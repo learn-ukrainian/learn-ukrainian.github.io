@@ -21,17 +21,20 @@
     right: Heart
   - left: Зуб
     right: Tooth
-  id: body-&-pain
 - type: cloze
   title: Diagnosis
-  passage: 'У мене {болить|болять|хворіє} голова. (Hurts sing.) У мене {болять|болить|хворіють} ноги. (Hurts pl.) У нього висока {температура|кашель|нежить}. (Fever)
+  passage: 'У мене {болить|болять|хворіє} голова. (Hurts sing.) У мене {болять|болить|хворіють}
+    ноги. (Hurts pl.) У нього висока {температура|кашель|нежить}. (Fever)
 
 
-    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписав {рецепт|таблетку|симптом}. Що вас {турбує|болить|хворіє}? (Bothers)
+    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписав {рецепт|таблетку|симптом}.
+    Що вас {турбує|болить|хворіє}? (Bothers)
 
 
-    Мені потрібен {лікар|пацієнт|рецепт}. (Doctor) У мене сильний {кашель|нежить|температура}. (Cough) Я {хворію|працюю|гуляю} вже три дні. Мені треба {лежати|бігати|танцювати} вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі {здоров''я|роботи|грошей}! (Health)'
-  id: diagnosis
+    Мені потрібен {лікар|пацієнт|рецепт}. (Doctor) У мене сильний {кашель|нежить|температура}.
+    (Cough) Я {хворію|працюю|гуляю} вже три дні. Мені треба {лежати|бігати|танцювати}
+    вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі
+    {здоров''я|роботи|грошей}! (Health)'
 - type: quiz
   title: Medical Expert
   items:
@@ -115,7 +118,6 @@
       correct: false
     - text: Nominative (називний відмінок)
       correct: false
-  id: medical-expert
 - type: unjumble
   title: Doctors Orders
   items:
@@ -180,7 +182,6 @@
     - щирого
     - серця
     answer: Бажаю вам міцного здоров'я завжди від щирого серця
-  id: doctors-orders
 - type: group-sort
   title: Symptoms vs Remedies
   groups:
@@ -200,7 +201,6 @@
     - Рецепт
     - Лікар
     - Аптека
-  id: symptoms-vs-remedies
 - type: true-false
   title: Medical Truths
   items:
@@ -223,7 +223,6 @@
     correct: true
   - statement: Tea with lemon is a standard Ukrainian cure.
     correct: true
-  id: medical-truths
 - type: cloze
   title: The Appointment
   passage: 'Я прийшов у {поліклініку|школу|магазин}, тому що я захворів.
@@ -249,11 +248,10 @@
     Я сподіваюся що скоро {одужаю|хворію|працюю}.
 
     Моє {здоров''я|робота|хобі} дуже важливе для мене.'
-  id: the-appointment
 - type: mark-the-words
   title: Medical Terms
-  id: medical-terms
-  passage: 'У мене *температура* і *кашель*. Я йду до *лікаря*. Мені треба купити *ліки*. Моє *здоров''я* важливе. *Аптека* за рогом.
+  passage: 'У мене *температура* і *кашель*. Я йду до *лікаря*. Мені треба купити
+    *ліки*. Моє *здоров''я* важливе. *Аптека* за рогом.
 
     ---
 
@@ -326,7 +324,6 @@
     - помилка
     - правильно
     explanation: Treats whom? -> пацієнта.
-  id: fix-the-complaint
 - type: translate
   title: English to Ukrainian
   items:
@@ -378,4 +375,3 @@
       correct: false
     - text: Неправильно
       correct: false
-  id: english-to-ukrainian

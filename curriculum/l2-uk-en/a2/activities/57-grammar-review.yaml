@@ -127,7 +127,6 @@
       correct: false
     - text: Dative (другу)
       correct: false
-  id: grammar-master
 - type: match-up
   title: Case Functions
   pairs:
@@ -155,24 +154,22 @@
     right: Орудний (Транспорт)
   - left: Мрію про відпустку
     right: Місцевий (Об'єкт думки)
-  id: case-functions
 - type: cloze
   title: Case Challenge
   passage: 'Я йду в {парк|парку|парком|паркі}_. Я гуляю в {парку|парк|парком|парка}_.
     Я не бачу {автобуса|автобус|автобусом|автобусі}_.
 
 
-    Я їм {суп|супу|супом|супі}_. Я їм суп {ложкою|ложка|ложку|ложці}_.
-    Я телефоную {татові|тато|тата|татом}_.
+    Я їм {суп|супу|супом|супі}_. Я їм суп {ложкою|ложка|ложку|ложці}_. Я телефоную
+    {татові|тато|тата|татом}_.
 
 
-    Ми з {братом|брат|брата|брату}_. Книга лежить на {столі|стіл|столу|столом}_.
-    У {мене|мені|я|мною}_ є ідея.
+    Ми з {братом|брат|брата|брату}_. Книга лежить на {столі|стіл|столу|столом}_. У
+    {мене|мені|я|мною}_ є ідея.
 
 
     Це подарунок для {сестри|сестрі|сестру|сестра}_. Я хочу стати {художником|художник|художника|художнику}_.
     Привіт, {Іване|Іван|Івана|Іваном}_!'
-  id: case-challenge
 - type: true-false
   title: Grammar Truths
   items:
@@ -212,7 +209,6 @@
   - statement: «У мене є» uses Genitive «мене».
     correct: true
     explanation: Yes.
-  id: grammar-truths
 - type: group-sort
   title: Aspect Sort
   groups:
@@ -235,7 +231,6 @@
     - 'якщо: Connectors'
     - 'коли: Connectors'
     - 'щоб: Connectors'
-  id: aspect-sort
 - type: unjumble
   title: Sentence Builder
   items:
@@ -359,7 +354,6 @@
     - зимові
     - шкарпетки
     answer: Мамо скажи де лежать мої теплі зимові шкарпетки
-  id: sentence-builder
 - type: error-correction
   title: Fix the Letter
   items:
@@ -480,7 +474,6 @@
     - ручку
     - ручки
     explanation: Instrumental.
-  id: fix-the-letter
 - type: cloze
   title: Grammar Fill
   passage: 'Я {новий|нова|нове} студент. Я {навчаюся|навчаюсь|вчу} в університеті.
@@ -504,10 +497,8 @@
     Я {думаю|знаю|бачу}, що це важливо.
 
     Ми хочемо {побачити|бачити|дивитися} світ.'
-  id: grammar-fill
 - type: mark-the-words
   title: Identification
-  id: identification
   passage: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на
     роботу. Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю.
     Я швидко *заснув*.
@@ -656,4 +647,3 @@
     - text: Інший варіант
       correct: false
     explanation: See mom.
-  id: case-detector

@@ -25,7 +25,6 @@
     right: behind
   - left: між
     right: between
-  id: preposition-meanings
 - type: fill-in
   title: Choose the Correct Preposition
   items:
@@ -113,7 +112,6 @@
     - За
     - Над
     - Перед
-  id: choose-the-correct-preposition
 - type: quiz
   title: Motion or Location?
   items:
@@ -249,7 +247,6 @@
       correct: false
     - text: Instrumental
       correct: false
-  id: motion-or-location?
 - type: true-false
   title: Preposition Rules
   items:
@@ -290,7 +287,6 @@
   - statement: Location after «під» uses instrumental, not locative.
     correct: true
     explanation: Yes! «Під столом» uses instrumental.
-  id: preposition-rules
 - type: group-sort
   title: Prepositions by Case
   groups:
@@ -312,7 +308,6 @@
     - над
     - перед
     - між
-  id: prepositions-by-case
 - type: unjumble
   title: Preposition Sentences
   items:
@@ -436,7 +431,6 @@
     - на
     - каву
     answer: Після роботи ми йдемо до кафе на каву
-  id: preposition-sentences
 - type: error-correction
   title: Fix the Case
   items:
@@ -548,7 +542,6 @@
     - будинку
     - будинці
     explanation: 'Location after «за» requires instrumental: будинок → будинком.'
-  id: fix-the-case
 - type: cloze
   title: Complete the Story
   passage: 'Марія живе {в/у + Loc|на + Acc|до + Gen} Києві. Вранці вона йде {на +
@@ -564,7 +557,6 @@
     + Instr} столом. Кіт спить {під + Instr|над + Instr|за + Instr} ліжком. Стіл стоїть
     {перед + Instr|за + Instr|між + Instr} вікном. Книги лежать {на + Loc|під + Instr|над
     + Instr} столі.'
-  id: complete-the-story
 - type: cloze
   title: Asking for Directions
   passage: '— {Вибачте, як дійти до пошти?|Дякую!|Йдіть через парк.}
@@ -594,10 +586,8 @@
     — {Немає за що!|Далеко від станції метро?|Він між аптекою і магазином.}
 
     '
-  id: asking-for-directions
 - type: mark-the-words
   title: Find Preposition + Case
-  id: find-preposition-+-case
   passage: 'Click on preposition + noun combinations.
 
     Він іде *до школи*. Потім він буде *в класі*. Книги лежать *на столі*. Олівець
@@ -694,4 +684,3 @@
     - text: Кіт під столі.
       correct: false
     explanation: Location 'Де?' + 'під' + Instrumental 'столом'.
-  id: english-to-ukrainian

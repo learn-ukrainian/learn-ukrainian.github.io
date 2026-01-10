@@ -25,7 +25,6 @@
     right: for (benefit)
   - left: без (Genitive)
     right: without
-  id: case-questions
 - type: fill-in
   title: Essential Case Selection
   items:
@@ -113,7 +112,6 @@
     - Друга
     - Друже
     - Другом
-  id: case-selection
 - type: quiz
   title: Comprehensive Case Mastery
   items:
@@ -127,7 +125,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: In the expression «Мені холодно» the pronoun «мені» is in which grammatical case?
+  - question: In the expression «Мені холодно» the pronoun «мені» is in which grammatical
+      case?
     options:
     - text: Dative
       correct: true
@@ -157,7 +156,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When speaking about something, as in «про книгу,» which case follows «про»?
+  - question: When speaking about something, as in «про книгу,» which case follows
+      «про»?
     options:
     - text: Accusative
       correct: true
@@ -167,7 +167,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When expressing accompaniment "with a friend" as in «з другом,» which case is used?
+  - question: When expressing accompaniment "with a friend" as in «з другом,» which
+      case is used?
     options:
     - text: Instrumental
       correct: true
@@ -177,7 +178,8 @@
       correct: false
     - text: Accusative
       correct: false
-  - question: In the phrase «в школі» expressing location at school, which case is used?
+  - question: In the phrase «в школі» expressing location at school, which case is
+      used?
     options:
     - text: Locative
       correct: true
@@ -237,7 +239,6 @@
       correct: false
     - text: Genitive
       correct: false
-  id: comprehensive-case-quiz
 - type: true-false
   title: Case Logic and Rules
   items:
@@ -277,7 +278,6 @@
   - statement: Service vocabulary uses accusative for direct objects.
     correct: true
     explanation: Correct! Відправити листа, зняти гроші.
-  id: case-rules-review
 - type: group-sort
   title: Preposition Case Sorting
   groups:
@@ -308,51 +308,172 @@
     - в/у (location)
     - на (location)
     - о/об (time)
-  id: preposition-cases
 - type: unjumble
   title: Mixed Case Construction
   items:
-  - words: [книгу, моєму, Я, даю, цікаву, найкращому, другові, Сьогодні]
+  - words:
+    - книгу
+    - моєму
+    - Я
+    - даю
+    - цікаву
+    - найкращому
+    - другові
+    - Сьогодні
     answer: Сьогодні я даю цікаву книгу моєму найкращому другові
-  - words: [лікарем, Він, працює, в, лікарні, старший, брат, головним, Мій, давно]
+  - words:
+    - лікарем
+    - Він
+    - працює
+    - в
+    - лікарні
+    - старший
+    - брат
+    - головним
+    - Мій
+    - давно
     answer: Мій старший брат вже давно працює головним лікарем в лікарні
-  - words: [школи, Я, до, йду, о, восьмій, Кожного, ранку, швидко, годині, моєї]
+  - words:
+    - школи
+    - Я
+    - до
+    - йду
+    - о
+    - восьмій
+    - Кожного
+    - ранку
+    - швидко
+    - годині
+    - моєї
     answer: Кожного ранку я швидко йду до моєї школи о восьмій годині
-  - words: [холодно, Мені, взимку, на, вулиці, завжди, дуже, коли, я, довго, гуляю]
+  - words:
+    - холодно
+    - Мені
+    - взимку
+    - на
+    - вулиці
+    - завжди
+    - дуже
+    - коли
+    - я
+    - довго
+    - гуляю
     answer: Мені завжди дуже холодно взимку коли я довго гуляю на вулиці
-  - words: [цукру, без, Кава, будь, ласка, мені, Дайте, одну, велику, зовсім]
+  - words:
+    - цукру
+    - без
+    - Кава
+    - будь
+    - ласка
+    - мені
+    - Дайте
+    - одну
+    - велику
+    - зовсім
     answer: Дайте мені будь ласка одну велику каву зовсім без цукру
-  - words: [столом, над, Лампа, світить, яскраво, Ця, стара, великим, дуже, ввечері]
+  - words:
+    - столом
+    - над
+    - Лампа
+    - світить
+    - яскраво
+    - Ця
+    - стара
+    - великим
+    - дуже
+    - ввечері
     answer: Ця стара лампа над великим столом світить дуже яскраво ввечері
-  - words: [карткою, Я, плачу, за, обід, У, цьому, ресторані, завжди, своєю, банківською]
+  - words:
+    - карткою
+    - Я
+    - плачу
+    - за
+    - обід
+    - У
+    - цьому
+    - ресторані
+    - завжди
+    - своєю
+    - банківською
     answer: У цьому ресторані я завжди плачу своєю банківською карткою за обід
-  - words: [листа, від, Я, отримав, мами, Вчора, ввечері, нарешті, довгого, моєї]
+  - words:
+    - листа
+    - від
+    - Я
+    - отримав
+    - мами
+    - Вчора
+    - ввечері
+    - нарешті
+    - довгого
+    - моєї
     answer: Вчора ввечері я нарешті отримав довгого листа від моєї мами
-  - words: [гроші, Мені, потрібно, зняти, в, банку, Сьогодні, терміново, цьому, новому]
+  - words:
+    - гроші
+    - Мені
+    - потрібно
+    - зняти
+    - в
+    - банку
+    - Сьогодні
+    - терміново
+    - цьому
+    - новому
     answer: Сьогодні мені терміново потрібно зняти гроші в цьому новому банку
-  - words: [Києві, Ми, зараз, живемо, в, тому, що, це, дуже, красиве, місто]
+  - words:
+    - Києві
+    - Ми
+    - зараз
+    - живемо
+    - в
+    - тому
+    - що
+    - це
+    - дуже
+    - красиве
+    - місто
     answer: Ми зараз живемо в Києві тому що це дуже красиве місто
-  - words: [другом, Я, гуляю, з, у, парку, Кожного, вечора, довго, моїм, найкращим]
+  - words:
+    - другом
+    - Я
+    - гуляю
+    - з
+    - у
+    - парку
+    - Кожного
+    - вечора
+    - довго
+    - моїм
+    - найкращим
     answer: Кожного вечора я довго гуляю з моїм найкращим другом у парку
-  - words: [України, Ця, посилка, з, для, Олега, велика, прийшла, спеціально, нашого, друга]
+  - words:
+    - України
+    - Ця
+    - посилка
+    - з
+    - для
+    - Олега
+    - велика
+    - прийшла
+    - спеціально
+    - нашого
+    - друга
     answer: Ця велика посилка прийшла з України спеціально для нашого друга Олега
-  id: case-sentences
 - type: cloze
   title: Transactions at the Bank and Post
-  passage: '{Добрий|Доброго|Добра} день! Я хочу відправити {листа|лист|листу}. {Куди|Де|Звідки}? {Бабусі|Бабусю|Бабуся}.
-    Чи потрібна {марка|марку|марці}? Так, будь ласка. Я плачу {карткою|картка|картку}.
-    
+  passage: '{Добрий|Доброго|Добра} день! Я хочу відправити {листа|лист|листу}. {Куди|Де|Звідки}?
+    {Бабусі|Бабусю|Бабуся}. Чи потрібна {марка|марку|марці}? Так, будь ласка. Я плачу
+    {карткою|картка|картку}.
+
     У банку я хочу зняти {гроші|грошей|грошам}. Який сьогодні {курс|курсу|курсом}?
     Тридцять сім {гривень|гривні|гривня}. Мені потрібно відкрити {рахунок|рахунку|рахунком}.
     Ось мій {паспорт|паспорта|паспортові}. Дякую {вам|вас|вами}!'
-  id: service-dialogue
 - type: mark-the-words
   title: Identifying cases in Narrative
   passage: 'Click on the words showing a case other than Nominative.
-    
-    Марія отримала *листа* від *мами*. Вона пише *ручкою*. 
-    Сьогодні *мені* холодно. Ми йдемо в *театр* з *другом*. 
-    Дай *мені* *каву* без *цукру*.'
+
+    Марія отримала *листа* від *мами*. Вона пише *ручкою*. Сьогодні *мені* холодно.
+    Ми йдемо в *театр* з *другом*. Дай *мені* *каву* без *цукру*.'
   correct_words:
   - листа
   - мами
@@ -364,71 +485,117 @@
   - каву
   - цукру
   instruction: Натисніть на слова в непрямих відмінках.
-  id: identify-cases
 - type: error-correction
   title: Correcting Case Usage
   items:
   - sentence: Я даю книгу мій друг.
     error: мій друг
     answer: моєму другові
-    options: [моєму другові, мій друг, мого друга, моїм другом]
+    options:
+    - моєму другові
+    - мій друг
+    - мого друга
+    - моїм другом
     explanation: Dative case is required for the recipient (кому?).
   - sentence: Вона працює лікар в лікарні.
     error: лікар
     answer: лікаркою
-    options: [лікаркою, лікар, лікаря, лікареві]
+    options:
+    - лікаркою
+    - лікар
+    - лікаря
+    - лікареві
     explanation: Instrumental case used with professions.
   - sentence: Ми йдемо в школа щодня.
     error: школа
     answer: школу
-    options: [школу, школа, школи, школі]
+    options:
+    - школу
+    - школа
+    - школи
+    - школі
     explanation: Accusative case used for direction/motion.
   - sentence: Кава з молоко дуже смачна.
     error: молоко
     answer: молоком
-    options: [молоком, молоко, молока, молоці]
+    options:
+    - молоком
+    - молоко
+    - молока
+    - молоці
     explanation: Instrumental used with «з» (with).
   - sentence: Вона в університет зараз.
     error: університет
     answer: університеті
-    options: [університеті, університет, університету, університетом]
+    options:
+    - університеті
+    - університет
+    - університету
+    - університетом
     explanation: Locative used for static position.
   - sentence: Подарунок від брат.
     error: брат
     answer: брата
-    options: [брата, брат, братові, братом]
+    options:
+    - брата
+    - брат
+    - братові
+    - братом
     explanation: Genitive used after «від» (from).
   - sentence: Допоможи я, будь ласка.
     error: я
     answer: мені
-    options: [мені, я, мене, мною]
+    options:
+    - мені
+    - я
+    - мене
+    - мною
     explanation: Dative used with «допомагати».
   - sentence: Він їде автобус до роботи.
     error: автобус
     answer: автобусом
-    options: [автобусом, автобус, автобуса, автобусу]
+    options:
+    - автобусом
+    - автобус
+    - автобуса
+    - автобусу
     explanation: Instrumental used for means of transport.
   - sentence: Немає час зараз.
     error: час
     answer: часу
-    options: [часу, час, часом, часі]
+    options:
+    - часу
+    - час
+    - часом
+    - часі
     explanation: Genitive used for absence/negation.
   - sentence: Я йду до школа.
     error: школа
     answer: школи
-    options: [школи, школа, школу, школою]
+    options:
+    - школи
+    - школа
+    - школу
+    - школою
     explanation: Genitive used after «до» (to/toward).
   - sentence: Платити картка.
     error: картка
     answer: карткою
-    options: [карткою, картка, картки, картці]
+    options:
+    - карткою
+    - картка
+    - картки
+    - картці
     explanation: Instrumental used for payment method.
   - sentence: Мені подобається Україна.
     error: Мені
     answer: Мені
-    options: [Мені, Я, Моє, Мене]
+    options:
+    - Мені
+    - Я
+    - Моє
+    - Мене
     explanation: This is correct! Dative is used with «подобатися».
-  id: case-errors
 - type: translate
   title: Practical Case Translation
   items:
@@ -552,7 +719,6 @@
       correct: false
     - text: Я телефоную батьком.
       correct: false
-  id: case-translation-practice
 - type: match-up
   title: Dative Pronoun Drill
   pairs:
@@ -580,11 +746,11 @@
     right: Мені потрібно
   - left: To whom?
     right: Кому?
-  id: dative-pronoun-drill
 - type: quiz
   title: Emotional States & Experiencers
   items:
-  - question: How do you correctly say "I am feeling cold" in Ukrainian using the dative case?
+  - question: How do you correctly say "I am feeling cold" in Ukrainian using the
+      dative case?
     options:
     - text: Мені холодно.
       correct: true
@@ -614,7 +780,7 @@
       correct: false
     - text: Вони сумно.
       correct: false
-  - question: "Complete the sentence: Нам дуже _____ (fun) at the party yesterday."
+  - question: 'Complete the sentence: Нам дуже _____ (fun) at the party yesterday.'
     options:
     - text: весело
       correct: true
@@ -624,7 +790,7 @@
       correct: false
     - text: веселому
       correct: false
-  - question: "Complete the sentence: Їй _____ (bad) сьогодні because she is sick."
+  - question: 'Complete the sentence: Їй _____ (bad) сьогодні because she is sick.'
     options:
     - text: погано
       correct: true
@@ -644,7 +810,7 @@
       correct: false
     - text: Ви цікаво?
       correct: false
-  - question: "Complete the sentence: Йому _____ (fine/good) after the long exam."
+  - question: 'Complete the sentence: Йому _____ (fine/good) after the long exam.'
     options:
     - text: добре
       correct: true
@@ -664,7 +830,7 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: "Translate the sentence 'We like Kyiv' using the dative case construction."
+  - question: Translate the sentence 'We like Kyiv' using the dative case construction.
     options:
     - text: Нам подобається Київ.
       correct: true
@@ -674,7 +840,7 @@
       correct: false
     - text: Ми любимо Київ.
       correct: false
-  - question: "Translate the sentence 'You need help' using the dative case construction."
+  - question: Translate the sentence 'You need help' using the dative case construction.
     options:
     - text: Тобі потрібна допомога.
       correct: true
@@ -704,4 +870,3 @@
       correct: false
     - text: Instrumental
       correct: false
-  id: emotional-states-experiencers

@@ -25,7 +25,6 @@
     right: more useful
   - left: зручніше
     right: more convenient
-  id: preference-expressions
 - type: cloze
   title: Express Preferences
   passage: 'Мені {більше|менше|найбільше|добре} подобається кава. Я {віддаю|даю|беру|маю}
@@ -42,7 +41,6 @@
 
     Мені {більше|великий|багато|найбільше} подобаються фільми. {Гірше|Гірший|Погано|Поганий}
     нічого не робити. Що ти б {вибрав|вибираєш|виберешся|вибір}?'
-  id: express-preferences
 - type: quiz
   title: Preferences
   items:
@@ -178,7 +176,6 @@
       correct: false
     - text: «вже» (adverb)
       correct: false
-  id: preferences
 - type: true-false
   title: Preference Rules
   items:
@@ -218,7 +215,6 @@
   - statement: «Важче» means "easier."
     correct: false
     explanation: «Важче» means "harder."
-  id: preference-rules
 - type: group-sort
   title: Preference Expressions
   groups:
@@ -238,7 +234,6 @@
     - Мій вибір — це...
     - Чи не могли б ви...
     - Я волію (I'd rather)
-  id: preference-expressions
 - type: unjumble
   title: Preference Sentences
   items:
@@ -377,7 +372,6 @@
     - просто
     - говорити
     answer: Завжди набагато важче робити важку справу ніж просто говорити
-  id: preference-sentences
 - type: error-correction
   title: Fix Preferences
   items:
@@ -435,7 +429,6 @@
     - подобатися
     - подобаюся
     explanation: 'Plural verb agreement: подобаються фільми.'
-  id: fix-preferences
 - type: cloze
   title: Expressing Preferences
   passage: '— Що тобі {більше|менше|найбільше} подобається: кава чи чай?
@@ -463,10 +456,8 @@
     — Мені {більше|менше|найбільше} подобаються розумні книги.
 
     — Кожному своє! Ми всі {маємо|маєте|маєш} вибір.'
-  id: expressing-preferences
 - type: mark-the-words
   title: Find Preference Words
-  id: find-preference-words
   passage: 'Click on PREFERENCE expressions.
 
     *Мені більше подобається* кава. *Я віддаю перевагу* книгам. *Краще* читати, ніж
@@ -553,4 +544,3 @@
       correct: false
     - text: Що ти віддаєш?
       correct: false
-  id: preference-translation

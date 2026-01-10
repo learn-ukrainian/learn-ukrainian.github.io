@@ -25,7 +25,6 @@
     right: бач- root
   - left: слухач
     right: слух- root
-  id: word-formation-pairs
 - type: cloze
   title: Formation Test
   passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід}
@@ -42,7 +41,6 @@
 
     Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати}
     Людина, яка пише = {письменник|писання|написати}'
-  id: formation-test
 - type: quiz
   title: Word Formation Quiz
   items:
@@ -168,7 +166,6 @@
       correct: false
     - text: -ач
       correct: false
-  id: word-formation-quiz
 - type: group-sort
   title: Word Parts
   groups:
@@ -197,7 +194,6 @@
     - пис-
     - бач-
     - слух-
-  id: word-parts
 - type: true-false
   title: Formation Rules
   items:
@@ -237,7 +233,6 @@
   - statement: Root families share core meaning.
     correct: true
     explanation: Yes! ход- = all about walking
-  id: formation-rules
 - type: unjumble
   title: Word Formation Rules
   items:
@@ -305,7 +300,6 @@
     - нові
     - слова
     answer: Треба знати корені слів щоб розуміти нові слова
-  id: word-formation-rules
 - type: cloze
   title: Complete the Words
   passage: 'Він {прийшов|вийшов|увійшов} до класу.
@@ -331,10 +325,8 @@
     Цей інструмент — {музичний|музика|музикант}.
 
     Ось {вхід|вихід|схід} у магазин.'
-  id: complete-the-words
 - type: mark-the-words
   title: Find Word Parts
-  id: find-word-parts
   passage: 'Click on all words with marked word parts.
 
     Він *при*йшов до школи. Потім *ви*йшов з неї.
@@ -455,7 +447,6 @@
       correct: false
     - text: Неправильно
       correct: false
-  id: english-to-ukrainian
 - type: translate
   title: Word Formation Translation
   items:
@@ -507,4 +498,3 @@
       correct: false
     - text: Науковець
       correct: false
-  id: word-formation-translation

@@ -21,7 +21,6 @@
     right: still/nevertheless
   - left: незважаючи на
     right: in spite of
-  id: logic-pairs
 - type: cloze
   title: Choose the Connector
   passage: 'Ми не пішли гуляти, {тому що|хоча|проте|зате} йшов сильний дощ. Вона купила
@@ -41,7 +40,6 @@
     Вона прийшла вчасно, {незважаючи на те що|тому що|бо|оскільки} прокинулася пізно.
     Я візьму чай {замість|через|завдяки|для} кави. Сонце світило, {все-таки|тому що|бо|оскільки}
     було холодно.'
-  id: choose-the-connector
 - type: quiz
   title: Understand the Logic
   items:
@@ -132,7 +130,6 @@
       correct: false
     - text: хоча
       correct: false
-  id: understand-the-logic
 - type: unjumble
   title: Build the Argument
   items:
@@ -207,7 +204,6 @@
     - своєю
     - статтею
     answer: Вона була дуже втомлена проте продовжувала працювати над своєю статтею
-  id: build-the-argument
 - type: group-sort
   title: Cause vs Contrast
   groups:
@@ -227,7 +223,6 @@
     - хоча
     - незважаючи на
     - однак
-  id: cause-vs-contrast
 - type: true-false
   title: Grammar Rules
   items:
@@ -261,7 +256,6 @@
   - statement: «Все ж таки» пишеться окремо.
     correct: true
     explanation: Так, це частка, яка пишеться саме так.
-  id: grammar-rules
 - type: cloze
   title: The Job Interview Success
   passage: Я дуже хочу отримати саме цю роботу, {тому що|хоча|проте|зате} мені зараз
@@ -275,10 +269,8 @@
     вартий. {Хоча|Оскільки|Бо|Тому що} я не знав нікого там, тепер ми друзі. Я запізнився
     раз {через|завдяки|про|для} затори на дорогах, але {все-таки|бо|хоча|проте} я
     на місці! Тепер я планую відпустку, {оскільки|хоча|проте|бо} я вже багато працював.
-  id: the-job-interview-success
 - type: mark-the-words
   title: Find the Logic
-  id: find-the-logic
   passage: '*Хоча* на вулиці дощ, ми йдемо гуляти. Ми взяли парасольки, *тому що*
     не хочемо змокнути. *Оскільки* парк близько, ми підемо пішки. Це важко, *проте*
     корисно. *Все-таки* свіже повітря потрібне.
@@ -358,7 +350,6 @@
     - про
     - для
     explanation: Traffic jams are bad. Use «через».
-  id: fix-the-connector
 - type: translate
   title: English to Ukrainian
   items:
@@ -482,4 +473,3 @@
       correct: false
     - text: Ми чекаємо про результат.
       correct: false
-  id: english-to-ukrainian

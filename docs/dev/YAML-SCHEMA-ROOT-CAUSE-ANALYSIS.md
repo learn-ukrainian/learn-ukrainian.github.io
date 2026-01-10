@@ -1,385 +1,401 @@
-# YAML Schema Violations - Root Cause Analysis
+# YAML Schema Violations - Root Cause Analysis (CORRECTED)
 
-**Date:** 2026-01-10
-**Status:** CRITICAL - Affects 100+ modules across B1, B2, C1
-**Impact:** Pipeline failures, invalid activity generation, broken validation
+**Date:** 2026-01-10 (Updated)
+**Status:** CRITICAL - Affects A1, A2, C1 (1,688 activities)
+**Impact:** Schema validation failures, audit errors
 
 ---
 
 ## Executive Summary
 
-**Root Cause:** Documentation (`ACTIVITY-YAML-REFERENCE.md`) uses different property names than the JSON Schema (`activities-base.schema.json`). AI agents and developers follow the documentation, generating invalid YAMLs that fail schema validation.
+**Root Cause:** The `id` property was added to the schema and 303 A1/A2 activity YAML files on Jan 7, 2026 (commit 331e2847), then removed from the schema on Jan 10, 2026 (commit d1056994) as "forbidden", but the A1/A2/C1 YAML files were never cleaned up.
 
-**Scope:**
-- ✅ A1: **0 violations** (34/34 modules clean)
-- ✅ A2: **0 violations** (57/57 modules clean)
-- ❌ B1: **~59 violations** across 60+ modules
-- ❌ B2: **Unknown** (multiple violations)
-- ❌ C1: **~20 violations** (YAML parse errors + schema issues)
+**Actual Scope (CORRECTED):**
+- ❌ **A1: 300 `id` violations** (~8-9 per module × 34 modules)
+- ❌ **A2: 585 `id` violations** (~10 per module × 57 modules)
+- ✅ **B1: 0 `id` violations** (cleaned up on Jan 10)
+- ✅ **B2: 0 `id` violations** (cleaned up on Jan 10)
+- ❌ **C1: 803 `id` violations** (never cleaned up)
+- ✅ **C2: 0 `id` violations** (no activities yet)
 
-**Top 5 Issues:**
-1. **59 instances:** mark-the-words missing `correct_words` property
-2. **35 instances:** unjumble has unexpected `scrambled` property
-3. **10 instances:** select/quiz missing `question` property
-4. **5 instances:** quiz options missing `correct` property
-5. **3 instances:** translate missing `source` property
+**Total violations: 1,688 `id` properties across 3 levels**
 
 ---
 
-## Detailed Analysis
+## What Actually Happened (Timeline)
 
-### 1. mark-the-words Activity (59 violations)
+### Jan 7, 2026 (Commit 331e2847)
 
-**Schema Requires:**
+**Commit message:** "feat: standardize activity YAMLs and fix Reading Activity resource handling"
+
+**What was done:**
+1. Added `id` property to schema for ALL activity types (quiz, select, fill-in, true-false, cloze, etc.)
+2. Added `id` property to 303 A1/A2 activity YAML files
+3. Commit message claimed: "Standardized 303 activity YAML files to match schema"
+4. Also added `instruction` property to schema (this one was correct)
+
+**Schema change example:**
+```diff
+ "quiz": {
+   "additionalProperties": false,
+   "properties": {
+     "type": { "const": "quiz" },
++    "id": {
++      "type": "string",
++      "description": "Unique identifier for the activity"
++    },
++    "instruction": {
++      "type": "string",
++      "description": "Additional instructions for the learner"
++    },
+     "title": { "type": "string", "minLength": 1 },
+```
+
+**YAML change example (A1 M01):**
+```diff
+ - type: match-up
+   title: True Friends
+   pairs:
+     - left: А
+       right: A
++  id: true-friends
+```
+
+### Jan 10, 2026 (Commit d1056994)
+
+**Commit message:** "fix(b2): remediate modules 03-10 and sync schemas"
+
+**What was done:**
+1. Removed `id` property from schema (marked as "forbidden")
+2. Removed `id` from 78 B2 activity files
+3. Commit message: "Synced activities-*.schema.json files with base schema"
+
+**Schema change:**
+```diff
+ "quiz": {
+   "additionalProperties": false,
+   "properties": {
+     "type": { "const": "quiz" },
+-    "id": {
+-      "type": "string",
+-      "description": "Unique identifier for the activity"
+-    },
+     "instruction": { "type": "string" },
+```
+
+### Jan 10, 2026 (Commit d4303f5f)
+
+**Commit message:** "fix(b1): Remove 886 invalid id properties from 75 activity files"
+
+**What was done:**
+1. Removed 886 `id` properties from B1 activities (75 files)
+2. Used `fix_activity_ids.py` script to automate removal
+
+**BUT:** A1, A2, and C1 were never cleaned up!
+
+---
+
+## Current State
+
+### Schema (Current)
+
+The schema does **NOT** allow `id` property for basic activity types:
+
 ```json
 {
-  "required": ["type", "title", "passage", "correct_words"],
-  "properties": {
-    "passage": { "type": "string" },
-    "correct_words": {
-      "type": "array",
-      "items": { "type": "string" }
+  "quiz": {
+    "additionalProperties": false,  // ← Prohibits 'id'
+    "properties": {
+      "type": { "const": "quiz" },
+      "instruction": { "type": "string" },  // ✅ Allowed
+      "title": { "type": "string" }
+      // NO 'id' property
     }
   }
 }
 ```
 
-**Documentation Shows (WRONG):**
+**Only these activity types allow `id`:**
+- `cloze` items (not the activity itself)
+- `comparative-study`
+- `authorial-intent`
+- `reading`
+
+### YAML Files (Current)
+
+**A1 Example (01-the-cyrillic-code-i.yaml):**
 ```yaml
-- type: mark-the-words
-  title: Title
-  instruction: Знайдіть усі іменники.
-  text: Гарний день приніс радість у серце.    # ❌ Should be "passage"
-  answers:                                     # ❌ Should be "correct_words"
-    - день
-    - радість
-    - серце
+- type: match-up
+  title: True Friends
+  pairs:
+    - left: А
+      right: A
+  id: true-friends  # ❌ VIOLATION - not in schema
 ```
 
-**Correct Format (from A2 modules):**
-```yaml
-- type: mark-the-words
-  title: Find Perfective Future
-  passage: 'Завтра я *прочитаю* книгу. Потім я *напишу* рецензію.'
-  correct_words:
-    - прочитаю
-    - напишу
-```
+**Every A1/A2/C1 activity has this violation.**
 
-**Impact:** 59 modules have mark-the-words activities that fail validation.
-
----
-
-### 2. unjumble Activity (35 violations)
-
-**Schema Requires:**
-```json
-{
-  "required": ["words", "answer"],
-  "additionalProperties": false,
-  "properties": {
-    "words": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "answer": { "type": "string" }
-  }
-}
-```
-
-**Documentation Shows (WRONG):**
-```yaml
-- type: unjumble
-  title: Title
-  items:
-    - jumbled: words / in / disorder   # ❌ Property "jumbled" not in schema
-      answer: Words in correct order.
-```
-
-**What's Being Generated (ALSO WRONG):**
-From `fix_yaml_quiz.py` line 87:
-```python
-'scrambled': item.strip(),   # ❌ Property "scrambled" not in schema
-```
-
-**Correct Format (from A2 modules):**
-```yaml
-- type: unjumble
-  title: Cooking Sentences
-  items:
-    - words:           # ✅ Array of individual words
-        - Ти
-        - маєш
-        - покласти
-        - свіжу
-        - картоплю
-      answer: Ти маєш покласти свіжу картоплю
-```
-
-**Impact:** 35 modules have unjumble activities with `scrambled` property that violates `additionalProperties: false`.
-
-**Evidence of Known Issue:** `fix_b2_activities.py` lines 30-31:
-```python
-if 'scrambled' in item and 'words' in item:
-    del item['scrambled']   # Script written to fix the violation!
-```
-
----
-
-### 3. translate Activity (3+ violations)
-
-**Schema Requires:**
-```json
-{
-  "required": ["source", "options"],
-  "properties": {
-    "source": { "type": "string" },
-    "options": { "type": "array" }
-  }
-}
-```
-
-**Common Error:** Missing `source` property
-
-**Correct Format:**
-```yaml
-- type: translate
-  title: Переклад
-  items:
-    - source: English sentence to translate.
-      options:
-        - text: Wrong translation
-          correct: false
-        - text: Correct translation
-          correct: true
-```
-
-**Impact:** Modules fail because translate items lack the required `source` property.
-
----
-
-### 4. select/quiz Activity (10+ violations)
-
-**Schema Requires:**
-```json
-{
-  "required": ["question", "options"],
-  "properties": {
-    "question": { "type": "string" },
-    "options": { "type": "array" }
-  }
-}
-```
-
-**Common Error:** Missing `question` property in items
-
-**Also:** Missing `correct` property in quiz options (5 violations)
-
----
-
-## Why A1/A2 Are Clean
-
-**A1 and A2 have ZERO violations because:**
-
-1. They were created earlier when the schema and docs were in sync
-2. They use the CORRECT property names:
-   - `words` (not `jumbled` or `scrambled`)
-   - `passage` and `correct_words` (not `text` and `answers`)
-   - `source` in translate items
-
-3. Subsequent levels (B1+) were created following the OUTDATED documentation
-
----
-
-## Root Cause Chain
-
-```
-1. Schema was updated (or documentation was never aligned)
-   ↓
-2. Documentation shows wrong property names
-   ↓
-3. AI agents and developers create YAMLs following documentation
-   ↓
-4. Schema validation fails (but modules were already written)
-   ↓
-5. Fix scripts written to patch specific issues (not systematic)
-   ↓
-6. Problem persists because documentation not fixed
-```
-
----
-
-## Impact on Pipeline
-
-**Current State:**
-- Modules pass markdown linting (no markdown validation)
-- Modules FAIL YAML schema validation during audit
-- Generators try to convert invalid YAML → MDX (may produce corrupt output)
-- HTML validation may fail due to missing/malformed activities
-
-**What's Broken:**
-1. ❌ Schema validation (audit step)
-2. ⚠️ MDX generation (may work but produce invalid JSON/MDX)
-3. ⚠️ HTML rendering (interactive activities may not load)
-4. ❌ JSON export for Vibe app (schema violations block generation)
-
----
-
-## Files That Need Fixing
-
-### 1. Documentation (Priority: CRITICAL)
-
-**File:** `docs/ACTIVITY-YAML-REFERENCE.md`
-
-**Changes needed:**
-
-#### mark-the-words section (line ~303)
-```diff
--- type: mark-the-words
-   title: Title
--  instruction: Знайдіть усі іменники.
--  text: Гарний день приніс радість у серце.
--  answers:
-+  passage: 'Click on NOUNS. Гарний *день* приніс *радість* у *серце*.'
-+  correct_words:
-     - день
-     - радість
-     - серце
-```
-
-#### unjumble section (line ~262)
-```diff
--- type: unjumble
-   title: Title
--  instruction: Optional instruction text.
-   items:
--    - jumbled: words / in / disorder
-+    - words:
-+        - words
-+        - in
-+        - disorder
-       answer: Words in correct order.
-```
-
-### 2. Generation Scripts
-
-**File:** `scripts/fix_yaml_quiz.py` (line 87)
-```diff
--'scrambled': item.strip(),
-+'words': item.strip().split(' / '),
-```
-
-**File:** Any script generating mark-the-words
-- Change `text` → `passage`
-- Change `answers` → `correct_words`
-
-**File:** Any script generating translate
-- Ensure `source` property is always included
-
-### 3. Existing YAML Files (Bulk Fix Required)
-
-**Need automated migration:**
+### Violation Counts
 
 ```bash
-# Fix all mark-the-words activities
-for file in curriculum/l2-uk-en/{b1,b2,c1}/activities/*.yaml; do
-  # Add missing correct_words property
-  # Extract words from passage marked with *asterisks*
-done
+# Actual counts (verified with rg):
+a1: 300 activities with 'id' property
+a2: 585 activities with 'id' property
+b1: 0 activities with 'id' property
+b2: 0 activities with 'id' property
+c1: 803 activities with 'id' property
+c2: 0 activities with 'id' property
+```
 
-# Fix all unjumble activities
-for file in curriculum/l2-uk-en/{b1,b2,c1}/activities/*.yaml; do
-  # Remove 'scrambled' property
-  # Convert to 'words' array if needed
-done
+**Total: 1,688 violations**
 
-# Fix all translate activities
-for file in curriculum/l2-uk-en/{b1,b2,c1}/activities/*.yaml; do
-  # Add missing 'source' property
+### Audit Output Example
+
+```
+YAML_SCHEMA_VIOLATION [match-up]: 'id' was unexpected
+YAML_SCHEMA_VIOLATION [quiz]: 'id' was unexpected
+YAML_SCHEMA_VIOLATION [fill-in]: 'id' was unexpected
+```
+
+---
+
+## Why This Happened
+
+### Root Cause Analysis
+
+1. **Jan 7:** Someone (likely using Gemini) thought adding `id` would be useful for frontend rendering
+2. **Jan 7:** Added `id` to schema and retroactively added to all A1/A2 YAMLs
+3. **Jan 10:** Discovered this broke validation (because `additionalProperties: false`)
+4. **Jan 10:** Removed `id` from schema
+5. **Jan 10:** Removed `id` from B1 (886 instances) and B2 (78 instances)
+6. **Jan 10:** **FORGOT to remove from A1/A2/C1**
+
+### Evidence in Code
+
+**scripts/fix_b2_yaml.py (lines 8-10):**
+```python
+# Remove top-level 'id' if present
+if 'id' in activity:
+    del activity['id']
+```
+
+This script was written to fix the violation but only applied to B2.
+
+**scripts/fix_activity_ids.py:**
+Used to remove 886 `id` properties from B1, but never run on A1/A2/C1.
+
+---
+
+## The Fix
+
+### Solution: Remove `id` from A1/A2/C1 Activity YAMLs
+
+**Same fix that was already applied to B1/B2.**
+
+### Implementation
+
+**Option 1: Modify existing script**
+
+Update `scripts/fix_activity_ids.py` to handle A1/A2/C1:
+
+```python
+#!/usr/bin/env python3
+import yaml
+import sys
+from pathlib import Path
+
+def remove_activity_ids(yaml_file):
+    """Remove 'id' property from all activities in YAML file."""
+    with open(yaml_file, 'r', encoding='utf-8') as f:
+        data = yaml.safe_load(f)
+
+    if not data or 'activities' not in data:
+        return 0
+
+    count = 0
+    for activity in data['activities']:
+        if 'id' in activity:
+            del activity['id']
+            count += 1
+
+    if count > 0:
+        with open(yaml_file, 'w', encoding='utf-8') as f:
+            yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
+    return count
+
+# Process all A1/A2/C1 files
+levels = ['a1', 'a2', 'c1']
+total = 0
+
+for level in levels:
+    activity_dir = Path(f'curriculum/l2-uk-en/{level}/activities')
+    for yaml_file in activity_dir.glob('*.yaml'):
+        count = remove_activity_ids(yaml_file)
+        if count > 0:
+            print(f"Removed {count} id properties from {yaml_file.name}")
+            total += count
+
+print(f"\nTotal: Removed {total} id properties")
+```
+
+**Option 2: Simple sed command**
+
+```bash
+# Remove 'id: something' lines from all A1/A2/C1 activity files
+for level in a1 a2 c1; do
+  find curriculum/l2-uk-en/$level/activities -name "*.yaml" -type f -exec \
+    sed -i '' '/^  id: /d' {} \;
 done
 ```
 
 ---
 
-## Recommended Fix Strategy
+## Verification Plan
 
-### Phase 1: Stop the Bleeding (Immediate)
-
-1. ✅ **Update documentation** (`ACTIVITY-YAML-REFERENCE.md`) to match schema
-2. ✅ **Fix generation scripts** to use correct property names
-3. ✅ **Add pre-commit validation** to prevent invalid YAMLs from being committed
-
-### Phase 2: Remediation (1-2 days)
-
-1. 🔧 **Create automated migration scripts** for each violation type:
-   - `fix_mark_the_words_schema.py` (59 modules)
-   - `fix_unjumble_schema.py` (35 modules)
-   - `fix_translate_schema.py` (3 modules)
-   - `fix_quiz_select_schema.py` (15 modules)
-
-2. 🔧 **Run migrations** on all B1, B2, C1 modules
-
-3. 🔧 **Re-audit all modules** to verify fixes
-
-### Phase 3: Prevention (Ongoing)
-
-1. ✅ **Add CI validation** that runs schema check on all YAML files
-2. ✅ **Update AI agent prompts** to reference correct schema format
-3. ✅ **Create YAML templates** for each activity type showing correct format
-4. ✅ **Add schema autocomplete** hints to VS Code/IDE configurations
-
----
-
-## Testing Plan
-
-### Validate Fix Success
+### Before Fix
 
 ```bash
-# Before fixes
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/30-purpose-shchob-past-form.md
-# Expected: YAML_SCHEMA_VIOLATION errors
+# Verify violations exist
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md 2>&1 | grep "id.*was unexpected"
+# Expected: 8-9 violations
 
-# After fixes
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/30-purpose-shchob-past-form.md
-# Expected: PASS with no schema violations
+# Count total violations
+for level in a1 a2 c1; do
+  echo "$level: $(rg "^  id: " curriculum/l2-uk-en/$level/activities/*.yaml 2>/dev/null | wc -l | tr -d ' ')"
+done
+# Expected: a1: 300, a2: 585, c1: 803
+```
 
-# Validate entire level
-for file in curriculum/l2-uk-en/b1/*.md; do
+### After Fix
+
+```bash
+# Run fix script
+.venv/bin/python scripts/fix_activity_ids_a1_a2_c1.py
+
+# Verify no violations
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md 2>&1 | grep "YAML_SCHEMA_VIOLATION"
+# Expected: No output
+
+# Count remaining id properties
+for level in a1 a2 c1; do
+  echo "$level: $(rg "^  id: " curriculum/l2-uk-en/$level/activities/*.yaml 2>/dev/null | wc -l | tr -d ' ')"
+done
+# Expected: a1: 0, a2: 0, c1: 0
+```
+
+### Full Level Validation
+
+```bash
+# Validate all A1 modules
+for file in curriculum/l2-uk-en/a1/*.md; do
   .venv/bin/python scripts/audit_module.py "$file" 2>&1 | grep "YAML_SCHEMA_VIOLATION"
 done
 # Expected: No output (all clean)
+
+# Same for A2 and C1
 ```
 
 ---
 
-## Appendix: Complete Error Counts
+## Additional Issues (B1/B2)
 
-**Extracted from audit reports:**
+**Note:** B1 and B2 have DIFFERENT violations unrelated to `id`:
 
-| Error Type | Count | Affected Modules |
-|------------|-------|------------------|
-| `correct_words` is a required property | 59 | B1 M30-50, others |
-| `'scrambled' was unexpected` | 35 | B1, B2 unjumble activities |
-| `'question' is a required property` | 10 | B1 select activities |
-| `'correct' is a required property` | 5 | B1 quiz options |
-| `'source' is a required property` | 3 | B1 translate activities |
-| `'sentence' is a required property` | 3 | Unknown |
-| `'id' was unexpected` (essay) | ~10 | C1 M85-99 biography modules |
-| YAML parse errors | ~6 | C1 M85-90 |
+### B1 Violations (Separate Issue)
 
-**Total modules affected:** ~100+ across B1, B2, C1
+From audit reports, B1 has violations related to:
+- `scrambled` property in unjumble (should be `words`)
+- `correct_words` missing in mark-the-words
+- `source` missing in translate
+
+**These are DIFFERENT from the `id` issue and require separate fixes.**
+
+### B2 Violations (Separate Issue)
+
+B2 also has some schema violations but not related to `id`.
+
+**Action:** Create separate root cause analysis for B1/B2 violations after fixing A1/A2/C1 `id` issue.
 
 ---
 
-## Next Steps
+## Impact Assessment
 
-1. **[IMMEDIATE]** Update `ACTIVITY-YAML-REFERENCE.md` with correct property names
-2. **[HIGH PRIORITY]** Create and run migration scripts for top 3 violations
-3. **[MEDIUM]** Add pre-commit YAML schema validation
-4. **[ONGOING]** Re-audit all fixed modules
+### Current Impact
+
+**Schema validation fails for:**
+- 34 A1 modules (~8-9 violations each)
+- 57 A2 modules (~10 violations each)
+- C1 modules with activities (~803 total violations)
+
+**Pipeline impact:**
+- ✅ Markdown linting: PASSES (doesn't check YAML schema)
+- ❌ Audit validation: FAILS (schema violations)
+- ⚠️ MDX generation: May work but technically invalid
+- ⚠️ HTML rendering: Works but violates schema contract
+
+### Post-Fix Impact
+
+After removing `id` properties:
+- ✅ Schema validation: PASS
+- ✅ Audit: PASS (no YAML violations)
+- ✅ Pipeline: Fully compliant
+
+---
+
+## Recommended Actions
+
+### Immediate (Priority: CRITICAL)
+
+1. ✅ **Create fix script** for A1/A2/C1 `id` removal
+2. ✅ **Run fix script** on all affected files
+3. ✅ **Verify** with audit on sample modules
+4. ✅ **Commit** with message: "fix(a1/a2/c1): Remove 1,688 invalid id properties"
+
+### Follow-up (Priority: HIGH)
+
+1. 🔧 **Investigate B1 violations** (scrambled, correct_words, source)
+2. 🔧 **Create separate fix strategy** for B1/B2 issues
+3. 🔧 **Add pre-commit hook** to prevent future schema violations
+
+### Prevention (Priority: MEDIUM)
+
+1. ✅ **Add CI validation** that runs schema check on all YAML files
+2. ✅ **Document schema** more clearly in ACTIVITY-YAML-REFERENCE.md
+3. ✅ **Add VSCode schema hints** for autocomplete
+
+---
+
+## Files Changed
+
+**Git commits involved:**
+- `331e2847` - Added `id` to schema + A1/A2 YAMLs (Jan 7)
+- `d1056994` - Removed `id` from schema + B2 YAMLs (Jan 10)
+- `d4303f5f` - Removed `id` from B1 YAMLs (Jan 10)
+
+**Files to fix:**
+- `curriculum/l2-uk-en/a1/activities/*.yaml` (34 files, 300 violations)
+- `curriculum/l2-uk-en/a2/activities/*.yaml` (57 files, 585 violations)
+- `curriculum/l2-uk-en/c1/activities/*.yaml` (C1 files, 803 violations)
+
+**Schema file (already correct):**
+- `schemas/activities-base.schema.json` ✅ Does NOT allow `id` for basic activity types
+
+---
+
+## Conclusion
+
+This was a 3-day mistake:
+1. **Jan 7:** Added `id` thinking it was needed
+2. **Jan 10:** Realized it violated `additionalProperties: false`
+3. **Jan 10:** Removed from schema and B1/B2, but forgot A1/A2/C1
+
+**Fix is simple:** Delete 1,688 lines containing `id: something` from A1/A2/C1 YAML files.
+
+**Estimated time:** 5 minutes to write script, 1 minute to run, 10 minutes to verify.
 
 ---
 
 **Prepared by:** Claude Sonnet 4.5
-**Date:** 2026-01-10
-**Status:** DRAFT - Ready for review and implementation
+**Date:** 2026-01-10 (Corrected)
+**Status:** READY FOR IMPLEMENTATION

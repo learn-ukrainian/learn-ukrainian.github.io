@@ -25,7 +25,6 @@
     right: spring
   - left: зима
     right: winter
-  id: nature-words
 - type: fill-in
   title: Nature & Weather
   items:
@@ -85,7 +84,6 @@
     - хмарно
     - вітряно
     - туманно
-  id: nature-&-weather
 - type: quiz
   title: Nature & Weather
   items:
@@ -169,11 +167,15 @@
       correct: false
     - text: A snowstorm
       correct: false
-  id: nature-&-weather
 - type: cloze
   title: Story Comprehension
-  passage: Україна має чудову {природу|погоду|роботу}. На заході є високі {гори|долини|міста} Карпати. Там взимку падає {сніг|дощ|град} і люди катаються на лижах. На півдні є Чорне {море|озеро|поле}. Влітку там дуже {сонячно|хмарно|темно} і тепло. Люди люблять плавати у {воді|піску|траві} і засмагати на {пляжі|даху|вулиці}. Через Київ тече велика {ріка|дорога|стежка} Дніпро. Навесні все цвіте і {зелене|біле|чорне}. Восени часто йде {дощ|сніг|сонце} і стає прохолодно. Тоді буває сильний {вітер|туман|мороз}. Але кожна {пора|година|хвилина} року по-своєму красива.
-  id: story-comprehension
+  passage: Україна має чудову {природу|погоду|роботу}. На заході є високі {гори|долини|міста}
+    Карпати. Там взимку падає {сніг|дощ|град} і люди катаються на лижах. На півдні
+    є Чорне {море|озеро|поле}. Влітку там дуже {сонячно|хмарно|темно} і тепло. Люди
+    люблять плавати у {воді|піску|траві} і засмагати на {пляжі|даху|вулиці}. Через
+    Київ тече велика {ріка|дорога|стежка} Дніпро. Навесні все цвіте і {зелене|біле|чорне}.
+    Восени часто йде {дощ|сніг|сонце} і стає прохолодно. Тоді буває сильний {вітер|туман|мороз}.
+    Але кожна {пора|година|хвилина} року по-своєму красива.
 - type: unjumble
   title: Weather Sentences
   items:
@@ -238,7 +240,6 @@
     - перед
     - собою
     answer: Яке величезне і красиве озеро ми бачимо перед собою
-  id: weather-sentences
 - type: error-correction
   title: Weather Mistakes
   items:
@@ -250,7 +251,8 @@
     - сніг
     - помилка
     - правильно
-    explanation: Snow and warm don't go together. Use «сонячно» (sunny) with warm weather.
+    explanation: Snow and warm don't go together. Use «сонячно» (sunny) with warm
+      weather.
   - sentence: Ми плаваємо в горі.
     error: горі
     answer: озері
@@ -296,7 +298,6 @@
     - помилка
     - правильно
     explanation: Summer is warm (тепло), not cold.
-  id: weather-mistakes
 - type: match-up
   title: Seasons & Activities
   pairs:
@@ -320,7 +321,6 @@
     right: лижі
   - left: літо
     right: плавання
-  id: seasons-&-activities
 - type: group-sort
   title: Nature Categories
   groups:
@@ -346,7 +346,6 @@
     - літо
     - осінь
     - зима
-  id: nature-categories
 - type: true-false
   title: Nature Facts
   items:
@@ -374,7 +373,6 @@
     correct: true
   - statement: «Долина» = mountain.
     correct: false
-  id: nature-facts
 - type: translate
   title: Nature Words
   items:
@@ -442,4 +440,3 @@
       correct: false
     - text: весна
       correct: false
-  id: nature-words

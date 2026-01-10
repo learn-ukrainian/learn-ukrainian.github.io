@@ -25,7 +25,6 @@
     right: найстаріший
   - left: молодший
     right: наймолодший
-  id: superlative-forms
 - type: cloze
   title: Form the Superlative
   passage: 'Це {найкраща|краща|добра|найдобріша} книга. (добрий) Він {найстаріший|старіший|старий|наймолодший}
@@ -43,7 +42,6 @@
     Це {найцікавіший|цікавіший|цікавий|надцікавий} фільм. (цікавий) Це {найважливіше|важливіше|важливе|надважливіше}
     рішення. (важливий) Вона {найталановитіша|талановитіша|талановита|надталановита}
     акторка. (талановитий)'
-  id: form-the-superlative
 - type: quiz
   title: Superlatives
   items:
@@ -179,7 +177,6 @@
       correct: false
     - text: They cannot form a superlative degree in standard Ukrainian
       correct: false
-  id: superlatives
 - type: true-false
   title: Superlative Rules
   items:
@@ -219,7 +216,6 @@
   - statement: Different prefixes are used for different adjectives.
     correct: false
     explanation: Always най-, no variation.
-  id: superlative-rules
 - type: group-sort
   title: Comparative vs Superlative
   groups:
@@ -239,7 +235,6 @@
     - найвищий
     - найдовший
     - найдорожчий
-  id: comparative-vs-superlative
 - type: unjumble
   title: Superlative Sentences
   items:
@@ -375,7 +370,6 @@
     - українських
     - Карпатах
     answer: Говерла найвища і найпопулярніша гора в українських Карпатах
-  id: superlative-sentences
 - type: error-correction
   title: Form the Superlative
   items:
@@ -433,7 +427,6 @@
     - довга
     - наддовга
     explanation: Superlative of довга is найдовша.
-  id: form-the-superlative
 - type: cloze
   title: World Records
   passage: 'Україна — {найкраща|краща|добра} країна в Європі за територією. {найкращий|кращий|добрий}
@@ -447,10 +440,8 @@
     хлопець у школі! Це був {найкращий|кращий|хороший} день у моєму житті! Я був {найщасливіша|щасливіша|щаслива}
     щаслива людина. Ми бачили {найгарніші|гарніші|гарні} краєвиди і {найвищі|вищі|високі}
     гори.'
-  id: world-records
 - type: mark-the-words
   title: Find Superlatives
-  id: find-superlatives
   passage: 'Click on SUPERLATIVE forms only.
 
     Це *найкраща* книга! Він *найстаріший* студент. Україна — *найбільша* країна.
@@ -523,4 +514,3 @@
       correct: false
     - text: Найвищий гора
       correct: false
-  id: superlative-translation

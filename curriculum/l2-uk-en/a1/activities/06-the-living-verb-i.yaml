@@ -18,7 +18,6 @@
     right: to think
   - left: грати
     right: to play
-  id: infinitive-to-english
 - type: quiz
   title: Conjugation Recognition
   items:
@@ -154,7 +153,6 @@
     - text: писат-
       correct: false
     explanation: писати → пиш-
-  id: conjugation-recognition
 - type: group-sort
   title: Person and Form
   groups:
@@ -176,7 +174,6 @@
     - вона читає
     - він знає
     - вона знає
-  id: person-and-form
 - type: fill-in
   title: Complete the Sentence
   items:
@@ -264,7 +261,6 @@
     - відпочиваєш
     - відпочиває
     - відпочивають
-  id: complete-the-sentence
 - type: true-false
   title: Verb Rules
   items:
@@ -278,13 +274,13 @@
       shows who's acting.
     correct: true
     explanation: Correct! «Читаю» = "I read" — the ending -ю tells you it's «я».
-  - statement: '«Писати» keeps the stem «писа-» in all forms.'
+  - statement: «Писати» keeps the stem «писа-» in all forms.
     correct: false
     explanation: 'Incorrect! It changes to «пиш-»: пишу, пишеш, пише.'
   - statement: The ending -ють is used for «вони» (they).
     correct: true
     explanation: Correct! вони читають, працюють, гуляють.
-  - statement: '«Ми читаєте» is the correct form for "we read".'
+  - statement: «Ми читаєте» is the correct form for "we read".
     correct: false
     explanation: Incorrect! «Ми читаємо» (not -єте). -єте is for «ви».
   - statement: Verbs like читати, писати, працювати all follow the same conjugation
@@ -295,20 +291,19 @@
     correct: false
     explanation: 'Incorrect! -ить is Second Conjugation. First Conjugation uses -є:
       він читає.'
-  - statement: '«Снідати», «обідати», «вечеряти» are all First Conjugation verbs related
-      to meals.'
+  - statement: «Снідати», «обідати», «вечеряти» are all First Conjugation verbs related
+      to meals.
     correct: true
     explanation: Correct! All three end in -ати and mean breakfast, lunch, dinner.
   - statement: The stem of «грати» is «гра-».
     correct: false
     explanation: Correct! грати → граю, граєш, грає. The stem is «гра-».
-  - statement: '«Співати» means "to sing".'
+  - statement: «Співати» means "to sing".
     correct: true
     explanation: Correct! співати = to sing.
   - statement: You must always use a pronoun with Ukrainian verbs.
     correct: false
     explanation: Incorrect! Pronouns are optional — the verb ending is enough.
-  id: verb-rules
 - type: anagram
   title: Build the Verb
   items:
@@ -336,7 +331,6 @@
     answer: чекати
   - scrambled: с н і д а т и
     answer: снідати
-  id: build-the-verb
 - type: anagram
   title: Build the Conjugated Form
   items:
@@ -364,7 +358,6 @@
     answer: чекаєте
   - scrambled: с н і д а ю т ь
     answer: снідають
-  id: build-the-conjugated-form
 - type: unjumble
   title: Build Verb Sentences
   items:
@@ -408,4 +401,3 @@
     - Вона
     - пісню
     answer: Вона співає пісню
-  id: build-verb-sentences

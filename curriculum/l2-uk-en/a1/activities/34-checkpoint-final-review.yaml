@@ -121,7 +121,6 @@
       correct: false
     - text: friend
       correct: false
-  id: cyrillic-mastery
 - type: match-up
   title: Gender Recognition
   pairs:
@@ -145,7 +144,6 @@
     right: feminine
   - left: '- друг'
     right: masculine
-  id: gender-recognition
 - type: fill-in
   title: Demonstrative Agreement
   items:
@@ -233,7 +231,6 @@
     - Ця
     - Це
     - Ці
-  id: demonstrative-agreement
 - type: fill-in
   title: Verb Tenses - Present
   items:
@@ -321,7 +318,6 @@
     - працюєш
     - працює
     - працюють
-  id: verb-tenses--present
 - type: fill-in
   title: Verb Tenses - Past
   items:
@@ -409,7 +405,6 @@
     - грала
     - грало
     - грали
-  id: verb-tenses--past
 - type: fill-in
   title: Case Usage
   items:
@@ -497,7 +492,6 @@
     - тата
     - татові
     - татом
-  id: case-usage
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -519,7 +513,6 @@
     - гарний
     - новий
     - старий
-  id: parts-of-speech
 - type: group-sort
   title: Gender Recognition
   groups:
@@ -541,7 +534,6 @@
     - місто
     - море
     - свято
-  id: gender-recognition
 - type: quiz
   title: Daily Life Situations
   items:
@@ -665,7 +657,6 @@
       correct: false
     - text: До побачення!
       correct: true
-  id: daily-life-situations
 - type: true-false
   title: A1 Knowledge Check
   items:
@@ -675,19 +666,19 @@
   - statement: All nouns ending in -а are masculine.
     correct: false
     explanation: False! They're usually feminine (книга, мама).
-  - statement: '«Я читав» indicates a male speaker.'
+  - statement: «Я читав» indicates a male speaker.
     correct: true
     explanation: True! Past tense -в ending is masculine.
-  - statement: '«Немає» requires genitive case.'
+  - statement: «Немає» requires genitive case.
     correct: true
     explanation: 'True! Немає + genitive: немає часу.'
-  - statement: '«Йде дощ» means "It''s cold."'
+  - statement: «Йде дощ» means "It's cold."
     correct: false
     explanation: False! It means "It's raining."
   - statement: Animate masculine accusative = genitive.
     correct: true
     explanation: True! студент → студента
-  - statement: '«Вдома» means "at home."'
+  - statement: «Вдома» means "at home."
     correct: true
     explanation: 'True! Compare: додому = "to home"'
   - statement: Numbers 2-4 use genitive plural.
@@ -696,16 +687,15 @@
   - statement: Ukrainian Christmas is now December 25.
     correct: true
     explanation: True! Since 2023, Ukraine celebrates on December 25.
-  - statement: '«Болить» is used for single body parts.'
+  - statement: «Болить» is used for single body parts.
     correct: true
     explanation: True! For plural, use «болять» (Болять очі).
-  - statement: '«Його» changes form based on noun gender.'
+  - statement: «Його» changes form based on noun gender.
     correct: false
     explanation: False! «Його» NEVER changes.
-  - statement: '«З Новим роком!» means "Happy New Year!"'
+  - statement: «З Новим роком!» means "Happy New Year!"
     correct: true
     explanation: True! A common holiday greeting.
-  id: a1-knowledge-check
 - type: unjumble
   title: Sentence Building
   items:
@@ -775,7 +765,6 @@
     - Києві
     - ми
     answer: Ми живемо у Києві.
-  id: sentence-building
 - type: match-up
   title: Time Expressions
   pairs:
@@ -799,4 +788,3 @@
     right: Today
   - left: '- Щодня'
     right: Every day
-  id: time-expressions

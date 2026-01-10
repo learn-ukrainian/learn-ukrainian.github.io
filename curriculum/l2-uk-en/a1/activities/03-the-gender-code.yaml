@@ -77,7 +77,7 @@
       correct: true
     - text: Plural
       correct: false
-    explanation: '«Море» ends in -е, so it''s neuter.'
+    explanation: «Море» ends in -е, so it's neuter.
   - question: Which noun is masculine?
     options:
     - text: хліб
@@ -88,7 +88,7 @@
       correct: false
     - text: кімната
       correct: false
-    explanation: '«Хліб» ends in a consonant, so it''s masculine.'
+    explanation: «Хліб» ends in a consonant, so it's masculine.
   - question: Which noun is feminine?
     options:
     - text: стіл
@@ -99,7 +99,7 @@
       correct: false
     - text: море
       correct: false
-    explanation: '«Школа» ends in -а, so it''s feminine.'
+    explanation: «Школа» ends in -а, so it's feminine.
   - question: Can you predict gender from the ending 95% of the time?
     options:
     - text: 'Yes'
@@ -132,8 +132,7 @@
       correct: true
     - text: магазин
       correct: false
-    explanation: '«Яблуко» ends in -о, so it''s neuter.'
-  id: gender-recognition
+    explanation: «Яблуко» ends in -о, so it's neuter.
 - type: match-up
   title: Gender Pairs
   pairs:
@@ -161,7 +160,6 @@
     right: apple
   - left: стілець
     right: chair
-  id: gender-pairs
 - type: group-sort
   title: Sort by Gender
   groups:
@@ -200,7 +198,6 @@
     - яблуко
     - крісло
     - ліжко
-  id: sort-by-gender
 - type: fill-in
   title: Complete with Gender
   items:
@@ -288,7 +285,6 @@
     - Апельсин
     - Огірок
     - Яблуко
-  id: complete-with-gender
 - type: true-false
   title: Gender Rules
   items:
@@ -316,7 +312,7 @@
   - statement: Gender affects case endings.
     correct: true
     explanation: Correct! Masculine, feminine, and neuter have different case patterns.
-  - statement: '«Двері» has a gender.'
+  - statement: «Двері» has a gender.
     correct: false
     explanation: Incorrect! «Двері» is plural only and has no singular gender.
   - statement: Family 2 includes both masculine and neuter nouns.
@@ -325,10 +321,9 @@
   - statement: You must memorize gender for every noun.
     correct: false
     explanation: Incorrect! You can predict gender from the ending pattern.
-  - statement: '«Ім''я» is a special neuter noun (Family 4).'
+  - statement: «Ім'я» is a special neuter noun (Family 4).
     correct: true
     explanation: 'Correct! It changes stem in declension: ім''я → імені.'
-  id: gender-rules
 - type: anagram
   title: Build the Word
   items:
@@ -356,7 +351,6 @@
     answer: хліб
   - scrambled: в о д а
     answer: вода
-  id: build-the-word
 - type: anagram
   title: More Words
   items:
@@ -384,7 +378,6 @@
     answer: диван
   - scrambled: л і ж к о
     answer: ліжко
-  id: more-words
 - type: quiz
   title: Gender Pronoun Match
   items:
@@ -476,4 +469,3 @@
     - text: вони
       correct: false
     explanation: Крісло ends in -о → neuter → воно
-  id: gender-pronoun-match

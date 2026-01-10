@@ -21,7 +21,6 @@
     right: to have dinner
   - left: '- відпочивати'
     right: to rest
-  id: daily-actions
 - type: group-sort
   title: When Do We Do This?
   groups:
@@ -44,7 +43,6 @@
     - гуляти
     - лягати спати
     - --
-  id: when-do-we-do-this?
 - type: fill-in
   title: Reflexive Verb Forms
   items:
@@ -104,7 +102,6 @@
     - дивишся
     - дивиться
     - дивляться
-  id: reflexive-verb-forms
 - type: fill-in
   title: Sequence Words
   items:
@@ -164,7 +161,6 @@
     - потім
     - спочатку
     - нарешті
-  id: sequence-words
 - type: quiz
   title: Daily Routine
   items:
@@ -248,7 +244,6 @@
       correct: false
     - text: Never I rest.
       correct: false
-  id: daily-routine
 - type: quiz
   title: Reflexive Understanding
   items:
@@ -332,7 +327,6 @@
       correct: false
     - text: -ти
       correct: false
-  id: reflexive-understanding
 - type: unjumble
   title: Daily Routine
   items:
@@ -372,38 +366,36 @@
     - телевізор
     - дивимося
     answer: Зазвичай ми дивимося телевізор
-  id: daily-routine
 - type: true-false
   title: Daily Routine Facts
   items:
-  - statement: '«Прокидатися» is a reflexive verb.'
+  - statement: «Прокидатися» is a reflexive verb.
     correct: true
-  - statement: '«Снідати» is a reflexive verb.'
+  - statement: «Снідати» is a reflexive verb.
     correct: false
     explanation: Incorrect! it's not reflexive
-  - statement: '«Спочатку» means "first" or "at first".'
+  - statement: «Спочатку» means "first" or "at first".
     correct: true
-  - statement: '«Нарешті» means "never".'
+  - statement: «Нарешті» means "never".
     correct: false
     explanation: Incorrect! it means "finally"
   - statement: '"-Ся" is added to show an action done to oneself.'
     correct: true
-  - statement: '«Щодня» means "sometimes".'
+  - statement: «Щодня» means "sometimes".
     correct: false
     explanation: Incorrect! it means "every day"
-  - statement: '«Зазвичай» means "usually".'
+  - statement: «Зазвичай» means "usually".
     correct: true
-  - statement: '«Повертатися» means "to leave".'
+  - statement: «Повертатися» means "to leave".
     correct: false
     explanation: Incorrect! it means "to return"
-  - statement: '«Засинати» means "to fall asleep".'
+  - statement: «Засинати» means "to fall asleep".
     correct: true
-  - statement: '«Виходити» means "to enter".'
+  - statement: «Виходити» means "to enter".
     correct: false
     explanation: Incorrect! it means "to go out"
-  - statement: '«Звичка» means "habit".'
+  - statement: «Звичка» means "habit".
     correct: true
-  - statement: '«Завжди» means "never".'
+  - statement: «Завжди» means "never".
     correct: false
     explanation: Incorrect! it means "always"
-  id: daily-routine-facts

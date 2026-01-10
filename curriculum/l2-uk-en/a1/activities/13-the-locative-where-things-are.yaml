@@ -133,7 +133,6 @@
     - text: під
       correct: false
     explanation: Open space (beach) uses на.
-  id: where-is-it?
 - type: match-up
   title: Places and Locations
   pairs:
@@ -155,7 +154,6 @@
     right: station
   - left: зупинка
     right: stop
-  id: places-and-locations
 - type: fill-in
   title: Complete the Locative
   items:
@@ -244,7 +242,6 @@
     - кафу
     - кафею
     explanation: 'Note: кафе is neuter and doesn''t change in locative.'
-  id: complete-the-locative
 - type: group-sort
   title: в/у or на?
   groups:
@@ -264,7 +261,6 @@
     - на зупинці
     - на вулиці
     - на площі
-  id: в/у-or-на?
 - type: true-false
   title: Locative Rules
   items:
@@ -274,7 +270,7 @@
   - statement: Locative case is used to show direction (where you're going).
     correct: false
     explanation: Incorrect! Locative shows LOCATION. Direction uses accusative.
-  - statement: '«У» and «в» are the same preposition, just different forms.'
+  - statement: «У» and «в» are the same preposition, just different forms.
     correct: true
     explanation: Correct! «У» is used before consonant clusters for easier pronunciation.
   - statement: All cities use «на» (e.g., на Києві).
@@ -290,7 +286,7 @@
     correct: true
     explanation: Correct! Russian uses «на» to imply Ukraine is just a borderland
       region.
-  - statement: '«На роботі» is a fixed expression.'
+  - statement: «На роботі» is a fixed expression.
     correct: true
     explanation: Correct! You always say «на роботі», never «в роботі».
   - statement: You can use locative case without a preposition in questions.
@@ -300,14 +296,13 @@
   - statement: Events (concerts, meetings) use «на».
     correct: true
     explanation: Correct! на концерті, на зустрічі, на уроці.
-  - statement: '«На столі» means "to the table."'
+  - statement: «На столі» means "to the table."
     correct: false
     explanation: Incorrect! «На столі» means "ON the table" (location). Direction
       would be accusative.
   - statement: Some masculine nouns have -ові ending in locative for people.
     correct: true
     explanation: Correct! на батькові, на дідові (though less common in modern Ukrainian).
-  id: locative-rules
 - type: quiz
   title: Where Questions Order
   items:
@@ -443,7 +438,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Студенти у бібліотеці'
-  id: where-questions-order
 - type: fill-in
   title: Preposition Choice
   items:
@@ -531,7 +525,6 @@
     - на
     - у
     - при
-  id: preposition-choice
 - type: match-up
   title: Nominative to Locative
   pairs:
@@ -555,7 +548,6 @@
     right: у парку
   - left: ліфт
     right: у ліфті
-  id: nominative-to-locative
 - type: quiz
   title: Translation Practice
   items:
@@ -691,4 +683,3 @@
     - text: вони
       correct: false
     explanation: Floor levels use на.
-  id: translation-practice

@@ -25,7 +25,6 @@
     right: новіший
   - left: старий
     right: старіший
-  id: comparative-forms
 - type: cloze
   title: Form the Comparative
   passage: 'Він {старіший|старий|старший|найстаріший} за мене. (старий) Ця книга {цікавіша|цікава|цікавший|найцікавіша}.
@@ -42,7 +41,6 @@
 
     Ця ідея {гірша|погана|поганіша|найгірша}! (поганий) Ця кава {гарячіша|гаряча|гарячша|найгарячіша}.
     (гарячий) Він {молодший|молодий|молодіший|наймолодший} за брата. (молодий)'
-  id: form-the-comparative
 - type: quiz
   title: Comparatives
   items:
@@ -180,7 +178,6 @@
       correct: false
     explanation: Regular comparatives add -ший/-іший. Others like добрий → кращий
       are irregular.
-  id: comparatives
 - type: group-sort
   title: Regular vs Irregular
   groups:
@@ -200,7 +197,6 @@
     - менший
     - вищий
     - нижчий
-  id: regular-vs-irregular
 - type: unjumble
   title: Comparison Sentences
   items:
@@ -334,7 +330,6 @@
     - гіркий
     - чай
     answer: Гаряча кава завжди набагато смачніша ніж холодний гіркий чай
-  id: comparison-sentences
 - type: fill-in
   title: Form the Comparative
   items:
@@ -422,7 +417,6 @@
     - краща
     - добріша
     - добрійша
-  id: form-the-comparative
 - type: cloze
   title: Comparisons in Context
   passage: 'Цей новий ноутбук {старіша|старий → старіша|молодша} за той старий. Він
@@ -437,7 +431,6 @@
     → вища|нижча} і набагато {розумніша|розумний → розумніша|дурніша}. Але я {молодший|молодий
     → старіший} за неї і швидше бігаю. Ми дуже {кращі|добрий → кращі|гірші} друзі
     і завжди {допомагаємо|допомагати → допоможемо} один одному.'
-  id: comparisons-in-context
 - type: cloze
   title: Shopping Comparisons
   passage: '— {Яка машина краща?|Так, якість коштує.|Є щось дешевше?}
@@ -467,10 +460,8 @@
     — {Так, цей. Він трохи гірший, але дешевший.|Є щось дешевше?|Ця більша, але дорожча.}
 
     '
-  id: shopping-comparisons
 - type: mark-the-words
   title: Find Comparatives
-  id: find-comparatives
   passage: 'Click on COMPARATIVE adjective forms only.
 
     Цей телефон *кращий* і *швидший*. Він *новіший* за мій старий телефон. Але він
@@ -578,4 +569,3 @@
       correct: true
     - text: швидка
       correct: false
-  id: comparison-patterns

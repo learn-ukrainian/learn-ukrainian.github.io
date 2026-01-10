@@ -19,7 +19,6 @@
     right: bread
   - left: сир
     right: cheese
-  id: food-&-drinks-vocabulary
 - type: fill-in
   title: Shopping Phrases
   items:
@@ -107,7 +106,6 @@
     - супу
     - супом
     - супи
-  id: shopping-phrases
 - type: group-sort
   title: Food vs Non-Food Items
   groups:
@@ -127,7 +125,6 @@
     - картка
     - гроші
     - сумка
-  id: food-vs-non-food-items
 - type: quiz
   title: Shopping Situations
   items:
@@ -163,7 +160,7 @@
       correct: false
     - text: Де пакет?
       correct: false
-    explanation: '«Потрібен» for masculine «пакет».'
+    explanation: «Потрібен» for masculine «пакет».
   - question: How do you ask for the price?
     options:
     - text: Яка ціна?
@@ -196,7 +193,7 @@
       correct: false
     - text: Чек тут
       correct: false
-    explanation: '«Знижка» is a discount.'
+    explanation: «Знижка» is a discount.
   - question: What do you use for a big shopping?
     options:
     - text: візок
@@ -262,8 +259,7 @@
       correct: false
     - text: Дешево це
       correct: false
-    explanation: '«Дешево» is the adverb for cheap.'
-  id: shopping-situations
+    explanation: «Дешево» is the adverb for cheap.
 - type: true-false
   title: Shopping Culture
   items:
@@ -273,7 +269,7 @@
   - statement: You should never greet the salesperson in a small Ukrainian store.
     correct: false
     explanation: Incorrect! It's polite to greet them when entering and leaving.
-  - statement: '«Скільки коштує?» means "How much does it cost?"'
+  - statement: «Скільки коштує?» means "How much does it cost?"
     correct: true
     explanation: Correct! This is the standard phrase for asking prices.
   - statement: Bread (хліб) has no cultural significance in Ukraine.
@@ -288,22 +284,21 @@
   - statement: UNESCO recognizes Ukrainian borsch culture as endangered heritage.
     correct: true
     explanation: Correct! This recognition came in 2022.
-  - statement: '«Дешево» means "expensive."'
+  - statement: «Дешево» means "expensive."
     correct: false
     explanation: Incorrect! Дешево = cheap. Дорого = expensive.
-  - statement: '«Каса» is where you pay at a supermarket.'
+  - statement: «Каса» is where you pay at a supermarket.
     correct: true
     explanation: Correct! Каса = checkout/cashier.
   - statement: Ukrainians only use cash, never cards.
     correct: false
     explanation: Incorrect! Modern supermarkets accept card payments.
-  - statement: '«Офіціантка» is the feminine form of "waiter."'
+  - statement: «Офіціантка» is the feminine form of "waiter."
     correct: true
     explanation: Correct! офіціант (m), офіціантка (f).
   - statement: It's rude to ask «Ще щось?» (Anything else?) in a store.
     correct: false
     explanation: Incorrect! This is a standard polite question from salespeople.
-  id: shopping-culture
 - type: quiz
   title: Shopping Sentences Order
   items:
@@ -439,7 +434,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Магазин відчинено о восьмій'
-  id: shopping-sentences-order
 - type: match-up
   title: Non-Food Items
   pairs:
@@ -461,7 +455,6 @@
     right: basket
   - left: візок
     right: trolley
-  id: non-food-items
 - type: fill-in
   title: Café Dialogue
   items:
@@ -549,7 +542,6 @@
     - вино
     - виною
     - вину
-  id: café-dialogue
 - type: group-sort
   title: Beverages vs Food vs Items
   groups:
@@ -571,4 +563,3 @@
     - каса
     - пакет
     - картка
-  id: beverages-vs-food-vs-items

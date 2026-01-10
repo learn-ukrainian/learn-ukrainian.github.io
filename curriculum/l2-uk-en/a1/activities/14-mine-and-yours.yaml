@@ -17,7 +17,6 @@
     right: their
   - left: чий / чия / чиє
     right: whose
-  id: possessive-forms
 - type: group-sort
   title: Gender Agreement
   groups:
@@ -39,7 +38,6 @@
     - твоє море
     - наше місто
     - ваше ім'я
-  id: gender-agreement
 - type: quiz
   title: Choose the Correct Possessive
   items:
@@ -175,42 +173,41 @@
     - text: їхні
       correct: true
     explanation: їхні matches речі (plural)
-  id: choose-the-correct-possessive
 - type: true-false
   title: Possessive Rules
   items:
   - statement: The possessive «його» (his) never changes form.
     correct: true
     explanation: Correct! його is invariant — always його, regardless of the noun.
-  - statement: '«Моя» can be used with masculine nouns.'
+  - statement: «Моя» can be used with masculine nouns.
     correct: false
     explanation: Incorrect! моя is the feminine form. Use мій for masculine.
-  - statement: '«Їхній» changes to «їхня» for feminine nouns.'
+  - statement: «Їхній» changes to «їхня» for feminine nouns.
     correct: true
     explanation: Correct! їхній (m) → їхня (f) → їхнє (n) → їхні (pl)
-  - statement: '«Її» changes to «їй» for plural nouns.'
+  - statement: «Її» changes to «їй» for plural nouns.
     correct: false
     explanation: Incorrect! її is invariant — it never changes form.
-  - statement: '«Ваш» can mean both formal "your" (singular) and plural "your".'
+  - statement: «Ваш» can mean both formal "your" (singular) and plural "your".
     correct: true
     explanation: Correct! ваш = formal singular OR plural, depending on context.
-  - statement: '«Твій» is the informal form of "your".'
+  - statement: «Твій» is the informal form of "your".
     correct: true
     explanation: Correct! Use твій with friends, family, children. Use ваш for formal/plural.
-  - statement: '«Наш» is feminine.'
+  - statement: «Наш» is feminine.
     correct: false
     explanation: Incorrect! наш is masculine. Feminine = наша, neuter = наше, plural
       = наші.
   - statement: Possessive pronouns agree with the noun's gender and number.
     correct: true
     explanation: Correct! (Except його and її, which are frozen.)
-  - statement: '«Мій» can be used with neuter nouns.'
+  - statement: «Мій» can be used with neuter nouns.
     correct: false
     explanation: Incorrect! мій is masculine. Use моє for neuter.
-  - statement: '«Чий» (whose) also changes form to match the noun.'
+  - statement: «Чий» (whose) also changes form to match the noun.
     correct: true
     explanation: Correct! чий (m), чия (f), чиє (n), чиї (pl).
-  - statement: '«Його» and «її» are the only possessives in Ukrainian.'
+  - statement: «Його» and «її» are the only possessives in Ukrainian.
     correct: false
     explanation: 'Incorrect! Ukrainian has 7 possessive types: мій, твій, його, її,
       наш, ваш, їхній.'
@@ -218,7 +215,6 @@
     correct: true
     explanation: Correct! Ukrainians often say «Телефон на столі» (Phone is on the
       table) instead of «Мій телефон...» when obvious.
-  id: possessive-rules
 - type: fill-in
   title: Complete with Possessives
   items:
@@ -327,7 +323,6 @@
     - ваша
     - ваше
     - ваші
-  id: complete-with-possessives
 - type: quiz
   title: Possessive Sentence Order
   items:
@@ -496,7 +491,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це ваше слово'
-  id: possessive-sentence-order
 - type: group-sort
   title: Інваріантні vs Змінні
   groups:
@@ -516,7 +510,6 @@
     - їх (their)
     - Марка (Mark's)
     - Анни (Anna's)
-  id: інваріантні-vs-змінні
 - type: quiz
   title: Cultural Context
   items:
@@ -530,7 +523,7 @@
       correct: false
     - text: люди
       correct: false
-    explanation: '«Родина» is a very common Ukrainian word for family.'
+    explanation: «Родина» is a very common Ukrainian word for family.
   - question: Which pronoun refers to "our house"?
     options:
     - text: наш
@@ -585,7 +578,7 @@
       correct: false
     - text: car
       correct: false
-    explanation: '«Родина» means family in Ukrainian.'
+    explanation: «Родина» means family in Ukrainian.
   - question: Which possessive never changes gender?
     options:
     - text: його
@@ -652,4 +645,3 @@
     - text: my city
       correct: false
     explanation: Наше means "our" (neuter).
-  id: cultural-context

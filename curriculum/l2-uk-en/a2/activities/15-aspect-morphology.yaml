@@ -25,7 +25,6 @@
     right: взяти
   - left: показувати
     right: показати
-  id: aspect-pairs
 - type: fill-in
   title: Identify the Pattern
   items:
@@ -127,7 +126,6 @@
     - на- prefix
     - по- prefix
     - suppletive
-  id: identify-the-pattern
 - type: quiz
   title: Aspect Formation
   items:
@@ -263,7 +261,6 @@
       correct: false
     - text: Suppletive pairs
       correct: false
-  id: aspect-formation
 - type: true-false
   title: Formation Rules
   items:
@@ -303,7 +300,6 @@
   - statement: All prefixes perfectivize without changing meaning.
     correct: false
     explanation: Different prefixes add different meanings!
-  id: formation-rules
 - type: group-sort
   title: Formation Patterns
   groups:
@@ -330,7 +326,6 @@
     - брати / взяти
     - гукати / гукнути
     - стрибати / стрибнути
-  id: formation-patterns
 - type: unjumble
   title: Aspect Pattern Sentences
   items:
@@ -468,7 +463,6 @@
     - цій
     - вулиці
     answer: Він раптом гукнув свого старого друга на цій вулиці
-  id: aspect-pattern-sentences
 - type: fill-in
   title: Find the Perfective
   items:
@@ -528,10 +522,8 @@
     - встати
     - постати
     - підстати
-  id: find-the-perfective
 - type: mark-the-words
   title: Identify Perfective Verbs
-  id: identify-perfective-verbs
   passage: 'Click on PERFECTIVE verbs only.
 
     Я *прочитав* книгу. Потім я *написав* рецензію. Він *сказав* правду. Вона довго
@@ -579,7 +571,6 @@
     right: знайти
   - left: купувати
     right: купити
-  id: suppletive-pairs
 - type: quiz
   title: Pattern Identification
   items:
@@ -670,4 +661,3 @@
       correct: false
     - text: Дієслово стає іменником
       correct: false
-  id: pattern-identification

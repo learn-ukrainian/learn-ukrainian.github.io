@@ -133,7 +133,6 @@
     - text: Я готель.
       correct: false
     explanation: 'Direction to building: в.'
-  id: navigation-basics
 - type: match-up
   title: City Vocabulary
   pairs:
@@ -155,7 +154,6 @@
     right: restaurant
   - left: метро
     right: metro
-  id: city-vocabulary
 - type: fill-in
   title: Complete the Directions
   items:
@@ -243,7 +241,6 @@
     - на автобусі
     - метро
     - на машині
-  id: complete-the-directions
 - type: fill-in
   title: Transportation Phrases
   items:
@@ -303,7 +300,6 @@
     - автобусом
     - автобус
     - в автобусі
-  id: transportation-phrases
 - type: true-false
   title: City Navigation Facts
   items:
@@ -311,44 +307,43 @@
       Dnipro.'
     correct: true
     explanation: Correct! Kyiv (1960), Kharkiv (1975), Dnipro (1995).
-  - statement: '«Прямо» means "turn left."'
+  - statement: «Прямо» means "turn left."
     correct: false
     explanation: Incorrect. «Прямо» means "straight" (forward).
   - statement: In Kyiv metro, female announcers indicate trains heading toward the
       center.
     correct: true
     explanation: Correct! Female voice = toward center, male voice = away from center.
-  - statement: '«Провулок» is a wide avenue.'
+  - statement: «Провулок» is a wide avenue.
     correct: false
     explanation: Incorrect. Провулок is a narrow lane or alley, not a wide street.
   - statement: Lviv is considered Ukraine's coffee capital.
     correct: true
     explanation: Correct! The first coffeehouse in Eastern Europe opened in Lviv in
       1574.
-  - statement: '«Навпроти» means "behind."'
+  - statement: «Навпроти» means "behind."
     correct: false
     explanation: Incorrect. «Навпроти» means "opposite" or "across from." «За» means
       "behind."
-  - statement: '«Пішки» means "on foot."'
+  - statement: «Пішки» means "on foot."
     correct: true
     explanation: Correct! Пішки = walking.
   - statement: All Ukrainian cities use marshrutky.
     correct: false
     explanation: Actually true! Marshrutky are ubiquitous across all Ukrainian cities,
       not just metro cities.
-  - statement: '«Станція» can refer to both metro and train stations.'
+  - statement: «Станція» can refer to both metro and train stations.
     correct: true
     explanation: Correct! Станція is the general word for "station."
-  - statement: '«Близько» and «далеко» are opposites.'
+  - statement: «Близько» and «далеко» are opposites.
     correct: false
     explanation: Correct! Близько = close/near, далеко = far.
   - statement: S.T.A.L.K.E.R. is a Ukrainian game set in the Chornobyl Exclusion Zone.
     correct: true
     explanation: Correct! Made by GSC Game World in Kyiv.
-  - statement: '«Метро» declines like other Ukrainian nouns.'
+  - statement: «Метро» declines like other Ukrainian nouns.
     correct: false
     explanation: Incorrect. Метро is indeclinable (doesn't change form).
-  id: city-navigation-facts
 - type: group-sort
   title: Directional vs. Locational
   groups:
@@ -368,7 +363,6 @@
     - Вони їдуть у Київ.
     - Я йду на площу.
     - Ти йдеш у школу.
-  id: directional-vs.-locational
 - type: group-sort
   title: Types of Urban Spaces
   groups:
@@ -388,7 +382,6 @@
     - кінотеатр
     - музей
     - театр
-  id: types-of-urban-spaces
 - type: quiz
   title: Directional Sentence Order
   items:
@@ -524,7 +517,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ні, це близько'
-  id: directional-sentence-order
 - type: match-up
   title: Question and Answer Pairs
   instruction: Match each question with the appropriate answer
@@ -545,36 +537,34 @@
     right: Біля світлофора, направо.
   - left: Скільки хвилин пішки?
     right: Десь десять хвилин.
-  id: question-and-answer-pairs
 - type: true-false
   title: Transportation Facts
   items:
-  - statement: '«Пішки» means "on foot."'
+  - statement: «Пішки» means "on foot."
     correct: true
     explanation: Correct! Пішки = walking.
   - statement: You say «автобус» to mean "by bus."
     correct: false
     explanation: Incorrect. You say «на автобусі».
-  - statement: '«Метро» is used alone without a preposition.'
+  - statement: «Метро» is used alone without a preposition.
     correct: true
     explanation: Correct! «Я їду метро» (I go by metro).
-  - statement: '«На машині» means "by bicycle."'
+  - statement: «На машині» means "by bicycle."
     correct: false
     explanation: Incorrect. «На машині» = by car. By bicycle = «на велосипеді.»
   - statement: You use locative case (на + Loc) for most vehicles.
     correct: true
     explanation: Correct! На автобусі, на трамваї, на велосипеді.
-  - statement: '«Трамвай» and «трамваї» are the same form.'
+  - statement: «Трамвай» and «трамваї» are the same form.
     correct: false
     explanation: Incorrect. «Трамвай» is nominative, «трамваї» is locative (used after
       «на»).
-  - statement: '«На таксі» is the correct way to say "by taxi."'
+  - statement: «На таксі» is the correct way to say "by taxi."
     correct: true
     explanation: Correct! Таксі is indeclinable, so use «на таксі.»
   - statement: You can say «їду в автобусі» to mean "I go by bus."
     correct: false
     explanation: Incorrect. Use «їду на автобусі» (на, not в) for transportation.
-  id: transportation-facts
 - type: quiz
   title: Transportation Phrases Order
   items:
@@ -710,4 +700,3 @@
     - text: вони
       correct: false
     explanation: 'Correct: На перехресті ідіть наліво'
-  id: transportation-phrases-order

@@ -19,7 +19,6 @@
     right: '90'
   - left: сто
     right: '100'
-  id: numbers-and-words
 - type: fill-in
   title: Complete with Numbers
   items:
@@ -107,7 +106,6 @@
     - два
     - дванадцять
     - сто
-  id: complete-with-numbers
 - type: quiz
   title: Number Grammar
   items:
@@ -243,7 +241,6 @@
     - text: копійка
       correct: false
     explanation: гривня (hryvnia) is the current currency
-  id: number-grammar
 - type: true-false
   title: Money Facts
   items:
@@ -257,7 +254,7 @@
   - statement: The number 2 has different forms for different genders.
     correct: true
     explanation: Correct! два (m/n) vs дві (f)
-  - statement: '«Дорого» means "cheap."'
+  - statement: «Дорого» means "cheap."
     correct: false
     explanation: Incorrect! «Дорого» means expensive. «Дешево» means cheap.
   - statement: The hryvnia symbol is ₴.
@@ -266,7 +263,7 @@
   - statement: Bargaining is not common in Ukrainian supermarkets.
     correct: true
     explanation: Correct! Prices are fixed in shops.
-  - statement: '«Готівка» means "card."'
+  - statement: «Готівка» means "card."
     correct: false
     explanation: Incorrect! «Готівка» means cash. «Картка» means card.
   - statement: The word «гривня» dates back to Kyivan Rus'.
@@ -275,7 +272,7 @@
   - statement: Numbers 5-20 use nominative case.
     correct: false
     explanation: Incorrect! They use genitive plural.
-  - statement: '«Скільки коштує?» is the phrase for asking prices.'
+  - statement: «Скільки коштує?» is the phrase for asking prices.
     correct: true
     explanation: Correct! Essential shopping phrase.
   - statement: One hundred is «дев'яносто.»
@@ -285,7 +282,6 @@
     correct: true
     explanation: Correct! Each denomination honors Ukrainian leaders and cultural
       icons.
-  id: money-facts
 - type: group-sort
   title: Number Categories
   groups:
@@ -307,7 +303,6 @@
     - десять студентів
     - двадцять вікон
     - сто книг
-  id: number-categories
 - type: quiz
   title: Shopping Sentences Order
   items:
@@ -443,7 +438,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Всього сто гривень'
-  id: shopping-sentences-order
 - type: fill-in
   title: Shopping Dialogue
   items:
@@ -504,7 +498,6 @@
     - решта
     - знижка
     - картка
-  id: shopping-dialogue
 - type: match-up
   title: Shopping Vocabulary
   pairs:
@@ -526,7 +519,6 @@
     right: discount
   - left: каса
     right: checkout
-  id: shopping-vocabulary
 - type: quiz
   title: Currency and Numbers
   items:
@@ -573,7 +565,7 @@
       correct: false
     - text: одне гривня
       correct: false
-    explanation: '«Гривня» is feminine.'
+    explanation: «Гривня» is feminine.
   - question: How do you accurately say "Two hryvnias"?
     options:
     - text: дві гривні
@@ -662,4 +654,3 @@
     - text: тридцять
       correct: false
     explanation: П'ятдесят is fifty.
-  id: currency-and-numbers

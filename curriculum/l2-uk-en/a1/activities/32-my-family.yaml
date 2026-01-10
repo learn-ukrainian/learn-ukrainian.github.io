@@ -21,7 +21,6 @@
     right: son
   - left: '- дочка'
     right: daughter
-  id: family-members
 - type: match-up
   title: More Family
   pairs:
@@ -45,7 +44,6 @@
     right: boyfriend
   - left: '- дівчина'
     right: girlfriend
-  id: more-family
 - type: group-sort
   title: Generations
   groups:
@@ -68,7 +66,6 @@
     - онук
     - онучка
     - --
-  id: generations
 - type: group-sort
   title: Gender of Family Terms
   groups:
@@ -89,7 +86,6 @@
     - дочка
     - дружина
     - --
-  id: gender-of-family-terms
 - type: fill-in
   title: Моя сім'я (My Family)
   items:
@@ -177,7 +173,6 @@
     - старша
     - молодша
     - середня
-  id: моя-сім'я-(my-family)
 - type: fill-in
   title: Possessives with Family
   items:
@@ -265,7 +260,6 @@
     - твого
     - твоя
     - твої
-  id: possessives-with-family
 - type: quiz
   title: Who Is Who?
   items:
@@ -349,7 +343,6 @@
       correct: false
     - text: Онучка
       correct: false
-  id: who-is-who?
 - type: quiz
   title: Marital Status
   items:
@@ -433,7 +426,6 @@
       correct: false
     - text: Брат
       correct: false
-  id: marital-status
 - type: unjumble
   title: Family Sentences
   items:
@@ -506,36 +498,34 @@
     - як
     - твого
     answer: Як звати твого тата
-  id: family-sentences
 - type: true-false
   title: Family Facts
   items:
-  - statement: '«Тато» is informal for "father.".'
+  - statement: «Тато» is informal for "father.".
     correct: true
-  - statement: '«Батько» is informal for "father.".'
+  - statement: «Батько» is informal for "father.".
     correct: false
     explanation: Incorrect! it's formal
-  - statement: '«Дідусь» means "grandfather.".'
+  - statement: «Дідусь» means "grandfather.".
     correct: true
-  - statement: '«Бабуся» means "aunt.".'
+  - statement: «Бабуся» means "aunt.".
     correct: false
     explanation: Incorrect! it means "grandmother"
-  - statement: '«Двоюрідний брат» means "male cousin.".'
+  - statement: «Двоюрідний брат» means "male cousin.".
     correct: true
   - statement: Ukrainians use different words for male and female cousins.
     correct: true
-  - statement: '«Одружена» is for men.'
+  - statement: «Одружена» is for men.
     correct: false
     explanation: Incorrect! it's for women
-  - statement: '«Наречений» means "fiancé.".'
+  - statement: «Наречений» means "fiancé.".
     correct: true
-  - statement: '«Діти» is the plural of «дитина.».'
+  - statement: «Діти» is the plural of «дитина.».
     correct: true
-  - statement: '«Чоловік» only means "husband.".'
+  - statement: «Чоловік» only means "husband.".
     correct: false
     explanation: Incorrect! it also means "man"
-  - statement: '«Сім''я» and «родина» both mean "family.".'
+  - statement: «Сім'я» and «родина» both mean "family.".
     correct: true
-  - statement: '«Молодший» means "younger.".'
+  - statement: «Молодший» means "younger.".
     correct: true
-  id: family-facts

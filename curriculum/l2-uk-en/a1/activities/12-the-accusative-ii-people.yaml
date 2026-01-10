@@ -17,7 +17,6 @@
     right: grandfather
   - left: бабуся
     right: grandmother
-  id: people-in-your-life
 - type: group-sort
   title: Animate vs Inanimate
   groups:
@@ -37,7 +36,6 @@
     - паспорт
     - квиток
     - поїзд
-  id: animate-vs-inanimate
 - type: quiz
   title: Accusative Endings
   items:
@@ -173,7 +171,6 @@
     - text: другом
       correct: false
     explanation: Animate masculine consonant → -а
-  id: accusative-endings
 - type: true-false
   title: Animate Accusative Rules
   items:
@@ -184,13 +181,13 @@
     correct: false
     explanation: Incorrect! Feminine animate nouns use the same -у/-ю pattern as inanimate
       nouns.
-  - statement: '«Я бачу студента» is correct.'
+  - statement: «Я бачу студента» is correct.
     correct: true
     explanation: 'Correct! Animate masculine: студент → студента.'
-  - statement: '«Я знаю лікар» is correct.'
+  - statement: «Я знаю лікар» is correct.
     correct: false
     explanation: Incorrect! Should be «лікаря».
-  - statement: '«Вона чекає подругу» is correct.'
+  - statement: «Вона чекає подругу» is correct.
     correct: true
     explanation: 'Correct! Feminine accusative: подруга → подругу.'
   - statement: Inanimate masculine nouns change in accusative case.
@@ -199,22 +196,21 @@
   - statement: The animate-inanimate distinction only affects masculine nouns.
     correct: true
     explanation: Correct! Feminine nouns follow the same pattern regardless of animacy.
-  - statement: '«Він бачить водія» is correct.'
+  - statement: «Він бачить водія» is correct.
     correct: true
     explanation: 'Correct! Animate masculine: водій → водія.'
-  - statement: '«Ми чекаємо вчитель» is correct.'
+  - statement: «Ми чекаємо вчитель» is correct.
     correct: false
     explanation: Incorrect! Should be «вчителя».
   - statement: Accusative = genitive for masculine animate nouns.
     correct: true
     explanation: Correct! This is the key rule for animate objects.
-  - statement: '«Я люблю директор» is correct.'
+  - statement: «Я люблю директор» is correct.
     correct: false
     explanation: Incorrect! Should be «директора».
-  - statement: '«Ти знаєш мою сусідку» is correct.'
+  - statement: «Ти знаєш мою сусідку» is correct.
     correct: true
     explanation: 'Correct! Feminine accusative: сусідка → сусідку.'
-  id: animate-accusative-rules
 - type: fill-in
   title: Complete with Animate Accusative
   items:
@@ -316,7 +312,6 @@
     - сусідку
     - сусідки
     - сусідці
-  id: complete-with-animate-accusative
 - type: fill-in
   title: Sentences in Context
   items:
@@ -404,7 +399,6 @@
     - гостя
     - гостю
     - гості
-  id: sentences-in-context
 - type: quiz
   title: Sentences with Animate Objects
   items:
@@ -540,7 +534,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він знає цю студентку з школи'
-  id: sentences-with-animate-objects
 - type: quiz
   title: More Complex Sentence Order
   items:
@@ -632,4 +625,3 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона бачить офіціанта та офіціантку'
-  id: more-complex-sentence-order

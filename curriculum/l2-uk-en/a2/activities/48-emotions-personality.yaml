@@ -82,7 +82,6 @@
       correct: false
     - text: They are fearful
       correct: false
-  id: emotion-recognition
 - type: cloze
   title: Complete the Sentences
   passage: 'Я дуже {радий|сумний|злий|веселий}_ бачити тебе! Вона {сумує|радіє|боїться|хвилюється}_
@@ -100,7 +99,6 @@
 
     Вона {стурбована|стурбований|стурбоване|стурбовані}_ новинами з дому. Ми {дивувалися|дивувався|дивувалася|дивувалося}_
     його таланту. Він був {сміливим|сміливий|смілива|сміливе}_ воїном.'
-  id: complete-the-sentences
 - type: match-up
   title: Emotions and Opposites
   pairs:
@@ -128,7 +126,6 @@
     right: дурний
   - left: сміливий
     right: боягузливий
-  id: emotions-and-opposites
 - type: true-false
   title: Personality and Emotions
   items:
@@ -168,7 +165,6 @@
   - statement: «Почуватися» is used to express feelings.
     correct: true
     explanation: Я почуваюся добре = I feel well.
-  id: personality-and-emotions
 - type: group-sort
   title: Positive vs Negative Traits
   groups:
@@ -190,7 +186,6 @@
     - 'нетерплячий: Negative Traits'
     - 'недобрий: Negative Traits'
     - 'нечесний: Negative Traits'
-  id: positive-vs-negative-traits
 - type: unjumble
   title: Emotion Sentences
   items:
@@ -276,7 +271,6 @@
     - світ
     - накраще
     answer: Сміливі люди можуть змінити цей великий світ накраще
-  id: emotion-sentences
 - type: error-correction
   title: Fix the Mistakes
   items:
@@ -388,7 +382,6 @@
     - добра
     - добрий
     explanation: 'Почуватися + adverb: добре.'
-  id: fix-the-mistakes
 - type: cloze
   title: Story Completion
   passage: 'Марійка мала {чудовий|злий|лінивий} характер. Вона була дуже {доброю|злою|сумною}
@@ -408,10 +401,8 @@
     — Я {щаслива|сумна|зла} допомогти! — усміхнулася Марійка.
 
     Це була справжня {радість|журба|нудьга}. Тепер вони обидві {щасливі|сумні|злі}.'
-  id: story-completion
 - type: mark-the-words
   title: Find the Emotions
-  id: find-the-emotions
   passage: 'Марійка прокинулася з *радістю*. Сьогодні особливий день! Але потім вона
     відчула *страх* — екзамен о десятій. *Хвилювання* наростало. Вона згадала слова
     мами: «Будь *сміливою*!» Це додало їй сили. На екзамені все пішло добре. *Задоволення*
@@ -570,4 +561,3 @@
     - text: Інший варіант
       correct: false
     explanation: Стати + instrumental.
-  id: choose-the-correct-form

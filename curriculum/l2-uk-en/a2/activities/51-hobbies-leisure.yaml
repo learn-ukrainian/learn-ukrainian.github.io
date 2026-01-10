@@ -121,7 +121,6 @@
       correct: false
     - text: бігати
       correct: false
-  id: hobby-quiz
 - type: match-up
   title: Hobby Vocabulary
   pairs:
@@ -149,7 +148,6 @@
     right: to inspect/sightsee
   - left: писати
     right: to write
-  id: hobby-vocabulary
 - type: cloze
   title: My Hobbies
   passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_
@@ -166,7 +164,6 @@
 
     Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_.
     {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
-  id: my-hobbies
 - type: true-false
   title: Cultural Leisure
   items:
@@ -206,7 +203,6 @@
   - statement: «Гопак» is a Ukrainian dance.
     correct: true
     explanation: Famous energetic dance.
-  id: cultural-leisure
 - type: group-sort
   title: Activity Types
   groups:
@@ -229,7 +225,6 @@
     - 'театр: Places'
     - 'музей: Places'
     - 'сцена: Places'
-  id: activity-types
 - type: unjumble
   title: Weekend Sentences
   items:
@@ -350,7 +345,6 @@
     - сосновому
     - лісі
     answer: Наш великий намет стоїть у зеленому сосновому лісі
-  id: weekend-sentences
 - type: error-correction
   title: Fix the Hobby
   items:
@@ -462,7 +456,6 @@
     - світу
     - світі
     explanation: 'Instrumental: світом.'
-  id: fix-the-hobby
 - type: cloze
   title: Cultural Weekend
   passage: 'У суботу ми поїхали на {дачу|роботу|школу}. Там ми робили шашлик.
@@ -478,10 +471,8 @@
     Ми любимо такий {відпочинок|урок|сон}.
 
     Ввечері ми обговорювали {враження|проблеми|гроші} і пили {чай|воду|суп}.'
-  id: cultural-weekend
 - type: mark-the-words
   title: Hobbies Search
-  id: hobbies-search
   passage: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра
     любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки*
     на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
@@ -633,4 +624,3 @@
     - text: Інший варіант
       correct: false
     explanation: Pack (gather) suitcase.
-  id: choose-correct-verb

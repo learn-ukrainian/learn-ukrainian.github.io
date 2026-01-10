@@ -81,7 +81,6 @@
       correct: false
     - text: В офісі
       correct: false
-  id: reading-comprehension-(text-1)
 - type: quiz
   title: Reading Comprehension (Text 2 & 3)
   items:
@@ -165,7 +164,6 @@
       correct: false
     - text: Французький суп
       correct: false
-  id: reading-comprehension-(text-2-&-3)
 - type: true-false
   title: Listening Check
   items:
@@ -193,7 +191,6 @@
   - statement: Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.
     correct: false
     explanation: At school (*вчилися в школі*). They are childhood acquaintances.
-  id: listening-check
 - type: cloze
   title: Grammar Final Test
   passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. Я вранці ніколи не
@@ -210,7 +207,6 @@
 
     Він став успішним {директором|директор|директора|директору}_. Я дуже дякую {вам|вас|ви|вами}_.
     Наша машина стоїть біля {будинку|будинок|будинком|будинка}_.'
-  id: grammar-final-test
 - type: group-sort
   title: Skill Sort
   groups:
@@ -234,7 +230,6 @@
     - 'чути музику: Listening'
     - 'бачити рекламу: Reading'
     - 'надсилати смс: Writing'
-  id: skill-sort
 - type: match-up
   title: Definitions
   pairs:
@@ -262,7 +257,6 @@
     right: To remember
   - left: Розуміти
     right: To understand
-  id: definitions
 - type: unjumble
   title: Final Sentences
   items:
@@ -390,13 +384,11 @@
     - вже
     - скоро
     answer: На мою власну думку все обов'язково буде дуже добре вже скоро
-  id: final-sentences
 - type: mark-the-words
   title: Final Check
-  id: final-check
-  passage: '*Україна* — це країна. *Київ* — це столиця. *Дніпро* — це річка.
-    *Люди* люблять *свободу*. *Студент* читає книгу. *Лікар* лікує хворих. *Мама*
-    готує обід. *Сонце* світить. *Дощ* іде.'
+  passage: '*Україна* — це країна. *Київ* — це столиця. *Дніпро* — це річка. *Люди*
+    люблять *свободу*. *Студент* читає книгу. *Лікар* лікує хворих. *Мама* готує обід.
+    *Сонце* світить. *Дощ* іде.'
   correct_words:
   - Україна
   - Київ
@@ -532,7 +524,6 @@
       correct: false
     - text: Можливо пізніше.
       correct: false
-  id: fluency-test
 - type: translate
   title: Final Translation Challenge
   items:
@@ -584,4 +575,3 @@
       correct: false
     - text: Вона сказати, що...
       correct: false
-  id: final-translation-challenge

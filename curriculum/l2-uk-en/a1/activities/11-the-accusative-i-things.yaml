@@ -133,7 +133,6 @@
     - text: вікном
       correct: false
     explanation: Neuter stays the same
-  id: accusative-recognition
 - type: match-up
   title: Vocabulary Practice
   pairs:
@@ -153,7 +152,6 @@
     right: to open
   - left: закривати
     right: to close
-  id: vocabulary-practice
 - type: fill-in
   title: Transform to Accusative
   items:
@@ -241,7 +239,6 @@
     - коробку
     - коробки
     - коробці
-  id: transform-to-accusative
 - type: true-false
   title: Grammar Rules
   items:
@@ -275,13 +272,12 @@
   - statement: The accusative of «вікно» is «вікна».
     correct: false
     explanation: 'Incorrect! Neuter stays same: вікно'
-  - statement: '«Брати» uses accusative for the object.'
+  - statement: «Брати» uses accusative for the object.
     correct: true
     explanation: Correct! Він бере сумку
   - statement: All Ukrainian nouns change in accusative.
     correct: false
     explanation: Incorrect! Only feminine -а/-я change
-  id: grammar-rules
 - type: group-sort
   title: Gender and Accusative Changes
   groups:
@@ -301,7 +297,6 @@
     - документ → документ
     - вікно → вікно
     - море → море
-  id: gender-and-accusative-changes
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -389,7 +384,6 @@
     - береш
     - бере
     - беремо
-  id: complete-the-sentences
 - type: quiz
   title: Word Order Practice
   items:
@@ -525,7 +519,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми відправляємо посилку сьогодні'
-  id: word-order-practice
 - type: match-up
   title: Verb + Object Pairs
   pairs:
@@ -547,7 +540,6 @@
     right: подарунок
   - left: нести
     right: сумку
-  id: verb-+-object-pairs
 - type: quiz
   title: Longer Sentence Order
   items:
@@ -661,4 +653,3 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він обережно відкриває велику коробку'
-  id: longer-sentence-order

@@ -81,7 +81,6 @@
       correct: false
     - text: книга
       correct: false
-  id: tech-quiz
 - type: match-up
   title: Digital Terms
   pairs:
@@ -109,7 +108,6 @@
     right: message
   - left: блогер
     right: blogger
-  id: digital-terms
 - type: cloze
   title: Tech Sentences
   passage: 'Я забув свій {пароль|екран|стіл|кіт}_. Надішли мені {посилання|мишку|клавіатуру|каву}_
@@ -126,7 +124,6 @@
 
     Тут поганий {зв''язок|телефон|комп''ютер|стіл}_. Він завжди {онлайн|офлайн|вдома|спить}_.
     Постав мені {лайк|коментар|бан|дізлайк}_!'
-  id: tech-sentences
 - type: true-false
   title: Tech Facts
   items:
@@ -166,7 +163,6 @@
   - statement: Wifi is «вайфай» in Ukrainian.
     correct: true
     explanation: 'Phonetic borrowing: вайфай.'
-  id: tech-facts
 - type: group-sort
   title: Hardware vs Software
   groups:
@@ -189,7 +185,6 @@
     - 'шукати: Actions'
     - 'публікувати: Actions'
     - 'коментувати: Actions'
-  id: hardware-vs-software
 - type: unjumble
   title: Digital Sentences
   items:
@@ -277,7 +272,6 @@
     - дорогий
     - смартфон
     answer: Моя старенька бабуся тепер має сучасний і дорогий смартфон
-  id: digital-sentences
 - type: error-correction
   title: Fix the Tech
   items:
@@ -391,7 +385,6 @@
     - музики
     - музикою
     explanation: 'Accusative feminine: музику.'
-  id: fix-the-tech
 - type: cloze
   title: Digital Morning
   passage: 'Мій ранок починається зі {смартфона|книги|вікна}. Я вимикаю будильник
@@ -408,10 +401,8 @@
     Сьогодні треба написати {код|пісню|обід} для сайту.
 
     Ввечері я вимикаю {звук|світло|газ} і лягаю спати. Без {інтернету|сну|їжі} ніяк.'
-  id: digital-morning
 - type: mark-the-words
   title: Find the Gadgets
-  id: find-the-gadgets
   passage: Я люблю свій *смартфон*. Це мій головний *гаджет*. Вдома у мене є *ноутбук*
     і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*.
     У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*.
@@ -563,4 +554,3 @@
     - text: Інший варіант
       correct: false
     explanation: Online.
-  id: choose-best-word

@@ -21,16 +21,14 @@
     right: his own book
   - left: Він взяв його книгу.
     right: someone else's book
-  id: свій-vs-його
 - type: cloze
   title: Choose Свій or Його
   passage: Він читає {свою|його|її} книгу. Вона любить {свою|її|його} маму. Я бачив
     {його|свого|її} друга. Вони живуть у {своєму|їхньому|моєму} домі. Марія взяла
     {свою|її|його} сумку. Він допоміг {своїй|її|його} сестрі. Я люблю {її|своїх|його}
-    батьків. Вона говорить про {свою|її|його} роботу. Ми любимо {свою|нашу|їхню}
-    країну. Вони шукають {свої|їхні|наші} речі. Він бачить {свого|його|її} брата.
-    Вона миє {своє|її|його} обличчя.
-  id: choose-свій-or-його
+    батьків. Вона говорить про {свою|її|його} роботу. Ми любимо {свою|нашу|їхню} країну.
+    Вони шукають {свої|їхні|наші} речі. Він бачить {свого|його|її} брата. Вона миє
+    {своє|її|його} обличчя.
 - type: quiz
   title: Concept Check
   items:
@@ -59,13 +57,13 @@
   - question: What is the subtle but important difference between «Він любить його
       маму» and «Він любить свою маму»?
     options:
-    - text: '«Його» means someone else''s mother; «своя» means his own'
+    - text: «Його» means someone else's mother; «своя» means his own
       correct: true
     - text: There is no functional difference in standard Ukrainian
       correct: false
-    - text: '«Його» is formal; «своя» is familiar and casual'
+    - text: «Його» is formal; «своя» is familiar and casual
       correct: false
-    - text: '«Його» is only for objects; «своя» is for people'
+    - text: «Його» is only for objects; «своя» is for people
       correct: false
   - question: Which of the following statements correctly identifies how the pronoun
       «свій» is declined in a Ukrainian sentence?
@@ -122,7 +120,6 @@
       correct: false
     - text: я
       correct: false
-  id: concept-check
 - type: cloze
   title: Family Story
   passage: Марія готує у {своїй|своєму|своїм} кухні. Її мама приїхала зі {своїм|своєю|своїй}
@@ -131,7 +128,6 @@
     батьків. Мій брат розповів про {свій|свою|своє} день. Максим любить {свою|свої|свій}
     роботу. Ми цінуємо {свою|своє|свої} родину. Ви бачите {свої|своє|свою} помилки.
     Вони шукають {свої|своє|свою} речі. Сестра миє {своє|свої|свою} обличчя.
-  id: family-story
 - type: unjumble
   title: Possessive Sentences
   items:
@@ -215,7 +211,6 @@
     - старих
     - батьків
     answer: Ми щиро любимо своїх добрих старих батьків
-  id: possessive-sentences
 - type: error-correction
   title: Wrong Possessive
   items:
@@ -263,7 +258,7 @@
     - своєї
     - своєю
     - своїй
-    explanation: '«Любить» takes Accusative → свою.'
+    explanation: «Любить» takes Accusative → свою.
   - sentence: 'Петро бачив свою сестру Оксани. (Intended: Oksana''s sister)'
     error: свою
     answer: її
@@ -273,7 +268,6 @@
     - його
     - моїх
     explanation: Oksana is not the subject → її.
-  id: wrong-possessive
 - type: group-sort
   title: Declension Forms
   groups:
@@ -301,7 +295,6 @@
     - своїми друзями
     - своє обличчя
     - своїх успіхів
-  id: declension-forms
 - type: match-up
   title: Case Selection
   pairs:
@@ -325,7 +318,6 @@
     right: Accusative
   - left: Я живу зі своїм братом.
     right: Instrumental
-  id: case-selection
 - type: fill-in
   title: Interview Story
   items:
@@ -385,7 +377,6 @@
     - їхній
     - його
     - наш
-  id: interview-story
 - type: cloze
   title: Edge Cases
   passage: Він попросив мене взяти {свою|її|його} книгу. (one's own) Треба любити
@@ -395,4 +386,3 @@
     дім. Ти відкрив {своє|твоє|її} вікно. Ми знаємо {свої|наші|їхні} цілі. Ви купили
     {свою|вашу|їхню} машину. Вони чекають {своїх|їхніх|наших} друзів. Вона миє {свої|її|його}
     руки.
-  id: edge-cases

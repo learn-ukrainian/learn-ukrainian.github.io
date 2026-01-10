@@ -21,7 +21,6 @@
     right: nose
   - left: '- рот'
     right: mouth
-  id: body-parts
 - type: match-up
   title: Health Vocabulary
   pairs:
@@ -45,7 +44,6 @@
     right: cold (illness)
   - left: '- швидка допомога'
     right: ambulance
-  id: health-vocabulary
 - type: group-sort
   title: Body Parts
   groups:
@@ -68,7 +66,6 @@
     - палець
     - коліно
     - --
-  id: body-parts
 - type: group-sort
   title: Болить vs Болять
   groups:
@@ -89,7 +86,6 @@
     - руки
     - пальці
     - --
-  id: болить-vs-болять
 - type: fill-in
   title: Що болить? (What Hurts?)
   items:
@@ -177,7 +173,6 @@
     - рука
     - живіт
     - горло
-  id: що-болить?-(what-hurts?)
 - type: fill-in
   title: У лікаря (At the Doctor's)
   items:
@@ -265,7 +260,6 @@
     - аптека
     - лікаря
     - таблетка
-  id: у-лікаря-(at-the-doctor's)
 - type: quiz
   title: Болить or Болять?
   items:
@@ -349,7 +343,6 @@
       correct: false
     - text: болі
       correct: false
-  id: болить-or-болять?
 - type: quiz
   title: Health Situations
   items:
@@ -433,7 +426,6 @@
       correct: false
     - text: Doctor
       correct: false
-  id: health-situations
 - type: unjumble
   title: Health Sentences
   items:
@@ -500,44 +492,42 @@
     - погано
     - дуже
     answer: Мені дуже погано
-  id: health-sentences
 - type: true-false
   title: Health Facts
   items:
-  - statement: '«Болить» is used for singular body parts.'
+  - statement: «Болить» is used for singular body parts.
     correct: true
     explanation: Correct! Use болить for one body part.
-  - statement: '«Болять» is used for plural body parts.'
+  - statement: «Болять» is used for plural body parts.
     correct: true
     explanation: Correct! Use болять for multiple body parts.
-  - statement: '«Аптека» means "hospital."'
+  - statement: «Аптека» means "hospital."
     correct: false
     explanation: Incorrect! Аптека means "pharmacy." Hospital is «лікарня.»
-  - statement: '«Лікарня» means "hospital."'
+  - statement: «Лікарня» means "hospital."
     correct: true
     explanation: Correct!
-  - statement: '«Швидка допомога» means "pharmacy."'
+  - statement: «Швидка допомога» means "pharmacy."
     correct: false
     explanation: Incorrect! It means "ambulance" (literally "fast help").
-  - statement: '«У мене температура» means "I have a fever."'
+  - statement: «У мене температура» means "I have a fever."
     correct: true
     explanation: Correct!
-  - statement: '«Головні болі» uses «болить.»'
+  - statement: «Головні болі» uses «болить.»
     correct: false
     explanation: Incorrect! It uses «болять» because болі is plural.
-  - statement: '«Я хворий» means "I''m sick."'
+  - statement: «Я хворий» means "I'm sick."
     correct: true
     explanation: Correct!
   - statement: In Ukraine, you call 103 for an ambulance.
     correct: true
     explanation: Correct! 103 is the emergency number for medical help.
-  - statement: '«Хвора» is for men.'
+  - statement: «Хвора» is for men.
     correct: false
     explanation: Incorrect! Хвора is feminine. Men use «хворий.»
-  - statement: '«Ліки» is always plural.'
+  - statement: «Ліки» is always plural.
     correct: true
     explanation: Correct! Ліки has no singular form.
-  - statement: '«Зуб» is singular, «зуби» is plural.'
+  - statement: «Зуб» is singular, «зуби» is plural.
     correct: true
     explanation: Correct!
-  id: health-facts

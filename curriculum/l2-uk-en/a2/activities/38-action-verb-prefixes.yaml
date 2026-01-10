@@ -25,17 +25,20 @@
     right: toward/add
   - left: роз-
     right: apart/spread
-  id: the-transformers
 - type: cloze
   title: The Editor
-  passage: 'Я хочу {переписати|дописати|записати} цей текст. Ми повинні {переробити|доробити|зробити} цю роботу. Треба {перечитати|дочитати|почитати} книгу ще раз.
+  passage: 'Я хочу {переписати|дописати|записати} цей текст. Ми повинні {переробити|доробити|зробити}
+    цю роботу. Треба {перечитати|дочитати|почитати} книгу ще раз.
 
 
-    Стіна погана, треба {перефарбувати|пофарбувати|зафарбувати}. Посуд брудний, треба {перемити|помити|вимити}. Я хочу {передивитися|подивитися|задивитися} цей фільм.
+    Стіна погана, треба {перефарбувати|пофарбувати|зафарбувати}. Посуд брудний, треба
+    {перемити|помити|вимити}. Я хочу {передивитися|подивитися|задивитися} цей фільм.
 
 
-    Він вирішив {перездати|здати|видати} екзамен. Ми {перебудували|збудували|добудували} плани. Треба {переставити|поставити|виставити} меблі в кімнаті. Вона хоче {перевірити|вивірити|довірити} всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми словами. Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
-  id: the-editor
+    Він вирішив {перездати|здати|видати} екзамен. Ми {перебудували|збудували|добудували}
+    плани. Треба {переставити|поставити|виставити} меблі в кімнаті. Вона хоче {перевірити|вивірити|довірити}
+    всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми
+    словами. Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
 - type: fill-in
   title: The Perfectionist
   items:
@@ -95,7 +98,6 @@
     - закрив
     - розкрив
     - варіант А
-  id: the-perfectionist
 - type: group-sort
   title: Open vs Close
   groups:
@@ -115,7 +117,6 @@
     - Заплющити очі
     - Закоркувати вино
     - Замкнути замок
-  id: open-vs-close
 - type: quiz
   title: Meaning Check
   items:
@@ -199,7 +200,6 @@
       correct: false
     - text: To eat again (поїсти знову)
       correct: false
-  id: meaning-check
 - type: true-false
   title: Propaganda Check
   items:
@@ -219,7 +219,6 @@
     correct: true
   - statement: «Перенести» means to move something to a new place.
     correct: true
-  id: propaganda-check
 - type: cloze
   title: The Test
   passage: 'Студент складав іспит.
@@ -245,7 +244,6 @@
     Він {по|від|за|під}дзвонив батькам і {роз|від|по|пере}казав хороші новини.
 
     Вони були дуже раді і вирішили {від|по|роз|пере}святкувати його успіх.'
-  id: the-test
 - type: error-correction
   title: Fix the Verb
   items:
@@ -284,7 +282,8 @@
     - підписав
     - помилка
     - правильно
-    explanation: You open (відкрити) a door with a key. Signed (підписав) makes no sense.
+    explanation: You open (відкрити) a door with a key. Signed (підписав) makes no
+      sense.
   - sentence: 'Ми розробили ремонт. (Context: Massive redo/work)'
     error: розробили
     answer: зробили | переробили
@@ -293,7 +292,8 @@
     - зробили
     - розробили
     - помилка
-    explanation: Use «зробили» or «переробили» (redid). «Розробили» implies "developed/designed" which is weird for "repair".
+    explanation: Use «зробили» or «переробили» (redid). «Розробили» implies "developed/designed"
+      which is weird for "repair".
   - sentence: Я написав трохи, 5 хвилин.
     error: написав
     answer: пописав
@@ -303,7 +303,6 @@
     - помилка
     - правильно
     explanation: Brief process uses По-. «Написав» implies a result.
-  id: fix-the-verb
 - type: match-up
   title: Give and Take
   pairs:
@@ -327,7 +326,6 @@
     right: to pass/hand over
   - left: віддати
     right: to give back
-  id: give-and-take
 - type: unjumble
   title: The Office
   items:
@@ -400,4 +398,3 @@
     - офісі
     - успішно
     answer: Ми під'єднали інтернет сьогодні вранці в новому офісі успішно
-  id: the-office

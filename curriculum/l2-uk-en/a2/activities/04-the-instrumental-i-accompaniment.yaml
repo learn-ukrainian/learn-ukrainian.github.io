@@ -25,7 +25,6 @@
     right: собакою
   - left: кіт
     right: котом
-  id: nominative-to-instrumental
 - type: cloze
   title: Instrumental Endings
   passage: 'Я йду в кіно з {другом|друг|друга}. Вона розмовляє з {мамою|мама|мамі}.
@@ -42,7 +41,6 @@
 
     Я працюю з {колегою|колега|колегу} над проєктом. Вона п''є чай з {лимоном|лимон|лимона}.
     Він помирився з {сестрою|сестра|сестрі}.'
-  id: instrumental-endings
 - type: quiz
   title: Instrumental Forms
   items:
@@ -178,7 +176,6 @@
       correct: false
     - text: Вона одружилася з Петрові.
       correct: false
-  id: instrumental-forms
 - type: true-false
   title: Instrumental Rules
   items:
@@ -218,7 +215,6 @@
   - statement: «Ім'я» has an irregular instrumental form.
     correct: true
     explanation: Yes! Ім'я → ім'ям.
-  id: instrumental-rules
 - type: group-sort
   title: Gender by Instrumental Ending
   groups:
@@ -243,7 +239,6 @@
     - морем
     - полем
     - молоком
-  id: gender-by-instrumental-ending
 - type: unjumble
   title: Instrumental Sentences
   items:
@@ -307,7 +302,6 @@
     - минулого
     - тижня
     answer: Вона познайомилася з хлопцем на вечірці минулого тижня
-  id: instrumental-sentences
 - type: error-correction
   title: Fix the Instrumental
   items:
@@ -371,7 +365,6 @@
     - хлопцеві
     explanation: 'After the preposition «з», nouns take Instrumental case. Masculine
       soft-stem nouns take -ем: хлопець → хлопцем.'
-  id: fix-the-instrumental
 - type: cloze
   title: Complete the Story
   passage: 'У суботу ми пішли в ресторан {з батьками|з батьки|з батьків}. Марія прийшла
@@ -385,10 +378,8 @@
     з подругами. Минулого тижня вона {познайомилася|познайомитися|познайомлюсь} з
     хлопцем на вечірці. Тепер вони часто {гуляють|гуляти|гуляємо}. Вона {розмовляє|розмовляти|розмовляюсь}
     з батьками про нього. Може, вони {одружаться|одружуються|одружитися}?'
-  id: complete-the-story
 - type: mark-the-words
   title: Find Instrumental Forms
-  id: find-instrumental-forms
   passage: 'Click on all instrumental case forms.
 
     Я йду в кіно *з другом*. Вона розмовляє *з сестрою*. Ми живемо *з батьками*. Діти
@@ -485,4 +476,3 @@
     - text: Ти йдеш з мною?
       correct: false
     explanation: Instrumental зі мною.
-  id: english-to-ukrainian

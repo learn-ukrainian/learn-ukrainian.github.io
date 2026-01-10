@@ -25,7 +25,6 @@
     right: Health
   - left: знижка
     right: Shopping
-  id: vocabulary-categories
 - type: cloze
   title: Vocabulary Test
   passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
@@ -42,7 +41,6 @@
 
     Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
     (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
-  id: vocabulary-test
 - type: quiz
   title: A2 Vocabulary Quiz
   items:
@@ -168,7 +166,6 @@
       correct: false
     - text: Bathroom
       correct: false
-  id: a2-vocabulary-quiz
 - type: group-sort
   title: Vocabulary Domains
   groups:
@@ -196,7 +193,6 @@
     - квиток
     - готель
     - знижка
-  id: vocabulary-domains
 - type: true-false
   title: Vocabulary Rules
   items:
@@ -236,7 +232,6 @@
   - statement: «Вітальня» is the kitchen.
     correct: false
     explanation: No! Вітальня = living room, кухня = kitchen.
-  id: vocabulary-rules
 - type: cloze
   title: A Day in Life
   passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00.
@@ -262,7 +257,6 @@
     Я люблю {вивчати|забувати|втрачати} нові місця.
 
     Це буде чудова {поїздка|робота|хвороба}!'
-  id: a-day-in-life
 - type: unjumble
   title: Daily Routines
   items:
@@ -322,10 +316,8 @@
     - найближча
     - аптека
     answer: Вибачте скажіть де тут є найближча аптека
-  id: daily-routines
 - type: mark-the-words
   title: Find the Vocabulary
-  id: find-the-vocabulary
   passage: 'Click on the key vocabulary words.
 
     Вранці я *прокидаюся* о 7:00 і йду до *кухні*, щоб *снідати*.
@@ -352,7 +344,7 @@
 - type: translate
   title: English to Ukrainian
   items:
-  - source: 'I wake up at 7:00.'
+  - source: I wake up at 7:00.
     options:
     - text: Я прокидаюся о сьомій годині.
       correct: true
@@ -360,7 +352,7 @@
       correct: false
     - text: Інший варіант
       correct: false
-  - source: 'He works as a programmer.'
+  - source: He works as a programmer.
     options:
     - text: Він працює програмістом.
       correct: true
@@ -368,7 +360,7 @@
       correct: false
     - text: Інший варіант
       correct: false
-  - source: 'My head hurts.'
+  - source: My head hurts.
     options:
     - text: У мене болить голова.
       correct: true
@@ -376,7 +368,7 @@
       correct: false
     - text: Інший варіант
       correct: false
-  - source: 'I want to buy a ticket.'
+  - source: I want to buy a ticket.
     options:
     - text: Я хочу купити квиток.
       correct: true
@@ -384,7 +376,7 @@
       correct: false
     - text: Інший варіант
       correct: false
-  - source: 'She studies at the university.'
+  - source: She studies at the university.
     options:
     - text: Вона вчиться в університеті.
       correct: true
@@ -392,7 +384,7 @@
       correct: false
     - text: Інший варіант
       correct: false
-  - source: 'Can I pay by card?'
+  - source: Can I pay by card?
     options:
     - text: Можна заплатити карткою?
       correct: true
@@ -400,7 +392,6 @@
       correct: false
     - text: Інший варіант
       correct: false
-  id: english-to-ukrainian
 - type: translate
   title: Vocabulary Review Translation
   items:
@@ -452,4 +443,3 @@
       correct: false
     - text: Посуд
       correct: false
-  id: vocabulary-review-translation

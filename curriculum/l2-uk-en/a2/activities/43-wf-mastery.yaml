@@ -21,7 +21,6 @@
     right: писати, письмо
   - left: чит-
     right: читати, читання
-  id: root-match
 - type: group-sort
   title: Family Tree
   groups:
@@ -49,17 +48,20 @@
     - Науковий
     - Український
     - Читач
-  id: family-tree
 - type: cloze
   title: Logic Puzzle
-  passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами. Це [{розмова|промова|замовлення}]. Те, що ми думаємо. Це [{думка|слух|мова}].
+  passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами.
+    Це [{розмова|промова|замовлення}]. Те, що ми думаємо. Це [{думка|слух|мова}].
 
 
-    Офіційний виступ. Це [{промова|розмова|мовчання}]. Те, що ми робимо в ресторані. Це [{замовлення|промова|слух}]. Перекласти текст іншою мовою. Це [{переклад|перехід|перерва}].
+    Офіційний виступ. Це [{промова|розмова|мовчання}]. Те, що ми робимо в ресторані.
+    Це [{замовлення|промова|слух}]. Перекласти текст іншою мовою. Це [{переклад|перехід|перерва}].
 
 
-    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}]. Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}]. Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це [{мовець|слухач|мовчун}].'
-  id: logic-puzzle
+    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}].
+    Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}].
+    Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це
+    [{мовець|слухач|мовчун}].'
 - type: unjumble
   title: High Sentences
   items:
@@ -123,7 +125,6 @@
     - чудові
     - книги
     answer: Він має письменницький талант і пише чудові книги
-  id: high-sentences
 - type: quiz
   title: Formation Check
   items:
@@ -137,7 +138,8 @@
       correct: false
     - text: To whisper
       correct: false
-  - question: The Ukrainian word «Замовлення» (Order) contains which specific root component?
+  - question: The Ukrainian word «Замовлення» (Order) contains which specific root
+      component?
     options:
     - text: МОВ
       correct: true
@@ -177,7 +179,8 @@
       correct: false
     - text: Наукський
       correct: false
-  - question: Can you explain why the words «Вхід» and «Вихід» are typically paired together?
+  - question: Can you explain why the words «Вхід» and «Вихід» are typically paired
+      together?
     options:
     - text: They are opposites
       correct: true
@@ -207,7 +210,6 @@
       correct: false
     - text: Українські мова
       correct: false
-  id: formation-check
 - type: cloze
   title: The Conference
   passage: 'На сцені стоїть {промовець|співак|актор}.
@@ -235,7 +237,6 @@
     Ми напишемо {статтю|книгу|листа} про цю подію.
 
     Це гарна {тема|проблема|гра} для роздумів.'
-  id: the-conference
 - type: error-correction
   title: Wrong Logic
   items:
@@ -293,7 +294,6 @@
     - помилка
     - правильно
     explanation: A public speech is Pro-mova, not Roz-mova.
-  id: wrong-logic
 - type: match-up
   title: Opposites
   pairs:
@@ -317,7 +317,6 @@
     right: злий
   - left: швидкий
     right: повільний
-  id: opposites
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -340,7 +339,6 @@
     - Писати
     - Говорити
     - Обдумати
-  id: parts-of-speech
 - type: match-up
   title: Definitions II
   pairs:
@@ -364,4 +362,3 @@
     right: translator
   - left: письменник
     right: writer
-  id: definitions-ii

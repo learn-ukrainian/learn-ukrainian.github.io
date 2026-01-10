@@ -19,7 +19,6 @@
     right: was (m)
   - left: читав
     right: was reading (m)
-  id: past-tense-vocabulary
 - type: group-sort
   title: Gender Endings
   groups:
@@ -41,7 +40,6 @@
     - працювали
     - говорили
     - були
-  id: gender-endings
 - type: fill-in
   title: Complete with Past Tense
   items:
@@ -115,7 +113,6 @@
     - дивилася
     - дивилося
     - дивилися
-  id: complete-with-past-tense
 - type: quiz
   title: Understanding Past Tense
   items:
@@ -207,7 +204,6 @@
     - text: Ми були
       correct: true
     explanation: Plural subjects use -ли ending
-  id: understanding-past-tense
 - type: unjumble
   title: Build Past Tense Sentences
   items:
@@ -247,17 +243,16 @@
     - по
     - говорила
     answer: Вона говорила по телефону
-  id: build-past-tense-sentences
 - type: true-false
   title: Past Tense Facts
   items:
   - statement: The past tense ending -в is used for masculine subjects.
     correct: true
     explanation: Correct! -в is the masculine singular ending.
-  - statement: '«Вона працював» is grammatically correct.'
+  - statement: «Вона працював» is grammatically correct.
     correct: false
     explanation: Wrong gender! It should be «Вона працювала.»
-  - statement: '«Вчора» means "tomorrow."'
+  - statement: «Вчора» means "tomorrow."
     correct: false
     explanation: Вчора means yesterday, not tomorrow.
   - statement: The past tense of «бути» for feminine is «була.»
@@ -266,16 +261,15 @@
   - statement: The verb «їсти» becomes «їв» in masculine past tense.
     correct: true
     explanation: Correct! Їсти → їв/їла/їло/їли.
-  - statement: '«Ми» uses the -ли ending in past tense.'
+  - statement: «Ми» uses the -ли ending in past tense.
     correct: true
     explanation: Correct! All plural subjects use -ли.
-  - statement: '«Давно» means "recently."'
+  - statement: «Давно» means "recently."
     correct: false
     explanation: Давно means "long ago." Недавно means "recently."
   - statement: The neuter past tense ending is -ло.
     correct: true
     explanation: Correct! Воно було, воно читало, воно працювало.
-  id: past-tense-facts
 - type: fill-in
   title: Transform to Past Tense
   items:
@@ -335,7 +329,6 @@
     - пила
     - пило
     - пили
-  id: transform-to-past-tense
 - type: quiz
   title: Time Expressions
   items:
@@ -427,4 +420,3 @@
     - text: Every week
       correct: false
     explanation: Минулого тижня = last week (genitive)
-  id: time-expressions

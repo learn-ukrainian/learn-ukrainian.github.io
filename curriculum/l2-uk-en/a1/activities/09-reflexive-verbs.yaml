@@ -17,7 +17,6 @@
     right: to wash face
   - left: одягатися
     right: to dress
-  id: reflexive-verbs-meanings
 - type: fill-in
   title: Conjugation Drill (Present Tense)
   items:
@@ -77,7 +76,6 @@
     - називаюсь
     - називаються
     - ми
-  id: conjugation-drill-(present-tense)
 - type: quiz
   title: Find the Mistake
   items:
@@ -169,7 +167,6 @@
     - text: вони
       correct: false
     explanation: 'Mistake: Вони (they) needs -ються.'
-  id: find-the-mistake
 - type: fill-in
   title: 'Dialogue: Morning Routine'
   items:
@@ -229,7 +226,6 @@
     - збираються
     - ми
     - вони
-  id: dialogue:-morning-routine
 - type: true-false
   title: Reflexive Concepts
   items:
@@ -257,7 +253,6 @@
   - statement: -ся always changes to -сь after consonants.
     correct: false
     explanation: Reverse! -ся after consonants, -сь after vowels.
-  id: reflexive-concepts
 - type: match-up
   title: Match Person to Verb
   pairs:
@@ -277,7 +272,6 @@
     right: дивлюсь
   - left: Ти (дивитися)
     right: дивишся
-  id: match-person-to-verb
 - type: quiz
   title: Context Quiz
   items:
@@ -369,7 +363,6 @@
     - text: вони
       correct: false
     explanation: Meet -> Зустрічатися.
-  id: context-quiz
 - type: fill-in
   title: Sentence Builder
   items:
@@ -429,4 +422,3 @@
     - дивишся
     - ми
     - вони
-  id: sentence-builder

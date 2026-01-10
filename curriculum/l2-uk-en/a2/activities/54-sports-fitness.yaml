@@ -11,8 +11,7 @@
       correct: false
     - text: Dancer
       correct: false
-  - question: When using the verb **займатися**, which grammatical
-      case must follow?
+  - question: When using the verb **займатися**, which grammatical case must follow?
     options:
     - text: Instrumental
       correct: true
@@ -125,7 +124,6 @@
       correct: false
     - text: doctor
       correct: false
-  id: sports-knowledge
 - type: match-up
   title: Sports Vocab
   pairs:
@@ -153,7 +151,6 @@
     right: player
   - left: матч
     right: match
-  id: sports-vocab
 - type: fill-in
   title: Sport Instrumental
   items:
@@ -253,7 +250,6 @@
     - тренера
     - тренеру
     explanation: Work as + Instrumental.
-  id: sport-instrumental
 - type: true-false
   title: Sports Rules
   items:
@@ -293,7 +289,6 @@
   - statement: Ukrainians like sports.
     correct: true
     explanation: Very much.
-  id: sports-rules
 - type: group-sort
   title: Action vs Place
   groups:
@@ -316,7 +311,6 @@
     - 'гравець: People'
     - 'вболівальник: People'
     - 'чемпіон: People'
-  id: action-vs-place
 - type: unjumble
   title: Sport Sentences
   items:
@@ -432,7 +426,6 @@
     - зеленому
     - лісі
     answer: Ми повільно бігаємо вранці в зеленому лісі
-  id: sport-sentences
 - type: error-correction
   title: Sport Mistakes
   items:
@@ -453,8 +446,7 @@
     - футболом
     - футболу
     - футболі
-    explanation: 'Play + Acc: грати в футбол. Instrumental
-      is wrong here.'
+    explanation: 'Play + Acc: грати в футбол. Instrumental is wrong here.'
   - sentence: Ми йдемо в стадіон.
     error: в
     answer: на
@@ -545,7 +537,6 @@
     - йогу
     - йозі
     explanation: Instrumental.
-  id: sport-mistakes
 - type: cloze
   title: Football Match
   passage: 'Ми на стадіоні. Сьогодні {матч|урок|обід}.
@@ -575,10 +566,8 @@
     Всі {люди|машини|дерева} аплодували.
 
     Ми пішли додому {щасливі|сумні|хворі}.'
-  id: football-match
 - type: mark-the-words
   title: Sports List
-  id: sports-list
   passage: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку
     ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його
     друг займається *карате*. *Гімнастика* — це дуже красиво.
@@ -727,4 +716,3 @@
     - text: Інший варіант
       correct: false
     explanation: Become (champion).
-  id: choose-correct-verb

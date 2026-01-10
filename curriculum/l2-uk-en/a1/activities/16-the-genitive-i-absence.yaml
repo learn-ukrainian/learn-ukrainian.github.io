@@ -19,7 +19,6 @@
     right: sense
   - left: різниця
     right: difference
-  id: absence-vocabulary
 - type: group-sort
   title: Genitive Endings
   groups:
@@ -41,7 +40,6 @@
     - вікна
     - знання
     - значення
-  id: genitive-endings
 - type: fill-in
   title: Complete with Genitive
   items:
@@ -129,7 +127,6 @@
     - З
     - До
     - Від
-  id: complete-with-genitive
 - type: quiz
   title: Understanding Genitive
   items:
@@ -265,7 +262,6 @@
     - text: кава немає цукру
       correct: false
     explanation: 'Pattern: noun + без + genitive'
-  id: understanding-genitive
 - type: true-false
   title: Genitive Rules
   items:
@@ -275,13 +271,13 @@
   - statement: The pattern is «Я немає + nominative».
     correct: false
     explanation: Incorrect! The pattern is «У мене немає + genitive».
-  - statement: '«Без» (without) requires genitive case.'
+  - statement: «Без» (without) requires genitive case.
     correct: true
     explanation: Correct! без + genitive is the rule.
   - statement: Feminine nouns don't change in genitive.
     correct: false
     explanation: Incorrect! Feminine -а becomes -и in genitive.
-  - statement: '«Немає проблем» means "No problem".'
+  - statement: «Немає проблем» means "No problem".
     correct: true
     explanation: Correct! This is a common idiomatic expression.
   - statement: Masculine genitive always ends in -а.
@@ -299,13 +295,12 @@
   - statement: Genitive is only used with «немає».
     correct: false
     explanation: Incorrect! It's also used with quantities, possession, and more.
-  - statement: '«У + person» means "by/at person" in possession contexts.'
+  - statement: «У + person» means "by/at person" in possession contexts.
     correct: true
     explanation: Correct! У мене = "by me" = "I have".
   - statement: 'Both parts are required: немає AND genitive ending.'
     correct: true
     explanation: Correct! You can't skip either part.
-  id: genitive-rules
 - type: quiz
   title: Form Sentences Order
   items:
@@ -441,7 +436,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: У мене немає досвіду'
-  id: form-sentences-order
 - type: match-up
   title: Prepositions and Genitive Nouns
   pairs:
@@ -461,7 +455,6 @@
     right: except that
   - left: без допомоги
     right: without help
-  id: prepositions-and-genitive-nouns
 - type: fill-in
   title: Transform to Negative
   items:
@@ -549,4 +542,3 @@
     - немає допомоги
     - є допомоги
     - не допомога
-  id: transform-to-negative

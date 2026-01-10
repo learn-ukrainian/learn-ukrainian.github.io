@@ -21,7 +21,6 @@
     right: низький
   - left: '- сильний'
     right: слабкий
-  id: антоніми-(antonym-pairs)
 - type: group-sort
   title: Категорії прикметників
   groups:
@@ -44,7 +43,6 @@
     - легкий
     - важкий
     - --
-  id: категорії-прикметників
 - type: fill-in
   title: Masculine Adjective Forms
   items:
@@ -104,7 +102,6 @@
     - молода
     - молоде
     - молоді
-  id: masculine-adjective-forms
 - type: fill-in
   title: Feminine and Neuter Forms
   items:
@@ -164,7 +161,6 @@
     - новий
     - нова
     - нові
-  id: feminine-and-neuter-forms
 - type: quiz
   title: Узгодження прикметників
   items:
@@ -248,7 +244,6 @@
       correct: false
     - text: Fast train (neuter)
       correct: false
-  id: узгодження-прикметників
 - type: quiz
   title: Значення прикметників
   items:
@@ -332,7 +327,6 @@
       correct: false
     - text: The street is short.
       correct: false
-  id: значення-прикметників
 - type: unjumble
   title: Складіть речення
   items:
@@ -366,13 +360,12 @@
     - це
     - питання
     answer: Це важливе питання
-  id: складіть-речення
 - type: true-false
   title: Правила прикметників
   items:
   - statement: Ukrainian adjectives change their endings to match nouns.
     correct: true
-  - statement: '«Велика» is masculine form.'
+  - statement: «Велика» is masculine form.
     correct: false
     explanation: Incorrect! it's feminine
   - statement: '"-Ий" is the masculine hard stem ending.'
@@ -382,22 +375,21 @@
     explanation: Incorrect! it's feminine
   - statement: '"-Е" is the neuter hard stem ending.'
     correct: true
-  - statement: '«Нові» is singular form.'
+  - statement: «Нові» is singular form.
     correct: false
     explanation: Incorrect! it's plural
-  - statement: '«Добрий» means "good" or "kind".'
+  - statement: «Добрий» means "good" or "kind".
     correct: true
-  - statement: '«Поганий» means "good".'
+  - statement: «Поганий» means "good".
     correct: false
     explanation: Incorrect! it means "bad"
   - statement: Adjectives usually come before nouns in Ukrainian.
     correct: true
-  - statement: '«Високий» means "short".'
+  - statement: «Високий» means "short".
     correct: false
     explanation: Incorrect! it means "tall"
-  - statement: '«Розумний» means "smart".'
+  - statement: «Розумний» means "smart".
     correct: true
-  - statement: '«Повільний» means "fast".'
+  - statement: «Повільний» means "fast".
     correct: false
     explanation: Incorrect! it means "slow"
-  id: правила-прикметників

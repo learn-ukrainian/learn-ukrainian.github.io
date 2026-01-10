@@ -21,7 +21,6 @@
     right: should, ought to
   - left: '- варто'
     right: worth, advisable
-  id: modal-meanings
 - type: group-sort
   title: Modal Categories
   groups:
@@ -44,7 +43,6 @@
     - не можна
     - заборонено
     - --
-  id: modal-categories
 - type: fill-in
   title: могти Conjugation
   items:
@@ -104,7 +102,6 @@
     - можеш
     - може
     - можемо
-  id: могти-conjugation
 - type: fill-in
   title: Obligation Words
   items:
@@ -164,7 +161,6 @@
     - Можна
     - Дозволено
     - Вмію
-  id: obligation-words
 - type: quiz
   title: Ability or Skill?
   items:
@@ -249,7 +245,6 @@
       correct: false
     - text: Obligation
       correct: false
-  id: ability-or-skill?
 - type: quiz
   title: Modal Meanings
   items:
@@ -333,7 +328,6 @@
       correct: false
     - text: One is forbidden to rest.
       correct: false
-  id: modal-meanings
 - type: unjumble
   title: Modal Sentences
   items:
@@ -371,37 +365,35 @@
     - вона
     - почати
     answer: Вона готова почати
-  id: modal-sentences
 - type: true-false
   title: Modal Understanding
   items:
-  - statement: '«Вміти» means "to know how to".'
+  - statement: «Вміти» means "to know how to".
     correct: true
-  - statement: '«Могти» means "must".'
+  - statement: «Могти» means "must".
     correct: false
     explanation: Incorrect! it means "can"
-  - statement: '«Можна» is used to ask permission.'
+  - statement: «Можна» is used to ask permission.
     correct: true
-  - statement: '«Заборонено» means "allowed".'
+  - statement: «Заборонено» means "allowed".
     correct: false
     explanation: Incorrect! it means "forbidden"
-  - statement: '«Треба» is an impersonal word for necessity.'
+  - statement: «Треба» is an impersonal word for necessity.
     correct: true
   - statement: '«Повинен» changes gender: повинен/повинна.'
     correct: false
-  - statement: '«Варто» means "worth" or "advisable".'
+  - statement: «Варто» means "worth" or "advisable".
     correct: true
-  - statement: '«Мусити» means "to want".'
+  - statement: «Мусити» means "to want".
     correct: false
     explanation: Incorrect! it means "must"
-  - statement: '«Готовий» means "ready".'
+  - statement: «Готовий» means "ready".
     correct: true
-  - statement: '«Слід» means "forbidden".'
+  - statement: «Слід» means "forbidden".
     correct: false
     explanation: Incorrect! it means "should"
-  - statement: '«Здатний» means "capable".'
+  - statement: «Здатний» means "capable".
     correct: true
-  - statement: '«Не можна» means "you can".'
+  - statement: «Не можна» means "you can".
     correct: false
     explanation: Incorrect! it means "not allowed"
-  id: modal-understanding

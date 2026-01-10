@@ -21,7 +21,6 @@
     right: Бажаю щастя!
   - left: '- Побажання здоров''я'
     right: Бажаю здоров'я!
-  id: holidays-and-greetings
 - type: match-up
   title: Celebration Vocabulary
   pairs:
@@ -45,7 +44,6 @@
     right: dancing
   - left: '- радість'
     right: joy
-  id: celebration-vocabulary
 - type: group-sort
   title: Holidays by Season
   groups:
@@ -68,7 +66,6 @@
     - Весілля
     - Ювілей
     - --
-  id: holidays-by-season
 - type: group-sort
   title: Holiday Activities
   groups:
@@ -89,7 +86,6 @@
     - цукерки
     - шоколад
     - --
-  id: holiday-activities
 - type: fill-in
   title: Привітання (Greetings)
   items:
@@ -177,7 +173,6 @@
     - буде
     - йде
     - робить
-  id: привітання-(greetings)
 - type: fill-in
   title: Святкування (Celebrating)
   items:
@@ -265,7 +260,6 @@
     - радість
     - радісний
     - радісна
-  id: святкування-(celebrating)
 - type: quiz
   title: Holiday Knowledge
   items:
@@ -349,7 +343,6 @@
       correct: false
     - text: Greeting
       correct: false
-  id: holiday-knowledge
 - type: unjumble
   title: Holiday Sentences
   items:
@@ -419,36 +412,34 @@
     - він
     - квіти
     answer: Він отримав квіти
-  id: holiday-sentences
 - type: true-false
   title: Holiday Facts
   items:
   - statement: Ukrainian Christmas is on December 25th (since 2023).
     correct: true
-  - statement: '«З Новим роком!» means "Merry Christmas!".'
+  - statement: «З Новим роком!» means "Merry Christmas!".
     correct: false
     explanation: Incorrect! it means "Happy New Year!"
-  - statement: '«Бажаю» means "I wish.".'
+  - statement: «Бажаю» means "I wish.".
     correct: true
-  - statement: '«Подарунок» means "gift.".'
+  - statement: «Подарунок» means "gift.".
     correct: true
-  - statement: '«Великдень» is New Year.'
+  - statement: «Великдень» is New Year.
     correct: false
     explanation: Incorrect! it's Easter
   - statement: Ukrainian greetings start with «З» + holiday name.
     correct: true
-  - statement: '«Торт» means "cake.".'
+  - statement: «Торт» means "cake.".
     correct: true
-  - statement: '«Гості» means "gifts.".'
+  - statement: «Гості» means "gifts.".
     correct: false
     explanation: Incorrect! it means "guests"
-  - statement: '«Святкувати» means "to celebrate.".'
+  - statement: «Святкувати» means "to celebrate.".
     correct: true
-  - statement: '«Многая літа!» is a traditional birthday wish.'
+  - statement: «Многая літа!» is a traditional birthday wish.
     correct: true
   - statement: March 8th is only celebrated in Ukraine.
     correct: false
     explanation: Incorrect! it's International Women's Day
-  - statement: '«Вітаю!» means "Congratulations!".'
+  - statement: «Вітаю!» means "Congratulations!".
     correct: true
-  id: holiday-facts

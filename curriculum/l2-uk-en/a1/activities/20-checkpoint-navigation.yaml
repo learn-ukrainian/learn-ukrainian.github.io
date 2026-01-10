@@ -85,7 +85,6 @@
     - цю дівчину
     - цієї дівчини
     - цій дівчині
-  id: case-mastery--accusative
 - type: fill-in
   title: Case Mastery - Locative
   items:
@@ -173,7 +172,6 @@
     - на
     - в
     - біля
-  id: case-mastery--locative
 - type: fill-in
   title: Case Mastery - Genitive
   items:
@@ -261,7 +259,6 @@
     - гривні
     - гривень
     - гривнями
-  id: case-mastery--genitive
 - type: match-up
   title: Possessive Pronouns Agreement
   pairs:
@@ -283,7 +280,6 @@
     right: our apartment
   - left: наше вікно
     right: our window
-  id: possessive-pronouns-agreement
 - type: quiz
   title: Grammar Knowledge Check
   items:
@@ -419,7 +415,6 @@
     - text: Genitive - України
       correct: false
     explanation: Я люблю Україну - accusative case for direct object
-  id: grammar-knowledge-check
 - type: true-false
   title: Grammar Rules Review
   items:
@@ -438,28 +433,27 @@
   - statement: Feminine nouns ending in -а change to -у in accusative.
     correct: true
     explanation: True! книга → книгу, сумка → сумку.
-  - statement: '«його» changes to «його» for different genders.'
+  - statement: «його» changes to «його» for different genders.
     correct: false
     explanation: False! «його» NEVER changes - it's a frozen form.
-  - statement: '«на» can mean both "on" and "at".'
+  - statement: «на» can mean both "on" and "at".
     correct: true
     explanation: True! на столі, на роботі.
   - statement: Numbers 2-4 use genitive plural.
     correct: false
     explanation: False! Numbers 2-4 use nominative plural. 5+ use genitive plural.
-  - statement: '«у/в» and «на» both require locative case for location.'
+  - statement: «у/в» and «на» both require locative case for location.
     correct: true
     explanation: True! Both prepositions use locative to show where something is.
-  - statement: '«їхній» never changes form.'
+  - statement: «їхній» never changes form.
     correct: false
     explanation: 'False! «їхній» DOES change: їхній/їхня/їхнє/їхні.'
-  - statement: '«без» + genitive means "without".'
+  - statement: «без» + genitive means "without".
     correct: true
     explanation: True! без цукру, без молока.
   - statement: Neuter nouns don't change in accusative.
     correct: true
     explanation: True! вікно → вікно, місто → місто.
-  id: grammar-rules-review
 - type: group-sort
   title: Preposition Usage
   groups:
@@ -479,7 +473,6 @@
     - на станції
     - на концерті
     - на площі
-  id: preposition-usage
 - type: quiz
   title: Building Sentences Order
   items:
@@ -615,7 +608,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Станція метро біля вокзалу.'
-  id: building-sentences-order
 - type: quiz
   title: Real Dialogues Order
   items:
@@ -751,7 +743,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Будь ласка! Доброї дороги!'
-  id: real-dialogues-order
 - type: match-up
   title: City Vocabulary - Navigation
   pairs:
@@ -773,4 +764,3 @@
     right: pharmacy
   - left: банк
     right: bank
-  id: city-vocabulary--navigation

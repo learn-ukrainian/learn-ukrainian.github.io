@@ -21,7 +21,6 @@
     right: next year
   - left: '- вже'
     right: already
-  id: time-expressions
 - type: group-sort
   title: Levels of Certainty
   groups:
@@ -42,7 +41,6 @@
     - постараюся
     - думаю
     - --
-  id: levels-of-certainty
 - type: fill-in
   title: Future Tense Forms
   items:
@@ -102,7 +100,6 @@
     - будеш
     - буде
     - будемо
-  id: future-tense-forms
 - type: fill-in
   title: Planning Expressions
   items:
@@ -162,7 +159,6 @@
     - мріємо
     - сподіваємося
     - думаємо
-  id: planning-expressions
 - type: quiz
   title: буду Conjugation
   items:
@@ -247,7 +243,6 @@
       correct: false
     - text: Do you watch the movie?
       correct: false
-  id: буду-conjugation
 - type: quiz
   title: Time Expressions
   items:
@@ -332,7 +327,6 @@
       correct: false
     - text: He understood yesterday.
       correct: false
-  id: time-expressions
 - type: unjumble
   title: Future Plans
   items:
@@ -377,44 +371,42 @@
     - Київ
     - до
     answer: Я планую поїхати до Києва
-  id: future-plans
 - type: true-false
   title: Understanding Future Expressions
   items:
-  - statement: '«Завтра» means "tomorrow."'
+  - statement: «Завтра» means "tomorrow."
     correct: true
     explanation: Correct!
-  - statement: '«Післязавтра» means "yesterday."'
+  - statement: «Післязавтра» means "yesterday."
     correct: false
     explanation: Incorrect! It means "day after tomorrow."
-  - statement: '«Буду читати» means "I will read."'
+  - statement: «Буду читати» means "I will read."
     correct: true
     explanation: Correct!
-  - statement: '«Наступного року» means "last year."'
+  - statement: «Наступного року» means "last year."
     correct: false
     explanation: Incorrect! It means "next year."
-  - statement: '«Я мрію» means "I dream."'
+  - statement: «Я мрію» means "I dream."
     correct: true
     explanation: Correct!
-  - statement: '«Скоро» means "slowly."'
+  - statement: «Скоро» means "slowly."
     correct: false
     explanation: Incorrect! It means "soon."
-  - statement: '«Обіцяю» means "I promise."'
+  - statement: «Обіцяю» means "I promise."
     correct: true
     explanation: Correct!
-  - statement: '«Вже» means "never."'
+  - statement: «Вже» means "never."
     correct: false
     explanation: Incorrect! It means "already."
-  - statement: '«Пізніше» means "later."'
+  - statement: «Пізніше» means "later."
     correct: true
     explanation: Correct!
-  - statement: '«Планую» means "I hope."'
+  - statement: «Планую» means "I hope."
     correct: false
     explanation: Incorrect! It means "I plan."
-  - statement: '«Сподіваюся» means "I hope."'
+  - statement: «Сподіваюся» means "I hope."
     correct: true
     explanation: Correct!
-  - statement: '«Ніколи» means "always."'
+  - statement: «Ніколи» means "always."
     correct: false
     explanation: Incorrect! It means "never."
-  id: understanding-future-expressions

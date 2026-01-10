@@ -25,7 +25,6 @@
     right: finished
   - left: почав
     right: began
-  id: past-tense-forms
 - type: fill-in
   title: Perfective or Imperfective Past
   items:
@@ -113,7 +112,6 @@
     - писали
     - пишуть
     - напишуть
-  id: perfective-or-imperfective-past
 - type: quiz
   title: Aspect in Past Tense
   items:
@@ -249,7 +247,6 @@
       correct: false
     - text: прийшла
       correct: false
-  id: aspect-in-past-tense
 - type: true-false
   title: Past Tense Rules
   items:
@@ -289,7 +286,6 @@
   - statement: «Сказав» is imperfective.
     correct: false
     explanation: «Сказав» is perfective. «Говорив» is imperfective.
-  id: past-tense-rules
 - type: group-sort
   title: Verb Aspect
   groups:
@@ -309,7 +305,6 @@
     - сказав
     - побачив
     - приїхав
-  id: verb-aspect
 - type: unjumble
   title: Past Tense Sentences
   items:
@@ -433,7 +428,6 @@
     - шкоди
     - вчора
     answer: Я взяв свою стару книгу зі шкоди вчора
-  id: past-tense-sentences
 - type: fill-in
   title: Choose Correct Aspect
   items:
@@ -493,7 +487,6 @@
     - попрацювали
     - працюємо
     - будуть працювати
-  id: choose-correct-aspect
 - type: cloze
   title: Aspect in Context
   passage: 'Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити}
@@ -505,7 +498,6 @@
     Минулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні.
     Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того
     як я {прочитав|читати} книгу, я {написав|писати} рецензію.'
-  id: aspect-in-context
 - type: cloze
   title: Completed vs Process
   passage: '— {Що ти робив учора?|Дві години.|Ти прочитав книгу?}
@@ -535,10 +527,8 @@
     — {Думаю, сьогодні прочитаю.|Скільки часу ти читав?|А коли закінчиш?}
 
     '
-  id: completed-vs-process
 - type: mark-the-words
   title: Find Perfective Past
-  id: find-perfective-past
   passage: 'Click on PERFECTIVE PAST forms only.
 
     Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті

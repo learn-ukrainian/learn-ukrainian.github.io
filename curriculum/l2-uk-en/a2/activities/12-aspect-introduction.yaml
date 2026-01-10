@@ -25,7 +25,6 @@
     right: вивчити
   - left: купувати
     right: купити
-  id: aspect-pairs
 - type: cloze
   title: Choose the Correct Aspect
   passage: 'Я {читав|прочитав} книгу дві години. (читав | прочитав) Вона {написала|писала}
@@ -43,7 +42,6 @@
 
     Він {сказав|говорив} «ні.» (говорив | сказав) Ми {їхали|приїхали} три години.
     (їхали | приїхали) Ми нарешті {приїхали|їхали}! (їхали | приїхали)'
-  id: choose-the-correct-aspect
 - type: quiz
   title: Process or Result?
   items:
@@ -178,7 +176,6 @@
       correct: false
     - text: Singular vs. plural
       correct: false
-  id: process-or-result?
 - type: true-false
   title: Aspect Rules
   items:
@@ -229,7 +226,6 @@
       «Що ти робив?» uses imperfective.
     correct: true
     explanation: Yes! Asking about activities/process.
-  id: aspect-rules
 - type: group-sort
   title: Imperfective vs Perfective
   groups:
@@ -249,7 +245,6 @@
     - сказати
     - побачити
     - взяти
-  id: imperfective-vs-perfective
 - type: unjumble
   title: Aspect Sentences
   items:
@@ -373,7 +368,6 @@
     - столу
     - вчора
     answer: Я взяв свою стару книгу зі столу вчора
-  id: aspect-sentences
 - type: error-correction
   title: Fix the Aspect
   items:
@@ -450,7 +444,6 @@
     - працюю
     - буду працювати
     explanation: Duration marker («цілий вечір») requires imperfective «працював.»
-  id: fix-the-aspect
 - type: cloze
   title: Complete the Story
   passage: 'Учора я {встав|встати|вставати} цілий день. Спочатку я {випив|пити|випити}
@@ -463,7 +456,6 @@
     сніданок. Потім я {пішов|іти|піти} до роботи. На роботі я {працював|працювати|попрацювати}
     цілий день. Увечері я {прийшов|йти|прийти} додому і {приготував|готувати|приготувати}
     смачну вечерю.'
-  id: complete-the-story
 - type: cloze
   title: Aspect in Conversation
   passage: '— {Що ти робив учора?|Скоро напишу!|Ти прочитав її?}
@@ -493,10 +485,8 @@
     — {Скоро напишу!|--|А коли прочитаєш?}
 
     '
-  id: aspect-in-conversation
 - type: mark-the-words
   title: Identify Aspect
-  id: identify-aspect
   passage: 'Click on PERFECTIVE verbs only.
 
     Я *прочитав* книгу. Потім я *написав* рецензію. Я довго писав, але нарешті *закінчив*.

@@ -133,7 +133,6 @@
     - text: чому
       correct: true
     explanation: чому (chomu) = why
-  id: question-word-meanings
 - type: match-up
   title: Question Words to Context
   instruction: Match each question word with the context where it's used
@@ -154,7 +153,6 @@
     right: asking for reason
   - left: як
     right: asking about manner or state
-  id: question-words-to-context
 - type: fill-in
   title: Complete Questions
   items:
@@ -242,35 +240,34 @@
     - Як
     - Де
     - Коли
-  id: complete-questions
 - type: true-false
   title: Question and Negation Rules
   items:
-  - statement: '«Чи» at the beginning of a sentence signals a yes/no question.'
+  - statement: «Чи» at the beginning of a sentence signals a yes/no question.
     correct: true
     explanation: Correct! Чи + subject + verb = yes/no question
   - statement: Ukrainian question words require "do/does" like English.
     correct: false
     explanation: Incorrect! Ukrainian doesn't need auxiliary verbs for questions.
-  - statement: '«Не» goes directly before the verb to make it negative.'
+  - statement: «Не» goes directly before the verb to make it negative.
     correct: true
     explanation: Correct! я не читаю = I don't read
-  - statement: '«Ніколи» (never) doesn''t need «не» because it''s already negative.'
+  - statement: «Ніколи» (never) doesn't need «не» because it's already negative.
     correct: false
     explanation: 'Incorrect! Ukrainian uses double negation: «Я ніколи не...»'
   - statement: You can skip «чи» in casual speech and use rising intonation instead.
     correct: true
     explanation: Correct! «Ти читаєш?» ↗ is common in casual conversation.
-  - statement: '«Де» and «куди» mean exactly the same thing.'
+  - statement: «Де» and «куди» mean exactly the same thing.
     correct: false
     explanation: Incorrect! «Де» = where (location), «куди» = where to
-  - statement: '«Звідки» asks about origin or source.'
+  - statement: «Звідки» asks about origin or source.
     correct: true
     explanation: Correct! Звідки ти? = Where are you from?
   - statement: Ukrainian uses double negation with words like «ніколи» (never).
     correct: true
     explanation: Correct! «Я ніколи не п'ю каву» = I never drink coffee
-  - statement: '«Що» can only mean "what", never "that".'
+  - statement: «Що» can only mean "what", never "that".
     correct: false
     explanation: Incorrect! «Що» means both "what" (question) and "that", depending
       on context.
@@ -282,10 +279,9 @@
     correct: false
     explanation: Incorrect! They can also say «Як ти?» (How are you?) or «Як діла?»
       (How are things?)
-  - statement: '«Так» means yes and «ні» means no.'
+  - statement: «Так» means yes and «ні» means no.
     correct: true
     explanation: Correct! Basic yes/no answers.
-  id: question-and-negation-rules
 - type: group-sort
   title: Frequency Adverbs
   groups:
@@ -307,7 +303,6 @@
     - ніколи не читаю
     - ніколи не пишу
     - ніколи не сплю
-  id: frequency-adverbs
 - type: fill-in
   title: Add Negation
   items:
@@ -395,7 +390,6 @@
     - ні
     - ніколи
     - чи
-  id: add-negation
 - type: anagram
   title: Question Words
   items:
@@ -423,7 +417,6 @@
     answer: іноді
   - scrambled: н і к о л и
     answer: ніколи
-  id: question-words
 - type: anagram
   title: Frequency Words
   items:
@@ -443,7 +436,6 @@
     answer: щодня
   - scrambled: п р а в д а
     answer: правда
-  id: frequency-words
 - type: quiz
   title: Negative Sentence Order
   items:
@@ -581,4 +573,3 @@
     - text: вони
       correct: false
     explanation: 'Correct order: Я не хочу чаю'
-  id: negative-sentence-order

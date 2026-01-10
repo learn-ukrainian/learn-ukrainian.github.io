@@ -25,7 +25,6 @@
     right: registered
   - left: звичайний
     right: regular
-  id: post-office-vocabulary
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -113,7 +112,6 @@
     - гривні
     - гривню
     - гривень
-  id: complete-the-sentences
 - type: quiz
   title: Service Situations
   items:
@@ -245,7 +243,6 @@
       correct: false
     - text: євро
       correct: false
-  id: service-situations
 - type: true-false
   title: Service Facts
   items:
@@ -285,7 +282,6 @@
   - statement: Квитанція means receipt.
     correct: true
     explanation: Correct!
-  id: service-facts
 - type: group-sort
   title: Post Office vs Bank
   groups:
@@ -305,7 +301,6 @@
     - валюта
     - переказ
     - кредит
-  id: post-office-vs-bank
 - type: unjumble
   title: Service Sentences
   items:
@@ -429,7 +424,6 @@
     - мого
     - рахунку
     answer: П'ятсот гривень будь ласка зніміть з мого рахунку
-  id: service-sentences
 - type: error-correction
   title: Fix the Case
   items:
@@ -541,7 +535,6 @@
     - Канаді
     - Канадою
     explanation: '«До» requires genitive: Канади.'
-  id: fix-the-case
 - type: cloze
   title: Complete the Dialogue
   passage: '— Добрий день! Я хочу відправити {долари|доларів|доларам}.
@@ -571,10 +564,8 @@
     — {Курс|Курси|Курсу} сьогодні — 37 {гривень|гривня|гривні} за долар.
 
     — Гаразд. Ось {долари|долар|доларів}.'
-  id: complete-the-dialogue
 - type: mark-the-words
   title: Find Case Forms
-  id: find-case-forms
   passage: 'Click on all nouns used in any case except Nominative.
 
     Я хочу відправити *посилку*. Напишіть вашу *адресу*. Він знімає *гроші*. Вона
@@ -669,4 +660,3 @@
     - text: Я хочу обміняти доларами.
       correct: false
     explanation: Direct object → Accusative plural 'долари'.
-  id: english-to-ukrainian

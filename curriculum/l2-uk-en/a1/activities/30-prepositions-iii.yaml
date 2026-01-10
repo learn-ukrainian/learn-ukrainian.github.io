@@ -21,7 +21,6 @@
     right: Home
   - left: '- Прямо'
     right: Straight
-  id: question-words
 - type: group-sort
   title: Location vs Direction
   groups:
@@ -42,7 +41,6 @@
     - туди
     - до лікаря
     - --
-  id: location-vs-direction
 - type: group-sort
   title: Preposition Usage
   groups:
@@ -65,7 +63,6 @@
     - до бабусі
     - до вчителя
     - --
-  id: preposition-usage
 - type: fill-in
   title: Де чи Куди? (Where or Where to?)
   items:
@@ -153,7 +150,6 @@
     - Де
     - Куди
     - Коли
-  id: де-чи-куди?-(where-or-where-to?)
 - type: fill-in
   title: Choose the Preposition
   items:
@@ -241,7 +237,6 @@
     - в
     - до
     - від
-  id: choose-the-preposition
 - type: quiz
   title: Location or Direction?
   items:
@@ -325,7 +320,6 @@
       correct: false
     - text: About here
       correct: false
-  id: location-or-direction?
 - type: quiz
   title: Which Preposition?
   items:
@@ -409,7 +403,6 @@
       correct: false
     - text: в татка
       correct: false
-  id: which-preposition?
 - type: unjumble
   title: Preposition Sentences
   items:
@@ -485,27 +478,26 @@
     - родом
     - скажи
     answer: Скажи, звідки ти родом
-  id: preposition-sentences
 - type: true-false
   title: Preposition Rules
   items:
-  - statement: '«Де?» asks about location.'
+  - statement: «Де?» asks about location.
     correct: true
-  - statement: '«Куди?» asks about location.'
+  - statement: «Куди?» asks about location.
     correct: false
     explanation: Incorrect! it asks about direction
-  - statement: '«Звідки?» asks about origin.'
+  - statement: «Звідки?» asks about origin.
     correct: true
-  - statement: '«Вдома» means "at home.".'
+  - statement: «Вдома» means "at home.".
     correct: true
-  - statement: '«Додому» means "at home.".'
+  - statement: «Додому» means "at home.".
     correct: false
     explanation: Incorrect! it means "to home"
-  - statement: '«З» is used for "from places.".'
+  - statement: «З» is used for "from places.".
     correct: true
-  - statement: '«Від» is used for "from people.".'
+  - statement: «Від» is used for "from people.".
     correct: true
-  - statement: '«До» is used for "from people.".'
+  - statement: «До» is used for "from people.".
     correct: false
     explanation: Incorrect! it's used for "to"
   - statement: Location uses Locative case.
@@ -513,8 +505,7 @@
   - statement: Direction uses Locative case.
     correct: false
     explanation: Incorrect! it uses Accusative/Genitive
-  - statement: '«Тут» means "here.".'
+  - statement: «Тут» means "here.".
     correct: true
-  - statement: '«Сюди» means "to here.".'
+  - statement: «Сюди» means "to here.".
     correct: true
-  id: preposition-rules

@@ -21,7 +21,6 @@
     right: прочитати
   - left: пити
     right: випити
-  id: tier-1-pairs
 - type: match-up
   title: Tier 2 Pairs
   pairs:
@@ -45,7 +44,6 @@
     right: полагодити
   - left: чистити
     right: почистити
-  id: tier-2-pairs
 - type: match-up
   title: Tier 3 Pairs
   pairs:
@@ -69,7 +67,6 @@
     right: померти
   - left: сідати
     right: сісти
-  id: tier-3-pairs
 - type: fill-in
   title: Transform to Perfective
   items:
@@ -143,7 +140,6 @@
     - готувати
     - заготувати
     - підготувати
-  id: transform-to-perfective
 - type: fill-in
   title: Transform to Imperfective
   items:
@@ -203,7 +199,6 @@
     - запам'ятати
     - пам'ятка
     - забути
-  id: transform-to-imperfective
 - type: quiz
   title: Aspect Selection
   items:
@@ -295,7 +290,6 @@
       correct: false
     - text: Наказ
       correct: false
-  id: aspect-selection
 - type: cloze
   title: Context Selection
   passage: 'Я вже {прочитав|читав} цю дуже цікаву книгу.
@@ -313,9 +307,8 @@
     ---
 
     Сьогодні зранку я {випив|пив} каву. Потім я {читав|прочитав} статтю одну годину.
-    Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо} пізно. Вона
-    {працювала|попрацювала} три години і нарешті {закінчила|закінчувала} роботу.'
-  id: context-selection
+    Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо} пізно. Вона {працювала|попрацювала}
+    три години і нарешті {закінчила|закінчувала} роботу.'
 - type: unjumble
   title: Aspect Sentences
   items:
@@ -404,7 +397,6 @@
     - у
     - кімнаті
     answer: Вона відкрила ці великі білі двері у кімнаті
-  id: aspect-sentences
 - type: error-correction
   title: Wrong Aspect
   items:
@@ -462,7 +454,6 @@
     - пила
     - вип'є
     explanation: Sequence of completed actions → both verbs should be perfective.
-  id: wrong-aspect
 - type: group-sort
   title: Formation Pattern
   groups:
@@ -485,4 +476,3 @@
     - вставати → встати
     - відкривати → відкрити
     - --
-  id: formation-pattern

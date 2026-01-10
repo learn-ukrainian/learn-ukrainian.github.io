@@ -19,7 +19,6 @@
     right: knife
   - left: ложка
     right: spoon
-  id: café-vocabulary
 - type: quiz
   title: Waiter Questions
   items:
@@ -33,7 +32,7 @@
       correct: false
     - text: Хто ви бажаєте?
       correct: false
-    explanation: '«Що» is used for the object of desire.'
+    explanation: «Що» is used for the object of desire.
   - question: How does a waiter ask accurately "Are you ready to order"?
     options:
     - text: Ви готові замовляти?
@@ -44,7 +43,7 @@
       correct: false
     - text: Ви готові йти?
       correct: false
-    explanation: '«Замовляти» means to order.'
+    explanation: «Замовляти» means to order.
   - question: How do you accurately ask for the bill?
     options:
     - text: Рахунок, будь ласка.
@@ -55,7 +54,7 @@
       correct: false
     - text: Де офіціант?
       correct: false
-    explanation: '«Рахунок» is the bill.'
+    explanation: «Рахунок» is the bill.
   - question: How do you ask for a table for two people?
     options:
     - text: Столик на двох, будь ласка.
@@ -66,7 +65,7 @@
       correct: false
     - text: Столик тут.
       correct: false
-    explanation: '«На двох» means for two.'
+    explanation: «На двох» means for two.
   - question: How do you accurately ask "Can I have a menu"?
     options:
     - text: Можна меню, будь ласка?
@@ -99,7 +98,7 @@
       correct: false
     - text: Вибачте!
       correct: false
-    explanation: '«Смачного» is the standard phrase.'
+    explanation: «Смачного» is the standard phrase.
   - question: How can you say accurately the phrase "The bill, please"?
     options:
     - text: Можна рахунок, будь ласка?
@@ -111,7 +110,6 @@
     - text: Рахунок тут.
       correct: false
     explanation: Polite request for the bill.
-  id: waiter-questions
 - type: fill-in
   title: Complete the Café Dialogue
   items:
@@ -199,7 +197,6 @@
     - Візьміть
     - Дайте
     - Покажіть
-  id: complete-the-café-dialogue
 - type: true-false
   title: Café Etiquette
   items:
@@ -218,28 +215,27 @@
   - statement: Lviv is famous for its coffee culture.
     correct: true
     explanation: Correct! Lviv has hundreds of unique cafés and a rich coffee history.
-  - statement: '«Будь ласка» should be added to most requests.'
+  - statement: «Будь ласка» should be added to most requests.
     correct: true
     explanation: Correct! Politeness is highly valued in Ukrainian culture.
   - statement: You should rush to leave after finishing your coffee.
     correct: false
     explanation: Incorrect! Ukrainian cafés welcome you to stay and relax.
-  - statement: '«Візьму» is the polite way to say "I''ll take."'
+  - statement: «Візьму» is the polite way to say "I'll take."
     correct: true
     explanation: Correct! It's less direct than «хочу» (I want).
   - statement: The waiter will ask «Разом чи окремо?» when bringing the bill.
     correct: true
     explanation: Correct! This means "Together or separately?"
-  - statement: '«Меню» means "table" in Ukrainian.'
+  - statement: «Меню» means "table" in Ukrainian.
     correct: false
     explanation: Incorrect! «Меню» means menu. «Стіл» or «столик» means table.
-  - statement: '«Ще» means "more" or "another."'
+  - statement: «Ще» means "more" or "another."
     correct: true
     explanation: Correct! «Ще один салат» = one more salad.
   - statement: Київський торт is a famous Kyiv dessert.
     correct: true
     explanation: Correct! It's a hazelnut meringue cake created in 1956.
-  id: café-etiquette
 - type: group-sort
   title: Café Phrases by Function
   groups:
@@ -261,7 +257,6 @@
     - Дякую.
     - Будь ласка.
     - Вибачте.
-  id: café-phrases-by-function
 - type: quiz
   title: Order the Café Sentences Order
   items:
@@ -386,7 +381,6 @@
     - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, воду'
-  id: order-the-café-sentences-order
 - type: fill-in
   title: Polite vs Direct
   items:
@@ -474,7 +468,6 @@
     - Дякую за обслуговування!
     - Нормально!
     - Гаразд!
-  id: polite-vs-direct
 - type: quiz
   title: Café Situations
   items:
@@ -510,7 +503,7 @@
       correct: false
     - text: Що смачне?
       correct: false
-    explanation: '«Що порекомендуєте?» is the polite way to ask for recommendations.'
+    explanation: «Що порекомендуєте?» is the polite way to ask for recommendations.
   - question: You want coffee. What's the polite order?
     options:
     - text: Я хочу каву!
@@ -521,7 +514,7 @@
       correct: false
     - text: Дайте каву!
       correct: false
-    explanation: '«Візьму» is polite, «хочу» is too direct.'
+    explanation: «Візьму» is polite, «хочу» is too direct.
   - question: The waiter asks «З цукром?» You want sugar. What do you say?
     options:
     - text: Ні
@@ -532,7 +525,7 @@
       correct: false
     - text: Може бути
       correct: false
-    explanation: '«Так, будь ласка» = Yes, please'
+    explanation: «Так, будь ласка» = Yes, please
   - question: You want more bread. What do you say?
     options:
     - text: Хліб!
@@ -543,7 +536,7 @@
       correct: true
     - text: Я хочу хліб!
       correct: false
-    explanation: '«Принесіть, будь ласка» is the polite imperative.'
+    explanation: «Принесіть, будь ласка» is the polite imperative.
   - question: The waiter asks «Ще щось?» You're finished ordering. What do you say?
     options:
     - text: Ні, це все. Дякую.
@@ -565,7 +558,7 @@
       correct: true
     - text: Воду
       correct: false
-    explanation: '«Рахунок» = check/bill'
+    explanation: «Рахунок» = check/bill
   - question: The waiter asks «Разом чи окремо?» You want to split. What do you say?
     options:
     - text: Разом
@@ -576,7 +569,7 @@
       correct: false
     - text: Так
       correct: false
-    explanation: '«Окремо» = separately'
+    explanation: «Окремо» = separately
   - question: You're leaving. What's a nice thing to say?
     options:
     - text: До побачення.
@@ -610,4 +603,3 @@
     - text: Тірамісу
       correct: false
     explanation: Київський торт (Kyiv cake) is the specialty!
-  id: café-situations

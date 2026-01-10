@@ -25,7 +25,6 @@
     right: will be drinking
   - left: вип'ю
     right: will drink up
-  id: future-forms
 - type: cloze
   title: Choose the Correct Future
   passage: 'Я {прочитаю|буду читати} книгу завтра. Вона {буде працювати|попрацює}
@@ -46,7 +45,6 @@
 
     Він {буде вчити|вивчить} українську. (will be learning — process) Ми {вивчимо|будемо
     вчити} цей урок! (will master — completion)'
-  id: choose-the-correct-future
 - type: quiz
   title: Future Tense
   items:
@@ -182,7 +180,6 @@
       correct: false
     - text: Present
       correct: false
-  id: future-tense
 - type: true-false
   title: Future Rules
   items:
@@ -222,7 +219,6 @@
   - statement: «Буду читати» = I finished reading.
     correct: false
     explanation: «Буду читати» = I will be reading.
-  id: future-rules
 - type: group-sort
   title: Future Formation
   groups:
@@ -242,7 +238,6 @@
     - скажемо
     - візьмете
     - дадуть
-  id: future-formation
 - type: unjumble
   title: Future Sentences
   items:
@@ -379,7 +374,6 @@
     - довгі
     - роки
     answer: Вони будуть вчитися в університеті ще три роки
-  id: future-sentences
 - type: fill-in
   title: Choose Correct Future
   items:
@@ -439,7 +433,6 @@
     - попрацюємо
     - працювали
     - працюємо
-  id: choose-correct-future
 - type: select
   title: Perfective Future Forms
   items:
@@ -523,7 +516,6 @@
       correct: true
     - text: почекаю
       correct: false
-  id: perfective-future-forms
 - type: cloze
   title: Future Plans
   passage: 'Завтра я {поїдемо|їхати} рано. Я {будемо їхати|їхати|поїдемо} каву і {побачу|бачити}
@@ -535,10 +527,8 @@
     Наступного тижня ми {поїдемо|їхати} до України! Ми {будемо їхати|їхати|поїдемо}
     три дні. Я {побачу|бачити} нові місця і {зроблю|робити} багато фотографій. Коли
     я {повернуся|повернутися}, я {розповім|розповідати} вам про нашу подорож!'
-  id: future-plans
 - type: mark-the-words
   title: Find Perfective Future
-  id: find-perfective-future
   passage: 'Click on PERFECTIVE FUTURE forms only.
 
     Завтра я *прочитаю* книгу. Потім я *напишу* рецензію. Я буду писати цілий день,

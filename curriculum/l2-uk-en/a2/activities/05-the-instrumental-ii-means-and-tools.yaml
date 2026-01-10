@@ -25,7 +25,6 @@
     right: by taxi
   - left: голосом
     right: with voice
-  id: transport-and-tools
 - type: cloze
   title: Instrumental Without Preposition
   passage: 'Ми їдемо в аеропорт {таксі|з таксі|на таксі}. Вона пише листа {ручкою|ручка|з
@@ -42,7 +41,6 @@
 
     Ми їдемо в центр {трамваєм|трамвай|з трамваєм}. Я надсилаю документи {електронною
     поштою|електронна пошта|з електронною поштою}. Вона киває {головою|голова|з головою}.'
-  id: instrumental-without-preposition
 - type: quiz
   title: Instrumental Uses
   items:
@@ -177,7 +175,6 @@
       correct: false
     - text: пошепку
       correct: false
-  id: instrumental-uses
 - type: true-false
   title: Instrumental Rules
   items:
@@ -218,7 +215,6 @@
   - statement: «Пошепки» is an adverb, not a noun in instrumental.
     correct: true
     explanation: Correct! Пошепки is an adverb meaning "in a whisper."
-  id: instrumental-rules
 - type: group-sort
   title: Transport vs. Tools
   groups:
@@ -238,7 +234,6 @@
     - ложкою
     - виделкою
     - ножицями
-  id: transport-vs.-tools
 - type: unjumble
   title: Instrumental Sentences
   items:
@@ -302,7 +297,6 @@
     - завжди
     - ввічливо
     answer: Він завжди ввічливо говорить тихим голосом у бібліотеці
-  id: instrumental-sentences
 - type: error-correction
   title: Fix the Instrumental
   items:
@@ -366,7 +360,6 @@
     - голосу
     explanation: Manner expressions use bare Instrumental. "In a quiet voice" = тихим
       голосом, not з голосом.
-  id: fix-the-instrumental
 - type: cloze
   title: Complete the Story
   passage: 'Вранці я йду на зупинку і їду {ножем|з ножем|ніж} на роботу. На роботі
@@ -380,10 +373,8 @@
     ножицями|ножиці}. Потім ми сідаємо за стіл і їмо: суп {ложкою|з ложкою|ложка},
     а другу страву {виделкою|з виделкою|виделка}. Тато розповідає історію тихим {голосом|з
     голосом|голос}. Після обіду брат їде на тренування {велосипедом|з велосипедом|велосипед}.'
-  id: complete-the-story
 - type: mark-the-words
   title: Find Bare Instrumental
-  id: find-bare-instrumental
   passage: 'Click on instrumental forms used WITHOUT a preposition.
 
     Я їду на роботу *автобусом*. Вона пише листа *ручкою*. Ми живемо з батьками. Він
@@ -479,4 +470,3 @@
     - text: Він говорить тихого голосу.
       correct: false
     explanation: Bare instrumental тихим голосом for manner.
-  id: english-to-ukrainian

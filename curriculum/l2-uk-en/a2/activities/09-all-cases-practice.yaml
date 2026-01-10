@@ -25,7 +25,6 @@
     right: direct object
   - left: Instrumental
     right: means, with
-  id: case-questions
 - type: fill-in
   title: Choose the Correct Case Form
   items:
@@ -113,7 +112,6 @@
     - кота
     - котові
     - котом
-  id: choose-the-correct-case-form
 - type: quiz
   title: Which Case?
   items:
@@ -249,7 +247,6 @@
       correct: false
     - text: Genitive
       correct: false
-  id: which-case?
 - type: true-false
   title: Case Rules
   items:
@@ -290,7 +287,6 @@
   - statement: «Про» requires accusative case.
     correct: true
     explanation: Yes! Я думаю про тебе.
-  id: case-rules
 - type: group-sort
   title: Case Functions
   groups:
@@ -314,7 +310,6 @@
     - profession
     - location
     - always with preposition
-  id: case-functions
 - type: unjumble
   title: Case Sentences
   items:
@@ -438,7 +433,6 @@
     - роки
     - зараз
     answer: Вона в університеті вчиться вже три роки зараз
-  id: case-sentences
 - type: error-correction
   title: Fix the Case
   items:
@@ -550,7 +544,6 @@
     - Мамо
     - Мамою
     explanation: Direct address requires vocative case.
-  id: fix-the-case
 - type: cloze
   title: Complete the Story
   passage: 'Це моя {Студент|Студента|Студентові}. Вона працює в {університеті|університет|університету}.
@@ -562,10 +555,8 @@
     {Студент|Студента|Студентові} вчиться в {університеті|університет|університету}.
     Він читає {книгу|книга|книги}. Потім він пише {ручкою|ручка|ручки}. Після {уроку|урок|уроком}
     він йде {додому|до дому|домом}.'
-  id: complete-the-story
 - type: mark-the-words
   title: Find Case Usage
-  id: find-case-usage
   passage: 'Click on all nouns used in any case except Nominative.
 
     Я даю книгу *другові*. Він пише листа *сестрі*. Ми йдемо *до школи*. Вона гуляє
@@ -660,4 +651,3 @@
     - text: Другом, привіт!
       correct: false
     explanation: Direct address → Vocative 'друже'.
-  id: english-to-ukrainian

@@ -21,7 +21,6 @@
     right: instead of
   - left: до
     right: to/until
-  id: preposition-meaning
 - type: group-sort
   title: Case Requirements
   groups:
@@ -46,7 +45,6 @@
   - name: Locative (На чому?)
     items:
     - о/об
-  id: case-requirements
 - type: fill-in
   title: Complete the Sentence
   items:
@@ -106,7 +104,6 @@
     - для
     - про
     - з
-  id: complete-the-sentence
 - type: quiz
   title: Logical Prepositions
   items:
@@ -198,7 +195,6 @@
       correct: false
     - text: без
       correct: false
-  id: logical-prepositions
 - type: cloze
   title: Story Gaps
   passage: 'Марія отримала лист {від|для|про} мами.
@@ -224,7 +220,6 @@
     Вона поїде {з|без|для} подругою в гори.
 
     Це буде подорож {без|з|про} планів.'
-  id: story-gaps
 - type: unjumble
   title: Logical Sentences
   items:
@@ -308,7 +303,6 @@
     - з
     - лимоном
     answer: Чай замість кави будь ласка і з лимоном
-  id: logical-sentences
 - type: error-correction
   title: Wrong Preposition
   items:
@@ -366,48 +360,46 @@
     - Про
     - Від
     explanation: '"For whom?" = Для кого? "After" = Після.'
-  id: wrong-preposition
 - type: true-false
   title: Preposition Rules
   items:
-  - statement: '«Для» always takes the genitive case.'
+  - statement: «Для» always takes the genitive case.
     correct: true
     explanation: 'Correct! Для + Gen: для мами, для тебе.'
-  - statement: '«Про» takes the genitive case.'
+  - statement: «Про» takes the genitive case.
     correct: false
     explanation: 'False! «Про» takes accusative: про тебе, про книгу.'
-  - statement: '«Через» can mean both "because of" and "through."'
+  - statement: «Через» can mean both "because of" and "through."
     correct: true
     explanation: Yes! Через дощ, через парк.
-  - statement: '«Від» is used for receiving something from a person.'
+  - statement: «Від» is used for receiving something from a person.
     correct: true
     explanation: Correct! Лист від мами = a letter from mom.
-  - statement: '«З» always means "from."'
+  - statement: «З» always means "from."
     correct: false
     explanation: 'False! «З» with instrumental means "with": з другом.'
-  - statement: '«Після» means "after" and takes genitive.'
+  - statement: «Після» means "after" and takes genitive.
     correct: true
     explanation: Yes! Після роботи = after work.
-  - statement: '«Для» and «на» mean the same thing.'
+  - statement: «Для» and «на» mean the same thing.
     correct: false
     explanation: False! Для = benefit (для тебе), На = payment (на каву).
-  - statement: '«Крім» means "except" and takes genitive.'
+  - statement: «Крім» means "except" and takes genitive.
     correct: true
     explanation: Correct! Всі прийшли, крім Олега.
-  - statement: '«О/об» is used for clock time.'
+  - statement: «О/об» is used for clock time.
     correct: true
     explanation: Yes! О третій = at three o'clock.
-  - statement: '«Через + noun» and «тому що + clause» are interchangeable.'
+  - statement: «Через + noun» and «тому що + clause» are interchangeable.
     correct: false
     explanation: 'They both mean "because" but have different grammar: через дощ vs
       тому що йде дощ.'
-  - statement: '«Замість» means "instead of."'
+  - statement: «Замість» means "instead of."
     correct: true
     explanation: Correct! Чай замість кави = tea instead of coffee.
-  - statement: '«Без» expresses absence.'
+  - statement: «Без» expresses absence.
     correct: true
     explanation: Yes! Кава без цукру = coffee without sugar.
-  id: preposition-rules
 - type: translate
   title: English to Ukrainian
   items:
@@ -477,7 +469,6 @@
     - text: Кава з молоку.
       correct: false
     explanation: '''З'' (with) + Instrumental ''молоком''.'
-  id: english-to-ukrainian
 - type: match-up
   title: Contrast Pairs
   pairs:
@@ -501,7 +492,6 @@
     right: Time (after)
   - left: До вечора
     right: Time (until)
-  id: contrast-pairs
 - type: cloze
   title: Pharmacy Dialogue
   passage: 'Мені потрібні ліки {від|для|про} головного болю.
@@ -523,7 +513,6 @@
     Можна взяти чай {замість|з|без} кави?
 
     Так, ось чай {з|без|для} лимоном.'
-  id: pharmacy-dialogue
 - type: match-up
   title: Case Endings
   pairs:
@@ -547,4 +536,3 @@
     right: до вечора
   - left: замість чай__
     right: замість чаю
-  id: case-endings

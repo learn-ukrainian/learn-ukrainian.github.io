@@ -25,7 +25,6 @@
     right: Barely
   - left: Раніше
     right: Before | Earlier
-  id: connectors-and-meanings
 - type: cloze
   title: Complete the Story
   passage: '{Раніше|Потім|Раптом|Нарешті} я не любив футбол, але тепер люблю. {Щойно|Давно|Колись|Завжди}
@@ -40,7 +39,6 @@
 
     {Згодом|Спочатку|Раніше|Щойно} він став відомим актором. Я {ледве|дуже|так|як}
     тебе не впізнав! Ми {тільки-но|довго|раніше|потім} прийшли.'
-  id: complete-the-story
 - type: quiz
   title: Understand the Sequence
   items:
@@ -169,7 +167,6 @@
       correct: false
     - text: Відсутність будь-якої дії в минулому
       correct: false
-  id: understand-the-sequence
 - type: group-sort
   title: Time Categories
   groups:
@@ -199,7 +196,6 @@
     - Нарешті
     - Врешті-решт
     - У кінці
-  id: time-categories
 - type: true-false
   title: True or False?
   items:
@@ -239,7 +235,6 @@
   - statement: Storytelling in Ukrainian requires perfective/imperfective mastery.
     correct: true
     explanation: Aspect is crucial for sequencing.
-  id: true-or-false?
 - type: cloze
   title: The Lost Keys in the City
   passage: '{Спочатку|Нарешті} я прийшов додому після роботи. Я хотів відкрити двері,
@@ -251,10 +246,8 @@
     кафе {вже|ще} зачинялося. Я {ледве|дуже} встиг зайти всередину до офіціанта. Він
     усміхнувся і відразу віддав мені мої ключі. {Нарешті|Раптом}, я був удома і відпочивав.
     {Врешті-решт|Спочатку} я тепер завжди перевіряю ключі!'
-  id: the-lost-keys-in-the-city
 - type: mark-the-words
   title: Identify Connectors
-  id: identify-connectors
   passage: '*Одного разу* ми пішли в ліс. *Спочатку* світило сонце. *Але* *раптом*
     почався дощ. Ми *відразу* побігли додому. *Нарешті* ми були в теплі. *Згодом*
     ми пили чай.
@@ -337,7 +330,6 @@
     - ледве
     - раніше
     explanation: «Відразу» means immediately/at once. «Несподівано» implies surprise.
-  id: fix-the-story-flow
 - type: translate
   title: English to Ukrainian
   items:
@@ -461,7 +453,6 @@
       correct: false
     - text: Згодом я жив у Києві.
       correct: false
-  id: english-to-ukrainian
 - type: translate
   title: Narrative Translation
   items:
@@ -513,4 +504,3 @@
       correct: false
     - text: І вони будуть жити щасливо.
       correct: false
-  id: narrative-translation

@@ -25,7 +25,6 @@
     right: to forbid someone (Dat + Inf)
   - left: дозволяти
     right: to allow someone (Dat + Inf)
-  id: verb-+-dative-pattern
 - type: cloze
   title: Choose the Correct Form
   passage: 'Я {допомагаю|допомагати|допомагає} мамі готувати обід. Ця музика {заважає|заважати|заважаю}
@@ -42,7 +41,6 @@
 
     Я {вибачаю|вибачати|вибачаюсь} тобі цю помилку. Вона {розповідає|розповідати|розповідається}
     подрузі новину. Мама {дозволяє|дозволяти|дозволяється} дітям гратися надворі.'
-  id: choose-the-correct-form
 - type: quiz
   title: Dative Verb Patterns
   items:
@@ -57,8 +55,8 @@
       correct: false
     - text: Instrumental
       correct: false
-  - question: For the verb «подобатися», which construction is grammatically
-      correct in Ukrainian?
+  - question: For the verb «подобатися», which construction is grammatically correct
+      in Ukrainian?
     options:
     - text: Мені подобається кава.
       correct: true
@@ -145,8 +143,8 @@
       correct: true
     - text: Я пояснюю учнями правило.
       correct: false
-  - question: Which grammatical case does the Ukrainian verb «співчувати»
-      require for its object?
+  - question: Which grammatical case does the Ukrainian verb «співчувати» require
+      for its object?
     options:
     - text: давального відмінка
       correct: true
@@ -178,7 +176,6 @@
       correct: false
     - text: Він радить мною відпочити.
       correct: false
-  id: dative-verb-patterns
 - type: true-false
   title: Dative Verb Rules
   items:
@@ -218,7 +215,6 @@
   - statement: Word order in Ukrainian sentences with dative is completely fixed.
     correct: false
     explanation: Word order is flexible! Case endings show grammatical roles.
-  id: dative-verb-rules
 - type: group-sort
   title: Verb Categories
   groups:
@@ -238,7 +234,6 @@
     - розповідати
     - радити
     - писати
-  id: verb-categories
 - type: unjumble
   title: Dative Verb Sentences
   items:
@@ -302,7 +297,6 @@
     - спати
     - вночі
     answer: Ця гучна музика заважає мені добре спати вночі
-  id: dative-verb-sentences
 - type: error-correction
   title: Fix the Dative Errors
   items:
@@ -366,7 +360,6 @@
     - я
     explanation: The verb «заважати» requires Dative. The pronoun «я» becomes «мені»
       in Dative, not «мене».
-  id: fix-the-dative-errors
 - type: cloze
   title: Complete the Story
   passage: 'Марія працює вчителькою. Щодня вона {Йому|Його|Він} учням нові теми. Коли
@@ -382,10 +375,8 @@
     — він слухає музику в навушниках. Тепер мама {каже|говорить|розповідає} Олегові,
     що він уважний. Олег {дякує|дякувати} мамі за розуміння. Батьки {дозволяють|дозволяти|дозволяється}
     Олегові слухати музику ввечері.'
-  id: complete-the-story
 - type: mark-the-words
   title: Find Dative Objects
-  id: find-dative-objects
   passage: 'Click on all the nouns in the dative case.
 
     Я допомагаю *мамі*. Він дякує *батькові*. Ми віримо *друзям*. Вона телефонує *сестрі*.
@@ -476,4 +467,3 @@
     - text: Вона пояснює правило учнем.
       correct: false
     explanation: Dative учневі.
-  id: english-to-ukrainian

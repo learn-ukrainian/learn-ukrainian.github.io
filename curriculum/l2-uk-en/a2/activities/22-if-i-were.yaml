@@ -25,7 +25,6 @@
     right: would go
   - left: купив би
     right: would buy
-  id: conditional-forms
 - type: cloze
   title: Conditional Sentences
   passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. Якби я {мав|маю|матиму|мати}
@@ -42,7 +41,6 @@
 
     Вона {б|буде|була|бути} сказала правду. Я б {хотів|хочу|хочеш|хотіти} подорожувати.
     Якби я {міг|можу|можеш|могти}, я б допоміг вам.'
-  id: conditional-sentences
 - type: quiz
   title: Conditional Mood
   items:
@@ -171,7 +169,6 @@
       correct: false
     - text: Не впливає на тон
       correct: false
-  id: conditional-mood
 - type: true-false
   title: Conditional Rules
   items:
@@ -211,7 +208,6 @@
   - statement: Conditional meaning is past.
     correct: false
     explanation: Conditional meaning is hypothetical present or future!
-  id: conditional-rules
 - type: group-sort
   title: Real vs Unreal Conditions
   groups:
@@ -231,7 +227,6 @@
     - Якби я була там разом з вами.
     - Якби ми мали більше вільних грошей.
     - Якби ви бачили цей чудовий фільм.
-  id: real-vs-unreal-conditions
 - type: unjumble
   title: Conditional Sentences
   items:
@@ -382,7 +377,6 @@
     - гарячих
     - вареників
     answer: Було б дуже добре поїсти сьогодні смачних гарячих вареників
-  id: conditional-sentences
 - type: fill-in
   title: Real or Unreal
   items:
@@ -442,7 +436,6 @@
     - буде
     - була
     - би
-  id: real-or-unreal
 - type: cloze
   title: Dreams and Wishes
   passage: '— Що ти б зробив, {якби|якщо} виграв у лотерею?
@@ -461,10 +454,8 @@
     — Якби ви {мали|маєте} такий шанс, ви {б|би} змінили своє життя?
 
     — Я думаю, я {б|би} став набагато {щасливим|щасливий} чоловіком.'
-  id: dreams-and-wishes
 - type: mark-the-words
   title: Find Conditional
-  id: find-conditional
   passage: 'Click on CONDITIONAL forms.
 
     *Якби* я *мав* час, я *б* *прочитав*. Це *було б* чудово!
@@ -541,4 +532,3 @@
       correct: false
     - text: Ми підемо разом.
       correct: false
-  id: conditional-translation

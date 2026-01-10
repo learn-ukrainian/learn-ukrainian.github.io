@@ -134,7 +134,6 @@
     - text: Noun
       correct: false
     explanation: вчити is clearly Second Conjugation.
-  id: second-conjugation-or-first-conjugation?
 - type: match-up
   title: Verbs and Actions
   pairs:
@@ -156,7 +155,6 @@
     right: to walk
   - left: спати
     right: to sleep
-  id: verbs-and-actions
 - type: fill-in
   title: Conjugate the Verb
   items:
@@ -244,7 +242,6 @@
     - спиш
     - спить
     - сплять
-  id: conjugate-the-verb
 - type: anagram
   title: Build the Verb
   items:
@@ -272,7 +269,6 @@
     answer: сидіти
   - scrambled: в ч и т и
     answer: вчити
-  id: build-the-verb
 - type: true-false
   title: Grammar Rules
   items:
@@ -292,7 +288,7 @@
   - statement: The verb «говорити» conjugates as «я говорую.»
     correct: false
     explanation: Incorrect! It's «я говорю» (not «говорую»).
-  - statement: '«Дякувати» is a First Conjugation verb.'
+  - statement: «Дякувати» is a First Conjugation verb.
     correct: true
     explanation: Correct! It ends in -увати, which is a First Conjugation pattern.
   - statement: All verbs ending in -ати are First Conjugation.
@@ -302,19 +298,18 @@
   - statement: The third person plural ending for Second Conjugation is -ять or -ать.
     correct: true
     explanation: Correct! вони говорять, вони роблять.
-  - statement: '«Я хочу» is an irregular form.'
+  - statement: «Я хочу» is an irregular form.
     correct: true
     explanation: 'Correct! хотіти is irregular: хочу, хочеш, хоче.'
   - statement: Second Conjugation verbs don't have consonant mutations.
     correct: false
     explanation: 'Incorrect! Many do: робити → роблю, ходити → ходжу.'
-  - statement: '«П''ю» is the first person singular of «пити.»'
+  - statement: «П'ю» is the first person singular of «пити.»
     correct: true
     explanation: Correct! я п'ю (I drink).
   - statement: Ukrainian distinguishes between ходити and їздити.
     correct: true
     explanation: Correct! This precision is a beautiful feature of Ukrainian.
-  id: grammar-rules
 - type: group-sort
   title: Verb Types
   groups:
@@ -336,7 +331,6 @@
     - їсти
     - пити
     - хотіти
-  id: verb-types
 - type: fill-in
   title: Complete the Dialogue
   items:
@@ -431,7 +425,6 @@
     - дивишся
     - дивиться
     - дивляться
-  id: complete-the-dialogue
 - type: quiz
   title: Choose the Right Verb
   items:
@@ -567,4 +560,3 @@
     - text: бачать
       correct: true
     explanation: вони бачать = they see
-  id: choose-the-right-verb

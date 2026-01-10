@@ -126,7 +126,6 @@
     - text: вони
       correct: false
     explanation: Always start with Ви for strangers (formal)
-  id: personal-pronouns
 - type: match-up
   title: Pronouns and Meanings
   pairs:
@@ -146,7 +145,6 @@
     right: you (formal/plural)
   - left: вони
     right: they
-  id: pronouns-and-meanings
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -234,7 +232,6 @@
     - Ми
     - Ви
     - Вони
-  id: complete-the-sentences
 - type: true-false
   title: Grammar Rules
   items:
@@ -244,10 +241,10 @@
   - statement: The pronoun «я» is always capitalized like English "I."
     correct: false
     explanation: Incorrect! «я» is lowercase unless it starts a sentence.
-  - statement: '«Ви» can mean both "you all" and formal "you" (singular).'
+  - statement: «Ви» can mean both "you all" and formal "you" (singular).
     correct: true
     explanation: Correct! Context tells you which.
-  - statement: '«Це» changes form for plural.'
+  - statement: «Це» changes form for plural.
     correct: false
     explanation: Incorrect! «Це» works for both singular and plural.
   - statement: Feminine professions typically add "-ка" to the masculine form.
@@ -256,26 +253,25 @@
   - statement: You should always use «ти» with strangers to be friendly.
     correct: false
     explanation: Incorrect! Use «Ви» with strangers—it's respectful.
-  - statement: '«Людина» is grammatically feminine but refers to any person.'
+  - statement: «Людина» is grammatically feminine but refers to any person.
     correct: true
     explanation: Correct! It's a feminine noun but gender-neutral in meaning.
   - statement: Ukrainian has more pronouns than English.
     correct: false
     explanation: Incorrect! Same number, but «ви» has dual function.
-  - statement: '«Він» is used for masculine nouns, not just male people.'
+  - statement: «Він» is used for masculine nouns, not just male people.
     correct: true
     explanation: Correct! All masculine nouns use «він.»
   - statement: In Ukrainian, you must say «Я є студент» to mean "I am a student."
     correct: false
     explanation: Incorrect! Just say «Я студент.» The «є» is dropped.
-  - statement: '«Друг» and «подруга» can mean both friend and romantic partner.'
+  - statement: «Друг» and «подруга» can mean both friend and romantic partner.
     correct: true
     explanation: Correct! Context is key.
   - statement: Saying «Я українець/українка» is an important identity statement in
       Ukrainian culture.
     correct: true
     explanation: Correct! It's a proud affirmation of national identity.
-  id: grammar-rules
 - type: group-sort
   title: Formal vs Informal
   groups:
@@ -295,7 +291,6 @@
     - Talking to a doctor you just met
     - Talking to the President
     - Talking to a cashier in a shop
-  id: formal-vs-informal
 - type: quiz
   title: Gender Forms
   items:
@@ -398,7 +393,7 @@
     - text: -иця
       correct: false
     explanation: Most add -ка to the masculine stem
-  - question: '«Він українець, вона ___.»'
+  - question: «Він українець, вона ___.»
     options:
     - text: українець
       correct: false
@@ -409,7 +404,7 @@
     - text: україна
       correct: false
     explanation: вона українка (feminine)
-  - question: '«Я студент» is said by a ___.'
+  - question: «Я студент» is said by a ___.
     options:
     - text: male
       correct: true
@@ -420,7 +415,7 @@
     - text: plural
       correct: false
     explanation: студент = masculine form
-  - question: '«Я студентка» is said by a ___.'
+  - question: «Я студентка» is said by a ___.
     options:
     - text: male
       correct: false
@@ -431,7 +426,6 @@
     - text: plural
       correct: false
     explanation: студентка = feminine form
-  id: gender-forms
 - type: anagram
   title: Build the Words
   items:
@@ -459,7 +453,6 @@
     answer: людина
   - scrambled: п о д р у г а
     answer: подруга
-  id: build-the-words
 - type: quiz
   title: Ти or Ви?
   items:
@@ -595,4 +588,3 @@
     - text: вони
       correct: false
     explanation: Use ти with people you live with casually.
-  id: ти-or-ви?

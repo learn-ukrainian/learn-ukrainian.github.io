@@ -121,7 +121,6 @@
       correct: false
     - text: German
       correct: false
-  id: cyrillic-reading
 - type: match-up
   title: Gender Recognition
   pairs:
@@ -141,7 +140,6 @@
     right: feminine
   - left: чай
     right: masculine
-  id: gender-recognition
 - type: fill-in
   title: Demonstrative Agreement
   items:
@@ -241,7 +239,6 @@
     - Це
     - Ці
     explanation: студенти = plural → ці
-  id: demonstrative-agreement
 - type: fill-in
   title: Verb Conjugation First Conjugation
   items:
@@ -341,7 +338,6 @@
     - читають
     - читаю
     explanation: ви → читаєте
-  id: verb-conjugation-first-conjugation
 - type: fill-in
   title: Verb Conjugation Second Conjugation
   items:
@@ -441,7 +437,6 @@
     - говорять
     - говорю
     explanation: ви → говорите
-  id: verb-conjugation-second-conjugation
 - type: group-sort
   title: Verb Classes
   groups:
@@ -463,7 +458,6 @@
     - їсти
     - пити
     - бути
-  id: verb-classes
 - type: quiz
   title: Question Words
   items:
@@ -587,7 +581,6 @@
       correct: false
     - text: Як
       correct: true
-  id: question-words
 - type: true-false
   title: Grammar Rules
   items:
@@ -603,7 +596,7 @@
   - statement: Ukrainian uses "to be" (є) in all present tense sentences.
     correct: false
     explanation: 'Incorrect! Ukrainian has zero copula: «Я студент» (no є needed).'
-  - statement: '«Це» can mean both "this" (neuter) and "this is".'
+  - statement: «Це» can mean both "this" (neuter) and "this is".
     correct: true
     explanation: Correct! Це вікно, Це книга (This is a book).
   - statement: First Conjugation verbs end in -ати or -яти.
@@ -618,16 +611,15 @@
   - statement: Negation in Ukrainian uses «ні» before the verb.
     correct: false
     explanation: 'Incorrect! Negation uses «не»: Я не читаю (I don''t read).'
-  - statement: '«Борщ» is a traditional Ukrainian soup.'
+  - statement: «Борщ» is a traditional Ukrainian soup.
     correct: true
     explanation: Correct! UNESCO recognized Ukrainian borsch culture!
-  - statement: '«Смачного!» means "Bon appétit!" in Ukrainian.'
+  - statement: «Смачного!» means "Bon appétit!" in Ukrainian.
     correct: true
     explanation: Correct! Used when someone starts eating.
   - statement: All Ukrainian verbs are regular.
     correct: false
     explanation: Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш).
-  id: grammar-rules
 - type: match-up
   title: Food and Drinks
   pairs:
@@ -647,7 +639,6 @@
     right: milk
   - left: сік
     right: juice
-  id: food-and-drinks
 - type: anagram
   title: Cyrillic Practice
   items:
@@ -675,7 +666,6 @@
     answer: мова
   - scrambled: с л о в о
     answer: слово
-  id: cyrillic-practice
 - type: fill-in
   title: Negation Practice
   items:
@@ -763,4 +753,3 @@
     - ні
     - ніколи
     - немає
-  id: negation-practice

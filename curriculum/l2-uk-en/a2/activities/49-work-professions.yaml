@@ -81,7 +81,6 @@
       correct: false
     - text: відпочивати
       correct: false
-  id: profession-quiz
 - type: match-up
   title: Profession Match-up
   pairs:
@@ -109,7 +108,6 @@
     right: підлеглий
   - left: колега
     right: співробітник
-  id: profession-match-up
 - type: fill-in
   title: Fill in the Blanks
   items:
@@ -209,7 +207,6 @@
     - начальником
     - начальнику
     explanation: 'Accusative animate: начальника.'
-  id: fill-in-the-blanks
 - type: true-false
   title: True or False
   items:
@@ -249,7 +246,6 @@
   - statement: Програмісти часто працюють з комп'ютером.
     correct: true
     explanation: Programmers work with computers.
-  id: true-or-false
 - type: group-sort
   title: Category Sort
   groups:
@@ -272,7 +268,6 @@
     - 'заробляти: Actions'
     - 'керувати: Actions'
     - 'звільнити: Actions'
-  id: category-sort
 - type: unjumble
   title: Unjumble Sentences
   items:
@@ -353,7 +348,6 @@
     - літню
     - відпустку
     answer: Вона вчора пішла у довгу літню відпустку
-  id: unjumble-sentences
 - type: error-correction
   title: Fix the Mistakes
   items:
@@ -465,7 +459,6 @@
     - Чесна
     - Чеснім
     explanation: 'Plural agreement: чесні люди.'
-  id: fix-the-mistakes
 - type: cloze
   title: Career Ladder
   passage: 'Максим почав свою {кар''єру|роботу|школу} в маленькій фірмі. Він працював
@@ -481,10 +474,8 @@
     Максим любить свій {офіс|дім|парк} і своїх колег. Влітку він поїде у {відпустку|роботу|лікарню}.
 
     Він каже, що {праця|лінь|гра} робить людину щасливою. Успіх — це {результат|початок|кінець}.'
-  id: career-ladder
 - type: mark-the-words
   title: Profession Search
-  id: profession-search
   passage: Мій брат — *програміст*. Він працює в *офісі*. Його дружина — *лікар*.
     Вона працює в *лікарні*. Мій батько був *водієм*. Він любив свій *автобус*. Моя
     мама — *вчитель*. *Школа* — це її другий дім. Я хочу бути *юристом*. Я буду працювати
@@ -636,4 +627,3 @@
     - text: Інший варіант
       correct: false
     explanation: Conjugated verb 'we work'.
-  id: choose-the-correct-word

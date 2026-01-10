@@ -121,7 +121,6 @@
       correct: false
     - text: teacher
       correct: false
-  id: education-facts
 - type: match-up
   title: School Vocab
   pairs:
@@ -149,7 +148,6 @@
     right: knowledge
   - left: предмет
     right: subject
-  id: school-vocab
 - type: fill-in
   title: Study Verbs
   items:
@@ -249,7 +247,6 @@
     - вчить
     - вчишся
     explanation: General process.
-  id: study-verbs
 - type: true-false
   title: Ukrainian Education
   items:
@@ -289,7 +286,6 @@
   - statement: «Вчитися» describes where you study.
     correct: true
     explanation: Я вчуся в школі.
-  id: ukrainian-education
 - type: group-sort
   title: School vs Uni
   groups:
@@ -312,7 +308,6 @@
     - 'ручка: Materials'
     - 'підручник: Materials'
     - 'олівець: Materials'
-  id: school-vs-uni
 - type: unjumble
   title: Education Syntax
   items:
@@ -437,7 +432,6 @@
     - роботу
     - вдома
     answer: Вона зараз пише свою складну дипломну роботу вдома
-  id: education-syntax
 - type: error-correction
   title: Grammar Fix
   items:
@@ -549,7 +543,6 @@
     - підручника
     - підручники
     explanation: 'Genitive plural after ''багато'': підручників.'
-  id: grammar-fix
 - type: cloze
   title: University Day
   passage: 'Я — студент. Я {вчуся|вивчаю|сплю} в університеті.
@@ -568,10 +561,8 @@
 
     Ввечері я йду в {гуртожиток|парк|ліс} і лягаю {рано|пізно|завтра} спати. Завтра
     знову {вчитися|грати|співати}.'
-  id: university-day
 - type: mark-the-words
   title: Classroom Objects
-  id: classroom-objects
   passage: На столі лежить *підручник* і мій синій *зошит*. Я беру *ручку*, щоб писати.
     Де мій *олівець*? Вчитель пише на *дошці*. У класі є комп'ютер і *карта*. У мене
     в рюкзаку є *книга* і *лінійка*. Я люблю свій *клас*.
@@ -721,4 +712,3 @@
     - text: Інший варіант
       correct: false
     explanation: Diploma.
-  id: word-choice

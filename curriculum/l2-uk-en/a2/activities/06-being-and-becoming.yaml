@@ -25,7 +25,6 @@
     right: секретарка
   - left: водій
     right: водійка
-  id: professions-masculine-and-feminine
 - type: fill-in
   title: Бути/Стати + Instrumental
   items:
@@ -113,7 +112,6 @@
     - акторкою
     - акторку
     - акторки
-  id: бути/стати-+-instrumental
 - type: quiz
   title: When to Use Instrumental
   items:
@@ -249,7 +247,6 @@
       correct: false
     - text: Він хоче стати лікарю.
       correct: false
-  id: when-to-use-instrumental
 - type: true-false
   title: Instrumental with Professions
   items:
@@ -289,7 +286,6 @@
   - statement: The feminine of «письменник» is «письменниця.»
     correct: true
     explanation: Correct! Письменник → письменниця.
-  id: instrumental-with-professions
 - type: group-sort
   title: Masculine vs. Feminine Professions
   groups:
@@ -309,7 +305,6 @@
     - програмістка
     - журналістка
     - письменниця
-  id: masculine-vs.-feminine-professions
 - type: unjumble
   title: Profession Sentences
   items:
@@ -433,7 +428,6 @@
     - театрі
     - київському
     answer: Вона хотіла стати відомою акторкою в київському театрі
-  id: profession-sentences
 - type: error-correction
   title: Fix the Instrumental
   items:
@@ -545,7 +539,6 @@
     - інженерів
     - інженерам
     explanation: Future of «стати» requires instrumental plural.
-  id: fix-the-instrumental
 - type: cloze
   title: Complete the Story
   passage: 'Мій друг Андрій раніше {працювала журналісткою|працювала журналістка|працювала
@@ -564,10 +557,8 @@
     і пише книги. Я пишаюся, що моя сестра {стала письменницею|стала журналісткою|працює
     письменницею}! Її чоловік Борис {працює інженером|працює інженер|працює інженера}
     на заводі. Раніше він {був студентом|був студент|був студента} у технікумі.'
-  id: complete-the-story
 - type: mark-the-words
   title: Find Instrumental Forms
-  id: find-instrumental-forms
   passage: 'Click on instrumental forms used with бути/стати/працювати.
 
     Він раніше *був студентом*. Зараз він лікар. Він *працює лікарем* у лікарні. Його
@@ -662,4 +653,3 @@
     - text: Вона працює журналісткі.
       correct: false
     explanation: Feminine 'журналістка' in Instrumental 'журналісткою'.
-  id: english-to-ukrainian
