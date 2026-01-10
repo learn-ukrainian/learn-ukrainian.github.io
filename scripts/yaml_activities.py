@@ -539,7 +539,7 @@ class ActivityParser:
         return f"### {self._escape_jsx(activity.title)}\n\n<Cloze passage={{{json.dumps(passage, ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
 
     def _match_up_to_mdx(self, activity: MatchUpActivity) -> str:
-        pairs = [{'left': p.left, 'right': p.right} for p in activity.pairs]
+        pairs = [{'left': str(p.left), 'right': str(p.right)} for p in activity.pairs]
         return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} />"
 
     def _group_sort_to_mdx(self, activity: GroupSortActivity) -> str:
