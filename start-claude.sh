@@ -111,4 +111,4 @@ echo ""
 
 # Start Claude
 echo "Launching Claude Code in dontAsk mode..."
-claude --permission-mode dontAsk "$@"
+claude --permission-mode bypassPermissions "$@"

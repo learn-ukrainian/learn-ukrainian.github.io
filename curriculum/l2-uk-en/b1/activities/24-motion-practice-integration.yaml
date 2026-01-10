@@ -394,6 +394,8 @@
       correct: false
     - text: зайшли
       correct: false
+    - text: залишилися
+      correct: false
   - question: Вони **дісталися** вершини гори.
     options:
     - text: дійшли до
@@ -402,6 +404,8 @@
       correct: false
     - text: зійшли з
       correct: false
+    - text: відійшли від
+      correct: false
   - question: Автобус **рушив** з місця.
     options:
     - text: поїхав
@@ -409,6 +413,8 @@
     - text: став
       correct: false
     - text: приїхав
+      correct: false
+    - text: зупинився
       correct: false
   - question: Ми **прогулювалися** набережною.
     options:
