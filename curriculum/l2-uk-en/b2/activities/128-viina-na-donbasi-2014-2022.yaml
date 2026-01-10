@@ -85,6 +85,7 @@ activities:
       correct: false
     - text: Американський безпілотник
       correct: false
+  title: Дайте відповідь на запитання на основі прочитаного тексту про війну на Донбасі.
 - type: fill-in
   id: vocab_context_1
   question: Заповніть пропуски відповідними словами з лексичного мінімуму.
@@ -145,6 +146,7 @@ activities:
     - чесна
     - швидка
     - легка
+  title: Заповніть пропуски відповідними словами з лексичного мінімуму.
 - type: match-up
   id: events_matching
   question: Поєднайте дати та події.
@@ -165,6 +167,7 @@ activities:
     right: Звільнення Слов'янська
   - left: 2014-2022
     right: Період АТО/ООС
+  title: Поєднайте дати та події.
 - type: error-correction
   id: grammar_agreement
   question: Виправте помилки в узгодженні слів.
@@ -217,6 +220,7 @@ activities:
     - Артилерія стріляло гучно.
     - Артилерія стріляли гучно.
     explanation: Артилерія — жіночий рід.
+  title: Виправте помилки в узгодженні слів.
 - type: select
   id: source_analysis_select
   question: 'Проаналізуйте уривок зі звіту ОБСЄ: ''Аналіз показує, що ракети... були
@@ -235,6 +239,7 @@ activities:
     correct: true
   - text: ОБСЄ підтримує дії бойовиків.
     correct: false
+  title: Виберіть правильні відповіді
 - type: mark-the-words
   id: grammar_verbs
   question: Знайдіть дієслова минулого часу.
@@ -249,6 +254,7 @@ activities:
   - привезли
   - засудив
   - вистояла
+  title: Знайдіть дієслова минулого часу.
 - type: group-sort
   id: sorting_categories
   question: Розподіліть поняття за категоріями.
@@ -279,6 +285,7 @@ activities:
     - Блокпост
     - Обмін полоненими
     - Гуманітарна допомога
+  title: Розподіліть поняття за категоріями.
 - type: cloze
   id: text_cloze
   question: Заповніть пропуски в тексті (16 слів).
@@ -295,6 +302,7 @@ activities:
     тил. Україна довела, що готова {боротися|здатися|мовчати|боротися} за свою свободу.
     Ми {пам'ятаємо|забуваємо|не знаємо|пам'ятаємо} наших героїв. Перемога буде за
     {нами|ними|ніким|нами}.
+  title: Заповніть пропуски в тексті (16 слів).
 - type: unjumble
   id: sentence_unjumble
   question: Складіть речення про війну.
@@ -344,6 +352,7 @@ activities:
     - всім
     - необхідним
     answer: Волонтери допомагали армії всім необхідним.
+  title: Складіть речення про війну.
 - type: translate
   id: translation_en_uk
   question: Перекладіть терміни українською мовою.
@@ -364,6 +373,7 @@ activities:
     answer: Блокпост
   - question: Ceasefire
     answer: Перемир'я
+  title: Перекладіть терміни українською мовою.
 - type: select
   id: linguistic_features
   question: Які слова стали символами цієї війни?
@@ -380,6 +390,7 @@ activities:
     correct: true
   - text: Інтернет (мережа)
     correct: false
+  title: Які слова стали символами цієї війни?
 - type: quiz
   id: general_knowledge
   question: Перевірте свої знання фактів.
@@ -464,6 +475,7 @@ activities:
       correct: false
     - text: Кордон з Польщею
       correct: false
+  title: Перевірте свої знання фактів.
 - type: true-false
   id: additional_check
   question: Визначте правдивість тверджень.
@@ -492,6 +504,7 @@ activities:
   - text: Війна на Донбасі закінчилася у 2022 році.
     answer: false
     explanation: Вона переросла у повномасштабну війну.
+  title: Визначте правдивість тверджень.
 - type: select
   id: additional_select
   question: Які міста були звільнені українською армією влітку 2014 року?
@@ -508,3 +521,4 @@ activities:
     correct: false
   - text: Сєвєродонецьк
     correct: true
+  title: Які міста були звільнені українською армією влітку 2014 року?

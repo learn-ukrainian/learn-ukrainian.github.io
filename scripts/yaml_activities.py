@@ -411,6 +411,8 @@ class ActivityParser:
         for item_data in data.get('items', []):
             words = item_data.get('words', [])
             if not words and 'jumbled' in item_data: words = [w.strip() for w in item_data['jumbled'].split('/')]
+            if not words and 'prompt' in item_data: words = [w.strip() for w in item_data['prompt'].split('/')]
+            if not words and 'scrambled' in item_data: words = [w.strip() for w in item_data['scrambled'].split('/')]
             items.append(UnjumbleItem(words=words, answer=item_data['answer']))
         return UnjumbleActivity(title=data.get('title', ''), items=items)
 
