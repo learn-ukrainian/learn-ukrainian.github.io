@@ -29,7 +29,9 @@
     "seo:generate": "python3 scripts/generate_seo.py",
     "sync:landing": ".venv/bin/python scripts/sync_landing_pages.py",
     "sync:landing:dry": ".venv/bin/python scripts/sync_landing_pages.py --dry-run",
-    "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/"
+    "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/",
+    "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\""
   },
   "repository": {
     "type": "git",
@@ -59,12 +61,14 @@
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.2.0",
     "js-yaml": "^4.1.1",
+    "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.7.4",
     "puppeteer": "^24.32.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0"
+    "typescript-eslint": "^8.49.0",
+    "yaml-language-server": "^1.19.2"
   },
   "dependencies": {
     "better-sqlite3": "^12.5.0",
