@@ -124,6 +124,10 @@
           "type": "string",
           "minLength": 1
         },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
         "pairs": {
           "type": "array",
           "minItems": 8,
