@@ -53,29 +53,9 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [розуміння-емоційного-інтелекту] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [index-8] unjumble: 'items.13' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [колокації--іменник-+-дієслово] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [синоніми-та-переклад] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [групування-за-значенням] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [вибір-слова-з-контексту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [правильні-колокації] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [правила-використання] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [заповніть-пропуски-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [виправте-помилки-в-колокаціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [переклад-речень] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [знайдіть-слова-емоційного-інтелекту] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 71-emotional-intelligence.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -88,7 +68,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 39 violations (severe - consider revision)
+- 29 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1747/1500
@@ -101,7 +81,7 @@
 - **Vocab:** ⚠️ 22 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 37 violations
+- **Pedagogy:** ❌ 27 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)

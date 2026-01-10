@@ -29,29 +29,9 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [розуміння-лексики-подорожей] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [колокації--іменник-+-дієслово] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [переклад-географічних-термінів] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [групування-за-категорією] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [вибір-слова-з-контексту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [правильні-колокації] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [правила-використання-лексики-подорожей] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [заповніть-пропуски-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [виправте-помилки-в-колокаціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [переклад-речень] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [знайдіть-лексику-подорожей] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-travel-geography.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -64,7 +44,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+- 17 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1660/1500
@@ -77,7 +57,7 @@
 - **Vocab:** ✅ 38/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 25 violations
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)

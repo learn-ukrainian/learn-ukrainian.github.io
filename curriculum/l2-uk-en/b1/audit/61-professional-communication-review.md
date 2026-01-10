@@ -23,29 +23,9 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [розуміння-професійної-лексики] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [колокації--іменник-+-дієслово] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [переклад-професійної-лексики] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [групування-за-категорією] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [вибір-слова-з-контексту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [правильні-колокації] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [правила-використання] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [заповніть-пропуски-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [виправте-помилки-в-колокаціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [переклад-речень] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [знайдіть-професійну-лексику] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-professional-communication.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 61 has 97.7% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
@@ -60,7 +40,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 25 violations (severe - consider revision)
+- 15 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1751/1500
@@ -73,7 +53,7 @@
 - **Vocab:** ⚠️ 15 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 22 violations
+- **Pedagogy:** ❌ 12 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.7% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 99% (vocabulary)

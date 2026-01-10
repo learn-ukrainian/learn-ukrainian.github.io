@@ -7,33 +7,7 @@
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Позначте сполучники складних речень' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [допустові-речення-(м35)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [причинові-та-наслідкові-речення-(м36)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [часові-речення-(м37)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [непряма-мова-(м39-40)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [з'єднайте-тип-речення-з-прикладом] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [інтегрований-тест] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [розподіліть-сполучники-за-типами] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [комплексний-тест] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [комплексний-тест] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [комплексний-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [позначте-сполучники-складних-речень] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [виберіть-усі-граматично-правильні-речення] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [комплексний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [правила-складних-речень] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-checkpoint-complex-sentences-2.yaml: [index-10] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -43,10 +17,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 60/100)
-- 18 violations (severe - consider revision)
+- 5 violations (moderate)
 - Activity density below minimum
 
 ## Gates
@@ -60,7 +33,7 @@
 - **Vocab:** ⚠️ 5 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ❌ 84% < 85% min (checkpoint)

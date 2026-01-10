@@ -7,29 +7,7 @@
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Позначте сполучники й відносні слова' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [відносні-речення-(м26-28)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [підрядні-речення-мети-(м29-30)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [умовні-речення-(м31-33)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [з'єднайте-тип-речення-з-прикладом] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [інтегрований-тест] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [розподіліть-речення-за-типами] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [комплексний-тест] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [комплексний-тест] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [комплексний-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [позначте-сполучники-й-відносні-слова] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [виберіть-усі-граматично-правильні-речення] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [комплексний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [index-9] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -39,10 +17,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 60/100)
-- 16 violations (severe - consider revision)
+- 5 violations (moderate)
 - Activity density below minimum
 
 ## Gates
@@ -56,7 +33,7 @@
 - **Vocab:** ⚠️ 7 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 14 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.4% (checkpoint - no gate)
 - **Richness:** ✅ 91% (checkpoint)

@@ -7,27 +7,7 @@
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Знайдіть канцелярити та русизми в тексті' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [теоретичні-знання-про-активні-дієприкметники-та-їхню-стилістику] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [канцеляризми-та-їхні-правильні-українські-відповідники] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [перефразування-дієприкметникових-конструкцій] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [стилістичний-статус-дієприкметникових-форм] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [класифікація-дієприкметникових-форм-за-стилістичним-статусом] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [побудова-правильних-речень-без-канцеляритів] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [виправлення-канцеляритів-та-русизмів-у-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [стилістичне-редагування-тексту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [знайдіть-канцелярити-та-русизми-в-тексті] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [вибір-правильної-форми-замість-канцелярита] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [переклад-речень-без-канцеляритів] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [index-8] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -35,10 +15,9 @@
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 60/100)
-- 14 violations (severe - consider revision)
+- 4 violations (moderate)
 - Activity density below minimum
 
 ## Gates
@@ -52,7 +31,7 @@
 - **Vocab:** ✅ 40/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 13 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)

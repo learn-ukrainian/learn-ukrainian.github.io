@@ -45,32 +45,6 @@
   - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 16 has 6 words (target: 8-15)
   - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [розуміння-тексту-про-велике-князівство-литовське] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [історична-та-правова-термінологія] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [історична-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [факти-про-велике-князівство-литовське] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [класифікація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [складіть-речення-про-велике-князівство-литовське] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [граматика-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [заповніть-текст-про-велике-князівство-литовське] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [знайдіть-правову-та-політичну-термінологію] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [переклад-історичних-термінів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-velyke-kniazivstvo-lytovske.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -86,7 +60,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 38 violations (severe - consider revision)
+- 25 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1866/2000
@@ -99,7 +73,7 @@
 - **Vocab:** ✅ 80/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 36 violations
+- **Pedagogy:** ❌ 23 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
 - **Immersion:** 🇺🇦 99.0% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)

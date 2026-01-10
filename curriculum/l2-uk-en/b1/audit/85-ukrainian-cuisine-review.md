@@ -19,29 +19,9 @@
   - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 8 has 5 words (target: 8-14)
   - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [розуміння-української-кухні] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [факти-про-українську-кухню] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [страви-та-їхні-характеристики] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [кулінарна-лексика--переклад] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [кулінарна-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [категоризація-страв] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [виберіть-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [текст-про-українську-кухню] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [складіть-речення-про-українську-кухню] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [виправте-помилки-в-реченнях-про-їжу] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [переклад-кулінарних-фраз] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [знайдіть-кулінарну-лексику] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -52,7 +32,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 21 violations (severe - consider revision)
+- 11 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1804/1500
@@ -65,7 +45,7 @@
 - **Vocab:** ✅ 75/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 20 violations
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)

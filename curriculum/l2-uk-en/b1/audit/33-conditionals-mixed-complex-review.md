@@ -3,36 +3,17 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [виберіть-правильну-відповідь] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [index-8] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [з'єднайте-умову-з-наслідком] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [доповніть-речення-правильною-формою] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [правда-чи-неправда?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [розподіліть-речення-за-типами] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [складіть-речення-з-розсипаних-слів] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [знайдіть-і-виправте-помилку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [заповніть-пропуски-в-тексті] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [позначте-часові-маркери-та-сполучники-умови] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [перекладіть-на-українську-мову] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [виберіть-усі-речення-зі-змішаними-умовами] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 33-conditionals-mixed-complex.yaml: [index-10] select: 'items.7' - 'question' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 33 has 96.1% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 60/100)
-- 12 violations (severe - consider revision)
+- 3 violations (minor)
 - Activity density below minimum
 
 ## Gates
@@ -46,7 +27,7 @@
 - **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 11 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.1% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)

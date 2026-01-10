@@ -7,27 +7,7 @@
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Знайдіть дієприслівники недоконаного виду' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [теоретичні-знання-про-дієприслівники-недоконаного-виду] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [інфінітив-та-відповідний-дієприслівник] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [утворення-дієприслівників-недоконаного-виду] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [правила-вживання-дієприслівників] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [класифікація-форм-дієприслівників] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [побудова-речень-з-дієприслівниками] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [виправлення-помилок-у-дієприслівникових-конструкціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [дієприслівники-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [знайдіть-дієприслівники-недоконаного-виду] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [вибір-правильного-дієприслівника] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [переклад-речень-з-дієприслівниками] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-adverbial-participles-imperfective.yaml: [index-8] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -35,10 +15,9 @@
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 60/100)
-- 14 violations (severe - consider revision)
+- 4 violations (moderate)
 - Activity density below minimum
 
 ## Gates
@@ -52,7 +31,7 @@
 - **Vocab:** ✅ 36/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 13 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)

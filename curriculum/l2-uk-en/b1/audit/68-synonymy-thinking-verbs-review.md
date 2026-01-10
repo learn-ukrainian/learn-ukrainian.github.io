@@ -33,29 +33,9 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [розуміння-дієслів-мислення] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [index-8] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [синоніми-та-переклад] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [колокації--дієслово-+-прийменник] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [групування-за-відтінком-значення] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [вибір-правильного-дієслова] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [правильне-вживання-дієслів] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [правила-використання-дієслів-мислення] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [заповніть-пропуски-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [складіть-речення-правильно] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [виправте-помилки-у-дієсловах-мислення] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [переклад-речень-з-дієсловами-мислення] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [знайдіть-дієслова-мислення] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 68 has 97.9% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
@@ -70,7 +50,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 30 violations (severe - consider revision)
+- 20 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1765/1500
@@ -83,7 +63,7 @@
 - **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 27 violations
+- **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)

@@ -17,29 +17,9 @@
   - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Південну Україну' item 8 has 5 words (target: 8-14)
   - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [розуміння-південної-україни] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [index-7] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [регіони-та-їхні-характеристики] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [українська-лексика--переклад] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [заповніть-пропуски] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [факти-про-південну-україну] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [категоризація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [заповніть-текст-про-південну-україну] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [складіть-речення-про-південну-україну] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [виправте-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [виберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [перекладіть-речення] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [знайдіть-географічні-та-культурні-терміни] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 74-regions-south.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -47,10 +27,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 30/100)
 
-- Revision recommended (severity 50/100)
-- 20 violations (severe - consider revision)
+- 10 violations (significant)
 
 ## Gates
 - **Words:** ✅ 1709/1500
@@ -63,7 +42,7 @@
 - **Vocab:** ✅ 56/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 19 violations
+- **Pedagogy:** ❌ 9 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (cultural)

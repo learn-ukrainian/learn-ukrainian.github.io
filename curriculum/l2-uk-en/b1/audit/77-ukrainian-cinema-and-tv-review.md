@@ -5,27 +5,9 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 8 has 6 words (target: 8-14)
   - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [українське-кіно--розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [index-7] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [правда-чи-хибність-про-українське-кіно] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [кіно-лексика--терміни-та-визначення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [заповніть-пропуски-кінолексикою] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [заповніть-текст-про-українське-кіно] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [розподіліть-за-категоріями] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [знайдіть-слова,-пов'язані-з-кіно] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [складіть-речення-про-українське-кіно] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [виправте-помилки-у-реченнях-про-кіно] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [перекладіть-фрази-про-кіно] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -33,10 +15,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 50/100)
-- 13 violations (severe - consider revision)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1702/1500
@@ -49,7 +30,7 @@
 - **Vocab:** ✅ 50/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 12 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ❌ 94% < 95% min (cultural)

@@ -27,10 +27,6 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q14 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q15 prompt length 7 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q16 prompt length 6 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 1 has 4 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 2 has 3 words (target: 10-18)
@@ -75,34 +71,6 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q16 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [визначення-функціонального-стилю] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стилі-та-їх-характеристики] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [визначення-стилю-за-контекстом] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [характеристики-стилів] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [класифікація-мовних-засобів-за-стилями] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [речення-різних-стилів] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стильові-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [характеристики-функціональних-стилів] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [знайдіть-маркери-офіційно-ділового-стилю] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [оберіть-усі-характеристики] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [трансформація-стилю] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [аналіз-текстів-за-стилями] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стильові-маркери-в-контексті] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
@@ -112,20 +80,20 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 51 violations (severe - consider revision)
+- 35 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2401/1750
-- **Activities:** ✅ 13/10
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 203/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 50 violations
+- **Pedagogy:** ❌ 34 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

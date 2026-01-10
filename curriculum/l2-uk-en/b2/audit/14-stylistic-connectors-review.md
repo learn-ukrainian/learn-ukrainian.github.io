@@ -3,35 +3,29 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q1 prompt length 8 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q2 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q3 prompt length 6 (target: 10-25)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q3 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q4 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q6 prompt length 8 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q7 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q8 prompt length 5 (target: 10-25)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q8 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q9 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q10 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q11 prompt length 6 (target: 10-25)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q11 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q12 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q13 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q14 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q15 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q16 prompt length 6 (target: 10-25)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні основи стилістичних сполучників' Q16 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення зі сполучниками' item 1 has 5 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
@@ -65,52 +59,16 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення зі сполучниками' item 16 has 6 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q2 prompt length 9 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q3 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q4 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q5 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q6 prompt length 8 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q10 prompt length 9 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q12 prompt length 9 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q13 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз вживання сполучників у тексті' Q16 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [теоретичні-основи-стилістичних-сполучників] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [сполучники-та-їхні-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [оберіть-правильний-сполучник] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [правда-чи-хибність] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [розподіліть-сполучники-за-функцією] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [складіть-речення-зі-сполучниками] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [виправте-помилки-у-вживанні-сполучників] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [заповніть-текст-сполучниками] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [знайдіть-сполучники-протиставлення-та-допусту] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [оберіть-усі-правильні-твердження] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [оберіть-правильний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [оберіть-сполучник-відповідно-до-регістру] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-stylistic-connectors.yaml: [аналіз-вживання-сполучників-у-тексті] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
@@ -120,20 +78,20 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 55 violations (severe - consider revision)
+- 34 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2048/1750
-- **Activities:** ✅ 13/10
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 136/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 54 violations
+- **Pedagogy:** ❌ 33 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

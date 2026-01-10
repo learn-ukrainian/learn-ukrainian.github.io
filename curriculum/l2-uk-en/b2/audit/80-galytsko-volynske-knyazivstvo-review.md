@@ -61,32 +61,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q12 prompt length 7 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [історична-лексика] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [історичний-контекст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [факти-про-галицько-волинське-князівство] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [категоризація-термінів] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [складіть-історичні-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [виправте-помилки-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [заповніть-історичний-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [знайдіть-політичні-терміни-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [аналіз-первинного-джерела] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [оберіть-правильний-переклад-історичних-термінів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [деколонізаційна-лексика-в-контексті] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-galytsko-volynske-knyazivstvo.yaml: [комплексна-перевірка-знань] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -102,7 +76,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 46 violations (severe - consider revision)
+- 33 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1818/2000
@@ -115,7 +89,7 @@
 - **Vocab:** ✅ 87/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 44 violations
+- **Pedagogy:** ❌ 31 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
 - **Immersion:** 🇺🇦 98.7% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)

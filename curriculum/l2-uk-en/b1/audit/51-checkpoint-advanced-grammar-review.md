@@ -33,43 +33,9 @@
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з дієприслівниками та дієприкметниками' item 10 has 5 words (target: 9-16)
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [дієприслівники-недоконаного-виду-(m42)] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [index-13] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [дієприслівники-доконаного-виду-(m43)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [активні-дієприкметники-(m44)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [пасивні-дієприкметники--повна-форма-(m45)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [пасивні-дієприкметники--коротка-форма-(m46)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [дієприслівники--форми] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [пасивні-дієприкметники--форми] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [демінутиви--пари] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [дієприслівники--заповніть-пропуски] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [пасивні-дієприкметники--заповніть-пропуски] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [правила-просунутої-граматики] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [типи-дієприслівників-та-дієприкметників] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [функції-демінутивів] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [складіть-речення-з-дієприслівниками-та-дієприкметниками] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [типові-помилки-з-просунутою-граматикою] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [інтеграційний-текст--один-день-у-музеї] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [знайдіть-дієприслівники-та-дієприкметники] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [переклад-з-англійської] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-checkpoint-advanced-grammar.yaml: [index-16] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -82,7 +48,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 36 violations (severe - consider revision)
+- 19 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2020/1200
@@ -95,7 +61,7 @@
 - **Vocab:** ✅ 28/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 34 violations
+- **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)

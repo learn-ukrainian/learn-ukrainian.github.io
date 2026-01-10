@@ -5,27 +5,9 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up 'Свята — лексика та визначення' has 15 pairs (target: 12-14)
   - FIX: Adjust number of pairs to 12-14.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [українські-свята--розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [index-7] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [правда-чи-хибність-про-українські-свята] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [свята--лексика-та-визначення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [святкові-вирази] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [релігійні-свята-україни] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [категорії-свят] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [що-пов'язано-з-різдвом?] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [знайдіть-святкові-терміни] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [складіть-речення-про-свята] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [виправте-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [перекладіть-святкові-фрази] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [index-8] unjumble: 'items.7' - 'words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 86 has 97.5% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
@@ -35,10 +17,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 50/100)
-- 14 violations (severe - consider revision)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2015/1500
@@ -51,7 +32,7 @@
 - **Vocab:** ✅ 49/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 12 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 95% (cultural)

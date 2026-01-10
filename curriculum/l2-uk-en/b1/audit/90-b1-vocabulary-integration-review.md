@@ -19,31 +19,11 @@
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 11 has 6 words (target: 9-16)
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [комплексний-огляд-лексики-b1] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-8] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [колокації--дієслово-+-іменник] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-11] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [синоніми-та-антоніми] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [групування-за-доменом] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [вибір-правильного-слова-з-контексту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [виберіть-всі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [правила-використання-лексики-b1] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [заповніть-пропуски-в-тексті-про-україну] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [складіть-речення-з-лексикою-b1] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [виправте-помилки-в-лексиці-та-колокаціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [переклад-речень-з-усіх-доменів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [знайдіть-дискурсні-маркери-в-тексті] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [знайдіть-абстрактні-іменники-в-тексті] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-12] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 90 has 97.6% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
@@ -56,7 +36,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 23 violations (severe - consider revision)
+- 13 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2097/1500
@@ -69,7 +49,7 @@
 - **Vocab:** ✅ 18/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 21 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (grammar)

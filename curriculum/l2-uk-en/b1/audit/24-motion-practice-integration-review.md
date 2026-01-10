@@ -5,40 +5,26 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Типові помилки' uses placeholder syntax instead of real errors
   - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 5/6 items with placeholders/missing errors.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [деталі-навігації] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [index-2] true-false: 'items.7' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [префікс-та-прийменник] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [index-7] error-correction: 'items.5.options' - ['по парку', 'в парку', 'у парку'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [культурні-нюанси-та-логіка] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [index-8] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [життя-в-русі] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [складіть-маршрут] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [вставте-прийменник] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [лист-із-відпустки] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [типові-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [ідіоми-в-тексті] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [синоніми-руху] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [навігація-в-місті] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-motion-practice-integration.yaml: [index-9] select: 'items.5.options' - [{'text': 'йшла', 'correct': True}, {'text': 'стояла', 'correct': False}, {'text': 'бігла', 'correct': False}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 24 has 93.9% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Практика|Вправи' found: Дієслова руху: практика та інтеграція, Практика
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Практика|Вправи' found: Практика, Дієслова руху: практика та інтеграція
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 40/100)
 
-- Revision recommended (severity 60/100)
-- 14 violations (severe - consider revision)
+- Revision recommended (severity 40/100)
+- 7 violations (significant)
 - Activity density below minimum
 
 ## Gates
@@ -52,7 +38,7 @@
 - **Vocab:** ✅ 46/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 12 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 93.9% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)

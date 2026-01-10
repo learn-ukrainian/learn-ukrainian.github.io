@@ -9,27 +9,9 @@
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про читання новин' item 6 has 7 words (target: 9-16)
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [розуміння-стратегій-читання-новин] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [index-7] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [правда-чи-хибність-про-читання-новин] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [лексика-новин--терміни-та-визначення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [заповніть-пропуски-лексикою-новин] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [заповніть-текст-про-структуру-новин] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [розподіліть-на-факти-та-думки] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [знайдіть-терміни-журналістики] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [складіть-речення-про-читання-новин] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [виправте-помилки-у-реченнях-про-новини] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [перекладіть-фрази-про-новини] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-novyny-yak-chytaty.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -37,10 +19,9 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 50/100)
-- 15 violations (severe - consider revision)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1922/1500
@@ -53,7 +34,7 @@
 - **Vocab:** ✅ 21/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 14 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 97% (grammar)

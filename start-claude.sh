@@ -110,5 +110,5 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 echo ""
 
 # Start Claude
-echo "Launching Claude Code..."
-claude "$@"
+echo "Launching Claude Code in dontAsk mode..."
+claude --permission-mode dontAsk "$@"

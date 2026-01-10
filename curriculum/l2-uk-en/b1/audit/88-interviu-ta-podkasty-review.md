@@ -25,27 +25,9 @@
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про слухання подкастів' item 12 has 7 words (target: 9-16)
   - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [стратегії-слухання-та-розуміння-подкастів] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [index-7] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [факти-про-стратегії-слухання] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [терміни-слухання-та-їх-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [слова-для-обговорення-аудіоконтенту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [помилки-в-реченнях-про-слухання] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [стратегії-ефективного-слухання] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [категоризація-термінів-аудіоконтенту] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [складіть-речення-про-слухання-подкастів] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [перекладіть-речення-про-слухання] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [знайдіть-слова,-пов'язані-зі-слуханням] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-interviu-ta-podkasty.yaml: [index-10] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -58,7 +40,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 24 violations (severe - consider revision)
+- 15 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2074/1500
@@ -71,7 +53,7 @@
 - **Vocab:** ✅ 32/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 22 violations
+- **Pedagogy:** ❌ 13 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)

@@ -23,27 +23,7 @@
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Знайдіть пасивні дієприкметники в тексті' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [теоретичні-знання-про-пасивні-дієприкметники-минулого-часу] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [інфінітив-та-відповідний-пасивний-дієприкметник] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [утворення-пасивних-дієприкметників] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [правила-утворення-та-використання-пасивних-дієприкметників] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [класифікація-дієприкметників-за-типом-суфікса] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [побудова-речень-з-пасивними-дієприкметниками] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [виправлення-помилок-у-формах-пасивних-дієприкметників] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [пасивні-дієприкметники-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [знайдіть-пасивні-дієприкметники-в-тексті] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [вибір-правильної-форми-дієприкметника] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [переклад-речень-з-пасивними-дієприкметниками] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-past-passive-participles-1.yaml: [index-8] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
@@ -56,7 +36,7 @@
 **📝 UPDATE** (severity 60/100)
 
 - Revision recommended (severity 60/100)
-- 23 violations (severe - consider revision)
+- 13 violations (severe - consider revision)
 - Activity density below minimum
 
 ## Gates
@@ -70,7 +50,7 @@
 - **Vocab:** ✅ 55/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 21 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
