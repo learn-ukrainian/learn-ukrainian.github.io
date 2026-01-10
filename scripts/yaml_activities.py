@@ -501,19 +501,19 @@ class ActivityParser:
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
-        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options], 'explanation': i.explanation or ''} for i in activity.items]
+        items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Quiz questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _select_to_mdx(self, activity: SelectActivity) -> str:
-        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options], 'explanation': i.explanation or ''} for i in activity.items]
+        items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Select questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _true_false_to_mdx(self, activity: TrueFalseActivity) -> str:
-        items = [{'statement': i.statement, 'isTrue': i.correct, 'explanation': i.explanation or ''} for i in activity.items]
+        items = [{'statement': str(i.statement), 'isTrue': i.correct, 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _fill_in_to_mdx(self, activity: FillInActivity) -> str:
-        items = [{'sentence': i.sentence, 'answer': i.answer, 'options': i.options} for i in activity.items]
+        items = [{'sentence': str(i.sentence), 'answer': str(i.answer), 'options': [str(opt) for opt in i.options]} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<FillIn items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _cloze_to_mdx(self, activity: ClozeActivity) -> str:
@@ -535,8 +535,8 @@ class ActivityParser:
             if blank_idx > 0:
                 passage = new_passage
 
-        blanks = [{'index': i, 'answer': b.answer, 'options': b.options} for i, b in enumerate(activity.blanks)]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze passage={{{json.dumps(passage, ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
+        blanks = [{'index': i, 'answer': str(b.answer), 'options': [str(opt) for opt in b.options]} for i, b in enumerate(activity.blanks)]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
 
     def _match_up_to_mdx(self, activity: MatchUpActivity) -> str:
         pairs = [{'left': str(p.left), 'right': str(p.right)} for p in activity.pairs]
@@ -547,26 +547,26 @@ class ActivityParser:
         return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
-        items = [{'jumbled': ' / '.join(i.words), 'answer': i.answer} for i in activity.items]
+        items = [{'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
         items = []
         for i in activity.items:
-            opts = self._dump_safe_json(i.options)
-            items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(i.sentence)}" errorWord="{self._escape_jsx(i.error)}" correctForm="{self._escape_jsx(i.answer)}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(i.explanation)}" />')
+            opts = self._dump_safe_json([str(opt) for opt in i.options])
+            items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(str(i.sentence))}" errorWord="{self._escape_jsx(str(i.error))}" correctForm="{self._escape_jsx(str(i.answer))}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(str(i.explanation))}" />')
         return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection>\n{chr(10).join(items)}\n</ErrorCorrection>"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
-        ans = self._dump_safe_json([w for word in activity.answers for w in (word.split() if ' ' in word else [word])])
-        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(activity.instruction)}\" text=\"{self._escape_jsx(activity.text)}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
+        ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
+        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
-        items = [{'source': i.source, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        items = [{'source': str(i.source), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Translate questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
-        items = [{'scrambled': i.scrambled, 'answer': i.answer, 'hint': i.hint or ''} for i in activity.items]
+        items = [{'scrambled': str(i.scrambled), 'answer': str(i.answer), 'hint': str(i.hint) if i.hint else ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Anagram items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _essay_response_to_mdx(self, activity: EssayResponseActivity, is_ukrainian_forced: bool = False) -> str:
