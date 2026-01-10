@@ -83,7 +83,24 @@ def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
             errors.append(f"{activity_type}: {e.message}")
     except jsonschema.SchemaError as e:
         errors.append(f"Schema error for {activity_type}: {e.message}")
-    
+
+    # Custom validation for cloze activities
+    if activity_type == 'cloze':
+        passage = activity.get('passage', '')
+        has_blanks_array = 'blanks' in activity
+        has_curly_braces = '{' in passage
+        has_pipe_format = '|' in passage
+
+        if has_curly_braces and not has_blanks_array and not has_pipe_format:
+            # Passage has {word} markers but no way to present options
+            errors.append(f"cloze: passage has {{word}} markers but no 'blanks' array or '|' options format")
+        elif has_curly_braces and not has_pipe_format and has_blanks_array:
+            # Has blanks array - markers should be {1}, {2}, etc.
+            markers = re.findall(r'\{([^}]+)\}', passage)
+            non_numeric = [m for m in markers if not m.isdigit()]
+            if non_numeric:
+                errors.append(f"cloze: when using 'blanks' array, passage markers must be {{1}}, {{2}}, etc. (not words)")
+
     return errors
 
 
