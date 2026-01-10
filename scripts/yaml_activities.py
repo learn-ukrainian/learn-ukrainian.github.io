@@ -501,11 +501,11 @@ class ActivityParser:
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
-        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options], 'explanation': i.explanation or ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Quiz questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _select_to_mdx(self, activity: SelectActivity) -> str:
-        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options], 'explanation': i.explanation or ''} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Select questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _true_false_to_mdx(self, activity: TrueFalseActivity) -> str:
