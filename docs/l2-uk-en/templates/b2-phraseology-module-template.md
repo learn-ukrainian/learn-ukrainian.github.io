@@ -10,11 +10,11 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Фразеологізми
   - Вживання у контексті
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: CBI
   min_word_count: 1800
   required_callouts: []

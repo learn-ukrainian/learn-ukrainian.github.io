@@ -15,8 +15,8 @@ TEMPLATE_METADATA:
   - Огляд періоду
   - Ключові теми
   - Аналіз
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: CBI
   min_word_count: 2000
   required_callouts:

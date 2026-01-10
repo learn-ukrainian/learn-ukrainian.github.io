@@ -12,11 +12,11 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Текст і аналіз
   - Обговорення
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Seminar
   min_word_count: 2000
   required_callouts: []

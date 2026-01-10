@@ -17,10 +17,7 @@
         "type": {
           "const": "quiz"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
+
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -86,10 +83,7 @@
         "type": {
           "const": "select"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
+
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -159,10 +153,7 @@
         "type": {
           "const": "true-false"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
+
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -209,10 +200,7 @@
         "type": {
           "const": "fill-in"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
+
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -271,10 +259,6 @@
         "type": {
           "const": "cloze"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -286,7 +270,7 @@
         "passage": {
           "type": "string",
           "minLength": 1,
-          "description": "Text with {1}, {2}, etc. marking blanks"
+          "description": "Text with inline {correct|opt1|opt2|opt3} format OR numbered {1}, {2} with blanks array"
         },
         "blanks": {
           "type": "array",
@@ -334,10 +318,6 @@
         "type": {
           "const": "match-up"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -381,10 +361,6 @@
       "properties": {
         "type": {
           "const": "group-sort"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
         },
         "instruction": {
           "type": "string",
@@ -435,10 +411,6 @@
         "type": {
           "const": "unjumble"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -486,10 +458,6 @@
       "properties": {
         "type": {
           "const": "error-correction"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
         },
         "instruction": {
           "type": "string",
@@ -559,10 +527,6 @@
         "type": {
           "const": "mark-the-words"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
         "title": {
           "type": "string",
           "minLength": 1
@@ -598,10 +562,6 @@
       "properties": {
         "type": {
           "const": "translate"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
         },
         "instruction": {
           "type": "string",
@@ -669,10 +629,6 @@
         "type": {
           "const": "anagram"
         },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
@@ -723,10 +679,6 @@
       "properties": {
         "type": {
           "const": "essay-response"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
         },
         "instruction": {
           "type": "string",
@@ -792,10 +744,6 @@
       "properties": {
         "type": {
           "const": "critical-analysis"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
         },
         "instruction": {
           "type": "string",

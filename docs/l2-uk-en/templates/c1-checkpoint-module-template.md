@@ -6,14 +6,15 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
-
+<!--
 TEMPLATE_METADATA:
   required_sections:
-  - Overview|Огляд
-  - Skills|Навички
-  - Need More Practice?|Потрібно більше практики?
+  - Огляд
+  - Навички
+  - Потрібно більше практики?
   pedagogy: TBL
   min_word_count: 1200
+-->
 
 ---
 

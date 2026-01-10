@@ -9,12 +9,11 @@
 
 Before submitting your integration module, verify:
 
-- [ ] **Word count:** 1500+ words
+- [ ] **Word count:** 1500+ words (M81-84), 1200+ (M85 Capstone)
 - [ ] **Vocabulary:** 15-20 items in 5-column format with IPA (lower than regular modules - these are review/meta modules)
-- [ ] **Activities:** 12+ activities with variety
+- [ ] **Activities:** 8-10 activities for M81-84 (quality over quantity), 5-8 activities + 5 tasks for M85 Capstone
 - [ ] **Authentic materials:** 5+ authentic Ukrainian texts/resources (news, podcasts, interviews)
-- [ ] **Quiz questions:** 12-20 words each (complex, context-rich)
-- [ ] **Unjumble sentences:** 12-16 words each
+- [ ] **Sentence complexity:** Validated by audit (see `scripts/audit/config.py` for CEFR-aligned targets)
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ (focus on learning strategies)
 - [ ] **Immersion:** 90-100% Ukrainian
@@ -28,8 +27,8 @@ TEMPLATE_METADATA:
   required_sections:
   - Огляд
   - Інтеграція
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: TTT
   min_word_count: 1500
   required_callouts: []
@@ -317,7 +316,7 @@ immersion_target: 90-95%
 
 #### Section 6: Вправи (Activities)
 
-**12+ activities** focused on strategy application
+**8-10 activities** (reduced from 12+, Jan 2026) focused on strategy application
 
 **Activity Mix for Skills Modules:**
 
@@ -599,25 +598,33 @@ immersion_target: 90-95%
 
 #### Section 6: Вправи (Activities)
 
-**25+ activities** (comprehensive, like checkpoint modules)
+**8-10 activities for M83-84** (reduced from 12+, Jan 2026 - quality over quantity)
+**5-8 activities + 5 comprehensive tasks for M85** (tasks ARE the main assessment)
 
-**Activity Mix for Integration Modules:**
+**Activity Mix for Integration Modules (M83-84):**
 
-| Activity Type    | Count       | Priority | Purpose                                      |
-| ---------------- | ----------- | -------- | -------------------------------------------- |
-| quiz             | 14-20 items | HIGH     | All grammar/vocabulary areas                 |
-| error-correction | 12-14 items | HIGH     | Common B1 errors                             |
-| fill-in          | 14+ items   | HIGH     | Context application                          |
-| cloze            | 14+ blanks  | HIGH     | Integrated passage                           |
-| match-up         | 12+ items   | MEDIUM   | Term to definition, rule to example          |
-| true-false       | 10-12 items | MEDIUM   | Fact verification                            |
-| group-sort       | 18+ items   | MEDIUM   | Categorize by grammar type or semantic field |
-| unjumble         | 10+ items   | MEDIUM   | Complex sentences (14-18 words)              |
-| translate        | 10+ items   | MEDIUM   | All grammar/vocabulary contexts              |
-| select           | 8+ items    | LOW      | Multiple correct options                     |
-| mark-the-words   | 8+ words    | LOW      | Identify grammar/vocabulary in passage       |
+| Activity Type    | Count      | Priority | Purpose                                      |
+| ---------------- | ---------- | -------- | -------------------------------------------- |
+| quiz             | 8+ items   | HIGH     | All grammar/vocabulary areas                 |
+| error-correction | 6+ items   | HIGH     | Common B1 errors                             |
+| fill-in          | 8+ items   | HIGH     | Context application                          |
+| cloze            | 12+ blanks | HIGH     | Integrated passage                           |
+| match-up         | 8+ items   | MEDIUM   | Term to definition, rule to example          |
+| unjumble         | 6+ items   | MEDIUM   | Complex sentences (see config.py)              |
+| translate        | 6+ items   | MEDIUM   | All grammar/vocabulary contexts              |
 
-**WHY 25+ activities:** Integration modules are comprehensive assessments, like checkpoints.
+**Activity Mix for Capstone (M85):**
+
+**Traditional Activities (5-8 total):**
+
+| Activity Type    | Count      | Purpose                            |
+| ---------------- | ---------- | ---------------------------------- |
+| quiz             | 8+ items   | Quick comprehension check          |
+| error-correction | 6+ items   | Common B1 errors                   |
+| cloze            | 12+ blanks | Integrated passage                 |
+| fill-in          | 8+ items   | Context application                |
+
+**Comprehensive Tasks (5 required):** See Task-Based Learning section
 
 ---
 
@@ -963,8 +970,7 @@ Before running the audit script, manually verify:
 
 ### Technical Gates (All):
 
-- [ ] **Quiz questions:** 12-20 words each
-- [ ] **Unjumble sentences:** 12-16 words each (14-18 for M85)
+- [ ] **Sentence complexity:** Validated by audit (see `scripts/audit/config.py` for CEFR-aligned targets)
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ boxes
 - [ ] **Immersion:** 90-100% Ukrainian (95-100% for M85)
@@ -1005,8 +1011,8 @@ Before running the audit script, manually verify:
 ### Phase 3: Activities (All)
 
 - [ ] Create 12+ activities (skills), 25+ (integration), 5-8 (capstone)
-- [ ] Verify quiz questions are 12-20 words each
-- [ ] Verify unjumble sentences are 12-16 words (14-18 for M85)
+- [ ] Sentence complexity validated by audit (see config.py)
+- [ ] Sentence complexity validated by audit (see config.py)
 - [ ] Verify cloze passage has 14+ blanks
 - [ ] Verify all error-correction activities have all 4 callouts
 
@@ -1130,7 +1136,7 @@ immersion_target: 90-95%
 5. cloze: Новинна стаття (14 blanks)
 6. group-sort: Факти, думки, джерела (18 items)
 7. select: Головні думки (8 items)
-8. unjumble: Новинні речення (8 items, 12-16 words)
+8. unjumble: Новинні речення (8 items)
 9. error-correction: Помилки в новинах (8 items)
 10. mark-the-words: Ключові слова (10 words)
 11. translate: Новинні фрази (8 items)

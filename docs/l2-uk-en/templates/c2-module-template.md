@@ -10,10 +10,10 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Аналіз
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Native
   min_word_count: 2500
   required_callouts: []
@@ -37,9 +37,9 @@ Before submitting a C2 module, verify:
 ### Activity Requirements
 - [ ] **Activities:** 14-16 minimum (C2 standard — quality over quantity)
 - [ ] **Activity density:**
-  - Quiz: 10-12 items, questions 20-35 words each (complex)
+  - Quiz: 10-12 items (complex)
   - Fill-in: 12+ items (nuanced, stylistic choices)
-  - Unjumble: 10+ items, sentences 20-30 words each
+  - Unjumble: 10+ items
   - Cloze: 20+ blanks in passage
   - Transformation: 8+ items (register shift, style transformation)
   - Creative production: Poetry, prose, translation (with Model Answer)
@@ -300,11 +300,13 @@ items:
 **Activity Mix for C2:**
 
 #### Core Activities (Refined for C2)
-1. **quiz** (10-12 items, 20-35 words/question — complex, nuanced)
+1. **quiz** (10-12 items — complex, nuanced)
 2. **fill-in** (12+ items, stylistic/register choices)
-3. **unjumble** (10+ items, 20-30 words/sentence)
+3. **unjumble** (10+ items)
 4. **cloze** (20+ blanks, 600+ word passage)
 5. **transformation** (8+ items: register shift, style change)
+
+**Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['C2'] for CEFR-aligned word count targets
 
 #### C2-Specific Creative Activities (Use new Schema types)
 6. **[essay-response]** (Publication-ready writing)

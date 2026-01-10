@@ -10,10 +10,10 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Літературний аналіз
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Native
   min_word_count: 3000
   required_callouts: []

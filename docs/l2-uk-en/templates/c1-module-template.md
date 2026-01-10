@@ -10,10 +10,10 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Аналіз
-  - Summary|Підсумок
-  - Need More Practice?|Потрібно більше практики?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Immersion
   min_word_count: 2000
   required_callouts: []
@@ -37,9 +37,9 @@ Before submitting a C1 module, verify:
 ### Activity Requirements
 - [ ] **Activities:** 16+ minimum (C1 standard)
 - [ ] **Activity density:**
-  - Quiz: 12+ items, questions 18-30 words each
+  - Quiz: 12+ items
   - Fill-in: 12+ items
-  - Unjumble: 10+ items, sentences 18-25 words each
+  - Unjumble: 10+ items
   - Cloze: 20+ blanks in passage
   - Group-sort: 18+ items
   - Error-correction: 10+ items with all 4 callouts
@@ -308,12 +308,14 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 **Activity Mix for C1:**
 
 #### Core Activities (Must Have)
-1. **quiz** (12+ items, 18-30 words/question)
+1. **quiz** (12+ items)
 2. **fill-in** (12+ items, academic/literary context)
-3. **unjumble** (10+ items, 18-25 words/sentence)
+3. **unjumble** (10+ items)
 4. **cloze** (20+ blanks, 500+ word passage)
 5. **error-correction** (10+ items with all 4 callouts)
 6. **group-sort** (18+ items, sophisticated categories)
+
+**Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['C1'] for CEFR-aligned word count targets
 
 #### C1-Specific Activities
 7. **text-comparison** (Analyze 2+ texts side-by-side)

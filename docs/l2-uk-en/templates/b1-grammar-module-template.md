@@ -9,11 +9,11 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест
-  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення
-  - Practice|Exercises|Activity|Практика|Вправи
-  - Summary|Підсумок
-  - Need More Practice?|Потрібно більше практики?
+  - Вступ|Контекст|Розминка|Тест
+  - Пояснення|Граматика|Теорія
+  - Практика|Вправи
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: TTT
   min_word_count: 1500
   required_callouts: []
@@ -28,13 +28,14 @@ Before submitting a B1 grammar module, verify:
 
 - [ ] **Word count:** 1500+ words (core prose: explanations, examples, engagement boxes, reading passages — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 25+ items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
-- [ ] **Activities:** 12+ with all activity types represented
+- [ ] **Activities:** 8-10 activities (quality over quantity, core types required)
 - [ ] **Activity density:**
-  - Quiz: 8+ items, questions 12-20 words each
+  - Quiz: 8+ items
   - Fill-in: 8+ items
-  - Unjumble: 6+ items, sentences 12-16 words each
-  - Cloze: 14+ blanks in passage
-  - Group-sort: 14+ items
+  - Unjumble: 6+ items
+  - Cloze: 12+ blanks in passage
+  - Group-sort: 12+ items (optional activity)
+  - **Sentence complexity:** Validated by audit (see `scripts/audit/config.py` for CEFR-aligned targets)
   - Error-correction: 6+ items with all 4 callouts
 - [ ] **Engagement boxes:** 5+ boxes with pedagogical value
 - [ ] **Immersion:** 90-100% Ukrainian (grammar explanations in Ukrainian)
@@ -316,19 +317,24 @@ Minimum 5+ engagement boxes with pedagogical value:
 
 ### Activity Order and Density
 
-**Required activities for B1 (all 12 types):**
+**Required activities for B1 (8-10 total, core types):**
 
-1. quiz (8+ items, questions 12-20 words)
+**Core Activities (Required - 7 types minimum):**
+1. quiz (8+ items)
 2. match-up (8+ items)
 3. fill-in (8+ items)
-4. true-false (8+ items)
-5. group-sort (14+ items)
-6. unjumble (6+ items, sentences 12-16 words)
-7. error-correction (6+ items with all 4 callouts)
-8. cloze (14+ blanks in passage)
-9. mark-the-words (6+ markable words)
-10. select (6+ multi-select questions)
-11. translate (6+ translation questions)
+4. unjumble (6+ items)
+5. error-correction (6+ items with all 4 callouts)
+6. cloze (12+ blanks in passage)
+7. translate (6+ translation questions)
+
+**Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['B1'] for CEFR-aligned word count targets
+
+**Optional Activities (choose 1-3 to reach 8-10 total):**
+8. true-false (8+ items)
+9. group-sort (12+ items)
+10. mark-the-words (6+ markable words)
+11. select (6+ multi-select questions)
 
 ---
 

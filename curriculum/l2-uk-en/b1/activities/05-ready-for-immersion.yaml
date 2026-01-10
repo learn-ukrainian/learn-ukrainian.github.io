@@ -159,7 +159,6 @@ activities:
       correct: false
     explanation: Частина мови = part of speech.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--частини-мови
 - type: quiz
   title: Комплексний тест — Відмінки
   items:
@@ -321,7 +320,6 @@ activities:
       correct: false
     explanation: Vocative = кличний.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--відмінки
 - type: quiz
   title: Комплексний тест — Вид і час
   items:
@@ -482,7 +480,6 @@ activities:
       correct: false
     explanation: ДВ = доконаний вид.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--вид-і-час
 - type: quiz
   title: Комплексний тест — Речення
   items:
@@ -642,7 +639,6 @@ activities:
       correct: false
     explanation: Розділові знаки = punctuation.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--речення
 - type: quiz
   title: Комплексний тест — Заперечення
   items:
@@ -737,7 +733,6 @@ activities:
       correct: false
     explanation: «Не прочитай випадково!» — попередження, ДВ.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--заперечення
 - type: quiz
   title: Комплексний тест — Форми дієслова
   items:
@@ -831,7 +826,6 @@ activities:
       correct: false
     explanation: Парадигма — всі форми відмінювання чи дієвідміни.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--форми-дієслова
 - type: quiz
   title: Комплексний тест — Інструкції вправ
   items:
@@ -925,7 +919,6 @@ activities:
       correct: true
     explanation: Складіть = compose, create.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--інструкції-вправ
 - type: quiz
   title: Комплексний тест — Аналітичні терміни
   items:
@@ -1019,7 +1012,6 @@ activities:
       correct: false
     explanation: НДВ/ДВ пара = аспектуальна пара.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--аналітичні-терміни
 - type: quiz
   title: Комплексний тест — Стиль і регістр
   items:
@@ -1112,7 +1104,6 @@ activities:
       correct: false
     explanation: Літературна мова — писемний стандарт української.
   instruction: Оберіть правильну відповідь.
-  id: комплексний-тест--стиль-і-регістр
 - type: match-up
   title: Комплексний огляд — Частини мови
   instruction: З'єднайте український термін з англійським.
@@ -1139,7 +1130,6 @@ activities:
     right: interjection
   - left: частина мови
     right: part of speech
-  id: комплексний-огляд--частини-мови
 - type: match-up
   title: Комплексний огляд — Відмінки і речення
   instruction: З'єднайте український термін з англійським.
@@ -1166,7 +1156,6 @@ activities:
     right: predicate
   - left: додаток
     right: object
-  id: комплексний-огляд--відмінки-і-речення
 - type: fill-in
   title: Комплексний тест
   items:
@@ -1269,7 +1258,6 @@ activities:
     - shows
     - expresses
   instruction: Заповніть пропуски правильним терміном.
-  id: комплексний-тест
 - type: fill-in
   title: Нові терміни з М02 і М03
   items:
@@ -1358,7 +1346,6 @@ activities:
     - показник
     - індикатор
   instruction: Заповніть пропуски правильним терміном.
-  id: нові-терміни-з-м02-і-м03
 - type: fill-in
   title: Граматичні категорії
   items:
@@ -1461,7 +1448,6 @@ activities:
     - допоміжні
     - другорядні
   instruction: Заповніть пропуски правильним терміном.
-  id: граматичні-категорії
 - type: true-false
   title: Комплексна перевірка
   items:
@@ -1508,7 +1494,6 @@ activities:
     correct: true
     explanation: Правильно!
   instruction: Визначте, чи правильне твердження.
-  id: комплексна-перевірка
 - type: group-sort
   title: Комплексне сортування
   groups:
@@ -1537,7 +1522,6 @@ activities:
     - спосіб
     - стан
   instruction: Розподіліть терміни за категоріями.
-  id: комплексне-сортування
 - type: unjumble
   title: Комплексні пояснення
   items:
@@ -1719,7 +1703,6 @@ activities:
     - граматику
     answer: Ви пройшли міст. Тепер починається повне занурення в українську граматику.
   instruction: Розташуйте слова в правильному порядку.
-  id: комплексні-пояснення
 - type: unjumble
   title: Граматичні визначення
   items:
@@ -1790,7 +1773,6 @@ activities:
     - лічбі
     answer: Числівник позначає кількість або порядок предметів при лічбі.
   instruction: Розташуйте слова в правильному порядку.
-  id: граматичні-визначення
 - type: error-correction
   title: Виправлення термінів
   items:
@@ -1867,7 +1849,6 @@ activities:
     - заборона
     explanation: «Ще не + ДВ» — очікувана дія.
   instruction: У кожному реченні є ОДНА помилка в термінології. Знайдіть і виправте.
-  id: виправлення-термінів
 - type: error-correction
   title: Виправлення помилок
   items:
@@ -1998,7 +1979,6 @@ activities:
     - dash
     explanation: Кома = comma, крапка = period.
   instruction: У кожному реченні є ОДНА помилка. Знайдіть і виправте.
-  id: виправлення-помилок
 - type: cloze
   title: Підсумковий текст
   passage: Ви вивчили основи граматичної термінології. Тепер ви знаєте {1} частин
@@ -2007,11 +1987,9 @@ activities:
     {8}. Слово складається з {9}, {10} і {11}. Речення буває {12} або {13}. Ви готові
     до {14} — граматичних пояснень українською мовою.
   instruction: Заповніть пропуски правильними термінами.
-  id: підсумковий-текст
 - type: mark-the-words
   title: Фінальний тест
   instruction: Натисніть на ВСІ граматичні терміни в тексті.
-  id: фінальний-тест
   passage: Дієслово «читати» — недоконаного виду. Воно використовується, коли дія
     триває. У реченні «Студент читає книгу» підмет — «студент», присудок — «читає»,
     додаток — «книгу». Це просте речення. Сполучник «бо» — сполучник підрядності.
@@ -2187,7 +2165,6 @@ activities:
       correct: true
     explanation: Вітаємо! Ви готові!
   instruction: Оберіть ВСІ правильні відповіді.
-  id: фінальний-множинний-вибір
 - type: translate
   title: Фінальний переклад
   items:
@@ -2346,4 +2323,3 @@ activities:
       correct: false
     explanation: Вітаємо = Congratulations!
   instruction: Оберіть правильний переклад.
-  id: фінальний-переклад

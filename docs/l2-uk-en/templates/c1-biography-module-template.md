@@ -13,8 +13,8 @@ TEMPLATE_METADATA:
   - Життєпис
   - Внесок
   - Спадщина
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Immersion
   min_word_count: 2000
   required_callouts: []

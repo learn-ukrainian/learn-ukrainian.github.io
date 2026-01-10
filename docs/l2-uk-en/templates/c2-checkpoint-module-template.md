@@ -12,8 +12,8 @@ TEMPLATE_METADATA:
   required_sections:
   - Огляд
   - Навички
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: Native
   min_word_count: 2500
   required_callouts: []

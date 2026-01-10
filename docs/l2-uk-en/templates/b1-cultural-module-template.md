@@ -11,11 +11,10 @@ Before submitting your cultural module, verify:
 
 - [ ] **Word count:** 1500+ words
 - [ ] **Vocabulary:** 25+ items in 5-column format with IPA (Слово | Вимова | English | PoS | Примітки)
-- [ ] **Activities:** 12+ activities with variety
+- [ ] **Activities:** 8-10 activities (quality over quantity, comprehension-focused)
+- [ ] **Activity items:** Quiz/match-up/fill-in 8+ items, cloze 12+ blanks
 - [ ] **Reading passages:** 3+ authentic or semi-authentic texts (300-500 words each)
-- [ ] **Quiz questions:** 12-20 words each (complex, context-rich)
-- [ ] **Unjumble sentences:** 12-16 words each
-- [ ] **Cloze passages:** 14+ blanks
+- [ ] **Sentence complexity:** Validated by audit (see `scripts/audit/config.py` for CEFR-aligned targets)
 - [ ] **Engagement boxes:** 5+ (focus on real-world cultural references)
 - [ ] **Immersion:** 90-100% Ukrainian
 - [ ] **External resources:** Added to `docs/resources/external_resources.yaml` (NOT embedded in module)
@@ -26,11 +25,11 @@ Before submitting your cultural module, verify:
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Історія та культура
   - Сучасність
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: CBI
   min_word_count: 1500
   required_callouts: []
@@ -189,27 +188,24 @@ immersion_target: 90-95%
 
 **WHY:** Cultural modules need reading comprehension and vocabulary practice, not grammar drills.
 
-**Activities Order (12+ total):**
+**Activities Order (8-10 total):**
 
-#### High Priority (comprehension-focused):
+#### Core Activities (Required - choose 6-7):
 
-1. **quiz** (10+ items, 12-20 words each) — Reading comprehension, cultural knowledge
-2. **true-false** (10+ items) — Fact verification from passages
-3. **match-up** (12+ items) — Match people/places/terms to descriptions
-4. **fill-in** (12+ items) — Vocabulary in cultural context
-5. **cloze** (14+ blanks) — Extended passage completion
+1. **quiz** (8+ items, 12-20 words each) — Reading comprehension, cultural knowledge
+2. **true-false** (8+ items) — Fact verification from passages
+3. **match-up** (8+ items) — Match people/places/terms to descriptions
+4. **fill-in** (8+ items) — Vocabulary in cultural context
+5. **cloze** (12+ blanks) — Extended passage completion
+6. **unjumble** (6+ items, 12-16 words) — Sentences about cultural content
+7. **translate** (6+ items) — Cultural phrases
 
-#### Medium Priority (analytical):
+#### Optional Activities (choose 1-3 to reach 8-10 total):
 
-6. **group-sort** (16+ items) — Categorize regions/genres/time periods
-7. **select** (8+ items) — Multiple correct answers (e.g., "Which are Western Ukrainian cities?")
-8. **mark-the-words** (passage with 8+ target words) — Identify cultural terms
-
-#### Lower Priority (production):
-
-9. **unjumble** (8+ items, 12-16 words) — Sentences about cultural content
-10. **error-correction** (8+ items) — Common misconceptions or mistakes
-11. **translate** (8+ items) — Cultural phrases
+8. **group-sort** (12+ items) — Categorize regions/genres/time periods
+9. **select** (6+ items) — Multiple correct answers (e.g., "Which are Western Ukrainian cities?")
+10. **mark-the-words** (6+ target words) — Identify cultural terms
+11. **error-correction** (6+ items) — Common misconceptions or mistakes
 
 **WHY this order:** Reading comprehension first, then analytical tasks, finally production.
 
@@ -333,25 +329,27 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Section 6: Вправи (Activities)
 
-**12+ activities** (see "Activities Order" in Section 3)
+**8-10 activities** (reduced from 12+, Jan 2026 - quality over quantity)
 
 **Activity Mix for Cultural Modules:**
 
-| Activity Type    | Count       | Priority | Purpose (LANGUAGE focus)                             |
-| ---------------- | ----------- | -------- | ---------------------------------------------------- |
-| quiz             | 10-14 items | HIGH     | Reading comprehension — "Згідно з текстом..."        |
-| true-false       | 10-12 items | HIGH     | Comprehension of text statements                     |
-| match-up         | 12+ items   | HIGH     | Vocabulary — Ukrainian terms ↔ Ukrainian definitions |
-| fill-in          | 12+ items   | HIGH     | Vocabulary/collocations in context                   |
-| cloze            | 14+ blanks  | HIGH     | Vocabulary in extended passage                       |
-| group-sort       | 16+ items   | MEDIUM   | Categorization using module vocabulary               |
-| select           | 8+ items    | MEDIUM   | Multi-select reading comprehension                   |
-| mark-the-words   | 8+ words    | MEDIUM   | Grammar recognition (verbs, nouns, etc.)             |
-| unjumble         | 8+ items    | LOW      | Word order and grammar                               |
-| error-correction | 8+ items    | LOW      | Grammar errors, NOT cultural mistakes                |
-| translate        | 8+ items    | LOW      | Vocabulary in translation context                    |
+| Activity Type    | Count      | Priority | Purpose (LANGUAGE focus)                             |
+| ---------------- | ---------- | -------- | ---------------------------------------------------- |
+| quiz             | 8+ items   | HIGH     | Reading comprehension — "Згідно з текстом..."        |
+| true-false       | 8+ items   | HIGH     | Comprehension of text statements                     |
+| match-up         | 8+ items   | HIGH     | Vocabulary — Ukrainian terms ↔ Ukrainian definitions |
+| fill-in          | 8+ items   | HIGH     | Vocabulary/collocations in context                   |
+| cloze            | 12+ blanks | HIGH     | Vocabulary in extended passage                       |
+| group-sort       | 12+ items  | MEDIUM   | Categorization using module vocabulary               |
+| select           | 6+ items   | MEDIUM   | Multi-select reading comprehension                   |
+| mark-the-words   | 6+ words   | MEDIUM   | Grammar recognition (verbs, nouns, etc.)             |
+| unjumble         | 6+ items   | LOW      | Word order and grammar                               |
+| error-correction | 6+ items   | LOW      | Grammar errors, NOT cultural mistakes                |
+| translate        | 6+ items   | LOW      | Vocabulary in translation context                    |
 
 **WHY this mix:** Cultural modules prioritize comprehension (quiz, true-false, match-up, cloze) over production (unjumble, error-correction).
+
+**Note:** Choose 8-10 total activities focusing on core types (quiz, match-up, fill-in, cloze, translate).
 
 ---
 
@@ -549,20 +547,20 @@ Before running the audit script, manually verify:
 
 ### Technical Gates:
 
-- [ ] **Word count:** 1500+ words (run `python3 scripts/audit_module.py`)
+- [ ] **Word count:** 1500+ words (run `.venv/bin/python scripts/audit_module.py`)
 - [ ] **Vocabulary:** 25+ items in 5-column format with IPA
-- [ ] **Activities:** 12+ activities
-- [ ] **Quiz questions:** 12-20 words each (check manually)
-- [ ] **Unjumble sentences:** 12-16 words each (check manually)
-- [ ] **Cloze passages:** 14+ blanks (check manually)
+- [ ] **Activities:** 8-10 activities (quality over quantity)
+- [ ] **Activity items:** Quiz/match-up/fill-in 8+ items each
+- [ ] **Sentence complexity:** Validated by audit (see `scripts/audit/config.py` for CEFR-aligned targets)
+- [ ] **Cloze passages:** 12+ blanks (check manually)
 - [ ] **Engagement boxes:** 5+ boxes
 - [ ] **Immersion:** 90-100% Ukrainian (audit script checks)
 
 ### Activity Mix:
 
-- [ ] **High comprehension focus:** quiz (10+), true-false (10+), match-up (12+), cloze (14+)
-- [ ] **Vocabulary practice:** fill-in (12+), group-sort (16+), select (8+)
-- [ ] **Production:** unjumble (8+), error-correction (8+), translate (8+)
+- [ ] **High comprehension focus:** quiz (8+), true-false (8+), match-up (8+), cloze (12+)
+- [ ] **Vocabulary practice:** fill-in (8+), group-sort (12+), select (6+)
+- [ ] **Production:** unjumble (6+), error-correction (6+), translate (6+)
 
 ---
 
@@ -588,10 +586,10 @@ Before running the audit script, manually verify:
 
 ### Phase 3: Activities
 
-- [ ] Create 12+ activities following cultural module priority mix
-- [ ] Verify quiz questions are 12-20 words each
-- [ ] Verify unjumble sentences are 12-16 words each
-- [ ] Verify cloze passage has 14+ blanks
+- [ ] Create 8-10 activities following cultural module priority mix (core: quiz, match-up, fill-in, cloze, translate)
+- [ ] Verify sentence complexity (see config.py for targets)
+- [ ] Sentence complexity validated by audit
+- [ ] Verify cloze passage has 12+ blanks
 - [ ] Verify all error-correction activities have all 4 callouts
 - [ ] Verify all activities have correct item counts (see matrix)
 
@@ -612,8 +610,8 @@ Before running the audit script, manually verify:
 
 - [ ] Run `python3 scripts/audit_module.py curriculum/l2-uk-en/b1/[module-file].md`
 - [ ] Fix any gate failures (word count, vocab count, activity counts)
-- [ ] Manually verify quiz question length (12-20 words)
-- [ ] Manually verify unjumble sentence length (12-16 words)
+- [ ] Sentence complexity validated by audit (config.py)
+- [ ] Sentence complexity validated by audit (config.py)
 - [ ] Manually verify cloze blank count (14+)
 - [ ] Verify immersion percentage (90-95%)
 
@@ -698,19 +696,16 @@ immersion_target: 90-95%
 
 "Ви дізналися про сучасну українську музику: від Євробачення до музичних фестивалів. Тепер ви можете обговорювати українських виконавців та їхні досягнення."
 
-### Section 6: Вправи (12 activities)
+### Section 6: Вправи (8-10 activities)
 
-1. quiz: Українська музика (12 items, comprehension)
-2. true-false: Факти про Євробачення (10 items)
-3. match-up: Виконавці та пісні (12 items)
-4. fill-in: Музична лексика (12 items)
-5. cloze: Текст про Kalush Orchestra (14 blanks)
-6. group-sort: Жанри, виконавці, фестивалі (18 items)
-7. select: Українські переможці Євробачення (8 items)
-8. mark-the-words: Знайдіть музичні терміни (passage with 10 terms)
-9. unjumble: Речення про музику (8 items, 12-16 words)
-10. error-correction: Помилки про українську музику (8 items)
-11. translate: Музичні фрази (8 items)
+1. quiz: Українська музика (8 items, comprehension)
+2. true-false: Факти про Євробачення (8 items)
+3. match-up: Виконавці та пісні (8 items)
+4. fill-in: Музична лексика (8 items)
+5. cloze: Текст про Kalush Orchestra (12 blanks)
+6. unjumble: Речення про музику (6 items)
+7. translate: Музичні фрази (6 items)
+8. group-sort: Жанри, виконавці, фестивалі (12 items) [optional]
 
 ### Section 7: Словник (25 words)
 

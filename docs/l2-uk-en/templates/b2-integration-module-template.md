@@ -10,11 +10,11 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Стратегії
-  - Practice|Exercises|Activity|Практика|Вправи
-  - Summary|Підсумок
-  - Need More Practice?
+  - Практика|Вправи
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: CBI
   min_word_count: 1500
   required_callouts: []

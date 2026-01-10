@@ -10,10 +10,10 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
-  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
-  - Summary|Підсумок
-  - Need More Practice?
+  - Вступ|Контекст|Розминка
+  - Пояснення|Граматика|Теорія
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: varies
   min_word_count: 1800
   required_callouts: []
@@ -34,13 +34,13 @@ Before submitting a B2 module, verify:
 - [ ] **Engagement boxes:** 5-6 boxes with pedagogical value
 
 ### Activity Requirements
-- [ ] **Activities:** 14+ minimum (B2 standard)
+- [ ] **Activities:** 10-12 activities (quality over quantity, B2 standard)
 - [ ] **Activity density:**
-  - Quiz: 10+ items, questions 15-25 words each
+  - Quiz: 10+ items
   - Fill-in: 10+ items
-  - Unjumble: 8+ items, sentences 15-20 words each
-  - Cloze: 16+ blanks in passage
-  - Group-sort: 16+ items
+  - Unjumble: 8+ items
+  - Cloze: 14+ blanks in passage
+  - Group-sort: 14+ items
   - Error-correction: 8+ items with all 4 callouts
   - Translate: 8+ items (if used)
   - Mark-the-words: 300+ word passage
@@ -238,28 +238,29 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 ### 5. Activities Section (Активності)
 
-**Minimum:** 14+ activities (vs. 12+ for B1)
+**Minimum:** 10-12 activities (reduced from 14+ in Jan 2026 - quality over quantity)
 
 **Activity Mix for B2:**
 
-#### Core Activities (Must Have)
-1. **quiz** (10+ items, 15-25 words/question)
-2. **fill-in** (10+ items)
-3. **unjumble** (8+ items, 15-20 words/sentence)
-4. **cloze** (16+ blanks, 300+ word passage)
-5. **error-correction** (8+ items with all 4 callouts)
-6. **group-sort** (16+ items, complex categories)
+#### Core Activities (Required - choose 8-9)
+1. **quiz** (10+ items) — Comprehension, grammar application
+2. **fill-in** (10+ items) — Contextual vocabulary/grammar
+3. **unjumble** (8+ items) — Sentence construction
+4. **cloze** (14+ blanks, 300+ word passage) — Extended reading comprehension
+5. **error-correction** (8+ items with all 4 callouts) — Common B2 errors
+6. **translate** (8+ items) — Ukrainian ↔ English translation practice
+7. **match-up** (10+ items) — Definitions, collocations, concepts
+8. **mark-the-words** (300+ word passage) — Grammar/vocabulary identification
 
-#### B2-Specific Activities
-7. **mark-the-words** (300+ word passage, mark target grammar/vocabulary)
-9. **translate** (8+ items, Ukrainian ↔ English)
-10. **select** (multi-checkbox, 10+ items)
+**Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['B2'] for CEFR-aligned word count targets
 
-#### Writing/Production Activities
-11. **Essay/Report with Model Answer** (150-300 words)
-12. **Transformation** (Active → Passive, Register shift, etc.)
-13. **Text analysis** (Identify register, grammar structures)
-14. **Collocation practice** (Phraseology, set expressions)
+#### Optional Activities (choose 2-4 to reach 10-12 total)
+9. **group-sort** (14+ items) — Complex categorization (registers, synonyms, etc.)
+10. **select** (multi-checkbox, 10+ items) — Multiple correct answers
+11. **true-false** (10+ items) — Statement verification
+12. **Writing with Model Answer** (150-300 words) — Essay/report/analysis
+13. **Transformation tasks** — Active → Passive, Register shift, etc.
+14. **Text analysis** — Identify register, grammar structures
 
 ### Activity Format Quick Reference
 
@@ -398,12 +399,14 @@ register: "науковий"  # Options: офіційно-діловий, нау
 |---------|----|----|
 | Word count | 1500+ | 1800+ |
 | Vocabulary | 25+ | 30+ |
-| Activities | 12+ | 14+ |
+| Activities | 8-10 | 10-12 |
 | Quiz words/question | 12-20 | 15-25 |
 | Unjumble words/sentence | 12-16 | 15-20 |
-| Cloze blanks | 14+ | 16+ |
+| Cloze blanks | 12+ | 14+ |
 | Passages | 200-300 words | 300-500+ words |
 | Immersion | 90-100% | 100% |
+
+**Note:** Activity counts reduced (Jan 2026) to focus on quality over quantity. Cloze blanks also adjusted for consistency.
 
 ---
 
@@ -413,7 +416,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **Focus:** Passive voice, participles, register system
 **Pedagogy:** TTT (Test-Teach-Test)
-**Activities:** 14+ (heavy on transformation, register identification)
+**Activities:** 10-12 (heavy on transformation, register identification)
 **Word count:** 1800+
 **Passages:** Academic/journalistic texts (300-500 words)
 
@@ -426,7 +429,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **Focus:** Numerals, word formation, pronouns
 **Pedagogy:** TTT
-**Activities:** 14+
+**Activities:** 10-12
 **Word count:** 1800+
 
 **Example modules:**
@@ -437,7 +440,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **Focus:** Idioms, proverbs, synonyms, antonyms, collocations
 **Pedagogy:** CBI (Narrative Arcs)
-**Activities:** 12+ (collocation matching, idiom usage)
+**Activities:** 10-12 (collocation matching, idiom usage)
 **Word count:** 1800+
 **Passages:** Literary excerpts, journalistic pieces
 
@@ -450,7 +453,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **Focus:** Origins to present history, vocabulary through narrative, decolonization
 **Pedagogy:** CBI (Historical narratives) + Synthesis modules
-**Activities:** 10-14 (comprehension, vocabulary in context, cross-era analysis)
+**Activities:** 10-12 (comprehension, vocabulary in context, cross-era analysis)
 **Word count:** 1800+
 **Passages:** 500+ word historical accounts
 
@@ -469,7 +472,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **Focus:** Integrated skills, final assessment
 **Pedagogy:** CBI + Skills integration
-**Activities:** 12+ (multi-skill integration)
+**Activities:** 10-12 (multi-skill integration)
 **Word count:** 1800+
 
 **Example modules:**
@@ -487,7 +490,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - **Don't skip Model Answers** — Writing tasks MUST have examples
 - **Don't ignore register** — Module must match its functional style
 - **Don't use short passages** — B2 requires 300-500+ word texts
-- **Don't under-count activities** — 14+ is the minimum
+- **Don't under-count activities** — 10-12 is the minimum (quality over quantity)
 
 ### ✅ DO:
 - **Use authentic-style passages** — Mimic Ukrainian journalism/literature
@@ -510,9 +513,9 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - [ ] Register matches frontmatter declaration
 
 ### Activities
-- [ ] 14+ activities minimum
-- [ ] All activity types represented
-- [ ] Activity density meets B2 standards
+- [ ] 10-12 activities minimum (quality over quantity)
+- [ ] Core activity types represented (8-9 required)
+- [ ] Activity density meets B2 standards (14+ items per activity)
 - [ ] Writing tasks include rubrics
 - [ ] Instructions in Ukrainian
 

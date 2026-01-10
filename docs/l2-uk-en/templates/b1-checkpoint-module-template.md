@@ -13,8 +13,8 @@ TEMPLATE_METADATA:
   - Огляд
   - Діагностика
   - Аналіз
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: TTT
   min_word_count: 1500
   required_callouts: []

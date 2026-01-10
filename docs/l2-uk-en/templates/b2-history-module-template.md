@@ -11,12 +11,12 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Читання
   - Первинні джерела
   - Деколонізаційний погляд
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   optional_sections:
   - Діалоги
   forbidden_headers:

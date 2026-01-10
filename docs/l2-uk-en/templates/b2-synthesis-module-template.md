@@ -12,8 +12,8 @@ TEMPLATE_METADATA:
   required_sections:
   - Огляд
   - Інтеграція
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: TTT
   min_word_count: 1800
   required_callouts: []

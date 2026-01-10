@@ -19,11 +19,11 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Вступ|Контекст|Розминка
   - Лексика
   - Вживання
-  - Summary|Підсумок
-  - Need More Practice?
+  - Підсумок
+  - Потрібно більше практики?
   pedagogy: CBI
   min_word_count: 1500
   required_callouts: []
@@ -42,10 +42,10 @@ Before submitting a B1 vocabulary module, verify:
 - [ ] **Key patterns:** 6-10 usage patterns with authentic examples
 - [ ] **Collocations:** Common word combinations explicitly taught
 - [ ] **Synonymy:** Related words differentiated by register/nuance
-- [ ] **Activities:** 12+ with emphasis on:
+- [ ] **Activities:** 8-10 activities (quality over quantity) with emphasis on:
   - Match-up (collocations, synonyms)
-  - Group-sort (semantic fields, register)
-  - Select (multiple correct collocations)
+  - Group-sort (semantic fields, register) - optional
+  - Select (multiple correct collocations) - optional
   - Fill-in (contextual usage)
 - [ ] **Reading passages:** 2-3 authentic texts using target vocabulary
 - [ ] **Engagement boxes:** 5+ boxes with real-world usage
@@ -402,19 +402,26 @@ Minimum 5+ engagement boxes focusing on USAGE:
 
 ### Activity Order and Emphasis
 
-**Recommended activities for B1 Vocabulary modules (12+ total):**
+**Recommended activities for B1 Vocabulary modules (8-10 total):**
 
-**High Priority (vocab-focused):**
+**Core Activities (Required - choose 6-7):**
 
 1. **match-up** (12+ items) — Collocations, synonyms, definitions
-2. **group-sort** (16+ items) — Semantic fields, register, word formation
-3. **select** (8+ items) — Multiple correct collocations
-4. **fill-in** (12+ items) — Contextual usage in sentences
-5. **cloze** (14+ blanks) — Reading passage with target vocabulary
+2. **fill-in** (12+ items) — Contextual usage in sentences
+3. **cloze** (12+ blanks) — Reading passage with target vocabulary
+4. **quiz** (8+ items, 12-20 words) — Vocabulary comprehension
+5. **unjumble** (6+ items, 12-16 words) — Sentence construction with target vocabulary
+6. **translate** (6+ items) — Translation practice
+7. **error-correction** (6+ items) — Wrong collocations
 
-**Standard Activities:** 6. **quiz** (8+ items, 12-20 words) — Vocabulary comprehension 7. **true-false** (8+ items) — Usage verification 8. **unjumble** (6+ items, 12-16 words) — Sentence construction 10. **translate** (6+ items) — Translation practice
+**Sentence Complexity:** See `scripts/audit/config.py` ACTIVITY_COMPLEXITY['B1-vocab'] for CEFR-aligned word count targets
 
-**Advanced Activities:** 11. **error-correction** (6+ items) — Wrong collocations 12. **mark-the-words** (6+ markable words) — Identify semantic field
+**Optional Activities (choose 1-3 to reach 8-10 total):**
+
+8. **group-sort** (12+ items) — Semantic fields, register, word formation
+9. **select** (8+ items) — Multiple correct collocations
+10. **true-false** (8+ items) — Usage verification
+11. **mark-the-words** (6+ markable words) — Identify semantic field
 
 ---
 
