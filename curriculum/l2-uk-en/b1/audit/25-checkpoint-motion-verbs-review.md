@@ -1,10 +1,6 @@
 # Audit Report: 25-checkpoint-motion-verbs.md
 **Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1200
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 25-checkpoint-motion-verbs.yaml: [index-10] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
@@ -15,9 +11,9 @@
   - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2814/1200
@@ -30,7 +26,7 @@
 - **Vocab:** ✅ 32/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 95% (grammar)

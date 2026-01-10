@@ -1,43 +1,30 @@
 # Audit Report: 28-relative-clauses-koly-shcho.md
 **Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-relative-clauses-koly-shcho.yaml: [index-5] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-relative-clauses-koly-shcho.yaml: [index-8] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-relative-clauses-koly-shcho.yaml: [index-10] translate: 'items.7' - 'source' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
   - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 40/100)
-- 6 violations (moderate)
-- Activity count below minimum
-- Activity density below minimum
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1999/1500
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.7% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
@@ -66,7 +53,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
-| **Діагностика** | ✅ | 197 | Included in Core |
+| **Тест** | ⚪️ | 197 | Skipped |
 | **Аналіз** | ✅ | 293 | Included in Core |
 | **Поглиблення** | ⚪️ | 896 | Skipped |
 | **Діалоги** | ✅ | 214 | Included in Core |
