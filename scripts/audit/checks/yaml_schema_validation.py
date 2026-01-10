@@ -185,8 +185,180 @@ def check_activity_yaml_schema(
     return violations
 
 
+# =============================================================================
+# AUTO-FIX FUNCTIONS
+# =============================================================================
+
+def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, List[str]]:
+    """
+    Automatically fix common YAML schema violations in an activity.
+
+    Returns (was_modified, list_of_fixes_applied).
+    """
+    fixes = []
+    modified = False
+    activity_type = activity.get('type', 'unknown')
+
+    # Get schema for this activity type
+    type_schema = get_activity_schema(activity_type, base_schema)
+    if not type_schema:
+        return False, []
+
+    # Fix 1: Remove 'id' property if not allowed in schema
+    allowed_properties = type_schema.get('properties', {}).keys()
+    if 'id' in activity and 'id' not in allowed_properties:
+        del activity['id']
+        fixes.append(f"Removed invalid 'id' property from {activity_type}")
+        modified = True
+
+    # Fix 2: mark-the-words - extract correct_words from passage
+    if activity_type == 'mark-the-words':
+        if 'passage' in activity and 'correct_words' not in activity:
+            passage = activity['passage']
+            # Extract words marked with *asterisks*
+            import re
+            marked_words = re.findall(r'\*([^\*]+)\*', passage)
+            if marked_words:
+                activity['correct_words'] = marked_words
+                fixes.append(f"Added correct_words extracted from passage ({len(marked_words)} words)")
+                modified = True
+
+    # Fix 3: unjumble - convert scrambled to words array
+    if activity_type == 'unjumble' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict):
+                # Remove scrambled property if exists alongside words
+                if 'scrambled' in item and 'words' in item:
+                    del item['scrambled']
+                    fixes.append(f"Removed duplicate 'scrambled' property from unjumble item {i+1}")
+                    modified = True
+                # Convert scrambled to words if words missing
+                elif 'scrambled' in item and 'words' not in item:
+                    scrambled = item['scrambled']
+                    # Split by ' / ' or whitespace
+                    if ' / ' in scrambled:
+                        words = [w.strip() for w in scrambled.split(' / ')]
+                    else:
+                        words = scrambled.split()
+                    item['words'] = words
+                    del item['scrambled']
+                    fixes.append(f"Converted 'scrambled' to 'words' array in unjumble item {i+1}")
+                    modified = True
+
+    # Fix 4: translate - ensure source property exists
+    if activity_type == 'translate' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict) and 'source' not in item:
+                # Try to extract source from context or first option
+                if 'options' in item and item['options']:
+                    # Use question field if it exists
+                    if 'question' in item:
+                        item['source'] = item['question']
+                        fixes.append(f"Added 'source' from 'question' in translate item {i+1}")
+                        modified = True
+
+    # Fix 5: quiz/select - ensure question property exists
+    if activity_type in ['quiz', 'select'] and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict) and 'question' not in item:
+                # Try to use prompt or text field
+                if 'prompt' in item:
+                    item['question'] = item['prompt']
+                    del item['prompt']
+                    fixes.append(f"Renamed 'prompt' to 'question' in {activity_type} item {i+1}")
+                    modified = True
+                elif 'text' in item:
+                    item['question'] = item['text']
+                    del item['text']
+                    fixes.append(f"Renamed 'text' to 'question' in {activity_type} item {i+1}")
+                    modified = True
+
+    # Fix 6: Remove 'instruction' if it's not in the schema properties
+    # (Some old YAMLs have this, but it's now part of the schema)
+    # Actually, instruction IS valid now, so skip this fix
+
+    return modified, fixes
+
+
+def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str]]:
+    """
+    Auto-fix schema violations in a YAML activity file.
+
+    Args:
+        yaml_path: Path to the YAML file
+        dry_run: If True, only report fixes without saving
+
+    Returns (num_fixes_applied, list_of_fix_messages).
+    """
+    all_fixes = []
+    total_fixes = 0
+
+    if not yaml_path.exists():
+        return 0, []
+
+    # Load base schema
+    try:
+        base_schema = load_base_schema()
+    except FileNotFoundError as e:
+        return 0, [f"Schema not found: {e}"]
+
+    # Load activities from YAML
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        return 0, [f"YAML parse error (cannot auto-fix): {e}"]
+
+    if not data:
+        return 0, []
+
+    # Handle both formats
+    if isinstance(data, dict) and 'activities' in data:
+        activities = data['activities']
+        root_is_dict = True
+    elif isinstance(data, list):
+        activities = data
+        root_is_dict = False
+    else:
+        return 0, ["Invalid YAML structure"]
+
+    # Fix each activity
+    for i, activity in enumerate(activities):
+        if not isinstance(activity, dict):
+            continue
+
+        modified, fixes = fix_activity_violations(activity, base_schema)
+        if modified:
+            total_fixes += len(fixes)
+            activity_title = activity.get('title', f'Activity {i+1}')[:40]
+            all_fixes.append(f"[{i+1}] {activity_title}:")
+            for fix in fixes:
+                all_fixes.append(f"    ✓ {fix}")
+
+    # Save if modifications were made and not dry run
+    if total_fixes > 0 and not dry_run:
+        try:
+            with open(yaml_path, 'w', encoding='utf-8') as f:
+                if root_is_dict:
+                    yaml.dump({'activities': activities}, f, allow_unicode=True,
+                             default_flow_style=False, sort_keys=False)
+                else:
+                    yaml.dump(activities, f, allow_unicode=True,
+                             default_flow_style=False, sort_keys=False)
+            all_fixes.insert(0, f"✅ Saved {total_fixes} fixes to {yaml_path.name}")
+        except Exception as e:
+            all_fixes.insert(0, f"❌ Error saving fixes: {e}")
+            return 0, all_fixes
+    elif total_fixes > 0 and dry_run:
+        all_fixes.insert(0, f"🔍 DRY RUN: Would apply {total_fixes} fixes to {yaml_path.name}")
+
+    return total_fixes, all_fixes
+
+
 __all__ = [
     'check_activity_yaml_schema',
     'validate_activity_yaml_file',
     'validate_activity',
+    'fix_activity_violations',
+    'fix_yaml_file',
 ]

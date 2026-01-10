@@ -151,6 +151,27 @@ def print_grammar_issues(issues: list[dict]) -> None:
             print(f"       Fix: {issue['recommendation'][:80]}")
 
 
+def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
+    """
+    Automatically fix YAML schema violations in a module's activity file.
+
+    Returns (num_fixes, list_of_messages).
+    """
+    from pathlib import Path
+    from audit.checks.yaml_schema_validation import fix_yaml_file
+
+    md_path = Path(file_path)
+    slug = md_path.stem
+    activities_dir = md_path.parent / "activities"
+    yaml_path = activities_dir / f"{slug}.yaml"
+
+    if not yaml_path.exists():
+        return 0, [f"  ℹ️ No YAML file found: {yaml_path.name}"]
+
+    num_fixes, messages = fix_yaml_file(yaml_path, dry_run=False)
+    return num_fixes, messages
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Audit curriculum module files for quality and standards."
@@ -161,20 +182,35 @@ if __name__ == "__main__":
         action="store_true",
         help="Enable LLM-based grammar validation (requires GEMINI_API_KEY)"
     )
-    
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Automatically fix YAML schema violations"
+    )
+
     args = parser.parse_args()
-    
+
     if not args.files:
-        print("Usage: python3 scripts/audit_module.py <file.md> [file2.md ...] [--validate-grammar]")
+        print("Usage: python3 scripts/audit_module.py <file.md> [file2.md ...] [--validate-grammar] [--fix]")
         sys.exit(1)
 
     any_failure = False
     for file_path in args.files:
         print(f"\n{'='*40}")
-        
+
+        # Auto-fix YAML violations if requested
+        if args.fix:
+            print("\n🔧 AUTO-FIX MODE: Attempting to fix YAML schema violations...")
+            num_fixes, messages = auto_fix_yaml_violations(file_path)
+            if messages:
+                for msg in messages:
+                    print(msg)
+            if num_fixes > 0:
+                print(f"\n✅ Applied {num_fixes} fixes. Re-running audit to verify...\n")
+
         # Run standard audit
         success = audit_module(file_path)
-        
+
         # Run optional LLM grammar validation
         if args.validate_grammar:
             issues = validate_grammar_with_llm(file_path)
@@ -182,7 +218,7 @@ if __name__ == "__main__":
             # Critical grammar issues cause failure
             if any(i['severity'] == 'critical' for i in issues):
                 success = False
-        
+
         if not success:
             any_failure = True
 
