@@ -3,32 +3,81 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: [index-1] cloze: 'blanks.15' - 'id' is a required property
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 1 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 2 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 3 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 4 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 5 has 8 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 6 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 7 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 8 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 9 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 10 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 11 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 12 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 13 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 14 has 8 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 15 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень з -но/-то' item 16 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q3 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q4 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q5 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q6 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q7 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q10 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q11 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q12 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q14 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Повторення (М01-М02)' Q15 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: [index-1] cloze: 'blanks.15.id' - 'закрито' is not of type 'integer'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: [index-7] cloze: 'blanks.15' - 'id' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: [index-7] cloze: 'blanks.15.id' - 'Зафіксовано' is not of type 'integer'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 50/100)
 
-- 3 violations (minor)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 28 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1925/1750
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 15/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 210/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
