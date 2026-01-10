@@ -90,48 +90,83 @@ def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
 def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     """
     Validate all activities in a YAML file against the schema.
-    
+
     Returns (is_valid, list_of_errors).
     """
     errors = []
-    
+
     if not yaml_path.exists():
         return True, []  # No YAML file is OK (module might use embedded activities)
-    
-    # Load base schema
+
+    # Detect level from path to load correct schema
+    level_match = None
+    for parent in yaml_path.parents:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+            level_match = parent.name
+            break
+
+    # Load level-specific schema (has minItems constraint)
+    level_schema = None
+    if level_match:
+        if level_match in ['a1', 'a2']:
+            schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
+        else:
+            # B1, B2, C1, C2 all use activities-b1.schema.json
+            schema_path = get_schemas_dir() / "activities-b1.schema.json"
+
+        if schema_path.exists():
+            with open(schema_path, 'r', encoding='utf-8') as f:
+                level_schema = json.load(f)
+
+    # Load base schema for individual activity validation
     try:
         base_schema = load_base_schema()
     except FileNotFoundError as e:
         return False, [str(e)]
-    
+
     # Load activities from YAML
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
     except yaml.YAMLError as e:
         return False, [f"YAML parse error: {e}"]
-    
+
     if not data:
         return True, []
-    
+
     # Handle both formats: list of activities or dict with 'activities' key
     activities = data if isinstance(data, list) else data.get('activities', [])
-    
+
     if not isinstance(activities, list):
         return False, ["Invalid YAML structure: expected list of activities"]
-    
-    # Validate each activity
+
+    # FIRST: Validate entire array against level schema (checks minItems, etc.)
+    if level_schema:
+        try:
+            jsonschema.validate(instance=activities, schema=level_schema)
+        except jsonschema.ValidationError as e:
+            # Array-level validation error (e.g., too few items)
+            # Format concise error messages
+            if "too short" in e.message.lower():
+                min_items = level_schema.get('minItems', 'N/A')
+                errors.append(f"Insufficient activities: {len(activities)} found, minimum {min_items} required for {level_match.upper()}")
+            else:
+                errors.append(f"Array validation: {e.message}")
+        except jsonschema.SchemaError as e:
+            errors.append(f"Schema error: {e.message}")
+
+    # SECOND: Validate each activity individually
     for i, activity in enumerate(activities):
         if not isinstance(activity, dict):
             errors.append(f"Activity {i}: not a dictionary")
             continue
-        
+
         activity_errors = validate_activity(activity, base_schema)
         for err in activity_errors:
             activity_id = activity.get('id', f'index-{i}')
             activity_title = activity.get('title', '')[:30]
             errors.append(f"[{activity_id}] {err}")
-    
+
     return len(errors) == 0, errors
 
 
