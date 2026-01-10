@@ -33,7 +33,7 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Тест, Застосування непрямої мови в різних контекстах
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Застосування непрямої мови в різних контекстах, Тест
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

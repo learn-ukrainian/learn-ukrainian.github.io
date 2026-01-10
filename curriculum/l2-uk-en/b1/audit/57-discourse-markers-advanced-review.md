@@ -57,7 +57,7 @@
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
   - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Підсумок' found: Група 5: Висновок та підсумок, Підсумок
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Підсумок' found: Підсумок, Група 5: Висновок та підсумок
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

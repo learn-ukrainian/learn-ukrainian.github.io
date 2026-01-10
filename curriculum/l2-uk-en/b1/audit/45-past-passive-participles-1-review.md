@@ -49,7 +49,7 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Практика|Вправи' found: Корисні вправи для самостійної практики, Практика
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Практика|Вправи' found: Практика, Корисні вправи для самостійної практики
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

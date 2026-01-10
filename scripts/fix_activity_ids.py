@@ -28,12 +28,20 @@ def fix_activity_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
 
-    if not data or 'activities' not in data:
+    if not data:
         return 0
 
     removed_count = 0
 
-    for activity in data['activities']:
+    # Handle both formats: direct array or wrapped in 'activities' key
+    if isinstance(data, list):
+        activities = data
+    elif isinstance(data, dict) and 'activities' in data:
+        activities = data['activities']
+    else:
+        return 0
+
+    for activity in activities:
         activity_type = activity.get('type')
 
         # Remove id from basic activities

@@ -51,7 +51,7 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Підсумок' found: Підсумок, Завдання: Підсумок подкасту
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Підсумок' found: Завдання: Підсумок подкасту, Підсумок
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
