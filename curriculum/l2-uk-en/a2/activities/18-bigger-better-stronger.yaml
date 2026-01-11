@@ -28,26 +28,18 @@
   instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Form the Comparative
-  passage: 'Він {старіший|старий|старший|найстаріший} за мене. (старий) Ця книга {цікавіша|цікава|цікавший|найцікавіша}.
-    (цікавий) Цей телефон {кращий|добріший|найдобріший|добрий}. (добрий)
+  passage: 'Він {старіший|старий|старший|найстаріший} за мене. (старий) Ця книга {цікавіша|цікава|цікавший|найцікавіша}. (цікавий) Цей телефон {кращий|добріший|найдобріший|добрий}. (добрий)
 
+    Лев {більший|великий|великіший|найбільший} за кота. (великий) Ця машина {дорожча|дорога|дорогіша|найдорожча}. (дорогий) Чай {дешевший|дешевий|дешевіший|найдешевший} за каву. (дешевий)
 
-    Лев {більший|великий|великіший|найбільший} за кота. (великий) Ця машина {дорожча|дорога|дорогіша|найдорожча}.
-    (дорогий) Чай {дешевший|дешевий|дешевіший|найдешевший} за каву. (дешевий)
+    Вона {вища|висока|високіша|найвища} за нього. (високий) Ця дорога {довша|довга|довгіша|найдовша}. (довгий) Він {розумніший|розумний|розумнійший|найрозумніший} за мене. (розумний)
 
-
-    Вона {вища|висока|високіша|найвища} за нього. (високий) Ця дорога {довша|довга|довгіша|найдовша}.
-    (довгий) Він {розумніший|розумний|розумнійший|найрозумніший} за мене. (розумний)
-
-
-    Ця ідея {гірша|погана|поганіша|найгірша}! (поганий) Ця кава {гарячіша|гаряча|гарячша|найгарячіша}.
-    (гарячий) Він {молодший|молодий|молодіший|наймолодший} за брата. (молодий)'
+    Ця ідея {гірша|погана|поганіша|найгірша}! (поганий) Ця кава {гарячіша|гаряча|гарячша|найгарячіша}. (гарячий) Він {молодший|молодий|молодіший|наймолодший} за брата. (молодий)'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Comparatives
   items:
-  - question: Which of the following suffixes is primarily used to form the regular
-      comparative degree of adjectives in Ukrainian?
+  - question: Which of the following suffixes is primarily used to form the regular comparative degree of adjectives in Ukrainian?
     options:
     - text: -ший / -іший
       correct: true
@@ -57,8 +49,7 @@
       correct: false
     - text: -чий / -ачий
       correct: false
-  - question: What is the correct comparative form of the Ukrainian adjective «добрий»
-      when expressing that something is "better"?
+  - question: What is the correct comparative form of the Ukrainian adjective «добрий» when expressing that something is "better"?
     options:
     - text: кращий
       correct: true
@@ -68,8 +59,7 @@
       correct: false
     - text: добрийший
       correct: false
-  - question: Which of the following comparative forms corresponds to the Ukrainian
-      adjective «поганий,» meaning "worse"?
+  - question: Which of the following comparative forms corresponds to the Ukrainian adjective «поганий,» meaning "worse"?
     options:
     - text: гірший
       correct: true
@@ -79,8 +69,7 @@
       correct: false
     - text: гіршіший
       correct: false
-  - question: How is the comparative degree formed for the common Ukrainian adjective
-      «великий,» meaning "bigger"?
+  - question: How is the comparative degree formed for the common Ukrainian adjective «великий,» meaning "bigger"?
     options:
     - text: більший
       correct: true
@@ -90,8 +79,7 @@
       correct: false
     - text: найбільший
       correct: false
-  - question: Which preposition is typically used in Ukrainian to express comparison
-      without using the conjunction «ніж» (than)?
+  - question: Which preposition is typically used in Ukrainian to express comparison without using the conjunction «ніж» (than)?
     options:
     - text: за
       correct: true
@@ -101,8 +89,7 @@
       correct: false
     - text: під
       correct: false
-  - question: What part of speech is usually used to intensify a comparative, such
-      as in the phrase «набагато кращий»?
+  - question: What part of speech is usually used to intensify a comparative, such as in the phrase «набагато кращий»?
     options:
     - text: Прислівник
       correct: true
@@ -112,8 +99,7 @@
       correct: false
     - text: Вигук
       correct: false
-  - question: What is the specific meaning of the Ukrainian comparative adjective
-      «дорожчий» in a shopping context?
+  - question: What is the specific meaning of the Ukrainian comparative adjective «дорожчий» in a shopping context?
     options:
     - text: more expensive
       correct: true
@@ -123,8 +109,7 @@
       correct: false
     - text: very cheap
       correct: false
-  - question: What is the specific meaning of the Ukrainian comparative adjective
-      «дешевший» when comparing two prices?
+  - question: What is the specific meaning of the Ukrainian comparative adjective «дешевший» when comparing two prices?
     options:
     - text: cheaper
       correct: true
@@ -134,8 +119,7 @@
       correct: false
     - text: very expensive
       correct: false
-  - question: The irregular Ukrainian comparative form «гірший» is derived from which
-      of the following base adjectives?
+  - question: The irregular Ukrainian comparative form «гірший» is derived from which of the following base adjectives?
     options:
     - text: поганий
       correct: true
@@ -145,8 +129,7 @@
       correct: false
     - text: старий
       correct: false
-  - question: Which of the following phrases is the' correct Ukrainian translation
-      for the comparative expression "less interesting"?
+  - question: Which of the following phrases is the' correct Ukrainian translation for the comparative expression "less interesting"?
     options:
     - text: менш цікавий
       correct: true
@@ -156,8 +139,7 @@
       correct: false
     - text: найменш цікавий
       correct: false
-  - question: What is the English meaning of the Ukrainian comparative adjective «старіший»
-      used to compare ages?
+  - question: What is the English meaning of the Ukrainian comparative adjective «старіший» used to compare ages?
     options:
     - text: older
       correct: true
@@ -167,8 +149,7 @@
       correct: false
     - text: newborn
       correct: false
-  - question: Which of the following adjective transformations into a comparative
-      form is considered a strictly regular formation in Ukrainian?
+  - question: Which of the following adjective transformations into a comparative form is considered a strictly regular formation in Ukrainian?
     options:
     - text: новий → новіший
       correct: true
@@ -178,8 +159,7 @@
       correct: false
     - text: дорогий → дорожчий
       correct: false
-    explanation: Regular comparatives add -ший/-іший. Others like добрий → кращий
-      are irregular.
+    explanation: Regular comparatives add -ший/-іший. Others like добрий → кращий are irregular.
   instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Regular vs Irregular
@@ -425,18 +405,11 @@
   instruction: Оберіть правильне слово для заповнення пропуску.
 - type: cloze
   title: Comparisons in Context
-  passage: 'Цей новий ноутбук {старіша|старий → старіша|молодша} за той старий. Він
-    має {вища|високий → вища|нижча} екран, але він набагато {розумніша|розумний →
-    розумніша|дурніша}. Батарея працює {молодший|молодий → старіший}, ніж у моєї старої
-    моделі. Загалом, цей ноутбук значно {кращі|добрий → кращі|гірші}. Я дуже задоволений
-    {допомагаємо|допомагати → допоможемо} покупкою.
+  passage: 'Цей новий ноутбук {старіша|старий → старіша|молодша} за той старий. Він має {вища|високий → вища|нижча} екран, але він набагато {розумніша|розумний → розумніша|дурніша}. Батарея працює {молодший|молодий → старіший}, ніж у моєї старої моделі. Загалом, цей ноутбук значно {кращі|добрий → кращі|гірші}. Я дуже задоволений {допомагаємо|допомагати → допоможемо} покупкою.
 
     ---
 
-    Моя старша сестра {старіша|старий → старіша|молодша} за мене. Вона {вища|високий
-    → вища|нижча} і набагато {розумніша|розумний → розумніша|дурніша}. Але я {молодший|молодий
-    → старіший} за неї і швидше бігаю. Ми дуже {кращі|добрий → кращі|гірші} друзі
-    і завжди {допомагаємо|допомагати → допоможемо} один одному.'
+    Моя старша сестра {старіша|старий → старіша|молодша} за мене. Вона {вища|високий → вища|нижча} і набагато {розумніша|розумний → розумніша|дурніша}. Але я {молодший|молодий → старіший} за неї і швидше бігаю. Ми дуже {кращі|добрий → кращі|гірші} друзі і завжди {допомагаємо|допомагати → допоможемо} один одному.'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: cloze
   title: Shopping Comparisons
@@ -470,9 +443,7 @@
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Comparatives
-  text: Click on COMPARATIVE adjective forms only. Цей телефон кращий і швидший. Він
-    новіший за мій старий телефон. Але він дорожчий. --- Вона вища за мене. Він старіший
-    за брата. Ця ідея цікавіша! --- Машина більша, але дешевша. Він набагато розумніший.
+  text: Click on COMPARATIVE adjective forms only. Цей телефон кращий і швидший. Він новіший за мій старий телефон. Але він дорожчий. --- Вона вища за мене. Він старіший за брата. Ця ідея цікавіша! --- Машина більша, але дешевша. Він набагато розумніший.
   answers:
   - кращий
   - швидший

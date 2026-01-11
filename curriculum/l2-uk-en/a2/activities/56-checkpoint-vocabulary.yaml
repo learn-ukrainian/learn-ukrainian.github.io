@@ -28,20 +28,13 @@
   instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Vocabulary Test
-  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
-    У мене болить {голова|голову|голові}. (head)
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}. У мене болить {голова|голову|голові}. (head)
 
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}? Я хочу купити {квиток|квитка|квитку}. (ticket)
 
-    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
-    Я хочу купити {квиток|квитка|квитку}. (ticket)
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
 
-
-    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
-    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
-
-
-    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
-    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}. (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: A2 Vocabulary Quiz
@@ -66,8 +59,7 @@
       correct: false
     - text: Genitive case
       correct: false
-  - question: In the phrase «У мене болить голова», what is the grammatical role of
-      «голова»?
+  - question: In the phrase «У мене болить голова», what is the grammatical role of «голова»?
     options:
     - text: Nominative (subject)
       correct: true
@@ -87,8 +79,7 @@
       correct: false
     - text: Locative
       correct: false
-  - question: What is the primary meaning of the verb «вчитися» in an educational
-      context?
+  - question: What is the primary meaning of the verb «вчитися» in an educational context?
     options:
     - text: To study
       correct: true
@@ -325,9 +316,7 @@
   instruction: Розташуйте слова у правильному порядку.
 - type: mark-the-words
   title: Find the Vocabulary
-  text: Click on the key vocabulary words. Вранці я прокидаюся о 7:00 і йду до кухні,
-    щоб снідати. --- Моя сестра працює лікаркою. Вона вчилася в університеті 6 років.
-    --- У мене болить голова і горло. Де тут аптека?
+  text: Click on the key vocabulary words. Вранці я прокидаюся о 7:00 і йду до кухні, щоб снідати. --- Моя сестра працює лікаркою. Вона вчилася в університеті 6 років. --- У мене болить голова і горло. Де тут аптека?
   answers:
   - прокидаюся
   - кухні

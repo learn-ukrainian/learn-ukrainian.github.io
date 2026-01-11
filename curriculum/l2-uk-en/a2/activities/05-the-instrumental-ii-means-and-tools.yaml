@@ -28,26 +28,18 @@
   instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Instrumental Without Preposition
-  passage: 'Ми їдемо в аеропорт {таксі|з таксі|на таксі}. Вона пише листа {ручкою|ручка|з
-    ручкою}. Він ріже хліб {ножем|ніж|з ножем}.
+  passage: 'Ми їдемо в аеропорт {таксі|з таксі|на таксі}. Вона пише листа {ручкою|ручка|з ручкою}. Він ріже хліб {ножем|ніж|з ножем}.
 
+    Ми їмо суп {ложкою|ложка|з ложкою}. Вона летить до Парижа {літаком|літак|з літаком}. Він говорить тихим {голосом|голос|з голосом}.
 
-    Ми їмо суп {ложкою|ложка|з ложкою}. Вона летить до Парижа {літаком|літак|з літаком}.
-    Він говорить тихим {голосом|голос|з голосом}.
+    Я працюю {комп''ютером|комп''ютер|з комп''ютером} щодня. Діти малюють {олівцем|олівець|з олівцем}. Вона махає {рукою|рука|з рукою}.
 
-
-    Я працюю {комп''ютером|комп''ютер|з комп''ютером} щодня. Діти малюють {олівцем|олівець|з
-    олівцем}. Вона махає {рукою|рука|з рукою}.
-
-
-    Ми їдемо в центр {трамваєм|трамвай|з трамваєм}. Я надсилаю документи {електронною
-    поштою|електронна пошта|з електронною поштою}. Вона киває {головою|голова|з головою}.'
+    Ми їдемо в центр {трамваєм|трамвай|з трамваєм}. Я надсилаю документи {електронною поштою|електронна пошта|з електронною поштою}. Вона киває {головою|голова|з головою}.'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Instrumental Uses
   items:
-  - question: When you want to say "by bus" in Ukrainian, which form correctly expresses
-      the means of transport?
+  - question: When you want to say "by bus" in Ukrainian, which form correctly expresses the means of transport?
     options:
     - text: з автобусом
       correct: false
@@ -57,8 +49,7 @@
       correct: false
     - text: автобуса
       correct: false
-  - question: When expressing that someone writes with a pen, which Ukrainian sentence
-      is grammatically correct?
+  - question: When expressing that someone writes with a pen, which Ukrainian sentence is grammatically correct?
     options:
     - text: Я пишу ручкою.
       correct: true
@@ -68,8 +59,7 @@
       correct: false
     - text: Я пишу ручку.
       correct: false
-  - question: In Ukrainian grammar, when do we use the Instrumental case WITHOUT a
-      preposition?
+  - question: In Ukrainian grammar, when do we use the Instrumental case WITHOUT a preposition?
     options:
     - text: Для засобу пересування та інструментів
       correct: true
@@ -79,8 +69,7 @@
       correct: false
     - text: Для часу (коли?)
       correct: false
-  - question: When expressing that someone cuts bread with a knife, which form is
-      correct for "with a knife"?
+  - question: When expressing that someone cuts bread with a knife, which form is correct for "with a knife"?
     options:
     - text: ножем
       correct: true
@@ -90,8 +79,7 @@
       correct: false
     - text: ніж
       correct: false
-  - question: When someone speaks quietly, which Ukrainian sentence correctly expresses
-      "in a quiet voice"?
+  - question: When someone speaks quietly, which Ukrainian sentence correctly expresses "in a quiet voice"?
     options:
     - text: Він говорить тихим голосом.
       correct: true
@@ -101,8 +89,7 @@
       correct: false
     - text: Він говорить тихого голосу.
       correct: false
-  - question: When expressing "by train" in Ukrainian, which form correctly shows
-      the means of transport?
+  - question: When expressing "by train" in Ukrainian, which form correctly shows the means of transport?
     options:
     - text: поїздом
       correct: true
@@ -112,8 +99,7 @@
       correct: false
     - text: поїзда
       correct: false
-  - question: The Ukrainian word «метро» in the Instrumental case for "by metro" takes
-      which form?
+  - question: The Ukrainian word «метро» in the Instrumental case for "by metro" takes which form?
     options:
     - text: не змінюється
       correct: true
@@ -123,8 +109,7 @@
       correct: false
     - text: стає «метри»
       correct: false
-  - question: When expressing seeing "with eyes" in Ukrainian, which irregular Instrumental
-      form is correct?
+  - question: When expressing seeing "with eyes" in Ukrainian, which irregular Instrumental form is correct?
     options:
     - text: очима
       correct: true
@@ -134,8 +119,7 @@
       correct: false
     - text: очей
       correct: false
-  - question: When expressing that someone cuts bread with a knife, which Ukrainian
-      sentence is correct?
+  - question: When expressing that someone cuts bread with a knife, which Ukrainian sentence is correct?
     options:
     - text: Вона ріже хліб ножем.
       correct: true
@@ -145,8 +129,7 @@
       correct: false
     - text: Вона ріже хліб ножа.
       correct: false
-  - question: When expressing "by email" in Ukrainian, which Instrumental form is
-      correct?
+  - question: When expressing "by email" in Ukrainian, which Instrumental form is correct?
     options:
     - text: електронною поштою
       correct: true
@@ -156,8 +139,7 @@
       correct: false
     - text: електронної пошти
       correct: false
-  - question: When using "scissors" in Ukrainian, which Instrumental form of «ножиці»
-      is correct?
+  - question: When using "scissors" in Ukrainian, which Instrumental form of «ножиці» is correct?
     options:
     - text: ножицями
       correct: true
@@ -192,8 +174,7 @@
     explanation: 'Yes! Очі has an irregular instrumental: очима.'
   - statement: We always use a preposition with the instrumental case.
     correct: false
-    explanation: The instrumental can be used without a preposition for means, tools,
-      and manner.
+    explanation: The instrumental can be used without a preposition for means, tools, and manner.
   - statement: «Ручкою» means "with a pen" (tool).
     correct: true
     explanation: Correct! Писати ручкою = to write with a pen.
@@ -314,8 +295,7 @@
     - автобусом
     - автобус
     - на автобус
-    explanation: For means of transport, use bare Instrumental WITHOUT preposition.
-      "By bus" = автобусом, not з автобусом.
+    explanation: For means of transport, use bare Instrumental WITHOUT preposition. "By bus" = автобусом, not з автобусом.
   - sentence: Вона пише листа з ручкою.
     error: з ручкою
     answer: ручкою
@@ -324,8 +304,7 @@
     - ручкою
     - ручка
     - ручку
-    explanation: For tools, use bare Instrumental WITHOUT preposition. "With a pen"
-      = ручкою, not з ручкою.
+    explanation: For tools, use bare Instrumental WITHOUT preposition. "With a pen" = ручкою, not з ручкою.
   - sentence: Він ріже хліб з ніж.
     error: з ніж
     answer: ножем
@@ -334,8 +313,7 @@
     - ножем
     - ніж
     - ножа
-    explanation: 'Tools use bare Instrumental: ніж → ножем. No preposition needed,
-      and the noun must be in Instrumental case.'
+    explanation: 'Tools use bare Instrumental: ніж → ножем. No preposition needed, and the noun must be in Instrumental case.'
   - sentence: Ми їмо суп ложка.
     error: ложка
     answer: ложкою
@@ -344,8 +322,7 @@
     - ложкою
     - ложки
     - ложку
-    explanation: 'Tools require Instrumental case. Feminine nouns ending in -а take
-      -ою: ложка → ложкою.'
+    explanation: 'Tools require Instrumental case. Feminine nouns ending in -а take -ою: ложка → ложкою.'
   - sentence: Вона летить до Парижа з літаком.
     error: з літаком
     answer: літаком
@@ -354,8 +331,7 @@
     - літаком
     - літак
     - літака
-    explanation: For means of transport, use bare Instrumental WITHOUT preposition.
-      "By plane" = літаком, not з літаком.
+    explanation: For means of transport, use bare Instrumental WITHOUT preposition. "By plane" = літаком, not з літаком.
   - sentence: Він говорить тихим з голосом.
     error: з голосом
     answer: голосом
@@ -364,30 +340,19 @@
     - голосом
     - голос
     - голосу
-    explanation: Manner expressions use bare Instrumental. "In a quiet voice" = тихим
-      голосом, not з голосом.
+    explanation: Manner expressions use bare Instrumental. "In a quiet voice" = тихим голосом, not з голосом.
   instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
-  passage: 'Вранці я йду на зупинку і їду {ножем|з ножем|ніж} на роботу. На роботі
-    працюю {ножицями|з ножицями|ножиці} цілий день. Пишу листи {ложкою|з ложкою|ложка}
-    і надсилаю їх {виделкою|з виделкою|виделка}. Увечері їду додому {голосом|з голосом|голос}
-    — це швидше. Вдома розмовляю {велосипедом|з велосипедом|велосипед} з родиною.
+  passage: 'Вранці я йду на зупинку і їду {ножем|з ножем|ніж} на роботу. На роботі працюю {ножицями|з ножицями|ножиці} цілий день. Пишу листи {ложкою|з ложкою|ложка} і надсилаю їх {виделкою|з виделкою|виделка}. Увечері їду додому {голосом|з голосом|голос} — це швидше. Вдома розмовляю {велосипедом|з велосипедом|велосипед} з родиною.
 
     ---
 
-    На кухні мама готує обід. Вона ріже м''ясо {ножем|з ножем|ніж}. Салат ріже {ножицями|з
-    ножицями|ножиці}. Потім ми сідаємо за стіл і їмо: суп {ложкою|з ложкою|ложка},
-    а другу страву {виделкою|з виделкою|виделка}. Тато розповідає історію тихим {голосом|з
-    голосом|голос}. Після обіду брат їде на тренування {велосипедом|з велосипедом|велосипед}.'
+    На кухні мама готує обід. Вона ріже м''ясо {ножем|з ножем|ніж}. Салат ріже {ножицями|з ножицями|ножиці}. Потім ми сідаємо за стіл і їмо: суп {ложкою|з ложкою|ложка}, а другу страву {виделкою|з виделкою|виделка}. Тато розповідає історію тихим {голосом|з голосом|голос}. Після обіду брат їде на тренування {велосипедом|з велосипедом|велосипед}.'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Bare Instrumental
-  text: Click on instrumental forms used WITHOUT a preposition. Я їду на роботу автобусом.
-    Вона пише листа ручкою. Ми живемо з батьками. Він ріже хліб ножем. Кава з молоком
-    смачна. --- Вона летить літаком до Парижа. Він розмовляє з другом. Я працюю комп''ютером.
-    Діти грають з котом. Вона махає рукою. --- Ми їмо суп ложкою. Він гуляє з собакою.
-    Вона говорить тихим голосом. Я їду поїздом. Він живе з братом.
+  text: Click on instrumental forms used WITHOUT a preposition. Я їду на роботу автобусом. Вона пише листа ручкою. Ми живемо з батьками. Він ріже хліб ножем. Кава з молоком смачна. --- Вона летить літаком до Парижа. Він розмовляє з другом. Я працюю комп''ютером. Діти грають з котом. Вона махає рукою. --- Ми їмо суп ложкою. Він гуляє з собакою. Вона говорить тихим голосом. Я їду поїздом. Він живе з братом.
   answers:
   - автобусом
   - ручкою
@@ -412,8 +377,7 @@
       correct: false
     - text: Ми їдемо в аеропорт таксу.
       correct: false
-    explanation: Taxi is indeclinable in Ukrainian. Bare instrumental is used for
-      transport.
+    explanation: Taxi is indeclinable in Ukrainian. Bare instrumental is used for transport.
   - source: She writes a letter with a pen.
     options:
     - text: Вона пише листа ручкою.

@@ -2,17 +2,8 @@
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2766/1750
+- **Words:** ✅ 2783/1750
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -36,7 +27,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 36 | 3 | 100% | 20% | 20.0% |
+| review_sections | 37 | 3 | 100% | 20% | 20.0% |
 | variety | 0.97 | - | 97% | 15% | 14.5% |
 | engagement | 10 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -44,14 +35,21 @@
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
 | **TOTAL** | | | | | **99.5%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Огляд** | ⚪️ | 105 | Skipped |
-| **Skill 1: Стильова ідентифікація (M15-16)** | ⚪️ | 73 | Skipped |
-| **Skill 2: Регістрове перемикання (M17-24)** | ⚪️ | 52 | Skipped |
-| **Skill 3: Крос-регістрова трансформація (M11-14, M25)** | ⚪️ | 49 | Skipped |
+| **Навички** | ⚪️ | 17 | Skipped |
+| **Навичка 1: Стильова ідентифікація (M15-16)** | ⚪️ | 73 | Skipped |
+| **Навичка 2: Регістрове перемикання (M17-24)** | ⚪️ | 52 | Skipped |
+| **Навичка 3: Крос-регістрова трансформація (M11-14, M25)** | ⚪️ | 49 | Skipped |
 | **Тест: Прочитайте вихідний текст** | ✅ | 455 | Included in Core |
 | **Пояснення** | ⚪️ | 560 | Skipped |
 | **Практика** | ⚪️ | 464 | Skipped |

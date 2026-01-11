@@ -91,6 +91,10 @@ def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
         has_curly_braces = '{' in passage
         has_pipe_format = '|' in passage
 
+        # Check for blank lines in passage (causes MDX/HTML rendering issues)
+        if '\n\n' in passage:
+            errors.append(f"cloze: passage contains blank lines (\\n\\n) which break MDX rendering. Use single newlines only.")
+
         if has_curly_braces and not has_blanks_array and not has_pipe_format:
             # Passage has {word} markers but no way to present options
             errors.append(f"cloze: passage has {{word}} markers but no 'blanks' array or '|' options format")
@@ -488,6 +492,19 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
         activity['instruction'] = DEFAULT_INSTRUCTIONS[activity_type]
         fixes.append(f"Added default instruction for {activity_type}")
         modified = True
+
+    # Fix 12: Remove blank lines from cloze passages (causes MDX rendering issues)
+    if activity_type == 'cloze' and 'passage' in activity:
+        passage = activity['passage']
+        if '\n\n' in passage:
+            # Replace all double newlines with single newlines
+            fixed_passage = passage.replace('\n\n', '\n')
+            # Clean up any triple+ newlines that might exist
+            while '\n\n' in fixed_passage:
+                fixed_passage = fixed_passage.replace('\n\n', '\n')
+            activity['passage'] = fixed_passage
+            fixes.append(f"Removed blank lines from cloze passage (fixes MDX rendering)")
+            modified = True
 
     return modified, fixes
 

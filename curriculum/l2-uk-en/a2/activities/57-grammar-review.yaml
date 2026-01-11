@@ -1,8 +1,7 @@
 - type: quiz
   title: Grammar Master
   items:
-  - question: Which grammatical case is primarily used for indicating a location in
-      Ukrainian?
+  - question: Which grammatical case is primarily used for indicating a location in Ukrainian?
     options:
     - text: Locative
       correct: true
@@ -12,8 +11,7 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: Which case correctly completes the phrase «Я працюю...» to mean "I work
-      as"?
+  - question: Which case correctly completes the phrase «Я працюю...» to mean "I work as"?
     options:
     - text: Instrumental (менеджером)
       correct: true
@@ -53,8 +51,7 @@
       correct: false
     - text: Wish / Desire
       correct: false
-  - question: What is the meaning and function of the connector «щоб» in a complex
-      sentence?
+  - question: What is the meaning and function of the connector «щоб» in a complex sentence?
     options:
     - text: In order to / Purpose
       correct: true
@@ -84,8 +81,7 @@
       correct: false
     - text: Accusative (олівець)
       correct: false
-  - question: Which case is used with the preposition «з» meaning "from" in «Він прийшов
-      з...»?
+  - question: Which case is used with the preposition «з» meaning "from" in «Він прийшов з...»?
     options:
     - text: Genitive (магазину)
       correct: true
@@ -95,8 +91,7 @@
       correct: false
     - text: Instrumental (магазином)
       correct: false
-  - question: Which case follows the preposition «про» in the phrase «Ми говоримо
-      про...»?
+  - question: Which case follows the preposition «про» in the phrase «Ми говоримо про...»?
     options:
     - text: Accusative (політику)
       correct: true
@@ -116,8 +111,7 @@
       correct: false
     - text: Accusative (Україну)
       correct: false
-  - question: Which special case form is used when addressing someone directly, like
-      «Привіт, ...»?
+  - question: Which special case form is used when addressing someone directly, like «Привіт, ...»?
     options:
     - text: Vocative (друже)
       correct: true
@@ -158,20 +152,13 @@
   instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Case Challenge
-  passage: 'Я йду в {парк|парку|парком|паркі}_. Я гуляю в {парку|парк|парком|парка}_.
-    Я не бачу {автобуса|автобус|автобусом|автобусі}_.
+  passage: 'Я йду в {парк|парку|парком|паркі}_. Я гуляю в {парку|парк|парком|парка}_. Я не бачу {автобуса|автобус|автобусом|автобусі}_.
 
+    Я їм {суп|супу|супом|супі}_. Я їм суп {ложкою|ложка|ложку|ложці}_. Я телефоную {татові|тато|тата|татом}_.
 
-    Я їм {суп|супу|супом|супі}_. Я їм суп {ложкою|ложка|ложку|ложці}_. Я телефоную
-    {татові|тато|тата|татом}_.
+    Ми з {братом|брат|брата|брату}_. Книга лежить на {столі|стіл|столу|столом}_. У {мене|мені|я|мною}_ є ідея.
 
-
-    Ми з {братом|брат|брата|брату}_. Книга лежить на {столі|стіл|столу|столом}_. У
-    {мене|мені|я|мною}_ є ідея.
-
-
-    Це подарунок для {сестри|сестрі|сестру|сестра}_. Я хочу стати {художником|художник|художника|художнику}_.
-    Привіт, {Іване|Іван|Івана|Іваном}_!'
+    Це подарунок для {сестри|сестрі|сестру|сестра}_. Я хочу стати {художником|художник|художника|художнику}_. Привіт, {Іване|Іван|Івана|Іваном}_!'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: true-false
   title: Grammar Truths
@@ -507,8 +494,7 @@
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Identification
-  text: Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я
-    зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.
+  text: Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.
   answers:
   - встав
   - поснідав
