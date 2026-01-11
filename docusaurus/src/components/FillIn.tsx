@@ -164,7 +164,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
       )}
       <div className={styles.activityContent}>
         {items.map((item, index) => {
-          const parts = item.sentence.split('___');
+          const parts = item.sentence.split(/_{3,}/);  // Match 3+ underscores
           const isCorrect = answers[index] === item.answer;
 
           return (
