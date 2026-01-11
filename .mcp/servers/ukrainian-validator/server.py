@@ -167,6 +167,101 @@ Use this format:
                 'summary': {'total': 0, 'recommendation': 'Check MCP server logs'}
             }
 
+    def check_naturalness(self, content: str, level: str, context: str = '') -> Dict[str, Any]:
+        """
+        Check if Ukrainian text sounds natural at the given CEFR level.
+
+        Args:
+            content: Ukrainian text to evaluate
+            level: CEFR level (A1-C2)
+            context: Optional context (e.g., "mark-the-words activity", "dialogue")
+
+        Returns:
+            Dict with score (1-10), issues, and recommendation
+        """
+        import re
+
+        prompt = f"""You are an expert Ukrainian language educator evaluating text naturalness.
+
+**Task**: Rate how natural this Ukrainian text sounds for a {level} learner.
+
+**Context**: {context or 'curriculum content'}
+
+**Text to evaluate**:
+{content}
+
+**Evaluation criteria**:
+1. **Flow**: Do sentences connect naturally? Are there discourse markers (потім, тому, але, тоді)?
+2. **Coherence**: Is there a logical narrative or theme, or just random disconnected sentences?
+3. **Register**: Does the language match {level} expectations (not too simple, not too complex)?
+4. **Authenticity**: Would a native speaker write/say this naturally?
+
+**Red flags for robotic text**:
+- Sentences that don't relate to each other
+- Repetitive subject-verb patterns ("Я зробив X. Я зробив Y. Я зробив Z.")
+- No temporal or logical connectors
+- Unnatural topic jumps
+
+Return JSON:
+{{
+  "score": 8,
+  "issues": ["list of specific problems"],
+  "recommendation": "brief actionable advice",
+  "rewrite_needed": false
+}}
+
+Score guide:
+- 9-10: Excellent, sounds like native writing
+- 7-8: Good, minor improvements possible
+- 5-6: Acceptable but noticeably artificial
+- 3-4: Poor, clearly robotic/disconnected
+- 1-2: Unusable, random sentences
+"""
+
+        try:
+            # Use flash model for quick evaluation
+            model = 'gemini-2.0-flash'
+
+            config_content = self.config_path.read_text(encoding='utf-8')
+            updated_config = re.sub(r'^model:.*$', f'model: {model}', config_content, flags=re.MULTILINE)
+            self.config_path.write_text(updated_config, encoding='utf-8')
+
+            result = subprocess.run(
+                ['gemini', '-y'],
+                input=prompt,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=self.project_root
+            )
+
+            if result.returncode != 0:
+                return {'error': 'gemini execution failed', 'stderr': result.stderr}
+
+            output = result.stdout.strip()
+
+            # Extract JSON
+            if '```json' in output:
+                json_start = output.find('```json') + 7
+                json_end = output.find('```', json_start)
+                json_str = output[json_start:json_end].strip()
+            elif '```' in output:
+                json_start = output.find('```') + 3
+                json_end = output.find('```', json_start)
+                json_str = output[json_start:json_end].strip()
+            else:
+                json_str = output
+
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError:
+                return {'error': 'Failed to parse response', 'raw_output': output}
+
+        except subprocess.TimeoutExpired:
+            return {'error': 'gemini timeout'}
+        except Exception as e:
+            return {'error': str(e)}
+
     def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle incoming MCP JSON-RPC request."""
         method = request.get('method')
@@ -223,6 +318,29 @@ Use this format:
                             },
                             'required': ['content', 'level']
                         }
+                    },
+                    {
+                        'name': 'check_naturalness',
+                        'description': 'Check if Ukrainian text sounds natural (detects robotic/disconnected content)',
+                        'inputSchema': {
+                            'type': 'object',
+                            'properties': {
+                                'content': {
+                                    'type': 'string',
+                                    'description': 'Ukrainian text to evaluate'
+                                },
+                                'level': {
+                                    'type': 'string',
+                                    'enum': ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
+                                    'description': 'CEFR level for appropriate register'
+                                },
+                                'context': {
+                                    'type': 'string',
+                                    'description': 'Optional context (e.g., "dialogue", "mark-the-words activity")'
+                                }
+                            },
+                            'required': ['content', 'level']
+                        }
                     }
                 ]
             })
@@ -236,6 +354,22 @@ Use this format:
                 level = arguments.get('level', 'B2')
 
                 result = self.validate_ukrainian(content, level)
+
+                return make_response({
+                    'content': [
+                        {
+                            'type': 'text',
+                            'text': json.dumps(result, indent=2, ensure_ascii=False)
+                        }
+                    ]
+                })
+
+            if tool_name == 'check_naturalness':
+                content = arguments.get('content', '')
+                level = arguments.get('level', 'B2')
+                context = arguments.get('context', '')
+
+                result = self.check_naturalness(content, level, context)
 
                 return make_response({
                     'content': [
