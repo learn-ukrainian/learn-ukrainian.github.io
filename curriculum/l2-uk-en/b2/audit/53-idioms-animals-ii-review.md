@@ -37,31 +37,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Походження та Традиції' Q8 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [знайдіть-значення] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: Array validation: {'type': 'translate', 'title': 'Переклад на українську', 'instruction': 'Виберіть еквівалентний фразеологізм.', 'items': [{'source': 'To daydream / To count tiles', 'options': [{'text': 'Рахувати ворон', 'correct': True}, {'text': 'Вбити двох зайців', 'correct': False}, {'text': 'Муха не сідала', 'correct': False}, {'text': 'Бути як риба'}], 'explanation': 'Це опис неуважного стану.'}, {'source': 'To kill two birds with one stone', 'options': [{'text': 'Вбити двох зайців', 'correct': True}, {'text': 'Зловити дві мухи', 'correct': False}, {'text': 'Побачити двох ворон', 'correct': False}, {'text': "З'їсти двох риб"}], 'explanation': 'В українській мові замість птахів — зайці.'}, {'source': 'Like a duck to water', 'options': [{'text': 'Як риба у воді', 'correct': True}, {'text': 'Як муха на слоні', 'correct': False}, {'text': 'Як заєць у кущах', 'correct': False}, {'text': 'Як ґава на паркані'}], 'explanation': 'Про природну впевненість у чомусь.'}, {'source': 'To make a mountain out of a molehill', 'options': [{'text': 'Робити з мухи слона', 'correct': True}, {'text': "Робити з риби м'ясо", 'correct': False}, {'text': 'Робити з ґави орла', 'correct': False}, {'text': 'Робити з ворони сокола'}], 'explanation': 'Типова метафора перебільшення.'}, {'source': 'Fish in troubled waters', 'options': [{'text': 'Ловити рибу в мутній воді', 'correct': True}, {'text': 'Ловити зайців у лісі', 'correct': False}, {'text': 'Ловити мух у повітрі', 'correct': False}, {'text': 'Ловити ґав у небі'}], 'explanation': 'Про отримання вигоди з хаосу.'}, {'source': 'Neither here nor there / Wishy-washy', 'options': [{'text': "Ні риба ні м'ясо", 'correct': True}, {'text': 'Ні заєць ні ворона', 'correct': False}, {'text': 'Ні муха ні слон', 'correct': False}, {'text': 'Ні вода ні повітря'}], 'explanation': 'Про невиразну людину.'}, {'source': 'Brand new / Mint condition', 'options': [{'text': 'Муха не сідала', 'correct': True}, {'text': 'Риба не плавала', 'correct': False}, {'text': 'Заєць не бігав', 'correct': False}, {'text': 'Ґава не літала'}], 'explanation': 'Вираз підкреслює ідеальну новизну.'}, {'source': 'To be distracted / Idle', 'options': [{'text': 'Ловити ґав', 'correct': True}, {'text': 'Ловити риб', 'correct': False}, {'text': 'Ловити мух', 'correct': False}, {'text': 'Ловити зайців'}], 'explanation': 'Про марнування часу через неуважність.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [оберіть-ситуацію] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [вставте-слово] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [чи-це-правда?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [класифікація-за-емоціями] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [складіть-ідіому] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [історія-про-невдаху] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [виправте-фразеологізми] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [знайдіть-близькі-поняття] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [переклад-на-українську] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [тварини-та-стихії] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [антоніми-за-змістом] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [походження-та-традиції] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: [index-9] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -69,14 +47,14 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Літературний контекст: "За двома зайцями", Вступ: Світ навколо нас як джерело мудрості
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 33 violations (severe - consider revision)
+- 22 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1829/1750
@@ -89,28 +67,28 @@
 - **Vocab:** ✅ 112/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 31 violations
+- **Pedagogy:** ❌ 20 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (vocab))
-- **Richness:** ✅ 98% (content)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 0.97 | - | 97% | 6% | 6.1% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.1%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 6 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.97 | - | 97% | 8% | 8.1% |
+| examples | 40 | - | 100% | 8% | 8.3% |
+| realworld | 7 | - | 100% | 8% | 8.3% |
+| questions | 8 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

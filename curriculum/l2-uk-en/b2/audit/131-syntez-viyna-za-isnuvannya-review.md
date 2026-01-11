@@ -3,33 +3,49 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [хронологія-великої-боротьби] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 1 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 2 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 3 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 4 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 5 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 6 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 7 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 8 has 3 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 9 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 10 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 11 has 4 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 12 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 13 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 14 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 15 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Хронологія великої боротьби' item 16 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз сучасної суб'єктності' Q11 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** group-sort 'Патерни агресії та спротиву' has 2 groups (target: 3-5)
+  - FIX: Adjust number of sorting categories to 3-5.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Міжнародна підтримка та солідарність' Q8 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: Array validation: {'type': 'select', 'title': 'Цінності українського опору', 'instruction': 'Виберіть усі цінності, які стали визначальними для українців у цій війні.', 'items': [{'correct': True, 'question': 'Свобода як найвищий пріоритет особистості та нації'}, {'correct': True, 'question': 'Солідарність та взаємодопомога у критичних ситуаціях'}, {'correct': True, 'question': 'Справедливість та покарання за скоєне зло'}, {'correct': False, 'question': 'Прагнення до авторитарного правління для наведення ладу'}, {'correct': True, 'question': 'Відкритість до світу та європейська інтеграція'}, {'correct': False, 'question': 'Пошук компромісу з ворогом ціною власної гідності'}, {'correct': True, 'question': 'Правда та боротьба з імперською дезінформацією'}, {'correct': True, 'question': "Віра у власні сили та суб'єктність України"}, {'correct': True, 'question': 'Самоорганізація без очікування вказівок зверху'}, {'correct': True, 'question': 'Повага до героїв, які захищають свою землю'}, {'correct': True, 'question': 'Гумор як спосіб подолання страху та стресу'}, {'correct': True, 'question': 'Відповідальність за майбутнє наступних поколінь'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [аналіз-сучасної-суб'єктності] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [index-6] select: 'items.11' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [синтез-понять-та-ідей] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [героїчні-місця-та-їх-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [патерни-агресії-та-спротиву] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [логіка-сучасної-стійкості] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [критерії-справжньої-перемоги] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [спростування-дезінформації] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [аналітичний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [колокації-сучасної-історії] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [пасивний-стан-в-історії] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [факти-сучасної-війни] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [міжнародна-підтримка-та-солідарність] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [цінності-українського-опору] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [index-13] select: 'items.11' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -45,26 +61,25 @@
   - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
-- 19 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 27 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2040/2000
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.0% (target 98-100% (history))
+- **Pedagogy:** ❌ 24 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

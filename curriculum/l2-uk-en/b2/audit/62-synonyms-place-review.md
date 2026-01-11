@@ -31,46 +31,24 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Простір пам'яті' Q8 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [знайдіть-місце] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Array validation: {'type': 'translate', 'title': 'Переклад простору', 'instruction': 'Оберіть правильний український синонім до англійського слова.', 'items': [{'source': 'here (colloquial/cozy)', 'options': [{'text': 'тутечки', 'correct': True}, {'text': 'там', 'correct': False}, {'text': 'далеко', 'correct': False}, {'text': 'сюди', 'correct': False}], 'explanation': 'Найкращий розмовний відповідник.'}, {'source': 'nearby / close by', 'options': [{'text': 'поблизу', 'correct': True}, {'text': 'далеко', 'correct': False}, {'text': 'ніде', 'correct': False}, {'text': 'звідти', 'correct': False}], 'explanation': 'Вказує на територіальну близькість.'}, {'source': 'everywhere', 'options': [{'text': 'всюди', 'correct': True}, {'text': 'десь', 'correct': False}, {'text': 'кудись', 'correct': False}, {'text': 'звідкись'}], 'explanation': 'Позначає кожну точку простору.'}, {'source': 'from here', 'options': [{'text': 'звідси', 'correct': True}, {'text': 'сюди', 'correct': False}, {'text': 'туди', 'correct': False}, {'text': 'там'}], 'explanation': 'Джерело руху від мовця.'}, {'source': 'over there (pointing)', 'options': [{'text': 'он там', 'correct': True}, {'text': 'тутечки', 'correct': False}, {'text': 'сюди', 'correct': False}, {'text': 'звідси'}], 'explanation': "Вказівка на віддалений видимий об'єкт."}, {'source': 'nowhere', 'options': [{'text': 'ніде', 'correct': True}, {'text': 'всюди', 'correct': False}, {'text': 'десь', 'correct': False}, {'text': 'кудись'}], 'explanation': 'Відсутність будь-якого місця.'}, {'source': 'boundary / limit', 'options': [{'text': 'межа', 'correct': True}, {'text': 'точка', 'correct': False}, {'text': 'район', 'correct': False}, {'text': 'обрій'}], 'explanation': 'Край або кордон простору.'}, {'source': 'horizon', 'options': [{'text': 'обрій', 'correct': True}, {'text': 'зона', 'correct': False}, {'text': 'місце', 'correct': False}, {'text': 'точка'}], 'explanation': 'Межа неба і землі.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [орієнтування-у-просторі] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [статика-чи-напрямок?] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [складіть-просторове-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [шлях-мандрівника] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [оберіть-масштаб-простору] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [виправте-місце] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [переклад-простору] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [нюанси-локацій] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [всі-форми-вказівки] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [простір-та-об'єкти] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [антоніми-простору] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [простір-пам'яті] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [типи-територій] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 30 violations (severe - consider revision)
+- 19 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1766/1750
@@ -83,28 +61,28 @@
 - **Vocab:** ✅ 57/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (vocab))
-- **Richness:** ✅ 98% (content)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Score:** 97% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 33 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 6 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.84 | - | 84% | 6% | 5.2% |
-| questions | 12 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.4%** |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
+| variety | 0.95 | - | 95% | 17% | 15.8% |
+| cultural | 4 | - | 100% | 17% | 16.7% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.84 | - | 84% | 8% | 7.0% |
+| examples | 33 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 12 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

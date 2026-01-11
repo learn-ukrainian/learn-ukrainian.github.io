@@ -31,33 +31,11 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія чину' Q8 prompt length 5 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [знайдіть-характер-дії] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Array validation: {'type': 'select', 'title': 'Всі форми активності', 'instruction': 'Оберіть усі слова, що позначають процес творення або дії (6+ елементів).', 'items': [{'question': "Оберіть синоніми до 'робити' (6+):", 'options': [{'text': 'чинити', 'correct': True}, {'text': 'діяти', 'correct': True}, {'text': 'виконувати', 'correct': True}, {'text': 'здійснювати', 'correct': True}, {'text': 'реалізовувати', 'correct': True}, {'text': 'втілювати', 'correct': True}, {'text': 'творити', 'correct': True}]}, {'question': 'Які слова вказують на результат дії?', 'options': [{'text': 'результат', 'correct': True}, {'text': 'наслідок', 'correct': True}, {'text': 'ефект', 'correct': True}, {'text': 'процес', 'correct': False}]}, {'question': 'Оберіть дієслова для швидкої реакції:', 'options': [{'text': 'хапати', 'correct': True}, {'text': 'вхопити', 'correct': True}, {'text': 'вихопити', 'correct': True}, {'text': 'чекати', 'correct': False}]}, {'question': 'Які слова описують зміну?', 'options': [{'text': 'перетворювати', 'correct': True}, {'text': 'трансформувати', 'correct': True}, {'text': 'модернізувати', 'correct': True}, {'text': 'зберігати', 'correct': False}]}, {'question': 'Оберіть терміни для соціальної дії:', 'options': [{'text': 'акція', 'correct': True}, {'text': 'ініціатива', 'correct': True}, {'text': 'кампанія', 'correct': True}, {'text': 'сон', 'correct': False}]}, {'question': 'Які дієслова підходять для роботи з планами?', 'options': [{'text': 'здійснювати', 'correct': True}, {'text': 'реалізовувати', 'correct': True}, {'text': 'втілювати', 'correct': True}, {'text': 'руйнувати', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [оберіть-точну-дію] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [дія-чи-результат?] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [складіть-дієве-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [проєкт-перетворення] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [професійне-дієслово] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [виправте-вчинок] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [переклад-дії] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [нюанси-чину] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [всі-форми-активності] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [дія-та-регістри] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [дія-та-її-об'єкт] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [філософія-чину] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [творча-та-технічна-дія] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: [index-9] select: 'items.0.options' - [{'text': 'чинити', 'correct': True}, {'text': 'діяти', 'correct': True}, {'text': 'виконувати', 'correct': True}, {'text': 'здійснювати', 'correct': True}, {'text': 'реалізовувати', 'correct': True}, {'text': 'втілювати', 'correct': True}, {'text': 'творити', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -65,14 +43,16 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Частина 5: Практичний додаток — Контекст і Регістр мовлення, Частина 11: Дія в контексті відновлення міст, Вступ: Енергія українського чину та перетворення
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 31 violations (severe - consider revision)
+- 21 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1830/1750
@@ -85,28 +65,28 @@
 - **Vocab:** ✅ 67/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (content)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 43 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.96 | - | 96% | 12% | 12.0% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 8 | 3 | 100% | 12% | 12.5% |
-| visual | 7 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.86 | - | 86% | 6% | 5.4% |
-| questions | 6 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.5%** |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
+| variety | 0.96 | - | 96% | 17% | 16.0% |
+| cultural | 3 | - | 100% | 17% | 16.7% |
+| visual | 7 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.86 | - | 86% | 8% | 7.2% |
+| examples | 43 | - | 100% | 8% | 8.3% |
+| realworld | 8 | - | 100% | 8% | 8.3% |
+| questions | 6 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -147,89 +147,79 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексний тест B2.1' Q12 prompt length 5 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [пасивний-стан:-розпізнавання-форм] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [пасивна-форма-та-типовий-регістр] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [класифікація-пасивних-конструкцій] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [активні-дієприкметники:-розпізнавання-та-трансформація] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [утворення-пасивних-дієприкметників] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [виправлення-помилок-у-пасивних-конструкціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [дієприслівники:-утворення-та-вживання] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [побудова-складних-речень] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [класифікація-за-функціональними-стилями] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [доменна-лексика-та-переклад] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [доменна-лексика-у-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [інтеграційний-текст-про-реформу] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [вставні-слова-та-конектори] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [правда-чи-хибність-про-регістри] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [знайдіть-пасивні-конструкції] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [переклад-пасивних-конструкцій] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [виправлення-регістрових-помилок] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: [комплексний-тест-b2.1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-grammar-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-grammar-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Трансформації' per template 'b2-grammar-module-template'
+  - FIX: Add '## Трансформації' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 93 violations (severe - consider revision)
+- 76 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2119/1750
-- **Activities:** ✅ 19/15
+- **Activities:** ✅ 19/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ❌ 5/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/10
+- **Vocab:** ✅ 31/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 91 violations
+- **Pedagogy:** ❌ 73 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
-- **Richness:** ✅ 88% (checkpoint)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 88% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 77% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 34 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
-| engagement | 5 | 3 | 100% | 10% | 10.0% |
-| cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 9 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.5%** |
+| examples | 41 | 24 | 100% | 20% | 20.0% |
+| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 0.90 | - | 90% | 10% | 9.0% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 33 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **77.8%** |
+
+### Dryness Flags & Fixes
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |

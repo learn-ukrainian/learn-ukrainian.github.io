@@ -31,33 +31,13 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Духовні концепції' item 8 has 8 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: Array validation: {'type': 'translate', 'title': 'Пасивні конструкції в духовному тексті', 'items': [{'options': [{'text': 'Русь було охрещено у 988 році.', 'correct': True}, {'text': 'Русь хрестила Володимира.'}, {'text': 'Володимир охрестив Русь.'}], 'source': 'Князь Володимир хрестив Русь у 988 році. (Пасив з -но/-то)'}, {'options': [{'text': 'Храм наповнюється віруючими.', 'correct': True}, {'text': 'Віруючі будуть наповнювати храм.'}, {'text': 'Храм наповнив віруючих.'}], 'source': 'Натовп віруючих наповнює храм. (Пасив на -ся)'}, {'options': [{'text': 'Цей проект був благословенний священиком.', 'correct': True}, {'text': 'Священик буде благословляти проект.'}, {'text': 'Проект благословив священика.'}], 'source': 'Священик благословив цей проект. (Пасив з -ний/-тий)'}, {'options': [{'text': 'Собор збудовано у центрі міста.', 'correct': True}, {'text': 'Ми будуємо собор.'}, {'text': 'Центр міста збудував собор.'}], 'source': 'Ми збудували собор у центрі міста. (Пасив з -но/-то)'}, {'options': [{'text': 'Допомога збирається громадою.', 'correct': True}, {'text': 'Громада буде збирати допомогу.'}, {'text': 'Допомога зібрала громаду.'}], 'source': 'Громада збирає допомогу. (Пасив на -ся)'}, {'options': [{'text': 'Ця мечеть була спроектована архітектором.', 'correct': True}, {'text': 'Архітектор спроектував мечеть.'}, {'text': 'Мечеть спроектувала архітектора.'}], 'source': 'Архітектор спроектував цю мечеть. (Пасив з -ний/-тий)'}, {'options': [{'text': 'Урядом ухвалено закон про свободу совісті.', 'correct': True}, {'text': 'Уряд ухвалює закон.'}, {'text': 'Закон ухвалив уряд.'}], 'source': 'Уряд ухвалив закон про свободу совісті. (Пасив з -но/-то)'}, {'options': [{'text': 'Наші серця об’єднуються любов’ю.', 'correct': True}, {'text': 'Любов буде об’єднувати серця.'}, {'text': 'Серця об’єднали любов.'}], 'source': 'Любов об’єднує наші серця. (Пасив на -ся)'}], 'instruction': 'Виберіть правильну пасивну форму для наведеного речення.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [index-7] error-correction: 'items.7' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [index-8] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-gs-1] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-mtw-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [планування-поїздки-до-почаєва] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-ec-1] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-tr-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-sel-1] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-cloze-1] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-trans-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-ta-1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [137-cp-1] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 137-religion-in-ukraine.yaml: [index-11] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -74,7 +54,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 32 violations (severe - consider revision)
+- 22 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 3031/1750
@@ -87,9 +67,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 19 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (skills))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation
 

@@ -99,40 +99,18 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань зі словотворення' Q16 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [творення-прислівників-від-прикметників] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [утворіть-прислівники-від-прикметників] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [оберіть-правильний-прислівник] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [правила-творення-прислівників] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [класифікація-за-типом-словотвору] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [складіть-речення-з-прислівниками] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [виправте-помилки-у-прислівниках-та-демінутивах] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [заповніть-текст-правильними-прислівниками-та-демінутивами] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [знайдіть-усі-прислівники] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [оберіть-усі-граматично-правильні-форми] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [оберіть-правильний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [утворіть-демінутиви-та-аугментативи] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-word-formation-adverbs-integration.yaml: [комплексна-перевірка-знань-зі-словотворення] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Трансформації' per template 'b2-grammar-module-template'
+  - FIX: Add '## Трансформації' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 62 violations (severe - consider revision)
+- 50 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1918/1750
@@ -145,9 +123,9 @@
 - **Vocab:** ✅ 64/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 62 violations
+- **Pedagogy:** ❌ 49 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
 

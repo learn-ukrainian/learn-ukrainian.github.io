@@ -1,0 +1,147 @@
+module: 167-summer-holidays
+level: C1
+version: '1.0'
+items:
+  - lemma: Трійця
+    ipa: /ˈtrʲijt͡sʲa/
+    translation: Trinity (Pentecost)
+    pos: noun
+    gender: f
+  - lemma: Купала
+    ipa: /kuˈpala/
+    translation: Kupala (midsummer holiday)
+    pos: propn
+    gender: n
+  - lemma: Спас
+    ipa: /spas/
+    translation: Savior (Transfiguration feast)
+    pos: noun
+    gender: m
+  - lemma: Маковія
+    ipa: /makɔˈvʲija/
+    translation: Makoviya (Maccabees/Poppy Spas)
+    pos: propn
+    gender: m
+  - lemma: вогнище
+    ipa: /ˈvɔhnɪʃt͡ʃɛ/
+    translation: bonfire
+    pos: noun
+    gender: n
+  - lemma: папороть
+    ipa: /ˈpapɔrɔtʲ/
+    translation: fern
+    pos: noun
+    gender: f
+  - lemma: вінок
+    ipa: /vʲiˈnɔk/
+    translation: wreath
+    pos: noun
+    gender: m
+  - lemma: зілля
+    ipa: /ˈzʲilʲːa/
+    translation: herbs, potion
+    pos: noun
+    gender: n
+  - lemma: мавка
+    ipa: /ˈmau̯ka/
+    translation: mavka (forest nymph)
+    pos: noun
+    gender: f
+  - lemma: русалка
+    ipa: /ruˈsalka/
+    translation: mermaid (rusalka)
+    pos: noun
+    gender: f
+  - lemma: жнива
+    ipa: /ʒnɪˈva/
+    translation: harvest
+    pos: noun
+    gender: pl
+  - lemma: обжинковий
+    ipa: /ɔbʒɪnˈkɔvɪj/
+    translation: harvest-related
+    pos: adj
+    gender: m
+  - lemma: марена
+    ipa: /maˈrɛna/
+    translation: marena (ritual tree/effigy)
+    pos: noun
+    gender: f
+  - lemma: маковійчик
+    ipa: /makɔˈvʲijt͡ʃɪk/
+    translation: makoviichyk (ritual bouquet)
+    pos: noun
+    gender: m
+  - lemma: мед
+    ipa: /mɛd/
+    translation: honey
+    pos: noun
+    gender: m
+  - lemma: мак
+    ipa: /mak/
+    translation: poppy
+    pos: noun
+    gender: m
+  - lemma: яблуко
+    ipa: /ˈjablukɔ/
+    translation: apple
+    pos: noun
+    gender: n
+  - lemma: горіх
+    ipa: /hɔˈrʲix/
+    translation: nut
+    pos: noun
+    gender: m
+  - lemma: очищення
+    ipa: /ɔˈt͡ʃɪʃt͡ʃɛnʲːa/
+    translation: purification
+    pos: noun
+    gender: n
+  - lemma: родючість
+    ipa: /rɔˈdʲut͡ʃʲisʲtʲ/
+    translation: fertility
+    pos: noun
+    gender: f
+  - lemma: магічний
+    ipa: /maˈhʲit͡ʃnɪj/
+    translation: magical
+    pos: adj
+    gender: m
+  - lemma: язичницький
+    ipa: /jazɪt͡ʃˈnɪt͡sʲkɪj/
+    translation: pagan
+    pos: adj
+    gender: m
+  - lemma: цілющий
+    ipa: /t͡sʲiˈlʲuʃt͡ʃɪj/
+    translation: healing
+    pos: adj
+    gender: m
+  - lemma: стрибати
+    ipa: /strɪˈbatɪ/
+    translation: to jump
+    pos: verb
+  - lemma: плести
+    ipa: /plɛsˈtɪ/
+    translation: to weave (wreaths)
+    pos: verb
+  - lemma: пускати
+    ipa: /pusˈkatɪ/
+    translation: to set afloat (wreaths)
+    pos: verb
+  - lemma: шукати
+    ipa: /ʃuˈkatɪ/
+    translation: to search
+    pos: verb
+  - lemma: спалювати
+    ipa: /spaˈlʲuvatɪ/
+    translation: to burn
+    pos: verb
+  - lemma: ворожити
+    ipa: /vɔrɔˈʒɪtɪ/
+    translation: to divine
+    pos: verb
+  - lemma: святкувати
+    ipa: /sʲvjatkuˈvatɪ/
+    translation: to celebrate
+    pos: verb

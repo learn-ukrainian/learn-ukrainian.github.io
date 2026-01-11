@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -50,7 +50,7 @@
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
 | **Тест: Прочитайте тексти** | ✅ | 337 | Included in Core |
 | **Пояснення** | ⚪️ | 836 | Skipped |
-| **Практика** | ⚪️ | 349 | Skipped |
+| **Трансформації** | ⚪️ | 349 | Skipped |
 | **Діалоги** | ✅ | 308 | Included in Core |
 | **Підсумок** | ✅ | 120 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

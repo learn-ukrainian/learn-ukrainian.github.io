@@ -55,32 +55,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q13 prompt length 6 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [розуміння-тексту-про-культурну-спадщину-мазепи] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [культурна-та-архітектурна-термінологія] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [культурна-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [факти-про-культурну-діяльність-мазепи] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [класифікація-культурних-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [складіть-речення-про-культуру-мазепи] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [граматика-в-реченнях-про-культуру] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [заповніть-текст-про-культурну-спадщину-мазепи] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [знайдіть-культурну-термінологію] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [переклад-культурної-термінології] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -102,7 +76,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 46 violations (severe - consider revision)
+- 33 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2144/2000
@@ -115,9 +89,9 @@
 - **Vocab:** ✅ 117/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 41 violations
+- **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 

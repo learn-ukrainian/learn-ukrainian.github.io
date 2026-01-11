@@ -65,48 +65,26 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q14 prompt length 7 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [розуміння-тексту-про-життя-сковороди] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [філософська-термінологія-сковороди] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [філософська-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [факти-про-сковороду] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [класифікація-понять-філософії-сковороди] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [складіть-речення-про-сковороду] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [граматика-в-реченнях-про-сковороду] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [заповніть-текст-про-філософію-сковороди] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [знайдіть-філософську-термінологію] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [переклад-філософської-термінології] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-hryhorii-skovoroda.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Skill Sections' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Skill Sections' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 48 violations (severe - consider revision)
+- 37 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2161/2000
@@ -119,9 +97,9 @@
 - **Vocab:** ✅ 86/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 46 violations
+- **Pedagogy:** ❌ 33 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 

@@ -99,44 +99,20 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка економічної лексики' Q16 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [економічні-поняття-та-термінологія] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [економічні-терміни-та-їх-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [заповніть-пропуски-в-економічних-новинах] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [перевірте-правильність-тверджень] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [розподіліть-економічні-терміни-за-категоріями] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [складіть-економічні-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [виправте-помилки-в-економічних-текстах] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [заповніть-текст-про-українську-економіку] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [знайдіть-економічні-терміни-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [оберіть-правильний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [оберіть-правильне-дієслово] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 28-economics-business-vocabulary.yaml: [комплексна-перевірка-економічної-лексики] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Граматика в контексті
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Трансформації' per template 'b2-grammar-module-template'
+  - FIX: Add '## Трансформації' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 63 violations (severe - consider revision)
+- 51 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1994/1750
@@ -149,9 +125,9 @@
 - **Vocab:** ✅ 148/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 62 violations
+- **Pedagogy:** ❌ 49 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 

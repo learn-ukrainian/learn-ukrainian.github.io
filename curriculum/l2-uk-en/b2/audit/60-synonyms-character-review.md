@@ -25,46 +25,26 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Характер у літературі' Q8 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [знайдіть-точне-слово] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: Array validation: {'type': 'select', 'title': 'Чесноти та Вади', 'instruction': 'Оберіть усі слова, що позначають позитивні якості (6+ елементів).', 'items': [{'question': 'Які слова описують шляхетну людину? (6+)', 'options': [{'text': 'милосердний', 'correct': True}, {'text': 'чуйний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'принциповий', 'correct': True}, {'text': 'незламний', 'correct': True}, {'text': 'сумлінний', 'correct': True}, {'text': 'турботливий', 'correct': True}]}, {'question': 'Оберіть вади характеру:', 'options': [{'text': 'байдужість', 'correct': True}, {'text': 'егоїзм', 'correct': True}, {'text': 'жорстокість', 'correct': True}, {'text': 'мудрість', 'correct': False}]}, {'question': 'Які слова описують активну доброту?', 'options': [{'text': 'жертовний', 'correct': True}, {'text': 'невтомний', 'correct': True}, {'text': 'дбайливий', 'correct': True}, {'text': 'пасивний', 'correct': False}]}, {'question': 'Оберіть ознаки емоційного інтелекту:', 'options': [{'text': 'емпатія', 'correct': True}, {'text': 'співпереживання', 'correct': True}, {'text': 'чуйність', 'correct': True}, {'text': 'агресія', 'correct': False}]}, {'question': 'Які слова вказують на професійний характер?', 'options': [{'text': 'пунктуальний', 'correct': True}, {'text': 'відповідальний', 'correct': True}, {'text': 'сумлінний', 'correct': True}, {'text': 'лінивий', 'correct': False}]}, {'question': 'Оберіть риси сучасного лідера:', 'options': [{'text': 'харизматичний', 'correct': True}, {'text': 'далекоглядний', 'correct': True}, {'text': 'гнучкий', 'correct': True}, {'text': 'жорсткий', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [портрет-особистості] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [світло-і-тіні] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [складіть-характеристику] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [портрет-волонтера] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [відтінки-розуму] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [виправте-портрет] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [переклад-характеру] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [нюанси-натури] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [всі-відтінки-інтелекту] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [регістри-та-риси] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [натура-та-вчинки] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [характер-у-літературі] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [чесноти-та-вади] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: [index-13] select: 'items.0.options' - [{'text': 'милосердний', 'correct': True}, {'text': 'чуйний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'принциповий', 'correct': True}, {'text': 'незламний', 'correct': True}, {'text': 'сумлінний', 'correct': True}, {'text': 'турботливий', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+- 17 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2342/1750
@@ -77,28 +57,28 @@
 - **Vocab:** ✅ 115/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 26 violations
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
-- **Richness:** ✅ 97% (content)
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
+- **Richness:** ✅ 96% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 56 | 15 | 100% | 25% | 25.0% |
-| engagement | 15 | 5 | 100% | 19% | 18.7% |
-| variety | 0.93 | - | 93% | 12% | 11.6% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 9 | 3 | 100% | 12% | 12.5% |
-| visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.74 | - | 74% | 6% | 4.6% |
-| questions | 9 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.5%** |
+| engagement | 15 | 4 | 100% | 25% | 25.0% |
+| variety | 0.93 | - | 93% | 17% | 15.5% |
+| cultural | 4 | - | 100% | 17% | 16.7% |
+| visual | 11 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.74 | - | 74% | 8% | 6.2% |
+| examples | 56 | - | 100% | 8% | 8.3% |
+| realworld | 9 | - | 100% | 8% | 8.3% |
+| questions | 9 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

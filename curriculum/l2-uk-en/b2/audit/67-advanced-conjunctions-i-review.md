@@ -43,42 +43,28 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q8 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [знайдіть-логічний-зв'язок] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: Array validation: {'type': 'select', 'title': 'Допустові конструкції', 'instruction': 'Оберіть усі сполучники допуску (6+ елементів).', 'items': [{'question': 'Які слова вказують на допуск? (6+)', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'дарма що', 'correct': True}, {'text': 'хай', 'correct': True}, {'text': 'хоч', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'все ж', 'correct': True}]}, {'question': "Оберіть синоніми до 'незважаючи на':", 'options': [{'text': 'попри', 'correct': True}, {'text': 'наперекір', 'correct': True}, {'text': 'всупереч', 'correct': True}, {'text': 'завдяки', 'correct': False}]}, {'question': 'Які слова виражають іронічний допуск?', 'options': [{'text': 'дарма що', 'correct': True}, {'text': 'хоч і', 'correct': True}, {'text': 'куди там', 'correct': True}, {'text': 'тому що', 'correct': False}]}, {'question': 'Оберіть сполучники для опису перешкод:', 'options': [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на', 'correct': True}, {'text': 'попри', 'correct': True}, {'text': 'оскільки', 'correct': False}]}, {'question': 'Які слова вказують на крайню поступку?', 'options': [{'text': 'хай', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'навіть якщо', 'correct': True}, {'text': 'бо', 'correct': False}]}, {'question': 'Оберіть ознаки допустового речення:', 'options': [{'text': 'наявність перешкоди', 'correct': True}, {'text': 'дія всупереч', 'correct': True}, {'text': 'логічний парадокс', 'correct': True}, {'text': 'проста причина', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [логіка-речення] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [причина-чи-допуск?] group-sort: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [index-9] select: 'items.0.options' - [{'text': 'тому що', 'correct': True}, {'text': 'бо', 'correct': True}, {'text': 'оскільки', 'correct': True}, {'text': 'через те що', 'correct': True}, {'text': 'завдяки тому що', 'correct': True}, {'text': 'внаслідок того що', 'correct': True}, {'text': 'адже', 'correct': True}, {'text': 'бо ж', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [складіть-складне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [аналіз-стійкості] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [оберіть-сполучник] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [виправте-логіку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [переклад-сполучників] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [правила-вживання] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [причинні-конструкції] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [стилі-та-сполучники] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [логічні-ланцюжки] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [пунктуаційний-квест] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [допустові-конструкції] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [index-13] select: 'items.0.options' - [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'дарма що', 'correct': True}, {'text': 'хай', 'correct': True}, {'text': 'хоч', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'все ж', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 35 violations (severe - consider revision)
+- 27 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2097/1750
@@ -91,30 +77,28 @@
 - **Vocab:** ✅ 42/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 35 violations
+- **Pedagogy:** ❌ 25 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 45 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 6 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
+| variety | 0.95 | - | 95% | 17% | 15.8% |
+| cultural | 3 | - | 100% | 17% | 16.7% |
+| visual | 8 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 45 | - | 100% | 8% | 8.3% |
+| realworld | 7 | - | 100% | 8% | 8.3% |
+| questions | 15 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

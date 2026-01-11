@@ -1,0 +1,944 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-c2.schema.json",
+  "title": "C2 Module Activities",
+  "description": "Activity schema for C2 level modules with near-native complexity requirements: quiz questions (20-35 words), unjumble sentences (15-25 words), nuanced vocabulary, sophisticated discourse, idiomatic mastery, highest density.",
+  "type": "array",
+  "minItems": 14,
+  "items": {
+    "oneOf": [
+      {
+        "$ref": "#/definitions/quiz-c2"
+      },
+      {
+        "$ref": "#/definitions/match-up-c2"
+      },
+      {
+        "$ref": "#/definitions/fill-in-c2"
+      },
+      {
+        "$ref": "#/definitions/group-sort-c2"
+      },
+      {
+        "$ref": "#/definitions/unjumble-c2"
+      },
+      {
+        "$ref": "#/definitions/true-false-c2"
+      },
+      {
+        "$ref": "#/definitions/cloze-c2"
+      },
+      {
+        "$ref": "#/definitions/error-correction-c2"
+      },
+      {
+        "$ref": "#/definitions/mark-the-words-c2"
+      },
+      {
+        "$ref": "#/definitions/select-c2"
+      },
+      {
+        "$ref": "#/definitions/translate-c2"
+      },
+      {
+        "$ref": "#/definitions/essay-response-c2"
+      },
+      {
+        "$ref": "#/definitions/critical-analysis-c2"
+      },
+      {
+        "$ref": "#/definitions/comparative-study-c2"
+      },
+      {
+        "$ref": "#/definitions/authorial-intent-c2"
+      },
+      {
+        "$ref": "#/definitions/reading-c2"
+      }
+    ]
+  },
+  "definitions": {
+    "quiz-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "quiz"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 14,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Question should be 20-35 words for C2 near-native complexity with nuanced distinctions"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "match-up-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "pairs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "match-up"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "left",
+              "right"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "left": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 pairs should use idiomatic expressions, subtle stylistic variations, or cultural depth"
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "fill-in-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "fill-in"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 sentences should demonstrate near-native mastery of style, idiom, and register"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "group-sort-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "groups"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "group-sort"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "items"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unjumble-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "unjumble"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "words",
+              "answer"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 15,
+                "maxItems": 25,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "C2 unjumble requires 15-25 words per sentence for near-native complex structures"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "true-false-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "true-false"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "statement",
+              "correct"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "statement": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 statements should test subtle cultural, idiomatic, or stylistic distinctions"
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cloze-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "passage"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cloze"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 1,
+          "description": "C2 passages should feature literary, philosophical, or specialized discourse at near-native level"
+        },
+        "blanks": {
+          "type": "array",
+          "minItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "error-correction-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "error-correction"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "error",
+              "answer",
+              "options",
+              "explanation"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 error correction should target very subtle register, idiom, or stylistic refinement"
+              },
+              "error": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "mark-the-words-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "instruction",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mark-the-words"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "C2 tasks should identify subtle stylistic devices, rare idioms, or sophisticated discourse features"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answers": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "select-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 select questions should test highly nuanced cultural or linguistic understanding"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "min_correct": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "translate-c2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "translate"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C2 translation should involve idiomatic precision, cultural nuance, and stylistic mastery"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "essay-response-c2": {
+      "type": "object",
+      "description": "Near-native writing task requiring sophisticated argumentation, stylistic mastery, and cultural depth",
+      "required": [
+        "type",
+        "title",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "essay-response"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 10,
+          "description": "C2 prompts should require near-native precision, cultural insight, and sophisticated discourse"
+        },
+        "min_words": {
+          "type": "integer",
+          "minimum": 250
+        },
+        "model_answer": {
+          "type": "string",
+          "minLength": 150,
+          "description": "Model answer should exemplify near-native Ukrainian with idiomatic precision and cultural depth"
+        },
+        "rubric": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "criteria",
+              "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "criteria": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "points": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "peer_review_guidelines": {
+          "type": "string"
+        }
+      }
+    },
+    "critical-analysis-c2": {
+      "type": "object",
+      "description": "Near-native critical analysis requiring sophisticated literary, cultural, or philosophical interpretation",
+      "required": [
+        "type",
+        "title",
+        "target_text",
+        "questions",
+        "model_answers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "critical-analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_text": {
+          "type": "string",
+          "description": "Literary, philosophical, or culturally complex text for near-native analysis"
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "focus_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sophisticated analytical dimensions (intertextuality, cultural subtext, stylistic subtlety)"
+        }
+      }
+    },
+    "comparative-study-c2": {
+      "type": "object",
+      "description": "Highly sophisticated comparison requiring near-native cultural and linguistic insight",
+      "required": [
+        "type",
+        "title",
+        "items_to_compare",
+        "criteria",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "comparative-study"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items_to_compare": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "Literary, philosophical, or culturally complex items requiring near-native comparison"
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Sophisticated analytical dimensions requiring cultural depth and stylistic precision"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "authorial-intent-c2": {
+      "type": "object",
+      "description": "Near-native evaluation of sophisticated rhetorical and cultural strategies",
+      "required": [
+        "type",
+        "title",
+        "text_excerpt",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text_excerpt": {
+          "type": "string",
+          "description": "Literarily or culturally sophisticated text excerpt"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "techniques_to_identify": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sophisticated rhetorical devices, cultural allusions, stylistic subtlety"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "reading-c2": {
+      "type": "object",
+      "description": "Reading comprehension with near-native authentic resources (literature, philosophy, specialized discourse)",
+      "required": [
+        "type",
+        "title",
+        "resource",
+        "tasks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "reading"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource": {
+          "type": "object",
+          "required": [
+            "type",
+            "url",
+            "title"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Literary work, philosophical text, specialized discourse"
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

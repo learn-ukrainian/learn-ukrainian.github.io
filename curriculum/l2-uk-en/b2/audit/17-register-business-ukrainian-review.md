@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.2% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -38,13 +38,20 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (14 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
 | **Вступи** | ⚪️ | 227 | Skipped |
 | **Пояснення** | ⚪️ | 840 | Skipped |
-| **Практика** | ⚪️ | 299 | Skipped |
+| **Трансформації** | ⚪️ | 123 | Skipped |
+| **Практика** | ⚪️ | 176 | Skipped |
 | **Діалоги** | ✅ | 465 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 89 | Skipped |

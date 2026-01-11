@@ -1,0 +1,931 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-b2.schema.json",
+  "title": "B2 Module Activities",
+  "description": "Activity schema for B2 level modules with increased complexity requirements: quiz questions (10-25 words), unjumble sentences (10-18 words), higher density.",
+  "type": "array",
+  "minItems": 10,
+  "items": {
+    "oneOf": [
+      {
+        "$ref": "#/definitions/quiz-b2"
+      },
+      {
+        "$ref": "#/definitions/match-up-b2"
+      },
+      {
+        "$ref": "#/definitions/fill-in-b2"
+      },
+      {
+        "$ref": "#/definitions/group-sort-b2"
+      },
+      {
+        "$ref": "#/definitions/unjumble-b2"
+      },
+      {
+        "$ref": "#/definitions/true-false-b2"
+      },
+      {
+        "$ref": "#/definitions/cloze-b2"
+      },
+      {
+        "$ref": "#/definitions/error-correction-b2"
+      },
+      {
+        "$ref": "#/definitions/mark-the-words-b2"
+      },
+      {
+        "$ref": "#/definitions/select-b2"
+      },
+      {
+        "$ref": "#/definitions/translate-b2"
+      },
+      {
+        "$ref": "#/definitions/essay-response-b2"
+      },
+      {
+        "$ref": "#/definitions/critical-analysis-b2"
+      },
+      {
+        "$ref": "#/definitions/comparative-study-b2"
+      },
+      {
+        "$ref": "#/definitions/authorial-intent-b2"
+      },
+      {
+        "$ref": "#/definitions/reading-b2"
+      }
+    ]
+  },
+  "definitions": {
+    "quiz-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "quiz"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Question should be 10-25 words for B2 complexity"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "match-up-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "pairs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "match-up"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "left",
+              "right"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "left": {
+                "type": "string",
+                "minLength": 1
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "fill-in-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "fill-in"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "group-sort-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "groups"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "group-sort"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "items"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unjumble-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "unjumble"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "words",
+              "answer"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 10,
+                "maxItems": 18,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "B2 unjumble requires 10-18 words per sentence"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "true-false-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "true-false"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "statement",
+              "correct"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cloze-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "passage"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cloze"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blanks": {
+          "type": "array",
+          "minItems": 16,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "error-correction-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "error-correction"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "error",
+              "answer",
+              "options",
+              "explanation"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "mark-the-words-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "instruction",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mark-the-words"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answers": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "select-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "min_correct": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "translate-b2": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "translate"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "essay-response-b2": {
+      "type": "object",
+      "description": "Long-form writing task with model answer and rubric - B2 requires 150+ words",
+      "required": [
+        "type",
+        "title",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "essay-response"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 10
+        },
+        "min_words": {
+          "type": "integer",
+          "minimum": 150
+        },
+        "model_answer": {
+          "type": "string",
+          "minLength": 150
+        },
+        "rubric": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "criteria",
+              "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "criteria": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "points": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "peer_review_guidelines": {
+          "type": "string"
+        }
+      }
+    },
+    "critical-analysis-b2": {
+      "type": "object",
+      "description": "Deep analysis of a text or concept - B2 requires more sophisticated analysis",
+      "required": [
+        "type",
+        "title",
+        "target_text",
+        "questions",
+        "model_answers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "critical-analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_text": {
+          "type": "string",
+          "description": "The text or excerpt to analyze"
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_answers": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "focus_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key elements to analyze (e.g. tone, bias, historical context)"
+        }
+      }
+    },
+    "comparative-study-b2": {
+      "type": "object",
+      "description": "Comparison of two or more texts/concepts",
+      "required": [
+        "type",
+        "title",
+        "items_to_compare",
+        "criteria",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "comparative-study"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items_to_compare": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "Titles or excerpts of items"
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Dimensions of comparison (e.g. style, theme)"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "authorial-intent-b2": {
+      "type": "object",
+      "description": "Evaluation of author's purpose and techniques",
+      "required": [
+        "type",
+        "title",
+        "text_excerpt",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text_excerpt": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "techniques_to_identify": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "reading-b2": {
+      "type": "object",
+      "description": "Reading comprehension task with external resource",
+      "required": [
+        "type",
+        "title",
+        "resource",
+        "tasks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "reading"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource": {
+          "type": "object",
+          "required": [
+            "type",
+            "url",
+            "title"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

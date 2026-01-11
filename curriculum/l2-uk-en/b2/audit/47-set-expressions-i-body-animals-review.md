@@ -51,48 +51,24 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть фразеологізми' item 16 has 2 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [значення-фразеологізмів] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: Insufficient activities: 14 found, minimum N/A required for B2
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [фразеологізми-та-їхнє-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [соматичні-vs-зоологічні-фразеологізми] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [вставте-фразеологізм-у-контекст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [правильне-вживання-фразеологізмів] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [відновіть-фразеологізми] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [виправте-помилки-у-фразеологізмах] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [фразеологізми-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [знайдіть-фразеологізми-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [знайдіть-англійський-еквівалент] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [оберіть-фразеологізм-для-ситуації] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [частини-тіла-та-їхня-символіка] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [завершіть-діалог-фразеологізмами] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-set-expressions-i-body-animals.yaml: [index-5] unjumble: 'items.15.words' - ['Біла', 'ворона'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Вживання у контексті
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вживання у контексті, Вступ
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Фразеологізми' found: Зоологічні фразеологізми: Тварини, Соматичні фразеологізми: Частини тіла
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 41 violations (severe - consider revision)
+- 29 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2119/1750
@@ -105,28 +81,28 @@
 - **Vocab:** ✅ 104/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 39 violations
+- **Pedagogy:** ❌ 27 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (content)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
+- **Richness:** ✅ 96% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 55 | 15 | 100% | 25% | 25.0% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.87 | - | 87% | 12% | 10.9% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 0.82 | - | 82% | 6% | 5.1% |
-| questions | 12 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.7%** |
+| engagement | 12 | 4 | 100% | 25% | 25.0% |
+| variety | 0.87 | - | 87% | 17% | 14.5% |
+| cultural | 6 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
+| examples | 55 | - | 100% | 8% | 8.3% |
+| realworld | 7 | - | 100% | 8% | 8.3% |
+| questions | 12 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

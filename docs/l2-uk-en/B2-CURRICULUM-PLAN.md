@@ -2839,9 +2839,9 @@ Vocabulary will emerge naturally from thematic content and should meet:
 > **Final Exam:** M145 tests M132-144 + all B2 skills.
 
 ### Learning Goals
-- Build advanced domain vocabulary (Medicine, Tech, Science, Arts, Psychology)
+- Build advanced domain vocabulary (Medicine, Tech, Science, Arts)
 - Develop academic writing and text analysis skills
-- Understand Ukrainian cultural identity (Mentality, Diaspora, Religion)
+- Understand Ukrainian cultural identity (Diaspora, Religion)
 - Complete capstone research project
 - Prepare for B2 certification
 
@@ -2856,12 +2856,12 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | 133 | Технології та ШІ | Domain | Software, data science, AI, cybersecurity | технологія, програма, додаток, код, алгоритм, дані, хмара, сервер, мережа, кіберзахист, штучний інтелект, нейромережа, інтерфейс, оновлення, баг |
 | 134 | Наука і дослідження | Domain | Scientific method, hypothesis, academic abstracts | наука, дослідження, метод, гіпотеза, теорія, експеримент, аналіз, доказ, аргумент, висновок, відкриття, винахід, патент, публікація, цитування |
 | 135 | Мистецтво і література | Domain | Literary genres, art criticism, style analysis | мистецтво, творчість, шедевр, жанр, стиль, модернізм, реалізм, картина, виставка, критика, образ, сюжет, метафора, символ, підтекст |
-| 136 | Психологія та розум | Domain | Emotional intelligence, mental health, cognition | психологія, свідомість, підсвідомість, емоція, почуття, стрес, депресія, тривога, травма, терапія, характер, особистість, поведінка, мотивація, гармонія |
-| 137 | Український менталітет | Culture | Cordocentrism, individualism, "My house is on the edge" | менталітет, характер, кордоцентризм, серце, емоційність, індивідуалізм, хазяйновитість, гостинність, моя хата скраю, волелюбність, непокірність, гумор, оптимізм, традиція, земля |
-| 138 | Сучасна діаспора | Culture | Global Ukrainians, lobbying, cultural diplomacy | діаспора, громада, закордонний, світовий конгрес, лобізм, дипломатія, м'яка сила, волонтер, допомога, мітинг, протест, школа, церква, асиміляція, ідентичність |
-| 139 | Релігія в Україні | Culture | Religious diversity, holidays, interfaith | релігія, конфесія, християнство, православ'я, католицизм, греко-католики, протестанти, іслам, юдаїзм, свято, різдво, великдень, піст, храм, толерантність |
-| 140 | Академічне письмо | Skills | Essay structure, citation, formal argumentation | есе, твір, структура, вступ, основна частина, висновок, теза, аргумент, контраргумент, приклад, цитата, джерело, посилання, плагіат, доброчесність |
-| 141 | Аналіз тексту | Skills | Subtext, bias, intent, rhetorical analysis | аналіз, розбір, текст, контекст, підтекст, зміст, форма, стиль, автор, мета, аудиторія, ідея, тема, проблема, позиція |
+| 136 | Сучасна діаспора | Culture | Global Ukrainians, lobbying, cultural diplomacy | діаспора, громада, закордонний, світовий конгрес, лобізм, дипломатія, м'яка сила, волонтер, допомога, мітинг, протест, школа, церква, асиміляція, ідентичність |
+| 137 | Релігія в Україні | Culture | Religious diversity, holidays, interfaith | релігія, конфесія, християнство, православ'я, католицизм, греко-католики, протестанти, іслам, юдаїзм, свято, різдво, великдень, піст, храм, толерантність |
+| 138 | Академічне письмо | Skills | Essay structure, citation, formal argumentation | есе, твір, структура, вступ, основна частина, висновок, теза, аргумент, контраргумент, приклад, цитата, джерело, посилання, плагіат, доброчесність |
+| 139 | Аналіз тексту | Skills | Subtext, bias, intent, rhetorical analysis | аналіз, розбір, текст, контекст, підтекст, зміст, форма, стиль, автор, мета, аудиторія, ідея, тема, проблема, позиція |
+| 140 | Підсумковий проєкт: Дослідження | Project | Research topic selection, source evaluation | дослідження, тема, джерело, бібліографія, пошук, інформація, оцінка, критерій, релевантність, достовірність, первинний, вторинний, огляд, конспект, план |
+| 141 | Аналіз тексту: Критичне мислення | Skills | Critical reading, argument evaluation, bias detection | критичний, аналіз, оцінка, упередження, маніпуляція, логіка, аргументація, висновок, доказ, протиріччя, факт, думка, інтерпретація, об'єктивність, суб'єктивність |
 | 142 | Capstone: Дослідження | Project | Topic selection, source gathering, outline | — (project work) |
 | 143 | Capstone: Презентація | Project | Written report (500 words) + recorded presentation | — (project work) |
 | 144 | B2 Підсумковий огляд | Review | Comprehensive review: Grammar, Vocabulary, History | — (review) |
@@ -2869,15 +2869,14 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ### Vocabulary Plan B2.4 (~350 words)
 
-**Domain Vocabulary (M132-136):**
+**Domain Vocabulary (M132-135):**
 - Medicine: діагноз, симптом, рецепт, обстеження, лікування, терапія
 - Technology: алгоритм, програма, дані, штучний інтелект, мережа
 - Science: гіпотеза, теорія, експеримент, дослідження, результати
 - Arts: жанр, метафора, стиль, образ, критика
-- Psychology: свідомість, підсвідомість, мотивація, поведінка
 
-**Culture (M137-139):** ментальність, діаспора, православ'я, греко-католицизм, кордоцентризм
-**Academic (M140-141):** тема, теза, аргумент, висновок, джерело, цитата, аналіз
+**Culture (M136-137):** діаспора, православ'я, греко-католицизм, толерантність
+**Academic & Skills (M138-141):** тема, теза, аргумент, висновок, джерело, цитата, аналіз, критичний
 
 **State Standard Thematic Vocabulary (embedded across B2):**
 - **Спорт (Sport):** чемпіонат, змагання, перемога, поразка, рекорд, тренер, спортсмен, олімпіада

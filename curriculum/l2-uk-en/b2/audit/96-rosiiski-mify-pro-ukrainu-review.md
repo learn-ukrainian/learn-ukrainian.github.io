@@ -43,32 +43,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q4 prompt length 7 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [розуміння-тексту-про-російські-міфи] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [термінологія-пропаганди-та-деколонізації] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [деколонізаційна-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [факти-про-російські-міфи] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [класифікація-термінів] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [складіть-речення-про-міфи-та-деколонізацію] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [граматика-в-деколонізаційних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [заповніть-текст-про-російські-міфи] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [знайдіть-пропагандистські-терміни] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [переклад-деколонізаційної-лексики] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 96-rosiiski-mify-pro-ukrainu.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -86,7 +60,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 38 violations (severe - consider revision)
+- 25 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ⚠️ 1931/2000 (69 short)
@@ -99,9 +73,9 @@
 - **Vocab:** ✅ 75/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 35 violations
+- **Pedagogy:** ❌ 22 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

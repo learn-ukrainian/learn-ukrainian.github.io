@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, прикметник, час, іменник, середній
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, рід, іменник, прикметник, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): надпис, напис, прочитати, письмо, пішохід...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): напис, ходити, письменник, вхід, прочитати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

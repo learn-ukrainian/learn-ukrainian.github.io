@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ✅ 1591/1500
-- **Activities:** ✅ 14/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
@@ -42,7 +42,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 41 | Included in Core |
-| **Тест** | ⚪️ | 91 | Skipped |
+| **Розминка** | ⚪️ | 91 | Skipped |
 | **Граматика** | ⚪️ | 223 | Skipped |
 | **Практика** | ⚪️ | 861 | Skipped |
 | **Діалоги** | ✅ | 145 | Included in Core |

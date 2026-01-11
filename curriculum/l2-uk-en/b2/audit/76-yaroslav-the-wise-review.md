@@ -43,32 +43,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційний аналіз' Q13 prompt length 6 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [історична-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [граматика-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [аналіз-первинного-джерела] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [історична-лексика--визначення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [знайдіть-пасивні-конструкції] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [знайдіть-історичні-терміни] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [правда-чи-хибність] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [заповніть-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [категоризація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [перекладіть] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-yaroslav-the-wise.yaml: [деколонізаційний-аналіз] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -77,14 +51,22 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 37 violations (severe - consider revision)
+- 28 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2017/2000
@@ -97,28 +79,29 @@
 - **Vocab:** ✅ 142/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 35 violations
+- **Pedagogy:** ❌ 22 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.0% (target 98-100% (history))
-- **Richness:** ✅ 96% (content)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
+- **Richness:** ✅ 96% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 18 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 0.75 | - | 75% | 6% | 4.7% |
-| questions | 5 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.6%** |
+| primary_sources | 14 | 3 | 100% | 24% | 23.8% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 9 | 2 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 3 | 4 | 75% | 10% | 7.1% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 0.75 | - | 75% | 5% | 3.6% |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **96.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -75,33 +75,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Тест: штучний інтелект' Q12 prompt length 5 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [match-it-terms] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: Array validation: {'type': 'select', 'title': 'Оберіть правила кібербезпеки', 'instruction': 'Позначте всі варіанти, що є хорошими практиками безпеки.', 'items': [{'correct': True, 'question': 'Використовувати складний пароль мінімум 12 символів'}, {'correct': False, 'question': 'Записувати паролі на стікерах біля монітора'}, {'correct': True, 'question': 'Увімкнути двофакторну аутентифікацію'}, {'correct': False, 'question': 'Використовувати один пароль для всіх сервісів'}, {'correct': True, 'question': 'Регулярно оновлювати програмне забезпечення'}, {'correct': False, 'question': 'Відкривати всі вкладення з невідомих листів'}, {'correct': True, 'question': 'Робити резервні копії важливих даних'}, {'correct': False, 'question': 'Підключатися до будь-яких публічних Wi-Fi'}, {'correct': True, 'question': 'Шифрувати конфіденційні файли'}, {'correct': False, 'question': 'Ділитися паролями з колегами'}, {'correct': True, 'question': 'Використовувати VPN для захисту'}, {'correct': False, 'question': 'Ігнорувати оновлення антивіруса'}, {'correct': True, 'question': 'Перевіряти URL перед введенням даних'}, {'correct': False, 'question': 'Встановлювати програми з неперевірених джерел'}, {'correct': True, 'question': 'Виходити з акаунтів на чужих пристроях'}, {'correct': True, 'question': 'Використовувати менеджер паролів'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [fill-in-it] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [quiz-it] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [true-false-it] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [group-sort-roles] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [unjumble-it] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [cloze-it-text] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [error-correction-it] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [translate-it] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [mark-it-terms] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [it-діалог-розробників] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [select-security] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [fill-in-companies] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [quiz-ai] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-tekhnolohii-ta-shi.yaml: [index-11] select: 'items.15' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -114,7 +90,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 52 violations (severe - consider revision)
+- 40 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1785/1750
@@ -127,9 +103,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 51 violations
+- **Pedagogy:** ❌ 39 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (skills))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
 

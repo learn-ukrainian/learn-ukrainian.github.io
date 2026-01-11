@@ -71,48 +71,26 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q13 prompt length 4 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [історична-лексика] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [історичний-контекст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [факти-про-скіфів-та-сарматів] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [категоризація-термінів] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [складіть-історичні-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [виправте-помилки-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [заповніть-історичний-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [знайдіть-археологічні-та-історичні-терміни-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [аналіз-первинного-джерела] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [оберіть-правильний-переклад-історичних-термінів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [деколонізаційна-лексика-в-контексті] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 72-scythians-sarmatians.yaml: [комплексна-перевірка-знань] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст, Вступ
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 51 violations (severe - consider revision)
+- 40 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2110/2000
@@ -125,28 +103,29 @@
 - **Vocab:** ✅ 188/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 49 violations
+- **Pedagogy:** ❌ 36 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (history))
-- **Richness:** ✅ 97% (content)
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
+- **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 15 | 100% | 25% | 25.0% |
-| engagement | 11 | 5 | 100% | 19% | 18.7% |
-| variety | 0.92 | - | 92% | 12% | 11.5% |
-| cultural | 6 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 14 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.76 | - | 76% | 6% | 4.8% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.5%** |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
+| decolonization | 10 | 2 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 14 | 4 | 100% | 10% | 9.5% |
+| variety | 0.92 | - | 92% | 5% | 4.4% |
+| paragraph_var | 0.76 | - | 76% | 5% | 3.6% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

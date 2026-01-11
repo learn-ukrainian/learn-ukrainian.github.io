@@ -1,34 +1,19 @@
 # Audit Report: 47-passive-constructions.md
 **Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [index-5] unjumble: 'items.5' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [index-8] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [index-10] translate: 'items.5' - 'source' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 30/100)
-
-- 3 violations (minor)
-- Activity count below minimum
-- Activity density below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 1673/1500
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 95% (grammar)

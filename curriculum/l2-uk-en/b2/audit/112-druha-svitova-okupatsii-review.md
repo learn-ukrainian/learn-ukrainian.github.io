@@ -17,44 +17,6 @@
   - FIX: Remove '## Зовнішні ресурси' header. This section is auto-injected from docs/resources/external_resources.yaml at build time. See docs/l2-uk-en/templates/ for correct pattern.
 - **[FORBIDDEN_HEADER]** Forbidden header '## Активності' violates Clean MD standard (Issue #398)
   - FIX: Remove '## Активності' header. This section is auto-injected from activities/{slug}.yaml at build time. See docs/l2-uk-en/templates/ for correct pattern.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [розуміння-історичного-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історична-лексика] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-та-стиль] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [відновлення-тексту] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історичні-відповідності] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [аналіз-дипломатії-1939-року] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [міфи-та-факти-про-війну] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-в-контексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [переклад-історичних-понять] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [класифікація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [трагедія-бабиного-яру] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [складні-речення-в-історії] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [стилістичне-редагування] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [відновлення-цитати-свідка] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [правда-чи-пропаганда?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історичні-сталі-вирази] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [поняття-та-терміни] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-результату] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [жертви-та-меморіали] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -80,7 +42,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 35 violations (severe - consider revision)
+- 16 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2668/2000
@@ -93,9 +55,9 @@
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 28 violations
+- **Pedagogy:** ❌ 9 violations
 - **Content_heavy:** ⚠️ Too many activities: 19 (target 10-14)
-- **Immersion:** 🇺🇦 98.4% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.4% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

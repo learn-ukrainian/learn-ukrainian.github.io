@@ -29,46 +29,28 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q8 prompt length 5 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [знайдіть-точне-поняття] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: Array validation: {'type': 'select', 'title': 'Стратегічні Поняття', 'instruction': 'Оберіть усі слова про високі ідеали (6+ елементів).', 'items': [{'question': 'Які терміни описують цінності (6+):', 'options': [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}, {'text': 'солідарність', 'correct': True}, {'text': 'толерантність', 'correct': True}]}, {'question': 'Які слова описують духовний розвиток?', 'options': [{'text': 'просвітлення', 'correct': True}, {'text': 'самовдосконалення', 'correct': True}, {'text': 'пізнання', 'correct': True}, {'text': 'застій', 'correct': False}]}, {'question': "Оберіть характеристики 'наукового' підходу:", 'options': [{'text': "об'єктивність", 'correct': True}, {'text': 'доказовість', 'correct': True}, {'text': 'системність', 'correct': True}, {'text': 'чутки', 'correct': False}]}, {'question': "Які слова вказують на 'візію' майбутнього?", 'options': [{'text': 'перспектива', 'correct': True}, {'text': 'прогноз', 'correct': True}, {'text': 'проєкт', 'correct': True}, {'text': 'минуле', 'correct': False}]}, {'question': "Оберіть терміни для опису 'істини':", 'options': [{'text': "об'єктивна", 'correct': True}, {'text': 'незаперечна', 'correct': True}, {'text': 'абсолютна', 'correct': True}, {'text': 'хибна', 'correct': False}]}, {'question': "Які слова описують 'національний' вимір?", 'options': [{'text': 'ідентичність', 'correct': True}, {'text': 'свідомість', 'correct': True}, {'text': 'патріотизм', 'correct': True}, {'text': 'байдужість', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [світ-ідей] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [рівні-абстракції] group-sort: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [index-9] select: 'items.0.options' - [{'text': 'концепція', 'correct': True}, {'text': 'теорія', 'correct': True}, {'text': 'гіпотеза', 'correct': True}, {'text': 'поняття', 'correct': True}, {'text': 'аксіома', 'correct': True}, {'text': 'принцип', 'correct': True}, {'text': 'теза', 'correct': True}, {'text': 'доктрина', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [складіть-інтелектуальну-фразу] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [лабіринт-думок] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [відтінки-абстракції] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [виправте-думку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [переклад-абстракцій] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [правда-про-ідеї] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [всі-форми-інтелекту] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [регістри-та-поняття] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [думка-та-наслідок] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [абстракції-в-культурі] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [стратегічні-поняття] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [index-13] select: 'items.0.options' - [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}, {'text': 'солідарність', 'correct': True}, {'text': 'толерантність', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 29 violations (severe - consider revision)
+- 20 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2524/1750
@@ -81,28 +63,28 @@
 - **Vocab:** ✅ 87/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 28 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (content)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 52 | 15 | 100% | 25% | 25.0% |
-| engagement | 11 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 8 | 3 | 100% | 12% | 12.5% |
-| visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.93 | - | 93% | 6% | 5.8% |
-| questions | 11 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.8%** |
+| engagement | 11 | 4 | 100% | 25% | 25.0% |
+| variety | 0.95 | - | 95% | 17% | 15.8% |
+| cultural | 3 | - | 100% | 17% | 16.7% |
+| visual | 11 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.93 | - | 93% | 8% | 7.8% |
+| examples | 52 | - | 100% | 8% | 8.3% |
+| realworld | 8 | - | 100% | 8% | 8.3% |
+| questions | 11 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

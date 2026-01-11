@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1963/1750
+- **Words:** ✅ 2596/1750
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -26,17 +26,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 64 | 24 | 100% | 20% | 20.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| realworld | 14 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 27 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 33 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.3%** |
+| **TOTAL** | | | | | **99.6%** |
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -51,6 +51,7 @@
 | **Вступ** | ⚪️ | 139 | Skipped |
 | **Пояснення** | ⚪️ | 1065 | Skipped |
 | **Практика** | ⚪️ | 299 | Skipped |
+| **Трансформації** | ⚪️ | 633 | Skipped |
 | **Діалоги** | ✅ | 183 | Included in Core |
 | **Підсумок** | ✅ | 108 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

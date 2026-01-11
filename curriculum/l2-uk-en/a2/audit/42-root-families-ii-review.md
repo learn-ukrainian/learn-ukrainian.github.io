@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, час
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): світло, всесвіт, народ, іноземець, рід...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): міський, містянин, іноземець, світ, народ...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

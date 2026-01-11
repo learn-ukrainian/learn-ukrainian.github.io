@@ -2,107 +2,172 @@ module: 71-emotional-intelligence
 level: B1
 version: '2.0'
 items:
-- lemma: анно
-  ipa: /ˈanːɔ/
-  translation: Anna (voc.)
-  pos: propn
-  gender: f
-- lemma: виправитися
-  ipa: /vɪpravɪˈtɪsʲa/
-  translation: to correct oneself
-  pos: verb
-- lemma: відвертість
-  ipa: /vidˈvɛrtʲisʲtʲ/
-  translation: frankness
-  pos: noun
-  gender: f
-- lemma: відсторонений
-  ipa: /vidstɔˈrɔnɛnɪj/
-  translation: detached
-  pos: adj
-  gender: m
-- lemma: елементарний
-  ipa: /ɛlɛmɛnˈtarnɪj/
-  translation: elementary
-  pos: adj
-  gender: f
-- lemma: заохочення
-  ipa: /zaɔˈxɔt͡ʃɛnʲːa/
-  translation: encouragement
-  pos: noun
-  gender: n
-- lemma: засудження
-  ipa: /zaˈsudʒɛnʲːa/
-  translation: condemnation
-  pos: noun
-  gender: n
-- lemma: зашкодити
-  ipa: /zaˈʃkɔdɪtɪ/
-  translation: to harm
-  pos: verb
-- lemma: міжособистісний
-  ipa: /mʲiʒɔsɔˈbɪstʲisnɪj/
-  translation: interpersonal
-  pos: adj
-- lemma: надалі
-  ipa: /naˈdalʲi/
-  translation: further/in future
-  pos: adv
-- lemma: нарікати
-  ipa: /narʲiˈkatɪ/
-  translation: to complain
-  pos: verb
-- lemma: недбалість
-  ipa: /nɛdˈbalʲisʲtʲ/
-  translation: negligence
-  pos: noun
-  gender: f
-- lemma: ображати
-  ipa: /ɔbraˈʒatɪ/
-  translation: to offend
-  pos: verb
-- lemma: перегнути
-  ipa: /pɛrɛhˈnutɪ/
-  translation: to bend too far
-  pos: verb
-  gender: m
-- lemma: порядність
-  ipa: /pɔˈrʲadnʲisʲtʲ/
-  translation: decency
-  pos: noun
-  gender: f
-- lemma: правдивий
-  ipa: /prau̯ˈdɪvɪj/
-  translation: truthful
-  pos: adj
-  gender: m
-- lemma: природжений
-  ipa: /prɪˈrɔdʒɛnɪj/
-  translation: innate
-  pos: adj
-  gender: m
-- lemma: пробачення
-  ipa: /prɔˈbat͡ʃɛnʲːa/
-  translation: forgiveness
-  pos: noun
-  gender: n
-- lemma: ройз
-  ipa: /rɔjz/
-  translation: Royz
-  pos: propn
-  gender: f
-- lemma: сина
-  ipa: /ˈsɪna/
-  translation: son (gen.)
-  pos: propn
-  gender: f
-- lemma: тактовність
-  ipa: /takˈtɔu̯nʲisʲtʲ/
-  translation: tact
-  pos: noun
-  gender: f
-- lemma: терпимість
-  ipa: /tɛrˈpɪmʲisʲtʲ/
-  translation: tolerance
-  pos: noun
-  gender: f
+  - lemma: емпатія
+    ipa: /ɛmˈpatʲija/
+    translation: empathy
+    pos: noun
+    gender: f
+  - lemma: співчуття
+    ipa: /sʲpʲiu̯ˈt͡ʃutʲːa/
+    translation: sympathy, compassion
+    pos: noun
+    gender: n
+  - lemma: розуміння
+    ipa: /rɔzuˈmʲinʲːa/
+    translation: understanding
+    pos: noun
+    gender: n
+  - lemma: терпіння
+    ipa: /tɛrˈpʲinʲːa/
+    translation: patience
+    pos: noun
+    gender: n
+  - lemma: толерантність
+    ipa: /tɔlɛˈrantnʲisʲtʲ/
+    translation: tolerance
+    pos: noun
+    gender: f
+  - lemma: повага
+    ipa: /pɔˈvaha/
+    translation: respect
+    pos: noun
+    gender: f
+  - lemma: ввічливість
+    ipa: /u̯ˈvʲit͡ʃlɪvʲisʲtʲ/
+    translation: politeness
+    pos: noun
+    gender: f
+  - lemma: тактовність
+    ipa: /takˈtɔu̯nʲisʲtʲ/
+    translation: tactfulness
+    pos: noun
+    gender: f
+  - lemma: делікатність
+    ipa: /dɛlʲiˈkatnʲisʲtʲ/
+    translation: delicacy, sensitivity
+    pos: noun
+    gender: f
+  - lemma: щирість
+    ipa: /ʃt͡ʃɪˈrʲisʲtʲ/
+    translation: sincerity
+    pos: noun
+    gender: f
+  - lemma: відвертість
+    ipa: /vʲidˈvɛrtʲisʲtʲ/
+    translation: frankness, openness
+    pos: noun
+    gender: f
+  - lemma: чесність
+    ipa: /t͡ʃɛsˈnʲisʲtʲ/
+    translation: honesty
+    pos: noun
+    gender: f
+  - lemma: порядність
+    ipa: /pɔˈrʲadnʲisʲtʲ/
+    translation: decency, integrity
+    pos: noun
+    gender: f
+  - lemma: відповідальність
+    ipa: /vʲidpɔvʲiˈdalʲnʲisʲtʲ/
+    translation: responsibility
+    pos: noun
+    gender: f
+  - lemma: зобов'язання
+    ipa: /zɔbɔˈu̯jazanʲːa/
+    translation: obligation, commitment
+    pos: noun
+    gender: n
+  - lemma: обіцянка
+    ipa: /ɔbʲiˈt͡sʲanka/
+    translation: promise
+    pos: noun
+    gender: f
+  - lemma: вибачення
+    ipa: /vɪˈbat͡ʃɛnʲːa/
+    translation: apology
+    pos: noun
+    gender: n
+  - lemma: пробачення
+    ipa: /prɔˈbat͡ʃɛnʲːa/
+    translation: forgiveness
+    pos: noun
+    gender: n
+  - lemma: примирення
+    ipa: /prɪˈmɪrɛnʲːa/
+    translation: reconciliation
+    pos: noun
+    gender: n
+  - lemma: компроміс
+    ipa: /kɔmprɔˈmʲis/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: порозуміння
+    ipa: /pɔrɔzuˈmʲinʲːa/
+    translation: understanding, agreement
+    pos: noun
+    gender: n
+  - lemma: взаєморозуміння
+    ipa: /vzajɛmɔrɔzuˈmʲinʲːa/
+    translation: mutual understanding
+    pos: noun
+    gender: n
+  - lemma: підтримка
+    ipa: /pʲidˈtrɪmka/
+    translation: support
+    pos: noun
+    gender: f
+  - lemma: заохочення
+    ipa: /zaɔˈxɔt͡ʃɛnʲːa/
+    translation: encouragement
+    pos: noun
+    gender: n
+  - lemma: похвала
+    ipa: /pɔxˈvala/
+    translation: praise
+    pos: noun
+    gender: f
+  - lemma: критика
+    ipa: /ˈkrɪtɪka/
+    translation: criticism
+    pos: noun
+    gender: f
+  - lemma: зауваження
+    ipa: /zau̯ˈvaʒɛnʲːa/
+    translation: remark, comment
+    pos: noun
+    gender: n
+  - lemma: порада
+    ipa: /pɔˈrada/
+    translation: advice
+    pos: noun
+    gender: f
+  - lemma: рекомендація
+    ipa: /rɛkɔmɛnˈdat͡sʲija/
+    translation: recommendation
+    pos: noun
+    gender: f
+  - lemma: виявляти
+    ipa: /vɪjavˈlʲatɪ/
+    translation: to reveal, to show (empathy)
+    pos: verb
+  - lemma: цінувати
+    ipa: /t͡sʲinuˈvatɪ/
+    translation: to appreciate, to value
+    pos: verb
+  - lemma: нести
+    ipa: /ˈnɛstɪ/
+    translation: to carry (responsibility)
+    pos: verb
+  - lemma: дотримуватися
+    ipa: /dɔˈtrɪmuvatɪsʲa/
+    translation: to keep, to adhere to (promises)
+    pos: verb
+  - lemma: досягати
+    ipa: /dɔsʲaˈhatɪ/
+    translation: to reach, to achieve
+    pos: verb
+  - lemma: сприймати
+    ipa: /sprɪjˈmatɪ/
+    translation: to perceive, to accept (criticism)
+    pos: verb

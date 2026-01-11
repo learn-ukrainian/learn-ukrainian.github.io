@@ -95,48 +95,22 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q8 prompt length 2 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-01-passive-forms] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-02-participles] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-03-registers] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-04-idioms] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-05-connectors] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-06-history-dates] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-07-culture-quiz] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-08-synonyms] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-09-prepositions] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-10-research-terms] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-11-mega-quiz] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-12-formal-informal] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-13-grammar-check] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-14-ukrainian-symbols] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-b2-pidsumkovyy-ohlyad.yaml: [144-15-error-type] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## B2 Підсумковий огляд' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 63 violations (severe - consider revision)
+- 50 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1044/1750
@@ -149,7 +123,7 @@
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 61 violations
+- **Pedagogy:** ❌ 46 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.4% (checkpoint - no gate)
 - **Richness:** ✅ 87% (checkpoint)

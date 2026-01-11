@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): біль, живіт, таблетка, нога, горло...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): хворіти, голова, приймати, таблетка, рецепт...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

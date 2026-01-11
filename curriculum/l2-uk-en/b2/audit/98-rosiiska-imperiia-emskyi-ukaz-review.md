@@ -45,32 +45,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q14 prompt length 6 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [розуміння-тексту-про-імперські-заборони] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [термінологія-імперських-заборон] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [історична-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [факти-про-імперські-заборони] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [класифікація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [складіть-речення-про-заборони-мови] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [граматика-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [заповніть-текст-про-емський-указ] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [знайдіть-терміни-імперської-політики] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [переклад-історичної-лексики] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 98-rosiiska-imperiia-emskyi-ukaz.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -92,7 +66,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 41 violations (severe - consider revision)
+- 28 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ⚠️ 1948/2000 (52 short)
@@ -105,9 +79,9 @@
 - **Vocab:** ✅ 73/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 36 violations
+- **Pedagogy:** ❌ 23 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 

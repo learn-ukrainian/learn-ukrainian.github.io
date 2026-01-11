@@ -63,34 +63,6 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY]** match-up 'Візуальні засоби' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-01-vocab-speech] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-02-presentation-structure] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-03-slide-design] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-04-rhetoric-devices] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-05-speech-intro] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-06-body-language] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-07-qa-handling] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-08-prep-vs-delivery] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-09-transitions] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-10-conclusion] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-11-voice] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-12-visuals] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-13-myths] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-capstone-prezentatsiya.yaml: [143-14-checklist] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
@@ -104,7 +76,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 47 violations (severe - consider revision)
+- 33 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ⚠️ 1748/1750 (2 short)
@@ -117,9 +89,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 45 violations
+- **Pedagogy:** ❌ 31 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (skills))
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ⏳ Pending validation
 

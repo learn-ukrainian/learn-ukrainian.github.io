@@ -1,21 +1,17 @@
 # Audit Report: 79-sports-in-ukraine.md
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 79-sports-in-ukraine.yaml: [index-6] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 79-sports-in-ukraine.yaml: [index-8] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Історія та культура' per template 'b1-cultural-module-template'
+  - FIX: Add '## Історія та культура' section as specified in docs/l2-uk-en/templates/b1-cultural-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Сучасність' per template 'b1-cultural-module-template'
+  - FIX: Add '## Сучасність' section as specified in docs/l2-uk-en/templates/b1-cultural-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1751/1500
@@ -28,7 +24,7 @@
 - **Vocab:** ✅ 69/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)

@@ -43,44 +43,22 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний контекст' Q8 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [знайдіть-відповідність] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: Array validation: {'type': 'translate', 'title': 'Переклад значень', 'instruction': 'Знайдіть правильний український фразеологізм для англійського виразу.', 'items': [{'source': 'Speak of the devil', 'options': [{'text': 'Про вовка промовка', 'correct': True}, {'text': 'Вовком вити', 'correct': False}, {'text': "Собаку з'їв", 'correct': False}, {'text': 'Кінь не валявся'}], 'explanation': 'Це прямий аналог за ситуацією вживання.'}, {'source': 'To know inside out / To be an old hand', 'options': [{'text': "Собаку з'їсти", 'correct': True}, {'text': 'Працювати як кінь', 'correct': False}, {'text': 'Темна конячка', 'correct': False}, {'text': 'Троянський кінь'}], 'explanation': 'Вказує на великий досвід та майстерність.'}, {'source': "Work hasn't even started", 'options': [{'text': 'Кінь не валявся', 'correct': True}, {'text': 'Про вовка промовка', 'correct': False}, {'text': 'Собача смерть', 'correct': False}, {'text': 'Вовком вити'}], 'explanation': 'Означає повну відсутність прогресу у справі.'}, {'source': 'To work like a dog/horse', 'options': [{'text': 'Працювати як кінь', 'correct': True}, {'text': 'Вовком вити', 'correct': False}, {'text': "Собаку з'їсти", 'correct': False}, {'text': 'Темна конячка'}], 'explanation': 'Про дуже важку фізичну або розумову працю.'}, {'source': 'Dark horse', 'options': [{'text': 'Темна конячка', 'correct': True}, {'text': 'Троянський кінь', 'correct': False}, {'text': 'Кінь не валявся', 'correct': False}, {'text': 'Чорний вовк'}], 'explanation': 'Дослівний та смисловий переклад.'}, {'source': 'Trojan horse', 'options': [{'text': 'Троянський кінь', 'correct': True}, {'text': 'Грецький кінь', 'correct': False}, {'text': 'Підступний пес', 'correct': False}, {'text': 'Собача смерть'}], 'explanation': 'Вираз походить з античної міфології.'}, {'source': 'In utter despair', 'options': [{'text': 'Вовком вити', 'correct': True}, {'text': "Собаку з'їсти", 'correct': False}, {'text': 'Кінь не валявся', 'correct': False}, {'text': 'Про вовка промовка'}], 'explanation': 'Передає стан крайнього горя.'}, {'source': 'To get what one deserves (negative)', 'options': [{'text': 'Собаці собача смерть', 'correct': True}, {'text': 'Працювати як кінь', 'correct': False}, {'text': "Собаку з'їсти", 'correct': False}, {'text': 'Кінь не валявся'}], 'explanation': 'Вказує на справедливу, але жорстоку відплату.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [вибір-фразеологізму] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [доповніть-фразу] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [правда-чи-брехня?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [класифікація-ідіом] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [відновіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [текст-з-пропусками] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [знайдіть-та-виправте-помилку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [виберіть-синоніми] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [переклад-значень] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [контекст-вживання-(регістри)] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [тварини-та-якості] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [культурний-контекст] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: [index-9] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 35 violations (severe - consider revision)
+- 24 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1816/1750
@@ -93,28 +71,28 @@
 - **Vocab:** ✅ 107/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 34 violations
+- **Pedagogy:** ❌ 23 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (vocab))
-- **Richness:** ✅ 97% (content)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 34 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 5 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 0.87 | - | 87% | 6% | 5.4% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.5%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 5 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.87 | - | 87% | 8% | 7.3% |
+| examples | 34 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 10 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,147 @@
+module: 166-spring-holidays
+level: C1
+version: '1.0'
+items:
+  - lemma: Великдень
+    ipa: /vɛˈlɪkdɛnʲ/
+    translation: Easter (Great Day)
+    pos: noun
+    gender: m
+  - lemma: Пасха
+    ipa: /ˈpasxa/
+    translation: Easter (Pascha)
+    pos: noun
+    gender: f
+  - lemma: Стрітення
+    ipa: /ˈstrʲitɛnʲːa/
+    translation: Candlemas (Meeting of Winter and Spring)
+    pos: noun
+    gender: n
+  - lemma: Вербна неділя
+    ipa: /ˈvɛrbna nɛˈdʲilʲa/
+    translation: Palm Sunday (Willow Sunday)
+    pos: noun
+    gender: f
+  - lemma: веснянка
+    ipa: /vɛsˈnʲanka/
+    translation: vesnianka (spring song)
+    pos: noun
+    gender: f
+  - lemma: гаївка
+    ipa: /haˈjiu̯ka/
+    translation: haiivka (ritual spring dance/song)
+    pos: noun
+    gender: f
+  - lemma: писанка
+    ipa: /ˈpɪsanka/
+    translation: pysanka (written egg)
+    pos: noun
+    gender: f
+  - lemma: крашанка
+    ipa: /ˈkraʃanka/
+    translation: krashanka (dyed egg)
+    pos: noun
+    gender: f
+  - lemma: кошик
+    ipa: /ˈkɔʃɪk/
+    translation: basket
+    pos: noun
+    gender: m
+  - lemma: жайворонок
+    ipa: /ˈʒaju̯vɔrɔnɔk/
+    translation: lark (bird/baked dough)
+    pos: noun
+    gender: m
+  - lemma: верба
+    ipa: /vɛrˈba/
+    translation: willow
+    pos: noun
+    gender: f
+  - lemma: пробудження
+    ipa: /prɔˈbudʒɛnʲːa/
+    translation: awakening
+    pos: noun
+    gender: n
+  - lemma: воскресіння
+    ipa: /vɔskrɛˈsʲinʲːa/
+    translation: resurrection
+    pos: noun
+    gender: n
+  - lemma: очищення
+    ipa: /ɔˈt͡ʃɪʃt͡ʃɛnʲːa/
+    translation: purification
+    pos: noun
+    gender: n
+  - lemma: проводи
+    ipa: /ˈprɔvɔdɪ/
+    translation: provody (memorial week)
+    pos: noun
+    gender: pl
+  - lemma: гробки
+    ipa: /hrɔbˈkɪ/
+    translation: hrobky (graves/memorial day)
+    pos: noun
+    gender: pl
+  - lemma: закликати
+    ipa: /zaklɪˈkatɪ/
+    translation: to summon, to call (spring)
+    pos: verb
+  - lemma: святити
+    ipa: /sʲvjaˈtɪtɪ/
+    translation: to bless (with water)
+    pos: verb
+  - lemma: христосуватися
+    ipa: /xrɪstɔsuˈvatɪsʲa/
+    translation: to greet with "Christ is Risen"
+    pos: verb
+  - lemma: постити
+    ipa: /pɔsˈtɪtɪ/
+    translation: to fast
+    pos: verb
+  - lemma: пекти
+    ipa: /pɛkˈtɪ/
+    translation: to bake
+    pos: verb
+  - lemma: розписувати
+    ipa: /rɔzˈpɪsuvatɪ/
+    translation: to paint (eggs)
+    pos: verb
+  - lemma: битися
+    ipa: /ˈbɪtɪsʲa/
+    translation: to fight (egg tapping game)
+    pos: verb
+  - lemma: сакральний
+    ipa: /saˈkralʲnɪj/
+    translation: sacred
+    pos: adj
+    gender: m
+  - lemma: язичницький
+    ipa: /jazɪt͡ʃˈnɪt͡sʲkɪj/
+    translation: pagan
+    pos: adj
+    gender: m
+  - lemma: сонячний
+    ipa: /ˈsɔnʲat͡ʃnɪj/
+    translation: solar
+    pos: adj
+    gender: m
+  - lemma: великодній
+    ipa: /vɛlɪˈkɔdnʲij/
+    translation: Easter (adj)
+    pos: adj
+    gender: m
+  - lemma: обрядовий
+    ipa: /ɔbrʲaˈdɔvɪj/
+    translation: ritual
+    pos: adj
+    gender: m
+  - lemma: плодючий
+    ipa: /plɔˈdʲut͡ʃɪj/
+    translation: fertile
+    pos: adj
+    gender: m
+  - lemma: цілющий
+    ipa: /t͡sʲiˈlʲuʃt͡ʃɪj/
+    translation: healing
+    pos: adj
+    gender: m

@@ -57,34 +57,6 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY]** match-up 'Методи пошуку ідей' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-01-vocab-research] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-02-research-steps] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-03-topic-selection] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-04-proposal-template] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-05-sources-type] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-06-method-goal] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-07-paper-structure] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-08-hypothesis] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-09-citation-styles] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-10-checklist] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-11-plagiarism-review] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-12-brainstorming] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-13-vocab-context-2] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-capstone-doslidzhennya.yaml: [142-14-final-readiness] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
@@ -98,7 +70,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 44 violations (severe - consider revision)
+- 30 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1770/1750
@@ -111,9 +83,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 42 violations
+- **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
 

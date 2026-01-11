@@ -1,95 +1,49 @@
 # Audit Report: 80-active-lifestyle.md
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q1 prompt length 7 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q3 prompt length 4 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q4 prompt length 5 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q5 prompt length 6 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q6 prompt length 7 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q7 prompt length 7 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q8 prompt length 7 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q10 prompt length 7 (target: 8-18)
-  - FIX: Adjust prompt length to 8-18 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення про здоров'я' item 1 has 6 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення про здоров'я' item 5 has 6 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення про здоров'я' item 6 has 6 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення про здоров'я' item 8 has 6 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-active-lifestyle.yaml: [index-7] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 80 has 95.8% immersion (target: 98.0%+)
-  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 60/100)
-
-- Revision recommended (severity 60/100)
-- 15 violations (severe - consider revision)
-- Activity density below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1998/1500
+- **Words:** ✅ 2085/1500
 - **Activities:** ✅ 11/8
-- **Density:** ❌ 1 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 13 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 95.8% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 93% < 95% min (cultural)
+- **Immersion:** 🇺🇦 95.9% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 93% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 6 | 5 | 100% | 33% | 33.3% |
-| engagement | 8 | 6 | 100% | 20% | 20.0% |
-| visual | 2 | 4 | 50% | 13% | 6.7% |
-| variety | 0.98 | - | 98% | 7% | 6.5% |
+| engagement | 9 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
 | paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
 | examples | 16 | - | 100% | 7% | 6.7% |
 | realworld | 6 | - | 100% | 7% | 6.7% |
 | questions | 29 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **93.2%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Ранкова пробіжка | cloze | 11 | 12 | Add 1 more items |
-
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ** | ⚪️ | 228 | Skipped |
-| **Презентація** | ⚪️ | 983 | Skipped |
+| **Історія та культура** | ✅ | 318 | Included in Core |
+| **Сучасність** | ⚪️ | 725 | Skipped |
 | **Практика** | ⚪️ | 37 | Skipped |
-| **Продукція** | ⚪️ | 509 | Skipped |
+| **Продукція** | ⚪️ | 536 | Skipped |
 | **Підсумок** | ✅ | 131 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

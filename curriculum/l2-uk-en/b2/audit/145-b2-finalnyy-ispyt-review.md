@@ -117,48 +117,22 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Говоріння (Симуляція)' Q8 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-01-reading] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-02-listening-sim] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-03-passive] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-04-participles] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-05-aspect] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-06-motion] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-07-cases] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-08-synonyms] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-09-idioms] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-10-definitions] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-11-history] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-12-culture] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-13-essay-order] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-14-register-sort] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-b2-finalnyy-ispyt.yaml: [145-15-speaking-sim] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Огляд' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Огляд' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 74 violations (severe - consider revision)
+- 61 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1073/1750
@@ -171,7 +145,7 @@
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 72 violations
+- **Pedagogy:** ❌ 57 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.3% (checkpoint - no gate)
 - **Richness:** ❌ 84% < 85% min (checkpoint)

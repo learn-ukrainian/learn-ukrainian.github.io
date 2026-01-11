@@ -3,7 +3,7 @@
 **Status:** 📝 PLANNED (Upgraded to A1 Quality - Rebalanced 2025, Arts Expansion Dec 2025, ULP S6 Integration Jan 2026)
 **Modules:** 01-202 (202 modules)
 **Vocabulary Target:** ~4,848 new words (~24/module)
-**Cumulative Target:** ~10,788 words after C1
+**Cumulative Target:** ~10,898 words after C1
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **Note:** Folk Culture & Fine Arts (36 modules) and Biographies (96 modules) expanded for comprehensive cultural coverage. December 2025 expansion added 11 composer/artist biographies and 11 fine arts modules. December 31, 2025: Removed military figures, added 15 contemporary Ukrainian writers (1951-1987) verified as Ukrainian patriots. January 8, 2026: Added 6 biographies based on ULP Season 6 gaps (Котляревський, Вовчок, Кропивницький, Павличко, Симоненко, Івасюк).
@@ -241,7 +241,7 @@ Before starting C1, learners have completed:
 
 ### Learning Outcomes
 
-By module 182, learners can:
+By module 202, learners can:
 
 **Understanding (Listening/Reading)**
 
@@ -1360,7 +1360,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase C1.3: Biographies (Modules 36-125)
+## Phase C1.3: Biographies (Modules 36-131)
 
 ### Learning Goals
 
@@ -1544,7 +1544,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 112: Metaphor & Simile
+#### Module 132: Metaphor & Simile
 
 **Grammar:** Understanding and using figurative language
 
@@ -1572,7 +1572,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 113: Irony & Sarcasm
+#### Module 133: Irony & Sarcasm
 
 **Grammar:** Detecting and producing ironic utterances
 
@@ -1604,7 +1604,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 114: Hyperbole & Litotes
+#### Module 134: Hyperbole & Litotes
 
 **Grammar:** Exaggeration and understatement
 
@@ -1633,7 +1633,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 115: Euphemism & Taboo
+#### Module 135: Euphemism & Taboo
 
 **Grammar:** Navigating sensitive topics
 
@@ -1665,7 +1665,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 116: Rhetorical Questions
+#### Module 136: Rhetorical Questions
 
 **Grammar:** Questions not expecting answers
 
@@ -1695,7 +1695,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 117: Degrees of Certainty
+#### Module 137: Degrees of Certainty
 
 **Grammar:** Precise expression of probability
 
@@ -1722,7 +1722,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 118: Politeness Strategies
+#### Module 138: Politeness Strategies
 
 **Grammar:** Face-saving in Ukrainian communication
 
@@ -1753,7 +1753,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 119: Indirectness
+#### Module 139: Indirectness
 
 **Grammar:** Reading between the lines
 
@@ -1779,7 +1779,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 120: Ukrainian Humor Traditions
+#### Module 140: Ukrainian Humor Traditions
 
 **Grammar:** Understanding cultural humor patterns
 
@@ -1811,7 +1811,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 121: Wordplay & Puns
+#### Module 141: Wordplay & Puns
 
 **Grammar:** Linguistic creativity and double meanings
 
@@ -1837,7 +1837,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 122: Anecdotes & Jokes
+#### Module 142: Anecdotes & Jokes
 
 **Grammar:** Structure and delivery of Ukrainian jokes
 
@@ -1869,7 +1869,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 123: Archaic Verb Forms
+#### Module 143: Archaic Verb Forms
 
 **Grammar:** Historical verb forms in literature
 
@@ -1895,7 +1895,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 124: Literary Syntax
+#### Module 144: Literary Syntax
 
 **Grammar:** Poetic word order and sentence structure
 
@@ -1922,7 +1922,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 125: Church Slavonicisms
+#### Module 145: Church Slavonicisms
 
 **Grammar:** Religious and high-style vocabulary
 
@@ -1954,7 +1954,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 138: Archaic Pronouns
+#### Module 146: Archaic Pronouns
 
 **Grammar:** Old pronoun forms in texts
 
@@ -1986,7 +1986,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 139: High Formal Register
+#### Module 147: High Formal Register
 
 **Grammar:** Official document language
 
@@ -2019,7 +2019,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 140: Intimate Register
+#### Module 148: Intimate Register
 
 **Grammar:** Language of close relationships
 
@@ -2045,7 +2045,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 141: Slang & Youth Language
+#### Module 149: Slang & Youth Language
 
 **Grammar:** Informal and youth vocabulary
 
@@ -2073,7 +2073,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 142: C1.4 Review
+#### Module 150: C1.4 Review
 
 **Grammar:** Consolidation of stylistics and rhetoric
 
@@ -2096,7 +2096,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 143: C1.4 Checkpoint
+#### Module 151: C1.4 Checkpoint
 
 **Covers:** M112-M136
 
@@ -2155,36 +2155,36 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | 141 | Народна медицина          | Folk Beliefs | Herbs, healing traditions                                         |
 | 142 | Козацькі легенди          | Folk Tales   | Hero tales, Cossack myths                                         |
 | 143 | Казки та притчі           | Folk Tales   | Magic tales, moral stories                                        |
-| 144 | Зимові обряди             | Calendar     | Коляда, Маланка, Водохреща                                        |
-| 145 | Весна та літо             | Calendar     | Великдень, Зелені свята, Купала                                   |
-| 146 | Хрестини та весілля       | Life Rituals | Birth and marriage customs                                        |
-| 147 | Поминальні обряди         | Life Rituals | Провід, поминки, memorial                                         |
-| 148 | Галичина                  | Regional     | Western Ukrainian traditions                                      |
-| 149 | Слобожанщина              | Regional     | Eastern Ukrainian traditions                                      |
-| 150 | Полісся                   | Regional     | Forest region traditions                                          |
-| 151 | Поділля та Волинь         | Regional     | Central-West traditions                                           |
-| 152 | Класична музика I         | Fine Arts    | 🎵 **NEW** Витоки: Бортнянський, Березовський, Гулак-Артемовський |
-| 153 | Класична музика II        | Fine Arts    | 🎵 **NEW** Національна школа: Лисенко, Леонтович                  |
-| 154 | Класична музика III       | Fine Arts    | 🎵 **NEW** Модернізм: Лятошинський, Скорик, Сильвестров           |
-| 155 | Оперне мистецтво          | Fine Arts    | 🎵 **NEW** Opera houses, great singers                            |
-| 156 | Вокальне мистецтво        | Fine Arts    | 🎵 **NEW** Choral tradition, art song                             |
-| 157 | Образотворче мистецтво I  | Fine Arts    | 🎨 **NEW** Icons → Avant-garde                                    |
-| 158 | Образотворче мистецтво II | Fine Arts    | 🎨 **NEW** Соцреалізм → сьогодення                                |
-| 159 | Балет і танець            | Fine Arts    | 🩰 **NEW** Серж Лифар, сучасний балет                             |
-| 160 | Театральне мистецтво I    | Fine Arts    | 🎭 **NEW** Від витоків до Курбаса                                 |
-| 161 | Театральне мистецтво II   | Fine Arts    | 🎭 **NEW** Сучасний театр                                         |
-| 162 | Українська архітектура    | Fine Arts    | 🏛️ **NEW** Baroque, wooden churches, modernism                    |
-| 163 | Сучасна музика            | Contemporary | Rock, pop, Eurovision                                             |
-| 164 | Українське кіно           | Contemporary | Довженко to contemporary                                          |
-| 165 | C1.5 Практика I           | Practice     | Folk culture integration                                          |
-| 166 | C1.5 Практика II          | Practice     | Fine arts integration                                             |
-| 167 | C1.5 Checkpoint           | Review       | Folk culture & fine arts assessment                               |
+| 152 | Зимові обряди             | Calendar     | Коляда, Маланка, Водохреща                                        |
+| 153 | Весна та літо             | Calendar     | Великдень, Зелені свята, Купала                                   |
+| 154 | Хрестини та весілля       | Life Rituals | Birth and marriage customs                                        |
+| 155 | Поминальні обряди         | Life Rituals | Провід, поминки, memorial                                         |
+| 156 | Галичина                  | Regional     | Western Ukrainian traditions                                      |
+| 157 | Слобожанщина              | Regional     | Eastern Ukrainian traditions                                      |
+| 158 | Полісся                   | Regional     | Forest region traditions                                          |
+| 159 | Поділля та Волинь         | Regional     | Central-West traditions                                           |
+| 160 | Класична музика I         | Fine Arts    | 🎵 **NEW** Витоки: Бортнянський, Березовський, Гулак-Артемовський |
+| 161 | Класична музика II        | Fine Arts    | 🎵 **NEW** Національна школа: Лисенко, Леонтович                  |
+| 162 | Класична музика III       | Fine Arts    | 🎵 **NEW** Модернізм: Лятошинський, Скорик, Сильвестров           |
+| 163 | Оперне мистецтво          | Fine Arts    | 🎵 **NEW** Opera houses, great singers                            |
+| 164 | Вокальне мистецтво        | Fine Arts    | 🎵 **NEW** Choral tradition, art song                             |
+| 165 | Образотворче мистецтво I  | Fine Arts    | 🎨 **NEW** Icons → Avant-garde                                    |
+| 166 | Образотворче мистецтво II | Fine Arts    | 🎨 **NEW** Соцреалізм → сьогодення                                |
+| 167 | Балет і танець            | Fine Arts    | 🩰 **NEW** Серж Лифар, сучасний балет                             |
+| 168 | Театральне мистецтво I    | Fine Arts    | 🎭 **NEW** Від витоків до Курбаса                                 |
+| 169 | Театральне мистецтво II   | Fine Arts    | 🎭 **NEW** Сучасний театр                                         |
+| 170 | Українська архітектура    | Fine Arts    | 🏛️ **NEW** Baroque, wooden churches, modernism                    |
+| 171 | Сучасна музика            | Contemporary | Rock, pop, Eurovision                                             |
+| 172 | Українське кіно           | Contemporary | Довженко to contemporary                                          |
+| 173 | C1.5 Практика I           | Practice     | Folk culture integration                                          |
+| 174 | C1.5 Практика II          | Practice     | Fine arts integration                                             |
+| 175 | C1.5 Checkpoint           | Review       | Folk culture & fine arts assessment                               |
 
 ### Module Content Specifications C1.5
 
 ---
 
-#### Module 144: Кобзарі та бандура
+#### Module 152: Кобзарі та бандура
 
 **Focus:** Ukrainian epic musical tradition and blind bards
 
@@ -2213,7 +2213,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 145: Обрядові пісні
+#### Module 153: Обрядові пісні
 
 **Focus:** Ritual songs through the calendar year
 
@@ -2242,7 +2242,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 146: Колискові та думи
+#### Module 154: Колискові та думи
 
 **Focus:** Lullabies and epic historical ballads
 
@@ -2269,7 +2269,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 147: Гопак і козачок
+#### Module 155: Гопак і козачок
 
 **Focus:** Traditional Cossack dances
 
@@ -2298,7 +2298,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 148: Регіональні танці
+#### Module 156: Регіональні танці
 
 **Focus:** Regional dance traditions across Ukraine
 
@@ -2327,7 +2327,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 149: Писанки
+#### Module 157: Писанки
 
 **Focus:** Easter egg art and symbolism
 
@@ -2354,7 +2354,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 150: Вишиванка
+#### Module 158: Вишиванка
 
 **Focus:** Traditional embroidered shirts and regional patterns
 
@@ -2381,7 +2381,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 151: Гончарство та різьбярство
+#### Module 159: Гончарство та різьбярство
 
 **Focus:** Pottery and woodcarving traditions
 
@@ -2410,7 +2410,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 152: Народна міфологія
+#### Module 160: Народна міфологія
 
 **Focus:** Ukrainian folk mythology and supernatural beings
 
@@ -2438,7 +2438,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 153: Народна медицина
+#### Module 161: Народна медицина
 
 **Focus:** Traditional Ukrainian healing practices
 
@@ -2465,7 +2465,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 154: Козацькі легенди
+#### Module 162: Козацькі легенди
 
 **Focus:** Cossack hero tales and historical myths
 
@@ -2494,7 +2494,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 155: Казки та притчі
+#### Module 163: Казки та притчі
 
 **Focus:** Ukrainian folk tales and moral stories
 
@@ -2521,7 +2521,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 156: Зимові обряди
+#### Module 164: Зимові обряди
 
 **Focus:** Winter calendar rituals
 
@@ -2550,7 +2550,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 157: Весна та літо
+#### Module 165: Весна та літо
 
 **Focus:** Spring and summer calendar rituals
 
@@ -2579,7 +2579,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 158: Хрестини та весілля
+#### Module 166: Хрестини та весілля
 
 **Focus:** Birth and marriage life cycle rituals
 
@@ -2606,7 +2606,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 159: Поминальні обряди
+#### Module 167: Поминальні обряди
 
 **Focus:** Death and memorial traditions
 
@@ -2633,7 +2633,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 160: Галичина
+#### Module 168: Галичина
 
 **Focus:** Western Ukrainian (Galician) folk traditions
 
@@ -2662,7 +2662,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 161: Слобожанщина
+#### Module 169: Слобожанщина
 
 **Focus:** Eastern Ukrainian (Sloboda) folk traditions
 
@@ -2691,7 +2691,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 162: Полісся
+#### Module 170: Полісся
 
 **Focus:** Northern (Polissia) forest region traditions
 
@@ -2720,7 +2720,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 163: Поділля та Волинь
+#### Module 171: Поділля та Волинь
 
 **Focus:** Central-Western Ukrainian regional traditions
 
@@ -2749,7 +2749,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 164: Класична музика I — Витоки (1745-1863)
+#### Module 172: Класична музика I — Витоки (1745-1863)
 
 **Focus:** 🎵 **NEW** Baroque and early Romantic — before national awakening
 **Note:** See **Modules 52, 53, 54** for biographies.
@@ -2777,7 +2777,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 165: Класична музика II — Національна школа (1863-1921)
+#### Module 173: Класична музика II — Національна школа (1863-1921)
 
 **Focus:** 🎵 **NEW** Лисенко and the national awakening in music
 **Note:** See **Modules 58, 78** for biographies.
@@ -2806,7 +2806,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 166: Класична музика III — Модернізм і сучасність (1920-present)
+#### Module 174: Класична музика III — Модернізм і сучасність (1920-present)
 
 **Focus:** 🎵 **NEW** Soviet era repression and contemporary renaissance
 
@@ -2833,7 +2833,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 167: Оперне мистецтво
+#### Module 175: Оперне мистецтво
 
 **Focus:** 🎵 **NEW** Ukrainian opera tradition and great singers
 
@@ -2859,7 +2859,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 168: Вокальне мистецтво
+#### Module 176: Вокальне мистецтво
 
 **Focus:** 🎵 **NEW** Beyond opera — choral tradition, art song, contemporary vocal
 
@@ -2886,7 +2886,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 169: Образотворче мистецтво I — Від ікони до авангарду
+#### Module 177: Образотворче мистецтво I — Від ікони до авангарду
 
 **Focus:** 🎨 **NEW** Ukrainian visual arts history through avant-garde
 **Note:** See **Modules 80, 82, 88** for biographies.
@@ -2912,7 +2912,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 170: Образотворче мистецтво II — Від соцреалізму до сьогодення
+#### Module 178: Образотворче мистецтво II — Від соцреалізму до сьогодення
 
 **Focus:** 🎨 **NEW** 20th century to contemporary Ukrainian art
 
@@ -2938,7 +2938,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 171: Балет і танець
+#### Module 179: Балет і танець
 
 **Focus:** 🩰 **NEW** Ukrainian contribution to world ballet
 **Note:** See **Module 99** for Lifar biography.
@@ -2965,7 +2965,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 172: Театральне мистецтво I — Від витоків до Курбаса
+#### Module 180: Театральне мистецтво I — Від витоків до Курбаса
 
 **Focus:** 🎭 **NEW** Ukrainian theater history
 **Note:** See **Module 89** for Kurbas biography.
@@ -2993,7 +2993,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 173: Театральне мистецтво II — Сучасний театр
+#### Module 181: Театральне мистецтво II — Сучасний театр
 
 **Focus:** 🎭 **NEW** Contemporary Ukrainian theater scene
 
@@ -3021,7 +3021,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 174: Українська архітектура
+#### Module 182: Українська архітектура
 
 **Focus:** 🏛️ **NEW** Ukrainian architectural heritage
 
@@ -3050,7 +3050,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 175: Сучасна музика
+#### Module 183: Сучасна музика
 
 **Focus:** Contemporary Ukrainian popular music
 
@@ -3079,7 +3079,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 176: Українське кіно
+#### Module 184: Українське кіно
 
 **Focus:** Ukrainian cinema history and contemporary
 
@@ -3108,7 +3108,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 177: C1.5 Практика I — Народна культура
+#### Module 185: C1.5 Практика I — Народна культура
 
 **Focus:** Integration and practice for folk culture modules (M138-151)
 
@@ -3132,7 +3132,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 178: C1.5 Практика II — Високе мистецтво
+#### Module 186: C1.5 Практика II — Високе мистецтво
 
 **Focus:** Integration and practice for fine arts modules (M158-164)
 
@@ -3156,7 +3156,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 179: C1.5 Checkpoint
+#### Module 187: C1.5 Checkpoint
 
 **Covers:** M144-M178 (Folk Culture & Fine Arts)
 
@@ -3206,27 +3206,27 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 | #   | Title                                      | Type       | Focus                          |
 | --- | ------------------------------------------ | ---------- | ------------------------------ |
-| 168 | Історія української літератури             | Literature | Periods and movements          |
-| 169 | Котляревський: Енеїда                      | Literature | Burlesque, national revival    |
-| 170 | Шевченко: Щоденник та листи                | Literature | Personal prose (bio: M55)      |
-| 171 | Шевченко: Поезія                           | Literature | Major poems analysis           |
-| 172 | Шевченко: Спадщина                         | Literature | Legacy, influence              |
-| 173 | Франко: Громадянська та філософська лірика | Literature | Major poetic cycles (bio: M63) |
-| 174 | Франко: Проза                              | Literature | Захар Беркут excerpts          |
-| 175 | Леся Українка: Лірична поезія              | Literature | Lyric poetry (bio: M75)        |
-| 176 | Леся Українка: Драма                       | Literature | Лісова пісня                   |
-| 177 | Вовчок та Мирний                           | Literature | Social realism                 |
-| 178 | Коцюбинський                               | Literature | Тіні забутих предків           |
-| 179 | Літературознавча термінологія              | Vocabulary | Plot, theme, motif             |
-| 180 | Аналіз поезії                              | Skills     | Meter, rhyme, imagery          |
-| 181 | C1.6 Review                                | Review     | 19th century literature        |
-| 182 | C1.6 Checkpoint                            | Review     | Comprehensive C1 assessment    |
+| 176 | Історія української літератури             | Literature | Periods and movements          |
+| 177 | Котляревський: Енеїда                      | Literature | Burlesque, national revival    |
+| 178 | Шевченко: Щоденник та листи                | Literature | Personal prose (bio: M55)      |
+| 179 | Шевченко: Поезія                           | Literature | Major poems analysis           |
+| 180 | Шевченко: Спадщина                         | Literature | Legacy, influence              |
+| 181 | Франко: Громадянська та філософська лірика | Literature | Major poetic cycles (bio: M63) |
+| 182 | Франко: Проза                              | Literature | Захар Беркут excerpts          |
+| 183 | Леся Українка: Лірична поезія              | Literature | Lyric poetry (bio: M75)        |
+| 184 | Леся Українка: Драма                       | Literature | Лісова пісня                   |
+| 185 | Вовчок та Мирний                           | Literature | Social realism                 |
+| 186 | Коцюбинський                               | Literature | Тіні забутих предків           |
+| 187 | Літературознавча термінологія              | Vocabulary | Plot, theme, motif             |
+| 188 | Аналіз поезії                              | Skills     | Meter, rhyme, imagery          |
+| 189 | C1.6 Review                                | Review     | 19th century literature        |
+| 190 | C1.6 Checkpoint                            | Review     | Comprehensive C1 assessment    |
 
 ### Module Content Specifications C1.6
 
 ---
 
-#### Module 180: Історія української літератури
+#### Module 188: Історія української літератури
 
 **Focus:** Overview of Ukrainian literary periods and movements
 
@@ -3254,7 +3254,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 181: Котляревський: Енеїда
+#### Module 189: Котляревський: Енеїда
 
 **Focus:** Ivan Kotlyarevsky and the birth of modern Ukrainian literature
 
@@ -3283,7 +3283,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 182: Шевченко: Щоденник та листи
+#### Module 190: Шевченко: Щоденник та листи
 
 **Focus:** Reading Shevchenko's personal prose and correspondence
 **Note:** For biography, see **Module 55**.
@@ -3311,7 +3311,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 183: Шевченко: Поезія
+#### Module 191: Шевченко: Поезія
 
 **Focus:** Analysis of Shevchenko's major poetic works
 
@@ -3340,7 +3340,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 184: Шевченко: Спадщина
+#### Module 192: Шевченко: Спадщина
 
 **Focus:** Shevchenko's influence and cultural legacy
 
@@ -3369,7 +3369,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 185: Франко: Громадянська та філософська лірика
+#### Module 193: Франко: Громадянська та філософська лірика
 
 **Focus:** Ivan Franko's major poetic cycles
 **Note:** For biography, see **Module 63**.
@@ -3397,7 +3397,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 186: Франко: Проза
+#### Module 194: Франко: Проза
 
 **Focus:** Ivan Franko's prose works
 
@@ -3426,7 +3426,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 187: Леся Українка: Лірична поезія
+#### Module 195: Леся Українка: Лірична поезія
 
 **Focus:** Lesya Ukrainka's lyric and philosophical poetry
 **Note:** For biography, see **Module 75**.
@@ -3454,7 +3454,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 188: Леся Українка: Драма
+#### Module 196: Леся Українка: Драма
 
 **Focus:** Lesya Ukrainka's dramatic works
 
@@ -3483,7 +3483,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 189: Вовчок та Мирний
+#### Module 197: Вовчок та Мирний
 
 **Focus:** Marko Vovchok and Panas Myrny - social realism
 
@@ -3512,7 +3512,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 190: Коцюбинський
+#### Module 198: Коцюбинський
 
 **Focus:** Mykhailo Kotsiubynsky and impressionist prose
 
@@ -3541,7 +3541,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 191: Літературознавча термінологія
+#### Module 199: Літературознавча термінологія
 
 **Focus:** Literary analysis vocabulary and concepts
 
@@ -3568,7 +3568,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 192: Аналіз поезії
+#### Module 200: Аналіз поезії
 
 **Focus:** Poetry analysis skills and terminology
 
@@ -3595,7 +3595,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 193: C1.6 Review
+#### Module 201: C1.6 Review
 
 **Focus:** 19th century Ukrainian literature comprehensive review
 
@@ -3619,7 +3619,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 194: C1.6 Checkpoint
+#### Module 202: C1.6 Checkpoint
 
 **Covers:** M180-M193
 
@@ -3654,11 +3654,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | --------- | ---------- | ------- | ------------------------------------------------------------------- |
 | C1.1      | 01-20      | 20      | Academic Foundation                                                 |
 | C1.2      | 21-35      | 15      | Professional & Social                                               |
-| C1.3      | 36-111     | 76      | Biographies (expanded December 2025: +11 arts figures)              |
-| C1.4      | 112-131    | 20      | Advanced Stylistics & Rhetoric                                      |
-| C1.5      | 132-167    | 36      | Folk Culture & Fine Arts (expanded December 2025: +11 arts modules) |
-| C1.6      | 168-182    | 15      | Literature - Complete                                               |
-| **TOTAL** | **01-182** | **182** |                                                                     |
+| C1.3      | 36-131     | 96      | Biographies (expanded Dec 2025 +11, Jan 2026 +6 ULP S6)             |
+| C1.4      | 132-151    | 20      | Advanced Stylistics & Rhetoric                                      |
+| C1.5      | 152-187    | 36      | Folk Culture & Fine Arts (expanded December 2025: +11 arts modules) |
+| C1.6      | 188-202    | 15      | Literature - Complete                                               |
+| **TOTAL** | **01-202** | **202** |                                                                     |
 
 ### Vocabulary Summary
 
@@ -3666,11 +3666,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | ------------ | ------------ | ---------------------- | ----------------------- |
 | C1.1         | ~500         | 500                    |
 | C1.2         | ~450         | 950                    |
-| C1.3         | ~2,160       | 3,110                  | (90 modules × 24 words) |
-| C1.4         | ~480         | 3,590                  |
-| C1.5         | ~864         | 4,454                  | (36 modules × 24 words) |
-| C1.6         | ~250         | 4,704                  |
-| **Total C1** | **~4,704**   | **~10,644 cumulative** |
+| C1.3         | ~2,304       | 3,254                  | (96 modules × 24 words) |
+| C1.4         | ~480         | 3,734                  |
+| C1.5         | ~864         | 4,598                  | (36 modules × 24 words) |
+| C1.6         | ~360         | 4,958                  | (15 modules × 24 words) |
+| **Total C1** | **~4,958**   | **~10,898 cumulative** |
 
 ---
 
@@ -3717,19 +3717,19 @@ graph TD
         M145 --> M151[M151 Checkpoint]
     end
 
-    %% Phase C1.5: Folk Culture & Fine Arts (M152-181)
-    subgraph C1_5 [Phase C1.5: Culture & Arts M152-181]
+    %% Phase C1.5: Folk Culture & Fine Arts (M152-187)
+    subgraph C1_5 [Phase C1.5: Culture & Arts M152-187]
         M152[M152 Kobzari] --> M160[M160 Mythology]
-        M160 --> M171[M171 Regions]
-        M171 --> M172[M172 Classical Music I]
+        M160 --> M168[M168 Regions]
+        M168 --> M172[M172 Classical Music I]
         M172 --> M177[M177 Visual Arts]
         M177 --> M179[M179 Ballet]
         M179 --> M182[M182 Architecture]
         M182 --> M187[M187 Checkpoint]
     end
 
-    %% Phase C1.6: Literature (M188-196)
-    subgraph C1_6 [Phase C1.6: Literature M188-196]
+    %% Phase C1.6: Literature (M188-202)
+    subgraph C1_6 [Phase C1.6: Literature M188-202]
         M188[M188 Lit History] --> M190[M190 Shevchenko]
         M190 --> M193[M193 Franko]
         M193 --> M195[M195 Lesia Ukrainka]
@@ -3816,25 +3816,25 @@ Before generating any C1 module:
 
 ## Implementation Status
 
-| Phase     | Modules    | Status                                                      |
-| --------- | ---------- | ----------------------------------------------------------- | --- |
-| C1.1      | 01-20      | ✅ Detailed specs complete                                  |
-| C1.2      | 21-35      | ✅ Detailed specs complete                                  |
-| C1.3      | 36-125     | ✅ Biographies (90 modules, expanded Dec 2025)              |
-| C1.4      | 126-145    | ✅ Advanced Stylistics & Rhetoric                           |
-| C1.5      | 146-181    | ✅ Folk Culture & Fine Arts (36 modules, expanded Dec 2025) |
-| C1.6      | 182-196    | ✅ Literature (incl. capstone)                              |
-| **TOTAL** | **01-196** | **196**                                                     |     |
+| Phase     | Modules    | Status                                                               |
+| --------- | ---------- | -------------------------------------------------------------------- |
+| C1.1      | 01-20      | ✅ Detailed specs complete                                           |
+| C1.2      | 21-35      | ✅ Detailed specs complete                                           |
+| C1.3      | 36-131     | ✅ Biographies (96 modules, expanded Dec 2025 +11, Jan 2026 +6 ULP)  |
+| C1.4      | 132-151    | ✅ Advanced Stylistics & Rhetoric                                    |
+| C1.5      | 152-187    | ✅ Folk Culture & Fine Arts (36 modules, expanded Dec 2025)          |
+| C1.6      | 188-202    | ✅ Literature (incl. capstone)                                       |
+| **TOTAL** | **01-202** | **202**                                                              |
 
 ---
 
 ## Notes
 
-1. **196 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
+1. **202 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
 
-2. **Level-relative numbering** (01-196) replaces old global numbering.
+2. **Level-relative numbering** (01-202) replaces old global numbering.
 
-3. **Biographies** (C1.3, 90 modules) expanded Dec 2025 with 11 arts figures (composers, visual artists, ballet, theater), then Jan 2026 with a focus on high-impact contributors (Marynovych, Sentsov, Matviichuk) alongside key literary voices (Zabuzhko, Zhadan, Andrukhovych).
+3. **Biographies** (C1.3, 96 modules) expanded Dec 2025 with 11 arts figures (composers, visual artists, ballet, theater), then Jan 2026 with 6 ULP S6 biographies (Котляревський, Вовчок, Кропивницький, Павличко, Симоненко, Івасюк) and 15 contemporary Ukrainian writers.
 
 4. **Folk Culture & Fine Arts** (C1.5, 36 modules) expanded Dec 2025 with 11 fine arts modules covering classical music, opera, visual arts, ballet, theater, and architecture.
 
@@ -3858,9 +3858,11 @@ Before generating any C1 module:
 
 ## Changelog
 
+- **2026-01-11:** Fixed module numbering inconsistencies. All phases now contiguous: C1.3 M36-131 (96 biographies), C1.4 M132-151, C1.5 M152-187, C1.6 M188-202. Total 202 modules.
+- **2026-01-08:** Expanded to 202 modules: +6 ULP S6 biographies (Котляревський, Вовчок, Кропивницький, Павличко, Симоненко, Івасюк). C1.3 now 96 modules.
 - **2026-01-02:** Refined Biography section: Swapped pure literary figures for high-impact moral and civic leaders (Мирослав Маринович, Олег Сенцов, Олександра Матвійчук). Re-ordered by birth year.
-- **2025-12-31:** Expanded to 196 modules: Removed Залужний (military figure). Added contemporary Ukrainian writers. Renumbered C1.4-C1.6 accordingly.
-- **2025-12-29:** Expanded to 182 modules: +11 biographies (composers, visual artists, ballet, theater) + 11 fine arts modules (classical music, opera, visual arts, ballet, theater, architecture). Renumbered C1.4-C1.6 accordingly.
+- **2025-12-31:** Expanded to 196 modules: Removed Залужний (military figure). Added contemporary Ukrainian writers.
+- **2025-12-29:** Expanded to 182 modules: +11 biographies (composers, visual artists, ballet, theater) + 11 fine arts modules.
 - **2025-12-23:** Rebalanced: expanded to 160 modules (Biographies from B2 added as C1.3, renumbered all subsequent phases)
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables
 - **2025-12-05:** Restructured: added C1.4 Folk Culture (25 modules from B2)

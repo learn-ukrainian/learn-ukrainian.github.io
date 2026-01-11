@@ -1,42 +1,6 @@
 # Audit Report: 90-b1-vocabulary-integration.md
 **Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 2 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 4 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 5 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 6 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 7 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 8 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 9 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з лексикою B1' item 11 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-8] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-11] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 90-b1-vocabulary-integration.yaml: [index-12] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 90 has 97.6% immersion (target: 98.0%+)
-  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 13 violations (severe - consider revision)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 2097/1500
@@ -46,10 +10,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 18/15
+- **Vocab:** ✅ 40/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 11 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (grammar)
@@ -79,7 +43,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Діагностика** | ✅ | 148 | Included in Core |
-| **Аналіз** | ✅ | 1072 | Included in Core |
+| **Огляд** | ⚪️ | 1072 | Skipped |
 | **Поглиблення** | ⚪️ | 305 | Skipped |
 | **Практика** | ⚪️ | 289 | Skipped |
 | **Підсумок** | ✅ | 124 | Included in Core |

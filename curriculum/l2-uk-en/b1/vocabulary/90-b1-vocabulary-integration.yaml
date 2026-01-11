@@ -2,89 +2,203 @@ module: 90-b1-vocabulary-integration
 level: B1
 version: '2.0'
 items:
-- lemma: взаємозе'зязка
-  ipa: /vzaˈjɛmɔzɛzjazka/
-  translation: interconnection (typo)
-  pos: noun
-  gender: m
-- lemma: видний
-  ipa: /ˈvɪdnɪj/
-  translation: visible
-  pos: adj
-- lemma: вірте
-  ipa: /vʲirˈtɛ/
-  translation: believe (imp.)
-  pos: propn
-  gender: m
-- lemma: готик
-  ipa: /ˈhɔtɪk/
-  translation: gothic (gen.)
-  pos: noun
-  gender: f
-- lemma: дискримінація
-  ipa: /dɪskrɪmʲiˈnat͡sʲija/
-  translation: discrimination
-  pos: noun
-  gender: f
-- lemma: доменя
-  ipa: /dɔˈmɛnʲa/
-  translation: domain (typo)
-  pos: noun
-  gender: m
-- lemma: діагностичний
-  ipa: /dʲiahnoˈstɪt͡ʃnɪj/
-  translation: diagnostic
-  pos: adj
-  gender: m
-- lemma: зложитися
-  ipa: /zlɔˈʒɪtɪsʲa/
-  translation: to develop (dial.)
-  pos: verb
-- lemma: мультикультурний
-  ipa: /mulʲtɪkulʲˈturnɪj/
-  translation: multicultural
-  pos: adj
-  gender: m
-- lemma: мультикультурність
-  ipa: /mulʲtɪkulʲˈturnʲisʲtʲ/
-  translation: multiculturalism
-  pos: noun
-  gender: f
-- lemma: міжкультурний
-  ipa: /mʲiʒkulʲˈturnɪj/
-  translation: intercultural
-  pos: adj
-  gender: n
-- lemma: набутий
-  ipa: /naˈbutɪj/
-  translation: acquired
-  pos: adj
-- lemma: однодумець
-  ipa: /ɔdnɔˈdumɛt͡sʲ/
-  translation: like-minded person
-  pos: noun
-  gender: m
-- lemma: переконливіший
-  ipa: /pɛrɛˈkɔnlɪvʲiʃɪj/
-  translation: more convincing
-  pos: adj
-  gender: f
-- lemma: поверхнево
-  ipa: /pɔvɛrxˈnɛvɔ/
-  translation: superficially
-  pos: adv
-- lemma: самовдосконалення
-  ipa: /samɔu̯dɔskɔˈnalɛnʲːa/
-  translation: self-improvement
-  pos: noun
-  gender: n
-- lemma: скульптура
-  ipa: /skulʲpˈtura/
-  translation: sculpture
-  pos: noun
-  gender: f
-- lemma: трий
-  ipa: /trɪj/
-  translation: three (typo)
-  pos: adj
-  gender: f
+  - lemma: взаємозв'язок
+    ipa: /vzajɛmɔzˈvjazɔk/
+    translation: interconnection, relationship
+    pos: noun
+    gender: m
+  - lemma: домен
+    ipa: /dɔˈmɛn/
+    translation: domain, field
+    pos: noun
+    gender: m
+  - lemma: діагностичний
+    ipa: /dʲiahnoˈstɪt͡ʃnɪj/
+    translation: diagnostic
+    pos: adj
+    gender: m
+  - lemma: мультикультурний
+    ipa: /mulʲtɪkulʲˈturnɪj/
+    translation: multicultural
+    pos: adj
+    gender: m
+  - lemma: мультикультурність
+    ipa: /mulʲtɪkulʲˈturnʲisʲtʲ/
+    translation: multiculturalism
+    pos: noun
+    gender: f
+  - lemma: міжкультурний
+    ipa: /mʲiʒkulʲˈturnɪj/
+    translation: intercultural
+    pos: adj
+    gender: m
+  - lemma: самовдосконалення
+    ipa: /samɔu̯dɔskɔˈnalɛnʲːa/
+    translation: self-improvement
+    pos: noun
+    gender: n
+  - lemma: стратегія
+    ipa: /straˈtɛhʲija/
+    translation: strategy
+    pos: noun
+    gender: f
+  - lemma: аргумент
+    ipa: /arhuˈmɛnt/
+    translation: argument
+    pos: noun
+    gender: m
+  - lemma: виклик
+    ipa: /ˈvɪklɪk/
+    translation: challenge
+    pos: noun
+    gender: m
+  - lemma: концепція
+    ipa: /kɔnt͡sɛpˈt͡sʲija/
+    translation: concept, conception
+    pos: noun
+    gender: f
+  - lemma: підхід
+    ipa: /pʲidˈxʲid/
+    translation: approach
+    pos: noun
+    gender: m
+  - lemma: наслідок
+    ipa: /ˈnasʲlʲidɔk/
+    translation: consequence, result (often negative)
+    pos: noun
+    gender: m
+  - lemma: висновок
+    ipa: /ˈvɪsnɔvɔk/
+    translation: conclusion
+    pos: noun
+    gender: m
+  - lemma: сталий розвиток
+    ipa: /ˈstalɪj ˈrɔzvɪtɔk/
+    translation: sustainable development
+    pos: noun
+    gender: m
+  - lemma: довкілля
+    ipa: /dɔu̯ˈkʲilʲːa/
+    translation: environment
+    pos: noun
+    gender: n
+  - lemma: забруднення
+    ipa: /zabrudˈnɛnʲːa/
+    translation: pollution
+    pos: noun
+    gender: n
+  - lemma: кар'єрне зростання
+    ipa: /karˈjɛrnɛ zrɔˈstannʲa/
+    translation: career growth
+    pos: noun
+    gender: n
+  - lemma: компетенція
+    ipa: /kɔmpɛˈtɛnt͡sʲija/
+    translation: competence, skill
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪna/
+    translation: heritage
+    pos: noun
+    gender: f
+  - lemma: традиція
+    ipa: /traˈdɪt͡sʲija/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: ініціатива
+    ipa: /inʲit͡sʲiaˈtɪva/
+    translation: initiative
+    pos: noun
+    gender: f
+  - lemma: громада
+    ipa: /hrɔˈmada/
+    translation: community, municipality
+    pos: noun
+    gender: f
+  - lemma: реформа
+    ipa: /rɛˈfɔrma/
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: інновація
+    ipa: /inːɔˈvat͡sʲija/
+    translation: innovation
+    pos: noun
+    gender: f
+  - lemma: потенціал
+    ipa: /pɔtɛnt͡sʲiˈal/
+    translation: potential
+    pos: noun
+    gender: m
+  - lemma: біорізноманіття
+    ipa: /bʲiɔrʲiznɔmaˈnʲitʲːa/
+    translation: biodiversity
+    pos: noun
+    gender: n
+  - lemma: екосистема
+    ipa: /ɛkɔsɪsˈtɛma/
+    translation: ecosystem
+    pos: noun
+    gender: f
+  - lemma: переробка
+    ipa: /pɛrɛˈrɔbka/
+    translation: recycling, processing
+    pos: noun
+    gender: f
+  - lemma: посада
+    ipa: /pɔˈsada/
+    translation: position, job title
+    pos: noun
+    gender: f
+  - lemma: обов'язок
+    ipa: /ɔˈbɔvjazɔk/
+    translation: duty, obligation
+    pos: noun
+    gender: m
+  - lemma: професіоналізм
+    ipa: /prɔfɛsʲiɔnaˈlʲizm/
+    translation: professionalism
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /fɔlʲkˈlɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: гумор
+    ipa: /ˈhumɔr/
+    translation: humor
+    pos: noun
+    gender: m
+  - lemma: готика
+    ipa: /ˈhɔtɪka/
+    translation: gothic
+    pos: noun
+    gender: f
+  - lemma: тріада
+    ipa: /trʲiˈada/
+    translation: triad
+    pos: noun
+    gender: f
+  - lemma: стійкість
+    ipa: /ˈstʲijkʲisʲtʲ/
+    translation: resilience, stability
+    pos: noun
+    gender: f
+  - lemma: оптимізм
+    ipa: /ɔptɪˈmʲizm/
+    translation: optimism
+    pos: noun
+    gender: m
+  - lemma: вразливий
+    ipa: /vrazˈlɪvɪj/
+    translation: vulnerable
+    pos: adj
+    gender: m
+  - lemma: прогалина
+    ipa: /prɔˈhalɪna/
+    translation: gap (in knowledge)
+    pos: noun
+    gender: f

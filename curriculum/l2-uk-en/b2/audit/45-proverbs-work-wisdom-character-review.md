@@ -29,39 +29,11 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q7 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [значення-прислів'їв] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [прислів'я-та-їхнє-значення] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [закінчіть-прислів'я] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [правильне-вживання-прислів'їв] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [тематична-класифікація-прислів'їв] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [відновіть-прислів'я] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [прислів'я-у-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [виправте-помилки-в-прислів'ях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [знайдіть-прислів'я-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [перекладіть-прислів'я-англійською] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [оберіть-прислів'я-для-ситуації] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [англійські-еквіваленти-прислів'їв] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [вставте-прислів'я-в-контекст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Історичний контекст українських прислів'їв, Вживання прислів'їв у контексті, Вступ
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вживання прислів'їв у контексті, Вступ, Історичний контекст українських прислів'їв
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
   - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
@@ -70,7 +42,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 30 violations (severe - consider revision)
+- 16 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2102/1750
@@ -83,9 +55,9 @@
 - **Vocab:** ✅ 89/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 28 violations
+- **Pedagogy:** ❌ 14 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.5% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (vocab))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation
 

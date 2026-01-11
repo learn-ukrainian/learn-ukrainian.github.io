@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, дієслово, родовий, відмінок
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, родовий, знахідний, дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

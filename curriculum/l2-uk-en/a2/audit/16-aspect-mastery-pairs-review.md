@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): губити, відповісти, відповідати, запитати, намалювати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): пам'ятати, побудувати, загубити, ремонтувати, купувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

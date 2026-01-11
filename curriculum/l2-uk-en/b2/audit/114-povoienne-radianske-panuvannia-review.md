@@ -35,32 +35,6 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналітичний квіз: Постаті' Q5 prompt length 7 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [розуміння-тексту:-радянська-русифікація] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [лексика-в-контексті:-радянська-система] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [термінологія-радянської-епохи] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [правда-чи-хибність:-радянська-україна] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [виправте-граматичні-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [категоризація-термінів] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [текст:-механізми-русифікації] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [аналіз-деколонізації] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [знайдіть-назви-організацій-та-рухів] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [перекладіть-правильно] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [аналітичний-квіз:-постаті] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 114-povoienne-radianske-panuvannia.yaml: [знайдіть-назви-творів-та-документів] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -76,7 +50,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 33 violations (severe - consider revision)
+- 20 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ⚠️ 1930/2000 (70 short)
@@ -89,9 +63,9 @@
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 31 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ⏳ Pending validation
 

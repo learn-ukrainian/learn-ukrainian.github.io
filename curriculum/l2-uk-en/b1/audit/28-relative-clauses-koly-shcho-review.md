@@ -2,20 +2,9 @@
 **Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1999/1500
-- **Activities:** ✅ 11/8
+- **Words:** ✅ 2032/1500
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
@@ -37,7 +26,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 31 | 24 | 100% | 20% | 20.0% |
+| examples | 34 | 24 | 100% | 20% | 20.0% |
 | engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
@@ -54,8 +43,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Тест** | ⚪️ | 197 | Skipped |
-| **Аналіз** | ✅ | 293 | Included in Core |
+| **Теорія (Аналіз)** | ✅ | 293 | Included in Core |
 | **Поглиблення** | ⚪️ | 896 | Skipped |
+| **Практика** | ⚪️ | 32 | Skipped |
 | **Діалоги** | ✅ | 214 | Included in Core |
-| **Підсумок** | ✅ | 239 | Included in Core |
+| **Підсумок** | ✅ | 240 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,43 +1,19 @@
 # Audit Report: 89-b1-grammar-integration.md
 **Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Самооцінка' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 89-b1-grammar-integration.yaml: [index-8] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 89-b1-grammar-integration.yaml: [index-11] translate: 'items.13' - 'source' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 89-b1-grammar-integration.yaml: [index-13] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Тест 3: Складні речення, Тест 4: Дієприкметники, Тест 2: Дієслова руху, Тест 1: Вид дієслова
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 40/100)
-
-- Revision recommended (severity 40/100)
-- 6 violations (moderate)
-- Activity count below minimum
-- Activity density below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 1667/1500
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 11 < 15 (soft target)
+- **Vocab:** ✅ 36/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 100% (grammar)
@@ -67,10 +43,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Діагностика** | ✅ | 205 | Included in Core |
-| **Аналіз** | ✅ | 378 | Included in Core |
-| **Поглиблення** | ⚪️ | 422 | Skipped |
-| **Практика** | ⚪️ | 222 | Skipped |
-| **Самооцінка** | ⚪️ | 130 | Skipped |
+| **Огляд** | ⚪️ | 378 | Skipped |
+| **Поглиблення та практика** | ⚪️ | 644 | Skipped |
 | **Наступний крок: Рівень B2** | ⚪️ | 68 | Skipped |
 | **Підсумок** | ✅ | 83 | Included in Core |
+| **Самооцінка** | ⚪️ | 130 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

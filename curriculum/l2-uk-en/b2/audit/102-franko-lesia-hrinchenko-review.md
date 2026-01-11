@@ -1,6 +1,15 @@
 # Audit Report: 102-franko-lesia-hrinchenko.md
 **Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 102-franko-lesia-hrinchenko.yaml: [index-3] cloze: when using 'blanks' array, passage markers must be {1}, {2}, etc. (not words)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2106/2000
@@ -13,9 +22,9 @@
 - **Vocab:** ✅ 74/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -36,12 +45,6 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.7%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (13 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

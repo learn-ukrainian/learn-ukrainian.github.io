@@ -1,10 +1,10 @@
-module: 74
+module: b1-74
 title: Українські регіони - Південь
 subtitle: Southern Ukraine
-level: B1
-phase: B1.7
-pedagogy: PPP
+version: '2.0'
+phase: B1.7 Contemporary Ukraine
 focus: cultural
+pedagogy: CBI
 duration: 75
 transliteration: none
 tags:
@@ -20,8 +20,6 @@ objectives:
   - Learner can understand authentic texts about Black Sea coastal cities
   - Learner can use regional vocabulary to describe the south
   - Learner can compare Southern Ukrainian traditions with other regions
-word_target: 1500
-vocab_target: 25
-immersion_target: 95
-vocab_count: 56
+vocabulary_count: 54
+vocab_count: 54
 slug: 74-regions-south

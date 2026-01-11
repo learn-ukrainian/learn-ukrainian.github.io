@@ -71,33 +71,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Тест: екстрені ситуації' Q12 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [match-specialists] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: Array validation: {'type': 'select', 'title': 'Оберіть усіх лікарів, до яких може направити терапевт', 'instruction': 'Позначте всі варіанти, які є вузькими спеціалістами.', 'items': [{'correct': True, 'question': 'кардіолог'}, {'correct': False, 'question': 'медсестра'}, {'correct': True, 'question': 'пульмонолог'}, {'correct': False, 'question': 'фармацевт'}, {'correct': True, 'question': 'ендокринолог'}, {'correct': False, 'question': 'санітар'}, {'correct': True, 'question': 'гастроентеролог'}, {'correct': False, 'question': 'реєстратор'}, {'correct': True, 'question': 'невролог'}, {'correct': False, 'question': 'лаборант'}, {'correct': True, 'question': 'офтальмолог'}, {'correct': True, 'question': 'дерматолог'}, {'correct': True, 'question': 'хірург'}, {'correct': True, 'question': 'отоларинголог'}, {'correct': True, 'question': 'психіатр'}, {'correct': True, 'question': 'уролог'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [fill-in-symptoms] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [quiz-medical-terms] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [true-false-medical] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [group-sort-registers] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [unjumble-medical] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [cloze-medical-text] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [error-correction-medical] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [translate-medical] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [mark-medical-terms] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [cloze-medical-dialogue] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [select-specialists] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [fill-in-prescription] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [quiz-emergency] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-medytsyna-pohlybleno.yaml: [index-11] select: 'items.15' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -110,7 +86,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 50 violations (severe - consider revision)
+- 38 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2314/1750
@@ -123,9 +99,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 49 violations
+- **Pedagogy:** ❌ 37 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ⏳ Pending validation
 

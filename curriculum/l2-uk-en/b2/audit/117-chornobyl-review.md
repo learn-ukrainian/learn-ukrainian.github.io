@@ -3,33 +3,51 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q1 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q2 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q3 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q4 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q6 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q7 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Поєднайте терміни з їхніми визначеннями.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'Доберіть синоніми до слів.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про події в Чорнобилі.' item 1 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про події в Чорнобилі.' item 3 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про події в Чорнобилі.' item 4 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q1 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q3 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q4 prompt length 4 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q5 prompt length 5 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q6 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q7 prompt length 5 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте свої загальні знання про Чорнобиль.' Q8 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: Array validation: {'type': 'select', 'items': [{'correct': True, 'question': 'Емоційно забарвлена лексика (жахливий, смертельний, зловісний)'}, {'correct': True, 'question': 'Велика кількість наукових термінів (ізотопи, рентгени, реакція)'}, {'correct': False, 'question': 'Використання гумору та іронії'}, {'correct': True, 'question': 'Риторичні запитання для залучення читача'}, {'correct': False, 'question': 'Діалектна лексика'}, {'correct': True, 'question': 'Метафори (сніг страху, ядерна засмага)'}], 'title': 'Які мовні засоби використовуються в тексті для опису трагедії?', 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [index-6] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [content_check_1] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [index-7] mark-the-words: 'title' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [grammar_passive_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [index-11] translate: 'items.7.options' - [{'text': 'Danger', 'correct': True}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [terms_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [synonyms_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [source_analysis] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [grammar_passive_voice] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [sentence_unjumble] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [sorting_categories] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [text_cloze] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [translation] translate: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [linguistic_features] select: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [general_knowledge] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 117-chornobyl.yaml: [index-12] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -41,26 +59,25 @@
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
-- 17 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 26 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2228/2000
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 22/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
+- **Pedagogy:** ❌ 25 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 

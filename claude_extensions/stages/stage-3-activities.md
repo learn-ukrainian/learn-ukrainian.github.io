@@ -2,6 +2,54 @@
 
 Generate activities in YAML format, separate from the prose content.
 
+> **CRITICAL:** See `docs/ACTIVITY-YAML-REFERENCE.md` for authoritative format reference.
+
+<critical>
+
+## ⚠️ YAML Structure Rules (MUST READ)
+
+### 1. Root MUST Be a Bare List
+```yaml
+# ✅ CORRECT - bare list at root
+- type: quiz
+  title: Quiz title
+
+- type: match-up
+  title: Match title
+```
+
+```yaml
+# ❌ WRONG - dictionary wrapper causes schema validation failure
+activities:
+  - type: quiz
+```
+
+### 2. Use Schema Property Names
+| Activity | Correct | Wrong |
+|----------|---------|-------|
+| unjumble | `jumbled` | `scrambled`, `words` |
+| mark-the-words | `text` + `answers` | `passage`, asterisks |
+| true-false | `statement` | `sentence` |
+
+### 3. Mark-the-Words Format
+```yaml
+# ✅ CORRECT
+- type: mark-the-words
+  text: Гарний день приніс радість у серце.
+  answers:
+    - день
+    - радість
+    - серце
+
+# ❌ WRONG - asterisks deprecated
+text: Гарний *день* приніс *радість*.
+answers: []
+```
+
+</critical>
+
+---
+
 ## ⚡ Direct YAML Creation (Recommended)
 
 **For new modules or recreation, write activities directly in YAML:**
@@ -60,7 +108,7 @@ curriculum/l2-uk-en/{level}/
 | `## fill-in:` sentences                             | Keep sentences + answers                | `items[].sentence`, `items[].answer`      |
 | `## true-false:` statements                         | Keep statements + T/F                   | `items[].statement`, `items[].correct`    |
 | `## group-sort:` categories                         | Keep groups + items                     | `groups[].name`, `groups[].items`         |
-| `## unjumble:` scrambled                            | Keep scrambled + answer                 | `items[].scrambled`, `items[].answer`     |
+| `## unjumble:` scrambled                            | Keep scrambled + answer                 | `items[].jumbled`, `items[].answer`       |
 | `## cloze:` passage with `[___:1]` blanks + options | Convert `[___:N]` → `{ans\|opt1\|opt2}` | `passage` with inline `{ans\|opt1\|opt2}` |
 | `## error-correction:`                              | Keep sentence + error + fix             | `items[].sentence/error/answer`           |
 | `## mark-the-words:`                                | Keep text + answers                     | `text` + `answers[]` array                |
@@ -205,128 +253,104 @@ For EVERY quiz question in content-heavy modules:
 ```yaml
 # Quiz (8+ items for B1)
 - type: quiz
-  id: quiz-id
   title: Quiz title
-  instructions: Select the correct answer.
+  instruction: Select the correct answer.
   items:
-    - prompt: Question text (12-20 words for B1)?
+    - question: Яке слово є синонімом до "великий"?
       options:
-        - text: Wrong answer
+        - text: малий
           correct: false
-        - text: Correct answer
+        - text: величезний
           correct: true
-        - text: Wrong answer
+        - text: швидкий
           correct: false
-        - text: Wrong answer
+        - text: повільний
           correct: false
-      explanation: Why correct/wrong.
+      explanation: "Величезний" означає дуже великий.
 
 # Match-up (12+ pairs for B1)
 - type: match-up
-  id: match-id
   title: Match title
-  instructions: Match the pairs.
-  items:
-    - left: Ukrainian term
-      right: English translation
-    - left: Another term
-      right: Its translation
+  instruction: Match the pairs.
+  pairs:
+    - left: іти
+      right: to go (on foot)
+    - left: їхати
+      right: to go (by vehicle)
 
 # Fill-in (12+ items for B1)
 - type: fill-in
-  id: fill-id
   title: Fill-in title
-  instructions: Choose the correct word.
+  instruction: Choose the correct word.
   items:
-    - prompt: Sentence with _____ blank (12-20 words for B1).
-      answer: correct
+    - sentence: Вона [___] до магазину, щоб купити хліб.
+      answer: пішла
       options:
-        - correct
-        - wrong1
-        - wrong2
-        - wrong3
+        - пішла
+        - їхала
+        - летіла
+        - бігла
 
 # True-false (12+ items for B1)
 - type: true-false
-  id: true-false-id
   title: True/False title
-  instructions: Determine if the statement is true or false.
+  instruction: Determine if the statement is true or false.
   items:
-    - statement: Statement text.
+    - statement: Дієслово "іти" означає рух пішки.
       correct: true
-      explanation: Why true/false.
+      explanation: Так, "іти" — це рух пішки, на відміну від "їхати" (транспортом).
 
 # Group-sort (16+ total items, 3-5 categories for B1)
 - type: group-sort
-  id: group-sort-id
   title: Sorting title
-  instructions: Sort items into categories.
+  instruction: Sort items into categories.
   groups:
-    - name: Category A
+    - name: Дієслова руху пішки
       items:
-        - item1
-        - item2
-    - name: Category B
+        - іти
+        - бігти
+    - name: Дієслова руху транспортом
       items:
-        - item3
-        - item4
-    - name: Category C
+        - їхати
+        - летіти
+    - name: Не дієслова руху
       items:
-        - item5
-        - item6
+        - читати
+        - писати
 
 # Unjumble (6+ items for B1, 12-16 words per sentence)
 - type: unjumble
-  id: unjumble-id
   title: Unjumble title
-  instructions: Put the words in the correct order.
+  instruction: Put the words in the correct order.
   items:
-    - words: слова / у / неправильному / порядку / для / створення / речення / довжиною / дванадцять / або / більше / слів
-      answer: Слова у неправильному порядку для створення речення довжиною дванадцять або більше слів.
+    - jumbled: Вона / до / пішла / магазину
+      answer: Вона пішла до магазину.
 
 # Cloze (14+ blanks for B1)
 - type: cloze
-  id: cloze-id
   title: Cloze title
-  instructions: Instructions for cloze.
-  passage: 'Text with {answer1} blanks and {answer2} more blanks.'
-  blanks:
-    - id: 1
-      answer: answer1
-      options:
-        - answer1
-        - option1
-        - option2
-        - option3
-    - id: 2
-      answer: answer2
-      options:
-        - answer2
-        - option1
-        - option2
-        - option3
+  instruction: Fill in the blanks.
+  passage: 'Марія {пішла|поїхала|полетіла} до школи, а потім {зайшла|виїхала|прибігла} до бібліотеки.'
 
 # Error-correction (6+ items for B1)
 - type: error-correction
-  id: error-id
   title: Error correction title
-  instructions: Find and fix the ONE error in each sentence.
+  instruction: Find and fix the ONE error in each sentence.
   items:
-    - sentence: Sentence with error (12-20 words for B1).
-      error: wrong_word
-      answer: correct_word
+    - sentence: Вона пішла до магазин, щоб купити хліб.
+      error: магазин
+      answer: магазину
       options:
-        - wrong_word
-        - correct_word
-        - distractor1
-        - distractor2
-      explanation: Why it's wrong.
+        - магазин
+        - магазину
+        - магазином
+        - магазині
+      explanation: Після прийменника "до" потрібен родовий відмінок — "магазину".
 
 # Mark-the-words (6+ correct words for B1)
 - type: mark-the-words
-  id: mark-id
   title: Mark words title
-  instructions: Знайдіть усі іменники.
+  instruction: Знайдіть усі іменники.
   text: Гарний день приніс радість у серце.
   answers:
     - день
@@ -335,39 +359,37 @@ For EVERY quiz question in content-heavy modules:
 
 # Select (6+ items for B1)
 - type: select
-  id: select-id
   title: Select title
-  instructions: Select ALL correct answers for each question.
+  instruction: Select ALL correct answers for each question.
   items:
-    - prompt: Question text?
+    - question: Які з цих слів є дієсловами руху?
       options:
-        - text: Correct 1
+        - text: іти
           correct: true
-        - text: Correct 2
+        - text: бігти
           correct: true
-        - text: Wrong
+        - text: стіл
           correct: false
-        - text: Wrong 2
+        - text: великий
           correct: false
-      explanation: Why these are correct.
+      explanation: Іти та бігти означають рух, стіл — іменник, великий — прикметник.
 
 # Translate (6+ items for B1)
 - type: translate
-  id: translate-id
   title: Translate title
-  instructions: Choose the correct Ukrainian translation.
+  instruction: Choose the correct Ukrainian translation.
   items:
-    - prompt: English sentence.
+    - source: She went to the store.
       options:
-        - text: Correct translation
+        - text: Вона пішла до магазину.
           correct: true
-        - text: Wrong translation
+        - text: Вона їхала до магазину.
           correct: false
-        - text: Wrong translation
+        - text: Вона біжить до магазину.
           correct: false
-        - text: Wrong translation
+        - text: Вона йде до магазину.
           correct: false
-      explanation: Why this translation is correct.
+      explanation: "Went" — минулий час, тому "пішла".
 ```
 
 ## YAML Quoting Rules (CRITICAL)

@@ -23,50 +23,32 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q7 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: Array validation: {'type': 'translate', 'title': 'Ключові фрази дослідження', 'items': [{'options': [{'text': 'Актуальність теми обґрунтована...', 'correct': True}, {'text': 'Тема є гарною через...'}, {'text': 'Ми вибрали цю тему, бо...'}], 'source': 'The relevance of the topic is grounded in...'}, {'options': [{'text': 'На основі опрацьованих джерел...', 'correct': True}, {'text': 'Згідно з книжками, які я читав...'}, {'text': 'Виходячи з тексту...'}], 'source': 'Based on the analyzed sources...'}, {'options': [{'text': 'Об’єктом дослідження є...', 'correct': True}, {'text': 'Предмет праці — це...'}, {'text': 'Ми дивимося на...'}], 'source': 'The object of the study is...'}, {'options': [{'text': 'Результати вказують на те, що...', 'correct': True}, {'text': 'Ми бачимо, що...'}, {'text': 'Зрештою сталося так, що...'}], 'source': 'The results indicate that...'}, {'options': [{'text': 'Згідно з обраною методологією...', 'correct': True}, {'text': 'Дивлячись на правила...'}, {'text': 'Через наш метод...'}], 'source': 'According to the methodology...'}, {'options': [{'text': 'На завершення варто зауважити...', 'correct': True}, {'text': 'Короче, ми хочемо сказати...'}, {'text': 'В самому кінці ми пишемо...'}], 'source': 'In conclusion, it should be noted...'}], 'instruction': 'Оберіть правильний український переклад для академічної фрази.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [index-7] error-correction: 'items.7' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [index-8] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [index-11] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-gs-1] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-mtw-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [консультація-щодо-теми-проєкту] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ec-1] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-sel-1] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-cloze-1] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-trans-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ta-1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-cp-1] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-2] translate: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [index-14] translate: 'items.5.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Огляд' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Огляд' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 28 violations (severe - consider revision)
+- 19 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1056/1750
@@ -79,7 +61,7 @@
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 25 violations
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.4% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)

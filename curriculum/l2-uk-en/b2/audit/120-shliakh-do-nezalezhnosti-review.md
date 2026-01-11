@@ -3,33 +3,25 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q4 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q6 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Поєднайте терміни з їхніми визначеннями.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'Встановіть відповідність між датами та подіями.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання про лідерів руху за незалежність.' Q3 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: Array validation: {'type': 'select', 'items': [{'correct': True, 'question': 'Геть від Москви!'}, {'correct': True, 'question': 'Соціалізм з людським обличчям'}, {'correct': True, 'question': 'Україна — понад усе!'}, {'correct': False, 'question': 'Ми за єдиний і неподільний Союз'}, {'correct': True, 'question': "Свободу політв'язням!"}, {'correct': False, 'question': "П'ятирічку — за три дні!"}], 'title': 'Виберіть правильні відповіді', 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [index-6] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [content_check_1] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [index-7] mark-the-words: 'title' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [grammar_politics_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [index-11] translate: 'items.7.options' - [{'text': 'Конституційна більшість', 'correct': True}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [terms_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [dates_events] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [source_analysis] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [grammar_verbs_action] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [sentence_unjumble] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [categorizing_history] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [text_cloze] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [translation_matching] translate: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [linguistic_nuances] select: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [general_knowledge_history] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 120-shliakh-do-nezalezhnosti.yaml: [index-12] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -41,26 +33,25 @@
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
-- 17 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 13 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ⚠️ 1984/2000 (16 short)
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Pedagogy:** ❌ 12 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 

@@ -1,17 +1,6 @@
 # Audit Report: 40-reported-questions-commands.md
 **Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-reported-questions-commands.yaml: [index-5] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-reported-questions-commands.yaml: [index-8] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 1646/1500
@@ -24,7 +13,7 @@
 - **Vocab:** ⚠️ 13 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)

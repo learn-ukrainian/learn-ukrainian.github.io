@@ -1,8 +1,9 @@
 module: b1-89
 title: Інтеграція граматики B1
 subtitle: B1 Grammar Integration
-version: '1.0'
-phase: B1.8 Integration
+version: '2.0'
+phase: B1.8 Skills & Integration
+focus: skills
 pedagogy: TTT
 duration: 90
 transliteration: none
@@ -25,6 +26,6 @@ objectives:
   - Learner applies grammar in integrated contexts
   - Learner identifies and corrects grammar errors
   - Learner is prepared for B2 grammar challenges
-vocabulary_count: 35
-vocab_count: 11
+vocabulary_count: 36
+vocab_count: 36
 slug: 89-b1-grammar-integration

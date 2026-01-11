@@ -1,0 +1,147 @@
+module: 170-funeral-rituals
+level: C1
+version: '1.0'
+items:
+  - lemma: похорон
+    ipa: /ˈpɔxɔrɔn/
+    translation: funeral
+    pos: noun
+    gender: m
+  - lemma: поминки
+    ipa: /pɔˈmɪnkɪ/
+    translation: memorial meal (wake)
+    pos: noun
+    gender: pl
+  - lemma: панахида
+    ipa: /panaˈxɪda/
+    translation: panakhyda (memorial service)
+    pos: noun
+    gender: f
+  - lemma: домовина
+    ipa: /dɔmɔˈvɪna/
+    translation: coffin (poetic/traditional)
+    pos: noun
+    gender: f
+  - lemma: труна
+    ipa: /truˈna/
+    translation: coffin
+    pos: noun
+    gender: f
+  - lemma: небіжчик
+    ipa: /nɛˈbʲiʒt͡ʃɪk/
+    translation: deceased person
+    pos: noun
+    gender: m
+  - lemma: покійний
+    ipa: /pɔˈkʲijnɪj/
+    translation: late (deceased)
+    pos: adj
+    gender: m
+  - lemma: цвинтар
+    ipa: /ˈt͡svɪntar/
+    translation: cemetery
+    pos: noun
+    gender: m
+  - lemma: кладовище
+    ipa: /kɫadɔˈvɪʃt͡ʃɛ/
+    translation: graveyard
+    pos: noun
+    gender: n
+  - lemma: могила
+    ipa: /mɔˈhɪla/
+    translation: grave
+    pos: noun
+    gender: f
+  - lemma: жалоба
+    ipa: /ʒaˈlɔba/
+    translation: mourning
+    pos: noun
+    gender: f
+  - lemma: голосіння
+    ipa: /hɔlɔˈsʲinʲːa/
+    translation: lamentation
+    pos: noun
+    gender: n
+  - lemma: коливо
+    ipa: /ˈkɔlɪvɔ/
+    translation: kolyvo (ritual boiled wheat/rice)
+    pos: noun
+    gender: n
+  - lemma: душа
+    ipa: /duˈʃa/
+    translation: soul
+    pos: noun
+    gender: f
+  - lemma: потойбіччя
+    ipa: /pɔtɔjˈbʲit͡ʃt͡ʃa/
+    translation: afterlife, the other side
+    pos: noun
+    gender: n
+  - lemma: вічність
+    ipa: /ˈvʲit͡ʃnʲisʲtʲ/
+    translation: eternity
+    pos: noun
+    gender: f
+  - lemma: пам'ять
+    ipa: /ˈpamjatʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: спадок
+    ipa: /ˈspadɔk/
+    translation: legacy, inheritance
+    pos: noun
+    gender: m
+  - lemma: заповіт
+    ipa: /zapɔˈvʲit/
+    translation: testament, will
+    pos: noun
+    gender: m
+  - lemma: вдова
+    ipa: /vdɔˈva/
+    translation: widow
+    pos: noun
+    gender: f
+  - lemma: вдівець
+    ipa: /vdʲiˈvɛt͡sʲ/
+    translation: widower
+    pos: noun
+    gender: m
+  - lemma: сирота
+    ipa: /sɪrɔˈta/
+    translation: orphan
+    pos: noun
+    gender: f
+  - lemma: ховати
+    ipa: /xɔˈvatɪ/
+    translation: to bury
+    pos: verb
+  - lemma: поминати
+    ipa: /pɔmɪˈnatɪ/
+    translation: to commemorate
+    pos: verb
+  - lemma: прощатися
+    ipa: /prɔˈʃt͡ʃatɪsʲa/
+    translation: to say goodbye
+    pos: verb
+  - lemma: сумувати
+    ipa: /sumuˈvatɪ/
+    translation: to grieve, to be sad
+    pos: verb
+  - lemma: співчувати
+    ipa: /spiu̯t͡ʃuˈvatɪ/
+    translation: to sympathize, to offer condolences
+    pos: verb
+  - lemma: спочити
+    ipa: /spɔˈt͡ʃɪtɪ/
+    translation: to rest (passed away)
+    pos: verb
+  - lemma: відспівувати
+    ipa: /vidsˈpʲivuvatɪ/
+    translation: to perform funeral service
+    pos: verb
+  - lemma: поховальний
+    ipa: /pɔxɔˈvalʲnɪj/
+    translation: funeral (adj)
+    pos: adj
+    gender: m

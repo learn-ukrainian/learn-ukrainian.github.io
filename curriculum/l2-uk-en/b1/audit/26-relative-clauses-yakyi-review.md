@@ -2,20 +2,9 @@
 **Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1579/1500
-- **Activities:** ✅ 11/8
+- **Words:** ✅ 1585/1500
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
@@ -42,20 +31,21 @@
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
 | questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.7%** |
+| **TOTAL** | | | | | **95.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Тест** | ⚪️ | 144 | Skipped |
-| **Аналіз** | ✅ | 93 | Included in Core |
+| **Теорія** | ⚪️ | 93 | Skipped |
 | **Поглиблення** | ⚪️ | 617 | Skipped |
+| **Практика** | ⚪️ | 5 | Skipped |
 | **Діалоги** | ✅ | 203 | Included in Core |
-| **Підсумок** | ✅ | 363 | Included in Core |
+| **Підсумок** | ✅ | 364 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

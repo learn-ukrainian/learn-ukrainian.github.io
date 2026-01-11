@@ -1,0 +1,944 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-c1.schema.json",
+  "title": "C1 Module Activities",
+  "description": "Activity schema for C1 level modules with academic/professional complexity requirements: quiz questions (15-30 words), unjumble sentences (12-20 words), academic vocabulary, complex discourse structures, higher density.",
+  "type": "array",
+  "minItems": 12,
+  "items": {
+    "oneOf": [
+      {
+        "$ref": "#/definitions/quiz-c1"
+      },
+      {
+        "$ref": "#/definitions/match-up-c1"
+      },
+      {
+        "$ref": "#/definitions/fill-in-c1"
+      },
+      {
+        "$ref": "#/definitions/group-sort-c1"
+      },
+      {
+        "$ref": "#/definitions/unjumble-c1"
+      },
+      {
+        "$ref": "#/definitions/true-false-c1"
+      },
+      {
+        "$ref": "#/definitions/cloze-c1"
+      },
+      {
+        "$ref": "#/definitions/error-correction-c1"
+      },
+      {
+        "$ref": "#/definitions/mark-the-words-c1"
+      },
+      {
+        "$ref": "#/definitions/select-c1"
+      },
+      {
+        "$ref": "#/definitions/translate-c1"
+      },
+      {
+        "$ref": "#/definitions/essay-response-c1"
+      },
+      {
+        "$ref": "#/definitions/critical-analysis-c1"
+      },
+      {
+        "$ref": "#/definitions/comparative-study-c1"
+      },
+      {
+        "$ref": "#/definitions/authorial-intent-c1"
+      },
+      {
+        "$ref": "#/definitions/reading-c1"
+      }
+    ]
+  },
+  "definitions": {
+    "quiz-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "quiz"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Question should be 15-30 words for C1 academic/professional complexity"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "match-up-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "pairs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "match-up"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "left",
+              "right"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "left": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 pairs should use academic/professional vocabulary"
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "fill-in-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "fill-in"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 sentences should demonstrate complex syntax and register-appropriate language"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "group-sort-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "groups"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "group-sort"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "items"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unjumble-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "unjumble"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "words",
+              "answer"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 12,
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "C1 unjumble requires 12-20 words per sentence for complex clause structures"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "true-false-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "true-false"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "statement",
+              "correct"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "statement": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 statements should test nuanced understanding of academic/professional concepts"
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cloze-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "passage"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cloze"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 1,
+          "description": "C1 passages should include academic/professional discourse with sophisticated vocabulary"
+        },
+        "blanks": {
+          "type": "array",
+          "minItems": 18,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "answer",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "error-correction-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "error-correction"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "error",
+              "answer",
+              "options",
+              "explanation"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 error correction should target subtle register, style, or complex grammar issues"
+              },
+              "error": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "mark-the-words-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "instruction",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mark-the-words"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "C1 tasks should identify discourse markers, register-specific terms, or sophisticated vocabulary"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answers": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "select-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 select questions should test multi-faceted understanding"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "min_correct": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "translate-c1": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "translate"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "C1 translation should involve register shifts and sophisticated vocabulary choices"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "essay-response-c1": {
+      "type": "object",
+      "description": "Long-form academic/professional writing task with model answer and detailed rubric",
+      "required": [
+        "type",
+        "title",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "essay-response"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 10,
+          "description": "C1 prompts should require complex argumentation and register-appropriate discourse"
+        },
+        "min_words": {
+          "type": "integer",
+          "minimum": 200
+        },
+        "model_answer": {
+          "type": "string",
+          "minLength": 100,
+          "description": "Model answer should demonstrate academic/professional Ukrainian with sophisticated structures"
+        },
+        "rubric": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "criteria",
+              "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "criteria": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "points": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "peer_review_guidelines": {
+          "type": "string"
+        }
+      }
+    },
+    "critical-analysis-c1": {
+      "type": "object",
+      "description": "Deep analysis of academic/professional texts requiring sophisticated interpretation",
+      "required": [
+        "type",
+        "title",
+        "target_text",
+        "questions",
+        "model_answers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "critical-analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_text": {
+          "type": "string",
+          "description": "Academic or professional text for analysis"
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "focus_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key analytical dimensions (rhetoric, register, argumentation structure)"
+        }
+      }
+    },
+    "comparative-study-c1": {
+      "type": "object",
+      "description": "Sophisticated comparison requiring academic/professional analytical skills",
+      "required": [
+        "type",
+        "title",
+        "items_to_compare",
+        "criteria",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "comparative-study"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items_to_compare": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "Academic/professional texts or concepts for comparison"
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Analytical dimensions requiring sophisticated understanding"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "authorial-intent-c1": {
+      "type": "object",
+      "description": "Evaluation of rhetorical strategies and communicative purpose in professional contexts",
+      "required": [
+        "type",
+        "title",
+        "text_excerpt",
+        "prompt",
+        "model_answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text_excerpt": {
+          "type": "string",
+          "description": "Professional or academic text excerpt"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "techniques_to_identify": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Rhetorical devices, register choices, discourse strategies"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "reading-c1": {
+      "type": "object",
+      "description": "Reading comprehension with authentic academic/professional resources",
+      "required": [
+        "type",
+        "title",
+        "resource",
+        "tasks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "reading"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource": {
+          "type": "object",
+          "required": [
+            "type",
+            "url",
+            "title"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Academic article, professional report, etc."
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

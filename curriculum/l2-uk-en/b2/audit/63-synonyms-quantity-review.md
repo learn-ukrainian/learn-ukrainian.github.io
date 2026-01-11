@@ -29,33 +29,11 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Кількість у житті' Q8 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [знайдіть-точну-міру] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: Array validation: {'type': 'select', 'title': 'Всі відтінки багатоманітності', 'instruction': 'Оберіть усі слова, що позначають велику кількість (6+ елементів).', 'items': [{'question': 'Які синоніми вказують на значний обсяг? (6+)', 'options': [{'text': 'чимало', 'correct': True}, {'text': 'безліч', 'correct': True}, {'text': 'сила-силенна', 'correct': True}, {'text': 'маса', 'correct': True}, {'text': 'купа', 'correct': True}, {'text': 'повно', 'correct': True}, {'text': 'хоч греблю гати', 'correct': True}, {'text': 'мізер', 'correct': False}]}, {'question': 'Які слова вказують на надлишок?', 'options': [{'text': 'занадто', 'correct': True}, {'text': 'надто', 'correct': True}, {'text': 'надмір', 'correct': True}, {'text': 'дефіцит', 'correct': False}]}, {'question': 'Оберіть терміни для фінансових розрахунків:', 'options': [{'text': 'сума', 'correct': True}, {'text': 'бюджет', 'correct': True}, {'text': 'витрати', 'correct': True}, {'text': 'радість', 'correct': False}]}, {'question': 'Які слова описують нескінченність?', 'options': [{'text': 'безмежність', 'correct': True}, {'text': 'неосяжність', 'correct': True}, {'text': 'нескінченність', 'correct': True}, {'text': 'кілька', 'correct': False}]}, {'question': "Оберіть синоніми до 'мало':", 'options': [{'text': 'небагато', 'correct': True}, {'text': 'мізер', 'correct': True}, {'text': "дріб'язок", 'correct': True}, {'text': 'маса', 'correct': False}]}, {'question': 'Які слова вказують на достатність?', 'options': [{'text': 'вдосталь', 'correct': True}, {'text': 'достатньо', 'correct': True}, {'text': 'доволі', 'correct': True}, {'text': 'замало', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [оберіть-масштаб] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [багато-чи-мало?] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [складіть-кількісне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [звіт-з-ярмарку] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [офіційна-міра] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [виправте-кількість] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [переклад-міри] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [нюанси-кількості] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [всі-відтінки-багатоманітності] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [регістри-та-кількість] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [кількість-та-об'єкти] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [кількість-у-житті] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [кількісна-етика] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-synonyms-quantity.yaml: [index-9] select: 'items.0.options' - [{'text': 'чимало', 'correct': True}, {'text': 'безліч', 'correct': True}, {'text': 'сила-силенна', 'correct': True}, {'text': 'маса', 'correct': True}, {'text': 'купа', 'correct': True}, {'text': 'повно', 'correct': True}, {'text': 'хоч греблю гати', 'correct': True}, {'text': 'мізер', 'correct': False}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -63,14 +41,16 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Масштаби українського життя, Таблиця відповідності регістрам та контекстам
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 30 violations (severe - consider revision)
+- 20 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2392/1750
@@ -83,28 +63,28 @@
 - **Vocab:** ✅ 60/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 28 violations
+- **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (content)
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
+- **Richness:** ❌ 93% < 95% min (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 93% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 65 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 0.71 | - | 71% | 12% | 8.9% |
-| cultural | 5 | 4 | 100% | 12% | 12.5% |
-| realworld | 9 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.85 | - | 85% | 6% | 5.3% |
-| questions | 9 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.4%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.71 | - | 71% | 17% | 11.8% |
+| cultural | 5 | - | 100% | 17% | 16.7% |
+| visual | 8 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
+| examples | 65 | - | 100% | 8% | 8.3% |
+| realworld | 9 | - | 100% | 8% | 8.3% |
+| questions | 9 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **93.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

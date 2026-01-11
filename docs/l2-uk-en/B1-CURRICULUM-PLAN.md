@@ -914,16 +914,16 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 | Module | Grammar Point                   | Builds On        | Enables               |
 | ------ | ------------------------------- | ---------------- | --------------------- |
-| 11     | Motion Verbs: Full System       | A2 motion basics | All pairs             |
-| 12     | Motion: Coming & Going          | M11              | при-, ви-, в-/у-      |
-| 13     | Motion: Passing & Crossing      | M12              | пере-, про-, об-      |
-| 14     | Motion: Starting & Returning    | M13              | по-, за-, роз-        |
-| 15     | Motion: Approaching & Departing | M14              | під-, від-, до-       |
-| 16     | Motion: Figurative Uses         | M11-15           | Idiomatic expressions |
-| 17     | Motion: Full Prefix Integration | M11-16           | All prefixes          |
-| 18     | Motion Patterns in Other Verbs  | M17              | Prefix transfer       |
-| 19     | Motion: Practice & Integration  | M11-18           | Consolidation         |
-| 20     | Checkpoint: Motion Verbs        | M11-19           | Review                |
+| 16     | Motion Verbs: Full System       | A2 motion basics | All pairs             |
+| 17     | Motion: Coming & Going          | M16              | при-, ви-, в-/у-      |
+| 18     | Motion: Passing & Crossing      | M17              | пере-, про-, об-      |
+| 19     | Motion: Starting & Returning    | M18              | по-, за-, роз-        |
+| 20     | Motion: Approaching & Departing | M19              | під-, від-, до-       |
+| 21     | Motion: Figurative Uses         | M16-20           | Idiomatic expressions |
+| 22     | Motion: Full Prefix Integration | M16-21           | All prefixes          |
+| 23     | Motion Patterns in Other Verbs  | M22              | Prefix transfer       |
+| 24     | Motion: Practice & Integration  | M16-23           | Consolidation         |
+| 25     | Checkpoint: Motion Verbs        | M16-24           | Review                |
 
 ### Module Content Specifications B1.2
 
@@ -3336,87 +3336,101 @@ Learners scoring 60-69 receive "B1 Developing" designation with specific remedia
 ```mermaid
 graph TD
     %% A2 Foundation
-    A2[A2 Foundation] --> B1_1
+    A2[A2 Foundation] --> B1_0
+
+    %% Phase B1.0: Metalanguage Bridge
+    subgraph B1_0 [Phase B1.0: Metalanguage]
+        M01[M01 Grammar Meta] --> M02[M02 Parts of Speech]
+        M02 --> M03[M03 Cases Meta]
+        M03 --> M04[M04 Tense Meta]
+        M04 --> M05[M05 Bridge Checkpoint]
+    end
 
     %% Phase B1.1: Aspect
     subgraph B1_1 [Phase B1.1: Aspect]
-        M01[M01 Aspect System] --> M02[M02 Past Single/Rep]
-        M02 --> M03[M03 Past Result/Proc]
-        M03 --> M04[M04 Future]
-        M04 --> M05[M05 Negation]
-        M05 --> M06[M06 Imperative]
-        M06 --> M09[M09 Integration]
+        M06[M06 Aspect System] --> M07[M07 Past Single/Rep]
+        M07 --> M08[M08 Past Result/Proc]
+        M08 --> M09[M09 Future]
+        M09 --> M10[M10 Negation]
+        M10 --> M11[M11 Imperative]
+        M11 --> M14[M14 Integration]
+        M14 --> M15[M15 Checkpoint]
     end
 
     %% Phase B1.2: Motion
     subgraph B1_2 [Phase B1.2: Motion]
-        M11[M11 Motion System] --> M12[M12 Come/Go]
-        M12 --> M13[M13 Pass/Cross]
-        M13 --> M14[M14 Start/Ret]
-        M14 --> M15[M15 Appr/Dep]
-        M15 --> M16[M16 Figurative]
-        M16 --> M17[M17 Full Prefix]
-        M17 --> M18[M18 Non-motion]
-        M18 --> M19[M19 Integration]
+        M16[M16 Motion System] --> M17[M17 Come/Go]
+        M17 --> M18[M18 Pass/Cross]
+        M18 --> M19[M19 Start/Ret]
+        M19 --> M20[M20 Appr/Dep]
+        M20 --> M21[M21 Figurative]
+        M21 --> M22[M22 Full Prefix]
+        M22 --> M23[M23 Non-motion]
+        M23 --> M24[M24 Integration]
+        M24 --> M25[M25 Checkpoint]
     end
 
     %% Phase B1.3: Complex Sentences
     subgraph B1_3 [Phase B1.3: Complex]
-        M21[M21 Rel який] --> M22[M22 Rel place]
-        M22 --> M23[M23 Rel time]
-        M23 --> M24[M24 Purp Inf]
-        M24 --> M25[M25 Purp Past]
-        M26[M26 Cond Real] --> M27[M27 Cond Unreal]
-        M27 --> M28[M28 Cond Mixed]
-        M29[M29 Concessive] --> M30[M30 Causal]
-        M30 --> M31[M31 Temporal]
-        M31 --> M32[M32 Integration]
-        M33[M33 Rep Stmt] --> M34[M34 Rep Qs]
+        M26[M26 Relatives] --> M30[M30 Purpose]
+        M30 --> M32[M32 Conditionals]
+        M32 --> M34[M34 Checkpoint A]
+        M35[M35 Concessive] --> M38[M38 Reported]
+        M38 --> M41[M41 Checkpoint B]
     end
 
     %% Phase B1.4: Advanced Grammar
     subgraph B1_4 [Phase B1.4: Advanced]
-        M36[M36 AdvPart Impf] --> M37[M37 AdvPart Perf]
-        M37 --> M38[M38 Practice]
-        M39[M39 PassPart I] --> M40[M40 PassPart II]
-        M40 --> M41[M41 Pass Const]
-        M42[M42 Diminutives] --> M43[M43 Nuance]
+        M42[M42 AdvPart] --> M44[M44 PassPart]
+        M44 --> M47[M47 Diminutives]
+        M47 --> M51[M51 Checkpoint]
     end
 
     %% Connections
-    M09 --> M11
-    M19 --> M21
-    M32 --> M36
-    M41 --> M46[M46+ Vocab Expansion]
-````
-
+    M05 --> M06
+    M15 --> M16
+    M25 --> M26
+    M41 --> M42
+    M51 --> M52[M52+ Vocab Expansion]
 ```
 
 ---
 
 ## Activity Types by Module Type
 
-### G-Modules (Grammar Focus: M01-06, M11-18, M21-34, M36-44)
+### Bridge Modules (Metalanguage: M01-05)
+1. Quiz: Grammar terminology recognition
+2. Match-up: Ukrainian term to grammar concept
+3. Fill-in: Complete grammar explanations in Ukrainian
+4. Group-sort: Categorize linguistic concepts
+
+### G-Modules (Grammar Focus: M06-51)
 1. Quiz: Contextual pattern recognition
 2. Fill-in: Complex gap-fills
 3. Transform: Rewrite sentences (register/grammar)
 4. Match-up: Grammar concept to usage
 5. Error-correction: Find and fix subtle errors
 
-### V-Modules (Vocabulary Focus: M07-08, M46-56, M59-64)
+### V-Modules (Vocabulary Focus: M52-71)
 1. Match-up: Collocations and definitions
 2. Fill-in: Narrative-based context gaps
 3. Group-sort: Semantic nuances
 4. Production: Rewrite story with new words
 5. Quiz: Synonym selection
 
-### F-Modules (Functional: M29, M76-77)
+### C-Modules (Cultural: M72-81)
+1. Quiz: Cultural knowledge comprehension
+2. Match-up: Regional/cultural associations
+3. Fill-in: Context-based vocabulary
+4. Group-sort: Cultural categories
+
+### I-Modules (Integration: M82-86)
 1. Dialogue: Complex role-play scenarios
 2. Quiz: Authentic listening comprehension
 3. Fill-in: Real-world task simulation
 4. Production: Functional writing
 
-### R-Modules (Review: M10, M20, M35, M45, M55, M65, M75, M78-80)
+### S-Modules (Skills & Capstone: M87-91)
 1. Quiz: Mixed grammar/vocab check
 2. Fill-in: Integrated skills test
 3. Production: Extended writing task

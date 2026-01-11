@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ✅ 1585/1500
-- **Activities:** ✅ 11/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

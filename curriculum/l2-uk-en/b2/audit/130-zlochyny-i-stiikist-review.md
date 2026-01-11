@@ -3,33 +3,33 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q4 prompt length 4 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q7 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Встановіть відповідність між терміном та його описом.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** group-sort 'Розподіліть події за категоріями: 'Трагедії окупації' та 'Перемоги визволення'.' has 2 groups (target: 3-5)
+  - FIX: Adjust number of sorting categories to 3-5.
+- **[COMPLEXITY]** match-up 'Доберіть синоніми до слів, що описують характер українців.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання про міжнародну реакцію на злочини окупантів.' Q1 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання про міжнародну реакцію на злочини окупантів.' Q4 prompt length 5 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання про міжнародну реакцію на злочини окупантів.' Q5 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання про міжнародну реакцію на злочини окупантів.' Q6 prompt length 4 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: Array validation: {'type': 'select', 'items': [{'correct': True, 'question': 'Світло завжди перемагає темряву'}, {'correct': True, 'question': 'Ми готові до всього'}, {'correct': False, 'question': 'Київ за три дні'}, {'correct': True, 'question': 'Херсон — це Україна'}, {'correct': True, 'question': 'Все буде Україна'}, {'correct': False, 'question': 'Моя хата скраю'}], 'title': 'Які з наведених висловів стали крилатими під час випробувань 2022 року?', 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [index-4] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [grammar_resilience_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [index-5] mark-the-words: 'title' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [terms_matching_crimes] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [index-10] translate: 'items.7.options' - [{'text': 'Внутрішньо переміщені особи', 'correct': True}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [source_analysis_select_1] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [grammar_passive_context] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [sentence_unjumble_resilience] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [war_events_sorting] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [text_cloze_1] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [synonyms_resilience] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [terms_translation_resilience] translate: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [linguistic_features_war] select: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [final_comp_check_resilience] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [additional_check_resilience] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 130-zlochyny-i-stiikist.yaml: [index-11] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -41,26 +41,25 @@
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
+- Revision recommended (severity 50/100)
 - 17 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
 
 ## Gates
 - **Words:** ❌ 1859/2000
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.0% (target 98-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

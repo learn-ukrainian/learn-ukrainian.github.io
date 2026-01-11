@@ -3,33 +3,27 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q2 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Поєднайте осіб та інституції з їхньою роллю у 2004 році.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'Доберіть синоніми до термінів політичної боротьби.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання фактів про Помаранчеву революцію.' Q1 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання фактів про Помаранчеву революцію.' Q2 prompt length 4 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірте знання фактів про Помаранчеву революцію.' Q7 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: Array validation: {'type': 'select', 'items': [{'correct': True, 'question': 'Разом нас багато — нас не подолати!'}, {'correct': True, 'question': 'Ющенко — Так!'}, {'correct': False, 'question': 'Кіборги'}, {'correct': True, 'question': 'Схід і Захід разом'}, {'correct': False, 'question': 'Беркут'}, {'correct': True, 'question': 'Ці руки нічого не крали'}], 'title': 'Які слова та вирази стали знаковими для 2004 року?', 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [index-4] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [figures_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [index-5] mark-the-words: 'title' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_agreement_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [index-10] translate: 'items.7.options' - [{'text': 'Політична реформа', 'correct': True}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [source_analysis_select] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_participles_1] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [sentence_unjumble_1] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [concepts_sorting_1] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [text_cloze_1] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [synonyms_matching_1] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [translation_1] translate: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [linguistic_features_1] select: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [general_knowledge_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [content_check_2] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [index-11] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -37,7 +31,7 @@
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст: Кінець епохи Кучми та передісторія конфлікту, Вступ
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст: Кінець епохи Кучми та передісторія конфлікту
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
@@ -47,26 +41,25 @@
   - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
-- 20 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 17 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2058/2000
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
+- **Pedagogy:** ❌ 13 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

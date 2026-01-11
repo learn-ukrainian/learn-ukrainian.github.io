@@ -1,0 +1,151 @@
+module: 164-ukrainian-house
+level: C1
+version: '1.0'
+items:
+  - lemma: стріха
+    ipa: /ˈstrʲixa/
+    translation: thatched roof
+    pos: noun
+    gender: f
+  - lemma: сволок
+    ipa: /ˈsvɔlɔk/
+    translation: svołok (main ceiling beam)
+    pos: noun
+    gender: m
+  - lemma: поріг
+    ipa: /pɔˈrʲih/
+    translation: threshold
+    pos: noun
+    gender: m
+  - lemma: призьба
+    ipa: /ˈprɪzʲba/
+    translation: pryzba (earth bench around house)
+    pos: noun
+    gender: f
+  - lemma: сіни
+    ipa: /ˈsʲinɪ/
+    translation: siany (entryway/hall)
+    pos: noun
+    gender: pl
+  - lemma: комора
+    ipa: /kɔˈmɔra/
+    translation: pantry, storehouse
+    pos: noun
+    gender: f
+  - lemma: мазанка
+    ipa: /ˈmazanka/
+    translation: mazanka (clay-walled house)
+    pos: noun
+    gender: f
+  - lemma: зруб
+    ipa: /zrub/
+    translation: log house
+    pos: noun
+    gender: m
+  - lemma: ґражда
+    ipa: /ˈɡraʒda/
+    translation: grazhda (fortified Hutsul homestead)
+    pos: noun
+    gender: f
+  - lemma: покуть
+    ipa: /ˈpɔkutʲ/
+    translation: pokut' (red corner, sacred corner)
+    pos: noun
+    gender: m
+  - lemma: піч
+    ipa: /pʲit͡ʃ/
+    translation: stove, oven
+    pos: noun
+    gender: f
+  - lemma: мисник
+    ipa: /ˈmɪsnɪk/
+    translation: dish rack (shelves)
+    pos: noun
+    gender: m
+  - lemma: скриня
+    ipa: /ˈskrɪnʲa/
+    translation: chest (for clothes)
+    pos: noun
+    gender: f
+  - lemma: колиска
+    ipa: /kɔˈlɪska/
+    translation: cradle
+    pos: noun
+    gender: f
+  - lemma: лава
+    ipa: /ˈlava/
+    translation: bench
+    pos: noun
+    gender: f
+  - lemma: жердка
+    ipa: /ˈʒɛrdka/
+    translation: pole (for hanging clothes)
+    pos: noun
+    gender: f
+  - lemma: солома
+    ipa: /sɔˈlɔma/
+    translation: straw
+    pos: noun
+    gender: f
+  - lemma: очерет
+    ipa: /ɔt͡ʃɛˈrɛt/
+    translation: reed
+    pos: noun
+    gender: m
+  - lemma: глина
+    ipa: /ˈhlɪna/
+    translation: clay
+    pos: noun
+    gender: f
+  - lemma: вапно
+    ipa: /vapˈnɔ/
+    translation: lime (for whitewashing)
+    pos: noun
+    gender: n
+  - lemma: толока
+    ipa: /tɔlɔˈka/
+    translation: toloka (collective work)
+    pos: noun
+    gender: f
+  - lemma: господа
+    ipa: /hɔsˈpɔda/
+    translation: home, household (poetic)
+    pos: noun
+    gender: f
+  - lemma: обійстя
+    ipa: /ɔˈbʲijsʲtʲa/
+    translation: farmstead, yard
+    pos: noun
+    gender: n
+  - lemma: інтер'єр
+    ipa: /intɛrˈjɛr/
+    translation: interior
+    pos: noun
+    gender: m
+  - lemma: екстер'єр
+    ipa: /ɛkstɛrˈjɛr/
+    translation: exterior
+    pos: noun
+    gender: m
+  - lemma: білити
+    ipa: /bʲiˈlɪtɪ/
+    translation: to whitewash
+    pos: verb
+  - lemma: будувати
+    ipa: /buduˈvatɪ/
+    translation: to build
+    pos: verb
+  - lemma: мазати
+    ipa: /ˈmazatɪ/
+    translation: to daub (clay)
+    pos: verb
+  - lemma: гостинний
+    ipa: /hɔsˈtɪnːɪj/
+    translation: hospitable
+    pos: adj
+    gender: m
+  - lemma: затишний
+    ipa: /zaˈtɪʃnɪj/
+    translation: cozy
+    pos: adj
+    gender: m

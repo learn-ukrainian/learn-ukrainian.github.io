@@ -1,0 +1,148 @@
+module: 163-ukrainian-cuisine
+level: C1
+version: '1.0'
+items:
+  - lemma: коровай
+    ipa: /kɔrɔˈvaj/
+    translation: korovai (wedding bread)
+    pos: noun
+    gender: m
+  - lemma: кутя
+    ipa: /kuˈtʲa/
+    translation: kutia (ritual grain dish)
+    pos: noun
+    gender: f
+  - lemma: узвар
+    ipa: /uzˈvar/
+    translation: uzvar (dried fruit compote)
+    pos: noun
+    gender: m
+  - lemma: паска
+    ipa: /ˈpaska/
+    translation: paska (Easter bread)
+    pos: noun
+    gender: f
+  - lemma: дідух
+    ipa: /dʲiˈdux/
+    translation: didukh (wheat sheaf)
+    pos: noun
+    gender: m
+  - lemma: макітра
+    ipa: /maˈkʲitra/
+    translation: makitra (clay mixing bowl)
+    pos: noun
+    gender: f
+  - lemma: макогін
+    ipa: /makɔˈhʲin/
+    translation: makohin (pestle)
+    pos: noun
+    gender: m
+  - lemma: піч
+    ipa: /pʲit͡ʃ/
+    translation: oven (traditional stove)
+    pos: noun
+    gender: f
+  - lemma: рогач
+    ipa: /rɔˈhat͡ʃ/
+    translation: rohach (oven fork)
+    pos: noun
+    gender: m
+  - lemma: горщик
+    ipa: /ˈhɔrʃt͡ʃɪk/
+    translation: clay pot
+    pos: noun
+    gender: m
+  - lemma: бануш
+    ipa: /ˈbanuʃ/
+    translation: banosh (cornmeal porridge)
+    pos: noun
+    gender: m
+  - lemma: галушка
+    ipa: /haˈluʃka/
+    translation: halushka (dumpling)
+    pos: noun
+    gender: f
+  - lemma: холодець
+    ipa: /xɔlɔˈdɛt͡sʲ/
+    translation: kholodets (aspic)
+    pos: noun
+    gender: m
+  - lemma: голубці
+    ipa: /hɔlubˈt͡sʲi/
+    translation: holubtsi (cabbage rolls)
+    pos: noun
+    gender: pl
+  - lemma: шкварки
+    ipa: /ˈʃkvarkɪ/
+    translation: cracklings
+    pos: noun
+    gender: pl
+  - lemma: смалець
+    ipa: /ˈsmalɛt͡sʲ/
+    translation: lard
+    pos: noun
+    gender: m
+  - lemma: гостинність
+    ipa: /hɔsˈtɪnːʲisʲtʲ/
+    translation: hospitality
+    pos: noun
+    gender: f
+  - lemma: застілля
+    ipa: /zaˈstʲilʲːa/
+    translation: feast
+    pos: noun
+    gender: n
+  - lemma: обрядовий
+    ipa: /ɔbrʲaˈdɔvɪj/
+    translation: ritual
+    pos: adj
+    gender: m
+  - lemma: сакральний
+    ipa: /saˈkralʲnɪj/
+    translation: sacred
+    pos: adj
+    gender: m
+  - lemma: автентичний
+    ipa: /au̯tɛnˈtɪt͡ʃnɪj/
+    translation: authentic
+    pos: adj
+    gender: m
+  - lemma: ситний
+    ipa: /ˈsɪtnɪj/
+    translation: hearty, filling
+    pos: adj
+    gender: m
+  - lemma: пісний
+    ipa: /pʲisˈnɪj/
+    translation: lenten, lean
+    pos: adj
+    gender: m
+  - lemma: томити
+    ipa: /tɔˈmɪtɪ/
+    translation: to simmer (slow cook)
+    pos: verb
+  - lemma: місити
+    ipa: /mʲiˈsɪtɪ/
+    translation: to knead
+    pos: verb
+  - lemma: ліпити
+    ipa: /lʲiˈpɪtɪ/
+    translation: to sculpt (dumplings)
+    pos: verb
+  - lemma: пригощати
+    ipa: /prɪhɔˈʃt͡ʃatɪ/
+    translation: to treat (guests)
+    pos: verb
+  - lemma: символізувати
+    ipa: /sɪmvɔlʲizuˈvatɪ/
+    translation: to symbolize
+    pos: verb
+  - lemma: вшановувати
+    ipa: /u̯ʃaˈnɔvuvatɪ/
+    translation: to honor
+    pos: verb
+  - lemma: інгредієнт
+    ipa: /inhrɛdʲiˈjɛnt/
+    translation: ingredient
+    pos: noun
+    gender: m

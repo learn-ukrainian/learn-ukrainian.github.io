@@ -123,58 +123,16 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Словотвір та регістри' item 10 has 4 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [комплексний-тест:-відмінювання-числівників-(м31-32)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [комплексний-тест:-словотвір-осіб-(м33)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [комплексний-тест:-односкладні-речення-(м38)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [комплексний-тест:-інтеграція-м31-39] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [словотвір:-базове-слово-→-назва-особи] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [словотвір:-базове-слово-→-місце] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [прикметник-→-прислівник] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [заповніть:-числівники-в-датах-і-часі] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [заповніть:-словотвір] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [заповніть:-прикметники-та-прислівники] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [класифікація-односкладних-речень] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [класифікація-суфіксів-словотвору] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [виправте-помилки:-числівники] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [виправте-помилки:-словотвір-та-синтаксис] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [заповніть-текст:-інтеграція-всіх-навичок] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [знайдіть-односкладні-речення] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [складіть-речення:-числівники-та-час] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [складіть-речення:-словотвір-та-регістри] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [перекладіть:-числівники-та-час] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: [правда-чи-хибність:-граматичні-правила] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Skill Sections' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Skill Sections' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 82 violations (severe - consider revision)
+- 61 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2326/1750
@@ -187,7 +145,7 @@
 - **Vocab:** ✅ 34/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 81 violations
+- **Pedagogy:** ❌ 60 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)

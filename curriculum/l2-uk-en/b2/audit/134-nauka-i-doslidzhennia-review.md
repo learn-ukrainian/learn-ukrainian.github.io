@@ -77,33 +77,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Тест: науковий метод' Q12 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [match-science-terms] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: Array validation: {'type': 'select', 'title': 'Оберіть правила академічної доброчесності', 'instruction': 'Позначте практики, що відповідають академічній етиці.', 'items': [{'correct': True, 'question': 'Завжди посилатися на джерела'}, {'correct': False, 'question': 'Видавати чужі ідеї за свої'}, {'correct': True, 'question': 'Зберігати первинні дані'}, {'correct': False, 'question': 'Вигадувати результати експериментів'}, {'correct': True, 'question': 'Перевіряти текст на плагіат'}, {'correct': False, 'question': 'Публікувати ту саму статтю двічі'}, {'correct': True, 'question': 'Дотримуватися етичних стандартів'}, {'correct': False, 'question': 'Приховувати негативні результати'}, {'correct': True, 'question': 'Чесно описувати методологію'}, {'correct': False, 'question': 'Фальсифікувати дані'}, {'correct': True, 'question': 'Публікувати результати рецензування'}, {'correct': False, 'question': 'Ігнорувати авторські права'}, {'correct': True, 'question': 'Зазначати конфлікт інтересів'}, {'correct': False, 'question': 'Перебільшувати значення результатів'}, {'correct': True, 'question': 'Ділитися даними з колегами'}, {'correct': False, 'question': 'Оплачувати за позитивні рецензії'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [fill-in-research] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [quiz-scientists] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [true-false-science] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [group-sort-stages] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [unjumble-science] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [cloze-research] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [error-correction-science] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [translate-science] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [mark-science-terms] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [поставте-репліки-у-правильному-порядку] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [select-practices] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [fill-in-grant] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [quiz-method] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-nauka-i-doslidzhennia.yaml: [index-11] select: 'items.15' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -116,7 +92,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 53 violations (severe - consider revision)
+- 41 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1946/1750
@@ -129,9 +105,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 52 violations
+- **Pedagogy:** ❌ 40 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
 

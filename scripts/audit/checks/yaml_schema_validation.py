@@ -263,16 +263,35 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
         fixes.append(f"Removed invalid 'id' property from {activity_type}")
         modified = True
 
-    # Fix 2: mark-the-words - extract correct_words from passage
+    # Fix 1b: Remove 'question' property if not allowed at activity level
+    # (Some B2 modules have 'question' at top level instead of 'title')
+    if 'question' in activity and 'question' not in allowed_properties:
+        # Keep the value if it's the only description
+        if 'title' not in activity:
+            activity['title'] = activity['question']
+            fixes.append(f"Renamed 'question' to 'title' in {activity_type}")
+        del activity['question']
+        fixes.append(f"Removed invalid 'question' property from {activity_type}")
+        modified = True
+
+    # Fix 1c: Remove 'text' property if not allowed at activity level
+    if 'text' in activity and 'text' not in allowed_properties:
+        del activity['text']
+        fixes.append(f"Removed invalid 'text' property from {activity_type}")
+        modified = True
+
+    # Fix 2: mark-the-words - extract answers from text if marked with *asterisks*
     if activity_type == 'mark-the-words':
-        if 'passage' in activity and 'correct_words' not in activity:
-            passage = activity['passage']
-            # Extract words marked with *asterisks*
+        if 'text' in activity and 'answers' not in activity:
+            text = activity['text']
+            # Extract words marked with *asterisks* (if any)
             import re
-            marked_words = re.findall(r'\*([^\*]+)\*', passage)
+            marked_words = re.findall(r'\*([^\*]+)\*', text)
             if marked_words:
-                activity['correct_words'] = marked_words
-                fixes.append(f"Added correct_words extracted from passage ({len(marked_words)} words)")
+                activity['answers'] = marked_words
+                # Remove asterisks from text
+                activity['text'] = re.sub(r'\*([^\*]+)\*', r'\1', text)
+                fixes.append(f"Extracted answers from text ({len(marked_words)} words)")
                 modified = True
 
     # Fix 3: unjumble - convert scrambled to words array
@@ -297,39 +316,238 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
                     fixes.append(f"Converted 'scrambled' to 'words' array in unjumble item {i+1}")
                     modified = True
 
-    # Fix 4: translate - ensure source property exists
+    # Fix 4: translate - ensure source property exists and restructure if needed
     if activity_type == 'translate' and 'items' in activity:
         for i, item in enumerate(activity['items']):
-            if isinstance(item, dict) and 'source' not in item:
-                # Try to extract source from context or first option
-                if 'options' in item and item['options']:
-                    # Use question field if it exists
-                    if 'question' in item:
+            if isinstance(item, dict):
+                # Rename question → source (or delete question if source already exists)
+                if 'question' in item:
+                    if 'source' not in item:
                         item['source'] = item['question']
-                        fixes.append(f"Added 'source' from 'question' in translate item {i+1}")
-                        modified = True
+                        fixes.append(f"Renamed 'question' to 'source' in translate item {i+1}")
+                    del item['question']
+                    fixes.append(f"Removed invalid 'question' from translate item {i+1}")
+                    modified = True
+                # Convert answer → options array (single correct option)
+                if 'answer' in item and 'options' not in item:
+                    item['options'] = [{'text': str(item['answer']), 'correct': True}]
+                    del item['answer']
+                    fixes.append(f"Converted 'answer' to 'options' array in translate item {i+1}")
+                    modified = True
+                # Ensure options items have string text (not numbers)
+                if 'options' in item:
+                    for opt in item['options']:
+                        if isinstance(opt, dict) and 'text' in opt and not isinstance(opt['text'], str):
+                            opt['text'] = str(opt['text'])
+                            fixes.append(f"Converted option text to string in translate item {i+1}")
+                            modified = True
 
-    # Fix 5: quiz/select - ensure question property exists
+    # Fix 5: quiz/select - ensure question property exists and type coercion
     if activity_type in ['quiz', 'select'] and 'items' in activity:
         for i, item in enumerate(activity['items']):
-            if isinstance(item, dict) and 'question' not in item:
-                # Try to use prompt or text field
-                if 'prompt' in item:
-                    item['question'] = item['prompt']
-                    del item['prompt']
-                    fixes.append(f"Renamed 'prompt' to 'question' in {activity_type} item {i+1}")
-                    modified = True
-                elif 'text' in item:
-                    item['question'] = item['text']
-                    del item['text']
-                    fixes.append(f"Renamed 'text' to 'question' in {activity_type} item {i+1}")
+            if isinstance(item, dict):
+                if 'question' not in item:
+                    # Try to use prompt or text field
+                    if 'prompt' in item:
+                        item['question'] = item['prompt']
+                        del item['prompt']
+                        fixes.append(f"Renamed 'prompt' to 'question' in {activity_type} item {i+1}")
+                        modified = True
+                    elif 'text' in item:
+                        item['question'] = item['text']
+                        del item['text']
+                        fixes.append(f"Renamed 'text' to 'question' in {activity_type} item {i+1}")
+                        modified = True
+                # Type coercion for options
+                if 'options' in item:
+                    for opt in item['options']:
+                        if isinstance(opt, dict) and 'text' in opt and not isinstance(opt['text'], str):
+                            opt['text'] = str(opt['text'])
+                            fixes.append(f"Converted option text to string in {activity_type} item {i+1}")
+                            modified = True
+
+    # Fix 5b: quiz/select - add missing correct:false to options
+    if activity_type in ['quiz', 'select'] and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict) and 'options' in item:
+                options_fixed = 0
+                for opt in item['options']:
+                    if isinstance(opt, dict) and 'correct' not in opt:
+                        opt['correct'] = False
+                        options_fixed += 1
+                if options_fixed > 0:
+                    fixes.append(f"Added 'correct: false' to {options_fixed} options in {activity_type} item {i+1}")
                     modified = True
 
-    # Fix 6: Remove 'instruction' if it's not in the schema properties
-    # (Some old YAMLs have this, but it's now part of the schema)
-    # Actually, instruction IS valid now, so skip this fix
+    # Fix 5c: match-up - type coercion for pairs
+    if activity_type == 'match-up' and 'pairs' in activity:
+        for i, pair in enumerate(activity['pairs']):
+            if isinstance(pair, dict):
+                if 'left' in pair and not isinstance(pair['left'], str):
+                    pair['left'] = str(pair['left'])
+                    fixes.append(f"Converted pair left to string in match-up pair {i+1}")
+                    modified = True
+                if 'right' in pair and not isinstance(pair['right'], str):
+                    pair['right'] = str(pair['right'])
+                    fixes.append(f"Converted pair right to string in match-up pair {i+1}")
+                    modified = True
+
+    # Fix 6: true-false - rename text→statement, answer→correct
+    if activity_type == 'true-false' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict):
+                if 'text' in item and 'statement' not in item:
+                    item['statement'] = item['text']
+                    del item['text']
+                    fixes.append(f"Renamed 'text' to 'statement' in true-false item {i+1}")
+                    modified = True
+                if 'answer' in item and 'correct' not in item:
+                    item['correct'] = item['answer']
+                    del item['answer']
+                    fixes.append(f"Renamed 'answer' to 'correct' in true-false item {i+1}")
+                    modified = True
+
+    # Fix 7: fill-in - rename text→sentence
+    if activity_type == 'fill-in' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict):
+                if 'text' in item and 'sentence' not in item:
+                    item['sentence'] = item['text']
+                    del item['text']
+                    fixes.append(f"Renamed 'text' to 'sentence' in fill-in item {i+1}")
+                    modified = True
+
+    # Fix 8: error-correction - ensure sentence property exists and type coercion
+    if activity_type == 'error-correction' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict):
+                if 'text' in item and 'sentence' not in item:
+                    item['sentence'] = item['text']
+                    del item['text']
+                    fixes.append(f"Renamed 'text' to 'sentence' in error-correction item {i+1}")
+                    modified = True
+                # If 'error' is used as the full sentence (schema requires both 'sentence' AND 'error')
+                elif 'error' in item and 'sentence' not in item:
+                    # Copy error to sentence (both are required, error should stay as error word)
+                    item['sentence'] = item['error']
+                    fixes.append(f"Copied 'error' to 'sentence' in error-correction item {i+1}")
+                    modified = True
+                # Type coercion for answer
+                if 'answer' in item and not isinstance(item['answer'], str):
+                    item['answer'] = str(item['answer'])
+                    fixes.append(f"Converted answer to string in error-correction item {i+1}")
+                    modified = True
+
+    # Fix 9: group-sort - rename title→name in groups
+    if activity_type == 'group-sort' and 'groups' in activity:
+        for group in activity['groups']:
+            if isinstance(group, dict):
+                if 'title' in group and 'name' not in group:
+                    group['name'] = group['title']
+                    del group['title']
+                    fixes.append(f"Renamed 'title' to 'name' in group-sort group")
+                    modified = True
+
+    # Fix 10: select - try property renames only (structural fixes need manual review)
+    # Note: flat format (items with question+correct bool) vs proper format (items with question+options array)
+    # are semantically different. Flat format needs manual regeneration, not auto-fix.
+    if activity_type == 'select' and 'items' in activity:
+        for i, item in enumerate(activity['items']):
+            if isinstance(item, dict):
+                # Only try simple property renames if 'options' exists
+                if 'options' not in item:
+                    if 'answers' in item:
+                        item['options'] = item['answers']
+                        del item['answers']
+                        fixes.append(f"Renamed 'answers' to 'options' in select item {i+1}")
+                        modified = True
+                    elif 'choices' in item:
+                        item['options'] = item['choices']
+                        del item['choices']
+                        fixes.append(f"Renamed 'choices' to 'options' in select item {i+1}")
+                        modified = True
+
+    # Fix 11: Add missing instruction field with default text
+    # Default instructions by activity type (in Ukrainian for B1+ immersion)
+    DEFAULT_INSTRUCTIONS = {
+        'quiz': 'Оберіть правильну відповідь.',
+        'match-up': "З'єднайте відповідні елементи.",
+        'fill-in': 'Оберіть правильне слово для заповнення пропуску.',
+        'true-false': 'Визначте, чи твердження правильне.',
+        'group-sort': 'Розподіліть елементи за групами.',
+        'unjumble': 'Розташуйте слова у правильному порядку.',
+        'cloze': 'Заповніть пропуски, обравши правильні слова.',
+        'error-correction': 'Знайдіть і виправте помилку в реченні.',
+        'mark-the-words': 'Клацніть на слова, що відповідають критерію.',
+        'select': 'Оберіть усі правильні відповіді.',
+        'translate': 'Оберіть правильний переклад.',
+        'anagram': 'Розташуйте літери у правильному порядку.',
+    }
+
+    if 'instruction' not in activity and activity_type in DEFAULT_INSTRUCTIONS:
+        activity['instruction'] = DEFAULT_INSTRUCTIONS[activity_type]
+        fixes.append(f"Added default instruction for {activity_type}")
+        modified = True
 
     return modified, fixes
+
+
+def fix_raw_yaml_text(content: str) -> Tuple[str, List[str]]:
+    """
+    Fix YAML issues at the raw text level (before parsing).
+
+    This handles issues that prevent YAML from parsing at all,
+    like double-quoted strings with asterisks being interpreted as aliases.
+
+    Returns (fixed_content, list_of_fixes).
+    """
+    fixes = []
+    import re
+
+    # Fix: Convert double-quoted text with asterisks to single quotes
+    # YAML interprets *word as an alias reference, causing parse errors
+    # when asterisks are followed by Cyrillic characters
+
+    lines = content.split('\n')
+    fixed_lines = []
+
+    for line in lines:
+        # Match: text: "..." (double-quoted text field containing asterisks)
+        match = re.match(r'^(\s*text:\s*)"(.+)"(\s*)$', line)
+        if match and '*' in match.group(2):
+            prefix = match.group(1)
+            text_content = match.group(2)
+            suffix = match.group(3)
+
+            # Handle escaped quotes and inner quotes
+            # Remove escape backslashes before quotes
+            text_content = text_content.replace('\\"', '"')
+
+            # Convert ASCII double quotes to Ukrainian guillemets (alternating « »)
+            # This handles cases like: "text with "*marked*" words"
+            result = []
+            quote_open = False
+            for char in text_content:
+                if char == '"':
+                    if quote_open:
+                        result.append('»')
+                        quote_open = False
+                    else:
+                        result.append('«')
+                        quote_open = True
+                else:
+                    result.append(char)
+            text_content = ''.join(result)
+
+            # Escape single quotes if present (YAML single-quoted strings)
+            text_content = text_content.replace("'", "''")
+
+            fixes.append("Converted double-quoted text with asterisks to single quotes")
+            fixed_lines.append(f"{prefix}'{text_content}'{suffix}")
+        else:
+            fixed_lines.append(line)
+
+    return '\n'.join(fixed_lines), fixes
 
 
 def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str]]:
@@ -354,12 +572,24 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     except FileNotFoundError as e:
         return 0, [f"Schema not found: {e}"]
 
+    # Pre-fix: Fix raw text issues that prevent YAML parsing
+    with open(yaml_path, 'r', encoding='utf-8') as f:
+        raw_content = f.read()
+
+    fixed_content, raw_fixes = fix_raw_yaml_text(raw_content)
+    if raw_fixes:
+        all_fixes.extend(raw_fixes)
+        total_fixes += len(raw_fixes)
+        if not dry_run:
+            with open(yaml_path, 'w', encoding='utf-8') as f:
+                f.write(fixed_content)
+        raw_content = fixed_content
+
     # Load activities from YAML
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
+        data = yaml.safe_load(raw_content)
     except yaml.YAMLError as e:
-        return 0, [f"YAML parse error (cannot auto-fix): {e}"]
+        return total_fixes, all_fixes + [f"YAML parse error (cannot auto-fix): {e}"]
 
     if not data:
         return 0, []
@@ -412,5 +642,6 @@ __all__ = [
     'validate_activity_yaml_file',
     'validate_activity',
     'fix_activity_violations',
+    'fix_raw_yaml_text',
     'fix_yaml_file',
 ]

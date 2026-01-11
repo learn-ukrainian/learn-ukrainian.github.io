@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -36,12 +36,6 @@
 | paragraph_var | 0.95 | - | 95% | 5% | 4.5% |
 | questions | 8 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.6%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

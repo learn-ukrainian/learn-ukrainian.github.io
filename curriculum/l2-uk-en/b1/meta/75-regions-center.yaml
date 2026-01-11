@@ -1,10 +1,10 @@
 module: b1-75
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
-version: '1.0'
+version: '2.0'
 phase: B1.7 Contemporary Ukraine
 focus: cultural
-pedagogy: PPP
+pedagogy: CBI
 duration: 90
 transliteration: none
 grammar:
@@ -20,6 +20,6 @@ objectives:
   - Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
   - Learner can use regional vocabulary to describe Central Ukrainian culture
   - Learner can explain the connection between Central Ukraine and Cossack heritage
-vocabulary_count: 25
+vocabulary_count: 29
 vocab_count: 29
 slug: 75-regions-center

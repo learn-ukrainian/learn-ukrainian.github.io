@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: прикметник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (25 words): науковий, молодий, математичний, кольоровий, матеріальний...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (25 words): науковий, дитячий, фізичний, холодний, англійський...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,10 +1,10 @@
 module: b1-87
 title: Новини - як читати
 subtitle: News Reading Strategies
-version: '1.0'
-phase: B1.8
-pedagogy: PPP
+version: '2.0'
+phase: B1.8 Skills & Integration
 focus: skills
+pedagogy: CBI
 duration: 75
 transliteration: none
 tags:
@@ -18,8 +18,6 @@ objectives:
   - Learner can identify headlines, leads, and main points in news articles
   - Learner can distinguish fact from opinion in Ukrainian news
   - Learner is prepared for autonomous news reading at B2
-vocabulary_count: 20
-word_target: 1500
-immersion_target: 100
-vocab_count: 21
+vocabulary_count: 36
+vocab_count: 36
 slug: 87-novyny-yak-chytaty

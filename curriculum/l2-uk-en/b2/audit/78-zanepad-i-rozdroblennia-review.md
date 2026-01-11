@@ -57,31 +57,9 @@
   - FIX: Adjust prompt length to 8-20 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційна перспектива' Q16 prompt length 7 (target: 8-20)
   - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: Array validation: {'type': 'select', 'title': 'Аналіз первинного джерела', 'instruction': 'Прочитайте уривок і виберіть усі правильні твердження про текст.', 'items': [{'question': "«Сего же року зійшлися брати на з'їзд у Любечі для влаштування миру. І мовили один одному: 'Нащо губимо землю Руську, самі проти себе чинячи?'» Які характеристики цього тексту правильні?", 'options': [{'text': 'Текст написаний від третьої особи', 'correct': True}, {'text': 'Використовується пряма мова', 'correct': True}, {'text': 'Текст написаний розмовним стилем', 'correct': False}, {'text': 'Є риторичне запитання', 'correct': True}, {'text': 'Текст належить до публіцистичного регістру', 'correct': False}, {'text': 'Використовується літописний стиль', 'correct': True}]}, {'question': "«А всіх походів моїх було вісімдесят і три великих, а решти не пам'ятаю, менших.» Які характеристики цього уривку з «Повчання» правильні?", 'options': [{'text': 'Автобіографічний характер тексту', 'correct': True}, {'text': 'Написано від першої особи', 'correct': True}, {'text': 'Офіційний документ', 'correct': False}, {'text': 'Автор демонструє скромність', 'correct': True}, {'text': 'Числові дані підкреслюють досвід', 'correct': True}, {'text': 'Текст призначений для широкої публіки', 'correct': False}]}, {'question': '«Хай кожний тримає вотчину свою.» Яке значення має ця фраза в контексті тексту?', 'options': [{'text': 'Закріплення права спадкування в межах роду', 'correct': True}, {'text': 'Відмова від лествичного права', 'correct': True}, {'text': "Об'єднання всіх земель", 'correct': False}, {'text': 'Узаконення роздроблення', 'correct': True}, {'text': 'Повернення до старої системи', 'correct': False}, {'text': 'Встановлення вотчинного принципу', 'correct': True}]}, {'question': '«Половці... села палять, людей ведуть у полон, а інших вбивають.» Які стилістичні особливості цього уривку?', 'options': [{'text': 'Використання переліку дій', 'correct': True}, {'text': 'Градація (наростання) насильства', 'correct': True}, {'text': 'Нейтральна оцінка подій', 'correct': False}, {'text': 'Емоційне забарвлення', 'correct': True}, {'text': 'Опис з позиції жертв', 'correct': True}, {'text': 'Похвала половцям', 'correct': False}]}, {'question': '«Не убивайте ні правого, ні винного, і не велите убивати. Якщо й буде повинний смерті, не губіте жодної душі християнської.» Які характеристики цього уривку з «Повчання» правильні?', 'options': [{'text': 'Моральна настанова', 'correct': True}, {'text': 'Заборона смертної кари', 'correct': True}, {'text': 'Релігійне обґрунтування', 'correct': True}, {'text': 'Військовий наказ', 'correct': False}, {'text': 'Гуманістичний характер', 'correct': True}, {'text': 'Заклик до помсти', 'correct': False}]}, {'question': '«Убогих не забувайте, годуйте їх по силі.» Яке значення має ця настанова Мономаха?', 'options': [{'text': 'Соціальна відповідальність правителя', 'correct': True}, {'text': 'Турбота про бідних', 'correct': True}, {'text': 'Імперативна форма дієслова', 'correct': True}, {'text': 'Економічна політика', 'correct': False}, {'text': "Моральний обов'язок", 'correct': True}, {'text': 'Військова стратегія', 'correct': False}, {'text': 'Опис з позиції жертв', 'correct': True}, {'text': 'Похвала половцям', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [історична-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [граматика-в-історичних-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [аналіз-первинного-джерела] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [історична-лексика] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [знайдіть-терміни,-пов'язані-з-роздробленням] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [категоризація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [правда-чи-хибність] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [переклад-історичних-термінів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [заповніть-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [деколонізаційна-перспектива] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [сталі-вирази-та-колокації] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 78-zanepad-i-rozdroblennia.yaml: [index-3] select: 'items.5.options' - [{'text': 'Соціальна відповідальність правителя', 'correct': True}, {'text': 'Турбота про бідних', 'correct': True}, {'text': 'Імперативна форма дієслова', 'correct': True}, {'text': 'Економічна політика', 'correct': False}, {'text': "Моральний обов'язок", 'correct': True}, {'text': 'Військова стратегія', 'correct': False}, {'text': 'Опис з позиції жертв', 'correct': True}, {'text': 'Похвала половцям', 'correct': False}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -89,16 +67,22 @@
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст твору, Контекст, Вступ
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст, Вступ, Контекст твору
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 44 violations (severe - consider revision)
+- 36 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2110/2000
@@ -111,28 +95,29 @@
 - **Vocab:** ✅ 139/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 42 violations
+- **Pedagogy:** ❌ 31 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
-- **Richness:** ✅ 97% (content)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
+- **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 31 | 15 | 100% | 25% | 25.0% |
-| engagement | 12 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
-| cultural | 7 | 4 | 100% | 12% | 12.5% |
-| realworld | 13 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.72 | - | 72% | 6% | 4.5% |
-| questions | 6 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.6%** |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 12 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 8 | 2 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 0.72 | - | 72% | 5% | 3.4% |
+| questions | 6 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

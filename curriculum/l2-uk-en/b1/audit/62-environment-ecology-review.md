@@ -1,49 +1,18 @@
 # Audit Report: 62-environment-ecology.md
 **Phase:** B1.6 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 6 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 5 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 3 has 5 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 4 has 4 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 5 has 4 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 6 has 5 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 7 has 4 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 8 has 5 words (target: 8-14)
-  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
-- **[SECTION_ORDER]** '## Лексика' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-environment-ecology.yaml: [index-8] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-environment-ecology.yaml: [index-11] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Вступ, Українські екологічні контексти
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вживання' found: Вживання, Приклади вживання
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 15 violations (severe - consider revision)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1685/1500
+- **Words:** ✅ 1686/1500
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -53,7 +22,7 @@
 - **Vocab:** ✅ 62/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 12 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (vocabulary)
@@ -81,9 +50,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |
 | **Вступ** | ⚪️ | 91 | Skipped |
-| **Лексика** | ⚪️ | 352 | Skipped |
-| **Використання** | ⚪️ | 289 | Skipped |
+| **Вживання** | ⚪️ | 289 | Skipped |
 | **Читання** | ✅ | 351 | Included in Core |
 | **Діалоги** | ✅ | 264 | Included in Core |
-| **Підсумок** | ✅ | 159 | Included in Core |
+| **Підсумок** | ✅ | 160 | Included in Core |
+| **Лексика** | ⚪️ | 352 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

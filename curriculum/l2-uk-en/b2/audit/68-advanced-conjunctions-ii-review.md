@@ -43,46 +43,28 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q8 prompt length 3 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [знайдіть-часову-межу] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: Array validation: {'type': 'select', 'title': 'Часові сполучники', 'instruction': 'Оберіть усі сполучники часу (6+ елементів).', 'items': [{'question': "Які слова відповідають на питання 'Коли?':", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'поки', 'correct': True}, {'text': 'відколи', 'correct': True}, {'text': 'після того як', 'correct': True}, {'text': 'перед тим як', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'відтоді як', 'correct': True}]}, {'question': 'Які слова описують тривалість?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'протягом', 'correct': True}, {'text': 'раптово', 'correct': False}]}, {'question': 'Оберіть сполучники для ретроспективи:', 'options': [{'text': 'відколи', 'correct': True}, {'text': 'відтоді як', 'correct': True}, {'text': 'з того часу як', 'correct': True}, {'text': 'завтра як', 'correct': False}]}, {'question': 'Які слова вказують на паралельність?', 'options': [{'text': 'поки', 'correct': True}, {'text': 'в той час як', 'correct': True}, {'text': 'тим часом як', 'correct': True}, {'text': 'після', 'correct': False}]}, {'question': 'Оберіть терміни для послідовності:', 'options': [{'text': 'спочатку', 'correct': True}, {'text': 'потім', 'correct': True}, {'text': 'згодом', 'correct': True}, {'text': 'разом', 'correct': False}]}, {'question': "Які сполучники мають значення 'відразу після'?", 'options': [{'text': 'щойно', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'ледве', 'correct': True}, {'text': 'давно', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умова-чи-час?] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [часова-лінія-чи-умова?] group-sort: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [index-9] select: 'items.0.options' - [{'text': 'якщо', 'correct': True}, {'text': 'якби', 'correct': True}, {'text': 'коли б', 'correct': True}, {'text': 'у випадку якщо', 'correct': True}, {'text': 'за умови що', 'correct': True}, {'text': 'при умові що', 'correct': True}, {'text': 'аби (у значенні умови)', 'correct': True}, {'text': 'коли (у значенні умови)', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [складіть-ланцюжок] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [сценарій-можливостей] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [точний-сполучник] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [виправте-сценарій] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [переклад-зв'язків] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [граматичні-правила] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умовні-конструкції] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [час-та-події] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [реальне-проти-нереального] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [сценарії-майбутнього] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [часові-сполучники] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [index-13] select: 'items.0.options' - [{'text': 'щойно', 'correct': True}, {'text': 'поки', 'correct': True}, {'text': 'відколи', 'correct': True}, {'text': 'після того як', 'correct': True}, {'text': 'перед тим як', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'відтоді як', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 36 violations (severe - consider revision)
+- 27 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2027/1750
@@ -95,30 +77,28 @@
 - **Vocab:** ✅ 51/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 35 violations
+- **Pedagogy:** ❌ 25 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
+| variety | 0.96 | - | 96% | 17% | 16.0% |
+| cultural | 7 | - | 100% | 17% | 16.7% |
+| visual | 8 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 26 | - | 100% | 8% | 8.3% |
+| realworld | 4 | - | 100% | 8% | 8.3% |
+| questions | 15 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -33,10 +33,16 @@
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.89 | - | 89% | 5% | 4.5% |
+| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
 | questions | 30 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.0%** |
+| **TOTAL** | | | | | **98.9%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -48,7 +54,7 @@
 | **Як обрати?** | ⚪️ | 85 | Skipped |
 | **Типові помилки** | ✅ | 144 | Included in Core |
 | **Діалоги** | ✅ | 194 | Included in Core |
-| **Практика** | ⚪️ | 182 | Skipped |
+| **Трансформації** | ⚪️ | 182 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Що ви вивчили** | ⚪️ | 34 | Skipped |
 | **Самоперевірка** | ⚪️ | 45 | Skipped |

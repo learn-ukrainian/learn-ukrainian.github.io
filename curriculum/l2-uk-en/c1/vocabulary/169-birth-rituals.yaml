@@ -1,0 +1,146 @@
+module: 169-birth-rituals
+level: C1
+version: '1.0'
+items:
+  - lemma: немовля
+    ipa: /nɛmɔu̯ˈlʲa/
+    translation: infant
+    pos: noun
+    gender: n
+  - lemma: пологи
+    ipa: /pɔˈlɔhɪ/
+    translation: childbirth
+    pos: noun
+    gender: pl
+  - lemma: породілля
+    ipa: /pɔrɔˈdʲilʲːa/
+    translation: woman in labor/new mother
+    pos: noun
+    gender: f
+  - lemma: повитуха
+    ipa: /pɔvɪˈtuxa/
+    translation: midwife (traditional)
+    pos: noun
+    gender: f
+  - lemma: хрестини
+    ipa: /xrɛˈstɪnɪ/
+    translation: christening (celebration)
+    pos: noun
+    gender: pl
+  - lemma: хрещення
+    ipa: /ˈxrɛʃt͡ʃɛnʲːa/
+    translation: baptism (sacrament)
+    pos: noun
+    gender: n
+  - lemma: кум
+    ipa: /kum/
+    translation: kum (godfather to parents)
+    pos: noun
+    gender: m
+  - lemma: кума
+    ipa: /kuˈma/
+    translation: kuma (godmother to parents)
+    pos: noun
+    gender: f
+  - lemma: хрещений батько
+    ipa: /xrɛˈʃt͡ʃɛnɪj ˈbatʲkɔ/
+    translation: godfather
+    pos: noun
+    gender: m
+  - lemma: хрещена мати
+    ipa: /xrɛˈʃt͡ʃɛna ˈmatɪ/
+    translation: godmother
+    pos: noun
+    gender: f
+  - lemma: крижма
+    ipa: /ˈkrɪʒma/
+    translation: kryzhma (christening cloth)
+    pos: noun
+    gender: f
+  - lemma: колиска
+    ipa: /kɔˈlɪska/
+    translation: cradle
+    pos: noun
+    gender: f
+  - lemma: лялька-мотанка
+    ipa: /ˈlʲalʲka ˈmɔtanka/
+    translation: motanka doll
+    pos: noun
+    gender: f
+  - lemma: пострижини
+    ipa: /pɔstrɪˈʒɪnɪ/
+    translation: first haircut ritual
+    pos: noun
+    gender: pl
+  - lemma: вдача
+    ipa: /ˈvdat͡ʃa/
+    translation: character, nature
+    pos: noun
+    gender: f
+  - lemma: доля
+    ipa: /ˈdɔlʲa/
+    translation: fate, destiny
+    pos: noun
+    gender: f
+  - lemma: наврочити
+    ipa: /navˈrɔt͡ʃɪtɪ/
+    translation: to jinx (evil eye)
+    pos: verb
+  - lemma: зурочити
+    ipa: /zuˈrɔt͡ʃɪtɪ/
+    translation: to jinx
+    pos: verb
+  - lemma: хрестити
+    ipa: /xrɛˈstɪtɪ/
+    translation: to baptize
+    pos: verb
+  - lemma: сповивати
+    ipa: /spɔvɪˈvatɪ/
+    translation: to swaddle
+    pos: verb
+  - lemma: колисати
+    ipa: /kɔlɪˈsatɪ/
+    translation: to rock (cradle)
+    pos: verb
+  - lemma: нарікати
+    ipa: /narʲiˈkatɪ/
+    translation: to name (give a name)
+    pos: verb
+  - lemma: піклуватися
+    ipa: /pikluˈvatɪsʲa/
+    translation: to take care
+    pos: verb
+  - lemma: виховувати
+    ipa: /vɪˈxɔvuvatɪ/
+    translation: to raise, to educate
+    pos: verb
+  - lemma: новонароджений
+    ipa: /nɔvɔnaˈrɔdʒɛnɪj/
+    translation: newborn
+    pos: adj
+    gender: m
+  - lemma: захисний
+    ipa: /zaxɪsˈnɪj/
+    translation: protective
+    pos: adj
+    gender: m
+  - lemma: щасливий
+    ipa: /ʃt͡ʃasˈlɪvɪj/
+    translation: happy
+    pos: adj
+    gender: m
+  - lemma: здоровий
+    ipa: /zdɔˈrɔvɪj/
+    translation: healthy
+    pos: adj
+    gender: m
+  - lemma: рідний
+    ipa: /ˈrʲidnɪj/
+    translation: native, kin
+    pos: adj
+    gender: m
+  - lemma: відповідальний
+    ipa: /vʲidpɔvʲiˈdalʲnɪj/
+    translation: responsible
+    pos: adj
+    gender: m

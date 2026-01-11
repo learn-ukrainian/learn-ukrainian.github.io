@@ -31,44 +31,24 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Психологічні нюанси' Q8 prompt length 9 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [знайдіть-значення] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: Array validation: {'type': 'translate', 'title': 'Переклад почуттів', 'instruction': 'Знайдіть найточніший український синонім до англійського слова.', 'items': [{'source': 'Fury / Rage', 'options': [{'text': 'лють', 'correct': True}, {'text': 'сум', 'correct': False}, {'text': 'втіха', 'correct': False}, {'text': 'радість'}], 'explanation': 'Це слова на позначення найвищого ступеня гніву.'}, {'source': 'Grief / Deep sorrow', 'options': [{'text': 'горе', 'correct': True}, {'text': 'задоволення', 'correct': False}, {'text': 'хвилювання', 'correct': False}, {'text': 'екстаз'}], 'explanation': 'Горе описує глибоке страждання.'}, {'source': 'Pleasure (sensory)', 'options': [{'text': 'насолода', 'correct': True}, {'text': 'тривога', 'correct': False}, {'text': 'паніка', 'correct': False}, {'text': 'злість'}], 'explanation': 'Насолода — це задоволення від відчуттів.'}, {'source': 'Anxiety / Unease', 'options': [{'text': 'тривога', 'correct': True}, {'text': 'щастя', 'correct': False}, {'text': 'лють', 'correct': False}, {'text': 'втіха'}], 'explanation': 'Тривога — це неспокій через майбутні події.'}, {'source': 'Despair / Hopelessness', 'options': [{'text': 'розпач', 'correct': True}, {'text': 'захоплення', 'correct': False}, {'text': 'ейфорія', 'correct': False}, {'text': 'радість'}], 'explanation': 'Розпач — стан втрати надії.'}, {'source': 'Satisfaction', 'options': [{'text': 'задоволення', 'correct': True}, {'text': 'жах', 'correct': False}, {'text': 'меланхолія', 'correct': False}, {'text': 'агресія'}], 'explanation': 'Задоволення виникає після виконаної праці.'}, {'source': 'Delight / Consolation', 'options': [{'text': 'втіха', 'correct': True}, {'text': 'паніка', 'correct': False}, {'text': 'гнів', 'correct': False}, {'text': 'страх'}], 'explanation': 'Втіха — це тиха і приємна радість.'}, {'source': 'Nostalgic longing', 'options': [{'text': 'туга', 'correct': True}, {'text': 'екстаз', 'correct': False}, {'text': 'ейфорія', 'correct': False}, {'text': 'задоволення'}], 'explanation': "Туга часто пов'язана з пам'яттю про щось рідне."}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [оберіть-точне-слово] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [емоційні-пропуски] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [правда-про-почуття] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [шкала-інтенсивності] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [емоційні-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [психологічний-портрет] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [відтінки-значень] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [оберіть-ознаки-емоції] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [переклад-почуттів] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [позитивні-чи-негативні?] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [контексти-вживання-(емоції)] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [психологічні-нюанси] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 55-synonyms-emotion.yaml: [index-9] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 29 violations (severe - consider revision)
+- 19 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1883/1750
@@ -81,27 +61,27 @@
 - **Vocab:** ✅ 104/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 28 violations
+- **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (content)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 100% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Score:** 100% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 53 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 1.00 | - | 100% | 12% | 12.5% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 10 | 4 | 100% | 6% | 6.2% |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 1.00 | - | 100% | 17% | 16.7% |
+| cultural | 4 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 53 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 10 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit

@@ -1,0 +1,149 @@
+module: 168-wedding-rituals
+level: C1
+version: '1.0'
+items:
+  - lemma: сватання
+    ipa: /svaˈtanʲːa/
+    translation: matchmaking
+    pos: noun
+    gender: n
+  - lemma: заручини
+    ipa: /zaˈrut͡ʃɪnɪ/
+    translation: engagement
+    pos: noun
+    gender: pl
+  - lemma: вінчання
+    ipa: /vʲinˈt͡ʃanʲːa/
+    translation: church wedding ceremony
+    pos: noun
+    gender: n
+  - lemma: молода
+    ipa: /mɔlɔˈda/
+    translation: bride
+    pos: noun
+    gender: f
+  - lemma: молодий
+    ipa: /mɔlɔˈdɪj/
+    translation: groom
+    pos: noun
+    gender: m
+  - lemma: сват
+    ipa: /svat/
+    translation: matchmaker (male)
+    pos: noun
+    gender: m
+  - lemma: сваха
+    ipa: /ˈsvaxa/
+    translation: matchmaker (female)
+    pos: noun
+    gender: f
+  - lemma: староста
+    ipa: /ˈstarɔsta/
+    translation: starosta (wedding master of ceremonies)
+    pos: noun
+    gender: m
+  - lemma: дружка
+    ipa: /ˈdruʒka/
+    translation: bridesmaid
+    pos: noun
+    gender: f
+  - lemma: дружба
+    ipa: /ˈdruʒba/
+    translation: groomsman
+    pos: noun
+    gender: m
+  - lemma: коровай
+    ipa: /kɔrɔˈvaj/
+    translation: korovai (wedding bread)
+    pos: noun
+    gender: m
+  - lemma: рушник
+    ipa: /ruʃˈnɪk/
+    translation: rushnyk (embroidered towel)
+    pos: noun
+    gender: m
+  - lemma: гарбуз
+    ipa: /harˈbuz/
+    translation: pumpkin (symbol of rejection)
+    pos: noun
+    gender: m
+  - lemma: гільце
+    ipa: /hʲilʲˈt͡sɛ/
+    translation: hiltse (wedding tree)
+    pos: noun
+    gender: n
+  - lemma: посаг
+    ipa: /ˈpɔsah/
+    translation: dowry
+    pos: noun
+    gender: m
+  - lemma: благословення
+    ipa: /bhaɫɔslɔˈvɛnʲːa/
+    translation: blessing
+    pos: noun
+    gender: n
+  - lemma: шлюб
+    ipa: /ʃlʲub/
+    translation: marriage
+    pos: noun
+    gender: m
+  - lemma: обручка
+    ipa: /ɔˈbrut͡ʃka/
+    translation: wedding ring
+    pos: noun
+    gender: f
+  - lemma: коса
+    ipa: /kɔˈsa/
+    translation: braid
+    pos: noun
+    gender: f
+  - lemma: дівич-вечір
+    ipa: /dʲiˈvɪt͡ʃ ˈvɛt͡ʃʲir/
+    translation: hen party (bachelorette party)
+    pos: noun
+    gender: m
+  - lemma: парубоцький вечір
+    ipa: /paruˈbɔt͡sʲkɪj ˈvɛt͡ʃʲir/
+    translation: stag party (bachelor party)
+    pos: noun
+    gender: m
+  - lemma: сватати
+    ipa: /ˈsvatatɪ/
+    translation: to matchmake, to propose
+    pos: verb
+  - lemma: благословляти
+    ipa: /bhaɫɔslɔu̯ˈlʲatɪ/
+    translation: to bless
+    pos: verb
+  - lemma: одружуватися
+    ipa: /ɔˈdruʒuvatɪsʲa/
+    translation: to get married
+    pos: verb
+  - lemma: розплітати
+    ipa: /rɔzplʲiˈtatɪ/
+    translation: to unbraid
+    pos: verb
+  - lemma: покривати
+    ipa: /pɔkrɪˈvatɪ/
+    translation: to cover (head)
+    pos: verb
+  - lemma: щасливий
+    ipa: /ʃt͡ʃasˈlɪvɪj/
+    translation: happy
+    pos: adj
+    gender: m
+  - lemma: заможний
+    ipa: /zaˈmɔʒnɪj/
+    translation: wealthy
+    pos: adj
+    gender: m
+  - lemma: сімейний
+    ipa: /sʲiˈmɛjnɪj/
+    translation: family (adj)
+    pos: adj
+    gender: m
+  - lemma: традиційний
+    ipa: /tradɪˈt͡sʲijnɪj/
+    translation: traditional
+    pos: adj
+    gender: m

@@ -49,31 +49,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Деталі значення' Q8 prompt length 6 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [знайдіть-відповідність] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: Array validation: {'type': 'select', 'title': 'Синоніми', 'instruction': 'Оберіть синонім до фразеологізму.', 'items': [{'question': 'Синонім до камінь з душі:', 'options': [{'text': 'полегшення', 'correct': True}, {'text': 'страх', 'correct': False}, {'text': 'горе', 'correct': False}]}, {'question': "Синонім до душа в п'яти:", 'options': [{'text': 'переляк', 'correct': True}, {'text': 'радість', 'correct': False}, {'text': 'сміливість', 'correct': False}]}, {'question': 'Синонім до споріднена душа:', 'options': [{'text': 'однодумець', 'correct': True}, {'text': 'ворог', 'correct': False}, {'text': 'сусід', 'correct': False}]}, {'question': 'Синонім до від щирого серця:', 'options': [{'text': 'щиро', 'correct': True}, {'text': 'хитро', 'correct': False}, {'text': 'швидко', 'correct': False}]}, {'question': 'Синонім до серце крається:', 'options': [{'text': 'шкода', 'correct': True}, {'text': 'весело', 'correct': False}, {'text': 'байдуже', 'correct': False}]}, {'question': 'Синонім до брати до серця:', 'options': [{'text': 'перейматися', 'correct': True}, {'text': 'ігнорувати', 'correct': False}, {'text': 'забути', 'correct': False}]}, {'question': 'Синонім до всією душею:', 'options': [{'text': 'віддано', 'correct': True}, {'text': 'ліниво', 'correct': False}, {'text': 'часом', 'correct': False}]}, {'question': 'Синонім до душа нараспашку:', 'options': [{'text': 'відвертість', 'correct': True}, {'text': 'скритність', 'correct': False}, {'text': 'злість', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [оберіть-правильний-фразеологізм] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [вставте-пропущене-слово] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [правда-чи-ні?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [емоційне-забарвлення] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [історія-з-фразеологізмами] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [знайди-помилку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [синоніми] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [переклад-ідіом] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [контекст-вживання] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [антоніми] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [деталі-значення] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 51-idioms-body.yaml: [index-8] select: 'items.7.options' - [{'text': 'відвертість', 'correct': True}, {'text': 'скритність', 'correct': False}, {'text': 'злість', 'correct': False}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -81,14 +59,12 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Емоційний ландшафт, Вживання у контексті: Практика
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 39 violations (severe - consider revision)
+- 27 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1975/1750
@@ -101,28 +77,28 @@
 - **Vocab:** ✅ 102/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 37 violations
+- **Pedagogy:** ❌ 26 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (content)
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 17 | 15 | 100% | 25% | 25.0% |
-| engagement | 11 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 4 | 4 | 100% | 12% | 12.5% |
-| realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 16 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.8%** |
+| engagement | 11 | 4 | 100% | 25% | 25.0% |
+| variety | 0.98 | - | 98% | 17% | 16.3% |
+| cultural | 4 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 17 | - | 100% | 8% | 8.3% |
+| realworld | 7 | - | 100% | 8% | 8.3% |
+| questions | 16 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

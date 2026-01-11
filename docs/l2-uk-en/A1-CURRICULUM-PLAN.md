@@ -2,7 +2,7 @@
 
 **Status:** ✅ COMPLETE
 **Modules:** 01-34 (34 modules)
-**Vocabulary Target:** ~850 unique words (total)
+**Vocabulary Target:** ~500 unique words
 
 ---
 
@@ -192,7 +192,7 @@ Before writing/reviewing any A1 module, verify:
 > Can understand and use familiar everyday expressions and very basic phrases aimed at the satisfaction of needs of a concrete type. Can introduce themselves and others and can ask and answer questions about personal details. Can interact in a simple way provided the other person talks slowly and clearly.
 
 ### Our A1 Can-Do Checklist
-By module 30, learners can:
+By module 34, learners can:
 
 **Understanding (Listening/Reading)**
 - [ ] Recognize all 33 Cyrillic letters in print and italic
@@ -237,7 +237,7 @@ By module 30, learners can:
 | 06 | Present tense Class I (-ати) | M04 | Action statements |
 | 07 | Questions (чи, що, хто, де) + Negation | M06 | Conversations |
 | 08 | Present tense Class II (-ити) | M06 | More verbs |
-| 09 | Food vocabulary | M08 | Eating, drinking |
+| 09 | Reflexive Verbs (-ся) | M08 | Daily routine |
 | 10 | REVIEW | M01-09 | Consolidation |
 
 ### Vocabulary Plan A1.1 (240 words)
@@ -1071,7 +1071,7 @@ By module 30, learners can:
 
 ---
 
-## Vocabulary Master List (456 words actual)
+## Vocabulary Master List (~500 words)
 
 ### Distribution by Domain
 

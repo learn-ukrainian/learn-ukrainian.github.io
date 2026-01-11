@@ -69,3 +69,43 @@ items:
   ipa: /ˈt͡ʃasɔm/
   translation: sometimes
   pos: adv
+- lemma: хоча
+  ipa: /xɔˈt͡ʃa/
+  translation: although
+  pos: conj
+- lemma: попри
+  ipa: /ˈpɔprɪ/
+  translation: despite
+  pos: prep
+- lemma: дарма що
+  ipa: /darˈma ʃt͡ʃɔ/
+  translation: even though
+  pos: conj
+- lemma: все одно
+  ipa: /usɛ ɔdˈnɔ/
+  translation: all the same / anyway
+  pos: adv
+- lemma: проте
+  ipa: /prɔˈtɛ/
+  translation: however
+  pos: conj
+- lemma: однак
+  ipa: /ɔdˈnak/
+  translation: however
+  pos: conj
+- lemma: тим не менш
+  ipa: /tɪm nɛ mɛnʃ/
+  translation: nevertheless
+  pos: adv
+- lemma: все ж таки
+  ipa: /usɛ ʒ taˈkɪ/
+  translation: still / nevertheless
+  pos: particle
+- lemma: незважаючи на
+  ipa: /nɛzvaˈʒajut͡ʃɪ na/
+  translation: despite / in spite of
+  pos: prep
+- lemma: всупереч
+  ipa: /ˈu̯supɛrɛt͡ʃ/
+  translation: contrary to
+  pos: prep

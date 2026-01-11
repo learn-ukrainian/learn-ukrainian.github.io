@@ -101,46 +101,22 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка' Q16 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [розуміння-еліпсису-та-парцеляції] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [еліпсис-та-повна-форма] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [відновіть-пропущені-слова] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [правила-еліпсису-та-парцеляції] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [класифікуйте-приклади] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [створіть-парцельовані-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [виправте-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [заповніть-художній-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [знайдіть-еліптичні-конструкції-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [впорядкуйте-діалог] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [оберіть-доречне-використання-еліпсису-та-парцеляції] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [оберіть-переклад-з-парцеляцією] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [визначте-стилістичні-прийоми] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-complex-syntax-ellipsis-parcelling.yaml: [комплексна-перевірка] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 65 violations (severe - consider revision)
+- 53 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1989/1750
@@ -153,30 +129,28 @@
 - **Vocab:** ✅ 76/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 64 violations
+- **Pedagogy:** ❌ 50 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 98-100% (vocab))
-- **Richness:** ✅ 97% (grammar)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
+- **Richness:** ✅ 95% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 95% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 24 | 4 | 100% | 15% | 15.0% |
-| variety | 0.84 | - | 84% | 10% | 8.4% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.81 | - | 81% | 5% | 4.1% |
-| questions | 70 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **97.5%** |
+| engagement | 12 | 4 | 100% | 25% | 25.0% |
+| variety | 0.84 | - | 84% | 17% | 14.0% |
+| cultural | 3 | - | 100% | 17% | 16.7% |
+| visual | 3 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.81 | - | 81% | 8% | 6.8% |
+| examples | 100 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 70 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **95.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

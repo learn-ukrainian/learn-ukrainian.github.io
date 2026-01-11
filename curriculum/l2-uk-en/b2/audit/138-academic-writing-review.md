@@ -17,50 +17,32 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз логічних зв’язків' Q8 prompt length 8 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: Array validation: {'type': 'translate', 'title': 'Академічна трансформація', 'items': [{'options': [{'text': 'Результати дослідження підтверджують ефективність даної методики.', 'correct': True}, {'text': 'Ця штука реально працює для всіх людей.'}, {'text': 'Ми думаємо, що це прикольна ідея.'}], 'source': 'Ну, ця штука реально працює в більшості випадків.'}, {'options': [{'text': 'Наведений аргумент викликає певні сумніви через брак доказів.', 'correct': True}, {'text': 'Я не хочу читати те, що він написав.'}, {'text': 'Це просто неправильна думка якогось автора.'}], 'source': 'Я просто не згоден з тим, що він там написав.'}, {'options': [{'text': 'Протягом останнього десятиліття було здійснено низку значущих наукових відкриттів.', 'correct': True}, {'text': "Круті відкриття з'являються щодня в інтернеті."}, {'text': 'Багато людей роблять щось цікаве в науці.'}], 'source': 'Вони зробили багато крутих відкриттів останнім часом.'}, {'options': [{'text': 'Отже, існує об’єктивна потреба у збільшенні фінансування даної галузі.', 'correct': True}, {'text': 'Короче, дайте нам гроші на проекти.'}, {'text': 'Фінанси — це головне для нашої роботи.'}], 'source': 'Короче, нам треба більше грошей на ці речі.'}, {'options': [{'text': 'Згідно з численними дослідженнями, дане явище негативно впливає на розвиток дитини.', 'correct': True}, {'text': 'Всі люди кажуть, що дітям це не подобається.'}, {'text': 'Це погана річ для кожної малої дитини.'}], 'source': 'Всі знають, що це погано впливає на дітей.'}, {'options': [{'text': 'Проаналізуємо наведений приклад детальніше для глибшого розуміння.', 'correct': True}, {'text': 'Давайте ще раз глянемо на цю картинку.'}, {'text': 'Цей приклад дуже важливий для нас сьогодні.'}], 'source': 'Давайте подивимося на цей приклад ще раз.'}, {'options': [{'text': 'Застосування запропонованого підходу сприятиме ефективному розв’язанню проблеми.', 'correct': True}, {'text': 'Я вірю, що ми все зробимо правильно.'}, {'text': 'Ця ідея є суперською для кожного з нас.'}], 'source': 'Я думаю, це допоможе вирішити проблему.'}, {'options': [{'text': 'Дана стаття характеризується надмірною деталізацією та низькою динамікою викладу.', 'correct': True}, {'text': 'Я не зміг дочитати цю довгу статтю до кінця.'}, {'text': 'Текст є великим і нецікавим для студентів.'}], 'source': 'Ця стаття занадто довга і нудна.'}], 'instruction': 'Виберіть найбільш відповідний академічний варіант для розмовного речення.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [index-7] error-correction: 'items.7' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [index-8] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-gs-1] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-mtw-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [поради-викладача-щодо-чернетки] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-ec-1] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-tr-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-sel-1] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-cloze-1] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-trans-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-ta-1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [138-cp-1] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 138-academic-writing.yaml: [index-11] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-integration-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-integration-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Стратегії' per template 'b2-integration-module-template'
+  - FIX: Add '## Стратегії' section as specified in docs/l2-uk-en/templates/b2-integration-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b2-integration-module-template'
+  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b2-integration-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-integration-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-integration-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 25 violations (severe - consider revision)
+- 16 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2848/1750
@@ -73,9 +55,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 22 violations
+- **Pedagogy:** ❌ 12 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 

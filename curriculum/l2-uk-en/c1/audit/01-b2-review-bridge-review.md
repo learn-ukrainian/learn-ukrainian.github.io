@@ -63,7 +63,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 17 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 

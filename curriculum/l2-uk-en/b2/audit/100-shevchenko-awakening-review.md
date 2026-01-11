@@ -1,6 +1,17 @@
 # Audit Report: 100-shevchenko-awakening.md
 **Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 100-shevchenko-awakening.yaml: [index-2] cloze: passage has {word} markers but no 'blanks' array or '|' options format
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 100-shevchenko-awakening.yaml: [index-4] cloze: passage has {word} markers but no 'blanks' array or '|' options format
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2183/2000
@@ -13,9 +24,9 @@
 - **Vocab:** ✅ 153/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -36,12 +47,6 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

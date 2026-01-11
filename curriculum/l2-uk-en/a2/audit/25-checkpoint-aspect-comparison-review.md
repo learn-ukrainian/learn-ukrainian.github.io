@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): нарешті, недавно, колись, згодом, одного...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): негайно, но, колись, давно, раніше...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

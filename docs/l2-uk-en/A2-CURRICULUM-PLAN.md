@@ -211,7 +211,7 @@ The A2 level (Базовий рівень) per the official Ukrainian State Stan
 - якби + past tense + б/би
 - Якби я знав, я б сказав. (If I knew, I would say.)
 
-**Imperative - full range (M23 - Complete Imperative):**
+**Imperative - full range (M24 - Complete Imperative):**
 
 - 2nd person formation: stem + endings (читай/читайте, пиши/пишіть)
 - 1st person plural: читаймо, ходімо (let's read, let's go)
@@ -699,7 +699,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.2: Aspect & Comparison (Modules 12-24)
+## Phase A2.2: Aspect & Comparison (Modules 12-25)
 
 ### Learning Goals
 
@@ -726,8 +726,9 @@ By module 50, learners can:
 | 20     | Comparison structures  | M18-19         | Preferences           |
 | 21     | Numerals & Nouns       | A1 numbers     | Counting things       |
 | 22     | Conditional mood       | A1 past tense  | "If I were..."        |
-| 23     | Functional: Shopping   | M18-21         | Real comparison       |
-| 24     | Checkpoint             | M12-23         | Assessment            |
+| 23     | Complete Imperative    | A1 imperatives | Commands, suggestions |
+| 24     | Functional: Shopping   | M18-21         | Real comparison       |
+| 25     | Checkpoint             | M12-25         | Assessment            |
 
 ### Module Content Specifications
 
@@ -1084,7 +1085,39 @@ By module 50, learners can:
 
 ---
 
-#### Module 23: Smart Shopping
+#### Module 23: Complete Imperative
+
+**Grammar:** Full imperative system (2nd, 1st plural, 3rd person)
+
+**2nd person formation (ти/ви):**
+
+- Class I: stem + -й/-йте (читай/читайте)
+- Class II: stem + -и/-іть (говори/говоріть)
+- Irregulars: дай, будь, їж, візьми
+
+**1st person plural (ми) - "Let's...":**
+
+- читаймо, ходімо, робімо
+- Formation: 1st pl. present → replace -мо with -ймо/-імо
+
+**3rd person with хай/нехай:**
+
+- Хай читає! (Let him read!)
+- Нехай вони знають! (Let them know!)
+- хай (conversational) vs нехай (literary)
+
+**Vocabulary (20 words):**
+читай, пиши, говори, роби, дай, візьми, будь, їж, ходімо, робімо, давайте, хай, нехай, будь ласка, прошу, допоможіть, скажіть, покажіть, зачекайте, послухайте
+
+**Signature Activity Concepts:**
+
+1. Transform: Infinitive → imperative forms
+2. Gap-fill: Complete polite requests
+3. Match-up: Situation → appropriate command form
+
+---
+
+#### Module 24: Smart Shopping
 
 **Grammar:** Functional application of comparison & quantities
 
@@ -1112,9 +1145,9 @@ By module 50, learners can:
 
 ---
 
-#### Module 24: Checkpoint - Aspect & Comparison
+#### Module 25: Checkpoint - Aspect & Comparison
 
-**Covers:** M12-23
+**Covers:** M12-25
 
 **Required Skill Groups:**
 
@@ -1126,6 +1159,8 @@ By module 50, learners can:
 6. Comparative & Superlative (M18-20) - більший, найкращий, structures
 7. Numeral-Noun Agreement (M21) - 1, 2-4, 5+ patterns
 8. Conditional Constructions (M22) - якщо, якби
+9. Complete Imperative (M23) - 2nd person, 1st plural, хай/нехай
+10. Functional Shopping (M24) - comparison in context
 
 **Vocabulary (10 words):** Review selection
 
@@ -1137,7 +1172,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.3: Complex Sentences (Modules 25-34)
+## Phase A2.3: Complex Sentences (Modules 26-35)
 
 ### Learning Goals
 
@@ -1150,20 +1185,20 @@ By module 50, learners can:
 
 | Module | Grammar Point       | Builds On       | Enables             |
 | ------ | ------------------- | --------------- | ------------------- |
-| 25     | Sequence connectors | A1 basic        | Storytelling        |
-| 26     | Causal clauses      | M25             | Explaining why      |
-| 27     | Reported speech     | A1 speech verbs | Quoting others      |
-| 28     | Opinion expressions | M26-27          | Giving views        |
-| 29     | Emotion expressions | M28             | Feelings            |
-| 30     | Purpose clauses     | A1 infinitive   | Goals               |
-| 31     | Relative clauses    | A1 questions    | Descriptions        |
-| 32     | Time clauses        | M25             | When things happen  |
-| 33     | Functional: Doctor  | All A2.3        | Medical interaction |
-| 34     | Checkpoint          | M25-33          | Assessment          |
+| 26     | Sequence connectors | A1 basic        | Storytelling        |
+| 27     | Causal clauses      | M26             | Explaining why      |
+| 28     | Reported speech     | A1 speech verbs | Quoting others      |
+| 29     | Opinion expressions | M27-28          | Giving views        |
+| 30     | Emotion expressions | M29             | Feelings            |
+| 31     | Purpose clauses     | A1 infinitive   | Goals               |
+| 32     | Relative clauses    | A1 questions    | Descriptions        |
+| 33     | Time clauses        | M26             | When things happen  |
+| 34     | Functional: Doctor  | All A2.3        | Medical interaction |
+| 35     | Checkpoint          | M26-34          | Assessment          |
 
 ### Module Content Specifications
 
-#### Module 25: Telling Stories
+#### Module 26: Telling Stories
 
 **Grammar:** Sequence connectors
 
@@ -1191,7 +1226,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 26: Because and Although
+#### Module 27: Because and Although
 
 **Grammar:** Causal/concessive clauses
 
@@ -1223,7 +1258,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 27: She Said That...
+#### Module 28: She Said That...
 
 **Grammar:** Basic reported speech
 
@@ -1256,7 +1291,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 28: I Think That...
+#### Module 29: I Think That...
 
 **Grammar:** Opinion expressions
 
@@ -1285,7 +1320,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 29: I'm Happy That...
+#### Module 30: I'm Happy That...
 
 **Grammar:** Emotion expressions
 
@@ -1313,7 +1348,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 30: In Order To...
+#### Module 31: In Order To...
 
 **Grammar:** Purpose clauses (щоб)
 
@@ -1341,7 +1376,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 31: Which One?
+#### Module 32: Which One?
 
 **Grammar:** Relative clauses (який, яка, яке, які)
 
@@ -1375,7 +1410,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 32: When, While, After
+#### Module 33: When, While, After
 
 **Grammar:** Time clauses
 
@@ -1403,7 +1438,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 33: At the Doctor's
+#### Module 34: At the Doctor's
 
 **Grammar:** Functional integration for medical context
 
@@ -1432,21 +1467,21 @@ By module 50, learners can:
 
 ---
 
-#### Module 34: Checkpoint - Complex Ideas
+#### Module 35: Checkpoint - Complex Ideas
 
-**Covers:** M25-33
+**Covers:** M26-34
 
 **Required Skill Groups:**
 
-1. Sequence & Storytelling (M25) - потім, тоді, нарешті
-2. Causal Clauses (M26) - тому що, бо, оскільки
-3. Concessive Clauses (M27) - хоча, проте
-4. Purpose Clauses (M28) - щоб + infinitive/past
-5. Relative Clauses (M29) - який, яка, яке, які
-6. Time Clauses (M30) - коли, поки, після того як
-7. Reported Speech (M31) - сказав, що...; запитав, чи...
-8. Opinion & Emotion (M32) - думаю, що...; радий, що...
-9. Medical Vocabulary (M33) - symptoms, remedies
+1. Sequence & Storytelling (M26) - потім, тоді, нарешті
+2. Causal Clauses (M27) - тому що, бо, оскільки
+3. Concessive Clauses (M28) - хоча, проте
+4. Purpose Clauses (M29) - щоб + infinitive/past
+5. Relative Clauses (M30) - який, яка, яке, які
+6. Time Clauses (M31) - коли, поки, після того як
+7. Reported Speech (M32) - сказав, що...; запитав, чи...
+8. Opinion & Emotion (M33) - думаю, що...; радий, що...
+9. Medical Vocabulary (M34) - symptoms, remedies
 
 **Vocabulary (10 words):** Review selection
 
@@ -1458,7 +1493,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.4: Word Formation (Modules 35-43)
+## Phase A2.4: Word Formation (Modules 36-44)
 
 ### Learning Goals
 
@@ -1471,19 +1506,19 @@ By module 50, learners can:
 
 | Module | Grammar Point              | Builds On       | Enables             |
 | ------ | -------------------------- | --------------- | ------------------- |
-| 35     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions    |
-| 36     | Advanced Motion Prefixes   | M35             | Complex Directions  |
-| 37     | Action verb prefixes       | All verbs       | Verbal precision    |
-| 38     | Noun suffixes              | A1 nouns        | Noun formation      |
-| 39     | Adjective suffixes         | A1 adjectives   | Adjective formation |
-| 40     | Root families I            | All vocab       | Recognition         |
-| 41     | Root families II           | All vocab       | Expansion           |
-| 42     | WF Mastery                 | M35-41          | Deep dive           |
-| 43     | Checkpoint: Word Formation | M35-42          | Assessment          |
+| 36     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions    |
+| 37     | Advanced Motion Prefixes   | M36             | Complex Directions  |
+| 38     | Action verb prefixes       | All verbs       | Verbal precision    |
+| 39     | Noun suffixes              | A1 nouns        | Noun formation      |
+| 40     | Adjective suffixes         | A1 adjectives   | Adjective formation |
+| 41     | Root families I            | All vocab       | Recognition         |
+| 42     | Root families II           | All vocab       | Expansion           |
+| 43     | WF Mastery                 | M36-42          | Deep dive           |
+| 44     | Checkpoint: Word Formation | M36-43          | Assessment          |
 
 ### Module Content Specifications
 
-#### Module 35: Basic Motion Prefixes
+#### Module 36: Basic Motion Prefixes
 
 **Grammar:** Directional entry/exit/arrival
 
@@ -1511,7 +1546,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 36: Advanced Motion Prefixes
+#### Module 37: Advanced Motion Prefixes
 
 **Grammar:** Complex paths sequences
 
@@ -1541,7 +1576,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 37: Prefixes II - Action Verbs
+#### Module 38: Prefixes II - Action Verbs
 
 **Grammar:** Prefixes with non-motion verbs
 
@@ -1572,7 +1607,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 38: Suffixes I - Nouns
+#### Module 39: Suffixes I - Nouns
 
 **Grammar:** Noun-forming suffixes
 
@@ -1608,7 +1643,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 39: Suffixes II - Adjectives
+#### Module 40: Suffixes II - Adjectives
 
 **Grammar:** Adjective-forming suffixes
 
@@ -1640,7 +1675,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 40: Root Families I
+#### Module 41: Root Families I
 
 **Grammar:** Common roots and derivatives
 
@@ -1670,7 +1705,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 41: Root Families II
+#### Module 42: Root Families II
 
 **Grammar:** Motion and perception roots
 
@@ -1700,7 +1735,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 42: Word Formation Mastery
+#### Module 43: Word Formation Mastery
 
 **Grammar:** Integrated word formation practice
 
@@ -1725,18 +1760,18 @@ By module 50, learners can:
 
 ---
 
-#### Module 43: Checkpoint - Word Formation
+#### Module 44: Checkpoint - Word Formation
 
-**Covers:** M35-42
+**Covers:** M36-43
 
 **Required Skill Groups:**
 
-1. Motion Verb Prefixes Basic (M35) - при-, ви-, в-/у-
-2. Motion Verb Prefixes Advanced (M36) - пере-, об-, про-
-3. Action Verb Prefixes (M37-38) - з-, на-, по-, ви-, пере-
-4. Noun-Forming Suffixes (M39) - -ість, -ння, -ач/-ець
-5. Adjective-Forming Suffixes (M40) - -ний, -овий, -ивий
-6. Root Families (M41-42) - рід-, світ-, земл-, міст-
+1. Motion Verb Prefixes Basic (M36) - при-, ви-, в-/у-
+2. Motion Verb Prefixes Advanced (M37) - пере-, об-, про-
+3. Action Verb Prefixes (M38-39) - з-, на-, по-, ви-, пере-
+4. Noun-Forming Suffixes (M40) - -ість, -ння, -ач/-ець
+5. Adjective-Forming Suffixes (M41) - -ний, -овий, -ивий
+6. Root Families (M42-43) - рід-, світ-, земл-, міст-
 
 **Vocabulary (10 words):** Review selection
 
@@ -1748,7 +1783,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.5: Vocabulary Expansion (Modules 44-55)
+## Phase A2.5: Vocabulary Expansion (Modules 45-56)
 
 ### Learning Goals
 
@@ -1760,115 +1795,115 @@ By module 50, learners can:
 
 | #   | Title                  | Domain       | New Words  |
 | --- | ---------------------- | ------------ | ---------- |
-| 44  | Food & Cooking         | Daily Life   | 35         |
-| 45  | Home & Furniture       | Daily Life   | 30         |
-| 46  | Nature & Weather       | Environment  | 30         |
-| 47  | Emotions & Personality | Social       | 30         |
-| 48  | Work & Professions     | Professional | 30         |
-| 49  | Technology & Media     | Modern Life  | 30         |
-| 50  | Hobbies & Leisure      | Lifestyle    | 30         |
-| 51  | Education & Learning   | Education    | 30         |
-| 52  | Shopping & Services    | Daily Life   | 30         |
-| 53  | Sports & Fitness       | Lifestyle    | 25         |
-| 54  | Health & Body          | Health       | 35         |
-| 55  | Checkpoint: Vocabulary | M44-54       | Assessment |
+| 45  | Food & Cooking         | Daily Life   | 35         |
+| 46  | Home & Furniture       | Daily Life   | 30         |
+| 47  | Nature & Weather       | Environment  | 30         |
+| 48  | Emotions & Personality | Social       | 30         |
+| 49  | Work & Professions     | Professional | 30         |
+| 50  | Technology & Media     | Modern Life  | 30         |
+| 51  | Hobbies & Leisure      | Lifestyle    | 30         |
+| 52  | Education & Learning   | Education    | 30         |
+| 53  | Shopping & Services    | Daily Life   | 30         |
+| 54  | Sports & Fitness       | Lifestyle    | 25         |
+| 55  | Health & Body          | Health       | 35         |
+| 56  | Checkpoint: Vocabulary | M45-55       | Assessment |
 
 ### Vocabulary Domains (per State Standard Каталог Б)
 
-**Module 44: Food & Cooking**
+**Module 45: Food & Cooking**
 
 - Kitchen: каструля, сковорода, духовка, мікрохвильовка
 - Cooking: нарізати, смажити, варити, пекти, тушкувати
 - Meals: сніданок, обід, вечеря, перекус
 - Tastes: солодкий, солоний, кислий, гіркий, гострий
 
-**Module 45: Home & Furniture**
+**Module 46: Home & Furniture**
 
 - Rooms: вітальня, спальня, кабінет, комора
 - Furniture: комод, полиця, шафа, крісло, диван
 - Appliances: пральна машина, посудомийка
 - Actions: прибирати, ремонтувати, облаштовувати
 
-**Module 46: Nature & Weather**
+**Module 47: Nature & Weather**
 
 - Landscape: гора, долина, озеро, ріка, море
 - Weather: хмарно, сонячно, гроза, туман
 - Seasons: весна, літо, осінь, зима
 - Flora/Fauna: дерево, квітка, птах, тварина
 
-**Module 47: Emotions & Personality**
+**Module 48: Emotions & Personality**
 
 - Emotions: радість, сум, гнів, страх, здивування
 - Personality: добрий, чесний, сміливий, терплячий
 - States: задоволений, розчарований, стурбований
 - Actions: радіти, сумувати, хвилюватися
 
-**Module 48: Work & Professions**
+**Module 49: Work & Professions**
 
 - Jobs: інженер, лікар, вчитель, програміст, юрист
 - Workplace: офіс, фабрика, майстерня
 - Actions: працювати, керувати, співпрацювати
 - Career: кар'єра, зарплата, відпустка
 
-**Module 49: Technology & Media**
+**Module 50: Technology & Media**
 
 - Devices: комп'ютер, смартфон, планшет
 - Internet: інтернет, вебсайт, соціальні мережі
 - Media: новини, стаття, блог, подкаст
 - Actions: завантажувати, публікувати, шукати
 
-**Module 50: Hobbies & Leisure**
+**Module 51: Hobbies & Leisure**
 
 - Activities: малювати, грати, співати, танцювати
 - Collecting: колекціонувати, збирати
 - Travel: подорожувати, відвідувати, оглядати
 - Entertainment: кіно, театр, концерт
 
-**Module 51: Education & Learning**
+**Module 52: Education & Learning**
 
 - School: урок, клас, предмет, вчитель
 - University: лекція, семінар, іспит, залік
 - Process: вчитися, навчатися, складати іспит
 - Materials: підручник, зошит, конспект
 
-**Module 52: Shopping & Services**
+**Module 53: Shopping & Services**
 
 - Stores: магазин, супермаркет, ринок, бутік
 - Services: банк, пошта, перукарня, хімчистка
 - Actions: купувати, платити, замовляти
 - Money: готівка, картка, рахунок, чек
 
-**Module 53: Sports & Fitness**
+**Module 54: Sports & Fitness**
 
 - Sports: футбол, баскетбол, плавання, біг
 - Activities: тренуватися, займатися, бігати
 - Places: стадіон, басейн, спортзал
 - Events: змагання, матч, чемпіонат
 
-**Module 54: Health & Body**
+**Module 55: Health & Body**
 
 - Body: серце, легені, печінка, нирки, шлунок
 - Systems: травлення, дихання, кровообіг
 - Symptoms: біль, температура, запалення, нежить
 - Treatment: ліки, таблетки, мазь, ін'єкція
 
-**Module 55: Checkpoint - Vocabulary Expansion**
+**Module 56: Checkpoint - Vocabulary Expansion**
 
-**Covers:** M44-54
+**Covers:** M45-55
 
 **Required Skill Groups:**
 
-1. Food & Cooking (M44) - ingredients, cooking verbs
-2. Home & Furniture (M45) - rooms, items, descriptions
-3. Nature & Weather (M46) - seasons, weather, landscape
-4. Emotions & Personality (M47) - feelings, character traits
-5. Work & Professions (M48) - jobs, workplace vocabulary
-6. Technology & Media (M49) - devices, internet, media
-7. Hobbies & Leisure (M50) - activities, interests
-8. Education & Learning (M51) - school, university, exams
-9. Shopping & Services (M52) - stores, transactions
-10. Sports & Fitness (M53) - activities, equipment
-11. Health & Body (M54) - body systems, symptoms, treatment
+1. Food & Cooking (M45) - ingredients, cooking verbs
+2. Home & Furniture (M46) - rooms, items, descriptions
+3. Nature & Weather (M47) - seasons, weather, landscape
+4. Emotions & Personality (M48) - feelings, character traits
+5. Work & Professions (M49) - jobs, workplace vocabulary
+6. Technology & Media (M50) - devices, internet, media
+7. Hobbies & Leisure (M51) - activities, interests
+8. Education & Learning (M52) - school, university, exams
+9. Shopping & Services (M53) - stores, transactions
+10. Sports & Fitness (M54) - activities, equipment
+11. Health & Body (M55) - body systems, symptoms, treatment
 
 **CEFR Can-Do Alignment:**
 
@@ -1876,7 +1911,7 @@ By module 50, learners can:
 - [ ] Can discuss personal interests, work, and leisure
 - [ ] Can handle practical situations (shopping, travel, health)
 
-**Vocabulary (10 words):** Review selection from M44-54
+**Vocabulary (10 words):** Review selection from M45-55
 
 **Signature Activity Concepts:**
 
@@ -1886,7 +1921,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.6: Review & Consolidation (Modules 56-58)
+## Phase A2.6: Review & Consolidation (Modules 57-58)
 
 ### Learning Goals
 
@@ -1899,11 +1934,10 @@ By module 50, learners can:
 
 | #   | Title                  | Focus                           | Type       |
 | --- | ---------------------- | ------------------------------- | ---------- |
-| 56  | Checkpoint: Vocabulary | All vocabulary consolidation    | Checkpoint |
 | 57  | A2 Grammar Review      | All grammar consolidation       | Review     |
 | 58  | A2 Final Review        | Comprehensive skills assessment | Checkpoint |
 
-### Module 56: A2 Grammar Review
+### Module 57: A2 Grammar Review
 
 **Case system review:**
 
@@ -1929,7 +1963,7 @@ By module 50, learners can:
 - Suffix patterns
 - Root family recognition
 
-### Module 57: A2 Capstone
+### Module 58: A2 Final Review
 
 **Assessment areas:**
 
@@ -1957,12 +1991,12 @@ By module 50, learners can:
 | Phase                     | Modules | New Words  | Focus                     |
 | ------------------------- | ------- | ---------- | ------------------------- |
 | A2.1 Cases                | 01-11   | ~275       | Case-related vocabulary   |
-| A2.2 Aspect & Comparison  | 12-24   | ~325       | Verbs, adjectives         |
-| A2.3 Complex Sentences    | 25-34   | ~250       | Connectors, expressions   |
-| A2.4 Word Formation       | 35-43   | ~270       | Prefixes, suffixes, roots |
-| A2.5 Vocabulary Expansion | 44-55   | ~360       | 12 thematic domains       |
-| A2.6 Review               | 56-57   | ~50        | Consolidation             |
-| **Total**                 | **57**  | **~1,530** |                           |
+| A2.2 Aspect & Comparison  | 12-25   | ~345       | Verbs, adjectives         |
+| A2.3 Complex Sentences    | 26-35   | ~250       | Connectors, expressions   |
+| A2.4 Word Formation       | 36-44   | ~270       | Prefixes, suffixes, roots |
+| A2.5 Vocabulary Expansion | 45-56   | ~360       | 12 thematic domains       |
+| A2.6 Review               | 57-58   | ~50        | Consolidation             |
+| **Total**                 | **58**  | **~1,550** |                           |
 
 **Cumulative after A2:** ~2,400 words
 
@@ -1996,35 +2030,35 @@ graph TD
         M16 --> M22[M22 Conditional]
         M18[M18 Comparative] --> M19[M19 Superlative]
         M19 --> M20[M20 Preference]
-        M20 --> M23[M23 Shopping]
-        M21[M21 Numerals] --> M23
+        M20 --> M24[M24 Shopping]
+        M21[M21 Numerals] --> M24
     end
 
     %% Phase A2.3: Complex Sentences
     subgraph A2_3 [Phase A2.3: Complex]
-        M25[M25 Sequence] --> M26[M26 Causal]
-        M26 --> M28[M28 Opinion]
-        M27[M27 Reported] --> M28
-        M28 --> M29[M29 Emotion]
-        M30[M30 Purpose] --> M33[M33 Doctor]
-        M31[M31 Relative] --> M33
-        M25 --> M32[M32 Time]
+        M26[M26 Sequence] --> M27[M27 Causal]
+        M27 --> M29[M29 Opinion]
+        M28[M28 Reported] --> M29
+        M29 --> M30[M30 Emotion]
+        M31[M31 Purpose] --> M34[M34 Doctor]
+        M32[M32 Relative] --> M34
+        M26 --> M33[M33 Time]
     end
 
     %% Phase A2.4: Word Formation
     subgraph A2_4 [Phase A2.4: Word Form]
-        M35[M35 Basic Motion] --> M36[M36 Adv Motion]
-        M37[M37 Action Pref] --> M40[M40 Roots I]
-        M38[M38 Noun Suff] --> M39[M39 Adj Suff]
-        M40 --> M41[M41 Roots II]
-        M41 --> M42[M42 WF Mastery]
+        M36[M36 Basic Motion] --> M37[M37 Adv Motion]
+        M38[M38 Action Pref] --> M41[M41 Roots I]
+        M39[M39 Noun Suff] --> M40[M40 Adj Suff]
+        M41 --> M42[M42 Roots II]
+        M42 --> M43[M43 WF Mastery]
     end
 
     %% Connections
     M11[Checkpoint A2.1] --> M12
-    M24[Checkpoint A2.2] --> M25
-    M34[Checkpoint A2.3] --> M35
-    M43[Checkpoint A2.4] --> M44[M44+ Vocab Expansion]
+    M25[Checkpoint A2.2] --> M26
+    M35[Checkpoint A2.3] --> M36
+    M44[Checkpoint A2.4] --> M45[M45+ Vocab Expansion]
 ```
 
 ---
@@ -2085,7 +2119,7 @@ With ~2,400 words after A2, learners are prepared for B1 which focuses on:
 - **Vocabulary (V)**: 12 modules - 30-40 new words each
 - **Function (F)**: 4 modules - 25-30 new words each
 - **Review (R)**: 4 modules - 10-20 new words each
-- **Total:** 57 Modules
+- **Total:** 58 Modules
 
 ### Immersion Level
 
@@ -2129,7 +2163,7 @@ Before generating any A2 module:
 
 ## Changelog
 
-- **2025-12-15:** Major restructure for State Standard Compliance. Expanded to 57 modules to include Aspect Drilling (M16), Possessives (M17), Numerals (M21), and split Motion Verbs (M35/36).
+- **2025-12-15:** Major restructure for State Standard Compliance. Expanded to 58 modules to include Aspect Drilling (M16), Possessives (M17), Numerals (M21), and split Motion Verbs (M36/36).
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables, moved to beginning
 - **2025-12-05:** Upgraded with detailed module specifications
 - **Previous:** Basic structure only

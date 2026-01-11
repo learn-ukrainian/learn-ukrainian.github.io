@@ -81,14 +81,18 @@
 ## TEMPLATE COMPLIANCE
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст, Вступ
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 39 violations (severe - consider revision)
+- 41 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1892/2000
@@ -103,26 +107,27 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 37 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (history))
-- **Richness:** ✅ 97% (content)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
+- **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 24 | 15 | 100% | 25% | 25.0% |
-| engagement | 15 | 5 | 100% | 19% | 18.7% |
-| variety | 0.97 | - | 97% | 12% | 12.1% |
-| cultural | 7 | 4 | 100% | 12% | 12.5% |
-| realworld | 4 | 3 | 100% | 12% | 12.5% |
-| visual | 5 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.70 | - | 70% | 6% | 4.4% |
-| questions | 13 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.8%** |
+| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| engagement | 15 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 10 | 2 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 0.70 | - | 70% | 5% | 3.3% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

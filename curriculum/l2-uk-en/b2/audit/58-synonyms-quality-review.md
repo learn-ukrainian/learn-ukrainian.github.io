@@ -23,48 +23,26 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Метафорична якість' Q8 prompt length 4 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [знайдіть-відповідність-(якість)] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Array validation: {'type': 'translate', 'title': 'Переклад якості', 'instruction': 'Оберіть правильний український синонім до англійського слова.', 'items': [{'source': 'flawless', 'options': [{'text': 'бездоганний', 'correct': True}, {'text': 'кепський', 'correct': False}, {'text': 'злий', 'correct': False}, {'text': 'гіркий', 'correct': False}], 'explanation': 'Найкращий відповідник для flawless.'}, {'source': 'disgusting', 'options': [{'text': 'огидний', 'correct': True}, {'text': 'чудовий', 'correct': False}, {'text': 'хороший', 'correct': False}, {'text': 'сучасний'}], 'explanation': 'Найкращий відповідник для disgusting.'}, {'source': 'lousy', 'options': [{'text': 'кепський', 'correct': True}, {'text': 'прекрасний', 'correct': False}, {'text': 'відмінний', 'correct': False}, {'text': 'ідеальний'}], 'explanation': 'Розмовне слово для позначення поганої якості.'}, {'source': 'splendid', 'options': [{'text': 'прекрасний', 'correct': True}, {'text': 'поганий', 'correct': False}, {'text': 'жахливий', 'correct': False}, {'text': 'дрібний'}], 'explanation': 'Високий стиль для позначення краси та якості.'}, {'source': 'harmful', 'options': [{'text': 'шкідливий', 'correct': True}, {'text': 'добрий', 'correct': False}, {'text': 'гарний', 'correct': False}, {'text': 'чудовий'}], 'explanation': 'Той, що завдає шкоди.'}, {'source': 'miraculous', 'options': [{'text': 'чудесний', 'correct': True}, {'text': 'страшний', 'correct': False}, {'text': 'кепський', 'correct': False}, {'text': 'звичайний'}], 'explanation': 'Той, що подібний до дива.'}, {'source': 'insufficient', 'options': [{'text': 'незадовільний', 'correct': True}, {'text': 'відмінний', 'correct': False}, {'text': 'бездоганний', 'correct': False}, {'text': 'ідеальний'}], 'explanation': 'Який не відповідає вимогам.'}, {'source': 'crucial', 'options': [{'text': 'вирішальний', 'correct': True}, {'text': 'незначний', 'correct': False}, {'text': 'дрібний', 'correct': False}, {'text': 'мізерний'}], 'explanation': 'Найважливіший у ситуації.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [оберіть-точну-оцінку] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [градація-оцінки] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [складіть-оцінне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [відгук-про-поїздку] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [оберіть-критерій] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [виправте-оцінку] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [переклад-якості] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [нюанси-оцінки] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [всі-відтінки-досконалості] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [регістри-та-оцінки] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [антоніми-якості] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [метафорична-якість] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [соціальна-оцінка] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Світ у відтінках якості, Частина 6: Психологія оцінки та емоційний інтелект в українському контексті
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Частина 6: Психологія оцінки та емоційний інтелект в українському контексті, Вступ: Світ у відтінках якості
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+- 16 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1777/1750
@@ -77,28 +55,28 @@
 - **Vocab:** ✅ 65/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 25 violations
+- **Pedagogy:** ❌ 13 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (content)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 53 | 15 | 100% | 25% | 25.0% |
-| engagement | 9 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 9 | 4 | 100% | 12% | 12.5% |
-| realworld | 10 | 3 | 100% | 12% | 12.5% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.88 | - | 88% | 6% | 5.5% |
-| questions | 5 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.1%** |
+| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| variety | 0.99 | - | 99% | 17% | 16.5% |
+| cultural | 9 | - | 100% | 17% | 16.7% |
+| visual | 4 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
+| examples | 53 | - | 100% | 8% | 8.3% |
+| realworld | 10 | - | 100% | 8% | 8.3% |
+| questions | 5 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

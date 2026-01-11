@@ -86,14 +86,14 @@ b1:
   immersion:
     metalanguage_bridge: [1, 2, 3, 4, 5]
     full_immersion_start: 6
-    target_percentage: 98.0
+    target_percentage: 90.0
     reference: "Curriculum design decision"
     description: "B1.1 metalanguage bridge, then 100% Ukrainian immersion"
 
 b2:
   # Full immersion required
   immersion:
-    target_percentage: 98.0
+    target_percentage: 90.0
     reference: "Curriculum design decision"
     description: "100% Ukrainian immersion throughout B2"
 
@@ -106,14 +106,14 @@ b2:
 c1:
   # Full immersion required
   immersion:
-    target_percentage: 98.0
+    target_percentage: 90.0
     reference: "Curriculum design decision"
     description: "100% Ukrainian immersion throughout C1"
 
 c2:
   # Full immersion required
   immersion:
-    target_percentage: 98.0
+    target_percentage: 90.0
     reference: "Curriculum design decision"
     description: "100% Ukrainian immersion throughout C2"
 

@@ -31,48 +31,28 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Метафоричне слово' Q8 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [знайдіть-контекст-мовлення] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: Array validation: {'type': 'select', 'title': 'Професійна комунікація', 'instruction': 'Оберіть слова, які доречні в ділових переговорах (6+ елементів).', 'items': [{'question': 'Яка лексика пасує для офіційних зустрічей?', 'options': [{'text': 'пропонувати', 'correct': True}, {'text': 'узгоджувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'підтверджувати', 'correct': True}, {'text': 'теревенити', 'correct': False}, {'text': 'резюмувати', 'correct': True}, {'text': 'обговорювати', 'correct': True}, {'text': 'уточнювати', 'correct': True}]}, {'question': 'Оберіть дієслова для підбиття підсумків:', 'options': [{'text': 'резюмувати', 'correct': True}, {'text': 'підсумовувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'висновувати', 'correct': True}]}, {'question': 'Які слова описують процес переконання?', 'options': [{'text': 'аргументувати', 'correct': True}, {'text': 'переконувати', 'correct': True}, {'text': 'обґрунтовувати', 'correct': True}, {'text': 'мовчати', 'correct': False}]}, {'question': 'Оберіть терміни для ділового спілкування:', 'options': [{'text': 'порядок денний', 'correct': True}, {'text': 'протокол', 'correct': True}, {'text': 'регламент', 'correct': True}, {'text': 'плітки', 'correct': False}]}, {'question': 'Які дієслова вказують на офіційне повідомлення?', 'options': [{'text': 'сповіщати', 'correct': True}, {'text': 'інформувати', 'correct': True}, {'text': 'повідомляти', 'correct': True}, {'text': 'шепотіти', 'correct': False}]}, {'question': 'Оберіть форми офіційного звернення:', 'options': [{'text': 'запит', 'correct': True}, {'text': 'заява', 'correct': True}, {'text': 'клопотання', 'correct': True}, {'text': 'балачка', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [оберіть-точне-дієслово] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [рівень-офіційності] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [складіть-речення-про-діалог] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [конференція-в-столиці] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [точність-запитання] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [виправте-помилки-комунікації] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [переклад-спілкування] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [нюанси-діалогу] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [всі-форми-повідомлення] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [спілкування-та-регістри] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [антоніми-спілкування] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [метафоричне-слово] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [професійна-комунікація] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: [index-13] select: 'items.0.options' - [{'text': 'пропонувати', 'correct': True}, {'text': 'узгоджувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'підтверджувати', 'correct': True}, {'text': 'теревенити', 'correct': False}, {'text': 'резюмувати', 'correct': True}, {'text': 'обговорювати', 'correct': True}, {'text': 'уточнювати', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Частина 5: Практичний додаток — Тон та Контекст, Вступ: Мистецтво висловлення думки
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Мистецтво висловлення думки, Частина 5: Практичний додаток — Тон та Контекст
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 31 violations (severe - consider revision)
+- 21 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1809/1750
@@ -85,28 +65,28 @@
 - **Vocab:** ✅ 58/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
-- **Richness:** ✅ 98% (content)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
-**Module Type:** content
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 15 | 100% | 25% | 25.0% |
-| engagement | 10 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 7 | 4 | 100% | 12% | 12.5% |
-| realworld | 10 | 3 | 100% | 12% | 12.5% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.82 | - | 82% | 6% | 5.1% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **98.6%** |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
+| variety | 0.98 | - | 98% | 17% | 16.3% |
+| cultural | 7 | - | 100% | 17% | 16.7% |
+| visual | 8 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
+| examples | 40 | - | 100% | 8% | 8.3% |
+| realworld | 10 | - | 100% | 8% | 8.3% |
+| questions | 8 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

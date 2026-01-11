@@ -2,24 +2,11 @@
 **Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 17 has 91.9% immersion (target: 98.0%+)
-  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Приклади в реальному контексті, Тест
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1768/1500
-- **Activities:** ✅ 11/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio

@@ -77,33 +77,9 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Тест: літературні жанри' Q12 prompt length 3 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [match-arts-terms] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: Array validation: {'type': 'select', 'title': 'Оберіть українські культурні явища', 'instruction': 'Позначте все, що належить до української культури.', 'items': [{'correct': True, 'question': '«Кобзар» Тараса Шевченка'}, {'correct': False, 'question': '«Війна і мир» Толстого'}, {'correct': True, 'question': '«Лісова пісня» Лесі Українки'}, {'correct': False, 'question': '«Мона Ліза» Леонардо'}, {'correct': True, 'question': '«Тіні забутих предків» Параджанова'}, {'correct': True, 'question': '«Чорний квадрат» Малевича'}, {'correct': False, 'question': '«Девʼята симфонія» Бетховена'}, {'correct': True, 'question': '«Наталка Полтавка» Лисенка'}, {'correct': False, 'question': '«Гамлет» Шекспіра'}, {'correct': True, 'question': '«Земля» Довженка'}, {'correct': True, 'question': '«1944» Джамали'}, {'correct': True, 'question': '«Червона рута» Івасюка'}, {'correct': False, 'question': '«Лебедине озеро» Чайковського'}, {'correct': True, 'question': '«Ворошиловград» Жадана'}, {'correct': False, 'question': '«Злочин і кара» Достоєвського'}, {'correct': True, 'question': '«20 днів у Маріуполі» Чернова'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [fill-in-literature] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [quiz-culture] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [true-false-culture] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [group-sort-arts] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [unjumble-culture] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [cloze-culture] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [error-correction-culture] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [translate-culture] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [mark-culture-terms] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [розмова-в-музеї] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [select-works] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [fill-in-criticism] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [quiz-genres] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-mystetstvo-i-literatura.yaml: [index-11] select: 'items.15' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -116,7 +92,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 53 violations (severe - consider revision)
+- 41 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2002/1750
@@ -129,9 +105,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 52 violations
+- **Pedagogy:** ❌ 40 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (skills))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ⏳ Pending validation
 

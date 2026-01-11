@@ -2,8 +2,19 @@
 **Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Пояснення|Граматика|Теорія' found: Пояснення, Вправа 4: Заміна сполучника з поясненням
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Трансформації' found: Трансформації, Вправа 5: Комбіновані трансформації
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2048/1750
+- **Words:** ✅ 2451/1750
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -15,7 +26,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -26,7 +37,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 53 | 24 | 100% | 20% | 20.0% |
+| examples | 70 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 0.92 | - | 92% | 10% | 9.2% |
@@ -51,6 +62,7 @@
 | **Вступ** | ⚪️ | 188 | Skipped |
 | **Пояснення** | ⚪️ | 1016 | Skipped |
 | **Практика** | ⚪️ | 387 | Skipped |
+| **Трансформації** | ⚪️ | 403 | Skipped |
 | **Діалоги** | ✅ | 142 | Included in Core |
 | **Підсумок** | ✅ | 139 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,10 +1,10 @@
 module: b1-72
 title: 'Українські регіони: Захід'
 subtitle: Western Ukraine - Regions and Heritage
-version: '1.0'
+version: '2.0'
 phase: B1.7 Contemporary Ukraine
 focus: cultural
-pedagogy: PPP
+pedagogy: CBI
 duration: 90
 transliteration: none
 grammar:
@@ -19,6 +19,6 @@ objectives:
   - Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia
   - Learner can use regional vocabulary to describe Western Ukrainian culture
   - Learner can compare Western Ukrainian traditions with other regions
-vocabulary_count: 25
-vocab_count: 57
+vocabulary_count: 52
+vocab_count: 52
 slug: 72-regions-west

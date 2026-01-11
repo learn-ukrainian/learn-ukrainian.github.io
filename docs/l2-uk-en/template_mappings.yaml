@@ -38,22 +38,22 @@ mappings:
     template: b1-metalanguage-module-template.md
     description: 'B1 metalanguage bridge modules (M01-M05)'
 
-  - pattern: '^b1-(15|25|34|41|51)$'
+  - pattern: '^b1-(15|25|34|41|51)(-.*)?$'
     level: b1
     template: b1-checkpoint-module-template.md
     description: 'B1 checkpoints (M15, M25, M34, M41, M51)'
 
-  - pattern: '^b1-(71|72|73|74|75|76|77|78|79|80)$'
+  - pattern: '^b1-(71|72|73|74|75|76|77|78|79|80)-'
     level: b1
     template: b1-cultural-module-template.md
     description: 'B1 cultural modules (Regions: M71-80)'
 
-  - pattern: '^b1-(52|53|54|55|56|57|58|59|60|61|62|63|64|65)$'
+  - pattern: '^b1-(52|53|54|55|56|57|58|59|60|61|62|63|64|65)-'
     level: b1
     template: b1-vocab-module-template.md
     description: 'B1 vocabulary expansion (M52-65)'
 
-  - pattern: '^b1-(81|82|83|84|85|86)$'
+  - pattern: '^b1-(81|82|83|84|85|86)-'
     level: b1
     template: b1-integration-module-template.md
     description: 'B1 integration modules (M81-86)'

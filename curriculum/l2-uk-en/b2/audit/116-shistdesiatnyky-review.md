@@ -3,33 +3,29 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q1 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q5 prompt length 5 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q6 prompt length 3 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Читання: Перевірка розуміння' Q8 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Поєднайте видатних діячів шістдесятництва з їхньою діяльністю або долею.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** group-sort 'Розподіліть за групами' has 2 groups (target: 3-5)
+  - FIX: Adjust number of sorting categories to 3-5.
+- **[COMPLEXITY]** match-up 'Доберіть синоніми до слів.' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: Array validation: {'type': 'translate', 'items': [{'source': 'Thaw', 'options': [{'text': 'Відлига', 'correct': True}]}, {'source': 'Censorship', 'options': [{'text': 'Цензура', 'correct': True}]}, {'source': 'Dissident', 'options': [{'text': 'Дисидент', 'correct': True}]}, {'source': 'Persecution', 'options': [{'text': 'Переслідування', 'correct': True}]}, {'source': 'Exile', 'options': [{'text': 'Заслання', 'correct': True}]}, {'source': 'Self-publishing', 'options': [{'text': 'Самвидав', 'correct': True}]}, {'source': 'Human dignity', 'options': [{'text': 'Людська гідність', 'correct': True}]}, {'source': 'Conscience', 'options': [{'text': 'Совість', 'correct': True}]}], 'title': 'Перекладіть історичні терміни українською мовою.', 'instruction': 'Оберіть правильний переклад.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [index-4] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [figures_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [index-5] mark-the-words: 'title' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [grammar_voice_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [index-12] select: 'items.5' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [source_analysis_1] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [grammar_passive_1] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [concepts_sorting] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [text_cloze_1] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [sentence_structure_1] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [content_check_1] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [synonyms_match] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [grammar_prep_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [cultural_context] select: Additional properties are not allowed ('id', 'question' were unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [terms_translation] translate: Additional properties are not allowed ('id', 'question' were unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-shistdesiatnyky.yaml: [index-13] translate: 'items.7.options' - [{'text': 'Совість', 'correct': True}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -41,26 +37,25 @@
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 50/100)
 
-- 17 violations (severe - consider revision)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 15 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2109/2000
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (history))
+- **Pedagogy:** ❌ 14 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 

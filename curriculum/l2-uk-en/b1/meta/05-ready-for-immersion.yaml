@@ -4,6 +4,7 @@ subtitle: Metalanguage mastery checkpoint
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: TTT
+focus: grammar
 template: b1-metalanguage-module-template.md
 duration: 75
 transliteration: none

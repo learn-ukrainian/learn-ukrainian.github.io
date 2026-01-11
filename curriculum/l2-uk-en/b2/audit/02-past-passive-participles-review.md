@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2106/1750
+- **Words:** ✅ 2124/1750
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.5% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -29,14 +29,14 @@
 | examples | 85 | 24 | 100% | 20% | 20.0% |
 | engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 48 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.1%** |
+| **TOTAL** | | | | | **96.2%** |
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -50,7 +50,8 @@
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
 | **Вступ** | ⚪️ | 186 | Skipped |
 | **Пояснення** | ⚪️ | 1279 | Skipped |
-| **Практика** | ⚪️ | 115 | Skipped |
+| **Практика** | ⚪️ | 0 | Skipped |
+| **Трансформації** | ⚪️ | 133 | Skipped |
 | **Діалоги** | ✅ | 250 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Що ви навчилися** | ⚪️ | 48 | Skipped |

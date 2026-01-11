@@ -1,0 +1,146 @@
+module: 165-winter-holidays
+level: C1
+version: '1.0'
+items:
+  - lemma: Святвечір
+    ipa: /sʲvjatˈvɛt͡ʃʲir/
+    translation: Holy Eve (Christmas Eve)
+    pos: noun
+    gender: m
+  - lemma: Різдво
+    ipa: /rʲizdˈvɔ/
+    translation: Christmas
+    pos: noun
+    gender: n
+  - lemma: Маланка
+    ipa: /maˈlanka/
+    translation: Malanka (New Year's Eve folk holiday)
+    pos: propn
+    gender: f
+  - lemma: Водохреща
+    ipa: /vɔdɔˈxrɛʃt͡ʃa/
+    translation: Epiphany (Jordan)
+    pos: noun
+    gender: n
+  - lemma: вертеп
+    ipa: /vɛrˈtɛp/
+    translation: vertep (nativity scene/play)
+    pos: noun
+    gender: m
+  - lemma: колядка
+    ipa: /kɔˈlʲadka/
+    translation: koliadka (Christmas carol)
+    pos: noun
+    gender: f
+  - lemma: щедрівка
+    ipa: /ʃt͡ʃɛˈdrʲiu̯ka/
+    translation: shchedrivka (New Year song)
+    pos: noun
+    gender: f
+  - lemma: дідух
+    ipa: /dʲiˈdux/
+    translation: didukh (wheat sheaf)
+    pos: noun
+    gender: m
+  - lemma: павук
+    ipa: /paˈvuk/
+    translation: spider (straw decoration)
+    pos: noun
+    gender: m
+  - lemma: звіздар
+    ipa: /zvizˈdar/
+    translation: star bearer
+    pos: noun
+    gender: m
+  - lemma: міхоноша
+    ipa: /mʲixɔˈnɔʃa/
+    translation: sack carrier
+    pos: noun
+    gender: m
+  - lemma: коза
+    ipa: /kɔˈza/
+    translation: goat (Malanka character)
+    pos: noun
+    gender: f
+  - lemma: ополонка
+    ipa: /ɔpɔˈlɔnka/
+    translation: ice hole
+    pos: noun
+    gender: f
+  - lemma: кутя
+    ipa: /kuˈtʲa/
+    translation: kutia
+    pos: noun
+    gender: f
+  - lemma: піст
+    ipa: /pʲist/
+    translation: fast (religious)
+    pos: noun
+    gender: m
+  - lemma: синкретизм
+    ipa: /sɪnkrɛˈtɪzm/
+    translation: syncretism
+    pos: noun
+    gender: m
+  - lemma: язичницький
+    ipa: /jazɪt͡ʃˈnɪt͡sʲkɪj/
+    translation: pagan
+    pos: adj
+    gender: m
+  - lemma: християнський
+    ipa: /xrɪstɪˈjansʲkɪj/
+    translation: Christian
+    pos: adj
+    gender: m
+  - lemma: обрядовий
+    ipa: /ɔbrʲaˈdɔvɪj/
+    translation: ritual
+    pos: adj
+    gender: m
+  - lemma: щедрий
+    ipa: /ˈʃt͡ʃɛdrɪj/
+    translation: generous
+    pos: adj
+    gender: m
+  - lemma: святий
+    ipa: /sʲvjaˈtɪj/
+    translation: holy, saint
+    pos: adj
+    gender: m
+  - lemma: колядувати
+    ipa: /kɔlʲaduˈvatɪ/
+    translation: to carol (koliadky)
+    pos: verb
+  - lemma: щедрувати
+    ipa: /ʃt͡ʃɛdruˈvatɪ/
+    translation: to sing shchedrivky
+    pos: verb
+  - lemma: посівати
+    ipa: /pɔsʲiˈvatɪ/
+    translation: to sow (grains ritual)
+    pos: verb
+  - lemma: ворожити
+    ipa: /vɔrɔˈʒɪtɪ/
+    translation: to divine, to tell fortune
+    pos: verb
+  - lemma: пірнати
+    ipa: /pʲirˈnatɪ/
+    translation: to dive (into water)
+    pos: verb
+  - lemma: освячувати
+    ipa: /ɔsˈvʲat͡ʃuvatɪ/
+    translation: to consecrate, to bless
+    pos: verb
+  - lemma: святкувати
+    ipa: /sʲvjatkuˈvatɪ/
+    translation: to celebrate
+    pos: verb
+  - lemma: вітати
+    ipa: /vʲiˈtatɪ/
+    translation: to greet, to congratulate
+    pos: verb
+  - lemma: добробут
+    ipa: /dɔˈbrɔbut/
+    translation: well-being, prosperity
+    pos: noun
+    gender: m

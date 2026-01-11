@@ -2870,7 +2870,7 @@ resources:
       channel: відео пояснення
     articles:
     - title: Вид дієслова
-      url: https://uk.wikipedia.org/wiki/Вид_(мовознавство
+      url: https://uk.wikipedia.org/wiki/Вид_(мовознавство)
       relevance: high
       source: Вікіпедія
     - title: 'Ukrainian Lessons Podcast: Aspect'
@@ -3243,7 +3243,7 @@ resources:
   b1-14-aspect-integration-practice:
     articles:
     - title: Вид дієслова
-      url: https://uk.wikipedia.org/wiki/Вид_(лінгвістика
+      url: https://uk.wikipedia.org/wiki/Вид_(лінгвістика)
       relevance: high
       source: Вікіпедія
     - title: Ukrainian Lessons Podcast

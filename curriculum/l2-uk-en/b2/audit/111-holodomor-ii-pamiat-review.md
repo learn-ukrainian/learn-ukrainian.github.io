@@ -3,33 +3,15 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: Array validation: {'type': 'translate', 'title': 'Англомовні поняття', 'instruction': 'Оберіть правильний переклад.', 'items': [{'sentence': 'Голодомор is a crime against humanity.', 'options': [{'text': 'Голодомор — це злочин проти людства.', 'correct': True}, {'text': 'Голодомор — це помилка природи.', 'correct': False}, {'text': 'Голодомор — це трагедія села.', 'correct': False}, {'text': 'Голодомор — це військова операція.', 'correct': False}]}, {'sentence': 'Denial is the final stage of genocide.', 'options': [{'text': 'Заперечення — це остання стадія геноциду.', 'correct': True}, {'text': 'Визнання — це початок геноциду.', 'correct': False}, {'text': 'Забуття — це мета геноциду.', 'correct': False}, {'text': 'Покарання — це наслідок геноциду.', 'correct': False}]}, {'sentence': 'Freedom of speech matters.', 'options': [{'text': 'Свобода слова має значення.', 'correct': True}, {'text': 'Свобода слова небезпечна.', 'correct': False}, {'text': 'Свобода слова скасована.', 'correct': False}, {'text': 'Свобода слова дорога.', 'correct': False}]}, {'sentence': 'Never again.', 'options': [{'text': 'Ніколи знову.', 'correct': True}, {'text': 'Завжди поруч.', 'correct': False}, {'text': 'Знову і знову.', 'correct': False}, {'text': 'Можливо колись.', 'correct': False}]}, {'sentence': 'Memory is a weapon.', 'options': [{'text': "Пам'ять — це зброя.", 'correct': True}, {'text': "Пам'ять — це біль.", 'correct': False}, {'text': "Пам'ять — це історія.", 'correct': False}, {'text': "Пам'ять — це життя.", 'correct': False}]}, {'sentence': 'The truth will prevail.', 'options': [{'text': 'Правда переможе.', 'correct': True}, {'text': 'Правда загине.', 'correct': False}, {'text': 'Правда не важлива.', 'correct': False}, {'text': 'Правда — це брехня.', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [лексика-пам'яті] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [index-0] quiz: 'items.7' - 'question' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [елемент-↔-значення] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [index-5] select: 'items.5' - 'question' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [міфи-та-факти] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [index-7] quiz: 'items.7' - 'question' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [історія-гарета-джонса] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [аналіз-джерела-(радченко-та-лисивець)] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [ролі-в-історії] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [граматика:-пасивний-стан-(revision)] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [виправлення-історичних-помилок] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [речення-про-пам'ять] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [англомовні-поняття] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [хронологія-правди] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [емоційна-лексика] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [числа-трагедії] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-holodomor-ii-pamiat.yaml: [index-10] translate: 'items.5' - 'source' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -37,7 +19,7 @@
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст і причини
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст і причини, Вступ
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
   - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
@@ -45,9 +27,10 @@
   - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 55/100)
 
-- 19 violations (severe - consider revision)
+- Revision recommended (severity 55/100)
+- 10 violations (significant)
 - Activity count below minimum
 - Activity density below minimum
 
@@ -62,9 +45,9 @@
 - **Vocab:** ⚠️ 16 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 16 violations
+- **Pedagogy:** ❌ 7 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 98.2% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 

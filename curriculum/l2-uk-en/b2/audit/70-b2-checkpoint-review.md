@@ -57,42 +57,20 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Фінальний синтаксис' Q8 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [граматичний-checkpoint] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: Array validation: {'type': 'select', 'title': 'Самодіагностика', 'instruction': 'Оберіть пункти успіху (6+).', 'items': [{'question': 'Мій успіх (6+):', 'options': [{'text': 'розумію синоніми', 'correct': True}, {'text': 'відмінюю числівники', 'correct': True}, {'text': 'вживаю сполучники', 'correct': True}, {'text': 'знаю ідіоми', 'correct': True}, {'text': 'відчуваю регістри', 'correct': True}, {'text': 'можу написати есей', 'correct': True}, {'text': 'готовий до історії', 'correct': True}, {'text': 'ціную мову', 'correct': True}]}, {'question': 'Які регіони ви відвідали у фазі B2.2?', 'options': [{'text': 'Полтавщина', 'correct': True}, {'text': 'Сумщина', 'correct': True}, {'text': 'Миколаївщина', 'correct': True}, {'text': 'Херсонщина', 'correct': True}]}, {'question': 'Оберіть навички професійного письма:', 'options': [{'text': 'структурування тексту', 'correct': True}, {'text': 'аргументованість', 'correct': True}, {'text': 'використання термінології', 'correct': True}, {'text': 'хаотичність', 'correct': False}]}, {'question': 'Які слова описують ваш розвиток?', 'options': [{'text': 'прогрес', 'correct': True}, {'text': 'майстерність', 'correct': True}, {'text': 'компетентність', 'correct': True}, {'text': 'застій', 'correct': False}]}, {'question': "Оберіть сполучники складних зв'язків:", 'options': [{'text': 'внаслідок того що', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'і', 'correct': False}]}, {'question': 'Які філософські поняття ми обговорювали?', 'options': [{'text': 'буття', 'correct': True}, {'text': 'сутність', 'correct': True}, {'text': 'ідея', 'correct': True}, {'text': 'ціна', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [фразеологічна-перевірка] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [синтаксичний-лабіринт] group-sort: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [index-9] select: 'items.0.options' - [{'text': 'відмінювати числівники', 'correct': True}, {'text': 'вживати ідіоми', 'correct': True}, {'text': 'будувати складні речення', 'correct': True}, {'text': 'розрізняти синоніми', 'correct': True}, {'text': 'використовувати абстрактну лексику', 'correct': True}, {'text': 'трансформувати тексти', 'correct': True}, {'text': 'володіти стилістичними регістрами', 'correct': True}, {'text': 'аналізувати підтекст', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [складіть-фінальну-тезу] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [лист-до-фахівця] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [трансформація-чисел] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [виправте-b2-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [фінальний-переклад] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [вердикт-фахівця] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [арсенал-b2.2] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [синонімічний-checkpoint] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [регістри-та-ситуації] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [фінальний-вердикт] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [самодіагностика] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [фінальний-синтаксис] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: [index-13] select: 'items.0.options' - [{'text': 'розумію синоніми', 'correct': True}, {'text': 'відмінюю числівники', 'correct': True}, {'text': 'вживаю сполучники', 'correct': True}, {'text': 'знаю ідіоми', 'correct': True}, {'text': 'відчуваю регістри', 'correct': True}, {'text': 'можу написати есей', 'correct': True}, {'text': 'готовий до історії', 'correct': True}, {'text': 'ціную мову', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Огляд' per template 'b2-checkpoint-module-template'
   - FIX: Add '## Огляд' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Skill Sections' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Skill Sections' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
+  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
   - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
 
@@ -100,7 +78,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 45 violations (severe - consider revision)
+- 34 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 1260/1750
@@ -113,7 +91,7 @@
 - **Vocab:** ✅ 26/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 42 violations
+- **Pedagogy:** ❌ 31 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (checkpoint - no gate)
 - **Richness:** ✅ 89% (checkpoint)

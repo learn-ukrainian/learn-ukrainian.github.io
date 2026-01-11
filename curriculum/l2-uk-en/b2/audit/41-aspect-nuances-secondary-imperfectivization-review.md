@@ -87,50 +87,22 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складніші речення' item 16 has 7 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [розуміння-вторинної-імперфективації] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [вторинні-імперфективи-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [видові-пари] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [виберіть-правильний-суфікс] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [типи-суфіксів-вторинної-імперфективації] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [складіть-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [виправте-видові-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [заповніть-текст] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [визначте-значення-вторинного-імперфектива] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [правила-вторинної-імперфективації] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [переклад-речень] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [складіть-складніші-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [виберіть-усі-правильні-вторинні-імперфективи] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [знайдіть-усі-вторинні-імперфективи] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 41-aspect-nuances-secondary-imperfectivization.yaml: [трансформуйте-речення] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Культурний контекст, Часові контексти вживання, Вторинна імперфективація в контексті
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Культурний контекст, Вторинна імперфективація в контексті, Часові контексти вживання
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Пояснення|Граматика|Теорія' found: Пояснення, 3. Коментуюче значення (пояснення до факту)
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 60 violations (severe - consider revision)
+- 46 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1900/1750
@@ -143,30 +115,28 @@
 - **Vocab:** ✅ 77/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 58 violations
+- **Pedagogy:** ❌ 43 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (vocab))
-- **Richness:** ✅ 96% (grammar)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 75 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 10 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
-| questions | 19 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| engagement | 12 | 4 | 100% | 25% | 25.0% |
+| variety | 0.98 | - | 98% | 17% | 16.3% |
+| cultural | 2 | - | 100% | 17% | 16.7% |
+| visual | 9 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.93 | - | 93% | 8% | 7.8% |
+| examples | 75 | - | 100% | 8% | 8.3% |
+| realworld | 7 | - | 100% | 8% | 8.3% |
+| questions | 19 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

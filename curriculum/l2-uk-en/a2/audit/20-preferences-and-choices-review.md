@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, давальний, дієслово
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, дієслово, давальний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): віддавати, краще, повільніше, швидше, волити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): легше, подобатися, краще, волити, дорожче...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,0 +1,150 @@
+module: 161-ukrainian-avant-garde
+level: C1
+version: '1.0'
+items:
+  - lemma: авангард
+    ipa: /avanˈhard/
+    translation: avant-garde
+    pos: noun
+    gender: m
+  - lemma: безпредметність
+    ipa: /bɛzprɛdˈmɛtnʲisʲtʲ/
+    translation: non-objectivity
+    pos: noun
+    gender: f
+  - lemma: бойчукізм
+    ipa: /bɔjvt͡ʃuˈkʲizm/
+    translation: Boichukism (monumentalism)
+    pos: noun
+    gender: m
+  - lemma: конструктивізм
+    ipa: /kɔnstruktyˈvʲizm/
+    translation: constructivism
+    pos: noun
+    gender: m
+  - lemma: кубофутуризм
+    ipa: /kubɔfutuˈrʲizm/
+    translation: cubo-futurism
+    pos: noun
+    gender: m
+  - lemma: супрематизм
+    ipa: /suprɛmaˈtɪzm/
+    translation: suprematism
+    pos: noun
+    gender: m
+  - lemma: спектралізм
+    ipa: /spɛktraˈlʲizm/
+    translation: spectralism
+    pos: noun
+    gender: m
+  - lemma: новаторство
+    ipa: /nɔˈvatɔrstvɔ/
+    translation: innovation
+    pos: noun
+    gender: n
+  - lemma: експеримент
+    ipa: /ɛkspɛrɪˈmɛnt/
+    translation: experiment
+    pos: noun
+    gender: m
+  - lemma: композиція
+    ipa: /kɔmpɔˈzɪt͡sʲija/
+    translation: composition
+    pos: noun
+    gender: f
+  - lemma: динаміка
+    ipa: /dɪˈnamʲika/
+    translation: dynamics
+    pos: noun
+    gender: f
+  - lemma: ритм
+    ipa: /rɪtm/
+    translation: rhythm
+    pos: noun
+    gender: m
+  - lemma: колорит
+    ipa: /kɔlɔˈrɪt/
+    translation: coloring, color scheme
+    pos: noun
+    gender: m
+  - lemma: площина
+    ipa: /plɔʃt͡ʃɪˈna/
+    translation: plane, surface
+    pos: noun
+    gender: f
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: сценографія
+    ipa: /st͡sɛnɔˈhrafʲija/
+    translation: scenography
+    pos: noun
+    gender: f
+  - lemma: урбанізм
+    ipa: /urbaˈnʲizm/
+    translation: urbanism
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /fɔlʲkˈlɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: орнамент
+    ipa: /ɔrˈnamɛnt/
+    translation: ornament
+    pos: noun
+    gender: m
+  - lemma: примітивізм
+    ipa: /prɪmʲitɪˈvʲizm/
+    translation: primitivism
+    pos: noun
+    gender: m
+  - lemma: руйнувати
+    ipa: /rujnuˈvatɪ/
+    translation: to destroy (canons)
+    pos: verb
+  - lemma: поєднувати
+    ipa: /pɔˈjɛdnuvatɪ/
+    translation: to combine
+    pos: verb
+  - lemma: трансформувати
+    ipa: /transfɔrmuˈvatɪ/
+    translation: to transform
+    pos: verb
+  - lemma: втілювати
+    ipa: /u̯ˈtʲilʲuvatɪ/
+    translation: to embody
+    pos: verb
+  - lemma: революційний
+    ipa: /rɛvɔlʲuˈt͡sʲijnɪj/
+    translation: revolutionary
+    pos: adj
+    gender: m
+  - lemma: геометричний
+    ipa: /hɛɔmɛˈtrɪt͡ʃnɪj/
+    translation: geometric
+    pos: adj
+    gender: m
+  - lemma: абстрактний
+    ipa: /abˈstraktnɪj/
+    translation: abstract
+    pos: adj
+    gender: m
+  - lemma: автентичний
+    ipa: /au̯tɛnˈtɪt͡ʃnɪj/
+    translation: authentic
+    pos: adj
+    gender: m
+  - lemma: світовий
+    ipa: /sʲvʲitɔˈvɪj/
+    translation: world, global
+    pos: adj
+    gender: m
+  - lemma: візуальний
+    ipa: /vʲizuˈalʲnɪj/
+    translation: visual
+    pos: adj
+    gender: m

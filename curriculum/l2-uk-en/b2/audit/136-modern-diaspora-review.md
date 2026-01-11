@@ -9,33 +9,13 @@
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Роль діаспори у світі' item 7 has 8 words (target: 10-18)
   - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: Array validation: {'type': 'translate', 'title': 'Пасивні конструкції (B2 фокус)', 'items': [{'options': [{'text': 'Громадою побудовано нову церкву.', 'correct': True}, {'text': 'Громада збудувала церкву.'}, {'text': 'Церква побудувала громаду.'}], 'source': 'Громада збудувала нову церкву.'}, {'options': [{'text': 'Цей мітинг був організований діаспорою.', 'correct': True}, {'text': 'Мітинг організував діаспору.'}, {'text': 'Діаспора буде організовувати мітинг.'}], 'source': 'Діаспора організувала цей мітинг.'}, {'options': [{'text': 'Допомога доставляється волонтерами.', 'correct': True}, {'text': 'Волонтери будуть доставляти допомогу.'}, {'text': 'Допомога доставлена волонтерам.'}], 'source': 'Волонтери доставляють допомогу.'}, {'options': [{'text': 'Урядом ухвалено закон про громадянство.', 'correct': True}, {'text': 'Уряд ухвалить закон.'}, {'text': 'Закон ухвалив уряд.'}], 'source': 'Уряд ухвалив закон про громадянство.'}, {'options': [{'text': 'Зусилля громад координуються СКУ.', 'correct': True}, {'text': 'СКУ буде координувати зусилля.'}, {'text': 'Громади координують СКУ.'}], 'source': 'СКУ координує зусилля громад.'}, {'options': [{'text': 'Суботня школа була відкрита нами.', 'correct': True}, {'text': 'Ми відкриваємо школу.'}, {'text': 'Школа відкрила нас.'}], 'source': 'Ми відкрили суботню школу.'}, {'options': [{'text': 'Активістами проведено протест.', 'correct': True}, {'text': 'Активісти проводять протест.'}, {'text': 'Протест провели активістів.'}], 'source': 'Активісти провели протест.'}, {'options': [{'text': 'Ідентичність зберігається нею.', 'correct': True}, {'text': 'Вона буде зберігати ідентичність.'}, {'text': 'Ідентичність зберегла її.'}], 'source': 'Вона зберігає ідентичність.'}], 'instruction': 'Виберіть правильний пасивний варіант для активного речення.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [index-7] error-correction: 'items.7' - 'options' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [index-8] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-gs-1] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-mtw-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [планування-суботньої-школи] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-ec-1] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-tr-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-sel-1] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-cloze-1] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-trans-1] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-ta-1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [136-cp-1] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-modern-diaspora.yaml: [index-11] translate: 'items.7.options.2' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: skills) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
@@ -52,7 +32,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 21 violations (severe - consider revision)
+- 11 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2866/1750
@@ -65,9 +45,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 18 violations
+- **Pedagogy:** ❌ 8 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.5% (target 98-100% (skills))
+- **Immersion:** 🇺🇦 98.5% (target 90-100% (skills))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ⏳ Pending validation
 

@@ -2,18 +2,9 @@
 **Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1721/1500
-- **Activities:** ✅ 11/8
+- **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
@@ -52,7 +43,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |
 | **Діагностика** | ✅ | 123 | Included in Core |
-| **Аналіз** | ✅ | 512 | Included in Core |
+| **Пояснення** | ⚪️ | 512 | Skipped |
 | **Поглиблення** | ⚪️ | 441 | Skipped |
 | **Практика** | ⚪️ | 110 | Skipped |
 | **Діалоги** | ✅ | 218 | Included in Core |

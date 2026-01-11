@@ -101,54 +101,22 @@
   - FIX: Adjust number of sorting categories to 3-5.
 - **[COMPLEXITY]** group-sort 'Розподіліть конструкції за значенням' has 2 groups (target: 3-5)
   - FIX: Adjust number of sorting categories to 3-5.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [вибір-виду:-наказовий-спосіб] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [не-можна-+-інфінітив] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [модальні-конструкції-з-інфінітивом] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [складіть-речення-з-наказовим-способом] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [складіть-речення-з-модальними-конструкціями] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [виправте-помилки-у-виборі-виду] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [виправте-помилки-в-модальних-конструкціях] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [заповніть-текст:-інструкція-для-гостей] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [заповніть-текст:-правила-безпеки] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [виберіть-правильний-варіант] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [правда-чи-хибність?] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [розподіліть-команди-за-видом] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [розподіліть-конструкції-за-значенням] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [знайдіть-команди-з-недоконаним-видом] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [знайдіть-команди-з-доконаним-видом] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [перекладіть-на-українську] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 42-aspect-nuances-imperative-infinitive.yaml: [поєднайте-команди-з-їхнім-значенням] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 69 violations (severe - consider revision)
+- 53 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2251/1750
@@ -161,30 +129,28 @@
 - **Vocab:** ✅ 68/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 68 violations
+- **Pedagogy:** ❌ 50 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
-| dialogues | 18 | 4 | 100% | 15% | 15.0% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.86 | - | 86% | 5% | 4.3% |
-| questions | 27 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.6%** |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
+| variety | 0.93 | - | 93% | 17% | 15.5% |
+| cultural | 5 | - | 100% | 17% | 16.7% |
+| visual | 7 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.86 | - | 86% | 8% | 7.2% |
+| examples | 100 | - | 100% | 8% | 8.3% |
+| realworld | 9 | - | 100% | 8% | 8.3% |
+| questions | 27 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **97.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

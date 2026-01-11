@@ -1,29 +1,11 @@
 # Audit Report: 39-reported-statements.md
 **Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** mark-the-words 'Позначте дієслова введення непрямої мови' has 0 items (minimum: 6)
-  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
-- **[MISSING_FIELD]** mark-the-words 'Позначте дієслова введення непрямої мови' is missing 'correct_words' array
-  - FIX: Add 'correct_words' array with correct words
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 39-reported-statements.yaml: [index-9] mark-the-words: 'correct_words' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка|Тест' found: Застосування непрямої мови в різних контекстах, Тест
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 4 violations (moderate)
-- Activity density below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1640/1500
+- **Words:** ✅ 1641/1500
 - **Activities:** ✅ 12/8
-- **Density:** ❌ 1 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
@@ -31,7 +13,7 @@
 - **Vocab:** ⚠️ 13 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
@@ -56,12 +38,6 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Позначте дієслова введення непрямої мови | mark-the-words | 0 | 6 | Add 6 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -70,5 +46,5 @@
 | **Пояснення** | ⚪️ | 716 | Skipped |
 | **Практика** | ⚪️ | 177 | Skipped |
 | **Діалоги** | ✅ | 222 | Included in Core |
-| **Підсумок** | ✅ | 149 | Included in Core |
+| **Підсумок** | ✅ | 150 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

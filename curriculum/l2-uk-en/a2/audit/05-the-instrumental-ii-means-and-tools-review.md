@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): телефоном, очима, автобусом, головою, ложкою...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): метро, ручкою, телефоном, виделкою, ложкою...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

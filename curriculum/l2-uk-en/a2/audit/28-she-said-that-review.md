@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): думку, можливо, зору, гадати, безумовно...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): зору, здається, безумовно, вважати, неправда...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

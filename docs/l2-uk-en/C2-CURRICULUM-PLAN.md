@@ -325,11 +325,11 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 | 18 | C2.1 Practice II | M01-16 | Transformation exercises |
 | 19 | C2.1 Review | M01-18 | Consolidation |
 | 20 | C2.1 Checkpoint | M01-19 | Assessment |
-| 26 | Stylistic Devices Mastery | M12-13 | Metaphor, metonymy, synecdoche |
-| 27 | Rhythm & Prosody | M02 | Prose rhythm control |
-| 28 | Intertextuality | M06 | Allusion, quotation, parody |
-| 29 | Style Blending | M03-09 | Hybrid registers |
-| 30 | C2.1 Final Checkpoint | M01-24 | Complete stylistic mastery |
+| 21 | Stylistic Devices Mastery | M12-13 | Metaphor, metonymy, synecdoche |
+| 22 | Rhythm & Prosody | M02 | Prose rhythm control |
+| 23 | Intertextuality | M06 | Allusion, quotation, parody |
+| 24 | Style Blending | M03-09 | Hybrid registers |
+| 25 | C2.1 Final Checkpoint | M01-24 | Complete stylistic mastery |
 
 ### Module Content Specifications C2.1
 
@@ -1011,9 +1011,9 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase C2.2: Literary Mastery (Modules 26-40)
+## Phase C2.2: Literary Mastery (Modules 26-45)
 
-> **Checkpoint:** M40 tests M26-39 skill groups. See `c2-checkpoint-module-template.md`.
+> **Checkpoint:** M45 tests M26-44 skill groups. See `c2-checkpoint-module-template.md`.
 
 ### Learning Goals
 - Master literary analysis at scholar level
@@ -1044,11 +1044,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | 38 | Contemporary Literature | C1.6 | Current literary scene |
 | 39 | Digital Literature | M33 | New forms |
 | 40 | Literary Prizes & Canon | M33-34 | Cultural context |
-| 46 | Literary Community | M35 | Professional engagement |
-| 47 | C2.2 Practice I | M26-36 | Literary portfolio |
-| 48 | C2.2 Practice II | M26-36 | Creative portfolio |
-| 49 | C2.2 Review | M26-38 | Consolidation |
-| 50 | C2.2 Checkpoint | M26-M49 | Assessment |
+| 41 | Literary Community | M35 | Professional engagement |
+| 42 | C2.2 Practice I | M26-36 | Literary portfolio |
+| 43 | C2.2 Practice II | M26-36 | Creative portfolio |
+| 44 | C2.2 Review | M26-43 | Consolidation |
+| 45 | C2.2 Checkpoint | M26-44 | Assessment |
 
 ### Vocabulary Plan C2.2 (~500 words)
 - Literary theory: наратологія, фокалізація, інтертекстуальність, деконструкція
@@ -1059,9 +1059,9 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase C2.3: Professional Specialization (Modules 41-75)
+## Phase C2.3: Professional Specialization (Modules 46-75)
 
-> **Checkpoints:** M55 (Midpoint) tests M41-54; M75 (Complete) tests M56-74. See `c2-checkpoint-module-template.md`.
+> **Checkpoints:** M55 (Midpoint) tests M46-54; M75 (Complete) tests M55-74. See `c2-checkpoint-module-template.md`.
 
 > **Ukrainian State Standard 2024 Compliance:** The standard requires C2 learners to handle "лекції і презентації на загальні чи професійні теми" (lectures and presentations on general or professional topics), "неадаптовані тексти зі сфери особистих і професійних зацікавлень" (unadapted texts from personal and professional interests), and produce "реферат, доповідь, повідомлення на теми зі сфери професійних чи особистих зацікавлень" (abstracts, reports, messages on professional topics). The standard does NOT prescribe specific professional domains — learners must be able to handle ANY professional field.
 
@@ -1317,29 +1317,32 @@ graph TD
     end
 
     %% Phase C2.2: Literary
-    subgraph C2_2 [Phase C2.2: Literary]
-        M21[M21 Theory] --> M22[M22 Narratology]
-        M22 --> M23[M23 Poetics Verse]
-        M23 --> M24[M24 Poetics Prose]
-        M24 --> M25[M25 Intertext]
-        M25 --> M26[M26 Criticism]
-        M26 --> M27[M27 Essay Writing]
-        M28[M28 Translation Theory] --> M29[M29 Trans Poetry]
-        M29 --> M30[M30 Trans Prose]
-        M30 --> M31[M31 Creative Poetry]
-        M31 --> M32[M32 Creative Prose]
+    subgraph C2_2 [Phase C2.2: Literary M26-45]
+        M26[M26 Theory] --> M27[M27 Narratology]
+        M27 --> M28[M28 Poetics Verse]
+        M28 --> M29[M29 Poetics Prose]
+        M29 --> M30[M30 Intertext]
+        M30 --> M31[M31 Criticism]
+        M31 --> M32[M32 Essay Writing]
+        M33[M33 Translation Theory] --> M34[M34 Trans Poetry]
+        M34 --> M35[M35 Trans Prose]
+        M35 --> M36[M36 Creative Poetry]
+        M36 --> M37[M37 Creative Prose]
+        M37 --> M45[M45 Checkpoint]
     end
 
     %% Phase C2.3: Professional
-    subgraph C2_3 [Phase C2.3: Professional]
-        M41[M41 Overview] --> M42[M42 Terminology I]
-        M42 --> M43[M43 Terminology II]
-        M43 --> M44[M44 Reading I]
-        M44 --> M45[M45 Reading II]
-        M45 --> M46[M46 Doc Types]
-        M46 --> M47[M47 Writing I]
-        M47 --> M48[M48 Writing II]
-        M48 --> M49[M49 Oral Comm]
+    subgraph C2_3 [Phase C2.3: Professional M46-75]
+        M46[M46 Overview] --> M47[M47 Terminology I]
+        M47 --> M48[M48 Terminology II]
+        M48 --> M49[M49 Reading I]
+        M49 --> M50[M50 Reading II]
+        M50 --> M51[M51 Doc Types]
+        M51 --> M52[M52 Writing I]
+        M52 --> M53[M53 Writing II]
+        M53 --> M54[M54 Oral Comm]
+        M54 --> M55[M55 Midpoint]
+        M55 --> M75[M75 Checkpoint]
     end
 
     %% Phase C2.4: Capstone
@@ -1354,9 +1357,9 @@ graph TD
     end
 
     %% Connections
-    M16 --> M21
-    M32 --> M41
-    M60 --> M76
+    M25 --> M26
+    M45 --> M46
+    M75 --> M76
 ```
 
 ---

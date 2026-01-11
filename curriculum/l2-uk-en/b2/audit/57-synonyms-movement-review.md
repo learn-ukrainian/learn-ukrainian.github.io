@@ -27,46 +27,24 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Метафоричний рух' Q8 prompt length 5 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [знайдіть-манеру-руху] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: Array validation: {'type': 'translate', 'title': 'Перекладіть дію', 'instruction': 'Оберіть правильний український синонім до англійського дієслова.', 'items': [{'source': 'to stride', 'options': [{'text': 'крокувати', 'correct': True}, {'text': 'брести', 'correct': False}, {'text': 'повзти', 'correct': False}, {'text': 'лізти', 'correct': False}], 'explanation': 'Найкращий відповідник для впевненої ходи.'}, {'source': 'to race', 'options': [{'text': 'мчати', 'correct': True}, {'text': 'йти', 'correct': False}, {'text': 'тупати', 'correct': False}, {'text': 'плавати', 'correct': False}], 'explanation': 'Передає високу швидкість руху.'}, {'source': 'to limp', 'options': [{'text': 'шкутильгати', 'correct': True}, {'text': 'бігати', 'correct': False}, {'text': 'летіти', 'correct': False}, {'text': 'стрибати', 'correct': False}], 'explanation': 'Описує рух травмованої людини.'}, {'source': 'to sneak', 'options': [{'text': 'крастися', 'correct': True}, {'text': 'нестися', 'correct': False}, {'text': 'спускатися', 'correct': False}, {'text': 'підніматися'}], 'explanation': 'Рух з метою залишитися непоміченим.'}, {'source': 'to trudge', 'options': [{'text': 'брести', 'correct': True}, {'text': 'мчати', 'correct': False}, {'text': 'летіти', 'correct': False}, {'text': 'плисти'}], 'explanation': 'Важкий, втомлений рух.'}, {'source': 'to scurry', 'options': [{'text': 'чимчикувати', 'correct': True}, {'text': 'стояти', 'correct': False}, {'text': 'лежати', 'correct': False}, {'text': 'сидіти'}], 'explanation': 'Швидкий рух маленькими кроками.'}, {'source': 'to stomp', 'options': [{'text': 'тупати', 'correct': True}, {'text': 'крастися', 'correct': False}, {'text': 'повзти', 'correct': False}, {'text': 'лізти'}], 'explanation': 'Йти, видаючи сильний шум ногами.'}, {'source': 'to zoom past', 'options': [{'text': 'проноситися', 'correct': True}, {'text': 'брести', 'correct': False}, {'text': 'йти', 'correct': False}, {'text': 'стояти'}], 'explanation': 'Дуже швидкий рух повз щось.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [оберіть-точний-рух] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [швидкість-та-стихія] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [складіть-динамічне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [дорога-додому] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [манера-та-швидкість] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [виправте-помилки-руху] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [перекладіть-дію] translate: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [нюанси-руху] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [всі-відтінки-бігу] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [рух-та-його-джерело] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [антоніми-за-манерою] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [метафоричний-рух] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [технічний-та-офіційний-рух] select: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: [index-7] translate: 'items.7.options.3' - 'correct' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Фразеологізми' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Фразеологізми' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вживання у контексті' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вживання у контексті' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 28 violations (severe - consider revision)
+- 17 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1768/1750
@@ -79,28 +57,28 @@
 - **Vocab:** ✅ 136/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 27 violations
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (vocab))
-- **Richness:** ✅ 99% (content)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** content
+**Score:** 98% (minimum: 95%)
+**Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 49 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.95 | - | 95% | 12% | 11.9% |
-| cultural | 7 | 4 | 100% | 12% | 12.5% |
-| realworld | 8 | 3 | 100% | 12% | 12.5% |
-| visual | 5 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.95 | - | 95% | 6% | 5.9% |
-| questions | 8 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **99.1%** |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
+| variety | 0.95 | - | 95% | 17% | 15.8% |
+| cultural | 7 | - | 100% | 17% | 16.7% |
+| visual | 5 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.95 | - | 95% | 8% | 7.9% |
+| examples | 49 | - | 100% | 8% | 8.3% |
+| realworld | 8 | - | 100% | 8% | 8.3% |
+| questions | 8 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

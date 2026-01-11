@@ -51,39 +51,85 @@ class TemplateStructure:
 def resolve_template(module_id: str, meta: dict) -> str:
     """
     Resolve which template a module should follow.
-    
+
+    Uses the 'focus' field from module metadata as the primary source of truth.
+    Falls back to level default template if focus is not recognized.
+
     Args:
         module_id: Module identifier (e.g., "b2-71", "a1-05")
         meta: Module metadata from meta/{slug}.yaml
-    
+
     Returns:
         Template filename (e.g., "b2-history-module-template.md")
-    
+
     Raises:
-        ValueError: If no template mapping matches
+        ValueError: If no template can be determined
     """
-    mappings_path = Path("docs/l2-uk-en/template_mappings.yaml")
-    
-    with mappings_path.open('r', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-    
-    for rule in config.get('mappings', []):
-        # Check pattern-based rules
-        if 'pattern' in rule:
-            if re.match(rule['pattern'], module_id):
-                return rule['template']
-        
-        # Check meta-field based rules
-        if 'meta_field' in rule:
-            field_name = rule['meta_field']
-            expected_value = rule['value']
-            actual_value = meta.get(field_name)
-            
-            if actual_value == expected_value:
-                return rule['template']
-    
-    # No match found
-    raise ValueError(f"No template mapping found for module '{module_id}' with meta: {meta}")
+    # Extract level from module_id
+    level = module_id.split('-')[0]  # e.g., "b2" from "b2-71"
+
+    # Get focus from meta (strip quotes if present)
+    focus = meta.get('focus', '').strip('"\'')
+
+    # Focus to template mapping
+    # This is the single source of truth for template selection
+    FOCUS_TEMPLATES = {
+        # Universal focus values
+        'grammar': '{level}-grammar-module-template.md',
+        'vocabulary': '{level}-vocab-module-template.md',
+        'cultural': '{level}-cultural-module-template.md',
+        'checkpoint': '{level}-checkpoint-module-template.md',
+        'skills': '{level}-integration-module-template.md',
+        'integration': '{level}-integration-module-template.md',
+
+        # B2-specific
+        'phraseology': 'b2-phraseology-module-template.md',
+        'history': 'b2-history-module-template.md',
+
+        # C1-specific
+        'biography': 'c1-biography-module-template.md',
+        'literature': 'c1-literature-module-template.md',
+        'academic': 'c1-academic-module-template.md',
+        'professional': 'c1-professional-module-template.md',
+        'sociolinguistics': 'c1-sociolinguistics-module-template.md',
+        'fine_arts': 'c1-fine-arts-module-template.md',
+        'folk_culture': 'c1-folk-culture-module-template.md',
+        'style': 'c1-style-module-template.md',
+        'genre': 'c1-genre-module-template.md',
+
+        # C2-specific
+        'literary': 'c2-literary-module-template.md',
+        'meta_skills': 'c2-meta-skills-module-template.md',
+    }
+
+    # Look up template by focus
+    if focus in FOCUS_TEMPLATES:
+        template = FOCUS_TEMPLATES[focus].format(level=level)
+
+        # Check if level-specific template exists, otherwise use generic
+        template_path = Path("docs/l2-uk-en/templates") / template
+        if template_path.exists():
+            return template
+
+        # Try without level prefix for level-agnostic templates
+        if not template.startswith(level):
+            return template
+
+    # Default templates by level
+    LEVEL_DEFAULTS = {
+        'a1': 'a1-module-template.md',
+        'a2': 'a2-module-template.md',
+        'b1': 'b1-grammar-module-template.md',
+        'b2': 'b2-module-template.md',
+        'c1': 'c1-module-template.md',
+        'c2': 'c2-module-template.md',
+        'lit': 'lit-module-template.md',
+    }
+
+    if level in LEVEL_DEFAULTS:
+        return LEVEL_DEFAULTS[level]
+
+    raise ValueError(f"No template found for module '{module_id}' with focus '{focus}'")
 
 
 def parse_template(template_path: str) -> TemplateStructure:
