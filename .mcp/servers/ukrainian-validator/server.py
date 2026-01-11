@@ -168,13 +168,42 @@ Use this format:
             }
 
     def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle incoming MCP tool request."""
+        """Handle incoming MCP JSON-RPC request."""
         method = request.get('method')
         params = request.get('params', {})
+        request_id = request.get('id')
+
+        # Wrap response in JSON-RPC format
+        def make_response(result):
+            if request_id is not None:
+                return {'jsonrpc': '2.0', 'id': request_id, 'result': result}
+            return result
+
+        def make_error(code, message):
+            if request_id is not None:
+                return {'jsonrpc': '2.0', 'id': request_id, 'error': {'code': code, 'message': message}}
+            return {'error': message}
+
+        # MCP Protocol: initialize handshake
+        if method == 'initialize':
+            return make_response({
+                'protocolVersion': '2024-11-05',
+                'capabilities': {
+                    'tools': {}
+                },
+                'serverInfo': {
+                    'name': 'ukrainian-validator',
+                    'version': '1.0.0'
+                }
+            })
+
+        # MCP Protocol: notifications (no response needed)
+        if method == 'notifications/initialized':
+            return None  # No response for notifications
 
         if method == 'tools/list':
             # Return list of available tools
-            return {
+            return make_response({
                 'tools': [
                     {
                         'name': 'validate_ukrainian',
@@ -196,7 +225,7 @@ Use this format:
                         }
                     }
                 ]
-            }
+            })
 
         elif method == 'tools/call':
             tool_name = params.get('name')
@@ -208,16 +237,18 @@ Use this format:
 
                 result = self.validate_ukrainian(content, level)
 
-                return {
+                return make_response({
                     'content': [
                         {
                             'type': 'text',
                             'text': json.dumps(result, indent=2, ensure_ascii=False)
                         }
                     ]
-                }
+                })
 
-        return {'error': 'Unknown method'}
+            return make_error(-32601, f'Unknown tool: {tool_name}')
+
+        return make_error(-32601, f'Unknown method: {method}')
 
     def run(self):
         """Run the MCP server (stdio mode)."""
@@ -229,12 +260,14 @@ Use this format:
             try:
                 request = json.loads(line)
                 response = self.handle_request(request)
-                print(json.dumps(response), flush=True)
+                # Only send response if not None (notifications don't get responses)
+                if response is not None:
+                    print(json.dumps(response), flush=True)
             except json.JSONDecodeError as e:
-                error_response = {'error': f'Invalid JSON: {str(e)}'}
+                error_response = {'jsonrpc': '2.0', 'id': None, 'error': {'code': -32700, 'message': f'Parse error: {str(e)}'}}
                 print(json.dumps(error_response), flush=True)
             except Exception as e:
-                error_response = {'error': f'Server error: {str(e)}'}
+                error_response = {'jsonrpc': '2.0', 'id': None, 'error': {'code': -32603, 'message': f'Internal error: {str(e)}'}}
                 print(json.dumps(error_response), flush=True)
 
 

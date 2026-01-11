@@ -30,6 +30,14 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - **English**: All technical work (git, scripts, errors, planning)
 - **Ukrainian**: Curriculum content only (lessons, activities, vocabulary)
 
+### 6. External LLM Access
+**No direct API keys** - use MCP server for Gemini access.
+- gemini-cli installed with Google AI Pro subscription
+- MCP server: `.mcp/servers/ukrainian-validator/server.py`
+- Provides `validate_ukrainian` tool for grammar checks
+- Python scripts can call same MCP server via `mcp` client library
+- See issue #412 for content naturalness detection extension
+
 </critical>
 
 ---
