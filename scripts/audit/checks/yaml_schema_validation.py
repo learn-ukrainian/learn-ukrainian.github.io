@@ -95,6 +95,24 @@ def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
         if '\n\n' in passage:
             errors.append(f"cloze: passage contains blank lines (\\n\\n) which break MDX rendering. Use single newlines only.")
 
+        # Check for full-sentence options in cloze blanks (indicates wrong activity type)
+        if has_curly_braces and has_pipe_format:
+            blanks = re.findall(r'\{([^}]+)\}', passage)
+            for blank_idx, blank_content in enumerate(blanks):
+                options = [opt.strip() for opt in blank_content.split('|')]
+                for option in options:
+                    # Skip placeholders
+                    if option in ['--', '-', ''] or len(option) < 3:
+                        continue
+                    # Full sentences with ? or ! are strong signals of misuse
+                    if option.rstrip().endswith('?') or option.rstrip().endswith('!'):
+                        errors.append(f"cloze: blank #{blank_idx + 1} has sentence options ending in '?' or '!' - this should be a 'select' activity, not cloze")
+                        break  # One error per blank is enough
+                    # Very long options (>35 chars) likely indicate full sentences
+                    if len(option) > 35:
+                        errors.append(f"cloze: blank #{blank_idx + 1} has very long options (>35 chars) - consider using 'select' activity instead")
+                        break
+
         if has_curly_braces and not has_blanks_array and not has_pipe_format:
             # Passage has {word} markers but no way to present options
             errors.append(f"cloze: passage has {{word}} markers but no 'blanks' array or '|' options format")

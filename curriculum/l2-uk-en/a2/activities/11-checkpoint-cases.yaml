@@ -477,7 +477,7 @@
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Identifying cases in Narrative
-  text: Click on the words showing a case other than Nominative. Марія отримала листа
+  text: Марія отримала листа
     від мами. Вона пише ручкою. Сьогодні мені холодно. Ми йдемо в театр з другом.
     Дай мені каву без цукру.
   answers:

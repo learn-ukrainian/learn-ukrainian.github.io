@@ -113,20 +113,18 @@
     - text: закінчення
       correct: false
     explanation: Корінь — це основна частина слова.
-  - question: Яке значення має стандартна інструкція «зверніть увагу» в сучасному
-      підручнику?
+  - question: Яке значення має стандартна інструкція «зверніть увагу» в сучасному підручнику?
     options:
     - text: Pay attention
       correct: true
     - text: Choose
       correct: false
-    - text: Find
+    - text: Remember
       correct: false
     - text: Write
       correct: false
-    explanation: «Зверніть увагу» означає сфокусуватися на деталі.
-  - question: Який саме стиль мови зазвичай використовують в офіційних та державних
-      документах?
+    explanation: «Зверніть увагу» означає "pay attention".
+  - question: Який саме стиль мови зазвичай використовують в офіційних та державних документах?
     options:
     - text: формальна мова
       correct: true
