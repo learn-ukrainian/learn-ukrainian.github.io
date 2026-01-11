@@ -160,6 +160,92 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for complete format specifications.
 
 **WARN** = Passes with warning. **FAIL** = Blocks approval.
 
+## Naturalness & Discourse Quality Requirements
+
+<critical>
+
+**Quality Threshold:** All prose activities (cloze, fill-in, unjumble) MUST score **>= 8/10** for naturalness.
+
+**Common Failures (Score < 8):**
+
+1. **Random subject shifts** without context:
+   ```yaml
+   # ❌ BAD - disconnected subjects (я → вона → він)
+   - sentence: Я читаю книгу.
+     answer: читаю
+   - sentence: Вона пише листа.
+     answer: пише
+   - sentence: Він малює картину.
+     answer: малює
+   ```
+
+2. **Missing discourse markers** (connectors):
+   ```yaml
+   # ❌ BAD - no connectors between sentences
+   Я прокинувся. Я поснідав. Я пішов.
+
+   # ✅ GOOD - добрано connectors
+   Спочатку я прокинувся. Потім я поснідав. Нарешті я пішов до школи.
+   ```
+
+3. **Incoherent topic jumps**:
+   ```yaml
+   # ❌ BAD - school → coffee with no transition
+   - Я йду до школи щодня.
+   - Кава без цукру будь ласка.
+
+   # ✅ GOOD - unified spatial context
+   - Я йду до школи щодня.
+   - Школа знаходиться біля великого парку.
+   ```
+
+4. **Redundant or contradictory statements**:
+   ```yaml
+   # ❌ BAD - repetitive without purpose
+   - Я завжди снідаю.
+   - Я зазвичай снідаю.
+   - Я щодня снідаю.
+   ```
+
+**Fixes (How to Reach >= 8/10):**
+
+| Issue | Solution | Ukrainian Connectors |
+|-------|----------|---------------------|
+| Subject shifts | Unify context (family, day, location) | я → моя сестра, мій брат, мама |
+| No flow | Add discourse markers | спочатку, потім, після того, нарешті |
+| Topic jumps | Create mini-narrative | а, але, тому, і |
+| Drill format | Keep focused practice, don't force complex plots | Use simple family/daily contexts |
+
+**Vocabulary Constraints:**
+
+- **ONLY use vocabulary from** `docs/l2-uk-en/{A1\|A2\|B1}-CURRICULUM-PLAN.md`
+- **Check module number:** Don't use vocabulary from later modules
+  - Example: Module 07 (Spatial Prepositions) must NOT use Module 08 prepositions (без, для, через, про)
+
+**Pedagogical Correctness:**
+
+- **Preserve grammar point** being taught
+- **Don't sacrifice drill focus** for narrative complexity
+- **Maintain CEFR level** (A1 = simple, A2 = connected, B1 = coherent)
+
+**Testing Naturalness:**
+
+Use MCP tool to validate fixes:
+```bash
+# Via MCP server
+mcp__ukrainian-validator__check_naturalness(
+  content="Учора я читав книгу. Потім моя сестра написала листа.",
+  level="A2",
+  context="fill-in activity about aspect"
+)
+```
+
+**Target:** Score >= 8/10 (natural Ukrainian discourse)
+
+</critical>
+
+---
+
 ## Special Requirements: Content-Heavy Modules
 
 **Content-heavy modules** (B2 History, C1 Literature/Biography/Folk/Arts) have **different requirements**:
