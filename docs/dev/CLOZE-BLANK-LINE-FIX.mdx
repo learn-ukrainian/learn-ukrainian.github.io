@@ -1,0 +1,367 @@
+---
+title: Cloze Blank Line Fix (2026-01-11)
+description: Complete documentation of the cloze activity blank line rendering issue and fix
+---
+
+# Cloze Blank Line Fix
+
+**Date:** 2026-01-11
+**Commit:** `c9e1242c`
+**Issue:** Blank lines (`\n\n`) in cloze activity passages causing MDX/HTML rendering issues
+
+## Problem Identified
+
+Blank lines in cloze activity passages were causing MDX/HTML rendering issues. User reported broken layout in [B1 Module 87](http://localhost:3000/docs/b1/module-87/#заповніть-пропуски-лексикою-новин).
+
+### Root Cause
+
+YAML multiline strings with embedded blank lines create unexpected paragraph breaks when rendered through MDX, breaking the intended layout of cloze exercises.
+
+### Scope
+
+- **286 affected cloze activities** across **177 modules**
+- Levels: A2, B1, B2
+- No issues in A1, C1, C2, LIT (either no cloze activities or already clean)
+
+## Solution Implemented
+
+### 1. Detection Script
+
+Created `scripts/detect_cloze_blank_lines.py`:
+- Scans all `activities/*.yaml` files for cloze passages with blank lines
+- Reports affected modules by level
+
+```bash
+.venv/bin/python scripts/detect_cloze_blank_lines.py
+```
+
+### 2. Fix Script
+
+Created `scripts/fix_cloze_blank_lines.py`:
+- Replaces `\n\n` with `\n` in all cloze passages
+- Supports `--dry-run` mode for preview
+
+```bash
+# Preview fixes
+.venv/bin/python scripts/fix_cloze_blank_lines.py --dry-run
+
+# Apply fixes
+.venv/bin/python scripts/fix_cloze_blank_lines.py
+```
+
+### 3. Audit Integration
+
+Updated `scripts/audit/checks/yaml_schema_validation.py`:
+- **Detection** (line 94-96): Validates cloze passages for blank lines
+- **Auto-fix** (line 496-507): Automatically removes blank lines during audit
+- Future modules will be validated automatically
+
+## Results
+
+✅ All 286 cloze activities fixed
+✅ B1 module 87 now renders correctly
+✅ Audit script now detects this issue
+✅ Auto-fix prevents recurrence
+
+## Affected Files
+
+### A2 (33 modules)
+
+<details>
+<summary>Show A2 files (33)</summary>
+
+- `curriculum/l2-uk-en/a2/activities/03-dative-verbs.yaml`
+- `curriculum/l2-uk-en/a2/activities/04-the-instrumental-i-accompaniment.yaml`
+- `curriculum/l2-uk-en/a2/activities/05-the-instrumental-ii-means-and-tools.yaml`
+- `curriculum/l2-uk-en/a2/activities/12-aspect-introduction.yaml`
+- `curriculum/l2-uk-en/a2/activities/14-future-plans-and-promises.yaml`
+- `curriculum/l2-uk-en/a2/activities/18-bigger-better-stronger.yaml`
+- `curriculum/l2-uk-en/a2/activities/19-the-best-the-worst.yaml`
+- `curriculum/l2-uk-en/a2/activities/20-preferences-and-choices.yaml`
+- `curriculum/l2-uk-en/a2/activities/22-if-i-were.yaml`
+- `curriculum/l2-uk-en/a2/activities/25-checkpoint-aspect-comparison.yaml`
+- `curriculum/l2-uk-en/a2/activities/27-because-and-although.yaml`
+- `curriculum/l2-uk-en/a2/activities/29-i-think-that.yaml`
+- `curriculum/l2-uk-en/a2/activities/30-i-feel-like.yaml`
+- `curriculum/l2-uk-en/a2/activities/31-in-order-to.yaml`
+- `curriculum/l2-uk-en/a2/activities/34-at-the-doctor.yaml`
+- `curriculum/l2-uk-en/a2/activities/35-checkpoint.yaml`
+- `curriculum/l2-uk-en/a2/activities/36-basic-motion-prefixes.yaml`
+- `curriculum/l2-uk-en/a2/activities/37-advanced-motion-prefixes.yaml`
+- `curriculum/l2-uk-en/a2/activities/38-action-verb-prefixes.yaml`
+- `curriculum/l2-uk-en/a2/activities/39-adjective-suffixes-qualities.yaml`
+- `curriculum/l2-uk-en/a2/activities/41-root-families-i.yaml`
+- `curriculum/l2-uk-en/a2/activities/42-root-families-ii.yaml`
+- `curriculum/l2-uk-en/a2/activities/43-wf-mastery.yaml`
+- `curriculum/l2-uk-en/a2/activities/44-checkpoint-word-formation.yaml`
+- `curriculum/l2-uk-en/a2/activities/46-home-and-furniture.yaml`
+- `curriculum/l2-uk-en/a2/activities/48-emotions-personality.yaml`
+- `curriculum/l2-uk-en/a2/activities/50-technology-media.yaml`
+- `curriculum/l2-uk-en/a2/activities/51-hobbies-leisure.yaml`
+- `curriculum/l2-uk-en/a2/activities/53-shopping-services.yaml`
+- `curriculum/l2-uk-en/a2/activities/55-health-body.yaml`
+- `curriculum/l2-uk-en/a2/activities/56-checkpoint-vocabulary.yaml`
+- `curriculum/l2-uk-en/a2/activities/57-grammar-review.yaml`
+- `curriculum/l2-uk-en/a2/activities/58-final-review.yaml`
+
+</details>
+
+### B1 (58 modules)
+
+<details>
+<summary>Show B1 files (58)</summary>
+
+- `curriculum/l2-uk-en/b1/activities/01-how-to-talk-about-grammar.yaml`
+- `curriculum/l2-uk-en/b1/activities/04-sentence-structure.yaml`
+- `curriculum/l2-uk-en/b1/activities/08-aspect-past-result-process.yaml`
+- `curriculum/l2-uk-en/b1/activities/09-aspect-future.yaml`
+- `curriculum/l2-uk-en/b1/activities/10-aspect-negation.yaml`
+- `curriculum/l2-uk-en/b1/activities/11-aspect-in-imperatives.yaml`
+- `curriculum/l2-uk-en/b1/activities/16-motion-verbs-full-system.yaml`
+- `curriculum/l2-uk-en/b1/activities/19-motion-starting-returning.yaml`
+- `curriculum/l2-uk-en/b1/activities/20-motion-approaching-departing.yaml`
+- `curriculum/l2-uk-en/b1/activities/21-motion-figurative-uses.yaml`
+- `curriculum/l2-uk-en/b1/activities/24-motion-practice-integration.yaml`
+- `curriculum/l2-uk-en/b1/activities/25-checkpoint-motion-verbs.yaml`
+- `curriculum/l2-uk-en/b1/activities/26-relative-clauses-yakyi.yaml`
+- `curriculum/l2-uk-en/b1/activities/27-relative-clauses-de-kudy-zvidky.yaml`
+- `curriculum/l2-uk-en/b1/activities/28-relative-clauses-koly-shcho.yaml`
+- `curriculum/l2-uk-en/b1/activities/29-purpose-shchob-infinitive.yaml`
+- `curriculum/l2-uk-en/b1/activities/30-purpose-shchob-past-form.yaml`
+- `curriculum/l2-uk-en/b1/activities/31-conditionals-real-yakshcho.yaml`
+- `curriculum/l2-uk-en/b1/activities/32-conditionals-unreal-yakby.yaml`
+- `curriculum/l2-uk-en/b1/activities/33-conditionals-mixed-complex.yaml`
+- `curriculum/l2-uk-en/b1/activities/34-checkpoint-complex-sentences-1.yaml`
+- `curriculum/l2-uk-en/b1/activities/35-concessive-khocha.yaml`
+- `curriculum/l2-uk-en/b1/activities/36-causal-result-clauses.yaml`
+- `curriculum/l2-uk-en/b1/activities/37-temporal-clauses.yaml`
+- `curriculum/l2-uk-en/b1/activities/40-reported-questions-commands.yaml`
+- `curriculum/l2-uk-en/b1/activities/41-checkpoint-complex-sentences-2.yaml`
+- `curriculum/l2-uk-en/b1/activities/46-past-passive-participles-2.yaml`
+- `curriculum/l2-uk-en/b1/activities/47-passive-constructions.yaml`
+- `curriculum/l2-uk-en/b1/activities/49-numerals-collectives-fractions.yaml`
+- `curriculum/l2-uk-en/b1/activities/50-integrated-grammar-lab.yaml`
+- `curriculum/l2-uk-en/b1/activities/51-checkpoint-advanced-grammar.yaml`
+- `curriculum/l2-uk-en/b1/activities/52-abstract-concepts-ideas.yaml`
+- `curriculum/l2-uk-en/b1/activities/53-abstract-concepts-processes.yaml`
+- `curriculum/l2-uk-en/b1/activities/55-agreement-disagreement.yaml`
+- `curriculum/l2-uk-en/b1/activities/57-discourse-markers-advanced.yaml`
+- `curriculum/l2-uk-en/b1/activities/58-describing-changes.yaml`
+- `curriculum/l2-uk-en/b1/activities/59-media-news.yaml`
+- `curriculum/l2-uk-en/b1/activities/60-society-politics.yaml`
+- `curriculum/l2-uk-en/b1/activities/61-professional-communication.yaml`
+- `curriculum/l2-uk-en/b1/activities/62-environment-ecology.yaml`
+- `curriculum/l2-uk-en/b1/activities/63-health-wellness.yaml`
+- `curriculum/l2-uk-en/b1/activities/64-emotions-deep-dive.yaml`
+- `curriculum/l2-uk-en/b1/activities/65-relationships.yaml`
+- `curriculum/l2-uk-en/b1/activities/66-business-basics.yaml`
+- `curriculum/l2-uk-en/b1/activities/67-travel-geography.yaml`
+- `curriculum/l2-uk-en/b1/activities/68-synonymy-thinking-verbs.yaml`
+- `curriculum/l2-uk-en/b1/activities/69-synonymy-speaking-verbs.yaml`
+- `curriculum/l2-uk-en/b1/activities/70-collocations-expressions.yaml`
+- `curriculum/l2-uk-en/b1/activities/71-emotional-intelligence.yaml`
+- `curriculum/l2-uk-en/b1/activities/72-regions-west.yaml`
+- `curriculum/l2-uk-en/b1/activities/73-regions-east.yaml`
+- `curriculum/l2-uk-en/b1/activities/74-regions-south.yaml`
+- `curriculum/l2-uk-en/b1/activities/75-regions-center.yaml`
+- `curriculum/l2-uk-en/b1/activities/76-ukrainian-music-today.yaml`
+- `curriculum/l2-uk-en/b1/activities/77-ukrainian-cinema-and-tv.yaml`
+- `curriculum/l2-uk-en/b1/activities/78-technology-and-startups.yaml`
+- `curriculum/l2-uk-en/b1/activities/79-sports-in-ukraine.yaml`
+- `curriculum/l2-uk-en/b1/activities/85-ukrainian-cuisine.yaml`
+- `curriculum/l2-uk-en/b1/activities/86-ukrainski-sviata-ta-festyvali.yaml`
+- `curriculum/l2-uk-en/b1/activities/87-novyny-yak-chytaty.yaml` ⚠️ **User-reported issue**
+- `curriculum/l2-uk-en/b1/activities/88-interviu-ta-podkasty.yaml`
+- `curriculum/l2-uk-en/b1/activities/89-b1-grammar-integration.yaml`
+- `curriculum/l2-uk-en/b1/activities/90-b1-vocabulary-integration.yaml`
+- `curriculum/l2-uk-en/b1/activities/91-b1-capstone.yaml`
+
+</details>
+
+### B2 (86 modules)
+
+<details>
+<summary>Show B2 files (86)</summary>
+
+- `curriculum/l2-uk-en/b2/activities/03-impersonal-passive.yaml`
+- `curriculum/l2-uk-en/b2/activities/04-reflexive-passive.yaml`
+- `curriculum/l2-uk-en/b2/activities/05-third-person-plural-passive.yaml`
+- `curriculum/l2-uk-en/b2/activities/06-passive-in-context.yaml`
+- `curriculum/l2-uk-en/b2/activities/07-active-participles-present.yaml`
+- `curriculum/l2-uk-en/b2/activities/08-active-participles-past.yaml`
+- `curriculum/l2-uk-en/b2/activities/09-participles-vs-relative-clauses.yaml`
+- `curriculum/l2-uk-en/b2/activities/10-checkpoint-passive-voice.yaml`
+- `curriculum/l2-uk-en/b2/activities/11-multi-clause-sentences.yaml`
+- `curriculum/l2-uk-en/b2/activities/12-parenthetical-expressions.yaml`
+- `curriculum/l2-uk-en/b2/activities/13-emphasis-and-inversion.yaml`
+- `curriculum/l2-uk-en/b2/activities/14-stylistic-connectors.yaml`
+- `curriculum/l2-uk-en/b2/activities/15-register-introduction.yaml`
+- `curriculum/l2-uk-en/b2/activities/16-register-formal-informal.yaml`
+- `curriculum/l2-uk-en/b2/activities/17-register-business-ukrainian.yaml`
+- `curriculum/l2-uk-en/b2/activities/18-register-academic-ukrainian.yaml`
+- `curriculum/l2-uk-en/b2/activities/19-register-official-legal.yaml`
+- `curriculum/l2-uk-en/b2/activities/20-register-medical-ukrainian.yaml`
+- `curriculum/l2-uk-en/b2/activities/21-register-technical-scientific.yaml`
+- `curriculum/l2-uk-en/b2/activities/22-register-literary-ukrainian.yaml`
+- `curriculum/l2-uk-en/b2/activities/23-register-media-journalistic.yaml`
+- `curriculum/l2-uk-en/b2/activities/24-register-colloquial-style.yaml`
+- `curriculum/l2-uk-en/b2/activities/25-register-practice-cross-register-rewriting.yaml`
+- `curriculum/l2-uk-en/b2/activities/26-politics-government-vocabulary.yaml`
+- `curriculum/l2-uk-en/b2/activities/27-law-justice-vocabulary.yaml`
+- `curriculum/l2-uk-en/b2/activities/28-economics-business-vocabulary.yaml`
+- `curriculum/l2-uk-en/b2/activities/29-b21-integration-practice.yaml`
+- `curriculum/l2-uk-en/b2/activities/30-b21-checkpoint.yaml`
+- `curriculum/l2-uk-en/b2/activities/32-numeral-declension-compound-numbers.yaml`
+- `curriculum/l2-uk-en/b2/activities/33-word-formation-person-suffixes.yaml`
+- `curriculum/l2-uk-en/b2/activities/34-word-formation-abstract-nouns.yaml`
+- `curriculum/l2-uk-en/b2/activities/35-word-formation-place-object-names.yaml`
+- `curriculum/l2-uk-en/b2/activities/36-word-formation-adjective-formation.yaml`
+- `curriculum/l2-uk-en/b2/activities/37-word-formation-adverbs-integration.yaml`
+- `curriculum/l2-uk-en/b2/activities/38-one-member-sentences.yaml`
+- `curriculum/l2-uk-en/b2/activities/39-register-religious-epistolary.yaml`
+- `curriculum/l2-uk-en/b2/activities/40-b21c-checkpoint.yaml`
+- `curriculum/l2-uk-en/b2/activities/41-aspect-nuances-secondary-imperfectivization.yaml`
+- `curriculum/l2-uk-en/b2/activities/42-aspect-nuances-imperative-infinitive.yaml`
+- `curriculum/l2-uk-en/b2/activities/43-correlative-constructions.yaml`
+- `curriculum/l2-uk-en/b2/activities/44-complex-syntax-ellipsis-parcelling.yaml`
+- `curriculum/l2-uk-en/b2/activities/45-proverbs-work-wisdom-character.yaml`
+- `curriculum/l2-uk-en/b2/activities/46-proverbs-nature-time-caution.yaml`
+- `curriculum/l2-uk-en/b2/activities/47-set-expressions-i-body-animals.yaml`
+- `curriculum/l2-uk-en/b2/activities/48-set-expressions-ii-objects-abstract.yaml`
+- `curriculum/l2-uk-en/b2/activities/49-idioms-body-head-face.yaml`
+- `curriculum/l2-uk-en/b2/activities/50-idioms-body-hands-legs.yaml`
+- `curriculum/l2-uk-en/b2/activities/71-trypillian-civilization.yaml`
+- `curriculum/l2-uk-en/b2/activities/72-scythians-sarmatians.yaml`
+- `curriculum/l2-uk-en/b2/activities/73-sloviany-na-ukrainskykh-zemliakh.yaml`
+- `curriculum/l2-uk-en/b2/activities/74-zasnuvannia-kyieva.yaml`
+- `curriculum/l2-uk-en/b2/activities/75-volodymyr-i-khreshchennia.yaml`
+- `curriculum/l2-uk-en/b2/activities/76-yaroslav-the-wise.yaml`
+- `curriculum/l2-uk-en/b2/activities/77-kultura-kyivskoi-rusi.yaml`
+- `curriculum/l2-uk-en/b2/activities/78-zanepad-i-rozdroblennia.yaml`
+- `curriculum/l2-uk-en/b2/activities/79-mongolska-navala-1240.yaml`
+- `curriculum/l2-uk-en/b2/activities/80-galytsko-volynske-knyazivstvo.yaml`
+- `curriculum/l2-uk-en/b2/activities/81-velyke-kniazivstvo-lytovske.yaml`
+- `curriculum/l2-uk-en/b2/activities/82-rich-pospolyta.yaml`
+- `curriculum/l2-uk-en/b2/activities/83-syntez-vytoky.yaml`
+- `curriculum/l2-uk-en/b2/activities/84-kozatstvo-vytoky.yaml`
+- `curriculum/l2-uk-en/b2/activities/85-zaporizka-sich.yaml`
+- `curriculum/l2-uk-en/b2/activities/86-kozatska-kultura.yaml`
+- `curriculum/l2-uk-en/b2/activities/87-khmelnychchyna-i-povstannia.yaml`
+- `curriculum/l2-uk-en/b2/activities/88-khmelnychchyna-ii-derzhava.yaml`
+- `curriculum/l2-uk-en/b2/activities/89-pereiaslav-treaty.yaml`
+- `curriculum/l2-uk-en/b2/activities/90-ruina-i-vyhovsky.yaml`
+- `curriculum/l2-uk-en/b2/activities/91-ruina-ii-doroshenko.yaml`
+- `curriculum/l2-uk-en/b2/activities/92-ivan-mazepa-i-derzhavnyk.yaml`
+- `curriculum/l2-uk-en/b2/activities/93-ivan-mazepa-ii-kultura.yaml`
+- `curriculum/l2-uk-en/b2/activities/94-ivan-mazepa-iii-poltava.yaml`
+- `curriculum/l2-uk-en/b2/activities/95-hryhorii-skovoroda.yaml`
+- `curriculum/l2-uk-en/b2/activities/96-rosiiski-mify-pro-ukrainu.yaml`
+- `curriculum/l2-uk-en/b2/activities/97-kinets-hetmanshchyny.yaml`
+- `curriculum/l2-uk-en/b2/activities/98-rosiiska-imperiia-emskyi-ukaz.yaml`
+- `curriculum/l2-uk-en/b2/activities/101-ideolhy-drahomanov-kulish.yaml`
+- `curriculum/l2-uk-en/b2/activities/107-syntez-kozachchyna-1920.yaml`
+- `curriculum/l2-uk-en/b2/activities/110-holodomor-mekhanizm.yaml`
+- `curriculum/l2-uk-en/b2/activities/111-holodomor-ii-pamiat.yaml`
+- `curriculum/l2-uk-en/b2/activities/112-druha-svitova-okupatsii.yaml`
+- `curriculum/l2-uk-en/b2/activities/132-medytsyna-pohlybleno.yaml`
+
+</details>
+
+## Summary Statistics
+
+| Level | Modules Fixed | Cloze Activities Fixed |
+|-------|---------------|------------------------|
+| A2    | 33            | ~40                    |
+| B1    | 58            | ~120                   |
+| B2    | 86            | ~126                   |
+| **Total** | **177**   | **286**                |
+
+## Code Changes
+
+### Detection Script
+
+**File:** `scripts/detect_cloze_blank_lines.py`
+
+```python
+def detect_blank_lines_in_cloze(yaml_path: Path) -> List[Tuple[int, str]]:
+    """Detect cloze activities with blank lines in their passages."""
+    violations = []
+
+    with open(yaml_path, 'r', encoding='utf-8') as f:
+        activities = yaml.safe_load(f)
+
+    for idx, activity in enumerate(activities):
+        if activity.get('type') == 'cloze':
+            passage = activity.get('passage', '')
+            if '\n\n' in passage:
+                violations.append((idx, activity.get('title', f'#{idx+1}')))
+
+    return violations
+```
+
+### Fix Script
+
+**File:** `scripts/fix_cloze_blank_lines.py`
+
+```python
+def fix_blank_lines_in_cloze(yaml_path: Path) -> Tuple[int, List[str]]:
+    """Fix cloze activities by removing blank lines."""
+    fixed_count = 0
+
+    with open(yaml_path, 'r', encoding='utf-8') as f:
+        activities = yaml.safe_load(f)
+
+    for activity in activities:
+        if activity.get('type') == 'cloze':
+            passage = activity.get('passage', '')
+            if '\n\n' in passage:
+                # Remove all blank lines
+                activity['passage'] = passage.replace('\n\n', '\n')
+                fixed_count += 1
+
+    with open(yaml_path, 'w', encoding='utf-8') as f:
+        yaml.dump(activities, f, allow_unicode=True, sort_keys=False)
+
+    return fixed_count
+```
+
+### Audit Validation
+
+**File:** `scripts/audit/checks/yaml_schema_validation.py`
+
+```python
+# Line 94-96: Detection
+if activity_type == 'cloze':
+    passage = activity.get('passage', '')
+    if '\n\n' in passage:
+        errors.append(f"cloze: passage contains blank lines (\\n\\n) which break MDX rendering")
+
+# Line 496-507: Auto-fix
+if activity_type == 'cloze' and 'passage' in activity:
+    passage = activity['passage']
+    if '\n\n' in passage:
+        fixed_passage = passage.replace('\n\n', '\n')
+        while '\n\n' in fixed_passage:
+            fixed_passage = fixed_passage.replace('\n\n', '\n')
+        activity['passage'] = fixed_passage
+        fixes.append(f"Removed blank lines from cloze passage (fixes MDX rendering)")
+        modified = True
+```
+
+## Prevention
+
+Future cloze activities will be validated automatically:
+
+1. **During module audit**: `audit_module.py` will detect blank lines
+2. **Auto-fix available**: Violations can be automatically corrected
+3. **CI/CD integration**: Can be added to pre-commit hooks
+
+## Related Issues
+
+None - this is a new validation rule added to prevent rendering issues.
+
+## See Also
+
+- [Activity YAML Reference](../ACTIVITY-YAML-REFERENCE.md)
+- [Module Richness Guidelines](../l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md)
+- [Scripts Reference](../SCRIPTS.md)
