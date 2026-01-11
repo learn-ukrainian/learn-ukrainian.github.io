@@ -519,8 +519,8 @@
       "required": [
         "type",
         "title",
-        "passage",
-        "correct_words"
+        "instruction",
+        "text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -536,11 +536,11 @@
           "minLength": 1,
           "description": "What words to mark (e.g., 'Mark all nouns')"
         },
-        "passage": {
+        "text": {
           "type": "string",
           "minLength": 1
         },
-        "correct_words": {
+        "answers": {
           "type": "array",
           "minItems": 1,
           "items": {

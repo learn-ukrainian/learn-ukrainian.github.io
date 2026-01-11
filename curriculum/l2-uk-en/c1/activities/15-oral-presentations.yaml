@@ -1,7 +1,3 @@
-module: 15-oral-presentations
-level: C1
-version: '1.0'
-activities:
 - title: Етапи доповіді
   type: quiz
   items:

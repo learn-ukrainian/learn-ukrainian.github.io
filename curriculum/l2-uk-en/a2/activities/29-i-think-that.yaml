@@ -21,6 +21,7 @@
     right: I think
   - left: впевнений
     right: I'm sure
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: 'Express Opinions (Concept: Contextual Usage)'
   passage: 'Я [{думаю|бачу|сплю|їм}:1], що це місто дуже красиве. На [{мою|мій|моє|мої}:2]
@@ -39,6 +40,7 @@
     Вона [{гадає|знає|бачить|пише}:9], що це важливо. На [{мій|мою|моє|мої}:10] погляд,
     це помилка. Ми [{певні|згодні|праві|старі}:11], що все буде добре. [{Можливо|Напевно|Безумовно|Очевидно}:12],
     ми прийдемо завтра.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: 'Understanding Opinions (Concept: Logical Deduction)'
   items:
@@ -179,6 +181,7 @@
       correct: false
     - text: Це українське слово «слово», що вказує на окрему одиницю людського мовлення
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: 'Opinion Rules (Concept: Concept Validation)'
   items:
@@ -206,6 +209,7 @@
   - statement: Opinions in Ukraine are often discussed deeply at night.
     correct: true
     explanation: This is a cultural trait.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: 'Agree vs Disagree (Згода чи Незгода) (Concept: Semantic Categorization)'
   groups:
@@ -229,6 +233,7 @@
     - Це неправда
     - Це не так
     - Мені важко сказати
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: 'Opinion Sentences (Concept: Syntax Integrity)'
   items:
@@ -314,6 +319,7 @@
     - нову
     - пропозицію
     answer: Вона навряд чи погодиться на таку дуже дивну і ризиковану нову пропозицію
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: 'Fix the Expression (Concept: Critical Proofreading)'
   items:
@@ -371,6 +377,7 @@
     - правильно
     - варіант
     explanation: Use the verb помиляєтеся.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: 'Opinion Exchange (Concept: Contextual Application)'
   passage: 'Complete the conversation about the new project.
@@ -393,14 +400,14 @@
     **Іван:** Я {теж|зовсім} так не думаю. Проте, {можливо|навряд} спробувати варто.
 
     **Анна:** {Саме|Хоча} так! Давайте почнемо роботу.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: 'Find Opinion Expressions (Concept: Pattern Recognition)'
-  passage: 'Identify the opinion-marking phrases in the text.
-
-    Я *думаю*, що це добре. На *мою думку*, це важливо. Мені *здається*, ви помиляєтеся.
-    Я *вважаю*, що час іти. Я не *певний* у цьому. Ви *праві*! Навряд *чи* це допоможе.
-    Я *згоден* з вами. Я *теж* так думаю.'
-  correct_words:
+  text: Identify the opinion-marking phrases in the text. Я думаю, що це добре. На
+    мою думку, це важливо. Мені здається, ви помиляєтеся. Я вважаю, що час іти. Я
+    не певний у цьому. Ви праві! Навряд чи це допоможе. Я згоден з вами. Я теж так
+    думаю.
+  answers:
   - думаю
   - мою думку
   - здається
@@ -410,7 +417,7 @@
   - чи
   - згоден
   - теж
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -510,3 +517,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

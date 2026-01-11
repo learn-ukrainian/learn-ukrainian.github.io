@@ -1,7 +1,3 @@
-module: 16-advanced-punctuation
-level: C1
-version: '1.0'
-activities:
 - title: Теорія знаків
   type: quiz
   items:

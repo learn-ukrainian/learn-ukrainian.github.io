@@ -1,9 +1,4 @@
-module: 135-mystetstvo-i-literatura
-level: B2
-version: '2.0'
-activities:
-- id: match-arts-terms
-  type: match-up
+- type: match-up
   title: 'Знайдіть відповідність: мистецькі терміни'
   instruction: Поєднайте термін з його визначенням.
   pairs:
@@ -31,8 +26,7 @@ activities:
     right: аналіз та оцінка твору
   - left: натхнення
     right: творчий імпульс
-- id: fill-in-literature
-  type: fill-in
+- type: fill-in
   title: 'Заповніть пропуски: розмова про літературу'
   instruction: Оберіть правильне слово для кожного пропуску.
   items:
@@ -120,8 +114,7 @@ activities:
     - Ґреммі
     - Пальму
     sentence: «20 днів у Маріуполі» отримав ___ у 2024 році.
-- id: quiz-culture
-  type: quiz
+- type: quiz
   title: 'Тест: українська культура'
   instruction: Оберіть правильну відповідь.
   items:
@@ -257,8 +250,7 @@ activities:
     - text: Леся Українка
       correct: false
     explanation: Жадан — один із найвідоміших сучасних авторів.
-- id: true-false-culture
-  type: true-false
+- type: true-false
   title: 'Правда чи ні: факти про культуру'
   instruction: Визначте, чи правдиве кожне твердження.
   items:
@@ -298,8 +290,7 @@ activities:
   - statement: PinchukArtCentre знаходиться у Львові.
     correct: false
     explanation: Він у Києві.
-- id: group-sort-arts
-  type: group-sort
+- type: group-sort
   title: Розподіліть за категоріями
   instruction: Визначте, до якого виду мистецтва належить кожен термін.
   groups:
@@ -323,8 +314,7 @@ activities:
     - пейзаж
     - гравюра
     - фреска
-- id: unjumble-culture
-  type: unjumble
+- type: unjumble
   title: Складіть речення правильно
   instruction: Розташуйте слова у правильному порядку.
   items:
@@ -396,8 +386,7 @@ activities:
     - митців
     - Розстріляне Відродження
     - генерація
-- id: cloze-culture
-  type: cloze
+- type: cloze
   title: Заповніть текст про українську культуру
   instruction: Заповніть пропуски у тексті.
   passage: Українська {культура|література|історія} має тисячолітню традицію. Найвідомішим
@@ -413,8 +402,7 @@ activities:
     Kalush Orchestra представляли Україну на {Євробаченні|Олімпіаді|Оскарі}-2022.
     Мистецтво {об'єднує|розділяє|ізолює} націю. Культура — це {спротив|розвага|бізнес}
     окупації.
-- id: error-correction-culture
-  type: error-correction
+- type: error-correction
   title: Виправте помилки в реченнях про культуру
   instruction: Знайдіть помилку та оберіть правильний варіант.
   items:
@@ -526,8 +514,7 @@ activities:
     - визнаним
     - визнавати
     explanation: Тут немає помилки. «Визнаний» — правильно.
-- id: translate-culture
-  type: translate
+- type: translate
   title: Перекладіть культурні терміни
   instruction: Оберіть найкращий переклад.
   items:
@@ -663,15 +650,14 @@ activities:
     - text: алегорія
       correct: false
     explanation: Symbol — символ.
-- id: mark-culture-terms
-  type: mark-the-words
+- type: mark-the-words
   title: Позначте культурні терміни
   instruction: Позначте всі терміни мистецтва та літератури.
-  passage: Український *живопис* має давню традицію. *Поезія* Шевченка стала *символом*
-    нації. *Композитор* Лисенко створив українську *оперу*. У *галереї* відкрилася
-    нова *виставка*. *Драма* Лесі Українки вражає глибиною *образів*. Це справжній
-    *шедевр* українського *мистецтва*.
-  correct_words:
+  text: "Український живопис має давню традицію. Поезія Шевченка стала символом\n\
+    \    нації. Композитор Лисенко створив українську оперу. У галереї відкрилася\n\
+    \    нова виставка. Драма Лесі Українки вражає глибиною образів. Це справжній\n\
+    \    шедевр українського мистецтва.\n"
+  answers:
   - живопис
   - Поезія
   - символом
@@ -719,46 +705,43 @@ activities:
 
     — Працівник: Будь ласка! {Гарного|Приємного|Чудового} перегляду!'
   instruction: Заповніть пропуски відповідними словами.
-  id: розмова-в-музеї
-- id: select-works
-  type: select
+- type: select
   title: Оберіть українські культурні явища
   instruction: Позначте все, що належить до української культури.
   items:
-  - text: «Кобзар» Тараса Шевченка
-    correct: true
-  - text: «Війна і мир» Толстого
-    correct: false
-  - text: «Лісова пісня» Лесі Українки
-    correct: true
-  - text: «Мона Ліза» Леонардо
-    correct: false
-  - text: «Тіні забутих предків» Параджанова
-    correct: true
-  - text: «Чорний квадрат» Малевича
-    correct: true
-  - text: «Девʼята симфонія» Бетховена
-    correct: false
-  - text: «Наталка Полтавка» Лисенка
-    correct: true
-  - text: «Гамлет» Шекспіра
-    correct: false
-  - text: «Земля» Довженка
-    correct: true
-  - text: «1944» Джамали
-    correct: true
-  - text: «Червона рута» Івасюка
-    correct: true
-  - text: «Лебедине озеро» Чайковського
-    correct: false
-  - text: «Ворошиловград» Жадана
-    correct: true
-  - text: «Злочин і кара» Достоєвського
-    correct: false
-  - text: «20 днів у Маріуполі» Чернова
-    correct: true
-- id: fill-in-criticism
-  type: fill-in
+  - correct: true
+    question: «Кобзар» Тараса Шевченка
+  - correct: false
+    question: «Війна і мир» Толстого
+  - correct: true
+    question: «Лісова пісня» Лесі Українки
+  - correct: false
+    question: «Мона Ліза» Леонардо
+  - correct: true
+    question: «Тіні забутих предків» Параджанова
+  - correct: true
+    question: «Чорний квадрат» Малевича
+  - correct: false
+    question: «Девʼята симфонія» Бетховена
+  - correct: true
+    question: «Наталка Полтавка» Лисенка
+  - correct: false
+    question: «Гамлет» Шекспіра
+  - correct: true
+    question: «Земля» Довженка
+  - correct: true
+    question: «1944» Джамали
+  - correct: true
+    question: «Червона рута» Івасюка
+  - correct: false
+    question: «Лебедине озеро» Чайковського
+  - correct: true
+    question: «Ворошиловград» Жадана
+  - correct: false
+    question: «Злочин і кара» Достоєвського
+  - correct: true
+    question: «20 днів у Маріуполі» Чернова
+- type: fill-in
   title: Заповніть мистецьку критику
   instruction: Оберіть правильні слова для опису твору.
   items:
@@ -846,8 +829,7 @@ activities:
     - нерозуміння
     - сумнів
     sentence: Твір залишає глибоке ___.
-- id: quiz-genres
-  type: quiz
+- type: quiz
   title: 'Тест: літературні жанри'
   instruction: Оберіть правильну відповідь про жанри та форми.
   items:

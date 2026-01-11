@@ -1,9 +1,4 @@
-module: 141-analiz-tekstu
-level: B2
-version: '2.0'
-activities:
 - type: match-up
-  id: 141-01-vocab-def
   title: Термінологія аналізу
   pairs:
   - left: Підтекст
@@ -30,8 +25,8 @@ activities:
     right: Походження інформації
   - left: Аудиторія
     right: Група людей, для яких призначений текст
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 141-02-style-id
   title: Визначення стилю тексту
   items:
   - question: Згідно з чинним законодавством, особи, які не сплатили податки...
@@ -114,8 +109,8 @@ activities:
       correct: false
     - text: Офіційно-діловий
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 141-03-purpose
   title: Мета автора
   pairs:
   - left: Інструкція до приладу
@@ -134,8 +129,8 @@ activities:
     right: Створити образ
   - left: Новинний репортаж
     right: Повідомити факти
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 141-04-bias-detect
   title: Виявлення упередженості
   items:
   - question: Яке речення є НЕЙТРАЛЬНИМ?
@@ -218,8 +213,8 @@ activities:
       correct: false
     - text: Цитата відомої людини.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 141-05-subtext
   title: Читаємо підтекст
   pairs:
   - left: Він 'дуже' поспішав. (у лапках)
@@ -238,8 +233,8 @@ activities:
     right: Розмова закінчена, я не згоден
   - left: Це дуже сміливе рішення.
     right: Це дурне або ризиковане рішення
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
-  id: 141-06-rhetoric-structure
   title: Структура аргументації
   items:
   - sentence: У першій частині есе, яка називається ___, автор знайомить читача з
@@ -299,8 +294,8 @@ activities:
     - парафраз
     - плагіат
     - теза
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 141-07-essay-order-match
   title: Порядок частин есе
   pairs:
   - left: Крок 1
@@ -319,8 +314,8 @@ activities:
     right: Спростування
   - left: Крок 8
     right: Висновок
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
-  id: 141-08-sources-cred-sort
   title: Сортування джерел
   groups:
   - name: Достовірні
@@ -344,8 +339,8 @@ activities:
     - Сайт 'Правда' без контактів
     - Листівка на стовпі
     - Анонімний Телеграм-канал
+  instruction: Розподіліть елементи за групами.
 - type: match-up
-  id: 141-09-manipulation
   title: Техніки маніпуляції
   pairs:
   - left: Всі так роблять!
@@ -364,8 +359,8 @@ activities:
     right: Апеляція до традиції
   - left: Або ми, або вони.
     right: Хибна дилема
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 141-10-plagiarism
   title: Плагіат чи ні?
   items:
   - question: Студент скопіював текст без посилання.
@@ -448,8 +443,8 @@ activities:
       correct: false
     - text: Це адаптація
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
-  id: 141-11-vocab-context
   title: Лексика в контексті
   items:
   - sentence: Перед написанням роботи потрібно провести ретельний ___ теми.
@@ -508,8 +503,8 @@ activities:
     - проблемою
     - метою
     - ідеєю
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 141-12-citations
   title: Види посилань
   pairs:
   - left: Пряма мова
@@ -528,8 +523,8 @@ activities:
     right: У цитованій праці
   - left: URL
     right: Електронна адреса
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 141-13-fact-vs-opinion
   title: Факт чи думка?
   items:
   - question: Київ — столиця України.
@@ -612,8 +607,8 @@ activities:
       correct: false
     - text: Вимір
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 141-14-logical-fallacies
   title: Логічні хиби
   pairs:
   - left: Після — отже внаслідок
@@ -632,3 +627,4 @@ activities:
     right: Перебільшення наслідків
   - left: Поспішне узагальнення
     right: Висновок з одного прикладу
+  instruction: З'єднайте відповідні елементи.

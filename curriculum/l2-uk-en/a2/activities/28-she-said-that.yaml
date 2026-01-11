@@ -21,6 +21,7 @@
     right: to say
   - left: повідомити
     right: to report
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: 'Report the Sentence (Concept: Pronoun Adaptation)'
   items:
@@ -94,6 +95,7 @@
     - розкритикував
     - спитав
     - нагадав
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: 'Logic of Reporting (Concept: Logical Deduction)'
   items:
@@ -228,6 +230,7 @@
       correct: false
     - text: Тиха та таємнича форма «Шепотіти»
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: 'Reconstruct the Report (Concept: Syntax Integrity)'
   items:
@@ -292,6 +295,7 @@
     - цілком
     - здорові
     answer: Лікар повідомив, що ми всі тепер цілком здорові
+  instruction: Розташуйте слова у правильному порядку.
 - type: group-sort
   title: 'Verb Intention (Concept: Semantic Categorization)'
   groups:
@@ -311,6 +315,7 @@
     - Заперечувати
     - Переконувати
     - Обіцяти
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: 'True or False? (Concept: Concept Validation)'
   items:
@@ -344,6 +349,7 @@
   - statement: «Вони кажуть» signifies a rumor.
     correct: true
     explanation: '"They say..."'
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: 'The Gossip Flow (Concept: Contextual Application)'
   passage: Ти вже чула останні новини про нашу Олю? Марія {сказала|поїла}, що Оля
@@ -355,16 +361,13 @@
     Я думаю, що треба {нагадати|забути} Олі ще раз про це. Може, вона {пояснить|замовкне}
     все нам пізніше? Я {обіцяю|заперечую}, що дізнаюся правду скоро. {Нехай|Хоча}
     вона сама розкаже. Адже всі {кажуть|мовчать}, що це цікаво!
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: 'Find Reporting Verbs (Concept: Pattern Recognition)'
-  passage: 'Він *сказав*, що прийде. Вона *запитала*, коли це буде. Ми *повідомили*,
-    що вже готові. Директор *наказав* працювати. Клієнт *поскаржився* на сервіс. Ти
-    *пообіцяв* допомогти!
-
-    ---
-
-    Я *заперечую* все. Він *стверджує* протилежне. Хто *пояснить* це правило?'
-  correct_words:
+  text: Він сказав, що прийде. Вона запитала, коли це буде. Ми повідомили, що вже
+    готові. Директор наказав працювати. Клієнт поскаржився на сервіс. Ти пообіцяв
+    допомогти! --- Я заперечую все. Він стверджує протилежне. Хто пояснить це правило?
+  answers:
   - сказав
   - запитала
   - повідомили
@@ -374,7 +377,7 @@
   - заперечую
   - стверджує
   - пояснить
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: 'Fix the Report (Concept: Critical Proofreading)'
   items:
@@ -432,6 +435,7 @@
     - помилка
     - правильно
     explanation: You cannot promise the past.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -531,3 +535,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

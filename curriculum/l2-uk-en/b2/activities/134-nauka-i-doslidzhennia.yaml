@@ -1,9 +1,4 @@
-module: 134-nauka-i-doslidzhennia
-level: B2
-version: '2.0'
-activities:
-- id: match-science-terms
-  type: match-up
+- type: match-up
   title: 'Знайдіть відповідність: наукові терміни'
   instruction: Поєднайте термін з його визначенням.
   pairs:
@@ -31,8 +26,7 @@ activities:
     right: видавання чужих ідей за свої
   - left: синтез
     right: поєднання елементів у ціле
-- id: fill-in-research
-  type: fill-in
+- type: fill-in
   title: 'Заповніть пропуски: наукова дискусія'
   instruction: Оберіть правильне слово для кожного пропуску.
   items:
@@ -120,8 +114,7 @@ activities:
     - новинному
     - літературному
     sentence: Стаття опублікована в ___ журналі.
-- id: quiz-scientists
-  type: quiz
+- type: quiz
   title: 'Тест: українські вчені'
   instruction: Оберіть правильну відповідь.
   items:
@@ -257,8 +250,7 @@ activities:
     - text: Лекції
       correct: false
     explanation: 'IMRAD: Introduction, Methods, Results, And Discussion.'
-- id: true-false-science
-  type: true-false
+- type: true-false
   title: 'Правда чи ні: факти про науку'
   instruction: Визначте, чи правдиве кожне твердження.
   items:
@@ -298,8 +290,7 @@ activities:
   - statement: Наукова стаття не потребує посилань.
     correct: false
     explanation: Посилання на джерела обов'язкові.
-- id: group-sort-stages
-  type: group-sort
+- type: group-sort
   title: Розподіліть за категоріями
   instruction: Визначте, де використовується кожен термін.
   groups:
@@ -323,8 +314,7 @@ activities:
     - публікація
     - редагування
     - форматування
-- id: unjumble-science
-  type: unjumble
+- type: unjumble
   title: Складіть речення правильно
   instruction: Розташуйте слова у правильному порядку.
   items:
@@ -394,8 +384,7 @@ activities:
     - заснована
     - року
     - '1918'
-- id: cloze-research
-  type: cloze
+- type: cloze
   title: Заповніть текст про науковий метод
   instruction: Заповніть пропуски у тексті.
   passage: Науковий {метод|підхід|спосіб} починається зі {спостереження|експерименту|висновку}.
@@ -410,8 +399,7 @@ activities:
     публікацій. {Академічна|Наукова|Освітня} доброчесність вимагає посилатися на {джерела|гіпотези|експерименти}.
     {Плагіат|Експеримент|Аналіз} є серйозним порушенням етики. Українські вчені роблять
     важливі {відкриття|гіпотези|методи}.
-- id: error-correction-science
-  type: error-correction
+- type: error-correction
   title: Виправте помилки в наукових реченнях
   instruction: Знайдіть помилку та оберіть правильний варіант.
   items:
@@ -523,8 +511,7 @@ activities:
     - Протягом
     - В процесі
     explanation: Перед приголосним «х» пишемо «у», не «в».
-- id: translate-science
-  type: translate
+- type: translate
   title: Перекладіть наукові терміни
   instruction: Оберіть найкращий переклад.
   items:
@@ -660,16 +647,14 @@ activities:
     - text: відкинути
       correct: false
     explanation: To refute — спростувати.
-- id: mark-science-terms
-  type: mark-the-words
+- type: mark-the-words
   title: Позначте наукові терміни
   instruction: Позначте всі наукові терміни у тексті.
-  passage: Українські *вчені* сформулювали *гіпотезу* про новий *метод* лікування.
-    Після серії *експериментів* у *лабораторії* вони отримали позитивні *результати*.
-    *Аналіз* даних підтвердив їхнє *припущення*. Робота пройшла *рецензування* та
-    була опублікована в міжнародному *журналі*. Команда подала заявку на *грант* для
-    подальших *досліджень*.
-  correct_words:
+  text: "Українські вчені сформулювали гіпотезу про новий метод лікування.\n    Після\
+    \ серії експериментів у лабораторії вони отримали позитивні результати.\n    Аналіз\
+    \ даних підтвердив їхнє припущення. Робота пройшла рецензування та\n    була опублікована\
+    \ в міжнародному журналі. Команда подала заявку на грант для\n    подальших досліджень.\n"
+  answers:
   - вчені
   - гіпотезу
   - метод
@@ -717,46 +702,43 @@ activities:
     — Модератор: {Аплодисменти|Питання|Коментарі} доповідачу. Переходимо до {наступної|останньої|першої}
     секції.'
   instruction: Розташуйте репліки розмови на конференції.
-  id: поставте-репліки-у-правильному-порядку
-- id: select-practices
-  type: select
+- type: select
   title: Оберіть правила академічної доброчесності
   instruction: Позначте практики, що відповідають академічній етиці.
   items:
-  - text: Завжди посилатися на джерела
-    correct: true
-  - text: Видавати чужі ідеї за свої
-    correct: false
-  - text: Зберігати первинні дані
-    correct: true
-  - text: Вигадувати результати експериментів
-    correct: false
-  - text: Перевіряти текст на плагіат
-    correct: true
-  - text: Публікувати ту саму статтю двічі
-    correct: false
-  - text: Дотримуватися етичних стандартів
-    correct: true
-  - text: Приховувати негативні результати
-    correct: false
-  - text: Чесно описувати методологію
-    correct: true
-  - text: Фальсифікувати дані
-    correct: false
-  - text: Публікувати результати рецензування
-    correct: true
-  - text: Ігнорувати авторські права
-    correct: false
-  - text: Зазначати конфлікт інтересів
-    correct: true
-  - text: Перебільшувати значення результатів
-    correct: false
-  - text: Ділитися даними з колегами
-    correct: true
-  - text: Оплачувати за позитивні рецензії
-    correct: false
-- id: fill-in-grant
-  type: fill-in
+  - correct: true
+    question: Завжди посилатися на джерела
+  - correct: false
+    question: Видавати чужі ідеї за свої
+  - correct: true
+    question: Зберігати первинні дані
+  - correct: false
+    question: Вигадувати результати експериментів
+  - correct: true
+    question: Перевіряти текст на плагіат
+  - correct: false
+    question: Публікувати ту саму статтю двічі
+  - correct: true
+    question: Дотримуватися етичних стандартів
+  - correct: false
+    question: Приховувати негативні результати
+  - correct: true
+    question: Чесно описувати методологію
+  - correct: false
+    question: Фальсифікувати дані
+  - correct: true
+    question: Публікувати результати рецензування
+  - correct: false
+    question: Ігнорувати авторські права
+  - correct: true
+    question: Зазначати конфлікт інтересів
+  - correct: false
+    question: Перебільшувати значення результатів
+  - correct: true
+    question: Ділитися даними з колегами
+  - correct: false
+    question: Оплачувати за позитивні рецензії
+- type: fill-in
   title: Заповніть грант-заявку
   instruction: Оберіть правильні слова для заявки на грант.
   items:
@@ -844,8 +826,7 @@ activities:
     - фонду
     - установи
     sentence: Проект відповідає пріоритетам ___ НФДУ
-- id: quiz-method
-  type: quiz
+- type: quiz
   title: 'Тест: науковий метод'
   instruction: Оберіть правильну відповідь про науковий метод.
   items:

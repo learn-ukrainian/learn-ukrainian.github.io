@@ -25,6 +25,7 @@
     right: Одночасність різних подій
   - left: Чи
     right: Вираження непрямого питання
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: 'Synthesis Challenge (Concept: Contextual Selection)'
   passage: 'Ми пішли в аптеку, [{щоб|бо|хоча|який}:1] купити ліки для мами. [{Тому
@@ -45,6 +46,7 @@
     Це людина, [{яка|який|які|якого}:10] допомагає нам щодня. Він працює, [{хоча|бо|щоб|після
     того як}:11] дуже втомлений. Я телефоную тобі, [{щоб|бо|поки|хоча}:12] дізнатися
     про твої плани на вечір.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: 'Checkpoint Master (Concept: Logical Deduction)'
   items:
@@ -140,6 +142,7 @@
       correct: false
     - text: 'Ввічливе питання звучить так: «Який ви хворий сьогодні у цьому кабінеті?»'
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: 'Constructing Complexity (Concept: Syntax Integrity)'
   items:
@@ -215,6 +218,7 @@
     - на
     - день
     answer: Лікар просить, щоб я приймав ці ліки тричі на день
+  instruction: Розташуйте слова у правильному порядку.
 - type: group-sort
   title: Connector Sorter | Логічне сортування
   groups:
@@ -245,6 +249,7 @@
     - Який будинок стоїть
     - Яка дівчина грає
     - Котрий зараз час
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: 'Checkpoint Quiz (Concept: Concept Validation)'
   items:
@@ -272,6 +277,7 @@
   - statement: «Що вас турбує?» is the standard "Why are you here?" for doctors.
     correct: true
     explanation: It literally means "What bothers you?".
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: 'The Recovery (Concept: Contextual Application)'
   passage: 'Complete the story about someone getting better using logic connectors.
@@ -286,14 +292,13 @@
     того як він почав приймати таблетки, йому стало краще. Тепер він знову здоровий,
     {проте|бо|щоб|коли} він більше не гуляє без куртки. Нам важливо, {щоб|що|як|чи}
     кожен {був|був би|є|бути} здоровим.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: 'Find the Logic (Concept: Pattern Recognition)'
-  passage: 'Identify the logical connector words in the text.
-
-    Я вчуся, *щоб* знати більше. Він прийшов, *тому що* обіцяв. *Хоча* йшов дощ, ми
-    вийшли. Це людина, *яка* нам допомогла. *Після того як* ми поїли, ми пішли. Я
-    знаю, *що* ти правий. Скажи мені, *чи* ти прийдеш.'
-  correct_words:
+  text: Identify the logical connector words in the text. Я вчуся, щоб знати більше.
+    Він прийшов, тому що обіцяв. Хоча йшов дощ, ми вийшли. Це людина, яка нам допомогла.
+    Після того як ми поїли, ми пішли. Я знаю, що ти правий. Скажи мені, чи ти прийдеш.
+  answers:
   - щоб
   - тому що
   - Хоча
@@ -301,7 +306,7 @@
   - Після того як
   - що
   - чи
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: 'Logic Refinement (Concept: Critical Proofreading)'
   items:
@@ -360,6 +365,7 @@
     - помилка
     - правильно
     explanation: Use «що» for direct statements in reported speech.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -411,3 +417,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

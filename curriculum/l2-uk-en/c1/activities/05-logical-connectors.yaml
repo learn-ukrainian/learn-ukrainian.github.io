@@ -1,7 +1,3 @@
-module: 05-logical-connectors
-level: C1
-version: '2.1'
-activities:
 - type: group-sort
   title: Класифікація конекторів 1
   instruction: Розподіліть слова за їхньою логічною функцією в реченні.

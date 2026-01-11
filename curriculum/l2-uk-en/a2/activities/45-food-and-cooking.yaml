@@ -25,6 +25,7 @@
     right: to chop
   - left: чайник
     right: kettle
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Cooking Methods
   passage: Я {варю|смажу|печу|тушкую} картоплю 20 хвилин. Вона {смажить|варить|пече|тушкує}
@@ -34,6 +35,7 @@
     Молоко тримають в {холодильнику|каструлі|духовці|плиті}. Вона {тушкує|смажить|варить|пече}
     овочі в каструлі. Ми {готуємо|нарізаємо|смажимо|варимо} вечерю разом. Він {закип'ячує|смажить|пече|тушкує}
     воду для чаю. Бабуся {запікає|варить|смажить|нарізає} курку в духовці.
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: cloze
   title: Recipe Story
   passage: 'Бабуся {готує|нарізає|смажить} борщ. (cooks)
@@ -59,6 +61,7 @@
     Це була чудова {вечеря|кухня|кімната}. (dinner)
 
     Марія каже: "{Дякую|Будь ласка|Прошу}, бабусю!"'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Food & Cooking
   items:
@@ -142,6 +145,7 @@
       correct: false
     - text: Їжа
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Cooking Sentences
   items:
@@ -227,6 +231,7 @@
     - для
     - родини
     answer: Я сьогодні ввечері готую святкову вечерю для родини
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Kitchen Mistakes
   items:
@@ -284,6 +289,7 @@
     - помилка
     - правильно
     explanation: We boil (кип'ятити) water, not stew it.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: match-up
   title: Meals & Times
   pairs:
@@ -307,6 +313,7 @@
     right: breakfast
   - left: вечеря
     right: dinner
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Kitchen Categories
   groups:
@@ -332,6 +339,7 @@
     - солоний
     - кислий
     - гострий
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Kitchen Facts
   items:
@@ -359,6 +367,7 @@
     correct: true
   - statement: «Обід» = dinner.
     correct: false
+  instruction: Визначте, чи твердження правильне.
 - type: translate
   title: Food Words
   items:
@@ -426,3 +435,4 @@
       correct: false
     - text: холодильник
       correct: false
+  instruction: Оберіть правильний переклад.

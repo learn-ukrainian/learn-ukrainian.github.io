@@ -25,6 +25,7 @@
     right: to forbid someone (Dat + Inf)
   - left: дозволяти
     right: to allow someone (Dat + Inf)
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Choose the Correct Form
   passage: 'Я {допомагаю|допомагати|допомагає} мамі готувати обід. Ця музика {заважає|заважати|заважаю}
@@ -41,6 +42,7 @@
 
     Я {вибачаю|вибачати|вибачаюсь} тобі цю помилку. Вона {розповідає|розповідати|розповідається}
     подрузі новину. Мама {дозволяє|дозволяти|дозволяється} дітям гратися надворі.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Dative Verb Patterns
   items:
@@ -176,6 +178,7 @@
       correct: false
     - text: Він радить мною відпочити.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Dative Verb Rules
   items:
@@ -215,6 +218,7 @@
   - statement: Word order in Ukrainian sentences with dative is completely fixed.
     correct: false
     explanation: Word order is flexible! Case endings show grammatical roles.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Verb Categories
   groups:
@@ -234,6 +238,7 @@
     - розповідати
     - радити
     - писати
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Dative Verb Sentences
   items:
@@ -297,6 +302,7 @@
     - спати
     - вночі
     answer: Ця гучна музика заважає мені добре спати вночі
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Dative Errors
   items:
@@ -360,6 +366,7 @@
     - я
     explanation: The verb «заважати» requires Dative. The pronoun «я» becomes «мені»
       in Dative, not «мене».
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
   passage: 'Марія працює вчителькою. Щодня вона {Йому|Його|Він} учням нові теми. Коли
@@ -375,18 +382,14 @@
     — він слухає музику в навушниках. Тепер мама {каже|говорить|розповідає} Олегові,
     що він уважний. Олег {дякує|дякувати} мамі за розуміння. Батьки {дозволяють|дозволяти|дозволяється}
     Олегові слухати музику ввечері.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Dative Objects
-  passage: 'Click on all the nouns in the dative case.
-
-    Я допомагаю *мамі*. Він дякує *батькові*. Ми віримо *друзям*. Вона телефонує *сестрі*.
-    Лікар допомагає *пацієнтові*.
-
-    ---
-
-    Ми надсилаємо посилку *бабусі*. Я даю книгу *студентові*. Він показує фото *другові*.
-    Вчитель пояснює урок *учням*. Ми довіряємо цьому *лікареві*.'
-  correct_words:
+  text: Click on all the nouns in the dative case. Я допомагаю мамі. Він дякує батькові.
+    Ми віримо друзям. Вона телефонує сестрі. Лікар допомагає пацієнтові. --- Ми надсилаємо
+    посилку бабусі. Я даю книгу студентові. Він показує фото другові. Вчитель пояснює
+    урок учням. Ми довіряємо цьому лікареві.
+  answers:
   - мамі
   - батькові
   - друзям
@@ -397,7 +400,7 @@
   - другові
   - учням
   - лікареві
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -467,3 +470,4 @@
     - text: Вона пояснює правило учнем.
       correct: false
     explanation: Dative учневі.
+  instruction: Оберіть правильний переклад.

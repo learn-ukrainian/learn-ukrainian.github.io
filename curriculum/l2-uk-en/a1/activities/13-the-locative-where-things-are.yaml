@@ -133,6 +133,7 @@
     - text: під
       correct: false
     explanation: Open space (beach) uses на.
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Places and Locations
   pairs:
@@ -154,6 +155,7 @@
     right: station
   - left: зупинка
     right: stop
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Complete the Locative
   items:
@@ -242,6 +244,7 @@
     - кафу
     - кафею
     explanation: 'Note: кафе is neuter and doesn''t change in locative.'
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: group-sort
   title: в/у or на?
   groups:
@@ -261,6 +264,7 @@
     - на зупинці
     - на вулиці
     - на площі
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Locative Rules
   items:
@@ -303,6 +307,7 @@
   - statement: Some masculine nouns have -ові ending in locative for people.
     correct: true
     explanation: Correct! на батькові, на дідові (though less common in modern Ukrainian).
+  instruction: Визначте, чи твердження правильне.
 - type: quiz
   title: Where Questions Order
   items:
@@ -438,6 +443,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Студенти у бібліотеці'
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
   title: Preposition Choice
   items:
@@ -525,6 +531,7 @@
     - на
     - у
     - при
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
   title: Nominative to Locative
   pairs:
@@ -548,6 +555,7 @@
     right: у парку
   - left: ліфт
     right: у ліфті
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Translation Practice
   items:
@@ -683,3 +691,4 @@
     - text: вони
       correct: false
     explanation: Floor levels use на.
+  instruction: Оберіть правильну відповідь.

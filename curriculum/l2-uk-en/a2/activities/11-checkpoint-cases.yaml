@@ -25,6 +25,7 @@
     right: for (benefit)
   - left: без (Genitive)
     right: without
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Essential Case Selection
   items:
@@ -112,6 +113,7 @@
     - Друга
     - Друже
     - Другом
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Comprehensive Case Mastery
   items:
@@ -239,6 +241,7 @@
       correct: false
     - text: Genitive
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Case Logic and Rules
   items:
@@ -278,6 +281,7 @@
   - statement: Service vocabulary uses accusative for direct objects.
     correct: true
     explanation: Correct! Відправити листа, зняти гроші.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Preposition Case Sorting
   groups:
@@ -308,6 +312,7 @@
     - в/у (location)
     - на (location)
     - о/об (time)
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Mixed Case Construction
   items:
@@ -459,6 +464,7 @@
     - нашого
     - друга
     answer: Ця велика посилка прийшла з України спеціально для нашого друга Олега
+  instruction: Розташуйте слова у правильному порядку.
 - type: cloze
   title: Transactions at the Bank and Post
   passage: '{Добрий|Доброго|Добра} день! Я хочу відправити {листа|лист|листу}. {Куди|Де|Звідки}?
@@ -468,13 +474,13 @@
     У банку я хочу зняти {гроші|грошей|грошам}. Який сьогодні {курс|курсу|курсом}?
     Тридцять сім {гривень|гривні|гривня}. Мені потрібно відкрити {рахунок|рахунку|рахунком}.
     Ось мій {паспорт|паспорта|паспортові}. Дякую {вам|вас|вами}!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Identifying cases in Narrative
-  passage: 'Click on the words showing a case other than Nominative.
-
-    Марія отримала *листа* від *мами*. Вона пише *ручкою*. Сьогодні *мені* холодно.
-    Ми йдемо в *театр* з *другом*. Дай *мені* *каву* без *цукру*.'
-  correct_words:
+  text: Click on the words showing a case other than Nominative. Марія отримала листа
+    від мами. Вона пише ручкою. Сьогодні мені холодно. Ми йдемо в театр з другом.
+    Дай мені каву без цукру.
+  answers:
   - листа
   - мами
   - ручкою
@@ -484,7 +490,7 @@
   - мені
   - каву
   - цукру
-  instruction: Натисніть на слова в непрямих відмінках.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: Correcting Case Usage
   items:
@@ -596,6 +602,7 @@
     - Моє
     - Мене
     explanation: This is correct! Dative is used with «подобатися».
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: Practical Case Translation
   items:
@@ -719,6 +726,7 @@
       correct: false
     - text: Я телефоную батьком.
       correct: false
+  instruction: Оберіть правильний переклад.
 - type: match-up
   title: Dative Pronoun Drill
   pairs:
@@ -746,6 +754,7 @@
     right: Мені потрібно
   - left: To whom?
     right: Кому?
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Emotional States & Experiencers
   items:
@@ -870,3 +879,4 @@
       correct: false
     - text: Instrumental
       correct: false
+  instruction: Оберіть правильну відповідь.

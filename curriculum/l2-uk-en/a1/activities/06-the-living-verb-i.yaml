@@ -153,6 +153,7 @@
     - text: писат-
       correct: false
     explanation: писати → пиш-
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Person and Form
   groups:
@@ -174,6 +175,7 @@
     - вона читає
     - він знає
     - вона знає
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete the Sentence
   items:
@@ -261,6 +263,7 @@
     - відпочиваєш
     - відпочиває
     - відпочивають
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Verb Rules
   items:
@@ -304,6 +307,7 @@
   - statement: You must always use a pronoun with Ukrainian verbs.
     correct: false
     explanation: Incorrect! Pronouns are optional — the verb ending is enough.
+  instruction: Визначте, чи твердження правильне.
 - type: anagram
   title: Build the Verb
   items:
@@ -331,6 +335,7 @@
     answer: чекати
   - scrambled: с н і д а т и
     answer: снідати
+  instruction: Розташуйте літери у правильному порядку.
 - type: anagram
   title: Build the Conjugated Form
   items:
@@ -358,6 +363,7 @@
     answer: чекаєте
   - scrambled: с н і д а ю т ь
     answer: снідають
+  instruction: Розташуйте літери у правильному порядку.
 - type: unjumble
   title: Build Verb Sentences
   items:
@@ -401,3 +407,4 @@
     - Вона
     - пісню
     answer: Вона співає пісню
+  instruction: Розташуйте слова у правильному порядку.

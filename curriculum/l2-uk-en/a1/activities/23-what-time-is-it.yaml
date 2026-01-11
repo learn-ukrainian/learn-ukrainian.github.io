@@ -21,6 +21,7 @@
     right: weekend
   - left: '- робочий день'
     right: workday
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: Months of the Year
   pairs:
@@ -44,6 +45,7 @@
     right: September
   - left: '- жовтень'
     right: October
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Time Units
   groups:
@@ -66,6 +68,7 @@
     - секунда
     - чверть
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Telling Time
   items:
@@ -125,6 +128,7 @@
     - рано
     - пізно
     - зараз
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Days and Months
   items:
@@ -184,6 +188,7 @@
     - четвер
     - п'ятниця
     - понеділок
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Time Expressions
   items:
@@ -267,6 +272,7 @@
       correct: false
     - text: The lesson is at one.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Months and Seasons
   items:
@@ -350,6 +356,7 @@
       correct: false
     - text: Четвер і п'ятниця
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Time Sentences
   items:
@@ -392,6 +399,7 @@
     - у
     - день
     answer: Мій день народження у травні
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Calendar Knowledge
   items:
@@ -431,3 +439,4 @@
   - statement: Вихідні — це понеділок і вівторок.
     correct: false
     explanation: Incorrect! Weekend is Saturday and Sunday.
+  instruction: Визначте, чи твердження правильне.

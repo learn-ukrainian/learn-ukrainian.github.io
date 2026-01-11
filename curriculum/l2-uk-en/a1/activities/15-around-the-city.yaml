@@ -133,6 +133,7 @@
     - text: Я готель.
       correct: false
     explanation: 'Direction to building: в.'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: City Vocabulary
   pairs:
@@ -154,6 +155,7 @@
     right: restaurant
   - left: метро
     right: metro
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Complete the Directions
   items:
@@ -241,6 +243,7 @@
     - на автобусі
     - метро
     - на машині
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Transportation Phrases
   items:
@@ -300,6 +303,7 @@
     - автобусом
     - автобус
     - в автобусі
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: City Navigation Facts
   items:
@@ -344,6 +348,7 @@
   - statement: «Метро» declines like other Ukrainian nouns.
     correct: false
     explanation: Incorrect. Метро is indeclinable (doesn't change form).
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Directional vs. Locational
   groups:
@@ -363,6 +368,7 @@
     - Вони їдуть у Київ.
     - Я йду на площу.
     - Ти йдеш у школу.
+  instruction: Розподіліть елементи за групами.
 - type: group-sort
   title: Types of Urban Spaces
   groups:
@@ -382,6 +388,7 @@
     - кінотеатр
     - музей
     - театр
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Directional Sentence Order
   items:
@@ -517,6 +524,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ні, це близько'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Question and Answer Pairs
   instruction: Match each question with the appropriate answer
@@ -565,6 +573,7 @@
   - statement: You can say «їду в автобусі» to mean "I go by bus."
     correct: false
     explanation: Incorrect. Use «їду на автобусі» (на, not в) for transportation.
+  instruction: Визначте, чи твердження правильне.
 - type: quiz
   title: Transportation Phrases Order
   items:
@@ -700,3 +709,4 @@
     - text: вони
       correct: false
     explanation: 'Correct: На перехресті ідіть наліво'
+  instruction: Оберіть правильну відповідь.

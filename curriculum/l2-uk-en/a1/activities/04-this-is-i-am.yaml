@@ -126,6 +126,7 @@
     - text: вони
       correct: false
     explanation: Always start with Ви for strangers (formal)
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Pronouns and Meanings
   pairs:
@@ -145,6 +146,7 @@
     right: you (formal/plural)
   - left: вони
     right: they
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -232,6 +234,7 @@
     - Ми
     - Ви
     - Вони
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Grammar Rules
   items:
@@ -272,6 +275,7 @@
       Ukrainian culture.
     correct: true
     explanation: Correct! It's a proud affirmation of national identity.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Formal vs Informal
   groups:
@@ -291,6 +295,7 @@
     - Talking to a doctor you just met
     - Talking to the President
     - Talking to a cashier in a shop
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Gender Forms
   items:
@@ -426,6 +431,7 @@
     - text: plural
       correct: false
     explanation: студентка = feminine form
+  instruction: Оберіть правильну відповідь.
 - type: anagram
   title: Build the Words
   items:
@@ -453,6 +459,7 @@
     answer: людина
   - scrambled: п о д р у г а
     answer: подруга
+  instruction: Розташуйте літери у правильному порядку.
 - type: quiz
   title: Ти or Ви?
   items:
@@ -588,3 +595,4 @@
     - text: вони
       correct: false
     explanation: Use ти with people you live with casually.
+  instruction: Оберіть правильну відповідь.

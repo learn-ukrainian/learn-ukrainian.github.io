@@ -1,9 +1,4 @@
-module: 145-b2-finalnyy-ispyt
-level: B2
-version: '2.0'
-activities:
 - type: quiz
-  id: 145-01-reading
   title: 'Читання: Розуміння тексту'
   items:
   - question: 'Текст: ''Попри складні умови, економіка демонструє зростання''. Що
@@ -87,8 +82,8 @@ activities:
       correct: false
     - text: Перед сном
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
-  id: 145-02-listening-sim
   title: Аудіювання (Симуляція)
   items:
   - question: 'Ви чуєте: ''Обережно, двері зачиняються''. Де ви?'
@@ -171,8 +166,8 @@ activities:
       correct: false
     - text: Байдужість
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
-  id: 145-03-passive
   title: 'Граматика: Пасив'
   items:
   - question: 'Перетворіть на пасив: ''Архітектор спроектував будинок''.'
@@ -255,8 +250,8 @@ activities:
       correct: false
     - text: Зробить
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
-  id: 145-04-participles
   title: 'Граматика: Дієприкметники'
   items:
   - question: 'Активний дієприкметник (уникаємо): ''Людина, яка пише''.'
@@ -339,8 +334,8 @@ activities:
       correct: false
     - text: Прислівник
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
-  id: 145-05-aspect
   title: 'Граматика: Вид дієслова'
   items:
   - sentence: Я ___ цей фільм вчора. (Процес/Факт)
@@ -399,8 +394,8 @@ activities:
     - давай
     - давати
     - давав
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
-  id: 145-06-motion
   title: 'Граматика: Рух'
   items:
   - sentence: Зараз я ___ в школу. (Пішки, в один бік)
@@ -459,8 +454,8 @@ activities:
     - біжать
     - йдуть
     - ходять
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
-  id: 145-07-cases
   title: 'Граматика: Відмінки'
   items:
   - sentence: Я не маю ___ (час).
@@ -519,8 +514,8 @@ activities:
     - лікарю
     - лікарем
     - лікар
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 145-08-synonyms
   title: 'Лексика: Синоніми'
   pairs:
   - left: Гарний
@@ -539,8 +534,8 @@ activities:
     right: Миттєво
   - left: Цікавий
     right: Захопливий
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
-  id: 145-09-idioms
   title: 'Лексика: Ідіоми'
   pairs:
   - left: Пекти раків
@@ -559,8 +554,8 @@ activities:
     right: Обманювати
   - left: Накивати п'ятами
     right: Втекти
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 145-10-definitions
   title: 'Лексика: Визначення'
   items:
   - question: Що таке 'гіпотеза'?
@@ -643,8 +638,8 @@ activities:
       correct: false
     - text: Ненависть
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 145-11-history
   title: 'Історія: Дати'
   pairs:
   - left: '988'
@@ -663,8 +658,8 @@ activities:
     right: Незалежність
   - left: '2014'
     right: Революція Гідності
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 145-12-culture
   title: 'Культура: Факти'
   items:
   - question: Символ Києва — це...
@@ -747,8 +742,8 @@ activities:
       correct: false
     - text: Танець
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
-  id: 145-13-essay-order
   title: 'Письмо: Структура есе'
   groups:
   - name: Початок
@@ -772,8 +767,8 @@ activities:
     - Заклик
     - Підпис
     - Посилання на джерела
+  instruction: Розподіліть елементи за групами.
 - type: group-sort
-  id: 145-14-register-sort
   title: 'Письмо: Стиль'
   groups:
   - name: Офіційно
@@ -794,8 +789,8 @@ activities:
     - Як справи?
     - Привіт, друже
     - Давай зустрінемось
+  instruction: Розподіліть елементи за групами.
 - type: quiz
-  id: 145-15-speaking-sim
   title: Говоріння (Симуляція)
   items:
   - question: 'Вас просять представитися. Ви кажете:'
@@ -878,3 +873,4 @@ activities:
       correct: false
     - text: Я не знаю.
       correct: false
+  instruction: Оберіть правильну відповідь.

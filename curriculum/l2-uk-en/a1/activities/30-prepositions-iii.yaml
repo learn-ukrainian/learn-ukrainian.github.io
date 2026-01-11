@@ -21,6 +21,7 @@
     right: Home
   - left: '- Прямо'
     right: Straight
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Location vs Direction
   groups:
@@ -41,6 +42,7 @@
     - туди
     - до лікаря
     - --
+  instruction: Розподіліть елементи за групами.
 - type: group-sort
   title: Preposition Usage
   groups:
@@ -63,6 +65,7 @@
     - до бабусі
     - до вчителя
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Де чи Куди? (Where or Where to?)
   items:
@@ -150,6 +153,7 @@
     - Де
     - Куди
     - Коли
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Choose the Preposition
   items:
@@ -237,6 +241,7 @@
     - в
     - до
     - від
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Location or Direction?
   items:
@@ -320,6 +325,7 @@
       correct: false
     - text: About here
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Which Preposition?
   items:
@@ -403,6 +409,7 @@
       correct: false
     - text: в татка
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Preposition Sentences
   items:
@@ -478,6 +485,7 @@
     - родом
     - скажи
     answer: Скажи, звідки ти родом
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Preposition Rules
   items:
@@ -509,3 +517,4 @@
     correct: true
   - statement: «Сюди» means "to here.".
     correct: true
+  instruction: Визначте, чи твердження правильне.

@@ -25,6 +25,7 @@
     right: will be drinking
   - left: вип'ю
     right: will drink up
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Choose the Correct Future
   passage: 'Я {прочитаю|буду читати} книгу завтра. Вона {буде працювати|попрацює}
@@ -45,6 +46,7 @@
 
     Він {буде вчити|вивчить} українську. (will be learning — process) Ми {вивчимо|будемо
     вчити} цей урок! (will master — completion)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Future Tense
   items:
@@ -180,6 +182,7 @@
       correct: false
     - text: Present
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Future Rules
   items:
@@ -219,6 +222,7 @@
   - statement: «Буду читати» = I finished reading.
     correct: false
     explanation: «Буду читати» = I will be reading.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Future Formation
   groups:
@@ -238,6 +242,7 @@
     - скажемо
     - візьмете
     - дадуть
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Future Sentences
   items:
@@ -374,6 +379,7 @@
     - довгі
     - роки
     answer: Вони будуть вчитися в університеті ще три роки
+  instruction: Розташуйте слова у правильному порядку.
 - type: fill-in
   title: Choose Correct Future
   items:
@@ -433,6 +439,7 @@
     - попрацюємо
     - працювали
     - працюємо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: select
   title: Perfective Future Forms
   items:
@@ -516,6 +523,7 @@
       correct: true
     - text: почекаю
       correct: false
+  instruction: Оберіть усі правильні відповіді.
 - type: cloze
   title: Future Plans
   passage: 'Завтра я {поїдемо|їхати} рано. Я {будемо їхати|їхати|поїдемо} каву і {побачу|бачити}
@@ -527,21 +535,14 @@
     Наступного тижня ми {поїдемо|їхати} до України! Ми {будемо їхати|їхати|поїдемо}
     три дні. Я {побачу|бачити} нові місця і {зроблю|робити} багато фотографій. Коли
     я {повернуся|повернутися}, я {розповім|розповідати} вам про нашу подорож!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Perfective Future
-  passage: 'Click on PERFECTIVE FUTURE forms only.
-
-    Завтра я *прочитаю* книгу. Потім я *напишу* рецензію. Я буду писати цілий день,
-    але *закінчу*!
-
-    ---
-
-    Ми *приїдемо* завтра. Вона *скаже* правду. Він *візьме* книгу і *піде*.
-
-    ---
-
-    Вони будуть працювати весь день. Потім вони *закінчать* і *підуть* додому.'
-  correct_words:
+  text: Click on PERFECTIVE FUTURE forms only. Завтра я прочитаю книгу. Потім я напишу
+    рецензію. Я буду писати цілий день, але закінчу! --- Ми приїдемо завтра. Вона
+    скаже правду. Він візьме книгу і піде. --- Вони будуть працювати весь день. Потім
+    вони закінчать і підуть додому.
+  answers:
   - прочитаю
   - напишу
   - закінчу
@@ -551,4 +552,4 @@
   - піде
   - закінчать
   - підуть
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.

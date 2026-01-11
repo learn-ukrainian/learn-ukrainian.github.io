@@ -21,6 +21,7 @@
     right: son
   - left: '- дочка'
     right: daughter
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: More Family
   pairs:
@@ -44,6 +45,7 @@
     right: boyfriend
   - left: '- дівчина'
     right: girlfriend
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Generations
   groups:
@@ -66,6 +68,7 @@
     - онук
     - онучка
     - --
+  instruction: Розподіліть елементи за групами.
 - type: group-sort
   title: Gender of Family Terms
   groups:
@@ -86,6 +89,7 @@
     - дочка
     - дружина
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Моя сім'я (My Family)
   items:
@@ -173,6 +177,7 @@
     - старша
     - молодша
     - середня
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Possessives with Family
   items:
@@ -260,6 +265,7 @@
     - твого
     - твоя
     - твої
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Who Is Who?
   items:
@@ -343,6 +349,7 @@
       correct: false
     - text: Онучка
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Marital Status
   items:
@@ -426,6 +433,7 @@
       correct: false
     - text: Брат
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Family Sentences
   items:
@@ -498,6 +506,7 @@
     - як
     - твого
     answer: Як звати твого тата
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Family Facts
   items:
@@ -529,3 +538,4 @@
     correct: true
   - statement: «Молодший» means "younger.".
     correct: true
+  instruction: Визначте, чи твердження правильне.

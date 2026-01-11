@@ -1,9 +1,4 @@
-module: 143-capstone-prezentatsiya
-level: B2
-version: '2.0'
-activities:
 - type: match-up
-  id: 143-01-vocab-speech
   title: Термінологія виступу
   pairs:
   - left: Оратор
@@ -22,8 +17,8 @@ activities:
     right: Слухачі, аудиторія
   - left: Подяка
     right: Слова вдячності в кінці
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
-  id: 143-02-presentation-structure
   title: Структура презентації
   groups:
   - name: Початок
@@ -50,8 +45,8 @@ activities:
     - Відповіді на запитання
     - Роздача матеріалів
     - Контакти спікера
+  instruction: Розподіліть елементи за групами.
 - type: quiz
-  id: 143-03-slide-design
   title: 'Дизайн слайдів: Так чи Ні?'
   items:
   - question: Слайд, на якому 500 слів дрібним шрифтом.
@@ -134,8 +129,8 @@ activities:
       correct: false
     - text: Помилка
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 143-04-rhetoric-devices
   title: Риторичні прийоми
   pairs:
   - left: Ми маємо мрію!
@@ -154,8 +149,8 @@ activities:
     right: Епітет
   - left: Час летить.
     right: Метафора
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
-  id: 143-05-speech-intro
   title: Фрази для вступу
   items:
   - sentence: Добрий день, шановні ___!
@@ -214,8 +209,8 @@ activities:
     - закінчимо
     - втечемо
     - забудемо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 143-06-body-language
   title: Мова тіла
   pairs:
   - left: Схрещені руки на грудях
@@ -234,8 +229,8 @@ activities:
     right: Енергія або Хвилювання
   - left: Сутулі плечі
     right: Втома / Невпевненість
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 143-07-qa-handling
   title: Складні запитання
   items:
   - question: Якщо ви не знаєте відповіді, що робити?
@@ -318,8 +313,8 @@ activities:
       correct: false
     - text: Тільки якщо вони від начальства
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
-  id: 143-08-prep-vs-delivery
   title: Підготовка vs Виступ
   groups:
   - name: Вдома (Підготовка)
@@ -342,8 +337,8 @@ activities:
     - Усмішка публіці
     - Перевірка клікера
     - Контроль часу
+  instruction: Розподіліть елементи за групами.
 - type: match-up
-  id: 143-09-transitions
   title: Фрази-переходи
   pairs:
   - left: Перейдемо до...
@@ -362,8 +357,8 @@ activities:
     right: Кінець виступу
   - left: Це приводить нас до...
     right: Логічний зв'язок
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
-  id: 143-10-conclusion
   title: Фрази для висновку
   items:
   - sentence: Дозвольте підбити ___.
@@ -422,8 +417,8 @@ activities:
     - проблем
     - дощу
     - хвороб
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
-  id: 143-11-voice
   title: Голос оратора
   items:
   - question: Говорити монотонно (на одній ноті) — це...
@@ -506,8 +501,8 @@ activities:
       correct: false
     - text: Смішно
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 143-12-visuals
   title: Візуальні засоби
   pairs:
   - left: Діаграма (Pie chart)
@@ -526,8 +521,8 @@ activities:
     right: Складна інформація просто
   - left: Карта
     right: Показати географію
+  instruction: З'єднайте відповідні елементи.
 - type: true-false
-  id: 143-13-myths
   title: Міфи про публічні виступи
   items:
   - statement: Гарним оратором народжуються, а не стають.
@@ -554,8 +549,8 @@ activities:
   - statement: Репетиція — запорука успіху.
     correct: true
     explanation: Імпровізація вимагає підготовки.
+  instruction: Визначте, чи твердження правильне.
 - type: true-false
-  id: 143-14-checklist
   title: Фінальний чек-лист
   items:
   - statement: Я знаю свою тему на 100%.
@@ -582,3 +577,4 @@ activities:
   - statement: Я налаштований позитивно.
     correct: true
     explanation: Усмішка — ваша зброя.
+  instruction: Визначте, чи твердження правильне.

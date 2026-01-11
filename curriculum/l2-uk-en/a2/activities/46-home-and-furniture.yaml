@@ -25,6 +25,7 @@
     right: vacuum
   - left: комод
     right: dresser
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Home Vocabulary
   passage: 'Я сплю у [{спальні|вітальні|кухні|ванній}]. Ми їмо на [{кухні|спальні|вітальні|ванній}].
@@ -42,6 +43,7 @@
 
     Квіти стоять на [{підвіконні|підлозі|столі|стелі}]. Діти граються на [{килимі|стелі|стіні|шафі}].
     Посуд миємо в [{мийці|духовці|холодильнику|плиті}].'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: cloze
   title: Story Comprehension
   passage: 'Ольга переїхала в нову {квартиру|будинок|кімнату}.
@@ -67,6 +69,7 @@
     На кухні працює {посудомийка|пралка|плита}.
 
     Взуття стоїть у {коридорі|ванній|кімнаті}. (hallway)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Home & Furniture
   items:
@@ -150,6 +153,7 @@
       correct: false
     - text: Коридор
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Home Sentences
   items:
@@ -233,6 +237,7 @@
     - та
     - світла
     answer: Ця нова квартира виглядає просто чудова та світла
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Home Mistakes
   items:
@@ -290,6 +295,7 @@
     - помилка
     - правильно
     explanation: We watch TV in the living room (вітальня).
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: match-up
   title: Appliances & Decor
   pairs:
@@ -313,6 +319,7 @@
     right: refrigerator
   - left: лампа
     right: lamp
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Home Categories
   groups:
@@ -338,6 +345,7 @@
     - посудомийка
     - пилосос
     - праска
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Home Facts
   items:
@@ -365,6 +373,7 @@
     correct: true
   - statement: «Коридор» = bedroom.
     correct: false
+  instruction: Визначте, чи твердження правильне.
 - type: translate
   title: Home Words
   items:
@@ -432,3 +441,4 @@
       correct: false
     - text: спальня
       correct: false
+  instruction: Оберіть правильний переклад.

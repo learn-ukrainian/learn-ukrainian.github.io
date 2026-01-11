@@ -1,6 +1,3 @@
-module: 146-kolyskovi-ta-dumy
-level: C1
-activities:
 - type: quiz
   title: Теоретичні основи жанрів колискової та думи
   items:

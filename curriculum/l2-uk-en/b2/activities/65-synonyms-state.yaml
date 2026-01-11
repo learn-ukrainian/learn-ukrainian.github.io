@@ -1,6 +1,3 @@
-module: b2-65
-level: B2
-activities:
 - type: match-up
   title: Знайдіть відтінок стану
   instruction: З'єднайте дієслово або іменник із його точним значенням.
@@ -21,7 +18,6 @@ activities:
     right: філософська категорія життя
   - left: стабільність
     right: незмінність позитивного стану
-  id: знайдіть-відтінок-стану
 - type: quiz
   title: Оберіть точний стан
   instruction: Який синонім найкраще підходить для опису наведеної ситуації?
@@ -49,6 +45,7 @@ activities:
     - text: він гарно становить
       correct: false
     - text: він гарно панікує
+      correct: false
     explanation: '''Виглядати'' стосується візуального сприйняття об''єкта.'
   - question: Після перевірки документів з'ясувалося, що в них була помилка. Факт...
     options:
@@ -59,6 +56,7 @@ activities:
     - text: був правдою
       correct: false
     - text: виглядав правдою
+      correct: false
     explanation: '''Виявлятися'' вказує на відкриття прихованої раніше реальності.'
   - question: Як ви назвете сукупність зовнішніх чинників, що впливають на роботу?
     options:
@@ -69,6 +67,7 @@ activities:
     - text: присутність
       correct: false
     - text: існування
+      correct: false
     explanation: Умови — це чинники, від яких залежить перебіг подій.
   - question: Ви відчуваєте повну гармонію всередині себе. Який це стан?
     options:
@@ -79,6 +78,7 @@ activities:
     - text: ситуація паніки
       correct: false
     - text: умови занепаду
+      correct: false
     explanation: Спокій — це стан внутрішньої рівноваги.
   - question: Витрати на оренду офісу складають 20% від усього бюджету. Вони...
     options:
@@ -89,6 +89,7 @@ activities:
     - text: здаються частиною
       correct: false
     - text: існують як частина
+      correct: false
     explanation: '''Становити'' — офіційний термін для кількісного складу.'
   - question: Натовп людей на площі створює відчуття великої сили. Люди своєю...
     options:
@@ -99,6 +100,7 @@ activities:
     - text: панікою надихають
       correct: false
     - text: втомою надихають
+      correct: false
     explanation: Присутність — факт фізичного перебування.
   - question: Ви бачите предмет, який нагадує вам щось інше, але ви не впевнені. Він
       вам...
@@ -110,8 +112,8 @@ activities:
     - text: становить
       correct: false
     - text: перебуває
+      correct: false
     explanation: '''Здаватися'' вказує на суб''єктивне сприйняття.'
-  id: оберіть-точний-стан
 - type: group-sort
   title: Об'єктивне чи Суб'єктивне?
   instruction: Розподіліть дієслова та іменники за типом опису стану (16+ елементів).
@@ -138,7 +140,6 @@ activities:
     - відчуття
     - погляд
     - враження
-  id: об'єктивне-чи-суб'єктивне?
 - type: unjumble
   title: Складіть речення про стан
   instruction: Відновіть правильний порядок слів у реченнях про буття (речення 15-20
@@ -310,7 +311,6 @@ activities:
     - проєкту
     answer: Ваша присутність на сьогоднішньому засіданні є надзвичайно важливою для
       прийняття остаточного та легітимного рішення щодо нашого проєкту.
-  id: складіть-речення-про-стан
 - type: cloze
   title: Стан речей
   instruction: Заповніть пропуски в тексті про ситуацію (16+ пропусків).
@@ -331,7 +331,6 @@ activities:
     Реальність {виявляється|здається|стає|виявляється} героїчною.
 
     '
-  id: стан-речей
 - type: fill-in
   title: Аналітичний стан
   instruction: Вставте правильний термін на позначення становища або умов (10+ елементів).
@@ -406,7 +405,6 @@ activities:
     - паніка
     - тривога
     - лють
-  id: аналітичний-стан
 - type: error-correction
   title: Виправте враження
   instruction: Знайдіть і виправте слово, яке логічно суперечить реальному стану.
@@ -483,7 +481,6 @@ activities:
     - паніка
     - тривога
     explanation: Адаптивність — це здатність до змін.
-  id: виправте-враження
 - type: translate
   title: Переклад стану
   instruction: Оберіть правильний український синонім до англійського слова.
@@ -570,7 +567,6 @@ activities:
       correct: false
     - text: браку
     explanation: Результат впливу образу.
-  id: переклад-стану
 - type: true-false
   title: Нюанси буття
   instruction: Визначте, чи правильно розрізнено відтінки дієслів стану.
@@ -599,7 +595,6 @@ activities:
   - statement: '''Адаптивність'' — здатність до змін.'
     correct: true
     explanation: Так, це виживання у змінах.
-  id: нюанси-буття
 - type: select
   title: Всі форми існування
   instruction: Оберіть усі слова, що позначають стан або факт буття (6+ елементів).
@@ -668,7 +663,6 @@ activities:
       correct: true
     - text: забутий
       correct: false
-  id: всі-форми-існування
 - type: match-up
   title: Стан та Регістри
   instruction: З'єднайте дієслово або іменник із стилем мовлення.
@@ -689,7 +683,6 @@ activities:
     right: художній
   - left: ситуація
     right: нейтральний
-  id: стан-та-регістри
 - type: match-up
   title: Стан та Чинники
   instruction: З'єднайте стан із чинником.
@@ -710,7 +703,6 @@ activities:
     right: небезпека
   - left: стабільний стан
     right: спокій
-  id: стан-та-чинники
 - type: quiz
   title: Філософія буття
   instruction: Про які концепції стану йдеться у тексті модуля?
@@ -724,6 +716,7 @@ activities:
     - text: швидкість
       correct: false
     - text: одяг
+      correct: false
     explanation: Сковорода фокусувався на бутті душі.
   - question: Яка зміна стану в 'Intermezzo'?
     options:
@@ -734,6 +727,7 @@ activities:
     - text: від сну до бійки
       correct: false
     - text: від мовчання до крику
+      correct: false
     explanation: Твір про емоційне відновлення.
   - question: Що таке 'екзистенційний стан' у Стуса?
     options:
@@ -744,6 +738,7 @@ activities:
     - text: втеча
       correct: false
     - text: байдужість
+      correct: false
     explanation: Стус писав про буття як виклик.
   - question: Яка різниця між 'буттям' та 'присутністю'?
     options:
@@ -754,6 +749,7 @@ activities:
     - text: буття — сон
       correct: false
     - text: присутність — мрія
+      correct: false
     explanation: Вибір залежить від глибини опису.
   - question: Як називається негативна динаміка стану?
     options:
@@ -764,6 +760,7 @@ activities:
     - text: стабільність
       correct: false
     - text: гармонія
+      correct: false
     explanation: Занепад — руйнування системи.
   - question: Що таке 'адаптивність'?
     options:
@@ -774,6 +771,7 @@ activities:
     - text: бажання залишити
       correct: false
     - text: агресія
+      correct: false
     explanation: Адаптивність допомагає вистояти.
   - question: Який термін описує 'статус у мережі'?
     options:
@@ -784,6 +782,7 @@ activities:
     - text: район
       correct: false
     - text: земля
+      correct: false
     explanation: Метафора буття у віртуальності.
   - question: Що допомагає приймати мудрі рішення?
     options:
@@ -794,8 +793,8 @@ activities:
     - text: незнання
       correct: false
     - text: байдужість
+      correct: false
     explanation: Тільки у спокої ми об'єктивні.
-  id: філософія-буття
 - type: select
   title: Складні стани
   instruction: Оберіть слова для опису глибоких станів (6+ елементів).
@@ -864,4 +863,3 @@ activities:
       correct: true
     - text: паніка
       correct: false
-  id: складні-стани

@@ -10,25 +10,29 @@ interface MarkTheWordsActivityProps {
 }
 
 export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrainian }: MarkTheWordsActivityProps) {
-  const [markedWords, setMarkedWords] = useState<Set<string>>(new Set());
+  const [markedIndices, setMarkedIndices] = useState<Set<number>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
   // Split text into words while preserving punctuation and spaces
   const tokens = text.match(/[\wа-яіїєґА-ЯІЇЄҐ']+|[^\s\wа-яіїєґА-ЯІЇЄҐ']+|\s+/gi) || [];
 
-  const handleWordClick = (word: string) => {
+  // Normalize for comparison
+  const normalizedCorrect = correctWords.map(w => w.toLowerCase().trim());
+
+  const handleWordClick = (idx: number) => {
     if (submitted) return;
 
-    const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+    const token = tokens[idx];
+    const cleanWord = token.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
     if (!cleanWord) return;
 
-    const newMarked = new Set(markedWords);
-    if (newMarked.has(cleanWord)) {
-      newMarked.delete(cleanWord);
+    const newMarked = new Set(markedIndices);
+    if (newMarked.has(idx)) {
+      newMarked.delete(idx);
     } else {
-      newMarked.add(cleanWord);
+      newMarked.add(idx);
     }
-    setMarkedWords(newMarked);
+    setMarkedIndices(newMarked);
   };
 
   const handleSubmit = () => {
@@ -36,19 +40,21 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
   };
 
   const handleReset = () => {
-    setMarkedWords(new Set());
+    setMarkedIndices(new Set());
     setSubmitted(false);
   };
 
-  // Normalize for comparison
-  const normalizedCorrect = correctWords.map(w => w.toLowerCase().trim());
+  const isWordCorrect = (word: string) => {
+    const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '').toLowerCase();
+    return normalizedCorrect.includes(cleanWord);
+  };
 
-  const getWordClass = (word: string) => {
-    const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+  const getWordClass = (token: string, idx: number) => {
+    const cleanWord = token.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
     if (!cleanWord) return '';
 
-    const isMarked = markedWords.has(cleanWord);
-    const isCorrect = normalizedCorrect.includes(cleanWord.toLowerCase());
+    const isMarked = markedIndices.has(idx);
+    const isCorrect = isWordCorrect(token);
 
     if (!submitted) {
       return isMarked ? styles.marked : '';
@@ -62,18 +68,19 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
   };
 
   // Calculate score
-  const markedArray = Array.from(markedWords);
-  const correctMarks = markedArray.filter(w =>
-    normalizedCorrect.includes(w.toLowerCase())
-  ).length;
-  const wrongMarks = markedArray.filter(w =>
-    !normalizedCorrect.includes(w.toLowerCase())
-  ).length;
-  const missedMarks = correctWords.filter(w =>
-    !markedWords.has(w) && !markedWords.has(w.toLowerCase())
-  ).length;
+  const markedArray = Array.from(markedIndices);
+  const correctMarks = markedArray.filter(idx => isWordCorrect(tokens[idx])).length;
+  const wrongMarks = markedArray.filter(idx => !isWordCorrect(tokens[idx])).length;
+  
+  // Total instances of correct words available in the text
+  const totalCorrectInstances = tokens.filter(t => {
+    const clean = t.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+    return clean && isWordCorrect(t);
+  }).length;
 
-  const isFullyCorrect = correctMarks === correctWords.length && wrongMarks === 0;
+  const missedMarks = totalCorrectInstances - correctMarks;
+
+  const isFullyCorrect = correctMarks === totalCorrectInstances && wrongMarks === 0;
   
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
@@ -100,8 +107,8 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
           return (
             <span
               key={idx}
-              className={`${styles.markableWord} ${getWordClass(token)}`}
-              onClick={() => handleWordClick(token)}
+              className={`${styles.markableWord} ${getWordClass(token, idx)}`}
+              onClick={() => handleWordClick(idx)}
             >
               {token}
             </span>

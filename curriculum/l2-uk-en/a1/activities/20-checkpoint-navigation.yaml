@@ -85,6 +85,7 @@
     - цю дівчину
     - цієї дівчини
     - цій дівчині
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Case Mastery - Locative
   items:
@@ -172,6 +173,7 @@
     - на
     - в
     - біля
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Case Mastery - Genitive
   items:
@@ -259,6 +261,7 @@
     - гривні
     - гривень
     - гривнями
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
   title: Possessive Pronouns Agreement
   pairs:
@@ -280,6 +283,7 @@
     right: our apartment
   - left: наше вікно
     right: our window
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Grammar Knowledge Check
   items:
@@ -415,6 +419,7 @@
     - text: Genitive - України
       correct: false
     explanation: Я люблю Україну - accusative case for direct object
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Grammar Rules Review
   items:
@@ -454,6 +459,7 @@
   - statement: Neuter nouns don't change in accusative.
     correct: true
     explanation: True! вікно → вікно, місто → місто.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Preposition Usage
   groups:
@@ -473,6 +479,7 @@
     - на станції
     - на концерті
     - на площі
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Building Sentences Order
   items:
@@ -608,6 +615,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Станція метро біля вокзалу.'
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Real Dialogues Order
   items:
@@ -743,6 +751,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Будь ласка! Доброї дороги!'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: City Vocabulary - Navigation
   pairs:
@@ -764,3 +773,4 @@
     right: pharmacy
   - left: банк
     right: bank
+  instruction: З'єднайте відповідні елементи.

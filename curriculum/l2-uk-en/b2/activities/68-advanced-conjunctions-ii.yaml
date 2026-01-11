@@ -1,6 +1,3 @@
-module: b2-68
-level: B2
-activities:
 - type: match-up
   title: Знайдіть часову межу
   instruction: З'єднайте сполучник із часовим або умовним значенням.
@@ -21,7 +18,6 @@ activities:
     right: послідовність етапів
   - left: за умови що
     right: сувора умова
-  id: знайдіть-часову-межу
 - type: quiz
   title: Умова чи Час?
   instruction: Який сполучник найкраще підходить?
@@ -57,6 +53,7 @@ activities:
     - text: Поки
       correct: false
     - text: Якби
+      correct: false
     explanation: Нейтральний момент.
   - question: Будемо чекати, ___ ви не повернетеся.
     options:
@@ -67,6 +64,7 @@ activities:
     - text: відколи
       correct: false
     - text: якби
+      correct: false
     explanation: Часова межа.
   - question: ___ ви підпишете договір, ми розпочнемо роботу.
     options:
@@ -77,6 +75,7 @@ activities:
     - text: Поки
       correct: false
     - text: Відколи
+      correct: false
     explanation: Реальна майбутня умова.
   - question: ___ відкрили хаб, життя стало цікавішим.
     options:
@@ -87,6 +86,7 @@ activities:
     - text: Доки
       correct: false
     - text: Якби
+      correct: false
     explanation: Точка відліку в минулому.
   - question: Ми гуляли, ___ не почало сутеніти.
     options:
@@ -97,6 +97,7 @@ activities:
     - text: якби
       correct: false
     - text: якщо
+      correct: false
     explanation: Тривалість процесу.
   - question: ___ ми не врахували ризики, був би інший результат.
     options:
@@ -107,8 +108,8 @@ activities:
     - text: Коли
       correct: false
     - text: Поки
+      correct: false
     explanation: Аналіз минулих помилок.
-  id: умова-чи-час?
 - type: group-sort
   title: Часова лінія чи Умова?
   instruction: Розподіліть сполучники за роллю (16+ елементів).
@@ -135,7 +136,6 @@ activities:
     - аби
     - раз
     - щоби
-  id: часова-лінія-чи-умова?
 - type: unjumble
   title: Складіть ланцюжок
   instruction: Відновіть порядок слів у реченнях (15-20 слів).
@@ -292,7 +292,6 @@ activities:
     - людей
     answer: Коли ми приїхали до Полтави святковий ярмарок уже був у самому розпалі
       і навколо було повно людей.
-  id: складіть-ланцюжок
 - type: cloze
   title: Сценарій можливостей
   instruction: Заповніть пропуски в тексті (16+ пропусків).
@@ -312,7 +311,6 @@ activities:
     ми тут, давайте робити справу.
 
     '
-  id: сценарій-можливостей
 - type: fill-in
   title: Точний сполучник
   instruction: Вставте правильний сполучник (10+ елементів).
@@ -387,7 +385,6 @@ activities:
     - після
     - перед
     - відколи
-  id: точний-сполучник
 - type: error-correction
   title: Виправте сценарій
   instruction: Знайдіть і виправте сполучник (8+ айтемів).
@@ -464,7 +461,6 @@ activities:
     - Щойно
     - Поки
     explanation: Нереальна умова в минулому.
-  id: виправте-сценарій
 - type: translate
   title: Переклад зв'язків
   instruction: Оберіть правильний сполучник.
@@ -551,7 +547,6 @@ activities:
       correct: false
     - text: після
     explanation: Межа завершення.
-  id: переклад-зв'язків
 - type: true-false
   title: Граматичні правила
   instruction: Визначте правильність твердження.
@@ -580,7 +575,6 @@ activities:
   - statement: '''Аби'' може вживатися в значенні умови.'
     correct: true
     explanation: Так, у значенні 'тільки б'.
-  id: граматичні-правила
 - type: select
   title: Умовні конструкції
   instruction: Оберіть усі сполучники умови (6+ елементів).
@@ -653,7 +647,6 @@ activities:
       correct: true
     - text: майбутній час
       correct: false
-  id: умовні-конструкції
 - type: match-up
   title: Час та Події
   instruction: З'єднайте час із подією.
@@ -674,7 +667,6 @@ activities:
     right: ми пішли на річку
   - left: в той час як одні вчилися
     right: інші працювали
-  id: час-та-події
 - type: match-up
   title: Реальне проти Нереального
   instruction: Знайдіть пари сполучників.
@@ -695,7 +687,6 @@ activities:
     right: якби вистачило
   - left: якщо пощастить
     right: якби пощастило
-  id: реальне-проти-нереального
 - type: quiz
   title: Сценарії майбутнього
   instruction: Оберіть правильний граматичний варіант.
@@ -742,6 +733,7 @@ activities:
     - text: Хоча ми отримаємо кошти, почнемо.
       correct: false
     - text: Дарма що отримаємо кошти, почнемо.
+      correct: false
     explanation: Офіційна умова.
   - question: 'Оберіть правильну ієрархію:'
     options:
@@ -763,6 +755,7 @@ activities:
     - text: щойно
       correct: false
     - text: якщо
+      correct: false
     explanation: Доки фокусується на межі.
   - question: Чи можна вживати 'аби' як умову?
     options:
@@ -773,6 +766,7 @@ activities:
     - text: лише в документах
       correct: false
     - text: лише з минулим
+      correct: false
     explanation: Аби має умовне значення.
   - question: 'Оберіть паралельні дії:'
     options:
@@ -783,8 +777,8 @@ activities:
     - text: Щойно мама готувала, тато читав.
       correct: false
     - text: Відколи мама готувала, тато читав.
+      correct: false
     explanation: Поки — ідеальний сполучник для паралелі.
-  id: сценарії-майбутнього
 - type: select
   title: Часові сполучники
   instruction: Оберіть усі сполучники часу (6+ елементів).
@@ -857,4 +851,3 @@ activities:
       correct: true
     - text: давно
       correct: false
-  id: часові-сполучники

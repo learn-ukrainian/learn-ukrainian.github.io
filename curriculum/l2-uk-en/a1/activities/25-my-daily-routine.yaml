@@ -21,6 +21,7 @@
     right: to have dinner
   - left: '- відпочивати'
     right: to rest
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: When Do We Do This?
   groups:
@@ -43,6 +44,7 @@
     - гуляти
     - лягати спати
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Reflexive Verb Forms
   items:
@@ -102,6 +104,7 @@
     - дивишся
     - дивиться
     - дивляться
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Sequence Words
   items:
@@ -161,6 +164,7 @@
     - потім
     - спочатку
     - нарешті
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Daily Routine
   items:
@@ -244,6 +248,7 @@
       correct: false
     - text: Never I rest.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Reflexive Understanding
   items:
@@ -327,6 +332,7 @@
       correct: false
     - text: -ти
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Daily Routine
   items:
@@ -366,6 +372,7 @@
     - телевізор
     - дивимося
     answer: Зазвичай ми дивимося телевізор
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Daily Routine Facts
   items:
@@ -399,3 +406,4 @@
   - statement: «Завжди» means "never".
     correct: false
     explanation: Incorrect! it means "always"
+  instruction: Визначте, чи твердження правильне.

@@ -21,6 +21,7 @@
     right: Heart
   - left: Зуб
     right: Tooth
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Diagnosis
   passage: 'У мене {болить|болять|хворіє} голова. (Hurts sing.) У мене {болять|болить|хворіють}
@@ -35,6 +36,7 @@
     (Cough) Я {хворію|працюю|гуляю} вже три дні. Мені треба {лежати|бігати|танцювати}
     вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі
     {здоров''я|роботи|грошей}! (Health)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Medical Expert
   items:
@@ -118,6 +120,7 @@
       correct: false
     - text: Nominative (називний відмінок)
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Doctors Orders
   items:
@@ -182,6 +185,7 @@
     - щирого
     - серця
     answer: Бажаю вам міцного здоров'я завжди від щирого серця
+  instruction: Розташуйте слова у правильному порядку.
 - type: group-sort
   title: Symptoms vs Remedies
   groups:
@@ -201,6 +205,7 @@
     - Рецепт
     - Лікар
     - Аптека
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Medical Truths
   items:
@@ -223,6 +228,7 @@
     correct: true
   - statement: Tea with lemon is a standard Ukrainian cure.
     correct: true
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: The Appointment
   passage: 'Я прийшов у {поліклініку|школу|магазин}, тому що я захворів.
@@ -248,25 +254,22 @@
     Я сподіваюся що скоро {одужаю|хворію|працюю}.
 
     Моє {здоров''я|робота|хобі} дуже важливе для мене.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Medical Terms
-  passage: 'У мене *температура* і *кашель*. Я йду до *лікаря*. Мені треба купити
-    *ліки*. Моє *здоров''я* важливе. *Аптека* за рогом.
-
-    ---
-
-    Я люблю *спорт*. Це *мій кіт*. Сонце *світить*.'
-  correct_words:
+  text: У мене температура і кашель. Я йду до лікаря. Мені треба купити ліки. Моє
+    здоров''я важливе. Аптека за рогом. --- Я люблю спорт. Це мій кіт. Сонце світить.
+  answers:
   - температура
   - кашель
   - лікаря
   - ліки
-  - здоров'я
+  - здоров''я
   - Аптека
   - спорт
   - мій кіт
   - світить
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: Fix the Complaint
   items:
@@ -324,6 +327,7 @@
     - помилка
     - правильно
     explanation: Treats whom? -> пацієнта.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: English to Ukrainian
   items:
@@ -375,3 +379,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

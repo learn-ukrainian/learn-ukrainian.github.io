@@ -1,6 +1,3 @@
-module: b2-63
-level: B2
-activities:
 - type: match-up
   title: Знайдіть точну міру
   instruction: З'єднайте синонім із описом ступеня кількості.
@@ -21,7 +18,6 @@ activities:
     right: перелічувана мала кількість
   - left: вдосталь
     right: відповідність потребі
-  id: знайдіть-точну-міру
 - type: quiz
   title: Оберіть масштаб
   instruction: Який синонім найкраще підходить для опису наведеної кількості?
@@ -114,8 +110,8 @@ activities:
     - text: мізер паперів
       correct: false
     - text: число паперів
+      correct: false
     explanation: '''Купа'' підкреслює хаотичність великої кількості предметів.'
-  id: оберіть-масштаб
 - type: group-sort
   title: Багато чи Мало?
   instruction: Розподіліть кількісні синоніми за категоріями (16+ елементів).
@@ -144,7 +140,6 @@ activities:
     - дріб'язок
     - крапля в морі
     - недостатньо
-  id: багато-чи-мало?
 - type: unjumble
   title: Складіть кількісне речення
   instruction: Відновіть правильний порядок слів у реченнях про кількість (речення
@@ -319,7 +314,6 @@ activities:
     - подолання
     answer: Масштаб екологічної катастрофи в регіоні був колосальним і вимагав негайного
       залучення всіх можливих ресурсів для її ліквідації та подолання.
-  id: складіть-кількісне-речення
 - type: cloze
   title: Звіт з ярмарку
   instruction: Заповніть пропуски в кількісному описі події (16+ пропусків).
@@ -339,7 +333,6 @@ activities:
     від поїздки.
 
     '
-  id: звіт-з-ярмарку
 - type: fill-in
   title: Офіційна міра
   instruction: Вставте правильний термін на позначення кількості в документах (10+
@@ -415,7 +408,6 @@ activities:
     - кількість
     - число
     - купу
-  id: офіційна-міра
 - type: error-correction
   title: Виправте кількість
   instruction: Знайдіть і виправте слово, яке логічно суперечить обсягу ситуації.
@@ -492,7 +484,6 @@ activities:
     - Ніяка
     - Декілька
     explanation: Аншлаг буває тоді, коли людей дуже багато.
-  id: виправте-кількість
 - type: translate
   title: Переклад міри
   instruction: Оберіть правильний український синонім до англійського слова.
@@ -579,7 +570,6 @@ activities:
       correct: false
     - text: масштаб
     explanation: Офіційний термін для браку.
-  id: переклад-міри
 - type: true-false
   title: Нюанси кількості
   instruction: Визначте правильність твердження про вживання синонімів.
@@ -608,7 +598,6 @@ activities:
   - statement: Термін 'масштаб' стосується лише фізичного розміру.
     correct: false
     explanation: Ні, він також описує розмах подій.
-  id: нюанси-кількості
 - type: select
   title: Всі відтінки багатоманітності
   instruction: Оберіть усі слова, що позначають велику кількість (6+ елементів).
@@ -681,7 +670,6 @@ activities:
       correct: true
     - text: замало
       correct: false
-  id: всі-відтінки-багатоманітності
 - type: match-up
   title: Регістри та Кількість
   instruction: З'єднайте слово з відповідним стилем мовлення.
@@ -702,7 +690,6 @@ activities:
     right: критичний
   - left: сила-силенна
     right: емоційний
-  id: регістри-та-кількість
 - type: match-up
   title: Кількість та Об'єкти
   instruction: З'єднайте кількісне слово з об'єктом.
@@ -723,7 +710,6 @@ activities:
     right: зірки
   - left: сила-силенна
     right: глядачі
-  id: кількість-та-об'єкти
 - type: quiz
   title: Кількість у житті
   instruction: Про які кількісні концепції йдеться у модулі?
@@ -737,6 +723,7 @@ activities:
     - text: купа листів
       correct: false
     - text: число слів
+      correct: false
     explanation: Це термін для Big Data.
   - question: Що означає вираз 'хоч греблю гати'?
     options:
@@ -747,6 +734,7 @@ activities:
     - text: зовсім немає
       correct: false
     - text: дуже мало
+      correct: false
     explanation: Народний синонім достатку.
   - question: Який термін описує брак ресурсів?
     options:
@@ -757,6 +745,7 @@ activities:
     - text: вдосталь
       correct: false
     - text: число
+      correct: false
     explanation: Офіційне слово для нестачі.
   - question: Що навчила нас цінувати історія?
     options:
@@ -767,6 +756,7 @@ activities:
     - text: нічого
       correct: false
     - text: швидкість
+      correct: false
     explanation: Трагічний досвід навчив народ ощадливості.
   - question: Яке місто згадане як великий порт?
     options:
@@ -777,6 +767,7 @@ activities:
     - text: Львів
       correct: false
     - text: Полтава
+      correct: false
     explanation: Одеса є центром морських обсягів.
   - question: Що означає 'оптимальний підхід'?
     options:
@@ -787,6 +778,7 @@ activities:
     - text: найменший
       correct: false
     - text: випадковий
+      correct: false
     explanation: Оптимальність — це баланс.
   - question: Де асоціюється 'купа товарів'?
     options:
@@ -797,6 +789,7 @@ activities:
     - text: театр
       correct: false
     - text: гора
+      correct: false
     explanation: Ярмарок — традиційне місце великої кількості речей.
   - question: Яке значення має точність у кількості?
     options:
@@ -807,8 +800,8 @@ activities:
     - text: тільки для математиків
       correct: false
     - text: це заважає
+      correct: false
     explanation: Точність веде до ефективності.
-  id: кількість-у-житті
 - type: select
   title: Кількісна етика
   instruction: Оберіть слова про правильне ставлення до ресурсів (6+ елементів).
@@ -877,4 +870,3 @@ activities:
       correct: true
     - text: таємне
       correct: false
-  id: кількісна-етика

@@ -1,331 +1,6 @@
-activities:
-- type: quiz
-  title: Члени речення
-  items:
-  - options:
-    - text: підмет
-      correct: true
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: false
-    - text: обставина
-      correct: false
-    explanation: Підмет — хто/що виконує дію.
-    question: Хто або що виконує дію в реченні — який це член речення?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: true
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: false
-    explanation: Присудок — що робить підмет.
-    question: Яка дія виконується або який стан описується — який це член речення?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: true
-    - text: обставина
-      correct: false
-    explanation: Додаток — об'єкт дії.
-    question: На кого або що спрямована дія — який це член речення?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: true
-    explanation: Означення описує іменник.
-    question: Який член речення описує іменник, дає його характеристику?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: false
-    - text: обставина
-      correct: true
-    explanation: Обставина — де, коли, як.
-    question: Який член речення описує обставини дії — де, коли, як?
-  - options:
-    - text: підмет
-      correct: true
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: false
-    explanation: Subject = підмет.
-    question: Англійське слово "subject" перекладається українською як який граматичний
-      термін?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: true
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: false
-    explanation: Predicate = присудок.
-    question: Англійське слово "predicate" перекладається українською як який граматичний
-      термін?
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: true
-    - text: означення
-      correct: false
-    explanation: Object = додаток.
-    question: Англійське слово "object" перекладається українською як який граматичний
-      термін?
-  - options:
-    - text: головні члени
-      correct: true
-    - text: другорядні члени
-      correct: false
-    - text: допоміжні члени
-      correct: false
-    - text: службові члени
-      correct: false
-    explanation: 'Головні члени: підмет, присудок.'
-    question: Підмет і присудок — це які важливі члени речення в українській мові?
-  - options:
-    - text: головні члени
-      correct: false
-    - text: другорядні члени
-      correct: true
-    - text: допоміжні члени
-      correct: false
-    - text: службові члени
-      correct: false
-    explanation: 'Другорядні члени: додаток, означення, обставина.'
-    question: Додаток, означення та обставина — це які саме члени українського речення?
-  - options:
-    - text: Марія
-      correct: true
-    - text: читає
-      correct: false
-    - text: книгу
-      correct: false
-    - text: Марія читає
-      correct: false
-    explanation: Марія — хто читає? — підмет.
-    question: У цьому простому реченні «Марія читає книгу» яке слово є підметом?
-  - options:
-    - text: Марія
-      correct: false
-    - text: читає
-      correct: true
-    - text: книгу
-      correct: false
-    - text: Марія читає
-      correct: false
-    explanation: Читає — що робить? — присудок.
-    question: У цьому простому реченні «Марія читає книгу» яке слово є присудком?
-  - options:
-    - text: Марія
-      correct: false
-    - text: читає
-      correct: false
-    - text: книгу
-      correct: true
-    - text: Марія читає
-      correct: false
-    explanation: Книгу — що читає? — додаток.
-    question: У цьому простому реченні «Марія читає книгу» яке слово є додатком?
-  - options:
-    - text: гарна
-      correct: true
-    - text: дівчина
-      correct: false
-    - text: читає
-      correct: false
-    - text: дівчина читає
-      correct: false
-    explanation: Гарна — яка? — означення.
-    question: У цьому реченні «Гарна дівчина читає» яке слово виконує роль означення?
-  instruction: Оберіть правильну відповідь про члени речення.
-- type: quiz
-  title: Види речень
-  items:
-  - options:
-    - text: просте речення
-      correct: true
-    - text: складне речення
-      correct: false
-    - text: складносурядне
-      correct: false
-    - text: складнопідрядне
-      correct: false
-    explanation: Просте — одна пара підмет-присудок.
-    question: Речення з однією парою підмет-присудок — яке воно?
-  - options:
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: true
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: false
-    explanation: Складне — кілька частин.
-    question: Якщо речення має кілька частин, то яке це граматичне речення?
-  - options:
-    - text: просте
-      correct: false
-    - text: складнопідрядне
-      correct: false
-    - text: складносурядне
-      correct: true
-    - text: підрядне
-      correct: false
-    explanation: Складносурядне — рівноправні частини.
-    question: Коли частини речення рівноправні та з'єднані «і», «а», «але» — яке це
-      речення?
-  - options:
-    - text: просте
-      correct: false
-    - text: складнопідрядне
-      correct: true
-    - text: складносурядне
-      correct: false
-    - text: головне
-      correct: false
-    explanation: Складнопідрядне — одна залежить від іншої.
-    question: Коли одна частина речення залежить від іншої — яке це речення?
-  - options:
-    - text: головне речення
-      correct: true
-    - text: підрядне речення
-      correct: false
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Головне речення — незалежне.
-    question: Як називається незалежна частина у структурі складного українського
-      речення?
-  - options:
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: true
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Підрядне речення — залежне.
-    question: Як граматично називається залежна частина у складному українському реченні?
-  - options:
-    - text: просте речення
-      correct: true
-    - text: складне речення
-      correct: false
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: false
-    explanation: Simple sentence = просте речення.
-    question: Англійський термін "Simple sentence" перекладається українською мовою
-      як який термін?
-  - options:
-    - text: головне речення
-      correct: true
-    - text: підрядне речення
-      correct: false
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Main clause = головне речення.
-    question: Англійський термін "Main clause" перекладається українською мовою як
-      який термін?
-  - options:
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: true
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Subordinate clause = підрядне речення.
-    question: Англійський термін "Subordinate clause" перекладається українською мовою
-      як який термін?
-  - options:
-    - text: сполучники сурядності
-      correct: true
-    - text: сполучники підрядності
-      correct: false
-    - text: прийменники
-      correct: false
-    - text: частки
-      correct: false
-    explanation: Сурядності — з'єднують рівноправні частини.
-    question: До якого типу належать сполучники «і», «а», «але» в українській мові?
-  - options:
-    - text: сполучники сурядності
-      correct: false
-    - text: сполучники підрядності
-      correct: true
-    - text: прийменники
-      correct: false
-    - text: частки
-      correct: false
-    explanation: Підрядності — з'єднують залежну частину.
-    question: До якого типу належать сполучники «що», «бо», «коли» в українській мові?
-  - options:
-    - text: просте
-      correct: true
-    - text: складне
-      correct: false
-    - text: складносурядне
-      correct: false
-    - text: складнопідрядне
-      correct: false
-    explanation: Одна пара підмет-присудок — просте.
-    question: Коли речення має лише дві слова «Я читаю» — яке воно?
-  - options:
-    - text: просте
-      correct: false
-    - text: складнопідрядне
-      correct: false
-    - text: складносурядне
-      correct: true
-    - text: підрядне
-      correct: false
-    explanation: «А» — сполучник сурядності.
-    question: «Я читаю, а сестра пише» — яке це речення?
-  - options:
-    - text: просте
-      correct: false
-    - text: складнопідрядне
-      correct: true
-    - text: складносурядне
-      correct: false
-    - text: головне
-      correct: false
-    explanation: «Бо» — сполучник підрядності.
-    question: «Я читаю, бо люблю книги» — яке це речення?
-  instruction: Оберіть правильну відповідь про види речень.
 - type: match-up
-  title: Члени речення
-  instruction: З'єднайте український термін з англійським.
+  title: Основні терміни
+  instruction: З'єднайте український термін з англійським перекладом.
   pairs:
   - left: підмет
     right: subject
@@ -340,25 +15,31 @@ activities:
   - left: член речення
     right: sentence part
   - left: головний член
-    right: main part
+    right: main sentence part
   - left: другорядний член
-    right: secondary part
+    right: secondary sentence part
+  - left: синтаксис
+    right: syntax
+  - left: пунктуація
+    right: punctuation
+  - left: інверсія
+    right: inversion
+- type: match-up
+  title: Види речень та знаки
+  instruction: З'єднайте український термін з англійським перекладом.
+  pairs:
   - left: просте речення
     right: simple sentence
   - left: складне речення
     right: complex sentence
+  - left: складносурядне речення
+    right: compound sentence
+  - left: складнопідрядне речення
+    right: complex sentence (subordinate)
   - left: головне речення
     right: main clause
-- type: match-up
-  title: Синтаксис і пунктуація
-  instruction: З'єднайте український термін з англійським.
-  pairs:
   - left: підрядне речення
     right: subordinate clause
-  - left: складносурядне
-    right: compound sentence
-  - left: складнопідрядне
-    right: complex sentence
   - left: сполучник сурядності
     right: coordinating conjunction
   - left: сполучник підрядності
@@ -369,270 +50,16 @@ activities:
     right: period
   - left: двокрапка
     right: colon
-  - left: тире
-    right: dash
-  - left: лапки
-    right: quotation marks
-  - left: синтаксис
-    right: syntax
-- type: fill-in
-  title: Члени речення
-  items:
-  - answer: підмет
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: Хто виконує дію — це ___.
-  - answer: присудок
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: Що робить підмет — це ___.
-  - answer: додаток
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: На що спрямована дія — це ___.
-  - answer: означення
-    options:
-    - означення
-    - обставина
-    - додаток
-    - підмет
-    sentence: Яка характеристика іменника — це ___.
-  - answer: обставина
-    options:
-    - означення
-    - обставина
-    - додаток
-    - підмет
-    sentence: Де, коли, як відбувається дія — це ___.
-  - answer: підмет
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: Subject = ___.
-  - answer: присудок
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: Predicate = ___.
-  - answer: додаток
-    options:
-    - підмет
-    - присудок
-    - додаток
-    - обставина
-    sentence: Object = ___.
-  - answer: головні
-    options:
-    - головні
-    - другорядні
-    - допоміжні
-    - службові
-    sentence: Підмет і присудок — це ___ члени.
-  - answer: другорядні
-    options:
-    - головні
-    - другорядні
-    - допоміжні
-    - службові
-    sentence: Додаток, означення, обставина — це ___ члени.
-  - answer: член речення
-    options:
-    - член речення
-    - частина мови
-    - відмінок
-    - рід
-    sentence: '"Sentence part" = ___.'
-  - answer: головний член
-    options:
-    - головний член
-    - другорядний член
-    - головне речення
-    - просте речення
-    sentence: Загальний термін для підмета чи присудка — ___.
-  - answer: другорядний член
-    options:
-    - головний член
-    - другорядний член
-    - головне речення
-    - просте речення
-    sentence: Загальний термін для додатка чи означення — ___.
-  - answer: означення
-    options:
-    - означення
-    - обставина
-    - додаток
-    - підмет
-    sentence: Attribute = ___.
-  instruction: Заповніть пропуски правильним терміном.
-- type: fill-in
-  title: Види речень
-  items:
-  - answer: просте речення
-    options:
-    - просте речення
-    - складне речення
-    - головне речення
-    - підрядне речення
-    sentence: Речення з однією парою підмет-присудок — ___.
-  - answer: складне речення
-    options:
-    - просте речення
-    - складне речення
-    - головне речення
-    - підрядне речення
-    sentence: Речення з кількома частинами — ___.
-  - answer: складносурядне
-    options:
-    - складносурядне
-    - складнопідрядне
-    - просте
-    - підрядне
-    sentence: Рівноправні частини з «і», «а», «але» — ___.
-  - answer: складнопідрядне
-    options:
-    - складносурядне
-    - складнопідрядне
-    - просте
-    - головне
-    sentence: Залежна частина з «що», «бо», «коли» — ___.
-  - answer: головне речення
-    options:
-    - головне речення
-    - підрядне речення
-    - просте речення
-    - складне речення
-    sentence: Незалежна частина — ___.
-  - answer: підрядне речення
-    options:
-    - головне речення
-    - підрядне речення
-    - просте речення
-    - складне речення
-    sentence: Залежна частина — ___.
-  - answer: сурядності
-    options:
-    - сурядності
-    - підрядності
-    - прийменники
-    - частки
-    sentence: «І», «а», «але» — сполучники ___.
-  - answer: підрядності
-    options:
-    - сурядності
-    - підрядності
-    - прийменники
-    - частки
-    sentence: «Що», «бо», «коли» — сполучники ___.
-  - answer: головне речення
-    options:
-    - головне речення
-    - підрядне речення
-    - просте речення
-    - складне речення
-    sentence: Main clause = ___.
-  - answer: підрядне речення
-    options:
-    - головне речення
-    - підрядне речення
-    - просте речення
-    - складне речення
-    sentence: Subordinate clause = ___.
-  - answer: просте речення
-    options:
-    - просте речення
-    - складне речення
-    - головне речення
-    - підрядне речення
-    sentence: Simple sentence = ___.
-  - answer: складносурядне
-    options:
-    - складносурядне
-    - складнопідрядне
-    - просте
-    - підрядне
-    sentence: Compound sentence = ___.
-  - answer: складнопідрядне
-    options:
-    - складносурядне
-    - складнопідрядне
-    - просте
-    - головне
-    sentence: Complex sentence (з підрядністю) = ___.
-  - answer: сполучник сурядності
-    options:
-    - сполучник сурядності
-    - сполучник підрядності
-    - прийменник
-    - частка
-    sentence: Coordinating conjunction = ___.
-  instruction: Заповніть пропуски правильним терміном.
-- type: true-false
-  title: Синтаксична термінологія
-  items:
-  - statement: «Підмет» означає "subject".
-    correct: true
-    explanation: Правильно!
-  - statement: «Присудок» означає "object".
-    correct: false
-    explanation: Неправильно! «Присудок» = predicate, «додаток» = object.
-  - statement: Підмет і присудок — головні члени речення.
-    correct: true
-    explanation: Правильно!
-  - statement: Означення — головний член речення.
-    correct: false
-    explanation: Неправильно! Означення — другорядний член.
-  - statement: «Складнопідрядне» має залежну частину.
-    correct: true
-    explanation: Правильно! Підрядне речення залежить від головного.
-  - statement: «Складносурядне» має залежну частину.
-    correct: false
-    explanation: Неправильно! У складносурядному частини рівноправні.
-  - statement: Перед «що», «бо», «коли» ставимо кому.
-    correct: true
-    explanation: Правильно! Це правило української пунктуації.
-  - statement: «Кома» означає "period".
-    correct: false
-    explanation: Неправильно! «Кома» = comma, «крапка» = period.
-  - statement: «Просте речення» має одну пару підмет-присудок.
-    correct: true
-    explanation: Правильно!
-  - statement: «Головне речення» — залежна частина.
-    correct: false
-    explanation: Неправильно! Головне — незалежне, підрядне — залежне.
-  - statement: «Додаток» означає "object".
-    correct: true
-    explanation: Правильно!
-  - statement: «Обставина» описує іменник.
-    correct: false
-    explanation: Неправильно! Обставина описує дію, означення — іменник.
-  - statement: «Синтаксис» — це правила побудови речень.
-    correct: true
-    explanation: Правильно!
-  - statement: «І», «а», «але» — сполучники підрядності.
-    correct: false
-    explanation: Неправильно! Це сполучники сурядності.
-  instruction: Визначте, чи правильне твердження.
 - type: group-sort
-  title: Члени речення
+  title: Класифікація термінів
+  instruction: Розподіліть терміни за правильними категоріями.
   groups:
   - name: Головні члени
     items:
     - підмет
     - присудок
     - головний член
+    - хто виконує дію
   - name: Другорядні члени
     items:
     - додаток
@@ -645,284 +72,599 @@ activities:
     - складне речення
     - складносурядне
     - складнопідрядне
-  - name: Частини складного речення
-    items:
-    - головне речення
-    - підрядне речення
-    - залежна частина
-  instruction: Розподіліть терміни за категоріями.
-- type: group-sort
-  title: Сполучники і пунктуація
-  groups:
-  - name: Сполучники сурядності
-    items:
-    - і
-    - а
-    - але
-    - або
-  - name: Сполучники підрядності
-    items:
-    - що
-    - бо
-    - коли
-    - якщо
   - name: Розділові знаки
     items:
     - кома
     - крапка
     - двокрапка
     - тире
-  - name: Синтаксичні терміни
-    items:
+    - лапки
+- type: quiz
+  title: Головні члени речення
+  instruction: Визначте підмет або присудок у реченні.
+  items:
+  - question: 'Визначте роль слова «студент» у реченні «Студент уважно читає нову
+      книгу»:'
+    options:
+    - text: підмет
+      correct: true
+    - text: присудок
+      correct: false
+    - text: додаток
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Студент виконує дію, тому це підмет.
+  - question: 'Визначте роль слова «брат» у реченні «Мій брат працює в університеті»:'
+    options:
+    - text: підмет
+      correct: true
+    - text: присудок
+      correct: false
+    - text: додаток
+      correct: false
+    - text: обставина
+      correct: false
+    explanation: Брат виконує дію.
+  - question: 'Визначте роль слова «читає» у реченні «Студент уважно читає нову книгу»:'
+    options:
+    - text: присудок
+      correct: true
+    - text: підмет
+      correct: false
+    - text: додаток
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Читає — це дія підмета.
+  - question: 'Визначте роль слова «працює» у реченні «Мій брат працює в університеті»:'
+    options:
+    - text: присудок
+      correct: true
+    - text: підмет
+      correct: false
+    - text: додаток
+      correct: false
+    - text: обставина
+      correct: false
+    explanation: Працює — це дія підмета.
+  - question: 'Оберіть правильний український переклад для англійського терміна «subject»:'
+    options:
+    - text: підмет
+      correct: true
+    - text: присудок
+      correct: false
+    - text: додаток
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Subject = підмет.
+  - question: 'Оберіть правильний український переклад для англійського терміна «predicate»:'
+    options:
+    - text: присудок
+      correct: true
+    - text: підмет
+      correct: false
+    - text: додаток
+      correct: false
+    - text: обставина
+      correct: false
+    explanation: Predicate = присудок.
+  - question: 'Оберіть член речення, який відповідає на питання «хто?» або «що?»:'
+    options:
+    - text: підмет
+      correct: true
+    - text: присудок
+      correct: false
+    - text: додаток
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Підмет стоїть у називному відмінку.
+  - question: Який із головних членів речення найчастіше виражений дієсловом?
+    options:
+    - text: присудок
+      correct: true
+    - text: підмет
+      correct: false
+    - text: додаток
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Присудок зазвичай є дієсловом.
+- type: quiz
+  title: Другорядні члени речення
+  instruction: Визначте додаток, означення або обставину.
+  items:
+  - question: 'Визначте роль слова «каву» у реченні «Я п''ю гарячу каву»:'
+    options:
+    - text: додаток
+      correct: true
+    - text: підмет
+      correct: false
+    - text: присудок
+      correct: false
+    - text: означення
+      correct: false
+    explanation: П'ю (що?) каву. Дія спрямована на каву.
+  - question: 'Визначте роль слова «гарячу» у реченні «Я п''ю гарячу каву»:'
+    options:
+    - text: означення
+      correct: true
+    - text: додаток
+      correct: false
+    - text: обставина
+      correct: false
+    - text: підмет
+      correct: false
+    explanation: Каву (яку?) гарячу. Описує іменник.
+  - question: 'Визначте роль словосполучення «в центрі» у реченні «Ми живемо в центрі»:'
+    options:
+    - text: обставина
+      correct: true
+    - text: додаток
+      correct: false
+    - text: підмет
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Живемо (де?) в центрі. Це місце дії.
+  - question: 'Визначте роль слова «швидко» реченні «Він читає дуже швидко»:'
+    options:
+    - text: обставина
+      correct: true
+    - text: означення
+      correct: false
+    - text: додаток
+      correct: false
+    - text: присудок
+      correct: false
+    explanation: Читає (як?) швидко. Це спосіб дії.
+  - question: 'Оберіть правильний український переклад для англійського терміна «object»:'
+    options:
+    - text: додаток
+      correct: true
+    - text: підмет
+      correct: false
+    - text: присудок
+      correct: false
+    - text: означення
+      correct: false
+    explanation: Object = додаток.
+  - question: 'Оберіть правильний український переклад для англійського терміна «attribute»:'
+    options:
+    - text: означення
+      correct: true
+    - text: обставина
+      correct: false
+    - text: додаток
+      correct: false
+    - text: підмет
+      correct: false
+    explanation: Attribute = означення.
+  - question: 'Оберіть правильний український переклад для англійського терміна «adverbial»:'
+    options:
+    - text: обставина
+      correct: true
+    - text: означення
+      correct: false
+    - text: додаток
+      correct: false
+    - text: присудок
+      correct: false
+    explanation: Adverbial = обставина.
+  - question: 'Оберіть член речення, який відповідає на питання «який?» або «чий?»:'
+    options:
+    - text: означення
+      correct: true
+    - text: обставина
+      correct: false
+    - text: додаток
+      correct: false
+    - text: підмет
+      correct: false
+    explanation: Означення відповідає на ці питання.
+- type: true-false
+  title: Теорія речень
+  instruction: Визначте, чи правильне твердження про типи речень.
+  items:
+  - statement: Просте речення має тільки одну граматичну основу (підмет і присудок).
+    correct: true
+    explanation: Так, це визначення простго речення.
+  - statement: Складне речення завжди складається мінімум з двох частин.
+    correct: true
+    explanation: Так, воно об'єднує два або більше простих речень.
+  - statement: У складносурядному реченні частини залежать одна від одної.
+    correct: false
+    explanation: Ні, у складносурядному (compound) частини рівноправні.
+  - statement: Підрядне речення може існувати окремо як самостійне речення.
+    correct: false
+    explanation: Ні, підрядне (subordinate) речення залежить від головного.
+  - statement: «Я читаю, а ти пишеш» — це складносурядне речення.
+    correct: true
+    explanation: Так, бо сполучник "а" з'єднує рівноправні частини.
+  - statement: «Я знаю, що ти прийдеш» — це просте речення.
+    correct: false
+    explanation: 'Ні, це складне, бо є дві основи: "я знаю" і "ти прийдеш".'
+  - statement: Головне речення — це незалежне речення.
+    correct: true
+    explanation: Так, головне речення (main clause) є незалежним.
+  - statement: Англійський термін «Simple sentence» означає «Складне речення».
+    correct: false
+    explanation: Simple = просте. Complex = складне.
+- type: true-false
+  title: Пунктуація та сполучники
+  instruction: Визначте, чи правильне твердження про розділові знаки.
+  items:
+  - statement: Сполучники «і», «а», «але» — це сполучники сурядності.
+    correct: true
+    explanation: Так, вони з'єднують рівноправні частини.
+  - statement: Сполучники «що», «бо», «коли» — це сполучники підрядності.
+    correct: true
+    explanation: Так, вони вводять підрядні речення.
+  - statement: Перед сполучником «що» в українській мові завжди ставимо кому.
+    correct: true
+    explanation: 'Це важливе правило: кома перед "що" обов''язкова.'
+  - statement: Перед сполучником «бо» (because) кому ставити не треба.
+    correct: false
+    explanation: Ні, перед "бо" кома ставиться завжди.
+  - statement: Слово «пунктуація» означає правила вимови слів.
+    correct: false
+    explanation: Ні, пунктуація — це правила вживання розділових знаків.
+  - statement: Знак «—» українською мовою називається «тире».
+    correct: true
+    explanation: Так, це тире (dash).
+  - statement: «Крапка» — це знак, який ми ставимо в кінці речення.
+    correct: true
+    explanation: Так, крапка (period) завершує розповідне речення.
+  - statement: Інверсія — це звичайний, прямий порядок слів у реченні.
+    correct: false
+    explanation: Ні, інверсія — це зміна порядку слів для логічного наголосу.
+- type: fill-in
+  title: Визначення термінів
+  instruction: Заповніть пропуски правильним терміном.
+  items:
+  - sentence: Головні члени речення — це підмет і ___.
+    answer: присудок
+    options:
+    - присудок
+    - додаток
+    - означення
+    - обставина
+  - sentence: Другорядні члени речення — це додаток, ___, обставина.
+    answer: означення
+    options:
+    - означення
+    - підмет
+    - присудок
     - синтаксис
+  - sentence: Речення, в якому є лише одна частина, називається ___.
+    answer: просте речення
+    options:
+    - просте речення
+    - складне речення
+    - головне речення
+    - підрядне речення
+  - sentence: Речення, частини якого рівноправні, називається ___ речення.
+    answer: складносурядне
+    options:
+    - складносурядне
+    - складнопідрядне
+    - просте
+    - підрядне
+  - sentence: Речення, одна частина якого залежить від іншої, називається ___.
+    answer: складнопідрядне
+    options:
+    - складнопідрядне
+    - складносурядне
+    - просте
+    - головне
+  - sentence: Синтаксис вивчає будову ___.
+    answer: речення
+    options:
+    - речення
+    - слова
+    - звуку
+    - літери
+  - sentence: Незалежна частина складного речення — це ___ речення.
+    answer: головне
+    options:
+    - головне
+    - підрядне
+    - просте
+    - другорядне
+  - sentence: Залежна частина складного речення — це ___ речення.
+    answer: підрядне
+    options:
+    - підрядне
+    - головне
+    - просте
+    - сурядне
+- type: fill-in
+  title: Розділові знаки
+  instruction: Оберіть правильну назву знака або сполучника.
+  items:
+  - sentence: Слово «і» — це сполучник ___.
+    answer: сурядності
+    options:
+    - сурядності
+    - підрядності
+    - пунктуації
+    - інверсії
+  - sentence: Слово «бо» — це сполучник ___.
+    answer: підрядності
+    options:
+    - підрядності
+    - сурядності
+    - додатку
+    - означення
+  - sentence: Знак «,» називається ___.
+    answer: кома
+    options:
+    - кома
+    - крапка
+    - тире
+    - лапки
+  - sentence: Знак «:» називається ___.
+    answer: двокрапка
+    options:
+    - двокрапка
+    - крапка
+    - кома
+    - лапки
+  - sentence: Знак «—» називається ___.
+    answer: тире
+    options:
+    - тире
+    - дефіс
+    - кома
+    - крапка
+  - sentence: Знак «.» називається ___.
+    answer: крапка
+    options:
+    - крапка
+    - кома
+    - лапки
+    - двокрапка
+  - sentence: Знаки « » називаються ___.
+    answer: лапки
+    options:
+    - лапки
+    - дужки
+    - коми
+    - крапки
+  - sentence: Система розділових знаків називається ___.
+    answer: пунктуація
+    options:
     - пунктуація
-    - інверсія
-  instruction: Розподіліть терміни за категоріями.
+    - синтаксис
+    - фонетика
+    - морфологія
+- type: select
+  title: Ознаки термінів
+  instruction: Оберіть усі правильні твердження для кожного терміна.
+  items:
+  - question: Оберіть правильні твердження про ПІДМЕТ.
+    options:
+    - text: Відповідає на питання «хто?», «що?».
+      correct: true
+    - text: Є головним членом речення.
+      correct: true
+    - text: Означає дію предмета.
+      correct: false
+    - text: Є другорядним членом.
+      correct: false
+    explanation: Підмет — головний член, відповідає на питання "хто/що".
+  - question: Оберіть правильні твердження про ПРИСУДОК.
+    options:
+    - text: Означає дію або стан підмета.
+      correct: true
+    - text: Є головним членом речення.
+      correct: true
+    - text: Відповідає на питання «який?».
+      correct: false
+    - text: Відповідає на питання «кого?».
+      correct: false
+    explanation: Присудок — головний член, означає дію.
+  - question: Оберіть правильні твердження про ДОДАТОК.
+    options:
+    - text: Означає предмет, на який спрямована дія.
+      correct: true
+    - text: Відповідає на питання непрямих відмінків.
+      correct: true
+    - text: Є другорядним членом речення.
+      correct: true
+    - text: Відповідає на питання «хто?», «що?» (називний).
+      correct: false
+    explanation: Додаток — другорядний член.
+  - question: Оберіть правильні твердження про ОЗНАЧЕННЯ.
+    options:
+    - text: Вказує на ознаку предмета.
+      correct: true
+    - text: Відповідає на питання «який?», «чий?».
+      correct: true
+    - text: Є другорядним членом речення.
+      correct: true
+    - text: Відповідає на питання «де?», «коли?».
+      correct: false
+    explanation: Означення описує ознаку.
+  - question: Оберіть правильні твердження про СКЛАДНОПІДРЯДНЕ речення.
+    options:
+    - text: Має головну і залежну частину.
+      correct: true
+    - text: Частини з'єднуються сполучниками «що», «бо», «коли».
+      correct: true
+    - text: Частини є рівноправними.
+      correct: false
+    - text: Має лише одну граматичну основу.
+      correct: false
+    explanation: У складнопідрядному є залежність (підрядність).
+  - question: Оберіть правильні твердження про КОМУ.
+    options:
+    - text: Ставиться перед сполучником «що».
+      correct: true
+    - text: Ставиться перед сполучником «а».
+      correct: true
+    - text: Ніколи не ставиться в кінці речення.
+      correct: true
+    - text: Ставиться в кінці питального речення.
+      correct: false
+    explanation: Кома розділяє частини, але не завершує речення.
 - type: unjumble
-  title: Синтаксичні пояснення
+  title: Визначення понять
+  instruction: Складіть речення з розкиданих слів, щоб утворити правильне визначення.
   items:
   - words:
     - підмет
     - це
+    - головний
     - член
     - речення
     - який
     - виконує
-    - головну
     - дію
-    answer: Підмет — це член речення, який виконує головну дію.
+    answer: Підмет — це головний член речення, який виконує дію.
   - words:
     - присудок
     - це
+    - головний
     - член
-    - речення
     - який
     - називає
     - дію
     - підмета
-    answer: Присудок — це член речення, який називає дію підмета.
+    answer: Присудок — це головний член, який називає дію підмета.
   - words:
     - додаток
-    - це
-    - другорядний
-    - член
-    - речення
+    - означає
+    - предмет
     - на
     - який
     - спрямована
     - дія
     - підмета
-    - в
-    - реченні
-    answer: Додаток — це другорядний член речення, на який спрямована дія підмета
-      в реченні.
+    answer: Додаток означає предмет, на який спрямована дія підмета.
   - words:
     - означення
     - це
     - другорядний
     - член
     - який
-    - описує
-    - характеристику
-    - ознаку
-    - іменника
-    - в
-    - реченні
-    answer: Означення — це другорядний член, який описує характеристику, ознаку іменника
-      в реченні.
+    - відповідає
+    - на
+    - питання
+    - який
+    answer: Означення — це другорядний член, який відповідає на питання який.
   - words:
     - обставина
     - це
     - член
     - речення
-    - який
-    - описує
-    - обставини
-    - події
-    answer: Обставина — це член речення, який описує обставини події.
-  - words:
-    - просте
-    - речення
-    - має
-    - лише
-    - одну
-    - пару
-    - підмет
-    - і
-    - присудок
-    answer: Просте речення має лише одну пару підмет і присудок.
-  - words:
-    - складне
-    - речення
-    - має
-    - кілька
-    - частин
-    - які
-    - з'єднані
-    - сполучниками
-    - сурядності
-    - або
-    - підрядності
-    answer: Складне речення має кілька частин, які з'єднані сполучниками сурядності
-      або підрядності.
-  - words:
-    - складносурядне
-    - речення
-    - має
-    - рівноправні
-    - частини
-    - з'єднані
-    - сполучниками
-    - і
-    - а
-    - але
-    - або
-    answer: Складносурядне речення має рівноправні частини, з'єднані сполучниками
-      і, а, але, або.
-  - words:
-    - складнопідрядне
-    - речення
-    - має
-    - головну
-    - частину
-    - і
-    - залежну
-    - підрядну
-    - частину
-    - з'єднану
-    - сполучником
-    answer: Складнопідрядне речення має головну частину і залежну підрядну частину,
-      з'єднану сполучником.
-  - words:
-    - перед
-    - сполучниками
-    - підрядності
     - що
-    - бо
-    - коли
-    - завжди
-    - ставимо
-    - кому
-    - в
-    - українській
-    - мові
-    answer: Перед сполучниками підрядності що, бо, коли завжди ставимо кому в українській
-      мові.
-  - words:
-    - головне
-    - речення
-    - незалежна
-    - частина
-    - складного
-    - речення
-    - яка
-    - може
-    - існувати
-    - самостійно
-    - без
-    - підрядного
-    answer: Головне речення — незалежна частина складного речення, яка може існувати
-      самостійно без підрядного.
-  - words:
-    - підрядне
-    - речення
-    - це
-    - залежна
-    - частина
-    - яка
-    - не
-    - існує
-    - самостійно
-    answer: Підрядне речення — це залежна частина, яка не існує самостійно.
+    - вказує
+    - на
+    - місце
+    - дії
+    answer: Обставина — це член речення, що вказує на місце дії.
   - words:
     - синтаксис
-    - це
-    - розділ
-    - граматики
-    - який
     - вивчає
     - будову
     - речень
-    - і
+    - та
     - правила
-    - їх
-    - побудови
-    answer: Синтаксис — це розділ граматики, який вивчає будову речень і правила їх
-      побудови.
+    - їхнього
+    - поєднання
+    answer: Синтаксис вивчає будову речень та правила їхнього поєднання.
   - words:
     - пунктуація
     - це
     - система
+    - правил
+    - про
+    - вживання
     - розділових
     - знаків
-    - і
-    - правила
-    - їх
-    - вживання
+    answer: Пунктуація — це система правил про вживання розділових знаків.
+  - words:
+    - просте
+    - речення
     - в
-    - писемному
-    - мовленні
-    answer: Пунктуація — це система розділових знаків і правила їх вживання в писемному
-      мовленні.
-  instruction: Розташуйте слова в правильному порядку.
+    - українській
+    - мові
+    - має
+    - лише
+    - одну
+    - основу
+    answer: Просте речення в українській мові має лише одну основу.
 - type: error-correction
-  title: Виправлення помилок
+  title: Знайди помилку
+  instruction: Знайдіть помилку у твердженні або прикладі.
   items:
-  - sentence: «Підмет» означає "object".
-    error: object
-    answer: subject
+  - sentence: Підмет відповідає на питання «кого?», «що?».
+    error: кого
+    answer: хто
     options:
-    - object
-    - subject
-    - predicate
-    - attribute
-    explanation: «Підмет» = subject.
-  - sentence: «Присудок» означає "subject".
-    error: subject
-    answer: predicate
+    - кого
+    - хто
+    - кому
+    - ким
+    explanation: Підмет відповідає на питання називного відмінка — хто? що?
+  - sentence: Присудок — це другорядний член речення.
+    error: другорядний
+    answer: головний
     options:
-    - subject
-    - predicate
-    - object
-    - attribute
-    explanation: «Присудок» = predicate.
-  - sentence: «Додаток» означає "subject".
-    error: subject
-    answer: object
-    options:
-    - subject
-    - object
-    - predicate
-    - attribute
-    explanation: «Додаток» = object.
-  - sentence: Означення — головний член речення.
-    error: головний
-    answer: другорядний
-    options:
-    - головний
     - другорядний
-    - допоміжний
-    - службовий
-    explanation: Означення — другорядний член.
-  - sentence: У складносурядному реченні одна частина залежна.
-    error: залежна
-    answer: рівноправна
+    - головний
+    - складний
+    - простий
+    explanation: Присудок — це головний член речення.
+  - sentence: Додаток підкреслюємо хвилястою лінією.
+    error: додаток
+    answer: означення
     options:
-    - залежна
-    - рівноправна
-    - підрядна
-    - головна
-    explanation: У складносурядному частини рівноправні.
-  - sentence: «Кома» означає "period".
-    error: period
-    answer: comma
+    - додаток
+    - означення
+    - підмет
+    - присудок
+    explanation: Хвилястою лінією підкреслюємо означення (attribute).
+  - sentence: Сполучник «і» — це сполучник підрядності.
+    error: підрядності
+    answer: сурядності
     options:
-    - period
-    - comma
-    - colon
-    - dash
-    explanation: «Кома» = comma, «крапка» = period.
-  - sentence: «Крапка» означає "comma".
+    - підрядності
+    - сурядності
+    - пунктуації
+    - синтаксису
+    explanation: «І» з'єднує рівноправні частини (сурядність).
+  - sentence: Речення «Я читаю» — це складне речення.
+    error: складне
+    answer: просте
+    options:
+    - складне
+    - просте
+    - питальне
+    - окличне
+    explanation: Тут одна граматична основа, отже це просте речення.
+  - sentence: Перед словом «що» ми ніколи не ставимо кому.
+    error: ніколи
+    answer: завжди
+    options:
+    - ніколи
+    - завжди
+    - інколи
+    - рідко
+    explanation: Перед «що» (як сполучником) кома ставиться завжди.
+  - sentence: Слово «швидко» у реченні «Він швидко біжить» — це додаток.
+    error: додаток
+    answer: обставина
+    options:
+    - додаток
+    - обставина
+    - підмет
+    - присудок
+    explanation: «Швидко» відповідає на питання «як?», це обставина.
+  - sentence: «Крапка» англійською мовою — це "comma".
     error: comma
     answer: period
     options:
@@ -930,413 +672,59 @@ activities:
     - period
     - colon
     - dash
-    explanation: «Крапка» = period.
-  - sentence: «І», «а», «але» — сполучники підрядності.
-    error: підрядності
-    answer: сурядності
-    options:
-    - підрядності
-    - сурядності
-    - прийменники
-    - частки
-    explanation: «І», «а», «але» — сурядності.
-  - sentence: «Що», «бо», «коли» — сполучники сурядності.
-    error: сурядності
-    answer: підрядності
-    options:
-    - сурядності
-    - підрядності
-    - прийменники
-    - частки
-    explanation: «Що», «бо», «коли» — підрядності.
-  - sentence: Підрядне речення — незалежна частина.
-    error: незалежна
-    answer: залежна
-    options:
-    - незалежна
-    - залежна
-    - головна
-    - проста
-    explanation: Підрядне — залежна, головне — незалежна.
-  - sentence: Головне речення — залежна частина.
-    error: залежна
-    answer: незалежна
-    options:
-    - залежна
-    - незалежна
-    - підрядна
-    - проста
-    explanation: Головне — незалежна частина.
-  - sentence: «Обставина» описує іменник.
-    error: іменник
-    answer: дію
-    options:
-    - іменник
-    - дію
-    - підмет
-    - присудок
-    explanation: Обставина — де, коли, як відбувається дія.
-  - sentence: «Означення» описує дію.
-    error: дію
-    answer: іменник
-    options:
-    - дію
-    - іменник
-    - присудок
-    - обставину
-    explanation: Означення описує іменник.
-  - sentence: «Просте речення» має кілька частин.
-    error: кілька частин
-    answer: одну частину
-    options:
-    - кілька частин
-    - одну частину
-    - дві частини
-    - три частини
-    explanation: Просте має одну пару підмет-присудок.
-  instruction: У кожному реченні є ОДНА помилка. Знайдіть і виправте.
-- type: cloze
-  title: Аналіз речення
-  passage: У реченні «Студент читає книгу в бібліотеці» є {підмет} і {присудок} як
-    головні члени. {Підмет} — «студент», {присудок} — «читає». Слово «книгу» — це
-    {додаток}, на яке спрямована дія. «В бібліотеці» — це {обставина}, що показує,
-    де відбувається дія. Це {просте} речення, бо має лише одну пару підмет-присудок.
-    Якби було «Студент читає, бо любить книги», це було б {складнопідрядне} речення.
-    «Бо» — сполучник {підрядності}. Перед «бо» треба ставити {кому}. «Я читаю, а сестра
-    пише» — це {складносурядне} речення, бо «а» — сполучник {сурядності}. Правила
-    побудови речень вивчає {синтаксис}. Система розділових знаків — це {пунктуація}.
-  instruction: Заповніть пропуски правильними термінами.
+    explanation: Крапка — це period. Comma — це кома.
 - type: mark-the-words
-  title: Знайдіть терміни
-  instruction: Натисніть на ВСІ синтаксичні терміни в тексті.
-  passage: У реченні визначте підмет і присудок. Додаток — на що спрямована дія. Означення
-    описує іменник. Обставина показує обставини дії. Це просте чи складне речення?
-    Якщо є сполучник підрядності, це складнопідрядне.
-  correct_words:
-  - підмет
-  - присудок
-  - Додаток
-  - Означення
-  - Обставина
-  - просте
-  - складне
-  - речення
-  - сполучник
-  - підрядності
-  - складнопідрядне
-- type: select
-  title: Множинний вибір
-  items:
-  - options:
-    - text: підмет
-      correct: true
-    - text: присудок
-      correct: true
-    - text: додаток
-      correct: false
-    - text: обставина
-      correct: false
-    explanation: 'Головні: підмет, присудок.'
-    question: Які терміни означають головні члени речення?
-  - options:
-    - text: додаток
-      correct: true
-    - text: означення
-      correct: true
-    - text: обставина
-      correct: true
-    - text: підмет
-      correct: false
-    explanation: 'Другорядні: додаток, означення, обставина.'
-    question: Які терміни означають другорядні члени?
-  - options:
-    - text: і
-      correct: true
-    - text: а
-      correct: true
-    - text: але
-      correct: true
-    - text: бо
-      correct: false
-    explanation: 'Сурядності: і, а, але. «Бо» — підрядності.'
-    question: Які сполучники є сполучниками сурядності?
-  - options:
-    - text: що
-      correct: true
-    - text: бо
-      correct: true
-    - text: коли
-      correct: true
-    - text: і
-      correct: false
-    explanation: 'Підрядності: що, бо, коли. «І» — сурядності.'
-    question: Які сполучники є сполучниками підрядності?
-  - options:
-    - text: кома
-      correct: true
-    - text: крапка
-      correct: true
-    - text: двокрапка
-      correct: true
-    - text: сполучник
-      correct: false
-    explanation: 'Розділові знаки: кома, крапка, двокрапка.'
-    question: Які терміни означають розділові знаки?
-  - options:
-    - text: складносурядне
-      correct: true
-    - text: складнопідрядне
-      correct: true
-    - text: просте
-      correct: false
-    - text: головне
-      correct: false
-    explanation: 'Складні: складносурядне, складнопідрядне.'
-    question: Які речення є складними?
-  - options:
-    - text: де відбувається дія
-      correct: true
-    - text: коли відбувається дія
-      correct: true
-    - text: як відбувається дія
-      correct: true
-    - text: яка характеристика іменника
-      correct: false
-    explanation: 'Обставина: де, коли, як.'
-    question: Що описує обставина?
-  - options:
-    - text: характеристику іменника
-      correct: true
-    - text: ознаку предмета
-      correct: true
-    - text: де відбувається дія
-      correct: false
-    - text: коли відбувається дія
-      correct: false
-    explanation: Означення описує іменник.
-    question: Що описує означення?
-  - options:
-    - text: що
-      correct: true
-    - text: бо
-      correct: true
-    - text: коли
-      correct: true
-    - text: і
-      correct: false
-    explanation: 'Перед підрядними: що, бо, коли.'
-    question: Перед якими сполучниками ставимо кому?
-  - options:
-    - text: головне речення
-      correct: true
-    - text: підрядне речення
-      correct: true
-    - text: просте речення
-      correct: false
-    - text: складносурядне речення
-      correct: false
-    explanation: 'Складнопідрядне: головне + підрядне.'
-    question: Які частини має складнопідрядне речення?
-  - options:
-    - text: член речення
-      correct: true
-    - text: частина мови
-      correct: false
-    - text: відмінок
-      correct: false
-    - text: рід
-      correct: false
-    explanation: Sentence part = член речення.
-    question: Що означає "sentence part"?
-  - options:
-    - text: синтаксис
-      correct: true
-    - text: морфологія
-      correct: false
-    - text: фонетика
-      correct: false
-    - text: лексика
-      correct: false
-    explanation: Syntax = синтаксис.
-    question: Що означає "syntax"?
-  - options:
-    - text: гарна
-      correct: true
-    - text: цікаву
-      correct: true
-    - text: швидко
-      correct: false
-    - text: книгу
-      correct: false
-    explanation: 'Означення: гарна, цікаву. «Швидко» — обставина.'
-    question: У реченні «Гарна дівчина швидко читає цікаву книгу» які є означення?
-  - options:
-    - text: гарна
-      correct: false
-    - text: цікаву
-      correct: false
-    - text: швидко
-      correct: true
-    - text: книгу
-      correct: false
-    explanation: Обставина швидко (як?).
-    question: У реченні «Гарна дівчина швидко читає цікаву книгу» яка є обставина?
-  instruction: Оберіть ВСІ правильні відповіді.
-- type: translate
-  title: Переклад термінів
-  items:
-  - options:
-    - text: підмет
-      correct: true
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: false
-    - text: обставина
-      correct: false
-    explanation: Subject = підмет.
-    source: subject
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: true
-    - text: додаток
-      correct: false
-    - text: обставина
-      correct: false
-    explanation: Predicate = присудок.
-    source: predicate
-  - options:
-    - text: підмет
-      correct: false
-    - text: присудок
-      correct: false
-    - text: додаток
-      correct: true
-    - text: обставина
-      correct: false
-    explanation: Object = додаток.
-    source: object
-  - options:
-    - text: підмет
-      correct: false
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: true
-    - text: обставина
-      correct: false
-    explanation: Attribute = означення.
-    source: attribute
-  - options:
-    - text: підмет
-      correct: false
-    - text: додаток
-      correct: false
-    - text: означення
-      correct: false
-    - text: обставина
-      correct: true
-    explanation: Adverbial = обставина.
-    source: adverbial
-  - options:
-    - text: просте речення
-      correct: true
-    - text: складне речення
-      correct: false
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: false
-    explanation: Simple sentence = просте речення.
-    source: simple sentence
-  - options:
-    - text: головне речення
-      correct: true
-    - text: підрядне речення
-      correct: false
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Main clause = головне речення.
-    source: main clause
-  - options:
-    - text: головне речення
-      correct: false
-    - text: підрядне речення
-      correct: true
-    - text: просте речення
-      correct: false
-    - text: складне речення
-      correct: false
-    explanation: Subordinate clause = підрядне речення.
-    source: subordinate clause
-  - options:
-    - text: кома
-      correct: true
-    - text: крапка
-      correct: false
-    - text: двокрапка
-      correct: false
-    - text: тире
-      correct: false
-    explanation: Comma = кома.
-    source: comma
-  - options:
-    - text: кома
-      correct: false
-    - text: крапка
-      correct: true
-    - text: двокрапка
-      correct: false
-    - text: тире
-      correct: false
-    explanation: Period = крапка.
-    source: period
-  - options:
-    - text: кома
-      correct: false
-    - text: крапка
-      correct: false
-    - text: двокрапка
-      correct: true
-    - text: тире
-      correct: false
-    explanation: Colon = двокрапка.
-    source: colon
-  - options:
-    - text: кома
-      correct: false
-    - text: крапка
-      correct: false
-    - text: двокрапка
-      correct: false
-    - text: тире
-      correct: true
-    explanation: Dash = тире.
-    source: dash
-  - options:
-    - text: синтаксис
-      correct: true
-    - text: морфологія
-      correct: false
-    - text: фонетика
-      correct: false
-    - text: пунктуація
-      correct: false
-    explanation: Syntax = синтаксис.
-    source: syntax
-  - options:
-    - text: синтаксис
-      correct: false
-    - text: морфологія
-      correct: false
-    - text: фонетика
-      correct: false
-    - text: пунктуація
-      correct: true
-    explanation: Punctuation = пунктуація.
-    source: punctuation
-  instruction: Оберіть правильний переклад.
+  title: Знайдіть підмет
+  instruction: Натисніть на слово, яке є ПІДМЕТОМ (хто виконує дію).
+  text: Київ — велике і красиве місто. Дніпро ділить його на дві частини. Туристи
+    люблять гуляти Хрещатиком. Увечері музиканти грають на вулиці. Ми часто слухаємо
+    їх. Життя тут завжди цікаве.
+  answers:
+  - Київ
+  - Дніпро
+  - Туристи
+  - музиканти
+  - Ми
+  - Життя
+- type: cloze
+  title: Синтаксичний розбір
+  instruction: Визначте роль кожного слова у реченнях.
+  passage: '**Речення 1:** «Мій брат швидко читає цікаву книгу».
+
+    Слово «брат» — це {підмет|присудок|додаток|обставина}.
+
+    Слово «читає» — це {присудок|підмет|додаток|означення}.
+
+    Слово «книгу» — це {додаток|підмет|присудок|обставина}.
+
+    Слово «цікаву» — це {означення|додаток|підмет|присудок}.
+
+    Слово «швидко» — це {обставина|означення|додаток|підмет}.
+
+
+    **Речення 2:** «Сьогодні мама готує смачний обід».
+
+    Слово «сьогодні» — це {обставина|додаток|підмет|присудок}.
+
+    Слово «мама» — це {підмет|присудок|додаток|означення}.
+
+    Слово «готує» — це {присудок|підмет|додаток|обставина}.
+
+    Слово «смачний» — це {означення|додаток|підмет|присудок}.
+
+    Слово «обід» — це {додаток|підмет|присудок|обставина}.
+
+
+    **Речення 3:** «Учора ми бачили гарний фільм».
+
+    Слово «учора» — це {обставина|додаток|підмет|присудок}.
+
+    Слово «ми» — це {підмет|присудок|додаток|означення}.
+
+    Слово «бачили» — це {присудок|підмет|додаток|обставина}.
+
+    Слово «гарний» — це {означення|додаток|підмет|присудок}.
+
+    Слово «фільм» — це {додаток|підмет|присудок|обставина}.
+
+    '

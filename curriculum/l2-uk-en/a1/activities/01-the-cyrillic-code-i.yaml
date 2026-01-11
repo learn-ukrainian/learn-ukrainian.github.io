@@ -25,6 +25,7 @@
     right: o
   - left: к
     right: k
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: False Friends Sound
   instruction: Match the Ukrainian letter with its sound
@@ -80,6 +81,7 @@
     - Л
     - П
     - Ф
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Reading Words
   items:
@@ -215,6 +217,7 @@
     - text: тєлєфон
       correct: false
     explanation: телефон = telephone
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Letter Recognition
   items:
@@ -255,6 +258,7 @@
   - statement: The letter Л sounds like "l" in "love".
     correct: true
     explanation: Correct! Л is a New Letter that makes the L sound.
+  instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Complete the Word
   items:
@@ -342,6 +346,7 @@
     - п
     - н
     - в
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: anagram
   title: Build the Word
   items:
@@ -369,6 +374,7 @@
     answer: таксі
   - scrambled: м у з и к а
     answer: музика
+  instruction: Розташуйте літери у правильному порядку.
 - type: anagram
   title: International Words
   items:
@@ -396,3 +402,4 @@
     answer: студент
   - scrambled: т у р и с т
     answer: турист
+  instruction: Розташуйте літери у правильному порядку.

@@ -25,6 +25,7 @@
     right: registered
   - left: звичайний
     right: regular
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -112,6 +113,7 @@
     - гривні
     - гривню
     - гривень
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Service Situations
   items:
@@ -243,6 +245,7 @@
       correct: false
     - text: євро
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Service Facts
   items:
@@ -282,6 +285,7 @@
   - statement: Квитанція means receipt.
     correct: true
     explanation: Correct!
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Post Office vs Bank
   groups:
@@ -301,6 +305,7 @@
     - валюта
     - переказ
     - кредит
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Service Sentences
   items:
@@ -424,6 +429,7 @@
     - мого
     - рахунку
     answer: П'ятсот гривень будь ласка зніміть з мого рахунку
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Case
   items:
@@ -535,6 +541,7 @@
     - Канаді
     - Канадою
     explanation: '«До» requires genitive: Канади.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Dialogue
   passage: '— Добрий день! Я хочу відправити {долари|доларів|доларам}.
@@ -564,22 +571,14 @@
     — {Курс|Курси|Курсу} сьогодні — 37 {гривень|гривня|гривні} за долар.
 
     — Гаразд. Ось {долари|долар|доларів}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Case Forms
-  passage: 'Click on all nouns used in any case except Nominative.
-
-    Я хочу відправити *посилку*. Напишіть вашу *адресу*. Він знімає *гроші*. Вона
-    чекає в *черзі*.
-
-    ---
-
-    Ми купуємо *марки*. Дайте мені *квитанцію*. Я відправляю лист до *Німеччини*.
-    Він обмінює *валюту*.
-
-    ---
-
-    Я поклав гроші на *рахунок*. Вона відправила лист *братові*.'
-  correct_words:
+  text: Click on all nouns used in any case except Nominative. Я хочу відправити посилку.
+    Напишіть вашу адресу. Він знімає гроші. Вона чекає в черзі. --- Ми купуємо марки.
+    Дайте мені квитанцію. Я відправляю лист до Німеччини. Він обмінює валюту. ---
+    Я поклав гроші на рахунок. Вона відправила лист братові.
+  answers:
   - посилку
   - адресу
   - гроші
@@ -590,7 +589,7 @@
   - валюту
   - рахунок
   - братові
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -660,3 +659,4 @@
     - text: Я хочу обміняти доларами.
       correct: false
     explanation: Direct object → Accusative plural 'долари'.
+  instruction: Оберіть правильний переклад.

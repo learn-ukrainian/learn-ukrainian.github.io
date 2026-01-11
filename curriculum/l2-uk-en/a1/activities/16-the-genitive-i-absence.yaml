@@ -19,6 +19,7 @@
     right: sense
   - left: різниця
     right: difference
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Genitive Endings
   groups:
@@ -40,6 +41,7 @@
     - вікна
     - знання
     - значення
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete with Genitive
   items:
@@ -127,6 +129,7 @@
     - З
     - До
     - Від
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Understanding Genitive
   items:
@@ -262,6 +265,7 @@
     - text: кава немає цукру
       correct: false
     explanation: 'Pattern: noun + без + genitive'
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Genitive Rules
   items:
@@ -301,6 +305,7 @@
   - statement: 'Both parts are required: немає AND genitive ending.'
     correct: true
     explanation: Correct! You can't skip either part.
+  instruction: Визначте, чи твердження правильне.
 - type: quiz
   title: Form Sentences Order
   items:
@@ -436,6 +441,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У мене немає досвіду'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Prepositions and Genitive Nouns
   pairs:
@@ -455,6 +461,7 @@
     right: except that
   - left: без допомоги
     right: without help
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Transform to Negative
   items:
@@ -542,3 +549,4 @@
     - немає допомоги
     - є допомоги
     - не допомога
+  instruction: Оберіть правильне слово для заповнення пропуску.

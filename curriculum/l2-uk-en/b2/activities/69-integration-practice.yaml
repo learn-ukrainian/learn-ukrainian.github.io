@@ -1,6 +1,3 @@
-module: b2-69
-level: B2
-activities:
 - type: match-up
   title: Знайдіть мудрість із контекстом
   instruction: З'єднайте прислів'я із ситуацією, де воно найбільш доречне.
@@ -21,7 +18,6 @@ activities:
     right: Перевершити конкурентів.
   - left: Бити байдики.
     right: Даремно витрачати час.
-  id: знайдіть-мудрість-із-контекстом
 - type: quiz
   title: Оберіть точну ідіому
   instruction: Який фразеологізм найкраще підходить для наведеної ситуації?
@@ -48,6 +44,7 @@ activities:
     - text: сидимо на двох стільцях
       correct: false
     - text: літаємо в хмарах
+      correct: false
     explanation: '''В одному човні'' підкреслює спільність долі та відповідальності.'
   - question: Проєкт майже завершений, залишилися останні кроки. Ми...
     options:
@@ -58,6 +55,7 @@ activities:
     - text: б'ємося як риба об лід
       correct: false
     - text: шукаємо голку в сіні
+      correct: false
     explanation: Ця ідіома ідеально описує завершальну стадію роботи.
   - question: Людина робить щось дуже щиро, з великим натхненням. Вона діє...
     options:
@@ -68,6 +66,7 @@ activities:
     - text: як мокре горить
       correct: false
     - text: через пень-колоду
+      correct: false
     explanation: '''За покликом серця'' означає щиру, внутрішню мотивацію.'
   - question: Ви хочете підкреслити, що ваша команда дуже активна і готова до змін.
     options:
@@ -78,6 +77,7 @@ activities:
     - text: ми пасемо задніх
       correct: false
     - text: ми товчемо воду в ступі
+      correct: false
     explanation: '''Людина чину'' — це той, хто діє, а не просто говорить.'
   - question: Конкуренти були впевнені у своїй перемозі, але ви виявилися кращими.
       Ви...
@@ -89,6 +89,7 @@ activities:
     - text: показали їм де раки зимують
       correct: false
     - text: заварили кашу
+      correct: false
     explanation: '''Втерти носа'' означає довести свою перевагу справою.'
   - question: Ви берете на себе дуже велику відповідальність і працюєте важко.
     options:
@@ -99,6 +100,7 @@ activities:
     - text: виходжу сухим із води
       correct: false
     - text: роблю з мухи слона
+      correct: false
     explanation: '''Тягнути лямку'' — це про тривалу та важку працю.'
   - question: Ситуація виявилася зовсім не такою, як обіцяли. Це було...
     options:
@@ -109,8 +111,8 @@ activities:
     - text: повна чаша
       correct: false
     - text: світла голова
+      correct: false
     explanation: '''Купити кота в мішку'' — придбати щось невідоме або неякісне.'
-  id: оберіть-точну-ідіому
 - type: group-sort
   title: Стилістична палітра
   instruction: Розподіліть слова та вирази за їхньою стилістичною забарвленістю (16+
@@ -138,7 +140,6 @@ activities:
     - повна чаша
     - братися за непосильне
     - світла голова
-  id: стилістична-палітра
 - type: unjumble
   title: Складіть складний аргумент
   instruction: Відновіть правильний порядок слів у реченнях з інтегрованою лексикою
@@ -316,7 +317,6 @@ activities:
     - мовою
     answer: Вік живи — вік учись — цей принцип має стати основою вашої стратегії саморозвитку
       на шляху до вільного володіння мовою.
-  id: складіть-складний-аргумент
 - type: cloze
   title: Історія успіху в Одесі
   instruction: Заповніть пропуски в тексті про реалізацію проєкту (16+ пропусків).
@@ -338,7 +338,6 @@ activities:
     нових цілей. Ця {практика|втома|гра|практика} зробила нас сильнішими.
 
     '
-  id: історія-успіху-в-одесі
 - type: fill-in
   title: Синонімічний вибір
   instruction: Вставте найбільш влучне слово для підсилення виразності (10+ елементів).
@@ -413,7 +412,6 @@ activities:
     - занепад
     - застій
     - відсутність
-  id: синонімічний-вибір
 - type: error-correction
   title: Виправте стиль
   instruction: Знайдіть і виправте слово, яке стилістично не пасує до контексту.
@@ -487,7 +485,6 @@ activities:
     - Золоті руки
     - Залізна воля
     explanation: Світла голова — про розум.
-  id: виправте-стиль
 - type: translate
   title: Переклад інтеграції
   instruction: Оберіть правильний український синонім до англійського виразу.
@@ -573,7 +570,6 @@ activities:
       correct: false
     - text: досвід
     explanation: Якість відповідності.
-  id: переклад-інтеграції
 - type: true-false
   title: Правила вживання
   instruction: Визначте правильність твердження.
@@ -602,7 +598,6 @@ activities:
   - statement: '''На фінішну пряму'' виходять на старті.'
     correct: false
     explanation: Ні, це завершення.
-  id: правила-вживання
 - type: select
   title: Всі засоби виразності
   instruction: Оберіть усі засоби, що підсилюють текст (6+ елементів).
@@ -675,7 +670,6 @@ activities:
       correct: true
     - text: незрозуміле
       correct: false
-  id: всі-засоби-виразності
 - type: match-up
   title: Трансформація тексту
   instruction: Замініть нейтральне слово на синонім рівня B2.
@@ -696,7 +690,6 @@ activities:
     right: сумлінне творення
   - left: людина
     right: автентична особистість
-  id: трансформація-тексту
 - type: match-up
   title: Логіка та Зв'язок
   instruction: Знайдіть продовження.
@@ -717,7 +710,6 @@ activities:
     right: ми втілимо ідею
   - left: За умови єдності
     right: ми згорнемо гори
-  id: логіка-та-зв'язок
 - type: quiz
   title: 'Кейс: Робота в Харкові'
   instruction: Оберіть правильні відповіді за змістом.
@@ -731,6 +723,7 @@ activities:
     - text: немає шуму
       correct: false
     - text: місто сумне
+      correct: false
     explanation: Метафора небезпеки.
   - question: Чому жителі 'не опускають рук'?
     options:
@@ -741,6 +734,7 @@ activities:
     - text: роблять зарядку
       correct: false
     - text: здалися
+      correct: false
     explanation: Стійкість.
   - question: Що підкреслює 'ми в одному човні'?
     options:
@@ -751,6 +745,7 @@ activities:
     - text: воду
       correct: false
     - text: веслування
+      correct: false
     explanation: Спільність долі.
   - question: Який сполучник пояснює віру?
     options:
@@ -761,6 +756,7 @@ activities:
     - text: хоча
       correct: false
     - text: якби
+      correct: false
     explanation: Логічне обґрунтування.
   - question: Що означає 'тягнути лямку'?
     options:
@@ -771,6 +767,7 @@ activities:
     - text: швидкий біг
       correct: false
     - text: ігри
+      correct: false
     explanation: Тривала праця.
   - question: Що означає 'не падати духом'?
     options:
@@ -781,6 +778,7 @@ activities:
     - text: порожнеча
       correct: false
     - text: страх
+      correct: false
     explanation: Оптимізм.
   - question: Що означає 'бити байдики'?
     options:
@@ -791,6 +789,7 @@ activities:
     - text: грати на інструменті
       correct: false
     - text: спати
+      correct: false
     explanation: Даремна трата часу.
   - question: Яка ідея уривку?
     options:
@@ -801,8 +800,8 @@ activities:
     - text: скарга
       correct: false
     - text: туризм
+      correct: false
     explanation: Натхнення.
-  id: кейс:-робота-в-харкові
 - type: select
   title: Майстерність виступу
   instruction: Оберіть елементи рівня B2 (6+ елементів).
@@ -875,4 +874,3 @@ activities:
       correct: true
     - text: мовчання
       correct: false
-  id: майстерність-виступу

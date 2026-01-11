@@ -134,6 +134,7 @@
     - text: Noun
       correct: false
     explanation: вчити is clearly Second Conjugation.
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Verbs and Actions
   pairs:
@@ -155,6 +156,7 @@
     right: to walk
   - left: спати
     right: to sleep
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Conjugate the Verb
   items:
@@ -242,6 +244,7 @@
     - спиш
     - спить
     - сплять
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: anagram
   title: Build the Verb
   items:
@@ -269,6 +272,7 @@
     answer: сидіти
   - scrambled: в ч и т и
     answer: вчити
+  instruction: Розташуйте літери у правильному порядку.
 - type: true-false
   title: Grammar Rules
   items:
@@ -310,6 +314,7 @@
   - statement: Ukrainian distinguishes between ходити and їздити.
     correct: true
     explanation: Correct! This precision is a beautiful feature of Ukrainian.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Verb Types
   groups:
@@ -331,6 +336,7 @@
     - їсти
     - пити
     - хотіти
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete the Dialogue
   items:
@@ -425,6 +431,7 @@
     - дивишся
     - дивиться
     - дивляться
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Choose the Right Verb
   items:
@@ -560,3 +567,4 @@
     - text: бачать
       correct: true
     explanation: вони бачать = they see
+  instruction: Оберіть правильну відповідь.

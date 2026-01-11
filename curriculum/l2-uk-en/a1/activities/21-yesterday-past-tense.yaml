@@ -19,6 +19,7 @@
     right: was (m)
   - left: читав
     right: was reading (m)
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Gender Endings
   groups:
@@ -40,6 +41,7 @@
     - працювали
     - говорили
     - були
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete with Past Tense
   items:
@@ -113,6 +115,7 @@
     - дивилася
     - дивилося
     - дивилися
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Understanding Past Tense
   items:
@@ -204,6 +207,7 @@
     - text: Ми були
       correct: true
     explanation: Plural subjects use -ли ending
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Build Past Tense Sentences
   items:
@@ -243,6 +247,7 @@
     - по
     - говорила
     answer: Вона говорила по телефону
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Past Tense Facts
   items:
@@ -270,6 +275,7 @@
   - statement: The neuter past tense ending is -ло.
     correct: true
     explanation: Correct! Воно було, воно читало, воно працювало.
+  instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Transform to Past Tense
   items:
@@ -329,6 +335,7 @@
     - пила
     - пило
     - пили
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Time Expressions
   items:
@@ -420,3 +427,4 @@
     - text: Every week
       correct: false
     explanation: Минулого тижня = last week (genitive)
+  instruction: Оберіть правильну відповідь.

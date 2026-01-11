@@ -21,6 +21,7 @@
     right: писати, письмо
   - left: чит-
     right: читати, читання
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Family Tree
   groups:
@@ -48,6 +49,7 @@
     - Науковий
     - Український
     - Читач
+  instruction: Розподіліть елементи за групами.
 - type: cloze
   title: Logic Puzzle
   passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами.
@@ -62,6 +64,7 @@
     Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}].
     Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це
     [{мовець|слухач|мовчун}].'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: High Sentences
   items:
@@ -125,6 +128,7 @@
     - чудові
     - книги
     answer: Він має письменницький талант і пише чудові книги
+  instruction: Розташуйте слова у правильному порядку.
 - type: quiz
   title: Formation Check
   items:
@@ -210,6 +214,7 @@
       correct: false
     - text: Українські мова
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: The Conference
   passage: 'На сцені стоїть {промовець|співак|актор}.
@@ -237,6 +242,7 @@
     Ми напишемо {статтю|книгу|листа} про цю подію.
 
     Це гарна {тема|проблема|гра} для роздумів.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: error-correction
   title: Wrong Logic
   items:
@@ -294,6 +300,7 @@
     - помилка
     - правильно
     explanation: A public speech is Pro-mova, not Roz-mova.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: match-up
   title: Opposites
   pairs:
@@ -317,6 +324,7 @@
     right: злий
   - left: швидкий
     right: повільний
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -339,6 +347,7 @@
     - Писати
     - Говорити
     - Обдумати
+  instruction: Розподіліть елементи за групами.
 - type: match-up
   title: Definitions II
   pairs:
@@ -362,3 +371,4 @@
     right: translator
   - left: письменник
     right: writer
+  instruction: З'єднайте відповідні елементи.

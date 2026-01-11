@@ -1,9 +1,4 @@
-module: 142-capstone-doslidzhennya
-level: B2
-version: '2.0'
-activities:
 - type: match-up
-  id: 142-01-vocab-research
   title: Термінологія дослідження
   pairs:
   - left: Гіпотеза
@@ -22,8 +17,8 @@ activities:
     right: Список використаної літератури
   - left: Новизна
     right: Те, що зроблено вперше
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
-  id: 142-02-research-steps
   title: Етапи дослідження
   groups:
   - name: Підготовка
@@ -50,8 +45,8 @@ activities:
     - Публікація результатів
     - Написання анотації
     - Перевірка на плагіат
+  instruction: Розподіліть елементи за групами.
 - type: quiz
-  id: 142-03-topic-selection
   title: 'Вибір теми: Добра чи Погана?'
   items:
   - question: 'Тема: ''Історія України'' (весь період).'
@@ -134,8 +129,8 @@ activities:
       correct: false
     - text: Лінгвістична тема
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
-  id: 142-04-proposal-template
   title: Шаблон пропозиції
   items:
   - sentence: Я обрав цю тему, тому що вона є ___.
@@ -194,8 +189,8 @@ activities:
     - вступ
     - початок
     - перерву
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 142-05-sources-type
   title: Типи джерел
   pairs:
   - left: Щоденник очевидця
@@ -214,8 +209,8 @@ activities:
     right: Вторинне джерело
   - left: Огляд літератури
     right: Вторинне джерело
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
-  id: 142-06-method-goal
   title: Метод і мета
   pairs:
   - left: Дізнатися думку багатьох людей
@@ -234,8 +229,8 @@ activities:
     right: Контент-аналіз
   - left: Узагальнити думки вчених
     right: Теоретичний аналіз
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  id: 142-07-paper-structure
   title: Структура роботи
   items:
   - question: З чого починається наукова робота?
@@ -318,8 +313,8 @@ activities:
       correct: false
     - text: Дякують батькам
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
-  id: 142-08-hypothesis
   title: Формулювання гіпотези
   items:
   - sentence: Якщо ми збільшимо кількість уроків, то успішність ___.
@@ -378,8 +373,8 @@ activities:
     - смішною
     - довгою
     - таємною
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
-  id: 142-09-citation-styles
   title: Стилі цитування (впізнавання)
   pairs:
   - left: (Petrenko, 2023)
@@ -398,8 +393,8 @@ activities:
     right: Колектив авторів
   - left: doi:10.1000/xyz
     right: Цифровий ідентифікатор
+  instruction: З'єднайте відповідні елементи.
 - type: true-false
-  id: 142-10-checklist
   title: Чек-лист готовності
   items:
   - statement: Я обрав тему, яка мені цікава.
@@ -426,8 +421,8 @@ activities:
   - statement: Я готовий до важкої, але цікавої роботи.
     correct: true
     explanation: Налаштуйтеся на успіх!
+  instruction: Визначте, чи твердження правильне.
 - type: quiz
-  id: 142-11-plagiarism-review
   title: 'Плагіат: Повторення'
   items:
   - question: Чи можна брати картинки з Google без дозволу?
@@ -510,8 +505,8 @@ activities:
       correct: false
     - text: Не писати нічого
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
-  id: 142-12-brainstorming
   title: Методи пошуку ідей
   pairs:
   - left: Мозковий штурм
@@ -530,8 +525,8 @@ activities:
     right: Погляд з різних точок зору
   - left: Випадкове слово
     right: Асоціації з випадковим стимулом
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
-  id: 142-13-vocab-context-2
   title: Лексика в контексті 2
   items:
   - sentence: Я пішов у ___ щоб знайти старі газети.
@@ -590,8 +585,8 @@ activities:
     - ремонт
     - танець
     - стрибок
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
-  id: 142-14-final-readiness
   title: Чи готовий я почати?
   items:
   - statement: Я розумію різницю між об'єктом і предметом.
@@ -618,3 +613,4 @@ activities:
   - statement: Дослідження — це цікава пригода.
     correct: true
     explanation: Саме так!
+  instruction: Визначте, чи твердження правильне.

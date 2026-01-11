@@ -4,7 +4,6 @@
   "title": "B1+ Module Activities",
   "description": "Activity schema for B1, B2, C1, C2 level modules. All 11 activity types (no anagram). Higher minimum item counts.",
   "type": "array",
-  "minItems": 12,
   "items": {
     "oneOf": [
       {
@@ -494,8 +493,7 @@
         "type",
         "title",
         "instruction",
-        "passage",
-        "correct_words"
+        "text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -510,13 +508,13 @@
           "type": "string",
           "minLength": 1
         },
-        "passage": {
+        "text": {
           "type": "string",
           "minLength": 1
         },
-        "correct_words": {
+        "answers": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 0,
           "items": {
             "type": "string",
             "minLength": 1

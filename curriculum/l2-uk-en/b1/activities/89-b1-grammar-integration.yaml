@@ -170,6 +170,7 @@
     - text: умовну дію
       correct: false
     explanation: Завжди + повторення = НДВ.
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Дієслова руху з префіксами
   items:
@@ -339,6 +340,7 @@
     - text: обидва для минулого часу
       correct: false
     explanation: Везти = односпрямований; возити = різноспрямований.
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Складні речення
   items:
@@ -510,6 +512,7 @@
     - text: причинове
       correct: false
     explanation: Поки не = до моменту завершення.
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: Заповніть пропуски (змішана граматика)
   passage: 'Я {читав|прочитав} книгу дві години, але не дочитав. (читав / прочитав)
@@ -533,6 +536,7 @@
 
     {Оскільки|Хоча} було пізно, вони поїхали. (Оскільки / Хоча) Він {перейшов|переходив}
     вулицю і {перейшов|переходив} у магазин. (перейшов / переходив, зайшов / заходив)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: match-up
   title: Видові пари дієслів
   pairs:
@@ -564,6 +568,7 @@
     right: їсти — з'їсти
   - left: пити
     right: пити — випити
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: Префікси дієслів руху
   pairs:
@@ -591,6 +596,7 @@
     right: рух у різні сторони
   - left: по- (піти)
     right: початок руху
+  instruction: З'єднайте відповідні елементи.
 - type: true-false
   title: Граматичні правила
   items:
@@ -648,6 +654,7 @@
       -ши і описують попередню дію.
     correct: true
     explanation: Правильно! Прочитавши, зробивши, написавши.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Категоризація граматичних форм
   groups:
@@ -683,6 +690,7 @@
     - літати
     - носити
     - возити
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Складіть складні речення
   items:
@@ -701,8 +709,6 @@
     - її
     - зміст
     answer: Я прочитав книгу, яку мені порадив друг, і тепер можу обговорити її зміст.
-    scrambled: я / прочитав / книгу / яку / мені / порадив / друг / і / тепер / можу
-      / обговорити / її / зміст
   - words:
     - Хоча
     - погода
@@ -716,8 +722,6 @@
     - до
     - парку
     answer: Хоча погода була погана, вони вирішили піти на прогулянку до парку.
-    scrambled: хоча / погода / була / погана / вони / вирішили / піти / на / прогулянку
-      / до / парку
   - words:
     - Він
     - вийшов
@@ -733,8 +737,6 @@
     - чекала
     - подруга
     answer: Він вийшов з дому, перейшов вулицю і зайшов у кав'ярню, де чекала подруга.
-    scrambled: він / вийшов / з / дому / перейшов / вулицю / і / зайшов / у / кав'ярню
-      / де / чекала / подруга
   - words:
     - Прочитавши
     - статтю
@@ -747,8 +749,6 @@
     - до
     - Львова
     answer: Прочитавши статтю про українську культуру, вона вирішила поїхати до Львова.
-    scrambled: прочитавши / статтю / про / українську / культуру / вона / вирішила
-      / поїхати / до / львова
   - words:
     - Якби
     - я
@@ -762,7 +762,6 @@
     - одну
     - мову
     answer: Якби я мав більше часу, я вивчив би ще одну мову.
-    scrambled: якби / я / мав / більше / часу / я / вивчив / би / ще / одну / мову
   - words:
     - Студент
     - який
@@ -777,8 +776,6 @@
     - року
     answer: Студент, який вивчає українську, приїхав зі Сполучених Штатів Америки
       минулого року.
-    scrambled: студент / який / вивчає / українську / приїхав / зі / сполучених /
-      штатів / америки / минулого / року
   - words:
     - Вона
     - ходила
@@ -791,8 +788,6 @@
     - від
     - нього
     answer: Вона ходила до університету щодня, бо жила недалеко від нього.
-    scrambled: вона / ходила / до / університету / щодня / бо / жила / недалеко /
-      від / нього
   - words:
     - Текст
     - написаний
@@ -806,8 +801,6 @@
     - журналі
     answer: Текст, написаний відомим українським письменником, був опублікований у
       престижному журналі.
-    scrambled: текст / написаний / відомим / українським / письменником / був / опублікований
-      / у / престижному / журналі
   - words:
     - Працюючи
     - над
@@ -820,8 +813,6 @@
     - краще
     - зосередитися
     answer: Працюючи над проєктом, він слухав українську музику, щоб краще зосередитися.
-    scrambled: працюючи / над / проєктом / він / слухав / українську / музику / щоб
-      / краще / зосередитися
   - words:
     - Оскільки
     - поїзд
@@ -835,8 +826,7 @@
     - на
     - вокзалі
     answer: Оскільки поїзд запізнився на годину, ми вирішили випити кави на вокзалі.
-    scrambled: оскільки / поїзд / запізнився / на / годину / ми / вирішили / випити
-      / кави / на / вокзалі
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Виправте граматичні помилки
   items:
@@ -966,6 +956,7 @@
     - летять
     - полетять
     explanation: Кожної осені = регулярно = НДВ + різноспрямований.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Заповніть текст
   passage: 'Минулого тижня я {вирішив|вирішував} {поїхати|їхати} до Одеси. Спочатку
@@ -977,11 +968,11 @@
     {де|куди} колись сиділи відомі письменники.
 
     '
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: translate
   title: Переклад
   items:
-  - question: I was reading a book for two hours when she called.
-    options:
+  - options:
     - text: Я читав книгу дві години, коли вона зателефонувала.
       correct: true
     - text: Я прочитав книгу дві години, коли вона зателефонувала.
@@ -991,8 +982,8 @@
     - text: Я буду читати книгу дві години, коли вона зателефонує.
       correct: false
     explanation: Тривалість у минулому = НДВ.
-  - question: She goes to work by bus every day.
-    options:
+    source: I was reading a book for two hours when she called.
+  - options:
     - text: Вона їздить на роботу автобусом щодня.
       correct: true
     - text: Вона їде на роботу автобусом щодня.
@@ -1002,8 +993,8 @@
     - text: Вона їхала на роботу автобусом щодня.
       correct: false
     explanation: Регулярний рух = різноспрямований.
-  - question: The city where I was born is very beautiful.
-    options:
+    source: She goes to work by bus every day.
+  - options:
     - text: Місто, де я народився, дуже красиве.
       correct: true
     - text: Місто, куди я народився, дуже красиве.
@@ -1013,8 +1004,8 @@
     - text: Місто, яке я народився, дуже красиве.
       correct: false
     explanation: Місце (where) = де.
-  - question: If I had known, I would have told you.
-    options:
+    source: The city where I was born is very beautiful.
+  - options:
     - text: Якби я знав, я сказав би тобі.
       correct: true
     - text: Якщо я знаю, я скажу тобі.
@@ -1024,8 +1015,8 @@
     - text: Хоча я знав, я сказав тобі.
       correct: false
     explanation: Нереальна умова = якби + минулий час + би.
-  - question: He came in order to help.
-    options:
+    source: If I had known, I would have told you.
+  - options:
     - text: Він прийшов, щоб допомогти.
       correct: true
     - text: Він прийшов, бо допомогти.
@@ -1035,8 +1026,8 @@
     - text: Він прийшов, якщо допомогти.
       correct: false
     explanation: Мета = щоб + інфінітив.
-  - question: Although the weather was bad, they went for a walk.
-    options:
+    source: He came in order to help.
+  - options:
     - text: Хоча погода була погана, вони пішли на прогулянку.
       correct: true
     - text: Оскільки погода була погана, вони пішли на прогулянку.
@@ -1046,8 +1037,8 @@
     - text: Якщо погода була погана, вони пішли на прогулянку.
       correct: false
     explanation: Контраст = допустове = хоча.
-  - question: Having read the book, he closed it.
-    options:
+    source: Although the weather was bad, they went for a walk.
+  - options:
     - text: Прочитавши книгу, він закрив її.
       correct: true
     - text: Читаючи книгу, він закрив її.
@@ -1057,8 +1048,8 @@
     - text: Читав книгу, він закрив її.
       correct: false
     explanation: Попередня завершена дія = дієприслівник ДВ (-вши).
-  - question: The text was written by a famous author.
-    options:
+    source: Having read the book, he closed it.
+  - options:
     - text: Текст написаний відомим автором.
       correct: true
     - text: Текст писаний відомим автором.
@@ -1068,8 +1059,8 @@
     - text: Текст пише відомий автор.
       correct: false
     explanation: Пасивний дієприкметник = написаний.
-  - question: Birds fly south every autumn.
-    options:
+    source: The text was written by a famous author.
+  - options:
     - text: Птахи відлітають на південь кожної осені.
       correct: true
     - text: Птахи полетіли на південь кожної осені.
@@ -1079,8 +1070,8 @@
     - text: Птахи летіли на південь кожної осені.
       correct: false
     explanation: Регулярний рух = НДВ з префіксом.
-  - question: He left the house, crossed the street, and entered the store.
-    options:
+    source: Birds fly south every autumn.
+  - options:
     - text: Він вийшов з дому, перейшов вулицю і зайшов у магазин.
       correct: true
     - text: Він виходив з дому, переходив вулицю і заходив у магазин.
@@ -1090,8 +1081,8 @@
     - text: Він вийшов з дому, перейшов вулицю і заходив у магазин.
       correct: false
     explanation: Послідовність завершених дій = всі ДВ з префіксами.
-  - question: Since it was late, they went home.
-    options:
+    source: He left the house, crossed the street, and entered the store.
+  - options:
     - text: Оскільки було пізно, вони поїхали додому.
       correct: true
     - text: Хоча було пізно, вони поїхали додому.
@@ -1101,8 +1092,8 @@
     - text: Щоб було пізно, вони поїхали додому.
       correct: false
     explanation: Причина = оскільки.
-  - question: While reading the book, she was drinking coffee.
-    options:
+    source: Since it was late, they went home.
+  - options:
     - text: Читаючи книгу, вона пила каву.
       correct: true
     - text: Прочитавши книгу, вона пила каву.
@@ -1112,8 +1103,8 @@
     - text: Прочитала книгу, вона пила каву.
       correct: false
     explanation: Одночасні дії = дієприслівник НДВ (-учи).
-  - question: Finally, he finished the project and submitted it.
-    options:
+    source: While reading the book, she was drinking coffee.
+  - options:
     - text: Нарешті він закінчив проєкт і здав його.
       correct: true
     - text: Нарешті він закінчував проєкт і здавав його.
@@ -1123,8 +1114,8 @@
     - text: Нарешті він закінчуватиме проєкт і здаватиме його.
       correct: false
     explanation: Нарешті + послідовність = ДВ + ДВ.
-  - question: She often used to visit her grandmother in summer.
-    options:
+    source: Finally, he finished the project and submitted it.
+  - options:
     - text: Вона часто їздила до бабусі влітку.
       correct: true
     - text: Вона часто поїхала до бабусі влітку.
@@ -1134,6 +1125,8 @@
     - text: Вона часто їхала до бабусі влітку.
       correct: false
     explanation: Часто = регулярно = НДВ + різноспрямований.
+    source: She often used to visit her grandmother in summer.
+  instruction: Оберіть правильний переклад.
 - type: select
   title: Оберіть усі правильні варіанти
   items:
@@ -1225,12 +1218,20 @@
     - text: завжди
       correct: false
     explanation: ДВ = нарешті, вже.
+  instruction: Оберіть усі правильні відповіді.
 - type: mark-the-words
   title: Знайдіть дієслова доконаного виду
   instruction: Натисніть на ВСІ дієслова доконаного виду в тексті.
-  passage: 'Минулого тижня я *вирішив* поїхати до Львова. Я *купив* квитки і *виїхав*
-    рано вранці. Я читав книгу в потязі, поки він не *прибув* на вокзал. Я *вийшов*
-    на перон і *пішов* до центру. Ходячи по місту, я оглядав красиву архітектуру.
-    Нарешті я *знайшов* кав''ярню і *замовив* каву.
-
-    '
+  text: Минулого тижня я вирішив поїхати до Львова. Я купив квитки і виїхав рано вранці.
+    Я читав книгу в потязі, поки він не прибув на вокзал. Я вийшов на перон і пішов
+    до центру. Ходячи по місту, я оглядав красиву архітектуру. Нарешті я знайшов кав''ярню
+    і замовив каву.
+  answers:
+  - вирішив
+  - купив
+  - виїхав
+  - прибув
+  - вийшов
+  - пішов
+  - знайшов
+  - замовив

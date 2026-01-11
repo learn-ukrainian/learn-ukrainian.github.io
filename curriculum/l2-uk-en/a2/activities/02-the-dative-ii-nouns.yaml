@@ -25,6 +25,7 @@
     right: подрузі
   - left: донька
     right: доньці
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Dative Noun Forms
   items:
@@ -112,6 +113,7 @@
     - подруга
     - подругу
     - подругою
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Dative or Not?
   items:
@@ -246,6 +248,7 @@
       correct: false
     - text: Це личить твоїм іменем.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Dative Rules
   items:
@@ -287,6 +290,7 @@
   - statement: Neuter nouns ending in -я like «ім'я» have regular dative forms.
     correct: false
     explanation: 'These nouns are irregular: ім''я → імені.'
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Noun Genders in Dative
   groups:
@@ -308,6 +312,7 @@
     - морю
     - вікну
     - полю
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Dative Sentences
   items:
@@ -371,6 +376,7 @@
     - дуже
     - детально
     answer: Лікар дуже детально пояснює діагноз пацієнтові в кабінеті
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Dative
   items:
@@ -434,6 +440,7 @@
     - пацієнтом
     explanation: 'The verb «пояснювати» requires Dative. Masculine nouns take -ові:
       пацієнт → пацієнтові.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Dialogue
   passage: 'Олег: Кому ти пишеш листа? Марія: Я пишу {бабусі|сестрі|подрузі}. У неї
@@ -448,18 +455,14 @@
     Зрозуміло. Що ви надсилаєте? Марія: Книги. Вони дуже {подобаються|потрібні|сподобаються}
     моїй бабусі. Працівник: Посилка буде {готова|там|доставлена} за тиждень. Марія:
     {Дякую|Дякуємо|Вдячна} вам!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Dative Nouns
-  passage: 'Click on all the nouns in the dative case.
-
-    Я даю книгу *другові*. Він показує фото *сестрі*. Ми пишемо листи *батькам*. Лікар
-    допомагає *пацієнтові*. Вона телефонує *мамі* щодня.
-
-    ---
-
-    Вчитель пояснює урок *учням*. Я надсилаю посилку *бабусі*. Він дарує квіти *дівчині*.
-    Брат допомагає *сестрі*. Ми довіряємо цьому *лікареві*.'
-  correct_words:
+  text: Click on all the nouns in the dative case. Я даю книгу другові. Він показує
+    фото сестрі. Ми пишемо листи батькам. Лікар допомагає пацієнтові. Вона телефонує
+    мамі щодня. --- Вчитель пояснює урок учням. Я надсилаю посилку бабусі. Він дарує
+    квіти дівчині. Брат допомагає сестрі. Ми довіряємо цьому лікареві.
+  answers:
   - другові
   - сестрі
   - батькам
@@ -470,7 +473,7 @@
   - дівчині
   - сестрі
   - лікареві
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -540,3 +543,4 @@
     - text: Вона дарує квіти сестрою.
       correct: false
     explanation: Dative сестрі.
+  instruction: Оберіть правильний переклад.

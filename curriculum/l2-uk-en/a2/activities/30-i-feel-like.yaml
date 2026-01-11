@@ -23,6 +23,7 @@
     right: I am satisfied
   - left: Мені приємно
     right: It is pleasant to me
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: 'Which Form? (Concept: Contextual Selection)'
   passage: '[{Мені|Я|Мене|Мною}:1] дуже холодно на вулиці сьогодні. Ганна сьогодні
@@ -41,6 +42,7 @@
     Вам [{жарко|жаркий|гаряче|гарячий}:9] у цьому пальті? Ми [{задоволені|задоволена|задоволений|задоволене}:10]
     вашим результатом. Мені [{приємно|приємний|приємна|приємні}:11] познайомитися
     з вами. Ти [{здивований|здивована|здивоване|здивовані}:12] цією новиною?'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: 'Emotional IQ (Concept: Logical Deduction)'
   items:
@@ -158,6 +160,7 @@
       correct: false
     - text: 'Найбільш правильно буде запитати: «Хто є холод?» у невідомої людини'
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: 'True or False? (Concept: Concept Validation)'
   items:
@@ -186,6 +189,7 @@
   - statement: Ukrainians are culturally expected to hide their true feelings.
     correct: false
     explanation: Emotional sincerity is highly valued in Ukraine.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: 'Positive vs Negative (Позитивні чи Негативні) (Concept: Semantic Categorization)'
   groups:
@@ -217,6 +221,7 @@
     - Вчорашній
     - Звичайний
     - Тихий
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: 'Express Yourself (Concept: Syntax Integrity)'
   items:
@@ -297,6 +302,7 @@
     - важкої
     - дороги
     answer: Ви виглядаєте дуже втомленими після цієї довгої і справді важкої дороги
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: 'Fix the Feelings (Concept: Critical Proofreading)'
   items:
@@ -354,6 +360,7 @@
     - помилка
     - правильно
     explanation: Use the past tense neuter form «було» for impersonal states.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: 'Emotional Story (Concept: Contextual Application)'
   passage: 'Complete this story about Taras''s day in the city.
@@ -371,14 +378,14 @@
     він вирішив піти в гості. Друзі довго розмовляли, і Тарасові було дуже {приємно|боляче|страшно|холодно}
     з другом. Йому було {шкода|добре|легко|смачно} йти додому, але вже була пізня
     ніч. Він ліг спати і був дуже {щасливий|злий|голодний|нудний}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: 'Finding Feelings (Concept: Pattern Recognition)'
-  passage: 'Identify the words and phrases that express feelings or states.
-
-    Сьогодні мені *холодно*. Я дуже *втомлений* після роботи. Ганні стало *нудно*
-    вдома. Ми були *раді* вас бачити. Йому було *весело* на святі. Вона почувається
-    *щасливою*. Мені *приємно* це чути. Вам *жарко* тут?'
-  correct_words:
+  text: Identify the words and phrases that express feelings or states. Сьогодні мені
+    холодно. Я дуже втомлений після роботи. Ганні стало нудно вдома. Ми були раді
+    вас бачити. Йому було весело на святі. Вона почувається щасливою. Мені приємно
+    це чути. Вам жарко тут?
+  answers:
   - холодно
   - втомлений
   - нудно
@@ -387,7 +394,7 @@
   - щасливою
   - приємно
   - жарко
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -487,3 +494,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

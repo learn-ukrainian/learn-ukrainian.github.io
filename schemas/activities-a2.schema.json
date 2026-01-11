@@ -2,9 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-a2.schema.json",
   "title": "A2 Module Activities",
-  "description": "Activity schema for A2 level modules. No anagram. Adds cloze, error-correction, mark-the-words. Select/translate optional.",
+  "description": "Activity schema for A2 level modules. Includes more complex activity types like cloze and mark-the-words.",
   "type": "array",
-  "minItems": 10,
   "items": {
     "oneOf": [
       {
@@ -479,8 +478,7 @@
         "type",
         "title",
         "instruction",
-        "passage",
-        "correct_words"
+        "text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -495,13 +493,13 @@
           "type": "string",
           "minLength": 1
         },
-        "passage": {
+        "text": {
           "type": "string",
           "minLength": 1
         },
-        "correct_words": {
+        "answers": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 0,
           "items": {
             "type": "string",
             "minLength": 1

@@ -25,6 +25,7 @@
     right: бач- root
   - left: слухач
     right: слух- root
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Formation Test
   passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід}
@@ -41,6 +42,7 @@
 
     Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати}
     Людина, яка пише = {письменник|писання|написати}'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Word Formation Quiz
   items:
@@ -166,6 +168,7 @@
       correct: false
     - text: -ач
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Word Parts
   groups:
@@ -194,6 +197,7 @@
     - пис-
     - бач-
     - слух-
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Formation Rules
   items:
@@ -233,6 +237,7 @@
   - statement: Root families share core meaning.
     correct: true
     explanation: Yes! ход- = all about walking
+  instruction: Визначте, чи твердження правильне.
 - type: unjumble
   title: Word Formation Rules
   items:
@@ -300,6 +305,7 @@
     - нові
     - слова
     answer: Треба знати корені слів щоб розуміти нові слова
+  instruction: Розташуйте слова у правильному порядку.
 - type: cloze
   title: Complete the Words
   passage: 'Він {прийшов|вийшов|увійшов} до класу.
@@ -325,20 +331,13 @@
     Цей інструмент — {музичний|музика|музикант}.
 
     Ось {вхід|вихід|схід} у магазин.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Word Parts
-  passage: 'Click on all words with marked word parts.
-
-    Він *при*йшов до школи. Потім *ви*йшов з неї.
-
-    ---
-
-    *Читач* любить *читання*. Він читає про *важлив*ість освіти.
-
-    ---
-
-    *Україн*ський письменник napisав *музич*ну п''єсу про *київ*ське життя.'
-  correct_words:
+  text: Click on all words with marked word parts. Він прийшов до школи. Потім вийшов
+    з неї. --- Читач любить читання. Він читає про важливість освіти. --- Український
+    письменник napisав музичну п''єсу про київське життя.
+  answers:
   - при
   - ви
   - Читач
@@ -347,7 +346,7 @@
   - Україн
   - музич
   - київ
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -447,6 +446,7 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.
 - type: translate
   title: Word Formation Translation
   items:
@@ -498,3 +498,4 @@
       correct: false
     - text: Науковець
       correct: false
+  instruction: Оберіть правильний переклад.

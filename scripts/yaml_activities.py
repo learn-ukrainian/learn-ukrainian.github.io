@@ -422,9 +422,43 @@ class ActivityParser:
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
-        passage = data.get('passage') or data.get('text', '')
+        raw_text = data.get('passage') or data.get('text', '')
         correct_words = data.get('correct_words') or data.get('answers', [])
-        return MarkTheWordsActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), text=passage, answers=correct_words)
+        
+        # Robust extraction from various markdown formats
+        extracted_answers = []
+        
+        def replace_match(match):
+            word = match.group(1).strip()
+            if word:
+                extracted_answers.append(word)
+            return word
+
+        # 1. Handle [word](correct) or [word](wrong)
+        clean_text = re.sub(r'\[([^\]]+)\]\(correct\)', replace_match, raw_text)
+        clean_text = re.sub(r'\[([^\]]+)\]\(wrong\)', r'\1', clean_text)
+        
+        # 2. Handle **word** (bold) - treat as correct
+        clean_text = re.sub(r'\*\*([^*]+)\*\*', replace_match, clean_text)
+        
+        # 3. Handle *word* (italics) - treat as correct
+        clean_text = re.sub(r'\*([^*]+)\*', replace_match, clean_text)
+        
+        # 4. Handle [word] (legacy brackets) - treat as correct
+        clean_text = re.sub(r'\[([^\]]+)\]', replace_match, clean_text)
+        
+        # If explicit answers provided, we prefer them (legacy), otherwise use extracted
+        if not correct_words:
+            # Filter out duplicates and empty strings
+            seen = set()
+            correct_words = [x for x in extracted_answers if not (x in seen or seen.add(x))]
+        
+        return MarkTheWordsActivity(
+            title=data.get('title', ''), 
+            instruction=data.get('instruction', ''), 
+            text=clean_text, 
+            answers=correct_words
+        )
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
         items = [TranslateItem(source=i['source'], options=[TranslateOption(text=o['text'], correct=o.get('correct', False)) for o in i.get('options', [])], explanation=i.get('explanation')) for i in data.get('items', [])]
@@ -454,9 +488,10 @@ class ActivityParser:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text: return ""
         if not isinstance(text, str): return str(text)
-        # Only escape what breaks JSX string attributes (", \, and backticks)
-        # We assume this is used in contexts like title="..." or similar
-        return text.replace('\\', '\\\\').replace('"', '&quot;')
+        # Escape characters that break JSX string attributes (", \, and backticks)
+        # Also escape newlines to keep the attribute on a single line in generated code
+        res = text.replace('\\', '\\\\').replace('"', '&quot;').replace('\n', '\\n').replace('\r', '')
+        return res
 
     def _dump_safe_json(self, data: Any) -> str:
         """Dumps JSON safely for inclusion in a JSX template literal (backticks)."""

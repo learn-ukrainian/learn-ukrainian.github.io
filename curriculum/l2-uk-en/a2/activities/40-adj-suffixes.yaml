@@ -25,6 +25,7 @@
     right: full of
   - left: -езн-
     right: augmentative
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Adjective Sorter
   groups:
@@ -52,6 +53,7 @@
     - Холодний
     - Старий
     - Молодий
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Noun to Adjective
   items:
@@ -139,6 +141,7 @@
     - колірний
     - колірський
     - варіант А
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Gender Match
   items:
@@ -226,6 +229,7 @@
     - звичайна
     - звичайне
     - варіант А
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: match-up
   title: Opposites
   pairs:
@@ -249,6 +253,7 @@
     right: малий
   - left: гарячий
     right: холодний
+  instruction: З'єднайте відповідні елементи.
 - type: unjumble
   title: Scientific Talk
   items:
@@ -312,6 +317,7 @@
     - своєму
     - кабінеті
     answer: Професор читає новий науковий журнал у своєму кабінеті
+  instruction: Розташуйте слова у правильному порядку.
 - type: fill-in
   title: City Vibes
   items:
@@ -371,6 +377,7 @@
     - шапки
     - штани
     - варіант А
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Logic Check
   items:
@@ -460,6 +467,7 @@
       correct: false
     - text: Цей прикметник відноситься до зору та кольорів
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: The Professor's Day
   passage: 'Професор читає {науковий|науцький|науковай} журнал.
@@ -485,6 +493,7 @@
     Це {фізичний|фізиковий|фізицький} світ.
 
     Але і {духовний|духовой|духівний}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: error-correction
   title: Wrong Suffix
   items:
@@ -542,3 +551,4 @@
     - помилка
     - правильно
     explanation: Material (Матерія) -> Material (Матеріальний).
+  instruction: Знайдіть і виправте помилку в реченні.

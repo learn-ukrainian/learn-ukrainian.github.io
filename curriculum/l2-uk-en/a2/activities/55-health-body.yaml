@@ -124,6 +124,7 @@
       correct: false
     - text: Грає на гітарі
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Body & Health
   pairs:
@@ -151,6 +152,7 @@
     right: fever
   - left: біль
     right: pain
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: My Symptoms
   passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_.
@@ -167,6 +169,7 @@
 
     Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_.
     У мене болить {спина|спину|спиною|спині}_. (back)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: true-false
   title: Medical Beliefs
   items:
@@ -206,6 +209,7 @@
   - statement: «Серце» is on the right side.
     correct: false
     explanation: Left usually.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Body vs Illness
   groups:
@@ -229,6 +233,7 @@
     - 'лікар: Medicine/Help'
     - 'аптека: Medicine/Help'
     - 'рецепт: Medicine/Help'
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Health Sentences
   items:
@@ -348,6 +353,7 @@
     - повністю
     - одужали
     answer: Скажіть будь ласка ви вже повністю одужали
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Grammar Clinic
   items:
@@ -461,6 +467,7 @@
     - здорова
     - здорове
     explanation: 'Plural/Formal: Будьте здорові.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Call the Doctor
   passage: '— Алло, це {швидка|піца|таксі}? Так, оператор слухає. Що сталося?
@@ -482,12 +489,13 @@
     — Які {ліки|цукерки|фрукти} треба приймати?
 
     — Ось цей {рецепт|квиток|чек}. Відпочивайте.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Body Parts
-  passage: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*,
-    ніс і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*.
-    Якщо ми носимо важке, болить *спина*.
-  correct_words:
+  text: У людини є одна голова, дві руки і дві ноги. На обличчі є очі, ніс і рот.
+    У роті є зуби. У грудях б'ється серце. Коли ми їмо, працює шлунок. Якщо ми носимо
+    важке, болить спина.
+  answers:
   - голова
   - руки
   - ноги
@@ -496,7 +504,7 @@
   - серце
   - шлунок
   - спина
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Medical Choice
   items:
@@ -632,3 +640,4 @@
     - text: Інший варіант
       correct: false
     explanation: Cough vs Cost.
+  instruction: Оберіть усі правильні відповіді.

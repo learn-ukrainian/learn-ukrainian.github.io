@@ -19,6 +19,7 @@
     right: knife
   - left: ложка
     right: spoon
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Waiter Questions
   items:
@@ -110,6 +111,7 @@
     - text: Рахунок тут.
       correct: false
     explanation: Polite request for the bill.
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
   title: Complete the Café Dialogue
   items:
@@ -197,6 +199,7 @@
     - Візьміть
     - Дайте
     - Покажіть
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Café Etiquette
   items:
@@ -236,6 +239,7 @@
   - statement: Київський торт is a famous Kyiv dessert.
     correct: true
     explanation: Correct! It's a hazelnut meringue cake created in 1956.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Café Phrases by Function
   groups:
@@ -257,6 +261,7 @@
     - Дякую.
     - Будь ласка.
     - Вибачте.
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Order the Café Sentences Order
   items:
@@ -381,6 +386,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, воду'
+  instruction: Оберіть правильну відповідь.
 - type: fill-in
   title: Polite vs Direct
   items:
@@ -468,6 +474,7 @@
     - Дякую за обслуговування!
     - Нормально!
     - Гаразд!
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Café Situations
   items:
@@ -603,3 +610,4 @@
     - text: Тірамісу
       correct: false
     explanation: Київський торт (Kyiv cake) is the specialty!
+  instruction: Оберіть правильну відповідь.

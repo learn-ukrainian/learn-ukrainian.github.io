@@ -121,6 +121,7 @@
       correct: false
     - text: teacher
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: School Vocab
   pairs:
@@ -148,6 +149,7 @@
     right: knowledge
   - left: предмет
     right: subject
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Study Verbs
   items:
@@ -247,6 +249,7 @@
     - вчить
     - вчишся
     explanation: General process.
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Ukrainian Education
   items:
@@ -286,6 +289,7 @@
   - statement: «Вчитися» describes where you study.
     correct: true
     explanation: Я вчуся в школі.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: School vs Uni
   groups:
@@ -308,6 +312,7 @@
     - 'ручка: Materials'
     - 'підручник: Materials'
     - 'олівець: Materials'
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Education Syntax
   items:
@@ -432,6 +437,7 @@
     - роботу
     - вдома
     answer: Вона зараз пише свою складну дипломну роботу вдома
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Grammar Fix
   items:
@@ -543,6 +549,7 @@
     - підручника
     - підручники
     explanation: 'Genitive plural after ''багато'': підручників.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: University Day
   passage: 'Я — студент. Я {вчуся|вивчаю|сплю} в університеті.
@@ -561,12 +568,13 @@
 
     Ввечері я йду в {гуртожиток|парк|ліс} і лягаю {рано|пізно|завтра} спати. Завтра
     знову {вчитися|грати|співати}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Classroom Objects
-  passage: На столі лежить *підручник* і мій синій *зошит*. Я беру *ручку*, щоб писати.
-    Де мій *олівець*? Вчитель пише на *дошці*. У класі є комп'ютер і *карта*. У мене
-    в рюкзаку є *книга* і *лінійка*. Я люблю свій *клас*.
-  correct_words:
+  text: На столі лежить підручник і мій синій зошит. Я беру ручку, щоб писати. Де
+    мій олівець? Вчитель пише на дошці. У класі є комп'ютер і карта. У мене в рюкзаку
+    є книга і лінійка. Я люблю свій клас.
+  answers:
   - підручник
   - зошит
   - ручку
@@ -576,7 +584,7 @@
   - книга
   - лінійка
   - клас
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Word Choice
   items:
@@ -712,3 +720,4 @@
     - text: Інший варіант
       correct: false
     explanation: Diploma.
+  instruction: Оберіть усі правильні відповіді.

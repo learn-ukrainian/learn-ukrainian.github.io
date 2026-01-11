@@ -21,6 +21,7 @@
     right: next year
   - left: '- вже'
     right: already
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Levels of Certainty
   groups:
@@ -41,6 +42,7 @@
     - постараюся
     - думаю
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Future Tense Forms
   items:
@@ -100,6 +102,7 @@
     - будеш
     - буде
     - будемо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Planning Expressions
   items:
@@ -159,6 +162,7 @@
     - мріємо
     - сподіваємося
     - думаємо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: буду Conjugation
   items:
@@ -243,6 +247,7 @@
       correct: false
     - text: Do you watch the movie?
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Time Expressions
   items:
@@ -327,6 +332,7 @@
       correct: false
     - text: He understood yesterday.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Future Plans
   items:
@@ -371,6 +377,7 @@
     - Київ
     - до
     answer: Я планую поїхати до Києва
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Understanding Future Expressions
   items:
@@ -410,3 +417,4 @@
   - statement: «Ніколи» means "always."
     correct: false
     explanation: Incorrect! It means "never."
+  instruction: Визначте, чи твердження правильне.

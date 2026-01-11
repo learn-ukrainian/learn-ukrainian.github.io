@@ -1,9 +1,4 @@
-module: 133-tekhnolohii-ta-shi
-level: B2
-version: '2.0'
-activities:
-- id: match-it-terms
-  type: match-up
+- type: match-up
   title: 'Знайдіть відповідність: IT-терміни'
   instruction: Поєднайте український термін з його значенням.
   pairs:
@@ -31,8 +26,7 @@ activities:
     right: нова версія програми
   - left: шифрування
     right: перетворення даних у нечитабельний формат
-- id: fill-in-it
-  type: fill-in
+- type: fill-in
   title: 'Заповніть пропуски: розмова розробників'
   instruction: Оберіть правильне слово для кожного пропуску.
   items:
@@ -120,8 +114,7 @@ activities:
     - видалити
     - скопіювати
     sentence: Потрібно ___ конфіденційні дані.
-- id: quiz-it
-  type: quiz
+- type: quiz
   title: 'Тест: технології та ШІ'
   instruction: Оберіть правильну відповідь.
   items:
@@ -257,8 +250,7 @@ activities:
     - text: Антивірусна програма
       correct: false
     explanation: Prometheus — українська платформа безкоштовної онлайн-освіти.
-- id: true-false-it
-  type: true-false
+- type: true-false
   title: 'Правда чи ні: факти про IT'
   instruction: Визначте, чи правдиве кожне твердження.
   items:
@@ -298,8 +290,7 @@ activities:
   - statement: Після 2022 року кількість кібератак на Україну зменшилась.
     correct: false
     explanation: Після вторгнення кількість кібератак різко зросла.
-- id: group-sort-roles
-  type: group-sort
+- type: group-sort
   title: Розподіліть професії за категоріями
   instruction: Визначте, чи позиція є технічною чи нетехнічною.
   groups:
@@ -323,8 +314,7 @@ activities:
     - Sales Manager
     - Product Owner
     - Scrum Master
-- id: unjumble-it
-  type: unjumble
+- type: unjumble
   title: Складіть речення правильно
   instruction: Розташуйте слова у правильному порядку.
   items:
@@ -396,8 +386,7 @@ activities:
     - конфліктів
     - без
     - пройшов
-- id: cloze-it-text
-  type: cloze
+- type: cloze
   title: Заповніть текст про кіберзахист
   instruction: Заповніть пропуски у тексті.
   passage: 'Кіберзахист стає все {важливішим|легшим|дорожчим} в сучасному світі. Щоб
@@ -414,8 +403,7 @@ activities:
     ваші дані та репутацію. Україна щодня відбиває тисячі {кібератак|вірусів|хакерів}.
     Кібербезпека — пріоритет для кожної {організації|людини|країни}. Захист починається
     з {вас|них|системи}.'
-- id: error-correction-it
-  type: error-correction
+- type: error-correction
   title: Виправте помилки в IT-реченнях
   instruction: Знайдіть помилку та оберіть правильний варіант.
   items:
@@ -527,8 +515,7 @@ activities:
     - для кібербезпеки
     - на кібербезпеку
     explanation: '«По» — часто русизм. Правильно: проект з кібербезпеки.'
-- id: translate-it
-  type: translate
+- type: translate
   title: Перекладіть IT-терміни
   instruction: Оберіть найкращий переклад.
   items:
@@ -664,16 +651,15 @@ activities:
     - text: захист
       correct: false
     explanation: Шифрування — перетворення даних у нечитабельний формат.
-- id: mark-it-terms
-  type: mark-the-words
+- type: mark-the-words
   title: Позначте IT-терміни
   instruction: Позначте всі IT-терміни у тексті.
-  passage: Українські *розробники* створюють *стартапи* зі *штучним інтелектом* та
-    *хмарними* технологіями. Вони використовують *Python* та *JavaScript* для написання
-    *коду*. *Кіберзахист* став пріоритетом після 2022 року. *Сервери* потрібно регулярно
-    *оновлювати*. *Дані* зберігаються в *базах даних*. Кожен *програміст* повинен
-    вміти працювати з *Git*.
-  correct_words:
+  text: "Українські розробники створюють стартапи зі штучним інтелектом та\n    хмарними\
+    \ технологіями. Вони використовують Python та JavaScript для написання\n    коду.\
+    \ Кіберзахист став пріоритетом після 2022 року. Сервери потрібно регулярно\n \
+    \   оновлювати. Дані зберігаються в базах даних. Кожен програміст повинен\n  \
+    \  вміти працювати з Git.\n"
+  answers:
   - розробники
   - стартапи
   - штучним інтелектом
@@ -725,46 +711,43 @@ activities:
 
     '
   instruction: Заповніть пропуски IT-термінами з контексту.
-  id: it-діалог-розробників
-- id: select-security
-  type: select
+- type: select
   title: Оберіть правила кібербезпеки
   instruction: Позначте всі варіанти, що є хорошими практиками безпеки.
   items:
-  - text: Використовувати складний пароль мінімум 12 символів
-    correct: true
-  - text: Записувати паролі на стікерах біля монітора
-    correct: false
-  - text: Увімкнути двофакторну аутентифікацію
-    correct: true
-  - text: Використовувати один пароль для всіх сервісів
-    correct: false
-  - text: Регулярно оновлювати програмне забезпечення
-    correct: true
-  - text: Відкривати всі вкладення з невідомих листів
-    correct: false
-  - text: Робити резервні копії важливих даних
-    correct: true
-  - text: Підключатися до будь-яких публічних Wi-Fi
-    correct: false
-  - text: Шифрувати конфіденційні файли
-    correct: true
-  - text: Ділитися паролями з колегами
-    correct: false
-  - text: Використовувати VPN для захисту
-    correct: true
-  - text: Ігнорувати оновлення антивіруса
-    correct: false
-  - text: Перевіряти URL перед введенням даних
-    correct: true
-  - text: Встановлювати програми з неперевірених джерел
-    correct: false
-  - text: Виходити з акаунтів на чужих пристроях
-    correct: true
-  - text: Використовувати менеджер паролів
-    correct: true
-- id: fill-in-companies
-  type: fill-in
+  - correct: true
+    question: Використовувати складний пароль мінімум 12 символів
+  - correct: false
+    question: Записувати паролі на стікерах біля монітора
+  - correct: true
+    question: Увімкнути двофакторну аутентифікацію
+  - correct: false
+    question: Використовувати один пароль для всіх сервісів
+  - correct: true
+    question: Регулярно оновлювати програмне забезпечення
+  - correct: false
+    question: Відкривати всі вкладення з невідомих листів
+  - correct: true
+    question: Робити резервні копії важливих даних
+  - correct: false
+    question: Підключатися до будь-яких публічних Wi-Fi
+  - correct: true
+    question: Шифрувати конфіденційні файли
+  - correct: false
+    question: Ділитися паролями з колегами
+  - correct: true
+    question: Використовувати VPN для захисту
+  - correct: false
+    question: Ігнорувати оновлення антивіруса
+  - correct: true
+    question: Перевіряти URL перед введенням даних
+  - correct: false
+    question: Встановлювати програми з неперевірених джерел
+  - correct: true
+    question: Виходити з акаунтів на чужих пристроях
+  - correct: true
+    question: Використовувати менеджер паролів
+- type: fill-in
   title: Заповніть факти про українські IT-компанії
   instruction: Оберіть правильну інформацію про українські технологічні компанії.
   items:
@@ -852,8 +835,7 @@ activities:
     - Королев
     - Патон
     sentence: Віктор ___ заснував Інститут кібернетики в Києві.
-- id: quiz-ai
-  type: quiz
+- type: quiz
   title: 'Тест: штучний інтелект'
   instruction: Оберіть правильну відповідь про ШІ та машинне навчання.
   items:

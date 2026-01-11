@@ -25,6 +25,7 @@
     right: to advise
   - left: пропонувати
     right: to offer
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Фрази для покупок
   items:
@@ -112,6 +113,7 @@
     - більший
     - багато
     - великий
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Smart Shopping
   items:
@@ -236,6 +238,7 @@
       correct: false
     - text: Скільки у вас є решти з гривні?
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Shopping Rules
   items:
@@ -275,6 +278,7 @@
   - statement: «Вартість» means "discount."
     correct: false
     explanation: «Вартість» means "cost/value."
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Positive vs Negative Shopping Responses
   groups:
@@ -294,6 +298,7 @@
     - Дякую, мені це зараз не потрібно.
     - Чи є у вас щось набагато дешевше?
     - Цей колір мені не дуже подобається.
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Shopping Sentences
   items:
@@ -441,6 +446,7 @@
     - гарною
     - ціною
     answer: Це мені ідеально підходить за розміром та за гарною ціною
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Виправте помилки в покупках
   items:
@@ -498,6 +504,7 @@
     - великий
     - багато
     explanation: «Більше подобається» — прислівник порівняння.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Shopping Dialogue at the Center
   passage: '— Добрий день! Чим можу вам сьогодні {допомогти|допомагати}?
@@ -518,15 +525,14 @@
     — Близько трьох тисяч {гривень|гривні}. Сьогодні у нас якраз діє вигідна {знижка|акція}.
 
     — Дякую, я ще трохи {подумаю|думаю} і, можливо, повернуся пізніше.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Comparison Words
   instruction: Click on COMPARISON words.
-  passage: 'Цей телефон кращий, але дорожчий. Є щось дешевше?
-
-    Мені більше подобається синій. Який найдешевший? Яка різниця?
-
-    Цей вигідніший. Якість краща. Порівняйте ціни!'
-  correct_words:
+  text: Цей телефон кращий, але дорожчий. Є щось дешевше? Мені більше подобається
+    синій. Який найдешевший? Яка різниця? Цей вигідніший. Якість краща. Порівняйте
+    ціни!
+  answers:
   - кращий
   - дорожчий
   - дешевше
@@ -587,3 +593,4 @@
       correct: false
     - text: Це занадто дорого.
       correct: false
+  instruction: Оберіть правильний переклад.

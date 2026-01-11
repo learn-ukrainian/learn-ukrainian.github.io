@@ -133,6 +133,7 @@
     - text: чому
       correct: true
     explanation: чому (chomu) = why
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Question Words to Context
   instruction: Match each question word with the context where it's used
@@ -240,6 +241,7 @@
     - Як
     - Де
     - Коли
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Question and Negation Rules
   items:
@@ -282,6 +284,7 @@
   - statement: «Так» means yes and «ні» means no.
     correct: true
     explanation: Correct! Basic yes/no answers.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Frequency Adverbs
   groups:
@@ -303,6 +306,7 @@
     - ніколи не читаю
     - ніколи не пишу
     - ніколи не сплю
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Add Negation
   items:
@@ -390,6 +394,7 @@
     - ні
     - ніколи
     - чи
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: anagram
   title: Question Words
   items:
@@ -417,6 +422,7 @@
     answer: іноді
   - scrambled: н і к о л и
     answer: ніколи
+  instruction: Розташуйте літери у правильному порядку.
 - type: anagram
   title: Frequency Words
   items:
@@ -436,6 +442,7 @@
     answer: щодня
   - scrambled: п р а в д а
     answer: правда
+  instruction: Розташуйте літери у правильному порядку.
 - type: quiz
   title: Negative Sentence Order
   items:
@@ -573,3 +580,4 @@
     - text: вони
       correct: false
     explanation: 'Correct order: Я не хочу чаю'
+  instruction: Оберіть правильну відповідь.

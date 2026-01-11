@@ -1,7 +1,3 @@
-module: 02-academic-style-markers
-level: C1
-version: '2.2'
-activities:
 - type: quiz
   title: Розуміння Тексту 1
   instruction: Дайте відповіді на запитання до тексту про особливості академічного

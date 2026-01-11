@@ -1,7 +1,3 @@
-module: 22-job-interview
-level: C1
-version: '2.0'
-activities:
 - type: match-up
   title: Етапи співбесіди
   instruction: Поєднайте етап співбесіди з його описом.

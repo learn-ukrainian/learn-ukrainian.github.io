@@ -21,6 +21,7 @@
     right: прочитати
   - left: пити
     right: випити
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: Tier 2 Pairs
   pairs:
@@ -44,6 +45,7 @@
     right: полагодити
   - left: чистити
     right: почистити
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: Tier 3 Pairs
   pairs:
@@ -67,6 +69,7 @@
     right: померти
   - left: сідати
     right: сісти
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Transform to Perfective
   items:
@@ -140,6 +143,7 @@
     - готувати
     - заготувати
     - підготувати
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Transform to Imperfective
   items:
@@ -199,6 +203,7 @@
     - запам'ятати
     - пам'ятка
     - забути
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Aspect Selection
   items:
@@ -290,6 +295,7 @@
       correct: false
     - text: Наказ
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: Context Selection
   passage: 'Я вже {прочитав|читав} цю дуже цікаву книгу.
@@ -309,6 +315,7 @@
     Сьогодні зранку я {випив|пив} каву. Потім я {читав|прочитав} статтю одну годину.
     Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо} пізно. Вона {працювала|попрацювала}
     три години і нарешті {закінчила|закінчувала} роботу.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: Aspect Sentences
   items:
@@ -397,6 +404,7 @@
     - у
     - кімнаті
     answer: Вона відкрила ці великі білі двері у кімнаті
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Wrong Aspect
   items:
@@ -454,6 +462,7 @@
     - пила
     - вип'є
     explanation: Sequence of completed actions → both verbs should be perfective.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: group-sort
   title: Formation Pattern
   groups:
@@ -476,3 +485,4 @@
     - вставати → встати
     - відкривати → відкрити
     - --
+  instruction: Розподіліть елементи за групами.

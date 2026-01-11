@@ -23,6 +23,7 @@
     right: щоб не хотіти спати
   - left: Ми прийшли
     right: щоб допомогти вам
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: 'Infinitive or Past? (Concept: Contextual Selection)'
   passage: 'Я хочу, щоб [{ти прийшов|ти прийдеш|ти приходити|ти прийди}:1] на вечірку.
@@ -43,6 +44,7 @@
     ми [{поговорили|говорити|говоримо|поговоримо}:10]. Ми відкрили вікно, щоб у кімнаті
     [{було|бути|буде|є}:11] свіжо. Ви тут для того, щоб [{вивчити|вивчили|вивчаєте|вивчите}:12]
     мову.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: 'Purpose Master (Concept: Logical Deduction)'
   items:
@@ -143,6 +145,7 @@
       correct: false
     - text: 'Найбільш правильно буде сказати таку фразу: «Він працює, як жити» у місті'
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: 'Constructing Purpose (Concept: Syntax Integrity)'
   items:
@@ -215,6 +218,7 @@
     - та
     - майбутнє
     answer: Вони працюють, щоб їхні діти мали кращу освіту та майбутнє
+  instruction: Розташуйте слова у правильному порядку.
 - type: group-sort
   title: 'Same vs Different (Позитивні чи Негативні) (Concept: Semantic Categorization)'
   groups:
@@ -236,6 +240,7 @@
     - Ви хочете, щоб я розумів
     - Я прошу, щоб вони не забули
     - Вони хочуть, щоб діти встигли
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: 'Grammar Check (Concept: Concept Validation)'
   items:
@@ -263,6 +268,7 @@
   - statement: Communicating purpose (**навіщо**) is seen as a sign of logical clarity.
     correct: true
     explanation: It shows intentionality (**цілеспрямованість**).
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: 'The Project (Concept: Contextual Application)'
   passage: 'Complete the story about a team working on a new idea.
@@ -277,14 +283,14 @@
     зробимо все, {щоб|що|як|де} проект став успішним. Хоча це важко, ми впевнені,
     {що|щоб|бо|але} ми встигнемо. Ми тут для того, {щоб|бо|тому|що} змінити нашу компанію
     на краще.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: 'Find the Connectors (Concept: Pattern Recognition)'
-  passage: 'Identify the purpose connectors in the text.
-
-    Я йду, *щоб* поїсти. Ми тут, *для того щоб* допомогти. Вона вчить мову, *щоб*
-    знати її добре. Директор хоче, *щоб* ми працювали. Я відкрию двері, *щоб* увійти.
-    Ми вмикаємо новини, *щоб* чути правду. Він прийшов, *щоб* побачити нас.'
-  correct_words:
+  text: Identify the purpose connectors in the text. Я йду, щоб поїсти. Ми тут, для
+    того щоб допомогти. Вона вчить мову, щоб знати її добре. Директор хоче, щоб ми
+    працювали. Я відкрию двері, щоб увійти. Ми вмикаємо новини, щоб чути правду. Він
+    прийшов, щоб побачити нас.
+  answers:
   - щоб
   - для того щоб
   - щоб
@@ -292,7 +298,7 @@
   - щоб
   - щоб
   - щоб
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: 'Fix the Purpose (Concept: Critical Proofreading)'
   items:
@@ -350,6 +356,7 @@
     - помилка
     - правильно
     explanation: Use past tense «був» after щоб in purpose clauses.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -449,3 +456,4 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть правильний переклад.

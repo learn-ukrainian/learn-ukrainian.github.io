@@ -25,6 +25,7 @@
     right: would go
   - left: купив би
     right: would buy
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Conditional Sentences
   passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. Якби я {мав|маю|матиму|мати}
@@ -41,6 +42,7 @@
 
     Вона {б|буде|була|бути} сказала правду. Я б {хотів|хочу|хочеш|хотіти} подорожувати.
     Якби я {міг|можу|можеш|могти}, я б допоміг вам.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Conditional Mood
   items:
@@ -169,6 +171,7 @@
       correct: false
     - text: Не впливає на тон
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Conditional Rules
   items:
@@ -208,6 +211,7 @@
   - statement: Conditional meaning is past.
     correct: false
     explanation: Conditional meaning is hypothetical present or future!
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Real vs Unreal Conditions
   groups:
@@ -227,6 +231,7 @@
     - Якби я була там разом з вами.
     - Якби ми мали більше вільних грошей.
     - Якби ви бачили цей чудовий фільм.
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Conditional Sentences
   items:
@@ -377,6 +382,7 @@
     - гарячих
     - вареників
     answer: Було б дуже добре поїсти сьогодні смачних гарячих вареників
+  instruction: Розташуйте слова у правильному порядку.
 - type: fill-in
   title: Real or Unreal
   items:
@@ -436,6 +442,7 @@
     - буде
     - була
     - би
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: cloze
   title: Dreams and Wishes
   passage: '— Що ти б зробив, {якби|якщо} виграв у лотерею?
@@ -454,20 +461,13 @@
     — Якби ви {мали|маєте} такий шанс, ви {б|би} змінили своє життя?
 
     — Я думаю, я {б|би} став набагато {щасливим|щасливий} чоловіком.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Conditional
-  passage: 'Click on CONDITIONAL forms.
-
-    *Якби* я *мав* час, я *б* *прочитав*. Це *було б* чудово!
-
-    ---
-
-    *Я б хотів* відвідати Україну. *Якби* *я знав* мову краще! Чи *могли б* ви сказати?
-
-    ---
-
-    Якщо буде сонячно, підемо. *Якби* *я був* на твоєму місці, *я б сказав* правду.'
-  correct_words:
+  text: Click on CONDITIONAL forms. Якби я мав час, я б прочитав. Це було б чудово!
+    --- Я б хотів відвідати Україну. Якби я знав мову краще! Чи могли б ви сказати?
+    --- Якщо буде сонячно, підемо. Якби я був на твоєму місці, я б сказав правду.
+  answers:
   - Якби
   - мав
   - б
@@ -480,7 +480,7 @@
   - Якби
   - я був
   - я б сказав
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: Conditional Translation
   items:
@@ -532,3 +532,4 @@
       correct: false
     - text: Ми підемо разом.
       correct: false
+  instruction: Оберіть правильний переклад.

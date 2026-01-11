@@ -2,8 +2,76 @@
 
 **Status:** CANONICAL - All levels (A1, A2, B1, B2, C1, C2)
 **Purpose:** Single source of truth for activity YAML schemas
+**Last Updated:** January 11, 2026
 
 > ⚠️ **This replaces `ACTIVITY-MARKDOWN-REFERENCE.md`** - All activities MUST be in YAML format.
+
+---
+
+## Critical Rules (READ FIRST)
+
+<critical>
+
+### 1. Root Structure: MUST Be a Bare List
+
+YAML activity files must have a **list at the root level**, NOT wrapped in a dictionary:
+
+```yaml
+# ✅ CORRECT - bare list at root
+- type: quiz
+  title: Quiz title
+  items: [...]
+
+- type: match-up
+  title: Match title
+  pairs: [...]
+```
+
+```yaml
+# ❌ WRONG - dictionary wrapper (causes schema validation failure)
+activities:
+  - type: quiz
+    title: Quiz title
+```
+
+**Why:** The JSON schema validates against a root array. A dictionary wrapper fails validation.
+
+### 2. Property Names Must Match Schema
+
+Use the exact property names defined in `schemas/activities-{level}.schema.json`:
+
+| Activity | Correct Property | Wrong Property |
+|----------|-----------------|----------------|
+| unjumble | `jumbled` | `scrambled`, `words` |
+| fill-in | `sentence` | `text`, `prompt` |
+| mark-the-words | `text` + `answers` | `passage` + `correct_words` |
+| cloze | `passage` | `text` |
+| true-false | `statement` | `sentence`, `text` |
+
+### 3. Mark-the-Words: Use `text` + `answers` Array
+
+```yaml
+# ✅ CORRECT - plain text with answers array
+- type: mark-the-words
+  title: Знайдіть іменники
+  instruction: Клацніть на всі іменники в реченні.
+  text: Гарний день приніс радість у серце.
+  answers:
+    - день
+    - радість
+    - серце
+```
+
+```yaml
+# ❌ WRONG - asterisks in text (was deprecated format)
+- type: mark-the-words
+  text: Гарний *день* приніс *радість* у *серце*.
+  answers: []  # Empty - relies on asterisk extraction
+```
+
+**Note:** The asterisk format was used historically but causes issues. Always use explicit `answers` array.
+
+</critical>
 
 ---
 
@@ -310,7 +378,7 @@ npm run pipeline l2-uk-en b1 52
     - серце
 ```
 
-> ⚠️ **IMPORTANT:** Do NOT use `*asterisks*` in text. Use the `answers` array to specify correct words.
+> **Format:** Plain text without asterisks + explicit `answers` array. The answers must appear exactly as written in the text.
 
 ### select (8+ items for B1)
 
@@ -440,5 +508,110 @@ This allows gradual migration—old modules keep working.
 
 ---
 
-**Last Updated:** 2026-01-06
-**Status:** Canonical (Issue #394)
+## Lessons Learned (January 2026)
+
+### The 711-File Fix (Root Structure Issue)
+
+**Problem:** AI agents generated YAML with `activities:` wrapper instead of bare list:
+```yaml
+# Generated (wrong)
+activities:
+  - type: quiz
+    ...
+```
+
+**Impact:** 711 files failed schema validation. VSCode showed errors, but YAML syntax validators passed because the YAML itself was valid - only the structure violated the JSON schema.
+
+**Root Cause:**
+1. Stage-3 documentation showed examples with wrapper
+2. AI agents followed the documentation literally
+3. Schema expected root array but got root object
+
+**Fix Applied:**
+1. Updated `claude_extensions/stages/stage-3-activities.md` with correct examples
+2. Batch-fixed all 711 files to remove wrapper
+3. Added auto-fix function in `scripts/yaml_schema_validation.py`
+
+**Prevention:**
+- This document now has Critical Rules section at top
+- CLAUDE.md references this as authoritative source
+- Schema validation runs in CI/CD
+
+### Property Name Mismatches
+
+**Problem:** AI agents used intuitive but wrong property names:
+- `words` instead of `jumbled` (unjumble)
+- `passage` instead of `text` (mark-the-words)
+- `scrambled` instead of `jumbled` (unjumble)
+
+**Root Cause:** Documentation used inconsistent examples, and agents filled in "sensible" names.
+
+**Fix:** Added property name table to Critical Rules section. Auto-fix function renames common mistakes.
+
+### Mark-the-Words Asterisk Format
+
+**Problem:** Documentation recommended asterisks in text with empty answers array:
+```yaml
+text: Гарний *день* приніс *радість* у *серце*.
+answers: []
+```
+
+**Issue:** This format required parser-side asterisk extraction, which was fragile and caused MDX build errors when asterisks weren't properly handled.
+
+**Fix:** Updated to explicit format:
+```yaml
+text: Гарний день приніс радість у серце.
+answers: [день, радість, серце]
+```
+
+---
+
+## Best Practices for YAML Sidecar Files
+
+1. **Validate early:** Run `npm run validate:yaml` before committing
+2. **Check schema:** Use VSCode YAML extension with schema association
+3. **Root = list:** Every activity file starts with `- type:` at column 0
+4. **Match property names:** Refer to schema, not intuition
+5. **Quote strings with colons:** `explanation: 'Правильно: так.'`
+6. **Use Ukrainian guillemets:** `«текст»` not `"текст"` in passages
+7. **Test generation:** Run `npm run pipeline` to catch MDX issues
+
+---
+
+## Validation Architecture
+
+### Two-Level Validation System
+
+**Level 1: JSON Schema (Structure)**
+- **Location:** `schemas/activities-{level}.schema.json`
+- **Purpose:** Validates YAML syntax and structure
+- **Checks:** Property names, types, required fields, item structure
+- **Does NOT enforce:** Activity counts, CEFR requirements
+
+**Level 2: Audit Script (Quality)**
+- **Location:** `scripts/audit/config.py` → `LEVEL_CONFIG`
+- **Purpose:** Enforces CEFR pedagogical requirements
+- **Checks:** Min activities, min items per activity, activity variety
+
+**Why Separated?**
+- Schema validation runs in IDE (real-time feedback)
+- YAML files with 1 activity are structurally valid but pedagogically incomplete
+- Audit catches incomplete modules during quality gate, not parse time
+- Allows incremental development (write 1 activity, validate structure, add more)
+
+**Activity Count Requirements (from config.py):**
+| Level | min_activities | Enforcement |
+|-------|----------------|-------------|
+| A1 | 8 | Audit |
+| A2 | 10 | Audit |
+| B1 | 8 | Audit |
+| B2 | 10 | Audit |
+| C1 | 12 | Audit |
+| C2 | 16 | Audit |
+
+These values are enforced by `audit_module.py`, not the JSON schema.
+
+---
+
+**Last Updated:** 2026-01-11
+**Status:** Canonical (Issue #394, updated for YAML lessons learned)

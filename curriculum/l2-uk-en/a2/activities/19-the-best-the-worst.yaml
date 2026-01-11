@@ -25,6 +25,7 @@
     right: найстаріший
   - left: молодший
     right: наймолодший
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Form the Superlative
   passage: 'Це {найкраща|краща|добра|найдобріша} книга. (добрий) Він {найстаріший|старіший|старий|наймолодший}
@@ -42,6 +43,7 @@
     Це {найцікавіший|цікавіший|цікавий|надцікавий} фільм. (цікавий) Це {найважливіше|важливіше|важливе|надважливіше}
     рішення. (важливий) Вона {найталановитіша|талановитіша|талановита|надталановита}
     акторка. (талановитий)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Superlatives
   items:
@@ -177,6 +179,7 @@
       correct: false
     - text: They cannot form a superlative degree in standard Ukrainian
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Superlative Rules
   items:
@@ -216,6 +219,7 @@
   - statement: Different prefixes are used for different adjectives.
     correct: false
     explanation: Always най-, no variation.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Comparative vs Superlative
   groups:
@@ -235,6 +239,7 @@
     - найвищий
     - найдовший
     - найдорожчий
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Superlative Sentences
   items:
@@ -370,6 +375,7 @@
     - українських
     - Карпатах
     answer: Говерла найвища і найпопулярніша гора в українських Карпатах
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Form the Superlative
   items:
@@ -427,6 +433,7 @@
     - довга
     - наддовга
     explanation: Superlative of довга is найдовша.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: World Records
   passage: 'Україна — {найкраща|краща|добра} країна в Європі за територією. {найкращий|кращий|добрий}
@@ -440,20 +447,14 @@
     хлопець у школі! Це був {найкращий|кращий|хороший} день у моєму житті! Я був {найщасливіша|щасливіша|щаслива}
     щаслива людина. Ми бачили {найгарніші|гарніші|гарні} краєвиди і {найвищі|вищі|високі}
     гори.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Superlatives
-  passage: 'Click on SUPERLATIVE forms only.
-
-    Це *найкраща* книга! Він *найстаріший* студент. Україна — *найбільша* країна.
-
-    ---
-
-    Дніпро — *найдовша* річка. Говерла — *найвища* гора. Це *найгірший* день.
-
-    ---
-
-    Вона дуже талановита. Він *найрозумніший*. Це *найдорожчий* телефон.'
-  correct_words:
+  text: Click on SUPERLATIVE forms only. Це найкраща книга! Він найстаріший студент.
+    Україна — найбільша країна. --- Дніпро — найдовша річка. Говерла — найвища гора.
+    Це найгірший день. --- Вона дуже талановита. Він найрозумніший. Це найдорожчий
+    телефон.
+  answers:
   - найкраща
   - найстаріший
   - найбільша
@@ -462,7 +463,7 @@
   - найгірший
   - найрозумніший
   - найдорожчий
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: Superlative Translation
   items:
@@ -514,3 +515,4 @@
       correct: false
     - text: Найвищий гора
       correct: false
+  instruction: Оберіть правильний переклад.

@@ -124,6 +124,7 @@
       correct: false
     - text: doctor
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Sports Vocab
   pairs:
@@ -151,6 +152,7 @@
     right: player
   - left: матч
     right: match
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Sport Instrumental
   items:
@@ -250,6 +252,7 @@
     - тренера
     - тренеру
     explanation: Work as + Instrumental.
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Sports Rules
   items:
@@ -289,6 +292,7 @@
   - statement: Ukrainians like sports.
     correct: true
     explanation: Very much.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Action vs Place
   groups:
@@ -311,6 +315,7 @@
     - 'гравець: People'
     - 'вболівальник: People'
     - 'чемпіон: People'
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Sport Sentences
   items:
@@ -426,6 +431,7 @@
     - зеленому
     - лісі
     answer: Ми повільно бігаємо вранці в зеленому лісі
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Sport Mistakes
   items:
@@ -537,6 +543,7 @@
     - йогу
     - йозі
     explanation: Instrumental.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Football Match
   passage: 'Ми на стадіоні. Сьогодні {матч|урок|обід}.
@@ -566,12 +573,13 @@
     Всі {люди|машини|дерева} аплодували.
 
     Ми пішли додому {щасливі|сумні|хворі}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Sports List
-  passage: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку
-    ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його
-    друг займається *карате*. *Гімнастика* — це дуже красиво.
-  correct_words:
+  text: У школі ми грали в футбол і баскетбол. Мій брат любить теніс. Взимку ми дивимося
+    біатлон. Влітку я люблю плавання. Мій тато дивиться бокс. Його друг займається
+    карате. Гімнастика — це дуже красиво.
+  answers:
   - футбол
   - баскетбол
   - теніс
@@ -580,7 +588,7 @@
   - бокс
   - карате
   - Гімнастика
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Choose Correct Verb
   items:
@@ -716,3 +724,4 @@
     - text: Інший варіант
       correct: false
     explanation: Become (champion).
+  instruction: Оберіть усі правильні відповіді.

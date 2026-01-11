@@ -21,6 +21,7 @@
     right: куртка
   - left: '- сіра'
     right: спідниця
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Clothing by Gender
   groups:
@@ -43,6 +44,7 @@
     - штани
     - джинси
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Узгодження кольорів (Color Agreement)
   items:
@@ -102,6 +104,7 @@
     - білий
     - біла
     - біле
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Опис одягу (Describing Outfits)
   items:
@@ -161,6 +164,7 @@
     - жовтий
     - жовта
     - жовті
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Що це? (What Is It?)
   items:
@@ -244,6 +248,7 @@
       correct: false
     - text: Brown pants
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Який колір? (What Color?)
   items:
@@ -327,6 +332,7 @@
       correct: false
     - text: Біла
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Опис одягу
   items:
@@ -360,6 +366,7 @@
     - куртка
     - його
     answer: Його куртка синя
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Color Rules
   items:
@@ -393,3 +400,4 @@
   - statement: «Темна» is the masculine form.
     correct: false
     explanation: Incorrect! it's feminine
+  instruction: Визначте, чи твердження правильне.

@@ -21,6 +21,7 @@
     right: instead of
   - left: до
     right: to/until
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Case Requirements
   groups:
@@ -45,6 +46,7 @@
   - name: Locative (На чому?)
     items:
     - о/об
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete the Sentence
   items:
@@ -104,6 +106,7 @@
     - для
     - про
     - з
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Logical Prepositions
   items:
@@ -195,6 +198,7 @@
       correct: false
     - text: без
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: Story Gaps
   passage: 'Марія отримала лист {від|для|про} мами.
@@ -220,6 +224,7 @@
     Вона поїде {з|без|для} подругою в гори.
 
     Це буде подорож {без|з|про} планів.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: Logical Sentences
   items:
@@ -303,6 +308,7 @@
     - з
     - лимоном
     answer: Чай замість кави будь ласка і з лимоном
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Wrong Preposition
   items:
@@ -360,6 +366,7 @@
     - Про
     - Від
     explanation: '"For whom?" = Для кого? "After" = Після.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: true-false
   title: Preposition Rules
   items:
@@ -400,6 +407,7 @@
   - statement: «Без» expresses absence.
     correct: true
     explanation: Yes! Кава без цукру = coffee without sugar.
+  instruction: Визначте, чи твердження правильне.
 - type: translate
   title: English to Ukrainian
   items:
@@ -469,6 +477,7 @@
     - text: Кава з молоку.
       correct: false
     explanation: '''З'' (with) + Instrumental ''молоком''.'
+  instruction: Оберіть правильний переклад.
 - type: match-up
   title: Contrast Pairs
   pairs:
@@ -492,6 +501,7 @@
     right: Time (after)
   - left: До вечора
     right: Time (until)
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Pharmacy Dialogue
   passage: 'Мені потрібні ліки {від|для|про} головного болю.
@@ -513,6 +523,7 @@
     Можна взяти чай {замість|з|без} кави?
 
     Так, ось чай {з|без|для} лимоном.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: match-up
   title: Case Endings
   pairs:
@@ -536,3 +547,4 @@
     right: до вечора
   - left: замість чай__
     right: замість чаю
+  instruction: З'єднайте відповідні елементи.

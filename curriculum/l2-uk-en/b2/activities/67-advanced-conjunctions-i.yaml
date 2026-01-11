@@ -1,6 +1,3 @@
-module: b2-67
-level: B2
-activities:
 - type: match-up
   title: Знайдіть логічний зв'язок
   instruction: З'єднайте сполучник із типом зв'язку, який він встановлює.
@@ -21,7 +18,6 @@ activities:
     right: сильна протидія
   - left: дарма що
     right: розмовне протиставлення
-  id: знайдіть-логічний-зв'язок
 - type: quiz
   title: Логіка речення
   instruction: Який сполучник найкраще підходить для поєднання частин речення?
@@ -68,6 +64,7 @@ activities:
     - text: внаслідок
       correct: false
     - text: незважаючи
+      correct: false
     explanation: '''Завдяки'' вказує на позитивний чинник.'
   - question: Він добре розуміє терміни, ___ вчить мову лише рік.
     options:
@@ -78,6 +75,7 @@ activities:
     - text: оскільки
       correct: false
     - text: через те що
+      correct: false
     explanation: '''Хоча'' вказує на обставину-перешкоду.'
   - question: ___ обмеження, проєкт було реалізовано.
     options:
@@ -88,6 +86,7 @@ activities:
     - text: Оскільки
       correct: false
     - text: Бо
+      correct: false
     explanation: '''Незважаючи на'' — офіційний допуск.'
   - question: Поспішаймо, ___ сонце вже сідає.
     options:
@@ -98,6 +97,7 @@ activities:
     - text: хоча
       correct: false
     - text: попри те що
+      correct: false
     explanation: '''Бо'' — для розмовної мови.'
   - question: Ми маємо переглянути угоду, ___ змінилися умови.
     options:
@@ -108,8 +108,8 @@ activities:
     - text: дарма що
       correct: false
     - text: хай
+      correct: false
     explanation: Офіційно-діловий стиль.
-  id: логіка-речення
 - type: group-sort
   title: Причина чи Допуск?
   instruction: Розподіліть сполучники за категоріями (16+ елементів).
@@ -136,7 +136,6 @@ activities:
     - нехай
     - все ж таки
     - проте
-  id: причина-чи-допуск?
 - type: unjumble
   title: Складіть складне речення
   instruction: Відновіть порядок слів у реченнях зі сполучниками (15-20 слів).
@@ -278,7 +277,6 @@ activities:
     - шляху
     - обов'язково
     answer: Хай це буде важко але ми маємо дійти до кінця нашого шляху обов'язково.
-  id: складіть-складне-речення
 - type: cloze
   title: Аналіз стійкості
   instruction: Заповніть пропуски в тексті про Миколаїв (16+ пропусків).
@@ -299,7 +297,6 @@ activities:
     він є серцем нашого півдня.
 
     '
-  id: аналіз-стійкості
 - type: fill-in
   title: Оберіть сполучник
   instruction: Вставте влучний сполучник (10+ елементів).
@@ -374,7 +371,6 @@ activities:
     - тому що
     - завдяки тому що
     - оскільки
-  id: оберіть-сполучник
 - type: error-correction
   title: Виправте логіку
   instruction: Знайдіть і виправте сполучник (8+ айтемів).
@@ -451,7 +447,6 @@ activities:
     - тому що
     - через те що
     explanation: Черствість — перешкода для покупки.
-  id: виправте-логіку
 - type: translate
   title: Переклад сполучників
   instruction: Оберіть правильний відповідник.
@@ -538,7 +533,6 @@ activities:
       correct: false
     - text: завдяки
     explanation: Припущення умови.
-  id: переклад-сполучників
 - type: true-false
   title: Правила вживання
   instruction: Визначте правильність твердження.
@@ -567,7 +561,6 @@ activities:
   - statement: '''Хай'' може виражати допуск.'
     correct: true
     explanation: Так, у значенні припущення.
-  id: правила-вживання
 - type: select
   title: Причинні конструкції
   instruction: Оберіть усі сполучники причини (6+ елементів).
@@ -642,7 +635,6 @@ activities:
       correct: true
     - text: хоча
       correct: false
-  id: причинні-конструкції
 - type: match-up
   title: Стилі та Сполучники
   instruction: З'єднайте сполучник із стилем.
@@ -663,7 +655,6 @@ activities:
     right: аналітичний
   - left: адже
     right: емоційний
-  id: стилі-та-сполучники
 - type: match-up
   title: Логічні ланцюжки
   instruction: Знайдіть продовження.
@@ -684,7 +675,6 @@ activities:
     right: але ми зробимо
   - left: Оскільки ви тут
     right: почнемо урок
-  id: логічні-ланцюжки
 - type: quiz
   title: Пунктуаційний квест
   instruction: Оберіть правильний варіант пунктуації.
@@ -731,6 +721,7 @@ activities:
     - text: ніде не треба
       correct: false
     - text: після 'на'
+      correct: false
     explanation: Це складний сполучник.
   - question: Чи потрібна кома перед 'адже'?
     options:
@@ -741,6 +732,7 @@ activities:
     - text: тільки в кінці
       correct: false
     - text: лише перед дієсловом
+      correct: false
     explanation: Адже вимагає коми перед собою.
   - question: 'Оберіть варіант з ''внаслідок того що'':'
     options:
@@ -762,6 +754,7 @@ activities:
     - text: тільки в середині
       correct: false
     - text: тільки в кінці
+      correct: false
     explanation: Це вставна конструкція або відокремлена обставина.
   - question: 'Оберіть варіант з ''хай'':'
     options:
@@ -774,7 +767,6 @@ activities:
     - text: Ми підемо хай, і дощ.
       correct: false
     explanation: Допустовий зв'язок вимагає коми.
-  id: пунктуаційний-квест
 - type: select
   title: Допустові конструкції
   instruction: Оберіть усі сполучники допуску (6+ елементів).
@@ -847,4 +839,3 @@ activities:
       correct: true
     - text: проста причина
       correct: false
-  id: допустові-конструкції

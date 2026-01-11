@@ -1,7 +1,3 @@
-module: 03-research-verbs
-level: C1
-version: '2.3'
-activities:
 - type: quiz
   title: Розуміння Тексту 1 (Етапи)
   instruction: Дайте відповіді на запитання до тексту про етапи наукового дослідження,

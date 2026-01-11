@@ -1,6 +1,3 @@
-module: b2-62
-level: B2
-activities:
 - type: match-up
   title: Знайдіть місце
   instruction: З'єднайте слово з його точним тлумаченням або сферою.
@@ -21,7 +18,6 @@ activities:
     right: конкретне сучасне місце
   - left: всюди
     right: у кожній точці простору
-  id: знайдіть-місце
 - type: quiz
   title: Орієнтування у просторі
   instruction: Яке слово найкраще вказує на місце у наведеній ситуації?
@@ -48,6 +44,7 @@ activities:
     - text: в даній локації
       correct: false
     - text: в зоні
+      correct: false
     explanation: '''Тутечки'' має пестливий та домашній відтінок.'
   - question: Офіційний представник розповідає про історичні події на конкретному
       полі. Він каже...
@@ -82,6 +79,7 @@ activities:
     - text: межа
       correct: false
     - text: вічність
+      correct: false
     explanation: Локація — сучасний термін для визначеного місця дії.
   - question: 'Ви хочете поїхати відпочити, але ще не обрали конкретне місто. Ви кажете:
       ''Я маю...'''
@@ -93,6 +91,7 @@ activities:
     - text: звідси втекти
       correct: false
     - text: всюди бути
+      correct: false
     explanation: '''Кудись'' вказує на невизначений напрямок.'
   - question: Яке слово описує адміністративну одиницю в Україні (наприклад, Полтавська)?
     options:
@@ -103,6 +102,7 @@ activities:
     - text: куточок
       correct: false
     - text: межа
+      correct: false
     explanation: Область — стандартна назва адміністративної території.
   - question: Ви перебуваєте в центрі подій і хочете, щоб всі підійшли до вас. Ви
       гукаєте...
@@ -114,8 +114,8 @@ activities:
     - text: всі звідси!
       correct: false
     - text: всі там!
+      correct: false
     explanation: '''Сюди'' — напрямок руху до мовця.'
-  id: орієнтування-у-просторі
 - type: group-sort
   title: Статика чи Напрямок?
   instruction: Розподіліть слова за їхньою граматичною функцією (16+ елементів).
@@ -142,7 +142,6 @@ activities:
     - навколо
     - вбік
     - вгору
-  id: статика-чи-напрямок?
 - type: unjumble
   title: Складіть просторове речення
   instruction: Відновіть правильний порядок слів у реченнях про простір (речення 15-20
@@ -306,7 +305,6 @@ activities:
     - історії
     answer: Простір пам'яті у кожному місті вимагає особливого ставлення та дуже точних
       слів для вшанування нашої героїчної історії.
-  id: складіть-просторове-речення
 - type: cloze
   title: Шлях мандрівника
   instruction: Заповніть пропуски в тексті про подорож (16+ пропусків).
@@ -325,7 +323,6 @@ activities:
     знайдена.
 
     '
-  id: шлях-мандрівника
 - type: fill-in
   title: Оберіть масштаб простору
   instruction: Вставте правильне слово на позначення обсягу території (10+ елементів).
@@ -400,7 +397,6 @@ activities:
     - територію
     - зону
     - район
-  id: оберіть-масштаб-простору
 - type: error-correction
   title: Виправте місце
   instruction: Знайдіть і виправте слово, яке логічно або граматично не пасує.
@@ -477,7 +473,6 @@ activities:
     - далеким
     - високим
     explanation: Тісна кімната — антонім неозорого простору.
-  id: виправте-місце
 - type: translate
   title: Переклад простору
   instruction: Оберіть правильний український синонім до англійського слова.
@@ -564,7 +559,6 @@ activities:
       correct: false
     - text: точка
     explanation: Межа неба і землі.
-  id: переклад-простору
 - type: true-false
   title: Нюанси локацій
   instruction: Визначте, чи правильно розрізнено просторові поняття.
@@ -593,7 +587,6 @@ activities:
   - statement: Слово 'ніде' означає повну відсутність місця.
     correct: true
     explanation: Так, це точне значення.
-  id: нюанси-локацій
 - type: select
   title: Всі форми вказівки
   instruction: Оберіть усі слова, що позначають місце або простір (6+ елементів).
@@ -676,7 +669,6 @@ activities:
       correct: true
     - text: маленький
       correct: false
-  id: всі-форми-вказівки
 - type: match-up
   title: Простір та Об'єкти
   instruction: З'єднайте термін із об'єктом.
@@ -697,7 +689,6 @@ activities:
     right: край
   - left: куточок
     right: дім
-  id: простір-та-об'єкти
 - type: match-up
   title: Антоніми простору
   instruction: Знайдіть пари антонімів.
@@ -718,7 +709,6 @@ activities:
     right: вниз
   - left: всередині
     right: зовні
-  id: антоніми-простору
 - type: quiz
   title: Простір пам'яті
   instruction: Про які місця йдеться у модулі?
@@ -732,6 +722,7 @@ activities:
     - text: Гідропарк
       correct: false
     - text: Троєщина
+      correct: false
     explanation: Це трагічна історична локація.
   - question: Яка локація на Волині згадана у тексті?
     options:
@@ -742,6 +733,7 @@ activities:
     - text: Одеса
       correct: false
     - text: Дніпро
+      correct: false
     explanation: Це унікальна природна зона.
   - question: Що вчить нас простір степу?
     options:
@@ -752,6 +744,7 @@ activities:
     - text: будівництва
       correct: false
     - text: бігу
+      correct: false
     explanation: Ландшафт формує світогляд.
   - question: Який термін описує 'місце у мережі'?
     options:
@@ -762,6 +755,7 @@ activities:
     - text: район
       correct: false
     - text: село
+      correct: false
     explanation: Метафора цифрового простору.
   - question: Що означає 'тутешність'?
     options:
@@ -772,6 +766,7 @@ activities:
     - text: бажання бути всюди
       correct: false
     - text: мовчання
+      correct: false
     explanation: Це зв'язок із землею.
   - question: В якому місті є Личаківське кладовище?
     options:
@@ -782,6 +777,7 @@ activities:
     - text: Херсон
       correct: false
     - text: Миколаїв
+      correct: false
     explanation: Визначний простір пам'яті Львова.
   - question: Яку функцію має меморіальна лексика?
     options:
@@ -792,6 +788,7 @@ activities:
     - text: продавати квитки
       correct: false
     - text: міняти назви
+      correct: false
     explanation: Точні слова зберігають пам'ять.
   - question: Що таке 'інклюзивне місто'?
     options:
@@ -802,8 +799,8 @@ activities:
     - text: без парків
       correct: false
     - text: порожнє
+      correct: false
     explanation: Простір рівних можливостей.
-  id: простір-пам'яті
 - type: select
   title: Типи територій
   instruction: Оберіть слова для масштабних територій (6+ елементів).
@@ -872,4 +869,3 @@ activities:
       correct: true
     - text: дика
       correct: false
-  id: типи-територій

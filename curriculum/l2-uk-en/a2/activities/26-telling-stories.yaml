@@ -25,6 +25,7 @@
     right: Barely
   - left: Раніше
     right: Before | Earlier
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Complete the Story
   passage: '{Раніше|Потім|Раптом|Нарешті} я не любив футбол, але тепер люблю. {Щойно|Давно|Колись|Завжди}
@@ -39,6 +40,7 @@
 
     {Згодом|Спочатку|Раніше|Щойно} він став відомим актором. Я {ледве|дуже|так|як}
     тебе не впізнав! Ми {тільки-но|довго|раніше|потім} прийшли.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Understand the Sequence
   items:
@@ -167,6 +169,7 @@
       correct: false
     - text: Відсутність будь-якої дії в минулому
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Time Categories
   groups:
@@ -196,6 +199,7 @@
     - Нарешті
     - Врешті-решт
     - У кінці
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: True or False?
   items:
@@ -235,6 +239,7 @@
   - statement: Storytelling in Ukrainian requires perfective/imperfective mastery.
     correct: true
     explanation: Aspect is crucial for sequencing.
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: The Lost Keys in the City
   passage: '{Спочатку|Нарешті} я прийшов додому після роботи. Я хотів відкрити двері,
@@ -246,20 +251,14 @@
     кафе {вже|ще} зачинялося. Я {ледве|дуже} встиг зайти всередину до офіціанта. Він
     усміхнувся і відразу віддав мені мої ключі. {Нарешті|Раптом}, я був удома і відпочивав.
     {Врешті-решт|Спочатку} я тепер завжди перевіряю ключі!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Identify Connectors
-  passage: '*Одного разу* ми пішли в ліс. *Спочатку* світило сонце. *Але* *раптом*
-    почався дощ. Ми *відразу* побігли додому. *Нарешті* ми були в теплі. *Згодом*
-    ми пили чай.
-
-    ---
-
-    *Раніше* я не вмів плавати. *Потім* я пішов у басейн. *Врешті-решт* я навчився.
-
-    ---
-
-    *Щойно* я зайшов, як телефон задзвонив. Це було *несподівано*.'
-  correct_words:
+  text: Одного разу ми пішли в ліс. Спочатку світило сонце. Але раптом почався дощ.
+    Ми відразу побігли додому. Нарешті ми були в теплі. Згодом ми пили чай. --- Раніше
+    я не вмів плавати. Потім я пішов у басейн. Врешті-решт я навчився. --- Щойно я
+    зайшов, як телефон задзвонив. Це було несподівано.
+  answers:
   - Одного разу
   - Спочатку
   - Але
@@ -272,7 +271,7 @@
   - Врешті-решт
   - Щойно
   - несподівано
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: Fix the Story Flow
   items:
@@ -330,6 +329,7 @@
     - ледве
     - раніше
     explanation: «Відразу» means immediately/at once. «Несподівано» implies surprise.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: English to Ukrainian
   items:
@@ -453,6 +453,7 @@
       correct: false
     - text: Згодом я жив у Києві.
       correct: false
+  instruction: Оберіть правильний переклад.
 - type: translate
   title: Narrative Translation
   items:
@@ -504,3 +505,4 @@
       correct: false
     - text: І вони будуть жити щасливо.
       correct: false
+  instruction: Оберіть правильний переклад.

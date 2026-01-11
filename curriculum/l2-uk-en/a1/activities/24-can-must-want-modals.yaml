@@ -21,6 +21,7 @@
     right: should, ought to
   - left: '- варто'
     right: worth, advisable
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Modal Categories
   groups:
@@ -43,6 +44,7 @@
     - не можна
     - заборонено
     - --
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: могти Conjugation
   items:
@@ -102,6 +104,7 @@
     - можеш
     - може
     - можемо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Obligation Words
   items:
@@ -161,6 +164,7 @@
     - Можна
     - Дозволено
     - Вмію
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Ability or Skill?
   items:
@@ -245,6 +249,7 @@
       correct: false
     - text: Obligation
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Modal Meanings
   items:
@@ -328,6 +333,7 @@
       correct: false
     - text: One is forbidden to rest.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: Modal Sentences
   items:
@@ -365,6 +371,7 @@
     - вона
     - почати
     answer: Вона готова почати
+  instruction: Розташуйте слова у правильному порядку.
 - type: true-false
   title: Modal Understanding
   items:
@@ -397,3 +404,4 @@
   - statement: «Не можна» means "you can".
     correct: false
     explanation: Incorrect! it means "not allowed"
+  instruction: Визначте, чи твердження правильне.

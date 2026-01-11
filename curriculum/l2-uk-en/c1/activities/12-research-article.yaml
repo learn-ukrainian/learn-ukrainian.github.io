@@ -1,6 +1,3 @@
-module: 12-research-article
-level: C1
-activities:
 - type: match-up
   title: Архітектура статті (IMRaD)
   pairs:

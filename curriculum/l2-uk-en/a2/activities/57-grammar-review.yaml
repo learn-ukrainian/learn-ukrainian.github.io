@@ -127,6 +127,7 @@
       correct: false
     - text: Dative (другу)
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Case Functions
   pairs:
@@ -154,6 +155,7 @@
     right: Орудний (Транспорт)
   - left: Мрію про відпустку
     right: Місцевий (Об'єкт думки)
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Case Challenge
   passage: 'Я йду в {парк|парку|парком|паркі}_. Я гуляю в {парку|парк|парком|парка}_.
@@ -170,6 +172,7 @@
 
     Це подарунок для {сестри|сестрі|сестру|сестра}_. Я хочу стати {художником|художник|художника|художнику}_.
     Привіт, {Іване|Іван|Івана|Іваном}_!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: true-false
   title: Grammar Truths
   items:
@@ -209,6 +212,7 @@
   - statement: «У мене є» uses Genitive «мене».
     correct: true
     explanation: Yes.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Aspect Sort
   groups:
@@ -231,6 +235,7 @@
     - 'якщо: Connectors'
     - 'коли: Connectors'
     - 'щоб: Connectors'
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Sentence Builder
   items:
@@ -354,6 +359,7 @@
     - зимові
     - шкарпетки
     answer: Мамо скажи де лежать мої теплі зимові шкарпетки
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Letter
   items:
@@ -474,6 +480,7 @@
     - ручку
     - ручки
     explanation: Instrumental.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Grammar Fill
   passage: 'Я {новий|нова|нове} студент. Я {навчаюся|навчаюсь|вчу} в університеті.
@@ -497,12 +504,12 @@
     Я {думаю|знаю|бачу}, що це важливо.
 
     Ми хочемо {побачити|бачити|дивитися} світ.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Identification
-  passage: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на
-    роботу. Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю.
-    Я швидко *заснув*.
-  correct_words:
+  text: Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я
+    зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.
+  answers:
   - встав
   - поснідав
   - випив
@@ -511,7 +518,7 @@
   - купив
   - приготував
   - заснув
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Case Detector
   items:
@@ -647,3 +654,4 @@
     - text: Інший варіант
       correct: false
     explanation: See mom.
+  instruction: Оберіть усі правильні відповіді.

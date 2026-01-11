@@ -1,6 +1,3 @@
-module: b2-70
-level: B2
-activities:
 - type: match-up
   title: Граматичний Checkpoint
   instruction: З'єднайте категорію з прикладом.
@@ -21,7 +18,6 @@ activities:
     right: виконати завдання
   - left: Парцеляція
     right: Він прийшов. Один.
-  id: граматичний-checkpoint
 - type: quiz
   title: Фразеологічна перевірка
   instruction: Оберіть правильне значення.
@@ -46,6 +42,7 @@ activities:
     - text: три рази заспівай
       correct: false
     - text: нічого не роби
+      correct: false
     explanation: Про виваженість.
   - question: Яка ідіома про лінощі?
     options:
@@ -56,6 +53,7 @@ activities:
     - text: звертає гори
       correct: false
     - text: тягне лямку
+      correct: false
     explanation: Бити байдики — лінуватися.
   - question: Що означає 'накивати п'ятами'?
     options:
@@ -66,6 +64,7 @@ activities:
     - text: масаж
       correct: false
     - text: стояти
+      correct: false
     explanation: Про втечу.
   - question: Як сказати про розумну людину?
     options:
@@ -76,6 +75,7 @@ activities:
     - text: пуста макітра
       correct: false
     - text: вітер у голові
+      correct: false
     explanation: Комплімент розуму.
   - question: Що означає 'втерти носа'?
     options:
@@ -86,6 +86,7 @@ activities:
     - text: заховати товар
       correct: false
     - text: вибачитися
+      correct: false
     explanation: Про перемогу.
   - question: Що означає 'не опускати рук'?
     options:
@@ -96,6 +97,7 @@ activities:
     - text: вправи
       correct: false
     - text: відмовитися
+      correct: false
     explanation: Стійкість.
   - question: Що означає 'купити кота в мішку'?
     options:
@@ -106,8 +108,8 @@ activities:
     - text: подарунок
       correct: false
     - text: тварина
+      correct: false
     explanation: Про необдуманість.
-  id: фразеологічна-перевірка
 - type: group-sort
   title: Синтаксичний лабіринт
   instruction: Розподіліть за типом.
@@ -134,7 +136,6 @@ activities:
     - Сьогодні тепло.
     - Тихо довкола.
     - Ранок був туманним.
-  id: синтаксичний-лабіринт
 - type: unjumble
   title: Складіть фінальну тезу
   instruction: Відновіть порядок слів (15-20 слів).
@@ -286,7 +287,6 @@ activities:
     - знання
     answer: Хоча на шляху будуть помилки не опускайте рук бо саме через них проходить
       дорога до знання.
-  id: складіть-фінальну-тезу
 - type: cloze
   title: Лист до фахівця
   instruction: Заповніть пропуски (16+).
@@ -306,7 +306,6 @@ activities:
     рух {вперед|назад|вбік|вперед}!
 
     '
-  id: лист-до-фахівця
 - type: fill-in
   title: Трансформація чисел
   instruction: Напишіть словами (10+).
@@ -381,7 +380,6 @@ activities:
     - чотирьох
     - чотирьом
     - чотирма
-  id: трансформація-чисел
 - type: error-correction
   title: Виправте B2 помилки
   instruction: Знайдіть і виправте (8+).
@@ -458,7 +456,6 @@ activities:
     - десять годин
     - біля десяти годин
     explanation: Час — о котрій.
-  id: виправте-b2-помилки
 - type: translate
   title: Фінальний переклад
   instruction: Оберіть влучний варіант.
@@ -544,7 +541,6 @@ activities:
       correct: false
     - text: жодні переконання
     explanation: Високий рівень абстракції.
-  id: фінальний-переклад
 - type: true-false
   title: Вердикт фахівця
   instruction: Визначте правильність.
@@ -573,7 +569,6 @@ activities:
   - statement: '''На фінішну пряму'' — початок проєкту.'
     correct: false
     explanation: Ні, завершення.
-  id: вердикт-фахівця
 - type: select
   title: Арсенал B2.2
   instruction: Оберіть ознаки рівня B2.2 (6+).
@@ -646,7 +641,6 @@ activities:
       correct: true
     - text: тільки прості
       correct: false
-  id: арсенал-b2.2
 - type: match-up
   title: Синонімічний Checkpoint
   instruction: З'єднайте з синонімом.
@@ -667,7 +661,6 @@ activities:
     right: бути
   - left: виявлятися
     right: з'ясовуватися
-  id: синонімічний-checkpoint
 - type: match-up
   title: Регістри та Ситуації
   instruction: З'єднайте речення з контекстом.
@@ -688,7 +681,6 @@ activities:
     right: Робота
   - left: Хай це буде секретом.
     right: Приватно
-  id: регістри-та-ситуації
 - type: quiz
   title: Фінальний вердикт
   instruction: Проаналізуйте прогрес.
@@ -724,6 +716,7 @@ activities:
     - text: Львів
       correct: false
     - text: Полтава
+      correct: false
     explanation: У вправах згадувався Харків.
   - question: Що далі після Checkpoint?
     options:
@@ -734,6 +727,7 @@ activities:
     - text: відпустка
       correct: false
     - text: фізика
+      correct: false
     explanation: Наступна фаза — історія.
   - question: Як автор називає мову?
     options:
@@ -744,6 +738,7 @@ activities:
     - text: дивина
       correct: false
     - text: пісня
+      correct: false
     explanation: Мова — динамічний простір.
   - question: Який числівник був як приклад?
     options:
@@ -754,6 +749,7 @@ activities:
     - text: десять
       correct: false
     - text: мільйон
+      correct: false
     explanation: Складна форма Орудного.
   - question: Що означає 'людина чину'?
     options:
@@ -764,6 +760,7 @@ activities:
     - text: бути старим
       correct: false
     - text: уряд
+      correct: false
     explanation: Активна позиція.
   - question: Яку пораду дає автор?
     options:
@@ -774,8 +771,8 @@ activities:
     - text: нічого не робити
       correct: false
     - text: одне слово
+      correct: false
     explanation: Активна практика.
-  id: фінальний-вердикт
 - type: select
   title: Самодіагностика
   instruction: Оберіть пункти успіху (6+).
@@ -848,7 +845,6 @@ activities:
       correct: true
     - text: ціна
       correct: false
-  id: самодіагностика
 - type: quiz
   title: Фінальний синтаксис
   instruction: Оберіть правильну структуру речення.
@@ -862,6 +858,7 @@ activities:
     - text: Він, переміг, всупереч усьому.
       correct: false
     - text: Він переміг. Всупереч. Усьому назавжди.
+      correct: false
     explanation: Парцеляція — розчленування для акценту.
   - question: Який сполучник найкраще підходить для офіційного обґрунтування?
     options:
@@ -872,6 +869,7 @@ activities:
     - text: тому що
       correct: false
     - text: хай
+      correct: false
     explanation: Оскільки — стандарт ділового стилю.
   - question: 'Оберіть безособове речення:'
     options:
@@ -882,6 +880,7 @@ activities:
     - text: Він реалізував проєкт.
       correct: false
     - text: Команда реалізувала проєкт.
+      correct: false
     explanation: Безособові речення фокусуються на дії/результаті.
   - question: Як правильно сказати про гіпотетичне минуле?
     options:
@@ -892,6 +891,7 @@ activities:
     - text: Якби я вчу, я допоміг би.
       correct: false
     - text: Якщо я буду знати, я допоможу.
+      correct: false
     explanation: Якби + минулий час + б.
   - question: Яка конструкція вказує на точну межу часу?
     options:
@@ -902,6 +902,7 @@ activities:
     - text: щойно почали
       correct: false
     - text: відколи прийшли
+      correct: false
     explanation: Доки вказує на часовий кордон.
   - question: 'Оберіть варіант із правильним відмінюванням ''дев''ятсот'' у Р.в.:'
     options:
@@ -912,6 +913,7 @@ activities:
     - text: дев'ятиста
       correct: false
     - text: дев'ятсотами
+      correct: false
     explanation: 'Відмінюються обидві частини: дев''яти + сот.'
   - question: Яка ідіома пасує для завершальної стадії роботи?
     options:
@@ -922,6 +924,7 @@ activities:
     - text: бити байдики
       correct: false
     - text: тягнути кота за хвоста
+      correct: false
     explanation: Вихід на фінішну пряму — це фінал.
   - question: Що в українській мові означає 'сродна праця'?
     options:
@@ -932,5 +935,5 @@ activities:
     - text: робота лише за гроші
       correct: false
     - text: відсутність роботи
+      correct: false
     explanation: Концепція Сковороди про щастя у праці.
-  id: фінальний-синтаксис

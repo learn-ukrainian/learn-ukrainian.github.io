@@ -25,6 +25,7 @@
     right: Вивантажити з авто
   - left: Вписати слово
     right: Виписати слово
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: 'Entry or Exit? (Concept: Contextual Logic)'
   passage: 'Машина [{в|ви|за|при}:1]їхала в гараж дуже повільно, щоб не вдарити стіну.
@@ -45,6 +46,7 @@
     Автобус [{ви|в|за|при}:10]їхав зі станції рівно о восьмій ранку. Діти [{у|ви|пере|за}:11]бігли
     в парк і почали гратися. Вона [{ви|у|під|за}:12]йняла книгу з полиці і почала
     читати.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: 'The Prefix Master (Concept: Morphological Awareness)'
   items:
@@ -134,6 +136,7 @@
       correct: false
     - text: Ви будете стояти точно між великими дверима і стіною кімнати
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: unjumble
   title: 'Building Complex Routes (Concept: Syntax Integrity)'
   items:
@@ -195,6 +198,7 @@
     - годині
     - вечора
     answer: Водій виїхав з парковки о шостій годині вечора
+  instruction: Розташуйте слова у правильному порядку.
 - type: group-sort
   title: 'Into vs. Out of (Concept: Directional Categorization)'
   groups:
@@ -214,6 +218,7 @@
     - Вилити воду на землю
     - Виїхати з тупика
     - Вийти з вагона
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: 'Directional Logic (Concept: Concept Validation)'
   items:
@@ -241,6 +246,7 @@
   - statement: Префікси в- та ви- завжди роблять дієслово доконаним за видом.
     correct: true
     explanation: Так, префіксація є головним способом творення доконаного виду.
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: 'The Museum Visit (Concept: Narrative Coherence)'
   passage: 'Complete the narrative about a complex visit to the local museum by choosing
@@ -257,6 +263,7 @@
     вулиці ми {зайшли|вийшли|ввійшли|прийшли} в парк, щоб {подихати|вдихнути|видихнути|дихати}
     свіжим повітрям. Ми {сіли|ввійшли|виїхали|прийшли} в машину і доїхали додому.
     Вечір {вийшов|увійшов|зайшов|прийшов} вдалим.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: select
   title: 'Prefix Selection (Concept: Morphological Choice)'
   items:
@@ -341,6 +348,7 @@
       correct: false
     - text: Неправильно
       correct: false
+  instruction: Оберіть усі правильні відповіді.
 - type: error-correction
   title: 'Directional Failures (Concept: Critical Proofreading)'
   items:
@@ -404,6 +412,7 @@
     - правильно
     explanation: Arrival from another city is \«приїхати.\» \«Під'їхати\» is for short-range
       approach.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: Motion Prefix Translation
   items:
@@ -527,3 +536,4 @@
     - text: Водій приїхав з парковки.
       correct: false
     source: The driver left the parking lot.
+  instruction: Оберіть правильний переклад.

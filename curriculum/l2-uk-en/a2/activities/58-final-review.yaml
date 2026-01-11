@@ -81,6 +81,7 @@
       correct: false
     - text: В офісі
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: Reading Comprehension (Text 2 & 3)
   items:
@@ -164,6 +165,7 @@
       correct: false
     - text: Французький суп
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Listening Check
   items:
@@ -191,6 +193,7 @@
   - statement: Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.
     correct: false
     explanation: At school (*вчилися в школі*). They are childhood acquaintances.
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: Grammar Final Test
   passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. Я вранці ніколи не
@@ -207,6 +210,7 @@
 
     Він став успішним {директором|директор|директора|директору}_. Я дуже дякую {вам|вас|ви|вами}_.
     Наша машина стоїть біля {будинку|будинок|будинком|будинка}_.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: group-sort
   title: Skill Sort
   groups:
@@ -230,6 +234,7 @@
     - 'чути музику: Listening'
     - 'бачити рекламу: Reading'
     - 'надсилати смс: Writing'
+  instruction: Розподіліть елементи за групами.
 - type: match-up
   title: Definitions
   pairs:
@@ -257,6 +262,7 @@
     right: To remember
   - left: Розуміти
     right: To understand
+  instruction: З'єднайте відповідні елементи.
 - type: unjumble
   title: Final Sentences
   items:
@@ -384,12 +390,12 @@
     - вже
     - скоро
     answer: На мою власну думку все обов'язково буде дуже добре вже скоро
+  instruction: Розташуйте слова у правильному порядку.
 - type: mark-the-words
   title: Final Check
-  passage: '*Україна* — це країна. *Київ* — це столиця. *Дніпро* — це річка. *Люди*
-    люблять *свободу*. *Студент* читає книгу. *Лікар* лікує хворих. *Мама* готує обід.
-    *Сонце* світить. *Дощ* іде.'
-  correct_words:
+  text: Україна — це країна. Київ — це столиця. Дніпро — це річка. Люди люблять свободу.
+    Студент читає книгу. Лікар лікує хворих. Мама готує обід. Сонце світить. Дощ іде.
+  answers:
   - Україна
   - Київ
   - Дніпро
@@ -400,7 +406,7 @@
   - Мама
   - Сонце
   - Дощ
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Fluency Test
   items:
@@ -524,6 +530,7 @@
       correct: false
     - text: Можливо пізніше.
       correct: false
+  instruction: Оберіть усі правильні відповіді.
 - type: translate
   title: Final Translation Challenge
   items:
@@ -575,3 +582,4 @@
       correct: false
     - text: Вона сказати, що...
       correct: false
+  instruction: Оберіть правильний переклад.

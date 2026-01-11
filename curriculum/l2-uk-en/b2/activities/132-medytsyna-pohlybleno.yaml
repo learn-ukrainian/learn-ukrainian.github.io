@@ -1,9 +1,4 @@
-module: 132-medytsyna-pohlybleno
-level: B2
-version: '2.0'
-activities:
-- id: match-specialists
-  type: match-up
+- type: match-up
   title: 'Знайдіть відповідність: спеціалісти та сфери'
   instruction: Поєднайте лікаря-спеціаліста з його сферою компетенції.
   pairs:
@@ -31,8 +26,7 @@ activities:
     right: опорно-руховий апарат
   - left: уролог
     right: сечовидільна система
-- id: fill-in-symptoms
-  type: fill-in
+- type: fill-in
   title: 'Заповніть пропуски: на прийомі у лікаря'
   instruction: Оберіть правильне слово для кожного пропуску в діалозі.
   items:
@@ -120,8 +114,7 @@ activities:
     - пане
     - вам
     sentence: 'Пацієнт: Дякую, ___.'
-- id: quiz-medical-terms
-  type: quiz
+- type: quiz
   title: 'Тест: медична термінологія'
   instruction: Оберіть правильну відповідь на кожне запитання про медичну термінологію.
   items:
@@ -264,8 +257,7 @@ activities:
       correct: false
     explanation: Щеплення (вакцинація) — введення вакцини для формування імунітету
       проти певної хвороби.
-- id: true-false-medical
-  type: true-false
+- type: true-false
   title: 'Правда чи ні: факти про медицину в Україні'
   instruction: Визначте, чи правдиве кожне твердження.
   items:
@@ -311,8 +303,7 @@ activities:
   - statement: Профілактика означає лікування вже наявної хвороби.
     correct: false
     explanation: Ні, профілактика — це запобігання хворобам, а не їх лікування.
-- id: group-sort-registers
-  type: group-sort
+- type: group-sort
   title: Розподіліть фрази за регістрами
   instruction: Визначте, до якого регістру належить кожна медична фраза.
   groups:
@@ -340,8 +331,7 @@ activities:
     - Лікар щось виписав, треба в аптеку.
     - Здається, у мене температура підскочила.
     - Піду завтра до свого терапевта.
-- id: unjumble-medical
-  type: unjumble
+- type: unjumble
   title: Складіть речення правильно
   instruction: Розташуйте слова у правильному порядку, щоб утворити речення.
   items:
@@ -412,8 +402,7 @@ activities:
     - до
     - ось
     - спеціаліста
-- id: cloze-medical-text
-  type: cloze
+- type: cloze
   title: 'Заповніть текст: візит до лікаря'
   instruction: Заповніть пропуски у тексті, обравши правильне слово з варіантів.
   passage: Коли ви відчуваєте перші {симптоми|ознаки|біль} хвороби, варто одразу звернутися
@@ -427,8 +416,7 @@ activities:
     Після {одужання|лікування|госпіталізації} рекомендовано пройти {реабілітацію|профілактику|діагностику}.
     Не забувайте про регулярні {огляди|щеплення|аналізи} для {профілактики|лікування|діагностики}
     захворювань.
-- id: error-correction-medical
-  type: error-correction
+- type: error-correction
   title: Виправте помилки в медичних реченнях
   instruction: Знайдіть помилку в кожному реченні та оберіть правильний варіант.
   items:
@@ -541,8 +529,7 @@ activities:
     - консультування
     - консульту
     explanation: Для (чого?) консультації — родовий відмінок.
-- id: translate-medical
-  type: translate
+- type: translate
   title: Перекладіть медичні фрази
   instruction: Оберіть найкращий переклад англійської фрази українською.
   items:
@@ -678,17 +665,17 @@ activities:
     - text: Одна таблетка два рази щодня.
       correct: false
     explanation: «Приймайте по одній таблетці двічі на день» — стандартна інструкція.
-- id: mark-medical-terms
-  type: mark-the-words
+- type: mark-the-words
   title: Позначте медичні терміни
   instruction: Позначте всі медичні терміни у тексті.
-  passage: 'Пацієнт звернувся до *терапевта* зі *скаргами* на головний біль та *температуру*.
-    Після *огляду* лікар призначив загальний *аналіз* крові та *рентген* грудної клітки.
-    За результатами обстеження було встановлено *діагноз* — гостра респіраторна *інфекція*.
-    *Терапевт* виписав *рецепт* на противірусні *ліки* та рекомендував постільний
-    режим протягом тижня. Через п''ять днів пацієнт відзначив покращення стану: *температура*
-    нормалізувалася, *симптоми* зменшилися. Контрольний *огляд* підтвердив одужання.'
-  correct_words:
+  text: "Пацієнт звернувся до терапевта зі скаргами на головний біль та температуру.\n\
+    \    Після огляду лікар призначив загальний аналіз крові та рентген грудної клітки.\n\
+    \    За результатами обстеження було встановлено діагноз — гостра респіраторна\
+    \ інфекція.\n    Терапевт виписав рецепт на противірусні ліки та рекомендував\
+    \ постільний\n    режим протягом тижня. Через п''ять днів пацієнт відзначив покращення\
+    \ стану: температура\n    нормалізувалася, симптоми зменшилися. Контрольний огляд\
+    \ підтвердив одужання.\n"
+  answers:
   - терапевта
   - скаргами
   - температуру
@@ -703,8 +690,7 @@ activities:
   - температура
   - симптоми
   - огляд
-- id: cloze-medical-dialogue
-  type: cloze
+- type: cloze
   title: На прийомі у лікаря
   instruction: Заповніть пропуски відповідними медичними термінами та виразами.
   passage: '— Добрий день! Сідайте, будь ласка. Що вас {турбує|болить|хвилює}?
@@ -756,45 +742,43 @@ activities:
     — Одужуйте! Якщо стане гірше — телефонуйте або приїжджайте.
 
     '
-- id: select-specialists
-  type: select
+- type: select
   title: Оберіть усіх лікарів, до яких може направити терапевт
   instruction: Позначте всі варіанти, які є вузькими спеціалістами.
   items:
-  - text: кардіолог
-    correct: true
-  - text: медсестра
-    correct: false
-  - text: пульмонолог
-    correct: true
-  - text: фармацевт
-    correct: false
-  - text: ендокринолог
-    correct: true
-  - text: санітар
-    correct: false
-  - text: гастроентеролог
-    correct: true
-  - text: реєстратор
-    correct: false
-  - text: невролог
-    correct: true
-  - text: лаборант
-    correct: false
-  - text: офтальмолог
-    correct: true
-  - text: дерматолог
-    correct: true
-  - text: хірург
-    correct: true
-  - text: отоларинголог
-    correct: true
-  - text: психіатр
-    correct: true
-  - text: уролог
-    correct: true
-- id: fill-in-prescription
-  type: fill-in
+  - correct: true
+    question: кардіолог
+  - correct: false
+    question: медсестра
+  - correct: true
+    question: пульмонолог
+  - correct: false
+    question: фармацевт
+  - correct: true
+    question: ендокринолог
+  - correct: false
+    question: санітар
+  - correct: true
+    question: гастроентеролог
+  - correct: false
+    question: реєстратор
+  - correct: true
+    question: невролог
+  - correct: false
+    question: лаборант
+  - correct: true
+    question: офтальмолог
+  - correct: true
+    question: дерматолог
+  - correct: true
+    question: хірург
+  - correct: true
+    question: отоларинголог
+  - correct: true
+    question: психіатр
+  - correct: true
+    question: уролог
+- type: fill-in
   title: Заповніть рецепт
   instruction: Оберіть правильні слова для оформлення рецепту.
   items:
@@ -882,8 +866,7 @@ activities:
     - чинності
     - дії
     sentence: Термін ___ — до 12.2026
-- id: quiz-emergency
-  type: quiz
+- type: quiz
   title: 'Тест: екстрені ситуації'
   instruction: Оберіть правильну дію в кожній екстреній медичній ситуації.
   items:

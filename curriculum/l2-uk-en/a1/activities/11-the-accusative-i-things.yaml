@@ -133,6 +133,7 @@
     - text: вікном
       correct: false
     explanation: Neuter stays the same
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Vocabulary Practice
   pairs:
@@ -152,6 +153,7 @@
     right: to open
   - left: закривати
     right: to close
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Transform to Accusative
   items:
@@ -239,6 +241,7 @@
     - коробку
     - коробки
     - коробці
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Grammar Rules
   items:
@@ -278,6 +281,7 @@
   - statement: All Ukrainian nouns change in accusative.
     correct: false
     explanation: Incorrect! Only feminine -а/-я change
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Gender and Accusative Changes
   groups:
@@ -297,6 +301,7 @@
     - документ → документ
     - вікно → вікно
     - море → море
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -384,6 +389,7 @@
     - береш
     - бере
     - беремо
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Word Order Practice
   items:
@@ -519,6 +525,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми відправляємо посилку сьогодні'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Verb + Object Pairs
   pairs:
@@ -540,6 +547,7 @@
     right: подарунок
   - left: нести
     right: сумку
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Longer Sentence Order
   items:
@@ -653,3 +661,4 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він обережно відкриває велику коробку'
+  instruction: Оберіть правильну відповідь.

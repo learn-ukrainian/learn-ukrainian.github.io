@@ -1,7 +1,3 @@
-module: 10-counterarguments
-level: C1
-version: '2.0'
-activities:
 - type: quiz
   title: Де тут контраргумент?
   instruction: Знайдіть речення, яке виражає протилежну думку.

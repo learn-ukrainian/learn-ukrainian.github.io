@@ -1,4 +1,3 @@
-activities:
 - type: quiz
   title: Дієслова думки — вибір правильного слова
   items:
@@ -6,114 +5,156 @@ activities:
       формальному контексті?
     options:
     - text: гадати
+      correct: false
     - text: вважати
       correct: true
     - text: думати
+      correct: false
     - text: припускати
+      correct: false
     explanation: Вважати — формальніше, виражає обдумане переконання.
   - question: Яке дієслово виражає найменший рівень впевненості серед дієслів думки?
     options:
     - text: вважати
+      correct: false
     - text: думати
+      correct: false
     - text: гадати
+      correct: false
     - text: припускати
       correct: true
     explanation: Припускати — найменш впевнено, це гіпотеза.
   - question: Яке дієслово є найпоширенішим та нейтральним для вираження думки?
     options:
     - text: вважати
+      correct: false
     - text: думати
       correct: true
     - text: гадати
+      correct: false
     - text: припускати
+      correct: false
     explanation: Думати — нейтральне, найпоширеніше дієслово.
   - question: Яке слово означає абсолютну впевненість у своїй позиції?
     options:
     - text: сумніватися
+      correct: false
     - text: гадати
+      correct: false
     - text: переконаний
       correct: true
     - text: припускати
+      correct: false
     explanation: Переконаний виражає абсолютну впевненість.
   - question: Яке слово використовується, коли ви не впевнені в правильності чогось?
     options:
     - text: впевнений
+      correct: false
     - text: переконаний
+      correct: false
     - text: сумніватися
       correct: true
     - text: погоджуватися
+      correct: false
     explanation: Сумніватися означає невпевненість.
   - question: Яке дієслово виражає підтримку чиєїсь ідеї або пропозиції?
     options:
     - text: критикувати
+      correct: false
     - text: заперечувати
+      correct: false
     - text: підтримувати
       correct: true
     - text: засуджувати
+      correct: false
     explanation: Підтримувати — виражати згоду та схвалення.
   - question: Яке дієслово означає виражати сильне моральне несхвалення?
     options:
     - text: критикувати
+      correct: false
     - text: заперечувати
+      correct: false
     - text: оцінювати
+      correct: false
     - text: засуджувати
       correct: true
     explanation: Засуджувати — найсильніша форма несхвалення.
   - question: Яке дієслово використовується для конструктивної критики?
     options:
     - text: засуджувати
+      correct: false
     - text: критикувати
       correct: true
     - text: заперечувати
+      correct: false
     - text: сумніватися
+      correct: false
     explanation: Критикувати — вказувати на недоліки конструктивно.
   - question: Який прислівник виражає абсолютну впевненість без сумніву?
     options:
     - text: очевидно
+      correct: false
     - text: зрозуміло
+      correct: false
     - text: безперечно
       correct: true
     - text: можливо
+      correct: false
     explanation: Безперечно означає без сумніву.
   - question: Який вираз є найм'якішим способом висловити думку?
     options:
     - text: я переконаний
+      correct: false
     - text: на мою думку
+      correct: false
     - text: мені здається
       correct: true
     - text: безперечно
+      correct: false
     explanation: Мені здається — найм'якший, найменш категоричний вираз.
   - question: Яке дієслово означає формально схвалювати щось?
     options:
     - text: критикувати
+      correct: false
     - text: схвалювати
       correct: true
     - text: засуджувати
+      correct: false
     - text: заперечувати
+      correct: false
     explanation: Схвалювати — виражати офіційне схвалення.
   - question: Який вираз є найбільш формальним для вираження особистої думки?
     options:
     - text: як на мене
+      correct: false
     - text: думаю
+      correct: false
     - text: з мого погляду
       correct: true
     - text: здається
+      correct: false
     explanation: З мого погляду — формальний вираз для офіційних ситуацій.
   - question: Яке дієслово використовується, щоб виразити незгоду з пропозицією?
     options:
     - text: погоджуватися
+      correct: false
     - text: підтримувати
+      correct: false
     - text: заперечувати
       correct: true
     - text: схвалювати
+      correct: false
     explanation: Заперечувати — виражати незгоду, бути проти.
   - question: Який вираз є розмовним і неформальним для вираження думки?
     options:
     - text: вважаю
+      correct: false
     - text: з мого погляду
+      correct: false
     - text: як на мене
       correct: true
     - text: я переконаний
+      correct: false
     explanation: Як на мене — розмовний, неформальний вираз.
   instruction: Оберіть правильне слово для кожного контексту.
 - type: quiz
@@ -122,114 +163,156 @@ activities:
   - question: Яка правильна колокація з дієсловом «погоджуватися»?
     options:
     - text: погоджуватися на думку
+      correct: false
     - text: погоджуватися з думкою
       correct: true
     - text: погоджуватися до думки
+      correct: false
     - text: погоджуватися про думку
+      correct: false
     explanation: Погоджуватися з кимось/чимось.
   - question: Яка правильна колокація з дієсловом «сумніватися»?
     options:
     - text: сумніватися з успіху
+      correct: false
     - text: сумніватися на успіх
+      correct: false
     - text: сумніватися в успіху
       correct: true
     - text: сумніватися до успіху
+      correct: false
     explanation: Сумніватися в чомусь.
   - question: Яка правильна колокація з дієсловом «заперечувати»?
     options:
     - text: заперечувати з змін
+      correct: false
     - text: заперечувати на зміни
+      correct: false
     - text: заперечувати проти змін
       correct: true
     - text: заперечувати до змін
+      correct: false
     explanation: Заперечувати проти чогось.
   - question: Яка правильна конструкція з «переконаний»?
     options:
     - text: переконаний в що
+      correct: false
     - text: переконаний, що
       correct: true
     - text: переконаний про що
+      correct: false
     - text: переконаний до чого
+      correct: false
     explanation: Переконаний, що + речення.
   - question: Яка правильна колокація з дієсловом «підтримувати»?
     options:
     - text: підтримувати з ідею
+      correct: false
     - text: підтримувати на ідею
+      correct: false
     - text: підтримувати ідею
       correct: true
     - text: підтримувати про ідею
+      correct: false
     explanation: Підтримувати + знахідний відмінок.
   - question: Яка правильна конструкція з «вважати»?
     options:
     - text: вважати про те
+      correct: false
     - text: вважати, що
       correct: true
     - text: вважати до того
+      correct: false
     - text: вважати на те
+      correct: false
     explanation: Вважати, що + речення.
   - question: Яка правильна колокація з «критикувати»?
     options:
     - text: гостро критикувати
       correct: true
     - text: сильно критикувати
+      correct: false
     - text: великий критикувати
+      correct: false
     - text: багато критикувати
+      correct: false
     explanation: Гостро критикувати — стійка колокація.
   - question: Яка правильна колокація з «впевнений»?
     options:
     - text: впевнений з перемоги
+      correct: false
     - text: впевнений на перемогу
+      correct: false
     - text: впевнений у перемозі
       correct: true
     - text: впевнений до перемоги
+      correct: false
     explanation: Впевнений у чомусь (місцевий відмінок).
   - question: Як правильно сказати «схвалювати рішення»?
     options:
     - text: схвалювати з рішенням
+      correct: false
     - text: схвалювати на рішення
+      correct: false
     - text: схвалювати рішення
       correct: true
     - text: схвалювати про рішення
+      correct: false
     explanation: Схвалювати + знахідний відмінок.
   - question: Яка правильна колокація з «рішуче»?
     options:
     - text: рішуче підтримувати
+      correct: false
     - text: рішуче засуджувати
       correct: true
     - text: рішуче думати
+      correct: false
     - text: рішуче гадати
+      correct: false
     explanation: Рішуче засуджувати — стійка колокація.
   - question: Яка правильна конструкція з «не погоджуватися»?
     options:
     - text: не погоджуватися на твердження
+      correct: false
     - text: не погоджуватися з твердженням
       correct: true
     - text: не погоджуватися до твердження
+      correct: false
     - text: не погоджуватися про твердження
+      correct: false
     explanation: Не погоджуватися з чимось.
   - question: Яка правильна колокація з «оцінювати»?
     options:
     - text: гостро оцінювати
+      correct: false
     - text: великий оцінювати
+      correct: false
     - text: об'єктивно оцінювати
       correct: true
     - text: сильно оцінювати
+      correct: false
     explanation: Об'єктивно оцінювати — стійка колокація.
   - question: Яка правильна конструкція з «мені здається»?
     options:
     - text: мені здається про те
+      correct: false
     - text: мені здається до того
+      correct: false
     - text: мені здається, що
       correct: true
     - text: мені здається на те
+      correct: false
     explanation: Мені здається, що + речення.
   - question: Як правильно почати формальну думку в офіційному документі?
     options:
     - text: як на мене
+      correct: false
     - text: думаю
+      correct: false
     - text: вважаю, що
       correct: true
     - text: здається
+      correct: false
     explanation: Вважаю, що — формальний спосіб почати думку.
   instruction: Оберіть правильну колокацію.
 - type: match-up
@@ -1149,13 +1232,27 @@ activities:
 - type: mark-the-words
   title: Знайдіть вирази думки
   instruction: Натисніть на всі вирази, що виражають думку або впевненість.
-  passage: '*Вважаю*, що сучасна освіта потребує реформ. *На мою думку*, школи мають
-    більше уваги приділяти практичним навичкам. *Переконаний*, що це підготує учнів
-    до реального життя. Деякі педагоги *сумніваються* в ефективності нових методів.
-    Вони *критикують* надмірну залежність від технологій. *Не погоджуюся* з їхньою
-    позицією повністю. Але *підтримую* ідею балансу. *Очевидно*, що зміни потрібні.
-    *Як на мене*, компроміс можливий. *Мені здається*, що результат буде позитивним.
-    *Безперечно*, це вимагатиме зусиль. Експерти *оцінюють* ситуацію по-різному. Одні
-    *схвалюють* реформи. Інші *заперечують* проти радикальних змін.
-
-    '
+  text: "Вважаю, що сучасна освіта потребує реформ. На мою думку, школи мають\n  \
+    \  більше уваги приділяти практичним навичкам. Переконаний, що це підготує учнів\n\
+    \    до реального життя. Деякі педагоги сумніваються в ефективності нових методів.\n\
+    \    Вони критикують надмірну залежність від технологій. Не погоджуюся з їхньою\n\
+    \    позицією повністю. Але підтримую ідею балансу. Очевидно, що зміни потрібні.\n\
+    \    Як на мене, компроміс можливий. Мені здається, що результат буде позитивним.\n\
+    \    Безперечно, це вимагатиме зусиль. Експерти оцінюють ситуацію по-різному.\
+    \ Одні\n    схвалюють реформи. Інші заперечують проти радикальних змін.\n\n  \
+    \  \n"
+  answers:
+  - Вважаю
+  - На мою думку
+  - Переконаний
+  - сумніваються
+  - критикують
+  - Не погоджуюся
+  - підтримую
+  - Очевидно
+  - Як на мене
+  - Мені здається
+  - Безперечно
+  - оцінюють
+  - схвалюють
+  - заперечують

@@ -25,6 +25,7 @@
     right: toward/add
   - left: роз-
     right: apart/spread
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: The Editor
   passage: 'Я хочу {переписати|дописати|записати} цей текст. Ми повинні {переробити|доробити|зробити}
@@ -39,6 +40,7 @@
     плани. Треба {переставити|поставити|виставити} меблі в кімнаті. Вона хоче {перевірити|вивірити|довірити}
     всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми
     словами. Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: fill-in
   title: The Perfectionist
   items:
@@ -98,6 +100,7 @@
     - закрив
     - розкрив
     - варіант А
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: group-sort
   title: Open vs Close
   groups:
@@ -117,6 +120,7 @@
     - Заплющити очі
     - Закоркувати вино
     - Замкнути замок
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Meaning Check
   items:
@@ -200,6 +204,7 @@
       correct: false
     - text: To eat again (поїсти знову)
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Propaganda Check
   items:
@@ -219,6 +224,7 @@
     correct: true
   - statement: «Перенести» means to move something to a new place.
     correct: true
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: The Test
   passage: 'Студент складав іспит.
@@ -244,6 +250,7 @@
     Він {по|від|за|під}дзвонив батькам і {роз|від|по|пере}казав хороші новини.
 
     Вони були дуже раді і вирішили {від|по|роз|пере}святкувати його успіх.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: error-correction
   title: Fix the Verb
   items:
@@ -303,6 +310,7 @@
     - помилка
     - правильно
     explanation: Brief process uses По-. «Написав» implies a result.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: match-up
   title: Give and Take
   pairs:
@@ -326,6 +334,7 @@
     right: to pass/hand over
   - left: віддати
     right: to give back
+  instruction: З'єднайте відповідні елементи.
 - type: unjumble
   title: The Office
   items:
@@ -398,3 +407,4 @@
     - офісі
     - успішно
     answer: Ми під'єднали інтернет сьогодні вранці в новому офісі успішно
+  instruction: Розташуйте слова у правильному порядку.

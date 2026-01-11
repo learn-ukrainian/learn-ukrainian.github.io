@@ -25,6 +25,7 @@
     right: взяти
   - left: показувати
     right: показати
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Identify the Pattern
   items:
@@ -126,6 +127,7 @@
     - на- prefix
     - по- prefix
     - suppletive
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Aspect Formation
   items:
@@ -261,6 +263,7 @@
       correct: false
     - text: Suppletive pairs
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Formation Rules
   items:
@@ -300,6 +303,7 @@
   - statement: All prefixes perfectivize without changing meaning.
     correct: false
     explanation: Different prefixes add different meanings!
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Formation Patterns
   groups:
@@ -326,6 +330,7 @@
     - брати / взяти
     - гукати / гукнути
     - стрибати / стрибнути
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Aspect Pattern Sentences
   items:
@@ -463,6 +468,7 @@
     - цій
     - вулиці
     answer: Він раптом гукнув свого старого друга на цій вулиці
+  instruction: Розташуйте слова у правильному порядку.
 - type: fill-in
   title: Find the Perfective
   items:
@@ -522,21 +528,14 @@
     - встати
     - постати
     - підстати
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: mark-the-words
   title: Identify Perfective Verbs
-  passage: 'Click on PERFECTIVE verbs only.
-
-    Я *прочитав* книгу. Потім я *написав* рецензію. Він *сказав* правду. Вона довго
-    говорила.
-
-    ---
-
-    Ми *вивчили* урок. Вона *встала* рано. Він давав книгу, а потім *дав*.
-
-    ---
-
-    Вони *побачили* море! Він *почув* шум. Я *взяв* книгу і *пішов*.'
-  correct_words:
+  text: Click on PERFECTIVE verbs only. Я прочитав книгу. Потім я написав рецензію.
+    Він сказав правду. Вона довго говорила. --- Ми вивчили урок. Вона встала рано.
+    Він давав книгу, а потім дав. --- Вони побачили море! Він почув шум. Я взяв книгу
+    і пішов.
+  answers:
   - прочитав
   - написав
   - сказав
@@ -547,7 +546,7 @@
   - почув
   - взяв
   - пішов
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: match-up
   title: Suppletive Pairs
   pairs:
@@ -571,6 +570,7 @@
     right: знайти
   - left: купувати
     right: купити
+  instruction: З'єднайте відповідні елементи.
 - type: quiz
   title: Pattern Identification
   items:
@@ -661,3 +661,4 @@
       correct: false
     - text: Дієслово стає іменником
       correct: false
+  instruction: Оберіть правильну відповідь.

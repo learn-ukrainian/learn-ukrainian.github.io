@@ -19,6 +19,7 @@
     right: bread
   - left: сир
     right: cheese
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Shopping Phrases
   items:
@@ -106,6 +107,7 @@
     - супу
     - супом
     - супи
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: group-sort
   title: Food vs Non-Food Items
   groups:
@@ -125,6 +127,7 @@
     - картка
     - гроші
     - сумка
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Shopping Situations
   items:
@@ -260,6 +263,7 @@
     - text: Дешево це
       correct: false
     explanation: «Дешево» is the adverb for cheap.
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Shopping Culture
   items:
@@ -299,6 +303,7 @@
   - statement: It's rude to ask «Ще щось?» (Anything else?) in a store.
     correct: false
     explanation: Incorrect! This is a standard polite question from salespeople.
+  instruction: Визначте, чи твердження правильне.
 - type: quiz
   title: Shopping Sentences Order
   items:
@@ -434,6 +439,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Магазин відчинено о восьмій'
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Non-Food Items
   pairs:
@@ -455,6 +461,7 @@
     right: basket
   - left: візок
     right: trolley
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Café Dialogue
   items:
@@ -542,6 +549,7 @@
     - вино
     - виною
     - вину
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: group-sort
   title: Beverages vs Food vs Items
   groups:
@@ -563,3 +571,4 @@
     - каса
     - пакет
     - картка
+  instruction: Розподіліть елементи за групами.

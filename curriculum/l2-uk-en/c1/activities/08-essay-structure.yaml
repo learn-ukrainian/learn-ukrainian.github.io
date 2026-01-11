@@ -1,7 +1,3 @@
-module: 08-essay-structure
-level: C1
-version: '2.0'
-activities:
 - type: quiz
   title: Архітектура есе
   instruction: Визначте, до якої частини есе належить цей елемент.

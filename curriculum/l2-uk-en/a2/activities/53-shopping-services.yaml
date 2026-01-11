@@ -121,6 +121,7 @@
       correct: false
     - text: Only in Kyiv
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Shop Vocabulary
   pairs:
@@ -148,6 +149,7 @@
     right: checkout
   - left: перукарня
     right: hairdresser's
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Shopping Sentences
   passage: 'Я хочу {купити|продати|міряти|спати}_ хліб. Скільки це {коштує|коштують|платить|купує}_?
@@ -164,6 +166,7 @@
 
     Сьогодні у магазині {знижка|черга|ціна|каса}_. Можна {замовити|купити|міряти|платити}_
     піцу? Банк закритий, він не {працює|коштує|купує|спить}_.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: true-false
   title: Ukrainian Services
   items:
@@ -203,6 +206,7 @@
   - statement: You can order delivery («замовити»).
     correct: true
     explanation: Delivery is popular (Glovo, Bolt Food).
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Places vs Things
   groups:
@@ -225,6 +229,7 @@
     - 'купувати: Actions'
     - 'платити: Actions'
     - 'міряти: Actions'
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Shopping Dialogue
   items:
@@ -343,6 +348,7 @@
     - зручне
     - взуття
     answer: Мені терміново треба поміряти це зручне взуття
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Shop Grammar
   items:
@@ -455,6 +461,7 @@
     - банку
     - банком
     explanation: 'Nominative subject: банк.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: At the Supermarket
   passage: 'Я беру {кошик|пакет|стіл} і йду в зал.
@@ -474,13 +481,14 @@
     Вдома я мию {овочі|руки|підлогу} і {фрукти|посуд|вікна}.
 
     Потім я {готую|купую|продаю} смачну {вечерю|воду|чергу}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Services
-  passage: Я живу в центрі. Біля мого дому є *супермаркет* і маленька *аптека*. Коли
-    мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама
-    працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і
-    *ресторан*. *Лікарня* теж недалеко.
-  correct_words:
+  text: Я живу в центрі. Біля мого дому є супермаркет і маленька аптека. Коли мені
+    треба гроші, я йду в банк. У неділю я йду на ринок за овочами. Моя мама працює
+    на пошті. Тато стрижеться в перукарні. Ми любимо ходити в кіно і ресторан. Лікарня
+    теж недалеко.
+  answers:
   - супермаркет
   - аптека
   - банк
@@ -490,7 +498,7 @@
   - кіно
   - ресторан
   - Лікарня
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: select
   title: Shopping Choices
   items:
@@ -626,3 +634,4 @@
     - text: Інший варіант
       correct: false
     explanation: Try on vs Reconcile.
+  instruction: Оберіть усі правильні відповіді.

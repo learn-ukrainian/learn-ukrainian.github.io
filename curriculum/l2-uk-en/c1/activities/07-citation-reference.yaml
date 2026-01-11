@@ -1,7 +1,3 @@
-module: 07-citation-reference
-level: C1
-version: '1.0'
-activities:
 - type: match-up
   title: Лексика цитування
   instruction: Поєднайте термін з його визначенням.

@@ -25,6 +25,7 @@
     right: spring
   - left: зима
     right: winter
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Nature & Weather
   items:
@@ -84,6 +85,7 @@
     - хмарно
     - вітряно
     - туманно
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Nature & Weather
   items:
@@ -167,6 +169,7 @@
       correct: false
     - text: A snowstorm
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: Story Comprehension
   passage: Україна має чудову {природу|погоду|роботу}. На заході є високі {гори|долини|міста}
@@ -176,6 +179,7 @@
     Київ тече велика {ріка|дорога|стежка} Дніпро. Навесні все цвіте і {зелене|біле|чорне}.
     Восени часто йде {дощ|сніг|сонце} і стає прохолодно. Тоді буває сильний {вітер|туман|мороз}.
     Але кожна {пора|година|хвилина} року по-своєму красива.
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: Weather Sentences
   items:
@@ -240,6 +244,7 @@
     - перед
     - собою
     answer: Яке величезне і красиве озеро ми бачимо перед собою
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Weather Mistakes
   items:
@@ -298,6 +303,7 @@
     - помилка
     - правильно
     explanation: Summer is warm (тепло), not cold.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: match-up
   title: Seasons & Activities
   pairs:
@@ -321,6 +327,7 @@
     right: лижі
   - left: літо
     right: плавання
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Nature Categories
   groups:
@@ -346,6 +353,7 @@
     - літо
     - осінь
     - зима
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Nature Facts
   items:
@@ -373,6 +381,7 @@
     correct: true
   - statement: «Долина» = mountain.
     correct: false
+  instruction: Визначте, чи твердження правильне.
 - type: translate
   title: Nature Words
   items:
@@ -440,3 +449,4 @@
       correct: false
     - text: весна
       correct: false
+  instruction: Оберіть правильний переклад.

@@ -17,6 +17,7 @@
     right: their
   - left: чий / чия / чиє
     right: whose
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Gender Agreement
   groups:
@@ -38,6 +39,7 @@
     - твоє море
     - наше місто
     - ваше ім'я
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Choose the Correct Possessive
   items:
@@ -173,6 +175,7 @@
     - text: їхні
       correct: true
     explanation: їхні matches речі (plural)
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Possessive Rules
   items:
@@ -215,6 +218,7 @@
     correct: true
     explanation: Correct! Ukrainians often say «Телефон на столі» (Phone is on the
       table) instead of «Мій телефон...» when obvious.
+  instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Complete with Possessives
   items:
@@ -323,6 +327,7 @@
     - ваша
     - ваше
     - ваші
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Possessive Sentence Order
   items:
@@ -491,6 +496,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це ваше слово'
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Інваріантні vs Змінні
   groups:
@@ -510,6 +516,7 @@
     - їх (their)
     - Марка (Mark's)
     - Анни (Anna's)
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Cultural Context
   items:
@@ -645,3 +652,4 @@
     - text: my city
       correct: false
     explanation: Наше means "our" (neuter).
+  instruction: Оберіть правильну відповідь.

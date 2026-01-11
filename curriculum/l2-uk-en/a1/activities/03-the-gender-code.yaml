@@ -133,6 +133,7 @@
     - text: магазин
       correct: false
     explanation: «Яблуко» ends in -о, so it's neuter.
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Gender Pairs
   pairs:
@@ -160,6 +161,7 @@
     right: apple
   - left: стілець
     right: chair
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Sort by Gender
   groups:
@@ -198,6 +200,7 @@
     - яблуко
     - крісло
     - ліжко
+  instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Complete with Gender
   items:
@@ -285,6 +288,7 @@
     - Апельсин
     - Огірок
     - Яблуко
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: true-false
   title: Gender Rules
   items:
@@ -324,6 +328,7 @@
   - statement: «Ім'я» is a special neuter noun (Family 4).
     correct: true
     explanation: 'Correct! It changes stem in declension: ім''я → імені.'
+  instruction: Визначте, чи твердження правильне.
 - type: anagram
   title: Build the Word
   items:
@@ -351,6 +356,7 @@
     answer: хліб
   - scrambled: в о д а
     answer: вода
+  instruction: Розташуйте літери у правильному порядку.
 - type: anagram
   title: More Words
   items:
@@ -378,6 +384,7 @@
     answer: диван
   - scrambled: л і ж к о
     answer: ліжко
+  instruction: Розташуйте літери у правильному порядку.
 - type: quiz
   title: Gender Pronoun Match
   items:
@@ -469,3 +476,4 @@
     - text: вони
       correct: false
     explanation: Крісло ends in -о → neuter → воно
+  instruction: Оберіть правильну відповідь.

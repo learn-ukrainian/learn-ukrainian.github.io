@@ -1,6 +1,3 @@
-module: 150-vyshyvanka
-level: C1
-activities:
 - type: quiz
   title: Теоретичні основи вишивального мистецтва
   items:

@@ -121,6 +121,7 @@
       correct: false
     - text: friend
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: match-up
   title: Gender Recognition
   pairs:
@@ -144,6 +145,7 @@
     right: feminine
   - left: '- друг'
     right: masculine
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Demonstrative Agreement
   items:
@@ -231,6 +233,7 @@
     - Ця
     - Це
     - Ці
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Verb Tenses - Present
   items:
@@ -318,6 +321,7 @@
     - працюєш
     - працює
     - працюють
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Verb Tenses - Past
   items:
@@ -405,6 +409,7 @@
     - грала
     - грало
     - грали
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Case Usage
   items:
@@ -492,6 +497,7 @@
     - тата
     - татові
     - татом
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -513,6 +519,7 @@
     - гарний
     - новий
     - старий
+  instruction: Розподіліть елементи за групами.
 - type: group-sort
   title: Gender Recognition
   groups:
@@ -534,6 +541,7 @@
     - місто
     - море
     - свято
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Daily Life Situations
   items:
@@ -657,6 +665,7 @@
       correct: false
     - text: До побачення!
       correct: true
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: A1 Knowledge Check
   items:
@@ -696,6 +705,7 @@
   - statement: «З Новим роком!» means "Happy New Year!"
     correct: true
     explanation: True! A common holiday greeting.
+  instruction: Визначте, чи твердження правильне.
 - type: unjumble
   title: Sentence Building
   items:
@@ -765,6 +775,7 @@
     - Києві
     - ми
     answer: Ми живемо у Києві.
+  instruction: Розташуйте слова у правильному порядку.
 - type: match-up
   title: Time Expressions
   pairs:
@@ -788,3 +799,4 @@
     right: Today
   - left: '- Щодня'
     right: Every day
+  instruction: З'єднайте відповідні елементи.

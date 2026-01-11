@@ -25,6 +25,7 @@
     right: behind
   - left: між
     right: between
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Choose the Correct Preposition
   items:
@@ -112,6 +113,7 @@
     - За
     - Над
     - Перед
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Motion or Location?
   items:
@@ -247,6 +249,7 @@
       correct: false
     - text: Instrumental
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Preposition Rules
   items:
@@ -287,6 +290,7 @@
   - statement: Location after «під» uses instrumental, not locative.
     correct: true
     explanation: Yes! «Під столом» uses instrumental.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Prepositions by Case
   groups:
@@ -308,6 +312,7 @@
     - над
     - перед
     - між
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Preposition Sentences
   items:
@@ -431,6 +436,7 @@
     - на
     - каву
     answer: Після роботи ми йдемо до кафе на каву
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Case
   items:
@@ -542,6 +548,7 @@
     - будинку
     - будинці
     explanation: 'Location after «за» requires instrumental: будинок → будинком.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
   passage: 'Марія живе {в/у + Loc|на + Acc|до + Gen} Києві. Вранці вона йде {на +
@@ -557,6 +564,7 @@
     + Instr} столом. Кіт спить {під + Instr|над + Instr|за + Instr} ліжком. Стіл стоїть
     {перед + Instr|за + Instr|між + Instr} вікном. Книги лежать {на + Loc|під + Instr|над
     + Instr} столі.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: cloze
   title: Asking for Directions
   passage: '— {Вибачте, як дійти до пошти?|Дякую!|Йдіть через парк.}
@@ -586,22 +594,14 @@
     — {Немає за що!|Далеко від станції метро?|Він між аптекою і магазином.}
 
     '
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Preposition + Case
-  passage: 'Click on preposition + noun combinations.
-
-    Він іде *до школи*. Потім він буде *в класі*. Книги лежать *на столі*. Олівець
-    *під зошитом*.
-
-    ---
-
-    Вона живе *біля парку*. Гуляє *з собакою*. Сидить *перед телевізором*. Після роботи
-    йде *до магазину*.
-
-    ---
-
-    Лист *від друга*. Подарунок *для сестри*. Кава *без цукру*. Розмова *про майбутнє*.'
-  correct_words:
+  text: Click on preposition + noun combinations. Він іде до школи. Потім він буде
+    в класі. Книги лежать на столі. Олівець під зошитом. --- Вона живе біля парку.
+    Гуляє з собакою. Сидить перед телевізором. Після роботи йде до магазину. --- Лист
+    від друга. Подарунок для сестри. Кава без цукру. Розмова про майбутнє.
+  answers:
   - до школи
   - в класі
   - на столі
@@ -614,7 +614,7 @@
   - для сестри
   - без цукру
   - про майбутнє
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -684,3 +684,4 @@
     - text: Кіт під столі.
       correct: false
     explanation: Location 'Де?' + 'під' + Instrumental 'столом'.
+  instruction: Оберіть правильний переклад.

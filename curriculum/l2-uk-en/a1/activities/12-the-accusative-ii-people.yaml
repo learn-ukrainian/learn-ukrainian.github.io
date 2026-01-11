@@ -17,6 +17,7 @@
     right: grandfather
   - left: бабуся
     right: grandmother
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Animate vs Inanimate
   groups:
@@ -36,6 +37,7 @@
     - паспорт
     - квиток
     - поїзд
+  instruction: Розподіліть елементи за групами.
 - type: quiz
   title: Accusative Endings
   items:
@@ -171,6 +173,7 @@
     - text: другом
       correct: false
     explanation: Animate masculine consonant → -а
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Animate Accusative Rules
   items:
@@ -211,6 +214,7 @@
   - statement: «Ти знаєш мою сусідку» is correct.
     correct: true
     explanation: 'Correct! Feminine accusative: сусідка → сусідку.'
+  instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Complete with Animate Accusative
   items:
@@ -312,6 +316,7 @@
     - сусідку
     - сусідки
     - сусідці
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: fill-in
   title: Sentences in Context
   items:
@@ -399,6 +404,7 @@
     - гостя
     - гостю
     - гості
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Sentences with Animate Objects
   items:
@@ -534,6 +540,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він знає цю студентку з школи'
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   title: More Complex Sentence Order
   items:
@@ -625,3 +632,4 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона бачить офіціанта та офіціантку'
+  instruction: Оберіть правильну відповідь.

@@ -1,6 +1,3 @@
-module: b2-64
-level: B2
-activities:
 - type: match-up
   title: Знайдіть характер дії
   instruction: З'єднайте дієслово з його функціональним відтінком.
@@ -21,7 +18,6 @@ activities:
     right: швидка, іноді різка дія
   - left: отримувати
     right: результат передачі чогось
-  id: знайдіть-характер-дії
 - type: quiz
   title: Оберіть точну дію
   instruction: Яке дієслово найкраще описує наведений процес?
@@ -49,6 +45,7 @@ activities:
     - text: він зламав по-людськи
       correct: false
     - text: він промовчав по-людськи
+      correct: false
     explanation: Слово 'вчинити' часто має етичне забарвлення в українській мові.
   - question: Художник створює картину, якої раніше ніхто не бачив. Що він робить?
     options:
@@ -59,6 +56,7 @@ activities:
     - text: хапає фарби
       correct: false
     - text: руйнує полотно
+      correct: false
     explanation: '''Творити'' — дієслово для позначення вищої форми творчої дії.'
   - question: Робітник на заводі чітко слідує всім пунктам технічного завдання. Він...
     options:
@@ -69,6 +67,7 @@ activities:
     - text: чинить опір
       correct: false
     - text: вихоплює інструменти
+      correct: false
     explanation: '''Виконувати'' підкреслює дотримання регламенту та правил.'
   - question: Ви раптово забираєте свою річ у людини, яка хотіла її вкрасти. Ви її...
     options:
@@ -79,6 +78,7 @@ activities:
     - text: втілюєте
       correct: false
     - text: будуєте
+      correct: false
     explanation: '''Вихоплювати'' вказує на швидку, часто силову і раптову дію.'
   - question: Уряд проводить масштабні зміни в системі освіти. Він...
     options:
@@ -89,6 +89,7 @@ activities:
     - text: руйнує реформи
       correct: false
     - text: мріє про реформи
+      correct: false
     explanation: '''Здійснювати'' — офіційний термін для впровадження великих змін.'
   - question: Ви нарешті отримали диплом про вищу освіту. Що ви зробили?
     options:
@@ -99,6 +100,7 @@ activities:
     - text: зруйнували результат праці
       correct: false
     - text: забули результат праці
+      correct: false
     explanation: '''Отримувати'' вказує на закономірний фінал зусиль або передачу.'
   - question: Інженер знайшов спосіб перетворити ідею на реальний механізм. Він її...
     options:
@@ -109,8 +111,8 @@ activities:
     - text: забув у житті
       correct: false
     - text: проспав у житті
+      correct: false
     explanation: '''Втілювати'' означає надавати ідеї фізичної форми.'
-  id: оберіть-точну-дію
 - type: group-sort
   title: Дія чи Результат?
   instruction: Розподіліть дієслова та іменники за їхньою функцією (16+ елементів).
@@ -137,7 +139,6 @@ activities:
     - досягнення
     - перемога
     - фіналізація
-  id: дія-чи-результат?
 - type: unjumble
   title: Складіть дієве речення
   instruction: Відновіть правильний порядок слів у реченнях про активність (речення
@@ -317,7 +318,6 @@ activities:
     - обставини
     answer: Ми маємо навчитися діяти злагоджено та ефективно щоб успішно подолати
       всі виклики які ставлять перед нами складні сучасні обставини.
-  id: складіть-дієве-речення
 - type: cloze
   title: Проєкт перетворення
   instruction: Заповніть пропуски в тексті про реалізацію ідеї (16+ пропусків).
@@ -337,7 +337,6 @@ activities:
     нашу систему. Наслідком {дії|мовчання|сну|дії} став успіх.
 
     '
-  id: проєкт-перетворення
 - type: fill-in
   title: Професійне дієслово
   instruction: Оберіть найточніше слово для ділового контексту (10+ елементів).
@@ -412,7 +411,6 @@ activities:
     - здійсніть
     - реалізуйте
     - вчиніть
-  id: професійне-дієслово
 - type: error-correction
   title: Виправте вчинок
   instruction: Знайдіть і виправте слово, яке логічно суперечить змісту дії.
@@ -489,7 +487,6 @@ activities:
     - Вчини
     - Хапни
     explanation: Тримати за руку — це фізична дія.
-  id: виправте-вчинок
 - type: translate
   title: Переклад дії
   instruction: Оберіть правильний український синонім до англійського слова.
@@ -576,7 +573,6 @@ activities:
       correct: false
     - text: стосуватися
     explanation: Глибока зміна об'єкта.
-  id: переклад-дії
 - type: true-false
   title: Нюанси чину
   instruction: Визначте, чи правильно розрізнено відтінки дієслів дії.
@@ -605,7 +601,6 @@ activities:
   - statement: '''Акція'' — це масштабна організована дія.'
     correct: true
     explanation: Так, це захід з певною метою.
-  id: нюанси-чину
 - type: select
   title: Всі форми активності
   instruction: Оберіть усі слова, що позначають процес творення або дії (6+ елементів).
@@ -676,7 +671,6 @@ activities:
       correct: true
     - text: руйнувати
       correct: false
-  id: всі-форми-активності
 - type: match-up
   title: Дія та Регістри
   instruction: З'єднайте дієслово з відповідним стилем мовлення.
@@ -697,7 +691,6 @@ activities:
     right: науковий
   - left: втілювати
     right: публіцистичний
-  id: дія-та-регістри
 - type: match-up
   title: Дія та Її Об'єкт
   instruction: З'єднайте дієслово з типовим об'єктом.
@@ -718,7 +711,6 @@ activities:
     right: обіцянки
   - left: приймати
     right: рішення
-  id: дія-та-її-об'єкт
 - type: quiz
   title: Філософія чину
   instruction: Про які концепції дії йдеться у тексті модуля?
@@ -732,6 +724,7 @@ activities:
     - text: байдужості
       correct: false
     - text: грошей
+      correct: false
     explanation: Герої Франка лупають скалу заради майбутнього.
   - question: Що означає бути 'людиною дії' зараз?
     options:
@@ -742,6 +735,7 @@ activities:
     - text: чекати на допомогу
       correct: false
     - text: мовчати
+      correct: false
     explanation: Сучасний контекст вимагає активності.
   - question: Яка різниця між 'дією' та 'вчинком'?
     options:
@@ -752,6 +746,7 @@ activities:
     - text: дія — це сон
       correct: false
     - text: вчинок — це техніка
+      correct: false
     explanation: Вчинок завжди пов'язаний з совістю.
   - question: Що означає слово 'відповідальність'?
     options:
@@ -762,6 +757,7 @@ activities:
     - text: право не робити
       correct: false
     - text: мовчання
+      correct: false
     explanation: Походить від слова 'відповідати'.
   - question: Як називається глибока зміна системи?
     options:
@@ -772,6 +768,7 @@ activities:
     - text: стагнація
       correct: false
     - text: застій
+      correct: false
     explanation: Це термін для масштабних змін.
   - question: Які міста згадані як індустріальні хаби?
     options:
@@ -782,6 +779,7 @@ activities:
     - text: інші країни
       correct: false
     - text: міста без світла
+      correct: false
     explanation: Це головні центри дії в Україні.
   - question: Що є 'мотором речення'?
     options:
@@ -792,6 +790,7 @@ activities:
     - text: крапка
       correct: false
     - text: пробіл
+      correct: false
     explanation: Дієслово надає динаміки.
   - question: Яке слово описує досконалу роботу?
     options:
@@ -802,8 +801,8 @@ activities:
     - text: хитрість
       correct: false
     - text: паніка
+      correct: false
     explanation: Сумлінна праця — ідеал господаря.
-  id: філософія-чину
 - type: select
   title: Творча та Технічна Дія
   instruction: Оберіть слова для опису складних процесів (6+ елементів).
@@ -872,4 +871,3 @@ activities:
       correct: true
     - text: пасивна
       correct: false
-  id: творча-та-технічна-дія

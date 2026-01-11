@@ -25,6 +25,7 @@
     right: direct object
   - left: Instrumental
     right: means, with
+  instruction: З'єднайте відповідні елементи.
 - type: fill-in
   title: Choose the Correct Case Form
   items:
@@ -112,6 +113,7 @@
     - кота
     - котові
     - котом
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Which Case?
   items:
@@ -247,6 +249,7 @@
       correct: false
     - text: Genitive
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Case Rules
   items:
@@ -287,6 +290,7 @@
   - statement: «Про» requires accusative case.
     correct: true
     explanation: Yes! Я думаю про тебе.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Case Functions
   groups:
@@ -310,6 +314,7 @@
     - profession
     - location
     - always with preposition
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Case Sentences
   items:
@@ -433,6 +438,7 @@
     - роки
     - зараз
     answer: Вона в університеті вчиться вже три роки зараз
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Case
   items:
@@ -544,6 +550,7 @@
     - Мамо
     - Мамою
     explanation: Direct address requires vocative case.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
   passage: 'Це моя {Студент|Студента|Студентові}. Вона працює в {університеті|університет|університету}.
@@ -555,22 +562,14 @@
     {Студент|Студента|Студентові} вчиться в {університеті|університет|університету}.
     Він читає {книгу|книга|книги}. Потім він пише {ручкою|ручка|ручки}. Після {уроку|урок|уроком}
     він йде {додому|до дому|домом}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Case Usage
-  passage: 'Click on all nouns used in any case except Nominative.
-
-    Я даю книгу *другові*. Він пише листа *сестрі*. Ми йдемо *до школи*. Вона гуляє
-    *з собакою*.
-
-    ---
-
-    Книга лежить *на столі*. Я не бачу *брата*. Він допомагає *мамі*. Ми говоримо
-    *про майбутнє*.
-
-    ---
-
-    Лист *від друга*. Подарунок *для Олени*.'
-  correct_words:
+  text: Click on all nouns used in any case except Nominative. Я даю книгу другові.
+    Він пише листа сестрі. Ми йдемо до школи. Вона гуляє з собакою. --- Книга лежить
+    на столі. Я не бачу брата. Він допомагає мамі. Ми говоримо про майбутнє. --- Лист
+    від друга. Подарунок для Олени.
+  answers:
   - другові
   - сестрі
   - до школи
@@ -581,7 +580,7 @@
   - про майбутнє
   - від друга
   - для Олени
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -651,3 +650,4 @@
     - text: Другом, привіт!
       correct: false
     explanation: Direct address → Vocative 'друже'.
+  instruction: Оберіть правильний переклад.

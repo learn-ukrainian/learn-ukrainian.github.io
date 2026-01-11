@@ -21,6 +21,7 @@
     right: see
   - left: чу- (чути)
     right: hear
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: Speech Roots
   pairs:
@@ -44,6 +45,7 @@
     right: say
   - left: мов- (мовити)
     right: speak
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Root Families
   passage: 'Я хочу [{бачити|слухати|говорити|чути}:1] тебе. [{Слухай|Бач|Говори|Пиши}:2]
@@ -58,6 +60,7 @@
     Ми маємо спільне [{бачення|побачення|чуття|слухання}:9] майбутнього. Ти [{чуєш|бачиш|пишеш|говориш}:10]
     цей дивний звук? Мій брат — хороший [{слухач|письменник|читач|водій}:11]. Я люблю
     [{говорити|мовчати|бачити|чути}:12] про політику.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Perception Roots
   items:
@@ -159,6 +162,7 @@
       correct: false
     - text: Слово «почуття» означає слухання а «відчуття» означає бачення
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: cloze
   title: Story Comprehension
   passage: 'Тарас {бачив|чув|слухав} дивну річ.
@@ -184,6 +188,7 @@
     Марія записує важливу {інформацію|розмову|мову}.
 
     Вони люблять {слухати|чути|бачити} тишу в лісі.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: Perception Sentences
   items:
@@ -268,6 +273,7 @@
     - на
     - лекціях
     answer: Вони завжди дуже уважні добрі слухачі на лекціях
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Root Usage
   items:
@@ -325,6 +331,7 @@
     - помилка
     - правильно
     explanation: Meeting/date = побачення, vision = бачення.
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: group-sort
   title: Root Families
   groups:
@@ -350,6 +357,7 @@
     - мовлення
     - мовчати
     - мовчання
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Root Rules
   items:
@@ -377,6 +385,7 @@
     correct: true
   - statement: «Слухач» = speaker.
     correct: false
+  instruction: Визначте, чи твердження правильне.
 - type: translate
   title: English to Ukrainian
   items:
@@ -444,3 +453,4 @@
       correct: false
     - text: розмова
       correct: false
+  instruction: Оберіть правильний переклад.

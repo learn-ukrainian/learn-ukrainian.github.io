@@ -25,6 +25,7 @@
     right: собакою
   - left: кіт
     right: котом
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Instrumental Endings
   passage: 'Я йду в кіно з {другом|друг|друга}. Вона розмовляє з {мамою|мама|мамі}.
@@ -41,6 +42,7 @@
 
     Я працюю з {колегою|колега|колегу} над проєктом. Вона п''є чай з {лимоном|лимон|лимона}.
     Він помирився з {сестрою|сестра|сестрі}.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Instrumental Forms
   items:
@@ -176,6 +178,7 @@
       correct: false
     - text: Вона одружилася з Петрові.
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Instrumental Rules
   items:
@@ -215,6 +218,7 @@
   - statement: «Ім'я» has an irregular instrumental form.
     correct: true
     explanation: Yes! Ім'я → ім'ям.
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Gender by Instrumental Ending
   groups:
@@ -239,6 +243,7 @@
     - морем
     - полем
     - молоком
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Instrumental Sentences
   items:
@@ -302,6 +307,7 @@
     - минулого
     - тижня
     answer: Вона познайомилася з хлопцем на вечірці минулого тижня
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix the Instrumental
   items:
@@ -365,6 +371,7 @@
     - хлопцеві
     explanation: 'After the preposition «з», nouns take Instrumental case. Masculine
       soft-stem nouns take -ем: хлопець → хлопцем.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
   passage: 'У суботу ми пішли в ресторан {з батьками|з батьки|з батьків}. Марія прийшла
@@ -378,23 +385,15 @@
     з подругами. Минулого тижня вона {познайомилася|познайомитися|познайомлюсь} з
     хлопцем на вечірці. Тепер вони часто {гуляють|гуляти|гуляємо}. Вона {розмовляє|розмовляти|розмовляюсь}
     з батьками про нього. Може, вони {одружаться|одружуються|одружитися}?'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Instrumental Forms
-  passage: 'Click on all instrumental case forms.
-
-    Я йду в кіно *з другом*. Вона розмовляє *з сестрою*. Ми живемо *з батьками*. Діти
-    грають *з котом*.
-
-    ---
-
-    Він познайомився *з дівчиною* на вечірці. Вона п''є каву *з молоком*. Ми зустрічаємося
-    *з друзями* щотижня.
-
-    ---
-
-    Петро одружився *з Марією*. Вони живуть *з дітьми*. Бабуся гуляє *з онуками*.
-    Він розмовляє *з колегою* про роботу.'
-  correct_words:
+  text: Click on all instrumental case forms. Я йду в кіно з другом. Вона розмовляє
+    з сестрою. Ми живемо з батьками. Діти грають з котом. --- Він познайомився з дівчиною
+    на вечірці. Вона п''є каву з молоком. Ми зустрічаємося з друзями щотижня. ---
+    Петро одружився з Марією. Вони живуть з дітьми. Бабуся гуляє з онуками. Він розмовляє
+    з колегою про роботу.
+  answers:
   - з другом
   - з сестрою
   - з батьками
@@ -406,7 +405,7 @@
   - з дітьми
   - з онуками
   - з колегою
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -476,3 +475,4 @@
     - text: Ти йдеш з мною?
       correct: false
     explanation: Instrumental зі мною.
+  instruction: Оберіть правильний переклад.

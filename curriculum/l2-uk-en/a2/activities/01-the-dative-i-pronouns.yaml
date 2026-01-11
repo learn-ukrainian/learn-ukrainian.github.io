@@ -25,6 +25,7 @@
     right: тобі потрібно
   - left: холодно (кому?)
     right: йому холодно
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
   title: Pronoun Cases
   groups:
@@ -55,6 +56,7 @@
     - нас
     - вас
     - їх
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Dative Rules
   items:
@@ -94,6 +96,7 @@
   - statement: Щоб запитати «Do you like Ukraine?», кажуть «Ти подобаєшся Україна?»
     correct: false
     explanation: Ні! Кажуть «Тобі подобається Україна?» з давальним відмінком.
+  instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Dative Pronouns
   items:
@@ -181,6 +184,7 @@
     - Вона
     - Її
     - Її
+  instruction: Оберіть правильне слово для заповнення пропуску.
 - type: quiz
   title: Understanding Dative
   items:
@@ -328,6 +332,7 @@
     - text: Ordering coffee for themselves
       correct: false
     explanation: «Вам» + іменник — типова формула гостинності для пропозицій.
+  instruction: Оберіть правильну відповідь.
 - type: error-correction
   title: Find the Mistake
   items:
@@ -439,6 +444,7 @@
     - Ви
     - Ваш
     explanation: '«Вас» — родовий/знахідний. Для «потрібно» — давальний: вам.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Complete the Story
   passage: 'Марія і Петро в Одесі. {Їм|Їх|Вони} подобається море. {Їм|Їх|Вони} тепло
@@ -452,6 +458,7 @@
 
     Увечері {їм|їх|вони} холодно. Вони йдуть додому. На вулиці {їм|їх|вони} весело.
     {Їм|Їх|Вони} подобається Одеса! {Їм|Їх|Вони} потрібно приїхати знову.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: 'Dative Sentences '
   items:
@@ -575,6 +582,7 @@
     - і
     - тюльпани
     answer: Їй подобаються червоні квіти, особливо троянди і тюльпани
+  instruction: Розташуйте слова у правильному порядку.
 - type: cloze
   title: At the Restaurant
   passage: 'Ми з другом у ресторані. Офіціант підходить і каже: «Добрий вечір! Дати
@@ -589,6 +597,7 @@
     Після обіду на вулиці холодно. Подруга каже: «{Мені|Мене|Я} холодно.» Я питаю:
     «{Тобі|Тебе|Ти} дати куртку?» Вона відповідає: «Так, дай {мені|мене|я}, дякую!»
     {Нам|Нас|Ми} весело разом.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: translate
   title: 'English to Ukrainian '
   items:
@@ -724,3 +733,4 @@
     - text: Вони цікаві.
       correct: false
     explanation: Dative їм + adverb for emotional/mental state.
+  instruction: Оберіть правильний переклад.

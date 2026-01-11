@@ -25,6 +25,7 @@
     right: Health
   - left: знижка
     right: Shopping
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Vocabulary Test
   passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
@@ -41,6 +42,7 @@
 
     Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
     (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: A2 Vocabulary Quiz
   items:
@@ -166,6 +168,7 @@
       correct: false
     - text: Bathroom
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: group-sort
   title: Vocabulary Domains
   groups:
@@ -193,6 +196,7 @@
     - квиток
     - готель
     - знижка
+  instruction: Розподіліть елементи за групами.
 - type: true-false
   title: Vocabulary Rules
   items:
@@ -232,6 +236,7 @@
   - statement: «Вітальня» is the kitchen.
     correct: false
     explanation: No! Вітальня = living room, кухня = kitchen.
+  instruction: Визначте, чи твердження правильне.
 - type: cloze
   title: A Day in Life
   passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00.
@@ -257,6 +262,7 @@
     Я люблю {вивчати|забувати|втрачати} нові місця.
 
     Це буде чудова {поїздка|робота|хвороба}!'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: unjumble
   title: Daily Routines
   items:
@@ -316,20 +322,13 @@
     - найближча
     - аптека
     answer: Вибачте скажіть де тут є найближча аптека
+  instruction: Розташуйте слова у правильному порядку.
 - type: mark-the-words
   title: Find the Vocabulary
-  passage: 'Click on the key vocabulary words.
-
-    Вранці я *прокидаюся* о 7:00 і йду до *кухні*, щоб *снідати*.
-
-    ---
-
-    Моя сестра *працює* *лікаркою*. Вона *вчилася* в *університеті* 6 років.
-
-    ---
-
-    У мене болить *голова* і *горло*. Де тут *аптека*?'
-  correct_words:
+  text: Click on the key vocabulary words. Вранці я прокидаюся о 7:00 і йду до кухні,
+    щоб снідати. --- Моя сестра працює лікаркою. Вона вчилася в університеті 6 років.
+    --- У мене болить голова і горло. Де тут аптека?
+  answers:
   - прокидаюся
   - кухні
   - снідати
@@ -340,7 +339,7 @@
   - голова
   - горло
   - аптека
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: English to Ukrainian
   items:
@@ -392,6 +391,7 @@
       correct: false
     - text: Інший варіант
       correct: false
+  instruction: Оберіть правильний переклад.
 - type: translate
   title: Vocabulary Review Translation
   items:
@@ -443,3 +443,4 @@
       correct: false
     - text: Посуд
       correct: false
+  instruction: Оберіть правильний переклад.

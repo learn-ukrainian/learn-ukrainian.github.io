@@ -25,6 +25,7 @@
     right: почати
   - left: закінчувати
     right: закінчити
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Comprehensive Review
   passage: 'Я {прочитав|читав|читаю|прочитаю} книгу вчора. Вона {старша|стара|старіша|найстаріша}
@@ -41,6 +42,7 @@
 
     Чи є {знижка|ціна|якість|покупка}? Він {сказав|говорив|говорить|скаже} «так.»
     Що ви {порекомендуєте|рекомендую|рекомендував|порекомендував}?'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Phase A2.2 Review
   items:
@@ -166,6 +168,7 @@
       correct: false
     - text: Для вираження вдячності іншій людині
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Grammar Rules
   items:
@@ -206,6 +209,7 @@
   - statement: 'Shopping uses all three skills: aspect, comparison, conditional.'
     correct: true
     explanation: Correct! «Який найкращий? Я б хотів. Я візьму.»
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Aspect Classification
   groups:
@@ -225,6 +229,7 @@
     - сказати
     - купити
     - взяти
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Sentence Building
   items:
@@ -295,6 +300,7 @@
     - на
     - товари
     answer: Чи є сьогодні у вашому магазині велика знижка на товари
+  instruction: Розташуйте слова у правильному порядку.
 - type: cloze
   title: Shopping Dialogue Mastery
   passage: 'Добрий день! Чим можу вам сьогодні {допомогти|допомогти → допомогти|допомогу}?
@@ -317,22 +323,14 @@
     Чи {могли б|могли б → могли б|можете} ви мені також показати чохол?
 
     Так, {якби|якби → якби|якщо} я мав більше часу, я {би|би → би|б} показав усе.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Grammar Spotting
-  passage: 'Click on aspect pairs/comparatives/conditionals.
-
-    Я *прочитав* книгу за три дні. Вона *краща*, ніж попередня. *Якби* я мав час,
-    я *б прочитав* ще одну.
-
-    ---
-
-    Цей телефон *дорожчий*, але *найкращий*. Я *б хотів* цей, але *вирішив* почекати.
-
-    ---
-
-    Минулого року я *їздив* до Львова. Місто *гарніше*, ніж я *думав*. *Якби* я жив
-    там, я *б був* щасливий.'
-  correct_words:
+  text: Click on aspect pairs/comparatives/conditionals. Я прочитав книгу за три дні.
+    Вона краща, ніж попередня. Якби я мав час, я б прочитав ще одну. --- Цей телефон
+    дорожчий, але найкращий. Я б хотів цей, але вирішив почекати. --- Минулого року
+    я їздив до Львова. Місто гарніше, ніж я думав. Якби я жив там, я б був щасливий.
+  answers:
   - прочитав
   - краща
   - Якби
@@ -346,7 +344,7 @@
   - думав
   - Якби
   - б був
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: error-correction
   title: Grammar Review
   items:
@@ -462,6 +460,7 @@
     - купував
     explanation: Conditional mood requires «би/б» with past tense «купив би» or «б
       купив».
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: translate
   title: Aspect Translation
   items:
@@ -513,3 +512,4 @@
       correct: false
     - text: Я закінчую роботу.
       correct: false
+  instruction: Оберіть правильний переклад.

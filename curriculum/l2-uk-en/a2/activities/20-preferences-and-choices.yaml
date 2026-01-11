@@ -25,6 +25,7 @@
     right: more useful
   - left: зручніше
     right: more convenient
+  instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Express Preferences
   passage: 'Мені {більше|менше|найбільше|добре} подобається кава. Я {віддаю|даю|беру|маю}
@@ -41,6 +42,7 @@
 
     Мені {більше|великий|багато|найбільше} подобаються фільми. {Гірше|Гірший|Погано|Поганий}
     нічого не робити. Що ти б {вибрав|вибираєш|виберешся|вибір}?'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: Preferences
   items:
@@ -176,6 +178,7 @@
       correct: false
     - text: «вже» (adverb)
       correct: false
+  instruction: Оберіть правильну відповідь.
 - type: true-false
   title: Preference Rules
   items:
@@ -215,6 +218,7 @@
   - statement: «Важче» means "easier."
     correct: false
     explanation: «Важче» means "harder."
+  instruction: Визначте, чи твердження правильне.
 - type: group-sort
   title: Preference Expressions
   groups:
@@ -234,6 +238,7 @@
     - Мій вибір — це...
     - Чи не могли б ви...
     - Я волію (I'd rather)
+  instruction: Розподіліть елементи за групами.
 - type: unjumble
   title: Preference Sentences
   items:
@@ -372,6 +377,7 @@
     - просто
     - говорити
     answer: Завжди набагато важче робити важку справу ніж просто говорити
+  instruction: Розташуйте слова у правильному порядку.
 - type: error-correction
   title: Fix Preferences
   items:
@@ -429,6 +435,7 @@
     - подобатися
     - подобаюся
     explanation: 'Plural verb agreement: подобаються фільми.'
+  instruction: Знайдіть і виправте помилку в реченні.
 - type: cloze
   title: Expressing Preferences
   passage: '— Що тобі {більше|менше|найбільше} подобається: кава чи чай?
@@ -456,21 +463,13 @@
     — Мені {більше|менше|найбільше} подобаються розумні книги.
 
     — Кожному своє! Ми всі {маємо|маєте|маєш} вибір.'
+  instruction: Заповніть пропуски, обравши правильні слова.
 - type: mark-the-words
   title: Find Preference Words
-  passage: 'Click on PREFERENCE expressions.
-
-    *Мені більше подобається* кава. *Я віддаю перевагу* книгам. *Краще* читати, ніж
-    дивитися.
-
-    ---
-
-    *Легше* говорити. *Важче* робити. *Я б вибрала* каву.
-
-    ---
-
-    Він *більше* любить музику. Вона *віддає перевагу* театру. Це *цікавіше*!'
-  correct_words:
+  text: Click on PREFERENCE expressions. Мені більше подобається кава. Я віддаю перевагу
+    книгам. Краще читати, ніж дивитися. --- Легше говорити. Важче робити. Я б вибрала
+    каву. --- Він більше любить музику. Вона віддає перевагу театру. Це цікавіше!
+  answers:
   - Мені більше подобається
   - Я віддаю перевагу
   - Краще
@@ -480,7 +479,7 @@
   - більше
   - віддає перевагу
   - цікавіше
-  instruction: Натисніть на правильні слова в тексті.
+  instruction: Клацніть на слова, що відповідають критерію.
 - type: translate
   title: Preference Translation
   items:
@@ -544,3 +543,4 @@
       correct: false
     - text: Що ти віддаєш?
       correct: false
+  instruction: Оберіть правильний переклад.
