@@ -85,6 +85,19 @@ def _check_required_sections(content: str, template: TemplateStructure) -> list[
                 # Flexible match (e.g., "Grammar" matches "## Grammar Theory")
                 # but NOT "Need More Practice?" matching "Practice"
                 elif alt_lower in header_lower and "practice?" not in header_lower:
+                    # Check if this alias is a substring of another requirement
+                    # If so, we only allow an EXACT match for this alias to avoid collisions
+                    is_substring_of_other_req = False
+                    for other_req in template.required_sections:
+                        if other_req == required:
+                            continue
+                        if alt_lower in other_req.lower() and len(other_req) > len(alt_lower):
+                            is_substring_of_other_req = True
+                            break
+                    
+                    if is_substring_of_other_req and alt_lower != header_lower:
+                        continue
+                        
                     found_alts.append(s)
         
         if not found_alts:
