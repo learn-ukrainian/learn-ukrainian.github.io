@@ -63,7 +63,7 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
       }
 
       const optionIndex = parseInt(match[1], 10);
-      const blank = shuffledBlanks.find(b => b.index === optionIndex - 1); // Convert 1-based to 0-based
+      const blank = shuffledBlanks.find(b => b.index === optionIndex); // MDX uses 0-based indices
 
       if (blank) {
         const selected = selections.get(blank.index);
