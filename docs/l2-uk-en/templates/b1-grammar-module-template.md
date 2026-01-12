@@ -42,6 +42,35 @@ Before submitting a B1 grammar module, verify:
 - [ ] **Pedagogy:** Level-appropriate complexity, no violations
 - [ ] **Structure:** TTT or Presentation-Practice-Production
 
+
+---
+
+## Naturalness Quality Checklist
+
+**Run this check during Stage 4 (Review & Fix) on prose activities.**
+
+Before finalizing the module, verify prose activities (cloze, fill-in, unjumble with 5+ sentences) achieve:
+
+- [ ] **Subject consistency** - Clear subjects maintained throughout passages
+- [ ] **Discourse markers** - At least 2-3 connectors per 10-sentence passage (а, але, потім, тому, також, спочатку, нарешті)
+- [ ] **Topic coherence** - All sentences contribute to unified narrative/theme, no random topic jumps
+- [ ] **No template repetition** - Varied sentence structures across activities within the module
+- [ ] **Moderate intensifiers** - Maximum 2-3 "дуже" per module, 0-1 "надзвичайно/справжній"
+- [ ] **No double superlatives** - Use one precise descriptor instead of redundant pairs (e.g., "найкращий" NOT "найкращий та найвидатніший")
+- [ ] **Natural transitions** - Avoid robotic "і це", "тому що... тому" patterns
+
+**Target score:** 8/10 for content modules, 7/10 for checkpoints
+
+**Red flags (score < target):**
+- Same sentence template repeated across multiple activities
+- Disconnected factoid lists without discourse markers
+- Excessive intensifiers or double superlatives
+- Robotic, mechanical transitions
+
+**See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
+
+**For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
+
 ---
 
 ## Module Structure Template

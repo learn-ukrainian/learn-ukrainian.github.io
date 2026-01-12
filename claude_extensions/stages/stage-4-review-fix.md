@@ -229,6 +229,74 @@ Flag content as DRY if ANY of these are true:
 - [ ] **NO Russian Characters**: Search for `ё`, `ъ`, `ы`, `э` (Forbidden).
 - [ ] **NO Russian Phonetics**: No comparisons like "Ukrainian И is like Russian Ы".
 
+### 9. Naturalness Check
+
+After grammar and vocabulary validation, check prose activities for naturalness.
+
+**Purpose:** Prevent disconnected drills, template repetition, and robotic flow that grammar/vocabulary checks miss.
+
+#### 9.1 Extract Prose Activities
+
+Identify activities with multi-sentence Ukrainian text:
+- **`cloze` passages** (5+ sentences)
+- **`fill-in`** with multi-sentence context
+- **`unjumble`** with 5+ sentences
+
+**Skip these types** (no prose naturalness evaluation):
+- `quiz`, `true-false`, `match-up`, `group-sort`, `select`, `error-correction`, `translate`, `mark-the-words`
+
+#### 9.2 Analyze Naturalness (Switch to Ukrainian Language Mode)
+
+Score each prose activity 1-10 based on:
+
+1. **Subject consistency** - Are subjects maintained throughout passages?
+2. **Discourse markers** - Presence of connectors (а, але, потім, тому, також, спочатку, нарешті)
+3. **Topic coherence** - Do passages maintain unified topics or jump randomly?
+4. **Redundancy** - Are there repetitive patterns or disconnected sentences?
+
+**Red flags (score < 8/10):**
+
+| Issue | Example |
+|-------|---------|
+| **Template repetition** | Same sentence structure repeated across multiple activities in module |
+| **Excessive intensifiers** | "дуже" used 5+ times, or "надзвичайно/справжній" overused |
+| **Double superlatives** | "найвидатніший та найвідоміший" (semantically redundant) |
+| **Missing discourse markers** | List of disconnected factoids with no connectors |
+| **Robotic transitions** | "і це допомагає...", "тому що... тому" (mechanical constructions) |
+
+#### 9.3 Scoring Standards
+
+| Module Type | Target Score | Flag If |
+|-------------|--------------|---------|
+| **Content modules** | 8/10 | < 8/10 |
+| **Checkpoints/Review** | 7/10 | < 7/10 |
+| **Quiz-only modules** | N/A | No prose to score |
+
+**Average the scores** of all prose activities in the module. If module average is below target, flag for fixes.
+
+#### 9.4 Fix Flagged Issues
+
+If module average score < target:
+
+1. **Identify specific patterns** causing issues (which red flags apply?)
+2. **Propose fixes** using ONLY:
+   - Vocabulary from M01-M{current} (check cumulative vocab)
+   - Grammar from curriculum plan (check allowed constructs)
+3. **Apply fixes** to activities YAML file
+4. **Re-score** to verify improvement
+
+**Common fix strategies:**
+
+| Issue | Fix |
+|-------|-----|
+| Template repetition | Vary sentence structures across activities |
+| Excessive intensifiers | Remove 50% of "дуже", eliminate "надзвичайно/справжній" unless essential |
+| Double superlatives | Replace with single precise descriptor |
+| Missing discourse markers | Add 2-3 connectors per 10-sentence passage (також, проте, тому, спочатку) |
+| Robotic transitions | Simplify mechanical constructions, use natural flow |
+
+**See also:** For batch naturalness scanning of completed modules, use `/scan-naturalness {level} {start} {end}`
+
 ## Fix Strategy
 
 ### Minor Violations (≤3 issues)

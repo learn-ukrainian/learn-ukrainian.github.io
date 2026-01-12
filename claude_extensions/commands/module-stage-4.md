@@ -168,6 +168,50 @@ If content was modified, check vocabulary alignment:
    .venv/bin/python scripts/global_vocab_audit.py --level {level}
    ```
 
+### Step 5c: Naturalness Check
+
+**After all structural/grammar/vocabulary audits pass, check prose naturalness.**
+
+**Reference:** See Section 9 in `claude_extensions/stages/stage-4-review-fix.md` for detailed criteria.
+
+**Quick workflow:**
+
+1. **Read activities YAML:** `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
+
+2. **Extract prose activities:**
+   - `cloze` passages with 5+ sentences
+   - `fill-in` with multi-sentence context
+   - `unjumble` with 5+ sentences
+   - Skip: quiz, true-false, match-up, group-sort, select, error-correction, translate, mark-the-words
+
+3. **If NO prose activities found:** Skip to Step 6 (PASS)
+
+4. **If prose activities found:** Switch to Ukrainian language mode and analyze each:
+   - Subject consistency
+   - Discourse markers (а, але, потім, тому, також, спочатку, нарешті)
+   - Topic coherence
+   - Redundancy/repetition
+
+5. **Score each activity 1-10:**
+   - 8/10+ = Pass (content modules)
+   - 7/10+ = Pass (checkpoints/review modules)
+   - < target = Flag for fixes
+
+6. **Calculate module average** from all prose activity scores
+
+7. **If module average < target:**
+   - Identify specific red flags (template repetition, excessive intensifiers, etc.)
+   - Apply fixes using ONLY vocabulary from M01-M{current}
+   - Re-score to verify improvement (target: 8/10+)
+
+**Common fixes:**
+- Break template repetition (vary sentence structures)
+- Remove 50% of intensifiers ("дуже", "надзвичайно")
+- Add discourse markers (2-3 per 10 sentences)
+- Simplify robotic transitions
+
+**If naturalness fixes applied:** Re-run audit (Step 3) to ensure no new violations introduced.
+
 ### Step 6: PASS - Run Full Pipeline
 
 When audit passes, run the full validation pipeline:
