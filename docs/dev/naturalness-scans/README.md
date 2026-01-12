@@ -26,20 +26,45 @@ Each prose activity (cloze passages, unjumbles, fill-ins) is scored 1-10 based o
 
 ## Reports Index
 
-### A2 Level (58 modules total)
+### A1 Level (34 modules total) ✅ COMPLETE
 
 | Report | Modules | Flagged | Average Score | Status |
 |--------|---------|---------|---------------|--------|
-| `a2-naturalness-scan-m26-m35.md` | M26-M35 (10 modules) | 3 modules | 6.9/10 → 8.0/10 (after fixes) | Fixed |
-| `a2-naturalness-scan-m36-m44.md` | M36-M44 (9 modules) | 4 modules | 6.6/10 → 8.0/10 (after fixes) | Fixed |
-| `a2-naturalness-scan-m57-m58.md` | M57-M58 (2 modules) | 0 modules | 7/10 (review standards) | Deferred |
+| `a1-naturalness-scan-m01-m34.md` | M01-M34 (34 modules) | 2 modules | 7.5/10 → 8.0/10+ | Fixed ✅ |
+
+**A1 Overall Results:**
+- **Total modules scanned:** 34/34 (100% complete)
+- **Prose activities found:** 25 modules (M10-M34)
+- **Modules flagged and fixed:** 2 modules (M21, M22) - 8%
+- **Checkpoints deferred:** 3 modules (M10, M20, M34)
+- **Average score before fixes:** 7.5/10
+- **Average score after fixes:** 8.0/10+
+- **Final status:** READY FOR PRODUCTION ✅
+
+**A1 Key Findings:**
+- M01-M09: No prose activities (pure vocabulary drills)
+- M10-M34: Single-sentence drills with good naturalness
+- Only 2 modules needed fixes (M21, M22) - disconnected sentences
+- A1 has simpler activities, less prone to naturalness issues than A2
+
+### A2 Level (58 modules total) ✅ COMPLETE
+
+| Report | Modules | Flagged | Average Score | Status |
+|--------|---------|---------|---------------|--------|
+| `a2-naturalness-scan-m01-m11.md` | M01-M11 (11 modules) | 4 modules | 6.8/10 → 8.0/10 | Fixed ✅ |
+| `a2-naturalness-scan-m12-m25.md` | M12-M25 (14 modules) | 8 modules | 6.7/10 → 8.0/10 | Fixed ✅ |
+| `a2-naturalness-scan-m26-m35.md` | M26-M35 (10 modules) | 3 modules | 6.9/10 → 8.0/10 | Fixed ✅ |
+| `a2-naturalness-scan-m36-m44.md` | M36-M44 (9 modules) | 4 modules | 6.6/10 → 8.0/10 | Fixed ✅ |
+| `a2-naturalness-scan-m45-m56.md` | M45-M56 (12 modules) | 4 modules | 7.1/10 → 8.0/10 | Fixed ✅ |
+| `a2-naturalness-scan-m57-m58.md` | M57-M58 (2 modules) | 0 modules | 7/10 (review) | Deferred |
 
 **A2 Overall Results:**
-- Total modules scanned: 58
-- Content modules flagged and fixed: 23 modules (41%)
-- Average score before fixes: 6.9/10
-- Average score after fixes: 8.0/10
-- Zero critical corruption errors found
+- **Total modules scanned:** 58/58 (100% complete)
+- **Content modules flagged and fixed:** 23 modules (41%)
+- **Average score before fixes:** 6.9/10
+- **Average score after fixes:** 8.0/10
+- **Critical errors found:** Multiple (gender, vocabulary violations)
+- **Final status:** READY FOR PRODUCTION ✅
 
 ### B1 Level (91 modules total) ✅ COMPLETE
 
@@ -191,11 +216,19 @@ python /tmp/query_{level}_vocab.py check "слово"
 ## Next Steps
 
 ### Completed ✅
+- ✅ **A1 M01-M34** full scan (all fixes applied) - 8.0/10+ average
+  - Only 2 modules flagged (M21, M22) - 8% flagged rate
+  - Simpler activities, less prone to naturalness issues
+  - **Final status:** READY FOR PRODUCTION
 - ✅ **A2 M01-M58** full scan (all fixes applied) - 8.0/10 average
+  - 23 modules flagged (41%) - significant quality improvement needed
+  - Critical errors fixed (gender, vocabulary violations)
+  - **Final status:** READY FOR PRODUCTION
 - ✅ **B1 M01-M91** complete scan (all fixes applied) - 8.2/10 average
   - M01-M05: Metalanguage improvements
   - M72-M75: Regional module fixes (19 changes)
   - M80: Active lifestyle flow improvements
+  - Only 11% flagged - highest baseline quality
   - **Final status:** READY FOR PRODUCTION
 
 ### In Progress 🔄
@@ -208,8 +241,6 @@ python /tmp/query_{level}_vocab.py check "слово"
 - **B2 M11-M145** (135 remaining modules)
   - Priority: MEDIUM (per GitHub issue #415)
   - Start after B2 audits complete
-- **A1 M01-M34** (34 modules - retroactive scan)
-  - Priority: Would complete full A1-B1 naturalness coverage
 - **C1 M01-M202** (202 modules)
   - Priority: LOW (per GitHub issue #416)
   - Start after C1 content completion
