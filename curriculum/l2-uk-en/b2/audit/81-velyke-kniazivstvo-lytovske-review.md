@@ -1,85 +1,21 @@
 # Audit Report: 81-velyke-kniazivstvo-lytovske.md
 **Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q2 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q4 prompt length 5 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q5 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q11 prompt length 4 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q13 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про Велике князівство Литовське' Q15 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 1 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 2 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 3 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 4 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 5 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 6 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 7 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 9 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 10 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 11 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 12 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 13 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 14 has 3 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 15 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Велике князівство Литовське' item 16 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ❌ 1866/2000
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2162/2000
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 80/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 23 violations
-- **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14); 1 cloze with year blanks
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -91,22 +27,30 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 13 | 6 | 100% | 14% | 14.3% |
+| engagement | 15 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 6 | 2 | 100% | 14% | 14.3% |
+| decolonization | 9 | 2 | 100% | 14% | 14.3% |
 | cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 0.67 | - | 67% | 5% | 3.2% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **98.2%** |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
+| paragraph_var | 0.76 | - | 76% | 5% | 3.6% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **98.7%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
-| **Вступ** | ⚪️ | 152 | Skipped |
-| **Литва приходить на українські землі** | ⚪️ | 512 | Skipped |
+| **Вступ** | ⚪️ | 216 | Skipped |
+| **Формування та розквіт держави** | ⚪️ | 80 | Skipped |
+| **Читання** | ✅ | 184 | Included in Core |
+| **Основні події та культурний синтез** | ✅ | 480 | Included in Core |
 | **Релігійна толерантність і автономія** | ⚪️ | 369 | Skipped |
 | **Первинні джерела** | ⚪️ | 171 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 250 | Skipped |

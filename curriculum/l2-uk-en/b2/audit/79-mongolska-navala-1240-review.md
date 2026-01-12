@@ -1,92 +1,20 @@
 # Audit Report: 79-mongolska-navala-1240.md
 **Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q3 prompt length 6 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q7 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q11 prompt length 6 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту' Q16 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 3 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 4 has 3 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 5 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 6 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 7 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 8 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 9 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 10 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 11 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 12 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 13 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 14 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 15 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 16 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційний погляд' Q6 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційний погляд' Q7 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційний погляд' Q9 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деколонізаційний погляд' Q13 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Монгольська навала: Історичний контекст, Вступ
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 31 violations (severe - consider revision)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 2163/2000
-- **Activities:** ✅ 14/10
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 148/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 26 violations
-- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
@@ -99,11 +27,11 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
-| engagement | 12 | 6 | 100% | 14% | 14.3% |
+| engagement | 14 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 14 | 2 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 0.87 | - | 87% | 5% | 4.1% |
 | questions | 14 | 3 | 100% | 5% | 4.8% |
@@ -113,8 +41,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ** | ⚪️ | 151 | Skipped |
-| **Монгольська навала: Історичний контекст** | ✅ | 1128 | Included in Core |
+| **Розминка** | ⚪️ | 151 | Skipped |
+| **Читання: Монгольська навала** | ✅ | 1128 | Included in Core |
 | **Первинні джерела** | ⚪️ | 249 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 300 | Skipped |
 | **Підсумок** | ✅ | 180 | Included in Core |

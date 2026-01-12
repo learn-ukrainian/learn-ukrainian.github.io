@@ -18,22 +18,30 @@
     right: виконати завдання
   - left: Парцеляція
     right: Він прийшов. Один.
+  - left: Сполучник допусту
+    right: хоча
+  - left: Сполучник причини
+    right: тому що
+  - left: Сполучник умови
+    right: якщо
+  - left: Сполучник мети
+    right: щоб
 - type: quiz
   title: Фразеологічна перевірка
   instruction: Оберіть правильне значення.
   items:
-  - question: Що означає 'вхопити бога за бороду'?
+  - question: Яке значення має фразеологізм 'вхопити бога за бороду', коли ми говоримо про успіх?
     options:
-    - text: надзвичайний успіх
+    - text: досягти надзвичайного успіху
       correct: true
-    - text: мати бороду
+    - text: мати довгу бороду
       correct: false
-    - text: спіймати рибу
+    - text: спіймати велику рибу
       correct: false
-    - text: впасти
+    - text: впасти з висоти
       correct: false
     explanation: Про великий успіх.
-  - question: 'Продовжте: ''Сім раз відміряй, а...'''
+  - question: "Як правильно продовжити відоме народне прислів'я: 'Сім раз відміряй, а...'?"
     options:
     - text: один раз відріж
       correct: true
@@ -44,7 +52,7 @@
     - text: нічого не роби
       correct: false
     explanation: Про виваженість.
-  - question: Яка ідіома про лінощі?
+  - question: Яка з наведених ідіом найкраще описує стан лінощів та повної бездіяльності людини?
     options:
     - text: б'є байдики
       correct: true
@@ -55,18 +63,18 @@
     - text: тягне лямку
       correct: false
     explanation: Бити байдики — лінуватися.
-  - question: Що означає 'накивати п'ятами'?
+  - question: Що саме означає фразеологізм 'накивати п'ятами', коли ми описуємо дії людини?
     options:
-    - text: швидко втекти
+    - text: швидко втекти звідкись
       correct: true
-    - text: купити взуття
+    - text: купити нове взуття
       correct: false
-    - text: масаж
+    - text: зробити масаж ніг
       correct: false
-    - text: стояти
+    - text: стояти на місці
       correct: false
     explanation: Про втечу.
-  - question: Як сказати про розумну людину?
+  - question: Як можна образно назвати дуже розумну та кмітливу людину, використовуючи фразеологізм?
     options:
     - text: світла голова
       correct: true
@@ -77,37 +85,37 @@
     - text: вітер у голові
       correct: false
     explanation: Комплімент розуму.
-  - question: Що означає 'втерти носа'?
+  - question: Що означає вираз 'втерти носа' супернику під час змагання або суперечки?
     options:
-    - text: довести перевагу
+    - text: довести свою перевагу
       correct: true
     - text: дати серветку
       correct: false
     - text: заховати товар
       correct: false
-    - text: вибачитися
+    - text: вибачитися перед ним
       correct: false
     explanation: Про перемогу.
-  - question: Що означає 'не опускати рук'?
+  - question: Що означає фразеологізм 'не опускати рук' у складній життєвій ситуації?
     options:
-    - text: продовжувати діяти
+    - text: продовжувати активно діяти
       correct: true
-    - text: тримати вгору
+    - text: тримати руки вгору
       correct: false
-    - text: вправи
+    - text: робити фізичні вправи
       correct: false
-    - text: відмовитися
+    - text: відмовитися від боротьби
       correct: false
     explanation: Стійкість.
-  - question: Що означає 'купити кота в мішку'?
+  - question: Що означає вираз 'купити кота в мішку', коли йдеться про покупки?
     options:
-    - text: придбати невідоме
+    - text: придбати щось невідоме
       correct: true
-    - text: зоомагазин
+    - text: піти в зоомагазин
       correct: false
-    - text: подарунок
+    - text: отримати подарунок
       correct: false
-    - text: тварина
+    - text: знайти тварину
       correct: false
     explanation: Про необдуманість.
 - type: group-sort
@@ -122,18 +130,20 @@
     - Оскільки ви готові, ми почнемо.
     - Він знає, де лежить ключ.
     - Ми працюємо, поки є світло.
-    - Я вірю, що все буде добре.
-    - Попри те що йшов дощ, ми йшли.
-    - Щойно ми прийшли, задзвонило.
-  - name: Односкладні та Прості
+  - name: Прості речення
+    items:
+    - Я вірю в краще.
+    - Попри дощ ми йшли.
+    - Щойно ми прийшли.
+    - Нам треба йти.
+    - Там дуже гарно.
+    - Сьогодні тепло.
+  - name: Односкладні речення
     items:
     - Пахне весною.
     - Люблю осінній ліс.
     - Мені не спиться.
     - Світає.
-    - Нам треба йти.
-    - Там гарно.
-    - Сьогодні тепло.
     - Тихо довкола.
     - Ранок був туманним.
 - type: unjumble
@@ -480,6 +490,7 @@
     - text: хапати свіжу думку
       correct: false
     - text: здійснювати стару річ
+      correct: false
     explanation: B2 лексика.
   - source: despite the complexity of the task
     options:
@@ -490,6 +501,7 @@
     - text: бо завдання складне
       correct: false
     - text: оскільки завдання складне
+      correct: false
     explanation: Допустовий зв'язок.
   - source: it appears that the situation is stable
     options:
@@ -500,6 +512,7 @@
     - text: здається, що ситуація панічна
       correct: false
     - text: існує думка про стабільність
+      correct: false
     explanation: Об'єктивне враження.
   - source: to be a man of action
     options:
@@ -510,6 +523,7 @@
     - text: бути людиною мовчання
       correct: false
     - text: бути людиною цифр
+      correct: false
     explanation: Ідіома про активність.
   - source: to move mountains for success
     options:
@@ -520,6 +534,7 @@
     - text: п'ятами кивати заради успіху
       correct: false
     - text: байдики бити заради успіху
+      correct: false
     explanation: Про зусилля.
   - source: as soon as we reach a conclusion
     options:
@@ -530,6 +545,7 @@
     - text: якби ми вирішили
       correct: false
     - text: відколи ми почали
+      correct: false
     explanation: Миттєва послідовність.
   - source: fundamental worldview principles
     options:
@@ -540,6 +556,7 @@
     - text: швидкі плани на вечір
       correct: false
     - text: жодні переконання
+      correct: false
     explanation: Високий рівень абстракції.
 - type: true-false
   title: Вердикт фахівця
@@ -582,14 +599,6 @@
     - text: будувати складні речення
       correct: true
     - text: розрізняти синоніми
-      correct: true
-    - text: використовувати абстрактну лексику
-      correct: true
-    - text: трансформувати тексти
-      correct: true
-    - text: володіти стилістичними регістрами
-      correct: true
-    - text: аналізувати підтекст
       correct: true
   - question: 'Оберіть ознаки майстерності:'
     options:
@@ -661,6 +670,14 @@
     right: бути
   - left: виявлятися
     right: з'ясовуватися
+  - left: говорити
+    right: казати
+  - left: йти
+    right: прямувати
+  - left: бігти
+    right: мчати
+  - left: думати
+    right: мислити
 - type: match-up
   title: Регістри та Ситуації
   instruction: З'єднайте речення з контекстом.
@@ -681,33 +698,41 @@
     right: Робота
   - left: Хай це буде секретом.
     right: Приватно
+  - left: Згідно з наказом.
+    right: Офіс
+  - left: Привіт, як ти?
+    right: Чат
+  - left: Шановний пане!
+    right: Лист
+  - left: Що таке?
+    right: Вдома
 - type: quiz
   title: Фінальний вердикт
   instruction: Проаналізуйте прогрес.
   items:
-  - question: Який блок найскладніший?
+  - question: Який навчальний блок здався вам найскладнішим та найважчим під час вивчення?
     options:
-    - text: числівники
+    - text: відмінювання складних числівників
       correct: true
-    - text: ідіоми
+    - text: вживання ідіом у контексті
       correct: true
-    - text: сполучники
+    - text: використання складних сполучників
       correct: true
-    - text: поняття
+    - text: філософські поняття
       correct: true
     explanation: Опитування.
-  - question: Що є критерієм B2.2?
+  - question: Що є головним та найважливішим критерієм успіху на рівні B2.2?
     options:
     - text: вміння інтегрувати знання
       correct: true
-    - text: десять слів
+    - text: знання десяти слів
       correct: false
-    - text: швидкий біг
+    - text: вміння швидко бігати
       correct: false
-    - text: мовчання
+    - text: постійне мовчання
       correct: false
     explanation: Інтеграція — ключ.
-  - question: Де був марафон у вправах?
+  - question: У якому саме місті проходив марафон, який ми згадували у вправах цього модуля?
     options:
     - text: Харків
       correct: true
@@ -718,29 +743,29 @@
     - text: Полтава
       correct: false
     explanation: У вправах згадувався Харків.
-  - question: Що далі після Checkpoint?
+  - question: Що цікавого чекає на вас після завершення цього важливого Checkpoint?
     options:
-    - text: історія України
+    - text: історія України та культура
       correct: true
-    - text: нічого
+    - text: нічого цікавого
       correct: false
-    - text: відпустка
+    - text: довга відпустка
       correct: false
-    - text: фізика
+    - text: уроки фізики
       correct: false
     explanation: Наступна фаза — історія.
-  - question: Як автор називає мову?
+  - question: Як автор курсу метафорично та поетично називає українську мову у своїх матеріалах?
     options:
     - text: простір свободи та сили
       correct: true
-    - text: набір правил
+    - text: складний набір правил
       correct: false
-    - text: дивина
+    - text: якась дивина
       correct: false
-    - text: пісня
+    - text: просто пісня
       correct: false
     explanation: Мова — динамічний простір.
-  - question: Який числівник був як приклад?
+  - question: Який складний числівник використовувався як приклад у поясненнях до першої навички?
     options:
     - text: вісьмомастами сорока шістьма
       correct: true
@@ -751,26 +776,26 @@
     - text: мільйон
       correct: false
     explanation: Складна форма Орудного.
-  - question: Що означає 'людина чину'?
+  - question: Що означає фразеологізм 'людина чину' в сучасній українській літературній мові?
     options:
-    - text: діяти, а не говорити
+    - text: діяти, а не лише говорити
       correct: true
-    - text: мати гроші
+    - text: мати багато грошей
       correct: false
-    - text: бути старим
+    - text: бути дуже старим
       correct: false
-    - text: уряд
+    - text: працювати в уряді
       correct: false
     explanation: Активна позиція.
-  - question: Яку пораду дає автор?
+  - question: Яку головну та найважливішу пораду дає автор для вашого подальшого розвитку?
     options:
     - text: слухати автентичне і писати
       correct: true
-    - text: спати
+    - text: постійно спати
       correct: false
     - text: нічого не робити
       correct: false
-    - text: одне слово
+    - text: вчити одне слово
       correct: false
     explanation: Активна практика.
 - type: select
@@ -786,14 +811,6 @@
     - text: вживаю сполучники
       correct: true
     - text: знаю ідіоми
-      correct: true
-    - text: відчуваю регістри
-      correct: true
-    - text: можу написати есей
-      correct: true
-    - text: готовий до історії
-      correct: true
-    - text: ціную мову
       correct: true
   - question: Які регіони ви відвідали у фазі B2.2?
     options:
@@ -849,7 +866,7 @@
   title: Фінальний синтаксис
   instruction: Оберіть правильну структуру речення.
   items:
-  - question: 'Оберіть варіант із правильною парцеляцією:'
+  - question: 'Яке з наведених речень містить стилістичну парцеляцію для підсилення змісту висловлювання?'
     options:
     - text: Він переміг. Всупереч усьому. Назавжди.
       correct: true
@@ -860,7 +877,7 @@
     - text: Він переміг. Всупереч. Усьому назавжди.
       correct: false
     explanation: Парцеляція — розчленування для акценту.
-  - question: Який сполучник найкраще підходить для офіційного обґрунтування?
+  - question: Який сполучник найкраще та найдоречніше підходить для офіційного обґрунтування вашої думки у звіті?
     options:
     - text: оскільки
       correct: true
@@ -871,7 +888,7 @@
     - text: хай
       correct: false
     explanation: Оскільки — стандарт ділового стилю.
-  - question: 'Оберіть безособове речення:'
+  - question: 'Оберіть граматично правильне безособове речення, яке підходить для офіційного звіту:'
     options:
     - text: Проєкт реалізовано вчасно.
       correct: true
@@ -882,7 +899,7 @@
     - text: Команда реалізувала проєкт.
       correct: false
     explanation: Безособові речення фокусуються на дії/результаті.
-  - question: Як правильно сказати про гіпотетичне минуле?
+  - question: Як правильно сформулювати думку про гіпотетичне минуле, використовуючи умовний спосіб?
     options:
     - text: Якби я знав, я б допоміг.
       correct: true
@@ -893,7 +910,7 @@
     - text: Якщо я буду знати, я допоможу.
       correct: false
     explanation: Якби + минулий час + б.
-  - question: Яка конструкція вказує на точну межу часу?
+  - question: Яка синтаксична конструкція найкраще вказує на точну часову межу тривалості дії?
     options:
     - text: доки не закінчимо
       correct: true
@@ -904,7 +921,7 @@
     - text: відколи прийшли
       correct: false
     explanation: Доки вказує на часовий кордон.
-  - question: 'Оберіть варіант із правильним відмінюванням ''дев''ятсот'' у Р.в.:'
+  - question: 'Оберіть варіант із правильним відмінюванням складного числівника ''дев''ятсот'' у родовому відмінку:'
     options:
     - text: дев'ятисот
       correct: true
@@ -915,7 +932,7 @@
     - text: дев'ятсотами
       correct: false
     explanation: 'Відмінюються обидві частини: дев''яти + сот.'
-  - question: Яка ідіома пасує для завершальної стадії роботи?
+  - question: Яка ідіома найкраще пасує для опису завершальної стадії важливої та тривалої роботи?
     options:
     - text: вийти на фінішну пряму
       correct: true
@@ -926,7 +943,7 @@
     - text: тягнути кота за хвоста
       correct: false
     explanation: Вихід на фінішну пряму — це фінал.
-  - question: Що в українській мові означає 'сродна праця'?
+  - question: Що в українській філософській думці, зокрема у Сковороди, означає поняття 'сродна праця'?
     options:
     - text: робота за покликанням душі
       correct: true
