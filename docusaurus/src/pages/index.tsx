@@ -155,14 +155,14 @@ export default function Home(): ReactNode {
                 level="A2"
                 name="Elementary"
                 description="All 7 cases, verb aspects, comparison"
-                modules={57}
+                modules={58}
                 color="#1565C0"
               />
               <LevelCard
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, complex sentences"
-                modules={86}
+                modules={91}
                 color="#E65100"
               />
               <LevelCard
