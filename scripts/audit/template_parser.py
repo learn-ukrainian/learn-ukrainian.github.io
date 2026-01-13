@@ -85,6 +85,7 @@ def resolve_template(module_id: str, meta: dict) -> str:
         # B2-specific
         'phraseology': 'b2-phraseology-module-template.md',
         'history': 'b2-history-module-template.md',
+        'synthesis': '{level}-synthesis-module-template.md',
 
         # C1-specific
         'biography': 'c1-biography-module-template.md',

@@ -1,158 +1,59 @@
 # Audit Report: 144-b2-pidsumkovyy-ohlyad.md
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up 'Пасивні форми' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q1 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q2 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q3 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q4 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q5 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q6 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q7 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дієприкметники' Q8 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY]** match-up 'Фразеологізми' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** match-up 'Історичні дати' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q1 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q2 prompt length 7 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q3 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q4 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q5 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q6 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q7 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний тест' Q8 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY]** match-up 'Синоніми' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q1 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q2 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q3 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q4 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q5 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q6 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q7 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Терміни дослідження' Q8 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q1 prompt length 2 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q2 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q3 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q4 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q5 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q6 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q7 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Мега-тест' Q8 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY]** group-sort 'Офіційно vs Неофіційно' has 2 groups (target: 3-5)
-  - FIX: Adjust number of sorting categories to 3-5.
-- **[COMPLEXITY]** match-up 'Символи України' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q1 prompt length 5 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q2 prompt length 4 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q3 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q4 prompt length 2 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q5 prompt length 3 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q6 prompt length 2 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q7 prompt length 2 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Тип помилки' Q8 prompt length 2 (target: 10-25)
-  - FIX: Adjust prompt length to 10-25 words.
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## B2 Підсумковий огляд' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Інтеграційне завдання' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Інтеграційне завдання' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-checkpoint-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Огляд' found: Контрольна точка: Підсумковий огляд B2, Зміст огляду
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 50 violations (severe - consider revision)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1044/1750
-- **Activities:** ✅ 15/15
+- **Words:** ✅ 1796/1750
+- **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 5/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 46 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.4% (checkpoint - no gate)
-- **Richness:** ✅ 87% (checkpoint)
+- **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 87% (minimum: 85%)
+**Score:** 98% (minimum: 85%)
 **Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 5 | 8 | 62% | 25% | 15.5% |
-| review_sections | 24 | 3 | 100% | 20% | 20.0% |
-| variety | 0.96 | - | 96% | 15% | 14.4% |
-| engagement | 5 | 3 | 100% | 10% | 10.0% |
+| activity_types | 10 | 8 | 100% | 25% | 25.0% |
+| review_sections | 23 | 3 | 100% | 20% | 20.0% |
+| variety | 0.92 | - | 92% | 15% | 13.8% |
+| engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 9 | - | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 0.79 | - | 79% | 10% | 7.9% |
-| **TOTAL** | | | | | **87.8%** |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Summary** | ✅ | 52 | Included in Core |
-| **Навичка 1: Граматичний арсенал** | ⚪️ | 165 | Skipped |
-| **Навичка 2: Стилі мовлення** | ⚪️ | 139 | Skipped |
-| **Навичка 3: Лексика і Фразеологія** | ⚪️ | 133 | Skipped |
-| **Навичка 4: Історія та Культура** | ✅ | 196 | Included in Core |
-| **Навичка 5: Комунікація** | ⚪️ | 249 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 71 | Included in Core |
+| **Зміст огляду** | ⚪️ | 72 | Skipped |
+| **Навички** | ⚪️ | 21 | Skipped |
+| **Skill 1: Пасивний стан та Дієприкметники (Граматичний арсенал)** | ⚪️ | 253 | Skipped |
+| **Skill 2: Функціональні стилі (Стилістичний діапазон)** | ⚪️ | 236 | Skipped |
+| **Skill 3: Фразеологія та Синонімія (Багатство мови)** | ⚪️ | 222 | Skipped |
+| **Skill 4: Культурно-історичний контекст (Код нації)** | ✅ | 224 | Included in Core |
+| **Інтеграційне завдання** | ⚪️ | 410 | Skipped |
+| **Підсумок** | ✅ | 146 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 141 | Skipped |

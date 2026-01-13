@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ✅ 2072/2000
-- **Activities:** ✅ 15/10
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation

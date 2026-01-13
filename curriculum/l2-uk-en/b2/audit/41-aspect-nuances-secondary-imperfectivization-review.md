@@ -3,8 +3,8 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Культурний контекст, Вживання у контексті
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -44,12 +44,6 @@
 | realworld | 7 | - | 100% | 8% | 8.3% |
 | questions | 20 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **99.8%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

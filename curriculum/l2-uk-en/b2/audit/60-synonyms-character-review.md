@@ -36,9 +36,6 @@
 | questions | 14 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **96.7%** |
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|

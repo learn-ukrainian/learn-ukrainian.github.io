@@ -43,6 +43,7 @@ MODULE_TYPE_MAP = {
     # History types
     'history': 'history',
     'historical': 'history',
+    'synthesis': 'history',
     # Phraseology types
     'phraseology': 'phraseology',
     'idioms': 'phraseology',

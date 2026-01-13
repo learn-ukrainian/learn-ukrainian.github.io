@@ -36,12 +36,6 @@
 | questions | 12 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **96.3%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (13 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|

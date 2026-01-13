@@ -1,70 +1,20 @@
 # Audit Report: 114-povoienne-radianske-panuvannia.md
 **Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q3 prompt length 3 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q4 prompt length 3 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q5 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q7 prompt length 5 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q8 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Радянська русифікація' Q9 prompt length 3 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 6 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 3 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 4 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 5 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 6 has 5 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 7 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 8 has 4 words (target: 8-15)
-  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналітичний квіз: Постаті' Q2 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналітичний квіз: Постаті' Q5 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Контекст: Відлига та сподівання
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 20 violations (severe - consider revision)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ⚠️ 1930/2000 (70 short)
-- **Activities:** ✅ 13/10
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 18/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 18 violations
-- **Content_heavy:** ✅ Content-heavy OK (13 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ⏳ Pending validation
@@ -91,11 +41,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 81 | Included in Core |
-| **Вступ** | ⚪️ | 209 | Skipped |
-| **Шістдесятники: Голос нового покоління** | ⚪️ | 389 | Skipped |
-| **Русифікація: Тиха війна проти мови** | ⚪️ | 361 | Skipped |
-| **Номенклатура: Нові хазяї** | ⚪️ | 210 | Skipped |
-| **Хельсінкський рух та Чорнобиль** | ⚪️ | 217 | Skipped |
+| **Читання** | ✅ | 1386 | Included in Core |
 | **Первинні джерела** | ⚪️ | 157 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 136 | Skipped |
 | **Підсумок** | ✅ | 60 | Included in Core |

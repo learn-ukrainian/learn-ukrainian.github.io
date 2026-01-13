@@ -3,40 +3,13 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [match-definitions-text1] match-up: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: YAML parse error: while parsing a block mapping
+  in "curriculum/l2-uk-en/c1/activities/01-b2-review-bridge.yaml", line 823, column 3
+expected <block end>, but found '<scalar>'
+  in "curriculum/l2-uk-en/c1/activities/01-b2-review-bridge.yaml", line 827, column 11
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [quiz-comprehension-text1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [match-synonyms-text2] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [quiz-comprehension-text2] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [group-sort-style] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [fill-in-academic-phrases] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [error-correction-register] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [cloze-academic-text] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [unjumble-sentences-c1] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [mark-passive] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [fill-in-connectors] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [select-academic-verbs] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [text-comparison-quiz] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [true-false-analysis] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [register-id-match] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [fill-in-passive-transform] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 01-b2-review-bridge.yaml: [essay-transition-c1] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## TEMPLATE COMPLIANCE
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template'
@@ -45,23 +18,25 @@
   - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 40/100)
 
-- Revision recommended (severity 50/100)
-- 19 violations (severe - consider revision)
+- Revision recommended (severity 40/100)
+- 4 violations (moderate)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 2534/2000
-- **Activities:** ✅ 17/12
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ❌ 0/12
+- **Density:** ❌ 0 < 12
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 17 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)

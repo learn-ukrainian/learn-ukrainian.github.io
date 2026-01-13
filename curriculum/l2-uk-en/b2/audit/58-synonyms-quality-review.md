@@ -2,6 +2,15 @@
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1777/1750
 - **Activities:** ✅ 15/10
@@ -35,12 +44,6 @@
 | realworld | 10 | - | 100% | 8% | 8.3% |
 | questions | 5 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **98.8%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

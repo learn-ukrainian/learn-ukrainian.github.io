@@ -16,31 +16,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
-- **Richness:** ✅ 96% (content)
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** content
+**Score:** 95% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 41 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 11 | 4 | 100% | 12% | 12.5% |
-| realworld | 3 | 3 | 100% | 12% | 12.5% |
-| visual | 2 | 4 | 50% | 6% | 3.1% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 7 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **96.8%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 11 | 4 | 100% | 10% | 9.5% |
+| visual | 2 | 4 | 50% | 10% | 4.8% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
