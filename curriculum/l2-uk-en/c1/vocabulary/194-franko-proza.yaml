@@ -1,0 +1,132 @@
+module: 194-franko-proza
+level: C1
+version: '2.0'
+items:
+  - lemma: проза
+    ipa: /ˈprɔzɐ/
+    translation: prose
+    pos: noun
+    gender: f
+  - lemma: повість
+    ipa: /ˈpɔwʲistʲ/
+    translation: novella, long story
+    pos: noun
+    gender: f
+  - lemma: роман
+    ipa: /rɔˈmɑn/
+    translation: novel
+    pos: noun
+    gender: m
+  - lemma: оповідання
+    ipa: /ɔpɔwʲiˈdannʲɐ/
+    translation: short story
+    pos: noun
+    gender: n
+  - lemma: реалізм
+    ipa: /rɛɐˈlʲizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: натуралізм
+    ipa: /nɐturɐˈlʲizm/
+    translation: naturalism
+    pos: noun
+    gender: m
+  - lemma: психологізм
+    ipa: /psɪxɔɫɔˈɦʲizm/
+    translation: psychologism
+    pos: noun
+    gender: m
+  - lemma: конфлікт
+    ipa: /kɔnˈfɫʲikt/
+    translation: conflict
+    pos: noun
+    gender: m
+  - lemma: громада
+    ipa: /ɦrɔˈmɑdɐ/
+    translation: community
+    pos: noun
+    gender: f
+  - lemma: експлуатація
+    ipa: /ɛkspɫuɐˈtat͡sʲijɐ/
+    translation: exploitation
+    pos: noun
+    gender: f
+  - lemma: нафта
+    ipa: /ˈnɑftɐ/
+    translation: oil, petroleum
+    pos: noun
+    gender: f
+  - lemma: робітник
+    ipa: /rɔbʲitˈnɪk/
+    translation: worker
+    pos: noun
+    gender: m
+  - lemma: бориславський
+    ipa: /bɔrɪˈsɫɑwsʲkɪj/
+    translation: Boryslav (related to the town)
+    pos: adj
+  - lemma: історичний
+    ipa: /istɔˈrɪt͡ʃnɪj/
+    translation: historical
+    pos: adj
+  - lemma: сюжет
+    ipa: /sʲuˈʒɛt/
+    translation: plot
+    pos: noun
+    gender: m
+  - lemma: персонаж
+    ipa: /pɛrsɔˈnɑʒ/
+    translation: character
+    pos: noun
+    gender: m
+  - lemma: типізація
+    ipa: /tɪpʲiˈzat͡sʲijɐ/
+    translation: typification
+    pos: noun
+    gender: f
+  - lemma: побут
+    ipa: /ˈpɔbut/
+    translation: everyday life, lifestyle
+    pos: noun
+    gender: m
+  - lemma: злидні
+    ipa: /ˈzɫɪdnʲi/
+    translation: poverty, misery
+    pos: noun
+    gender: m
+  - lemma: боротьба
+    ipa: /bɔˈrɔtʲbɐ/
+    translation: struggle, fight
+    pos: noun
+    gender: f
+  - lemma: нерівність
+    ipa: /nɛˈrʲiwnʲistʲ/
+    translation: inequality
+    pos: noun
+    gender: f
+  - lemma: гуманізм
+    ipa: /ɦumɐˈnʲizm/
+    translation: humanism
+    pos: noun
+    gender: m
+  - lemma: рефлексія
+    ipa: /rɛˈfɫɛksʲijɐ/
+    translation: reflection
+    pos: noun
+    gender: f
+  - lemma: панорама
+    ipa: /pɐnɔˈrɑmɐ/
+    translation: panorama, overview
+    pos: noun
+    gender: f
+  - lemma: критик
+    ipa: /ˈkrɪtɪk/
+    translation: critic
+    pos: noun
+    gender: m
+  - lemma: епіка
+    ipa: /ˈɛpʲikɐ/
+    translation: epic (genre)
+    pos: noun
+    gender: f

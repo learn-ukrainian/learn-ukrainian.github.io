@@ -1,0 +1,132 @@
+module: 193-franko-liryka
+level: C1
+version: '2.0'
+items:
+  - lemma: каменяр
+    ipa: /kɐmɛˈnʲar/
+    translation: stonebreaker
+    pos: noun
+    gender: m
+  - lemma: лірика
+    ipa: /ˈlʲirɪkɐ/
+    translation: lyric poetry
+    pos: noun
+    gender: f
+  - lemma: філософський
+    ipa: /fʲiɫɔˈsɔwsʲkɪj/
+    translation: philosophical
+    pos: adj
+  - lemma: громадянин
+    ipa: /ɦrɔmɐˈdʲanɪn/
+    translation: citizen
+    pos: noun
+    gender: m
+  - lemma: революціонер
+    ipa: /rɛwɔlʲut͡sʲiɔˈnɛr/
+    translation: revolutionary
+    pos: noun
+    gender: m
+  - lemma: дух
+    ipa: /dux/
+    translation: spirit
+    pos: noun
+    gender: m
+  - lemma: поступ
+    ipa: /ˈpɔstup/
+    translation: progress
+    pos: noun
+    gender: m
+  - lemma: цикл
+    ipa: /t͡sɪkɫ/
+    translation: cycle (of poems)
+    pos: noun
+    gender: m
+  - lemma: алегорія
+    ipa: /ɐlɛˈɦɔrʲijɐ/
+    translation: allegory
+    pos: noun
+    gender: f
+  - lemma: стоїцизм
+    ipa: /stɔjiˈt͡sɪzm/
+    translation: stoicism
+    pos: noun
+    gender: m
+  - lemma: модернізм
+    ipa: /mɔdɛrˈnʲizm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: реалізм
+    ipa: /rɛɐˈlʲizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: драматизм
+    ipa: /drɐmɐˈtɪzm/
+    translation: dramatism, intensity
+    pos: noun
+    gender: m
+  - lemma: екзистенційний
+    ipa: /ɛkzɪstɛnt͡sʲiˈjⁿɪj/
+    translation: existential
+    pos: adj
+  - lemma: пролог
+    ipa: /prɔˈɫɔɦ/
+    translation: prologue
+    pos: noun
+    gender: m
+  - lemma: месіанство
+    ipa: /mɛsʲiˈanstwɔ/
+    translation: messianism
+    pos: noun
+    gender: n
+  - lemma: визволення
+    ipa: /wɪˈzwɔlɛnnʲɐ/
+    translation: liberation
+    pos: noun
+    gender: n
+  - lemma: катарсис
+    ipa: /kɐˈtarsɪs/
+    translation: catharsis
+    pos: noun
+    gender: m
+  - lemma: сонет
+    ipa: /sɔˈnɛt/
+    translation: sonnet
+    pos: noun
+    gender: m
+  - lemma: збірка
+    ipa: /ˈzbʲirkɐ/
+    translation: collection, volume
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪmwɔɫ/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: метафора
+    ipa: /mɛˈtɑfɔrɑ/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: епітет
+    ipa: /ɛˈpʲitɛt/
+    translation: epithet
+    pos: noun
+    gender: m
+  - lemma: звукопис
+    ipa: /ˈzwukɔpɪs/
+    translation: sound-writing, onomatopoeia
+    pos: noun
+    gender: m
+  - lemma: ритміка
+    ipa: /ˈrɪtmʲikɐ/
+    translation: rhythmics
+    pos: noun
+    gender: f
+  - lemma: строфа
+    ipa: /strɔˈfɑ/
+    translation: stanza
+    pos: noun
+    gender: f

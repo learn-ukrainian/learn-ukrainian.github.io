@@ -1,0 +1,132 @@
+module: 195-lesya-ukrainka-liryka
+level: C1
+version: '2.0'
+items:
+  - lemma: неоромантизм
+    ipa: /nɛɔrɔmɐnˈtɪzm/
+    translation: neo-romanticism
+    pos: noun
+    gender: m
+  - lemma: стоїцизм
+    ipa: /stɔjiˈt͡sɪzm/
+    translation: stoicism
+    pos: noun
+    gender: m
+  - lemma: незламність
+    ipa: /nɛˈzɫamnʲistʲ/
+    translation: indomitability, resilience
+    pos: noun
+    gender: f
+  - lemma: воля
+    ipa: /ˈwɔlʲɐ/
+    translation: will, freedom
+    pos: noun
+    gender: f
+  - lemma: туга
+    ipa: /ˈtuɦɐ/
+    translation: longing, melancholy
+    pos: noun
+    gender: f
+  - lemma: сподівання
+    ipa: /spɔdʲiˈwannʲɐ/
+    translation: expectation, hope
+    pos: noun
+    gender: n
+  - lemma: мотив
+    ipa: /mɔˈtɪw/
+    translation: motif, theme
+    pos: noun
+    gender: m
+  - lemma: цикл
+    ipa: /t͡sɪkɫ/
+    translation: cycle (of poems)
+    pos: noun
+    gender: m
+  - lemma: образотворчість
+    ipa: /ɔbrɐzɔˈtwɔrt͡ʃnʲistʲ/
+    translation: imagery, creativity
+    pos: noun
+    gender: f
+  - lemma: поетика
+    ipa: /pɔˈɛtɪkɐ/
+    translation: poetics
+    pos: noun
+    gender: f
+  - lemma: аристократизм
+    ipa: /ɐrɪstɔkrɐˈtɪzm/
+    translation: aristocratism (of spirit)
+    pos: noun
+    gender: m
+  - lemma: фемінізм
+    ipa: /fɛmʲiˈnʲizm/
+    translation: feminism
+    pos: noun
+    gender: m
+  - lemma: патріотизм
+    ipa: /pɐtrʲiɔˈtɪzm/
+    translation: patriotism
+    pos: noun
+    gender: m
+  - lemma: покликання
+    ipa: /pɔkɫɪˈkannʲɐ/
+    translation: calling, vocation
+    pos: noun
+    gender: n
+  - lemma: тернистий
+    ipa: /tɛrˈnɪstɪj/
+    translation: thorny (path)
+    pos: adj
+  - lemma: гартувати
+    ipa: /ɦɐrtuˈwɑtɪ/
+    translation: to temper, to harden
+    pos: verb
+  - lemma: перемога
+    ipa: /pɛrɛˈmɔɦɐ/
+    translation: victory
+    pos: noun
+    gender: f
+  - lemma: дух
+    ipa: /dux/
+    translation: spirit
+    pos: noun
+    gender: m
+  - lemma: ліризм
+    ipa: /lʲiˈrɪzm/
+    translation: lyricism
+    pos: noun
+    gender: m
+  - lemma: алегорія
+    ipa: /ɐlɛˈɦɔrʲijɐ/
+    translation: allegory
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪmwɔɫ/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: метафора
+    ipa: /mɛˈtɑfɔrɑ/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: епітет
+    ipa: /ɛˈpʲitɛt/
+    translation: epithet
+    pos: noun
+    gender: m
+  - lemma: звукопис
+    ipa: /ˈzwukɔpɪs/
+    translation: sound-writing
+    pos: noun
+    gender: m
+  - lemma: ритміка
+    ipa: /ˈrɪtmʲikɐ/
+    translation: rhythmics
+    pos: noun
+    gender: f
+  - lemma: строфа
+    ipa: /strɔˈfɑ/
+    translation: stanza
+    pos: noun
+    gender: f
