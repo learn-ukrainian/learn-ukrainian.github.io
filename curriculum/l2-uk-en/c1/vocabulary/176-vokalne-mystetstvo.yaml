@@ -1,0 +1,104 @@
+module: 176-vokalne-mystetstvo
+level: C1
+version: '2.0'
+items:
+  - lemma: хор
+    ipa: /xɔr/
+    translation: choir
+    pos: ім. (ч.р.)
+  - lemma: багатоголосся
+    ipa: /bɐɦɐtɔɦɔˈlɔsʲːɐ/
+    translation: polyphony/multi-part singing
+    pos: ім. (с.р.)
+  - lemma: капела
+    ipa: /kɐˈpɛlɐ/
+    translation: chapel/choir
+    pos: ім. (ж.р.)
+  - lemma: солоспів
+    ipa: /sɔlɔˈsp⁽ʲ⁾iw/
+    translation: art song
+    pos: ім. (ч.р.)
+  - lemma: романс
+    ipa: /rɔˈmɑns/
+    translation: romance (song)
+    pos: ім. (ч.р.)
+  - lemma: вокал
+    ipa: /wɔˈkɑl/
+    translation: vocal art
+    pos: ім. (ч.р.)
+  - lemma: діапазон
+    ipa: /d⁽ʲ⁾iɐpɐˈzɔn/
+    translation: range (voice)
+    pos: ім. (ч.р.)
+  - lemma: тембр
+    ipa: /tɛmbr/
+    translation: timbre
+    pos: ім. (ч.р.)
+  - lemma: аранжування
+    ipa: /ɐrɐnʒʊˈwɑnʲːɐ/
+    translation: arrangement
+    pos: ім. (с.р.)
+  - lemma: фольк-рок
+    ipa: /fɔlʲk rɔk/
+    translation: folk rock
+    pos: ім. (ч.р.)
+  - lemma: етно-хаос
+    ipa: /ˈɛtnɔ ˈxɑɔs/
+    translation: ethno-chaos (style)
+    pos: ім. (ч.р.)
+  - lemma: репертуар
+    ipa: /rɛpɛrtʊˈɑr/
+    translation: repertoire
+    pos: ім. (ч.р.)
+  - lemma: диригент
+    ipa: /dɪrɪˈɦɛnt/
+    translation: conductor
+    pos: ім. (ч.р.)
+  - lemma: партитура
+    ipa: /pɐrtɪˈturɐ/
+    translation: score
+    pos: ім. (ж.р.)
+  - lemma: сакральний
+    ipa: /sɐˈkrɑlʲnɪj/
+    translation: sacred
+    pos: прикм.
+  - lemma: літургія
+    ipa: /lʲiˈturɦijɐ/
+    translation: liturgy
+    pos: ім. (ж.р.)
+  - lemma: кант
+    ipa: /kɑnt/
+    translation: kant (old song form)
+    pos: ім. (ч.р.)
+  - lemma: псалом
+    ipa: /psɐˈlɔm/
+    translation: psalm
+    pos: ім. (ч.р.)
+  - lemma: автентика
+    ipa: /ɐwˈtɛntɪkɐ/
+    translation: authenticity
+    pos: ім. (ж.р.)
+  - lemma: імпровізація
+    ipa: /imprɔw⁽ʲ⁾iˈzɑt͡s⁽ʲ⁾ijɐ/
+    translation: improvisation
+    pos: ім. (ж.р.)
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: ім. (ч.р.)
+  - lemma: ф'южн
+    ipa: /fjubn/
+    translation: fusion
+    pos: ім. (ч.р.)
+  - lemma: експеримент
+    ipa: /ɛkspɛrɪˈmɛnt/
+    translation: experiment
+    pos: ім. (ч.р.)
+  - lemma: звучання
+    ipa: /zwʊˈt͡ʃɑnʲːɐ/
+    translation: sound/sounding
+    pos: ім. (с.р.)
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: heritage
+    pos: ім. (ж.р.)

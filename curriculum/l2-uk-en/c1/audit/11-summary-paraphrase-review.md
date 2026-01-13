@@ -1,24 +1,9 @@
 # Audit Report: 11-summary-paraphrase.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Техніки скорочення тексту' Q2 prompt length 10 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Техніки скорочення тексту' Q4 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-academic-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-academic-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 3 violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1951/2000 (49 short)
+- **Words:** ✅ 2026/2000
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -28,9 +13,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 98-100%)
+- **Immersion:** 🇺🇦 99.4% (target 90-100%)
 - **Richness:** ✅ 99% (academic)
 - **Grammar:** ⏳ Pending validation
 
@@ -43,7 +28,7 @@
 |--------|-------|--------|-------|--------|--------------|
 | citations | 7 | 5 | 100% | 24% | 23.8% |
 | data_refs | 7 | 3 | 100% | 19% | 19.0% |
-| visual | 10 | 5 | 100% | 14% | 14.3% |
+| visual | 11 | 5 | 100% | 14% | 14.3% |
 | questions | 14 | 4 | 100% | 14% | 14.3% |
 | engagement | 7 | 5 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 10% | 9.4% |
@@ -55,10 +40,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Академічний текст: Основи переказу** | ✅ | 209 | Included in Core |
+| **Вступ: Академічний текст та основи переказу** | ✅ | 209 | Included in Core |
 | **Резюме: Як «вичавити сік» і залишити вітаміни** | ⚪️ | 167 | Skipped |
 | **Діалог: Обговорення резюме з професором** | ✅ | 491 | Included in Core |
 | **Аналіз** | ✅ | 363 | Included in Core |
-| **Етика цитування: Де межа між натхненням і крадіжкою** | ⚪️ | 433 | Skipped |
+| **Етика цитування: Де межа між натхненням і крадіжкою** | ⚪️ | 481 | Skipped |
 | **Підсумок** | ✅ | 179 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 49 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 76 | Skipped |

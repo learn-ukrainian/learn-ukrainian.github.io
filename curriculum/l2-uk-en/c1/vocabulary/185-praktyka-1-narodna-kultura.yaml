@@ -1,0 +1,84 @@
+module: 185-praktyka-1-narodna-kultura
+level: C1
+version: '2.0'
+items:
+  - lemma: кобзар
+    ipa: /kɔbˈzɑr/
+    translation: kobzar
+    pos: ім. (ч.р.)
+  - lemma: веснянка
+    ipa: /wɛsˈnʲɑnkɐ/
+    translation: vesnianka (spring song)
+    pos: ім. (ж.р.)
+  - lemma: гопак
+    ipa: /ɦɔˈpɑk/
+    translation: hopak
+    pos: ім. (ч.р.)
+  - lemma: писанка
+    ipa: /ˈpɪsɐnkɐ/
+    translation: pysanka
+    pos: ім. (ж.р.)
+  - lemma: вишиванка
+    ipa: /wɪʃɪˈwɑnkɐ/
+    translation: vyshyvanka
+    pos: ім. (ж.р.)
+  - lemma: кераміка
+    ipa: /kɛˈrɑm⁽ʲ⁾ikɐ/
+    translation: ceramics
+    pos: ім. (ж.р.)
+  - lemma: мавка
+    ipa: /ˈmɑwkɐ/
+    translation: mavka
+    pos: ім. (ж.р.)
+  - lemma: казка
+    ipa: /ˈkɑzkɐ/
+    translation: fairy tale
+    pos: ім. (ж.р.)
+  - lemma: коляда
+    ipa: /kɔlʲɐˈdɑ/
+    translation: koliada
+    pos: ім. (ж.р.)
+  - lemma: Купала
+    ipa: /kʊˈpɑlɐ/
+    translation: Kupala
+    pos: ім. (с.р.)
+  - lemma: весілля
+    ipa: /wɛˈs⁽ʲ⁾ilʲːɐ/
+    translation: wedding
+    pos: ім. (с.р.)
+  - lemma: поминки
+    ipa: /pɔˈmɪnkɪ/
+    translation: funeral feast
+    pos: ім. (мн.)
+  - lemma: Галичина
+    ipa: /ɦɐlɪt͡ʃɪˈnɑ/
+    translation: Halychyna
+    pos: ім. (ж.р.)
+  - lemma: Слобожанщина
+    ipa: /slɔbɔˈʒɑnʃt͡ʃɪnɐ/
+    translation: Slobozhanshchyna
+    pos: ім. (ж.р.)
+  - lemma: Полісся
+    ipa: /pɔˈlʲisʲːɐ/
+    translation: Polissia
+    pos: ім. (с.р.)
+  - lemma: Поділля
+    ipa: /pɔˈd⁽ʲ⁾ilʲːɐ/
+    translation: Podillia
+    pos: ім. (с.р.)
+  - lemma: традиція
+    ipa: /trɐˈdɪt͡s⁽ʲ⁾ijɐ/
+    translation: tradition
+    pos: ім. (ж.р.)
+  - lemma: обряд
+    ipa: /ɔˈbrʲɑd/
+    translation: ritual
+    pos: ім. (ч.р.)
+  - lemma: символ
+    ipa: /ˈsɪmwɔl/
+    translation: symbol
+    pos: ім. (ч.р.)
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: heritage
+    pos: ім. (ж.р.)

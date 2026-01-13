@@ -1,0 +1,129 @@
+module: 198-kotsiubynskyi
+level: C1
+version: '2.0'
+items:
+  - lemma: імпресіонізм
+    ipa: /imprɛsʲiɔˈnʲizm/
+    translation: impressionism
+    pos: noun
+    gender: m
+  - lemma: новела
+    ipa: /nɔˈwɛlɐ/
+    translation: novella, short story
+    pos: noun
+    gender: f
+  - lemma: етюд
+    ipa: /ɛˈtʲud/
+    translation: etude, sketch
+    pos: noun
+    gender: m
+  - lemma: інтермецо
+    ipa: /intɛrˈmɛt͡sɔ/
+    translation: intermezzo
+    pos: noun
+    gender: n
+  - lemma: психологізм
+    ipa: /psɪxɔɫɔˈɦʲizm/
+    translation: psychologism
+    pos: noun
+    gender: m
+  - lemma: колористика
+    ipa: /kɔɫɔˈrɪstɪkɐ/
+    translation: coloristics, color scheme
+    pos: noun
+    gender: f
+  - lemma: пейзаж
+    ipa: /pɛjˈzɑʒ/
+    translation: landscape
+    pos: noun
+    gender: m
+  - lemma: настрій
+    ipa: /nɑsˈtrʲij/
+    translation: mood
+    pos: noun
+    gender: m
+  - lemma: враження
+    ipa: /ˈwrɑʒɛnnʲɐ/
+    translation: impression
+    pos: noun
+    gender: n
+  - lemma: сонцепоклонник
+    ipa: /sɔnt͡sɛpɔˈkɫɔnnɪk/
+    translation: sun worshipper
+    pos: noun
+    gender: m
+  - lemma: гуцул
+    ipa: /ɦuˈt͡suɫ/
+    translation: Hutsul (highlander)
+    pos: noun
+    gender: m
+  - lemma: мольфар
+    ipa: /mɔlʲˈfɑr/
+    translation: molfar (Carpathian sorcerer)
+    pos: noun
+    gender: m
+  - lemma: полонина
+    ipa: /pɔɫɔˈnɪnɐ/
+    translation: polonyna (mountain pasture)
+    pos: noun
+    gender: f
+  - lemma: трембіта
+    ipa: /trɛmˈbʲitɐ/
+    translation: trembita (alpine horn)
+    pos: noun
+    gender: f
+  - lemma: містика
+    ipa: /ˈmʲistɪkɐ/
+    translation: mysticism
+    pos: noun
+    gender: f
+  - lemma: фатум
+    ipa: /ˈfɑtum/
+    translation: fate, doom
+    pos: noun
+    gender: m
+  - lemma: гармонія
+    ipa: /ɦɐrˈmɔnʲijɐ/
+    translation: harmony
+    pos: noun
+    gender: f
+  - lemma: втома
+    ipa: /ˈwtɔmɐ/
+    translation: fatigue
+    pos: noun
+    gender: f
+  - lemma: місто
+    ipa: /ˈmʲistɔ/
+    translation: city
+    pos: noun
+    gender: n
+  - lemma: поле
+    ipa: /ˈpɔlɛ/
+    translation: field
+    pos: noun
+    gender: n
+  - lemma: свідомість
+    ipa: /swʲiˈdɔmʲistʲ/
+    translation: consciousness
+    pos: noun
+    gender: f
+  - lemma: підсвідомість
+    ipa: /pʲidswʲiˈdɔmʲistʲ/
+    translation: subconsciousness
+    pos: noun
+    gender: f
+  - lemma: алегорія
+    ipa: /ɐlɛˈɦɔrʲijɐ/
+    translation: allegory
+    pos: noun
+    gender: f
+  - lemma: контраст
+    ipa: /kɔnˈtrɑst/
+    translation: contrast
+    pos: noun
+    gender: m
+  - lemma: ритм
+    ipa: /rɪtm/
+    translation: rhythm
+    pos: noun
+    gender: m

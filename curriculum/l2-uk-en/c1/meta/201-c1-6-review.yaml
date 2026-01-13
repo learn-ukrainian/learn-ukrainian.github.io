@@ -1,0 +1,23 @@
+module: c1-201
+id: 201
+slug: 201-c1-6-review
+title: 'C1.6 Література: Огляд та рефлексія'
+subtitle: 'C1.6 Literature: Review and Reflection'
+version: '2.0'
+phase: 'C1.6 Literature'
+focus: review
+pedagogy: 'Integration'
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - review
+  - synthesis
+  - analysis
+grammar:
+  - 'Synthesis of stylistic devices'
+  - 'Comparative literary analysis'
+objectives:
+  - 'Learner can synthesize knowledge of the Ukrainian literary canon from classics to contemporary.'
+  - 'Learner can compare different literary eras and movements.'
+  - 'Learner can apply advanced literary terminology to various texts.'

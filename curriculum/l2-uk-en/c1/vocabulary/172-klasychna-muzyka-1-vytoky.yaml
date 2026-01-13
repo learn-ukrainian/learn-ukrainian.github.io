@@ -1,0 +1,144 @@
+module: 172-klasychna-muzyka-1-vytoky
+level: C1
+version: '2.0'
+items:
+  - lemma: духовний концерт
+    ipa: /dʊˈxɔwnɪj kɔnˈt͡sɛrt/
+    translation: sacred concerto
+    pos: ім. (ч.р.)
+  - lemma: хорова капела
+    ipa: /xɔrɔˈwɑ kɐˈpɛlɐ/
+    translation: choral chapel/choir
+    pos: ім. (ж.р.)
+  - lemma: композитор
+    ipa: /kɔmpɔˈzɪtɔr/
+    translation: composer
+    pos: ім. (ч.р.)
+  - lemma: опера
+    ipa: /ˈɔpɛrɐ/
+    translation: opera
+    pos: ім. (ж.р.)
+  - lemma: лібрето
+    ipa: /lʲiˈbrɛtɔ/
+    translation: libretto
+    pos: ім. (с.р.)
+  - lemma: партитура
+    ipa: /pɐrtɪˈturɐ/
+    translation: score (music)
+    pos: ім. (ж.р.)
+  - lemma: сопрано
+    ipa: /sɔˈprɑnɔ/
+    translation: soprano
+    pos: ім. (с.р.)
+  - lemma: баритон
+    ipa: /bɐrɪˈtɔn/
+    translation: baritone
+    pos: ім. (ч.р.)
+  - lemma: арія
+    ipa: /ˈɑrʲijɐ/
+    translation: aria
+    pos: ім. (ж.р.)
+  - lemma: увертюра
+    ipa: /ʊwɛrˈtʲurɐ/
+    translation: overture
+    pos: ім. (ж.р.)
+  - lemma: витоки
+    ipa: /ˈwɪtɔkɪ/
+    translation: origins/roots
+    pos: ім. (мн.)
+  - lemma: бароко
+    ipa: /bɐˈrɔkɔ/
+    translation: Baroque
+    pos: ім. (с.р.)
+  - lemma: класицизм
+    ipa: /klɐsɪˈt͡sɪzm/
+    translation: Classicism
+    pos: ім. (ч.р.)
+  - lemma: романтизм
+    ipa: /rɔmɐnˈtɪzm/
+    translation: Romanticism
+    pos: ім. (ч.р.)
+  - lemma: сакральний
+    ipa: /sɐˈkrɑlʲnɪj/
+    translation: sacred
+    pos: прикм.
+  - lemma: шедевр
+    ipa: /ʃɛˈdɛwr/
+    translation: masterpiece
+    pos: ім. (ч.р.)
+  - lemma: визнання
+    ipa: /wɪˈznɐnʲnʲɐ/
+    translation: recognition
+    pos: ім. (с.р.)
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: heritage
+    pos: ім. (ж.р.)
+  - lemma: віртуозність
+    ipa: /wirˈtuɔznʲistʲ/
+    translation: virtuosity
+    pos: ім. (ж.р.)
+  - lemma: гармонія
+    ipa: /ɦɐrˈmɔnʲijɐ/
+    translation: harmony
+    pos: ім. (ж.р.)
+  - lemma: мелодія
+    ipa: /mɛˈlɔdʲijɐ/
+    translation: melody
+    pos: ім. (ж.р.)
+  - lemma: репертуар
+    ipa: /rɛpɛrˈtuɐr/
+    translation: repertoire
+    pos: ім. (ч.р.)
+  - lemma: ліризм
+    ipa: /lʲiˈrɪzm/
+    translation: lyricism
+    pos: ім. (ч.р.)
+  - lemma: драматизм
+    ipa: /drɐmɐˈtɪzm/
+    translation: dramatism
+    pos: ім. (ч.р.)
+  - lemma: національне пробудження
+    ipa: /nɐt͡s⁽ʲ⁾iɔˈnɑlʲnɛ prɔˈbud͡ʒɛnʲnʲɐ/
+    translation: national awakening
+    pos: ім. (с.р.)
+  - lemma: просвітництво
+    ipa: /prɔˈsw⁽ʲ⁾itnɪt͡stwɔ/
+    translation: Enlightenment
+    pos: ім. (с.р.)
+  - lemma: жанр
+    ipa: /ʒɐnr/
+    translation: genre
+    pos: ім. (ч.р.)
+  - lemma: епоха
+    ipa: /ɛˈpɔxɐ/
+    translation: era
+    pos: ім. (ж.р.)
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: ім. (ч.р.)
+  - lemma: творчість
+    ipa: /ˈtwɔrt͡ʃistʲ/
+    translation: creativity/works
+    pos: ім. (ж.р.)
+  - lemma: симфонія
+    ipa: /sɪmˈfɔnʲijɐ/
+    translation: symphony
+    pos: ім. (ж.р.)
+  - lemma: придворна капела
+    ipa: /prɪˈdwɔrnɐ kɐˈpɛlɐ/
+    translation: court chapel
+    pos: ім. (ж.р.)
+  - lemma: втілення
+    ipa: /ˈwt⁽ʲ⁾ilʲɛnʲnʲɐ/
+    translation: embodiment
+    pos: ім. (с.р.)
+  - lemma: самобутність
+    ipa: /sɐmɔˈbutnʲistʲ/
+    translation: originality/authenticity
+    pos: ім. (ж.р.)
+  - lemma: вплив
+    ipa: /wplɪw/
+    translation: influence
+    pos: ім. (ч.р.)

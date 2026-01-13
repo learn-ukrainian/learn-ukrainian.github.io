@@ -15,26 +15,26 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100%)
-- **Richness:** ✅ 95% (content)
+- **Immersion:** 🇺🇦 99.2% (target 90-100%)
+- **Richness:** ✅ 99% (professional)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 95%)
+**Module Type:** professional
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 15 | 93% | 25% | 23.2% |
-| engagement | 11 | 5 | 100% | 19% | 18.7% |
+| examples | 14 | - | 100% | 25% | 25.0% |
+| engagement | 11 | 4 | 100% | 19% | 18.7% |
 | variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 3 | 4 | 75% | 12% | 9.4% |
-| realworld | 9 | 3 | 100% | 12% | 12.5% |
-| visual | 14 | 4 | 100% | 6% | 6.2% |
+| cultural | 3 | - | 100% | 12% | 12.5% |
+| realworld | 9 | - | 100% | 12% | 12.5% |
+| visual | 14 | 3 | 100% | 6% | 6.2% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 16 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.0%** |
+| questions | 16 | - | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

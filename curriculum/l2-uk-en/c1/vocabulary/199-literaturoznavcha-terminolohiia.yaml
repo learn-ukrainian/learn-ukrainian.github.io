@@ -1,0 +1,154 @@
+module: 199-literaturoznavcha-terminolohiia
+level: C1
+version: '2.0'
+items:
+  - lemma: сюжет
+    ipa: /sʲuˈʒɛt/
+    translation: plot
+    pos: noun
+    gender: m
+    note: послідовність подій у творі
+  - lemma: фабула
+    ipa: /ˈfɑbuɫɐ/
+    translation: story, fabula
+    pos: noun
+    gender: f
+    note: хронологічний порядок подій
+  - lemma: оповідач
+    ipa: /ɔpɔˈwʲidɐt͡ʃ/
+    translation: narrator
+    pos: noun
+    gender: m
+  - lemma: фокалізація
+    ipa: /fɔkɐlʲiˈzɑt͡sʲijɐ/
+    translation: focalization
+    pos: noun
+    gender: f
+  - lemma: метафора
+    ipa: /mɛˈtɑfɔrɑ/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: метонімія
+    ipa: /mɛtɔˈnʲimʲijɐ/
+    translation: metonymy
+    pos: noun
+    gender: f
+  - lemma: алегорія
+    ipa: /ɐlɛˈɦɔrʲijɐ/
+    translation: allegory
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪmwɔɫ/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: повість
+    ipa: /ˈpɔwʲistʲ/
+    translation: novella, long story
+    pos: noun
+    gender: f
+  - lemma: новела
+    ipa: /nɔˈwɛlɐ/
+    translation: short story, novella
+    pos: noun
+    gender: f
+  - lemma: драма
+    ipa: /ˈdrɑmɐ/
+    translation: drama
+    pos: noun
+    gender: f
+  - lemma: мотив
+    ipa: /mɔˈtɪw/
+    translation: motif
+    pos: noun
+    gender: m
+  - lemma: конфлікт
+    ipa: /kɔnˈfɫʲikt/
+    translation: conflict
+    pos: noun
+    gender: m
+  - lemma: іронія
+    ipa: /iˈrɔnʲijɐ/
+    translation: irony
+    pos: noun
+    gender: f
+  - lemma: гротеск
+    ipa: /ɦrɔˈtɛsk/
+    translation: grotesque
+    pos: noun
+    gender: m
+  - lemma: парадокс
+    ipa: /pɐrɐˈdɔks/
+    translation: paradox
+    pos: noun
+    gender: m
+  - lemma: наратив
+    ipa: /nɐrɐˈtɪw/
+    translation: narrative
+    pos: noun
+    gender: m
+  - lemma: образність
+    ipa: /ˈɔbrɐznʲistʲ/
+    translation: imagery
+    pos: noun
+    gender: f
+  - lemma: композиція
+    ipa: /kɔmpɔˈzɪt͡sʲijɐ/
+    translation: composition
+    pos: noun
+    gender: f
+  - lemma: кульмінація
+    ipa: /kuɫʲmʲiˈnɑt͡sʲijɐ/
+    translation: climax
+    pos: noun
+    gender: f
+  - lemma: розв’язка
+    ipa: /rɔˈzwjɑzkɐ/
+    translation: resolution, denouement
+    pos: noun
+    gender: f
+  - lemma: зав’язка
+    ipa: /zɐˈwjɑzkɐ/
+    translation: exposition, beginning of conflict
+    pos: noun
+    gender: f
+  - lemma: експозиція
+    ipa: /ɛkspɔˈzɪt͡sʲijɐ/
+    translation: exposition (setting)
+    pos: noun
+    gender: f
+  - lemma: тропи
+    ipa: /ˈtrɔpɪ/
+    translation: tropes
+    pos: noun
+    gender: pl
+  - lemma: підтекст
+    ipa: /ˈpʲidtɛkst/
+    translation: subtext
+    pos: noun
+    gender: m
+  - lemma: ідея
+    ipa: /iˈdɛjɐ/
+    translation: idea, message
+    pos: noun
+    gender: f
+  - lemma: тема
+    ipa: /ˈtɛmɐ/
+    translation: theme
+    pos: noun
+    gender: f
+  - lemma: жанр
+    ipa: /ʒɑnr/
+    translation: genre
+    pos: noun
+    gender: m
+  - lemma: стилістичний
+    ipa: /stɪlʲiˈstɪt͡ʃnɪj/
+    translation: stylistic
+    pos: adj
+  - lemma: художній
+    ipa: /xuˈdɔʒnʲij/
+    translation: artistic, literary
+    pos: adj

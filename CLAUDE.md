@@ -91,7 +91,7 @@ curriculum/l2-uk-en/{level}/
 └── audit/                    # Review reports
 ```
 
-**Levels**: A1 (34), A2 (57), B1 (91), B2 (145), C1 (196), C2 (100)
+**Levels**: A1 (34), A2 (57), B1 (91), B2 (145), C1 (202), C2 (100)
 
 ---
 

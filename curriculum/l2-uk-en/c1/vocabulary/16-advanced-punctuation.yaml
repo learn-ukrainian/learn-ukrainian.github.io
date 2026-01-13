@@ -42,8 +42,7 @@ items:
   translation: brackets / parentheses
   pos: noun
   gender: pl
-  pos: noun
-  gender: f
+
 - lemma: комою
   ipa: /ˈkɔmɔjʊ/
   translation: with a comma
@@ -117,3 +116,13 @@ items:
   translation: rule
   pos: noun
   gender: n
+- lemma: інтонація
+  ipa: /intɔˈnɑtsʲijɐ/
+  translation: intonation
+  pos: noun
+  gender: f
+- lemma: пауза
+  ipa: /ˈpɑʊzɐ/
+  translation: pause
+  pos: noun
+  gender: f

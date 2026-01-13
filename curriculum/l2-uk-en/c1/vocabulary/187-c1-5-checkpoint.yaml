@@ -1,0 +1,104 @@
+module: 187-c1-5-checkpoint
+level: C1
+version: '2.0'
+items:
+  - lemma: оцінювання
+    ipa: /ot͡s⁽ʲ⁾iˈnʲuvɐnʲnʲɐ/
+    translation: evaluation / assessment
+    pos: noun
+    gender: n
+  - lemma: контроль
+    ipa: /konˈtrɔlʲ/
+    translation: control / check
+    pos: noun
+    gender: m
+  - lemma: тестування
+    ipa: /tɛstuˈvɑnʲnʲɐ/
+    translation: testing
+    pos: noun
+    gender: n
+  - lemma: критерій
+    ipa: /krɪˈtɛr⁽ʲ⁾ij/
+    translation: criterion
+    pos: noun
+    gender: m
+  - lemma: результат
+    ipa: /rɛzulʲˈtɑt/
+    translation: result
+    pos: noun
+    gender: m
+  - lemma: досягнення
+    ipa: /doˈsʲɑɦnɛnʲnʲɐ/
+    translation: achievement
+    pos: noun
+    gender: n
+  - lemma: прогрес
+    ipa: /proˈɦrɛs/
+    translation: progress
+    pos: noun
+    gender: m
+  - lemma: перевірка
+    ipa: /pɛrɛˈv⁽ʲ⁾irkɐ/
+    translation: verification
+    pos: noun
+    gender: f
+  - lemma: навичка
+    ipa: /ˈnɑvɪt͡ʃkɐ/
+    translation: skill
+    pos: noun
+    gender: f
+  - lemma: компетентність
+    ipa: /kompɛˈtɛntn⁽ʲ⁾istʲ/
+    translation: competence
+    pos: noun
+    gender: f
+  - lemma: підсумок
+    ipa: /ˈp⁽ʲ⁾idsumok/
+    translation: summary / result
+    pos: noun
+    gender: m
+  - lemma: аналіз
+    ipa: /ɐˈnɑl⁽ʲ⁾iz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾istʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: самобутність
+    ipa: /sɐmoˈbutn⁽ʲ⁾istʲ/
+    translation: originality / uniqueness
+    pos: noun
+    gender: f
+  - lemma: цінність
+    ipa: /ˈt͡s⁽ʲ⁾inn⁽ʲ⁾istʲ/
+    translation: value
+    pos: noun
+    gender: f
+  - lemma: переосмислення
+    ipa: /pɛrɛosˈmɪslɛnʲnʲɐ/
+    translation: rethinking
+    pos: noun
+    gender: n
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦl⁽ʲ⁾istʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+  - lemma: джерело
+    ipa: /d͡ʒɛrɛˈlɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: висновок
+    ipa: /ˈvɪsnokok/
+    translation: conclusion
+    pos: noun
+    gender: m

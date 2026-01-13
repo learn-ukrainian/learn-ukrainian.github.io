@@ -1,29 +1,6 @@
 # Audit Report: 27-global-context.md
 **Phase:** C1.2 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Шлях до ЄС' Q3 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Шлях до ЄС' Q4 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Шлях до ЄС' Q5 prompt length 11 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Функції організацій' Q1 prompt length 10 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Функції організацій' Q2 prompt length 8 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Функції організацій' Q5 prompt length 8 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 30/100)
-
-- 7 violations (significant)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ⚠️ 1902/2000 (98 short)
@@ -36,9 +13,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 98-100%)
+- **Immersion:** 🇺🇦 98.1% (target 90-100%)
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -78,4 +55,4 @@
 | **Первинні джерела** | ⚪️ | 85 | Skipped |
 | **Порівняння союзів** | ⚪️ | 47 | Skipped |
 | **Підсумок** | ✅ | 37 | Included in Core |
-| **Need More Practice?** | ⚪️ | 94 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 94 | Skipped |

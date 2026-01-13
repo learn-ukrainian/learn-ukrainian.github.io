@@ -1,0 +1,124 @@
+module: 173-klasychna-muzyka-2-natsionalna-shkola
+level: C1
+version: '2.0'
+items:
+  - lemma: національна школа
+    ipa: /nat͡sʲioˈnalʲna ˈʃkɔla/
+    translation: national school
+    pos: noun
+    gender: f
+  - lemma: фундатор
+    ipa: /fʊnˈdatɔr/
+    translation: founder
+    pos: noun
+    gender: m
+  - lemma: етнографізм
+    ipa: /etnɔɦraˈfizm/
+    translation: ethnographism
+    pos: noun
+    gender: m
+  - lemma: обробка
+    ipa: /ɔˈbrɔbka/
+    translation: arrangement (musical)
+    pos: noun
+    gender: f
+  - lemma: хоровий майстер
+    ipa: /xɔrɔˈvɪi ˈmaister/
+    translation: choral master
+    pos: noun
+    gender: m
+  - lemma: щедрик
+    ipa: /ˈʃt͡ʃɛdrɪk/
+    translation: shchedryk (carol)
+    pos: noun
+    gender: m
+  - lemma: солоспів
+    ipa: /sɔlɔˈspiu/
+    translation: art song (solo)
+    pos: noun
+    gender: m
+  - lemma: цикл
+    ipa: /ˈt͡sɪkl/
+    translation: cycle
+    pos: noun
+    gender: m
+  - lemma: фольклорне джерело
+    ipa: /fɔlʲˈklɔrne d͡ʒeˈrɛlɔ/
+    translation: folklore source
+    pos: noun
+    gender: n
+  - lemma: самобутність
+    ipa: /samɔˈbutʲnʲistʲ/
+    translation: authenticity/originality
+    pos: noun
+    gender: f
+  - lemma: кантата
+    ipa: /kanˈtata/
+    translation: cantata
+    pos: noun
+    gender: f
+  - lemma: ораторія
+    ipa: /ɔraˈtɔrʲija/
+    translation: oratorio
+    pos: noun
+    gender: f
+  - lemma: збирання
+    ipa: /zbɪˈranʲnʲa/
+    translation: collecting (folk songs)
+    pos: noun
+    gender: n
+  - lemma: транскрипція
+    ipa: /tranˈskrɪpt͡sʲija/
+    translation: transcription
+    pos: noun
+    gender: f
+  - lemma: інтонація
+    ipa: /intɔˈnat͡sʲija/
+    translation: intonation
+    pos: noun
+    gender: f
+  - lemma: ладова структура
+    ipa: /ˈladɔva strʊkˈtura/
+    translation: modal structure
+    pos: noun
+    gender: f
+  - lemma: піднесення
+    ipa: /pidˈnɛsenʲnʲa/
+    translation: elevation/rise
+    pos: noun
+    gender: n
+  - lemma: відродження
+    ipa: /vidˈrɔd͡ʒenʲnʲa/
+    translation: revival/renaissance
+    pos: noun
+    gender: n
+  - lemma: спадкоємність
+    ipa: /spadkɔˈjɛmnʲistʲ/
+    translation: continuity/succession
+    pos: noun
+    gender: f
+  - lemma: просвітництво
+    ipa: /prɔˈsvitnɪt͡stvw/
+    translation: enlightenment
+    pos: noun
+    gender: n
+  - lemma: музикознавство
+    ipa: /mʊzɪkɔˈznaut͡stvw/
+    translation: musicology
+    pos: noun
+    gender: n
+  - lemma: канон
+    ipa: /kaˈnɔn/
+    translation: canon
+    pos: noun
+    gender: m
+  - lemma: шедевр
+    ipa: /ʃeˈdɛur/
+    translation: masterpiece
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /vɪˈznanʲnʲa/
+    translation: recognition
+    pos: noun
+    gender: n

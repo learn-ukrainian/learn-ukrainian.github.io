@@ -1,0 +1,23 @@
+module: c1-179
+title: 'Балет і танець'
+subtitle: 'Ballet and Dance'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: fine-arts
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - arts
+  - dance
+  - ballet
+  - lifar
+grammar:
+  - 'Movement vocabulary'
+  - 'Choreographic description'
+objectives:
+  - 'Learner explores the legacy of Serge Lifar and his impact on world ballet.'
+  - 'Learner understands the distinction between folk dance (Hopak) and academic ballet.'
+  - 'Learner can describe contemporary dance trends in Ukraine.'
+vocabulary_count: 25
+slug: 179-balet-i-tanets

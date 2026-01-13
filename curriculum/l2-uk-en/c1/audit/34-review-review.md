@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1941/2000 (59 short)
+- **Words:** ✅ 2128/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 98-100%)
+- **Immersion:** 🇺🇦 98.9% (target 90-100%)
 - **Richness:** ✅ 100% (checkpoint)
 - **Grammar:** ⏳ Pending validation
 
@@ -27,7 +27,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 9 | 8 | 100% | 25% | 25.0% |
-| review_sections | 16 | 3 | 100% | 20% | 20.0% |
+| review_sections | 17 | 3 | 100% | 20% | 20.0% |
 | variety | 1.00 | - | 100% | 15% | 15.0% |
 | engagement | 8 | 3 | 100% | 10% | 10.0% |
 | cultural | 4 | - | 100% | 10% | 10.0% |
@@ -46,3 +46,4 @@
 | **Цифровий етикет: Правила нового часу** | ⚪️ | 126 | Skipped |
 | **Підсумок** | ✅ | 47 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 130 | Skipped |
+| **Додаткові рекомендації для самостійного опрацювання** | ⚪️ | 187 | Skipped |

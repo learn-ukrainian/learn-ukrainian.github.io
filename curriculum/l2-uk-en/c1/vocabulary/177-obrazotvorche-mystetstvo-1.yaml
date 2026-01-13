@@ -1,0 +1,104 @@
+module: 177-obrazotvorche-mystetstvo-1
+level: C1
+version: '2.0'
+items:
+  - lemma: іконопис
+    ipa: /ikɔˈnɔpɪs/
+    translation: iconography
+    pos: ім. (ч.р.)
+  - lemma: авангард
+    ipa: /ɐwɐnˈɦɑrd/
+    translation: avant-garde
+    pos: ім. (ч.р.)
+  - lemma: супрематизм
+    ipa: /sʊprɛmɐˈtɪzm/
+    translation: suprematism
+    pos: ім. (ч.р.)
+  - lemma: кубізм
+    ipa: /kʊˈbʲizm/
+    translation: cubism
+    pos: ім. (ч.р.)
+  - lemma: фреска
+    ipa: /ˈfrɛskɐ/
+    translation: fresco
+    pos: ім. (ж.р.)
+  - lemma: мозаїка
+    ipa: /mɔˈzɑjɪkɐ/
+    translation: mosaic
+    pos: ім. (ж.р.)
+  - lemma: портрет
+    ipa: /pɔrˈtrɛt/
+    translation: portrait
+    pos: ім. (ч.р.)
+  - lemma: пейзаж
+    ipa: /pɛjˈzɑʒ/
+    translation: landscape
+    pos: ім. (ч.р.)
+  - lemma: натюрморт
+    ipa: /nɐtʲurˈmɔrt/
+    translation: still life
+    pos: ім. (ч.р.)
+  - lemma: композиція
+    ipa: /kɔmpɔˈzɪt͡s⁽ʲ⁾ijɐ/
+    translation: composition
+    pos: ім. (ж.р.)
+  - lemma: колорит
+    ipa: /kɔlɔˈrɪt/
+    translation: coloring/color scheme
+    pos: ім. (ч.р.)
+  - lemma: перспектива
+    ipa: /pɛrspɛkˈtɪwɐ/
+    translation: perspective
+    pos: ім. (ж.р.)
+  - lemma: офорт
+    ipa: /ɔˈfɔrt/
+    translation: etching
+    pos: ім. (ч.р.)
+  - lemma: гравюра
+    ipa: /ɦrɐˈwʲurɐ/
+    translation: engraving
+    pos: ім. (ж.р.)
+  - lemma: бароко
+    ipa: /bɐˈrɔkɔ/
+    translation: Baroque
+    pos: ім. (с.р.)
+  - lemma: абстракція
+    ipa: /ɐbˈstrɑkt͡s⁽ʲ⁾ijɐ/
+    translation: abstraction
+    pos: ім. (ж.р.)
+  - lemma: бойчукізм
+    ipa: /bɔjt͡ʃʊˈkizm/
+    translation: Boichukism (school)
+    pos: ім. (ч.р.)
+  - lemma: монументалізм
+    ipa: /mɔnʊmɛntɐˈlʲizm/
+    translation: monumentalism
+    pos: ім. (ч.р.)
+  - lemma: скульптура
+    ipa: /skʊlʲpˈturɐ/
+    translation: sculpture
+    pos: ім. (ж.р.)
+  - lemma: пластика
+    ipa: /plɐˈstɪkɐ/
+    translation: plastic art/form
+    pos: ім. (ж.р.)
+  - lemma: полотно
+    ipa: /pɔlɔtˈnɔ/
+    translation: canvas
+    pos: ім. (с.р.)
+  - lemma: пензель
+    ipa: /ˈpɛnzɛlʲ/
+    translation: paintbrush
+    pos: ім. (ч.р.)
+  - lemma: виставка
+    ipa: /ˈwɪstɐwkɐ/
+    translation: exhibition
+    pos: ім. (ж.р.)
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: heritage
+    pos: ім. (ж.р.)
+  - lemma: шедевр
+    ipa: /ʃɛˈdɛwr/
+    translation: masterpiece
+    pos: ім. (ч.р.)

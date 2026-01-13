@@ -320,6 +320,20 @@
       correct: false
     min_correct: 3
     explanation: Вона є актуальною фігурою в історії культури.
+  - question: Чому її діяльність була важливою для майбутнього?
+    options:
+    - text: Це був початок організованого руху
+      correct: true
+    - text: Вона надихнула наступні покоління
+      correct: true
+    - text: Вона створила нові закони
+      correct: false
+    - text: Вона стала президентом
+      correct: false
+    - text: Вона винайшла ліки
+      correct: false
+    min_correct: 2
+    explanation: Вона заклала організаційні основи фемінізму.
 - type: error-correction
   title: Граматика в біографічному тексті
   items:
@@ -665,31 +679,41 @@
       correct: false
   - source: She edited the almanac 'The First Wreath'.
     options:
-    - text: Вона редагувала альманах 'Перший вінок'.
+    - text: "Вона редагувала альманах 'Перший вінок'."
       correct: true
-    - text: Вона написала роман 'Перший вінок'.
+    - text: "Вона написала роман 'Перший вінок'."
       correct: false
-    - text: Вона купила вінок.
+    - text: 'Вона купила вінок.'
       correct: false
-    - text: Вона продавала альманахи.
+    - text: 'Вона продавала альманахи.'
       correct: false
   - source: Her works address acute social problems.
     options:
-    - text: Її твори порушують гострі соціальні проблеми.
+    - text: 'Її твори порушують гострі соціальні проблеми.'
       correct: true
-    - text: Її твори описують природу.
+    - text: 'Її твори описують природу.'
       correct: false
-    - text: Вона писала про проблеми зі здоров'ям.
+    - text: "Вона писала про проблеми зі здоров'ям."
       correct: false
-    - text: Вона уникала соціальних тем.
+    - text: 'Вона уникала соціальних тем.'
       correct: false
   - source: She died of typhus in 1920.
     options:
-    - text: Вона померла від тифу в 1920 році.
+    - text: 'Вона померла від тифу в 1920 році.'
       correct: true
-    - text: Вона народилася в 1920 році.
+    - text: 'Вона народилася в 1920 році.'
       correct: false
-    - text: Вона виїхала в 1920 році.
+    - text: 'Вона виїхала в 1920 році.'
       correct: false
-    - text: Вона захворіла в 1920 році.
+    - text: 'Вона захворіла в 1920 році.'
+      correct: false
+  - source: She advocated for women's right to vote.
+    options:
+    - text: Вона виступала за право жінок голосувати.
+      correct: true
+    - text: Вона була проти виборів.
+      correct: false
+    - text: Вона голосувала лише вдома.
+      correct: false
+    - text: Вона не цікавилася політикою.
       correct: false

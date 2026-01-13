@@ -1,0 +1,129 @@
+module: 174-klasychna-muzyka-3-modernizm-i-suchasnist
+level: C1
+version: '2.0'
+items:
+  - lemma: модернізм
+    ipa: /mɔderˈnizm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: симфоніст
+    ipa: /sɪmfɔˈnist/
+    translation: symphonist
+    pos: noun
+    gender: m
+  - lemma: авангард
+    ipa: /auanˈhard/
+    translation: avant-garde
+    pos: noun
+    gender: m
+  - lemma: репресії
+    ipa: /reˈprɛsʲiji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: неокласицизм
+    ipa: /nɛɔklasɪt͡sɪˈzm/
+    translation: neoclassicism
+    pos: noun
+    gender: m
+  - lemma: мелодія
+    ipa: /meˈlɔdʲija/
+    translation: melody
+    pos: noun
+    gender: f
+  - lemma: партитура
+    ipa: /partɪˈtura/
+    translation: score/partition
+    pos: noun
+    gender: f
+  - lemma: дисонанс
+    ipa: /dɪsɔˈnans/
+    translation: dissonance
+    pos: noun
+    gender: m
+  - lemma: гармонія
+    ipa: /harˈmɔnʲija/
+    translation: harmony
+    pos: noun
+    gender: f
+  - lemma: оркестровка
+    ipa: /ɔrkesˈtrɔuka/
+    translation: orchestration
+    pos: noun
+    gender: f
+  - lemma: сюїта
+    ipa: /sʲuˈjita/
+    translation: suite
+    pos: noun
+    gender: f
+  - lemma: соната
+    ipa: /sɔˈnata/
+    translation: sonata
+    pos: noun
+    gender: f
+  - lemma: постмодернізм
+    ipa: /pɔstmɔderˈnizm/
+    translation: postmodernism
+    pos: noun
+    gender: m
+  - lemma: тихі пісні
+    ipa: /ˈtɪxʲi piˈsnʲi/
+    translation: silent songs
+    pos: noun
+    gender: f
+  - lemma: кіномузика
+    ipa: /kinɔˈmʊzɪka/
+    translation: film music
+    pos: noun
+    gender: f
+  - lemma: світове визнання
+    ipa: /svʲiˈtɔve vɪˈznanʲnʲa/
+    translation: world recognition
+    pos: noun
+    gender: n
+  - lemma: новаторство
+    ipa: /nɔˈvatɔrstvw/
+    translation: innovation
+    pos: noun
+    gender: n
+  - lemma: тяглість
+    ipa: /ˈtʲaɦlʲistʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+  - lemma: етап
+    ipa: /eˈtap/
+    translation: stage/phase
+    pos: noun
+    gender: m
+  - lemma: концепція
+    ipa: /kɔnˈt͡sɛpt͡sʲija/
+    translation: concept
+    pos: noun
+    gender: f
+  - lemma: маніфест
+    ipa: /manʲiˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: стилістика
+    ipa: /stɪˈlɪstɪka/
+    translation: stylistics
+    pos: noun
+    gender: f
+  - lemma: доробка
+    ipa: /dɔˈrɔbka/
+    translation: creative output/work
+    pos: noun
+    gender: f
+  - lemma: резонанс
+    ipa: /rezɔˈnans/
+    translation: resonance
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪna/
+    translation: heritage
+    pos: noun
+    gender: f

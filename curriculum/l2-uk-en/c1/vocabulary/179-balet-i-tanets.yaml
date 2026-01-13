@@ -1,0 +1,104 @@
+module: 179-balet-i-tanets
+level: C1
+version: '2.0'
+items:
+  - lemma: балет
+    ipa: /bɐˈlɛt/
+    translation: ballet
+    pos: ім. (ч.р.)
+  - lemma: хореографія
+    ipa: /xɔrɛɔˈɦrɑf⁽ʲ⁾ijɐ/
+    translation: choreography
+    pos: ім. (ж.р.)
+  - lemma: пуанти
+    ipa: /pʊˈɑntɪ/
+    translation: pointe shoes
+    pos: ім. (мн.)
+  - lemma: пачка
+    ipa: /ˈpɑt͡ʃkɐ/
+    translation: tutu
+    pos: ім. (ж.р.)
+  - lemma: прима-балерина
+    ipa: /ˈprɪmɐ bɐlɛˈrɪnɐ/
+    translation: prima ballerina
+    pos: ім. (ж.р.)
+  - lemma: соліст
+    ipa: /sɔˈlʲist/
+    translation: soloist
+    pos: ім. (ч.р.)
+  - lemma: кордебалет
+    ipa: /kɔrdɛbɐˈlɛt/
+    translation: corps de ballet
+    pos: ім. (ч.р.)
+  - lemma: гопак
+    ipa: /ɦɔˈpɑk/
+    translation: hopak (dance)
+    pos: ім. (ч.р.)
+  - lemma: трюк
+    ipa: /trʲuk/
+    translation: trick/stunt
+    pos: ім. (ч.р.)
+  - lemma: обертання
+    ipa: /ɔbɛrˈtɑnʲːɐ/
+    translation: rotation/spin
+    pos: ім. (с.р.)
+  - lemma: стрибок
+    ipa: /strɪˈbɔk/
+    translation: jump/leap
+    pos: ім. (ч.р.)
+  - lemma: підтримка
+    ipa: /pidˈtrɪmkɐ/
+    translation: lift (in dance)
+    pos: ім. (ж.р.)
+  - lemma: пластика
+    ipa: /plɐˈstɪkɐ/
+    translation: plasticity/movement quality
+    pos: ім. (ж.р.)
+  - lemma: імпровізація
+    ipa: /imprɔw⁽ʲ⁾iˈzɑt͡s⁽ʲ⁾ijɐ/
+    translation: improvisation
+    pos: ім. (ж.р.)
+  - lemma: модерн
+    ipa: /mɔˈdɛrn/
+    translation: modern (dance style)
+    pos: ім. (ч.р.)
+  - lemma: контемпорарі
+    ipa: /kɔnˈtɛmpɔrɐrʲi/
+    translation: contemporary dance
+    pos: ім. (с.р.)
+  - lemma: ансамбль
+    ipa: /ɐnˈsɑmblʲ/
+    translation: ensemble
+    pos: ім. (ч.р.)
+  - lemma: постановка
+    ipa: /pɔstɐˈnɔwkɐ/
+    translation: production/staging
+    pos: ім. (ж.р.)
+  - lemma: лібрето
+    ipa: /lʲiˈbrɛtɔ/
+    translation: libretto
+    pos: ім. (с.р.)
+  - lemma: грація
+    ipa: /ˈɦrɑt͡s⁽ʲ⁾ijɐ/
+    translation: grace
+    pos: ім. (ж.р.)
+  - lemma: витривалість
+    ipa: /wɪtrɪˈwɑlʲnʲistʲ/
+    translation: endurance/stamina
+    pos: ім. (ж.р.)
+  - lemma: репетиція
+    ipa: /rɛpɛˈtɪt͡s⁽ʲ⁾ijɐ/
+    translation: rehearsal
+    pos: ім. (ж.р.)
+  - lemma: прем'єра
+    ipa: /prɛˈmjɛrɐ/
+    translation: premiere
+    pos: ім. (ж.р.)
+  - lemma: гастролі
+    ipa: /ɦɐˈstrɔlʲi/
+    translation: tour
+    pos: ім. (мн.)
+  - lemma: овації
+    ipa: /ɔˈwɑt͡s⁽ʲ⁾iji/
+    translation: ovation
+    pos: ім. (мн.)

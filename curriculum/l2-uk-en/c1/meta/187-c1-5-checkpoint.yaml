@@ -1,0 +1,21 @@
+module: c1-187
+title: 'C1.5 Контрольна точка'
+subtitle: 'C1.5 Checkpoint'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: checkpoint
+pedagogy: 'Assessment'
+duration: 120
+transliteration: none
+tags:
+  - assessment
+  - culture
+  - arts
+grammar:
+  - 'Comprehensive Review'
+objectives:
+  - 'Assess knowledge of Ukrainian folk culture and fine arts'
+  - 'Evaluate ability to analyze cultural phenomena at C1 level'
+  - 'Verify mastery of cultural and artistic terminology'
+vocabulary_count: 20
+slug: 187-c1-5-checkpoint

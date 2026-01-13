@@ -2098,17 +2098,17 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 #### Module 151: C1.4 Checkpoint
 
-**Covers:** M112-M136
+**Covers:** M132-M150
 
 **Required Skill Groups:**
 
-1. Figurative Language (M112-114) - metaphor, simile, irony, sarcasm, hyperbole, litotes
-2. Euphemism & Rhetoric (M115-116) - taboo language, rhetorical questions
-3. Modality & Politeness (M117-119) - degrees of certainty, politeness strategies, indirectness
-4. Ukrainian Humor (M120-122) - humor traditions, wordplay, anecdotes
-5. Archaic Forms (M123-126) - archaic verbs, literary syntax, Church Slavonicisms, pronouns
-6. Register Control (M133-129) - high formal, intimate, slang/youth language
-7. Integration Practice (M136) - C1.4 review and synthesis
+1. Figurative Language (M132-134) - metaphor, simile, irony, sarcasm, hyperbole, litotes
+2. Euphemism & Rhetoric (M135-136) - taboo language, rhetorical questions
+3. Modality & Politeness (M137-139) - degrees of certainty, politeness strategies, indirectness
+4. Ukrainian Humor (M140-142) - humor traditions, wordplay, anecdotes
+5. Archaic Forms (M143-146) - archaic verbs, literary syntax, Church Slavonicisms, pronouns
+6. Register Control (M147-149) - high formal, intimate, slang/youth language
+7. Integration Practice (M150) - C1.4 review and synthesis
 
 **Vocabulary (10 words - assessment):**
 оцінювання, тестування, перевірка, контроль, екзамен, залік, бал, оцінка, критерій, результат
@@ -2143,42 +2143,42 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 | #   | Title                     | Type         | Focus                                                             |
 | --- | ------------------------- | ------------ | ----------------------------------------------------------------- |
-| 132 | Кобзарі та бандура        | Folk Music   | Epic tradition, blind bards                                       |
-| 133 | Обрядові пісні            | Folk Music   | Колядки, щедрівки, веснянки                                       |
-| 134 | Колискові та думи         | Folk Music   | Lullabies, epic ballads                                           |
-| 135 | Гопак і козачок           | Folk Dance   | Traditional Cossack dances                                        |
-| 136 | Регіональні танці         | Folk Dance   | Гуцульський аркан, полісські                                      |
-| 137 | Писанки                   | Folk Crafts  | Easter egg symbolism                                              |
-| 138 | Вишиванка                 | Folk Crafts  | Regional embroidery patterns                                      |
-| 139 | Гончарство та різьбярство | Folk Crafts  | Опішне, гуцульська різьба                                         |
-| 140 | Народна міфологія         | Folk Beliefs | Мавка, домовик, лісовик                                           |
-| 141 | Народна медицина          | Folk Beliefs | Herbs, healing traditions                                         |
-| 142 | Козацькі легенди          | Folk Tales   | Hero tales, Cossack myths                                         |
-| 143 | Казки та притчі           | Folk Tales   | Magic tales, moral stories                                        |
-| 152 | Зимові обряди             | Calendar     | Коляда, Маланка, Водохреща                                        |
-| 153 | Весна та літо             | Calendar     | Великдень, Зелені свята, Купала                                   |
-| 154 | Хрестини та весілля       | Life Rituals | Birth and marriage customs                                        |
-| 155 | Поминальні обряди         | Life Rituals | Провід, поминки, memorial                                         |
-| 156 | Галичина                  | Regional     | Western Ukrainian traditions                                      |
-| 157 | Слобожанщина              | Regional     | Eastern Ukrainian traditions                                      |
-| 158 | Полісся                   | Regional     | Forest region traditions                                          |
-| 159 | Поділля та Волинь         | Regional     | Central-West traditions                                           |
-| 160 | Класична музика I         | Fine Arts    | 🎵 **NEW** Витоки: Бортнянський, Березовський, Гулак-Артемовський |
-| 161 | Класична музика II        | Fine Arts    | 🎵 **NEW** Національна школа: Лисенко, Леонтович                  |
-| 162 | Класична музика III       | Fine Arts    | 🎵 **NEW** Модернізм: Лятошинський, Скорик, Сильвестров           |
-| 163 | Оперне мистецтво          | Fine Arts    | 🎵 **NEW** Opera houses, great singers                            |
-| 164 | Вокальне мистецтво        | Fine Arts    | 🎵 **NEW** Choral tradition, art song                             |
-| 165 | Образотворче мистецтво I  | Fine Arts    | 🎨 **NEW** Icons → Avant-garde                                    |
-| 166 | Образотворче мистецтво II | Fine Arts    | 🎨 **NEW** Соцреалізм → сьогодення                                |
-| 167 | Балет і танець            | Fine Arts    | 🩰 **NEW** Серж Лифар, сучасний балет                             |
-| 168 | Театральне мистецтво I    | Fine Arts    | 🎭 **NEW** Від витоків до Курбаса                                 |
-| 169 | Театральне мистецтво II   | Fine Arts    | 🎭 **NEW** Сучасний театр                                         |
-| 170 | Українська архітектура    | Fine Arts    | 🏛️ **NEW** Baroque, wooden churches, modernism                    |
-| 171 | Сучасна музика            | Contemporary | Rock, pop, Eurovision                                             |
-| 172 | Українське кіно           | Contemporary | Довженко to contemporary                                          |
-| 173 | C1.5 Практика I           | Practice     | Folk culture integration                                          |
-| 174 | C1.5 Практика II          | Practice     | Fine arts integration                                             |
-| 175 | C1.5 Checkpoint           | Review       | Folk culture & fine arts assessment                               |
+| 152 | Кобзарі та бандура        | Folk Music   | Epic tradition, blind bards                                       |
+| 153 | Обрядові пісні            | Folk Music   | Колядки, щедрівки, веснянки                                       |
+| 154 | Колискові та думи         | Folk Music   | Lullabies, epic ballads                                           |
+| 155 | Гопак і козачок           | Folk Dance   | Traditional Cossack dances                                        |
+| 156 | Регіональні танці         | Folk Dance   | Гуцульський аркан, полісські                                      |
+| 157 | Писанки                   | Folk Crafts  | Easter egg symbolism                                              |
+| 158 | Вишиванка                 | Folk Crafts  | Regional embroidery patterns                                      |
+| 159 | Гончарство та різьбярство | Folk Crafts  | Опішне, гуцульська різьба                                         |
+| 160 | Народна міфологія         | Folk Beliefs | Мавка, домовик, лісовик                                           |
+| 161 | Народна медицина          | Folk Beliefs | Herbs, healing traditions                                         |
+| 162 | Козацькі легенди          | Folk Tales   | Hero tales, Cossack myths                                         |
+| 163 | Казки та притчі           | Folk Tales   | Magic tales, moral stories                                        |
+| 164 | Зимові обряди             | Calendar     | Коляда, Маланка, Водохреща                                        |
+| 165 | Весна та літо             | Calendar     | Великдень, Зелені свята, Купала                                   |
+| 166 | Хрестини та весілля       | Life Rituals | Birth and marriage customs                                        |
+| 167 | Поминальні обряди         | Life Rituals | Провід, поминки, memorial                                         |
+| 168 | Галичина                  | Regional     | Western Ukrainian traditions                                      |
+| 169 | Слобожанщина              | Regional     | Eastern Ukrainian traditions                                      |
+| 170 | Полісся                   | Regional     | Forest region traditions                                          |
+| 171 | Поділля та Волинь         | Regional     | Central-West traditions                                           |
+| 172 | Класична музика I         | Fine Arts    | 🎵 **NEW** Витоки: Бортнянський, Березовський, Гулак-Артемовський |
+| 173 | Класична музика II        | Fine Arts    | 🎵 **NEW** Національна школа: Лисенко, Леонтович                  |
+| 174 | Класична музика III       | Fine Arts    | 🎵 **NEW** Модернізм: Лятошинський, Скорик, Сильвестров           |
+| 175 | Оперне мистецтво          | Fine Arts    | 🎵 **NEW** Opera houses, great singers                            |
+| 176 | Вокальне мистецтво        | Fine Arts    | 🎵 **NEW** Choral tradition, art song                             |
+| 177 | Образотворче мистецтво I  | Fine Arts    | 🎨 **NEW** Icons → Avant-garde                                    |
+| 178 | Образотворче мистецтво II | Fine Arts    | 🎨 **NEW** Соцреалізм → сьогодення                                |
+| 179 | Балет і танець            | Fine Arts    | 🩰 **NEW** Серж Лифар, сучасний балет                             |
+| 180 | Театральне мистецтво I    | Fine Arts    | 🎭 **NEW** Від витоків до Курбаса                                 |
+| 181 | Театральне мистецтво II   | Fine Arts    | 🎭 **NEW** Сучасний театр                                         |
+| 182 | Українська архітектура    | Fine Arts    | 🏛️ **NEW** Baroque, wooden churches, modernism                    |
+| 183 | Сучасна музика            | Contemporary | Rock, pop, Eurovision                                             |
+| 184 | Українське кіно           | Contemporary | Довженко to contemporary                                          |
+| 185 | C1.5 Практика I           | Practice     | Folk culture integration                                          |
+| 186 | C1.5 Практика II          | Practice     | Fine arts integration                                             |
+| 187 | C1.5 Checkpoint           | Review       | Folk culture & fine arts assessment                               |
 
 ### Module Content Specifications C1.5
 
@@ -3621,18 +3621,18 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 #### Module 202: C1.6 Checkpoint
 
-**Covers:** M180-M193
+**Covers:** M188-M201
 
 **Required Skill Groups:**
 
-1. Literary History (M174) - Ukrainian literary periods and movements
-2. Early Classics (M175) - Kotlyarevsky, Eneida
-3. Shevchenko (M176-172) - diary/letters, poetry, legacy (bio: M55)
-4. Franko (M179-174) - major poetic cycles, prose (bio: M63)
-5. Lesia Ukrainka (M181-176) - lyric poetry, drama (bio: M75)
-6. Other Classics (M183-178) - Vovchok, Myrny, Kotsyubynsky
-7. Literary Terminology (M185) - literary analysis vocabulary
-8. Practice Integration (M186-181) - poetry analysis, review
+1. Literary History (M188) - Ukrainian literary periods and movements
+2. Early Classics (M189) - Kotlyarevsky, Eneida
+3. Shevchenko (M190-192) - diary/letters, poetry, legacy (bio: M55)
+4. Franko (M193-194) - major poetic cycles, prose (bio: M63)
+5. Lesia Ukrainka (M195-196) - lyric poetry, drama (bio: M75)
+6. Other Classics (M197-198) - Vovchok, Myrny, Kotsyubynsky
+7. Literary Terminology (M199) - literary analysis vocabulary
+8. Practice Integration (M200-201) - poetry analysis, review
 
 **Vocabulary (15 words - assessment focus):**
 література, період, автор, твір, жанр, стиль, тема, образ, символ, аналіз, критика, інтерпретація, вплив, спадщина, традиція
@@ -3697,20 +3697,20 @@ graph TD
         M30 --> M35[M35 Checkpoint]
     end
 
-    %% Phase C1.3: Biographies (M36-125) - 90 figures by birth year
-    subgraph C1_3 [Phase C1.3: Biographies M36-125]
-        M36[M36 Ольга 890] --> M45[M45 Сковорода 1722]
-        M45 --> M52[M52 Березовський 1745]
+    %% Phase C1.3: Biographies (M36-131) - 96 figures by birth year
+    subgraph C1_3 [Phase C1.3: Biographies M36-131]
+        M36[M36 Ольга 890] --> M51[M51 Сковорода 1722]
+        M51 --> M52[M52 Березовський 1745]
         M52 --> M58[M58 Лисенко 1842]
         M58 --> M78[M78 Леонтович 1877]
         M78 --> M80[M80 Малевич 1879]
-        M80 --> M89[M89 Курбас 1887]
-        M89 --> M99[M99 Лифар 1904]
-        M99 --> M125[M125 Checkpoint]
+        M80 --> M92[M92 Курбас 1887]
+        M92 --> M102[M102 Лифар 1904]
+        M102 --> M131[M131 Checkpoint]
     end
 
-    %% Phase C1.4: Advanced Stylistics (M132-145)
-    subgraph C1_4 [Phase C1.4: Stylistics M132-145]
+    %% Phase C1.4: Advanced Stylistics (M132-151)
+    subgraph C1_4 [Phase C1.4: Stylistics M132-151]
         M132[M132 Metaphor] --> M136[M136 Rhetoric]
         M136 --> M140[M140 Humor]
         M140 --> M145[M145 Archaic Forms]

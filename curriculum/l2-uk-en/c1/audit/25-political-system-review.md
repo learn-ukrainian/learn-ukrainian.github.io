@@ -1,25 +1,6 @@
 # Audit Report: 25-political-system.md
 **Phase:** C1.2 | **Level:** C1 | **Pedagogy:** History | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q1 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q3 prompt length 10 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q5 prompt length 11 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-history-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 5 violations (moderate)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 2070/2000
@@ -32,9 +13,9 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 98.1% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -78,5 +59,5 @@
 | **14. Prozorro: Революція прозорості** | ⚪️ | 72 | Skipped |
 | **15. Геополітика і Конституція** | ⚪️ | 106 | Skipped |
 | **Первинні джерела** | ⚪️ | 50 | Skipped |
-| **Summary** | ✅ | 56 | Included in Core |
-| **Need More Practice?** | ⚪️ | 84 | Skipped |
+| **Підсумок** | ✅ | 56 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 84 | Skipped |

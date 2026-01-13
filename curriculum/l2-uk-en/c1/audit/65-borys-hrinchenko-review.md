@@ -1,53 +1,9 @@
 # Audit Report: 65-borys-hrinchenko.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-quiz-01] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-fill-in-01] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-error-01] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-match-01] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-select-01] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-unjumble-01] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-cloze-01] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-tf-01] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-gs-01] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-mark-01] mark-the-words: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-critical-01] critical-analysis: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-borys-hrinchenko.yaml: [c1-65-essay-01] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'c1-biography-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 17 violations (severe - consider revision)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1901/2000 (99 short)
+- **Words:** ⚠️ 1917/2000 (83 short)
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 14/4 types
@@ -57,9 +13,9 @@
 - **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 12 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ⏳ Pending validation
 
@@ -79,7 +35,7 @@
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -87,8 +43,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 73 | Included in Core |
 | **Вступ** | ⚪️ | 193 | Skipped |
-| **Біографія** | ⚪️ | 1137 | Skipped |
+| **Життєпис** | ⚪️ | 328 | Skipped |
+| **Внесок** | ⚪️ | 635 | Skipped |
+| **Спадщина** | ⚪️ | 174 | Skipped |
 | **Історичний контекст** | ✅ | 302 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 129 | Included in Core |
-| **Summary** | ✅ | 67 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 67 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 16 | Skipped |

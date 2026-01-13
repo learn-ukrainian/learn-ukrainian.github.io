@@ -1,36 +1,30 @@
 # Audit Report: 62-mariya-pavlova.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-mariya-pavlova.yaml: Insufficient activities: 16 found, minimum N/A required for C1
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2092/2000
-- **Activities:** ✅ 16/12
+- **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (16 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ⏳ Pending validation
 
@@ -58,7 +52,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
 | **Вступ** | ⚪️ | 209 | Skipped |
-| **Біографія** | ⚪️ | 746 | Skipped |
+| **Життєпис** | ⚪️ | 193 | Skipped |
+| **Внесок** | ⚪️ | 480 | Skipped |
+| **Спадщина** | ⚪️ | 73 | Skipped |
 | **Історичний контекст** | ✅ | 433 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 215 | Included in Core |
 | **Есе** | ⚪️ | 46 | Skipped |
@@ -66,4 +62,4 @@
 | **Зразок відповіді** | ⚪️ | 310 | Skipped |
 | **Підсумок** | ✅ | 56 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 17 | Skipped |

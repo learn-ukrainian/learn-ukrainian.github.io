@@ -420,6 +420,11 @@ REGISTER_MARKERS = [
     r'літературн\w+',
     r'просторічн\w+',
     r'регістр',
+    r'діалект\w+',
+    r'архаїзм\w+',
+    r'жаргон\w+',
+    r'сленг\w+',
+    r'суржик',
 ]
 
 # Analysis section markers (for LIT modules)
@@ -764,7 +769,7 @@ def count_collocations(content: str) -> int:
     colloc_table = re.search(r'колокаці[їй]|сполучен', content, re.IGNORECASE)
     if colloc_table:
         # Count table rows after the match
-        count += len(re.findall(r'^\|[^|]+\|', content[colloc_table.start():], re.MULTILINE)) // 2
+        count += len(re.findall(r'^[> ]*\|[^|]+\|', content[colloc_table.start():], re.MULTILINE)) // 2
     return min(count, 30)
 
 

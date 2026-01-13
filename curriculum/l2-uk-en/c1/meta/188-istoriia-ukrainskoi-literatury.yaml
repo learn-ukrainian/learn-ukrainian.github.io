@@ -1,0 +1,22 @@
+module: c1-188
+title: 'Історія української літератури'
+subtitle: 'History of Ukrainian Literature'
+version: '2.0'
+phase: 'C1.6 Literature'
+focus: literature
+pedagogy: 'Immersion & Analysis'
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - history
+  - analysis
+grammar:
+  - 'Literary analysis register'
+  - 'Historical present in narrative'
+objectives:
+  - 'Overview of major periods in Ukrainian literature'
+  - 'Identify key authors and movements'
+  - 'Understand the socio-political context of literary development'
+vocabulary_count: 24
+slug: 188-istoriia-ukrainskoi-literatury

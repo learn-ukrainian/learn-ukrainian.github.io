@@ -67,8 +67,7 @@
       correct: false
     - text: Тільки якщо автор — ваш знайомий
       correct: false
-  - question: Що означає важливий термін 'контекстуалізація' власного дослідження
-      в межах огляду літератури?
+  - question: "Що саме в академічному письмі означає важливий методологічний термін 'контекстуалізація' власного дослідження в межах огляду літератури?"
     options:
     - text: Визначення місця вашої праці серед робіт попередників
       correct: true
@@ -131,48 +130,56 @@
     - одностайні
     - різні
     - довгі
+    - складні
   - sentence: Поза [___] вчених залишається питання логістики.
     answer: увагою
     options:
     - увагою
     - хатою
     - межею
+    - горою
   - sentence: Цей підхід [___] результатами експерименту.
     answer: підтверджується
     options:
     - підтверджується
     - заважає
     - мовчить
+    - спить
   - sentence: Автор [___] на важливості цифровізації.
     answer: наголошує
     options:
     - наголошує
     - кричить
     - чує
+    - бачить
   - sentence: Методологія потребує подальшого [___].
     answer: доопрацювання
     options:
     - доопрацювання
     - знищення
     - читання
+    - писання
   - sentence: Думки авторів [___] в питанні термінології.
     answer: розходяться
     options:
     - розходяться
     - біжать
     - стоять
+    - лежать
   - sentence: Існуючі дані є [___] та неповними.
     answer: фрагментарними
     options:
     - фрагментарними
     - великими
     - гарними
+    - малими
   - sentence: Варто [___] до думки професора Коваля.
     answer: прислухатися
     options:
     - прислухатися
     - подивитися
     - прийти
+    - втекти
   instruction: Вставте правильне слово у фразу наукового огляду.
 - title: Групування джерел
   type: group-sort
@@ -208,6 +215,8 @@
     options:
     - каже, що все дуже погано
     - все дуже погано
+    - Петренко каже
+    - дуже погано
     answer: констатує кризовий стан
     explanation: Використовуйте термінологію.
   - sentence: Сидоренко написав таку саму штуку.
@@ -215,6 +224,8 @@
     options:
     - написав таку саму штуку
     - таку саму штуку
+    - Сидоренко написав
+    - саму штуку
     answer: пропонує аналогічний підхід
     explanation: Уникайте слова 'штука' в науці.
   - sentence: Я подивився багато книжок і зрозумів...
@@ -222,6 +233,8 @@
     options:
     - Я подивився багато книжок і зрозумів
     - багато книжок і зрозумів
+    - я подивився
+    - книжок і зрозумів
     answer: Аналіз літературних джерел дозволив дійти висновку
     explanation: Безособова форма професійніша.
   - sentence: Ці два автори сваряться між собою.
@@ -229,6 +242,8 @@
     options:
     - сваряться між собою
     - між собою
+    - ці два автори
+    - автори сваряться
     answer: ведуть наукову полеміку / мають протилежні погляди
     explanation: Дотримуйтеся академічної етики.
   - sentence: Він придумує нову ідею.
@@ -236,6 +251,8 @@
     options:
     - придумує
     - нову ідею
+    - він придумує
+    - ідею
     answer: обґрунтовує / розвиває
     explanation: Вчені 'обґрунтовують' або 'висувають', а не 'придумують'.
   - sentence: Тут є велика дірка в науці.
@@ -243,6 +260,8 @@
     options:
     - велика дірка
     - дірка в науці
+    - тут є
+    - є велика
     answer: суттєва прогалина
     explanation: '''Дірка'' — це розмовне слово.'
   instruction: Виправте розмовні або некоректні вирази на академічні форми.
@@ -291,8 +310,7 @@
       correct: false
     - text: тікає
       correct: false
-  - question: Нова фундаментальна праця Коваля суттєво [___] та розширює попереднє
-      класичне дослідження Петренка.
+  - question: "Нова фундаментальна праця Коваля суттєво, значно та докорінно [___] та розширює попереднє класичне дослідження Петренка."
     options:
     - text: доповнює
       correct: true
@@ -302,8 +320,7 @@
       correct: false
     - text: бачить
       correct: false
-  - question: Ця оглядова стаття детально [___] надзвичайно широкий спектр актуальних
-      питань сучасної економіки.
+  - question: "Ця оглядова стаття детально та всебічно [___] надзвичайно широкий спектр актуальних питань сучасної економіки."
     options:
     - text: висвітлює
       correct: true
@@ -313,8 +330,7 @@
       correct: false
     - text: каже
       correct: false
-  - question: Молоді вчені сміливо [___] нову альтернативну гіпотезу щодо походження
-      цього явища.
+  - question: "Молоді вчені у своєму новому дослідженні сміливо та аргументовано [___] нову альтернативну гіпотезу щодо походження цього явища."
     options:
     - text: висувають
       correct: true
@@ -324,8 +340,7 @@
       correct: false
     - text: ставлять
       correct: false
-  - question: Всі отримані експериментальні дані повністю [___] з попередніми теоретичними
-      висновками колег.
+  - question: "Всі отримані під час цього етапу експериментальні дані повністю та беззаперечно [___] з попередніми теоретичними висновками колег."
     options:
     - text: узгоджуються
       correct: true
@@ -346,8 +361,7 @@
       correct: false
     - text: вірить
       correct: false
-  - question: Статистичні результати переконливо [___] про високу ефективність запропонованого
-      автором методу.
+  - question: "Отримані статистичні результати переконливо та однозначно [___] про високу наукову та практичну ефективність запропонованого автором методу."
     options:
     - text: свідчать
       correct: true
@@ -687,7 +701,7 @@
 - title: Переклад фраз
   type: quiz
   items:
-  - question: A growing body of research suggests that this phenomenon is widespread.
+  - question: "A growing body of modern and comprehensive research suggests that this phenomenon is widespread."
     options:
     - text: Дедалі більше досліджень свідчать, що це явище є поширеним.
       correct: true
@@ -708,7 +722,7 @@
       correct: false
     - text: Увага була велика...
       correct: false
-  - question: Consistent with previous findings, our results show a positive correlation.
+  - question: "Consistent with the previous findings of other researchers, our results show a positive correlation."
     options:
     - text: Узгоджується з попередніми знахідками, наші результати показують позитивну
         кореляцію.
@@ -719,8 +733,7 @@
       correct: false
     - text: Відповідно до того що було...
       correct: false
-  - question: Contrary to expectations, the experiment failed to produce significant
-      results.
+  - question: "Contrary to all initial and optimistic expectations, the experiment failed to produce significant results."
     options:
     - text: Всупереч очікуванням, експеримент не дав значущих результатів.
       correct: true
@@ -751,7 +764,7 @@
       correct: false
     - text: Продовжуючи ідеї...
       correct: false
-  - question: The findings contradict established theories in the field of physics.
+  - question: "The findings directly and unambiguously contradict established theories in the field of modern physics."
     options:
     - text: Результати суперечать усталеним теоріям у галузі фізики.
       correct: true

@@ -1,0 +1,124 @@
+module: 188-istoriia-ukrainskoi-literatury
+level: C1
+version: '2.0'
+items:
+  - lemma: література
+    ipa: /l⁽ʲ⁾itɛrɐˈturɐ/
+    translation: literature
+    pos: noun
+    gender: f
+  - lemma: письменник
+    ipa: /pɪsʲˈmɛnnɪk/
+    translation: writer
+    pos: noun
+    gender: m
+  - lemma: поет
+    ipa: /poˈɛt/
+    translation: poet
+    pos: noun
+    gender: m
+  - lemma: прозаїк
+    ipa: /proˈzɑj⁽ʲ⁾ik/
+    translation: prose writer
+    pos: noun
+    gender: m
+  - lemma: драматург
+    ipa: /drɐmɐˈturɦ/
+    translation: playwright
+    pos: noun
+    gender: m
+  - lemma: епоха
+    ipa: /ɛˈpɔxɐ/
+    translation: era / epoch
+    pos: noun
+    gender: f
+  - lemma: період
+    ipa: /pɛˈr⁽ʲ⁾iod/
+    translation: period
+    pos: noun
+    gender: m
+  - lemma: напрям
+    ipa: /ˈnɑprʲɐm/
+    translation: movement / direction
+    pos: noun
+    gender: m
+  - lemma: течія
+    ipa: /tɛˈt͡ʃ⁽ʲ⁾ijɐ/
+    translation: trend / current
+    pos: noun
+    gender: f
+  - lemma: класицизм
+    ipa: /klɐsɪˈt͡sɪzm/
+    translation: classicism
+    pos: noun
+    gender: m
+  - lemma: романтизм
+    ipa: /romɐnˈtɪzm/
+    translation: romanticism
+    pos: noun
+    gender: m
+  - lemma: реалізм
+    ipa: /rɛɐˈl⁽ʲ⁾izm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: модернізм
+    ipa: /modɛrˈn⁽ʲ⁾izm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /folʲˈklɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: відродження
+    ipa: /v⁽ʲ⁾idˈrɔd͡ʒɛnʲnʲɐ/
+    translation: rebirth / renaissance
+    pos: noun
+    gender: n
+  - lemma: просвітництво
+    ipa: /pros⁽ʲ⁾v⁽ʲ⁾itˈnɪt͡stvo/
+    translation: enlightenment
+    pos: noun
+    gender: n
+  - lemma: бароко
+    ipa: /bɐˈrɔko/
+    translation: baroque
+    pos: noun
+    gender: n
+  - lemma: шедевр
+    ipa: /ʃeˈdɛu̯r/
+    translation: masterpiece
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: heritage / legacy
+    pos: noun
+    gender: f
+  - lemma: канон
+    ipa: /kɐˈnɔn/
+    translation: canon
+    pos: noun
+    gender: m
+  - lemma: контекст
+    ipa: /konˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: інтерпретація
+    ipa: /intɛrprɛˈtɑt͡sʲijɐ/
+    translation: interpretation
+    pos: noun
+    gender: f
+  - lemma: критика
+    ipa: /ˈkrɪtɪkɐ/
+    translation: criticism
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈvnɛsok/
+    translation: contribution
+    pos: noun
+    gender: m

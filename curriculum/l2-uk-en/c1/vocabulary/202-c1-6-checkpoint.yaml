@@ -1,0 +1,69 @@
+module: 202-c1-6-checkpoint
+level: C1
+version: '2.0'
+items:
+  - lemma: верифікація
+    ipa: /wɛrɪfʲikɐˈt͡sʲijɐ/
+    translation: verification
+    pos: noun
+    gender: f
+  - lemma: інтертекстуальність
+    ipa: /intɛrtɛksturɐˈlʲnʲistʲ/
+    translation: intertextuality
+    pos: noun
+    gender: f
+  - lemma: деконструкція
+    ipa: /dɛkɔnˈstrukt͡sʲijɐ/
+    translation: deconstruction
+    pos: noun
+    gender: f
+  - lemma: парадигма
+    ipa: /pɐrɐˈdɪɦmɐ/
+    translation: paradigm
+    pos: noun
+    gender: f
+  - lemma: апробація
+    ipa: /ɐprɔˈbɑt͡sʲijɐ/
+    translation: approbation, testing
+    pos: noun
+    gender: f
+  - lemma: релевантний
+    ipa: /rɛlɛˈβɐntnɪj/
+    translation: relevant
+    pos: adj
+  - lemma: когерентний
+    ipa: /kɔɦɛˈrɛntnɪj/
+    translation: coherent
+    pos: adj
+  - lemma: автентичний
+    ipa: /ɐwtɛnˈtɪt͡ʃnɪj/
+    translation: authentic
+    pos: adj
+  - lemma: репрезентативний
+    ipa: /rɛprɛzɛntɐˈtɪwnɪj/
+    translation: representative
+    pos: adj
+  - lemma: концептуальний
+    ipa: /kɔnt͡sɛptuˈɑlʲnɪj/
+    translation: conceptual
+    pos: adj
+  - lemma: аргументований
+    ipa: /ɐrɦumɛntɔˈβɑnɪj/
+    translation: reasoned, argumentative
+    pos: adj
+  - lemma: обґрунтований
+    ipa: /ɔbɦrunˈtɔβɐnɪj/
+    translation: substantiated, justified
+    pos: adj
+  - lemma: систематизований
+    ipa: /sɪstɛmɐtɪˈzɔβɐnɪj/
+    translation: systematized
+    pos: adj
+  - lemma: узагальнений
+    ipa: /uzɐˈɦɑlʲnʲɛnɪj/
+    translation: generalized
+    pos: adj
+  - lemma: критичний
+    ipa: /krɪˈtɪt͡ʃnɪj/
+    translation: critical
+    pos: adj

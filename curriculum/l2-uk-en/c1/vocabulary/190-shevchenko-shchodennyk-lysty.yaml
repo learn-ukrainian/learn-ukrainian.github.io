@@ -1,0 +1,124 @@
+module: 190-shevchenko-shchodennyk-lysty
+level: C1
+version: '2.0'
+items:
+  - lemma: щоденник
+    ipa: /ʃt͡ʃoˈdɛnnɪk/
+    translation: diary / journal
+    pos: noun
+    gender: m
+  - lemma: листування
+    ipa: /lɪstuˈvɑnʲnʲɐ/
+    translation: correspondence
+    pos: noun
+    gender: n
+  - lemma: епістолярій
+    ipa: /ɛp⁽ʲ⁾istoˈlʲar⁽ʲ⁾ij/
+    translation: epistolary (collection of letters)
+    pos: noun
+    gender: m
+  - lemma: заслання
+    ipa: /zɐˈslannʲɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: спогади
+    ipa: /ˈspɔɦɐdɪ/
+    translation: memories / memoirs
+    pos: noun
+    gender: m
+  - lemma: щирість
+    ipa: /ˈʃt͡ʃɪr⁽ʲ⁾istʲ/
+    translation: sincerity
+    pos: noun
+    gender: f
+  - lemma: роздуми
+    ipa: /ˈrɔzdumɪ/
+    translation: reflections / thoughts
+    pos: noun
+    gender: m
+  - lemma: почуття
+    ipa: /pot͡ʃuˈtʲtʲɐ/
+    translation: feelings / emotions
+    pos: noun
+    gender: n
+  - lemma: інтелігенція
+    ipa: /intɛl⁽ʲ⁾iˈɦɛnt͡sʲijɐ/
+    translation: intelligentsia
+    pos: noun
+    gender: f
+  - lemma: побратим
+    ipa: /pobrɐˈtɪm/
+    translation: brother-in-arms / close friend
+    pos: noun
+    gender: m
+  - lemma: однодумець
+    ipa: /odnoˈdumɛt͡sʲ/
+    translation: like-minded person
+    pos: noun
+    gender: m
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɐ/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: автопортрет
+    ipa: /ɐu̯topoˈrtrɛt/
+    translation: self-portrait
+    pos: noun
+    gender: m
+  - lemma: самотність
+    ipa: /sɐˈmɔtn⁽ʲ⁾istʲ/
+    translation: loneliness
+    pos: noun
+    gender: f
+  - lemma: ностальгія
+    ipa: /nostɐlʲˈɦ⁽ʲ⁾ijɐ/
+    translation: nostalgia
+    pos: noun
+    gender: f
+  - lemma: туга
+    ipa: /ˈtuɦɐ/
+    translation: sorrow / longing
+    pos: noun
+    gender: f
+  - lemma: надія
+    ipa: /nɐˈd⁽ʲ⁾ijɐ/
+    translation: hope
+    pos: noun
+    gender: f
+  - lemma: звільнення
+    ipa: /zv⁽ʲ⁾ilʲˈnɛnʲnʲɐ/
+    translation: release / liberation
+    pos: noun
+    gender: n
+  - lemma: кріпацтво
+    ipa: /kr⁽ʲ⁾iˈpɑt͡stvo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: академія
+    ipa: /ɐkɐˈdɛm⁽ʲ⁾ijɐ/
+    translation: academy
+    pos: noun
+    gender: f
+  - lemma: покровитель
+    ipa: /pokroˈvɪtɛlʲ/
+    translation: patron / protector
+    pos: noun
+    gender: m
+  - lemma: духовність
+    ipa: /duˈxɔun⁽ʲ⁾istʲ/
+    translation: spirituality
+    pos: noun
+    gender: f
+  - lemma: спадок
+    ipa: /ˈspɑdok/
+    translation: inheritance / legacy
+    pos: noun
+    gender: m
+  - lemma: свідчення
+    ipa: /ˈs⁽ʲ⁾v⁽ʲ⁾id͡ʃɛnʲnʲɐ/
+    translation: testimony / evidence
+    pos: noun
+    gender: n

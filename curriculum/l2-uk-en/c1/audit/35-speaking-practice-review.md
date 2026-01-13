@@ -2,19 +2,8 @@
 **Phase:** C1.2 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Огляд' per template 'c1-checkpoint-module-template'
-  - FIX: Add '## Огляд' section as specified in docs/l2-uk-en/templates/c1-checkpoint-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Навички' per template 'c1-checkpoint-module-template'
-  - FIX: Add '## Навички' section as specified in docs/l2-uk-en/templates/c1-checkpoint-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2327/1750
+- **Words:** ✅ 2341/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/4 types
@@ -38,7 +27,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 7 | 8 | 88% | 25% | 22.0% |
-| review_sections | 31 | 3 | 100% | 20% | 20.0% |
+| review_sections | 33 | 3 | 100% | 20% | 20.0% |
 | variety | 0.98 | - | 98% | 15% | 14.7% |
 | engagement | 10 | 3 | 100% | 10% | 10.0% |
 | cultural | 2 | - | 100% | 10% | 10.0% |
@@ -49,7 +38,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 41 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Огляд** | ⚪️ | 9 | Skipped |
+| **Навички** | ⚪️ | 46 | Skipped |
 | **Вступ** | ⚪️ | 76 | Skipped |
 | **Навичка 1: Основи риторики та переконання** | ⚪️ | 347 | Skipped |
 | **Навичка 2: Структура ефективного аргументу** | ⚪️ | 276 | Skipped |

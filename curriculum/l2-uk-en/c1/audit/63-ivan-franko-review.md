@@ -3,45 +3,16 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-quiz-01] quiz: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: Array validation: {'type': 'select', 'title': 'Лінгвістичний аналіз первинного джерела', 'instruction': 'Проаналізуйте уривок із поезії Франка «Я син народу». Виберіть УСІ правильні твердження.', 'items': [{'question': '«Прочитайте уривок — «Я син народу, що вгору йде, хоч був закритий в льоху...» Які лінгвістичні та стилістичні особливості тут присутні?»', 'options': [{'text': 'Використання розгорнутої метафори («закритий в льоху») для опису гноблення.', 'correct': True}, {'text': 'Синтаксичний паралелізм (повторення структури «Я син народу...»).', 'correct': True}, {'text': "Виключне використання архаїчної церковнослов'янської лексики.", 'correct': False}, {'text': 'Емоційно забарвлені дієслова («плює», «живе», «йде»).', 'correct': True}, {'text': 'Вживання офіційно-ділового стилю для підсилення логіки.', 'correct': False}]}, {'question': 'Які ще художні засоби характерні для публіцистичної поезії Івана Франка згідно з аналізом його творчості?', 'options': [{'text': 'Використання риторичних запитань для залучення читача до діалогу.', 'correct': True}, {'text': 'Побудова тексту як сухого переліку історичних дат та подій.', 'correct': False}, {'text': 'Насичення тексту інтимними зізнаннями, що не стосуються народу.', 'correct': False}, {'text': 'Вживання алегоричних образів (наприклад, Каменяр, Мойсей).', 'correct': True}, {'text': 'Використання складнопідрядних речень з багатьма підрядними.', 'correct': True}]}, {'question': "Оберіть терміни, які найкраще описують стиль та зміст збірки «Зів'яле листя» Франка.", 'options': [{'text': 'Психологізм та інтимна лірика.', 'correct': True}, {'text': 'Модернізм та символіка.', 'correct': True}, {'text': 'Епічна героїка та опис битв.', 'correct': False}, {'text': 'Філософська заглибленість у почуття.', 'correct': True}, {'text': 'Сухий виклад фактів особистої біографії.', 'correct': False}]}, {'question': 'Які лексичні пласти Франко активно впроваджував в українську літературну мову?', 'options': [{'text': 'Філософська та абстрактна термінологія.', 'correct': True}, {'text': 'Наукова лексика з різних галузей знань.', 'correct': True}, {'text': 'Виключно діалектизми свого рідного села.', 'correct': False}, {'text': 'Суспільно-політична лексика європейського зразка.', 'correct': True}, {'text': 'Церковні архаїзми без жодних змін.', 'correct': False}]}, {'question': 'Виберіть ознаки публіцистичного стилю Франка, згадані в модулі.', 'options': [{'text': 'Логічність та послідовність аргументації.', 'correct': True}, {'text': "Використання конекторів для зв'язку думок.", 'correct': True}, {'text': 'Звернення до читача через риторичні засоби.', 'correct': True}, {'text': 'Повна відсутність будьяких емоційних засобів.', 'correct': False}, {'text': 'Орієнтація на актуальні проблеми суспільства.', 'correct': True}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-fill-in-01] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-error-01] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-match-01] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-select-01] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-unjumble-01] unjumble: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-cloze-01] cloze: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-tf-01] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-gs-01] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 63-ivan-franko.yaml: [c1-63-essay-01] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'c1-biography-module-template'
-  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 14 violations (severe - consider revision)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1953/2000 (47 short)
+- **Words:** ✅ 2003/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -51,9 +22,9 @@
 - **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 10 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ⏳ Pending validation
 
@@ -73,7 +44,7 @@
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -81,8 +52,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |
 | **Вступ** | ⚪️ | 214 | Skipped |
-| **Біографія** | ⚪️ | 1025 | Skipped |
+| **Життєпис** | ⚪️ | 205 | Skipped |
+| **Внесок** | ⚪️ | 655 | Skipped |
+| **Спадщина** | ⚪️ | 199 | Skipped |
 | **Історичний контекст** | ✅ | 334 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 152 | Included in Core |
-| **Summary** | ✅ | 159 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 159 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 16 | Skipped |

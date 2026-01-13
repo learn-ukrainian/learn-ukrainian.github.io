@@ -1,0 +1,104 @@
+module: 178-obrazotvorche-mystetstvo-2
+level: C1
+version: '2.0'
+items:
+  - lemma: соцреалізм
+    ipa: /sɔt͡srɛɐˈlʲizm/
+    translation: socialist realism
+    pos: ім. (ч.р.)
+  - lemma: дисидент
+    ipa: /dɪsɪˈdɛnt/
+    translation: dissident
+    pos: ім. (ч.р.)
+  - lemma: наївне мистецтво
+    ipa: /nɐˈjiwnɛ mɪsˈtɛt͡stwɔ/
+    translation: naive art
+    pos: ім. (с.р.)
+  - lemma: примітивізм
+    ipa: /prɪm⁽ʲ⁾itɪˈw⁽ʲ⁾izm/
+    translation: primitivism
+    pos: ім. (ч.р.)
+  - lemma: шістдесятники
+    ipa: /ʃistdɛˈsʲɑtnɪkɪ/
+    translation: Sixtiers (generation)
+    pos: ім. (мн.)
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɐ/
+    translation: censorship
+    pos: ім. (ж.р.)
+  - lemma: ідеологія
+    ipa: /idɛɔˈlɔɦijɐ/
+    translation: ideology
+    pos: ім. (ж.р.)
+  - lemma: перформанс
+    ipa: /pɛrˈfɔrmɐns/
+    translation: performance art
+    pos: ім. (ч.р.)
+  - lemma: інсталяція
+    ipa: /instɐˈlʲɑt͡s⁽ʲ⁾ijɐ/
+    translation: installation
+    pos: ім. (ж.р.)
+  - lemma: бієнале
+    ipa: /b⁽ʲ⁾ijɛˈnɑlɛ/
+    translation: biennale
+    pos: ім. (с.р.)
+  - lemma: куратор
+    ipa: /kʊˈrɑtɔr/
+    translation: curator
+    pos: ім. (ч.р.)
+  - lemma: мурал
+    ipa: /mʊˈrɑl/
+    translation: mural
+    pos: ім. (ч.р.)
+  - lemma: графіті
+    ipa: /ɡrɐˈfʲitʲi/
+    translation: graffiti
+    pos: ім. (с.р.)
+  - lemma: модернізм
+    ipa: /mɔdɛrˈnizm/
+    translation: modernism
+    pos: ім. (ч.р.)
+  - lemma: постмодернізм
+    ipa: /pɔstmɔdɛrˈnizm/
+    translation: postmodernism
+    pos: ім. (ч.р.)
+  - lemma: пльонтанізм
+    ipa: /plʲɔntɐˈnizm/
+    translation: pliontanism (Marchuk's style)
+    pos: ім. (ч.р.)
+  - lemma: фантасмагорія
+    ipa: /fɐntɐsmɐˈhɔrʲijɐ/
+    translation: phantasmagoria
+    pos: ім. (ж.р.)
+  - lemma: звірі
+    ipa: /ˈzw⁽ʲ⁾irʲi/
+    translation: beasts (artistic)
+    pos: ім. (мн.)
+  - lemma: квіти
+    ipa: /ˈkw⁽ʲ⁾itɪ/
+    translation: flowers (artistic theme)
+    pos: ім. (мн.)
+  - lemma: вітраж
+    ipa: /wiˈtrɑʒ/
+    translation: stained glass
+    pos: ім. (ч.р.)
+  - lemma: мозаїка
+    ipa: /mɔˈzɑjɪkɐ/
+    translation: mosaic
+    pos: ім. (ж.р.)
+  - lemma: знищення
+    ipa: /znɪˈʃt͡ʃɛnʲːɐ/
+    translation: destruction
+    pos: ім. (с.р.)
+  - lemma: відродження
+    ipa: /widˈrɔd͡ʒɛnʲːɐ/
+    translation: rebirth/renaissance
+    pos: ім. (с.р.)
+  - lemma: спротив
+    ipa: /ˈsprɔtɪw/
+    translation: resistance
+    pos: ім. (ч.р.)
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+    translation: identity
+    pos: ім. (ж.р.)

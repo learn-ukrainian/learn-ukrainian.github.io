@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 98-100%)
+- **Immersion:** 🇺🇦 98.9% (target 90-100%)
 - **Richness:** ✅ 99% (academic)
 - **Grammar:** ⏳ Pending validation
 

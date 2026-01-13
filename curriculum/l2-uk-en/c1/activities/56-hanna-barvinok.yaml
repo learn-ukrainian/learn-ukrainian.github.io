@@ -902,3 +902,13 @@
       correct: false
     - text: Вона мала занадто тихий голос для сцени.
       correct: false
+  - source: She proved that women have a voice.
+    options:
+    - text: Вона довела, що жінки мають голос.
+      correct: true
+    - text: Вона сказала, що жінки мовчать.
+      correct: false
+    - text: Вона співала голосом жінки.
+      correct: false
+    - text: Вона втратила голос.
+      correct: false

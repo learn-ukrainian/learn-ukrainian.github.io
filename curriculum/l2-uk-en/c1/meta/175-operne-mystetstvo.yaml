@@ -1,0 +1,23 @@
+module: c1-175
+title: 'Оперне мистецтво'
+subtitle: 'Opera Art'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: fine-arts
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - arts
+  - opera
+  - singers
+  - krushelnytska
+grammar:
+  - 'Narrative of institutional history'
+  - 'Evaluative discourse on performance'
+objectives:
+  - 'Learner knows the history of major Ukrainian opera houses.'
+  - 'Learner can identify world-renowned Ukrainian opera singers.'
+  - 'Learner uses professional terminology to evaluate operatic performances.'
+vocabulary_count: 25
+slug: 175-operne-mystetstvo
