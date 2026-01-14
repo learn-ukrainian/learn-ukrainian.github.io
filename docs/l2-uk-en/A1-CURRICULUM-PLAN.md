@@ -1,8 +1,10 @@
 # A1 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** ✅ COMPLETE
-**Modules:** 01-34 (34 modules)
-**Vocabulary Target:** ~500 unique words
+**Status:** 🔄 EXPANDING (RFC #409)
+**Modules:** 01-44 (44 modules)
+**Vocabulary Target:** ~600 unique words
+
+> **Note:** Modules 35-44 are new practical scenario modules added as part of RFC #409 Curriculum Reorganization (January 2026).
 
 ---
 
@@ -1071,7 +1073,222 @@ By module 34, learners can:
 
 ---
 
-## Vocabulary Master List (~500 words)
+## Phase A1.4: Practical Scenarios (Modules 35-44)
+
+> **NEW** (RFC #409): These practical modules apply A1 grammar and vocabulary to real-world situations.
+
+### Learning Goals
+- Apply A1 skills to realistic service encounters
+- Build confidence in transactional conversations
+- Handle basic emergencies and unexpected situations
+- Navigate daily life scenarios independently
+
+### Grammar Application
+These modules reinforce M01-34 grammar (no new grammar introduced):
+- Accusative for ordering/requesting
+- Locative for places
+- Genitive for quantities and absence
+- Modal constructions for needs and requests
+
+### Vocabulary Plan A1.4 (~100 words)
+
+| Module | Words | Domain | Key Items |
+|--------|-------|--------|-----------|
+| 35 | 10 | Café | напій, гарячий, холодний, рахунок... |
+| 36 | 15 | Restaurant | страва, офіціант, меню, замовлення... |
+| 37 | 15 | Market | кілограм, скільки коштує, свіжий... |
+| 38 | 10 | Store | каса, пакет, картка, готівка... |
+| 39 | 10 | Tickets | квиток, туди-назад, місце... |
+| 40 | 10 | Transport | зупинка, пересадка, вихід... |
+| 41 | 10 | Phone | алло, хвилинку, передзвоню... |
+| 42 | 10 | Introductions | познайомтесь, родом з, працюю... |
+| 43 | 10 | Emergency | допоможіть, загубив, поліція... |
+| 44 | 5 | Review | (consolidation of above) |
+
+### Module Content Specifications A1.4
+
+#### Module 35: At the Café
+**Focus:** Ordering drinks and snacks, asking for the bill
+
+**Key patterns:**
+- Мені каву, будь ласка. (A coffee for me, please.)
+- Це все? (Is that all?)
+- Можна рахунок? (Can I have the bill?)
+
+**Vocabulary (10 words):**
+напій, гарячий, холодний, з молоком, без цукру, тістечко, круасан, рахунок, сплатити, чайові
+
+**Signature Activity Concepts:**
+1. Dialogue: Order at a café
+2. Quiz: Menu comprehension
+3. Role-play: Complete café interaction
+
+---
+
+#### Module 36: At the Restaurant
+**Focus:** Full meal ordering, dietary restrictions, feedback
+
+**Key patterns:**
+- Столик на двох, будь ласка. (Table for two, please.)
+- Я вегетаріанець/вегетаріанка. (I'm vegetarian.)
+- Було дуже смачно! (It was delicious!)
+
+**Vocabulary (15 words):**
+столик, бронювання, меню, страва, закуска, головна страва, десерт, вегетаріанський, алергія, порекомендувати, спробувати, смачний, гострий, солоний, солодкий
+
+**Signature Activity Concepts:**
+1. Dialogue: Full restaurant scenario
+2. Gap-fill: Dietary preferences
+3. Quiz: Menu navigation
+
+---
+
+#### Module 37: At the Market
+**Focus:** Quantities, prices, freshness, basic negotiation
+
+**Key patterns:**
+- Скільки коштує кілограм? (How much is a kilogram?)
+- Це свіже? (Is this fresh?)
+- Можна дешевше? (Can it be cheaper?)
+
+**Vocabulary (15 words):**
+кілограм, грам, штука, свіжий, стиглий, зелений, скільки коштує, дорого, дешево, знижка, торгуватися, вибирати, зважити, пакет, сумка
+
+**Signature Activity Concepts:**
+1. Dialogue: Market shopping
+2. Quiz: Calculate totals
+3. Gap-fill: Quantities and prices
+
+---
+
+#### Module 38: At the Store
+**Focus:** Checkout process, payment methods
+
+**Key patterns:**
+- Карткою чи готівкою? (Card or cash?)
+- Пакет потрібен? (Do you need a bag?)
+- Решта ваша. (Keep the change.)
+
+**Vocabulary (10 words):**
+каса, касир, пакет, картка, готівка, готово, решта, чек, безконтактно, оплатити
+
+**Signature Activity Concepts:**
+1. Dialogue: Checkout interaction
+2. Quiz: Payment vocabulary
+3. Gap-fill: Store phrases
+
+---
+
+#### Module 39: Buying Tickets
+**Focus:** Transport tickets, destinations, classes
+
+**Key patterns:**
+- Один квиток до Львова. (One ticket to Lviv.)
+- Туди й назад? (Round trip?)
+- О котрій відправлення? (What time is departure?)
+
+**Vocabulary (10 words):**
+квиток, туди, назад, туди-назад, відправлення, прибуття, платформа, місце, біля вікна, при проході
+
+**Signature Activity Concepts:**
+1. Dialogue: Buy train tickets
+2. Quiz: Timetable reading
+3. Gap-fill: Ticket booking
+
+---
+
+#### Module 40: Taking Transport
+**Focus:** On public transport, stops, transfers
+
+**Key patterns:**
+- Ця зупинка? (Is this the stop?)
+- Де пересадка? (Where is the transfer?)
+- Вибачте, мені виходити. (Excuse me, I need to get off.)
+
+**Vocabulary (10 words):**
+зупинка, станція, пересадка, наступна, кінцева, вихід, вхід, двері, триматися, оголошення
+
+**Signature Activity Concepts:**
+1. Dialogue: Navigate metro
+2. Quiz: Understand announcements
+3. Gap-fill: Transport phrases
+
+---
+
+#### Module 41: Phone Basics
+**Focus:** Answering, wrong numbers, simple messages
+
+**Key patterns:**
+- Алло? Хто говорить? (Hello? Who's speaking?)
+- Ви помилилися номером. (You have the wrong number.)
+- Перетелефоную пізніше. (I'll call back later.)
+
+**Vocabulary (10 words):**
+алло, говорить, хвилинку, зачекайте, помилитися, передзвонити, залишити повідомлення, не чую, зайнято, недоступний
+
+**Signature Activity Concepts:**
+1. Dialogue: Answer a phone call
+2. Quiz: Phone phrases
+3. Gap-fill: Leave a message
+
+---
+
+#### Module 42: Introductions Extended
+**Focus:** Detailed self-introduction, meeting new people
+
+**Key patterns:**
+- Познайомтесь, це мій друг. (Meet my friend.)
+- Я родом з... (I'm originally from...)
+- Працюю в/у... (I work at...)
+
+**Vocabulary (10 words):**
+познайомитися, знайомство, приємно, родом, професія, працювати, жити, приїхати, вивчати, цікавитися
+
+**Signature Activity Concepts:**
+1. Monologue: Extended self-introduction
+2. Dialogue: Meeting at a party
+3. Gap-fill: Personal details
+
+---
+
+#### Module 43: Emergency Basics
+**Focus:** Asking for help, reporting problems, basic safety
+
+**Key patterns:**
+- Допоможіть! (Help!)
+- Я загубив паспорт. (I lost my passport.)
+- Викличте швидку! (Call an ambulance!)
+
+**Vocabulary (10 words):**
+допомога, допомогти, загубити, вкрасти, поліція, швидка, посольство, небезпечно, терміново, допоможіть
+
+**Signature Activity Concepts:**
+1. Dialogue: Report a lost item
+2. Quiz: Emergency numbers
+3. Gap-fill: Emergency phrases
+
+---
+
+#### Module 44: A1 Practical Checkpoint
+**Covers:** M35-43 (Practical Scenarios)
+
+**Required Skill Groups:**
+1. Service Interactions (M35-38) - café, restaurant, market, store
+2. Transport Navigation (M39-40) - tickets, public transport
+3. Communication (M41-42) - phone, introductions
+4. Emergency Handling (M43) - help, reporting problems
+
+**Assessment Tasks:**
+1. Full café/restaurant role-play
+2. Buy tickets and navigate transport
+3. Phone conversation simulation
+4. Emergency scenario response
+
+**Vocabulary (5 words):** Review selection from A1.4
+
+---
+
+## Vocabulary Master List (~600 words)
 
 ### Distribution by Domain
 

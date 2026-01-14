@@ -1,8 +1,10 @@
 # B1 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
-**Modules:** 01-91 (91 modules, including 5 metalanguage bridge modules)
-**Vocabulary Target:** ~1,500 words (level), ~3,300 cumulative
+**Status:** 🔄 EXPANDING (RFC #409)
+**Modules:** 01-99 (99 modules, including 5 metalanguage bridge modules)
+**Vocabulary Target:** ~1,700 words (level), ~3,500 cumulative
+
+> **Note:** Modules 92-99 are new communication skills modules added as part of RFC #409 Curriculum Reorganization (January 2026).
 
 ---
 
@@ -62,6 +64,7 @@ The "Content Guidance" sections below provide **thematic direction** and **pop c
 | **B1.6**  | M62-71  | **100%**     | Vocabulary expansion II — professional, emotional                |
 | **B1.7**  | M72-86  | **100%**     | Contemporary Ukraine — regions, culture, active lifestyle        |
 | **B1.8**  | M87-91  | **100%**     | Skills & integration — news, podcasts, capstone                  |
+| **B1.9**  | M92-99  | **100%**     | Communication skills — email, letters, listening, debate         |
 
 **Transition continuity:**
 
@@ -3435,6 +3438,152 @@ graph TD
 2. Fill-in: Integrated skills test
 3. Production: Extended writing task
 4. Match-up: Cross-module concepts
+
+### C-Modules (Communication Skills: M92-99)
+1. Production: Formal/informal writing
+2. Quiz: Listening comprehension
+3. Dialogue: Discussion and debate
+4. Fill-in: Register transformation
+
+---
+
+## Phase B1.9: Communication Skills (Modules 92-99)
+
+> **NEW** (RFC #409): These modules develop practical communication skills for independent language use.
+
+### Learning Goals
+- Master formal and informal written communication
+- Develop critical listening skills
+- Build argumentation and debate abilities
+- Navigate register differences confidently
+
+### Module Content Specifications B1.9
+
+#### Module 92: Email Writing Basics
+**Focus:** Email structure, greetings, closings, professional tone
+
+**Content Guidance:**
+- Formal email structure: subject line, greeting, body, closing
+- Ukrainian email conventions vs. English
+- Register markers in written communication
+- Common phrases: «У відповідь на...», «Звертаюся з проханням...»
+
+**Signature Activity Concepts:**
+1. Production: Write a formal email
+2. Transform: Informal → formal register
+3. Gap-fill: Email structure completion
+
+---
+
+#### Module 93: Formal Letters
+**Focus:** Official requests, complaints, applications
+
+**Content Guidance:**
+- Letter vs. email conventions
+- Official document structure
+- Requesting information, lodging complaints
+- Ukrainian bureaucratic vocabulary
+
+**Signature Activity Concepts:**
+1. Production: Write official complaint
+2. Quiz: Letter format recognition
+3. Gap-fill: Formal phrases
+
+---
+
+#### Module 94: Informal Correspondence
+**Focus:** Messages to friends, family, casual tone
+
+**Content Guidance:**
+- Informal register features
+- Colloquial expressions
+- Casual greetings and closings
+- Tone and relationship markers
+
+**Signature Activity Concepts:**
+1. Transform: Formal → informal
+2. Production: Message to a friend
+3. Match-up: Register identification
+
+---
+
+#### Module 95: Podcast Listening I
+**Focus:** News podcasts, note-taking, main ideas
+
+**Content Guidance:**
+- Ukrainian podcast ecosystem
+- News summary comprehension
+- Note-taking strategies
+- Key information extraction
+
+**Signature Activity Concepts:**
+1. Quiz: Listening comprehension
+2. Fill-in: Note completion
+3. Production: Summary writing
+
+---
+
+#### Module 96: Podcast Listening II
+**Focus:** Interview podcasts, following arguments, details
+
+**Content Guidance:**
+- Interview format conventions
+- Argument tracking
+- Speaker opinion identification
+- Implicit meaning detection
+
+**Signature Activity Concepts:**
+1. Quiz: Argument comprehension
+2. Match-up: Opinion attribution
+3. Production: Response writing
+
+---
+
+#### Module 97: Discussion Skills
+**Focus:** Expressing opinions, agreeing/disagreeing, turn-taking
+
+**Content Guidance:**
+- Opinion expressions: «На мою думку...», «Я вважаю...»
+- Agreement/disagreement markers
+- Discussion etiquette
+- Building on others' points
+
+**Signature Activity Concepts:**
+1. Dialogue: Discussion simulation
+2. Gap-fill: Opinion expressions
+3. Production: Position statement
+
+---
+
+#### Module 98: Debate Skills
+**Focus:** Argumentation, counterpoints, formal debate
+
+**Content Guidance:**
+- Argument structure
+- Supporting evidence phrases
+- Counterargument techniques
+- Formal debate conventions
+
+**Signature Activity Concepts:**
+1. Production: Argument construction
+2. Transform: Statement → counterargument
+3. Dialogue: Mini-debate
+
+---
+
+#### Module 99: B1 Skills Checkpoint
+**Covers:** M92-98 (Communication Skills)
+
+**Required Skill Groups:**
+1. Written Communication (M92-94) - email, letters, informal
+2. Listening Skills (M95-96) - podcasts, note-taking
+3. Oral Communication (M97-98) - discussion, debate
+
+**Assessment Tasks:**
+1. Write formal email response
+2. Listening comprehension test
+3. Discussion participation
+4. Short debate argument
 
 ---
 

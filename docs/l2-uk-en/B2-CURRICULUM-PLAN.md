@@ -1,36 +1,39 @@
 # B2 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** 📝 PLANNED (Gemini Expansion + Counter-Proposal Integration 2025-12-29)
-**Modules:** 01-145 (145 modules)
-**Vocabulary Target:** ~3,480 new words (~24/module)
-**Cumulative Target:** ~6,780 words after B2
+**Status:** 🔄 REORGANIZED (RFC #409, January 2026)
+**Modules:** 01-94 (94 modules)
+**Vocabulary Target:** ~2,256 new words (~24/module)
+**Cumulative Target:** ~5,556 words after B2
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
-> **Note:** Folk Culture & Arts (25 modules) and Biographies (65 modules) moved to C1 for better pedagogical fit and curriculum balance.
+> **RFC #409 Changes (January 2026):**
+> - History modules (formerly M71-131) → relocated to **B2-HIST** optional track (61 modules)
+> - Skills modules (formerly M132-145) → renumbered to M71-84
+> - New communication skills modules → M85-94 (10 new modules)
+> - See `B2-HIST-CURRICULUM-PLAN.md` for history track details
 
 ---
 
-## Changelog (2025-12-29)
+## Changelog
 
-**Major Changes from Previous Version (135 → 145 modules):**
+**RFC #409 Reorganization (January 2026):**
 
-1. **B2.1c Expanded (M26-40):** Added Word Formation modules (M33-37), Numeral Declension (M31-32), One-member Sentences (M38), Religious/Epistolary Styles (M39), Advanced Pronouns (M40) — from Gemini proposal
-2. **B2.3 History Expanded (M71-131):** 61 modules (was 50) — includes Gemini's detailed specifications
-3. **New Modules Added:**
-   - M95: Григорій Сковорода (Skovoroda) — Ukrainian philosopher
-   - M96: Російські міфи про Україну (Russian Myths Synthesis) — decolonization
-   - M102: Михайло Грушевський (Hrushevsky) — from Counter-Proposal
-   - M90-91: Руїна split into two modules (Vyhovsky + Doroshenko)
-   - M109-110: Розстріляне відродження split (Figures + Terror Mechanism) — from Counter-Proposal
-   - M115: Депортація кримських татар (Crimean Tatar Genocide)
-   - M118: Діаспора: Ковчег держави (Diaspora as Ark)
-   - M124: Томос і духовна незалежність (Church Independence)
-4. **History Checkpoints → Synthesis Modules:** Replaced formal checkpoints with "Synthesis Modules" (M83, M107, M119, M125, M131) that test analysis, not just recall
-5. **B2.4 Skills & Capstone (M132-145):** Updated numbering, added detail from Gemini
+1. **History Track Relocation:** B2 M71-131 (61 history modules) → relocated to **B2-HIST** optional track
+   - See `B2-HIST-CURRICULUM-PLAN.md` for complete history track details
+   - History is now optional content, not required for B2 completion
+2. **Skills Renumbering:** Former M132-145 (14 skills modules) → renumbered to M71-84
+3. **New Communication Skills (M85-94):** 10 new practical modules added:
+   - M85-86: Professional Email
+   - M87-88: Professional Reports
+   - M89-90: News Analysis
+   - M91-92: Presentation Skills
+   - M93: Discussion & Debate
+   - M94: B2 Skills Checkpoint
+4. **Module Count:** 145 → 94 core modules (61 history moved to track, 10 new skills added)
 
-**Sources Merged:**
-- `B2-GEMINI-EXPANSION-PROPOSAL.md` (primary structure, 143 modules)
-- `B2-COUNTER-PROPOSAL.md` (+2 modules: Hrushevsky, Executed Renaissance split)
+**Previous Changelog (2025-12-29):**
+- Gemini Expansion integrated
+- Counter-Proposal modules integrated
 
 ---
 
@@ -2834,9 +2837,16 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase B2.4: Skills & Capstone (Modules 132-145)
+## Phase B2.3: Skills (Modules 71-84)
 
-> **Final Exam:** M145 tests M132-144 + all B2 skills.
+> **Note:** These are the former M132-145 modules, renumbered after history relocation to B2-HIST track.
+
+---
+
+## Phase B2.4: Communication Skills (Modules 85-94)
+
+> **NEW** (RFC #409): These modules develop practical professional communication skills.
+> **Checkpoint:** M94 tests M85-93 + all B2 skills.
 
 ### Learning Goals
 - Build advanced domain vocabulary (Medicine, Tech, Science, Arts)
@@ -2895,21 +2905,11 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | B2.1b | 11-25 | 15 | Participles & Register Intro | **M25** |
 | B2.1c | 26-40 | 15 | Register System & Domain Vocab | **M40** |
 | B2.2 | 41-70 | 30 | Phraseology & Synonymy | **M70** |
-| B2.3a | 71-83 | 13 | History: Origins → Commonwealth | **M83** |
-| B2.3b | 84-107 | 24 | History: Cossack Era & Empire | **M107** |
-| B2.3c | 108-119 | 12 | History: Trauma & Resistance | **M119** |
-| B2.3d | 120-125 | 6 | History: Independence Era | **M125** |
-| B2.3e | 126-131 | 6 | History: Revolution & War | **M131** |
-| B2.4 | 132-145 | 14 | Skills & Capstone | **M145** |
-| **TOTAL** | **01-145** | **145** | | **10 synthesis** |
+| B2.3 | 71-84 | 14 | Skills (renumbered) | **M84** |
+| B2.4 | 85-94 | 10 | **NEW** Communication Skills | **M94** |
+| **TOTAL** | **01-94** | **94** | | **3 checkpoints** |
 
-> **Note:** Phase structure updated 2025-12-29 to implement merged Gemini + Counter-Proposal expansion:
-> - B2.3 expanded from 50 to 61 history modules (M71-131)
-> - Added: Skovoroda (M95), Russian Myths (M96), Hrushevsky (M103), Executed Renaissance split (M108-109), Crimean Tatar Genocide (M115), Diaspora Ark (M118), Tomos (M124)
-> - Replaced Checkpoints with "Synthesis Modules" (see GitHub issue #332)
-> - Mazepa trilogy (M92-94), Ruina split (M90-91), expanded Holodomor (3 modules), expanded War era (6 modules)
-
-> **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words) + Biographies (65 modules, ~1,560 words)
+> **RFC #409 Note (January 2026):** History modules (formerly B2.3 M71-131, 61 modules) relocated to **B2-HIST** optional track. See `B2-HIST-CURRICULUM-PLAN.md` for history curriculum.
 
 ### Vocabulary Summary
 
@@ -2919,33 +2919,23 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | B2.1b | M11-25 | 15 | ~24 | ~360 | 600 |
 | B2.1c | M26-40 | 15 | ~24 | ~360 | 960 |
 | B2.2 | M41-70 | 30 | ~24 | ~720 | 1,680 |
-| B2.3a | M71-83 | 13 | ~24 | ~312 | 1,992 |
-| B2.3b | M84-107 | 24 | ~24 | ~576 | 2,568 |
-| B2.3c | M108-119 | 12 | ~24 | ~288 | 2,856 |
-| B2.3d | M120-125 | 6 | ~24 | ~144 | 3,000 |
-| B2.3e | M126-131 | 6 | ~24 | ~144 | 3,144 |
-| B2.4 | M132-145 | 14 | ~24 | ~336 | 3,480 |
-| **Total B2** | **145** | | | **~3,480** | **~6,780 cumulative** |
+| B2.3 | M71-84 | 14 | ~24 | ~336 | 1,992 |
+| B2.4 | M85-94 | 10 | ~24 | ~240 | 2,232 |
+| **Total B2** | **94** | | | **~2,256** | **~5,556 cumulative** |
 
-> **Note:** B2 cumulative assumes ~3,300 from A1-B1. Actual per-module counts may vary based on domain complexity.
+> **Note:** B2 cumulative assumes ~3,300 from A1-B1. History modules (~1,464 words) now in B2-HIST track.
 
 ---
 
-## Decolonization & Myth-Busting Modules ⚠️
+## Decolonization Content
 
-These modules explicitly address Russian historical narratives and require decolonization framing:
-
-| Module | Title | Focus |
-|--------|-------|-------|
-| M89 | Переяславська угода | 1654 was NOT "reunification" — myth deconstruction |
-| M96 | Російські міфи про Україну | Systematic catalogue of Russian lies + counter-evidence |
-| M103 | Михайло Грушевський | Counter-narrative: Ukraine as distinct civilization |
-| M108-109 | Розстріляне відродження | Cultural genocide mechanism exposed |
-| M110-112 | Голодомор I-III | 1932-33 genocide: mechanism, testimonies, recognition |
-| M115 | Геноцид кримських татар | 1944 Sürgün — parallel to Holodomor |
-| M127-131 | War Era | Russian aggression 2014-present, international recognition |
-
-> **Primary Source Requirement:** Each module must include Ukrainian-language primary sources with proper citation. See GitHub issue #332 for Synthesis Module template.
+> **Note:** Decolonization and myth-busting modules have been relocated to the **B2-HIST** optional track. See `B2-HIST-CURRICULUM-PLAN.md` for details on history curriculum including:
+> - Pereiaslav Treaty (myth deconstruction)
+> - Russian Myths Synthesis
+> - Executed Renaissance (cultural genocide)
+> - Holodomor (3 modules)
+> - Crimean Tatar Genocide
+> - War Era (Russian aggression 2014-present)
 
 ---
 

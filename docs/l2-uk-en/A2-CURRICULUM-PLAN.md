@@ -1,8 +1,10 @@
 # A2 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
-**Modules:** 01-58 (58 modules)
-**Vocabulary Target:** ~950 unique words (level), ~1,800 cumulative (A1+A2)
+**Status:** 🔄 EXPANDING (RFC #409)
+**Modules:** 01-70 (70 modules)
+**Vocabulary Target:** ~1,100 unique words (level), ~2,000 cumulative (A1+A2)
+
+> **Note:** Modules 59-70 are new practical scenario modules added as part of RFC #409 Curriculum Reorganization (January 2026).
 
 ---
 
@@ -1996,9 +1998,10 @@ By module 50, learners can:
 | A2.4 Word Formation       | 36-44   | ~270       | Prefixes, suffixes, roots |
 | A2.5 Vocabulary Expansion | 45-56   | ~360       | 12 thematic domains       |
 | A2.6 Review               | 57-58   | ~50        | Consolidation             |
-| **Total**                 | **58**  | **~1,550** |                           |
+| A2.7 Practical Scenarios  | 59-70   | ~150       | Real-world applications   |
+| **Total**                 | **70**  | **~1,700** |                           |
 
-**Cumulative after A2:** ~2,400 words
+**Cumulative after A2:** ~2,600 words
 
 ---
 
@@ -2060,6 +2063,262 @@ graph TD
     M35[Checkpoint A2.3] --> M36
     M44[Checkpoint A2.4] --> M45[M45+ Vocab Expansion]
 ```
+
+---
+
+## Phase A2.7: Practical Scenarios (Modules 59-70)
+
+> **NEW** (RFC #409): These practical modules apply A2 grammar and vocabulary to real-world situations requiring greater linguistic complexity than A1.
+
+### Learning Goals
+- Handle more complex service interactions
+- Manage appointments and scheduling
+- Navigate housing and employment situations
+- Use digital communication appropriately
+- Build confidence in multi-turn conversations
+
+### Grammar Application
+These modules reinforce A2 grammar (no new grammar introduced):
+- Full 7-case system in context
+- Aspect selection in real scenarios
+- Complex sentences with connectors
+- Conditional and subjunctive for requests
+
+### Vocabulary Plan A2.7 (~150 words)
+
+| Module | Words | Domain | Key Items |
+|--------|-------|--------|-----------|
+| 59 | 15 | Doctor | симптом, рецепт, діагноз... |
+| 60 | 12 | Pharmacy | ліки, дозування, побічні ефекти... |
+| 61 | 15 | Hotel | бронювання, номер, зручності... |
+| 62 | 15 | Rental | оренда, договір, комунальні... |
+| 63 | 12 | Appointments | записатися, підтвердити, скасувати... |
+| 64 | 15 | Job Interview | досвід, обов'язки, зарплата... |
+| 65 | 12 | Giving Directions | орієнтир, відстань, напрямок... |
+| 66 | 12 | Asking Directions | заблукати, карта, маршрут... |
+| 67 | 12 | Social Media | пост, коментар, підписатися... |
+| 68 | 10 | Texting | скорочення, емоджі, неформально... |
+| 69 | 15 | Online Services | додаток, доставка, замовлення... |
+| 70 | 5 | Review | (consolidation of above) |
+
+### Module Content Specifications A2.7
+
+#### Module 59: At the Doctor
+**Focus:** Describing symptoms, understanding diagnoses, prescriptions
+
+**Key patterns:**
+- У мене болить голова вже два дні. (My head has been hurting for two days.)
+- Я маю алергію на... (I'm allergic to...)
+- Скільки разів на день приймати? (How many times a day should I take it?)
+
+**Vocabulary (15 words):**
+симптом, діагноз, рецепт, приймати, болить, температура, кашель, нежить, алергія, огляд, аналіз, направлення, лікарняний, хворіти, одужати
+
+**Signature Activity Concepts:**
+1. Dialogue: Medical consultation
+2. Gap-fill: Describe symptoms
+3. Quiz: Medicine instructions
+
+---
+
+#### Module 60: At the Pharmacy
+**Focus:** Medications, dosages, side effects
+
+**Key patterns:**
+- Мені потрібно щось від головного болю. (I need something for a headache.)
+- Які є побічні ефекти? (What are the side effects?)
+- Це за рецептом чи без? (Is this prescription or over-the-counter?)
+
+**Vocabulary (12 words):**
+аптека, фармацевт, ліки, таблетка, сироп, мазь, дозування, побічний ефект, рецепт, без рецепта, вживати, протипоказання
+
+**Signature Activity Concepts:**
+1. Dialogue: Pharmacy consultation
+2. Quiz: Read medication instructions
+3. Gap-fill: Dosage expressions
+
+---
+
+#### Module 61: Hotel Check-in
+**Focus:** Reservations, room types, amenities, complaints
+
+**Key patterns:**
+- У мене бронювання на ім'я... (I have a reservation under the name...)
+- Чи можна номер з видом на...? (Can I have a room with a view of...?)
+- Сніданок включено? (Is breakfast included?)
+
+**Vocabulary (15 words):**
+готель, бронювання, номер, одномісний, двомісний, люкс, сніданок включено, Wi-Fi, кондиціонер, ключ-картка, рецепція, портьє, виїзд, залишити багаж, скарга
+
+**Signature Activity Concepts:**
+1. Dialogue: Hotel check-in
+2. Gap-fill: Room preferences
+3. Quiz: Hotel amenities vocabulary
+
+---
+
+#### Module 62: Apartment Rental
+**Focus:** Viewing, lease terms, utilities
+
+**Key patterns:**
+- Скільки коштує оренда на місяць? (How much is the rent per month?)
+- Комунальні включені? (Are utilities included?)
+- Який термін договору? (What is the lease term?)
+
+**Vocabulary (15 words):**
+оренда, квартира, власник, орендар, договір, застава, комунальні, опалення, електрика, меблі, умови, підписати, оглянути, звільнити, ремонт
+
+**Signature Activity Concepts:**
+1. Dialogue: Apartment viewing
+2. Gap-fill: Lease terms
+3. Quiz: Rental vocabulary
+
+---
+
+#### Module 63: Making Appointments
+**Focus:** Scheduling, confirming, rescheduling, cancelling
+
+**Key patterns:**
+- Я хочу записатися до лікаря. (I want to make an appointment with the doctor.)
+- Чи можна перенести на інший день? (Can I reschedule to another day?)
+- Я змушений скасувати. (I have to cancel.)
+
+**Vocabulary (12 words):**
+записатися, прийом, вільний час, підтвердити, перенести, скасувати, нагадування, попередити, черга, запис, онлайн-бронювання, вчасно
+
+**Signature Activity Concepts:**
+1. Dialogue: Schedule appointment
+2. Gap-fill: Confirmation phrases
+3. Quiz: Time expressions for appointments
+
+---
+
+#### Module 64: Job Interview Basics
+**Focus:** Self-presentation, experience, asking questions
+
+**Key patterns:**
+- Я працював у сфері... (I worked in the field of...)
+- Мій досвід включає... (My experience includes...)
+- Які обов'язки на цій посаді? (What are the responsibilities of this position?)
+
+**Vocabulary (15 words):**
+співбесіда, посада, досвід, обов'язки, зарплата, резюме, працевлаштування, роботодавець, кандидат, навички, кваліфікація, випробувальний термін, соціальний пакет, графік, віддалена робота
+
+**Signature Activity Concepts:**
+1. Monologue: Professional self-introduction
+2. Dialogue: Interview Q&A
+3. Gap-fill: Describing experience
+
+---
+
+#### Module 65: Giving Directions
+**Focus:** Landmarks, distances, step-by-step navigation
+
+**Key patterns:**
+- Ідіть прямо до перехрестя. (Go straight to the intersection.)
+- Поверніть наліво біля банку. (Turn left at the bank.)
+- Це приблизно п'ять хвилин пішки. (It's about five minutes on foot.)
+
+**Vocabulary (12 words):**
+орієнтир, перехрестя, світлофор, відстань, приблизно, пішки, автівкою, за рогом, повз, напроти, між, далі
+
+**Signature Activity Concepts:**
+1. Quiz: Follow map directions
+2. Production: Give directions from map
+3. Gap-fill: Direction sequences
+
+---
+
+#### Module 66: Asking for Directions
+**Focus:** When lost, using maps, public transit routes
+
+**Key patterns:**
+- Вибачте, як дістатися до...? (Excuse me, how do I get to...?)
+- Я заблукав/заблукала. (I'm lost.)
+- Покажіть, будь ласка, на карті. (Please show me on the map.)
+
+**Vocabulary (12 words):**
+заблукати, дістатися, маршрут, карта, навігатор, найближчий, метро, автобус, пересадка, кінцева, куди їде, зупинка
+
+**Signature Activity Concepts:**
+1. Dialogue: Ask for directions
+2. Quiz: Transit route understanding
+3. Gap-fill: Location questions
+
+---
+
+#### Module 67: Social Media Ukrainian
+**Focus:** Posts, comments, messaging conventions
+
+**Key patterns:**
+- Поставити лайк / Поділитися. (Like / Share.)
+- Підписатися на канал. (Subscribe to the channel.)
+- Написати в особисті. (Send a DM.)
+
+**Vocabulary (12 words):**
+пост, коментар, лайк, репост, підписатися, відписатися, стрічка, історія, профіль, особисті повідомлення, хештег, згадка
+
+**Signature Activity Concepts:**
+1. Gap-fill: Social media phrases
+2. Quiz: Platform vocabulary
+3. Production: Write a comment
+
+---
+
+#### Module 68: Texting & Messaging
+**Focus:** Abbreviations, emoji, informal register
+
+**Key patterns:**
+- Дякую / Дяки / Дяк (formal to informal "thanks")
+- Бу ла (будь ласка abbreviated)
+- 😊👍 (emoji conventions)
+
+**Vocabulary (10 words):**
+скорочення, сленг, неформально, швидко, голосове, стікер, емоджі, друкувати, надіслати, прочитано
+
+**Signature Activity Concepts:**
+1. Match-up: Abbreviation → meaning
+2. Transform: Formal → informal register
+3. Quiz: Texting conventions
+
+---
+
+#### Module 69: Online Services
+**Focus:** Banking apps, delivery, booking platforms
+
+**Key patterns:**
+- Замовити доставку їжі. (Order food delivery.)
+- Перевірити баланс. (Check balance.)
+- Забронювати онлайн. (Book online.)
+
+**Vocabulary (15 words):**
+додаток, доставка, замовлення, оплата онлайн, баланс, переказ, бронювання, підтвердження, відстежити, код підтвердження, увійти, зареєструватися, пароль, налаштування, повідомлення
+
+**Signature Activity Concepts:**
+1. Gap-fill: App navigation
+2. Dialogue: Delivery order
+3. Quiz: Online service vocabulary
+
+---
+
+#### Module 70: A2 Practical Checkpoint
+**Covers:** M59-69 (Practical Scenarios)
+
+**Required Skill Groups:**
+1. Medical Interactions (M59-60) - doctor, pharmacy
+2. Accommodation (M61-62) - hotel, rental
+3. Scheduling (M63-64) - appointments, interviews
+4. Navigation (M65-66) - giving/asking directions
+5. Digital Communication (M67-69) - social media, texting, apps
+
+**Assessment Tasks:**
+1. Medical consultation role-play
+2. Apartment viewing simulation
+3. Job interview practice
+4. Navigation task
+5. Digital communication exercise
+
+**Vocabulary (5 words):** Review selection from A2.7
 
 ---
 
