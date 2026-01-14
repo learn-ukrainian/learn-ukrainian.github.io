@@ -25,12 +25,20 @@ def generate_report(
     low_density_activities: list[dict] = None,
     richness_data: dict = None,
     richness_flags: list = None,
-    template_violations: list[dict] = None
+    template_violations: list[dict] = None,
+    naturalness: dict = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
     report_lines.append(f"# Audit Report: {os.path.basename(file_path)}")
     report_lines.append(f"**Phase:** {phase} | **Level:** {level_code} | **Pedagogy:** {pedagogy} | **Target:** {target}")
+    
+    # Add Naturalness Score to header if available
+    if naturalness:
+        score = naturalness.get('score', 0)
+        status = naturalness.get('status', 'PENDING')
+        report_lines.append(f"**Naturalness:** {score}/10 ({status})")
+        
     report_lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")
     report_lines.append("")
 

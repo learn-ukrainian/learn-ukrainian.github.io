@@ -1600,6 +1600,9 @@ def audit_module(file_path: str) -> bool:
         richness_data = calculate_richness_score(content, level_code, file_path, yaml_activity_types)
         richness_flags_for_report = detect_dryness_flags(content, level_code, file_path)
 
+    # Get naturalness data from metadata
+    naturalness_data = meta_data.get('naturalness') if meta_data else None
+
     report_content = generate_report(
         file_path, phase, level_code, pedagogy, target,
         has_critical_failure, results, table_rows,
@@ -1608,7 +1611,8 @@ def audit_module(file_path: str) -> bool:
         low_density_activities,
         richness_data=richness_data,
         richness_flags=richness_flags_for_report,
-        template_violations=template_violations
+        template_violations=template_violations,
+        naturalness=naturalness_data
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

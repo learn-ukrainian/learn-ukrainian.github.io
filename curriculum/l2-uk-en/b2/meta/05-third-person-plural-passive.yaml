@@ -28,3 +28,6 @@ resources:
     url: https://r2u.org.ua/grammar/passive
 vocab_count: 123
 slug: 05-third-person-plural-passive
+naturalness:
+  score: 8
+  status: PASS

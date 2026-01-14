@@ -26,3 +26,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 156
 slug: 06-passive-in-context
+naturalness:
+  score: 8
+  status: PASS
