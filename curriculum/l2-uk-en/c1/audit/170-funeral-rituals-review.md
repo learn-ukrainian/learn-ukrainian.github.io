@@ -1,6 +1,6 @@
 # Audit Report: 170-funeral-rituals.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2076/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -35,12 +36,6 @@
 | realworld | 3 | - | 100% | 7% | 6.7% |
 | questions | 7 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.9%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

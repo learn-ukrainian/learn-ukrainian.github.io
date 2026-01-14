@@ -1,6 +1,6 @@
 # Audit Report: 171-podillia-ta-volyn.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2999/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (folk-culture))
 - **Richness:** ✅ 99% (content)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -35,12 +36,6 @@
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
 | questions | 7 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **99.9%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

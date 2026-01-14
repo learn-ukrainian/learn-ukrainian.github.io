@@ -1,6 +1,15 @@
 # Audit Report: 02-academic-style-markers.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** ttt | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 02-academic-style-markers.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2487/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -37,12 +47,6 @@
 | questions | 17 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (18 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

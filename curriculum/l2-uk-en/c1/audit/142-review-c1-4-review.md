@@ -1,6 +1,15 @@
 # Audit Report: 142-review-c1-4.md
 **Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Review | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-review-c1-4.yaml: Schema validation error at key '9': {'type': 'error-correction', 'title': 'Стилістичний редактор', 'instruction': 'Знайдіть слово, яке НЕ пасує до стилю речення, і замініть його.', 'items': [{'sentence': 'Шановний клієнте, наша компанія пропонує вам [[круті]] послуги.', 'error': 'круті', 'answer': 'якісні', 'options': ['yakisni', 'kruti', 'klovu', 'bombesni'], 'explanation': "В офіційному спілкуванні слово 'круті' недоречне. Краще 'якісні' або 'професійні'."}, {'sentence': 'Привіт, бабусю! Згідно з [[постановою]], я приїду до тебе в суботу.', 'error': 'постановою', 'answer': 'домовленістю', 'options': ['domovlenistyu', 'postanovoyu', 'nakazom', 'zakonom'], 'explanation': "З бабусею не спілкуються мовою постанов. 'Як ми й домовлялися' — краще."}, {'sentence': "Йо, чувак! Ти виконав [[зобов'язання]] по домашці?", 'error': "зобов'язання", 'answer': 'завдання', 'options': ['zavdannya', 'zobovyazannya', 'borg', 'obicyanku'], 'explanation': "У сленгу 'зобов'язання' звучить занадто офіційно. Просто 'зробив домашку' або 'виконав таск'."}, {'sentence': 'Кохана, ти моя [[уповноважена особа]].', 'error': 'уповноважена особа', 'answer': 'половинка', 'options': ['polovynka', 'upovnovazhena osoba', 'pracivnycya', 'kolega'], 'explanation': "Це звучить як шлюбний контракт, а не освідчення. 'Половинка' або 'рідна'."}, {'sentence': 'Директор [[спіймав крінж]] від твого звіту.', 'error': 'спіймав крінж', 'answer': 'був незадоволений', 'options': ['buv nezadovolenyi', 'spijmav krinzh', 'buv v shoci', 'buv zlij'], 'explanation': "Якщо це офіційна розмова, краще сказати 'був незадоволений' або 'розкритикував'."}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2004/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.8% (target 98-100%)
+- **Immersion:** 🇺🇦 99.8% (target 90-100%)
 - **Richness:** ✅ 97% (style)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

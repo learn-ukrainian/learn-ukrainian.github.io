@@ -3,36 +3,17 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-09] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: [148-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 148-rehionalni-tantsi.yaml: Schema validation error at key '11': {'type': 'unjumble', 'title': 'Філософія регіонального руху', 'items': [{'words': ['Кожен', 'регіон', 'України', 'має', 'власну', 'унікальну', 'мову', 'тіла', 'що', 'відображає', 'характер', 'та', 'темперамент', 'народу'], 'answer': 'Кожен регіон України має власну унікальну мову тіла що відображає характер та темперамент народу'}, {'words': ['Аркан', 'це', 'не', 'просто', 'танець', 'це', 'закрите', 'коло', 'яке', 'тримає', 'на', 'своїх', 'плечах', 'єдність', 'та', 'волю', 'всієї', 'громади'], 'answer': 'Аркан це не просто танець це закрите коло яке тримає на своїх плечах єдність та волю всієї громади'}, {'words': ['Коломийка', 'є', 'справжнім', 'вихором', 'народної', 'дотепності', 'де', 'кожен', 'рух', 'ідеально', 'збігається', 'з', 'математичним', 'ритмом', 'слова'], 'answer': 'Коломийка є справжнім вихором народної дотепності де кожен рух ідеально збігається з математичним ритмом слова'}, {'words': ['Українська', 'хореографія', 'завжди', 'була', 'нерозривно', "пов'язана", 'з', 'ландшафтом', 'та', 'природною', 'стихією', 'рідної', 'землі', 'від', 'гір', 'до', 'степу'], 'answer': "Українська хореографія завжди була нерозривно пов'язана з ландшафтом та природною стихією рідної землі від гір до степу"}, {'words': ['Знищити', 'дух', 'народного', 'танцю', 'неможливо', 'оскільки', 'він', 'живе', 'в', 'генетичній', "пам'яті", 'кожного', 'нового', 'покоління', 'вільних', 'українців'], 'answer': "Знищити дух народного танцю неможливо оскільки він живе в генетичній пам'яті кожного нового покоління вільних українців"}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 11 violations (severe - consider revision)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1903/2000 (97 short)
@@ -45,11 +26,12 @@
 - **Vocab:** ✅ 29/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 10 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.7% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

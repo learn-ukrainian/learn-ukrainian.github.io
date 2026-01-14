@@ -11,19 +11,21 @@
   - FIX: Adjust prompt length to 12-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння біографії' Q5 prompt length 10 (target: 12-30)
   - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 111-viacheslav-chornovil.yaml: Schema validation error at key 'options': ['журналіст', 'інженер', 'військовий'] is too short
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 30/100)
 
-- 7 violations (significant)
+- 8 violations (significant)
 
 ## Gates
 - **Words:** ⚠️ 1984/2000 (16 short)
@@ -36,11 +38,12 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (biography))
 - **Richness:** ✅ 95% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

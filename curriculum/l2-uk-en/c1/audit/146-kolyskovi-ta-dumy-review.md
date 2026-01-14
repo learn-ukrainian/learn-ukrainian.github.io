@@ -3,36 +3,17 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-09] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: Schema validation error at key '11': {'type': 'unjumble', 'title': "Філософське кобзарське кредо про пам'ять та славу", 'items': [{'words': ['Дума', 'це', 'справжня', 'історія', 'України', 'яку', 'народ', 'розповів', 'сам', 'про', 'себе', 'без', 'жодної', 'імперської', 'цензури'], 'answer': 'Дума це справжня історія України яку народ розповів сам про себе без жодної імперської цензури'}, {'words': ['Наша', 'слава', 'козацька', 'ніколи', 'не', 'вмре', 'і', 'не', 'поляже', 'доки', 'будуть', 'звучати', 'бандури', 'вільні', 'струни'], 'answer': 'Наша слава козацька ніколи не вмре і не поляже доки будуть звучати бандури вільні струни'}, {'words': ['Кобзарі', 'були', 'живими', 'архівами', 'нації', 'що', 'несли', 'сакральну', 'істину', 'крізь', 'темряву', 'віків', 'та', 'жорстокі', 'ворожі', 'переслідування'], 'answer': 'Кобзарі були живими архівами нації що несли сакральну істину крізь темряву віків та жорстокі ворожі переслідування'}, {'words': ['Маруся', 'Богуславська', 'зробила', 'трагічний', 'вибір', 'між', 'власним', 'спокоєм', 'та', 'свободою', 'своїх', 'бідних', 'невільних', 'братів', 'та', 'вірних', 'побратимів'], 'answer': 'Маруся Богуславська зробила трагічний вибір між власним спокоєм та свободою своїх бідних невільних братів та вірних побратимів'}, {'words': ['Кожна', 'українська', 'колискова', 'пісня', 'є', 'магічним', 'захистом', 'що', 'будує', 'навколо', 'дитини', 'непроникний', 'кокон', 'нескінченної', 'материнської', 'любові'], 'answer': 'Кожна українська колискова пісня є магічним захистом що будує навколо дитини непроникний кокон нескінченної материнської любові'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 11 violations (severe - consider revision)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2086/2000
@@ -45,11 +26,12 @@
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 10 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.5% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

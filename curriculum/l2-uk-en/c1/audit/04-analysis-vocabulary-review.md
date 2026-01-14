@@ -1,6 +1,15 @@
 # Audit Report: 04-analysis-vocabulary.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 04-analysis-vocabulary.yaml: Schema validation error at key 'words': ['Глибокий', 'аналіз', 'зібраних', 'даних', 'дозволив', 'вченим', 'виявити', 'приховані', 'закономірності', 'розвитку', 'системи'] is too short
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2546/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

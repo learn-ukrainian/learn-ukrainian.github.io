@@ -11,40 +11,17 @@
   - FIX: Adjust prompt length to 12-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Глибинний аналіз творчості' Q5 prompt length 11 (target: 12-30)
   - FIX: Adjust prompt length to 12-30 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-error-1] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-match-1] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-select-1] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-group-1] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-fill-2] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-error-2] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-quiz-2] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-mariia-prymachenko.yaml: [c1-104-essay-1] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 50/100)
-- 17 violations (severe - consider revision)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2576/2000
@@ -57,11 +34,12 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 15 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 97% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

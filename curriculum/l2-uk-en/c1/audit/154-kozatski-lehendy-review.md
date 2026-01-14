@@ -1,6 +1,15 @@
 # Audit Report: 154-kozatski-lehendy.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 154-kozatski-lehendy.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Козацькі клейноди та символи', 'items': [{'question': 'Які з перелічених предметів належали до офіційних козацьких клейнодів, що символізували державну та військову владу?', 'options': [{'text': 'Гетьманська булава', 'correct': True}, {'text': 'Військова корогва', 'correct': True}, {'text': 'Звичайна люлька', 'correct': False}, {'text': 'Військова печатка', 'correct': True}, {'text': 'Мідний котел', 'correct': False}, {'text': 'Срібна булава', 'correct': True}], 'min_correct': 3}, {'question': 'Які якості вважалися обов’язковими для козака-лицяря згідно з традиційним етосом січового товариства?', 'options': [{'text': 'Абсолютна вірність побратимам', 'correct': True}, {'text': 'Накопичення приватного майна', 'correct': False}, {'text': 'Готовність до самопожертви', 'correct': True}, {'text': 'Релігійна відданість', 'correct': True}, {'text': 'Схильність до зради ворогу', 'correct': False}], 'min_correct': 3}, {'question': 'Які надприродні здібності народна міфологія зазвичай приписувала легендарним козакам-характерникам?', 'options': [{'text': 'Здатність ставати невидимим', 'correct': True}, {'text': 'Вміння літати на хмарах', 'correct': False}, {'text': 'Невразливість до ворожих куль', 'correct': True}, {'text': 'Передбачення кроків противника', 'correct': True}, {'text': 'Зупинка течії великих річок', 'correct': False}], 'min_correct': 3}, {'question': 'Які елементи картини з Козаком Мамаєм вказують на його нерозривний зв’язок із рідною землею та предками?', 'options': [{'text': 'Старий дуб на задньому плані', 'correct': True}, {'text': 'Зображення іноземних замків', 'correct': False}, {'text': 'Спис, уткнутий у рідну землю', 'correct': True}, {'text': 'Музичний інструмент бандура', 'correct': True}, {'text': 'Сучасні карти та компаси', 'correct': False}], 'min_correct': 3}, {'question': 'Які постаті в козацькій історії набули найбільшого міфологічного статусу як «батьки нації» та захисники волі?', 'options': [{'text': 'Петро Сагайдачний', 'correct': True}, {'text': 'Іван Сірко', 'correct': True}, {'text': 'Богдан Хмельницький', 'correct': True}, {'text': 'Іван Мазепа', 'correct': True}, {'text': 'Цар Петро Перший', 'correct': False}], 'min_correct': 4}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2033/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

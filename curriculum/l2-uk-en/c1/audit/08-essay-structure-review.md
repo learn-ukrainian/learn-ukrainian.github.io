@@ -1,6 +1,15 @@
 # Audit Report: 08-essay-structure.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** TTT | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-essay-structure.yaml: Schema validation error at key 'words': ["Заняття спортом є надзвичайно корисними для фізичного здоров'я,", 'оскільки регулярні вправи значно покращують роботу', 'серцево-судинної системи людини.'] is too short
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2017/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 43/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -37,12 +47,6 @@
 | questions | 14 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.7%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

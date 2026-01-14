@@ -1,6 +1,15 @@
 # Audit Report: 144-kobzari-bandura.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-kobzari-bandura.yaml: Schema validation error at key '14': {'type': 'fill-in', 'title': 'Культурний контекст', 'instruction': 'Вставте відповідне слово.', 'items': [{'sentence': 'Шевченка називають Великим ___.', 'answer': 'Кобзарем', 'options': ['Кобзарем', 'Співаком', 'Гравцем', 'Поетом']}, {'sentence': "Фільм 'Поводир' розповідає про ___ 1930-х років.", 'answer': 'події', 'options': ['події', 'свята', 'танці', 'жарти']}, {'sentence': 'Сучасні бандуристи часто виступають на ___ сценах.', 'answer': 'світових', 'options': ['світових', 'лісових', 'домашніх', 'таємних']}, {'sentence': 'Звук бандури часто порівнюють зі ___.', 'answer': 'сріблом', 'options': ['сріблом', 'золотом', 'залізом', 'деревом']}, {'sentence': 'Кобзарі мали свою таємну ___ мову.', 'answer': 'лебійську', 'options': ['лебійську', 'пташину', 'вовчу', "риб'ячу"]}, {'sentence': 'Щоб стати кобзарем, треба було пройти обряд ___.', 'answer': 'посвяти', 'options': ['посвяти', 'весілля', 'хрещення', 'прощання']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1970/2000 (30 short)
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (cultural))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

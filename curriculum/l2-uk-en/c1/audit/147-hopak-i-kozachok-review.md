@@ -3,36 +3,17 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-09] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: Schema validation error at key '11': {'type': 'unjumble', 'title': 'Цитати про магію українського танцю', 'items': [{'words': ['Гопак', 'це', 'не', 'просто', 'танець', 'це', 'вираження', 'незламної', 'волі', 'та', 'сили', 'українського', 'народу'], 'answer': 'Гопак це не просто танець це вираження незламної волі та сили українського народу'}, {'words': ['Ансамбль', 'Вірського', 'показав', 'всьому', 'світові', 'високий', 'інтелектуальний', 'рівень', 'нашої', 'національної', 'хореографічної', 'культури'], 'answer': 'Ансамбль Вірського показав всьому світові високий інтелектуальний рівень нашої національної хореографічної культури'}, {'words': ['Бойовий', 'гопак', 'поєднує', 'в', 'собі', 'стародавню', 'козацьку', 'систему', 'виживання', 'та', 'сучасну', 'філософію', 'духовного', 'самовдосконалення'], 'answer': 'Бойовий гопак поєднує в собі стародавню козацьку систему виживання та сучасну філософію духовного самовдосконалення'}, {'words': ['Справжній', 'народний', 'танець', 'це', 'найкраща', 'зброя', 'культурної', 'дипломатії', 'яка', 'долає', 'всі', 'кордони', 'та', 'забобони'], 'answer': 'Справжній народний танець це найкраща зброя культурної дипломатії яка долає всі кордони та забобони'}, {'words': ['Шароварщина', 'намагалася', 'примітивізувати', 'наше', 'мистецтво', 'але', 'справжня', 'майстерність', 'завжди', 'перемагає', 'будь-яку', 'імперську', 'пропаганду'], 'answer': 'Шароварщина намагалася примітивізувати наше мистецтво але справжня майстерність завжди перемагає будь-яку імперську пропаганду'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 11 violations (severe - consider revision)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1993/2000 (7 short)
@@ -45,11 +26,12 @@
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 10 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.1% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

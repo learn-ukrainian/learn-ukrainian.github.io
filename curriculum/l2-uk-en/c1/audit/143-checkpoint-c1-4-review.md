@@ -1,15 +1,19 @@
 # Audit Report: 143-checkpoint-c1-4.md
 **Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Assessment | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-checkpoint-c1-4.yaml: Schema validation error at key '13': {'type': 'translate', 'title': 'Фінальний переклад', 'instruction': 'Перекладіть англійські фрази українською у відповідному регістрі.', 'items': [{'source': "Hey bro, what's up? (Slang)", 'options': [{'text': 'Йо, бро, як справи?', 'correct': True}, {'text': 'Вітаю, брате, що нового?', 'correct': False}, {'text': 'Доброго дня, колего.', 'correct': False}, {'text': 'Привіт, родичу, як життя?', 'correct': False}]}, {'source': 'I hereby certify that... (Formal)', 'options': [{'text': 'Цим засвідчую, що...', 'correct': True}, {'text': 'Я тут кажу, що...', 'correct': False}, {'text': 'Я клянусь, що...', 'correct': False}, {'text': 'Зуб даю, що...', 'correct': False}]}, {'source': 'My darling, I miss you. (Intimate)', 'options': [{'text': 'Моє сонечко, я сумую.', 'correct': True}, {'text': 'Моя дорога, я не бачив тебе.', 'correct': False}, {'text': 'Шановна, мені нудно.', 'correct': False}, {'text': 'Мала, де ти є?', 'correct': False}]}, {'source': 'Could you please help me? (Polite)', 'options': [{'text': 'Чи не могли б Ви мені допомогти?', 'correct': True}, {'text': 'Поможи мені швидко.', 'correct': False}, {'text': 'Треба хелп.', 'correct': False}, {'text': 'Ви мусите допомогти.', 'correct': False}]}, {'source': "It's cringe. (Slang)", 'options': [{'text': 'Це крінж.', 'correct': True}, {'text': 'Це соромно.', 'correct': False}, {'text': 'Це незручно.', 'correct': False}, {'text': 'Це ганьба.', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-checkpoint-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-checkpoint-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-checkpoint-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-checkpoint-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1668/1750 (82 short)
@@ -22,11 +26,12 @@
 - **Vocab:** ✅ 20/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.4% (checkpoint - no gate)
 - **Richness:** ✅ 85% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 85% (minimum: 85%)

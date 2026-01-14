@@ -1,15 +1,19 @@
 # Audit Report: 132-metaphor-simile.md
 **Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 132-metaphor-simile.yaml: Schema validation error at key '11': {'type': 'fill-in', 'title': 'Створення метафор', 'items': [{'sentence': 'Його ідеї були _____ для нашого проекту.', 'answer': 'фундаментом', 'options': ['фундаментом', 'стіною', 'дахом', 'вікном']}, {'sentence': 'Вона потонула в _____ своїх мрій.', 'answer': 'океані', 'options': ['океані', 'лісі', 'полі', 'небі']}, {'sentence': 'Ця новина вдарила його, як _____.', 'answer': 'блискавка', 'options': ['блискавка', 'дощ', 'вітер', 'сніг']}, {'sentence': 'Він побудував _____ стіну мовчання навколо себе.', 'answer': 'глуху', 'options': ['глуху', 'німу', 'сліпу', 'тиху']}, {'sentence': 'Її слова були бальзамом на _____.', 'answer': 'душу', 'options': ['душу', 'серце', 'розум', 'тіло']}, {'sentence': 'Він тримав свої емоції в _____ рукавицях.', 'answer': 'їжакових', 'options': ['їжакових', 'вовчих', 'лисячих', 'ведмежих']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1993/2000 (7 short)
@@ -22,11 +26,12 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 98-100%)
+- **Immersion:** 🇺🇦 99.9% (target 90-100%)
 - **Richness:** ✅ 99% (style)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

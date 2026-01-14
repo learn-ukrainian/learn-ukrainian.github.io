@@ -1,6 +1,6 @@
 # Audit Report: 65-borys-hrinchenko.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ⚠️ 1917/2000 (83 short)
@@ -17,7 +17,8 @@
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 99% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

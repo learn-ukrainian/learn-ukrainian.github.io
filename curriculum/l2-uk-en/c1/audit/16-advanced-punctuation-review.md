@@ -1,6 +1,17 @@
 # Audit Report: 16-advanced-punctuation.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-grammar-module-template.md'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Трансформації' per template 'b2-grammar-module-template.md'
+  - FIX: Add '## Трансформації' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2053/2000
@@ -17,7 +28,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

@@ -1,6 +1,15 @@
 # Audit Report: 152-narodna-mifolohiia.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 152-narodna-mifolohiia.yaml: Schema validation error at key '15': {'type': 'true-false', 'title': 'Язичництво та християнство', 'items': [{'statement': 'Прийняття християнства призвело до негайного та повного зникнення всіх народних духів.', 'correct': False, 'explanation': 'Ні, народні вірування трансформувалися та збереглися у формі двовір’я.'}, {'statement': 'Велес вважався охоронцем потойбічного світу та багатства у давніх українців.', 'correct': True, 'explanation': 'Так, це був один із найважливіших богів давнього пантеону.'}, {'statement': 'Сварог був богом підземних вод та глибоких океанічних течій.', 'correct': False, 'explanation': 'Ні, Сварог уособлював небесний вогонь та божественне ковальство.'}, {'statement': 'Християнські святі часто переймали функції та атрибути колишніх язичницьких богів.', 'correct': True, 'explanation': 'Це дозволило Церкві легше адаптувати нову віру до народного світогляду.'}, {'statement': 'Перун вважався покровителем виключно селян-хліборобів, а не князівської дружини.', 'correct': False, 'explanation': 'Навпаки, Перун був насамперед богом воїнів та державної влади.'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2088/2000
@@ -13,11 +22,12 @@
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

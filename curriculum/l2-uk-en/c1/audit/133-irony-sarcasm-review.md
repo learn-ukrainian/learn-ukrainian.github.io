@@ -1,15 +1,19 @@
 # Audit Report: 133-irony-sarcasm.md
 **Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-irony-sarcasm.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Іронія в культурі', 'items': [{'question': 'Який український письменник вважається майстром іронічної прози?', 'options': [{'text': 'Остап Вишня', 'correct': True}, {'text': 'Тарас Шевченко', 'correct': False}, {'text': 'Василь Стефаник', 'correct': False}, {'text': 'Іван Багряний', 'correct': False}], 'explanation': 'Остап Вишня — класик українського гумору та сатири.'}, {'question': "Що таке 'сміх крізь сльози'?", 'options': [{'text': 'Поєднання комічного і трагічного, характерне для української літератури.', 'correct': True}, {'text': 'Сміх під час нарізання цибулі.', 'correct': False}, {'text': 'Істерична реакція на стрес.', 'correct': False}, {'text': 'Медичний термін.', 'correct': False}]}, {'question': 'Який персонаж є прикладом сатиричного зображення?', 'options': [{'text': "Голохвастов ('За двома зайцями')", 'correct': True}, {'text': 'Захар Беркут', 'correct': False}, {'text': 'Мавка', 'correct': False}, {'text': 'Ярослав Мудрий', 'correct': False}]}, {'question': 'Як українці використовують іронію під час війни?', 'options': [{'text': 'Як захисний механізм та зброю проти пропаганди (меми, жарти).', 'correct': True}, {'text': 'Українці перестали жартувати.', 'correct': False}, {'text': 'Іронія заборонена законом.', 'correct': False}, {'text': 'Тільки для спілкування з ворогами.', 'correct': False}]}, {'question': "Що означає вираз 'зробити ведмежу послугу'?", 'options': [{'text': 'Допомогти так, що стало тільки гірше (ситуативна іронія).', 'correct': True}, {'text': 'Принести мед.', 'correct': False}, {'text': 'Бути дуже сильним.', 'correct': False}, {'text': 'Впасти в сплячку.', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1917/2000 (83 short)
@@ -22,11 +26,12 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 98-100%)
+- **Immersion:** 🇺🇦 99.9% (target 90-100%)
 - **Richness:** ✅ 99% (style)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

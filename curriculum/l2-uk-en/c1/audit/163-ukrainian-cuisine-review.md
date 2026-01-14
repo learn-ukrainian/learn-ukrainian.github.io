@@ -1,6 +1,6 @@
 # Audit Report: 163-ukrainian-cuisine.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2236/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
 - **Richness:** ✅ 100% (cultural)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)
@@ -35,12 +36,6 @@
 | realworld | 2 | - | 100% | 7% | 6.7% |
 | questions | 8 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

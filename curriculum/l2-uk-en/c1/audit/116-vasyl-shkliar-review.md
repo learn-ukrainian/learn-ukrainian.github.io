@@ -1,32 +1,21 @@
 # Audit Report: 116-vasyl-shkliar.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння біографії' Q1 prompt length 10 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння біографії' Q2 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння біографії' Q3 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння біографії' Q5 prompt length 9 (target: 12-30)
-  - FIX: Adjust prompt length to 12-30 words.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-vasyl-shkliar.yaml: Schema validation error at key '2': {'type': 'quiz', 'title': 'Розуміння біографії', 'items': [{'question': 'Згідно з текстом, чому Василя Шкляра називають «батьком українського бестселера»?', 'options': [{'text': 'Його роман «Чорний Ворон» досяг рекордних накладів і популярності', 'correct': True}, {'text': 'Він заснував перше комерційне видавництво в Україні', 'correct': False}, {'text': 'Він пише виключно дитячі казки, які люблять усі батьки', 'correct': False}, {'text': 'Він є автором першого українського підручника з маркетингу', 'correct': False}], 'explanation': 'Його книга стала феноменом масової культури.'}, {'question': 'Якій історичній події присвячено найвідоміший роман Шкляра «Чорний Ворон»?', 'options': [{'text': 'Повстанській боротьбі холодноярців проти радянської влади у 1920-х роках', 'correct': True}, {'text': 'Героїчній обороні Києва від монголо-татарської навали', 'correct': False}, {'text': 'Подіям Другої світової війни та діяльності УПА на Волині', 'correct': False}, {'text': 'Студентській Революції на граніті 1990 року', 'correct': False}], 'explanation': 'Роман розповідає про боротьбу залишнеців у Холодному Яру.'}, {'question': 'Що означає термін «залишенець», який став другою назвою роману?', 'options': [{'text': 'Повстанець, який продовжує боротьбу навіть у повній ізоляції', 'correct': True}, {'text': 'Людина, яка забула свої речі на вокзалі', 'correct': False}, {'text': 'Солдат, який дезертирував з армії під час бою', 'correct': False}, {'text': 'Емігрант, який не зміг адаптуватися за кордоном', 'correct': False}]}, {'question': 'Як Василь Шкляр відреагував на присудження йому Шевченківської премії у 2011 році?', 'options': [{'text': 'Попросив перенести нагородження на час, коли при владі не буде українофобів', 'correct': True}, {'text': 'З радістю прийняв нагороду з рук тодішнього президента', 'correct': False}, {'text': 'Відмовився від премії, заявивши, що він не гідний її', 'correct': False}, {'text': 'Вимагав виплатити премію у подвійному розмірі', 'correct': False}]}, {'question': 'Який жанр літератури є основним у творчості Василя Шкляра?', 'options': [{'text': 'Історичний гостросюжетний роман (екшн)', 'correct': True}, {'text': 'Філософська лірика та верлібри', 'correct': False}, {'text': 'Наукова фантастика про космос', 'correct': False}, {'text': 'Психологічна драма про сімейні стосунки', 'correct': False}, {'text': 'Психологічна драма про сімейні стосунки', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 116-vasyl-shkliar.yaml: [index-2] quiz: 'items.4.options' - [{'text': 'Історичний гостросюжетний роман (екшн)', 'correct': True}, {'text': 'Філософська лірика та верлібри', 'correct': False}, {'text': 'Наукова фантастика про космос', 'correct': False}, {'text': 'Психологічна драма про сімейні стосунки', 'correct': False}, {'text': 'Психологічна драма про сімейні стосунки', 'correct': False}] is too long
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 5/100)
 
-- 7 violations (significant)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1977/2000 (23 short)
+- **Words:** ✅ 2018/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -36,11 +25,12 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (biography))
 - **Richness:** ✅ 95% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)
@@ -53,7 +43,7 @@
 | engagement | 9 | 6 | 100% | 14% | 14.3% |
 | quotes | 9 | 3 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
-| visual | 13 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 18 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
@@ -66,7 +56,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |
 | **Вступ** | ⚪️ | 189 | Skipped |
-| **Біографія** | ⚪️ | 613 | Skipped |
+| **Життєпис** | ⚪️ | 479 | Skipped |
+| **Внесок** | ⚪️ | 68 | Skipped |
+| **Сучасний етап** | ⚪️ | 107 | Skipped |
 | **Історичний контекст** | ✅ | 254 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 165 | Included in Core |
 | **Есе** | ⚪️ | 334 | Skipped |

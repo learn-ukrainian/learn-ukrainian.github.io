@@ -3,36 +3,17 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-09] select: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: [149-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 149-pysanky.yaml: Schema validation error at key '11': {'type': 'unjumble', 'title': 'Філософські роздуми про писанку', 'items': [{'words': ['Писанка', 'це', 'справжній', 'космос', 'на', 'долоні', 'де', 'кожна', 'лінія', 'має', 'своє', 'глибоке', 'магічне', 'значення'], 'answer': 'Писанка це справжній космос на долоні де кожна лінія має своє глибоке магічне значення'}, {'words': ['Стародавні', 'символи', 'на', 'шкаралупі', 'яйця', 'передають', 'нам', 'знання', 'про', 'створення', 'світу', 'та', 'вічне', 'відродження', 'життя'], 'answer': 'Стародавні символи на шкаралупі яйця передають нам знання про створення світу та вічне відродження життя'}, {'words': ['Мистецтво', 'писанкарства', 'є', 'нерозривно', "пов'язаним", 'із', 'чистотою', 'думок', 'та', 'духовним', 'станом', 'самої', 'майстрині'], 'answer': "Мистецтво писанкарства є нерозривно пов'язаним із чистотою думок та духовним станом самої майстрині"}, {'words': ['Українська', 'писанка', 'стала', 'потужним', 'маркером', 'національної', 'ідентичності', 'який', 'не', 'змогли', 'знищити', 'жодні', 'імперські', 'заборони'], 'answer': 'Українська писанка стала потужним маркером національної ідентичності який не змогли знищити жодні імперські заборони'}, {'words': ['Тримати', 'в', 'руках', 'писанку', 'означає', 'відчувати', 'енергію', 'багатьох', 'поколінь', 'своїх', 'предків', 'що', 'вірили', 'в', 'перемогу', 'світла'], 'answer': 'Тримати в руках писанку означає відчувати енергію багатьох поколінь своїх предків що вірили в перемогу світла'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 11 violations (severe - consider revision)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1902/2000 (98 short)
@@ -45,11 +26,12 @@
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 10 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

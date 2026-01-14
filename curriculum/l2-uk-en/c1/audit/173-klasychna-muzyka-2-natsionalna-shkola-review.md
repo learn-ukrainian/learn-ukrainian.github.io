@@ -1,6 +1,6 @@
 # Audit Report: 173-klasychna-muzyka-2-natsionalna-shkola.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2656/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (fine-arts))
 - **Richness:** ✅ 96% (content)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

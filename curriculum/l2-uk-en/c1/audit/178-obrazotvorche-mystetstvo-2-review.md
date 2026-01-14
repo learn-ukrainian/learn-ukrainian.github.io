@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Цитати Марії Примаченко' item 4 has 10 words (target: 12-20)
   - FIX: Adjust sentence length to 12-20 words to match C1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 178-obrazotvorche-mystetstvo-2.yaml: Insufficient activities: 17 found, minimum N/A required for C1
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 178-obrazotvorche-mystetstvo-2.yaml: Schema validation error at key 'blanks': [{'id': 1, 'answer': 'світ', 'options': ['світ', 'село', 'місто', 'район']}, {'id': 2, 'answer': 'освіти', 'options': ['освіти', 'фарби', 'хати', 'землі']}, {'id': 3, 'answer': 'звірі', 'options': ['звірі', 'люди', 'будинки', 'машини']}, {'id': 4, 'answer': 'назву', 'options': ['назву', 'ціну', 'раму', 'вагу']}, {'id': 5, 'answer': 'атомну', 'options': ['атомну', 'холодну', 'стару', 'нову']}, {'id': 6, 'answer': 'наївним', 'options': ['наївним', 'суворим', 'нудним', 'швидким']}, {'id': 7, 'answer': 'фарби', 'options': ['фарби', 'олівці', 'ручки', 'нитки']}, {'id': 8, 'answer': 'фантазії', 'options': ['фантазії', 'бідності', 'ліні', 'роботи']}, {'id': 9, 'answer': 'модний', 'options': ['модний', 'старий', 'брудний', 'дешевий']}, {'id': 10, 'answer': 'ідентичності', 'options': ['ідентичності', 'слабкості', 'байдужості', 'покори']}, {'id': 11, 'answer': 'щирістю', 'options': ['щирістю', 'хитрістю', 'злістю', 'нудьгою']}, {'id': 12, 'answer': 'диво', 'options': ['диво', 'гроші', 'біду', 'страх']}] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -28,7 +28,8 @@
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (fine-arts))
 - **Richness:** ✅ 98% (content)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)

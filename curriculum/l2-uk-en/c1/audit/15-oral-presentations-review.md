@@ -1,6 +1,6 @@
 # Audit Report: 15-oral-presentations.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2079/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100%)
 - **Richness:** ✅ 99% (style)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

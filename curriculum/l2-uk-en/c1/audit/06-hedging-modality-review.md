@@ -1,6 +1,6 @@
 # Audit Report: 06-hedging-modality.md
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 2435/2000
@@ -17,7 +17,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -37,12 +38,6 @@
 | questions | 10 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (18 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

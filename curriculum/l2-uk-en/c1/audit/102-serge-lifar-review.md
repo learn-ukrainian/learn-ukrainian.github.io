@@ -1,19 +1,23 @@
 # Audit Report: 102-serge-lifar.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Глибинний аналіз біографії' Q2 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Глибинний аналіз біографії' Q5 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
-  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2530/2000
@@ -26,11 +30,12 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.7% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (biography))
 - **Richness:** ✅ 99% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

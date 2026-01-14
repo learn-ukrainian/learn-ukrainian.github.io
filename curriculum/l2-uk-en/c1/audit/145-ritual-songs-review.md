@@ -1,15 +1,19 @@
 # Audit Report: 145-ritual-songs.md
 **Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-ritual-songs.yaml: Schema validation error at key '14': {'type': 'fill-in', 'title': 'Символіка кольорів', 'instruction': 'Вставте колір, що відповідає символу.', 'items': [{'sentence': '___ (колір крові та життя) — символ любові та енергії.', 'answer': 'Червоний', 'options': ['Червоний', 'Білий', 'Чорний', 'Синій']}, {'sentence': '___ (колір чистоти) — символ святості та невинності.', 'answer': 'Білий', 'options': ['Білий', 'Зелений', 'Жовтий', 'Сірий']}, {'sentence': '___ (колір землі) — символ смутку та смерті, але й родючості.', 'answer': 'Чорний', 'options': ['Чорний', 'Блакитний', 'Рожевий', 'Золотий']}, {'sentence': '___ (колір весни) — символ відродження природи.', 'answer': 'Зелений', 'options': ['Зелений', 'Фіолетовий', 'Коричневий', 'Срібний']}, {'sentence': '___ (колір сонця) — символ світла та багатства.', 'answer': 'Жовтий', 'options': ['Жовтий', 'Темний', 'Блідий', 'Мутний']}, {'sentence': '___ (колір води і неба) — символ духовності.', 'answer': 'Синій', 'options': ['Синій', 'Червоний', 'Помаранчевий', 'Бежевий']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template.md'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2034/2000
@@ -22,11 +26,12 @@
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (cultural))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (cultural))
 - **Richness:** ✅ 100% (cultural)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

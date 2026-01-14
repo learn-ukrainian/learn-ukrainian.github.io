@@ -29,20 +29,22 @@
   - FIX: Adjust prompt length to 12-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Роль діаспори у збереженні ідентичності' Q5 prompt length 9 (target: 12-30)
   - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 118-kvitka-tsisyk.yaml: Schema validation error at key '8': {'type': 'quiz', 'title': 'Роль діаспори у збереженні ідентичності', 'items': [{'question': 'Яку хвилю української еміграції представляла родина Квітки Цісик?', 'options': [{'text': 'Першу (трудову)', 'correct': False}, {'text': 'Третю (політичну після Другої світової)', 'correct': True}, {'text': 'Четверту (сучасну економічну)', 'correct': False}, {'text': 'Другу (міжвоєнну)', 'correct': False}]}, {'question': 'Чому для діаспори було важливо зберігати українську мову та культуру?', 'options': [{'text': 'Бо вони не хотіли вчити англійську', 'correct': False}, {'text': 'Для протидії радянській русифікації та збереження нації в екзилі', 'correct': True}, {'text': 'Через вимоги американського уряду', 'correct': False}, {'text': 'Це було просто хобі для вільних людей', 'correct': False}]}, {'question': 'Яку мету переслідувала Квітка, вкладаючи власні кошти в українські пісні?', 'options': [{'text': 'Стати популярною в СРСР', 'correct': False}, {'text': 'Віддати шану своєму народові та зберегти спадщину', 'correct': True}, {'text': 'Уникнути сплати податків у США', 'correct': False}, {'text': 'Вона просто не мала куди витрачати гроші', 'correct': False}]}, {'question': 'Як радянська влада ставилася до популярності Квітки Цісик в Україні?', 'options': [{'text': 'Офіційно запрошувала її на гастролі', 'correct': False}, {'text': 'Замовчувала її існування та переслідувала за розповсюдження касет', 'correct': True}, {'text': 'Вручила їй державну премію', 'correct': False}, {'text': 'Дозволяла крутити її пісні на радіо', 'correct': False}]}, {'question': 'Яке значення має приклад Квітки для сучасного патріотичного виховання?', 'options': [{'text': 'Він вчить, що треба виїжджати з України', 'correct': False}, {'text': 'Він показує, як можна любити і прославляти Батьківщину ділом', 'correct': True}, {'text': 'Він демонструє, що реклама — це найголовніше мистецтво', 'correct': False}, {'text': 'Він не має жодного значення сьогодні', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
-  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template.md'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 16 violations (severe - consider revision)
+- 17 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2182/2000
@@ -55,11 +57,12 @@
 - **Vocab:** ✅ 27/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 13 violations
+- **Pedagogy:** ❌ 14 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (biography))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (biography))
 - **Richness:** ✅ 99% (biography)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

@@ -1,15 +1,19 @@
 # Audit Report: 136-rhetorical-questions.md
 **Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-rhetorical-questions.yaml: Schema validation error at key '10': {'type': 'fill-in', 'title': 'Контекстуальна риторика', 'items': [{'sentence': "Коли хтось робить очевидну дурницю, ми питаємо: 'Де були твої _____?'", 'answer': 'очі', 'options': ['очі', 'руки', 'ноги', 'вуха']}, {'sentence': "Коли ми не віримо своїм вухам, ми кажем: 'Та _____?'", 'answer': 'невже', 'options': ['невже', 'коли', 'хто', 'де']}, {'sentence': "Коли ми хочемо присоромити когось, ми кажемо: 'Як тобі не _____?'", 'answer': 'соромно', 'options': ['соромно', 'сумно', 'весело', 'боляче']}, {'sentence': "Коли ми наголошуємо на очевидності, ми кажемо: 'Хіба це не _____?'", 'answer': 'зрозуміло', 'options': ['зрозуміло', 'темно', 'тихо', 'далеко']}, {'sentence': "Коли ми втрачаємо терпіння, ми питаємо: 'Скільки можна _____?'", 'answer': 'терпіти', 'options': ['терпіти', 'спати', 'їсти', 'гуляти']}, {'sentence': "Коли ми бачимо безлад, ми питаємо: 'Що тут _____?'", 'answer': 'відбувається', 'options': ['відбувається', 'лежить', 'стоїть', 'росте']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2011/2000
@@ -22,11 +26,12 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.1% (target 98-100%)
+- **Immersion:** 🇺🇦 99.1% (target 90-100%)
 - **Richness:** ✅ 99% (style)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
