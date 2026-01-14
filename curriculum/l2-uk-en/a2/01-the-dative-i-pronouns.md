@@ -277,6 +277,10 @@ _(— Do you like Kyiv? — Yes, we like it very much! We find it interesting he
 | заважати   | to bother   | Не заважай мені!  |
 | дякувати   | to thank    | Дякую тобі!       |
 
+## Practice
+
+Complete the following exercises to practice using the Dative case pronouns.
+
 # Підсумок
 У цьому модулі ви навчилися:
 

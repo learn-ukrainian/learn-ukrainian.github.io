@@ -101,3 +101,49 @@ items:
   pos: noun
   gender: n
   note: grammatical term
+- lemma: скажіть
+  ipa: skɑˈʒitʲ
+  translation: say, tell (imperative pl.)
+  pos: verb
+- lemma: читай
+  ipa: t͡ʃɪˈtɑj
+  translation: read (imperative sg.)
+  pos: verb
+- lemma: давайте
+  ipa: dɑˈvɑjtɛ
+  translation: let's (particle/verb pl.)
+  pos: part
+- lemma: зачекайте
+  ipa: zɑt͡ʃɛˈkɑjtɛ
+  translation: wait (imperative pl.)
+  pos: verb
+- lemma: пиши
+  ipa: pɪˈʃɪ
+  translation: write (imperative sg.)
+  pos: verb
+- lemma: прошу
+  ipa: ˈprɔʃu
+  translation: please; I beg
+  pos: verb
+- lemma: ласка
+  ipa: ˈlɑskɑ
+  translation: kindness; favor
+  pos: noun
+  gender: f
+  note: used in "будь ласка"
+- lemma: слухайте
+  ipa: ˈsluxɑjtɛ
+  translation: listen (imperative pl.)
+  pos: verb
+- lemma: роби
+  ipa: rɔˈbɪ
+  translation: do, make (imperative sg.)
+  pos: verb
+- lemma: робімо
+  ipa: rɔˈbimɔ
+  translation: let's do/make
+  pos: verb
+- lemma: покажіть
+  ipa: pɔkɑˈʒitʲ
+  translation: show (imperative pl.)
+  pos: verb
