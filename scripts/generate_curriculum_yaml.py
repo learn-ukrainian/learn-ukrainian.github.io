@@ -27,6 +27,45 @@ OUTPUT_FILE = CURRICULUM_DIR / "curriculum.yaml"
 
 LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
 
+# Specialized tracks (not in core path)
+TRACKS = {
+    'b2-hist': {
+        'name': 'B2 History Track - Ukrainian History',
+        'description': 'Ukrainian history from Kyivan Rus to present',
+        'prerequisite': 'b2-core-70'
+    },
+    'c1-bio': {
+        'name': 'C1 Biography Track - Famous Ukrainians',
+        'description': 'Biographies of notable Ukrainian figures',
+        'prerequisite': 'b2-hist-61'
+    },
+    'b2-pro': {
+        'name': 'B2 Professional Track - Business Ukrainian',
+        'description': 'Business and professional communication at B2 level',
+        'prerequisite': 'b2-core-70'
+    },
+    'c1-pro': {
+        'name': 'C1 Professional Track - Professional Mastery',
+        'description': 'Executive and academic professional communication',
+        'prerequisite': 'b2-pro-40'
+    },
+    'lit': {
+        'name': 'LIT Track - Classical Ukrainian Literature',
+        'description': 'Literary analysis seminar from Kotliarevsky to Shevchenko',
+        'prerequisite': 'c1-core'
+    },
+    'oes': {
+        'name': 'OES Track - Old East Slavic',
+        'description': 'Historical linguistics proving Ukrainian continuity',
+        'prerequisite': 'c1-core'
+    },
+    'ruth': {
+        'name': 'RUTH Track - Ruthenian',
+        'description': 'Middle Ukrainian period linguistics',
+        'prerequisite': 'oes-30'
+    }
+}
+
 
 def extract_slug(filename: str) -> str:
     """Extract slug from numbered filename."""
@@ -123,9 +162,32 @@ def generate_manifest() -> dict:
         manifest['core'][level] = level_data
         print(f"  Found {len(modules)} modules")
 
-    # Tracks placeholder (for future)
+    # Process tracks
     manifest['tracks'] = OrderedDict()
-    manifest['tracks']['_comment'] = "Specialized tracks will be added after reorganization (#409)"
+
+    for track_id, track_info in TRACKS.items():
+        track_dir = CURRICULUM_DIR / track_id
+        if not track_dir.exists():
+            # Track planned but not yet populated
+            track_data = OrderedDict()
+            track_data['name'] = track_info['name']
+            track_data['description'] = track_info['description']
+            track_data['prerequisite'] = track_info['prerequisite']
+            track_data['modules'] = []
+            manifest['tracks'][track_id] = track_data
+            continue
+
+        print(f"Processing track {track_id}...")
+        modules = get_modules_for_level(track_id)
+
+        track_data = OrderedDict()
+        track_data['name'] = track_info['name']
+        track_data['description'] = track_info['description']
+        track_data['prerequisite'] = track_info['prerequisite']
+        track_data['modules'] = modules
+
+        manifest['tracks'][track_id] = track_data
+        print(f"  Found {len(modules)} modules")
 
     return manifest
 

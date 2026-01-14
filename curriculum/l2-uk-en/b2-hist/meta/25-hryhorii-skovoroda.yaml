@@ -1,0 +1,30 @@
+module: b2-hist-25
+title: Григорій Сковорода
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- philosophy
+- literature
+- skovoroda
+- enlightenment
+grammar:
+- Історичний наратив
+- Філософська термінологія
+vocabulary_focus: null
+vocab_count: 86 - "Філософська лексика" - "Літературна термінологія"
+objectives:
+- Учень може описати життєвий шлях Григорія Сковороди
+- Учень може пояснити основні філософські концепції Сковороди
+- Учень може охарактеризувати значення кордоцентризму та сродної праці
+- Учень може аналізувати Сковороду як символ українського духу
+vocabulary_count: 35
+slug: 95-hryhorii-skovoroda
+naturalness:
+  score: 9
+  status: PASS

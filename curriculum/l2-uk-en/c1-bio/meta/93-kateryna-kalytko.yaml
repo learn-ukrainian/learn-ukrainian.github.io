@@ -1,0 +1,29 @@
+module: c1-bio-93
+title: 'Катерина Калитко: Поезія тілесності та війни'
+subtitle: 'Kateryna Kalytko: Poetry of Physicality and War'
+version: '1.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- literature
+- poetry
+- war
+grammar:
+- Metaphorical descriptions of physical sensations
+- Elliptical sentences in poetry
+objectives:
+- Learner understands the unique poetic voice of Kateryna Kalytko and her focus on
+  the physical experience of war
+- Learner can analyze the themes of isolation and trauma in "Land of the Lost"
+- Learner masters vocabulary related to anatomy, sensory perception, and psychological
+  states
+vocabulary_count: 25
+slug: 128-kateryna-kalytko
+vital_status: living
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,24 @@
+module: c1-bio-20
+title: 'Тарас Шевченко: Національний Пророк'
+phase: C1.3 Biographies
+duration: 120
+transliteration: none
+pedagogy: CBI
+register: публіцистичний
+focus: biography
+objectives:
+- Deeply understand the life and struggle of Taras Shevchenko
+- Analyze his role as the spiritual founder of the modern Ukrainian nation
+- Explore his artistic and literary contributions in the context of decolonization
+- Identify complex syntactic structures in his diary and letters
+tags:
+- biography
+- era: imperial
+- domain: literature
+grammar:
+- Complex historical narrative
+- High-style literary syntax
+vocabulary_focus:
+- Prophetic and national revival terminology
+- Repression and resistance vocabulary
+slug: 55-taras-shevchenko

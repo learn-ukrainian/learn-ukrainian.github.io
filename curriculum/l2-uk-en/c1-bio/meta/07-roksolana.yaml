@@ -1,0 +1,24 @@
+module: c1-bio-07
+title: 'Роксолана: Влада та Дипломатія'
+subtitle: 'Roksolana: Power and Diplomacy'
+version: '1.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- early-modern
+- history
+- diplomacy
+grammar:
+- Historical narrative register
+- Complex hypothetical conditionals
+objectives:
+- Learner can analyze the life and influence of Roksolana within the Ottoman Empire
+- Learner understands her role as a cultural and diplomatic bridge
+- Learner can use specialized vocabulary related to power, diplomacy, and the Ottoman
+  court
+vocabulary_count: 25
+slug: 42-roksolana

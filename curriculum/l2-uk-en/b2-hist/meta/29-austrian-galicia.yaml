@@ -1,0 +1,28 @@
+module: b2-hist-29
+title: 'Австрійська Галичина: Український П''ємонт'
+subtitle: 'Галичина під владою Габсбургів: від Весни народів до національного відродження'
+version: '1.0'
+focus: history
+phase: B2.3b
+pedagogy: CBI
+duration: 90
+transliteration: none
+register: публіцистичний
+tags:
+- history
+- era:imperial
+- topic:galicia
+- topic:national-awakening
+grammar:
+- Пасивний стан в історичному наративі
+- Складнопідрядні речення з причиновими сполучниками
+objectives:
+- Зрозуміти роль Австрійської Галичини як осередку українського відродження
+- Проаналізувати різницю між російською та австрійською політикою щодо українців
+- Оволодіти лексикою національного руху та освіти
+vocabulary_count: 35
+vocab_count: 92
+slug: 99-austrian-galicia
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,29 @@
+module: b2-hist-17
+title: 'Хмельниччина I: повстання'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- khmelnytsky
+- uprising
+- military
+grammar:
+- Історичний наратив
+- Військова термінологія
+vocabulary_focus: null
+vocab_count: 125 - "Військова та політична лексика" - "Історичні терміни козацької
+  доби"
+objectives:
+- Учень може пояснити причини повстання Богдана Хмельницького
+- Учень може описати перебіг ключових битв 1648 року
+- Учень може аналізувати значення козацьких перемог для української історії
+vocabulary_count: 35
+slug: 87-khmelnychchyna-i-povstannia
+naturalness:
+  score: 9
+  status: PASS

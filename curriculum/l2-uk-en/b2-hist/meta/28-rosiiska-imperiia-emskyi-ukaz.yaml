@@ -1,0 +1,28 @@
+module: b2-hist-28
+title: 'Російська імперія: Емський указ'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- imperial-era
+- linguistic-genocide
+- decolonization
+- resistance
+grammar:
+- Історичний наратив
+- Пасивний стан у історичних текстах
+vocabulary_focus: null
+vocab_count: 73 - "Термінологія імперської політики" - "Лексика мовного гноблення"
+objectives:
+- Учень може описати політику Російської імперії щодо української мови в XIX столітті
+- Учень може аналізувати первинні джерела (Валуєвський циркуляр, Емський указ)
+- Учень може пояснити наслідки мовних заборон для української культури
+vocabulary_count: 35
+slug: 98-rosiiska-imperiia-emskyi-ukaz
+naturalness:
+  score: 9
+  status: PASS

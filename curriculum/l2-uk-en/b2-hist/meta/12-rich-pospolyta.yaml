@@ -1,0 +1,26 @@
+module: b2-hist-12
+title: Річ Посполита — полонізація та кріпацтво
+phase: B2.3a [Українська історія]
+pedagogy: CBI
+focus: history
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- early-modern
+- polish-lithuanian-commonwealth
+grammar:
+- Історичний наратив
+- Пасивний стан у науковому тексті
+vocabulary_focus: null
+vocab_count: 138 - "Політична та соціальна термінологія" - "Релігійна лексика"
+objectives:
+- Учень може пояснити наслідки Люблінської унії для українських земель
+- Учень може аналізувати процеси полонізації та релігійного тиску
+- Учень може характеризувати соціальне становище українського селянства
+vocabulary_count: 37
+slug: 82-rich-pospolyta
+naturalness:
+  score: 9
+  status: PASS

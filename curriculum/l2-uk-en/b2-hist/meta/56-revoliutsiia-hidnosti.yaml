@@ -1,0 +1,28 @@
+module: b2-hist-56
+title: Революція Гідності
+subtitle: The Revolution of Dignity
+version: '2.0'
+phase: B2.3e War for Existence
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- euromaidan
+- revolution
+- resistance
+- democracy
+grammar:
+- Historical narrative register
+- Political and social terminology
+objectives:
+- Understand the causes and timeline of the Revolution of Dignity
+- 'Identify key moments: побиття студентів, закони 16 січня, розстріли на Інститутській'
+- Explain the concept of 'Dignity' in the context of the protest
+- Discuss the role of the 'Heavenly Hundred'
+vocabulary_count: 25
+slug: 126-revoliutsiia-hidnosti
+naturalness:
+  score: 9
+  status: PASS

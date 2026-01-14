@@ -1,0 +1,24 @@
+module: c1-bio-09
+title: 'Сильвестр Косів: Дипломатія Духу'
+subtitle: 'Sylvestr Kosiv: Diplomacy of the Spirit'
+version: '1.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- early-modern
+- history
+- religion
+- diplomacy
+grammar:
+- Historical narrative register
+- Formal ecclesiastical address
+objectives:
+- Learner can analyze the leadership of Sylvestr Kosiv during the Khmelnytsky Uprising
+- Learner understands the complexities of church-state relations in the 17th century
+- Learner can use specialized vocabulary related to ecclesiastical law and diplomacy
+vocabulary_count: 25
+slug: 44-sylvestr-kosiv

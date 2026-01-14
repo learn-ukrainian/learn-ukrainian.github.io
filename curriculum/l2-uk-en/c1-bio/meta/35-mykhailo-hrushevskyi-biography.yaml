@@ -1,0 +1,23 @@
+module: c1-bio-35
+title: 'Михайло Грушевський: Архітектор української історії'
+subtitle: 'Mykhailo Hrushevsky: Architect of Ukrainian History'
+version: '2.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- history
+- politics
+- academia
+grammar:
+- Formal academic and historiographical register
+- Political proclamations and legal language
+objectives:
+- Learner understands Mykhailo Hrushevskys role as the leader of the UNR.
+- Learner can analyze the "History of Ukraine-Rus" as a foundational national narrative.
+- Learner explores the challenges of political leadership during the Revolution.
+vocabulary_count: 24
+slug: 70-mykhailo-hrushevskyi-biography

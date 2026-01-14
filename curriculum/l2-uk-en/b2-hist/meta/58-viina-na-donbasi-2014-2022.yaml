@@ -1,0 +1,29 @@
+module: b2-hist-58
+title: Війна на Донбасі 2014-2022
+subtitle: The War in Donbas 2014-2022
+version: '2.0'
+phase: B2.3e War for Existence
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- war
+- donbas
+- ato
+- cyborgs
+- volunteers
+grammar:
+- Military terminology
+- Past tense for historical events
+objectives:
+- Analyze the causes and timeline of the war in Donbas
+- Identify key battles (Sloviansk, Ilovaisk, DAP)
+- Understand the role of volunteer battalions and volunteers
+- Discuss the Minsk Agreements and their failure
+vocabulary_count: 25
+slug: 128-viina-na-donbasi-2014-2022
+naturalness:
+  score: 9
+  status: PASS

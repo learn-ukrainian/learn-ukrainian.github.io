@@ -1,0 +1,30 @@
+module: c1-bio-94
+title: 'Софія Андрухович: Ілюзії «Фелікс Австрія» та пам''ять «Амадоки»'
+subtitle: 'Sofia Andrukhovych: Illusions of "Felix Austria" and Memory of "Amadoka"'
+version: '1.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- literature
+- history
+- memory
+grammar:
+- Stylization of 19th-century language
+- Complex narrative structures
+objectives:
+- Learner understands the role of Sofia Andrukhovych in deconstructing the "Galician
+  myth"
+- Learner can analyze the themes of illusion, dependence, and historical trauma in
+  her novels
+- Learner masters vocabulary related to psychology, culinary arts, and historical
+  reconstruction
+vocabulary_count: 25
+slug: 129-sofia-andrukhovych
+vital_status: living
+naturalness:
+  score: 9
+  status: PASS

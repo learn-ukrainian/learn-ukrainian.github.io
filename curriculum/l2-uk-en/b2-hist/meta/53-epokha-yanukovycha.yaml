@@ -1,0 +1,28 @@
+module: b2-hist-53
+title: 'Епоха Януковича: Реванш'
+subtitle: The Yanukovych Era
+version: '2.0'
+phase: B2.3d Independence & War
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- politics
+- corruption
+- authoritarianism
+- resistance
+grammar:
+- Political terminology
+- Complex sentences in political discourse
+objectives:
+- Analyze the political regression during the Yanukovych presidency
+- 'Understand key events: Kharkiv Pact, Language Law, Tymoshenko imprisonment'
+- Discuss the concept of 'The Family' and corruption
+- Evaluate the reasons for the refusal of the EU Association Agreement
+vocabulary_count: 25
+slug: 123-epokha-yanukovycha
+naturalness:
+  score: 9
+  status: PASS

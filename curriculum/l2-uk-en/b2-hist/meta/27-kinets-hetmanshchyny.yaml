@@ -1,0 +1,29 @@
+module: b2-hist-27
+title: Кінець Гетьманщини
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- hetmanate
+- catherine-ii
+- decolonization
+grammar:
+- Історична наративна лексика
+- Пасивні конструкції в історичних текстах
+vocabulary_focus: null
+vocab_count: 104 - "Термінологія ліквідації автономії" - "Адміністративно-політичний
+  словник"
+objectives:
+- Учень може пояснити процес ліквідації Гетьманщини та Запорозької Січі
+- Учень може аналізувати наслідки колоніальної політики Катерини II для України
+- Учень може критично оцінювати імперські наративи про «добровільну інтеграцію»
+vocabulary_count: 35
+slug: 97-kinets-hetmanshchyny
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,27 @@
+module: b2-hist-03
+title: Слов'яни на українських землях — Витоки державності
+phase: B2.3a [Українська історія]
+pedagogy: CBI
+focus: history
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- early-medieval
+- slavs
+grammar:
+- Історичний наратив
+- Минулий час у науковому тексті
+vocabulary_focus: null
+vocab_count: 122 - "Слов'янська термінологія" - "Політична лексика"
+objectives:
+- Учень може описувати слов'янські племена на українських землях
+- Учень може аналізувати свідчення античних авторів про слов'ян
+- Учень може аргументувати зв'язок між племінною демократією і українською політичною
+  традицією
+vocabulary_count: 30
+slug: 73-sloviany-na-ukrainskykh-zemliakh
+naturalness:
+  score: 9
+  status: PASS

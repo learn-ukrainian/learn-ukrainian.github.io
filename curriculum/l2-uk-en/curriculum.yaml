@@ -2303,6 +2303,1066 @@ core:
       - vocabulary
       - synonyms
       - idioms
+    - slug: medytsyna-pohlybleno
+      title: Медицина (поглиблено)
+      phase: B2.4 Skills & Capstone
+      focus: domain
+      tags:
+      - domain
+      - medicine
+      - health
+      - professional
+    - slug: tekhnolohii-ta-shi
+      title: Технології та ШІ
+      phase: B2.4 Skills & Capstone
+      focus: domain
+      tags:
+      - domain
+      - technology
+      - ai
+      - professional
+    - slug: nauka-i-doslidzhennia
+      title: Наука і дослідження
+      phase: B2.4 Skills & Capstone
+      focus: domain
+      tags:
+      - domain
+      - science
+      - research
+      - academic
+    - slug: mystetstvo-i-literatura
+      title: Мистецтво і література
+      phase: B2.4 Skills & Capstone
+      focus: domain
+      tags:
+      - domain
+      - arts
+      - literature
+      - culture
+    - slug: modern-diaspora
+      title: Сучасна діаспора
+      phase: B2.4 Skills & Capstone
+      focus: culture
+      tags:
+      - culture
+      - diaspora
+      - society
+    - slug: religion-in-ukraine
+      title: Релігія в Україні
+      phase: B2.4 Skills & Capstone
+      focus: culture
+      tags:
+      - culture
+      - religion
+      - history
+    - slug: academic-writing
+      title: Академічне письмо
+      phase: B2.4 Skills & Capstone
+      focus: skills
+      tags:
+      - skills
+      - academic
+      - writing
+    - slug: text-analysis
+      title: Аналіз тексту
+      phase: B2.4 Skills & Capstone
+      focus: skills
+      tags:
+      - skills
+      - analysis
+      - reading
+    - slug: capstone-research
+      title: 'Підсумковий проєкт: Дослідження'
+      phase: B2.4 Skills & Capstone
+      focus: checkpoint
+      tags:
+      - project
+      - research
+      - skills
+    - slug: analiz-tekstu
+      title: Аналіз тексту
+      phase: B2.4 Skills & Capstone
+      focus: skills
+      tags:
+      - skills
+      - analysis
+      - reading
+    - slug: capstone-doslidzhennya
+      title: 'Capstone: Дослідження'
+      phase: B2.4 Skills & Capstone
+      focus: project
+      tags:
+      - project
+      - research
+      - capstone
+    - slug: capstone-prezentatsiya
+      title: 'Capstone: Презентація'
+      phase: B2.4 Skills & Capstone
+      focus: project
+      tags:
+      - project
+      - presentation
+      - capstone
+    - slug: b2-pidsumkovyy-ohlyad
+      title: B2 Підсумковий огляд
+      phase: B2.4 Skills & Capstone
+      focus: checkpoint
+      tags:
+      - review
+      - grammar
+      - vocabulary
+    - slug: b2-finalnyy-ispyt
+      title: B2 Фінальний іспит
+      phase: B2.4 Skills & Capstone
+      focus: checkpoint
+      tags:
+      - exam
+      - assessment
+      - certification
+  c1:
+    name: C1 - Advanced
+    modules:
+    - slug: b2-review-bridge
+      title: Огляд B2 та міст до C1
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - academic
+      - review
+      - grammar
+    - slug: academic-style-markers
+      title: Маркери академічного стилю
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - c1
+      - grammar
+      - academic
+      - style
+    - slug: research-verbs
+      title: Дієслова наукового дослідження
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - academic
+      - verbs
+      - research
+    - slug: analysis-vocabulary
+      title: Словник для критичного аналізу
+      phase: C1.1 [Academic Foundation]
+      focus: vocabulary
+      tags:
+      - academic
+      - analysis
+      - vocabulary
+      - critical-thinking
+    - slug: logical-connectors
+      title: Логічні зв'язки
+      phase: C1.1 Argumentation
+      focus: grammar
+      tags:
+      - grammar
+      - syntax
+      - argumentation
+      - connectors
+    - slug: hedging-modality
+      title: Хеджування та модальність
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - academic
+      - grammar
+      - writing
+    - slug: citation-reference
+      title: Цитація та посилання
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - academic
+      - citation
+      - writing
+    - slug: essay-structure
+      title: Структура есе
+      phase: C1.1 Academic Writing
+      focus: grammar
+      tags:
+      - writing
+      - structure
+      - essay
+      - academic
+    - slug: thesis-development
+      title: Розвиток тези
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - essay
+      - structure
+      - writing
+    - slug: counterarguments
+      title: Контраргументи
+      phase: C1.1 Academic Foundation
+      focus: grammar
+      tags:
+      - essay
+      - logic
+      - debate
+    - slug: summary-paraphrase
+      title: 'Мистецтво переказу: Резюме та парафраз'
+      phase: C1.1 Academic Foundation
+      focus: academic
+      tags:
+      - academic
+      - writing
+      - summary
+      - paraphrase
+    - slug: research-article
+      title: 'Жанр: Наукова стаття'
+      phase: C1.1 Academic Foundation
+      focus: genre
+      tags:
+      - academic
+      - writing
+      - research
+    - slug: abstract-writing
+      title: 'Жанр: Реферат та Анотація'
+      phase: C1.1 Academic Writing
+      focus: academic
+      tags:
+      - academic
+      - writing
+      - abstract
+      - summary
+    - slug: literature-review
+      title: 'Жанр: Огляд літератури'
+      phase: C1.1 Academic Writing
+      focus: academic
+      tags:
+      - academic
+      - writing
+      - literature-review
+      - synthesis
+    - slug: oral-presentations
+      title: Доповідь та Презентація
+      phase: C1.1 Academic Writing
+      focus: style
+      tags:
+      - academic
+      - speaking
+      - presentation
+      - public-speaking
+    - slug: advanced-punctuation
+      title: Поглиблена Пунктуація
+      phase: C1.1 Academic Writing
+      focus: grammar
+      tags:
+      - academic
+      - grammar
+      - punctuation
+      - syntax
+    - slug: irregular-verbs-complete
+      title: 'Неправильні дієслова: повний огляд'
+      phase: C1.1 Academic Writing
+      focus: grammar
+      tags:
+      - grammar
+      - morphology
+      - verbs
+      - irregular-verbs
+    - slug: essay-writing-practice
+      title: 'Практикум C1.1: Написання есе'
+      phase: C1.1 Academic Foundation
+      focus: style
+      tags:
+      - writing
+      - academic
+      - essay
+      - practice
+    - slug: practice-ii-article-critique
+      title: 'Практика II: Критика статті'
+      phase: C1.1 Academic Foundations
+      focus: academic
+      tags:
+      - academic
+      - writing
+      - analysis
+      - critique
+    - slug: c1-1-checkpoint
+      title: 'Контрольна точка: Академічна база'
+      phase: C1.1 Academic Foundations Checkpoint
+      focus: checkpoint
+      tags:
+      - checkpoint
+      - integration
+      - academic
+      - review
+    - slug: cv-resume-writing
+      title: Написання резюме та CV
+      phase: C1.2 Professional & Social Context
+      focus: skills
+      tags:
+      - professional
+    - slug: job-interview
+      title: 'Співбесіда: стратегії успіху'
+      phase: C1.2 Professional & Social Context
+      focus: skills
+      tags:
+      - professional
+      - interview
+      - career
+      - business
+    - slug: business-etiquette
+      title: Діловий етикет в Україні
+      phase: C1.2 Professional & Social Context
+      focus: skills
+      tags:
+      - professional
+      - etiquette
+      - culture
+      - business
+    - slug: digital-communication
+      title: Цифрова комунікація
+      phase: C1.1 Professional Excellence
+      focus: skills
+      tags:
+      - business
+      - communication
+      - email
+      - digital
+    - slug: political-system
+      title: Політична система України
+      phase: C1.2 Society & State
+      focus: history
+      tags:
+      - politics
+      - government
+      - constitution
+    - slug: media-landscape
+      title: 'Медіаландшафт: Як не потонути в інформації'
+      phase: C1.2 Society & State
+      focus: society
+      tags:
+      - media
+      - journalism
+      - disinformation
+    - slug: global-context
+      title: 'Глобальний контекст: Україна, ЄС та НАТО'
+      phase: C1.2 Society & State
+      focus: society
+      tags:
+      - geopolitics
+      - eu
+      - nato
+      - diplomacy
+    - slug: dialects-of-ukrainian
+      title: Діалекти та наріччя
+      phase: C1.3 Linguistic Awareness
+      focus: sociolinguistics
+      tags:
+      - dialects
+      - linguistics
+      - phonetics
+      - surzhyk
+    - slug: surzhyk
+      title: 'Суржик: Феномен змішування'
+      phase: C1.3 Linguistic Awareness
+      focus: sociolinguistics
+      tags:
+      - surzhyk
+      - linguistics
+      - sociolinguistics
+      - mixing
+    - slug: history-of-language
+      title: 'Історія мови: Від Русі до сьогодення'
+      phase: C1.1 History & Culture
+      focus: history
+      tags:
+      - history
+      - language
+      - politics
+    - slug: diaspora-ukrainian
+      title: Українська діаспора
+      phase: C1.2 Professional & Social
+      focus: vocabulary
+      tags:
+      - diaspora
+      - culture
+      - history
+    - slug: professional-scenarios
+      title: Професійні сценарії
+      phase: C1.2 Professional & Social
+      focus: professional
+      tags:
+      - professional
+      - business
+      - communication
+      - practice
+    - slug: case-studies
+      title: Практичні кейси
+      phase: C1.2 Professional Application
+      focus: professional
+      tags:
+      - professional
+      - analysis
+      - case-study
+      - critical-thinking
+    - slug: review
+      title: 'Огляд і повторення: Професійна комунікація'
+      phase: C1.2 Practice
+      focus: review
+      tags:
+      - review
+      - professional
+      - business
+      - sociolinguistics
+    - slug: speaking-practice
+      title: Мовний практикум
+      phase: C1.2 Professional Mastery
+      focus: checkpoint
+      tags:
+      - speaking
+      - debate
+      - rhetoric
+      - professional
+    - slug: metaphor-simile
+      title: 'Метафора та порівняння: Образна мова'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - figurative-language
+      - metaphor
+      - simile
+    - slug: irony-sarcasm
+      title: 'Іронія та сарказм: Тонкощі змісту'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - irony
+      - sarcasm
+      - humor
+    - slug: hyperbole-litotes
+      title: 'Гіпербола та літота: Гра масштабів'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - hyperbole
+      - litotes
+      - exaggeration
+    - slug: euphemism-taboo
+      title: 'Евфемізми та табу: Мова делікатності'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - euphemism
+      - taboo
+      - etiquette
+    - slug: rhetorical-questions
+      title: 'Риторичні питання: Мистецтво переконання'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - questions
+      - persuasion
+      - emotion
+    - slug: degrees-of-certainty
+      title: 'Ступені впевненості: Модальність та хеджування'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - modality
+      - hedging
+      - academic-writing
+    - slug: politeness-strategies
+      title: 'Стратегії ввічливості: Прагматика спілкування'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - rhetoric
+      - politeness
+      - pragmatics
+      - social-interaction
+    - slug: high-formal-register
+      title: 'Офіційно-діловий стиль: Мова документів'
+      phase: C1.5 Folk Culture & Arts
+      focus: style
+      tags:
+      - professional
+      - stylistics
+      - documents
+    - slug: intimate-register
+      title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - stylistics
+      - social-interaction
+      - family
+      - relationships
+    - slug: slang-youth
+      title: Сленг та молодіжна мова
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - slang
+      - youth-culture
+      - internet-culture
+      - informal
+    - slug: review-c1-4
+      title: 'Огляд етапу C1.4: Стилістика та регістри'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: style
+      tags:
+      - review
+      - stylistics
+      - registers
+      - pragmatics
+    - slug: checkpoint-c1-4
+      title: 'Контрольна точка: Стилістика і регістри'
+      phase: C1.4 Advanced Stylistics & Rhetoric
+      focus: checkpoint
+      tags:
+      - checkpoint
+      - assessment
+      - stylistics
+    - slug: kobzari-bandura
+      title: 'Кобзарі та бандура: Душа України'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: cultural
+      tags:
+      - music
+      - history
+      - folk-culture
+      - instruments
+    - slug: ritual-songs
+      title: 'Обрядові пісні: Коло життя'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: cultural
+      tags:
+      - music
+      - folklore
+      - rituals
+      - traditions
+      - holidays
+    - slug: kolyskovi-ta-dumy
+      title: 'Колискові та думи: Від колиски до вічності'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: history
+      tags:
+      - folk culture
+      - music
+      - history
+    - slug: hopak-i-kozachok
+      title: 'Гопак і козачок: Танці волі та сили'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: history
+      tags:
+      - folk culture
+      - dance
+      - history
+    - slug: rehionalni-tantsi
+      title: 'Регіональні танці: Від Аркана до Коломийки'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: history
+      tags:
+      - folk culture
+      - dance
+      - geography
+    - slug: pysanky
+      title: 'Писанки: Космос на долоні'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: history
+      tags:
+      - folk culture
+      - art
+      - symbology
+    - slug: vyshyvanka
+      title: 'Вишиванка: Зашифрована доля'
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: history
+      tags:
+      - folk culture
+      - textile
+      - identity
+    - slug: honcharstvo-ta-rizbyarstvo
+      title: Гончарство та різьбярство
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: vocabulary
+      tags:
+      - culture
+      - folk-arts
+      - pottery
+      - woodcarving
+    - slug: narodna-mifolohiia
+      title: Народна міфологія
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: vocabulary
+      tags:
+      - culture
+      - folk-beliefs
+      - mythology
+    - slug: narodna-medytsyna
+      title: Народна медицина
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: vocabulary
+      tags:
+      - culture
+      - folk-medicine
+      - herbs
+    - slug: kozatski-lehendy
+      title: Козацькі легенди
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: vocabulary
+      tags:
+      - culture
+      - history
+      - legends
+      - cossacks
+    - slug: kazky-ta-prytchi
+      title: Казки та притчі
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: vocabulary
+      tags:
+      - culture
+      - literature
+      - folk-tales
+    - slug: zymovi-obriady
+      title: Зимові обряди
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: folk-culture
+      tags:
+      - culture
+      - folk-traditions
+      - winter
+    - slug: vesna-ta-lito
+      title: Весна та літо
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: folk-culture
+      tags:
+      - culture
+      - folk-traditions
+      - spring
+      - summer
+    - slug: khrestyny-ta-vesillia
+      title: Хрестини та весілля
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: folk-culture
+      tags:
+      - culture
+      - folk-traditions
+      - rituals
+      - wedding
+    - slug: pomynalni-obriady
+      title: Поминальні обряди
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: folk-culture
+      tags:
+      - culture
+      - folk-traditions
+      - memorial
+    - slug: halychyna
+      title: Галичина
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: folk-culture
+      tags:
+      - culture
+      - regions
+      - galicia
+    - slug: ukrainian-avant-garde
+      title: Український авангард
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - art
+      - avant-garde
+      - history
+    - slug: traditional-clothing
+      title: Традиційний український одяг
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - ethnography
+      - clothing
+      - traditions
+    - slug: ukrainian-cuisine-traditions
+      title: Українська кухня - традиції та символи
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - cuisine
+      - food
+      - traditions
+    - slug: ukrainian-house
+      title: Українська хата - архітектура та побут
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - architecture
+      - home
+      - traditions
+    - slug: winter-holidays
+      title: Українські свята - зимовий цикл
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - holidays
+      - christmas
+      - traditions
+    - slug: spring-holidays
+      title: Українські свята - весняний цикл
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - holidays
+      - easter
+      - traditions
+    - slug: summer-holidays
+      title: Українські свята - літній цикл
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - holidays
+      - kupala
+      - traditions
+    - slug: wedding-rituals
+      title: Родинні обряди - весілля
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - rituals
+      - wedding
+      - family
+    - slug: birth-rituals
+      title: Родинні обряди - народження
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - rituals
+      - birth
+      - family
+    - slug: funeral-rituals
+      title: Родинні обряди - похорон
+      phase: C1.5 Folk Culture & Arts
+      focus: cultural
+      tags:
+      - culture
+      - rituals
+      - funeral
+      - family
+    - slug: podillia-ta-volyn
+      title: Поділля та Волинь
+      phase: C1.5 Folk Culture & Arts
+      focus: folk-culture
+      tags:
+      - folk-culture
+      - region
+      - traditions
+    - slug: klasychna-muzyka-1-vytoky
+      title: Класична музика I — Витоки
+      phase: C1.5 Folk Culture & Arts
+      focus: fine-arts
+      tags:
+      - fine-arts
+      - classical-music
+      - baroque
+      - romanticism
+    - slug: klasychna-muzyka-2-natsionalna-shkola
+      title: Класична музика II — Національна школа
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - music
+      - lysenko
+      - leontovych
+    - slug: klasychna-muzyka-3-modernizm-i-suchasnist
+      title: Класична музика III — Модернізм і сучасність
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - music
+      - modernism
+      - lyatoshynsky
+      - skorik
+    - slug: operne-mystetstvo
+      title: Оперне мистецтво
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - opera
+      - singers
+      - krushelnytska
+    - slug: vokalne-mystetstvo
+      title: Вокальне мистецтво
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - music
+      - choral
+      - song
+    - slug: obrazotvorche-mystetstvo-1
+      title: Образотворче мистецтво I
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - visual-arts
+      - avant-garde
+      - icons
+    - slug: obrazotvorche-mystetstvo-2
+      title: Образотворче мистецтво II
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - visual-arts
+      - contemporary
+      - folk-art
+    - slug: balet-i-tanets
+      title: Балет і танець
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - dance
+      - ballet
+      - lifar
+    - slug: teatralne-mystetstvo-1
+      title: Театральне мистецтво I
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - theater
+      - kurbas
+      - drama
+    - slug: teatralne-mystetstvo-2
+      title: Театральне мистецтво II
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - theater
+      - contemporary
+      - drama
+    - slug: ukrainska-arkhitektura
+      title: Українська архітектура
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - architecture
+      - baroque
+      - modernism
+    - slug: suchasna-muzyka
+      title: Сучасна музика
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - music
+      - rock
+      - pop
+    - slug: ukrainske-kino
+      title: Українське кіно
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - cinema
+      - dovzhenko
+      - sentsov
+    - slug: praktyka-1-narodna-kultura
+      title: C1.5 Практика I — Народна культура
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: fine-arts
+      tags:
+      - arts
+      - culture
+      - review
+      - folk
+    - slug: praktyka-2-vysoke-mystetstvo
+      title: Практика II — Високе мистецтво
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: practice
+      tags:
+      - arts
+      - music
+      - painting
+      - theater
+      - architecture
+    - slug: c1-5-checkpoint
+      title: C1.5 Контрольна точка
+      phase: C1.5 Folk Culture & Fine Arts
+      focus: checkpoint
+      tags:
+      - assessment
+      - culture
+      - arts
+    - slug: istoriia-ukrainskoi-literatury
+      title: Історія української літератури
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - history
+      - analysis
+    - slug: kotliarevskyi-eneida
+      title: 'Котляревський: Енеїда'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - history
+      - burlesque
+    - slug: shevchenko-shchodennyk-lysty
+      title: 'Шевченко: Щоденник та листи'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - prose
+      - biography
+    - slug: shevchenko-poeziia
+      title: 'Шевченко: Поезія'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - shevchenko
+      - poetry
+      - kobzar
+      - romanticism
+    - slug: shevchenko-spadshchyna
+      title: 'Шевченко: Спадщина'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - shevchenko
+      - legacy
+      - identity
+    - slug: franko-liryka
+      title: 'Франко: Громадянська та філософська лірика'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - franko
+      - poetry
+      - philosophy
+    - slug: franko-proza
+      title: 'Франко: Проза'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - franko
+      - prose
+      - realism
+    - slug: lesya-ukrainka-liryka
+      title: 'Леся Українка: Лірична поезія'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - lesya-ukrainka
+      - poetry
+      - stoicism
+    - slug: lesya-ukrainka-drama
+      title: 'Леся Українка: Драма'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - drama
+      - symbolism
+      - neo-romanticism
+      - mythology
+    - slug: vovchok-myrnyi
+      title: Вовчок та Мирний
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - realism
+      - social-critique
+      - village-life
+    - slug: kotsiubynskyi
+      title: 'Імпресіонізм: Коцюбинський'
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - impressionism
+      - kotsiubynsky
+      - psychology
+    - slug: literaturoznavcha-terminolohiia
+      title: Літературознавча термінологія
+      phase: C1.6 Literature
+      focus: academic
+      tags:
+      - literature
+      - terminology
+      - academic
+      - analysis
+    - slug: analiz-poezii
+      title: Аналіз поезії
+      phase: C1.6 Literature
+      focus: literature
+      tags:
+      - literature
+      - poetry
+      - analysis
+      - versification
+    - slug: c1-6-review
+      title: 'C1.6 Література: Огляд та рефлексія'
+      phase: C1.6 Literature
+      focus: review
+      tags:
+      - literature
+      - review
+      - synthesis
+      - analysis
+    - slug: c1-6-checkpoint
+      title: 'C1.6 Контрольна точка: Літературний канон'
+      phase: C1.6 Literature
+      focus: checkpoint
+      tags:
+      - literature
+      - checkpoint
+      - assessment
+  c2:
+    name: C2 - Mastery
+    modules: []
+tracks:
+  b2-hist:
+    name: B2 History Track - Ukrainian History
+    description: Ukrainian history from Kyivan Rus to present
+    prerequisite: b2-core-70
+    modules:
     - slug: trypillian-civilization
       title: Трипільська цивілізація — Витоки української землі
       phase: B2.3a [Українська історія]
@@ -2896,426 +3956,11 @@ core:
       - synthesis
       - war
       - modern-ukraine
-    - slug: medytsyna-pohlybleno
-      title: Медицина (поглиблено)
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - medicine
-      - health
-      - professional
-    - slug: tekhnolohii-ta-shi
-      title: Технології та ШІ
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - technology
-      - ai
-      - professional
-    - slug: nauka-i-doslidzhennia
-      title: Наука і дослідження
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - science
-      - research
-      - academic
-    - slug: mystetstvo-i-literatura
-      title: Мистецтво і література
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - arts
-      - literature
-      - culture
-    - slug: modern-diaspora
-      title: Сучасна діаспора
-      phase: B2.4 Skills & Capstone
-      focus: culture
-      tags:
-      - culture
-      - diaspora
-      - society
-    - slug: religion-in-ukraine
-      title: Релігія в Україні
-      phase: B2.4 Skills & Capstone
-      focus: culture
-      tags:
-      - culture
-      - religion
-      - history
-    - slug: academic-writing
-      title: Академічне письмо
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - academic
-      - writing
-    - slug: text-analysis
-      title: Аналіз тексту
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - analysis
-      - reading
-    - slug: capstone-research
-      title: 'Підсумковий проєкт: Дослідження'
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - project
-      - research
-      - skills
-    - slug: analiz-tekstu
-      title: Аналіз тексту
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - analysis
-      - reading
-    - slug: capstone-doslidzhennya
-      title: 'Capstone: Дослідження'
-      phase: B2.4 Skills & Capstone
-      focus: project
-      tags:
-      - project
-      - research
-      - capstone
-    - slug: capstone-prezentatsiya
-      title: 'Capstone: Презентація'
-      phase: B2.4 Skills & Capstone
-      focus: project
-      tags:
-      - project
-      - presentation
-      - capstone
-    - slug: b2-pidsumkovyy-ohlyad
-      title: B2 Підсумковий огляд
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - review
-      - grammar
-      - vocabulary
-    - slug: b2-finalnyy-ispyt
-      title: B2 Фінальний іспит
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - exam
-      - assessment
-      - certification
-  c1:
-    name: C1 - Advanced
+  c1-bio:
+    name: C1 Biography Track - Famous Ukrainians
+    description: Biographies of notable Ukrainian figures
+    prerequisite: b2-hist-61
     modules:
-    - slug: b2-review-bridge
-      title: Огляд B2 та міст до C1
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - review
-      - grammar
-    - slug: academic-style-markers
-      title: Маркери академічного стилю
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - c1
-      - grammar
-      - academic
-      - style
-    - slug: research-verbs
-      title: Дієслова наукового дослідження
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - verbs
-      - research
-    - slug: analysis-vocabulary
-      title: Словник для критичного аналізу
-      phase: C1.1 [Academic Foundation]
-      focus: vocabulary
-      tags:
-      - academic
-      - analysis
-      - vocabulary
-      - critical-thinking
-    - slug: logical-connectors
-      title: Логічні зв'язки
-      phase: C1.1 Argumentation
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - argumentation
-      - connectors
-    - slug: hedging-modality
-      title: Хеджування та модальність
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - grammar
-      - writing
-    - slug: citation-reference
-      title: Цитація та посилання
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - citation
-      - writing
-    - slug: essay-structure
-      title: Структура есе
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - writing
-      - structure
-      - essay
-      - academic
-    - slug: thesis-development
-      title: Розвиток тези
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - essay
-      - structure
-      - writing
-    - slug: counterarguments
-      title: Контраргументи
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - essay
-      - logic
-      - debate
-    - slug: summary-paraphrase
-      title: 'Мистецтво переказу: Резюме та парафраз'
-      phase: C1.1 Academic Foundation
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - summary
-      - paraphrase
-    - slug: research-article
-      title: 'Жанр: Наукова стаття'
-      phase: C1.1 Academic Foundation
-      focus: genre
-      tags:
-      - academic
-      - writing
-      - research
-    - slug: abstract-writing
-      title: 'Жанр: Реферат та Анотація'
-      phase: C1.1 Academic Writing
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - abstract
-      - summary
-    - slug: literature-review
-      title: 'Жанр: Огляд літератури'
-      phase: C1.1 Academic Writing
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - literature-review
-      - synthesis
-    - slug: oral-presentations
-      title: Доповідь та Презентація
-      phase: C1.1 Academic Writing
-      focus: style
-      tags:
-      - academic
-      - speaking
-      - presentation
-      - public-speaking
-    - slug: advanced-punctuation
-      title: Поглиблена Пунктуація
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - academic
-      - grammar
-      - punctuation
-      - syntax
-    - slug: irregular-verbs-complete
-      title: 'Неправильні дієслова: повний огляд'
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - grammar
-      - morphology
-      - verbs
-      - irregular-verbs
-    - slug: essay-writing-practice
-      title: 'Практикум C1.1: Написання есе'
-      phase: C1.1 Academic Foundation
-      focus: style
-      tags:
-      - writing
-      - academic
-      - essay
-      - practice
-    - slug: practice-ii-article-critique
-      title: 'Практика II: Критика статті'
-      phase: C1.1 Academic Foundations
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - analysis
-      - critique
-    - slug: c1-1-checkpoint
-      title: 'Контрольна точка: Академічна база'
-      phase: C1.1 Academic Foundations Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - academic
-      - review
-    - slug: cv-resume-writing
-      title: Написання резюме та CV
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-    - slug: job-interview
-      title: 'Співбесіда: стратегії успіху'
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-      - interview
-      - career
-      - business
-    - slug: business-etiquette
-      title: Діловий етикет в Україні
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-      - etiquette
-      - culture
-      - business
-    - slug: digital-communication
-      title: Цифрова комунікація
-      phase: C1.1 Professional Excellence
-      focus: skills
-      tags:
-      - business
-      - communication
-      - email
-      - digital
-    - slug: political-system
-      title: Політична система України
-      phase: C1.2 Society & State
-      focus: history
-      tags:
-      - politics
-      - government
-      - constitution
-    - slug: media-landscape
-      title: 'Медіаландшафт: Як не потонути в інформації'
-      phase: C1.2 Society & State
-      focus: society
-      tags:
-      - media
-      - journalism
-      - disinformation
-    - slug: global-context
-      title: 'Глобальний контекст: Україна, ЄС та НАТО'
-      phase: C1.2 Society & State
-      focus: society
-      tags:
-      - geopolitics
-      - eu
-      - nato
-      - diplomacy
-    - slug: dialects-of-ukrainian
-      title: Діалекти та наріччя
-      phase: C1.3 Linguistic Awareness
-      focus: sociolinguistics
-      tags:
-      - dialects
-      - linguistics
-      - phonetics
-      - surzhyk
-    - slug: surzhyk
-      title: 'Суржик: Феномен змішування'
-      phase: C1.3 Linguistic Awareness
-      focus: sociolinguistics
-      tags:
-      - surzhyk
-      - linguistics
-      - sociolinguistics
-      - mixing
-    - slug: history-of-language
-      title: 'Історія мови: Від Русі до сьогодення'
-      phase: C1.1 History & Culture
-      focus: history
-      tags:
-      - history
-      - language
-      - politics
-    - slug: diaspora-ukrainian
-      title: Українська діаспора
-      phase: C1.2 Professional & Social
-      focus: vocabulary
-      tags:
-      - diaspora
-      - culture
-      - history
-    - slug: professional-scenarios
-      title: Професійні сценарії
-      phase: C1.2 Professional & Social
-      focus: professional
-      tags:
-      - professional
-      - business
-      - communication
-      - practice
-    - slug: case-studies
-      title: Практичні кейси
-      phase: C1.2 Professional Application
-      focus: professional
-      tags:
-      - professional
-      - analysis
-      - case-study
-      - critical-thinking
-    - slug: review
-      title: 'Огляд і повторення: Професійна комунікація'
-      phase: C1.2 Practice
-      focus: review
-      tags:
-      - review
-      - professional
-      - business
-      - sociolinguistics
-    - slug: speaking-practice
-      title: Мовний практикум
-      phase: C1.2 Professional Mastery
-      focus: checkpoint
-      tags:
-      - speaking
-      - debate
-      - rhetoric
-      - professional
     - slug: knyahynia-olha
       title: 'Княгиня Ольга: Регент і Реформатор'
       phase: C1.3 Biographies
@@ -4193,7 +4838,15 @@ core:
       - history
       - memory
     - slug: oleksandra-matviichuk
-      title: Oleksandra Matviichuk
+      title: 'Олександра Матвійчук: Захист прав людини'
+      phase: C1.3 Biographies
+      focus: biography
+      tags:
+      - biography
+      - independence
+      - politics
+      - law
+      - human-rights
     - slug: c1-3-checkpoint
       title: 'Контрольна точка: Біографії'
       phase: C1.3 Biographies Checkpoint
@@ -4202,725 +4855,169 @@ core:
       - checkpoint
       - integration
       - biography
-    - slug: metaphor-simile
-      title: 'Метафора та порівняння: Образна мова'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - figurative-language
-      - metaphor
-      - simile
-    - slug: irony-sarcasm
-      title: 'Іронія та сарказм: Тонкощі змісту'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - irony
-      - sarcasm
-      - humor
-    - slug: hyperbole-litotes
-      title: 'Гіпербола та літота: Гра масштабів'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - hyperbole
-      - litotes
-      - exaggeration
-    - slug: euphemism-taboo
-      title: 'Евфемізми та табу: Мова делікатності'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - euphemism
-      - taboo
-      - etiquette
-    - slug: rhetorical-questions
-      title: 'Риторичні питання: Мистецтво переконання'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - questions
-      - persuasion
-      - emotion
-    - slug: degrees-of-certainty
-      title: 'Ступені впевненості: Модальність та хеджування'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - modality
-      - hedging
-      - academic-writing
-    - slug: politeness-strategies
-      title: 'Стратегії ввічливості: Прагматика спілкування'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - politeness
-      - pragmatics
-      - social-interaction
-    - slug: high-formal-register
-      title: 'Офіційно-діловий стиль: Мова документів'
-      phase: C1.5 Folk Culture & Arts
-      focus: style
-      tags:
-      - professional
-      - stylistics
-      - documents
-    - slug: intimate-register
-      title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - social-interaction
-      - family
-      - relationships
-    - slug: slang-youth
-      title: Сленг та молодіжна мова
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - slang
-      - youth-culture
-      - internet-culture
-      - informal
-    - slug: review-c1-4
-      title: 'Огляд етапу C1.4: Стилістика та регістри'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - review
-      - stylistics
-      - registers
-      - pragmatics
-    - slug: checkpoint-c1-4
-      title: 'Контрольна точка: Стилістика і регістри'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - assessment
-      - stylistics
-    - slug: kobzari-bandura
-      title: 'Кобзарі та бандура: Душа України'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: cultural
-      tags:
-      - music
-      - history
-      - folk-culture
-      - instruments
-    - slug: ritual-songs
-      title: 'Обрядові пісні: Коло життя'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: cultural
-      tags:
-      - music
-      - folklore
-      - rituals
-      - traditions
-      - holidays
-    - slug: kolyskovi-ta-dumy
-      title: 'Колискові та думи: Від колиски до вічності'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - music
-      - history
-    - slug: hopak-i-kozachok
-      title: 'Гопак і козачок: Танці волі та сили'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - dance
-      - history
-    - slug: rehionalni-tantsi
-      title: 'Регіональні танці: Від Аркана до Коломийки'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - dance
-      - geography
-    - slug: pysanky
-      title: 'Писанки: Космос на долоні'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - art
-      - symbology
-    - slug: vyshyvanka
-      title: 'Вишиванка: Зашифрована доля'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - textile
-      - identity
-    - slug: honcharstvo-ta-rizbyarstvo
-      title: Гончарство та різьбярство
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-arts
-      - pottery
-      - woodcarving
-    - slug: narodna-mifolohiia
-      title: Народна міфологія
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-beliefs
-      - mythology
-    - slug: narodna-medytsyna
-      title: Народна медицина
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-medicine
-      - herbs
-    - slug: kozatski-lehendy
-      title: Козацькі легенди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - history
-      - legends
-      - cossacks
-    - slug: kazky-ta-prytchi
-      title: Казки та притчі
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - literature
-      - folk-tales
-    - slug: zymovi-obriady
-      title: Зимові обряди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - winter
-    - slug: vesna-ta-lito
-      title: Весна та літо
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - spring
-      - summer
-    - slug: khrestyny-ta-vesillia
-      title: Хрестини та весілля
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - rituals
-      - wedding
-    - slug: pomynalni-obriady
-      title: Поминальні обряди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - memorial
-    - slug: halychyna
-      title: Галичина
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - regions
-      - galicia
-    - slug: ukrainian-avant-garde
-      title: Український авангард
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - art
-      - avant-garde
-      - history
-    - slug: traditional-clothing
-      title: Традиційний український одяг
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - ethnography
-      - clothing
-      - traditions
-    - slug: ukrainian-cuisine-traditions
-      title: Українська кухня - традиції та символи
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - cuisine
-      - food
-      - traditions
-    - slug: ukrainian-house
-      title: Українська хата - архітектура та побут
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - architecture
-      - home
-      - traditions
-    - slug: winter-holidays
-      title: Українські свята - зимовий цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - christmas
-      - traditions
-    - slug: spring-holidays
-      title: Українські свята - весняний цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - easter
-      - traditions
-    - slug: summer-holidays
-      title: Українські свята - літній цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - kupala
-      - traditions
-    - slug: wedding-rituals
-      title: Родинні обряди - весілля
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - wedding
-      - family
-    - slug: birth-rituals
-      title: Родинні обряди - народження
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - birth
-      - family
-    - slug: funeral-rituals
-      title: Родинні обряди - похорон
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - funeral
-      - family
-    - slug: podillia-ta-volyn
-      title: Поділля та Волинь
-      phase: C1.5 Folk Culture & Arts
-      focus: folk-culture
-      tags:
-      - folk-culture
-      - region
-      - traditions
-    - slug: klasychna-muzyka-1-vytoky
-      title: Класична музика I — Витоки
-      phase: C1.5 Folk Culture & Arts
-      focus: fine-arts
-      tags:
-      - fine-arts
-      - classical-music
-      - baroque
-      - romanticism
-    - slug: klasychna-muzyka-2-natsionalna-shkola
-      title: Класична музика II — Національна школа
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - lysenko
-      - leontovych
-    - slug: klasychna-muzyka-3-modernizm-i-suchasnist
-      title: Класична музика III — Модернізм і сучасність
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - modernism
-      - lyatoshynsky
-      - skorik
-    - slug: operne-mystetstvo
-      title: Оперне мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - opera
-      - singers
-      - krushelnytska
-    - slug: vokalne-mystetstvo
-      title: Вокальне мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - choral
-      - song
-    - slug: obrazotvorche-mystetstvo-1
-      title: Образотворче мистецтво I
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - visual-arts
-      - avant-garde
-      - icons
-    - slug: obrazotvorche-mystetstvo-2
-      title: Образотворче мистецтво II
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - visual-arts
-      - contemporary
-      - folk-art
-    - slug: balet-i-tanets
-      title: Балет і танець
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - dance
-      - ballet
-      - lifar
-    - slug: teatralne-mystetstvo-1
-      title: Театральне мистецтво I
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - theater
-      - kurbas
-      - drama
-    - slug: teatralne-mystetstvo-2
-      title: Театральне мистецтво II
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - theater
-      - contemporary
-      - drama
-    - slug: ukrainska-arkhitektura
-      title: Українська архітектура
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - architecture
-      - baroque
-      - modernism
-    - slug: suchasna-muzyka
-      title: Сучасна музика
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - rock
-      - pop
-    - slug: ukrainske-kino
-      title: Українське кіно
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - cinema
-      - dovzhenko
-      - sentsov
-    - slug: praktyka-1-narodna-kultura
-      title: C1.5 Практика I — Народна культура
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - culture
-      - review
-      - folk
-    - slug: praktyka-2-vysoke-mystetstvo
-      title: Практика II — Високе мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: practice
-      tags:
-      - arts
-      - music
-      - painting
-      - theater
-      - architecture
-    - slug: c1-5-checkpoint
-      title: C1.5 Контрольна точка
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: checkpoint
-      tags:
-      - assessment
-      - culture
-      - arts
-    - slug: istoriia-ukrainskoi-literatury
-      title: Історія української літератури
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - history
-      - analysis
-    - slug: kotliarevskyi-eneida
-      title: 'Котляревський: Енеїда'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - history
-      - burlesque
-    - slug: shevchenko-shchodennyk-lysty
-      title: 'Шевченко: Щоденник та листи'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - prose
-      - biography
-    - slug: shevchenko-poeziia
-      title: 'Шевченко: Поезія'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - shevchenko
-      - poetry
-      - kobzar
-      - romanticism
-    - slug: shevchenko-spadshchyna
-      title: 'Шевченко: Спадщина'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - shevchenko
-      - legacy
-      - identity
-    - slug: franko-liryka
-      title: 'Франко: Громадянська та філософська лірика'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - franko
-      - poetry
-      - philosophy
-    - slug: franko-proza
-      title: 'Франко: Проза'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - franko
-      - prose
-      - realism
-    - slug: lesya-ukrainka-liryka
-      title: 'Леся Українка: Лірична поезія'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - lesya-ukrainka
-      - poetry
-      - stoicism
-    - slug: lesya-ukrainka-drama
-      title: 'Леся Українка: Драма'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - drama
-      - symbolism
-      - neo-romanticism
-      - mythology
-    - slug: vovchok-myrnyi
-      title: Вовчок та Мирний
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - realism
-      - social-critique
-      - village-life
-    - slug: kotsiubynskyi
-      title: 'Імпресіонізм: Коцюбинський'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - impressionism
-      - kotsiubynsky
-      - psychology
-    - slug: literaturoznavcha-terminolohiia
-      title: Літературознавча термінологія
-      phase: C1.6 Literature
-      focus: academic
-      tags:
-      - literature
-      - terminology
-      - academic
-      - analysis
-    - slug: analiz-poezii
-      title: Аналіз поезії
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - poetry
-      - analysis
-      - versification
-    - slug: c1-6-review
-      title: 'C1.6 Література: Огляд та рефлексія'
-      phase: C1.6 Literature
-      focus: review
-      tags:
-      - literature
-      - review
-      - synthesis
-      - analysis
-    - slug: c1-6-checkpoint
-      title: 'C1.6 Контрольна точка: Літературний канон'
-      phase: C1.6 Literature
-      focus: checkpoint
-      tags:
-      - literature
-      - checkpoint
-      - assessment
-  c2:
-    name: C2 - Mastery
-    modules: []
-tracks:
-  # History & Biography Tracks (to be relocated from core)
-  b2-hist:
-    name: B2 History Track - Ukrainian History
-    description: Ukrainian history from Kyivan Rus to present (relocated from B2 M71-131)
-    prerequisite: b2-core-70
-    modules: []  # Will be populated during Phase C relocation
-
-  c1-bio:
-    name: C1 Biography Track - Famous Ukrainians
-    description: Biographies of notable Ukrainian figures (relocated from C1 M36-131)
-    prerequisite: b2-hist-61
-    modules: []  # Will be populated during Phase C relocation
-
-  # Professional Tracks (new)
   b2-pro:
     name: B2 Professional Track - Business Ukrainian
     description: Business and professional communication at B2 level
     prerequisite: b2-core-70
-    modules: []  # 40 modules planned
-
+    modules: []
   c1-pro:
     name: C1 Professional Track - Professional Mastery
     description: Executive and academic professional communication
     prerequisite: b2-pro-40
-    modules: []  # 50 modules planned
-
-  # Literature Track (existing)
+    modules: []
   lit:
     name: LIT Track - Classical Ukrainian Literature
     description: Literary analysis seminar from Kotliarevsky to Shevchenko
     prerequisite: c1-core
     modules:
     - slug: introduction-to-kotliarevsky
-      title: "Вступ до Котляревського"
+      title: Феномен Івана Котляревського
+      phase: LIT
       focus: literature
+      tags:
+      - література
+      - історія
+      - класика
+      - котляревський
+      - біографія
     - slug: eneida-part-1
-      title: "Енеїда: Частина 1"
+      title: 'Енеїда: Сміх над Безоднею (Частина I)'
+      phase: LIT
       focus: literature
+      tags:
+      - література
+      - класика
+      - котляревський
+      - енеїда
+      - гумор
+      - бурлеск
     - slug: eneida-feast
-      title: "Енеїда: Бенкет"
+      title: 'Енеїда: Філософія Бенкету (Частина II)'
+      phase: LIT
       focus: literature
+      tags:
+      - література
+      - класика
+      - котляревський
+      - енеїда
+      - їжа
+      - словник
+      - тіло
+      - ігри
     - slug: eneida-war
-      title: "Енеїда: Війна"
-      focus: literature
+      title: 'Енеїда: Словник Війни'
+      phase: LIT
+      tags:
+      - література
+      - класика
+      - котляревський
+      - енеїда
+      - війна
+      - зброя
     - slug: natalka-poltavka
-      title: "Наталка Полтавка"
-      focus: literature
+      title: 'Наталка Полтавка: Анатомія Почуттів'
+      phase: LIT
+      tags:
+      - література
+      - п'єса
+      - котляревський
+      - сентименталізм
+      - пісня
+      - театр
     - slug: kvitka-bio
-      title: "Квітка-Основ'яненко: Біографія"
-      focus: literature
+      title: 'Батько Прози: Квітка-Основ''яненко'
+      phase: LIT
+      tags:
+      - література
+      - проза
+      - квітка-основ'яненко
+      - слобожанщина
+      - сентименталізм
     - slug: marusya
-      title: "Маруся"
-      focus: literature
+      title: 'Маруся: Ідеал Української Душі'
+      phase: LIT
+      tags:
+      - література
+      - проза
+      - маруся
+      - квітка-основ'яненко
+      - сентименталізм
     - slug: konotop-witch
-      title: "Конотопська відьма"
-      focus: literature
+      title: 'Конотопська Відьма: Сатира на Руїну'
+      phase: LIT
+      tags:
+      - література
+      - сатира
+      - квітка-основ'яненко
+      - козацтво
+      - містика
     - slug: ethnography
-      title: "Етнографічна проза"
-      focus: literature
+      title: 'Етнографія як Література: Український Світ Квітки'
+      phase: LIT
+      tags:
+      - література
+      - етнографія
+      - обряди
+      - весілля
+      - похорон
+      - чумацтво
+      - топографія
     - slug: kvitka-language
-      title: "Мова Квітки"
-      focus: literature
+      title: 'Мова як Маніфест: Голос Слобожанщини'
+      phase: LIT
+      tags:
+      - література
+      - мова
+      - діалект
+      - стиль
+      - сентименталізм
     - slug: young-shevchenko
-      title: "Молодий Шевченко"
-      focus: literature
+      title: 'Тарас Шевченко: Від Кріпака до Пророка'
+      phase: LIT
+      tags:
+      - література
+      - біографія
+      - шевченко
+      - кріпацтво
+      - петербург
+      - викуп
+      - романтизм
     - slug: the-ballads
-      title: "Балади"
-      focus: literature
+      title: 'Балади: Між Світами'
+      phase: LIT
+      tags:
+      - література
+      - шевченко
+      - романтизм
+      - містика
+      - фольклор
     - slug: haidamaky
-      title: "Гайдамаки"
-      focus: literature
+      title: 'Гайдамаки: Кривава Свобода'
+      phase: LIT
+      tags:
+      - література
+      - шевченко
+      - історія
+      - коліївщина
+      - гайдамаки
+      - епос
+      - трагедія
     - slug: son
-      title: "Сон"
-      focus: literature
-
-  # Linguistics Tracks (planned)
+      title: 'Політична Сатира: Сон'
+      phase: LIT
+      tags:
+      - література
+      - шевченко
+      - сатира
+      - імперія
+      - сон
   oes:
     name: OES Track - Old East Slavic
     description: Historical linguistics proving Ukrainian continuity
     prerequisite: c1-core
-    modules: []  # 30 modules planned
-
+    modules: []
   ruth:
     name: RUTH Track - Ruthenian
     description: Middle Ukrainian period linguistics
     prerequisite: oes-30
-    modules: []  # 30 modules planned
+    modules: []

@@ -1,0 +1,30 @@
+module: b2-hist-24
+title: 'Іван Мазепа III: Полтава і вигнання'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- mazepa
+- great-northern-war
+- poltava
+- exile
+grammar:
+- Історичний наратив
+- Пасивний стан в історичному тексті
+vocabulary_focus: null
+vocab_count: 78 - "Військова лексика" - "Політична термінологія"
+objectives:
+- Учень може описати причини переходу Мазепи на бік Швеції
+- Учень може пояснити значення Батуринської трагедії
+- Учень може проаналізувати наслідки Полтавської битви для України
+- Учень може охарактеризувати Конституцію Пилипа Орлика як важливий документ державності
+vocabulary_count: 35
+slug: 94-ivan-mazepa-iii-poltava
+naturalness:
+  score: 9
+  status: PASS

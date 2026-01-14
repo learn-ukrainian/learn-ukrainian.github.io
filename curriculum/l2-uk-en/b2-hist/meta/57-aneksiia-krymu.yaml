@@ -1,0 +1,29 @@
+module: b2-hist-57
+title: 'Анексія Криму: Початок війни'
+subtitle: 'The Annexation of Crimea: The War Begins'
+version: '2.0'
+phase: B2.3e War for Existence
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- war
+- crimea
+- annexation
+- hybrid-warfare
+- propaganda
+grammar:
+- Military and political terminology
+- Active vs Passive voice in news reporting
+objectives:
+- Analyze the chronology of the Crimean annexation in 2014
+- Understand the concept of 'hybrid warfare' and 'green men'
+- Discuss the resistance of Crimean Tatars and Ukrainians
+- Evaluate the international reaction and sanctions
+vocabulary_count: 25
+slug: 127-aneksiia-krymu
+naturalness:
+  score: 9
+  status: PASS

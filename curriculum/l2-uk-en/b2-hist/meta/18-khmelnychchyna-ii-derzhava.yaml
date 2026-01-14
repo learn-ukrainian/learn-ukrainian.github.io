@@ -1,0 +1,27 @@
+module: b2-hist-18
+title: 'Хмельниччина II: держава — будівництво гетьманату'
+phase: B2.3b [Українська історія]
+pedagogy: CBI
+focus: history
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- state-building
+- hetmanate
+grammar:
+- Історичний наратив
+- Політична термінологія
+vocabulary_focus: null
+vocab_count: 60 - "Державна та адміністративна лексика" - "Військово-політична термінологія"
+objectives:
+- Учень може пояснити структуру Війська Запорозького як держави
+- Учень може характеризувати адміністративний устрій Гетьманщини
+- Учень може аналізувати значення Зборівського договору 1649 року
+vocabulary_count: 36
+slug: 88-khmelnychchyna-ii-derzhava
+naturalness:
+  score: 9
+  status: PASS

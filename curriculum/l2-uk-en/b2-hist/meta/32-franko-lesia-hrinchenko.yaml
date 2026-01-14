@@ -1,0 +1,30 @@
+module: b2-hist-32
+title: Франко, Леся, Грінченко
+subtitle: Три титани модерної української культури
+version: '1.0'
+focus: history
+phase: B2.3b
+pedagogy: CBI
+duration: 90
+transliteration: none
+register: публіцистичний
+tags:
+- history
+- biography
+- topic:franko
+- topic:lesya-ukrainka
+- topic:hrinchenko
+- topic:modernism
+grammar:
+- Пасивні конструкції в біографічному контексті
+- Цитати та пряма мова в історичному наративі
+objectives:
+- Проаналізувати внесок Франка, Лесі Українки та Грінченка в українську культуру
+- Зрозуміти концепцію модернізму в українській літературі
+- Вивчити ключові твори кожного з титанів
+vocabulary_count: 35
+vocab_count: 74
+slug: 102-franko-lesia-hrinchenko
+naturalness:
+  score: 9
+  status: PASS

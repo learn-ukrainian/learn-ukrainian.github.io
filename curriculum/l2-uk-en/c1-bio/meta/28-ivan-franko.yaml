@@ -1,0 +1,32 @@
+module: c1-bio-28
+title: 'Іван Франко: Титан праці'
+subtitle: 'Ivan Franko: The Titan of Work'
+version: '2.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- imperial
+- literature
+- politics
+- science
+grammar:
+- Historical narrative tenses
+- Quoted speech conventions
+objectives:
+- Learner understands the multifaceted contributions of Ivan Franko to Ukrainian literature,
+  science, and politics.
+- Learner can analyze biographical narratives using C1-level vocabulary and rhetorical
+  devices.
+- Learner understands the historical context of late 19th-century Galicia and its
+  role in the Ukrainian national revival.
+- Learner can perform a comparative analysis between major national figures (Franko
+  vs. Shevchenko).
+vocabulary_focus:
+- Domain-specific terminology
+- Historical vocabulary
+vocabulary_count: 30
+slug: 063-ivan-franko

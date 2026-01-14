@@ -1,0 +1,29 @@
+module: b2-hist-46
+title: Шістдесятники
+subtitle: The Sixtiers Movement
+version: '2.0'
+phase: B2.3c Trauma & Resistance
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- culture
+- soviet-union
+- resistance
+- literature
+- cinema
+grammar:
+- Historical narrative tenses
+- Passive voice in historical context
+objectives:
+- Understand the cultural and political significance of the Sixtiers movement
+- Identify key figures of the movement (Symonenko, Stus, Kostenko, Parajanov)
+- Analyze the concept of 'Thaw' and subsequent repressions
+- Discuss the role of Samvydav in preserving freedom of speech
+vocabulary_count: 25
+slug: 116-shistdesiatnyky
+naturalness:
+  score: 9
+  status: PASS

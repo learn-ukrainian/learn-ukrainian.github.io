@@ -1,0 +1,30 @@
+module: b2-hist-31
+title: 'Ідеологи: Драгоманов, Куліш'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- imperial-era
+- intellectuals
+- ideology
+- language
+- decolonization
+grammar:
+- Історичний наратив
+- Пасивний стан у історичних текстах
+vocabulary_focus: null
+vocab_count: 49 - "Політична термінологія XIX століття" - "Лексика мовознавства та
+  правопису"
+objectives:
+- Учень може описати внесок Пантелеймона Куліша в українську літературу та мовознавство
+- Учень може пояснити політичні ідеї Михайла Драгоманова та їхній вплив
+- Учень може аналізувати первинні джерела — уривки з творів обох мислителів
+vocabulary_count: 35
+slug: 101-ideolhy-drahomanov-kulish
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,30 @@
+module: c1-bio-87
+title: 'Ярослав Грицак: Глобальна історія та подолання минулого'
+subtitle: 'Yaroslav Hrytsak: Global History and Overcoming the Past'
+version: '1.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- biography
+- history
+- modernization
+- europe
+grammar:
+- Cause-and-effect structures
+- Academic and publicistic vocabulary
+objectives:
+- Learner understands Yaroslav Hrytsak's approach to Ukrainian history in a global
+  context
+- Learner can analyze key concepts such as modernization, overcoming the past, and
+  European integration
+- Learner masters vocabulary related to historical analysis, sociology, and political
+  science
+vocabulary_count: 25
+slug: 122-yaroslav-hrytsak
+vital_status: living
+naturalness:
+  score: 9
+  status: PASS

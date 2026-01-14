@@ -1,0 +1,29 @@
+module: b2-hist-22
+title: 'Іван Мазепа I: державник'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- mazepa
+- hetmanate
+- statecraft
+grammar:
+- Історичний наратив
+- Політична термінологія
+vocabulary_focus: null
+vocab_count: 92 - "Політична та дипломатична лексика" - "Терміни державного управління"
+objectives:
+- Учень може описати шлях Івана Мазепи до гетьманства
+- Учень може пояснити значення Коломацьких статей для автономії Гетьманщини
+- Учень може аналізувати дипломатичну стратегію Мазепи щодо Московії
+- Учень може охарактеризувати Мазепу як державного діяча
+vocabulary_count: 35
+slug: 92-ivan-mazepa-i-derzhavnyk
+naturalness:
+  score: 9
+  status: PASS

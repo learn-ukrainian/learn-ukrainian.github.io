@@ -1,0 +1,27 @@
+module: b2-hist-15
+title: Запорозька Січ — козацька республіка
+phase: B2.3b [Українська історія]
+pedagogy: CBI
+focus: history
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack
+- democracy
+- statehood
+grammar:
+- Історичний наратив
+- Пасивний стан у науковому тексті
+vocabulary_focus: null
+vocab_count: 109 - "Козацька термінологія" - "Політична та військова лексика"
+objectives:
+- Учень може описувати устрій Запорозької Січі
+- Учень може пояснювати демократичні традиції козацтва
+- Учень може аналізувати роль Хортиці в історії України
+vocabulary_count: 36
+slug: 85-zaporizka-sich
+naturalness:
+  score: 9
+  status: PASS
