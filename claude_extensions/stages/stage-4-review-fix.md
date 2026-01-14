@@ -403,7 +403,7 @@ The pipeline validates:
 3. **Validate MDX**: Ensures no content loss during conversion
 4. **Validate HTML**: Headless browser check for rendering errors
 
-**Note:** HTML validation requires dev server running (`cd docusaurus && npm start`)
+**Note:** HTML validation requires dev server running (`cd docusaurus && pnpm start`)
 
 Report:
 

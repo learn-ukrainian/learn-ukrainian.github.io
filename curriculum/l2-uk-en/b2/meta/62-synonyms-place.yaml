@@ -9,19 +9,21 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - place
+- vocabulary
+- synonyms
+- place
 grammar:
-  - Adverbs of place
-  - Locative prepositions and distance
+- Adverbs of place
+- Locative prepositions and distance
 objectives:
-  - Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки,
-    на цьому місці)
-  - Учень вміє використовувати лексику простору для опису географічних та міських
-    локацій
-  - Учень розуміє різницю між статичним положенням та напрямком руху
+- Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки,
+  на цьому місці)
+- Учень вміє використовувати лексику простору для опису географічних та міських локацій
+- Учень розуміє різницю між статичним положенням та напрямком руху
 vocabulary_count: 30
 register: публіцистичний
 vocab_count: 57
 slug: 62-synonyms-place
+naturalness:
+  score: 9
+  status: PASS

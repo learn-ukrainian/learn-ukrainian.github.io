@@ -9,19 +9,22 @@ pedagogy: PPP
 duration: 75
 transliteration: none
 tags:
-  - cultural
-  - hiking
-  - mountains
-  - trail-running
-  - carpathians
+- cultural
+- hiking
+- mountains
+- trail-running
+- carpathians
 grammar: []
 objectives:
-  - Learner can discuss hiking and mountain activities in Ukrainian
-  - Learner can understand trail descriptions and mountain weather reports
-  - Learner can use vocabulary for equipment and nature
-  - Learner can plan a hiking trip to the Carpathians
+- Learner can discuss hiking and mountain activities in Ukrainian
+- Learner can understand trail descriptions and mountain weather reports
+- Learner can use vocabulary for equipment and nature
+- Learner can plan a hiking trip to the Carpathians
 word_target: 1500
 vocab_target: 25
 immersion_target: 95
 vocab_count: 25
 slug: 82-mountains-trail
+naturalness:
+  score: 9
+  status: PASS

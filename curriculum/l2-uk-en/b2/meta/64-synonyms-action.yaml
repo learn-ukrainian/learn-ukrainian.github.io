@@ -9,18 +9,21 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - action
+- vocabulary
+- synonyms
+- action
 grammar:
-  - Nuances in verbs of action
-  - Aspectual pairs and intensity
+- Nuances in verbs of action
+- Aspectual pairs and intensity
 objectives:
-  - Учень може розрізняти відтінки значень дієслів на позначення дії (робити, чинити,
-    діяти)
-  - Учень вміє обирати точне слово для опису професійних та творчих процесів
-  - Учень розуміє концепцію вчинку та результату в українському культурному контексті
+- Учень може розрізняти відтінки значень дієслів на позначення дії (робити, чинити,
+  діяти)
+- Учень вміє обирати точне слово для опису професійних та творчих процесів
+- Учень розуміє концепцію вчинку та результату в українському культурному контексті
 vocabulary_count: 35
 register: публіцистичний
 vocab_count: 67
 slug: 64-synonyms-action
+naturalness:
+  score: 9
+  status: PASS

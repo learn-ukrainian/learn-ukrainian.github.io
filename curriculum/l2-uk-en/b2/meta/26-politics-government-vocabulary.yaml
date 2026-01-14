@@ -8,19 +8,22 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - vocabulary
-  - domain-specific
-  - politics
-  - government
-  - register
+- vocabulary
+- domain-specific
+- politics
+- government
+- register
 grammar:
-  - political-terminology
-  - official-register
-  - journalistic-register
+- political-terminology
+- official-register
+- journalistic-register
 objectives:
-  - Учень може розуміти новини про політичні події в Україні
-  - Учень може обговорювати політичні теми з використанням відповідної термінології
-  - Учень може розрізняти офіційний та публіцистичний стилі в політичному дискурсі
+- Учень може розуміти новини про політичні події в Україні
+- Учень може обговорювати політичні теми з використанням відповідної термінології
+- Учень може розрізняти офіційний та публіцистичний стилі в політичному дискурсі
 vocabulary_count: 35
 vocab_count: 101
 slug: 26-politics-government-vocabulary
+naturalness:
+  score: 9
+  status: PASS

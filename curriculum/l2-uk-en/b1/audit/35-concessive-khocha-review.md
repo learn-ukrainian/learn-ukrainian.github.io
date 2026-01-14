@@ -1,5 +1,6 @@
 # Audit Report: 35-concessive-khocha.md
 **Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 95% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

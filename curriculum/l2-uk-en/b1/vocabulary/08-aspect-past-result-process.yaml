@@ -133,6 +133,7 @@ items:
   ipa: /xvɪˈlɪnu/
   translation: for a minute
   pos: noun
+  gender: f
 - lemma: щойно
   ipa: /ˈʃt͡ʃɔjnɔ/
   translation: just now
@@ -150,9 +151,10 @@ items:
   translation: finally
   pos: adv
 - lemma: годину
-  ipa: /xvɪˈlɪnu/
+  ipa: /ɦɔˈdɪnu/
   translation: for an hour
   pos: noun
+  gender: f
 - lemma: тиждень
   ipa: /ˈtɪʒdɛnʲ/
   translation: week

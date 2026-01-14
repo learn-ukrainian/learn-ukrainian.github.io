@@ -9,21 +9,24 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - grammar
-  - word-formation
-  - suffixes
-  - vocabulary
+- grammar
+- word-formation
+- suffixes
+- vocabulary
 grammar:
-  - Suffix -ня (place of activity)
-  - Suffix -ище (place/area)
-  - Suffix -арня (workshop/establishment)
-  - Derivational morphology for place names
+- Suffix -ня (place of activity)
+- Suffix -ище (place/area)
+- Suffix -арня (workshop/establishment)
+- Derivational morphology for place names
 objectives:
-  - Learner can identify suffixes that form place and object names in Ukrainian
-  - Learner can derive place names from verbs and nouns using appropriate suffixes
-  - Learner can distinguish between -ня, -ище, and -арня formations
-  - Learner can use place vocabulary appropriately in context
+- Learner can identify suffixes that form place and object names in Ukrainian
+- Learner can derive place names from verbs and nouns using appropriate suffixes
+- Learner can distinguish between -ня, -ище, and -арня formations
+- Learner can use place vocabulary appropriately in context
 vocabulary_count: 25
 register: науковий
 vocab_count: 145
 slug: 35-word-formation-place-object-names
+naturalness:
+  score: 9
+  status: PASS

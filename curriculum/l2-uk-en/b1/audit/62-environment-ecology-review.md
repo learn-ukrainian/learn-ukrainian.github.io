@@ -1,15 +1,7 @@
 # Audit Report: 62-environment-ecology.md
 **Phase:** B1.6 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вживання' found: Вживання, Приклади вживання
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1686/1500
@@ -26,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

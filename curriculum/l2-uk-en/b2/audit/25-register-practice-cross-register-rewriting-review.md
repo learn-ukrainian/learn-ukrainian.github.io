@@ -1,5 +1,6 @@
 # Audit Report: 25-register-practice-cross-register-rewriting.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 85%)

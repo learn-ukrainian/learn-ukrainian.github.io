@@ -15,7 +15,7 @@ items:
 - lemma: лижі
   ipa: /lˈɪʒi/
   translation: skis
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: сноуборд
   ipa: /snoʊˈbɔɾd/
@@ -26,7 +26,7 @@ items:
   ipa: /kɑˈtɑtɪsʲɑ/
   translation: to ride / slide
   pos: verb
-  gender: ~
+  gender: null
 - lemma: курорт
   ipa: /kʊˈɾɔɾt/
   translation: resort
@@ -55,12 +55,12 @@ items:
 - lemma: окуляри
   ipa: /okʊˈlʲɑɾɪ/
   translation: goggles / glasses
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: рукавиці
   ipa: /ɾʊkɑˈwɪt͡sʲi/
   translation: mittens / gloves
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: холод
   ipa: /xˈɔɫod/
@@ -80,13 +80,13 @@ items:
 - lemma: ковзани
   ipa: /kowzɑˈnɪ/
   translation: skates
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: падати
   ipa: /pˈɑdɑtɪ/
   translation: to fall
   pos: verb
-  gender: ~
+  gender: null
 - lemma: безпека
   ipa: /bezˈpɛkɑ/
   translation: safety
@@ -95,12 +95,12 @@ items:
 - lemma: Буковель
   ipa: /bʊkoˈwɛlʲ/
   translation: Bukovel (resort)
-  pos: proper noun (m)
+  pos: propn
   gender: m
 - lemma: Драгобрат
   ipa: /dɾɑɦoˈbɾɑt/
   translation: Drahobrat (highest resort)
-  pos: proper noun (m)
+  pos: propn
   gender: m
 - lemma: скі-пас
   ipa: /sʲkʲi pɑs/
@@ -140,7 +140,7 @@ items:
 - lemma: черевики
   ipa: /t͡ʃeɾeˈwɪkɪ/
   translation: boots
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: спорядження
   ipa: /spoˈɾʲɑd͡ʒenʲːɑ/

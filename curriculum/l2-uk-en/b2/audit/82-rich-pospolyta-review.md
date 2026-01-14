@@ -1,5 +1,6 @@
 # Audit Report: 82-rich-pospolyta.md
 **Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ⚠️ 1 fill-in with year answers
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)

@@ -9,18 +9,21 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - history
-  - literature
-  - decolonization
-  - 1920s
+- history
+- literature
+- decolonization
+- 1920s
 grammar:
-  - Stylistic nuances of polemical texts
-  - Abstract nouns in cultural analysis
+- Stylistic nuances of polemical texts
+- Abstract nouns in cultural analysis
 objectives:
-  - Учень розуміє передумови та значення політики українізації 1920-х років
-  - Учень може аналізувати гасло 'Геть від Москви!' у контексті деколонізації
-  - Учень розрізняє естетичні платформи неокласиків та представників активного мистецтва
+- Учень розуміє передумови та значення політики українізації 1920-х років
+- Учень може аналізувати гасло 'Геть від Москви!' у контексті деколонізації
+- Учень розрізняє естетичні платформи неокласиків та представників активного мистецтва
 vocabulary_count: 35
 register: академічний
 vocab_count: 162
 slug: 106-vistovtsi-neoclassicists
+naturalness:
+  score: 9
+  status: PASS

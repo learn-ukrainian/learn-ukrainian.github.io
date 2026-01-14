@@ -9,20 +9,23 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - quantity
+- vocabulary
+- synonyms
+- quantity
 grammar:
-  - Adverbs of quantity
-  - Nouns for collective amounts
+- Adverbs of quantity
+- Nouns for collective amounts
 objectives:
-  - Учень може розрізняти відтінки значень синонімів на позначення великої та малої
-    кількості
-  - Учень вміє використовувати професійну лексику для опису обсягів та масштабів у
-    звітах та статтях
-  - Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення
-    міри
+- Учень може розрізняти відтінки значень синонімів на позначення великої та малої
+  кількості
+- Учень вміє використовувати професійну лексику для опису обсягів та масштабів у звітах
+  та статтях
+- Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення
+  міри
 vocabulary_count: 35
 register: публіцистичний
 vocab_count: 60
 slug: 63-synonyms-quantity
+naturalness:
+  score: 9
+  status: PASS

@@ -8,18 +8,21 @@ pedagogy: CBI
 duration: 75
 transliteration: none
 tags:
-  - cultural
-  - geography
-  - regions
-  - southern-ukraine
+- cultural
+- geography
+- regions
+- southern-ukraine
 grammar:
-  - regional-vocabulary
-  - cultural-context
+- regional-vocabulary
+- cultural-context
 objectives:
-  - Learner can discuss Southern Ukraine's geography and culture
-  - Learner can understand authentic texts about Black Sea coastal cities
-  - Learner can use regional vocabulary to describe the south
-  - Learner can compare Southern Ukrainian traditions with other regions
+- Learner can discuss Southern Ukraine's geography and culture
+- Learner can understand authentic texts about Black Sea coastal cities
+- Learner can use regional vocabulary to describe the south
+- Learner can compare Southern Ukrainian traditions with other regions
 vocabulary_count: 54
 vocab_count: 54
 slug: 74-regions-south
+naturalness:
+  score: 9
+  status: PASS

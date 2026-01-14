@@ -209,7 +209,7 @@ def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateRes
         GateResult with validation status
     """
     if not grammar_file_exists:
-        return GateResult('INFO', '⏳', "Pending validation")
+        return GateResult('INFO', 'ℹ️', "N/A (covered by naturalness)")
 
     if summary:
         confirmed = summary.get('errors_confirmed', 0)

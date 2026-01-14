@@ -8,18 +8,21 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - participles
-  - adverbial-participles
-  - imperfective
+- grammar
+- participles
+- adverbial-participles
+- imperfective
 grammar:
-  - Дієприслівники недоконаного виду
-  - Суфікси -ючи/-ачи
-  - Одночасність дій
+- Дієприслівники недоконаного виду
+- Суфікси -ючи/-ачи
+- Одночасність дій
 objectives:
-  - Learner can form imperfective adverbial participles using -ючи/-ачи suffixes
-  - Learner can use adverbial participles to express simultaneous actions
-  - Learner understands when imperfective participles are preferred over perfective
+- Learner can form imperfective adverbial participles using -ючи/-ачи suffixes
+- Learner can use adverbial participles to express simultaneous actions
+- Learner understands when imperfective participles are preferred over perfective
 vocabulary_count: 20
 vocab_count: 40
 slug: 42-adverbial-participles-imperfective
+naturalness:
+  score: 9
+  status: PASS

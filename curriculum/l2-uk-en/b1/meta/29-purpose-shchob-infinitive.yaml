@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - purpose-clauses
-  - complex-sentences
-  - infinitive
+- grammar
+- purpose-clauses
+- complex-sentences
+- infinitive
 grammar:
-  - щоб + infinitive for same-subject purpose clauses
-  - Alternative purpose expressions
+- щоб + infinitive for same-subject purpose clauses
+- Alternative purpose expressions
 objectives:
-  - Learner understands when to use щоб + infinitive
-  - Learner can form same-subject purpose clauses
-  - Learner can use alternative purpose expressions
+- Learner understands when to use щоб + infinitive
+- Learner can form same-subject purpose clauses
+- Learner can use alternative purpose expressions
 vocabulary_count: 25
 vocab_count: 17
 slug: 29-purpose-shchob-infinitive
+naturalness:
+  score: 9
+  status: PASS

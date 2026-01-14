@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - reported-speech
-  - indirect-questions
-  - commands
+- grammar
+- reported-speech
+- indirect-questions
+- commands
 grammar:
-  - Reported questions with чи, що, хто, де, коли
-  - Reported commands with щоб
+- Reported questions with чи, що, хто, де, коли
+- Reported commands with щоб
 objectives:
-  - Learner can report questions using indirect speech
-  - Learner can report commands and requests using щоб
-  - Learner can choose appropriate structures for different speech acts
+- Learner can report questions using indirect speech
+- Learner can report commands and requests using щоб
+- Learner can choose appropriate structures for different speech acts
 vocabulary_count: 30
 vocab_count: 13
 slug: 40-reported-questions-commands
+naturalness:
+  score: 9
+  status: PASS

@@ -8,19 +8,22 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - register
-  - literary-style
-  - stylistics
+- grammar
+- register
+- literary-style
+- stylistics
 grammar:
-  - literary-register
-  - figurative-language
-  - archaic-vocabulary
-  - inverted-word-order
+- literary-register
+- figurative-language
+- archaic-vocabulary
+- inverted-word-order
 objectives:
-  - Учень може розпізнавати характерні ознаки літературного стилю
-  - Учень може аналізувати стилістичні засоби в художніх текстах
-  - Учень може трансформувати нейтральний текст у літературний стиль
+- Учень може розпізнавати характерні ознаки літературного стилю
+- Учень може аналізувати стилістичні засоби в художніх текстах
+- Учень може трансформувати нейтральний текст у літературний стиль
 vocabulary_count: 30
 vocab_count: 162
 slug: 22-register-literary-ukrainian
+naturalness:
+  score: 9
+  status: PASS

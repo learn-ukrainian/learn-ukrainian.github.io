@@ -34,7 +34,7 @@ npm run generate:json l2-uk-en a1 5
 
 **Note:** HTML validation requires Docusaurus dev server running:
 ```bash
-cd docusaurus && npm start  # In separate terminal
+cd docusaurus && pnpm start  # In separate terminal
 ```
 
 ### Step 1: Audit Module
@@ -141,7 +141,7 @@ npm run pipeline l2-uk-en a1        # Validate entire level
 npm run pipeline l2-uk-en a1 5      # Validate single module
 ```
 
-**Requires:** Docusaurus dev server running (`cd docusaurus && npm start`)
+**Requires:** Docusaurus dev server running (`cd docusaurus && pnpm start`)
 
 ---
 
@@ -237,7 +237,7 @@ npm run validate:html l2-uk-en a1 5 # Validate single module
 When the dev server is not running, validation skips gracefully with exit code 0:
 ```
 ℹ️  Docusaurus dev server not running - skipping HTML validation
-   To enable: cd docusaurus && npm start
+   To enable: cd docusaurus && pnpm start
 ```
 This allows the pipeline to continue without failing.
 
@@ -256,7 +256,7 @@ Or with issues:
 ```
 
 **Requires:**
-- Docusaurus dev server running (`cd docusaurus && npm start`)
+- Docusaurus dev server running (`cd docusaurus && pnpm start`)
 - Playwright installed (`playwright install`)
 
 ---
@@ -759,7 +759,7 @@ npm run sync:landing:dry      # Preview changes without applying
 npm run claude:deploy         # Deploy skills to .claude/
 
 # Development
-cd docusaurus && npm start    # Start Docusaurus dev server (for HTML validation)
+cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validation)
 ```
 
 ---
@@ -820,7 +820,7 @@ npm run vocab:rebuild
 npm run validate:mdx l2-uk-en a1 5
 
 # Full validation (requires dev server)
-cd docusaurus && npm start  # In terminal 1
+cd docusaurus && pnpm start  # In terminal 1
 npm run pipeline l2-uk-en a1 5  # In terminal 2
 ```
 

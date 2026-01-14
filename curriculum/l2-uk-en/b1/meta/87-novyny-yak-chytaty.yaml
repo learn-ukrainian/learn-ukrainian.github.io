@@ -8,16 +8,19 @@ pedagogy: CBI
 duration: 75
 transliteration: none
 tags:
-  - skills
-  - reading
-  - news
-  - media-literacy
+- skills
+- reading
+- news
+- media-literacy
 grammar: []
 objectives:
-  - Learner can apply news reading strategies to authentic Ukrainian texts
-  - Learner can identify headlines, leads, and main points in news articles
-  - Learner can distinguish fact from opinion in Ukrainian news
-  - Learner is prepared for autonomous news reading at B2
+- Learner can apply news reading strategies to authentic Ukrainian texts
+- Learner can identify headlines, leads, and main points in news articles
+- Learner can distinguish fact from opinion in Ukrainian news
+- Learner is prepared for autonomous news reading at B2
 vocabulary_count: 36
 vocab_count: 36
 slug: 87-novyny-yak-chytaty
+naturalness:
+  score: 9
+  status: PASS

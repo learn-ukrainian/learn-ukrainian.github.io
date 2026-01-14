@@ -1,5 +1,6 @@
 # Audit Report: 39-register-religious-epistolary.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

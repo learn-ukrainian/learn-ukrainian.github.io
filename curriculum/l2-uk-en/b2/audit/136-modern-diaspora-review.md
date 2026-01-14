@@ -1,5 +1,6 @@
 # Audit Report: 136-modern-diaspora.md
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (skills))
 - **Richness:** ✅ 98% (content)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)

@@ -8,17 +8,20 @@ focus: checkpoint
 duration: 75
 transliteration: none
 tags:
-  - checkpoint
-  - integration
-  - motion-verbs
+- checkpoint
+- integration
+- motion-verbs
 grammar:
-  - Integration of M16-M24
-  - Comprehensive review and testing
+- Integration of M16-M24
+- Comprehensive review and testing
 objectives:
-  - Learner can demonstrate mastery of motion verb pairs
-  - Learner can use all directional prefixes correctly
-  - Learner can apply figurative motion expressions
-  - Learner can integrate motion verbs in complex narratives
+- Learner can demonstrate mastery of motion verb pairs
+- Learner can use all directional prefixes correctly
+- Learner can apply figurative motion expressions
+- Learner can integrate motion verbs in complex narratives
 vocabulary_count: 38
 vocab_count: 34
 slug: 25-checkpoint-motion-verbs
+naturalness:
+  score: 9
+  status: PASS

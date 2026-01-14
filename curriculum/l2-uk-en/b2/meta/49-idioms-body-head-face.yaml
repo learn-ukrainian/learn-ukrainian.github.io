@@ -9,20 +9,23 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - phraseology
-  - somatic
-  - idioms
-  - head
-  - face
+- phraseology
+- somatic
+- idioms
+- head
+- face
 grammar:
-  - Fixed expressions (фразеологічні одиниці)
-  - Idiom structure and variation
+- Fixed expressions (фразеологічні одиниці)
+- Idiom structure and variation
 objectives:
-  - Learner can recognize and interpret 8 core Ukrainian somatic idioms about head
-    and face
-  - Learner can distinguish literal vs figurative meanings of body-related idioms
-  - Learner can use head/face idioms appropriately in context with correct register
+- Learner can recognize and interpret 8 core Ukrainian somatic idioms about head and
+  face
+- Learner can distinguish literal vs figurative meanings of body-related idioms
+- Learner can use head/face idioms appropriately in context with correct register
 vocabulary_count: 30
 register: varies
 vocab_count: 107
 slug: 49-idioms-body-head-face
+naturalness:
+  score: 9
+  status: PASS

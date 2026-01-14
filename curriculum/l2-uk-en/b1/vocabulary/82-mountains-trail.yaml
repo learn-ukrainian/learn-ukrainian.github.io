@@ -56,12 +56,12 @@ items:
   ipa: /pidnʲiˈmɑtɪsʲɑ/
   translation: to ascend / climb up
   pos: verb
-  gender: ~
+  gender: null
 - lemma: спускатися
   ipa: /spʊsˈkɑtɪsʲɑ/
   translation: to descend / go down
   pos: verb
-  gender: ~
+  gender: null
 - lemma: краєвид
   ipa: /kɾɑjeˈwɪd/
   translation: view / landscape
@@ -120,12 +120,12 @@ items:
 - lemma: Говерла
   ipa: /ɦoˈwɛɾɫɑ/
   translation: Hoverla (highest peak)
-  pos: proper noun (f)
+  pos: propn
   gender: f
 - lemma: Карпати
   ipa: /kɑɾˈpɑtɪ/
   translation: Carpathians
-  pos: proper noun (pl)
+  pos: propn
   gender: pl
 - lemma: рюкзак
   ipa: /ɾʲʊkˈzɑk/

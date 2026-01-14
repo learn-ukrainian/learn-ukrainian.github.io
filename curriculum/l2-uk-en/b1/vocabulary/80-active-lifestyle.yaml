@@ -5,7 +5,7 @@ items:
 - lemma: активний відпочинок
   ipa: /ɑkˈtɪwnɪj widpoˈt͡ʃɪnok/
   translation: active leisure / recreation
-  pos: noun phrase (m)
+  pos: phrase
   gender: m
 - lemma: тренування
   ipa: /trenʊˈwɑnʲːɑ/
@@ -16,22 +16,22 @@ items:
   ipa: /biˈɦɑtɪ/
   translation: to run (habitually)
   pos: verb
-  gender: ~
+  gender: null
 - lemma: ходити в похід
   ipa: /xoˈdɪtɪ w poˈxid/
   translation: to go hiking
-  pos: verb phrase
-  gender: ~
+  pos: phrase
+  gender: null
 - lemma: кататися на велосипеді
   ipa: /kɑˈtɑtɪsʲɑ nɑ welosɪˈpedʲi/
   translation: to ride a bicycle
-  pos: verb phrase
-  gender: ~
+  pos: phrase
+  gender: null
 - lemma: займатися спортом
   ipa: /zɑjˈmɑtɪsʲɑ ˈspoɾtom/
   translation: to do sports
-  pos: verb phrase
-  gender: ~
+  pos: phrase
+  gender: null
 - lemma: спортзал
   ipa: /spoɾtˈzɑl/
   translation: gym
@@ -45,7 +45,7 @@ items:
 - lemma: свіже повітря
   ipa: /sʲwˈiʒe poˈw⁽ʲ⁾itʲɾʲɑ/
   translation: fresh air
-  pos: noun phrase (n)
+  pos: phrase
   gender: n
 - lemma: маршрут
   ipa: /mɑɾˈʃɾut/
@@ -71,7 +71,7 @@ items:
   ipa: /dˈɪxɑtɪ/
   translation: to breathe
   pos: verb
-  gender: ~
+  gender: null
 - lemma: розминка
   ipa: /ɾozˈmɪnkɑ/
   translation: warm-up
@@ -80,7 +80,7 @@ items:
 - lemma: кросівки
   ipa: /kɾoˈsʲiwkɪ/
   translation: sneakers / running shoes
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: рюкзак
   ipa: /ɾʲukˈzɑk/
@@ -90,12 +90,12 @@ items:
 - lemma: пляшка води
   ipa: /plˈʲɑʃkɑ woˈdɪ/
   translation: water bottle
-  pos: noun phrase (f)
+  pos: phrase
   gender: f
 - lemma: здоровий спосіб життя
   ipa: /zdoˈɾowɪj ˈsposʲib ʒɪtʲˈːɑ/
   translation: healthy lifestyle
-  pos: noun phrase (m)
+  pos: phrase
   gender: m
 - lemma: рух
   ipa: /ɾux/
@@ -110,7 +110,7 @@ items:
 - lemma: м'язи
   ipa: /mˈjɑzɪ/
   translation: muscles
-  pos: noun (pl)
+  pos: noun
   gender: pl
 - lemma: втома
   ipa: /wˈtomɑ/

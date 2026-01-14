@@ -8,15 +8,18 @@ pedagogy: TTT
 duration: 90
 transliteration: none
 grammar:
-  - interpersonal vocabulary collocations
+- interpersonal vocabulary collocations
 tags:
-  - vocabulary
-  - emotional-intelligence
-  - interpersonal
+- vocabulary
+- emotional-intelligence
+- interpersonal
 objectives:
-  - Learner can use 30+ emotional and interpersonal vocabulary words in context
-  - Learner can distinguish between similar concepts like співчуття/емпатія, вибачення/пробачення
-  - Learner can form natural collocations with interpersonal nouns and verbs
+- Learner can use 30+ emotional and interpersonal vocabulary words in context
+- Learner can distinguish between similar concepts like співчуття/емпатія, вибачення/пробачення
+- Learner can form natural collocations with interpersonal nouns and verbs
 vocabulary_count: 35
 vocab_count: 35
 slug: 71-emotional-intelligence
+naturalness:
+  score: 9
+  status: PASS

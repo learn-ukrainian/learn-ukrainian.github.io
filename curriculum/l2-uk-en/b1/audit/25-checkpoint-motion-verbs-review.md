@@ -1,5 +1,6 @@
 # Audit Report: 25-checkpoint-motion-verbs.md
 **Phase:** B1.2 | **Level:** B1 | **Pedagogy:** Checkpoint | **Target:** 1200
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 85%)

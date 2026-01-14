@@ -4,7 +4,7 @@ subtitle: Metalanguage mastery checkpoint
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: TTT
-focus: grammar
+focus: bridge
 template: b1-metalanguage-module-template.md
 duration: 75
 transliteration: none
@@ -25,5 +25,7 @@ objectives:
   - Learner can understand activity instruction verbs
   - Learner can apply analytical terms and style/register concepts
 vocabulary_count: 44
-vocab_count: 4
 slug: 05-ready-for-immersion
+naturalness:
+  score: 9
+  status: PASS

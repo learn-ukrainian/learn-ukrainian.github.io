@@ -8,18 +8,21 @@ pedagogy: CBI
 duration: 90
 transliteration: none
 grammar:
-  - reading comprehension
-  - cultural vocabulary in context
+- reading comprehension
+- cultural vocabulary in context
 tags:
-  - cultural
-  - regions
-  - central-ukraine
-  - cossacks
+- cultural
+- regions
+- central-ukraine
+- cossacks
 objectives:
-  - Learner can discuss Central Ukraine's regions and historical significance
-  - Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
-  - Learner can use regional vocabulary to describe Central Ukrainian culture
-  - Learner can explain the connection between Central Ukraine and Cossack heritage
+- Learner can discuss Central Ukraine's regions and historical significance
+- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
+- Learner can use regional vocabulary to describe Central Ukrainian culture
+- Learner can explain the connection between Central Ukraine and Cossack heritage
 vocabulary_count: 29
 vocab_count: 29
 slug: 75-regions-center
+naturalness:
+  score: 9
+  status: PASS

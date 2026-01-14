@@ -4,7 +4,7 @@ subtitle: Sentence analysis terminology
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
-focus: grammar
+focus: bridge
 duration: 75
 transliteration: none
 tags:
@@ -21,5 +21,7 @@ objectives:
   - Learner can distinguish main and subordinate clauses
   - Learner can name sentence types and punctuation marks
 vocabulary_count: 25
-vocab_count: 3
 slug: 04-sentence-structure
+naturalness:
+  score: 9
+  status: PASS

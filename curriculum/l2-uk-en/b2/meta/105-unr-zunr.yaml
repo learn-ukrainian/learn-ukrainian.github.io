@@ -9,15 +9,18 @@ duration: 45 min
 transliteration: none
 vocabulary_count: 35
 tags:
-  - history
-  - revolution
-  - independence
+- history
+- revolution
+- independence
 grammar:
-  - Political Vocabulary
-  - Passive Voice (Revision)
+- Political Vocabulary
+- Passive Voice (Revision)
 objectives:
-  - Зрозуміти етапи Української революції 1917–1921 років
-  - Вивчити зміст Чотирьох Універсалів
-  - Дізнатися про Акт Злуки та його значення
-  - Проаналізувати причини поразки визвольних змагань
+- Зрозуміти етапи Української революції 1917–1921 років
+- Вивчити зміст Чотирьох Універсалів
+- Дізнатися про Акт Злуки та його значення
+- Проаналізувати причини поразки визвольних змагань
 vocab_count: 90
+naturalness:
+  score: 9
+  status: PASS

@@ -8,17 +8,20 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - verb synonymy and semantic distinctions
-  - thinking verb collocations
+- verb synonymy and semantic distinctions
+- thinking verb collocations
 tags:
-  - vocabulary
-  - synonymy
-  - verbs
-  - cognition
+- vocabulary
+- synonymy
+- verbs
+- cognition
 objectives:
-  - Learner can distinguish between думати/гадати/вважати/міркувати
-  - Learner can use 20 thinking verbs in appropriate contexts
-  - Learner can form natural collocations with thinking verbs
+- Learner can distinguish between думати/гадати/вважати/міркувати
+- Learner can use 20 thinking verbs in appropriate contexts
+- Learner can form natural collocations with thinking verbs
 vocabulary_count: 20
 vocab_count: 17
 slug: 68-synonymy-thinking-verbs
+naturalness:
+  score: 9
+  status: PASS

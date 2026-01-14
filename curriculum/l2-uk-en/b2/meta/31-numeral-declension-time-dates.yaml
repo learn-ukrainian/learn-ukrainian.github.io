@@ -9,19 +9,22 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - grammar
-  - numerals
-  - time
-  - dates
+- grammar
+- numerals
+- time
+- dates
 grammar:
-  - Порядкові числівники в часових виразах
-  - Відмінювання числівників при датах
-  - Родовий відмінок місяців
+- Порядкові числівники в часових виразах
+- Відмінювання числівників при датах
+- Родовий відмінок місяців
 objectives:
-  - Learner can tell the time using formal and informal expressions
-  - Learner can state and understand dates in all required cases
-  - Learner can use months in genitive and prepositional cases correctly
+- Learner can tell the time using formal and informal expressions
+- Learner can state and understand dates in all required cases
+- Learner can use months in genitive and prepositional cases correctly
 vocabulary_count: 25
 register: нейтральний
 vocab_count: 52
 slug: 31-numeral-declension-time-dates
+naturalness:
+  score: 9
+  status: PASS

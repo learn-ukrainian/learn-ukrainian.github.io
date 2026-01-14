@@ -8,20 +8,23 @@ pedagogy: TTT
 duration: 90
 transliteration: none
 tags:
-  - checkpoint
-  - integration
-  - complex-sentences
-  - concessive-clauses
-  - causal-clauses
-  - temporal-clauses
-  - reported-speech
+- checkpoint
+- integration
+- complex-sentences
+- concessive-clauses
+- causal-clauses
+- temporal-clauses
+- reported-speech
 grammar:
-  - Integration of M35-M40
-  - Comprehensive review and testing
+- Integration of M35-M40
+- Comprehensive review and testing
 objectives:
-  - Learner can demonstrate mastery of concessive, causal, temporal clauses
-  - Learner can use reported speech for statements, questions, and commands
-  - Learner can self-assess readiness for B1.4 phase
+- Learner can demonstrate mastery of concessive, causal, temporal clauses
+- Learner can use reported speech for statements, questions, and commands
+- Learner can self-assess readiness for B1.4 phase
 vocabulary_count: 35
 vocab_count: 5
 slug: 41-checkpoint-complex-sentences-2
+naturalness:
+  score: 9
+  status: PASS

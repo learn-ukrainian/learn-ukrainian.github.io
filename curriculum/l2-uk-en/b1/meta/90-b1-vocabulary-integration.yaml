@@ -8,18 +8,21 @@ pedagogy: TTT
 duration: 90
 transliteration: none
 tags:
-  - integration
-  - vocabulary
-  - review
+- integration
+- vocabulary
+- review
 grammar:
-  - vocabulary collocations review
-  - register and formality
-  - cross-domain usage
+- vocabulary collocations review
+- register and formality
+- cross-domain usage
 objectives:
-  - Learner can demonstrate mastery of all B1 vocabulary domains
-  - Learner can apply vocabulary in integrated cross-domain contexts
-  - Learner can identify and correct vocabulary usage errors
-  - Learner is prepared for B2 vocabulary challenges
+- Learner can demonstrate mastery of all B1 vocabulary domains
+- Learner can apply vocabulary in integrated cross-domain contexts
+- Learner can identify and correct vocabulary usage errors
+- Learner is prepared for B2 vocabulary challenges
 vocabulary_count: 40
 vocab_count: 40
 slug: 90-b1-vocabulary-integration
+naturalness:
+  score: 9
+  status: PASS

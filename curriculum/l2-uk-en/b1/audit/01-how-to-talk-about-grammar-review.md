@@ -1,38 +1,25 @@
 # Audit Report: 01-how-to-talk-about-grammar.md
-**Phase:** B1.0 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+**Phase:** B1.0 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1200
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b1-grammar-module-template'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
-- **Words:** ✅ 2026/1500
-- **Activities:** ✅ 15/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Words:** ✅ 2020/1200
+- **Activities:** ✅ 15/12
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 33.0% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 36.3% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -57,11 +44,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Presentation** | ✅ | 191 | Included in Core |
-| **The Parts of Speech: Частини мови** | ⚪️ | 471 | Skipped |
-| **The Seven Cases: Сім відмінків** | ⚪️ | 309 | Skipped |
-| **Basic Sentence Terms** | ⚪️ | 440 | Skipped |
-| **Practice** | ⚪️ | 120 | Skipped |
+| **Вступ** | ⚪️ | 191 | Skipped |
+| **Пояснення** | ⚪️ | 1214 | Skipped |
+| **Практика** | ⚪️ | 120 | Skipped |
 | **Mini-Dialogues** | ✅ | 205 | Included in Core |
 | **Підсумок** | ✅ | 102 | Included in Core |
-| **Need More Practice?** | ⚪️ | 110 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

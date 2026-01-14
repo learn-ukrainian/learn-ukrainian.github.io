@@ -18,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 88% (minimum: 85%)

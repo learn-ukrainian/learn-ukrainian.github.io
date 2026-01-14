@@ -1,18 +1,10 @@
 # Audit Report: 54-idioms-nature.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1914/1750
+- **Words:** ✅ 1915/1750
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -26,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -39,21 +32,21 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 8 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.94 | - | 94% | 8% | 7.8% |
-| examples | 46 | - | 100% | 8% | 8.3% |
+| paragraph_var | 0.93 | - | 93% | 8% | 7.8% |
+| examples | 27 | - | 100% | 8% | 8.3% |
 | realworld | 6 | - | 100% | 8% | 8.3% |
 | questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.3%** |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
-| **Пролог: Життя в обіймах стихій** | ⚪️ | 248 | Skipped |
+| **Вступ** | ⚪️ | 248 | Skipped |
 | **Частина 1: Вода — Дзеркало правди та зайвих слів** | ✅ | 261 | Included in Core |
 | **Частина 2: Вогонь — Ризик та вище загартування** | ✅ | 253 | Included in Core |
 | **Частина 3: Земля та Вітер — Пошук опори та Легковажність** | ✅ | 154 | Included in Core |
-| **Культурний код: Стихії в українському світогляді** | ✅ | 366 | Included in Core |
+| **Культурний код: Стихії в українському світогляді** | ✅ | 367 | Included in Core |
 | **Природа та стихії в українському фольклорі** | ⚪️ | 109 | Skipped |
 | **Вживання у контексті** | ✅ | 104 | Included in Core |
 | **Стихії та емоційний інтелект** | ⚪️ | 158 | Skipped |

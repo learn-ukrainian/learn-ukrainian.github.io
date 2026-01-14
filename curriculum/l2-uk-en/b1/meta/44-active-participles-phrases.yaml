@@ -8,24 +8,27 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - participles
-  - active-participles
-  - stylistics
-  - register
+- grammar
+- participles
+- active-participles
+- stylistics
+- register
 grammar:
-  - Активні дієприкметники теперішнього часу (-учий/-ючий)
-  - Активні дієприкметники минулого часу (-лий)
-  - Стилістична маркованість дієприкметників
-  - Канцелярити та русизми
+- Активні дієприкметники теперішнього часу (-учий/-ючий)
+- Активні дієприкметники минулого часу (-лий)
+- Стилістична маркованість дієприкметників
+- Канцелярити та русизми
 objectives:
-  - Learner can recognize active present participles (-учий/-ючий)
-  - Learner can recognize active past participles (-лий)
-  - Learner understands stylistic markedness of participles
-  - Learner can avoid bureaucratic forms and russicisms
+- Learner can recognize active present participles (-учий/-ючий)
+- Learner can recognize active past participles (-лий)
+- Learner understands stylistic markedness of participles
+- Learner can avoid bureaucratic forms and russicisms
 vocabulary_count: 25
 requires:
-  - 42
-  - 43
+- 42
+- 43
 vocab_count: 45
 slug: 44-active-participles-phrases
+naturalness:
+  score: 9
+  status: PASS

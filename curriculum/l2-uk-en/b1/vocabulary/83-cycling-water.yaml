@@ -21,7 +21,7 @@ items:
   ipa: /jˈizdɪtɪ/
   translation: to ride (habitually)
   pos: verb
-  gender: ~
+  gender: null
 - lemma: велодоріжка
   ipa: /weɫodoˈɾ⁽ʲ⁾iʒkɑ/
   translation: bike lane
@@ -45,7 +45,7 @@ items:
 - lemma: відкрита вода
   ipa: /widˈkɾɪtɑ woˈdɑ/
   translation: open water
-  pos: noun phrase (f)
+  pos: phrase
   gender: f
 - lemma: байдарка
   ipa: /bɑjˈdɑɾkɑ/
@@ -65,7 +65,7 @@ items:
 - lemma: рятувальний жилет
   ipa: /ɾʲɑtʊˈwɑlʲнɪj ʒɪˈlɛt/
   translation: life vest
-  pos: noun phrase (m)
+  pos: phrase
   gender: m
 - lemma: триатлон
   ipa: /tɾɪɑtˈɫɔn/
@@ -121,12 +121,12 @@ items:
   ipa: /zɑsmɑˈɦɑtɪ/
   translation: to sunbathe
   pos: verb
-  gender: ~
+  gender: null
 - lemma: відпочивати
   ipa: /widpot͡ʃɪˈwɑtɪ/
   translation: to rest / relax
   pos: verb
-  gender: ~
+  gender: null
 - lemma: дистанція
   ipa: /dɪsˈtɑnt͡sʲijɑ/
   translation: distance

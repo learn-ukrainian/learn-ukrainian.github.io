@@ -1,26 +1,30 @@
 module: b2-115
-title: "Sürgünlik: Депортація 1944"
-subtitle: "Crimean Tatar Genocide"
-version: "2.0"
-phase: "B2.3c Trauma & Resistance"
+title: 'Sürgünlik: Депортація 1944'
+subtitle: Crimean Tatar Genocide
+version: '2.0'
+phase: B2.3c Trauma & Resistance
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - crimea
-  - crimean-tatar
-  - genocide
-  - soviet-repression
-  - decolonization
+- history
+- crimea
+- crimean-tatar
+- genocide
+- soviet-repression
+- decolonization
 grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical context"
+- Historical narrative tenses
+- Passive voice in historical context
 objectives:
-  - "Understand the historical context and mechanism of the 1944 deportation of Crimean Tatars"
-  - "Identify the linguistic and cultural impact of the Sürgünlik"
-  - "Apply historical vocabulary in context"
-  - "Analyze primary sources related to the deportation"
+- Understand the historical context and mechanism of the 1944 deportation of Crimean
+  Tatars
+- Identify the linguistic and cultural impact of the Sürgünlik
+- Apply historical vocabulary in context
+- Analyze primary sources related to the deportation
 vocabulary_count: 25
 slug: 115-surgunlik-deportatsiia-1944
+naturalness:
+  score: 9
+  status: PASS

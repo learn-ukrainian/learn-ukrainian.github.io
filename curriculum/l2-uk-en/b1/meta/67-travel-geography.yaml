@@ -8,16 +8,19 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - travel vocabulary collocations
-  - geographical terminology
+- travel vocabulary collocations
+- geographical terminology
 tags:
-  - vocabulary
-  - travel
-  - geography
+- vocabulary
+- travel
+- geography
 objectives:
-  - Learner can use 30 travel and geography words in context
-  - Learner can distinguish between подорож/мандрівка/поїздка
-  - Learner can form natural collocations with travel vocabulary
+- Learner can use 30 travel and geography words in context
+- Learner can distinguish between подорож/мандрівка/поїздка
+- Learner can form natural collocations with travel vocabulary
 vocabulary_count: 35
 vocab_count: 38
 slug: 67-travel-geography
+naturalness:
+  score: 9
+  status: PASS

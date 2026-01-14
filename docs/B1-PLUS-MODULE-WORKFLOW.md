@@ -918,10 +918,10 @@ npm run validate:html l2-uk-en b1 50
 **Solution**:
 ```bash
 # Check dev server
-cd docusaurus && npm start
+cd docusaurus && pnpm start
 
 # If port conflict, use different port
-PORT=3001 npm start
+PORT=3001 pnpm start
 
 # Regenerate module first
 npm run generate l2-uk-en b1 50

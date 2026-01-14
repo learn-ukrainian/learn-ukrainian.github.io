@@ -8,16 +8,19 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - verbs
+- grammar
+- motion-verbs
+- verbs
 grammar:
-  - 14 motion verb pairs
-  - Unidirectional vs multidirectional distinction
+- 14 motion verb pairs
+- Unidirectional vs multidirectional distinction
 objectives:
-  - Learner knows all 14 motion verb pairs
-  - Learner understands unidirectional vs multidirectional
-  - Learner can choose correct motion verb for context
+- Learner knows all 14 motion verb pairs
+- Learner understands unidirectional vs multidirectional
+- Learner can choose correct motion verb for context
 vocabulary_count: 25
 vocab_count: 54
 slug: 16-motion-verbs-full-system
+naturalness:
+  score: 9
+  status: PASS

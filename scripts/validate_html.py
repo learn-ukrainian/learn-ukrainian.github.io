@@ -98,7 +98,7 @@ class DevServer:
 
         print("  Starting Docusaurus dev server...")
         self.process = subprocess.Popen(
-            ["npm", "start"],
+            ["pnpm", "start"],
             cwd=DOCUSAURUS_DIR,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -332,7 +332,7 @@ async def main_async():
         print(f"  Server running at {BASE_URL}\n")
     except Exception as e:
         print("ℹ️  Docusaurus dev server not running - skipping HTML validation")
-        print("   To enable: cd docusaurus && npm start")
+        print("   To enable: cd docusaurus && pnpm start")
         sys.exit(0)  # Exit cleanly to not block pipeline
 
     levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']

@@ -1,5 +1,6 @@
 # Audit Report: 145-b2-finalnyy-ispyt.md
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** Test | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 85%)
@@ -34,12 +36,6 @@
 | visual | 10 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
 | **TOTAL** | | | | | **98.7%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (21 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

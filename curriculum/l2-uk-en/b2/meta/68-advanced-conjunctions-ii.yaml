@@ -9,21 +9,23 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - grammar
-  - conjunctions
-  - temporal
-  - conditional
+- grammar
+- conjunctions
+- temporal
+- conditional
 grammar:
-  - Temporal conjunctions (щойно, поки, доки)
-  - Conditional conjunctions (якщо vs якби)
+- Temporal conjunctions (щойно, поки, доки)
+- Conditional conjunctions (якщо vs якби)
 objectives:
-  - Учень може будувати складні часові ланцюжки для опису послідовних та паралельних
-    подій
-  - Учень вміє розрізняти реальні та гіпотетичні умови, використовуючи відповідні
-    сполучники
-  - Учень розуміє використання сполучників щойно та відколи в історичних та особистих
-    розповідях
+- Учень може будувати складні часові ланцюжки для опису послідовних та паралельних
+  подій
+- Учень вміє розрізняти реальні та гіпотетичні умови, використовуючи відповідні сполучники
+- Учень розуміє використання сполучників щойно та відколи в історичних та особистих
+  розповідях
 vocabulary_count: 36
 register: публіцистичний
 vocab_count: 51
 slug: 68-advanced-conjunctions-ii
+naturalness:
+  score: 9
+  status: PASS

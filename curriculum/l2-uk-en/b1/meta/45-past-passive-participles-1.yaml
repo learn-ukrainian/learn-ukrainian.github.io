@@ -8,22 +8,25 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - participles
-  - passive-participles
-  - past
+- grammar
+- participles
+- passive-participles
+- past
 grammar:
-  - Пасивні дієприкметники минулого часу
-  - Суфікси -ний/-тий
-  - Узгодження з іменником
+- Пасивні дієприкметники минулого часу
+- Суфікси -ний/-тий
+- Узгодження з іменником
 objectives:
-  - Learner can form past passive participles using -ний/-тий suffixes
-  - Learner can agree participles with nouns in gender, number, and case
-  - Learner can use passive participles in sentences
+- Learner can form past passive participles using -ний/-тий suffixes
+- Learner can agree participles with nouns in gender, number, and case
+- Learner can use passive participles in sentences
 vocabulary_count: 25
 requires:
-  - 42
-  - 43
-  - 44
+- 42
+- 43
+- 44
 vocab_count: 59
 slug: 45-past-passive-participles-1
+naturalness:
+  score: 9
+  status: PASS

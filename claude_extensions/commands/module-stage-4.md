@@ -223,7 +223,7 @@ npm run pipeline l2-uk-en {level} {module_num}
 
 **Note:** HTML validation requires dev server running:
 ```bash
-cd docusaurus && npm start  # In separate terminal
+cd docusaurus && pnpm start  # In separate terminal
 ```
 
 If pipeline fails at any step, fix the issue and re-run.

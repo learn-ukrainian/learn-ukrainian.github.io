@@ -9,22 +9,25 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - phraseology
-  - idioms
-  - somatic
-  - zoomorphic
-  - body-parts
-  - animals
+- phraseology
+- idioms
+- somatic
+- zoomorphic
+- body-parts
+- animals
 grammar:
-  - Fixed expressions (фразеологічні одиниці)
-  - Somatic and zoomorphic idioms
+- Fixed expressions (фразеологічні одиниці)
+- Somatic and zoomorphic idioms
 objectives:
-  - Learner can recognize and interpret 16 core Ukrainian idioms with body parts and
-    animals
-  - Learner can use somatic and zoomorphic idioms appropriately in context
-  - Learner understands the cultural symbolism of body parts and animals in Ukrainian
-    phraseology
+- Learner can recognize and interpret 16 core Ukrainian idioms with body parts and
+  animals
+- Learner can use somatic and zoomorphic idioms appropriately in context
+- Learner understands the cultural symbolism of body parts and animals in Ukrainian
+  phraseology
 vocabulary_count: 35
 register: varies
 vocab_count: 111
 slug: 47-set-expressions-i-body-animals
+naturalness:
+  score: 9
+  status: PASS

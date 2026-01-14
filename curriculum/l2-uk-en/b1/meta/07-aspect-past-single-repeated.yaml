@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 13
 slug: 07-aspect-past-single-repeated
+naturalness:
+  score: 9
+  status: PASS

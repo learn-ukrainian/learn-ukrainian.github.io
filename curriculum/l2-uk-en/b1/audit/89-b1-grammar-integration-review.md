@@ -1,5 +1,6 @@
 # Audit Report: 89-b1-grammar-integration.md
 **Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 100% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)
@@ -44,7 +46,7 @@
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Діагностика** | ✅ | 205 | Included in Core |
 | **Огляд** | ⚪️ | 378 | Skipped |
-| **Поглиблення та практика** | ⚪️ | 644 | Skipped |
+| **Інтеграція** | ⚪️ | 644 | Skipped |
 | **Наступний крок: Рівень B2** | ⚪️ | 68 | Skipped |
 | **Підсумок** | ✅ | 83 | Included in Core |
 | **Самооцінка** | ⚪️ | 130 | Skipped |

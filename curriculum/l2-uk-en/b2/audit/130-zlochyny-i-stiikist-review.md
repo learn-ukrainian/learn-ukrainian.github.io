@@ -1,5 +1,6 @@
 # Audit Report: 130-zlochyny-i-stiikist.md
 **Phase:** B2.3e | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

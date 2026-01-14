@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - reported-speech
-  - indirect-speech
-  - statements
+- grammar
+- reported-speech
+- indirect-speech
+- statements
 grammar:
-  - Converting direct speech to indirect speech
-  - Він сказав, що... constructions
+- Converting direct speech to indirect speech
+- Він сказав, що... constructions
 objectives:
-  - Learner can report what someone said using indirect speech
-  - Learner can apply tense backshift in reported statements
-  - Learner can use appropriate reporting verbs
+- Learner can report what someone said using indirect speech
+- Learner can apply tense backshift in reported statements
+- Learner can use appropriate reporting verbs
 vocabulary_count: 25
 vocab_count: 14
 slug: 39-reported-statements
+naturalness:
+  score: 9
+  status: PASS

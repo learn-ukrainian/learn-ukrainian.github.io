@@ -9,19 +9,22 @@ pedagogy: PPP
 duration: 75
 transliteration: none
 tags:
-  - cultural
-  - active-lifestyle
-  - fitness
-  - health
-  - outdoors
+- cultural
+- active-lifestyle
+- fitness
+- health
+- outdoors
 grammar: []
 objectives:
-  - Learner can discuss active lifestyle habits in Ukrainian
-  - Learner can understand texts about fitness and outdoor activities
-  - Learner can use vocabulary for diverse physical activities
-  - Learner can compare active leisure traditions in Ukraine and abroad
+- Learner can discuss active lifestyle habits in Ukrainian
+- Learner can understand texts about fitness and outdoor activities
+- Learner can use vocabulary for diverse physical activities
+- Learner can compare active leisure traditions in Ukraine and abroad
 word_target: 1500
 vocab_target: 25
 immersion_target: 95
 vocab_count: 25
 slug: 80-active-lifestyle
+naturalness:
+  score: 9
+  status: PASS

@@ -9,17 +9,20 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - movement
+- vocabulary
+- synonyms
+- movement
 grammar:
-  - Nuances in verbs of motion
-  - Manner of movement and adverbs
+- Nuances in verbs of motion
+- Manner of movement and adverbs
 objectives:
-  - Учень може розрізняти відтінки значень дієслів на позначення руху
-  - Учень вміє вживати лексику пересування для створення динамічних описів у художньому
-    та публіцистичному стилях
+- Учень може розрізняти відтінки значень дієслів на позначення руху
+- Учень вміє вживати лексику пересування для створення динамічних описів у художньому
+  та публіцистичному стилях
 vocabulary_count: 35
 register: художній
 vocab_count: 136
 slug: 57-synonyms-movement
+naturalness:
+  score: 9
+  status: PASS

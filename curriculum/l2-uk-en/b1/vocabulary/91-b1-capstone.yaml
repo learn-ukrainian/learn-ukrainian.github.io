@@ -2,180 +2,170 @@ module: 91-b1-capstone
 level: B1
 version: '2.0'
 items:
-  - lemma: підсумковий
-    ipa: /pʲidˈsumkɔvɪj/
-    translation: final, summary (adj)
-    pos: adj
-    gender: m
-  - lemma: стійкість
-    ipa: /ˈstʲijkʲisʲtʲ/
-    translation: resilience, stability
-    pos: noun
-    gender: f
-  - lemma: майстерність
-    ipa: /majstɛrˈnʲisʲtʲ/
-    translation: mastery, skill
-    pos: noun
-    gender: f
-  - lemma: перспективний
-    ipa: /pɛrspɛkˈtɪu̯nɪj/
-    translation: promising, prospective
-    pos: adj
-    gender: m
-  - lemma: програмне забезпечення
-    ipa: /prɔˈhramnɛ zabɛzˈpɛt͡ʃɛnʲːa/
-    translation: software
-    pos: noun
-    gender: n
-  - lemma: стартап
-    ipa: /starˈtap/
-    translation: startup
-    pos: noun
-    gender: m
-  - lemma: фахівець
-    ipa: /faˈxʲivɛt͡sʲ/
-    translation: specialist, expert
-    pos: noun
-    gender: m
-  - lemma: складнощі
-    ipa: /ˈskladnɔʃt͡ʃʲi/
-    translation: difficulties, complexities
-    pos: noun
-    gender: pl
-  - lemma: зіставити
-    ipa: /zʲisˈtavɪtɪ/
-    translation: to compare, to collate
-    pos: verb
-  - lemma: бентежити
-    ipa: /bɛnˈtɛʒɪtɪ/
-    translation: to disturb, to confuse
-    pos: verb
-  - lemma: зарплата
-    ipa: /zarˈplata/
-    translation: salary
-    pos: noun
-    gender: f
-  - lemma: зв'язність
-    ipa: /ˈzvjaznʲisʲtʲ/
-    translation: coherence, connectivity
-    pos: noun
-    gender: f
-  - lemma: провітрювання
-    ipa: /prɔˈvʲitrʲuvanʲːa/
-    translation: ventilation, airing
-    pos: noun
-    gender: n
-  - lemma: підкаст
-    ipa: /pʲidˈkast/
-    translation: podcast
-    pos: noun
-    gender: m
-  - lemma: розкритий
-    ipa: /rɔzˈkrɪtɪj/
-    translation: revealed, disclosed
-    pos: adj
-    gender: m
-  - lemma: удосконалення
-    ipa: /udɔskɔˈnalɛnʲːa/
-    translation: improvement, perfection
-    pos: noun
-    gender: n
-  - lemma: діагностика
-    ipa: /dʲiahˈnɔstɪka/
-    translation: diagnostics, assessment
-    pos: noun
-    gender: f
-  - lemma: комплексний
-    ipa: /kɔmˈplɛksnɪj/
-    translation: complex, comprehensive
-    pos: adj
-    gender: m
-  - lemma: досягнення
-    ipa: /dɔˈsʲahnɛnʲːa/
-    translation: achievement
-    pos: noun
-    gender: n
-  - lemma: впевненість
-    ipa: /u̯ˈpɛu̯nɛnʲisʲtʲ/
-    translation: confidence
-    pos: noun
-    gender: f
-  - lemma: перемога
-    ipa: /pɛrɛˈmɔha/
-    translation: victory
-    pos: noun
-    gender: f
-  - lemma: випробування
-    ipa: /vɪprɔˈbuvanʲːa/
-    translation: trial, test, challenge
-    pos: noun
-    gender: n
-  - lemma: наполегливість
-    ipa: /napɔˈlɛhlɪvʲisʲtʲ/
-    translation: persistence, perseverance
-    pos: noun
-    gender: f
-  - lemma: оцінювання
-    ipa: /ɔt͡sʲiˈnʲuvanʲːa/
-    translation: evaluation, grading
-    pos: noun
-    gender: n
-  - lemma: критерій
-    ipa: /krɪˈtɛrʲij/
-    translation: criterion
-    pos: noun
-    gender: m
-  - lemma: рубрика
-    ipa: /ˈrubrɪka/
-    translation: rubric, category
-    pos: noun
-    gender: f
-  - lemma: висновок
-    ipa: /ˈvɪsnɔvɔk/
-    translation: conclusion
-    pos: noun
-    gender: m
-  - lemma: підсумок
-    ipa: /pʲidˈsumɔk/
-    translation: summary, result
-    pos: noun
-    gender: m
-  - lemma: адаптуватися
-    ipa: /adapˈtuvatɪsʲa/
-    translation: to adapt
-    pos: verb
-  - lemma: обстріл
-    ipa: /ˈɔbstrʲil/
-    translation: shelling, bombardment
-    pos: noun
-    gender: m
-  - lemma: ІТ-галузь
-    ipa: /i tɛ ˈhaluzʲ/
-    translation: IT industry
-    pos: noun
-    gender: f
-  - lemma: фахівець
-    ipa: /faˈxʲivɛt͡sʲ/
-    translation: specialist
-    pos: noun
-    gender: m
-  - lemma: майстерність
-    ipa: /majstɛrˈnʲisʲtʲ/
-    translation: craftsmanship, skill
-    pos: noun
-    gender: f
-  - lemma: есе
-    ipa: /ɛˈsɛ/
-    translation: essay
-    pos: noun
-    gender: n
-  - lemma: аудіювання
-    ipa: /audʲiˈjuvanʲːa/
-    translation: listening comprehension
-    pos: noun
-    gender: n
-  - lemma: самооцінка
-    ipa: /samɔɔˈt͡sʲinka/
-    translation: self-assessment
-    pos: noun
-    gender: f
+- lemma: підсумковий
+  ipa: /pʲidˈsumkɔvɪj/
+  translation: final, summary (adj)
+  pos: adj
+  gender: m
+- lemma: стійкість
+  ipa: /ˈstʲijkʲisʲtʲ/
+  translation: resilience, stability
+  pos: noun
+  gender: f
+- lemma: майстерність
+  ipa: /majstɛrˈnʲisʲtʲ/
+  translation: mastery, skill
+  pos: noun
+  gender: f
+- lemma: перспективний
+  ipa: /pɛrspɛkˈtɪu̯nɪj/
+  translation: promising, prospective
+  pos: adj
+  gender: m
+- lemma: програмне забезпечення
+  ipa: /prɔˈhramnɛ zabɛzˈpɛt͡ʃɛnʲːa/
+  translation: software
+  pos: noun
+  gender: n
+- lemma: стартап
+  ipa: /starˈtap/
+  translation: startup
+  pos: noun
+  gender: m
+- lemma: фахівець
+  ipa: /faˈxʲivɛt͡sʲ/
+  translation: specialist, expert
+  pos: noun
+  gender: m
+- lemma: складнощі
+  ipa: /ˈskladnɔʃt͡ʃʲi/
+  translation: difficulties, complexities
+  pos: noun
+  gender: pl
+- lemma: зіставити
+  ipa: /zʲisˈtavɪtɪ/
+  translation: to compare, to collate
+  pos: verb
+- lemma: бентежити
+  ipa: /bɛnˈtɛʒɪtɪ/
+  translation: to disturb, to confuse
+  pos: verb
+- lemma: зарплата
+  ipa: /zarˈplata/
+  translation: salary
+  pos: noun
+  gender: f
+- lemma: зв'язність
+  ipa: /ˈzvjaznʲisʲtʲ/
+  translation: coherence, connectivity
+  pos: noun
+  gender: f
+- lemma: провітрювання
+  ipa: /prɔˈvʲitrʲuvanʲːa/
+  translation: ventilation, airing
+  pos: noun
+  gender: n
+- lemma: підкаст
+  ipa: /pʲidˈkast/
+  translation: podcast
+  pos: noun
+  gender: m
+- lemma: розкритий
+  ipa: /rɔzˈkrɪtɪj/
+  translation: revealed, disclosed
+  pos: adj
+  gender: m
+- lemma: удосконалення
+  ipa: /udɔskɔˈnalɛnʲːa/
+  translation: improvement, perfection
+  pos: noun
+  gender: n
+- lemma: діагностика
+  ipa: /dʲiahˈnɔstɪka/
+  translation: diagnostics, assessment
+  pos: noun
+  gender: f
+- lemma: комплексний
+  ipa: /kɔmˈplɛksnɪj/
+  translation: complex, comprehensive
+  pos: adj
+  gender: m
+- lemma: досягнення
+  ipa: /dɔˈsʲahnɛnʲːa/
+  translation: achievement
+  pos: noun
+  gender: n
+- lemma: впевненість
+  ipa: /u̯ˈpɛu̯nɛnʲisʲtʲ/
+  translation: confidence
+  pos: noun
+  gender: f
+- lemma: перемога
+  ipa: /pɛrɛˈmɔha/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: випробування
+  ipa: /vɪprɔˈbuvanʲːa/
+  translation: trial, test, challenge
+  pos: noun
+  gender: n
+- lemma: наполегливість
+  ipa: /napɔˈlɛhlɪvʲisʲtʲ/
+  translation: persistence, perseverance
+  pos: noun
+  gender: f
+- lemma: оцінювання
+  ipa: /ɔt͡sʲiˈnʲuvanʲːa/
+  translation: evaluation, grading
+  pos: noun
+  gender: n
+- lemma: критерій
+  ipa: /krɪˈtɛrʲij/
+  translation: criterion
+  pos: noun
+  gender: m
+- lemma: рубрика
+  ipa: /ˈrubrɪka/
+  translation: rubric, category
+  pos: noun
+  gender: f
+- lemma: висновок
+  ipa: /ˈvɪsnɔvɔk/
+  translation: conclusion
+  pos: noun
+  gender: m
+- lemma: підсумок
+  ipa: /pʲidˈsumɔk/
+  translation: summary, result
+  pos: noun
+  gender: m
+- lemma: адаптуватися
+  ipa: /adapˈtuvatɪsʲa/
+  translation: to adapt
+  pos: verb
+- lemma: обстріл
+  ipa: /ˈɔbstrʲil/
+  translation: shelling, bombardment
+  pos: noun
+  gender: m
+- lemma: ІТ-галузь
+  ipa: /i tɛ ˈhaluzʲ/
+  translation: IT industry
+  pos: noun
+  gender: f
+- lemma: есе
+  ipa: /ɛˈsɛ/
+  translation: essay
+  pos: noun
+  gender: n
+- lemma: аудіювання
+  ipa: /audʲiˈjuvanʲːa/
+  translation: listening comprehension
+  pos: noun
+  gender: n
+- lemma: самооцінка
+  ipa: /samɔɔˈt͡sʲinka/
+  translation: self-assessment
+  pos: noun
+  gender: f

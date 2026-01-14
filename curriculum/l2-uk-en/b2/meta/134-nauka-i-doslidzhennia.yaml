@@ -1,23 +1,26 @@
 module: b2-134
-title: "Наука і дослідження"
-subtitle: "Science & Research"
-version: "2.0"
-phase: "B2.4 Skills & Capstone"
+title: Наука і дослідження
+subtitle: Science & Research
+version: '2.0'
+phase: B2.4 Skills & Capstone
 focus: domain
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 90
 transliteration: none
 tags:
-  - domain
-  - science
-  - research
-  - academic
+- domain
+- science
+- research
+- academic
 grammar:
-  - "Academic register"
-  - "Scientific terminology"
+- Academic register
+- Scientific terminology
 objectives:
-  - "Використовувати наукову термінологію українською"
-  - "Описувати дослідницький процес"
-  - "Орієнтуватися в українській науковій спільноті"
+- Використовувати наукову термінологію українською
+- Описувати дослідницький процес
+- Орієнтуватися в українській науковій спільноті
 vocabulary_count: 25
 slug: 134-nauka-i-doslidzhennia
+naturalness:
+  score: 9
+  status: PASS

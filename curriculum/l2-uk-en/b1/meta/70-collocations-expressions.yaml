@@ -8,16 +8,19 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - verb-noun collocations
-  - adjective-noun collocations
+- verb-noun collocations
+- adjective-noun collocations
 tags:
-  - vocabulary
-  - collocations
-  - expressions
+- vocabulary
+- collocations
+- expressions
 objectives:
-  - Learner can use 25 common verb-noun collocations naturally
-  - Learner can distinguish between similar verbs in collocations
-  - Learner can form natural word combinations in professional and everyday contexts
+- Learner can use 25 common verb-noun collocations naturally
+- Learner can distinguish between similar verbs in collocations
+- Learner can form natural word combinations in professional and everyday contexts
 vocabulary_count: 35
 vocab_count: 9
 slug: 70-collocations-expressions
+naturalness:
+  score: 9
+  status: PASS

@@ -9,17 +9,20 @@ template: b1-checkpoint-module-template.md
 duration: 75
 transliteration: none
 tags:
-  - checkpoint
-  - integration
-  - aspect
+- checkpoint
+- integration
+- aspect
 grammar:
-  - Integration of M06-14
-  - Comprehensive review and testing
+- Integration of M06-14
+- Comprehensive review and testing
 objectives:
-  - Learner can demonstrate mastery of verbal aspect
-  - Learner can integrate knowledge from M06-14
-  - Learner can select correct aspect in all contexts
-  - Learner can self-assess readiness for Motion Verbs phase
+- Learner can demonstrate mastery of verbal aspect
+- Learner can integrate knowledge from M06-14
+- Learner can select correct aspect in all contexts
+- Learner can self-assess readiness for Motion Verbs phase
 vocabulary_count: 35
 vocab_count: 13
 slug: 15-checkpoint-aspect-mastery
+naturalness:
+  score: 9
+  status: PASS

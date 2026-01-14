@@ -1,18 +1,10 @@
 # Audit Report: 59-synonyms-communication.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1755/1750
+- **Words:** ✅ 1756/1750
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -26,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -39,19 +32,19 @@
 | variety | 0.97 | - | 97% | 17% | 16.2% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.97 | - | 97% | 8% | 8.1% |
-| examples | 55 | - | 100% | 8% | 8.3% |
+| paragraph_var | 0.94 | - | 94% | 8% | 7.8% |
+| examples | 31 | - | 100% | 8% | 8.3% |
 | realworld | 7 | - | 100% | 8% | 8.3% |
 | questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.2%** |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Пролог: Мистецтво висловлення думки** | ⚪️ | 143 | Skipped |
+| **Вступ** | ⚪️ | 143 | Skipped |
 | **Фразеологізми та синоніми: Передача інформації** | ⚪️ | 516 | Skipped |
-| **Культурний код: Форми української комунікації** | ✅ | 199 | Included in Core |
+| **Культурний код: Форми української комунікації** | ✅ | 200 | Included in Core |
 | **Вживання у контексті: Тон, Регістр та Цифровий світ** | ✅ | 233 | Included in Core |
 | **Психологія спілкування та Емоційний інтелект** | ⚪️ | 178 | Skipped |
 | **Комунікація в історії та літературі** | ⚪️ | 236 | Skipped |

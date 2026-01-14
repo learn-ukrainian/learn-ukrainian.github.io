@@ -4,7 +4,7 @@ subtitle: Learning grammar terminology in Ukrainian
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
-focus: grammar
+focus: bridge
 duration: 75
 transliteration: none
 tags:
@@ -23,3 +23,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 25
 slug: 01-how-to-talk-about-grammar
+naturalness:
+  score: 9
+  status: PASS

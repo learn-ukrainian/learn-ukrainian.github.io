@@ -169,7 +169,7 @@ def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optiona
         urllib.request.urlopen("http://localhost:3000/", timeout=5)
     except:
         print("  ⚠️ Docusaurus dev server not running")
-        print("  Start with: cd docusaurus && npm start")
+        print("  Start with: cd docusaurus && pnpm start")
         return StepResult("validate_html", False, "Dev server not running")
 
     cmd = [str(VENV_PYTHON), "scripts/validate_html.py", lang_pair]

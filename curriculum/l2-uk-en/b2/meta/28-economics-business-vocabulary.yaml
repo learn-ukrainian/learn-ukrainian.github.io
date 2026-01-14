@@ -8,20 +8,23 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - vocabulary
-  - economics
-  - business
-  - register
+- vocabulary
+- economics
+- business
+- register
 grammar:
-  - Economic terminology and register
-  - Business communication conventions
-  - Financial news reading strategies
+- Economic terminology and register
+- Business communication conventions
+- Financial news reading strategies
 objectives:
-  - Учень може читати та розуміти економічні новини українською мовою
-  - Учень може аналізувати економічні показники та їх значення
-  - Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану
-    лексику
+- Учень може читати та розуміти економічні новини українською мовою
+- Учень може аналізувати економічні показники та їх значення
+- Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану
+  лексику
 vocabulary_count: 35
 register: науковий
 vocab_count: 149
 slug: 28-economics-business-vocabulary
+naturalness:
+  score: 9
+  status: PASS

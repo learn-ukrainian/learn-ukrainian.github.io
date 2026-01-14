@@ -1,23 +1,26 @@
 module: b2-120
-title: "Шлях до незалежності"
-subtitle: "The Path to Independence"
-version: "2.0"
-phase: "B2.3d Independence & War"
+title: Шлях до незалежності
+subtitle: The Path to Independence
+version: '2.0'
+phase: B2.3d Independence & War
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - independence
-  - rukh
-  - revolution
+- history
+- independence
+- rukh
+- revolution
 grammar:
-  - "Historical narrative register"
-  - "Formal political terminology"
+- Historical narrative register
+- Formal political terminology
 objectives:
-  - "Understand the timeline of events leading to Ukrainian independence (1989-1991)"
-  - "Identify key figures and movements (Rukh, Chornovil, Granite Revolution)"
-  - "Explain the significance of the 1991 referendum"
+- Understand the timeline of events leading to Ukrainian independence (1989-1991)
+- Identify key figures and movements (Rukh, Chornovil, Granite Revolution)
+- Explain the significance of the 1991 referendum
 vocabulary_count: 25
 slug: 120-shliakh-do-nezalezhnosti
+naturalness:
+  score: 9
+  status: PASS

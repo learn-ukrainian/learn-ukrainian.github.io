@@ -8,16 +8,19 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - complex-sentences
-  - temporal-clauses
+- grammar
+- complex-sentences
+- temporal-clauses
 grammar:
-  - Temporal clause constructions with коли, після того як, поки
-  - Sequence of events with перш ніж, як тільки
+- Temporal clause constructions with коли, після того як, поки
+- Sequence of events with перш ніж, як тільки
 objectives:
-  - Learner can express часові відношення using various temporal connectors
-  - Learner can sequence events using appropriate temporal markers
-  - Learner can distinguish simultaneous vs sequential actions
+- Learner can express часові відношення using various temporal connectors
+- Learner can sequence events using appropriate temporal markers
+- Learner can distinguish simultaneous vs sequential actions
 vocabulary_count: 25
 vocab_count: 15
 slug: 37-temporal-clauses
+naturalness:
+  score: 9
+  status: PASS

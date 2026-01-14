@@ -4,7 +4,7 @@ subtitle: Understanding grammar explanations in Ukrainian
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
-focus: grammar
+focus: bridge
 duration: 75
 transliteration: none
 tags:
@@ -23,6 +23,8 @@ objectives:
   - Learner can recognize activity instruction verbs
   - Learner can understand analytical terminology
   - Learner can distinguish language styles and registers
-vocabulary_count: 39
-vocab_count: 13
+vocabulary_count: 40
 slug: 03-reading-grammar-rules
+naturalness:
+  score: 9
+  status: PASS

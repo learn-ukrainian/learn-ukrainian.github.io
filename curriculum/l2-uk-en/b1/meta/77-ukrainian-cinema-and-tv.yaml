@@ -8,16 +8,19 @@ pedagogy: CBI
 duration: 75
 transliteration: none
 tags:
-  - culture
-  - cinema
-  - television
-  - media
+- culture
+- cinema
+- television
+- media
 grammar: []
 objectives:
-  - Learner can discuss Ukrainian films and television series
-  - Learner can understand authentic texts about Ukrainian cinema
-  - Learner can use film industry vocabulary in context
-  - Learner can compare Ukrainian cinema with their own cultural experience
+- Learner can discuss Ukrainian films and television series
+- Learner can understand authentic texts about Ukrainian cinema
+- Learner can use film industry vocabulary in context
+- Learner can compare Ukrainian cinema with their own cultural experience
 vocabulary_count: 50
 vocab_count: 50
 slug: 77-ukrainian-cinema-and-tv
+naturalness:
+  score: 9
+  status: PASS

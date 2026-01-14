@@ -1,5 +1,6 @@
 # Audit Report: 27-relative-clauses-de-kudy-zvidky.md
 **Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 98% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)

@@ -225,7 +225,7 @@ Fix these audit violations:
 
 ```bash
 # Start dev server (separate terminal)
-cd docusaurus && npm start
+cd docusaurus && pnpm start
 
 # Generate output (main terminal)
 npm run pipeline l2-uk-en b1 50

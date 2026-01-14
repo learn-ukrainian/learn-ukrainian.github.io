@@ -22,3 +22,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 7
 slug: 06-aspect-complete-system
+naturalness:
+  score: 9
+  status: PASS

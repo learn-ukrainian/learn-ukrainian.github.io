@@ -1,26 +1,29 @@
 module: b2-118
-title: "Діаспора: Ковчег Держави"
-subtitle: "Diaspora: The Ark of Statehood"
-version: "2.0"
-phase: "B2.3c Trauma & Resistance"
+title: 'Діаспора: Ковчег Держави'
+subtitle: 'Diaspora: The Ark of Statehood'
+version: '2.0'
+phase: B2.3c Trauma & Resistance
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - diaspora
-  - emigration
-  - statehood
-  - plast
-  - preservation
+- history
+- diaspora
+- emigration
+- statehood
+- plast
+- preservation
 grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in formal context"
+- Historical narrative tenses
+- Passive voice in formal context
 objectives:
-  - "Understand the role of the Ukrainian diaspora in preserving statehood"
-  - "Identify key institutions: UNR Government in Exile, Plast"
-  - "Analyze the significance of the 1992 handover of power"
-  - "Discuss the concept of 'The Ark' in Ukrainian history"
+- Understand the role of the Ukrainian diaspora in preserving statehood
+- 'Identify key institutions: UNR Government in Exile, Plast'
+- Analyze the significance of the 1992 handover of power
+- Discuss the concept of 'The Ark' in Ukrainian history
 vocabulary_count: 25
 slug: 118-diaspora-kovcheh-derzhavy
+naturalness:
+  score: 9
+  status: PASS

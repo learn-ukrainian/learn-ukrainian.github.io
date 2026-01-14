@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - verbs
-  - vocabulary
+- grammar
+- aspect
+- verbs
+- vocabulary
 grammar:
-  - 40 essential aspect pairs
-  - Imperfective-perfective correspondence
+- 40 essential aspect pairs
+- Imperfective-perfective correspondence
 objectives:
-  - Learner knows the 40 most essential aspect pairs
-  - Learner can recognize and use both forms correctly
-  - Learner understands common aspect formation patterns
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
 vocabulary_count: 40
 vocab_count: 19
 slug: 12-aspect-pairs-essential-40
+naturalness:
+  score: 9
+  status: PASS

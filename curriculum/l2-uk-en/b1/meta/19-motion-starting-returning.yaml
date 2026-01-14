@@ -8,16 +8,19 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - prefixes
+- grammar
+- motion-verbs
+- prefixes
 grammar:
-  - Prefixes по-, за-, роз-
-  - Starting, stopping by, dispersing patterns
+- Prefixes по-, за-, роз-
+- Starting, stopping by, dispersing patterns
 objectives:
-  - Learner can use по- for starting movement
-  - Learner can use за- for stopping by
-  - Learner can use роз- for dispersing
+- Learner can use по- for starting movement
+- Learner can use за- for stopping by
+- Learner can use роз- for dispersing
 vocabulary_count: 25
 vocab_count: 34
 slug: 19-motion-starting-returning
+naturalness:
+  score: 9
+  status: PASS

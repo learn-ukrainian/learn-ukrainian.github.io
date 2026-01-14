@@ -1,5 +1,6 @@
 # Audit Report: 105-unr-zunr.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

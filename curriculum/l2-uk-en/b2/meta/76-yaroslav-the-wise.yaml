@@ -8,23 +8,26 @@ focus: history
 duration: 90
 transliteration: none
 tags:
-  - history
-  - medieval
-  - yaroslav-the-wise
-  - ruska-pravda
-  - kyivan-rus
+- history
+- medieval
+- yaroslav-the-wise
+- ruska-pravda
+- kyivan-rus
 register: публіцистичний
 grammar:
-  - Historical narrative tenses
-  - Passive voice in historical writing
+- Historical narrative tenses
+- Passive voice in historical writing
 vocabulary_focus: null
 vocab_count: 142 - "Historical terminology" - "Legal and political vocabulary" - "Cultural
   and educational vocabulary"
 objectives:
-  - Learner can understand and discuss the reign of Yaroslav the Wise in Ukrainian
-  - Learner can analyze primary sources related to medieval Ukrainian law and culture
-  - Learner can recognize and counter Russian historiographical appropriation of Kyivan
-    Rus legacy
-  - Learner can use era-specific vocabulary in historical discourse
+- Learner can understand and discuss the reign of Yaroslav the Wise in Ukrainian
+- Learner can analyze primary sources related to medieval Ukrainian law and culture
+- Learner can recognize and counter Russian historiographical appropriation of Kyivan
+  Rus legacy
+- Learner can use era-specific vocabulary in historical discourse
 vocabulary_count: 42
 slug: 76-yaroslav-the-wise
+naturalness:
+  score: 9
+  status: PASS

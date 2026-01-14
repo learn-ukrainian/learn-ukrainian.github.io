@@ -8,18 +8,21 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - conditionals
-  - complex-sentences
-  - mixed-conditionals
+- grammar
+- conditionals
+- complex-sentences
+- mixed-conditionals
 grammar:
-  - Mixed conditional constructions
-  - Chained conditionals
-  - Complex condition-consequence relationships
+- Mixed conditional constructions
+- Chained conditionals
+- Complex condition-consequence relationships
 objectives:
-  - Learner understands mixed conditional types
-  - Learner can combine real and unreal conditions
-  - Learner can form chained conditional sentences
+- Learner understands mixed conditional types
+- Learner can combine real and unreal conditions
+- Learner can form chained conditional sentences
 vocabulary_count: 25
 vocab_count: 17
 slug: 33-conditionals-mixed-complex
+naturalness:
+  score: 9
+  status: PASS

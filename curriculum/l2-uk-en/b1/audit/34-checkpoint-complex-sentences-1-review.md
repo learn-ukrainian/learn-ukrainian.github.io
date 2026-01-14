@@ -1,5 +1,6 @@
 # Audit Report: 34-checkpoint-complex-sentences-1.md
 **Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1200
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.1% (checkpoint - no gate)
 - **Richness:** ✅ 91% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 91% (minimum: 85%)

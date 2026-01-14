@@ -8,19 +8,22 @@ pedagogy: TTT
 duration: 90
 transliteration: none
 tags:
-  - checkpoint
-  - integration
-  - complex-sentences
-  - relative-clauses
-  - purpose-clauses
-  - conditionals
+- checkpoint
+- integration
+- complex-sentences
+- relative-clauses
+- purpose-clauses
+- conditionals
 grammar:
-  - Integration of M26-M33
-  - Comprehensive review and testing
+- Integration of M26-M33
+- Comprehensive review and testing
 objectives:
-  - Learner can demonstrate mastery of complex sentence structures
-  - Learner can integrate knowledge from M26-M33
-  - Learner can self-assess readiness for B1.3b phase
+- Learner can demonstrate mastery of complex sentence structures
+- Learner can integrate knowledge from M26-M33
+- Learner can self-assess readiness for B1.3b phase
 vocabulary_count: 35
 vocab_count: 7
 slug: 34-checkpoint-complex-sentences-1
+naturalness:
+  score: 9
+  status: PASS

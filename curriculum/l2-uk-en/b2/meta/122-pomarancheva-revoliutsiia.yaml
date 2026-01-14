@@ -1,24 +1,27 @@
 module: b2-122
-title: "Помаранчева революція"
-subtitle: "The Orange Revolution"
-version: "2.0"
-phase: "B2.3d Independence & War"
+title: Помаранчева революція
+subtitle: The Orange Revolution
+version: '2.0'
+phase: B2.3d Independence & War
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - modern-ukraine
-  - revolution
-  - democracy
+- history
+- modern-ukraine
+- revolution
+- democracy
 grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in political analysis"
+- Historical narrative tenses
+- Passive voice in political analysis
 objectives:
-  - "Understand the causes and timeline of the Orange Revolution"
-  - "Identify key figures: Yushchenko, Tymoshenko"
-  - "Explain the role of civil society and peaceful protest"
-  - "Analyze the significance of the 2004 Supreme Court decision"
+- Understand the causes and timeline of the Orange Revolution
+- 'Identify key figures: Yushchenko, Tymoshenko'
+- Explain the role of civil society and peaceful protest
+- Analyze the significance of the 2004 Supreme Court decision
 vocabulary_count: 25
 slug: 122-pomarancheva-revoliutsiia
+naturalness:
+  score: 9
+  status: PASS

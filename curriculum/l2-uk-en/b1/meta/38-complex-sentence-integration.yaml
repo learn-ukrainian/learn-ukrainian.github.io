@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - complex-sentences
-  - integration
-  - synthesis
+- grammar
+- complex-sentences
+- integration
+- synthesis
 grammar:
-  - Combining multiple clause types in one sentence
-  - Coordination and subordination together
+- Combining multiple clause types in one sentence
+- Coordination and subordination together
 objectives:
-  - Learner can combine причинові, часові, умовні clauses
-  - Learner can build multi-clause sentences
-  - Learner can choose appropriate connectors for context
+- Learner can combine причинові, часові, умовні clauses
+- Learner can build multi-clause sentences
+- Learner can choose appropriate connectors for context
 vocabulary_count: 25
 vocab_count: 9
 slug: 38-complex-sentence-integration
+naturalness:
+  score: 9
+  status: PASS

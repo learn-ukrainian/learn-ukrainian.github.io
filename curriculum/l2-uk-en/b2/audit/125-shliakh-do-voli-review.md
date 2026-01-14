@@ -1,5 +1,6 @@
 # Audit Report: 125-shliakh-do-voli.md
 **Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ✅ Content-heavy OK (10 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -41,10 +43,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Ключова тема** | ⚪️ | 173 | Skipped |
-| **Тематичний аналіз** | ✅ | 969 | Included in Core |
-| **Деколонізаційний синтез** | ⚪️ | 188 | Skipped |
+| **Ключові теми** | ⚪️ | 173 | Skipped |
+| **Огляд періоду** | ⚪️ | 969 | Skipped |
+| **Деколонізаційний огляд** | ⚪️ | 188 | Skipped |
 | **Історіографічна рефлексія** | ⚪️ | 185 | Skipped |
-| **Завдання: Письмовий аргумент** | ⚪️ | 277 | Skipped |
+| **Есе-аналіз: Письмовий аргумент** | ✅ | 277 | Included in Core |
 | **Підсумок** | ✅ | 76 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 88 | Skipped |

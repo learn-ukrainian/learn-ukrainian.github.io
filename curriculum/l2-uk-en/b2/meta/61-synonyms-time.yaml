@@ -9,19 +9,22 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - time
+- vocabulary
+- synonyms
+- time
 grammar:
-  - Adverbs of time
-  - Temporal nouns and intensity
+- Adverbs of time
+- Temporal nouns and intensity
 objectives:
-  - Учень може розрізняти відтінки значень синонімів на позначення поточного моменту
-    (зараз, тепер, наразі)
-  - Учень вміє використовувати лексику часових періодів для опису історичних та особистих
-    подій
-  - Учень розуміє концепцію вічності та миті в українській мові
+- Учень може розрізняти відтінки значень синонімів на позначення поточного моменту
+  (зараз, тепер, наразі)
+- Учень вміє використовувати лексику часових періодів для опису історичних та особистих
+  подій
+- Учень розуміє концепцію вічності та миті в українській мові
 vocabulary_count: 35
 register: публіцистичний
 vocab_count: 65
 slug: 61-synonyms-time
+naturalness:
+  score: 9
+  status: PASS

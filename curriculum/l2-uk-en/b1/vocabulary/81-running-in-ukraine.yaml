@@ -60,7 +60,7 @@ items:
 - lemma: особистий рекорд
   ipa: /osoˈbɪstɪj ɾeˈkɔɾd/
   translation: personal best
-  pos: noun phrase (m)
+  pos: phrase
   gender: m
 - lemma: рекорд
   ipa: /reˈkɔrd/
@@ -80,7 +80,7 @@ items:
 - lemma: біговий клуб
   ipa: /b⁽ʲ⁾iɦoˈwɪj klʊb/
   translation: running club
-  pos: noun phrase (m)
+  pos: phrase
   gender: m
 - lemma: клуб
   ipa: /klub/
@@ -91,27 +91,27 @@ items:
   ipa: /tɾenʊˈwɑtɪsʲɑ/
   translation: to train
   pos: verb
-  gender: ~
+  gender: null
 - lemma: готуватися
   ipa: /ɦotʊˈwɑtɪsʲɑ/
   translation: to prepare
   pos: verb
-  gender: ~
+  gender: null
 - lemma: брати участь
   ipa: /bˈɾɑtɪ ˈut͡ʃɑsʲtʲ/
   translation: to participate
-  pos: verb phrase
-  gender: ~
+  pos: phrase
+  gender: null
 - lemma: перемагати
   ipa: /peɾemɑˈɦɑtɪ/
   translation: to win
   pos: verb
-  gender: ~
+  gender: null
 - lemma: вболівати
   ipa: /wbol⁽ʲ⁾iˈwɑtɪ/
   translation: to cheer for
   pos: verb
-  gender: ~
+  gender: null
 - lemma: волонтер
   ipa: /woɫonˈtɛɾ/
   translation: volunteer

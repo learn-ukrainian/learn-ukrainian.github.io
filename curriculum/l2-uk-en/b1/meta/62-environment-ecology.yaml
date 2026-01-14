@@ -8,15 +8,18 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - environmental vocabulary collocations
+- environmental vocabulary collocations
 tags:
-  - vocabulary
-  - environment
-  - ecology
+- vocabulary
+- environment
+- ecology
 objectives:
-  - Learner can use 35 environmental vocabulary words in context
-  - Learner can discuss environmental issues using appropriate collocations
-  - Learner can distinguish between related terms (довкілля/навколишнє середовище/природа)
+- Learner can use 35 environmental vocabulary words in context
+- Learner can discuss environmental issues using appropriate collocations
+- Learner can distinguish between related terms (довкілля/навколишнє середовище/природа)
 vocabulary_count: 35
 vocab_count: 62
 slug: 62-environment-ecology
+naturalness:
+  score: 9
+  status: PASS

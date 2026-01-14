@@ -8,18 +8,21 @@ focus: checkpoint
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - register
-  - transformation
-  - cross-register
+- grammar
+- register
+- transformation
+- cross-register
 grammar:
-  - register-transformation
-  - style-adaptation
-  - cross-register-writing
+- register-transformation
+- style-adaptation
+- cross-register-writing
 objectives:
-  - Учень може переписати текст з одного функціонального стилю в інший
-  - Учень може обирати мовні засоби відповідно до регістру
-  - Учень може визначати, які елементи тексту потребують адаптації при зміні стилю
+- Учень може переписати текст з одного функціонального стилю в інший
+- Учень може обирати мовні засоби відповідно до регістру
+- Учень може визначати, які елементи тексту потребують адаптації при зміні стилю
 vocabulary_count: 30
 vocab_count: 128
 slug: 25-register-practice-cross-register-rewriting
+naturalness:
+  score: 9
+  status: PASS

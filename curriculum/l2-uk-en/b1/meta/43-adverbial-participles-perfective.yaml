@@ -8,18 +8,21 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - participles
-  - adverbial-participles
-  - perfective
+- grammar
+- participles
+- adverbial-participles
+- perfective
 grammar:
-  - Дієприслівники доконаного виду
-  - Суфікси -вши/-ши
-  - Попередність дій
+- Дієприслівники доконаного виду
+- Суфікси -вши/-ши
+- Попередність дій
 objectives:
-  - Learner can form perfective adverbial participles using -вши/-ши suffixes
-  - Learner can use adverbial participles to express prior completed actions
-  - Learner can distinguish between imperfective and perfective adverbial participles
+- Learner can form perfective adverbial participles using -вши/-ши suffixes
+- Learner can use adverbial participles to express prior completed actions
+- Learner can distinguish between imperfective and perfective adverbial participles
 vocabulary_count: 20
 vocab_count: 17
 slug: 43-adverbial-participles-perfective
+naturalness:
+  score: 9
+  status: PASS

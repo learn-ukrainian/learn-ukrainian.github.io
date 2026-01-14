@@ -9,19 +9,22 @@ pedagogy: PPP
 duration: 75
 transliteration: none
 tags:
-  - cultural
-  - winter-sports
-  - skiing
-  - snowboarding
-  - bukovel
+- cultural
+- winter-sports
+- skiing
+- snowboarding
+- bukovel
 grammar: []
 objectives:
-  - Learner can discuss winter sports and ski resorts in Ukrainian
-  - Learner can understand slopes maps and weather conditions
-  - Learner can use vocabulary for skiing equipment
-  - Learner can plan a winter vacation to Bukovel or Drahobrat
+- Learner can discuss winter sports and ski resorts in Ukrainian
+- Learner can understand slopes maps and weather conditions
+- Learner can use vocabulary for skiing equipment
+- Learner can plan a winter vacation to Bukovel or Drahobrat
 word_target: 1500
 vocab_target: 25
 immersion_target: 95
 vocab_count: 25
 slug: 84-winter-sports
+naturalness:
+  score: 9
+  status: PASS

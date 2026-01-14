@@ -8,16 +8,19 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - noun collocations with civic vocabulary
-  - political discourse patterns
+- noun collocations with civic vocabulary
+- political discourse patterns
 tags:
-  - vocabulary
-  - society
-  - politics
+- vocabulary
+- society
+- politics
 objectives:
-  - Learner can use 30 civic and political vocabulary words in context
-  - Learner can discuss democratic processes and institutions
-  - Learner can form natural collocations with political vocabulary
+- Learner can use 30 civic and political vocabulary words in context
+- Learner can discuss democratic processes and institutions
+- Learner can form natural collocations with political vocabulary
 vocabulary_count: 35
 vocab_count: 14
 slug: 60-society-politics
+naturalness:
+  score: 9
+  status: PASS

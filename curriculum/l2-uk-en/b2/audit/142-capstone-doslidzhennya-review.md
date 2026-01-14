@@ -1,5 +1,6 @@
 # Audit Report: 142-capstone-doslidzhennya.md
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
 - **Richness:** ✅ 97% (content)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -32,16 +34,16 @@
 | cultural | 7 | 4 | 100% | 12% | 12.5% |
 | realworld | 20 | 3 | 100% | 12% | 12.5% |
 | visual | 9 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.99 | - | 99% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
 | questions | 9 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.8%** |
+| **TOTAL** | | | | | **97.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ** | ⚪️ | 226 | Skipped |
-| **Планування часу: Як не провалити дедлайн** | ⚪️ | 174 | Skipped |
+| **Стратегії: Планування часу** | ⚪️ | 174 | Skipped |
 | **Пояснення: Методологія успіху** | ⚪️ | 231 | Skipped |
 | **Практика: Організація процесу** | ⚪️ | 216 | Skipped |
 | **Пошук джерел: Де ховається істина?** | ⚪️ | 269 | Skipped |

@@ -1,18 +1,10 @@
 # Audit Report: 56-synonyms-size.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-phraseology-module-template'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-phraseology-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1834/1750
+- **Words:** ✅ 1835/1750
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -26,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -40,7 +33,7 @@
 | cultural | 5 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 33 | - | 100% | 8% | 8.3% |
+| examples | 24 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 7 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **99.8%** |
@@ -49,9 +42,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |
-| **Пролог: Велич і мізерність навколо нас** | ⚪️ | 161 | Skipped |
+| **Вступ** | ⚪️ | 161 | Skipped |
 | **Фразеологізми та синоніми розміру** | ⚪️ | 622 | Skipped |
-| **Культурний код: Параметри та виміри в українському світогляді** | ✅ | 291 | Included in Core |
+| **Культурний код: Параметри та виміри в українському світогляді** | ✅ | 292 | Included in Core |
 | **Мистецтво порівняння та гіперболи в літературі** | ⚪️ | 109 | Skipped |
 | **Вживання у контексті: Регістр та Стиль** | ✅ | 175 | Included in Core |
 | **Індустріальний масштаб та сучасна урбаністика** | ⚪️ | 211 | Skipped |

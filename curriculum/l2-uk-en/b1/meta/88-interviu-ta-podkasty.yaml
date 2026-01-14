@@ -8,16 +8,19 @@ pedagogy: CBI
 duration: 90
 transliteration: none
 tags:
-  - integration
-  - listening
-  - audio comprehension
-  - note-taking
+- integration
+- listening
+- audio comprehension
+- note-taking
 grammar: []
 objectives:
-  - Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
-  - Learner can identify main points and key information in spoken discourse
-  - Learner can take effective notes while listening to Ukrainian audio content
-  - Learner is prepared for autonomous listening practice at B2
+- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
+- Learner can identify main points and key information in spoken discourse
+- Learner can take effective notes while listening to Ukrainian audio content
+- Learner is prepared for autonomous listening practice at B2
 vocabulary_count: 38
 vocab_count: 38
 slug: 88-interviu-ta-podkasty
+naturalness:
+  score: 9
+  status: PASS

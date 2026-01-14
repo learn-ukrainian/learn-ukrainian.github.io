@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - complex-sentences
-  - causal-clauses
-  - result-clauses
+- grammar
+- complex-sentences
+- causal-clauses
+- result-clauses
 grammar:
-  - Causal clause constructions with тому що, бо, через те що
-  - Result clause constructions with тому, отже, внаслідок
+- Causal clause constructions with тому що, бо, через те що
+- Result clause constructions with тому, отже, внаслідок
 objectives:
-  - Learner can express причина using various causal connectors
-  - Learner can express наслідок using result connectors
-  - Learner can transform causal statements into result statements
+- Learner can express причина using various causal connectors
+- Learner can express наслідок using result connectors
+- Learner can transform causal statements into result statements
 vocabulary_count: 25
 vocab_count: 15
 slug: 36-causal-result-clauses
+naturalness:
+  score: 9
+  status: PASS

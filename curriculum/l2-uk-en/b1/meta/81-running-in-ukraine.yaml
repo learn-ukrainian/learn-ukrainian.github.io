@@ -9,19 +9,22 @@ pedagogy: PPP
 duration: 75
 transliteration: none
 tags:
-  - cultural
-  - running
-  - marathons
-  - events
-  - active-lifestyle
+- cultural
+- running
+- marathons
+- events
+- active-lifestyle
 grammar: []
 objectives:
-  - Learner can discuss running events and training in Ukrainian
-  - Learner can understand registration information for races
-  - Learner can use running-specific vocabulary
-  - Learner can describe their running experience
+- Learner can discuss running events and training in Ukrainian
+- Learner can understand registration information for races
+- Learner can use running-specific vocabulary
+- Learner can describe their running experience
 word_target: 1500
 vocab_target: 25
 immersion_target: 95
 vocab_count: 25
 slug: 81-running-in-ukraine
+naturalness:
+  score: 9
+  status: PASS

@@ -8,19 +8,22 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - integration
-  - practice
-  - prepositions
+- grammar
+- motion-verbs
+- integration
+- practice
+- prepositions
 grammar:
-  - Integration of pure and prefixed motion verbs
-  - Prepositions governing motion (в, на, до, через, повз)
-  - Figurative idioms with motion verbs
+- Integration of pure and prefixed motion verbs
+- Prepositions governing motion (в, на, до, через, повз)
+- Figurative idioms with motion verbs
 objectives:
-  - Master complex travel narratives
-  - Correctly use prepositions with specific motion prefixes
-  - Understand and use high-frequency motion idioms
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
 vocabulary_count: 34
 vocab_count: 46
 slug: 24-motion-practice-integration
+naturalness:
+  score: 9
+  status: PASS

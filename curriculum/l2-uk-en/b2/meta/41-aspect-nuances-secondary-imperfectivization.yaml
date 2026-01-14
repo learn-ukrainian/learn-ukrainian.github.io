@@ -4,24 +4,27 @@ subtitle: Secondary Imperfectivization - Deriving Imperfective from Perfective
 version: '1.0'
 phase: B2.2 [Phraseology & Synonymy]
 pedagogy: TTT
-focus: phraseology
+focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - verb-formation
-  - imperfectivization
+- grammar
+- aspect
+- verb-formation
+- imperfectivization
 grammar:
-  - Secondary imperfectivization (вторинна імперфективація)
-  - 'Suffix patterns: -ува-/-юва-, -ва-, -а-/-я-'
-  - Vowel alternation in roots
-  - Aspectual pairs with prefixes
+- Secondary imperfectivization (вторинна імперфективація)
+- 'Suffix patterns: -ува-/-юва-, -ва-, -а-/-я-'
+- Vowel alternation in roots
+- Aspectual pairs with prefixes
 objectives:
-  - Learner can identify secondary imperfective forms derived from perfective verbs
-  - Learner can apply correct suffixation patterns for imperfectivization
-  - Learner can distinguish iterative and process meanings of secondary imperfectives
-  - Learner can use secondary imperfectives appropriately in context
+- Learner can identify secondary imperfective forms derived from perfective verbs
+- Learner can apply correct suffixation patterns for imperfectivization
+- Learner can distinguish iterative and process meanings of secondary imperfectives
+- Learner can use secondary imperfectives appropriately in context
 vocabulary_count: 35
 vocab_count: 79
 slug: 41-aspect-nuances-secondary-imperfectivization
+naturalness:
+  score: 9
+  status: PASS

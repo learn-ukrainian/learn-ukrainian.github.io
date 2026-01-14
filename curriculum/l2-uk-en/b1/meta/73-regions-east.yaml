@@ -8,18 +8,20 @@ pedagogy: CBI
 duration: 90
 transliteration: none
 grammar:
-  - reading comprehension
-  - cultural vocabulary in context
+- reading comprehension
+- cultural vocabulary in context
 tags:
-  - cultural
-  - regions
-  - eastern-ukraine
+- cultural
+- regions
+- eastern-ukraine
 objectives:
-  - Learner can discuss Eastern Ukraine's industrial heritage and academic centers
-  - Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
-  - Learner can use regional vocabulary to describe Eastern Ukrainian culture and
-    identity
-  - Learner can compare Eastern Ukrainian traditions with other regions
+- Learner can discuss Eastern Ukraine's industrial heritage and academic centers
+- Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
+- Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity
+- Learner can compare Eastern Ukrainian traditions with other regions
 vocabulary_count: 46
 vocab_count: 46
 slug: 73-regions-east
+naturalness:
+  score: 9
+  status: PASS

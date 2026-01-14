@@ -9,18 +9,21 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - practice
-  - integration
-  - phraseology
-  - grammar
+- practice
+- integration
+- phraseology
+- grammar
 grammar:
-  - Review of complex syntax
-  - Phraseological integration
+- Review of complex syntax
+- Phraseological integration
 objectives:
-  - Учень може вільно інтеграції прислів'я та приказки у власну аргументацію
-  - Учень вміє створювати зв'язні тексти, використовуючи ідіоми та складні сполучники
-  - Учень демонструє майстерність у виборі синонімів залежно від контексту
+- Учень може вільно інтеграції прислів'я та приказки у власну аргументацію
+- Учень вміє створювати зв'язні тексти, використовуючи ідіоми та складні сполучники
+- Учень демонструє майстерність у виборі синонімів залежно від контексту
 vocabulary_count: 35
 register: змішаний
 vocab_count: 46
 slug: 69-integration-practice
+naturalness:
+  score: 9
+  status: PASS

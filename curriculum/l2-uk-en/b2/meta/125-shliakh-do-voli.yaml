@@ -1,24 +1,28 @@
 module: b2-125
-title: "Синтез: Шлях до Волі"
-subtitle: "Synthesis: The Road to Freedom"
-version: "2.0"
-phase: "B2.3d Independence & War Synthesis"
+title: 'Синтез: Шлях до Волі'
+subtitle: 'Synthesis: The Road to Freedom'
+version: '2.0'
+phase: B2.3d Independence & War Synthesis
 focus: synthesis
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - synthesis
-  - independence
-  - revolution
-  - identity
+- history
+- synthesis
+- independence
+- revolution
+- identity
 grammar:
-  - "Historical narrative synthesis"
-  - "Argumentative writing structures"
+- Historical narrative synthesis
+- Argumentative writing structures
 objectives:
-  - "Learner can synthesize the factors leading to Ukrainian independence and its preservation"
-  - "Learner can analyze the continuity of democratic movements from 1990 to 2014"
-  - "Learner can construct arguments regarding the importance of institutional and spiritual independence"
+- Learner can synthesize the factors leading to Ukrainian independence and its preservation
+- Learner can analyze the continuity of democratic movements from 1990 to 2014
+- Learner can construct arguments regarding the importance of institutional and spiritual
+  independence
 vocabulary_count: 25
 slug: 125-shliakh-do-voli
+naturalness:
+  score: 9
+  status: PASS

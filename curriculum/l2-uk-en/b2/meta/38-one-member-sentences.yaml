@@ -8,20 +8,23 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - syntax
-  - sentence-structure
-  - stylistics
+- grammar
+- syntax
+- sentence-structure
+- stylistics
 grammar:
-  - Означено-особові речення
-  - Неозначено-особові речення
-  - Безособові речення
-  - Номінативні речення
+- Означено-особові речення
+- Неозначено-особові речення
+- Безособові речення
+- Номінативні речення
 objectives:
-  - Learner can identify and classify four types of one-member sentences
-  - Learner can use one-member sentences for stylistic effect
-  - Learner can transform two-member sentences into one-member structures
-  - Learner understands the expressive functions of one-member sentences
+- Learner can identify and classify four types of one-member sentences
+- Learner can use one-member sentences for stylistic effect
+- Learner can transform two-member sentences into one-member structures
+- Learner understands the expressive functions of one-member sentences
 vocabulary_count: 25
 vocab_count: 82
 slug: 38-one-member-sentences
+naturalness:
+  score: 9
+  status: PASS

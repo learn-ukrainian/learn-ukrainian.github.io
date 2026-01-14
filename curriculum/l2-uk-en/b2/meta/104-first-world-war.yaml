@@ -9,14 +9,17 @@ duration: 45 min
 transliteration: none
 vocabulary_count: 25
 tags:
-  - history
-  - war
-  - USS
+- history
+- war
+- USS
 grammar:
-  - Military Vocabulary
-  - Past Tense in Narrative
+- Military Vocabulary
+- Past Tense in Narrative
 objectives:
-  - Зрозуміти трагедію розділеного народу
-  - Вивчити історію Легіону УСС
-  - Опанувати військову лексику
+- Зрозуміти трагедію розділеного народу
+- Вивчити історію Легіону УСС
+- Опанувати військову лексику
 vocab_count: 122
+naturalness:
+  score: 9
+  status: PASS

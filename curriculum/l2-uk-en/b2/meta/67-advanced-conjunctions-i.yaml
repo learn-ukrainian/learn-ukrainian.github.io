@@ -9,20 +9,23 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - grammar
-  - conjunctions
-  - causal
-  - concessive
+- grammar
+- conjunctions
+- causal
+- concessive
 grammar:
-  - Causal conjunctions (тому що vs оскільки)
-  - Concessive conjunctions (хоча vs незважаючи на)
+- Causal conjunctions (тому що vs оскільки)
+- Concessive conjunctions (хоча vs незважаючи на)
 objectives:
-  - Учень може будувати складні причинно-наслідкові ланцюжки, використовуючи різноманітні
-    сполучники
-  - Учень вміє висловлювати допуск та протиставлення в офіційному та публіцистичному
-    стилях
-  - Учень розуміє стилістичні відтінки між бо, тому що та оскільки
+- Учень може будувати складні причинно-наслідкові ланцюжки, використовуючи різноманітні
+  сполучники
+- Учень вміє висловлювати допуск та протиставлення в офіційному та публіцистичному
+  стилях
+- Учень розуміє стилістичні відтінки між бо, тому що та оскільки
 vocabulary_count: 36
 register: публіцистичний
 vocab_count: 42
 slug: 67-advanced-conjunctions-i
+naturalness:
+  score: 9
+  status: PASS

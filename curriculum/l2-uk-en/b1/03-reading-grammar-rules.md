@@ -4,9 +4,9 @@
 >
 > You've learned the names for parts of speech, cases, aspects, and tenses. Now you need to understand *how* Ukrainian grammar books explain rules. This module teaches you the patterns and phrases that appear in every Ukrainian grammar resource — so you can learn independently from materials written for native speakers.
 
-## Presentation
+## Вступ
 
-### The Language of Grammar Explanations
+### Мова граматичних пояснень
 
 Ukrainians have a proverb: **«Без правил і мова — не мова.»** — «Without rules, even language isn't language.» This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language *of* grammar.
 
@@ -26,11 +26,13 @@ Where do Ukrainians learn these patterns? Київ is home to the National Acade
 
 ---
 
-## Explanation Patterns: Пояснювальні конструкції
+## Пояснення
 
-### «Is Used When...»
+### Моделі пояснень: Пояснювальні конструкції
 
-The most common pattern explains when to use a grammatical form:
+#### «Використовується, коли...»
+
+Найпоширеніша модель пояснює, коли вживати ту чи іншу граматичну форму:
 
 | Pattern | English | Example |
 |---------|---------|---------|
@@ -68,9 +70,9 @@ These patterns explain *what* a form means:
 
 ---
 
-## Instruction Patterns: Інструкції
+### Моделі інструкцій: Інструкції
 
-### Commands in Grammar Exercises
+#### Команди в граматичних вправах
 
 Grammar exercises use imperative forms. Learn these instruction verbs:
 
@@ -108,9 +110,9 @@ Grammar often compares forms:
 
 ---
 
-## Word Formation Terms: Словотвір
+### Терміни словотвору: Словотвір
 
-### Parts of a Word
+#### Частини слова
 
 To understand how words are built, you need these terms:
 
@@ -136,7 +138,7 @@ To understand how words are built, you need these terms:
 
 ---
 
-## Activity Instruction Verbs: Інструкції для вправ
+### Дієслова-інструкції до вправ: Інструкції для вправ
 
 When you work with grammar exercises, you'll see these specific instruction verbs:
 
@@ -170,7 +172,7 @@ When you work with grammar exercises, you'll see these specific instruction verb
 
 ---
 
-## Analytical Terms: Аналітична лексика
+### Аналітичні терміни: Аналітична лексика
 
 Grammar discussions use these analytical terms to describe linguistic concepts:
 
@@ -199,7 +201,7 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 
 ---
 
-## Style and Register: Стиль і регістр
+### Стиль і регістр: Стиль і регістр
 
 Grammar books discuss different language styles:
 
@@ -230,7 +232,7 @@ Grammar books discuss different language styles:
 
 ---
 
-## Practice
+## Практика
 
 ### Reading a Grammar Explanation
 
@@ -292,7 +294,7 @@ When you see these words, you know the grammar is signaling a logical step. «О
 
 ---
 
-## Mini-Dialogues
+## Міні-діалоги
 
 ### Діалог 1: Читання підручника
 
@@ -453,7 +455,7 @@ With these terms, you can now read grammar explanations in Ukrainian textbooks a
 
 ---
 
-## Need More Practice?
+## Потрібно більше практики?
 
 - Practice reading Ukrainian grammar explanations on [Ukrainian Lessons](https://www.ukrainianlessons.com/) — they use these exact patterns
 - Try reading grammar sections on [СЛОВНИК.UA](https://slovnyk.ua/) — real Ukrainian grammar terminology in context

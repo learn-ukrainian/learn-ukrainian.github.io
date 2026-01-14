@@ -8,17 +8,20 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - purpose-clauses
-  - complex-sentences
-  - subjunctive
+- grammar
+- purpose-clauses
+- complex-sentences
+- subjunctive
 grammar:
-  - щоб + past form for different-subject purpose clauses
-  - Subject agreement in subordinate clauses
+- щоб + past form for different-subject purpose clauses
+- Subject agreement in subordinate clauses
 objectives:
-  - Learner understands when to use щоб + past form
-  - Learner can form different-subject purpose clauses
-  - Learner can correctly agree verb forms with subjects
+- Learner understands when to use щоб + past form
+- Learner can form different-subject purpose clauses
+- Learner can correctly agree verb forms with subjects
 vocabulary_count: 25
 vocab_count: 30
 slug: 30-purpose-shchob-past-form
+naturalness:
+  score: 9
+  status: PASS

@@ -8,16 +8,19 @@ pedagogy: CBI
 duration: 90
 transliteration: none
 tags:
-  - cultural
-  - music
-  - contemporary
+- cultural
+- music
+- contemporary
 grammar:
-  - cultural vocabulary in context
+- cultural vocabulary in context
 objectives:
-  - Learner can discuss Ukrainian music genres and artists in context
-  - Learner can understand authentic texts about Ukrainian music scene
-  - Learner can use music-related vocabulary to express preferences
-  - Learner can compare Ukrainian music with their own musical culture
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
 vocabulary_count: 52
 vocab_count: 52
 slug: 76-ukrainian-music-today
+naturalness:
+  score: 9
+  status: PASS

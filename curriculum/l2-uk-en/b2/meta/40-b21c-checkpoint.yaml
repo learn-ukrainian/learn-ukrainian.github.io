@@ -9,25 +9,28 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - checkpoint
-  - integration
-  - numerals
-  - word-formation
-  - syntax
-  - register
+- checkpoint
+- integration
+- numerals
+- word-formation
+- syntax
+- register
 grammar:
-  - Integration of M31-M39
-  - Numeral declension review
-  - Word formation patterns review
-  - One-member sentences review
-  - Religious and epistolary register review
+- Integration of M31-M39
+- Numeral declension review
+- Word formation patterns review
+- One-member sentences review
+- Religious and epistolary register review
 objectives:
-  - Learner can demonstrate mastery of numeral declension for time and dates
-  - Learner can form nouns using person, abstract, and place suffixes
-  - Learner can identify and use one-member sentences for stylistic effect
-  - Learner can recognize and produce texts in religious and epistolary registers
-  - Learner can self-assess readiness for B2.2 (Phraseology)
+- Learner can demonstrate mastery of numeral declension for time and dates
+- Learner can form nouns using person, abstract, and place suffixes
+- Learner can identify and use one-member sentences for stylistic effect
+- Learner can recognize and produce texts in religious and epistolary registers
+- Learner can self-assess readiness for B2.2 (Phraseology)
 vocabulary_count: 50
 register: varies
 vocab_count: 39
 slug: 40-b21c-checkpoint
+naturalness:
+  score: 9
+  status: PASS

@@ -9,16 +9,19 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - quality
+- vocabulary
+- synonyms
+- quality
 grammar:
-  - Nuances in evaluative adjectives
-  - Register and subjective judgment
+- Nuances in evaluative adjectives
+- Register and subjective judgment
 objectives:
-  - Учень може розрізняти відтінки значень синонімів на позначення якості
-  - Учень вміє вживати оцінну лексику відповідно до контексту та регістру
+- Учень може розрізняти відтінки значень синонімів на позначення якості
+- Учень вміє вживати оцінну лексику відповідно до контексту та регістру
 vocabulary_count: 35
 register: публіцистичний
 vocab_count: 65
 slug: 58-synonyms-quality
+naturalness:
+  score: 9
+  status: PASS

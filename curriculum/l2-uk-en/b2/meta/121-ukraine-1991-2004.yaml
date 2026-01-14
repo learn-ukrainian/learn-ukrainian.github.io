@@ -1,25 +1,28 @@
 module: b2-121
-title: "Україна 1991-2004: Становлення"
-subtitle: "Ukraine 1991-2004: Formation"
-version: "2.0"
-phase: "B2.3d Independence & War"
+title: 'Україна 1991-2004: Становлення'
+subtitle: 'Ukraine 1991-2004: Formation'
+version: '2.0'
+phase: B2.3d Independence & War
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - independence
-  - economy
-  - constitution
-  - politics
+- history
+- independence
+- economy
+- constitution
+- politics
 grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in political discourse"
+- Historical narrative tenses
+- Passive voice in political discourse
 objectives:
-  - "Understand the economic and political challenges of early independence"
-  - "Identify key events: Budapest Memorandum, Adoption of Constitution, Monetary reform"
-  - "Analyze the emergence of the oligarchic system"
-  - "Discuss the presidency of Kravchuk and Kuchma"
+- Understand the economic and political challenges of early independence
+- 'Identify key events: Budapest Memorandum, Adoption of Constitution, Monetary reform'
+- Analyze the emergence of the oligarchic system
+- Discuss the presidency of Kravchuk and Kuchma
 vocabulary_count: 25
 slug: 121-ukraine-1991-2004
+naturalness:
+  score: 9
+  status: PASS

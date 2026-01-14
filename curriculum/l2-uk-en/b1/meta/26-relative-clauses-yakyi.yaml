@@ -8,16 +8,19 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - relative-clauses
-  - complex-sentences
+- grammar
+- relative-clauses
+- complex-sentences
 grammar:
-  - який/яка/яке/які in all cases
-  - Agreement with antecedent and role in clause
+- який/яка/яке/які in all cases
+- Agreement with antecedent and role in clause
 objectives:
-  - Learner understands який agreement patterns
-  - Learner can use який in all seven cases
-  - Learner can combine sentences using який
+- Learner understands який agreement patterns
+- Learner can use який in all seven cases
+- Learner can combine sentences using який
 vocabulary_count: 25
 vocab_count: 10
 slug: 26-relative-clauses-yakyi
+naturalness:
+  score: 9
+  status: PASS

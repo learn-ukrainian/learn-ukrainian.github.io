@@ -288,7 +288,7 @@ Status: APPROVED (pipeline passes) or NEEDS MANUAL REVIEW
 - Validate MDX (no content loss)
 - Validate HTML (browser rendering)
 
-**Note:** HTML validation requires `cd docusaurus && npm start` running
+**Note:** HTML validation requires `cd docusaurus && pnpm start` running
 
 ## Individual Stage Commands
 

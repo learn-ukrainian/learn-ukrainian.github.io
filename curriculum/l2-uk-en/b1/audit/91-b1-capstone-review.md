@@ -1,5 +1,6 @@
 # Audit Report: 91-b1-capstone.md
 **Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TBL | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -10,14 +11,15 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/15
+- **Vocab:** ✅ 34/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.7% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -43,11 +45,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
 | **Огляд** | ⚪️ | 11 | Skipped |
-| **Завдання 1: Читання** | ✅ | 301 | Included in Core |
-| **Завдання 2: Письмо** | ⚪️ | 117 | Skipped |
-| **Завдання 3: Аудіювання** | ⚪️ | 119 | Skipped |
-| **Завдання 4: Граматика** | ⚪️ | 222 | Skipped |
-| **Завдання 5: Лексика** | ⚪️ | 119 | Skipped |
+| **Інтеграція** | ⚪️ | 878 | Skipped |
 | **Діалог: Розмова про підсумки B1** | ✅ | 177 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ваш шлях від A1 до B1** | ⚪️ | 5 | Skipped |

@@ -1,5 +1,6 @@
 # Audit Report: 90-b1-vocabulary-integration.md
 **Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,7 +18,8 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -44,7 +46,7 @@
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Діагностика** | ✅ | 148 | Included in Core |
 | **Огляд** | ⚪️ | 1072 | Skipped |
-| **Поглиблення** | ⚪️ | 305 | Skipped |
+| **Інтеграція** | ⚪️ | 305 | Skipped |
 | **Практика** | ⚪️ | 289 | Skipped |
 | **Підсумок** | ✅ | 124 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

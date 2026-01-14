@@ -8,16 +8,19 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion
-  - prefixes
+- grammar
+- motion
+- prefixes
 grammar:
-  - Prefixes при-, ви-, в-/у- with motion verbs
-  - Arrival, exit, and entry semantics
+- Prefixes при-, ви-, в-/у- with motion verbs
+- Arrival, exit, and entry semantics
 objectives:
-  - Learner can form motion verbs with при-, ви-, в-/у- prefixes
-  - Learner can choose correct prefix for arrival, exit, or entry
-  - Learner can use prefixed motion verbs in sentences
+- Learner can form motion verbs with при-, ви-, в-/у- prefixes
+- Learner can choose correct prefix for arrival, exit, or entry
+- Learner can use prefixed motion verbs in sentences
 vocabulary_count: 25
 vocab_count: 30
 slug: 17-motion-coming-going
+naturalness:
+  score: 9
+  status: PASS

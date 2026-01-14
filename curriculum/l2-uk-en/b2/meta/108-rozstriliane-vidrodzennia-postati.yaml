@@ -1,25 +1,28 @@
 module: b2-108
-title: "Розстріляне відродження I: Постаті"
-subtitle: "The Executed Renaissance I: Key Figures"
-version: "2.0"
-phase: "B2.3c Trauma & Resistance"
+title: 'Розстріляне відродження I: Постаті'
+subtitle: 'The Executed Renaissance I: Key Figures'
+version: '2.0'
+phase: B2.3c Trauma & Resistance
 focus: history
-pedagogy: "CBI"
+pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - literature
-  - art
-  - repression
-  - sandarmokh
+- history
+- literature
+- art
+- repression
+- sandarmokh
 grammar:
-  - "Historical narrative register"
-  - "Biography-specific vocabulary"
+- Historical narrative register
+- Biography-specific vocabulary
 objectives:
-  - "Identify key figures of the Executed Renaissance: Khvylovy, Zerov, Kurbas, Boychuk"
-  - "Understand the concept of 'Psychological Europe' and 'Away from Moscow'"
-  - "Analyze the tragic fate of the 1920s generation"
-  - "Identify the cultural significance of the 'Slovo' building"
+- 'Identify key figures of the Executed Renaissance: Khvylovy, Zerov, Kurbas, Boychuk'
+- Understand the concept of 'Psychological Europe' and 'Away from Moscow'
+- Analyze the tragic fate of the 1920s generation
+- Identify the cultural significance of the 'Slovo' building
 vocabulary_count: 25
 slug: 108-rozstriliane-vidrodzennia-postati
+naturalness:
+  score: 9
+  status: PASS

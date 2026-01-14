@@ -9,18 +9,21 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - state
+- vocabulary
+- synonyms
+- state
 grammar:
-  - Nuances in verbs of state
-  - Static vs Appearative verbs
+- Nuances in verbs of state
+- Static vs Appearative verbs
 objectives:
-  - Учень може розрізняти відтінки значень дієслів на позначення буття (бути, існувати,
-    перебувати)
-  - Учень вміє обирати точне слово для опису умов, обставин та зовнішнього вигляду
-  - Учень розуміє філософську концепцію буття в українській мовній картині світу
+- Учень може розрізняти відтінки значень дієслів на позначення буття (бути, існувати,
+  перебувати)
+- Учень вміє обирати точне слово для опису умов, обставин та зовнішнього вигляду
+- Учень розуміє філософську концепцію буття в українській мовній картині світу
 vocabulary_count: 35
 register: науковий
 vocab_count: 33
 slug: 65-synonyms-state
+naturalness:
+  score: 9
+  status: PASS

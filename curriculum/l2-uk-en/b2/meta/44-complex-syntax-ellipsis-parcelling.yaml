@@ -8,20 +8,23 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - syntax
-  - stylistics
-  - literature
+- grammar
+- syntax
+- stylistics
+- literature
 grammar:
-  - Ellipsis (еліпсис/пропуск) - omission of understood words
-  - Parcelling (парцеляція) - stylistic fragmentation with periods
-  - Expressive syntax in literature and speech
+- Ellipsis (еліпсис/пропуск) - omission of understood words
+- Parcelling (парцеляція) - stylistic fragmentation with periods
+- Expressive syntax in literature and speech
 objectives:
-  - Learner can recognize elliptical constructions in authentic Ukrainian texts
-  - Learner can produce parcelled sentences for stylistic effect
-  - Learner can recover omitted elements in elliptical speech
-  - Learner can transform standard sentences using parcelling
+- Learner can recognize elliptical constructions in authentic Ukrainian texts
+- Learner can produce parcelled sentences for stylistic effect
+- Learner can recover omitted elements in elliptical speech
+- Learner can transform standard sentences using parcelling
 vocabulary_count: 36
 register: художній
 vocab_count: 76
 slug: 44-complex-syntax-ellipsis-parcelling
+naturalness:
+  score: 9
+  status: PASS

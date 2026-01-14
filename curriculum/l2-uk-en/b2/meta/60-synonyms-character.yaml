@@ -9,19 +9,22 @@ duration: 90
 transliteration: none
 immersion: 100
 tags:
-  - vocabulary
-  - synonyms
-  - character
+- vocabulary
+- synonyms
+- character
 grammar:
-  - Adjectival nuances in personality
-  - Abstract nouns for traits
+- Adjectival nuances in personality
+- Abstract nouns for traits
 objectives:
-  - Учень може розрізняти відтінки значень між синонімами на позначення інтелекту
-    та доброти
-  - Учень вміє створювати детальні психологічні портрети, використовуючи лексику рівня
-    B2
-  - Учень розуміє концепцію 'вдачі' та 'натури' в українському культурному контексті
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелекту та
+  доброти
+- Учень вміє створювати детальні психологічні портрети, використовуючи лексику рівня
+  B2
+- Учень розуміє концепцію 'вдачі' та 'натури' в українському культурному контексті
 vocabulary_count: 35
 register: художній
 vocab_count: 115
 slug: 60-synonyms-character
+naturalness:
+  score: 9
+  status: PASS

@@ -8,16 +8,19 @@ pedagogy: PPP
 duration: 90
 transliteration: none
 grammar:
-  - verb collocations with speaking vocabulary
-  - register differentiation in reporting verbs
+- verb collocations with speaking vocabulary
+- register differentiation in reporting verbs
 tags:
-  - vocabulary
-  - synonymy
-  - speaking-verbs
+- vocabulary
+- synonymy
+- speaking-verbs
 objectives:
-  - Learner can distinguish between казати/говорити/розповідати/повідомляти
-  - Learner can use 20 speaking verbs with appropriate collocations
-  - Learner can select verbs by register (formal vs informal)
+- Learner can distinguish between казати/говорити/розповідати/повідомляти
+- Learner can use 20 speaking verbs with appropriate collocations
+- Learner can select verbs by register (formal vs informal)
 vocabulary_count: 35
 vocab_count: 18
 slug: 69-synonymy-speaking-verbs
+naturalness:
+  score: 9
+  status: PASS

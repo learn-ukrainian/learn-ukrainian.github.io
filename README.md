@@ -62,7 +62,7 @@ cd learn-ukrainian.github.io
 npm install
 
 # Start the web platform
-cd docusaurus && npm start
+cd docusaurus && pnpm start
 # Opens at http://localhost:3000/
 ```
 

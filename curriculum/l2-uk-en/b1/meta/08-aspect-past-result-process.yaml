@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 35
 vocab_count: 24
 slug: 08-aspect-past-result-process
+naturalness:
+  score: 9
+  status: PASS
