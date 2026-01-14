@@ -2,260 +2,268 @@ module: 04-the-instrumental-i-accompaniment
 level: A2
 version: '2.0'
 items:
-  - lemma: ама
-    ipa: ˈɑmɐ
-    translation: ending
-    pos: noun
-    gender: m
-  - lemma: ами
-    ipa: ˈɑmɪ
-    translation: ending
-    pos: other
-  - lemma: виконуватися
-    ipa: vɪˈkɔnuʋɐtɪsʲɐ
-    translation: to be performed; to happen
-    pos: verb
-  - lemma: використовуватися
-    ipa: vɪkorɪsˈtɔʋuʋɐtɪsʲɐ
-    translation: to be used
-    pos: verb
-  - lemma: виняток
-    ipa: ˈvɪnʲɐtok
-    translation: exception
-    pos: noun
-    gender: m
-  - lemma: відображати
-    ipa: vidobrɐˈʒɑte
-    translation: to reflect
-    pos: verb
-  - lemma: відразу
-    ipa: vidˈrɑzu
-    translation: immediately
-    pos: adv
-  - lemma: господар
-    ipa: hosˈpɔdɐr
-    translation: master; host; owner
-    pos: noun
-    gender: m
-  - lemma: ем
-    ipa: em
-    translation: ending
-    pos: other
-  - lemma: закохатися
-    ipa: zɐkoˈxɑtɪsʲɐ
-    translation: to fall in love
-    pos: verb
-  - lemma: закричати
-    ipa: zɐkrɪˈt͡ʃɑte
-    translation: to scream; to shout
-    pos: verb
-  - lemma: закінчуватися
-    ipa: zɐˈkint͡ʃuʋɐtɪsʲɐ
-    translation: to finish; to end
-    pos: verb
-  - lemma: засіб
-    ipa: ˈzɑsib
-    translation: means; remedy
-    pos: noun
-    gender: m
-  - lemma: зм
-    ipa: zm
-    translation: change?
-    pos: other
-  - lemma: зі
-    ipa: zi
-    translation: with (variant of з)
-    pos: other
-  - lemma: й
-    ipa: i
-    translation: and
-    pos: other
-  - lemma: кохання
-    ipa: koˈxɑnʲːɐ
-    translation: love
-    pos: noun
-    gender: n
-  - lemma: крем
-    ipa: krɛm
-    translation: cream
-    pos: noun
-    gender: m
-  - lemma: любовий
-    ipa: lʲuˈbɔʋei̯
-    translation: love (adj) - typo? Любов (name)?
-    pos: adj
-    gender: f
-  - lemma: марина
-    ipa: mɐˈrɪnɐ
-    translation: Maryna
-    pos: propn
-    gender: f
-  - lemma: мн
-    ipa: mn
-    translation: pl
-    pos: other
-  - lemma: над
-    ipa: nɑd
-    translation: above; over
-    pos: other
-  - lemma: найчастіше
-    ipa: nɐi̯t͡ʃɐsˈtiʃe
-    translation: most often
-    pos: adv
-  - lemma: наталія
-    ipa: nɐˈtɑlʲijɐ
-    translation: Nataliya
-    pos: propn
-    gender: f
-  - lemma: начальник
-    ipa: nɐˈt͡ʃɑlʲnɪk
-    translation: boss; chief
-    pos: noun
-    gender: m
-  - lemma: олексій
-    ipa: olekˈsʲii̯
-    translation: Oleksiy
-    pos: propn
-    gender: m
-  - lemma: ом
-    ipa: om
-    translation: ending
-    pos: noun
-    gender: m
-  - lemma: орудний
-    ipa: oˈrudnei̯
-    translation: instrumental (case)
-    pos: adj
-    gender: m
-  - lemma: орудувати
-    ipa: oruˈduʋɐte
-    translation: to wield; to operate
-    pos: verb
-  - lemma: освіжати
-    ipa: osʲʋiˈʒɑte
-    translation: to refresh
-    pos: verb
-  - lemma: партнер
-    ipa: pɐrtˈnɛr
-    translation: partner
-    pos: noun
-    gender: m
-  - lemma: подружитися
-    ipa: podruˈʒɪtɪsʲɐ
-    translation: to make friends
-    pos: verb
-  - lemma: познайомити
-    ipa: poznɐˈjɔmɪte
-    translation: to introduce
-    pos: verb
-    gender: m
-  - lemma: поле
-    ipa: ˈpɔle
-    translation: field
-    pos: noun
-    gender: n
-  - lemma: помиритися
-    ipa: pomɪˈrɪtɪsʲɐ
-    translation: to reconcile; to make up
-    pos: verb
-  - lemma: попрощатися
-    ipa: poproˈʃt͡ʃɑtɪsʲɐ
-    translation: to say goodbye
-    pos: verb
-  - lemma: посваритися
-    ipa: posʋɐˈrɪtɪsʲɐ
-    translation: to quarrel
-    pos: verb
-  - lemma: походити
-    ipa: poxoˈdɪte
-    translation: to originate; to come from
-    pos: verb
-  - lemma: правильно
-    ipa: ˈprɑʋɪlʲno
-    translation: correctly
-    pos: adv
-  - lemma: проєкт
-    ipa: proˈjɛkt
-    translation: project
-    pos: noun
-    gender: m
-  - lemma: розлучитися
-    ipa: rozluˈt͡ʃɪtɪsʲɐ
-    translation: to divorce
-    pos: verb
-  - lemma: супровод
-    ipa: suˈprɔʋid
-    translation: accompaniment; escort
-    pos: noun
-    gender: m
-  - lemma: сховатися
-    ipa: sxoˈʋɑtɪsʲɐ
-    translation: to hide (oneself)
-    pos: verb
-  - lemma: сюрприз
-    ipa: sʲurˈprɪz
-    translation: surprise
-    pos: noun
-    gender: m
-  - lemma: уже
-    ipa: uˈʒɛ
-    translation: already
-    pos: adv
-  - lemma: утворити
-    ipa: utʋoˈrɪte
-    translation: to form; to create
-    pos: verb
-  - lemma: учора
-    ipa: uˈt͡ʃɔrɐ
-    translation: yesterday
-    pos: adv
-  - lemma: функція
-    ipa: ˈfunkt͡sʲijɐ
-    translation: function
-    pos: noun
-    gender: f
-  - lemma: хресна
-    ipa: ˈxrɛsnɐ
-    translation: godmother
-    pos: other
-    gender: f
-  - lemma: яма
-    ipa: ˈjɑmɐ
-    translation: ending or pit
-    pos: noun
-    gender: f
-  - lemma: єм
-    ipa: jem
-    translation: ending
-    pos: other
-  - lemma: відмінок
-    translation: case
-    pos: noun
-    gender: m
-  - lemma: час
-    translation: time; tense
-    pos: noun
-    gender: m
-  - lemma: давальний
-    translation: dative
-    pos: adj
-  - lemma: називний
-    translation: nominative
-    pos: adj
-  - lemma: родовий
-    translation: genitive
-    pos: adj
-  - lemma: місцевий
-    translation: locative
-    pos: adj
-  - lemma: кличний
-    translation: vocative
-    pos: adj
-  - lemma: знахідний
-    translation: accusative
-    pos: adj
-  - lemma: інструмент
-    ipa: instruˈmɛnt
-    translation: instrument; tool
-    pos: noun
-    gender: m
+- lemma: ама
+  ipa: ˈɑmɐ
+  translation: ending
+  pos: noun
+  gender: m
+- lemma: ами
+  ipa: ˈɑmɪ
+  translation: ending
+  pos: other
+- lemma: виконуватися
+  ipa: vɪˈkɔnuʋɐtɪsʲɐ
+  translation: to be performed; to happen
+  pos: verb
+- lemma: використовуватися
+  ipa: vɪkorɪsˈtɔʋuʋɐtɪsʲɐ
+  translation: to be used
+  pos: verb
+- lemma: виняток
+  ipa: ˈvɪnʲɐtok
+  translation: exception
+  pos: noun
+  gender: m
+- lemma: відображати
+  ipa: vidobrɐˈʒɑte
+  translation: to reflect
+  pos: verb
+- lemma: відразу
+  ipa: vidˈrɑzu
+  translation: immediately
+  pos: adv
+- lemma: господар
+  ipa: hosˈpɔdɐr
+  translation: master; host; owner
+  pos: noun
+  gender: m
+- lemma: ем
+  ipa: em
+  translation: ending
+  pos: other
+- lemma: закохатися
+  ipa: zɐkoˈxɑtɪsʲɐ
+  translation: to fall in love
+  pos: verb
+- lemma: закричати
+  ipa: zɐkrɪˈt͡ʃɑte
+  translation: to scream; to shout
+  pos: verb
+- lemma: закінчуватися
+  ipa: zɐˈkint͡ʃuʋɐtɪsʲɐ
+  translation: to finish; to end
+  pos: verb
+- lemma: засіб
+  ipa: ˈzɑsib
+  translation: means; remedy
+  pos: noun
+  gender: m
+- lemma: зм
+  ipa: zm
+  translation: change?
+  pos: other
+- lemma: зі
+  ipa: zi
+  translation: with (variant of з)
+  pos: other
+- lemma: й
+  ipa: i
+  translation: and
+  pos: other
+- lemma: кохання
+  ipa: koˈxɑnʲːɐ
+  translation: love
+  pos: noun
+  gender: n
+- lemma: крем
+  ipa: krɛm
+  translation: cream
+  pos: noun
+  gender: m
+- lemma: любовий
+  ipa: lʲuˈbɔʋei̯
+  translation: love (adj) - typo? Любов (name)?
+  pos: adj
+  gender: f
+- lemma: марина
+  ipa: mɐˈrɪnɐ
+  translation: Maryna
+  pos: propn
+  gender: f
+- lemma: мн
+  ipa: mn
+  translation: pl
+  pos: other
+- lemma: над
+  ipa: nɑd
+  translation: above; over
+  pos: other
+- lemma: найчастіше
+  ipa: nɐi̯t͡ʃɐsˈtiʃe
+  translation: most often
+  pos: adv
+- lemma: наталія
+  ipa: nɐˈtɑlʲijɐ
+  translation: Nataliya
+  pos: propn
+  gender: f
+- lemma: начальник
+  ipa: nɐˈt͡ʃɑlʲnɪk
+  translation: boss; chief
+  pos: noun
+  gender: m
+- lemma: олексій
+  ipa: olekˈsʲii̯
+  translation: Oleksiy
+  pos: propn
+  gender: m
+- lemma: ом
+  ipa: om
+  translation: ending
+  pos: noun
+  gender: m
+- lemma: орудний
+  ipa: oˈrudnei̯
+  translation: instrumental (case)
+  pos: adj
+  gender: m
+- lemma: орудувати
+  ipa: oruˈduʋɐte
+  translation: to wield; to operate
+  pos: verb
+- lemma: освіжати
+  ipa: osʲʋiˈʒɑte
+  translation: to refresh
+  pos: verb
+- lemma: партнер
+  ipa: pɐrtˈnɛr
+  translation: partner
+  pos: noun
+  gender: m
+- lemma: подружитися
+  ipa: podruˈʒɪtɪsʲɐ
+  translation: to make friends
+  pos: verb
+- lemma: познайомити
+  ipa: poznɐˈjɔmɪte
+  translation: to introduce
+  pos: verb
+  gender: m
+- lemma: поле
+  ipa: ˈpɔle
+  translation: field
+  pos: noun
+  gender: n
+- lemma: помиритися
+  ipa: pomɪˈrɪtɪsʲɐ
+  translation: to reconcile; to make up
+  pos: verb
+- lemma: попрощатися
+  ipa: poproˈʃt͡ʃɑtɪsʲɐ
+  translation: to say goodbye
+  pos: verb
+- lemma: посваритися
+  ipa: posʋɐˈrɪtɪsʲɐ
+  translation: to quarrel
+  pos: verb
+- lemma: походити
+  ipa: poxoˈdɪte
+  translation: to originate; to come from
+  pos: verb
+- lemma: правильно
+  ipa: ˈprɑʋɪlʲno
+  translation: correctly
+  pos: adv
+- lemma: проєкт
+  ipa: proˈjɛkt
+  translation: project
+  pos: noun
+  gender: m
+- lemma: розлучитися
+  ipa: rozluˈt͡ʃɪtɪsʲɐ
+  translation: to divorce
+  pos: verb
+- lemma: супровод
+  ipa: suˈprɔʋid
+  translation: accompaniment; escort
+  pos: noun
+  gender: m
+- lemma: сховатися
+  ipa: sxoˈʋɑtɪsʲɐ
+  translation: to hide (oneself)
+  pos: verb
+- lemma: сюрприз
+  ipa: sʲurˈprɪz
+  translation: surprise
+  pos: noun
+  gender: m
+- lemma: уже
+  ipa: uˈʒɛ
+  translation: already
+  pos: adv
+- lemma: утворити
+  ipa: utʋoˈrɪte
+  translation: to form; to create
+  pos: verb
+- lemma: учора
+  ipa: uˈt͡ʃɔrɐ
+  translation: yesterday
+  pos: adv
+- lemma: функція
+  ipa: ˈfunkt͡sʲijɐ
+  translation: function
+  pos: noun
+  gender: f
+- lemma: хресна
+  ipa: ˈxrɛsnɐ
+  translation: godmother
+  pos: other
+  gender: f
+- lemma: яма
+  ipa: ˈjɑmɐ
+  translation: ending or pit
+  pos: noun
+  gender: f
+- lemma: єм
+  ipa: jem
+  translation: ending
+  pos: other
+- lemma: відмінок
+  translation: case
+  pos: noun
+  gender: m
+  ipa: /ʋʲidˈmʲinɔk/
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: давальний
+  translation: dative
+  pos: adj
+  ipa: /dɐˈʋɑlʲnɪj/
+- lemma: називний
+  translation: nominative
+  pos: adj
+  ipa: /nɐzɪu̯ˈnɪj/
+- lemma: родовий
+  translation: genitive
+  pos: adj
+  ipa: /rodoˈʋɪj/
+- lemma: місцевий
+  translation: locative
+  pos: adj
+  ipa: /mʲisˈt͡sɛʋɪj/
+- lemma: кличний
+  translation: vocative
+  pos: adj
+  ipa: /ˈklɪt͡ʃnɪj/
+- lemma: знахідний
+  translation: accusative
+  pos: adj
+  ipa: /znɐˈxʲidnɪj/
+- lemma: інструмент
+  ipa: instruˈmɛnt
+  translation: instrument; tool
+  pos: noun
+  gender: m

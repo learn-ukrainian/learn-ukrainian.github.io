@@ -99,19 +99,24 @@ items:
   translation: plural
   pos: noun
   gender: f
+  ipa: /mnoˈʒɪnɐ/
 - lemma: називний
   translation: nominative
   pos: adj
+  ipa: /nɐzɪu̯ˈnɪj/
 - lemma: рід
   translation: gender
   pos: noun
   gender: m
+  ipa: /rʲid/
 - lemma: чоловічий
   translation: masculine
   pos: adj
+  ipa: /t͡ʃoloˈʋʲit͡ʃɪj/
 - lemma: жіночий
   translation: feminine
   pos: adj
+  ipa: /ʒʲiˈnɔt͡ʃɪj/
 - lemma: числівник
   ipa: t͡ʃɪsˈlʲiʋnɪk
   translation: numeral
@@ -121,7 +126,6 @@ items:
   ipa: jɐˈkɪjsʲ
   translation: some; a certain
   pos: other
-
 - lemma: іменник
   ipa: /iˈmɛnːɪk/
   translation: noun

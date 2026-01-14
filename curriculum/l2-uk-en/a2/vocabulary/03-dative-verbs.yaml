@@ -2,313 +2,318 @@ module: 03-dative-verbs
 level: A2
 version: '2.0'
 items:
-  - lemma: бракувати
-    ipa: brɐkuˈʋɑte
-    translation: to lack
-    pos: verb
-  - lemma: ваз
-    ipa: ʋɑz
-    translation: vase or VAZ (car)
-    pos: noun
-    gender: f
-  - lemma: вечірець
-    ipa: ʋet͡ʃiˈrɛt͡ʃ
-    translation: party (little evening? вечірка is std)
-    pos: noun
-    gender: f
-  - lemma: визначати
-    ipa: vɪznɐˈt͡ʃɑte
-    translation: to determine
-    pos: verb
-  - lemma: вистачати
-    ipa: vɪstɐˈt͡ʃɑte
-    translation: to be enough
-    pos: verb
-  - lemma: відрізнятися
-    ipa: vidrizˈnʲɑtɪsʲɐ
-    translation: to differ
-    pos: verb
-  - lemma: відчувати
-    ipa: vidt͡ʃuˈʋɑte
-    translation: to feel
-    pos: verb
-  - lemma: героїня
-    ipa: ɦeroˈjinʲɐ
-    translation: heroine
-    pos: noun
-    gender: f
-  - lemma: гратися
-    ipa: ˈɦrɑtɪsʲɐ
-    translation: to play
-    pos: verb
-  - lemma: дозволяти
-    ipa: dozʋoˈlʲɑte
-    translation: to allow
-    pos: verb
-  - lemma: дізнатися
-    ipa: dizˈnɑtɪsʲɐ
-    translation: to find out
-    pos: verb
-  - lemma: дієслов
-    ipa: dijeˈslɔu̯
-    translation: verb
-    pos: noun
-    gender: m
-  - lemma: еквівалент
-    ipa: ekʋiʋɐˈlɛnt
-    translation: equivalent
-    pos: noun
-    gender: m
-  - lemma: заборона
-    ipa: zɐboˈrɔnɐ
-    translation: prohibition
-    pos: noun
-    gender: f
-  - lemma: забороняти
-    ipa: zɐboronʲˈɑte
-    translation: to prohibit
-    pos: verb
-  - lemma: заздрити
-    ipa: ˈzɑzdrɪte
-    translation: to envy
-    pos: verb
-  - lemma: замість
-    ipa: ˈzɑmisʲtʲ
-    translation: instead of
-    pos: other
-  - lemma: заслуговувати
-    ipa: zɐsluˈɦɔʋuʋɐte
-    translation: to deserve
-    pos: verb
-  - lemma: змінювати
-    ipa: ˈzminʲuʋɐte
-    translation: to change
-    pos: verb
-  - lemma: значення
-    ipa: ˈznɑt͡ʃenʲːɐ
-    translation: meaning
-    pos: noun
-    gender: n
-  - lemma: казка
-    ipa: ˈkɑzkɐ
-    translation: fairy tale
-    pos: noun
-    gender: f
-  - lemma: клас
-    ipa: klɑs
-    translation: class
-    pos: noun
-    gender: m
-  - lemma: конструкція
-    ipa: konˈstrukt͡sʲijɐ
-    translation: construction
-    pos: noun
-    gender: f
-  - lemma: користуватися
-    ipa: korɪstuˈʋɑtɪsʲɐ
-    translation: to use
-    pos: verb
-  - lemma: кінотеатр
-    ipa: kinoˈtɛɐtr
-    translation: cinema
-    pos: noun
-    gender: m
-  - lemma: методик
-    ipa: meˈtɔdɪk
-    translation: methods
-    pos: noun
-    gender: f
-  - lemma: методика
-    ipa: meˈtɔdɪkɐ
-    translation: methodology
-    pos: noun
-    gender: f
-  - lemma: мислення
-    ipa: ˈmɪslenʲːɐ
-    translation: thinking
-    pos: noun
-    gender: n
-  - lemma: обоє
-    ipa: oˈbɔje
-    translation: both
-    pos: other
-  - lemma: олега
-    ipa: oˈlɛɦɐ
-    translation: Oleh
-    pos: propn
-    gender: m
-  - lemma: оскільки
-    ipa: osˈkilʲkɪ
-    translation: since; because
-    pos: other
-  - lemma: п'ятниця
-    ipa: ˈpjatnɪt͡sʲɐ
-    translation: Friday
-    pos: propn
-    gender: f
-  - lemma: пасувати
-    ipa: pɐsuˈʋɑte
-    translation: to suit; to fit
-    pos: verb
-  - lemma: повністю
-    ipa: ˈpɔu̯nisʲtʲu
-    translation: completely
-    pos: adv
-  - lemma: подарувати
-    ipa: podɐruˈʋɑte
-    translation: to give as a gift
-    pos: verb
-  - lemma: порядок
-    ipa: poˈrʲɑdok
-    translation: order; sequence
-    pos: noun
-    gender: m
-  - lemma: посилати
-    ipa: posɪˈlɑte
-    translation: to send
-    pos: verb
-  - lemma: приносити
-    ipa: prɪˈnɔsɪte
-    translation: to bring
-    pos: verb
-  - lemma: приємно
-    ipa: prɪˈjɛmno
-    translation: pleasantly; nice
-    pos: adv
-  - lemma: пробачати
-    ipa: probɐˈt͡ʃɑte
-    translation: to forgive
-    pos: verb
-  - lemma: пробачити
-    ipa: proˈbɑt͡ʃɪte
-    translation: to forgive
-    pos: verb
-  - lemma: підмет
-    ipa: ˈpidmet
-    translation: subject (grammar)
-    pos: noun
-    gender: m
-  - lemma: підходити
-    ipa: pidˈxɔdɪte
-    translation: to approach; to suit
-    pos: verb
-  - lemma: родинний
-    ipa: roˈdɪnːei̯
-    translation: family (adj)
-    pos: adj
-    gender: f
-  - lemma: розбити
-    ipa: rozˈbɪte
-    translation: to break
-    pos: verb
-    gender: m
-  - lemma: розмовляти
-    ipa: rozmou̯ˈlʲɑte
-    translation: to speak; to talk
-    pos: verb
-  - lemma: саме
-    ipa: ˈsɑme
-    translation: exactly; precisely
-    pos: other
-  - lemma: симпатизувати
-    ipa: sɪmpɐtɪzuˈʋɑte
-    translation: to sympathize
-    pos: verb
-  - lemma: симпатія
-    ipa: sɪmˈpɑtʲijɐ
-    translation: sympathy
-    pos: noun
-    gender: f
-  - lemma: син
-    ipa: sɪn
-    translation: son
-    pos: noun
-    gender: m
-  - lemma: спас
-    ipa: spɑs
-    translation: savior; Spas (holiday)
-    pos: noun
-    gender: m
-  - lemma: спасибі
-    ipa: spɐˈsɪbi
-    translation: thank you
-    pos: other
-  - lemma: справді
-    ipa: ˈsprɑu̯dʲi
-    translation: really; indeed
-    pos: adv
-  - lemma: сприймати
-    ipa: sprɪi̯ˈmɑte
-    translation: to perceive
-    pos: verb
-  - lemma: спрямований
-    ipa: sprʲɐˈmɔʋɐnei̯
-    translation: directed
-    pos: adj
-    gender: f
-  - lemma: співчувати
-    ipa: spiu̯t͡ʃuˈʋɑte
-    translation: to sympathize
-    pos: verb
-  - lemma: ставати
-    ipa: stɐˈʋɑte
-    translation: to become
-    pos: verb
-  - lemma: сцена
-    ipa: ˈst͡sɛnɐ
-    translation: scene; stage
-    pos: noun
-    gender: f
-  - lemma: тема
-    ipa: ˈtɛmɐ
-    translation: topic; theme
-    pos: noun
-    gender: f
-  - lemma: давальний
-    translation: dative
-    pos: adj
-  - lemma: дієслово
-    translation: verb
-    pos: noun
-    gender: m
-  - lemma: час
-    translation: time; tense
-    pos: noun
-    gender: m
-  - lemma: знахідний
-    translation: accusative
-    pos: adj
-  - lemma: відмінок
-    translation: case
-    pos: noun
-    gender: m
-  - lemma: утворювати
-    ipa: utˈʋɔrʲuʋɐte
-    translation: to form; to create
-    pos: verb
-  - lemma: учнева
-    ipa: ˈut͡ʃneʋɐ
-    translation: student's (female? archaic?)
-    pos: noun
-    gender: m
-  - lemma: фундаментально
-    ipa: fundɐmenˈtɑlʲno
-    translation: fundamentally
-    pos: adv
-  - lemma: шкодувати
-    ipa: ʃkoduˈʋɑte
-    translation: to regret; to pity
-    pos: verb
-  - lemma: щиро
-    ipa: ˈʃt͡ʃɪro
-    translation: sincerely
-    pos: adv
-  - lemma: щоб
-    ipa: ʃt͡ʃɔb
-    translation: in order to
-    pos: other
-  - lemma: щоденник
-    ipa: ʃt͡ʃoˈdɛnːɪk
-    translation: diary
-    pos: noun
-    gender: m
+- lemma: бракувати
+  ipa: brɐkuˈʋɑte
+  translation: to lack
+  pos: verb
+- lemma: ваз
+  ipa: ʋɑz
+  translation: vase (genitive pl) or VAZ (car)
+  pos: noun
+  gender: f
+- lemma: вечірець
+  ipa: ʋet͡ʃiˈrɛt͡ʃ
+  translation: party (little evening? вечірка is std)
+  pos: noun
+  gender: f
+- lemma: визначати
+  ipa: vɪznɐˈt͡ʃɑte
+  translation: to determine
+  pos: verb
+- lemma: вистачати
+  ipa: vɪstɐˈt͡ʃɑte
+  translation: to be enough
+  pos: verb
+- lemma: відрізнятися
+  ipa: vidrizˈnʲɑtɪsʲɐ
+  translation: to differ
+  pos: verb
+- lemma: відчувати
+  ipa: vidt͡ʃuˈʋɑte
+  translation: to feel
+  pos: verb
+- lemma: героїня
+  ipa: ɦeroˈjinʲɐ
+  translation: heroine
+  pos: noun
+  gender: f
+- lemma: гратися
+  ipa: ˈɦrɑtɪsʲɐ
+  translation: to play
+  pos: verb
+- lemma: дозволяти
+  ipa: dozʋoˈlʲɑte
+  translation: to allow
+  pos: verb
+- lemma: дізнатися
+  ipa: dizˈnɑtɪsʲɐ
+  translation: to find out
+  pos: verb
+- lemma: дієслов
+  ipa: dijeˈslɔu̯
+  translation: verb (genitive pl)
+  pos: noun
+  gender: m
+- lemma: еквівалент
+  ipa: ekʋiʋɐˈlɛnt
+  translation: equivalent
+  pos: noun
+  gender: m
+- lemma: заборона
+  ipa: zɐboˈrɔnɐ
+  translation: prohibition
+  pos: noun
+  gender: f
+- lemma: забороняти
+  ipa: zɐboronʲˈɑte
+  translation: to prohibit
+  pos: verb
+- lemma: заздрити
+  ipa: ˈzɑzdrɪte
+  translation: to envy
+  pos: verb
+- lemma: замість
+  ipa: ˈzɑmisʲtʲ
+  translation: instead of
+  pos: other
+- lemma: заслуговувати
+  ipa: zɐsluˈɦɔʋuʋɐte
+  translation: to deserve
+  pos: verb
+- lemma: змінювати
+  ipa: ˈzminʲuʋɐte
+  translation: to change
+  pos: verb
+- lemma: значення
+  ipa: ˈznɑt͡ʃenʲːɐ
+  translation: meaning
+  pos: noun
+  gender: n
+- lemma: казка
+  ipa: ˈkɑzkɐ
+  translation: fairy tale
+  pos: noun
+  gender: f
+- lemma: клас
+  ipa: klɑs
+  translation: class
+  pos: noun
+  gender: m
+- lemma: конструкція
+  ipa: konˈstrukt͡sʲijɐ
+  translation: construction
+  pos: noun
+  gender: f
+- lemma: користуватися
+  ipa: korɪstuˈʋɑtɪsʲɐ
+  translation: to use
+  pos: verb
+- lemma: кінотеатр
+  ipa: kinoˈtɛɐtr
+  translation: cinema
+  pos: noun
+  gender: m
+- lemma: методик
+  ipa: meˈtɔdɪk
+  translation: methods (genitive pl)
+  pos: noun
+  gender: f
+- lemma: методика
+  ipa: meˈtɔdɪkɐ
+  translation: methodology
+  pos: noun
+  gender: f
+- lemma: мислення
+  ipa: ˈmɪslenʲːɐ
+  translation: thinking
+  pos: noun
+  gender: n
+- lemma: обоє
+  ipa: oˈbɔje
+  translation: both
+  pos: other
+- lemma: олега
+  ipa: oˈlɛɦɐ
+  translation: Oleh (genitive/accusative)
+  pos: propn
+  gender: m
+- lemma: оскільки
+  ipa: osˈkilʲkɪ
+  translation: since; because
+  pos: other
+- lemma: п'ятниця
+  ipa: ˈpjatnɪt͡sʲɐ
+  translation: Friday
+  pos: propn
+  gender: f
+- lemma: пасувати
+  ipa: pɐsuˈʋɑte
+  translation: to suit; to fit
+  pos: verb
+- lemma: повністю
+  ipa: ˈpɔu̯nisʲtʲu
+  translation: completely
+  pos: adv
+- lemma: подарувати
+  ipa: podɐruˈʋɑte
+  translation: to give as a gift
+  pos: verb
+- lemma: порядок
+  ipa: poˈrʲɑdok
+  translation: order; sequence
+  pos: noun
+  gender: m
+- lemma: посилати
+  ipa: posɪˈlɑte
+  translation: to send
+  pos: verb
+- lemma: приносити
+  ipa: prɪˈnɔsɪte
+  translation: to bring
+  pos: verb
+- lemma: приємно
+  ipa: prɪˈjɛmno
+  translation: pleasantly; nice
+  pos: adv
+- lemma: пробачати
+  ipa: probɐˈt͡ʃɑte
+  translation: to forgive
+  pos: verb
+- lemma: пробачити
+  ipa: proˈbɑt͡ʃɪte
+  translation: to forgive (perfective)
+  pos: verb
+- lemma: підмет
+  ipa: ˈpidmet
+  translation: subject (grammar)
+  pos: noun
+  gender: m
+- lemma: підходити
+  ipa: pidˈxɔdɪte
+  translation: to approach; to suit
+  pos: verb
+- lemma: родинний
+  ipa: roˈdɪnːei̯
+  translation: family (adj)
+  pos: adj
+  gender: f
+- lemma: розбити
+  ipa: rozˈbɪte
+  translation: to break
+  pos: verb
+  gender: m
+- lemma: розмовляти
+  ipa: rozmou̯ˈlʲɑte
+  translation: to speak; to talk
+  pos: verb
+- lemma: саме
+  ipa: ˈsɑme
+  translation: exactly; precisely
+  pos: other
+- lemma: симпатизувати
+  ipa: sɪmpɐtɪzuˈʋɑte
+  translation: to sympathize
+  pos: verb
+- lemma: симпатія
+  ipa: sɪmˈpɑtʲijɐ
+  translation: sympathy
+  pos: noun
+  gender: f
+- lemma: син
+  ipa: sɪn
+  translation: son
+  pos: noun
+  gender: m
+- lemma: спас
+  ipa: spɑs
+  translation: savior; Spas (holiday)
+  pos: noun
+  gender: m
+- lemma: спасибі
+  ipa: spɐˈsɪbi
+  translation: thank you
+  pos: other
+- lemma: справді
+  ipa: ˈsprɑu̯dʲi
+  translation: really; indeed
+  pos: adv
+- lemma: сприймати
+  ipa: sprɪi̯ˈmɑte
+  translation: to perceive
+  pos: verb
+- lemma: спрямований
+  ipa: sprʲɐˈmɔʋɐnei̯
+  translation: directed
+  pos: adj
+  gender: f
+- lemma: співчувати
+  ipa: spiu̯t͡ʃuˈʋɑte
+  translation: to sympathize
+  pos: verb
+- lemma: ставати
+  ipa: stɐˈʋɑte
+  translation: to become
+  pos: verb
+- lemma: сцена
+  ipa: ˈst͡sɛnɐ
+  translation: scene; stage
+  pos: noun
+  gender: f
+- lemma: тема
+  ipa: ˈtɛmɐ
+  translation: topic; theme
+  pos: noun
+  gender: f
+- lemma: давальний
+  translation: dative
+  pos: adj
+  ipa: /dɐˈʋɑlʲnɪj/
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  gender: m
+  ipa: /dʲijeˈslɔʋo/
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: знахідний
+  translation: accusative
+  pos: adj
+  ipa: /znɐˈxʲidnɪj/
+- lemma: відмінок
+  translation: case
+  pos: noun
+  gender: m
+  ipa: /ʋʲidˈmʲinɔk/
+- lemma: утворювати
+  ipa: utˈʋɔrʲuʋɐte
+  translation: to form; to create
+  pos: verb
+- lemma: учнева
+  ipa: ˈut͡ʃneʋɐ
+  translation: student's (female? archaic?)
+  pos: noun
+  gender: m
+- lemma: фундаментально
+  ipa: fundɐmenˈtɑlʲno
+  translation: fundamentally
+  pos: adv
+- lemma: шкодувати
+  ipa: ʃkoduˈʋɑte
+  translation: to regret; to pity
+  pos: verb
+- lemma: щиро
+  ipa: ˈʃt͡ʃɪro
+  translation: sincerely
+  pos: adv
+- lemma: щоб
+  ipa: ʃt͡ʃɔb
+  translation: in order to
+  pos: other
+- lemma: щоденник
+  ipa: ʃt͡ʃoˈdɛnːɪk
+  translation: diary
+  pos: noun
+  gender: m

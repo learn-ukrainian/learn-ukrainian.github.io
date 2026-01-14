@@ -204,14 +204,17 @@ items:
   translation: aspect
   pos: noun
   gender: m
+  ipa: /ʋɪd/
 - lemma: недоконаний
   translation: imperfective
   pos: adj
   gender: m
+  ipa: /nedoˈkɔnɐnɪj/
 - lemma: доконаний
   translation: perfective
   pos: adj
   gender: m
+  ipa: /doˈkɔnɐnɪj/
 - lemma: якось
   ipa: ˈjɑkosʲ
   translation: somehow; once

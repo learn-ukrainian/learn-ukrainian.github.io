@@ -2,238 +2,243 @@ module: 10-at-the-post-office-and-bank
 level: A2
 version: '2.0'
 items:
-  - lemma: автоматично
-    ipa: ɐu̯tomɐˈtɪt͡ʃno
-    translation: automatically
-    pos: adv
-  - lemma: баланс
-    ipa: bɐˈlɑns
-    translation: balance
-    pos: noun
-    gender: m
-  - lemma: валюта
-    ipa: ʋɐˈlʲutɐ
-    translation: currency
-    pos: noun
-    gender: f
-  - lemma: ввічливий
-    ipa: ˈʋːit͡ʃlɪʋei̯
-    translation: polite
-    pos: adj
-  - lemma: ввічливість
-    ipa: ˈʋːit͡ʃlɪʋisʲtʲ
-    translation: politeness
-    pos: noun
-    gender: f
-  - lemma: використання
-    ipa: vɪkorɪsˈtɑnʲːɐ
-    translation: usage
-    pos: noun
-    gender: n
-  - lemma: вказати
-    ipa: vkɐˈzɑte
-    translation: to indicate
-    pos: verb
-  - lemma: відправлення
-    ipa: vidˈprɑu̯lenʲːɐ
-    translation: shipment; sending
-    pos: noun
-    gender: n
-  - lemma: гаразд
-    ipa: ɦɐˈrɑzd
-    translation: okay; fine
-    pos: other
-  - lemma: готово
-    ipa: hoˈtɔʋo
-    translation: ready; done
-    pos: adv
-  - lemma: двість
-    ipa: dvisʲtʲ
-    translation: two hundred (typo? двісті)
-    pos: other
-  - lemma: ефективно
-    ipa: efekˈtɪu̯no
-    translation: effectively
-    pos: adv
-  - lemma: загубити
-    ipa: zɐhuˈbɪte
-    translation: to lose
-    pos: verb
-    gender: m
-  - lemma: закрити
-    ipa: zɐˈkrɪte
-    translation: to close
-    pos: verb
-  - lemma: звазти
-    ipa: zʋɐʒte
-    translation: to weigh (typo? зважити)
-    pos: verb
-  - lemma: звичайний
-    ipa: zʋɪˈt͡ʃɑi̯nei̯
-    translation: ordinary; normal
-    pos: adj
-    gender: m
-  - lemma: зняти
-    ipa: ˈznʲɑte
-    translation: to withdraw; to remove
-    pos: verb
-  - lemma: квитанція
-    ipa: kvɪˈtɑnt͡sʲijɐ
-    translation: receipt
-    pos: noun
-    gender: f
-  - lemma: контексть
-    ipa: konˈtɛkst
-    translation: context (typo? контекст)
-    pos: noun
-    gender: m
-  - lemma: кредит
-    ipa: kreˈdɪt
-    translation: credit
-    pos: noun
-    gender: m
-  - lemma: купівля
-    ipa: kuˈpiu̯lʲɐ
-    translation: purchase
-    pos: noun
-    gender: f
-  - lemma: лексик
-    ipa: ˈlɛksɪkɐ
-    translation: vocabulary
-    pos: noun
-    gender: f
-  - lemma: марка
-    ipa: ˈmɑrkɐ
-    translation: stamp
-    pos: noun
-    gender: f
-  - lemma: метод
-    ipa: ˈmɛtod
-    translation: method
-    pos: noun
-    gender: m
-  - lemma: німеччина
-    ipa: nimeˈt͡ʃːɪnɐ
-    translation: Germany
-    pos: propn
-    gender: f
-  - lemma: обмін
-    ipa: ˈobmin
-    translation: exchange
-    pos: noun
-    gender: m
-  - lemma: обміняти
-    ipa: obmiˈnʲɑte
-    translation: to exchange
-    pos: verb
-  - lemma: огляд
-    ipa: ˈɔhlʲɐd
-    translation: review; overview
-    pos: noun
-    gender: m
-  - lemma: оплата
-    ipa: oˈplɑtɐ
-    translation: payment
-    pos: noun
-    gender: f
-  - lemma: п'ятсот
-    ipa: pjɐtˈsɔt
-    translation: five hundred
-    pos: other
-  - lemma: переказ
-    ipa: pereˈkɑz
-    translation: transfer; retelling
-    pos: noun
-    gender: m
-  - lemma: переказа
-    ipa: pereˈkɑzɐ
-    translation: transfer (genitive?)
-    pos: noun
-    gender: m
-  - lemma: переказати
-    ipa: perekɐˈzɑte
-    translation: to transfer; to retell
-    pos: verb
-  - lemma: переклад
-    ipa: pereˈklɑd
-    translation: translation
-    pos: noun
-    gender: m
-  - lemma: покласти
-    ipa: poˈklɑste
-    translation: to put; to deposit
-    pos: verb
-  - lemma: послуга
-    ipa: ˈpɔsluɦɐ
-    translation: service
-    pos: noun
-    gender: f
-  - lemma: походження
-    ipa: poˈxɔdʒenʲːɐ
-    translation: origin
-    pos: noun
-    gender: n
-  - lemma: прохань
-    ipa: proˈxɑnʲ
-    translation: request (genitive pl?)
-    pos: noun
-    gender: n
-  - lemma: рекомендований
-    ipa: rekomenˈdɔʋɐnei̯
-    translation: recommended; registered (mail)
-    pos: adj
-    gender: m
-  - lemma: розуміння
-    ipa: rozuˈminʲːɐ
-    translation: understanding
-    pos: noun
-    gender: n
-  - lemma: сервісний
-    ipa: ˈsɛrvisnei̯
-    translation: service (adj)
-    pos: adj
-  - lemma: ситуація
-    ipa: sɪtuˈɑt͡sʲijɐ
-    translation: situation
-    pos: noun
-    gender: f
-  - lemma: сфера
-    ipa: ˈsfɛrɐ
-    translation: sphere; area
-    pos: noun
-    gender: f
-  - lemma: тисяча
-    ipa: ˈtɪsʲɐt͡ʃɐ
-    translation: thousand
-    pos: other
-  - lemma: управління
-    ipa: uprɐu̯ˈlʲinʲːɐ
-    translation: management; control
-    pos: noun
-    gender: n
-  - lemma: формула
-    ipa: ˈfɔrmulɐ
-    translation: formula
-    pos: noun
-    gender: f
-  - lemma: родовий
-    translation: genitive
-    pos: adj
-  - lemma: знахідний
-    translation: accusative
-    pos: adj
-  - lemma: орудний
-    translation: instrumental
-    pos: adj
-  - lemma: давальний
-    translation: dative
-    pos: adj
-  - lemma: відмінок
-    translation: case
-    pos: noun
-    gender: m
-  - lemma: індекс
-    ipa: ˈindeks
-    translation: zip code; index
-    pos: noun
-    gender: m
+- lemma: автоматично
+  ipa: ɐu̯tomɐˈtɪt͡ʃno
+  translation: automatically
+  pos: adv
+- lemma: баланс
+  ipa: bɐˈlɑns
+  translation: balance
+  pos: noun
+  gender: m
+- lemma: валюта
+  ipa: ʋɐˈlʲutɐ
+  translation: currency
+  pos: noun
+  gender: f
+- lemma: ввічливий
+  ipa: ˈʋːit͡ʃlɪʋei̯
+  translation: polite
+  pos: adj
+- lemma: ввічливість
+  ipa: ˈʋːit͡ʃlɪʋisʲtʲ
+  translation: politeness
+  pos: noun
+  gender: f
+- lemma: використання
+  ipa: vɪkorɪsˈtɑnʲːɐ
+  translation: usage
+  pos: noun
+  gender: n
+- lemma: вказати
+  ipa: vkɐˈzɑte
+  translation: to indicate
+  pos: verb
+- lemma: відправлення
+  ipa: vidˈprɑu̯lenʲːɐ
+  translation: shipment; sending
+  pos: noun
+  gender: n
+- lemma: гаразд
+  ipa: ɦɐˈrɑzd
+  translation: okay; fine
+  pos: other
+- lemma: готово
+  ipa: hoˈtɔʋo
+  translation: ready; done
+  pos: adv
+- lemma: двість
+  ipa: dvisʲtʲ
+  translation: two hundred (typo? двісті)
+  pos: other
+- lemma: ефективно
+  ipa: efekˈtɪu̯no
+  translation: effectively
+  pos: adv
+- lemma: загубити
+  ipa: zɐhuˈbɪte
+  translation: to lose
+  pos: verb
+  gender: m
+- lemma: закрити
+  ipa: zɐˈkrɪte
+  translation: to close
+  pos: verb
+- lemma: звазти
+  ipa: zʋɐʒte
+  translation: to weigh (typo? зважити)
+  pos: verb
+- lemma: звичайний
+  ipa: zʋɪˈt͡ʃɑi̯nei̯
+  translation: ordinary; normal
+  pos: adj
+  gender: m
+- lemma: зняти
+  ipa: ˈznʲɑte
+  translation: to withdraw; to remove
+  pos: verb
+- lemma: квитанція
+  ipa: kvɪˈtɑnt͡sʲijɐ
+  translation: receipt
+  pos: noun
+  gender: f
+- lemma: контексть
+  ipa: konˈtɛkst
+  translation: context (typo? контекст)
+  pos: noun
+  gender: m
+- lemma: кредит
+  ipa: kreˈdɪt
+  translation: credit
+  pos: noun
+  gender: m
+- lemma: купівля
+  ipa: kuˈpiu̯lʲɐ
+  translation: purchase
+  pos: noun
+  gender: f
+- lemma: лексик
+  ipa: ˈlɛksɪkɐ
+  translation: vocabulary
+  pos: noun
+  gender: f
+- lemma: марка
+  ipa: ˈmɑrkɐ
+  translation: stamp
+  pos: noun
+  gender: f
+- lemma: метод
+  ipa: ˈmɛtod
+  translation: method
+  pos: noun
+  gender: m
+- lemma: німеччина
+  ipa: nimeˈt͡ʃːɪnɐ
+  translation: Germany
+  pos: propn
+  gender: f
+- lemma: обмін
+  ipa: ˈobmin
+  translation: exchange
+  pos: noun
+  gender: m
+- lemma: обміняти
+  ipa: obmiˈnʲɑte
+  translation: to exchange
+  pos: verb
+- lemma: огляд
+  ipa: ˈɔhlʲɐd
+  translation: review; overview
+  pos: noun
+  gender: m
+- lemma: оплата
+  ipa: oˈplɑtɐ
+  translation: payment
+  pos: noun
+  gender: f
+- lemma: п'ятсот
+  ipa: pjɐtˈsɔt
+  translation: five hundred
+  pos: other
+- lemma: переказ
+  ipa: pereˈkɑz
+  translation: transfer; retelling
+  pos: noun
+  gender: m
+- lemma: переказа
+  ipa: pereˈkɑzɐ
+  translation: transfer (genitive?)
+  pos: noun
+  gender: m
+- lemma: переказати
+  ipa: perekɐˈzɑte
+  translation: to transfer; to retell
+  pos: verb
+- lemma: переклад
+  ipa: pereˈklɑd
+  translation: translation
+  pos: noun
+  gender: m
+- lemma: покласти
+  ipa: poˈklɑste
+  translation: to put; to deposit
+  pos: verb
+- lemma: послуга
+  ipa: ˈpɔsluɦɐ
+  translation: service
+  pos: noun
+  gender: f
+- lemma: походження
+  ipa: poˈxɔdʒenʲːɐ
+  translation: origin
+  pos: noun
+  gender: n
+- lemma: прохань
+  ipa: proˈxɑnʲ
+  translation: request (genitive pl?)
+  pos: noun
+  gender: n
+- lemma: рекомендований
+  ipa: rekomenˈdɔʋɐnei̯
+  translation: recommended; registered (mail)
+  pos: adj
+  gender: m
+- lemma: розуміння
+  ipa: rozuˈminʲːɐ
+  translation: understanding
+  pos: noun
+  gender: n
+- lemma: сервісний
+  ipa: ˈsɛrvisnei̯
+  translation: service (adj)
+  pos: adj
+- lemma: ситуація
+  ipa: sɪtuˈɑt͡sʲijɐ
+  translation: situation
+  pos: noun
+  gender: f
+- lemma: сфера
+  ipa: ˈsfɛrɐ
+  translation: sphere; area
+  pos: noun
+  gender: f
+- lemma: тисяча
+  ipa: ˈtɪsʲɐt͡ʃɐ
+  translation: thousand
+  pos: other
+- lemma: управління
+  ipa: uprɐu̯ˈlʲinʲːɐ
+  translation: management; control
+  pos: noun
+  gender: n
+- lemma: формула
+  ipa: ˈfɔrmulɐ
+  translation: formula
+  pos: noun
+  gender: f
+- lemma: родовий
+  translation: genitive
+  pos: adj
+  ipa: /rodoˈʋɪj/
+- lemma: знахідний
+  translation: accusative
+  pos: adj
+  ipa: /znɐˈxʲidnɪj/
+- lemma: орудний
+  translation: instrumental
+  pos: adj
+  ipa: /oˈrudnɪj/
+- lemma: давальний
+  translation: dative
+  pos: adj
+  ipa: /dɐˈʋɑlʲnɪj/
+- lemma: відмінок
+  translation: case
+  pos: noun
+  gender: m
+  ipa: /ʋʲidˈmʲinɔk/
+- lemma: індекс
+  ipa: ˈindeks
+  translation: zip code; index
+  pos: noun
+  gender: m

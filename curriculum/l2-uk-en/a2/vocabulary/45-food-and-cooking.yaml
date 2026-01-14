@@ -2,197 +2,219 @@ module: 45-food-and-cooking
 level: A2
 version: '2.0'
 items:
-  - lemma: каструля
-    ipa: kɐsˈtrulʲɐ
-    translation: pot
-    pos: noun
-    gender: f
-  - lemma: сковорода
-    ipa: skoʋoroˈdɑ
-    translation: frying pan
-    pos: noun
-    gender: f
-  - lemma: духовка
-    ipa: duˈxɔu̯kɐ
-    translation: oven
-    pos: noun
-    gender: f
-  - lemma: мікрохвильовка
-    ipa: mʲikroxʋɪˈlʲɔu̯kɐ
-    translation: microwave
-    pos: noun
-    gender: f
-  - lemma: холодильник
-    ipa: xoloˈdɪlʲnʲik
-    translation: refrigerator
-    pos: noun
-    gender: m
-  - lemma: плита
-    ipa: plɪˈtɑ
-    translation: stove
-    pos: noun
-    gender: f
-  - lemma: чайник
-    ipa: ˈt͡ʃɑjnʲik
-    translation: kettle
-    pos: noun
-    gender: m
-  - lemma: варити
-    ipa: ʋɐˈrɪtɪ
-    translation: to boil/cook
-    pos: verb
-  - lemma: смажити
-    ipa: ˈsmɑʒɪtɪ
-    translation: to fry
-    pos: verb
-  - lemma: пекти
-    ipa: pɛkˈtɪ
-    translation: to bake
-    pos: verb
-  - lemma: тушкувати
-    ipa: tuʃkuˈʋɑtɪ
-    translation: to stew
-    pos: verb
-  - lemma: нарізати
-    ipa: nɐˈrʲizɐtɪ
-    translation: to cut/slice
-    pos: verb
-  - lemma: запікати
-    ipa: zɐpiˈkɑtɪ
-    translation: to roast
-    pos: verb
-  - lemma: готувати
-    ipa: ɦotuˈʋɑtɪ
-    translation: to cook
-    pos: verb
-  - lemma: сніданок
-    ipa: snʲiˈdɑnɔk
-    translation: breakfast
-    pos: noun
-    gender: m
-  - lemma: обід
-    ipa: oˈbid
-    translation: lunch
-    pos: noun
-    gender: m
-  - lemma: вечеря
-    ipa: ʋɛˈt͡ʃɛrʲɐ
-    translation: dinner
-    pos: noun
-    gender: f
-  - lemma: перекус
-    ipa: pɛrɛˈkus
-    translation: snack
-    pos: noun
-    gender: m
-  - lemma: солодкий
-    ipa: soˈlɔdkɪj
-    translation: sweet
-    pos: adj
-  - lemma: солоний
-    ipa: soˈlɔnɪj
-    translation: salty
-    pos: adj
-  - lemma: кислий
-    ipa: ˈkɪslɪj
-    translation: sour
-    pos: adj
-  - lemma: гіркий
-    ipa: ɦʲirˈkɪj
-    translation: bitter
-    pos: adj
-  - lemma: гострий
-    ipa: ˈɦɔstrɪj
-    translation: spicy
-    pos: adj
-  - lemma: смачний
-    ipa: smɐt͡ʃˈnɪj
-    translation: delicious
-    pos: adj
-  - lemma: свіжий
-    ipa: ˈsʋʲiʒɪj
-    translation: fresh
-    pos: adj
-  - lemma: борошно
-    ipa: boˈrɔʃno
-    translation: flour
-    pos: noun
-    gender: n
-  - lemma: тісто
-    ipa: ˈtʲisto
-    translation: dough
-    pos: noun
-    gender: n
-  - lemma: начинка
-    ipa: ˈnɑt͡ʃɪnkɐ
-    translation: filling
-    pos: noun
-    gender: f
-  - lemma: змішати
-    ipa: zmʲiˈʃɑtɪ
-    translation: to mix
-    pos: verb
-  - lemma: вітальня
-    translation: living room
-    pos: noun
-    gender: f
-  - lemma: спальня
-    translation: bedroom
-    pos: noun
-    gender: f
-  - lemma: кабінет
-    translation: study/office
-    pos: noun
-    gender: m
-  - lemma: комора
-    translation: pantry
-    pos: noun
-    gender: f
-  - lemma: комод
-    translation: chest of drawers
-    pos: noun
-    gender: m
-  - lemma: полиця
-    translation: shelf
-    pos: noun
-    gender: f
-  - lemma: шафа
-    translation: wardrobe/cabinet
-    pos: noun
-    gender: f
-  - lemma: крісло
-    translation: armchair
-    pos: noun
-    gender: n
-  - lemma: диван
-    translation: sofa
-    pos: noun
-    gender: m
-  - lemma: пральна машина
-    translation: washing machine
-    pos: noun
-    gender: f
-  - lemma: посудомийка
-    translation: dishwasher
-    pos: noun
-    gender: f
-  - lemma: прибирати
-    translation: to clean
-    pos: verb
-  - lemma: ремонтувати
-    translation: to repair
-    pos: verb
-  - lemma: облаштовувати
-    translation: to furnish/arrange
-    pos: verb
-  - lemma: місцевий
-    translation: locative/local
-    pos: adj
-  - lemma: відмінок
-    translation: gram. case
-    pos: noun
-    gender: m
-  - lemma: час
-    translation: gram. tense/time
-    pos: noun
-    gender: m
+- lemma: каструля
+  ipa: kɐsˈtrulʲɐ
+  translation: pot
+  pos: noun
+  gender: f
+- lemma: сковорода
+  ipa: skoʋoroˈdɑ
+  translation: frying pan
+  pos: noun
+  gender: f
+- lemma: духовка
+  ipa: duˈxɔu̯kɐ
+  translation: oven
+  pos: noun
+  gender: f
+- lemma: мікрохвильовка
+  ipa: mʲikroxʋɪˈlʲɔu̯kɐ
+  translation: microwave
+  pos: noun
+  gender: f
+- lemma: холодильник
+  ipa: xoloˈdɪlʲnʲik
+  translation: refrigerator
+  pos: noun
+  gender: m
+- lemma: плита
+  ipa: plɪˈtɑ
+  translation: stove
+  pos: noun
+  gender: f
+- lemma: чайник
+  ipa: ˈt͡ʃɑjnʲik
+  translation: kettle
+  pos: noun
+  gender: m
+- lemma: варити
+  ipa: ʋɐˈrɪtɪ
+  translation: to boil/cook
+  pos: verb
+- lemma: смажити
+  ipa: ˈsmɑʒɪtɪ
+  translation: to fry
+  pos: verb
+- lemma: пекти
+  ipa: pɛkˈtɪ
+  translation: to bake
+  pos: verb
+- lemma: тушкувати
+  ipa: tuʃkuˈʋɑtɪ
+  translation: to stew
+  pos: verb
+- lemma: нарізати
+  ipa: nɐˈrʲizɐtɪ
+  translation: to cut/slice
+  pos: verb
+- lemma: запікати
+  ipa: zɐpiˈkɑtɪ
+  translation: to roast
+  pos: verb
+- lemma: готувати
+  ipa: ɦotuˈʋɑtɪ
+  translation: to cook
+  pos: verb
+- lemma: сніданок
+  ipa: snʲiˈdɑnɔk
+  translation: breakfast
+  pos: noun
+  gender: m
+- lemma: обід
+  ipa: oˈbid
+  translation: lunch
+  pos: noun
+  gender: m
+- lemma: вечеря
+  ipa: ʋɛˈt͡ʃɛrʲɐ
+  translation: dinner
+  pos: noun
+  gender: f
+- lemma: перекус
+  ipa: pɛrɛˈkus
+  translation: snack
+  pos: noun
+  gender: m
+- lemma: солодкий
+  ipa: soˈlɔdkɪj
+  translation: sweet
+  pos: adj
+- lemma: солоний
+  ipa: soˈlɔnɪj
+  translation: salty
+  pos: adj
+- lemma: кислий
+  ipa: ˈkɪslɪj
+  translation: sour
+  pos: adj
+- lemma: гіркий
+  ipa: ɦʲirˈkɪj
+  translation: bitter
+  pos: adj
+- lemma: гострий
+  ipa: ˈɦɔstrɪj
+  translation: spicy
+  pos: adj
+- lemma: смачний
+  ipa: smɐt͡ʃˈnɪj
+  translation: delicious
+  pos: adj
+- lemma: свіжий
+  ipa: ˈsʋʲiʒɪj
+  translation: fresh
+  pos: adj
+- lemma: борошно
+  ipa: boˈrɔʃno
+  translation: flour
+  pos: noun
+  gender: n
+- lemma: тісто
+  ipa: ˈtʲisto
+  translation: dough
+  pos: noun
+  gender: n
+- lemma: начинка
+  ipa: ˈnɑt͡ʃɪnkɐ
+  translation: filling
+  pos: noun
+  gender: f
+- lemma: змішати
+  ipa: zmʲiˈʃɑtɪ
+  translation: to mix
+  pos: verb
+- lemma: вітальня
+  translation: living room
+  pos: noun
+  gender: f
+  ipa: /ʋʲiˈtɑlʲnʲɐ/
+- lemma: спальня
+  translation: bedroom
+  pos: noun
+  gender: f
+  ipa: /ˈspɑlʲnʲɐ/
+- lemma: кабінет
+  translation: study/office
+  pos: noun
+  gender: m
+  ipa: /kɐbʲiˈnɛt/
+- lemma: комора
+  translation: pantry
+  pos: noun
+  gender: f
+  ipa: /koˈmɔrɐ/
+- lemma: комод
+  translation: chest of drawers
+  pos: noun
+  gender: m
+  ipa: /koˈmɔd/
+- lemma: полиця
+  translation: shelf
+  pos: noun
+  gender: f
+  ipa: /ˈpɔlɪt͡sʲɐ/
+- lemma: шафа
+  translation: wardrobe/cabinet
+  pos: noun
+  gender: f
+  ipa: /ˈʃɑfɐ/
+- lemma: крісло
+  translation: armchair
+  pos: noun
+  gender: n
+  ipa: /ˈkrʲislo/
+- lemma: диван
+  translation: sofa
+  pos: noun
+  gender: m
+  ipa: /dɪˈʋɑn/
+- lemma: пральна машина
+  translation: washing machine
+  pos: noun
+  gender: f
+  ipa: /ˈprɑlʲnɐ mɐˈʃɪnɐ/
+- lemma: посудомийка
+  translation: dishwasher
+  pos: noun
+  gender: f
+  ipa: /posudoˈmɪjkɐ/
+- lemma: прибирати
+  translation: to clean
+  pos: verb
+  ipa: /prɪbɪˈrɑtɪ/
+- lemma: ремонтувати
+  translation: to repair
+  pos: verb
+  ipa: /remontuˈʋɑtɪ/
+- lemma: облаштовувати
+  translation: to furnish/arrange
+  pos: verb
+  ipa: /oblɐʃˈtɔʋuʋɑtɪ/
+- lemma: місцевий
+  translation: locative/local
+  pos: adj
+  ipa: /mʲisˈt͡sɛʋɪj/
+- lemma: відмінок
+  translation: gram. case
+  pos: noun
+  gender: m
+  ipa: /ʋʲidˈmʲinɔk/
+- lemma: час
+  translation: gram. tense/time
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  gender: n
+  ipa: /dʲijeˈslɔʋo/

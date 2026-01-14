@@ -2,154 +2,160 @@ module: 22-if-i-were
 level: A2
 version: '2.0'
 items:
-  - lemma: австралія
-    ipa: ɐu̯strˈɑlʲijɐ
-    translation: Australia
-    pos: propn
-    gender: f
-  - lemma: би
-    ipa: bɪ
-    translation: would (particle)
-    pos: other
-  - lemma: багатий
-    ipa: bɐˈɦɑtɪj
-    translation: rich
-    pos: adj
-    gender: m
-  - lemma: білет
-    ipa: bʲiˈlɛt
-    translation: ticket
-    pos: noun
-    gender: m
-  - lemma: вибачитися
-    ipa: ˈʋɪbɐt͡ʃɪtɪsʲɐ
-    translation: to apologize (perf)
-    pos: verb
-  - lemma: виграти
-    ipa: ˈʋɪhrɐte
-    translation: to win (perf)
-    pos: verb
-  - lemma: впасти
-    ipa: ˈvpɑste
-    translation: to fall (perf)
-    pos: verb
-  - lemma: зачекати
-    ipa: zɐt͡ʃeˈkɑte
-    translation: to wait (perf)
-    pos: verb
-  - lemma: лотерейний
-    ipa: loteˈrɛjnɪj
-    translation: lottery (adj)
-    pos: adj
-    gender: m
-  - lemma: мільйон
-    ipa: mʲilʲˈjɔn
-    translation: million
-    pos: other
-  - lemma: наврочити
-    ipa: nɐˈvrɔt͡ʃɪte
-    translation: to jinx
-    pos: verb
-  - lemma: незручно
-    ipa: neˈzrut͡ʃno
-    translation: uncomfortably; awkwardly
-    pos: adv
-  - lemma: ого
-    ipa: oˈɦɔ
-    translation: wow
-    pos: other
-  - lemma: підстелити
-    ipa: pʲidsteˈlɪte
-    translation: to spread (under)
-    pos: verb
-  - lemma: реальність
-    ipa: reˈɑlʲnʲisʲtʲ
-    translation: reality
-    pos: noun
-    gender: f
-  - lemma: соломка
-    ipa: soˈlɔmkɐ
-    translation: straw
-    pos: noun
-    gender: f
-  - lemma: уявляти
-    ipa: ujɐʋˈlʲɑte
-    translation: to imagine
-    pos: verb
-  - lemma: майбутній
-    translation: future
-    pos: adj
-  - lemma: час
-    translation: time; tense
-    pos: noun
-    gender: m
-  - lemma: минулий
-    translation: past
-    pos: adj
-  - lemma: якби
-    ipa: jɐkˈbɪ
-    translation: if (unreal)
-    pos: other
-  - lemma: якщо
-    ipa: jɐkˈʃɔ
-    translation: if (real)
-    pos: other
-  - lemma: можливо
-    ipa: moʒˈlɪʋo
-    translation: perhaps; possibly
-    pos: adv
-  - lemma: напевно
-    ipa: nɐˈpɛu̯no
-    translation: for sure; probably
-    pos: adv
-  - lemma: мабуть
-    ipa: mɐˈbutʲ
-    translation: probably
-    pos: adv
-  - lemma: певно
-    ipa: ˈpɛu̯no
-    translation: surely
-    pos: adv
-  - lemma: обов'язково
-    ipa: oboˈʋjɐzkoʋo
-    translation: certainly; necessarily
-    pos: adv
-  - lemma: купити
-    ipa: kuˈpɪte
-    translation: to buy (perf)
-    pos: verb
-  - lemma: піти
-    ipa: piˈtɪ
-    translation: to go (on foot, perf)
-    pos: verb
-  - lemma: поїхати
-    ipa: poˈjixɐte
-    translation: to go (by vehicle, perf)
-    pos: verb
-  - lemma: сказати
-    ipa: skɐˈzɑte
-    translation: to say (perf)
-    pos: verb
-  - lemma: знати
-    ipa: ˈznɑte
-    translation: to know
-    pos: verb
-  - lemma: могти
-    ipa: mɔhˈtɪ
-    translation: to be able to
-    pos: verb
-  - lemma: хотіти
-    ipa: xoˈtitɪ
-    translation: to want
-    pos: verb
-  - lemma: дієслово
-    translation: verb
-    pos: noun
-    gender: n
-  - lemma: спосіб
-    translation: mood; way
-    pos: noun
-    gender: m
-  - lemma: умовний
-    translation: conditional
-    pos: adj
+- lemma: австралія
+  ipa: ɐu̯strˈɑlʲijɐ
+  translation: Australia
+  pos: propn
+  gender: f
+- lemma: би
+  ipa: bɪ
+  translation: would (particle)
+  pos: other
+- lemma: багатий
+  ipa: bɐˈɦɑtɪj
+  translation: rich
+  pos: adj
+  gender: m
+- lemma: білет
+  ipa: bʲiˈlɛt
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: вибачитися
+  ipa: ˈʋɪbɐt͡ʃɪtɪsʲɐ
+  translation: to apologize (perf)
+  pos: verb
+- lemma: виграти
+  ipa: ˈʋɪhrɐte
+  translation: to win (perf)
+  pos: verb
+- lemma: впасти
+  ipa: ˈvpɑste
+  translation: to fall (perf)
+  pos: verb
+- lemma: зачекати
+  ipa: zɐt͡ʃeˈkɑte
+  translation: to wait (perf)
+  pos: verb
+- lemma: лотерейний
+  ipa: loteˈrɛjnɪj
+  translation: lottery (adj)
+  pos: adj
+  gender: m
+- lemma: мільйон
+  ipa: mʲilʲˈjɔn
+  translation: million
+  pos: other
+- lemma: наврочити
+  ipa: nɐˈvrɔt͡ʃɪte
+  translation: to jinx
+  pos: verb
+- lemma: незручно
+  ipa: neˈzrut͡ʃno
+  translation: uncomfortably; awkwardly
+  pos: adv
+- lemma: ого
+  ipa: oˈɦɔ
+  translation: wow
+  pos: other
+- lemma: підстелити
+  ipa: pʲidsteˈlɪte
+  translation: to spread (under)
+  pos: verb
+- lemma: реальність
+  ipa: reˈɑlʲnʲisʲtʲ
+  translation: reality
+  pos: noun
+  gender: f
+- lemma: соломка
+  ipa: soˈlɔmkɐ
+  translation: straw
+  pos: noun
+  gender: f
+- lemma: уявляти
+  ipa: ujɐʋˈlʲɑte
+  translation: to imagine
+  pos: verb
+- lemma: майбутній
+  translation: future
+  pos: adj
+  ipa: /mɐi̯ˈbutʲnʲij/
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: минулий
+  translation: past
+  pos: adj
+  ipa: /mɪˈnulɪj/
+- lemma: якби
+  ipa: jɐkˈbɪ
+  translation: if (unreal)
+  pos: other
+- lemma: якщо
+  ipa: jɐkˈʃɔ
+  translation: if (real)
+  pos: other
+- lemma: можливо
+  ipa: moʒˈlɪʋo
+  translation: perhaps; possibly
+  pos: adv
+- lemma: напевно
+  ipa: nɐˈpɛu̯no
+  translation: for sure; probably
+  pos: adv
+- lemma: мабуть
+  ipa: mɐˈbutʲ
+  translation: probably
+  pos: adv
+- lemma: певно
+  ipa: ˈpɛu̯no
+  translation: surely
+  pos: adv
+- lemma: обов'язково
+  ipa: oboˈʋjɐzkoʋo
+  translation: certainly; necessarily
+  pos: adv
+- lemma: купити
+  ipa: kuˈpɪte
+  translation: to buy (perf)
+  pos: verb
+- lemma: піти
+  ipa: piˈtɪ
+  translation: to go (on foot, perf)
+  pos: verb
+- lemma: поїхати
+  ipa: poˈjixɐte
+  translation: to go (by vehicle, perf)
+  pos: verb
+- lemma: сказати
+  ipa: skɐˈzɑte
+  translation: to say (perf)
+  pos: verb
+- lemma: знати
+  ipa: ˈznɑte
+  translation: to know
+  pos: verb
+- lemma: могти
+  ipa: mɔhˈtɪ
+  translation: to be able to
+  pos: verb
+- lemma: хотіти
+  ipa: xoˈtitɪ
+  translation: to want
+  pos: verb
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  gender: n
+  ipa: /dʲijeˈslɔʋo/
+- lemma: спосіб
+  translation: mood; way
+  pos: noun
+  gender: m
+  ipa: /ˈspɔsʲib/
+- lemma: умовний
+  translation: conditional
+  pos: adj
+  ipa: /uˈmɔu̯nɪj/

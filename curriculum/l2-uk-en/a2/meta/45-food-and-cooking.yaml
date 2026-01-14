@@ -22,5 +22,5 @@ vocabulary_count: 35
 slug: 45-food-and-cooking
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

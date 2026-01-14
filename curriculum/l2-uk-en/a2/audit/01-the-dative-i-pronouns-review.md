@@ -1,40 +1,50 @@
 # Audit Report: 01-the-dative-i-pronouns.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** Sentence too long for A2: 24 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ви побачите що багато важливих...'
+- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Introduction|Вступ' found: Вступ, Introduction
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 45/100)
+
+- Revision recommended (severity 45/100)
+- 3 violations (minor)
+- Immersion 25% off target (major rebalancing needed)
+
 ## Gates
-- **Words:** ✅ 1932/1000
+- **Words:** ❌ 780/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ❌ 2/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 81/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 39.8% LOW (target 40-50% (A2.1))
+- **Immersion:** ❌ 74.5% HIGH (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction** | ✅ | 253 | Included in Core |
-| **Presentation** | ✅ | 726 | Included in Core |
-| **Чому давальний відмінок важливий** | ⚪️ | 139 | Skipped |
-| **The Dative Pronouns** | ⚪️ | 35 | Skipped |
-| **Pattern 1: Expressing Likes** | ✅ | 113 | Included in Core |
-| **Модель 2: Вираження потреб** | ⚪️ | 26 | Skipped |
-| **Модель 3: Фізичні та емоційні стани** | ⚪️ | 84 | Skipped |
-| **Cultural Insight** | ✅ | 0 | Included in Core |
-| **Mini-Dialogues** | ✅ | 284 | Included in Core |
-| **Найбільш вживані вирази** | ⚪️ | 130 | Skipped |
-| **Дієслова, що вимагають давальний відмінок** | ⚪️ | 31 | Skipped |
-| **Practice** | ⚪️ | 11 | Skipped |
-| **Підсумок** | ✅ | 70 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Introduction** | ✅ | 130 | Included in Core |
+| **Вступ** | ⚪️ | 102 | Skipped |
+| **Presentation** | ✅ | 243 | Included in Core |
+| **Practice** | ⚪️ | 118 | Skipped |
+| **Dialogues** | ✅ | 89 | Included in Core |
+| **Summary** | ✅ | 56 | Included in Core |
+| **Need More Practice?** | ⚪️ | 42 | Skipped |

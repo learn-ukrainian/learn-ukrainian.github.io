@@ -23,5 +23,5 @@ vocabulary_count: 26
 slug: 01-the-dative-i-pronouns
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

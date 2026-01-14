@@ -92,6 +92,7 @@ items:
   translation: time; tense
   pos: noun
   gender: m
+  ipa: /t͡ʃɑs/
 - lemma: шкідливіший
   ipa: ʃkʲidˈlɪʋiʃɪj
   translation: more harmful

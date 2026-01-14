@@ -24,5 +24,5 @@ vocabulary_count: 46
 focus: checkpoint
 template: a2-checkpoint-module-template.md
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

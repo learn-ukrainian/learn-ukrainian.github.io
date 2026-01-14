@@ -2,120 +2,125 @@ module: 14-future-plans-and-promises
 level: A2
 version: '2.0'
 items:
-  - lemma: обіцянка
-    ipa: oˈbit͡sʲɐnkɐ
-    translation: promise
-    pos: noun
-    gender: f
-  - lemma: плани
-    ipa: ˈplɑnɪ
-    translation: plans
-    pos: noun
-    gender: m
-    number: pl
-  - lemma: обіцяти
-    ipa: oˈbit͡sʲɐte
-    translation: to promise
-    pos: verb
-  - lemma: зроблю
-    ipa: zroˈblʲu
-    translation: will do/make (perf)
-    pos: verb
-  - lemma: напишу
-    ipa: nɐpɪˈʃu
-    translation: will write (perf)
-    pos: verb
-  - lemma: прочитаю
-    ipa: prot͡ʃɪˈtɑju
-    translation: will read (perf)
-    pos: verb
-  - lemma: скажу
-    ipa: skɐˈʒu
-    translation: will say (perf)
-    pos: verb
-  - lemma: побачу
-    ipa: poˈbɑt͡ʃu
-    translation: will see (perf)
-    pos: verb
-  - lemma: почую
-    ipa: poˈt͡ʃuju
-    translation: will hear (perf)
-    pos: verb
-  - lemma: візьму
-    ipa: ʋizʲˈmu
-    translation: will take (perf)
-    pos: verb
-  - lemma: дам
-    ipa: dɑm
-    translation: will give (perf)
-    pos: verb
-  - lemma: піду
-    ipa: piˈdu
-    translation: will go (on foot, perf)
-    pos: verb
-  - lemma: прийду
-    ipa: prɪjˈdu
-    translation: will arrive (on foot, perf)
-    pos: verb
-  - lemma: приїду
-    ipa: prɪˈjidu
-    translation: will arrive (by vehicle, perf)
-    pos: verb
-  - lemma: вийду
-    ipa: ˈʋɪjdu
-    translation: will go out (perf)
-    pos: verb
-  - lemma: увійду
-    ipa: uʋijˈdu
-    translation: will enter (perf)
-    pos: verb
-  - lemma: почну
-    ipa: pot͡ʃˈnu
-    translation: will start (perf)
-    pos: verb
-  - lemma: закінчу
-    ipa: zɐˈkint͡ʃu
-    translation: will finish (perf)
-    pos: verb
-  - lemma: зрозумію
-    ipa: zrozuˈmʲiju
-    translation: will understand (perf)
-    pos: verb
-  - lemma: забуду
-    ipa: zɐˈbudu
-    translation: will forget (perf)
-    pos: verb
-  - lemma: запам'ятаю
-    ipa: zɐpɐmjɐˈtɑju
-    translation: will remember (perf)
-    pos: verb
-  - lemma: знайду
-    ipa: znɐjˈdu
-    translation: will find (perf)
-    pos: verb
-  - lemma: загублю
-    ipa: zɐhuˈblʲu
-    translation: will lose (perf)
-    pos: verb
-  - lemma: вид
-    ipa: ʋɪd
-    translation: view; aspect (grammar)
-    pos: noun
-    gender: m
-  - lemma: недоконаний
-    translation: imperfective
-    pos: adj
-  - lemma: доконаний
-    translation: perfective
-    pos: adj
-  - lemma: майбутній
-    translation: future
-    pos: adj
-  - lemma: час
-    translation: time; tense
-    pos: noun
-    gender: m
-  - lemma: дієслово
-    translation: verb
-    pos: noun
-    gender: n
+- lemma: обіцянка
+  ipa: oˈbit͡sʲɐnkɐ
+  translation: promise
+  pos: noun
+  gender: f
+- lemma: плани
+  ipa: ˈplɑnɪ
+  translation: plans
+  pos: noun
+  gender: m
+  number: pl
+- lemma: обіцяти
+  ipa: oˈbit͡sʲɐte
+  translation: to promise
+  pos: verb
+- lemma: зроблю
+  ipa: zroˈblʲu
+  translation: will do/make (perf)
+  pos: verb
+- lemma: напишу
+  ipa: nɐpɪˈʃu
+  translation: will write (perf)
+  pos: verb
+- lemma: прочитаю
+  ipa: prot͡ʃɪˈtɑju
+  translation: will read (perf)
+  pos: verb
+- lemma: скажу
+  ipa: skɐˈʒu
+  translation: will say (perf)
+  pos: verb
+- lemma: побачу
+  ipa: poˈbɑt͡ʃu
+  translation: will see (perf)
+  pos: verb
+- lemma: почую
+  ipa: poˈt͡ʃuju
+  translation: will hear (perf)
+  pos: verb
+- lemma: візьму
+  ipa: ʋizʲˈmu
+  translation: will take (perf)
+  pos: verb
+- lemma: дам
+  ipa: dɑm
+  translation: will give (perf)
+  pos: verb
+- lemma: піду
+  ipa: piˈdu
+  translation: will go (on foot, perf)
+  pos: verb
+- lemma: прийду
+  ipa: prɪjˈdu
+  translation: will arrive (on foot, perf)
+  pos: verb
+- lemma: приїду
+  ipa: prɪˈjidu
+  translation: will arrive (by vehicle, perf)
+  pos: verb
+- lemma: вийду
+  ipa: ˈʋɪjdu
+  translation: will go out (perf)
+  pos: verb
+- lemma: увійду
+  ipa: uʋijˈdu
+  translation: will enter (perf)
+  pos: verb
+- lemma: почну
+  ipa: pot͡ʃˈnu
+  translation: will start (perf)
+  pos: verb
+- lemma: закінчу
+  ipa: zɐˈkint͡ʃu
+  translation: will finish (perf)
+  pos: verb
+- lemma: зрозумію
+  ipa: zrozuˈmʲiju
+  translation: will understand (perf)
+  pos: verb
+- lemma: забуду
+  ipa: zɐˈbudu
+  translation: will forget (perf)
+  pos: verb
+- lemma: запам'ятаю
+  ipa: zɐpɐmjɐˈtɑju
+  translation: will remember (perf)
+  pos: verb
+- lemma: знайду
+  ipa: znɐjˈdu
+  translation: will find (perf)
+  pos: verb
+- lemma: загублю
+  ipa: zɐhuˈblʲu
+  translation: will lose (perf)
+  pos: verb
+- lemma: вид
+  ipa: ʋɪd
+  translation: view; aspect (grammar)
+  pos: noun
+  gender: m
+- lemma: недоконаний
+  translation: imperfective
+  pos: adj
+  ipa: /nedoˈkɔnɐnɪj/
+- lemma: доконаний
+  translation: perfective
+  pos: adj
+  ipa: /doˈkɔnɐnɪj/
+- lemma: майбутній
+  translation: future
+  pos: adj
+  ipa: /mɐi̯ˈbutʲnʲij/
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  gender: n
+  ipa: /dʲijeˈslɔʋo/

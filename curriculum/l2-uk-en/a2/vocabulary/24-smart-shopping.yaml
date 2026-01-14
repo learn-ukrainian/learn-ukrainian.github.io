@@ -85,19 +85,24 @@ items:
 - lemma: родовий
   translation: genitive
   pos: adj
+  ipa: /rodoˈʋɪj/
 - lemma: знахідний
   translation: accusative
   pos: adj
+  ipa: /znɐˈxʲidnɪj/
 - lemma: орудний
   translation: instrumental
   pos: adj
+  ipa: /oˈrudnɪj/
 - lemma: давальний
   translation: dative
   pos: adj
+  ipa: /dɐˈʋɑlʲnɪj/
 - lemma: відмінок
   translation: case
   pos: noun
   gender: m
+  ipa: /ʋʲidˈmʲinɔk/
 - lemma: шкіра
   ipa: ˈʃkʲirɐ
   translation: leather; skin

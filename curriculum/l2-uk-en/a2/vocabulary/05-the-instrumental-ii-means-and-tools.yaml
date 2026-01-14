@@ -2,279 +2,283 @@ module: 05-the-instrumental-ii-means-and-tools
 level: A2
 version: '2.0'
 items:
-  - lemma: арсенальний
-    ipa: ɐrseˈnɑlʲnei̯
-    translation: Arsenalna
-    pos: adj
-    gender: f
-  - lemma: базар
-    ipa: bɐˈzɑr
-    translation: bazaar; market
-    pos: noun
-    gender: m
-  - lemma: бити
-    ipa: ˈbɪte
-    translation: to beat; to hit
-    pos: verb
-  - lemma: виконання
-    ipa: vɪkoˈnɑnʲːɐ
-    translation: execution; performance
-    pos: noun
-    gender: n
-  - lemma: випадок
-    ipa: ˈvɪpɐdok
-    translation: case; incident
-    pos: noun
-    gender: m
-  - lemma: волійти
-    ipa: voˈlʲite
-    translation: to prefer (typo? воліти)
-    pos: verb
-  - lemma: вушима
-    ipa: ˈʋuʃɪmɐ
-    translation: with ears (instr)
-    pos: other
-  - lemma: голка
-    ipa: ˈɦɔlkɐ
-    translation: needle
-    pos: noun
-    gender: f
-  - lemma: дзвонити
-    ipa: dzʋoˈnɪte
-    translation: to ring; to call
-    pos: verb
-  - lemma: дзвоняти
-    ipa: dzʋoˈnʲɑte
-    translation: to ring (dialect/typo?)
-    pos: verb
-  - lemma: дивно
-    ipa: ˈdɪu̯no
-    translation: strangely
-    pos: adv
-  - lemma: добиратися
-    ipa: dobɪˈrɑtɪsʲɐ
-    translation: to get to; to reach
-    pos: verb
-  - lemma: електронний
-    ipa: elekˈtrɔnːei̯
-    translation: electronic
-    pos: adj
-    gender: f
-  - lemma: забивати
-    ipa: zɐbɪˈʋɑte
-    translation: to hammer in; to score
-    pos: verb
-  - lemma: закритий
-    ipa: zɐˈkrɪtei̯
-    translation: closed
-    pos: adj
-    gender: n
-  - lemma: застосування
-    ipa: zɐstossuˈʋɑnʲːɐ
-    translation: application; use
-    pos: noun
-    gender: n
-  - lemma: знаряддя
-    ipa: znɐˈrʲɑdʲːɐ
-    translation: tool; implement
-    pos: noun
-    gender: f
-  - lemma: зручніше
-    ipa: zrut͡ʃˈnʲiʃe
-    translation: more conveniently
-    pos: adv
-  - lemma: карпати
-    ipa: kɐrˈpɑtɪ
-    translation: Carpathians
-    pos: propn
-  - lemma: кивати
-    ipa: kɪˈʋɑte
-    translation: to nod
-    pos: verb
-  - lemma: кричати
-    ipa: krɪˈt͡ʃɑte
-    translation: to shout
-    pos: verb
-  - lemma: летіти
-    ipa: leˈtite
-    translation: to fly
-    pos: verb
-  - lemma: літак
-    ipa: lʲiˈtɑk
-    translation: airplane
-    pos: noun
-    gender: m
-  - lemma: маршрутка
-    ipa: mɐrˈʃrutkɐ
-    translation: marshrutka (minibus)
-    pos: noun
-    gender: f
-  - lemma: махати
-    ipa: mɐˈxɑte
-    translation: to wave
-    pos: verb
-  - lemma: молоток
-    ipa: moloˈtɔk
-    translation: hammer
-    pos: noun
-    gender: m
-  - lemma: нагадування
-    ipa: nɐˈɦɑduʋɐnʲːɐ
-    translation: reminder
-    pos: noun
-    gender: n
-  - lemma: найглибший
-    ipa: nɐi̯ˈɦlɪbʃei̯
-    translation: deepest
-    pos: adj
-    gender: n
-  - lemma: нож
-    ipa: nʲiʒ
-    translation: knife (typo? ніж)
-    pos: noun
-    gender: m
-  - lemma: ножиця
-    ipa: ˈnɔʒɪt͡sʲɐ
-    translation: scissor (singular - rare)
-    pos: noun
-    gender: m
-  - lemma: ножиці
-    ipa: ˈnɔʒɪt͡sʲi
-    translation: scissors
-    pos: noun
-    gender: pl
-  - lemma: окуляри
-    ipa: okuˈlʲɑrɪ
-    translation: glasses
-    pos: noun
-    gender: m
-  - lemma: пензель
-    ipa: ˈpɛnzelʲ
-    translation: brush (paint)
-    pos: noun
-    gender: m
-  - lemma: пензль
-    ipa: ˈpɛnzlʲ
-    translation: brush (typo?)
-    pos: noun
-    gender: m
-  - lemma: пересування
-    ipa: peresuˈʋɑnʲːɐ
-    translation: movement
-    pos: noun
-    gender: n
-  - lemma: пересуватися
-    ipa: peresuˈʋɑtɪsʲɐ
-    translation: to move
-    pos: verb
-  - lemma: плече
-    ipa: pleˈt͡ʃɛ
-    translation: shoulder
-    pos: noun
-    gender: n
-  - lemma: помітити
-    ipa: poˈmitɪte
-    translation: to notice
-    pos: verb
-    gender: m
-  - lemma: попередній
-    ipa: popeˈrɛdnʲij
-    translation: previous
-    pos: adj
-    gender: m
-  - lemma: пошепки
-    ipa: ˈpɔʃepkɪ
-    translation: in a whisper
-    pos: adv
-  - lemma: поїзд
-    ipa: ˈpɔjizd
-    translation: train
-    pos: noun
-    gender: m
-  - lemma: пригода
-    ipa: prɪˈɦɔdɐ
-    translation: adventure
-    pos: noun
-    gender: f
-  - lemma: розглянити
-    ipa: rozˈɦlʲɑnute
-    translation: to examine (typo? розглянути)
-    pos: verb
-  - lemma: різати
-    ipa: ˈrizɐte
-    translation: to cut
-    pos: verb
-  - lemma: спосіб
-    ipa: ˈspɔsib
-    translation: way; method
-    pos: noun
-    gender: m
-  - lemma: справжній
-    ipa: ˈsprɑu̯ʒnʲij
-    translation: real; genuine
-    pos: adj
-    gender: n
-  - lemma: терміновий
-    ipa: termiˈnɔʋei̯
-    translation: urgent
-    pos: adj
-    gender: m
-  - lemma: терміново
-    ipa: termiˈnɔʋo
-    translation: urgently
-    pos: adv
-  - lemma: тоді
-    ipa: toˈdʲi
-    translation: then
-    pos: adv
-  - lemma: трамваєма
-    ipa: trɐmˈʋɑjemɐ
-    translation: by tram (instr - typo? трамваєм)
-    pos: noun
-    gender: m
-  - lemma: тролейбус
-    ipa: troˈlɛi̯bus
-    translation: trolleybus
-    pos: noun
-    gender: m
-  - lemma: франківськ
-    ipa: frɐnˈkiu̯sʲk
-    translation: Frankivsk
-    pos: propn
-    gender: m
-  - lemma: чистий
-    ipa: ˈt͡ʃɪstei̯
-    translation: clean
-    pos: adj
-    gender: m
-  - lemma: шити
-    ipa: ˈʃɪte
-    translation: to sew
-    pos: verb
-  - lemma: яремче
-    ipa: jɐˈrɛmt͡ʃe
-    translation: Yaremche
-    pos: propn
-    gender: n
-  - lemma: іваний
-    ipa: iˈʋɑnei̯
-    translation: Ivan (adj? typo?)
-    pos: adj
-  - lemma: відмінок
-    translation: case
-    pos: noun
-    gender: m
-  - lemma: орудний
-    translation: instrumental
-    pos: adj
-  - lemma: називний
-    translation: nominative
-    pos: adj
-  - lemma: час
-    translation: time; tense
-    pos: noun
-    gender: m
-  - lemma: історичний
-    ipa: istoˈrɪt͡ʃnei̯
-    translation: historical
-    pos: adj
+- lemma: арсенальний
+  ipa: ɐrseˈnɑlʲnei̯
+  translation: Arsenalna
+  pos: adj
+  gender: f
+- lemma: базар
+  ipa: bɐˈzɑr
+  translation: bazaar; market
+  pos: noun
+  gender: m
+- lemma: бити
+  ipa: ˈbɪte
+  translation: to beat; to hit
+  pos: verb
+- lemma: виконання
+  ipa: vɪkoˈnɑnʲːɐ
+  translation: execution; performance
+  pos: noun
+  gender: n
+- lemma: випадок
+  ipa: ˈvɪpɐdok
+  translation: case; incident
+  pos: noun
+  gender: m
+- lemma: волійти
+  ipa: voˈlʲite
+  translation: to prefer (typo? воліти)
+  pos: verb
+- lemma: вушима
+  ipa: ˈʋuʃɪmɐ
+  translation: with ears (instr)
+  pos: other
+- lemma: голка
+  ipa: ˈɦɔlkɐ
+  translation: needle
+  pos: noun
+  gender: f
+- lemma: дзвонити
+  ipa: dzʋoˈnɪte
+  translation: to ring; to call
+  pos: verb
+- lemma: дзвоняти
+  ipa: dzʋoˈnʲɑte
+  translation: to ring (dialect/typo?)
+  pos: verb
+- lemma: дивно
+  ipa: ˈdɪu̯no
+  translation: strangely
+  pos: adv
+- lemma: добиратися
+  ipa: dobɪˈrɑtɪsʲɐ
+  translation: to get to; to reach
+  pos: verb
+- lemma: електронний
+  ipa: elekˈtrɔnːei̯
+  translation: electronic
+  pos: adj
+  gender: f
+- lemma: забивати
+  ipa: zɐbɪˈʋɑte
+  translation: to hammer in; to score
+  pos: verb
+- lemma: закритий
+  ipa: zɐˈkrɪtei̯
+  translation: closed
+  pos: adj
+  gender: n
+- lemma: застосування
+  ipa: zɐstossuˈʋɑnʲːɐ
+  translation: application; use
+  pos: noun
+  gender: n
+- lemma: знаряддя
+  ipa: znɐˈrʲɑdʲːɐ
+  translation: tool; implement
+  pos: noun
+  gender: f
+- lemma: зручніше
+  ipa: zrut͡ʃˈnʲiʃe
+  translation: more conveniently
+  pos: adv
+- lemma: карпати
+  ipa: kɐrˈpɑtɪ
+  translation: Carpathians
+  pos: propn
+- lemma: кивати
+  ipa: kɪˈʋɑte
+  translation: to nod
+  pos: verb
+- lemma: кричати
+  ipa: krɪˈt͡ʃɑte
+  translation: to shout
+  pos: verb
+- lemma: летіти
+  ipa: leˈtite
+  translation: to fly
+  pos: verb
+- lemma: літак
+  ipa: lʲiˈtɑk
+  translation: airplane
+  pos: noun
+  gender: m
+- lemma: маршрутка
+  ipa: mɐrˈʃrutkɐ
+  translation: marshrutka (minibus)
+  pos: noun
+  gender: f
+- lemma: махати
+  ipa: mɐˈxɑte
+  translation: to wave
+  pos: verb
+- lemma: молоток
+  ipa: moloˈtɔk
+  translation: hammer
+  pos: noun
+  gender: m
+- lemma: нагадування
+  ipa: nɐˈɦɑduʋɐnʲːɐ
+  translation: reminder
+  pos: noun
+  gender: n
+- lemma: найглибший
+  ipa: nɐi̯ˈɦlɪbʃei̯
+  translation: deepest
+  pos: adj
+  gender: n
+- lemma: нож
+  ipa: nʲiʒ
+  translation: knife (typo? ніж)
+  pos: noun
+  gender: m
+- lemma: ножиця
+  ipa: ˈnɔʒɪt͡sʲɐ
+  translation: scissor (singular - rare)
+  pos: noun
+  gender: m
+- lemma: ножиці
+  ipa: ˈnɔʒɪt͡sʲi
+  translation: scissors
+  pos: noun
+  gender: pl
+- lemma: окуляри
+  ipa: okuˈlʲɑrɪ
+  translation: glasses
+  pos: noun
+  gender: m
+- lemma: пензель
+  ipa: ˈpɛnzelʲ
+  translation: brush (paint)
+  pos: noun
+  gender: m
+- lemma: пензль
+  ipa: ˈpɛnzlʲ
+  translation: brush (typo?)
+  pos: noun
+  gender: m
+- lemma: пересування
+  ipa: peresuˈʋɑnʲːɐ
+  translation: movement
+  pos: noun
+  gender: n
+- lemma: пересуватися
+  ipa: peresuˈʋɑtɪsʲɐ
+  translation: to move
+  pos: verb
+- lemma: плече
+  ipa: pleˈt͡ʃɛ
+  translation: shoulder
+  pos: noun
+  gender: n
+- lemma: помітити
+  ipa: poˈmitɪte
+  translation: to notice
+  pos: verb
+  gender: m
+- lemma: попередній
+  ipa: popeˈrɛdnʲij
+  translation: previous
+  pos: adj
+  gender: m
+- lemma: пошепки
+  ipa: ˈpɔʃepkɪ
+  translation: in a whisper
+  pos: adv
+- lemma: поїзд
+  ipa: ˈpɔjizd
+  translation: train
+  pos: noun
+  gender: m
+- lemma: пригода
+  ipa: prɪˈɦɔdɐ
+  translation: adventure
+  pos: noun
+  gender: f
+- lemma: розглянити
+  ipa: rozˈɦlʲɑnute
+  translation: to examine (typo? розглянути)
+  pos: verb
+- lemma: різати
+  ipa: ˈrizɐte
+  translation: to cut
+  pos: verb
+- lemma: спосіб
+  ipa: ˈspɔsib
+  translation: way; method
+  pos: noun
+  gender: m
+- lemma: справжній
+  ipa: ˈsprɑu̯ʒnʲij
+  translation: real; genuine
+  pos: adj
+  gender: n
+- lemma: терміновий
+  ipa: termiˈnɔʋei̯
+  translation: urgent
+  pos: adj
+  gender: m
+- lemma: терміново
+  ipa: termiˈnɔʋo
+  translation: urgently
+  pos: adv
+- lemma: тоді
+  ipa: toˈdʲi
+  translation: then
+  pos: adv
+- lemma: трамваєма
+  ipa: trɐmˈʋɑjemɐ
+  translation: by tram (instr - typo? трамваєм)
+  pos: noun
+  gender: m
+- lemma: тролейбус
+  ipa: troˈlɛi̯bus
+  translation: trolleybus
+  pos: noun
+  gender: m
+- lemma: франківськ
+  ipa: frɐnˈkiu̯sʲk
+  translation: Frankivsk
+  pos: propn
+  gender: m
+- lemma: чистий
+  ipa: ˈt͡ʃɪstei̯
+  translation: clean
+  pos: adj
+  gender: m
+- lemma: шити
+  ipa: ˈʃɪte
+  translation: to sew
+  pos: verb
+- lemma: яремче
+  ipa: jɐˈrɛmt͡ʃe
+  translation: Yaremche
+  pos: propn
+  gender: n
+- lemma: іваний
+  ipa: iˈʋɑnei̯
+  translation: Ivan (adj? typo?)
+  pos: adj
+- lemma: відмінок
+  translation: case
+  pos: noun
+  gender: m
+  ipa: /ʋʲidˈmʲinɔk/
+- lemma: орудний
+  translation: instrumental
+  pos: adj
+  ipa: /oˈrudnɪj/
+- lemma: називний
+  translation: nominative
+  pos: adj
+  ipa: /nɐzɪu̯ˈnɪj/
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+  ipa: /t͡ʃɑs/
+- lemma: історичний
+  ipa: istoˈrɪt͡ʃnei̯
+  translation: historical
+  pos: adj
