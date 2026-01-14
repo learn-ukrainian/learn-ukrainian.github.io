@@ -1,6 +1,7 @@
 # Audit Report: 16-the-genitive-i-absence.md
 **Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1091/750
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 30.4% (target 25-40% (M16))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

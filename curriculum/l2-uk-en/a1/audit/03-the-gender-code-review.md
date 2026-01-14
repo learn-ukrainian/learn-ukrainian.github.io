@@ -1,6 +1,7 @@
 # Audit Report: 03-the-gender-code.md
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1045/300
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 14.5% (target 10-25% (M03))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

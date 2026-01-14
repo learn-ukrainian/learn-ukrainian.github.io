@@ -1,6 +1,7 @@
 # Audit Report: 47-nature-and-weather.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1696/1000
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 84.8% (target 75-85% (A2.3))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

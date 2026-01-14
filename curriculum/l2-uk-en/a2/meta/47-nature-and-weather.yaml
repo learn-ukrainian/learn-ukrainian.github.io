@@ -21,3 +21,6 @@ objectives:
 vocabulary_count: 30
 slug: 47-nature-and-weather
 focus: vocabulary
+naturalness:
+  score: 0
+  status: PENDING

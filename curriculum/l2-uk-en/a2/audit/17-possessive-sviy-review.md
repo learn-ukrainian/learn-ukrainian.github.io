@@ -1,11 +1,12 @@
 # Audit Report: 17-possessive-sviy.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): спільний, особистий, ділитися, своє, своя...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): спільний, свій, ділитися, свої, своє...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -28,6 +29,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 53.9% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

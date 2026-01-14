@@ -1,11 +1,12 @@
 # Audit Report: 41-root-families-i.md
 **Phase:** A2.4 | **Level:** A2 | **Pedagogy:** Inquiry | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово, місцевий, доконаний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид, доконаний, дієслово, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): роздуми, думка, погляд, слухач, мовець...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): огляд, хід, вигляд, ходити, побачення...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -28,6 +29,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 66.4% (target 65-75% (A2.3))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

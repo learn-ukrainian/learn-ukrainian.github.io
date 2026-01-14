@@ -1,6 +1,7 @@
 # Audit Report: 32-my-family.md
 **Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1065/750
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.0% (target 35-55% (M32))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

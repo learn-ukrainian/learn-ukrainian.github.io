@@ -23,3 +23,6 @@ slug: 58-final-review
 vocabulary_count: 46
 focus: checkpoint
 template: a2-checkpoint-module-template.md
+naturalness:
+  score: 0
+  status: PENDING

@@ -1,6 +1,7 @@
 # Audit Report: 20-checkpoint-navigation.md
 **Phase:** A1.2 | **Level:** A1 | **Pedagogy:** Review | **Target:** 750
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1406/750
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 39.0% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

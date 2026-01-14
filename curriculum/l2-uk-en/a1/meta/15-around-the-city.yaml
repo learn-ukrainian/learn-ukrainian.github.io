@@ -26,3 +26,6 @@ objectives:
 vocabulary_count: 40
 vocab_count: 90
 slug: 15-around-the-city
+naturalness:
+  score: 0
+  status: PENDING

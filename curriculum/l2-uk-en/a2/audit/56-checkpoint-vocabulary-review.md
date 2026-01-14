@@ -1,6 +1,7 @@
 # Audit Report: 56-checkpoint-vocabulary.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** Review | **Target:** 800
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 991/800
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 39.9% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

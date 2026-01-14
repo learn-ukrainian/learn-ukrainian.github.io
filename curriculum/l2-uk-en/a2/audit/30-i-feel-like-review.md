@@ -1,6 +1,7 @@
 # Audit Report: 30-i-feel-like.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1336/1000
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 52.5% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

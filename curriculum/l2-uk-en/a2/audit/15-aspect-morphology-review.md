@@ -1,6 +1,7 @@
 # Audit Report: 15-aspect-morphology.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
@@ -26,6 +27,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 44.7% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

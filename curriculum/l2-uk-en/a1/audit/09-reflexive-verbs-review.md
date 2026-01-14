@@ -1,6 +1,7 @@
 # Audit Report: 09-reflexive-verbs.md
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 569/500
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 26.1% (target 15-35% (M09))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

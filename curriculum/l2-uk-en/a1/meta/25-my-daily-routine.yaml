@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 30
 vocab_count: 27
 slug: 25-my-daily-routine
+naturalness:
+  score: 0
+  status: PENDING

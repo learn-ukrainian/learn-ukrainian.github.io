@@ -75,7 +75,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness']
     for k in keys_order:
         r = results.get(k)
         if r:

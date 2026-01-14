@@ -25,3 +25,6 @@ objectives:
 vocabulary_count: 25
 slug: 35-checkpoint
 focus: checkpoint
+naturalness:
+  score: 0
+  status: PENDING

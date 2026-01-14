@@ -21,3 +21,6 @@ objectives:
 vocabulary_count: 25
 slug: 30-i-feel-like
 focus: grammar
+naturalness:
+  score: 0
+  status: PENDING

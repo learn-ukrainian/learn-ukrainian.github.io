@@ -21,3 +21,6 @@ objectives:
 vocabulary_count: 25
 slug: 32-which-one
 focus: grammar
+naturalness:
+  score: 0
+  status: PENDING

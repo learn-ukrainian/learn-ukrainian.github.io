@@ -23,3 +23,6 @@ objectives:
 vocabulary_count: 25
 slug: 20-preferences-and-choices
 focus: grammar
+naturalness:
+  score: 0
+  status: PENDING

@@ -1,6 +1,7 @@
 # Audit Report: 27-colors-and-clothing.md
 **Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 846/750
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.6% (target 35-55% (M27))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

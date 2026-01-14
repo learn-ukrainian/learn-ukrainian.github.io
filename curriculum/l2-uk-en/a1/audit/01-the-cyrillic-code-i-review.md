@@ -1,6 +1,7 @@
 # Audit Report: 01-the-cyrillic-code-i.md
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 948/300
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 7.1% (target 5-15% (M01))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

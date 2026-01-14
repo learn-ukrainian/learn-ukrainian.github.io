@@ -1,6 +1,7 @@
 # Audit Report: 58-final-review.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** Simulated Immersion | **Target:** 800
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1371/800
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 48.4% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

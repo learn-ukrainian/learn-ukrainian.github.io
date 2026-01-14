@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 40
 vocab_count: 42
 slug: 05-my-world-objects
+naturalness:
+  score: 0
+  status: PENDING

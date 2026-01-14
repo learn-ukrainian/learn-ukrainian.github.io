@@ -1,6 +1,7 @@
 # Audit Report: 10-checkpoint-first-contact.md
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** Review | **Target:** 500
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1148/500
@@ -17,6 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 29.3% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

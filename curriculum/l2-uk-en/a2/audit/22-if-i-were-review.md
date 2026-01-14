@@ -1,20 +1,22 @@
 # Audit Report: 22-if-i-were.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
 - **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): пішов...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
 - 1 violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1123/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
@@ -26,6 +28,13 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 52.1% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Conditional Sentences | cloze | 10 | 12 | Add 2 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

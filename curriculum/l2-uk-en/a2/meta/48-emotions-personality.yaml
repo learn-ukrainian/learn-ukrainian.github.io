@@ -21,3 +21,6 @@ objectives:
 vocabulary_count: 30
 slug: 48-emotions-personality
 focus: grammar
+naturalness:
+  score: 0
+  status: PENDING

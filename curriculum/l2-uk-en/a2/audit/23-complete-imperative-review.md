@@ -1,9 +1,10 @@
 # Audit Report: 23-complete-imperative.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): ціна, економ, вигідний, порівнювати, якість...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): прошу, послухайте, пиши, роби, ласка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,6 +27,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 59.7% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

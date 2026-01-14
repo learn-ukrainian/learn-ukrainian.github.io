@@ -30,3 +30,6 @@ objectives:
 vocabulary_count: 20
 vocab_count: 20
 slug: 10-checkpoint-first-contact
+naturalness:
+  score: 0
+  status: PENDING

@@ -1,9 +1,10 @@
 # Audit Report: 10-at-the-post-office-and-bank.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Naturalness:** 0/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): посилка, знімати, банк, курс, картка...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): гроші, знімати, позика, лист, бандероль...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,6 +27,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 48.0% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |

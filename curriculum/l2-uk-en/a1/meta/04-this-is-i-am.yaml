@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 32
 vocab_count: 45
 slug: 04-this-is-i-am
+naturalness:
+  score: 0
+  status: PENDING

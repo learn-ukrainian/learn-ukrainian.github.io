@@ -22,3 +22,6 @@ objectives:
 vocabulary_count: 25
 slug: 19-the-best-the-worst
 focus: grammar
+naturalness:
+  score: 0
+  status: PENDING

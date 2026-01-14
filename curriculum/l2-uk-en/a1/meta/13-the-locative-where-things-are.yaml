@@ -23,3 +23,6 @@ grammar:
   - prepositions-v-u-na
 vocab_count: 36
 slug: 13-the-locative-where-things-are
+naturalness:
+  score: 0
+  status: PENDING

@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 35
 vocab_count: 40
 slug: 01-the-cyrillic-code-i
+naturalness:
+  score: 0
+  status: PENDING
