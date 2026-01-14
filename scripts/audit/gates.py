@@ -176,6 +176,24 @@ def evaluate_immersion(
     return GateResult('PASS', '🇺🇦', f"{score:.1f}%{phase_label}")
 
 
+def evaluate_naturalness(score: int, status: str) -> GateResult:
+    """Evaluate naturalness score gate.
+    
+    Target: 8/10 for content modules, 7/10 for checkpoints.
+    """
+    if status != 'PASS':
+        return GateResult('WARN', '⏳', f"{score}/10 ({status})")
+    
+    if score >= 8:
+        return GateResult('PASS', '✅', f"{score}/10 (High)")
+    elif score >= 7:
+        return GateResult('PASS', '✅', f"{score}/10 (Acceptable)")
+    elif score > 0:
+        return GateResult('WARN', '⚠️', f"{score}/10 (Low)")
+    else:
+        return GateResult('INFO', '❓', "Not scored")
+
+
 def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateResult:
     """Evaluate grammar validation status.
 

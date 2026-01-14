@@ -94,6 +94,7 @@ from .gates import (
     evaluate_grammar,
     evaluate_activity_quality,
     evaluate_content_heavy,
+    evaluate_naturalness,
     compute_recommendation,
 )
 from .checks.content_recall_detection import (
@@ -1489,6 +1490,15 @@ def audit_module(file_path: str) -> bool:
             pass
 
     results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
+
+    # Naturalness validation (Issue #415)
+    nat_score = 0
+    nat_status = "PENDING"
+    if meta_data and 'naturalness' in meta_data:
+        nat_score = meta_data['naturalness'].get('score', 0)
+        nat_status = meta_data['naturalness'].get('status', 'PENDING')
+    
+    results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
 
     # Activity quality validation check - look for -quality.md in audit folder
     quality_file = os.path.join(audit_dir, f"{base_name}-quality.md")
