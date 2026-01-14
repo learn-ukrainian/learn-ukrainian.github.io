@@ -28,5 +28,5 @@ vocabulary_count: 24
 vocab_count: 24
 slug: 19-at-the-cafe
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

@@ -25,3 +25,6 @@ objectives:
 vocabulary_count: 30
 vocab_count: 90
 slug: 19-register-official-legal
+naturalness:
+  score: 8
+  status: PASS

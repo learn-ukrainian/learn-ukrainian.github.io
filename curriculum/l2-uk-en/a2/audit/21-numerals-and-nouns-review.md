@@ -4,21 +4,20 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, іменник, родовий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, родовий, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): сім, дванадцять, шість, одинадцять, нуль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): вісім, дев'ять, двадцять, дванадцять, одинадцять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
-- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1603/1000
 - **Activities:** ✅ 10/10
-- **Density:** ❌ 1 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
@@ -31,12 +30,6 @@
 - **Immersion:** 🇺🇦 59.0% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Shopping at the Market | cloze | 10 | 12 | Add 2 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

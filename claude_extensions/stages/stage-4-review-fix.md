@@ -27,8 +27,8 @@ Review the module, fix violations, repeat until PASS.
                    ▼         ▼
         ┌─────────────┐   ┌─────────────────────────┐
         │   PASS!     │   │  COUNT VIOLATIONS       │
-        │ Output JSON │   │  ≤3 = FIX               │
-        │ & MDX       │   │  >3 = REBUILD SECTION   │
+        │ Output MDX  │   │  ≤3 = FIX               │
+        │             │   │  >3 = REBUILD SECTION   │
         └─────────────┘   └─────────────────────────┘
                                     │
                                     ▼
@@ -231,19 +231,29 @@ Flag content as DRY if ANY of these are true:
 
 ### 9. Naturalness Check
 
-After grammar and vocabulary validation, check prose activities for naturalness.
+After grammar and vocabulary validation, check ALL Ukrainian text for naturalness.
 
 **Purpose:** Prevent disconnected drills, template repetition, and robotic flow that grammar/vocabulary checks miss.
 
-#### 9.1 Extract Prose Activities
+**How it works:** You evaluate naturalness directly using your Ukrainian language knowledge. No external tools or MCP servers required. As an LLM trained on extensive Ukrainian text, you can assess flow, register, and authenticity.
 
-Identify activities with multi-sentence Ukrainian text:
-- **`cloze` passages** (5+ sentences)
-- **`fill-in`** with multi-sentence context
-- **`unjumble`** with 5+ sentences
+**CRITICAL:** Naturalness is NEVER "N/A" - every module with Ukrainian text requires evaluation, including alphabet modules with simple instructions.
 
-**Skip these types** (no prose naturalness evaluation):
-- `quiz`, `true-false`, `match-up`, `group-sort`, `select`, `error-correction`, `translate`, `mark-the-words`
+#### 9.1 Extract ALL Ukrainian Text
+
+Evaluate ALL Ukrainian content in the module:
+
+**Always evaluate:**
+- **Activity instructions** (e.g., "З'єднайте відповідні елементи", "Оберіть правильну відповідь")
+- **Cloze passages** (any length)
+- **Fill-in sentences/paragraphs**
+- **Unjumble sentences**
+- **Quiz explanations** in Ukrainian
+- **Mark-the-words text passages**
+
+**Minimal evaluation (just check instructions):**
+- `match-up`, `group-sort` - typically just have instruction text
+- `quiz`, `true-false`, `select` - check instruction + any Ukrainian explanations
 
 #### 9.2 Analyze Naturalness (Switch to Ukrainian Language Mode)
 
@@ -270,9 +280,27 @@ Score each prose activity 1-10 based on:
 |-------------|--------------|---------|
 | **Content modules** | 8/10 | < 8/10 |
 | **Checkpoints/Review** | 7/10 | < 7/10 |
-| **Quiz-only modules** | N/A | No prose to score |
+| **Minimal prose modules** | 8/10 | < 8/10 (still evaluate instructions) |
 
-**Average the scores** of all prose activities in the module. If module average is below target, flag for fixes.
+**Score all Ukrainian text** in the module. If average is below target, flag for fixes.
+
+#### 9.3.1 Update Meta File After Scoring
+
+After evaluating naturalness, **always update the module's meta file**:
+
+```yaml
+# curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
+naturalness:
+  score: 9      # Your evaluated score (1-10)
+  status: PASS  # PASS if score >= 8 (or >= 7 for checkpoints), else PENDING/FAIL
+```
+
+**Status values:**
+- `PASS` - Score meets threshold, audit will pass
+- `PENDING` - Not yet evaluated (causes audit FAIL)
+- `FAIL` - Evaluated but below threshold
+
+The audit reads this meta file and will FAIL if status is not PASS or score < 8.
 
 #### 9.4 Fix Flagged Issues
 
@@ -366,9 +394,6 @@ When audit passes, run the full pipeline:
 ```bash
 # Full pipeline: lint → generate MDX → validate MDX → validate HTML
 npm run pipeline l2-uk-en {level} {module_num}
-
-# Also generate JSON for Vibe app
-npm run generate:json l2-uk-en {level} {module_num}
 ```
 
 The pipeline validates:
@@ -385,5 +410,4 @@ Report:
 - Final audit score
 - Pipeline status (PASS/FAIL)
 - MDX file location
-- JSON file location
 - "MODULE APPROVED"

@@ -1,6 +1,16 @@
 # Audit Report: 05-third-person-plural-passive.md
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 05-third-person-plural-passive.yaml: [index-7] cloze: passage contains blank lines (\n\n) which break MDX rendering. Use single newlines only.
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1904/1750
@@ -13,7 +23,7 @@
 - **Vocab:** ✅ 123/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

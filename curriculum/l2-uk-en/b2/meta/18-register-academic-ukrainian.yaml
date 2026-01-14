@@ -23,3 +23,6 @@ objectives:
 vocabulary_count: 30
 vocab_count: 119
 slug: 18-register-academic-ukrainian
+naturalness:
+  score: 8
+  status: PASS

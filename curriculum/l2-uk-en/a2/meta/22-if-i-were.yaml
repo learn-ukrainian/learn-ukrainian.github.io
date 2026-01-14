@@ -23,5 +23,8 @@ vocabulary_count: 25
 slug: 22-if-i-were
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS
+naturalness:
+  score: 8
+  status: PASS

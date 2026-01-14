@@ -103,7 +103,7 @@
 - type: quiz
   title: Choose the Correct Demonstrative
   items:
-  - question: ___ телефон (this phone, masculine)
+  - question: ___ телефон
     options:
     - text: цей
       correct: true
@@ -114,7 +114,7 @@
     - text: ці
       correct: false
     explanation: Телефон is masculine, so use цей.
-  - question: ___ чашка (this cup, feminine)
+  - question: ___ чашка
     options:
     - text: цей
       correct: false
@@ -125,7 +125,7 @@
     - text: ці
       correct: false
     explanation: Чашка is feminine, so use ця.
-  - question: ___ вікно (this window, neuter)
+  - question: ___ вікно
     options:
     - text: цей
       correct: false
@@ -136,7 +136,7 @@
     - text: ці
       correct: false
     explanation: Вікно is neuter, so use це.
-  - question: ___ ключі (these keys, plural)
+  - question: ___ ключі
     options:
     - text: цей
       correct: false
@@ -147,7 +147,7 @@
     - text: ці
       correct: true
     explanation: Plural objects use ці.
-  - question: ___ диван (that couch, masculine)
+  - question: ___ диван
     options:
     - text: той
       correct: true
@@ -158,7 +158,7 @@
     - text: ті
       correct: false
     explanation: Диван is masculine, so use той.
-  - question: ___ шафа (that wardrobe, feminine)
+  - question: ___ шафа
     options:
     - text: той
       correct: false
@@ -169,7 +169,7 @@
     - text: ті
       correct: false
     explanation: Шафа is feminine, so use та.
-  - question: ___ крісло (that armchair, neuter)
+  - question: ___ крісло
     options:
     - text: той
       correct: false
@@ -180,7 +180,7 @@
     - text: ті
       correct: false
     explanation: Крісло is neuter, so use те.
-  - question: ___ двері (those doors, plural)
+  - question: ___ двері
     options:
     - text: той
       correct: false
@@ -191,7 +191,7 @@
     - text: ті
       correct: true
     explanation: Plural objects use ті.
-  - question: ___ лампа (this lamp, feminine)
+  - question: ___ лампа
     options:
     - text: цей
       correct: false
@@ -202,7 +202,7 @@
     - text: ці
       correct: false
     explanation: Лампа is feminine, so use ця.
-  - question: ___ пилосос (that vacuum cleaner, masculine)
+  - question: ___ пилосос
     options:
     - text: той
       correct: true
@@ -213,7 +213,7 @@
     - text: ті
       correct: false
     explanation: Пилосос is masculine, so use той.
-  - question: ___ дзеркало (this mirror, neuter)
+  - question: ___ дзеркало
     options:
     - text: цей
       correct: false
@@ -224,7 +224,7 @@
     - text: ці
       correct: false
     explanation: Дзеркало is neuter, so use це.
-  - question: ___ картини (those paintings, plural)
+  - question: ___ картини
     options:
     - text: той
       correct: false
@@ -397,90 +397,84 @@
 - type: fill-in
   title: Complete the Dialogue
   items:
-  - sentence: — Що ___? — ___ ніж. (What is this? This is a knife.)
+  - sentence: — Що ___? — ___ ніж.
     answer: це | Це
     options:
     - це, Це
     - той, Той
     - ця, Ця
     - ці, Ці
-  - sentence: — ___ чашка твоя? — Так, моя. (Is this cup yours? Yes, mine.)
+  - sentence: — ___ чашка твоя? — Так, моя.
     answer: Ця
     options:
     - Цей
     - Ця
     - Це
     - Ці
-  - sentence: — Де мій телефон? — ___ телефон на столі. (Where is my phone? That phone
-      is on the table.)
+  - sentence: — Де мій телефон? — ___ телефон на столі.
     answer: Той
     options:
     - Той
     - Та
     - Те
     - Ті
-  - sentence: — ___ ключі? — Так, ці ключі. (These keys? Yes, these keys.)
+  - sentence: — ___ ключі? — Так, ці ключі.
     answer: Ці
     options:
     - Цей
     - Ця
     - Це
     - Ці
-  - sentence: — ___ вікно велике! — Так, дуже велике. (That window is big! Yes, very
-      big.)
+  - sentence: — ___ вікно велике! — Так, дуже велике.
     answer: Те
     options:
     - Той
     - Та
     - Те
     - Ті
-  - sentence: — ___ сумка нова? — Ні, стара. (Is this bag new? No, old.)
+  - sentence: — ___ сумка нова? — Ні, стара.
     answer: Ця
     options:
     - Цей
     - Ця
     - Це
     - Ці
-  - sentence: — ___ стілець гарний? — Так, дуже гарний. (Is this chair nice? Yes,
-      very nice.)
+  - sentence: — ___ стілець гарний? — Так, дуже гарний.
     answer: Цей
     options:
     - Цей
     - Ця
     - Це
     - Ці
-  - sentence: — Де ___ картина? — Вона на стіні. (Where is that painting? It is on
-      the wall.)
+  - sentence: — Де ___ картина? — Вона на стіні.
     answer: Та
     options:
     - Та
     - Той
     - Те
     - Ті
-  - sentence: — ___ лампа не працює. — Так, зламана. (This lamp doesn't work. Yes,
-      broken.)
+  - sentence: — ___ лампа не працює. — Так, зламана.
     answer: Ця
     options:
     - Цей
     - Ця
     - Це
     - Ці
-  - sentence: — ___ годинник новий? — Так, новий. (Is that clock new? Yes, new.)
+  - sentence: — ___ годинник новий? — Так, новий.
     answer: Той
     options:
     - Той
     - Та
     - Те
     - Ті
-  - sentence: — Де ___ двері? — Там. (Where are those doors? There.)
+  - sentence: — Де ___ двері? — Там.
     answer: ті
     options:
     - той
     - та
     - те
     - ті
-  - sentence: — ___ дзеркало дуже гарне! — Дякую! (This mirror is very nice! Thank
-      you!)
+  - sentence: — ___ дзеркало дуже гарне! — Дякую!
     answer: Це
     options:
     - Цей

@@ -262,70 +262,70 @@
 - type: fill-in
   title: Complete the Word
   items:
-  - sentence: ___анк (bank)
+  - sentence: ___анк
     answer: Б
     options:
     - Б
     - В
     - П
     - Ф
-  - sentence: ка___а (coffee)
+  - sentence: ка___а
     answer: в
     options:
     - в
     - б
     - ф
     - п
-  - sentence: ___адіо (radio)
+  - sentence: ___адіо
     answer: Р
     options:
     - Р
     - П
     - Н
     - В
-  - sentence: мет___о (metro)
+  - sentence: мет___о
     answer: р
     options:
     - р
     - п
     - н
     - в
-  - sentence: ___уп (soup)
+  - sentence: ___уп
     answer: С
     options:
     - С
     - З
     - Ц
     - Х
-  - sentence: ___арк (park)
+  - sentence: ___арк
     answer: П
     options:
     - П
     - Р
     - Б
     - Ф
-  - sentence: ___утбол (football)
+  - sentence: ___утбол
     answer: Ф
     options:
     - Ф
     - П
     - В
     - Б
-  - sentence: бана___ (banana)
+  - sentence: бана___
     answer: н
     options:
     - н
     - м
     - р
     - л
-  - sentence: ___імон (lemon)
+  - sentence: ___імон
     answer: Л
     options:
     - Л
     - П
     - Р
     - Н
-  - sentence: ___октор (doctor)
+  - sentence: ___октор
     answer: Д
     options:
     - Д
@@ -339,7 +339,7 @@
     - м
     - р
     - л
-  - sentence: ка___та (map/card)
+  - sentence: ка___та
     answer: р
     options:
     - р

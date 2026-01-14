@@ -147,3 +147,11 @@ items:
   ipa: pɔkɑˈʒitʲ
   translation: show (imperative pl.)
   pos: verb
+- lemma: послухайте
+  ipa: pɔˈsluxɑjtɛ
+  translation: listen (imperative pl.)
+  pos: verb
+- lemma: говори
+  ipa: ɦɔvɔˈrɪ
+  translation: speak (imperative sg.)
+  pos: verb

@@ -121,3 +121,19 @@ items:
   ipa: jɐˈkɪjsʲ
   translation: some; a certain
   pos: other
+
+- lemma: іменник
+  ipa: /iˈmɛnːɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: родовий
+  ipa: /rɔdɔˈvɪj/
+  translation: genitive (case)
+  pos: adj
+  gender: m
+- lemma: відмінок
+  ipa: /vidˈminɔk/
+  translation: case (grammatical)
+  pos: noun
+  gender: m

@@ -1,15 +1,7 @@
 # Audit Report: 16-register-formal-informal.md
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Завдання 3: Вибір регістру за контекстом, Вступ
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2338/1750
@@ -27,6 +19,7 @@
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

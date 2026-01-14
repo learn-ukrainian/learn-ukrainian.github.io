@@ -1,5 +1,6 @@
 # Audit Report: 09-participles-vs-relative-clauses.md
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates

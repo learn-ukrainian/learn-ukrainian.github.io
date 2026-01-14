@@ -31,5 +31,5 @@ vocabulary_count: 20
 vocab_count: 9
 slug: 20-checkpoint-navigation
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

@@ -1,5 +1,6 @@
 # Audit Report: 20-register-medical-ukrainian.md
 **Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -18,6 +19,7 @@
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

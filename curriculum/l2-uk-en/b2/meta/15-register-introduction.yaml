@@ -22,3 +22,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 203
 slug: 15-register-introduction
+naturalness:
+  score: 8
+  status: PASS

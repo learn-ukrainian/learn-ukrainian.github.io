@@ -4,7 +4,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид, відмінок, час
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, вид, місцевий, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

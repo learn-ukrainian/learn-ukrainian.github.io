@@ -23,3 +23,6 @@ objectives:
 vocabulary_count: 25
 vocab_count: 76
 slug: 16-register-formal-informal
+naturalness:
+  score: 8
+  status: PASS

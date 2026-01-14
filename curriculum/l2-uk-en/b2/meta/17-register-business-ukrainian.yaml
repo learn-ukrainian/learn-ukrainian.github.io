@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 30
 vocab_count: 110
 slug: 17-register-business-ukrainian
+naturalness:
+  score: 8
+  status: PASS

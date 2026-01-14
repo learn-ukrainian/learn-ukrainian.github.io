@@ -1,5 +1,6 @@
 # Audit Report: 15-register-introduction.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -18,6 +19,7 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

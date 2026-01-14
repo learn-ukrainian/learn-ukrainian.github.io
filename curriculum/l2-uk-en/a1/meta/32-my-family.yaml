@@ -24,5 +24,5 @@ vocabulary_count: 35
 vocab_count: 39
 slug: 32-my-family
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

@@ -26,5 +26,5 @@ vocabulary_count: 35
 vocab_count: 39
 slug: 29-weather-and-nature
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

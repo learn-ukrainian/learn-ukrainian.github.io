@@ -129,56 +129,56 @@
     - стіл
     - каву
     - воду
-  - sentence: Що ___? (What do you recommend?)
+  - sentence: Що ___?
     answer: порекомендуєте
     options:
     - порекомендуєте
     - візьму
     - принесіть
     - спробую
-  - sentence: Я ___ каву з молоком. (I'll take)
+  - sentence: Я ___ каву з молоком.
     answer: візьму
     options:
     - візьму
     - хочу
     - беру
     - маю
-  - sentence: ___, будь ласка, ще хліб. (Bring)
+  - sentence: ___, будь ласка, ще хліб.
     answer: Принесіть
     options:
     - Принесіть
     - Візьміть
     - Дайте
     - Покажіть
-  - sentence: ___ щось? (Anything else?)
+  - sentence: ___ щось?
     answer: Ще
     options:
     - Ще
     - Вже
     - Все
     - Так
-  - sentence: Ні, це ___. (That's everything)
+  - sentence: Ні, це ___.
     answer: все
     options:
     - все
     - добре
     - так
     - достатньо
-  - sentence: ___, будь ласка. (Check, please)
+  - sentence: ___, будь ласка.
     answer: Рахунок
     options:
     - Рахунок
     - Меню
     - Столик
     - Гроші
-  - sentence: Разом чи ___? (Together or separately?)
+  - sentence: Разом чи ___?
     answer: окремо
     options:
     - окремо
     - разом
     - все
     - достатньо
-  - sentence: Це ___. (That's enough)
+  - sentence: Це ___.
     answer: достатньо
     options:
     - достатньо
@@ -192,7 +192,7 @@
     - добре
     - гарно
     - чудово
-  - sentence: ___, будь ласка, воду. (Bring)
+  - sentence: ___, будь ласка, воду.
     answer: Принесіть
     options:
     - Принесіть
@@ -390,21 +390,21 @@
 - type: fill-in
   title: Polite vs Direct
   items:
-  - sentence: You want coffee. ___ (What should you say?)
+  - sentence: You want coffee.
     answer: Я візьму каву, будь ласка
     options:
     - Я хочу каву!
     - Я візьму каву, будь ласка.
     - Дайте мені каву!
     - Каву!
-  - sentence: You need the menu. ___ (What's the polite way?)
+  - sentence: You need the menu.
     answer: Можна меню
     options:
     - Дайте меню!
     - Меню!
     - Можна меню?
     - Я хочу меню!
-  - sentence: You want more bread. ___ (How do you ask?)
+  - sentence: You want more bread.
     answer: Принесіть, будь ласка, ще хліб
     options:
     - Хліб!

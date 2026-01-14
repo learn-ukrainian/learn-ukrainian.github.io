@@ -25,5 +25,5 @@ vocabulary_count: 30
 vocab_count: 25
 slug: 28-description-adverbs
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

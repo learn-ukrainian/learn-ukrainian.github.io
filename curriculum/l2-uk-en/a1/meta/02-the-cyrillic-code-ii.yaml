@@ -30,5 +30,5 @@ vocabulary_count: 35
 vocab_count: 77
 slug: 02-the-cyrillic-code-ii
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

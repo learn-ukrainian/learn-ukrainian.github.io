@@ -279,56 +279,56 @@
 - type: fill-in
   title: Transform to Past Tense
   items:
-  - sentence: Він (читати) ___ газету.
+  - sentence: Він ___ газету.
     answer: читав
     options:
     - читав
     - читала
     - читало
     - читали
-  - sentence: Вона (говорити) ___ по телефону.
+  - sentence: Вона ___ по телефону.
     answer: говорила
     options:
     - говорив
     - говорила
     - говорило
     - говорили
-  - sentence: Воно (бути) ___ тут.
+  - sentence: Воно ___ тут.
     answer: було
     options:
     - був
     - була
     - було
     - були
-  - sentence: Вони (працювати) ___ весь день.
+  - sentence: Вони ___ весь день.
     answer: працювали
     options:
     - працював
     - працювала
     - працювало
     - працювали
-  - sentence: Я (слухати) ___ музику.
+  - sentence: Я ___ музику.
     answer: слухала
     options:
     - слухав
     - слухала
     - слухало
     - слухали
-  - sentence: Ти (дивитися) ___ фільм?
+  - sentence: Ти ___ фільм?
     answer: дивився
     options:
     - дивився
     - дивилася
     - дивилося
     - дивилися
-  - sentence: Він (їсти) ___ сніданок.
+  - sentence: Він ___ сніданок.
     answer: їв
     options:
     - їв
     - їла
     - їло
     - їли
-  - sentence: Вона (пити) ___ каву.
+  - sentence: Вона ___ каву.
     answer: пила
     options:
     - пив

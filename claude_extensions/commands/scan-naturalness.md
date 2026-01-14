@@ -3,6 +3,35 @@
 ## Purpose
 Scan activities for naturalness issues while maintaining vocabulary and grammar constraints.
 
+## How Naturalness Evaluation Works
+
+**You evaluate naturalness directly using your Ukrainian language knowledge.** No external tools or MCP servers are required.
+
+As an LLM trained on extensive Ukrainian text, you can assess:
+- Whether text flows naturally
+- Appropriate use of discourse markers
+- Register matching CEFR level
+- Authentic vs robotic phrasing
+
+**IMPORTANT:** Naturalness is NEVER "N/A" for any module with Ukrainian text. Even alphabet modules have Ukrainian instructions that must sound natural.
+
+### What to Evaluate
+
+1. **Activity instructions** (e.g., "З'єднайте відповідні елементи")
+2. **Multi-sentence prose** (cloze, fill-in, unjumble passages)
+3. **Quiz explanations** in Ukrainian
+4. **Any other Ukrainian text** in activities
+
+### After Evaluation
+
+Update the module's meta file with your score:
+```yaml
+# curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
+naturalness:
+  score: 9  # Your evaluated score (1-10)
+  status: PASS  # PASS if score >= 8, else FAIL
+```
+
 ## Usage
 
 ```
@@ -22,7 +51,7 @@ Scan activities for naturalness issues while maintaining vocabulary and grammar 
 - `<start_module>`: First module number (1-based)
 - `<end_module>`: Last module number (inclusive)
 
-## Instructions for Claude
+## Instructions
 
 When this skill is invoked, follow the protocol in `claude_extensions/protocols/a1-naturalness-scan.md` with these adaptations:
 
@@ -107,24 +136,35 @@ if __name__ == "__main__":
 For each module in range `<start_module>` to `<end_module>`:
 
 ```bash
-# Read module context
-READ: curriculum/l2-uk-en/{level}/{num}-{slug}.md
-
 # Read activity file
 READ: curriculum/l2-uk-en/{level}/activities/{num}-{slug}.yaml
 
-# Extract prose activities (fill-in, cloze, unjumble with 5+ sentences)
-EXTRACT: Multi-sentence activities only
+# Read meta file to check current naturalness status
+READ: curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
 
-# Analyze naturalness (switch to Ukrainian language mode)
+# Extract ALL Ukrainian text:
+# - Activity instructions (always present)
+# - Multi-sentence prose (cloze, fill-in, unjumble)
+# - Quiz explanations in Ukrainian
+# - Mark-the-words passages
+EXTRACT: All Ukrainian text content
+
+# Analyze naturalness using your Ukrainian language knowledge
 ANALYZE:
-  - Subject consistency
-  - Discourse markers (а, але, потім, тому, спочатку, etc.)
-  - Topic coherence
-  - Redundancy
+  - Flow: Do sentences connect naturally?
+  - Discourse markers: (а, але, потім, тому, спочатку, etc.)
+  - Register: Matches CEFR level expectations?
+  - Authenticity: Would a native speaker write this?
+  - Instructions: Natural phrasing for activity context?
 
 # Score 1-10
-SCORE: Based on naturalness criteria
+SCORE: Based on naturalness criteria (target: 8/10 for content, 7/10 for checkpoints)
+
+# Update meta file with score
+UPDATE: curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
+  naturalness:
+    score: {score}
+    status: PASS  # if score >= 8, else FAIL
 
 # If score < 8, validate vocabulary before proposing fix
 VALIDATE: All words against M01-M{current} cumulative vocab
@@ -217,9 +257,9 @@ Generate report at `/tmp/{level}-naturalness-scan-m{start}-m{end}.md`:
 
 To minimize token usage:
 - Batch file reads (Read multiple activity files in parallel)
-- Only analyze prose activities (skip quiz, match-up, group-sort)
-- Skip modules with no multi-sentence prose
+- For minimal-prose modules (alphabet, matching), focus on instruction text
 - Group similar issues in report
+- Read meta files in parallel with activity files
 
 ### 7. After Scan Complete
 
@@ -245,6 +285,8 @@ Scan A2 in checkpoint-based batches:
 ## Notes
 
 - Use parallel tool calls for efficiency
-- Switch to Ukrainian when analyzing sentences
+- Evaluate naturalness using your Ukrainian language knowledge (no MCP required)
+- **Always update meta files** with score and status after evaluation
 - Validate ALL vocabulary before proposing fixes
 - Maintain strict grammar progression constraints
+- Naturalness is NEVER "N/A" - every module with Ukrainian text needs a score

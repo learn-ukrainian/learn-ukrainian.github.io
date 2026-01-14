@@ -23,84 +23,84 @@
 - type: fill-in
   title: Shopping Phrases
   items:
-  - sentence: Скільки ___ хліб? (How much is bread?)
+  - sentence: Скільки ___ хліб?
     answer: коштує
     options:
     - коштує
     - є
     - має
     - бере
-  - sentence: Я ___ каву. (I want coffee.)
+  - sentence: Я ___ каву.
     answer: хочу
     options:
     - хочу
     - хоче
     - хочеш
     - хочуть
-  - sentence: Я хочу ___, будь ласка. (I want bread, please.)
+  - sentence: Я хочу ___, будь ласка.
     answer: хліб
     options:
     - хліб
     - хліба
     - хлібу
     - хлібом
-  - sentence: Склянку ___, будь ласка. (A glass of water, please.)
+  - sentence: Склянку ___, будь ласка.
     answer: води
     options:
     - води
     - вода
     - воду
     - водою
-  - sentence: Ми ___ овочі. (We buy vegetables.)
+  - sentence: Ми ___ овочі.
     answer: купуємо
     options:
     - купуємо
     - купую
     - купуєш
     - купує
-  - sentence: ___, будь ласка. (The bill, please.)
+  - sentence: ___, будь ласка.
     answer: Рахунок
     options:
     - Рахунок
     - Рахунку
     - Рахунком
     - Рахунки
-  - sentence: У меню є ___? (Is there dessert on the menu?)
+  - sentence: У меню є ___?
     answer: десерт
     options:
     - десерт
     - десерту
     - десерті
     - десертом
-  - sentence: Я шукаю зубну ___. (I'm looking for toothpaste.)
+  - sentence: Я шукаю зубну ___.
     answer: пасту
     options:
     - пасту
     - паста
     - пасти
     - пастою
-  - sentence: Я хочу ___. (I want a pen.)
+  - sentence: Я хочу ___.
     answer: ручку
     options:
     - ручку
     - ручка
     - ручки
     - ручкою
-  - sentence: Магазин ___ о восьмій. (The store opens at 8.)
+  - sentence: Магазин ___ о восьмій.
     answer: відчинено
     options:
     - відчинено
     - зачинено
     - відчиняє
     - зачиняє
-  - sentence: Це дуже ___. (This is very expensive.)
+  - sentence: Це дуже ___.
     answer: дорого
     options:
     - дорого
     - дешево
     - коштує
     - ціна
-  - sentence: Я візьму ___ та салат. (I'll take soup and salad.)
+  - sentence: Я візьму ___ та салат.
     answer: суп
     options:
     - суп

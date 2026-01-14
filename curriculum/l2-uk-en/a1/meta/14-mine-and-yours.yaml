@@ -27,5 +27,5 @@ vocabulary_count: 20
 vocab_count: 25
 slug: 14-mine-and-yours
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

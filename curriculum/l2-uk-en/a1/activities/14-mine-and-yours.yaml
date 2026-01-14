@@ -43,7 +43,7 @@
 - type: quiz
   title: Choose the Correct Possessive
   items:
-  - question: Це ___ книга. (my — feminine)
+  - question: Це ___ дуже цікава українська книга.
     options:
     - text: мій
       correct: false
@@ -54,7 +54,7 @@
     - text: мої
       correct: false
     explanation: моя matches книга (feminine)
-  - question: Де ___ телефон? (your informal — masculine)
+  - question: Де зараз ___ новий мобільний телефон?
     options:
     - text: твій
       correct: true
@@ -65,7 +65,7 @@
     - text: твої
       correct: false
     explanation: твій matches телефон
-  - question: ___ вікно велике. (our — neuter)
+  - question: ___ велике вікно виходить на вулицю.
     options:
     - text: наш
       correct: false
@@ -76,7 +76,7 @@
     - text: наші
       correct: false
     explanation: наше matches вікно (neuter)
-  - question: Це ___ машина. (his — invariant)
+  - question: Це ___ нова швидка червона машина.
     options:
     - text: він
       correct: false
@@ -87,7 +87,7 @@
     - text: йог
       correct: false
     explanation: його never changes
-  - question: ___ сестра студентка. (her — invariant)
+  - question: ___ молодша сестра сьогодні — розумна студентка.
     options:
     - text: вона
       correct: false
@@ -98,7 +98,7 @@
     - text: їх
       correct: false
     explanation: її never changes
-  - question: ___ друзі тут. (their — plural)
+  - question: ___ найкращі друзі зараз живуть тут.
     options:
     - text: їхній
       correct: false
@@ -109,7 +109,7 @@
     - text: їхні
       correct: true
     explanation: їхні matches друзі (plural)
-  - question: Де ___ батьки? (your formal/plural)
+  - question: Де зараз живуть ___ старі батьки?
     options:
     - text: ваш
       correct: false
@@ -120,7 +120,7 @@
     - text: ваші
       correct: true
     explanation: ваші matches батьки (plural)
-  - question: Чий це ___ дім? (our — masculine)
+  - question: Скажіть, чий це великий наш дім?
     options:
     - text: наш
       correct: true
@@ -131,7 +131,7 @@
     - text: наші
       correct: false
     explanation: наш matches дім
-  - question: ___ робота цікава. (my — feminine)
+  - question: ___ щоденна робота дуже цікава та важлива.
     options:
     - text: мій
       correct: false
@@ -142,7 +142,7 @@
     - text: мої
       correct: false
     explanation: моя matches робота (feminine)
-  - question: Це ___ життя. (his — neuter, invariant)
+  - question: Це ___ дуже важке та складне життя.
     options:
     - text: йому
       correct: false
@@ -153,7 +153,7 @@
     - text: він
       correct: false
     explanation: його never changes
-  - question: ___ місто гарне. (your informal — neuter)
+  - question: ___ рідне місто дуже гарне та старе.
     options:
     - text: твій
       correct: false
@@ -164,7 +164,7 @@
     - text: твої
       correct: false
     explanation: твоє matches місто (neuter)
-  - question: Чиї це ___ речі? (their — plural)
+  - question: Чиї це всі ___ важливі речі?
     options:
     - text: їхній
       correct: false
@@ -222,7 +222,7 @@
 - type: fill-in
   title: Complete with Possessives
   items:
-  - sentence: Це ___ книга. (my)
+  - sentence: Це ___ книга.
     answer: моя
     options:
     - мій
@@ -236,56 +236,56 @@
     - твоя
     - твоє
     - твої
-  - sentence: ___ вікно велике. (our)
+  - sentence: ___ вікно велике.
     answer: Наше
     options:
     - Наш
     - Наша
     - Наше
     - Наші
-  - sentence: Це ___ машина. (his)
+  - sentence: Це ___ машина.
     answer: його
     options:
     - його
     - її
     - їхній
     - його
-  - sentence: ___ сестра студентка. (her)
+  - sentence: ___ сестра студентка.
     answer: Її
     options:
     - Його
     - Її
     - Їхня
     - Її
-  - sentence: ___ друзі тут. (their)
+  - sentence: ___ друзі тут.
     answer: Їхні
     options:
     - їхній
     - їхня
     - їхнє
     - їхні
-  - sentence: Де ___ батьки? (your formal/plural)
+  - sentence: Де ___ батьки?
     answer: ваші
     options:
     - ваш
     - ваша
     - ваше
     - ваші
-  - sentence: Чий це ___ дім? (our)
+  - sentence: Чий це ___ дім?
     answer: наш
     options:
     - наш
     - наша
     - наше
     - наші
-  - sentence: ___ робота цікава. (my)
+  - sentence: ___ робота цікава.
     answer: Моя
     options:
     - Мій
     - Моя
     - Моє
     - Мої
-  - sentence: Це ___ життя. (his)
+  - sentence: Це ___ життя.
     answer: його
     options:
     - його
@@ -299,21 +299,21 @@
     - Твоя
     - Твоє
     - Твої
-  - sentence: Чиї це ___ речі? (their)
+  - sentence: Чиї це ___ речі?
     answer: їхні
     options:
     - їхній
     - їхня
     - їхнє
     - їхні
-  - sentence: ___ стіл там. (my)
+  - sentence: ___ стіл там.
     answer: Мій
     options:
     - Мій
     - Моя
     - Моє
     - Мої
-  - sentence: ___ кімната чиста. (our)
+  - sentence: ___ кімната чиста.
     answer: Наша
     options:
     - Наш

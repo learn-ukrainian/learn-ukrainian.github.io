@@ -23,84 +23,84 @@
 - type: fill-in
   title: Complete with Numbers
   items:
-  - sentence: У мене ___ гривень. (I have ___ hryvnias.) [10]
+  - sentence: У мене ___ гривень.
     answer: десять
     options:
     - десять
     - п'ять
     - двадцять
     - сто
-  - sentence: Це коштує ___ гривень. (This costs ___ hryvnias.) [50]
+  - sentence: Це коштує ___ гривень.
     answer: п'ятдесят
     options:
     - п'ятнадцять
     - п'ятдесят
     - п'ять
     - сорок
-  - sentence: Вона має ___ років. (She is ___ years old.) [23]
+  - sentence: Вона має ___ років.
     answer: двадцять три
     options:
     - двадцять три
     - тридцять два
     - двадцять
     - три
-  - sentence: Автобус номер ___. (Bus number ___.) [40]
+  - sentence: Автобус номер ___.
     answer: сорок
     options:
     - чотири
     - чотирнадцять
     - сорок
     - чотирдесят
-  - sentence: ___ студентів у класі. (___ students in the class.) [15]
+  - sentence: ___ студентів у класі.
     answer: П'ятнадцять
     options:
     - П'ять
     - П'ятнадцять
     - П'ятдесят
     - Шістнадцять
-  - sentence: Хліб коштує ___ гривень. (Bread costs ___ hryvnias.) [8]
+  - sentence: Хліб коштує ___ гривень.
     answer: вісім
     options:
     - вісім
     - вісімнадцять
     - вісімдесят
     - сім
-  - sentence: Я маю ___ рік. (I am ___ years old.) [21]
+  - sentence: Я маю ___ рік.
     answer: двадцять один
     options:
     - один
     - двадцять
     - двадцять один
     - одинадцять
-  - sentence: Це коштує ___ гривень. (This costs ___ hryvnias.) [100]
+  - sentence: Це коштує ___ гривень.
     answer: сто
     options:
     - десять
     - сто
     - вісімдесят
     - дев'яносто
-  - sentence: У мене є ___ копійок. (I have ___ kopecks.) [75]
+  - sentence: У мене є ___ копійок.
     answer: сімдесят п'ять
     options:
     - сімдесят п'ять
     - сім
     - п'ятдесят сім
     - п'ять
-  - sentence: Каса номер ___. (Cashier number ___.) [7]
+  - sentence: Каса номер ___.
     answer: сім
     options:
     - сім
     - сімдесят
     - сімнадцять
     - вісім
-  - sentence: ___ книг на столі. (___ books on the table.) [12]
+  - sentence: ___ книг на столі.
     answer: Дванадцять
     options:
     - Два
     - Дванадцять
     - Двадцять
     - Двадцять два
-  - sentence: Молоко коштує ___ гривень. (Milk costs ___ hryvnias.) [20]
+  - sentence: Молоко коштує ___ гривень.
     answer: двадцять
     options:
     - двадцять
@@ -447,57 +447,56 @@
 - type: fill-in
   title: Shopping Dialogue
   items:
-  - sentence: Доброго дня! Що ___? (Good afternoon! What ___ you want?)
+  - sentence: Доброго дня! Що ___?
     answer: бажаєте
     options:
     - бажаєте
     - є
     - коштує
     - маю
-  - sentence: ___ коштує молоко? (___ does milk cost?)
+  - sentence: ___ коштує молоко?
     answer: Скільки
     options:
     - Скільки
     - Що
     - Де
     - Хто
-  - sentence: Двадцять ___. (Twenty ___.)
+  - sentence: Двадцять ___.
     answer: гривень
     options:
     - гривня
     - гривні
     - гривень
     - гривнів
-  - sentence: Добре. Одне молоко, ___ ласка. (Okay. One milk, ___.)
+  - sentence: Добре. Одне молоко, ___ ласка.
     answer: будь
     options:
     - будь
     - є
     - маю
     - дякую
-  - sentence: Можна платити ___? (Can I pay by ___?)
+  - sentence: Можна платити ___?
     answer: карткою
     options:
     - картка
     - карткою
     - картки
     - карток
-  - sentence: Так, звичайно. ___! (Yes, of course. ___!)
+  - sentence: Так, звичайно. ___!
     answer: Дякую
     options:
     - Дякую
     - Привіт
     - До побачення
     - Вибачте
-  - sentence: Ось ваше молоко. ___ гривень, будь ласка. (Here's your milk. ___ hryvnias,
-      please.)
+  - sentence: Ось ваше молоко. ___ гривень, будь ласка.
     answer: Двадцять
     options:
     - Два
     - Двадцять
     - Дванадцять
     - Сто
-  - sentence: У вас є ___? (Do you have ___?)
+  - sentence: У вас є ___?
     answer: гроші
     options:
     - гроші

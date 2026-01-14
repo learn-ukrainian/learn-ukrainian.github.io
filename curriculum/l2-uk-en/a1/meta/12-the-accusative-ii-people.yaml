@@ -24,5 +24,5 @@ vocabulary_count: 20
 vocab_count: 45
 slug: 12-the-accusative-ii-people
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

@@ -25,5 +25,5 @@ vocabulary_count: 36
 vocab_count: 44
 slug: 26-describing-things-adjectives
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

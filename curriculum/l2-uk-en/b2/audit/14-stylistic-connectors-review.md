@@ -1,17 +1,7 @@
 # Audit Report: 14-stylistic-connectors.md
 **Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Пояснення|Граматика|Теорія' found: Пояснення, Вправа 4: Заміна сполучника з поясненням
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Трансформації' found: Трансформації, Вправа 5: Комбіновані трансформації
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2451/1750
@@ -29,6 +19,7 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

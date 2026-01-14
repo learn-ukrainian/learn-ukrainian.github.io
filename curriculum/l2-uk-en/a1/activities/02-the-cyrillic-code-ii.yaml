@@ -213,91 +213,91 @@
 - type: fill-in
   title: Complete the Greetings
   items:
-  - sentence: ___ (Hello!)
+  - sentence: ___
     answer: Привіт
     options:
     - Привіт
     - Дякую
     - Добре
     - Так
-  - sentence: ___ (Thank you)
+  - sentence: ___
     answer: Дякую
     options:
     - Дякую
     - Будь ласка
     - До побачення
     - Привіт
-  - sentence: ___ (Please / You're welcome)
+  - sentence: ___
     answer: Будь ласка
     options:
     - Будь ласка
     - Дякую
     - Вибачте
     - Так
-  - sentence: ___ (Goodbye)
+  - sentence: ___
     answer: До побачення
     options:
     - До побачення
     - Привіт
     - Дякую
     - Ні
-  - sentence: ___ (Excuse me / Sorry)
+  - sentence: ___
     answer: Вибачте
     options:
     - Вибачте
     - Будь ласка
     - Дякую
     - Добре
-  - sentence: ___ (Yes)
+  - sentence: ___
     answer: Так
     options:
     - Так
     - Ні
     - Що
     - Як
-  - sentence: ___ (No)
+  - sentence: ___
     answer: Ні
     options:
     - Ні
     - Так
     - Де
     - Хто
-  - sentence: ___ (Good / Well)
+  - sentence: ___
     answer: Добре
     options:
     - Добре
     - Дякую
     - Так
     - Ні
-  - sentence: ___ (What?)
+  - sentence: ___
     answer: Що
     options:
     - Що
     - Як
     - Де
     - Хто
-  - sentence: ___ (How?)
+  - sentence: ___
     answer: Як
     options:
     - Як
     - Що
     - Де
     - Хто
-  - sentence: ___ (Where?)
+  - sentence: ___
     answer: Де
     options:
     - Де
     - Що
     - Як
     - Хто
-  - sentence: ___ (Who?)
+  - sentence: ___
     answer: Хто
     options:
     - Хто
     - Що
     - Як
     - Де
-  - sentence: ___ (Welcome)
+  - sentence: ___
     answer: Ласкаво просимо
     options:
     - Ласкаво просимо

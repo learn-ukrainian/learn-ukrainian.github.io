@@ -22,5 +22,8 @@ vocabulary_count: 30
 slug: 21-numerals-and-nouns
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS
+naturalness:
+  score: 8
+  status: PASS

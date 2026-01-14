@@ -3,17 +3,8 @@
 **Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1921/1000
+- **Words:** ✅ 1932/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -25,7 +16,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.1% (target 40-50% (A2.1))
+- **Immersion:** ❌ 39.8% LOW (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
@@ -44,5 +35,6 @@
 | **Mini-Dialogues** | ✅ | 284 | Included in Core |
 | **Найбільш вживані вирази** | ⚪️ | 130 | Skipped |
 | **Дієслова, що вимагають давальний відмінок** | ⚪️ | 31 | Skipped |
+| **Practice** | ⚪️ | 11 | Skipped |
 | **Підсумок** | ✅ | 70 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

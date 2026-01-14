@@ -219,9 +219,6 @@ When audit passes, run the full validation pipeline:
 ```bash
 # Full pipeline: lint → generate MDX → validate MDX → validate HTML
 npm run pipeline l2-uk-en {level} {module_num}
-
-# Also generate JSON for Vibe app
-npm run generate:json l2-uk-en {level} {module_num}
 ```
 
 **Note:** HTML validation requires dev server running:
@@ -240,7 +237,6 @@ MODULE APPROVED
 Audit: PASS
 Pipeline: PASS (lint ✓ generate ✓ validate_mdx ✓ validate_html ✓)
 MDX: docusaurus/docs/{level}/module-{num}.mdx
-JSON: output/json/l2-uk-en/{level}/module-{num}.json
 
 Statistics:
 - Word count: XXX

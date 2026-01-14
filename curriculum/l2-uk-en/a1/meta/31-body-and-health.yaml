@@ -24,5 +24,5 @@ vocabulary_count: 30
 vocab_count: 35
 slug: 31-body-and-health
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

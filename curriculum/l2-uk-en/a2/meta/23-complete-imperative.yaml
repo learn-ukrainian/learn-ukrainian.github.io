@@ -27,5 +27,8 @@ slug: 23-complete-imperative
 vocabulary_count: 20
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS
+naturalness:
+  score: 8
+  status: PASS

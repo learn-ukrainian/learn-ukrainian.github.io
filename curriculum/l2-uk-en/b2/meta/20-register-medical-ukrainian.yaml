@@ -24,3 +24,6 @@ objectives:
 vocabulary_count: 30
 vocab_count: 161
 slug: 20-register-medical-ukrainian
+naturalness:
+  score: 8
+  status: PASS

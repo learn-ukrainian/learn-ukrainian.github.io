@@ -1,7 +1,7 @@
 - type: quiz
   title: Personal Pronouns
   items:
-  - question: ___ студент. (I am a student.)
+  - question: ___ студент.
     options:
     - text: Я
       correct: true
@@ -11,7 +11,7 @@
       correct: false
     - text: Вона
       correct: false
-  - question: ___ лікар. (He is a doctor.)
+  - question: ___ лікар.
     options:
     - text: Я
       correct: false
@@ -21,7 +21,7 @@
       correct: true
     - text: Вона
       correct: false
-  - question: ___ студенти. (They are students.)
+  - question: ___ студенти.
     options:
     - text: Я
       correct: false
@@ -31,7 +31,7 @@
       correct: false
     - text: Вони
       correct: true
-  - question: ___ українка. (She is Ukrainian.)
+  - question: ___ українка.
     options:
     - text: Я
       correct: false
@@ -150,84 +150,84 @@
 - type: fill-in
   title: Complete the Sentences
   items:
-  - sentence: ___ студент. (I am a student)
+  - sentence: ___ студент.
     answer: Я
     options:
     - Я
     - Ти
     - Він
     - Вона
-  - sentence: ___ українка. (She is Ukrainian)
+  - sentence: ___ українка.
     answer: Вона
     options:
     - Я
     - Ти
     - Він
     - Вона
-  - sentence: ___ професор? (Are you a professor?)
+  - sentence: ___ професор?
     answer: Ти
     options:
     - Я
     - Ти
     - Він
     - Ми
-  - sentence: ___ лікар. (He is a doctor)
+  - sentence: ___ лікар.
     answer: Він
     options:
     - Я
     - Він
     - Вона
     - Воно
-  - sentence: ___ студенти. (We are students)
+  - sentence: ___ студенти.
     answer: Ми
     options:
     - Я
     - Ти
     - Ми
     - Ви
-  - sentence: ___ українці. (They are Ukrainians)
+  - sentence: ___ українці.
     answer: Вони
     options:
     - Він
     - Вона
     - Ми
     - Вони
-  - sentence: ___ професорка? (Are you a professor? - formal)
+  - sentence: ___ професорка?
     answer: Ви
     options:
     - Ти
     - Він
     - Ви
     - Вони
-  - sentence: ___ друг. (He is a friend)
+  - sentence: ___ друг.
     answer: Він
     options:
     - Я
     - Він
     - Ми
     - Вони
-  - sentence: ___ людина. (She is a person)
+  - sentence: ___ людина.
     answer: Вона
     options:
     - Він
     - Вона
     - Воно
     - Вони
-  - sentence: ___ подруга? (Is she a friend?)
+  - sentence: ___ подруга?
     answer: Вона
     options:
     - Я
     - Він
     - Вона
     - Ви
-  - sentence: ___ англієць. (I am English)
+  - sentence: ___ англієць.
     answer: Я
     options:
     - Я
     - Ти
     - Він
     - Ми
-  - sentence: ___ канадці. (You all are Canadians)
+  - sentence: ___ канадці.
     answer: Ви
     options:
     - Ти

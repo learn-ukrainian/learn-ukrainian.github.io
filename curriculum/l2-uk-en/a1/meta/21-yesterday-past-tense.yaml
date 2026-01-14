@@ -28,5 +28,5 @@ vocabulary_count: 25
 vocab_count: 49
 slug: 21-yesterday-past-tense
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

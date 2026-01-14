@@ -26,5 +26,5 @@ vocabulary_count: 25
 vocab_count: 36
 slug: 08-the-living-verb-ii
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

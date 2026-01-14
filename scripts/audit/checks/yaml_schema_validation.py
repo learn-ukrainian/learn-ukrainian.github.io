@@ -186,11 +186,14 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
         except jsonschema.ValidationError as e:
             # Array-level validation error (e.g., too few items)
             # Format concise error messages
-            if "too short" in e.message.lower():
+            # Array-level validation error (e.g., too few items)
+            # Format concise error messages
+            if "too short" in e.message.lower() and len(e.path) == 0:
                 min_items = level_schema.get('minItems', 'N/A')
                 errors.append(f"Insufficient activities: {len(activities)} found, minimum {min_items} required for {level_match.upper()}")
             else:
-                errors.append(f"Array validation: {e.message}")
+                path_str = f" at key '{e.path[-1]}'" if e.path else ""
+                errors.append(f"Schema validation error{path_str}: {e.message}")
         except jsonschema.SchemaError as e:
             errors.append(f"Schema error: {e.message}")
 

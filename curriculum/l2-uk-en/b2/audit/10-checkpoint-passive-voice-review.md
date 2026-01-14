@@ -1,5 +1,6 @@
 # Audit Report: 10-checkpoint-passive-voice.md
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** checkpoint | **Target:** 1750
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
