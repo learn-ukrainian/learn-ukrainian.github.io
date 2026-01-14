@@ -60,7 +60,14 @@ def resolve_template(module_id: str, meta: Dict) -> str:
         
     mappings = config.get('mappings', [])
     
+    module_level = module_id.split('-')[0].lower()
+    
     for rule in mappings:
+        # Check if level matches (if specified in rule)
+        rule_level = rule.get('level', '').lower()
+        if rule_level and rule_level != module_level:
+            continue
+
         # Check by metadata field
         if 'meta_field' in rule:
             field_name = rule['meta_field']
@@ -76,8 +83,7 @@ def resolve_template(module_id: str, meta: Dict) -> str:
                 return f"docs/l2-uk-en/templates/{rule['template']}"
                 
     # Fallback to level default
-    level = module_id.split('-')[0].lower()
-    return f"docs/l2-uk-en/templates/{level}-module-template.md"
+    return f"docs/l2-uk-en/templates/{module_level}-module-template.md"
 
 
 def parse_template(template_path: str) -> Optional[TemplateStructure]:

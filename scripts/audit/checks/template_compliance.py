@@ -41,7 +41,7 @@ def check_template_compliance(
     violations = []
     
     # Level 1: Required sections and forbidden headers (CRITICAL)
-    violations.extend(_check_required_sections(content, template))
+    violations.extend(_check_required_sections(content, meta, template))
     violations.extend(_check_forbidden_headers(content, template))
     
     # Level 2: Section order (WARNING)
@@ -53,7 +53,7 @@ def check_template_compliance(
     return violations
 
 
-def _check_required_sections(content: str, template: TemplateStructure) -> list[dict]:
+def _check_required_sections(content: str, meta: dict, template: TemplateStructure) -> list[dict]:
     """
     Check that all required sections from template are present, not empty, and unique.
     
@@ -68,10 +68,28 @@ def _check_required_sections(content: str, template: TemplateStructure) -> list[
     sections_data = _extract_sections_with_content(content)
     present_headers = [s['header'].lower() for s in sections_data]
     
+    vital_status = meta.get('vital_status', 'deceased').lower()
+    
     for required in template.required_sections:
         alt_names = [name.strip() for name in required.split('|')]
         found_alts = []
         
+        # Determine preferred and forbidden names based on vital status for biographies
+        preferred_name = None
+        forbidden_name = None
+        
+        if len(alt_names) > 1 and template.level == 'c1' and 'biography' in template.template_name:
+            if 'living' in vital_status:
+                if 'Сучасний етап' in alt_names: preferred_name = 'Сучасний етап'
+                if 'Останні роки' in alt_names: forbidden_name = 'Останні роки'
+                if 'Вплив' in alt_names: preferred_name = 'Вплив'
+                if 'Спадщина' in alt_names: forbidden_name = 'Спадщина'
+            else:
+                if 'Останні роки' in alt_names: preferred_name = 'Останні роки'
+                if 'Сучасний етап' in alt_names: forbidden_name = 'Сучасний етап'
+                if 'Спадщина' in alt_names: preferred_name = 'Спадщина'
+                if 'Вплив' in alt_names: forbidden_name = 'Вплив'
+
         for alt in alt_names:
             # Stricter matching: must be the whole header or a clear synonym
             # We match if the alias is the WHOLE header or if it's a known common abbreviation
@@ -100,13 +118,26 @@ def _check_required_sections(content: str, template: TemplateStructure) -> list[
                         
                     found_alts.append(s)
         
+        # Check if forbidden name is used
+        if forbidden_name:
+            for s in sections_data:
+                if forbidden_name.lower() == s['header'].lower():
+                    violations.append({
+                        'type': 'FORBIDDEN_HEADER_TONE',
+                        'severity': 'CRITICAL',
+                        'line': s['line'],
+                        'issue': f"Header '## {s['header']}' is inappropriate for a {vital_status} person. Use '## {preferred_name}' instead.",
+                        'fix': f"Rename '## {s['header']}' to '## {preferred_name}' to maintain correct biographical tone."
+                    })
+
         if not found_alts:
+            display_name = preferred_name if preferred_name else alt_names[0]
             violations.append({
                 'type': 'MISSING_REQUIRED_SECTION',
                 'severity': 'CRITICAL',
                 'line': 0,
-                'issue': f"Missing required section '{required}' per template '{template.template_name}'",
-                'fix': f"Add '## {alt_names[0]}' section as specified in docs/l2-uk-en/templates/{template.template_name}.md"
+                'issue': f"Missing required section '{display_name}' per template '{template.template_name}'",
+                'fix': f"Add '## {display_name}' section as specified in docs/l2-uk-en/templates/{template.template_name}.md"
             })
         else:
             # Check for duplicates (Issue mentioned by user)

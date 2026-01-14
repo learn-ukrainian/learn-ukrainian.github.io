@@ -76,7 +76,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -146,7 +146,7 @@
         },
         "pairs": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 6,
           "items": {
             "type": "object",
             "required": [
@@ -191,7 +191,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 6,
           "items": {
             "type": "object",
             "required": [
@@ -293,7 +293,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -347,7 +347,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -395,7 +395,7 @@
         },
         "blanks": {
           "type": "array",
-          "minItems": 18,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -453,7 +453,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -550,7 +550,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -620,7 +620,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [

@@ -147,10 +147,11 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     # Load level-specific schema (has minItems constraint)
     level_schema = None
     if level_match:
-        if level_match in ['a1', 'a2']:
-            schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
-        else:
-            # B1, B2, C1, C2 all use activities-b1.schema.json
+        # Check for level-specific schema (e.g., activities-c1.schema.json)
+        schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
+        
+        # Fallback to B1 schema if specific one doesn't exist (B1 is the baseline for B1+)
+        if not schema_path.exists():
             schema_path = get_schemas_dir() / "activities-b1.schema.json"
 
         if schema_path.exists():

@@ -231,8 +231,8 @@ ACTIVITY_COMPLEXITY = {
         'B2': {'min_len': 10, 'max_len': 25, 'options': [4], 'min_items': 8},  # CEFR: smooth +1 from B1
         'B2-history': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard (was 6, better alignment)
         'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
-        'C1': {'min_len': 12, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 8, fixes backward jump)
-        'C2': {'min_len': 14, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 10)
+        'C1': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 12 to 8
+        'C2': {'min_len': 10, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 14 to 10
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
