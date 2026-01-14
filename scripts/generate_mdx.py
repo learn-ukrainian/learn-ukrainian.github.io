@@ -26,6 +26,7 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).parent
 sys.path.append(str(SCRIPT_DIR))
 from yaml_activities import ActivityParser, Activity
+from manifest_utils import get_module_by_slug
 
 # Paths
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -1076,6 +1077,46 @@ def process_dialogues(content: str) -> str:
 
     return '\n'.join(result)
 
+
+# =============================================================================
+# SLUG LINK RESOLVER
+# =============================================================================
+
+def resolve_slug_links(content: str) -> str:
+    """
+    Replace [slug:xxx] links with actual module title and path.
+
+    This allows content to reference other modules by slug instead of
+    hardcoded paths, making the curriculum resilient to renumbering.
+
+    Example:
+        Input:  See [slug:the-cyrillic-code-i] for details.
+        Output: See [The Cyrillic Code I](/a1/module-01) for details.
+
+    Args:
+        content: Markdown content with potential [slug:xxx] links
+
+    Returns:
+        Content with slug links resolved to actual paths
+    """
+    def replace_slug(match):
+        slug = match.group(1)
+        try:
+            module = get_module_by_slug(slug)
+            if module:
+                return f"[{module.title}]({module.path})"
+            else:
+                # Module not found - leave as-is but log warning
+                print(f"  Warning: Unknown slug '{slug}' - link not resolved")
+                return match.group(0)
+        except Exception as e:
+            print(f"  Warning: Error resolving slug '{slug}': {e}")
+            return match.group(0)
+
+    # Match [slug:xxx] pattern
+    return re.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug, content)
+
+
 # =============================================================================
 # MDX GENERATOR
 # =============================================================================
@@ -1174,6 +1215,9 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 
     # Convert callouts
     processed = convert_callouts(processed)
+
+    # Resolve slug links (e.g., [slug:the-cyrillic-code-i] -> [The Cyrillic Code I](/a1/module-01))
+    processed = resolve_slug_links(processed)
 
     # Fix HTML for JSX compatibility (self-closing tags)
     processed = fix_html_for_jsx(processed)
