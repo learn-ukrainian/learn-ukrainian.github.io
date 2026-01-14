@@ -1499,6 +1499,8 @@ def audit_module(file_path: str) -> bool:
         nat_status = meta_data['naturalness'].get('status', 'PENDING')
     
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
+    if results['naturalness'].status == 'FAIL':
+        has_critical_failure = True
 
     # Activity quality validation check - look for -quality.md in audit folder
     quality_file = os.path.join(audit_dir, f"{base_name}-quality.md")

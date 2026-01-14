@@ -179,19 +179,20 @@ def evaluate_immersion(
 def evaluate_naturalness(score: int, status: str) -> GateResult:
     """Evaluate naturalness score gate.
     
-    Target: 8/10 for content modules, 7/10 for checkpoints.
+    Target: 8/10 for content modules.
     """
     if status != 'PASS':
-        return GateResult('WARN', '⏳', f"{score}/10 ({status})")
+        return GateResult('FAIL', '❌', f"{score}/10 ({status}) - Naturalness check required")
     
     if score >= 8:
         return GateResult('PASS', '✅', f"{score}/10 (High)")
     elif score >= 7:
-        return GateResult('PASS', '✅', f"{score}/10 (Acceptable)")
+        # Strict requirement: Fail if below 8
+        return GateResult('FAIL', '❌', f"{score}/10 (Acceptable but below 8/10 target)")
     elif score > 0:
-        return GateResult('WARN', '⚠️', f"{score}/10 (Low)")
+        return GateResult('FAIL', '❌', f"{score}/10 (Low - Requires rewrite)")
     else:
-        return GateResult('INFO', '❓', "Not scored")
+        return GateResult('FAIL', '❌', "Not scored")
 
 
 def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateResult:
