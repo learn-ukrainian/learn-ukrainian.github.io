@@ -1524,7 +1524,13 @@ def main():
         print(f'📚 Loaded {len(all_resources)} modules with external resources\n', flush=True)
 
     curriculum_path = CURRICULUM_DIR / lang_pair
-    levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit']
+    # Core levels + specialized tracks
+    levels = [
+        'a1', 'a2', 'b1', 'b2', 'c1', 'c2',  # Core path
+        'b2-hist', 'c1-bio',                   # History & Biography tracks
+        'b2-pro', 'c1-pro',                    # Professional tracks
+        'lit', 'oes', 'ruth'                   # Literature & Linguistics tracks
+    ]
 
     for level in levels:
         if target_level and level != target_level:

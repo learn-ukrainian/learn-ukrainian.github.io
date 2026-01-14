@@ -4837,4 +4837,90 @@ core:
     name: C2 - Mastery
     modules: []
 tracks:
-  _comment: Specialized tracks will be added after reorganization (#409)
+  # History & Biography Tracks (to be relocated from core)
+  b2-hist:
+    name: B2 History Track - Ukrainian History
+    description: Ukrainian history from Kyivan Rus to present (relocated from B2 M71-131)
+    prerequisite: b2-core-70
+    modules: []  # Will be populated during Phase C relocation
+
+  c1-bio:
+    name: C1 Biography Track - Famous Ukrainians
+    description: Biographies of notable Ukrainian figures (relocated from C1 M36-131)
+    prerequisite: b2-hist-61
+    modules: []  # Will be populated during Phase C relocation
+
+  # Professional Tracks (new)
+  b2-pro:
+    name: B2 Professional Track - Business Ukrainian
+    description: Business and professional communication at B2 level
+    prerequisite: b2-core-70
+    modules: []  # 40 modules planned
+
+  c1-pro:
+    name: C1 Professional Track - Professional Mastery
+    description: Executive and academic professional communication
+    prerequisite: b2-pro-40
+    modules: []  # 50 modules planned
+
+  # Literature Track (existing)
+  lit:
+    name: LIT Track - Classical Ukrainian Literature
+    description: Literary analysis seminar from Kotliarevsky to Shevchenko
+    prerequisite: c1-core
+    modules:
+    - slug: introduction-to-kotliarevsky
+      title: "Вступ до Котляревського"
+      focus: literature
+    - slug: eneida-part-1
+      title: "Енеїда: Частина 1"
+      focus: literature
+    - slug: eneida-feast
+      title: "Енеїда: Бенкет"
+      focus: literature
+    - slug: eneida-war
+      title: "Енеїда: Війна"
+      focus: literature
+    - slug: natalka-poltavka
+      title: "Наталка Полтавка"
+      focus: literature
+    - slug: kvitka-bio
+      title: "Квітка-Основ'яненко: Біографія"
+      focus: literature
+    - slug: marusya
+      title: "Маруся"
+      focus: literature
+    - slug: konotop-witch
+      title: "Конотопська відьма"
+      focus: literature
+    - slug: ethnography
+      title: "Етнографічна проза"
+      focus: literature
+    - slug: kvitka-language
+      title: "Мова Квітки"
+      focus: literature
+    - slug: young-shevchenko
+      title: "Молодий Шевченко"
+      focus: literature
+    - slug: the-ballads
+      title: "Балади"
+      focus: literature
+    - slug: haidamaky
+      title: "Гайдамаки"
+      focus: literature
+    - slug: son
+      title: "Сон"
+      focus: literature
+
+  # Linguistics Tracks (planned)
+  oes:
+    name: OES Track - Old East Slavic
+    description: Historical linguistics proving Ukrainian continuity
+    prerequisite: c1-core
+    modules: []  # 30 modules planned
+
+  ruth:
+    name: RUTH Track - Ruthenian
+    description: Middle Ukrainian period linguistics
+    prerequisite: oes-30
+    modules: []  # 30 modules planned

@@ -225,6 +225,55 @@ mappings:
     description: 'C2 default template'
 
   # =============================================================================
+  # B2-HIST: History Track (relocated from B2 M71-131)
+  # =============================================================================
+  - pattern: '^b2-hist-(83|107|119|125|131)(-.*)?$'
+    level: b2-hist
+    template: b2-history-synthesis-module-template.md
+    description: 'B2-HIST synthesis modules'
+
+  - pattern: '^b2-hist-'
+    level: b2-hist
+    template: b2-history-module-template.md
+    description: 'B2-HIST history track modules'
+
+  # =============================================================================
+  # C1-BIO: Biography Track (relocated from C1 M36-131)
+  # =============================================================================
+  - pattern: '^c1-bio-'
+    level: c1-bio
+    template: c1-biography-module-template.md
+    description: 'C1-BIO biography track modules'
+
+  # =============================================================================
+  # B2-PRO: Professional Track (new)
+  # =============================================================================
+  - meta_field: focus
+    value: checkpoint
+    level: b2-pro
+    template: b2-checkpoint-module-template.md
+    description: 'B2-PRO checkpoint modules'
+
+  - pattern: '^b2-pro-'
+    level: b2-pro
+    template: b2-pro-module-template.md
+    description: 'B2-PRO professional track modules'
+
+  # =============================================================================
+  # C1-PRO: Professional Track (new)
+  # =============================================================================
+  - meta_field: focus
+    value: checkpoint
+    level: c1-pro
+    template: c1-checkpoint-module-template.md
+    description: 'C1-PRO checkpoint modules'
+
+  - pattern: '^c1-pro-'
+    level: c1-pro
+    template: c1-pro-module-template.md
+    description: 'C1-PRO professional track modules'
+
+  # =============================================================================
   # LIT: Single template
   # =============================================================================
   - pattern: '^lit-'
