@@ -3626,7 +3626,7 @@ core:
       - literature
       - politics
       - independence
-    - slug: mykhailo-hrushevskyi
+    - slug: mykhailo-hrushevskyi-biography
       title: 'Михайло Грушевський: Архітектор української історії'
       phase: C1.3 Biographies
       focus: biography
@@ -4476,7 +4476,7 @@ core:
       - ethnography
       - clothing
       - traditions
-    - slug: ukrainian-cuisine
+    - slug: ukrainian-cuisine-traditions
       title: Українська кухня - традиції та символи
       phase: C1.5 Folk Culture & Arts
       focus: cultural

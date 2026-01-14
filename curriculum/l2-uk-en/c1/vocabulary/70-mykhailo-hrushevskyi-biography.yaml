@@ -1,0 +1,124 @@
+module: 70-mykhailo-hrushevskyi
+level: C1
+version: '2.0'
+items:
+  - lemma: історіографія
+    ipa: /isˌtɔr⁽ʲ⁾ioˈɦrɑf⁽ʲ⁾ijɐ/
+    translation: historiography
+    pos: noun
+    gender: f
+  - lemma: Центральна Рада
+    ipa: /t͡sɛnˈtrɑlʲnɐ ˈrɑdɐ/
+    translation: Central Rada (Council)
+    pos: noun
+    gender: f
+  - lemma: голова
+    ipa: /ɦoˈlɔwɐ/
+    translation: head/chairman
+    pos: noun
+    gender: m
+  - lemma: спадкоємність
+    ipa: /spɐdkoˈjɛmn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: continuity/succession
+    pos: noun
+    gender: f
+  - lemma: державність
+    ipa: /derˈʒɑwn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: statehood
+    pos: noun
+    gender: f
+  - lemma: джерело
+    ipa: /d͡ʒeˈrɛlo/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: праця
+    ipa: /ˈprɑt͡sʲɐ/
+    translation: work/labor
+    pos: noun
+    gender: f
+  - lemma: том
+    ipa: /tɔm/
+    translation: volume
+    pos: noun
+    gender: m
+  - lemma: археологія
+    ipa: /ɐrxeoˈlɔɦ⁽ʲ⁾ijɐ/
+    translation: archaeology
+    pos: noun
+    gender: f
+  - lemma: етногенез
+    ipa: /etnoˈɦɛnez/
+    translation: ethnogenesis
+    pos: noun
+    gender: m
+  - lemma: самостійність
+    ipa: /sɐmoˈst⁽ʲ⁾ijn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: універсал
+    ipa: /ʊn⁽ʲ⁾iwerˈsɑl/
+    translation: universal (legal proclamation)
+    pos: noun
+    gender: m
+  - lemma: республіка
+    ipa: /resˈpublʲikɐ/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: авторитет
+    ipa: /ɐwtoˈrɪtɛt/
+    translation: authority
+    pos: noun
+    gender: m
+  - lemma: академік
+    ipa: /ɐkɐˈdɛm⁽ʲ⁾ik/
+    translation: academician
+    pos: noun
+    gender: m
+  - lemma: професор
+    ipa: /proˈfɛsɔr/
+    translation: professor
+    pos: noun
+    gender: m
+  - lemma: концепція
+    ipa: /konˈt͡sɛpt͡s⁽ʲ⁾ijɐ/
+    translation: concept/notion
+    pos: noun
+    gender: f
+  - lemma: дискурс
+    ipa: /ˈdɪskʊrs/
+    translation: discourse
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /leɦ⁽ʲ⁾iˈtɪmn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: маніфестація
+    ipa: /mɐn⁽ʲ⁾ifesˈtɑt͡s⁽ʲ⁾ijɐ/
+    translation: manifestation
+    pos: noun
+    gender: f
+  - lemma: репресії
+    ipa: /reˈprɛs⁽ʲ⁾iji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: вигнання
+    ipa: /wɪɦˈnɑnʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: пам'ятник
+    ipa: /ˈpɑmʲɐtnɪk/
+    translation: monument
+    pos: noun
+    gender: m
+  - lemma: постать
+    ipa: /ˈpɔstɐtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
