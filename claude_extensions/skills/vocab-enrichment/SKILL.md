@@ -165,3 +165,58 @@ npm run vocab:enrich l2-uk-en [moduleNum]
 # Rebuild vocabulary database after all modules complete
 npm run vocab:rebuild
 ```
+
+## Vocabulary Database Schema
+
+**Location**: `curriculum/l2-uk-en/vocabulary.db` (SQLite)
+
+**Schema**:
+```sql
+CREATE TABLE vocabulary (
+  id INTEGER PRIMARY KEY,
+  level TEXT,
+  module INTEGER,
+  lemma TEXT,
+  ipa TEXT,
+  translation TEXT,
+  pos TEXT,
+  gender TEXT,
+  aspect TEXT,
+  pair TEXT,
+  note TEXT
+);
+```
+
+**Usage**:
+- Global vocabulary searches
+- Duplicate detection
+- Cross-level vocabulary tracking
+- Cumulative vocabulary counting
+
+## Vocabulary Targets by Level
+
+| Level | Cumulative Vocab | New This Level |
+|-------|------------------|----------------|
+| A1    | ~750             | 750            |
+| A2    | ~1,800           | 1,050          |
+| B1    | ~3,300           | 1,500          |
+| B2    | ~5,940           | 2,640          |
+| C1    | ~9,780           | 3,840          |
+| C2    | ~12,280          | 2,500          |
+
+## Common Issues
+
+### Missing IPA
+**Cause**: espeak-ng not installed or Ukrainian voice missing
+**Fix**:
+```bash
+brew install espeak-ng
+```
+
+### Duplicate Lemmas
+**Cause**: Same word added in multiple modules
+**Fix**: Check if word belongs in both contexts or remove duplicate
+
+### Incorrect Gender
+**Cause**: espeak-ng misidentification
+**Fix**: Manually correct in YAML, re-run enrichment
