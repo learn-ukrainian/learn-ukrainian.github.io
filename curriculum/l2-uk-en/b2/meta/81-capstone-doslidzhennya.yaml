@@ -1,0 +1,25 @@
+module: b2-81
+title: 'Capstone: Дослідження'
+subtitle: 'Capstone: Research'
+version: '2.0'
+phase: B2.4 Skills & Capstone
+focus: project
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- project
+- research
+- capstone
+grammar:
+- Research methodology
+- Formulating hypotheses
+objectives:
+- Select a research topic for Capstone Project
+- Gather and evaluate sources
+- Create a detailed research outline
+vocabulary_count: 25
+slug: 81-capstone-doslidzhennya
+naturalness:
+  score: 9
+  status: PASS

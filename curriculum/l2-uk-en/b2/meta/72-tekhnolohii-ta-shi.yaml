@@ -1,0 +1,26 @@
+module: b2-72
+title: Технології та ШІ
+subtitle: Technology & AI
+version: '2.0'
+phase: B2.4 Skills & Capstone
+focus: domain
+pedagogy: CBI
+duration: 90
+transliteration: none
+tags:
+- domain
+- technology
+- ai
+- professional
+grammar:
+- Technical register
+- Professional terminology
+objectives:
+- Використовувати IT-термінологію українською мовою
+- Обговорювати штучний інтелект та кіберзахист
+- Орієнтуватися в українській IT-галузі
+vocabulary_count: 25
+slug: 72-tekhnolohii-ta-shi
+naturalness:
+  score: 9
+  status: PASS

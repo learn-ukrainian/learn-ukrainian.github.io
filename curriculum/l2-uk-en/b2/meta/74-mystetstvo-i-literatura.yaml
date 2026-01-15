@@ -1,0 +1,26 @@
+module: b2-74
+title: Мистецтво і література
+subtitle: Art & Literature
+version: '2.0'
+phase: B2.4 Skills & Capstone
+focus: domain
+pedagogy: CBI
+duration: 90
+transliteration: none
+tags:
+- domain
+- arts
+- literature
+- culture
+grammar:
+- Literary register
+- Art criticism vocabulary
+objectives:
+- Використовувати термінологію мистецтва та літератури
+- Обговорювати літературні жанри та художні стилі
+- Орієнтуватися в українському культурному просторі
+vocabulary_count: 25
+slug: 74-mystetstvo-i-literatura
+naturalness:
+  score: 9
+  status: PASS

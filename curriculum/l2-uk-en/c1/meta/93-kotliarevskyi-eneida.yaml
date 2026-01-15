@@ -1,0 +1,22 @@
+module: c1-93
+title: 'Котляревський: Енеїда'
+subtitle: 'Kotlyarevsky: Eneida'
+version: '2.0'
+phase: 'C1.6 Literature'
+focus: literature
+pedagogy: 'Immersion & Analysis'
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - history
+  - burlesque
+grammar:
+  - 'Burlesque and travesty register'
+  - 'Vernacular vs. High Style'
+objectives:
+  - 'Analyze the historical and literary significance of Eneida'
+  - 'Understand the burlesque-travesty genre'
+  - 'Explore the birth of the modern Ukrainian literary language'
+vocabulary_count: 24
+slug: 93-kotliarevskyi-eneida

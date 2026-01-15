@@ -39,7 +39,13 @@ def load_config() -> dict:
 
     # Validate and normalize
     levels = {}
-    for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+    # Core levels + specialized tracks
+    all_levels = [
+        'a1', 'a2', 'b1', 'b2', 'c1', 'c2',  # Core path
+        'b2-hist', 'c1-bio',                  # History & Biography tracks
+        'b2-pro', 'c1-pro',                   # Professional tracks
+    ]
+    for level in all_levels:
         if level not in config:
             print(f"Warning: Level {level} not found in config, using defaults")
             levels[level] = {'planned': 0, 'status': 'auto', 'description': f'{level.upper()} Level'}
@@ -124,6 +130,7 @@ def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
         "|-------|-------------|---------|--------|",
     ]
 
+    # Core levels for main table
     for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
         s = stats[level]
         status_str = f"{s['emoji']} {s['status']}"
@@ -202,21 +209,38 @@ def update_level_index(level: str, stats: dict, dry_run: bool) -> bool:
 def print_summary(stats: dict):
     """Print a summary table."""
     print("\n📊 Landing Page Sync\n")
-    print("Level  Planned  Ready  Status")
-    print("─────  ───────  ─────  ──────")
+    print("Level     Planned  Ready  Status")
+    print("────────  ───────  ─────  ──────")
 
     total_planned = 0
     total_ready = 0
 
-    for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+    # Core levels
+    core_levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+    for level in core_levels:
         s = stats[level]
         total_planned += s['planned']
         total_ready += s['ready']
-
         pct_str = f"({s['pct']}%)" if s['status'] == 'In Progress' else ''
-        print(f"{level.upper():5}  {s['planned']:7}  {s['ready']:5}  {s['emoji']} {s['status']} {pct_str}")
+        print(f"{level.upper():8}  {s['planned']:7}  {s['ready']:5}  {s['emoji']} {s['status']} {pct_str}")
 
-    print(f"\nTotal: {total_planned} modules ({total_ready} ready)")
+    print("────────  ───────  ─────  ──────")
+
+    # Specialized tracks
+    track_levels = ['b2-hist', 'c1-bio', 'b2-pro', 'c1-pro']
+    track_planned = 0
+    track_ready = 0
+    for level in track_levels:
+        if level not in stats:
+            continue
+        s = stats[level]
+        track_planned += s['planned']
+        track_ready += s['ready']
+        pct_str = f"({s['pct']}%)" if s['status'] == 'In Progress' else ''
+        print(f"{level.upper():8}  {s['planned']:7}  {s['ready']:5}  {s['emoji']} {s['status']} {pct_str}")
+
+    print(f"\nCore Total: {total_planned} modules ({total_ready} ready)")
+    print(f"Tracks Total: {track_planned} modules ({track_ready} ready)")
 
 
 def main():

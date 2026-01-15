@@ -1,0 +1,23 @@
+module: c1-77
+title: 'Класична музика II — Національна школа'
+subtitle: 'Classical Music II — National School'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: fine-arts
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - arts
+  - music
+  - lysenko
+  - leontovych
+grammar:
+  - 'Musicological academic register'
+  - 'Analysis of cultural impact'
+objectives:
+  - 'Learner understands the role of Mykola Lysenko in founding the national music school.'
+  - 'Learner can analyze the structure and global impact of "Shchedryk" by Leontovych.'
+  - 'Learner masters professional terminology related to composition and vocal art.'
+vocabulary_count: 25
+slug: 77-klasychna-muzyka-2-natsionalna-shkola

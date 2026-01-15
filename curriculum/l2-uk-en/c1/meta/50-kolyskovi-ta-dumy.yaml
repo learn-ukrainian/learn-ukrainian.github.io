@@ -1,0 +1,22 @@
+module: c1-50
+title: 'Колискові та думи: Від колиски до вічності'
+subtitle: 'Lullabies and Dumas: From Cradle to Eternity'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: history
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - folk culture
+  - music
+  - history
+grammar:
+  - 'Narrative historical registers'
+  - 'Poetic syntax'
+objectives:
+  - 'Understand the role of lullabies in early linguistic development and enculturation'
+  - 'Analyze the structure and historical significance of Ukrainian Dumas'
+  - 'Compare the intimate register of lullabies with the epic register of dumas'
+vocabulary_count: 28
+slug: 50-kolyskovi-ta-dumy

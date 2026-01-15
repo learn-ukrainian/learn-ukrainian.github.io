@@ -12,31 +12,65 @@
 #   <10% -> "Planned"
 
 a1:
-  planned: 34
-  status: complete  # Manually verified 2024
-  description: "Beginner — Cyrillic alphabet, basic grammar"
+  planned: 44  # 34 existing + 10 new practical scenarios (RFC #409)
+  status: auto
+  description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
 
 a2:
-  planned: 57
-  status: complete  # Manually verified 2024
-  description: "Elementary — All 7 cases, aspect intro, comparison"
+  planned: 70  # 58 existing + 12 new practical scenarios (RFC #409)
+  status: auto
+  description: "Elementary — All 7 cases, aspect intro, practical scenarios"
 
 b1:
-  planned: 91
-  status: complete  # Manually verified 2026-01-02
-  description: "Intermediate — Aspect mastery, motion verbs, complex sentences"
+  planned: 99  # 91 existing + 8 new skills modules (RFC #409)
+  status: auto
+  description: "Intermediate — Aspect mastery, motion verbs, communication skills"
 
 b2:
-  planned: 145
-  status: complete  # Manually verified 2026-01-06
-  description: "Upper-Intermediate — Passive voice, registers, history"
+  planned: 94  # 84 existing + 10 new professional basics (RFC #409)
+  status: auto
+  description: "Upper-Intermediate — Passive voice, registers, professional basics"
 
 c1:
-  planned: 202
+  planned: 106
   status: auto
-  description: "Advanced — Biographies, stylistics, literature"
+  description: "Advanced — Stylistics, literature, complex grammar"
 
 c2:
   planned: 100
   status: auto
   description: "Mastery — Native-level proficiency"
+
+# =============================================================================
+# Specialized Tracks (RFC #409)
+# =============================================================================
+
+# History Track (relocated from B2 M71-131)
+b2-hist:
+  planned: 61
+  status: auto
+  description: "History — Ukrainian history from origins to present"
+
+# Biography Track (relocated from C1 M36-131)
+c1-bio:
+  planned: 96
+  status: auto
+  description: "Biographies — Notable Ukrainians through history"
+
+# Professional Track (new)
+b2-pro:
+  planned: 40
+  status: auto
+  description: "Professional — Business communication, technical domains"
+
+# Professional Mastery Track (new)
+c1-pro:
+  planned: 50
+  status: auto
+  description: "Professional Mastery — Executive, academic, specialized"
+
+# Literature Track (post-C1)
+lit:
+  planned: 30
+  status: auto
+  description: "Literature — Ukrainian classics and literary analysis"

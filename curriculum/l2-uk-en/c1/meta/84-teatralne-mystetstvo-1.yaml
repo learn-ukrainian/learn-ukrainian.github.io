@@ -1,0 +1,23 @@
+module: c1-84
+title: 'Театральне мистецтво I'
+subtitle: 'Theater Arts I — From Origins to Kurbas'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: fine-arts
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - arts
+  - theater
+  - kurbas
+  - drama
+grammar:
+  - 'Dramatic terminology'
+  - 'Analysis of staging'
+objectives:
+  - 'Learner explores the origins of Ukrainian theater (Vertep, School Drama).'
+  - 'Learner understands the role of the Coryphaei Theater.'
+  - 'Learner analyzes the revolutionary impact of Les Kurbas and Berezil.'
+vocabulary_count: 25
+slug: 84-teatralne-mystetstvo-1
