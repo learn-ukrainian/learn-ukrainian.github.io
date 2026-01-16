@@ -1,28 +1,29 @@
 module: a2-13
 title: The Completed Past
-subtitle: Perfective Verbs in Past Tense
+subtitle: Using Perfective Aspect
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
+- verbs
 - aspect
-- past-tense
-- perfective
+- past tense
 grammar:
 - perfective past tense
-- completion vs process
-- aspect choice in past
+- formation of past tense
+- narrative sequencing
+- result-focused actions
 objectives:
-- Learner can conjugate perfective verbs in past tense
-- Learner understands when to use perfective past
-- Learner can express completed actions
-- Learner can distinguish process from result in past
-vocabulary_count: 20
+- Learner can form the past tense of perfective verbs
+- Learner can use perfective past to describe completed actions
+- Learner can narrate a sequence of events
+- Learner can distinguish between 'did' and 'done' contexts
+vocabulary_count: 25
 slug: 13-the-completed-past
 focus: grammar
 naturalness:
-  score: 9
+  score: 8
   status: PASS

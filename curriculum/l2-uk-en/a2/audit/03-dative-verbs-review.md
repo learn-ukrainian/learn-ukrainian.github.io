@@ -1,10 +1,10 @@
 # Audit Report: 03-dative-verbs.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): належати, заважати, подобатися, захотітися, дякувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): заважати, довіряти, сподобатися, допомагати, подобатися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,8 +26,8 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 40.6% (target 40-50% (A2.1))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

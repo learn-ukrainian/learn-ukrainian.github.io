@@ -1,26 +1,29 @@
 module: a2-29
 title: I Think That...
-subtitle: Expressing Opinions and Beliefs
+subtitle: Expressing Opinions
 version: '1.0'
-phase: A2.3
-pedagogy: Communicative
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - opinions
-- thoughts
+- debate
 - agreement
 grammar:
-- opinion verbs
-- that-clauses
-- agreement forms
+- opinion phrases (я думаю, на мою думку)
+- agreement/disagreement phrases
+- filler words (можливо, напевно)
+- justifying opinions
 objectives:
-- Learner can express simple opinions
-- Learner can agree and disagree politely
-- Learner understands the contrast between думати and вважати
+- Learner can express personal opinions clearly
+- Learner can agree or disagree politely
+- Learner can use introductory phrases to structure arguments
+- Learner can discuss topics using 'я вважаю' and 'мені здається'
 vocabulary_count: 25
 slug: 29-i-think-that
-focus: grammar
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

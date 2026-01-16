@@ -1,27 +1,29 @@
 module: a2-55
-title: Health & Body
+title: Health and Body
 subtitle: Feeling Good
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - health
 - body
-- doctor
+- medicine
 grammar:
-- dative-subjects
-- imperative-health
+- describing symptoms (болить, температура)
+- medical advice (треба, можна)
+- body parts vocabulary
+- doctor's appointment
 objectives:
-- Name body parts: голова, рука, серце
-- Describe symptoms: болить, температура
-- Visit a doctor/pharmacy: ліки, рецепт
-- Give health advice: пийте воду, не хворійте
+- Learner can name body parts
+- Learner can describe symptoms and illness
+- Learner can understand medical instructions
+- Learner can give simple health advice
+vocabulary_count: 25
 slug: 55-health-body
-vocabulary_count: 57
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

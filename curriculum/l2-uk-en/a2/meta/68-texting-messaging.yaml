@@ -1,27 +1,29 @@
-module: 68-texting-messaging
+module: a2-68
 title: Texting and Messaging
-subtitle: Abbreviations, Emoji, Informal Register
+subtitle: Chatting with Friends
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- texting
+- vocabulary
+- communication
 - messaging
-- informal
-- digital
+- slang
 grammar:
-- 'Abbreviations: Дяк (дякую), Бу ла (будь ласка)'
-- 'Informal register: Дяки, Прив'
-- 'Voice messages: Надіслати голосове'
+- text abbreviations (прив, дяк)
+- informal syntax in chats
+- emoji usage in Ukrainian context
+- polite vs informal messaging
 objectives:
-- Learner can understand common Ukrainian texting abbreviations
-- Learner can switch between formal and informal digital register
-- Learner can communicate naturally via messaging apps
-vocabulary_count: 10
+- Learner can send and receive text messages
+- Learner can use common abbreviations
+- Learner can understand informal chat language
+- Learner can arrange meetings via text
+vocabulary_count: 25
 slug: 68-texting-messaging
+focus: vocabulary
 naturalness:
   score: 10
   status: PASS

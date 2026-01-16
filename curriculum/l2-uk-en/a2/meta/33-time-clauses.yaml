@@ -1,27 +1,29 @@
 module: a2-33
-title: When & While
-subtitle: Time Clauses
+title: Time Clauses
+subtitle: When, While, and After
 version: '1.0'
-phase: A2.3
-pedagogy: Expressive
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- connectors
-- time
 - grammar
-- logic
+- conjunctions
+- time
+- sequence
 grammar:
-- time clauses (коли, поки)
-- sequence of events (після того як)
-- simultaneous events
+- time connectors (коли, поки, після того як)
+- sequence of tenses
+- aspect in time clauses
+- simultaneous vs sequential actions
 objectives:
-- Learner can express sequence
-- Learner can express duration (while)
-- Learner understands 'як тільки'
+- Learner can sequence events using time conjunctions
+- Learner can describe simultaneous actions using 'поки' and 'коли'
+- Learner can distinguish between 'перед тим як' and 'після того як'
+- Learner can tell stories with clear chronological structure
 vocabulary_count: 25
 slug: 33-time-clauses
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

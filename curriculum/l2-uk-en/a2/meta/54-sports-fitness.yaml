@@ -1,27 +1,29 @@
 module: a2-54
-title: Sports & Fitness
-subtitle: Active Life in Ukraine
+title: Sports and Fitness
+subtitle: Active Lifestyle
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - sports
+- fitness
 - health
-- hobby
 grammar:
-- instrumental-with-verbs
-- play-prep-review
+- sports verbs (грати в, займатися)
+- accusative vs instrumental in sports
+- describing events (match, game)
+- healthy lifestyle terms
 objectives:
-- Talk about sports: футбол, бокс, біг
-- Describe fitness: тренування, спортзал
-- Discuss watching sports: матч, вболівальник
-- Use play verbs correctly: грати в
+- Learner can talk about sports and fitness
+- Learner can use 'грати в' and 'займатися' correctly
+- Learner can describe a sports event
+- Learner can discuss healthy habits
+vocabulary_count: 25
 slug: 54-sports-fitness
-vocabulary_count: 54
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

@@ -1,27 +1,29 @@
 module: a2-53
-title: Shopping & Services
-subtitle: Buying and Selling in Ukrainian
+title: Shopping and Services
+subtitle: Buying and Paying
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - shopping
-- money
 - services
+- money
 grammar:
-- accusative-inanimate
-- genitive-quantities
+- payment verbs (платити, купувати)
+- accusative for prices/objects
+- instrumental for means (карткою)
+- service dialogues
 objectives:
-- Buy items in a shop: купувати, платити
-- Use services: банк, пошта, перукарня
-- Talk about money: готівка, картка, ціна
-- Ask for price: скільки коштує?
+- Learner can buy items in a shop
+- Learner can ask for price and pay
+- Learner can use service vocabulary (checkout, receipt)
+- Learner can describe payment methods
+vocabulary_count: 25
 slug: 53-shopping-services
-vocabulary_count: 45
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

@@ -1,0 +1,58 @@
+module: 60-at-the-pharmacy
+level: A2
+version: '1.0'
+items:
+- lemma: аптека
+  translation: pharmacy
+  pos: noun
+  gender: f
+- lemma: фармацевт
+  translation: pharmacist
+  pos: noun
+  gender: m
+- lemma: ліки
+  translation: medicine
+  pos: noun
+  gender: pl
+- lemma: таблетка
+  translation: pill/tablet
+  pos: noun
+  gender: f
+- lemma: сироп
+  translation: syrup
+  pos: noun
+  gender: m
+- lemma: мазь
+  translation: ointment
+  pos: noun
+  gender: f
+- lemma: дозування
+  translation: dosage
+  pos: noun
+  gender: n
+- lemma: побічний ефект
+  translation: side effect
+  pos: noun
+  gender: m
+- lemma: без рецепта
+  translation: over-the-counter
+  pos: phrase
+- lemma: вживати
+  translation: to take/consume
+  pos: verb
+- lemma: протипоказання
+  translation: contraindication
+  pos: noun
+  gender: n
+- lemma: крапля
+  translation: drop
+  pos: noun
+  gender: f
+- lemma: родовий
+  translation: genitive
+  pos: adj
+  gender: m
+- lemma: відмінок
+  translation: case (grammar)
+  pos: noun
+  gender: m

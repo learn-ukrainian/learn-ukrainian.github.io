@@ -1,0 +1,426 @@
+- type: match-up
+  title: Medical Vocabulary
+  instruction: Match the Ukrainian medical terms to their English meanings.
+  pairs:
+    - left: симптом
+      right: symptom
+    - left: діагноз
+      right: diagnosis
+    - left: рецепт
+      right: prescription
+    - left: ліки
+      right: medicine
+    - left: температура
+      right: fever / temperature
+    - left: кашель
+      right: cough
+    - left: нежить
+      right: runny nose
+    - left: алергія
+      right: allergy
+    - left: огляд
+      right: examination
+    - left: аналіз
+      right: test / analysis
+    - left: лікарняний
+      right: sick leave
+    - left: одужати
+      right: to recover
+
+- type: fill-in
+  title: At the Doctor's
+  instruction: Complete the dialogue with the correct words.
+  items:
+    - sentence: «Добрий день! На що _____?»
+      answer: скаржитесь
+      options: [скаржитесь, робите, йдете, знаєте]
+    - sentence: «У мене _____ голова і горло.»
+      answer: болить
+      options: [болить, спати, їсти, пити]
+    - sentence: «Яка у вас _____?»
+      answer: температура
+      options: [температура, погода, ціна, дата]
+    - sentence: «У мене 38.5. Я погано _____ сьогодні.»
+      answer: почуваюся
+      options: [почуваюся, думаю, знаю, бачу]
+    - sentence: «У вас є _____ на ліки?»
+      answer: алергія
+      options: [алергія, енергія, історія, віза]
+    - sentence: «Я випишу вам _____.»
+      answer: рецепт
+      options: [рецепт, квиток, чек, лист]
+    - sentence: «Вам треба приймати ці _____ двічі на день.»
+      answer: таблетки
+      options: [таблетки, яблука, цукерки, книги]
+    - sentence: «Вам потрібен _____ для роботи?»
+      answer: лікарняний
+      options: [лікарняний, паспорт, телефон, ключ]
+    - sentence: «Так, я не можу _____ на роботу.»
+      answer: йти
+      options: [йти, спати, їсти, пити]
+    - sentence: «Приходьте на _____ через три дні.»
+      answer: огляд
+      options: [огляд, обід, концерт, фільм]
+    - sentence: «Дякую, лікарю. До _____!»
+      answer: побачення
+      options: [побачення, зустрічі, завтра, вечора]
+    - sentence: «Одужуйте! Пийте багато _____.»
+      answer: води
+      options: [води, кави, коли, вина]
+
+- type: quiz
+  title: Medical Knowledge
+  instruction: Choose the correct answer.
+  items:
+    - question: «Що ви зазвичай робите, коли у вас сильний нежить?»
+      options:
+        - text: «Мені важко дихати носом.»
+          correct: true
+        - text: «Я багато бігаю.»
+          correct: false
+        - text: «Я їм морозиво.»
+          correct: false
+        - text: «Я співаю пісні.»
+          correct: false
+    - question: «Скажіть, будь ласка, що таке «рецепт» у лікарні?»
+      options:
+        - text: «Документ на ліки.»
+          correct: true
+        - text: «Інструкція для торта.»
+          correct: false
+        - text: «Квиток у кіно.»
+          correct: false
+        - text: «Лист другу.»
+          correct: false
+    - question: «Що означає фраза «приймати ліки» у цьому контексті?»
+      options:
+        - text: «To take medicine.»
+          correct: true
+        - text: «To buy medicine.»
+          correct: false
+        - text: «To cook medicine.»
+          correct: false
+        - text: «To sell medicine.»
+          correct: false
+    - question: «Ви хочете спати і нічого не хочете робити. Ви відчуваєте...»
+      options:
+        - text: «Слабкість (Weakness).»
+          correct: true
+        - text: «Радість.»
+          correct: false
+        - text: «Голод.»
+          correct: false
+        - text: «Щастя.»
+          correct: false
+    - question: «Що саме робить лікар під час медичного огляду?»
+      options:
+        - text: «Слухає серце і легені.»
+          correct: true
+        - text: «Грає в ігри.»
+          correct: false
+        - text: «Читає газету.»
+          correct: false
+        - text: «Спить.»
+          correct: false
+    - question: «Який телефонний номер швидкої медичної допомоги в Україні?»
+      options:
+        - text: «103»
+          correct: true
+        - text: «101»
+          correct: false
+        - text: «102»
+          correct: false
+        - text: «104»
+          correct: false
+    - question: «Що таке «аналіз крові» у медичній лабораторії?»
+      options:
+        - text: «Blood test.»
+          correct: true
+        - text: «Eye test.»
+          correct: false
+        - text: «Hearing test.»
+          correct: false
+        - text: «Skin test.»
+          correct: false
+    - question: «Що треба робити вдома, щоб швидше одужати?»
+      options:
+        - text: «Відпочивати і пити воду.»
+          correct: true
+        - text: «Багато працювати.»
+          correct: false
+        - text: «Гуляти на холоді.»
+          correct: false
+        - text: «Їсти тільки цукерки.»
+          correct: false
+
+- type: group-sort
+  title: Symptoms vs Treatment
+  instruction: Sort the words into Symptoms or Treatment.
+  groups:
+    - name: Симптоми (Symptoms)
+      items:
+        - кашель
+        - нежить
+        - температура
+        - біль
+        - слабкість
+        - алергія
+    - name: Лікування (Treatment)
+      items:
+        - таблетки
+        - сироп
+        - укол
+        - вітаміни
+        - чай з лимоном
+        - ліжковий режим
+
+- type: true-false
+  title: Medical Facts
+  instruction: True or False regarding medical care in Ukraine.
+  items:
+    - statement: «Сімейний лікар — це перший лікар, до якого ви йдете.»
+      correct: true
+      explanation: «Так, сімейний лікар (therapist/GP) — це перша ланка.»
+    - statement: «Швидку допомогу (103) треба викликати, якщо у вас просто нежить.»
+      correct: false
+      explanation: «Ні, швидку викликають тільки в екстрених випадках.»
+    - statement: «Лікарняний — це документ для роботи.»
+      correct: true
+      explanation: «Так, він підтверджує, що ви хворі.»
+    - statement: «Всі ліки в аптеці безкоштовні.»
+      correct: false
+      explanation: «Ні, за ліки треба платити.»
+    - statement: «Температура 36.6 вважається нормальною.»
+      correct: true
+      explanation: «Так, це здорова температура.»
+    - statement: «Антибіотики можна купити без рецепта.»
+      correct: false
+      explanation: «Ні, потрібен електронний рецепт.»
+    - statement: «Приватні клініки в Україні платні.»
+      correct: true
+      explanation: «Так, за візит треба платити.»
+    - statement: «Якщо у вас грип, треба йти на роботу.»
+      correct: false
+      explanation: «Ні, треба сидіти вдома, щоб не заразити інших.»
+  instruction: Визначте, чи твердження правильне.
+
+- type: unjumble
+  title: Doctor Sentences
+  instruction: Put the words in order.
+  items:
+    - words: ["Сьогодні", "зранку", "у", "мене", "дуже", "болить", "голова"]
+      answer: «Сьогодні зранку у мене дуже болить голова.»
+    - words: ["Я", "хочу", "записатися", "на", "прийом", "до", "лікаря"]
+      answer: «Я хочу записатися на прийом до лікаря.»
+    - words: ["Будь", "ласка", "приймайте", "ці", "ліки", "після", "їжі"]
+      answer: «Будь ласка приймайте ці ліки після їжі.»
+    - words: ["Ви", "маєте", "якусь", "алергію", "на", "пеніцилін", "?"]
+      answer: «Ви маєте якусь алергію на пеніцилін?»
+    - words: ["Скажіть", "скільки", "днів", "ви", "вже", "хворієте", "?"]
+      answer: «Скажіть скільки днів ви вже хворієте?»
+    - words: ["Мені", "терміново", "потрібен", "лікарняний", "на", "мою", "роботу"]
+      answer: «Мені терміново потрібен лікарняний на мою роботу.»
+    - words: ["Дихайте", "дуже", "глибоко", "і", "будь", "ласка", "не", "хвилюйтеся"]
+      answer: «Дихайте дуже глибоко і будь ласка не хвилюйтеся.»
+    - words: ["Сьогодні", "я", "почуваюся", "вже", "набагато", "краще", "дякую"]
+      answer: «Сьогодні я почуваюся вже набагато краще дякую.»
+
+- type: select
+  title: Choose the Phrase
+  instruction: Select the best phrase for the situation.
+  items:
+    - question: '«Лікар питає: «На що скаржитесь?» Ви відповідаєте:»'
+      options:
+        - text: «У мене болить живіт.»
+          correct: true
+        - text: «Я люблю каву.»
+          correct: false
+        - text: «Сьогодні гарна погода.»
+          correct: false
+        - text: «До побачення.»
+          correct: false
+    - question: «Ви хочете запитати, як пити ліки. Ви кажете:»
+      options:
+        - text: «Як приймати ці таблетки?»
+          correct: true
+        - text: «Скільки це коштує?»
+          correct: false
+        - text: «Де тут вихід?»
+          correct: false
+        - text: «Ви лікар?»
+          correct: false
+    - question: «Вам потрібен документ для школи/роботи. Ви просите:»
+      options:
+        - text: «Дайте, будь ласка, довідку (лікарняний).»
+          correct: true
+        - text: «Дайте мені рецепт.»
+          correct: false
+        - text: «Дайте мені води.»
+          correct: false
+        - text: «Дайте мені чек.»
+          correct: false
+    - question: «Лікар каже «Одужуйте!». Ви відповідаєте:»
+      options:
+        - text: «Дякую, до побачення!»
+          correct: true
+        - text: «Вибачте.»
+          correct: false
+        - text: «Слухаю.»
+          correct: false
+        - text: «Алло.»
+          correct: false
+    - question: «У вас алергія. Ви кажете:»
+      options:
+        - text: «У мене алергія на...»
+          correct: true
+        - text: «Я люблю...»
+          correct: false
+        - text: «Я хочу...»
+          correct: false
+        - text: «Я бачу...»
+          correct: false
+    - question: «Ви не зрозуміли лікаря. Ви кажете:»
+      options:
+        - text: «Повторіть, будь ласка.»
+          correct: true
+        - text: «Я все знаю.»
+          correct: false
+        - text: «Я пішов.»
+          correct: false
+        - text: «Тихо!»
+          correct: false
+
+- type: cloze
+  title: Sick Leave Story
+  passage: "Мене звати {Андрій|Андрія|Андрію}_. Вчора я відчув {слабкість|радість|силу}_. У мене піднялася {температура|рука|ціна}_ до 39 градусів. Я викликав {лікаря|поліцію|таксі}_. Лікар прийшов і послухав {мене|тебе|нас}_. Він сказав, що це {грип|спорт|сон}_. Він виписав мені {рецепт|квиток|паспорт}_ на ліки. Тепер я лежу в {ліжку|школі|парку}_ і п'ю {чай|суп|сік}_. Я не йду на {роботу|кіно|вулицю}_. Я хочу {спати|бігати|грати}_. Скоро я буду {здоровий|хворий|сумний}_."
+  instruction: Заповніть пропуски в історії.
+
+- type: error-correction
+  title: Find the Mistake
+  instruction: Find the error in the sentence.
+  items:
+    - sentence: "У мене болить ноги."
+      error: ноги
+      answer: нога
+      options: [ноги, нога, ногу, ногою]
+      explanation: "«Болить» is singular. For plural «ноги», use «болять»."
+    - sentence: "Я маю температура."
+      error: маю
+      answer: в мене
+      options: [маю, в мене, мені, я]
+      explanation: "Standard phrase: «У мене (є) температура»."
+    - sentence: "Лікар слухає мене вухом."
+      error: вухом
+      answer: стетоскопом
+      options: [вухом, стетоскопом, рукою, оком]
+      explanation: "Doctors listen with a stethoscope."
+    - sentence: "Я п'ю таблетку в носі."
+      error: в носі
+      answer: ротом
+      options: [в носі, ротом, вухом, оком]
+      explanation: "Pills are taken by mouth."
+    - sentence: "Я хворий на здоров'я."
+      error: здоров'я
+      answer: грип
+      options: [здоров'я, грип, спорт, сон]
+      explanation: "You are sick with a disease, not health."
+    - sentence: "Лікар дав мені квиток на ліки."
+      error: квиток
+      answer: рецепт
+      options: [квиток, рецепт, паспорт, чек]
+      explanation: "Prescription is «рецепт», not «квиток»."
+    - sentence: "У мене болить зуби."
+      error: болить
+      answer: болять
+      options: [болить, болять, хворіють, лікують]
+      explanation: "Plural subject «зуби» requires plural verb «болять»."
+    - sentence: "Я йду до аптеки за хлібом."
+      error: хлібом
+      answer: ліками
+      options: [хлібом, ліками, водою, молоком]
+      explanation: "Pharmacies sell medicine, not bread."
+
+- type: translate
+  title: Translate Phrases
+  instruction: Choose the correct translation.
+  items:
+    - source: "I have a headache."
+      options:
+        - text: "У мене болить голова."
+          correct: true
+        - text: "Я маю голову."
+          correct: false
+        - text: "Моя голова гарна."
+          correct: false
+        - text: "Голова - це важливо."
+          correct: false
+    - source: "Call an ambulance!"
+      options:
+        - text: "Викличте швидку!"
+          correct: true
+        - text: "Викличте таксі!"
+          correct: false
+        - text: "Подзвоніть мамі!"
+          correct: false
+        - text: "Ідіть додому!"
+          correct: false
+    - source: "Take one pill."
+      options:
+        - text: "Прийміть одну таблетку."
+          correct: true
+        - text: "Купіть одну таблетку."
+          correct: false
+        - text: "Знайдіть одну таблетку."
+          correct: false
+        - text: "Дайте одну таблетку."
+          correct: false
+    - source: "I feel sick."
+      options:
+        - text: "Я погано почуваюся."
+          correct: true
+        - text: "Я добре почуваюся."
+          correct: false
+        - text: "Я люблю хворіти."
+          correct: false
+        - text: "Я не знаю."
+          correct: false
+    - source: "Open your mouth."
+      options:
+        - text: "Відкрийте рот."
+          correct: true
+        - text: "Закрийте рот."
+          correct: false
+        - text: "Помийте рот."
+          correct: false
+        - text: "Дивіться на рот."
+          correct: false
+    - source: "Breathe deeply."
+      options:
+        - text: "Дихайте глибоко."
+          correct: true
+        - text: "Не дихайте."
+          correct: false
+        - text: "Співайте голосно."
+          correct: false
+        - text: "Спіть міцно."
+          correct: false
+    - source: "Where does it hurt?"
+      options:
+        - text: "Де болить?"
+          correct: true
+        - text: "Хто болить?"
+          correct: false
+        - text: "Коли болить?"
+          correct: false
+        - text: "Чому болить?"
+          correct: false
+    - source: "Get well soon!"
+      options:
+        - text: "Одужуйте!"
+          correct: true
+        - text: "Хворійте!"
+          correct: false
+        - text: "Працюйте!"
+          correct: false
+        - text: "Спіть!"
+          correct: false

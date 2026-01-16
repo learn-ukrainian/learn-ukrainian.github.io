@@ -1,9 +1,9 @@
 module: a2-52
-title: Education & Learning
-subtitle: Studying in Ukrainian
+title: Education and Learning
+subtitle: School and University
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
@@ -12,16 +12,18 @@ tags:
 - school
 - university
 grammar:
-- verb-aspect-introduction
-- locative-places
+- education verbs (вчитися, вивчати)
+- school subjects
+- grades and exams
+- describing academic life
 objectives:
-- Talk about school: урок, клас, вчитель
-- Discuss university life: лекція, іспит, студент
-- Differentiate study verbs: вчитися, вивчати
-- Describe learning materials: підручник, зошит
+- Learner can describe their studies
+- Learner can use 'вчитися' and 'вивчати' correctly
+- Learner can talk about school/university subjects
+- Learner can discuss exams and grades
+vocabulary_count: 25
 slug: 52-education-learning
-vocabulary_count: 29
-focus: grammar
+focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

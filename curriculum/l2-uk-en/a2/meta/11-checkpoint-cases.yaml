@@ -1,30 +1,29 @@
 module: a2-11
-title: Checkpoint - Cases
-subtitle: Comprehensive Review of Modules 01-09
-version: '2.0'
+title: Checkpoint — Cases
+subtitle: Review and Mastery
+version: '1.0'
 phase: A2.1
-focus: checkpoint
-pedagogy: Review
+pedagogy: TTT
 duration: 60
 transliteration: none
 tags:
-- review
 - checkpoint
-- assessment
+- review
 - cases
+- assessment
 grammar:
-- dative pronouns and nouns
-- instrumental case review
-- preposition + case combinations
-- all 7 cases integration
-- service vocabulary
+- case system review
+- prepositions review
+- case functions
+- error correction
 objectives:
-- Learner can demonstrate mastery of dative case
-- Learner can use instrumental case correctly
-- Learner can combine prepositions with correct cases
-- Learner can apply cases in service contexts
-vocabulary_count: 27
+- Learner can correctly identify and use all 7 cases
+- Learner can choose appropriate prepositions for each case
+- Learner can correct common case errors
+- Learner can apply case knowledge in mixed contexts
+vocabulary_count: 25
 slug: 11-checkpoint-cases
+focus: checkpoint
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

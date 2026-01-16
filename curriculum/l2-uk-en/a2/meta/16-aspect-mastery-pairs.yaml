@@ -1,25 +1,29 @@
 module: a2-16
-title: Aspect Mastery
-subtitle: Drilling the 30 Most Common Pairs
+title: Aspect Mastery — Pairs
+subtitle: Automating Perfective and Imperfective
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- aspect
+- grammar
 - verbs
-- drilling
+- aspect
+- practice
 grammar:
-- perfective/imperfective pairs
-- aspect selection in context
+- identifying aspect pairs
+- choosing aspect in context
+- common aspect patterns
+- aspect in tenses review
 objectives:
-- Learner can recall 30+ aspect pairs automatically
-- Learner can select correct aspect based on context
-- Learner can transform between aspects fluently
-vocabulary_count: 30
+- Learner can correctly pair imperfective and perfective verbs
+- Learner can choose the correct aspect based on context clues
+- Learner can automate the use of common aspect pairs
+- Learner can identify aspect patterns (prefixes, suffixes)
+vocabulary_count: 25
 slug: 16-aspect-mastery-pairs
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

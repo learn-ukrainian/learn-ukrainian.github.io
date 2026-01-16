@@ -1,0 +1,79 @@
+module: 61-hotel-accommodation
+level: A2
+version: '1.0'
+items:
+- lemma: готель
+  translation: hotel
+  pos: noun
+  gender: m
+- lemma: бронювання
+  translation: reservation
+  pos: noun
+  gender: n
+- lemma: номер
+  translation: room (hotel)
+  pos: noun
+  gender: m
+- lemma: одномісний
+  translation: single (room)
+  pos: adj
+- lemma: двомісний
+  translation: double (room)
+  pos: adj
+- lemma: люкс
+  translation: suite
+  pos: noun
+  gender: m
+- lemma: сніданок включено
+  translation: breakfast included
+  pos: phrase
+- lemma: кондиціонер
+  translation: air conditioning
+  pos: noun
+  gender: m
+- lemma: ключ-картка
+  translation: key card
+  pos: noun
+  gender: f
+- lemma: рецепція
+  translation: reception
+  pos: noun
+  gender: f
+- lemma: портьє
+  translation: receptionist
+  pos: noun
+  gender: m
+- lemma: виїзд
+  translation: checkout
+  pos: noun
+  gender: m
+- lemma: залишити багаж
+  translation: leave luggage
+  pos: phrase
+- lemma: скарга
+  translation: complaint
+  pos: noun
+  gender: f
+- lemma: послуга
+  translation: service
+  pos: noun
+  gender: f
+- lemma: багаж
+  translation: luggage
+  pos: noun
+  gender: m
+- lemma: картка
+  translation: card
+  pos: noun
+  gender: f
+- lemma: включено
+  translation: included
+  pos: adv
+- lemma: вид
+  translation: view
+  pos: noun
+  gender: m
+- lemma: час
+  translation: time
+  pos: noun
+  gender: m

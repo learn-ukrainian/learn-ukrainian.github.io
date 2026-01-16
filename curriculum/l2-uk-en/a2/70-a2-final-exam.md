@@ -2,7 +2,7 @@
 
 ## Overview (Огляд)
 
-Congratulations on reaching the end of the A2 level! This final exam serves as a comprehensive assessment of everything you have learned throughout this stage. We will review the complete Ukrainian case system, the nuances of verbal aspect, and the practical scenarios that allow you to navigate life in Ukraine with confidence. This is your chance to see how much progress you have made.
+Вітаємо з успішним завершенням рівня A2! Цей фінальний іспит є комплексною перевіркою всього, що ви вивчили на цьому етапі. Ми повторимо повну систему відмінків та нюанси виду дієслова. Також ми розглянемо практичні сценарії, які дозволять вам впевнено орієнтуватися в житті в Україні. Це ваш шанс побачити свій реальний прогрес.
 
 У цьому фінальному іспиті ми перевіримо ваші знання з усіх ключових тем рівня A2. Це важливий момент вашого навчання. Ми розглянемо:
 - **Усі 7 відмінків** (включаючи Давальний та Орудний).
@@ -15,14 +15,14 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 
 ---
 
-## Skill 1: Cases Mastery (Майстерність відмінків)
+## Навичка 1: Майстерність відмінків
 
 ### Model: Cases in Context (Модель)
 
 > Я живу у **Києві** (Місцевий). Кожного ранку я даю **другові** (**Давальний**) цікаву книгу. Ми часто йдемо на роботу **автобусом** (**Орудний**). У мене зовсім немає **часу** (**Родовий**) на відпочинок сьогодні. Я бачу великий **парк** (**Знахідний**) за вікном. **Друже** (Кличний), ходімо гуляти зараз!
 
-**Notice:**
-- All 7 cases work together to show relationships between people and objects.
+**Зверніть увагу:**
+- Усі 7 відмінків працюють разом, щоб показати зв'язки між людьми та предметами.
 - **Давальний** відмінок відповідає на питання Кому? Чому?
 - **Орудний** відмінок вказує на засіб дії або професію людини.
 
@@ -42,18 +42,18 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 > 5. директором (Орудний)
 
 ### Self-Check: (Самоперевірка)
-- ☐ I can correctly use Dative and Instrumental cases in sentences.
-- ☐ I can identify the correct case for any noun or pronoun in context.
+- ☐ Я можу правильно використовувати Давальний та Орудний відмінки в реченнях.
+- ☐ Я можу визначити правильний відмінок для будь-якого іменника в контексті.
 
 ---
 
-## Skill 2: Verbal Aspect (Вид дієслова)
+## Навичка 2: Вид дієслова
 
 ### Model: Process vs Result (Модель)
 
 > Вчора я **читав** (**Недоконаний**) цікаву книгу дві години. Нарешті я **прочитав** (**Доконаний**) її до самого кінця! Я часто **роблю** (**Недоконаний**) домашнє завдання ввечері. Але сьогодні я **зроблю** (**Доконаний**) його дуже швидко.
 
-**Notice:**
+**Зверніть увагу:**
 - **Недоконаний вид** описує тривалий процес, повторювану дію або дію в часі.
 - **Доконаний вид** вказує на конкретний результат або завершення дії.
 
@@ -73,18 +73,18 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 > 5. приїхав (результат)
 
 ### Self-Check: (Самоперевірка)
-- ☐ I understand the difference between imperfective and perfective verbs.
-- ☐ I can form correct aspect pairs for common Ukrainian verbs.
+- ☐ Я розумію різницю між недоконаним та доконаним видом дієслова.
+- ☐ Я можу утворювати правильні видові пари для поширених дієслів.
 
 ---
 
-## Skill 3: Practical Navigation (Навігація в місті)
+## Навичка 3: Навігація в місті
 
 ### Model: Giving and Asking Directions (Модель)
 
 > Вибачте, як **дістатися** до найближчої аптеки? Ідіть **прямо** до світлофора, потім **поверніть наліво**. Аптека знаходиться відразу **за рогом**, прямо **напроти** банку. Це приблизно п'ять хвилин **пішки** звідси.
 
-**Notice:**
+**Зверніть увагу:**
 - Використовуйте наказовий спосіб для чітких вказівок іншим людям.
 - Орієнтири (світлофор, банк, парк) допомагають швидше знайти дорогу.
 
@@ -104,18 +104,18 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 > 5. пересадка
 
 ### Self-Check: (Самоперевірка)
-- ☐ I can ask for help when I am lost in an unfamiliar area.
-- ☐ I can give step-by-step directions using landmarks and prepositions.
+- ☐ Я можу попросити про допомогу, коли заблукав у незнайомому місці.
+- ☐ Я можу дати покрокові вказівки, використовуючи орієнтири та прийменники.
 
 ---
 
-## Skill 4: Word Formation (Словотвір)
+## Навичка 4: Словотвір
 
 ### Model: Roots and Prefixes (Модель)
 
 > Дієслово **іти** стає **прийти** (arrival) або **вийти** (exit) за допомогою префіксів. Корінь **-ход-** допомагає будувати слова: **хід**, **вихід**, **перехід**. Це допомагає розуміти нові слова без словника.
 
-**Notice:**
+**Зверніть увагу:**
 - Префікси змінюють значення слова, але корінь залишається незмінним.
 - Суфікси допомагають утворювати іменники та прикметники від дієслів.
 
@@ -133,8 +133,8 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 > 4. перейти
 
 ### Self-Check: (Самоперевірка)
-- ☐ I can recognize common Ukrainian roots and prefixes.
-- ☐ I can deduce the meaning of new words based on their structure.
+- ☐ Я можу розпізнавати поширені українські корені та префікси.
+- ☐ Я можу зрозуміти значення нових слів, спираючись на їхню структуру.
 
 ---
 
@@ -170,7 +170,7 @@ Congratulations on reaching the end of the A2 level! This final exam serves as a
 
 # Summary (Підсумок)
 
-Congratulations! You have completed the A2 level. You are now a confident basic user of the Ukrainian language. This is a huge achievement!
+Вітаємо! Ви успішно завершили рівень A2. Тепер ви впевнений базовий користувач української мови. Це величезне досягнення!
 
 | Тема | Опис | Приклад |
 | :--- | :--- | :--- |

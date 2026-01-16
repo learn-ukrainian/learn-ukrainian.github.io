@@ -1,27 +1,29 @@
-module: 69-online-services
+module: a2-69
 title: Online Services
-subtitle: Banking Apps, Delivery, Booking Platforms
+subtitle: Apps and Delivery
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- online
+- vocabulary
 - services
 - apps
-- digital
+- shopping
 grammar:
-- 'App actions: Замовити доставку, Перевірити баланс'
-- 'Registration: Увійти, Зареєструватися'
-- 'Confirmation: Код підтвердження, Відстежити замовлення'
+- app interface vocabulary (кошик, замовити)
+- banking terms (картка, переказ)
+- delivery instructions
+- customer support phrases
 objectives:
-- Learner can navigate Ukrainian banking and delivery apps
-- Learner can complete online booking and payment processes
-- Learner can understand app notifications and confirmations
-vocabulary_count: 15
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+vocabulary_count: 25
 slug: 69-online-services
+focus: vocabulary
 naturalness:
-  score: 9
+  score: 10
   status: PASS

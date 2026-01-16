@@ -1,27 +1,29 @@
 module: a2-51
-title: Hobbies & Leisure
-subtitle: Free Time in Ukrainian
+title: Hobbies and Leisure
+subtitle: What We Do for Fun
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - hobbies
-- travel
-- entertainment
+- free time
+- leisure
 grammar:
-- verb-conjugation-imperative
-- accusative-activities
+- verbs for hobbies (грати на, займатися)
+- accusative vs instrumental (футбол vs тенісом)
+- expressing frequency
+- describing interests
 objectives:
-- Discuss hobbies: малювати, співати, танцювати
-- Talk about travel: подорожувати, відвідувати
-- Describe entertainment: кіно, театр, концерт
-- Plan free time
+- Learner can talk about hobbies and interests
+- Learner can use 'грати' and 'займатися' correctly
+- Learner can describe weekend plans
+- Learner can ask others about their free time
+vocabulary_count: 25
 slug: 51-hobbies-leisure
-vocabulary_count: 46
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

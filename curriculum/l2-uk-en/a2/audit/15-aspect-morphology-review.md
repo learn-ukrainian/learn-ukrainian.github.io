@@ -1,19 +1,10 @@
 # Audit Report: 15-aspect-morphology.md
-**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1427/1000
+- **Words:** ✅ 1426/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -26,8 +17,8 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 44.7% (target 40-50% (A2.1))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -46,6 +37,6 @@
 | **Вид та словотвір** | ⚪️ | 116 | Skipped |
 | **Логіка суфіксації** | ⚪️ | 113 | Skipped |
 | **Вправа: Визначте модель** | ⚪️ | 207 | Skipped |
-| **Практика** | ⚪️ | 120 | Skipped |
+| **Практика** | ⚪️ | 119 | Skipped |
 | **Підсумок** | ✅ | 189 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

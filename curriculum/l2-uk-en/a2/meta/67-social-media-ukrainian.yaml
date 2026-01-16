@@ -1,27 +1,29 @@
-module: 67-social-media-ukrainian
+module: a2-67
 title: Social Media Ukrainian
-subtitle: Posts, Comments, Messaging Conventions
+subtitle: Digital Life
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- social-media
-- digital
-- communication
-- online
+- vocabulary
+- internet
+- social media
+- technology
 grammar:
-- 'Actions: Поставити лайк, Поділитися, Підписатися'
-- 'Messaging: Написати в особисті'
-- 'Engagement: Залишити коментар'
+- internet slang (лайк, пост, сторіз)
+- verbs for digital actions (постити, лайкати)
+- commenting etiquette
+- privacy settings terms
 objectives:
-- Learner can navigate Ukrainian social media platforms
-- Learner can write appropriate comments and posts
-- Learner can use social media vocabulary naturally
-vocabulary_count: 12
+- Learner can navigate Ukrainian social media interfaces
+- Learner can write comments and posts
+- Learner can understand digital slang
+- Learner can manage profile settings
+vocabulary_count: 25
 slug: 67-social-media-ukrainian
+focus: vocabulary
 naturalness:
-  score: 9
+  score: 10
   status: PASS

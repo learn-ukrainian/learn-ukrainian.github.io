@@ -1,6 +1,6 @@
 module: a2-01
 title: The Dative I — Pronouns
-subtitle: To Whom Does This Belong?
+subtitle: I Like, I Need, and How I Feel
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
@@ -13,15 +13,18 @@ tags:
 - pronouns
 grammar:
 - dative pronouns
-- verbs with dative
+- impersonal constructions
+- подобатися
+- потрібно
+- states
 objectives:
-- Learner can use dative pronouns (мені, тобі, йому, їй, нам, вам, їм)
-- Learner can express likes and needs using dative constructions
-- Learner can recognize verbs that require dative objects
-- Learner can describe physical and emotional states with dative
-vocabulary_count: 26
+- Learner can use dative pronouns correctly
+- Learner can express likes using подобатися
+- Learner can express needs using потрібно
+- Learner can describe physical and emotional states
+vocabulary_count: 25
 slug: 01-the-dative-i-pronouns
 focus: grammar
 naturalness:
-  score: 10
+  score: 8
   status: PASS

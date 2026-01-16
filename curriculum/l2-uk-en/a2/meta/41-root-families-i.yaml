@@ -1,25 +1,29 @@
 module: a2-41
 title: Root Families I
-subtitle: Language Legos
+subtitle: Motion and Vision
 version: '1.0'
-phase: A2.4
-pedagogy: Inquiry
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- vocabulary
+- grammar
+- word formation
 - roots
-- word-formation
+- vocabulary
 grammar:
-- root families (хід, пис, чит, бач)
-- guessing meaning from context
+- root ход- (motion)
+- root пис- (writing)
+- root бач-/гляд- (vision)
+- prefixes and suffixes
 objectives:
-- Learner can recognize common roots (хід, пис)
-- Learner can deduce meaning of new words (Вхід vs Вихід)
-- Learner uses root logic to expand vocabulary rapidly
-vocabulary_count: 30
+- Learner can identify words with the root -ход- (вхід, вихід, перехід)
+- Learner can identify words with the root -пис- (писати, підпис)
+- Learner can identify words with roots -бач- and -гляд-
+- Learner can deduce meaning from known roots
+vocabulary_count: 25
 slug: 41-root-families-i
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

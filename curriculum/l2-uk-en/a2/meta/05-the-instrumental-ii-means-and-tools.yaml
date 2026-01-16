@@ -1,6 +1,6 @@
 module: a2-05
-title: The Instrumental II — Means & Tools
-subtitle: By Bus, With a Pen
+title: The Instrumental II — Means and Tools
+subtitle: How? By What Means?
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
@@ -10,20 +10,20 @@ tags:
 - grammar
 - cases
 - instrumental
+- usage
+grammar:
+- instrumental of means
+- instrumental without prepositions
 - transport
 - tools
-grammar:
-- instrumental without preposition
-- means of transport
-- tools and instruments
 objectives:
-- Learner can use instrumental without preposition for means of transport
-- Learner can use instrumental for tools and instruments
-- Learner can express manner using instrumental case
-- Learner can distinguish between з + Instrumental and bare Instrumental
-vocabulary_count: 28
+- Learner can use instrumental case to describe means of transport
+- Learner can use instrumental case to describe tools and instruments
+- Learner can distinguish between instrumental with and without prepositions
+- Learner can describe how actions are performed
+vocabulary_count: 25
 slug: 05-the-instrumental-ii-means-and-tools
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

@@ -1,4 +1,4 @@
-module: 57-grammar-review
+module: 57-practical-intro
 level: A2
 version: '2.0'
 items:
@@ -241,5 +241,35 @@ items:
 - lemma: інспектор
   ipa: /inˈspɛktor/
   translation: inspector
+  pos: noun
+  gender: m
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time; tense
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijeˈslɔvɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: майбутній
+  ipa: /mɐi̯ˈbutnʲij/
+  translation: future
+  pos: adj
+  gender: m
+- lemma: відмінок
+  ipa: /vʲidˈmʲinok/
+  translation: case (grammar)
+  pos: noun
+  gender: m
+- lemma: займенник
+  ipa: /zɐi̯ˈmɛnːɪk/
+  translation: pronoun
+  pos: noun
+  gender: m
+- lemma: прикметник
+  ipa: /prɪkˈmɛtnɪk/
+  translation: adjective
   pos: noun
   gender: m

@@ -1,27 +1,29 @@
-module: 66-asking-for-directions
+module: a2-66
 title: Asking for Directions
-subtitle: When Lost, Using Maps, Transit Routes
+subtitle: Getting Around Town
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - directions
-- navigation
-- transit
-- maps
+- city
+- transport
 grammar:
-- 'Questions: Як дістатися до...?, Де знаходиться...?'
-- 'Being lost: Я заблукав/заблукала'
-- 'Transit requests: Куди їде цей автобус?'
+- verbs of motion (йти, їхати)
+- prepositions of movement (до, повз, через)
+- imperative for directions (йдіть, поверніть)
+- transport vocabulary
 objectives:
-- Learner can ask for directions politely
-- Learner can understand transit route information
-- Learner can use maps and navigation tools
-vocabulary_count: 12
+- Learner can ask for directions to landmarks
+- Learner can understand complex route descriptions
+- Learner can use public transport vocabulary
+- Learner can describe their location
+vocabulary_count: 25
 slug: 66-asking-for-directions
+focus: vocabulary
 naturalness:
-  score: 9
+  score: 10
   status: PASS

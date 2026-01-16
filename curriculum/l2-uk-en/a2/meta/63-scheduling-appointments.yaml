@@ -1,27 +1,29 @@
-module: 63-scheduling-appointments
+module: a2-63
 title: Scheduling Appointments
-subtitle: Making Appointments
+subtitle: Making and Changing Plans
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - scheduling
 - appointments
 - time
-- planning
 grammar:
-- 'Scheduling: Я хотів би записатися на...'
-- 'Time expressions: О котрій?, На яку годину?'
-- 'Confirming: Добре, о третій годині'
+- making appointments (записатися на)
+- rescheduling and canceling
+- time expressions for meetings
+- polite phone etiquette
 objectives:
-- Learner can make appointments by phone
-- Learner can reschedule or cancel appointments
-- Learner can confirm appointment details
-vocabulary_count: 15
+- Learner can make an appointment by phone
+- Learner can reschedule or cancel a meeting
+- Learner can understand appointment details
+- Learner can use polite phrases for scheduling
+vocabulary_count: 25
 slug: 63-scheduling-appointments
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

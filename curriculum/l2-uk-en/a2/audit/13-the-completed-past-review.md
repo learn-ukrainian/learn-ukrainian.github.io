@@ -1,6 +1,6 @@
 # Audit Report: 13-the-completed-past.md
-**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -17,14 +17,8 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 42.6% (target 40-50% (A2.1))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

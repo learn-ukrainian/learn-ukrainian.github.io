@@ -1,28 +1,29 @@
 module: a2-15
-title: Aspect Pairs Deep Dive
-subtitle: Prefixation Patterns and Common Pairs
+title: Aspect Morphology
+subtitle: Prefixes and Suffixes
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
+- verbs
 - aspect
-- word-formation
-- prefixes
+- morphology
 grammar:
-- prefixation patterns
-- suffixation patterns
+- prefixes (про-, на-, з-, по-)
+- suffixes (-ва-, -ува-)
+- stem changes
 - suppletive pairs
 objectives:
-- Learner knows common prefix patterns for aspect
-- Learner recognizes suffix changes in aspect pairs
-- Learner can predict aspect from verb form
-- Learner knows suppletive pairs
-vocabulary_count: 30
+- Learner can identify aspect based on morphology
+- Learner can form perfective verbs using common prefixes
+- Learner can form imperfective verbs using suffixes
+- Learner can recognize irregular aspect pairs
+vocabulary_count: 25
 slug: 15-aspect-morphology
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

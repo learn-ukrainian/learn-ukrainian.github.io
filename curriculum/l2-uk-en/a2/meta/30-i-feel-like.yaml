@@ -1,26 +1,29 @@
 module: a2-30
 title: I Feel Like...
-subtitle: Expressing Feelings and Needs
+subtitle: Physical and Emotional States
 version: '1.0'
-phase: A2.3
-pedagogy: Communicative
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- feelings
+- vocabulary
 - emotions
-- state
+- feelings
+- dative
 grammar:
-- impersonal constructions
-- dative of experience
-- emotional adjectives
+- dative with states (мені сумно)
+- reflexive verbs (почуватися)
+- adjectives vs adverbs (веселий vs весело)
+- describing health
 objectives:
-- Learner can express basic physical and emotional states
-- Learner can use the dative case for personal feelings
-- Learner can distinguish between states and adjectives
+- Learner can describe physical states (hot, cold, painful)
+- Learner can describe emotional states (sad, happy, bored)
+- Learner can ask others about their feelings
+- Learner can distinguish between personal traits and temporary states
 vocabulary_count: 25
 slug: 30-i-feel-like
-focus: grammar
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

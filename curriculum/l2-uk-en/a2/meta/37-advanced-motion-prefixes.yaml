@@ -1,26 +1,29 @@
 module: a2-37
 title: Advanced Motion Prefixes
-subtitle: 'Complex Paths: Crossing, Stopping, Going Around'
+subtitle: Crossing, Passing, and Approaching
 version: '1.0'
-phase: A2.4
+phase: A2.3
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- motion verbs
+- grammar
+- verbs
+- motion
 - prefixes
-- spatial
-- advanced
 grammar:
-- advanced motion prefixes (пере-, за-, про-, під-, об-, до-)
-- path semantics in motion verbs
+- prefix пере- (crossing)
+- prefix про- (passing/through)
+- prefix під- (approaching)
+- prefix до- (reaching)
 objectives:
-- Learner can describe complex motion paths
-- Learner can use prefixes to express crossing, passing, stopping by
-- Learner can give and follow directional instructions
-vocabulary_count: 30
+- Learner can describe crossing streets and spaces
+- Learner can describe passing by or through places
+- Learner can describe approaching an object
+- Learner can describe reaching a destination
+vocabulary_count: 25
 slug: 37-advanced-motion-prefixes
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

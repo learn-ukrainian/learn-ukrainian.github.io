@@ -1,28 +1,29 @@
 module: a2-44
-title: Checkpoint - Word Formation
-subtitle: Review of Modules 37-42
-version: '2.0'
-phase: A2.4
-focus: checkpoint
-pedagogy: Review
+title: Checkpoint — Word Formation
+subtitle: Review and Mastery
+version: '1.0'
+phase: A2.3
+pedagogy: TTT
 duration: 60
 transliteration: none
 tags:
-- review
 - checkpoint
-- assessment
+- review
+- word formation
+- roots
 grammar:
-- motion prefixes
-- action prefixes
-- noun suffixes
-- adjective suffixes
-- root families
+- word formation review
+- root families review
+- prefix/suffix review
+- analysis skills
 objectives:
-- Learner demonstrates mastery of word formation
-- Learner can analyze word components
-- Learner can derive new words from roots
+- Learner can confidently identify root families
+- Learner can deduce meaning using morphological clues
+- Learner can form words using correct prefixes and suffixes
+- Learner can correct common word formation errors
 vocabulary_count: 25
 slug: 44-checkpoint-word-formation
+focus: checkpoint
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

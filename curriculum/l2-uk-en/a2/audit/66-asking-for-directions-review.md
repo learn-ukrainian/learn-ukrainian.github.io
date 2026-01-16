@@ -1,6 +1,6 @@
 # Audit Report: 66-asking-for-directions.md
-**Phase:** A2.6 | **Level:** A2 | **Pedagogy:** TBL | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
+**Phase:** A2.4 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -18,14 +18,7 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 75.1% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-### Errors
-- ❌ HTTP 404
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

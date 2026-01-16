@@ -1,0 +1,406 @@
+- type: match-up
+  title: Hotel Vocabulary
+  instruction: Match the Ukrainian hotel terms to their English meanings.
+  pairs:
+    - left: готель
+      right: hotel
+    - left: бронювання
+      right: reservation
+    - left: номер
+      right: room
+    - left: рецепція
+      right: reception
+    - left: портьє
+      right: receptionist
+    - left: виїзд
+      right: checkout
+    - left: сніданок
+      right: breakfast
+    - left: ключ-картка
+      right: key card
+    - left: поверх
+      right: floor
+    - left: ліфт
+      right: elevator
+    - left: багаж
+      right: luggage
+    - left: рушник
+      right: towel
+
+- type: fill-in
+  title: Check-in Dialogue
+  instruction: Complete the dialogue with the correct words.
+  items:
+    - sentence: «Добрий день! Я хочу _____.»
+      answer: заселитися
+      options: [заселитися, виїхати, піти, спати]
+    - sentence: «У вас є _____?»
+      answer: бронювання
+      options: [бронювання, паспорт, квиток, номер]
+    - sentence: «Так, на ім'я _____.»
+      answer: Петренко
+      options: [Петренко, Київ, Готель, Номер]
+    - sentence: «Ваш _____ на третьому поверсі.»
+      answer: номер
+      options: [номер, поверх, ліфт, ключ]
+    - sentence: «Ось ваша _____.»
+      answer: ключ-картка
+      options: [ключ-картка, паспорт, віза, гроші]
+    - sentence: «Сніданок _____ у вартість?»
+      answer: включено
+      options: [включено, виключено, зроблено, куплено]
+    - sentence: «Так, сніданок з 7 до 10 _____.»
+      answer: ранку
+      options: [ранку, вечора, ночі, дня]
+    - sentence: «Де тут _____?»
+      answer: ліфт
+      options: [ліфт, сходи, двері, вікно]
+    - sentence: «Ліфт праворуч. Гарного _____.»
+      answer: відпочинку
+      options: [відпочинку, роботи, сну, дня]
+    - sentence: «Дякую! До _____.»
+      answer: побачення
+      options: [побачення, зустрічі, ранку, вечора]
+    - sentence: «Який пароль від _____?»
+      answer: вай-фаю
+      options: [вай-фаю, дверей, номера, сейфа]
+    - sentence: «Виїзд до _____ години.»
+      answer: дванадцятої
+      options: [дванадцятої, першої, другої, третьої]
+
+- type: quiz
+  title: Hotel Knowledge
+  instruction: Choose the correct answer.
+  items:
+    - question: «Що саме означає термін «одномісний номер» в готелі?»
+      options:
+        - text: «Номер для однієї людини.»
+          correct: true
+        - text: «Номер з одним вікном.»
+          correct: false
+        - text: «Номер на першому поверсі.»
+          correct: false
+        - text: «Номер без ліжка.»
+          correct: false
+    - question: «Що саме означає популярна фраза «сніданок включено» в готелі?»
+      options:
+        - text: «Сніданок безкоштовний (в ціні).»
+          correct: true
+        - text: «Сніданку немає.»
+          correct: false
+        - text: «За сніданок треба платити.»
+          correct: false
+        - text: «Сніданок в номері.»
+          correct: false
+    - question: «Ви хочете залишити речі на рецепції. Що ви скажете?»
+      options:
+        - text: «Можна залишити багаж?»
+          correct: true
+        - text: «Де мій багаж?»
+          correct: false
+        - text: «Я загубив багаж.»
+          correct: false
+        - text: «Багаж важкий.»
+          correct: false
+    - question: «У номері холодно. Що ви скажете портьє?»
+      options:
+        - text: «У номері не працює опалення.»
+          correct: true
+        - text: «У номері жарко.»
+          correct: false
+        - text: «Мені добре.»
+          correct: false
+        - text: «Вікно відкрите.»
+          correct: false
+    - question: «Скажіть, будь ласка, що таке категорія номера «люкс»?»
+      options:
+        - text: «Найкращий і найдорожчий номер.»
+          correct: true
+        - text: «Найдешевший номер.»
+          correct: false
+        - text: «Номер для персоналу.»
+          correct: false
+        - text: «Кухня в готелі.»
+          correct: false
+    - question: «Як можна ввічливо попросити прибрати в номері сьогодні?»
+      options:
+        - text: «Приберіть, будь ласка, в номері.»
+          correct: true
+        - text: «Я прибираю сам.»
+          correct: false
+        - text: «Не прибирайте.»
+          correct: false
+        - text: «Номер чистий.»
+          correct: false
+    - question: «Вам потрібен ще один рушник. Що ви скажете?»
+      options:
+        - text: «Принесіть, будь ласка, рушник.»
+          correct: true
+        - text: «Де вода?»
+          correct: false
+        - text: «Я хочу спати.»
+          correct: false
+        - text: «Рушник мокрий.»
+          correct: false
+    - question: «Що таке процедура «виїзд» (check-out) з готелю?»
+      options:
+        - text: «Коли ви залишаєте готель.»
+          correct: true
+        - text: «Коли ви приїжджаєте.»
+          correct: false
+        - text: «Коли ви йдете гуляти.»
+          correct: false
+        - text: «Коли ви спите.»
+          correct: false
+
+- type: group-sort
+  title: Room Types vs Amenities
+  instruction: Sort into Room Types or Amenities.
+  groups:
+    - name: Типи номерів (Room Types)
+      items:
+        - одномісний
+        - двомісний
+        - люкс
+        - стандарт
+        - сімейний
+        - президентський
+    - name: Зручності (Amenities)
+      items:
+        - кондиціонер
+        - телевізор
+        - фен
+        - міні-бар
+        - сейф
+        - вай-фай
+
+- type: true-false
+  title: Hotel Facts
+  instruction: True or False regarding Ukrainian hotels.
+  items:
+    - statement: «Рецепція працює цілодобово (24/7).»
+      correct: true
+      explanation: «Зазвичай у готелях рецепція працює завжди.»
+    - statement: «Виїзд з готелю зазвичай о 18:00.»
+      correct: false
+      explanation: «Ні, виїзд зазвичай до 12:00.»
+    - statement: «Для заселення потрібен паспорт.»
+      correct: true
+      explanation: «Так, паспорт обов'язковий.»
+    - statement: «У всіх номерах є кухня.»
+      correct: false
+      explanation: «Ні, кухня є тільки в апартаментах.»
+    - statement: «Покоївка — це людина, яка прибирає номер.»
+      correct: true
+      explanation: «Так, це її робота.»
+    - statement: «Міні-бар завжди безкоштовний.»
+      correct: false
+      explanation: «Ні, за напої в міні-барі треба платити.»
+    - statement: «Можна попросити розбудити вас вранці.»
+      correct: true
+      explanation: «Так, це послуга «будильник» (wake-up call).»
+    - statement: «У готелі не можна жити з тваринами.»
+      correct: false
+      explanation: «Деякі готелі дозволяють тварин (pet-friendly).»
+  instruction: Визначте, чи твердження правильне.
+
+- type: unjumble
+  title: Hotel Requests
+  instruction: Put the words in order.
+  items:
+    - words: ["Я", "хочу", "забронювати", "номер", "на", "двох"]
+      answer: «Я хочу забронювати номер на двох.»
+    - words: ["Скільки", "коштує", "номер", "за", "одну", "ніч", "?"]
+      answer: «Скільки коштує номер за одну ніч?»
+    - words: ["Чи", "є", "у", "вас", "вільні", "номери", "?"]
+      answer: «Чи є у вас вільні номери?»
+    - words: ["Я", "хочу", "номер", "з", "видом", "на", "море"]
+      answer: «Я хочу номер з видом на море.»
+    - words: ["У", "мене", "в", "номері", "не", "працює", "кондиціонер"]
+      answer: «У мене в номері не працює кондиціонер.»
+    - words: ["Коли", "буде", "повністю", "готовий", "мій", "сніданок", "?"]
+      answer: «Коли буде повністю готовий мій сніданок?»
+    - words: ["Можна", "залишити", "багаж", "на", "рецепції", "сьогодні", "?"]
+      answer: «Можна залишити багаж на рецепції сьогодні?»
+    - words: ["Дайте", "мені", "ще", "один", "ключ", "будь", "ласка"]
+      answer: «Дайте мені ще один ключ будь ласка.»
+
+- type: select
+  title: Problem Solving
+  instruction: Choose the best phrase for the situation.
+  items:
+    - question: «Ви загубили ключ. Що ви скажете?»
+      options:
+        - text: «Я загубив ключ-картку.»
+          correct: true
+        - text: «Я загубив номер.»
+          correct: false
+        - text: «Я загубив готель.»
+          correct: false
+        - text: «Де мій паспорт?»
+          correct: false
+    - question: «У вас немає гарячої води. Ви дзвоните на рецепцію:»
+      options:
+        - text: «Немає гарячої води.»
+          correct: true
+        - text: «Немає холодної води.»
+          correct: false
+        - text: «Я хочу пити.»
+          correct: false
+        - text: «Вода смачна.»
+          correct: false
+    - question: «Ви хочете таксі в аеропорт. Ви просите:»
+      options:
+        - text: «Викличте таксі в аеропорт, будь ласка.»
+          correct: true
+        - text: «Я йду в аеропорт.»
+          correct: false
+        - text: «Де аеропорт?»
+          correct: false
+        - text: «Я люблю літати.»
+          correct: false
+    - question: «Вам заважає шум. Ви скаржитесь:»
+      options:
+        - text: «У сусідньому номері дуже шумно.»
+          correct: true
+        - text: «Я люблю музику.»
+          correct: false
+        - text: «Тут дуже тихо.»
+          correct: false
+        - text: «Я співаю.»
+          correct: false
+    - question: «Ви хочете поміняти номер. Ви кажете:»
+      options:
+        - text: «Я хочу інший номер.»
+          correct: true
+        - text: «Я хочу додому.»
+          correct: false
+        - text: «Цей номер гарний.»
+          correct: false
+        - text: «Я не хочу номер.»
+          correct: false
+    - question: «Вам потрібен пароль від інтернету. Ви питаєте:»
+      options:
+        - text: «Який пароль від Wi-Fi?»
+          correct: true
+        - text: «Де комп'ютер?»
+          correct: false
+        - text: «У вас є інтернет?»
+          correct: false
+        - text: «Інтернет швидкий?»
+          correct: false
+
+- type: cloze
+  title: Hotel Description
+  passage: "Наш готель {знаходиться|стоїть|лежить}_ у центрі міста. У нас є {зручні|погані|старі}_ номери. У кожному номері є {ліжко|парк|магазин}_, телевізор і {душ|кухня|сад}_. Сніданок {включено|виключено|продано}_ у вартість. На першому поверсі є {ресторан|лікарня|школа}_. Для гостей працює безкоштовний {вай-фай|телефон|радіо}_. Ми чекаємо на {вас|нас|їх}_! Забронюйте {номер|стіл|квиток}_ вже {сьогодні|вчора|ніколи}_. Ваш {відпочинок|робота|сон}_ буде чудовим. Ми працюємо {цілодобово|вдень|вночі}_."
+  instruction: Заповніть пропуски в описі готелю.
+
+- type: error-correction
+  title: Find the Mistake
+  instruction: Find the error in the sentence.
+  items:
+    - sentence: "Я хочу замовити кімнату."
+      error: кімнату
+      answer: номер
+      options: [кімнату, номер, дім, квартиру]
+      explanation: "In a hotel, we say «номер», not «кімната»."
+    - sentence: "Дайте мені ключ від готелю."
+      error: готелю
+      answer: номера
+      options: [готелю, номера, міста, парку]
+      explanation: "You need a key for the room, not the whole hotel."
+    - sentence: "Скільки коштує один ніч?"
+      error: один
+      answer: одна
+      options: [один, одна, одно, одні]
+      explanation: "«Ніч» is feminine, so «одна»."
+    - sentence: "Я живу в п'ятому поверсі."
+      error: в
+      answer: на
+      options: [в, на, у, біля]
+      explanation: "Floors use «на» + Locative."
+    - sentence: "Мій номер дуже голосний."
+      error: голосний
+      answer: шумний
+      options: [голосний, шумний, тихий, гарний]
+      explanation: "Noisy room is «шумний». «Голосний» is for voice."
+    - sentence: "Я хочу заплатити грошима."
+      error: грошима
+      answer: готівкою
+      options: [грошима, готівкою, картою, чеком]
+      explanation: "«Готівкою» is the standard phrase for cash payment."
+    - sentence: "У мене є резервація."
+      error: резервація
+      answer: бронювання
+      options: [резервація, бронювання, замовлення, покупка]
+      explanation: "«Бронювання» is the standard term for hotel booking."
+    - sentence: "Де тут вихід з номера?"
+      error: номера
+      answer: готелю
+      options: [номера, готелю, ліжка, душу]
+      explanation: "Usually you ask for the hotel exit."
+
+- type: translate
+  title: Hotel Phrases
+  instruction: Choose the correct translation.
+  items:
+    - source: "I have a reservation."
+      options:
+        - text: "У мене є бронювання."
+          correct: true
+        - text: "Я маю номер."
+          correct: false
+        - text: "Я хочу номер."
+          correct: false
+        - text: "Це мій готель."
+          correct: false
+    - source: "Is breakfast included?"
+      options:
+        - text: "Сніданок включено?"
+          correct: true
+        - text: "Де сніданок?"
+          correct: false
+        - text: "Скільки коштує сніданок?"
+          correct: false
+        - text: "Я хочу снідати."
+          correct: false
+    - source: "Can I see the room?"
+      options:
+        - text: "Можна подивитися номер?"
+          correct: true
+        - text: "Де номер?"
+          correct: false
+        - text: "Номер гарний?"
+          correct: false
+        - text: "Я живу тут."
+          correct: false
+    - source: "The air conditioner is broken."
+      options:
+        - text: "Кондиціонер не працює."
+          correct: true
+        - text: "Кондиціонер старий."
+          correct: false
+        - text: "Де кондиціонер?"
+          correct: false
+        - text: "Я хочу кондиціонер."
+          correct: false
+    - source: "Please clean my room."
+      options:
+        - text: "Приберіть, будь ласка, у номері."
+          correct: true
+        - text: "Не прибирайте."
+          correct: false
+        - text: "Де покоївка?"
+          correct: false
+        - text: "Номер брудний."
+          correct: false
+    - source: "I am checking out."
+      options:
+        - text: "Я виїжджаю."
+          correct: true
+        - text: "Я приїжджаю."
+          correct: false
+        - text: "Я живу."
+          correct: false
+        - text: "Я плачу."
+          correct: false

@@ -1,0 +1,60 @@
+module: 59-at-the-doctor
+level: A2
+version: '1.0'
+items:
+- lemma: симптом
+  translation: symptom
+  pos: noun
+  gender: m
+- lemma: діагноз
+  translation: diagnosis
+  pos: noun
+  gender: m
+- lemma: рецепт
+  translation: prescription
+  pos: noun
+  gender: m
+- lemma: приймати
+  translation: to take (medicine)
+  pos: verb
+- lemma: болить
+  translation: hurts (impersonal)
+  pos: verb
+- lemma: температура
+  translation: temperature/fever
+  pos: noun
+  gender: f
+- lemma: кашель
+  translation: cough
+  pos: noun
+  gender: m
+- lemma: нежить
+  translation: runny nose
+  pos: noun
+  gender: m
+- lemma: алергія
+  translation: allergy
+  pos: noun
+  gender: f
+- lemma: огляд
+  translation: examination
+  pos: noun
+  gender: m
+- lemma: аналіз
+  translation: test/analysis
+  pos: noun
+  gender: m
+- lemma: направлення
+  translation: referral
+  pos: noun
+  gender: n
+- lemma: лікарняний
+  translation: sick leave
+  pos: noun
+  gender: m
+- lemma: хворіти
+  translation: to be sick
+  pos: verb
+- lemma: одужати
+  translation: to recover
+  pos: verb

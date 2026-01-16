@@ -1,0 +1,29 @@
+module: a2-60
+title: At the Pharmacy
+subtitle: Buying Medicine
+version: '1.0'
+phase: A2.3
+pedagogy: PPP
+duration: 60
+transliteration: none
+tags:
+- vocabulary
+- pharmacy
+- medicine
+- shopping
+grammar:
+- asking for specific medicine
+- understanding instructions (dosage)
+- side effects vocabulary
+- polite transactions
+objectives:
+- Learner can ask for medicine by symptoms
+- Learner can understand dosage instructions
+- Learner can read medicine labels
+- Learner can discuss side effects
+vocabulary_count: 25
+slug: 60-at-the-pharmacy
+focus: vocabulary
+naturalness:
+  score: 10
+  status: PASS

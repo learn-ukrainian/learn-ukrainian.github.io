@@ -1,27 +1,29 @@
 module: a2-56
-title: 'Checkpoint: Full Grammar (Повна граматика)'
-subtitle: Confirm grammar readiness before practical scenarios
-version: '2.0'
-phase: A2.5
-focus: checkpoint
+title: Checkpoint — Full Grammar
+subtitle: A2 Mastery Review
+version: '1.0'
+phase: A2.3
 pedagogy: TTT
-duration: 90
+duration: 60
 transliteration: none
 tags:
 - checkpoint
-- assessment
+- review
+- vocabulary
 - grammar
-- comprehensive
 grammar:
-- all-cases
-- aspect-basics
-- complex-sentences
+- A2 vocabulary review
+- case system review
+- verb aspect review
+- communication skills
 objectives:
-- Learner can demonstrate A2 grammar mastery
-- Learner can apply all 7 cases correctly
-- Learner is ready for Phase A2.6 practical scenarios
+- Learner can integrate A2 vocabulary in conversation
+- Learner can use all grammatical cases correctly
+- Learner can navigate common daily situations
+- Learner can demonstrate A2 proficiency
 vocabulary_count: 25
 slug: 56-checkpoint-full-grammar
+focus: checkpoint
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

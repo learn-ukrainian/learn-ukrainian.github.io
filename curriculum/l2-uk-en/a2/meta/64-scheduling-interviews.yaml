@@ -1,27 +1,29 @@
-module: 64-scheduling-interviews
+module: a2-64
 title: Scheduling Interviews
-subtitle: Job Interviews and Preparation
+subtitle: Job Search and Interviews
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
+- work
 - interview
-- job
 - career
-- scheduling
 grammar:
-- 'Formal requests: Я хотів би домовитися про співбесіду'
-- 'Self-presentation: Я маю досвід у...'
-- 'Questions: Які обов язки...?'
+- interview vocabulary (співбесіда, резюме)
+- describing experience and skills
+- asking about job conditions
+- formal introduction
 objectives:
-- Learner can schedule a job interview
-- Learner can introduce themselves professionally
-- Learner can ask basic job-related questions
-vocabulary_count: 18
+- Learner can arrange a job interview
+- Learner can describe their professional background
+- Learner can ask about salary and duties
+- Learner can use formal language for business
+vocabulary_count: 25
 slug: 64-scheduling-interviews
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

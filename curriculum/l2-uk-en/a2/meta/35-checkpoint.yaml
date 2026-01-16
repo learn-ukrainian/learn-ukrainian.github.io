@@ -1,30 +1,29 @@
 module: a2-35
-title: Checkpoint - Complex Ideas
-subtitle: Review of Narratives, Logic, and Health
+title: Checkpoint
+subtitle: Complex Sentences & Health
 version: '1.0'
-phase: A2.3
-pedagogy: Consolidation
+phase: A2.2
+pedagogy: TTT
 duration: 60
 transliteration: none
 tags:
-- review
 - checkpoint
-- health
+- review
 - logic
+- health
 grammar:
-- sequence (потім, нарешті)
-- causal (тому що, бо)
-- concessive (хоча, проте)
-- purpose (щоб)
-- relative (який)
-- time clauses (коли, поки)
+- logical connectors review
+- relative clauses review
+- health vocabulary review
+- complex sentence structure
 objectives:
-- Learner can synthesize complex sentence structures
-- Learner can express cause, purpose, and concession accurately
-- Learner can use health-related vocabulary in dialogue
+- Learner can build complex arguments using logical connectors
+- Learner can use relative clauses to define and describe
+- Learner can navigate medical situations confidently
+- Learner can correct common errors in complex sentences
 vocabulary_count: 25
 slug: 35-checkpoint
 focus: checkpoint
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

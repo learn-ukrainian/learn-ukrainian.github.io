@@ -2,25 +2,26 @@
 
 ## Огляд
 
-**Готові до практики?** Let's warm up with transition exercises!
+**Готові до практики?** Давайте розігріємося!
 
-This module builds on the practical introduction and prepares you for the scenario-based modules ahead.
-You'll practice applying your grammar knowledge in guided exercises before diving into full scenarios.
+Цей модуль базується на практичному вступі та готує вас до сценарних модулів.
+Ви будете практикувати застосування граматичних знань у вправах перед тим, як перейти до повних сценаріїв.
 
-**Skills Focus:**
-- Applying grammar in context
-- Building practical vocabulary
-- Preparing for real-world interactions
-Now let's verify you can apply these **skills**.
+**Фокус навичок:**
+- Застосування граматики в контексті
+- Побудова практичного словника
+- Підготовка до реальних взаємодій
+
+Тепер давайте перевіримо, чи можете ви застосувати ці **навички**.
 Поїхали!
 
-In this final review, you'll demonstrate your proficiency in major skill areas. We will look at how you handle longer texts, real-life dialogues, and expressive writing.
+У цьому фінальному огляді ви продемонструєте свої знання в основних сферах. Ми розглянемо, як ви працюєте з довгими текстами, реальними діалогами та письмом.
 
-1. **Reading Comprehension** — Understanding longer authentic texts about Ukraine's geography, culture, and daily life.
-2. **Listening Comprehension** — Following complex dialogues where people discuss their professional business plans and personal life biographies.
-3. **Writing Skills** — Creating your own cohesive autobiography in Ukrainian using clinical grammar patterns and vocabulary acquired throughout A1-A2.
+1. **Читання** — Розуміння довгих автентичних текстів про географію, культуру та життя України.
+2. **Слухання** — Розуміння складних діалогів, де люди обговорюють професійні плани та особисте життя.
+3. **Письмо** — Створення власної автобіографії українською мовою з використанням граматичних конструкцій та слів рівнів А1-А2.
 
-## Skill 1: Reading Comprehension
+## Skill 1: Reading Comprehension (Розуміння прочитаного)
 
 ### Model: My Ukraine
 
@@ -75,7 +76,7 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 - Can you identify the main topic of the text?
 - Can you find specific details (names, places)?
 
-## Skill 2: Listening & Speaking
+## Skill 2: Listening & Speaking (Слухання та Говоріння)
 
 ### Model: Future Plans
 
@@ -94,15 +95,15 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 
 ### Practice: Roleplay
 
-**Can you invite a friend to an event?**
+**Чи можете ви запросити друга на подію?**
 
-Imagine you are planning a trip or a celebration. Use the following patterns:
+Уявіть, що ви плануєте подорож або свято. Використовуйте наступні фрази:
 
 - **Я запрошую тебе на...** (I invite you to...)
 - **Коли...** (When is...?)
 - **Я обов'язково прийду.** (I will definitely come.)
 
-**Scenario:** Ask your partner where they were last week and invite them to a coffee this Saturday.
+**Сценарій:** Запитайте партнера, де він був минулого тижня, і запросіть його на каву цієї суботи.
 
 > [!tip] 🗣️ Speaking Goal
 > Focus on your intonation in questions. In Ukrainian, questions often end with a rising tone on the key word.
@@ -112,19 +113,19 @@ Imagine you are planning a trip or a celebration. Use the following patterns:
 - Can you follow the flow of conversation?
 - Can you identify the relationship between speakers?
 
-## Skill 3: Writing Skills
+## Skill 3: Writing Skills (Навички Письма)
 
 ### Practice: My Autobiography
 
-Now it is your turn to showcase your writing skills. Write a short text about yourself (5-7 sentences). This is a comprehensive task where you should use the various grammatical structures and vocabulary words you have mastered throughout Level A1 and A2. Focus on using correct case endings for your profession and hobbies.
+Тепер ваша черга показати свої навички письма. Напишіть короткий текст про себе (5-7 речень). Це комплексне завдання. Використовуйте граматику та слова рівнів А1 та А2. Зосередьтеся на використанні правильних відмінків для професії та хобі.
 
-Please include the following information in your text:
+Будь ласка, включіть наступну інформацію у ваш текст:
 
-1. **Name and age** (e.g., _Мене звати... Мені... років_). Remember to use the Dative case for age!
-2. **Profession or Study** (e.g., _Я працюю..._ or _Я вчуся..._). Use the Instrumental case for your profession.
-3. **Hobbies and Interests** (e.g., _Я люблю..._). Use the Accusative case for the things you like.
-4. **Family and Relations** (e.g., _У мене є..._). Use the Nominative case for family members after «є».
-5. **Future Dreams and Goals** (e.g., _Я мрію про..._). Use the Locative case after «про» when describing what you dream about.
+1. **Ім'я та вік** (наприклад, _Мене звати... Мені... років_). Пам'ятайте про Давальний відмінок для віку!
+2. **Професія або навчання** (наприклад, _Я працюю..._ або _Я вчуся..._). Використовуйте Орудний відмінок для професії.
+3. **Хобі та інтереси** (наприклад, _Я люблю..._). Використовуйте Знахідний відмінок.
+4. **Сім'я** (наприклад, _У мене є..._). Використовуйте Називний відмінок після «є».
+5. **Мрії та цілі** (наприклад, _Я мрію про..._). Використовуйте Місцевий відмінок після «про».
 
 ### Model: Example
 
@@ -171,8 +172,8 @@ _Мене звати Джон. Мені 30 років. Я інженер. Я ж�
 
 ### Practice: The Future of Transport
 
-In this text, we explore the ambitious plans for Ukrainian infrastructure.
-Understanding technical texts is a key skill for B1.
+У цьому тексті ми розглянемо амбітні плани української інфраструктури.
+Розуміння технічних текстів — ключова навичка для рівня В1.
 
 Всі знають, що в Україні гарна залізниця.
 Поїзди їздять вчасно і коштують недорого.
@@ -184,9 +185,9 @@ Understanding technical texts is a key skill for B1.
 Люди зможуть жити біля моря і працювати в столиці.
 Це не фантастика, це план на 10 років.
 
-> [!note] **Did you understand?**
-> The text mentions «залізниця» (railway) and «літаки» (planes).
-> Notice how Future Tense is used: «будуть швидкі», «можна буде».
+> [!note] **Ви зрозуміли?**
+> Текст згадує «залізницю» та «літаки».
+> Зверніть увагу на використання майбутнього часу: «будуть швидкі», «можна буде».
 
 ### Practice: Future Plans Continued
 
@@ -221,19 +222,19 @@ Understanding technical texts is a key skill for B1.
 
 # Підсумок
 
-You have officially completed A2!
-You can:
+Ви офіційно завершили рівень А2!
+Ви вмієте:
 
-- Read texts about everyday life.
-- Understand conversations about plans and biography.
-- Write simple emails and stories.
-- Use basic grammar correctly.
+- Читати тексти про повсякденне життя.
+- Розуміти розмови про плани та біографію.
+- Писати прості листи та історії.
+- Правильно використовувати базову граматику.
 
-You are ready for **Level B1**.
-Success! (_Успіхів!_)
+Ви готові до **Рівня В1**.
+Успіхів!
 
 ---
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Щоб закріпити знання, спробуйте написати п'ять речень, використовуючи граматичні конструкції з цього модуля. Використовуйте слова зі списку, щоб практикувати нові слова в контексті!

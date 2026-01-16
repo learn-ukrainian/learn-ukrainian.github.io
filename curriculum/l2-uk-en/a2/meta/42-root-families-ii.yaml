@@ -1,25 +1,29 @@
 module: a2-42
 title: Root Families II
-subtitle: Motion and Perception Roots
-version: '2.0'
-phase: A2.4
+subtitle: Speaking and Hearing
+version: '1.0'
+phase: A2.3
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
-- word-formation
+- word formation
 - roots
+- vocabulary
 grammar:
-- perception roots
-- speaking roots
+- root мов-/говор- (speech)
+- root слух-/чу- (hearing)
+- root дум- (thought)
+- word families
 objectives:
-- Learner knows perception root families
-- Learner knows speaking root families
-- Learner can recognize word connections
+- Learner can identify words with roots -мов- and -говор-
+- Learner can identify words with roots -слух- and -чу-
+- Learner can identify words with the root -дум-
+- Learner can build new vocabulary using root knowledge
 vocabulary_count: 25
 slug: 42-root-families-ii
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

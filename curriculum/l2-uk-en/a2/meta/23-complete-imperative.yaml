@@ -1,6 +1,6 @@
 module: a2-23
-title: The Complete Imperative
-subtitle: Наказовий спосіб
+title: Complete Imperative
+subtitle: Let It Be! (3rd Person)
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
@@ -8,27 +8,22 @@ duration: 60
 transliteration: none
 tags:
 - grammar
+- verbs
 - imperative
-- mood
-- verb-forms
+- commands
 grammar:
-- 2nd person imperative formation
-- 1st person plural imperative (-мо forms)
-- 3rd person imperative with хай/nехай
-- irregular imperative forms (дай, будь, їж, візьми)
-- register differences (хай vs нехай)
+- 3rd person imperative (хай/нехай)
+- wishes and toasts
+- indirect commands
+- imperative review
 objectives:
-- Learner can form 2nd person imperatives from verb stems
-- Learner can form 1st person plural imperatives (let's...)
-- Learner can form 3rd person imperatives with хай/nехай
-- Learner understands register differences between хай and nехай
-- Learner can use common imperative expressions
+- Learner can form 3rd person commands using хай/нехай
+- Learner can make toasts and wishes
+- Learner can relay indirect commands
+- Learner can use the full range of imperative forms
+vocabulary_count: 25
 slug: 23-complete-imperative
-vocabulary_count: 20
 focus: grammar
 naturalness:
   score: 9
-  status: PASS
-naturalness:
-  score: 8
   status: PASS

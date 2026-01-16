@@ -1,27 +1,29 @@
-module: 70-a2-final-exam
+module: a2-70
 title: A2 Final Exam
-subtitle: Comprehensive A2 Assessment
+subtitle: Level Completion
 version: '1.0'
-phase: A2.7 Final Assessment
+phase: A2.4
 pedagogy: TTT
-focus: checkpoint
-duration: 90
+duration: 60
 transliteration: none
 tags:
 - exam
-- final
-- assessment
-- certification
+- checkpoint
+- comprehensive
+- mastery
 grammar:
-- 'Cumulative: All A2 grammar structures'
-- 'Cases: All 7 cases in context'
-- 'Practical: Real-world application'
+- comprehensive A2 grammar review
+- all cases mastery
+- verb aspect mastery
+- complex sentence structures
 objectives:
-- Learner demonstrates mastery of all A2 grammar
-- Learner demonstrates practical communication skills
-- Learner is ready to progress to B1
-vocabulary_count: 0
+- Learner can demonstrate A2 level proficiency
+- Learner can solve practical problems in Ukrainian
+- Learner can understand main points of complex texts
+- Learner is ready for B1 level
+vocabulary_count: 25
 slug: 70-a2-final-exam
+focus: exam
 naturalness:
   score: 10
   status: PASS

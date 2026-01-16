@@ -1,26 +1,29 @@
 module: a2-43
 title: Word Formation Mastery
-subtitle: Checkpoint & New Roots
+subtitle: Prefixes, Suffixes, Roots
 version: '1.0'
-phase: A2.4
-pedagogy: Review/Inquiry
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- checkpoint
+- grammar
+- word formation
 - roots
-- vocabulary
-- review
+- prefixes
 grammar:
-- root families (мов, слух, дум, рід)
-- review of prefixes and suffixes
+- prefix/suffix review
+- root identification practice
+- forming nouns from verbs
+- forming adjectives from nouns
 objectives:
-- Learner can express thoughts (dum), speech (mov), and hearing (slukh)
-- Learner can synthesize knowledge of prefixes, suffixes, and roots
-- Learner completes the Word Formation phase
-vocabulary_count: 48
+- Learner can analyze complex words into parts
+- Learner can identify the meaning of common prefixes and suffixes
+- Learner can create nouns and adjectives from roots
+- Learner can use context to guess the meaning of new words
+vocabulary_count: 25
 slug: 43-wf-mastery
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

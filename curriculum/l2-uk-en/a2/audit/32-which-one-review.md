@@ -1,10 +1,10 @@
 # Audit Report: 32-which-one.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: жіночий, займенник, середній, знахідний, множина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник, орудний, середній, жіночий, родовий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -26,8 +26,8 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 52.9% (target 50-65% (A2.2))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

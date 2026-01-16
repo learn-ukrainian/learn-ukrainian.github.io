@@ -1,18 +1,16 @@
 # Audit Report: 21-numerals-and-nouns.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, родовий, відмінок
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): вісім, дев'ять, двадцять, дванадцять, одинадцять...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): сім, десять, двадцять, вісім, дев'ять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1603/1000
@@ -22,14 +20,14 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 29/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 59.0% (target 50-65% (A2.2))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

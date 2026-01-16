@@ -1,26 +1,29 @@
 module: a2-49
-title: Work & Professions
-subtitle: Building a Career in Ukrainian
+title: Work and Professions
+subtitle: Jobs and Careers
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - work
 - professions
-- business
+- career
 grammar:
-- noun-gender-professions
+- instrumental with professions (працювати лікарем)
+- workplace vocabulary
+- describing duties
+- job interviews
 objectives:
-- Name common professions: лікар, вчитель, інженер
-- Describe workplaces: офіс, школа, лікарня
-- Discuss career and salary
-- Use verbs for work activities
+- Learner can name common professions
+- Learner can describe their job
+- Learner can talk about workplace activities
+- Learner can use instrumental case for jobs
+vocabulary_count: 25
 slug: 49-work-professions
-vocabulary_count: 42
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

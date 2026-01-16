@@ -1,6 +1,6 @@
 module: a2-06
 title: Being and Becoming
-subtitle: Professions and States with Instrumental
+subtitle: Professions and Instrumental Case
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
@@ -11,20 +11,19 @@ tags:
 - cases
 - instrumental
 - professions
-- бути
-- стати
 grammar:
-- instrumental with бути
-- instrumental with стати
-- instrumental with працювати
+- бути + instrumental
+- стати + instrumental
+- працювати + instrumental
+- past tense of бути
 objectives:
-- Learner can use instrumental to express profession with бути
-- Learner can use instrumental to describe becoming something with стати
-- Learner can use instrumental to express working as with працювати
-- Learner can distinguish present from past/future (бути + Instr)
-vocabulary_count: 27
+- Learner can describe professions using instrumental case
+- Learner can use verbs бути and стати with correct case government
+- Learner can describe past roles and future aspirations
+- Learner can distinguish between nominative (identity) and instrumental (role/function)
+vocabulary_count: 25
 slug: 06-being-and-becoming
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

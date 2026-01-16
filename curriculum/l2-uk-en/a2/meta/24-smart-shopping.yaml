@@ -1,6 +1,6 @@
 module: a2-24
 title: Smart Shopping
-subtitle: Comparing Products and Making Decisions
+subtitle: Comparisons and Choices
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
@@ -8,21 +8,22 @@ duration: 60
 transliteration: none
 tags:
 - vocabulary
-- functional
 - shopping
 - comparison
+- negotiation
 grammar:
-- comparison in practice
+- comparison in context
+- asking for advice
 - negotiation phrases
-- shopping vocabulary
+- decision making
 objectives:
-- Learner can compare products
-- Learner can negotiate politely
-- Learner can express requirements
-- Learner can make purchase decisions
+- Learner can compare products using comparative adjectives
+- Learner can ask for recommendations and advice
+- Learner can negotiate prices and ask for discounts
+- Learner can express purchase decisions politely
 vocabulary_count: 25
 slug: 24-smart-shopping
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

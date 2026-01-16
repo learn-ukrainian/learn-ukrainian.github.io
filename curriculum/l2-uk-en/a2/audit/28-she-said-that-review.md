@@ -1,21 +1,19 @@
 # Audit Report: 28-she-said-that.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): скаржитися, розповідати, відповідати, обіцяти, переконувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): запитати, коментувати, попередити, хвалити, переконувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1836/1000
+- **Words:** ✅ 1842/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -27,9 +25,9 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.6% (target 50-65% (A2.2))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Immersion:** 🇺🇦 50.2% (target 50-65% (A2.2))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,7 +35,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 118 | Included in Core |
 | **Presentation** | ✅ | 364 | Included in Core |
-| **Practice** | ⚪️ | 303 | Skipped |
+| **Practice** | ⚪️ | 306 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **«Plitky» (Gossip)** | ⚪️ | 67 | Skipped |
 | **4. Nuance of Tone** | ⚪️ | 98 | Skipped |
@@ -49,5 +47,5 @@
 | **The Broken Phone** | ⚪️ | 51 | Skipped |
 | **Analysis** | ⚪️ | 24 | Skipped |
 | **Story Time: Новини в Офісі** | ✅ | 190 | Included in Core |
-| **Підсумок** | ✅ | 44 | Included in Core |
+| **Підсумок** | ✅ | 47 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

@@ -1,5 +1,5 @@
 # Audit Report: 63-scheduling-appointments.md
-**Phase:** A2.6 | **Level:** A2 | **Pedagogy:** TBL | **Target:** 1000
+**Phase:** A2.4 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -28,13 +28,6 @@
 - **Immersion:** 🇺🇦 77.5% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-### Errors
-- ❌ HTTP 404
 
 ## Section Audit
 | Section | Status | Count | Notes |

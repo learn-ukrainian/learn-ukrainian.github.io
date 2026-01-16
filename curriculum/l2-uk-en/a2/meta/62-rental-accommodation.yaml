@@ -1,27 +1,29 @@
-module: 62-rental-accommodation
+module: a2-62
 title: Rental Accommodation
-subtitle: Renting Apartments and Contracts
+subtitle: Finding an Apartment
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - rental
 - apartment
-- contract
 - housing
 grammar:
-- 'Inquiries: Скільки коштує оренда?'
-- 'Conditions: У вартість входить...?'
-- 'Contract terms: Договір на рік'
+- rental vocabulary (оренда, власник)
+- discussing utilities (комунальні)
+- describing apartment features
+- signing a contract
 objectives:
-- Learner can inquire about rental properties
-- Learner can understand basic contract terms
-- Learner can negotiate rental conditions
-vocabulary_count: 15
+- Learner can understand rental ads
+- Learner can ask about apartment details
+- Learner can discuss lease terms
+- Learner can talk about utilities and furniture
+vocabulary_count: 25
 slug: 62-rental-accommodation
+focus: vocabulary
 naturalness:
   score: 9
   status: PASS

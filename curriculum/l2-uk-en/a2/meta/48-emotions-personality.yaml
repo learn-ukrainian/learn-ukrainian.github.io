@@ -1,8 +1,8 @@
 module: a2-48
-title: Emotions & Personality
-subtitle: Describing feelings and character traits
+title: Emotions and Personality
+subtitle: Describing People
 version: '1.0'
-phase: A2
+phase: A2.3
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -10,17 +10,20 @@ tags:
 - vocabulary
 - emotions
 - personality
-- adjectives
+- description
 grammar:
-- adjective-agreement
-- instrumental-with-бути
+- adjectives of personality (добрий, злий)
+- describing feelings (мені сумно)
+- characterizing people
+- emotions vocabulary
 objectives:
-- Learner can describe basic emotions in Ukrainian
-- Learner can describe personality traits using appropriate adjectives
-- Learner can express emotional states using бути + instrumental
-vocabulary_count: 30
+- Learner can describe personality traits
+- Learner can describe emotional states
+- Learner can characterize people
+- Learner can express feelings
+vocabulary_count: 25
 slug: 48-emotions-personality
-focus: grammar
+focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

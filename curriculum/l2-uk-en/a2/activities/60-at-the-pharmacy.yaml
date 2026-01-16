@@ -1,0 +1,406 @@
+- type: match-up
+  title: Pharmacy Vocabulary
+  instruction: Match the Ukrainian medical terms to their English meanings.
+  pairs:
+    - left: аптека
+      right: pharmacy
+    - left: ліки
+      right: medicine
+    - left: таблетка
+      right: tablet / pill
+    - left: сироп
+      right: syrup
+    - left: мазь
+      right: ointment
+    - left: краплі
+      right: drops
+    - left: рецепт
+      right: prescription
+    - left: дозування
+      right: dosage
+    - left: протипоказання
+      right: contraindications
+    - left: побічний ефект
+      right: side effect
+    - left: фармацевт
+      right: pharmacist
+    - left: вітаміни
+      right: vitamins
+
+- type: fill-in
+  title: Buying Medicine
+  instruction: Complete the dialogue with the correct words.
+  items:
+    - sentence: «Добрий день! У вас є щось _____ голови?»
+      answer: від
+      options: [від, для, до, за]
+    - sentence: «Так, ось хороші _____.»
+      answer: таблетки
+      options: [таблетки, сиропи, мазі, краплі]
+    - sentence: «Скільки _____ коштують?»
+      answer: вони
+      options: [вони, вона, воно, він]
+    - sentence: «Сто п'ятдесят _____.»
+      answer: гривень
+      options: [гривень, доларів, євро, центів]
+    - sentence: «Це _____ чи без?»
+      answer: рецептом
+      options: [рецептом, квитком, чеком, паспортом]
+    - sentence: «Це без рецепта. _____ по одній таблетці.»
+      answer: Приймайте
+      options: [Приймайте, Їжте, Купуйте, Продавайте]
+    - sentence: «Вам потрібен _____?»
+      answer: пакет
+      options: [пакет, рецепт, лікар, стіл]
+    - sentence: «Ні, дякую. Можна _____ карткою?»
+      answer: розрахуватися
+      options: [розрахуватися, подивитися, прийти, піти]
+    - sentence: «Так, будь ласка, _____ картку.»
+      answer: прикладіть
+      options: [прикладіть, покажіть, дайте, візьміть]
+    - sentence: «Дякую. До _____!»
+      answer: побачення
+      options: [побачення, зустрічі, ранку, вечора]
+    - sentence: «_____! (Get well!)»
+      answer: Одужуйте
+      options: [Одужуйте, Хворійте, Працюйте, Спіть]
+    - sentence: «У мене _____ на мед.»
+      answer: алергія
+      options: [алергія, енергія, історія, віза]
+
+- type: quiz
+  title: Medicine Knowledge
+  instruction: Choose the correct answer.
+  items:
+    - question: «Що таке «сироп» і як він виглядає?»
+      options:
+        - text: «Рідкі солодкі ліки.»
+          correct: true
+        - text: «Тверді білі ліки.»
+          correct: false
+        - text: «Крем для рук.»
+          correct: false
+        - text: «Вода з газом.»
+          correct: false
+    - question: «Скажіть, будь ласка, що ми робимо з маззю?»
+      options:
+        - text: «Мастимо шкіру.»
+          correct: true
+        - text: «П'ємо з чаєм.»
+          correct: false
+        - text: «Їмо ложкою.»
+          correct: false
+        - text: «Капаємо в очі.»
+          correct: false
+    - question: «Куди ми зазвичай капаємо медичні краплі, коли хворіємо?»
+      options:
+        - text: «В очі або ніс.»
+          correct: true
+        - text: «На хліб.»
+          correct: false
+        - text: «На руку.»
+          correct: false
+        - text: «У воду.»
+          correct: false
+    - question: «Що означає слово «протипоказання» в інструкції до ліків?»
+      options:
+        - text: «Кому не можна приймати ліки.»
+          correct: true
+        - text: «Коли треба приймати ліки.»
+          correct: false
+        - text: «Скільки коштують ліки.»
+          correct: false
+        - text: «Де купити ліки.»
+          correct: false
+    - question: «Що означає слово «дозування» на упаковці ліків?»
+      options:
+        - text: «Скільки ліків приймати.»
+          correct: true
+        - text: «Якого кольору ліки.»
+          correct: false
+        - text: «Хто продав ліки.»
+          correct: false
+        - text: «Коли відкрита аптека.»
+          correct: false
+    - question: «Ви хочете купити антибіотик. Що вам обов'язково потрібно?»
+      options:
+        - text: «Електронний рецепт.»
+          correct: true
+        - text: «Паспорт.»
+          correct: false
+        - text: «Квиток.»
+          correct: false
+        - text: «Фотографія.»
+          correct: false
+    - question: «Що таке «побічний ефект» після прийому ліків?»
+      options:
+        - text: «Небажана реакція організму.»
+          correct: true
+        - text: «Хороший результат.»
+          correct: false
+        - text: «Швидке одужання.»
+          correct: false
+        - text: «Низька ціна.»
+          correct: false
+    - question: «Як називається людина, яка працює в аптеці?»
+      options:
+        - text: «Фармацевт.»
+          correct: true
+        - text: «Хірург.»
+          correct: false
+        - text: «Вчитель.»
+          correct: false
+        - text: «Водій.»
+          correct: false
+
+- type: group-sort
+  title: Medicine Forms
+  instruction: Sort into Liquid or Solid/Semi-solid forms.
+  groups:
+    - name: Рідкі (Liquid)
+      items:
+        - сироп
+        - краплі
+        - спрей
+        - мікстура
+        - розчин
+        - вода для ін'єкцій
+    - name: Тверді / М'які (Solid/Soft)
+      items:
+        - таблетка
+        - капсула
+        - мазь
+        - крем
+        - гель
+        - порошок
+
+- type: true-false
+  title: Pharmacy Facts
+  instruction: True or False regarding Ukrainian pharmacies.
+  items:
+    - statement: «Зелений хрест — це символ аптеки.»
+      correct: true
+      explanation: «Так, це стандартний знак.»
+    - statement: «В аптеці можна купити хліб.»
+      correct: false
+      explanation: «Ні, в аптеці тільки ліки та косметика.»
+    - statement: «Антибіотики продають без рецепта.»
+      correct: false
+      explanation: «Ні, потрібен рецепт лікаря.»
+    - statement: «Фармацевт може порадити прості ліки.»
+      correct: true
+      explanation: «Так, вони допомагають з вибором.»
+    - statement: «Сироп — це завжди гіркі ліки.»
+      correct: false
+      explanation: «Ні, сиропи часто солодкі.»
+    - statement: ««24/7» означає, що аптека працює цілодобово.»
+      correct: true
+      explanation: «Так, вдень і вночі.»
+    - statement: «Ліки не мають терміну придатності.»
+      correct: false
+      explanation: «Всі ліки мають дату, до якої їх можна вживати.»
+    - statement: «Вітаміни можна купити без рецепта.»
+      correct: true
+      explanation: «Так, вітаміни у вільному доступі.»
+  instruction: Визначте, чи твердження правильне.
+
+- type: unjumble
+  title: Pharmacy Sentences
+  instruction: Put the words in order.
+  items:
+    - words: ["У", "вас", "є", "щось", "від", "сильного", "кашлю", "?"]
+      answer: «У вас є щось від сильного кашлю?»
+    - words: ["Дайте", "будь", "ласка", "одну", "велику", "упаковку", "вітамінів"]
+      answer: «Дайте будь ласка одну велику упаковку вітамінів.»
+    - words: ["Як", "правильно", "приймати", "ці", "ліки", "вдома", "?"]
+      answer: «Як правильно приймати ці ліки вдома?»
+    - words: ["Цей", "новий", "препарат", "має", "якісь", "побічні", "ефекти", "?"]
+      answer: «Цей новий препарат має якісь побічні ефекти?»
+    - words: ["Я", "хочу", "купити", "мазь", "від", "болю", "в", "спині"]
+      answer: «Я хочу купити мазь від болю в спині.»
+    - words: ["Скільки", "разів", "на", "день", "треба", "пити", "сироп", "?"]
+      answer: «Скільки разів на день треба пити сироп?»
+    - words: ["Ці", "ліки", "обов'язково", "треба", "зберігати", "в", "холодильнику"]
+      answer: «Ці ліки обов'язково треба зберігати в холодильнику.»
+    - words: ["На", "жаль", "у", "мене", "немає", "електронного", "рецепта"]
+      answer: «На жаль у мене немає електронного рецепта.»
+
+- type: select
+  title: Choose the Situation
+  instruction: Select the best phrase for the situation.
+  items:
+    - question: «У вас болить горло. Що ви скажете фармацевту?»
+      options:
+        - text: «Дайте щось від болю в горлі.»
+          correct: true
+        - text: «Дайте щось від живота.»
+          correct: false
+        - text: «Я хочу їсти.»
+          correct: false
+        - text: «Де тут метро?»
+          correct: false
+    - question: «Ви хочете дізнатися ціну. Що ви спитаєте?»
+      options:
+        - text: «Скільки це коштує?»
+          correct: true
+        - text: «Скільки годин?»
+          correct: false
+        - text: «Яка погода?»
+          correct: false
+        - text: «Хто це?»
+          correct: false
+    - question: «Вам потрібен чек. Що ви скажете?»
+      options:
+        - text: «Дайте, будь ласка, чек.»
+          correct: true
+        - text: «Дайте рецепт.»
+          correct: false
+        - text: «Дайте пакет.»
+          correct: false
+        - text: «Дайте води.»
+          correct: false
+    - question: '«Фармацевт питає: «Пакет потрібен?» Ви не хочете.»'
+      options:
+        - text: «Ні, дякую.»
+          correct: true
+        - text: «Так, будь ласка.»
+          correct: false
+        - text: «Я не знаю.»
+          correct: false
+        - text: «До побачення.»
+          correct: false
+    - question: «Ви не зрозуміли, як пити ліки. Ви питаєте:»
+      options:
+        - text: «Як це приймати?»
+          correct: true
+        - text: «Як це купити?»
+          correct: false
+        - text: «Як це продати?»
+          correct: false
+        - text: «Як це зробити?»
+          correct: false
+    - question: «Вам потрібні ліки для дитини. Ви кажете:»
+      options:
+        - text: «Це для дитини.»
+          correct: true
+        - text: «Це для мене.»
+          correct: false
+        - text: «Це для дідуся.»
+          correct: false
+        - text: «Це для кішки.»
+          correct: false
+
+- type: cloze
+  title: Medicine Instruction
+  passage: "Інструкція: Цей препарат {потрібно|хоче|може}_ приймати після {їжі|сну|роботи}_. Дорослим по одній {таблетці|мазі|краплі}_ три рази на {день|рік|ніч}_. Дітям цей препарат {протипоказаний|дозволений|потрібен}_. Не перевищуйте {дозу|ціну|вагу}_. Якщо виникне алергія, припиніть {прийом|продаж|купівлю}_ і зверніться до {лікаря|повара|водія}_. Термін придатності — два {роки|дні|тижні}_. Зберігати в сухому {місці|лісі|парку}_. Бережіть від {дітей|друзів|сусідів}_. Ціна {доступна|висока|низька}_."
+  instruction: Заповніть пропуски в інструкції.
+
+- type: error-correction
+  title: Grammar Mistakes
+  instruction: Find the error in the sentence.
+  items:
+    - sentence: "У мене болить вуха."
+      error: болить
+      answer: болять
+      options: [болить, болять, хворіють, лікують]
+      explanation: "«Вуха» is plural, so use «болять»."
+    - sentence: "Дайте таблетки для голова."
+      error: для голова
+      answer: від голови
+      options: [для голова, від голови, з голови, у голови]
+      explanation: "Medicine *for* something bad uses «від» + Genitive."
+    - sentence: "Я хочу купити сироп від кашлем."
+      error: кашлем
+      answer: кашлю
+      options: [кашлем, кашлю, кашель, кашля]
+      explanation: "«Від» requires Genitive case: кашлю."
+    - sentence: "Я приймаю ліки в день."
+      error: в день
+      answer: на день
+      options: [в день, на день, у день, про день]
+      explanation: "Times per day is «на день»."
+    - sentence: "Цей мазь дуже добра."
+      error: Цей
+      answer: Ця
+      options: [Цей, Ця, Це, Ці]
+      explanation: "«Мазь» is feminine, so «Ця»."
+    - sentence: "У мене є рецепт на антибіотик."
+      error: none
+      answer: ✓
+      options: [рецепт, квиток, паспорт, чек]
+      explanation: "This sentence is correct."
+    - sentence: "Ви маєте алергію на котів?"
+      error: none
+      answer: ✓
+      options: [алергію, енергію, симпатію, апатію]
+      explanation: "Correct sentence."
+    - sentence: "Фармацевт продає ліку."
+      error: ліку
+      answer: ліки
+      options: [ліку, ліки, ліків, лікам]
+      explanation: "Accusative plural of «ліки» is «ліки» (inanimate/plural object)."
+
+- type: translate
+  title: Pharmacy Translation
+  instruction: Choose the correct translation.
+  items:
+    - source: "Do you have something for a cold?"
+      options:
+        - text: "У вас є щось від застуди?"
+          correct: true
+        - text: "У вас є щось для застуди?"
+          correct: false
+        - text: "Ви любите застуду?"
+          correct: false
+        - text: "Де застуда?"
+          correct: false
+    - source: "I need painkillers."
+      options:
+        - text: "Мені потрібне знеболювальне (від болю)."
+          correct: true
+        - text: "Я хочу боліти."
+          correct: false
+        - text: "Мені потрібен біль."
+          correct: false
+        - text: "Я люблю біль."
+          correct: false
+    - source: "How much is this syrup?"
+      options:
+        - text: "Скільки коштує цей сироп?"
+          correct: true
+        - text: "Який цей сироп?"
+          correct: false
+        - text: "Де цей сироп?"
+          correct: false
+        - text: "Хто цей сироп?"
+          correct: false
+    - source: "Take after meals."
+      options:
+        - text: "Приймати після їжі."
+          correct: true
+        - text: "Приймати до їжі."
+          correct: false
+        - text: "Приймати замість їжі."
+          correct: false
+        - text: "Не приймати їжу."
+          correct: false
+    - source: "Side effects."
+      options:
+        - text: "Побічні ефекти."
+          correct: true
+        - text: "Головні ефекти."
+          correct: false
+        - text: "Добрі ефекти."
+          correct: false
+        - text: "Немає ефектів."
+          correct: false
+    - source: "Keep out of reach of children."
+      options:
+        - text: "Зберігати в недоступному для дітей місці."
+          correct: true
+        - text: "Давати дітям."
+          correct: false
+        - text: "Грати з дітьми."
+          correct: false
+        - text: "Любити дітей."
+          correct: false

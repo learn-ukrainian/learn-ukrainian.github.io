@@ -1,21 +1,19 @@
 # Audit Report: 20-preferences-and-choices.md
-**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 0/10 (PENDING)
-**Overall Status:** ❌ FAIL
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, давальний, відмінок
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): віддавати, комфортніше, вибирати, швидше, дешевше...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): віддавати, дешевше, подобатися, краще, зручніше...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1519/1000
+- **Words:** ✅ 1520/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -27,15 +25,15 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.1))
-- **Grammar:** ⏳ Pending validation
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Immersion:** 🇺🇦 51.0% (target 50-65% (A2.1))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |
-| **Presentation** | ✅ | 288 | Included in Core |
+| **Presentation** | ✅ | 289 | Included in Core |
 | **Practice** | ⚪️ | 77 | Skipped |
 | **Expressing Preferences** | ⚪️ | 12 | Skipped |
 | **1. Мені більше подобається X (ніж Y)** | ⚪️ | 145 | Skipped |

@@ -1,29 +1,29 @@
 module: a2-21
-title: Numerals & Nouns
-subtitle: 'One, Two, Many: The Agreement Puzzle'
+title: Numerals and Nouns
+subtitle: Counting Things Correctly
 version: '1.0'
-phase: A2.3
+phase: A2.2
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- grammar
 - numerals
 - nouns
 - agreement
-- grammar
 grammar:
-- numeral-noun agreement (1, 2-4, 5+)
-- case requirements for numerals
+- numerals 1, 2-4, 5+
+- genitive singular with 2-4
+- genitive plural with 5+
+- noun agreement zones
 objectives:
-- Learner can use nouns correctly after 1, 2-4, and 5+
-- Learner can count objects using correct forms
+- Learner can use correct noun forms with numerals 1, 2-4, and 5+
+- Learner can identify agreement zones for compound numbers
 - Learner can use numerals in shopping contexts
-vocabulary_count: 30
+- Learner can count years and age
+vocabulary_count: 25
 slug: 21-numerals-and-nouns
 focus: grammar
 naturalness:
-  score: 8
-  status: PASS
-naturalness:
-  score: 8
+  score: 9
   status: PASS

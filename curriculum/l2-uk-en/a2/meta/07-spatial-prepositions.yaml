@@ -1,6 +1,6 @@
 module: a2-07
 title: Spatial Prepositions
-subtitle: Location, Motion, and Case Combinations
+subtitle: Location and Motion
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
@@ -8,22 +8,22 @@ duration: 60
 transliteration: none
 tags:
 - grammar
-- prepositions
 - cases
-- spatial
+- prepositions
+- location
 grammar:
-- preposition + case combinations
-- motion vs. location distinction
-- genitive prepositions
-- instrumental prepositions
+- prepositions of location
+- prepositions of motion
+- в/на + locative vs accusative
+- під/за/над + instrumental
 objectives:
-- Learner can use prepositions with correct cases
-- Learner can distinguish motion vs. location contexts
-- Learner can form sentences with common preposition + case combinations
-- Learner can understand spatial relationships in Ukrainian
-vocabulary_count: 30
+- Learner can use prepositions to describe location
+- Learner can use prepositions to describe motion
+- Learner can distinguish between location (locative/instrumental) and motion (accusative)
+- Learner can ask for and give directions
+vocabulary_count: 25
 slug: 07-spatial-prepositions
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

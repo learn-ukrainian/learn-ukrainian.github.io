@@ -1,25 +1,29 @@
 module: a2-17
-title: 'Possessive: Свій vs Його'
-subtitle: My Own vs His/Her/Their
+title: Possessive Sviy
+subtitle: The Reflexive Possessive Pronoun
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- possessives
-- pronouns
 - grammar
+- pronouns
+- possessive
+- reflexive
 grammar:
-- reflexive possessive свій
-- contrast with його/її/їхній
+- свій vs мій/твій/його
+- declension of свій
+- subject-object agreement
+- avoiding ambiguity
 objectives:
-- Learner can distinguish свій from його/її/їхній
-- Learner can use свій when possessor is the subject
-- Learner can decline свій correctly
+- Learner can correctly use the reflexive possessive pronoun 'свій'
+- Learner can distinguish between 'свій' and other possessives
+- Learner can avoid ambiguity when referring to the subject's possession
+- Learner can decline 'свій' in common cases
 vocabulary_count: 25
 slug: 17-possessive-sviy
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

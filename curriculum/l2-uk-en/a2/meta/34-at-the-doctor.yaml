@@ -1,27 +1,29 @@
 module: a2-34
-title: At the Doctor's
-subtitle: Health & Medicine
+title: At the Doctor
+subtitle: Health and Medical Vocabulary
 version: '1.0'
-phase: A2.3
-pedagogy: Expressive
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- medicine
+- vocabulary
 - health
-- symptoms
-- functional
+- medicine
+- body parts
 grammar:
-- expression of pain (болить + Nom)
-- medical imperative (приймайте, лежіть)
-- symptoms description
+- describing pain (у мене болит...)
+- giving advice (вам треба...)
+- medical terminology
+- polite requests to doctors
 objectives:
-- Learner can describe symptoms
-- Learner can understand doctor's instructions
-- Learner can buy medicine
-vocabulary_count: 30
+- Learner can describe symptoms and pain
+- Learner can make a doctor's appointment
+- Learner can understand medical advice and prescriptions
+- Learner can buy medicine at a pharmacy
+vocabulary_count: 25
 slug: 34-at-the-doctor
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

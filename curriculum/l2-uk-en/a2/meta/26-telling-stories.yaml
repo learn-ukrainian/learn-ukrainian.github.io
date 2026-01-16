@@ -1,26 +1,29 @@
 module: a2-26
 title: Telling Stories
-subtitle: First, Then, Finally
+subtitle: Sequencing Events in Narrative
 version: '1.0'
-phase: A2.3
-pedagogy: Narrative Arc
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - storytelling
 - sequence
-- narration
+- connectors
 grammar:
-- sequence connectors
-- narrative structure
-- time markers
+- sequencing words (спочатку, потім, нарешті)
+- time markers (раптом, одного разу)
+- narrative tenses
+- structuring a story
 objectives:
-- Learner can sequence events logically
-- Learner can tell a simple story about the past
-- Learner can use connectors like 'suddenly' and 'finally'
+- Learner can sequence events using connectors
+- Learner can tell a simple story with a beginning, middle, and end
+- Learner can describe unexpected events
+- Learner can use time markers to structure narrative
 vocabulary_count: 25
 slug: 26-telling-stories
-focus: grammar
+focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

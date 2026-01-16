@@ -18,7 +18,7 @@
 **Average Score Improvement:** 4.0/5 → 5.0/5 (↑ 1.0)
 
 **Total Fixes Applied:** ~120
-- Category 1 (Structure): 32 fixes (Removed legacy sections, added headers)
+- Category 1 (Structure): 32 fixes (Removed legacy sections, added headers, restored narrative)
 - Category 2 (Language): 64 fixes (Added IPA, fixed Russianisms, fixed quotes)
 - Category 3 (Pedagogy): 8 fixes (Simplified A1 instructions)
 - Category 5 (Activities): 16 fixes (Fixed YAML errors, mixed language items)

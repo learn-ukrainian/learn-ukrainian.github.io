@@ -1,26 +1,27 @@
 module: a2-14
-title: Future Plans & Promises
-subtitle: Perfective Future Tense
+title: Future Plans and Promises
+subtitle: Simple Future vs. Compound Future
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
+- verbs
 - aspect
-- future-tense
-- perfective
+- future tense
 grammar:
-- perfective future tense
-- process vs completion in future
-- promise and intention
+- imperfective future (буду + infinitive)
+- perfective future (conjugated)
+- promises vs plans
+- duration in future
 objectives:
-- Learner can form perfective future
-- Learner can form imperfective future
-- Learner understands when to use each
-- Learner can make promises and express intentions
-vocabulary_count: 20
+- Learner can form the compound future tense (imperfective)
+- Learner can form the simple future tense (perfective)
+- Learner can distinguish between future process and future result
+- Learner can make promises and describe plans
+vocabulary_count: 25
 slug: 14-future-plans-and-promises
 focus: grammar
 naturalness:

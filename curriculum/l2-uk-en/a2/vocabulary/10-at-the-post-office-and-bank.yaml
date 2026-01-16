@@ -2,10 +2,59 @@ module: 10-at-the-post-office-and-bank
 level: A2
 version: '2.0'
 items:
-- lemma: автоматично
-  ipa: ɐu̯tomɐˈtɪt͡ʃno
-  translation: automatically
-  pos: adv
+- lemma: адреса
+  ipa: ɐˈdrɛsɐ
+  translation: address
+  pos: noun
+  gender: f
+- lemma: відсоток
+  ipa: ʋidˈsɔtok
+  translation: percentage; interest
+  pos: noun
+  gender: m
+- lemma: посилка
+  ipa: poˈsɪlkɐ
+  translation: package; parcel
+  pos: noun
+  gender: f
+- lemma: гроші
+  ipa: ˈɦrɔʃi
+  translation: money
+  pos: noun
+  gender: m
+- lemma: знімати
+  ipa: zniˈmɑte
+  translation: to withdraw (imperfective)
+  pos: verb
+- lemma: зняти
+  ipa: ˈznʲɑte
+  translation: to withdraw (perfective)
+  pos: verb
+- lemma: лист
+  ipa: lɪst
+  translation: letter
+  pos: noun
+  gender: m
+- lemma: конверт
+  ipa: konˈʋɛrt
+  translation: envelope
+  pos: noun
+  gender: m
+- lemma: курс
+  ipa: kurs
+  translation: exchange rate; course
+  pos: noun
+  gender: m
+- lemma: долар
+  ipa: ˈdɔlɐr
+  translation: dollar
+  pos: noun
+  gender: m
+- lemma: гривня
+  ipa: ˈɦrɪu̯nʲɐ
+  translation: hryvnia
+  pos: noun
+  gender: f
 - lemma: баланс
   ipa: bɐˈlɑns
   translation: balance
@@ -47,9 +96,9 @@ items:
   ipa: hoˈtɔʋo
   translation: ready; done
   pos: adv
-- lemma: двість
-  ipa: dvisʲtʲ
-  translation: two hundred (typo? двісті)
+- lemma: двісті
+  ipa: ˈdvisʲtʲi
+  translation: two hundred
   pos: other
 - lemma: ефективно
   ipa: efekˈtɪu̯no
@@ -64,27 +113,23 @@ items:
   ipa: zɐˈkrɪte
   translation: to close
   pos: verb
-- lemma: звазти
-  ipa: zʋɐʒte
-  translation: to weigh (typo? зважити)
+- lemma: зважити
+  ipa: ˈzʋɑʒɪte
+  translation: to weigh
   pos: verb
 - lemma: звичайний
   ipa: zʋɪˈt͡ʃɑi̯nei̯
   translation: ordinary; normal
   pos: adj
   gender: m
-- lemma: зняти
-  ipa: ˈznʲɑte
-  translation: to withdraw; to remove
-  pos: verb
 - lemma: квитанція
   ipa: kvɪˈtɑnt͡sʲijɐ
   translation: receipt
   pos: noun
   gender: f
-- lemma: контексть
+- lemma: контекст
   ipa: konˈtɛkst
-  translation: context (typo? контекст)
+  translation: context
   pos: noun
   gender: m
 - lemma: кредит
@@ -97,7 +142,7 @@ items:
   translation: purchase
   pos: noun
   gender: f
-- lemma: лексик
+- lemma: лексика
   ipa: ˈlɛksɪkɐ
   translation: vocabulary
   pos: noun
@@ -112,7 +157,7 @@ items:
   translation: method
   pos: noun
   gender: m
-- lemma: німеччина
+- lemma: Німеччина
   ipa: nimeˈt͡ʃːɪnɐ
   translation: Germany
   pos: propn
@@ -142,12 +187,7 @@ items:
   pos: other
 - lemma: переказ
   ipa: pereˈkɑz
-  translation: transfer; retelling
-  pos: noun
-  gender: m
-- lemma: переказа
-  ipa: pereˈkɑzɐ
-  translation: transfer (genitive?)
+  translation: transfer
   pos: noun
   gender: m
 - lemma: переказати
@@ -173,9 +213,9 @@ items:
   translation: origin
   pos: noun
   gender: n
-- lemma: прохань
-  ipa: proˈxɑnʲ
-  translation: request (genitive pl?)
+- lemma: прохання
+  ipa: proˈxɑnʲːɐ
+  translation: request
   pos: noun
   gender: n
 - lemma: рекомендований

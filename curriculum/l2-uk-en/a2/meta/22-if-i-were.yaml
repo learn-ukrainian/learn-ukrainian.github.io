@@ -1,6 +1,6 @@
 module: a2-22
-title: If I Were...
-subtitle: Conditional Mood
+title: If I Were
+subtitle: The Conditional Mood
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
@@ -8,23 +8,22 @@ duration: 60
 transliteration: none
 tags:
 - grammar
+- verbs
 - conditional
-- hypothetical
+- dreams
 grammar:
-- conditional mood formation
-- real vs unreal conditions
-- якби and якщо
+- conditional mood formation (б/би)
+- real condition (якщо)
+- unreal condition (якби)
+- polite requests (я б хотів)
 objectives:
-- Learner can form conditional sentences
-- Learner understands real vs unreal conditions
-- Learner can express wishes and hypotheticals
-- Learner can use якби correctly
+- Learner can form the conditional mood using the particle б/би
+- Learner can distinguish between real (якщо) and unreal (якби) conditions
+- Learner can express wishes and dreams
+- Learner can make polite requests using the conditional
 vocabulary_count: 25
 slug: 22-if-i-were
 focus: grammar
 naturalness:
-  score: 8
-  status: PASS
-naturalness:
-  score: 8
+  score: 9
   status: PASS

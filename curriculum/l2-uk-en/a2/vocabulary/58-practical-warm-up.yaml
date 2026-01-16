@@ -1,4 +1,4 @@
-module: 58-final-review
+module: 58-practical-warm-up
 level: A2
 version: '2.0'
 items:
@@ -51,9 +51,9 @@ items:
   translation: greeting
   pos: noun
   gender: n
-- lemma: говерло
-  ipa: /hoˈvɛrlo/
-  translation: Hoverla (voc/typo)
+- lemma: говерла
+  ipa: /hoˈvɛrlɐ/
+  translation: Hoverla
   pos: propn
   gender: f
 - lemma: грошовий
@@ -124,14 +124,14 @@ items:
   translation: Mykola
   pos: propn
   gender: m
-- lemma: мира
-  ipa: /ˈmɪrɐ/
-  translation: Myra (name?)
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace
   pos: noun
-  gender: f
-- lemma: мріти
-  ipa: /ˈmritɪ/
-  translation: to dream (dialect)
+  gender: m
+- lemma: мріяти
+  ipa: /ˈmrʲijɐte/
+  translation: to dream
   pos: verb
 - lemma: недорого
   ipa: /neˈdɔroho/
@@ -207,9 +207,9 @@ items:
   translation: finale
   pos: noun
   gender: m
-- lemma: церков
-  ipa: /t͡sɛrˈkɔu̯/
-  translation: church (gen pl)
+- lemma: церква
+  ipa: /t͡sɛrkʋɐ/
+  translation: church
   pos: noun
   gender: f
 - lemma: ігоря
@@ -222,3 +222,33 @@ items:
   translation: Italy
   pos: propn
   gender: f
+- lemma: відмінок
+  ipa: /vʲidˈmʲinok/
+  translation: case (grammar)
+  pos: noun
+  gender: m
+- lemma: називний
+  ipa: /nɐzɪu̯ˈnɪj/
+  translation: nominative
+  pos: adj
+  gender: m
+- lemma: давальний
+  ipa: /dɐˈʋɑlʲnɪj/
+  translation: dative
+  pos: adj
+  gender: m
+- lemma: знахідний
+  ipa: /znɐˈxʲidnɪj/
+  translation: accusative
+  pos: adj
+  gender: m
+- lemma: орудний
+  ipa: /oˈrudnɪj/
+  translation: instrumental
+  pos: adj
+  gender: m
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: locative
+  pos: adj
+  gender: m

@@ -1,28 +1,29 @@
 module: a2-39
-title: Word Formation — Adjective Suffixes
-subtitle: Painting the World with Nuance
+title: Adjective Suffixes — Qualities
+subtitle: Making Descriptions Richer
 version: '1.0'
-phase: A2.4
+phase: A2.3
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
-- word-formation
 - adjectives
 - suffixes
+- description
 grammar:
-- relational suffixes (-н-, -ськ-)
-- diminutive/subjective suffixes (-еньк-, -есеньк-)
-- intensifier suffixes (-енн-, -уч-)
-- adjectival patterns
+- diminutive suffixes (-еньк-)
+- augmentative suffixes (-енн-, -езн-)
+- relative suffixes (-ськ-, -н-)
+- adjective formation
 objectives:
-- Learner can recognize and use relational adjective suffixes correctly
-- Learner can express affection and softness using diminutive suffixes
-- Learner can amplify meanings using intensive suffixes for emphasis
-vocabulary_count: 65
+- Learner can use suffixes to express affection or smallness
+- Learner can use suffixes to express largeness or intensity
+- Learner can form adjectives from nouns using common suffixes
+- Learner can describe objects with emotional nuance
+vocabulary_count: 25
 slug: 39-adjective-suffixes-qualities
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

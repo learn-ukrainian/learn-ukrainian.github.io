@@ -1,27 +1,29 @@
-module: 65-giving-directions
+module: a2-65
 title: Giving Directions
-subtitle: Landmarks, Distances, Step-by-Step Navigation
+subtitle: Navigating the City
 version: '1.0'
-phase: A2.6 Practical Scenarios
-pedagogy: TBL
-focus: practical
+phase: A2.4
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
+- vocabulary
 - directions
+- city
 - navigation
-- landmarks
-- spatial
 grammar:
-- 'Imperatives for directions: Ідіть прямо, Поверніть наліво'
-- 'Distance expressions: П''ять хвилин пішки'
-- 'Prepositions: біля, повз, напроти, між'
+- asking for directions (як пройти?)
+- giving instructions (йдіть прямо, поверніть)
+- prepositions of place and movement
+- landmarks vocabulary
 objectives:
-- Learner can give clear directions to a destination
-- Learner can describe landmarks and distances
-- Learner can use directional vocabulary accurately
-vocabulary_count: 12
+- Learner can ask for directions in a city
+- Learner can give simple directions to others
+- Learner can understand location descriptions
+- Learner can use landmarks for navigation
+vocabulary_count: 25
 slug: 65-giving-directions
+focus: vocabulary
 naturalness:
-  score: 9
+  score: 10
   status: PASS

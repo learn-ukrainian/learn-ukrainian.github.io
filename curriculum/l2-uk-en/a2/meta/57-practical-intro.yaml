@@ -1,25 +1,29 @@
 module: a2-57
-title: Practical Introduction
-subtitle: Overview of Real-World Scenarios
-version: '2.0'
-phase: A2.6
-pedagogy: TBL
+title: Practical Intro
+subtitle: Real World Ukrainian
+version: '1.0'
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- practical
-- introduction
-- scenarios
-- skills
+- grammar
+- cases
+- review
+- practice
 grammar:
-- applied-grammar
+- case system review
+- verb aspect review
+- sentence structure
+- common errors
 objectives:
-- Learner can preview practical scenario types
-- Learner understands how to apply grammar in real situations
-- Learner is prepared for practical modules M58-70
-slug: 57-practical-intro
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
 vocabulary_count: 25
-focus: practical
+slug: 57-practical-intro
+focus: grammar
 naturalness:
   score: 9
   status: PASS

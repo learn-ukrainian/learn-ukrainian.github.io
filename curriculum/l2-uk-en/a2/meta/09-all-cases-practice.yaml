@@ -1,6 +1,6 @@
 module: a2-09
 title: All Cases Practice
-subtitle: Integrating All 7 Ukrainian Cases
+subtitle: Consolidating the Case System
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
@@ -9,20 +9,21 @@ transliteration: none
 tags:
 - grammar
 - cases
-- practice
 - review
+- practice
 grammar:
-- 7-case integration
-- case recognition
-- case selection
+- all 7 cases review
+- case selection logic
+- common prepositions
+- case endings
 objectives:
-- Learner can identify all 7 Ukrainian cases
-- Learner can choose the correct case for each context
-- Learner can transform nouns through different cases
-- Learner can use cases in connected speech
+- Learner can identify which case is required in a given context
+- Learner can form correct endings for all 7 cases
+- Learner can switch between cases fluently in conversation
+- Learner can correct common case errors
 vocabulary_count: 25
 slug: 09-all-cases-practice
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS

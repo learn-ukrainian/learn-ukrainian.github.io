@@ -1,24 +1,26 @@
 module: a2-12
 title: Aspect Introduction
-subtitle: Understanding Perfective and Imperfective Verbs
+subtitle: Process vs. Result
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
-- aspect
 - verbs
+- aspect
+- introduction
 grammar:
-- perfective vs imperfective concept
+- imperfective aspect (process)
+- perfective aspect (result)
 - aspect pairs
-- basic usage patterns
+- aspect usage rules
 objectives:
-- Learner understands the concept of verbal aspect
+- Learner can distinguish between process and result
 - Learner can identify perfective and imperfective verbs
-- Learner knows basic aspect pairs
-- Learner can choose aspect based on meaning
+- Learner can match common aspect pairs
+- Learner can choose the correct aspect in simple sentences
 vocabulary_count: 25
 slug: 12-aspect-introduction
 focus: grammar

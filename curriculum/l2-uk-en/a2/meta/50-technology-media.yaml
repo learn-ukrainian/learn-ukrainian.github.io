@@ -1,27 +1,29 @@
 module: a2-50
-title: Technology & Media
-subtitle: Digital Life in Ukrainian
+title: Technology and Media
+subtitle: Digital World
 version: '1.0'
-phase: A2
-pedagogy: Narrative
+phase: A2.3
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - vocabulary
 - technology
-- internet
 - media
+- internet
 grammar:
-- accusative-inanimate
-- locative-places
+- technology verbs (завантажити, відправити)
+- internet vocabulary
+- social media terms
+- describing devices
 objectives:
-- Name common devices: комп'ютер, смартфон, планшет
-- Discuss internet activities: шукати, завантажувати
-- Talk about media: новини, блог, соціальні мережі
-- Describe digital habits
+- Learner can talk about computers and phones
+- Learner can describe internet activities
+- Learner can use social media vocabulary
+- Learner can discuss technology in daily life
+vocabulary_count: 25
 slug: 50-technology-media
-vocabulary_count: 57
 focus: vocabulary
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

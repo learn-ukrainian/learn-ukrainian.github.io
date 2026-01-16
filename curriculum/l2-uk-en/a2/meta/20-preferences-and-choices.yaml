@@ -1,28 +1,29 @@
 module: a2-20
-title: Preferences & Choices
-subtitle: Expressing What You Like Better
+title: Preferences and Choices
+subtitle: Expressing Likes and Dislikes
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
+- vocabulary
 - preferences
-- comparison
-- functional
+- choices
 grammar:
-- preference expressions
-- comparison of actions
-- choice vocabulary
+- мені більше подобається
+- я віддаю перевагу
+- краще / гірше (adverbs)
+- conditional choice (я б вибрав)
 objectives:
-- Learner can express preferences
-- Learner can compare options
-- Learner can make and explain choices
-- Learner can discuss likes and dislikes
+- Learner can express preferences and choices
+- Learner can compare options using comparative forms
+- Learner can use 'would' structures for hypothetical choices
+- Learner can politely decline or accept offers
 vocabulary_count: 25
 slug: 20-preferences-and-choices
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

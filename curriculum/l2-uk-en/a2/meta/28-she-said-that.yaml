@@ -1,26 +1,29 @@
 module: a2-28
 title: She Said That...
-subtitle: Reporting What People Say
+subtitle: Reported Speech Basics
 version: '1.0'
-phase: A2.3
-pedagogy: Communicative
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- speech
-- dialogue
-- gossip
-grammar:
+- grammar
 - reported speech
-- that-clauses
-- speech verbs
+- verbs
+- conversation
+grammar:
+- indirect speech construction (що, щоб, чи)
+- pronoun changes
+- tense retention rule
+- reporting verbs (казати, говорити, питати)
 objectives:
-- Learner can report simple statements
-- Learner understands tense handling in reported speech
-- Learner can use verbs like 'say', 'tell', 'ask'
+- Learner can convert direct speech to indirect speech
+- Learner can report statements using 'що'
+- Learner can report questions using 'чи'
+- Learner can report commands using 'щоб'
 vocabulary_count: 25
 slug: 28-she-said-that
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

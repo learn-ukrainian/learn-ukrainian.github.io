@@ -1,27 +1,29 @@
 module: a2-19
 title: The Best, The Worst
-subtitle: Superlative Adjectives
+subtitle: The Superlative Degree
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
 - adjectives
-- superlatives
+- superlative
+- description
 grammar:
-- superlative formation
-- irregular superlatives
-- absolute superlative
+- superlative adjectives formation (най-)
+- irregular superlatives (найкращий)
+- emphatic superlatives (якнай-, щонай-)
+- world records context
 objectives:
 - Learner can form superlative adjectives
-- Learner knows irregular superlatives
-- Learner can express 'the most' and 'the best'
-- Learner can use intensifiers
+- Learner can describe the highest degree of a quality
+- Learner can use superlatives to talk about records and favorites
+- Learner can distinguish between comparative and superlative forms
 vocabulary_count: 25
 slug: 19-the-best-the-worst
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

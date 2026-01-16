@@ -38,13 +38,11 @@
 
 **Дві структури порівняння:**
 
-1. **За + Знахідний відмінок**
-   - Цей телефон дорожчий **за** той. (This phone is more expensive than that one.)
-   - Літо тепліше **за** зиму. (Summer is warmer than winter.)
+1. **За + Accusative case** (more common in spoken language)
+   *   Він вищий **за мене**. (He is taller **than me**.)
+   *   Кава смачніша **за чай**. (Coffee is tastier **than tea**.)
 
-2. **Ніж + Називний відмінок**
-   - Цей телефон дорожчий, **ніж** той. (This phone is more expensive than that one.)
-   - Літо тепліше, **ніж** зима. (Summer is warmer than winter.)
+2. **Ніж + Nominative case** (more formal or for complex sentences)
 
 **Посилювачі:**
 - **набагато** — much (набагато кращий — much better)
@@ -74,7 +72,7 @@
 
 **Вправа 2: Порівняйте предмети**
 
-Використайте структуру «за + Знахідний» або «ніж + Називний»:
+Використайте структуру «за + Accusative» або «ніж + Nominative»:
 
 1. Київ / Львів (великий)
    → Київ **більший за** Львів. / Київ **більший, ніж** Львів.

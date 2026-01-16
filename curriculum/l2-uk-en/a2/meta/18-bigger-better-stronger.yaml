@@ -1,28 +1,29 @@
 module: a2-18
 title: Bigger, Better, Stronger
-subtitle: Comparative Adjectives
+subtitle: The Comparative Degree
 version: '1.0'
-phase: A2.2
+phase: A2.1
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
 - grammar
 - adjectives
-- comparison
+- comparative
+- description
 grammar:
-- comparative adjective formation
-- regular comparatives
-- irregular comparatives
-- comparison structures
+- comparative adjectives formation
+- regular comparatives (-іший)
+- irregular comparatives (кращий, більший)
+- comparison structures (ніж, за)
 objectives:
 - Learner can form comparative adjectives
-- Learner knows irregular comparatives
-- Learner can make comparisons with ніж and за
-- Learner can express preferences
+- Learner can compare two objects using 'ніж' and 'за'
+- Learner can identify and use irregular comparative forms
+- Learner can describe differences in quality and quantity
 vocabulary_count: 25
 slug: 18-bigger-better-stronger
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 9
+  status: PASS

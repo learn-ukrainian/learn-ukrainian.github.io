@@ -1,0 +1,29 @@
+module: a2-61
+title: Hotel Accommodation
+subtitle: Checking In and Out
+version: '1.0'
+phase: A2.4
+pedagogy: PPP
+duration: 60
+transliteration: none
+tags:
+- vocabulary
+- hotel
+- travel
+- accommodation
+grammar:
+- booking vocabulary (забронювати, номер)
+- check-in phrases (заселення)
+- requests (рушник, сніданок)
+- dealing with problems
+objectives:
+- Learner can book a hotel room
+- Learner can check in and check out
+- Learner can ask for amenities
+- Learner can resolve common hotel issues
+vocabulary_count: 25
+slug: 61-hotel-accommodation
+focus: vocabulary
+naturalness:
+  score: 9
+  status: PASS

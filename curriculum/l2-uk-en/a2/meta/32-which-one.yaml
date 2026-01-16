@@ -1,26 +1,29 @@
 module: a2-32
 title: Which One?
-subtitle: Relative Clauses
+subtitle: Relative Clauses with Який
 version: '1.0'
-phase: A2.3
-pedagogy: Expressive
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- connectors
-- relative clauses
 - grammar
-- declension
+- pronouns
+- relative clauses
+- description
 grammar:
-- relative pronouns (який/яка/яке/які)
-- case agreement in clauses
+- relative pronoun який (declension)
+- defining relative clauses
+- punctuation in complex sentences
+- adjective agreement rules
 objectives:
-- Learner can describe nouns using clauses
-- Learner understands 'який' declension
-- Learner can link sentences
+- Learner can use 'який' to connect sentences
+- Learner can decline 'який' to match the gender and case of the noun
+- Learner can describe people and objects using relative clauses
+- Learner can punctuate complex sentences correctly
 vocabulary_count: 25
 slug: 32-which-one
 focus: grammar
 naturalness:
-  score: 0
-  status: PENDING
+  score: 10
+  status: PASS

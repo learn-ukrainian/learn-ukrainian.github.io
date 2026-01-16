@@ -1,22 +1,27 @@
 module: a2-31
-title: In Order To...
-subtitle: Expressing Purpose and Intent
+title: In Order To
+subtitle: Expressing Purpose with Щоб
 version: '1.0'
-phase: A2.3
-pedagogy: Communicative
+phase: A2.2
+pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- purpose
-- intent
 - grammar
+- conjunctions
+- purpose
+- clauses
 grammar:
-- purpose clauses (щоб)
-- infinitive vs past form
+- щоб + infinitive
+- щоб + past tense
+- для того щоб
+- purpose clauses
+- complex sentences
 objectives:
-- Learner can express purpose using 'щоб'
-- Learner can distinguish between same-subject and different-subject purpose clauses
-- Learner can use past tense forms for wishes following 'щоб'
+- Learner can express purpose using щоб + infinitive (same subject)
+- Learner can express purpose using щоб + past tense (different subjects)
+- Learner can distinguish between щоб and тому що
+- Learner can use для того щоб for emphasis
 vocabulary_count: 25
 slug: 31-in-order-to
 focus: grammar

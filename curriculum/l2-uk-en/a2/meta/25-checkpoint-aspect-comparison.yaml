@@ -1,28 +1,29 @@
 module: a2-25
-title: Checkpoint - Aspect & Comparison
-subtitle: Review of Modules 11-19
-version: '2.0'
+title: Checkpoint — Aspect & Comparison
+subtitle: Review and Mastery
+version: '1.0'
 phase: A2.2
-focus: checkpoint
-pedagogy: Review
+pedagogy: TTT
 duration: 60
 transliteration: none
 tags:
-- review
 - checkpoint
-- assessment
+- review
+- aspect
+- comparison
 grammar:
-- aspect review
-- comparative and superlative
-- conditional mood
-- shopping vocabulary
+- aspect system review
+- comparative/superlative review
+- conditional mood review
+- shopping skills
 objectives:
-- Learner demonstrates mastery of verbal aspect
-- Learner can form comparatives and superlatives
-- Learner can use conditional mood
-- Learner can apply skills in shopping contexts
+- Learner can confidently choose between perfective and imperfective aspect
+- Learner can use comparative and superlative forms in conversation
+- Learner can construct conditional sentences
+- Learner can integrate grammar skills in shopping scenarios
 vocabulary_count: 25
 slug: 25-checkpoint-aspect-comparison
+focus: checkpoint
 naturalness:
-  score: 0
-  status: PENDING
+  score: 8
+  status: PASS
