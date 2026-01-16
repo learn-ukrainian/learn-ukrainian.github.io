@@ -1,0 +1,38 @@
+module: c1-bio-99
+title: 'Володимир Вернадський: Батько української науки'
+slug: 99-volodymyr-vernadskyi
+phase: C1.3 Biographies
+duration: 120
+transliteration: none
+pedagogy: CBI
+register: публіцистичний
+focus: biography
+objectives:
+  - Describe Vernadsky's role in founding the Ukrainian Academy of Sciences
+  - Explain key concepts of biosphere and noosphere
+  - Analyze the connection between science and national identity
+  - Identify his contributions to Ukrainian scientific institutions
+tags:
+  - biography
+  - era: early-20th-century
+  - domain: science
+  - domain: geochemistry
+  - domain: education
+grammar:
+  - Complex scientific narrative
+  - High-style academic syntax
+vocabulary_focus:
+  - Scientific terminology (geochemistry, biosphere, noosphere)
+  - Academic institution vocabulary
+  - Ukrainian state-building terminology
+prerequisites:
+  - c1-bio-98
+learning_outcomes:
+  - Describe Vernadsky's role in founding the Ukrainian Academy of Sciences
+  - Explain key concepts of biosphere and noosphere
+  - Analyze the connection between science and national identity
+  - Use scientific terminology in Ukrainian context
+naturalness:
+  score: 10
+  status: PASS
+  checked: 2026-01-16

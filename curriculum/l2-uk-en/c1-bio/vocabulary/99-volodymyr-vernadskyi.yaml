@@ -1,0 +1,144 @@
+module: 99-volodymyr-vernadskyi
+level: C1
+version: "1.0"
+items:
+  - lemma: геохімія
+    ipa: /ɦeoxˈimʲijɐ/
+    translation: geochemistry
+    pos: noun
+    gender: f
+
+  - lemma: біосфера
+    ipa: /b⁽ʲ⁾ioˈsferɐ/
+    translation: biosphere
+    pos: noun
+    gender: f
+
+  - lemma: ноосфера
+    ipa: /nooˈsferɐ/
+    translation: noosphere
+    pos: noun
+    gender: f
+
+  - lemma: мінералогія
+    ipa: /mʲineraˈlɔɦʲijɐ/
+    translation: mineralogy
+    pos: noun
+    gender: f
+
+  - lemma: академія наук
+    ipa: /akɐˈdɛmʲijɐ ˈnauk/
+    translation: academy of sciences
+    pos: noun phrase
+    gender: f
+
+  - lemma: президент
+    ipa: /prezɪˈdɛnt/
+    translation: president
+    pos: noun
+    gender: m
+
+  - lemma: засновник
+    ipa: /zɐˈsɔwnɪk/
+    translation: founder
+    pos: noun
+    gender: m
+
+  - lemma: радіогеологія
+    ipa: /rɐdʲioɦeoˈlɔɦʲijɐ/
+    translation: radiogeology
+    pos: noun
+    gender: f
+
+  - lemma: біогеохімія
+    ipa: /b⁽ʲ⁾ioɦeoxˈimʲijɐ/
+    translation: biogeochemistry
+    pos: noun
+    gender: f
+
+  - lemma: національна бібліотека
+    ipa: /natsʲioˈnalʲnɐ bʲiblʲioˈtɛkɐ/
+    translation: national library
+    pos: noun phrase
+    gender: f
+
+  - lemma: гетьманат
+    ipa: /ɦetʲˈmɐnɐt/
+    translation: hetmanate
+    pos: noun
+    gender: m
+
+  - lemma: еволюція
+    ipa: /evoˈlʲutsʲijɐ/
+    translation: evolution
+    pos: noun
+    gender: f
+
+  - lemma: цивілізація
+    ipa: /tsɪvʲilʲiˈzɐtsʲijɐ/
+    translation: civilization
+    pos: noun
+    gender: f
+
+  - lemma: космічний
+    ipa: /kosˈmʲitʃnɪj/
+    translation: cosmic
+    pos: adj
+
+  - lemma: геосфера
+    ipa: /ɦeoˈsferɐ/
+    translation: geosphere
+    pos: noun
+    gender: f
+
+  - lemma: вчений
+    ipa: /ˈutʃenɪj/
+    translation: scientist, scholar
+    pos: noun
+    gender: m
+
+  - lemma: спадщина
+    ipa: /ˈspɐdʃːɪnɐ/
+    translation: legacy, heritage
+    pos: noun
+    gender: f
+
+  - lemma: дослідження
+    ipa: /dosˈlʲidʒenʲːɐ/
+    translation: research, study
+    pos: noun
+    gender: n
+
+  - lemma: банкнота
+    ipa: /bɐnkˈnɔtɐ/
+    translation: banknote
+    pos: noun
+    gender: f
+
+  - lemma: незалежність
+    ipa: /nezɐˈlɛʒnʲistʲ/
+    translation: independence
+    pos: noun
+    gender: f
+
+  - lemma: природознавство
+    ipa: /prɪrɔdɔˈznɐwstwɔ/
+    translation: natural science
+    pos: noun
+    gender: n
+
+  - lemma: планетарний
+    ipa: /plɐneˈtɐrnɪj/
+    translation: planetary
+    pos: adj
+
+  - lemma: видатний
+    ipa: /vɪˈdɐtnɪj/
+    translation: outstanding, prominent
+    pos: adj
+
+  - lemma: державність
+    ipa: /derˈʒɐwnʲistʲ/
+    translation: statehood
+    pos: noun
+    gender: f

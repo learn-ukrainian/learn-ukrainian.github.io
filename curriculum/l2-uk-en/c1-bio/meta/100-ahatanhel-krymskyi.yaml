@@ -1,0 +1,38 @@
+module: c1-bio-100
+title: 'Агатангел Кримський: Поліглот і мученик науки'
+slug: 100-ahatanhel-krymskyi
+phase: C1.3 Biographies
+duration: 120
+transliteration: none
+pedagogy: CBI
+register: публіцистичний
+focus: biography
+objectives:
+  - Describe Krymsky's role in founding the Ukrainian Academy of Sciences
+  - Explain his unique multilingual abilities and scholarly achievements
+  - Analyze the fate of Ukrainian intellectuals under Soviet repression
+  - Identify his contributions to Oriental studies and Ukrainian linguistics
+tags:
+  - biography
+  - era: early-20th-century
+  - domain: linguistics
+  - domain: orientalism
+  - domain: education
+grammar:
+  - Complex historical narrative
+  - High-style literary syntax
+vocabulary_focus:
+  - Oriental studies terminology
+  - Linguistic and academic vocabulary
+  - Soviet repression terminology
+prerequisites:
+  - c1-bio-99
+learning_outcomes:
+  - Describe Krymsky's role in founding the Ukrainian Academy of Sciences
+  - Explain his unique multilingual abilities and scholarly achievements
+  - Analyze the fate of Ukrainian intellectuals under Soviet repression
+  - Use academic and linguistic terminology in Ukrainian context
+naturalness:
+  score: 10
+  status: PASS
+  checked: 2026-01-16

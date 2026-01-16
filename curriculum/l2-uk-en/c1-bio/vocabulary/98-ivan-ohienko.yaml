@@ -1,0 +1,122 @@
+module: 98-ivan-ohienko
+level: C1
+version: "1.0"
+items:
+  - lemma: митрополит
+    ipa: /mɪtrɔpɔˈlɪt/
+    translation: metropolitan (church rank)
+    pos: noun
+    gender: m
+  - lemma: Іларіон
+    ipa: /ilɑˈriɔn/
+    translation: Hilarion (his church name)
+    pos: noun
+    gender: m
+  - lemma: мовознавство
+    ipa: /mɔwɔˈznɑwstwɔ/
+    translation: linguistics
+    pos: noun
+    gender: n
+  - lemma: автокефалія
+    ipa: /ɑu̯tɔkɛˈfɑlʲijɑ/
+    translation: autocephaly (church independence)
+    pos: noun
+    gender: f
+  - lemma: православ'я
+    ipa: /prɑwɔˈslɑu̯jɑ/
+    translation: Orthodoxy
+    pos: noun
+    gender: n
+  - lemma: орфографія
+    ipa: /ɔrfɔˈɦrɑfijɑ/
+    translation: orthography
+    pos: noun
+    gender: f
+  - lemma: стилістика
+    ipa: /stɪˈlʲistɪkɑ/
+    translation: stylistics
+    pos: noun
+    gender: f
+  - lemma: кодифікація
+    ipa: /kɔdɪfɪˈkɑt͡sijɑ/
+    translation: codification
+    pos: noun
+    gender: f
+  - lemma: міністр освіти
+    ipa: /mʲiˈnʲistr ɔˈswitɪ/
+    translation: Minister of Education
+    pos: noun phrase
+    gender: m
+  - lemma: УНР
+    ipa: /uɛnˈɛr/
+    translation: Ukrainian People's Republic
+    pos: abbr
+  - lemma: еміграція
+    ipa: /ɛmʲiˈɦrɑt͡sijɑ/
+    translation: emigration
+    pos: noun
+    gender: f
+  - lemma: діаспора
+    ipa: /dʲiˈɑspɔrɑ/
+    translation: diaspora
+    pos: noun
+    gender: f
+  - lemma: церковнослов'янський
+    ipa: /t͡sɛrkɔu̯nɔslɔˈwjɑnʲsʲkɪj/
+    translation: Church Slavonic
+    pos: adj
+  - lemma: богослов'я
+    ipa: /bɔɦɔˈslɔu̯jɑ/
+    translation: theology
+    pos: noun
+    gender: n
+  - lemma: катехизис
+    ipa: /kɑtɛˈxɪzɪs/
+    translation: catechism
+    pos: noun
+    gender: m
+  - lemma: літургія
+    ipa: /lʲiturˈɦijɑ/
+    translation: liturgy
+    pos: noun
+    gender: f
+  - lemma: богослужіння
+    ipa: /bɔɦɔslʊˈʒʲinʲːɑ/
+    translation: divine service
+    pos: noun
+    gender: n
+  - lemma: переслідування
+    ipa: /pɛrɛˈslʲiduwɑnʲːɑ/
+    translation: persecution
+    pos: noun
+    gender: n
+  - lemma: вигнання
+    ipa: /wɪɦˈnɑnʲːɑ/
+    translation: exile/expulsion
+    pos: noun
+    gender: n
+  - lemma: збереження
+    ipa: /zbɛrɛˈʒɛnʲːɑ/
+    translation: preservation
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: норма
+    ipa: /ˈnɔrmɑ/
+    translation: norm/standard
+    pos: noun
+    gender: f
+  - lemma: мовна політика
+    ipa: /ˈmɔu̯nɑ pɔˈlʲitɪkɑ/
+    translation: language policy
+    pos: noun phrase
+    gender: f
+  - lemma: спадкоємність
+    ipa: /spɑdkɔˈjɛmnʲistʲ/
+    translation: continuity/succession
+    pos: noun
+    gender: f

@@ -1,0 +1,122 @@
+module: 97-panteleimon-kulish
+level: C1
+version: "1.0"
+items:
+  - lemma: правопис
+    ipa: /prɑwɔˈpɪs/
+    translation: orthography/spelling
+    pos: noun
+    gender: m
+  - lemma: кулішівка
+    ipa: /kulʲiˈʃiu̯kɑ/
+    translation: Kulishivka (Kulish's alphabet system)
+    pos: noun
+    gender: f
+  - lemma: фонетичний
+    ipa: /fɔnɛˈtɪt͡ʃnɪj/
+    translation: phonetic
+    pos: adj
+  - lemma: переклад
+    ipa: /pɛrɛˈklɑd/
+    translation: translation
+    pos: noun
+    gender: m
+  - lemma: Біблія
+    ipa: /ˈbiblʲijɑ/
+    translation: Bible
+    pos: noun
+    gender: f
+  - lemma: братство
+    ipa: /brɑˈtstwɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: кирило-мефодіївський
+    ipa: /kɪrɪlɔmɛˈfɔdʲijiu̯sʲkɪj/
+    translation: Cyril-Methodius (adj.)
+    pos: adj
+  - lemma: етнографія
+    ipa: /ɛtnɔˈɦrɑfijɑ/
+    translation: ethnography
+    pos: noun
+    gender: f
+  - lemma: фольклорист
+    ipa: /fɔlʲklɔˈrɪst/
+    translation: folklorist
+    pos: noun
+    gender: m
+  - lemma: історичний роман
+    ipa: /istɔˈrɪt͡ʃnɪj rɔˈmɑn/
+    translation: historical novel
+    pos: noun phrase
+    gender: m
+  - lemma: видавець
+    ipa: /wɪdɑˈwɛt͡sʲ/
+    translation: publisher
+    pos: noun
+    gender: m
+  - lemma: друкарня
+    ipa: /druˈkɑrnʲɑ/
+    translation: printing house
+    pos: noun
+    gender: f
+  - lemma: літературна мова
+    ipa: /lʲitɛrɑˈturnɑ ˈmɔwɑ/
+    translation: literary language
+    pos: noun phrase
+    gender: f
+  - lemma: стандартизація
+    ipa: /stɑndɑrtɪˈzɑt͡sijɑ/
+    translation: standardization
+    pos: noun
+    gender: f
+  - lemma: козацтво
+    ipa: /kɔˈzɑt͡stwɔ/
+    translation: Cossackdom
+    pos: noun
+    gender: n
+  - lemma: хутір
+    ipa: /ˈxutʲir/
+    translation: farmstead/khutor
+    pos: noun
+    gender: m
+  - lemma: хуторянство
+    ipa: /xutɔˈrʲɑnstwɔ/
+    translation: ruralism/provincialism (pejorative)
+    pos: noun
+    gender: n
+  - lemma: псевдонім
+    ipa: /psɛu̯dɔˈnʲim/
+    translation: pseudonym
+    pos: noun
+    gender: m
+  - lemma: рукопис
+    ipa: /rukɔˈpɪs/
+    translation: manuscript
+    pos: noun
+    gender: m
+  - lemma: видання
+    ipa: /wɪˈdɑnʲːɑ/
+    translation: publication/edition
+    pos: noun
+    gender: n
+  - lemma: літопис
+    ipa: /ˈlʲitɔpɪs/
+    translation: chronicle
+    pos: noun
+    gender: m
+  - lemma: мовознавець
+    ipa: /mɔwɔˈznɑwɛt͡sʲ/
+    translation: linguist
+    pos: noun
+    gender: m
+  - lemma: суперечка
+    ipa: /supɛˈrɛt͡ʃkɑ/
+    translation: controversy/dispute
+    pos: noun
+    gender: f
+  - lemma: полеміка
+    ipa: /pɔlɛˈmikɑ/
+    translation: polemic
+    pos: noun
+    gender: f

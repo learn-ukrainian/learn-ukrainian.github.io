@@ -1,0 +1,55 @@
+# Audit Report: 18-dmytro-bortnyanskyy.md
+**Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## Gates
+- **Words:** ✅ 2073/2000
+- **Activities:** ✅ 13/12
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (13 activities)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (biography))
+- **Richness:** ✅ 95% (biography)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** biography
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
+| quotes | 11 | 3 | 100% | 14% | 14.3% |
+| cultural | 2 | 4 | 50% | 10% | 4.8% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 22 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.1%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 70 | Included in Core |
+| **Вступ** | ⚪️ | 322 | Skipped |
+| **Життєпис** | ⚪️ | 392 | Skipped |
+| **Внесок** | ⚪️ | 189 | Skipped |
+| **Спадщина** | ⚪️ | 123 | Skipped |
+| **Історичний контекст** | ✅ | 327 | Included in Core |
+| **Порівняльний аналіз** | ✅ | 126 | Included in Core |
+| **Критичне мислення** | ⚪️ | 78 | Skipped |
+| **Есе** | ⚪️ | 298 | Skipped |
+| **Підсумок** | ✅ | 80 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 68 | Skipped |

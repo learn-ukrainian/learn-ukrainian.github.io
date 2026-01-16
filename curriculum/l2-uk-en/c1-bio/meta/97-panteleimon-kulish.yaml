@@ -1,0 +1,27 @@
+module: 97-panteleimon-kulish
+title: Пантелеймон Куліш
+subtitle: Будівничий української мови
+version: '1.0'
+phase: C1.3 Biography
+pedagogy: Immersion
+focus: biography
+duration: 45
+transliteration: none
+tags:
+- biography
+- language
+- history
+- literature
+grammar:
+- 'Professional terminology: правопис, кулішівка'
+- 'Stylistic nuances: полеміка, братство'
+objectives:
+- Analyze Kulish's role in creating Ukrainian orthography
+- Understand his relationship with Shevchenko
+- Evaluate his translation of the Bible
+vocabulary_count: 24
+vital_status: deceased
+slug: 97-panteleimon-kulish
+naturalness:
+  score: 9
+  status: PASS

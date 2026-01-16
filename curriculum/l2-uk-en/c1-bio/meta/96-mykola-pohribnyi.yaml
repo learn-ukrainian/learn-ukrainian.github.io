@@ -1,0 +1,27 @@
+module: 96-mykola-pohribnyi
+title: Микола Погрібний
+subtitle: Голос української вимови
+version: '1.0'
+phase: C1.3 Biography
+pedagogy: Immersion
+focus: biography
+duration: 45
+transliteration: none
+tags:
+- biography
+- language
+- pronunciation
+- radio
+grammar:
+- 'Professional terminology: орфоепія, дикція'
+- 'Stylistic nuances: еталон, норма'
+objectives:
+- Analyze the role of radio in language preservation
+- Understand the principles of Ukrainian orthoepy
+- Compare spoken and written language norms
+vocabulary_count: 24
+vital_status: deceased
+slug: 96-mykola-pohribnyi
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,121 @@
+module: 96-mykola-pohribnyi
+level: C1
+version: "1.0"
+items:
+  - lemma: вимова
+    ipa: /wɪˈmɔwɑ/
+    translation: pronunciation
+    pos: noun
+    gender: f
+  - lemma: наголос
+    ipa: /ˈnɑɦɔlɔs/
+    translation: stress/accent
+    pos: noun
+    gender: m
+  - lemma: орфоепія
+    ipa: /ɔrfɔˈɛpijɑ/
+    translation: orthoepy (study of correct pronunciation)
+    pos: noun
+    gender: f
+  - lemma: лексикограф
+    ipa: /lɛksɪˈkɔɦrɑf/
+    translation: lexicographer
+    pos: noun
+    gender: m
+  - lemma: словник
+    ipa: /ˈslɔwnɪk/
+    translation: dictionary
+    pos: noun
+    gender: m
+  - lemma: диктор
+    ipa: /ˈdɪktɔr/
+    translation: announcer/broadcaster
+    pos: noun
+    gender: m
+  - lemma: радіо
+    ipa: /ˈrɑdʲiɔ/
+    translation: radio
+    pos: noun
+    gender: n
+  - lemma: ефір
+    ipa: /ɛˈfir/
+    translation: airtime/broadcast
+    pos: noun
+    gender: m
+  - lemma: мовлення
+    ipa: /ˈmɔwlɛnʲːɑ/
+    translation: speech/broadcasting
+    pos: noun
+    gender: n
+  - lemma: артикуляція
+    ipa: /ɑrtɪkuˈlʲɑt͡sijɑ/
+    translation: articulation
+    pos: noun
+    gender: f
+  - lemma: голосний
+    ipa: /ɦɔlɔsˈnɪj/
+    translation: vowel (adj./noun)
+    pos: adj
+  - lemma: приголосний
+    ipa: /prɪɦɔˈlɔsnɪj/
+    translation: consonant (adj./noun)
+    pos: adj
+  - lemma: наголошувати
+    ipa: /nɑɦɔˈlɔʃuwɑtɪ/
+    translation: to stress/emphasize
+    pos: verb
+    aspect: impf
+  - lemma: вимовляти
+    ipa: /wɪmɔwˈlʲɑtɪ/
+    translation: to pronounce
+    pos: verb
+    aspect: impf
+  - lemma: літературна норма
+    ipa: /lʲitɛrɑˈturnɑ ˈnɔrmɑ/
+    translation: literary norm/standard
+    pos: noun phrase
+    gender: f
+  - lemma: культура мовлення
+    ipa: /kulʲˈturɑ ˈmɔwlɛnʲːɑ/
+    translation: speech culture
+    pos: noun phrase
+    gender: f
+  - lemma: еталон
+    ipa: /ɛtɑˈlɔn/
+    translation: standard/benchmark
+    pos: noun
+    gender: m
+  - lemma: кодифікація
+    ipa: /kɔdɪfɪˈkɑt͡sijɑ/
+    translation: codification
+    pos: noun
+    gender: f
+  - lemma: транскрипція
+    ipa: /trɑnskrɪpˈt͡sijɑ/
+    translation: transcription
+    pos: noun
+    gender: f
+  - lemma: фонетика
+    ipa: /fɔˈnɛtɪkɑ/
+    translation: phonetics
+    pos: noun
+    gender: f
+  - lemma: інтонація
+    ipa: /intɔˈnɑt͡sijɑ/
+    translation: intonation
+    pos: noun
+    gender: f
+  - lemma: заслужений
+    ipa: /zɑsluˈʒɛnɪj/
+    translation: honored/distinguished
+    pos: adj
+  - lemma: зразок
+    ipa: /zrɑˈzɔk/
+    translation: model/example
+    pos: noun
+    gender: m
+  - lemma: довідник
+    ipa: /dɔˈwʲidnɪk/
+    translation: reference book/handbook
+    pos: noun
+    gender: m

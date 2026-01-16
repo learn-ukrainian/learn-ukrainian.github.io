@@ -1,0 +1,27 @@
+module: 98-ivan-ohienko
+title: Іван Огієнко
+subtitle: Митрополит і Захисник Мови
+version: '1.0'
+phase: C1.3 Biography
+pedagogy: Immersion
+focus: biography
+duration: 45
+transliteration: none
+tags:
+- biography
+- language
+- church
+- history
+grammar:
+- 'Professional terminology: автокефалія, літургія'
+- 'Stylistic nuances: канонічність, соборність'
+objectives:
+- Evaluate Ohiienko's contribution to Ukrainian autocephaly
+- Analyze the linguistic features of his Bible translation
+- Understand his role as a statesman
+vocabulary_count: 24
+vital_status: deceased
+slug: 98-ivan-ohienko
+naturalness:
+  score: 9
+  status: PASS
