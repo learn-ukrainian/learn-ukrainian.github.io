@@ -1,0 +1,30 @@
+module: lit-020
+title: 'Культ Шевченка: Рецепція і Міфи'
+subtitle: 'The Cult of Shevchenko: Modern Reception'
+version: '1.0'
+phase: LIT.3 The Prophet (Taras Shevchenko)
+focus: literature
+pedagogy: Seminar
+duration: 120
+transliteration: none
+tags:
+- literature
+- shevchenko
+- culture
+- myth
+- identity
+grammar:
+- Critical discourse
+- Modern essayistic style
+objectives:
+- 'Analyze the evolution of Shevchenko''s image: from Prophet to Icon to Meme'
+- Discuss the "Soviet Shevchenko" vs "Diaspora Shevchenko" narratives
+- Examine modern reinterpretations (Grekhov, pop-culture)
+- Reflect on the concept of "National Father" and its risks
+vocabulary_count: 30
+slug: 20-cult-of-shevchenko
+naturalness:
+  score: 10
+  status: PASS
+  reviewer: Antigravity
+  comment: 'Checked via scan-naturalness protocol. Flow: Excellent academic register. Discourse markers: Natural use of "зокрема", "однак", "натомість". Authenticity: High (Classical/Modern Academic). Note: Contains extensive 19th-century primary texts.'

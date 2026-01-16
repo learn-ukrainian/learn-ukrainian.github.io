@@ -1,0 +1,152 @@
+module: 17-the-artist
+level: C1
+version: '1.0'
+items:
+  - lemma: офорт
+    translation: etching
+    note: 'техніка гравюри, в якій Шевченко був академіком'
+    pos: noun
+    gender: m
+  - lemma: акварель
+    translation: watercolor
+    note: 'водяні фарби; техніка живопису'
+    pos: noun
+    gender: f
+  - lemma: пейзаж
+    translation: landscape
+    note: 'зображення природи'
+    pos: noun
+    gender: m
+  - lemma: портрет
+    translation: portrait
+    note: 'зображення людини'
+    pos: noun
+    gender: m
+  - lemma: автопортрет
+    translation: self-portrait
+    note: 'зображення художника самим собою'
+    pos: noun
+    gender: m
+  - lemma: натурник
+    translation: model (art)
+    note: 'людина, яка позує художнику'
+    pos: noun
+    gender: m
+  - lemma: майстерня
+    translation: studio/workshop
+    note: 'робоче місце художника'
+    pos: noun
+    gender: f
+  - lemma: мольберт
+    translation: easel
+    note: 'підставка для картини'
+    pos: noun
+    gender: m
+  - lemma: пензель
+    translation: brush
+    note: 'інструмент для малювання'
+    pos: noun
+    gender: m
+  - lemma: палітра
+    translation: palette
+    note: 'дощечка для змішування фарб'
+    pos: noun
+    gender: f
+  - lemma: академік
+    translation: academician
+    note: 'вище звання в Академії мистецтв'
+    pos: noun
+    gender: m
+  - lemma: сепія
+    translation: sepia
+    note: 'коричнева фарба; малюнок цією фарбою'
+    pos: noun
+    gender: f
+  - lemma: гравюра
+    translation: engraving
+    note: 'відбиток малюнка'
+    pos: noun
+    gender: f
+  - lemma: композиція
+    translation: composition
+    note: 'будова художнього твору'
+    pos: noun
+    gender: f
+  - lemma: світлотінь
+    translation: chiaroscuro
+    note: 'розподіл світла і тіні'
+    pos: noun
+    gender: f
+  - lemma: штрих
+    translation: stroke/hatch
+    note: 'лінія в малюнку'
+    pos: noun
+    gender: m
+  - lemma: ескіз
+    translation: sketch
+    note: 'попередній начерк'
+    pos: noun
+    gender: m
+  - lemma: перспектива
+    translation: perspective
+    note: 'зображення простору'
+    pos: noun
+    gender: f
+  - lemma: викуп
+    translation: ransom/purchase from serfdom
+    note: 'плата за звільнення (про Шевченка)'
+    pos: noun
+    gender: m
+  - lemma: меценат
+    translation: patron of arts
+    note: 'покровитель мистецтв'
+    pos: noun
+    gender: m
+  - lemma: лотерея
+    translation: lottery
+    note: 'спосіб, яким розіграли портрет Жуковського'
+    pos: noun
+    gender: f
+  - lemma: натхнення
+    translation: inspiration
+    note: 'творчий підйом'
+    pos: noun
+    gender: n
+  - lemma: ремесло
+    translation: craft
+    note: 'професійні навички'
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    translation: heritage/legacy
+    note: 'те, що залишив митець'
+    pos: noun
+    gender: f
+  - lemma: живописна Україна
+    translation: Picturesque Ukraine
+    note: 'серія офортів Шевченка'
+    pos: phrase
+  - lemma: інтелігенція
+    translation: intelligentsia
+    note: 'освічена верства суспільства'
+    pos: noun
+    gender: f
+  - lemma: блудний син
+    translation: prodigal son
+    note: 'сюжет серії малюнків'
+    pos: phrase
+  - lemma: талант
+    translation: talent
+    note: 'обдарування'
+    pos: noun
+    gender: m
+  - lemma: покликання
+    translation: calling/vocation
+    note: 'призначення людини'
+    pos: noun
+    gender: n
+  - lemma: доля
+    translation: fate/destiny
+    note: 'ключове поняття для Шевченка'
+    pos: noun
+    gender: f

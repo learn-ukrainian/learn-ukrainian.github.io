@@ -1,0 +1,29 @@
+module: lit-016
+title: 'Біблійні теми: Давидові псалми і "Марія"'
+subtitle: 'Biblical Themes: Psalms of David and "Maria"'
+version: '1.0'
+phase: LIT.3 The Prophet (Taras Shevchenko)
+focus: literature
+pedagogy: Seminar
+duration: 120
+transliteration: none
+tags:
+- literature
+- shevchenko
+- bible
+- romanticism
+grammar:
+- Church Slavonicisms
+- High style syntax
+objectives:
+- Analyze Shevchenko's reinterpretations of biblical texts (Psalms, Prophets)
+- Examine the poem "Maria" as a humanization of the divine
+- Identify Church Slavonic vocabulary and its stylistic function
+- Discuss the concept of "Holy Truth" (Свята Правда) in Shevchenko's ethics
+vocabulary_count: 30
+slug: 16-biblical-themes
+naturalness:
+  score: 10
+  status: PASS
+  reviewer: Antigravity
+  comment: 'Checked via scan-naturalness protocol. Flow: Excellent academic register. Discourse markers: Natural use of "зокрема", "однак", "натомість". Authenticity: High (Classical/Modern Academic). Note: Contains extensive 19th-century primary texts.'

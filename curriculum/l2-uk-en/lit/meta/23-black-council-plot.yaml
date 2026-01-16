@@ -1,0 +1,22 @@
+module: lit-023
+title: 'Чорна рада: Роман'
+subtitle: 'The Black Council: The Novel'
+version: '2.0'
+phase: 'LIT.4 Intellectuals'
+focus: literature
+pedagogy: 'Analysis'
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - kulish
+  - romanticism
+  - novel
+grammar:
+  - 'Literary Archetypes'
+objectives:
+  - 'Analyze the plot structure of the first Ukrainian historical novel.'
+  - 'Compare Walter Scott''s influence with Ukrainian realities.'
+  - 'Evaluate the character archetypes (Shram, Cherevan, Somko).'
+vocabulary_count: 25
+slug: 23-black-council-plot

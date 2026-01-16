@@ -1,0 +1,104 @@
+module: 23-black-council-plot
+level: C1
+version: '2.0'
+items:
+  - lemma: хроніка
+    ipa: /xrˈɔnʲikɑ/
+    translation: chronicle
+    pos: noun
+    gender: f
+  - lemma: хутір
+    ipa: /xˈutʲir/
+    translation: khutor (isolated farmstead)
+    pos: noun
+    gender: m
+  - lemma: старшина
+    ipa: /stɑrʃˈɪnɑ/
+    translation: elder / officer class
+    pos: noun
+    gender: f
+  - lemma: січовик
+    ipa: /sʲit͡ʃovˈɪk/
+    translation: Sich cossack
+    pos: noun
+    gender: m
+  - lemma: побратим
+    ipa: /pɔbrɑtˈɪm/
+    translation: sworn brother
+    pos: noun
+    gender: m
+  - lemma: зрада
+    ipa: /zrˈɑdɑ/
+    translation: betrayal / treason
+    pos: noun
+    gender: f
+  - lemma: відвага
+    ipa: /vʲidvˈɑɦɑ/
+    translation: courage
+    pos: noun
+    gender: f
+  - lemma: підступність
+    ipa: /pʲidstˈupnʲistʲ/
+    translation: treacherousness
+    pos: noun
+    gender: f
+  - lemma: наречений
+    ipa: /nɑrɛt͡ʃˈɛnɪj/
+    translation: fiance
+    pos: noun
+    gender: m
+  - lemma: вибори
+    ipa: /vˈɪbɔrɪ/
+    translation: election
+    pos: noun
+    gender: p
+  - lemma: булава
+    ipa: /bulɑvˈɑ/
+    translation: bulava (mace, symbol of power)
+    pos: noun
+    gender: f
+  - lemma: байдужість
+    ipa: /bɑjdˈuʒistʲ/
+    translation: indifference
+    pos: noun
+    gender: f
+  - lemma: доля
+    ipa: /dˈɔlʲɑ/
+    translation: fate
+    pos: noun
+    gender: f
+  - lemma: звичай
+    ipa: /zvˈɪt͡ʃɑj/
+    translation: custom
+    pos: noun
+    gender: m
+  - lemma: честь
+    ipa: /t͡ʃɛstʲ/
+    translation: honor
+    pos: noun
+    gender: f
+  - lemma: романтизм
+    ipa: /rɔmɑntˈɪzm/
+    translation: romanticism
+    pos: noun
+    gender: m
+  - lemma: образ
+    ipa: /ɔbrˈɑz/
+    translation: image / character
+    pos: noun
+    gender: m
+  - lemma: сюжет
+    ipa: /sʲuʒˈɛt/
+    translation: plot
+    pos: noun
+    gender: m
+  - lemma: кульмінація
+    ipa: /kulʲmʲinˈɑt͡sʲijɑ/
+    translation: climax
+    pos: noun
+    gender: f
+  - lemma: розв'язка
+    ipa: /rɔzvjˈɑzkɑ/
+    translation: denouement
+    pos: noun
+    gender: f

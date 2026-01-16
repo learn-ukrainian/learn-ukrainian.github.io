@@ -1,0 +1,22 @@
+module: lit-022
+title: 'Чорна рада: Історичний контекст'
+subtitle: 'The Black Council: Historical Context'
+version: '1.0'
+phase: 'LIT.4 The Intellectuals'
+focus: history
+pedagogy: 'Immersion'
+duration: 120
+transliteration: none
+tags:
+  - history
+  - ruin
+  - hetmanate
+  - kulish
+grammar:
+  - 'Historical terminology'
+objectives:
+  - 'Analyze the causes and consequences of "The Ruin" (Руїна)'
+  - 'Understand the political landscape of 1663 (Somko vs. Briukhovetskyi)'
+  - 'Evaluate the concept of "ochlocracy" (mob rule) in Ukrainian history'
+vocabulary_count: 20
+slug: 22-black-council-history

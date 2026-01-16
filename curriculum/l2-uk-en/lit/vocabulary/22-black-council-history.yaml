@@ -1,0 +1,104 @@
+module: 22-black-council-history
+level: C1
+version: '1.0'
+items:
+  - lemma: Руїна
+    ipa: /rʊˈjina/
+    translation: The Ruin (historical period)
+    pos: noun
+    gender: f
+  - lemma: булава
+    ipa: /bʊlaˈʋa/
+    translation: mace (symbol of hetman power)
+    pos: noun
+    gender: f
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲman/
+    translation: hetman
+    pos: noun
+    gender: m
+  - lemma: старшина
+    ipa: /starʃɪˈna/
+    translation: cossack officers/elite
+    pos: noun
+    gender: f
+  - lemma: чернь
+    ipa: /t͡ʃɛrnʲ/
+    translation: mob/commoners (derogatory)
+    pos: noun
+    gender: f
+  - lemma: охлократія
+    ipa: /ɔxlɔˈkrat⁽ʲ⁾ija/
+    translation: ochlocracy (mob rule)
+    pos: noun
+    gender: f
+  - lemma: демагогія
+    ipa: /dɛmaˈɦɔɦija/
+    translation: demagoguery
+    pos: noun
+    gender: f
+  - lemma: розкол
+    ipa: /rɔzˈkɔl/
+    translation: schism/split
+    pos: noun
+    gender: m
+  - lemma: міжусобиця
+    ipa: /miʒʊˈsɔbɪt͡sʲa/
+    translation: internecine strife/civil war
+    pos: noun
+    gender: f
+  - lemma: присяга
+    ipa: /prɪˈsʲaɦa/
+    translation: oath
+    pos: noun
+    gender: f
+  - lemma: універсал
+    ipa: /ʊniʋɛrˈsal/
+    translation: universal (hetman's decree)
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /aʋtɔˈnɔmija/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: протекторат
+    ipa: /prɔtɛktɔˈrat/
+    translation: protectorate
+    pos: noun
+    gender: m
+  - lemma: зрада
+    ipa: /'zrada/
+    translation: betrayal/treason
+    pos: noun
+    gender: f
+  - lemma: страта
+    ipa: /'strata/
+    translation: execution
+    pos: noun
+    gender: f
+  - lemma: електорат
+    ipa: /ɛlɛktɔˈrat/
+    translation: electorate
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /lɛɦiˈtɪmɲisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: узурпація
+    ipa: /ʊzʊrˈpat͡sʲija/
+    translation: usurpation
+    pos: noun
+    gender: f
+  - lemma: анархія
+    ipa: /aˈnarxija/
+    translation: anarchy
+    pos: noun
+    gender: f
+  - lemma: державність
+    ipa: /dɛrˈʒaʋɲisʲtʲ/
+    translation: statehood
+    pos: noun
+    gender: f

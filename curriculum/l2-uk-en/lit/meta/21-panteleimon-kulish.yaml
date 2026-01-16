@@ -1,0 +1,30 @@
+module: lit-021
+title: 'Пантелеймон Куліш: Європеєць на Хуторі'
+subtitle: 'Panteleimon Kulish: The European on the Farmstead'
+version: '1.0'
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+focus: biography
+pedagogy: Seminar
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - biography
+  - kulish
+  - romanticism
+  - translation
+grammar:
+  - Epistolary style
+  - Intellectual lexicon
+objectives:
+  - Analyze the duality of Kulish (Europeanism vs Khutorianstvo)
+  - Discuss his complex relationship with Shevchenko
+  - Examine his role as a translator (Shakespeare, Bible)
+  - Evaluate his contribution to the Ukrainian language (Kulishivka)
+vocabulary_count: 30
+slug: 21-panteleimon-kulish
+naturalness:
+  score: 10
+  status: PASS
+  reviewer: Antigravity
+  comment: 'Checked via scan-naturalness protocol. Flow: Excellent academic register. Discourse markers: Natural use of "зокрема", "однак", "натомість". Authenticity: High (Classical/Modern Academic).'

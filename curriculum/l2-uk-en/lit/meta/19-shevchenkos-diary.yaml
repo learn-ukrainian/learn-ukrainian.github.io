@@ -1,0 +1,29 @@
+module: lit-019
+title: Щоденник ("Журнал") Шевченка
+subtitle: 'Shevchenko’s Diary: The Inner World'
+version: '1.0'
+phase: LIT.3 The Prophet (Taras Shevchenko)
+focus: literature
+pedagogy: Seminar
+duration: 120
+transliteration: none
+tags:
+- literature
+- shevchenko
+- diary
+- psychology
+grammar:
+- Introspective language
+- Conversational Russian of 19th c.
+objectives:
+- Analyze "The Diary" (Журнал) as a psychological document
+- Discuss the period of exile and release (1857-1858)
+- Examine the contrast between the public "Kobzar" and private "Taras"
+- Understand his views on theater, literature, and technology
+vocabulary_count: 30
+slug: 19-shevchenkos-diary
+naturalness:
+  score: 10
+  status: PASS
+  reviewer: Antigravity
+  comment: 'Checked via scan-naturalness protocol. Flow: Excellent academic register. Discourse markers: Natural use of "зокрема", "однак", "натомість". Authenticity: High (Classical/Modern Academic). Note: Contains extensive 19th-century primary texts.'

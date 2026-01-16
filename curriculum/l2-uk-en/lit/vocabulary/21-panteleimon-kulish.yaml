@@ -1,0 +1,185 @@
+module: 21-panteleimon-kulish
+level: LIT
+version: '1.0'
+items:
+  - lemma: гарячковий
+    ipa: /ɦarʲat͡ʃˈkɔʋɪi̯/
+    translation: feverish/fervent
+    pos: adj
+    gender: m
+    definition: "Збуджений, неспокійний; про людину, яка діє швидко і пристрасно."
+  - lemma: хутір
+    ipa: /xutʲir/
+    translation: farmstead/hamlet
+    pos: noun
+    gender: m
+    definition: "Мале сільське поселення; для Куліша — символ ідеального патріархального життя."
+  - lemma: просвітництво
+    ipa: /prɔsˈʋitnɪt͡stʋo/
+    translation: enlightenment
+    pos: noun
+    gender: n
+    definition: "Поширення знань і культури; головна мета діяльності Куліша."
+  - lemma: амбівалентність
+    ipa: /ambʲiʋaˈlɛntnʲisʲtʲ/
+    translation: ambivalence
+    pos: noun
+    gender: f
+    definition: "Двоїстість почуттів; характеристика ставлення Куліша до козацтва."
+  - lemma: переклад
+    ipa: /pɛˈrɛklad/
+    translation: translation
+    pos: noun
+    gender: m
+    definition: "Відтворення тексту іншою мовою; Куліш переклав Біблію і Шекспіра."
+  - lemma: опонент
+    ipa: /ɔpɔˈnɛnt/
+    translation: opponent
+    pos: noun
+    gender: m
+    definition: "Супротивник у суперечці; Куліш часто був опонентом Шевченка."
+  - lemma: правопис
+    ipa: /praˈʋɔpɪs/
+    translation: orthography/spelling
+    pos: noun
+    gender: m
+    definition: "Система правил написання слів; Куліш створив 'кулішівку'."
+  - lemma: інтелектуал
+    ipa: /intɛlɛktuˈal/
+    translation: intellectual
+    pos: noun
+    gender: m
+    definition: "Людина розумової праці; Куліш позиціонував себе як першого українського інтелектуала."
+  - lemma: європеїзм
+    ipa: /jɛu̯rɔpɛˈjizm/
+    translation: Europeanism
+    pos: noun
+    gender: m
+    definition: "Орієнтація на європейську культуру і цінності."
+  - lemma: хуторянство
+    ipa: /xutɔˈrʲanstʋo/
+    translation: khutorianstvo (provincialism/isolationism)
+    pos: noun
+    gender: n
+    definition: "Філософія відокремленого життя на землі; у негативному сенсі — провінційність."
+  - lemma: полеміка
+    ipa: /pɔˈlɛmʲika/
+    translation: polemic
+    pos: noun
+    gender: f
+    definition: "Гостра суперечка в пресі або літературі."
+  - lemma: епістолярний
+    ipa: /ɛpʲistɔˈlʲarnɪi̯/
+    translation: epistolary
+    pos: noun
+    gender: m
+    definition: "Стосовний до листування; листи Куліша — шедевр жанру."
+  - lemma: подвижництво
+    ipa: /pɔdˈʋɪʒnɪt͡stʋo/
+    translation: asceticism/devotion
+    pos: noun
+    gender: n
+    definition: "Самовіддана діяльність заради високої мети."
+  - lemma: суперечливий
+    ipa: /supɛˈrɛt͡ʃlɪʋɪi̯/
+    translation: controversial/contradictory
+    pos: adj
+    gender: m
+    definition: "Такий, що містить суперечності; Куліш — найбільш суперечлива постать культури."
+  - lemma: еволюція
+    ipa: /ɛʋɔˈlʲut͡sʲija/
+    translation: evolution
+    pos: noun
+    gender: f
+    definition: "Процес поступового розвитку; погляди Куліша постійно еволюціонували."
+  - lemma: москвофільство
+    ipa: /mɔskʋɔˈfʲilʲstʋo/
+    translation: Russophilia
+    pos: noun
+    gender: n
+    definition: "Симпатія до російської влади; Куліша іноді звинувачували в цьому в пізні роки."
+  - lemma: українофільство
+    ipa: /ukrajinɔˈfʲilʲstʋo/
+    translation: Ukrainophilia
+    pos: noun
+    gender: n
+    definition: "Любов до українського; рух інтелігенції XIX ст."
+  - lemma: раціо
+    ipa: /rat͡sʲio/
+    translation: ratio (reason)
+    pos: noun
+    gender: n
+    definition: "Розум, логіка; Куліш ставив раціо вище за емоції (на відміну від Шевченка)."
+  - lemma: серце
+    ipa: /sɛrt͡sɛ/
+    translation: heart
+    pos: noun
+    gender: n
+    definition: "Символ емоційного, кордоцентричного світогляду (Шевченко)."
+  - lemma: цивілізація
+    ipa: /t͡sɪʋʲilʲiˈzat͡sʲija/
+    translation: civilization
+    pos: noun
+    gender: f
+    definition: "Рівень суспільного розвитку; Куліш хотів принести цивілізацію в Україну."
+  - lemma: варварство
+    ipa: /varvarstʋo/
+    translation: barbarism
+    pos: noun
+    gender: n
+    definition: "Безкультур'я; Куліш вважав козацьку анархію варварством."
+  - lemma: синтез
+    ipa: /sɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+    definition: "Поєднання різнорідних елементів."
+  - lemma: ренегат
+    ipa: /rɛnɛˈɦat/
+    translation: renegade
+    pos: noun
+    gender: m
+    definition: "Відступник; так Куліша називали радикали за критику козацтва."
+  - lemma: апостол
+    ipa: /aˈpɔstɔl/
+    translation: apostle
+    pos: noun
+    gender: m
+    definition: "Проповідник ідеї; Куліш вважав себе апостолом науки."
+  - lemma: візіонер
+    ipa: /ʋʲizʲiɔˈnɛr/
+    translation: visionary
+    pos: noun
+    gender: m
+    definition: "Людина, що передбачає майбутнє."
+  - lemma: критика
+    ipa: /krɪtɪka/
+    translation: criticism
+    pos: noun
+    gender: f
+    definition: "Аналіз і оцінка; Куліш був першим професійним критиком."
+  - lemma: перекладач
+    ipa: /pɛrɛklaˈdat͡ʃ/
+    translation: translator
+    pos: noun
+    gender: m
+    definition: "Той, хто перекладає тексти."
+  - lemma: Біблія
+    ipa: /bʲiblʲija/
+    translation: Bible
+    pos: noun
+    gender: f
+    definition: "Святе Письмо; переклад Біблії був справою життя Куліша."
+  - lemma: Шекспір
+    ipa: /ʃɛkˈspʲir/
+    translation: Shakespeare
+    pos: noun
+    gender: m
+    definition: "Англійський драматург; Куліш переклав його твори українською."
+  - lemma: хуторянка
+    ipa: /mɔtɔˈrɪk/
+    translation: khutoryanka
+    pos: noun
+    gender: f
+    definition: "Мешканка хутора; також псевдонім Ганни Барвінок."
+    ipa: /xutɔˈrʲanka/
