@@ -1457,6 +1457,40 @@ def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary")
         
     return '\n'.join(lines)
 
+from manifest_utils import load_manifest, get_module_by_slug, get_modules_for_level, Module
+
+def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module]:
+    """Get list of modules to process from manifest."""
+    manifest = load_manifest()
+    all_modules = []
+    
+    # Process core levels
+    for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+        if target_level and level != target_level:
+            continue
+        all_modules.extend(get_modules_for_level(level))
+        
+    # Process tracks
+    for track_name in manifest.get('tracks', {}):
+        if track_name.startswith('_'): continue
+        if target_level and track_name != target_level:
+            continue
+            
+        track_data = manifest['tracks'][track_name]
+        for local_num, mod_entry in enumerate(track_data.get('modules', []), 1):
+            all_modules.append(Module(
+                slug=mod_entry['slug'],
+                title=mod_entry.get('title', 'Untitled'),
+                level=track_name,
+                track=track_name,
+                local_num=local_num,
+                global_num=0,
+                phase=mod_entry.get('phase'),
+                focus=mod_entry.get('focus')
+            ))
+            
+    return all_modules
+
 def main():
     args = sys.argv[1:]
 
@@ -1464,57 +1498,39 @@ def main():
     validate_after = '--validate' in args
     args = [a for a in args if a != '--validate']
 
-    print('\n🚀 MDX Generator (Python)\n', flush=True)
+    print('\n🚀 MDX Generator (Manifest-Driven)\n', flush=True)
 
-    # Handle file path argument (e.g., generate_mdx.py curriculum/l2-uk-en/a1/01.md)
-    if args and str(args[0]).endswith('.md'):
-        file_path = Path(args[0])
-        print(f"  Detected file path argument: {file_path}")
-        
-        # Try to resolve path relative to project root if it exists
-        if not file_path.exists():
-            potential_path = PROJECT_ROOT / file_path
-            if potential_path.exists():
-                file_path = potential_path
-        
-        if file_path.exists():
-            # Expected structure: .../curriculum/l2-uk-en/a1/01-intro.md
-            try:
-                # Resolve to absolute to be safe
-                file_path = file_path.resolve()
-                
-                # Extract parts from path
-                # assumption: path ends with .../lang_pair/level/filename.md
-                if 'curriculum' in file_path.parts:
-                    curr_idx = file_path.parts.index('curriculum')
-                    if len(file_path.parts) > curr_idx + 2:
-                        lang_pair = file_path.parts[curr_idx + 1]
-                        target_level = file_path.parts[curr_idx + 2]
-                        
-                        # Extract module number
-                        match = re.match(r'^(\d+)', file_path.name)
-                        if match:
-                            target_module = int(match.group(1))
-                            print(f"  Auto-detected: lang={lang_pair}, level={target_level}, module={target_module}")
-                            args = [] # Clear args to prevent double processing
-                        else:
-                            print("  ⚠️  Could not extract module number from filename")
-            except Exception as e:
-                print(f"  ⚠️  Error parsing file path: {e}")
+    target_level = None
+    target_module = None
+    lang_pair = 'l2-uk-en'
 
     if args:
-        lang_pair = args[0]
-        target_level = args[1].lower() if len(args) > 1 else None
-        target_module = int(args[2]) if len(args) > 2 else None
-    elif 'lang_pair' not in locals():
-        # Fallback default if not detected from file path
-        lang_pair = 'l2-uk-en'
-        target_level = None
-        target_module = None
+        if args[0].endswith('.md'):
+            # Specific file logic (keeping for backward compatibility)
+            file_path = Path(args[0])
+            # ... existing detection logic could be here, but let's simplify for now
+            # and rely on slug lookup if we have a filename
+            slug = file_path.stem
+            # Remove leading numbers if present
+            slug = re.sub(r'^\d+-', '', slug)
+            mod_obj = get_module_by_slug(slug)
+            if mod_obj:
+                process_modules = [mod_obj]
+            else:
+                print(f"  ⚠️  Could not find module in manifest for: {args[0]}")
+                sys.exit(1)
+        else:
+            lang_pair = args[0]
+            target_level = args[1].lower() if len(args) > 1 else None
+            target_module = int(args[2]) if len(args) > 2 else None
+            process_modules = get_modules_from_manifest(target_level)
+    else:
+        process_modules = get_modules_from_manifest()
+
     print(f'Source: curriculum/{lang_pair}/', flush=True)
     print(f'Output: docusaurus/docs/\n', flush=True)
 
-    # Load EXTERNAL RESOURCES (YAML Architecture) - loaded once for all modules
+    # Load EXTERNAL RESOURCES
     external_resources_file = PROJECT_ROOT / 'docs' / 'resources' / 'external_resources.yaml'
     all_resources = {}
     if external_resources_file.exists():
@@ -1523,96 +1539,84 @@ def main():
             all_resources = resources_data.get('resources', {})
         print(f'📚 Loaded {len(all_resources)} modules with external resources\n', flush=True)
 
-    curriculum_path = CURRICULUM_DIR / lang_pair
-    # Core levels + specialized tracks
-    levels = [
-        'a1', 'a2', 'b1', 'b2', 'c1', 'c2',  # Core path
-        'b2-hist', 'c1-bio',                   # History & Biography tracks
-        'b2-pro', 'c1-pro',                    # Professional tracks
-        'lit', 'oes', 'ruth'                   # Literature & Linguistics tracks
-    ]
-
-    for level in levels:
-        if target_level and level != target_level:
+    current_level = None
+    for mod in process_modules:
+        if target_module and mod.local_num != target_module:
             continue
 
-        level_path = curriculum_path / level
-        if not level_path.exists():
+        if mod.level != current_level:
+            print(f'📁 Level {mod.level.upper()}')
+            current_level = mod.level
+            output_dir = DOCUSAURUS_DIR / mod.level
+            output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Find the physical file
+        # Try slug-only first, then numbered slug (migration period)
+        level_dir = CURRICULUM_DIR / lang_pair / mod.level
+        md_file = level_dir / f"{mod.slug}.md"
+        if not md_file.exists():
+            md_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.md"
+        
+        if not md_file.exists():
+            print(f"  ⚠️  Physical file not found for slug '{mod.slug}' in {mod.level}")
             continue
 
-        # Get module files
-        module_files = sorted(level_path.glob('*.md'))
-        if not module_files:
-            continue
-
-        print(f'📁 Level {level.upper()} ({len(module_files)} modules)')
-
-        # Ensure output directory
-        output_dir = DOCUSAURUS_DIR / level
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        for md_file in module_files:
-            # Extract module number from filename (e.g., "01-intro.md" -> 1)
-            match = re.match(r'^(\d+)', md_file.name)
-            if not match:
-                continue
-
-            module_num = int(match.group(1))
-
-            if target_module and module_num != target_module:
-                continue
-
-            # Read and convert
-            md_content = md_file.read_text(encoding='utf-8')
+        # Read and convert
+        md_content = md_file.read_text(encoding='utf-8')
+        
+        # Load META
+        meta_file = level_dir / 'meta' / f"{mod.slug}.yaml"
+        if not meta_file.exists():
+            meta_file = level_dir / 'meta' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
-            # Load META (YAML Architecture)
-            meta_file = md_file.parent / 'meta' / (md_file.stem + '.yaml')
-            meta_data = None
-            if meta_file.exists():
-                with open(meta_file, 'r', encoding='utf-8') as f:
-                    meta_data = yaml.safe_load(f)
-                    
-            # Load VOCABULARY (YAML Architecture)
-            vocab_file = md_file.parent / 'vocabulary' / (md_file.stem + '.yaml')
-            vocab_items = None
-            if vocab_file.exists():
-                with open(vocab_file, 'r', encoding='utf-8') as f:
-                    v_data = yaml.safe_load(f)
-                    if v_data and 'items' in v_data:
-                        vocab_items = v_data['items']
-
-            # Check for YAML activities file
-            # New structure: activities/{module}.yaml
-            # Legacy: {module}.activities.yaml
-            yaml_file = md_file.parent / 'activities' / (md_file.stem + '.yaml')
-            if not yaml_file.exists():
-                yaml_file = md_file.parent / (md_file.stem + '.activities.yaml')
+        meta_data = None
+        if meta_file.exists():
+            with open(meta_file, 'r', encoding='utf-8') as f:
+                meta_data = yaml.safe_load(f)
+                
+        # Load VOCABULARY
+        vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
+        if not vocab_file.exists():
+            vocab_file = level_dir / 'vocabulary' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
-            yaml_activities = None
-            if yaml_file.exists():
-                parser = ActivityParser()
-                try:
-                    yaml_activities = parser.parse(yaml_file)
-                    if yaml_activities:
-                        print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
-                except Exception as e:
-                    print(f'    ⚠️ Error parsing YAML activities: {e}')
+        vocab_items = None
+        if vocab_file.exists():
+            with open(vocab_file, 'r', encoding='utf-8') as f:
+                v_data = yaml.safe_load(f)
+                if v_data and 'items' in v_data:
+                    vocab_items = v_data['items']
 
-            # Lookup EXTERNAL RESOURCES by module_id
-            # module_id format: {level}-{filename} (e.g., a1-09-food-and-drinks)
-            module_id = f"{level}-{md_file.stem}"
-            module_resources = all_resources.get(module_id, {})
-            if module_resources:
-                resource_count = sum(len(module_resources.get(t, [])) for t in ['podcasts', 'youtube', 'articles', 'books', 'websites'])
-                print(f'    🔗 Loading {resource_count} external resources from YAML')
+        # Load ACTIVITIES
+        yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
+        if not yaml_file.exists():
+            yaml_file = level_dir / 'activities' / f"{mod.local_num:02d}-{mod.slug}.yaml"
+        if not yaml_file.exists():
+            yaml_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.activities.yaml"
+        
+        yaml_activities = None
+        if yaml_file.exists():
+            parser = ActivityParser()
+            try:
+                yaml_activities = parser.parse(yaml_file)
+            except Exception as e:
+                print(f'    ⚠️ Error parsing YAML activities for {mod.slug}: {e}')
 
-            mdx_content = generate_mdx(md_content, module_num, yaml_activities, meta_data, vocab_items, module_resources, level)
+        # EXTERNAL RESOURCES
+        module_id = f"{mod.level}-{mod.slug}"
+        module_resources = all_resources.get(module_id, {})
 
-            # Write output
-            output_file = output_dir / f'module-{str(module_num).zfill(2)}.mdx'
-            output_file.write_text(mdx_content, encoding='utf-8')
+        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
 
-            print(f'  ✓ Module {str(module_num).zfill(2)}')
+        # Write output
+        # Use slug-based filenames for tracks (b2-hist, c1-bio, etc.)
+        # Use numbered format for core levels (a1-c2) for backward compatibility
+        if mod.track and mod.track != 'core':
+            output_file = output_dir / f'{mod.slug}.mdx'
+        else:
+            output_file = output_dir / f'module-{mod.local_num:02d}.mdx'
+        output_file.write_text(mdx_content, encoding='utf-8')
+
+        print(f'  ✓ {mod.local_num:02d}. {mod.title}')
 
     print('\n✅ MDX generation complete!')
 

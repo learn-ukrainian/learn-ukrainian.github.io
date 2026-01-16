@@ -258,8 +258,13 @@ class ActivityValidator:
                 for warn in yaml_results['warnings']:
                     print(f"     ⚠️  {warn}")
 
-            # 2. MDX validation
-            mdx_path = Path(f'docusaurus/docs/{self.level}/module-{module_num:02d}.mdx')
+            # 2. MDX validation (use slug from yaml filename)
+            # yaml_file.stem is like "01-some-slug" - extract slug
+            slug = '-'.join(yaml_file.stem.split('-')[1:]) if '-' in yaml_file.stem else yaml_file.stem
+            mdx_path = Path(f'docusaurus/docs/{self.level}/{slug}.mdx')
+            # Fallback to old numbered format if slug-based doesn't exist
+            if not mdx_path.exists():
+                mdx_path = Path(f'docusaurus/docs/{self.level}/module-{module_num:02d}.mdx')
             mdx_results = self.validate_mdx(mdx_path)
             if not mdx_results['pass']:
                 print(f"  ❌ MDX: {len(mdx_results['errors'])} errors")

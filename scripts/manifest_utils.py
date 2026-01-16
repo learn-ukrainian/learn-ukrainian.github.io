@@ -41,16 +41,23 @@ class Module:
     @property
     def path(self) -> str:
         """URL path for this module."""
+        # Use slug-based paths for tracks, numbered for core levels
+        if self.track and self.track != 'core':
+            return f"/{self.level}/{self.slug}"
         return f"/{self.level}/module-{self.local_num:02d}"
 
     @property
     def numbered_slug(self) -> str:
-        """Current numbered filename (for compatibility)."""
+        """Legacy numbered filename (for compatibility during migration)."""
         return f"{self.local_num:02d}-{self.slug}"
 
     @property
     def file_path(self) -> Path:
-        """Path to the module markdown file."""
+        """Path to the module markdown file (slug-based, falls back to numbered)."""
+        slug_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / self.level / f"{self.slug}.md"
+        if slug_path.exists():
+            return slug_path
+        # Fallback to numbered format during migration
         return PROJECT_ROOT / "curriculum" / "l2-uk-en" / self.level / f"{self.numbered_slug}.md"
 
 
@@ -127,10 +134,10 @@ def get_module_by_slug(slug: str) -> Optional[Module]:
 
 def get_modules_for_level(level: str) -> list[Module]:
     """
-    Get ordered list of modules for a level.
+    Get ordered list of modules for a level or track.
 
     Args:
-        level: Level code (e.g., 'a1', 'b2')
+        level: Level code (e.g., 'a1', 'b2') or track name (e.g., 'b2-hist', 'c1-bio')
 
     Returns:
         List of Module objects in curriculum order
@@ -138,7 +145,24 @@ def get_modules_for_level(level: str) -> list[Module]:
     manifest = load_manifest()
     modules = []
 
-    # Calculate global offset
+    # Check if this is a track
+    if level in manifest.get('tracks', {}):
+        track_data = manifest['tracks'][level]
+        for local_num, mod in enumerate(track_data.get('modules', []), 1):
+            modules.append(Module(
+                slug=mod.get('slug'),
+                title=mod.get('title', ''),
+                level=level,
+                track=level,
+                local_num=local_num,
+                global_num=0,  # Tracks don't have global numbers
+                phase=mod.get('phase'),
+                focus=mod.get('focus'),
+                tags=mod.get('tags')
+            ))
+        return modules
+
+    # Calculate global offset for core levels
     global_offset = 0
     for lvl in LEVELS:
         if lvl == level:
@@ -146,7 +170,7 @@ def get_modules_for_level(level: str) -> list[Module]:
         level_data = manifest.get('core', {}).get(lvl, {})
         global_offset += len(level_data.get('modules', []))
 
-    # Get modules for this level
+    # Get modules for this core level
     level_data = manifest.get('core', {}).get(level, {})
     for local_num, mod in enumerate(level_data.get('modules', []), 1):
         modules.append(Module(

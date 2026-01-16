@@ -146,7 +146,8 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
     # Detect level from file path
     level_from_path = None
     # Match a1, a2, b1, b2, c1, c2 (case insensitive)
-    path_match = re.search(r'/([abc][12])/', file_path.lower())
+    # Also matches tracks like b2-hist, c1-bio by ignoring suffix
+    path_match = re.search(r'/([abc][12])(?:-[a-z0-9]+)?/', file_path.lower())
     if path_match:
         level_from_path = path_match.group(1).upper()
 

@@ -6,5098 +6,1068 @@ settings:
 core:
   a1:
     name: A1 - Beginner
-    modules:
-    - slug: the-cyrillic-code-i
-      title: The Cyrillic Code I
-      phase: A1.1
-      focus: grammar
-      tags:
-      - alphabet
-      - cyrillic
-      - phonetics
-      - true-friends
-      - false-friends
-    - slug: the-cyrillic-code-ii
-      title: The Cyrillic Code II
-      phase: A1.1
-      focus: grammar
-      tags:
-      - alphabet
-      - cyrillic
-      - phonetics
-      - unique-letters
-      - iotated-vowels
-      - soft-sign
-      - italic
-    - slug: the-gender-code
-      title: The Gender Code
-      phase: A1.1
-      focus: grammar
-      tags:
-      - grammar
-      - gender
-      - declension
-      - noun-patterns
-    - slug: this-is-i-am
-      title: This Is / I Am
-      phase: A1.1
-      focus: grammar
-      tags:
-      - grammar
-      - pronouns
-      - identity
-      - zero-copula
-    - slug: my-world-objects
-      title: 'My World: Objects'
-      phase: A1.1
-      focus: grammar
-      tags:
-      - demonstratives
-      - household-objects
-      - gender-agreement
-      - pointing
-    - slug: the-living-verb-i
-      title: 'The Living Verb I - First Conjugation: -ати Verbs'
-      phase: A1.1
-      focus: grammar
-      tags:
-      - verbs
-      - conjugation
-      - first-conjugation
-      - present-tense
-      - actions
-    - slug: questions-and-negation
-      title: Questions & Negation
-      phase: A1.1
-      focus: grammar
-      tags:
-      - questions
-      - negation
-      - question-words
-      - frequency-adverbs
-    - slug: the-living-verb-ii
-      title: 'The Living Verb II - Second Conjugation: -ити Verbs'
-      phase: A1.1
-      focus: grammar
-      tags:
-      - verbs
-      - conjugation
-      - second-conjugation
-      - irregular-verbs
-    - slug: reflexive-verbs
-      title: Reflexive Verbs (-ся)
-      phase: A1.1
-      focus: grammar
-      tags:
-      - verbs
-      - reflexive
-      - grammar
-      - present-tense
-    - slug: checkpoint-first-contact
-      title: Checkpoint - First Contact
-      phase: A1.1
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - review
-      - alphabet
-      - gender
-      - verbs
-      - questions
-      - food
-    - slug: the-accusative-i-things
-      title: The Accusative I - Things
-      phase: A1.2 Navigation
-      focus: grammar
-      tags:
-      - grammar
-      - accusative
-      - cases
-      - direct-objects
-    - slug: the-accusative-ii-people
-      title: 'The Accusative II: People'
-      phase: A1.2
-      focus: grammar
-      tags:
-      - accusative
-      - cases
-      - animate
-      - people
-      - grammar
-    - slug: the-locative-where-things-are
-      title: The Locative - Where Things Are
-      phase: A1.2
-      focus: grammar
-      tags:
-      - grammar
-      - locative-case
-      - places
-      - prepositions
-    - slug: mine-and-yours
-      title: Mine and Yours
-      phase: A1.2
-      focus: grammar
-      tags:
-      - possessives
-      - pronouns
-      - agreement
-      - gender
-      - ownership
-    - slug: around-the-city
-      title: Around the City
-      phase: A1.2 - Navigation
-      focus: grammar
-      tags:
-      - navigation
-      - directions
-      - city
-      - locative-case
-      - transport
-    - slug: the-genitive-i-absence
-      title: The Genitive I - Absence
-      phase: A1.2 - Navigation
-      focus: grammar
-      tags:
-      - genitive-case
-      - absence
-      - negation
-      - немає
-      - prepositions
-    - slug: numbers-and-money
-      title: Numbers & Money
-      phase: A1.2
-      focus: grammar
-      tags:
-      - numbers
-      - money
-      - shopping
-      - genitive-plural
-      - currency
-    - slug: food-and-shopping
-      title: Food, Drinks & Shopping
-      phase: A1.2
-      focus: grammar
-      tags:
-      - food
-      - shopping
-      - vocabulary
-      - accusative
-      - genitive
-    - slug: at-the-cafe
-      title: At the Café
-      phase: A1.2
-      focus: grammar
-      tags:
-      - functional
-      - café
-      - ordering
-      - restaurant
-      - food
-      - drinks
-      - politeness
-    - slug: checkpoint-navigation
-      title: Checkpoint - Navigation
-      phase: A1.2
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - review
-      - accusative
-      - locative
-      - genitive
-      - possessives
-      - navigation
-      - restaurant
-    - slug: yesterday-past-tense
-      title: Yesterday - Past Tense
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - past-tense
-      - l-participle
-      - time-expressions
-      - verbs
-      - aspect
-    - slug: tomorrow-future-tense
-      title: Tomorrow - Future Tense
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - future-tense
-      - compound-future
-      - time-expressions
-      - planning
-      - aspect
-    - slug: what-time-is-it
-      title: What Time Is It?
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - time
-      - clock
-      - days-of-week
-      - months
-      - calendar
-    - slug: can-must-want-modals
-      title: Can, Must, Want - Modals
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - modals
-      - ability
-      - obligation
-      - permission
-    - slug: my-daily-routine
-      title: My Daily Routine
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - reflexive-verbs
-      - daily-routine
-      - time-sequence
-      - habits
-    - slug: describing-things-adjectives
-      title: Describing Things - Adjectives
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - adjectives
-      - agreement
-      - gender
-      - description
-    - slug: colors-and-clothing
-      title: Colors & Clothing
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - colors
-      - clothing
-      - adjectives
-      - description
-    - slug: description-adverbs
-      title: 'Description: Adverbs'
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - adverbs
-      - manner
-      - frequency
-      - description
-    - slug: weather-and-nature
-      title: Weather & Nature
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - weather
-      - nature
-      - seasons
-      - pets
-      - impersonal
-    - slug: prepositions-iii
-      title: Prepositions III
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - prepositions
-      - direction
-      - location
-      - movement
-    - slug: body-and-health
-      title: Body & Health
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - body
-      - health
-      - doctor
-      - pharmacy
-    - slug: my-family
-      title: My Family
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - family
-      - relationships
-      - possessives
-    - slug: holidays-and-traditions
-      title: Holidays & Traditions
-      phase: A1.3 - Consolidation
-      focus: grammar
-      tags:
-      - holidays
-      - traditions
-      - greetings
-      - celebrations
-    - slug: checkpoint-final-review
-      title: 'Checkpoint: Final Review'
-      phase: A1.3 - Consolidation
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - assessment
-      - A1
-    - slug: at-the-cafe-practical
-      title: At the Café
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - cafe
-      - ordering
-      - practical
-    - slug: at-the-restaurant
-      title: At the Restaurant
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - restaurant
-      - food
-      - practical
-    - slug: at-the-market
-      title: At the Market
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - market
-      - shopping
-      - practical
-    - slug: at-the-store
-      title: At the Store
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - store
-      - shopping
-      - practical
-    - slug: buying-tickets
-      title: Buying Tickets
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - transport
-      - tickets
-      - practical
-    - slug: taking-transport
-      title: Taking Transport
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - transport
-      - navigation
-      - practical
-    - slug: phone-basics
-      title: Phone Basics
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - phone
-      - communication
-      - practical
-    - slug: emergencies
-      title: Emergencies
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - emergency
-      - help
-      - practical
-    - slug: combined-practice
-      title: Combined Practice
-      phase: A1.4 Practical Scenarios
-      focus: practical
-      tags:
-      - review
-      - practical
-      - integration
-    - slug: a1-final-exam
-      title: A1 Final Exam
-      phase: A1.4 Practical Scenarios
-      focus: checkpoint
-      tags:
-      - exam
-      - assessment
-      - cumulative
+    modules: []
   a2:
     name: A2 - Elementary
-    modules:
-    - slug: the-dative-i-pronouns
-      title: The Dative I — Pronouns
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - dative
-      - pronouns
-    - slug: the-dative-ii-nouns
-      title: The Dative II — Nouns
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - dative
-      - nouns
-    - slug: dative-verbs
-      title: Dative Verbs
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - verbs
-      - dative
-      - case government
-    - slug: the-instrumental-i-accompaniment
-      title: The Instrumental I — Accompaniment
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - instrumental
-      - prepositions
-    - slug: the-instrumental-ii-means-and-tools
-      title: The Instrumental II — Means & Tools
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - instrumental
-      - transport
-      - tools
-    - slug: being-and-becoming
-      title: Being and Becoming
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - instrumental
-      - professions
-      - бути
-      - стати
-    - slug: spatial-prepositions
-      title: Spatial Prepositions
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - prepositions
-      - cases
-      - spatial
-    - slug: logical-prepositions
-      title: Logical Prepositions
-      phase: A2.1
-      focus: grammar
-      tags:
-      - prepositions
-      - grammar
-      - abstract
-    - slug: all-cases-practice
-      title: All Cases Practice
-      phase: A2.1
-      focus: grammar
-      tags:
-      - grammar
-      - cases
-      - practice
-      - review
-    - slug: at-the-post-office-and-bank
-      title: At the Post Office & Bank
-      phase: A2.1
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - services
-      - functional
-      - cases
-    - slug: checkpoint-cases
-      title: Checkpoint - Cases
-      phase: A2.1
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - assessment
-      - cases
-    - slug: aspect-introduction
-      title: Aspect Introduction
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - verbs
-    - slug: the-completed-past
-      title: The Completed Past
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - past-tense
-      - perfective
-    - slug: future-plans-and-promises
-      title: Future Plans & Promises
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - future-tense
-      - perfective
-    - slug: aspect-morphology
-      title: Aspect Pairs Deep Dive
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - word-formation
-      - prefixes
-    - slug: aspect-mastery-pairs
-      title: Aspect Mastery
-      phase: A2.2
-      focus: grammar
-      tags:
-      - aspect
-      - verbs
-      - drilling
-    - slug: possessive-sviy
-      title: 'Possessive: Свій vs Його'
-      phase: A2.2
-      focus: grammar
-      tags:
-      - possessives
-      - pronouns
-      - grammar
-    - slug: bigger-better-stronger
-      title: Bigger, Better, Stronger
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - adjectives
-      - comparison
-    - slug: the-best-the-worst
-      title: The Best, The Worst
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - adjectives
-      - superlatives
-    - slug: preferences-and-choices
-      title: Preferences & Choices
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - preferences
-      - comparison
-      - functional
-    - slug: numerals-and-nouns
-      title: Numerals & Nouns
-      phase: A2.3
-      focus: grammar
-      tags:
-      - numerals
-      - nouns
-      - agreement
-      - grammar
-    - slug: if-i-were
-      title: If I Were...
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - conditional
-      - hypothetical
-    - slug: complete-imperative
-      title: The Complete Imperative
-      phase: A2.2
-      focus: grammar
-      tags:
-      - grammar
-      - imperative
-      - mood
-      - verb-forms
-    - slug: smart-shopping
-      title: Smart Shopping
-      phase: A2.2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - functional
-      - shopping
-      - comparison
-    - slug: checkpoint-aspect-comparison
-      title: Checkpoint - Aspect & Comparison
-      phase: A2.2
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - assessment
-    - slug: telling-stories
-      title: Telling Stories
-      phase: A2.3
-      focus: grammar
-      tags:
-      - storytelling
-      - sequence
-      - narration
-    - slug: because-and-although
-      title: Because and Although
-      phase: A2.3
-      focus: grammar
-      tags:
-      - connectors
-      - reasoning
-      - debating
-    - slug: she-said-that
-      title: She Said That...
-      phase: A2.3
-      focus: grammar
-      tags:
-      - speech
-      - dialogue
-      - gossip
-    - slug: i-think-that
-      title: I Think That...
-      phase: A2.3
-      focus: grammar
-      tags:
-      - opinions
-      - thoughts
-      - agreement
-    - slug: i-feel-like
-      title: I Feel Like...
-      phase: A2.3
-      focus: grammar
-      tags:
-      - feelings
-      - emotions
-      - state
-    - slug: in-order-to
-      title: In Order To...
-      phase: A2.3
-      focus: grammar
-      tags:
-      - purpose
-      - intent
-      - grammar
-    - slug: which-one
-      title: Which One?
-      phase: A2.3
-      focus: grammar
-      tags:
-      - connectors
-      - relative clauses
-      - grammar
-      - declension
-    - slug: time-clauses
-      title: When & While
-      phase: A2.3
-      focus: grammar
-      tags:
-      - connectors
-      - time
-      - grammar
-      - logic
-    - slug: at-the-doctor
-      title: At the Doctor's
-      phase: A2.3
-      focus: vocabulary
-      tags:
-      - medicine
-      - health
-      - symptoms
-      - functional
-    - slug: checkpoint
-      title: Checkpoint - Complex Ideas
-      phase: A2.3
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - health
-      - logic
-    - slug: basic-motion-prefixes
-      title: Motion Prefixes I — Entering and Exiting
-      phase: A2.4
-      focus: grammar
-      tags:
-      - grammar
-      - verbs
-      - prefixes
-      - word-formation
-    - slug: advanced-motion-prefixes
-      title: Advanced Motion Prefixes
-      phase: A2.4
-      focus: grammar
-      tags:
-      - motion verbs
-      - prefixes
-      - spatial
-      - advanced
-    - slug: action-verb-prefixes
-      title: Action Verb Prefixes
-      phase: A2.4
-      focus: grammar
-      tags:
-      - grammar
-      - verbs
-      - prefixes
-      - word-formation
-    - slug: adjective-suffixes-qualities
-      title: Word Formation — Adjective Suffixes
-      phase: A2.4
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - adjectives
-      - suffixes
-    - slug: adj-suffixes
-      title: Adjective Suffixes
-      phase: A2.4
-      focus: grammar
-      tags:
-      - grammar
-      - adjectives
-      - suffixes
-      - word-formation
-    - slug: root-families-i
-      title: Root Families I
-      phase: A2.4
-      focus: grammar
-      tags:
-      - vocabulary
-      - roots
-      - word-formation
-    - slug: root-families-ii
-      title: Root Families II
-      phase: A2.4
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - roots
-    - slug: wf-mastery
-      title: Word Formation Mastery
-      phase: A2.4
-      focus: grammar
-      tags:
-      - checkpoint
-      - roots
-      - vocabulary
-      - review
-    - slug: checkpoint-word-formation
-      title: Checkpoint - Word Formation
-      phase: A2.4
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - assessment
-    - slug: food-and-cooking
-      title: Food & Cooking
-      phase: A2.5
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - food
-      - cooking
-      - kitchen
-    - slug: home-and-furniture
-      title: Home & Furniture
-      phase: A2.5
-      focus: grammar
-      tags:
-      - vocabulary
-      - home
-      - furniture
-    - slug: nature-and-weather
-      title: Nature & Weather
-      phase: A2.5
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - nature
-      - weather
-      - environment
-    - slug: emotions-personality
-      title: Emotions & Personality
-      phase: A2
-      focus: grammar
-      tags:
-      - vocabulary
-      - emotions
-      - personality
-      - adjectives
-    - slug: work-professions
-      title: Work & Professions
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - work
-      - professions
-      - business
-    - slug: technology-media
-      title: Technology & Media
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - technology
-      - internet
-      - media
-    - slug: hobbies-leisure
-      title: Hobbies & Leisure
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - hobbies
-      - travel
-      - entertainment
-    - slug: education-learning
-      title: Education & Learning
-      phase: A2
-      focus: grammar
-      tags:
-      - vocabulary
-      - education
-      - school
-      - university
-    - slug: shopping-services
-      title: Shopping & Services
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - shopping
-      - money
-      - services
-    - slug: sports-fitness
-      title: Sports & Fitness
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - sports
-      - health
-      - hobby
-    - slug: health-body
-      title: Health & Body
-      phase: A2
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - health
-      - body
-      - doctor
-    - slug: checkpoint-vocabulary
-      title: Checkpoint - Vocabulary Expansion
-      phase: A2.5
-      focus: checkpoint
-      tags:
-      - review
-      - checkpoint
-      - vocabulary
-      - assessment
-    - slug: grammar-review
-      title: A2 Grammar Review
-      phase: A2
-      focus: checkpoint
-      tags:
-      - review
-      - grammar
-      - cases
-      - syntax
-    - slug: final-review
-      title: A2 Final Review (Skills)
-      phase: A2
-      focus: checkpoint
-      tags:
-      - review
-      - skills
-      - reading
-      - writing
-      - listening
+    modules: []
   b1:
     name: B1 - Intermediate
-    modules:
-    - slug: how-to-talk-about-grammar
-      title: Як говорити про граматику
-      phase: B1.0 Bridge
-      focus: bridge
-      tags:
-      - grammar
-      - metalanguage
-      - terminology
-      - bridge
-    - slug: language-about-verbs
-      title: Мова про дієслова
-      phase: B1.0 Bridge
-      focus: bridge
-      tags:
-      - grammar
-      - metalanguage
-      - aspect
-      - tense
-      - bridge
-    - slug: reading-grammar-rules
-      title: Читаємо граматичні правила
-      phase: B1.0 Bridge
-      focus: bridge
-      tags:
-      - grammar
-      - metalanguage
-      - patterns
-      - bridge
-    - slug: sentence-structure
-      title: Структура речення
-      phase: B1.0 Bridge
-      focus: bridge
-      tags:
-      - grammar
-      - metalanguage
-      - syntax
-      - bridge
-    - slug: ready-for-immersion
-      title: Готові до занурення
-      phase: B1.0 Bridge
-      focus: bridge
-      tags:
-      - grammar
-      - metalanguage
-      - checkpoint
-      - bridge
-    - slug: aspect-complete-system
-      title: 'Вид дієслова: повна система'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - verbs
-    - slug: aspect-past-single-repeated
-      title: 'Вид у минулому: одного разу vs щодня'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - past-tense
-      - adverbs
-    - slug: aspect-past-result-process
-      title: 'Вид у минулому: результат vs процес'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - past-tense
-      - duration
-    - slug: aspect-future
-      title: Вид у майбутньому часі
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - future-tense
-      - verb-conjugation
-    - slug: aspect-negation
-      title: Вид у запереченні
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - negation
-      - imperatives
-    - slug: aspect-in-imperatives
-      title: Вид у наказовому способі
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - imperatives
-    - slug: aspect-pairs-essential-40
-      title: 'Видові пари: 40 найважливіших'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - verbs
-      - vocabulary
-    - slug: work-week-aspect-in-action
-      title: 'Робочий тиждень: вид у дії'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - work
-      - thematic
-    - slug: aspect-integration-practice
-      title: 'Інтеграція виду: практика'
-      phase: B1.1 Aspect
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - integration
-    - slug: checkpoint-aspect-mastery
-      title: 'Контрольна точка: Опанування виду'
-      phase: B1.1 Aspect Mastery Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - aspect
-    - slug: motion-verbs-full-system
-      title: 'Дієслова руху: повна система'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - verbs
-    - slug: motion-coming-going
-      title: 'Рух: Прибуття та вихід'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion
-      - prefixes
-    - slug: motion-passing-crossing
-      title: 'Рух: перехід і обхід'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - prefixes
-    - slug: motion-starting-returning
-      title: 'Рух: початок і повернення'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - prefixes
-    - slug: motion-approaching-departing
-      title: 'Рух: наближення і віддалення'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - prefixes
-    - slug: motion-figurative-uses
-      title: Переносні значення дієслів руху
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - figurative-language
-      - idioms
-    - slug: motion-full-prefix-integration
-      title: 'Рух: інтеграція префіксів'
-      phase: B1.3 Motion Verbs
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - prefixes
-    - slug: motion-patterns-other-verbs
-      title: Префікси руху в інших дієсловах
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - prefixes
-      - word-formation
-      - verbs
-    - slug: motion-practice-integration
-      title: 'Дієслова руху: практика та інтеграція'
-      phase: B1.2 Motion
-      focus: grammar
-      tags:
-      - grammar
-      - motion-verbs
-      - integration
-      - practice
-      - prepositions
-    - slug: checkpoint-motion-verbs
-      title: 'Контрольна точка: Дієслова руху'
-      phase: B1.2 Motion Verbs Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - motion-verbs
-    - slug: relative-clauses-yakyi
-      title: 'Підрядні означальні: який'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - relative-clauses
-      - complex-sentences
-    - slug: relative-clauses-de-kudy-zvidky
-      title: 'Підрядні означальні: де, куди, звідки'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - relative-clauses
-      - complex-sentences
-      - place-adverbs
-    - slug: relative-clauses-koly-shcho
-      title: 'Підрядні означальні: коли, що'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - relative-clauses
-      - complex-sentences
-      - time-expressions
-    - slug: purpose-shchob-infinitive
-      title: 'Підрядні речення мети: щоб + інфінітив'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - purpose-clauses
-      - complex-sentences
-      - infinitive
-    - slug: purpose-shchob-past-form
-      title: 'Підрядні речення мети: щоб + минула форма'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - purpose-clauses
-      - complex-sentences
-      - subjunctive
-    - slug: conditionals-real-yakshcho
-      title: 'Умовні речення: реальна умова (якщо)'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - conditionals
-      - complex-sentences
-      - yakshcho
-    - slug: conditionals-unreal-yakby
-      title: 'Умовні речення: нереальна умова (якби)'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - conditionals
-      - complex-sentences
-      - yakby
-      - subjunctive
-    - slug: conditionals-mixed-complex
-      title: 'Умовні речення: змішані та складні умови'
-      phase: B1.3a Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - conditionals
-      - complex-sentences
-      - mixed-conditionals
-    - slug: checkpoint-complex-sentences-1
-      title: 'Контрольна точка: складні речення (частина 1)'
-      phase: B1.3a Complex Sentences Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - complex-sentences
-      - relative-clauses
-      - purpose-clauses
-      - conditionals
-    - slug: concessive-khocha
-      title: 'Допустові речення: хоча, незважаючи на'
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - concessive-clauses
-      - complex-sentences
-      - khocha
-    - slug: causal-result-clauses
-      title: Причинові та наслідкові речення
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - complex-sentences
-      - causal-clauses
-      - result-clauses
-    - slug: temporal-clauses
-      title: Часові підрядні речення
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - complex-sentences
-      - temporal-clauses
-    - slug: complex-sentence-integration
-      title: Інтеграція складних речень
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - complex-sentences
-      - integration
-      - synthesis
-    - slug: reported-statements
-      title: 'Непряма мова: твердження'
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - reported-speech
-      - indirect-speech
-      - statements
-    - slug: reported-questions-commands
-      title: Непрямі питання та накази
-      phase: B1.3b Complex Sentences
-      focus: grammar
-      tags:
-      - grammar
-      - reported-speech
-      - indirect-questions
-      - commands
-    - slug: checkpoint-complex-sentences-2
-      title: 'Контрольна точка: складні речення (частина 2)'
-      phase: B1.3b Complex Sentences Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - complex-sentences
-      - concessive-clauses
-      - causal-clauses
-      - temporal-clauses
-      - reported-speech
-    - slug: adverbial-participles-imperfective
-      title: Дієприслівники недоконаного виду
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - adverbial-participles
-      - imperfective
-    - slug: adverbial-participles-perfective
-      title: Дієприслівники доконаного виду
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - adverbial-participles
-      - perfective
-    - slug: active-participles-phrases
-      title: Активні дієприкметники та їхній стиль
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - active-participles
-      - stylistics
-      - register
-    - slug: past-passive-participles-1
-      title: Пасивні дієприкметники минулого часу I
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - passive-participles
-      - past
-    - slug: past-passive-participles-2
-      title: 'Пасивні дієприкметники: коротка форма'
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - passive
-      - impersonal
-    - slug: passive-constructions
-      title: 'Пасивні конструкції: повна система'
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - voice
-      - constructions
-    - slug: diminutives-master-class
-      title: 'Демінутиви: майстер-клас'
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - diminutives
-      - word-formation
-      - pragmatics
-    - slug: numerals-collectives-fractions
-      title: 'Числівники: збірні та дроби'
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - numerals
-      - collectives
-      - fractions
-    - slug: integrated-grammar-lab
-      title: Інтегрована граматична лабораторія
-      phase: B1.4 Advanced Grammar
-      focus: grammar
-      tags:
-      - grammar
-      - integration
-      - synthesis
-      - practice
-    - slug: checkpoint-advanced-grammar
-      title: 'Контрольна точка: Просунута граматика'
-      phase: B1.4 Advanced Grammar Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - participles
-      - passive
-      - diminutives
-      - numerals
-    - slug: abstract-concepts-ideas
-      title: 'Абстрактні концепції: ідеї та думки'
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - abstract
-    - slug: abstract-concepts-processes
-      title: 'Абстрактні концепції: процеси та зміни'
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - abstract
-      - processes
-    - slug: expressing-opinions
-      title: Вираження думок та поглядів
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - opinions
-      - discourse
-    - slug: agreement-disagreement
-      title: Згода і незгода
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - discussion
-      - debate
-    - slug: discourse-markers-basic
-      title: 'Дискурсивні маркери: базові конектори'
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - discourse
-      - connectors
-    - slug: discourse-markers-advanced
-      title: 'Дискурсивні маркери II: складна організація'
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - discourse-markers
-      - text-organization
-    - slug: describing-changes
-      title: Опис змін
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - change
-      - dynamics
-    - slug: media-news
-      title: Медіа та новини
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - media
-      - journalism
-    - slug: society-politics
-      title: Суспільство та політика
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - society
-      - politics
-    - slug: professional-communication
-      title: Професійна комунікація
-      phase: B1.5 Vocabulary Expansion I
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - professional
-      - workplace
-    - slug: environment-ecology
-      title: Довкілля та екологія
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - environment
-      - ecology
-    - slug: health-wellness
-      title: Здоров'я та самопочуття
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - health
-      - wellness
-    - slug: emotions-deep-dive
-      title: 'Емоції: глибоке занурення'
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - emotions
-      - psychology
-    - slug: relationships
-      title: Стосунки та зв'язки
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - relationships
-      - social
-    - slug: business-basics
-      title: Основи бізнесу
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - business
-      - professional
-    - slug: travel-geography
-      title: Подорожі та географія
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - travel
-      - geography
-    - slug: synonymy-thinking-verbs
-      title: 'Синонімія I: Дієслова мислення'
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - synonymy
-      - verbs
-      - cognition
-    - slug: synonymy-speaking-verbs
-      title: 'Синоніми II: дієслова мовлення'
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - synonymy
-      - speaking-verbs
-    - slug: collocations-expressions
-      title: Колокації та вирази
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - collocations
-      - expressions
-    - slug: emotional-intelligence
-      title: Емоційний інтелект та міжособистісні навички
-      phase: B1.6 Vocabulary Expansion II
-      focus: vocabulary
-      tags:
-      - vocabulary
-      - emotional-intelligence
-      - interpersonal
-    - slug: regions-west
-      title: 'Українські регіони: Захід'
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - regions
-      - western-ukraine
-    - slug: regions-east
-      title: 'Українські регіони: Схід'
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - regions
-      - eastern-ukraine
-    - slug: regions-south
-      title: Українські регіони - Південь
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - geography
-      - regions
-      - southern-ukraine
-    - slug: regions-center
-      title: 'Українські регіони: Центр'
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - regions
-      - central-ukraine
-      - cossacks
-    - slug: ukrainian-music-today
-      title: Українська музика сьогодні
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - music
-      - contemporary
-    - slug: ukrainian-cinema-and-tv
-      title: Українське кіно та серіали
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - culture
-      - cinema
-      - television
-      - media
-    - slug: technology-and-startups
-      title: Технології та стартапи
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - technology
-      - IT
-      - startups
-      - contemporary
-    - slug: sports-in-ukraine
-      title: Спорт в Україні
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - spectator-sports
-      - sports
-      - football
-      - boxing
-      - Olympics
-      - contemporary
-    - slug: active-lifestyle
-      title: Активний відпочинок
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - active-lifestyle
-      - fitness
-      - health
-      - outdoors
-    - slug: running-in-ukraine
-      title: Біг в Україні
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - running
-      - marathons
-      - events
-      - active-lifestyle
-    - slug: mountains-trail
-      title: Гори та трейлраннінг
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - hiking
-      - mountains
-      - trail-running
-      - carpathians
-    - slug: cycling-water
-      title: Велосипед та водні види
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - cycling
-      - swimming
-      - triathlon
-      - kayaking
-    - slug: winter-sports
-      title: Зимові види спорту
-      phase: B1.7
-      focus: cultural
-      tags:
-      - cultural
-      - winter-sports
-      - skiing
-      - snowboarding
-      - bukovel
-    - slug: ukrainian-cuisine
-      title: Українська кухня
-      phase: B1.7 Contemporary Ukraine
-      focus: cultural
-      tags:
-      - cultural
-      - cuisine
-      - food
-      - traditions
-    - slug: ukrainski-sviata-ta-festyvali
-      title: Українські свята та фестивалі
-      phase: B1.7
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - festivals
-      - traditions
-    - slug: novyny-yak-chytaty
-      title: Новини - як читати
-      phase: B1.8 Skills & Integration
-      focus: skills
-      tags:
-      - skills
-      - reading
-      - news
-      - media-literacy
-    - slug: interviu-ta-podkasty
-      title: Інтерв'ю та подкасти
-      phase: B1.8 Skills & Integration
-      focus: skills
-      tags:
-      - integration
-      - listening
-      - audio comprehension
-      - note-taking
-    - slug: b1-grammar-integration
-      title: Інтеграція граматики B1
-      phase: B1.8 Skills & Integration
-      focus: skills
-      tags:
-      - grammar
-      - integration
-      - review
-      - aspect
-      - motion-verbs
-      - complex-sentences
-      - participles
-    - slug: b1-vocabulary-integration
-      title: Інтеграція лексики B1
-      phase: B1.8 Skills & Integration
-      focus: integration
-      tags:
-      - integration
-      - vocabulary
-      - review
-    - slug: b1-capstone
-      title: Підсумковий модуль B1
-      phase: B1.8 Skills & Integration
-      focus: skills
-      tags:
-      - capstone
-      - assessment
-      - integration
-      - b2-preparation
+    modules: []
   b2:
     name: B2 - Upper Intermediate
-    modules:
-    - slug: passive-voice-system
-      title: 'Пасивний стан: повна система'
-      phase: B2.1a Grammar & Register
-      focus: grammar
-      tags:
-      - grammar
-      - passive-voice
-      - register
-    - slug: past-passive-participles
-      title: 'Минулі пасивні дієприкметники: форми на -ний/-тий'
-      phase: B2.1a Grammar & Register
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - participles
-    - slug: impersonal-passive
-      title: 'Безособовий пасив: форми на -но/-то'
-      phase: B2.1a Grammar & Register
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - register
-      - official-style
-    - slug: reflexive-passive
-      title: Рефлексивний пасив з -ся
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - reflexive
-    - slug: third-person-plural-passive
-      title: Третя особа множини як пасив
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - colloquial
-      - register
-    - slug: passive-in-context
-      title: 'Пасив у контексті: вибір регістру'
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - passive
-      - register
-      - context
-    - slug: active-participles-present
-      title: Дієприкметники активні теперішнього часу (-учий/-ючий)
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - active-participles
-      - literary-style
-      - register
-    - slug: active-participles-past
-      title: Активні дієприкметники минулого часу (-лий)
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - register
-      - synthetic-future
-    - slug: participles-vs-relative-clauses
-      title: Дієприкметники проти підрядних речень
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - participles
-      - relative-clauses
-      - register
-      - style
-    - slug: checkpoint-passive-voice
-      title: 'Контрольна точка: Пасивний стан'
-      phase: B2.1a [Passive Voice] Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - passive
-      - participles
-    - slug: multi-clause-sentences
-      title: Багатоскладні речення
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - punctuation
-      - complex-sentences
-    - slug: parenthetical-expressions
-      title: Вставні слова та вирази
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - modality
-      - discourse-markers
-    - slug: emphasis-and-inversion
-      title: Емфаза та інверсія
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - word-order
-      - emphasis
-      - stylistics
-    - slug: stylistic-connectors
-      title: Стилістичні сполучники
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - connectors
-      - register
-      - syntax
-      - cohesion
-    - slug: register-introduction
-      title: Функціональні стилі мови
-      phase: B2
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - functional-styles
-    - slug: register-formal-informal
-      title: Формальне та неформальне спілкування
-      phase: B2.1a [Grammar & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - address-forms
-    - slug: register-business-ukrainian
-      title: Ділова українська мова
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - business
-      - correspondence
-    - slug: register-academic-ukrainian
-      title: Науковий стиль української мови
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - academic-writing
-    - slug: register-official-legal
-      title: 'Офіційно-діловий стиль: документи, закони, заяви'
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - official-style
-      - legal-language
-    - slug: register-medical-ukrainian
-      title: 'Медична українська: спілкування у сфері охорони здоров''я'
-      phase: B2.1b [Participles & Register]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - medical
-      - healthcare
-    - slug: register-technical-scientific
-      title: 'Регістр: науково-технічний стиль'
-      phase: B2.1c [Register System & Domain Vocab]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - technical
-      - scientific
-    - slug: register-literary-ukrainian
-      title: Регістр — Літературна українська
-      phase: B2
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - literary-style
-      - stylistics
-    - slug: register-media-journalistic
-      title: Медійний та журналістський регістр
-      phase: B2.1c [Register System]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - media
-      - journalism
-    - slug: register-colloquial-style
-      title: Розмовний стиль
-      phase: B2.1b [Grammar Completion]
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - colloquial-style
-    - slug: register-practice-cross-register-rewriting
-      title: 'Регістрова практика: Перенесення тексту між стилями'
-      phase: B2
-      focus: checkpoint
-      tags:
-      - grammar
-      - register
-      - transformation
-      - cross-register
-    - slug: politics-government-vocabulary
-      title: Політика та державне управління
-      phase: B2
-      focus: grammar
-      tags:
-      - vocabulary
-      - domain-specific
-      - politics
-      - government
-      - register
-    - slug: law-justice-vocabulary
-      title: Право та юстиція
-      phase: B2
-      focus: grammar
-      tags:
-      - vocabulary
-      - domain-specific
-      - law
-      - justice
-      - register
-    - slug: economics-business-vocabulary
-      title: 'Економічна лексика: говоримо про бізнес'
-      phase: B2.1c [Register & Domain Vocab]
-      focus: grammar
-      tags:
-      - vocabulary
-      - economics
-      - business
-      - register
-    - slug: b21-integration-practice
-      title: Інтеграційна практика B2.1
-      phase: B2.1c [Register & Domain Vocab]
-      focus: grammar
-      tags:
-      - integration
-      - review
-      - passive-voice
-      - participles
-      - register
-      - multi-clause
-    - slug: b21-checkpoint
-      title: 'Контрольна точка: B2.1 Завершення'
-      phase: B2.1 [Complete Grammar & Register] Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - passive
-      - participles
-      - register
-      - domain-vocabulary
-    - slug: numeral-declension-time-dates
-      title: 'Відмінювання числівників І: Час і дати'
-      phase: B2.1c
-      focus: grammar
-      tags:
-      - grammar
-      - numerals
-      - time
-      - dates
-    - slug: numeral-declension-compound-numbers
-      title: 'Відмінювання числівників ІІ: Складені числівники'
-      phase: B2.1c
-      focus: grammar
-      tags:
-      - grammar
-      - numerals
-      - statistics
-      - prices
-    - slug: word-formation-person-suffixes
-      title: 'Словотворення: суфікси на позначення осіб'
-      phase: B2.1c [Register & Word Formation]
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - person-nouns
-      - derivation
-    - slug: word-formation-abstract-nouns
-      title: 'Словотворення: абстрактні іменники'
-      phase: B2.1c [Register & Word Formation]
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - abstract-nouns
-      - derivation
-    - slug: word-formation-place-object-names
-      title: 'Словотворення: назви місць та об''єктів'
-      phase: B2.1c [Grammar Completion]
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - suffixes
-      - vocabulary
-    - slug: word-formation-adjective-formation
-      title: 'Словотворення: прикметники'
-      phase: B2.1b [Grammar Completion]
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - adjectives
-      - derivation
-    - slug: word-formation-adverbs-integration
-      title: 'Словотворення: прислівники та інтеграція'
-      phase: B2.1b [Grammar Completion]
-      focus: grammar
-      tags:
-      - grammar
-      - word-formation
-      - adverbs
-      - diminutives
-      - augmentatives
-      - integration
-    - slug: one-member-sentences
-      title: Односкладні речення
-      phase: B2.1c [Register & Domain Vocab]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - sentence-structure
-      - stylistics
-    - slug: register-religious-epistolary
-      title: Регістр — Релігійний та епістолярний стилі
-      phase: B2
-      focus: grammar
-      tags:
-      - grammar
-      - register
-      - religious-style
-      - epistolary-style
-      - stylistics
-    - slug: b21c-checkpoint
-      title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'
-      phase: B2.1c [Checkpoint]
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - numerals
-      - word-formation
-      - syntax
-      - register
-    - slug: aspect-nuances-secondary-imperfectivization
-      title: 'Видові нюанси I: Вторинна імперфективація'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - verb-formation
-      - imperfectivization
-    - slug: aspect-nuances-imperative-infinitive
-      title: 'Відтінки виду II: наказовий спосіб та інфінітив'
-      phase: B2.2 [Grammar Completion]
-      focus: grammar
-      tags:
-      - grammar
-      - aspect
-      - imperative
-      - infinitive
-      - politeness
-    - slug: correlative-constructions
-      title: Співвідносні конструкції
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - correlatives
-      - complex-sentences
-    - slug: complex-syntax-ellipsis-parcelling
-      title: 'Складний синтаксис: еліпсис і парцеляція'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - stylistics
-      - literature
-    - slug: proverbs-work-wisdom-character
-      title: 'Прислів''я I: Праця, мудрість і характер'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - proverbs
-      - wisdom
-      - work-ethic
-      - character
-    - slug: proverbs-nature-time-caution
-      title: 'Прислів''я II: Природа, час і обережність'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - proverbs
-      - nature
-      - time
-      - caution
-      - planning
-    - slug: set-expressions-i-body-animals
-      title: 'Сталі вирази I: Частини тіла та тварини'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - idioms
-      - somatic
-      - zoomorphic
-      - body-parts
-      - animals
-    - slug: set-expressions-ii-objects-abstract
-      title: 'Сталі вирази II: Предмети та абстракції'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - idioms
-      - objects
-      - abstract-concepts
-      - metaphors
-    - slug: idioms-body-head-face
-      title: 'Соматичні фразеологізми: Голова та обличчя'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - somatic
-      - idioms
-      - head
-      - face
-    - slug: idioms-body-hands-legs
-      title: 'Соматичні фразеологізми: Руки та ноги'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - somatic
-      - idioms
-      - body-parts
-    - slug: idioms-body
-      title: 'Фразеологізми: Душа і Серце'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - somatic
-      - emotions
-      - idioms
-    - slug: idioms-animals-i
-      title: 'Фразеологізми: Тварини I (Вовк, Собака, Кінь)'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - animals
-      - idioms
-      - wolf
-      - dog
-      - horse
-    - slug: idioms-animals-ii
-      title: 'Фразеологізми: Тварини II (Птахи, Риби, Комахи)'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - animals
-      - idioms
-      - birds
-      - fish
-      - insects
-    - slug: idioms-nature
-      title: 'Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - phraseology
-      - nature
-      - idioms
-      - water
-      - fire
-      - earth
-      - wind
-    - slug: synonyms-emotion
-      title: 'Синоніми: Емоції та почуття'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - emotions
-      - feelings
-    - slug: synonyms-size
-      title: 'Синоніми: Розмір і Масштаб'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - size
-    - slug: synonyms-movement
-      title: 'Синоніми: Рух і Пересування'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - movement
-    - slug: synonyms-quality
-      title: 'Синоніми: Якість та Оцінка'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - quality
-    - slug: synonyms-communication
-      title: 'Синоніми: Комунікація та Мовлення'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - communication
-    - slug: synonyms-character
-      title: 'Синоніми: Характер та Особистість'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - character
-    - slug: synonyms-time
-      title: 'Синоніми: Час та Періоди'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - time
-    - slug: synonyms-place
-      title: 'Синоніми: Місце та Простір'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - place
-    - slug: synonyms-quantity
-      title: 'Синоніми: Кількість та Міра'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - quantity
-    - slug: synonyms-action
-      title: 'Синоніми: Дія та Перетворення'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - action
-    - slug: synonyms-state
-      title: 'Синоніми: Стан та Буття'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - state
-    - slug: synonyms-abstract
-      title: 'Синоніми: Абстрактні Поняття та Ідеї'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: phraseology
-      tags:
-      - vocabulary
-      - synonyms
-      - abstract
-    - slug: advanced-conjunctions-i
-      title: 'Складні Сполучники I: Причина та Допуск'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: grammar
-      tags:
-      - grammar
-      - conjunctions
-      - causal
-      - concessive
-    - slug: advanced-conjunctions-ii
-      title: 'Складні Сполучники II: Час та Умова'
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: grammar
-      tags:
-      - grammar
-      - conjunctions
-      - temporal
-      - conditional
-    - slug: integration-practice
-      title: Практика інтеграції B2.2
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: integration
-      tags:
-      - practice
-      - integration
-      - phraseology
-      - grammar
-    - slug: b2-checkpoint
-      title: Контрольна точка B2.2
-      phase: B2.2 [Phraseology & Synonymy]
-      focus: checkpoint
-      tags:
-      - assessment
-      - checkpoint
-      - grammar
-      - vocabulary
-      - synonyms
-      - idioms
-    - slug: medytsyna-pohlybleno
-      title: Медицина (поглиблено)
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - medicine
-      - health
-      - professional
-    - slug: tekhnolohii-ta-shi
-      title: Технології та ШІ
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - technology
-      - ai
-      - professional
-    - slug: nauka-i-doslidzhennia
-      title: Наука і дослідження
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - science
-      - research
-      - academic
-    - slug: mystetstvo-i-literatura
-      title: Мистецтво і література
-      phase: B2.4 Skills & Capstone
-      focus: domain
-      tags:
-      - domain
-      - arts
-      - literature
-      - culture
-    - slug: modern-diaspora
-      title: Сучасна діаспора
-      phase: B2.4 Skills & Capstone
-      focus: culture
-      tags:
-      - culture
-      - diaspora
-      - society
-    - slug: religion-in-ukraine
-      title: Релігія в Україні
-      phase: B2.4 Skills & Capstone
-      focus: culture
-      tags:
-      - culture
-      - religion
-      - history
-    - slug: academic-writing
-      title: Академічне письмо
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - academic
-      - writing
-    - slug: text-analysis
-      title: Аналіз тексту
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - analysis
-      - reading
-    - slug: capstone-research
-      title: 'Підсумковий проєкт: Дослідження'
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - project
-      - research
-      - skills
-    - slug: analiz-tekstu
-      title: Аналіз тексту
-      phase: B2.4 Skills & Capstone
-      focus: skills
-      tags:
-      - skills
-      - analysis
-      - reading
-    - slug: capstone-doslidzhennya
-      title: 'Capstone: Дослідження'
-      phase: B2.4 Skills & Capstone
-      focus: project
-      tags:
-      - project
-      - research
-      - capstone
-    - slug: capstone-prezentatsiya
-      title: 'Capstone: Презентація'
-      phase: B2.4 Skills & Capstone
-      focus: project
-      tags:
-      - project
-      - presentation
-      - capstone
-    - slug: b2-pidsumkovyy-ohlyad
-      title: B2 Підсумковий огляд
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - review
-      - grammar
-      - vocabulary
-    - slug: b2-finalnyy-ispyt
-      title: B2 Фінальний іспит
-      phase: B2.4 Skills & Capstone
-      focus: checkpoint
-      tags:
-      - exam
-      - assessment
-      - certification
+    modules: []
   c1:
     name: C1 - Advanced
-    modules:
-    - slug: b2-review-bridge
-      title: Огляд B2 та міст до C1
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - review
-      - grammar
-    - slug: academic-style-markers
-      title: Маркери академічного стилю
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - c1
-      - grammar
-      - academic
-      - style
-    - slug: research-verbs
-      title: Дієслова наукового дослідження
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - verbs
-      - research
-    - slug: analysis-vocabulary
-      title: Словник для критичного аналізу
-      phase: C1.1 [Academic Foundation]
-      focus: vocabulary
-      tags:
-      - academic
-      - analysis
-      - vocabulary
-      - critical-thinking
-    - slug: logical-connectors
-      title: Логічні зв'язки
-      phase: C1.1 Argumentation
-      focus: grammar
-      tags:
-      - grammar
-      - syntax
-      - argumentation
-      - connectors
-    - slug: hedging-modality
-      title: Хеджування та модальність
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - grammar
-      - writing
-    - slug: citation-reference
-      title: Цитація та посилання
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - academic
-      - citation
-      - writing
-    - slug: essay-structure
-      title: Структура есе
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - writing
-      - structure
-      - essay
-      - academic
-    - slug: thesis-development
-      title: Розвиток тези
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - essay
-      - structure
-      - writing
-    - slug: counterarguments
-      title: Контраргументи
-      phase: C1.1 Academic Foundation
-      focus: grammar
-      tags:
-      - essay
-      - logic
-      - debate
-    - slug: summary-paraphrase
-      title: 'Мистецтво переказу: Резюме та парафраз'
-      phase: C1.1 Academic Foundation
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - summary
-      - paraphrase
-    - slug: research-article
-      title: 'Жанр: Наукова стаття'
-      phase: C1.1 Academic Foundation
-      focus: genre
-      tags:
-      - academic
-      - writing
-      - research
-    - slug: abstract-writing
-      title: 'Жанр: Реферат та Анотація'
-      phase: C1.1 Academic Writing
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - abstract
-      - summary
-    - slug: literature-review
-      title: 'Жанр: Огляд літератури'
-      phase: C1.1 Academic Writing
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - literature-review
-      - synthesis
-    - slug: oral-presentations
-      title: Доповідь та Презентація
-      phase: C1.1 Academic Writing
-      focus: style
-      tags:
-      - academic
-      - speaking
-      - presentation
-      - public-speaking
-    - slug: advanced-punctuation
-      title: Поглиблена Пунктуація
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - academic
-      - grammar
-      - punctuation
-      - syntax
-    - slug: irregular-verbs-complete
-      title: 'Неправильні дієслова: повний огляд'
-      phase: C1.1 Academic Writing
-      focus: grammar
-      tags:
-      - grammar
-      - morphology
-      - verbs
-      - irregular-verbs
-    - slug: essay-writing-practice
-      title: 'Практикум C1.1: Написання есе'
-      phase: C1.1 Academic Foundation
-      focus: style
-      tags:
-      - writing
-      - academic
-      - essay
-      - practice
-    - slug: practice-ii-article-critique
-      title: 'Практика II: Критика статті'
-      phase: C1.1 Academic Foundations
-      focus: academic
-      tags:
-      - academic
-      - writing
-      - analysis
-      - critique
-    - slug: c1-1-checkpoint
-      title: 'Контрольна точка: Академічна база'
-      phase: C1.1 Academic Foundations Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - academic
-      - review
-    - slug: cv-resume-writing
-      title: Написання резюме та CV
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-    - slug: job-interview
-      title: 'Співбесіда: стратегії успіху'
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-      - interview
-      - career
-      - business
-    - slug: business-etiquette
-      title: Діловий етикет в Україні
-      phase: C1.2 Professional & Social Context
-      focus: skills
-      tags:
-      - professional
-      - etiquette
-      - culture
-      - business
-    - slug: digital-communication
-      title: Цифрова комунікація
-      phase: C1.1 Professional Excellence
-      focus: skills
-      tags:
-      - business
-      - communication
-      - email
-      - digital
-    - slug: political-system
-      title: Політична система України
-      phase: C1.2 Society & State
-      focus: history
-      tags:
-      - politics
-      - government
-      - constitution
-    - slug: media-landscape
-      title: 'Медіаландшафт: Як не потонути в інформації'
-      phase: C1.2 Society & State
-      focus: society
-      tags:
-      - media
-      - journalism
-      - disinformation
-    - slug: global-context
-      title: 'Глобальний контекст: Україна, ЄС та НАТО'
-      phase: C1.2 Society & State
-      focus: society
-      tags:
-      - geopolitics
-      - eu
-      - nato
-      - diplomacy
-    - slug: dialects-of-ukrainian
-      title: Діалекти та наріччя
-      phase: C1.3 Linguistic Awareness
-      focus: sociolinguistics
-      tags:
-      - dialects
-      - linguistics
-      - phonetics
-      - surzhyk
-    - slug: surzhyk
-      title: 'Суржик: Феномен змішування'
-      phase: C1.3 Linguistic Awareness
-      focus: sociolinguistics
-      tags:
-      - surzhyk
-      - linguistics
-      - sociolinguistics
-      - mixing
-    - slug: history-of-language
-      title: 'Історія мови: Від Русі до сьогодення'
-      phase: C1.1 History & Culture
-      focus: history
-      tags:
-      - history
-      - language
-      - politics
-    - slug: diaspora-ukrainian
-      title: Українська діаспора
-      phase: C1.2 Professional & Social
-      focus: vocabulary
-      tags:
-      - diaspora
-      - culture
-      - history
-    - slug: professional-scenarios
-      title: Професійні сценарії
-      phase: C1.2 Professional & Social
-      focus: professional
-      tags:
-      - professional
-      - business
-      - communication
-      - practice
-    - slug: case-studies
-      title: Практичні кейси
-      phase: C1.2 Professional Application
-      focus: professional
-      tags:
-      - professional
-      - analysis
-      - case-study
-      - critical-thinking
-    - slug: review
-      title: 'Огляд і повторення: Професійна комунікація'
-      phase: C1.2 Practice
-      focus: review
-      tags:
-      - review
-      - professional
-      - business
-      - sociolinguistics
-    - slug: speaking-practice
-      title: Мовний практикум
-      phase: C1.2 Professional Mastery
-      focus: checkpoint
-      tags:
-      - speaking
-      - debate
-      - rhetoric
-      - professional
-    - slug: metaphor-simile
-      title: 'Метафора та порівняння: Образна мова'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - figurative-language
-      - metaphor
-      - simile
-    - slug: irony-sarcasm
-      title: 'Іронія та сарказм: Тонкощі змісту'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - irony
-      - sarcasm
-      - humor
-    - slug: hyperbole-litotes
-      title: 'Гіпербола та літота: Гра масштабів'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - hyperbole
-      - litotes
-      - exaggeration
-    - slug: euphemism-taboo
-      title: 'Евфемізми та табу: Мова делікатності'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - euphemism
-      - taboo
-      - etiquette
-    - slug: rhetorical-questions
-      title: 'Риторичні питання: Мистецтво переконання'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - questions
-      - persuasion
-      - emotion
-    - slug: degrees-of-certainty
-      title: 'Ступені впевненості: Модальність та хеджування'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - modality
-      - hedging
-      - academic-writing
-    - slug: politeness-strategies
-      title: 'Стратегії ввічливості: Прагматика спілкування'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - rhetoric
-      - politeness
-      - pragmatics
-      - social-interaction
-    - slug: high-formal-register
-      title: 'Офіційно-діловий стиль: Мова документів'
-      phase: C1.5 Folk Culture & Arts
-      focus: style
-      tags:
-      - professional
-      - stylistics
-      - documents
-    - slug: intimate-register
-      title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - stylistics
-      - social-interaction
-      - family
-      - relationships
-    - slug: slang-youth
-      title: Сленг та молодіжна мова
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - slang
-      - youth-culture
-      - internet-culture
-      - informal
-    - slug: review-c1-4
-      title: 'Огляд етапу C1.4: Стилістика та регістри'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: style
-      tags:
-      - review
-      - stylistics
-      - registers
-      - pragmatics
-    - slug: checkpoint-c1-4
-      title: 'Контрольна точка: Стилістика і регістри'
-      phase: C1.4 Advanced Stylistics & Rhetoric
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - assessment
-      - stylistics
-    - slug: kobzari-bandura
-      title: 'Кобзарі та бандура: Душа України'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: cultural
-      tags:
-      - music
-      - history
-      - folk-culture
-      - instruments
-    - slug: ritual-songs
-      title: 'Обрядові пісні: Коло життя'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: cultural
-      tags:
-      - music
-      - folklore
-      - rituals
-      - traditions
-      - holidays
-    - slug: kolyskovi-ta-dumy
-      title: 'Колискові та думи: Від колиски до вічності'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - music
-      - history
-    - slug: hopak-i-kozachok
-      title: 'Гопак і козачок: Танці волі та сили'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - dance
-      - history
-    - slug: rehionalni-tantsi
-      title: 'Регіональні танці: Від Аркана до Коломийки'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - dance
-      - geography
-    - slug: pysanky
-      title: 'Писанки: Космос на долоні'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - art
-      - symbology
-    - slug: vyshyvanka
-      title: 'Вишиванка: Зашифрована доля'
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: history
-      tags:
-      - folk culture
-      - textile
-      - identity
-    - slug: honcharstvo-ta-rizbyarstvo
-      title: Гончарство та різьбярство
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-arts
-      - pottery
-      - woodcarving
-    - slug: narodna-mifolohiia
-      title: Народна міфологія
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-beliefs
-      - mythology
-    - slug: narodna-medytsyna
-      title: Народна медицина
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - folk-medicine
-      - herbs
-    - slug: kozatski-lehendy
-      title: Козацькі легенди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - history
-      - legends
-      - cossacks
-    - slug: kazky-ta-prytchi
-      title: Казки та притчі
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: vocabulary
-      tags:
-      - culture
-      - literature
-      - folk-tales
-    - slug: zymovi-obriady
-      title: Зимові обряди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - winter
-    - slug: vesna-ta-lito
-      title: Весна та літо
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - spring
-      - summer
-    - slug: khrestyny-ta-vesillia
-      title: Хрестини та весілля
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - rituals
-      - wedding
-    - slug: pomynalni-obriady
-      title: Поминальні обряди
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - folk-traditions
-      - memorial
-    - slug: halychyna
-      title: Галичина
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: folk-culture
-      tags:
-      - culture
-      - regions
-      - galicia
-    - slug: ukrainian-avant-garde
-      title: Український авангард
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - art
-      - avant-garde
-      - history
-    - slug: traditional-clothing
-      title: Традиційний український одяг
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - ethnography
-      - clothing
-      - traditions
-    - slug: ukrainian-cuisine-traditions
-      title: Українська кухня - традиції та символи
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - cuisine
-      - food
-      - traditions
-    - slug: ukrainian-house
-      title: Українська хата - архітектура та побут
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - architecture
-      - home
-      - traditions
-    - slug: winter-holidays
-      title: Українські свята - зимовий цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - christmas
-      - traditions
-    - slug: spring-holidays
-      title: Українські свята - весняний цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - easter
-      - traditions
-    - slug: summer-holidays
-      title: Українські свята - літній цикл
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - holidays
-      - kupala
-      - traditions
-    - slug: wedding-rituals
-      title: Родинні обряди - весілля
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - wedding
-      - family
-    - slug: birth-rituals
-      title: Родинні обряди - народження
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - birth
-      - family
-    - slug: funeral-rituals
-      title: Родинні обряди - похорон
-      phase: C1.5 Folk Culture & Arts
-      focus: cultural
-      tags:
-      - culture
-      - rituals
-      - funeral
-      - family
-    - slug: podillia-ta-volyn
-      title: Поділля та Волинь
-      phase: C1.5 Folk Culture & Arts
-      focus: folk-culture
-      tags:
-      - folk-culture
-      - region
-      - traditions
-    - slug: klasychna-muzyka-1-vytoky
-      title: Класична музика I — Витоки
-      phase: C1.5 Folk Culture & Arts
-      focus: fine-arts
-      tags:
-      - fine-arts
-      - classical-music
-      - baroque
-      - romanticism
-    - slug: klasychna-muzyka-2-natsionalna-shkola
-      title: Класична музика II — Національна школа
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - lysenko
-      - leontovych
-    - slug: klasychna-muzyka-3-modernizm-i-suchasnist
-      title: Класична музика III — Модернізм і сучасність
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - modernism
-      - lyatoshynsky
-      - skorik
-    - slug: operne-mystetstvo
-      title: Оперне мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - opera
-      - singers
-      - krushelnytska
-    - slug: vokalne-mystetstvo
-      title: Вокальне мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - choral
-      - song
-    - slug: obrazotvorche-mystetstvo-1
-      title: Образотворче мистецтво I
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - visual-arts
-      - avant-garde
-      - icons
-    - slug: obrazotvorche-mystetstvo-2
-      title: Образотворче мистецтво II
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - visual-arts
-      - contemporary
-      - folk-art
-    - slug: balet-i-tanets
-      title: Балет і танець
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - dance
-      - ballet
-      - lifar
-    - slug: teatralne-mystetstvo-1
-      title: Театральне мистецтво I
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - theater
-      - kurbas
-      - drama
-    - slug: teatralne-mystetstvo-2
-      title: Театральне мистецтво II
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - theater
-      - contemporary
-      - drama
-    - slug: ukrainska-arkhitektura
-      title: Українська архітектура
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - architecture
-      - baroque
-      - modernism
-    - slug: suchasna-muzyka
-      title: Сучасна музика
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - music
-      - rock
-      - pop
-    - slug: ukrainske-kino
-      title: Українське кіно
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - cinema
-      - dovzhenko
-      - sentsov
-    - slug: praktyka-1-narodna-kultura
-      title: C1.5 Практика I — Народна культура
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: fine-arts
-      tags:
-      - arts
-      - culture
-      - review
-      - folk
-    - slug: praktyka-2-vysoke-mystetstvo
-      title: Практика II — Високе мистецтво
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: practice
-      tags:
-      - arts
-      - music
-      - painting
-      - theater
-      - architecture
-    - slug: c1-5-checkpoint
-      title: C1.5 Контрольна точка
-      phase: C1.5 Folk Culture & Fine Arts
-      focus: checkpoint
-      tags:
-      - assessment
-      - culture
-      - arts
-    - slug: istoriia-ukrainskoi-literatury
-      title: Історія української літератури
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - history
-      - analysis
-    - slug: kotliarevskyi-eneida
-      title: 'Котляревський: Енеїда'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - history
-      - burlesque
-    - slug: shevchenko-shchodennyk-lysty
-      title: 'Шевченко: Щоденник та листи'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - prose
-      - biography
-    - slug: shevchenko-poeziia
-      title: 'Шевченко: Поезія'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - shevchenko
-      - poetry
-      - kobzar
-      - romanticism
-    - slug: shevchenko-spadshchyna
-      title: 'Шевченко: Спадщина'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - shevchenko
-      - legacy
-      - identity
-    - slug: franko-liryka
-      title: 'Франко: Громадянська та філософська лірика'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - franko
-      - poetry
-      - philosophy
-    - slug: franko-proza
-      title: 'Франко: Проза'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - franko
-      - prose
-      - realism
-    - slug: lesya-ukrainka-liryka
-      title: 'Леся Українка: Лірична поезія'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - lesya-ukrainka
-      - poetry
-      - stoicism
-    - slug: lesya-ukrainka-drama
-      title: 'Леся Українка: Драма'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - drama
-      - symbolism
-      - neo-romanticism
-      - mythology
-    - slug: vovchok-myrnyi
-      title: Вовчок та Мирний
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - realism
-      - social-critique
-      - village-life
-    - slug: kotsiubynskyi
-      title: 'Імпресіонізм: Коцюбинський'
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - impressionism
-      - kotsiubynsky
-      - psychology
-    - slug: literaturoznavcha-terminolohiia
-      title: Літературознавча термінологія
-      phase: C1.6 Literature
-      focus: academic
-      tags:
-      - literature
-      - terminology
-      - academic
-      - analysis
-    - slug: analiz-poezii
-      title: Аналіз поезії
-      phase: C1.6 Literature
-      focus: literature
-      tags:
-      - literature
-      - poetry
-      - analysis
-      - versification
-    - slug: c1-6-review
-      title: 'C1.6 Література: Огляд та рефлексія'
-      phase: C1.6 Literature
-      focus: review
-      tags:
-      - literature
-      - review
-      - synthesis
-      - analysis
-    - slug: c1-6-checkpoint
-      title: 'C1.6 Контрольна точка: Літературний канон'
-      phase: C1.6 Literature
-      focus: checkpoint
-      tags:
-      - literature
-      - checkpoint
-      - assessment
+    modules: []
   c2:
     name: C2 - Mastery
     modules: []
 tracks:
   b2-hist:
-    name: B2 History Track - Ukrainian History
-    description: Ukrainian history from Kyivan Rus to present
-    prerequisite: b2-core-70
+    name: B2 History Track
+    description: Ukrainian History from Kyivan Rus' to Independence
+    prerequisite: b2
     modules:
     - slug: trypillian-civilization
-      title: Трипільська цивілізація — Витоки української землі
-      phase: B2.3a [Українська історія]
+      title: Трипільська цивілізація
+      phase: HIST.1
       focus: history
-      tags:
-      - history
-      - ancient
-      - trypillia
     - slug: scythians-sarmatians
-      title: Скіфи та сармати — Володарі степу
-      phase: B2.3a [Українська історія]
+      title: Скіфи та сармати
+      phase: HIST.1
       focus: history
-      tags:
-      - history
-      - ancient
-      - scythians
-      - sarmatians
-    - slug: sloviany-na-ukrainskykh-zemliakh
-      title: Слов'яни на українських землях — Витоки державності
-      phase: B2.3a [Українська історія]
+    - slug: greeks-crimea-olbia
+      title: 'Грецькі міста-держави: Ольвія, Херсонес'
+      phase: HIST.1
       focus: history
-      tags:
-      - history
-      - early-medieval
-      - slavs
+    - slug: sloviany-origins
+      title: 'Слов''яни: Походження та розселення'
+      phase: HIST.1
+      focus: history
+    - slug: slavic-tribes
+      title: Слов'янські племена на українських землях
+      phase: HIST.1
+      focus: history
     - slug: zasnuvannia-kyieva
-      title: Заснування Києва — Легенда та історія
-      phase: B2.3a [Українська історія]
+      title: 'Заснування Києва: Легенда і археологія'
+      phase: HIST.1
       focus: history
-      tags:
-      - history
-      - era: medieval
-      - topic: kyiv-founding
-    - slug: volodymyr-i-khreshchennia
-      title: Володимир і хрещення — 988 рік
-      phase: B2.3a [Українська історія]
+    - slug: khozary-i-sloviany
+      title: Хозарський каганат і слов'яни
+      phase: HIST.1
       focus: history
-      tags:
-      - history
-      - medieval
-      - christianization
-    - slug: yaroslav-the-wise
-      title: Ярослав Мудрий — Золота доба Київської Русі
-      phase: B2.3a [Ukrainian History]
+    - slug: syntez-vytoky-1
+      title: '**Синтез: Від Трипілля до Києва**'
+      phase: HIST.1
+      focus: checkpoint
+    - slug: oleh-ihor
+      title: 'Олег та Ігор: Перші правителі'
+      phase: HIST.2
       focus: history
-      tags:
-      - history
-      - medieval
-      - yaroslav-the-wise
-      - ruska-pravda
-      - kyivan-rus
+    - slug: olha-sviatoslav
+      title: Ольга та Святослав
+      phase: HIST.2
+      focus: history
+    - slug: volodymyr-khreshchennia
+      title: Володимир і Хрещення Русі
+      phase: HIST.2
+      focus: history
+    - slug: yaroslav-wise
+      title: 'Ярослав Мудрий: Золота доба'
+      phase: HIST.2
+      focus: history
+    - slug: ruska-pravda
+      title: 'Руська Правда: Перший законодавчий кодекс'
+      phase: HIST.2
+      focus: history
+    - slug: sofiya-kyivska
+      title: Софія Київська та культурний розквіт
+      phase: HIST.2
+      focus: history
+    - slug: volodymyr-monomakh
+      title: Володимир Мономах
+      phase: HIST.2
+      focus: history
     - slug: kultura-kyivskoi-rusi
-      title: Культура Київської Русі — Писемність, мистецтво, архітектура
-      phase: B2.3a [Ukrainian History]
+      title: Культура Київської Русі
+      phase: HIST.2
       focus: history
-      tags:
-      - history
-      - medieval
-      - kyivan-rus-culture
-      - literacy
-      - mosaics
-      - architecture
-    - slug: zanepad-i-rozdroblennia
-      title: Занепад і роздроблення — Кінець єдності Русі
-      phase: B2.3a [Ukrainian History]
+    - slug: kniazivski-usobiytsi
+      title: Княжі усобиці та роздроблення
+      phase: HIST.2
       focus: history
-      tags:
-      - history
-      - medieval
-      - liubech-congress
-      - civil-wars
-      - monomakh-testament
-    - slug: mongolska-navala-1240
+    - slug: ludy-rusi
+      title: 'Люди Русі: Суспільство та побут'
+      phase: HIST.2
+      focus: history
+    - slug: rus-ta-susidy
+      title: 'Русь та сусіди: Візантія, Польща, Угорщина'
+      phase: HIST.2
+      focus: history
+    - slug: syntez-kyivska-rus
+      title: '**Синтез: Київська Русь — спадщина**'
+      phase: HIST.2
+      focus: checkpoint
+    - slug: mongolska-navala
       title: Монгольська навала 1240
-      phase: B2.3a
+      phase: HIST.3
       focus: history
-      tags:
-      - history
-      - era:medieval
-      - topic:mongol-invasion
-    - slug: galytsko-volynske-knyazivstvo
-      title: Галицько-Волинське князівство — Західний оплот Русі
-      phase: B2.3a [Українська історія]
+    - slug: mykhailo-chernigivskyi
+      title: 'Михайло Чернігівський: Опір Орді'
+      phase: HIST.3
       focus: history
-      tags:
-      - history
-      - medieval
-      - galicia-volhynia
-      - king-danylo
+    - slug: danylo-halytskyi
+      title: 'Данило Галицький: Король України'
+      phase: HIST.3
+      focus: history
+    - slug: galytsko-volynska-derzhava
+      title: Галицько-Волинська держава
+      phase: HIST.3
+      focus: history
+    - slug: boiare-i-shliakhta
+      title: 'Бояри і шляхта: Соціальні верстви'
+      phase: HIST.3
+      focus: history
+    - slug: kinets-halytsko-volyni
+      title: Кінець Галицько-Волинської держави
+      phase: HIST.3
+      focus: history
+    - slug: krymske-khanstvo
+      title: 'Кримське ханство: Виникнення'
+      phase: HIST.3
+      focus: history
+    - slug: syntez-dvokniazivstvo
+      title: '**Синтез: Від Русі до занепаду**'
+      phase: HIST.3
+      focus: checkpoint
     - slug: velyke-kniazivstvo-lytovske
-      title: Велике князівство Литовське — Руська держава
-      phase: B2.3a [Українська історія]
+      title: Велике князівство Литовське
+      phase: HIST.4
       focus: history
-      tags:
-      - history
-      - medieval
-      - lithuania
-      - ruthenian
+    - slug: ukrainski-zemli-u-vkl
+      title: Українські землі у ВКЛ
+      phase: HIST.4
+      focus: history
+    - slug: liublinska-uniia
+      title: Люблінська унія 1569
+      phase: HIST.4
+      focus: history
     - slug: rich-pospolyta
-      title: Річ Посполита — полонізація та кріпацтво
-      phase: B2.3a [Українська історія]
+      title: 'Річ Посполита: Устрій'
+      phase: HIST.4
       focus: history
-      tags:
-      - history
-      - early-modern
-      - polish-lithuanian-commonwealth
-    - slug: syntez-vytoky
-      title: 'Синтез: Витоки'
-      phase: B2.3a [Ukrainian History] Synthesis
-      focus: synthesis
-      tags:
-      - history
-      - synthesis
-      - checkpoint
-      - trypillia
-      - kyivan-rus
-      - mongol-invasion
-      - galicia-volhynia
-      - lithuania
-      - commonwealth
+    - slug: beresteyska-uniia
+      title: 'Берестейська унія: Церковний розкол'
+      phase: HIST.4
+      focus: history
+    - slug: pravoslavna-tserkva-17
+      title: Православна церква XVII століття
+      phase: HIST.4
+      focus: history
+    - slug: petro-mohyla
+      title: 'Петро Могила: Реформатор церкви'
+      phase: HIST.4
+      focus: history
+    - slug: bratstva-i-osvita
+      title: 'Братства та освіта: Острозька академія'
+      phase: HIST.4
+      focus: history
+    - slug: bukovyna-zakarpattia
+      title: Буковина та Закарпаття під сусідами
+      phase: HIST.4
+      focus: history
+    - slug: slobozhanshchyna
+      title: 'Слобожанщина: Заселення і розвиток'
+      phase: HIST.4
+      focus: history
+    - slug: liudy-ricchi-pospolytoi
+      title: 'Люди Речі Посполитої: Суспільство'
+      phase: HIST.4
+      focus: history
+    - slug: syntez-lytva-polska
+      title: '**Синтез: Литовсько-польська доба**'
+      phase: HIST.4
+      focus: checkpoint
     - slug: kozatstvo-vytoky
-      title: 'Козацтво: витоки'
-      phase: B2.3b [Українська історія]
+      title: 'Козацтво: Витоки'
+      phase: HIST.5
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - origins
     - slug: zaporizka-sich
-      title: Запорозька Січ — козацька республіка
-      phase: B2.3b [Українська історія]
+      title: 'Запорізька Січ: Республіка'
+      phase: HIST.5
       focus: history
-      tags:
-      - history
-      - cossack
-      - democracy
-      - statehood
+    - slug: dmytro-vyshnevetskyi
+      title: 'Дмитро Вишневецький: Перший кошовий'
+      phase: HIST.5
+      focus: history
+    - slug: kozatski-povstannia-16
+      title: Козацькі повстання XVI століття
+      phase: HIST.5
+      focus: history
+    - slug: petro-sahaidachnyi
+      title: 'Петро Сагайдачний: Гетьман і меценат'
+      phase: HIST.5
+      focus: history
+    - slug: khotynska-viyna
+      title: Хотинська війна 1621
+      phase: HIST.5
+      focus: history
     - slug: kozatska-kultura
-      title: Козацька культура — кобзарі, думи та бароко
-      phase: B2.3b [Українська історія]
+      title: Козацька культура та побут
+      phase: HIST.5
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - culture
-      - music
-      - art
-    - slug: khmelnychchyna-i-povstannia
-      title: 'Хмельниччина I: повстання'
-      phase: B2.3b [Українська історія]
+    - slug: kozatske-viisko
+      title: Козацьке військо та озброєння
+      phase: HIST.5
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - khmelnytsky
-      - uprising
-      - military
-    - slug: khmelnychchyna-ii-derzhava
-      title: 'Хмельниччина II: держава — будівництво гетьманату'
-      phase: B2.3b [Українська історія]
+    - slug: morski-pokhody
+      title: Морські походи козаків
+      phase: HIST.5
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - state-building
-      - hetmanate
-    - slug: pereiaslav-treaty
-      title: Переяславська угода
-      phase: B2.3b [Українська історія]
+    - slug: syntez-kozatstvo-vytoky
+      title: '**Синтез: Становлення козацтва**'
+      phase: HIST.5
+      focus: checkpoint
+    - slug: khmelnychchyna-prychyny
+      title: 'Хмельниччина: Передумови'
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - pereiaslav
-      - decolonization
-      - myth-busting
-    - slug: ruina-i-vyhovsky
-      title: 'Руїна I: Виговщина і розкол'
-      phase: B2.3b [Українська історія]
+    - slug: bohdan-khmelnytskyi
+      title: 'Богдан Хмельницький: Постать'
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - ruin
-      - vyhovsky
-      - civil-war
-    - slug: ruina-ii-doroshenko
-      title: 'Руїна II: Дорошенко і надія'
-      phase: B2.3b [Українська історія]
+    - slug: bitva-pid-zhovtymy-vodamy
+      title: Битва під Жовтими Водами
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - ruin
-      - doroshenko
-      - turkish-alliance
-    - slug: ivan-mazepa-i-derzhavnyk
-      title: 'Іван Мазепа I: державник'
-      phase: B2.3b [Українська історія]
+    - slug: zborivska-bila-tserkva
+      title: Зборівська та Білоцерківська угоди
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - mazepa
-      - hetmanate
-      - statecraft
-    - slug: ivan-mazepa-ii-kultura
-      title: 'Іван Мазепа II: освіта і культура'
-      phase: B2.3b [Українська історія]
+    - slug: kozatska-derzhava
+      title: 'Козацька держава: Устрій'
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - mazepa
-      - baroque
-      - culture
-      - education
-    - slug: ivan-mazepa-iii-poltava
-      title: 'Іван Мазепа III: Полтава і вигнання'
-      phase: B2.3b [Українська історія]
+    - slug: pereyaslavska-uhoda
+      title: 'Переяславська угода: Суть і наслідки'
+      phase: HIST.6
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - mazepa
-      - great-northern-war
-      - poltava
-      - exile
+    - slug: yurii-nemyrych
+      title: 'Юрій Немирич: Гадяцька угода'
+      phase: HIST.6
+      focus: history
+    - slug: ruina-i
+      title: 'Руїна I: Виговський та розкол'
+      phase: HIST.6
+      focus: history
+    - slug: ruina-ii
+      title: 'Руїна II: Дорошенко'
+      phase: HIST.6
+      focus: history
+    - slug: andrusivske-peremyrya
+      title: 'Андрусівське перемир''я: Поділ України'
+      phase: HIST.6
+      focus: history
+    - slug: ivan-sirko
+      title: 'Іван Сірко: Легендарний кошовий'
+      phase: HIST.6
+      focus: history
+    - slug: syntez-khmelnychchyna
+      title: '**Синтез: Козацька революція**'
+      phase: HIST.6
+      focus: checkpoint
+    - slug: ivan-mazepa-derzhavnyk
+      title: 'Іван Мазепа I: Державник'
+      phase: HIST.7
+      focus: history
+    - slug: ivan-mazepa-kultura
+      title: 'Іван Мазепа II: Культура'
+      phase: HIST.7
+      focus: history
+    - slug: kost-hordiyenko
+      title: Кость Гордієнко та Січ
+      phase: HIST.7
+      focus: history
+    - slug: ivan-mazepa-poltava
+      title: 'Іван Мазепа III: Полтава'
+      phase: HIST.7
+      focus: history
+    - slug: pylyp-orlyk-konstytutsiia
+      title: 'Пилип Орлик: Перша конституція'
+      phase: HIST.7
+      focus: history
     - slug: hryhorii-skovoroda
-      title: Григорій Сковорода
-      phase: B2.3b [Українська історія]
+      title: 'Григорій Сковорода: Філософ'
+      phase: HIST.7
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - philosophy
-      - literature
-      - skovoroda
-      - enlightenment
-    - slug: rosiiski-mify-pro-ukrainu
-      title: Російські міфи про Україну
-      phase: B2.3b [Українська історія]
+    - slug: pavlo-polubotok
+      title: 'Павло Полуботок: Останній наказний'
+      phase: HIST.7
       focus: history
-      tags:
-      - history
-      - decolonization
-      - myth-busting
-      - propaganda
-      - critical-thinking
+    - slug: danylo-apostol
+      title: Данило Апостол та Кирило Розумовський
+      phase: HIST.7
+      focus: history
+    - slug: koliivshchyna
+      title: Коліївщина та Гайдамаки
+      phase: HIST.7
+      focus: history
+    - slug: opryshky
+      title: Опришки Карпат
+      phase: HIST.7
+      focus: history
+    - slug: petro-kalnyshevskyi
+      title: 'Петро Калнишевський: Останній кошовий'
+      phase: HIST.7
+      focus: history
     - slug: kinets-hetmanshchyny
-      title: Кінець Гетьманщини
-      phase: B2.3b [Українська історія]
+      title: Кінець Гетьманщини і Січі
+      phase: HIST.7
       focus: history
-      tags:
-      - history
-      - cossack-era
-      - hetmanate
-      - catherine-ii
-      - decolonization
-    - slug: rosiiska-imperiia-emskyi-ukaz
-      title: 'Російська імперія: Емський указ'
-      phase: B2.3b [Українська історія]
+    - slug: rosiiska-imperiia-ukraina
+      title: Україна в Російській імперії
+      phase: HIST.8
       focus: history
-      tags:
-      - history
-      - imperial-era
-      - linguistic-genocide
-      - decolonization
-      - resistance
-    - slug: austrian-galicia
-      title: 'Австрійська Галичина: Український П''ємонт'
-      phase: B2.3b
+    - slug: habsburzka-halichyna
+      title: Габсбурзька Галичина
+      phase: HIST.8
       focus: history
-      tags:
-      - history
-      - era:imperial
-      - topic:galicia
-      - topic:national-awakening
+    - slug: pivden-novorosiia
+      title: 'Південь: "Новоросія" — колонізація'
+      phase: HIST.8
+      focus: history
+    - slug: nova-serbiya
+      title: Нова Сербія та заселення степів
+      phase: HIST.8
+      focus: history
+    - slug: krypatsvo-selo
+      title: Кріпацтво та селянське життя
+      phase: HIST.8
+      focus: history
+    - slug: kyrylo-mefodiivtsi
+      title: Кирило-Мефодіївське братство
+      phase: HIST.8
+      focus: history
     - slug: shevchenko-awakening
-      title: Шевченко і пробудження
-      phase: B2.3b
+      title: 'Тарас Шевченко: Пробудження нації'
+      phase: HIST.8
       focus: history
-      tags:
-      - history
-      - biography
-      - topic:shevchenko
-      - topic:national-awakening
-    - slug: ideolhy-drahomanov-kulish
-      title: 'Ідеологи: Драгоманов, Куліш'
-      phase: B2.3b [Українська історія]
+    - slug: valuevskyi-emskyi
+      title: Валуєвський циркуляр та Емський указ
+      phase: HIST.8
       focus: history
-      tags:
-      - history
-      - imperial-era
-      - intellectuals
-      - ideology
-      - language
-      - decolonization
+    - slug: hromady
+      title: Громадівський рух
+      phase: HIST.8
+      focus: history
+    - slug: drahomanov
+      title: Михайло Драгоманов
+      phase: HIST.8
+      focus: history
     - slug: franko-lesia-hrinchenko
       title: Франко, Леся, Грінченко
-      phase: B2.3b
+      phase: HIST.8
       focus: history
-      tags:
-      - history
-      - biography
-      - topic:franko
-      - topic:lesya-ukrainka
-      - topic:hrinchenko
-      - topic:modernism
-    - slug: mykhailo-hrushevskyi
-      title: Михайло Грушевський
-      phase: B2.3b [Українська історія]
+    - slug: syntez-imperska-doba
+      title: '**Синтез: Імперська доба**'
+      phase: HIST.8
+      focus: checkpoint
+    - slug: hrushevskyi
+      title: 'Михайло Грушевський: Історик і політик'
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - biography
-      - historiography
-      - decolonization
-      - unr
-      - national-awakening
-    - slug: first-world-war
-      title: 'Перша світова війна: Брат проти брата'
+    - slug: persha-svitova
+      title: 'Перша світова війна: Українські землі'
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - war
-      - USS
-    - slug: unr-zunr
-      title: 'УНР і ЗУНР: Мрія про Соборність'
+    - slug: sichovi-striltsi
+      title: Січові стрільці
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - revolution
-      - independence
-    - slug: vistovtsi-neoclassicists
-      title: 'Вітовці та Неокласики: Культурний ренесанс 1920-х'
-      phase: B2.3c [Trauma & Resistance]
+    - slug: tsentralna-rada
+      title: 'Центральна Рада: УНР'
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - literature
-      - decolonization
-      - 1920s
-    - slug: syntez-kozachchyna-1920
-      title: 'Синтез: Козаччина — 1920-ті'
-      phase: B2.3b [Ukrainian History] Synthesis
+    - slug: skoropadskyi
+      title: 'Павло Скоропадський: Гетьманат'
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - synthesis
-      - checkpoint
-      - cossack
-      - imperial
-      - 1920s
-      - decolonization
-    - slug: rozstriliane-vidrodzennia-postati
-      title: 'Розстріляне відродження I: Постаті'
-      phase: B2.3c Trauma & Resistance
+    - slug: zunr
+      title: 'ЗУНР: Західноукраїнська Народна Республіка'
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - literature
-      - art
-      - repression
-      - sandarmokh
-    - slug: rozstriliane-vidrodzhennia-ii-mekhanizm-teroru
-      title: 'Розстріляне відродження II: Механізм терору'
-      phase: B2.3c Trauma & Resistance
+    - slug: dyrektoriia
+      title: Директорія УНР
+      phase: HIST.9
       focus: history
-      tags:
-      - history
-      - soviet
-      - terror
-      - executed-renaissance
+    - slug: symon-petliura
+      title: Симон Петлюра
+      phase: HIST.9
+      focus: history
+    - slug: bilshovytsko-ukrainska-viyna
+      title: Більшовицько-українська війна
+      phase: HIST.9
+      focus: history
+    - slug: kholodnyi-yar
+      title: 'Холодний Яр: Останній опір'
+      phase: HIST.9
+      focus: history
+    - slug: karpatska-ukraina
+      title: Карпатська Україна 1938-1939
+      phase: HIST.9
+      focus: history
+    - slug: syntez-revoliutsiia
+      title: '**Синтез: Українська революція**'
+      phase: HIST.9
+      focus: checkpoint
+    - slug: rozstriliane-vidrodzennia
+      title: Розстріляне відродження
+      phase: HIST.10
+      focus: history
+    - slug: mekhanizm-teroru
+      title: Механізм терору
+      phase: HIST.10
+      focus: history
     - slug: holodomor-mekhanizm
-      title: 'Голодомор I: Механізм'
-      phase: B2.3c [Trauma & Resistance]
+      title: 'Голодомор: Механізм'
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - decolonization
-      - 1930s
-      - holodomor
-      - genocide
-    - slug: holodomor-ii-pamiat
-      title: 'Голодомор II: Пам''ять'
-      phase: B2.3c [Trauma & Resistance]
+    - slug: holodomor-pamiat
+      title: 'Голодомор: Пам''ять та визнання'
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - soviet
-      - holodomor
-      - memory
-      - trauma
-    - slug: druha-svitova-okupatsii
-      title: 'Друга світова: окупації'
-      phase: B2.3c Trauma & Resistance
+    - slug: pacyfikatsiia
+      title: 'Пацифікація: Поляки в Галичині'
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - wwii
-      - decolonization
-      - trauma
-    - slug: upa-i-zbroinyi-opir
-      title: УПА і збройний опір
-      phase: B2.3c Trauma & Resistance
+    - slug: oun
+      title: 'ОУН: Формування'
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - wwii
-      - resistance
-    - slug: povoienne-radianske-panuvannia
-      title: Повоєнне радянське панування
-      phase: B2.3c Trauma & Resistance
+    - slug: druha-svitova-pochatok
+      title: 'Друга світова: Початок'
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - soviet
-      - russification
-      - cold-war
-    - slug: surgunlik-deportatsiia-1944
-      title: 'Sürgünlik: Депортація 1944'
-      phase: B2.3c Trauma & Resistance
+    - slug: babyn-yar
+      title: Бабин Яр та Голокост в Україні
+      phase: HIST.10
       focus: history
-      tags:
-      - history
-      - crimea
-      - crimean-tatar
-      - genocide
-      - soviet-repression
-      - decolonization
+    - slug: upa
+      title: 'УПА: Збройний опір'
+      phase: HIST.10
+      focus: history
+    - slug: syntez-trahedii
+      title: '**Синтез: Трагедії XX століття**'
+      phase: HIST.10
+      focus: checkpoint
+    - slug: povoienne-vidbudova
+      title: Повоєнна відбудова
+      phase: HIST.11
+      focus: history
+    - slug: deportatsii-ukraintsiv
+      title: Депортації українців 1944-1951
+      phase: HIST.11
+      focus: history
+    - slug: surgunlik
+      title: 'Сургунлік: Депортація кримських татар'
+      phase: HIST.11
+      focus: history
+    - slug: krym-1954
+      title: 'Крим 1954: Передача УРСР'
+      phase: HIST.11
+      focus: history
+    - slug: destalinizatsiia
+      title: Десталінізація в Україні
+      phase: HIST.11
+      focus: history
     - slug: shistdesiatnyky
       title: Шістдесятники
-      phase: B2.3c Trauma & Resistance
+      phase: HIST.11
       focus: history
-      tags:
-      - history
-      - culture
-      - soviet-union
-      - resistance
-      - literature
-      - cinema
+    - slug: ukrainska-helsinska-hrupa
+      title: Українська Гельсінська група
+      phase: HIST.11
+      focus: history
+    - slug: afhanistan
+      title: Українці в Афганістані
+      phase: HIST.11
+      focus: history
     - slug: chornobyl
-      title: 'Чорнобиль: Ціна брехні'
-      phase: B2.3c Trauma & Resistance
+      title: Чорнобиль
+      phase: HIST.11
       focus: history
-      tags:
-      - history
-      - chornobyl
-      - ecology
-      - disaster
-      - soviet-union
-      - resistance
-    - slug: diaspora-kovcheh-derzhavy
-      title: 'Діаспора: Ковчег Держави'
-      phase: B2.3c Trauma & Resistance
+    - slug: diaspora
+      title: 'Діаспора: Ковчег держави'
+      phase: HIST.11
       focus: history
-      tags:
-      - history
-      - diaspora
-      - emigration
-      - statehood
-      - plast
-      - preservation
-    - slug: syntez-trahedii-xx-stolittia
-      title: 'Синтез: Трагедії XX ст.'
-      phase: B2.3c Trauma & Resistance
-      focus: history
-      tags:
-      - history
-      - synthesis
-      - soviet-era
-      - wwii
-      - resistance
-    - slug: shliakh-do-nezalezhnosti
+    - slug: shliakh-nezalezhnosti
       title: Шлях до незалежності
-      phase: B2.3d Independence & War
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - independence
-      - rukh
-      - revolution
-    - slug: ukraine-1991-2004
-      title: 'Україна 1991-2004: Становлення'
-      phase: B2.3d Independence & War
+    - slug: rukh
+      title: 'Рух: Народний рух України'
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - independence
-      - economy
-      - constitution
-      - politics
-    - slug: pomarancheva-revoliutsiia
+    - slug: nezalezhnist-1991
+      title: Проголошення незалежності
+      phase: HIST.12
+      focus: history
+    - slug: ukraine-90s
+      title: 'Україна 1990-х: Кучма та олігархи'
+      phase: HIST.12
+      focus: history
+    - slug: pomara-revoliutsiia
       title: Помаранчева революція
-      phase: B2.3d Independence & War
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - modern-ukraine
-      - revolution
-      - democracy
-    - slug: epokha-yanukovycha
-      title: 'Епоха Януковича: Реванш'
-      phase: B2.3d Independence & War
+    - slug: tomos
+      title: 'Томос: Духовна незалежність'
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - politics
-      - corruption
-      - authoritarianism
-      - resistance
-    - slug: dukhovnyi-front-tomos
-      title: 'Духовний Фронт: Томос'
-      phase: B2.3d Independence & War
+    - slug: yanukovych
+      title: Епоха Януковича
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - church
-      - independence
-      - tomos
-      - decolonization
-    - slug: shliakh-do-voli
-      title: 'Синтез: Шлях до Волі'
-      phase: B2.3d Independence & War Synthesis
-      focus: synthesis
-      tags:
-      - history
-      - synthesis
-      - independence
-      - revolution
-      - identity
+    - slug: movna-polityka
+      title: Мовна політика незалежної України
+      phase: HIST.12
+      focus: history
     - slug: revoliutsiia-hidnosti
       title: Революція Гідності
-      phase: B2.3e War for Existence
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - euromaidan
-      - revolution
-      - resistance
-      - democracy
     - slug: aneksiia-krymu
-      title: 'Анексія Криму: Початок війни'
-      phase: B2.3e War for Existence
+      title: Анексія Криму
+      phase: HIST.12
       focus: history
-      tags:
-      - history
-      - war
-      - crimea
-      - annexation
-      - hybrid-warfare
-      - propaganda
-    - slug: viina-na-donbasi-2014-2022
+    - slug: krymski-tatary-pislia-2014
+      title: Кримські татари після 2014
+      phase: HIST.12
+      focus: history
+    - slug: syntez-nezalezhnist
+      title: '**Синтез: Незалежна Україна**'
+      phase: HIST.12
+      focus: checkpoint
+    - slug: viyna-donbas
       title: Війна на Донбасі 2014-2022
-      phase: B2.3e War for Existence
+      phase: HIST.13
       focus: history
-      tags:
-      - history
-      - war
-      - donbas
-      - ato
-      - cyborgs
-      - volunteers
-    - slug: pownomasshtabne-wtorhnessnia
+    - slug: povnomasshtabne-vtorhnessnia
       title: Повномасштабне вторгнення
-      phase: B2.3e War for Existence
+      phase: HIST.13
       focus: history
-      tags:
-      - history
-      - war
-      - invasion
-      - resistance
-      - kyiv
-    - slug: zlochyny-i-stiikist
-      title: Злочини і Стійкість
-      phase: B2.3e War for Existence
+    - slug: mariupol-azovstal
+      title: Маріуполь та Азовсталь
+      phase: HIST.13
       focus: history
-      tags:
-      - history
-      - war
-      - war-crimes
-      - resilience
-      - liberation
-    - slug: syntez-viyna-za-isnuvannya
-      title: 'Синтез: Війна за існування'
-      phase: B2.3e War for Existence
+    - slug: bucha-irpin
+      title: 'Буча та Ірпінь: Злочини'
+      phase: HIST.13
       focus: history
-      tags:
-      - history
-      - synthesis
-      - war
-      - modern-ukraine
+    - slug: kakhovska-hes
+      title: 'Каховська ГЕС: Екоцид'
+      phase: HIST.13
+      focus: history
+    - slug: voienna-ekonomika
+      title: Воєнна економіка України
+      phase: HIST.13
+      focus: history
+    - slug: hromadske-suspilstvo
+      title: Громадянське суспільство у війні
+      phase: HIST.13
+      focus: history
+    - slug: mizhnarodna-pidtrymka
+      title: Міжнародна підтримка
+      phase: HIST.13
+      focus: history
+    - slug: zlochyny-stiikist
+      title: Злочини і стійкість
+      phase: HIST.13
+      focus: history
+    - slug: syntez-viyna
+      title: '**Синтез: Війна за існування**'
+      phase: HIST.13
+      focus: checkpoint
   c1-bio:
-    name: C1 Biography Track - Famous Ukrainians
-    description: Biographies of notable Ukrainian figures
-    prerequisite: b2-hist-61
+    name: C1 Biography Track
+    description: Notable Ukrainians through history
+    prerequisite: c1
     modules:
     - slug: knyahynia-olha
       title: 'Княгиня Ольга: Регент і Реформатор'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - kyivan-rus
-      - women-in-history
+      birth_year: 890
     - slug: kniaz-sviatoslav
       title: 'Князь Святослав: Воїн на Троні'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - warfare
-      - expansion
-    - slug: volodymyr-velykii
-      title: 'Князь Володимир Великий: Хреститель і Державотворець'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - history
-      - christianity
-      - state-building
+      birth_year: 942
     - slug: kniaz-yaroslav-mudryi
       title: 'Князь Ярослав Мудрий: Золота Доба'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - law
-      - culture
+      birth_year: 978
+      death_year: 1054
+    - slug: volodymyr-velykii
+      title: 'Князь Володимир Великий: Хреститель і Державотворець'
+      focus: biography
+      birth_year: 980
     - slug: knyazhna-anna-yaroslavna
       title: 'Анна Ярославна: Королева Франції та донька Русі'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - diplomacy
-      - middle-ages
+      birth_year: 1032
     - slug: mykhailo-chernihivskyi
-      title: 'Михайло Чернігівський: Опір Орді'
-      phase: C1.3 Biographies
+      title: 'Михайло Чернігівський: Опір Орді та Трагедія Вибору'
       focus: biography
-      tags:
-      - biography
-      - pre-modern
-      - history
-      - resistance
+      birth_year: 1179
     - slug: roksolana
-      title: 'Роксолана: Влада та Дипломатія'
-      phase: C1.3 Biographies
+      title: 'Роксолана: Від Невільниці до Архітекторки Імперії'
       focus: biography
-      tags:
-      - biography
-      - early-modern
-      - history
-      - diplomacy
+      birth_year: 1502
     - slug: iov-boretskyi
-      title: 'Іов Борецький: Духовний Опір'
-      phase: C1.3 Biographies
+      title: 'Іов Борецький: Духовний Очільник Національного Відродження'
       focus: biography
-      tags:
-      - biography
-      - early-modern
-      - history
-      - religion
-      - education
+      birth_year: 1560
+      death_year: 1631
     - slug: sylvestr-kosiv
-      title: 'Сильвестр Косів: Дипломатія Духу'
-      phase: C1.3 Biographies
+      title: 'Сильвестр Косів: Дипломатія Духу та Захист Автономії'
       focus: biography
-      tags:
-      - biography
-      - early-modern
-      - history
-      - religion
-      - diplomacy
+      birth_year: 1576
     - slug: bohdan-khmelnytskyy
       title: 'Богдан Хмельницький: Будівничий Козацької Держави'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - cossacks
-      - state-building
-      - 17th-century
+      birth_year: 1595
     - slug: yuriy-nemyrych
       title: 'Юрій Немирич: Дипломат і Пророк Великого Князівства Руського'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - diplomacy
-      - hadiach-treaty
-      - european-context
+      birth_year: 1612
+      death_year: 1659
     - slug: ivan-mazepa
       title: 'Іван Мазепа: Гетьман-Меценат і Європейський Вибір'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - mazepa-baroque
-      - poltava-battle
-      - independence
-    - slug: kost-hordiyenko
-      title: 'Кость Гордієнко: Отаман Непокори та Лицар Волі'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - history
-      - cossacks
-      - zaporozhian-sich
-      - 18th-century
+      birth_year: 1639
+      death_year: 1709
     - slug: pylyp-orlyk
       title: 'Пилип Орлик: Гетьман-Вигнанець та Батько Українського Конституціоналізму'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - constitution-1710
-      - emigration
-      - diplomacy
+      birth_year: 1672
+      death_year: 1742
     - slug: petro-kalnyshevskyy
       title: 'Петро Калнишевський: Останній Лицар Степу та Мученик за Волю'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - zaporozhian-sich
-      - liquidation
-      - 18th-century
+      birth_year: 1691
+      death_year: 1803
     - slug: hryhoriy-skovoroda
       title: 'Григорій Сковорода: Мандрівний Філософ та Пророк Серця'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - philosophy
-      - enlightenment
-      - 18th-century
+      birth_year: 1722
+      death_year: 1794
     - slug: maksym-berezovskyy
       title: 'Максим Березовський: Трагічний Геній Українського Бароко'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - classical-music
-      - opera
-      - 18th-century
+      birth_year: 1745
+      death_year: 1777
     - slug: dmytro-bortnyanskyy
       title: 'Дмитро Бортнянський: Реформатор Хорового Мистецтва'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: arts
-    - slug: semen-hulak-artemovskyy
-      title: 'Семен Гулак-Артемовський: Творець Національної Опери'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: arts
-    - slug: taras-shevchenko
-      title: 'Тарас Шевченко: Національний Пророк'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: literature
-    - slug: hanna-barvinok
-      title: 'Ганна Барвінок: Перша з Жінок'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: literature
-    - slug: mykhailo-drahomanov
-      title: 'Михайло Драгоманов: Архітектор Європейської України'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: politics
-    - slug: mykola-lysenko
-      title: 'Микола Лисенко: Батько Української Музики'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: arts
-    - slug: olena-pchilka
-      title: 'Олена Пчілка: Мати Українського Націоналізму'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: literature
-    - slug: nataliya-kobrynska
-      title: 'Наталія Кобринська: Піонерка Фемінізму'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: politics
-    - slug: mariya-zankovetska
-      title: 'Марія Заньковецька: Королева Української Сцени'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: arts
-    - slug: mariya-pavlova
-      title: 'Марія Павлова: Світова Зоря Палеонтології'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - era: imperial
-      - domain: science
-    - slug: ivan-franko
-      title: 'Іван Франко: Титан праці'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - politics
-      - science
-    - slug: yevhen-chykalenko
-      title: 'Євген Чикаленко: Меценат українського духу'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - politics
-      - agriculture
-    - slug: borys-hrinchenko
-      title: 'Борис Грінченко: Вартовий українського слова'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - linguistics
-      - education
-    - slug: olha-kobylianska
-      title: 'Ольга Кобилянська: Гірська орлиця модернізму'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - feminism
-      - modernism
-    - slug: kyrylo-trylovskyi
-      title: 'Кирило Трильовський: Батько «Січі» та адвокат народу'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - politics
-      - activism
-    - slug: sofiya-okunevska
-      title: 'Софія Окуневська: Перша жінка-лікар'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - medicine
-      - feminism
-      - galicia
-    - slug: ivan-lypa
-      title: 'Іван Липа: Лікар душ і борець за державність'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - literature
-      - politics
-      - independence
-    - slug: mykhailo-hrushevskyi-biography
-      title: 'Михайло Грушевський: Архітектор української історії'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - history
-      - politics
-      - academia
-    - slug: mykola-vasylenko
-      title: 'Микола Василенко: Юрист, історик, державотворець'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - history
-      - law
-      - science
-    - slug: mariia-voiakovska
-      title: 'Марія Вояковська: Феміністка, освітянка, соратниця'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - feminism
-      - education
-      - translation
-    - slug: liudmyla-starytska
-      title: 'Людмила Старицька-Черняхівська: Драматургиня, свідок епохи'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - theater
-      - literature
-      - repression
-    - slug: yulian-bachynskyi
-      title: 'Юліан Бачинський: Пророк української незалежності'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - revolutionary
-      - politics
-      - independence
-    - slug: lesya-ukrainka
-      title: 'Леся Українка: Дочка Прометея'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - drama
-      - feminism
-    - slug: solomiya-krushelnytska
-      title: 'Соломія Крушельницька: Соловейко з України'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - arts
-      - music
-      - opera
-    - slug: mykola-mikhnovskyi
-      title: 'Микола Міхновський: Ідеолог державної самостійності'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - revolutionary
-      - politics
-      - independence
-      - nationalism
-    - slug: mykola-leontovych
-      title: 'Микола Леонтович: Маг українського хору'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - revolutionary
-      - arts
-      - music
-      - composer
-    - slug: symon-petliura
-      title: 'Симон Петлюра: Отаман визвольних змагань'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - revolutionary
-      - politics
-      - military
-      - independence
-    - slug: kazimir-malevich
-      title: 'Казимір Малевич: Творець Чорного квадрата'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - arts
-      - avant-garde
-      - suprematism
+      birth_year: 1751
+      death_year: 1825
     - slug: ivan-kotliarevskyi
       title: 'Іван Котляревський: Батько нової літератури'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - classicism
-      - humor
+      birth_year: 1769
+      death_year: 1838
+    - slug: semen-hulak-artemovskyy
+      title: 'Семен Гулак-Артемовський: Творець Національної Опери'
+      focus: biography
+      birth_year: 1813
+      death_year: 1873
+    - slug: taras-shevchenko
+      title: 'Тарас Шевченко: Національний Пророк'
+      focus: biography
+      birth_year: 1814
+      death_year: 1861
+    - slug: panteleimon-kulish
+      title: 'Пантелеймон Куліш: Будівничий української мови'
+      focus: biography
+      birth_year: 1819
+      death_year: 1840
+    - slug: hanna-barvinok
+      title: 'Ганна Барвінок: Перша з Жінок'
+      focus: biography
+      birth_year: 1828
+      death_year: 1911
     - slug: marko-vovchok
       title: 'Марко Вовчок: Загадкова зірка літератури'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - literature
-      - realism
-      - feminism
+      birth_year: 1833
+      death_year: 1907
     - slug: marko-kropyvnytskyi
       title: 'Марко Кропивницький: Батько українського театру'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - arts
-      - theater
-      - drama
+      birth_year: 1840
+      death_year: 1910
+    - slug: mykhailo-drahomanov
+      title: 'Михайло Драгоманов: Архітектор Європейської України'
+      focus: biography
+      birth_year: 1841
+      death_year: 1895
+    - slug: mykola-lysenko
+      title: 'Микола Лисенко: Батько Української Музики'
+      focus: biography
+      birth_year: 1842
+      death_year: 1912
+    - slug: olena-pchilka
+      title: 'Олена Пчілка: Мати Українського Націоналізму'
+      focus: biography
+      birth_year: 1849
+      death_year: 1930
+    - slug: nataliya-kobrynska
+      title: 'Наталія Кобринська: Піонерка Фемінізму'
+      focus: biography
+      birth_year: 1851
+      death_year: 1920
+    - slug: mariya-zankovetska
+      title: 'Марія Заньковецька: Королева Української Сцени'
+      focus: biography
+      birth_year: 1854
+      death_year: 1934
+    - slug: mariya-pavlova
+      title: 'Марія Павлова: Світова Зоря Палеонтології'
+      focus: biography
+      birth_year: 1854
+      death_year: 1938
+    - slug: ivan-franko
+      title: 'Іван Франко: Титан праці'
+      focus: biography
+      birth_year: 1856
+      death_year: 1916
+    - slug: yevhen-chykalenko
+      title: 'Євген Чикаленко: Меценат українського духу'
+      focus: biography
+      birth_year: 1861
+      death_year: 1914
+    - slug: borys-hrinchenko
+      title: 'Борис Грінченко: Вартовий українського слова'
+      focus: biography
+      birth_year: 1863
+      death_year: 1910
+    - slug: olha-kobylianska
+      title: 'Ольга Кобилянська: Гірська орлиця модернізму'
+      focus: biography
+      birth_year: 1863
+      death_year: 1942
+    - slug: volodymyr-vernadskyi
+      title: 'Володимир Вернадський: Батько української науки'
+      focus: biography
+      birth_year: 1863
+      death_year: 1890
+    - slug: kyrylo-trylovskyi
+      title: 'Кирило Трильовський: Батько «Січі» та адвокат народу'
+      focus: biography
+      birth_year: 1864
+      death_year: 1940
+    - slug: sofiya-okunevska
+      title: 'Софія Окуневська: Перша лікарка Австро-Угорщини та провідниця прогресу'
+      focus: biography
+      birth_year: 1865
+      death_year: 1918
+    - slug: mykhailo-hrushevskyi-biography
+      title: 'Михайло Грушевський: Архітектор української історії та батько республіки'
+      focus: biography
+      birth_year: 1866
+      death_year: 1934
+    - slug: mykola-vasylenko
+      title: 'Микола Василенко: Юрист, історик, державотворець'
+      focus: biography
+      birth_year: 1866
+      death_year: 1935
+    - slug: ivan-lypa
+      title: 'Іван Липа: Лікар душ і борець за державність'
+      focus: biography
+      birth_year: 1867
+      death_year: 1921
+    - slug: mariia-voiakovska
+      title: 'Марія Вояковська: Феміністка, освітянка, соратниця'
+      focus: biography
+      birth_year: 1868
+      death_year: 1924
+    - slug: liudmyla-starytska
+      title: 'Людмила Старицька-Черняхівська: Драматургиня, свідок епохи'
+      focus: biography
+      birth_year: 1868
+      death_year: 1933
+    - slug: yulian-bachynskyi
+      title: 'Юліан Бачинський: Пророк української незалежності'
+      focus: biography
+      birth_year: 1870
+      death_year: 1940
+    - slug: lesya-ukrainka
+      title: 'Леся Українка: Дочка Прометея'
+      focus: biography
+      birth_year: 1871
+      death_year: 1913
+    - slug: ahatanhel-krymskyi
+      title: 'Агатангел Кримський: Поліглот і мученик науки'
+      focus: biography
+      birth_year: 1871
+      death_year: 1896
+    - slug: solomiya-krushelnytska
+      title: 'Соломія Крушельницька: Соловейко з України'
+      focus: biography
+      birth_year: 1872
+      death_year: 1952
+    - slug: mykola-mikhnovskyi
+      title: 'Микола Міхновський: Ідеолог державної самостійності'
+      focus: biography
+      birth_year: 1873
+      death_year: 1924
     - slug: oleksandr-hrekiv
       title: 'Олександр Греків: Генерал УНР'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - revolutionary
-      - military
-      - politics
-      - history
+      birth_year: 1875
+      death_year: 1959
+    - slug: mykola-leontovych
+      title: 'Микола Леонтович: Маг українського хору'
+      focus: biography
+      birth_year: 1877
+      death_year: 1921
+    - slug: symon-petliura-bio
+      title: 'Симон Петлюра: Отаман визвольних змагань'
+      focus: biography
+      birth_year: 1879
+      death_year: 1920
+    - slug: kazimir-malevich
+      title: 'Казимір Малевич: Творець Чорного квадрата'
+      focus: biography
+      birth_year: 1879
+      death_year: 1935
     - slug: oleksandr-bohomazov
       title: 'Олександр Богомазов: Український Пікассо'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - arts
-      - avant-garde
-      - cubo-futurism
+      birth_year: 1880
+      death_year: 1929
     - slug: viacheslav-lypynskyi
       title: 'В’ячеслав Липинський: Ідеолог українського консерватизму'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - politics
-      - history
-      - conservatism
+      birth_year: 1882
+      death_year: 1931
+    - slug: ivan-ohienko
+      title: 'Іван Огієнко: Митрополит і Захисник Мови'
+      focus: biography
+      birth_year: 1882
+      death_year: 1909
     - slug: dmytro-dontsov
       title: 'Дмитро Донцов: Апостол українського націоналізму'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - politics
-      - nationalism
-    - slug: petro-bolbochan
-      title: 'Петро Болбочан: Полководець незалежності'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - military
-      - history
+      birth_year: 1883
+      death_year: 1939
     - slug: nataliia-polonska-vasylenko
       title: 'Наталія Полонська-Василенко: Берегиня історичної правди'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - imperial
-      - revolutionary
-      - soviet
-      - history
-      - science
+      birth_year: 1884
+      death_year: 1973
     - slug: valentyna-radzymovska
-      title: 'Валентина Радзимовська: Піонерка української біохімії'
-      phase: C1.3 Biographies
+      title: 'Валентина Радзимовська: Піонерка української біохімії та незламна вчена'
       focus: biography
-      tags:
-      - biography
-      - soviet
-      - science
-      - repression
+      birth_year: 1886
+      death_year: 1953
     - slug: oleksandr-arkhypenko
       title: 'Олександр Архипенко: Маг тривимірного простору'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - arts
-      - avant-garde
-      - sculpture
+      birth_year: 1887
+      death_year: 1905
     - slug: les-kurbas
       title: 'Лесь Курбас: Режисер, що розірвав кайдани сцени'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - theater
-      - avant-garde
-      - executed-renaissance
-    - slug: vasyl-vyshyvanyi
-      title: 'Василь Вишиваний: Ерцгерцог, що обрав Україну'
-      phase: C1.3 Biographies
-      focus: biography
-      tags:
-      - biography
-      - military
-      - politics
-      - habsburg
+      birth_year: 1887
+      death_year: 1937
     - slug: olha-basarab
       title: 'Ольга Басараб: Муза і сталь українського підпілля'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - resistance
-      - politics
-      - women
+      birth_year: 1889
+      death_year: 1924
     - slug: berta-rapoport
       title: 'Берта Рапопорт: Перша капітанка Чорного моря'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - maritime
-      - women
-      - odessa
+      birth_year: 1891
+      death_year: 1979
     - slug: olena-stepaniv
       title: 'Олена Степанів: Перша у світі жінка-офіцер'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - military
-      - women
-      - history
+      birth_year: 1892
+      death_year: 1963
     - slug: vira-kholodna
       title: 'Віра Холодна: Королева німого кіно'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - cinema
-      - arts
-      - women
+      birth_year: 1893
+      death_year: 1919
     - slug: mykola-khvylovyi
       title: 'Микола Хвильовий: Бунтівний романтик революції'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - politics
-      - executed-renaissance
+      birth_year: 1893
+      death_year: 1933
+    - slug: vasyl-vyshyvanyi
+      title: 'Василь Вишиваний: Ерцгерцог, що обрав Україну'
+      focus: biography
+      birth_year: 1895
+      death_year: 1948
     - slug: borys-liatoshynskyi
       title: 'Борис Лятошинський: Батько українського модернізму'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - music
-      - modernism
-      - arts
+      birth_year: 1895
+      death_year: 1968
     - slug: klavdiya-latysheva
       title: 'Клавдія Латишева: Математик, що підкорила рівняння'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - science
-      - mathematics
-      - women
+      birth_year: 1897
+      death_year: 1956
     - slug: kateryna-bilokur
-      title: '«Катерина Білокур: Квіти за колючим дротом»'
-      phase: C1.3 Biographies
+      title: 'Катерина Білокур: Квіти за колючим дротом'
       focus: biography
-      tags:
-      - biography
-      - art
-      - folk-art
-      - painting
+      birth_year: 1900
+      death_year: 1961
     - slug: serge-lifar
-      title: '«Серж Лифар: Бог танцю з Києва»'
-      phase: C1.3 Biographies
+      title: 'Серж Лифар: Бог танцю з Києва'
       focus: biography
-      tags:
-      - biography
-      - art
-      - ballet
-      - dance
-      - paris-opera
+      birth_year: 1904
+      death_year: 1944
     - slug: olena-teliha
-      title: '«Олена Теліга: Поезія і чин»'
-      phase: C1.3 Biographies
+      title: 'Олена Теліга: Поезія і чин'
       focus: biography
-      tags:
-      - biography
-      - literature
-      - resistance
-      - poetry
-      - wwii
+      birth_year: 1906
+      death_year: 1942
     - slug: mariia-prymachenko
-      title: '«Марія Примаченко: Диво-звірі та народна фантазія»'
-      phase: C1.3 Biographies
+      title: 'Марія Примаченко: Диво-звірі та народна фантазія'
       focus: biography
-      tags:
-      - biography
-      - art
-      - folk-art
-      - naive-art
+      birth_year: 1909
+      death_year: 1938
+    - slug: petro-bolbochan
+      title: 'Петро Болбочан: Полководець незалежності'
+      focus: biography
+      birth_year: 1919
+      death_year: 1920
     - slug: kateryna-yushchenko
-      title: '«Катерина Ющенко: Мати мови програмування»'
-      phase: C1.3 Biographies
+      title: 'Катерина Ющенко: Мати мови програмування'
       focus: biography
-      tags:
-      - biography
-      - science
-      - technology
-      - cybernetics
-      - computer-science
+      birth_year: 1919
+      death_year: 2001
     - slug: levko-lukyanenko
-      title: '«Левко Лук''яненко: Батько Незалежності»'
-      phase: C1.3 Biographies
+      title: 'Левко Лук''яненко: Батько Незалежності'
       focus: biography
-      tags:
-      - biography
-      - politics
-      - history
-      - dissident
-      - independence
+      birth_year: 1928
+      death_year: 1993
     - slug: alla-horska
-      title: '«Алла Горська: Душа шістдесятництва»'
-      phase: C1.3 Biographies
+      title: 'Алла Горська: Душа шістдесятництва'
       focus: biography
-      tags:
-      - biography
-      - art
-      - dissident
-      - history
-      - monumental-art
+      birth_year: 1929
+      death_year: 1970
     - slug: dmytro-pavlychko
-      title: '«Дмитро Павличко: Два кольори мої»'
-      phase: C1.3 Biographies
+      title: 'Дмитро Павличко: Два кольори мої'
       focus: biography
-      tags:
-      - biography
-      - literature
-      - poetry
-      - music
-      - politics
+      birth_year: 1929
+      death_year: 2023
     - slug: lina-kostenko
-      title: '«Ліна Костенко: Совість нації»'
-      phase: C1.3 Biographies
+      title: 'Ліна Костенко: Совість нації'
       focus: biography
-      tags:
-      - biography
-      - literature
-      - poetry
-      - history
-      - morality
+      birth_year: 1930
     - slug: vasyl-symonenko
       title: 'Василь Симоненко: Витязь молодої української поезії'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - sixtiers
-      - soviet-era
+      birth_year: 1935
+      death_year: 1963
     - slug: viacheslav-chornovil
       title: 'В’ячеслав Чорновіл: Провідник до незалежності'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - politics
-      - dissident
-      - independence
+      birth_year: 1937
+      death_year: 1999
     - slug: vasyl-stus
       title: 'Василь Стус: Вертикальне стояння духу'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - dissident
-      - poetry
+      birth_year: 1938
+      death_year: 1985
     - slug: myroslav-marynovych
       title: 'Мирослав Маринович: Голос совісті та прав людини'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - human-rights
-      - dissident
-      - religion
+      birth_year: 1949
     - slug: volodymyr-ivasyuk
-      title: 'Володимир Івасюк: Творець червоної рути'
-      phase: C1.3 Biographies
+      title: 'Володимир Івасюк: Творець «Червоної рути»'
       focus: biography
-      tags:
-      - biography
-      - music
-      - arts
-      - mystery
+      birth_year: 1949
+      death_year: 1979
     - slug: leonid-kadenyuk
       title: 'Леонід Каденюк: Перший космонавт незалежної України'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - science
-      - space
-      - statehood
+      birth_year: 1951
+      death_year: 2018
     - slug: vasyl-shkliar
       title: 'Василь Шкляр: Батько українського бестселера'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - history
-      - independence
+      birth_year: 1951
     - slug: yuriy-vynnychuk
       title: 'Юрій Винничук: Майстер містифікацій та «Танґо смерті»'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - postmodernism
-      - lviv
+      birth_year: 1952
     - slug: kvitka-tsisyk
       title: 'Квітка Цісик: Голос української душі в Америці'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - music
-      - diaspora
-      - culture
+      birth_year: 1953
+      death_year: 1998
     - slug: halyna-pahutyak
       title: 'Галина Пагутяк: Майстриня українського химерного реалізму'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - mysticism
-      - philosophy
+      birth_year: 1958
     - slug: mariya-matios
       title: 'Марія Матіос: Солодка Даруся та залізний дух Буковини'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - history
-      - bukovina
+      birth_year: 1959
+    - slug: mykola-pohribnyi
+      title: 'Микола Погрібний: Голос української вимови'
+      focus: biography
+      birth_year: 1959
+      death_year: 1992
     - slug: oksana-zabuzhko
       title: 'Оксана Забужко: Інтелектуальна провокація та фемінізм'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - feminism
-      - philosophy
+      birth_year: 1960
     - slug: yaroslav-hrytsak
       title: 'Ярослав Грицак: Глобальна історія та подолання минулого'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - history
-      - modernization
-      - europe
+      birth_year: 1960
     - slug: vitaly-portnikov
       title: 'Віталій Портников: Публіцистика як інструмент державотворення'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - journalism
-      - politics
-      - state-building
+      birth_year: 1967
     - slug: taras-prokhasko
       title: 'Тарас Прохасько: Філософія буття і «непрості»'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - philosophy
-      - carpathians
+      birth_year: 1968
     - slug: serhiy-zhadan
       title: 'Сергій Жадан: Голос Сходу і поет війни'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - war
-      - music
+      birth_year: 1974
     - slug: oleg-sentsov
       title: 'Олег Сенцов: Режисер, політв''язень, воїн'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - cinema
-      - resistance
-      - crimea
+      birth_year: 1976
     - slug: tamara-horikha-zernya
       title: 'Тамара Горіха Зерня: «Доця» і жіноче обличчя війни'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - war
-      - volunteering
+      birth_year: 1976
     - slug: kateryna-kalytko
       title: 'Катерина Калитко: Поезія тілесності та війни'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - poetry
-      - war
+      birth_year: 1982
     - slug: sofia-andrukhovych
       title: 'Софія Андрухович: Ілюзії «Фелікс Австрія» та пам''ять «Амадоки»'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - literature
-      - history
-      - memory
+      birth_year: 1982
     - slug: oleksandra-matviichuk
       title: 'Олександра Матвійчук: Захист прав людини'
-      phase: C1.3 Biographies
       focus: biography
-      tags:
-      - biography
-      - independence
-      - politics
-      - law
-      - human-rights
-    - slug: c1-3-checkpoint
+      birth_year: 1983
+    - slug: kost-hordiyenko-bio
+      title: 'Кость Гордієнко: Отаман Непокори та Лицар Волі'
+      focus: biography
+    - slug: c1-bio-checkpoint
       title: 'Контрольна точка: Біографії'
-      phase: C1.3 Biographies Checkpoint
-      focus: checkpoint
-      tags:
-      - checkpoint
-      - integration
-      - biography
-  b2-pro:
-    name: B2 Professional Track - Business Ukrainian
-    description: Business and professional communication at B2 level
-    prerequisite: b2-core-70
-    modules: []
-  c1-pro:
-    name: C1 Professional Track - Professional Mastery
-    description: Executive and academic professional communication
-    prerequisite: b2-pro-40
-    modules: []
-  lit:
-    name: LIT Track - Classical Ukrainian Literature
-    description: Literary analysis seminar from Kotliarevsky to Shevchenko
-    prerequisite: c1-core
-    modules:
-    - slug: introduction-to-kotliarevsky
-      title: Феномен Івана Котляревського
-      phase: LIT
-      focus: literature
-      tags:
-      - література
-      - історія
-      - класика
-      - котляревський
-      - біографія
-    - slug: eneida-part-1
-      title: 'Енеїда: Сміх над Безоднею (Частина I)'
-      phase: LIT
-      focus: literature
-      tags:
-      - література
-      - класика
-      - котляревський
-      - енеїда
-      - гумор
-      - бурлеск
-    - slug: eneida-feast
-      title: 'Енеїда: Філософія Бенкету (Частина II)'
-      phase: LIT
-      focus: literature
-      tags:
-      - література
-      - класика
-      - котляревський
-      - енеїда
-      - їжа
-      - словник
-      - тіло
-      - ігри
-    - slug: eneida-war
-      title: 'Енеїда: Словник Війни'
-      phase: LIT
-      tags:
-      - література
-      - класика
-      - котляревський
-      - енеїда
-      - війна
-      - зброя
-    - slug: natalka-poltavka
-      title: 'Наталка Полтавка: Анатомія Почуттів'
-      phase: LIT
-      tags:
-      - література
-      - п'єса
-      - котляревський
-      - сентименталізм
-      - пісня
-      - театр
-    - slug: kvitka-bio
-      title: 'Батько Прози: Квітка-Основ''яненко'
-      phase: LIT
-      tags:
-      - література
-      - проза
-      - квітка-основ'яненко
-      - слобожанщина
-      - сентименталізм
-    - slug: marusya
-      title: 'Маруся: Ідеал Української Душі'
-      phase: LIT
-      tags:
-      - література
-      - проза
-      - маруся
-      - квітка-основ'яненко
-      - сентименталізм
-    - slug: konotop-witch
-      title: 'Конотопська Відьма: Сатира на Руїну'
-      phase: LIT
-      tags:
-      - література
-      - сатира
-      - квітка-основ'яненко
-      - козацтво
-      - містика
-    - slug: ethnography
-      title: 'Етнографія як Література: Український Світ Квітки'
-      phase: LIT
-      tags:
-      - література
-      - етнографія
-      - обряди
-      - весілля
-      - похорон
-      - чумацтво
-      - топографія
-    - slug: kvitka-language
-      title: 'Мова як Маніфест: Голос Слобожанщини'
-      phase: LIT
-      tags:
-      - література
-      - мова
-      - діалект
-      - стиль
-      - сентименталізм
-    - slug: young-shevchenko
-      title: 'Тарас Шевченко: Від Кріпака до Пророка'
-      phase: LIT
-      tags:
-      - література
-      - біографія
-      - шевченко
-      - кріпацтво
-      - петербург
-      - викуп
-      - романтизм
-    - slug: the-ballads
-      title: 'Балади: Між Світами'
-      phase: LIT
-      tags:
-      - література
-      - шевченко
-      - романтизм
-      - містика
-      - фольклор
-    - slug: haidamaky
-      title: 'Гайдамаки: Кривава Свобода'
-      phase: LIT
-      tags:
-      - література
-      - шевченко
-      - історія
-      - коліївщина
-      - гайдамаки
-      - епос
-      - трагедія
-    - slug: son
-      title: 'Політична Сатира: Сон'
-      phase: LIT
-      tags:
-      - література
-      - шевченко
-      - сатира
-      - імперія
-      - сон
-  oes:
-    name: OES Track - Old East Slavic
-    description: Historical linguistics proving Ukrainian continuity
-    prerequisite: c1-core
-    modules: []
-  ruth:
-    name: RUTH Track - Ruthenian
-    description: Middle Ukrainian period linguistics
-    prerequisite: oes-30
-    modules: []
+      focus: biography
+
