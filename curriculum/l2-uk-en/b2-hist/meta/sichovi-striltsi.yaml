@@ -1,0 +1,25 @@
+module: sichovi-striltsi
+title: "Українські січові стрільці: Патріоти, воїни, просвітники"
+subtitle: "Перше національне військове формування"
+version: "2.0"
+phase: "HIST.9"
+focus: history
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - wwi
+  - revolution
+  - army
+  - identity
+grammar:
+  - "Historical narrative register"
+  - "Passive voice (було створено, було зупинено)"
+  - "Modal verbs in oaths"
+objectives:
+  - "Learner understands the role of USS in Ukrainian national revival"
+  - "Learner can analyze primary sources (oaths, memoirs)"
+  - "Learner masters military and educational terminology"
+vocabulary_count: 28
+slug: sichovi-striltsi

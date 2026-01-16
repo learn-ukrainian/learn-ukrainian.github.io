@@ -1,0 +1,31 @@
+module: greeks-crimea-olbia
+title: "Грецькі міста-держави: Ольвія, Херсонес"
+subtitle: "Антична цивілізація на українських землях"
+version: '1.0'
+phase: HIST.1
+focus: history
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+- history
+- antiquity
+- greeks
+- crimea
+- olbia
+- chersonesus
+- colonization
+grammar:
+- 'Historical narrative register'
+- 'Past tense mastery'
+objectives:
+- 'Understand the causes of Greek colonization in Ukraine'
+- 'Describe the political structure of Olbia and Chersonesus'
+- 'Analyze the interaction between Greeks and Scythians'
+- 'Recognize the legacy of antiquity in Ukrainian history'
+vocabulary_count: 24
+slug: greeks-crimea-olbia
+naturalness:
+  score: 10
+  status: PASS
+status: active
