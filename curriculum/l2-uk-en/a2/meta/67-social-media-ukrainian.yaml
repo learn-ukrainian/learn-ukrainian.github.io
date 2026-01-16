@@ -1,0 +1,27 @@
+module: 67-social-media-ukrainian
+title: Social Media Ukrainian
+subtitle: Posts, Comments, Messaging Conventions
+version: '1.0'
+phase: A2.6 Practical Scenarios
+pedagogy: TBL
+focus: practical
+duration: 60
+transliteration: none
+tags:
+- social-media
+- digital
+- communication
+- online
+grammar:
+- 'Actions: Поставити лайк, Поділитися, Підписатися'
+- 'Messaging: Написати в особисті'
+- 'Engagement: Залишити коментар'
+objectives:
+- Learner can navigate Ukrainian social media platforms
+- Learner can write appropriate comments and posts
+- Learner can use social media vocabulary naturally
+vocabulary_count: 12
+slug: 67-social-media-ukrainian
+naturalness:
+  score: 9
+  status: PASS

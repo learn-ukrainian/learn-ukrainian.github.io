@@ -1,0 +1,83 @@
+module: 66-asking-for-directions
+level: A2
+version: '1.0'
+items:
+- lemma: заблукати
+  ipa: /zɐbɫʊˈkɑtɪ/
+  translation: to get lost
+  pos: verb
+- lemma: дістатися
+  ipa: /dʲisˈtɑtɪsʲɐ/
+  translation: to get to/reach
+  pos: verb
+- lemma: маршрут
+  ipa: /mɐrˈʃrut/
+  translation: route
+  pos: noun
+  gender: m
+- lemma: карта
+  ipa: /ˈkɑrtɐ/
+  translation: map
+  pos: noun
+  gender: f
+- lemma: навігатор
+  ipa: /nɐʋʲiˈɦɑtɔr/
+  translation: GPS/navigator
+  pos: noun
+  gender: m
+- lemma: найближчий
+  ipa: /nɐjˈblɪʒt͡ʃɪj/
+  translation: nearest
+  pos: adj
+- lemma: метро
+  ipa: /mɛˈtrɔ/
+  translation: metro
+  pos: noun
+  gender: n
+- lemma: автобус
+  ipa: /ɐu̯ˈtɔbus/
+  translation: bus
+  pos: noun
+  gender: m
+- lemma: пересадка
+  ipa: /pɛrɛˈsɑdkɐ/
+  translation: transfer
+  pos: noun
+  gender: f
+- lemma: кінцева
+  ipa: /kʲinʲˈt͡сɛʋɐ/
+  translation: terminal/last stop
+  pos: noun
+  gender: f
+- lemma: куди їде
+  ipa: /kʊˈdɪ ˈjide/
+  translation: where (does it) go
+  pos: phrase
+- lemma: зупинка
+  ipa: /zʊˈpɪnkɐ/
+  translation: stop (bus/tram)
+  pos: noun
+  gender: f
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: вокзал
+  ipa: /ʋɔkˈzɑɫ/
+  translation: station
+  pos: noun
+  gender: m
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: local
+  pos: adj
+- lemma: їде
+  ipa: /ˈjide/
+  translation: goes/travels
+  pos: verb

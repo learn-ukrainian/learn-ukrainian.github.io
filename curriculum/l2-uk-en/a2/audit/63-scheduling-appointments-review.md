@@ -1,0 +1,49 @@
+# Audit Report: 63-scheduling-appointments.md
+**Phase:** A2.6 | **Level:** A2 | **Pedagogy:** TBL | **Target:** 1000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): бронювання...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
+## Gates
+- **Words:** ✅ 1616/1000
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 14/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 77.5% (target 75-85% (A2.3))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+### Errors
+- ❌ HTTP 404
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction (Вступ)** | ✅ | 131 | Included in Core |
+| **Presentation (Презентиція)** | ✅ | 627 | Included in Core |
+| **Practice (Практика)** | ⚪️ | 0 | Skipped |
+| **Dialogues (Діалоги)** | ✅ | 205 | Included in Core |
+| **Narrative (Розповідь)** | ✅ | 491 | Included in Core |
+| **Summary (Підсумок)** | ✅ | 81 | Included in Core |
+| **Need More Practice?** | ⚪️ | 81 | Skipped |

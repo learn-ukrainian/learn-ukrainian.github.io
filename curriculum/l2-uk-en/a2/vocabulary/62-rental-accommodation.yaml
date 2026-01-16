@@ -1,0 +1,65 @@
+module: 62-rental-accommodation
+level: A2
+version: '1.0'
+items:
+- lemma: оренда
+  translation: rent/rental
+  pos: noun
+  gender: f
+- lemma: квартира
+  translation: apartment
+  pos: noun
+  gender: f
+- lemma: власник
+  translation: owner
+  pos: noun
+  gender: m
+- lemma: орендар
+  translation: tenant
+  pos: noun
+  gender: m
+- lemma: договір
+  translation: contract
+  pos: noun
+  gender: m
+- lemma: застава
+  translation: deposit
+  pos: noun
+  gender: f
+- lemma: комунальні
+  translation: utilities
+  pos: noun
+  gender: pl
+- lemma: опалення
+  translation: heating
+  pos: noun
+  gender: n
+- lemma: електрика
+  translation: electricity
+  pos: noun
+  gender: f
+- lemma: меблі
+  translation: furniture
+  pos: noun
+  gender: pl
+- lemma: умови
+  translation: conditions/terms
+  pos: noun
+  gender: pl
+- lemma: підписати
+  translation: to sign
+  pos: verb
+- lemma: оглянути
+  translation: to inspect/view
+  pos: verb
+- lemma: звільнити
+  translation: to vacate
+  pos: verb
+- lemma: ремонт
+  translation: repair/renovation
+  pos: noun
+  gender: m
+- lemma: час
+  translation: time
+  pos: noun
+  gender: m

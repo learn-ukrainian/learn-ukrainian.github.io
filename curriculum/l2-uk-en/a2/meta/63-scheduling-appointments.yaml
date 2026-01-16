@@ -1,0 +1,27 @@
+module: 63-scheduling-appointments
+title: Scheduling Appointments
+subtitle: Making Appointments
+version: '1.0'
+phase: A2.6 Practical Scenarios
+pedagogy: TBL
+focus: practical
+duration: 60
+transliteration: none
+tags:
+- scheduling
+- appointments
+- time
+- planning
+grammar:
+- 'Scheduling: Я хотів би записатися на...'
+- 'Time expressions: О котрій?, На яку годину?'
+- 'Confirming: Добре, о третій годині'
+objectives:
+- Learner can make appointments by phone
+- Learner can reschedule or cancel appointments
+- Learner can confirm appointment details
+vocabulary_count: 15
+slug: 63-scheduling-appointments
+naturalness:
+  score: 9
+  status: PASS

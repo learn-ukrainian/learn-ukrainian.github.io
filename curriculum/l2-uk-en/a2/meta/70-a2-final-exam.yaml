@@ -1,0 +1,27 @@
+module: 70-a2-final-exam
+title: A2 Final Exam
+subtitle: Comprehensive A2 Assessment
+version: '1.0'
+phase: A2.7 Final Assessment
+pedagogy: TTT
+focus: checkpoint
+duration: 90
+transliteration: none
+tags:
+- exam
+- final
+- assessment
+- certification
+grammar:
+- 'Cumulative: All A2 grammar structures'
+- 'Cases: All 7 cases in context'
+- 'Practical: Real-world application'
+objectives:
+- Learner demonstrates mastery of all A2 grammar
+- Learner demonstrates practical communication skills
+- Learner is ready to progress to B1
+vocabulary_count: 0
+slug: 70-a2-final-exam
+naturalness:
+  score: 10
+  status: PASS

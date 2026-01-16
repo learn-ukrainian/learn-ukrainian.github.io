@@ -1,0 +1,80 @@
+module: 67-social-media-ukrainian
+level: A2
+version: '1.0'
+items:
+- lemma: пост
+  ipa: /pɔst/
+  translation: post
+  pos: noun
+  gender: m
+- lemma: коментар
+  ipa: /kɔmɛnˈtɑr/
+  translation: comment
+  pos: noun
+  gender: m
+- lemma: лайк
+  ipa: /ɫɑjk/
+  translation: like
+  pos: noun
+  gender: m
+- lemma: репост
+  ipa: /rɛˈpɔst/
+  translation: repost/share
+  pos: noun
+  gender: m
+- lemma: підписатися
+  ipa: /pʲidpɪˈsɑtɪsʲɐ/
+  translation: to subscribe/follow
+  pos: verb
+- lemma: відписатися
+  ipa: /ʋʲidpɪˈsɑtɪsʲɐ/
+  translation: to unsubscribe/unfollow
+  pos: verb
+- lemma: стрічка
+  ipa: /ˈstrʲit͡ʃkɐ/
+  translation: feed
+  pos: noun
+  gender: f
+- lemma: історія
+  ipa: /isˈtɔrʲijɐ/
+  translation: story
+  pos: noun
+  gender: f
+- lemma: профіль
+  ipa: /ˈprɔfʲilʲ/
+  translation: profile
+  pos: noun
+  gender: m
+- lemma: особисті повідомлення
+  ipa: /ɔˈsɔbɪsʲtʲi pɔʋʲidɔmˈlɛnʲːɐ/
+  translation: direct messages
+  pos: phrase
+- lemma: хештег
+  ipa: /xɛʃˈtɛɦ/
+  translation: hashtag
+  pos: noun
+  gender: m
+- lemma: згадка
+  ipa: /ˈzɦɑdkɐ/
+  translation: mention
+  pos: noun
+  gender: f
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: local
+  pos: adj
+- lemma: повідомлення
+  ipa: /pɔʋʲidɔmˈlɛnʲːɐ/
+  translation: message
+  pos: noun
+  gender: n

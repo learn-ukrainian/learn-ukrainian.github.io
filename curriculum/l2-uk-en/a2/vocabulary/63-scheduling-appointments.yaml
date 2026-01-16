@@ -1,0 +1,53 @@
+module: 63-scheduling-appointments
+level: A2
+version: '1.0'
+items:
+- lemma: записатися
+  translation: to make an appointment
+  pos: verb
+- lemma: прийом
+  translation: appointment
+  pos: noun
+  gender: m
+- lemma: вільний час
+  translation: free time/availability
+  pos: phrase
+- lemma: підтвердити
+  translation: to confirm
+  pos: verb
+- lemma: перенести
+  translation: to reschedule
+  pos: verb
+- lemma: скасувати
+  translation: to cancel
+  pos: verb
+- lemma: нагадування
+  translation: reminder
+  pos: noun
+  gender: n
+- lemma: попередити
+  translation: to notify/warn
+  pos: verb
+- lemma: черга
+  translation: queue
+  pos: noun
+  gender: f
+- lemma: запис
+  translation: booking/registration
+  pos: noun
+  gender: m
+- lemma: онлайн-бронювання
+  translation: online booking
+  pos: noun
+  gender: n
+- lemma: вчасно
+  translation: on time
+  pos: adv
+- lemma: час
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  gender: n

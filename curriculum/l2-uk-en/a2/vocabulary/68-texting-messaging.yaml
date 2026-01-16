@@ -1,0 +1,63 @@
+module: 68-texting-messaging
+level: A2
+version: '1.0'
+items:
+- lemma: скорочення
+  ipa: /skɔˈrɔt͡ʃɛnʲːɐ/
+  translation: abbreviation
+  pos: noun
+  gender: n
+- lemma: сленг
+  ipa: /slɛnɦ/
+  translation: slang
+  pos: noun
+  gender: m
+- lemma: неформально
+  ipa: /nɛfɔrˈmɑlʲnɔ/
+  translation: informally
+  pos: adv
+- lemma: швидко
+  ipa: /ˈʃʋɪdkɔ/
+  translation: quickly
+  pos: adv
+- lemma: голосове
+  ipa: /ɦɔɫɔˈsɔʋɛ/
+  translation: voice message
+  pos: noun
+  gender: n
+- lemma: стікер
+  ipa: /ˈsʲtʲikɛr/
+  translation: sticker
+  pos: noun
+  gender: m
+- lemma: емоджі
+  ipa: /ɛˈmɔd͡ʒʲi/
+  translation: emoji
+  pos: noun
+  gender: n
+- lemma: друкувати
+  ipa: /drʊkʊˈʋɑtɪ/
+  translation: to type
+  pos: verb
+- lemma: надіслати
+  ipa: /nɐdʲisˈɫɑtɪ/
+  translation: to send
+  pos: verb
+- lemma: прочитано
+  ipa: /prɔˈt͡ʃɪtɐnɔ/
+  translation: read (status)
+  pos: part
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: local
+  pos: adj

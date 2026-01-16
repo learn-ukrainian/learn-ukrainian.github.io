@@ -1,0 +1,96 @@
+module: 64-scheduling-interviews
+level: A2
+version: '1.0'
+items:
+- lemma: співбесіда
+  ipa: /sʲpʲiu̯ˈbɛsʲidɐ/
+  translation: interview
+  pos: noun
+  gender: f
+- lemma: посада
+  ipa: /ˈpɔsɐdɐ/
+  translation: position
+  pos: noun
+  gender: f
+- lemma: досвід
+  ipa: /ˈdɔsʲʋʲid/
+  translation: experience
+  pos: noun
+  gender: m
+- lemma: обов'язки
+  ipa: /ɔˈbɔʋʲɑzkɪ/
+  translation: responsibilities
+  pos: noun
+  gender: pl
+- lemma: зарплата
+  ipa: /zɐrˈplɑtɐ/
+  translation: salary
+  pos: noun
+  gender: f
+- lemma: резюме
+  ipa: /rɛzʲʊˈmɛ/
+  translation: resume/CV
+  pos: noun
+  gender: n
+- lemma: працевлаштування
+  ipa: /prɐt͡sɛu̯lɐʃˈtuʋɐnʲːɐ/
+  translation: employment
+  pos: noun
+  gender: n
+- lemma: роботодавець
+  ipa: /rɔbɔtɔˈdɑʋɛt͡sʲ/
+  translation: employer
+  pos: noun
+  gender: m
+- lemma: кандидат
+  ipa: /kɐndɪˈdɑt/
+  translation: candidate
+  pos: noun
+  gender: m
+- lemma: навички
+  ipa: /ˈnɑʋɪt͡ʃkɪ/
+  translation: skills
+  pos: noun
+  gender: pl
+- lemma: кваліфікація
+  ipa: /kʋɐlʲifʲiˈkɑt͡sʲijɐ/
+  translation: qualification
+  pos: noun
+  gender: f
+- lemma: випробувальний термін
+  ipa: /ʋɪprɔˈbuʋɐlʲnɪj ˈtɛrmʲin/
+  translation: probation period
+  pos: phrase
+- lemma: соціальний пакет
+  ipa: /sɔt͡sʲiˈɑlʲnɪj pɐˈkɛt/
+  translation: benefits package
+  pos: phrase
+- lemma: графік
+  ipa: /ˈɦrɑfʲik/
+  translation: schedule
+  pos: noun
+  gender: m
+- lemma: віддалена робота
+  ipa: /ʋʲidˈdɑlɛnɐ rɔˈbɔtɐ/
+  translation: remote work
+  pos: phrase
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: термін
+  ipa: /ˈtɛrmʲin/
+  translation: term/period
+  pos: noun
+  gender: m
+- lemma: пакет
+  ipa: /pɐˈkɛt/
+  translation: package
+  pos: noun
+  gender: m

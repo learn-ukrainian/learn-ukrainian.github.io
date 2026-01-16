@@ -1,0 +1,75 @@
+module: 65-giving-directions
+level: A2
+version: '1.0'
+items:
+- lemma: орієнтир
+  ipa: /ɔrʲijɛnˈtɪr/
+  translation: landmark
+  pos: noun
+  gender: m
+- lemma: перехрестя
+  ipa: /pɛrɛˈxrɛsʲtʲɐ/
+  translation: intersection
+  pos: noun
+  gender: n
+- lemma: світлофор
+  ipa: /sʲʋʲitɫɔˈfɔr/
+  translation: traffic light
+  pos: noun
+  gender: m
+- lemma: відстань
+  ipa: /ˈʋʲid͡stɐnʲ/
+  translation: distance
+  pos: noun
+  gender: f
+- lemma: приблизно
+  ipa: /prɪˈblɪznɔ/
+  translation: approximately
+  pos: adv
+- lemma: пішки
+  ipa: /ˈpʲiʃkɪ/
+  translation: on foot
+  pos: adv
+- lemma: автівкою
+  ipa: /ɐu̯ˈtʲiu̯kɔju̯/
+  translation: by car
+  pos: adv
+- lemma: за рогом
+  ipa: /zɐ ˈrɔɦɔm/
+  translation: around the corner
+  pos: phrase
+- lemma: повз
+  ipa: /pɔu̯z/
+  translation: past
+  pos: prep
+- lemma: напроти
+  ipa: /nɐˈprɔtɪ/
+  translation: opposite
+  pos: prep
+- lemma: між
+  ipa: /mʲiʒ/
+  translation: between
+  pos: prep
+- lemma: далі
+  ipa: /ˈdɑlʲi/
+  translation: further
+  pos: adv
+- lemma: час
+  ipa: /t͡ʃɑs/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijɛˈslɔʋɔ/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: рогом
+  ipa: /ˈrɔɦɔm/
+  translation: corner (instrumental)
+  pos: noun
+  gender: m
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: local
+  pos: adj
