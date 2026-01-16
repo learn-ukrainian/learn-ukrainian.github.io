@@ -1,6 +1,8 @@
 # B2 Module Template
 
-**Purpose:** Reference template for creating B2 modules (M01-110: Grammar, Phraseology, Ukrainian History, Skills)
+**Purpose:** Reference template for creating B2 Core modules (M01-94: Grammar, Phraseology, Register, Communication Skills)
+
+> **Note:** History content (61 modules) has been moved to the **B2-HIST** track. See `b2-history-module-template.md` for history-specific guidance.
 
 **Based on:** B1-grammar-module-template.md, scaled to B2 requirements per Ukrainian State Standard 2024
 
@@ -94,12 +96,12 @@ title: "Ukrainian Title"
 subtitle: "English subtitle"
 version: "1.0"
 phase: "B2.X [Phase Name]"  # B2.1a, B2.1b, B2.2, B2.3, B2.4
-pedagogy: "TTT"  # Grammar modules; "CBI" for Vocab/History modules
+pedagogy: "TTT"  # Grammar modules; "CBI" for Phraseology/Integration modules
 duration: 90  # minutes
 transliteration: none  # No transliteration at B2
 immersion: 100  # FULL immersion (English only in vocab table)
 tags:
-  - [module-type]  # grammar, phraseology, history, skills
+  - [module-type]  # grammar, phraseology, register, integration, skills
   - [topic-tag]
 grammar:
   - "Main grammar concept (e.g., Passive voice - full participle form)"
@@ -224,7 +226,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 ---
 
-#### For Vocabulary/History Modules (CBI/Narrative Arc Pedagogy)
+#### For Phraseology/Integration Modules (CBI/Narrative Arc Pedagogy)
 
 **Section 1: Narrative Hook — 300-500 words**
 - Compelling story or historical account
@@ -398,8 +400,8 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 **"Content is King" at B2:**
 - Grammar modules: Teach grammar through authentic texts (300-500+ words)
-- Vocabulary modules: Embed words in compelling narratives (no lists!)
-- History modules: Teach vocabulary through historical accounts
+- Phraseology modules: Embed words in compelling narratives (no lists!)
+- Integration modules: Consolidate grammar and vocabulary through thematic content
 
 **Text density:** B2 modules feature substantial reading passages that mimic Ukrainian media/literature.
 
@@ -478,26 +480,19 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - M51-60: Synonyms and antonyms
 - M61-70: Collocations and set expressions
 
-### B2.3: Ukrainian History (M71-131)
+### B2.3: Integration & Skills (M71-94)
 
-**Focus:** Origins to present history, vocabulary through narrative, decolonization
-**Pedagogy:** CBI (Historical narratives) + Synthesis modules
-**Activities:** 10-12 (comprehension, vocabulary in context, cross-era analysis)
+**Focus:** Integration of grammar and register, practical communication skills
+**Pedagogy:** CBI (Content-Based Instruction)
+**Activities:** 12-14 (skills application, integrated practice)
 **Word count:** 1800+
-**Passages:** 500+ word historical accounts
 
 **Phase breakdown:**
-- M71-83: Origins → Commonwealth (Trypillia to Lithuania)
-- M84-107: Cossack Era & Empire (Sich, Mazepa, Shevchenko)
-- M108-119: Trauma & Resistance (Executed Renaissance, Holodomor, WWII)
-- M120-125: Independence Era (1991-2013)
-- M126-131: Revolution & War (2014-present)
+- M71-84: Integration modules (grammar review, register application)
+- M85-93: Communication skills (professional email, news analysis, presentations)
+- M94: B2 Final Exam (cumulative assessment)
 
-**Synthesis modules:** M83, M107, M119, M125, M131 (cross-era analysis)
-
-**Critical:** Decolonization content — see `b2-synthesis-module-template.md` and GitHub issue #332
-
-### B2.4: Skills & Capstone (M132-145)
+> **Note:** History content (61 modules) has been moved to the **B2-HIST** track.
 
 **Focus:** Integrated skills, final assessment
 **Pedagogy:** CBI + Skills integration
@@ -551,7 +546,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 ### Immersion & Quality
 - [ ] 100% Ukrainian (English only in vocabulary "Переклад" column)
 - [ ] No Language Link boxes
-- [ ] Pedagogy appropriate (TTT for grammar, CBI for vocab/history)
+- [ ] Pedagogy appropriate (TTT for grammar, CBI for phraseology/integration)
 - [ ] No pedagogical violations
 - [ ] Register awareness throughout
 

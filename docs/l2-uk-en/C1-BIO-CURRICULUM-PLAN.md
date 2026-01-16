@@ -1,7 +1,7 @@
 # C1-BIO Curriculum Plan: Ukrainian Biographies Track
 
 **Status:** ✅ IMPLEMENTED (relocated from C1 Core, January 2026)
-**Modules:** 01-96 (96 modules)
+**Modules:** 01-99 (99 modules)
 **Prerequisite:** B2-HIST Track (M01-61)
 **Vocabulary Target:** Content-driven (~24/module)
 **Immersion:** 100% Ukrainian
@@ -14,7 +14,7 @@
 
 **Україна через призму її людей — від княгині Ольги до нобелівських лауреатів!**
 
-Цей трек — це 96 біографій видатних українців, від середньовічних князів до сучасних письменників та активістів. Кожна біографія — це вікно в епоху та можливість вивчати мову через життєві історії.
+Цей трек — це 98 біографій видатних українців, від середньовічних князів до сучасних письменників та активістів. Кожна біографія — це вікно в епоху та можливість вивчати мову через життєві історії.
 
 ### Навіщо вивчати біографії?
 
@@ -188,11 +188,26 @@ The C1-BIO track presents biographies of notable Ukrainians from Kyivan Rus to t
 | 94 | sofia-andrukhovych | Софія Андрухович: Наратор пам'яті | Contemporary |
 | 95 | oleksandra-matviichuk | Олександра Матвійчук: Захист прав людини | Contemporary |
 
-### Phase BIO.9: Checkpoint (M96)
+### Phase BIO.9: Language Standardizers (M96-98)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 96 | mykola-pohribnyi | Микола Погрібний: Українська редакторська школа | 1931-2003 |
+| 97 | panteleimon-kulish | Пантелеймон Куліш: Будівничий української мови | 1819-1897 |
+| 98 | ivan-ohienko | Іван Огієнко: Митрополит і Захисник Мови | 1882-1972 |
+
+### Phase BIO.10: Academy Founders (M99-100)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 99 | volodymyr-vernadskyi | Володимир Вернадський: Батько української науки | 1863-1945 |
+| 100 | ahatanhel-krymskyi | Агатангел Кримський: Поліглот і мученик науки | 1871-1942 |
+
+### Phase BIO.11: Checkpoint (M101)
 
 | # | Slug | Title | Type |
 |---|------|-------|------|
-| 96 | c1-3-checkpoint | Контрольна точка: Біографії | Checkpoint |
+| 101 | c1-bio-checkpoint | Контрольна точка: Біографії | Checkpoint |
 
 ---
 
@@ -205,11 +220,12 @@ The track covers diverse fields of Ukrainian achievement:
 | **Political Leaders** | 18 | Olha, Khmelnytsky, Mazepa, Petliura |
 | **Writers & Poets** | 22 | Shevchenko, Franko, Lesya Ukrainka, Stus |
 | **Artists & Musicians** | 14 | Lysenko, Bohomazov, Prymachenko, Bilokur |
-| **Scientists** | 5 | Pavlova, Yushchenko, Rapoport |
-| **Religious Leaders** | 3 | Boretskyi, Kosiv, Mykhailo Chernihivskyi |
+| **Scientists** | 7 | Vernadsky, Krymsky, Pavlova, Yushchenko, Rapoport |
+| **Religious Leaders** | 4 | Boretskyi, Kosiv, Mykhailo Chernihivskyi, Ohienko |
 | **Military Figures** | 6 | Sviatoslav, Hordiyenko, Bolbochan |
 | **Human Rights Activists** | 8 | Chornovil, Lukyanenko, Matviichuk |
 | **Women in History** | 20 | Roksolana, Kobylianska, Teliha, Zabuzhko |
+| **Linguists & Lexicographers** | 2 | Kulish, Ohienko |
 
 ---
 
@@ -250,4 +266,4 @@ Students should complete B2-HIST for historical context before studying individu
 
 ---
 
-*Last updated: January 2026 (RFC #409 relocation)*
+*Last updated: January 2026 (RFC #409 relocation, added Kulish & Ohienko)*

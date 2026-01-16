@@ -1,6 +1,8 @@
 # C1 Module Template
 
-**Purpose:** Reference template for creating C1 modules (M01-160: Academic Foundation, Professional, Biographies, Stylistics, Folk Culture, Literature)
+**Purpose:** Reference template for creating C1 Core modules (M01-106: Academic Foundation, Professional, Stylistics, Folk Culture, Literature)
+
+> **Note:** Biography content (101 modules) has been moved to the **C1-BIO** track. See `c1-biography-module-template.md` for biography-specific guidance.
 
 **Based on:** B2-module-template.md, scaled to C1 requirements per Ukrainian State Standard 2024
 
@@ -101,7 +103,7 @@ duration: 120  # minutes (longer than B2)
 transliteration: none
 immersion: 100
 tags:
-  - [module-type]  # academic, professional, biography, stylistics, folk-culture, literature
+  - [module-type]  # academic, professional, stylistics, folk-culture, literature
   - [topic-tag]
 grammar:
   - "Advanced grammar concept (e.g., Archaic forms in literature)"
@@ -547,56 +549,52 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - M26-30: Professional correspondence
 - M31-35: Professional Checkpoint
 
-### C1.3: Biographies (M36-100)
-
-**Focus:** 65 Ukrainian historical/cultural figures
-**Pedagogy:** Biographical narrative + analysis
-**Activities:** 12-14 (comprehension, vocabulary in context)
-**Word count:** 2000+
-**Passages:** 600+ word biographical accounts
-
-**Example modules:**
-- M36-50: Pre-modern figures (Kyivan Rus, Cossack era)
-- M51-75: 19th-20th century figures (writers, artists, activists)
-- M76-100: Contemporary figures (post-independence)
-
-**Critical:** Gender/era balance, cultural diversity
-
-### C1.4: Advanced Stylistics & Rhetoric (M101-120)
+### C1.3: Stylistics & Sociolinguistics (M36-55)
 
 **Focus:** Rhetorical devices, stylistic analysis, register shifting
 **Pedagogy:** Comparative stylistic analysis
 **Activities:** 16+ (stylistic identification, register transformation)
 **Word count:** 2000+
+**Checkpoint:** M55
 
 **Example modules:**
-- M101-110: Rhetorical devices (metaphor, irony, hyperbole, etc.)
-- M111-115: Register transformation
-- M116-120: Stylistics Checkpoint
+- M36-45: Rhetorical devices (metaphor, irony, hyperbole, etc.)
+- M46-54: Register transformation and sociolinguistic variation
+- M55: Stylistics Checkpoint
 
-### C1.5: Folk Culture & Arts (M121-145)
+### C1.4: Folk Culture & Arts (M56-85)
 
 **Focus:** Traditional Ukrainian culture (music, art, beliefs, crafts)
 **Pedagogy:** Cultural analysis
-**Activities:** 12-14 (cultural comprehension, vocabulary)
+**Activities:** 10-12 (cultural comprehension, vocabulary) — content-heavy modules
 **Word count:** 2000+
+**Checkpoint:** M85
 
 **Example modules:**
-- M121-130: Traditional music and folk songs
-- M131-140: Traditional arts and crafts
-- M141-145: Folk Culture Checkpoint
+- M56-65: Traditional music and folk songs
+- M66-75: Traditional arts and crafts
+- M76-84: Folk beliefs and traditions
+- M85: Folk Culture Checkpoint
 
-### C1.6: Literature - Complete (M146-160)
+> **Note:** C1.4 modules are **content-heavy** with reduced activity counts (10-12). See "Content-Heavy Modules" section below.
+
+### C1.5: Literature & Final Exam (M86-106)
 
 **Focus:** Ukrainian literary canon (classics + contemporary)
 **Pedagogy:** Literary analysis, close reading
-**Activities:** 12-14 (text analysis, stylistic devices)
+**Activities:** 10-12 (text analysis, stylistic devices) — content-heavy modules
 **Word count:** 2000+
 **Passages:** Poetry, prose excerpts (500-800 words)
+**Checkpoint:** M105
+**Final Exam:** M106
 
 **Example modules:**
-- M146-152: Classics (Shevchenko, Franko, Lesya Ukrainka)
-- M153-158: Contemporary literature (post-independence)
+- M86-95: Classics (Shevchenko, Franko, Lesya Ukrainka)
+- M96-104: Contemporary literature (post-independence)
+- M105: Literature Checkpoint
+- M106: C1 Final Exam
+
+> **Note:** Biography content (101 modules) has been moved to the **C1-BIO** track.
 - M159: Literature Review
 - M160: C1 Final Exam (Checkpoint)
 
