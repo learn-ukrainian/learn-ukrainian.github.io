@@ -1,27 +1,31 @@
+module: 27-colors-and-clothing
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Колір і одяг
   pairs:
-  - left: '- біла'
+  - left: біла
     right: сорочка
-  - left: '- чорний'
+  - left: чорний
     right: светр
-  - left: '- сині'
+  - left: сині
     right: джинси
-  - left: '- червона'
+  - left: червона
     right: сукня
-  - left: '- зелене'
+  - left: зелене
     right: пальто
-  - left: '- жовта'
+  - left: жовта
     right: футболка
-  - left: '- білі'
+  - left: білі
     right: кросівки
-  - left: '- чорні'
+  - left: чорні
     right: штани
-  - left: '- синя'
+  - left: синя
     right: куртка
-  - left: '- сіра'
+  - left: сіра
     right: спідниця
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the colors with the clothing items.
 - type: group-sort
   title: Clothing by Gender
   groups:
@@ -43,8 +47,7 @@
     - пальто
     - штани
     - джинси
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Узгодження кольорів (Color Agreement)
   items:
@@ -104,7 +107,35 @@
     - білий
     - біла
     - біле
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Це ___ небо.
+    answer: блакитне
+    options:
+    - блакитне
+    - блакитний
+    - блакитна
+    - блакитні
+  - sentence: Трава дуже ___.
+    answer: зелена
+    options:
+    - зелена
+    - зелений
+    - зелене
+    - зелені
+  - sentence: Море ___ і глибоке.
+    answer: синє
+    options:
+    - синє
+    - синій
+    - синя
+    - сині
+  - sentence: Сонце сьогодні ___.
+    answer: жовте
+    options:
+    - жовте
+    - жовтий
+    - жовта
+    - жовті
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Опис одягу (Describing Outfits)
   items:
@@ -164,7 +195,35 @@
     - жовтий
     - жовта
     - жовті
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Ця сорочка дуже ___.
+    answer: красива
+    options:
+    - красива
+    - гарний
+    - красивий
+    - гарні
+  - sentence: Вона сьогодні в ___ сукні.
+    answer: червоній
+    options:
+    - червоній
+    - червона
+    - червону
+    - червоним
+  - sentence: Я люблю цей ___ колір.
+    answer: синій
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Мої шорти ___.
+    answer: короткі
+    options:
+    - короткі
+    - коротка
+    - короткий
+    - коротке
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Що це? (What Is It?)
   items:
@@ -248,7 +307,47 @@
       correct: false
     - text: Brown pants
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: How do you say accurately "Violet shirt"?
+    options:
+    - text: Фіолетова сорочка
+      correct: true
+    - text: Синя сорочка
+      correct: false
+    - text: Рожева сорочка
+      correct: false
+    - text: Біла сорочка
+      correct: false
+  - question: What does the phrase «Яскрава футболка» accurately mean?
+    options:
+    - text: Bright t-shirt
+      correct: true
+    - text: Dark t-shirt
+      correct: false
+    - text: Old t-shirt
+      correct: false
+    - text: New t-shirt
+      correct: false
+  - question: Identify the meaning of «Нові джинси».
+    options:
+    - text: New jeans
+      correct: true
+    - text: Old jeans
+      correct: false
+    - text: Blue jeans
+      correct: false
+    - text: Black jeans
+      correct: false
+  - question: What is accurately the English translation of «Теплий шарф»?
+    options:
+    - text: Warm scarf
+      correct: true
+    - text: Cold scarf
+      correct: false
+    - text: Long scarf
+      correct: false
+    - text: Short scarf
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Який колір? (What Color?)
   items:
@@ -332,7 +431,47 @@
       correct: false
     - text: Біла
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: What color is a pink pig?
+    options:
+    - text: Рожевий
+      correct: true
+    - text: Сірий
+      correct: false
+    - text: Білий
+      correct: false
+    - text: Чорний
+      correct: false
+  - question: Which color accurately represents an orange fruit?
+    options:
+    - text: Помаранчевий
+      correct: true
+    - text: Жовтий
+      correct: false
+    - text: Червоний
+      correct: false
+    - text: Зелений
+      correct: false
+  - question: What color is accurately associated with a gray mouse?
+    options:
+    - text: Сірий
+      correct: true
+    - text: Чорний
+      correct: false
+    - text: Білий
+      correct: false
+    - text: Коричневий
+      correct: false
+  - question: Which color represents accurately a purple grape?
+    options:
+    - text: Фіолетовий
+      correct: true
+    - text: Синій
+      correct: false
+    - text: Червоний
+      correct: false
+    - text: Зелений
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Опис одягу
   items:
@@ -366,7 +505,37 @@
     - куртка
     - його
     answer: Його куртка синя
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - блакитне
+    - небо
+    - сьогодні
+    answer: Сьогодні блакитне небо
+  - words:
+    - зелена
+    - трава
+    - це
+    answer: Це зелена трава
+  - words:
+    - сонце
+    - жовте
+    - велике
+    answer: Велике жовте сонце
+  - words:
+    - нова
+    - куртка
+    - її
+    answer: Її нова куртка
+  - words:
+    - чорні
+    - джинси
+    - мої
+    answer: Мої чорні джинси
+  - words:
+    - теплий
+    - шарф
+    - цей
+    answer: Цей теплий шарф
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Color Rules
   items:
@@ -400,4 +569,4 @@
   - statement: «Темна» is the masculine form.
     correct: false
     explanation: Incorrect! it's feminine
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

@@ -1,0 +1,26 @@
+module: 37-at-the-market
+title: At the Market
+subtitle: Buying Fresh Produce
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- at the market
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle at the market situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 15
+vocab_count: 15
+slug: at-the-market
+naturalness:
+  score: 10
+  status: PASS

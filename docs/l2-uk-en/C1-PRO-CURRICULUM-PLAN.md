@@ -10,6 +10,33 @@
 
 ---
 
+## Вступ
+
+**Українська на рівні керівника — від виконавчого листування до академічних публікацій!**
+
+Цей трек для тих, хто потребує найвищого рівня професійної української. Керівники, науковці, фахівці, що працюють з українськими партнерами — цей курс для вас.
+
+### Для кого цей трек?
+
+- **Керівники (C-suite)** — виконавче листування, кризові комунікації
+- **Науковці** — академічне письмо, публікації українською
+- **Перекладачі** — базові навички синхронного перекладу
+- **Міжнародні фахівці** — крос-культурна комунікація
+
+### Підхід до навчання
+
+Комбінація ESP (English for Specific Purposes) та CLIL (Content and Language Integrated Learning). Ви вивчаєте мову через реальні професійні завдання найвищої складності.
+
+**Занурення:** 100% українською
+
+### Попередні вимоги
+
+- Завершення B2-PRO Track або B2 Core
+- Продемонстрована професійна потреба
+- Словниковий запас ~6,000+ слів
+
+---
+
 ## Track Overview
 
 The C1-PRO track develops advanced professional communication skills for executives, academics, and specialists requiring mastery-level Ukrainian. It covers executive communication, academic publishing, deep industry specialization, and cross-cultural competence.

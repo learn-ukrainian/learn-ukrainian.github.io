@@ -1,0 +1,30 @@
+module: b1-89
+title: 'Checkpoint: Grammar Synthesis (Синтез граматики)'
+subtitle: Confirm grammar readiness before communication skills
+version: '2.0'
+phase: B1.8
+focus: checkpoint
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+- checkpoint
+- assessment
+- grammar
+- comprehensive
+grammar:
+- Aspect (all contexts)
+- Motion verbs with prefixes
+- Complex sentences (all types)
+- Participles (adverbial and passive)
+- Advanced structures
+objectives:
+- Learner demonstrates mastery of all B1 grammar (M01-88)
+- Learner applies grammar in integrated contexts
+- Learner is ready for Phase B1.9 communication skills
+vocabulary_count: 25
+vocab_count: 25
+slug: 89-checkpoint-grammar-synthesis
+naturalness:
+  score: 9
+  status: PASS

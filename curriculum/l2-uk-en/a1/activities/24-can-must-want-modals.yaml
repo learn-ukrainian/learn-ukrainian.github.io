@@ -1,27 +1,31 @@
+module: 24-can-must-want-modals
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Modal Meanings
   pairs:
-  - left: '- могти'
+  - left: могти
     right: can, be able to
-  - left: '- вміти'
+  - left: вміти
     right: know how to
-  - left: '- повинен'
+  - left: повинен
     right: must (personal)
-  - left: '- треба'
+  - left: треба
     right: need to
-  - left: '- можна'
+  - left: можна
     right: may, allowed
-  - left: '- не можна'
+  - left: не можна
     right: not allowed
-  - left: '- заборонено'
+  - left: заборонено
     right: forbidden
-  - left: '- дозволено'
+  - left: дозволено
     right: permitted
-  - left: '- слід'
+  - left: слід
     right: should, ought to
-  - left: '- варто'
+  - left: варто
     right: worth, advisable
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Modal Categories
   groups:
@@ -43,8 +47,7 @@
     - дозволено
     - не можна
     - заборонено
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: могти Conjugation
   items:
@@ -104,7 +107,35 @@
     - можеш
     - може
     - можемо
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Діти ___ гуляти тут.
+    answer: можуть
+    options:
+    - можуть
+    - може
+    - можемо
+    - можеш
+  - sentence: Ви ___ відкрити двері?
+    answer: можете
+    options:
+    - можете
+    - можемо
+    - можеш
+    - можуть
+  - sentence: Хто ___ сказати правильну відповідь?
+    answer: може
+    options:
+    - може
+    - можуть
+    - можу
+    - можемо
+  - sentence: Ми не ___ запізнюватися.
+    answer: можемо
+    options:
+    - можемо
+    - можете
+    - можеш
+    - може
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Obligation Words
   items:
@@ -164,7 +195,35 @@
     - Можна
     - Дозволено
     - Вмію
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Студенти ___ знати правила.
+    answer: повинні
+    options:
+    - повинні
+    - повинен
+    - повинна
+    - повинно
+  - sentence: Я ___ йти додому вже зараз.
+    answer: мушу
+    options:
+    - мушу
+    - мусиш
+    - мусить
+    - мусимо
+  - sentence: Вам ___ бути тут о дев'ятій.
+    answer: потрібно
+    options:
+    - потрібно
+    - вчасно
+    - можна
+    - варто
+  - sentence: Нам ___ працювати більше.
+    answer: треба
+    options:
+    - треба
+    - можна
+    - дозволено
+    - заборонено
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Ability or Skill?
   items:
@@ -249,7 +308,47 @@
       correct: false
     - text: Obligation
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: Choose the category for "Can you help me with this?"
+    options:
+    - text: Physical ability (request)
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: Does "She can speak four languages" express a learned skill?
+    options:
+    - text: Yes, it is a skill (вміти)
+      correct: true
+    - text: No, it is physical ability
+      correct: false
+    - text: It is a permission
+      correct: false
+    - text: It is an obligation
+      correct: false
+  - question: Is "I can't swim today because the water is cold" a skill issue?
+    options:
+    - text: No, it is a circumstantial ability (могти)
+      correct: true
+    - text: Yes, it is a skill issue
+      correct: false
+    - text: It is a permission issue
+      correct: false
+    - text: It is an obligation issue
+      correct: false
+  - question: Choose the correct category for "We can't go there now."
+    options:
+    - text: Physical/circumstantial ability
+      correct: true
+    - text: Learned skill
+      correct: false
+    - text: Absolute obligation
+      correct: false
+    - text: Constant permission
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Modal Meanings
   items:
@@ -333,7 +432,47 @@
       correct: false
     - text: One is forbidden to rest.
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: What is accurately the meaning of «Не можна»?
+    options:
+    - text: Not allowed
+      correct: true
+    - text: Possible
+      correct: false
+    - text: Necessary
+      correct: false
+    - text: Easy
+      correct: false
+  - question: How do you say accurately "I promise" in Ukrainian?
+    options:
+    - text: Я обіцяю
+      correct: true
+    - text: Я можу
+      correct: false
+    - text: Я хочу
+      correct: false
+    - text: Я вмію
+      correct: false
+  - question: What does precisely the word «Здатний» mean?
+    options:
+    - text: Capable
+      correct: true
+    - text: Ready
+      correct: false
+    - text: Sure
+      correct: false
+    - text: Forbidden
+      correct: false
+  - question: Which phrase accurately means "I have to go" in Ukrainian?
+    options:
+    - text: Я мушу йти
+      correct: true
+    - text: Я можу йти
+      correct: false
+    - text: Я хочу йти
+      correct: false
+    - text: Я вмію йти
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Modal Sentences
   items:
@@ -371,7 +510,44 @@
     - вона
     - почати
     answer: Вона готова почати
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - мусимо
+    - ми
+    - чекати
+    - тут
+    answer: Ми мусимо чекати тут
+  - words:
+    - треба
+    - вчитися
+    - кожен
+    - день
+    answer: Треба вчитися кожен день
+  - words:
+    - можу
+    - я
+    - прийти
+    - не
+    - сьогодні
+    answer: Я не можу прийти сьогодні
+  - words:
+    - вміють
+    - вони
+    - малювати
+    - добре
+    answer: Вони вміють малювати добре
+  - words:
+    - згоден
+    - я
+    - допомогти
+    - тобі
+    answer: Я згоден допомогти тобі
+  - words:
+    - вчасно
+    - він
+    - старається
+    - прийти
+    answer: Він старається прийти вчасно
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Modal Understanding
   items:
@@ -388,7 +564,7 @@
   - statement: «Треба» is an impersonal word for necessity.
     correct: true
   - statement: '«Повинен» changes gender: повинен/повинна.'
-    correct: false
+    correct: true
   - statement: «Варто» means "worth" or "advisable".
     correct: true
   - statement: «Мусити» means "to want".
@@ -404,4 +580,4 @@
   - statement: «Не можна» means "you can".
     correct: false
     explanation: Incorrect! it means "not allowed"
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

@@ -1,0 +1,54 @@
+module: 42-emergencies
+level: A1
+version: '1.0'
+items:
+  - lemma: допомога
+    ipa: /dɔpɔˈmɔɦɑ/
+    translation: help
+    pos: noun 
+    gender: f
+  - lemma: допоможіть
+    ipa: /dɔpɔmɔˈʒʲitʲ/
+    translation: help! (imperative)
+    pos: verb 
+    aspect: pf
+  - lemma: загубити
+    ipa: /zɑɦʊˈbɪtɪ/
+    translation: to lose
+    pos: verb 
+    aspect: pf
+  - lemma: вкрасти
+    ipa: /ˈvkrɑstɪ/
+    translation: to steal
+    pos: verb 
+    aspect: pf
+  - lemma: поліція
+    ipa: /pɔˈlʲit͡sʲijɑ/
+    translation: police
+    pos: noun 
+    gender: f
+  - lemma: швидка
+    ipa: /ʃvɪdˈkɑ/
+    translation: ambulance
+    pos: noun 
+    gender: f
+  - lemma: посольство
+    ipa: /pɔˈsɔlʲstvɔ/
+    translation: embassy
+    pos: noun 
+    gender: n
+  - lemma: небезпечно
+    ipa: /nɛbɛzˈpɛt͡ʃnɔ/
+    translation: dangerous
+    pos: adv 
+    gender: n/a
+  - lemma: терміново
+    ipa: /tɛrmʲiˈnɔvɔ/
+    translation: urgently
+    pos: adv 
+    gender: n/a
+  - lemma: лікар
+    ipa: /ˈlʲikɑr/
+    translation: doctor
+    pos: noun 
+    gender: m

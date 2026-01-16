@@ -2,7 +2,7 @@
 
 ## Огляд
 
-**Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
+**Вітаємо!** /vʲiˈtɑjemɔ/ You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
 
 This checkpoint reviews five core abilities from Modules 11-19:
 

@@ -1,3 +1,7 @@
+module: 03-the-gender-code
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Gender Recognition
   items:
@@ -133,7 +137,7 @@
     - text: магазин
       correct: false
     explanation: «Яблуко» ends in -о, so it's neuter.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Gender Pairs
   pairs:
@@ -161,7 +165,7 @@
     right: apple
   - left: стілець
     right: chair
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Sort by Gender
   groups:
@@ -200,7 +204,7 @@
     - яблуко
     - крісло
     - ліжко
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete with Gender
   items:
@@ -288,7 +292,7 @@
     - Апельсин
     - Огірок
     - Яблуко
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Gender Rules
   items:
@@ -328,7 +332,7 @@
   - statement: «Ім'я» is a special neuter noun (Family 4).
     correct: true
     explanation: 'Correct! It changes stem in declension: ім''я → імені.'
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: anagram
   title: Build the Word
   items:
@@ -356,7 +360,7 @@
     answer: хліб
   - scrambled: в о д а
     answer: вода
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: anagram
   title: More Words
   items:
@@ -384,7 +388,7 @@
     answer: диван
   - scrambled: л і ж к о
     answer: ліжко
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: quiz
   title: Gender Pronoun Match
   items:
@@ -476,4 +480,48 @@
     - text: вони
       correct: false
     explanation: Крісло ends in -о → neuter → воно
-  instruction: Оберіть правильну відповідь.
+  - question: Which pronoun matches **село** (village)?
+    options:
+    - text: він
+      correct: false
+    - text: вона
+      correct: false
+    - text: воно
+      correct: true
+    - text: вони
+      correct: false
+    explanation: Село ends in -о → neuter → воно
+  - question: Which pronoun matches **стілець** (chair)?
+    options:
+    - text: він
+      correct: true
+    - text: вона
+      correct: false
+    - text: воно
+      correct: false
+    - text: вони
+      correct: false
+    explanation: Стілець ends in a consonant → masculine → він
+  - question: Which pronoun matches **земля** (earth)?
+    options:
+    - text: він
+      correct: false
+    - text: вона
+      correct: true
+    - text: воно
+      correct: false
+    - text: вони
+      correct: false
+    explanation: Земля ends in -я → feminine → вона
+  - question: Which pronoun matches **місяць** (moon)?
+    options:
+    - text: він
+      correct: true
+    - text: вона
+      correct: false
+    - text: воно
+      correct: false
+    - text: вони
+      correct: false
+    explanation: Місяць ends in a consonant → masculine → він
+  instruction: Choose the correct answer.

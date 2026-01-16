@@ -25,12 +25,12 @@ In English, adjectives don't change («big house», «big houses»). In Ukrainia
 
 Most Ukrainian adjectives use these endings:
 
-| Gender    | Ending  | Example           | Meaning     |
-| --------- | ------- | ----------------- | ----------- |
-| Masculine | -**ий** | нов**ий** будинок | new house   |
-| Feminine  | -**а**  | нов**а** книга    | new book    |
-| Neuter    | -**е**  | нов**е** місто    | new city    |
-| Plural    | -**і**  | нов**і** друзі    | new friends |
+| Gender | Ending | Example | IPA | Meaning |
+| --- | --- | --- | --- | --- |
+| Masculine | -**ий** | новий будинок | /nɔˈvɪj/ | new house |
+| Feminine | -**а** | нова книга | /nɔˈvɑ/ | new book |
+| Neuter | -**е** | нове місто | /nɔˈvɛ/ | new city |
+| Plural | -**і** | нові друзі | /nɔˈʋi/ | new friends |
 
 ### More Examples
 
@@ -58,12 +58,12 @@ Some adjectives have «soft» stems (those ending in soft consonants). They use 
 
 ### Soft Stem Endings Table
 
-| Gender    | Ending  | Example          | Meaning    |
-| --------- | ------- | ---------------- | ---------- |
-| Masculine | -**ій** | син**ій** колір  | blue color |
-| Feminine  | -**я**  | син**я** сорочка | blue shirt |
-| Neuter    | -**є**  | син**є** небо    | blue sky   |
-| Plural    | -**і**  | син**і** очі     | blue eyes  |
+| Gender | Ending | Example | IPA | Meaning |
+| --- | --- | --- | --- | --- |
+| Masculine | -**ій** | синій колір | /ˈsɪnʲij/ | blue color |
+| Feminine | -**я** | синя сорочка | /ˈsɪnʲɑ/ | blue shirt |
+| Neuter | -**є** | синє небо | /ˈsɪnʲɛ/ | blue sky |
+| Plural | -**і** | сині очі | /ˈsɪnʲi/ | blue eyes |
 
 Most common soft-stem adjectives include colors ending in -ій and some other adjectives.
 
@@ -208,15 +208,17 @@ Learning adjectives in pairs helps you remember them better:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. It is a big house.
+2. She is a kind person.
+3. I want a new phone.
 
 ---
 
 # Підсумок
+
 Ви вивчили прикметники! Тепер ви знаєте, як описувати речі в українській мові. (You learned adjectives! Now you know how to describe things in Ukrainian.) Ви знаєте закінчення роду: -ий, -а, -е. Ви знаєте багато нових слів: великий, малий, гарний. Це був дуже цікавий урок (This was a very interesting lesson)! Українська мова солов'їна! Дякую!
 
 ---

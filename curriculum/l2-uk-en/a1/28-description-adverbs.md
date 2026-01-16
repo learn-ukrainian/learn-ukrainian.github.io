@@ -29,22 +29,20 @@
 
 ### The Formula
 
-| Adjective (m) | Meaning   | Adverb   | Meaning       |
-| ------------- | --------- | -------- | ------------- |
-| гарний        | beautiful | гарно    | beautifully   |
-| швидкий       | fast      | швидко   | fast, quickly |
-| повільний     | slow      | повільно | slowly        |
-| тихий         | quiet     | тихо     | quietly       |
-| голосний      | loud      | голосно  | loudly        |
+| Adjective (m) | Meaning | Adverb | IPA | Meaning |
+| --- | --- | --- | --- | --- |
+| гарний | beautiful | гарно | /ˈɦɑrnɔ/ | beautifully |
+| швидкий | fast | швидко | /ˈʃvɪdkɔ/ | fast, quickly |
+| повільний | slow | повільно | /pɔˈvilʲnɔ/ | slowly |
+| тихий | quiet | тихо | /ˈtɪxɔ/ | quietly |
+| голосний | loud | голосно | /ˈɦɔlɔsnɔ/ | loudly |
 
 ### Irregular Adverbs
 
-Some adverbs are special:
-
-| Adjective      | Expected  | Actual Adverb      |
-| -------------- | --------- | ------------------ |
-| хороший (good) | _хорошо_  | **добре** (well)   |
-| поганий (bad)  | _поганно_ | **погано** (badly) |
+| Adjective | Adverb | IPA | Meaning |
+| --------- | ------ | --- | ------- |
+| хороший | **добре** | /ˈdɔbrɛ/ | well |
+| поганий | **погано** | /ˈpɔhɑnɔ/ | badly |
 
 ---
 
@@ -54,7 +52,7 @@ Some adverbs are special:
 >
 > From ALWAYS to NEVER:
 >
-> **завжди** (100%) → **часто** (75%) → **зазвичай** (60%) → **іноді** (25%) → **рідко** (10%) → **ніколи** (0%)
+> **завжди** /ˈzɑvʒdɪ/ → **часто** /ˈt͡ʃɑstɔ/ → **зазвичай** /zɑzʋɪˈt͡ʃɑj/ → **іноді** /ˈinɔdi/ → **рідко** /ˈridkɔ/ → **ніколи** /ˈnʲikɔlɪ/
 
 ### Examples
 
@@ -183,15 +181,17 @@ Some adverbs are special:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. He runs fast.
+2. She sings beautifully.
+3. We always eat breakfast.
 
 ---
 
 # Підсумок
+
 Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
 
 ---

@@ -34,7 +34,8 @@ Before submitting, verify:
 
 - [ ] Frontmatter complete (module, title, phase, pedagogy, objectives)
 - [ ] Word count meets target (M01-05: 300+, M06-10: 500+, M11-34: 750+)
-- [ ] Transliteration appropriate for module number
+- [ ] **IPA included for all new vocabulary and key pronunciation examples**
+- [ ] **NO Latin transliteration used (forbidden)**
 - [ ] 8+ activities with 12+ items each
 - [ ] 4+ unique activity types
 - [ ] 3+ engagement boxes
@@ -54,7 +55,7 @@ version: '1.0'
 phase: 'A1.{1|2|3}'
 pedagogy: 'PPP'
 duration: '60 min'
-transliteration: '{full|partial|first-occurrence|none}'
+phonetics: 'ipa'
 tags:
   - { topic1 }
   - { topic2 }
@@ -69,14 +70,7 @@ vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
-### Transliteration Rules
-
-| Modules | Phase | Transliteration    | Example          |
-| ------- | ----- | ------------------ | ---------------- |
-| 01-10   | A1.1  | `full`             | Слово (Slovo)    |
-| 11-20   | A1.2  | `partial`          | Vocab lists only |
-| 21-34   | A1.3  | `first-occurrence` | First time only  |
-
+> ⚠️ **PHONETIC RULE:** Latin transliteration (e.g., "knyha") is **FORBIDDEN**. Use only IPA (e.g., /ˈknɪɦɑ/).
 
 ---
 
@@ -132,12 +126,12 @@ Introduce concept with:
 
 - Clear explanation in English (A1 allows English)
 - Table showing patterns
-- 3-5 example words/phrases with transliteration (if applicable)
+- 3-5 example words/phrases with **IPA**
 
 ```markdown
-| Letter  | Sound | Example | English |
-| ------- | ----- | ------- | ------- |
-| **А а** | /ɑ/   | мама    | mama    |
+| Letter  | Sound | Example | IPA     | English |
+| ------- | ----- | ------- | ------- | |
+| **А а** | /ɑ/   | мама    | /ˈmɑmɑ/ | mama    |
 ```
 
 #### ### {Subsection 2}
@@ -288,7 +282,7 @@ version: '1.0'
 phase: 'A1.1'
 pedagogy: 'PPP'
 duration: '60 min'
-transliteration: 'full'
+phonetics: 'ipa'
 tags:
   - numbers
   - counting

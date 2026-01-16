@@ -1,3 +1,7 @@
+module: 19-at-the-cafe
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Café Vocabulary
   pairs:
@@ -19,7 +23,9 @@
     right: knife
   - left: ложка
     right: spoon
-  instruction: З'єднайте відповідні елементи.
+  - left: кава
+    right: coffee
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Waiter Questions
   items:
@@ -111,7 +117,51 @@
     - text: Рахунок тут.
       correct: false
     explanation: Polite request for the bill.
-  instruction: Оберіть правильну відповідь.
+  - question: How does the waiter ask about sugar?
+    options:
+    - text: З цукром?
+      correct: true
+    - text: Без цукру?
+      correct: false
+    - text: Який цукор?
+      correct: false
+    - text: Де цукор?
+      correct: false
+    explanation: Asking "With sugar?"
+  - question: How does the waiter ask about milk?
+    options:
+    - text: З молоком?
+      correct: true
+    - text: Без молока?
+      correct: false
+    - text: Де молоко?
+      correct: false
+    - text: Яке молоко?
+      correct: false
+    explanation: Asking "With milk?"
+  - question: How does the waiter ask "Anything else"?
+    options:
+    - text: Ще щось?
+      correct: true
+    - text: Все?
+      correct: false
+    - text: Що це?
+      correct: false
+    - text: Як справи?
+      correct: false
+    explanation: Standard phrase for additional orders.
+  - question: How does the waiter ask "Black or herbal"? (about tea)
+    options:
+    - text: Чорний чи трав'яний?
+      correct: true
+    - text: Зелений чи чорний?
+      correct: false
+    - text: Гарячий чи холодний?
+      correct: false
+    - text: З лимоном?
+      correct: false
+    explanation: Asking about tea type.
+  instruction: Choose the correct answer.
 - type: fill-in
   title: Complete the Café Dialogue
   items:
@@ -199,7 +249,7 @@
     - Візьміть
     - Дайте
     - Покажіть
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Café Etiquette
   items:
@@ -239,7 +289,7 @@
   - statement: Київський торт is a famous Kyiv dessert.
     correct: true
     explanation: Correct! It's a hazelnut meringue cake created in 1956.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Café Phrases by Function
   groups:
@@ -261,11 +311,11 @@
     - Дякую.
     - Будь ласка.
     - Вибачте.
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Order the Café Sentences Order
   items:
-  - question: 'Correct sentence order for: "Table for two, please."'
+  - question: 'Identify the correct order: "Table for two, please."'
     options:
     - text: Столик на двох, будь ласка
       correct: true
@@ -276,7 +326,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Столик на двох, будь ласка'
-  - question: 'Correct sentence order for: "I''ll take coffee with milk."'
+  - question: 'Identify the correct order: "I''ll take coffee with milk."'
     options:
     - text: Я візьму каву з молоком
       correct: true
@@ -287,7 +337,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я візьму каву з молоком'
-  - question: 'Correct sentence order for: "What do you recommend?"'
+  - question: 'Identify the correct order: "What do you recommend?"'
     options:
     - text: Що порекомендуєте
       correct: true
@@ -298,7 +348,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Що порекомендуєте'
-  - question: 'Correct sentence order for: "Please bring more bread."'
+  - question: 'Identify the correct order: "Please bring more bread."'
     options:
     - text: Принесіть, будь ласка, ще хліб
       correct: true
@@ -309,7 +359,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, ще хліб'
-  - question: 'Correct sentence order for: "Check separately, please."'
+  - question: 'Identify the correct order: "Check separately, please."'
     options:
     - text: Рахунок окремо, будь ласка
       correct: true
@@ -320,7 +370,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Рахунок окремо, будь ласка'
-  - question: 'Correct sentence order for: "That''s everything."'
+  - question: 'Identify the correct order: "That''s everything."'
     options:
     - text: Це все
       correct: true
@@ -331,7 +381,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це все'
-  - question: 'Correct sentence order for: "Thank you, it was..."'
+  - question: 'Identify the correct order: "Thank you, it was..."'
     options:
     - text: Дякую, було дуже смачно
       correct: true
@@ -342,7 +392,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Дякую, було дуже смачно'
-  - question: 'Correct sentence order for: "That''s enough."'
+  - question: 'Identify the correct order: "That''s enough."'
     options:
     - text: Це достатньо
       correct: true
@@ -353,7 +403,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це достатньо'
-  - question: 'Correct sentence order for: "Can I have a menu?"'
+  - question: 'Identify the correct order: "Can I have a menu?"'
     options:
     - text: Можна меню
       correct: true
@@ -364,7 +414,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Можна меню'
-  - question: 'Correct sentence order for: "Anything else?"'
+  - question: 'Identify the correct order: "Anything else?"'
     options:
     - text: Ще щось
       correct: true
@@ -375,7 +425,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ще щось'
-  - question: 'Correct sentence order for: "Please bring water."'
+  - question: 'Identify the correct order: "Please bring water."'
     options:
     - text: Принесіть, будь ласка, воду
       correct: true
@@ -386,7 +436,18 @@
     - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, воду'
-  instruction: Оберіть правильну відповідь.
+  - question: 'Identify the correct order: "I''ll take this salad."'
+    options:
+    - text: Я візьму цей салат
+      correct: true
+    - text: візьму Я цей салат
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Я візьму цей салат'
+  instruction: Choose the correct answer.
 - type: fill-in
   title: Polite vs Direct
   items:
@@ -474,7 +535,7 @@
     - Дякую за обслуговування!
     - Нормально!
     - Гаразд!
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Café Situations
   items:
@@ -610,4 +671,4 @@
     - text: Тірамісу
       correct: false
     explanation: Київський торт (Kyiv cake) is the specialty!
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

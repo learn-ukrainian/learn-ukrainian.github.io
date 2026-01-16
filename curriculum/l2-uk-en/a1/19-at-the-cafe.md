@@ -12,23 +12,23 @@ When you walk into a Ukrainian café, you'll use phrases you've already learned�
 
 **Entering and Seating:**
 
-- **Столик на двох, будь ласка.** (Table for two, please.)
-- **Можна меню?** (Can I have a menu?)
-- **Де туалет?** (Where is the restroom?)
+- **Столик на двох, будь ласка.** /ˈstɔlɪk nɑ dʋɔx/ (Table for two, please.)
+- **Можна меню?** /ˈmɔʒnɑ mɛˈnʲu/ (Can I have a menu?)
+- **Де туалет?** /dɛ tuɑˈlɛt/ (Where is the restroom?)
 
 **Ordering:**
 
-- **Що порекомендуєте?** (What do you recommend?)
-- **Я візьму каву.** (I'll take coffee.)
-- **Принесіть, будь ласка, борщ.** (Please bring borscht.)
-- **Ще один салат, будь ласка.** (One more salad, please.)
+- **Що порекомендуєте?** /ʃt͡ʃɔ pɔrɛkɔmɛnˈdujɛtɛ/ (What do you recommend?)
+- **Я візьму каву.** /jɑ ˈʋizʲmu ˈkɑʋu/ (I'll take coffee.)
+- **Принесіть, будь ласка, борщ.** /prɪnɛˈsʲitʲ/ (Please bring borscht.)
+- **Ще один салат, будь ласка.** /ʃt͡ʃɛ ˈɔdɪn sɑˈlɑt/ (One more salad, please.)
 
 **Paying:**
 
-- **Рахунок, будь ласка.** (Check, please.)
-- **Разом чи окремо?** (Together or separately?)
-- **Це все.** (That's everything.)
-- **Дякую, було дуже смачно!** (Thank you, it was very delicious!)
+- **Рахунок, будь ласка.** /rɑˈxunɔk/ (Check, please.)
+- **Разом чи окремо?** /ˈrɑzɔm t͡ʃɪ ɔˈkrɛmɔ/ (Together or separately?)
+- **Це все.** /t͡sɛ wsɛ/ (That's everything.)
+- **Дякую, було дуже смачно!** /ˈsmɑt͡ʃnɔ/ (Thank you, it was very delicious!)
 
 > [!tip] **Did You Know?**
 >

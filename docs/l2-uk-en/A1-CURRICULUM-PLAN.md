@@ -8,6 +8,45 @@
 
 ---
 
+## Introduction
+
+**Welcome to Ukrainian! Ласкаво просимо!**
+
+A1 is your first step into the Ukrainian language. By the end of this level, you'll be able to introduce yourself, ask simple questions, understand basic everyday situations, and navigate common survival scenarios—from ordering at a café to buying tickets.
+
+### What You'll Learn
+
+- **The Cyrillic alphabet** — reading and writing Ukrainian script
+- **Basic grammar** — 5 of 7 cases (Nominative, Accusative, Locative, Vocative, Genitive)
+- **Essential vocabulary** — ~600 words covering greetings, family, food, numbers, time, and daily life
+- **Practical scenarios** — café, restaurant, market, store, transport, phone basics, emergencies
+
+### Learning Philosophy
+
+At A1, we prioritize **comprehension over production**. You'll focus on:
+- Recognizing patterns rather than memorizing rules
+- Understanding spoken and written Ukrainian in context
+- Building confidence through repetition and practical use
+
+**Immersion level:** 25-50% Ukrainian (with full English support)
+
+### Prerequisites
+
+None! A1 assumes zero prior knowledge of Ukrainian or Cyrillic script.
+
+### By Module 44
+
+You will be able to:
+- Read and write in Cyrillic script confidently
+- Introduce yourself and ask about others
+- Order food and drinks at restaurants and cafés
+- Shop at markets and stores
+- Use basic public transport
+- Handle simple phone conversations
+- Communicate basic needs in emergency situations
+
+---
+
 ## Quality Standards Reference
 
 For detailed quality metrics on instructional core word counts, immersion percentages, example sentences, engagement boxes, mini-dialogues, and activity requirements by level, please refer to:
@@ -705,7 +744,7 @@ By module 34, learners can:
 
 ---
 
-## Phase A1.3: Time & Self (Modules 21-30)
+## Phase A1.3: Time & Self (Modules 21-34)
 
 ### Learning Goals
 - Use past and future tense
@@ -731,7 +770,7 @@ By module 34, learners can:
 | 31 | Body & Health | M30 preps | Standard 3.10: Body parts, Pharmacy, "Bolyt" |
 | 32 | My Family | M14 poss, M16 gen | Standard 3.1: Family Members, Genitive Relations |
 | 33 | Holidays & Traditions | M23 time | Standard 3.12: Dates, Greetings, Gifts |
-| 34 | Checkpoint: Final Review | All A1 | Final Exam simulation |
+| 34 | Checkpoint: Core Grammar | All A1.1-A1.3 | Grammar consolidation before practical |
 
 ### Vocabulary Plan A1.3 (260 words)
 
@@ -1049,27 +1088,29 @@ By module 34, learners can:
 
 ---
 
-#### Module 34: Checkpoint: Final Review (A1 Mastery)
-**Covers:** M01-33
+#### Module 34: Checkpoint: Core Grammar (Базова граматика)
+**Covers:** M01-33 (All core grammar before practical scenarios)
+
+> **Note:** This checkpoint confirms grammar readiness before Phase A1.4 practical modules. It is NOT the final A1 assessment—that is M44.
 
 **Required Skill Groups:**
 1. Cyrillic Fluency (M01-02) - read without transliteration
 2. Verb Tenses (M21-22) - past (-в/-ла) and future (буду+)
-3. Four Cases (M11-17) - Nom/Acc/Gen/Loc endings
+3. Five Cases (M11-17) - Nom/Acc/Gen/Loc/Voc endings
 4. Adjective Agreement (M26-27) - gender/number matching
 5. Adverbs (M28) - manner, frequency, formation
 6. Time & Routine (M23-25) - scheduling, daily activities
-7. Practical Contexts (M18-19, M31-32) - café, health, family
-8. Weather & Holidays (M29, M33) - seasons, celebrations
+7. Prepositions & Body (M30-31) - direction, location, health
+8. Family & Holidays (M32-33) - relationships, celebrations
 
-**Final tasks:**
+**Assessment tasks:**
 1. Self-introduction monologue
 2. "My typical day" paragraph
-3. Restaurant/Shop role-play
-4. Doctor visit simulation
-5. Family & Holidays description
+3. Basic dialogue comprehension
+4. Case ending identification
+5. Grammar transformation exercises
 
-**Vocabulary (10 words):** Final review selection
+**Vocabulary (10 words):** Review selection from M01-33
 
 ---
 
@@ -1103,7 +1144,7 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 | 41 | 10 | Phone | алло, хвилинку, передзвоню... |
 | 42 | 10 | Introductions | познайомтесь, родом з, працюю... |
 | 43 | 10 | Emergency | допоможіть, загубив, поліція... |
-| 44 | 5 | Review | (consolidation of above) |
+| 44 | 5 | Final Exam | Cumulative assessment (M01-43) |
 
 ### Module Content Specifications A1.4
 
@@ -1269,22 +1310,36 @@ These modules reinforce M01-34 grammar (no new grammar introduced):
 
 ---
 
-#### Module 44: A1 Practical Checkpoint
-**Covers:** M35-43 (Practical Scenarios)
+#### Module 44: A1 Final Exam (A1 Підсумковий іспит)
+**Covers:** M01-43 (CUMULATIVE - All A1 grammar + practical scenarios)
 
-**Required Skill Groups:**
-1. Service Interactions (M35-38) - café, restaurant, market, store
-2. Transport Navigation (M39-40) - tickets, public transport
-3. Communication (M41-42) - phone, introductions
-4. Emergency Handling (M43) - help, reporting problems
+> **LEVEL FINAL:** This is the comprehensive A1 certification exam testing all grammar, vocabulary, and practical skills from the entire level.
 
-**Assessment Tasks:**
-1. Full café/restaurant role-play
-2. Buy tickets and navigate transport
-3. Phone conversation simulation
-4. Emergency scenario response
+**Part 1: Core Grammar (M01-33)**
+1. Cyrillic reading fluency
+2. Five cases - recognition and production
+3. Verb conjugation (present, past, future)
+4. Adjective and adverb usage
+5. Preposition selection (location vs direction)
 
-**Vocabulary (5 words):** Review selection from A1.4
+**Part 2: Practical Application (M35-43)**
+1. Service Interactions - café, restaurant, market, store
+2. Transport Navigation - tickets, public transport
+3. Communication - phone, introductions
+4. Emergency Handling - help, reporting problems
+
+**Assessment Format:**
+- **Reading:** Menu, schedule, simple text comprehension (20 min)
+- **Grammar:** Case endings, verb forms, agreement (20 min)
+- **Practical:** Role-play scenarios - ordering, buying, navigating (20 min)
+- **Production:** Short written response (10 min)
+
+**Passing Criteria:**
+- 70%+ overall score
+- No section below 60%
+- Demonstrates readiness for A2
+
+**Vocabulary (5 words):** Final consolidation
 
 ---
 

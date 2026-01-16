@@ -1,3 +1,7 @@
+module: 10-checkpoint-first-contact
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Cyrillic Reading
   items:
@@ -71,7 +75,7 @@
       correct: false
     - text: letter
       correct: false
-  - question: What is the meaning of «будь ласка»?
+  - question: What is the meaning of « будь ласка»?
     options:
     - text: thank you
       correct: false
@@ -121,7 +125,7 @@
       correct: false
     - text: German
       correct: false
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Gender Recognition
   pairs:
@@ -141,7 +145,11 @@
     right: feminine
   - left: чай
     right: masculine
-  instruction: З'єднайте відповідні елементи.
+  - left: море
+    right: neuter
+  - left: школа
+    right: feminine
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Demonstrative Agreement
   items:
@@ -241,7 +249,7 @@
     - Це
     - Ці
     explanation: студенти = plural → ці
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Verb Conjugation First Conjugation
   items:
@@ -341,7 +349,7 @@
     - читають
     - читаю
     explanation: ви → читаєте
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Verb Conjugation Second Conjugation
   items:
@@ -441,7 +449,7 @@
     - говорять
     - говорю
     explanation: ви → говорите
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: group-sort
   title: Verb Classes
   groups:
@@ -463,7 +471,7 @@
     - їсти
     - пити
     - бути
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Question Words
   items:
@@ -587,7 +595,7 @@
       correct: false
     - text: Як
       correct: true
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Grammar Rules
   items:
@@ -627,7 +635,7 @@
   - statement: All Ukrainian verbs are regular.
     correct: false
     explanation: Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш).
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: match-up
   title: Food and Drinks
   pairs:
@@ -647,7 +655,11 @@
     right: milk
   - left: сік
     right: juice
-  instruction: З'єднайте відповідні елементи.
+  - left: яблуко
+    right: apple
+  - left: яйце
+    right: egg
+  instruction: Match the corresponding elements.
 - type: anagram
   title: Cyrillic Practice
   items:
@@ -675,7 +687,7 @@
     answer: мова
   - scrambled: с л о в о
     answer: слово
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: fill-in
   title: Negation Practice
   items:
@@ -763,4 +775,4 @@
     - ні
     - ніколи
     - немає
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.

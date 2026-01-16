@@ -1,3 +1,7 @@
+module: 16-the-genitive-i-absence
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Absence Vocabulary
   pairs:
@@ -19,7 +23,9 @@
     right: sense
   - left: різниця
     right: difference
-  instruction: З'єднайте відповідні елементи.
+  - left: допомога
+    right: help
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Genitive Endings
   groups:
@@ -41,7 +47,7 @@
     - вікна
     - знання
     - значення
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete with Genitive
   items:
@@ -129,7 +135,7 @@
     - З
     - До
     - Від
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Understanding Genitive
   items:
@@ -265,7 +271,7 @@
     - text: кава немає цукру
       correct: false
     explanation: 'Pattern: noun + без + genitive'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Genitive Rules
   items:
@@ -305,11 +311,11 @@
   - statement: 'Both parts are required: немає AND genitive ending.'
     correct: true
     explanation: Correct! You can't skip either part.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: quiz
   title: Form Sentences Order
   items:
-  - question: 'Correct sentence order for: "I don''t have time."'
+  - question: 'Identify the correct order: "I don''t have time."'
     options:
     - text: У мене немає часу
       correct: true
@@ -320,7 +326,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У мене немає часу'
-  - question: 'Correct sentence order for: "There''s no coffee here."'
+  - question: 'Identify the correct order: "There''s no coffee here."'
     options:
     - text: Тут немає кави
       correct: true
@@ -331,7 +337,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Тут немає кави'
-  - question: 'Correct sentence order for: "She doesn''t have money."'
+  - question: 'Identify the correct order: "She doesn''t have money."'
     options:
     - text: У неї немає грошей
       correct: true
@@ -342,7 +348,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У неї немає грошей'
-  - question: 'Correct sentence order for: "Without sugar, please."'
+  - question: 'Identify the correct order: "Without sugar, please."'
     options:
     - text: Без цукру, будь ласка
       correct: true
@@ -353,7 +359,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Без цукру, будь ласка'
-  - question: 'Correct sentence order for: "No problem!"'
+  - question: 'Identify the correct order: "No problem!"'
     options:
     - text: Немає проблем
       correct: true
@@ -364,7 +370,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Немає проблем'
-  - question: 'Correct sentence order for: "We don''t have a choice."'
+  - question: 'Identify the correct order: "We don''t have a choice."'
     options:
     - text: У нас немає вибору
       correct: true
@@ -375,7 +381,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У нас немає вибору'
-  - question: 'Correct sentence order for: "You don''t have the opportunity?"'
+  - question: 'Identify the correct order: "You don''t have the opportunity?"'
     options:
     - text: У тебе немає можливості
       correct: true
@@ -386,7 +392,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У тебе немає можливості'
-  - question: 'Correct sentence order for: "Without help, it''s difficult."'
+  - question: 'Identify the correct order: "Without help, it''s difficult."'
     options:
     - text: Без допомоги це важко
       correct: true
@@ -397,7 +403,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Без допомоги це важко'
-  - question: 'Correct sentence order for: "There''s no difference here."'
+  - question: 'Identify the correct order: "There''s no difference here."'
     options:
     - text: Тут немає різниці
       correct: true
@@ -408,7 +414,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Тут немає різниці'
-  - question: 'Correct sentence order for: "You don''t have patience?"'
+  - question: 'Identify the correct order: "You don''t have patience?"'
     options:
     - text: У вас немає терпіння
       correct: true
@@ -419,7 +425,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У вас немає терпіння'
-  - question: 'Correct sentence order for: "They don''t have knowledge."'
+  - question: 'Identify the correct order: "They don''t have knowledge."'
     options:
     - text: У них немає знання
       correct: true
@@ -430,7 +436,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У них немає знання'
-  - question: 'Correct sentence order for: "I don''t have experience."'
+  - question: 'Identify the correct order: "I don''t have experience."'
     options:
     - text: У мене немає досвіду
       correct: true
@@ -441,7 +447,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У мене немає досвіду'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Prepositions and Genitive Nouns
   pairs:
@@ -461,7 +467,11 @@
     right: except that
   - left: без допомоги
     right: without help
-  instruction: З'єднайте відповідні елементи.
+  - left: у неї немає
+    right: she doesn't have
+  - left: у нього немає
+    right: he doesn't have
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Transform to Negative
   items:
@@ -549,4 +559,4 @@
     - немає допомоги
     - є допомоги
     - не допомога
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.

@@ -15,31 +15,104 @@ a1:
   planned: 44  # 34 existing + 10 new practical scenarios (RFC #409)
   status: auto
   description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
+  introduction: |
+    ## Welcome to Ukrainian!
+
+    This is your first step into the beautiful Ukrainian language. By the end of A1, you'll be able to read and write in Cyrillic, introduce yourself, count, tell time, and have simple conversations about everyday topics.
+
+    **What You'll Learn:**
+    - The Cyrillic alphabet and Ukrainian pronunciation
+    - Basic sentence structure and word order
+    - Numbers, colors, days of the week
+    - Introducing yourself and meeting people
+    - Shopping, ordering at cafés, basic travel
+
+    **Learning Philosophy:** We believe in understanding patterns, not just memorizing phrases. Every grammar concept is explained with clear rules and many examples before you practice.
 
 a2:
   planned: 70  # 58 existing + 12 new practical scenarios (RFC #409)
   status: auto
   description: "Elementary — All 7 cases, aspect intro, practical scenarios"
+  introduction: |
+    ## Building the Foundation
+
+    A2 transforms you from a tourist into someone who can truly communicate in Ukrainian. This level covers all 7 grammatical cases, introduces verbal aspect, and builds practical conversation skills for real-world situations.
+
+    **What You'll Learn:**
+    - Complete case system — Nominative, Accusative, Genitive, Dative, Instrumental, Locative, Vocative
+    - Verbal aspect basics — Perfective vs. Imperfective
+    - Verb conjugation patterns across all tenses
+    - Practical scenarios — doctors, pharmacies, hotels, scheduling, social situations
+
+    **Learning Philosophy:** Ukrainian cases aren't random — they follow logical patterns. We teach you to recognize and apply these patterns, making what seems complex surprisingly systematic.
 
 b1:
   planned: 99  # 91 existing + 8 new skills modules (RFC #409)
   status: auto
   description: "Intermediate — Aspect mastery, motion verbs, communication skills"
+  introduction: |
+    ## Від граматики до справжньої розмови!
+
+    Цей рівень — ваш перехід від «я вивчаю українську» до «я говорю українською». B1 поглиблює розуміння видів дієслова, вводить систему дієслів руху та розвиває комунікативні навички.
+
+    **Чого ви навчитеся:**
+    - Повне опанування видів дієслова — вибір між доконаним і недоконаним
+    - Система дієслів руху — «йти/ходити», «їхати/їздити» та префікси
+    - Складнопідрядні речення — причина, час, умова
+    - Комунікативні навички — написання листів, подкасти, обговорення
+
+    **Занурення:** 75-90% українською — ви вже готові!
 
 b2:
   planned: 94  # 84 existing + 10 new professional basics (RFC #409)
   status: auto
   description: "Upper-Intermediate — Passive voice, registers, professional basics"
+  introduction: |
+    ## Від вивчення до володіння!
+
+    На цьому рівні ви переходите від «студента» до «користувача» української мови. B2 охоплює пасивний стан, стилістику, мовні регістри та складні комунікативні ситуації.
+
+    **Чого ви навчитеся:**
+    - Пасивний стан — всі способи вираження пасиву в українській
+    - Дієприкметники та дієприслівники — активні та пасивні форми
+    - Регістри мовлення — офіційний, діловий, науковий, медичний
+    - Стилістика — наголос, інверсія, сполучники
+
+    **Занурення:** 100% українською — англійська більше не потрібна!
 
 c1:
   planned: 106
   status: auto
   description: "Advanced — Stylistics, literature, complex grammar"
+  introduction: |
+    ## Просунутий рівень — вільне володіння мовою!
+
+    C1 — це рівень, на якому ви думаєте українською. Ви опановуєте стилістичні тонкощі, літературну мову та культурний контекст на рівні освіченого носія.
+
+    **Чого ви навчитеся:**
+    - Стилістика — емфаза, інверсія, риторичні прийоми
+    - Літературна мова — аналіз класичних текстів
+    - Культурні модулі — фольклор, звичаї, сучасна культура
+    - Діалектологія — особливості регіональних варіантів
+
+    **Занурення:** 100% українською без будь-яких пояснень англійською
 
 c2:
   planned: 100
   status: auto
   description: "Mastery — Native-level proficiency"
+  introduction: |
+    ## Рівень досконалості — як освічений носій!
+
+    C2 — це фінальна вершина. На цьому рівні ви володієте українською на рівні освіченого носія: стилістична досконалість, літературна творчість, професійна спеціалізація.
+
+    **Чого ви навчитеся:**
+    - Морфологічна досконалість — рідкісні форми, виняткові парадигми
+    - Літературне письмо — оповідання, есе, поезія
+    - Наукове та професійне письмо — дисертації, доповіді
+    - Риторика — публічні виступи, дебати
+
+    **Занурення:** 100% українською на рівні академічних текстів
 
 # =============================================================================
 # Specialized Tracks (RFC #409)
@@ -50,27 +123,87 @@ b2-hist:
   planned: 61
   status: auto
   description: "History — Ukrainian history from origins to present"
+  introduction: |
+    ## Історія України — від витоків до сьогодення!
+
+    Цей трек — подорож крізь тисячоліття української історії. Від Трипільської культури до сучасної незалежності — ви вивчатимете історію українською мовою на рівні B2.
+
+    **Чого ви навчитеся:**
+    - Давня історія — Трипілля, скіфи, Київська Русь
+    - Козацька доба — Запорозька Січ, Богдан Хмельницький
+    - Національне відродження — XIX-XX століття
+    - Сучасна Україна — незалежність, Революція Гідності
+
+    **Підхід:** Деколонізована перспектива з опорою на українські джерела
 
 # Biography Track (relocated from C1 M36-131)
 c1-bio:
   planned: 96
   status: auto
   description: "Biographies — Notable Ukrainians through history"
+  introduction: |
+    ## Видатні українці — обличчя нації!
+
+    Цей трек знайомить вас із життям і досягненнями видатних українців. Від поетів до науковців, від воїнів до митців — кожен модуль присвячений одній особистості.
+
+    **Чого ви навчитеся:**
+    - Культурні діячі — Шевченко, Франко, Леся Українка
+    - Науковці та винахідники — Сікорський, Корольов, Вернадський
+    - Історичні постаті — Хмельницький, Мазепа, Петлюра
+    - Сучасники — митці, спортсмени, активісти
+
+    **Підхід:** Біографія як вікно в епоху — історичний та культурний контекст
 
 # Professional Track (new)
 b2-pro:
   planned: 40
   status: auto
   description: "Professional — Business communication, technical domains"
+  introduction: |
+    ## Українська для кар'єри — від листування до переговорів!
+
+    Цей трек розроблений для професіоналів, які хочуть використовувати українську на робочому місці. Ділове листування, технічна документація, презентації та переговори.
+
+    **Чого ви навчитеся:**
+    - Ділова комунікація — листи, звіти, протоколи
+    - Технічні домени — IT, фінанси, право, медицина
+    - Медіа та дискурс — аналіз новин, публічні виступи
+    - Нетворкінг — професійні контакти українською
+
+    **Підхід:** ESP (English for Specific Purposes) адаптований для української
 
 # Professional Mastery Track (new)
 c1-pro:
   planned: 50
   status: auto
   description: "Professional Mastery — Executive, academic, specialized"
+  introduction: |
+    ## Українська на рівні керівника — від виконавчого листування до наукових публікацій!
+
+    Цей трек для тих, хто потребує найвищого рівня професійної української. Керівники, науковці, перекладачі — цей курс для вас.
+
+    **Чого ви навчитеся:**
+    - Виконавча комунікація — стратегічні звіти, кризові комунікації
+    - Академічне письмо — наукові статті, гранти, дисертації
+    - Галузева спеціалізація — IT, фінанси, право, медицина
+    - Переклад — основи синхронного та послідовного перекладу
+
+    **Підхід:** ESP + CLIL — мова через професійні завдання
 
 # Literature Track (post-C1)
 lit:
   planned: 30
   status: auto
   description: "Literature — Ukrainian classics and literary analysis"
+  introduction: |
+    ## Від читача до науковця — українська література як духовна скарбниця нації!
+
+    Цей трек — для тих, хто хоче не просто читати українську літературу, а глибоко аналізувати її. «Кобзар» Шевченка, драми Лесі Українки, проза Франка — ви вивчатимете ці тексти на рівні літературознавця.
+
+    **Чого ви навчитеся:**
+    - Бурлескна традиція — Котляревський, «Енеїда»
+    - Сентименталізм — Квітка-Основ'яненко
+    - Романтизм — Шевченко, «Кобзар»
+    - Реалізм — Нечуй-Левицький, Панас Мирний
+
+    **Підхід:** Прямий контакт з повними текстами через UkrLib

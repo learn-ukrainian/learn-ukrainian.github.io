@@ -1,0 +1,94 @@
+module: 37-at-the-market
+level: A1
+version: '1.0'
+items:
+  - lemma: ринок
+    ipa: /ˈrɪnɔk/
+    translation: market
+    pos: noun
+    gender: m
+  - lemma: свіжий
+    ipa: /ˈswiʒɪj/
+    translation: fresh
+    pos: adjective
+  - lemma: стиглий
+    ipa: /ˈstɪɦlɪj/
+    translation: ripe
+    pos: adjective
+  - lemma: кілограм
+    ipa: /kilɔˈɦrɑm/
+    translation: kilogram
+    pos: noun
+    gender: m
+  - lemma: грам
+    ipa: /ɦrɑm/
+    translation: gram
+    pos: noun
+    gender: m
+  - lemma: ціна
+    ipa: /t͡sɪˈnɑ/
+    translation: price
+    pos: noun
+    gender: f
+  - lemma: знижка
+    ipa: /ˈznɪʒkɑ/
+    translation: discount
+    pos: noun
+    gender: f
+  - lemma: торгуватися
+    ipa: /tɔrɦʊˈvɑtɪsʲɑ/
+    translation: to haggle/negotiate
+    pos: verb
+  - lemma: пакет
+    ipa: /pɑˈkɛt/
+    translation: bag/plastic bag
+    pos: noun
+    gender: m
+  - lemma: ваги
+    ipa: /ˈvɑɦɪ/
+    translation: scale
+    pos: noun
+    gender: p
+  - lemma: коштувати
+    ipa: /ˈkɔʃtʊvɑtɪ/
+    translation: to cost
+    pos: verb
+  - lemma: дешевше
+    ipa: /dɛˈʃɛu̯ʃɛ/
+    translation: cheaper
+    pos: adverb
+  - lemma: зважити
+    ipa: /ˈzvɑʒɪtɪ/
+    translation: to weigh
+    pos: verb
+  - lemma: решта
+    ipa: /ˈrɛʃtɑ/
+    translation: change (money)
+    pos: noun
+    gender: f
+  - lemma: вибирати
+    ipa: /vɪbɪˈrɑtɪ/
+    translation: to choose
+    pos: verb
+  - lemma: домашній
+    ipa: /dɔˈmɑʃnʲij/
+    translation: homemade/home-grown
+    pos: adjective
+  - lemma: дорого
+    ipa: /ˈdɔrɔɦɔ/
+    translation: expensive
+    pos: adverb
+  - lemma: сумка
+    ipa: /ˈsumkɑ/
+    translation: bag
+    pos: noun
+    gender: f
+  - lemma: штука
+    ipa: /ˈʃtukɑ/
+    translation: piece/item
+    pos: noun
+    gender: f
+  - lemma: зелений
+    ipa: /zɛˈlɛnɪj/
+    translation: green
+    pos: adjective

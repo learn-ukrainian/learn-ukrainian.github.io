@@ -1,0 +1,54 @@
+module: 35-at-the-cafe
+level: A1
+version: '1.0'
+items:
+- lemma: напій
+  ipa: /nɑˈpij/
+  translation: beverage
+  pos: noun
+  gender: m
+- lemma: гарячий
+  ipa: /ɦɑˈrʲɑt͡ʃɪj/
+  translation: hot
+  pos: adj
+  gender: m
+- lemma: холодний
+  ipa: /xɔˈlɔdnɪj/
+  translation: cold
+  pos: adj
+  gender: m
+- lemma: з молоком
+  ipa: /z mɔlɔˈkɔm/
+  translation: with milk
+  pos: phrase
+  gender: n/a
+- lemma: без цукру
+  ipa: /bɛz ˈt͡sukrʊ/
+  translation: without sugar
+  pos: phrase
+  gender: n/a
+- lemma: тістечко
+  ipa: /tʲisˈtɛt͡ʃkɔ/
+  translation: pastry / small cake
+  pos: noun
+  gender: n
+- lemma: круасан
+  ipa: /krʊɑˈsɑn/
+  translation: croissant
+  pos: noun
+  gender: m
+- lemma: рахунок
+  ipa: /rɑˈxunɔk/
+  translation: bill / check
+  pos: noun
+  gender: m
+- lemma: сплатити
+  ipa: /splɑˈtɪtɪ/
+  translation: to pay
+  pos: verb
+  aspect: pf
+- lemma: чайові
+  ipa: /t͡ʃɑjɔˈvi/
+  translation: tips
+  pos: noun
+  gender: pl

@@ -1,3 +1,7 @@
+module: 20-checkpoint-navigation
+level: A1
+version: '2.0'
+activities:
 - type: fill-in
   title: Case Mastery - Accusative
   items:
@@ -85,7 +89,7 @@
     - цю дівчину
     - цієї дівчини
     - цій дівчині
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Case Mastery - Locative
   items:
@@ -173,7 +177,7 @@
     - на
     - в
     - біля
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Case Mastery - Genitive
   items:
@@ -261,7 +265,7 @@
     - гривні
     - гривень
     - гривнями
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: match-up
   title: Possessive Pronouns Agreement
   pairs:
@@ -283,7 +287,9 @@
     right: our apartment
   - left: наше вікно
     right: our window
-  instruction: З'єднайте відповідні елементи.
+  - left: їхні друзі
+    right: their friends
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Grammar Knowledge Check
   items:
@@ -419,7 +425,7 @@
     - text: Genitive - України
       correct: false
     explanation: Я люблю Україну - accusative case for direct object
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Grammar Rules Review
   items:
@@ -459,7 +465,7 @@
   - statement: Neuter nouns don't change in accusative.
     correct: true
     explanation: True! вікно → вікно, місто → місто.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Preposition Usage
   groups:
@@ -479,11 +485,11 @@
     - на станції
     - на концерті
     - на площі
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Building Sentences Order
   items:
-  - question: 'Correct sentence order for: "I see a student..."'
+  - question: 'Identify the correct order: "I see a student..."'
     options:
     - text: Я бачу студента у бібліотеці.
       correct: true
@@ -494,7 +500,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я бачу студента у бібліотеці.'
-  - question: 'Correct sentence order for: "The book is lying..."'
+  - question: 'Identify the correct order: "The book is lying..."'
     options:
     - text: Книга лежить на столі.
       correct: true
@@ -505,7 +511,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Книга лежить на столі.'
-  - question: 'Correct sentence order for: "I don''t have time today."'
+  - question: 'Identify the correct order: "I don''t have time today."'
     options:
     - text: У мене немає часу сьогодні.
       correct: true
@@ -516,7 +522,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У мене немає часу сьогодні.'
-  - question: 'Correct sentence order for: "This is my bag,..."'
+  - question: 'Identify the correct order: "This is my bag,..."'
     options:
     - text: Це моя сумка, а це твоя.
       correct: true
@@ -527,7 +533,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це моя сумка, а це твоя.'
-  - question: 'Correct sentence order for: "We live in the..."'
+  - question: 'Identify the correct order: "We live in the..."'
     options:
     - text: Ми живемо у центрі Львова.
       correct: true
@@ -538,7 +544,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми живемо у центрі Львова.'
-  - question: 'Correct sentence order for: "I want coffee without sugar."'
+  - question: 'Identify the correct order: "I want coffee without sugar."'
     options:
     - text: Я хочу каву без цукру.
       correct: true
@@ -549,7 +555,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я хочу каву без цукру.'
-  - question: 'Correct sentence order for: "She''s at work now."'
+  - question: 'Identify the correct order: "She''s at work now."'
     options:
     - text: Вона на роботі зараз.
       correct: true
@@ -560,7 +566,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона на роботі зараз.'
-  - question: 'Correct sentence order for: "One ticket costs five hryvnias."'
+  - question: 'Identify the correct order: "One ticket costs five hryvnias."'
     options:
     - text: Один квиток коштує п'ять гривень.
       correct: true
@@ -571,7 +577,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Один квиток коштує п''ять гривень.'
-  - question: 'Correct sentence order for: "I want to buy..."'
+  - question: 'Identify the correct order: "I want to buy..."'
     options:
     - text: Я хочу купити хліб і молоко.
       correct: true
@@ -582,7 +588,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я хочу купити хліб і молоко.'
-  - question: 'Correct sentence order for: "Today there are no..."'
+  - question: 'Identify the correct order: "Today there are no..."'
     options:
     - text: Сьогодні у магазині немає помідорів.
       correct: true
@@ -593,7 +599,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Сьогодні у магазині немає помідорів.'
-  - question: 'Correct sentence order for: "He reads a very..."'
+  - question: 'Identify the correct order: "He reads a very..."'
     options:
     - text: Він читає дуже цікаву книгу.
       correct: true
@@ -604,7 +610,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він читає дуже цікаву книгу.'
-  - question: 'Correct sentence order for: "The metro station is..."'
+  - question: 'Identify the correct order: "The metro station is..."'
     options:
     - text: Станція метро біля вокзалу.
       correct: true
@@ -615,11 +621,11 @@
     - text: вони
       correct: false
     explanation: 'Correct: Станція метро біля вокзалу.'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: quiz
   title: Real Dialogues Order
   items:
-  - question: 'Correct sentence order for: "How do I get..."'
+  - question: 'Identify the correct order: "How do I get..."'
     options:
     - text: Як дістатися до станції метро?
       correct: true
@@ -630,7 +636,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Як дістатися до станції метро?'
-  - question: 'Correct sentence order for: "Go straight and then left."'
+  - question: 'Identify the correct order: "Go straight and then left."'
     options:
     - text: Ідіть прямо і потім наліво.
       correct: true
@@ -641,7 +647,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ідіть прямо і потім наліво.'
-  - question: 'Correct sentence order for: "Is there a menu..."'
+  - question: 'Identify the correct order: "Is there a menu..."'
     options:
     - text: У ресторані є меню українською?
       correct: true
@@ -652,7 +658,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У ресторані є меню українською?'
-  - question: 'Correct sentence order for: "Yes, of course. Here..."'
+  - question: 'Identify the correct order: "Yes, of course. Here..."'
     options:
     - text: Так, звичайно. Ось, будь ласка.
       correct: true
@@ -663,7 +669,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Так, звичайно. Ось, будь ласка.'
-  - question: 'Correct sentence order for: "I''ll take borsch and varenyky."'
+  - question: 'Identify the correct order: "I''ll take borsch and varenyky."'
     options:
     - text: Я візьму борщ і вареники.
       correct: true
@@ -674,7 +680,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я візьму борщ і вареники.'
-  - question: 'Correct sentence order for: "Can I have the..."'
+  - question: 'Identify the correct order: "Can I have the..."'
     options:
     - text: Можна рахунок, будь ласка?
       correct: true
@@ -685,7 +691,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Можна рахунок, будь ласка?'
-  - question: 'Correct sentence order for: "How much does everything..."'
+  - question: 'Identify the correct order: "How much does everything..."'
     options:
     - text: Скільки коштує все разом?
       correct: true
@@ -696,7 +702,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Скільки коштує все разом?'
-  - question: 'Correct sentence order for: "Together eighty hryvnias."'
+  - question: 'Identify the correct order: "Together eighty hryvnias."'
     options:
     - text: Разом вісімдесят гривень.
       correct: true
@@ -707,7 +713,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Разом вісімдесят гривень.'
-  - question: 'Correct sentence order for: "Can I pay by card?"'
+  - question: 'Identify the correct order: "Can I pay by card?"'
     options:
     - text: Можна платити карткою?
       correct: true
@@ -718,7 +724,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Можна платити карткою?'
-  - question: 'Correct sentence order for: "Yes, you can pay..."'
+  - question: 'Identify the correct order: "Yes, you can pay..."'
     options:
     - text: Так, можна готівкою або карткою.
       correct: true
@@ -729,7 +735,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Так, можна готівкою або картою.'
-  - question: 'Correct sentence order for: "Thank you very much..."'
+  - question: 'Identify the correct order: "Thank you very much..."'
     options:
     - text: Дякую дуже за допомогу!
       correct: true
@@ -740,7 +746,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Дякую дуже за допомогу!'
-  - question: 'Correct sentence order for: "You''re welcome! Safe travels!"'
+  - question: 'Identify the correct order: "You''re welcome! Safe travels!"'
     options:
     - text: Будь ласка! Доброї дороги!
       correct: true
@@ -751,7 +757,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Будь ласка! Доброї дороги!'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: City Vocabulary - Navigation
   pairs:
@@ -773,4 +779,6 @@
     right: pharmacy
   - left: банк
     right: bank
-  instruction: З'єднайте відповідні елементи.
+  - left: міст
+    right: bridge
+  instruction: Match the corresponding elements.

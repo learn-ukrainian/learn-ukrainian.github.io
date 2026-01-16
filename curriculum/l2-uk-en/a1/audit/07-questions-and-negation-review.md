@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1087/500
+- **Words:** ✅ 1041/500
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -16,22 +16,16 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 19.2% (target 15-35% (M07))
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 20.1% (target 15-35% (M07))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 560 | Included in Core |
+| **Presentation** | ✅ | 514 | Included in Core |
 | **Practice** | ⚪️ | 44 | Skipped |
 | **Production** | ➖ | 158 | Excluded Type |
 | **Cultural Insight** | ✅ | 131 | Included in Core |

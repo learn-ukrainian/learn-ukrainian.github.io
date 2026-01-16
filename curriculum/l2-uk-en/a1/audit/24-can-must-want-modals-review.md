@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 959/750
+- **Words:** ✅ 962/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -16,15 +16,9 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.6% (target 35-55% (M24))
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 41.4% (target 35-55% (M24))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,7 +27,7 @@
 | **Warm-up** | ✅ | 35 | Included in Core |
 | **Grammar** | ⚪️ | 50 | Skipped |
 | **Expressing Obligation: повинен, треба, мусити** | ⚪️ | 80 | Skipped |
-| **Expressing Permission: можна / не можна** | ⚪️ | 36 | Skipped |
+| **Expressing Permission: можна / не можна** | ⚪️ | 39 | Skipped |
 | **Recommendations and Advice** | ⚪️ | 0 | Skipped |
 | **Trying and Succeeding** | ⚪️ | 0 | Skipped |
 | **Modal Adjectives** | ⚪️ | 0 | Skipped |

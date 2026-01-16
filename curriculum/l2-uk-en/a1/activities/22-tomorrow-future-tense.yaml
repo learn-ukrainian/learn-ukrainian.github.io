@@ -1,27 +1,31 @@
+module: 22-tomorrow-future-tense
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Time Expressions
   pairs:
-  - left: '- завтра'
+  - left: завтра
     right: tomorrow
-  - left: '- післязавтра'
+  - left: післязавтра
     right: day after tomorrow
-  - left: '- скоро'
+  - left: скоро
     right: soon
-  - left: '- пізніше'
+  - left: пізніше
     right: later
-  - left: '- потім'
+  - left: потім
     right: then, afterwards
-  - left: '- згодом'
+  - left: згодом
     right: eventually
-  - left: '- наступного тижня'
+  - left: наступного тижня
     right: next week
-  - left: '- наступного місяця'
+  - left: наступного місяця
     right: next month
-  - left: '- наступного року'
+  - left: наступного року
     right: next year
-  - left: '- вже'
+  - left: вже
     right: already
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Levels of Certainty
   groups:
@@ -41,8 +45,7 @@
     - спробую
     - постараюся
     - думаю
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Future Tense Forms
   items:
@@ -102,7 +105,35 @@
     - будеш
     - буде
     - будемо
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Вона ___ сміятися з комедії.
+    answer: буде
+    options:
+    - буду
+    - будеш
+    - буде
+    - будуть
+  - sentence: Діти ___ грати в парку скоро.
+    answer: будуть
+    options:
+    - будуть
+    - будемо
+    - будете
+    - будеш
+  - sentence: Я ___ вчитися ввечері.
+    answer: буду
+    options:
+    - буду
+    - будемо
+    - будете
+    - буде
+  - sentence: Ви ___ обідати пізніше?
+    answer: будете
+    options:
+    - будете
+    - будуть
+    - будемо
+    - буде
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Planning Expressions
   items:
@@ -162,7 +193,35 @@
     - мріємо
     - сподіваємося
     - думаємо
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Я ___ вивчити три мови.
+    answer: маю намір
+    options:
+    - маю намір
+    - хочу
+    - думаю
+    - обіцяю
+  - sentence: Ми ___ поїхати в Одесу.
+    answer: мріємо
+    options:
+    - мріємо
+    - маємо
+    - будемо
+    - хочемо
+  - sentence: Я ___ зробити це добре.
+    answer: спробую
+    options:
+    - спробую
+    - буду
+    - хочу
+    - мрію
+  - sentence: Він ___ бути там.
+    answer: обіцяє
+    options:
+    - обіцяє
+    - хоче
+    - мріє
+    - думає
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: буду Conjugation
   items:
@@ -247,7 +306,47 @@
       correct: false
     - text: Do you watch the movie?
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: How do you say "He will be laughing" in the Ukrainian language?
+    options:
+    - text: Він буде сміятися
+      correct: true
+    - text: Він буде сміявся
+      correct: false
+    - text: Він сміється
+      correct: false
+    - text: Він буде сміюся
+      correct: false
+  - question: Choose the correct form of the verb «бути» for «ми».
+    options:
+    - text: будемо
+      correct: true
+    - text: будуть
+      correct: false
+    - text: будете
+      correct: false
+    - text: будеш
+      correct: false
+  - question: Choose the correct form of the verb «бути» for «ви».
+    options:
+    - text: будете
+      correct: true
+    - text: будемо
+      correct: false
+    - text: будуть
+      correct: false
+    - text: буде
+      correct: false
+  - question: Choose the correct form of the verb «бути» for «вони».
+    options:
+    - text: будуть
+      correct: true
+    - text: будете
+      correct: false
+    - text: буде
+      correct: false
+    - text: будемо
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Time Expressions
   items:
@@ -332,7 +431,47 @@
       correct: false
     - text: He understood yesterday.
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: What does precisely the word "today" mean in Ukrainian?
+    options:
+    - text: сьогодні
+      correct: true
+    - text: завтра
+      correct: false
+    - text: вчора
+      correct: false
+    - text: скоро
+      correct: false
+  - question: What does precisely the word "tomorrow" mean in Ukrainian?
+    options:
+    - text: завтра
+      correct: true
+    - text: сьогодні
+      correct: false
+    - text: післязавтра
+      correct: false
+    - text: згодом
+      correct: false
+  - question: How do you say accurately "next month" in Ukrainian?
+    options:
+    - text: наступного місяця
+      correct: true
+    - text: минулого місяця
+      correct: false
+    - text: цього місяця
+      correct: false
+    - text: скоро місяць
+      correct: false
+  - question: How do you say accurately "next week" in Ukrainian?
+    options:
+    - text: наступного тижня
+      correct: true
+    - text: минулого тижня
+      correct: false
+    - text: завтра тижня
+      correct: false
+    - text: потім тижня
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Future Plans
   items:
@@ -368,16 +507,52 @@
     - будете
     - що
     - завтра
-    - '?'
     answer: Що ви будете робити завтра
   - words:
     - планую
     - я
     - поїхати
-    - Київ
+    - Києва
     - до
     answer: Я планую поїхати до Києва
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - буду
+    - я
+    - там
+    - обов'язково
+    answer: Я обов'язково буду там
+  - words:
+    - сподіваємося
+    - ми
+    - скоро
+    - вас
+    - побачити
+    answer: Ми сподіваємося побачити вас скоро
+  - words:
+    - мрію
+    - я
+    - Україні
+    - в
+    - жити
+    answer: Я мрію жити в Україні
+  - words:
+    - обіцяю
+    - я
+    - допомогти
+    - тобі
+    answer: Я обіцяю тобі допомогти
+  - words:
+    - скоро
+    - весна
+    - буде
+    answer: Скоро буде весна
+  - words:
+    - пізніше
+    - я
+    - тобі
+    - зателефоную
+    answer: Я зателефоную тобі пізніше
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Understanding Future Expressions
   items:
@@ -396,25 +571,25 @@
   - statement: «Я мрію» means "I dream."
     correct: true
     explanation: Correct!
-  - statement: «Скоро» means "slowly."
+  - statement: «Скоро» means "soon."
     correct: false
-    explanation: Incorrect! It means "soon."
+    explanation: Correct!
   - statement: «Обіцяю» means "I promise."
     correct: true
     explanation: Correct!
-  - statement: «Вже» means "never."
+  - statement: «Вже» means "already."
     correct: false
-    explanation: Incorrect! It means "already."
+    explanation: Correct!
   - statement: «Пізніше» means "later."
     correct: true
     explanation: Correct!
-  - statement: «Планую» means "I hope."
+  - statement: «Планую» means "I plan."
     correct: false
-    explanation: Incorrect! It means "I plan."
+    explanation: Correct!
   - statement: «Сподіваюся» means "I hope."
     correct: true
     explanation: Correct!
-  - statement: «Ніколи» means "always."
+  - statement: «Ніколи» means "never."
     correct: false
-    explanation: Incorrect! It means "never."
-  instruction: Визначте, чи твердження правильне.
+    explanation: Correct!
+  instruction: Determine if the statement is true.

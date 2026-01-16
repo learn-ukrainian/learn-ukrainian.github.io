@@ -1,0 +1,26 @@
+module: 44-a1-final-exam
+title: A1 Final Exam
+subtitle: Comprehensive Assessment
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- a1 final exam
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle a1 final exam situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 10
+vocab_count: 10
+slug: a1-final-exam
+naturalness:
+  score: 10
+  status: PASS

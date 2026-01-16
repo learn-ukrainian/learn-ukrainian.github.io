@@ -7121,11 +7121,115 @@ resources:
       source: статті про засновників українського руху
   151-honcharstvo-ta-rizbyarstvo:
     websites:
-      - title: 'Національний музей-заповідник українського гончарства в Опішному'
-        url: 'http://www.opishne-museum.gov.ua/'
-        relevance: high
-        source: Official museum website
-      - title: 'UNESCO: Tradition of Kosiv painted ceramics'
-        url: 'https://ich.unesco.org/en/RL/tradition-of-kosiv-painted-ceramics-01456'
-        relevance: high
-        source: UNESCO Intangible Heritage
+    - title: Національний музей-заповідник українського гончарства в Опішному
+      url: http://www.opishne-museum.gov.ua/
+      relevance: high
+      source: Official museum website
+    - title: 'UNESCO: Tradition of Kosiv painted ceramics'
+      url: https://ich.unesco.org/en/RL/tradition-of-kosiv-painted-ceramics-01456
+      relevance: high
+      source: UNESCO Intangible Heritage
+  a1-35-at-the-cafe:
+    youtube:
+    - title: Ordering in a Ukrainian Cafe
+      url: https://www.youtube.com/watch?v=FjI1V3I-9_w
+      relevance: high
+      channel: Ukrainian Lessons
+    websites:
+    - title: Ukrainian Coffee Culture
+      url: https://ukrainer.net/coffee/
+      relevance: high
+      source: Authentic stories and photos from coffee shops across Ukraine
+  a1-36-at-the-restaurant:
+    youtube:
+    - title: Ordering in a Ukrainian Cafe/Restaurant
+      url: https://www.youtube.com/watch?v=FjI1V3I-9_w
+      relevance: high
+      channel: Ukrainian Lessons
+    websites:
+    - title: Ukrainian Cuisine Guide
+      url: https://ukraine.ua/visit/cuisine/
+      relevance: high
+      source: Official guide to Ukrainian food culture
+  a1-37-at-the-market:
+    youtube:
+    - title: Fruits and Vegetables in Ukrainian
+      url: https://www.youtube.com/watch?v=F0O5y9D1kGg
+      relevance: high
+      channel: Ukrainian Lessons
+    websites:
+    - title: Bessarabsky Market in Kyiv
+      url: https://discover-ukraine.info/index.php/en/places/kyiv/kyiv-places/bessarabsky-market
+      relevance: high
+      source: History and guide to the famous Kyiv market
+  a1-38-at-the-store:
+    youtube:
+    - title: Shopping in Ukrainian - Supermarket Vocabulary
+      url: https://www.youtube.com/watch?v=q6P8vA_G938
+      relevance: high
+      channel: Ukrainian Lessons
+    websites:
+    - title: Supermarket Vocabulary Guide
+      url: https://www.ukrainianlessons.com/supermarket/
+      relevance: high
+      source: Detailed list of grocery items and checkout phrases
+  a1-39-buying-tickets:
+    websites:
+    - title: Ukrainian Railways (Ukrzaliznytsia) Booking
+      url: https://booking.uz.gov.ua/en/
+      relevance: high
+      source: Official train ticket booking site with English interface
+    articles:
+    - title: Transportation in Ukrainian
+      url: https://www.ukrainianlessons.com/transport/
+      relevance: high
+      source: Vocabulary and phrases for trains, buses, and planes
+  a1-40-taking-transport:
+    websites:
+    - title: Kyiv Metro Official Map
+      url: https://metro.kyiv.ua/ru/karta-metro/
+      relevance: high
+      source: Official interactive map of the Kyiv Metro lines
+    - title: How to Ride a Marshrutka
+      url: https://www.ukrainianlessons.com/marshrutka/
+      relevance: high
+      source: Guide to the etiquette and phrases for Ukrainian minibuses
+  a1-41-phone-basics:
+    articles:
+    - title: Ukrainian Telephone Phrases
+      url: https://www.ukrainianlessons.com/phone/
+      relevance: high
+      source: Cheat sheet for phone conversations with audio
+    websites:
+    - title: Kyivstar - Largest Mobile Operator
+      url: https://kyivstar.ua/en
+      relevance: medium
+      source: Explore plans and services to see real-world terminology
+  a1-42-emergencies:
+    websites:
+    - title: Visit Ukraine - Emergency Contacts
+      url: https://visitukraine.today/blog/69/emergency-phone-numbers-in-ukraine
+      relevance: high
+      source: Complete list of emergency numbers for tourists and residents
+    articles:
+    - title: Medical and Health Vocabulary
+      url: https://www.ukrainianlessons.com/health/
+      relevance: high
+      source: Phrases for doctor visits and emergencies with audio
+  a1-43-combined-practice:
+    websites:
+    - title: Visit Kyiv - Official City Guide
+      url: https://visitkyiv.travel/
+      relevance: medium
+      source: Explore things to do and places to visit in the capital
+    articles:
+    - title: Ukrainian Daily Routine Vocabulary
+      url: https://www.ukrainianlessons.com/daily-routine/
+      relevance: high
+      source: Review common verbs and nouns for daily activities
+  a1-44-a1-final-exam:
+    websites:
+    - title: National Commission for State Language Standards
+      url: https://mova.gov.ua/
+      relevance: medium
+      source: Information on official Ukrainian language exams and standards

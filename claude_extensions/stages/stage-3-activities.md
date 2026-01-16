@@ -94,8 +94,14 @@ For each module, create:
 ```
 curriculum/l2-uk-en/{level}/
 ├── {num}-{slug}.md                    # Prose only (no activities)
-└── {num}-{slug}.activities.yaml       # All activities in YAML
+└── activities/{num}-{slug}.yaml       # All activities in YAML
 ```
+
+**Example for A1 Module 35 "At the Café":**
+- `curriculum/l2-uk-en/a1/35-at-the-cafe.md`
+- `curriculum/l2-uk-en/a1/activities/35-at-the-cafe.yaml`
+
+**CRITICAL:** Activity files MUST include the module number prefix (e.g., `35-at-the-cafe.yaml`, NOT `at-the-cafe.yaml`).
 
 ## Migrating Existing Embedded Activities
 

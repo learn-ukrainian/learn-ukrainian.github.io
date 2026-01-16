@@ -1,3 +1,7 @@
+module: 13-the-locative-where-things-are
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Where Is It?
   items:
@@ -133,7 +137,7 @@
     - text: під
       correct: false
     explanation: Open space (beach) uses на.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Places and Locations
   pairs:
@@ -155,7 +159,9 @@
     right: station
   - left: зупинка
     right: stop
-  instruction: З'єднайте відповідні елементи.
+  - left: ресторан
+    right: restaurant
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Complete the Locative
   items:
@@ -244,7 +250,7 @@
     - кафу
     - кафею
     explanation: 'Note: кафе is neuter and doesn''t change in locative.'
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: group-sort
   title: в/у or на?
   groups:
@@ -264,7 +270,7 @@
     - на зупинці
     - на вулиці
     - на площі
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: true-false
   title: Locative Rules
   items:
@@ -307,11 +313,11 @@
   - statement: Some masculine nouns have -ові ending in locative for people.
     correct: true
     explanation: Correct! на батькові, на дідові (though less common in modern Ukrainian).
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: quiz
   title: Where Questions Order
   items:
-  - question: 'Correct sentence order for: "Where are you?"'
+  - question: 'Identify the correct order: "Where are you?"'
     options:
     - text: Де ти
       correct: true
@@ -322,7 +328,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де ти'
-  - question: 'Correct sentence order for: "I''m in a café."'
+  - question: 'Identify the correct order: "I''m in a café."'
     options:
     - text: Я в кафе
       correct: true
@@ -333,7 +339,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я в кафе'
-  - question: 'Correct sentence order for: "The book is on..."'
+  - question: 'Identify the correct order: "The book is on..."'
     options:
     - text: Книга на столі
       correct: true
@@ -344,7 +350,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Книга на столі'
-  - question: 'Correct sentence order for: "I live in Kyiv."'
+  - question: 'Identify the correct order: "I live in Kyiv."'
     options:
     - text: Я живу у Києві
       correct: true
@@ -355,7 +361,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я живу у Києві'
-  - question: 'Correct sentence order for: "The children are at school."'
+  - question: 'Identify the correct order: "The children are at school."'
     options:
     - text: Діти в школі
       correct: true
@@ -366,7 +372,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Діти в школі'
-  - question: 'Correct sentence order for: "She''s at work."'
+  - question: 'Identify the correct order: "She''s at work."'
     options:
     - text: Вона на роботі
       correct: true
@@ -377,7 +383,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона на роботі'
-  - question: 'Correct sentence order for: "We''re in a shop..."'
+  - question: 'Identify the correct order: "We''re in a shop..."'
     options:
     - text: Ми в магазині у центрі
       correct: true
@@ -388,7 +394,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми в магазині у центрі'
-  - question: 'Correct sentence order for: "Where is your passport?"'
+  - question: 'Identify the correct order: "Where is your passport?"'
     options:
     - text: Де твій паспорт
       correct: true
@@ -399,7 +405,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де твій паспорт'
-  - question: 'Correct sentence order for: "It''s in the bag."'
+  - question: 'Identify the correct order: "It''s in the bag."'
     options:
     - text: Він у сумці
       correct: true
@@ -410,7 +416,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він у сумці'
-  - question: 'Correct sentence order for: "The concert is at..."'
+  - question: 'Identify the correct order: "The concert is at..."'
     options:
     - text: Концерт на стадіоні
       correct: true
@@ -421,7 +427,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Концерт на стадіоні'
-  - question: 'Correct sentence order for: "They''re at the beach now."'
+  - question: 'Identify the correct order: "They''re at the beach now."'
     options:
     - text: Вони зараз на пляжі
       correct: true
@@ -432,7 +438,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вони зараз на пляжі'
-  - question: 'Correct sentence order for: "The students are in..."'
+  - question: 'Identify the correct order: "The students are in..."'
     options:
     - text: Студенти у бібліотеці
       correct: true
@@ -443,7 +449,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Студенти у бібліотеці'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: fill-in
   title: Preposition Choice
   items:
@@ -531,12 +537,10 @@
     - на
     - у
     - при
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: match-up
   title: Nominative to Locative
   pairs:
-  - left: Nominative
-    right: Locative
   - left: стіл
     right: на столі
   - left: вікно
@@ -555,7 +559,9 @@
     right: у парку
   - left: ліфт
     right: у ліфті
-  instruction: З'єднайте відповідні елементи.
+  - left: шафа
+    right: у шафі
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Translation Practice
   items:
@@ -691,4 +697,4 @@
     - text: вони
       correct: false
     explanation: Floor levels use на.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

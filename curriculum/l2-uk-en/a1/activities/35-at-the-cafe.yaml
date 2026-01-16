@@ -1,0 +1,624 @@
+- type: match-up
+  title: Hot or Cold?
+  instruction: Match the drink to its temperature category or description.
+  pairs:
+    - left: гаряча кава
+      right: hot coffee
+    - left: холодний чай
+      right: cold tea
+    - left: напій
+      right: beverage
+    - left: з молоком
+      right: with milk
+    - left: без цукру
+      right: without sugar
+    - left: тепла вода
+      right: warm water
+    - left: гарячий шоколад
+      right: hot chocolate
+    - left: холодна вода
+      right: cold water
+    - left: капучино
+      right: cappuccino
+    - left: еспресо
+      right: espresso
+
+- type: fill-in
+  title: Ordering Phrases
+  instruction: Complete the ordering phrases with the correct word form.
+  items:
+    - sentence: Мені _____, будь ласка.
+      answer: каву
+      options:
+        - кава
+        - каву
+        - каві
+        - кавою
+    - sentence: Я буду _____.
+      answer: чай
+      options:
+        - чай
+        - чаю
+        - чаєм
+        - чаї
+    - sentence: Дайте, будь ласка, _____.
+      answer: меню
+      options:
+        - меню
+        - мені
+        - мене
+        - маю
+    - sentence: Це _____?
+      answer: все
+      options:
+        - все
+        - ще
+        - вже
+        - де
+    - sentence: Можна _____?
+      answer: рахунок
+      options:
+        - рахунок
+        - гроші
+        - ціна
+        - чек
+    - sentence: Я хочу _____.
+      answer: круасан
+      options:
+        - круасан
+        - круасана
+        - круасану
+        - круасаном
+    - sentence: Мені _____ чай.
+      answer: гарячий
+      options:
+        - гарячий
+        - гаряча
+        - гаряче
+        - гарячі
+    - sentence: Кава з _____.
+      answer: молоком
+      options:
+        - молоком
+        - молока
+        - молоко
+        - молоку
+    - sentence: Чай _____ цукру.
+      answer: без
+      options:
+        - без
+        - з
+        - до
+        - на
+    - sentence: Ось ваші _____.
+      answer: чайові
+      options:
+        - чайові
+        - чай
+        - чаєм
+        - чаю
+    - sentence: Я хочу _____.
+      answer: сплатити
+      options:
+        - сплатити
+        - плати
+        - плачу
+        - платив
+    - sentence: Смачне _____.
+      answer: тістечко
+      options:
+        - тістечко
+        - тісто
+        - тіста
+        - тістом
+
+- type: quiz
+  title: Understanding the Waiter
+  instruction: Select the best response to the waiter's question.
+  items:
+    - question: Доброго дня, що ви сьогодні будете замовляти?
+      options:
+        - text: Мені каву, будь ласка.
+          correct: true
+        - text: Я не знаю.
+          correct: false
+        - text: Дякую.
+          correct: false
+        - text: До побачення.
+          correct: false
+    - question: Скажіть, будь ласка, це все ваше замовлення?
+      options:
+        - text: Так, це все.
+          correct: true
+        - text: Ні, це меню.
+          correct: false
+        - text: Будь ласка.
+          correct: false
+        - text: Доброго дня.
+          correct: false
+    - question: Ви хочете каву з молоком чи без?
+      options:
+        - text: Ні, без молока.
+          correct: true
+        - text: Так, без цукру.
+          correct: false
+        - text: Кава гаряча.
+          correct: false
+        - text: Я хочу чай.
+          correct: false
+    - question: Як вам сьогоднішній напій, все смачно?
+      options:
+        - text: Дуже смачно.
+          correct: true
+        - text: Це напій.
+          correct: false
+        - text: Рахунок.
+          correct: false
+        - text: Я тут.
+          correct: false
+    - question: Ви будете замовляти смачний десерт сьогодні?
+      options:
+        - text: Так, тістечко, будь ласка.
+          correct: true
+        - text: Я буду платити.
+          correct: false
+        - text: Десерт там.
+          correct: false
+        - text: Ні, я не хочу.
+          correct: false
+    - question: Ви будете платити карткою чи готівкою?
+      options:
+        - text: Карткою, будь ласка.
+          correct: true
+        - text: Я хочу меню.
+          correct: false
+        - text: Дякую.
+          correct: false
+        - text: Я не знаю.
+          correct: false
+    - question: Чи можна вже забрати ваше меню?
+      options:
+        - text: Так, будь ласка.
+          correct: true
+        - text: Ні, це рахунок.
+          correct: false
+        - text: Меню смачне.
+          correct: false
+        - text: Я хочу їсти.
+          correct: false
+    - question: Ось, будь ласка, ваш рахунок за замовлення.
+      options:
+        - text: Дякую.
+          correct: true
+        - text: Будь ласка.
+          correct: false
+        - text: Я тут.
+          correct: false
+        - text: Це все.
+          correct: false
+    - question: Вам потрібно принести ще щось до столу?
+      options:
+        - text: Ні, дякую, це все.
+          correct: true
+        - text: Так, це все.
+          correct: false
+        - text: Щось тут.
+          correct: false
+        - text: До побачення.
+          correct: false
+    - question: Будь ласка, сідайте за цей вільний столик.
+      options:
+        - text: Дякую.
+          correct: true
+        - text: Я стою.
+          correct: false
+        - text: До побачення.
+          correct: false
+        - text: Я йду.
+          correct: false
+    - question: Який саме чай ви хочете випити зараз?
+      options:
+        - text: Зелений, будь ласка.
+          correct: true
+        - text: Гарячий суп.
+          correct: false
+        - text: Я не хочу.
+          correct: false
+        - text: Чорна кава.
+          correct: false
+    - question: Вам потрібен цукор до вашого напою?
+      options:
+        - text: Ні, дякую, я п'ю без цукру.
+          correct: true
+        - text: Так, без цукру.
+          correct: false
+        - text: Цукор білий.
+          correct: false
+        - text: Я не знаю.
+          correct: false
+
+- type: unjumble
+  title: Build the Sentence
+  instruction: Put the words in the correct order to form a sentence.
+  items:
+    - words:
+        - каву
+        - Мені
+        - з
+        - молоком
+        - ласка
+        - будь
+      answer: Мені каву з молоком будь ласка.
+    - words:
+        - рахунок
+        - мені
+        - Можна
+        - "?"
+      answer: Можна мені рахунок?
+    - words:
+        - буду
+        - чай
+        - Я
+        - зелений
+      answer: Я буду зелений чай.
+    - words:
+        - коштує
+        - Скільки
+        - тістечко
+        - це
+        - "?"
+      answer: Скільки коштує це тістечко?
+    - words:
+        - все
+        - Це
+        - дякую
+      answer: Це все дякую.
+    - words:
+        - платити
+        - Ви
+        - карткою
+        - будете
+        - "?"
+      answer: Ви будете платити карткою?
+    - words:
+        - води
+        - Принесіть
+        - ще
+      answer: Принесіть ще води.
+    - words:
+        - смачна
+        - дуже
+        - Кава
+      answer: Кава дуже смачна.
+    - words:
+        - замовити
+        - хочу
+        - Я
+        - десерт
+      answer: Я хочу замовити десерт.
+    - words:
+        - є
+        - вас
+        - У
+        - круасани
+        - "?"
+      answer: У вас є круасани?
+    - words:
+        - столик
+        - на
+        - двох
+        - Це
+      answer: Це столик на двох.
+    - words:
+        - чайові
+        - ваші
+        - Ось
+      answer: Ось ваші чайові.
+
+- type: true-false
+  title: Menu Detective
+  instruction: Read the statement about the menu items and decide if it's logical or true based on common cafe items.
+  items:
+    - statement: Еспресо - це холодний напій.
+      correct: false
+    - statement: Капучино - це кава з молоком.
+      correct: true
+    - statement: Круасан - це напій.
+      correct: false
+    - statement: Чай може бути гарячим.
+      correct: true
+    - statement: Тістечко - це солодкий десерт.
+      correct: true
+    - statement: Лимонад завжди гарячий.
+      correct: false
+    - statement: Ми платимо, коли хочемо піти.
+      correct: true
+    - statement: Офіціант готує їжу.
+      correct: false
+    - statement: Меню - це список страв і напоїв.
+      correct: true
+    - statement: Чайові - це гроші для офіціанта.
+      correct: true
+    - statement: Вода коштує мільйон гривень.
+      correct: false
+    - statement: Каву можна пити без цукру.
+      correct: true
+
+- type: group-sort
+  title: Cafe Categories
+  instruction: Sort the items into the correct category.
+  groups:
+    - name: Drinks
+      items:
+        - кава
+        - чай
+        - вода
+        - сік
+        - лате
+        - еспресо
+    - name: Food
+      items:
+        - тістечко
+        - круасан
+        - салат
+        - суп
+        - торт
+        - сендвіч
+    - name: Actions
+      items:
+        - платити
+        - замовляти
+        - їсти
+        - пити
+        - просити
+        - дякувати
+
+- type: quiz
+  title: What Can You Drink?
+  instruction: Choose the item that is a drink.
+  items:
+    - question: Як ви скажете 'What can you drink?' українською?
+      options:
+        - text: Що можна пити?
+          correct: true
+        - text: Що можна їсти?
+          correct: false
+        - text: Що можна робити?
+          correct: false
+        - text: Що можна читати?
+          correct: false
+    - question: Що з цього списку є гарячим напоєм?
+      options:
+        - text: Гарячий шоколад
+          correct: true
+        - text: Морозиво
+          correct: false
+        - text: Лимонад
+          correct: false
+        - text: Салат
+          correct: false
+    - question: Який напій зазвичай чорного кольору?
+      options:
+        - text: Чорна кава
+          correct: true
+        - text: Молоко
+          correct: false
+        - text: Вода
+          correct: false
+        - text: Сік
+          correct: false
+    - question: Що ми додаємо до кави, щоб вона була біла?
+      options:
+        - text: Молоко
+          correct: true
+        - text: Цукор
+          correct: false
+        - text: Сіль
+          correct: false
+        - text: Перець
+          correct: false
+    - question: Що ми часто п'ємо, коли хочемо спати ввечері?
+      options:
+        - text: Чай або молоко
+          correct: true
+        - text: Еспресо
+          correct: false
+        - text: Каву
+          correct: false
+        - text: Енергетик
+          correct: false
+    - question: Який чай є дуже популярним в Україні?
+      options:
+        - text: Зелений чай
+          correct: true
+        - text: Синій чай
+          correct: false
+        - text: Солоний чай
+          correct: false
+        - text: Сухий чай
+          correct: false
+    - question: Що з цього є холодним літнім напоєм?
+      options:
+        - text: Лимонад
+          correct: true
+        - text: Гарячий чай
+          correct: false
+        - text: Капучино
+          correct: false
+        - text: Суп
+          correct: false
+    - question: Що ми можемо пити з лимоном?
+      options:
+        - text: Чай
+          correct: true
+        - text: Молоко
+          correct: false
+        - text: Каву з молоком
+          correct: false
+        - text: Какао
+          correct: false
+    - question: Що таке "лате" у кафе?
+      options:
+        - text: Кава з молоком
+          correct: true
+        - text: Чай з лимоном
+          correct: false
+        - text: Вода з газом
+          correct: false
+        - text: Сік з яблук
+          correct: false
+    - question: Що багато людей п'ють вранці для енергії?
+      options:
+        - text: Каву
+          correct: true
+        - text: Суп
+          correct: false
+        - text: Вино
+          correct: false
+        - text: Олію
+          correct: false
+    - question: Що з цього списку не є напоєм?
+      options:
+        - text: Піца
+          correct: true
+        - text: Кава
+          correct: false
+        - text: Чай
+          correct: false
+        - text: Вода
+          correct: false
+    - question: Що з цього можна пити без цукру?
+      options:
+        - text: Все це
+          correct: true
+        - text: Тільки воду
+          correct: false
+        - text: Тільки сік
+          correct: false
+        - text: Тільки суп
+          correct: false
+
+- type: quiz
+  title: Translate the Phrases
+  instruction: Choose the correct Ukrainian translation for the English phrase.
+  items:
+    - question: Як перекласти фразу 'The bill, please'?
+      options:
+        - text: Рахунок, будь ласка.
+          correct: true
+        - text: Меню, будь ласка.
+          correct: false
+        - text: Каву, будь ласка.
+          correct: false
+        - text: Дякую, будь ласка.
+          correct: false
+    - question: Як сказати українською 'I will have coffee'?
+      options:
+        - text: Я буду каву.
+          correct: true
+        - text: Я буду чай.
+          correct: false
+        - text: Я хочу їсти.
+          correct: false
+        - text: Я не буду.
+          correct: false
+    - question: Як перекласти коротку фразу 'With milk'?
+      options:
+        - text: З молоком.
+          correct: true
+        - text: Без молока.
+          correct: false
+        - text: З цукром.
+          correct: false
+        - text: Без цукру.
+          correct: false
+    - question: Як запитати українською 'Is that all'?
+      options:
+        - text: Це все?
+          correct: true
+        - text: Це що?
+          correct: false
+        - text: Це де?
+          correct: false
+        - text: Це хто?
+          correct: false
+    - question: Як запитати про оплату 'By card or cash'?
+      options:
+        - text: Карткою чи готівкою?
+          correct: true
+        - text: Кава чи чай?
+          correct: false
+        - text: Рахунок чи меню?
+          correct: false
+        - text: Сьогодні чи завтра?
+          correct: false
+    - question: Як сказати 'Here are your tips' офіціанту?
+      options:
+        - text: Ось ваші чайові.
+          correct: true
+        - text: Ось ваш рахунок.
+          correct: false
+        - text: Ось ваше меню.
+          correct: false
+        - text: Ось ваша кава.
+          correct: false
+    - question: Як замовити 'A croissant for me'?
+      options:
+        - text: Мені круасан.
+          correct: true
+        - text: Мені тістечко.
+          correct: false
+        - text: Мені рахунок.
+          correct: false
+        - text: Мені меню.
+          correct: false
+    - question: Як сказати, що було 'Very delicious'?
+      options:
+        - text: Дуже смачно.
+          correct: true
+        - text: Дуже погано.
+          correct: false
+        - text: Дуже дорого.
+          correct: false
+        - text: Дуже швидко.
+          correct: false
+    - question: Як перекласти фразу 'I want tea'?
+      options:
+        - text: Я хочу чай.
+          correct: true
+        - text: Я хочу каву.
+          correct: false
+        - text: Я хочу воду.
+          correct: false
+        - text: Я хочу сік.
+          correct: false
+    - question: Як сказати українською 'Without sugar'?
+      options:
+        - text: Без цукру.
+          correct: true
+        - text: З цукром.
+          correct: false
+        - text: З медом.
+          correct: false
+        - text: З лимоном.
+          correct: false
+    - question: Як запитати 'Can I have the menu'?
+      options:
+        - text: Можна меню?
+          correct: true
+        - text: Можна рахунок?
+          correct: false
+        - text: Можна каву?
+          correct: false
+        - text: Можна чай?
+          correct: false
+    - question: Як подякувати і сказати 'Thank you'?
+      options:
+        - text: Дякую.
+          correct: true
+        - text: Будь ласка.
+          correct: false
+        - text: Доброго дня.
+          correct: false
+        - text: До побачення.
+          correct: false

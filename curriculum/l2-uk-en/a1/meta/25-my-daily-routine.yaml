@@ -6,7 +6,8 @@ phase: A1.3 - Consolidation
 pedagogy: PPP
 focus: grammar
 duration: 60 min
-transliteration: first-occurrence
+transliteration: none
+phonetics: ipa
 tags:
   - reflexive-verbs
   - daily-routine

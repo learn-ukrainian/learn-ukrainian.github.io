@@ -6,7 +6,8 @@ phase: A1.2
 pedagogy: PPP
 focus: grammar
 duration: 60 min
-transliteration: vocab-only
+transliteration: none
+phonetics: ipa
 tags:
   - possessives
   - pronouns

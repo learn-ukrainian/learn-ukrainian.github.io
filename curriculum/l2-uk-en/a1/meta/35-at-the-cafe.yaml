@@ -1,0 +1,28 @@
+module: 35-at-the-cafe
+title: At the Café
+subtitle: Ordering Drinks and Snacks
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- cafe
+- ordering
+- practical
+- food
+grammar:
+- 'Polite requests: Мені..., будь ласка'
+- 'Accusative for ordering: Мені каву'
+- 'Questions: Можна...?, Це все?'
+objectives:
+- Learner can order a drink and a snack
+- Learner can ask for the bill
+- Learner can handle basic payment queries
+vocabulary_count: 10
+vocab_count: 10
+slug: 35-at-the-cafe-practical
+naturalness:
+  score: 10
+  status: PASS

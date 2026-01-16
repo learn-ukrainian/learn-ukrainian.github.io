@@ -1,0 +1,28 @@
+module: b1-90
+title: Grammar in Context
+subtitle: Applying Grammar to Practical Communication
+version: '2.0'
+phase: B1.9
+focus: communication
+pedagogy: TBL
+duration: 90
+transliteration: none
+tags:
+- communication
+- grammar
+- practical
+- applied
+grammar:
+- applied aspect
+- motion verbs in narratives
+- complex sentences in context
+objectives:
+- Learner applies grammar knowledge in practical scenarios
+- Learner produces extended written discourse
+- Learner builds communication skills
+vocabulary_count: 25
+vocab_count: 25
+slug: 90-grammar-in-context
+naturalness:
+  score: 9
+  status: PASS

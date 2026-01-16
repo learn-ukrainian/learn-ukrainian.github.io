@@ -1,3 +1,7 @@
+module: 14-mine-and-yours
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Possessive Forms
   pairs:
@@ -17,7 +21,11 @@
     right: their
   - left: чий / чия / чиє
     right: whose
-  instruction: З'єднайте відповідні елементи.
+  - left: свій / своя / своє
+    right: one's own
+  - left: мої / твої
+    right: my / your (plural)
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Gender Agreement
   groups:
@@ -39,7 +47,7 @@
     - твоє море
     - наше місто
     - ваше ім'я
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Choose the Correct Possessive
   items:
@@ -175,7 +183,7 @@
     - text: їхні
       correct: true
     explanation: їхні matches речі (plural)
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Possessive Rules
   items:
@@ -197,7 +205,7 @@
   - statement: «Твій» is the informal form of "your".
     correct: true
     explanation: Correct! Use твій with friends, family, children. Use ваш for formal/plural.
-  - statement: «Наш» is feminine.
+  - statement: «Наш» is masculine.
     correct: false
     explanation: Incorrect! наш is masculine. Feminine = наша, neuter = наше, plural
       = наші.
@@ -218,7 +226,7 @@
     correct: true
     explanation: Correct! Ukrainians often say «Телефон на столі» (Phone is on the
       table) instead of «Мій телефон...» when obvious.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: fill-in
   title: Complete with Possessives
   items:
@@ -327,11 +335,11 @@
     - ваша
     - ваше
     - ваші
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Possessive Sentence Order
   items:
-  - question: 'Correct sentence order for: "This is my book."'
+  - question: 'Identify the correct order: "This is my book."'
     options:
     - text: Це моя книга
       correct: true
@@ -342,7 +350,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це моя книга'
-  - question: 'Correct sentence order for: "Where is your phone?"'
+  - question: 'Identify the correct order: "Where is your phone?"'
     options:
     - text: Де твій телефон
       correct: true
@@ -353,7 +361,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де твій телефон'
-  - question: 'Correct sentence order for: "Our window is big."'
+  - question: 'Identify the correct order: "Our window is big."'
     options:
     - text: Наше вікно велике
       correct: true
@@ -364,7 +372,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Наше вікно велике'
-  - question: 'Correct sentence order for: "This is his car."'
+  - question: 'Identify the correct order: "This is his car."'
     options:
     - text: Це його машина
       correct: true
@@ -375,7 +383,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це його машина'
-  - question: 'Correct sentence order for: "Her sister is a student."'
+  - question: 'Identify the correct order: "Her sister is a student."'
     options:
     - text: Її сестра студентка
       correct: true
@@ -386,7 +394,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Її сестра студентка'
-  - question: 'Correct sentence order for: "Their friends are here."'
+  - question: 'Identify the correct order: "Their friends are here."'
     options:
     - text: Їхні друзі тут
       correct: true
@@ -397,7 +405,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Їхні друзі тут'
-  - question: 'Correct sentence order for: "Where are your parents?"'
+  - question: 'Identify the correct order: "Where are your parents?"'
     options:
     - text: Де ваші батьки
       correct: true
@@ -408,7 +416,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де ваші батьки'
-  - question: 'Correct sentence order for: "Wait — this is..."'
+  - question: 'Identify the correct order: "Wait — this is..."'
     options:
     - text: Чий це наш дім
       correct: true
@@ -419,7 +427,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Чий це наш дім'
-  - question: 'Correct sentence order for: "My work is interesting."'
+  - question: 'Identify the correct order: "My work is interesting."'
     options:
     - text: Моя робота цікава
       correct: true
@@ -430,7 +438,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Моя робота цікава'
-  - question: 'Correct sentence order for: "This is his life."'
+  - question: 'Identify the correct order: "This is his life."'
     options:
     - text: Це його життя
       correct: true
@@ -441,7 +449,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це його життя'
-  - question: 'Correct sentence order for: "Your city is beautiful."'
+  - question: 'Identify the correct order: "Your city is beautiful."'
     options:
     - text: Твоє місто гарне
       correct: true
@@ -452,7 +460,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Твоє місто гарне'
-  - question: 'Correct sentence order for: "Wait — another trick!..."'
+  - question: 'Identify the correct order: "Wait — another trick!..."'
     options:
     - text: Чиї це їхні речі
       correct: true
@@ -463,7 +471,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Чиї це їхні речі'
-  - question: 'Correct sentence order for: "My table is there."'
+  - question: 'Identify the correct order: "My table is there."'
     options:
     - text: Мій стіл там
       correct: true
@@ -474,7 +482,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Мій стіл там'
-  - question: 'Correct sentence order for: "Our room is clean."'
+  - question: 'Identify the correct order: "Our room is clean."'
     options:
     - text: Наша кімната чиста
       correct: true
@@ -485,7 +493,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Наша кімната чиста'
-  - question: 'Correct sentence order for: "This is your word."'
+  - question: 'Identify the correct order: "This is your word."'
     options:
     - text: Це ваше слово
       correct: true
@@ -496,11 +504,11 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це ваше слово'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: group-sort
-  title: Інваріантні vs Змінні
+  title: Invariant vs Variable
   groups:
-  - name: Змінні (Change by Gender)
+  - name: Variable (Change by Gender)
     items:
     - мій / моя / моє
     - твій / твоя / твоє
@@ -509,14 +517,14 @@
     - їхній / їхня / їхнє
     - чий / чия / чиє
     - цей / ця / це
-  - name: Інваріантні (Never Change)
+  - name: Invariant (Never Change)
     items:
     - його (his)
     - її (her)
     - їх (their)
     - Марка (Mark's)
     - Анни (Anna's)
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Cultural Context
   items:
@@ -652,4 +660,4 @@
     - text: my city
       correct: false
     explanation: Наше means "our" (neuter).
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

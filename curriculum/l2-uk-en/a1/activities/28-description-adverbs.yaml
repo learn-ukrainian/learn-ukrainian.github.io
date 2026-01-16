@@ -1,27 +1,31 @@
+module: 28-description-adverbs
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Adjective → Adverb
   pairs:
-  - left: '- гарний'
+  - left: гарний
     right: гарно
-  - left: '- швидкий'
+  - left: швидкий
     right: швидко
-  - left: '- повільний'
+  - left: повільний
     right: повільно
-  - left: '- тихий'
+  - left: тихий
     right: тихо
-  - left: '- голосний'
+  - left: голосний
     right: голосно
-  - left: '- веселий'
+  - left: веселий
     right: весело
-  - left: '- сумний'
+  - left: сумний
     right: сумно
-  - left: '- легкий'
+  - left: легкий
     right: легко
-  - left: '- важкий'
+  - left: важкий
     right: важко
-  - left: '- чесний'
+  - left: чесний
     right: чесно
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the adjectives with their corresponding adverbs.
 - type: group-sort
   title: Frequency Scale
   groups:
@@ -43,8 +47,7 @@
     - майже ніколи
     - зовсім не часто
     - ніколи
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups based on frequency.
 - type: group-sort
   title: Type of Adverb
   groups:
@@ -66,8 +69,7 @@
     - занадто
     - трохи
     - зовсім
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups based on their type.
 - type: fill-in
   title: Як ти це робиш? (How Do You Do It?)
   items:
@@ -155,7 +157,7 @@
     - веселий
     - весела
     - веселе
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Як часто? (How Often?)
   items:
@@ -243,7 +245,7 @@
     - ніколи
     - рідко
     - весело
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Adverb or Adjective?
   items:
@@ -257,7 +259,7 @@
       correct: false
     - text: добра
       correct: false
-  - question: Which form is correct for «Він говорить ___» in English?
+  - question: Which form is correct for «Він говорить ___»?
     options:
     - text: добре (adverb)
       correct: true
@@ -267,7 +269,7 @@
       correct: false
     - text: добро
       correct: false
-  - question: How should you describe «Це ___ машина» using masculine/feminine forms?
+  - question: How should you describe «Це ___ машина»?
     options:
     - text: швидка
       correct: true
@@ -277,7 +279,7 @@
       correct: false
     - text: швидке
       correct: false
-  - question: What is the correct form for «Вона біжить ___» here?
+  - question: What is the correct form for «Вона біжить ___»?
     options:
     - text: швидко (adverb)
       correct: true
@@ -287,7 +289,7 @@
       correct: false
     - text: швидке
       correct: false
-  - question: Which word correctly completes «У неї ___ голос» in Ukrainian?
+  - question: Which word correctly completes «У неї ___ голос»?
     options:
     - text: тихий
       correct: true
@@ -297,7 +299,7 @@
       correct: false
     - text: тихе
       correct: false
-  - question: How should you accurately translate "He speaks quietly" into Ukrainian?
+  - question: How should you accurately translate "He speaks quietly"?
     options:
     - text: тихо (adverb)
       correct: true
@@ -307,7 +309,7 @@
       correct: false
     - text: тихе
       correct: false
-  - question: What is the right adjective for «Вона ___ людина» here?
+  - question: What is the right form for «Вона ___ людина»?
     options:
     - text: весела
       correct: true
@@ -327,11 +329,51 @@
       correct: false
     - text: голосне
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: Choose the correct word for the sentence «Це ___ день».
+    options:
+    - text: гарний
+      correct: true
+    - text: гарно
+      correct: false
+    - text: гарна
+      correct: false
+    - text: гарне
+      correct: false
+  - question: Choose the correct word for the sentence «Я почуваюся ___».
+    options:
+    - text: добре
+      correct: true
+    - text: добрий
+      correct: false
+    - text: добра
+      correct: false
+    - text: добро
+      correct: false
+  - question: Choose the correct word for the sentence «Мій телефон ___».
+    options:
+    - text: старий
+      correct: true
+    - text: старо
+      correct: false
+    - text: стара
+      correct: false
+    - text: старе
+      correct: false
+  - question: Choose the correct word for the sentence «Він працює ___».
+    options:
+    - text: повільно
+      correct: true
+    - text: повільний
+      correct: false
+    - text: повільна
+      correct: false
+    - text: повільне
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Frequency Meaning
   items:
-  - question: What is the English translation of «Завжди»?
+  - question: What is the English translation of the word «Завжди»?
     options:
     - text: Always
       correct: true
@@ -341,7 +383,7 @@
       correct: false
     - text: Rarely
       correct: false
-  - question: Which English word represents the adverb «Часто»?
+  - question: Which English word represents the adverb «Часто» accurately?
     options:
     - text: Often
       correct: true
@@ -351,7 +393,7 @@
       correct: false
     - text: Always
       correct: false
-  - question: How do you translate «Іноді» into English?
+  - question: How do you translate the adverb «Іноді» into English?
     options:
     - text: Sometimes
       correct: true
@@ -361,7 +403,7 @@
       correct: false
     - text: Often
       correct: false
-  - question: What is the meaning of «Рідко» in English?
+  - question: What is the meaning of «Рідко» in the English language?
     options:
     - text: Rarely
       correct: true
@@ -371,7 +413,7 @@
       correct: false
     - text: Never
       correct: false
-  - question: Which English term matches «Ніколи»?
+  - question: Which English term matches the adverb «Ніколи» accurately?
     options:
     - text: Never
       correct: true
@@ -381,7 +423,7 @@
       correct: false
     - text: Always
       correct: false
-  - question: How is «Зазвичай» translated into English?
+  - question: How is the word «Зазвичай» correctly translated into English?
     options:
     - text: Usually
       correct: true
@@ -391,7 +433,7 @@
       correct: false
     - text: Sometimes
       correct: false
-  - question: What is the English meaning of «Дуже»?
+  - question: What isaccurately the English meaning of «Дуже»?
     options:
     - text: Very
       correct: true
@@ -401,7 +443,7 @@
       correct: false
     - text: Rarely
       correct: false
-  - question: Which phrase translates the word «Трохи» into English?
+  - question: Which phrase translates the word «Трохи» into English correctly?
     options:
     - text: A little
       correct: true
@@ -411,7 +453,47 @@
       correct: false
     - text: Always
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: What does precisely the word «Зовсім» mean in English?
+    options:
+    - text: Completely
+      correct: true
+    - text: A little
+      correct: false
+    - text: Sometimes
+      correct: false
+    - text: Often
+      correct: false
+  - question: Identify the English word for «Занадто» accurately.
+    options:
+    - text: Too much
+      correct: true
+    - text: Enough
+      correct: false
+    - text: Well
+      correct: false
+    - text: Fast
+      correct: false
+  - question: What is accurately the meaning of «Раніше» today?
+    options:
+    - text: Earlier
+      correct: true
+    - text: Later
+      correct: false
+    - text: Now
+      correct: false
+    - text: Tomorrow
+      correct: false
+  - question: How do you say "Always" in the Ukrainian language?
+    options:
+    - text: завжди
+      correct: true
+    - text: ніколи
+      correct: false
+    - text: рідко
+      correct: false
+    - text: часто
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Describing Actions
   items:
@@ -461,7 +543,7 @@
     - добре
     - справи
     - як
-    answer: Як справи? Добре
+    answer: Як справи Добре
   - words:
     - іноді
     - ми
@@ -479,7 +561,7 @@
     - вони
     - танцюють
     answer: Вони весело танцюють
-  instruction: Розташуйте слова у правильному порядку.
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Adverb Rules
   items:
@@ -510,6 +592,6 @@
   - statement: «Як справи?» — «Добрий!».
     correct: false
     explanation: Incorrect! should be «Добре!»
-  - statement: «Як справи?» — «Добре!».
+  - statement: Adjectives end in -ий, -а, -е.
     correct: true
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

@@ -1,0 +1,26 @@
+module: 41-phone-basics
+title: Phone Basics
+subtitle: Making Calls and Texting
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- phone basics
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle phone basics situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 10
+vocab_count: 10
+slug: phone-basics
+naturalness:
+  score: 10
+  status: PASS

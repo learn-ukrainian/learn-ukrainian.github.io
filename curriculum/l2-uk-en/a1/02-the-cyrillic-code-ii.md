@@ -163,19 +163,19 @@ You've now learned all 33 letters of the Ukrainian Cyrillic alphabet. That's 19 
 
 Try reading these cities and see if you can decode them:
 
-Київ (Kyiv)
-Львів (Lviv)
-Одеса (Odesa)
-Харків (Kharkiv)
-Дніпро (Dnipro)
+Київ /ˈkɪjiu̯/ (Kyiv)
+Львів /lʲviv/ (Lviv)
+Одеса /ɔˈdɛsɑ/ (Odesa)
+Харків /ˈxɑrkiv/ (Kharkiv)
+Дніпро /dɲiˈprɔ/ (Dnipro)
 
 And these Ukrainian words:
 
-Україна (Ukraine)
-мова (language)
-алфавіт (alphabet)
-слово (word)
-буква (letter)
+Україна /ʊkrɑˈjinɑ/ (Ukraine)
+мова /ˈmɔvɑ/ (language)
+алфавіт /ɑlfɑˈvit/ (alphabet)
+слово /ˈslɔvɔ/ (word)
+буква /ˈbukvɑ/ (letter)
 
 ## Cultural Insight
 

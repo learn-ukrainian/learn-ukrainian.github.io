@@ -1,0 +1,54 @@
+module: 43-combined-practice
+level: A1
+version: '1.0'
+items:
+  - lemma: план
+    ipa: /plɑn/
+    translation: plan
+    pos: noun 
+    gender: m
+  - lemma: встигнути
+    ipa: /vsˈtɪɦnʊtɪ/
+    translation: to be on time / to manage
+    pos: verb 
+    aspect: pf
+  - lemma: зайнятий
+    ipa: /ˈzɑjnʲɑtɪj/
+    translation: busy
+    pos: adj 
+    gender: m
+  - lemma: список
+    ipa: /ˈspɪsɔk/
+    translation: list
+    pos: noun 
+    gender: m
+  - lemma: справа
+    ipa: /ˈsprɑvɑ/
+    translation: matter / business
+    pos: noun 
+    gender: f
+  - lemma: зустріч
+    ipa: /ˈzustrʲit͡ʃ/
+    translation: meeting
+    pos: noun 
+    gender: f
+  - lemma: вільний
+    ipa: /ˈvʲilʲnɪj/
+    translation: free
+    pos: adj 
+    gender: m
+  - lemma: успіх
+    ipa: /ˈuspʲix/
+    translation: success
+    pos: noun 
+    gender: m
+  - lemma: нарешті
+    ipa: /nɑˈrɛʃtʲi/
+    translation: finally
+    pos: adv 
+    gender: n/a
+  - lemma: втомитися
+    ipa: /vtɔˈmɪtɪsʲɑ/
+    translation: to get tired
+    pos: verb 
+    aspect: pf

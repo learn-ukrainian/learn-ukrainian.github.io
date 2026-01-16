@@ -1,0 +1,26 @@
+module: 40-taking-transport
+title: Taking Transport
+subtitle: Navigating the City
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- taking transport
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle taking transport situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 10
+vocab_count: 10
+slug: taking-transport
+naturalness:
+  score: 10
+  status: PASS

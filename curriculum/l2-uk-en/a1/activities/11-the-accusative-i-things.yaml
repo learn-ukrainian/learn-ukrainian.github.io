@@ -1,3 +1,7 @@
+module: 11-the-accusative-i-things
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Accusative Recognition
   items:
@@ -133,7 +137,7 @@
     - text: вікном
       correct: false
     explanation: Neuter stays the same
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Vocabulary Practice
   pairs:
@@ -153,7 +157,11 @@
     right: to open
   - left: закривати
     right: to close
-  instruction: З'єднайте відповідні елементи.
+  - left: показувати
+    right: to show
+  - left: знаходити
+    right: to find
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Transform to Accusative
   items:
@@ -206,7 +214,7 @@
     - подарунку
     - подарунка
     - подарунком
-  - sentence: Ти берешь ___?
+  - sentence: Ти береш ___?
     answer: сумку
     options:
     - сумка
@@ -241,7 +249,7 @@
     - коробку
     - коробки
     - коробці
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Grammar Rules
   items:
@@ -281,7 +289,7 @@
   - statement: All Ukrainian nouns change in accusative.
     correct: false
     explanation: Incorrect! Only feminine -а/-я change
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Gender and Accusative Changes
   groups:
@@ -301,7 +309,7 @@
     - документ → документ
     - вікно → вікно
     - море → море
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -389,7 +397,7 @@
     - береш
     - бере
     - беремо
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Word Order Practice
   items:
@@ -525,12 +533,10 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми відправляємо посилку сьогодні'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Verb + Object Pairs
   pairs:
-  - left: Verb
-    right: Object
   - left: читати
     right: газету
   - left: показувати
@@ -547,7 +553,11 @@
     right: подарунок
   - left: нести
     right: сумку
-  instruction: З'єднайте відповідні елементи.
+  - left: бачити
+    right: автобус
+  - left: малювати
+    right: картину
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Longer Sentence Order
   items:
@@ -661,4 +671,26 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він обережно відкриває велику коробку'
-  instruction: Оберіть правильну відповідь.
+  - question: 'Correct sentence order for: "I see my new passport."'
+    options:
+    - text: Я бачу свій новий паспорт
+      correct: true
+    - text: бачу Я свій новий паспорт
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Я бачу свій новий паспорт'
+  - question: 'Correct sentence order for: "I see a big white window."'
+    options:
+    - text: Я бачу велике біле вікно
+      correct: true
+    - text: бачу Я велике біле вікно
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Я бачу велике біле вікно'
+  instruction: Choose the correct answer.

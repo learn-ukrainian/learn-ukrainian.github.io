@@ -1,3 +1,7 @@
+module: 08-the-living-verb-ii
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Second Conjugation or First Conjugation?
   items:
@@ -134,7 +138,7 @@
     - text: Noun
       correct: false
     explanation: вчити is clearly Second Conjugation.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Verbs and Actions
   pairs:
@@ -156,7 +160,9 @@
     right: to walk
   - left: спати
     right: to sleep
-  instruction: З'єднайте відповідні елементи.
+  - left: лежати
+    right: to lie (down)
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Conjugate the Verb
   items:
@@ -214,7 +220,7 @@
     options:
     - люблю
     - любиш
-    - любить
+    - любит
     - люблять
   - sentence: Ти ___ вправу?
     answer: робиш
@@ -244,7 +250,7 @@
     - спиш
     - спить
     - сплять
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: anagram
   title: Build the Verb
   items:
@@ -272,7 +278,7 @@
     answer: сидіти
   - scrambled: в ч и т и
     answer: вчити
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: true-false
   title: Grammar Rules
   items:
@@ -314,7 +320,7 @@
   - statement: Ukrainian distinguishes between ходити and їздити.
     correct: true
     explanation: Correct! This precision is a beautiful feature of Ukrainian.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Verb Types
   groups:
@@ -336,7 +342,7 @@
     - їсти
     - пити
     - хотіти
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete the Dialogue
   items:
@@ -431,7 +437,7 @@
     - дивишся
     - дивиться
     - дивляться
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Choose the Right Verb
   items:
@@ -441,7 +447,7 @@
       correct: true
     - text: говориш
       correct: false
-    - text: говорить
+    - text: говорит
       correct: false
     - text: говорять
       correct: false
@@ -567,4 +573,4 @@
     - text: бачать
       correct: true
     explanation: вони бачать = they see
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

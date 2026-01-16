@@ -1,0 +1,419 @@
+- type: match-up
+  title: Vocabulary Match
+  instruction: Match the Ukrainian words to their English meanings.
+  pairs:
+    - left: столик
+      right: table (small/restaurant)
+    - left: меню
+      right: menu
+    - left: страва
+      right: dish
+    - left: закуска
+      right: appetizer
+    - left: десерт
+      right: dessert
+    - left: напій
+      right: beverage
+    - left: виделка
+      right: fork
+    - left: ложка
+      right: spoon
+    - left: ніж
+      right: knife
+    - left: рахунок
+      right: bill
+
+- type: fill-in
+  title: Complete the Dialogue
+  instruction: Fill in the blanks using the context of a restaurant visit.
+  items:
+    - sentence: Доброго дня! У вас є вільний _____?
+      answer: столик
+      options: [столик, меню, десерт, рахунок]
+    - sentence: Так, звичайно. Прошу, ось ваше _____.
+      answer: меню
+      options: [меню, вікно, крісло, таксі]
+    - sentence: Я хочу _____ смачний борщ.
+      answer: замовити
+      options: [замовити, зробити, піти, спати]
+    - sentence: Що ви _____ на десерт сьогодні?
+      answer: будете
+      options: [будете, робите, йдете, знаєте]
+    - sentence: Я буду великий шоколадний _____.
+      answer: торт
+      options: [торт, суп, салат, хліб]
+    - sentence: Це дуже _____ і корисна страва.
+      answer: смачна
+      options: [смачна, погана, дешева, стара]
+    - sentence: Принесіть, будь ласка, наш _____.
+      answer: рахунок
+      options: [рахунок, стіл, дім, парк]
+    - sentence: Ви платите _____ чи готівкою зараз?
+      answer: карткою
+      options: [карткою, книгою, словом, рукою]
+    - sentence: Ось ваші _____. Велике дякую!
+      answer: гроші
+      options: [гроші, друзі, вікна, двері]
+    - sentence: Все було дуже _____ і гарно.
+      answer: смачно
+      options: [смачно, голосно, темно, холодно]
+    - sentence: Я _____ вегетаріанець, не їм м'ясо.
+      answer: є
+      options: [є, маю, роблю, хочу]
+    - sentence: У мене _____ на ці горіхи.
+      answer: алергія
+      options: [алергія, ідея, problem, машина]
+
+- type: group-sort
+  title: Taste Categories
+  instruction: Sort the foods into their taste categories.
+  groups:
+    - name: Солодке (Sweet)
+      items: [шоколад, торт, морозиво, цукерка, мед, печиво]
+    - name: Солоне (Salty)
+      items: [сіль, чіпси, риба, піца, сир, горішки]
+
+- type: unjumble
+  title: Order the Sentences
+  instruction: Reorder the words to form correct sentences.
+  items:
+    - words: [Я, буду, зелений, салат]
+      answer: Я буду зелений салат.
+    - words: [Можна, меню, будь, ласка]
+      answer: Можна меню, будь ласка?
+    - words: [Скільки, коштує, ця, страва]
+      answer: Скільки коштує ця страва?
+    - words: [У, мене, алергія, на, молоко]
+      answer: У мене алергія на молоко.
+    - words: [Я, не, їм, м'ясо]
+      answer: Я не їм м'ясо.
+    - words: [Це, дуже, гостра, страва]
+      answer: Це дуже гостра страва.
+    - words: [Принесіть, будь, ласка, воду]
+      answer: Принесіть, будь ласка, воду.
+    - words: [Дякую, все, було, смачно]
+      answer: Дякую, все було смачно.
+    - words: [Ми, хочемо, столик, на, двох]
+      answer: Ми хочемо столик на двох.
+    - words: [Я, люблю, українську, кухню]
+      answer: Я люблю українську кухню.
+    - words: [Це, вегетаріанська, страва, чи, ні]
+      answer: Це вегетаріанська страва чи ні?
+    - words: [Де, тут, туалет]
+      answer: Де тут туалет?
+
+- type: quiz
+  title: Menu Comprehension
+  instruction: Choose the correct answer based on typical menu knowledge.
+  items:
+    - question: Що таке український борщ? Це...
+      options:
+        - text: суп
+          correct: true
+        - text: десерт
+          correct: false
+        - text: напій
+          correct: false
+        - text: салат
+          correct: false
+    - question: Що таке солодкий Наполеон? Це...
+      options:
+        - text: торт
+          correct: true
+        - text: салат
+          correct: false
+        - text: м'ясо
+          correct: false
+        - text: риба
+          correct: false
+    - question: Що таке чорне еспресо? Це...
+      options:
+        - text: кава
+          correct: true
+        - text: чай
+          correct: false
+        - text: сік
+          correct: false
+        - text: вода
+          correct: false
+    - question: Що таке салат Олів'є? Це...
+      options:
+        - text: салат
+          correct: true
+        - text: суп
+          correct: false
+        - text: торт
+          correct: false
+        - text: хліб
+          correct: false
+    - question: Що таке українські вареники? Це...
+      options:
+        - text: традиційна страва
+          correct: true
+        - text: напій
+          correct: false
+        - text: фрукт
+          correct: false
+        - text: овоч
+          correct: false
+    - question: Що таке холодний узвар? Це...
+      options:
+        - text: напій
+          correct: true
+        - text: суп
+          correct: false
+        - text: хліб
+          correct: false
+        - text: м'ясо
+          correct: false
+    - question: Що таке італійська карбонара? Це...
+      options:
+        - text: паста
+          correct: true
+        - text: піца
+          correct: false
+        - text: суп
+          correct: false
+        - text: салат
+          correct: false
+    - question: Що таке відомий Цезар? Це...
+      options:
+        - text: салат
+          correct: true
+        - text: імператор
+          correct: false
+        - text: напій
+          correct: false
+        - text: десерт
+          correct: false
+    - question: Що таке кава латте? Це...
+      options:
+        - text: кава з молоком
+          correct: true
+        - text: чорна кава
+          correct: false
+        - text: чай з лимоном
+          correct: false
+        - text: вода з газом
+          correct: false
+    - question: Що таке фруктовий фреш? Це...
+      options:
+        - text: свіжий сік
+          correct: true
+        - text: стара вода
+          correct: false
+        - text: гарячий чай
+          correct: false
+        - text: холодне пиво
+          correct: false
+    - question: Що зазвичай не їдять вегетаріанці?
+      options:
+        - text: м'ясо
+          correct: true
+        - text: овочі
+          correct: false
+        - text: фрукти
+          correct: false
+        - text: хліб
+          correct: false
+    - question: Що треба сказати офіціанту спочатку?
+      options:
+        - text: «Добрий день»
+          correct: true
+        - text: «Дай рахунок»
+          correct: false
+        - text: «Де моя їжа»
+          correct: false
+        - text: «Я йду додому»
+          correct: false
+
+- type: true-false
+  title: Restaurant Etiquette
+  instruction: Decide if the statement is true or false in Ukraine.
+  items:
+    - statement: У ресторані можна платити карткою.
+      correct: true
+      explanation: Most restaurants accept cards.
+    - statement: Чайові - це обов'язково 50%.
+      correct: false
+      explanation: Tips are usually 10% and voluntary.
+    - statement: Борщ - це десерт.
+      correct: false
+      explanation: Borsch is a soup.
+    - statement: Офіціант приносить меню.
+      correct: true
+      explanation: The waiter brings the menu.
+    - statement: Треба кричати, щоб покликати офіціанта.
+      correct: false
+      explanation: It is rude to shout. Catch their eye or raise a hand.
+    - statement: Можна попросити рахунок.
+      correct: true
+      explanation: You ask for the bill when ready.
+    - statement: В Україні немає піци.
+      correct: false
+      explanation: Pizza is very popular.
+    - statement: Вареники бувають з картоплею.
+      correct: true
+      explanation: Varenyky with potatoes are classic.
+    - statement: У кафе не можна пити каву.
+      correct: false
+      explanation: Cafes are for coffee!
+    - statement: Меню тільки англійською мовою.
+      correct: false
+      explanation: Menu is usually in Ukrainian, often with English translation.
+    - statement: Можна замовити столик телефоном.
+      correct: true
+      explanation: Reservations are common.
+    - statement: У ресторані не можна говорити.
+      correct: false
+      explanation: Restaurants are social places.
+
+- type: match-up
+  title: Dish Description
+  instruction: Match the adjective to the food description.
+  pairs:
+    - left: солодкий
+      right: торт
+    - left: солоний
+      right: огірок
+    - left: гострий
+      right: перець
+    - left: гарячий
+      right: суп
+    - left: холодний
+      right: лимонад
+    - left: свіжий
+      right: хліб
+    - left: смачна
+      right: піца
+    - left: український
+      right: борщ
+    - left: вегетаріанський
+      right: салат
+    - left: м'ясна
+      right: страва
+
+- type: quiz
+  title: Special Requests Quiz
+  instruction: Choose the correct Ukrainian phrase for the situation.
+  items:
+    - question: Як сказати "I don't eat meat" українською мовою?
+      options:
+        - text: Я не їм м'ясо.
+          correct: true
+        - text: Я не їм овочі.
+          correct: false
+        - text: Я хочу м'ясо.
+          correct: false
+        - text: Де моє м'ясо?
+          correct: false
+    - question: Як сказати "I have an allergy to nuts" правильно?
+      options:
+        - text: У мене алергія на горіхи.
+          correct: true
+        - text: Я люблю горіхи.
+          correct: false
+        - text: Де тут горіхи?
+          correct: false
+        - text: Це горіхи?
+          correct: false
+    - question: Як запитати "Is this dish without sugar" у ресторані?
+      options:
+        - text: Ця страва без цукру?
+          correct: true
+        - text: Тут є цукор?
+          correct: false
+        - text: Я хочу цукор.
+          correct: false
+        - text: Дайте цукор.
+          correct: false
+    - question: Як сказати "I am a vegetarian" для чоловіка?
+      options:
+        - text: Я вегетаріанець.
+          correct: true
+        - text: Я вегетаріанка.
+          correct: false
+        - text: Я лікар.
+          correct: false
+        - text: Я студент.
+          correct: false
+    - question: Як сказати "I am a vegetarian" для жінки?
+      options:
+        - text: Я вегетаріанка.
+          correct: true
+        - text: Я вегетаріанець.
+          correct: false
+        - text: Я вчителька.
+          correct: false
+        - text: Я подруга.
+          correct: false
+    - question: Як запитати "Is this dish spicy" про їжу?
+      options:
+        - text: Це гостра страва?
+          correct: true
+        - text: Це солодка страва?
+          correct: false
+        - text: Це холодна страва?
+          correct: false
+        - text: Це велика страва?
+          correct: false
+    - question: Як сказати "Without onion, please" офіціанту в кафе?
+      options:
+        - text: Без цибулі, будь ласка.
+          correct: true
+        - text: З цибулею, будь ласка.
+          correct: false
+        - text: Я люблю цибулю.
+          correct: false
+        - text: Де цибуля?
+          correct: false
+    - question: Як запитати "Is this fresh" про українську страву?
+      options:
+        - text: Це свіжа страва?
+          correct: true
+        - text: Це стара страва?
+          correct: false
+        - text: Це гаряча страва?
+          correct: false
+        - text: Це дорога страва?
+          correct: false
+    - question: Як ввічливо запитати "Can I have a glass of water"?
+      options:
+        - text: Можна склянку води?
+          correct: true
+        - text: Я хочу пиво.
+          correct: false
+        - text: Дайте чай.
+          correct: false
+        - text: Де вода?
+          correct: false
+    - question: Як попросити офіціанта "Bring more bread, please"?
+      options:
+        - text: Принесіть ще хліб, будь ласка.
+          correct: true
+        - text: Я не хочу хліб.
+          correct: false
+        - text: Це мій хліб.
+          correct: false
+        - text: Де хліб?
+          correct: false
+    - question: Як сказати "This is for a child" українською?
+      options:
+        - text: Це для дитини.
+          correct: true
+        - text: Це для тата.
+          correct: false
+        - text: Це для мене.
+          correct: false
+        - text: Це для друга.
+          correct: false
+    - question: Як подякувати "Thank you for the service" в кінці?
+      options:
+        - text: Дякую за обслуговування.
+          correct: true
+        - text: Дайте рахунок.
+          correct: false
+        - text: Вибачте.
+          correct: false
+        - text: Привіт.
+          correct: false

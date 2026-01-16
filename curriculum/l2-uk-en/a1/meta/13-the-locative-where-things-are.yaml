@@ -12,7 +12,8 @@ objectives:
   - Learner can name common places in Ukrainian
 vocabulary_count: 30
 duration: 60
-transliteration: vocabulary
+transliteration: none
+phonetics: ipa
 tags:
   - grammar
   - locative-case

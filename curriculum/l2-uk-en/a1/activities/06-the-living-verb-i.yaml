@@ -1,3 +1,7 @@
+module: 06-the-living-verb-i
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Infinitive to English
   instruction: Match Ukrainian infinitives with their English translations
@@ -10,14 +14,18 @@
     right: to listen
   - left: писати
     right: to write
-  - left: питати
-    right: to ask
   - left: відповідати
     right: to answer
   - left: думати
     right: to think
   - left: грати
     right: to play
+  - left: починати
+    right: to start
+  - left: робити
+    right: to do/make
+  - left: гуляти
+    right: to walk
 - type: quiz
   title: Conjugation Recognition
   items:
@@ -153,7 +161,7 @@
     - text: писат-
       correct: false
     explanation: писати → пиш-
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: group-sort
   title: Person and Form
   groups:
@@ -175,7 +183,7 @@
     - вона читає
     - він знає
     - вона знає
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete the Sentence
   items:
@@ -263,7 +271,7 @@
     - відпочиваєш
     - відпочиває
     - відпочивають
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Verb Rules
   items:
@@ -307,7 +315,7 @@
   - statement: You must always use a pronoun with Ukrainian verbs.
     correct: false
     explanation: Incorrect! Pronouns are optional — the verb ending is enough.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: anagram
   title: Build the Verb
   items:
@@ -335,7 +343,7 @@
     answer: чекати
   - scrambled: с н і д а т и
     answer: снідати
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: anagram
   title: Build the Conjugated Form
   items:
@@ -363,7 +371,7 @@
     answer: чекаєте
   - scrambled: с н і д а ю т ь
     answer: снідають
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: unjumble
   title: Build Verb Sentences
   items:
@@ -407,4 +415,24 @@
     - Вона
     - пісню
     answer: Вона співає пісню
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - пісню
+    - Ми
+    - співаємо
+    answer: Ми співаємо пісню
+  - words:
+    - знають
+    - Вони
+    - багато
+    answer: Вони знають багато
+  - words:
+    - малюю
+    - Я
+    - це
+    answer: Я малюю це
+  - words:
+    - гуляє
+    - Він
+    - тут
+    answer: Він гуляє тут
+  instruction: Arrange the words in the correct order.

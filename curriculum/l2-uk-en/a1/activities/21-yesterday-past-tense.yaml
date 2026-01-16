@@ -1,3 +1,7 @@
+module: 21-yesterday-past-tense
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Past Tense Vocabulary
   pairs:
@@ -15,11 +19,13 @@
     right: once
   - left: минулого тижня
     right: last week
+  - left: минулого року
+    right: last year
   - left: був
     right: was (m)
-  - left: читав
-    right: was reading (m)
-  instruction: З'єднайте відповідні елементи.
+  - left: була
+    right: was (f)
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Gender Endings
   groups:
@@ -29,19 +35,25 @@
     - працював
     - говорив
     - був
+    - їв
+    - пив
   - name: Feminine (-ла)
     items:
     - читала
     - працювала
     - говорила
     - була
+    - їла
+    - пила
   - name: Plural (-ли)
     items:
     - читали
     - працювали
     - говорили
     - були
-  instruction: Розподіліть елементи за групами.
+    - їли
+    - пили
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete with Past Tense
   items:
@@ -115,7 +127,21 @@
     - дивилася
     - дивилося
     - дивилися
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Вчора ми ___ у ресторані.
+    answer: обідали
+    options:
+    - обідав
+    - обідала
+    - обідали
+    - обідати
+  - sentence: Вона ___ десерт після обіду.
+    answer: їла
+    options:
+    - їв
+    - їла
+    - їли
+    - їло
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Understanding Past Tense
   items:
@@ -141,7 +167,7 @@
     - text: Я працювали
       correct: false
     explanation: Male speakers use -в ending
-  - question: What doesaccurately the word «вчора» mean in English?
+  - question: What does accurately the word «вчора» mean in English?
     options:
     - text: Tomorrow
       correct: false
@@ -207,7 +233,51 @@
     - text: Ми були
       correct: true
     explanation: Plural subjects use -ли ending
-  instruction: Оберіть правильну відповідь.
+  - question: What is the past tense ending for neuter nouns?
+    options:
+    - text: -в
+      correct: false
+    - text: -ла
+      correct: false
+    - text: -ло
+      correct: true
+    - text: -ли
+      correct: false
+    explanation: Neuter singular uses -ло.
+  - question: Which time expression means "last year"?
+    options:
+    - text: минулого року
+      correct: true
+    - text: минулого тижня
+      correct: false
+    - text: минулого місяця
+      correct: false
+    - text: вчора
+      correct: false
+    explanation: рік -> року (genitive).
+  - question: How do you conjugate «сміятися» for «вона»?
+    options:
+    - text: сміялася
+      correct: true
+    - text: сміявся
+      correct: false
+    - text: сміялися
+      correct: false
+    - text: сміятися
+      correct: false
+    explanation: "Feminine reflexive: -ла + -ся."
+  - question: "Which is the correct past tense for 'they spoke'?"
+    options:
+    - text: говорив
+      correct: false
+    - text: говорила
+      correct: false
+    - text: говорили
+      correct: true
+    - text: говорити
+      correct: false
+    explanation: Plural uses -ли.
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Build Past Tense Sentences
   items:
@@ -247,7 +317,43 @@
     - по
     - говорила
     answer: Вона говорила по телефону
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - кафе
+    - були
+    - ми
+    - в
+    - вчора
+    answer: Ми були в кафе вчора
+  - words:
+    - минулого
+    - місяця
+    - вони
+    - працювали
+    answer: Вони працювали минулого місяця
+  - words:
+    - він
+    - автобус
+    - чекав
+    - на
+    answer: Він чекав на автобус
+  - words:
+    - вона
+    - фільм
+    - дивилася
+    answer: Вона дивилася фільм
+  - words:
+    - колись
+    - знайшов
+    - я
+    - це
+    answer: Я знайшов це колись
+  - words:
+    - тут
+    - раніше
+    - було
+    - тихо
+    answer: Раніше тут було тихо
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Past Tense Facts
   items:
@@ -275,7 +381,19 @@
   - statement: The neuter past tense ending is -ло.
     correct: true
     explanation: Correct! Воно було, воно читало, воно працювало.
-  instruction: Визначте, чи твердження правильне.
+  - statement: "You keep the '-ва-' suffix in past tense (працював)."
+    correct: true
+    explanation: "Yes! Past tense is built from the infinitive: працювати -> працював."
+  - statement: "Reflexive verbs lose the '-ся' in the past."
+    correct: false
+    explanation: "Incorrect! You keep it: сміявся, сміялася."
+  - statement: "Past tense endings in Ukrainian show person (1st, 2nd, 3rd)."
+    correct: false
+    explanation: "Incorrect! They only show gender and number."
+  - statement: "The plural ending -ли is used for 'ми', 'ви', and 'вони'."
+    correct: true
+    explanation: Correct! All plural forms use -ли.
+  instruction: Determine if the statement is true.
 - type: fill-in
   title: Transform to Past Tense
   items:
@@ -335,7 +453,35 @@
     - пила
     - пило
     - пили
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Ми ___ у парку.
+    answer: відпочивали
+    options:
+    - відпочивав
+    - відпочивала
+    - відпочивали
+    - відпочивати
+  - sentence: Ти ___ мене?
+    answer: чекав
+    options:
+    - чекав
+    - чекала
+    - чекали
+    - чекало
+  - sentence: Студенти ___ українську мову.
+    answer: вчили
+    options:
+    - вчив
+    - вчила
+    - вчили
+    - вчило
+  - sentence: Дитина ___ вдень.
+    answer: спала
+    options:
+    - спав
+    - спала
+    - спало
+    - спали
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Time Expressions
   items:
@@ -427,4 +573,48 @@
     - text: Every week
       correct: false
     explanation: Минулого тижня = last week (genitive)
-  instruction: Оберіть правильну відповідь.
+  - question: How do you accurately say exactly "last Monday"?
+    options:
+    - text: минулого понеділка
+      correct: true
+    - text: минулий понеділок
+      correct: false
+    - text: вчора понеділок
+      correct: false
+    - text: завтра понеділок
+      correct: false
+    explanation: Genitive for "last" day.
+  - question: How do you accurately say exactly "last weekend"?
+    options:
+    - text: минулого вихідного
+      correct: true
+    - text: минулий вихідний
+      correct: false
+    - text: колись вихідний
+      correct: false
+    - text: раніше вихідний
+      correct: false
+    explanation: Genitive for "last" time.
+  - question: What does precisely the word "today" mean in Ukrainian?
+    options:
+    - text: сьогодні
+      correct: true
+    - text: завтра
+      correct: false
+    - text: вчора
+      correct: false
+    - text: раніше
+      correct: false
+    explanation: Сьогодні = today.
+  - question: What does precisely the word "tomorrow" mean in Ukrainian?
+    options:
+    - text: завтра
+      correct: true
+    - text: сьогодні
+      correct: false
+    - text: вчора
+      correct: false
+    - text: давно
+      correct: false
+    explanation: Завтра = tomorrow.
+  instruction: Choose the correct answer.

@@ -105,6 +105,7 @@ def build_level_landing(level, config):
     """Build landing page for a single level."""
     planned = config.get('planned', 0)
     description = config.get('description', '')
+    introduction = config.get('introduction', '').strip()
 
     meta_files, mdx_files = get_module_files(level)
 
@@ -144,6 +145,11 @@ def build_level_landing(level, config):
 
         rows.append(f"| {num} | {link} | {status} |")
 
+    # Build introduction section
+    intro_section = ""
+    if introduction:
+        intro_section = f"\n{introduction}\n"
+
     # Build content
     content = f"""---
 sidebar_position: 1
@@ -153,9 +159,7 @@ title: {LEVEL_NAMES_UK[level]}
 # {status_emoji} {LEVEL_NAMES_UK[level]}
 
 **{status_text}**
-
-{description}
-
+{intro_section}
 ---
 
 ## Модулі

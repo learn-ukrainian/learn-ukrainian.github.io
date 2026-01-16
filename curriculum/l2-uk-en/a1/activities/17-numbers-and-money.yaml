@@ -1,3 +1,7 @@
+module: 17-numbers-and-money
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Numbers and Words
   pairs:
@@ -19,7 +23,9 @@
     right: '90'
   - left: сто
     right: '100'
-  instruction: З'єднайте відповідні елементи.
+  - left: п'ятдесят
+    right: '50'
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Complete with Numbers
   items:
@@ -107,7 +113,7 @@
     - два
     - дванадцять
     - сто
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Number Grammar
   items:
@@ -243,7 +249,7 @@
     - text: копійка
       correct: false
     explanation: гривня (hryvnia) is the current currency
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Money Facts
   items:
@@ -285,7 +291,7 @@
     correct: true
     explanation: Correct! Each denomination honors Ukrainian leaders and cultural
       icons.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Number Categories
   groups:
@@ -307,7 +313,7 @@
     - десять студентів
     - двадцять вікон
     - сто книг
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Shopping Sentences Order
   items:
@@ -443,7 +449,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Всього сто гривень'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: fill-in
   title: Shopping Dialogue
   items:
@@ -503,7 +509,35 @@
     - решта
     - знижка
     - картка
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Ось ваша ___. (change)
+    answer: решта
+    options:
+    - решта
+    - каса
+    - ціна
+    - знижка
+  - sentence: Мені потрібен ___. (receipt)
+    answer: чек
+    options:
+    - чек
+    - квиток
+    - список
+    - рахунок
+  - sentence: Яка ___? (price)
+    answer: ціна
+    options:
+    - ціна
+    - каса
+    - решта
+    - знижка
+  - sentence: Я плачу ___. (cash)
+    answer: готівкою
+    options:
+    - готівкою
+    - карткою
+    - грошима
+    - чеком
+  instruction: Choose the correct word to fill in the blank.
 - type: match-up
   title: Shopping Vocabulary
   pairs:
@@ -525,7 +559,9 @@
     right: discount
   - left: каса
     right: checkout
-  instruction: З'єднайте відповідні елементи.
+  - left: рахунок
+    right: bill
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Currency and Numbers
   items:
@@ -661,4 +697,4 @@
     - text: тридцять
       correct: false
     explanation: П'ятдесят is fifty.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

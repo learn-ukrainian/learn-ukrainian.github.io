@@ -1,0 +1,54 @@
+module: 44-a1-final-exam
+level: A1
+version: '1.0'
+items:
+  - lemma: іспит
+    ipa: /ˈispɪt/
+    translation: exam
+    pos: noun 
+    gender: m
+  - lemma: тест
+    ipa: /tɛst/
+    translation: test
+    pos: noun 
+    gender: m
+  - lemma: оцінка
+    ipa: /ɔˈt͡sʲinkɑ/
+    translation: grade / evaluation
+    pos: noun 
+    gender: f
+  - lemma: рівень
+    ipa: /ˈrʲivɛnʲ/
+    translation: level
+    pos: noun 
+    gender: m
+  - lemma: сертифікат
+    ipa: /sɛrtɪfʲiˈkɑt/
+    translation: certificate
+    pos: noun 
+    gender: m
+  - lemma: мова
+    ipa: /ˈmɔvɑ/
+    translation: language
+    pos: noun 
+    gender: f
+  - lemma: слово
+    ipa: /ˈslɔvɔ/
+    translation: word
+    pos: noun 
+    gender: n
+  - lemma: питання
+    ipa: /pɪˈtɑnʲːɑ/
+    translation: question
+    pos: noun 
+    gender: n
+  - lemma: відповідь
+    ipa: /vʲidˈpɔvʲidʲ/
+    translation: answer
+    pos: noun 
+    gender: f
+  - lemma: студент
+    ipa: /stʊˈdɛnt/
+    translation: student
+    pos: noun 
+    gender: m

@@ -1,3 +1,7 @@
+module: 05-my-world-objects
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Demonstratives and Gender
   pairs:
@@ -27,7 +31,7 @@
     right: this window (n)
   - left: ці ключі
     right: these keys (pl)
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: match-up
   title: Objects and Translations
   pairs:
@@ -59,7 +63,7 @@
     right: key
   - left: лампа
     right: lamp
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Sort by Gender
   groups:
@@ -99,7 +103,7 @@
     - дзеркало
     - крісло
     - ліжко
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Choose the Correct Demonstrative
   items:
@@ -235,7 +239,7 @@
     - text: ті
       correct: true
     explanation: Plural objects use ті.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: fill-in
   title: Complete with Demonstratives
   items:
@@ -323,7 +327,7 @@
     - Та
     - Те
     - Ті
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Demonstrative Agreement
   items:
@@ -365,7 +369,7 @@
   - statement: Most objects ending in consonants are masculine.
     correct: true
     explanation: Correct! Ніж, стіл, телефон, ключ.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: anagram
   title: Build the Word
   items:
@@ -393,7 +397,7 @@
     answer: ліжко
   - scrambled: т е л е ф о н
     answer: телефон
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: fill-in
   title: Complete the Dialogue
   items:
@@ -481,4 +485,4 @@
     - Ця
     - Це
     - Ці
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.

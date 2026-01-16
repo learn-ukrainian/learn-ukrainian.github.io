@@ -15,54 +15,54 @@ But to eat, you must shop! Whether it's a bustling **ринок** (market) full 
 ### Part 1: Food & Drinks (Їжа та Напої)
 
 Ukrainians typically eat three main meals:
-- **Сніданок** (snidanok) — Breakfast.
-- **Обід** (obid) — Lunch (main meal, 1-3 PM).
-- **Вечеря** (vecherya) — Dinner (lighter, 6-8 PM).
+- **Сніданок** /ˈsnidɑnɔk/ — Breakfast.
+- **Обід** /ɔˈbid/ — Lunch (main meal, 1-3 PM).
+- **Вечеря** /vɛˈt͡ʃɛrʲɑ/ — Dinner (lighter, 6-8 PM).
 
 #### Essential Vocabulary
 
 **1. Main Dishes (Основні страви)**
-- **Борщ** (borshch) — Beet soup.
-- **Суп** (sup) — Soup.
-- **Вареники** (varenyky) — Dumplings.
-- **М'ясо** (m'yaso) — Meat.
-- **Риба** (ryba) — Fish.
-- **Курка** (kurka) — Chicken.
+- **Борщ** /bɔrʃt͡ʃ/ — Beet soup.
+- **Суп** /sup/ — Soup.
+- **Вареники** /vɑˈrɛnɪkɪ/ — Dumplings.
+- **М'ясо** /ˈmjɑsɔ/ — Meat.
+- **Риба** /ˈrɪbɑ/ — Fish.
+- **Курка** /ˈkurkɑ/ — Chicken.
 
 **2. Basics**
-- **Хліб** (khlib) — Bread (sacred in Ukraine!).
-- **Сир** (syr) — Cheese (or cottage cheese).
-- **Яйце** (yaytse) — Egg.
+- **Хліб** /xlʲib/ — Bread.
+- **Сир** /sɪr/ — Cheese.
+- **Яйце** /jɑjˈt͡sɛ/ — Egg.
 
 **3. Fruits & Vegetables (Фрукти та Овочі)**
 - **Овочі**: Картопля (potato), Помідор (tomato), Огірок (cucumber), Цибуля (onion).
 - **Фрукти**: Яблуко (apple), Банан (banana).
 
 **4. Drinks (Напої)**
-- **Вода** (voda) — Water.
-- **Чай** (chay) — Tea.
-- **Кава** (kava) — Coffee.
-- **Сік** (sik) — Juice.
-- **Вино** (vyno) — Wine.
-- **Пиво** (pyvo) — Beer.
+- **Вода** /vɔˈdɑ/ — Water.
+- **Чай** /t͡ʃɑj/ — Tea.
+- **Кава** /ˈkɑvɑ/ — Coffee.
+- **Сік** /sik/ — Juice.
+- **Вино** /vɪˈnɔ/ — Wine.
+- **Пиво** /ˈpɪvɔ/ — Beer.
 
 > 🎬 **Pop Culture Moment**
 >
-> In the game **S.T.A.L.K.E.R.**, **тушонка** (canned meat) is iconic. It's a survival staple every Ukrainian knows!
+> In the game **S.T.A.L.K.E.R.**, **тушонка** /tuˈʃɔnkɑ/ (canned meat) is iconic. It's a survival staple every Ukrainian knows!
 
 ### Part 2: The Action — їсти & пити
 
 You learned these verbs in Module 08. Use them now!
 
-**їсти (to eat):** я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять.
-**пити (to drink):** я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють.
+**їсти** /ˈjistɪ/ (to eat): я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять.
+**пити** /ˈpɪtɪ/ (to drink): я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють.
 
 **Example:**
 — Ти **їси** борщ? (Are you eating borshch?)
 — Так, я **їм** борщ і **п'ю** чай. (Yes, I'm eating borshch and drinking tea.)
 
 **The Magic Word:**
-When eating, always say **Смачного!** (Smachnoho!) — Bon appétit!
+When eating, always say **Смачного!** /smɑt͡ʃˈnɔɦɔ/ — Bon appétit!
 
 ### Part 3: How Cases Work in Shopping (Accusative + Genitive)
 

@@ -1,3 +1,7 @@
+module: 30-prepositions-iii
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Question Words
   pairs:
@@ -207,9 +211,9 @@
     - з
     - до
   - sentence: Ми приїхали ___ Львова.
-    answer: з
+    answer: зі
     options:
-    - з
+    - зі
     - в
     - до
     - на
@@ -247,57 +251,57 @@
   items:
   - question: Which category correctly describes the sentence «Я в парку»?
     options:
-    - text: I'm from the park (origin)
+    - text: «I'm from the park (origin)»
       correct: false
-    - text: I am in the park (location)
+    - text: «I am in the park (location)»
       correct: true
-    - text: I'm going to the park
+    - text: «I'm going to the park»
       correct: false
-    - text: I was in the park (past)
+    - text: «I was in the park (past)»
       correct: false
   - question: How do you categorize «Я йду в парк»?
     options:
-    - text: I am in the park (location)
+    - text: «I am in the park (location)»
       correct: false
-    - text: I'm from the park (origin)
+    - text: «I'm from the park (origin)»
       correct: false
-    - text: I'm going to the park
+    - text: «I'm going to the park»
       correct: true
-    - text: I was in the park (past)
+    - text: «I was in the park (past)»
       correct: false
   - question: What is the meaning of «Вдома»?
     options:
     - text: To home
       correct: false
-    - text: At home (location)
+    - text: «At home (location)»
       correct: true
-    - text: From home (origin)
+    - text: «From home (origin)»
       correct: false
     - text: About home
       correct: false
   - question: Which category summarizes the term «Додому»?
     options:
-    - text: At home (location)
+    - text: «At home (location)»
       correct: false
-    - text: From home (origin)
+    - text: «From home (origin)»
       correct: false
-    - text: Home (direction - going home)
+    - text: «Home (direction - going home)»
       correct: true
     - text: About home
       correct: false
   - question: How is the phrase «Я з України» described?
     options:
-    - text: I'm in Ukraine
+    - text: «I'm in Ukraine»
       correct: false
-    - text: I'm going to Ukraine
+    - text: «I'm going to Ukraine»
       correct: false
-    - text: I'm from Ukraine
+    - text: «I'm from Ukraine»
       correct: true
-    - text: I was in Ukraine
+    - text: «I was in Ukraine»
       correct: false
   - question: What is the description for «До лікаря»?
     options:
-    - text: At the doctor's
+    - text: «At the doctor's»
       correct: false
     - text: To the doctor
       correct: true
@@ -307,21 +311,21 @@
       correct: false
   - question: Which category correctly represents the word «Тут»?
     options:
-    - text: Here (location)
+    - text: «Here (location)»
       correct: true
     - text: To here
       correct: false
-    - text: From here (origin)
+    - text: «From here (origin)»
       correct: false
     - text: About here
       correct: false
   - question: How would you accurately describe «Сюди»?
     options:
-    - text: Here (location)
+    - text: «Here (location)»
       correct: false
     - text: To here
       correct: true
-    - text: From here (origin)
+    - text: «From here (origin)»
       correct: false
     - text: About here
       correct: false
@@ -329,7 +333,7 @@
 - type: quiz
   title: Which Preposition?
   items:
-  - question: What is the translation for "I'm FROM Kyiv"?
+  - question: What is the translation for «I'm FROM Kyiv»?
     options:
     - text: в Києві
       correct: false
@@ -339,7 +343,7 @@
       correct: false
     - text: від Києва
       correct: false
-  - question: Which Ukrainian phrase translates "A gift FROM mom"?
+  - question: Which Ukrainian phrase translates «A gift FROM mom»?
     options:
     - text: з мами
       correct: false
@@ -349,7 +353,7 @@
       correct: true
     - text: в мами
       correct: false
-  - question: How do you say "Going TO the doctor" in Ukrainian?
+  - question: How do you say «Going TO the doctor» in Ukrainian?
     options:
     - text: в лікаря
       correct: false
@@ -359,7 +363,7 @@
       correct: true
     - text: від лікаря
       correct: false
-  - question: What is the phrase for "Going TO the store"?
+  - question: What is the phrase for «Going TO the store»?
     options:
     - text: в магазин
       correct: true
@@ -369,7 +373,7 @@
       correct: false
     - text: від магазину
       correct: false
-  - question: Which phrase represents "I'm IN the park"?
+  - question: Which phrase represents «I'm IN the park»?
     options:
     - text: в парк
       correct: false
@@ -379,7 +383,7 @@
       correct: false
     - text: до парку
       correct: false
-  - question: How is "Coming FROM school" translated?
+  - question: How is «Coming FROM school» translated?
     options:
     - text: в школі
       correct: false
@@ -389,7 +393,7 @@
       correct: false
     - text: від школи
       correct: false
-  - question: What is the Ukrainian term for "Going TO work"?
+  - question: What is the Ukrainian term for «Going TO work»?
     options:
     - text: в роботу
       correct: false
@@ -399,7 +403,7 @@
       correct: true
     - text: з роботи
       correct: false
-  - question: How should you translate "Letter FROM dad"?
+  - question: How should you translate «Letter FROM dad»?
     options:
     - text: з татка
       correct: false
@@ -493,28 +497,28 @@
     correct: true
   - statement: «Куди?» asks about location.
     correct: false
-    explanation: Incorrect! it asks about direction
+    explanation: «Incorrect! it asks about direction»
   - statement: «Звідки?» asks about origin.
     correct: true
-  - statement: «Вдома» means "at home.".
+  - statement: «Вдома» means «at home.».
     correct: true
-  - statement: «Додому» means "at home.".
+  - statement: «Додому» means «at home.».
     correct: false
-    explanation: Incorrect! it means "to home"
-  - statement: «З» is used for "from places.".
+    explanation: «Incorrect! it means «to home»»
+  - statement: «З» is used for «from places.».
     correct: true
-  - statement: «Від» is used for "from people.".
+  - statement: «Від» is used for «from people.».
     correct: true
-  - statement: «До» is used for "from people.".
+  - statement: «До» is used for «from people.».
     correct: false
-    explanation: Incorrect! it's used for "to"
+    explanation: «Incorrect! it's used for «to»»
   - statement: Location uses Locative case.
     correct: true
   - statement: Direction uses Locative case.
     correct: false
-    explanation: Incorrect! it uses Accusative/Genitive
-  - statement: «Тут» means "here.".
+    explanation: «Incorrect! it uses Accusative/Genitive»
+  - statement: «Тут» means «here.».
     correct: true
-  - statement: «Сюди» means "to here.".
+  - statement: «Сюди» means «to here.».
     correct: true
   instruction: Визначте, чи твердження правильне.

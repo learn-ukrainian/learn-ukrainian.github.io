@@ -337,6 +337,86 @@ core:
       - checkpoint
       - assessment
       - A1
+    - slug: at-the-cafe-practical
+      title: At the Café
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - cafe
+      - ordering
+      - practical
+    - slug: at-the-restaurant
+      title: At the Restaurant
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - restaurant
+      - food
+      - practical
+    - slug: at-the-market
+      title: At the Market
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - market
+      - shopping
+      - practical
+    - slug: at-the-store
+      title: At the Store
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - store
+      - shopping
+      - practical
+    - slug: buying-tickets
+      title: Buying Tickets
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - transport
+      - tickets
+      - practical
+    - slug: taking-transport
+      title: Taking Transport
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - transport
+      - navigation
+      - practical
+    - slug: phone-basics
+      title: Phone Basics
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - phone
+      - communication
+      - practical
+    - slug: emergencies
+      title: Emergencies
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - emergency
+      - help
+      - practical
+    - slug: combined-practice
+      title: Combined Practice
+      phase: A1.4 Practical Scenarios
+      focus: practical
+      tags:
+      - review
+      - practical
+      - integration
+    - slug: a1-final-exam
+      title: A1 Final Exam
+      phase: A1.4 Practical Scenarios
+      focus: checkpoint
+      tags:
+      - exam
+      - assessment
+      - cumulative
   a2:
     name: A2 - Elementary
     modules:

@@ -26,13 +26,13 @@ The locative case (місцевий відмінок) is ALWAYS used with a prep
 
 Here's the basic pattern:
 
-| Nominative (Де це?) | Locative (Де ти?)  | English                  |
-| ------------------- | ------------------ | ------------------------ |
-| Це **кімната**      | Я **в кімнаті**    | I'm in the room          |
-| Це **банк**         | Я **в банку**      | I'm in the bank          |
-| Це **місто**        | Я **в місті**      | I'm in the city          |
-| Це **стіл**         | Книга **на столі** | The book is on the table |
-| Це **робота**       | Я **на роботі**    | I'm at work              |
+| Nominative (Де це?) | Locative (Де ти?) | IPA | English                  |
+| ------------------- | ----------------- | --- | ------------------------ |
+| кімната             | в кімнаті         | /w kʲimˈnɑtʲi/ | I'm in the room          |
+| банк                | в банку           | /w ˈbɑnku/ | I'm in the bank          |
+| місто               | в місті           | /w ˈmisʲtʲi/ | I'm in the city          |
+| стіл                | на столі          | /nɑ stɔˈlʲi/ | The book is on the table |
+| робота              | на роботі         | /nɑ rɔˈbɔtʲi/ | I'm at work              |
 
 ### Locative Endings: The Pattern
 

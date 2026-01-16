@@ -24,20 +24,20 @@
 
 ### Hours on the Clock
 
-| Time  | Ukrainian         | Literal Meaning |
-| ----- | ----------------- | --------------- |
-| 1:00  | Перша година      | First hour      |
-| 2:00  | Друга година      | Second hour     |
-| 3:00  | Третя година      | Third hour      |
-| 4:00  | Четверта година   | Fourth hour     |
-| 5:00  | П'ята година      | Fifth hour      |
-| 6:00  | Шоста година      | Sixth hour      |
-| 7:00  | Сьома година      | Seventh hour    |
-| 8:00  | Восьма година     | Eighth hour     |
-| 9:00  | Дев'ята година    | Ninth hour      |
-| 10:00 | Десята година     | Tenth hour      |
-| 11:00 | Одинадцята година | Eleventh hour   |
-| 12:00 | Дванадцята година | Twelfth hour    |
+| Time  | Ukrainian | IPA | Literal Meaning |
+| ----- | --------- | --- | --------------- |
+| 1:00  | Перша година | /ˈpɛrʃɑ ɦɔˈdɪnɑ/ | First hour      |
+| 2:00  | Друга година | /ˈdruɦɑ ɦɔˈdɪnɑ/ | Second hour     |
+| 3:00  | Третя година | /ˈtrɛtʲɑ ɦɔˈdɪnɑ/ | Third hour      |
+| 4:00  | Четверта година | /t͡ʃɛtˈvɛrtɑ ɦɔˈdɪnɑ/ | Fourth hour     |
+| 5:00  | П'ята година | /ˈpjɑtɑ ɦɔˈdɪnɑ/ | Fifth hour      |
+| 6:00  | Шоста година | /ˈʃɔstɑ ɦɔˈdɪnɑ/ | Sixth hour      |
+| 7:00  | Сьома година | /ˈsʲɔmɑ ɦɔˈdɪnɑ/ | Seventh hour    |
+| 8:00  | Восьма година | /ˈvɔsʲmɑ ɦɔˈdɪnɑ/ | Eighth hour     |
+| 9:00  | Дев'ята година | /dɛˈvjɑtɑ ɦɔˈdɪnɑ/ | Ninth hour      |
+| 10:00 | Десята година | /dɛˈsʲɑtɑ ɦɔˈdɪnɑ/ | Tenth hour      |
+| 11:00 | Одинадцята година | /ɔdɪˈnɑdt͡sʲɑtɑ ɦɔˈdɪnɑ/ | Eleventh hour   |
+| 12:00 | Дванадцята година | /dvɑˈnɑdt͡sʲɑtɑ ɦɔˈdɪnɑ/ | Twelfth hour    |
 
 ### Half and Quarter Hours
 
@@ -77,22 +77,15 @@ Or in conversation:
 >
 > The Ukrainian week starts on **Monday** (понеділок), not Sunday. This is the European standard.
 
-| Day       | Ukrainian | Origin                       |
-| --------- | --------- | ---------------------------- |
-| Monday    | понеділок | «after Sunday» (по + неділя) |
-| Tuesday   | вівторок  | «second day»                 |
-| Wednesday | середа    | «middle»                     |
-| Thursday  | четвер    | «fourth»                     |
-| Friday    | п'ятниця  | «fifth»                      |
-| Saturday  | субота    | from Hebrew «Sabbath»        |
-| Sunday    | неділя    | «no work» (не + діло)        |
-
-**Useful phrases:**
-
-- **робочий день** — workday (Monday-Friday)
-- **вихідні** — weekend (Saturday-Sunday)
-- **цього тижня** — this week
-- **наступного тижня** — next week
+| Day | Ukrainian | IPA | Origin |
+| --------- | --------- | --- | ---------------------------- |
+| Monday | понеділок | /pɔnɛˈdʲilɔk/ | «after Sunday» (по + неділя) |
+| Tuesday | вівторок | /viwˈtɔrɔk/ | «second day» |
+| Wednesday | середа | /sɛrɛˈdɑ/ | «middle» |
+| Thursday | четвер | /t͡ʃɛtˈvɛr/ | «fourth» |
+| Friday | п'ятниця | /ˈpjɑtnɪt͡sʲɑ/ | «fifth» |
+| Saturday | субота | /suˈbɔtɑ/ | from Hebrew «Sabbath» |
+| Sunday | неділя | /nɛˈdʲilʲɑ/ | «no work» (не + діло) |
 
 ---
 
@@ -102,20 +95,20 @@ Or in conversation:
 >
 > Ukrainian months have beautiful, nature-inspired names! Unlike Latin-based names in English, Ukrainian months describe what happens in nature.
 
-| Month     | Ukrainian | Meaning                        |
-| --------- | --------- | ------------------------------ |
-| January   | січень    | «cutting» (frost cuts)         |
-| February  | лютий     | «fierce» (fierce frost)        |
-| March     | березень  | «birch» (birch sap flows)      |
-| April     | квітень   | «flowers» (flowers bloom)      |
-| May       | травень   | «grass» (grass grows)          |
-| June      | червень   | «red» (berries ripen)          |
-| July      | липень    | «linden» (linden blooms)       |
-| August    | серпень   | «sickle» (harvest time)        |
-| September | вересень  | «heather» (heather blooms)     |
-| October   | жовтень   | «yellow» (leaves turn)         |
-| November  | листопад  | «leaf fall»                    |
-| December  | грудень   | «frozen lumps» (frozen ground) |
+| Month | Ukrainian | IPA | Meaning |
+| --------- | --------- | --- | ------------------------------ |
+| January | січень | /ˈsit͡ʃɛnʲ/ | «cutting» (frost cuts) |
+| February | лютий | /ˈlʲutɪj/ | «fierce» (fierce frost) |
+| March | березень | /ˈbɛrɛzɛnʲ/ | «birch» (birch sap flows) |
+| April | квітень | /ˈkvitɛnʲ/ | «flowers» (flowers bloom) |
+| May | травень | /ˈtrɑvɛnʲ/ | «grass» (grass grows) |
+| June | червень | /ˈt͡ʃɛrvɛnʲ/ | «red» (berries ripen) |
+| July | липень | /ˈlɪpɛnʲ/ | «linden» (linden blooms) |
+| August | серпень | /ˈsɛrpɛnʲ/ | «sickle» (harvest time) |
+| September | вересень | /ˈvɛrɛsɛnʲ/ | «heather» (heather blooms) |
+| October | жовтень | /ˈʒɔwtɛnʲ/ | «yellow» (leaves turn) |
+| November | листопад | /lɪstɔˈpɑd/ | «leaf fall» |
+| December | грудень | /ˈɦrudɛnʲ/ | «frozen lumps» (frozen ground) |
 
 ---
 
@@ -248,15 +241,17 @@ Or in conversation:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. It is two o'clock.
+2. I work until five.
+3. The meeting is at three.
 
 ---
 
 # Підсумок
+
 Ви навчилися говорити про час українською! (You've learned to tell time in Ukrainian!)
 
 **Що ви вивчили (What you learned):**

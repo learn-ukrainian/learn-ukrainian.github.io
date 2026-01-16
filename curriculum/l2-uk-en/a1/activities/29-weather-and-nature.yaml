@@ -1,51 +1,55 @@
+module: 29-weather-and-nature
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Weather Expressions
   pairs:
-  - left: '- Тепло'
+  - left: Тепло
     right: It's warm
-  - left: '- Холодно'
+  - left: Холодно
     right: It's cold
-  - left: '- Жарко'
+  - left: Жарко
     right: It's hot
-  - left: '- Сонячно'
+  - left: Сонячно
     right: It's sunny
-  - left: '- Хмарно'
+  - left: Хмарно
     right: It's cloudy
-  - left: '- Вітряно'
+  - left: Вітряно
     right: It's windy
-  - left: '- Йде дощ'
+  - left: Йде дощ
     right: It's raining
-  - left: '- Йде сніг'
+  - left: Йде сніг
     right: It's snowing
-  - left: '- Яка погода?'
+  - left: Яка погода?
     right: What's the weather?
-  - left: '- Як надворі?'
+  - left: Як надворі?
     right: How is it outside?
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: match-up
   title: Nature Vocabulary
   pairs:
-  - left: '- сонце'
+  - left: сонце
     right: sun
-  - left: '- хмара'
+  - left: хмара
     right: cloud
-  - left: '- вітер'
+  - left: вітер
     right: wind
-  - left: '- дощ'
+  - left: дощ
     right: rain
-  - left: '- сніг'
+  - left: сніг
     right: snow
-  - left: '- дерево'
+  - left: дерево
     right: tree
-  - left: '- квітка'
+  - left: квітка
     right: flower
-  - left: '- ліс'
+  - left: ліс
     right: forest
-  - left: '- річка'
+  - left: річка
     right: river
-  - left: '- море'
+  - left: море
     right: sea
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Seasons
   groups:
@@ -65,8 +69,7 @@
     - йде сніг
     - хмарно
     - вітряно
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: group-sort
   title: Animals vs Plants
   groups:
@@ -86,8 +89,7 @@
     - трава
     - парк
     - сад
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Яка погода? (What's the Weather?)
   items:
@@ -175,7 +177,7 @@
     - жарко
     - сонячно
     - вітряно
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Природа і тварини (Nature and Animals)
   items:
@@ -263,11 +265,11 @@
     - гір
     - морів
     - птахів
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: What Season?
   items:
-  - question: Which season correctly matches «Йде сніг, холодно» here?
+  - question: Which season correctly matches «Йде сніг, холодно»?
     options:
     - text: Літо
       correct: false
@@ -347,7 +349,47 @@
       correct: false
     - text: Весна
       correct: true
-  instruction: Оберіть правильну відповідь.
+  - question: Which month accurately marks the start of spring?
+    options:
+    - text: Березень
+      correct: true
+    - text: Січень
+      correct: false
+    - text: Травень
+      correct: false
+    - text: Липень
+      correct: false
+  - question: Which month is the height of summer heat?
+    options:
+    - text: Липень
+      correct: true
+    - text: Квітень
+      correct: false
+    - text: Жовтень
+      correct: false
+    - text: Лютий
+      correct: false
+  - question: Choose the coldest winter month accurately.
+    options:
+    - text: Лютий
+      correct: true
+    - text: Травень
+      correct: false
+    - text: Червень
+      correct: false
+    - text: Вересень
+      correct: false
+  - question: When do schools typically start in Ukraine?
+    options:
+    - text: У вересні
+      correct: true
+    - text: У березні
+      correct: false
+    - text: У червні
+      correct: false
+    - text: У грудні
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Animal or Plant?
   items:
@@ -361,7 +403,7 @@
       correct: false
     - text: Сезон
       correct: false
-  - question: What is the correct category for «Дерево»?
+  - question: What is the correct category for the word «Дерево»?
     options:
     - text: Тварина
       correct: false
@@ -371,7 +413,7 @@
       correct: false
     - text: Одяг
       correct: false
-  - question: Which classification accurately fits «Кіт»?
+  - question: Which classification accurately fits the word «Кіт»?
     options:
     - text: Рослина
       correct: false
@@ -381,7 +423,7 @@
       correct: false
     - text: Гроші
       correct: false
-  - question: What is the group for the word «Квітка»?
+  - question: What is the group for the word «Квітка» in Ukrainian?
     options:
     - text: Тварина
       correct: false
@@ -401,7 +443,7 @@
       correct: false
     - text: Сім'я
       correct: false
-  - question: How is the word «Ліс» categorized?
+  - question: How is the word «Ліс» correctly categorized here?
     options:
     - text: Тварина
       correct: false
@@ -411,7 +453,7 @@
       correct: false
     - text: Робота
       correct: false
-  - question: Which category matches the word «Риба»?
+  - question: Which category matches the word «Риба» accurately?
     options:
     - text: Рослина
       correct: false
@@ -421,7 +463,7 @@
       correct: true
     - text: Фрукт
       correct: false
-  - question: What is the group for the word «Трава»?
+  - question: What is the group for the word «Трава» accurately?
     options:
     - text: Напій
       correct: false
@@ -431,7 +473,47 @@
       correct: false
     - text: Транспорт
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: Identify accurately the category for «Троянда» (rose).
+    options:
+    - text: Рослина
+      correct: true
+    - text: Тварина
+      correct: false
+    - text: Місто
+      correct: false
+    - text: Їжа
+      correct: false
+  - question: Which group includes the word «Ведмідь» (bear) accurately?
+    options:
+    - text: Тварина
+      correct: true
+    - text: Рослина
+      correct: false
+    - text: Погода
+      correct: false
+    - text: Колір
+      correct: false
+  - question: What is accurately the category for the word «Парк»?
+    options:
+    - text: Рослина (area)
+      correct: true
+    - text: Тварина
+      correct: false
+    - text: Транспорт
+      correct: false
+    - text: Одяг
+      correct: false
+  - question: Which classification fits the word «Кущ» (bush) accurately?
+    options:
+    - text: Рослина
+      correct: true
+    - text: Тварина
+      correct: false
+    - text: Погода
+      correct: false
+    - text: Сім'я
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Weather Sentences
   items:
@@ -504,37 +586,36 @@
     - сьогодні
     - дуже
     answer: Сьогодні надворі дуже холодно
-  instruction: Розташуйте слова у правильному порядку.
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Weather and Nature Facts
   items:
-  - statement: «Йде дощ» means "It's raining.".
+  - statement: «Йде дощ» means «It's raining.».
     correct: true
-  - statement: «Йде сніг» means "It's cold.".
+  - statement: «Йде сніг» means «It's cold.».
     correct: false
-    explanation: Incorrect! it means "it's snowing"
+    explanation: «Incorrect! it means «it's snowing»»
   - statement: Ukrainian weather expressions don't need a subject.
     correct: true
-  - statement: «Тепло» means "hot.".
-    correct: false
-    explanation: Incorrect! it means "warm"
-  - statement: «Жарко» means "hot.".
+  - statement: «Тепло» means «warm.».
+    correct: true
+  - statement: «Жарко» means «hot.».
     correct: true
   - statement: Ukraine has only steppes.
     correct: false
-    explanation: Incorrect! it has mountains, forests, seas
+    explanation: «Incorrect! it has mountains, forests, seas»
   - statement: The Carpathians are mountains in Ukraine.
     correct: true
-  - statement: «Собака» and «пес» both mean "dog.".
+  - statement: «Собака» and «пес» both mean «dog.».
     correct: true
-  - statement: «Кіт» means "a female cat.".
+  - statement: «Кіт» means «a female cat.».
     correct: false
-    explanation: Incorrect! it means "male cat"
-  - statement: «Влітку» means "in summer.".
+    explanation: «Incorrect! it means «male cat»»
+  - statement: «Влітку» means «in summer.».
     correct: true
-  - statement: «Взимку» means "in autumn.".
+  - statement: «Взимку» means «in autumn.».
     correct: false
-    explanation: Incorrect! it means "in winter"
+    explanation: «Incorrect! it means «in winter»»
   - statement: The Dnipro is a river.
     correct: true
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

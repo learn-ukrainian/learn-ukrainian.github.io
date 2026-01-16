@@ -1,3 +1,7 @@
+module: 15-around-the-city
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Navigation Basics
   items:
@@ -133,7 +137,7 @@
     - text: Я готель.
       correct: false
     explanation: 'Direction to building: в.'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: City Vocabulary
   pairs:
@@ -155,7 +159,9 @@
     right: restaurant
   - left: метро
     right: metro
-  instruction: З'єднайте відповідні елементи.
+  - left: міст
+    right: bridge
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Complete the Directions
   items:
@@ -243,7 +249,7 @@
     - на автобусі
     - метро
     - на машині
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Transportation Phrases
   items:
@@ -303,7 +309,35 @@
     - автобусом
     - автобус
     - в автобусі
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Я їду ___ до Києва.
+    answer: на поїзді
+    options:
+    - на поїзді
+    - поїздом
+    - поїзд
+    - у поїзді
+  - sentence: Ми подорожуємо ___ до Львова.
+    answer: на маршрутці
+    options:
+    - на маршрутці
+    - маршруткою
+    - маршрутка
+    - у маршрутці
+  - sentence: Він іде ___ до зупинки.
+    answer: пішки
+    options:
+    - пішки
+    - ногами
+    - біля
+    - через
+  - sentence: Ви їдете ___?
+    answer: на тролейбусі
+    options:
+    - на тролейбусі
+    - тролейбусом
+    - тролейбус
+    - у тролейбусі
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: City Navigation Facts
   items:
@@ -333,14 +367,13 @@
     correct: true
     explanation: Correct! Пішки = walking.
   - statement: All Ukrainian cities use marshrutky.
-    correct: false
-    explanation: Actually true! Marshrutky are ubiquitous across all Ukrainian cities,
-      not just metro cities.
+    correct: true
+    explanation: Actually true! Marshrutky are ubiquitous across all Ukrainian cities.
   - statement: «Станція» can refer to both metro and train stations.
     correct: true
     explanation: Correct! Станція is the general word for "station."
   - statement: «Близько» and «далеко» are opposites.
-    correct: false
+    correct: true
     explanation: Correct! Близько = close/near, далеко = far.
   - statement: S.T.A.L.K.E.R. is a Ukrainian game set in the Chornobyl Exclusion Zone.
     correct: true
@@ -348,7 +381,7 @@
   - statement: «Метро» declines like other Ukrainian nouns.
     correct: false
     explanation: Incorrect. Метро is indeclinable (doesn't change form).
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Directional vs. Locational
   groups:
@@ -368,7 +401,7 @@
     - Вони їдуть у Київ.
     - Я йду на площу.
     - Ти йдеш у школу.
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: group-sort
   title: Types of Urban Spaces
   groups:
@@ -388,11 +421,11 @@
     - кінотеатр
     - музей
     - театр
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Directional Sentence Order
   items:
-  - question: 'Correct sentence order for: "Go straight, then turn left."'
+  - question: 'Identify the correct order: "Go straight, then turn left."'
     options:
     - text: Іди прямо, потім поверни наліво
       correct: true
@@ -403,7 +436,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Іди прямо, потім поверни наліво'
-  - question: 'Correct sentence order for: "Where is the metro station?"'
+  - question: 'Identify the correct order: "Where is the metro station?"'
     options:
     - text: Де станція метро
       correct: true
@@ -414,7 +447,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де станція метро'
-  - question: 'Correct sentence order for: "The pharmacy is opposite..."'
+  - question: 'Identify the correct order: "The pharmacy is opposite..."'
     options:
     - text: Аптека навпроти банку
       correct: true
@@ -425,7 +458,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Аптека навпроти банку'
-  - question: 'Correct sentence order for: "How to get to..."'
+  - question: 'Identify the correct order: "How to get to..."'
     options:
     - text: Як дістатися до центру
       correct: true
@@ -436,7 +469,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Як дістатися до центру'
-  - question: 'Correct sentence order for: "I go to work..."'
+  - question: 'Identify the correct order: "I go to work..."'
     options:
     - text: Я їду на роботу на автобусі
       correct: true
@@ -447,7 +480,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я їду на роботу на автобусі'
-  - question: 'Correct sentence order for: "The stop is near..."'
+  - question: 'Identify the correct order: "The stop is near..."'
     options:
     - text: Зупинка біля світлофора
       correct: true
@@ -458,7 +491,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Зупинка біля світлофора'
-  - question: 'Correct sentence order for: "Go along Shevchenko Street."'
+  - question: 'Identify the correct order: "Go along Shevchenko Street."'
     options:
     - text: Іди вздовж вулиці Шевченка
       correct: true
@@ -469,7 +502,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Іди вздовж вулиці Шевченка'
-  - question: 'Correct sentence order for: "It''s very far."'
+  - question: 'Identify the correct order: "It''s very far."'
     options:
     - text: Це дуже далеко
       correct: true
@@ -480,7 +513,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Це дуже далеко'
-  - question: 'Correct sentence order for: "Turn right at the intersection."'
+  - question: 'Identify the correct order: "Turn right at the intersection."'
     options:
     - text: На перехресті поверніть направо
       correct: true
@@ -491,7 +524,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: На перехресті поверніть направо'
-  - question: 'Correct sentence order for: "I walk to the university."'
+  - question: 'Identify the correct order: "I walk to the university."'
     options:
     - text: Я ходжу до університету пішки
       correct: true
@@ -502,7 +535,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я ходжу до університету пішки'
-  - question: 'Correct sentence order for: "The museum is between..."'
+  - question: 'Identify the correct order: "The museum is between..."'
     options:
     - text: Музей між театром і парком
       correct: true
@@ -513,7 +546,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Музей між театром і парком'
-  - question: 'Correct sentence order for: "No, it''s close."'
+  - question: 'Identify the correct order: "No, it''s close."'
     options:
     - text: Ні, це близько
       correct: true
@@ -524,10 +557,9 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ні, це близько'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Question and Answer Pairs
-  instruction: Match each question with the appropriate answer
   pairs:
   - left: Де метро?
     right: Прямо, біля банку.
@@ -545,6 +577,11 @@
     right: Біля світлофора, направо.
   - left: Скільки хвилин пішки?
     right: Десь десять хвилин.
+  - left: Де вокзал?
+    right: Там, прямо через міст.
+  - left: Як дістатися до аеропорту?
+    right: На таксі або на автобусі.
+  instruction: Match each question with the appropriate answer.
 - type: true-false
   title: Transportation Facts
   items:
@@ -573,11 +610,23 @@
   - statement: You can say «їду в автобусі» to mean "I go by bus."
     correct: false
     explanation: Incorrect. Use «їду на автобусі» (на, not в) for transportation.
-  instruction: Визначте, чи твердження правильне.
+  - statement: Kyiv has the deepest metro system in the world.
+    correct: true
+    explanation: Correct! Some stations are 100+ meters underground.
+  - statement: «Маршрутка» is a type of minivan taxi.
+    correct: true
+    explanation: Correct! It is a minibus following a fixed route.
+  - statement: You must pay the driver directly in a marshrutka.
+    correct: true
+    explanation: Correct! You pass the money forward.
+  - statement: «Станція» only refers to metro.
+    correct: false
+    explanation: Incorrect. It refers to both metro and train stations.
+  instruction: Determine if the statement is true.
 - type: quiz
   title: Transportation Phrases Order
   items:
-  - question: 'Correct sentence order for: "I go by bus..."'
+  - question: 'Identify the correct order: "I go by bus..."'
     options:
     - text: Я їду на автобусі щодня
       correct: true
@@ -588,7 +637,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я їду на автобусі щодня'
-  - question: 'Correct sentence order for: "She gets to work..."'
+  - question: 'Identify the correct order: "She gets to work..."'
     options:
     - text: Вона дістається на роботу на трамваї
       correct: true
@@ -599,7 +648,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона дістається на роботу на трамваї'
-  - question: 'Correct sentence order for: "We go by metro..."'
+  - question: 'Identify the correct order: "We go by metro..."'
     options:
     - text: Ми їдемо метро до центру
       correct: true
@@ -610,7 +659,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми їдемо метро до центру'
-  - question: 'Correct sentence order for: "He rides a bicycle..."'
+  - question: 'Identify the correct order: "He rides a bicycle..."'
     options:
     - text: Він їздить на велосипеді щодня
       correct: true
@@ -621,7 +670,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він їздить на велосипеді щодня'
-  - question: 'Correct sentence order for: "They arrived by car."'
+  - question: 'Identify the correct order: "They arrived by car."'
     options:
     - text: Вони приїхали на машині
       correct: true
@@ -632,7 +681,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вони приїхали на машині'
-  - question: 'Correct sentence order for: "I walk to the university."'
+  - question: 'Identify the correct order: "I walk to the university."'
     options:
     - text: Я ходжу до університету пішки
       correct: true
@@ -643,7 +692,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я ходжу до університету пішки'
-  - question: 'Correct sentence order for: "He''s going home by taxi."'
+  - question: 'Identify the correct order: "He''s going home by taxi."'
     options:
     - text: Він їде додому на таксі
       correct: true
@@ -654,7 +703,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він їде додому на таксі'
-  - question: 'Correct sentence order for: "Where is the bus stop?"'
+  - question: 'Identify the correct order: "Where is the bus stop?"'
     options:
     - text: Де зупинка автобуса
       correct: true
@@ -665,7 +714,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де зупинка автобуса'
-  - question: 'Correct sentence order for: "The metro station is..."'
+  - question: 'Identify the correct order: "The metro station is..."'
     options:
     - text: Станція метро там, прямо
       correct: true
@@ -676,7 +725,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Станція метро там, прямо'
-  - question: 'Correct sentence order for: "Usually I go by tram."'
+  - question: 'Identify the correct order: "Usually I go by tram."'
     options:
     - text: Зазвичай я їду на трамваї
       correct: true
@@ -687,7 +736,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Зазвичай я їду на трамваї'
-  - question: 'Correct sentence order for: "Turn right at the..."'
+  - question: 'Identify the correct order: "Turn right at the..."'
     options:
     - text: Поверніть направо біля світлофора
       correct: true
@@ -698,7 +747,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Поверніть направо біля світлофора'
-  - question: 'Correct sentence order for: "At the intersection go left."'
+  - question: 'Identify the correct order: "At the intersection go left."'
     options:
     - text: На перехресті ідіть наліво
       correct: true
@@ -709,4 +758,4 @@
     - text: вони
       correct: false
     explanation: 'Correct: На перехресті ідіть наліво'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

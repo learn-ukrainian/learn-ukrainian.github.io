@@ -1,3 +1,7 @@
+module: 18-food-and-shopping
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Food & Drinks Vocabulary
   pairs:
@@ -19,7 +23,9 @@
     right: bread
   - left: сир
     right: cheese
-  instruction: З'єднайте відповідні елементи.
+  - left: яблуко
+    right: apple
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Shopping Phrases
   items:
@@ -107,7 +113,7 @@
     - супу
     - супом
     - супи
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: group-sort
   title: Food vs Non-Food Items
   groups:
@@ -127,7 +133,7 @@
     - картка
     - гроші
     - сумка
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Shopping Situations
   items:
@@ -263,7 +269,7 @@
     - text: Дешево це
       correct: false
     explanation: «Дешево» is the adverb for cheap.
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Shopping Culture
   items:
@@ -303,11 +309,11 @@
   - statement: It's rude to ask «Ще щось?» (Anything else?) in a store.
     correct: false
     explanation: Incorrect! This is a standard polite question from salespeople.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: quiz
   title: Shopping Sentences Order
   items:
-  - question: 'Correct sentence order for: "I want coffee."'
+  - question: 'Identify the correct order: "I want coffee."'
     options:
     - text: Я хочу каву
       correct: true
@@ -318,7 +324,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я хочу каву'
-  - question: 'Correct sentence order for: "How much is bread?"'
+  - question: 'Identify the correct order: "How much is bread?"'
     options:
     - text: Скільки коштує хліб
       correct: true
@@ -329,7 +335,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Скільки коштує хліб'
-  - question: 'Correct sentence order for: "I''ll take cheese, please."'
+  - question: 'Identify the correct order: "I''ll take cheese, please."'
     options:
     - text: Я візьму сир, будь ласка
       correct: true
@@ -340,7 +346,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я візьму сир, будь ласка'
-  - question: 'Correct sentence order for: "A glass of water, please."'
+  - question: 'Identify the correct order: "A glass of water, please."'
     options:
     - text: Склянку води, будь ласка
       correct: true
@@ -351,7 +357,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Склянку води, будь ласка'
-  - question: 'Correct sentence order for: "We buy vegetables and meat."'
+  - question: 'Identify the correct order: "We buy vegetables and meat."'
     options:
     - text: Ми купуємо овочі та м'ясо
       correct: true
@@ -362,7 +368,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Ми купуємо овочі та м''ясо'
-  - question: 'Correct sentence order for: "Is there dessert on..."'
+  - question: 'Identify the correct order: "Is there dessert on..."'
     options:
     - text: У меню є десерт
       correct: true
@@ -373,7 +379,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: У меню є десерт'
-  - question: 'Correct sentence order for: "The bill, please."'
+  - question: 'Identify the correct order: "The bill, please."'
     options:
     - text: Рахунок, будь ласка
       correct: true
@@ -384,7 +390,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Рахунок, будь ласка'
-  - question: 'Correct sentence order for: "Borscht is very tasty."'
+  - question: 'Identify the correct order: "Borscht is very tasty."'
     options:
     - text: Борщ дуже смачний
       correct: true
@@ -395,7 +401,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Борщ дуже смачний'
-  - question: 'Correct sentence order for: "I''m looking for toothpaste."'
+  - question: 'Identify the correct order: "I''m looking for toothpaste."'
     options:
     - text: Я шукаю зубну пасту
       correct: true
@@ -406,7 +412,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я шукаю зубну пасту'
-  - question: 'Correct sentence order for: "Excuse me, where is..."'
+  - question: 'Identify the correct order: "Excuse me, where is..."'
     options:
     - text: Вибачте, де магазин
       correct: true
@@ -417,7 +423,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вибачте, де магазин'
-  - question: 'Correct sentence order for: "I''ll take soup and salad."'
+  - question: 'Identify the correct order: "I''ll take soup and salad."'
     options:
     - text: Я візьму суп та салат
       correct: true
@@ -428,7 +434,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Я візьму суп та салат'
-  - question: 'Correct sentence order for: "The store opens at 8."'
+  - question: 'Identify the correct order: "The store opens at 8."'
     options:
     - text: Магазин відчинено о восьмій
       correct: true
@@ -439,7 +445,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Магазин відчинено о восьмій'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Non-Food Items
   pairs:
@@ -461,7 +467,9 @@
     right: basket
   - left: візок
     right: trolley
-  instruction: З'єднайте відповідні елементи.
+  - left: список
+    right: list
+  instruction: Match the corresponding elements.
 - type: fill-in
   title: Café Dialogue
   items:
@@ -549,7 +557,7 @@
     - вино
     - виною
     - вину
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: group-sort
   title: Beverages vs Food vs Items
   groups:
@@ -571,4 +579,4 @@
     - каса
     - пакет
     - картка
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.

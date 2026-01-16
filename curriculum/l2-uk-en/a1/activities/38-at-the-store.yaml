@@ -1,0 +1,371 @@
+- type: match-up
+  title: Checkout Vocabulary
+  instruction: Match the store terms to their English meanings.
+  pairs:
+    - left: каса
+      right: checkout / cash register
+    - left: касир
+      right: cashier
+    - left: чек
+      right: receipt
+    - left: картка
+      right: card
+    - left: готівка
+      right: cash
+    - left: безконтактно
+      right: contactless
+    - left: оплатити
+      right: to pay
+    - left: пакет
+      right: shopping bag
+    - left: решта
+      right: change (money)
+    - left: черга
+      right: queue / line
+
+- type: fill-in
+  title: At the Cash Register
+  instruction: Complete the dialogue with the cashier using the correct words.
+  items:
+    - sentence: «Добрий день! _____ потрібен?»
+      answer: Пакет
+      options: [Пакет, Гроші, Чек, Карта]
+    - sentence: «Так, дайте один _____, будь ласка.»
+      answer: маленький
+      options: [маленький, вчора, завтра, ніколи]
+    - sentence: «У вас є _____ клієнта?»
+      answer: картка
+      options: [картка, карта, карти, картою]
+    - sentence: «Ви будете платити _____ чи готівкою?»
+      answer: карткою
+      options: [карткою, карта, карти, карту]
+    - sentence: «Будь ласка, _____ картку до терміналу.»
+      answer: прикладіть
+      options: [прикладіть, їжте, пийте, спіть]
+    - sentence: «Ось ваш _____. Гарного дня!»
+      answer: чек
+      options: [чек, час, day, ніч]
+    - sentence: «Вибачте, у мене тільки _____.»
+      answer: готівка
+      options: [готівка, вода, їжа, погода]
+    - sentence: «Ваша _____ — п'ятдесят гривень.»
+      answer: решта
+      options: [решта, робота, школа, сім'я]
+    - sentence: «Мені не потрібен _____, я маю свій.»
+      answer: пакет
+      options: [пакет, квиток, паспорт, телефон]
+    - sentence: «Де тут _____ самообслуговування?»
+      answer: каса
+      options: [каса, вулиця, кімната, річка]
+    - sentence: «Я хочу _____ це яблуко.»
+      answer: зважити
+      options: [зважити, читати, писати, знати]
+    - sentence: «Скажіть, будь ласка, скільки це _____?»
+      answer: коштує
+      options: [коштує, працює, думає, знає]
+
+- type: quiz
+  title: Understanding the Cashier
+  instruction: Choose the best response to what the cashier says.
+  items:
+    - question: '«Касир питає: «Пакет потрібен?» Що ви відповісте?»'
+      options:
+        - text: «Ні, дякую, я маю свій.»
+          correct: true
+        - text: «Я не знаю.»
+          correct: false
+        - text: «До побачення.»
+          correct: false
+        - text: «Мені каву.»
+          correct: false
+    - question: '«Касир каже: «З вас 200 гривень.» Що ви зробите?»'
+      options:
+        - text: «Я заплачу карткою або готівкою.»
+          correct: true
+        - text: «Я піду додому.»
+          correct: false
+        - text: «Я буду спати.»
+          correct: false
+        - text: «Я не буду.»
+          correct: false
+    - question: '«Касир питає: «Картка лояльності є?» Що ви скажете?»'
+      options:
+        - text: «Так, ось моя картка.»
+          correct: true
+        - text: «Я люблю карти.»
+          correct: false
+        - text: «Де моя машина?»
+          correct: false
+        - text: «Я не граю в карти.»
+          correct: false
+    - question: '«Касир питає: «Карткою чи готівкою?» Ви маєте тільки телефон. Що ви скажете?»'
+      options:
+        - text: «Карткою, будь ласка.»
+          correct: true
+        - text: «Готівкою.»
+          correct: false
+        - text: «Без грошей.»
+          correct: false
+        - text: «Я не плачу.»
+          correct: false
+    - question: '«Касир каже: «Чек потрібен?» Ви не хочете папір. Що ви відповісте?»'
+      options:
+        - text: «Ні, дякую, не треба.»
+          correct: true
+        - text: «Так, дайте два.»
+          correct: false
+        - text: «Я люблю чеки.»
+          correct: false
+        - text: «Де чек?»
+          correct: false
+    - question: «Ви дали 100 гривень, а треба 80. Що дасть касир?»
+      options:
+        - text: «Решту 20 гривень.»
+          correct: true
+        - text: «Чек і все.»
+          correct: false
+        - text: «Ще один товар.»
+          correct: false
+        - text: «Нічого.»
+          correct: false
+    - question: «Ви на касі самообслуговування. Що треба зробити спочатку?»
+      options:
+        - text: «Сканувати товар.»
+          correct: true
+        - text: «Платити гроші.»
+          correct: false
+        - text: «Йти додому.»
+          correct: false
+        - text: «Спати.»
+          correct: false
+    - question: «Ви хочете заплатити телефоном. Що ви запитаєте?»
+      options:
+        - text: «Можна безконтактно?»
+          correct: true
+        - text: «Можна готівкою?»
+          correct: false
+        - text: «Де банк?»
+          correct: false
+        - text: «Хто ви?»
+          correct: false
+
+- type: unjumble
+  title: Payment Sentences
+  instruction: Reorder the words to form correct sentences about paying.
+  items:
+    - words: ["Я", "хочу", "оплатити", "карткою"]
+      answer: «Я хочу оплатити карткою.»
+    - words: ["Пакет", "вам", "потрібен", "великий", "?"]
+      answer: «Вам потрібен великий пакет?»
+    - words: ["Ваша", "решта", "десять", "гривень"]
+      answer: «Ваша решта десять гривень.»
+    - words: ["Ось", "ваш", "чек", "будь", "ласка"]
+      answer: «Ось ваш чек будь ласка.»
+    - words: ["У", "мене", "немає", "дрібних", "грошей"]
+      answer: «У мене немає дрібних грошей.»
+    - words: ["Ви", "приймаєте", "кредитні", "картки", "?"]
+      answer: «Ви приймаєте кредитні картки?»
+    - words: ["Дякую", "за", "покупку", "гарного", "дня"]
+      answer: «Дякую за покупку гарного дня.»
+    - words: ["Скануйте", "ваш", "товар", "тут"]
+      answer: «Скануйте ваш товар тут.»
+
+- type: true-false
+  title: Store Rules
+  instruction: Determine if the statement about Ukrainian stores is true or false.
+  items:
+    - statement: «У супермаркеті треба платити на касі.»
+      correct: true
+    - statement: «Пакет завжди безкоштовний (free).»
+      correct: false
+    - statement: «Можна платити телефоном (Google Pay/Apple Pay).»
+      correct: true
+    - statement: «Касир завжди мовчить і нічого не питає.»
+      correct: false
+    - statement: «Чек — це документ про покупку.»
+      correct: true
+    - statement: «Решта — це коли ви дали більше грошей.»
+      correct: true
+    - statement: «У магазині не можна купувати їжу.»
+      correct: false
+    - statement: «Каса самообслуговування працює без касира.»
+      correct: true
+
+- type: group-sort
+  title: Payment vs Goods
+  instruction: Sort the words into «Payment» or «Goods» categories.
+  groups:
+    - name: Payment (Оплата)
+      items: ["картка", "готівка", "решта", "чек", "термінал", "пін-код"]
+    - name: Goods (Товари)
+      items: ["хліб", "молоко", "пакет", "вода", "яблуко", "шоколад"]
+
+- type: quiz
+  title: Payment Methods Quiz
+  instruction: Choose the correct Ukrainian phrase for each payment method.
+  items:
+    - question: «Як українською сказати «I pay by card»?»
+      options:
+        - text: «Я плачу карткою.»
+          correct: true
+        - text: «Я плачу готівкою.»
+          correct: false
+        - text: «Я плачу телефоном.»
+          correct: false
+        - text: «Я не плачу.»
+          correct: false
+    - question: «Як українською сказати «I pay in cash»?»
+      options:
+        - text: «Я плачу готівкою.»
+          correct: true
+        - text: «Я плачу карткою.»
+          correct: false
+        - text: «Я плачу чеком.»
+          correct: false
+        - text: «Я плачу пакетом.»
+          correct: false
+    - question: «Як українською сказати «Contactless payment»?»
+      options:
+        - text: «Безконтактна оплата.»
+          correct: true
+        - text: «Готівкова оплата.»
+          correct: false
+        - text: «Швидка оплата.»
+          correct: false
+        - text: «Довга оплата.»
+          correct: false
+    - question: «Як українською сказати «Keep the change»?»
+      options:
+        - text: «Решти не треба.»
+          correct: true
+        - text: «Дайте решту.»
+          correct: false
+        - text: «Де моя решта?»
+          correct: false
+        - text: «Це моя решта.»
+          correct: false
+    - question: «Як українською сказати «Receipt, please»?»
+      options:
+        - text: «Чек, будь ласка.»
+          correct: true
+        - text: «Пакет, будь ласка.»
+          correct: false
+        - text: «Карту, будь ласка.»
+          correct: false
+        - text: «Гроші, будь ласка.»
+          correct: false
+    - question: «Як українською сказати «Where is the exit?»»
+      options:
+        - text: «Де тут вихід?»
+          correct: true
+        - text: «Де тут вхід?»
+          correct: false
+        - text: «Де тут каса?»
+          correct: false
+        - text: «Де тут туалет?»
+          correct: false
+    - question: «Як українською сказати «Cash register»?»
+      options:
+        - text: «Каса.»
+          correct: true
+        - text: «Пакет.»
+          correct: false
+        - text: «Карта.»
+          correct: false
+        - text: «Гроші.»
+          correct: false
+    - question: «Скажіть, будь ласка, як перекласти слово «Bag»?»
+      options:
+        - text: «Пакет.»
+          correct: true
+        - text: «Чек.»
+          correct: false
+        - text: «Решта.»
+          correct: false
+        - text: «Ціна.»
+          correct: false
+
+- type: quiz
+  title: Self-Checkout Steps
+  instruction: Order the steps for using a self-checkout machine.
+  items:
+    - question: «Що ми робимо спочатку на касі самообслуговування?»
+      options:
+        - text: «Скануємо товари.»
+          correct: true
+        - text: «Платимо гроші.»
+          correct: false
+        - text: «Беремо чек.»
+          correct: false
+        - text: «Йдемо додому.»
+          correct: false
+    - question: «Що ми робимо після сканування товарів?»
+      options:
+        - text: «Вибираємо спосіб оплати.»
+          correct: true
+        - text: «Їмо продукти.»
+          correct: false
+        - text: «Спимо.»
+          correct: false
+        - text: «Кричимо.»
+          correct: false
+    - question: «Що ми робимо в самому кінці?»
+      options:
+        - text: «Беремо чек і товари.»
+          correct: true
+        - text: «Скануємо ще раз.»
+          correct: false
+        - text: «Платимо ще раз.»
+          correct: false
+        - text: «Чекаємо касира.»
+          correct: false
+    - question: «Якщо виникла проблема на касі, що треба натиснути?»
+      options:
+        - text: «Кнопку «Викликати помічника».»
+          correct: true
+        - text: «Кнопку «Вихід».»
+          correct: false
+        - text: «Кнопку «Стоп».»
+          correct: false
+        - text: «Кнопку «Старт».»
+          correct: false
+    - question: «Що робити, якщо товар не сканується?»
+      options:
+        - text: «Ввести код вручну або покликати касира.»
+          correct: true
+        - text: «Взяти товар безкоштовно.»
+          correct: false
+        - text: «З'їсти товар.»
+          correct: false
+        - text: «Втекти з магазину.»
+          correct: false
+    - question: «Куди класти товари після сканування?»
+      options:
+        - text: «На платформу ваги / у пакет.»
+          correct: true
+        - text: «У кишеню.»
+          correct: false
+        - text: «На підлогу.»
+          correct: false
+        - text: «Назад на полицю.»
+          correct: false
+    - question: «Як додати пакет до чеку?»
+      options:
+        - text: «Вибрати на екрані «Пакет».»
+          correct: true
+        - text: «Взяти пакет тихо.»
+          correct: false
+        - text: «Попросити маму.»
+          correct: false
+        - text: «Не брати пакет.»
+          correct: false
+    - question: «Коли треба забрати банківську картку?»
+      options:
+        - text: «Після оплати.»
+          correct: true
+        - text: «До сканування.»
+          correct: false
+        - text: «Ніколи.»
+          correct: false
+        - text: «Завтра.»
+          correct: false

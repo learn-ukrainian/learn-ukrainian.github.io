@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1148/500
+- **Words:** ✅ 1145/500
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 6/4 types
@@ -16,7 +16,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.3% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 29.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -26,7 +26,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд** | ⚪️ | 79 | Skipped |
 | **Skill 1: Reading Cyrillic** | ✅ | 96 | Included in Core |
-| **Skill 2: Identifying Gender** | ⚪️ | 165 | Skipped |
+| **Skill 2: Identifying Gender** | ⚪️ | 162 | Skipped |
 | **Skill 3: Conjugating Verbs** | ⚪️ | 266 | Skipped |
 | **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |
 | **Skill 5: Ordering Food** | ⚪️ | 191 | Skipped |

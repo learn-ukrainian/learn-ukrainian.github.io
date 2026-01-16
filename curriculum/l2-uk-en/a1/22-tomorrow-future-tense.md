@@ -35,11 +35,11 @@ Ukrainian uses **буду** (future of «to be») + infinitive to form the compo
 
 ### Conjugation of буду
 
-| Person | Singular | Plural |
-| ------ | -------- | ------ |
-| 1st    | буду     | будемо |
-| 2nd    | будеш    | будете |
-| 3rd    | буде     | будуть |
+| Person | Singular | IPA | Plural | IPA |
+| ------ | -------- | --- | ------ | --- |
+| 1st    | буду     | /ˈbudu/ | будемо | /ˈbudɛmɔ/ |
+| 2nd    | будеш    | /ˈbudɛʃ/ | будете | /ˈbudɛtɛ/ |
+| 3rd    | буде     | /ˈbudɛ/ | будуть | /ˈbudutʲ/ |
 
 ### Optional: Literary Future (читатиму)
 
@@ -123,17 +123,17 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ### Timeline
 
-| When?              | Ukrainian         | Example                          |
-| ------------------ | ----------------- | -------------------------------- |
-| Tomorrow           | завтра            | Завтра я буду працювати.         |
-| Day after tomorrow | післязавтра       | Післязавтра ми поїдемо.          |
-| Soon               | скоро             | Скоро буде весна.                |
-| Later              | пізніше           | Пізніше я подзвоню.              |
-| Then/afterwards    | потім             | Потім ми будемо обідати.         |
-| Eventually         | згодом            | Згодом він зрозуміє.             |
-| Next week          | наступного тижня  | Наступного тижня я починаю курс. |
-| Next month         | наступного місяця | Наступного місяця вона приїде.   |
-| Next year          | наступного року   | Наступного року ми одружимося.   |
+| When?              | Ukrainian | IPA | Example                          |
+| ------------------ | --------- | --- | -------------------------------- |
+| Tomorrow           | завтра    | /ˈzɑwtrɑ/ | Завтра я буду працювати.         |
+| Day after tomorrow | післязавтра | /pislʲɑˈzɑwtrɑ/ | Післязавтра ми поїдемо.          |
+| Soon               | скоро     | /ˈskɔrɔ/ | Скоро буде весна.                |
+| Later              | пізніше   | /pizˈnʲiʃɛ/ | Пізніше я подзвоню.              |
+| Then/afterwards    | потім     | /ˈpɔtʲim/ | Потім ми будемо обідати.         |
+| Eventually         | згодом    | /ˈzɦɔdɔm/ | Згодом він зрозуміє.             |
+| Next week          | наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | Наступного тижня я починаю курс. |
+| Next month         | наступного місяця | /nɑˈstupnɔɦɔ ˈmʲisʲɑt͡sʲɑ/ | Наступного місяця вона приїде.   |
+| Next year          | наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | Наступного року ми одружимося.   |
 
 ---
 
@@ -239,15 +239,17 @@ You might see a shorter future form in books or formal speech. It's called the *
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. I will read a book.
+2. We will work tomorrow.
+3. She will cook dinner.
 
 ---
 
 # Підсумок
+
 Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)
 
 **Що ви вивчили (What you learned):**

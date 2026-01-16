@@ -1,0 +1,26 @@
+module: 36-at-the-restaurant
+title: At the Restaurant
+subtitle: Dining Out in Ukraine
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- at the restaurant
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle at the restaurant situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 15
+vocab_count: 15
+slug: at-the-restaurant
+naturalness:
+  score: 10
+  status: PASS

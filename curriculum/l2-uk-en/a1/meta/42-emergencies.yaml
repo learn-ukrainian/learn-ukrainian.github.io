@@ -1,0 +1,26 @@
+module: 42-emergencies
+title: Emergencies
+subtitle: Help and Safety
+version: '1.0'
+phase: A1.4 Practical Scenarios
+pedagogy: PPP
+focus: practical
+duration: 60
+transliteration: first-occurrence
+tags:
+- practical
+- emergencies
+grammar:
+- Practical usage of A1 cases
+- Polite requests
+- Questions and answers
+objectives:
+- Learner can handle emergencies situations
+- Learner can use relevant vocabulary
+- Learner can communicate needs
+vocabulary_count: 10
+vocab_count: 10
+slug: emergencies
+naturalness:
+  score: 10
+  status: PASS

@@ -23,16 +23,29 @@ Unlike English, where «I worked» and «she worked» look the same, Ukrainian p
 
 ### How Ukrainian Past Tense Works
 
+
+
 The past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:
 
-| Who                          | Ending  | Example |
-| ---------------------------- | ------- | ------- |
-| він (he)                     | -**в**  | читав   |
-| вона (she)                   | -**ла** | читала  |
-| воно (it)                    | -**ло** | читало  |
-| вони / ми / ви (they/we/you) | -**ли** | читали  |
 
-**Key insight:** The ending matches the **gender of the subject**, not the person. So «I read» is:
+
+| Who | Ending | IPA | Example | IPA |
+
+| --- | ------ | --- | ------- | --- |
+
+| він (he) | -**в** | /w/ | читав | /t͡ʃɪˈtɑw/ |
+
+| вона (she) | -**ла** | /lɑ/ | читала | /t͡ʃɪˈtɑlɑ/ |
+
+| воно (it) | -**ло** | /lɔ/ | читало | /t͡ʃɪˈtɑlɔ/ |
+
+| вони (they) | -**ли** | /lɪ/ | читали | /t͡ʃɪˈtɑlɪ/ |
+
+
+
+**Key insight:** The ending matches the **gender of the subject**, not the person.
+
+ So «I read» is:
 
 - Я читав (if you're male)
 - Я читала (if you're female)
@@ -80,20 +93,20 @@ Reflexive verbs (Module 09) follow the same gender rules, but you keep the **-с
 
 Let's look at **сміятися** (to laugh):
 
-| Who | Formation | Result |
-| :--- | :--- | :--- |
-| **Він** | сміяв + ся | **сміявся** |
-| **Вона** | сміяла + ся | **сміялася** |
-| **Воно** | сміяло + ся | **сміялося** |
-| **Вони** | сміяли + ся | **сміялися** |
+| Who | Result | IPA |
+| :--- | :--- | --- |
+| **Він** | **сміявся** | /smiˈjɑwsʲɑ/ |
+| **Вона** | **сміялася** | /smiˈjɑlɑsʲɑ/ |
+| **Воно** | **сміялося** | /smiˈjɑlɔsʲɑ/ |
+| **Вони** | **сміялися** | /smiˈjɑlɪsʲɑ/ |
 
 > [!observe] Pattern Discovery
 >
 > Look at these sentences. What do you notice about the verb endings?
 >
-> - Він читав книгу. (He was reading a book.)
-> - Вона читала книгу. (She was reading a book.)
-> - Ми читали книгу. (We were reading a book.)
+> - Він читав книгу.
+> - Вона читала книгу.
+> - Ми читали книгу.
 >
 > The verb changes based on who is speaking, not what tense it is!
 
@@ -101,17 +114,17 @@ Let's look at **сміятися** (to laugh):
 
 When did it happen? Use these words:
 
-| Ukrainian       | English              | Example                        |
-| --------------- | -------------------- | ------------------------------ |
-| вчора           | yesterday            | Вчора я працював.              |
-| позавчора       | day before yesterday | Позавчора вона приїхала.       |
-| минулого тижня  | last week            | Минулого тижня ми говорили.    |
-| минулого місяця | last month           | Минулого місяця він поїхав.    |
-| минулого року   | last year            | Минулого року вони зустрілися. |
-| давно           | long ago             | Давно це було.                 |
-| недавно         | recently             | Недавно я почув новину.        |
-| раніше          | earlier, before      | Раніше тут був ресторан.       |
-| колись          | once, sometime       | Колись я був там.              |
+| Ukrainian | IPA | English |
+| --------- | --- | ------- |
+| вчора | /wt͡ʃɔˈrɑ/ | yesterday |
+| позавчора | /pɔzɑwˈt͡ʃɔrɑ/ | day before yesterday |
+| минулого тижня | /mɪˈnulɔɦɔ ˈtɪʒnʲɑ/ | last week |
+| минулого місяця | /mɪˈnulɔɦɔ ˈmisʲɑt͡sʲɑ/ | last month |
+| минулого року | /mɪˈnulɔɦɔ ˈrɔku/ | last year |
+| давно | /dɑwˈnɔ/ | long ago |
+| недавно | /nɛˈdɑwnɔ/ | recently |
+| раніше | /rɑˈnʲiʃɛ/ | earlier, before |
+| колись | /ˈkɔlɪsʲ/ | once, sometime |
 
 > [!example] **Pop Culture Moment**
 >

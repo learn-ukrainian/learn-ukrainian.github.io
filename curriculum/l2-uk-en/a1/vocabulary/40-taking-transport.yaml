@@ -1,0 +1,54 @@
+module: 40-taking-transport
+level: A1
+version: '1.0'
+items:
+  - lemma: зупинка
+    ipa: /zʊˈpɪnkɑ/
+    translation: stop (bus/tram)
+    pos: noun 
+    gender: f
+  - lemma: станція
+    ipa: /ˈstɑnʲt͡sʲijɑ/
+    translation: station (metro)
+    pos: noun 
+    gender: f
+  - lemma: пересадка
+    ipa: /pɛrɛˈsɑdkɑ/
+    translation: transfer
+    pos: noun 
+    gender: f
+  - lemma: наступна
+    ipa: /nɑˈstʊpnɑ/
+    translation: next
+    pos: adj 
+    gender: f
+  - lemma: кінцева
+    ipa: /kʲinˈt͡sɛvɑ/
+    translation: terminal / last stop
+    pos: adj 
+    gender: f
+  - lemma: вихід
+    ipa: /ˈvɪxʲid/
+    translation: exit
+    pos: noun 
+    gender: m
+  - lemma: вхід
+    ipa: /vxʲid/
+    translation: entrance
+    pos: noun 
+    gender: m
+  - lemma: триматися
+    ipa: /trɪˈmɑtɪsʲɑ/
+    translation: to hold on
+    pos: verb 
+    aspect: impf
+  - lemma: оголошення
+    ipa: /ɔɦɔˈlɔʃɛnʲːɑ/
+    translation: announcement
+    pos: noun 
+    gender: n
+  - lemma: виходити
+    ipa: /vɪˈxɔdɪtɪ/
+    translation: to get off / exit
+    pos: verb 
+    aspect: impf

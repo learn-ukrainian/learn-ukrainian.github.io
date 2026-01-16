@@ -1,0 +1,98 @@
+module: 36-at-the-restaurant
+level: A1
+version: '1.0'
+items:
+  - lemma: столик
+    ipa: /ˈstɔlɪk/
+    translation: table (small/restaurant)
+    pos: noun
+    gender: m
+  - lemma: меню
+    ipa: /mɛˈnʲu/
+    translation: menu
+    pos: noun
+    gender: n
+  - lemma: страва
+    ipa: /ˈstrɑvɑ/
+    translation: dish
+    pos: noun
+    gender: f
+  - lemma: закуска
+    ipa: /zɑˈkuskɑ/
+    translation: appetizer
+    pos: noun
+    gender: f
+  - lemma: десерт
+    ipa: /dɛˈsɛrt/
+    translation: dessert
+    pos: noun
+    gender: m
+  - lemma: напій
+    ipa: /nɑˈpij/
+    translation: beverage
+    pos: noun
+    gender: m
+  - lemma: виделка
+    ipa: /vɪˈdɛlkɑ/
+    translation: fork
+    pos: noun
+    gender: f
+  - lemma: ложка
+    ipa: /ˈlɔʒkɑ/
+    translation: spoon
+    pos: noun
+    gender: f
+  - lemma: ніж
+    ipa: /niʒ/
+    translation: knife
+    pos: noun
+    gender: m
+  - lemma: рахунок
+    ipa: /rɑˈxunɔk/
+    translation: bill
+    pos: noun
+    gender: m
+  - lemma: гострий
+    ipa: /ˈɦɔstrɪj/
+    translation: spicy
+    pos: adjective
+  - lemma: солоний
+    ipa: /sɔˈlɔnɪj/
+    translation: salty
+    pos: adjective
+  - lemma: солодкий
+    ipa: /sɔˈlɔdkɪj/
+    translation: sweet
+    pos: adjective
+  - lemma: вегетаріанець
+    ipa: /vɛɦɛtɑrʲiˈɑnɛt͡sʲ/
+    translation: vegetarian (male)
+    pos: noun
+    gender: m
+  - lemma: алергія
+    ipa: /ɑlɛrˈɦijɑ/
+    translation: allergy
+    pos: noun
+    gender: f
+  - lemma: головна страва
+    ipa: /ɦɔlɔu̯ˈnɑ ˈstrɑvɑ/
+    translation: main dish
+    pos: noun
+    gender: f
+  - lemma: порекомендувати
+    ipa: /pɔrɛkɔmɛndʊˈvɑtɪ/
+    translation: to recommend
+    pos: verb
+  - lemma: спробувати
+    ipa: /ˈsprɔbʊvɑtɪ/
+    translation: to try/taste
+    pos: verb
+  - lemma: смачний
+    ipa: /smɑt͡ʃˈnɪj/
+    translation: tasty/delicious
+    pos: adjective
+  - lemma: бронювання
+    ipa: /brɔnʲʊˈvɑnnʲɑ/
+    translation: reservation/booking
+    pos: noun
+    gender: n

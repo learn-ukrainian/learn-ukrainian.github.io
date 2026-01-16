@@ -2,6 +2,8 @@
 
 > **CRITICAL:** Follow this checklist EXACTLY. Do not improvise. Do not invent new criteria. Do not skip steps. Your goal is **elevating content to 10/10** - not just reporting issues.
 
+> **⚠️ MANDATORY IPA RULE:** All phonetic transcriptions MUST utilize the International Phonetic Alphabet (IPA). **Latin transliteration is FORBIDDEN.** IPA is the sole standard for accurate pronunciation acquisition. Mandate IPA for all new vocabulary.
+
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
 **MANDATE:** Evaluate module content for educational quality, coherence, and pedagogical soundness. **Then immediately fix all issues to achieve 10/10 scores.**
@@ -206,6 +208,12 @@ Validate ALL Ukrainian text against these sources:
 - ✅ **Словарь Грінченка** - authentic Ukrainian forms
 - ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
 - ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
+
+**Phonetic Standard (CRITICAL):**
+
+- ✅ **IPA ONLY:** All phonetic transcriptions MUST utilize the International Phonetic Alphabet (IPA).
+- ❌ **NO TRANSLITERATION:** Latin transliteration (e.g., "shcho", "knyha") is **FORBIDDEN**. It hinders accurate pronunciation and adds ambiguity.
+- ✅ **Mandatory IPA:** Every new vocabulary item and key pronunciation example MUST include IPA.
 
 **Auto-fail Russianisms:**
 

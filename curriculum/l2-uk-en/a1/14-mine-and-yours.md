@@ -38,13 +38,13 @@ Ukrainian possessive pronouns fall into two categories:
 
 These possessives follow the same pattern as adjectives you learned in Module 03:
 
-| Possessor            | Masculine | Feminine | Neuter | Plural |
-| -------------------- | --------- | -------- | ------ | ------ |
-| **my**               | мій       | моя      | моє    | мої    |
-| **your (sg)**        | твій      | твоя     | твоє   | твої   |
-| **our**              | наш       | наша     | наше   | наші   |
-| **your (pl/formal)** | ваш       | ваша     | ваше   | ваші   |
-| **their**            | їхній     | їхня     | їхнє   | їхні   |
+| Possessor            | Masculine | Feminine | Neuter | Plural | IPA (m/f/n/pl) |
+| -------------------- | --------- | -------- | ------ | ------ | -------------- |
+| **my**               | мій       | моя      | моє    | мої    | /mij/, /mɔˈjɑ/, /mɔˈjɛ/, /mɔˈji/ |
+| **your (sg)**        | твій      | твоя     | твоє   | твої   | /tvij/, /tvɔˈjɑ/, /tvɔˈjɛ/, /tvɔˈji/ |
+| **our**              | наш       | наша     | наше   | наші   | /nɑʃ/, /ˈnɑʃɑ/, /ˈnɑʃɛ/, /ˈnɑʃi/ |
+| **your (pl/formal)** | ваш       | ваша     | ваше   | ваші   | /vɑʃ/, /ˈvɑʃɑ/, /ˈvɑʃɛ/, /ˈvɑʃi/ |
+| **their**            | їхній     | їхня     | їхнє   | їхні   | /ˈjixnʲij/, /ˈjixnʲɑ/, /ˈjixnʲɛ/, /ˈjixnʲi/ |
 
 **Examples:**
 
@@ -57,10 +57,10 @@ These possessives follow the same pattern as adjectives you learned in Module 03
 
 These never change. Ever. They always remain його and її regardless of the gender or number of the noun that follows.
 
-| Possessor | All Forms |
-| --------- | --------- |
-| **his**   | його      |
-| **her**   | її        |
+| Possessor | All Forms | IPA |
+| --------- | --------- | --- |
+| **his**   | його      | /jɔˈɦɔ/ |
+| **her**   | її        | /jiˈji/ |
 
 **Examples:**
 
@@ -95,9 +95,9 @@ See the pattern? Мій AGREES. Його DOESN't.
 
 Ukrainian has a special possessive **свій** that means «one's own» — referring back to the subject:
 
-|                      | Masculine | Feminine | Neuter | Plural |
-| -------------------- | --------- | -------- | ------ | ------ |
-| **свій** (one's own) | свій      | своя     | своє   | свої   |
+|                      | Masculine | Feminine | Neuter | Plural | IPA (m/f/n/pl) |
+| -------------------- | --------- | -------- | ------ | ------ | -------------- |
+| **свій** (one's own) | свій      | своя     | своє   | свої   | /sʲvij/, /svɔˈjɑ/, /svɔˈjɛ/, /svɔˈji/ |
 
 **The key difference:**
 

@@ -1,0 +1,373 @@
+- type: match-up
+  title: Phone Vocabulary
+  instruction: Match the phone terms to their English meanings.
+  pairs:
+    - left: алло
+      right: hello (on phone)
+    - left: номер
+      right: number
+    - left: повідомлення
+      right: message
+    - left: дзвонити
+      right: to call
+    - left: слухаю
+      right: I'm listening (Hello)
+    - left: помилитися
+      right: to make a mistake
+    - left: передзвонити
+      right: to call back
+    - left: зв'язок
+      right: connection
+    - left: зайнято
+      right: busy (line)
+    - left: недоступний
+      right: unavailable
+
+- type: fill-in
+  title: Phone Dialogue
+  instruction: Complete the conversation with the correct words.
+  items:
+    - sentence: «Алло! Це _____?»
+      answer: Олена
+      options: [Олена, Олені, Олену, Оленою]
+    - sentence: «Ви _____ номером.»
+      answer: помилилися
+      options: [помилилися, дзвонили, говорили, чекали]
+    - sentence: «Я вас погано _____.»
+      answer: чую
+      options: [чую, бачу, знаю, роблю]
+    - sentence: «Будь ласка, _____ пізніше.»
+      answer: передзвоніть
+      options: [передзвоніть, прийдіть, підіть, скажіть]
+    - sentence: «Залиште, будь ласка, _____.»
+      answer: повідомлення
+      options: [повідомлення, телефон, номер, час]
+    - sentence: «Я зараз _____.»
+      answer: зайнятий
+      options: [зайнятий, вільний, новий, старий]
+    - sentence: «Який у вас _____ телефону?»
+      answer: номер
+      options: [номер, день, час, рік]
+    - sentence: «Абонент _____.»
+      answer: недоступний
+      options: [недоступний, вдома, тут, там]
+    - sentence: «У мене сів _____.»
+      answer: телефон
+      options: [телефон, стіл, стілець, диван]
+    - sentence: «Ви можете _____ голосніше?»
+      answer: говорити
+      options: [говорити, мовчати, спати, їсти]
+    - sentence: «Дякую за _____.»
+      answer: дзвінок
+      options: [дзвінок, вікно, двері, стіну]
+    - sentence: «До _____.»
+      answer: побачення
+      options: [побачення, зустрічі, ранку, вечора]
+
+- type: quiz
+  title: Phone Situations
+  instruction: What should you say in these situations?
+  items:
+    - question: «Ви не чуєте співрозмовника. Що ви скажете?»
+      options:
+        - text: «Я вас не чую.»
+          correct: true
+        - text: «Я вас не бачу.»
+          correct: false
+        - text: «Я вас люблю.»
+          correct: false
+        - text: «Я вас знаю.»
+          correct: false
+    - question: «Хтось подзвонив вам помилково. Що ви скажете?»
+      options:
+        - text: «Ви помилилися номером.»
+          correct: true
+        - text: «Привіт, як справи?»
+          correct: false
+        - text: «Це мій номер.»
+          correct: false
+        - text: «Я не знаю.»
+          correct: false
+    - question: «Ви хочете, щоб людина подзвонила пізніше. Що ви скажете?»
+      options:
+        - text: «Передзвоніть, будь ласка.»
+          correct: true
+        - text: «Не дзвоніть мені.»
+          correct: false
+        - text: «Я дзвоню.»
+          correct: false
+        - text: «Говоріть зараз.»
+          correct: false
+    - question: «Ви піднімаєте слухавку. Яке перше слово?»
+      options:
+        - text: «Алло!»
+          correct: true
+        - text: «Па-па!»
+          correct: false
+        - text: «Дякую!»
+          correct: false
+        - text: «Будь ласка!»
+          correct: false
+    - question: «Вам дзвонить незнайомий номер. Як запитати «Who is this?»?»
+      options:
+        - text: «Хто це?»
+          correct: true
+        - text: «Де це?»
+          correct: false
+        - text: «Що це?»
+          correct: false
+        - text: «Коли це?»
+          correct: false
+    - question: «Ви хочете поговорити з Іваном. Що ви запитаєте?»
+      options:
+        - text: «Можна почути Івана?»
+          correct: true
+        - text: «Де живе Іван?»
+          correct: false
+        - text: «Хто такий Іван?»
+          correct: false
+        - text: «Іван вдома?»
+          correct: false
+    - question: «У вас поганий зв'язок. Що це означає?»
+      options:
+        - text: «Bad connection.»
+          correct: true
+        - text: «Good phone.»
+          correct: false
+        - text: «No battery.»
+          correct: false
+        - text: «Wrong number.»
+          correct: false
+    - question: «Абонент недоступний. Що це означає?»
+      options:
+        - text: «Subscriber is unavailable.»
+          correct: true
+        - text: «Subscriber is busy.»
+          correct: false
+        - text: «Subscriber is sleeping.»
+          correct: false
+        - text: «Subscriber is eating.»
+          correct: false
+    - question: «Ви закінчуєте розмову. Що ви скажете?»
+      options:
+        - text: «На все добре.»
+          correct: true
+        - text: «Алло.»
+          correct: false
+        - text: «Слухаю.»
+          correct: false
+        - text: «Як справи?»
+          correct: false
+    - question: «Ви хочете відправити повідомлення. Що ви використаєте?»
+      options:
+        - text: «Месенджер (Viber, Telegram).»
+          correct: true
+        - text: «Калькулятор.»
+          correct: false
+        - text: «Камеру.»
+          correct: false
+        - text: «Радіо.»
+          correct: false
+    - question: '«Вам дзвонить кур''єр. Що він зазвичай питає?»'
+      options:
+        - text: «Ви вдома?»
+          correct: true
+        - text: «Як вас звати?»
+          correct: false
+        - text: «Котра година?»
+          correct: false
+        - text: «Яка погода?»
+          correct: false
+    - question: «Що означає слово «мобільний» у цьому контексті?»
+      options:
+        - text: «Mobile phone.»
+          correct: true
+        - text: «Car.»
+          correct: false
+        - text: «Furniture.»
+          correct: false
+        - text: «House.»
+          correct: false
+
+- type: unjumble
+  title: Make a Sentence
+  instruction: Put the words in the correct order.
+  items:
+    - words: ["Ви", "помилилися", "номером"]
+      answer: «Ви помилилися номером.»
+    - words: ["Я", "передзвоню", "вам", "пізніше"]
+      answer: «Я передзвоню вам пізніше.»
+    - words: ["Поганий", "зв'язок", "я", "не", "чую"]
+      answer: «Поганий зв'язок я не чую.»
+    - words: ["Алло", "це", "хто", "говорить", "?"]
+      answer: «Алло це хто говорить?»
+    - words: ["Можна", "почути", "Олену", "?"]
+      answer: «Можна почути Олену?»
+    - words: ["Залиште", "повідомлення", "після", "сигналу"]
+      answer: «Залиште повідомлення після сигналу.»
+    - words: ["Цей", "номер", "не", "відповідає"]
+      answer: «Цей номер не відповідає.»
+    - words: ["Я", "чекаю", "вашого", "дзвінка"]
+      answer: «Я чекаю вашого дзвінка.»
+    - words: ["Дякую", "за", "ваше", "замовлення"]
+      answer: «Дякую за ваше замовлення.»
+    - words: ["Ви", "можете", "говорити", "зараз", "?"]
+      answer: «Ви можете говорити зараз?»
+    - words: ["Я", "напишу", "тобі", "в", "Телеграм"]
+      answer: «Я напишу тобі в Телеграм.»
+    - words: ["Мій", "телефон", "розрядився"]
+      answer: «Мій телефон розрядився.»
+
+- type: true-false
+  title: Phone Etiquette
+  instruction: True or False regarding phone usage in Ukraine.
+  items:
+    - statement: «Слова «Слухаю» — це ввічливий спосіб відповісти.»
+      correct: true
+    - statement: «Якщо ви помилилися, треба сказати «Вибачте».»
+      correct: true
+    - statement: «В Україні ніхто не користується Viber.»
+      correct: false
+    - statement: «Можна дзвонити людям вночі без причини.»
+      correct: false
+    - statement: «Кур'єри часто дзвонить перед доставкою.»
+      correct: true
+    - statement: «Слово «Алло» використовують тільки в Україні.»
+      correct: false
+    - statement: «Якщо зайнято, можна передзвонити пізніше.»
+      correct: true
+    - statement: «Ми завжди кажемо «До побачення» в кінці.»
+      correct: true
+    - statement: «Можна кидати слухавку без слів.»
+      correct: false
+    - statement: «Багато людей пишуть спочатку в месенджер.»
+      correct: true
+    - statement: «Номер 103 — це замовлення піци (ні, це швидка).»
+      correct: false
+    - statement: «Код України +380.»
+      correct: true
+
+- type: group-sort
+  title: Conversation Parts
+  instruction: Is it a Beginning, Problem, or Ending phrase?
+  groups:
+    - name: Beginning (Початок)
+      items: ["Алло", "Слухаю", "Це Андрій", "Хто це?", "Добрий день"]
+    - name: Problem (Проблема)
+      items: ["Не чую", "Помилка", "Зайнято", "Поганий зв'язок"]
+    - name: Ending (Кінець)
+      items: ["До побачення", "На все добре", "Па-па", "Зідзвонимося"]
+
+- type: quiz
+  title: Delivery Call
+  instruction: Select the correct phrase for a delivery situation.
+  items:
+    - question: '«Кур''єр: «Я біля під''їзду.» Ви:»'
+      options:
+        - text: «Я зараз відкрию.»
+          correct: true
+        - text: «Я не знаю.»
+          correct: false
+        - text: «До побачення.»
+          correct: false
+        - text: «Ви помилилися.»
+          correct: false
+    - question: '«Кур''єр: «Який поверх?» Ви:»'
+      options:
+        - text: «П'ятий.»
+          correct: true
+        - text: «Зелений.»
+          correct: false
+        - text: «Швидкий.»
+          correct: false
+        - text: «Смачний.»
+          correct: false
+    - question: '«Кур''єр: «Ваше замовлення.» Ви:»'
+      options:
+        - text: «Дякую.»
+          correct: true
+        - text: «Алло.»
+          correct: false
+        - text: «Слухаю.»
+          correct: false
+        - text: «Передзвоніть.»
+          correct: false
+    - question: «Ви хочете безконтактну доставку. Ви кажете:»
+      options:
+        - text: «Залиште біля дверей.»
+          correct: true
+        - text: «Зайдіть у квартиру.»
+          correct: false
+        - text: «Ідіть додому.»
+          correct: false
+        - text: «Я не хочу.»
+          correct: false
+    - question: '«Кур''єр: «Який код на дверях?»»'
+      options:
+        - text: «Код тридцять п'ять.»
+          correct: true
+        - text: «Код зелений.»
+          correct: false
+        - text: «Код смачний.»
+          correct: false
+        - text: «Код добрий.»
+          correct: false
+    - question: «Ви хочете заплатити готівкою. Ви питаєте:»
+      options:
+        - text: «У вас є решта?»
+          correct: true
+        - text: «У вас є піца?»
+          correct: false
+        - text: «У вас є телефон?»
+          correct: false
+        - text: «У вас є час?»
+          correct: false
+    - question: '«Кур''єр каже: «Смачного!» Ви відповідаєте:»'
+      options:
+        - text: «Дякую, гарного дня!»
+          correct: true
+        - text: «Вибачте, ні.»
+          correct: false
+        - text: «Я не чую.»
+          correct: false
+        - text: «Алло.»
+          correct: false
+    - question: «Ви не можете відкрити двері. Ви кажете:»
+      options:
+        - text: «Ліфт не працює.»
+          correct: true
+        - text: «Телефон не працює.»
+          correct: false
+        - text: «Піца не працює.»
+          correct: false
+        - text: «День не працює.»
+          correct: false
+
+- type: fill-in
+  title: Message Text
+  instruction: Complete the text message to a friend.
+  items:
+    - sentence: «Привіт, як _____?»
+      answer: справи
+      options: [справи, день, ніч, час]
+    - sentence: «Я сьогодні _____.»
+      answer: вільний
+      options: [вільний, зайнятий, дорогий, дешевий]
+    - sentence: «Ходімо в _____?»
+      answer: кіно
+      options: [кино, дім, стіл, вікно]
+    - sentence: «Напиши _____.»
+      answer: мені
+      options: [мені, тебе, його, нас]
+    - sentence: «Давай _____ пізніше.»
+      answer: зустрінемося
+      options: [зустрінемося, поспимо, поїмо, підемо]
+    - sentence: «Це гарна _____.»
+      answer: ідея
+      options: [ідея, вода, погода, книга]
+    - sentence: «Я чекаю на _____.»
+      answer: відповідь
+      options: [відповідь, питання, слово, діло]
+    - sentence: «Мій номер _____.»
+      answer: змінився
+      options: [змінився, залишився, пішов, прийшов]

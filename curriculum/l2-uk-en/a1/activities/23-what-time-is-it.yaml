@@ -1,51 +1,55 @@
+module: 23-what-time-is-it
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Days of the Week
   pairs:
-  - left: '- понеділок'
+  - left: понеділок
     right: Monday
-  - left: '- вівторок'
+  - left: вівторок
     right: Tuesday
-  - left: '- середа'
+  - left: середа
     right: Wednesday
-  - left: '- четвер'
+  - left: четвер
     right: Thursday
-  - left: '- п''ятниця'
+  - left: п'ятниця
     right: Friday
-  - left: '- субота'
+  - left: субота
     right: Saturday
-  - left: '- неділя'
+  - left: неділя
     right: Sunday
-  - left: '- тиждень'
+  - left: тиждень
     right: week
-  - left: '- вихідні'
+  - left: вихідні
     right: weekend
-  - left: '- робочий день'
+  - left: робочий день
     right: workday
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: match-up
   title: Months of the Year
   pairs:
-  - left: '- січень'
+  - left: січень
     right: January
-  - left: '- лютий'
+  - left: лютий
     right: February
-  - left: '- березень'
+  - left: березень
     right: March
-  - left: '- квітень'
+  - left: квітень
     right: April
-  - left: '- травень'
+  - left: травень
     right: May
-  - left: '- червень'
+  - left: червень
     right: June
-  - left: '- липень'
+  - left: липень
     right: July
-  - left: '- серпень'
+  - left: серпень
     right: August
-  - left: '- вересень'
+  - left: вересень
     right: September
-  - left: '- жовтень'
+  - left: жовтень
     right: October
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Time Units
   groups:
@@ -67,15 +71,14 @@
     - хвилина
     - секунда
     - чверть
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Telling Time
   items:
   - sentence: Зараз ___ година.
     answer: друга
     options:
-    - друга
+    - вторая
     - два
     - другий
     - друге
@@ -128,7 +131,35 @@
     - рано
     - пізно
     - зараз
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Урок триває одну ___.
+    answer: годину
+    options:
+    - годину
+    - година
+    - години
+    - годині
+  - sentence: Чекай п'ять ___.
+    answer: хвилин
+    options:
+    - хвилин
+    - хвилини
+    - хвилина
+    - хвилину
+  - sentence: Зараз ___ на четверту. (3:30)
+    answer: пів
+    options:
+    - пів
+    - чверть
+    - після
+    - за
+  - sentence: Ми прийшли дуже ___.
+    answer: рано
+    options:
+    - рано
+    - пізно
+    - вчасно
+    - згодом
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Days and Months
   items:
@@ -188,7 +219,35 @@
     - четвер
     - п'ятниця
     - понеділок
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Різдво в Україні тепер двадцять п'ятого ___.
+    answer: грудня
+    options:
+    - грудня
+    - грудень
+    - грудню
+    - груднем
+  - sentence: Квітень — це тепла ___.
+    answer: весна
+    options:
+    - весна
+    - літо
+    - зима
+    - осінь
+  - sentence: Березень названий на честь дерева ___.
+    answer: берези
+    options:
+    - берези
+    - квітки
+    - трави
+    - липи
+  - sentence: Шостий місяць року — це ___.
+    answer: червень
+    options:
+    - червень
+    - травень
+    - липень
+    - квітень
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Time Expressions
   items:
@@ -272,7 +331,47 @@
       correct: false
     - text: The lesson is at one.
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: How do you accurately say "It is late" in Ukrainian?
+    options:
+    - text: Це пізно
+      correct: true
+    - text: Це рано
+      correct: false
+    - text: Це вчасно
+      correct: false
+    - text: Це зараз
+      correct: false
+  - question: What does the phrase «О котрій годині?» mean?
+    options:
+    - text: At what time?
+      correct: true
+    - text: Which hour?
+      correct: false
+    - text: How many hours?
+      correct: false
+    - text: What day?
+      correct: false
+  - question: How do you say accurately "See you later" in Ukrainian?
+    options:
+    - text: Побачимось пізніше
+      correct: true
+    - text: Побачимось вчасно
+      correct: false
+    - text: Побачимось рано
+      correct: false
+    - text: Побачимось завтра
+      correct: false
+  - question: What is accurately the meaning of «згодом»?
+    options:
+    - text: eventually, later
+      correct: true
+    - text: never
+      correct: false
+    - text: immediately
+      correct: false
+    - text: always
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Months and Seasons
   items:
@@ -356,7 +455,47 @@
       correct: false
     - text: Четвер і п'ятниця
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: Which month is named accurately after red berries?
+    options:
+    - text: червень
+      correct: true
+    - text: травень
+      correct: false
+    - text: серпень
+      correct: false
+    - text: квітень
+      correct: false
+  - question: Which month is named accurately after the sickle (harvest)?
+    options:
+    - text: серпень
+      correct: true
+    - text: липень
+      correct: false
+    - text: червень
+      correct: false
+    - text: травень
+      correct: false
+  - question: Which month is accurately «october» in Ukrainian?
+    options:
+    - text: жовтень
+      correct: true
+    - text: вересень
+      correct: false
+    - text: листопад
+      correct: false
+    - text: грудень
+      correct: false
+  - question: Which month is accurately «february» in Ukrainian?
+    options:
+    - text: лютий
+      correct: true
+    - text: січень
+      correct: false
+    - text: березень
+      correct: false
+    - text: квітень
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Time Sentences
   items:
@@ -377,7 +516,7 @@
     - сьогодні
     - робочий день
     - це
-    answer: Сьогодні понеділок, це робочий день
+    answer: Сьогодні понеділок це робочий день
   - words:
     - вихідні
     - я
@@ -399,7 +538,42 @@
     - у
     - день
     answer: Мій день народження у травні
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - зараз
+    - другу
+    - на
+    - пів
+    answer: Зараз пів на другу
+  - words:
+    - прийшов
+    - вчасно
+    - ти
+    answer: Ти прийшов вчасно
+  - words:
+    - буду
+    - я
+    - третій
+    - о
+    answer: Я буду о третій
+  - words:
+    - пізніше
+    - я
+    - тобі
+    - зателефоную
+    answer: Я тобі зателефоную пізніше
+  - words:
+    - ми
+    - побачимось
+    - завтра
+    - вранці
+    answer: Ми побачимось завтра вранці
+  - words:
+    - тижня
+    - наступного
+    - свято
+    - буде
+    answer: Наступного тижня буде свято
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Calendar Knowledge
   items:
@@ -439,4 +613,4 @@
   - statement: Вихідні — це понеділок і вівторок.
     correct: false
     explanation: Incorrect! Weekend is Saturday and Sunday.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

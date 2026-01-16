@@ -24,8 +24,7 @@ The suffix has two forms depending on what comes before it:
 
 > ⚡ **Pronunciation Hack**
 >
-> The combination **-ться** (in «він сміється») is pronounced like a long, soft **[ц':а]** (ts'a).
-> It does NOT sound like «t-s-y-a». It's a soft buzzing TS sound.
+> The combination **-ться** (in «він сміється») is pronounced like a long, soft buzzing **[t͡sʲːɑ]** sound.
 > **Сміється** = /smiˈjɛt͡sʲːɑ/
 
 ### Conjugation Pattern

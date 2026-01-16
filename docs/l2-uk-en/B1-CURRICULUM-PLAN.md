@@ -8,6 +8,45 @@
 
 ---
 
+## Вступ (Introduction)
+
+**Від граматики до справжньої розмови!**
+
+B1 — це рівень, де ви перестаєте «вивчати українську» і починаєте «говорити українською». Ви вже знаєте відмінки й базову граматику. Тепер час навчитися використовувати їх вільно, природно й у реальних ситуаціях.
+
+### Що ви вивчите (What You'll Learn)
+
+- **Вид дієслова (Verbal aspect)** — доконаний і недоконаний види, їхнє значення та використання
+- **Дієслова руху (Motion verbs)** — йти/ходити, їхати/їздити, нести/носити та інші пари
+- **Складні речення (Complex sentences)** — підрядні речення, сполучники, непряма мова
+- **Культура та суспільство** — регіони України, музика, кіно, технології, спорт
+- **Комунікативні навички** — електронні листи, формальне та неформальне листування
+
+### Філософія навчання (Learning Philosophy)
+
+На рівні B1 ми переходимо від вивчення граматики до вживання мови. Основний принцип: **TTT (Test-Teach-Test)** — спочатку спробуй, потім вивчай, потім практикуй.
+
+**Занурення (Immersion):** 75-90% українською
+
+### Попередні вимоги (Prerequisites)
+
+Завершення рівня A2 або еквівалент:
+- Вільне володіння всіма 7 відмінками
+- Базове розуміння видів дієслова
+- Словниковий запас ~2,000 слів
+
+### На кінець модуля 99
+
+Ви зможете:
+- Вільно перемикатися між доконаним і недоконаним видом
+- Правильно використовувати дієслова руху в різних контекстах
+- Будувати складні речення з кількома підрядними
+- Писати офіційні та неофіційні листи
+- Слухати й розуміти подкасти та новини
+- Вести дискусії та дебати на різні теми
+
+---
+
 ## 📋 Templates & Resources
 
 **Before creating B1 modules, consult these templates:**
@@ -63,8 +102,9 @@ The "Content Guidance" sections below provide **thematic direction** and **pop c
 | **B1.5**  | M52-61  | **100%**     | Vocabulary expansion I — abstract concepts, discourse            |
 | **B1.6**  | M62-71  | **100%**     | Vocabulary expansion II — professional, emotional                |
 | **B1.7**  | M72-86  | **100%**     | Contemporary Ukraine — regions, culture, active lifestyle        |
-| **B1.8**  | M87-91  | **100%**     | Skills & integration — news, podcasts, capstone                  |
-| **B1.9**  | M92-99  | **100%**     | Communication skills — email, letters, listening, debate         |
+| **B1.8**  | M87-88  | **100%**     | Skills development — news, podcasts                              |
+| —         | **M89** | **100%**     | **Checkpoint: Grammar Synthesis** — confirms readiness for B1.9  |
+| **B1.9**  | M90-99  | **100%**     | Communication skills — email, letters, listening, debate         |
 
 **Transition continuity:**
 
@@ -2668,7 +2708,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase B1.7: Contemporary Ukraine (Modules 72-81)
+## Phase B1.7: Contemporary Ukraine (Modules 72-86)
 
 ### Learning Goals
 
@@ -3096,14 +3136,13 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-## Phase B1.8: Skills & Integration (Modules 87-91)
+## Phase B1.8: Skills Development (Modules 87-88)
 
 ### Learning Goals
 
 - Develop authentic text comprehension skills
 - Practice news and media literacy
-- Integrate all B1 grammar and vocabulary
-- Prepare for B2 level
+- Build active listening and reading strategies
 
 ### Module Content Specifications B1.8
 
@@ -3161,71 +3200,30 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ---
 
-#### Module 89: B1 Grammar Integration
+## Module 89: Checkpoint: Grammar Synthesis (Синтез граматики)
 
-**Focus:** Comprehensive grammar review
+**Focus:** Comprehensive grammar assessment before communication skills phase
 
-**Review Areas:**
+> **Note:** This checkpoint confirms grammar mastery before Phase B1.9 communication modules. It is NOT the final B1 assessment—that is M99.
 
-1. Aspect (all contexts)
-2. Motion verbs with prefixes
-3. Complex sentences (all types)
-4. Participles (adverbial and passive)
-5. Advanced structures
+**Covers:** M01-88 (All B1 grammar and content)
 
-**Vocabulary (15 words):** Grammar metalanguage
+**Required Skill Groups:**
+1. Aspect Mastery (M06-15) - доконаний/недоконаний вид
+2. Motion Verbs (M16-25) - дієслова руху з префіксами
+3. Complex Sentences (M26-41) - all clause types
+4. Advanced Grammar (M42-51) - participles, passive, diminutives
+5. Vocabulary Domains (M52-71) - abstract, professional, emotional
+6. Contemporary Ukraine (M72-86) - culture, regions, lifestyle
+7. Skills Integration (M87-90) - news, podcasts
 
-**Signature Activity Concepts:**
+**Assessment Structure:**
+1. Grammar: Aspect selection, motion verbs, complex sentences
+2. Reading: Authentic text comprehension
+3. Writing: Extended essay (150+ words)
+4. Vocabulary: Domain coverage test
 
-1. Comprehensive quiz: All grammar
-2. Error correction: Mixed errors
-3. Writing: Complex text production
-
----
-
-#### Module 90: B1 Vocabulary Integration
-
-**Focus:** Comprehensive vocabulary review
-
-**Review Domains:**
-
-1. Abstract concepts
-2. Opinions and discussion
-3. Environment and society
-4. Professional and personal
-5. Culture and regions
-
-**Vocabulary (15 words):** Cross-domain review
-
-**Signature Activity Concepts:**
-
-1. Vocabulary quiz: All domains
-2. Collocation practice
-3. Writing: Extended vocabulary use
-
----
-
-#### Module 91: B1 Capstone
-
-**Focus:** Comprehensive assessment
-
-**Can-Do Assessment:**
-
-1. Understand main points of standard input
-2. Deal with travel situations
-3. Produce connected text on familiar topics
-4. Describe experiences and opinions
-5. Give reasons and explanations
-
-**Final Tasks:**
-
-1. Reading: Authentic text comprehension
-2. Writing: Extended essay
-3. Speaking: Recorded presentation
-4. Grammar: Comprehensive test
-5. Vocabulary: Domain coverage test
-
-**Vocabulary (10 words):** Final review
+**Vocabulary (10 words):** Final grammar review
 
 ---
 
@@ -3244,8 +3242,10 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | B1.5 Vocabulary I         | 52-61   | ~270       | Abstract, discourse, professional  |
 | B1.6 Vocabulary II        | 62-71   | ~270       | Health, emotions, synonymy         |
 | B1.7 Contemporary Ukraine | 72-86   | ~425       | Culture, regions, active lifestyle |
-| B1.8 Skills               | 87-91   | ~80        | Integration                        |
-| **Total**                 | **91**  | **~1,985** |                                    |
+| B1.8 Skills               | 87-88   | ~50        | News, podcasts                     |
+| M89 Checkpoint            | 89      | ~15        | Grammar Synthesis assessment       |
+| B1.9 Communication        | 90-99   | ~200       | Grammar/vocab in context, email, letters, listening, debate |
+| **Total**                 | **99**  | **~2,145** |                                    |
 
 **Cumulative after B1:** ~3,785 words
 
@@ -3433,13 +3433,19 @@ graph TD
 3. Fill-in: Real-world task simulation
 4. Production: Functional writing
 
-### S-Modules (Skills & Capstone: M87-91)
-1. Quiz: Mixed grammar/vocab check
-2. Fill-in: Integrated skills test
-3. Production: Extended writing task
-4. Match-up: Cross-module concepts
+### S-Modules (Skills: M87-88)
+1. Quiz: News comprehension
+2. Fill-in: Podcast note-taking
+3. Production: Summary writing
+4. Match-up: Media literacy concepts
 
-### C-Modules (Communication Skills: M92-99)
+### M89 Checkpoint (Grammar Synthesis)
+1. Quiz: Comprehensive grammar assessment
+2. Fill-in: All grammar domains
+3. Production: Extended writing
+4. Match-up: Cross-module integration
+
+### C-Modules (Communication Skills: M90-99)
 1. Production: Formal/informal writing
 2. Quiz: Listening comprehension
 3. Dialogue: Discussion and debate
@@ -3447,9 +3453,10 @@ graph TD
 
 ---
 
-## Phase B1.9: Communication Skills (Modules 92-99)
+## Phase B1.9: Communication Skills (Modules 90-99)
 
 > **NEW** (RFC #409): These modules develop practical communication skills for independent language use.
+> **Note:** M90-91 were repurposed from integration review modules to practical content to eliminate redundant assessment sequence.
 
 ### Learning Goals
 - Master formal and informal written communication
@@ -3458,6 +3465,42 @@ graph TD
 - Navigate register differences confidently
 
 ### Module Content Specifications B1.9
+
+#### Module 90: Grammar in Context
+**Focus:** Applying grammar knowledge to practical communication
+
+> **Note:** Repurposed from integration review. Now applies grammar in practical scenarios.
+
+**Content Guidance:**
+- Aspect choice in real-world contexts
+- Motion verbs in travel narratives
+- Complex sentences in storytelling
+- Practical error correction
+
+**Signature Activity Concepts:**
+1. Production: Write a travel narrative using motion verbs
+2. Transform: Simple sentences → complex
+3. Gap-fill: Aspect selection in context
+
+---
+
+#### Module 91: Vocabulary in Context
+**Focus:** Applying vocabulary knowledge to practical communication
+
+> **Note:** Repurposed from integration review. Now applies vocabulary in practical scenarios.
+
+**Content Guidance:**
+- Domain vocabulary in context
+- Collocations in natural speech
+- Register-appropriate word choice
+- Vocabulary for real situations
+
+**Signature Activity Concepts:**
+1. Production: Write a description using domain vocabulary
+2. Match-up: Collocations
+3. Gap-fill: Context-appropriate vocabulary
+
+---
 
 #### Module 92: Email Writing Basics
 **Focus:** Email structure, greetings, closings, professional tone
@@ -3571,19 +3614,48 @@ graph TD
 
 ---
 
-#### Module 99: B1 Skills Checkpoint
-**Covers:** M92-98 (Communication Skills)
+#### Module 99: B1 Final Exam (B1 Підсумковий іспит)
+
+**Covers:** M01-98 (CUMULATIVE - All B1 grammar, content, and communication skills)
+
+> **LEVEL FINAL:** This is the comprehensive B1 certification exam testing everything from M01-98.
 
 **Required Skill Groups:**
-1. Written Communication (M92-94) - email, letters, informal
-2. Listening Skills (M95-96) - podcasts, note-taking
-3. Oral Communication (M97-98) - discussion, debate
+1. Grammar Synthesis (tested in M89) - aspect, motion, complex sentences, participles
+2. Vocabulary Domains (M52-86) - all B1 vocabulary
+3. Applied Communication (M90-94) - grammar/vocab in context, email, letters, register
+4. Listening Skills (M95-96) - podcasts, note-taking
+5. Oral Communication (M97-98) - discussion, debate
 
-**Assessment Tasks:**
-1. Write formal email response
-2. Listening comprehension test
-3. Discussion participation
-4. Short debate argument
+**Assessment Structure:**
+
+**Section A: Reading (25 points)**
+- Authentic text comprehension with all B1 grammar features
+- Main idea extraction and detail questions
+
+**Section B: Grammar (25 points)**
+- Aspect selection in context
+- Motion verbs with prefixes
+- Complex sentence formation
+- Participle usage
+
+**Section C: Vocabulary (25 points)**
+- Collocation completion
+- Domain-specific vocabulary
+- Register identification
+
+**Section D: Written Production (25 points)**
+- Task 1: Formal email (100+ words)
+- Task 2: Opinion essay (200+ words)
+
+**Total: 100 points | Pass: 60 points**
+
+**CEFR B1 Exit Checklist Integration:**
+- Can understand main points of clear standard texts
+- Can deal with most travel situations
+- Can produce connected text on familiar topics
+- Can describe experiences, events, opinions
+- Can give reasons and explanations for opinions
 
 ---
 

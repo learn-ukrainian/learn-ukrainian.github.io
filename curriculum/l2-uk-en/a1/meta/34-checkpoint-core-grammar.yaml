@@ -1,0 +1,28 @@
+module: a1-34
+title: 'Checkpoint: Core Grammar (Базова граматика)'
+subtitle: Confirm grammar readiness before practical scenarios
+version: '2.0'
+phase: A1.3 - Consolidation
+focus: checkpoint
+pedagogy: Review
+duration: 90 min
+transliteration: first-occurrence
+tags:
+  - review
+  - checkpoint
+  - assessment
+  - A1
+grammar:
+  - All A1 grammar review
+objectives:
+  - Demonstrate Cyrillic reading fluency
+  - Identify noun gender and use agreement correctly
+  - Conjugate verbs in present, past, and future tense
+  - Apply four cases (Nominative, Accusative, Genitive, Locative)
+  - Navigate daily life situations in Ukrainian
+vocabulary_count: 20
+vocab_count: 19
+slug: 34-checkpoint-core-grammar
+naturalness:
+  score: 10
+  status: PASS

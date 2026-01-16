@@ -1,29 +1,33 @@
+module: 26-describing-things-adjectives
+level: A1
+version: '2.0'
+activities:
 - type: match-up
-  title: Антоніми (Antonym Pairs)
+  title: Antonym Pairs
   pairs:
-  - left: '- великий'
+  - left: великий
     right: малий
-  - left: '- новий'
+  - left: новий
     right: старий
-  - left: '- добрий'
+  - left: добрий
     right: поганий
-  - left: '- швидкий'
+  - left: швидкий
     right: повільний
-  - left: '- дорогий'
+  - left: дорогий
     right: дешевий
-  - left: '- легкий'
+  - left: легкий
     right: важкий
-  - left: '- довгий'
+  - left: довгий
     right: короткий
-  - left: '- широкий'
+  - left: широкий
     right: вузький
-  - left: '- високий'
+  - left: високий
     right: низький
-  - left: '- сильний'
+  - left: сильний
     right: слабкий
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the opposites.
 - type: group-sort
-  title: Категорії прикметників
+  title: Adjective Categories
   groups:
   - name: Size (Розмір)
     items:
@@ -43,8 +47,7 @@
     - повільний
     - легкий
     - важкий
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Masculine Adjective Forms
   items:
@@ -104,7 +107,35 @@
     - молода
     - молоде
     - молоді
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Мій тато дуже ___.
+    answer: сильний
+    options:
+    - сильний
+    - сильна
+    - сильне
+    - сильні
+  - sentence: Цей ___ чай дуже гарячий.
+    answer: чорний
+    options:
+    - чорний
+    - чорна
+    - чорне
+    - чорні
+  - sentence: Я хочу ___ квиток.
+    answer: новий
+    options:
+    - новий
+    - нова
+    - нове
+    - нові
+  - sentence: Це ___ текст.
+    answer: короткий
+    options:
+    - короткий
+    - коротка
+    - коротке
+    - короткі
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Feminine and Neuter Forms
   items:
@@ -164,11 +195,39 @@
     - новий
     - нова
     - нові
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: ___ яблуко дуже смачне.
+    answer: Велике
+    options:
+    - Велике
+    - Великий
+    - Велика
+    - Великі
+  - sentence: Моя ___ вправа готова.
+    answer: перша
+    options:
+    - перша
+    - перший
+    - перше
+    - перші
+  - sentence: Це ___ ідея!
+    answer: хороша
+    options:
+    - хороша
+    - хороший
+    - хороше
+    - хороші
+  - sentence: ___ вікно біле.
+    answer: Старе
+    options:
+    - Старе
+    - Старий
+    - Стара
+    - Старі
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
-  title: Узгодження прикметників
+  title: Adjective Agreement
   items:
-  - question: Which category correctly describes the phrase «Велика машина» here?
+  - question: Which category correctly describes the phrase «Велика машина»?
     options:
     - text: Big car (feminine)
       correct: true
@@ -248,11 +307,51 @@
       correct: false
     - text: Fast train (neuter)
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: Choose the correct gender for the phrase «Розумне завдання».
+    options:
+    - text: Neuter
+      correct: true
+    - text: Masculine
+      correct: false
+    - text: Feminine
+      correct: false
+    - text: Plural
+      correct: false
+  - question: What is accurately the English meaning of «Синій колір»?
+    options:
+    - text: Blue color
+      correct: true
+    - text: Red color
+      correct: false
+    - text: Green color
+      correct: false
+    - text: Yellow color
+      correct: false
+  - question: How do you accurately say «Beautiful flowers» in Ukrainian?
+    options:
+    - text: Гарні квіти
+      correct: true
+    - text: Гарна квіти
+      correct: false
+    - text: Гарний квіти
+      correct: false
+    - text: Гарне квіти
+      correct: false
+  - question: Identify the gender of the phrase «Довга дорога».
+    options:
+    - text: Feminine
+      correct: true
+    - text: Masculine
+      correct: false
+    - text: Neuter
+      correct: false
+    - text: Plural
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
-  title: Значення прикметників
+  title: Adjective Meanings
   items:
-  - question: What accurately is the meaning of «Він швидкий» here?
+  - question: What accurately is the meaning of «Він швидкий»?
     options:
     - text: He is fast.
       correct: true
@@ -262,7 +361,7 @@
       correct: false
     - text: He is weak.
       correct: false
-  - question: Which English sentence represents «Книга нудна» accurately today?
+  - question: Which English sentence represents «Книга нудна» accurately?
     options:
     - text: The book is boring.
       correct: true
@@ -272,7 +371,7 @@
       correct: false
     - text: The book is old.
       correct: false
-  - question: How do you correctly translate «Це важливе питання» now?
+  - question: How do you correctly translate «Це важливе питання»?
     options:
     - text: This is an important question.
       correct: true
@@ -332,9 +431,49 @@
       correct: false
     - text: The street is short.
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: What is accurately the meaning of «Широка річка»?
+    options:
+    - text: Wide river
+      correct: true
+    - text: Narrow river
+      correct: false
+    - text: Long river
+      correct: false
+    - text: Small river
+      correct: false
+  - question: How do you accurately say «It is cheap» in Ukrainian?
+    options:
+    - text: Це дешево
+      correct: true
+    - text: Це дорого
+      correct: false
+    - text: Це важливо
+      correct: false
+    - text: Це весело
+      correct: false
+  - question: What does precisely «Весела людина» mean in English?
+    options:
+    - text: Cheerful person
+      correct: true
+    - text: Boring person
+      correct: false
+    - text: Angry person
+      correct: false
+    - text: Sad person
+      correct: false
+  - question: Which word means accurately «melodious» in Ukrainian?
+    options:
+    - text: мелодійна
+      correct: true
+    - text: гарна
+      correct: false
+    - text: цікава
+      correct: false
+    - text: швидка
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
-  title: Складіть речення
+  title: Build Descriptive Sentences
   items:
   - words:
     - будинок
@@ -366,9 +505,39 @@
     - це
     - питання
     answer: Це важливе питання
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - стара
+    - книга
+    - це
+    answer: Це стара книга
+  - words:
+    - річка
+    - широка
+    - ця
+    answer: Ця широка річка
+  - words:
+    - високий
+    - чоловік
+    - той
+    answer: Той високий чоловік
+  - words:
+    - місто
+    - старе
+    - Львів
+    answer: Львів старе місто
+  - words:
+    - нові
+    - це
+    - плани
+    answer: Це нові плани
+  - words:
+    - веселі
+    - вони
+    - студенти
+    answer: Вони веселі студенти
+  instruction: Arrange the words in the correct order.
 - type: true-false
-  title: Правила прикметників
+  title: Adjective Rules
   items:
   - statement: Ukrainian adjectives change their endings to match nouns.
     correct: true
@@ -400,4 +569,4 @@
   - statement: «Повільний» means "fast".
     correct: false
     explanation: Incorrect! it means "slow"
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

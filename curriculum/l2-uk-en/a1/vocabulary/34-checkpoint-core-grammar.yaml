@@ -1,0 +1,108 @@
+module: 34-checkpoint-core-grammar
+level: A1
+version: '2.0'
+items:
+  - lemma: акція
+    ipa: /ˈɑkt͡sʲijɑ/
+    translation: special offer/promotion
+    pos: noun
+    gender: f
+  - lemma: будувати
+    ipa: /buduˈvɑtɪ/
+    translation: to build
+    pos: verb
+  - lemma: випити
+    ipa: /ˈvɪpɪtɪ/
+    translation: to drink (perf)
+    pos: verb
+  - lemma: вчитися
+    ipa: /ˈvt͡ʃɪtɪsʲɑ/
+    translation: to study/learn
+    pos: verb
+  - lemma: захід
+    ipa: /ˈzɑxid/
+    translation: west/event
+    pos: noun
+    gender: m
+  - lemma: здавати
+    ipa: /zdɑˈvɑtɪ/
+    translation: to take (exam)/hand in
+    pos: verb
+  - lemma: зустрічатися
+    ipa: /zustriˈt͡ʃɑtɪsʲɑ/
+    translation: to meet
+    pos: verb
+  - lemma: іспит
+    ipa: /ˈispɪt/
+    translation: exam
+    pos: noun
+    gender: m
+  - lemma: оглянути
+    ipa: /ɔɦˈlʲɑnutɪ/
+    translation: to examine
+    pos: verb
+  - lemma: одинадцята
+    ipa: /ɔdɪˈnɑdt͡sʲɑtɑ/
+    translation: eleventh
+    pos: adj
+    gender: f
+  - lemma: попереду
+    ipa: /pɔˈpɛrɛdu/
+    translation: ahead
+    pos: adv
+  - lemma: приготувати
+    ipa: /prɪɦɔtuˈvɑtɪ/
+    translation: to cook/prepare
+    pos: verb
+  - lemma: простий
+    ipa: /prɔsˈtɪj/
+    translation: simple
+    pos: adj
+    gender: m
+  - lemma: прочитати
+    ipa: /prɔt͡ʃɪˈtɑtɪ/
+    translation: to read (perf)
+    pos: verb
+  - lemma: речення
+    ipa: /ˈrɛt͡ʃɛnʲːɑ/
+    translation: sentence
+    pos: noun
+    gender: n
+  - lemma: рід
+    ipa: /rid/
+    translation: gender
+    pos: noun
+    gender: m
+  - lemma: жіночий
+    ipa: /ʒiˈnɔt͡ʃɪj/
+    translation: feminine
+    pos: adj
+    gender: m
+  - lemma: чоловічий
+    ipa: /t͡ʃɔlɔˈvit͡ʃɪj/
+    translation: masculine
+    pos: adj
+    gender: m
+  - lemma: середній
+    ipa: /sɛˈrɛdnʲij/
+    translation: neuter / middle
+    pos: adj
+    gender: m
+  - lemma: теперішній
+    ipa: /tɛˈpɛriʃnʲij/
+    translation: present (time)
+    pos: adj
+    gender: m
+  - lemma: тричі
+    ipa: /ˈtrɪt͡ʃi/
+    translation: three times
+    pos: adv
+  - lemma: турбувати
+    ipa: /turbuˈvɑtɪ/
+    translation: to trouble/bother
+    pos: verb
+  - lemma: увага
+    ipa: /uˈvɑɦɑ/
+    translation: attention
+    pos: noun
+    gender: f

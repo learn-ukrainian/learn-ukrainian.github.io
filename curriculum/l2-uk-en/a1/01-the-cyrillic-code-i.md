@@ -126,7 +126,7 @@ Today you learned **19 letters**. That's more than half the alphabet! Only 14 le
 
 Now it's time to test your decoding skills. Look at these Ukrainian words and try to read them aloud:
 
-Таксі (taxi). Опера (opera). Балет (ballet). Актор (actor). Паспорт (passport). Віза (visa). Карта (card/map). Комета (comet). Ракета (rocket). Какао (cocoa).
+Таксі /tɑkˈsi/ (taxi). Опера /ˈɔpɛrɑ/ (opera). Балет /bɑˈlɛt/ (ballet). Актор /ɑkˈtɔr/ (actor). Паспорт /ˈpɑspɔrt/ (passport). Віза /ˈvizɑ/ (visa). Карта /ˈkɑrtɑ/ (card/map). Комета /kɔˈmɛtɑ/ (comet). Ракета /rɑˈkɛtɑ/ (rocket). Какао /kɑˈkɑɔ/ (cocoa).
 
 Every single one of these is an international word that you already know. Just written in a different alphabet!
 

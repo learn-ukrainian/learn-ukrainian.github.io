@@ -6,23 +6,24 @@ phase: A1.2
 pedagogy: PPP
 focus: grammar
 duration: 60 min
-transliteration: vocab-only
-objectives:
-  - Learner can count from 0-100 in Ukrainian
-  - Learner can ask and answer 'How much does it cost?'
-  - Learner can handle basic shopping transactions
-  - Learner can use numbers with genitive plural forms
-vocabulary_count: 35
-grammar:
-  - Cardinals 0-100
-  - Number agreement with nouns (1=nom.sg, 2-4=nom.pl, 5+=gen.pl)
-  - Genitive plural with numbers
+transliteration: none
+phonetics: ipa
 tags:
   - numbers
   - money
   - shopping
   - genitive-plural
   - currency
+grammar:
+  - Cardinals 0-100
+  - Number agreement with nouns (1=nom.sg, 2-4=nom.pl, 5+=gen.pl)
+  - Genitive plural with numbers
+objectives:
+  - Learner can count from 0-100 in Ukrainian
+  - Learner can ask and answer 'How much does it cost?'
+  - Learner can handle basic shopping transactions
+  - Learner can use numbers with genitive plural forms
+vocabulary_count: 35
 vocab_count: 61
 slug: 17-numbers-and-money
 naturalness:

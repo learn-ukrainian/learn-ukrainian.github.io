@@ -1,0 +1,319 @@
+- type: match-up
+  title: Emergency Vocabulary
+  instruction: Match the emergency terms to their English meanings.
+  pairs:
+    - left: допомога
+      right: help
+    - left: поліція
+      right: police
+    - left: швидка
+      right: ambulance
+    - left: лікар
+      right: doctor
+    - left: пожежа
+      right: fire
+    - left: passport
+      right: passport
+    - left: загубити
+      right: to lose
+    - left: вкрасти
+      right: to steal
+    - left: заблукати
+      right: to get lost
+    - left: аптека
+      right: pharmacy
+
+- type: fill-in
+  title: Asking for Help
+  instruction: Complete the sentences with the correct word.
+  items:
+    - sentence: «Допоможіть! Мені потрібна _____.»
+      answer: допомога
+      options: [допомога, допомогу, допомоги, допомагаю]
+    - sentence: «Я _____ свій телефон.»
+      answer: загубив
+      options: [загубив, знайшов, купив, продав]
+    - sentence: «Викличте _____, тут аварія!»
+      answer: поліцію
+      options: [поліцію, піцу, таксі, маму]
+    - sentence: «У мене _____ голова.»
+      answer: болить
+      options: [болить, спить, їсть, йде]
+    - sentence: «Де найближча _____?»
+      answer: аптека
+      options: [аптека, аптеку, аптеки, аптекою]
+    - sentence: «Я _____ і не знаю, де я.»
+      answer: заблукав
+      options: [заблукав, гуляю, живу, працюю]
+    - sentence: «Ви _____ англійською?»
+      answer: говорите
+      options: [говорите, знаєте, чуєте, бачите]
+    - sentence: «У мене _____ гаманець.»
+      answer: вкрали
+      options: [вкрали, дали, взяли, купили]
+    - sentence: «Я громадянин _____.»
+      answer: США
+      options: [США, Києва, парку, магазину]
+    - sentence: «Це _____ ситуація.»
+      answer: екстрена
+      options: [екстрена, гарна, весела, смачна]
+    - sentence: «Мені _____.»
+      answer: погано
+      options: [погано, добре, весело, цікаво]
+    - sentence: «Зателефонуйте в _____.»
+      answer: посольство
+      options: [посольство, ресторан, готель, театр]
+
+- type: quiz
+  title: Emergency Numbers
+  instruction: Choose the correct number for the service.
+  items:
+    - question: «Який номер треба набрати, щоб викликати поліцію в Україні?»
+      options:
+        - text: "102"
+          correct: true
+        - text: "101"
+          correct: false
+        - text: "103"
+          correct: false
+        - text: "104"
+          correct: false
+    - question: «Який номер треба набрати для виклику швидкої допомоги?»
+      options:
+        - text: "103"
+          correct: true
+        - text: "102"
+          correct: false
+        - text: "101"
+          correct: false
+        - text: "911"
+          correct: false
+    - question: «Який номер треба набрати при пожежі (пожежна охорона)?»
+      options:
+        - text: "101"
+          correct: true
+        - text: "102"
+          correct: false
+        - text: "103"
+          correct: false
+        - text: "100"
+          correct: false
+    - question: «Який універсальний номер допомоги в Україні (як 911)?»
+      options:
+        - text: "112"
+          correct: true
+        - text: "100"
+          correct: false
+        - text: "999"
+          correct: false
+        - text: "000"
+          correct: false
+    - question: «Ви бачите великий вогонь (пожежу). Куди ви будете дзвонити?»
+      options:
+        - text: "101"
+          correct: true
+        - text: "102"
+          correct: false
+        - text: "103"
+          correct: false
+        - text: "104"
+          correct: false
+    - question: «Людині стало дуже погано на вулиці. Куди треба дзвонити?»
+      options:
+        - text: "103"
+          correct: true
+        - text: "102"
+          correct: false
+        - text: "101"
+          correct: false
+        - text: "104"
+          correct: false
+    - question: «Вас пограбували на вулиці. Куди ви будете дзвонити?»
+      options:
+        - text: "102"
+          correct: true
+        - text: "103"
+          correct: false
+        - text: "101"
+          correct: false
+        - text: "104"
+          correct: false
+    - question: «Ви відчуваєте сильний запах газу. Куди треба дзвонити?»
+      options:
+        - text: "104"
+          correct: true
+        - text: "103"
+          correct: false
+        - text: "102"
+          correct: false
+        - text: "101"
+          correct: false
+    - question: «Ви загубилися в лісі і не знаєте дорогу. Куди дзвонити?»
+      options:
+        - text: «112 або 101»
+          correct: true
+        - text: "103"
+          correct: false
+        - text: "104"
+          correct: false
+        - text: «У ресторан»
+          correct: false
+    - question: «Як українською мовою сказати слово «Help!»?»
+      options:
+        - text: «Допоможіть!»
+          correct: true
+        - text: «Вітаю!»
+          correct: false
+        - text: «Дякую!»
+          correct: false
+        - text: «Смачного!»
+          correct: false
+    - question: «Як сказати українською «I lost my passport»?»
+      options:
+        - text: «Я загубив паспорт.»
+          correct: true
+        - text: «Я знайшов паспорт.»
+          correct: false
+        - text: «Я купив паспорт.»
+          correct: false
+        - text: «Я люблю паспорт.»
+          correct: false
+    - question: «Як сказати українською «I need a doctor»?»
+      options:
+        - text: «Мені потрібен лікар.»
+          correct: true
+        - text: «Мені потрібен вчитель.»
+          correct: false
+        - text: «Мені потрібен таксист.»
+          correct: false
+        - text: «Мені потрібен кухар.»
+          correct: false
+
+- type: unjumble
+  title: Emergency Sentences
+  instruction: Put the words in order.
+  items:
+    - words: ["Допоможіть", "мені", "будь", "ласка"]
+      answer: «Допоможіть мені будь ласка.»
+    - words: ["Я", "не", "знаю", "де", "я"]
+      answer: «Я не знаю де я.»
+    - words: ["Викличте", "швидку", "допомогу", "зараз"]
+      answer: «Викличте швидку допомогу зараз.»
+    - words: ["У", "мене", "вкрали", "телефон"]
+      answer: «У мене вкрали телефон.»
+    - words: ["Де", "знаходиться", "відділок", "поліції", "?"]
+      answer: «Де знаходиться відділок поліції?»
+    - words: ["Я", "хочу", "зателефонувати", "в", "посольство"]
+      answer: «Я хочу зателефонувати в посольство.»
+    - words: ["Мені", "дуже", "погано", "тут"]
+      answer: «Мені дуже погано тут.»
+    - words: ["Я", "загубила", "свою", "сумку"]
+      answer: «Я загубила свою сумку.»
+    - words: ["Ви", "говорите", "англійською", "мовою", "?"]
+      answer: «Ви говорите англійською мовою?»
+    - words: ["Це", "небезпечна", "ситуація", "для", "мене"]
+      answer: «Це небезпечна ситуація для мене.»
+    - words: ["Я", "турист", "із", "США"]
+      answer: «Я турист із США.»
+    - words: ["Дякую", "за", "вашу", "допомогу"]
+      answer: «Дякую за вашу допомогу.»
+
+- type: true-false
+  title: Safety Facts
+  instruction: True or False about safety in Ukraine.
+  items:
+    - statement: «Номер 103 — це поліція.»
+      correct: false
+    - statement: «Якщо ви загубили паспорт, треба йти в поліцію.»
+      correct: true
+    - statement: «У великих містах поліція часто говорить англійською.»
+      correct: true
+    - statement: «Можна переходити дорогу на червоне світло.»
+      correct: false
+    - statement: «Аптеки мають зелений хрест.»
+      correct: true
+    - statement: «Якщо ви заблукали, можна спитати дорогу.»
+      correct: true
+    - statement: «112 — це номер замовлення піци.»
+      correct: false
+    - statement: «Треба носити паспорт з собою.»
+      correct: true
+    - statement: «Якщо звучить сирена (air raid), треба йти в укриття.»
+      correct: true
+    - statement: «Можна пити воду з річки Дніпро.»
+      correct: false
+    - statement: «Швидка допомога безкоштовна в екстрених випадках.»
+      correct: true
+    - statement: «Поліція в Україні має жовті машини (ні, білі з синім).»
+      correct: false
+
+- type: group-sort
+  title: Problem vs Solution
+  instruction: Is this a Problem or a Solution?
+  groups:
+    - name: Problem (Проблема)
+      items: ["Пожежа", "Аварія", "Крадіжка", "Хвороба", "Втрата паспорта", "Заблукав"]
+    - name: Solution (Рішення)
+      items: ["Лікар", "Поліція", "Швидка", "Аптека", "Посольство", "Перехожий"]
+
+- type: match-up
+  title: Medical Symptoms
+  instruction: Match the phrase to the meaning.
+  pairs:
+    - left: Болить голова
+      right: Headache
+    - left: Температура
+      right: Fever
+    - left: Мені погано
+      right: I feel sick
+    - left: Алергія
+      right: Allergy
+    - left: Болить живіт
+      right: Stomachache
+    - left: Болить зуб
+      right: Toothache
+    - left: Зламав руку
+      right: Broken arm
+    - left: Порізав палець
+      right: Cut finger
+
+- type: fill-in
+  title: Safety Dialogue
+  instruction: Complete the conversation on the street.
+  items:
+    - sentence: «Вибачте, я _____.»
+      answer: заблукав
+      options: [заблукав, пішов, прийшов, купив]
+    - sentence: «Де тут _____ поліції?»
+      answer: відділок
+      options: [відділок, магазин, парк, театр]
+    - sentence: «Він _____ прямо і ліворуч.»
+      answer: знаходиться
+      options: [знаходиться, ходить, бігає, спить]
+    - sentence: «У мене немає _____.»
+      answer: телефону
+      options: [телефону, грошей, часу, бажання]
+    - sentence: «Я можу _____ поліцію.»
+      answer: викликати
+      options: [викликати, купити, продати, з'їсти]
+    - sentence: «Дякую, ви дуже _____.»
+      answer: добрий
+      options: [добрий, поганий, злий, старий]
+    - sentence: «Ось _____ для води.»
+      answer: пляшка
+      options: [пляшка, стіл, стілець, вікно]
+    - sentence: «Ви хочете _____?»
+      answer: пити
+      options: [пити, їсти, спати, гуляти]
+    - sentence: «Ні, я хочу _____.»
+      answer: додому
+      options: [додому, в гості, в кіно, в парк]
+    - sentence: «Я _____ вам таксі.»
+      answer: викличу
+      options: [викличу, зроблю, скажу, напишу]
+    - sentence: «Скільки _____ чекати?»
+      answer: треба
+      options: [треба, можна, хочу, буду]
+    - sentence: «Машина _____ через 5 хвилин.»
+      answer: буде
+      options: [буде, була, є, немає]

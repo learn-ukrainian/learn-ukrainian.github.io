@@ -1186,7 +1186,7 @@ def audit_module(file_path: str) -> bool:
             })
 
     # Run vocabulary plan compliance checks
-    # VOCAB_PLAN_MISSING is now BLOCKING - core vocab from plan must be present
+    # VOCAB_PLAN_MISSING is NON-BLOCKING (Issue #387) - shown as warning only
     if vocab_data:
         # Extract set of words from vocab_data dicts
         vocab_words = set()

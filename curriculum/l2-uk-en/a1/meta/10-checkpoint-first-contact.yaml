@@ -6,7 +6,8 @@ phase: A1.1
 focus: checkpoint
 pedagogy: Review
 duration: 45 min
-transliteration: full
+transliteration: none
+phonetics: ipa
 tags:
   - checkpoint
   - review

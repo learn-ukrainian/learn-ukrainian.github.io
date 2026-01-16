@@ -87,9 +87,10 @@ CASE_PATTERNS = {
         r'\bчитаючи\b', r'\bговорячи\b', r'\bйдучи\b',
     ],
     'subordinate_markers': [
-        # Relative pronouns (який/яка/яке/які) - only flag when preceded by a noun/comma
-        # This indicates a relative clause, not a question
-        r',\s*який\s+[а-яіїєґ]', r',\s*яка\s+[а-яіїєґ]', r',\s*яке\s+[а-яіїєґ]', r',\s*які\s+[а-яіїєґ]',
+        # Relative pronouns (який/яка/яке/які) - only flag when preceded by comma AND not followed by "це"
+        # "книга, яка цікава" = relative clause (flag at A1)
+        # "Скажіть, яке це тістечко?" = question (do NOT flag)
+        r',\s*який\s+(?!це\b)[а-яіїєґ]', r',\s*яка\s+(?!це\b)[а-яіїєґ]', r',\s*яке\s+(?!це\b)[а-яіїєґ]', r',\s*які\s+(?!це\b)[а-яіїєґ]',
         # "що" as subordinate - only when preceded by verb/clause (not sentence-initial questions)
         # Pattern: verb + що + word (subordinate) vs. Що + word? (question)
         # Exclude: "що це", "що тут", "що там", "що далі" (these are questions/phrases, not subordinate clauses)

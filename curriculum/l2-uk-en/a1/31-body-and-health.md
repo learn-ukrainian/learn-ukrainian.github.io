@@ -4,12 +4,12 @@
 
 > 💡 **Що болить? (What Hurts?)**
 >
-> When you're sick in Ukraine, you need to know how to say what's wrong!
+> Oh no! You're feeling a bit under the weather in Kyiv? Don't worry, you've got this! Learning how to say what's wrong is your first step to feeling better.
 > — **У мене болить голова.** (My head hurts. — Literally: «At me hurts head.»)
 > — **Я хворий/хвора.** (I'm sick. — m/f)
 > — **У мене температура.** (I have a fever.)
 >
-> Notice: We use «болить» (3rd person singular) even though YOU are the one hurting!
+> **Aha! Moment:** Notice that we use «болить» (3rd person singular) even though YOU are the one hurting! In Ukrainian, the *body part* is the one doing the hurting to you.
 
 ---
 
@@ -19,16 +19,18 @@
 
 > [!observe] Спостереження (Pattern Discovery)
 >
-> Look at these sentences:
+> Look at these sentences Oksana is saying to her doctor:
 >
 > - У мене **болить голова**. (My head hurts.)
 > - У мене **болить живіт**. (My stomach hurts.)
 > - У мене **болить горло**. (My throat hurts.)
 >
 > Pattern: **У мене болить** + [body part in Nominative]
-> The body part is the SUBJECT (nominative), not the object!
+> The body part is the SUBJECT (nominative), not the object! It's like saying "To me, the head hurts."
 
 ### Pain Formula
+
+It's simpler than it looks! Just check if you're talking about one thing or many.
 
 | Structure                | Example                   | Translation    |
 | ------------------------ | ------------------------- | -------------- |
@@ -37,100 +39,84 @@
 
 ### Body Part + Болить/Болять
 
-| Singular (болить) | Plural (болять) |
-| ----------------- | --------------- |
-| голова болить     | зуби болять     |
-| живіт болить      | очі болять      |
-| горло болить      | вуха болять     |
-| спина болить      | ноги болять     |
+| Singular (болить) | IPA | Plural (болять) | IPA |
+| ----------------- | --- | --------------- | --- |
+| голова болить     | /ɦɔlɔˈvɑ bɔˈlɪtʲ/ | зуби болять     | /ˈzubɪ bɔˈlʲɑtʲ/ |
+| живіт болить      | /ʒɪˈvit bɔˈlɪtʲ/ | очі болять      | /ˈɔt͡ʃi bɔˈlʲɑtʲ/ |
+| горло болить      | /ˈɦɔrlɔ bɔˈlɪtʲ/ | вуха болять     | /ˈvuxɑ bɔˈlʲɑtʲ/ |
+| спина болить      | /spɪˈnɑ bɔˈlɪtʲ/ | ноги болять     | /ˈnɔɦɪ bɔˈlʲɑtʲ/ |
 
 ---
 
 ## Common Health Expressions
 
-| Ukrainian             | English              |
-| --------------------- | -------------------- |
-| Що болить?            | What hurts?          |
-| Як ви себе почуваєте? | How do you feel?     |
-| Я хворий/хвора.       | I'm sick. (m/f)      |
-| Я здоровий/здорова.   | I'm healthy. (m/f)   |
-| У мене температура.   | I have a fever.      |
-| У мене кашель.        | I have a cough.      |
-| У мене нежить.        | I have a runny nose. |
-| У мене застуда.       | I have a cold.       |
+| Ukrainian             | IPA | English              |
+| --------------------- | --- | -------------------- |
+| Що болить?            | /ʃt͡ʃɔ bɔˈlɪtʲ/ | What hurts?          |
+| Як ви себе почуваєте? | /jɑk vɪ ˈsɛbɛ pɔt͡ʃʊˈwɑjɛtɛ/ | How do you feel?     |
+| Я хворий/хвора.       | /ˈxvɔrɪj/ / /ˈxvɔrɑ/ | I'm sick. (m/f)      |
+| Я здоровий/здорова.   | /zdɔˈrɔvɪj/ / /zdɔˈrɔvɑ/ | I'm healthy. (m/f)   |
+| У мене температура.   | /tɛmpɛrɑˈturɑ/ | I have a fever.      |
+| У мене кашель.        | /ˈkɑʃɛlʲ/ | I have a cough.      |
+| У мене нежить.        | /ˈnɛʒɪtʲ/ | I have a runny nose. |
+| У мене застуда.       | /zɑˈstudɑ/ | I have a cold.       |
 
 ---
 
-## At the Pharmacy
+## At the Pharmacy (В аптеці)
 
-| Ukrainian                            | English                     |
-| ------------------------------------ | --------------------------- |
-| Дайте, будь ласка, ліки.             | Give me medicine, please.   |
-| У вас є таблетки від головного болю? | Do you have headache pills? |
-| Скільки це коштує?                   | How much does it cost?      |
-| Ось ваші ліки.                       | Here is your medicine.      |
+Imagine walking into a bright **аптека** on Khreshchatyk Street. You'll hear these phrases:
+
+| Ukrainian                            | IPA | English                     |
+| ------------------------------------ | --- | --------------------------- |
+| Дайте, будь ласка, ліки.             | /ˈdɑjtɛ bʊdʲ ˈlɑskɑ ˈlʲikɪ/ | Give me medicine, please.   |
+| У вас є таблетки від головного болю? | /tɑˈblɛtkɪ/ | Do you have headache pills? |
+| Скільки це коштує?                   | /ˈskilʲkɪ t͡sɛ ˈkɔʃtʊjɛ/ | How much does it cost?      |
+| Ось ваші ліки.                       | /ɔsʲ ˈvɑʃi ˈlʲikɪ/ | Here is your medicine.      |
 
 ---
 
 ## Examples in Context
 
-> [!example] Що болить? (What Hurts?)
+> [!example] Поодинокий біль (Singular Pain)
 >
 > - У мене болить **голова**. (My head hurts.)
 > - У мене болить **живіт**. (My stomach hurts.)
 > - У мене болить **горло**. (My throat hurts.)
 > - У мене болить **спина**. (My back hurts.)
 > - У мене болить **нога**. (My leg hurts.)
-> - У мене болить **рука**. (My arm hurts.)
-> - У мене болить **зуб**. (My tooth hurts.)
-> - У мене болить **вухо**. (My ear hurts.)
 
-> [!example] Болять (Plural)
+> [!example] Коли болить багато (Plural Pain)
 >
 > - У мене болять **очі**. (My eyes hurt.)
 > - У мене болять **вуха**. (My ears hurt.)
 > - У мене болять **зуби**. (My teeth hurt.)
-> - У мене болять **ноги**. (My legs hurt.)
-> - У мене болять **руки**. (My hands hurt.)
-
-> [!example] Симптоми (Symptoms)
->
-> - Я **хворий**. (I'm sick. — male)
-> - Я **хвора**. (I'm sick. — female)
-> - У мене **температура**. (I have a fever.)
-> - У мене **кашель**. (I have a cough.)
-> - У мене **нежить**. (I have a runny nose.)
-> - У мене **застуда**. (I have a cold.)
-> - Я **почуваюся** погано. (I feel bad.)
-> - У мене висока **температура**. (I have a high temperature/fever.)
-> - Треба **викликати** лікаря. (Need to call a doctor.)
-> - Це **лікарня**. (This is a hospital.)
 
 ---
 
 ## Dialogues
 
-> [!conversation] У лікаря (At the Doctor's)
+> [!conversation] У лікаря (At Dr. Bondarenko's Office)
 >
-> — Добрий день! Що болить?
-> — Добрий день. У мене болить **голова** і **горло**.
-> — У вас є температура?
-> — Так, **висока температура**.
-> — У вас застуда. Ось рецепт на ліки.
+> **Лікар:** Добрий день! Що болить?
+> **Пацієнт:** Добрий день. У мене болить **голова** і **горло**.
+> **Лікар:** У вас є температура?
+> **Пацієнт:** Так, **висока температура**.
+> **Лікар:** У вас застуда. Ось рецепт на ліки. Одужуйте!
 >
 > — Good day! What hurts?
 > — Good day. My head and throat hurt.
 > — Do you have a fever?
 > — Yes, a high fever.
-> — You have a cold. Here's a prescription for medicine.
+> — You have a cold. Here's a prescription for medicine. Get well soon!
 
-> [!conversation] В аптеці (At the Pharmacy)
+> [!conversation] В аптеці «Подорожник» (At Podorozhnyk Pharmacy)
 >
-> — Добрий день! У вас є ліки від застуди?
-> — Так, звичайно. Таблетки чи сироп?
-> — Таблетки, будь ласка.
-> — Ось. Це коштує 50 гривень.
-> — Дякую!
+> **Провізор:** Добрий день! У вас є ліки від застуди?
+> **Клієнт:** Так, звичайно. Таблетки чи сироп?
+> **Провізор:** Таблетки, будь ласка.
+> **Клієнт:** Ось. Це коштує 50 гривень.
+> **Провізор:** Дякую!
 >
 > — Good day! Do you have cold medicine?
 > — Yes, of course. Pills or syrup?
@@ -144,63 +130,51 @@
 > — Що сталося?
 > — Я дуже хворий. У мене болить серце.
 > — Яка ваша адреса?
-> — Вулиця Шевченка, 10.
-> — Швидка вже їде!
+> — Вулиця Володимирська, 15.
+> — Швидка вже їде! Не хвилюйтеся.
 >
 > — Hello! An ambulance is needed!
 > — What happened?
 > — I am very sick. My heart hurts.
 > — What's your address?
-> — Shevchenko Street, 10.
-> — The ambulance is on its way!
+> — Volodymyrska Street, 15.
+> — The ambulance is on its way! Don't worry.
 
 ---
 
 > 💡 **Болить vs Болять (Singular vs Plural)**
 >
-> This is one of the most important patterns for health vocabulary in Ukrainian!
+> This is a key secret of Ukrainian!
 >
-> Use **болить** (singular) for ONE body part: голова болить, горло болить, живіт болить.
-> Use **болять** (plural) for MULTIPLE body parts: зуби болять, очі болять, ноги болять, руки болять.
+> Use **болить** (singular) for ONE body part: голова болить, горло болить.
+> Use **болять** (plural) for MULTIPLE body parts: зуби болять, очі болять.
 >
-> Remember: the verb agrees with the number of body parts, not with «у мене»!
+> **Remember:** the verb agrees with the *body part*, not with you! You're just the one experiencing it.
 
 > 🌍 **Українська медицина (Ukrainian Healthcare)**
 >
-> In Ukraine, you can buy many medicines without a prescription at the «аптека» (pharmacy). Every neighborhood has one! For emergencies, call 103 for «швидка допомога» (ambulance).
+> В Україні аптеки (**аптека**) є всюди! Look for the glowing green cross! Багато ліків можна купити без рецепта. For an emergency, dial **103**.
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** «Ukrainian is too hard to use in emergencies»
-> **Fact:** With just a few key phrases, you can communicate at the doctor's office or pharmacy. The formula is simple: «У мене болить...» (I have pain in...) plus any body part. Add «Я хворий/хвора» (I'm sick — m/f) and «Потрібен лікар!» (A doctor is needed!) and you can handle most health situations!
+> **Myth:** «I'll never be able to explain my pain.»
+> **Fact:** Українці дуже приязні! They will understand your "У мене болить..." even if your pronunciation isn't perfect. Don't be afraid to point and use these simple words!
 
 > 🎭 **Народна медицина (Folk Medicine)**
 >
-> Ukrainians have traditional remedies! For a cold: чай, мед і лимон (tea, honey and lemon). For sore throat: тепле молоко (warm milk). Grandma (бабуся) always knows the best cure!
+> If a Ukrainian grandmother (**бабуся**) offers you **чай + малина** (tea + raspberry) or **тепле молоко + мед** (warm milk + honey), take it! It's the ultimate cultural "cure-all" for any застуда. бабуся завжди знає краще! (Grandma always knows better!)
 
 ---
 
 ## Практика
 
-### Вправа 1: Переклад
-Перекладіть речення на українську мову.
+Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+# Підсумок (Summary)
 
----
-
-# Підсумок
-In this module, you learned:
-
-Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
-
----
+Wow! Ви вивчили основи здоров'я. (You've mastered the basics of health.) Тепер ви можете описати свій біль. (Now you can describe your pain.) Ви знаєте аптеку. Ви знаєте лікаря. Ви можете викликати допомогу. Це чудовий результат! (This is a great result!)
 
 ## Need More Practice?
 
-> [!resources] External Review
->
-> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)
+> [!tip]
+> Дивіться в дзеркало і говоріть назви частин тіла! (Look in the mirror and say the names of body parts!)

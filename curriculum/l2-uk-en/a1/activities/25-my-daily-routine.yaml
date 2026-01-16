@@ -1,27 +1,31 @@
+module: 25-my-daily-routine
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Daily Actions
   pairs:
-  - left: '- прокидатися'
+  - left: прокидатися
     right: to wake up
-  - left: '- вмиватися'
+  - left: вмиватися
     right: to wash (face)
-  - left: '- одягатися'
+  - left: одягатися
     right: to get dressed
-  - left: '- снідати'
+  - left: снідати
     right: to have breakfast
-  - left: '- виходити'
+  - left: виходити
     right: to go out, leave
-  - left: '- працювати'
+  - left: працювати
     right: to work
-  - left: '- обідати'
+  - left: обідати
     right: to have lunch
-  - left: '- повертатися'
+  - left: повертатися
     right: to return
-  - left: '- вечеряти'
+  - left: вечеряти
     right: to have dinner
-  - left: '- відпочивати'
+  - left: відпочивати
     right: to rest
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: When Do We Do This?
   groups:
@@ -43,8 +47,7 @@
     - відпочивати
     - гуляти
     - лягати спати
-    - --
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Reflexive Verb Forms
   items:
@@ -104,7 +107,35 @@
     - дивишся
     - дивиться
     - дивляться
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Він ___ у дзеркало і усміхається.
+    answer: дивиться
+    options:
+    - дивиться
+    - дивлюся
+    - дивимося
+    - дивляться
+  - sentence: Діти вже ___ спати.
+    answer: готуються
+    options:
+    - готуються
+    - готуюся
+    - готуєшся
+    - готується
+  - sentence: Ми зазвичай ___ біля театру.
+    answer: зустрічаємося
+    options:
+    - зустрічаємося
+    - зустрічаюся
+    - зустрічаєшся
+    - зустрічаються
+  - sentence: Ця широка вулиця ___ Соборна.
+    answer: називається
+    options:
+    - називається
+    - називаюся
+    - називаються
+    - називаємося
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Sequence Words
   items:
@@ -164,7 +195,35 @@
     - потім
     - спочатку
     - нарешті
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  - sentence: Я ___ працюю у центрі міста.
+    answer: часто
+    options:
+    - часто
+    - рідко
+    - ніколи
+    - спочатку
+  - sentence: Він ___ обідає в кафе.
+    answer: іноді
+    options:
+    - іноді
+    - завжди
+    - щодня
+    - ніколи
+  - sentence: ___ ми йдемо гуляти разом.
+    answer: Потім
+    options:
+    - Потім
+    - Спочатку
+    - Колись
+    - Раніше
+  - sentence: Вона ___ дивиться фільми українською.
+    answer: рідко
+    options:
+    - рідко
+    - часто
+    - завжди
+    - спочатку
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Daily Routine
   items:
@@ -248,7 +307,47 @@
       correct: false
     - text: Never I rest.
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: "Choose the correct translation for 'He brushes his teeth'."
+    options:
+    - text: Він чистить зуби
+      correct: true
+    - text: Він вмивається
+      correct: false
+    - text: Він голиться
+      correct: false
+    - text: Він одягається
+      correct: false
+  - question: "What does 'Ми вечеряємо о сьомій' mean?"
+    options:
+    - text: We have dinner at seven.
+      correct: true
+    - text: We have breakfast at seven.
+      correct: false
+    - text: We have lunch at seven.
+      correct: false
+    - text: We go to bed at seven.
+      correct: false
+  - question: "How do you say 'She falls asleep quickly'?"
+    options:
+    - text: Вона засинає швидко
+      correct: true
+    - text: Вона прокидається швидко
+      correct: false
+    - text: Вона одягається швидко
+      correct: false
+    - text: Вона працює швидко
+      correct: false
+  - question: "What is the meaning of 'Він голиться'?"
+    options:
+    - text: He shaves
+      correct: true
+    - text: He washes
+      correct: false
+    - text: He dresses
+      correct: false
+    - text: He sleeps
+      correct: false
+  instruction: Choose the correct answer.
 - type: quiz
   title: Reflexive Understanding
   items:
@@ -332,7 +431,47 @@
       correct: false
     - text: -ти
       correct: false
-  instruction: Оберіть правильну відповідь.
+  - question: How do you conjugate «готуватися» for «я»?
+    options:
+    - text: готуюся
+      correct: true
+    - text: готуєшся
+      correct: false
+    - text: готується
+      correct: false
+    - text: готуються
+      correct: false
+  - question: How do you conjugate «дивитися» for «вони»?
+    options:
+    - text: дивляться
+      correct: true
+    - text: дивлюся
+      correct: false
+    - text: дивиться
+      correct: false
+    - text: дивимося
+      correct: false
+  - question: What is accurately the English meaning of «прокидатися»?
+    options:
+    - text: to wake up
+      correct: true
+    - text: to go to bed
+      correct: false
+    - text: to sleep
+      correct: false
+    - text: to dream
+      correct: false
+  - question: Which reflexive ending is used after consonants?
+    options:
+    - text: -ся
+      correct: true
+    - text: -сь
+      correct: false
+    - text: -ться
+      correct: false
+    - text: -шся
+      correct: false
+  instruction: Choose the correct answer.
 - type: unjumble
   title: Daily Routine
   items:
@@ -372,7 +511,40 @@
     - телевізор
     - дивимося
     answer: Зазвичай ми дивимося телевізор
-  instruction: Розташуйте слова у правильному порядку.
+  - words:
+    - спочатку
+    - я
+    - чищу
+    - зуби
+    answer: Спочатку я чищу зуби
+  - words:
+    - потім
+    - вона
+    - одягається
+    answer: Потім вона одягається
+  - words:
+    - вони
+    - обідають
+    - опівдні
+    answer: Вони обідають опівдні
+  - words:
+    - я
+    - лягаю
+    - спати
+    - о десятій
+    answer: Я лягаю спати о десятій
+  - words:
+    - він
+    - повертається
+    - додому
+    - пізно
+    answer: Він повертається додому пізно
+  - words:
+    - ми
+    - вмиваємося
+    - разом
+    answer: Ми вмиваємося разом
+  instruction: Arrange the words in the correct order.
 - type: true-false
   title: Daily Routine Facts
   items:
@@ -406,4 +578,4 @@
   - statement: «Завжди» means "never".
     correct: false
     explanation: Incorrect! it means "always"
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.

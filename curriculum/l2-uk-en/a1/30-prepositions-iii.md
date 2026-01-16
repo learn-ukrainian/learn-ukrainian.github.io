@@ -21,11 +21,11 @@
 >
 > Look at these question-answer pairs:
 >
-> | Question                  | Case Needed         | Example                          |
-> | ------------------------- | ------------------- | -------------------------------- |
-> | **Де?** (Where?)          | Locative            | Я **в парку**.                   |
-> | **Куди?** (Where to?)     | Accusative/Genitive | Я йду **в парк** / **до парку**. |
-> | **Звідки?** (Where from?) | Genitive            | Я **з парку**.                   |
+| Question                  | IPA            | Case Needed         | Example                          |
+| ------------------------- | -------------- | ------------------- | -------------------------------- |
+| **Де?** (Where?)          | /dɛ/           | Locative            | Я **в парку**.                   |
+| **Куди?** (Where to?)     | /kʊˈdɪ/        | Accusative/Genitive | Я йду **в парк** / **до парку**. |
+| **Звідки?** (Where from?) | /ˈzvidkɪ/      | Genitive            | Я **зі Львова**.                 |
 >
 > The QUESTION determines which CASE to use!
 
@@ -35,10 +35,10 @@
 
 For **location** (where something IS), use **Locative case**:
 
-| Preposition | Example             | Translation               |
-| ----------- | ------------------- | ------------------------- |
-| **в/у**     | Я **в парку**.      | I am in the park.         |
-| **на**      | Книга **на столі**. | The book is on the table. |
+| Preposition | Example             | IPA           | Translation               |
+| ----------- | ------------------- | ------------- | ------------------------- |
+| **в/у**     | Я **в парку**.      | /jɑ w ˈpɑrkʊ/ | I am in the park.         |
+| **на**      | Книга **на столі**. | /nɑ stɔˈlʲi/   | The book is on the table. |
 
 ### Examples
 
@@ -52,11 +52,11 @@ For **location** (where something IS), use **Locative case**:
 
 For **direction** (where something is GOING), use **Accusative** or **Genitive**:
 
-| Preposition | Case | Example              | Translation              |
-| ----------- | ---- | -------------------- | ------------------------ |
-| **в/у**     | Acc  | Я йду **в парк**.    | I'm going to the park.   |
-| **на**      | Acc  | Я йду **на роботу**. | I'm going to work.       |
-| **до**      | Gen  | Я йду **до лікаря**. | I'm going to the doctor. |
+| Preposition | Case | Example              | IPA                | Translation              |
+| ----------- | ---- | -------------------- | ------------------ | ------------------------ |
+| **в/у**     | Acc  | Я йду **в парк**.    | /jɑ jdu w pɑrk/    | I'm going to the park.   |
+| **на**      | Acc  | Я йду **на роботу**. | /jɑ jdu nɑ rɔˈbɔtʊ/ | I'm going to work.       |
+| **до**      | Gen  | Я йду **до лікаря**. | /jɑ jdu dɔ ˈlʲikɑrʲɑ/ | I'm going to the doctor. |
 
 ### Examples
 
@@ -70,10 +70,10 @@ For **direction** (where something is GOING), use **Accusative** or **Genitive**
 
 For **origin** (where something is FROM), use **Genitive** with **з** or **від**:
 
-| Preposition | Use         | Example                    | Translation              |
-| ----------- | ----------- | -------------------------- | ------------------------ |
-| **з**       | from places | Я **з України**.           | I'm from Ukraine.        |
-| **від**     | from people | Це подарунок **від мами**. | This is a gift from mom. |
+| Preposition | Use         | Example                    | IPA                  | Translation              |
+| ----------- | ----------- | -------------------------- | -------------------- | ------------------------ |
+| **з**       | from places | Я **з України**.           | /jɑ z ʊkrɑˈjinɪ/     | I'm from Ukraine.        |
+| **від**     | from people | Це подарунок **від мами**. | /wid ˈmɑmɪ/          | This is a gift from mom. |
 
 ### Examples
 
@@ -116,7 +116,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 > [!example] Звідки? (Where from?)
 >
 > - Я **з України**. (I'm from Ukraine.)
-> - Він **з Львова**. (He's from Lviv.)
+> - Він **зі Львова**. (He's from Lviv.)
 > - Вона **з Одеси**. (She's from Odesa.)
 > - Це подарунок **від татка**. (This is a gift from dad.)
 > - Лист **від друга**. (A letter from a friend.)
@@ -186,7 +186,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 > 🌍 **Українські міста (Ukrainian Cities)**
 >
-> Звідки ти? Я **з Києва**. Він **з Львова**. Вона **з Одеси**. Ми **з Харкова**. Вони **з Дніпра**. А звідки ви? Ми **з України**!
+> Звідки ти? Я **з Києва**. Він **зі Львова**. Вона **з Одеси**. Ми **з Харкова**. Вони **з Дніпра**. А звідки ви? Ми **з України**!
 >
 > Practice origin: Where are you from? I'm from Kyiv. He's from Lviv. She's from Odesa. We're from Kharkiv. They're from Dnipro. And where are you from? We're from Ukraine!
 
@@ -206,23 +206,13 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ## Практика
 
-### Вправа 1: Переклад
-Перекладіть речення на українську мову.
-
-1. I am a student.
-2. This is my house.
-3. She is in the city.
-
----
+Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
 
 # Підсумок
-Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати «Де?» або «Куди?». (You learned prepositions of location and direction! Now you know how to ask «Where?» or «Where to?») Ви знаєте різницю між «вдома» та «додому». Ви також знаєте, як сказати «звідки» ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
----
+Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати «Де?» або «Куди?». (You learned prepositions of location and direction! Now you know how to ask «Where?» or «Where to?») Ви знаєте різницю між «вдома» та «додому». Ви також знаєте, як сказати «звідки» ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
 ## Need More Practice?
 
-> [!resources] External Review
->
-> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)
+> [!tip]
+> Спробуйте описати свій шлях додому сьогодні! (Try to describe your way home today!)

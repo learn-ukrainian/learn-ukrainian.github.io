@@ -1,49 +1,49 @@
 - type: match-up
   title: Family Members
   pairs:
-  - left: '- тато'
+  - left: тато
     right: dad
-  - left: '- мама'
+  - left: мама
     right: mom
-  - left: '- брат'
+  - left: брат
     right: brother
-  - left: '- сестра'
+  - left: сестра
     right: sister
-  - left: '- дідусь'
+  - left: дідусь
     right: grandfather
-  - left: '- бабуся'
+  - left: бабуся
     right: grandmother
-  - left: '- дядько'
+  - left: дядько
     right: uncle
-  - left: '- тітка'
+  - left: тітка
     right: aunt
-  - left: '- син'
+  - left: син
     right: son
-  - left: '- дочка'
+  - left: дочка
     right: daughter
   instruction: З'єднайте відповідні елементи.
 - type: match-up
   title: More Family
   pairs:
-  - left: '- батьки'
+  - left: батьки
     right: parents
-  - left: '- діти'
+  - left: діти
     right: children
-  - left: '- онук'
+  - left: онук
     right: grandson
-  - left: '- онучка'
+  - left: онучка
     right: granddaughter
-  - left: '- двоюрідний брат'
+  - left: двоюрідний брат
     right: cousin (male)
-  - left: '- двоюрідна сестра'
+  - left: двоюрідна сестра
     right: cousin (female)
-  - left: '- наречений'
+  - left: наречений
     right: fiancé
-  - left: '- наречена'
+  - left: наречена
     right: fiancée
-  - left: '- хлопець'
+  - left: хлопець
     right: boyfriend
-  - left: '- дівчина'
+  - left: дівчина
     right: girlfriend
   instruction: З'єднайте відповідні елементи.
 - type: group-sort
@@ -353,7 +353,7 @@
 - type: quiz
   title: Marital Status
   items:
-  - question: 'He has a wife. He is:'
+  - question: «He has a wife. He is:»
     options:
     - text: Одружений
       correct: true
@@ -363,7 +363,7 @@
       correct: false
     - text: Молодший
       correct: false
-  - question: 'She doesn''t have a husband. She is:'
+  - question: «She doesn't have a husband. She is:»
     options:
     - text: Неодружена
       correct: true
@@ -373,7 +373,7 @@
       correct: false
     - text: Старша
       correct: false
-  - question: 'They are engaged. He is:'
+  - question: «They are engaged. He is:»
     options:
     - text: Наречений
       correct: true
@@ -383,7 +383,7 @@
       correct: false
     - text: Чоловік
       correct: false
-  - question: 'She is engaged. She is:'
+  - question: «She is engaged. She is:»
     options:
     - text: Наречена
       correct: true
@@ -393,7 +393,7 @@
       correct: false
     - text: Дружина
       correct: false
-  - question: 'He has a girlfriend. He is her:'
+  - question: «He has a girlfriend. He is her:»
     options:
     - text: Хлопець
       correct: true
@@ -403,7 +403,7 @@
       correct: false
     - text: Брат
       correct: false
-  - question: 'She has a boyfriend. She is his:'
+  - question: «She has a boyfriend. She is his:»
     options:
     - text: Дівчина
       correct: true
@@ -413,7 +413,7 @@
       correct: false
     - text: Сестра
       correct: false
-  - question: 'She has a husband. She is his:'
+  - question: «She has a husband. She is his:»
     options:
     - text: Дружина
       correct: true
@@ -423,7 +423,7 @@
       correct: false
     - text: Сестра
       correct: false
-  - question: 'He has a wife. He is her:'
+  - question: «He has a wife. He is her:»
     options:
     - text: Чоловік
       correct: true
@@ -510,32 +510,32 @@
 - type: true-false
   title: Family Facts
   items:
-  - statement: «Тато» is informal for "father.".
+  - statement: ««Тато» is informal for «father.».»
     correct: true
-  - statement: «Батько» is informal for "father.".
+  - statement: ««Батько» is informal for «father.».»
     correct: false
-    explanation: Incorrect! it's formal
-  - statement: «Дідусь» means "grandfather.".
+    explanation: ««Incorrect! it's formal»»
+  - statement: ««Дідусь» means «grandfather.».»
     correct: true
-  - statement: «Бабуся» means "aunt.".
+  - statement: ««Бабуся» means «aunt.».»
     correct: false
-    explanation: Incorrect! it means "grandmother"
-  - statement: «Двоюрідний брат» means "male cousin.".
+    explanation: ««Incorrect! it means «grandmother»»»
+  - statement: ««Двоюрідний брат» means «male cousin.».»
     correct: true
-  - statement: Ukrainians use different words for male and female cousins.
+  - statement: «Ukrainians use different words for male and female cousins.»
     correct: true
-  - statement: «Одружена» is for men.
+  - statement: ««Одружена» is for men.»
     correct: false
-    explanation: Incorrect! it's for women
-  - statement: «Наречений» means "fiancé.".
+    explanation: ««Incorrect! it's for women»»
+  - statement: ««Наречений» means «fiancé.».»
     correct: true
-  - statement: «Діти» is the plural of «дитина.».
+  - statement: ««Діти» is the plural of «дитина.».»
     correct: true
-  - statement: «Чоловік» only means "husband.".
+  - statement: ««Чоловік» only means «husband.».»
     correct: false
-    explanation: Incorrect! it also means "man"
-  - statement: «Сім'я» and «родина» both mean "family.".
+    explanation: ««Incorrect! it also means «man»»»
+  - statement: ««Сім'я» and «родина» both mean «family.».»
     correct: true
-  - statement: «Молодший» means "younger.".
+  - statement: ««Молодший» means «younger.».»
     correct: true
   instruction: Визначте, чи твердження правильне.

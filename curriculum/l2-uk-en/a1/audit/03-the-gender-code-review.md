@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1045/300
+- **Words:** ✅ 1163/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -16,24 +16,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 14.5% (target 10-25% (M03))
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 11.2% (target 10-25% (M03))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 296 | Included in Core |
-| **Practice** | ⚪️ | 280 | Skipped |
-| **Production** | ➖ | 103 | Excluded Type |
-| **Cultural Insight** | ✅ | 150 | Included in Core |
-| **Підсумок** | ✅ | 96 | Included in Core |
+| **Presentation** | ✅ | 350 | Included in Core |
+| **Practice** | ⚪️ | 370 | Skipped |
+| **Production** | ➖ | 65 | Excluded Type |
+| **Cultural Insight** | ✅ | 162 | Included in Core |
+| **Summary** | ✅ | 96 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

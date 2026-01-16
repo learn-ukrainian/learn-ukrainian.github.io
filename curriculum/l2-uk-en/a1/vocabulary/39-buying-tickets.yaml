@@ -1,0 +1,69 @@
+module: 39-buying-tickets
+level: A1
+version: '1.0'
+items:
+  - lemma: квиток
+    ipa: /kvɪˈtɔk/
+    translation: ticket
+    pos: noun 
+    gender: m
+  - lemma: туди
+    ipa: /tʊˈdɪ/
+    translation: there / one way
+    pos: adv 
+    gender: n/a
+  - lemma: назад
+    ipa: /nɑˈzɑd/
+    translation: back / return
+    pos: adv 
+    gender: n/a
+  - lemma: відправлення
+    ipa: /vʲidˈprɑvlɛnʲːɑ/
+    translation: departure
+    pos: noun 
+    gender: n
+  - lemma: прибуття
+    ipa: /prɪbʊˈtʲːɑ/
+    translation: arrival
+    pos: noun 
+    gender: n
+  - lemma: платформа
+    ipa: /plɑtˈfɔrmɑ/
+    translation: platform
+    pos: noun 
+    gender: f
+  - lemma: місце
+    ipa: /ˈmʲisʲt͡sɛ/
+    translation: seat / place
+    pos: noun 
+    gender: n
+  - lemma: вагон
+    ipa: /vɑˈɦɔn/
+    translation: carriage / wagon
+    pos: noun 
+    gender: m
+  - lemma: поїзд
+    ipa: /ˈpɔjizd/
+    translation: train
+    pos: noun 
+    gender: m
+  - lemma: автобус
+    ipa: /ɑvˈtɔbʊs/
+    translation: bus
+    pos: noun 
+    gender: m
+  - lemma: туди-назад
+    ipa: /tʊˈdɪ nɑˈzɑd/
+    translation: round trip
+    pos: adv
+    gender: n/a
+  - lemma: біля вікна
+    ipa: /ˈbʲilʲɑ vʲikˈnɑ/
+    translation: by the window
+    pos: phrase
+    gender: n/a
+  - lemma: при проході
+    ipa: /prɪ prɔˈxɔdʲi/
+    translation: by the aisle
+    pos: phrase
+    gender: n/a

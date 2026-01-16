@@ -1,0 +1,528 @@
+- type: match-up
+  title: Market Vocabulary
+  instruction: Match the Ukrainian market terms to their English meanings.
+  pairs:
+    - left: ринок
+      right: market
+    - left: свіжий
+      right: fresh
+    - left: стиглий
+      right: ripe
+    - left: кілограм
+      right: kilogram
+    - left: грам
+      right: gram
+    - left: ціна
+      right: price
+    - left: знижка
+      right: discount
+    - left: торгуватися
+      right: to haggle/negotiate
+    - left: пакет
+      right: bag/plastic bag
+    - left: ваги
+      right: scale (weighing)
+
+- type: fill-in
+  title: Market Conversation
+  instruction: Complete the sentences from a typical market interaction.
+  items:
+    - sentence: «Скажіть, будь ласка. Скільки _____ цей кілограм?»
+      answer: коштує
+      options:
+        - коштує
+        - робить
+        - йде
+        - бачить
+    - sentence: «Це дуже _____ яблука.»
+      answer: свіжі
+      options:
+        - свіжі
+        - старі
+        - великі
+        - сині
+    - sentence: «Дайте мені один _____ помідорів.»
+      answer: кілограм
+      options:
+        - кілограм
+        - метр
+        - літр
+        - грам
+    - sentence: «Цей кавун уже _____?»
+      answer: стиглий
+      options:
+        - стиглий
+        - холодний
+        - гострий
+        - швидкий
+    - sentence: «Можна мені менший _____?»
+      answer: пакет
+      options:
+        - пакет
+        - столик
+        - рахунок
+        - меню
+    - sentence: «Скільки з _____?»
+      answer: мене
+      options:
+        - мене
+        - тебе
+        - нас
+        - вас
+    - sentence: «Це _____ ціна чи можна знижку?»
+      answer: остання
+      options:
+        - остання
+        - перша
+        - гарна
+        - велика
+    - sentence: «Ой, це занадто _____!»
+      answer: дорого
+      options:
+        - дорого
+        - дешево
+        - смачно
+        - тихо
+    - sentence: «Прошу, ваша _____.»
+      answer: решта
+      options:
+        - решта
+        - карта
+        - сумка
+        - ніж
+    - sentence: «Я хочу _____ ці овочі.»
+      answer: вибрати
+      options:
+        - вибрати
+        - спати
+        - пити
+        - йти
+    - sentence: «Будь ласка, _____ ці яблука.»
+      answer: зважте
+      options:
+        - зважте
+        - пийте
+        - їжте
+        - дивіться
+    - sentence: «У вас є _____ фрукти?»
+      answer: свіжі
+      options:
+        - свіжі
+        - старі
+        - погані
+        - чорні
+
+- type: unjumble
+  title: Shopping Phrases
+  instruction: Reorder the words to form correct sentences.
+  items:
+    - words:
+        - Скільки
+        - коштує
+        - цей
+        - мед
+        - "?"
+      answer: «Скільки коштує цей мед?»
+    - words:
+        - Дайте
+        - мені
+        - один
+        - кілограм
+        - огірків
+      answer: «Дайте мені один кілограм огірків.»
+    - words:
+        - Це
+        - дуже
+        - дорогі
+        - помідори
+        - "!"
+      answer: «Це дуже дорогі помідори!»
+    - words:
+        - Можна
+        - мені
+        - інший
+        - пакет
+        - "?"
+      answer: «Можна мені інший пакет?»
+    - words:
+        - Я
+        - хочу
+        - спробувати
+        - це
+        - яблуко
+      answer: «Я хочу спробувати це яблуко.»
+    - words:
+        - У
+        - вас
+        - є
+        - свіжа
+        - риба
+        - "?"
+      answer: «У вас є свіжа риба?»
+    - words:
+        - Ціна
+        - занадто
+        - висока
+        - для
+        - мене
+      answer: «Ціна занадто висока для мене.»
+    - words:
+        - Прошу
+        - ось
+        - ваша
+        - решта
+      answer: «Прошу, ось ваша решта.»
+    - words:
+        - Дякую
+        - гарного
+        - вам
+        - дня
+        - "!"
+      answer: «Дякую, гарного вам дня!»
+    - words:
+        - Цей
+        - сир
+        - дуже
+        - смачний
+        - "."
+      answer: «Цей сир дуже смачний.»
+    - words:
+        - Де
+        - можна
+        - купити
+        - домашнє
+        - молоко
+        - "?"
+      answer: «Де можна купити домашнє молоко?»
+    - words:
+        - Я
+        - купую
+        - тільки
+        - свіжі
+        - овочі
+      answer: «Я купую тільки свіжі овочі.»
+
+- type: group-sort
+  title: Market Categories
+  instruction: Sort the items into correct market categories.
+  groups:
+    - name: Овочі (Vegetables)
+      items:
+        - помідор
+        - огірок
+        - картопля
+        - капуста
+        - морква
+        - цибуля
+    - name: Фрукти (Fruits)
+      items:
+        - яблуко
+        - груша
+        - слива
+        - вишня
+        - полуниця
+        - кавун
+
+- type: true-false
+  title: Market Facts
+  instruction: Is this statement logical or true in a Ukrainian market?
+  items:
+    - statement: На ринку можна торгуватися.
+      correct: true
+    - statement: Помідор — це фрукт на ринку.
+      correct: false
+    - statement: Можна попросити спробувати сир.
+      correct: true
+    - statement: Один кілограм — це дуже мало.
+      correct: false
+    - statement: Решта — це ваші гроші.
+      correct: true
+    - statement: На ринку продають тільки старі речі.
+      correct: false
+    - statement: Ціна може бути зі знижкою.
+      correct: true
+    - statement: Стигле яблуко — це добре.
+      correct: true
+    - statement: На ринку немає пакетів.
+      correct: false
+    - statement: Продавець важить товар на вагах.
+      correct: true
+    - statement: Мед купують у склянках або банках.
+      correct: true
+    - statement: Ринок працює тільки вночі.
+      correct: false
+
+- type: quiz
+  title: Shopping Scenarios
+  instruction: Choose the correct response for each market situation.
+  items:
+    - question: «Ви хочете знати ціну за 1 кг. Що ви скажете?»
+      options:
+        - text: «Скільки коштує кілограм?»
+          correct: true
+        - text: «Де тут вихід?»
+          correct: false
+        - text: «Як вас звати?»
+          correct: false
+        - text: «Я хочу спати.»
+          correct: false
+    - question: «Ви хочете знижку. Що ви скажете?»
+      options:
+        - text: «Можна дешевше?»
+          correct: true
+        - text: «Це дуже дешево.»
+          correct: false
+        - text: «Дайте два.»
+          correct: false
+        - text: «Дякую, не треба.»
+          correct: false
+    - question: «Ви хочете 500 грамів сиру. Що ви скажете?»
+      options:
+        - text: «Дайте півкілограма сиру.»
+          correct: true
+        - text: «Дайте один ніж.»
+          correct: false
+        - text: «Де мій сир?»
+          correct: false
+        - text: «Я не люблю сир.»
+          correct: false
+    - question: '«Продавець питає: «Скільки вам?» Що ви відповісте?»'
+      options:
+        - text: «Один кілограм, будь ласка.»
+          correct: true
+        - text: «Мене звати Андрій.»
+          correct: false
+        - text: «Я тут сьогодні.»
+          correct: false
+        - text: «Це ринок.»
+          correct: false
+    - question: «Ви хочете спробувати фрукт. Що ви скажете?»
+      options:
+        - text: «Можна спробувати?»
+          correct: true
+        - text: «Дайте пакет.»
+          correct: false
+        - text: «Це стигле?»
+          correct: false
+        - text: «Дякую.»
+          correct: false
+    - question: «Товар занадто дорогий. Яка ваша реакція?»
+      options:
+        - text: «Ой, це дуже дорого!»
+          correct: true
+        - text: «Це дуже дешево.»
+          correct: false
+        - text: «Я купую це.»
+          correct: false
+        - text: «Де каса?»
+          correct: false
+    - question: «Ви платите і даєте 100 гривень. Що ви чекаєте?»
+      options:
+        - text: «Решту.»
+          correct: true
+        - text: «Пакет.»
+          correct: false
+        - text: «Помідор.»
+          correct: false
+        - text: «Друга.»
+          correct: false
+    - question: «Що ви скажете в кінці покупки?»
+      options:
+        - text: «Дякую, гарного дня!»
+          correct: true
+        - text: «Привіт.»
+          correct: false
+        - text: «Де я?»
+          correct: false
+        - text: «Це дорого.»
+          correct: false
+    - question: «Ви хочете вибрати найкращі овочі. Що ви скажете?»
+      options:
+        - text: «Я хочу вибрати сам.»
+          correct: true
+        - text: «Дайте будь-що.»
+          correct: false
+        - text: «Я не хочу овочі.»
+          correct: false
+        - text: «Овочі зелені.»
+          correct: false
+    - question: «Продавець дає вам товар. Що він каже?»
+      options:
+        - text: «Прошу, ось ваше замовлення.»
+          correct: true
+        - text: «Дайте гроші.»
+          correct: false
+        - text: «Хто ви?»
+          correct: false
+        - text: «Де ринок?»
+          correct: false
+    - question: «Ви шукаєте мед. Як ви запитаєте?»
+      options:
+        - text: «У вас є свіжий мед?»
+          correct: true
+        - text: «Ви любите мед?»
+          correct: false
+        - text: «Де тут мед?»
+          correct: false
+        - text: «Мед солодкий.»
+          correct: false
+    - question: «Скажіть, будь ласка, що означає слово «решта» у магазині?»
+      options:
+        - text: «Change / Money back»
+          correct: true
+        - text: «Rest / Sleep»
+          correct: false
+        - text: «Menu»
+          correct: false
+        - text: «Table»
+          correct: false
+
+- type: match-up
+  title: Product Quality
+  instruction: Match the quality adjective with the correct noun.
+  pairs:
+    - left: стиглий
+      right: кавун
+    - left: свіжий
+      right: хліб
+    - left: домашнє
+      right: молоко
+    - left: червоний
+      right: помідор
+    - left: зелений
+      right: огірок
+    - left: солодка
+      right: вишня
+    - left: кисла
+      right: слива
+    - left: тверда
+      right: капуста
+    - left: велика
+      right: картопля
+    - left: смачний
+      right: сир
+
+- type: quiz
+  title: Market Quantities Quiz
+  instruction: Choose the correct Ukrainian phrase for quantities.
+  items:
+    - question: «Як сказати «One kilogram of potatoes»?»
+      options:
+        - text: «Один кілограм картоплі.»
+          correct: true
+        - text: «Одна картопля.»
+          correct: false
+        - text: «Багато картоплі.»
+          correct: false
+        - text: «Мало картоплі.»
+          correct: false
+    - question: «Як сказати «500 grams of cheese»?»
+      options:
+        - text: «П'ятсот грамів сиру.»
+          correct: true
+        - text: «П'ять грамів сиру.»
+          correct: false
+        - text: «Один сир.»
+          correct: false
+        - text: «Де сир?»
+          correct: false
+    - question: «Як сказати «Three apples, please»?»
+      options:
+        - text: «Три яблука, будь ласка.»
+          correct: true
+        - text: «Одне яблуко.»
+          correct: false
+        - text: «Десять яблук.»
+          correct: false
+        - text: «Я люблю яблука.»
+          correct: false
+    - question: «Скажіть, будь ласка, скільки це грамів — «півкілограма»?»
+      options:
+        - text: «500 grams»
+          correct: true
+        - text: «100 grams»
+          correct: false
+        - text: «2 kilograms»
+          correct: false
+        - text: «5 kilograms»
+          correct: false
+    - question: «Як запитати «How many items»?»
+      options:
+        - text: «Скільки штук?»
+          correct: true
+        - text: «Яка ціна?»
+          correct: false
+        - text: «Де ринок?»
+          correct: false
+        - text: «Це свіже?»
+          correct: false
+    - question: «Як сказати «A liter of milk»?»
+      options:
+        - text: «Літр молока.»
+          correct: true
+        - text: «Кілограм молока.»
+          correct: false
+        - text: «Склянка молока.»
+          correct: false
+        - text: «Пакет молока.»
+          correct: false
+    - question: «Як українською мовою правильно сказати «Two lemons»?»
+      options:
+        - text: «Два лимони.»
+          correct: true
+        - text: «Один лимон.»
+          correct: false
+        - text: «Багато лимонів.»
+          correct: false
+        - text: «Мало лимонів.»
+          correct: false
+    - question: «Як українською мовою правильно сказати «Ten eggs»?»
+      options:
+        - text: «Десять яєць.»
+          correct: true
+        - text: «Одне яйце.»
+          correct: false
+        - text: «Два яйця.»
+          correct: false
+        - text: «Скільки яєць?»
+          correct: false
+    - question: «Скажіть, будь ласка, що означає слово «багато»?»
+      options:
+        - text: «A lot / Many»
+          correct: true
+        - text: «A little / Few»
+          correct: false
+        - text: «Nothing»
+          correct: false
+        - text: «Everything»
+          correct: false
+    - question: «Скажіть, будь ласка, що означає слово «трохи»?»
+      options:
+        - text: «A little bit»
+          correct: true
+        - text: «A lot»
+          correct: false
+        - text: «Never»
+          correct: false
+        - text: «Always»
+          correct: false
+    - question: «Як сказати «One package of honey»?»
+      options:
+        - text: «Одна банка меду.»
+          correct: true
+        - text: «Один кілограм меду.»
+          correct: false
+        - text: «Один пакет меду.»
+          correct: false
+        - text: «Де мед?»
+          correct: false
+    - question: «Як сказати «Half of a watermelon»?»
+      options:
+        - text: «Половина кавуна.»
+          correct: true
+        - text: «Один кавун.»
+          correct: false
+        - text: «Два кавуни.»
+          correct: false
+        - text: «Де кавун?»
+          correct: false

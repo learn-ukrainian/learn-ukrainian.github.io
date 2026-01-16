@@ -119,9 +119,9 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 3. Extract module section (title, vocabulary, grammar scope)
 4. Read `docs/MARKDOWN-FORMAT.md` for strict syntax requirements
 5. Create logic:
-   - `meta/{slug}.yaml`: Metadata (Frontmatter)
-   - `vocabulary/{slug}.yaml`: Structured vocabulary
-   - `module.md`: Pure content (No frontmatter, No vocab table)
+   - `meta/{num}-{slug}.yaml`: Metadata (Frontmatter)
+   - `vocabulary/{num}-{slug}.yaml`: Structured vocabulary
+   - `{num}-{slug}.md`: Pure content (No frontmatter, No vocab table)
 
 **Stage 2: Content**
 
@@ -133,7 +133,7 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 
 1. Load content from Stage 2
 2. Generate activities using vocabulary
-3. Write to `activities/{slug}.yaml` directly
+3. Write to `activities/{num}-{slug}.yaml` directly (e.g., `activities/35-at-the-cafe.yaml`)
 4. Verify counts, types, syntax
 
 **Stage 4: Review & Fix**

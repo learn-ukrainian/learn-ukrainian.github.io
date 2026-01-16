@@ -1,0 +1,429 @@
+- type: quiz
+  title: Grammar Challenge
+  instruction: Choose the correct grammatical form.
+  items:
+    - question: «Я _____ (read) книгу щодня.»
+      options:
+        - text: «читаю»
+          correct: true
+        - text: «читаєш»
+          correct: false
+        - text: «читає»
+          correct: false
+        - text: «читаємо»
+          correct: false
+    - question: «Він _____ (lives) у Києві.»
+      options:
+        - text: «живе»
+          correct: true
+        - text: «живу»
+          correct: false
+        - text: «живуть»
+          correct: false
+        - text: «жити»
+          correct: false
+    - question: «Ми зараз _____ (speak) українською мовою.»
+      options:
+        - text: «говоримо»
+          correct: true
+        - text: «говорить»
+          correct: false
+        - text: «говориш»
+          correct: false
+        - text: «говорять»
+          correct: false
+    - question: «Я бачу _____ (sister — Accusative).»
+      options:
+        - text: «сестру»
+          correct: true
+        - text: «сестра»
+          correct: false
+        - text: «сестри»
+          correct: false
+        - text: «сестрою»
+          correct: false
+    - question: «Я хочу _____ (apple — Accusative).»
+      options:
+        - text: «яблуко»
+          correct: true
+        - text: «яблука»
+          correct: false
+        - text: «яблуку»
+          correct: false
+        - text: «яблуком»
+          correct: false
+    - question: «Книга на _____ (table — Locative).»
+      options:
+        - text: «столі»
+          correct: true
+        - text: «стіл»
+          correct: false
+        - text: «стола»
+          correct: false
+        - text: «столом»
+          correct: false
+    - question: «Я в _____ (park — Locative).»
+      options:
+        - text: «парку»
+          correct: true
+        - text: «парк»
+          correct: false
+        - text: «парка»
+          correct: false
+        - text: «парком»
+          correct: false
+    - question: «У мене немає _____ (time — Genitive).»
+      options:
+        - text: «часу»
+          correct: true
+        - text: «час»
+          correct: false
+        - text: «часом»
+          correct: false
+        - text: «часі»
+          correct: false
+    - question: «Це _____ (my) добра мама.»
+      options:
+        - text: «моя»
+          correct: true
+        - text: «мій»
+          correct: false
+        - text: «моє»
+          correct: false
+        - text: «мої»
+          correct: false
+    - question: «Це мій _____ (new) мобільний телефон.»
+      options:
+        - text: «новий»
+          correct: true
+        - text: «нова»
+          correct: false
+        - text: «нове»
+          correct: false
+        - text: «нові»
+          correct: false
+    - question: «Я _____ (was) вдома вчора (male).»
+      options:
+        - text: «був»
+          correct: true
+        - text: «була»
+          correct: false
+        - text: «було»
+          correct: false
+        - text: «були»
+          correct: false
+    - question: «Завтра я _____ (will read) книгу.»
+      options:
+        - text: «буду читати»
+          correct: true
+        - text: «читав»
+          correct: false
+        - text: «читаю»
+          correct: false
+        - text: «прочитав»
+          correct: false
+
+- type: match-up
+  title: Vocabulary Master
+  instruction: Match the Ukrainian word to its English translation.
+  pairs:
+    - left: родина
+      right: family
+    - left: сніданок
+      right: breakfast
+    - left: вулиця
+      right: street
+    - left: вокзал
+      right: train station
+    - left: завжди
+      right: always
+    - left: ніколи
+      right: never
+    - left: вчора
+      right: yesterday
+    - left: завтра
+      right: tomorrow
+    - left: дешевий
+      right: cheap
+    - left: квиток
+      right: ticket
+
+- type: fill-in
+  title: Dialogue Completion
+  instruction: Fill in the missing words in the dialogues.
+  items:
+    - sentence: '«— Привіт! Як тебе _____? — Мене звати Олена.»'
+      answer: звати
+      options: [звати, робити, жити, знати]
+    - sentence: '«— Скільки _____ цей хліб? — Двадцять гривень.»'
+      answer: коштує
+      options: [коштує, купує, продає, має]
+    - sentence: '«— Де _____ метро? — Прямо і наліво.»'
+      answer: станція
+      options: [станція, зупинка, вулиця, кімната]
+    - sentence: '«— Я буду _____ з молоком. — Добре.»'
+      answer: каву
+      options: [каву, кава, кави, каві]
+    - sentence: '«— Вибачте, я _____. Де центр? — Я не знаю.»'
+      answer: заблукав
+      options: [заблукав, знайшов, купив, продав]
+    - sentence: '«— Котра _____? — П''ята година.»'
+      answer: година
+      options: [година, хвилина, секунда, ніч]
+    - sentence: '«— У вас є _____? — Так, ось він.»'
+      answer: паспорт
+      options: [паспорт, парк, порт, спорт]
+    - sentence: '«— Можна _____? — Так, карткою чи готівкою?»'
+      answer: рахунок
+      options: [рахунок, меню, стіл, стілець]
+    - sentence: '«— Я _____ працюю. — Де ти працюєш?»'
+      answer: не
+      options: [не, так, ні, це]
+    - sentence: '«— _____ вихідні! — Дякую, навзаєм!»'
+      answer: Гарних
+      options: [Гарних, Поганих, Довгих, Коротких]
+    - sentence: '«— Я _____ Україну. — Це чудово!»'
+      answer: люблю
+      options: [люблю, бачу, чую, знаю]
+    - sentence: '«— До _____! — Па-па!»'
+      answer: побачення
+      options: [побачення, зустрічі, ранку, вечора]
+
+- type: true-false
+  title: Cultural Knowledge
+  instruction: Is this statement about Ukraine True or False?
+  items:
+    - statement: «Київ — столиця України.»
+      correct: true
+    - statement: «Гривня — це валюта (гроші) України.»
+      correct: true
+    - statement: «Борщ — це популярний десерт.»
+      correct: false
+    - statement: «В Україні пишуть кирилицею.»
+      correct: true
+    - statement: «Дніпро — це найбільша річка в Україні.»
+      correct: true
+    - statement: «Львів знаходиться на сході України (ні, на заході).»
+      correct: false
+    - statement: «Одеса знаходиться біля Чорного моря.»
+      correct: true
+    - statement: «Карпати — це гори.»
+      correct: true
+    - statement: «Слово «Дякую» означає «Hello».»
+      correct: false
+    - statement: «Номер 103 — це поліція (ні, це швидка).»
+      correct: false
+    - statement: «У метро треба платити за проїзд.»
+      correct: true
+    - statement: «Українці не люблять гостей.»
+      correct: false
+
+- type: unjumble
+  title: Sentence Structure
+  instruction: Arrange the words to make a correct sentence.
+  items:
+    - words: ["Я", "не", "розумію", "вас"]
+      answer: «Я не розумію вас.»
+    - words: ["Скільки", "коштує", "ця", "книга", "?"]
+      answer: «Скільки коштує ця книга?»
+    - words: ["Де", "знаходиться", "банк", "?"]
+      answer: «Де знаходиться банк?»
+    - words: ["Я", "люблю", "пити", "каву"]
+      answer: «Я люблю пити каву.»
+    - words: ["Мене", "звати", "Андрій", "."]
+      answer: «Мене звати Андрій.»
+    - words: ["Я", "живу", "в", "Києві"]
+      answer: «Я живу в Києві.»
+    - words: ["У", "мене", "немає", "часу"]
+      answer: «У мене немає часу.»
+    - words: ["Дайте", "меню", "будь", "ласка"]
+      answer: «Дайте меню будь ласка.»
+    - words: ["Сьогодні", "гарна", "погода", "."]
+      answer: «Сьогодні гарна погода.»
+    - words: ["Мій", "брат", "студент", "."]
+      answer: «Мій брат студент.»
+    - words: ["Ми", "йдемо", "в", "кіно"]
+      answer: «Ми йдемо в кіно.»
+    - words: ["Ви", "говорите", "англійською", "?"]
+      answer: «Ви говорите англійською?»
+
+- type: group-sort
+  title: Gender Sort
+  instruction: Is the noun Masculine, Feminine, or Neuter?
+  groups:
+    - name: Masculine (Він)
+      items: ["стіл", "брат", "парк", "чай", "телефон", "будинок"]
+    - name: Feminine (Вона)
+      items: ["мама", "книга", "кава", "вулиця", "музика", "вода"]
+    - name: Neuter (Воно)
+      items: ["вікно", "місто", "море", "яблуко", "молоко", "сонце"]
+
+- type: quiz
+  title: Reading Comprehension
+  instruction: Read the short text and answer the question.
+  items:
+    - question: '«Текст: «Я не люблю м''ясо. Я їм тільки овочі.» Хто ця людина?»'
+      options:
+        - text: «Вегетаріанець.»
+          correct: true
+        - text: «Лікар.»
+          correct: false
+        - text: «Студент.»
+          correct: false
+        - text: «Водій.»
+          correct: false
+    - question: '«Текст: «Мій брат працює в школі. Він вчить дітей.» Хто він?»'
+      options:
+        - text: «Вчитель.»
+          correct: true
+        - text: «Лікар.»
+          correct: false
+        - text: «Актор.»
+          correct: false
+        - text: «Інженер.»
+          correct: false
+    - question: '«Текст: «Сьогодні йде дощ. Мені потрібна парасолька (umbrella).» Яка погода?»'
+      options:
+        - text: «Погана / Дощова.»
+          correct: true
+        - text: «Сонячна.»
+          correct: false
+        - text: «Жарка.»
+          correct: false
+        - text: «Суха.»
+          correct: false
+    - question: '«Текст: «Поїзд відправляється о 10:00.» Коли поїзд їде?»'
+      options:
+        - text: «О десятій.»
+          correct: true
+        - text: «О другій.»
+          correct: false
+        - text: «О п''ятій.»
+          correct: false
+        - text: «О першій.»
+          correct: false
+    - question: '«Текст: «У мене болить зуб. Я йду до лікаря.» Куди йде людина?»'
+      options:
+        - text: «У лікарню / стоматологію.»
+          correct: true
+        - text: «У магазин.»
+          correct: false
+        - text: «У парк.»
+          correct: false
+        - text: «На вокзал.»
+          correct: false
+    - question: '«Текст: «Я хочу купити квиток до Львова.» Де ця людина?»'
+      options:
+        - text: «На вокзалі.»
+          correct: true
+        - text: «У школі.»
+          correct: false
+        - text: «У лісі.»
+          correct: false
+        - text: «В аптеці.»
+          correct: false
+    - question: '«Текст: «Ця сукня дуже дорога. Я не можу її купити.» Чому вона не купує?»'
+      options:
+        - text: «Немає грошей / Дорого.»
+          correct: true
+        - text: «Не подобається.»
+          correct: false
+        - text: «Немає розміру.»
+          correct: false
+        - text: «Магазин зачинено.»
+          correct: false
+    - question: '«Текст: «Мій улюблений день — субота.» Чому?»'
+      options:
+        - text: «Це вихідний.»
+          correct: true
+        - text: «Це робочий день.»
+          correct: false
+        - text: «Це важкий день.»
+          correct: false
+        - text: «Це понеділок.»
+          correct: false
+
+- type: quiz
+  title: Situational Reaction
+  instruction: What is the best thing to say?
+  items:
+    - question: «Вам дали подарунок. Що ви скажете?»
+      options:
+        - text: «Дякую!»
+          correct: true
+        - text: «До побачення!»
+          correct: false
+        - text: «Вибачте!»
+          correct: false
+        - text: «Алло!»
+          correct: false
+    - question: «Ви наступили комусь на ногу. Що ви скажете?»
+      options:
+        - text: «Вибачте!»
+          correct: true
+        - text: «Дякую!»
+          correct: false
+        - text: «Будь ласка!»
+          correct: false
+        - text: «Привіт!»
+          correct: false
+    - question: «Ви хочете зайти, але двері зачинені. Що ви запитаєте?»
+      options:
+        - text: «Відчинено?»
+          correct: true
+        - text: «Зачинено?»
+          correct: false
+        - text: «Хто там?»
+          correct: false
+        - text: «Де я?»
+          correct: false
+    - question: «Хтось чхнув (sneezed). Що ви скажете?»
+      options:
+        - text: «Будьте здорові!»
+          correct: true
+        - text: «Смачного!»
+          correct: false
+        - text: «На добраніч!»
+          correct: false
+        - text: «Щасливої дороги!»
+          correct: false
+    - question: «Ви лягаєте спати. Що ви скажете?»
+      options:
+        - text: «На добраніч!»
+          correct: true
+        - text: «Доброго ранку!»
+          correct: false
+        - text: «Добрий день!»
+          correct: false
+        - text: «Смачного!»
+          correct: false
+    - question: «Ви сідаєте їсти. Що ви скажете?»
+      options:
+        - text: «Смачного!»
+          correct: true
+        - text: «Вітаю!»
+          correct: false
+        - text: «Щастя!»
+          correct: false
+        - text: «Здоров'я!»
+          correct: false
+    - question: «У друга день народження. Що ви скажете?»
+      options:
+        - text: «Вітаю з днем народження!»
+          correct: true
+        - text: «До побачення!»
+          correct: false
+        - text: «Вибачте!»
+          correct: false
+        - text: «Алло!»
+          correct: false
+    - question: «Ви не знаєте відповідь. Що ви скажете?»
+      options:
+        - text: «Я не знаю.»
+          correct: true
+        - text: «Я знаю.»
+          correct: false
+        - text: «Я тут.»
+          correct: false
+        - text: «Це стіл.»
+          correct: false

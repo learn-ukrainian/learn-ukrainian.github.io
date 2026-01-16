@@ -1,0 +1,321 @@
+- type: match-up
+  title: Locations and Actions
+  instruction: Match the place to what you do there.
+  pairs:
+    - left: ринок
+      right: buy fresh vegetables
+    - left: кафе
+      right: drink coffee
+    - left: вокзал
+      right: buy a ticket
+    - left: аптека
+      right: buy medicine
+    - left: метро
+      right: go to another station
+    - left: магазин
+      right: buy bread
+    - left: каса
+      right: pay for goods
+    - left: стадіон
+      right: watch football
+    - left: парк
+      right: walk and rest
+    - left: готель
+      right: sleep
+
+- type: fill-in
+  title: My Plans
+  instruction: Complete the story about plans for the day.
+  items:
+    - sentence: «Сьогодні у мене багато _____.»
+      answer: справ
+      options: [справ, грошей, друзів, книг]
+    - sentence: «У мене болить голова. Спочатку я йду в _____.»
+      answer: аптеку
+      options: [аптеку, аптека, аптеки, аптекою]
+    - sentence: «Там я купую _____.»
+      answer: ліки
+      options: [ліки, хліб, каву, квиток]
+    - sentence: «Я люблю швидкий транспорт. Потім я їду на _____.»
+      answer: метро
+      options: [метро, таксі, автобус, літак]
+    - sentence: «Мені треба їхати. Я хочу купити _____.»
+      answer: квиток
+      options: [квиток, паспорт, сумку, воду]
+    - sentence: «Я люблю місто Лева. Я хочу поїхати до _____.»
+      answer: Львова
+      options: [Львова, Львів, Львовом, Львові]
+    - sentence: «Я не працюю ввечері. Ввечері я _____.»
+      answer: вільний
+      options: [вільний, зайнятий, хворий, сумний]
+    - sentence: «У мене є друг. Я дзвоню _____.»
+      answer: другу
+      options: [другу, друг, друга, другом]
+    - sentence: «Ми хочемо їсти. Ми йдемо в _____.»
+      answer: кафе
+      options: [кафе, банк, аптеку, школу]
+    - sentence: «Ми любимо гарячі напої. Ми п'ємо _____.»
+      answer: чай
+      options: [чай, суп, воду, сік]
+    - sentence: «Сонце сідає. Це був гарний _____.»
+      answer: день
+      options: [день, ніч, ранок, вечір]
+    - sentence: «У мене все добре. Я _____.»
+      answer: щасливий
+      options: [щасливий, сумний, злий, поганий]
+
+- type: quiz
+  title: Where am I?
+  instruction: Read the phrase and guess the place.
+  items:
+    - question: '«Де ви можете почути: «Ваш квиток і паспорт, будь ласка»?»'
+      options:
+        - text: «Вокзал (Station)»
+          correct: true
+        - text: «Аптека (Pharmacy)»
+          correct: false
+        - text: «Кафе (Cafe)»
+          correct: false
+        - text: «Парк (Park)»
+          correct: false
+    - question: '«Де ви можете почути: «Що у вас болить?»»'
+      options:
+        - text: «Лікарня / Аптека»
+          correct: true
+        - text: «Магазин»
+          correct: false
+        - text: «Метро»
+          correct: false
+        - text: «Ринок»
+          correct: false
+    - question: '«Де ви можете почути: «Обережно, двері зачиняються»?»'
+      options:
+        - text: «Метро»
+          correct: true
+        - text: «Таксі»
+          correct: false
+        - text: «Велосипед»
+          correct: false
+        - text: «Пішки»
+          correct: false
+    - question: '«Де ви можете почути фразу: «Пакет потрібен?»?»'
+      options:
+        - text: «Супермаркет»
+          correct: true
+        - text: «Театр»
+          correct: false
+        - text: «Музей»
+          correct: false
+        - text: «Банк»
+          correct: false
+    - question: '«Де зазвичай говорять: «Можна дешевше?»?»'
+      options:
+        - text: «Ринок»
+          correct: true
+        - text: «Аптека»
+          correct: false
+        - text: «Метро»
+          correct: false
+        - text: «Кінотеатр»
+          correct: false
+    - question: '«Де ви можете сказати: «Я буду капучино»?»'
+      options:
+        - text: «Кафе»
+          correct: true
+        - text: «Аптека»
+          correct: false
+        - text: «Банк»
+          correct: false
+        - text: «Школа»
+          correct: false
+    - question: '«Де ви можете почути: «Прикладіть картку до терміналу»?»'
+      options:
+        - text: «Магазин / Каса»
+          correct: true
+        - text: «Парк»
+          correct: false
+        - text: «Пляж»
+          correct: false
+        - text: «Ліс»
+          correct: false
+    - question: '«Де ви можете сказати: «Алло, я тебе не чую»?»'
+      options:
+        - text: «Телефонна розмова»
+          correct: true
+        - text: «Читання книги»
+          correct: false
+        - text: «Сон»
+          correct: false
+        - text: «Обід»
+          correct: false
+
+- type: unjumble
+  title: Daily Sequence
+  instruction: Put the words in order.
+  items:
+    - words: ["Спочатку", "я", "йду", "в", "магазин"]
+      answer: «Спочатку я йду в магазин.»
+    - words: ["Потім", "я", "купую", "квиток"]
+      answer: «Потім я купую квиток.»
+    - words: ["Я", "маю", "список", "справ"]
+      answer: «Я маю список справ.»
+    - words: ["Нарешті", "я", "вдома"]
+      answer: «Нарешті я вдома.»
+    - words: ["Я", "дуже", "втомився", "сьогодні"]
+      answer: «Я дуже втомився сьогодні.»
+    - words: ["Ми", "зустрічаємося", "о", "сьомій"]
+      answer: «Ми зустрічаємося о сьомій.»
+    - words: ["Все", "добре", "дякую"]
+      answer: «Все добре дякую.»
+    - words: ["У", "мене", "немає", "часу"]
+      answer: «У мене немає часу.»
+
+- type: true-false
+  title: Mixed Facts
+  instruction: True or False based on previous modules.
+  items:
+    - statement: «На ринку можна купити свіжі овочі.»
+      correct: true
+    - statement: «Аптека продає каву і чай.»
+      correct: false
+    - statement: «У метро треба платити за проїзд.»
+      correct: true
+    - statement: «Паспорт потрібен для покупки хліба.»
+      correct: false
+    - statement: «Швидка допомога має номер 103.»
+      correct: true
+    - statement: «Капучино — це суп.»
+      correct: false
+    - statement: «Ми говори «Алло», коли дзвонимо.»
+      correct: true
+    - statement: «Квиток «туди й назад» — це два квитки.»
+      correct: true
+    - statement: «Офіціант працює в поліції.»
+      correct: false
+    - statement: «Київ — столиця України.»
+      correct: true
+
+- type: group-sort
+  title: Time Markers
+  instruction: Sort into sequence categories.
+  groups:
+    - name: Start (Початок)
+      items: ["Спочатку", "Вранці", "Перше", "Зранку"]
+    - name: Middle (Середина)
+      items: ["Потім", "Після цього", "Далі", "Вдень"]
+    - name: End (Кінець)
+      items: ["Нарешті", "Ввечері", "В кінці", "Вночі"]
+
+- type: quiz
+  title: What do I need?
+  instruction: Identify the object needed for the action.
+  items:
+    - question: «Я хочу їти в метро. Мені потрібен...»
+      options:
+        - text: «Жетон / Картка / Телефон»
+          correct: true
+        - text: «Паспорт»
+          correct: false
+        - text: «Ключ»
+          correct: false
+        - text: «Чек»
+          correct: false
+    - question: «Я хочу подзвонити. Мені потрібен...»
+      options:
+        - text: «Телефон»
+          correct: true
+        - text: «Хліб»
+          correct: false
+        - text: «Стіл»
+          correct: false
+        - text: «Квиток»
+          correct: false
+    - question: «Я хочу купити ліки. Я йду в...»
+      options:
+        - text: «Аптеку»
+          correct: true
+        - text: «Бібліотеку»
+          correct: false
+        - text: «Парк»
+          correct: false
+        - text: «Ліс»
+          correct: false
+    - question: «Я хочу заплатити безготівково. Я використовую...»
+      options:
+        - text: «Картку»
+          correct: true
+        - text: «Готівку»
+          correct: false
+        - text: «Паспорт»
+          correct: false
+        - text: «Квиток»
+          correct: false
+    - question: «Я хочу їсти. Мені потрібна...»
+      options:
+        - text: «Їжа»
+          correct: true
+        - text: «Вода»
+          correct: false
+        - text: «Музика»
+          correct: false
+        - text: «Книга»
+          correct: false
+    - question: «Я заблукав у місті. Мені потрібна...»
+      options:
+        - text: «Карта»
+          correct: true
+        - text: «Піца»
+          correct: false
+        - text: «Ліжко»
+          correct: false
+        - text: «Лампа»
+          correct: false
+    - question: «Я хочу спати. Мені потрібен...»
+      options:
+        - text: «Готель / Дім»
+          correct: true
+        - text: «Ринок»
+          correct: false
+        - text: «Офіс»
+          correct: false
+        - text: «Магазин»
+          correct: false
+    - question: «Мені дуже холодно. Мені потрібна...»
+      options:
+        - text: «Куртка / Чай»
+          correct: true
+        - text: «Вода з льодом»
+          correct: false
+        - text: «Морозиво»
+          correct: false
+        - text: «Вентилятор»
+          correct: false
+
+- type: fill-in
+  title: Task List
+  instruction: Complete the to-do list.
+  items:
+    - sentence: «Я хочу їсти бутерброд. Треба купити _____.»
+      answer: хліб
+      options: [хліб, воду, каву, чай]
+    - sentence: «Я хочу говорити з мамою. Треба подзвонити _____.»
+      answer: мамі
+      options: [мамі, татові, брату, сестрі]
+    - sentence: «Мені потрібні гроші. Треба піти в _____.»
+      answer: банк
+      options: [банк, парк, ліс, сад]
+    - sentence: «Я запізнююсь. Треба замовити _____.»
+      answer: таксі
+      options: [таксі, піцу, суші, квиток]
+    - sentence: «Я їду за кордон. Мені потрібен _____.»
+      answer: паспорт
+      options: [паспорт, телефон, ключ, гроші]
+    - sentence: «Завтра урок. Треба вивчити _____.»
+      answer: слова
+      options: [слова, букви, цифри, пісні]
+    - sentence: «Я хочу сказати привіт. Треба написати _____.»
+      answer: повідомлення
+      options: [повідомлення, лист, книгу, вірш]
+    - sentence: «Це домашнє завдання. Треба зробити _____.»
+      answer: вправу
+      options: [вправу, каву, чай, обід]

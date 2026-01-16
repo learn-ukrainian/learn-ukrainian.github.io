@@ -24,25 +24,25 @@
 
 ### могти — Can (Physical Ability)
 
-| Person   | могти  | Example                                 |
-| -------- | ------ | --------------------------------------- |
-| я        | можу   | Я можу бігти. (I can run.)              |
-| ти       | можеш  | Ти можеш допомогти? (Can you help?)     |
-| він/вона | може   | Він може прийти. (He can come.)         |
-| ми       | можемо | Ми можемо зробити це. (We can do this.) |
-| ви       | можете | Ви можете почекати? (Can you wait?)     |
-| вони     | можуть | Вони можуть грати. (They can play.)     |
+| Person | могти | IPA | Example |
+| --- | --- | --- | --- |
+| я | можу | /ˈmɔʒu/ | Я можу бігти. (I can run.) |
+| ти | можеш | /ˈmɔʒɛʃ/ | Ти можеш допомогти? (Can you help?) |
+| він/вона | може | /ˈmɔʒɛ/ | Він може прийти. (He can come.) |
+| ми | можемо | /ˈmɔʒɛmɔ/ | Ми можемо зробити це. (We can do this.) |
+| ви | можете | /ˈmɔʒɛtɛ/ | Ви можете почекати? (Can you wait?) |
+| вони | можуть | /ˈmɔʒutʲ/ | Вони можуть грати. (They can play.) |
 
 ### вміти — Know How To (Skill)
 
-| Person   | вміти  | Example                                                      |
-| -------- | ------ | ------------------------------------------------------------ |
-| я        | вмію   | Я вмію готувати. (I know how to cook.)                       |
-| ти       | вмієш  | Ти вмієш танцювати? (Do you know how to dance?)              |
-| він/вона | вміє   | Вона вміє малювати. (She knows how to draw.)                 |
-| ми       | вміємо | Ми вміємо плавати. (We know how to swim.)                    |
-| ви       | вмієте | Ви вмієте водити? (Do you know how to drive?)                |
-| вони     | вміють | Вони вміють грати на гітарі. (They know how to play guitar.) |
+| Person | вміти | IPA | Example |
+| --- | --- | --- | --- |
+| я | вмію | /ˈvmijʊ/ | Я вмію готувати. (I know how to cook.) |
+| ти | вмієш | /ˈvmijɛʃ/ | Ти вмієш танцювати? (Do you know how to dance?) |
+| він/вона | вміє | /ˈvmijɛ/ | Вона вміє малювати. (She knows how to draw.) |
+| ми | вміємо | /ˈvmijɛmɔ/ | Ми вміємо плавати. (We know how to swim.) |
+| ви | вмієте | /ˈvmijɛtɛ/ | Ви вмієте водити? (Do you know how to drive?) |
+| вони | вміють | /ˈvmijutʲ/ | Вони вміють грати на гітарі. (They know how to play guitar.) |
 
 ---
 
@@ -75,14 +75,14 @@ These are impersonal — the «subject» is optional:
 
 ### мусити — Must, Have To
 
-| Person   | мусити | Example                                  |
-| -------- | ------ | ---------------------------------------- |
-| я        | мушу   | Я мушу йти. (I must go.)                 |
-| ти       | мусиш  | Ти мусиш зробити це. (You must do this.) |
-| він/вона | мусить | Вона мусить залишитися. (She must stay.) |
-| ми       | мусимо | Ми мусимо почекати. (We must wait.)      |
-| ви       | мусите | Ви мусите відповісти. (You must answer.) |
-| вони     | мусять | Вони мусять знати. (They must know.)     |
+| Person | мусити | IPA | Example |
+| --- | --- | --- | --- |
+| я | мушу | /ˈmuʃu/ | Я мушу йти. (I must go.) |
+| ти | мусиш | /ˈmusɪʃ/ | Ти мусиш зробити це. (You must do this.) |
+| він/вона | мусить | /ˈmusɪtʲ/ | Вона мусить залишитися. (She must stay.) |
+| ми | мусимо | /ˈmusɪmɔ/ | Ми мусимо почекати. (We must wait.) |
+| ви | мусите | /ˈmusɪtɛ/ | Ви мусите відповісти. (You must answer.) |
+| вони | мусять | /ˈmusʲɑtʲ/ | Вони мусять знати. (They must know.) |
 
 ---
 
@@ -90,8 +90,8 @@ These are impersonal — the «subject» is optional:
 
 > [!observe] Pattern Discovery
 >
-> - **Можна** увійти? (May I enter?)
-> - **Не можна** палити тут. (Smoking is not allowed here.)
+> - **Можна** /ˈmɔʒnɑ/ увійти? (May I enter?)
+> - **Не можна** /nɛ ˈmɔʒnɑ/ палити тут. (Smoking is not allowed here.)
 >
 > **можна** = allowed, permitted
 > **не можна** = not allowed, forbidden
@@ -242,15 +242,17 @@ These are impersonal — the «subject» is optional:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. I can speak Ukrainian.
+2. You must work today.
+3. May I open the window?
 
 ---
 
 # Підсумок
+
 Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати «я можу», «я вмію» та «я хочу». Ви також знаєте слова «треба», «можна» та «заборонено». Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
 
 > [!myth] **Міф про українську мову (Myth about Ukrainian language)**

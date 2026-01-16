@@ -1,0 +1,403 @@
+- type: match-up
+  title: Transport Vocabulary
+  instruction: Match the transport modes to their English meanings.
+  pairs:
+    - left: метро
+      right: metro / subway
+    - left: автобус
+      right: bus
+    - left: трамвай
+      right: tram
+    - left: тролейбус
+      right: trolleybus
+    - left: таксі
+      right: taxi
+    - left: маршрутка
+      right: minibus (marshrutka)
+    - left: поїзд
+      right: train
+    - left: літак
+      right: plane
+    - left: велосипед
+      right: bicycle
+    - left: самокат
+      right: scooter
+
+- type: fill-in
+  title: In the Metro
+  instruction: Complete the sentences about using the metro.
+  items:
+    - sentence: «Де найближча _____ метро?»
+      answer: станція
+      options: [станція, зупинка, вулиця, кімната]
+    - sentence: «Обережно, двері _____.»
+      answer: зачиняються
+      options: [зачиняються, відкриваються, стоять, йдуть]
+    - sentence: «Наступна _____ — «Хрещатик».»
+      answer: станція
+      options: [станція, зупинка, лінія, карта]
+    - sentence: «Тут треба зробити _____.»
+      answer: пересадку
+      options: [пересадку, зупинку, вихід, вхід]
+    - sentence: «Де _____ на червону лінію?»
+      answer: перехід
+      options: [перехід, вихід, вхід, поїзд]
+    - sentence: «Прикладіть _____ до турнікета.»
+      answer: телефон
+      options: [телефон, паспорт, руку, ногу]
+    - sentence: «Будь ласка, _____ за проїзд.»
+      answer: передайте
+      options: [передайте, стійте, сидіть, йдіть]
+    - sentence: «Ви _____ на наступній?»
+      answer: виходите
+      options: [виходите, заходите, стоїте, сидите]
+    - sentence: «Зупиніть на _____, будь ласка.»
+      answer: зупинці
+      options: [зупинці, станції, світлофорі, перехресті]
+    - sentence: «Я чекаю на _____.»
+      answer: таксі
+      options: [таксі, метро, ліфт, сходи]
+    - sentence: «Де тут _____ в метро?»
+      answer: вхід
+      options: [вхід, вихід, перехід, поїзд]
+    - sentence: «Це кінцева _____.»
+      answer: зупинка
+      options: [зупинка, станція, вулиця, площа]
+
+- type: quiz
+  title: Transport Situations
+  instruction: What should you say or do in these situations?
+  items:
+    - question: «Ви в маршрутці. Ви хочете заплатити. Що ви скажете?»
+      options:
+        - text: «Передайте за проїзд, будь ласка.»
+          correct: true
+        - text: «Дайте мені гроші.»
+          correct: false
+        - text: «Я хочу їсти.»
+          correct: false
+        - text: «Зупиніть тут.»
+          correct: false
+    - question: «Ви в автобусі. Людина перед вами заважає вийти. Що ви спитаєте?»
+      options:
+        - text: «Ви виходите на наступній?»
+          correct: true
+        - text: «Як вас звати?»
+          correct: false
+        - text: «Котра година?»
+          correct: false
+        - text: «Це ваш автобус?»
+          correct: false
+    - question: «Ви в метро. Ви не знаєте, де вихід. Що ви запитаєте?»
+      options:
+        - text: «Де тут вихід?»
+          correct: true
+        - text: «Де тут вхід?»
+          correct: false
+        - text: «Де тут поїзд?»
+          correct: false
+        - text: «Де тут таксі?»
+          correct: false
+    - question: '«Що означає оголошення «Обережно, двері зачиняються»?»'
+      options:
+        - text: «Caution, doors are closing.»
+          correct: true
+        - text: «Welcome to the metro.»
+          correct: false
+        - text: «Please sit down.»
+          correct: false
+        - text: «Show your ticket.»
+          correct: false
+    - question: «Ви в таксі. Водій їде занадто швидко. Що ви скажете?»
+      options:
+        - text: «Будь ласка, повільніше.»
+          correct: true
+        - text: «Швидше, будь ласка.»
+          correct: false
+        - text: «Дякую, дуже добре.»
+          correct: false
+        - text: «Я люблю швидкість.»
+          correct: false
+    - question: '«Що означає вираз «година пік» у транспорті?»'
+      options:
+        - text: «Rush hour.»
+          correct: true
+        - text: «Lunch time.»
+          correct: false
+        - text: «Night time.»
+          correct: false
+        - text: «Free time.»
+          correct: false
+    - question: «Ви хочете замовити таксі. Що ви використовуєте?»
+      options:
+        - text: «Додаток у телефоні (Uklon, Bolt).»
+          correct: true
+        - text: «Газету.»
+          correct: false
+        - text: «Радіо.»
+          correct: false
+        - text: «Телевізор.»
+          correct: false
+    - question: '«Хто такий «контролер» у громадському транспорті?»'
+      options:
+        - text: «Ticket inspector.»
+          correct: true
+        - text: «Driver.»
+          correct: false
+        - text: «Passenger.»
+          correct: false
+        - text: «Mechanic.»
+          correct: false
+    - question: '«Ви бачите знак «Не притулятися». Що це значить?»'
+      options:
+        - text: «Do not lean (against doors).»
+          correct: true
+        - text: «Do not enter.»
+          correct: false
+        - text: «Do not smoke.»
+          correct: false
+        - text: «Do not speak.»
+          correct: false
+    - question: «Як називається популярний жовтий маленький автобус?»
+      options:
+        - text: «Маршрутка.»
+          correct: true
+        - text: «Трамвай.»
+          correct: false
+        - text: «Поїзд.»
+          correct: false
+        - text: «Літак.»
+          correct: false
+    - question: «Який колір жетонів у київському метро (раніше)?»
+      options:
+        - text: «Синій або зелений.»
+          correct: true
+        - text: «Червоний.»
+          correct: false
+        - text: «Чорний.»
+          correct: false
+        - text: «Білий.»
+          correct: false
+    - question: «У якому місті знаходиться найглибша станція метро?»
+      options:
+        - text: «У Києві (Арсенальна).»
+          correct: true
+        - text: «У Лондоні.»
+          correct: false
+        - text: «У Нью-Йорку.»
+          correct: false
+        - text: «У Парижі.»
+          correct: false
+
+- type: unjumble
+  title: Ask for Directions
+  instruction: Put the words in order to form a question.
+  items:
+    - words: ["Як", "доїхати", "до", "центру", "?"]
+      answer: «Як доїхати до центру?»
+    - words: ["Де", "знаходиться", "станція", "метро", "?"]
+      answer: «Де знаходиться станція метро?»
+    - words: ["Зупиніть", "на", "зупинці", "будь", "ласка"]
+      answer: «Зупиніть на зупинці будь ласка.»
+    - words: ["Скільки", "коштує", "проїзд", "у", "метро", "?"]
+      answer: «Скільки коштує проїзд у метро?»
+    - words: ["Яка", "це", "буде", "зупинка", "?"]
+      answer: «Яка це буде зупинка?»
+    - words: ["Мені", "треба", "на", "вокзал"]
+      answer: «Мені треба на вокзал.»
+    - words: ["Ви", "виходите", "на", "наступній", "?"]
+      answer: «Ви виходите на наступній?»
+    - words: ["Передайте", "будь", "ласка", "за", "одного"]
+      answer: «Передайте будь ласка за одного.»
+    - words: ["Обережно", "двері", "зачиняються"]
+      answer: «Обережно двері зачиняються.»
+    - words: ["Наступна", "станція", "Майдан", "Незалежності"]
+      answer: «Наступна станція Майдан Незалежності.»
+    - words: ["Це", "місце", "вільне", "?"]
+      answer: «Це місце вільне?»
+    - words: ["Я", "чекаю", "на", "автобус"]
+      answer: «Я чекаю на автобус.»
+
+- type: group-sort
+  title: Transport Types
+  instruction: Is it Underground or Surface transport?
+  groups:
+    - name: Underground (Під землею)
+      items: ["метро", "ескалатор", "станція", "турнікет", "платформа метро", "поїзд метро"]
+    - name: Surface (На землі)
+      items: ["автобус", "трамвай", "тролейбус", "таксі", "маршрутка", "фунікулер"]
+
+- type: true-false
+  title: Transport Rules
+  instruction: True or False about Ukrainian transport.
+  items:
+    - statement: «У метро треба платити за вхід.»
+      correct: true
+    - statement: «У маршрутці платять при виході (зазвичай ні, при вході).»
+      correct: false
+    - statement: «Таксі можна викликати через додаток.»
+      correct: true
+    - statement: «Трамвай їде по рейках.»
+      correct: true
+    - statement: «Метро працює цілодобово (24/7).»
+      correct: false
+    - statement: «Треба поступатися місцем старшим людям.»
+      correct: true
+    - statement: «У метро можна курити.»
+      correct: false
+    - statement: «Станція «Арсенальна» дуже глибока.»
+      correct: true
+    - statement: «Автобус зупиняється, де ви хочете (ні, на зупинках).»
+      correct: false
+    - statement: «Для проїзду потрібен квиток або картка.»
+      correct: true
+    - statement: «Водій таксі завжди знає дорогу.»
+      correct: false
+    - statement: «У транспорті треба триматися за поручень.»
+      correct: true
+
+- type: quiz
+  title: Transport Signs
+  instruction: What does the sign mean?
+  items:
+    - question: '«Що означає цей знак «Вхід заборонено»?»'
+      options:
+        - text: «No entry.»
+          correct: true
+        - text: «Entrance.»
+          correct: false
+        - text: «Exit.»
+          correct: false
+        - text: «Ticket office.»
+          correct: false
+    - question: '«Що означає цей знак «Місця для пасажирів з дітьми»?»'
+      options:
+        - text: «Seats for passengers with children.»
+          correct: true
+        - text: «Seats for drivers.»
+          correct: false
+        - text: «No sitting.»
+          correct: false
+        - text: «Standing area.»
+          correct: false
+    - question: '«Що означає цей знак «Аварійний вихід»?»'
+      options:
+        - text: «Emergency exit.»
+          correct: true
+        - text: «Main entrance.»
+          correct: false
+        - text: «Toilet.»
+          correct: false
+        - text: «Shop.»
+          correct: false
+    - question: '«Що означає цей знак «Не притулятися»?»'
+      options:
+        - text: «Do not lean.»
+          correct: true
+        - text: «Do not touch.»
+          correct: false
+        - text: «Do not enter.»
+          correct: false
+        - text: «Do not speak.»
+          correct: false
+    - question: '«Що означає напис «Каса» на станції?»'
+      options:
+        - text: «Ticket office.»
+          correct: true
+        - text: «Police.»
+          correct: false
+        - text: «Doctor.»
+          correct: false
+        - text: «Driver.»
+          correct: false
+    - question: '«Що означає цей знак «Вихід у місто»?»'
+      options:
+        - text: «Exit to city.»
+          correct: true
+        - text: «Entrance from city.»
+          correct: false
+        - text: «City center.»
+          correct: false
+        - text: «City map.»
+          correct: false
+    - question: '«Що означає цей знак «Зупинка автобуса»?»'
+      options:
+        - text: «Bus stop.»
+          correct: true
+        - text: «Metro station.»
+          correct: false
+        - text: «Taxi stand.»
+          correct: false
+        - text: «Parking.»
+          correct: false
+    - question: '«Що означає цей знак «Інформація»?»'
+      options:
+        - text: «Information.»
+          correct: true
+        - text: «Internet.»
+          correct: false
+        - text: «Ice cream.»
+          correct: false
+        - text: «Inside.»
+          correct: false
+    - question: '«Що означає цей знак «Туалет»?»'
+      options:
+        - text: «Toilet / WC.»
+          correct: true
+        - text: «Train.»
+          correct: false
+        - text: «Ticket.»
+          correct: false
+        - text: «Telephone.»
+          correct: false
+    - question: '«Що означає цей знак «Ліфт»?»'
+      options:
+        - text: «Elevator.»
+          correct: true
+        - text: «Escalator.»
+          correct: false
+        - text: «Stairs.»
+          correct: false
+        - text: «Door.»
+          correct: false
+
+- type: fill-in
+  title: Taxi Dialogue
+  instruction: Complete the conversation in a taxi.
+  items:
+    - sentence: '«Водій: Добрий день! Куди _____?»'
+      answer: їдемо
+      options: [їдемо, йдемо, стоїмо, спимо]
+    - sentence: '«Ви: На _____ Франка, п''ять.»'
+      answer: вулицю
+      options: [вулицю, площу, парк, місто]
+    - sentence: '«Водій: Добре. _____ seatbelt, будь ласка.»'
+      answer: Пристібніться
+      options: [Пристібніться, Вийдіть, Зайдіть, Сядьте]
+    - sentence: '«Ви: Скільки _____ їхати?»'
+      answer: часу
+      options: [часу, грошей, людей, машин]
+    - sentence: '«Водій: Двадцять хвилин. _____ немає.»'
+      answer: Заторів
+      options: [Заторів, Дороги, Машини, Людей]
+    - sentence: '«Ви: Можна відкрити _____?»'
+      answer: вікно
+      options: [вікно, двері, капот, багажник]
+    - sentence: '«Водій: Так, будь _____.»'
+      answer: ласка
+      options: [ласка, добре, погано, швидко]
+    - sentence: '«Ви: Зупиніть _____ тут.»'
+      answer: ось
+      options: [ось, там, де, коли]
+    - sentence: '«Водій: Добре. З вас 100 _____.»'
+      answer: гривень
+      options: [гривень, доларів, євро, центів]
+    - sentence: '«Ви: Оплата _____.»'
+      answer: карткою
+      options: [карткою, готівкою, телефоном, чеком]
+    - sentence: '«Водій: Дякую. Гарного _____.»'
+      answer: дня
+      options: [дня, ночі, вечора, ранку]
+    - sentence: '«Ви: Дякую, до _____.»'
+      answer: побачення
+      options: [побачення, зустрічі, завтра, вечора]

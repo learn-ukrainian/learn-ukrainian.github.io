@@ -6,7 +6,7 @@ You're at a market in Kyiv. The vendor says «Двадцять гривень.»
 
 > 💡 **Did You Know?**
 >
-> The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant «neck ring» - a silver ornament worn by wealthy citizens.
+> The Ukrainian currency is called **гривня** /ˈɦrɪwnʲɑ/ (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century!
 
 ## Presentation
 
@@ -44,17 +44,17 @@ Let's start with the basics. Ukrainian numbers 0-20 are unique and must be memor
 
 The tens follow a beautiful pattern:
 
-| Number | Ukrainian  | Pattern         |
-| ------ | ---------- | --------------- |
-| 20     | двадцять   | два + дцять     |
-| 30     | тридцять   | три + дцять     |
-| 40     | сорок      | (unique)        |
-| 50     | п'ятдесят  | п'ять + десят   |
-| 60     | шістдесят  | шість + десят   |
-| 70     | сімдесят   | сім + десят     |
-| 80     | вісімдесят | вісім + десят   |
-| 90     | дев'яносто | дев'ять + носто |
-| 100    | сто        | (unique)        |
+| Number | Ukrainian  | IPA | Pattern         |
+| ------ | ---------- | --- | --------------- |
+| 20     | двадцять   | /ˈdvɑdt͡sʲɑtʲ/ | два + дцять     |
+| 30     | тридцять   | /ˈtrɪdt͡sʲɑtʲ/ | три + дцять     |
+| 40     | сорок      | /ˈsɔrɔk/ | (unique)        |
+| 50     | п'ятдесят  | /pjɑtdɛˈsʲɑt/ | п'ять + десят   |
+| 60     | шістдесят  | /ʃisdeˈsʲɑt/ | шість + десят   |
+| 70     | сімдесят   | /simdɛˈsʲɑt/ | сім + десят     |
+| 80     | вісімдесят | /visimdɛˈsʲɑt/ | вісім + десят   |
+| 90     | дев'яносто | /dɛvjɑˈnɔstɔ/ | дев'ять + носто |
+| 100    | сто        | /stɔ/ | (unique)        |
 
 **Examples:**
 

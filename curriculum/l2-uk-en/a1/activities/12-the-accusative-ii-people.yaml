@@ -1,3 +1,7 @@
+module: 12-the-accusative-ii-people
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: People in Your Life
   pairs:
@@ -17,7 +21,11 @@
     right: grandfather
   - left: бабуся
     right: grandmother
-  instruction: З'єднайте відповідні елементи.
+  - left: чоловік
+    right: man/husband
+  - left: жінка
+    right: woman/wife
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Animate vs Inanimate
   groups:
@@ -37,7 +45,7 @@
     - паспорт
     - квиток
     - поїзд
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Accusative Endings
   items:
@@ -173,7 +181,7 @@
     - text: другом
       correct: false
     explanation: Animate masculine consonant → -а
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Animate Accusative Rules
   items:
@@ -214,7 +222,7 @@
   - statement: «Ти знаєш мою сусідку» is correct.
     correct: true
     explanation: 'Correct! Feminine accusative: сусідка → сусідку.'
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: fill-in
   title: Complete with Animate Accusative
   items:
@@ -228,7 +236,7 @@
   - sentence: Вона знає цього ___.
     answer: студента
     options:
-    - студент
+    - student
     - студента
     - студенту
     - студенті
@@ -316,7 +324,7 @@
     - сусідку
     - сусідки
     - сусідці
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Sentences in Context
   items:
@@ -375,7 +383,7 @@
     - менеджер
     - менеджера
     - менеджеру
-    - менеджерові
+    - менеджрові
   - sentence: Ти чекаєш свою ___?
     answer: подругу
     options:
@@ -404,7 +412,7 @@
     - гостя
     - гостю
     - гості
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Sentences with Animate Objects
   items:
@@ -540,7 +548,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Він знає цю студентку з школи'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: quiz
   title: More Complex Sentence Order
   items:
@@ -590,7 +598,7 @@
     explanation: 'Correct: Ти бачиш того лікаря там'
   - question: 'Correct sentence order for: "He really loves his neighbor."'
     options:
-    - text: Він дуже любить свою сусідку
+    - text: Він дуже люблю свою сусідку
       correct: true
     - text: дуже Він любить свою сусідку
       correct: false
@@ -632,4 +640,48 @@
     - text: вони
       correct: false
     explanation: 'Correct: Вона бачить офіціанта та офіціантку'
-  instruction: Оберіть правильну відповідь.
+  - question: 'Correct sentence order for: "I see our friendly neighbor."'
+    options:
+    - text: Я бачу нашого привітного сусіда
+      correct: true
+    - text: бачу Я нашого привітного сусіда
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Я бачу нашого привітного сусіда'
+  - question: 'Correct sentence order for: "She knows this new teacher."'
+    options:
+    - text: Вона знає цю нову вчительку
+      correct: true
+    - text: знає Вона цю нову вчительку
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Вона знає цю нову вчительку'
+  - question: 'Correct sentence order for: "We wait for our director there."'
+    options:
+    - text: Ми чекаємо нашого директора там
+      correct: true
+    - text: чекаємо Ми нашого директора там
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Ми чекаємо нашого директора там'
+  - question: 'Correct sentence order for: "Do you see that waiter here?"'
+    options:
+    - text: Ти бачиш того офіціанта тут?
+      correct: true
+    - text: бачиш Ти того офіціанта тут?
+      correct: false
+    - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
+      correct: false
+    explanation: 'Correct: Ти бачиш того офіціанта тут?'
+  instruction: Choose the correct answer.

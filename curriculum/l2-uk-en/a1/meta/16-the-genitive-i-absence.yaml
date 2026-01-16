@@ -6,7 +6,8 @@ phase: A1.2 - Navigation
 pedagogy: PPP
 focus: grammar
 duration: 60 min
-transliteration: vocabulary-only
+transliteration: none
+phonetics: ipa
 tags:
   - genitive-case
   - absence

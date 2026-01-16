@@ -20,12 +20,12 @@ Ukrainian cities blend historic architecture with Soviet-era planning and modern
 
 When Ukrainians give directions, they reference key urban features:
 
-- **вулиця** (vulytsia) — street (main roads with names)
-- **провулок** (provulok) — lane, alley (smaller connecting streets)
-- **площа** (ploshcha) — square (public gathering spaces)
-- **проспект** (prospekt) — avenue (wide, major thoroughfares)
-- **бульвар** (bulvar) — boulevard (often tree-lined)
-- **набережна** (naberezha) — embankment (riverside promenades)
+- **вулиця** /ˈvulɪt͡sʲɑ/ — street (main roads with names)
+- **провулок** /prɔˈvulɔk/ — lane, alley (smaller connecting streets)
+- **площа** /ˈplɔʃt͡ʃɑ/ — square (public gathering spaces)
+- **проспект** /prɔˈspɛkt/ — avenue (wide, major thoroughfares)
+- **бульвар** /bulʲˈvɑr/ — boulevard (often tree-lined)
+- **набережна** /ˈnɑbɛrɛʒnɑ/ — embankment (riverside promenades)
 
 **Navigation Reference Points:**
 
@@ -50,12 +50,12 @@ When Ukrainians give directions, they reference key urban features:
 
 Ukrainians use simple directional adverbs when guiding others:
 
-| Direction | Ukrainian   | Pronunciation | Usage                |
-| --------- | ----------- | ------------- | -------------------- |
-| Straight  | **прямо**   | [ˈprʲɑmɔ]     | Keep going forward   |
-| Left      | **наліво**  | [nɑˈliʋɔ]     | Turn/go to the left  |
-| Right     | **направо** | [nɑˈprɑʋɔ]    | Turn/go to the right |
-| Back      | **назад**   | [nɑˈzɑd]      | Return, go back      |
+| Direction | Ukrainian   | IPA | Usage                |
+| --------- | ----------- | --- | -------------------- |
+| Straight  | **прямо**   | /ˈprʲɑmɔ/ | Keep going forward   |
+| Left      | **наліво**  | /nɑˈlivɔ/ | Turn/go to the left  |
+| Right     | **направо** | /nɑˈprɑvɔ/ | Turn/go to the right |
+| Back      | **назад**   | /nɑˈzɑd/ | Return, go back      |
 
 **Mini-Dialogue: At the Train Station**
 

@@ -4,37 +4,31 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1065/750
+- **Words:** ✅ 912/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 48/1
+- **Vocab:** ✅ 49/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.0% (target 35-55% (M32))
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 46.6% (target 35-55% (M32))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 68 | Included in Core |
-| **Grammar** | ⚪️ | 57 | Skipped |
-| **Describing Family Members** | ⚪️ | 154 | Skipped |
-| **Examples in Context** | ✅ | 232 | Included in Core |
-| **Dialogues** | ✅ | 452 | Included in Core |
-| **Практика** | ⚪️ | 21 | Skipped |
-| **Підсумок** | ✅ | 62 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Warm-up** | ✅ | 108 | Included in Core |
+| **Граматика (Grammar)** | ⚪️ | 66 | Skipped |
+| **Describing Family Members (Опис членів сім'ї)** | ⚪️ | 144 | Skipped |
+| **Приклади (Examples)** | ⚪️ | 132 | Skipped |
+| **Діалоги (Dialogues)** | ✅ | 373 | Included in Core |
+| **Практика (Practice)** | ⚪️ | 13 | Skipped |
+| **Підсумок (Summary)** | ✅ | 58 | Included in Core |
+| **Need More Practice?** | ⚪️ | 18 | Skipped |

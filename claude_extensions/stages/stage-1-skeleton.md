@@ -12,11 +12,16 @@ Create the module skeleton with frontmatter, section headers, and vocabulary tab
 
 Three files:
 
-1. `meta/{slug}.yaml`: Module configuration (formerly frontmatter)
-2. `vocabulary/{slug}.yaml`: Structured vocabulary data
-3. `module.md`: Pure content (headers + placeholders)
+1. `meta/{num}-{slug}.yaml`: Module configuration (formerly frontmatter)
+2. `vocabulary/{num}-{slug}.yaml`: Structured vocabulary data
+3. `{num}-{slug}.md`: Pure content (headers + placeholders)
 
-## Metadata YAML Template (`meta/{slug}.yaml`)
+**Example for A1 Module 35 "At the Café":**
+- `meta/35-at-the-cafe.yaml`
+- `vocabulary/35-at-the-cafe.yaml`
+- `35-at-the-cafe.md`
+
+## Metadata YAML Template (`meta/{num}-{slug}.yaml`)
 
 ```yaml
 id: { number }
@@ -32,7 +37,7 @@ objectives:
 # Note: vocabulary_count is dynamic, no longer needed in meta
 ```
 
-## Vocabulary YAML Format (`vocabulary/{slug}.yaml`)
+## Vocabulary YAML Format (`vocabulary/{num}-{slug}.yaml`)
 
 Refer to `docs/dev/VOCAB_YAML_SCHEMA.md` for full details.
 
@@ -48,7 +53,7 @@ items:
     tags: []
 ```
 
-## Section Structure by Pedagogy (`module.md`)
+## Section Structure by Pedagogy (`{num}-{slug}.md`)
 
 ### PPP (A1-A2)
 

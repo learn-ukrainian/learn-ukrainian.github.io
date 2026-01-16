@@ -8,6 +8,51 @@
 
 ---
 
+## Introduction
+
+**Building the Foundation: Від початку до впевненості!**
+
+A2 is where Ukrainian grammar truly comes to life. You already know the Cyrillic alphabet and basic phrases from A1. Now you'll master the complete Ukrainian case system—all 7 cases—and start expressing yourself with real grammatical accuracy.
+
+### What You'll Learn
+
+- **Complete case system** — Dative, Instrumental, and full declension patterns
+- **Verb aspects** — Introduction to perfective/imperfective distinction
+- **Complex sentences** — Relative clauses, conjunctions, time expressions
+- **Expanded vocabulary** — ~1,100 new words across practical life domains
+- **Practical scenarios** — doctor, pharmacy, hotel, scheduling, social situations
+
+### Learning Philosophy
+
+A2 is the "bridge" level—you're no longer a beginner, but you're not yet independent. We use graduated methodology:
+- **Phases A2.1-A2.3** (M01-35): Structured presentation with maximum scaffolding
+- **Phases A2.4-A2.5** (M36-55): Hybrid approach preparing for B1 independence
+- **M56**: Checkpoint confirming grammar readiness
+- **Phase A2.6** (M57-70): Practical scenarios applying everything you've learned
+
+**Immersion level:** 40-80% Ukrainian (gradually increasing)
+
+### Prerequisites
+
+Completion of A1 or equivalent:
+- Comfortable reading/writing Cyrillic
+- Basic vocabulary (~600 words)
+- Understanding of Nominative, Accusative, Locative, Vocative, Genitive cases
+
+### By Module 70
+
+You will be able to:
+- Use all 7 Ukrainian cases correctly in common contexts
+- Distinguish between perfective and imperfective verbs
+- Construct complex sentences with multiple clauses
+- Handle medical appointments and pharmacy visits
+- Book hotels and rental accommodations
+- Schedule appointments and interviews
+- Navigate social situations with appropriate register
+- Communicate via modern digital channels
+
+---
+
 ## Quality Standards Reference
 
 For detailed quality metrics on instructional core word counts, immersion percentages, example sentences, engagement boxes, mini-dialogues, and activity requirements by level, please refer to:
@@ -21,20 +66,27 @@ For detailed quality metrics on instructional core word counts, immersion percen
 
 A2 is the "Bridge" level where learners are no longer beginners but not yet independent. To manage difficulty, we use a graduating methodology mix:
 
-| Phase    | Modules | Style Mix                          | Focus                            | Safety                                         |
-| :------- | :------ | :--------------------------------- | :------------------------------- | :--------------------------------------------- |
-| **A2.1** | 01-20   | **100% PPP**                       | Core Case Endings                | Maximized scaffolding. No surprises.           |
-| **A2.2** | 21-40   | **80% PPP / 20% Simple Narrative** | Aspect Drills + Short Readings   | Controlled comparison.                         |
-| **A2.3** | 41-50   | **Hybrid (Pre-B1 Runway)**         | Complex Sentences / Longer Texts | Narrative density increases to prepare for B1. |
+| Phase    | Modules | Style Mix                          | Focus                                  |
+| :------- | :------ | :--------------------------------- | :------------------------------------- |
+| **A2.1** | 01-11   | **100% PPP**                       | Completing the Cases (Dative, Instr.)  |
+| **A2.2** | 12-25   | **80% PPP / 20% Narrative**        | Aspect & Comparison                    |
+| **A2.3** | 26-35   | **70% PPP / 30% Narrative**        | Complex Sentences                      |
+| **A2.4** | 36-44   | **Hybrid**                         | Word Formation                         |
+| **A2.5** | 45-55   | **Hybrid (Pre-B1)**                | Vocabulary Expansion                   |
+| —        | **56**  | **Checkpoint**                     | Core Grammar (tests M01-55)            |
+| **A2.6** | 57-70   | **Practical (NEW)**                | Practical Scenarios (RFC #409)         |
 
 **Immersion Progression:**
 
 | Phase | Modules | Immersion Target |
 | ----- | ------- | ---------------- |
-| A2.1  | 01-15   | 40-50%           |
-| A2.2  | 16-35   | 50-65%           |
-| A2.3  | 36-44   | 65-75%           |
-| A2.5  | 45-58   | 75-80% (Pre-B1)  |
+| A2.1  | 01-11   | 40-50%           |
+| A2.2  | 12-25   | 50-60%           |
+| A2.3  | 26-35   | 55-65%           |
+| A2.4  | 36-44   | 60-70%           |
+| A2.5  | 45-55   | 65-75%           |
+| M56   | 56      | 70% (Checkpoint) |
+| A2.6  | 57-70   | 75-80% (Pre-B1)  |
 
 **Key Constraint:** A2 modules strictly target **~25 new words per module** (1,250 total for level) to prevent cognitive overload while grappling with the 7-case system.
 
@@ -1785,7 +1837,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.5: Vocabulary Expansion (Modules 45-56)
+## Phase A2.5: Vocabulary Expansion (Modules 45-55)
 
 ### Learning Goals
 
@@ -1889,9 +1941,13 @@ By module 50, learners can:
 - Symptoms: біль, температура, запалення, нежить
 - Treatment: ліки, таблетки, мазь, ін'єкція
 
-**Module 56: Checkpoint - Vocabulary Expansion**
+---
 
-**Covers:** M45-55
+## Module 56: Checkpoint: Core Grammar (Базова граматика)
+
+> **Note:** This checkpoint confirms grammar readiness before Phase A2.6 practical scenarios. It is NOT the final A2 assessment—that is M70.
+
+**Covers:** M01-55 (All A2 grammar and vocabulary)
 
 **Required Skill Groups:**
 
@@ -1923,66 +1979,87 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.6: Review & Consolidation (Modules 57-58)
+## Phase A2.6: Practical Scenarios (Modules 57-70)
+
+> **NEW** (RFC #409): These practical modules apply A2 grammar and vocabulary to real-world situations.
+> **Note:** M57-58 were repurposed from review modules to practical content to eliminate redundant assessment sequence.
 
 ### Learning Goals
 
-- Consolidate all A2 grammar
-- Review word formation patterns
-- Integrate vocabulary across domains
-- Prepare for B1 level
+- Handle complex service interactions (doctor, pharmacy, hotel)
+- Navigate scheduling and appointment systems
+- Manage formal and informal social situations
+- Communicate via modern digital channels
+- Apply all A2 grammar in authentic contexts
 
 ### Module Structure
 
-| #   | Title                  | Focus                           | Type       |
-| --- | ---------------------- | ------------------------------- | ---------- |
-| 57  | A2 Grammar Review      | All grammar consolidation       | Review     |
-| 58  | A2 Final Review        | Comprehensive skills assessment | Checkpoint |
+| #   | Slug                        | Title                          | Content                        |
+| --- | --------------------------- | ------------------------------ | ------------------------------ |
+| 57  | practical-intro             | Practical Introduction         | Overview of real-world scenarios |
+| 58  | practical-warm-up           | Practical Warm-up              | Transition exercises           |
+| 59  | at-the-doctor               | At the Doctor                  | Medical appointments, symptoms |
+| 60  | at-the-pharmacy             | At the Pharmacy                | Buying medicine, prescriptions |
+| 61  | hotel-accommodation         | Hotel Accommodation            | Booking, check-in, complaints  |
+| 62  | rental-accommodation        | Rental Accommodation           | Renting apartments, contracts  |
+| 63  | scheduling-appointments     | Scheduling Appointments        | Making appointments            |
+| 64  | scheduling-interviews       | Scheduling Interviews          | Job interviews, preparation    |
+| 65  | social-situations-formal    | Social Situations: Formal      | Formal events, etiquette       |
+| 66  | social-situations-informal  | Social Situations: Informal    | Casual gatherings, friends     |
+| 67  | modern-communication-email  | Modern Communication: Email    | Basic emails, messaging        |
+| 68  | modern-communication-social | Modern Communication: Social   | Social media, chat             |
+| 69  | combined-practice           | Combined Practice              | Integration of M57-68          |
+| 70  | a2-final-exam               | A2 Final Exam                  | CUMULATIVE: All A2 content     |
 
-### Module 57: A2 Grammar Review
+### Module 57: Practical Introduction (TO BE WRITTEN)
 
-**Case system review:**
+**Focus:** Transition from grammar to practical application
 
-- All 7 cases with correct endings
-- Preposition + case combinations
-- Common case errors and corrections
+**Content:**
+- Overview of practical scenario types
+- Key phrases for service interactions
+- Cultural notes on Ukrainian service contexts
+- Preview of upcoming scenarios
 
-**Aspect review:**
+### Module 58: Practical Warm-up (TO BE WRITTEN)
 
-- Perfective/imperfective selection
-- Aspect pairs vocabulary
-- Aspect in all tense contexts
+**Focus:** Guided practice bridging grammar to real-world use
 
-**Complex sentences review:**
+**Content:**
+- Structured role-play exercises
+- Scaffolded dialogues with increasing complexity
+- Error prevention for common mistakes
+- Confidence-building activities
 
-- Causal, concessive, purpose clauses
-- Relative clauses with який
-- Time clauses and sequence
+---
 
-**Word formation review:**
+## Module 70: A2 Final Exam (A2 Підсумковий іспит)
 
-- Prefix patterns
-- Suffix patterns
-- Root family recognition
+**Covers:** M01-69 (CUMULATIVE - All A2 grammar + practical scenarios)
 
-### Module 58: A2 Final Review
+> **LEVEL FINAL:** This is the comprehensive A2 certification exam.
 
-**Assessment areas:**
+**Assessment Structure:**
 
-1. Cases: Full paradigm and usage
-2. Aspect: Selection in context
-3. Comparison: Comparative/superlative
-4. Complex sentences: All clause types
-5. Word formation: Recognition and production
-6. Vocabulary: All 12 thematic domains
+**Section A: Reading (25 points)**
+- Authentic text with all case usage
+- Main idea and detail questions
 
-**Can-do verification:**
+**Section B: Grammar (25 points)**
+- All 7 cases in context
+- Aspect selection
+- Complex sentence formation
 
-- [ ] Handle routine situations at shops, banks, post offices
-- [ ] Describe experiences and events with reasons
-- [ ] Understand and produce texts on familiar topics
-- [ ] Use all 7 cases correctly
-- [ ] Select appropriate aspect
+**Section C: Vocabulary (25 points)**
+- Thematic vocabulary
+- Word formation
+- Collocations
+
+**Section D: Written Production (25 points)**
+- Practical scenario response (100+ words)
+- Short essay (150+ words)
+
+**Total: 100 points | Pass: 60 points**
 
 ---
 
@@ -1996,9 +2073,9 @@ By module 50, learners can:
 | A2.2 Aspect & Comparison  | 12-25   | ~345       | Verbs, adjectives         |
 | A2.3 Complex Sentences    | 26-35   | ~250       | Connectors, expressions   |
 | A2.4 Word Formation       | 36-44   | ~270       | Prefixes, suffixes, roots |
-| A2.5 Vocabulary Expansion | 45-56   | ~360       | 12 thematic domains       |
-| A2.6 Review               | 57-58   | ~50        | Consolidation             |
-| A2.7 Practical Scenarios  | 59-70   | ~150       | Real-world applications   |
+| A2.5 Vocabulary Expansion | 45-55   | ~330       | 11 thematic domains       |
+| M56 Checkpoint            | 56      | ~25        | Core Grammar assessment   |
+| A2.6 Practical Scenarios  | 57-70   | ~200       | Real-world applications   |
 | **Total**                 | **70**  | **~1,700** |                           |
 
 **Cumulative after A2:** ~2,600 words
@@ -2064,44 +2141,7 @@ graph TD
     M44[Checkpoint A2.4] --> M45[M45+ Vocab Expansion]
 ```
 
----
-
-## Phase A2.7: Practical Scenarios (Modules 59-70)
-
-> **NEW** (RFC #409): These practical modules apply A2 grammar and vocabulary to real-world situations requiring greater linguistic complexity than A1.
-
-### Learning Goals
-- Handle more complex service interactions
-- Manage appointments and scheduling
-- Navigate housing and employment situations
-- Use digital communication appropriately
-- Build confidence in multi-turn conversations
-
-### Grammar Application
-These modules reinforce A2 grammar (no new grammar introduced):
-- Full 7-case system in context
-- Aspect selection in real scenarios
-- Complex sentences with connectors
-- Conditional and subjunctive for requests
-
-### Vocabulary Plan A2.7 (~150 words)
-
-| Module | Words | Domain | Key Items |
-|--------|-------|--------|-----------|
-| 59 | 15 | Doctor | симптом, рецепт, діагноз... |
-| 60 | 12 | Pharmacy | ліки, дозування, побічні ефекти... |
-| 61 | 15 | Hotel | бронювання, номер, зручності... |
-| 62 | 15 | Rental | оренда, договір, комунальні... |
-| 63 | 12 | Appointments | записатися, підтвердити, скасувати... |
-| 64 | 15 | Job Interview | досвід, обов'язки, зарплата... |
-| 65 | 12 | Giving Directions | орієнтир, відстань, напрямок... |
-| 66 | 12 | Asking Directions | заблукати, карта, маршрут... |
-| 67 | 12 | Social Media | пост, коментар, підписатися... |
-| 68 | 10 | Texting | скорочення, емоджі, неформально... |
-| 69 | 15 | Online Services | додаток, доставка, замовлення... |
-| 70 | 5 | Review | (consolidation of above) |
-
-### Module Content Specifications A2.7
+### Module Content Specifications A2.6 (M59-69)
 
 #### Module 59: At the Doctor
 **Focus:** Describing symptoms, understanding diagnoses, prescriptions
@@ -2301,24 +2341,37 @@ These modules reinforce A2 grammar (no new grammar introduced):
 
 ---
 
-#### Module 70: A2 Practical Checkpoint
-**Covers:** M59-69 (Practical Scenarios)
+#### Module 70: A2 Final Exam (A2 Підсумковий іспит)
+**Covers:** M01-69 (CUMULATIVE - All A2 grammar + practical scenarios)
 
-**Required Skill Groups:**
-1. Medical Interactions (M59-60) - doctor, pharmacy
-2. Accommodation (M61-62) - hotel, rental
-3. Scheduling (M63-64) - appointments, interviews
-4. Navigation (M65-66) - giving/asking directions
-5. Digital Communication (M67-69) - social media, texting, apps
+> **LEVEL FINAL:** This is the comprehensive A2 certification exam testing all grammar, vocabulary, and practical skills from the entire level.
 
-**Assessment Tasks:**
-1. Medical consultation role-play
-2. Apartment viewing simulation
-3. Job interview practice
-4. Navigation task
-5. Digital communication exercise
+**Part 1: Core Grammar (M01-57)**
+1. All 7 cases - full paradigm recognition and production
+2. Verbal aspect - perfective/imperfective selection
+3. Comparison - comparative and superlative forms
+4. Complex sentences - causal, conditional, relative clauses
+5. Word formation - prefixes, suffixes, root recognition
 
-**Vocabulary (5 words):** Review selection from A2.7
+**Part 2: Practical Application (M59-69)**
+1. Medical Interactions - doctor, pharmacy consultations
+2. Accommodation - hotel booking, rental inquiries
+3. Scheduling - appointments, interviews
+4. Social Situations - formal and informal contexts
+5. Digital Communication - email, messaging, social media
+
+**Assessment Format:**
+- **Reading:** Complex texts with all case usage (25 min)
+- **Grammar:** Case paradigms, aspect selection, sentence transformation (25 min)
+- **Practical:** Role-play scenarios - medical, accommodation, scheduling (25 min)
+- **Production:** Paragraph writing on familiar topics (15 min)
+
+**Passing Criteria:**
+- 70%+ overall score
+- No section below 60%
+- Demonstrates readiness for B1
+
+**Vocabulary (5 words):** Review selection from A2.6
 
 ---
 

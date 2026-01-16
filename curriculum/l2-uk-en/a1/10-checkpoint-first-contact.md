@@ -2,7 +2,7 @@
 
 ## Огляд
 
-**Вітаємо!** (vitayemo) You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
+**Вітаємо!** /vʲiˈtɑjemɔ/ You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
 
 This checkpoint reviews five core abilities from Modules 1-9:
 
@@ -26,9 +26,9 @@ This checkpoint reviews five core abilities from Modules 1-9:
 
 **Notice:**
 
-- **КАФЕ** = cafe (Ф sounds like F, not P)
+- **КАФЕ** = cafe (Ф sounds like /f/, not /p/)
 - **КИЇВ** = Kyiv (И = /ɪ/, Ї = /ji/)
-- **вареники** = varenyky (remember: В = V, not B)
+- **вареники** = varenyky (remember: В = /v/, not /b/)
 
 ### Practice: Read and Match
 
@@ -56,9 +56,9 @@ Read each word, then match it to the English meaning in your head:
 
 ### Model: The Gender Pattern
 
-> **Книга** (knyha) ends in **-а** → **feminine** → **ця книга** (this book)
-> **Стіл** (stil) ends in **consonant** → **masculine** → **цей стіл** (this table)
-> **Вікно** (vikno) ends in **-о** → **neuter** → **це вікно** (this window)
+> **Книга** ends in **-а** → **feminine** → **ця книга** (this book)
+> **Стіл** ends in **consonant** → **masculine** → **цей стіл** (this table)
+> **Вікно** ends in **-о** → **neuter** → **це вікно** (this window)
 
 **The Pattern:**
 
@@ -158,12 +158,12 @@ Complete with the correct verb form:
 
 **The Question Words:**
 
-- **Що** (shcho) = what
-- **Хто** (khto) = who
-- **Де** (de) = where
-- **Як** (yak) = how
-- **Коли** (koly) = when
-- **Чому** (chomu) = why
+- **Що** /ʃt͡ʃɔ/ = what
+- **Хто** /xtɔ/ = who
+- **Де** /dɛ/ = where
+- **Як** /jɑk/ = how
+- **Коли** /kɔˈlɪ/ = when
+- **Чому** /t͡ʃɔˈmu/ = why
 
 ### Practice: Match Question to Answer
 

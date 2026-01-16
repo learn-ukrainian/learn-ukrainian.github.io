@@ -1,3 +1,7 @@
+module: 01-the-cyrillic-code-i
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: True Friends
   pairs:
@@ -25,7 +29,7 @@
     right: o
   - left: к
     right: k
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: match-up
   title: False Friends Sound
   instruction: Match the Ukrainian letter with its sound
@@ -81,7 +85,7 @@
     - Л
     - П
     - Ф
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: quiz
   title: Reading Words
   items:
@@ -217,7 +221,7 @@
     - text: тєлєфон
       correct: false
     explanation: телефон = telephone
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: true-false
   title: Letter Recognition
   items:
@@ -258,7 +262,7 @@
   - statement: The letter Л sounds like "l" in "love".
     correct: true
     explanation: Correct! Л is a New Letter that makes the L sound.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: fill-in
   title: Complete the Word
   items:
@@ -346,7 +350,7 @@
     - п
     - н
     - в
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: anagram
   title: Build the Word
   items:
@@ -374,7 +378,7 @@
     answer: таксі
   - scrambled: м у з и к а
     answer: музика
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: anagram
   title: International Words
   items:
@@ -402,4 +406,4 @@
     answer: студент
   - scrambled: т у р и с т
     answer: турист
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.

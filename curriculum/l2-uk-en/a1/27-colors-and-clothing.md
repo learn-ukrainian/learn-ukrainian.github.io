@@ -25,14 +25,14 @@
 
 ### Color Agreement Table
 
-| Color (m) | Feminine | Neuter  | Plural  |
-| --------- | -------- | ------- | ------- |
-| білий     | біла     | біле    | білі    |
-| чорний    | чорна    | чорне   | чорні   |
-| червоний  | червона  | червоне | червоні |
-| зелений   | зелена   | зелене  | зелені  |
-| синій     | синя     | синє    | сині    |
-| жовтий    | жовта    | жовте   | жовті   |
+| Color (m) | IPA | Feminine | Neuter | Plural |
+| --------- | --- | -------- | ------ | ------ |
+| білий | /ˈbilɪj/ | біла | біле | білі |
+| чорний | /ˈt͡ʃɔrnɪj/ | чорна | чорне | чорні |
+| червоний | /t͡ʃɛrˈvɔnɪj/ | червона | червоне | червоні |
+| зелений | /zɛˈlɛnɪj/ | зелена | зелене | зелені |
+| синій | /ˈsɪnʲij/ | синя | синє | сині |
+| жовтий | /ˈʒɔwtɪj/ | жовта | жовте | жовті |
 
 ---
 
@@ -67,13 +67,13 @@ Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sen
 
 Some clothing words are ALWAYS plural in Ukrainian:
 
-| Word     | Meaning  | Why?     |
-| -------- | -------- | -------- |
-| штани    | pants    | Two legs |
-| джинси   | jeans    | Two legs |
-| шорти    | shorts   | Two legs |
-| черевики | boots    | Two feet |
-| кросівки | sneakers | Two feet |
+| Word | IPA | Meaning | Why? |
+| -------- | --- | -------- | -------- |
+| штани | /ʃtɑˈnɪ/ | pants | Two legs |
+| джинси | /ˈdʒɪnsɪ/ | jeans | Two legs |
+| шорти | /ˈʃɔrtɪ/ | shorts | Two legs |
+| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots | Two feet |
+| кросівки | /krɔˈsivkɪ/ | sneakers | Two feet |
 
 These words take **plural adjectives**:
 
@@ -183,15 +183,17 @@ These words take **plural adjectives**:
 ## Практика
 
 ### Вправа 1: Переклад
+
 Перекладіть речення на українську мову.
 
-1. I am a student.
-2. This is my house.
-3. She is in the city.
+1. I have a white shirt.
+2. The sky is blue.
+3. His jacket is black.
 
 ---
 
 # Підсумок
+
 Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова «білий» та «чорний». Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
 
 ---

@@ -1,0 +1,25 @@
+module: a2-58
+title: Practical Warm-up
+subtitle: Transition Exercises for Real-World Skills
+version: '2.0'
+phase: A2.6
+pedagogy: TBL
+duration: 60
+transliteration: none
+tags:
+- practical
+- warm-up
+- skills
+- transition
+grammar:
+- applied-grammar
+objectives:
+- Learner can practice foundational practical skills
+- Learner builds confidence for scenario-based learning
+- Learner transitions from grammar focus to practical application
+slug: 58-practical-warm-up
+vocabulary_count: 25
+focus: practical
+naturalness:
+  score: 10
+  status: PASS

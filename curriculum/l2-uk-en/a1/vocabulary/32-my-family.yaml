@@ -121,16 +121,17 @@ items:
     translation: family
     pos: noun
     gender: f
-  - lemma: родич
-    ipa: /ˈrɔdɪt͡ʃ/
-    translation: relative
+  - lemma: родичі
+    ipa: /ˈrɔdɪt͡ʃʲi/
+    translation: relatives
+    pos: noun
+    gender: pl
+  - lemma: рід
+    ipa: /rid/
+    translation: gender
     pos: noun
     gender: m
-  - lemma: розлучений
-    ipa: /rɔzˈlut͡ʃɛnɪj/
-    translation: divorced
-    pos: adj
-    gender: m
+  - lemma: розлучена
   - lemma: святий
     ipa: /svʲɑˈtɪj/
     translation: holy/saint

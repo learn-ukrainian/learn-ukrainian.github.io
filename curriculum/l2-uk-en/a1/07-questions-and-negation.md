@@ -16,14 +16,14 @@ In English, asking «Do you read?» requires changing word order or adding «do/
 
 The simplest way to turn any statement into a yes/no question is to add **чи** at the beginning:
 
-| Statement                     | Question (with чи)                        |
-| ----------------------------- | ----------------------------------------- |
-| Ти читаєш. (Ty chytayesh)     | **Чи** ти читаєш? (Chy ty chytayesh?)     |
-| You read.                     | Do you read?                              |
-| Вона працює. (Vona pratsyuye) | **Чи** вона працює? (Chy vona pratsyuye?) |
-| She works.                    | Does she work?                            |
-| Ми знаємо. (My znayemo)       | **Чи** ми знаємо? (Chy my znayemo?)       |
-| We know.                      | Do we know?                               |
+| Statement      | Question (with чи) |
+| -------------- | ------------------ |
+| Ти читаєш.     | **Чи** ти читаєш?  |
+| You read.      | Do you read?       |
+| Вона працює.   | **Чи** вона працює? |
+| She works.     | Does she work?     |
+| Ми знаємо.     | **Чи** ми знаємо?  |
+| We know.       | Do we know?        |
 
 **The pattern:** Чи + subject + verb?
 
@@ -51,17 +51,17 @@ In casual speech, Ukrainians often skip **чи** and just use rising intonation:
 
 Ukrainian has question words (like English «what, who, where») that replace the unknown part of the sentence:
 
-| Ukrainian            | IPA        | English          | Example                                |
-| -------------------- | ---------- | ---------------- | -------------------------------------- |
-| **що** (Shcho)       | /ʃt͡ʃɔ/     | what             | Що ти читаєш? (What do you read?)      |
-| **хто** (Khto)       | /xtɔ/      | who              | Хто працює? (Who works?)               |
-| **де** (De)          | /dɛ/       | where (location) | Де ти? (Where are you?)                |
-| **куди** (Kudy)      | /ˈkudɪ/    | where (to)       | Куди ти йдеш? (Where are you going?)   |
-| **звідки** (Zvidky)  | /ˈzʲʋidkɪ/ | where from       | Звідки ти? (Where are you from?)       |
-| **коли** (Koly)      | /kɔˈlɪ/    | when             | Коли ти працюєш? (When do you work?)   |
-| **чому** (Chomu)     | /t͡ʃɔˈmu/   | why              | Чому ти читаєш? (Why do you read?)     |
-| **як** (Yak)         | /jɑk/      | how              | Як ти? (How are you?)                  |
-| **скільки** (Skilky) | /ˈskilʲkɪ/ | how much/many    | Скільки це коштує? (How much is this?) |
+| Ukrainian    | IPA        | English          | Example                                |
+| ------------ | ---------- | ---------------- | -------------------------------------- |
+| **що**       | /ʃt͡ʃɔ/     | what             | Що ти читаєш? (What do you read?)      |
+| **хто**      | /xtɔ/      | who              | Хто працює? (Who works?)               |
+| **де**       | /dɛ/       | where (location) | Де ти? (Where are you?)                |
+| **куди**     | /ˈkudɪ/    | where (to)       | Куди ти йдеш? (Where are you going?)   |
+| **звідки**   | /ˈzʲʋidkɪ/ | where from       | Звідки ти? (Where are you from?)       |
+| **коли**     | /kɔˈlɪ/    | when             | Коли ти працюєш? (When do you work?)   |
+| **чому**     | /t͡ʃɔˈmu/   | why              | Чому ти читаєш? (Why do you read?)     |
+| **як**       | /jɑk/      | how              | Як ти? (How are you?)                  |
+| **скільки**  | /ˈskilʲkɪ/ | how much/many    | Скільки це коштує? (How much is this?) |
 
 **Pattern:** Question word + verb + rest of sentence
 
@@ -84,53 +84,53 @@ Notice: Unlike English, you don't need «do/does» - the question word itself si
 
 To make a verb negative, just put **не** (ne) before it. Simple!
 
-| Positive                      | Negative                                    |
-| ----------------------------- | ------------------------------------------- |
-| я читаю. (Ya chytayu)         | я **не** читаю. (Ya **ne** chytayu)         |
-| I read.                       | I don't read.                               |
-| Вона працює. (Vona pratsyuye) | Вона **не** працює. (Vona **ne** pratsyuye) |
-| She works.                    | She doesn't work.                           |
-| Ми знаємо. (My znayemo)       | Ми **не** знаємо. (My **ne** znayemo)       |
-| We know.                      | We don't know.                              |
+| Positive      | Negative          |
+| ------------- | ----------------- |
+| Я читаю.      | Я **не** читаю.   |
+| I read.       | I don't read.     |
+| Вона працює.  | Вона **не** працює. |
+| She works.    | She doesn't work. |
+| Ми знаємо.    | Ми **не** знаємо.  |
+| We know.      | We don't know.    |
 
 **Key difference from English:** In Ukrainian, you don't need «don't/doesn't/didn't» - just **не + verb**!
 
 **Common negative constructions:**
 
-- я не розумію. (Ya ne rozumiyu) = I don't understand.
-- я не знаю. (Ya ne znayu) = I don't know.
-- Це не правда. (Tse ne pravda) = That's not true.
+- Я не розумію. = I don't understand.
+- Я не знаю. = I don't know.
+- Це не правда. = That's not true.
 
 > 🌍 **Real World**
 >
-> Ukrainians are very direct with negation. If you ask «Чи ти знаєш?» (Do you know?), a simple «Ні, не знаю» (No, I don't know) is perfectly polite. No need to soften it with «I'm afraid I don't...» like in English!
+> Ukrainians are very direct with negation. If you ask «Чи ти знаєш?», a simple «Ні, не знаю» is perfectly polite. No need to soften it with «I'm afraid I don't...» like in English!
 
 **Mini-Dialogue 3: Misunderstandings**
 
-— Чи ти говориш англійською? (Chy ty hovorysh anhliyskoyu?)
-— Так, говорю. а ти? (Tak, hovoryu. A ty?)
-— Ні, я не говорю англійською. я говорю українською. (Ni, ya ne hovoryu anhliyskoyu. Ya hovoryu ukrayinskoyu.)
-— Добре! Ми говоримо українською! (Dobre! My hovorymo ukrayinskoyu!)
+— Чи ти говориш англійською?
+— Так, говорю. А ти?
+— Ні, я не говорю англійською. Я говорю українською.
+— Добре! Ми говоримо українською!
 
 ### Frequency Adverbs
 
 When talking about how often you do things, Ukrainian uses these adverbs:
 
-| Adverb                   | IPA          | English   | Example                                                      |
-| ------------------------ | ------------ | --------- | ------------------------------------------------------------ |
-| **завжди** (zavzhdy)     | /ˈzɑʋʒdɪ/    | always    | я завжди читаю. (I always read.)                             |
-| **часто** (chasto)       | /ˈt͡ʃɑstɔ/    | often     | Вона часто працює. (She often works.)                        |
-| **іноді** (inodi)        | /iˈnɔdi/     | sometimes | Ми іноді говоримо. (We sometimes talk.)                      |
-| **рідко** (ridko)        | /ˈridkɔ/     | rarely    | Він рідко пише. (He rarely writes.)                          |
-| **ніколи** (nikoly)      | /nʲiˈkɔlɪ/   | never     | я ніколи не п'ю каву. (I never drink coffee.)                |
-| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually   | я звичайно снідаю вдома. (I usually have breakfast at home.) |
+| Adverb        | IPA          | English   | Example                                                      |
+| ------------- | ------------ | --------- | ------------------------------------------------------------ |
+| **завжди**    | /ˈzɑʋʒdɪ/    | always    | Я завжди читаю. (I always read.)                             |
+| **часто**     | /ˈt͡ʃɑstɔ/    | often     | Вона часто працює. (She often works.)                        |
+| **іноді**     | /iˈnɔdi/     | sometimes | Ми іноді говоримо. (We sometimes talk.)                      |
+| **рідко**     | /ˈridkɔ/     | rarely    | Він рідко пише. (He rarely writes.)                          |
+| **ніколи**    | /nʲiˈkɔlɪ/   | never     | Я ніколи не п'ю каву. (I never drink coffee.)                |
+| **звичайно**  | /zvɪˈt͡ʃɑjnɔ/ | usually   | Я звичайно снідаю вдома. (I usually have breakfast at home.) |
 
 **Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!
 
-- я **ніколи не** п'ю каву. (I never drink coffee.) ✅
-- я ніколи п'ю каву. ❌ (Wrong - missing не!)
+- Я **ніколи не** п'ю каву. (I never drink coffee.) ✅
+- Я ніколи п'ю каву. ❌ (Wrong - missing не!)
 
-This is called **double negation** and it's mandatory in Ukrainian (unlike English where «I never don't drink» would be wrong).
+This is called **double negation** and it's mandatory in Ukrainian.
 
 > 💡 **Did You Know?**
 >

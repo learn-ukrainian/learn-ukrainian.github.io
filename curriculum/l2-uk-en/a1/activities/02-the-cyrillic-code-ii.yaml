@@ -1,3 +1,7 @@
+module: 02-the-cyrillic-code-ii
+level: A1
+version: '2.0'
+activities:
 - type: match-up
   title: Letter Sounds
   pairs:
@@ -25,7 +29,7 @@
     right: ya (like "yacht")
   - left: '- Ь'
     right: soft sign
-  instruction: З'єднайте відповідні елементи.
+  instruction: Match the corresponding elements.
 - type: quiz
   title: Alphabet Knowledge
   items:
@@ -161,7 +165,7 @@
     - text: y
       correct: false
     explanation: Я makes the "ya" sound as in як (how).
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: group-sort
   title: Letter Categories
   groups:
@@ -185,7 +189,7 @@
     - Ь
     - И
     - Й
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: anagram
   title: Build Ukrainian Words
   items:
@@ -209,7 +213,11 @@
     answer: майонез
   - scrambled: ч е м п і о н
     answer: чемпіон
-  instruction: Розташуйте літери у правильному порядку.
+  - scrambled: У к р а ї н а
+    answer: Україна
+  - scrambled: м о в а
+    answer: мова
+  instruction: Arrange the letters in the correct order.
 - type: fill-in
   title: Complete the Greetings
   items:
@@ -304,7 +312,7 @@
     - Привіт
     - Дякую
     - До побачення
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Alphabet Facts
   items:
@@ -345,9 +353,9 @@
   - statement: The letter И is the same as І in Ukrainian.
     correct: false
     explanation: Incorrect! И is a hard "i" sound, while І is a soft "ee" sound.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: match-up
-  title: Ukrainian Cities
+  title: Ukrainian Cities & Countries
   pairs:
   - left: '- Київ'
     right: Kyiv
@@ -365,7 +373,15 @@
     right: London
   - left: '- Європа'
     right: Europe
-  instruction: З'єднайте відповідні елементи.
+  - left: '- Польща'
+    right: Poland
+  - left: '- Канада'
+    right: Canada
+  - left: '- Америка'
+    right: America
+  - left: '- Італія'
+    right: Italy
+  instruction: Match the corresponding elements.
 - type: match-up
   title: Food Vocabulary
   pairs:
@@ -385,7 +401,15 @@
     right: letter
   - left: '- слово'
     right: word
-  instruction: З'єднайте відповідні елементи.
+  - left: '- піца'
+    right: pizza
+  - left: '- банан'
+    right: banana
+  - left: '- суп'
+    right: soup
+  - left: '- салат'
+    right: salad
+  instruction: Match the corresponding elements.
 - type: group-sort
   title: Print vs Italic Confusion
   groups:
@@ -410,4 +434,4 @@
     - с
     - ф
     - х
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.

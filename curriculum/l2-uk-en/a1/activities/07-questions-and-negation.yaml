@@ -1,3 +1,7 @@
+module: 07-questions-and-negation
+level: A1
+version: '2.0'
+activities:
 - type: quiz
   title: Question Word Meanings
   items:
@@ -133,7 +137,7 @@
     - text: чому
       correct: true
     explanation: чому (chomu) = why
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.
 - type: match-up
   title: Question Words to Context
   instruction: Match each question word with the context where it's used
@@ -154,6 +158,10 @@
     right: asking for reason
   - left: як
     right: asking about manner or state
+  - left: скільки
+    right: asking about quantity or price
+  - left: чи
+    right: asking a yes/no question
 - type: fill-in
   title: Complete Questions
   items:
@@ -241,7 +249,7 @@
     - Як
     - Де
     - Коли
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: Question and Negation Rules
   items:
@@ -284,7 +292,7 @@
   - statement: «Так» means yes and «ні» means no.
     correct: true
     explanation: Correct! Basic yes/no answers.
-  instruction: Визначте, чи твердження правильне.
+  instruction: Determine if the statement is true.
 - type: group-sort
   title: Frequency Adverbs
   groups:
@@ -306,7 +314,7 @@
     - ніколи не читаю
     - ніколи не пишу
     - ніколи не сплю
-  instruction: Розподіліть елементи за групами.
+  instruction: Distribute the elements into groups.
 - type: fill-in
   title: Add Negation
   items:
@@ -386,7 +394,7 @@
     - ніколи не
     - не ніколи
     - ні не
-    - не ні
+    - ne ni
   - sentence: Вона ___ слухає музику.
     answer: не
     options:
@@ -394,7 +402,7 @@
     - ні
     - ніколи
     - чи
-  instruction: Оберіть правильне слово для заповнення пропуску.
+  instruction: Choose the correct word to fill in the blank.
 - type: anagram
   title: Question Words
   items:
@@ -422,7 +430,7 @@
     answer: іноді
   - scrambled: н і к о л и
     answer: ніколи
-  instruction: Розташуйте літери у правильному порядку.
+  instruction: Arrange the letters in the correct order.
 - type: anagram
   title: Frequency Words
   items:
@@ -442,7 +450,15 @@
     answer: щодня
   - scrambled: п р а в д а
     answer: правда
-  instruction: Розташуйте літери у правильному порядку.
+  - scrambled: з а в ж д и
+    answer: завжди
+  - scrambled: ч а с т о
+    answer: часто
+  - scrambled: і н о д і
+    answer: іноді
+  - scrambled: н і к о л и
+    answer: ніколи
+  instruction: Arrange the letters in the correct order.
 - type: quiz
   title: Negative Sentence Order
   items:
@@ -580,4 +596,4 @@
     - text: вони
       correct: false
     explanation: 'Correct order: Я не хочу чаю'
-  instruction: Оберіть правильну відповідь.
+  instruction: Choose the correct answer.

@@ -1,0 +1,28 @@
+module: b1-91
+title: Vocabulary in Context
+subtitle: Applying Vocabulary to Practical Communication
+version: '2.0'
+phase: B1.9
+focus: communication
+pedagogy: TBL
+duration: 90
+transliteration: none
+tags:
+- communication
+- vocabulary
+- practical
+- applied
+grammar:
+- vocabulary collocations
+- register awareness
+- domain vocabulary
+objectives:
+- Learner applies vocabulary in practical scenarios
+- Learner uses collocations naturally
+- Learner demonstrates register-appropriate word choice
+vocabulary_count: 25
+vocab_count: 25
+slug: 91-vocabulary-in-context
+naturalness:
+  score: 9
+  status: PASS
