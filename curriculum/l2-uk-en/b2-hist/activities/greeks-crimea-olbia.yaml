@@ -201,3 +201,27 @@
           correct: false
         - text: "Порт для кораблів."
           correct: false
+
+- type: reading
+  id: b2-hist-03-reading-01
+  title: 'Херсонес: Українські Помпеї'
+  resource:
+    type: article
+    url: 'https://localhistory.org.ua/texts/statti/khersones-tavriiskii-istoriia-i-suchasnist/'
+    title: 'Історія міста двох тисячоліть'
+  tasks:
+    - 'Чому Херсонес називають "Українськими Помпеями"?'
+    - 'Як місто вижило під час навали варварів, коли Ольвія загинула?'
+    - 'Яке значення має Херсонес для історії християнства в Україні?'
+
+- type: reading
+  id: b2-hist-03-reading-02
+  title: 'Ольвійські дельфінчики'
+  resource:
+    type: article
+    url: 'https://bank.gov.ua/ua/news/all/monetni-skarby-olviyi'
+    title: 'Унікальна грошова система'
+  tasks:
+    - 'Чому монети мали форму дельфінів?'
+    - 'Що це говорить про роль Аполлона Дельфінія в культі міста?'
+    - 'Як розвивалася економіка Ольвії завдяки власній валюті?'
