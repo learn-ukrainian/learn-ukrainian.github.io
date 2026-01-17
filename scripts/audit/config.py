@@ -628,6 +628,20 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
+    'B2-professional': {
+        # B2-PRO Professional Track (M01-40)
+        # ESP (English for Specific Purposes adapted for Ukrainian)
+        'target_words': 3000,
+        'min_activities': 10,
+        'min_items_per_activity': 14,
+        'min_types_unique': 4,
+        'min_vocab': 30,  # Domain-specific terminology
+        'min_engagement': 5,
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
+        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'transliteration_allowed': False,
+        'priority_types': {'fill-in', 'cloze', 'translate', 'quiz'}
+    },
     'C1': {
         'target_words': 2000,
         'min_activities': 12,
@@ -653,16 +667,18 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C1-professional': {
-        'target_words': 2000,
+        # C1-PRO Professional Mastery Track (M01-50)
+        # ESP + CLIL approach for executives, academics, specialists
+        'target_words': 3000,
         'min_activities': 12,
-        'min_items_per_activity': 12,
+        'min_items_per_activity': 14,
         'min_types_unique': 4,
-        'min_vocab': 24,
+        'min_vocab': 35,  # Advanced domain-specific terminology
         'min_engagement': 6,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'translate'}
+        'priority_types': {'fill-in', 'cloze', 'translate', 'error-correction'}
     },
     'C1-stylistics': {
         'target_words': 2000,

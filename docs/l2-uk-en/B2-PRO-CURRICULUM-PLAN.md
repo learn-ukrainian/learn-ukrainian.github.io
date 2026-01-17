@@ -129,7 +129,7 @@ The B2-PRO track develops professional communication skills in Ukrainian for lea
 ## Quality Standards
 
 **Per module:**
-- 1500+ words of prose
+- 3000+ words of prose
 - 30+ vocabulary items (domain-specific terminology)
 - 10-12 activities
 - 100% Ukrainian immersion

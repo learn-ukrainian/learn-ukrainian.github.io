@@ -146,7 +146,7 @@ The C1-PRO track develops advanced professional communication skills for executi
 ## Quality Standards
 
 **Per module:**
-- 2000+ words of prose
+- 3000+ words of prose
 - 35+ vocabulary items (advanced domain-specific)
 - 12-15 activities
 - 100% Ukrainian immersion
