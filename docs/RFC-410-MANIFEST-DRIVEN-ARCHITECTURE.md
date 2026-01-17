@@ -1,6 +1,6 @@
 # RFC #410: Manifest-Driven Architecture
 
-> **Status**: Draft
+> **Status**: Approved (decisions finalized 2026-01-17)
 > **Author**: Claude (AI Assistant)
 > **Created**: 2026-01-14
 > **GitHub Issue**: [#410](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/410)
@@ -420,20 +420,38 @@ git checkout -b post-manifest-rollback
 
 ---
 
-## Open Questions
+## Decisions (Finalized 2026-01-17)
 
-1. **Single vs per-level manifests?**
-   - Single `curriculum.yaml` (proposed) - easier to see full structure
-   - Per-level `a1/curriculum.yaml` - smaller files, less merge conflicts
+### 1. Single vs per-level manifests?
 
-2. **Track module numbering?**
-   - Continue from core (B2-HIST starts at 85)?
-   - Independent (B2-HIST starts at 1)?
-   - No numbers for tracks (slug-only)?
+**Decision: Single `curriculum.yaml`**
 
-3. **Backward compatibility period?**
-   - Support both `01-slug.md` and `slug.md` during transition?
-   - Hard cutover (simpler but riskier)?
+Rationale: With ~600 modules it's ~2000 lines - manageable. Merge conflicts are rare since module ordering rarely changes. One source of truth is cleaner.
+
+### 2. Track module numbering?
+
+**Decision: Slug-only for tracks (no numbers)**
+
+Tracks (b2-hist, c1-bio, b2-pro, c1-pro, lit) use:
+- `slug:` field only in meta YAML
+- No `module:` field with numbers
+- Order determined by manifest, not by numbering
+
+Core levels (a1, a2, b1, b2, c1, c2) retain numbered format until full migration.
+
+**Cleanup required:**
+| Track | Files with `module:` to remove |
+|-------|-------------------------------|
+| B2-HIST | 63 |
+| C1-BIO | 101 |
+| LIT | 23 |
+| **Total** | **187** |
+
+### 3. Backward compatibility period?
+
+**Decision: Hard cutover**
+
+Single atomic migration commit with git tag `pre-manifest-migration` for rollback. No dual-format support needed since this is a single-developer project.
 
 ---
 
