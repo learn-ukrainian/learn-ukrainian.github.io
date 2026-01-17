@@ -69,7 +69,7 @@ Before submitting a B2 synthesis module, verify:
 - [ ] **Present connection:** Link to modern Ukraine (post-2014/2022)
 - [ ] **Decolonization lens:** Ukraine-centric perspective throughout
 - [ ] **Immersion:** 100% Ukrainian (English only in vocabulary translations)
-- [ ] **Word count:** 1500+ words total
+- [ ] **Word count:** 2000+ words total
 - [ ] **Activities:** 10-12 activities (fewer than regular modules, more analytical)
 
 

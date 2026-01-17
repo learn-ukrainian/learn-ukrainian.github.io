@@ -27,7 +27,7 @@ TEMPLATE_METADATA:
   - Словник
   - Зовнішні ресурси
   pedagogy: CBI
-  min_word_count: 1800
+  min_word_count: 3000
   required_callouts:
   - myth-buster
   - history-bite

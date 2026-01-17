@@ -15,7 +15,7 @@
 
 | Metric         | Target | WARN  | FAIL  |
 | -------------- | ------ | ----- | ----- |
-| Word count     | 2000   | <2000 | <1900 |
+| Word count     | 3000   | <3000 | <2800 |
 | Activities     | 10     | <10   | <8    |
 | Items/activity | 16     | <16   | <12   |
 
@@ -92,7 +92,7 @@ naturalness:
 
 | Metric            | Biography Modules | Checkpoint |
 | ----------------- | ----------------- | ---------- |
-| Core Word Count   | 2000+             | 1800+      |
+| Core Word Count   | 3000+             | 2000+      |
 | Immersion         | **100%**          | **100%**   |
 | Vocabulary (YAML) | 20-25             | 50-55      |
 | Engagement Boxes  | 6+                | 4+         |

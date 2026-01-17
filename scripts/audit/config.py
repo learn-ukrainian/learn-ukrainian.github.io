@@ -567,7 +567,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'B2-history': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 10,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -579,7 +579,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
     },
     'B2-biography': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 10,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -605,7 +605,7 @@ LEVEL_CONFIG = {
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
-        'target_words': 1750,
+        'target_words': 2000,
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
         'min_types_unique': 4,
@@ -689,7 +689,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'mark-the-words'}
     },
     'C1-biography': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
