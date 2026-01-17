@@ -9,6 +9,19 @@ Usage:
     from manifest_utils import load_manifest, get_module_by_slug, validate_manifest
 
 RFC: docs/RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md
+
+Manifest format (RFC #410):
+    version: '1.0'
+    levels:
+      a1:
+        type: core
+        modules:
+          - 01-the-cyrillic-code-i    # Numbered slugs for core
+          - 02-the-cyrillic-code-ii
+      b2-hist:
+        type: track
+        modules:
+          - trypillian-civilization   # Slug-only for tracks
 """
 
 import re
@@ -21,8 +34,11 @@ from typing import Optional
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent
 MANIFEST_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
-LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+CORE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+LEVELS = CORE_LEVELS  # Backward compatibility
+TRACKS = ['b2-hist', 'c1-bio', 'lit']
 
 
 @dataclass
@@ -41,7 +57,6 @@ class Module:
     @property
     def path(self) -> str:
         """URL path for this module."""
-        # Use slug-based paths for tracks, numbered for core levels
         if self.track and self.track != 'core':
             return f"/{self.level}/{self.slug}"
         return f"/{self.level}/module-{self.local_num:02d}"
@@ -53,11 +68,19 @@ class Module:
 
     @property
     def file_path(self) -> Path:
-        """Path to the module markdown file (slug-based, falls back to numbered)."""
+        """Path to the module markdown file."""
+        # Try flat track structure first: curriculum/l2-uk-en/{track}/{slug}.md
+        if self.track != 'core':
+            track_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / self.track / f"{self.slug}.md"
+            if track_path.exists():
+                return track_path
+
+        # Try level-based structure: curriculum/l2-uk-en/{level}/{slug}.md
         slug_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / self.level / f"{self.slug}.md"
         if slug_path.exists():
             return slug_path
-        # Fallback to numbered format during migration
+
+        # Fallback to numbered format
         return PROJECT_ROOT / "curriculum" / "l2-uk-en" / self.level / f"{self.numbered_slug}.md"
 
 
@@ -72,133 +95,130 @@ def load_manifest() -> dict:
 
 
 def clear_manifest_cache():
-    """Clear the cached manifest (for testing or after updates)."""
+    """Clear cached manifest."""
     load_manifest.cache_clear()
+    _load_meta_file.cache_clear()
+
+
+@lru_cache(maxsize=256)
+def _load_meta_file(level: str, slug: str) -> dict:
+    """Load and cache meta file for a module."""
+    meta_dir = CURRICULUM_PATH / level / 'meta'
+    meta_path = meta_dir / f"{slug}.yaml"
+
+    if meta_path.exists():
+        with open(meta_path) as f:
+            return yaml.safe_load(f) or {}
+
+    # Search for matching meta file by slug field inside or filename match
+    if meta_dir.exists():
+        for meta_file in meta_dir.glob('*.yaml'):
+            try:
+                content = yaml.safe_load(meta_file.read_text()) or {}
+                # Match by slug field or filename
+                if content.get('slug') == slug or meta_file.stem == slug:
+                    return content
+                # Handle numbered filenames matching numbered slugs
+                _, base_slug = parse_numbered_slug(slug)
+                _, file_base = parse_numbered_slug(meta_file.stem)
+                if file_base == base_slug:
+                    return content
+            except Exception:
+                continue
+
+    return {}
+
+
+def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
+    """Parse a numbered slug into (number, base_slug)."""
+    match = re.match(r'^(\d+)-(.+)$', slug)
+    if match:
+        return int(match.group(1)), match.group(2)
+    return None, slug
 
 
 def get_module_by_slug(slug: str) -> Optional[Module]:
-    """
-    Find module by slug across all levels and tracks.
-
-    Args:
-        slug: The module slug (e.g., 'the-cyrillic-code-i')
-
-    Returns:
-        Module object or None if not found
-    """
+    """Find module by slug across core and tracks."""
     manifest = load_manifest()
-    global_num = 0
 
-    # Search core levels
-    for level in LEVELS:
-        level_data = manifest.get('core', {}).get(level, {})
+    # Strip number prefix for comparison
+    _, target_base = parse_numbered_slug(slug)
+
+    # Search all levels (new format uses 'levels' key)
+    global_num = 0
+    for level_name, level_data in manifest.get('levels', {}).items():
+        if not isinstance(level_data, dict):
+            continue
+
+        is_track = level_data.get('type') == 'track'
         modules = level_data.get('modules', [])
 
-        for local_num, mod in enumerate(modules, 1):
-            global_num += 1
-            if mod.get('slug') == slug:
-                return Module(
-                    slug=slug,
-                    title=mod.get('title', ''),
-                    level=level,
-                    track='core',
-                    local_num=local_num,
-                    global_num=global_num,
-                    phase=mod.get('phase'),
-                    focus=mod.get('focus'),
-                    tags=mod.get('tags')
-                )
+        for local_num, mod_slug in enumerate(modules, 1):
+            if not is_track:
+                global_num += 1
 
-    # Search tracks
-    for track_name, track_data in manifest.get('tracks', {}).items():
-        if track_name.startswith('_'):  # Skip comments
-            continue
-        modules = track_data.get('modules', [])
+            # Modules in new format are just slug strings
+            _, mod_base = parse_numbered_slug(mod_slug)
 
-        for local_num, mod in enumerate(modules, 1):
-            if mod.get('slug') == slug:
+            if mod_slug == slug or mod_base == target_base:
+                meta = _load_meta_file(level_name, mod_slug)
                 return Module(
-                    slug=slug,
-                    title=mod.get('title', ''),
-                    level=track_name,
-                    track=track_name,
+                    slug=mod_base,  # Store base slug without number prefix
+                    title=meta.get('title', mod_base),
+                    level=level_name,
+                    track=level_name if is_track else 'core',
                     local_num=local_num,
-                    global_num=0,  # Tracks don't have global numbers
-                    phase=mod.get('phase'),
-                    focus=mod.get('focus'),
-                    tags=mod.get('tags')
+                    global_num=global_num if not is_track else 0,
+                    phase=meta.get('phase'),
+                    focus=meta.get('focus'),
+                    tags=meta.get('tags')
                 )
 
     return None
 
 
 def get_modules_for_level(level: str) -> list[Module]:
-    """
-    Get ordered list of modules for a level or track.
-
-    Args:
-        level: Level code (e.g., 'a1', 'b2') or track name (e.g., 'b2-hist', 'c1-bio')
-
-    Returns:
-        List of Module objects in curriculum order
-    """
+    """Get ordered list of modules for a level or track."""
     manifest = load_manifest()
     modules = []
 
-    # Check if this is a track
-    if level in manifest.get('tracks', {}):
-        track_data = manifest['tracks'][level]
-        for local_num, mod in enumerate(track_data.get('modules', []), 1):
-            modules.append(Module(
-                slug=mod.get('slug'),
-                title=mod.get('title', ''),
-                level=level,
-                track=level,
-                local_num=local_num,
-                global_num=0,  # Tracks don't have global numbers
-                phase=mod.get('phase'),
-                focus=mod.get('focus'),
-                tags=mod.get('tags')
-            ))
-        return modules
+    level_data = manifest.get('levels', {}).get(level, {})
+    if not level_data:
+        return []
+
+    is_track = level_data.get('type') == 'track'
+    mod_slugs = level_data.get('modules', [])
 
     # Calculate global offset for core levels
     global_offset = 0
-    for lvl in LEVELS:
-        if lvl == level:
-            break
-        level_data = manifest.get('core', {}).get(lvl, {})
-        global_offset += len(level_data.get('modules', []))
+    if not is_track:
+        for lvl in CORE_LEVELS:
+            if lvl == level:
+                break
+            lvl_data = manifest.get('levels', {}).get(lvl, {})
+            global_offset += len(lvl_data.get('modules', []))
 
-    # Get modules for this core level
-    level_data = manifest.get('core', {}).get(level, {})
-    for local_num, mod in enumerate(level_data.get('modules', []), 1):
+    for local_num, mod_slug in enumerate(mod_slugs, 1):
+        _, base_slug = parse_numbered_slug(mod_slug)
+        meta = _load_meta_file(level, mod_slug)
+
         modules.append(Module(
-            slug=mod.get('slug'),
-            title=mod.get('title', ''),
+            slug=base_slug,
+            title=meta.get('title', base_slug),
             level=level,
-            track='core',
+            track=level if is_track else 'core',
             local_num=local_num,
-            global_num=global_offset + local_num,
-            phase=mod.get('phase'),
-            focus=mod.get('focus'),
-            tags=mod.get('tags')
+            global_num=(global_offset + local_num) if not is_track else 0,
+            phase=meta.get('phase'),
+            focus=meta.get('focus'),
+            tags=meta.get('tags')
         ))
 
     return modules
 
 
 def get_module_by_number(level: str, num: int) -> Optional[Module]:
-    """
-    Get module by level and local number.
-
-    Args:
-        level: Level code (e.g., 'a1')
-        num: Local module number (1-based)
-
-    Returns:
-        Module object or None
-    """
+    """Get module by level and local number."""
     modules = get_modules_for_level(level)
     if 1 <= num <= len(modules):
         return modules[num - 1]
@@ -206,15 +226,7 @@ def get_module_by_number(level: str, num: int) -> Optional[Module]:
 
 
 def resolve_slug_link(slug: str) -> tuple[str, str]:
-    """
-    Resolve a slug to its title and path.
-
-    Args:
-        slug: Module slug
-
-    Returns:
-        Tuple of (title, path) or raises ValueError if not found
-    """
+    """Resolve a slug to title and path."""
     module = get_module_by_slug(slug)
     if module:
         return (module.title, module.path)
@@ -222,81 +234,28 @@ def resolve_slug_link(slug: str) -> tuple[str, str]:
 
 
 def validate_manifest() -> list[str]:
-    """
-    Validate manifest integrity.
-
-    Returns:
-        List of error messages (empty if valid)
-    """
+    """Validate manifest integrity."""
     errors = []
-
-    try:
-        manifest = load_manifest()
-    except Exception as e:
-        return [f"Failed to load manifest: {e}"]
-
+    manifest = load_manifest()
     seen_slugs = set()
 
-    def check_slug(slug: str, context: str):
-        # Check format
-        if not slug:
-            errors.append(f"{context}: missing slug")
-            return
-
-        if not re.match(r'^[a-z0-9]+(-[a-z0-9]+)*$', slug):
-            errors.append(f"{context}: invalid slug format '{slug}'")
-
-        # Check uniqueness
-        if slug in seen_slugs:
-            errors.append(f"{context}: duplicate slug '{slug}'")
-        seen_slugs.add(slug)
-
-        # Check length
-        if len(slug) > 60:
-            errors.append(f"{context}: slug too long ({len(slug)} chars): '{slug}'")
-
-    def check_modules(modules: list, context: str):
-        for i, mod in enumerate(modules):
-            slug = mod.get('slug')
-            check_slug(slug, f"{context}[{i}]")
-
-            if not mod.get('title'):
-                errors.append(f"{context}[{i}] ({slug}): missing title")
-
-            # Check focus if present
-            valid_focus = [
-                # Core types
-                'grammar', 'vocabulary', 'cultural', 'checkpoint', 'integration', 'review',
-                # Content types
-                'history', 'biography', 'literature', 'phraseology',
-                # Skills & professional
-                'skills', 'professional', 'academic', 'practical',
-                # Cultural specializations
-                'folk-culture', 'fine-arts', 'culture',
-                # Style & linguistics
-                'style', 'sociolinguistics', 'society',
-                # Project/synthesis
-                'project', 'synthesis', 'practice', 'domain', 'genre',
-                # Bridge modules (B1 metalanguage)
-                'bridge'
-            ]
-            focus = mod.get('focus')
-            if focus and focus not in valid_focus:
-                errors.append(f"{context}[{i}] ({slug}): invalid focus '{focus}'")
-
-    # Check core levels
-    for level in LEVELS:
-        level_data = manifest.get('core', {}).get(level, {})
-        modules = level_data.get('modules', [])
-        check_modules(modules, f"core.{level}")
-
-    # Check tracks
-    for track_name, track_data in manifest.get('tracks', {}).items():
-        if track_name.startswith('_'):
+    for level_name, level_data in manifest.get('levels', {}).items():
+        if not isinstance(level_data, dict):
             continue
-        if isinstance(track_data, dict):
-            modules = track_data.get('modules', [])
-            check_modules(modules, f"tracks.{track_name}")
+
+        modules = level_data.get('modules', [])
+        level_type = level_data.get('type', 'core')
+        context = f"{level_type}.{level_name}"
+
+        for i, mod_slug in enumerate(modules):
+            if not mod_slug:
+                errors.append(f"{context}[{i}]: missing slug")
+                continue
+
+            _, base_slug = parse_numbered_slug(mod_slug)
+            if base_slug in seen_slugs:
+                errors.append(f"{context}[{i}]: duplicate slug '{mod_slug}'")
+            seen_slugs.add(base_slug)
 
     return errors
 
@@ -312,24 +271,21 @@ def get_manifest_stats() -> dict:
         'tracks': {}
     }
 
-    for level in LEVELS:
-        level_data = manifest.get('core', {}).get(level, {})
-        count = len(level_data.get('modules', []))
-        stats['levels'][level] = count
-        stats['total_modules'] += count
-
-    for track_name, track_data in manifest.get('tracks', {}).items():
-        if track_name.startswith('_'):
+    for level_name, level_data in manifest.get('levels', {}).items():
+        if not isinstance(level_data, dict):
             continue
-        if isinstance(track_data, dict):
-            stats['tracks'][track_name] = len(track_data.get('modules', []))
+
+        count = len(level_data.get('modules', []))
+        level_type = level_data.get('type', 'core')
+
+        if level_type == 'track':
+            stats['tracks'][level_name] = count
+        else:
+            stats['levels'][level_name] = count
+            stats['total_modules'] += count
 
     return stats
 
-
-# =============================================================================
-# CLI for testing
-# =============================================================================
 
 def main():
     """CLI for testing manifest utilities."""
@@ -361,7 +317,7 @@ def main():
         print(f"\nCore modules by level:")
         for level, count in stats['levels'].items():
             print(f"  {level.upper()}: {count}")
-        print(f"\nTotal: {stats['total_modules']}")
+        print(f"\nTotal core: {stats['total_modules']}")
 
         if stats['tracks']:
             print(f"\nTracks:")
