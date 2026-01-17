@@ -1,4 +1,3 @@
-module: b2-hist-04
 title: Заснування Києва — Легенда та історія
 phase: B2.3a [Українська історія]
 pedagogy: CBI
@@ -20,7 +19,7 @@ objectives:
 - Учень може аналізувати роль торговельного шляху «з варягів у греки»
 - Учень може порівнювати міфологічні та історичні версії походження міста
 vocabulary_count: 35
-slug: 74-zasnuvannia-kyieva
+slug: zasnuvannia-kyieva
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-19
 title: Переяславська угода
 phase: B2.3b [Українська історія]
 focus: history
@@ -22,7 +21,7 @@ objectives:
 - Учень може спростувати міф про «возз'єднання» України з Росією
 - Учень може аналізувати первинні джерела про події 1654 року
 vocabulary_count: 36
-slug: 89-pereiaslav-treaty
+slug: pereiaslav-treaty
 naturalness:
   score: 9
   status: PASS

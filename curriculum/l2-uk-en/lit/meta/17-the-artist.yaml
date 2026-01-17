@@ -1,4 +1,3 @@
-module: lit-017
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Understand the role of the Academy of Arts in his liberation
 - Discuss the synergy between his visual art and poetry
 vocabulary_count: 30
-slug: 17-the-artist
+slug: the-artist
 naturalness:
   score: 10
   status: PASS

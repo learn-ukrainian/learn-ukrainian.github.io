@@ -1,4 +1,3 @@
-module: b2-hist-06
 title: Ярослав Мудрий — Золота доба Київської Русі
 subtitle: Законодавець, будівничий, дипломат
 version: '1.0'
@@ -27,7 +26,7 @@ objectives:
   Rus legacy
 - Learner can use era-specific vocabulary in historical discourse
 vocabulary_count: 42
-slug: 76-yaroslav-the-wise
+slug: yaroslav-the-wise
 naturalness:
   score: 9
   status: PASS

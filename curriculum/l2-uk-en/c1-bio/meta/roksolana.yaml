@@ -1,4 +1,3 @@
-module: c1-bio-07
 title: 'Роксолана: Влада та Дипломатія'
 subtitle: 'Roksolana: Power and Diplomacy'
 version: '1.0'
@@ -21,4 +20,4 @@ objectives:
 - Learner can use specialized vocabulary related to power, diplomacy, and the Ottoman
   court
 vocabulary_count: 25
-slug: 42-roksolana
+slug: roksolana

@@ -1,4 +1,3 @@
-module: c1-bio-93
 title: 'Катерина Калитко: Поезія тілесності та війни'
 subtitle: 'Kateryna Kalytko: Poetry of Physicality and War'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
 - Learner masters vocabulary related to anatomy, sensory perception, and psychological
   states
 vocabulary_count: 25
-slug: 128-kateryna-kalytko
+slug: kateryna-kalytko
 vital_status: living
 naturalness:
   score: 9

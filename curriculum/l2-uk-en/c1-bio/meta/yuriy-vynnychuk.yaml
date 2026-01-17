@@ -1,4 +1,3 @@
-module: c1-bio-82
 title: 'Юрій Винничук: Майстер містифікацій та «Танґо смерті»'
 subtitle: 'Yuriy Vynnychuk: Master of Mystifications and "Tango of Death"'
 version: '1.0'
@@ -20,7 +19,7 @@ objectives:
 - Learner can identify and analyze Lviv urban myth and dialectal coloring in his prose
 - Learner masters vocabulary related to literary mystification and postmodern aesthetics
 vocabulary_count: 25
-slug: 117-yuriy-vynnychuk
+slug: yuriy-vynnychuk
 vital_status: living
 naturalness:
   score: 9

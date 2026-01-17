@@ -1,4 +1,3 @@
-module: c1-bio-85
 title: 'Марія Матіос: Солодка Даруся та залізний дух Буковини'
 subtitle: 'Mariya Matios: Sweet Darusia and the Iron Spirit of Bukovina'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
 - Learner masters vocabulary related to family sagas, historical justice, and regional
   identity
 vocabulary_count: 25
-slug: 120-mariya-matios
+slug: mariya-matios
 vital_status: living
 naturalness:
   score: 9

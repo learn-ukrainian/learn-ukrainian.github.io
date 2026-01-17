@@ -1,4 +1,3 @@
-module: b2-hist-54
 title: 'Духовний Фронт: Томос'
 subtitle: 'The Spiritual Front: Tomos'
 version: '2.0'
@@ -23,7 +22,7 @@ objectives:
 - Explain the significance of the 2019 Tomos of Autocephaly
 - Discuss the role of spiritual independence in national identity
 vocabulary_count: 25
-slug: 124-dukhovnyi-front-tomos
+slug: dukhovnyi-front-tomos
 naturalness:
   score: 9
   status: PASS

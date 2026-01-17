@@ -2,7 +2,7 @@ id: 104-first-world-war
 title: 'Перша світова війна: Брат проти брата'
 description: Українці у Першій світовій війні. Трагедія розділеного народу та народження
   військової еліти (Січових Стрільців).
-slug: 104-first-world-war
+slug: first-world-war
 focus: history
 pedagogy: CBI
 duration: 45 min
@@ -23,4 +23,3 @@ vocab_count: 122
 naturalness:
   score: 9
   status: PASS
-module: b2-hist-34

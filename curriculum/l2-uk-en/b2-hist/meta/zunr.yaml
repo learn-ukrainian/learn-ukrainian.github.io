@@ -2,7 +2,7 @@ id: 105-unr-zunr
 title: 'УНР і ЗУНР: Мрія про Соборність'
 description: Українська Революція 1917–1921 років. Створення УНР, Акт Злуки та трагічна
   боротьба за державність.
-slug: 105-unr-zunr
+slug: unr-zunr
 focus: history
 pedagogy: CBI
 duration: 45 min
@@ -24,4 +24,3 @@ vocab_count: 90
 naturalness:
   score: 9
   status: PASS
-module: b2-hist-35

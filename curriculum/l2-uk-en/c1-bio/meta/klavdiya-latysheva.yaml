@@ -1,4 +1,3 @@
-module: c1-bio-65
 title: 'Клавдія Латишева: Математик, що підкорила рівняння'
 subtitle: 'Klavdiya Latysheva: The Mathematician Who Conquered Equations'
 version: '2.0'
@@ -20,7 +19,7 @@ objectives:
 - Learner can discuss science, education, and overcoming barriers in Ukrainian.
 - Learner masters vocabulary for research, logic, and academic career.
 vocabulary_count: 24
-slug: 100-klavdiya-latysheva
+slug: klavdiya-latysheva
 naturalness:
   score: 9
   status: PASS

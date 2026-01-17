@@ -1,4 +1,3 @@
-module: c1-bio-91
 title: 'Олег Сенцов: Режисер, політв''язень, воїн'
 subtitle: 'Oleg Sentsov: Director, Political Prisoner, Warrior'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
   reality
 - Learner masters vocabulary related to filmmaking, human rights, and military service
 vocabulary_count: 25
-slug: 126-oleg-sentsov
+slug: oleg-sentsov
 vital_status: living
 naturalness:
   score: 9

@@ -1,4 +1,3 @@
-module: c1-bio-16
 title: 'Григорій Сковорода: Мандрівний Філософ та Пророк Серця'
 subtitle: 'Hryhoriy Skovoroda: The Wandering Philosopher and Prophet of the Heart'
 version: '2.0'
@@ -22,4 +21,4 @@ objectives:
   Enlightenment
 - Learner can use advanced vocabulary related to philosophy, morality, and inner freedom
 vocabulary_count: 25
-slug: 16-hryhoriy-skovoroda
+slug: hryhoriy-skovoroda

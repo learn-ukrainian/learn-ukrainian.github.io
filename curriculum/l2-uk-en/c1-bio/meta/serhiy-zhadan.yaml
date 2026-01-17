@@ -1,4 +1,3 @@
-module: c1-bio-90
 title: 'Сергій Жадан: Голос Сходу і поет війни'
 subtitle: 'Serhiy Zhadan: Voice of the East and Poet of War'
 version: '1.0'
@@ -23,7 +22,7 @@ objectives:
 - Learner masters vocabulary related to military service, volunteering, and urban
   culture
 vocabulary_count: 25
-slug: 125-serhiy-zhadan
+slug: serhiy-zhadan
 vital_status: living
 naturalness:
   score: 9

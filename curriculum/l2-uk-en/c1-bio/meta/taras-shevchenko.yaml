@@ -1,4 +1,3 @@
-module: c1-bio-20
 title: 'Тарас Шевченко: Національний Пророк'
 phase: C1.3 Biographies
 duration: 120
@@ -21,4 +20,4 @@ grammar:
 vocabulary_focus:
 - Prophetic and national revival terminology
 - Repression and resistance vocabulary
-slug: 20-taras-shevchenko
+slug: taras-shevchenko

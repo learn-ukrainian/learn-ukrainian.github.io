@@ -1,4 +1,3 @@
-module: c1-bio-21
 title: 'Ганна Барвінок: Перша з Жінок'
 phase: C1.3 Biographies
 duration: 120
@@ -21,4 +20,4 @@ grammar:
 vocabulary_focus:
 - Literary and ethnographic terminology
 - Gender and social status vocabulary
-slug: 56-hanna-barvinok
+slug: hanna-barvinok

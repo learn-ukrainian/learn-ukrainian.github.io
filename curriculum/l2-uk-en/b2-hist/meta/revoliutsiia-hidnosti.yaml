@@ -1,4 +1,3 @@
-module: b2-hist-56
 title: Революція Гідності
 subtitle: The Revolution of Dignity
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Explain the concept of 'Dignity' in the context of the protest
 - Discuss the role of the 'Heavenly Hundred'
 vocabulary_count: 25
-slug: 126-revoliutsiia-hidnosti
+slug: revoliutsiia-hidnosti
 naturalness:
   score: 9
   status: PASS

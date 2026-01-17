@@ -1,4 +1,3 @@
-module: b2-hist-10
 title: Галицько-Волинське князівство — Західний оплот Русі
 phase: B2.3a [Українська історія]
 pedagogy: CBI
@@ -22,7 +21,7 @@ objectives:
 - Учень може аналізувати західну орієнтацію князівства та її наслідки
 - Учень може аргументувати значення королівського титулу Данила для української державності
 vocabulary_count: 35
-slug: 80-galytsko-volynske-knyazivstvo
+slug: galytsko-volynske-knyazivstvo
 naturalness:
   score: 9
   status: PASS

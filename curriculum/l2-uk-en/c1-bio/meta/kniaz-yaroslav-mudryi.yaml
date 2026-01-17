@@ -1,4 +1,3 @@
-module: c1-bio-04
 title: 'Князь Ярослав Мудрий: Золота Доба'
 subtitle: 'Prince Yaroslav the Wise: The Golden Age'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Evaluate the cultural achievements of the Golden Age of Kyivan Rus'
 vocabulary_count: 25
 vital_status: deceased
-slug: 39-kniaz-yaroslav-mudryi
+slug: kniaz-yaroslav-mudryi

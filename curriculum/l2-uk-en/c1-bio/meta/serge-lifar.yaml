@@ -1,4 +1,3 @@
-module: c1-bio-67
 title: '«Серж Лифар: Бог танцю з Києва»'
 subtitle: 'Serge Lifar: The God of Dance from Kyiv'
 version: '2.0'
@@ -20,4 +19,4 @@ objectives:
 - Learner can describe Serge Lifars career and his Ukrainian identity
 - Learner understands the terminology of ballet and performing arts
 vocabulary_count: 25
-slug: 102-serge-lifar
+slug: serge-lifar

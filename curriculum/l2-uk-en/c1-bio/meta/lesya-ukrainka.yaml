@@ -1,4 +1,3 @@
-module: c1-bio-40
 title: 'Леся Українка: Дочка Прометея'
 subtitle: 'Lesya Ukrainka: Daughter of Prometheus'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Learner can analyze literary and biographical narratives at C1 level
 - Learner masters literary and historical vocabulary
 vocabulary_count: 25
-slug: 75-lesya-ukrainka
+slug: lesya-ukrainka

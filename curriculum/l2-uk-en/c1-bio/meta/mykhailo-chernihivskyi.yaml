@@ -1,4 +1,3 @@
-module: c1-bio-06
 title: 'Михайло Чернігівський: Опір Орді'
 subtitle: 'Mykhailo of Chernihiv: Resistance to the Horde'
 version: '1.0'
@@ -21,4 +20,4 @@ objectives:
 - Learner understands the concept of political martyrdom in Kyivan Rus'
 - Learner can use specialized historical and ecclesiastical vocabulary
 vocabulary_count: 25
-slug: 41-mykhailo-chernihivskyi
+slug: mykhailo-chernihivskyi

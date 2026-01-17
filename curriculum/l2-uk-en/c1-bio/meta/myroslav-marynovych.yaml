@@ -1,4 +1,3 @@
-module: c1-bio-78
 title: 'Мирослав Маринович: Голос совісті та прав людини'
 subtitle: 'Myroslav Marynovych: Voice of Conscience and Human Rights'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Learner can analyze intellectual and ethical discourse in Ukrainian
 - Learner masters vocabulary related to human rights, ecumenism, and social justice
 vocabulary_count: 25
-slug: 113-myroslav-marynovych
+slug: myroslav-marynovych
 vital_status: living
 naturalness:
   score: 9

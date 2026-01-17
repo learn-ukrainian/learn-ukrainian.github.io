@@ -1,4 +1,3 @@
-module: lit-021
 title: 'Пантелеймон Куліш: Європеєць на Хуторі'
 subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
   - Examine his role as a translator (Shakespeare, Bible)
   - Evaluate his contribution to the Ukrainian language (Kulishivka)
 vocabulary_count: 30
-slug: 21-panteleimon-kulish
+slug: panteleimon-kulish
 naturalness:
   score: 10
   status: PASS

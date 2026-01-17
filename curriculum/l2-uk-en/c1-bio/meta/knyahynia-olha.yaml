@@ -1,4 +1,3 @@
-module: c1-bio-01
 title: 'Княгиня Ольга: Регент і Реформатор'
 subtitle: 'Princess Olha: Regent and Reformer'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Discuss the role of women in Kyivan Rus politics
 vocabulary_count: 24
 vital_status: deceased
-slug: 36-knyahynia-olha
+slug: knyahynia-olha

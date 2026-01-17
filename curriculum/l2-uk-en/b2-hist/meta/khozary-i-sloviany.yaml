@@ -1,10 +1,27 @@
-# Meta for Хозарський каганат і слов'яни
-slug: khozary-i-sloviany
 title: "Хозарський каганат і слов'яни"
-level: B2
-track: history
-phase: "HIST.1 [Origins & Early Civilizations]"
-status: skeleton
+subtitle: "Сусіди та суперники"
+version: "2.0"
+phase: "HIST.1"
 focus: history
-prerequisites: []
-learning_outcomes: []
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - khazars
+  - slavic
+  - medieval
+  - tribute
+grammar:
+  - "Historical narrative register"
+  - "Subordinate clauses of reason (оскільки, тому що)"
+  - "Participles in historical descriptions"
+objectives:
+  - "Learner understands the political structure of the Khazar Khaganate"
+  - "Learner can explain the relationship between Khazars and Slavic tribes"
+  - "Learner masters vocabulary related to nomadic states and tribute"
+vocabulary_count: 28
+slug: khozary-i-sloviany
+naturalness:
+  score: 9
+  status: PASS

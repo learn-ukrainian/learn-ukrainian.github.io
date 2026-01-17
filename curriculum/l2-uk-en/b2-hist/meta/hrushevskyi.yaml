@@ -1,4 +1,3 @@
-module: b2-hist-33
 title: Михайло Грушевський
 subtitle: Батько української історіографії та перший президент УНР
 phase: B2.3b [Українська історія]
@@ -25,7 +24,7 @@ objectives:
 - Учень може проаналізувати його роль як президента УНР
 - Учень може протиставити його схему російській імперській історіографії
 vocabulary_count: 35
-slug: 103-mykhailo-hrushevskyi
+slug: mykhailo-hrushevskyi
 naturalness:
   score: 9
   status: PASS

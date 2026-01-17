@@ -1,4 +1,3 @@
-module: c1-bio-05
 title: 'Анна Ярославна: Королева Франції та донька Русі'
 subtitle: 'Anna Yaroslavna: Queen of France and Daughter of Rus'''
 version: '2.0'
@@ -22,4 +21,4 @@ objectives:
 - Discuss the legacy of the Reims Gospel in the context of Ukrainian heritage
 vocabulary_count: 25
 vital_status: deceased
-slug: 40-knyazhna-anna-yaroslavna
+slug: knyazhna-anna-yaroslavna

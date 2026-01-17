@@ -1,4 +1,3 @@
-module: b2-hist-30
 title: Шевченко і пробудження
 subtitle: 'Життя та творчість Тараса Шевченка: від кріпацтва до національного пророка'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
 - Вивчити ключові концепції шевченкового 'Заповіту' та поеми 'Кавказ'
 vocabulary_count: 25
 vocab_count: 153
-slug: 100-shevchenko-awakening
+slug: shevchenko-awakening
 naturalness:
   score: 9
   status: PASS

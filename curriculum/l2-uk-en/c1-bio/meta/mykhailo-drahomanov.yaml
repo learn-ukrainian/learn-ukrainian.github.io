@@ -1,4 +1,3 @@
-module: c1-bio-22
 title: 'Михайло Драгоманов: Архітектор Європейської України'
 phase: C1.3 Biographies
 duration: 120
@@ -22,4 +21,4 @@ grammar:
 vocabulary_focus:
 - Political science vocabulary
 - Social and cultural critique terms
-slug: 57-mykhailo-drahomanov
+slug: mykhailo-drahomanov

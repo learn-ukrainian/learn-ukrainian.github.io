@@ -1,4 +1,3 @@
-module: lit-023
 title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
 version: '2.0'
@@ -19,4 +18,4 @@ objectives:
   - 'Compare Walter Scott''s influence with Ukrainian realities.'
   - 'Evaluate the character archetypes (Shram, Cherevan, Somko).'
 vocabulary_count: 25
-slug: 23-black-council-plot
+slug: black-council-plot

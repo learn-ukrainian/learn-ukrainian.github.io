@@ -1,4 +1,3 @@
-module: lit-016
 title: 'Біблійні теми: Давидові псалми і "Марія"'
 subtitle: 'Biblical Themes: Psalms of David and "Maria"'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Identify Church Slavonic vocabulary and its stylistic function
 - Discuss the concept of "Holy Truth" (Свята Правда) in Shevchenko's ethics
 vocabulary_count: 30
-slug: 16-biblical-themes
+slug: biblical-themes
 naturalness:
   score: 10
   status: PASS

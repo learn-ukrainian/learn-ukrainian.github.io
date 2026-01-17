@@ -1,4 +1,3 @@
-module: b2-hist-38
 title: 'Розстріляне відродження I: Постаті'
 subtitle: 'The Executed Renaissance I: Key Figures'
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Analyze the tragic fate of the 1920s generation
 - Identify the cultural significance of the 'Slovo' building
 vocabulary_count: 25
-slug: 108-rozstriliane-vidrodzennia-postati
+slug: rozstriliane-vidrodzennia-postati
 naturalness:
   score: 9
   status: PASS

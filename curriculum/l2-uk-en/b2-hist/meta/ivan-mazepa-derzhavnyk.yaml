@@ -1,4 +1,3 @@
-module: b2-hist-22
 title: 'Іван Мазепа I: державник'
 phase: B2.3b [Українська історія]
 focus: history
@@ -23,7 +22,7 @@ objectives:
 - Учень може аналізувати дипломатичну стратегію Мазепи щодо Московії
 - Учень може охарактеризувати Мазепу як державного діяча
 vocabulary_count: 35
-slug: 92-ivan-mazepa-i-derzhavnyk
+slug: ivan-mazepa-i-derzhavnyk
 naturalness:
   score: 9
   status: PASS

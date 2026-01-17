@@ -1,4 +1,3 @@
-module: c1-bio-28
 title: 'Іван Франко: Титан праці'
 subtitle: 'Ivan Franko: The Titan of Work'
 version: '2.0'
@@ -29,4 +28,4 @@ vocabulary_focus:
 - Domain-specific terminology
 - Historical vocabulary
 vocabulary_count: 30
-slug: 063-ivan-franko
+slug: ivan-franko

@@ -1,4 +1,3 @@
-module: b2-hist-20
 title: 'Руїна I: Виговщина і розкол'
 phase: B2.3b [Українська історія]
 focus: history
@@ -23,7 +22,7 @@ objectives:
 - Учень може аналізувати Конотопську битву як приклад військового тріумфу
 - Учень може пояснити розкол України на Правобережжя та Лівобережжя
 vocabulary_count: 35
-slug: 90-ruina-i-vyhovsky
+slug: ruina-i-vyhovsky
 naturalness:
   score: 9
   status: PASS

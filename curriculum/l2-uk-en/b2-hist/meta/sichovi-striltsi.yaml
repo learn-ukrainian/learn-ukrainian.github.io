@@ -1,4 +1,3 @@
-module: sichovi-striltsi
 title: "Українські січові стрільці: Патріоти, воїни, просвітники"
 subtitle: "Перше національне військове формування"
 version: "2.0"
@@ -23,3 +22,6 @@ objectives:
   - "Learner masters military and educational terminology"
 vocabulary_count: 28
 slug: sichovi-striltsi
+naturalness:
+  score: 9
+  status: PASS

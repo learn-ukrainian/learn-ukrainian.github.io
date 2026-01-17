@@ -1,4 +1,3 @@
-module: c1-bio-43
 title: 'Микола Леонтович: Маг українського хору'
 subtitle: 'Mykola Leontovych: Magician of Ukrainian Choir'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Learner can analyze musical and biographical narratives at C1 level
 - Learner masters musical and historical vocabulary
 vocabulary_count: 25
-slug: 78-mykola-leontovych
+slug: mykola-leontovych

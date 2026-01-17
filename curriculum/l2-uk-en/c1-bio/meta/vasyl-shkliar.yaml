@@ -1,4 +1,3 @@
-module: c1-bio-81
 title: 'Василь Шкляр: Батько українського бестселера'
 subtitle: 'Vasyl Shkliar: Father of the Ukrainian Bestseller'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Learner can analyze the linguistic features of the "Black Raven" novel
 - Learner masters vocabulary related to partisan struggle and historical memory
 vocabulary_count: 25
-slug: 116-vasyl-shkliar
+slug: vasyl-shkliar
 vital_status: living
 naturalness:
   score: 9

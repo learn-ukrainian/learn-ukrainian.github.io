@@ -1,4 +1,3 @@
-module: c1-bio-101
 title: 'Контрольна точка: Біографії'
 subtitle: 'Checkpoint: Biographies'
 version: '1.0'
@@ -19,7 +18,7 @@ objectives:
   - "Інтегрувати знання про видатних постатей України від княжих часів до сьогодення"
   - "Застосувати навички порівняльного аналізу історичних та сучасних контекстів"
 vocabulary_count: 55
-slug: 101-c1-bio-checkpoint
+slug: c1-bio-checkpoint
 naturalness:
   score: 10
   status: PASS

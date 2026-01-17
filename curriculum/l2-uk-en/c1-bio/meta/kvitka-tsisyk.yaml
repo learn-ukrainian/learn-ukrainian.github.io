@@ -1,4 +1,3 @@
-module: c1-bio-83
 title: 'Квітка Цісик: Голос української душі в Америці'
 subtitle: 'Kvitka Cisyk: The Voice of the Ukrainian Soul in America'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
   identity
 - Learner masters vocabulary related to vocal art, folklore, and cultural heritage
 vocabulary_count: 25
-slug: 118-kvitka-tsisyk
+slug: kvitka-tsisyk

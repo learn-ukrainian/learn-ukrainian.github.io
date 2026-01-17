@@ -1,4 +1,3 @@
-module: b2-hist-23
 title: 'Іван Мазепа II: освіта і культура'
 phase: B2.3b [Українська історія]
 focus: history
@@ -24,7 +23,7 @@ objectives:
 - Учень може охарактеризувати роль Києво-Могилянської академії в культурному відродженні
 - Учень може аналізувати Мазепу як мецената та покровителя мистецтв
 vocabulary_count: 35
-slug: 93-ivan-mazepa-ii-kultura
+slug: ivan-mazepa-ii-kultura
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-53
 title: 'Епоха Януковича: Реванш'
 subtitle: The Yanukovych Era
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Discuss the concept of 'The Family' and corruption
 - Evaluate the reasons for the refusal of the EU Association Agreement
 vocabulary_count: 25
-slug: 123-epokha-yanukovycha
+slug: epokha-yanukovycha
 naturalness:
   score: 9
   status: PASS

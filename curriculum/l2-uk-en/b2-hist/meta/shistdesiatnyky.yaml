@@ -1,4 +1,3 @@
-module: b2-hist-46
 title: Шістдесятники
 subtitle: The Sixtiers Movement
 version: '2.0'
@@ -23,7 +22,7 @@ objectives:
 - Analyze the concept of 'Thaw' and subsequent repressions
 - Discuss the role of Samvydav in preserving freedom of speech
 vocabulary_count: 25
-slug: 116-shistdesiatnyky
+slug: shistdesiatnyky
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-42
 title: 'Друга світова: окупації'
 subtitle: 'WWII: Occupations'
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Learner recognizes the impact of the 'Bloodlands' concept on Ukrainian history
 - Learner can discuss Babyn Yar and the Holocaust in Ukraine using appropriate terminology
 vocabulary_count: 25
-slug: 112-druha-svitova-okupatsii
+slug: druha-svitova-okupatsii
 naturalness:
   score: 9
   status: PASS

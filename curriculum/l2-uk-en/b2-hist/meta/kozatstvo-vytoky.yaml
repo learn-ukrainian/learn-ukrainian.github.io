@@ -1,4 +1,3 @@
-module: b2-hist-14
 title: 'Козацтво: витоки'
 phase: B2.3b [Українська історія]
 pedagogy: CBI
@@ -20,7 +19,7 @@ objectives:
 - Учень може аналізувати первинні джерела про ранніх козаків
 - Учень може характеризувати козацький спосіб життя на основі описів Боплана
 vocabulary_count: 36
-slug: 84-kozatstvo-vytoky
+slug: kozatstvo-vytoky
 naturalness:
   score: 9
   status: PASS

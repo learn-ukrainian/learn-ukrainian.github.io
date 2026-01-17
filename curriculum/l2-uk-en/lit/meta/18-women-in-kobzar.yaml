@@ -1,4 +1,3 @@
-module: lit-018
 title: Жіноча доля в "Кобзарі"
 subtitle: 'Women in Kobzar: The Tragic Archetype'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Discuss Shevchenko's empathy towards women as a unique feature of his poetry
 - Examine the symbolism of the unwed mother in Ukrainian society
 vocabulary_count: 30
-slug: 18-women-in-kobzar
+slug: women-in-kobzar
 naturalness:
   score: 10
   status: PASS

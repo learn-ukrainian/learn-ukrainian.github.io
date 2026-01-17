@@ -1,4 +1,3 @@
-module: c1-bio-10
 title: 'Богдан Хмельницький: Будівничий Козацької Держави'
 subtitle: 'Bohdan Khmelnytskyi: Architect of the Cossack State'
 version: '2.0'
@@ -22,4 +21,4 @@ objectives:
   Khmelnytsky Uprising
 - Learner can use advanced vocabulary related to statehood and geopolitics
 vocabulary_count: 25
-slug: 45-bohdan-khmelnytskyy
+slug: bohdan-khmelnytskyy

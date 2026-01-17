@@ -1,4 +1,3 @@
-module: b2-hist-31
 title: 'Ідеологи: Драгоманов, Куліш'
 phase: B2.3b [Українська історія]
 focus: history
@@ -24,7 +23,7 @@ objectives:
 - Учень може пояснити політичні ідеї Михайла Драгоманова та їхній вплив
 - Учень може аналізувати первинні джерела — уривки з творів обох мислителів
 vocabulary_count: 35
-slug: 101-ideolhy-drahomanov-kulish
+slug: ideolhy-drahomanov-kulish
 naturalness:
   score: 9
   status: PASS

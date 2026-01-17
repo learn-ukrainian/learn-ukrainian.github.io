@@ -1,4 +1,3 @@
-module: b2-hist-18
 title: 'Хмельниччина II: держава — будівництво гетьманату'
 phase: B2.3b [Українська історія]
 pedagogy: CBI
@@ -21,7 +20,7 @@ objectives:
 - Учень може характеризувати адміністративний устрій Гетьманщини
 - Учень може аналізувати значення Зборівського договору 1649 року
 vocabulary_count: 36
-slug: 88-khmelnychchyna-ii-derzhava
+slug: khmelnychchyna-ii-derzhava
 naturalness:
   score: 9
   status: PASS

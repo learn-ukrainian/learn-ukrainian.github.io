@@ -1,4 +1,3 @@
-module: b2-hist-05
 title: Володимир і хрещення — 988 рік
 phase: B2.3a [Українська історія]
 pedagogy: CBI
@@ -20,7 +19,7 @@ objectives:
 - Учень може аналізувати політичні мотиви вибору християнства
 - Учень може розрізняти міф і історичну реальність щодо хрещення
 vocabulary_count: 35
-slug: 75-volodymyr-i-khreshchennia
+slug: volodymyr-i-khreshchennia
 naturalness:
   score: 9
   status: PASS

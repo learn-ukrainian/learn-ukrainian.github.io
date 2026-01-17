@@ -1,4 +1,3 @@
-module: lit-019
 title: Щоденник ("Журнал") Шевченка
 subtitle: 'Shevchenko’s Diary: The Inner World'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Examine the contrast between the public "Kobzar" and private "Taras"
 - Understand his views on theater, literature, and technology
 vocabulary_count: 30
-slug: 19-shevchenkos-diary
+slug: shevchenkos-diary
 naturalness:
   score: 10
   status: PASS

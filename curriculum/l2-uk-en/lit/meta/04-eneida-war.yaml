@@ -1,6 +1,5 @@
-module: 04-eneida-war
 title: 'Енеїда: Словник Війни'
-slug: 04-eneida-war
+slug: eneida-war
 version: '1.0'
 subtitle: 'LIT-004: Анатомія Козацького Бою'
 phase: LIT

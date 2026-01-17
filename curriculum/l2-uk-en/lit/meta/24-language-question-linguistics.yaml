@@ -1,0 +1,21 @@
+title: 'Мовне питання: Кулішівка'
+subtitle: 'The Language Question: Kulishivka'
+version: '2.0'
+phase: 'LIT.4 Intellectuals'
+focus: linguistics # Specific focus for linguistics
+pedagogy: 'Analysis'
+duration: 120
+transliteration: none
+tags:
+  - linguistics
+  - history
+  - orthography
+  - russification
+grammar:
+  - 'Phonetic Orthography'
+objectives:
+  - 'Analyze the evolution of Ukrainian orthography (Kulishivka).'
+  - 'Understand the political context of the Valuev Circular and Ems Ukaz.'
+  - 'Discuss the role of language in nation-building.'
+vocabulary_count: 25
+slug: language-question-linguistics

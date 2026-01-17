@@ -1,4 +1,3 @@
-module: c1-bio-47
 title: 'Марко Вовчок: Загадкова зірка літератури'
 subtitle: 'Marko Vovchok: Mysterious Star of Literature'
 version: '1.0'
@@ -21,4 +20,4 @@ objectives:
 - Learner can analyze literary and biographical narratives at C1 level
 - Learner masters literary and historical vocabulary
 vocabulary_count: 25
-slug: 82-marko-vovchok
+slug: marko-vovchok

@@ -1,4 +1,3 @@
-module: c1-bio-76
 title: 'В’ячеслав Чорновіл: Провідник до незалежності'
 subtitle: 'Viacheslav Chornovil: Guide to Independence'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Learner masters vocabulary related to state-building, human rights, and political
   activism
 vocabulary_count: 25
-slug: 111-viacheslav-chornovil
+slug: viacheslav-chornovil

@@ -1,4 +1,3 @@
-module: c1-bio-02
 title: 'Князь Святослав: Воїн на Троні'
 subtitle: 'Prince Sviatoslav: Warrior on the Throne'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Evaluate his impact on the geopolitical map of Eastern Europe
 vocabulary_count: 25
 vital_status: deceased
-slug: 37-kniaz-sviatoslav
+slug: kniaz-sviatoslav

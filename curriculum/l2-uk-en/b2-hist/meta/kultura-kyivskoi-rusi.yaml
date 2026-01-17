@@ -1,4 +1,3 @@
-module: b2-hist-07
 title: Культура Київської Русі — Писемність, мистецтво, архітектура
 subtitle: 'Від графіті до мозаїк: культурна спадщина XI століття'
 version: '1.0'
@@ -28,7 +27,7 @@ objectives:
   narratives
 - Learner can use era-specific vocabulary in cultural and historical discourse
 vocabulary_count: 40
-slug: 77-kultura-kyivskoi-rusi
+slug: kultura-kyivskoi-rusi
 naturalness:
   score: 9
   status: PASS

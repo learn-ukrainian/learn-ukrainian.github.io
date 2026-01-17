@@ -1,4 +1,3 @@
-module: 96-mykola-pohribnyi
 title: Микола Погрібний
 subtitle: Голос української вимови
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Compare spoken and written language norms
 vocabulary_count: 24
 vital_status: deceased
-slug: 96-mykola-pohribnyi
+slug: mykola-pohribnyi
 naturalness:
   score: 9
   status: PASS

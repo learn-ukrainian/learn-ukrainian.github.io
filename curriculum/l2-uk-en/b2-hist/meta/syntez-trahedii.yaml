@@ -1,4 +1,3 @@
-module: b2-hist-49
 title: 'Синтез: Трагедії XX ст.'
 subtitle: 'Synthesis: 20th Century Tragedies'
 version: '2.0'
@@ -21,7 +20,7 @@ objectives:
 - Learner can analyze connections between Holodomor, WWII, and Soviet repression
 - Learner can construct historical arguments about cultural survival
 vocabulary_count: 25
-slug: 119-syntez-trahedii-xx-stolittia
+slug: syntez-trahedii-xx-stolittia
 naturalness:
   score: 9
   status: PASS

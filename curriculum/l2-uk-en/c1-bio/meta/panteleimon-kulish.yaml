@@ -1,4 +1,3 @@
-module: 97-panteleimon-kulish
 title: Пантелеймон Куліш
 subtitle: Будівничий української мови
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Evaluate his translation of the Bible
 vocabulary_count: 24
 vital_status: deceased
-slug: 97-panteleimon-kulish
+slug: panteleimon-kulish
 naturalness:
   score: 9
   status: PASS

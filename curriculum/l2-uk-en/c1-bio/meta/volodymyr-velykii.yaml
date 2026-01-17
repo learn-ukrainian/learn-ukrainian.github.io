@@ -1,4 +1,3 @@
-module: c1-bio-03
 title: 'Князь Володимир Великий: Хреститель і Державотворець'
 subtitle: 'Prince Volodymyr the Great: Baptizer and State Builder'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Discuss the symbolism of the Trident (Tryzub) in Ukrainian history
 vocabulary_count: 25
 vital_status: deceased
-slug: 38-volodymyr-velykii
+slug: volodymyr-velykii

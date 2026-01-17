@@ -1,4 +1,3 @@
-module: lit-022
 title: 'Чорна рада: Історичний контекст'
 subtitle: 'The Black Council: Historical Context'
 version: '1.0'
@@ -19,4 +18,4 @@ objectives:
   - 'Understand the political landscape of 1663 (Somko vs. Briukhovetskyi)'
   - 'Evaluate the concept of "ochlocracy" (mob rule) in Ukrainian history'
 vocabulary_count: 20
-slug: 22-black-council-history
+slug: black-council-history

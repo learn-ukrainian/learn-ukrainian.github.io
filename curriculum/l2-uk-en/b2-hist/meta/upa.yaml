@@ -1,4 +1,3 @@
-module: b2-hist-43
 title: УПА і збройний опір
 subtitle: UPA and Armed Resistance
 version: '2.0'
@@ -18,7 +17,7 @@ objectives:
 - Learner can analyze primary sources from the resistance movement.
 - Learner understands the 'war on two fronts' concept.
 vocabulary_count: 15
-slug: 113-upa-i-zbroinyi-opir
+slug: upa-i-zbroinyi-opir
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-57
 title: 'Анексія Криму: Початок війни'
 subtitle: 'The Annexation of Crimea: The War Begins'
 version: '2.0'
@@ -23,7 +22,7 @@ objectives:
 - Discuss the resistance of Crimean Tatars and Ukrainians
 - Evaluate the international reaction and sanctions
 vocabulary_count: 25
-slug: 127-aneksiia-krymu
+slug: aneksiia-krymu
 naturalness:
   score: 9
   status: PASS

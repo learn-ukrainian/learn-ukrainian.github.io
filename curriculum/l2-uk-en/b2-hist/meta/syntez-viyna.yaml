@@ -1,4 +1,3 @@
-module: b2-hist-61
 title: 'Синтез: Війна за існування'
 subtitle: 'Synthesis: War for Existence'
 version: '2.0'
@@ -20,7 +19,7 @@ objectives:
 - Аналізувати причинно-наслідкові зв'язки сучасної війни
 - Формулювати аргументовані висновки про майбутнє України
 vocabulary_count: 30
-slug: 131-syntez-viyna-za-isnuvannya
+slug: syntez-viyna-za-isnuvannya
 naturalness:
   score: 9
   status: PASS

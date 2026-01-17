@@ -1,4 +1,3 @@
-module: c1-bio-84
 title: 'Галина Пагутяк: Майстриня українського химерного реалізму'
 subtitle: 'Halyna Pahutyak: Master of Ukrainian Chimerical Realism'
 version: '1.0'
@@ -21,7 +20,7 @@ objectives:
 - Learner can identify elements of chimerical realism and mysticism in her prose
 - Learner masters vocabulary related to philosophy, mysticism, and literary analysis
 vocabulary_count: 25
-slug: 119-halyna-pahutyak
+slug: halyna-pahutyak
 vital_status: living
 naturalness:
   score: 9

@@ -1,4 +1,3 @@
-module: b2-hist-59
 title: Повномасштабне вторгнення
 subtitle: The Full-Scale Invasion
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Analyze the factors behind the failure of the Russian 'Blitzkrieg'
 - Discuss the role of leadership and national unity in the first days of the invasion
 vocabulary_count: 25
-slug: 129-pownomasshtabne-wtorhnessnia
+slug: pownomasshtabne-wtorhnessnia
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-15
 title: Запорозька Січ — козацька республіка
 phase: B2.3b [Українська історія]
 pedagogy: CBI
@@ -21,7 +20,7 @@ objectives:
 - Учень може пояснювати демократичні традиції козацтва
 - Учень може аналізувати роль Хортиці в історії України
 vocabulary_count: 36
-slug: 85-zaporizka-sich
+slug: zaporizka-sich
 naturalness:
   score: 9
   status: PASS

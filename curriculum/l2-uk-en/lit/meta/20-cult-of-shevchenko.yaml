@@ -1,4 +1,3 @@
-module: lit-020
 title: 'Культ Шевченка: Рецепція і Міфи'
 subtitle: 'The Cult of Shevchenko: Modern Reception'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
 - Examine modern reinterpretations (Grekhov, pop-culture)
 - Reflect on the concept of "National Father" and its risks
 vocabulary_count: 30
-slug: 20-cult-of-shevchenko
+slug: cult-of-shevchenko
 naturalness:
   score: 10
   status: PASS

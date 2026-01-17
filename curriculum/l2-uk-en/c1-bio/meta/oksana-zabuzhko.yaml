@@ -1,4 +1,3 @@
-module: c1-bio-86
 title: 'Оксана Забужко: Інтелектуальна провокація та фемінізм'
 subtitle: 'Oksana Zabuzhko: Intellectual Provocation and Feminism'
 version: '1.0'
@@ -22,7 +21,7 @@ objectives:
   Secrets"
 - Learner masters vocabulary related to feminism, post-colonialism, and literary criticism
 vocabulary_count: 25
-slug: 121-oksana-zabuzhko
+slug: oksana-zabuzhko
 vital_status: living
 naturalness:
   score: 9

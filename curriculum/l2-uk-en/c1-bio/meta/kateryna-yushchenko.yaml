@@ -1,4 +1,3 @@
-module: c1-bio-70
 title: '«Катерина Ющенко: Мати мови програмування»'
 subtitle: 'Kateryna Yushchenko: The Mother of Programming Language'
 version: '2.0'
@@ -20,4 +19,4 @@ objectives:
 - Learner can describe Kateryna Yushchenkos scientific career and invention
 - Learner understands the vocabulary of cybernetics and programming in Ukrainian
 vocabulary_count: 25
-slug: 105-kateryna-yushchenko
+slug: kateryna-yushchenko

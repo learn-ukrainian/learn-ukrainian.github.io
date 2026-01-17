@@ -1,4 +1,3 @@
-module: b2-hist-01
 title: Трипільська цивілізація — Витоки української землі
 phase: B2.3a [Українська історія]
 pedagogy: CBI
@@ -20,7 +19,7 @@ objectives:
 - Учень може аналізувати первинні джерела про археологічні знахідки
 - Учень може аргументувати зв'язок Трипілля з українською спадщиною
 vocabulary_count: 35
-slug: 71-trypillian-civilization
+slug: trypillian-civilization
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: c1-bio-94
 title: 'Софія Андрухович: Ілюзії «Фелікс Австрія» та пам''ять «Амадоки»'
 subtitle: 'Sofia Andrukhovych: Illusions of "Felix Austria" and Memory of "Amadoka"'
 version: '1.0'
@@ -23,7 +22,7 @@ objectives:
 - Learner masters vocabulary related to psychology, culinary arts, and historical
   reconstruction
 vocabulary_count: 25
-slug: 129-sofia-andrukhovych
+slug: sofia-andrukhovych
 vital_status: living
 naturalness:
   score: 9

@@ -1,4 +1,3 @@
-module: b2-hist-08
 title: Занепад і роздроблення — Кінець єдності Русі
 subtitle: Любецький з'їзд, князівські усобиці, Повчання Мономаха
 version: '1.0'
@@ -27,7 +26,7 @@ objectives:
 - Learner can recognize causes and consequences of political fragmentation
 - Learner can use era-specific vocabulary in historical discourse
 vocabulary_count: 35
-slug: 78-zanepad-i-rozdroblennia
+slug: zanepad-i-rozdroblennia
 naturalness:
   score: 9
   status: PASS

@@ -1,4 +1,3 @@
-module: b2-hist-24
 title: 'Іван Мазепа III: Полтава і вигнання'
 phase: B2.3b [Українська історія]
 focus: history
@@ -24,7 +23,7 @@ objectives:
 - Учень може проаналізувати наслідки Полтавської битви для України
 - Учень може охарактеризувати Конституцію Пилипа Орлика як важливий документ державності
 vocabulary_count: 35
-slug: 94-ivan-mazepa-iii-poltava
+slug: ivan-mazepa-iii-poltava
 naturalness:
   score: 9
   status: PASS

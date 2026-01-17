@@ -1,4 +1,3 @@
-module: b2-hist-39
 title: 'Розстріляне відродження II: Механізм терору'
 subtitle: 'The Executed Renaissance II: The Mechanism of Terror'
 version: '2.0'
@@ -21,7 +20,7 @@ objectives:
 - Learner can identify the geography of repression (Solovki, Sandarmokh).
 - Learner recognizes terms related to the mechanism of state terror and cultural genocide.
 vocabulary_count: 25
-slug: 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru
+slug: rozstriliane-vidrodzhennia-ii-mekhanizm-teroru
 naturalness:
   score: 9
   status: PASS

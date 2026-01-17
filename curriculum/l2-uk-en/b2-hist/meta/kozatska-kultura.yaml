@@ -1,4 +1,3 @@
-module: b2-hist-16
 title: Козацька культура — кобзарі, думи та бароко
 phase: B2.3b [Українська історія]
 pedagogy: CBI
@@ -22,7 +21,7 @@ objectives:
 - Учень може аналізувати жанр дум як унікальний український епос
 - Учень може характеризувати козацьке бароко та освітню систему
 vocabulary_count: 35
-slug: 86-kozatska-kultura
+slug: kozatska-kultura
 naturalness:
   score: 9
   status: PASS

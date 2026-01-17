@@ -1,4 +1,3 @@
-module: c1-bio-92
 title: 'Тамара Горіха Зерня: «Доця» і жіноче обличчя війни'
 subtitle: 'Tamara Horikha Zernya: "Dotsya" and the Female Face of War'
 version: '1.0'
@@ -20,7 +19,7 @@ objectives:
 - Learner can analyze the novel "Dotsya" as a document of the epoch
 - Learner masters vocabulary related to volunteering, occupation, and resistance
 vocabulary_count: 25
-slug: 127-tamara-horikha-zernya
+slug: tamara-horikha-zernya
 vital_status: living
 naturalness:
   score: 9

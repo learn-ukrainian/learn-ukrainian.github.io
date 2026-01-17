@@ -1,4 +1,3 @@
-module: c1-bio-80
 title: 'Леонід Каденюк: Перший космонавт незалежної України'
 subtitle: 'Leonid Kadenyuk: First Astronaut of Independent Ukraine'
 version: '1.0'
@@ -22,4 +21,4 @@ objectives:
 - Learner masters vocabulary related to space exploration, technology, and national
   pride
 vocabulary_count: 25
-slug: 115-leonid-kadenyuk
+slug: leonid-kadenyuk

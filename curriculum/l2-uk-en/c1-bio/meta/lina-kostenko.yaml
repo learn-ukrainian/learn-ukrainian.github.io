@@ -1,4 +1,3 @@
-module: c1-bio-74
 title: '«Ліна Костенко: Совість нації»'
 subtitle: 'Lina Kostenko: The Conscience of the Nation'
 version: '2.0'
@@ -20,7 +19,7 @@ objectives:
 - Learner can describe Lina Kostenkos role as a moral authority
 - Learner understands the significance of her novel Marusia Churai
 vocabulary_count: 25
-slug: 109-lina-kostenko
+slug: lina-kostenko
 vital_status: living
 naturalness:
   score: 9

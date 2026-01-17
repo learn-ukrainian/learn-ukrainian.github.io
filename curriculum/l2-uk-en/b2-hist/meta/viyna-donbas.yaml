@@ -1,4 +1,3 @@
-module: b2-hist-58
 title: Війна на Донбасі 2014-2022
 subtitle: The War in Donbas 2014-2022
 version: '2.0'
@@ -23,7 +22,7 @@ objectives:
 - Understand the role of volunteer battalions and volunteers
 - Discuss the Minsk Agreements and their failure
 vocabulary_count: 25
-slug: 128-viina-na-donbasi-2014-2022
+slug: viina-na-donbasi-2014-2022
 naturalness:
   score: 9
   status: PASS

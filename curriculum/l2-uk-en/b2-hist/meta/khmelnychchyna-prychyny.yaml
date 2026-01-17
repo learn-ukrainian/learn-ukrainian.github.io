@@ -1,4 +1,3 @@
-module: b2-hist-17
 title: 'Хмельниччина I: повстання'
 phase: B2.3b [Українська історія]
 focus: history
@@ -23,7 +22,7 @@ objectives:
 - Учень може описати перебіг ключових битв 1648 року
 - Учень може аналізувати значення козацьких перемог для української історії
 vocabulary_count: 35
-slug: 87-khmelnychchyna-i-povstannia
+slug: khmelnychchyna-i-povstannia
 naturalness:
   score: 9
   status: PASS

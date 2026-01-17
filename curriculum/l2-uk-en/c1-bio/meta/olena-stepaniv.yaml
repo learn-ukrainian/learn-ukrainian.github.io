@@ -1,4 +1,3 @@
-module: c1-bio-61
 title: 'Олена Степанів: Перша у світі жінка-офіцер'
 subtitle: 'Olena Stepaniv: The World’s First Female Officer'
 version: '2.0'
@@ -20,4 +19,4 @@ objectives:
 - Learner can discuss women’s role in the military and history in Ukrainian.
 - Learner masters vocabulary for military ranks, heroism, and education.
 vocabulary_count: 24
-slug: 96-olena-stepaniv
+slug: olena-stepaniv

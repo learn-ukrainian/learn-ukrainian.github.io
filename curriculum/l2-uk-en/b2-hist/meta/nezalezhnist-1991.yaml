@@ -1,4 +1,3 @@
-module: b2-hist-51
 title: 'Україна 1991-2004: Становлення'
 subtitle: 'Ukraine 1991-2004: Formation'
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Analyze the emergence of the oligarchic system
 - Discuss the presidency of Kravchuk and Kuchma
 vocabulary_count: 25
-slug: 121-ukraine-1991-2004
+slug: ukraine-1991-2004
 naturalness:
   score: 9
   status: PASS

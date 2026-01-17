@@ -1,4 +1,3 @@
-module: b2-hist-60
 title: Злочини і Стійкість
 subtitle: Crimes and Resilience
 version: '2.0'
@@ -22,7 +21,7 @@ objectives:
 - Analyze the concept of Ukrainian resilience ('Stiikist') during blackouts and attacks
 - Discuss the international legal response to war crimes
 vocabulary_count: 25
-slug: 130-zlochyny-i-stiikist
+slug: zlochyny-i-stiikist
 naturalness:
   score: 9
   status: PASS
