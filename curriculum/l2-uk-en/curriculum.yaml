@@ -1,1073 +1,687 @@
-version: '2.0'
-language_pair: uk-en
-name: Ukrainian for English Speakers
-settings:
-  default_transliteration: true
-core:
+version: '1.0'
+description: 'L2 Ukrainian-English Curriculum Manifest (RFC #410)'
+levels:
   a1:
-    name: A1 - Beginner
-    modules: []
+    type: core
+    modules:
+    - 01-the-cyrillic-code-i
+    - 02-the-cyrillic-code-ii
+    - 03-the-gender-code
+    - 04-this-is-i-am
+    - 05-my-world-objects
+    - 06-the-living-verb-i
+    - 07-questions-and-negation
+    - 08-the-living-verb-ii
+    - 09-reflexive-verbs
+    - 10-checkpoint-first-contact
+    - 11-the-accusative-i-things
+    - 12-the-accusative-ii-people
+    - 13-the-locative-where-things-are
+    - 14-mine-and-yours
+    - 15-around-the-city
+    - 16-the-genitive-i-absence
+    - 17-numbers-and-money
+    - 18-food-and-shopping
+    - 19-at-the-cafe
+    - 20-checkpoint-navigation
+    - 21-yesterday-past-tense
+    - 22-tomorrow-future-tense
+    - 23-what-time-is-it
+    - 24-can-must-want-modals
+    - 25-my-daily-routine
+    - 26-describing-things-adjectives
+    - 27-colors-and-clothing
+    - 28-description-adverbs
+    - 29-weather-and-nature
+    - 30-prepositions-iii
+    - 31-body-and-health
+    - 32-my-family
+    - 33-holidays-and-traditions
+    - 34-checkpoint-core-grammar
+    - 35-at-the-cafe-practical
+    - at-the-restaurant
+    - at-the-market
+    - at-the-store
+    - buying-tickets
+    - taking-transport
+    - phone-basics
+    - emergencies
+    - combined-practice
+    - a1-final-exam
   a2:
-    name: A2 - Elementary
-    modules: []
+    type: core
+    modules:
+    - 01-the-dative-i-pronouns
+    - 02-the-dative-ii-nouns
+    - 03-dative-verbs
+    - 04-the-instrumental-i-accompaniment
+    - 05-the-instrumental-ii-means-and-tools
+    - 06-being-and-becoming
+    - 07-spatial-prepositions
+    - 08-logical-prepositions
+    - 09-all-cases-practice
+    - 10-at-the-post-office-and-bank
+    - 11-checkpoint-cases
+    - 12-aspect-introduction
+    - 13-the-completed-past
+    - 14-future-plans-and-promises
+    - 15-aspect-morphology
+    - 16-aspect-mastery-pairs
+    - 17-possessive-sviy
+    - 18-bigger-better-stronger
+    - 19-the-best-the-worst
+    - 20-preferences-and-choices
+    - 21-numerals-and-nouns
+    - 22-if-i-were
+    - 23-complete-imperative
+    - 24-smart-shopping
+    - 25-checkpoint-aspect-comparison
+    - 26-telling-stories
+    - 27-because-and-although
+    - 28-she-said-that
+    - 29-i-think-that
+    - 30-i-feel-like
+    - 31-in-order-to
+    - 32-which-one
+    - 33-time-clauses
+    - 34-at-the-doctor
+    - 35-checkpoint
+    - 36-basic-motion-prefixes
+    - 37-advanced-motion-prefixes
+    - 38-action-verb-prefixes
+    - 39-adjective-suffixes-qualities
+    - 40-adj-suffixes
+    - 41-root-families-i
+    - 42-root-families-ii
+    - 43-wf-mastery
+    - 44-checkpoint-word-formation
+    - 45-food-and-cooking
+    - 46-home-and-furniture
+    - 47-nature-and-weather
+    - 48-emotions-personality
+    - 49-work-professions
+    - 50-technology-media
+    - 51-hobbies-leisure
+    - 52-education-learning
+    - 53-shopping-services
+    - 54-sports-fitness
+    - 55-health-body
+    - 56-checkpoint-full-grammar
+    - 57-practical-intro
+    - 58-practical-warm-up
+    - 59-at-the-doctor
+    - 60-at-the-pharmacy
+    - 61-hotel-accommodation
+    - 62-rental-accommodation
+    - 63-scheduling-appointments
+    - 64-scheduling-interviews
+    - 65-giving-directions
+    - 66-asking-for-directions
+    - 67-social-media-ukrainian
+    - 68-texting-messaging
+    - 69-online-services
+    - 70-a2-final-exam
   b1:
-    name: B1 - Intermediate
-    modules: []
+    type: core
+    modules:
+    - 01-how-to-talk-about-grammar
+    - 02-language-about-verbs
+    - 03-reading-grammar-rules
+    - 04-sentence-structure
+    - 05-ready-for-immersion
+    - 06-aspect-complete-system
+    - 07-aspect-past-single-repeated
+    - 08-aspect-past-result-process
+    - 09-aspect-future
+    - 10-aspect-negation
+    - 11-aspect-in-imperatives
+    - 12-aspect-pairs-essential-40
+    - 13-work-week-aspect-in-action
+    - 14-aspect-integration-practice
+    - 15-checkpoint-aspect-mastery
+    - 16-motion-verbs-full-system
+    - 17-motion-coming-going
+    - 18-motion-passing-crossing
+    - 19-motion-starting-returning
+    - 20-motion-approaching-departing
+    - 21-motion-figurative-uses
+    - 22-motion-full-prefix-integration
+    - 23-motion-patterns-other-verbs
+    - 24-motion-practice-integration
+    - 25-checkpoint-motion-verbs
+    - 26-relative-clauses-yakyi
+    - 27-relative-clauses-de-kudy-zvidky
+    - 28-relative-clauses-koly-shcho
+    - 29-purpose-shchob-infinitive
+    - 30-purpose-shchob-past-form
+    - 31-conditionals-real-yakshcho
+    - 32-conditionals-unreal-yakby
+    - 33-conditionals-mixed-complex
+    - 34-checkpoint-complex-sentences-1
+    - 35-concessive-khocha
+    - 36-causal-result-clauses
+    - 37-temporal-clauses
+    - 38-complex-sentence-integration
+    - 39-reported-statements
+    - 40-reported-questions-commands
+    - 41-checkpoint-complex-sentences-2
+    - 42-adverbial-participles-imperfective
+    - 43-adverbial-participles-perfective
+    - 44-active-participles-phrases
+    - 45-past-passive-participles-1
+    - 46-past-passive-participles-2
+    - 47-passive-constructions
+    - 48-diminutives-master-class
+    - 49-numerals-collectives-fractions
+    - 50-integrated-grammar-lab
+    - 51-checkpoint-advanced-grammar
+    - 52-abstract-concepts-ideas
+    - 53-abstract-concepts-processes
+    - 54-expressing-opinions
+    - 55-agreement-disagreement
+    - 56-discourse-markers-basic
+    - 57-discourse-markers-advanced
+    - 58-describing-changes
+    - 59-media-news
+    - 60-society-politics
+    - 61-professional-communication
+    - 62-environment-ecology
+    - 63-health-wellness
+    - 64-emotions-deep-dive
+    - 65-relationships
+    - 66-business-basics
+    - 67-travel-geography
+    - 68-synonymy-thinking-verbs
+    - 69-synonymy-speaking-verbs
+    - 70-collocations-expressions
+    - 71-emotional-intelligence
+    - 72-regions-west
+    - 73-regions-east
+    - 74-regions-south
+    - 75-regions-center
+    - 76-ukrainian-music-today
+    - 77-ukrainian-cinema-and-tv
+    - 78-technology-and-startups
+    - 79-sports-in-ukraine
+    - 80-active-lifestyle
+    - 81-running-in-ukraine
+    - 82-mountains-trail
+    - 83-cycling-water
+    - 84-winter-sports
+    - 85-ukrainian-cuisine
+    - 86-ukrainski-sviata-ta-festyvali
+    - 87-novyny-yak-chytaty
+    - 88-interviu-ta-podkasty
+    - 89-checkpoint-grammar-synthesis
+    - 90-grammar-in-context
+    - 91-vocabulary-in-context
   b2:
-    name: B2 - Upper Intermediate
-    modules: []
+    type: core
+    modules:
+    - 01-passive-voice-system
+    - 02-past-passive-participles
+    - 03-impersonal-passive
+    - 04-reflexive-passive
+    - 05-third-person-plural-passive
+    - 06-passive-in-context
+    - 07-active-participles-present
+    - 08-active-participles-past
+    - 09-participles-vs-relative-clauses
+    - 10-checkpoint-passive-voice
+    - 11-multi-clause-sentences
+    - 12-parenthetical-expressions
+    - 13-emphasis-and-inversion
+    - 14-stylistic-connectors
+    - 15-register-introduction
+    - 16-register-formal-informal
+    - 17-register-business-ukrainian
+    - 18-register-academic-ukrainian
+    - 19-register-official-legal
+    - 20-register-medical-ukrainian
+    - 21-register-technical-scientific
+    - 22-register-literary-ukrainian
+    - 23-register-media-journalistic
+    - 24-register-colloquial-style
+    - 25-register-practice-cross-register-rewriting
+    - 26-politics-government-vocabulary
+    - 27-law-justice-vocabulary
+    - 28-economics-business-vocabulary
+    - 29-b21-integration-practice
+    - 30-b21-checkpoint
+    - 31-numeral-declension-time-dates
+    - 32-numeral-declension-compound-numbers
+    - 33-word-formation-person-suffixes
+    - 34-word-formation-abstract-nouns
+    - 35-word-formation-place-object-names
+    - 36-word-formation-adjective-formation
+    - 37-word-formation-adverbs-integration
+    - 38-one-member-sentences
+    - 39-register-religious-epistolary
+    - 40-b21c-checkpoint
+    - 41-aspect-nuances-secondary-imperfectivization
+    - 42-aspect-nuances-imperative-infinitive
+    - 43-correlative-constructions
+    - 44-complex-syntax-ellipsis-parcelling
+    - 45-proverbs-work-wisdom-character
+    - 46-proverbs-nature-time-caution
+    - 47-set-expressions-i-body-animals
+    - 48-set-expressions-ii-objects-abstract
+    - 49-idioms-body-head-face
+    - 50-idioms-body-hands-legs
+    - 51-idioms-body
+    - 52-idioms-animals-i
+    - 53-idioms-animals-ii
+    - 54-idioms-nature
+    - 55-synonyms-emotion
+    - 56-synonyms-size
+    - 57-synonyms-movement
+    - 58-synonyms-quality
+    - 59-synonyms-communication
+    - 60-synonyms-character
+    - 61-synonyms-time
+    - 62-synonyms-place
+    - 63-synonyms-quantity
+    - 64-synonyms-action
+    - 65-synonyms-state
+    - 66-synonyms-abstract
+    - 67-advanced-conjunctions-i
+    - 68-advanced-conjunctions-ii
+    - 69-integration-practice
+    - 70-b2-checkpoint
+    - 71-medytsyna-pohlybleno
+    - 72-tekhnolohii-ta-shi
+    - 73-nauka-i-doslidzhennia
+    - 74-mystetstvo-i-literatura
+    - 75-modern-diaspora
+    - 76-religion-in-ukraine
+    - 77-academic-writing
+    - 78-text-analysis
+    - 79-capstone-research
+    - 80-analiz-tekstu
+    - 81-capstone-doslidzhennya
+    - 82-capstone-prezentatsiya
+    - 83-b2-pidsumkovyy-ohlyad
+    - 84-checkpoint-register-synthesis
   c1:
-    name: C1 - Advanced
-    modules: []
-  c2:
-    name: C2 - Mastery
-    modules: []
-tracks:
+    type: core
+    modules:
+    - 01-b2-review-bridge
+    - 02-academic-style-markers
+    - 03-research-verbs
+    - 04-analysis-vocabulary
+    - 05-logical-connectors
+    - 06-hedging-modality
+    - 07-citation-reference
+    - 08-essay-structure
+    - 09-thesis-development
+    - 10-counterarguments
+    - 11-summary-paraphrase
+    - 12-research-article
+    - 13-abstract-writing
+    - 14-literature-review
+    - 15-oral-presentations
+    - 16-advanced-punctuation
+    - 17-irregular-verbs-complete
+    - 18-essay-writing-practice
+    - 19-practice-ii-article-critique
+    - c1-1-checkpoint
+    - 21-cv-resume-writing
+    - 22-job-interview
+    - 23-business-etiquette
+    - 24-digital-communication
+    - 25-political-system
+    - 26-media-landscape
+    - 27-global-context
+    - 28-dialects-of-ukrainian
+    - 29-surzhyk
+    - 30-history-of-language
+    - 31-diaspora-ukrainian
+    - 32-professional-scenarios
+    - 33-case-studies
+    - 34-review
+    - 35-speaking-practice
+    - 36-metaphor-simile
+    - 37-irony-sarcasm
+    - 38-hyperbole-litotes
+    - 39-euphemism-taboo
+    - 40-rhetorical-questions
+    - 41-degrees-of-certainty
+    - 42-politeness-strategies
+    - high-formal-register
+    - intimate-register
+    - slang-youth
+    - review-c1-4
+    - checkpoint-c1-4
+    - kobzari-bandura
+    - ritual-songs
+    - 50-kolyskovi-ta-dumy
+    - 51-hopak-i-kozachok
+    - 52-rehionalni-tantsi
+    - 53-pysanky
+    - 54-vyshyvanka
+    - 55-honcharstvo-ta-rizbyarstvo
+    - 56-narodna-mifolohiia
+    - 57-narodna-medytsyna
+    - 58-kozatski-lehendy
+    - 59-kazky-ta-prytchi
+    - 60-zymovi-obriady
+    - 61-vesna-ta-lito
+    - 62-khrestyny-ta-vesillia
+    - 63-pomynalni-obriady
+    - 64-halychyna
+    - 65-ukrainian-avant-garde
+    - 66-traditional-clothing
+    - 67-ukrainian-cuisine-traditions
+    - 68-ukrainian-house
+    - 69-winter-holidays
+    - 70-spring-holidays
+    - 71-summer-holidays
+    - 72-wedding-rituals
+    - 73-birth-rituals
+    - 74-funeral-rituals
+    - 75-podillia-ta-volyn
+    - 76-klasychna-muzyka-1-vytoky
+    - 77-klasychna-muzyka-2-natsionalna-shkola
+    - 78-klasychna-muzyka-3-modernizm-i-suchasnist
+    - 79-operne-mystetstvo
+    - 80-vokalne-mystetstvo
+    - 81-obrazotvorche-mystetstvo-1
+    - 82-obrazotvorche-mystetstvo-2
+    - 83-balet-i-tanets
+    - 84-teatralne-mystetstvo-1
+    - 85-teatralne-mystetstvo-2
+    - 86-ukrainska-arkhitektura
+    - 87-suchasna-muzyka
+    - 88-ukrainske-kino
+    - 89-praktyka-1-narodna-kultura
+    - 90-praktyka-2-vysoke-mystetstvo
+    - 91-c1-5-checkpoint
+    - 92-istoriia-ukrainskoi-literatury
+    - 93-kotliarevskyi-eneida
+    - 94-shevchenko-shchodennyk-lysty
+    - 95-shevchenko-poeziia
+    - 96-shevchenko-spadshchyna
+    - 97-franko-liryka
+    - 98-franko-proza
+    - 99-lesya-ukrainka-liryka
+    - 100-lesya-ukrainka-drama
+    - 101-vovchok-myrnyi
+    - 102-kotsiubynskyi
+    - 103-literaturoznavcha-terminolohiia
+    - 104-analiz-poezii
+    - 105-c1-6-review
+    - 106-c1-6-checkpoint
   b2-hist:
-    name: B2 History Track
-    description: Ukrainian History from Kyivan Rus' to Independence
-    prerequisite: b2
+    type: track
     modules:
-    - slug: trypillian-civilization
-      title: Трипільська цивілізація
-      phase: HIST.1
-      focus: history
-    - slug: scythians-sarmatians
-      title: Скіфи та сармати
-      phase: HIST.1
-      focus: history
-    - slug: greeks-crimea-olbia
-      title: 'Грецькі міста-держави: Ольвія, Херсонес'
-      phase: HIST.1
-      focus: history
-    - slug: sloviany-origins
-      title: 'Слов''яни: Походження та розселення'
-      phase: HIST.1
-      focus: history
-    - slug: slavic-tribes
-      title: Слов'янські племена на українських землях
-      phase: HIST.1
-      focus: history
-    - slug: zasnuvannia-kyieva
-      title: 'Заснування Києва: Легенда і археологія'
-      phase: HIST.1
-      focus: history
-    - slug: khozary-i-sloviany
-      title: Хозарський каганат і слов'яни
-      phase: HIST.1
-      focus: history
-    - slug: syntez-vytoky-1
-      title: '**Синтез: Від Трипілля до Києва**'
-      phase: HIST.1
-      focus: checkpoint
-    - slug: oleh-ihor
-      title: 'Олег та Ігор: Перші правителі'
-      phase: HIST.2
-      focus: history
-    - slug: olha-sviatoslav
-      title: Ольга та Святослав
-      phase: HIST.2
-      focus: history
-    - slug: volodymyr-khreshchennia
-      title: Володимир і Хрещення Русі
-      phase: HIST.2
-      focus: history
-    - slug: yaroslav-wise
-      title: 'Ярослав Мудрий: Золота доба'
-      phase: HIST.2
-      focus: history
-    - slug: ruska-pravda
-      title: 'Руська Правда: Перший законодавчий кодекс'
-      phase: HIST.2
-      focus: history
-    - slug: sofiya-kyivska
-      title: Софія Київська та культурний розквіт
-      phase: HIST.2
-      focus: history
-    - slug: volodymyr-monomakh
-      title: Володимир Мономах
-      phase: HIST.2
-      focus: history
-    - slug: kultura-kyivskoi-rusi
-      title: Культура Київської Русі
-      phase: HIST.2
-      focus: history
-    - slug: kniazivski-usobiytsi
-      title: Княжі усобиці та роздроблення
-      phase: HIST.2
-      focus: history
-    - slug: ludy-rusi
-      title: 'Люди Русі: Суспільство та побут'
-      phase: HIST.2
-      focus: history
-    - slug: rus-ta-susidy
-      title: 'Русь та сусіди: Візантія, Польща, Угорщина'
-      phase: HIST.2
-      focus: history
-    - slug: syntez-kyivska-rus
-      title: '**Синтез: Київська Русь — спадщина**'
-      phase: HIST.2
-      focus: checkpoint
-    - slug: mongolska-navala
-      title: Монгольська навала 1240
-      phase: HIST.3
-      focus: history
-    - slug: mykhailo-chernigivskyi
-      title: 'Михайло Чернігівський: Опір Орді'
-      phase: HIST.3
-      focus: history
-    - slug: danylo-halytskyi
-      title: 'Данило Галицький: Король України'
-      phase: HIST.3
-      focus: history
-    - slug: galytsko-volynska-derzhava
-      title: Галицько-Волинська держава
-      phase: HIST.3
-      focus: history
-    - slug: boiare-i-shliakhta
-      title: 'Бояри і шляхта: Соціальні верстви'
-      phase: HIST.3
-      focus: history
-    - slug: kinets-halytsko-volyni
-      title: Кінець Галицько-Волинської держави
-      phase: HIST.3
-      focus: history
-    - slug: krymske-khanstvo
-      title: 'Кримське ханство: Виникнення'
-      phase: HIST.3
-      focus: history
-    - slug: syntez-dvokniazivstvo
-      title: '**Синтез: Від Русі до занепаду**'
-      phase: HIST.3
-      focus: checkpoint
-    - slug: velyke-kniazivstvo-lytovske
-      title: Велике князівство Литовське
-      phase: HIST.4
-      focus: history
-    - slug: ukrainski-zemli-u-vkl
-      title: Українські землі у ВКЛ
-      phase: HIST.4
-      focus: history
-    - slug: liublinska-uniia
-      title: Люблінська унія 1569
-      phase: HIST.4
-      focus: history
-    - slug: rich-pospolyta
-      title: 'Річ Посполита: Устрій'
-      phase: HIST.4
-      focus: history
-    - slug: beresteyska-uniia
-      title: 'Берестейська унія: Церковний розкол'
-      phase: HIST.4
-      focus: history
-    - slug: pravoslavna-tserkva-17
-      title: Православна церква XVII століття
-      phase: HIST.4
-      focus: history
-    - slug: petro-mohyla
-      title: 'Петро Могила: Реформатор церкви'
-      phase: HIST.4
-      focus: history
-    - slug: bratstva-i-osvita
-      title: 'Братства та освіта: Острозька академія'
-      phase: HIST.4
-      focus: history
-    - slug: bukovyna-zakarpattia
-      title: Буковина та Закарпаття під сусідами
-      phase: HIST.4
-      focus: history
-    - slug: slobozhanshchyna
-      title: 'Слобожанщина: Заселення і розвиток'
-      phase: HIST.4
-      focus: history
-    - slug: liudy-ricchi-pospolytoi
-      title: 'Люди Речі Посполитої: Суспільство'
-      phase: HIST.4
-      focus: history
-    - slug: syntez-lytva-polska
-      title: '**Синтез: Литовсько-польська доба**'
-      phase: HIST.4
-      focus: checkpoint
-    - slug: kozatstvo-vytoky
-      title: 'Козацтво: Витоки'
-      phase: HIST.5
-      focus: history
-    - slug: zaporizka-sich
-      title: 'Запорізька Січ: Республіка'
-      phase: HIST.5
-      focus: history
-    - slug: dmytro-vyshnevetskyi
-      title: 'Дмитро Вишневецький: Перший кошовий'
-      phase: HIST.5
-      focus: history
-    - slug: kozatski-povstannia-16
-      title: Козацькі повстання XVI століття
-      phase: HIST.5
-      focus: history
-    - slug: petro-sahaidachnyi
-      title: 'Петро Сагайдачний: Гетьман і меценат'
-      phase: HIST.5
-      focus: history
-    - slug: khotynska-viyna
-      title: Хотинська війна 1621
-      phase: HIST.5
-      focus: history
-    - slug: kozatska-kultura
-      title: Козацька культура та побут
-      phase: HIST.5
-      focus: history
-    - slug: kozatske-viisko
-      title: Козацьке військо та озброєння
-      phase: HIST.5
-      focus: history
-    - slug: morski-pokhody
-      title: Морські походи козаків
-      phase: HIST.5
-      focus: history
-    - slug: syntez-kozatstvo-vytoky
-      title: '**Синтез: Становлення козацтва**'
-      phase: HIST.5
-      focus: checkpoint
-    - slug: khmelnychchyna-prychyny
-      title: 'Хмельниччина: Передумови'
-      phase: HIST.6
-      focus: history
-    - slug: bohdan-khmelnytskyi
-      title: 'Богдан Хмельницький: Постать'
-      phase: HIST.6
-      focus: history
-    - slug: bitva-pid-zhovtymy-vodamy
-      title: Битва під Жовтими Водами
-      phase: HIST.6
-      focus: history
-    - slug: zborivska-bila-tserkva
-      title: Зборівська та Білоцерківська угоди
-      phase: HIST.6
-      focus: history
-    - slug: kozatska-derzhava
-      title: 'Козацька держава: Устрій'
-      phase: HIST.6
-      focus: history
-    - slug: pereyaslavska-uhoda
-      title: 'Переяславська угода: Суть і наслідки'
-      phase: HIST.6
-      focus: history
-    - slug: yurii-nemyrych
-      title: 'Юрій Немирич: Гадяцька угода'
-      phase: HIST.6
-      focus: history
-    - slug: ruina-i
-      title: 'Руїна I: Виговський та розкол'
-      phase: HIST.6
-      focus: history
-    - slug: ruina-ii
-      title: 'Руїна II: Дорошенко'
-      phase: HIST.6
-      focus: history
-    - slug: andrusivske-peremyrya
-      title: 'Андрусівське перемир''я: Поділ України'
-      phase: HIST.6
-      focus: history
-    - slug: ivan-sirko
-      title: 'Іван Сірко: Легендарний кошовий'
-      phase: HIST.6
-      focus: history
-    - slug: syntez-khmelnychchyna
-      title: '**Синтез: Козацька революція**'
-      phase: HIST.6
-      focus: checkpoint
-    - slug: ivan-mazepa-derzhavnyk
-      title: 'Іван Мазепа I: Державник'
-      phase: HIST.7
-      focus: history
-    - slug: ivan-mazepa-kultura
-      title: 'Іван Мазепа II: Культура'
-      phase: HIST.7
-      focus: history
-    - slug: kost-hordiyenko
-      title: Кость Гордієнко та Січ
-      phase: HIST.7
-      focus: history
-    - slug: ivan-mazepa-poltava
-      title: 'Іван Мазепа III: Полтава'
-      phase: HIST.7
-      focus: history
-    - slug: pylyp-orlyk-konstytutsiia
-      title: 'Пилип Орлик: Перша конституція'
-      phase: HIST.7
-      focus: history
-    - slug: hryhorii-skovoroda
-      title: 'Григорій Сковорода: Філософ'
-      phase: HIST.7
-      focus: history
-    - slug: pavlo-polubotok
-      title: 'Павло Полуботок: Останній наказний'
-      phase: HIST.7
-      focus: history
-    - slug: danylo-apostol
-      title: Данило Апостол та Кирило Розумовський
-      phase: HIST.7
-      focus: history
-    - slug: koliivshchyna
-      title: Коліївщина та Гайдамаки
-      phase: HIST.7
-      focus: history
-    - slug: opryshky
-      title: Опришки Карпат
-      phase: HIST.7
-      focus: history
-    - slug: petro-kalnyshevskyi
-      title: 'Петро Калнишевський: Останній кошовий'
-      phase: HIST.7
-      focus: history
-    - slug: kinets-hetmanshchyny
-      title: Кінець Гетьманщини і Січі
-      phase: HIST.7
-      focus: history
-    - slug: rosiiska-imperiia-ukraina
-      title: Україна в Російській імперії
-      phase: HIST.8
-      focus: history
-    - slug: habsburzka-halichyna
-      title: Габсбурзька Галичина
-      phase: HIST.8
-      focus: history
-    - slug: pivden-novorosiia
-      title: 'Південь: "Новоросія" — колонізація'
-      phase: HIST.8
-      focus: history
-    - slug: nova-serbiya
-      title: Нова Сербія та заселення степів
-      phase: HIST.8
-      focus: history
-    - slug: krypatsvo-selo
-      title: Кріпацтво та селянське життя
-      phase: HIST.8
-      focus: history
-    - slug: kyrylo-mefodiivtsi
-      title: Кирило-Мефодіївське братство
-      phase: HIST.8
-      focus: history
-    - slug: shevchenko-awakening
-      title: 'Тарас Шевченко: Пробудження нації'
-      phase: HIST.8
-      focus: history
-    - slug: valuevskyi-emskyi
-      title: Валуєвський циркуляр та Емський указ
-      phase: HIST.8
-      focus: history
-    - slug: hromady
-      title: Громадівський рух
-      phase: HIST.8
-      focus: history
-    - slug: drahomanov
-      title: Михайло Драгоманов
-      phase: HIST.8
-      focus: history
-    - slug: franko-lesia-hrinchenko
-      title: Франко, Леся, Грінченко
-      phase: HIST.8
-      focus: history
-    - slug: syntez-imperska-doba
-      title: '**Синтез: Імперська доба**'
-      phase: HIST.8
-      focus: checkpoint
-    - slug: hrushevskyi
-      title: 'Михайло Грушевський: Історик і політик'
-      phase: HIST.9
-      focus: history
-    - slug: persha-svitova
-      title: 'Перша світова війна: Українські землі'
-      phase: HIST.9
-      focus: history
-    - slug: sichovi-striltsi
-      title: Січові стрільці
-      phase: HIST.9
-      focus: history
-    - slug: tsentralna-rada
-      title: 'Центральна Рада: УНР'
-      phase: HIST.9
-      focus: history
-    - slug: skoropadskyi
-      title: 'Павло Скоропадський: Гетьманат'
-      phase: HIST.9
-      focus: history
-    - slug: zunr
-      title: 'ЗУНР: Західноукраїнська Народна Республіка'
-      phase: HIST.9
-      focus: history
-    - slug: dyrektoriia
-      title: Директорія УНР
-      phase: HIST.9
-      focus: history
-    - slug: symon-petliura
-      title: Симон Петлюра
-      phase: HIST.9
-      focus: history
-    - slug: bilshovytsko-ukrainska-viyna
-      title: Більшовицько-українська війна
-      phase: HIST.9
-      focus: history
-    - slug: kholodnyi-yar
-      title: 'Холодний Яр: Останній опір'
-      phase: HIST.9
-      focus: history
-    - slug: karpatska-ukraina
-      title: Карпатська Україна 1938-1939
-      phase: HIST.9
-      focus: history
-    - slug: syntez-revoliutsiia
-      title: '**Синтез: Українська революція**'
-      phase: HIST.9
-      focus: checkpoint
-    - slug: rozstriliane-vidrodzennia
-      title: Розстріляне відродження
-      phase: HIST.10
-      focus: history
-    - slug: mekhanizm-teroru
-      title: Механізм терору
-      phase: HIST.10
-      focus: history
-    - slug: holodomor-mekhanizm
-      title: 'Голодомор: Механізм'
-      phase: HIST.10
-      focus: history
-    - slug: holodomor-pamiat
-      title: 'Голодомор: Пам''ять та визнання'
-      phase: HIST.10
-      focus: history
-    - slug: pacyfikatsiia
-      title: 'Пацифікація: Поляки в Галичині'
-      phase: HIST.10
-      focus: history
-    - slug: oun
-      title: 'ОУН: Формування'
-      phase: HIST.10
-      focus: history
-    - slug: druha-svitova-pochatok
-      title: 'Друга світова: Початок'
-      phase: HIST.10
-      focus: history
-    - slug: babyn-yar
-      title: Бабин Яр та Голокост в Україні
-      phase: HIST.10
-      focus: history
-    - slug: upa
-      title: 'УПА: Збройний опір'
-      phase: HIST.10
-      focus: history
-    - slug: syntez-trahedii
-      title: '**Синтез: Трагедії XX століття**'
-      phase: HIST.10
-      focus: checkpoint
-    - slug: povoienne-vidbudova
-      title: Повоєнна відбудова
-      phase: HIST.11
-      focus: history
-    - slug: deportatsii-ukraintsiv
-      title: Депортації українців 1944-1951
-      phase: HIST.11
-      focus: history
-    - slug: surgunlik
-      title: 'Сургунлік: Депортація кримських татар'
-      phase: HIST.11
-      focus: history
-    - slug: krym-1954
-      title: 'Крим 1954: Передача УРСР'
-      phase: HIST.11
-      focus: history
-    - slug: destalinizatsiia
-      title: Десталінізація в Україні
-      phase: HIST.11
-      focus: history
-    - slug: shistdesiatnyky
-      title: Шістдесятники
-      phase: HIST.11
-      focus: history
-    - slug: ukrainska-helsinska-hrupa
-      title: Українська Гельсінська група
-      phase: HIST.11
-      focus: history
-    - slug: afhanistan
-      title: Українці в Афганістані
-      phase: HIST.11
-      focus: history
-    - slug: chornobyl
-      title: Чорнобиль
-      phase: HIST.11
-      focus: history
-    - slug: diaspora
-      title: 'Діаспора: Ковчег держави'
-      phase: HIST.11
-      focus: history
-    - slug: shliakh-nezalezhnosti
-      title: Шлях до незалежності
-      phase: HIST.12
-      focus: history
-    - slug: rukh
-      title: 'Рух: Народний рух України'
-      phase: HIST.12
-      focus: history
-    - slug: nezalezhnist-1991
-      title: Проголошення незалежності
-      phase: HIST.12
-      focus: history
-    - slug: ukraine-90s
-      title: 'Україна 1990-х: Кучма та олігархи'
-      phase: HIST.12
-      focus: history
-    - slug: pomara-revoliutsiia
-      title: Помаранчева революція
-      phase: HIST.12
-      focus: history
-    - slug: tomos
-      title: 'Томос: Духовна незалежність'
-      phase: HIST.12
-      focus: history
-    - slug: yanukovych
-      title: Епоха Януковича
-      phase: HIST.12
-      focus: history
-    - slug: movna-polityka
-      title: Мовна політика незалежної України
-      phase: HIST.12
-      focus: history
-    - slug: revoliutsiia-hidnosti
-      title: Революція Гідності
-      phase: HIST.12
-      focus: history
-    - slug: aneksiia-krymu
-      title: Анексія Криму
-      phase: HIST.12
-      focus: history
-    - slug: krymski-tatary-pislia-2014
-      title: Кримські татари після 2014
-      phase: HIST.12
-      focus: history
-    - slug: syntez-nezalezhnist
-      title: '**Синтез: Незалежна Україна**'
-      phase: HIST.12
-      focus: checkpoint
-    - slug: viyna-donbas
-      title: Війна на Донбасі 2014-2022
-      phase: HIST.13
-      focus: history
-    - slug: povnomasshtabne-vtorhnessnia
-      title: Повномасштабне вторгнення
-      phase: HIST.13
-      focus: history
-    - slug: mariupol-azovstal
-      title: Маріуполь та Азовсталь
-      phase: HIST.13
-      focus: history
-    - slug: bucha-irpin
-      title: 'Буча та Ірпінь: Злочини'
-      phase: HIST.13
-      focus: history
-    - slug: kakhovska-hes
-      title: 'Каховська ГЕС: Екоцид'
-      phase: HIST.13
-      focus: history
-    - slug: voienna-ekonomika
-      title: Воєнна економіка України
-      phase: HIST.13
-      focus: history
-    - slug: hromadske-suspilstvo
-      title: Громадянське суспільство у війні
-      phase: HIST.13
-      focus: history
-    - slug: mizhnarodna-pidtrymka
-      title: Міжнародна підтримка
-      phase: HIST.13
-      focus: history
-    - slug: zlochyny-stiikist
-      title: Злочини і стійкість
-      phase: HIST.13
-      focus: history
-    - slug: syntez-viyna
-      title: '**Синтез: Війна за існування**'
-      phase: HIST.13
-      focus: checkpoint
+    - afhanistan
+    - andrusivske-peremyrya
+    - aneksiia-krymu
+    - babyn-yar
+    - beresteyska-uniia
+    - bilshovytsko-ukrainska-viyna
+    - bitva-pid-zhovtymy-vodamy
+    - bohdan-khmelnytskyi
+    - boiare-i-shliakhta
+    - bratstva-i-osvita
+    - bucha-irpin
+    - bukovyna-zakarpattia
+    - chornobyl
+    - danylo-apostol
+    - danylo-halytskyi
+    - povoienne-radianske-panuvannia
+    - destalinizatsiia
+    - diaspora-kovcheh-derzhavy
+    - dmytro-vyshnevetskyi
+    - ideolhy-drahomanov-kulish
+    - druha-svitova-okupatsii
+    - dyrektoriia
+    - franko-lesia-hrinchenko
+    - galytsko-volynske-knyazivstvo
+    - greeks-crimea-olbia
+    - austrian-galicia
+    - holodomor-mekhanizm
+    - holodomor-ii-pamiat
+    - hromadske-suspilstvo
+    - hromady
+    - mykhailo-hrushevskyi
+    - hryhorii-skovoroda
+    - ivan-mazepa-i-derzhavnyk
+    - ivan-mazepa-ii-kultura
+    - ivan-mazepa-iii-poltava
+    - ivan-sirko
+    - kakhovska-hes
+    - karpatska-ukraina
+    - khmelnychchyna-i-povstannia
+    - kholodnyi-yar
+    - khotynska-viyna
+    - khozary-i-sloviany
+    - kinets-halytsko-volyni
+    - kinets-hetmanshchyny
+    - zanepad-i-rozdroblennia
+    - koliivshchyna
+    - kost-hordiyenko
+    - khmelnychchyna-ii-derzhava
+    - kozatska-kultura
+    - kozatske-viisko
+    - kozatski-povstannia-16
+    - kozatstvo-vytoky
+    - krym-1954
+    - krymske-khanstvo
+    - krymski-tatary-pislia-2014
+    - krypatsvo-selo
+    - kultura-kyivskoi-rusi
+    - kyrylo-mefodiivtsi
+    - liublinska-uniia
+    - liudy-ricchi-pospolytoi
+    - ludy-rusi
+    - mariupol-azovstal
+    - rozstriliane-vidrodzhennia-ii-mekhanizm-teroru
+    - mizhnarodna-pidtrymka
+    - mongolska-navala-1240
+    - morski-pokhody
+    - movna-polityka
+    - mykhailo-chernigivskyi
+    - ukraine-1991-2004
+    - nova-serbiya
+    - oleh-ihor
+    - olha-sviatoslav
+    - opryshky
+    - oun
+    - pacyfikatsiia
+    - pavlo-polubotok
+    - pereiaslav-treaty
+    - first-world-war
+    - petro-kalnyshevskyi
+    - petro-mohyla
+    - petro-sahaidachnyi
+    - pivden-novorosiia
+    - pomarancheva-revoliutsiia
+    - pownomasshtabne-wtorhnessnia
+    - povoienne-vidbudova
+    - pravoslavna-tserkva-17
+    - pylyp-orlyk-konstytutsiia
+    - revoliutsiia-hidnosti
+    - rich-pospolyta
+    - rosiiska-imperiia-ukraina
+    - rozstriliane-vidrodzennia-postati
+    - ruina-i-vyhovsky
+    - ruina-ii-doroshenko
+    - rukh
+    - rus-ta-susidy
+    - ruska-pravda
+    - scythians-sarmatians
+    - shevchenko-awakening
+    - shistdesiatnyky
+    - shliakh-do-nezalezhnosti
+    - sichovi-striltsi
+    - skoropadskyi
+    - slavic-tribes
+    - slobozhanshchyna
+    - sloviany-na-ukrainskykh-zemliakh
+    - sofiya-kyivska
+    - surgunlik-deportatsiia-1944
+    - symon-petliura
+    - syntez-dvokniazivstvo
+    - syntez-imperska-doba
+    - syntez-khmelnychchyna
+    - syntez-kozatstvo-vytoky
+    - syntez-kyivska-rus
+    - syntez-lytva-polska
+    - syntez-nezalezhnist
+    - syntez-revoliutsiia
+    - syntez-trahedii-xx-stolittia
+    - syntez-viyna-za-isnuvannya
+    - syntez-vytoky
+    - dukhovnyi-front-tomos
+    - trypillian-civilization
+    - tsentralna-rada
+    - ukraine-90s
+    - ukrainska-helsinska-hrupa
+    - ukrainski-zemli-u-vkl
+    - upa-i-zbroinyi-opir
+    - rosiiska-imperiia-emskyi-ukaz
+    - velyke-kniazivstvo-lytovske
+    - viina-na-donbasi-2014-2022
+    - voienna-ekonomika
+    - volodymyr-i-khreshchennia
+    - volodymyr-monomakh
+    - epokha-yanukovycha
+    - yaroslav-the-wise
+    - yurii-nemyrych
+    - zaporizka-sich
+    - zasnuvannia-kyieva
+    - zborivska-bila-tserkva
+    - zlochyny-i-stiikist
+    - unr-zunr
   c1-bio:
-    name: C1 Biography Track
-    description: Notable Ukrainians through history
-    prerequisite: c1
+    type: track
     modules:
-    - slug: knyahynia-olha
-      title: 'Княгиня Ольга: Регент і Реформатор'
-      focus: biography
-      birth_year: 890
-    - slug: kniaz-sviatoslav
-      title: 'Князь Святослав: Воїн на Троні'
-      focus: biography
-      birth_year: 942
-    - slug: kniaz-yaroslav-mudryi
-      title: 'Князь Ярослав Мудрий: Золота Доба'
-      focus: biography
-      birth_year: 978
-      death_year: 1054
-    - slug: volodymyr-velykii
-      title: 'Князь Володимир Великий: Хреститель і Державотворець'
-      focus: biography
-      birth_year: 980
-    - slug: knyazhna-anna-yaroslavna
-      title: 'Анна Ярославна: Королева Франції та донька Русі'
-      focus: biography
-      birth_year: 1032
-    - slug: mykhailo-chernihivskyi
-      title: 'Михайло Чернігівський: Опір Орді та Трагедія Вибору'
-      focus: biography
-      birth_year: 1179
-    - slug: roksolana
-      title: 'Роксолана: Від Невільниці до Архітекторки Імперії'
-      focus: biography
-      birth_year: 1502
-    - slug: iov-boretskyi
-      title: 'Іов Борецький: Духовний Очільник Національного Відродження'
-      focus: biography
-      birth_year: 1560
-      death_year: 1631
-    - slug: sylvestr-kosiv
-      title: 'Сильвестр Косів: Дипломатія Духу та Захист Автономії'
-      focus: biography
-      birth_year: 1576
-    - slug: bohdan-khmelnytskyy
-      title: 'Богдан Хмельницький: Будівничий Козацької Держави'
-      focus: biography
-      birth_year: 1595
-    - slug: yuriy-nemyrych
-      title: 'Юрій Немирич: Дипломат і Пророк Великого Князівства Руського'
-      focus: biography
-      birth_year: 1612
-      death_year: 1659
-    - slug: ivan-mazepa
-      title: 'Іван Мазепа: Гетьман-Меценат і Європейський Вибір'
-      focus: biography
-      birth_year: 1639
-      death_year: 1709
-    - slug: pylyp-orlyk
-      title: 'Пилип Орлик: Гетьман-Вигнанець та Батько Українського Конституціоналізму'
-      focus: biography
-      birth_year: 1672
-      death_year: 1742
-    - slug: petro-kalnyshevskyy
-      title: 'Петро Калнишевський: Останній Лицар Степу та Мученик за Волю'
-      focus: biography
-      birth_year: 1691
-      death_year: 1803
-    - slug: hryhoriy-skovoroda
-      title: 'Григорій Сковорода: Мандрівний Філософ та Пророк Серця'
-      focus: biography
-      birth_year: 1722
-      death_year: 1794
-    - slug: maksym-berezovskyy
-      title: 'Максим Березовський: Трагічний Геній Українського Бароко'
-      focus: biography
-      birth_year: 1745
-      death_year: 1777
-    - slug: dmytro-bortnyanskyy
-      title: 'Дмитро Бортнянський: Реформатор Хорового Мистецтва'
-      focus: biography
-      birth_year: 1751
-      death_year: 1825
-    - slug: ivan-kotliarevskyi
-      title: 'Іван Котляревський: Батько нової літератури'
-      focus: biography
-      birth_year: 1769
-      death_year: 1838
-    - slug: semen-hulak-artemovskyy
-      title: 'Семен Гулак-Артемовський: Творець Національної Опери'
-      focus: biography
-      birth_year: 1813
-      death_year: 1873
-    - slug: taras-shevchenko
-      title: 'Тарас Шевченко: Національний Пророк'
-      focus: biography
-      birth_year: 1814
-      death_year: 1861
-    - slug: panteleimon-kulish
-      title: 'Пантелеймон Куліш: Будівничий української мови'
-      focus: biography
-      birth_year: 1819
-      death_year: 1840
-    - slug: hanna-barvinok
-      title: 'Ганна Барвінок: Перша з Жінок'
-      focus: biography
-      birth_year: 1828
-      death_year: 1911
-    - slug: marko-vovchok
-      title: 'Марко Вовчок: Загадкова зірка літератури'
-      focus: biography
-      birth_year: 1833
-      death_year: 1907
-    - slug: marko-kropyvnytskyi
-      title: 'Марко Кропивницький: Батько українського театру'
-      focus: biography
-      birth_year: 1840
-      death_year: 1910
-    - slug: mykhailo-drahomanov
-      title: 'Михайло Драгоманов: Архітектор Європейської України'
-      focus: biography
-      birth_year: 1841
-      death_year: 1895
-    - slug: mykola-lysenko
-      title: 'Микола Лисенко: Батько Української Музики'
-      focus: biography
-      birth_year: 1842
-      death_year: 1912
-    - slug: olena-pchilka
-      title: 'Олена Пчілка: Мати Українського Націоналізму'
-      focus: biography
-      birth_year: 1849
-      death_year: 1930
-    - slug: nataliya-kobrynska
-      title: 'Наталія Кобринська: Піонерка Фемінізму'
-      focus: biography
-      birth_year: 1851
-      death_year: 1920
-    - slug: mariya-zankovetska
-      title: 'Марія Заньковецька: Королева Української Сцени'
-      focus: biography
-      birth_year: 1854
-      death_year: 1934
-    - slug: mariya-pavlova
-      title: 'Марія Павлова: Світова Зоря Палеонтології'
-      focus: biography
-      birth_year: 1854
-      death_year: 1938
-    - slug: ivan-franko
-      title: 'Іван Франко: Титан праці'
-      focus: biography
-      birth_year: 1856
-      death_year: 1916
-    - slug: yevhen-chykalenko
-      title: 'Євген Чикаленко: Меценат українського духу'
-      focus: biography
-      birth_year: 1861
-      death_year: 1914
-    - slug: borys-hrinchenko
-      title: 'Борис Грінченко: Вартовий українського слова'
-      focus: biography
-      birth_year: 1863
-      death_year: 1910
-    - slug: olha-kobylianska
-      title: 'Ольга Кобилянська: Гірська орлиця модернізму'
-      focus: biography
-      birth_year: 1863
-      death_year: 1942
-    - slug: volodymyr-vernadskyi
-      title: 'Володимир Вернадський: Батько української науки'
-      focus: biography
-      birth_year: 1863
-      death_year: 1890
-    - slug: kyrylo-trylovskyi
-      title: 'Кирило Трильовський: Батько «Січі» та адвокат народу'
-      focus: biography
-      birth_year: 1864
-      death_year: 1940
-    - slug: sofiya-okunevska
-      title: 'Софія Окуневська: Перша лікарка Австро-Угорщини та провідниця прогресу'
-      focus: biography
-      birth_year: 1865
-      death_year: 1918
-    - slug: mykhailo-hrushevskyi-biography
-      title: 'Михайло Грушевський: Архітектор української історії та батько республіки'
-      focus: biography
-      birth_year: 1866
-      death_year: 1934
-    - slug: mykola-vasylenko
-      title: 'Микола Василенко: Юрист, історик, державотворець'
-      focus: biography
-      birth_year: 1866
-      death_year: 1935
-    - slug: ivan-lypa
-      title: 'Іван Липа: Лікар душ і борець за державність'
-      focus: biography
-      birth_year: 1867
-      death_year: 1921
-    - slug: mariia-voiakovska
-      title: 'Марія Вояковська: Феміністка, освітянка, соратниця'
-      focus: biography
-      birth_year: 1868
-      death_year: 1924
-    - slug: liudmyla-starytska
-      title: 'Людмила Старицька-Черняхівська: Драматургиня, свідок епохи'
-      focus: biography
-      birth_year: 1868
-      death_year: 1933
-    - slug: yulian-bachynskyi
-      title: 'Юліан Бачинський: Пророк української незалежності'
-      focus: biography
-      birth_year: 1870
-      death_year: 1940
-    - slug: lesya-ukrainka
-      title: 'Леся Українка: Дочка Прометея'
-      focus: biography
-      birth_year: 1871
-      death_year: 1913
-    - slug: ahatanhel-krymskyi
-      title: 'Агатангел Кримський: Поліглот і мученик науки'
-      focus: biography
-      birth_year: 1871
-      death_year: 1896
-    - slug: solomiya-krushelnytska
-      title: 'Соломія Крушельницька: Соловейко з України'
-      focus: biography
-      birth_year: 1872
-      death_year: 1952
-    - slug: mykola-mikhnovskyi
-      title: 'Микола Міхновський: Ідеолог державної самостійності'
-      focus: biography
-      birth_year: 1873
-      death_year: 1924
-    - slug: oleksandr-hrekiv
-      title: 'Олександр Греків: Генерал УНР'
-      focus: biography
-      birth_year: 1875
-      death_year: 1959
-    - slug: mykola-leontovych
-      title: 'Микола Леонтович: Маг українського хору'
-      focus: biography
-      birth_year: 1877
-      death_year: 1921
-    - slug: symon-petliura-bio
-      title: 'Симон Петлюра: Отаман визвольних змагань'
-      focus: biography
-      birth_year: 1879
-      death_year: 1920
-    - slug: kazimir-malevich
-      title: 'Казимір Малевич: Творець Чорного квадрата'
-      focus: biography
-      birth_year: 1879
-      death_year: 1935
-    - slug: oleksandr-bohomazov
-      title: 'Олександр Богомазов: Український Пікассо'
-      focus: biography
-      birth_year: 1880
-      death_year: 1929
-    - slug: viacheslav-lypynskyi
-      title: 'В’ячеслав Липинський: Ідеолог українського консерватизму'
-      focus: biography
-      birth_year: 1882
-      death_year: 1931
-    - slug: ivan-ohienko
-      title: 'Іван Огієнко: Митрополит і Захисник Мови'
-      focus: biography
-      birth_year: 1882
-      death_year: 1909
-    - slug: dmytro-dontsov
-      title: 'Дмитро Донцов: Апостол українського націоналізму'
-      focus: biography
-      birth_year: 1883
-      death_year: 1939
-    - slug: nataliia-polonska-vasylenko
-      title: 'Наталія Полонська-Василенко: Берегиня історичної правди'
-      focus: biography
-      birth_year: 1884
-      death_year: 1973
-    - slug: valentyna-radzymovska
-      title: 'Валентина Радзимовська: Піонерка української біохімії та незламна вчена'
-      focus: biography
-      birth_year: 1886
-      death_year: 1953
-    - slug: oleksandr-arkhypenko
-      title: 'Олександр Архипенко: Маг тривимірного простору'
-      focus: biography
-      birth_year: 1887
-      death_year: 1905
-    - slug: les-kurbas
-      title: 'Лесь Курбас: Режисер, що розірвав кайдани сцени'
-      focus: biography
-      birth_year: 1887
-      death_year: 1937
-    - slug: olha-basarab
-      title: 'Ольга Басараб: Муза і сталь українського підпілля'
-      focus: biography
-      birth_year: 1889
-      death_year: 1924
-    - slug: berta-rapoport
-      title: 'Берта Рапопорт: Перша капітанка Чорного моря'
-      focus: biography
-      birth_year: 1891
-      death_year: 1979
-    - slug: olena-stepaniv
-      title: 'Олена Степанів: Перша у світі жінка-офіцер'
-      focus: biography
-      birth_year: 1892
-      death_year: 1963
-    - slug: vira-kholodna
-      title: 'Віра Холодна: Королева німого кіно'
-      focus: biography
-      birth_year: 1893
-      death_year: 1919
-    - slug: mykola-khvylovyi
-      title: 'Микола Хвильовий: Бунтівний романтик революції'
-      focus: biography
-      birth_year: 1893
-      death_year: 1933
-    - slug: vasyl-vyshyvanyi
-      title: 'Василь Вишиваний: Ерцгерцог, що обрав Україну'
-      focus: biography
-      birth_year: 1895
-      death_year: 1948
-    - slug: borys-liatoshynskyi
-      title: 'Борис Лятошинський: Батько українського модернізму'
-      focus: biography
-      birth_year: 1895
-      death_year: 1968
-    - slug: klavdiya-latysheva
-      title: 'Клавдія Латишева: Математик, що підкорила рівняння'
-      focus: biography
-      birth_year: 1897
-      death_year: 1956
-    - slug: kateryna-bilokur
-      title: 'Катерина Білокур: Квіти за колючим дротом'
-      focus: biography
-      birth_year: 1900
-      death_year: 1961
-    - slug: serge-lifar
-      title: 'Серж Лифар: Бог танцю з Києва'
-      focus: biography
-      birth_year: 1904
-      death_year: 1944
-    - slug: olena-teliha
-      title: 'Олена Теліга: Поезія і чин'
-      focus: biography
-      birth_year: 1906
-      death_year: 1942
-    - slug: mariia-prymachenko
-      title: 'Марія Примаченко: Диво-звірі та народна фантазія'
-      focus: biography
-      birth_year: 1909
-      death_year: 1938
-    - slug: petro-bolbochan
-      title: 'Петро Болбочан: Полководець незалежності'
-      focus: biography
-      birth_year: 1919
-      death_year: 1920
-    - slug: kateryna-yushchenko
-      title: 'Катерина Ющенко: Мати мови програмування'
-      focus: biography
-      birth_year: 1919
-      death_year: 2001
-    - slug: levko-lukyanenko
-      title: 'Левко Лук''яненко: Батько Незалежності'
-      focus: biography
-      birth_year: 1928
-      death_year: 1993
-    - slug: alla-horska
-      title: 'Алла Горська: Душа шістдесятництва'
-      focus: biography
-      birth_year: 1929
-      death_year: 1970
-    - slug: dmytro-pavlychko
-      title: 'Дмитро Павличко: Два кольори мої'
-      focus: biography
-      birth_year: 1929
-      death_year: 2023
-    - slug: lina-kostenko
-      title: 'Ліна Костенко: Совість нації'
-      focus: biography
-      birth_year: 1930
-    - slug: vasyl-symonenko
-      title: 'Василь Симоненко: Витязь молодої української поезії'
-      focus: biography
-      birth_year: 1935
-      death_year: 1963
-    - slug: viacheslav-chornovil
-      title: 'В’ячеслав Чорновіл: Провідник до незалежності'
-      focus: biography
-      birth_year: 1937
-      death_year: 1999
-    - slug: vasyl-stus
-      title: 'Василь Стус: Вертикальне стояння духу'
-      focus: biography
-      birth_year: 1938
-      death_year: 1985
-    - slug: myroslav-marynovych
-      title: 'Мирослав Маринович: Голос совісті та прав людини'
-      focus: biography
-      birth_year: 1949
-    - slug: volodymyr-ivasyuk
-      title: 'Володимир Івасюк: Творець «Червоної рути»'
-      focus: biography
-      birth_year: 1949
-      death_year: 1979
-    - slug: leonid-kadenyuk
-      title: 'Леонід Каденюк: Перший космонавт незалежної України'
-      focus: biography
-      birth_year: 1951
-      death_year: 2018
-    - slug: vasyl-shkliar
-      title: 'Василь Шкляр: Батько українського бестселера'
-      focus: biography
-      birth_year: 1951
-    - slug: yuriy-vynnychuk
-      title: 'Юрій Винничук: Майстер містифікацій та «Танґо смерті»'
-      focus: biography
-      birth_year: 1952
-    - slug: kvitka-tsisyk
-      title: 'Квітка Цісик: Голос української душі в Америці'
-      focus: biography
-      birth_year: 1953
-      death_year: 1998
-    - slug: halyna-pahutyak
-      title: 'Галина Пагутяк: Майстриня українського химерного реалізму'
-      focus: biography
-      birth_year: 1958
-    - slug: mariya-matios
-      title: 'Марія Матіос: Солодка Даруся та залізний дух Буковини'
-      focus: biography
-      birth_year: 1959
-    - slug: mykola-pohribnyi
-      title: 'Микола Погрібний: Голос української вимови'
-      focus: biography
-      birth_year: 1959
-      death_year: 1992
-    - slug: oksana-zabuzhko
-      title: 'Оксана Забужко: Інтелектуальна провокація та фемінізм'
-      focus: biography
-      birth_year: 1960
-    - slug: yaroslav-hrytsak
-      title: 'Ярослав Грицак: Глобальна історія та подолання минулого'
-      focus: biography
-      birth_year: 1960
-    - slug: vitaly-portnikov
-      title: 'Віталій Портников: Публіцистика як інструмент державотворення'
-      focus: biography
-      birth_year: 1967
-    - slug: taras-prokhasko
-      title: 'Тарас Прохасько: Філософія буття і «непрості»'
-      focus: biography
-      birth_year: 1968
-    - slug: serhiy-zhadan
-      title: 'Сергій Жадан: Голос Сходу і поет війни'
-      focus: biography
-      birth_year: 1974
-    - slug: oleg-sentsov
-      title: 'Олег Сенцов: Режисер, політв''язень, воїн'
-      focus: biography
-      birth_year: 1976
-    - slug: tamara-horikha-zernya
-      title: 'Тамара Горіха Зерня: «Доця» і жіноче обличчя війни'
-      focus: biography
-      birth_year: 1976
-    - slug: kateryna-kalytko
-      title: 'Катерина Калитко: Поезія тілесності та війни'
-      focus: biography
-      birth_year: 1982
-    - slug: sofia-andrukhovych
-      title: 'Софія Андрухович: Ілюзії «Фелікс Австрія» та пам''ять «Амадоки»'
-      focus: biography
-      birth_year: 1982
-    - slug: oleksandra-matviichuk
-      title: 'Олександра Матвійчук: Захист прав людини'
-      focus: biography
-      birth_year: 1983
-    - slug: kost-hordiyenko-bio
-      title: 'Кость Гордієнко: Отаман Непокори та Лицар Волі'
-      focus: biography
-    - slug: c1-bio-checkpoint
-      title: 'Контрольна точка: Біографії'
-      focus: biography
-
+    - ahatanhel-krymskyi
+    - alla-horska
+    - berta-rapoport
+    - bohdan-khmelnytskyy
+    - borys-hrinchenko
+    - borys-liatoshynskyi
+    - c1-bio-checkpoint
+    - dmytro-bortnyanskyy
+    - dmytro-dontsov
+    - dmytro-pavlychko
+    - halyna-pahutyak
+    - hanna-barvinok
+    - hryhoriy-skovoroda
+    - iov-boretskyi
+    - ivan-franko
+    - ivan-kotliarevskyi
+    - ivan-lypa
+    - ivan-mazepa
+    - ivan-ohienko
+    - kateryna-bilokur
+    - kateryna-kalytko
+    - kateryna-yushchenko
+    - kazimir-malevich
+    - klavdiya-latysheva
+    - kniaz-sviatoslav
+    - kniaz-yaroslav-mudryi
+    - knyahynia-olha
+    - knyazhna-anna-yaroslavna
+    - kost-hordiyenko
+    - kvitka-tsisyk
+    - kyrylo-trylovskyi
+    - leonid-kadenyuk
+    - les-kurbas
+    - lesya-ukrainka
+    - levko-lukyanenko
+    - lina-kostenko
+    - liudmyla-starytska
+    - maksym-berezovskyy
+    - mariia-prymachenko
+    - mariia-voiakovska
+    - mariya-matios
+    - mariya-pavlova
+    - mariya-zankovetska
+    - marko-kropyvnytskyi
+    - marko-vovchok
+    - mykhailo-chernihivskyi
+    - mykhailo-drahomanov
+    - mykhailo-hrushevskyi-biography
+    - mykola-khvylovyi
+    - mykola-leontovych
+    - mykola-lysenko
+    - mykola-mikhnovskyi
+    - mykola-pohribnyi
+    - mykola-vasylenko
+    - myroslav-marynovych
+    - nataliia-polonska-vasylenko
+    - nataliya-kobrynska
+    - oksana-zabuzhko
+    - oleg-sentsov
+    - oleksandr-arkhypenko
+    - oleksandr-bohomazov
+    - oleksandr-hrekiv
+    - oleksandra-matviichuk
+    - olena-pchilka
+    - olena-stepaniv
+    - olena-teliha
+    - olha-basarab
+    - olha-kobylianska
+    - panteleimon-kulish
+    - petro-bolbochan
+    - petro-kalnyshevskyy
+    - pylyp-orlyk
+    - roksolana
+    - semen-hulak-artemovskyy
+    - serge-lifar
+    - serhiy-zhadan
+    - sofia-andrukhovych
+    - sofiya-okunevska
+    - solomiya-krushelnytska
+    - sylvestr-kosiv
+    - symon-petliura
+    - tamara-horikha-zernya
+    - taras-prokhasko
+    - taras-shevchenko
+    - valentyna-radzymovska
+    - vasyl-shkliar
+    - vasyl-stus
+    - vasyl-symonenko
+    - vasyl-vyshyvanyi
+    - viacheslav-chornovil
+    - viacheslav-lypynskyi
+    - vira-kholodna
+    - vitaly-portnikov
+    - volodymyr-ivasyuk
+    - volodymyr-velykii
+    - volodymyr-vernadskyi
+    - yaroslav-hrytsak
+    - yevhen-chykalenko
+    - yulian-bachynskyi
+    - yuriy-nemyrych
+    - yuriy-vynnychuk
+  lit:
+    type: track
+    modules:
+    - introduction-to-kotliarevsky
+    - eneida-part-1
+    - eneida-feast
+    - eneida-war
+    - natalka-poltavka
+    - kvitka-bio
+    - marusya
+    - konotop-witch
+    - ethnography
+    - kvitka-language
+    - young-shevchenko
+    - the-ballads
+    - haidamaky
+    - son
+    - biblical-themes
+    - the-artist
+    - women-in-kobzar
+    - shevchenkos-diary
+    - cult-of-shevchenko
+    - panteleimon-kulish
+    - black-council-history
+    - black-council-plot
+    - language-question-linguistics
+    - cyrillo-methodian-brotherhood
