@@ -1,9 +1,31 @@
 # B2-HIST Module 04: Слов'яни: Походження та розселення
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Audit Passed)
 
+module: b2-hist-04
 id: b2-hist-04
 title: "Слов'яни: Походження та розселення"
+subtitle: 'Slavic Origins and Migration'
 slug: sloviany-origins
+version: '2.0'
+phase: 'HIST.1 Origins'
+focus: history
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - history
+  - ancient
+  - slavs
+grammar:
+  - 'B2 historical register'
+objectives:
+  - 'Learner understands theories of Slavic origins'
+  - 'Learner can describe the Great Slavic Migration'
+vocabulary_count: 150
+naturalness:
+  score: 9
+  status: PASS
+
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
