@@ -57,10 +57,22 @@ def resolve_template(module_id: str, meta: Dict) -> str:
         
     with open(mapping_file, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
-        
+
     mappings = config.get('mappings', [])
-    
-    module_level = module_id.split('-')[0].lower()
+
+    # Extract level from module_id - handle track levels like b2-hist, c1-bio
+    # Pattern: level-slug or track-level-slug
+    parts = module_id.lower().split('-')
+    if len(parts) >= 2 and parts[0] in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+        # Check if second part is a known track suffix
+        if parts[1] in ['hist', 'bio', 'pro']:
+            module_level = f"{parts[0]}-{parts[1]}"
+        else:
+            module_level = parts[0]
+    elif parts[0] == 'lit':
+        module_level = 'lit'
+    else:
+        module_level = parts[0]
     
     for rule in mappings:
         # Check if level matches (if specified in rule)

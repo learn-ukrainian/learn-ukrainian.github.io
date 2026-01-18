@@ -1,5 +1,212 @@
 # Vocabulary for Слов'янські племена на українських землях
-# Status: skeleton - to be developed
+# Status: complete
 # Target: 24-30 terms
 
-terms: []
+terms:
+  - term: плем'я
+    pos: noun
+    gender: n
+    ipa: /ˈplɛmjɐ/
+    translation: tribe
+    notes: Основна форма соціальної організації слов'ян до формування держави.
+    example: Кожне плем'я мало свого князя та власні звичаї.
+
+  - term: поляни
+    pos: noun
+    gender: pl
+    ipa: /poˈlʲanɪ/
+    translation: Polianians (tribe)
+    notes: Назва походить від "поле" — відкритий лісостеповий простір.
+    example: Поляни заснували Київ на пагорбах над Дніпром.
+
+  - term: древляни
+    pos: noun
+    gender: pl
+    ipa: /drɛvˈlʲanɪ/
+    translation: Derevlianians (tribe)
+    notes: Назва походить від "дерево" — жителі густих лісів.
+    example: Древляни довго чинили опір київським князям.
+
+  - term: сіверяни
+    pos: noun
+    gender: pl
+    ipa: /sʲiˈvɛrʲanɪ/
+    translation: Siveriany (tribe)
+    notes: Мешканці Лівобережжя, вартові степового прикордоння.
+    example: Сіверяни захищали слов'янські землі від кочівників.
+
+  - term: городище
+    pos: noun
+    gender: n
+    ipa: /ɦoroˈdɪʃtʃɛ/
+    translation: fortified settlement
+    notes: Укріплене поселення з валом і ровом.
+    example: Іскоростень був наймогутнішим городищем древлян.
+
+  - term: віче
+    pos: noun
+    gender: n
+    ipa: /ˈʋʲitʃɛ/
+    translation: popular assembly
+    notes: Загальноплемінні збори всіх вільних чоловіків.
+    example: На віче вирішували питання війни та миру.
+
+  - term: князь
+    pos: noun
+    gender: m
+    ipa: /knʲazʲ/
+    translation: prince, chieftain
+    notes: Військовий вождь, законодавець і суддя племені.
+    example: Князь спирався на дружину — загін професійних воїнів.
+
+  - term: дружина
+    pos: noun
+    gender: f
+    ipa: /druˈʒɪna/
+    translation: princely retinue, warband
+    notes: Каста професійних воїнів при княжому дворі.
+    example: Дружинники були особисто віддані своєму князеві.
+
+  - term: смерд
+    pos: noun
+    gender: m
+    ipa: /smɛrd/
+    translation: commoner, peasant
+    notes: Вільний общинник, основа населення та економіки.
+    example: Смерди платили данину князеві та служили в ополченні.
+
+  - term: данина
+    pos: noun
+    gender: f
+    ipa: /daˈnɪna/
+    translation: tribute
+    notes: Обов'язкова плата підлеглих племен або населення.
+    example: Збір данини був основним джерелом доходів князя.
+
+  - term: язичництво
+    pos: noun
+    gender: n
+    ipa: /jaˈzɪtʃnɪt͡stʋo/
+    translation: paganism
+    notes: Дохристиянська релігія слов'ян із культом природи.
+    example: Язичництво було глибоко пов'язане з аграрним циклом.
+
+  - term: Перун
+    pos: noun
+    gender: m
+    ipa: /pɛˈrun/
+    translation: Perun (thunder god)
+    notes: Головний бог воїнів і князів, володар грому.
+    example: Капища Перуна розташовували на панівних висотах.
+
+  - term: Велес
+    pos: noun
+    gender: m
+    ipa: /ˈʋɛlɛs/
+    translation: Veles (god of cattle and trade)
+    notes: Бог добробуту, торгівлі та покровитель худоби.
+    example: Велеса шанували купці та скотарі.
+
+  - term: волхв
+    pos: noun
+    gender: m
+    ipa: /ʋɔlxʋ/
+    translation: pagan priest, seer
+    notes: Жрець-посередник між людьми та богами.
+    example: Волхви проводили обряди та ворожили на майбутнє.
+
+  - term: капище
+    pos: noun
+    gender: n
+    ipa: /kaˈpɪʃtʃɛ/
+    translation: pagan sanctuary
+    notes: Священний гай із дерев'яними ідолами богів.
+    example: На капищах приносили жертви та проводили обряди.
+
+  - term: тризна
+    pos: noun
+    gender: f
+    ipa: /ˈtrɪzna/
+    translation: funeral feast, wake
+    notes: Складний комплекс поминальних бенкетів та ігор.
+    example: На тризні влаштовували військові змагання на честь померлого.
+
+  - term: бортництво
+    pos: noun
+    gender: n
+    ipa: /bɔrtˈnɪt͡stʋo/
+    translation: beekeeping (wild)
+    notes: Збирання меду диких бджіл у дуплах дерев.
+    example: Бортництво давало мед для їжі та торгівлі.
+
+  - term: рало
+    pos: noun
+    gender: n
+    ipa: /ˈralo/
+    translation: ard, wooden plow
+    notes: Дерев'яний плуг із залізним наральником.
+    example: Рало було основним знаряддям землеробства.
+
+  - term: підсічно-вогневий
+    pos: adj
+    gender: m
+    ipa: /pʲidˈsʲitʃnoˌʋoɦnɛˈʋɪj/
+    translation: slash-and-burn (agriculture)
+    notes: Метод обробітку лісових ділянок через спалювання.
+    example: Древляни використовували підсічно-вогневий метод землеробства.
+
+  - term: напівземлянка
+    pos: noun
+    gender: f
+    ipa: /napʲiʋzɛmˈlʲanka/
+    translation: semi-dugout dwelling
+    notes: Традиційне житло, наполовину заглиблене в землю.
+    example: Напівземлянки добре зберігали тепло взимку.
+
+  - term: дирхем
+    pos: noun
+    gender: m
+    ipa: /ˈdɪrxɛm/
+    translation: dirham (Arabic silver coin)
+    notes: Арабська срібна монета, популярна на торгових шляхах.
+    example: Знахідки дирхемів свідчать про активну міжнародну торгівлю.
+
+  - term: Змієві вали
+    pos: noun
+    gender: pl
+    ipa: /zmʲiˈjɛʋʲi ˈʋalɪ/
+    translation: Snake Ramparts
+    notes: Система оборонних валів на південь від Києва.
+    example: Змієві вали захищали землеробів від степових кочівників.
+
+  - term: протодержава
+    pos: noun
+    gender: f
+    ipa: /protoˈdɛrʒaʋa/
+    translation: proto-state
+    notes: Ранній етап формування державності до Київської Русі.
+    example: Племінні союзи полян були розвиненою протодержавою.
+
+  - term: воєнна демократія
+    pos: noun
+    gender: f
+    ipa: /ʋoˈjɛnna dɛmoˈkratʲija/
+    translation: military democracy
+    notes: Система, де голос кожного воїна мав значення.
+    example: Віче було проявом воєнної демократії слов'ян.
+
+  - term: закуп
+    pos: noun
+    gender: m
+    ipa: /zaˈkup/
+    translation: indentured servant
+    notes: Той, хто потрапив у кабалу через борг.
+    example: Закупи працювали на господаря, поки не виплатили борг.
+
+  - term: холоп
+    pos: noun
+    gender: m
+    ipa: /ˈxɔlop/
+    translation: slave, serf
+    notes: Повністю залежна людина без прав.
+    example: Холопи вважалися власністю господаря.

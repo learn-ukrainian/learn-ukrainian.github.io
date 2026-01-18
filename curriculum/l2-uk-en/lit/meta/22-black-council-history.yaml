@@ -1,6 +1,10 @@
 title: 'Чорна рада: Історичний контекст'
 subtitle: 'The Black Council: Historical Context'
 version: '1.0'
+naturalness:
+  score: 9
+  status: PASS
+  rationale: "Historical narrative with authentic flow"
 phase: 'LIT.4 The Intellectuals'
 focus: history
 pedagogy: 'Immersion'

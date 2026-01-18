@@ -1,0 +1,18 @@
+module: b2-91
+title: 'Communication Skills 91'
+subtitle: 'B2 Communication Practice'
+version: '1.0'
+phase: 'B2.4'
+focus: communication
+pedagogy: 'CBI'
+duration: 90
+transliteration: 'none'
+tags:
+  - communication
+  - skills
+grammar:
+  - 'Communication strategies'
+objectives:
+  - 'Develop advanced communication skills'
+vocabulary_count: 25
+slug: 91-communication-skills-91

@@ -1,0 +1,20 @@
+module: b2-94
+title: 'B2 Final Exam'
+subtitle: 'Comprehensive B2 Assessment'
+version: '1.0'
+phase: 'B2.4'
+focus: checkpoint
+pedagogy: 'Test'
+duration: 180
+transliteration: 'none'
+tags:
+  - exam
+  - assessment
+  - final
+grammar:
+  - 'Comprehensive B2 grammar review'
+objectives:
+  - 'Demonstrate B2 level proficiency'
+  - 'Pass final comprehensive assessment'
+vocabulary_count: 0
+slug: 94-b2-final-exam

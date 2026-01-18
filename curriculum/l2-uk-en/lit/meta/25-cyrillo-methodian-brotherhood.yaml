@@ -1,22 +1,28 @@
-title: 'Кирило-Мефодіївське Братство'
+module: lit-25
+title: 'Кирило-Мефодіївське братство'
 subtitle: 'The Cyrillo-Methodian Brotherhood'
-version: '1.0'
+version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
+  rationale: "Historical brotherhood narrative with authentic Ukrainian prose"
 phase: 'LIT.4 The Intellectuals'
 focus: history
-pedagogy: 'CBI'
-duration: 45
+pedagogy: 'Analysis'
+duration: 100
 transliteration: none
 tags:
   - history
   - politics
-  - brotherhood
-  - 19th-century
+  - kostomarov
+  - secret-society
 grammar:
-  - 'Political terminology'
-  - 'Abstract nouns'
+  - 'Political Terminology'
+  - 'Religious Rhetoric'
+  - 'Historical Narrative'
 objectives:
-  - 'Understand the significance of the first Ukrainian political organization'
-  - 'Analyze the "Books of Genesis of the Ukrainian People"'
-  - 'Discuss the concepts of federalism and abolition of serfdom'
+  - 'Understand the goals of the first Ukrainian political organization'
+  - 'Analyze the "Books of the Genesis of the Ukrainian People"'
+  - 'Evaluate the role of Kostomarov, Shevchenko, and Kulish'
 vocabulary_count: 20
-slug: cyrillo-methodian-brotherhood
+slug: 25-cyrillo-methodian-brotherhood

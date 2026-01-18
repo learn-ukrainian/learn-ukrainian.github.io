@@ -1,0 +1,124 @@
+module: 15-the-testament
+level: C1
+version: '2.0'
+items:
+  - lemma: поховати
+    ipa: /poxɔˈwatɪ/
+    translation: to bury
+    pos: verb
+    gender: null
+    class: null
+  - lemma: могила
+    ipa: /mɔˈɦɪlɑ/
+    translation: grave / mound
+    pos: noun
+    gender: f
+    class: null
+  - lemma: степ
+    ipa: /stɛp/
+    translation: steppe
+    pos: noun
+    gender: m
+    class: null
+  - lemma: лан
+    ipa: /lɑn/
+    translation: field (arable land)
+    pos: noun
+    gender: m
+    class: null
+  - lemma: ревіти
+    ipa: /rɛˈwitɪ/
+    translation: to roar (river/beast)
+    pos: verb
+    gender: null
+    class: null
+  - lemma: ревучий
+    ipa: /rɛˈwut͡ʃɪj/
+    translation: roaring (one)
+    pos: adj
+    gender: m
+    class: null
+  - lemma: понести
+    ipa: /pɔnɛˈstɪ/
+    translation: to carry away (perf)
+    pos: verb
+    gender: null
+    class: null
+  - lemma: молитися
+    ipa: /mɔˈlɪtɪsʲɑ/
+    translation: to pray
+    pos: verb
+    gender: null
+    class: null
+  - lemma: кайдани
+    ipa: /kɑjˈdɑnɪ/
+    translation: chains / shackles
+    pos: noun
+    gender: p
+    class: null
+  - lemma: порвати
+    ipa: /pɔrˈwɑtɪ/
+    translation: to tear / break (chains)
+    pos: verb
+    gender: null
+    class: null
+  - lemma: окропити
+    ipa: /ɔkrɔˈpɪtɪ/
+    translation: to sprinkle (with blood)
+    pos: verb
+    gender: null
+    class: null
+  - lemma: вольний
+    ipa: /wɔlʲnɪj/
+    translation: free (archaic/poetic)
+    pos: adj
+    gender: m
+    class: null
+  - lemma: сім'я
+    ipa: /sʲiˈmja/
+    translation: family
+    pos: noun
+    gender: f
+    class: null
+  - lemma: незлим
+    ipa: /nɛˈzlɪm/
+    translation: not evil / kind
+    pos: adj
+    gender: m
+    class: null
+  - lemma: тихим
+    ipa: /tɪxɪm/
+    translation: quiet
+    pos: adj
+    gender: m
+    class: null
+  - lemma: заповіт
+    ipa: /zɑpɔˈwit/
+    translation: testament / will
+    pos: noun
+    gender: m
+    class: null
+  - lemma: повставати
+    ipa: /pɔu̯stɑˈwɑtɪ/
+    translation: to rise up / rebel
+    pos: verb
+    gender: null
+    class: null
+  - lemma: вражий
+    ipa: /wrɑʒɪj/
+    translation: enemy's (adj)
+    pos: adj
+    gender: m
+    class: null
+  - lemma: кров
+    ipa: /krɔu̯/
+    translation: blood
+    pos: noun
+    gender: f
+    class: null
+  - lemma: згадувати
+    ipa: /zɦɑduˈwɑtɪ/
+    translation: to mention / remember
+    pos: verb
+    gender: null
+    class: null

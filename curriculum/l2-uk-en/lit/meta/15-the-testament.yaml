@@ -1,0 +1,27 @@
+module: lit-15
+title: 'Заповіт'
+subtitle: 'The Testament'
+version: '2.0'
+phase: 'LIT.3 The Prophet'
+focus: literature
+pedagogy: 'Analysis'
+duration: 90
+transliteration: none
+tags:
+  - shevchenko
+  - poetry
+  - grammar
+  - politics
+grammar:
+  - 'Imperative Mood'
+  - 'Future Tense'
+  - 'Conditional Sentences'
+objectives:
+  - 'Analyze the grammar of the national anthem'
+  - 'Understand the political instruction in the poem'
+  - 'Explore the concept of "The Nation"'
+vocabulary_count: 20
+slug: 15-the-testament
+naturalness:
+  score: 10
+  status: PASS

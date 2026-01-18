@@ -1,21 +1,28 @@
-title: 'Мовне питання: Кулішівка'
-subtitle: 'The Language Question: Kulishivka'
+module: lit-24
+title: 'Мовне питання'
+subtitle: 'The Language Question'
 version: '2.0'
-phase: 'LIT.4 Intellectuals'
-focus: linguistics # Specific focus for linguistics
+naturalness:
+  score: 9
+  status: PASS
+  rationale: "Historical linguistic narrative with authentic flow"
+phase: 'LIT.4 The Intellectuals'
+focus: linguistics
 pedagogy: 'Analysis'
-duration: 120
+duration: 100
 transliteration: none
 tags:
   - linguistics
   - history
   - orthography
-  - russification
+  - kulish
 grammar:
   - 'Phonetic Orthography'
+  - 'Etymological Orthography'
+  - 'Historical Terminology'
 objectives:
-  - 'Analyze the evolution of Ukrainian orthography (Kulishivka).'
-  - 'Understand the political context of the Valuev Circular and Ems Ukaz.'
-  - 'Discuss the role of language in nation-building.'
-vocabulary_count: 25
-slug: language-question-linguistics
+  - 'Understand the history of Ukrainian orthography (Kulishivka)'
+  - 'Analyze the "Alphabet Wars" of the 19th century'
+  - 'Distinguish between phonetic and etymological principles'
+vocabulary_count: 20
+slug: 24-language-question-linguistics

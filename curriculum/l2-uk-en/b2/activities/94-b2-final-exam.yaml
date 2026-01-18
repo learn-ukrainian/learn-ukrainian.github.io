@@ -1,0 +1,9 @@
+# B2 Final Exam Activities
+# TODO: Add comprehensive assessment activities
+- type: quiz
+  title: 'Placeholder'
+  question: 'Placeholder question'
+  options:
+    - 'Option A'
+    - 'Option B'
+  answer: 0

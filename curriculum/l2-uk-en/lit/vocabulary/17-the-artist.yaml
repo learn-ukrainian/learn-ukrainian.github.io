@@ -3,150 +3,103 @@ level: C1
 version: '1.0'
 items:
   - lemma: офорт
+    ipa: /oˈfɔrt/
     translation: etching
-    note: 'техніка гравюри, в якій Шевченко був академіком'
     pos: noun
     gender: m
-  - lemma: акварель
-    translation: watercolor
-    note: 'водяні фарби; техніка живопису'
-    pos: noun
-    gender: f
-  - lemma: пейзаж
-    translation: landscape
-    note: 'зображення природи'
-    pos: noun
-    gender: m
-  - lemma: портрет
-    translation: portrait
-    note: 'зображення людини'
-    pos: noun
-    gender: m
-  - lemma: автопортрет
-    translation: self-portrait
-    note: 'зображення художника самим собою'
-    pos: noun
-    gender: m
-  - lemma: натурник
-    translation: model (art)
-    note: 'людина, яка позує художнику'
-    pos: noun
-    gender: m
-  - lemma: майстерня
-    translation: studio/workshop
-    note: 'робоче місце художника'
-    pos: noun
-    gender: f
-  - lemma: мольберт
-    translation: easel
-    note: 'підставка для картини'
-    pos: noun
-    gender: m
-  - lemma: пензель
-    translation: brush
-    note: 'інструмент для малювання'
-    pos: noun
-    gender: m
-  - lemma: палітра
-    translation: palette
-    note: 'дощечка для змішування фарб'
-    pos: noun
-    gender: f
-  - lemma: академік
-    translation: academician
-    note: 'вище звання в Академії мистецтв'
-    pos: noun
-    gender: m
+    definition: "Техніка глибокого друку на металі за допомогою кислоти."
   - lemma: сепія
+    ipa: /ˌsɛpʲiˈja/
     translation: sepia
-    note: 'коричнева фарба; малюнок цією фарбою'
     pos: noun
     gender: f
   - lemma: гравюра
+    ipa: /ɦraˈvʲura/
     translation: engraving
-    note: 'відбиток малюнка'
+    pos: noun
+    gender: f
+  - lemma: академізм
+    ipa: /akaˈdɛmizm/
+    translation: academicism
+    pos: noun
+    gender: m
+  - lemma: к'яроскуро
+    ipa: /kjaˈroskuro/
+    translation: chiaroscuro
+    pos: noun
+    gender: n
+  - lemma: пейзаж
+    ipa: /pejˈzaʒ/
+    translation: landscape
+    pos: noun
+    gender: m
+  - lemma: портрет
+    ipa: /pɔrˈtrɛt/
+    translation: portrait
+    pos: noun
+    gender: m
+  - lemma: автопортрет
+    ipa: /awtopɔrˈtrɛt/
+    translation: self-portrait
+    pos: noun
+    gender: m
+  - lemma: натура
+    ipa: /naˈtura/
+    translation: nature / model
     pos: noun
     gender: f
   - lemma: композиція
+    ipa: /kɔmpoˈzɪt͡sʲija/
     translation: composition
-    note: 'будова художнього твору'
     pos: noun
     gender: f
-  - lemma: світлотінь
-    translation: chiaroscuro
-    note: 'розподіл світла і тіні'
+  - lemma: майстерня
+    ipa: /majˈstɛrnʲa/
+    translation: workshop / studio
     pos: noun
     gender: f
-  - lemma: штрих
-    translation: stroke/hatch
-    note: 'лінія в малюнку'
+  - lemma: полотно
+    ipa: /pɔlɔtˈnɔ/
+    translation: canvas
+    pos: noun
+    gender: n
+  - lemma: пензель
+    ipa: /pɛnˈzɛlʲ/
+    translation: brush
     pos: noun
     gender: m
   - lemma: ескіз
+    ipa: /ɛsˈkiz/
     translation: sketch
-    note: 'попередній начерк'
     pos: noun
     gender: m
-  - lemma: перспектива
-    translation: perspective
-    note: 'зображення простору'
-    pos: noun
-    gender: f
-  - lemma: викуп
-    translation: ransom/purchase from serfdom
-    note: 'плата за звільнення (про Шевченка)'
+  - lemma: живопис
+    ipa: /ʒɪˈvɔpɪs/
+    translation: painting (art)
     pos: noun
     gender: m
-  - lemma: меценат
-    translation: patron of arts
-    note: 'покровитель мистецтв'
+  - lemma: акварель
+    ipa: /akvaˈrɛlʲ/
+    translation: watercolor
+    pos: noun
+    gender: f
+  - lemma: ракурс
+    ipa: /raˈkurs/
+    translation: angle / perspective
     pos: noun
     gender: m
-  - lemma: лотерея
-    translation: lottery
-    note: 'спосіб, яким розіграли портрет Жуковського'
-    pos: noun
-    gender: f
-  - lemma: натхнення
-    translation: inspiration
-    note: 'творчий підйом'
-    pos: noun
-    gender: n
-  - lemma: ремесло
-    translation: craft
-    note: 'професійні навички'
-    pos: noun
-    gender: n
-  - lemma: спадщина
-    translation: heritage/legacy
-    note: 'те, що залишив митець'
-    pos: noun
-    gender: f
-  - lemma: живописна Україна
-    translation: Picturesque Ukraine
-    note: 'серія офортів Шевченка'
-    pos: phrase
-  - lemma: інтелігенція
-    translation: intelligentsia
-    note: 'освічена верства суспільства'
-    pos: noun
-    gender: f
-  - lemma: блудний син
-    translation: prodigal son
-    note: 'сюжет серії малюнків'
-    pos: phrase
-  - lemma: талант
-    translation: talent
-    note: 'обдарування'
+  - lemma: штрих
+    ipa: /ʃtrɪx/
+    translation: stroke / hatch
     pos: noun
     gender: m
-  - lemma: покликання
-    translation: calling/vocation
-    note: 'призначення людини'
-    pos: noun
-    gender: n
-  - lemma: доля
-    translation: fate/destiny
-    note: 'ключове поняття для Шевченка'
+  - lemma: світлотінь
+    ipa: /svitloˈtʲinʲ/
+    translation: chiaroscuro (light and shadow)
     pos: noun
     gender: f
+  - lemma: колорит
+    ipa: /kɔlɔˈrɪt/
+    translation: coloring / color scheme
+    pos: noun
+    gender: m

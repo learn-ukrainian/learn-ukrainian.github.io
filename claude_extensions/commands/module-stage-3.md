@@ -45,8 +45,12 @@ Read: `claude_extensions/stages/stage-3-activities.md`
 
 ### Step 2: Load Module
 
-Read the module file:
-`curriculum/l2-uk-en/{level}/{number}-*.md`
+**For core levels (a1, a2, b1, b2, c1, c2):**
+`curriculum/l2-uk-en/{level}/{number:02d}-*.md`
+
+**For track levels (b2-hist, c1-bio, lit, b2-pro, c1-pro):**
+Look up slug from manifest: `yq ".levels.\"{level}\".modules[{number-1}]" curriculum/l2-uk-en/curriculum.yaml`
+Then: `curriculum/l2-uk-en/{level}/{slug}.md`
 
 Verify content is present (not just `[placeholder]` markers).
 If content incomplete, STOP and report: "Run Stage 2 first."

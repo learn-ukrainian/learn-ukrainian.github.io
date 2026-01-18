@@ -1457,38 +1457,24 @@ def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary")
         
     return '\n'.join(lines)
 
-from manifest_utils import load_manifest, get_module_by_slug, get_modules_for_level, Module
+from manifest_utils import load_manifest, get_module_by_slug, get_modules_for_level, Module, CORE_LEVELS, TRACKS
 
 def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module]:
     """Get list of modules to process from manifest."""
-    manifest = load_manifest()
     all_modules = []
-    
+
     # Process core levels
-    for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+    for level in CORE_LEVELS:
         if target_level and level != target_level:
             continue
         all_modules.extend(get_modules_for_level(level))
-        
-    # Process tracks
-    for track_name in manifest.get('tracks', {}):
-        if track_name.startswith('_'): continue
+
+    # Process tracks (b2-hist, c1-bio, lit)
+    for track_name in TRACKS:
         if target_level and track_name != target_level:
             continue
-            
-        track_data = manifest['tracks'][track_name]
-        for local_num, mod_entry in enumerate(track_data.get('modules', []), 1):
-            all_modules.append(Module(
-                slug=mod_entry['slug'],
-                title=mod_entry.get('title', 'Untitled'),
-                level=track_name,
-                track=track_name,
-                local_num=local_num,
-                global_num=0,
-                phase=mod_entry.get('phase'),
-                focus=mod_entry.get('focus')
-            ))
-            
+        all_modules.extend(get_modules_for_level(track_name))
+
     return all_modules
 
 def main():

@@ -141,7 +141,11 @@ Exercise items
 
 ### Step 3: Create Skeleton
 
-Create the file at: `curriculum/l2-uk-en/{level}/{number}-{slug}.md`
+**For core levels (a1, a2, b1, b2, c1, c2):**
+`curriculum/l2-uk-en/{level}/{number:02d}-{slug}.md`
+
+**For track levels (b2-hist, c1-bio, lit, b2-pro, c1-pro):**
+`curriculum/l2-uk-en/{level}/{slug}.md` (no number prefix)
 
 Following the stage-1 template:
 1. YAML frontmatter with all required fields

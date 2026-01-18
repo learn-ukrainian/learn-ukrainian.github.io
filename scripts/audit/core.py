@@ -612,6 +612,10 @@ def audit_module(file_path: str) -> bool:
     phase_match = re.search(r'phase:\s*([A-Za-z0-9\.]+)', frontmatter_str)
     phase = phase_match.group(1) if phase_match else level_code
 
+    # Parse title for display
+    title_match = re.search(r"title:\s*['\"]?([^'\"\n]+)['\"]?", frontmatter_str)
+    module_title = title_match.group(1).strip() if title_match else os.path.basename(file_path)
+
     # Detect focus (pass filename for checkpoint detection)
     module_focus = detect_focus(frontmatter_str, level_code, module_num, os.path.basename(file_path))
 
@@ -634,8 +638,11 @@ def audit_module(file_path: str) -> bool:
             from .checks import template_compliance as tc_module
             
             # Construct module ID for template mapping
+            # Extract full level including track suffix (b2-hist, c1-bio, lit)
             module_slug = Path(file_path).stem
-            module_id_for_mapping = f"{level_code.lower()}-{module_slug}"
+            track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
+            full_level = track_match.group(1) if track_match else level_code.lower()
+            module_id_for_mapping = f"{full_level}-{module_slug}"
             
             # Resolve which template this module should follow
             meta_for_template = meta_data if meta_data else {}
@@ -808,7 +815,8 @@ def audit_module(file_path: str) -> bool:
     table_rows = []
     low_density_activities = []  # Track activities with insufficient items
 
-    print(f"\nAuditing {file_path} (Target: {target})...\n")
+    print(f"\n📋 Auditing: {level_code} M{module_num:02d} — {module_title}")
+    print(f"   File: {file_path} | Target: {target} words\n")
 
     # Check for YAML activities file using shared parser (Issue #394)
     yaml_activities = None

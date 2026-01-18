@@ -10,8 +10,13 @@ Status indicators:
 """
 
 import os
+import sys
 import yaml
 from pathlib import Path
+
+# Add scripts dir to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from manifest_utils import get_modules_for_level
 
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -61,7 +66,7 @@ def load_level_status():
 
 
 def get_module_files(level):
-    """Get existing module files for a level."""
+    """Get existing module files for a level (core levels with numbered files)."""
     meta_dir = CURRICULUM_DIR / level / "meta"
     mdx_dir = DOCS_DIR / level
 
@@ -91,6 +96,29 @@ def get_module_files(level):
     return meta_files, mdx_files
 
 
+def get_track_module_files(level):
+    """Get existing module files for a track (slug-based files).
+
+    Uses manifest to get module list and checks for slug-based MDX files.
+    """
+    mdx_dir = DOCS_DIR / level
+    modules = get_modules_for_level(level)
+
+    mdx_files = {}  # {local_num: mdx_path}
+    meta_data = {}  # {local_num: (title, subtitle)}
+
+    for mod in modules:
+        # Check if MDX exists (slug-based naming)
+        mdx_path = mdx_dir / f"{mod.slug}.mdx"
+        if mdx_path.exists():
+            mdx_files[mod.local_num] = mdx_path
+
+        # Store meta data from manifest
+        meta_data[mod.local_num] = (mod.title, '')
+
+    return meta_data, mdx_files
+
+
 def get_module_title(meta_file):
     """Extract title from meta YAML file."""
     try:
@@ -101,13 +129,16 @@ def get_module_title(meta_file):
         return 'Untitled', ''
 
 
-def build_level_landing(level, config):
+def build_level_landing(level, config, is_track=False):
     """Build landing page for a single level."""
     planned = config.get('planned', 0)
     description = config.get('description', '')
     introduction = config.get('introduction', '').strip()
 
-    meta_files, mdx_files = get_module_files(level)
+    if is_track:
+        meta_files, mdx_files = get_track_module_files(level)
+    else:
+        meta_files, mdx_files = get_module_files(level)
 
     # Count stats
     ready_count = len(mdx_files)
@@ -126,24 +157,41 @@ def build_level_landing(level, config):
 
     # Build module table rows
     rows = []
-    for num in range(1, planned + 1):
-        if num in mdx_files:
-            status = "✅"
-            title, subtitle = get_module_title(meta_files.get(num)) if num in meta_files else ('', '')
-            link = f"[{title}](./module-{num:02d})"
-            if subtitle:
-                link += f" <small>({subtitle})</small>"
-        elif num in meta_files:
-            status = "🚧"
-            title, subtitle = get_module_title(meta_files[num])
-            link = f"{title}"
-            if subtitle:
-                link += f" <small>({subtitle})</small>"
-        else:
-            status = "📋"
-            link = f"Модуль {num:02d}"
 
-        rows.append(f"| {num} | {link} | {status} |")
+    # For tracks, get module list from manifest
+    if is_track:
+        modules = get_modules_for_level(level)
+        for mod in modules:
+            num = mod.local_num
+            if num in mdx_files:
+                status = "✅"
+                link = f"[{mod.title}](./{mod.slug})"
+            elif num in meta_files:
+                status = "🚧"
+                link = f"{mod.title}"
+            else:
+                status = "📋"
+                link = f"Модуль {num:02d}"
+            rows.append(f"| {num} | {link} | {status} |")
+    else:
+        for num in range(1, planned + 1):
+            if num in mdx_files:
+                status = "✅"
+                title, subtitle = get_module_title(meta_files.get(num)) if num in meta_files else ('', '')
+                link = f"[{title}](./module-{num:02d})"
+                if subtitle:
+                    link += f" <small>({subtitle})</small>"
+            elif num in meta_files:
+                status = "🚧"
+                title, subtitle = get_module_title(meta_files[num])
+                link = f"{title}"
+                if subtitle:
+                    link += f" <small>({subtitle})</small>"
+            else:
+                status = "📋"
+                link = f"Модуль {num:02d}"
+
+            rows.append(f"| {num} | {link} | {status} |")
 
     # Build introduction section
     intro_section = ""
@@ -218,7 +266,7 @@ def build_intro_page(level_status):
             continue
         planned = config.get('planned', 0)
         description = config.get('description', '')
-        meta_files, mdx_files = get_module_files(level)
+        meta_files, mdx_files = get_track_module_files(level)
         ready = len(mdx_files)
 
         total_lessons += ready
@@ -366,7 +414,7 @@ def main():
             print(f"  Skipping {level} - no config")
             continue
 
-        content, ready, planned = build_level_landing(level, config)
+        content, ready, planned = build_level_landing(level, config, is_track=True)
         output_path = DOCS_DIR / level / "index.mdx"
         output_path.parent.mkdir(parents=True, exist_ok=True)
 

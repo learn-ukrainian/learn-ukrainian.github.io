@@ -1,0 +1,56 @@
+# Audit Report: slavic-tribes.md
+**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 3278/3000
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Immersion:** 🇺🇦 97.1% (target 90-100% (history))
+- **Richness:** ✅ 100% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
+
+## Richness Details
+**Score:** 100% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 6 | 3 | 100% | 24% | 23.8% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 15 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 14 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 29 | Included in Core |
+| **Слов'янські племена на українських землях** | ⚪️ | 106 | Skipped |
+| **Вступ** | ⚪️ | 307 | Skipped |
+| **Читання** | ✅ | 1848 | Included in Core |
+| **Деколонізаційний погляд** | ⚪️ | 193 | Skipped |
+| **Первинні джерела** | ⚪️ | 258 | Skipped |
+| **Підсумок** | ✅ | 89 | Included in Core |
+| **Есе** | ⚪️ | 0 | Skipped |
+| **Тема** | ⚪️ | 96 | Skipped |
+| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
+| **Зразок відповіді** | ⚪️ | 276 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 76 | Skipped |

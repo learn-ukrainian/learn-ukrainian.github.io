@@ -1,0 +1,124 @@
+module: 25-cyrillo-methodian-brotherhood
+level: C1
+version: '2.0'
+items:
+  - lemma: братство
+    ipa: /brɑtstwɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+    class: null
+  - lemma: таємний
+    ipa: /tɑjɛmnɪj/
+    translation: secret
+    pos: adj
+    gender: m
+    class: null
+  - lemma: товариство
+    ipa: /tɔwɑrɪstwɔ/
+    translation: society / association
+    pos: noun
+    gender: n
+    class: null
+  - lemma: федерація
+    ipa: /fɛdɛrɑt͡sʲijɑ/
+    translation: federation
+    pos: noun
+    gender: f
+    class: null
+  - lemma: скасування
+    ipa: /skɑsuwɑnʲːɑ/
+    translation: abolition / cancellation
+    pos: noun
+    gender: n
+    class: null
+  - lemma: кріпацтво
+    ipa: /kripɑt͡stwɔ/
+    translation: serfdom
+    pos: noun
+    gender: n
+    class: null
+  - lemma: рівність
+    ipa: /riwnistʲ/
+    translation: equality
+    pos: noun
+    gender: f
+    class: null
+  - lemma: освіта
+    ipa: /ɔswitɑ/
+    translation: education
+    pos: noun
+    gender: f
+    class: null
+  - lemma: поширення
+    ipa: /pɔʃɪrɛnʲːɑ/
+    translation: spreading / dissemination
+    pos: noun
+    gender: n
+    class: null
+  - lemma: донос
+    ipa: /dɔnɔs/
+    translation: denunciation / snitching
+    pos: noun
+    gender: m
+    class: null
+  - lemma: арешт
+    ipa: /ɑrɛʃt/
+    translation: arrest
+    pos: noun
+    gender: m
+    class: null
+  - lemma: заслання
+    ipa: /zɑslɑnʲːɑ/
+    translation: exile
+    pos: noun
+    gender: n
+    class: null
+  - lemma: маніфест
+    ipa: /mɑnifɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+    class: null
+  - lemma: статут
+    ipa: /stɑtut/
+    translation: statute / charter
+    pos: noun
+    gender: m
+    class: null
+  - lemma: слов'янський
+    ipa: /slɔwjɑnʲsʲkɪj/
+    translation: Slavic
+    pos: adj
+    gender: m
+    class: null
+  - lemma: відродження
+    ipa: /widrɔd͡ʒɛnʲːɑ/
+    translation: rebirth / renaissance
+    pos: noun
+    gender: n
+    class: null
+  - lemma: месіанство
+    ipa: /mɛsianstwɔ/
+    translation: messianism
+    pos: noun
+    gender: n
+    class: null
+  - lemma: проголошувати
+    ipa: /prɔhɔlɔʃuwɑtɪ/
+    translation: to proclaim / declare
+    pos: verb
+    gender: null
+    class: null
+  - lemma: зрада
+    ipa: /zrɑdɑ/
+    translation: betrayal / treason
+    pos: noun
+    gender: f
+    class: null
+  - lemma: доля
+    ipa: /dɔlʲɑ/
+    translation: fate / destiny
+    pos: noun
+    gender: f
+    class: null

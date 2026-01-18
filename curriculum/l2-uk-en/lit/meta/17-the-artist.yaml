@@ -1,28 +1,27 @@
+module: lit-17
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
-version: '1.0'
-phase: LIT.3 The Prophet (Taras Shevchenko)
-focus: literature
-pedagogy: Seminar
-duration: 120
-transliteration: none
-tags:
-- literature
-- art
-- shevchenko
-- biography
-grammar:
-- Artistic terminology
-- Descriptive prose
-objectives:
-- Explore Shevchenko's identity as a professional artist vs amateur poet
-- Analyze the autobiographical novel "The Artist" (Художник)
-- Understand the role of the Academy of Arts in his liberation
-- Discuss the synergy between his visual art and poetry
-vocabulary_count: 30
-slug: the-artist
 naturalness:
   score: 10
   status: PASS
-  reviewer: Antigravity
-  comment: 'Checked via scan-naturalness protocol. Flow: Excellent academic register. Discourse markers: Natural use of "зокрема", "однак", "натомість". Authenticity: High (Classical/Modern Academic). Note: Contains extensive 19th-century primary texts.'
+  rationale: "Native-like flow"
+version: '1.0'
+phase: 'LIT.2 The Artist'
+focus: biography
+pedagogy: 'Immersion & Analysis'
+duration: 120
+transliteration: none
+tags:
+  - shevchenko
+  - art
+  - biography
+  - painting
+grammar:
+  - 'Artistic Terminology'
+  - 'Biographical Narrative'
+objectives:
+  - 'Understand Shevchenkos role as a visual artist'
+  - 'Analyze the interaction between his painting and poetry'
+  - 'Read and interpret excerpts from the novel "The Artist"'
+vocabulary_count: 20
+slug: 17-the-artist

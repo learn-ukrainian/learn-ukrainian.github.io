@@ -1,5 +1,5 @@
 # Audit Report: trypillian-civilization.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 

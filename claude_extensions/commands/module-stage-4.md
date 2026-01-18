@@ -47,8 +47,24 @@ Read: `claude_extensions/stages/stage-4-review-fix.md`
 
 ### Step 2: Load Module
 
-Read the module file:
-`curriculum/l2-uk-en/{level}/{number}-*.md`
+**For core levels (a1, a2, b1, b2, c1, c2):**
+```
+curriculum/l2-uk-en/{level}/{number:02d}-*.md
+```
+
+**For track levels (b2-hist, c1-bio, lit, b2-pro, c1-pro):**
+Tracks use slug-only filenames without number prefixes.
+
+1. Look up the slug from manifest by position:
+   ```bash
+   yq ".levels.\"{level}\".modules[{number-1}]" curriculum/l2-uk-en/curriculum.yaml
+   ```
+2. Construct file path:
+   ```
+   curriculum/l2-uk-en/{level}/{slug}.md
+   ```
+
+Example: `b2-hist 1` → slug is `afhanistan` → `curriculum/l2-uk-en/b2-hist/afhanistan.md`
 
 ### Step 3: Run Initial Audit
 

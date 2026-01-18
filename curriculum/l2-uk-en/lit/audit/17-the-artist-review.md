@@ -1,22 +1,22 @@
 # Audit Report: 17-the-artist.md
-**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
+**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** Immersion & Analysis | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 3564/3500
-- **Activities:** ✅ 3/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/0
+- **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
-- **Immersion:** 🇺🇦 99.0% (target 95-100% (literature))
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 99.0% (target 95-100% (biography))
 - **Richness:** ✅ 96% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)

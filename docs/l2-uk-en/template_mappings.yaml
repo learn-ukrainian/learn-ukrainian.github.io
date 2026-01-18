@@ -227,10 +227,12 @@ mappings:
   # =============================================================================
   # B2-HIST: History Track (relocated from B2 M71-131)
   # =============================================================================
-  - pattern: '^b2-hist-(83|107|119|125|131)(-.*)?$'
+  # Synthesis modules (by meta.focus: synthesis)
+  - meta_field: focus
+    value: synthesis
     level: b2-hist
     template: b2-history-synthesis-module-template.md
-    description: 'B2-HIST synthesis modules'
+    description: 'B2-HIST synthesis modules (via focus field)'
 
   - pattern: '^b2-hist-'
     level: b2-hist

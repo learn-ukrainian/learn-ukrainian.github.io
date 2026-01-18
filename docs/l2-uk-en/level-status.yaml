@@ -12,7 +12,7 @@
 #   <10% -> "Planned"
 
 a1:
-  planned: 44  # 34 existing + 10 new practical scenarios (RFC #409)
+  planned: 44 # 34 existing + 10 new practical scenarios (RFC #409)
   status: auto
   description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
   introduction: |
@@ -28,9 +28,8 @@ a1:
     - Shopping, ordering at cafés, basic travel
 
     **Learning Philosophy:** We believe in understanding patterns, not just memorizing phrases. Every grammar concept is explained with clear rules and many examples before you practice.
-
 a2:
-  planned: 70  # 58 existing + 12 new practical scenarios (RFC #409)
+  planned: 70 # 58 existing + 12 new practical scenarios (RFC #409)
   status: auto
   description: "Elementary — All 7 cases, aspect intro, practical scenarios"
   introduction: |
@@ -45,9 +44,8 @@ a2:
     - Practical scenarios — doctors, pharmacies, hotels, scheduling, social situations
 
     **Learning Philosophy:** Ukrainian cases aren't random — they follow logical patterns. We teach you to recognize and apply these patterns, making what seems complex surprisingly systematic.
-
 b1:
-  planned: 99  # 91 existing + 8 new skills modules (RFC #409)
+  planned: 99 # 91 existing + 8 new skills modules (RFC #409)
   status: auto
   description: "Intermediate — Aspect mastery, motion verbs, communication skills"
   introduction: |
@@ -62,9 +60,8 @@ b1:
     - Комунікативні навички — написання листів, подкасти, обговорення
 
     **Занурення:** 75-90% українською — ви вже готові!
-
 b2:
-  planned: 94  # 84 existing + 10 new professional basics (RFC #409)
+  planned: 94 # 84 existing + 10 new professional basics (RFC #409)
   status: auto
   description: "Upper-Intermediate — Passive voice, registers, professional basics"
   introduction: |
@@ -79,7 +76,6 @@ b2:
     - Стилістика — наголос, інверсія, сполучники
 
     **Занурення:** 100% українською — англійська більше не потрібна!
-
 c1:
   planned: 106
   status: auto
@@ -96,7 +92,6 @@ c1:
     - Діалектологія — особливості регіональних варіантів
 
     **Занурення:** 100% українською без будь-яких пояснень англійською
-
 c2:
   planned: 100
   status: auto
@@ -113,14 +108,13 @@ c2:
     - Риторика — публічні виступи, дебати
 
     **Занурення:** 100% українською на рівні академічних текстів
-
 # =============================================================================
 # Specialized Tracks (RFC #409)
 # =============================================================================
 
 # History Track (relocated from B2 M71-131)
 b2-hist:
-  planned: 61
+  planned: 140
   status: auto
   description: "History — Ukrainian history from origins to present"
   introduction: |
@@ -135,10 +129,26 @@ b2-hist:
     - Сучасна Україна — незалежність, Революція Гідності
 
     **Підхід:** Деколонізована перспектива з опорою на українські джерела
+# Advanced History Track (new - analytical/academic level)
+c1-hist:
+  planned: 80
+  status: auto
+  description: "Advanced History — Primary sources, historiography, analytical"
+  introduction: |
+    ## Від знання історії до аналізу історії — рівень історика!
 
+    Цей трек переводить вас від розуміння «що сталося» до аналізу «як ми це знаємо, хто це каже, і що оспорюється». Ви працюватимете з першоджерелами, порівнюватимете інтерпретації та розвиватимете критичне мислення.
+
+    **Чого ви навчитеся:**
+    - Історіографія — українська, російська, польська, діаспорна традиції
+    - Первинні джерела — літописи, універсали, листи, свідчення
+    - Тематичні студії — Голодомор, Розстріляне відродження, діаспора
+    - Регіональні перспективи — Галичина, Волинь, Крим, Донбас
+
+    **Підхід:** Академічний аналіз з роботою над оригінальними текстами
 # Biography Track (relocated from C1 M36-131)
 c1-bio:
-  planned: 101
+  planned: 100
   status: auto
   description: "Biographies — Notable Ukrainians through history"
   introduction: |
@@ -153,7 +163,6 @@ c1-bio:
     - Сучасники — митці, спортсмени, активісти
 
     **Підхід:** Біографія як вікно в епоху — історичний та культурний контекст
-
 # Professional Track (new)
 b2-pro:
   planned: 40
@@ -171,7 +180,6 @@ b2-pro:
     - Нетворкінг — професійні контакти українською
 
     **Підхід:** ESP (English for Specific Purposes) адаптований для української
-
 # Professional Mastery Track (new)
 c1-pro:
   planned: 50
@@ -189,7 +197,6 @@ c1-pro:
     - Переклад — основи синхронного та послідовного перекладу
 
     **Підхід:** ESP + CLIL — мова через професійні завдання
-
 # Literature Track (post-C1)
 lit:
   planned: 30

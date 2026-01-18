@@ -1,0 +1,124 @@
+module: 24-the-language-question
+level: C1
+version: '2.0'
+items:
+  - lemma: правопис
+    ipa: /prɑˈwɔpɪs/
+    translation: orthography / spelling
+    pos: noun
+    gender: m
+    class: null
+  - lemma: абетка
+    ipa: /ɑˈbɛtkɑ/
+    translation: alphabet
+    pos: noun
+    gender: f
+    class: null
+  - lemma: кулішівка
+    ipa: /kuliˈʃiwkɑ/
+    translation: Kulish's phonetic alphabet
+    pos: noun
+    gender: f
+    class: proper
+  - lemma: ярижка
+    ipa: /jɑˈrɪʒkɑ/
+    translation: Yaryzhka (Russian-based spelling)
+    pos: noun
+    gender: f
+    class: proper
+  - lemma: драгоманівка
+    ipa: /drɑɦɔˈmɑniwkɑ/
+    translation: Drahomanivka (radical phonetic spelling)
+    pos: noun
+    gender: f
+    class: proper
+  - lemma: желехівка
+    ipa: /ʒɛlɛˈxiwkɑ/
+    translation: Zhelekhivka (Western Ukrainian spelling)
+    pos: noun
+    gender: f
+    class: proper
+  - lemma: фонетичний
+    ipa: /fɔnɛˈtɪt͡ʃnɪj/
+    translation: phonetic
+    pos: adj
+    gender: m
+    class: null
+  - lemma: етимологічний
+    ipa: /ɛtɪmɔlɔˈɦit͡ʃnɪj/
+    translation: etymological
+    pos: adj
+    gender: m
+    class: null
+  - lemma: заборона
+    ipa: /zɑbɔˈrɔnɑ/
+    translation: ban / prohibition
+    pos: noun
+    gender: f
+    class: null
+  - lemma: циркуляр
+    ipa: /t͡sɪrkuˈlʲɑr/
+    translation: circular (administrative order)
+    pos: noun
+    gender: m
+    class: null
+  - lemma: указ
+    ipa: /uˈkɑz/
+    translation: decree / ukase
+    pos: noun
+    gender: m
+    class: null
+  - lemma: говірка
+    ipa: /ɦɔˈwirkɑ/
+    translation: sub-dialect / speech variety
+    pos: noun
+    gender: f
+    class: null
+  - lemma: наріччя
+    ipa: /nɑˈrit͡ʃʲːɑ/
+    translation: dialect group / adverb (grammar)
+    pos: noun
+    gender: n
+    class: null
+  - lemma: скасувати
+    ipa: /skɑsuˈwɑtɪ/
+    translation: to abolish / cancel
+    pos: verb
+    gender: null
+    class: null
+  - lemma: впровадити
+    ipa: /uprɔˈwɑdɪtɪ/
+    translation: to implement / introduce
+    pos: verb
+    gender: null
+    class: null
+  - lemma: літера
+    ipa: /lʲiˈtɛrɑ/
+    translation: letter (character)
+    pos: noun
+    gender: f
+    class: null
+  - lemma: звук
+    ipa: /zwuk/
+    translation: sound
+    pos: noun
+    gender: m
+    class: null
+  - lemma: принцип
+    ipa: /prɪnˈt͡sɪp/
+    translation: principle
+    pos: noun
+    gender: m
+    class: null
+  - lemma: стверджувати
+    ipa: /stwɛrd͡ʒuˈwɑtɪ/
+    translation: to assert / claim
+    pos: verb
+    gender: null
+    class: null
+  - lemma: занепад
+    ipa: /zɑˈnɛpɑd/
+    translation: decline / decay
+    pos: noun
+    gender: m
+    class: null

@@ -18,7 +18,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 2000
+  min_word_count: 3000
   required_callouts:
   - myth-buster
   - history-bite

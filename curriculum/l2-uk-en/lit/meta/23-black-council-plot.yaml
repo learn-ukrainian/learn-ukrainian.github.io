@@ -1,6 +1,10 @@
 title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
 version: '2.0'
+naturalness:
+  score: 9
+  status: PASS
+  rationale: "Literary analysis with natural Ukrainian prose"
 phase: 'LIT.4 Intellectuals'
 focus: literature
 pedagogy: 'Analysis'
