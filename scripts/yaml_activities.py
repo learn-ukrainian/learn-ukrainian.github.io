@@ -681,14 +681,24 @@ class ActivityParser:
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
         tasks = self._dump_safe_json(activity.tasks)
         resource = self._dump_safe_json(activity.resource) if activity.resource else '{}'
-        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\" resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} />"
+        # Seminar mode uses text/source; legacy uses context/resource
+        text_prop = f' text={{{json.dumps(activity.text, ensure_ascii=False)}}}' if activity.text else ''
+        source_prop = f' source={{{json.dumps(activity.source, ensure_ascii=False)}}}' if activity.source else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\"{text_prop}{source_prop} resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _critical_analysis_to_mdx(self, activity: CriticalAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
-        # Same logic as EssayResponse, passing strings directly as props via {}
-        return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        # Seminar mode uses targetText/questions/modelAnswers; legacy uses context/question/modelAnswer
+        target_text_prop = f' targetText={{{json.dumps(activity.target_text, ensure_ascii=False)}}}' if activity.target_text else ''
+        questions_prop = f' questions={{JSON.parse(`{self._dump_safe_json(activity.questions)}`)}}' if activity.questions else ''
+        model_answers_prop = f' modelAnswers={{JSON.parse(`{self._dump_safe_json(activity.model_answers)}`)}}' if activity.model_answers else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{target_text_prop}{questions_prop}{model_answers_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _comparative_study_to_mdx(self, activity: ComparativeStudyActivity, is_ukrainian_forced: bool = False) -> str:
-        return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy title=\"{self._escape_jsx(activity.title)}\" sourceA={{{json.dumps(activity.source_a, ensure_ascii=False)}}} sourceB={{{json.dumps(activity.source_b, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        # Seminar mode uses itemsToCompare/criteria/prompt; legacy uses sourceA/sourceB/task
+        items_prop = f' itemsToCompare={{JSON.parse(`{self._dump_safe_json(activity.items_to_compare)}`)}}' if activity.items_to_compare else ''
+        criteria_prop = f' criteria={{JSON.parse(`{self._dump_safe_json(activity.criteria)}`)}}' if activity.criteria else ''
+        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
+        return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy title=\"{self._escape_jsx(activity.title)}\" content={{{json.dumps(activity.source_a, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{items_prop}{criteria_prop}{prompt_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _authorial_intent_to_mdx(self, activity: AuthorialIntentActivity, is_ukrainian_forced: bool = False) -> str:
         questions = self._dump_safe_json(activity.questions)

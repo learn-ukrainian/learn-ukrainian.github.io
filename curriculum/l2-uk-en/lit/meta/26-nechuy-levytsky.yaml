@@ -1,0 +1,27 @@
+module: 26-nechuy-levytsky
+title: 'Іван Нечуй-Левицький'
+subtitle: 'Ivan Nechuy-Levytsky'
+version: '2.0'
+phase: 'LIT.5 Realism'
+focus: biography
+pedagogy: 'Seminar'
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - realism
+  - biography
+  - 19th-century
+  - prose
+grammar:
+  - 'Realism as a method'
+  - 'Descriptive prose style'
+objectives:
+  - 'Зрозуміти роль Нечуя-Левицького у становленні українського реалізму'
+  - 'Проаналізувати особливості його "візуального" стилю письма'
+  - 'Дізнатися про конфлікт письменника з мовними нормами того часу'
+vocabulary_count: 30
+slug: 26-nechuy-levytsky
+naturalness:
+  score: 10
+  justification: 'Graduate level academic Ukrainian'

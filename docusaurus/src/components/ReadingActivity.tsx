@@ -6,6 +6,8 @@ import { parseMarkdown } from './utils';
 interface ReadingProps {
   title: string;
   context?: string;
+  text?: string;  // Seminar: inline primary source text
+  source?: string;  // Seminar: attribution (e.g., 'Тарас Шевченко (1845)')
   resource?: {
     type?: string;
     url?: string;
@@ -18,6 +20,8 @@ interface ReadingProps {
 export default function ReadingActivity({
   title,
   context = '',
+  text = '',
+  source = '',
   resource,
   tasks,
   isUkrainian
@@ -41,7 +45,17 @@ export default function ReadingActivity({
       </div>
       <div className={styles.activityContent}>
         <div className={styles.readingContext}>
-          {context ? (
+          {text ? (
+            // Seminar mode: inline primary source text
+            <div className={styles.primarySource}>
+              {parseMarkdown(text)}
+              {source && (
+                <p className={styles.sourceAttribution}>
+                  <em>— {source}</em>
+                </p>
+              )}
+            </div>
+          ) : context ? (
             parseMarkdown(context)
           ) : resource?.url ? (
             <div className={styles.externalResource}>

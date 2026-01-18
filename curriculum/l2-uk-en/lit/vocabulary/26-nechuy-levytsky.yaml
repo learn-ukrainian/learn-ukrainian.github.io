@@ -1,0 +1,154 @@
+module: 26-nechuy-levytsky
+level: C1
+version: '2.0'
+items:
+  - lemma: реалізм
+    ipa: /re.aˈlʲizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: побут
+    ipa: /pɔˈbʊt/
+    translation: daily life / way of life
+    pos: noun
+    gender: m
+  - lemma: пейзаж
+    ipa: /pei̯ˈzaʒ/
+    translation: landscape
+    pos: noun
+    gender: m
+  - lemma: колорит
+    ipa: /kɔ.lɔˈrɪt/
+    translation: local color / flavor
+    pos: noun
+    gender: m
+  - lemma: наратив
+    ipa: /na.raˈtɪu̯/
+    translation: narrative
+    pos: noun
+    gender: m
+  - lemma: описовість
+    ipa: /ɔ.pɪˈsɔ.ʋisʲtʲ/
+    translation: descriptiveness
+    pos: noun
+    gender: f
+  - lemma: деталізація
+    ipa: /de.ta.lʲiˈza.t͡sʲi.ja/
+    translation: detailing / attention to detail
+    pos: noun
+    gender: f
+  - lemma: семінарія
+    ipa: /se.miˈna.rʲi.ja/
+    translation: seminary
+    pos: noun
+    gender: f
+  - lemma: академія
+    ipa: /a.kaˈdɛ.mi.ja/
+    translation: academy
+    pos: noun
+    gender: f
+  - lemma: бурса
+    ipa: /bʊrˈsa/
+    translation: bursa (seminary school)
+    pos: noun
+    gender: f
+  - lemma: парубок
+    ipa: /paˈrʊ.bɔk/
+    translation: young unmarried man / bachelor
+    pos: noun
+    gender: m
+  - lemma: самотність
+    ipa: /saˈmɔt.nʲisʲtʲ/
+    translation: loneliness / solitude
+    pos: noun
+    gender: f
+  - lemma: етнографія
+    ipa: /et.nɔˈɦra.fi.ja/
+    translation: ethnography
+    pos: noun
+    gender: f
+  - lemma: ментальність
+    ipa: /menˈta.lʲnʲisʲtʲ/
+    translation: mentality
+    pos: noun
+    gender: f
+  - lemma: характер
+    ipa: /xaˈrak.ter/
+    translation: character / temper
+    pos: noun
+    gender: m
+  - lemma: тип
+    ipa: /tɪp/
+    translation: type (character type)
+    pos: noun
+    gender: m
+  - lemma: діалектизм
+    ipa: /dʲi.a.lekˈtɪzm/
+    translation: dialectism
+    pos: noun
+    gender: m
+  - lemma: просторіччя
+    ipa: /prɔ.stɔˈrʲit͡ʃ.t͡ʃa/
+    translation: vernacular / colloquial speech
+    pos: noun
+    gender: n
+  - lemma: правопис
+    ipa: /praˈvɔ.pɪs/
+    translation: spelling / orthography
+    pos: noun
+    gender: m
+  - lemma: норма
+    ipa: /nɔrˈma/
+    translation: norm / standard
+    pos: noun
+    gender: f
+  - lemma: цензура
+    ipa: /t͡senˈzu.ra/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: видання
+    ipa: /vɪˈdanʲ.nʲa/
+    translation: publication / edition
+    pos: noun
+    gender: n
+  - lemma: псевдонім
+    ipa: /pseu̯ˈdɔ.nʲim/
+    translation: pseudonym
+    pos: noun
+    gender: m
+  - lemma: спостережливість
+    ipa: /spɔ.steˈrɛʒ.lɪ.ʋisʲtʲ/
+    translation: power of observation
+    pos: noun
+    gender: f
+  - lemma: панорама
+    ipa: /pa.nɔˈra.ma/
+    translation: panorama
+    pos: noun
+    gender: f
+  - lemma: естетика
+    ipa: /esˈtɛ.tɪ.ka/
+    translation: aesthetics
+    pos: noun
+    gender: f
+  - lemma: конфлікт
+    ipa: /kɔnˈflʲikt/
+    translation: conflict
+    pos: noun
+    gender: m
+  - lemma: покоління
+    ipa: /pɔ.kɔˈlʲinʲ.nʲa/
+    translation: generation
+    pos: noun
+    gender: n
+  - lemma: духовенство
+    ipa: /dʊ.xɔˈʋɛn.stʋɔ/
+    translation: clery
+    pos: noun
+    gender: n
+  - lemma: просвіта
+    ipa: /prɔˈsʋi.ta/
+    translation: enlightenment / education
+    pos: noun
+    gender: f

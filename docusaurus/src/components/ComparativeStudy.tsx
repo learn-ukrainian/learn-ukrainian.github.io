@@ -5,18 +5,25 @@ import { parseMarkdown } from './utils';
 
 interface ComparativeStudyProps {
   title: string;
-  content: string; // The comparison table or text
-  task: string;
+  content?: string; // The comparison table or text (legacy)
+  task?: string;
   modelAnswer?: string;
+  // Seminar mode fields
+  itemsToCompare?: string[];
+  criteria?: string[];
+  prompt?: string;
   isUkrainian?: boolean;
 }
 
-export default function ComparativeStudy({ 
-  title, 
-  content, 
-  task, 
-  modelAnswer, 
-  isUkrainian 
+export default function ComparativeStudy({
+  title,
+  content = '',
+  task = '',
+  modelAnswer = '',
+  itemsToCompare = [],
+  criteria = [],
+  prompt = '',
+  isUkrainian
 }: ComparativeStudyProps) {
   const [response, setResponse] = useState('');
   const [showModel, setShowModel] = useState(false);
@@ -36,13 +43,34 @@ export default function ComparativeStudy({
         <ActivityHelp activityType="comparative-study" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        <div className={styles.comparisonContent}>
-          {parseMarkdown(content)}
-        </div>
+        {/* Seminar mode: items to compare and criteria */}
+        {itemsToCompare && itemsToCompare.length > 0 ? (
+          <div className={styles.comparisonContent}>
+            <strong>{isUkrainian ? 'Порівняйте:' : 'Compare:'}</strong>
+            <ul>
+              {itemsToCompare.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+            {criteria && criteria.length > 0 && (
+              <>
+                <strong>{isUkrainian ? 'За критеріями:' : 'Using criteria:'}</strong>
+                <ul>
+                  {criteria.map((c, i) => (
+                    <li key={i}>{c}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        ) : content && (
+          <div className={styles.comparisonContent}>
+            {parseMarkdown(content)}
+          </div>
+        )}
 
         <div className={styles.essayPrompt}>
-          <strong>{isUkrainian ? 'Завдання:' : 'Task:'}</strong> {parseMarkdown(task)}
-        </div>
+          <strong>{isUkrainian ? 'Завдання:' : 'Task:'}</strong> {parseMarkdown(prompt || task)}
 
         <div className={styles.essayInputArea}>
           <label className={styles.inputLabel}>{analysisLabel}</label>
