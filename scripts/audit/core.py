@@ -59,6 +59,7 @@ from .checks.activity_validation import (
     check_english_hints_in_activities,
     check_unjumble_empty_jumbled,
     check_mdx_unjumble_rendering,
+    check_seminar_reading_pairing,
 )
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
@@ -966,6 +967,18 @@ def audit_module(file_path: str) -> bool:
         if unjumble_violations:
             print(f"  ⚠️  unjumble activities with empty jumbled fields: {len(unjumble_violations)}")
             for v in unjumble_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v['activity']}")
+                print(f"        Issue: {v['message']}")
+                print(f"        Fix: {v['suggestion']}")
+
+    # Check for reading-analysis pairing in seminar tracks (Issue #425)
+    seminar_pairing_violations = []
+    if yaml_activities:
+        seminar_pairing_violations = check_seminar_reading_pairing(yaml_activities, level_code)
+        if seminar_pairing_violations:
+            print(f"  📚 Seminar reading-analysis pairing issues: {len(seminar_pairing_violations)}")
+            for v in seminar_pairing_violations:
                 severity = "🔴" if v['severity'] == 'critical' else "⚠️"
                 print(f"     {severity} [{v['type']}] {v['activity']}")
                 print(f"        Issue: {v['message']}")

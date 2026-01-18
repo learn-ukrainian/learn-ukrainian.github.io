@@ -78,6 +78,7 @@ from .activity_validation import (
     check_mark_the_words_format,
     check_morpheme_pedagogy,
     check_english_hints_in_activities,
+    check_seminar_reading_pairing,
 )
 from .yaml_schema_validation import (
     check_activity_yaml_schema,
@@ -145,6 +146,7 @@ __all__ = [
     'check_morpheme_patterns',
     'check_morpheme_pedagogy',
     'check_english_hints_in_activities',
+    'check_seminar_reading_pairing',
     # YAML Schema Validation
     'check_activity_yaml_schema',
     'validate_activity_yaml_file',

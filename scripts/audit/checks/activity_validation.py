@@ -335,6 +335,118 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
     return violations
 
 
+def _get_activity_attr(activity, attr: str, default=None):
+    """Helper to get attribute from activity object or dictionary."""
+    if hasattr(activity, attr):
+        return getattr(activity, attr, default)
+    elif isinstance(activity, dict):
+        return activity.get(attr, default)
+    return default
+
+
+def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
+    """
+    Check that seminar track activities have proper reading-analysis pairing.
+
+    Validation rules:
+    1. Every reading activity should have an id field
+    2. Analytical activities (essay-response, critical-analysis, comparative-study,
+       authorial-intent) should have source_reading linking to a reading id
+    3. Orphan readings (not referenced by any analysis) trigger WARNING
+    4. Orphan analyses (missing or invalid source_reading) trigger ERROR
+
+    Only applies to seminar tracks: LIT, B2-HIST, C1-HIST, C1-BIO
+    """
+    violations = []
+
+    # Seminar tracks that require reading-analysis pairing
+    seminar_tracks = {'lit', 'b2-hist', 'c1-hist', 'c1-bio', 'c1-bio-seminar'}
+    level_lower = level.lower() if level else ''
+
+    # Skip if not a seminar track
+    if level_lower not in seminar_tracks:
+        return violations
+
+    # Collect reading IDs
+    reading_ids = set()
+    readings_without_id = []
+
+    for idx, activity in enumerate(yaml_activities):
+        act_type = _get_activity_attr(activity, 'type', '')
+        title = _get_activity_attr(activity, 'title', f'Activity {idx+1}')
+
+        if act_type == 'reading':
+            act_id = _get_activity_attr(activity, 'id')
+            if act_id:
+                reading_ids.add(act_id)
+            else:
+                readings_without_id.append(title)
+
+    # Check for readings without ID
+    for title in readings_without_id:
+        violations.append({
+            'type': 'READING_MISSING_ID',
+            'severity': 'critical',
+            'activity': title,
+            'message': 'Reading activity missing required "id" field',
+            'suggestion': 'Add id: "reading-01" (or similar) to link with analytical activities'
+        })
+
+    # Collect referenced readings from analytical activities
+    referenced_readings = set()
+    analytical_types = {'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'}
+
+    for idx, activity in enumerate(yaml_activities):
+        act_type = _get_activity_attr(activity, 'type', '')
+        title = _get_activity_attr(activity, 'title', f'Activity {idx+1}')
+
+        if act_type in analytical_types:
+            source_reading = _get_activity_attr(activity, 'source_reading')
+
+            if source_reading:
+                referenced_readings.add(source_reading)
+                # Check if source_reading points to valid reading
+                if source_reading not in reading_ids:
+                    violations.append({
+                        'type': 'INVALID_SOURCE_READING',
+                        'severity': 'critical',
+                        'activity': title,
+                        'message': f'source_reading "{source_reading}" not found in module readings',
+                        'suggestion': f'Valid reading IDs: {", ".join(sorted(reading_ids)) if reading_ids else "(none defined)"}'
+                    })
+            else:
+                # Missing source_reading - this is a warning (recommended but not required)
+                violations.append({
+                    'type': 'MISSING_SOURCE_READING',
+                    'severity': 'warning',
+                    'activity': title,
+                    'activity_type': act_type,
+                    'message': f'{act_type} activity lacks source_reading link',
+                    'suggestion': 'Add source_reading: "reading-XX" to link this analysis to its source text'
+                })
+
+    # Check for orphan readings (defined but never referenced)
+    orphan_readings = reading_ids - referenced_readings
+    for reading_id in orphan_readings:
+        # Find the reading title
+        reading_title = reading_id
+        for activity in yaml_activities:
+            act_id = _get_activity_attr(activity, 'id')
+            if act_id == reading_id:
+                reading_title = _get_activity_attr(activity, 'title', reading_id)
+                break
+
+        violations.append({
+            'type': 'ORPHAN_READING',
+            'severity': 'warning',
+            'activity': reading_title,
+            'message': f'Reading "{reading_id}" is not referenced by any analytical activity',
+            'suggestion': 'Add source_reading: "{}" to an essay-response, critical-analysis, or comparative-study'.format(reading_id)
+        })
+
+    return violations
+
+
 __all__ = [
     'check_unjumble_empty_jumbled',
     'check_mdx_unjumble_rendering',
@@ -342,4 +454,5 @@ __all__ = [
     'check_mark_the_words_format',
     'check_morpheme_pedagogy',
     'check_english_hints_in_activities',
+    'check_seminar_reading_pairing',
 ]
