@@ -1,13 +1,13 @@
 # Audit Report: scythians-sarmatians.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ⚠️ 2929/3000 (71 short)
-- **Activities:** ✅ 15/10
+- **Activities:** ✅ 19/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 13/4 types
+- **Unique_types:** ✅ 15/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
+- **Content_heavy:** ⚠️ Too many activities: 19 (target 10-14)
 - **Immersion:** 🇺🇦 97.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
