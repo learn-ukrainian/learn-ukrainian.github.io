@@ -325,6 +325,138 @@ If module average score < target:
 
 **See also:** For batch naturalness scanning of completed modules, use `/scan-naturalness {level} {start} {end}`
 
+### 10. Seminar Track Pairing (LIT, B2-HIST, C1-HIST, C1-BIO)
+
+**Applies to:** LIT, B2-HIST, C1-HIST, C1-BIO tracks only.
+
+Seminar tracks use **Reading-Analysis Pairs** architecture:
+- Every analytical activity MUST link to a reading source
+- `reading` activities provide INPUT (source text)
+- `essay-response`, `critical-analysis`, `comparative-study` provide OUTPUT (analysis)
+
+#### 10.1 Audit Violations
+
+| Violation | Severity | Meaning |
+|-----------|----------|---------|
+| `READING_MISSING_ID` | CRITICAL | Reading activity lacks `id` field |
+| `MISSING_SOURCE_READING` | CRITICAL | Analytical activity lacks `source_reading` link |
+| `INVALID_SOURCE_READING` | CRITICAL | `source_reading` points to non-existent reading id |
+| `ORPHAN_READING` | WARNING | Reading defined but never referenced |
+
+#### 10.2 Fix: Add Missing Reading Activity
+
+If module has analytical activities but no `reading` activity:
+
+**Step 1:** Identify source material from the module content (prose section)
+
+**Step 2:** Create reading activity at the TOP of the YAML:
+
+```yaml
+- type: reading
+  id: reading-01                    # REQUIRED: unique ID
+  title: 'Джерело: [Topic]'
+  source: '[Author] ([Year])'       # Attribution
+  text: |
+    [Extract 200-500 words of primary source text
+    that the analytical activities will analyze]
+```
+
+**Step 3:** Link existing analytical activities:
+
+```yaml
+- type: essay-response
+  source_reading: reading-01        # ADD THIS LINE
+  title: 'Есе: ...'
+  prompt: '...'
+```
+
+#### 10.3 Fix: Add source_reading to Existing Activities
+
+For each `essay-response`, `critical-analysis`, `comparative-study`, or `authorial-intent`:
+
+1. Identify which reading it analyzes
+2. Add `source_reading: reading-XX` field
+3. Ensure the referenced reading exists
+
+**Example fix:**
+
+```yaml
+# BEFORE (fails audit)
+- type: critical-analysis
+  title: 'Аналіз символіки'
+  target_text: 'Поховайте та вставайте...'
+  questions:
+    - 'Яку функцію виконує імператив?'
+
+# AFTER (passes audit)
+- type: critical-analysis
+  source_reading: reading-01        # ← ADDED
+  title: 'Аналіз символіки'
+  target_text: 'Поховайте та вставайте...'
+  questions:
+    - 'Яку функцію виконує імператив?'
+```
+
+#### 10.4 Fix: Reading Missing ID
+
+```yaml
+# BEFORE (fails audit)
+- type: reading
+  title: 'Джерело: Заповіт'
+  text: |
+    Як умру, то поховайте...
+
+# AFTER (passes audit)
+- type: reading
+  id: reading-testament              # ← ADDED (pattern: reading-[slug])
+  title: 'Джерело: Заповіт'
+  text: |
+    Як умру, то поховайте...
+```
+
+#### 10.5 Multiple Readings Strategy
+
+For modules with multiple source texts:
+
+```yaml
+# First reading for first set of analyses
+- type: reading
+  id: reading-01
+  title: 'Джерело 1: ...'
+  text: '...'
+
+# Second reading for comparison
+- type: reading
+  id: reading-02
+  title: 'Джерело 2: ...'
+  text: '...'
+
+# Analytical activity referencing first reading
+- type: essay-response
+  source_reading: reading-01
+  title: 'Есе про джерело 1'
+
+# Comparative study using both
+- type: comparative-study
+  source_reading: reading-01        # Primary reference
+  title: 'Порівняння двох джерел'
+  items_to_compare:
+    - 'Джерело 1'
+    - 'Джерело 2'
+```
+
+#### 10.6 Quick Fix Checklist for Seminar Tracks
+
+- [ ] At least ONE `reading` activity exists
+- [ ] ALL `reading` activities have `id` field
+- [ ] ALL `essay-response` have `source_reading`
+- [ ] ALL `critical-analysis` have `source_reading`
+- [ ] ALL `comparative-study` have `source_reading`
+- [ ] ALL `authorial-intent` have `source_reading`
+- [ ] ALL `source_reading` values point to valid reading IDs
+
+---
+
 ## Fix Strategy
 
 ### Minor Violations (≤3 issues)

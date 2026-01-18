@@ -415,10 +415,10 @@ def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
                         'suggestion': f'Valid reading IDs: {", ".join(sorted(reading_ids)) if reading_ids else "(none defined)"}'
                     })
             else:
-                # Missing source_reading - this is a warning (recommended but not required)
+                # Missing source_reading - CRITICAL for seminar tracks (required, not optional)
                 violations.append({
                     'type': 'MISSING_SOURCE_READING',
-                    'severity': 'warning',
+                    'severity': 'critical',
                     'activity': title,
                     'activity_type': act_type,
                     'message': f'{act_type} activity lacks source_reading link',

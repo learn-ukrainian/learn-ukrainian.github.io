@@ -138,9 +138,10 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
         return True, []  # No YAML file is OK (module might use embedded activities)
 
     # Detect level from path to load correct schema
+    # Includes track levels: lit, b2-hist, c1-bio, b2-pro, c1-pro
     level_match = None
     for parent in yaml_path.parents:
-        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'b2-pro', 'c1-pro']:
             level_match = parent.name
             break
 
@@ -198,17 +199,20 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
         except jsonschema.SchemaError as e:
             errors.append(f"Schema error: {e.message}")
 
-    # SECOND: Validate each activity individually
-    for i, activity in enumerate(activities):
-        if not isinstance(activity, dict):
-            errors.append(f"Activity {i}: not a dictionary")
-            continue
+    # SECOND: Validate each activity individually ONLY if no level schema
+    # If level schema exists and validated, it already covers individual activities
+    # with level-specific definitions (e.g., LIT has source_reading, reading without resource)
+    if not level_schema:
+        for i, activity in enumerate(activities):
+            if not isinstance(activity, dict):
+                errors.append(f"Activity {i}: not a dictionary")
+                continue
 
-        activity_errors = validate_activity(activity, base_schema)
-        for err in activity_errors:
-            activity_id = activity.get('id', f'index-{i}')
-            activity_title = activity.get('title', '')[:30]
-            errors.append(f"[{activity_id}] {err}")
+            activity_errors = validate_activity(activity, base_schema)
+            for err in activity_errors:
+                activity_id = activity.get('id', f'index-{i}')
+                activity_title = activity.get('title', '')[:30]
+                errors.append(f"[{activity_id}] {err}")
 
     return len(errors) == 0, errors
 

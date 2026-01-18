@@ -65,23 +65,81 @@ LIT modules are no longer monolithic. You must create four distinct files for ev
 
 ---
 
-## 🏛️ The "Reading Hall" (Active Reading)
+## 🏛️ Reading-Analysis Pairs (CRITICAL)
 
-We do not use passive resource lists. We use **Active Reading Tasks** (`type: reading`).
+LIT modules use **seminar pedagogy**: every analytical activity must link to a reading source.
 
-**Schema in `activities/{slug}.yaml`**:
+<critical>
+
+### The Architecture
+
+```
+Reading (INPUT) → Analytical Activity (OUTPUT)
+     ↑                       ↓
+   id: reading-xxx    source_reading: reading-xxx
+```
+
+### Schema in `activities/{slug}.yaml`:
 
 ```yaml
+# 1. Reading activity (INPUT) - MUST have id
 - type: reading
-  id: lit-001-reading-01
-  title: 'Primary Source Analysis'
-  resource:
-    type: article # or primary_source
-    url: 'https://...'
-    title: 'Document Title'
-  tasks:
-    - 'Question 1?'
-    - 'Question 2?'
+  id: reading-testament           # ← REQUIRED: Unique identifier
+  title: 'Первинне джерело: Заповіт'
+  text: |
+    Як умру, то поховайте
+    Мене на могилі...
+
+# 2. Analytical activity (OUTPUT) - MUST have source_reading
+- type: essay-response
+  title: 'Есе: Націотворча роль Заповіту'
+  source_reading: reading-testament   # ← REQUIRED: Links to reading above
+  prompt: 'Проаналізуйте символіку могили та Дніпра...'
+  min_words: 300
+```
+
+### Validation (Audit Enforcement)
+
+| Violation | Severity | Meaning |
+|-----------|----------|---------|
+| `READING_MISSING_ID` | **CRITICAL** | Reading activity lacks `id` field |
+| `MISSING_SOURCE_READING` | **CRITICAL** | Analytical activity lacks `source_reading` link |
+| `INVALID_SOURCE_READING` | **CRITICAL** | `source_reading` references non-existent `id` |
+| `ORPHAN_READING` | WARNING | Reading not referenced by any activity |
+
+**All CRITICAL violations fail the audit. Fix before proceeding.**
+
+</critical>
+
+### Analytical Activity Types (Require `source_reading`)
+
+| Type | Purpose |
+|------|---------|
+| `essay-response` | Extended written response (300+ words) |
+| `critical-analysis` | Close reading of specific passage |
+| `comparative-study` | Compare two texts/authors |
+| `authorial-intent` | Analyze author's purpose/technique |
+
+### Multiple Readings Strategy
+
+```yaml
+# For comparative analysis, use multiple readings:
+- type: reading
+  id: reading-shevchenko
+  title: 'Шевченко: Заповіт'
+  text: 'Як умру, то поховайте...'
+
+- type: reading
+  id: reading-kulish
+  title: 'Куліш: Листи'
+  text: '...'
+
+- type: comparative-study
+  title: 'Порівняння: Романтики'
+  source_reading: reading-shevchenko  # Primary source
+  items_to_compare:
+    - 'Шевченко (емоційний підхід)'
+    - 'Куліш (раціональний підхід)'
 ```
 
 ---

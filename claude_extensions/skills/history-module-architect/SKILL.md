@@ -106,6 +106,57 @@ Every historical/biographical module must include:
 
 </critical>
 
+### Activity Modes
+
+History/Biography tracks support two activity modes. Check which applies to your track:
+
+| Track | Mode | Activity Types |
+|-------|------|----------------|
+| `b2-hist`, `c1-bio` | **Seminar** | reading + essay-response + critical-analysis |
+| `b2` (history modules), `c1` (biography modules) | **Traditional** | quiz, fill-in, cloze, etc. |
+
+---
+
+## Seminar Mode (b2-hist, c1-bio tracks)
+
+<critical>
+
+### Reading-Analysis Pairs Architecture
+
+Every analytical activity MUST link to a reading source:
+
+```yaml
+# 1. Reading activity (INPUT) - MUST have id
+- type: reading
+  id: reading-mazepa                 # ← REQUIRED: Unique identifier
+  title: 'Первинне джерело: Листи Мазепи'
+  text: |
+    [Historical document excerpt...]
+
+# 2. Analytical activity (OUTPUT) - MUST have source_reading
+- type: essay-response
+  title: 'Есе: Дипломатія Мазепи'
+  source_reading: reading-mazepa     # ← REQUIRED: Links to reading above
+  prompt: 'Проаналізуйте...'
+  min_words: 150  # b2-hist: 150-250, c1-bio: 300-500
+```
+
+### Validation (Audit Enforcement)
+
+| Violation | Severity | Meaning |
+|-----------|----------|---------|
+| `READING_MISSING_ID` | **CRITICAL** | Reading activity lacks `id` field |
+| `MISSING_SOURCE_READING` | **CRITICAL** | Analytical activity lacks `source_reading` link |
+| `INVALID_SOURCE_READING` | **CRITICAL** | `source_reading` references non-existent `id` |
+
+**All CRITICAL violations fail the audit.**
+
+</critical>
+
+---
+
+## Traditional Mode (b2 history, c1 biography in core levels)
+
 ### Activity Requirements (10-12 total)
 
 | Activity Type         | Count | Key Requirement                                                  |

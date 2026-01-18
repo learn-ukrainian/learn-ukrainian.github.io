@@ -983,6 +983,10 @@ def audit_module(file_path: str) -> bool:
                 print(f"     {severity} [{v['type']}] {v['activity']}")
                 print(f"        Issue: {v['message']}")
                 print(f"        Fix: {v['suggestion']}")
+            # Critical pairing violations fail the audit (Issue #425)
+            critical_pairing = [v for v in seminar_pairing_violations if v['severity'] == 'critical']
+            if critical_pairing:
+                has_critical_failure = True
 
     if use_yaml_activities:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")

@@ -521,11 +521,12 @@ Seminar tracks use academic-style activities for deeper engagement with literary
   ...
 ```
 
-**Validation rules:**
-1. Every `critical-analysis`, `essay-response`, and `comparative-study` should have `source_reading`
+**Validation rules (enforced by audit):**
+1. Every `critical-analysis`, `essay-response`, and `comparative-study` **must** have `source_reading`
 2. `source_reading` must reference a valid `id` in a `reading` activity in the same file
-3. Orphan readings (unreferenced) trigger WARNING
-4. Orphan analyses (missing source) trigger ERROR
+3. Orphan readings (unreferenced) trigger **WARNING** (info severity)
+4. Missing `source_reading` on analytical activity triggers **CRITICAL** (audit fails)
+5. Invalid `source_reading` reference (points to non-existent id) triggers **CRITICAL**
 
 **Valid pairings:**
 | Reading Type | Valid Outputs |

@@ -206,8 +206,11 @@ class AnagramActivity:
 class ReadingActivity:
     type: str = "reading"
     title: str = ""
+    id: str = ""  # REQUIRED: Unique identifier for linking (Issue #425)
+    text: str = ""  # Primary source text for analysis (LIT)
     context: str = ""
-    resource: dict = field(default_factory=dict)
+    source: str = ""  # Attribution (e.g., 'Тарас Шевченко (1845)')
+    resource: dict = field(default_factory=dict)  # Legacy: for external resources
     tasks: list[str] = field(default_factory=list)
 
 
@@ -215,6 +218,7 @@ class ReadingActivity:
 class EssayResponseActivity:
     type: str = "essay-response"
     title: str = ""
+    source_reading: str = ""  # Links to reading activity id (Issue #425)
     prompt: str = ""
     min_words: int = 0
     model_answer: str = ""
@@ -225,18 +229,26 @@ class EssayResponseActivity:
 class CriticalAnalysisActivity:
     type: str = "critical-analysis"
     title: str = ""
+    source_reading: str = ""  # Links to reading activity id (Issue #425)
+    target_text: str = ""  # Specific excerpt for analysis
     context: str = ""
     question: str = ""
+    questions: list[str] = field(default_factory=list)  # Multiple questions
     model_answer: str = ""
+    model_answers: list[str] = field(default_factory=list)  # Multiple answers
 
 
 @dataclass
 class ComparativeStudyActivity:
     type: str = "comparative-study"
     title: str = ""
-    source_a: str = ""
-    source_b: str = ""
+    source_reading: str = ""  # Links to reading activity id (Issue #425)
+    items_to_compare: list[str] = field(default_factory=list)
+    criteria: list[str] = field(default_factory=list)
+    source_a: str = ""  # Legacy
+    source_b: str = ""  # Legacy
     task: str = ""
+    prompt: str = ""
     model_answer: str = ""
 
 
@@ -244,6 +256,7 @@ class ComparativeStudyActivity:
 class AuthorialIntentActivity:
     type: str = "authorial-intent"
     title: str = ""
+    source_reading: str = ""  # Links to reading activity id (Issue #425)
     excerpt: str = ""
     questions: list[str] = field(default_factory=list)
     model_answer: str = ""
@@ -469,20 +482,60 @@ class ActivityParser:
         return AnagramActivity(title=data.get('title', ''), items=items)
 
     def _parse_reading(self, data: dict) -> ReadingActivity:
-        # context is optional - reading activities use external resources
-        return ReadingActivity(title=data.get('title', ''), context=data.get('context', ''), resource=data.get('resource', {}), tasks=data.get('tasks', []))
+        # LIT reading activities use inline text; others use external resources
+        return ReadingActivity(
+            title=data.get('title', ''),
+            id=data.get('id', ''),  # Issue #425: Required for linking
+            text=data.get('text', ''),  # LIT: inline primary source
+            source=data.get('source', ''),  # Attribution
+            context=data.get('context', ''),
+            resource=data.get('resource', {}),
+            tasks=data.get('tasks', [])
+        )
 
     def _parse_essay_response(self, data: dict) -> EssayResponseActivity:
-        return EssayResponseActivity(title=data.get('title', ''), prompt=data.get('prompt', ''), min_words=data.get('min_words', 0), model_answer=data.get('model_answer', ''), rubric=data.get('rubric', []))
+        return EssayResponseActivity(
+            title=data.get('title', ''),
+            source_reading=data.get('source_reading', ''),  # Issue #425: Link to reading
+            prompt=data.get('prompt', ''),
+            min_words=data.get('min_words', 0),
+            model_answer=data.get('model_answer', ''),
+            rubric=data.get('rubric', [])
+        )
 
     def _parse_critical_analysis(self, data: dict) -> CriticalAnalysisActivity:
-        return CriticalAnalysisActivity(title=data.get('title', ''), context=data.get('context', ''), question=data.get('question', ''), model_answer=data.get('model_answer', ''))
+        return CriticalAnalysisActivity(
+            title=data.get('title', ''),
+            source_reading=data.get('source_reading', ''),  # Issue #425: Link to reading
+            target_text=data.get('target_text', ''),
+            context=data.get('context', ''),
+            question=data.get('question', ''),
+            questions=data.get('questions', []),
+            model_answer=data.get('model_answer', ''),
+            model_answers=data.get('model_answers', [])
+        )
 
     def _parse_comparative_study(self, data: dict) -> ComparativeStudyActivity:
-        return ComparativeStudyActivity(title=data.get('title', ''), source_a=data.get('source_a', ''), source_b=data.get('source_b', ''), task=data.get('task', ''), model_answer=data.get('model_answer', ''))
+        return ComparativeStudyActivity(
+            title=data.get('title', ''),
+            source_reading=data.get('source_reading', ''),  # Issue #425
+            items_to_compare=data.get('items_to_compare', []),
+            criteria=data.get('criteria', []),
+            source_a=data.get('source_a', ''),
+            source_b=data.get('source_b', ''),
+            task=data.get('task', ''),
+            prompt=data.get('prompt', ''),
+            model_answer=data.get('model_answer', '')
+        )
 
     def _parse_authorial_intent(self, data: dict) -> AuthorialIntentActivity:
-        return AuthorialIntentActivity(title=data.get('title', ''), excerpt=data.get('excerpt', ''), questions=data.get('questions', []), model_answer=data.get('model_answer', ''))
+        return AuthorialIntentActivity(
+            title=data.get('title', ''),
+            source_reading=data.get('source_reading', ''),  # Issue #425
+            excerpt=data.get('excerpt', ''),
+            questions=data.get('questions', []),
+            model_answer=data.get('model_answer', '')
+        )
 
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
