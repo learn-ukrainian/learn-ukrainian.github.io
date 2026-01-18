@@ -1,0 +1,118 @@
+# C1-HIST Module 124: Після Сталіна — Шістдесятники
+# Status: SPEC (ready for content development)
+
+id: c1-hist-124
+title: "Після Сталіна: Шістдесятники"
+slug: pislya-stalina-shistdesiatnyky
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Шістдесятники (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Шістдесятники
+    type: reference
+    notes: Sixtiers overview
+  - name: Українське дисидентське рух (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+    type: reference
+    notes: Dissident movement
+
+content_outline:
+  - section: Вступ — Відлига
+    words: 400
+    points:
+      - 1953 — смерть Сталіна
+      - Хрущовська відлига
+      - Нове покоління
+      - Структура модуля
+
+  - section: Хто такі шістдесятники
+    words: 700
+    points:
+      - Покоління — хто вони
+      - Стус, Симоненко, Костенко
+      - Не політики — митці
+      - «Клуб творчої молоді»
+
+  - section: Культурний вибух
+    words: 600
+    points:
+      - Нова поезія
+      - Кіно — Параджанов
+      - Мистецтво — нові форми
+      - Повернення до заборонених тем
+
+  - section: Репресії
+    words: 600
+    points:
+      - 1965-1972 — арешти
+      - Шелест падає
+      - Щербицький — нова хвиля
+      - Табори
+
+  - section: Від культури до політики
+    words: 500
+    points:
+      - Українська Гельсінська група
+      - Правозахисний рух
+      - Зв'язок з культурою
+      - Спадок для 1991
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Шістдесятники — міст
+      - Від культури до незалежності
+      - Перехід до пост-2014
+
+vocabulary_hints:
+  required:
+    - шістдесятники (Sixtiers)
+    - відлига (thaw)
+    - дисидент (dissident)
+    - самвидав (samvydav)
+    - репресії (repressions)
+    - табір (camp)
+    - правозахисний рух (human rights movement)
+    - Українська Гельсінська група (Ukrainian Helsinki Group)
+    - культурний вибух (cultural explosion)
+    - спадок (legacy)
+  recommended:
+    - Стус (Stus)
+    - Симоненко (Symonenko)
+    - Костенко (Kostenko)
+    - Параджанов (Parajanov)
+    - «Клуб творчої молоді» (Club of Creative Youth)
+
+activity_hints:
+  - type: generation-study
+    focus: Who were the Sixtiers — profiles
+    output: Generation portrait
+
+  - type: cultural-analysis
+    focus: Sixtiers cultural output — poetry, cinema, art
+    output: Cultural analysis
+
+  - type: repression-documentation
+    focus: 1965-1972 repressions — timeline
+    output: Repression timeline
+
+  - type: legacy-tracing
+    focus: Sixtiers → Ukrainian Helsinki Group → 1991
+    output: Legacy chain
+
+  - type: essay-response
+    focus: "Як шістдесятники підготували незалежність?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-123 (Post-Ems Galicia)
+  - c1-hist-59-63 (Dissident movement)
+
+connects_to:
+  - c1-hist-125 (Post-2014 synthesis)
+  - c1-hist-126 (Cultural resistance)

@@ -1,10 +1,139 @@
-# Meta for Володимир Мономах
+# B2-HIST Module 15: Володимир Мономах
+# Status: SPEC (ready for content development)
+
+id: b2-hist-15
+title: Володимир Мономах
 slug: volodymyr-monomakh
-title: "Володимир Мономах"
-level: B2
-track: history
-phase: "HIST.2 [Kyivan Rus]"
-status: skeleton
-focus: history
-prerequisites: []
-learning_outcomes: []
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Володимир Мономах (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+    type: reference
+    notes: Comprehensive overview
+  - name: Повчання Володимира Мономаха
+    url: https://litopys.org.ua/pvl/pvl21.htm
+    type: primary
+    notes: Monomakh's Instruction to his children
+  - name: Любецький з'їзд (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+    type: reference
+    notes: Congress of Liubech
+
+content_outline:
+  - section: Вступ — Останній великий князь
+    words: 450
+    points:
+      - Володимир Мономах як символ єдності Русі
+      - Онук Ярослава та Візантійського імператора
+      - Правління 1113-1125
+      - Значення його постаті для історії
+
+  - section: Шлях до великого княжіння
+    words: 600
+    points:
+      - Боротьба з половцями — понад 80 походів
+      - Любецький з'їзд 1097 — "кожен хай держить отчину свою"
+      - Засліплення Василька Теребовльського
+      - Київське повстання 1113 — покликання на престол
+
+  - section: Внутрішня політика
+    words: 650
+    points:
+      - Устав Володимира Мономаха — доповнення Руської Правди
+      - Захист боржників та закупів
+      - Обмеження лихварства
+      - Зміцнення центральної влади
+
+  - section: Зовнішня політика
+    words: 550
+    points:
+      - Перемоги над половцями
+      - Відносини з Візантією
+      - Шапка Мономаха — легенда та символ
+      - Дипломатичні зв'язки
+
+  - section: Повчання Мономаха
+    words: 650
+    points:
+      - Унікальна літературна пам'ятка
+      - Автобіографічні елементи
+      - Моральні настанови синам
+      - "Не лінуйтеся, а працюйте"
+
+  - section: Спадщина та значення
+    words: 500
+    points:
+      - Мстислав Великий — продовжувач справи
+      - Остання спроба збереження єдності
+      - Мономах у російській міфології — присвоєння спадщини
+      - Український погляд на Мономаха
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Останній світлий період Русі
+      - Неминучість роздроблення
+      - Перехід до культури Київської Русі
+
+vocabulary_hints:
+  required:
+    - великий князь (grand prince)
+    - половці (Polovtsians/Cumans)
+    - з'їзд (congress)
+    - отчина (patrimony)
+    - устав (statute)
+    - лихварство (usury)
+    - повчання (instruction)
+    - настанова (admonition)
+    - єдність (unity)
+    - роздроблення (fragmentation)
+    - боржник (debtor)
+    - шапка Мономаха (Monomakh's Cap)
+  recommended:
+    - засліплення (blinding)
+    - лінуватися (to be lazy)
+    - Любеч (Liubech)
+    - Теребовля (Terebovlia)
+    - автобіографія (autobiography)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from Monomakh's Instruction
+    source: Provide in module
+
+  - type: vocabulary
+    focus: Political and moral terminology
+    items: "15+"
+
+  - type: timeline
+    focus: Key events of Monomakh's life
+    items: "12+ events"
+
+  - type: quiz
+    focus: Facts about Volodymyr Monomakh
+    items: "12+"
+
+  - type: compare-contrast
+    focus: Monomakh vs Yaroslav the Wise
+    output: Leadership comparison
+
+  - type: essay-response
+    focus: "Чому Повчання Мономаха є унікальним для середньовічної Європи?"
+    word_target: 200
+    model_answer: Required
+
+  - type: discussion
+    focus: "Чи міг Мономах запобігти роздробленню Русі?"
+
+prerequisites:
+  - b2-hist-12 (Yaroslav the Wise)
+  - b2-hist-13 (Ruska Pravda)
+
+connects_to:
+  - b2-hist-17 (Princely feuds and fragmentation)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

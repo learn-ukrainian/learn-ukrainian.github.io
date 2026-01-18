@@ -1,6 +1,15 @@
-module: b1-22
+# B1 Module 22: Рух - інтеграція префіксів
+# Status: SPEC (ready for content development)
+
+id: b1-22
 title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
+slug: 22-motion-full-prefix-integration
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.7'
 phase: B1.3 Motion Verbs
 pedagogy: TTT
@@ -8,20 +17,136 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- motion-verbs
-- prefixes
+  - grammar
+  - motion-verbs
+  - prefixes
 grammar:
-- Prefixes of motion (по-, при-, пі-, за-, ви-, в-, до-, від-, пере-, про-)
-- Aspect pairs in motion (ідти/піти, ходити/сходити)
-- Figurative meanings of prefixed motion verbs
+  - Prefixes of motion (по-, при-, пі-, за-, ви-, в-, до-, від-, пере-, про-)
+  - Aspect pairs in motion (ідти/піти, ходити/сходити)
+  - Figurative meanings of prefixed motion verbs
 objectives:
-- Master the logic of motion prefixes
-- Distinguish between spatial and resultative meanings
-- Use prefixed verbs in narratives and dialogues
-vocabulary_count: 25
-vocab_count: 29
-slug: 22-motion-full-prefix-integration
+  - Master the logic of motion prefixes
+  - Distinguish between spatial and resultative meanings
+  - Use prefixed verbs in narratives and dialogues
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Motion Prefixes
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official prefix system for motion verbs
+  - name: Ukrainian Verbal Prefixes
+    url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+    type: reference
+    notes: Complete prefix reference with all meanings
+  - name: Ukrainian Motion Verbs (Academic)
+    url: https://uk.wikipedia.org/wiki/Дієслова_руху
+    type: reference
+    notes: Academic treatment of motion verb system
+
+content_outline:
+  - section: Вступ — Повна система префіксів
+    words: 400
+    points:
+      - Огляд усіх 14 префіксів
+      - TTT — визначте префікс
+      - Інтеграція M17-M21
+
+  - section: Напрямок руху
+    words: 600
+    points:
+      - при- (arrival), ви- (exit), в-/у- (entry)
+      - до- (reaching), від- (away from)
+      - під- (approach), над- (over - rare)
+
+  - section: Характер руху
+    words: 600
+    points:
+      - пере- (crossing), про- (through/past)
+      - об- (around), по- (start)
+      - за- (drop by), роз- (disperse)
+
+  - section: Матриця комбінацій
+    words: 500
+    points:
+      - йти/ходити + всі префікси
+      - їхати/їздити + всі префікси
+      - бігти/бігати + всі префікси
+      - Обмеження комбінацій
+
+  - section: Аспект у префіксованих дієсловах
+    words: 500
+    points:
+      - Префіксація змінює вид
+      - НДВ форми з суфіксами (-ува-, -ва-)
+      - приходити/прийти, виходити/вийти
+
+  - section: Комплексна практика
+    words: 350
+    points:
+      - Опис подорожі
+      - Оповідання з рухом
+      - Типові помилки
+
+  - section: Підсумок
+    words: 250
+    points:
+      - Довідкова таблиця всіх префіксів
+      - Готовність до M23
+
+vocabulary_hints:
+  required:
+    - при- (arrival)
+    - ви- (exit)
+    - в-/у- (entry)
+    - пере- (across)
+    - про- (through/past)
+    - об- (around)
+    - по- (start)
+    - за- (drop by)
+    - від- (away from)
+    - до- (reaching)
+  recommended:
+    - під- (approach)
+    - роз- (disperse)
+    - з-/с- (down/together)
+    - над- (over - rare)
+    - комбінація (combination)
+
+activity_hints:
+  - type: quiz
+    focus: Prefix meaning identification
+    items: "20+"
+
+  - type: fill-in
+    focus: Combine prefixes with motion verbs
+    items: "15+"
+
+  - type: transform
+    focus: Add prefix to change meaning
+    items: "12+"
+
+  - type: cloze
+    focus: Story using 10+ prefixed motion verbs
+    items: "15+"
+
+  - type: match-up
+    focus: Prefix + verb -> meaning
+    items: "15+"
+
+prerequisites:
+  - b1-16 (Motion verbs full system)
+  - b1-17 (Motion - coming & going)
+  - b1-18 (Motion - passing & crossing)
+  - b1-19 (Motion - starting & returning)
+  - b1-20 (Motion - approaching & departing)
+  - b1-21 (Motion - figurative uses)
+
+connects_to:
+  - b1-23 (Motion patterns in other verbs)
+  - b1-25 (Checkpoint - motion verbs)
+
 naturalness:
   score: 9
   status: PASS

@@ -1,5 +1,6 @@
 - type: essay-response
   title: 'Есе-Роздум: Гонта: Герой чи Злочинець?'
+  source_reading: "reading-haidamaky"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Трагедія Івана Гонти: Чи виправдовує мета засоби?'.
 
@@ -29,6 +30,7 @@
       points: 30
 - type: critical-analysis
   title: 'Аналіз: Метафізика Ножа'
+  source_reading: "reading-haidamaky"
   target_text: "Освятили ножі... Пішли, пішли... Кров'ю, кров'ю, кров'ю..."
   questions:
     - Що означає обряд освячення ножів?
@@ -44,6 +46,7 @@
     - Психологія натовпу.
 - type: comparative-study
   title: 'Тарас Бульба vs Гонта'
+  source_reading: "reading-haidamaky"
   items_to_compare:
     - Тарас Бульба (Гоголь)
     - Іван Гонта (Шевченко)
@@ -63,10 +66,11 @@
     2. **Рефлексія:** Бульба не вагається. Гонта божеволіє від горя (сцена похорону).
     3. **Висновок:** Образ Гонти складніший і страшніший, бо це вбивство невинних заради абстрактної ідеї.
 - type: reading
+  id: reading-haidamaky
   title: 'Читальна Зала: Гайдамаки'
   resource:
     type: primary_source
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=1547
+    url: http://litopys.org.ua/shevchenko/haidam.htm
     title: Тарас Шевченко. Гайдамаки (Розділ "Гонта в Умані")
   tasks:
     - Знайдіть монолог Гонти над трупами дітей.

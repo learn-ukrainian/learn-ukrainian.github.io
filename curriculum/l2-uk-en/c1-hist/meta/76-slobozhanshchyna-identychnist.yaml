@@ -1,0 +1,131 @@
+# C1-HIST Module 76: Слобожанщина — Формування ідентичності
+# Status: SPEC (ready for content development)
+
+id: c1-hist-76
+title: "Слобожанщина: Формування ідентичності"
+slug: slobozhanshchyna-identychnist
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Слобідська Україна (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Слобідська_Україна
+    type: reference
+    notes: Regional overview
+  - name: Слобідські козацькі полки (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
+    type: reference
+    notes: Cossack regiments
+  - name: Харків (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Харків
+    type: reference
+    notes: City history
+
+content_outline:
+  - section: Вступ — «Слободи» — вільні землі
+    words: 400
+    points:
+      - Слобожанщина — де це
+      - Назва — від «слобода»
+      - Козацьке заселення
+      - Структура модуля
+
+  - section: Заселення (XVII ст.)
+    words: 600
+    points:
+      - Втечі з Правобережжя
+      - Козацькі полки — Харківський, Сумський, та ін.
+      - Росія запрошує — чому
+      - Особливий статус
+
+  - section: Слобідське козацтво
+    words: 600
+    points:
+      - Козацька організація
+      - Відмінності від Запорожжя
+      - Служба Росії
+      - Скасування — 1765
+
+  - section: Харків — культурний центр
+    words: 700
+    points:
+      - Заснування — 1654
+      - Університет — 1804
+      - Харківська школа романтиків
+      - Котляревський, Квітка-Основ'яненко
+      - Перша столиця УРСР
+
+  - section: Русифікація
+    words: 500
+    points:
+      - Раніше, ніж деінде
+      - Близькість до Росії
+      - Мовний зсув
+      - Але збереження ідентичності
+
+  - section: Сучасна Слобожанщина
+    words: 400
+    points:
+      - Харківська область
+      - «Другий фронт» 2022
+      - Деокупація
+      - Українська ідентичність під тиском
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Слобожанщина — козацька, але інша
+      - Харків — українське місто
+      - Перехід до Донбасу
+
+vocabulary_hints:
+  required:
+    - Слобожанщина (Slobozhanshchyna)
+    - слобода (sloboda/free settlement)
+    - козацький полк (Cossack regiment)
+    - заселення (settlement)
+    - русифікація (Russification)
+    - культурний центр (cultural center)
+    - ідентичність (identity)
+    - романтизм (Romanticism)
+    - прикордоння (borderland)
+    - автономія (autonomy)
+  recommended:
+    - Харківська школа (Kharkiv school)
+    - етнічна межа (ethnic boundary)
+    - мовний зсув (language shift)
+    - регіональна свідомість (regional consciousness)
+    - колонізація (colonization)
+
+activity_hints:
+  - type: settlement-analysis
+    focus: Who settled Slobozhanshchyna and why
+    output: Migration study
+
+  - type: cultural-analysis
+    focus: Kharkiv as Ukrainian cultural center — key figures
+    output: Cultural history
+
+  - type: comparative-study
+    focus: Slobozhanshchyna vs. Zaporozhian Cossacks
+    output: Cossack comparison
+
+  - type: contemporary-analysis
+    focus: Kharkiv 2022 — Ukrainian identity under siege
+    output: Contemporary analysis
+
+  - type: essay-response
+    focus: "Чому Харків став культурною столицею України у XIX ст.?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-75 (Western regions synthesis)
+  - b2-hist (Slobozhanshchyna narrative)
+
+connects_to:
+  - c1-hist-77 (Donbas)
+  - c1-hist-80 (Regional diversity synthesis)

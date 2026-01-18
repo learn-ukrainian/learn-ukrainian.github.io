@@ -1,23 +1,131 @@
-module: c1-21
-title: "Написання резюме та CV"
-subtitle: "CV & Resume Writing"
-version: "2.0"
-phase: 'C1.2 Professional & Social Context'
-focus: skills
-pedagogy: 'Immersion'
+# C1 Module 21: CV & Resume Writing
+# Status: SPEC (ready for content development)
 
-duration: 120
-transliteration: none
-immersion: 100
-tags:
-  - professional
-grammar:
-  - "Formal self-presentation"
-  - "Action verbs in past/present"
-  - "Impersonal constructions for descriptions"
-objectives:
-  - "Learner can distinguish between CV and Resume structure"
-  - "Learner can describe experience using formal action verbs"
-  - "Learner can format a Ukrainian-style CV correctly"
-vocabulary_count: 36
+id: c1-21
+title: Написання резюме та CV
 slug: 21-cv-resume-writing
+module_type: skills
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian CV Standards
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official guidelines for Ukrainian CV format
+  - name: Ukrainian State Standard C1 (2024)
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C1 professional writing requirements
+
+content_outline:
+  - section: Вступ — Резюме vs CV
+    words: 400
+    points:
+      - Різниця між резюме та CV
+      - Коли використовувати який формат
+      - Українські vs міжнародні стандарти
+
+  - section: Структура українського CV
+    words: 800
+    points:
+      - Особисті дані (Personal data)
+      - Освіта (Education)
+      - Досвід роботи (Work experience)
+      - Навички (Skills)
+      - Мови (Languages)
+      - Рекомендації (References)
+
+  - section: Дієслова дії для досвіду
+    words: 700
+    points:
+      - Розробляв, впроваджував, координував
+      - Керував, організовував, планував
+      - Аналізував, оптимізував, досягав
+
+  - section: Формальний стиль опису
+    words: 600
+    points:
+      - Безособові конструкції
+      - Формальна лексика
+      - Уникнення займенників
+
+  - section: Супровідний лист
+    words: 700
+    points:
+      - Структура листа
+      - Звертання і прощання
+      - Мотивація та цілі
+
+  - section: Типові помилки
+    words: 500
+    points:
+      - Зайва інформація
+      - Неформальний стиль
+      - Граматичні помилки
+
+  - section: Практичне завдання
+    words: 300
+    points:
+      - Написання власного CV
+      - Редагування чужого CV
+      - Трансформація стилю
+
+vocabulary_hints:
+  required:
+    - резюме (resume)
+    - CV (curriculum vitae)
+    - досвід роботи (work experience)
+    - освіта (education)
+    - навички (skills)
+    - компетенція (competency)
+    - посада (position)
+    - обов'язки (responsibilities)
+    - досягнення (achievements)
+    - рекомендація (reference)
+  recommended:
+    - кар'єрний шлях (career path)
+    - професійний розвиток (professional development)
+    - кваліфікація (qualification)
+    - сертифікат (certificate)
+    - стажування (internship)
+
+activity_hints:
+  - type: fill-in
+    focus: CV section phrases
+    items: "15+"
+
+  - type: quiz
+    focus: CV structure and format
+    items: "15+"
+
+  - type: match-up
+    focus: Informal → formal descriptions
+    items: "12+"
+
+  - type: cloze
+    focus: Action verbs in work experience
+    items: "12+"
+
+  - type: error-correction
+    focus: Fix CV mistakes
+    items: "10+"
+
+  - type: essay-response
+    focus: Write cover letter
+    word_target: 200
+
+prerequisites:
+  - c1-01 to c1-20 (Complete C1.1)
+  - Academic writing foundation
+
+connects_to:
+  - c1-22 (Job Interview)
+  - c1-23 (Business Etiquette)
+  - c1-32 (Professional Scenarios)
+
+naturalness:
+  score: null
+  status: PENDING

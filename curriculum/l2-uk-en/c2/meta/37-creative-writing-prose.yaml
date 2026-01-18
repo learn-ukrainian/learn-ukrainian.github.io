@@ -1,0 +1,151 @@
+# C2 Module 37: Creative Writing — Prose
+# Status: SPEC (ready for content development)
+
+id: c2-37
+title: Творче письмо — проза
+slug: creative-writing-prose
+module_type: literature
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Майстерність прозаїка
+    url: https://uk.wikipedia.org/wiki/Проза
+    type: reference
+    notes: Prose writing craft
+  - name: Сучасна українська проза
+    url: https://ukrlib.com.ua/
+    type: primary
+    notes: Contemporary Ukrainian prose examples
+  - name: Творчі майстерні
+    url: https://uk.wikipedia.org/wiki/Творче_письмо
+    type: reference
+    notes: Creative writing workshop tradition
+
+content_outline:
+  - section: Вступ — Проза як мистецтво
+    words: 500
+    points:
+      - Від споживача до творця прози
+      - Жанри малої прози
+      - Процес написання оповідання
+
+  - section: Елементи оповідання
+    words: 700
+    points:
+      - Ідея і тема
+      - Персонажі та їх створення
+      - Сюжет і структура
+      - Конфлікт і напруга
+
+  - section: Побудова світу і атмосфери
+    words: 600
+    points:
+      - Хронотоп у власній прозі
+      - Опис місця і часу
+      - Сенсорні деталі
+      - Атмосфера і настрій
+
+  - section: Голос і точка зору
+    words: 700
+    points:
+      - Вибір наратора
+      - Перша vs. третя особа
+      - Фокалізація на практиці
+      - Консистентність голосу
+
+  - section: Діалог і мовлення
+    words: 600
+    points:
+      - Написання природних діалогів
+      - Підтекст у діалозі
+      - Характеризація через мовлення
+      - Баланс діалогу і наративу
+
+  - section: Редагування прози
+    words: 500
+    points:
+      - Структурне редагування
+      - Мовне шліфування
+      - "Kill your darlings"
+      - Підготовка до публікації
+
+  - section: Підсумок
+    words: 400
+    points:
+      - Регулярна практика
+      - Від короткої форми до більшої
+      - Письменницька спільнота
+
+vocabulary_hints:
+  required:
+    - оповідання (short story)
+    - новела (novella)
+    - персонаж (character)
+    - сюжет (plot)
+    - конфлікт (conflict)
+    - діалог (dialogue)
+    - наратив (narrative)
+    - атмосфера (atmosphere)
+    - голос (voice)
+    - редагування (editing)
+  recommended:
+    - антагоніст (antagonist)
+    - протагоніст (protagonist)
+    - кульмінація (climax)
+    - зав'язка (exposition)
+    - флешбек (flashback)
+
+activity_hints:
+  - type: essay-response
+    focus: Write flash fiction (under 500 words)
+    word_target: 500
+    output: Complete short story with self-analysis
+
+  - type: essay-response
+    focus: Create character profile and introductory scene
+    word_target: 600
+    output: Character sketch + scene demonstrating character
+
+  - type: critical-analysis
+    focus: Analyze and revise dialogue in own writing
+    output: Before/after with dialogue improvement notes
+
+  - type: essay-response
+    focus: Write scene focusing on sensory description
+    word_target: 400
+    output: Descriptive passage with one setting, all senses
+
+  - type: comparative-study
+    focus: Rewrite scene from different point of view
+    output: Two versions with analysis of effect
+
+  - type: essay-response
+    focus: Complete short story (1500+ words)
+    word_target: 1500
+    output: Full narrative arc with model answer comparison
+
+  - type: authorial-intent
+    focus: Write author's notes on creative process
+    word_target: 400
+    output: Reflection on decisions made while writing
+
+  - type: critical-analysis
+    focus: Peer workshop — provide feedback on colleague's story
+    output: Constructive critique addressing plot, character, style
+
+prerequisites:
+  - c2-29 (Poetyka: Prose Analysis)
+  - c2-27 (Narratology)
+  - c2-24 (Style Blending)
+
+connects_to:
+  - c2-38 (Contemporary Literature)
+  - c2-43 (C2.2 Practice II — Creative Portfolio)
+  - c2-45 (C2.2 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

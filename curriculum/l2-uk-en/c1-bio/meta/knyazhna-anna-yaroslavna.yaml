@@ -1,24 +1,147 @@
-title: 'Анна Ярославна: Королева Франції та донька Русі'
-subtitle: 'Anna Yaroslavna: Queen of France and Daughter of Rus'''
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-immersion: 100
-tags:
-- biography
-- history
-- diplomacy
-- middle-ages
-grammar:
-- Honorifics and royal titles
-- Diplomatic correspondence markers
-objectives:
-- Evaluate the role of Anna Yaroslavna in medieval European diplomacy
-- Analyze the cultural impact of her literacy in the French court
-- Discuss the legacy of the Reims Gospel in the context of Ukrainian heritage
-vocabulary_count: 25
-vital_status: deceased
+# C1-BIO Module 05: Княжна Анна Ярославна: Королева Франції
+# Status: SPEC (ready for content development)
+
+id: c1-bio-05
+title: "Княжна Анна Ярославна: Королева Франції"
 slug: knyazhna-anna-yaroslavna
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Анна Ярославна (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+    type: primary
+    notes: Biography, French queenship, regency
+  - name: Реймське Євангеліє
+    url: https://uk.wikipedia.org/wiki/Реймське_Євангеліє
+    type: reference
+    notes: Her legacy in France
+  - name: Генріх I (король Франції)
+    url: https://uk.wikipedia.org/wiki/Генріх_I_(король_Франції)
+    type: reference
+    notes: Context of her marriage
+
+content_outline:
+  - section: Вступ — Руська принцеса на французькому троні
+    words: 400
+    points:
+      - Унікальність Анни в європейській історії
+      - Значення для української та французької пам'яті
+      - Джерела про її життя
+
+  - section: Дитинство в Києві
+    words: 600
+    points:
+      - Народження та походження по материнській лінії
+      - Освіта при дворі Ярослава
+      - Грамотність та культура
+      - Порівняння Києва та Парижа XI століття
+
+  - section: Шлюб із Генріхом I
+    words: 700
+    points:
+      - Посольство до Києва
+      - Чому Генріх обрав руську принцесу
+      - Подорож до Франції
+      - Весілля в Реймсі 1051 року
+
+  - section: Королева Франції
+    words: 700
+    points:
+      - Народження синів (Філіп, Роберт, Гуго)
+      - Політичний вплив
+      - Підписи на документах кирилицею
+      - Реймське Євангеліє
+
+  - section: Вдівство та регентство
+    words: 700
+    points:
+      - Смерть Генріха 1060 року
+      - Регентство при малолітньому Філіпі
+      - Шлюб із Раулем де Крепі
+      - Скандал та церковне засудження
+
+  - section: Останні роки та спадщина
+    words: 600
+    points:
+      - Монастир у Санлісі
+      - Смерть та поховання
+      - Пам'ять про Анну у Франції
+      - Сучасні вшанування
+
+  - section: Підсумок — Міст між світами
+    words: 300
+    points:
+      - Анна як символ зв'язків Русі з Європою
+      - Її роль у жіночій історії
+      - Спадщина для України
+
+vocabulary_hints:
+  required:
+    - княжна (princess)
+    - королева (queen)
+    - регент (regent)
+    - посольство (embassy)
+    - грамотність (literacy)
+    - вінчання (coronation/wedding)
+    - вдова (widow)
+    - спадкоємець (heir)
+    - монастир (monastery)
+    - євангеліє (gospel)
+  recommended:
+    - придане (dowry)
+    - династичний (dynastic)
+    - коронація (coronation)
+    - печатка (seal)
+    - абатство (abbey)
+
+activity_hints:
+  - type: reading
+    focus: French chronicle descriptions of Anna
+    source: Adapted medieval sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Facts about Anna's life in France
+    items: "12+"
+
+  - type: match-up
+    focus: Anna's family members and their fates
+    items: "10+"
+
+  - type: essay-response
+    focus: Compare Anna's life in Kyiv vs. Paris
+    word_target: 250
+    output: Comparative analysis
+
+  - type: group-sort
+    focus: Ukrainian heritage vs. French queenship
+    items: "12+"
+
+  - type: fill-in
+    focus: Key dates and names in Anna's biography
+    items: "8+"
+
+  - type: discussion
+    focus: Why was a Kyivan princess more educated than French nobility?
+    output: Analysis with historical context
+
+  - type: critical-analysis
+    focus: Evaluate competing Ukrainian and French claims to Anna
+    output: Balanced assessment
+
+prerequisites:
+  - c1-bio-04 (Yaroslav Mudryi - father)
+  - Understanding of medieval European dynasties
+
+connects_to:
+  - c1-bio-04 (Yaroslav Mudryi - father and his dynasty)
+  - c1-bio-06 (Mykhailo Chernihivskyi - later period)
+  - c1-bio-07 (Roksolana - another Ukrainian woman abroad)
+
+naturalness:
+  score: null
+  status: PENDING

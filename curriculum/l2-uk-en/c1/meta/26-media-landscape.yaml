@@ -1,22 +1,130 @@
-module: c1-26
-title: 'Медіаландшафт: Як не потонути в інформації'
-subtitle: 'Media Landscape: Information Hygiene'
-version: '2.0'
-phase: 'C1.2 Society & State'
-focus: society
-pedagogy: 'Immersion'
-duration: 120
-transliteration: none
-tags:
-  - media
-  - journalism
-  - disinformation
-grammar:
-  - 'Media literacy concepts'
-  - 'Identifying bias'
-objectives:
-  - 'Analyze news sources for reliability'
-  - 'Identify propaganda techniques'
-  - 'Discuss the role of social media in Ukraine'
-vocabulary_count: 25
+# C1 Module 26: Media Landscape
+# Status: SPEC (ready for content development)
+
+id: c1-26
+title: "Медіаландшафт: Як не потонути в інформації"
 slug: 26-media-landscape
+module_type: cultural
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Інститут масової інформації
+    url: https://imi.org.ua/
+    type: reference
+    notes: Media monitoring and analysis
+  - name: StopFake
+    url: https://www.stopfake.org/
+    type: secondary
+    notes: Fact-checking resources
+
+content_outline:
+  - section: Вступ — Медіа в Україні
+    words: 400
+    points:
+      - Огляд медіаландшафту
+      - Державні vs приватні ЗМІ
+      - Роль медіа в суспільстві
+
+  - section: Типи медіа
+    words: 700
+    points:
+      - Телебачення (державні, приватні канали)
+      - Радіо
+      - Преса (газети, журнали)
+      - Інтернет-видання
+      - Соціальні мережі
+
+  - section: Медіаграмотність
+    words: 800
+    points:
+      - Оцінка джерел
+      - Виявлення упередженості
+      - Розпізнавання маніпуляцій
+
+  - section: Фейки та пропаганда
+    words: 700
+    points:
+      - Ознаки дезінформації
+      - Методи пропаганди
+      - Фактчекінг
+
+  - section: Критичний аналіз
+    words: 600
+    points:
+      - Аналіз новинних статей
+      - Порівняння джерел
+      - Верифікація інформації
+
+  - section: Свобода слова
+    words: 500
+    points:
+      - Права журналістів
+      - Виклики для медіа
+      - Медіа в умовах війни
+
+  - section: Практичне завдання
+    words: 300
+    points:
+      - Аналіз новини
+      - Виявлення маніпуляцій
+      - Порівняльний огляд
+
+vocabulary_hints:
+  required:
+    - ЗМІ (mass media)
+    - джерело (source)
+    - упередженість (bias)
+    - дезінформація (disinformation)
+    - пропаганда (propaganda)
+    - фейк (fake)
+    - фактчекінг (fact-checking)
+    - маніпуляція (manipulation)
+    - достовірність (reliability)
+    - свобода слова (freedom of speech)
+  recommended:
+    - олігархічні медіа (oligarch-owned media)
+    - інформаційна гігієна (information hygiene)
+    - верифікація (verification)
+    - первинне джерело (primary source)
+    - медіаграмотність (media literacy)
+
+activity_hints:
+  - type: quiz
+    focus: Media literacy concepts
+    items: "15+"
+
+  - type: group-sort
+    focus: Media types by reliability
+    items: "12+"
+
+  - type: match-up
+    focus: Propaganda technique → example
+    items: "12+"
+
+  - type: cloze
+    focus: Media analysis vocabulary
+    items: "10+"
+
+  - type: true-false
+    focus: Identify bias indicators
+    items: "12+"
+
+  - type: essay-response
+    focus: Analyze news article for bias
+    word_target: 200
+
+prerequisites:
+  - c1-25 (Political System)
+  - Critical thinking skills
+
+connects_to:
+  - c1-27 (Global Context)
+  - c1-33 (Case Studies)
+  - c1-35 (C1.2 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

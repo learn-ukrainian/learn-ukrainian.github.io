@@ -1,13 +1,13 @@
 # Audit Report: 04-eneida-war.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.1 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 3513/3500
-- **Activities:** ✅ 3/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
@@ -15,8 +15,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.8% (target 95-100%)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Immersion:** 🇺🇦 99.8% (target 95-100% (literature))
 - **Richness:** ✅ 96% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)

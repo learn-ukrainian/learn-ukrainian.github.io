@@ -1,7 +1,16 @@
 # Audit Report: 15-the-testament.md
 **Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-the-testament.yaml: Schema validation error at key '2': {'type': 'fill-in', 'title': 'Форми дієслів', 'items': [{'sentence': 'Як {понесе|несе|нести|знесе} з України у синєє море кров ворожу.', 'answer': 'понесе', 'options': ['понесе', 'несе', 'нести', 'знесе']}, {'sentence': 'Тоді я і лани, і гори — все {покину|кину|лишу|залишу} і полину до самого Бога.', 'answer': 'покину', 'options': ['покину', 'кину', 'лишу', 'залишу']}, {'sentence': 'А до того — я не {знаю|бачу|чую|вірю} Бога.', 'answer': 'знаю', 'options': ['знаю', 'бачу', 'чую', 'вірю']}, {'sentence': 'Мене в сім’ї великій, в сім’ї {вольній|новій|старій|давній}, новій.', 'answer': 'вольній', 'options': ['вольній', 'новій', 'старій', 'давній']}, {'sentence': 'Не {забудьте|збудьте|будьте|прошу} пом’янути незлим тихим словом.', 'answer': 'забудьте', 'options': ['забудьте', 'збудьте', 'будьте', 'прошу']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3572/3500
@@ -14,7 +23,7 @@
 - **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.0% (target 95-100% (literature))
 - **Richness:** ⚠️ 96% (literature) - 1 flags

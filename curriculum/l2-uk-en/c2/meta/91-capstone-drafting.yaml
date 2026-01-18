@@ -1,0 +1,138 @@
+# C2 Module 91: Capstone Drafting
+# Status: SPEC (ready for content development)
+
+id: c2-91
+title: Дипломний проєкт — Написання чернетки
+slug: capstone-drafting
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Структура наукової роботи — Вимоги МОН
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official structure requirements for academic papers
+  - name: Академічне письмо — Практичний посібник
+    url: https://naqa.gov.ua/
+    type: reference
+    notes: Academic writing guidelines for Ukrainian institutions
+  - name: Науковий стиль — Норми і практика
+    url: https://lcorp.ulif.org.ua/
+    type: secondary
+    notes: Scientific style norms and conventions
+
+content_outline:
+  - section: Вступ — Від матеріалу до тексту
+    words: 400
+    points:
+      - Перехід від дослідження до написання
+      - Подолання страху чистого аркуша
+      - Стратегії продуктивного письма
+
+  - section: Структура академічної роботи
+    words: 700
+    points:
+      - Вступ (актуальність, мета, завдання)
+      - Огляд літератури
+      - Методологія
+      - Результати та обговорення
+      - Висновки
+
+  - section: Написання вступу
+    words: 600
+    points:
+      - Формулювання актуальності
+      - Визначення мети і завдань
+      - Об'єкт і предмет дослідження
+      - Наукова новизна
+
+  - section: Написання основної частини
+    words: 700
+    points:
+      - Логіка аргументації
+      - Інтеграція джерел у текст
+      - Баланс опису, аналізу, інтерпретації
+      - Когерентність і когезія
+
+  - section: Написання висновків
+    words: 500
+    points:
+      - Узагальнення результатів
+      - Відповідь на дослідницьке питання
+      - Обмеження дослідження
+      - Перспективи подальших досліджень
+
+  - section: Практика — Написання чернетки
+    words: 800
+    points:
+      - Написання вступу (1000+ слів)
+      - Написання одного розділу (2000+ слів)
+      - Самоперевірка за чеклістом
+      - Зворотний зв'язок від наставника
+
+vocabulary_hints:
+  required:
+    - чернетка (draft)
+    - актуальність (relevance)
+    - мета дослідження (research aim)
+    - завдання дослідження (research objectives)
+    - об'єкт дослідження (research object)
+    - предмет дослідження (research subject)
+    - наукова новизна (scientific novelty)
+    - аргументація (argumentation)
+    - когерентність (coherence)
+    - висновки (conclusions)
+  recommended:
+    - логічний перехід (logical transition)
+    - абзацна структура (paragraph structure)
+    - теза (thesis statement)
+    - антитеза (antithesis)
+    - синтез (synthesis)
+
+activity_hints:
+  - type: quiz
+    focus: Структура академічної роботи
+    items: "12+"
+
+  - type: essay-response
+    focus: Написання вступу до дипломної роботи
+    word_target: 800
+    output: Повний вступ із усіма елементами
+
+  - type: critical-analysis
+    focus: Самоперевірка вступу за критеріями
+    output: Аналіз сильних і слабких сторін
+
+  - type: essay-response
+    focus: Написання першого розділу (огляд літератури або методологія)
+    word_target: 1500
+    output: Повний розділ із посиланнями
+
+  - type: match-up
+    focus: Елементи академічної роботи та їхні функції
+    items: "10+"
+
+  - type: essay-response
+    focus: Написання висновків до розділу
+    word_target: 400
+    output: Підсумок із переходом до наступного розділу
+
+  - type: discussion
+    focus: Обговорення чернетки з наставником
+    output: План доопрацювання
+
+prerequisites:
+  - M90 (Capstone Research)
+  - Completed research phase
+  - Working bibliography
+
+connects_to:
+  - c2-92 (Capstone Revision)
+  - c2-93 (Capstone Polish)
+
+naturalness:
+  score: null
+  status: PENDING

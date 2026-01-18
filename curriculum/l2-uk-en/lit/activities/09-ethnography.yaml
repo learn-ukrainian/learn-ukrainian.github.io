@@ -1,5 +1,6 @@
 - type: comparative-study
   title: 'Аналіз: Весілля vs Похорон'
+  source_reading: "reading-ethnography"
   items_to_compare:
     - Весілля (Створення родини)
     - Похорон (Перехід у вічність)
@@ -24,6 +25,7 @@
     *   **Функція:** Це терапія для громади. Перетворення трагедії (смерть роду) на свято (весілля) дозволяє пережити горе.
 - type: critical-analysis
   title: 'Економічна Етнографія: Чумацтво'
+  source_reading: "reading-ethnography"
   target_text: "Пішов Василь у чумаки... щоб грошей заробити..."
   questions:
     - Які ризики супроводжували чумаків у степу?
@@ -39,6 +41,7 @@
     - Психологія підприємництва.
 - type: essay-response
   title: 'Творче Завдання: Реєстр Посагу'
+  source_reading: "reading-ethnography"
   prompt: |
     Складіть детальний перелік речей, які мали бути в скрині заможної дівчини (як Маруся).
 
@@ -68,6 +71,7 @@
       description: Пояснення значення речей.
       points: 30
 - type: reading
+  id: reading-ethnography
   title: 'Читальна Зала: Сцени Обрядів'
   resource:
     type: primary_source

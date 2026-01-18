@@ -1,0 +1,136 @@
+# C2 Module 94: Capstone Defense
+# Status: SPEC (ready for content development)
+
+id: c2-94
+title: Дипломний проєкт — Захист
+slug: capstone-defense
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Процедура захисту академічних робіт
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official defense procedures in Ukrainian academia
+  - name: Риторика наукового виступу
+    url: https://naqa.gov.ua/
+    type: reference
+    notes: Rhetoric of academic presentations
+  - name: Презентаційні навички для науковців
+    url: https://www.coe.int/
+    type: secondary
+    notes: Presentation skills for academic contexts
+
+content_outline:
+  - section: Вступ — Захист як кульмінація проєкту
+    words: 400
+    points:
+      - Мета і формат захисту
+      - Критерії оцінювання
+      - Психологічна підготовка
+
+  - section: Підготовка презентації
+    words: 700
+    points:
+      - Структура наукової презентації
+      - Візуальні матеріали (слайди)
+      - Час і темп виступу
+      - Баланс деталей і загальної картини
+
+  - section: Техніка усного виступу
+    words: 700
+    points:
+      - Академічна риторика
+      - Контакт з аудиторією
+      - Управління голосом і темпом
+      - Жести та невербальна комунікація
+
+  - section: Відповіді на запитання
+    words: 600
+    points:
+      - Типи запитань від комісії
+      - Стратегії відповідей
+      - Визнання обмежень
+      - Захист авторської позиції
+
+  - section: Робота зі стресом
+    words: 500
+    points:
+      - Техніки релаксації
+      - Візуалізація успіху
+      - Підготовка до несподіванок
+      - Позитивний внутрішній діалог
+
+  - section: Практика — Пробний захист
+    words: 800
+    points:
+      - Підготовка повної презентації (15-20 хв)
+      - Пробний захист перед групою
+      - Відповіді на запитання
+      - Зворотний зв'язок та доопрацювання
+
+vocabulary_hints:
+  required:
+    - захист (defense)
+    - презентація (presentation)
+    - виступ (speech/talk)
+    - слайд (slide)
+    - комісія (committee/panel)
+    - рецензент (reviewer)
+    - опонент (opponent)
+    - критика (criticism)
+    - аргументація (argumentation)
+    - обмеження дослідження (research limitations)
+  recommended:
+    - тезова заява (thesis statement)
+    - візуальний супровід (visual aids)
+    - риторичне запитання (rhetorical question)
+    - контраргумент (counterargument)
+    - регламент (time limit)
+
+activity_hints:
+  - type: quiz
+    focus: Процедура і критерії захисту
+    items: "12+"
+
+  - type: essay-response
+    focus: Написання тексту виступу на захисті
+    word_target: 1500
+    output: Повний текст 15-хвилинного виступу
+
+  - type: critical-analysis
+    focus: Аналіз відеозапису академічного захисту
+    output: Ідентифікація сильних і слабких сторін
+
+  - type: discussion
+    focus: Пробний виступ (15 хвилин)
+    output: Запис виступу для самоаналізу
+
+  - type: discussion
+    focus: Сесія запитань і відповідей
+    output: Практика відповідей на складні запитання
+
+  - type: essay-response
+    focus: Відповідь на типове критичне запитання
+    word_target: 300
+    output: Структурована відповідь із аргументами
+
+  - type: match-up
+    focus: Типи запитань та стратегії відповідей
+    items: "10+"
+
+prerequisites:
+  - M93 (Capstone Polish)
+  - Completed capstone project
+  - Final version approved
+
+connects_to:
+  - c2-95 (Final Review I)
+  - c2-98 (Final Exam)
+
+naturalness:
+  score: null
+  status: PENDING

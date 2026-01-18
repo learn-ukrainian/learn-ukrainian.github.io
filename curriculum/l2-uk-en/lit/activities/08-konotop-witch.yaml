@@ -1,5 +1,6 @@
 - type: essay-response
   title: 'Есе-Роздум: Гумор: Скальпель чи Наркоз?'
+  source_reading: "reading-konotop"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Чи маємо ми право сміятися над сценою вбивства жінок у ставку?'.
 
@@ -29,6 +30,7 @@
       points: 30
 - type: essay-response
   title: 'Дискусія: Жінка і Влада'
+  source_reading: "reading-konotop"
   prompt: |
     Чи можна вважати Явдоху Зубиху сильною жінкою, яка протистоїть патріархальній системі? Явдоха керує чоловіками, але через статус відьми.
 
@@ -46,6 +48,7 @@
       description: Доказовість.
       points: 50
 - type: reading
+  id: reading-konotop
   title: 'Читальна Зала: Анатомія Занепаду'
   resource:
     type: book
@@ -57,6 +60,7 @@
     - Знайдіть опис сцени на ставку.
 - type: critical-analysis
   title: 'Аналіз Тексту: Мова Бюрократії'
+  source_reading: "reading-konotop"
   target_text: "Пістряк: ...понеже... оскільки... ібо... того ради..."
   questions:
     - Яку функцію виконують канцеляризми в мові Пістряка?

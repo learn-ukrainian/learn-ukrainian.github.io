@@ -1,6 +1,15 @@
-module: b1-23
+# B1 Module 23: Префікси руху в інших дієсловах
+# Status: SPEC (ready for content development)
+
+id: b1-23
 title: Префікси руху в інших дієсловах
 subtitle: Motion prefixes in non-motion verbs
+slug: 23-motion-patterns-other-verbs
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '3.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -8,21 +17,131 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- prefixes
-- word-formation
-- verbs
+  - grammar
+  - prefixes
+  - word-formation
+  - verbs
 grammar:
-- Prefix meanings transferred to non-motion verbs
-- Word formation with motion prefixes
-- Semantic patterns across verb categories
+  - Prefix meanings transferred to non-motion verbs
+  - Word formation with motion prefixes
+  - Semantic patterns across verb categories
 objectives:
-- Master the abstract logic of Ukrainian prefixes
-- Predict meanings of new verbs based on their prefixes
-- Use complex prefixed verbs in professional and daily contexts
-vocabulary_count: 31
-vocab_count: 46
-slug: 23-motion-patterns-other-verbs
+  - Master the abstract logic of Ukrainian prefixes
+  - Predict meanings of new verbs based on their prefixes
+  - Use complex prefixed verbs in professional and daily contexts
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Word Formation
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official guidance on prefix patterns in word formation
+  - name: Ukrainian Verbal Prefixes
+    url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+    type: reference
+    notes: Prefix meanings across verb categories
+  - name: Ukrainian Word Formation (Academic)
+    url: https://uk.wikipedia.org/wiki/Словотвір
+    type: reference
+    notes: Systematic treatment of derivation
+
+content_outline:
+  - section: Вступ — Префікси за межами руху
+    words: 400
+    points:
+      - Як префікси переносяться на інші дієслова
+      - TTT — визначте значення префікса
+      - Зв'язок з M22
+
+  - section: При- (досягнення, приєднання)
+    words: 550
+    points:
+      - прийти -> приготувати (prepare - "bring to ready")
+      - приєднатися (join), прив'язати (tie to)
+      - Семантика наближення/приєднання
+
+  - section: Ви- (результат, вилучення)
+    words: 550
+    points:
+      - вийти -> виробляти (produce - "work out")
+      - вивчити (learn), виконати (fulfill)
+      - Семантика вилучення/результату
+
+  - section: Пере- (повторення, зміна)
+    words: 500
+    points:
+      - перейти -> переробляти (redo, process)
+      - переписати (rewrite), переглянути (review)
+      - Семантика повторення/зміни
+
+  - section: За- (початок, фіксація)
+    words: 500
+    points:
+      - зайти -> заговорити (start speaking)
+      - записати (write down), запам'ятати (remember)
+      - Семантика початку/фіксації
+
+  - section: Від- (віддалення, відмова)
+    words: 450
+    points:
+      - відійти -> відмовитися (refuse)
+      - відповісти (answer), відкрити (open)
+      - Семантика віддалення/результату
+
+  - section: Підсумок
+    words: 250
+    points:
+      - Порівняльна таблиця префіксів
+      - Готовність до M24
+
+vocabulary_hints:
+  required:
+    - приготувати (to prepare)
+    - виробляти (to produce)
+    - переробляти (to redo, process)
+    - заговорити (to start speaking)
+    - відмовитися (to refuse)
+    - приєднатися (to join)
+    - вивчити (to learn)
+    - переписати (to rewrite)
+    - записати (to write down)
+    - відповісти (to answer)
+  recommended:
+    - прив'язати (to tie to)
+    - виконати (to fulfill)
+    - переглянути (to review)
+    - запам'ятати (to remember)
+    - відкрити (to open)
+
+activity_hints:
+  - type: match-up
+    focus: Prefix meaning in motion vs non-motion verbs
+    items: "15+"
+
+  - type: fill-in
+    focus: Use prefixed non-motion verbs
+    items: "12+"
+
+  - type: transform
+    focus: Add prefix to change meaning
+    items: "12+"
+
+  - type: quiz
+    focus: Predict verb meaning from prefix
+    items: "15+"
+
+  - type: group-sort
+    focus: Group verbs by prefix meaning
+    items: "15+"
+
+prerequisites:
+  - b1-22 (Motion full prefix integration)
+
+connects_to:
+  - b1-24 (Motion practice & integration)
+  - b1-25 (Checkpoint - motion verbs)
+
 naturalness:
   score: 9
   status: PASS

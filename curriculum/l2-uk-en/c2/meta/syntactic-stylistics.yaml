@@ -1,0 +1,141 @@
+# C2 Module 13: Syntactic Stylistics
+# Status: SPEC (ready for content development)
+
+id: c2-13
+title: Синтаксична стилістика — Різноманітність речень
+slug: syntactic-stylistics
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Пономарів О. Стилістика сучасної української мови
+    url: https://r2u.org.ua/
+    type: primary
+    notes: Canonical Ukrainian stylistics textbook
+  - name: Синтаксис української мови — НАН
+    url: https://www.nbuv.gov.ua/
+    type: reference
+    notes: Academic analysis of Ukrainian syntax
+  - name: Ukrainian State Standard 2024 — Syntactic mastery
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for sentence variety
+
+content_outline:
+  - section: Вступ — Синтаксис як інструмент стилю
+    words: 400
+    points:
+      - Зв'язок синтаксису та ритму
+      - Вплив структури речення на сприйняття
+      - Синтаксична норма та відхилення
+
+  - section: Просте vs складне речення
+    words: 600
+    points:
+      - Функції простих речень
+      - Коли використовувати складні
+      - Чергування для ритму
+      - Авторський вибір
+
+  - section: Довжина речення
+    words: 600
+    points:
+      - Короткі речення — наголос, драма
+      - Довгі речення — плин думки
+      - Варіювання для ефекту
+      - Аналіз прозаїків
+
+  - section: Інверсія та порядок слів
+    words: 700
+    points:
+      - Нейтральний порядок слів
+      - Інверсія для наголосу
+      - Тема-рема структура
+      - Стилістичні функції порядку
+
+  - section: Спеціальні конструкції
+    words: 700
+    points:
+      - Еліпсис — пропуск для стислості
+      - Повтор — для підсилення
+      - Паралелізм — для ритму
+      - Градація — для наростання
+
+  - section: Риторичні фігури
+    words: 600
+    points:
+      - Риторичні запитання
+      - Окличні речення
+      - Звертання
+      - Парцеляція
+
+  - section: Практикум — Робота з реченням
+    words: 400
+    points:
+      - Трансформація простих у складні
+      - Створення абзацу з синтаксичною різноманітністю
+      - Аналіз синтаксису літературного тексту
+      - Редагування монотонного синтаксису
+
+vocabulary_hints:
+  required:
+    - інверсія (inversion)
+    - еліпсис (ellipsis)
+    - паралелізм (parallelism)
+    - градація (gradation)
+    - парцеляція (parcellation)
+    - риторичний (rhetorical)
+    - тема (theme/topic)
+    - рема (rheme/comment)
+    - анафора (anaphora)
+    - епіфора (epiphora)
+  recommended:
+    - асиндетон (asyndeton)
+    - полісиндетон (polysyndeton)
+    - хіазм (chiasmus)
+    - антиклімакс (anticlimax)
+    - апосіопеза (aposiopesis)
+
+activity_hints:
+  - type: essay-response
+    focus: Transform simple sentences into complex
+    word_target: 300
+    output: Text with variety and annotation
+
+  - type: essay-response
+    focus: Create paragraph with deliberate syntactic variety
+    word_target: 400
+    output: Prose with short/long, simple/complex balance
+
+  - type: critical-analysis
+    focus: Analyze sentence patterns in literary text
+    output: Essay on author's syntactic style
+
+  - type: quiz
+    focus: Identify syntactic figures in excerpts
+    items: "15+"
+
+  - type: fill-in
+    focus: Complete sentences with appropriate structure
+    items: "12+"
+
+  - type: error-correction
+    focus: Fix monotonous or awkward syntax
+    items: "10+"
+
+prerequisites:
+  - C1 complex sentence mastery
+  - c2-12 (Lexical stylistics complements syntactic)
+  - c2-02 (Euphony affects sentence rhythm)
+
+connects_to:
+  - c2-22 (Rhythm & prosody builds on syntax)
+  - c2-16 (Text coherence uses syntactic linking)
+  - c2-14 (Individual voice through syntactic preferences)
+
+naturalness:
+  score: null
+  status: PENDING

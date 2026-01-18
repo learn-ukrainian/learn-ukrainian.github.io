@@ -1,0 +1,129 @@
+# C2 Module 52: Writing Professional Documents I
+# Status: SPEC (ready for content development)
+
+id: c2-52
+title: Написання професійних документів I — Звіти та реферати
+slug: writing-professional-documents-i
+module_type: grammar
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: ДСТУ 3008:2015 — Звіти у сфері науки і техніки
+    url: https://dnaop.com/
+    type: reference
+    notes: Ukrainian standard for scientific and technical reports
+  - name: НАН України — вимоги до наукових звітів
+    url: https://www.nas.gov.ua/
+    type: reference
+    notes: Academic requirements for research reports
+  - name: Міністерство освіти і науки — методичні рекомендації
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Guidelines for academic writing in Ukrainian
+
+content_outline:
+  - section: Вступ — Письмове професійне мовлення
+    words: 400
+    points:
+      - Відмінність усної та письмової професійної комунікації
+      - Принципи ефективного професійного письма
+      - Підготовка до написання
+
+  - section: Реферат — Короткий виклад
+    words: 700
+    points:
+      - Типи рефератів (інформативний, індикативний)
+      - Структура реферату
+      - Техніка реферування
+
+  - section: Анотація — Стисла характеристика
+    words: 600
+    points:
+      - Відмінність анотації від реферату
+      - Структура та обсяг анотації
+      - Ключові слова
+
+  - section: Звіт — Офіційний документ
+    words: 800
+    points:
+      - Типи звітів (науковий, технічний, фінансовий)
+      - Структура звіту (вступ, основна частина, висновки)
+      - Оформлення за ДСТУ
+
+  - section: Повідомлення та доповідна записка
+    words: 600
+    points:
+      - Коли використовувати повідомлення vs. записку
+      - Структура та стиль
+      - Адресат та мета
+
+  - section: Практичні вправи
+    words: 600
+    points:
+      - Написання реферату статті
+      - Складання анотації
+      - Підготовка короткого звіту
+
+vocabulary_hints:
+  required:
+    - реферат (abstract/summary)
+    - анотація (annotation)
+    - звіт (report)
+    - повідомлення (message/notice)
+    - доповідна записка (memo/report)
+    - структура (structure)
+    - вступ (introduction)
+    - висновок (conclusion)
+    - оформлення (formatting)
+    - ключове слово (keyword)
+  recommended:
+    - інформативний (informative)
+    - індикативний (indicative)
+    - резюме (summary)
+    - компіляція (compilation)
+    - синтезування (synthesizing)
+
+activity_hints:
+  - type: essay-response
+    focus: Написання реферату наукової статті
+    word_target: 300
+    output: Реферат з моделлю відповіді
+
+  - type: essay-response
+    focus: Написання анотації до книги/статті
+    word_target: 150
+    output: Анотація за стандартом
+
+  - type: essay-response
+    focus: Написання короткого звіту про виконану роботу
+    word_target: 500
+    output: Структурований звіт з моделлю
+
+  - type: quiz
+    focus: Відмінності між типами документів
+    items: "12+"
+
+  - type: critical-analysis
+    focus: Аналіз та покращення слабкого реферату
+    output: Редагований варіант з поясненням змін
+
+  - type: fill-in
+    focus: Заповнення структурних елементів звіту
+    items: "15+"
+
+prerequisites:
+  - M51 (Professional Document Types)
+  - M03 (Науковий стиль — Publication-Ready)
+  - M10 (Style Transformation I)
+
+connects_to:
+  - c2-53 (Writing Professional Documents II — Proposals)
+  - c2-54 (Professional Oral Communication)
+  - c2-56 (Professional Correspondence)
+
+naturalness:
+  score: null
+  status: PENDING

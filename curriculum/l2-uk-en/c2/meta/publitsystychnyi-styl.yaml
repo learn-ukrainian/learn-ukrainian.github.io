@@ -1,0 +1,142 @@
+# C2 Module 05: Публіцистичний стиль
+# Status: SPEC (ready for content development)
+
+id: c2-05
+title: Публіцистичний стиль — Журналістика
+slug: publitsystychnyi-styl
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Українська правда
+    url: https://www.pravda.com.ua/
+    type: example
+    notes: Contemporary Ukrainian journalism examples
+  - name: Стандарти журналістики — ІМІ
+    url: https://imi.org.ua/
+    type: primary
+    notes: Institute of Mass Information journalism standards
+  - name: Ukrainian State Standard 2024 — Media communication
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for publicistic style
+
+content_outline:
+  - section: Вступ — Публіцистика як стиль впливу
+    words: 400
+    points:
+      - Функції публіцистичного стилю
+      - Інформування vs переконування
+      - Об'єктивність та суб'єктивність
+
+  - section: Новина — інформаційний жанр
+    words: 600
+    points:
+      - Перевернута піраміда
+      - Лід — 5W+H (хто, що, де, коли, як, чому)
+      - Заголовок — приваблення уваги
+      - Фактчекінг та джерела
+
+  - section: Репортаж та інтерв'ю
+    words: 700
+    points:
+      - Репортаж — "бути очевидцем"
+      - Структура та мова репортажу
+      - Інтерв'ю — підготовка та подання
+      - Пряма мова та цитування
+
+  - section: Аналітична стаття
+    words: 600
+    points:
+      - Структура аналітики
+      - Аргументація та докази
+      - Експертна думка
+      - Баланс точок зору
+
+  - section: Колонка та есей
+    words: 600
+    points:
+      - Авторська позиція
+      - Риторичні прийоми
+      - Іронія та сатира
+      - Персональний голос журналіста
+
+  - section: Мовні особливості публіцистики
+    words: 600
+    points:
+      - Емоційність та експресивність
+      - Суспільно-політична лексика
+      - Риторичні запитання
+      - Метафори та образність
+
+  - section: Практикум — Створення журналістських текстів
+    words: 500
+    points:
+      - Написання новини за фактами
+      - Написання колонки на актуальну тему
+      - Порівняльний аналіз медійного висвітлення
+      - Редагування журналістського тексту
+
+vocabulary_hints:
+  required:
+    - новина (news)
+    - репортаж (report/feature)
+    - інтерв'ю (interview)
+    - колонка (column)
+    - фактчекінг (fact-checking)
+    - лід (lead)
+    - заголовок (headline)
+    - джерело (source)
+    - об'єктивність (objectivity)
+    - аналітика (analysis/analytics)
+  recommended:
+    - ексклюзив (exclusive)
+    - редакційний (editorial)
+    - медійний (media-related)
+    - висвітлення (coverage)
+    - маніпуляція (manipulation)
+
+activity_hints:
+  - type: essay-response
+    focus: Write a news report based on provided facts
+    word_target: 300
+    output: Complete news article with proper lead
+
+  - type: essay-response
+    focus: Write an opinion column on current event
+    word_target: 400
+    output: Persuasive text with clear authorial voice
+
+  - type: critical-analysis
+    focus: Compare coverage of same event in 2-3 outlets
+    output: Analysis of bias, framing, and language choices
+
+  - type: quiz
+    focus: Identify journalistic genre by text features
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete news leads with missing 5W+H elements
+    items: "10+"
+
+  - type: error-correction
+    focus: Fix violations of journalistic standards
+    items: "10+"
+
+prerequisites:
+  - C1 media literacy
+  - Understanding of argumentation
+  - c2-02 (Euphony for readable prose)
+  - c2-04 (Formal structures for factual reporting)
+
+connects_to:
+  - c2-11 (Transforming official to journalistic)
+  - c2-06 (Literary techniques enhance journalism)
+  - c2-14 (Individual voice development)
+
+naturalness:
+  score: null
+  status: PENDING

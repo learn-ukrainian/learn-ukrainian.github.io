@@ -1,0 +1,143 @@
+# C2 Module 22: Rhythm & Prosody in Prose
+# Status: SPEC (ready for content development)
+
+id: c2-22
+title: Ритм і просодія прози
+slug: rhythm-prosody
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Поетика прози — Вікіпедія
+    url: https://uk.wikipedia.org/wiki/Поетика
+    type: reference
+    notes: General poetics terminology and concepts
+  - name: Український літературний модернізм
+    url: https://ukrlib.com.ua/
+    type: primary
+    notes: Examples of rhythmic prose from Ukrainian modernists (Stefanyk, Kotsyubynsky)
+  - name: Стилістика української мови
+    url: https://uk.wikipedia.org/wiki/Стилістика
+    type: reference
+    notes: Sound devices and euphony in Ukrainian stylistics
+
+content_outline:
+  - section: Вступ — Ритм у прозі vs. поезії
+    words: 500
+    points:
+      - Що таке ритм прози
+      - Відмінності від поетичного ритму
+      - Роль ритму в створенні настрою
+
+  - section: Інтонаційні періоди
+    words: 700
+    points:
+      - Структура періоду (протасис, аподосис)
+      - Підвищення та зниження інтонації
+      - Ритмічні групи в реченні
+      - Приклади з української класики
+
+  - section: Довжина речень як інструмент
+    words: 600
+    points:
+      - Короткі речення для напруги
+      - Довгі речення для опису
+      - Чергування для динаміки
+      - Аналіз текстів Стефаника
+
+  - section: Звукопис у прозі
+    words: 700
+    points:
+      - Алітерація (повторення приголосних)
+      - Асонанс (повторення голосних)
+      - Ономатопея (звуконаслідування)
+      - Роль звукопису в створенні атмосфери
+
+  - section: Евфонія та какофонія
+    words: 600
+    points:
+      - Милозвучні комбінації звуків
+      - Навмисна різкість для ефекту
+      - Практичні приклади з сучасної прози
+      - Редагування для покращення звучання
+
+  - section: Практикум — редагування ритму
+    words: 500
+    points:
+      - Аналіз власних текстів
+      - Техніки покращення ритму
+      - Читання вголос як інструмент
+
+  - section: Підсумок
+    words: 400
+    points:
+      - Ключові принципи ритмічної прози
+      - Зв'язок з індивідуальним стилем
+      - Перехід до інтертекстуальності
+
+vocabulary_hints:
+  required:
+    - ритм (rhythm)
+    - просодія (prosody)
+    - інтонація (intonation)
+    - період (period/sentence unit)
+    - алітерація (alliteration)
+    - асонанс (assonance)
+    - евфонія (euphony)
+    - какофонія (cacophony)
+    - звукопис (sound painting)
+    - ономатопея (onomatopoeia)
+  recommended:
+    - протасис (protasis)
+    - аподосис (apodosis)
+    - модуляція (modulation)
+    - темп (tempo)
+    - пауза (pause)
+
+activity_hints:
+  - type: critical-analysis
+    focus: Analyze rhythm patterns in Stefanyk's prose
+    output: Identify sentence length variation and effect
+
+  - type: essay-response
+    focus: Rewrite flat passage with rhythmic variation
+    word_target: 300
+    output: Original and revised versions with commentary
+
+  - type: quiz
+    focus: Identify sound devices in prose excerpts
+    items: "15+"
+
+  - type: match-up
+    focus: Match sound device terms to examples
+    items: "12+"
+
+  - type: essay-response
+    focus: Create euphonic vs. cacophonic passages on same theme
+    word_target: 200
+    output: Two contrasting passages with analysis
+
+  - type: critical-analysis
+    focus: Read aloud and analyze own writing for rhythm
+    output: Self-assessment with revision plan
+
+  - type: comparative-study
+    focus: Compare rhythm in Kotsyubynsky vs. contemporary author
+    output: Analysis of different rhythmic approaches
+
+prerequisites:
+  - c2-02 (Milozвучність Complete)
+  - c2-13 (Syntactic Stylistics)
+  - c2-14-15 (Individual Voice)
+
+connects_to:
+  - c2-23 (Intertextuality)
+  - c2-28 (Poetyka: Verse Analysis)
+  - c2-36 (Creative Writing: Poetry)
+
+naturalness:
+  score: null
+  status: PENDING

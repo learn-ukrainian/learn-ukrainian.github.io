@@ -1,6 +1,15 @@
-module: b1-03
+# B1 Module 03: Читаємо граматичні правила
+# Status: SPEC (ready for content development)
+
+id: b1-03
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
+slug: 03-reading-grammar-rules
+module_type: bridge
+word_target: 3000
+immersion: "75% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
@@ -23,8 +32,122 @@ objectives:
   - Learner can recognize activity instruction verbs
   - Learner can understand analytical terminology
   - Learner can distinguish language styles and registers
-vocabulary_count: 40
-slug: 03-reading-grammar-rules
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian Grammar Textbooks
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Standard patterns used in Ukrainian grammar instruction
+  - name: Ukrainian Language Teaching Resources
+    url: https://osvita.ua/
+    type: reference
+    notes: Common instructional language in educational materials
+
+content_outline:
+  - section: Introduction - Reading Grammar in Ukrainian
+    words: 300
+    points:
+      - Why understanding instruction patterns matters
+      - Common grammar textbook structure
+      - Preparation for full immersion
+
+  - section: Grammar Explanation Patterns
+    words: 600
+    points:
+      - "X використовується, коли..." (X is used when...)
+      - "X показує..." (X shows...)
+      - "X означає..." (X means...)
+      - "Порівняйте:" and "Зверніть увагу:"
+
+  - section: Activity Instruction Verbs
+    words: 500
+    points:
+      - виберіть, знайдіть, з'єднайте
+      - розташуйте, доповніть, натисніть
+      - перекладіть, складіть
+      - Understanding what activities ask you to do
+
+  - section: Analytical Terms
+    words: 500
+    points:
+      - контекст, маркер, частота
+      - аспектуальна пара
+      - Using these terms in grammar discussion
+
+  - section: Style and Register Terminology
+    words: 400
+    points:
+      - стиль, регістр
+      - розмовна мова, літературна мова, формальна мова
+      - Recognizing style markers in texts
+
+  - section: Word Formation Terms
+    words: 500
+    points:
+      - корінь, префікс, суфікс
+      - основа, закінчення
+      - Analyzing word structure
+
+  - section: Practice and Summary
+    words: 200
+    points:
+      - Reading authentic grammar explanations
+      - Readiness check for M04
+
+vocabulary_hints:
+  required:
+    - використовується (is used)
+    - показує (shows)
+    - означає (means)
+    - порівняйте (compare)
+    - зверніть увагу (note, pay attention)
+    - виберіть (choose)
+    - знайдіть (find)
+    - доповніть (complete)
+    - контекст (context)
+    - маркер (marker)
+  recommended:
+    - частота (frequency)
+    - аспектуальна пара (aspectual pair)
+    - розмовна мова (colloquial language)
+    - літературна мова (literary language)
+    - формальна мова (formal language)
+
+activity_hints:
+  - type: mark-the-words
+    focus: Find instruction patterns in grammar text
+    items: "10+"
+
+  - type: true-false
+    focus: Statements about grammar patterns
+    items: "10+"
+
+  - type: cloze
+    focus: Complete grammar explanation passages
+    items: "8+"
+
+  - type: match-up
+    focus: Activity instruction verb → example activity (виберіть → quiz question)
+    items: "10+"
+
+  - type: quiz
+    focus: Identify analytical terms in grammar explanations (контекст, маркер, частота)
+    items: "8+"
+
+  - type: group-sort
+    focus: Style types (розмовна vs літературна vs формальна)
+    items: "12+"
+
+prerequisites:
+  - b1-01 (Basic grammar terminology)
+  - b1-02 (Verb terminology)
+
+connects_to:
+  - b1-04 (Sentence structure)
+  - b1-05 (Metalanguage checkpoint)
+
 naturalness:
   score: 9
   status: PASS

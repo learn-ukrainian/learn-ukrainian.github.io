@@ -5,9 +5,9 @@
 
 ## Gates
 - **Words:** ✅ 3671/3500
-- **Activities:** ✅ 5/3
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.3% (target 95-100% (literature))
 - **Richness:** ✅ 97% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

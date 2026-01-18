@@ -1,22 +1,130 @@
-module: c1-34
-title: 'Огляд і повторення: Професійна комунікація'
-subtitle: 'Review: Professional Communication'
-version: '2.0'
-phase: 'C1.2 Practice'
-focus: review
-pedagogy: 'Immersion'
-duration: 120
-transliteration: none
-tags:
-  - review
-  - professional
-  - business
-  - sociolinguistics
-grammar:
-  - 'Consolidation of C1.2 grammar points'
-objectives:
-  - 'Review professional vocabulary and etiquette'
-  - 'Consolidate sociolinguistic knowledge (dialects, surzhyk)'
-  - 'Practice advanced rhetorical devices'
-vocabulary_count: 10
+# C1 Module 34: C1.2 Review
+# Status: SPEC (ready for content development)
+
+id: c1-34
+title: "Огляд і повторення: Професійна комунікація"
 slug: 34-review
+module_type: review
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: CEFR C1 Assessment Criteria
+    url: https://www.coe.int/
+    type: reference
+    notes: C1 level review standards
+  - name: Ukrainian State Standard C1 (2024)
+    url: https://mon.gov.ua/
+    type: reference
+    notes: National C1 competency requirements
+
+content_outline:
+  - section: Огляд C1.2 — Підсумок
+    words: 500
+    points:
+      - Основні теми M21-M33
+      - Ключові компетенції
+      - Структура повторення
+
+  - section: Професійна комунікація
+    words: 700
+    points:
+      - CV та супровідний лист
+      - Співбесіда та переговори
+      - Діловий етикет
+      - Цифрова комунікація
+
+  - section: Політика та суспільство
+    words: 700
+    points:
+      - Політична система
+      - Медіаландшафт
+      - Міжнародні відносини
+
+  - section: Соціолінгвістика
+    words: 700
+    points:
+      - Діалекти української
+      - Суржик
+      - Історія мови
+      - Діаспорна українська
+
+  - section: Практичні навички
+    words: 600
+    points:
+      - Професійні сценарії
+      - Кейс-аналіз
+      - Критичне мислення
+
+  - section: Вправи на повторення
+    words: 500
+    points:
+      - Комплексний тест
+      - Лексичний огляд
+      - Усна практика
+
+  - section: Самооцінка
+    words: 300
+    points:
+      - Критерії C1.2
+      - Рубрика оцінювання
+      - Підготовка до контрольної
+
+vocabulary_hints:
+  required:
+    - повторення (review)
+    - узагальнення (generalization)
+    - консолідація (consolidation)
+    - закріплення (reinforcement)
+    - систематизація (systematization)
+    - огляд (overview)
+    - підсумок (summary)
+    - результат (result)
+    - прогрес (progress)
+    - досягнення (achievement)
+  recommended:
+    - компетенція (competency)
+    - критерій (criterion)
+    - рубрика (rubric)
+    - оцінювання (assessment)
+    - самооцінка (self-assessment)
+
+activity_hints:
+  - type: quiz
+    focus: Comprehensive C1.2 review
+    items: "30+"
+
+  - type: match-up
+    focus: Review key concepts M21-M33
+    items: "20+"
+
+  - type: fill-in
+    focus: Professional vocabulary review
+    items: "15+"
+
+  - type: cloze
+    focus: Sociolinguistic terminology
+    items: "12+"
+
+  - type: group-sort
+    focus: Classify concepts by module
+    items: "15+"
+
+  - type: error-correction
+    focus: Fix professional communication errors
+    items: "12+"
+
+prerequisites:
+  - c1-21 to c1-33 (Complete C1.2 content)
+  - All professional and sociolinguistic skills
+
+connects_to:
+  - c1-35 (C1.2 Checkpoint)
+  - c1-36 (Metaphor & Simile - C1.3 start)
+  - c1-55 (C1.3 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

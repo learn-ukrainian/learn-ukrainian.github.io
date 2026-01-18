@@ -894,14 +894,27 @@
     },
     "reading-lit": {
       "type": "object",
-      "description": "Primary source text for analysis. MUST have 'id' field for linking to analytical activities via 'source_reading'.",
+      "description": "Primary source text or external resource for analysis. MUST have 'id' for linking via 'source_reading'. Use 'text' for inline quotes OR 'resource' for external links.",
       "required": [
         "type",
         "title",
-        "id",
-        "text"
+        "id"
       ],
       "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["text"],
+          "properties": {
+            "resource": false
+          }
+        },
+        {
+          "required": ["resource"],
+          "properties": {
+            "text": false
+          }
+        }
+      ],
       "properties": {
         "type": {
           "const": "reading"
@@ -909,7 +922,7 @@
         "id": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "REQUIRED: Unique identifier for linking (e.g., 'reading-01', 'reading-testament')"
+          "description": "REQUIRED: Unique identifier for linking (e.g., 'reading-01', 'reading-bio')"
         },
         "title": {
           "type": "string",
@@ -917,16 +930,40 @@
         },
         "source": {
           "type": "string",
-          "description": "Attribution (e.g., 'Тарас Шевченко (1845)')"
+          "description": "Attribution for inline text (e.g., 'Тарас Шевченко (1845)') - NOT website names"
         },
         "text": {
           "type": "string",
-          "minLength": 10,
-          "description": "Primary source text for analysis"
+          "minLength": 20,
+          "description": "Inline primary source text (Ukrainian). Use for short quotes/excerpts."
         },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
+        "resource": {
+          "type": "object",
+          "description": "External resource link. Use for longer materials.",
+          "required": ["url"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Resource type label (e.g., 'Biography', 'Article')"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Full URL to external material"
+            },
+            "title": {
+              "type": "string",
+              "description": "Display title for the link"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Reading comprehension questions/tasks"
         }
       }
     }

@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): терміново, поліція, допомогти, допоможіть, вкрасти...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): терміново, небезпечно, допомогти, швидка, допомога...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -28,6 +28,12 @@
 - **Immersion:** 🇺🇦 50.1% (target 35-55% (M43))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

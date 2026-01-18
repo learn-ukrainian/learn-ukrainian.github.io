@@ -1,0 +1,212 @@
+# Detailed Meta YAML Schema for Curriculum Modules
+# Reference implementation: curriculum/l2-uk-en/c1-hist/meta/*.yaml
+# Version: 1.0 (January 2026)
+
+# =============================================================================
+# PURPOSE
+# =============================================================================
+# Detailed meta YAMLs serve as BUILD SPECS for AI agents:
+# - Agent reads ONE meta file (~100-130 lines, 500-800 tokens)
+# - vs. reading entire curriculum plan (~10,000-30,000 tokens)
+# - Enables parallel module generation with consistent quality
+# - curriculum.yaml = table of contents (slugs, order)
+# - meta/*.yaml = detailed build specifications
+
+# =============================================================================
+# SCHEMA DEFINITION
+# =============================================================================
+
+# --- REQUIRED FIELDS ---
+
+# Header comment (module identification)
+# Format: "# {LEVEL} Module {NUM}: {Title}"
+# Status: SPEC (ready for content) | CONTENT (content exists) | COMPLETE (reviewed)
+# Example:
+# # A1 Module 01: The Cyrillic Code I
+# # Status: SPEC (ready for content development)
+
+id: string                    # Format: {level}-{number:02d} e.g., "a1-01", "b2-hist-15"
+title: string                 # Ukrainian title (for display)
+slug: string                  # URL-safe identifier, matches filename without extension
+module_type: string           # One of: grammar, vocabulary, culture, history, biography,
+                              #         literature, integration, checkpoint, practice,
+                              #         historiography, style, phonology, morphology
+
+# Content specifications
+word_target: integer          # Target word count (e.g., 2500 for A1, 3500 for B2+)
+immersion: string             # Percentage Ukrainian content
+                              # A1: "25-50% Ukrainian (with full English support)"
+                              # A2: "50-75% Ukrainian"
+                              # B1: "75% Ukrainian"
+                              # B2+: "100% Ukrainian"
+
+# --- SOURCES (Required for B2+, optional for A1-B1) ---
+sources:
+  - name: string              # Human-readable source name
+    url: string               # URL to resource
+    type: string              # primary | secondary | reference | example
+    notes: string             # How to use this source
+  # Recommended minimum: 2-3 sources for B2+
+
+# --- CONTENT OUTLINE (Required) ---
+# Breaks down content into sections with word targets
+content_outline:
+  - section: string           # Section title (Ukrainian for B2+, English for A1-B1)
+    words: integer            # Word target for this section
+    points:                   # 3-5 key points to cover
+      - string
+      - string
+      - string
+  # Typically 4-7 sections totaling word_target
+
+# --- VOCABULARY HINTS (Required) ---
+vocabulary_hints:
+  required:                   # MUST include these terms (with English gloss)
+    - string                  # Format: "українське_слово (english gloss)"
+  recommended:                # Should include if space permits
+    - string
+  # Required: 8-15 terms | Recommended: 5-10 terms
+
+# --- ACTIVITY HINTS (Required) ---
+# Guides activity YAML generation
+activity_hints:
+  - type: string              # Activity type: reading, quiz, match-up, fill-in, cloze,
+                              #                essay-response, discussion, group-sort, etc.
+    focus: string             # What skill/content this activity targets
+    source: string            # Optional: where to get content (in module, external)
+    items: string             # Optional: minimum item count (e.g., "12+")
+    output: string            # Optional: expected learner output
+    word_target: integer      # Optional: for essays/writing activities
+  # Minimum 5-8 activity hints per module
+
+# --- CONNECTIONS (Required) ---
+prerequisites:                # What learner should know before this module
+  - string                    # Reference to other modules or general skills
+
+connects_to:                  # Forward links to related modules
+  - string                    # Format: "{id} ({brief description})"
+
+# --- OPTIONAL FIELDS ---
+
+subtitle: string              # English subtitle (for bilingual display)
+version: string               # Meta spec version (default: "1.0")
+phase: string                 # Curriculum phase (e.g., "A1.1 Alphabet", "B2.1a Grammar")
+focus: string                 # Primary focus: grammar | vocabulary | culture | skills
+pedagogy: string              # Teaching approach: TTT | PPP | Analysis | Project
+duration: integer             # Estimated minutes (default: 90)
+transliteration: string       # none | minimal | full
+tags:                         # Searchable tags
+  - string
+grammar:                      # Grammar points covered (for grammar modules)
+  - string
+
+# Post-content validation (added after content generation)
+naturalness:
+  score: integer              # 1-10 naturalness score
+  status: string              # PASS | PENDING | FAIL
+
+# =============================================================================
+# EXAMPLES BY LEVEL
+# =============================================================================
+
+# --- A1 EXAMPLE ---
+# # A1 Module 01: The Cyrillic Code I
+# # Status: SPEC
+#
+# id: a1-01
+# title: Кирилиця I — Знайомі Літери
+# slug: 01-the-cyrillic-code-i
+# module_type: phonology
+# word_target: 2500
+# immersion: "25-50% Ukrainian (with full English support)"
+#
+# sources:
+#   - name: Ukrainian Alphabet (Wikipedia)
+#     url: https://uk.wikipedia.org/wiki/Українська_абетка
+#     type: reference
+#     notes: Letter forms and sounds
+#
+# content_outline:
+#   - section: Introduction - Why Cyrillic?
+#     words: 300
+#     points:
+#       - Brief history of Cyrillic script
+#       - Relationship to Latin alphabet
+#       - What makes Ukrainian Cyrillic unique
+#   - section: True Friends (identical letters)
+#     words: 500
+#     points:
+#       - А, Е, І, О, К, М, Т
+#       - How they look and sound the same
+#       - Practice reading cognates
+#   - section: False Friends (look similar, different sound)
+#     words: 600
+#     points:
+#       - В, Н, Р, С, У, Х
+#       - Common mistakes to avoid
+#       - Memory tricks
+#   - section: New Letters
+#     words: 500
+#     points:
+#       - Б, Д, З, Л, П, Ф
+#       - Letter-sound associations
+#   - section: Practice Reading
+#     words: 400
+#     points:
+#       - International words
+#       - Common signs
+#       - Basic phrases
+#
+# vocabulary_hints:
+#   required:
+#     - мама (mom)
+#     - тато (dad)
+#     - банк (bank)
+#     - кафе (café)
+#     - метро (metro)
+#   recommended:
+#     - студент (student)
+#     - таксі (taxi)
+#     - паспорт (passport)
+#
+# activity_hints:
+#   - type: match-up
+#     focus: False Friends letter → sound
+#     items: "12+"
+#   - type: quiz
+#     focus: Read international words
+#     items: "10+"
+#   - type: group-sort
+#     focus: True Friends vs False Friends vs New
+#     items: "15+"
+#
+# prerequisites:
+#   - None (entry point)
+#
+# connects_to:
+#   - a1-02 (Cyrillic II - remaining letters)
+#   - a1-03 (Noun gender recognition)
+
+# --- B2+ EXAMPLE ---
+# See: curriculum/l2-uk-en/c1-hist/meta/01-shcho-take-istoriohrafiia.yaml
+
+# =============================================================================
+# CONVERSION NOTES
+# =============================================================================
+
+# When converting simple meta to detailed format:
+# 1. Keep existing fields (id, title, slug, objectives, tags, etc.)
+# 2. Add: sources (from curriculum plan or research)
+# 3. Add: content_outline (derive from curriculum plan module spec)
+# 4. Add: vocabulary_hints (from curriculum plan vocabulary list)
+# 5. Add: activity_hints (from "Signature Activity Concepts")
+# 6. Add: prerequisites and connects_to (from curriculum plan sequence)
+# 7. Set word_target based on level guidelines:
+#    - A1: 2000-2500
+#    - A2: 2500-3000
+#    - B1: 3000-3500
+#    - B2: 3500-4000
+#    - C1+: 4000-5000
+
+# Total: 812 modules across all levels need conversion
+# C1-HIST (135 modules) is the reference implementation

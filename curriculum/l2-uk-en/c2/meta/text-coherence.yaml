@@ -1,0 +1,141 @@
+# C2 Module 16: Text Coherence
+# Status: SPEC (ready for content development)
+
+id: c2-16
+title: Когерентність тексту — Бездоганний плин
+slug: text-coherence
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Лінгвістика тексту — дискурсознавство
+    url: https://www.nbuv.gov.ua/
+    type: primary
+    notes: Academic discourse analysis resources
+  - name: Halliday & Hasan — Cohesion in English (Ukrainian adaptation)
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Theoretical framework for text cohesion
+  - name: Ukrainian State Standard 2024 — Text organization
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for seamless text flow
+
+content_outline:
+  - section: Вступ — Когерентність vs когезія
+    words: 400
+    points:
+      - Визначення термінів
+      - Логічна vs граматична зв'язність
+      - Чому тексти "розпадаються"
+
+  - section: Тематична прогресія
+    words: 600
+    points:
+      - Модель теми-реми
+      - Лінійна прогресія
+      - Константна тема
+      - Розгалужена прогресія
+
+  - section: Засоби когезії
+    words: 700
+    points:
+      - Референція (займенники, вказівні слова)
+      - Заміщення та еліпсис
+      - Лексична когезія (повтор, синоніми)
+      - Граматична когезія
+
+  - section: Конектори та сполучники
+    words: 700
+    points:
+      - Типи логічних зв'язків
+      - Часові конектори
+      - Причинно-наслідкові
+      - Протиставні та приєднувальні
+
+  - section: Абзацна структура
+    words: 600
+    points:
+      - Тема абзацу
+      - Перехідні речення
+      - Мости між абзацами
+      - Логіка секціонування
+
+  - section: Наративний momentum
+    words: 500
+    points:
+      - Інформаційний потік
+      - Given-new principle
+      - Передбачуваність vs сюрприз
+      - Темп і напруга
+
+  - section: Практикум — Створення плинних текстів
+    words: 500
+    points:
+      - Аналіз когезійних засобів у професійному тексті
+      - Редагування слабкого тексту для плинності
+      - Написання когерентного есею
+      - Peer review на зв'язність
+
+vocabulary_hints:
+  required:
+    - когерентність (coherence)
+    - когезія (cohesion)
+    - референція (reference)
+    - конектор (connector)
+    - тема (theme)
+    - рема (rheme)
+    - прогресія (progression)
+    - заміщення (substitution)
+    - еліпсис (ellipsis)
+    - плинність (flow)
+  recommended:
+    - анафора (anaphora — reference)
+    - катафора (cataphora)
+    - momentum (momentum)
+    - секціонування (sectioning)
+    - перехід (transition)
+
+activity_hints:
+  - type: critical-analysis
+    focus: Analyze cohesion devices in professional text
+    output: Identification and categorization of all linking devices
+
+  - type: error-correction
+    focus: Improve flow in weak text
+    items: "8+"
+    output: Edited text with annotations
+
+  - type: essay-response
+    focus: Write seamlessly flowing essay
+    word_target: 500
+    output: Coherent text with self-analysis of devices used
+
+  - type: fill-in
+    focus: Add appropriate connectors and transitions
+    items: "15+"
+
+  - type: quiz
+    focus: Identify thematic progression patterns
+    items: "12+"
+
+  - type: match-up
+    focus: Match connectors to logical relationships
+    items: "15+"
+
+prerequisites:
+  - c2-13 (Syntactic stylistics)
+  - c2-14, c2-15 (Individual voice for consistent style)
+  - C1 essay writing
+
+connects_to:
+  - c2-17 (Practice I uses coherence in portfolio)
+  - c2-32 (Writing literary essays requires coherence)
+  - c2-52 (Professional documents need flow)
+
+naturalness:
+  score: null
+  status: PENDING

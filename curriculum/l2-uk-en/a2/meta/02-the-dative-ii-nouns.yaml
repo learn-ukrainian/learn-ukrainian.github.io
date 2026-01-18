@@ -1,30 +1,157 @@
-module: a2-02
+# A2 Module 02: The Dative II - Nouns
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-02
 title: The Dative II — Nouns
 subtitle: Giving, Sending, and Showing
+slug: 02-the-dative-ii-nouns
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- dative
-- nouns
+  - grammar
+  - cases
+  - dative
+  - nouns
+  - declension
+
 grammar:
-- dative noun endings
-- masculine dative
-- feminine dative
-- neuter dative
-- plural dative
+  - dative noun endings
+  - masculine dative (-ові/-у)
+  - feminine dative (-і)
+  - neuter dative (-у/-ові)
+  - plural dative (-ам)
+
 objectives:
-- Learner can form dative case endings for masculine nouns
-- Learner can form dative case endings for feminine and neuter nouns
-- Learner can form dative plural endings
-- Learner can use dative nouns with common verbs
-vocabulary_count: 25
-slug: 02-the-dative-ii-nouns
-focus: grammar
+  - Learner can form dative case endings for masculine nouns
+  - Learner can form dative case endings for feminine and neuter nouns
+  - Learner can form dative plural endings
+  - Learner can use dative nouns with common verbs
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Noun Declension
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Complete dative endings for all noun genders
+  - name: Ukrainian Grammar Tables
+    url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
+    type: reference
+    notes: Declension patterns and exceptions
+
+content_outline:
+  - section: Dative Noun Overview
+    words: 400
+    points:
+      - Building on dative pronouns from M01
+      - Indirect object concept (recipient of action)
+      - Кому? question for animate, чому? for inanimate
+
+  - section: Masculine Dative Endings
+    words: 600
+    points:
+      - Hard stem consonant → -ові/-у (друг → другові)
+      - Soft stem -ь → -еві (вчитель → вчителеві)
+      - Masculine -а ending → -і (тато → татові)
+      - When to use -ові vs -у variants
+
+  - section: Feminine Dative Endings
+    words: 500
+    points:
+      - Hard stem -а → -і (сестра → сестрі)
+      - Soft stem -я → -і (Марія → Марії)
+      - Consonant changes before -і (г→з, к→ц, х→с)
+
+  - section: Neuter and Plural Dative
+    words: 500
+    points:
+      - Neuter -о/-е → -у/-ю (місто → місту)
+      - Plural all genders → -ам/-ям (друзі → друзям)
+      - Common patterns across genders
+
+  - section: Verbs Taking Dative Objects
+    words: 500
+    points:
+      - давати (to give) + Dat + Acc
+      - показувати (to show) + Dat + Acc
+      - телефонувати (to call) + Dat
+      - писати (to write) + Dat
+
+  - section: Practice Patterns
+    words: 300
+    points:
+      - Common phrases with dative nouns
+      - Family member forms (мамі, татові, братові)
+      - Error correction practice
+
+vocabulary_hints:
+  required:
+    - давати (to give)
+    - дарувати (to gift)
+    - посилати (to send)
+    - надсилати (to send)
+    - показувати (to show)
+    - пояснювати (to explain)
+    - розповідати (to tell)
+    - допомагати (to help)
+    - заважати (to bother)
+    - личити (to suit)
+    - підходити (to suit)
+    - вистачати (to be enough)
+    - бракувати (to lack)
+    - відповідати (to answer)
+    - телефонувати (to call)
+  recommended:
+    - шкодити (to harm)
+    - вірити (to believe)
+    - довіряти (to trust)
+    - радити (to advise)
+    - дозволяти (to allow)
+
+activity_hints:
+  - type: fill-in
+    focus: Add dative endings to nouns
+    items: "15+"
+
+  - type: quiz
+    focus: Form dative from nominative
+    items: "12+"
+
+  - type: match-up
+    focus: Verb + typical dative object pairs
+    items: "10+"
+
+  - type: fill-in
+    focus: Complete sentences with correct dative noun
+    items: "10+"
+
+  - type: quiz
+    focus: Choose correct dative ending by gender
+    items: "10+"
+
+  - type: dialogue
+    focus: Giving and telling scenarios
+    items: "4+"
+
+prerequisites:
+  - a2-01 (Dative pronouns)
+  - A1 noun gender recognition
+  - A1 accusative case
+
+connects_to:
+  - a2-03 (Dative Verbs)
+  - a2-04 (Instrumental I)
+  - a2-09 (All Cases Practice)
+
 naturalness:
   score: 9
   status: PASS

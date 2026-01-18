@@ -1,26 +1,140 @@
-title: "Слов'янські племена на українських землях"
-subtitle: "Мозаїка племінних союзів"
-version: "2.0"
-phase: "HIST.1"
-focus: history
-pedagogy: "CBI"
-duration: 120
-transliteration: none
-tags:
-  - history
-  - slavic
-  - tribes
-  - medieval
-grammar:
-  - "Historical narrative register"
-  - "Relative clauses (який, яка, яке)"
-  - "Passive voice in archaeology"
-objectives:
-  - "Learner identifies the main Slavic tribal unions on Ukrainian territory"
-  - "Learner understands the geographic distribution of tribes"
-  - "Learner masters vocabulary related to tribal life and geography"
-vocabulary_count: 28
+# B2-HIST Module 05: Слов'янські племена на українських землях
+# Status: SPEC (ready for content development)
+
+id: b2-hist-05
+title: Слов'янські племена на українських землях
 slug: slavic-tribes
-naturalness:
-  score: 9
-  status: PASS
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Східнослов'янські племена (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Східнослов%27янські_племена
+    type: reference
+    notes: Overview of East Slavic tribes
+  - name: Повість минулих літ
+    url: https://litopys.org.ua/pvl/pvl.htm
+    type: primary
+    notes: Primary source on tribal locations
+  - name: Поляни (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Поляни_(плем%27я)
+    type: reference
+    notes: Detailed article on Polyany tribe
+
+content_outline:
+  - section: Вступ — Племена та землі
+    words: 500
+    points:
+      - Східні слов'яни на території сучасної України VII-IX ст.
+      - Повість минулих літ як головне джерело
+      - Проблема ототожнення археологічних культур із племенами
+      - Племінні союзи як протодержавні утворення
+
+  - section: Поляни — засновники Києва
+    words: 650
+    points:
+      - Розселення в середній течії Дніпра
+      - Легенда про Кия, Щека, Хорива та Либідь
+      - Політичний та культурний центр — Київ
+      - "Поляни яко мудрі" — за літописом
+
+  - section: Древляни — лісові люди
+    words: 550
+    points:
+      - Територія — Полісся, на захід від полян
+      - Конфлікт з полянами та Київською державою
+      - Повстання проти князя Ігоря
+      - Іскоростень — головний центр
+
+  - section: Сіверяни та інші племена
+    words: 650
+    points:
+      - Сіверяни — Лівобережжя, Чернігівщина
+      - Уличі та тиверці — південні племена
+      - Волиняни (бужани) — західні регіони
+      - Дуліби та білі хорвати
+
+  - section: Побут та культура племен
+    words: 550
+    points:
+      - Землеробство та скотарство
+      - Ремесла — ковальство, ткацтво
+      - Язичницькі вірування та святилища
+      - Поховальні обряди
+
+  - section: Шлях до об'єднання
+    words: 500
+    points:
+      - Данина хозарам та варягам
+      - Племінні конфлікти
+      - Торгові шляхи як об'єднавчий фактор
+      - Передумови створення держави Русь
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Племена як основа українського етносу
+      - Регіональні відмінності та єдність
+      - Перехід до заснування Києва
+
+vocabulary_hints:
+  required:
+    - поляни (Polyany)
+    - древляни (Derevlyany)
+    - сіверяни (Siveryany)
+    - уличі (Ulychi)
+    - тиверці (Tyvertsi)
+    - волиняни (Volhynians)
+    - племінний союз (tribal union)
+    - данина (tribute)
+    - святилище (sanctuary)
+    - обряд (ritual)
+    - городище (fortified settlement)
+    - літопис (chronicle)
+  recommended:
+    - дуліби (Duleby)
+    - білі хорвати (White Croats)
+    - Іскоростень (Iskorosten)
+    - варяги (Varangians)
+    - ковальство (blacksmithing)
+    - поховання (burial)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from Primary Chronicle about tribes
+    source: Provide in module
+
+  - type: map-activity
+    focus: Locate each tribe on the map of Ukraine
+    items: "8+ tribes"
+
+  - type: vocabulary
+    focus: Tribal names and related terminology
+    items: "15+"
+
+  - type: match-up
+    focus: Match tribes to their territories and characteristics
+    items: "10+"
+
+  - type: quiz
+    focus: Facts about Slavic tribes
+    items: "12+"
+
+  - type: group-sort
+    focus: Categorize tribes by region (Left Bank, Right Bank, South, West)
+    items: "8+"
+
+  - type: discussion
+    focus: "Які сліди племінної доби збереглися в сучасній Україні?"
+
+prerequisites:
+  - b2-hist-04 (Slavic origins)
+  - Understanding of tribal society
+
+connects_to:
+  - b2-hist-06 (Founding of Kyiv)
+  - b2-hist-09 (Oleh and Ihor)
+  - b2-hist-08 (Synthesis: Origins to Kyiv)

@@ -1,0 +1,136 @@
+# C1-HIST Module 64: Перша хвиля еміграції — Трудова (1880-1914)
+# Status: SPEC (ready for content development)
+
+id: c1-hist-64
+title: "Перша хвиля еміграції: Трудова (1880-1914)"
+slug: persha-khvylia-emihratsiyi
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Українська діаспора (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українська_діаспора
+    type: reference
+    notes: General overview
+  - name: Українці в Канаді (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
+    type: reference
+    notes: Canadian settlement
+  - name: Українці в США (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українці_в_США
+    type: reference
+    notes: American settlement
+  - name: Еміграція з України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Еміграція_з_України
+    type: reference
+    notes: Emigration waves
+
+content_outline:
+  - section: Вступ — Чому виїжджали?
+    words: 400
+    points:
+      - Економічні причини — земельний голод
+      - Перенаселення Галичини
+      - Тиск імперій
+      - Структура модуля
+
+  - section: Галицькі селяни в дорозі
+    words: 600
+    points:
+      - Хто виїжджав — соціальний портрет
+      - Маршрути — порти, кораблі
+      - Агенти еміграції — реклама «нового світу»
+      - Ілюзії і реальність
+
+  - section: Канада — «безкрайні прерії»
+    words: 700
+    points:
+      - Сіфтон і «чоловіки в кожухах»
+      - Заселення прерій
+      - Блокові поселення
+      - Важке життя — землянки, холод
+      - Перші церкви і школи
+
+  - section: США — вугільні копальні
+    words: 600
+    points:
+      - Пенсільванія — шахтарські містечка
+      - Важка праця — умови
+      - Робітничий рух
+      - Міські громади — Нью-Йорк, Чикаго
+
+  - section: Південна Америка
+    words: 400
+    points:
+      - Бразилія — кавові плантації
+      - Аргентина — пампаси
+      - Менші хвилі — Парагвай, Уругвай
+      - Збереження vs. асиміляція
+
+  - section: Формування громад
+    words: 500
+    points:
+      - Церква як центр
+      - Читальні та «Просвіти»
+      - Преса — перші газети
+      - Мова — збереження чи втрата?
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Масштаби — скільки виїхало
+      - Закладення фундаменту
+      - Підготовка до політичної хвилі
+
+vocabulary_hints:
+  required:
+    - еміграція (emigration)
+    - діаспора (diaspora)
+    - трудова міграція (labor migration)
+    - поселення (settlement)
+    - громада (community)
+    - асиміляція (assimilation)
+    - прерії (prairies)
+    - землянка (sod house)
+    - шахтар (miner)
+    - читальня (reading room)
+  recommended:
+    - агент еміграції (emigration agent)
+    - блокове поселення (block settlement)
+    - етнічна ідентичність (ethnic identity)
+    - репатріація (repatriation)
+    - тимчасова міграція (temporary migration)
+
+activity_hints:
+  - type: demographic-analysis
+    focus: Map emigration from specific Galician regions
+    output: Migration flow analysis
+
+  - type: settlement-study
+    focus: Compare Canadian vs. American settlement patterns
+    output: Comparative analysis
+
+  - type: testimony-analysis
+    focus: Analyze emigrant letters home
+    output: Primary source study
+
+  - type: community-formation
+    focus: How Ukrainian institutions formed in diaspora
+    output: Institutional development timeline
+
+  - type: essay-response
+    focus: "Чому саме галичани становили більшість першої хвилі?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-71 (Galician national movement)
+  - b2-hist (Habsburg Galicia context)
+
+connects_to:
+  - c1-hist-65 (Second wave)
+  - c1-hist-67 (Diaspora organizations)
+  - c1-hist-69 (Diaspora synthesis)

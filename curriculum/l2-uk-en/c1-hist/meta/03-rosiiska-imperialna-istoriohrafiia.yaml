@@ -1,0 +1,132 @@
+# C1-HIST Module 03: Російська імперіальна історіографія
+# Status: SPEC (ready for content development)
+
+id: c1-hist-03
+title: Російська імперіальна історіографія
+slug: rosiiska-imperialna-istoriohrafiia
+module_type: historiography
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Михайло Погодін (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Погодін_Михайло_Петрович
+    type: reference
+    notes: Creator of "Pogodin theory" denying Ukrainian distinctiveness
+  - name: Теорія Погодіна
+    url: https://uk.wikipedia.org/wiki/Теорія_Погодіна
+    type: reference
+    notes: The theory itself explained
+  - name: Малоросійство
+    url: https://uk.wikipedia.org/wiki/Малоросійство
+    type: reference
+    notes: "Little Russia" ideology analysis
+  - name: Serhii Plokhy - Lost Kingdom
+    url: https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation
+    type: secondary
+    notes: Modern analysis of Russian imperial nationalism
+
+content_outline:
+  - section: Вступ — Імперська історіографія як зброя
+    words: 400
+    points:
+      - Історія як інструмент легітимації імперії
+      - Чому Росія потребувала "привласнити" українську історію
+      - Київ як "колиска" — чия саме?
+
+  - section: Карамзін і початок імперського наративу
+    words: 500
+    points:
+      - "Історія держави Російської" (1816-1829)
+      - Київська Русь як "початок Росії"
+      - Нема окремих українців — є "малороси"
+      - Вплив на російську свідомість
+
+  - section: Теорія Погодіна
+    words: 700
+    points:
+      - Михайло Погодін (1800-1875)
+      - Суть теорії — українці "прийшли" після монголів
+      - "Справжні" кияни пішли на північ → москвичі
+      - Наукова критика теорії (Грушевський, Антонович)
+      - Чому теорія досі популярна в Росії
+
+  - section: Концепція "Малоросії"
+    words: 600
+    points:
+      - Термін "Малоросія" — походження та еволюція
+      - Від географії до ідеології
+      - "Малорос" як неповноцінний росіянин
+      - Культурна асиміляція як мета
+
+  - section: Радянська версія імперського наративу
+    words: 500
+    points:
+      - "Возз'єднання" 1654 — офіційний міф
+      - "Братні народи" — ієрархія братів
+      - Табуйовані теми — Голодомор, репресії, ОУН
+      - Продовження царської схеми у новій формі
+
+  - section: Сучасна російська історіографія
+    words: 500
+    points:
+      - Путінські історичні есе (2021)
+      - "Один народ" — заперечення українців
+      - Історія як виправдання війни
+      - Від Погодіна до Путіна — безперервність
+
+  - section: Критичний аналіз і деконструкція
+    words: 300
+    points:
+      - Як розпізнати імперський наратив
+      - Ключові маркери пропаганди
+      - Українська відповідь
+
+vocabulary_hints:
+  required:
+    - імперський наратив (imperial narrative)
+    - Малоросія / малорос (Little Russia / Little Russian)
+    - возз'єднання (reunification - Soviet term)
+    - привласнення (appropriation)
+    - легітимація (legitimation)
+    - асиміляція (assimilation)
+    - теорія Погодіна (Pogodin theory)
+    - колиска (cradle)
+    - братні народи (fraternal peoples)
+    - один народ (one people)
+  recommended:
+    - спадкоємність (succession/continuity)
+    - історична пам'ять (historical memory)
+    - фальсифікація (falsification)
+    - деконструкція (deconstruction)
+    - ідеологія (ideology)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from Putin's 2021 essay "On the Historical Unity of Russians and Ukrainians"
+    source: Provide translated excerpt with analysis questions
+
+  - type: critical-analysis
+    focus: Identify 5 markers of imperial narrative in a Russian textbook excerpt
+    output: Annotated text
+
+  - type: comparative-study
+    focus: Same event (1654) in Ukrainian vs Russian textbook
+    output: Table of differences in framing
+
+  - type: essay-response
+    focus: "Чому теорія Погодіна є науково неспроможною?"
+    word_target: 400
+    model_answer: Required
+
+  - type: debate
+    focus: How should Ukraine respond to Russian historical claims?
+
+prerequisites:
+  - c1-hist-01, c1-hist-02
+
+connects_to:
+  - c1-hist-04 (Soviet historiography - continuation)
+  - c1-hist-108 (Information warfare - modern application)

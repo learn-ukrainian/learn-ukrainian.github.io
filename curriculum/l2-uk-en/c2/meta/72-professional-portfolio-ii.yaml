@@ -1,0 +1,151 @@
+# C2 Module 72: Professional Portfolio II — Multi-Format Evidence
+# Status: SPEC (ready for content development)
+
+id: c2-72
+title: Професійне портфоліо II — Багатоформатна презентація
+slug: professional-portfolio-ii
+module_type: professional
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Дія.Бізнес — Підприємництво
+    url: https://business.diia.gov.ua/
+    type: reference
+    notes: Цифрові інструменти для професіоналів
+  - name: LinkedIn Україна
+    url: https://www.linkedin.com/
+    type: reference
+    notes: Професійні мережі
+  - name: Behance/Dribbble для творчих професій
+    url: https://www.behance.net/
+    type: reference
+    notes: Портфоліо креативних спеціалістів
+
+content_outline:
+  - section: Вступ — Мультиформатне портфоліо
+    words: 500
+    points:
+      - Різні формати для різних цілей
+      - Синергія форматів
+      - Консистентність особистого бренду
+      - Адаптація до авдиторії
+
+  - section: Цифрове портфоліо
+    words: 700
+    points:
+      - Особистий вебсайт
+      - LinkedIn-профіль українською
+      - Галерейні платформи (Behance, GitHub)
+      - Блог як частина портфоліо
+
+  - section: Відеопрезентація
+    words: 600
+    points:
+      - Відеорезюме — формат і зміст
+      - Відеоогляд проєктів
+      - Вебінари та записи виступів
+      - Технічні вимоги та якість
+
+  - section: Презентаційні матеріали
+    words: 600
+    points:
+      - Слайд-дек (pitch deck)
+      - Інфографіка досягнень
+      - Один-сторінковий профіль
+      - Візитівка та брендинг
+
+  - section: Кейс-стаді та проєктна документація
+    words: 600
+    points:
+      - Структура кейс-стаді
+      - Опис проблеми та рішення
+      - Результати та метрики
+      - Візуалізація процесу
+
+  - section: Інтеграція форматів
+    words: 500
+    points:
+      - Єдиний наратив
+      - Перехресні посилання
+      - Оновлення та підтримка
+      - Архівування та версіонування
+
+  - section: Практикум — Багатоформатна презентація
+    words: 500
+    points:
+      - Створення LinkedIn-профілю
+      - Написання кейс-стаді
+      - Підготовка відеопрезентації
+
+vocabulary_hints:
+  required:
+    - цифрове портфоліо (digital portfolio)
+    - особистий бренд (personal brand)
+    - відеорезюме (video resume)
+    - кейс-стаді (case study)
+    - презентація (presentation)
+    - слайд-дек (slide deck)
+    - інфографіка (infographic)
+    - метрика (metric)
+    - візуалізація (visualization)
+    - наратив (narrative)
+  recommended:
+    - pitch (pitch)
+    - брендинг (branding)
+    - вебінар (webinar)
+    - контент (content)
+    - платформа (platform)
+
+activity_hints:
+  - type: reading
+    focus: Аналіз успішного LinkedIn-профілю
+    source: Реальний приклад (анонімізований)
+    items: "1 повний профіль"
+
+  - type: essay-response
+    focus: Написання тексту LinkedIn-профілю
+    word_target: 400
+    output: Повний профіль з усіма секціями
+
+  - type: essay-response
+    focus: Написання кейс-стаді за власним проєктом
+    word_target: 600
+    output: Структуроване кейс-стаді
+
+  - type: quiz
+    focus: Вибір оптимального формату для різних цілей
+    items: "12+"
+
+  - type: fill-in
+    focus: Заповнення шаблону pitch deck
+    items: "10+"
+
+  - type: critical-analysis
+    focus: Аналіз консистентності портфоліо через формати
+    output: Рекомендації щодо інтеграції
+
+  - type: essay-response
+    focus: Написання скрипту для відеорезюме
+    word_target: 300
+    output: Структурований скрипт на 2-3 хвилини
+
+  - type: comparative-study
+    focus: Порівняння портфоліо для різних індустрій
+    output: Аналіз специфіки оформлення
+
+prerequisites:
+  - c2-71 (Professional Portfolio I)
+  - Digital literacy
+  - Style blending skills (C2.1 M24)
+
+connects_to:
+  - c2-73 (Professional Identity)
+  - c2-74 (C2.3 Review)
+  - c2-75 (C2.3 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

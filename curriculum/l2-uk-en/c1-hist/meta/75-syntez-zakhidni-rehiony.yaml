@@ -1,0 +1,136 @@
+# C1-HIST Module 75: Синтез — Західні землі
+# Status: SPEC (ready for content development)
+
+id: c1-hist-75
+title: "Синтез: Західні землі"
+slug: syntez-zakhidni-rehiony
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Західна Україна (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Західна_Україна
+    type: reference
+    notes: Regional overview
+  - name: Галичина (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Галичина
+    type: reference
+    notes: Galicia summary
+
+content_outline:
+  - section: Вступ — Чому «більш українські»?
+    words: 400
+    points:
+      - Огляд модулів 70-74
+      - Стереотип «справжніх українців»
+      - Чи це правда?
+      - Мета синтезу
+
+  - section: Порівняння регіонів
+    words: 600
+    points:
+      - Галичина vs. Буковина vs. Закарпаття vs. Волинь
+      - Різні імперії — різні долі
+      - Спільне і відмінне
+      - Таблиця порівняння
+
+  - section: Чому зберегли ідентичність
+    words: 700
+    points:
+      - Австрія vs. Росія — ключ
+      - Церква — греко-католицька
+      - Освіта — можливості
+      - Політичний досвід
+
+  - section: Західні землі в XX столітті
+    words: 600
+    points:
+      - 1918 — ЗУНР
+      - Міжвоєнний період — під Польщею, Румунією, Чехословаччиною
+      - 1939-1945 — окупації
+      - «Возз'єднання» 1939/1945
+
+  - section: Західна Україна в СРСР
+    words: 500
+    points:
+      - Радянізація
+      - Опір — УПА
+      - Репресії
+      - Збереження ідентичності
+
+  - section: Роль після 1991
+    words: 400
+    points:
+      - «Український П'ємонт» — знову
+      - Помаранчева революція
+      - Революція Гідності
+      - 2022 — чи ще актуальний поділ?
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Західні землі — інша історія
+      - Але частина України
+      - Перехід до східних регіонів
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - західні землі (western lands)
+    - регіональна ідентичність (regional identity)
+    - траєкторія (trajectory)
+    - «український П'ємонт» (Ukrainian Piedmont)
+    - радянізація (Sovietization)
+    - «возз'єднання» (reunification)
+    - стереотип (stereotype)
+    - порівняння (comparison)
+    - спадщина (heritage)
+  recommended:
+    - ЗУНР (WUPR - West Ukrainian People's Republic)
+    - регіональний поділ (regional division)
+    - інтеграція (integration)
+    - національна свідомість (national consciousness)
+    - диференціація (differentiation)
+
+activity_hints:
+  - type: synthesis
+    focus: Create western regions comparison diagram
+    output: Regional map
+
+  - type: comparative-table
+    focus: Four regions — empire, church, language, outcome
+    output: Comparison table
+
+  - type: historical-analysis
+    focus: Why did western lands preserve identity better?
+    output: Causal analysis
+
+  - type: contemporary-analysis
+    focus: Is the west-east divide still relevant?
+    output: Contemporary assessment
+
+  - type: essay-response
+    focus: "Чому західні українці 'більш українські'? Чи це міф?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-70-74 (All western regions modules)
+
+connects_to:
+  - c1-hist-76 (Slobozhanshchyna)
+  - c1-hist-80 (Regional diversity synthesis)
+
+# === WESTERN REGIONS PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.10
+# Students now have:
+# - Galicia under Austria understanding
+# - Galician national movement knowledge
+# - Bukovyna history awareness
+# - Transcarpathia unique path
+# - Volhynia trauma and memory
+#
+# Ready for Phase C1H.11: Regional Perspectives II

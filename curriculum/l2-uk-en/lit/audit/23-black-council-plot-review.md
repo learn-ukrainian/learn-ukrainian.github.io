@@ -1,7 +1,16 @@
 # Audit Report: 23-black-council-plot.md
 **Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 23-black-council-plot.yaml: Schema validation error at key 'pairs': [{'left': 'Яким Сомко', 'right': 'Ідеальний правитель-лицар'}, {'left': 'Іван Брюховецький', 'right': 'Демагог і трикстер'}, {'left': 'Михайло Черевань', 'right': 'Пасивний обиватель (хуторянин)'}, {'left': 'Кирило Тур', 'right': 'Романтичний бунтар (байронічний герой)'}, {'left': 'Полковник Шрам', 'right': 'Священик-воїтель (поборник традиції)'}] is too short
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3773/3500
@@ -14,7 +23,7 @@
 - **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (literature))
 - **Richness:** ✅ 92% (literature)

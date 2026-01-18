@@ -1,6 +1,15 @@
-module: b1-04
+# B1 Module 04: Структура речення
+# Status: SPEC (ready for content development)
+
+id: b1-04
 title: Структура речення
 subtitle: Sentence analysis terminology
+slug: 04-sentence-structure
+module_type: bridge
+word_target: 3000
+immersion: "75% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
@@ -20,8 +29,120 @@ objectives:
   - Learner can identify sentence parts using Ukrainian terminology
   - Learner can distinguish main and subordinate clauses
   - Learner can name sentence types and punctuation marks
-vocabulary_count: 25
-slug: 04-sentence-structure
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian Syntax (Wikipedia)
+    url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+    type: reference
+    notes: Overview of Ukrainian sentence structure terminology
+  - name: Ukrainian State Standard 2024 - Syntax
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official terminology for sentence analysis
+
+content_outline:
+  - section: Introduction - Understanding Sentence Structure
+    words: 300
+    points:
+      - Why sentence analysis terminology matters
+      - How native speakers learn syntax
+      - Connection to complex sentences in B1.3
+
+  - section: Sentence Parts (Члени речення)
+    words: 700
+    points:
+      - підмет (subject), присудок (predicate)
+      - додаток (object), означення (attribute)
+      - обставина (adverbial)
+      - Identifying parts in example sentences
+
+  - section: Clause Types
+    words: 600
+    points:
+      - головне речення (main clause)
+      - підрядне речення (subordinate clause)
+      - Simple vs complex sentence recognition
+
+  - section: Sentence Types
+    words: 500
+    points:
+      - просте речення (simple sentence)
+      - складне речення (complex sentence)
+      - складносурядне (compound)
+      - складнопідрядне (complex with subordination)
+
+  - section: Punctuation Terms
+    words: 400
+    points:
+      - кома, крапка, знак питання
+      - двокрапка, крапка з комою
+      - Punctuation rules in complex sentences
+
+  - section: Practice Analyzing Sentences
+    words: 400
+    points:
+      - Breaking down real Ukrainian sentences
+      - Identifying all components
+      - Readiness for M05
+
+  - section: Summary
+    words: 100
+    points:
+      - Key terms review
+      - Self-assessment checklist
+
+vocabulary_hints:
+  required:
+    - підмет (subject)
+    - присудок (predicate)
+    - додаток (object)
+    - означення (attribute)
+    - обставина (adverbial)
+    - головне речення (main clause)
+    - підрядне речення (subordinate clause)
+    - просте речення (simple sentence)
+    - складне речення (complex sentence)
+    - складносурядне речення (compound sentence)
+  recommended:
+    - складнопідрядне речення (complex sentence with subordination)
+    - кома (comma)
+    - крапка (period)
+    - сполучник (conjunction)
+    - інтонація (intonation)
+
+activity_hints:
+  - type: mark-the-words
+    focus: Identify sentence parts in Ukrainian sentences
+    items: "10+"
+
+  - type: match-up
+    focus: Term → example sentence part
+    items: "12+"
+
+  - type: quiz
+    focus: Sentence type identification
+    items: "10+"
+
+  - type: fill-in
+    focus: Label sentence components
+    items: "8+"
+
+  - type: group-sort
+    focus: Simple vs complex sentence examples
+    items: "12+"
+
+prerequisites:
+  - b1-01 (Basic grammar terminology)
+  - b1-02 (Verb terminology)
+  - b1-03 (Reading grammar rules)
+
+connects_to:
+  - b1-05 (Metalanguage checkpoint)
+  - b1-26 (Relative clauses)
+  - b1-35 (Concessive clauses)
+
 naturalness:
   score: 9
   status: PASS

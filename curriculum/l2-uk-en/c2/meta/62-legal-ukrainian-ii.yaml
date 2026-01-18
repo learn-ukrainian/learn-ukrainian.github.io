@@ -1,0 +1,144 @@
+# C2 Module 62: Legal Ukrainian II — Contracts and Agreements
+# Status: SPEC (ready for content development)
+
+id: c2-62
+title: Правнича українська II — Договори та угоди
+slug: legal-ukrainian-ii
+module_type: professional
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Законодавство України — Цивільний кодекс
+    url: https://zakon.rada.gov.ua/laws/show/435-15
+    type: primary
+    notes: Цивільний кодекс України, розділ про договори
+  - name: Верховна Рада України — Зразки договорів
+    url: https://zakon.rada.gov.ua/
+    type: reference
+    notes: Типові форми договорів та угод
+  - name: Юридичний словник термінів
+    url: https://uk.wikipedia.org/wiki/Юридичний_словник
+    type: reference
+    notes: Правнича термінологія
+
+content_outline:
+  - section: Вступ — Структура договору в українському праві
+    words: 500
+    points:
+      - Загальна структура договору
+      - Обов'язкові реквізити
+      - Типи договорів за Цивільним кодексом
+
+  - section: Преамбула та сторони договору
+    words: 600
+    points:
+      - Формулювання преамбули
+      - Ідентифікація сторін (фізичні/юридичні особи)
+      - Уповноважені представники та підстави
+      - Формула "далі — Сторона 1, Сторона 2"
+
+  - section: Предмет договору та істотні умови
+    words: 700
+    points:
+      - Визначення предмета договору
+      - Істотні умови за законодавством
+      - Права та обов'язки сторін
+      - Строки виконання
+
+  - section: Фінансові умови та порядок розрахунків
+    words: 600
+    points:
+      - Ціна договору та порядок оплати
+      - Валюта розрахунків
+      - Штрафні санкції та пеня
+      - Банківські реквізити
+
+  - section: Відповідальність сторін та форс-мажор
+    words: 600
+    points:
+      - Відповідальність за порушення умов
+      - Обставини непереборної сили
+      - Порядок вирішення спорів
+      - Претензійний порядок
+
+  - section: Прикінцеві положення та підписи
+    words: 500
+    points:
+      - Строк дії договору
+      - Порядок внесення змін
+      - Додатки як невід'ємні частини
+      - Формат підписання
+
+  - section: Практикум — Аналіз та складання договорів
+    words: 500
+    points:
+      - Аналіз типового договору оренди
+      - Редагування проблемних пунктів
+      - Складання простого договору
+
+vocabulary_hints:
+  required:
+    - договір (contract/agreement)
+    - угода (agreement/accord)
+    - сторона (party)
+    - предмет договору (subject of contract)
+    - істотні умови (essential terms)
+    - реквізити (requisites/details)
+    - уповноважений (authorized)
+    - зобов'язання (obligation)
+    - пеня (penalty/fine)
+    - форс-мажор (force majeure)
+  recommended:
+    - преамбула (preamble)
+    - контрагент (counterparty)
+    - акцепт (acceptance)
+    - оферта (offer)
+    - розірвання (termination)
+
+activity_hints:
+  - type: reading
+    focus: Аналіз структури типового договору оренди
+    source: zakon.rada.gov.ua template
+    items: "1 повний договір"
+
+  - type: quiz
+    focus: Ідентифікація істотних умов у витягах з договорів
+    items: "15+"
+
+  - type: fill-in
+    focus: Заповнення пропусків у договорі
+    items: "12+"
+
+  - type: match-up
+    focus: Термін → визначення в правничому контексті
+    items: "15+"
+
+  - type: essay-response
+    focus: Складання простого договору про надання послуг
+    word_target: 500
+    output: Повний договір з усіма обов'язковими елементами
+
+  - type: error-correction
+    focus: Виправлення юридичних неточностей у договорі
+    items: "10+"
+
+  - type: comparative-study
+    focus: Порівняння договору та угоди як правових форм
+    output: Таблиця відмінностей
+
+prerequisites:
+  - c2-61 (Legal Ukrainian I — terminology basics)
+  - C2.3 professional foundations (M46-60)
+  - Complete stylistic mastery (C2.1)
+
+connects_to:
+  - c2-63 (Legal Ukrainian III — court procedures)
+  - c2-64 (Legal Ukrainian IV — legal writing)
+  - c2-71 (Professional Portfolio I)
+
+naturalness:
+  score: null
+  status: PENDING

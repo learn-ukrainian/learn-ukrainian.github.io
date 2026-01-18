@@ -1,0 +1,128 @@
+# C1-HIST Module 28: Синтез — Голоси козацької доби
+# Status: SPEC (ready for content development)
+
+id: c1-hist-28
+title: "Синтез: Голоси козацької доби"
+slug: syntez-kozatski-dzherela
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Козацькі літописи (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+    type: reference
+    notes: Overview
+  - name: Джерелознавство
+    url: https://uk.wikipedia.org/wiki/Джерелознавство
+    type: reference
+    notes: Source studies
+
+content_outline:
+  - section: Вступ — Що ми вивчили
+    words: 400
+    points:
+      - Огляд модулів 19-27
+      - Різноманітність козацьких джерел
+      - Мета синтезу — системний погляд
+
+  - section: Типологія козацьких джерел
+    words: 600
+    points:
+      - Літописи — три головні
+      - Документи — універсали, статті
+      - Листування — дипломатичне, приватне
+      - Правові документи — Конституція, суди
+      - Таблиця порівняння
+
+  - section: Голоси епохи — хто говорить?
+    words: 700
+    points:
+      - Старшина — домінуючий голос
+      - Рядові козаки — де їхній голос?
+      - Селяни — майже мовчать
+      - Жінки — відсутні
+      - Інші — поляки, росіяни
+
+  - section: Що джерела кажуть vs. що замовчують
+    words: 600
+    points:
+      - Героїзація vs. критика
+      - Внутрішні конфлікти — приховані
+      - Насильство — як описано
+      - Соціальні протиріччя
+      - Реконструкція замовчаного
+
+  - section: Методологічні уроки
+    words: 500
+    points:
+      - Порівняння джерел — ключ до правди
+      - Критика упередженості
+      - Польські джерела — альтернатива
+      - Російські джерела — інша перспектива
+      - Комплексний підхід
+
+  - section: Практикум — комплексний аналіз
+    words: 500
+    points:
+      - Одна подія — кілька джерел
+      - Наприклад: Полтава в різних джерелах
+      - Що збігається, що суперечить
+      - Реконструкція події
+
+  - section: Підсумок
+    words: 200
+    points:
+      - Від середньовіччя до модерну
+      - Чек-ліст для козацьких джерел
+      - Підготовка до XIX-XX ст.
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - типологія (typology)
+    - голос / голоси (voice/voices)
+    - замовчування (silencing)
+    - реконструкція (reconstruction)
+    - комплексний підхід (comprehensive approach)
+    - упередженість (bias)
+    - старшина (officer class)
+    - рядовий козак (rank-and-file Cossack)
+    - альтернативна перспектива (alternative perspective)
+  recommended:
+    - просопографія (prosopography)
+    - соціальна історія (social history)
+    - мікроісторія (microhistory)
+    - субалтерн (subaltern)
+    - агенція (agency)
+
+activity_hints:
+  - type: synthesis
+    focus: Create comprehensive source matrix for modules 19-27
+    output: Completed typology table
+
+  - type: multi-source-analysis
+    focus: One event from 4+ sources — compare
+    output: Multi-perspective reconstruction
+
+  - type: gap-analysis
+    focus: What social groups are missing from sources?
+    output: Silences map
+
+  - type: portfolio
+    focus: Best analyses from modules 19-27
+    output: Portfolio with reflection
+
+  - type: essay-response
+    focus: "Чий голос домінує в козацьких джерелах і чому?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-19 through c1-hist-27 (All Cossack source modules)
+
+connects_to:
+  - c1-hist-29 (Modern sources — transition)
+  - c1-hist-82-88 (Imperial mechanisms — using these sources)

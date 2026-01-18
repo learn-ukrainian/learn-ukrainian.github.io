@@ -1,0 +1,138 @@
+# C1-HIST Module 07: Нова українська історіографія після 1991
+# Status: SPEC (ready for content development)
+
+id: c1-hist-07
+title: Нова українська історіографія після 1991
+slug: nova-ukrainska-istoriohrafiia
+module_type: historiography
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Інститут історії України НАНУ
+    url: http://history.org.ua/
+    type: reference
+    notes: Main academic institution
+  - name: Український інститут національної пам'яті
+    url: https://uinp.gov.ua/
+    type: reference
+    notes: State memory policy institution
+  - name: Декомунізація в Україні
+    url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+    type: reference
+    notes: Legal framework for historical revision
+  - name: Закони про декомунізацію (2015)
+    url: https://zakon.rada.gov.ua/laws/show/317-19
+    type: primary
+    notes: Decommunization law text
+
+content_outline:
+  - section: Вступ — Історія для нової держави
+    words: 400
+    points:
+      - 1991 — що змінилося?
+      - Відкриття архівів
+      - Повернення забороненого
+      - Нові питання, старі відповіді?
+
+  - section: Перше десятиліття (1991-2000)
+    words: 600
+    points:
+      - Повернення діаспорної спадщини
+      - Реабілітація Грушевського
+      - Голодомор — від табу до центральної теми
+      - Проблема кадрів — хто вчить істориків
+      - Нові підручники — хаос і пошук
+
+  - section: Друге десятиліття (2000-2014)
+    words: 500
+    points:
+      - Професіоналізація
+      - Контроверсії — ОУН-УПА, Бандера
+      - Регіональні відмінності — Захід vs. Схід
+      - Інституційний розвиток
+      - "Війни пам'яті" з Росією
+
+  - section: Декомунізація (2015)
+    words: 600
+    points:
+      - Чотири закони про декомунізацію
+      - Перейменування — масштаб операції
+      - Що заборонено, що дозволено
+      - Критика — внутрішня і зовнішня
+      - Результати — що змінилося
+
+  - section: Інститут національної пам'яті
+    words: 500
+    points:
+      - Створення і мандат
+      - Володимир В'ятрович — перший голова
+      - Функції — архіви, освіта, пам'ять
+      - Контроверсії — політизація?
+      - Порівняння з польським IPN
+
+  - section: Сучасний стан (2022+)
+    words: 500
+    points:
+      - Війна як каталізатор
+      - Деколонізація — новий етап
+      - Деросіянізація культурного простору
+      - Молоде покоління істориків
+      - Міжнародне визнання
+
+  - section: Виклики і перспективи
+    words: 400
+    points:
+      - Що залишається спірним
+      - Баланс — національний наратив vs. критична історія
+      - Роль у формуванні нації
+      - Що далі
+
+vocabulary_hints:
+  required:
+    - декомунізація (decommunization)
+    - реабілітація (rehabilitation)
+    - національна пам'ять (national memory)
+    - перейменування (renaming)
+    - архівна революція (archival revolution)
+    - деколонізація (decolonization)
+    - табуйована тема (taboo topic)
+    - переосмислення (reinterpretation)
+    - контроверсія (controversy)
+    - інституція (institution)
+  recommended:
+    - люстрація (lustration)
+    - політизація (politicization)
+    - регіональна відмінність (regional difference)
+    - наративна війна (narrative war)
+    - пострадянський (post-Soviet)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from decommunization law (2015) — key provisions
+    source: zakon.rada.gov.ua
+
+  - type: research
+    focus: Explore UINP website — what current projects exist?
+    output: Summary of 3 initiatives
+
+  - type: critical-analysis
+    focus: Analyze renaming of a street/city — what was the historical reasoning?
+    output: Case study
+
+  - type: essay-response
+    focus: "Чи є декомунізація переписуванням історії?"
+    word_target: 400
+    model_answer: Required (showing balanced argument)
+
+  - type: debate
+    focus: Should there be limits on historical memory legislation?
+
+prerequisites:
+  - c1-hist-04 (Soviet historiography)
+
+connects_to:
+  - c1-hist-08 (Decolonization methodology)
+  - c1-hist-10 (Historical memory and politics)

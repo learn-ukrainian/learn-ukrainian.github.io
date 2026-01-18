@@ -1,29 +1,157 @@
-module: a2-03
+# A2 Module 03: Dative Verbs
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-03
 title: Dative Verbs
 subtitle: Verbs That Demand the Dative Case
+slug: 03-dative-verbs
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- dative
-- verbs
+  - grammar
+  - cases
+  - dative
+  - verbs
+  - verb-case-government
+
 grammar:
-- verbs + dative
-- verbs + dative + accusative
-- indirect objects
-- verb government
+  - verbs + dative
+  - verbs + dative + accusative
+  - indirect objects
+  - verb government
+
 objectives:
-- Learner can use common verbs that require the dative case
-- Learner can distinguish between verbs taking dative vs accusative
-- Learner can construct sentences with indirect objects
-- Learner can use verbs of communication and interaction correctly
-vocabulary_count: 25
-slug: 03-dative-verbs
-focus: grammar
+  - Learner can use common verbs that require the dative case
+  - Learner can distinguish between verbs taking dative vs accusative
+  - Learner can construct sentences with indirect objects
+  - Learner can use verbs of communication and interaction correctly
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Verb Government
+    url: https://mon.gov.ua/
+    type: reference
+    notes: List of verbs requiring dative case per A2 level
+  - name: Ukrainian Verb Government Reference
+    url: https://uk.wiktionary.org/
+    type: reference
+    notes: Case requirements for common verbs
+
+content_outline:
+  - section: Verb Government Concept
+    words: 400
+    points:
+      - Why some verbs require specific cases
+      - Difference from English (help someone vs допомагати + Dat)
+      - Building on M01-02 dative knowledge
+
+  - section: Dative-Only Verbs
+    words: 600
+    points:
+      - допомагати + Dat (to help someone)
+      - заважати + Dat (to bother someone)
+      - подобатися + Dat (to please someone)
+      - вірити + Dat (to believe someone)
+      - дякувати + Dat (to thank someone)
+
+  - section: Dative + Accusative Verbs
+    words: 500
+    points:
+      - давати + Dat + Acc (to give smth to smn)
+      - показувати + Dat + Acc (to show smth to smn)
+      - пояснювати + Dat + Acc (to explain smth to smn)
+      - Word order flexibility in Ukrainian
+
+  - section: Impersonal Dative Constructions
+    words: 500
+    points:
+      - Це не заважає нікому (This doesn't bother anyone)
+      - Мені здається... (It seems to me...)
+      - Common impersonal expressions
+
+  - section: Special Dative Verbs
+    words: 500
+    points:
+      - Personal vs impersonal usage
+      - Reflexive verbs with dative (здаватися, сподобатися)
+      - Perfective pairs (допомагати/допомогти)
+
+  - section: Integration Practice
+    words: 300
+    points:
+      - Common conversation patterns
+      - Error patterns to avoid
+      - Mini-dialogues with dative verbs
+
+vocabulary_hints:
+  required:
+    - допомагати (to help)
+    - заважати (to bother)
+    - подобатися (to please/like)
+    - вірити (to believe)
+    - довіряти (to trust)
+    - дякувати (to thank)
+    - вибачати (to forgive)
+    - пробачати (to excuse)
+    - заздрити (to envy)
+    - симпатизувати (to sympathize)
+    - співчувати (to empathize)
+    - личити (to suit)
+    - підходити (to suit/fit)
+    - вистачати (to be enough)
+    - бракувати (to lack)
+  recommended:
+    - шкодити (to harm)
+    - служити (to serve)
+    - належати (to belong)
+    - сподобатися (to come to like - pf)
+    - захотітися (to feel like - pf)
+
+activity_hints:
+  - type: fill-in
+    focus: Complete sentences with dative verbs
+    items: "12+"
+
+  - type: quiz
+    focus: Add dative object to sentences
+    items: "10+"
+
+  - type: quiz
+    focus: Which verbs require dative?
+    items: "12+"
+
+  - type: match-up
+    focus: Verb + appropriate case pattern
+    items: "10+"
+
+  - type: fill-in
+    focus: Dative vs accusative object selection
+    items: "10+"
+
+  - type: dialogue
+    focus: Helping and thanking conversations
+    items: "4+"
+
+prerequisites:
+  - a2-01 (Dative pronouns)
+  - a2-02 (Dative nouns)
+  - A1 verb conjugation
+
+connects_to:
+  - a2-04 (Instrumental I)
+  - a2-09 (All Cases Practice)
+  - a2-11 (Checkpoint - Cases)
+
 naturalness:
   score: 8
   status: PASS

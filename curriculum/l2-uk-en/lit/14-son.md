@@ -338,5 +338,5 @@
 
 > [!resources] Додаткові ресурси
 >
-> - [Тарас Шевченко. Сон (Текст)](https://www.ukrlib.com.ua/books/printit.php?tid=1569)
+> - [Тарас Шевченко. Сон (Текст)](https://www.ukrlib.com.ua/books/printit.php?tid=18)
 > - [Аналіз поеми "Сон" (Відео)](https://www.youtube.com/watch?v=example)

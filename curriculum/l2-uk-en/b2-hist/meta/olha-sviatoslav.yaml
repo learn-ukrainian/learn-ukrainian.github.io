@@ -1,10 +1,138 @@
-# Meta for Ольга та Святослав
+# B2-HIST Module 10: Ольга та Святослав
+# Status: SPEC (ready for content development)
+
+id: b2-hist-10
+title: Ольга та Святослав
 slug: olha-sviatoslav
-title: "Ольга та Святослав"
-level: B2
-track: history
-phase: "HIST.2 [Kyivan Rus]"
-status: skeleton
-focus: history
-prerequisites: []
-learning_outcomes: []
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ольга (княгиня київська) (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
+    type: reference
+    notes: Overview of Princess Olha
+  - name: Святослав Ігорович (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+    type: reference
+    notes: Overview of Sviatoslav
+  - name: Повість минулих літ
+    url: https://litopys.org.ua/pvl/pvl.htm
+    type: primary
+    notes: Chronicle accounts
+
+content_outline:
+  - section: Вступ — Мати і син
+    words: 450
+    points:
+      - Ольга — перша жінка-правителька Русі
+      - Святослав — воїн-завойовник
+      - Контраст між дипломатією та військовою силою
+      - Значення цього періоду
+
+  - section: Помста Ольги
+    words: 650
+    points:
+      - Три помсти древлянам за літописом
+      - Спалення Іскоростеня
+      - Символіка та історична правда
+      - Ольга як символ справедливості
+
+  - section: Реформи Ольги
+    words: 600
+    points:
+      - Адміністративна реформа — погости та уроки
+      - Впорядкування збирання данини
+      - Зміцнення центральної влади
+      - Значення реформ для державотворення
+
+  - section: Хрещення Ольги
+    words: 550
+    points:
+      - Поїздка до Константинополя (957 р.)
+      - Прийняття християнства
+      - Відносини з імператором Константином VII
+      - Ольга як свята рівноапостольна
+
+  - section: Святослав — князь-воїн
+    words: 700
+    points:
+      - "Іду на ви" — стиль ведення війни
+      - Розгром Хозарського каганату (965-969)
+      - Балканські походи — війна з Болгарією та Візантією
+      - Переяславець як мрія про нову столицю
+
+  - section: Загибель Святослава
+    words: 500
+    points:
+      - Облога Доростолу
+      - Повернення на Русь
+      - Засідка печенігів на Дніпрових порогах (972 р.)
+      - Чаша з черепа — легенда
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Два підходи до державотворення
+      - Ольга — дипломатія, Святослав — меч
+      - Перехід до Володимира Великого
+
+vocabulary_hints:
+  required:
+    - княгиня (princess)
+    - помста (revenge)
+    - реформа (reform)
+    - хрещення (baptism)
+    - погост (pogost - tax station)
+    - урок (urok - fixed tribute)
+    - данина (tribute)
+    - каганат (khaganate)
+    - завоювання (conquest)
+    - воїн (warrior)
+    - похід (campaign)
+    - печеніги (Pechenegs)
+  recommended:
+    - рівноапостольна (equal-to-apostles)
+    - Доростол (Dorostolon)
+    - Балкани (Balkans)
+    - чаша (cup/chalice)
+    - дипломатія (diplomacy)
+
+activity_hints:
+  - type: reading
+    focus: Chronicle accounts of Olha's revenge
+    source: Provide in module
+
+  - type: map-activity
+    focus: Sviatoslav's campaigns — Khazaria and Balkans
+    items: "Campaign routes"
+
+  - type: vocabulary
+    focus: Political and military terminology
+    items: "15+"
+
+  - type: timeline
+    focus: Key events 945-972
+    items: "12+ events"
+
+  - type: compare-contrast
+    focus: Olha vs Sviatoslav — governance approaches
+    output: Two-column comparison
+
+  - type: quiz
+    focus: Facts about Olha and Sviatoslav
+    items: "12+"
+
+  - type: discussion
+    focus: "Хто більше вплинув на розвиток Русі — Ольга чи Святослав?"
+
+prerequisites:
+  - b2-hist-09 (Oleh and Ihor)
+
+connects_to:
+  - b2-hist-11 (Volodymyr and Baptism)
+  - b2-hist-07 (Khazar Khaganate — defeat)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

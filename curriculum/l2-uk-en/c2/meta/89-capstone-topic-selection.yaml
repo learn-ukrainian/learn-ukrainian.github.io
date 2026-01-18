@@ -1,0 +1,140 @@
+# C2 Module 89: Capstone Topic Selection
+# Status: SPEC (ready for content development)
+
+id: c2-89
+title: Дипломний проєкт — Вибір теми
+slug: capstone-topic-selection
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Методичні рекомендації до написання магістерських робіт
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Guidelines for academic thesis writing in Ukraine
+  - name: CEFR C2 Portfolio Requirements
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: C2 level assessment through portfolio
+  - name: Academic Writing in Ukrainian — Best Practices
+    url: https://naqa.gov.ua/
+    type: secondary
+    notes: Quality standards for academic writing
+
+content_outline:
+  - section: Вступ — Дипломний проєкт як вершина навчання
+    words: 500
+    points:
+      - Мета і значення дипломного проєкту
+      - Типи проєктів (дослідження, переклад, творчість, портфоліо)
+      - Критерії оцінювання
+      - Часові рамки та етапи
+
+  - section: Вибір типу проєкту
+    words: 700
+    points:
+      - Дослідницька робота (10,000+ слів)
+      - Перекладацький проєкт (50+ сторінок)
+      - Літературна творчість (збірка поезії або прози)
+      - Професійне портфоліо
+      - Самооцінка схильностей і можливостей
+
+  - section: Формулювання теми
+    words: 700
+    points:
+      - Критерії вдалої теми
+      - Звуження широкої теми
+      - Формулювання дослідницького питання
+      - Перевірка актуальності та оригінальності
+
+  - section: Попередній огляд літератури
+    words: 600
+    points:
+      - Пошук джерел українською
+      - Оцінка наявних досліджень
+      - Ідентифікація прогалин
+      - Позиціонування власної роботи
+
+  - section: Планування проєкту
+    words: 600
+    points:
+      - Структура та обсяг
+      - Календарний план
+      - Ресурси та підтримка
+      - Потенційні труднощі та їх подолання
+
+  - section: Практика — Обґрунтування теми
+    words: 600
+    points:
+      - Написання proposal (заявки на тему)
+      - Презентація теми для обговорення
+      - Отримання зворотного зв'язку
+      - Доопрацювання теми
+
+vocabulary_hints:
+  required:
+    - дипломний проєкт (capstone project)
+    - дослідницька робота (research paper)
+    - дослідницьке питання (research question)
+    - огляд літератури (literature review)
+    - актуальність (relevance/timeliness)
+    - оригінальність (originality)
+    - методологія (methodology)
+    - гіпотеза (hypothesis)
+    - proposal (project proposal)
+    - календарний план (timeline)
+  recommended:
+    - звуження теми (narrowing down)
+    - прогалина в дослідженнях (research gap)
+    - теоретична рамка (theoretical framework)
+    - практична значущість (practical significance)
+    - джерельна база (source base)
+
+activity_hints:
+  - type: quiz
+    focus: Типи дипломних проєктів та їхні вимоги
+    items: "12+"
+
+  - type: essay-response
+    focus: Самооцінка — вибір типу проєкту
+    word_target: 300
+    output: Обґрунтований вибір із аргументами
+
+  - type: essay-response
+    focus: Формулювання трьох потенційних тем
+    word_target: 400
+    output: Три теми з попереднім обґрунтуванням
+
+  - type: critical-analysis
+    focus: Попередній огляд літератури за обраною темою
+    output: Анотований список 5-7 джерел
+
+  - type: essay-response
+    focus: Написання project proposal (заявки)
+    word_target: 600
+    output: Повна заявка: тема, мета, методи, план
+
+  - type: discussion
+    focus: Презентація теми для групового обговорення
+    output: 5-хвилинна презентація та відповіді на питання
+
+  - type: essay-response
+    focus: Доопрацьована версія proposal
+    word_target: 600
+    output: Фінальна заявка з урахуванням зворотного зв'язку
+
+prerequisites:
+  - All C2 modules 01-88
+  - Academic writing mastery
+  - Research skills from C2.2-C2.3
+
+connects_to:
+  - c2-90 (Capstone Research)
+  - c2-91 (Capstone Drafting)
+
+naturalness:
+  score: null
+  status: PENDING

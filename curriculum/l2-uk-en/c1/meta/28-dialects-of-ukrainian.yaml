@@ -1,23 +1,128 @@
-module: c1-28
-title: 'Діалекти та наріччя'
-subtitle: 'Dialects of Ukrainian'
-version: '2.0'
-phase: 'C1.3 Linguistic Awareness'
-pedagogy: 'Immersion'
-focus: sociolinguistics
-duration: 120
-transliteration: none
-tags:
-  - dialects
-  - linguistics
-  - phonetics
-  - surzhyk
-grammar:
-  - 'Dialectal features'
-  - 'Phonetic variations'
-objectives:
-  - 'Identify 3 main dialect groups'
-  - 'Distinguish dialect from Surzhyk'
-  - 'Understand history of standardization'
-vocabulary_count: 25
+# C1 Module 28: Dialects of Ukrainian
+# Status: SPEC (ready for content development)
+
+id: c1-28
+title: Діалекти та наріччя
 slug: 28-dialects-of-ukrainian
+module_type: grammar
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Атлас української мови
+    url: https://r2u.org.ua/
+    type: primary
+    notes: Dialectological atlas of Ukrainian
+  - name: Українська діалектологія
+    url: https://mova.info/
+    type: reference
+    notes: Dialectology textbook
+
+content_outline:
+  - section: Вступ — Діалектологія
+    words: 400
+    points:
+      - Що таке діалект
+      - Діалект vs літературна мова
+      - Історія діалектної диференціації
+
+  - section: Три наріччя
+    words: 800
+    points:
+      - Північне наріччя (Полісся)
+      - Південно-західне наріччя (Галичина, Закарпаття, Буковина)
+      - Південно-східне наріччя (Слобожанщина, Донеччина)
+
+  - section: Фонетичні особливості
+    words: 700
+    points:
+      - Ікання vs укання
+      - Дзвінкі та глухі приголосні
+      - Наголос та інтонація
+
+  - section: Лексичні відмінності
+    words: 600
+    points:
+      - Бараболя vs картопля
+      - Файний vs гарний
+      - Регіоналізми
+
+  - section: Морфологічні риси
+    words: 600
+    points:
+      - Закінчення дієслів
+      - Особливості відмінювання
+      - Форми займенників
+
+  - section: Діалект і ідентичність
+    words: 500
+    points:
+      - Соціальне сприйняття
+      - Діалект у літературі
+      - Збереження діалектів
+
+  - section: Практичне завдання
+    words: 400
+    points:
+      - Розпізнавання діалектних рис
+      - Аналіз текстів
+      - Слухання діалектних зразків
+
+vocabulary_hints:
+  required:
+    - діалект (dialect)
+    - наріччя (dialect group)
+    - говір (subdialect)
+    - фонетика (phonetics)
+    - лексика (vocabulary)
+    - морфологія (morphology)
+    - літературна мова (standard language)
+    - регіоналізм (regionalism)
+    - ізоглоса (isogloss)
+    - діалектологія (dialectology)
+  recommended:
+    - говірка (local speech)
+    - діалектна риса (dialectal feature)
+    - стандартизація (standardization)
+    - діалектний атлас (dialect atlas)
+    - мовна норма (linguistic norm)
+
+activity_hints:
+  - type: quiz
+    focus: Identify dialect by features
+    items: "15+"
+
+  - type: match-up
+    focus: Dialectal word → standard equivalent
+    items: "15+"
+
+  - type: group-sort
+    focus: Features by dialect group
+    items: "12+"
+
+  - type: fill-in
+    focus: Dialectal text comprehension
+    items: "10+"
+
+  - type: cloze
+    focus: Dialectological terminology
+    items: "10+"
+
+  - type: true-false
+    focus: Dialect facts and myths
+    items: "12+"
+
+prerequisites:
+  - c1-27 (Global Context)
+  - B2 register awareness
+
+connects_to:
+  - c1-29 (Surzhyk)
+  - c1-30 (History of Language)
+  - c1-31 (Diaspora Ukrainian)
+
+naturalness:
+  score: null
+  status: PENDING

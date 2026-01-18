@@ -1,33 +1,138 @@
-title: Культура Київської Русі — Писемність, мистецтво, архітектура
-subtitle: 'Від графіті до мозаїк: культурна спадщина XI століття'
-version: '1.0'
-phase: B2.3a [Ukrainian History]
-pedagogy: CBI
-focus: history
-duration: 90
-transliteration: none
-tags:
-- history
-- medieval
-- kyivan-rus-culture
-- literacy
-- mosaics
-- architecture
-register: публіцистичний
-grammar:
-- Historical narrative tenses
-- Passive voice in historical writing
-vocabulary_focus: null
-vocab_count: 135 - "Historical terminology" - "Cultural and artistic vocabulary" -
-  "Medieval literacy vocabulary"
-objectives:
-- Learner can understand and discuss the cultural achievements of Kyivan Rus in Ukrainian
-- Learner can analyze primary sources related to medieval Ukrainian literacy and art
-- Learner can recognize the uniqueness of Kyivan Rus culture and counter appropriation
-  narratives
-- Learner can use era-specific vocabulary in cultural and historical discourse
-vocabulary_count: 40
+# B2-HIST Module 16: Культура Київської Русі
+# Status: SPEC (ready for content development)
+
+id: b2-hist-16
+title: Культура Київської Русі
 slug: kultura-kyivskoi-rusi
-naturalness:
-  score: 9
-  status: PASS
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Культура Київської Русі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
+    type: reference
+    notes: Comprehensive overview
+  - name: Літописання Київської Русі
+    url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
+    type: reference
+    notes: Chronicle tradition
+  - name: Слово о полку Ігоревім
+    url: https://litopys.org.ua/slovo/slovo.htm
+    type: primary
+    notes: Epic poem text
+
+content_outline:
+  - section: Вступ — Культурний світ Русі
+    words: 450
+    points:
+      - Київська Русь як культурний простір Європи
+      - Візантійський вплив та місцева творчість
+      - Християнство як основа культури
+      - Писемність як ключ до цивілізації
+
+  - section: Писемність та освіта
+    words: 650
+    points:
+      - Кирилиця та глаголиця
+      - Школи при церквах та монастирях
+      - Берестяні грамоти — писемність народу
+      - Бібліотеки та скрипторії
+
+  - section: Література
+    words: 700
+    points:
+      - Літописання — "Повість минулих літ"
+      - "Слово о полку Ігоревім" — шедевр давньої поезії
+      - Житія святих — Борис і Гліб
+      - "Слово про закон і благодать" Іларіона
+
+  - section: Архітектура
+    words: 550
+    points:
+      - Дерев'яна архітектура — втрачена спадщина
+      - Кам'яне будівництво — візантійська традиція
+      - Софійські собори — Київ, Новгород, Полоцьк
+      - Печерські лаври та монастирі
+
+  - section: Образотворче мистецтво
+    words: 550
+    points:
+      - Мозаїки та фрески
+      - Іконопис — візантійська школа
+      - Ювелірне мистецтво — емаль, скань
+      - Книжкова мініатюра
+
+  - section: Музика та усна творчість
+    words: 500
+    points:
+      - Церковний спів
+      - Билини та історичні пісні
+      - Боян — легендарний співець
+      - Народна творчість
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Синтез візантійського та слов'янського
+      - Унікальність культури Русі
+      - Перехід до княжих усобиць
+
+vocabulary_hints:
+  required:
+    - писемність (literacy)
+    - кирилиця (Cyrillic)
+    - літопис (chronicle)
+    - житіє (hagiography)
+    - мозаїка (mosaic)
+    - фреска (fresco)
+    - іконопис (icon painting)
+    - скань (filigree)
+    - емаль (enamel)
+    - монастир (monastery)
+    - скрипторій (scriptorium)
+    - билина (bylina - epic poem)
+  recommended:
+    - берестяна грамота (birch bark letter)
+    - мініатюра (miniature)
+    - глаголиця (Glagolitic)
+    - Боян (Boyan)
+    - церковний спів (church chant)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from "Slovo o polku Ihorevim"
+    source: Provide in module
+
+  - type: image-analysis
+    focus: Kyivan Rus art and architecture
+    items: "10+ images"
+
+  - type: vocabulary
+    focus: Cultural and artistic terminology
+    items: "18+"
+
+  - type: quiz
+    focus: Cultural achievements of Kyivan Rus
+    items: "15+"
+
+  - type: match-up
+    focus: Match cultural artifacts to their descriptions
+    items: "12+"
+
+  - type: group-sort
+    focus: Categorize cultural works by type (literature, art, architecture)
+    items: "15+"
+
+  - type: discussion
+    focus: "Що унікального в культурі Київської Русі порівняно з Візантією?"
+
+prerequisites:
+  - b2-hist-14 (St. Sophia Cathedral)
+  - b2-hist-12 (Yaroslav the Wise)
+
+connects_to:
+  - b2-hist-18 (People of Rus — everyday life)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

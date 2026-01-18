@@ -1,0 +1,122 @@
+# C1-HIST Module 122: Цикл культурних відроджень — Теорія
+# Status: SPEC (ready for content development)
+
+id: c1-hist-122
+title: "Цикл культурних відроджень: Теорія"
+slug: tsykl-kulturnykh-vidrodzhen
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Українське національне відродження (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
+    type: reference
+    notes: National revival overview
+  - name: Культурна політика (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Культурна_політика
+    type: reference
+    notes: Cultural policy context
+
+content_outline:
+  - section: Вступ — Пригнічення → Відродження
+    words: 400
+    points:
+      - Український культурний цикл
+      - Паттерн: пригнічення → підпілля → розквіт
+      - Чому повторюється
+      - Структура модуля
+
+  - section: Теоретична рамка
+    words: 700
+    points:
+      - Культура як резистенція
+      - Мова — головне поле бою
+      - «Смерть» і «відродження»
+      - Порівняння з іншими народами
+
+  - section: Історичні цикли
+    words: 600
+    points:
+      - XVII ст. — козацька культура
+      - XIX ст. — романтичне відродження
+      - 1920-ті — розстріляне відродження
+      - Пост-Сталін — шістдесятники
+
+  - section: Механізми виживання
+    words: 600
+    points:
+      - Самвидав
+      - Діаспора як «ковчег»
+      - Церква — носій культури
+      - Індивідуальна пам'ять
+
+  - section: Чому культура виживає
+    words: 500
+    points:
+      - Що неможливо знищити
+      - Роль травми
+      - Кожне покоління — з нуля?
+      - Континуїтет vs переривання
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Цикл — не фатальність
+      - 2022 — новий виток
+      - Перехід до пост-Емського періоду
+
+vocabulary_hints:
+  required:
+    - культурне відродження (cultural revival)
+    - цикл (cycle)
+    - пригнічення (suppression)
+    - резистенція (resistance)
+    - самвидав (samvydav)
+    - розстріляне відродження (executed renaissance)
+    - шістдесятники (Sixtiers)
+    - континуїтет (continuity)
+    - переривання (interruption)
+    - механізм виживання (survival mechanism)
+  recommended:
+    - культурна травма (cultural trauma)
+    - підпілля (underground)
+    - колективна пам'ять (collective memory)
+    - культурний спадок (cultural heritage)
+    - реконструкція (reconstruction)
+
+activity_hints:
+  - type: theory-development
+    focus: Build theoretical framework for cultural cycles
+    output: Theoretical framework
+
+  - type: cycle-mapping
+    focus: Map all Ukrainian cultural revival cycles
+    output: Cycle timeline
+
+  - type: survival-mechanisms
+    focus: How culture survived suppression
+    output: Mechanism analysis
+
+  - type: comparative-study
+    focus: Ukrainian cycles vs. other colonized cultures
+    output: Comparative analysis
+
+  - type: essay-response
+    focus: "Чи українська культура 'вмирала' і 'відроджувалась'?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-121 (Jewish-Ukrainian synthesis)
+  - c1-hist-52-57 (Executed Renaissance)
+
+connects_to:
+  - c1-hist-123 (Post-Ems Galicia)
+  - c1-hist-125 (Post-2014 synthesis)
+
+# === CULTURAL REVIVAL CYCLES PHASE START ===
+# Phase C1H.19 begins here
+# The recurring pattern: suppression → underground → revival

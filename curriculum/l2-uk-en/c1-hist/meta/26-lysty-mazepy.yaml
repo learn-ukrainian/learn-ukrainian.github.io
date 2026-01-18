@@ -1,0 +1,131 @@
+# C1-HIST Module 26: Листи Мазепи — Дипломат і меценат
+# Status: SPEC (ready for content development)
+
+id: c1-hist-26
+title: "Листи Мазепи: Дипломат і меценат"
+slug: lysty-mazepy
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Іван Мазепа (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+    type: reference
+    notes: Hetman biography
+  - name: Листування Мазепи
+    url: https://litopys.org.ua/
+    type: primary
+    notes: Correspondence collection
+  - name: Мазепа як меценат
+    url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+    type: reference
+    notes: Cultural patronage
+
+content_outline:
+  - section: Вступ — Мазепа у листах
+    words: 400
+    points:
+      - Листування як джерело
+      - Чому важливі приватні документи?
+      - Мазепа — багатогранна постать
+      - Що збереглося
+
+  - section: Типи кореспонденції
+    words: 500
+    points:
+      - Дипломатичні листи — до царя
+      - Внутрішня кореспонденція — старшина
+      - Приватні листи
+      - Меценатське листування — культура
+
+  - section: Мазепа-дипломат
+    words: 700
+    points:
+      - Листи до Петра І
+      - Тон — підданий чи союзник?
+      - Що Мазепа просив
+      - Як маневрував
+      - Останні листи перед зрадою
+
+  - section: Фрагмент — Лист до Петра I
+    words: 600
+    points:
+      - Текст (з глосами)
+      - Формули ввічливості
+      - Прихований зміст
+      - Що не сказано
+
+  - section: Мазепа-меценат
+    words: 600
+    points:
+      - Листування про церкви
+      - Підтримка освіти
+      - Культурний патронат
+      - Інший образ — не тільки політик
+
+  - section: Критика джерела
+    words: 400
+    points:
+      - Офіційні листи — маска
+      - Що можна дізнатися
+      - Порівняння з іншими джерелами
+      - Чи знаємо "справжнього" Мазепу?
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Листування як вікно в епоху
+      - Складність постаті
+      - Зв'язок із циклом кооптації
+
+vocabulary_hints:
+  required:
+    - листування (correspondence)
+    - кореспонденція (correspondence)
+    - дипломатія (diplomacy)
+    - меценатство (patronage)
+    - ввічливість (courtesy/politeness)
+    - підданий (subject)
+    - зрада (betrayal)
+    - маневрування (maneuvering)
+    - патронат (patronage)
+    - анафема (anathema)
+  recommended:
+    - епістолярний (epistolary)
+    - ритуал (ritual)
+    - титулатура (titulature)
+    - челобитна (petition)
+    - грамота (charter)
+
+activity_hints:
+  - type: reading
+    focus: Letter to Peter I with glosses
+    source: litopys.org.ua
+
+  - type: between-the-lines
+    focus: What is NOT said in an official letter?
+    output: Subtext analysis
+
+  - type: comparative-study
+    focus: Compare letter tone before and after 1708
+    output: Transformation analysis
+
+  - type: character-study
+    focus: Reconstruct Mazepa's personality from letters
+    output: Character profile
+
+  - type: essay-response
+    focus: "Чи можна зрозуміти Мазепу через його листування?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-22 (Velychko chronicle)
+  - c1-hist-24 (Pereiaslav Articles)
+
+connects_to:
+  - c1-hist-83 (Mazepa cycle — co-optation)
+  - c1-hist-90 (Poltava consequences)

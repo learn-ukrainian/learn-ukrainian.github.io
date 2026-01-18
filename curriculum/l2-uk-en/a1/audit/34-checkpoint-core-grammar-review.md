@@ -7,7 +7,7 @@
 - **Words:** ✅ 1351/750
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 10
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/2
 - **Audio:** ℹ️ No audio
@@ -20,12 +20,18 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд (Overview)** | ⚪️ | 156 | Skipped |
-| **Skill 1: Reading Cyrillic (Читання)** | ✅ | 205 | Included in Core |
+| **Skill 1: Reading Cyrillic (Читання)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Skill 2: Gender & Agreement (Рід та узгодження)** | ⚪️ | 201 | Skipped |
 | **Skill 3: Verb System (Дієслова)** | ⚪️ | 158 | Skipped |
 | **Skill 4: Case System (Відмінки)** | ⚪️ | 200 | Skipped |

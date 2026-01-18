@@ -61,6 +61,10 @@ from .checks.activity_validation import (
     check_mdx_unjumble_rendering,
     check_seminar_reading_pairing,
 )
+from .checks.external_resource_validation import (
+    check_external_resources,
+    fix_external_resource_url,
+)
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
@@ -987,6 +991,112 @@ def audit_module(file_path: str) -> bool:
             critical_pairing = [v for v in seminar_pairing_violations if v['severity'] == 'critical']
             if critical_pairing:
                 has_critical_failure = True
+
+    # Check external resource URLs in reading activities (Issue #430)
+    external_url_violations = []
+    if yaml_activities and level_code.lower() in ['lit', 'b2-hist', 'c1-hist', 'c1-bio']:
+        external_url_violations = check_external_resources(yaml_activities, module_title)
+        if external_url_violations:
+            print(f"  🔗 External URL validation issues: {len(external_url_violations)}")
+            for v in external_url_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v['activity']}")
+                print(f"        URL: {v.get('url', 'N/A')}")
+                print(f"        Issue: {v['message']}")
+                if v.get('suggested_url'):
+                    print(f"        ✅ Suggested fix: {v['suggested_url']}")
+                    # Auto-fix if we have a suggestion
+                    if yaml_file and v.get('suggested_url'):
+                        if fix_external_resource_url(yaml_file, v['url'], v['suggested_url']):
+                            print(f"        ✓ AUTO-FIXED: URL updated in {yaml_file.name}")
+                        else:
+                            print(f"        Fix: {v['suggestion']}")
+                else:
+                    print(f"        Fix: {v['suggestion']}")
+            # External URL mismatches are critical
+            has_critical_failure = True
+
+    # Check for LLM self-validation review file (Issue #430)
+    # ALL modules REQUIRE an LLM review file to verify content accuracy
+    llm_review_missing = False
+    module_slug = Path(file_path).stem
+    audit_dir = Path(file_path).parent / 'audit'
+    llm_review_path = audit_dir / f"{module_slug}-llm-review.md"
+
+    is_seminar_track = level_code.lower() in ['lit', 'b2-hist', 'c1-hist', 'c1-bio']
+
+    if not llm_review_path.exists():
+        llm_review_missing = True
+        print(f"  🔴 MISSING LLM SELF-VALIDATION")
+        print(f"     File not found: {llm_review_path}")
+        if is_seminar_track:
+            print(f"     Seminar tracks require LLM verification of:")
+            print(f"       - External URLs (correct author/content)")
+            print(f"       - Reading-analysis coherence")
+            print(f"       - Model answer quality")
+            print(f"       - Factual accuracy")
+        else:
+            print(f"     Core modules require LLM verification of:")
+            print(f"       - Ukrainian grammar correctness")
+            print(f"       - Vocabulary appropriateness for level")
+            print(f"       - Activity instructions clarity")
+            print(f"       - Cultural/factual accuracy")
+        print(f"     Create: {llm_review_path.name}")
+        has_critical_failure = True
+    else:
+        # Check for stale review (content hash mismatch)
+        import hashlib
+        current_hash = hashlib.md5(content.encode('utf-8')).hexdigest()[:8]
+
+        llm_review_content = llm_review_path.read_text(encoding='utf-8')
+        hash_match = re.search(r'\*\*Content Hash:\*\*\s*([a-f0-9]{8})', llm_review_content)
+
+        if hash_match:
+            review_hash = hash_match.group(1)
+            if review_hash == current_hash:
+                print(f"  ✅ LLM self-validation: {llm_review_path.name} (hash: {current_hash})")
+
+                # Parse for unresolved issues (Issue #430)
+                # Extract "## Issues Found" section
+                issues_section = re.search(
+                    r'## Issues Found\s*\n(.*?)(?=\n## |\n---|\Z)',
+                    llm_review_content,
+                    re.DOTALL
+                )
+
+                if issues_section:
+                    issues_text = issues_section.group(1).strip()
+
+                    # Skip if no issues or explicitly empty
+                    if issues_text and issues_text.lower() not in ['none', 'none.', 'no issues found', 'no issues found.', '-', '']:
+                        # Find all issues - look for bullet points with issue types
+                        # Pattern: "- **ISSUE_TYPE** (FIXED):" or "- **ISSUE_TYPE**:"
+                        issue_lines = re.findall(r'-\s*\*\*([A-Z_]+)\*\*\s*(\(FIXED\))?\s*[:\-]?\s*(.+)', issues_text)
+
+                        unresolved_issues = []
+                        for issue_type, fixed_marker, description in issue_lines:
+                            if not fixed_marker:  # No "(FIXED)" marker
+                                unresolved_issues.append((issue_type, description.strip()))
+
+                        if unresolved_issues:
+                            print(f"  🔴 UNRESOLVED ISSUES IN LLM REVIEW")
+                            print(f"     The LLM review identified issues that were NOT fixed:")
+                            for issue_type, desc in unresolved_issues:
+                                print(f"     - {issue_type}: {desc[:60]}...")
+                            print(f"     Fix these issues and update the review file")
+                            has_critical_failure = True
+            else:
+                print(f"  🔴 STALE LLM REVIEW")
+                print(f"     Content changed since validation - review is INVALID")
+                print(f"     Review hash: {review_hash} | Current: {current_hash}")
+                print(f"     Re-run LLM validation and update the review file")
+                has_critical_failure = True
+        else:
+            print(f"  🔴 LLM REVIEW MISSING HASH")
+            print(f"     Review file exists but has no content hash for verification")
+            print(f"     Add: **Content Hash:** {current_hash}")
+            print(f"     Then re-validate the content")
+            has_critical_failure = True
 
     if use_yaml_activities:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")

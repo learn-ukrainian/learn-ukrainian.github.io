@@ -1,0 +1,136 @@
+# C1-HIST Module 135: Фінальний синтез — Що ми дізналися
+# Status: SPEC (ready for content development)
+
+id: c1-hist-135
+title: "Фінальний синтез: Що ми дізналися"
+slug: finalnyi-syntez
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Історіографія України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Історіографія_України
+    type: reference
+    notes: Ukrainian historiography
+  - name: Методологія історії (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Методологія_історії
+    type: reference
+    notes: Historical methodology
+
+content_outline:
+  - section: Вступ — Кінець курсу, початок розуміння
+    words: 400
+    points:
+      - 135 модулів — що ми пройшли
+      - Не факти — методи
+      - Як думати про історію
+      - Структура модуля
+
+  - section: Методологічні уроки
+    words: 700
+    points:
+      - Джерелознавство — чому важливе
+      - Множинність інтерпретацій
+      - Критичне мислення
+      - Як оцінювати історичні твердження
+
+  - section: Тематичні уроки
+    words: 600
+    points:
+      - Імперські механізми — як розпізнавати
+      - Культурна резистенція — як працює
+      - Агентність — чому ключова
+      - Пам'ять — як формується
+
+  - section: Практичні уроки
+    words: 600
+    points:
+      - Як читати джерела
+      - Як оцінювати аргументи
+      - Як писати про історію
+      - Як розпізнавати пропаганду
+
+  - section: Відкриті питання
+    words: 500
+    points:
+      - Що залишається невідомим
+      - Де потрібні дослідження
+      - Нові джерела — нові інтерпретації
+      - Історія — незавершений проект
+
+  - section: Підсумок курсу
+    words: 300
+    points:
+      - Від фактів до розуміння
+      - Від споживача до критика
+      - Завершення C1-HIST
+
+vocabulary_hints:
+  required:
+    - фінальний синтез (final synthesis)
+    - методологія (methodology)
+    - джерелознавство (source criticism)
+    - критичне мислення (critical thinking)
+    - інтерпретація (interpretation)
+    - агентність (agency)
+    - пам'ять (memory)
+    - пропаганда (propaganda)
+    - аргумент (argument)
+    - дослідження (research)
+  recommended:
+    - епістемологія (epistemology)
+    - верифікація (verification)
+    - контекстуалізація (contextualization)
+    - деконструкція (deconstruction)
+    - рефлексія (reflection)
+
+activity_hints:
+  - type: course-reflection
+    focus: What did you learn in 135 modules?
+    output: Personal reflection
+
+  - type: methodology-summary
+    focus: Key methodological takeaways
+    output: Methodology summary
+
+  - type: skill-assessment
+    focus: Historical thinking skills self-assessment
+    output: Skill inventory
+
+  - type: future-questions
+    focus: What questions remain open?
+    output: Research agenda
+
+  - type: essay-response
+    focus: "Як C1-HIST змінив ваше розуміння української історії?"
+    word_target: 500
+    model_answer: Required (reflective)
+
+prerequisites:
+  - c1-hist-134 (Ukrainian question XXI)
+  - All previous modules
+
+connects_to:
+  - C1-BIO track (Biographical perspective)
+  - LIT track (Literary perspective)
+
+# === FINAL SYNTHESIS PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.21 AND the entire C1-HIST track
+#
+# Students completing all 135 modules will have:
+# - Historiographical methodology mastery
+# - Primary source analysis skills
+# - 21 thematic deep dives completed
+# - Critical thinking about historical claims
+# - Understanding of imperial mechanisms
+# - Recognition of Ukrainian agency
+# - Preparation for C1-BIO and LIT tracks
+#
+# Track total: 135 modules × 3500 words = ~472,500 words
+# Academic vocabulary: ~4,050 items
+# Study time: ~90-100 hours
+#
+# CURRICULUM COMPLETE

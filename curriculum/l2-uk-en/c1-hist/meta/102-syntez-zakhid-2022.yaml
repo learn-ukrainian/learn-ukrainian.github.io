@@ -1,0 +1,138 @@
+# C1-HIST Module 102: Синтез — 2022: Зміна парадигми?
+# Status: SPEC (ready for content development)
+
+id: c1-hist-102
+title: "Синтез: 2022 — Зміна парадигми?"
+slug: syntez-zakhid-2022
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Вторгнення Росії в Україну (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+    type: reference
+    notes: War context
+  - name: Допомога Україні (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Допомога_Україні
+    type: reference
+    notes: Western aid
+
+content_outline:
+  - section: Вступ — Щось змінилося?
+    words: 400
+    points:
+      - Огляд модулів 95-101
+      - 2022 — інша реакція
+      - Чи це зміна парадигми
+      - Мета синтезу
+
+  - section: Порівняння з минулим
+    words: 600
+    points:
+      - 1918 — нічого
+      - 1945 — зрада
+      - 1991 — протидія
+      - 1994 — порожні гарантії
+      - 2008, 2014 — слабкість
+      - 2022 — ?
+
+  - section: Що змінилося у 2022
+    words: 700
+    points:
+      - Масштаб допомоги
+      - Санкції — серйозні
+      - Військова допомога — летальна
+      - Політична підтримка
+      - Але...
+
+  - section: Що не змінилося
+    words: 600
+    points:
+      - «Не провокувати»
+      - Поступові рішення
+      - Страх ескалації
+      - «Переможець не потрібен»?
+      - Паттерн — досі присутній
+
+  - section: Чому 2022 інший
+    words: 500
+    points:
+      - Український спротив — ключ
+      - Неможливо ігнорувати
+      - Громадська думка на Заході
+      - Путін перейшов межу
+
+  - section: Чи тривкі зміни
+    words: 400
+    points:
+      - Втома від війни — ризик
+      - Вибори — зміни політики
+      - Як закріпити підтримку
+
+  - section: Підсумок
+    words: 300
+    points:
+      - 2022 — можливий поворот
+      - Але не гарантований
+      - Перехід до економічної експлуатації
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - парадигма (paradigm)
+    - зміна (change)
+    - допомога (aid)
+    - санкції (sanctions)
+    - ескалація (escalation)
+    - спротив (resistance)
+    - втома від війни (war fatigue)
+    - паттерн (pattern)
+    - підтримка (support)
+  recommended:
+    - «ленд-ліз» (lend-lease)
+    - летальна зброя (lethal weapons)
+    - громадська думка (public opinion)
+    - геополітичний (geopolitical)
+    - стратегічний перелом (strategic turning point)
+
+activity_hints:
+  - type: synthesis
+    focus: Create Western policy evolution timeline
+    output: Policy evolution map
+
+  - type: change-analysis
+    focus: What specifically changed in 2022?
+    output: Change inventory
+
+  - type: continuity-analysis
+    focus: What patterns continue despite 2022?
+    output: Continuity assessment
+
+  - type: future-scenarios
+    focus: Will 2022 changes last?
+    output: Scenario analysis
+
+  - type: essay-response
+    focus: "Чи 2022 рік став справжнім переломом у західній політиці щодо України?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-95-101 (All Western policy modules)
+
+connects_to:
+  - c1-hist-103 (Economic exploitation)
+  - c1-hist-131 (Why 2022 worked)
+
+# === WESTERN POLICY PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.14
+# Students now have:
+# - 100+ years of Western policy toward Ukraine
+# - Pattern of abandonment documented
+# - 2022 as potential paradigm shift
+# - Critical analysis skills for international relations
+#
+# Ready for Phase C1H.15: Economic Exploitation

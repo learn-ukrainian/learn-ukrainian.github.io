@@ -1,0 +1,130 @@
+# C2 Module 43: C2.2 Practice II — Creative Portfolio
+# Status: SPEC (ready for content development)
+
+id: c2-43
+title: Практика C2.2 II — Творче портфоліо
+slug: c2-2-practice-ii
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Літературний конкурс "Коронація слова"
+    url: https://koronacijaslova.org.ua/
+    type: reference
+    notes: Standards for contemporary Ukrainian creative writing competitions
+  - name: Видавництво "Старий Лев"
+    url: https://starylev.com.ua/
+    type: example
+    notes: Contemporary Ukrainian prose and poetry for creative models
+  - name: ЛітАкцент — сучасна література
+    url: https://litakcent.com/
+    type: reference
+    notes: Reviews and analysis of current Ukrainian literary scene
+
+content_outline:
+  - section: Вступ — Творче портфоліо як мистецький проєкт
+    words: 400
+    points:
+      - Відмінність творчого портфоліо від літературознавчого
+      - Концептуальна єдність творчої збірки
+      - Авторська ідентичність через добір творів
+
+  - section: Поезія — Цикл віршів
+    words: 700
+    points:
+      - Створення тематично пов'язаного поетичного циклу
+      - Експерименти з формою (верлібр, традиційні форми, візуальна поезія)
+      - Робота зі звукописом та ритмом (М22)
+
+  - section: Проза — Оповідання
+    words: 900
+    points:
+      - Написання повноцінного оповідання
+      - Наративні техніки та фокалізація (М27)
+      - Робота з хронотопом та атмосферою
+
+  - section: Драматургія — Діалог або сцена
+    words: 600
+    points:
+      - Написання драматичного діалогу
+      - Підтекст та непряма характеризація
+      - Сценічні ремарки та візуальна мова
+
+  - section: Есеїстика — Літературний есей
+    words: 700
+    points:
+      - Особистий голос в есеїстичному жанрі
+      - Баланс між суб'єктивним та об'єктивним
+      - Інтертекстуальні посилання (М23)
+
+  - section: Підсумкова рефлексія
+    words: 400
+    points:
+      - Творча філософія автора
+      - Зв'язок між різними творами портфоліо
+      - Бачення подальшого творчого розвитку
+
+vocabulary_hints:
+  required:
+    - творче портфоліо (creative portfolio)
+    - поетичний цикл (poetry cycle)
+    - наративна техніка (narrative technique)
+    - драматургія (dramaturgy)
+    - есеїстика (essay writing)
+    - підтекст (subtext)
+    - хронотоп (chronotope)
+    - авторська ідентичність (authorial identity)
+    - концептуальна єдність (conceptual unity)
+    - творча філософія (creative philosophy)
+  recommended:
+    - візуальна поезія (visual poetry)
+    - фокалізація (focalization)
+    - сценічна ремарка (stage direction)
+    - непряма характеризація (indirect characterization)
+    - мистецький проєкт (artistic project)
+
+activity_hints:
+  - type: essay-response
+    focus: Написання поетичного циклу (3-5 віршів)
+    word_target: 400
+    output: Тематично пов'язані вірші з моделлю відповіді
+
+  - type: essay-response
+    focus: Написання оповідання
+    word_target: 1000
+    output: Повноцінне оповідання з наративним аналізом
+
+  - type: essay-response
+    focus: Написання драматичної сцени
+    word_target: 500
+    output: Діалог з ремарками
+
+  - type: essay-response
+    focus: Літературний есей на вільну тему
+    word_target: 600
+    output: Особистий есей з інтертекстуальними посиланнями
+
+  - type: critical-analysis
+    focus: Самоаналіз творчого портфоліо
+    output: Рефлексія про творчий процес та авторські рішення
+
+  - type: authorial-intent
+    focus: Реконструкція концептуальної єдності портфоліо
+    output: Пояснення зв'язків між творами
+
+prerequisites:
+  - M42 (C2.2 Practice I — Literary portfolio)
+  - M36-37 (Creative writing: poetry and prose)
+  - M23 (Intertextuality)
+
+connects_to:
+  - c2-44 (C2.2 Review)
+  - c2-45 (C2.2 Checkpoint)
+  - c2-41 (Literary community)
+
+naturalness:
+  score: null
+  status: PENDING

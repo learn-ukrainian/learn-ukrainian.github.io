@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1484/300
+- **Words:** ✅ 1463/300
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -16,7 +16,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 8.9% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 9.0% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -30,4 +30,4 @@
 | **Production** | ➖ | 80 | Excluded Type |
 | **Cultural Insight** | ✅ | 291 | Included in Core |
 | **Підсумок** | ✅ | 144 | Included in Core |
-| **Need More Practice?** | ⚪️ | 40 | Skipped |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

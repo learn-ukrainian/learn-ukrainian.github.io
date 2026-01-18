@@ -150,3 +150,221 @@ This track is designed for **Advanced (C1)** learners who want to move from bein
 | LIT-029 | Language of Realism | - | Authentic village dialogue, curse words |
 | LIT-030 | Mykola Dzherya | *Mykola Dzherya* | Serfdom escape, industrialization |
 
+---
+
+## Detailed Module Specifications (LIT-028 to LIT-030)
+
+> **For LLM Agents:** These specifications provide explicit URLs, content outlines, and vocabulary to enable autonomous module creation without external research.
+
+---
+
+### LIT-028: Кайдашева сім'я — Конфлікт
+
+**Slug:** `kaidash-family-conflict`
+**Word Target:** 3500+
+**Immersion:** 100% Ukrainian
+
+#### Primary Sources (VERIFIED URLs)
+
+| Resource | URL |
+|----------|-----|
+| Повний текст | `https://www.ukrlib.com.ua/books/printit.php?tid=907` |
+| Аналіз твору | `https://www.ukrlib.com.ua/analiz/printit.php?tid=907` |
+| Біографія автора | `https://www.ukrlib.com.ua/bio/printit.php?tid=1646` |
+
+#### Content Outline
+
+1. **Вступ: Війна за грушу** (~400 words)
+   - The pear tree (груша) as symbol of property conflict
+   - Why a tree became the center of family destruction
+   - Connection to Ukrainian village land disputes
+
+2. **Конфлікт поколінь** (~600 words)
+   - Old Kaidash vs. his sons (Karpo, Lavrin)
+   - Kaidashykha's role as instigator
+   - Motria vs. Melashka (daughters-in-law war)
+
+3. **Аналіз ключових сцен** (~800 words)
+   - The splitting of the household (поділ)
+   - The pear tree destruction scene
+   - The final reconciliation attempt
+
+4. **Соціальний коментар** (~500 words)
+   - Nechuy's critique of village pettiness
+   - Property obsession in peasant society
+   - Humor as social criticism tool
+
+5. **Літературний аналіз** (~600 words)
+   - Realism techniques: dialogue, description
+   - Character development through conflict
+   - Comparison with European naturalism
+
+6. **Сучасна актуальність** (~400 words)
+   - Family property disputes today
+   - The "Kaidash syndrome" in Ukrainian culture
+   - Film/theater adaptations
+
+#### Key Vocabulary (must include)
+
+| Слово | Значення |
+|-------|----------|
+| груша | pear tree (central symbol) |
+| поділ | division of property/household |
+| невістка | daughter-in-law |
+| свекруха | mother-in-law |
+| сварка | quarrel |
+| заздрість | envy |
+| спадщина | inheritance |
+| двір | homestead/yard |
+| межа | boundary |
+| примирення | reconciliation |
+
+#### Activity Requirements
+
+- **Reading:** Full conflict chapters from UkrLib (tid=907)
+- **Analysis:** Essay on "Чому груша стала символом руйнування?" (300+ words)
+- **Vocabulary:** Match characters to their conflicts
+- **Discussion:** Compare to modern family disputes
+
+---
+
+### LIT-029: Мова реалізму
+
+**Slug:** `language-of-realism`
+**Word Target:** 3500+
+**Immersion:** 100% Ukrainian
+
+#### Primary Sources (VERIFIED URLs)
+
+| Resource | URL |
+|----------|-----|
+| Кайдашева сім'я (діалоги) | `https://www.ukrlib.com.ua/books/printit.php?tid=907` |
+| Микола Джеря (діалоги) | `https://www.ukrlib.com.ua/books/printit.php?tid=908` |
+| Мовознавчий аналіз | `https://www.ukrlib.com.ua/analiz/printit.php?tid=1646` |
+
+#### Content Outline
+
+1. **Вступ: Від книжної до живої мови** (~400 words)
+   - Transition from Romantic elevated style to spoken language
+   - Nechuy's revolution: peasants speak like peasants
+   - Comparison with Shevchenko's poetic language
+
+2. **Діалектні особливості** (~600 words)
+   - Kyiv region dialectisms in Nechuy's prose
+   - Phonetic features (examples from text)
+   - Lexical borrowings from Polish, Russian (marked as such)
+
+3. **Лайка та експресивна лексика** (~600 words)
+   - Curse words and their literary function
+   - Intensifiers and emotional vocabulary
+   - How Nechuy sanitized vs. preserved authentic speech
+
+4. **Побутова лексика** (~500 words)
+   - Household items vocabulary
+   - Food and cooking terms
+   - Agricultural terminology
+
+5. **Стилістичний аналіз діалогів** (~700 words)
+   - Direct speech techniques
+   - Characterization through language
+   - Class distinctions in speech patterns
+
+6. **Вплив на сучасну мову** (~500 words)
+   - Words Nechuy preserved that are still used
+   - His contribution to literary standard
+   - Comparison with modern rural speech
+
+#### Key Vocabulary (must include)
+
+| Слово | Значення |
+|-------|----------|
+| діалект | dialect |
+| просторіччя | colloquial speech |
+| лайка | swearing/curse words |
+| побутова лексика | everyday vocabulary |
+| мовлення | speech/discourse |
+| говірка | local speech variety |
+| русизм | Russian loanword |
+| архаїзм | archaism |
+| неологізм | neologism |
+| стилізація | stylization |
+
+#### Activity Requirements
+
+- **Reading:** Extract dialogues from Kaidasheva Simia
+- **Analysis:** Identify 10 dialectisms and explain their meaning
+- **Vocabulary:** Sort words by register (neutral/colloquial/vulgar)
+- **Writing:** Rewrite a scene in "literary" vs. "realistic" style
+
+---
+
+### LIT-030: Микола Джеря
+
+**Slug:** `mykola-dzherya`
+**Word Target:** 3500+
+**Immersion:** 100% Ukrainian
+
+#### Primary Sources (VERIFIED URLs)
+
+| Resource | URL |
+|----------|-----|
+| Повний текст | `https://www.ukrlib.com.ua/books/printit.php?tid=908` |
+| Аналіз твору | `https://www.ukrlib.com.ua/analiz/printit.php?tid=908` |
+| Біографія автора | `https://www.ukrlib.com.ua/bio/printit.php?tid=1646` |
+
+#### Content Outline
+
+1. **Вступ: Втеча від кріпацтва** (~400 words)
+   - Historical context: serfdom in 1840s-1860s Ukraine
+   - Mykola's decision to escape
+   - The "runaway serf" as literary archetype
+
+2. **Сюжет і структура** (~600 words)
+   - Mykola's journey from village to city
+   - Key episodes: escape, factory work, return
+   - Circular structure: from bondage to bondage?
+
+3. **Індустріалізація в літературі** (~700 words)
+   - Factory life depiction (one of first in Ukrainian lit)
+   - Contrast: village poverty vs. urban exploitation
+   - Nechuy's critique of both systems
+
+4. **Образ Миколи Джері** (~600 words)
+   - Character analysis: strength, stubbornness, tragedy
+   - Mykola as "new Ukrainian hero" (not Cossack, not intellectual)
+   - His relationship with Nymydora
+
+5. **Соціальна критика** (~500 words)
+   - Serfdom as dehumanization
+   - Landowner class critique
+   - The impossibility of freedom under empire
+
+6. **Порівняльний аналіз** (~500 words)
+   - Comparison with Shevchenko's serf narratives
+   - Comparison with Marko Vovchok's prose
+   - Nechuy's unique contribution to the theme
+
+#### Key Vocabulary (must include)
+
+| Слово | Значення |
+|-------|----------|
+| кріпак | serf |
+| кріпацтво | serfdom |
+| втеча | escape |
+| пан / поміщик | landowner |
+| фабрика | factory |
+| заробітчанин | migrant worker |
+| визволення | liberation |
+| неволя | captivity/bondage |
+| бунт | rebellion |
+| скасування | abolition |
+
+#### Activity Requirements
+
+- **Reading:** Chapters 1-3 from UkrLib (tid=908)
+- **Analysis:** Essay on "Чи знайшов Микола свободу?" (300+ words)
+- **Vocabulary:** Factory/industrial terminology extraction
+- **Comparison:** Chart comparing Mykola's life stages
+
+---
+

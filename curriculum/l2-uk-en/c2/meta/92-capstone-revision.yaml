@@ -1,0 +1,137 @@
+# C2 Module 92: Capstone Revision
+# Status: SPEC (ready for content development)
+
+id: c2-92
+title: Дипломний проєкт — Редагування
+slug: capstone-revision
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Редагування наукового тексту — Практичний посібник
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Guidelines for editing academic texts
+  - name: Культура наукової мови
+    url: https://lcorp.ulif.org.ua/
+    type: reference
+    notes: Scientific language culture and norms
+  - name: Типові помилки в академічних текстах
+    url: https://naqa.gov.ua/
+    type: secondary
+    notes: Common errors in Ukrainian academic writing
+
+content_outline:
+  - section: Вступ — Редагування як етап творення
+    words: 400
+    points:
+      - Різниця між написанням і редагуванням
+      - Рівні редагування (зміст, структура, мова)
+      - Відстань від тексту перед редагуванням
+
+  - section: Змістове редагування
+    words: 700
+    points:
+      - Перевірка логіки аргументації
+      - Узгодженість тез і доказів
+      - Повнота розкриття теми
+      - Відповідність меті та завданням
+
+  - section: Структурне редагування
+    words: 600
+    points:
+      - Пропорційність розділів
+      - Логічні переходи між частинами
+      - Абзацна структура
+      - Когезія (зв'язність тексту)
+
+  - section: Мовне редагування
+    words: 700
+    points:
+      - Відповідність науковому стилю
+      - Термінологічна послідовність
+      - Усунення повторів і штампів
+      - Синтаксична різноманітність
+
+  - section: Робота зі зворотним зв'язком
+    words: 500
+    points:
+      - Отримання відгуків від рецензентів
+      - Інтерпретація критики
+      - Пріоритизація змін
+      - Обґрунтування авторських рішень
+
+  - section: Практика — Редагування роботи
+    words: 800
+    points:
+      - Самоперевірка за чеклістом
+      - Редагування одного розділу (повний цикл)
+      - Обмін роботами для взаємного рецензування
+      - Інтеграція зворотного зв'язку
+
+vocabulary_hints:
+  required:
+    - редагування (editing/revision)
+    - змістове редагування (content editing)
+    - структурне редагування (structural editing)
+    - мовне редагування (language editing)
+    - когезія (cohesion)
+    - узгодженість (consistency)
+    - рецензування (reviewing)
+    - зворотний зв'язок (feedback)
+    - чеклист (checklist)
+    - доопрацювання (revision)
+  recommended:
+    - штамп (cliche)
+    - тавтологія (tautology)
+    - плеоназм (pleonasm)
+    - пасивний стан (passive voice)
+    - номіналізація (nominalization)
+
+activity_hints:
+  - type: quiz
+    focus: Рівні та принципи редагування
+    items: "12+"
+
+  - type: critical-analysis
+    focus: Змістове редагування одного розділу
+    output: Перелік змін із обґрунтуванням
+
+  - type: essay-response
+    focus: Переписування слабкого абзацу
+    word_target: 300
+    output: Покращена версія з поясненням змін
+
+  - type: match-up
+    focus: Типи помилок та способи виправлення
+    items: "15+"
+
+  - type: essay-response
+    focus: Рецензія на роботу колеги (500 слів)
+    word_target: 500
+    output: Конструктивна рецензія з рекомендаціями
+
+  - type: discussion
+    focus: Обговорення отриманої рецензії
+    output: План інтеграції зауважень
+
+  - type: essay-response
+    focus: Відредагована версія розділу
+    word_target: 1500
+    output: Фінальна версія одного розділу
+
+prerequisites:
+  - M91 (Capstone Drafting)
+  - Complete first draft
+  - Willingness to revise
+
+connects_to:
+  - c2-93 (Capstone Polish)
+  - c2-94 (Capstone Defense)
+
+naturalness:
+  score: null
+  status: PENDING

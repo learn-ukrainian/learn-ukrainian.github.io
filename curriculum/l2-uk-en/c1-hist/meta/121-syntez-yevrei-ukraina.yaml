@@ -1,0 +1,131 @@
+# C1-HIST Module 121: Синтез — Зеленський і нова сторінка
+# Status: SPEC (ready for content development)
+
+id: c1-hist-121
+title: "Синтез: Зеленський і нова сторінка"
+slug: syntez-yevrei-ukraina
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Володимир Зеленський (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Володимир_Зеленський
+    type: reference
+    notes: Zelensky biography
+  - name: Меморіальний центр Бабин Яр (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Меморіальний_центр_«Бабин_Яр»
+    type: reference
+    notes: Babi Yar memorial
+  - name: Єврейська громада України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Євреї_України
+    type: reference
+    notes: Jewish community today
+
+content_outline:
+  - section: Вступ — Символічний момент
+    words: 400
+    points:
+      - Огляд модулів 118-120
+      - Єврейський президент України
+      - Що це означає
+      - Мета синтезу
+
+  - section: Зеленський як символ
+    words: 700
+    points:
+      - Біографія — єврейські корені
+      - Обрання 2019 — без «єврейського питання»
+      - Родина в Голокості
+      - Ідентичність — український єврей
+
+  - section: Меморіал Бабин Яр
+    words: 600
+    points:
+      - Десятиліття суперечок
+      - Новий проект — 2020-ті
+      - Російський удар 2022
+      - Пам'ять як боротьба
+
+  - section: «Денацифікація» — іронія
+    words: 600
+    points:
+      - Путін: «нацистська Україна»
+      - Президент-єврей
+      - Як Україна відповіла
+      - Міжнародна реакція
+
+  - section: Єврейська громада сьогодні
+    words: 500
+    points:
+      - 50-100 тисяч
+      - Інституції
+      - Еміграція vs залишення
+      - Майбутнє громади
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Нова сторінка — не кінець історії
+      - Примирення триває
+      - Перехід до культурних циклів
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - символ (symbol)
+    - примирення (reconciliation)
+    - ідентичність (identity)
+    - «денацифікація» (denazification)
+    - меморіал (memorial)
+    - єврейська громада (Jewish community)
+    - Голокост (Holocaust)
+    - пам'ять (memory)
+    - нова сторінка (new page)
+  recommended:
+    - діаспора (diaspora)
+    - репатріація (repatriation)
+    - іронія (irony)
+    - пропаганда (propaganda)
+    - культурне відродження (cultural revival)
+
+activity_hints:
+  - type: synthesis
+    focus: 1000 years → Zelensky moment
+    output: Historical transformation map
+
+  - type: symbolism-analysis
+    focus: What Zelensky's election means historically
+    output: Symbolic significance analysis
+
+  - type: propaganda-deconstruction
+    focus: "Denazification" claim vs. Jewish president
+    output: Propaganda deconstruction
+
+  - type: community-study
+    focus: Jewish community in Ukraine today
+    output: Community assessment
+
+  - type: essay-response
+    focus: "Чи Зеленський — кінець єврейсько-українського конфлікту?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-118-120 (All Jewish-Ukrainian modules)
+
+connects_to:
+  - c1-hist-122 (Cultural revival cycles)
+  - c1-hist-133 (Agency synthesis)
+
+# === JEWISH-UKRAINIAN RELATIONS PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.18
+# Students now have:
+# - 1000 years of Jewish presence documented
+# - Holocaust collaboration AND rescue understood
+# - Soviet antisemitism analyzed
+# - Contemporary reconciliation examined
+#
+# Ready for Phase C1H.19: Cultural Revival Cycles

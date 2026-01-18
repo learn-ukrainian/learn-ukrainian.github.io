@@ -1,0 +1,144 @@
+# C2 Module 34: Literary Translation I — Poetry
+# Status: SPEC (ready for content development)
+
+id: c2-34
+title: Літературний переклад I — поезія
+slug: literary-translation-i
+module_type: literature
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Переклад поезії — Вікіпедія
+    url: https://uk.wikipedia.org/wiki/Поетичний_переклад
+    type: reference
+    notes: Challenges of poetry translation
+  - name: Український поетичний переклад
+    url: https://ukrlib.com.ua/
+    type: primary
+    notes: Examples of translated poetry
+  - name: Максим Рильський — перекладач
+    url: https://uk.wikipedia.org/wiki/Максим_Рильський
+    type: reference
+    notes: Master poetry translator
+
+content_outline:
+  - section: Вступ — Чи можна перекласти поезію?
+    words: 500
+    points:
+      - Проблема перекладу поезії
+      - Що втрачається і що зберігається
+      - Переклад vs. переспів vs. адаптація
+
+  - section: Переклад форми
+    words: 700
+    points:
+      - Збереження метру і ритму
+      - Переклад рими
+      - Збереження строфіки
+      - Коли форму можна змінити
+
+  - section: Переклад звукової організації
+    words: 600
+    points:
+      - Алітерація і асонанс
+      - Звуковий символізм
+      - Компенсаційні стратегії
+      - Евфонія в перекладі
+
+  - section: Переклад образності
+    words: 700
+    points:
+      - Метафори і їх переклад
+      - Культурно-специфічні образи
+      - Інтертекстуальні посилання
+      - Збереження vs. адаптація
+
+  - section: Практикум — переклад з англійської
+    words: 600
+    points:
+      - Аналіз оригіналу
+      - Вибір стратегії
+      - Процес перекладу
+      - Самоаналіз результату
+
+  - section: Практикум — переклад на англійську
+    words: 500
+    points:
+      - Специфіка перекладу з української
+      - Що важливо зберегти
+      - Представлення української поезії світові
+
+  - section: Підсумок
+    words: 400
+    points:
+      - Критерії якості поетичного перекладу
+      - Роль перекладача як співавтора
+      - Від перекладу до власної творчості
+
+vocabulary_hints:
+  required:
+    - поетичний переклад (poetry translation)
+    - переспів (adaptation/versification)
+    - метр (meter)
+    - рима (rhyme)
+    - звукопис (sound painting)
+    - образ (image)
+    - оригінал (original)
+    - еквівалент (equivalent)
+    - інтерпретація (interpretation)
+    - компенсація (compensation)
+  recommended:
+    - верлібр (free verse)
+    - строфіка (stanzaic form)
+    - калька (calque)
+    - трансформація (transformation)
+    - конотація (connotation)
+
+activity_hints:
+  - type: essay-response
+    focus: Translate English sonnet into Ukrainian
+    word_target: 100
+    output: Translation with detailed commentary
+
+  - type: comparative-study
+    focus: Compare three Ukrainian translations of Shakespeare sonnet
+    output: Analysis of different approaches
+
+  - type: critical-analysis
+    focus: Analyze Rylsky's translation technique
+    output: Detailed study of form and content choices
+
+  - type: essay-response
+    focus: Translate Ukrainian poem into English
+    word_target: 100
+    output: Translation with preservation strategy explained
+
+  - type: quiz
+    focus: Identify translation strategies in examples
+    items: "15+"
+
+  - type: essay-response
+    focus: Write translation commentary justifying choices
+    word_target: 500
+    output: Professional translator's notes
+
+  - type: comparative-study
+    focus: Evaluate own translation against published version
+    output: Self-assessment with improvement notes
+
+prerequisites:
+  - c2-28 (Poetyka: Verse Analysis)
+  - c2-33 (Translation Theory)
+  - Strong bilingual competence
+
+connects_to:
+  - c2-35 (Literary Translation II — Prose)
+  - c2-36 (Creative Writing: Poetry)
+  - c2-86 (C2.4 Translation Practice I)
+
+naturalness:
+  score: null
+  status: PENDING

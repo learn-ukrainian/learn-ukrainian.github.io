@@ -391,11 +391,11 @@ Ukrainians value hospitality.
 - [ ] Engagement boxes add value? (15d)
 
 **Scoring:**
-- **5/5:** All checks pass. Content feels authentically human.
-- **4/5:** 1-2 minor flags. Mostly human, slight AI traces.
-- **3/5:** 3-4 flags. Noticeably AI-generated but salvageable.
-- **2/5:** 5+ flags. Heavy AI fingerprint. Needs rewrite.
-- **1/5:** Auto-fail red flags present. Pure AI slop. Complete rewrite.
+- **10/10:** All checks pass. Content feels authentically human.
+- **8/10:** 1-2 minor flags. Mostly human, slight AI traces.
+- **6/10:** 3-4 flags. Noticeably AI-generated but salvageable.
+- **4/10:** 5+ flags. Heavy AI fingerprint. Needs rewrite.
+- **2/10:** Auto-fail red flags present. Pure AI slop. Complete rewrite.
 
 ---
 
@@ -406,15 +406,15 @@ Ukrainians value hospitality.
 **Module B1-08 (Aspect - Past Result/Process)**
 
 **Before Enhancement (Old Review):**
-- Coherence: 4/5
-- Relevance: 5/5
-- Educational: 4/5
-- Language: 5/5
-- Pedagogy: 4/5
-- Immersion: 5/5
-- Activities: 5/5
-- Richness: 3/5
-- **Overall: 4.4/5** → ✅ PASS
+- Coherence: 8/10
+- Relevance: 10/10
+- Educational: 8/10
+- Language: 10/10
+- Pedagogy: 8/10
+- Immersion: 10/10
+- Activities: 10/10
+- Richness: 6/10
+- **Overall: 8.8/10** → ✅ PASS
 
 **Issues Noted:** "Minor repetition in examples"
 
@@ -429,7 +429,7 @@ Ukrainians value hospitality.
 - **Human Warmth:** 1/4 (missing encouragement, confusion anticipation)
 - **Richness Red Flag:** Engagement boxes restate body text
 
-**New Score: 3/5** → ⚠️ NEEDS ENRICHMENT
+**New Score: 6/10** → ⚠️ NEEDS ENRICHMENT
 
 **Why this matters:** Old review missed that content WORKS but lacks SOUL. New review catches this.
 

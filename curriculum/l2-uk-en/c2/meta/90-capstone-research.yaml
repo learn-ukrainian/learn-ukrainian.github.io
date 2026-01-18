@@ -1,0 +1,138 @@
+# C2 Module 90: Capstone Research
+# Status: SPEC (ready for content development)
+
+id: c2-90
+title: Дипломний проєкт — Дослідження
+slug: capstone-research
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Методологія наукових досліджень
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Research methodology standards for Ukrainian academia
+  - name: Академічна доброчесність — Рекомендації МОН
+    url: https://naqa.gov.ua/
+    type: reference
+    notes: Academic integrity guidelines
+  - name: Науковий стиль української мови
+    url: https://lcorp.ulif.org.ua/
+    type: secondary
+    notes: Corpus-based examples of academic Ukrainian
+
+content_outline:
+  - section: Вступ — Етап збору матеріалу
+    words: 400
+    points:
+      - Від теми до дослідження
+      - Типи джерел і методів
+      - Організація дослідницького процесу
+
+  - section: Робота з джерелами
+    words: 700
+    points:
+      - Первинні та вторинні джерела
+      - Критична оцінка джерел
+      - Бібліографічні бази даних українською
+      - Архівні та онлайн-ресурси
+
+  - section: Методи дослідження
+    words: 700
+    points:
+      - Якісні методи (аналіз, інтерпретація)
+      - Кількісні методи (статистика, корпусний аналіз)
+      - Змішані методи
+      - Вибір методів для свого проєкту
+
+  - section: Академічна доброчесність
+    words: 600
+    points:
+      - Правила цитування (ДСТУ 8302:2015)
+      - Уникнення плагіату
+      - Парафразування vs. пряме цитування
+      - Посилання та бібліографія
+
+  - section: Ведення дослідницьких нотаток
+    words: 500
+    points:
+      - Систематизація зібраного матеріалу
+      - Конспектування джерел
+      - Каталогізація цитат
+      - Цифрові інструменти для дослідження
+
+  - section: Практика — Збір матеріалу
+    words: 800
+    points:
+      - Складання робочої бібліографії (20+ джерел)
+      - Конспект 5 ключових джерел
+      - Критичний аналіз суперечливих позицій
+      - Звіт про стан дослідження
+
+vocabulary_hints:
+  required:
+    - методологія (methodology)
+    - первинне джерело (primary source)
+    - вторинне джерело (secondary source)
+    - якісний метод (qualitative method)
+    - кількісний метод (quantitative method)
+    - академічна доброчесність (academic integrity)
+    - плагіат (plagiarism)
+    - парафразування (paraphrasing)
+    - бібліографія (bibliography)
+    - посилання (citation/reference)
+  recommended:
+    - корпусний аналіз (corpus analysis)
+    - контент-аналіз (content analysis)
+    - систематичний огляд (systematic review)
+    - триангуляція (triangulation)
+    - валідність (validity)
+
+activity_hints:
+  - type: quiz
+    focus: Типи джерел та методів дослідження
+    items: "15+"
+
+  - type: essay-response
+    focus: Обґрунтування вибору методології для свого проєкту
+    word_target: 400
+    output: Опис методів із поясненням вибору
+
+  - type: critical-analysis
+    focus: Критична оцінка 3 джерел за темою проєкту
+    output: Анотації з оцінкою надійності та релевантності
+
+  - type: essay-response
+    focus: Конспект ключового джерела
+    word_target: 500
+    output: Структурований конспект із цитатами
+
+  - type: quiz
+    focus: Правила цитування за ДСТУ 8302:2015
+    items: "12+"
+
+  - type: essay-response
+    focus: Робоча бібліографія (20+ джерел)
+    word_target: 400
+    output: Оформлена бібліографія за стандартом
+
+  - type: essay-response
+    focus: Звіт про стан дослідження (проміжний)
+    word_target: 500
+    output: Що зроблено, що залишилось, труднощі
+
+prerequisites:
+  - M89 (Capstone Topic Selection)
+  - Approved project proposal
+  - Access to research resources
+
+connects_to:
+  - c2-91 (Capstone Drafting)
+  - c2-92 (Capstone Revision)
+
+naturalness:
+  score: null
+  status: PENDING

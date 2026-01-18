@@ -1,27 +1,141 @@
-title: Скіфи та сармати — Володарі степу
-phase: B2.3a [Українська історія]
-pedagogy: CBI
-focus: history
-register: публіцистичний
-duration: 90
-transliteration: none
-tags:
-- history
-- ancient
-- scythians
-- sarmatians
-grammar:
-- Історичний наратив
-- Минулий час у науковому тексті
-vocabulary_focus: Археологічна термінологія, Назви давніх народів
-vocab_count: 35
-objectives:
-- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
-  степу
-- Учень може аналізувати первинні джерела про кочові народи
-- Учень може аргументувати значення скіфської спадщини для української культури
-vocabulary_count: 35
+# B2-HIST Module 02: Скіфи та сармати
+# Status: SPEC (ready for content development)
+
+id: b2-hist-02
+title: Скіфи та сармати
 slug: scythians-sarmatians
-naturalness:
-  score: 9
-  status: PASS
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Скіфи (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Скіфи
+    type: reference
+    notes: Overview of Scythian civilization
+  - name: Сармати (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Сармати
+    type: reference
+    notes: Overview of Sarmatian peoples
+  - name: Геродот про скіфів
+    url: https://litopys.org.ua/
+    type: primary
+    notes: Ancient Greek descriptions of Scythians
+
+content_outline:
+  - section: Вступ — Володарі степу
+    words: 500
+    points:
+      - Скіфи як перша велика кочова імперія на українських землях
+      - Географія — від Дунаю до Дону
+      - Хронологія — VII ст. до н.е. — III ст. н.е.
+      - Джерела знань — Геродот, археологія
+
+  - section: Скіфське суспільство
+    words: 700
+    points:
+      - Царські скіфи, скіфи-землероби, скіфи-кочівники
+      - Військова організація — кіннота та лучники
+      - Політична структура — царства та племена
+      - Жінки-воїни — амазонки?
+
+  - section: Скіфське мистецтво
+    words: 600
+    points:
+      - Звіриний стиль — золоті прикраси
+      - Пектораль з Товстої Могили
+      - Кургани як культурні пам'ятки
+      - Вплив грецького мистецтва
+
+  - section: Скіфи та греки
+    words: 500
+    points:
+      - Торгівля з грецькими містами-державами
+      - Культурний обмін
+      - Скіфське царство в Криму
+      - Атей — останній великий скіфський цар
+
+  - section: Сармати — нові володарі
+    words: 600
+    points:
+      - Походження сарматів
+      - Завоювання скіфських земель
+      - Сарматські племена — язиги, роксолани, алани
+      - Сарматський період в Україні
+
+  - section: Спадщина кочівників
+    words: 500
+    points:
+      - Вплив на слов'янську культуру
+      - Топоніми скіфо-сарматського походження
+      - Сарматизм у польській культурі
+      - Скіфська спадщина в сучасній Україні
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Значення скіфо-сарматської доби
+      - Україна як простір культурних обмінів
+      - Перехід до грецьких міст-держав
+
+vocabulary_hints:
+  required:
+    - скіфи (Scythians)
+    - сармати (Sarmatians)
+    - кочівники (nomads)
+    - степ (steppe)
+    - курган (burial mound)
+    - пектораль (pectoral)
+    - кіннота (cavalry)
+    - лучник (archer)
+    - звіриний стиль (animal style)
+    - плем'я (tribe)
+    - цар (king/tsar)
+    - золото (gold)
+  recommended:
+    - царство (kingdom)
+    - завоювання (conquest)
+    - торгівля (trade)
+    - амазонка (Amazon warrior)
+    - топонім (toponym)
+    - сарматизм (Sarmatism)
+    - алани (Alans)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from Herodotus about Scythians (Ukrainian translation)
+    source: Provide in module
+
+  - type: image-analysis
+    focus: Analyze Scythian gold artifacts including the pectoral
+    items: "5-6 images"
+
+  - type: map-activity
+    focus: Trace Scythian and Sarmatian territories
+    items: "2 maps"
+
+  - type: vocabulary
+    focus: Archaeological and nomadic terminology
+    items: "15+"
+
+  - type: compare-contrast
+    focus: Scythians vs Sarmatians — similarities and differences
+    output: Table or diagram
+
+  - type: quiz
+    focus: Key facts about steppe civilizations
+    items: "12+"
+
+  - type: discussion
+    focus: "Як кочівники вплинули на розвиток українських земель?"
+
+prerequisites:
+  - b2-hist-01 (Trypillia civilization)
+  - Basic historical vocabulary
+
+connects_to:
+  - b2-hist-03 (Greek city-states in Crimea)
+  - b2-hist-04 (Slavic origins)
+  - b2-hist-08 (Synthesis: Origins to Kyiv)

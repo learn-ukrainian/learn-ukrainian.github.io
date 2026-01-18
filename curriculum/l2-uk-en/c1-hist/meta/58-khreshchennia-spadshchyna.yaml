@@ -1,0 +1,131 @@
+# C1-HIST Module 58: Спадщина Хрещення — Візантійська традиція
+# Status: SPEC (ready for content development)
+
+id: c1-hist-58
+title: "Спадщина Хрещення: Візантійська традиція"
+slug: khreshchennia-spadshchyna
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Хрещення Русі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+    type: reference
+    notes: Baptism of Rus
+  - name: Візантійський обряд
+    url: https://uk.wikipedia.org/wiki/Візантійський_обряд
+    type: reference
+    notes: Byzantine rite
+  - name: Православ'я в Україні
+    url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
+    type: reference
+    notes: Orthodoxy overview
+
+content_outline:
+  - section: Вступ — Релігія і нація
+    words: 400
+    points:
+      - Чому релігійна ідентичність важлива
+      - Хрещення 988 — початок
+      - Візантійський вибір — наслідки
+      - Структура фази
+
+  - section: Хрещення Русі — факти і міфи
+    words: 600
+    points:
+      - Володимир і вибір віри — легенда
+      - Політичні мотиви
+      - Візантійський союз
+      - Що насправді сталося
+
+  - section: Візантійська спадщина
+    words: 700
+    points:
+      - Літургія церковнослов'янською
+      - Архітектура — Софія Київська
+      - Право — Номоканон
+      - Література — перекладна
+      - Мистецтво — ікони
+
+  - section: Церква і держава
+    words: 500
+    points:
+      - Візантійська модель — симфонія
+      - Митрополія Київська
+      - Залежність від Константинополя
+      - Князі і церква
+
+  - section: Дебати про спадщину
+    words: 600
+    points:
+      - Чия спадщина — України, Росії, Білорусі?
+      - Московська претензія
+      - Українська позиція
+      - Сучасні церковні конфлікти
+
+  - section: Спадщина для ідентичності
+    words: 400
+    points:
+      - Православ'я як ідентичність
+      - Але не тільки православ'я
+      - Різноманітність — УГКЦ, протестанти
+      - Секуляризація
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Хрещення — початок історії
+      - Від Візантії до сьогодення
+      - Підготовка до Берестейської унії
+
+vocabulary_hints:
+  required:
+    - Хрещення Русі (Baptism of Rus)
+    - Візантія (Byzantium)
+    - православ'я (Orthodoxy)
+    - церковнослов'янський (Church Slavonic)
+    - митрополія (metropolitanate)
+    - літургія (liturgy)
+    - ікона (icon)
+    - симфонія (symphony - church-state model)
+    - спадщина (heritage)
+    - ідентичність (identity)
+  recommended:
+    - патріарх (patriarch)
+    - єпархія (eparchy/diocese)
+    - канонічний (canonical)
+    - автокефалія (autocephaly)
+    - обряд (rite)
+
+activity_hints:
+  - type: source-analysis
+    focus: PVL baptism narrative — separate fact from legend
+    output: Source criticism
+
+  - type: heritage-debate
+    focus: Whose heritage is Kyivan Christianity?
+    output: Position analysis
+
+  - type: visual-analysis
+    focus: Analyze Byzantine influences in Ukrainian church art
+    output: Visual comparison
+
+  - type: contemporary-connection
+    focus: How does 988 legacy affect 2022 church conflicts?
+    output: Contemporary relevance
+
+  - type: essay-response
+    focus: "Як візантійська традиція сформувала українську ідентичність?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-12 (PVL — baptism narrative)
+  - c1-hist-57 (Cultural genocide synthesis)
+
+connects_to:
+  - c1-hist-59 (Union of Brest)
+  - c1-hist-60 (Orthodox identity 17th-18th c.)

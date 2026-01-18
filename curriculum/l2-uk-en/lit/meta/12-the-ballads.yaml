@@ -1,34 +1,153 @@
+# LIT Module 12: The Ballads
+# Status: SPEC (ready for content development)
+
+id: lit-12
 title: 'Балади: Між Світами'
-slug: the-ballads
-version: '1.0'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
-phase: LIT
-transliteration: none
+slug: the-ballads
+module_type: literature
+word_target: 4500
+immersion: "100% Ukrainian"
+grammar:
+  - Romantic ballad style
+  - Folk mythology lexicon
+  - Gothic atmosphere vocabulary
+
+objectives:
+  - Analyze the genre of Romantic Ballad
+  - Explore the "Metamorphosis" motif
+  - Compare "Priichynna" and "Topolya"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Причинна
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+    type: primary
+    notes: Балада для аналізу
+  - name: Тополя
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+    type: primary
+    notes: Балада для аналізу
+  - name: Утоплена
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+    type: primary
+    notes: Балада для аналізу
+  - name: Кобзар — повний текст
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+    type: secondary
+    notes: Контекст ранньої поезії
+
+content_outline:
+  - section: Вступ — Жанр романтичної балади
+    words: 500
+    points:
+      - Що таке балада (європейський контекст)
+      - Романтизм і фольклор
+      - Шевченко і народна традиція
+
+  - section: '"Причинна" — божевілля і русалки'
+    words: 700
+    points:
+      - Сюжет і символіка
+      - Образ "причинної" (божевільної)
+      - Зустріч із потойбічним світом
+
+  - section: '"Тополя" — метаморфоза'
+    words: 700
+    points:
+      - Міф про перетворення
+      - Дівчина-дерево як архетип
+      - Тема самотності та очікування
+
+  - section: '"Утоплена" — темна казка'
+    words: 700
+    points:
+      - Матір-відьма і помста води
+      - Готичні елементи
+      - Жіноча доля у баладах
+
+  - section: Народна демонологія
+    words: 600
+    points:
+      - Русалки, відьми, мавки
+      - Функція фантастичного
+      - Зв'язок з європейським романтизмом
+
+  - section: Підсумок — Фатум і доля
+    words: 400
+    points:
+      - Концепція долі у раннього Шевченка
+      - Від балад до епосу
+      - Містика як шлях до реальності
+
+vocabulary_hints:
+  required:
+    - балада (ballad)
+    - романтизм (romanticism)
+    - метаморфоза (metamorphosis)
+    - русалка (water nymph)
+    - фатум (fate)
+    - причинна (bewitched/mad woman)
+    - потойбіччя (afterworld)
+    - демонологія (demonology)
+    - архетип (archetype)
+    - символіка (symbolism)
+  recommended:
+    - мавка (forest nymph)
+    - відьма (witch)
+    - перетворення (transformation)
+    - самотність (loneliness)
+    - готика (gothic)
+
+activity_hints:
+  - type: reading
+    focus: Повні тексти балад
+    source: UkrLib
+    items: "5+"
+
+  - type: quiz
+    focus: Сюжети та символіка балад
+    items: "15+"
+
+  - type: match-up
+    focus: Балада → її центральний мотив
+    items: "10+"
+
+  - type: essay-response
+    focus: Концепція фатуму у раннього Шевченка
+    word_target: 300
+    output: Літературознавче есе
+
+  - type: group-sort
+    focus: Демонологічні образи (русалки / відьми / мавки)
+    items: "15+"
+
+  - type: cloze
+    focus: Ключові цитати з балад
+    items: "12+"
+
+prerequisites:
+  - lit-11 (Young Shevchenko)
+  - Understanding of Romanticism
+
+connects_to:
+  - lit-13 (Haidamaky — від балади до епосу)
+  - lit-18 (Women in Kobzar — жіночі образи)
+
+version: "1.0"
+phase: LIT.3 The Prophet (Taras Shevchenko)
+focus: literature
 pedagogy: literature
 duration: 120
+transliteration: none
 tags:
-- література
-- шевченко
-- романтизм
-- містика
-- фольклор
-objectives:
-- Проаналізувати жанр романтичної балади
-- Дослідити мотив метаморфози (перетворення) у "Тополі"
-- Розкрити народну демонологію у "Причинній" та "Утопленій"
-- Зрозуміти концепцію "фатуму" (долі) у раннього Шевченка
-grammar:
-- Архаїчні форми дієслів
-- Символіка кольорів і чисел
-audio: true
-description: 'У цьому модулі ми зануримося у **містичний період** творчості Шевченка.
-  Ми розберемо жанр **балади** — історії, де реальність переплітається з фантастикою.
-  Ми проаналізуємо п''ять шедеврів: 1.  **"Причинна"**: Трагедія божевілля і зустріч
-  з русалками. 2.  **"Тополя"**: Міф про метаморфозу (перетворення дівчини на дерево).
-  3.  **"Утоплена"**: Похмура історія про матір-відьму і помсту води. 4.  **"Лілея"**:
-  Історія дівчини-квітки, загиблої від панської руки. 5.  **"Русалка"**: Страшна казка
-  про матір, що топить дитину. Ви дізнаєтесь, як українська народна демонологія стала
-  основою високого європейського романтизму.'
+  - література
+  - шевченко
+  - романтизм
+  - містика
+  - фольклор
+
 naturalness:
   score: 10
   status: PASS

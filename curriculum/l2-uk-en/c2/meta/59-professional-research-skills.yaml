@@ -1,0 +1,132 @@
+# C2 Module 59: Professional Research Skills
+# Status: SPEC (ready for content development)
+
+id: c2-59
+title: Професійні дослідницькі навички
+slug: professional-research-skills
+module_type: grammar
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Національна бібліотека України імені В. І. Вернадського
+    url: https://nbuv.gov.ua/
+    type: reference
+    notes: Research resources and methodology guidelines
+  - name: Scopus — база наукових публікацій
+    url: https://www.scopus.com/
+    type: reference
+    notes: International database for academic research
+  - name: УРАН — українська дослідницька та академічна мережа
+    url: https://www.uran.ua/
+    type: reference
+    notes: Ukrainian academic network and research resources
+
+content_outline:
+  - section: Вступ — Дослідницькі компетенції для професіонала
+    words: 500
+    points:
+      - Роль дослідження в професійній діяльності
+      - Типи професійних досліджень
+      - Етика дослідження та академічна доброчесність
+
+  - section: Пошук та оцінка джерел
+    words: 800
+    points:
+      - Бази даних та пошукові системи
+      - Критерії оцінки якості джерел
+      - Первинні vs. вторинні джерела
+      - Робота з бібліографією
+
+  - section: Методи збору інформації
+    words: 700
+    points:
+      - Огляд літератури (literature review)
+      - Аналіз документів
+      - Інтерв'ю та опитування
+      - Спостереження та кейс-стаді
+
+  - section: Аналіз та синтез інформації
+    words: 600
+    points:
+      - Систематизація зібраних даних
+      - Виявлення закономірностей
+      - Критичний аналіз результатів
+      - Формулювання висновків
+
+  - section: Презентація результатів дослідження
+    words: 600
+    points:
+      - Структура дослідницького звіту
+      - Візуалізація даних
+      - Цитування та посилання (ДСТУ)
+      - Етика представлення результатів
+
+  - section: Практичні вправи
+    words: 500
+    points:
+      - Проведення міні-дослідження
+      - Написання огляду літератури
+      - Презентація результатів
+
+vocabulary_hints:
+  required:
+    - дослідження (research)
+    - джерело (source)
+    - методологія (methodology)
+    - гіпотеза (hypothesis)
+    - дані (data)
+    - аналіз (analysis)
+    - синтез (synthesis)
+    - висновок (conclusion)
+    - бібліографія (bibliography)
+    - цитування (citation)
+  recommended:
+    - верифікація (verification)
+    - валідність (validity)
+    - надійність (reliability)
+    - вибірка (sample)
+    - кореляція (correlation)
+
+activity_hints:
+  - type: essay-response
+    focus: Написання огляду літератури на задану тему (3-5 джерел)
+    word_target: 600
+    output: Огляд з моделлю відповіді
+
+  - type: quiz
+    focus: Критерії оцінки якості джерел
+    items: "15+"
+
+  - type: critical-analysis
+    focus: Оцінка методології дослідження
+    output: Критичний аналіз з рекомендаціями
+
+  - type: fill-in
+    focus: Правильне цитування за ДСТУ
+    items: "12+"
+
+  - type: essay-response
+    focus: Формулювання дослідницького питання та гіпотези
+    word_target: 200
+    output: Питання, гіпотеза, план з моделлю
+
+  - type: comparative-study
+    focus: Порівняння методологій двох досліджень
+    output: Аналіз сильних та слабких сторін
+
+prerequisites:
+  - M58 (Cross-Domain Communication)
+  - M49-50 (Reading Professional Texts I-II)
+  - M03 (Науковий стиль — Publication-Ready)
+
+connects_to:
+  - c2-60 (Building Domain Expertise)
+  - c2-71-72 (Professional Portfolio I-II)
+  - c2-89-94 (Capstone Project)
+
+naturalness:
+  score: null
+  status: PENDING

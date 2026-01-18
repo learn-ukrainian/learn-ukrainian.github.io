@@ -455,6 +455,280 @@ For modules with multiple source texts:
 - [ ] ALL `authorial-intent` have `source_reading`
 - [ ] ALL `source_reading` values point to valid reading IDs
 
+#### 10.7 LLM Self-Validation (MANDATORY for Audit)
+
+<critical>
+
+**SKEPTICAL VALIDATION - NOT A RUBBER STAMP**
+
+You are the last line of defense. The audit script catches syntax and structure, but YOU must catch:
+- Wrong URLs pointing to wrong authors
+- Factual errors in historical content
+- Unnatural or robotic Ukrainian
+- Model answers that don't match prompts
+
+**Approach:**
+- **Assume errors exist** until you verify otherwise
+- **Actively look for problems**, don't just confirm correctness
+- **Check specific details** (dates, names, URLs) against your knowledge
+- **If uncertain, FLAG IT** - false positives are better than missed errors
+
+**DO NOT:**
+- ❌ Skim and approve
+- ❌ Copy-paste "all checks passed" without verification
+- ❌ Assume previous creator got it right
+
+**DO:**
+- ✅ Read every Ukrainian sentence critically
+- ✅ Verify each URL against known mappings
+- ✅ Check that model answers actually address prompts
+- ✅ Document specific evidence for each check
+
+---
+
+**The audit script cannot verify content accuracy. YOU (the LLM doing the audit) MUST verify these against your knowledge:**
+
+**1. External URL Verification**
+
+For every `reading` activity with a `resource.url`:
+
+- Do you recognize this URL from your training data?
+- Does the URL content match the expected author/topic?
+- Known URL mappings (verify or flag):
+
+| Author | UkrLib URL |
+|--------|------------|
+| Нечуй-Левицький | `tid=1646` |
+| Шевченко | `tid=57` |
+| Куліш | `tid=1621` |
+| Котляревський | `tid=1553` |
+| Франко | `tid=71` |
+| Леся Українка | `tid=83` |
+| Кобилянська | `tid=1582` |
+| Квітка-Основ'яненко | `tid=1568` |
+
+**If URL doesn't match your knowledge: FLAG as `INVALID_EXTERNAL_URL` with suggested correction.**
+
+**2. Reading-Analysis Coherence**
+
+For every `critical-analysis` and `authorial-intent`:
+
+- Does `target_text` actually appear in or derive from the source reading?
+- Do the `questions` relate directly to the reading content?
+- Are `focus_points` appropriate for the target text?
+
+**If mismatched: FLAG as `INCOHERENT_ANALYSIS` with explanation.**
+
+**3. Model Answer Quality**
+
+For every `essay-response`, `critical-analysis`, and `comparative-study`:
+
+- Does `model_answer` actually address the prompt/questions?
+- Is the analysis substantive and correct?
+- Does it demonstrate the expected analytical approach?
+
+**If model answer is off-topic or incorrect: FLAG as `INVALID_MODEL_ANSWER`.**
+
+**4. Factual Accuracy**
+
+For all historical/biographical content:
+
+- Are dates correct?
+- Are names spelled correctly?
+- Are historical facts accurate?
+- Are literary attributions correct?
+
+**If factual error found: FLAG as `FACTUAL_ERROR` with correction.**
+
+**Audit Report Format for Self-Validation Issues:**
+
+```
+=== LLM SELF-VALIDATION ===
+
+INVALID_EXTERNAL_URL (CRITICAL)
+  Activity: Біографія Нечуя-Левицького
+  Current URL: https://www.ukrlib.com.ua/bio/printit.php?tid=1815
+  Expected: tid=1646 (Нечуй-Левицький)
+  Reason: URL points to wrong author
+
+FACTUAL_ERROR (WARNING)
+  Activity: Есе про творчість
+  Issue: "народився 1845" should be "народився 1838"
+```
+
+**Logging Results (MANDATORY):**
+
+Write self-validation results to a **separate file** (audit.py overwrites the main review file):
+
+**File:** `curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md`
+
+```markdown
+# LLM Self-Validation: {slug}
+**Validated by:** Claude/Gemini | **Date:** YYYY-MM-DD
+**Content Hash:** {first 8 chars of md5 hash of module .md file}
+
+## Verification Evidence
+
+### External URLs
+**Status:** ✅/❌
+- URL: `{actual URL from module}`
+- Expected author: {author name}
+- Verified against: {tid mapping or knowledge source}
+- Evidence: "{quote from page title or content proving correct author}"
+
+### Reading-Analysis Coherence
+**Status:** ✅/❌
+- Reading ID: `{reading-id}`
+- Linked activities: {list of activity types referencing it}
+- Target text verification: "{first 10 words of target_text}" appears in source: YES/NO
+
+### Model Answers
+**Status:** ✅/❌
+- Checked {N} model answers
+- Each addresses its prompt: YES/NO
+- Quality issues: {specific issues or "None found"}
+
+### Factual Accuracy
+**Status:** ✅/❌
+- Key facts verified:
+  - Birth/death dates: {dates} ✓
+  - Locations: {places} ✓
+  - Historical events: {events} ✓
+- Corrections needed: {list or "None"}
+
+### Naturalness
+**Status:** ✅/❌ | **Score:** X/10
+- Checked {N} prose passages
+- Red flags: {template repetition, robotic transitions, etc. or "None"}
+
+## Issues Found
+[MUST list specific issues with line numbers/activity names, or explicitly state "None found after checking X items"]
+
+## Fixes Applied
+[List specific fixes with before/after, or "None needed"]
+```
+
+**EVIDENCE REQUIRED:** Generic statements like "all checks passed" are NOT acceptable. Each section must show WHAT was checked and HOW it was verified.
+
+**Content Hash:** Run `md5 -q {module}.md | cut -c1-8` to get the hash. If module changes after review, audit will FAIL as stale.
+
+**Two-file structure:**
+- `{slug}-review.md` - Auto-generated by `audit.py` (script output)
+- `{slug}-llm-review.md` - Written by LLM (self-validation, never overwritten by script)
+
+</critical>
+
+### 11. Core Module LLM Self-Validation (A1-C2)
+
+**Applies to:** A1, A2, B1, B2, C1, C2 core levels.
+
+<critical>
+
+**SKEPTICAL VALIDATION - NOT A RUBBER STAMP**
+
+You are the last line of defense for core modules. Be aggressive in finding errors:
+- Russianisms slip through constantly (приймати участь, на протязі)
+- English calques from translation (робити сенс, брати місце)
+- Wrong case endings in activities
+- Vocabulary too advanced for the level
+
+**Approach:**
+- **Read every Ukrainian sentence** - don't skim
+- **Check vocabulary against curriculum plan** - is this word allowed at this level?
+- **Verify activity answers** - are the "correct" answers actually correct?
+- **Flag uncertainty** - if you're not sure, mark it for review
+
+---
+
+**The audit script checks structure and counts but cannot verify content accuracy. YOU (the LLM doing the audit) MUST verify:**
+
+**1. Ukrainian Grammar Correctness**
+
+- Are all Ukrainian sentences grammatically correct?
+- Are case endings correct for the context?
+- Is word order natural (not calqued from English)?
+- Are verb aspects used correctly?
+
+**Common errors to check:**
+| ❌ Wrong | ✅ Correct | Issue |
+|----------|-----------|-------|
+| приймати участь | брати участь | Russicism |
+| самий кращий | найкращий | Superlative calque |
+| на протязі | протягом | Russicism |
+| робити сенс | мати сенс | English calque |
+
+**2. Vocabulary Appropriateness**
+
+- Is vocabulary within the level scope? (Check curriculum plan)
+- Are words used in correct contexts?
+- Are collocations natural?
+
+**3. Activity Instructions Clarity**
+
+- Are instructions unambiguous?
+- Can learners understand what to do?
+- Are example answers correct?
+
+**4. Cultural/Factual Accuracy**
+
+- Are cultural references accurate?
+- Are any facts stated that could be wrong?
+
+**Logging Results (MANDATORY):**
+
+**File:** `curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md`
+
+```markdown
+# LLM Self-Validation: {slug}
+**Validated by:** Claude/Gemini | **Date:** YYYY-MM-DD
+**Content Hash:** {first 8 chars of md5 hash of module .md file}
+
+## Verification Evidence
+
+### Grammar
+**Status:** ✅/❌
+- Sentences checked: {N}
+- Russianisms found: {list or "None"}
+- English calques found: {list or "None"}
+- Case/aspect errors: {list or "None"}
+- Sample verified: "{quote a sentence you checked}"
+
+### Vocabulary
+**Status:** ✅/❌
+- Level: {A1/A2/B1/B2/C1/C2}
+- Words checked against curriculum plan: {N}
+- Out-of-scope words found: {list or "None"}
+- Collocation issues: {list or "None"}
+
+### Activity Instructions
+**Status:** ✅/❌
+- Activities reviewed: {N}
+- Ambiguous instructions: {list with activity names or "None"}
+- Incorrect example answers: {list or "None"}
+
+### Factual Accuracy
+**Status:** ✅/❌
+- Cultural references verified: {list what you checked}
+- Corrections needed: {list or "None"}
+
+### Naturalness
+**Status:** ✅/❌ | **Score:** X/10
+- Prose passages checked: {N}
+- Red flags: {specific issues or "None"}
+
+## Issues Found
+[MUST list specific issues with line numbers/activity names, or explicitly state "None found after checking X items"]
+
+## Fixes Applied
+[List specific fixes with before/after, or "None needed"]
+```
+
+**EVIDENCE REQUIRED:** Generic statements like "all checks passed" are NOT acceptable. Each section must show WHAT was checked and HOW it was verified.
+
+**Content Hash:** Run `md5 -q {module}.md | cut -c1-8` to get the hash. If module changes after review, audit will FAIL as stale.
+
+</critical>
+
 ---
 
 ## Fix Strategy

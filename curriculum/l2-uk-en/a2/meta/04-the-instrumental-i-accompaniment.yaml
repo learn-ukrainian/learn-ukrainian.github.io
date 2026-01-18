@@ -1,29 +1,159 @@
-module: a2-04
+# A2 Module 04: The Instrumental I - Accompaniment
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-04
 title: The Instrumental I — Accompaniment
 subtitle: With Whom? Using 'З'
+slug: 04-the-instrumental-i-accompaniment
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- instrumental
-- prepositions
+  - grammar
+  - cases
+  - instrumental
+  - prepositions
+  - accompaniment
+
 grammar:
-- instrumental endings
-- preposition з/із/зі
-- accompaniment
-- social interaction
+  - instrumental endings
+  - preposition з/із/зі
+  - accompaniment
+  - social interaction
+
 objectives:
-- Learner can form instrumental case endings for nouns
-- Learner can use the preposition з (with) correctly
-- Learner can describe doing things together with others
-- Learner can use proper euphony rules for з/із/зі
-vocabulary_count: 25
-slug: 04-the-instrumental-i-accompaniment
-focus: grammar
+  - Learner can form instrumental case endings for nouns
+  - Learner can use the preposition з (with) correctly
+  - Learner can describe doing things together with others
+  - Learner can use proper euphony rules for з/із/зі
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Instrumental Case
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Instrumental endings and з/із/зі usage rules
+  - name: Ukrainian Grammar Reference
+    url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+    type: reference
+    notes: Complete instrumental paradigm
+
+content_outline:
+  - section: Introduction to Instrumental Case
+    words: 400
+    points:
+      - The seventh case in Ukrainian (орудний відмінок)
+      - Key question - ким? чим? (by whom? by what?)
+      - Primary use - accompaniment with з/із/зі
+
+  - section: Instrumental Endings by Gender
+    words: 600
+    points:
+      - Masculine hard → -ом (друг → з другом)
+      - Masculine soft -ь → -ем (вчитель → з вчителем)
+      - Feminine -а → -ою (сестра → з сестрою)
+      - Feminine -я → -ею (земля → з землею)
+      - Neuter -о/-е → -ом/-ем (вікно → з вікном)
+
+  - section: Plural Instrumental
+    words: 400
+    points:
+      - All genders → -ами/-ями (друзі → з друзями)
+      - Consonant patterns before endings
+      - Common irregular forms
+
+  - section: з/із/зі Variants
+    words: 400
+    points:
+      - з before vowels and most consonants
+      - із before consonant clusters
+      - зі before з, с, ш, щ (зі мною, зі своїм)
+
+  - section: Social Verbs with Accompaniment
+    words: 600
+    points:
+      - зустрічатися з (to meet with)
+      - гуляти з (to walk with)
+      - розмовляти з (to talk with)
+      - жити з (to live with)
+      - працювати з (to work with)
+
+  - section: Common Expressions
+    words: 400
+    points:
+      - разом з (together with)
+      - поруч з (next to)
+      - Food combinations (кава з молоком)
+      - Mini-dialogues for practice
+
+vocabulary_hints:
+  required:
+    - з/із/зі (with)
+    - разом (together)
+    - разом з (together with)
+    - поруч з (next to)
+    - зустрічатися (to meet)
+    - гуляти (to walk)
+    - розмовляти (to talk)
+    - спілкуватися (to communicate)
+    - зустрітися (to meet - pf)
+    - познайомитися (to get acquainted)
+    - одружитися (to get married)
+    - подружитися (to become friends)
+    - жити (to live)
+    - працювати (to work)
+    - грати (to play)
+  recommended:
+    - помиритися (to make up)
+    - посваритися (to quarrel)
+    - товаришувати (to be friends)
+    - приятелювати (to be pals)
+    - сусідити (to be neighbors)
+
+activity_hints:
+  - type: fill-in
+    focus: Add instrumental endings to nouns
+    items: "15+"
+
+  - type: match-up
+    focus: Person + з + instrumental form
+    items: "12+"
+
+  - type: fill-in
+    focus: Combine two people doing something together
+    items: "10+"
+
+  - type: quiz
+    focus: Choose correct instrumental ending
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete social verb sentences
+    items: "10+"
+
+  - type: dialogue
+    focus: Making plans with friends
+    items: "4+"
+
+prerequisites:
+  - a2-02 (Dative noun endings)
+  - A1 noun gender
+  - A1 prepositions basics
+
+connects_to:
+  - a2-05 (Instrumental II - Means & Tools)
+  - a2-06 (Being and Becoming)
+  - a2-07 (Spatial Prepositions)
+
 naturalness:
   score: 8
   status: PASS

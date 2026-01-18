@@ -1,0 +1,130 @@
+# C1-HIST Module 43: Акт проголошення незалежності — Текст і контекст
+# Status: SPEC (ready for content development)
+
+id: c1-hist-43
+title: "Акт проголошення незалежності: Текст і контекст"
+slug: akt-nezalezhnosti-1991
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Акт проголошення незалежності України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+    type: reference
+    notes: Overview
+  - name: Текст Акту
+    url: https://zakon.rada.gov.ua/laws/show/1427-12
+    type: primary
+    notes: Official text
+  - name: Референдум 1991
+    url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
+    type: reference
+    notes: Confirmation referendum
+
+content_outline:
+  - section: Вступ — Найважливіший документ
+    words: 400
+    points:
+      - 24 серпня 1991
+      - Контекст — путч у Москві
+      - Значення документа
+      - Чому такий короткий текст
+
+  - section: Контекст серпня 1991
+    words: 600
+    points:
+      - Путч 19-21 серпня
+      - Верховна Рада УРСР
+      - Хто голосував — комуністи!
+      - Чому раптом підтримали
+
+  - section: Текст Акту — детальний аналіз
+    words: 700
+    points:
+      - Повний текст (з коментарями)
+      - "Тисячолітня традиція державотворення"
+      - Посилання на Декларацію суверенітету
+      - Юридична формула незалежності
+
+  - section: Хто голосував і чому
+    words: 500
+    points:
+      - Голосування — 321 за
+      - Комуністи vs. націоналісти
+      - Мотивації різних груп
+      - Кравчук — перевертень?
+
+  - section: Референдум 1 грудня
+    words: 600
+    points:
+      - Чому потрібен був референдум
+      - 90.32% — що означає
+      - Регіональний розподіл
+      - Крим і Донбас теж голосували "так"
+
+  - section: Міжнародне визнання
+    words: 400
+    points:
+      - Перші країни
+      - США і Росія — коли визнали
+      - Розпад СРСР — наслідок
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Акт як фундамент
+      - Від документа до реальності
+      - Зв'язок із 2022
+
+vocabulary_hints:
+  required:
+    - акт (act)
+    - незалежність (independence)
+    - проголошення (proclamation)
+    - путч (putsch/coup)
+    - референдум (referendum)
+    - суверенітет (sovereignty)
+    - Верховна Рада (Supreme Council)
+    - визнання (recognition)
+    - державотворення (state-building)
+    - голосування (voting)
+  recommended:
+    - правонаступництво (succession)
+    - легітимність (legitimacy)
+    - ратифікація (ratification)
+    - денонсація (denunciation)
+    - розпад (dissolution)
+
+activity_hints:
+  - type: reading
+    focus: Full text with commentary
+    source: zakon.rada.gov.ua
+
+  - type: voting-analysis
+    focus: Who voted yes and why? Analyze motivations
+    output: Voter motivation map
+
+  - type: referendum-mapping
+    focus: Map regional referendum results — what patterns?
+    output: Regional analysis with map
+
+  - type: comparative-study
+    focus: Compare with Baltic independence declarations
+    output: Declaration comparison
+
+  - type: essay-response
+    focus: "Чому 90% українців проголосували за незалежність?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-42 (Ukrainian Helsinki Group)
+  - c1-hist-34-35 (UNR Universals and Zluka)
+
+connects_to:
+  - c1-hist-92 (1991 — why 90% said yes)
+  - c1-hist-97 (Chicken Kyiv speech)
+  - c1-hist-98 (Budapest Memorandum)

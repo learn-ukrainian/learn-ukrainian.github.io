@@ -1,5 +1,6 @@
 - type: essay-response
   title: 'Есе-Роздум: Втеча від реальності'
+  source_reading: "reading-ballads"
   prompt: |
     Напишіть есе (350-500 слів) на тему: «Балада як спосіб втечі від жорстокої реальності: Психотерапія чи Ескапізм?».
 
@@ -29,6 +30,7 @@
       points: 30
 - type: critical-analysis
   title: 'Аналіз: Натурфілософія Балади'
+  source_reading: "reading-ballads"
   target_text: "По діброві вітер виє, гуляє по полю... Край дороги гне тополю до самого долу."
   questions:
     - Яка роль вітру в цьому уривку?
@@ -44,6 +46,7 @@
     - Фаталізм.
 - type: comparative-study
   title: 'Жанровий Аналіз: Балада vs Поема'
+  source_reading: "reading-ballads"
   items_to_compare:
     - Балада (Причинна)
     - Поема (Катерина)
@@ -62,10 +65,11 @@
     2. **Фінал:** У баладі — смерть як містичне єднання, у поемі — самогубство як соціальний протест.
     3. **Висновок:** Шевченко еволюціонує від романтичної містики до соціального реалізму.
 - type: reading
+  id: reading-ballads
   title: 'Читальна Зала: Тополя'
   resource:
     type: primary_source
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=1549
+    url: http://litopys.org.ua/shevchenko/shev113.htm
     title: Тарас Шевченко. Тополя
   tasks:
     - Знайдіть момент перетворення дівчини.

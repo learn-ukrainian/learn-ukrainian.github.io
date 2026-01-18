@@ -1,6 +1,15 @@
-module: b1-06
+# B1 Module 06: Вид дієслова - повна система
+# Status: SPEC (ready for content development)
+
+id: b1-06
 title: 'Вид дієслова: повна система'
 subtitle: Perfective vs Imperfective - The complete picture
+slug: 06-aspect-complete-system
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.1 Aspect
 pedagogy: TTT
@@ -19,9 +28,112 @@ objectives:
   - Learner understands the complete aspectual system
   - Learner can identify aspect from context clues
   - Learner can choose appropriate aspect for different situations
-vocabulary_count: 25
-vocab_count: 7
-slug: 06-aspect-complete-system
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Verbal Aspect
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official aspect selection rules and contexts
+  - name: Ukrainian Verb Aspect (Wikipedia)
+    url: https://uk.wikipedia.org/wiki/Вид_дієслова
+    type: reference
+    notes: Overview of aspectual system with examples
+
+content_outline:
+  - section: Вступ — Що таке вид дієслова?
+    words: 400
+    points:
+      - Доконаний і недоконаний вид
+      - Чому вид важливий для комунікації
+      - TTT підхід — спочатку спробуйте
+
+  - section: Недоконаний вид — процес, тривалість, повторення
+    words: 600
+    points:
+      - Процес без чіткого кінця
+      - Тривалі дії (весь день, довго)
+      - Повторювані дії (щодня, часто)
+      - Загальні твердження
+
+  - section: Доконаний вид — результат, завершення, одиничність
+    words: 600
+    points:
+      - Завершена дія з результатом
+      - Одноразові дії
+      - Обмежений час (за годину)
+      - Послідовність дій
+
+  - section: Контекст визначає вид
+    words: 600
+    points:
+      - Маркери часу і їх вплив
+      - Наміри мовця (фокус на процес чи результат)
+      - Амбівалентні контексти
+
+  - section: Практика вибору виду
+    words: 700
+    points:
+      - Вправи на розпізнавання контексту
+      - Трансформація речень
+      - Типові помилки та їх виправлення
+
+  - section: Підсумок і самооцінка
+    words: 300
+    points:
+      - Ключові правила
+      - Готовність до M07
+
+vocabulary_hints:
+  required:
+    - доконаний вид (perfective aspect)
+    - недоконаний вид (imperfective aspect)
+    - процес (process)
+    - результат (result)
+    - тривалість (duration)
+    - повторення (repetition)
+    - контекст (context)
+    - маркер (marker)
+    - завершення (completion)
+    - одноразова дія (single action)
+  recommended:
+    - фокус (focus)
+    - намір (intention)
+    - послідовність (sequence)
+    - обмежений час (bounded time)
+    - загальне твердження (general statement)
+
+activity_hints:
+  - type: quiz
+    focus: Identify aspect pairs
+    items: "12+"
+
+  - type: match-up
+    focus: Context → aspect choice
+    items: "15+"
+
+  - type: fill-in
+    focus: Choose correct aspect
+    items: "12+"
+
+  - type: group-sort
+    focus: Sort contexts by aspect (process vs result vs repetition)
+    items: "15+"
+
+  - type: transform
+    focus: Change aspect and explain meaning difference
+    items: "8+"
+
+prerequisites:
+  - b1-05 (Metalanguage checkpoint)
+  - A2 aspect basics (impf/pf recognition)
+
+connects_to:
+  - b1-07 (Aspect in past - single vs repeated)
+  - b1-08 (Aspect in past - result vs process)
+  - b1-15 (Aspect mastery checkpoint)
+
 naturalness:
   score: 9
   status: PASS

@@ -1,24 +1,141 @@
-title: 'Княгиня Ольга: Регент і Реформатор'
-subtitle: 'Princess Olha: Regent and Reformer'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-immersion: 100
-tags:
-- biography
-- history
-- kyivan-rus
-- women-in-history
-grammar:
-- Historical narrative register
-- Archaic terms (regency, tribute)
-objectives:
-- Understand the historical significance of Princess Olha
-- Analyze the legend of her revenge vs. historical reality
-- Discuss the role of women in Kyivan Rus politics
-vocabulary_count: 24
-vital_status: deceased
+# C1-BIO Module 01: Княгиня Ольга: Регент і Реформатор
+# Status: SPEC (ready for content development)
+
+id: c1-bio-01
+title: "Княгиня Ольга: Регент і Реформатор"
 slug: knyahynia-olha
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Княгиня Ольга (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
+    type: primary
+    notes: Biography, reign details, Byzantine relations
+  - name: Повість минулих літ
+    url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+    type: primary
+    notes: Primary chronicle source for Olha narratives
+  - name: Women in Kyivan Rus
+    url: https://uk.wikipedia.org/wiki/Жінки_Київської_Русі
+    type: reference
+    notes: Context for women's roles in medieval governance
+
+content_outline:
+  - section: Вступ — Легендарна постать
+    words: 400
+    points:
+      - Унікальність Ольги як жінки-правительки
+      - Проблема розмежування легенди та історії
+      - Значення для української державності
+
+  - section: Походження та шлюб з Ігорем
+    words: 600
+    points:
+      - Версії про походження (Псков, Плесненськ)
+      - Шлюб із князем Ігорем
+      - Народження Святослава
+
+  - section: Помста древлянам
+    words: 800
+    points:
+      - Вбивство Ігоря та вимога древлян
+      - Чотири помсти за літописом
+      - Символіка та літературний аналіз помсти
+      - Історична достовірність легенди
+
+  - section: Адміністративні реформи
+    words: 700
+    points:
+      - Введення погостів та уроків
+      - Централізація збору данини
+      - Вплив на державне будівництво
+
+  - section: Хрещення та місія до Константинополя
+    words: 700
+    points:
+      - Візит до Візантії 957 року
+      - Прийняття християнства
+      - Спроби поширити християнство на Русі
+      - Конфлікт із Святославом щодо віри
+
+  - section: Спадщина та канонізація
+    words: 500
+    points:
+      - Смерть та поховання
+      - Канонізація як рівноапостольної святої
+      - Місце в українській історичній пам'яті
+
+  - section: Підсумок — Жінка, що творила історію
+    words: 300
+    points:
+      - Ольга як символ жіночої влади
+      - Її роль у формуванні Київської Русі
+      - Актуальність її спадщини сьогодні
+
+vocabulary_hints:
+  required:
+    - регент (regent)
+    - данина (tribute)
+    - погост (administrative district)
+    - урок (fixed tribute)
+    - помста (revenge)
+    - древляни (Drevlians)
+    - хрещення (baptism)
+    - канонізація (canonization)
+    - рівноапостольна (equal-to-the-apostles)
+    - візантійський (Byzantine)
+  recommended:
+    - княгиня (princess/duchess)
+    - вдова (widow)
+    - посольство (embassy)
+    - літопис (chronicle)
+    - язичництво (paganism)
+
+activity_hints:
+  - type: reading
+    focus: Close reading of chronicle excerpts about Olha's revenge
+    source: Повість минулих літ (adapted)
+    items: "3 passages"
+
+  - type: quiz
+    focus: Historical facts vs. legendary elements
+    items: "12+"
+
+  - type: match-up
+    focus: Administrative terms and their functions
+    items: "10+"
+
+  - type: essay-response
+    focus: Analyze the significance of Olha's reforms
+    word_target: 250
+    output: Structured analysis with examples
+
+  - type: discussion
+    focus: Was Olha's revenge justified? Historical vs. moral perspectives
+    output: Oral or written response
+
+  - type: fill-in
+    focus: Biographical timeline completion
+    items: "8+"
+
+  - type: critical-analysis
+    focus: Compare chronicle narrative with modern historical interpretations
+    output: Identify 3+ differences
+
+prerequisites:
+  - B2-HIST completion recommended
+  - Vocabulary ~5,500 words
+  - Familiarity with Kyivan Rus period
+
+connects_to:
+  - c1-bio-02 (Kniaz Sviatoslav - son of Olha)
+  - c1-bio-03 (Volodymyr Velykyi - grandson, completed Christianization)
+  - c1-bio-04 (Yaroslav Mudryi - continuation of reforms)
+
+naturalness:
+  score: null
+  status: PENDING

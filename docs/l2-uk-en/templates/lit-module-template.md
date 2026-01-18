@@ -407,18 +407,73 @@ items:
 
 **CRITICAL:** Reading tasks must be defined in `activities/{slug}.yaml` as `type: reading`.
 
-**Example `activities/lit-001-kotliarevsky.yaml`:**
+<critical>
+
+**Required fields:**
+- `id:` - REQUIRED unique identifier for linking to analytical activities (e.g., `reading-bio`, `reading-poem`)
+- `title:` - Display title
+- Either `text:` (inline) OR `resource:` (external URL) - NOT both
+- `tasks:` - Array of reading comprehension questions
+
+**URL Verification (MANDATORY):**
+Before using any external URL, you MUST verify it points to the correct content:
+1. Open the URL in a browser
+2. Confirm the page is about the intended author/work
+3. Check the page title contains the author's name
+
+Common UkrLib author IDs (verify before using):
+- Котляревський: tid=1672
+- Шевченко: tid=57
+- Куліш: tid=1621
+- Нечуй-Левицький: tid=1646
+- Франко: tid=71
+
+</critical>
+
+**Format 1: External Resource (for biographies, full texts)**
 
 ```yaml
 - type: reading
-  title: Біографічні Нариси
+  id: reading-bio                    # REQUIRED for linking
+  title: Біографія Котляревського
   resource:
-    type: biography
-    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1672
+    type: Biography
+    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1672  # VERIFY this URL!
     title: Іван Котляревський. Життя і творчість
-  instruction: Зверніть увагу на розділи про службу в полку.
   tasks:
     - Знайдіть паралелі між життям автора і сюжетом "Енеїди".
+    - Як вплинула військова служба на творчість?
+```
+
+**Format 2: Inline Primary Source (for poems, short excerpts)**
+
+```yaml
+- type: reading
+  id: reading-testament              # REQUIRED for linking
+  title: 'Джерело: Заповіт'
+  source: 'Тарас Шевченко (1845)'    # Attribution (author, year)
+  text: |
+    Як умру, то поховайте
+    Мене на могилі,
+    Серед степу широкого,
+    На Вкраїні милій...
+  tasks:
+    - Які географічні образи використовує поет?
+    - Яка роль імперативу в тексті?
+```
+
+**Linking to Analytical Activities:**
+
+```yaml
+# Reading defines the id
+- type: reading
+  id: reading-bio          # ← This ID
+  ...
+
+# Essay/analysis references it
+- type: essay-response
+  source_reading: reading-bio  # ← Must match the reading id
+  ...
 ```
 
 **Resource Types:**

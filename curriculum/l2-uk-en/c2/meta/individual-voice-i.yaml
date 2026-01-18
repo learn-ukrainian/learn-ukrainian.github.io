@@ -1,0 +1,141 @@
+# C2 Module 14: Individual Voice I
+# Status: SPEC (ready for content development)
+
+id: c2-14
+title: Індивідуальний голос I — Розвиток особистого стилю
+slug: individual-voice-i
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Теорія літератури — авторський стиль
+    url: https://www.nbuv.gov.ua/
+    type: primary
+    notes: Academic analysis of authorial voice
+  - name: Українські письменники про творчість
+    url: https://litopys.org.ua/
+    type: example
+    notes: Writers on their creative process
+  - name: Ukrainian State Standard 2024 — Creative expression
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for individual style
+
+content_outline:
+  - section: Вступ — Що таке авторський голос?
+    words: 400
+    points:
+      - Визначення індивідуального стилю
+      - Голос vs манерність
+      - Автентичність у письмі
+
+  - section: Елементи голосу — Тон
+    words: 600
+    points:
+      - Тональні регістри (серйозний, іронічний, ліричний)
+      - Консистентність тону
+      - Тональні переключення
+      - Аналіз тону в зразках
+
+  - section: Елементи голосу — Ритм
+    words: 600
+    points:
+      - Характерна довжина речень
+      - Улюблені синтаксичні конструкції
+      - Темп прози
+      - Ритмічний підпис автора
+
+  - section: Елементи голосу — Лексика
+    words: 600
+    points:
+      - Словникові преференції
+      - Характерні образи та метафори
+      - Улюблені слова та звороти
+      - Лексичний fingerprint
+
+  - section: Самоаналіз — Дослідження власного голосу
+    words: 700
+    points:
+      - Аналіз попередніх текстів
+      - Виявлення тенденцій
+      - Сильні сторони та слабкості
+      - Свідомий vs несвідомий стиль
+
+  - section: Експериментування з голосом
+    words: 600
+    points:
+      - Написання однієї теми різними голосами
+      - Імітація улюбленого автора
+      - Пошук автентичності
+      - Межі експерименту
+
+  - section: Практикум — Знаходження голосу
+    words: 500
+    points:
+      - Аналіз власних текстів на ознаки стилю
+      - Написання одного абзацу трьома голосами
+      - Порівняння свого голосу з улюбленим автором
+      - План розвитку голосу
+
+vocabulary_hints:
+  required:
+    - голос (voice)
+    - тон (tone)
+    - ритм (rhythm)
+    - автентичність (authenticity)
+    - манерність (mannerism)
+    - консистентність (consistency)
+    - тенденція (tendency)
+    - преференція (preference)
+    - експеримент (experiment)
+    - імітація (imitation)
+  recommended:
+    - fingerprint (fingerprint — stylistic)
+    - підпис (signature)
+    - унікальність (uniqueness)
+    - свідомий (conscious)
+    - несвідомий (unconscious)
+
+activity_hints:
+  - type: critical-analysis
+    focus: Analyze your own previous writing for voice elements
+    output: Self-assessment of tonal, rhythmic, lexical patterns
+
+  - type: essay-response
+    focus: Write same topic in three different voices
+    word_target: 450
+    output: Three 150-word versions with annotation
+
+  - type: comparative-study
+    focus: Compare your voice to favorite author
+    output: Analysis of similarities and differences
+
+  - type: essay-response
+    focus: Imitate style of chosen Ukrainian author
+    word_target: 300
+    output: Pastiche with explanation of techniques used
+
+  - type: quiz
+    focus: Identify authors by voice in unmarked excerpts
+    items: "10+"
+
+  - type: discussion
+    focus: What makes voice authentic vs affected?
+    output: Reflective journal entry
+
+prerequisites:
+  - c2-12 (Lexical stylistics for word choice awareness)
+  - c2-13 (Syntactic stylistics for structure awareness)
+  - C1 creative writing experience
+
+connects_to:
+  - c2-15 (Individual voice II — refinement)
+  - c2-36 (Creative writing: poetry)
+  - c2-37 (Creative writing: prose)
+
+naturalness:
+  score: null
+  status: PENDING

@@ -1,30 +1,143 @@
-module: b2-01
-title: 'Пасивний стан: повна система'
-subtitle: Passive Voice System
-version: '1.0'
-phase: B2.1a Grammar & Register
-focus: grammar
-pedagogy: TTT
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - passive-voice
-  - register
-grammar:
-  - Past passive participles (-ний/-тий)
-  - Impersonal constructions (-но/-то)
-  - Reflexive passive (-ся)
-  - 3rd person plural passive
-  - Register-appropriate passive selection
-objectives:
-  - Learner can recognize and distinguish all 4 Ukrainian passive voice forms
-  - Learner can identify the appropriate register for each passive construction
-  - Learner can transform active sentences into passive using the correct form
-  - Learner can choose the register-appropriate passive in context
-vocabulary_count: 25
-vocab_count: 241
+# B2 Module 01: Passive Voice - The Complete System
+# Status: SPEC (ready for content development)
+
+id: b2-01
+title: "Пасивний стан: повна система"
 slug: 01-passive-voice-system
+module_type: grammar
+word_target: 3800
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Passive Voice
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official B2 passive voice requirements, all 4 forms
+  - name: CEFR B2 Grammar Descriptors
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: B2 grammar complexity expectations
+  - name: Сучасна українська мова - Пономарів
+    url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
+    type: secondary
+    notes: Academic reference for passive voice usage and register
+
+content_outline:
+  - section: Вступ — Що таке пасивний стан?
+    words: 500
+    points:
+      - Різниця між активним і пасивним станом
+      - Чому пасив важливий для офіційного та наукового стилю
+      - Огляд чотирьох форм пасиву в українській мові
+
+  - section: Форма 1 — Дієприкметники на -ний/-тий
+    words: 700
+    points:
+      - Утворення від дієслова (написати → написаний)
+      - Узгодження з іменником (рід, число, відмінок)
+      - Вживання з допоміжним дієсловом бути
+      - Регістр — літературний, академічний, формальний
+
+  - section: Форма 2 — Безособові конструкції на -но/-то
+    words: 700
+    points:
+      - Утворення від дієприкметника (написаний → написано)
+      - Об'єкт у знахідному відмінку (Книгу написано)
+      - Відсутність агента — безособовість
+      - Регістр — офіційно-діловий, юридичний, бюрократичний
+
+  - section: Форма 3 — Зворотний пасив із -ся
+    words: 600
+    points:
+      - Утворення (будуватися, писатися)
+      - Акцент на процесі, а не на результаті
+      - Можливість вираження агента (орудний відмінок)
+      - Регістр — науковий, технічний, процедурний
+
+  - section: Форма 4 — Третя особа множини
+    words: 600
+    points:
+      - Конструкція без явного підмета (Мені сказали)
+      - Імпліцитний агент — невизначені "вони"
+      - Об'єкт часто в давальному відмінку
+      - Регістр — розмовний, неформальний
+
+  - section: Вибір форми пасиву за контекстом
+    words: 500
+    points:
+      - Таблиця регістрів і відповідних форм
+      - Практичні сценарії вибору
+      - Типові помилки та як їх уникати
+
+  - section: Підсумок і практика
+    words: 200
+    points:
+      - Ключові правила вибору пасиву
+      - Зв'язок із наступними модулями
+
+vocabulary_hints:
+  required:
+    - пасивний стан (passive voice)
+    - дієприкметник (participle)
+    - безособовий (impersonal)
+    - зворотний (reflexive)
+    - агент (agent)
+    - регістр (register)
+    - офіційно-діловий (official/bureaucratic)
+    - науковий (scientific)
+    - літературний (literary)
+    - розмовний (colloquial)
+  recommended:
+    - узгодження (agreement)
+    - конструкція (construction)
+    - трансформація (transformation)
+    - контекст (context)
+    - стиль (style)
+
+activity_hints:
+  - type: quiz
+    focus: Identify passive voice type from sentence
+    items: "15+"
+
+  - type: match-up
+    focus: Sentence → passive type classification
+    items: "12+"
+
+  - type: group-sort
+    focus: Classify sentences by passive form (4 categories)
+    items: "16+"
+
+  - type: fill-in
+    focus: Complete sentences with correct passive form
+    items: "12+"
+
+  - type: transform
+    focus: Active → passive transformation (choose appropriate type)
+    items: "10+"
+
+  - type: quiz
+    focus: Which passive for which register?
+    items: "12+"
+
+  - type: essay-response
+    focus: Rewrite paragraph using appropriate passive forms
+    word_target: 150
+    output: Model answer provided
+
+prerequisites:
+  - B1 completion required
+  - Active voice mastery
+  - All 7 cases
+  - Aspect system (perfective/imperfective)
+
+connects_to:
+  - b2-02 (Past Passive Participles -ний/-тий)
+  - b2-03 (Impersonal -но/-то)
+  - b2-06 (Passive in Context)
+  - b2-10 (B2.1a Checkpoint)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

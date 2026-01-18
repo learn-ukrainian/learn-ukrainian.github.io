@@ -509,28 +509,28 @@ activities:
     - решта
     - знижка
     - картка
-  - sentence: Ось ваша ___. (change)
+  - sentence: Ось ваша решта.
     answer: решта
     options:
     - решта
     - каса
     - ціна
     - знижка
-  - sentence: Мені потрібен ___. (receipt)
+  - sentence: Мені потрібен чек.
     answer: чек
     options:
     - чек
     - квиток
     - список
     - рахунок
-  - sentence: Яка ___? (price)
+  - sentence: Яка ціна?
     answer: ціна
     options:
     - ціна
     - каса
     - решта
     - знижка
-  - sentence: Я плачу ___. (cash)
+  - sentence: Я плачу готівкою.
     answer: готівкою
     options:
     - готівкою

@@ -1,6 +1,15 @@
-module: b1-21
+# B1 Module 21: Переносні значення дієслів руху
+# Status: SPEC (ready for content development)
+
+id: b1-21
 title: Переносні значення дієслів руху
 subtitle: Figurative uses of motion verbs
+slug: 21-motion-figurative-uses
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.2'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -8,20 +17,137 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- motion-verbs
-- figurative-language
-- idioms
+  - grammar
+  - motion-verbs
+  - figurative-language
+  - idioms
 grammar:
-- Idiomatic expressions with motion verbs
-- Figurative vs literal motion
-- Abstract movement vocabulary
+  - Idiomatic expressions with motion verbs
+  - Figurative vs literal motion
+  - Abstract movement vocabulary
 objectives:
-- Learner can recognize figurative uses of motion verbs
-- Learner can use common idiomatic expressions with motion verbs
-- Learner understands the metaphorical extensions of motion prefixes
-vocabulary_count: 25
-slug: 21-motion-figurative-uses
+  - Learner can recognize figurative uses of motion verbs
+  - Learner can use common idiomatic expressions with motion verbs
+  - Learner understands the metaphorical extensions of motion prefixes
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Figurative Language
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official guidance on idiomatic expressions
+  - name: Ukrainian Idioms with Motion Verbs
+    url: https://uk.wikipedia.org/wiki/Фразеологізми
+    type: reference
+    notes: Common figurative expressions with motion verbs
+  - name: Slovnyk.UA - Motion Verb Idioms
+    url: https://slovnyk.ua/
+    type: reference
+    notes: Dictionary entries with figurative meanings
+
+content_outline:
+  - section: Вступ — Від буквального до переносного
+    words: 400
+    points:
+      - Чому дієслова руху мають переносні значення
+      - TTT — визначте буквальний чи переносний зміст
+      - Зв'язок з M16-M20
+
+  - section: Виходити/Вийти — переносні значення
+    words: 550
+    points:
+      - виходить, що... (it turns out that...)
+      - вийти з ситуації (get out of a situation)
+      - вийти на новий рівень (reach a new level)
+
+  - section: Доходити/Дійти — переносні значення
+    words: 550
+    points:
+      - дійти до висновку (reach a conclusion)
+      - до мене дійшло (it dawned on me)
+      - дійти до суті (get to the point)
+
+  - section: Заходити/Зайти — переносні значення
+    words: 500
+    points:
+      - зайти занадто далеко (go too far)
+      - зайти в глухий кут (reach a dead end)
+      - розмова зайшла про... (the conversation turned to...)
+
+  - section: Інші переносні вирази
+    words: 600
+    points:
+      - відійти від теми (digress from the topic)
+      - підійти до питання (approach a question)
+      - обійтися без (do without)
+      - перейти до справи (get down to business)
+      - пройти через щось (go through something)
+
+  - section: Контрастивна практика
+    words: 350
+    points:
+      - Буквальний vs переносний контекст
+      - Вживання в розмовній мові
+      - Типові помилки
+
+  - section: Підсумок
+    words: 250
+    points:
+      - Таблиця переносних виразів
+      - Готовність до M22
+
+vocabulary_hints:
+  required:
+    - виходить, що (it turns out that)
+    - дійти до висновку (reach a conclusion)
+    - зайти занадто далеко (go too far)
+    - відійти від теми (digress)
+    - підійти до питання (approach a question)
+    - обійтися без (do without)
+    - перейти до справи (get down to business)
+    - пройти через (go through - experience)
+    - вийти з ситуації (get out of a situation)
+    - зайти в глухий кут (reach a dead end)
+  recommended:
+    - до мене дійшло (it dawned on me)
+    - вийти на новий рівень (reach a new level)
+    - переносне значення (figurative meaning)
+    - буквальний зміст (literal meaning)
+    - фразеологізм (phraseological unit)
+
+activity_hints:
+  - type: match-up
+    focus: Expression -> meaning
+    items: "15+"
+
+  - type: fill-in
+    focus: Use figurative expressions in context
+    items: "12+"
+
+  - type: quiz
+    focus: Literal vs figurative motion
+    items: "15+"
+
+  - type: cloze
+    focus: Dialogue with figurative expressions
+    items: "12+"
+
+  - type: group-sort
+    focus: Literal motion vs figurative expression
+    items: "14+"
+
+prerequisites:
+  - b1-16 (Motion verbs full system)
+  - b1-17 (Motion - coming & going)
+  - b1-18 (Motion - passing & crossing)
+  - b1-19 (Motion - starting & returning)
+  - b1-20 (Motion - approaching & departing)
+
+connects_to:
+  - b1-22 (Motion full prefix integration)
+  - b1-25 (Checkpoint - motion verbs)
+
 naturalness:
   score: 9
   status: PASS

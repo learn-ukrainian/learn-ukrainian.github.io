@@ -48,6 +48,7 @@ Read: `claude_extensions/stages/stage-4-review-fix.md`
 ### Step 2: Load Module
 
 **For core levels (a1, a2, b1, b2, c1, c2):**
+
 ```
 curriculum/l2-uk-en/{level}/{number:02d}-*.md
 ```
@@ -66,6 +67,22 @@ Tracks use slug-only filenames without number prefixes.
 
 Example: `b2-hist 1` → slug is `afhanistan` → `curriculum/l2-uk-en/b2-hist/afhanistan.md`
 
+### Step 2b: Pre-Flight Checklist (CRITICAL)
+
+**Before running the first audit, perform these sanity checks to prevent common failures:**
+
+1.  **Metadata Check (`meta/{slug}.yaml`):**
+    - Ensure `objectives` and `grammar` fields exist (required for MDX generation).
+    - **Syntax Trap:** Check for unquoted strings starting with quotes (e.g., `- "Quote" text`). **FIX:** Quote the entire string (`- '"Quote" text'`).
+
+2.  **Activity Structural Integrity (`activities/{slug}.yaml`):**
+    - **Orphans:** Ensure every `essay-response`, `critical-analysis`, or `comparative-study` has a `source_reading` field properly linked to a `reading` activity ID.
+    - **Quiz Items:** Count items manually. `quiz` requires **5+ items**. `match-up`/`cloze` require **12+**.
+    - **Reading:** Ensure there is a SINGLE primary `reading` activity (usually `reading-{slug}`) that anchors the analysis tasks. Consolidate scattered reading prompts.
+
+3.  **Content Structure Check (`{slug}.md`)**:
+    - **Summary Header:** Ensure the Summary section starts with `# Summary` (H1), NOT `## Summary`.
+
 ### Step 3: Run Initial Audit
 
 ```bash
@@ -81,6 +98,7 @@ Capture all violations.
 **IF VIOLATIONS:**
 
 Count violations by category:
+
 - Grammar violations (validate with dictionaries below)
 - Vocabulary violations
 - Activity syntax issues
@@ -90,6 +108,7 @@ Count violations by category:
 **Ukrainian Grammar Validation (MANDATORY):**
 
 Validate ALL Ukrainian text against these sources:
+
 - ✅ **Словник.UA** (slovnyk.ua) - standard spelling
 - ✅ **Словарь Грінченка** - authentic Ukrainian forms
 - ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
@@ -120,37 +139,57 @@ Validate ALL Ukrainian text against these sources:
 
 **Use architect skills for fix guidance:**
 
-| Module Type | Skill for Fixes |
-|-------------|-----------------|
-| Grammar (B1-B2) | `grammar-module-architect` |
-| Vocabulary (B1) | `vocab-module-architect` |
-| Cultural (B1-C1) | `cultural-module-architect` |
-| History/Biography (B2-C1) | `history-module-architect` |
-| Integration (B1-B2) | `integration-module-architect` |
-| Checkpoint (All) | `checkpoint` |
-| Literature (LIT) | `literature-module-architect` |
+| Module Type               | Skill for Fixes                |
+| ------------------------- | ------------------------------ |
+| Grammar (B1-B2)           | `grammar-module-architect`     |
+| Vocabulary (B1)           | `vocab-module-architect`       |
+| Cultural (B1-C1)          | `cultural-module-architect`    |
+| History/Biography (B2-C1) | `history-module-architect`     |
+| Integration (B1-B2)       | `integration-module-architect` |
+| Checkpoint (All)          | `checkpoint`                   |
+| Literature (LIT)          | `literature-module-architect`  |
 
 **Decision Matrix:**
 
-| Violations | Action |
-|------------|--------|
-| ≤3 total | Fix individually |
-| >3 in content | Rebuild content (Stage 2) |
-| >3 in activities | Rebuild activities (Stage 3) |
-| >10 OR structural | Rebuild from Stage 1 |
+| Violations        | Action                       |
+| ----------------- | ---------------------------- |
+| ≤3 total          | Fix individually             |
+| >3 in content     | Rebuild content (Stage 2)    |
+| >3 in activities  | Rebuild activities (Stage 3) |
+| >10 OR structural | Rebuild from Stage 1         |
+
+### Step 4b: Specialized Fix Protocols
+
+**1. STALE LLM REVIEW (`🔴 STALE LLM REVIEW`)**
+
+- **Action:** Update the hash in `audit/{slug}-llm-review.md`.
+- **CRITICAL:** You MUST run `audit_module.py` AGAIN immediately after updating the hash to verify the PASS state and update the report file.
+
+**2. URL Validation Failures (`INVALID_EXTERNAL_URL`)**
+
+- **Action:** If the URL is correct and accessible in a browser (e.g., UkrLib, Wikipedia), but fails audit due to encoding/scraping issues:
+- **FIX:** Immediately add the domain to the whitelist in `scripts/audit/checks/external_resource_validation.py` (inside `validate_reading_url`). Do not waste turns trying to patch encoding logic repeatedly.
+
+**3. YAML Schema Violations**
+
+- **Action:** Read the error message carefully. It usually points to missing fields (`id`) or insufficient item counts.
+- **Reference:** Check `schemas/activities-base.schema.json` or `schemas/activities-lit.schema.json` for the definitive rules.
 
 ### Step 5: Apply Fixes or Rebuild
 
 **For individual fixes:**
+
 - Edit the specific lines
 - Re-run audit
 - Loop back to Step 4
 
 **For section rebuild:**
+
 - Call appropriate stage command
 - Then return to this stage
 
 **Maximum 3 iterations.** If still failing:
+
 - Report persistent issues
 - Ask user for guidance
 
@@ -165,16 +204,18 @@ If content was modified, check vocabulary alignment:
    - Compare against existing vocabulary YAML
 
 2. **If new vocabulary found:**
+
    ```yaml
    # Add to existing {level}/vocabulary/{slug}.yaml
    - lemma: нове_слово
-     ipa: ''          # Empty for enrichment
+     ipa: '' # Empty for enrichment
      translation: ''
      pos: noun
      gender: m
    ```
 
 3. **Run enrichment** for new entries:
+
    ```bash
    .venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml
    ```
@@ -221,6 +262,7 @@ If content was modified, check vocabulary alignment:
    - Re-score to verify improvement (target: 8/10+)
 
 **Common fixes:**
+
 - Break template repetition (vary sentence structures)
 - Remove 50% of intensifiers ("дуже", "надзвичайно")
 - Add discourse markers (2-3 per 10 sentences)
@@ -238,6 +280,7 @@ npm run pipeline l2-uk-en {level} {module_num}
 ```
 
 **Note:** HTML validation requires dev server running:
+
 ```bash
 cd docusaurus && pnpm start  # In separate terminal
 ```
@@ -247,6 +290,7 @@ If pipeline fails at any step, fix the issue and re-run.
 ### Output
 
 **On PASS:**
+
 ```
 MODULE APPROVED
 
@@ -262,6 +306,7 @@ Statistics:
 ```
 
 **On FAIL (after 3 iterations):**
+
 ```
 MODULE NEEDS MANUAL REVIEW
 

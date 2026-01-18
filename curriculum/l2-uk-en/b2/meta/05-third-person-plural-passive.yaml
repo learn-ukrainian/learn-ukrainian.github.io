@@ -1,33 +1,144 @@
-module: b2-05
-title: Третя особа множини як пасив
-subtitle: Розмовна безособова конструкція
-version: '1.0'
-phase: B2.1a [Grammar & Register]
-pedagogy: TTT
-focus: grammar
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - passive
-  - colloquial
-  - register
-grammar:
-  - 3rd person plural as impersonal passive
-  - Dative recipient construction
-  - 'Register awareness: colloquial vs formal passive'
-objectives:
-  - Розпізнавати безособові конструкції з 3-ю особою множини в розмовному мовленні
-  - Використовувати 3-ю особу множини для передачі пасивного значення
-  - Розрізняти регістрове використання різних пасивних конструкцій
-  - Трансформувати формальні пасивні речення в розмовні та навпаки
-vocabulary_count: 25
-resources:
-  - type: article
-    title: Пасивні конструкції в українській мові
-    url: https://r2u.org.ua/grammar/passive
-vocab_count: 123
+# B2 Module 05: 3rd Person Plural Passive
+# Status: SPEC (ready for content development)
+
+id: b2-05
+title: Пасив третьою особою множини
 slug: 05-third-person-plural-passive
+module_type: grammar
+word_target: 3800
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Impersonal Constructions
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Colloquial impersonal passive patterns
+  - name: Розмовний стиль української мови
+    url: https://uk.wikipedia.org/wiki/Розмовний_стиль
+    type: secondary
+    notes: Colloquial speech characteristics
+  - name: CEFR B2 Speaking Descriptors
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: B2 speaking fluency expectations
+
+content_outline:
+  - section: Вступ — Найрозмовніший пасив
+    words: 400
+    points:
+      - Третя особа множини як пасивна конструкція
+      - Імпліцитний агент — невизначені "вони"
+      - Місце в системі пасиву
+
+  - section: Утворення конструкції
+    words: 600
+    points:
+      - Дієслово в 3-й особі множини без підмета
+      - Об'єкт часто в давальному відмінку (Мені сказали)
+      - Об'єкт у знахідному (Книгу взяли)
+      - Видові нюанси
+
+  - section: Семантика невизначеного агента
+    words: 600
+    points:
+      - "Вони" як абстрактні люди
+      - Порівняння з англійським "One says" / "They say"
+      - Ефект анонімності
+
+  - section: Контексти вживання
+    words: 700
+    points:
+      - Побутові ситуації (У магазині мене запитали)
+      - Телефонні розмови (По телефону нам повідомили)
+      - Чутки та плітки (Кажуть, що...)
+      - Неформальні оповіді
+
+  - section: Порівняння з іншими формами пасиву
+    words: 700
+    points:
+      - 3-я особа множини vs -но/-то — регістр
+      - 3-я особа множини vs -ся — акцент
+      - Стилістичний вибір
+      - Коли не можна використовувати
+
+  - section: Типові помилки
+    words: 500
+    points:
+      - Надмірна формальність у розмовному контексті
+      - Змішування відмінків
+      - Неправильний вибір регістру
+
+  - section: Практика і підсумок
+    words: 300
+    points:
+      - Ключові правила
+      - Підготовка до модуля 06
+      - Інтеграція всіх форм пасиву
+
+vocabulary_hints:
+  required:
+    - сказали (they said/was told)
+    - запитали (they asked/was asked)
+    - повідомили (they informed/was informed)
+    - пообіцяли (they promised/was promised)
+    - дали (they gave/was given)
+    - показали (they showed/was shown)
+    - розмовний (colloquial)
+    - неформальний (informal)
+    - імпліцитний (implicit)
+    - анонімний (anonymous)
+  recommended:
+    - чутка (rumor)
+    - плітка (gossip)
+    - побутовий (everyday)
+    - оповідь (narrative)
+    - контекст (context)
+
+activity_hints:
+  - type: transform
+    focus: Formal passive → colloquial (3rd person plural)
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete everyday sentences with 3rd pl passive
+    items: "14+"
+
+  - type: quiz
+    focus: Register identification (formal vs colloquial)
+    items: "12+"
+
+  - type: role-play
+    focus: Retell events using colloquial passive
+    items: "8+"
+    output: Dialogue script provided
+
+  - type: match-up
+    focus: Situation → appropriate passive form
+    items: "12+"
+
+  - type: rewrite
+    focus: Official announcement → casual retelling
+    items: "8+"
+
+  - type: essay-response
+    focus: Write informal story using 3rd pl passive
+    word_target: 150
+    output: Model answer provided
+
+prerequisites:
+  - b2-01 (Passive Voice System)
+  - b2-02 (Past Passive Participles)
+  - b2-03 (Impersonal -но/-то)
+  - b2-04 (Reflexive Passive)
+  - Dative case mastery
+
+connects_to:
+  - b2-06 (Passive in Context)
+  - b2-24 (Register: Colloquial Style)
+  - b2-10 (B2.1a Checkpoint)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

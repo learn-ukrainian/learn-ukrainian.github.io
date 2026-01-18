@@ -1,0 +1,133 @@
+# C1-HIST Module 36: Свідчення Голодомору I — Усна історія
+# Status: SPEC (ready for content development)
+
+id: c1-hist-36
+title: "Свідчення Голодомору I: Усна історія"
+slug: svidchennia-holodomoru-i
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Голодомор (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Голодомор
+    type: reference
+    notes: Overview
+  - name: Архів свідчень Голодомору (UCRDC)
+    url: https://ucrdc.org/
+    type: primary
+    notes: Testimony archive
+  - name: Усна історія (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Усна_історія
+    type: reference
+    notes: Methodology
+
+content_outline:
+  - section: Вступ — Голоси вижилих
+    words: 400
+    points:
+      - Усна історія — що це?
+      - Чому важлива для Голодомору
+      - Свідчення як джерело
+      - Методологічні питання
+
+  - section: Методологія усної історії
+    words: 600
+    points:
+      - Як збирають свідчення
+      - Інтерв'ю — техніка
+      - Пам'ять і травма
+      - Обмеження методу
+      - Етичні питання
+
+  - section: Проєкти збору свідчень
+    words: 500
+    points:
+      - UCRDC — Україно-канадський дослідницький центр
+      - Комісія конгресу США (1980-ті)
+      - Українські проєкти після 1991
+      - Що збережено
+
+  - section: Типові теми свідчень
+    words: 600
+    points:
+      - Голод — як описують
+      - Конфіскація зерна
+      - Смерті в родині
+      - Виживання — стратегії
+      - Табу і замовчування
+
+  - section: Фрагменти свідчень
+    words: 700
+    points:
+      - Свідчення 1 — дитина 1932
+      - Свідчення 2 — мати
+      - Свідчення 3 — село
+      - Як читати травму
+
+  - section: Критика джерела
+    words: 400
+    points:
+      - Ретроспективність — через десятиліття
+      - Вплив пізніших наративів
+      - Репрезентативність — хто вижив
+      - Як верифікувати
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Усна історія як доповнення
+      - Голос жертв
+      - Зв'язок із документами
+
+vocabulary_hints:
+  required:
+    - усна історія (oral history)
+    - свідчення (testimony)
+    - вижилий (survivor)
+    - травма (trauma)
+    - пам'ять (memory)
+    - інтерв'ю (interview)
+    - конфіскація (confiscation)
+    - голод (famine/hunger)
+    - виживання (survival)
+    - табу (taboo)
+  recommended:
+    - ретроспективність (retrospectivity)
+    - репрезентативність (representativeness)
+    - наратив (narrative)
+    - посттравматичний (post-traumatic)
+    - архів (archive)
+
+activity_hints:
+  - type: reading
+    focus: Two survivor testimonies
+    source: UCRDC archive
+
+  - type: methodology-critique
+    focus: What are the strengths/weaknesses of oral history?
+    output: Method evaluation
+
+  - type: close-reading
+    focus: Identify recurring themes across testimonies
+    output: Theme mapping
+
+  - type: ethical-reflection
+    focus: How to work with trauma testimonies responsibly?
+    output: Ethics guidelines
+
+  - type: essay-response
+    focus: "Як усна історія допомагає зрозуміти Голодомор?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-09 (Source criticism)
+  - c1-hist-45 (Holodomor historiography)
+
+connects_to:
+  - c1-hist-37 (Holodomor documents)
+  - c1-hist-49 (Holodomor witnesses — deep dive)
+  - c1-hist-51 (Holodomor synthesis)

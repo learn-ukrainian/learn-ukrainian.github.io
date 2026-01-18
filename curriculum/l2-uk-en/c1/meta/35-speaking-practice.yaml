@@ -1,23 +1,130 @@
-module: c1-35
-title: 'Мовний практикум'
-subtitle: 'Speaking Practice'
-version: '1.0'
-phase: 'C1.2 Professional Mastery'
-focus: checkpoint
-pedagogy: 'Immersion'
-duration: 90
-transliteration: none
-tags:
-  - speaking
-  - debate
-  - rhetoric
-  - professional
-grammar:
-  - 'Spoken discourse markers'
-  - 'Debate structures'
-objectives:
-  - 'Demonstrate fluency in professional discussions'
-  - 'Use rhetorical devices in speech'
-  - 'Argue complex points spontaneously'
-vocabulary_count: 10
+# C1 Module 35: C1.2 Checkpoint (Speaking Practice)
+# Status: SPEC (ready for content development)
+
+id: c1-35
+title: Мовний практикум
 slug: 35-speaking-practice
+module_type: checkpoint
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: CEFR C1 Assessment Criteria
+    url: https://www.coe.int/
+    type: reference
+    notes: C1 speaking assessment descriptors
+  - name: Ukrainian State Standard C1 (2024)
+    url: https://mon.gov.ua/
+    type: reference
+    notes: National C1 oral competency requirements
+
+content_outline:
+  - section: Огляд C1.2 — Контрольна точка
+    words: 500
+    points:
+      - Підсумок модулів M21-M34
+      - Ключові компетенції C1.2
+      - Структура контрольної точки
+
+  - section: Професійна комунікація
+    words: 700
+    points:
+      - CV та співбесіда
+      - Діловий етикет
+      - Цифрова комунікація
+      - Ділове листування
+
+  - section: Політика та медіа
+    words: 700
+    points:
+      - Політична система України
+      - Медіаграмотність
+      - Міжнародний контекст
+
+  - section: Соціолінгвістичні знання
+    words: 700
+    points:
+      - Діалекти та наріччя
+      - Суржик
+      - Історія мови
+      - Діаспорна українська
+
+  - section: Усні завдання
+    words: 600
+    points:
+      - Дискусійні теми
+      - Рольові ігри
+      - Спонтанне мовлення
+
+  - section: Оцінювання
+    words: 500
+    points:
+      - Критерії оцінювання
+      - Рубрика усного мовлення
+      - Зворотний зв'язок
+
+  - section: Практичні завдання
+    words: 300
+    points:
+      - Письмовий екзамен
+      - Усна дискусія
+      - Аудіювання діалектів
+
+vocabulary_hints:
+  required:
+    - оцінювання (assessment)
+    - тестування (testing)
+    - перевірка (verification)
+    - контроль (control)
+    - екзамен (exam)
+    - залік (credit)
+    - бал (score)
+    - оцінка (grade)
+    - критерій (criterion)
+    - результат (result)
+  recommended:
+    - компетенція (competency)
+    - дискурс (discourse)
+    - спонтанність (spontaneity)
+    - плавність (fluency)
+    - точність (accuracy)
+
+activity_hints:
+  - type: quiz
+    focus: Comprehensive C1.2 assessment
+    items: "40+"
+
+  - type: essay-response
+    focus: Write professional document
+    word_target: 400
+
+  - type: match-up
+    focus: Review all key concepts M21-M34
+    items: "20+"
+
+  - type: fill-in
+    focus: Sociolinguistic knowledge
+    items: "15+"
+
+  - type: cloze
+    focus: Dialect recognition passages
+    items: "12+"
+
+  - type: group-sort
+    focus: Classify professional situations
+    items: "15+"
+
+prerequisites:
+  - c1-21 to c1-34 (Complete Phase C1.2)
+  - All professional and sociolinguistic skills
+
+connects_to:
+  - c1-36 (Metaphor & Simile - C1.3 start)
+  - c1-55 (C1.3 Checkpoint)
+  - c1-106 (Final C1 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

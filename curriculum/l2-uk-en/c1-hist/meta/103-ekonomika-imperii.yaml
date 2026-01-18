@@ -1,0 +1,121 @@
+# C1-HIST Module 103: Економіка імперії — Україна як житниця
+# Status: SPEC (ready for content development)
+
+id: c1-hist-103
+title: "Економіка імперії: Україна як житниця"
+slug: ekonomika-imperii
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Економіка Російської імперії (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Економіка_Російської_імперії
+    type: reference
+    notes: Imperial economy
+  - name: Кріпацтво в Україні (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні
+    type: reference
+    notes: Serfdom
+  - name: Експорт зерна (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Експорт_зерна_з_України
+    type: reference
+    notes: Grain export
+
+content_outline:
+  - section: Вступ — Колонія ресурсів
+    words: 400
+    points:
+      - Україна — «житниця Європи»
+      - Економічна колонізація
+      - Ресурсний вимір залежності
+      - Структура модуля
+
+  - section: Зерновий експорт XVIII-XIX ст.
+    words: 700
+    points:
+      - Чорноземи — багатство
+      - Хто отримував прибуток
+      - Одеса — порт імперії
+      - Селяни — виробники, не бенефіціари
+
+  - section: Кріпацтво як економічна система
+    words: 600
+    points:
+      - Безкоштовна робоча сила
+      - Латифундії — російських і польських панів
+      - Скасування 1861 — що змінилось
+      - Борги і залежність
+
+  - section: Цукрова промисловість
+    words: 500
+    points:
+      - Українські цукроварні
+      - Хто володів
+      - Прибутки — куди йшли
+      - Терещенки — виняток чи правило
+
+  - section: Залізниці і порти
+    words: 500
+    points:
+      - Інфраструктура — для експорту
+      - Не для розвитку України
+      - Колоніальна модель
+      - Порівняння з іншими колоніями
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Україна — економічна колонія
+      - Багатство — експортоване
+      - Перехід до радянської індустріалізації
+
+vocabulary_hints:
+  required:
+    - житниця (granary/breadbasket)
+    - економічна колонія (economic colony)
+    - зерновий експорт (grain export)
+    - кріпацтво (serfdom)
+    - латифундія (latifundium)
+    - інфраструктура (infrastructure)
+    - бенефіціар (beneficiary)
+    - прибуток (profit)
+    - ресурсна залежність (resource dependence)
+    - чорнозем (chernozem/black soil)
+  recommended:
+    - поміщик (landowner)
+    - панщина (corvée labor)
+    - цукроварня (sugar refinery)
+    - колоніальна модель (colonial model)
+    - метрополія (metropole)
+
+activity_hints:
+  - type: economic-analysis
+    focus: Where did Ukrainian grain profits go?
+    output: Profit flow analysis
+
+  - type: colonial-comparison
+    focus: Ukraine vs. other colonies — economic extraction
+    output: Colonial comparison
+
+  - type: infrastructure-analysis
+    focus: Railways for empire, not for Ukraine
+    output: Infrastructure purpose analysis
+
+  - type: class-analysis
+    focus: Who benefited from Ukrainian agriculture?
+    output: Beneficiary identification
+
+  - type: essay-response
+    focus: "Чи була Україна економічною колонією Російської імперії?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-102 (Western policy synthesis)
+
+connects_to:
+  - c1-hist-104 (Soviet industrialization)
+  - c1-hist-107 (Economic decolonization synthesis)

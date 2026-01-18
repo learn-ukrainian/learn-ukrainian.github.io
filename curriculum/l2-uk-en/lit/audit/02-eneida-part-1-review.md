@@ -1,13 +1,13 @@
 # Audit Report: 02-eneida-part-1.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.1 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3857/3500
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 3858/3500
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/4
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.4% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -37,8 +37,8 @@
 | variety | 0.98 | - | 98% | 4% | 4.3% |
 | cultural | 8 | - | 100% | 4% | 4.3% |
 | visual | 10 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 0.97 | - | 97% | 4% | 4.2% |
-| **TOTAL** | | | | | **99.8%** |
+| paragraph_var | 0.83 | - | 83% | 4% | 3.6% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -46,10 +46,10 @@
 | **Intro/Narrative** | ✅ | 31 | Included in Core |
 | **Підсумок** | ✅ | 106 | Included in Core |
 | **Частина I: Сюжетний Каркас і Травма 1775 Року** | ✅ | 330 | Included in Core |
-| **Частина II: Геополітика Олімпу та Бюрократія** | ✅ | 269 | Included in Core |
+| **Частина II: Геополітика Олімпу та Бюрократія** | ✅ | 270 | Included in Core |
 | **Частина III: Травестія та Європейський Контекст 🌍** | ✅ | 225 | Included in Core |
 | **Частина IV: Філософське коріння: Бароко** | ✅ | 158 | Included in Core |
-| **Частина V: Інтерпретація тексту (Slow Reading) 📜** | ✅ | 397 | Included in Core |
+| **Частина V: Інтерпретація тексту (Slow Reading) 📜** | ⚪️ | 0 | Skipped (using YAML) |
 | **Частина VI: Історична Хронологія (Контекст Катастрофи) ⏳** | ✅ | 228 | Included in Core |
 | **Частина VII: Географія Втечі (Карта Енея) 🗺️** | ✅ | 199 | Included in Core |
 | **Частина VIII: Олімпійські Ігри по-українськи (Спорт і Сатира) 🏆** | ✅ | 207 | Included in Core |

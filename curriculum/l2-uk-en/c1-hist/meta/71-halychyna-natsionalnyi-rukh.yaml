@@ -1,0 +1,131 @@
+# C1-HIST Module 71: Галицький національний рух
+# Status: SPEC (ready for content development)
+
+id: c1-hist-71
+title: Галицький національний рух
+slug: halychyna-natsionalnyi-rukh
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Українофіли (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українофіли
+    type: reference
+    notes: Ukrainophile movement
+  - name: Москвофіли (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Москвофіли
+    type: reference
+    notes: Russophile movement
+  - name: Товариство «Просвіта» (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
+    type: reference
+    notes: Prosvita society
+
+content_outline:
+  - section: Вступ — Боротьба за душу Галичини
+    words: 400
+    points:
+      - Три варіанти ідентичності
+      - Народовці vs. москвофіли
+      - Ставки — яким буде народ
+      - Структура модуля
+
+  - section: Москвофіли — хибний шлях
+    words: 600
+    points:
+      - Хто вони — соціальний склад
+      - Ідеологія — «єдиний руський народ»
+      - Русификація як модернізація?
+      - Чому програли
+
+  - section: Народовці — український вибір
+    words: 700
+    points:
+      - Молоде покоління
+      - Ідеологія — окремий народ
+      - Зв'язки з Наддніпрянщиною
+      - Перемога до 1914
+
+  - section: «Просвіта» — культурний рух
+    words: 600
+    points:
+      - Заснування — 1868
+      - Читальні — мережа
+      - Освітня діяльність
+      - Вплив на селянство
+
+  - section: Січовий рух
+    words: 500
+    points:
+      - Гімнастичні товариства
+      - Військове виховання
+      - Січові стрільці
+      - Підготовка до 1914
+
+  - section: Політичні партії
+    words: 400
+    points:
+      - Радикальна партія — Франко
+      - Національно-демократична
+      - Соціал-демократи
+      - Галицька багатопартійність
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Перемога українофілів
+      - Галичина — центр руху
+      - Підготовка до Буковини
+
+vocabulary_hints:
+  required:
+    - народовці (Ukrainophiles/populists)
+    - москвофіли (Russophiles)
+    - національний рух (national movement)
+    - «Просвіта» (Prosvita/Enlightenment)
+    - читальня (reading room)
+    - Січ (Sich - gymnastic society)
+    - радикальний (radical)
+    - партія (party)
+    - ідентичність (identity)
+    - селянство (peasantry)
+  recommended:
+    - русофільство (Russophilism)
+    - українофільство (Ukrainophilism)
+    - національне відродження (national revival)
+    - політична мобілізація (political mobilization)
+    - масовий рух (mass movement)
+
+activity_hints:
+  - type: ideological-comparison
+    focus: Narodovtsi vs. Russophiles — key differences
+    output: Ideological analysis
+
+  - type: institutional-analysis
+    focus: Prosvita network — how it worked
+    output: Organizational study
+
+  - type: social-analysis
+    focus: Who supported each movement — social map
+    output: Social base analysis
+
+  - type: timeline
+    focus: Victory of Ukrainophiles — key moments
+    output: Chronological analysis
+
+  - type: essay-response
+    focus: "Чому москвофіли програли в Галичині?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-70 (Galicia under Austria)
+  - c1-hist-61 (Greek Catholic Church)
+
+connects_to:
+  - c1-hist-72 (Bukovyna)
+  - c1-hist-75 (Western regions synthesis)
+  - c1-hist-123 (Post-Ems cultural shift)

@@ -78,10 +78,10 @@ For each module in range:
 ```
 /review-content b1 2-5
 
-→ Task agent: /review-content b1 2 → ✅ 5/5
-→ Task agent: /review-content b1 3 → ⚠️ 4/5 (coherence)
-→ Task agent: /review-content b1 4 → ✅ 5/5
-→ Task agent: /review-content b1 5 → ⚠️ 3/5 (accuracy, examples)
+→ Task agent: /review-content b1 2 → ✅ 10/10
+→ Task agent: /review-content b1 3 → ⚠️ 8/10 (coherence)
+→ Task agent: /review-content b1 4 → ✅ 10/10
+→ Task agent: /review-content b1 5 → ⚠️ 6/10 (accuracy, examples)
 
 Summary: 2/4 perfect, 2/4 need fixes
 ```
@@ -251,7 +251,7 @@ Validate ALL Ukrainian text against these sources:
 
 **If template compliance fails, flag as ❌ REWRITE regardless of other scores.**
 
-Score each criterion 1-5:
+Score each criterion 1-10:
 
 **1. Coherence**
 
@@ -1511,11 +1511,11 @@ Ukrainians value hospitality.
 
 **LLM Fingerprint Scoring:**
 
-- **5/5:** All checks pass. Content feels authentically human.
-- **4/5:** 1-2 minor flags. Mostly human, slight AI traces.
-- **3/5:** 3-4 flags. Noticeably AI-generated but salvageable.
-- **2/5:** 5+ flags. Heavy AI fingerprint. Needs rewrite.
-- **1/5:** Auto-fail red flags present. Pure AI slop. Complete rewrite.
+- **10/10:** All checks pass. Content feels authentically human.
+- **8/10:** 1-2 minor flags. Mostly human, slight AI traces.
+- **6/10:** 3-4 flags. Noticeably AI-generated but salvageable.
+- **4/10:** 5+ flags. Heavy AI fingerprint. Needs rewrite.
+- **2/10:** Auto-fail red flags present. Pure AI slop. Complete rewrite.
 
 ---
 
@@ -1544,7 +1544,7 @@ For each module, first evaluate current state:
 ## Module {num}: {title}
 
 **INITIAL SCORES (before fixes):**
-Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | Humanity {X}/5 | LLM Fingerprint {X}/5 | **Overall {X}/5**
+Coherence {X}/10 | Relevance {X}/10 | Educational {X}/10 | Language {X}/10 | Pedagogy {X}/10 | Immersion {X}/10 | Activities {X}/10 | Richness {X}/10 | Humanity {X}/10 | LLM Fingerprint {X}/10 | **Overall {X}/10**
 
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
 
@@ -1560,8 +1560,8 @@ Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagog
 
 **Step 4: Apply ALL Fixes to Achieve 10/10**
 
-> **CRITICAL MANDATE:** Your goal is a perfect **10/10** score (5/5 on every criterion).
-> Do not settle for "PASS" (4/5) or "GOOD" - aim for **EXCELLENT**.
+> **CRITICAL MANDATE:** Your goal is a perfect **10/10** score on every criterion.
+> Do not settle for "PASS" (8/10) or "GOOD" - aim for **EXCELLENT** (10/10).
 > **Every identified issue MUST be fixed immediately.** Do not just report it.
 
 **NEW PHILOSOPHY:**
@@ -1661,7 +1661,7 @@ Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagog
 
 ### Fix Application Workflow
 
-**For EACH criterion scored <5/5:**
+**For EACH criterion scored <10/10:**
 
 1. **Identify specific issues** (quote problematic text)
 2. **Apply appropriate fix** from Categories 1-7 above
@@ -1696,7 +1696,7 @@ After applying all fixes, re-evaluate the module:
 ## Module {num}: {title} - FINAL REPORT
 
 **FINAL SCORES (after fixes):**
-Coherence {X}/5 (was {Y}) | Relevance {X}/5 (was {Y}) | Educational {X}/5 (was {Y}) | Language {X}/5 (was {Y}) | Pedagogy {X}/5 (was {Y}) | Immersion {X}/5 (was {Y}) | Activities {X}/5 (was {Y}) | Richness {X}/5 (was {Y}) | Humanity {X}/5 (was {Y}) | LLM Fingerprint {X}/5 (was {Y}) | **Overall {X}/5** ⬆️ from {Y}/5
+Coherence {X}/10 (was {Y}) | Relevance {X}/10 (was {Y}) | Educational {X}/10 (was {Y}) | Language {X}/10 (was {Y}) | Pedagogy {X}/10 (was {Y}) | Immersion {X}/10 (was {Y}) | Activities {X}/10 (was {Y}) | Richness {X}/10 (was {Y}) | Humanity {X}/10 (was {Y}) | LLM Fingerprint {X}/10 (was {Y}) | **Overall {X}/10** ⬆️ from {Y}/10
 
 **Status:** ✅ 10/10 ACHIEVED / ⚠️ 9/10 (1 minor issue remains) / ⏳ 8/10 (needs manual review)
 
@@ -1740,12 +1740,12 @@ After reviewing and fixing all modules in scope:
 
 | Status | Before Fixes | After Fixes | Improvement |
 |--------|--------------|-------------|-------------|
-| ✅ 10/10 (5/5 all criteria) | {count} | {count} | +{delta} |
-| ⚠️ 9/10 (4.5+/5 avg) | {count} | {count} | +{delta} |
+| ✅ 10/10 (all criteria) | {count} | {count} | +{delta} |
+| ⚠️ 9/10 (avg 9+) | {count} | {count} | +{delta} |
 | ⏳ 8/10 (needs manual review) | {count} | {count} | +{delta} |
 | ❌ <8/10 (incomplete) | {count} | {count} | -{delta} |
 
-**Average Score Improvement:** {before_avg}/5 → {after_avg}/5 (↑ {delta})
+**Average Score Improvement:** {before_avg}/10 → {after_avg}/10 (↑ {delta})
 
 **Total Fixes Applied:** {count}
 - Category 1 (Structure): {count} fixes
@@ -1766,21 +1766,21 @@ After reviewing and fixing all modules in scope:
 
 ## Detailed Module: {module_number} - {title}
 
-**Overall Score:** {X}/5 {stars}
+**Overall Score:** {X}/10 {stars}
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
 
 ### Scores Breakdown
 - Template Compliance: ✅ PASS / ❌ FAIL {reason}
-- Coherence: {X}/5 {reason}
-- Relevance: {X}/5 {reason}
-- Educational: {X}/5 {reason}
-- Language: {X}/5 {reason}
-- Pedagogy: {X}/5 {reason}
-- Immersion: {X}/5 {reason}
-- Activities: {X}/5 {reason}
-- Richness: {X}/5 {reason} (B1+ only, N/A for A1/A2)
-- Humanity: {X}/5 {reason}
-- LLM Fingerprint: {X}/5 {reason} (B1+ critical, A1/A2 informational)
+- Coherence: {X}/10 {reason}
+- Relevance: {X}/10 {reason}
+- Educational: {X}/10 {reason}
+- Language: {X}/10 {reason}
+- Pedagogy: {X}/10 {reason}
+- Immersion: {X}/10 {reason}
+- Activities: {X}/10 {reason}
+- Richness: {X}/10 {reason} (B1+ only, N/A for A1/A2)
+- Humanity: {X}/10 {reason}
+- LLM Fingerprint: {X}/10 {reason} (B1+ critical, A1/A2 informational)
 - Word Salad: ❌ No / ⚠️ Yes
 - Dryness Flags: {list any triggered flags}
 - AI Detection Flags: {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}
@@ -1884,8 +1884,8 @@ For large batches, the command will show progress:
 
 ```
 Reviewing A1...
-[1/34] Module 01... ✅ PASS (4.5/5)
-[2/34] Module 02... ⚠️ NEEDS WORK (3/5)
+[1/34] Module 01... ✅ PASS (9/10)
+[2/34] Module 02... ⚠️ NEEDS WORK (6/10)
 ...
 ```
 
@@ -1967,7 +1967,7 @@ These trigger automatic REWRITE recommendation:
 
 - ❌ **Template compliance failure:** Module doesn't follow appropriate template structure
 - ❌ Word salad detected
-- ❌ Overall score < 2/5
+- ❌ Overall score < 4/10
 - ❌ Teaching wrong grammar for level
 - ❌ Examples completely unrelated to topic
 - ❌ No actual teaching content (just filler)
@@ -1980,7 +1980,7 @@ These trigger automatic REWRITE recommendation:
 - ❌ **Unrelated Resources:** YouTube/blog links don't match module topic
 - ❌ **Dry Content (B1+):** 2+ dryness flags triggered (textbook voice, no cultural anchors, generic examples)
 - ❌ **AI Slop (Section 15):** ChatGPT default voice, bullet point barrage (>50%), Wikipedia tone, engagement box faker (>50% restate content)
-- ❌ **LLM Fingerprint Score 1/5 (B1+):** Auto-fail red flags from Section 15 detected
+- ❌ **LLM Fingerprint Score 2/10 (B1+):** Auto-fail red flags from Section 15 detected
 
 ## Common Activity Issues (Examples)
 

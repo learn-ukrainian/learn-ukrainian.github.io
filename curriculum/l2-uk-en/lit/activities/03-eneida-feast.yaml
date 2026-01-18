@@ -1,5 +1,17 @@
+- type: reading
+  id: reading-eneida-feast
+  title: 'Іван Котляревський: Енеїда (Бенкет)'
+  resource:
+    type: 'Module Text'
+    url: 'https://www.ukrlib.com.ua/books/printit.php?tid=1042&page=2'
+    title: 'Іван Котляревський. Енеїда (Частина II)'
+  tasks:
+    - 'Прочитайте опис бенкету в Частині II.'
+    - 'Випишіть назви страв та напоїв.'
+
 - type: essay-response
   title: 'Есе-Роздум: Шпундра як ідеологія'
+  source_reading: "reading-eneida-feast"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Чому деталізація побуту важлива для колонізованої нації?'
 
@@ -28,6 +40,7 @@
       points: 30
 - type: essay-response
   title: 'Творче Завдання: Меню Енея'
+  source_reading: "reading-eneida-feast"
   prompt: 'Складіть ''Меню Енея'' для сучасного ресторану української кухні. Виберіть з тексту:
 
     1. Закуску
@@ -63,6 +76,7 @@
       points: 50
 - type: critical-analysis
   title: 'Аналіз Тексту: Бенкет як Ритуал'
+  source_reading: "reading-eneida-feast"
   target_text: "Тут їли різнії потрави, і все з полив'яних мисок... І кубками пили слив'янку, мед, пиво, брагу, сирівець."
   questions:
     - Яку соціальну функцію виконує спільна трапеза в поемі?

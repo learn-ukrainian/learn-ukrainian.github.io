@@ -1,0 +1,133 @@
+# C2 Module 56: Professional Correspondence
+# Status: SPEC (ready for content development)
+
+id: c2-56
+title: Професійна кореспонденція
+slug: professional-correspondence
+module_type: grammar
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: ДСТУ 4163:2020 — Вимоги до оформлювання документів
+    url: https://dnaop.com/
+    type: reference
+    notes: Ukrainian state standard for document formatting including letters
+  - name: Кабінет Міністрів України — зразки листів
+    url: https://www.kmu.gov.ua/
+    type: example
+    notes: Examples of official government correspondence
+  - name: Ділова кореспонденція — навчальний посібник
+    url: https://nbuv.gov.ua/
+    type: reference
+    notes: Academic textbook on Ukrainian business correspondence
+
+content_outline:
+  - section: Вступ — Культура ділової кореспонденції
+    words: 500
+    points:
+      - Роль листування в професійному житті
+      - Еволюція ділової кореспонденції (паперові vs. електронні)
+      - Універсальні принципи ефективного листування
+
+  - section: Офіційні листи
+    words: 800
+    points:
+      - Типи офіційних листів (запит, пропозиція, скарга, подяка)
+      - Структура офіційного листа
+      - Реквізити та оформлення
+      - Формули ввічливості (звертання, завершення)
+
+  - section: Ділові електронні листи
+    words: 700
+    points:
+      - Специфіка email-комунікації
+      - Структура ділового email
+      - Тема листа та її значення
+      - Вкладення та посилання
+
+  - section: Запити та відповіді
+    words: 600
+    points:
+      - Формулювання запитів
+      - Структура відповіді на запит
+      - Негативні відповіді та ввічлива відмова
+      - Follow-up листи
+
+  - section: Скарги та претензії
+    words: 600
+    points:
+      - Структура скарги
+      - Аргументація та докази
+      - Вимоги та очікування
+      - Реагування на скарги
+
+  - section: Практичні вправи
+    words: 500
+    points:
+      - Написання офіційного запиту
+      - Складання ділового email
+      - Формулювання відповіді на скаргу
+
+vocabulary_hints:
+  required:
+    - кореспонденція (correspondence)
+    - офіційний лист (official letter)
+    - запит (request/inquiry)
+    - відповідь (response)
+    - скарга (complaint)
+    - претензія (claim)
+    - звертання (salutation)
+    - реквізит (requisite)
+    - вкладення (attachment)
+    - підпис (signature)
+  recommended:
+    - follow-up (follow-up)
+    - шаблон (template)
+    - адресат (addressee)
+    - відправник (sender)
+    - вихідний номер (outgoing number)
+
+activity_hints:
+  - type: essay-response
+    focus: Написання офіційного листа-запиту
+    word_target: 300
+    output: Лист з моделлю відповіді
+
+  - type: essay-response
+    focus: Написання ділового email
+    word_target: 200
+    output: Email з моделлю
+
+  - type: essay-response
+    focus: Написання відповіді на скаргу
+    word_target: 300
+    output: Лист-відповідь з моделлю
+
+  - type: quiz
+    focus: Формули ввічливості в офіційних листах
+    items: "15+"
+
+  - type: fill-in
+    focus: Заповнення структурних елементів листа
+    items: "12+"
+
+  - type: critical-analysis
+    focus: Аналіз та редагування неефективного листа
+    output: Покращений варіант з поясненням змін
+
+prerequisites:
+  - M55 (C2.3 Midpoint Checkpoint)
+  - M09 (Епістолярний стиль — Complete Correspondence)
+  - M51 (Professional Document Types)
+
+connects_to:
+  - c2-57 (Professional Discussions)
+  - c2-58 (Cross-Domain Communication)
+  - c2-71 (Professional Portfolio I)
+
+naturalness:
+  score: null
+  status: PENDING

@@ -1,0 +1,132 @@
+# C1-HIST Module 15: Галицько-Волинський літопис I — Про Данила
+# Status: SPEC (ready for content development)
+
+id: c1-hist-15
+title: "Галицько-Волинський літопис I: Про Данила"
+slug: halytsko-volynskyi-litopys-i
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Галицько-Волинський літопис (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+    type: reference
+    notes: Overview
+  - name: Галицько-Волинський літопис (текст)
+    url: https://litopys.org.ua/hvlitop/hvl.htm
+    type: primary
+    notes: Full text
+  - name: Данило Галицький
+    url: https://uk.wikipedia.org/wiki/Данило_Романович
+    type: reference
+    notes: King Danylo biography
+
+content_outline:
+  - section: Вступ — Літопис королівства
+    words: 400
+    points:
+      - Що таке Галицько-Волинський літопис?
+      - Чому це інший літопис ніж ПМЛ?
+      - Західна Русь — окрема традиція
+      - Хронологія — XIII ст.
+
+  - section: Контекст — Галицько-Волинське князівство
+    words: 500
+    points:
+      - Географія — західні землі
+      - Відносини з Європою
+      - Монгольська навала 1240
+      - Чому важлива ця держава
+
+  - section: Авторство та датування
+    words: 500
+    points:
+      - Хто написав? Кілька авторів
+      - Галицький і Волинський компоненти
+      - Придворні літописці
+      - Коли завершено — поч. XIV ст.
+
+  - section: Данило Галицький у літописі
+    words: 700
+    points:
+      - Героїчна постать
+      - Боротьба за владу — молоді роки
+      - Монгольське підкорення
+      - Королівська коронація 1253
+      - Дипломатія — Папа, Угорщина, Польща
+
+  - section: Фрагмент — Коронація Данила
+    words: 600
+    points:
+      - Текст (з глосами)
+      - Перший і останній король Русі
+      - Символіка — корона від Папи
+      - Чому це важливо для ідентичності?
+      - Пропаганда vs. історія
+
+  - section: Критика джерела
+    words: 500
+    points:
+      - Придворний характер — апологія Романовичів
+      - Що замовчано
+      - Порівняння з іншими джерелами
+      - Цінність незважаючи на упередженість
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Західна альтернатива — не тільки Київ
+      - Європейська орієнтація
+      - Зв'язок із Галичиною пізніше
+
+vocabulary_hints:
+  required:
+    - князівство (principality)
+    - коронація (coronation)
+    - король (king)
+    - папа (Pope)
+    - монгольська навала (Mongol invasion)
+    - дипломатія (diplomacy)
+    - придворний літописець (court chronicler)
+    - апологія (apology/defense)
+    - західна орієнтація (Western orientation)
+    - династія (dynasty)
+  recommended:
+    - васал (vassal)
+    - данина (tribute)
+    - унія (union)
+    - хрестовий похід (crusade)
+    - легат (legate)
+
+activity_hints:
+  - type: reading
+    focus: Coronation passage with glosses
+    source: litopys.org.ua
+
+  - type: source-evaluation
+    focus: How does the chronicle present Danylo's submission to Mongols?
+    output: Bias analysis
+
+  - type: map-exercise
+    focus: Galicia-Volhynia — European connections
+    output: Annotated map
+
+  - type: comparative-study
+    focus: Compare coronation account with papal sources
+    output: Perspective comparison
+
+  - type: essay-response
+    focus: "Чому Данило Галицький важливий для української історії?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-11 (PVL I)
+  - c1-hist-12 (PVL II)
+
+connects_to:
+  - c1-hist-16 (Galician-Volhynian Chronicle II)
+  - c1-hist-70 (Galicia under Austria)

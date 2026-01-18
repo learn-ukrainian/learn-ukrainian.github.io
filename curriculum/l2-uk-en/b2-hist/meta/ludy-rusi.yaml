@@ -1,10 +1,138 @@
-# Meta for Люди Русі: Суспільство та побут
-slug: ludy-rusi
+# B2-HIST Module 18: Люди Русі: Суспільство та побут
+# Status: SPEC (ready for content development)
+
+id: b2-hist-18
 title: "Люди Русі: Суспільство та побут"
-level: B2
-track: history
-phase: "HIST.2 [Kyivan Rus]"
-status: skeleton
-focus: history
-prerequisites: []
-learning_outcomes: []
+slug: ludy-rusi
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Суспільство Київської Русі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
+    type: reference
+    notes: Social structure overview
+  - name: Побут населення Київської Русі
+    url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
+    type: reference
+    notes: Everyday life
+  - name: Руська Правда — соціальні норми
+    url: https://litopys.org.ua/oldukr2/oldukr51.htm
+    type: primary
+    notes: Legal text on social classes
+
+content_outline:
+  - section: Вступ — Суспільство Русі
+    words: 450
+    points:
+      - Соціальна структура за джерелами
+      - Вільні, напіввільні, невільні
+      - Місто і село — два світи
+      - Джерела знань — Руська Правда, археологія, літописи
+
+  - section: Вільне населення
+    words: 650
+    points:
+      - Князь та княжа родина
+      - Бояри — земельна аристократія
+      - Дружина — військова еліта
+      - Купці та ремісники — міщани
+
+  - section: Залежне населення
+    words: 600
+    points:
+      - Смерди — основа сільського населення
+      - Закупи — боргова залежність
+      - Рядовичі — договірна залежність
+      - Холопи та челядь — раби
+
+  - section: Міське життя
+    words: 600
+    points:
+      - Київ як мегаполіс — 50 000 населення
+      - Ремесла — ковальство, ювелірство, ткацтво
+      - Торгівля — внутрішня та зовнішня
+      - Віче — міське самоврядування
+
+  - section: Сільське життя
+    words: 550
+    points:
+      - Землеробство — рало та соха
+      - Тваринництво та промисли
+      - Громада — сільська спільнота
+      - Побут селянської родини
+
+  - section: Повсякденне життя
+    words: 550
+    points:
+      - Житло — хата, городище, терем
+      - Одяг та прикраси
+      - Їжа та напої
+      - Свята та обряди — християнські та язичницькі
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Суспільство Русі у європейському контексті
+      - Соціальна мобільність та її межі
+      - Перехід до зовнішніх відносин
+
+vocabulary_hints:
+  required:
+    - суспільство (society)
+    - побут (everyday life)
+    - смерд (smerd/peasant)
+    - закуп (zakup/debt bondsman)
+    - холоп (kholop/slave)
+    - боярин (boyar)
+    - дружина (druzhina)
+    - купець (merchant)
+    - ремісник (craftsman)
+    - віче (veche - assembly)
+    - громада (community)
+    - рало (ard/plow)
+  recommended:
+    - рядович (contract laborer)
+    - челядь (household slaves)
+    - терем (terem/tower)
+    - городище (fortified settlement)
+    - соха (sokha/plow)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from Ruska Pravda on social classes
+    source: Provide in module
+
+  - type: vocabulary
+    focus: Social and economic terminology
+    items: "18+"
+
+  - type: image-analysis
+    focus: Archaeological reconstructions of Rus life
+    items: "8-10 images"
+
+  - type: quiz
+    focus: Social structure and daily life
+    items: "15+"
+
+  - type: group-sort
+    focus: Categorize people by social status
+    items: "12+"
+
+  - type: compare-contrast
+    focus: City vs village life in Rus
+    output: Two-column comparison
+
+  - type: discussion
+    focus: "Яким було життя пересічного жителя Русі?"
+
+prerequisites:
+  - b2-hist-13 (Ruska Pravda)
+  - b2-hist-16 (Kyivan Rus culture)
+
+connects_to:
+  - b2-hist-19 (Rus and neighbors)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

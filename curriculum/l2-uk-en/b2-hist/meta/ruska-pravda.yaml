@@ -1,10 +1,140 @@
-# Meta for Руська Правда: Перший законодавчий кодекс
-slug: ruska-pravda
+# B2-HIST Module 13: Руська Правда: Перший законодавчий кодекс
+# Status: SPEC (ready for content development)
+
+id: b2-hist-13
 title: "Руська Правда: Перший законодавчий кодекс"
-level: B2
-track: history
-phase: "HIST.2 [Kyivan Rus]"
-status: skeleton
-focus: history
-prerequisites: []
-learning_outcomes: []
+slug: ruska-pravda
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Руська Правда (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Руська_Правда
+    type: reference
+    notes: Overview of the legal code
+  - name: Текст Руської Правди
+    url: https://litopys.org.ua/oldukr2/oldukr51.htm
+    type: primary
+    notes: Original text with translation
+  - name: Правда Ярослава (Коротка редакція)
+    url: https://uk.wikipedia.org/wiki/Правда_Ярослава
+    type: reference
+    notes: First version of the code
+
+content_outline:
+  - section: Вступ — Від звичаю до закону
+    words: 500
+    points:
+      - Руська Правда як найстаріша пам'ятка права
+      - Перехід від усного звичаєвого права до писаного
+      - Значення для розуміння суспільства Русі
+      - Редакції Руської Правди — Коротка та Просторова
+
+  - section: Правда Ярослава
+    words: 600
+    points:
+      - Найдавніша частина (1016-1036)
+      - Кровна помста та її обмеження
+      - Віра — грошова компенсація за вбивство
+      - Статті про побої та образи
+
+  - section: Правда Ярославичів
+    words: 600
+    points:
+      - Доповнення синів Ярослава
+      - Скасування кровної помсти
+      - Захист князівської власності
+      - Статті про холопів та закупів
+
+  - section: Соціальна структура за Руською Правдою
+    words: 650
+    points:
+      - Вільні люди — бояри, дружинники, смерди
+      - Напіввільні — закупи, рядовичі
+      - Невільні — холопи, челядь
+      - Ціна життя різних верств — система вір
+
+  - section: Економічні відносини
+    words: 550
+    points:
+      - Статті про борги та позики
+      - Торгівля та купці
+      - Спадкування та власність
+      - Жіночі права за Руською Правдою
+
+  - section: Судочинство
+    words: 500
+    points:
+      - Судові процедури — звід, гоніння сліду
+      - Ордалії — Божий суд
+      - Свідки та присяга
+      - Княжий суд та церковний суд
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Руська Правда як джерело для вивчення суспільства
+      - Вплив на пізніше законодавство
+      - Перехід до Софії Київської
+
+vocabulary_hints:
+  required:
+    - право (law)
+    - закон (statute)
+    - віра (wergild)
+    - кровна помста (blood feud)
+    - смерд (smerd - peasant)
+    - холоп (kholop - slave)
+    - закуп (zakup - debt bondsman)
+    - боярин (boyar)
+    - дружина (druzhina)
+    - судочинство (judiciary)
+    - звід (svod - legal procedure)
+    - спадкування (inheritance)
+  recommended:
+    - рядович (riadovych)
+    - челядь (household slaves)
+    - ордалія (ordeal)
+    - гоніння сліду (pursuit of trail)
+    - присяга (oath)
+    - Просторова редакція (Expanded edition)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from Ruska Pravda with translation
+    source: Provide in module
+
+  - type: vocabulary
+    focus: Legal and social terminology
+    items: "18+"
+
+  - type: compare-contrast
+    focus: Punishments for crimes against different social classes
+    output: Table of wergild amounts
+
+  - type: quiz
+    focus: Social structure and legal concepts
+    items: "15+"
+
+  - type: group-sort
+    focus: Categorize social classes by status (free, semi-free, unfree)
+    items: "10+"
+
+  - type: essay-response
+    focus: "Що Руська Правда розповідає про суспільство Київської Русі?"
+    word_target: 250
+    model_answer: Required
+
+  - type: discussion
+    focus: "Чи була Руська Правда справедливою для всіх верств населення?"
+
+prerequisites:
+  - b2-hist-12 (Yaroslav the Wise)
+
+connects_to:
+  - b2-hist-14 (St. Sophia — cultural context)
+  - b2-hist-18 (People of Rus — social life)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

@@ -1,0 +1,132 @@
+# C1-HIST Module 55: Театр Курбаса — Реформа і знищення
+# Status: SPEC (ready for content development)
+
+id: c1-hist-55
+title: "Театр Курбаса: Реформа і знищення"
+slug: teatr-kurbasa
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Лесь Курбас (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Курбас_Лесь
+    type: reference
+    notes: Biography
+  - name: Березіль (театр)
+    url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+    type: reference
+    notes: Theater history
+  - name: Український театральний авангард
+    url: https://uk.wikipedia.org/wiki/Авангардизм
+    type: reference
+    notes: Avant-garde context
+
+content_outline:
+  - section: Вступ — Революціонер сцени
+    words: 400
+    points:
+      - Курбас — хто він
+      - Театральна революція
+      - Чому театр — політика
+      - Структура модуля
+
+  - section: Шлях до "Березоля"
+    words: 500
+    points:
+      - Ранні роки і навчання
+      - "Молодий театр" — перші експерименти
+      - Перша світова і революція
+      - Створення "Березоля" (1922)
+
+  - section: Театральна реформа Курбаса
+    words: 700
+    points:
+      - Проти традиційного театру
+      - Система Курбаса — що нового
+      - Експресіонізм і конструктивізм
+      - Синтетичний актор
+      - Вплив європейського авангарду
+
+  - section: Найважливіші постановки
+    words: 600
+    points:
+      - "Газ" Кайзера
+      - "Джіммі Гіггінз"
+      - "Народний Малахій" Куліша
+      - Що показували — як реагували
+      - Критика і успіх
+
+  - section: Конфлікт із владою
+    words: 500
+    points:
+      - Тиск зростає — 1930-ті
+      - "Формалізм" — звинувачення
+      - Звільнення з театру (1933)
+      - Заслання і арешт
+
+  - section: Загибель і пам'ять
+    words: 500
+    points:
+      - Соловецький табір
+      - Розстріл (1937)
+      - Реабілітація — коли і як
+      - Спадщина — сучасний театр
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Курбас — символ знищеного
+      - Від експерименту до злочину
+      - Підготовка до механізму знищення
+
+vocabulary_hints:
+  required:
+    - театр (theater)
+    - режисер (director)
+    - авангард (avant-garde)
+    - Березіль (Berezil)
+    - експресіонізм (expressionism)
+    - конструктивізм (constructivism)
+    - формалізм (formalism)
+    - звинувачення (accusation)
+    - заслання (exile)
+    - розстріл (execution)
+  recommended:
+    - постановка (production/staging)
+    - синтетичний актор (synthetic actor)
+    - умовний театр (conditional theater)
+    - реабілітація (rehabilitation)
+    - мистецтво (art)
+
+activity_hints:
+  - type: biography-study
+    focus: Trace Kurbas's career arc
+    output: Career timeline
+
+  - type: artistic-analysis
+    focus: What was revolutionary about Kurbas's method?
+    output: Innovation analysis
+
+  - type: comparative-study
+    focus: Compare Kurbas with European avant-garde (Meyerhold)
+    output: Artistic comparison
+
+  - type: censorship-study
+    focus: How was "formalism" used to attack artists?
+    output: Censorship mechanism analysis
+
+  - type: essay-response
+    focus: "Чому радянська влада знищила авангардний театр?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-54 (Khvylovyi)
+  - c1-hist-52 (Executed Renaissance context)
+
+connects_to:
+  - c1-hist-56 (Destruction mechanism)
+  - c1-hist-57 (Cultural genocide synthesis)

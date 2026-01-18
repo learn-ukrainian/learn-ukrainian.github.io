@@ -1,0 +1,130 @@
+# C1-HIST Module 79: Південь — Колонізація та міфи «Новоросії»
+# Status: SPEC (ready for content development)
+
+id: c1-hist-79
+title: "Південь: Колонізація та міфи «Новоросії»"
+slug: pivden-kolonizatsiia-mify
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Новоросія (історичний регіон) (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
+    type: reference
+    notes: Historical region
+  - name: Одеса (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Одеса
+    type: reference
+    notes: City history
+  - name: Українці на Півдні України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українці
+    type: reference
+    notes: Ukrainian presence
+
+content_outline:
+  - section: Вступ — «Новоросія» — що це?
+    words: 400
+    points:
+      - Імперська назва
+      - Сучасне відродження міфу
+      - Чому потрібна деконструкція
+      - Структура модуля
+
+  - section: До «Новоросії»
+    words: 600
+    points:
+      - Дике поле — не пусте
+      - Козацька присутність
+      - Запорозька Січ
+      - Кримськотатарські землі
+
+  - section: Російська колонізація
+    words: 700
+    points:
+      - Потьомкін і Катерина
+      - Заселення — хто приїхав
+      - Українці — більшість
+      - Греки, болгари, німці
+      - Росіяни — меншість
+
+  - section: Одеса — імперське місто
+    words: 600
+    points:
+      - Заснування — 1794
+      - Мультикультурне місто
+      - Українці в Одесі
+      - Одеський міф — «не українське місто»?
+
+  - section: Херсон, Миколаїв, Маріуполь
+    words: 500
+    points:
+      - Інші міста Півдня
+      - Українська присутність
+      - Русифікація XX ст.
+      - Збереження ідентичності
+
+  - section: «Новоросія» 2014
+    words: 400
+    points:
+      - Російський проект — провал
+      - Чому не спрацювало
+      - 2022 — Херсон, Запоріжжя
+      - Спротив Півдня
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Південь — не російський
+      - «Новоросія» — імперський міф
+      - Перехід до синтезу
+
+vocabulary_hints:
+  required:
+    - Новоросія (Novorossiya)
+    - колонізація (colonization)
+    - міф (myth)
+    - імперський (imperial)
+    - Дике поле (Wild Field)
+    - деконструкція (deconstruction)
+    - заселення (settlement)
+    - мультикультурний (multicultural)
+    - ідентичність (identity)
+    - спротив (resistance)
+  recommended:
+    - Потьомкін (Potemkin)
+    - порто-франко (free port)
+    - космополітизм (cosmopolitanism)
+    - етнічний склад (ethnic composition)
+    - регіональний міф (regional myth)
+
+activity_hints:
+  - type: myth-deconstruction
+    focus: "Novorossiya" — imperial construct analysis
+    output: Myth analysis
+
+  - type: demographic-study
+    focus: Who settled Southern Ukraine — ethnic breakdown
+    output: Demographic analysis
+
+  - type: city-analysis
+    focus: Odesa — Ukrainian or "other"?
+    output: Urban identity study
+
+  - type: contemporary-analysis
+    focus: 2014 vs. 2022 — why "Novorossiya" project failed
+    output: Contemporary analysis
+
+  - type: essay-response
+    focus: "Чому російський проект 'Новоросії' провалився?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-76-78 (Other eastern/southern regions)
+
+connects_to:
+  - c1-hist-80 (Regional diversity synthesis)
+  - c1-hist-108 ("Little Russia" myth)

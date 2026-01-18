@@ -1,14 +1,131 @@
-module: lit-24
+# LIT Module 24: The Language Question
+# Status: SPEC (ready for content development)
+
+id: lit-24
 title: 'Мовне питання'
 subtitle: 'The Language Question'
-version: '2.0'
-naturalness:
-  score: 9
-  status: PASS
-  rationale: "Historical linguistic narrative with authentic flow"
-phase: 'LIT.4 The Intellectuals'
+slug: language-question-linguistics
+module_type: linguistics
+word_target: 4500
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Кулішівка — стаття
+    url: https://uk.wikipedia.org/wiki/Кулішівка
+    type: primary
+    notes: Історія правопису
+  - name: Історія українського правопису
+    url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
+    type: secondary
+    notes: Ширший контекст
+  - name: Валуєвський циркуляр
+    url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+    type: reference
+    notes: Політичний контекст
+
+content_outline:
+  - section: Вступ — Чому правопис — це політика?
+    words: 500
+    points:
+      - Мова як поле битви
+      - Зв'язок орфографії та ідентичності
+      - XIX століття — час "мовних війн"
+
+  - section: Кулішівка — система Куліша
+    words: 800
+    points:
+      - Принципи фонетичного правопису
+      - Як Кулішівка відрізняється від етимологічного
+      - Практичне застосування
+
+  - section: "Війни алфавітів" XIX століття
+    words: 700
+    points:
+      - Максимовичівка vs Кулішівка
+      - Ярижка (російська транслітерація)
+      - Позиція Австро-Угорщини
+
+  - section: Імперські заборони
+    words: 700
+    points:
+      - Валуєвський циркуляр (1863)
+      - Емський указ (1876)
+      - Наслідки для української літератури
+
+  - section: Фонетика vs етимологія
+    words: 500
+    points:
+      - Фонетичний принцип: "як чую, так пишу"
+      - Етимологічний принцип: історичне написання
+      - Сучасний український правопис
+
+  - section: Підсумок — Мова як нація
+    words: 400
+    points:
+      - Внесок Куліша в мовознавство
+      - Від XIX до XXI століття
+      - Перехід до Кирило-Мефодіївського братства
+
+vocabulary_hints:
+  required:
+    - правопис (orthography)
+    - кулішівка (Kulishivka script)
+    - фонетичний (phonetic)
+    - етимологічний (etymological)
+    - циркуляр (circular/decree)
+    - указ (edict)
+    - заборона (ban)
+    - транслітерація (transliteration)
+    - орфографія (orthography)
+    - літера (letter)
+  recommended:
+    - абетка (alphabet)
+    - графіка (graphics/script)
+    - нормування (standardization)
+    - кодифікація (codification)
+    - варіант (variant)
+
+activity_hints:
+  - type: reading
+    focus: Статті про історію українського правопису
+    source: Wikipedia
+    items: "4+"
+
+  - type: quiz
+    focus: Факти про мовні реформи XIX ст.
+    items: "15+"
+
+  - type: match-up
+    focus: Система правопису → її автор / принцип
+    items: "12+"
+
+  - type: essay-response
+    focus: Чому імперія боялася українського правопису?
+    word_target: 300
+    output: Політико-лінгвістичне есе
+
+  - type: group-sort
+    focus: Фонетичні vs етимологічні написання
+    items: "20+"
+
+  - type: cloze
+    focus: Ключові дати і закони
+    items: "12+"
+
+prerequisites:
+  - lit-21 (Panteleimon Kulish)
+  - lit-10 (Language of Kvitka — for context)
+
+connects_to:
+  - lit-25 (Cyrillo-Methodian Brotherhood — політичний контекст)
+  - lit-29 (Language of Realism)
+
+version: "2.0"
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
 focus: linguistics
-pedagogy: 'Analysis'
+pedagogy: Analysis
 duration: 100
 transliteration: none
 tags:
@@ -16,13 +133,12 @@ tags:
   - history
   - orthography
   - kulish
+
 grammar:
-  - 'Phonetic Orthography'
-  - 'Etymological Orthography'
-  - 'Historical Terminology'
-objectives:
-  - 'Understand the history of Ukrainian orthography (Kulishivka)'
-  - 'Analyze the "Alphabet Wars" of the 19th century'
-  - 'Distinguish between phonetic and etymological principles'
-vocabulary_count: 20
-slug: 24-language-question-linguistics
+  - Phonetic Orthography
+  - Etymological Orthography
+  - Historical Terminology
+
+naturalness:
+  score: 9
+  status: PASS

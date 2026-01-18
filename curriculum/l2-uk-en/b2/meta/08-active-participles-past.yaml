@@ -1,29 +1,141 @@
-module: b2-08
+# B2 Module 08: Active Participles II - Past (-лий)
+# Status: SPEC (ready for content development)
+
+id: b2-08
 title: Активні дієприкметники минулого часу (-лий)
-subtitle: Розпізнавання архаїчних форм та легітимні альтернативи
-version: '1.0'
-phase: B2.1a [Grammar & Register]
-pedagogy: TTT
-focus: grammar
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - register
-  - synthetic-future
-grammar:
-  - Активні дієприкметники минулого часу (-лий)
-  - Розрізнення русизмів та автентичних форм
-  - Синтетичний майбутній час (-иму/-тиму)
-objectives:
-  - Учень може розпізнавати активні дієприкметники минулого часу в текстах
-  - Учень може розрізняти русизми та легітимні українські форми
-  - Учень може трансформувати дієприкметники в підрядні означальні речення
-  - Учень може використовувати синтетичний майбутній час у формальному мовленні
-vocabulary_count: 25
-vocab_count: 145
 slug: 08-active-participles-past
+module_type: grammar
+word_target: 3800
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Participles
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Recognition of -лий forms, russism awareness
+  - name: Антисуржик
+    url: https://uk.wikipedia.org/wiki/Антисуржик
+    type: secondary
+    notes: Distinguishing Ukrainian from Russian-influenced forms
+  - name: Правопис української мови 2019
+    url: https://uk.wikipedia.org/wiki/Український_правопис
+    type: reference
+    notes: Official position on -лий participles
+
+content_outline:
+  - section: Вступ — Минулі активні дієприкметники
+    words: 400
+    points:
+      - Теоретична можливість утворення
+      - Історичний контекст
+      - Чому більшість форм вважаються русизмами
+
+  - section: Утворення форм на -лий
+    words: 600
+    points:
+      - Від основи минулого часу + -лий
+      - Теоретичні приклади (читав → *читавший)
+      - Чому такі форми не є нормативними
+
+  - section: Легітимні лексикалізовані форми
+    words: 700
+    points:
+      - бувший (former) — колишній переважно
+      - минулий (past) — повноцінне слово
+      - майбутній (future) — повноцінне слово
+      - Інші прийнятні форми
+
+  - section: Русизми та їх уникання
+    words: 700
+    points:
+      - Форми типу прочитавший, зробивший — русизми
+      - Українські альтернативи (людина, яка прочитала)
+      - Важливість для чистоти мови
+      - Історичний контекст мовної політики
+
+  - section: Синтетичний майбутній час
+    words: 600
+    points:
+      - Альтернатива до буду + інфінітив
+      - Утворення (інфінітив + -иму/-тиму)
+      - Приклади (боротимуся, питимеш, кричатиме)
+      - Літературний/формальний характер
+
+  - section: Розпізнавання в старих текстах
+    words: 500
+    points:
+      - Тексти XIX-початку XX століття
+      - Радянська література (російський вплив)
+      - Як розпізнавати й трансформувати
+
+  - section: Практика і підсумок
+    words: 300
+    points:
+      - Ключові легітимні форми
+      - Уникання русизмів
+      - Підготовка до модуля 09
+
+vocabulary_hints:
+  required:
+    - минулий (past)
+    - майбутній (future)
+    - колишній (former)
+    - русизм (russism)
+    - нормативний (normative)
+    - лексикалізований (lexicalized)
+    - синтетичний (synthetic)
+    - аналітичний (analytic)
+    - літературний (literary)
+    - формальний (formal)
+  recommended:
+    - мовна норма (language norm)
+    - історичний контекст (historical context)
+    - деколонізація (decolonization)
+    - чистота мови (language purity)
+    - альтернатива (alternative)
+
+activity_hints:
+  - type: quiz
+    focus: Legitimate vs russism participles — identification
+    items: "15+"
+
+  - type: transform
+    focus: Russism participle → relative clause
+    items: "12+"
+
+  - type: identify
+    focus: Spot participles in academic/literary text
+    items: "3 texts"
+
+  - type: fill-in
+    focus: Complete sentences with минулий/майбутній/колишній
+    items: "12+"
+
+  - type: transform
+    focus: Compound future → synthetic future
+    items: "10+"
+
+  - type: error-correction
+    focus: Replace russism participles with Ukrainian alternatives
+    items: "12+"
+
+  - type: match-up
+    focus: Russism → correct Ukrainian equivalent
+    items: "12+"
+
+prerequisites:
+  - b2-07 (Active Participles Present)
+  - b2-02 (Past Passive Participles)
+  - Past tense formation
+  - Future tense (compound)
+
+connects_to:
+  - b2-09 (Participles vs Relative Clauses)
+  - b2-10 (B2.1a Checkpoint)
+  - b2-22 (Register: Literary Ukrainian)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

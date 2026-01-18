@@ -1,13 +1,13 @@
 # Audit Report: 07-marusya.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 3568/3500
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 3618/3500
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
@@ -15,8 +15,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 95-100%)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -44,6 +44,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 48 | Included in Core |
+| **Summary** | ✅ | 49 | Included in Core |
 | **Частина I: Народження Сентименталізму** | ✅ | 368 | Included in Core |
 | **Частина II: Сюжет і Структура** | ✅ | 381 | Included in Core |
 | **Частина III: Образ Марусі: Між Святою і Лялькою** | ✅ | 249 | Included in Core |
@@ -63,5 +64,5 @@
 | **Частина XVII: Епілог: Чому Василь не Боровся?** | ✅ | 82 | Included in Core |
 | **Частина XVIII: Феномен Оповідача: Грицько Основ'яненко 👤** | ✅ | 77 | Included in Core |
 | **🏛️ Читальна Зала** | ⚪️ | 122 | Skipped |
-| **✍️ Аналітичний Практикум** | ⚪️ | 259 | Skipped |
+| **✍️ Аналітичний Практикум** | ⚪️ | 260 | Skipped |
 | **Додаткове Завдання (Дискусія)** | ⚪️ | 84 | Skipped |

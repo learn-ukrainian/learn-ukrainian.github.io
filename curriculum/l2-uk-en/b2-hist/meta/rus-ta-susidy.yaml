@@ -1,10 +1,137 @@
-# Meta for Русь та сусіди: Візантія, Польща, Угорщина
-slug: rus-ta-susidy
+# B2-HIST Module 19: Русь та сусіди: Візантія, Польща, Угорщина
+# Status: SPEC (ready for content development)
+
+id: b2-hist-19
 title: "Русь та сусіди: Візантія, Польща, Угорщина"
-level: B2
-track: history
-phase: "HIST.2 [Kyivan Rus]"
-status: skeleton
-focus: history
-prerequisites: []
-learning_outcomes: []
+slug: rus-ta-susidy
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Зовнішня політика Київської Русі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
+    type: reference
+    notes: Overview of foreign relations
+  - name: Русько-візантійські договори
+    url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
+    type: reference
+    notes: Treaties with Byzantium
+  - name: Повість минулих літ — дипломатичні місії
+    url: https://litopys.org.ua/pvl/pvl.htm
+    type: primary
+    notes: Chronicle accounts
+
+content_outline:
+  - section: Вступ — Русь у міжнародному контексті
+    words: 450
+    points:
+      - Геополітичне положення Русі
+      - Торгівля, війна, дипломатія
+      - Династичні зв'язки як інструмент політики
+      - Русь очима сусідів
+
+  - section: Русь і Візантія
+    words: 700
+    points:
+      - Від ворожнечі до союзу
+      - Договори 907, 911, 944, 971 років
+      - Хрещення та церковні зв'язки
+      - Культурний вплив — мистецтво, право, освіта
+
+  - section: Русь і Польща
+    words: 600
+    points:
+      - Сусіди та суперники
+      - Конфлікт за Червенські гради
+      - Болеслав Хоробрий у Києві (1018)
+      - Від ворожнечі до династичних шлюбів
+
+  - section: Русь і Угорщина
+    words: 550
+    points:
+      - Сусідство в Карпатах
+      - Династичні зв'язки — Анастасія, дружина Андраша I
+      - Боротьба за Галичину
+      - Спільний ворог — кочівники
+
+  - section: Степові сусіди
+    words: 600
+    points:
+      - Печеніги — постійна загроза
+      - Торки та берендеї — "чорні клобуки"
+      - Половці — вороги та союзники
+      - Степовий кордон як виклик
+
+  - section: Скандинавія та Захід
+    words: 500
+    points:
+      - Варязькі зв'язки
+      - Гаральд Суворий та Єлисавета
+      - Анна Ярославна — королева Франції
+      - Русь у європейській політиці
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Русь як європейська держава
+      - Мережа дипломатичних зв'язків
+      - Перехід до синтезу Київської Русі
+
+vocabulary_hints:
+  required:
+    - дипломатія (diplomacy)
+    - договір (treaty)
+    - династичний шлюб (dynastic marriage)
+    - сусід (neighbor)
+    - союз (alliance)
+    - Візантія (Byzantium)
+    - Польща (Poland)
+    - Угорщина (Hungary)
+    - печеніги (Pechenegs)
+    - половці (Polovtsians)
+    - торгівля (trade)
+    - посольство (embassy)
+  recommended:
+    - Червенські гради (Cherven towns)
+    - чорні клобуки (black hoods)
+    - варяги (Varangians)
+    - степовий кордон (steppe frontier)
+
+activity_hints:
+  - type: reading
+    focus: Excerpt from Russo-Byzantine treaty
+    source: Provide in module
+
+  - type: map-activity
+    focus: Rus neighbors and trade routes
+    items: "Major partners and routes"
+
+  - type: vocabulary
+    focus: Diplomatic and political terminology
+    items: "15+"
+
+  - type: timeline
+    focus: Key diplomatic events
+    items: "12+ events"
+
+  - type: quiz
+    focus: Foreign relations of Kyivan Rus
+    items: "12+"
+
+  - type: match-up
+    focus: Match rulers to their foreign policy achievements
+    items: "10+"
+
+  - type: discussion
+    focus: "Чи була Русь частиною Європи?"
+
+prerequisites:
+  - b2-hist-17 (Princely feuds)
+  - b2-hist-11 (Volodymyr and Baptism — Byzantine connection)
+
+connects_to:
+  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - b2-hist-24 (Galicia-Volhynia — Hungarian influence)

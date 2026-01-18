@@ -1,23 +1,149 @@
-title: 'Пилип Орлик: Гетьман-Вигнанець та Батько Українського Конституціоналізму'
-subtitle: 'Pylyp Orlyk: Hetman in Exile and Father of Ukrainian Constitutionalism'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- history
-- constitution-1710
-- emigration
-- diplomacy
-grammar:
-- Historical legal register
-- Terminology of constitutional law
-objectives:
-- Learner can analyze the political legacy of Pylyp Orlyk and the 1710 Constitution
-- Learner understands the challenges of the first Ukrainian political emigration
-- Learner can use specialized vocabulary related to human rights and state structure
-vocabulary_count: 25
+# C1-BIO Module 14: Пилип Орлик: Автор першої конституції
+# Status: SPEC (ready for content development)
+
+id: c1-bio-14
+title: "Пилип Орлик: Автор першої конституції"
 slug: pylyp-orlyk
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Пилип Орлик (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+    type: primary
+    notes: Biography, Constitution of 1710, exile
+  - name: Конституція Пилипа Орлика
+    url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+    type: primary
+    notes: Text and analysis of Constitution
+  - name: Перша українська еміграція
+    url: https://uk.wikipedia.org/wiki/Українська_еміграція
+    type: reference
+    notes: Context of political exile
+
+content_outline:
+  - section: Вступ — Батько українського конституціоналізму
+    words: 400
+    points:
+      - Значення Конституції 1710 року
+      - Орлик як політичний мислитель
+      - Перша українська політична еміграція
+
+  - section: Молодість та служба при Мазепі
+    words: 600
+    points:
+      - Походження та освіта
+      - Кар'єра в гетьманській канцелярії
+      - Генеральний писар
+      - Вірність Мазепі
+
+  - section: Обрання гетьманом в еміграції
+    words: 600
+    points:
+      - Смерть Мазепи в Бендерах
+      - Обрання гетьманом 1710 року
+      - Присяга та Конституція
+      - Легітимність еміграційного гетьманства
+
+  - section: Конституція Пилипа Орлика
+    words: 900
+    points:
+      - Структура документа
+      - Обмеження влади гетьмана
+      - Права козацтва та населення
+      - Порівняння з європейськими конституціями
+      - Демократичні елементи
+
+  - section: Дипломатична діяльність
+    words: 700
+    points:
+      - Боротьба за міжнародну підтримку
+      - Прутський похід 1711 року
+      - Листування з європейськими дворами
+      - Мандри Європою
+
+  - section: Останні роки та спадщина
+    words: 500
+    points:
+      - Життя в еміграції
+      - Смерть у Молдові
+      - Доля нащадків
+      - Конституція як символ
+
+  - section: Підсумок — Візія, що випередила час
+    words: 300
+    points:
+      - Орлик як провісник демократії
+      - Актуальність Конституції 1710 року
+      - Місце в українській політичній думці
+
+vocabulary_hints:
+  required:
+    - конституція (constitution)
+    - гетьман (hetman)
+    - еміграція (emigration)
+    - писар (scribe/secretary)
+    - рада (council)
+    - обмеження влади (limitation of power)
+    - присяга (oath)
+    - пакти (pacts)
+    - привілеї (privileges)
+    - канцелярія (chancellery)
+  recommended:
+    - генеральний (general - as in rank)
+    - статті (articles)
+    - ратифікація (ratification)
+    - клейноди (regalia)
+    - протекторат (protectorate)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from the Constitution of 1710
+    source: Original text (adapted)
+    items: "4 passages"
+
+  - type: quiz
+    focus: Structure and provisions of Orlyk's Constitution
+    items: "15+"
+
+  - type: match-up
+    focus: Constitutional provisions and their modern equivalents
+    items: "12+"
+
+  - type: essay-response
+    focus: Was Orlyk's Constitution democratic for its time?
+    word_target: 300
+    output: Comparative constitutional analysis
+
+  - type: group-sort
+    focus: Orlyk's Constitution vs. contemporary European documents
+    items: "12+"
+
+  - type: fill-in
+    focus: Constitutional and legal terminology
+    items: "10+"
+
+  - type: discussion
+    focus: Why is 1710 Constitution celebrated in modern Ukraine?
+    output: Analysis of historical memory
+
+  - type: critical-analysis
+    focus: Evaluate claims of "first European constitution"
+    output: Balanced assessment with context
+
+prerequisites:
+  - c1-bio-12 (Ivan Mazepa - predecessor)
+  - c1-bio-13 (Kost Hordiyenko - ally)
+  - c1-bio-04 (Yaroslav Mudryi - earlier legal tradition)
+
+connects_to:
+  - c1-bio-15 (Petro Kalnyshevskyy - end of Sich)
+  - c1-bio-35 (Mykhailo Hrushevskyi - later constitutionalism)
+  - c1-bio-71 (Levko Lukyanenko - independence document)
+
+naturalness:
+  score: null
+  status: PENDING

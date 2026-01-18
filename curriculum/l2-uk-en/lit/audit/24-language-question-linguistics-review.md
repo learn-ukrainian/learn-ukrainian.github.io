@@ -1,7 +1,16 @@
 # Audit Report: 24-language-question-linguistics.md
 **Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 24-language-question-linguistics.yaml: Schema validation error at key '2': {'title': 'Термінологія реформ', 'type': 'fill-in', 'items': [{'sentence': 'Пантелеймон Куліш скасував літеру ___ з кінця слів.', 'answer': 'єри', 'options': ['єри', 'ять', 'фіта', 'іжиця']}, {'sentence': 'Система "пишу як чую" називається ___ принципом.', 'answer': 'фонетичним', 'options': ['фонетичним', 'етимологічним', 'історичним', 'традиційним']}, {'sentence': 'Російська імперія намагалася нав’язати ___ правопис.', 'answer': 'етимологічний', 'options': ['етимологічний', 'фонетичний', 'новий', 'старий']}, {'sentence': 'Борис Грінченко видав відомий ___ української мови.', 'answer': 'словник', 'options': ['словник', 'підручник', 'буквар', 'катехизм']}, {'sentence': 'В Галичині використовували правопис ___ до 1922 року.', 'answer': 'Желехівка', 'options': ['Желехівка', 'Максимовичівка', 'Драгоманівка', 'Кулішівка']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 3411/3500 (89 short)
@@ -14,7 +23,7 @@
 - **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 95-100%)
 - **Richness:** ✅ 93% (literature)

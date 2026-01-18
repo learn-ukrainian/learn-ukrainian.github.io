@@ -1,6 +1,15 @@
-module: b1-01
+# B1 Module 01: Як говорити про граматику
+# Status: SPEC (ready for content development)
+
+id: b1-01
 title: Як говорити про граматику
 subtitle: Learning grammar terminology in Ukrainian
+slug: 01-how-to-talk-about-grammar
+module_type: bridge
+word_target: 3000
+immersion: "75% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
@@ -20,9 +29,113 @@ objectives:
   - Learner can identify parts of speech using Ukrainian terminology
   - Learner can name all seven grammatical cases in Ukrainian
   - Learner can describe basic sentence elements using Ukrainian terms
-vocabulary_count: 25
-vocab_count: 25
-slug: 01-how-to-talk-about-grammar
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Grammar Terminology
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official metalanguage terms for Ukrainian grammar education
+  - name: Ukrainian Grammar (Wikipedia)
+    url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+    type: reference
+    notes: Overview of Ukrainian grammatical terminology
+
+content_outline:
+  - section: Introduction - Why Learn Grammar in Ukrainian?
+    words: 400
+    points:
+      - Benefits of learning grammar terminology in target language
+      - How native speakers learn grammar in school
+      - Preparation for full immersion in B1.1+
+
+  - section: Parts of Speech (Частини мови)
+    words: 700
+    points:
+      - дієслово, іменник, прикметник, прислівник, займенник
+      - сполучник, прийменник, частка
+      - Identifying parts of speech in sentences
+
+  - section: Case Names (Відмінки)
+    words: 600
+    points:
+      - називний, родовий, давальний, знахідний
+      - орудний, місцевий, кличний
+      - Questions for each case
+
+  - section: Basic Sentence Terms
+    words: 500
+    points:
+      - слово, речення, частина мови
+      - граматика, правило, приклад
+      - Basic structural vocabulary
+
+  - section: Practice Reading Grammar Explanations
+    words: 600
+    points:
+      - Simple grammar explanations in Ukrainian
+      - Recognizing patterns in textbook language
+      - Comprehension exercises
+
+  - section: Summary and Self-Assessment
+    words: 200
+    points:
+      - Key terms review
+      - Readiness check for M02
+
+vocabulary_hints:
+  required:
+    - дієслово (verb)
+    - іменник (noun)
+    - прикметник (adjective)
+    - прислівник (adverb)
+    - займенник (pronoun)
+    - називний відмінок (nominative case)
+    - родовий відмінок (genitive case)
+    - давальний відмінок (dative case)
+    - знахідний відмінок (accusative case)
+    - орудний відмінок (instrumental case)
+    - місцевий відмінок (locative case)
+    - кличний відмінок (vocative case)
+  recommended:
+    - сполучник (conjunction)
+    - прийменник (preposition)
+    - частка (particle)
+    - граматика (grammar)
+    - правило (rule)
+
+activity_hints:
+  - type: match-up
+    focus: Ukrainian term → English equivalent
+    items: "12+"
+
+  - type: quiz
+    focus: Identify part of speech by Ukrainian name
+    items: "10+"
+
+  - type: fill-in
+    focus: Complete sentences about grammar using Ukrainian terms
+    items: "8+"
+
+  - type: group-sort
+    focus: Categorize terms by category (parts of speech vs cases)
+    items: "15+"
+
+  - type: reading
+    focus: Simple grammar explanation comprehension
+    source: in module
+
+prerequisites:
+  - A2 completion required
+  - Familiarity with all 7 cases (conceptually)
+  - Basic understanding of grammar concepts
+
+connects_to:
+  - b1-02 (Verb-specific terminology)
+  - b1-03 (Reading grammar rules)
+  - b1-05 (Metalanguage checkpoint)
+
 naturalness:
   score: 9
   status: PASS

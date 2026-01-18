@@ -1,13 +1,13 @@
 # Audit Report: 06-kvitka-bio.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3582/3500
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 3637/3500
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
@@ -15,35 +15,36 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.5% (target 95-100%)
-- **Richness:** ✅ 96% (literature)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 90%)
-**Module Type:** literature
+**Score:** 99% (minimum: 95%)
+**Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 6 | 5 | 100% | 17% | 17.4% |
-| engagement | 8 | 4 | 100% | 13% | 13.0% |
-| historical_context | 30 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 2 | 3 | 67% | 9% | 5.8% |
-| variety | 0.98 | - | 98% | 4% | 4.3% |
-| cultural | 12 | - | 100% | 4% | 4.3% |
-| visual | 12 | 1 | 100% | 4% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **97.0%** |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 6 | 3 | 100% | 14% | 14.3% |
+| cultural | 12 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 39 | Included in Core |
+| **Summary** | ✅ | 54 | Included in Core |
 | **Частина I: Слобожанський Феномен 🌻** | ✅ | 11 | Included in Core |
 | **1. Земля Вільних Людей** | ⚪️ | 75 | Skipped |
 | **2. Тінь Сковороди** | ⚪️ | 58 | Skipped |
@@ -64,12 +65,12 @@
 | **1. Лексичні Перли** | ⚪️ | 44 | Skipped |
 | **2. Синтаксис Оповідача** | ⚪️ | 60 | Skipped |
 | **3. Граматичний Архаїзм** | ⚪️ | 73 | Skipped |
-| **1. Есе-Міркування (300 слів)** | ⚪️ | 161 | Skipped |
+| **1. Есе-Міркування (300 слів)** | ⚪️ | 162 | Skipped |
 | **2. Літературна Дуель (Дебати)** | ⚪️ | 75 | Skipped |
 | **3. Творча Реконструкція** | ⚪️ | 56 | Skipped |
 | **4. Дебатний Клуб: Логіка проти Емоцій 🧠 vs ❤️** | ⚪️ | 88 | Skipped |
 | **Частина VII: Методичні Рекомендації 🎓** | ✅ | 24 | Included in Core |
-| **1. Повільне Читання (Slow Reading)** | ✅ | 61 | Included in Core |
+| **1. Повільне Читання (Slow Reading)** | ⚪️ | 0 | Skipped (using YAML) |
 | **2. Етнографічний Ключ** | ⚪️ | 76 | Skipped |
 | **Частина VIII: Порівняльний Контекст 🌍** | ✅ | 25 | Included in Core |
 | **1. Квітка і Руссо** | ⚪️ | 43 | Skipped |

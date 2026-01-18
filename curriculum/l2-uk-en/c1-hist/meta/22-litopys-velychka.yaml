@@ -1,0 +1,131 @@
+# C1-HIST Module 22: Літопис Величка — Барокова історія
+# Status: SPEC (ready for content development)
+
+id: c1-hist-22
+title: "Літопис Величка: Барокова історія"
+slug: litopys-velychka
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Літопис Самійла Величка (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+    type: reference
+    notes: Overview
+  - name: Літопис Величка (текст)
+    url: https://litopys.org.ua/velichko/vel.htm
+    type: primary
+    notes: Full text (partial)
+  - name: Величко Самійло Васильович
+    url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
+    type: reference
+    notes: Author biography
+
+content_outline:
+  - section: Вступ — Найповніший козацький літопис
+    words: 400
+    points:
+      - Самійло Величко — канцелярист
+      - Найбільший за обсягом
+      - Документальний підхід
+      - Трагічна доля тексту
+
+  - section: Автор і обставини написання
+    words: 500
+    points:
+      - Біографія Величка
+      - Служба в канцелярії
+      - Доступ до документів
+      - Сліпота і завершення праці
+
+  - section: Структура і джерела
+    words: 700
+    points:
+      - Чотири томи
+      - Від 1648 до 1700 року
+      - Вставлені документи — унікальна цінність
+      - Компіляція різних джерел
+      - Що втрачено — рукопис неповний
+
+  - section: Документи в літописі
+    words: 600
+    points:
+      - Універсали гетьманів
+      - Дипломатичне листування
+      - Договори
+      - Чому це революційний підхід
+      - Верифікація — чи автентичні?
+
+  - section: Фрагмент — Переяславська рада
+    words: 600
+    points:
+      - Текст (з глосами)
+      - Як Величко описує 1654
+      - Документи vs. інтерпретація
+      - Позиція автора
+
+  - section: Критика джерела
+    words: 400
+    points:
+      - Компіляція — що звідки
+      - Можливі інтерполяції
+      - Пізніші редакції
+      - Як використовувати критично
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Найважливіший козацький літопис
+      - Архів у літописі
+      - Порівняння з іншими
+
+vocabulary_hints:
+  required:
+    - канцелярист (chancery clerk)
+    - документальний (documentary)
+    - компіляція (compilation)
+    - вставка (insertion)
+    - архів (archive)
+    - автентичність (authenticity)
+    - верифікація (verification)
+    - рукопис (manuscript)
+    - том (volume)
+    - редакція (redaction)
+  recommended:
+    - дипломатика (diplomatics)
+    - акт (act/document)
+    - корпус (corpus)
+    - інтерполяція (interpolation)
+    - лакуна (lacuna/gap)
+
+activity_hints:
+  - type: reading
+    focus: Pereiaslav Council passage with inserted documents
+    source: litopys.org.ua
+
+  - type: source-evaluation
+    focus: Verify one inserted document — is it authentic?
+    output: Authentication exercise
+
+  - type: comparative-study
+    focus: Compare Velychko's Pereiaslav with Samovydets and Hrabianka
+    output: Three perspectives table
+
+  - type: document-analysis
+    focus: Analyze a Universal inserted in the chronicle
+    output: Document criticism
+
+  - type: essay-response
+    focus: "Чому Величко вставляв документи в літопис?"
+    word_target: 350
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-19-21 (Previous Cossack chronicle modules)
+
+connects_to:
+  - c1-hist-23 (Khmelnytsky's Universals)
+  - c1-hist-24 (Pereiaslav Articles)

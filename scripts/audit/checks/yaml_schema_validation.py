@@ -22,6 +22,81 @@ import yaml
 
 
 # =============================================================================
+# DUPLICATE KEY DETECTION
+# =============================================================================
+
+class DuplicateKeyError(Exception):
+    """Raised when duplicate keys are found in YAML."""
+    pass
+
+
+class DuplicateKeyLoader(yaml.SafeLoader):
+    """Custom YAML loader that detects duplicate keys."""
+    pass
+
+
+def _construct_mapping_with_duplicate_check(loader, node):
+    """Construct a mapping while checking for duplicate keys."""
+    loader.flatten_mapping(node)
+    pairs = []
+    seen_keys = {}
+    duplicates = []
+
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=False)
+
+        if key in seen_keys:
+            # Record the duplicate with line numbers
+            original_line = seen_keys[key]
+            duplicate_line = key_node.start_mark.line + 1  # 1-indexed
+            duplicates.append((key, original_line, duplicate_line))
+        else:
+            seen_keys[key] = key_node.start_mark.line + 1  # 1-indexed
+
+        value = loader.construct_object(value_node, deep=False)
+        pairs.append((key, value))
+
+    if duplicates:
+        # Store duplicates for later reporting (attach to loader)
+        if not hasattr(loader, '_duplicates'):
+            loader._duplicates = []
+        loader._duplicates.extend(duplicates)
+
+    return dict(pairs)
+
+
+# Register the custom constructor
+DuplicateKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    _construct_mapping_with_duplicate_check
+)
+
+
+def safe_load_with_duplicate_check(content: str) -> Tuple[Any, List[str]]:
+    """
+    Load YAML content and check for duplicate keys.
+
+    Returns:
+        Tuple of (parsed_data, list_of_duplicate_key_errors)
+    """
+    errors = []
+    loader = DuplicateKeyLoader(content)
+    try:
+        data = loader.get_single_data()
+
+        # Collect any duplicates found
+        if hasattr(loader, '_duplicates'):
+            for key, line1, line2 in loader._duplicates:
+                errors.append(
+                    f"Duplicate key '{key}' at line {line2} (first defined at line {line1})"
+                )
+    finally:
+        loader.dispose()
+
+    return data, errors
+
+
+# =============================================================================
 # SCHEMA LOADING
 # =============================================================================
 
@@ -165,15 +240,20 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     except FileNotFoundError as e:
         return False, [str(e)]
 
-    # Load activities from YAML
+    # Load activities from YAML with duplicate key detection
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
+            content = f.read()
+        data, duplicate_errors = safe_load_with_duplicate_check(content)
+
+        # Report duplicate keys as errors (these are serious issues)
+        if duplicate_errors:
+            errors.extend(duplicate_errors)
     except yaml.YAMLError as e:
         return False, [f"YAML parse error: {e}"]
 
     if not data:
-        return True, []
+        return len(errors) == 0, errors
 
     # Handle both formats: list of activities or dict with 'activities' key
     activities = data if isinstance(data, list) else data.get('activities', [])
@@ -628,9 +708,12 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
                 f.write(fixed_content)
         raw_content = fixed_content
 
-    # Load activities from YAML
+    # Load activities from YAML with duplicate key detection
     try:
-        data = yaml.safe_load(raw_content)
+        data, duplicate_errors = safe_load_with_duplicate_check(raw_content)
+        if duplicate_errors:
+            # Duplicates cannot be auto-fixed - report them
+            all_fixes.extend([f"⚠️ CANNOT AUTO-FIX: {err}" for err in duplicate_errors])
     except yaml.YAMLError as e:
         return total_fixes, all_fixes + [f"YAML parse error (cannot auto-fix): {e}"]
 

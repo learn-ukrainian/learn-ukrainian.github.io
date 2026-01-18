@@ -1,13 +1,13 @@
 # Audit Report: 08-konotop-witch.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 3597/3500
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 3630/3500
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -15,8 +15,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 95-100%)
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Immersion:** 🇺🇦 100.0% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -44,6 +44,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
+| **Summary** | ✅ | 33 | Included in Core |
 | **Частина I: Історичний Контекст: Кінець Героїчної Епохи** | ✅ | 310 | Included in Core |
 | **Частина II: Пороздільний Аналіз: Хроніка Абсурду** | ✅ | 1219 | Included in Core |
 | **Частина III: Глибока Етнографія та Фольклор** | ✅ | 270 | Included in Core |

@@ -1,21 +1,30 @@
 # Audit Report: 16-biblical-themes.md
 **Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 16-biblical-themes.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Давидові Псалми', 'resource': {'type': 'primary-text', 'url': 'https://www.ukrlib.com.ua/books/printit.php?tid=818', 'title': 'Тарас Шевченко. Давидові псалми'}, 'tasks': ['Прочитайте переспів. Які соціальні мотиви і політичний підтекст додає Шевченко до біблійних текстів?', 'Кого поет має на увазі під "злими" і "праведними" у контексті 19 століття?']} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3598/3500
-- **Activities:** ✅ 3/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,0 +1,130 @@
+# C1-HIST Module 67: Діаспорні організації — UCC, UCCA, OUN
+# Status: SPEC (ready for content development)
+
+id: c1-hist-67
+title: "Діаспорні організації: UCC, UCCA, OUN"
+slug: diaspora-orhanizatsiyi
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Конгрес українців Канади (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
+    type: reference
+    notes: UCC history
+  - name: Український конгресовий комітет Америки (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
+    type: reference
+    notes: UCCA history
+  - name: Світовий конгрес українців (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+    type: reference
+    notes: World Congress
+
+content_outline:
+  - section: Вступ — Держава в еміграції
+    words: 400
+    points:
+      - Без держави — потреба організації
+      - Функції діаспорних інституцій
+      - «Замінники держави»
+      - Структура модуля
+
+  - section: Конгрес українців Канади (UCC)
+    words: 600
+    points:
+      - Заснування — 1940
+      - Структура — парасолькова організація
+      - Функції — представництво, лобіювання
+      - Досягнення — мультикультуралізм
+
+  - section: UCCA — Український конгрес Америки
+    words: 600
+    points:
+      - Заснування — 1940
+      - Структура і членство
+      - Холодна війна — антикомуністична діяльність
+      - Лобіювання в Конгресі
+
+  - section: Світовий конгрес українців
+    words: 500
+    points:
+      - Координація діаспор
+      - Міжнародне представництво
+      - Зв'язок з Україною після 1991
+      - Сучасна роль
+
+  - section: Політичні організації — ОУН в еміграції
+    words: 600
+    points:
+      - Бандерівці vs. мельниківці
+      - Антибольшовицький блок народів (АБН)
+      - Холодна війна — співпраця з Заходом
+      - Контроверсії і спадщина
+
+  - section: Церковні структури
+    words: 500
+    points:
+      - УГКЦ в діаспорі — кардинал Сліпий
+      - УАПЦ — автокефалія в еміграції
+      - Церква як центр громади
+      - Після 1991 — зміни
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Діаспора як «держава в еміграції»
+      - Політичні конфлікти
+      - Роль у незалежності
+
+vocabulary_hints:
+  required:
+    - організація (organization)
+    - конгрес (congress)
+    - парасолькова організація (umbrella organization)
+    - лобіювання (lobbying)
+    - представництво (representation)
+    - діаспора (diaspora)
+    - антикомуністичний (anti-communist)
+    - Холодна війна (Cold War)
+    - координація (coordination)
+    - еміграція (emigration)
+  recommended:
+    - АБН (ABN - Anti-Bolshevik Bloc)
+    - мультикультуралізм (multiculturalism)
+    - етнічне лобі (ethnic lobby)
+    - громадська організація (civic organization)
+    - політичний розкол (political split)
+
+activity_hints:
+  - type: organizational-analysis
+    focus: Compare UCC vs. UCCA structures
+    output: Organizational comparison
+
+  - type: policy-analysis
+    focus: What did diaspora organizations achieve politically?
+    output: Achievement analysis
+
+  - type: conflict-study
+    focus: Map political divisions in diaspora
+    output: Conflict analysis
+
+  - type: timeline-construction
+    focus: Key moments in diaspora organizational history
+    output: Historical timeline
+
+  - type: essay-response
+    focus: "Як діаспорні організації виконували функції держави?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-64-66 (Three emigration waves)
+
+connects_to:
+  - c1-hist-68 (Diaspora scholars)
+  - c1-hist-69 (Diaspora synthesis)
+  - c1-hist-06 (Diaspora historians)

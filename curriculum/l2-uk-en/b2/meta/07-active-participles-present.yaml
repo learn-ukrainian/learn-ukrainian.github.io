@@ -1,30 +1,142 @@
-module: b2-07
-title: Дієприкметники активні теперішнього часу (-учий/-ючий)
-subtitle: Літературний стиль та трансформація в підрядні речення
-version: '1.0'
-phase: B2.1a [Grammar & Register]
-pedagogy: TTT
-focus: grammar
-register: художній
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - active-participles
-  - literary-style
-  - register
-grammar:
-  - Активні дієприкметники теперішнього часу з суфіксами -учий/-ючий
-  - Трансформація дієприкметників у підрядні речення з який/яка/яке
-  - 'Регістрова варіація: літературний стиль vs розмовний'
-objectives:
-  - Розпізнавати активні дієприкметники теперішнього часу в текстах
-  - Трансформувати дієприкметникові конструкції в підрядні речення
-  - Розуміти регістрові обмеження вживання дієприкметників
-vocabulary_count: 25
-vocab_count: 210
+# B2 Module 07: Active Participles I - Present (-учий/-ючий)
+# Status: SPEC (ready for content development)
+
+id: b2-07
+title: Активні дієприкметники теперішнього часу (-учий/-ючий)
 slug: 07-active-participles-present
+module_type: grammar
+word_target: 3800
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Active Participles
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Recognition requirements for active participles
+  - name: Літературна мова та її стилі
+    url: https://uk.wikipedia.org/wiki/Літературна_мова
+    type: secondary
+    notes: Literary usage of participles
+  - name: Правопис української мови 2019
+    url: https://uk.wikipedia.org/wiki/Український_правопис
+    type: reference
+    notes: Official orthography rules for participles
+
+content_outline:
+  - section: Вступ — Активні дієприкметники
+    words: 400
+    points:
+      - Різниця між активними та пасивними дієприкметниками
+      - Роль активних дієприкметників у літературній мові
+      - Чому вивчаємо для розпізнавання, а не для продукування
+
+  - section: Утворення дієприкметників на -учий/-ючий
+    words: 700
+    points:
+      - Від основи 3-ї особи множини теперішнього часу
+      - читають → читаючий (reading)
+      - працюють → працюючий (working)
+      - говорять → говорячий (speaking)
+      - Правила чергування суфіксів
+
+  - section: Стилістична специфіка
+    words: 600
+    points:
+      - Архаїчний/книжний характер
+      - Рідкість у сучасному мовленні
+      - Українська мова віддає перевагу підрядним реченням
+
+  - section: Еквівалентні підрядні речення
+    words: 700
+    points:
+      - працюючий чоловік = чоловік, який працює
+      - читаюча жінка = жінка, яка читає
+      - Коли обирати дієприкметник, коли — підрядне
+      - Стилістичний ефект кожної форми
+
+  - section: Контексти вживання
+    words: 600
+    points:
+      - Літературні тексти XIX-XX століття
+      - Офіційні документи (діюча особа, чинний закон)
+      - Наукові терміни
+      - Уникання в розмовному мовленні
+
+  - section: Лексикалізовані форми
+    words: 500
+    points:
+      - Дієприкметники, що стали прикметниками
+      - Приклади: завідуючий, керуючий, існуючий
+      - Правильне вживання лексикалізованих форм
+
+  - section: Практика і підсумок
+    words: 300
+    points:
+      - Розпізнавання в текстах
+      - Трансформація в підрядні речення
+      - Підготовка до модуля 08
+
+vocabulary_hints:
+  required:
+    - активний (active)
+    - дієприкметник (participle)
+    - теперішній час (present tense)
+    - книжний (bookish)
+    - архаїчний (archaic)
+    - підрядне речення (subordinate clause)
+    - лексикалізований (lexicalized)
+    - діюча особа (acting person)
+    - чинний закон (current law)
+    - керуючий (manager - lexicalized)
+  recommended:
+    - існуючий (existing)
+    - завідуючий (head/manager)
+    - трансформація (transformation)
+    - еквівалент (equivalent)
+    - стилістичний ефект (stylistic effect)
+
+activity_hints:
+  - type: transform
+    focus: Participle → relative clause
+    items: "14+"
+
+  - type: quiz
+    focus: Identify participles in literary text
+    items: "12+"
+
+  - type: match-up
+    focus: Participle → equivalent clause
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete sentences with lexicalized participles
+    items: "10+"
+
+  - type: reading
+    focus: Identify all participles in literary excerpt
+    items: "3 texts"
+
+  - type: group-sort
+    focus: Lexicalized vs productive participles
+    items: "16+"
+
+  - type: error-correction
+    focus: Replace inappropriate participles with clauses
+    items: "10+"
+
+prerequisites:
+  - b2-02 (Past Passive Participles)
+  - Relative clause formation (який/яка/яке)
+  - Present tense conjugation
+
+connects_to:
+  - b2-08 (Active Participles Past)
+  - b2-09 (Participles vs Relative Clauses)
+  - b2-22 (Register: Literary Ukrainian)
+  - b2-10 (B2.1a Checkpoint)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

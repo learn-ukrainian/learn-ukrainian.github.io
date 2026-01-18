@@ -1,28 +1,144 @@
-module: b2-10
-title: 'Контрольна точка: Пасивний стан'
-subtitle: Перевірка фази B2.1a
-version: '1.0'
-phase: B2.1a [Passive Voice] Checkpoint
-focus: checkpoint
-pedagogy: checkpoint
-duration: 90
-transliteration: none
-tags:
-  - checkpoint
-  - integration
-  - passive
-  - participles
-register: varies
-grammar:
-  - Інтеграція M01-M09
-  - Комплексна перевірка та тестування
-objectives:
-  - Демонструвати майстерність усіх чотирьох пасивних форм
-  - Інтегрувати знання з модулів M01-M09
-  - Самостійно оцінювати готовність до наступної фази
-vocabulary_count: 45
-vocab_count: 47
+# B2 Module 10: B2.1a Checkpoint - Passive Voice System
+# Status: SPEC (ready for content development)
+
+id: b2-10
+title: Контрольний модуль B2.1a — Система пасивного стану
 slug: 10-checkpoint-passive-voice
+module_type: checkpoint
+word_target: 3500
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - B2 Assessment
+    url: https://mon.gov.ua/
+    type: reference
+    notes: B2 assessment criteria for passive voice
+  - name: CEFR B2 Can-Do Statements
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: B2 grammar proficiency descriptors
+  - name: B2 Checkpoint Module Template
+    url: docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+    type: reference
+    notes: Checkpoint structure and requirements
+
+content_outline:
+  - section: Вступ — Що ми вивчили
+    words: 300
+    points:
+      - Огляд модулів 01-09
+      - Структура контрольного модуля
+      - Критерії оцінювання
+
+  - section: Огляд — Чотири форми пасиву
+    words: 500
+    points:
+      - Дієприкметники на -ний/-тий
+      - Безособові конструкції -но/-то
+      - Зворотний пасив -ся
+      - Третя особа множини
+
+  - section: Огляд — Вибір форми за регістром
+    words: 500
+    points:
+      - Юридичний контекст → -но/-то
+      - Науковий контекст → -ся
+      - Літературний контекст → -ний/-тий
+      - Розмовний контекст → 3-я особа множини
+
+  - section: Огляд — Активні дієприкметники
+    words: 500
+    points:
+      - Теперішній час (-учий/-ючий) — розпізнавання
+      - Минулий час (-лий) — лексикалізовані форми
+      - Русизми та їх уникання
+      - Трансформація в підрядні речення
+
+  - section: Огляд — Дієприкметники vs підрядні речення
+    words: 400
+    points:
+      - Стилістичний вибір
+      - Коли дієприкметник, коли підрядне
+      - Фіксовані вирази
+
+  - section: Діагностичні завдання
+    words: 800
+    points:
+      - Тест на ідентифікацію форм пасиву
+      - Тест на трансформацію
+      - Тест на вибір регістру
+      - Тест на редагування
+
+  - section: Самооцінка і план
+    words: 300
+    points:
+      - Контрольний список умінь
+      - Виявлення прогалин
+      - Підготовка до фази B2.1b
+
+vocabulary_hints:
+  required:
+    - контрольний модуль (checkpoint module)
+    - оцінювання (assessment)
+    - діагностика (diagnostics)
+    - уміння (skill)
+    - прогалина (gap)
+    - трансформація (transformation)
+    - ідентифікація (identification)
+    - регістр (register)
+    - самооцінка (self-assessment)
+    - критерій (criterion)
+  recommended:
+    - консолідація (consolidation)
+    - систематизація (systematization)
+    - рефлексія (reflection)
+    - компетенція (competence)
+    - рівень володіння (proficiency level)
+
+activity_hints:
+  - type: quiz
+    focus: Identify all 4 passive voice types
+    items: "20+"
+
+  - type: quiz
+    focus: Form past passive participles with correct agreement
+    items: "15+"
+
+  - type: transform
+    focus: Active → appropriate passive form by register
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete official documents with -но/-то
+    items: "10+"
+
+  - type: quiz
+    focus: Select appropriate passive form by register
+    items: "15+"
+
+  - type: transform
+    focus: Active participles → relative clauses
+    items: "10+"
+
+  - type: error-correction
+    focus: Fix register-inappropriate passive usage
+    items: "12+"
+
+  - type: essay-response
+    focus: Diagnostic writing — use all 4 passive forms
+    word_target: 200
+    output: Self-evaluate against rubric
+
+prerequisites:
+  - b2-01 through b2-09 (all passive voice modules)
+
+connects_to:
+  - b2-11 (Multi-clause Sentences)
+  - b2-15 (Register Introduction)
+  - b2-25 (B2.1b Checkpoint)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

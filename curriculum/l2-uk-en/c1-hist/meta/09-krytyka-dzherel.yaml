@@ -1,0 +1,144 @@
+# C1-HIST Module 09: Критика джерел — Принципи та практика
+# Status: SPEC (ready for content development)
+
+id: c1-hist-09
+title: "Критика джерел: Принципи та практика"
+slug: krytyka-dzherel
+module_type: historiography
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Джерелознавство (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Джерелознавство
+    type: reference
+    notes: Source studies overview
+  - name: Історичне джерело
+    url: https://uk.wikipedia.org/wiki/Історичне_джерело
+    type: reference
+    notes: Types of historical sources
+  - name: Критика джерел
+    url: https://uk.wikipedia.org/wiki/Критика_джерел
+    type: reference
+    notes: Source criticism methods
+  - name: Леопольд фон Ранке
+    url: https://uk.wikipedia.org/wiki/Ранке_Леопольд_фон
+    type: reference
+    notes: Founder of modern source criticism
+
+content_outline:
+  - section: Вступ — Чому джерела брешуть
+    words: 400
+    points:
+      - Кожне джерело має автора з інтересами
+      - Історик як детектив
+      - Від наївного читання до критичного
+      - Мета модуля — практичні навички
+
+  - section: Типи історичних джерел
+    words: 500
+    points:
+      - Первинні — документи, листи, хроніки
+      - Вторинні — дослідження, підручники
+      - Матеріальні — артефакти, археологія
+      - Усні — свідчення, інтерв'ю
+      - Візуальні — фото, карти, фільми
+      - Цифрові — нові виклики
+
+  - section: Зовнішня критика (автентичність)
+    words: 600
+    points:
+      - Чи справжній документ?
+      - Датування — коли створено
+      - Авторство — хто написав
+      - Походження — звідки потрапив до нас
+      - Збереженість — що могло змінитися
+      - Приклад — "Слово о полку Ігоревім" (дебати)
+
+  - section: Внутрішня критика (достовірність)
+    words: 700
+    points:
+      - Чи правду каже автор?
+      - Упередження автора — політичне, релігійне, особисте
+      - Мета тексту — для кого писав
+      - Що опущено — аналіз мовчання
+      - Порівняння з іншими джерелами
+      - Внутрішня логіка тексту
+      - Приклад — козацькі літописи
+
+  - section: П'ять ключових питань до джерела
+    words: 500
+    points:
+      - ХТО? — авторство і позиція
+      - КОЛИ? — датування і контекст
+      - ДЛЯ КОГО? — аудиторія і мета
+      - ЧОМУ? — інтереси автора
+      - ЩО ОПУЩЕНО? — аналіз мовчання
+      - Практичний чекліст
+
+  - section: Практикум — аналіз джерела
+    words: 500
+    points:
+      - Вибране джерело (Universal Хмельницького або інше)
+      - Крок за кроком — застосування методу
+      - Що ми дізналися
+      - Що залишається невідомим
+
+  - section: Особливості українських джерел
+    words: 300
+    points:
+      - Знищення архівів — що втрачено
+      - Радянська фільтрація — що залишилося
+      - Діаспорні архіви — альтернатива
+      - Цифровізація — нові можливості
+
+vocabulary_hints:
+  required:
+    - джерелознавство (source studies)
+    - первинне джерело (primary source)
+    - вторинне джерело (secondary source)
+    - автентичність (authenticity)
+    - достовірність (reliability/credibility)
+    - зовнішня критика (external criticism)
+    - внутрішня критика (internal criticism)
+    - упередження (bias)
+    - контекст (context)
+    - верифікація (verification)
+  recommended:
+    - палеографія (paleography)
+    - дипломатика (diplomatics)
+    - провенанс (provenance)
+    - інтерполяція (interpolation)
+    - редакція (redaction)
+
+activity_hints:
+  - type: reading
+    focus: A short primary source (e.g., Khmelnytsky's Universal or letter)
+    source: Litopys.org.ua or similar
+
+  - type: source-evaluation
+    focus: Apply 5 questions to the provided source
+    output: Structured analysis (table format)
+
+  - type: comparative-study
+    focus: Compare two sources describing the same event — what differs?
+    output: Analysis of discrepancies
+
+  - type: practical
+    focus: Evaluate a Wikipedia article as a source — strengths and weaknesses
+    output: Source quality assessment
+
+  - type: essay-response
+    focus: "Чи може історик бути об'єктивним?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-01 (What is historiography)
+  - c1-hist-08 (Decolonization methodology)
+
+connects_to:
+  - All primary source modules (C1H.2-5)
+  - c1-hist-10 (Historical memory - how sources shape memory)

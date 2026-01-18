@@ -1,0 +1,144 @@
+# C2 Module 28: Поетика — Verse Analysis
+# Status: SPEC (ready for content development)
+
+id: c2-28
+title: Поетика — аналіз віршів
+slug: poetyka-verse-analysis
+module_type: literature
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Віршування — Вікіпедія
+    url: https://uk.wikipedia.org/wiki/Віршування
+    type: reference
+    notes: Ukrainian versification systems
+  - name: Українська поезія — укрліб
+    url: https://ukrlib.com.ua/
+    type: primary
+    notes: Classic and contemporary Ukrainian poetry examples
+  - name: Тарас Шевченко — Кобзар
+    url: https://uk.wikisource.org/wiki/Кобзар_(Шевченко)
+    type: primary
+    notes: Foundation of modern Ukrainian poetics
+
+content_outline:
+  - section: Вступ — Системи віршування
+    words: 500
+    points:
+      - Силабічне віршування
+      - Силабо-тонічне віршування
+      - Тонічне віршування
+      - Верлібр
+
+  - section: Метрика та ритміка
+    words: 700
+    points:
+      - Стопа і розмір (ямб, хорей, дактиль, амфібрахій, анапест)
+      - Піррихій і спондей
+      - Цезура і анжамбеман
+      - Ритмічні варіації
+
+  - section: Строфіка
+    words: 600
+    points:
+      - Катрен, терцет, дистих
+      - Сонет (італійський, шекспірівський)
+      - Октава, секстина
+      - Вільна строфіка
+
+  - section: Рима і звукова організація
+    words: 700
+    points:
+      - Типи рим (чоловіча, жіноча, дактилічна)
+      - Схеми римування (суміжна, перехресна, кільцева)
+      - Алітерація й асонанс
+      - Звуковий символізм
+
+  - section: Тропи та фігури в поезії
+    words: 600
+    points:
+      - Метафора і символ у поезії
+      - Порівняння і персоніфікація
+      - Оксиморон і антитеза
+      - Епітети та їх функції
+
+  - section: Аналіз українських віршів
+    words: 500
+    points:
+      - Аналіз вірша Шевченка
+      - Модерністська поезія (Тичина, Рильський)
+      - Сучасна поезія (Жадан, Герасим'юк)
+
+  - section: Підсумок
+    words: 400
+    points:
+      - Інтегрований аналіз вірша
+      - Зв'язок форми і змісту
+      - Підготовка до власної творчості
+
+vocabulary_hints:
+  required:
+    - віршування (versification)
+    - метр (meter)
+    - стопа (foot)
+    - ямб (iamb)
+    - хорей (trochee)
+    - катрен (quatrain)
+    - рима (rhyme)
+    - строфа (stanza)
+    - верлібр (free verse)
+    - анжамбеман (enjambment)
+  recommended:
+    - дактиль (dactyl)
+    - амфібрахій (amphibrach)
+    - анапест (anapest)
+    - цезура (caesura)
+    - сонет (sonnet)
+
+activity_hints:
+  - type: critical-analysis
+    focus: Full metrical analysis of Shevchenko poem
+    output: Scansion, rhyme scheme, sound devices identified
+
+  - type: quiz
+    focus: Identify meter and rhyme scheme in excerpts
+    items: "20+"
+
+  - type: essay-response
+    focus: Write analysis of modernist poem (Tychyna)
+    word_target: 500
+    output: Comprehensive poetic analysis
+
+  - type: match-up
+    focus: Match poetic terms to definitions and examples
+    items: "15+"
+
+  - type: comparative-study
+    focus: Compare versification in Shevchenko vs. contemporary poet
+    output: Evolution of Ukrainian poetic form
+
+  - type: critical-analysis
+    focus: Analyze sound symbolism in poem
+    output: Connection between sound and meaning
+
+  - type: essay-response
+    focus: Write original poem in specific form (sonnet or катрен)
+    word_target: 50
+    output: Original poem with self-analysis
+
+prerequisites:
+  - c2-22 (Rhythm & Prosody)
+  - c2-26 (Literary Theory)
+  - c2-27 (Narratology)
+
+connects_to:
+  - c2-29 (Poetyka: Prose Analysis)
+  - c2-34 (Literary Translation I — Poetry)
+  - c2-36 (Creative Writing: Poetry)
+
+naturalness:
+  score: null
+  status: PENDING

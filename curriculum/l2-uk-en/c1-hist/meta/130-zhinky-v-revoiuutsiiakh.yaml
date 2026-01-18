@@ -1,0 +1,118 @@
+# C1-HIST Module 130: Жінки в революціях — Прихована історія
+# Status: SPEC (ready for content development)
+
+id: c1-hist-130
+title: "Жінки в революціях: Прихована історія"
+slug: zhinky-v-revoiuutsiiakh
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Жіночий рух в Україні (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
+    type: reference
+    notes: Women's movement
+  - name: Євромайдан (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Євромайдан
+    type: reference
+    notes: Women at Euromaidan
+
+content_outline:
+  - section: Вступ — Невидимі героїні
+    words: 400
+    points:
+      - Жінки в українській історії — де вони?
+      - Прихована агентність
+      - Від 1917 до 2022
+      - Структура модуля
+
+  - section: 1917-1921 — Революція і війна
+    words: 600
+    points:
+      - Жіночі організації УНР
+      - Олена Теліга — символ
+      - Медицина і тил
+      - Чому забули
+
+  - section: 1990 — Гранітна революція
+    words: 500
+    points:
+      - Студентки — половина учасників
+      - Організаторки
+      - Чому в історії — тільки чоловіки
+      - Приклади
+
+  - section: 2004 і 2014
+    words: 700
+    points:
+      - Помаранчева — жінки на сцені
+      - Євромайдан — жінки в бою
+      - «Жіноча сотня»
+      - Волонтерство — переважно жіноче
+
+  - section: 2022 — Нова видимість
+    words: 600
+    points:
+      - Жінки в ЗСУ
+      - Волонтерки
+      - Політичне лідерство
+      - Зміна наративу
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Жінки завжди були
+      - Історію писали чоловіки
+      - Перехід до 2022 мобілізації
+
+vocabulary_hints:
+  required:
+    - жіночий рух (women's movement)
+    - прихована історія (hidden history)
+    - агентність (agency)
+    - волонтерка (female volunteer)
+    - «Жіноча сотня» (Women's Hundred)
+    - гендер (gender)
+    - лідерство (leadership)
+    - видимість (visibility)
+    - наратив (narrative)
+    - героїня (heroine)
+  recommended:
+    - фемінізм (feminism)
+    - патріархат (patriarchy)
+    - «невидима праця» (invisible labor)
+    - Теліга (Teliha)
+    - рівність (equality)
+
+activity_hints:
+  - type: recovery-study
+    focus: Recover women's roles in 1917-1921
+    output: Historical recovery
+
+  - type: visibility-analysis
+    focus: Why women disappeared from revolutionary history
+    output: Invisibility factors
+
+  - type: maidan-women
+    focus: Women at Euromaidan — roles and recognition
+    output: Women's participation analysis
+
+  - type: 2022-change
+    focus: How 2022 changed women's visibility
+    output: Change documentation
+
+  - type: essay-response
+    focus: "Чому жінок 'забули' в українській революційній історії?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-129 (2004 Crimea crisis)
+  - c1-hist-128 (Granite Revolution)
+
+connects_to:
+  - c1-hist-131 (Why 2022 worked)
+  - c1-hist-133 (Agency synthesis)

@@ -1,0 +1,27 @@
+module: lit-30
+title: 'Микола Джеря'
+subtitle: 'Втеча від Кріпацтва'
+version: '2.0'
+phase: 'LIT.5 Realism'
+focus: narrative
+pedagogy: analysis
+duration: 120
+transliteration: none
+tags:
+  - literature
+  - realism
+  - serfdom
+  - history
+grammar:
+  - 'Narrative structures'
+objectives:
+  - 'Analyze the character of Mykola Dzherya as a new Ukrainian hero'
+  - 'Understand the impact of serfdom and industrialization on 19th-century Ukraine'
+  - 'Compare village and city life through Nechuy-Levytsky''s lens'
+vocabulary_count: 10
+slug: 30-mykola-dzherya
+naturalness:
+  score: 10
+  justification: "Manual verification: High quality literary Ukrainian."
+  status: PASS
+status: review

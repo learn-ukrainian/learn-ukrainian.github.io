@@ -1,6 +1,15 @@
-module: b1-11
+# B1 Module 11: Вид у наказовому способі
+# Status: SPEC (ready for content development)
+
+id: b1-11
 title: Вид у наказовому способі
 subtitle: Aspect in Imperatives
+slug: 11-aspect-in-imperatives
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.1 Aspect
 pedagogy: TTT
@@ -8,19 +17,119 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- aspect
-- imperatives
+  - grammar
+  - aspect
+  - imperatives
 grammar:
-- Aspect selection in imperatives
-- Perfective vs Imperfective commands
+  - Aspect selection in imperatives
+  - Perfective vs Imperfective commands
 objectives:
-- Learner can choose correct aspect for different command types
-- Learner understands when to use НДВ vs ДВ in imperatives
-- Learner can form polite requests and direct commands
-vocabulary_count: 26
-vocab_count: 24
-slug: 11-aspect-in-imperatives
+  - Learner can choose correct aspect for different command types
+  - Learner understands when to use НДВ vs ДВ in imperatives
+  - Learner can form polite requests and direct commands
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Imperative Mood
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official rules for aspect in imperative constructions
+  - name: Ukrainian Imperative (Wikipedia)
+    url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+    type: reference
+    notes: Imperative formation with aspect
+
+content_outline:
+  - section: Вступ — Накази і вид
+    words: 350
+    points:
+      - Чому вибір виду важливий у наказах
+      - TTT — визначте вид у командах
+      - Зв'язок з M10 (заперечення)
+
+  - section: Недоконаний вид у наказах
+    words: 550
+    points:
+      - Загальні поради (Читай книги!)
+      - Запрошення до процесу (Сідай! Їж!)
+      - Повторювані дії (Завжди мий руки!)
+
+  - section: Доконаний вид у наказах
+    words: 550
+    points:
+      - Конкретні завдання (Напиши листа!)
+      - Одноразові дії з результатом
+      - Термінові команди
+
+  - section: Ввічливі прохання
+    words: 500
+    points:
+      - Будь ласка + недок. (процес)
+      - Будь ласка + док. (результат)
+      - Регістр і тон
+
+  - section: Заперечні накази (повторення)
+    words: 450
+    points:
+      - Не + недок. (загальна заборона)
+      - Не + док. (попередження)
+      - Типові помилки
+
+  - section: Практика і підсумок
+    words: 350
+    points:
+      - Комплексні вправи
+      - Готовність до M12
+
+vocabulary_hints:
+  required:
+    - наказовий спосіб (imperative mood)
+    - команда (command)
+    - прохання (request)
+    - порада (advice)
+    - будь ласка (please)
+    - негайно (immediately)
+    - обов'язково (definitely/must)
+    - пам'ятай (remember - impf)
+    - запам'ятай (memorize - pf)
+    - перестань (stop - pf)
+  recommended:
+    - припини (stop/cease - pf)
+    - продовжуй (continue - impf)
+    - зачекай (wait - pf)
+    - чекай (wait - impf)
+    - давай (let's - impf)
+
+activity_hints:
+  - type: quiz
+    focus: Which aspect for which command type?
+    items: "15+"
+
+  - type: fill-in
+    focus: Imperative aspect selection
+    items: "12+"
+
+  - type: transform
+    focus: General advice → specific command (НДВ → ДВ)
+    items: "10+"
+
+  - type: match-up
+    focus: Situation → appropriate imperative
+    items: "12+"
+
+  - type: dialogue
+    focus: Polite requests in different registers
+    items: "8+"
+
+prerequisites:
+  - b1-10 (Aspect in negation)
+  - All aspect modules M06-10
+
+connects_to:
+  - b1-12 (Aspect pairs - essential 40)
+  - b1-15 (Aspect mastery checkpoint)
+
 naturalness:
   score: 9
   status: PASS

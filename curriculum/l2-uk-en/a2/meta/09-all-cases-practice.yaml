@@ -1,29 +1,158 @@
-module: a2-09
+# A2 Module 09: All Cases Practice
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-09
 title: All Cases Practice
 subtitle: Consolidating the Case System
+slug: 09-all-cases-practice
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- review
-- practice
+  - grammar
+  - cases
+  - review
+  - practice
+  - integration
+
 grammar:
-- all 7 cases review
-- case selection logic
-- common prepositions
-- case endings
+  - all 7 cases review
+  - case selection logic
+  - common prepositions
+  - case endings
+
 objectives:
-- Learner can identify which case is required in a given context
-- Learner can form correct endings for all 7 cases
-- Learner can switch between cases fluently in conversation
-- Learner can correct common case errors
-vocabulary_count: 25
-slug: 09-all-cases-practice
-focus: grammar
+  - Learner can identify which case is required in a given context
+  - Learner can form correct endings for all 7 cases
+  - Learner can switch between cases fluently in conversation
+  - Learner can correct common case errors
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Case System
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Complete 7-case paradigm requirements for A2
+  - name: Ukrainian Case System Reference
+    url: https://uk.wikipedia.org/wiki/Відмінок
+    type: reference
+    notes: Complete declension tables
+
+content_outline:
+  - section: Case System Overview
+    words: 500
+    points:
+      - All 7 cases with questions
+      - Nominative (хто? що?) - subject
+      - Genitive (кого? чого?) - possession, absence
+      - Dative (кому? чому?) - indirect object
+      - Accusative (кого? що?) - direct object
+      - Instrumental (ким? чим?) - means, with
+      - Locative (на кому? на чому?) - location
+      - Vocative - address
+
+  - section: Case Recognition Strategies
+    words: 500
+    points:
+      - Ending patterns by gender
+      - Context clues (verbs, prepositions)
+      - Question word method
+
+  - section: Masculine Noun Full Paradigm
+    words: 400
+    points:
+      - Hard stem example (друг)
+      - Soft stem example (вчитель)
+      - Animate vs inanimate accusative
+
+  - section: Feminine Noun Full Paradigm
+    words: 400
+    points:
+      - Hard stem -а example (книга)
+      - Soft stem -я example (земля)
+      - Consonant alternations
+
+  - section: Neuter and Plural Paradigms
+    words: 400
+    points:
+      - Neuter -о/-е patterns
+      - Plural endings all genders
+      - Common irregular plurals
+
+  - section: Integration Exercises
+    words: 600
+    points:
+      - Mixed case practice
+      - Error correction drills
+      - Full sentence transformation
+
+vocabulary_hints:
+  required:
+    - хто (who)
+    - що (what)
+    - кого (whom - acc/gen)
+    - чого (of what)
+    - кому (to whom)
+    - чому (to what / why)
+    - ким (by whom)
+    - чим (by what)
+    - відмінок (case)
+    - називний (nominative)
+    - родовий (genitive)
+    - давальний (dative)
+    - знахідний (accusative)
+    - орудний (instrumental)
+    - місцевий (locative)
+  recommended:
+    - кличний (vocative)
+    - однина (singular)
+    - множина (plural)
+    - закінчення (ending)
+    - відмінювати (to decline)
+
+activity_hints:
+  - type: fill-in
+    focus: Choose correct case for context
+    items: "15+"
+
+  - type: fill-in
+    focus: Decline nouns through all 7 cases
+    items: "8+"
+
+  - type: quiz
+    focus: Identify case by ending
+    items: "15+"
+
+  - type: match-up
+    focus: Case + question word + function
+    items: "10+"
+
+  - type: fill-in
+    focus: Error correction - fix wrong cases
+    items: "10+"
+
+  - type: quiz
+    focus: Mixed case selection in paragraphs
+    items: "10+"
+
+prerequisites:
+  - a2-01 through a2-08 (all case modules)
+  - A1 case basics (Nom, Acc, Gen, Loc)
+
+connects_to:
+  - a2-10 (Post Office & Bank - application)
+  - a2-11 (Checkpoint - Cases)
+  - All subsequent A2 modules
+
 naturalness:
   score: 8
   status: PASS

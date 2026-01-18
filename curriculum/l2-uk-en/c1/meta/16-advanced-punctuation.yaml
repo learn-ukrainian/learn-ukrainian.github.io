@@ -1,26 +1,128 @@
-module: 16
-title: "Поглиблена Пунктуація"
-subtitle: "Advanced Punctuation"
-version: "1.0"
-phase: "C1.1 Academic Writing"
-focus: grammar
-pedagogy: immersion
-duration: 120
-transliteration: none
-tags:
-  - academic
-  - grammar
-  - punctuation
-  - syntax
-grammar:
-  - "Complex punctuation rules in Ukrainian"
-  - "Comma in complex sentences"
-  - "Dash for emphasis and structure"
-  - "Colon and semicolon usage"
-objectives:
-  - "Master complex punctuation rules for academic writing"
-  - "Correctly use commas in various types of subordinate clauses"
-  - "Understand the stylistic function of the dash in Ukrainian"
-  - "Properly format lists and complex enumerations using colons and semicolons"
-vocabulary_count: 20
+# C1 Module 16: Advanced Punctuation
+# Status: SPEC (ready for content development)
+
+id: c1-16
+title: Поглиблена пунктуація
 slug: 16-advanced-punctuation
+module_type: grammar
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Український правопис 2019
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official punctuation rules
+  - name: Пунктуація сучасної української мови
+    url: https://r2u.org.ua/
+    type: secondary
+    notes: Comprehensive punctuation guide
+
+content_outline:
+  - section: Вступ — Пунктуація як інструмент
+    words: 400
+    points:
+      - Роль пунктуації в науковому тексті
+      - Відмінності від розмовного стилю
+      - Типові помилки в академічному письмі
+
+  - section: Кома в складних реченнях
+    words: 800
+    points:
+      - Кома перед сполучниками (і, а, але, що, який)
+      - Кома в підрядних реченнях
+      - Кома при відокремлених членах
+
+  - section: Тире — функції та правила
+    words: 700
+    points:
+      - Тире між підметом і присудком
+      - Тире для підкреслення
+      - Тире у безсполучникових реченнях
+
+  - section: Двокрапка і крапка з комою
+    words: 600
+    points:
+      - Двокрапка перед переліком
+      - Двокрапка в безсполучниковому реченні
+      - Крапка з комою в складних переліках
+
+  - section: Лапки та цитування
+    words: 600
+    points:
+      - Типи лапок в українській мові
+      - Лапки в цитатах
+      - Лапки для іронії/умовності
+
+  - section: Дужки та інші знаки
+    words: 500
+    points:
+      - Круглі дужки для пояснень
+      - Квадратні дужки в цитатах
+      - Три крапки (еліпсис)
+
+  - section: Практика редагування
+    words: 400
+    points:
+      - Виправлення пунктуаційних помилок
+      - Стилістичне варіювання пунктуації
+      - Розстановка знаків у науковому тексті
+
+vocabulary_hints:
+  required:
+    - кома (comma)
+    - тире (dash)
+    - двокрапка (colon)
+    - крапка з комою (semicolon)
+    - лапки (quotation marks)
+    - дужки (brackets)
+    - відокремлення (separation)
+    - перелік (list)
+    - підрядне речення (subordinate clause)
+    - еліпсис (ellipsis)
+  recommended:
+    - пунктуаційний знак (punctuation mark)
+    - інтонаційний (intonational)
+    - граматичний (grammatical)
+    - факультативний (optional)
+    - обов'язковий (obligatory)
+
+activity_hints:
+  - type: error-correction
+    focus: Fix punctuation errors in academic text
+    items: "15+"
+
+  - type: fill-in
+    focus: Insert appropriate punctuation
+    items: "15+"
+
+  - type: quiz
+    focus: Choose correct punctuation option
+    items: "15+"
+
+  - type: match-up
+    focus: Punctuation mark to rule
+    items: "12+"
+
+  - type: cloze
+    focus: Punctuate academic passages
+    items: "10+"
+
+  - type: group-sort
+    focus: Classify punctuation functions
+    items: "12+"
+
+prerequisites:
+  - c1-05 (Logical Connectors)
+  - Complex sentence structures
+
+connects_to:
+  - c1-17 (Irregular Verbs Complete)
+  - c1-18 (Essay Writing Practice)
+  - c1-48 (Literary Syntax)
+
+naturalness:
+  score: null
+  status: PENDING

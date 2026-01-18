@@ -1,5 +1,6 @@
 - type: essay-response
   title: 'Есе-Роздум: Пасивність Марусі'
+  source_reading: "reading-marusya"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Пасивність Марусі: Чеснота чи Вада?'.
 
@@ -29,6 +30,7 @@
       points: 30
 - type: essay-response
   title: 'Дискусія: Синдром розбитого серця'
+  source_reading: "reading-marusya"
   prompt: |
     Проаналізуйте смерть Марусі з точки зору сучасної психології. Чи була застуда лише приводом?
 
@@ -46,6 +48,7 @@
       description: Сучасний погляд на класику.
       points: 50
 - type: reading
+  id: reading-marusya
   title: 'Читальна Зала: Занурення в Сентименталізм'
   resource:
     type: book
@@ -57,6 +60,7 @@
     - Зверніть увагу на кількість зменшувально-пестливих слів.
 - type: critical-analysis
   title: 'Аналіз Тексту: Пейзаж як Душа'
+  source_reading: "reading-marusya"
   target_text: "Сонце низенько, вечір близенько... Все затихло, ніщо не шелохне..."
   questions:
     - Як природа відображає внутрішній стан героїні?

@@ -1,0 +1,134 @@
+# C1-HIST Module 45: Голодомор — Історіографія теми
+# Status: SPEC (ready for content development)
+
+id: c1-hist-45
+title: "Голодомор: Історіографія теми"
+slug: holodomor-istoriohrafiia
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Голодомор (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Голодомор
+    type: reference
+    notes: Overview
+  - name: Роберт Конквест
+    url: https://uk.wikipedia.org/wiki/Роберт_Конквест
+    type: reference
+    notes: "Harvest of Sorrow" author
+  - name: Джеймс Мейс
+    url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
+    type: reference
+    notes: US Commission researcher
+  - name: Станіслав Кульчицький
+    url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
+    type: reference
+    notes: Ukrainian scholar
+
+content_outline:
+  - section: Вступ — Як вивчають Голодомор
+    words: 400
+    points:
+      - Від замовчування до визнання
+      - Історіографія як предмет
+      - Чому важливо знати, хто писав
+      - Структура модуля
+
+  - section: Радянське замовчування (1933-1991)
+    words: 600
+    points:
+      - Офіційна версія — "неврожай"
+      - Заборона згадувати
+      - Що знали на Заході
+      - Джонс vs. Дюранті — два журналісти
+
+  - section: Діаспорні дослідження (1950-1980-ті)
+    words: 600
+    points:
+      - Збір свідчень — перші спроби
+      - Проблеми — відсутність архівів
+      - Політичний контекст Холодної війни
+      - Критика — упередженість?
+
+  - section: Конквест і Мейс (1980-ті)
+    words: 700
+    points:
+      - "Harvest of Sorrow" (1986) — перший синтез
+      - Комісія Конгресу США (1988)
+      - Мейс — від дослідника до активіста
+      - Визнання геноцидом — початок
+
+  - section: Пострадянські дослідження
+    words: 600
+    points:
+      - Відкриття архівів — нові документи
+      - Кульчицький — еволюція поглядів
+      - Українські інституції
+      - Дебати — геноцид vs. голод
+
+  - section: Денаєрство та контр-наративи
+    words: 400
+    points:
+      - Російський офіційний наратив
+      - "Спільна трагедія" — що це означає
+      - Академічний скептицизм
+      - Як відповідати
+
+  - section: Підсумок
+    words: 200
+    points:
+      - Стан поля сьогодні
+      - Відкриті питання
+      - Підготовка до наступних модулів
+
+vocabulary_hints:
+  required:
+    - Голодомор (Holodomor)
+    - історіографія (historiography)
+    - замовчування (silencing)
+    - визнання (recognition)
+    - геноцид (genocide)
+    - денаєрство (denial)
+    - діаспора (diaspora)
+    - архів (archive)
+    - свідчення (testimony)
+    - дебати (debates)
+  recommended:
+    - неврожай (crop failure)
+    - штучний голод (man-made famine)
+    - Холодна війна (Cold War)
+    - ревізіонізм (revisionism)
+    - апологетика (apologetics)
+
+activity_hints:
+  - type: timeline
+    focus: Map evolution of Holodomor historiography
+    output: Chronological timeline
+
+  - type: comparative-study
+    focus: Compare Conquest, Mace, Kulchytsky interpretations
+    output: Interpretation comparison table
+
+  - type: source-evaluation
+    focus: Evaluate one denial argument — how to counter?
+    output: Rebuttal analysis
+
+  - type: bibliography
+    focus: Create annotated bibliography of key works
+    output: 10 sources with annotations
+
+  - type: essay-response
+    focus: "Чому Голодомор так довго замовчувався?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-36-37 (Holodomor sources)
+  - c1-hist-01 (What is historiography)
+
+connects_to:
+  - c1-hist-46-50 (Holodomor deep dive modules)
+  - c1-hist-51 (Holodomor synthesis)

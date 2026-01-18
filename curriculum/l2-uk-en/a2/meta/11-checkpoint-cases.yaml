@@ -1,29 +1,151 @@
-module: a2-11
+# A2 Module 11: Checkpoint - Cases A2.1
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-11
 title: Checkpoint — Cases
 subtitle: Review and Mastery
+slug: 11-checkpoint-cases
+module_type: checkpoint
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: checkpoint
 pedagogy: TTT
 duration: 60
 transliteration: none
+
 tags:
-- checkpoint
-- review
-- cases
-- assessment
+  - checkpoint
+  - review
+  - cases
+  - assessment
+
 grammar:
-- case system review
-- prepositions review
-- case functions
-- error correction
+  - case system review
+  - prepositions review
+  - case functions
+  - error correction
+
 objectives:
-- Learner can correctly identify and use all 7 cases
-- Learner can choose appropriate prepositions for each case
-- Learner can correct common case errors
-- Learner can apply case knowledge in mixed contexts
-vocabulary_count: 25
-slug: 11-checkpoint-cases
-focus: checkpoint
+  - Learner can correctly identify and use all 7 cases
+  - Learner can choose appropriate prepositions for each case
+  - Learner can correct common case errors
+  - Learner can apply case knowledge in mixed contexts
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - A2 Assessment
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Assessment criteria for case system mastery
+  - name: CEFR A2 Can-Do Statements
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: A2 grammar proficiency requirements
+
+content_outline:
+  - section: Case System Review
+    words: 400
+    points:
+      - All 7 cases at a glance
+      - Key questions and functions
+      - Self-assessment checklist
+
+  - section: Dative Case Mastery (M01-03)
+    words: 400
+    points:
+      - Pronoun forms (мені, тобі, йому, їй)
+      - Noun endings by gender
+      - Dative verbs (допомагати, подобатися)
+
+  - section: Instrumental Case Mastery (M04-06)
+    words: 400
+    points:
+      - Accompaniment (з другом)
+      - Means/tools (автобусом, ручкою)
+      - Professions (бути лікарем)
+
+  - section: Preposition + Case Combinations (M07-08)
+    words: 400
+    points:
+      - Spatial prepositions (motion vs location)
+      - Logical prepositions (cause, purpose, time)
+      - Common preposition errors
+
+  - section: Service Interactions (M09-10)
+    words: 400
+    points:
+      - Post office vocabulary with cases
+      - Bank vocabulary with cases
+      - Practical dialogue patterns
+
+  - section: Comprehensive Assessment
+    words: 800
+    points:
+      - Mixed case exercises
+      - Error correction tasks
+      - Dialogue completion with all cases
+
+vocabulary_hints:
+  required:
+    - відмінок (case)
+    - давальний (dative)
+    - орудний (instrumental)
+    - прийменник (preposition)
+    - допомагати (to help)
+    - подобатися (to like)
+    - з (with)
+    - для (for)
+    - без (without)
+    - через (because of)
+    - після (after)
+    - пошта (post office)
+    - банк (bank)
+    - відправляти (to send)
+    - обмінювати (to exchange)
+  recommended:
+    - правильно (correctly)
+    - помилка (mistake)
+    - виправити (to correct)
+    - перевірити (to check)
+    - оцінка (assessment)
+
+activity_hints:
+  - type: quiz
+    focus: Comprehensive case quiz - all 7 cases
+    items: "20+"
+
+  - type: fill-in
+    focus: Sentence transformation - change case
+    items: "15+"
+
+  - type: dialogue
+    focus: Dialogue completion with correct cases
+    items: "6+"
+
+  - type: quiz
+    focus: Error identification and correction
+    items: "12+"
+
+  - type: match-up
+    focus: Preposition + case + meaning
+    items: "15+"
+
+  - type: fill-in
+    focus: Service interaction dialogues
+    items: "10+"
+
+prerequisites:
+  - a2-01 through a2-10 (all A2.1 modules)
+
+connects_to:
+  - a2-12 (Aspect Introduction)
+  - a2-25 (Checkpoint - Aspect & Comparison)
+  - a2-35 (Checkpoint - Complex Ideas)
+
 naturalness:
   score: 9
   status: PASS

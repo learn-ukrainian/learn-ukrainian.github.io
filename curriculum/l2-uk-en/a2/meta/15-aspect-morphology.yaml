@@ -1,29 +1,160 @@
-module: a2-15
+# A2 Module 15: Aspect Morphology
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-15
 title: Aspect Morphology
 subtitle: Prefixes and Suffixes
+slug: 15-aspect-morphology
+module_type: grammar
+word_target: 2800
+immersion: "55-65% Ukrainian"
+
 version: '1.0'
-phase: A2.1
+phase: A2.2
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- verbs
-- aspect
-- morphology
+  - grammar
+  - verbs
+  - aspect
+  - morphology
+  - word-formation
+
 grammar:
-- prefixes (про-, на-, з-, по-)
-- suffixes (-ва-, -ува-)
-- stem changes
-- suppletive pairs
+  - prefixes (про-, на-, з-, по-)
+  - suffixes (-ва-, -ува-)
+  - stem changes
+  - suppletive pairs
+
 objectives:
-- Learner can identify aspect based on morphology
-- Learner can form perfective verbs using common prefixes
-- Learner can form imperfective verbs using suffixes
-- Learner can recognize irregular aspect pairs
-vocabulary_count: 25
-slug: 15-aspect-morphology
-focus: grammar
+  - Learner can identify aspect based on morphology
+  - Learner can form perfective verbs using common prefixes
+  - Learner can form imperfective verbs using suffixes
+  - Learner can recognize irregular aspect pairs
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Word Formation
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Verbal prefix and suffix patterns
+  - name: Ukrainian Verb Morphology
+    url: https://uk.wikipedia.org/wiki/Словотвір
+    type: reference
+    notes: Aspect formation patterns
+
+content_outline:
+  - section: How Aspect Pairs Form
+    words: 400
+    points:
+      - Prefixation (impf → pf)
+      - Suffixation (pf → impf secondary)
+      - Suppletive pairs (different roots)
+
+  - section: Prefixation Patterns
+    words: 600
+    points:
+      - на- completion (писати → написати)
+      - про- through (читати → прочитати)
+      - з- completion (робити → зробити)
+      - по- completion (бачити → побачити)
+      - ви- mastery (вчити → вивчити)
+
+  - section: Suffixation Patterns
+    words: 500
+    points:
+      - -ва- removal creates perfective
+      - давати → дати
+      - вставати → встати
+      - відпочивати → відпочити
+
+  - section: Suppletive Pairs
+    words: 400
+    points:
+      - говорити / сказати (different roots)
+      - брати / взяти
+      - класти / покласти
+      - Memory strategies for irregulars
+
+  - section: Extended Aspect Pairs
+    words: 500
+    points:
+      - відпочивати/відпочити
+      - вставати/встати
+      - відкривати/відкрити
+      - закривати/закрити
+      - вмикати/увімкнути
+
+  - section: Pattern Recognition Practice
+    words: 400
+    points:
+      - Identify prefix/suffix
+      - Predict aspect from form
+      - Build aspect pairs
+
+vocabulary_hints:
+  required:
+    - відпочивати/відпочити (to rest)
+    - вставати/встати (to get up)
+    - одягатися/одягнутися (to dress)
+    - сідати/сісти (to sit down)
+    - лягати/лягти (to lie down)
+    - відкривати/відкрити (to open)
+    - закривати/закрити (to close)
+    - вмикати/увімкнути (to turn on)
+    - вимикати/вимкнути (to turn off)
+    - починати/почати (to begin)
+    - закінчувати/закінчити (to finish)
+    - отримувати/отримати (to receive)
+    - посилати/послати (to send)
+    - вибирати/вибрати (to choose)
+    - вирішувати/вирішити (to decide)
+  recommended:
+    - префікс (prefix)
+    - суфікс (suffix)
+    - корінь (root)
+    - основа (stem)
+    - утворення (formation)
+
+activity_hints:
+  - type: match-up
+    focus: Extended aspect pairs
+    items: "15+"
+
+  - type: quiz
+    focus: Pattern recognition - identify prefix/suffix
+    items: "12+"
+
+  - type: fill-in
+    focus: Use correct pair member in context
+    items: "12+"
+
+  - type: quiz
+    focus: Predict aspect from verb form
+    items: "10+"
+
+  - type: fill-in
+    focus: Build perfective from imperfective
+    items: "10+"
+
+  - type: match-up
+    focus: Suppletive pairs matching
+    items: "8+"
+
+prerequisites:
+  - a2-12 (Aspect introduction)
+  - a2-13 (Perfective past)
+  - a2-14 (Perfective future)
+
+connects_to:
+  - a2-16 (Aspect Mastery Pairs)
+  - a2-36 (Basic Motion Prefixes)
+  - a2-38 (Action Verb Prefixes)
+
 naturalness:
   score: 8
   status: PASS

@@ -69,8 +69,11 @@ export default function ComparativeStudy({
           </div>
         )}
 
-        <div className={styles.essayPrompt}>
-          <strong>{isUkrainian ? 'Завдання:' : 'Task:'}</strong> {parseMarkdown(prompt || task)}
+        {(prompt || task) && (
+          <div className={styles.essayPrompt}>
+            <strong>{isUkrainian ? 'Завдання:' : 'Task:'}</strong> {parseMarkdown(prompt || task)}
+          </div>
+        )}
 
         <div className={styles.essayInputArea}>
           <label className={styles.inputLabel}>{analysisLabel}</label>

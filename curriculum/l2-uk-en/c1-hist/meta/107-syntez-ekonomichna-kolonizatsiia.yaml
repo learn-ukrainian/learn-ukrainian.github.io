@@ -1,0 +1,127 @@
+# C1-HIST Module 107: Синтез — Економічна деколонізація
+# Status: SPEC (ready for content development)
+
+id: c1-hist-107
+title: "Синтез: Економічна деколонізація"
+slug: syntez-ekonomichna-kolonizatsiia
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Економіка України (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Економіка_України
+    type: reference
+    notes: Economic overview
+  - name: Угода про асоціацію (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
+    type: reference
+    notes: EU integration
+
+content_outline:
+  - section: Вступ — Від колонії до суб'єкта
+    words: 400
+    points:
+      - Огляд модулів 103-106
+      - Економічна колонізація — 300 років
+      - Деколонізація — що це означає
+      - Мета синтезу
+
+  - section: Еволюція експлуатації
+    words: 600
+    points:
+      - Імперський період — зерно
+      - Радянський — промисловість
+      - Пострадянський — газ
+      - Спільне — ресурси йдуть з України
+
+  - section: Механізми залежності
+    words: 600
+    points:
+      - Торговельні зв'язки
+      - Технологічна залежність
+      - Фінансова залежність
+      - Як кожен працював
+
+  - section: Розрив зв'язків
+    words: 700
+    points:
+      - 2014 — початок
+      - Торговельна переорієнтація
+      - Енергетична незалежність
+      - 2022 — повний розрив
+
+  - section: ЄС — нова залежність чи партнерство?
+    words: 500
+    points:
+      - Угода про асоціацію
+      - Відмінності від Росії
+      - Ризики і можливості
+      - Умови успіху
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Економічна деколонізація — процес
+      - Не завершено
+      - Перехід до інформаційної війни
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - економічна деколонізація (economic decolonization)
+    - залежність (dependence)
+    - експлуатація (exploitation)
+    - переорієнтація (reorientation)
+    - торговельні зв'язки (trade links)
+    - інтеграція (integration)
+    - партнерство (partnership)
+    - суб'єкт (subject/actor)
+    - механізм (mechanism)
+  recommended:
+    - DCFTA (Deep and Comprehensive Free Trade Area)
+    - диверсифікація (diversification)
+    - структурна залежність (structural dependence)
+    - асиметрія (asymmetry)
+    - самодостатність (self-sufficiency)
+
+activity_hints:
+  - type: synthesis
+    focus: Create economic colonization evolution diagram
+    output: Historical economic map
+
+  - type: mechanism-comparison
+    focus: How each form of exploitation worked
+    output: Mechanism comparison
+
+  - type: decolonization-assessment
+    focus: How far has economic decolonization gone?
+    output: Progress assessment
+
+  - type: future-analysis
+    focus: EU integration — risks and opportunities
+    output: Integration analysis
+
+  - type: essay-response
+    focus: "Чи завершила Україна економічну деколонізацію?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-103-106 (All economic exploitation modules)
+
+connects_to:
+  - c1-hist-108 (Information warfare)
+  - c1-hist-125 (Post-2014 decolonization)
+
+# === ECONOMIC EXPLOITATION PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.15
+# Students now have:
+# - 300 years of economic exploitation documented
+# - Grain, industry, gas extraction patterns
+# - Decolonization process understanding
+# - EU integration analysis
+#
+# Ready for Phase C1H.16: Information Warfare

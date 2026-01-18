@@ -1,6 +1,15 @@
-module: b1-20
+# B1 Module 20: Рух - наближення і віддалення
+# Status: SPEC (ready for content development)
+
+id: b1-20
 title: 'Рух: наближення і віддалення'
 subtitle: Motion - Approaching & Departing
+slug: 20-motion-approaching-departing
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '1.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -8,19 +17,118 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- motion-verbs
-- prefixes
+  - grammar
+  - motion-verbs
+  - prefixes
 grammar:
-- Prefixes під-, від-, до-
-- Approaching, departing, reaching patterns
+  - Prefixes під-, від-, до-
+  - Approaching, departing, reaching patterns
 objectives:
-- Learner can use під- for approaching
-- Learner can use від- for departing
-- Learner can use до- for reaching destination
-vocabulary_count: 25
-vocab_count: 28
-slug: 20-motion-approaching-departing
+  - Learner can use під- for approaching
+  - Learner can use від- for departing
+  - Learner can use до- for reaching destination
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Motion Prefixes
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official prefix meanings for approach/depart
+  - name: Ukrainian Verbal Prefixes
+    url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+    type: reference
+    notes: під-, від-, до- semantics
+
+content_outline:
+  - section: Вступ — Наближення і віддалення
+    words: 350
+    points:
+      - Три нові префікси
+      - TTT — визначте тип руху
+      - Зв'язок з M19
+
+  - section: Префікс під- (наближення)
+    words: 550
+    points:
+      - підійти до столу (to approach the table)
+      - під'їхати до будинку (to drive up to)
+      - Рух до певної точки
+
+  - section: Префікс від- (віддалення)
+    words: 550
+    points:
+      - відійти від вікна (to step away from)
+      - від'їхати від зупинки (to drive away from)
+      - Рух від певної точки
+
+  - section: Префікс до- (досягнення)
+    words: 500
+    points:
+      - дійти до станції (to reach on foot)
+      - доїхати до кінця (to reach by vehicle)
+      - Досягнення цілі
+
+  - section: Контрастивна практика
+    words: 600
+    points:
+      - Він підійшов — він відійшов — він дійшов
+      - Опис маршруту
+      - Типові помилки
+
+  - section: Підсумок
+    words: 250
+    points:
+      - Порівняльна таблиця
+      - Готовність до M21
+
+vocabulary_hints:
+  required:
+    - підійти/підходити (to approach on foot)
+    - під'їхати/під'їжджати (to approach by vehicle)
+    - відійти/відходити (to move away on foot)
+    - від'їхати/від'їжджати (to drive away)
+    - дійти/доходити (to reach on foot)
+    - доїхати/доїжджати (to reach by vehicle)
+    - наближення (approach)
+    - віддалення (moving away)
+    - досягнення (reaching)
+    - відстань (distance)
+  recommended:
+    - підбігти/підбігати (to run up to)
+    - відбігти/відбігати (to run away)
+    - добігти/добігати (to reach running)
+    - наблизитися (to approach - reflexive)
+    - віддалитися (to move away - reflexive)
+
+activity_hints:
+  - type: quiz
+    focus: під- vs від- vs до- selection
+    items: "15+"
+
+  - type: fill-in
+    focus: Route descriptions with direction
+    items: "12+"
+
+  - type: transform
+    focus: Approach → depart → reach sequence
+    items: "10+"
+
+  - type: cloze
+    focus: Narrative about a journey
+    items: "12+"
+
+  - type: match-up
+    focus: Situation → prefixed verb
+    items: "12+"
+
+prerequisites:
+  - b1-19 (Motion - starting & returning)
+
+connects_to:
+  - b1-21 (Motion - figurative uses)
+  - b1-22 (Motion full prefix integration)
+
 naturalness:
   score: 9
   status: PASS

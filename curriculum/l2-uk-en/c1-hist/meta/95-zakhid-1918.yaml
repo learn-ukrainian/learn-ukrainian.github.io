@@ -1,0 +1,129 @@
+# C1-HIST Module 95: 1918-1921 — Чому Антанта не допомогла УНР?
+# Status: SPEC (ready for content development)
+
+id: c1-hist-95
+title: "1918-1921: Чому Антанта не допомогла УНР?"
+slug: zakhid-1918
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Паризька мирна конференція (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Паризька_мирна_конференція
+    type: reference
+    notes: Peace conference
+  - name: Антанта (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Антанта
+    type: reference
+    notes: Allied powers
+  - name: Українська місія в Парижі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українська_місія_в_Парижі
+    type: reference
+    notes: Ukrainian delegation
+
+content_outline:
+  - section: Вступ — Забуті союзники
+    words: 400
+    points:
+      - УНР шукала допомоги
+      - Антанта — не допомогла
+      - Паттерн починається
+      - Структура модуля
+
+  - section: Контекст — Хто був Антанта
+    words: 500
+    points:
+      - Британія, Франція, США
+      - Перемога у Першій світовій
+      - Переформатування Європи
+      - Принцип самовизначення — для кого
+
+  - section: Чому Україну ігнорували
+    words: 700
+    points:
+      - Невідома країна
+      - «Мала Росія» — стереотип
+      - Підтримка білих — проти червоних
+      - Польща — важливіша
+
+  - section: Паризька конференція
+    words: 600
+    points:
+      - Українська делегація — не допущена
+      - Лобіювання — провал
+      - Про Україну — без України
+      - Результат — ніякої підтримки
+
+  - section: Франція і Одеса
+    words: 500
+    points:
+      - Французькі війська в Одесі
+      - Підтримка білих, не українців
+      - Швидкий відступ
+      - Ілюзії розвіяні
+
+  - section: Наслідки
+    words: 500
+    points:
+      - УНР — сама проти всіх
+      - Поразка — частково через це
+      - Урок — Захід не допоможе
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Перша зрада Заходу
+      - Паттерн встановлено
+      - Перехід до Ялти
+
+vocabulary_hints:
+  required:
+    - Антанта (Entente)
+    - Паризька конференція (Paris Peace Conference)
+    - самовизначення (self-determination)
+    - визнання (recognition)
+    - делегація (delegation)
+    - лобіювання (lobbying)
+    - інтервенція (intervention)
+    - білі (Whites — anti-Bolsheviks)
+    - ігнорування (ignoring)
+    - зрада (betrayal)
+  recommended:
+    - Вільсон (Wilson)
+    - 14 пунктів (Fourteen Points)
+    - мирна конференція (peace conference)
+    - геополітика (geopolitics)
+    - буферна держава (buffer state)
+
+activity_hints:
+  - type: diplomatic-analysis
+    focus: Why wasn't Ukraine recognized at Paris?
+    output: Diplomatic failure analysis
+
+  - type: perception-study
+    focus: How did the West see Ukraine in 1918?
+    output: Perception analysis
+
+  - type: comparative-study
+    focus: Poland vs. Ukraine — different treatment
+    output: Allied policy comparison
+
+  - type: source-analysis
+    focus: Ukrainian delegation reports from Paris
+    output: Primary source study
+
+  - type: essay-response
+    focus: "Чому принцип самовизначення не поширився на Україну?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-91 (UNR strategic mistakes)
+  - c1-hist-34 (UNR Universals — source)
+
+connects_to:
+  - c1-hist-96 (Yalta betrayal)
+  - c1-hist-102 (2022 — paradigm shift?)

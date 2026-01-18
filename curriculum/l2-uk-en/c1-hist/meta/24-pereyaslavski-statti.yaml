@@ -1,0 +1,132 @@
+# C1-HIST Module 24: Переяславські статті — Текст і контекст
+# Status: SPEC (ready for content development)
+
+id: c1-hist-24
+title: "Переяславські статті: Текст і контекст"
+slug: pereyaslavski-statti
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Переяславська рада (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Переяславська_рада
+    type: reference
+    notes: Overview
+  - name: Березневі статті
+    url: https://uk.wikipedia.org/wiki/Березневі_статті
+    type: reference
+    notes: March Articles (actual agreement)
+  - name: Текст статей
+    url: https://litopys.org.ua/
+    type: primary
+    notes: Document text
+
+content_outline:
+  - section: Вступ — Найконтроверсійніший документ
+    words: 400
+    points:
+      - Переяслав 1654 — що відбулося?
+      - Чому досі сперечаються
+      - Рада vs. Статті — що підписали?
+      - Мета модуля — прочитати оригінал
+
+  - section: Що насправді відбулося в січні 1654
+    words: 600
+    points:
+      - Рада в Переяславі — церемонія
+      - Присяга — хто кому?
+      - Інцидент з присягою царя
+      - Що вирішили, чого не вирішили
+
+  - section: Березневі статті — справжній договір
+    words: 700
+    points:
+      - Переговори в Москві
+      - 23 статті — зміст
+      - Козацька автономія
+      - Московські застереження
+      - Що підписано, що відхилено
+
+  - section: Фрагмент — Ключові статті
+    words: 700
+    points:
+      - Текст (з глосами)
+      - Про реєстр — 60 000 козаків
+      - Про права старшини
+      - Про відносини з іншими державами
+      - Московська редакція
+
+  - section: Інтерпретації
+    words: 600
+    points:
+      - Українська інтерпретація — персональна унія
+      - Російська інтерпретація — возз'єднання
+      - Польська інтерпретація — зрада
+      - Сучасний аналіз — що насправді?
+
+  - section: Чому це важливо досі
+    words: 300
+    points:
+      - Переяслав у російській пропаганді
+      - Деконструкція міфу
+      - Історична пам'ять vs. документ
+
+  - section: Підсумок
+    words: 200
+    points:
+      - Від легенди до тексту
+      - Критичний підхід
+      - Зв'язок із циклом кооптації
+
+vocabulary_hints:
+  required:
+    - Переяславська рада (Pereiaslav Council)
+    - Березневі статті (March Articles)
+    - присяга (oath)
+    - автономія (autonomy)
+    - унія (union)
+    - возз'єднання (reunification)
+    - реєстр (register)
+    - старшина (officer class)
+    - застереження (reservation)
+    - суверенітет (sovereignty)
+  recommended:
+    - протекторат (protectorate)
+    - васалітет (vassalage)
+    - кондиції (conditions)
+    - ратифікація (ratification)
+    - денонсація (denunciation)
+
+activity_hints:
+  - type: reading
+    focus: Key articles text with glosses
+    source: litopys.org.ua
+
+  - type: comparative-study
+    focus: Ukrainian vs. Russian interpretation of same article
+    output: Interpretation comparison
+
+  - type: legal-analysis
+    focus: What rights were guaranteed? What was ambiguous?
+    output: Legal status table
+
+  - type: source-evaluation
+    focus: Why do different copies differ?
+    output: Textual criticism
+
+  - type: essay-response
+    focus: "Чи був Переяслав 'возз'єднанням' чи 'союзом'?"
+    word_target: 500
+    model_answer: Required (showing both interpretations)
+
+prerequisites:
+  - c1-hist-23 (Khmelnytsky's Universals)
+  - c1-hist-09 (Source criticism)
+
+connects_to:
+  - c1-hist-82 (Pereiaslav cycle — co-optation)
+  - c1-hist-89 (Pereiaslav alternatives)
+  - c1-hist-03 (Russian imperial historiography)

@@ -1,24 +1,143 @@
-title: 'Князь Святослав: Воїн на Троні'
-subtitle: 'Prince Sviatoslav: Warrior on the Throne'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-immersion: 100
-tags:
-- biography
-- history
-- warfare
-- expansion
-grammar:
-- Military narrative register
-- Archaic lexicon (дружина, каганат)
-objectives:
-- Understand the military achievements of Sviatoslav I
-- Analyze his 'I'm coming at you' philosophy of warfare
-- Evaluate his impact on the geopolitical map of Eastern Europe
-vocabulary_count: 25
-vital_status: deceased
+# C1-BIO Module 02: Князь Святослав: Воїн-завойовник
+# Status: SPEC (ready for content development)
+
+id: c1-bio-02
+title: "Князь Святослав: Воїн-завойовник"
 slug: kniaz-sviatoslav
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Святослав Ігорович (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+    type: primary
+    notes: Military campaigns, death, historical significance
+  - name: Повість минулих літ
+    url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+    type: primary
+    notes: Chronicle accounts of campaigns
+  - name: Хозарський каганат
+    url: https://uk.wikipedia.org/wiki/Хозарський_каганат
+    type: reference
+    notes: Context for Khazar campaign
+
+content_outline:
+  - section: Вступ — Воїн на троні
+    words: 400
+    points:
+      - Святослав як ідеал воїна-князя
+      - Контраст із політикою матері Ольги
+      - Значення його правління для Русі
+
+  - section: Дитинство та регентство Ольги
+    words: 500
+    points:
+      - Народження та раннє дитинство
+      - Виховання як воїна
+      - Перший бій за літописом
+      - Відмова від християнства
+
+  - section: Розгром Хозарського каганату
+    words: 800
+    points:
+      - Стратегічне значення Хозарії
+      - Похід 965-969 років
+      - Взяття Саркела та Ітіля
+      - Наслідки знищення Хозарії
+
+  - section: Балканські походи
+    words: 800
+    points:
+      - Запрошення Візантії проти болгар
+      - Завоювання Болгарії
+      - Конфлікт із Візантією
+      - Облога Доростола та договір
+
+  - section: Загибель на порогах
+    words: 600
+    points:
+      - Повернення з Балкан
+      - Засідка печенігів на Дніпрі
+      - Загибель та легенда про чашу
+      - Символіка смерті воїна
+
+  - section: Спадщина та оцінки
+    words: 600
+    points:
+      - Поділ Русі між синами
+      - Вплив на геополітику Східної Європи
+      - Образ у літературі та мистецтві
+      - Сучасні дискусії про його роль
+
+  - section: Підсумок — Меч і доля
+    words: 300
+    points:
+      - Святослав як архетип воїна
+      - Його слова "Іду на ви!"
+      - Місце в українській пам'яті
+
+vocabulary_hints:
+  required:
+    - воїн (warrior)
+    - завойовник (conqueror)
+    - каганат (khaganate)
+    - похід (campaign/march)
+    - дружина (retinue/warband)
+    - печеніги (Pechenegs)
+    - пороги (rapids)
+    - засідка (ambush)
+    - данник (tributary)
+    - договір (treaty)
+  recommended:
+    - чаша (cup/goblet)
+    - череп (skull)
+    - здобич (spoils/booty)
+    - облога (siege)
+    - перемога (victory)
+
+activity_hints:
+  - type: reading
+    focus: Chronicle description of Sviatoslav's campaigns
+    source: Повість минулих літ (adapted)
+    items: "3 passages"
+
+  - type: quiz
+    focus: Military campaigns chronology and geography
+    items: "12+"
+
+  - type: match-up
+    focus: Enemies of Sviatoslav and outcomes
+    items: "10+"
+
+  - type: essay-response
+    focus: Evaluate Sviatoslav's legacy - conqueror or destroyer?
+    word_target: 250
+    output: Balanced argument with evidence
+
+  - type: group-sort
+    focus: Categorize actions as diplomatic vs. military
+    items: "12+"
+
+  - type: fill-in
+    focus: Famous quotes and their contexts
+    items: "8+"
+
+  - type: discussion
+    focus: Compare Sviatoslav with other medieval conquerors
+    output: Oral or written comparison
+
+prerequisites:
+  - c1-bio-01 (Knyahynia Olha - mother)
+  - Understanding of Kyivan Rus geography
+
+connects_to:
+  - c1-bio-03 (Volodymyr Velykyi - son)
+  - c1-bio-04 (Yaroslav Mudryi - grandson's era)
+  - c1-bio-06 (Mykhailo Chernihivskyi - later Mongol threat parallel)
+
+naturalness:
+  score: null
+  status: PENDING

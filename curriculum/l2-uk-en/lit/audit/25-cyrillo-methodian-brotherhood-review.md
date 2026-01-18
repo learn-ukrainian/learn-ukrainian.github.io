@@ -1,7 +1,16 @@
 # Audit Report: 25-cyrillo-methodian-brotherhood.md
 **Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 25-cyrillo-methodian-brotherhood.yaml: Schema validation error at key '2': {'title': 'Політична програма', 'type': 'fill-in', 'items': [{'sentence': 'Братство хотіло скасувати ___ у всіх слов’янських землях.', 'answer': 'кріпацтво', 'options': ['кріпацтво', 'податки', 'армію', 'цензуру']}, {'sentence': 'Україна мала стати центром слов’янської ___.', 'answer': 'федерації', 'options': ['федерації', 'імперії', 'колонії', 'республіки']}, {'sentence': 'Головними принципами були християнська ___ і свобода.', 'answer': 'мораль', 'options': ['мораль', 'війна', 'культура', 'освіта']}, {'sentence': 'Шевченко був більш ___, ніж Костомаров.', 'answer': 'радикальним', 'options': ['радикальним', 'поміркованим', 'обережним', 'сміливим']}, {'sentence': 'Братство проіснувало лише ___ перш ніж його викрили.', 'answer': '14 місяців', 'options': ['14 місяців', '10 років', '5 років', '2 роки']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 3429/3500 (71 short)
@@ -14,7 +23,7 @@
 - **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (history))
 - **Richness:** ✅ 99% (history)

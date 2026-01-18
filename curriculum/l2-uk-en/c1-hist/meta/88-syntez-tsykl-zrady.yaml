@@ -1,0 +1,137 @@
+# C1-HIST Module 88: Синтез — Чому цикл повторюється?
+# Status: SPEC (ready for content development)
+
+id: c1-hist-88
+title: "Синтез: Чому цикл повторюється?"
+slug: syntez-tsykl-zrady
+module_type: synthesis
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Російський імперіалізм (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+    type: reference
+    notes: Imperial patterns
+  - name: Українсько-російські відносини (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
+    type: reference
+    notes: Bilateral history
+
+content_outline:
+  - section: Вступ — Паттерн через віки
+    words: 400
+    points:
+      - Огляд модулів 81-87
+      - Шість циклів — одна структура
+      - Чому повторюється
+      - Мета синтезу
+
+  - section: Порівняльна таблиця циклів
+    words: 600
+    points:
+      - Хмельницький → Мазепа → Розумовський
+      - Українізація → Шелест → Янукович
+      - Фази — скрізь однакові
+      - Відмінності — масштаб, методи
+
+  - section: Чому цикл працює
+    words: 700
+    points:
+      - Асиметрія сили
+      - Надія на «цього разу інакше»
+      - Короткострокові інтереси еліт
+      - Відсутність альтернатив (здавалося)
+      - Недостатня пам'ять
+
+  - section: Чому цикл ламається (2014, 2022)
+    words: 600
+    points:
+      - Громадянське суспільство — новий актор
+      - Інформаційна доступність
+      - Європейська альтернатива
+      - Національна свідомість — масова
+      - Рішення приймає народ, не еліта
+
+  - section: Чи зламався цикл назавжди?
+    words: 500
+    points:
+      - 2022 — унікальна ситуація
+      - Загрози — післявоєнна втома
+      - Західна залежність — новий цикл?
+      - Як запобігти
+
+  - section: Уроки для майбутнього
+    words: 400
+    points:
+      - Розпізнавати фази циклу
+      - Не вірити обіцянкам
+      - Шукати альтернативи
+      - Пам'ятати історію
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Цикл — не фатальний
+      - 2014-2022 — можливий вихід
+      - Перехід до поворотних точок
+
+vocabulary_hints:
+  required:
+    - синтез (synthesis)
+    - цикл (cycle)
+    - паттерн (pattern)
+    - кооптація (co-optation)
+    - фаза (phase)
+    - асиметрія (asymmetry)
+    - громадянське суспільство (civil society)
+    - національна свідомість (national consciousness)
+    - альтернатива (alternative)
+    - урок (lesson)
+  recommended:
+    - структурний (structural)
+    - циклічний (cyclical)
+    - імперський механізм (imperial mechanism)
+    - точка зламу (breaking point)
+    - запобігання (prevention)
+
+activity_hints:
+  - type: synthesis
+    focus: Create master cycle comparison diagram
+    output: Comprehensive cycle map
+
+  - type: pattern-analysis
+    focus: What's constant, what changes across cycles
+    output: Pattern identification
+
+  - type: breaking-point-analysis
+    focus: Why 2014 and 2022 broke the cycle
+    output: Breaking point analysis
+
+  - type: future-scenarios
+    focus: Could cycle restart? How to prevent?
+    output: Scenario analysis
+
+  - type: essay-response
+    focus: "Як Україна може назавжди вийти з циклу кооптації?"
+    word_target: 500
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-81-87 (All cycle modules)
+
+connects_to:
+  - c1-hist-89 (Crossroads — Pereiaslav alternatives)
+  - c1-hist-131 (Why 2022 worked)
+
+# === IMPERIAL MECHANISMS PHASE COMPLETION NOTE ===
+# This module concludes Phase C1H.12
+# Students now have:
+# - Co-optation cycle theoretical framework
+# - Six historical cycle examples
+# - Pattern recognition skills
+# - Understanding of cycle-breaking factors
+#
+# Ready for Phase C1H.13: Crossroads

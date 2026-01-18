@@ -1,4 +1,16 @@
+- type: reading
+  id: reading-zapovit
+  title: "Читальна Зала: Заповіт"
+  source:
+    title: "Заповіт (повний текст)"
+    url: "http://litopys.org.ua/shevchenko/zapovit.htm"
+    author: "Тарас Шевченко"
+  items:
+    - question: "Прочитайте вірш. Знайдіть усі дієслова наказового способу (Imperative)."
+      type: "open"
+
 - type: quiz
+  id: quiz-zapovit
   title: 'Розуміння тексту'
   items:
     - question: 'Де поет просить його поховати?'

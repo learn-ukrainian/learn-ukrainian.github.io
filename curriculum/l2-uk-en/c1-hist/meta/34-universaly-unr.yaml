@@ -1,0 +1,132 @@
+# C1-HIST Module 34: Універсали УНР
+# Status: SPEC (ready for content development)
+
+id: c1-hist-34
+title: Універсали УНР
+slug: universaly-unr
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Універсали Центральної Ради (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
+    type: reference
+    notes: Overview of four Universals
+  - name: Перший універсал
+    url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
+    type: primary
+    notes: First Universal text
+  - name: Четвертий універсал
+    url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
+    type: primary
+    notes: Fourth Universal text
+
+content_outline:
+  - section: Вступ — Чотири кроки до незалежності
+    words: 400
+    points:
+      - 1917-1918 — революційний рік
+      - Чотири універсали Центральної Ради
+      - Від автономії до незалежності
+      - Чому така еволюція
+
+  - section: Історичний контекст
+    words: 500
+    points:
+      - Лютнева революція 1917
+      - Центральна Рада — як виникла
+      - Грушевський — лідер
+      - Відносини з Тимчасовим урядом
+
+  - section: Перший універсал (10 червня 1917)
+    words: 600
+    points:
+      - Текст (з глосами)
+      - Автономія — не незалежність
+      - Чому ще не сепарація
+      - Реакція Петрограда
+
+  - section: Від другого до третього
+    words: 500
+    points:
+      - Другий універсал — компроміс
+      - Жовтневий переворот
+      - Третій універсал — УНР проголошено
+      - Федерація vs. незалежність
+
+  - section: Четвертий універсал (22 січня 1918)
+    words: 700
+    points:
+      - Текст (з глосами)
+      - "Самостійна, ні від кого незалежна"
+      - Чому саме тоді
+      - Брестський мир — контекст
+      - Соціальні реформи в універсалі
+
+  - section: Порівняльний аналіз
+    words: 500
+    points:
+      - Еволюція риторики
+      - Від "народ український" до "нація"
+      - Таблиця — чотири універсали
+      - Історична логіка
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Універсали як свідчення
+      - Чому не вдалося?
+      - Зв'язок із 1991
+
+vocabulary_hints:
+  required:
+    - універсал (universal/proclamation)
+    - Центральна Рада (Central Rada)
+    - автономія (autonomy)
+    - незалежність (independence)
+    - федерація (federation)
+    - самостійність (sovereignty)
+    - проголошення (proclamation)
+    - соціальні реформи (social reforms)
+    - еволюція (evolution)
+    - Брестський мир (Brest Peace)
+  recommended:
+    - тимчасовий уряд (Provisional Government)
+    - жовтневий переворот (October coup)
+    - сепаратизм (separatism)
+    - делегація (delegation)
+    - ратифікація (ratification)
+
+activity_hints:
+  - type: reading
+    focus: First and Fourth Universals side by side
+    source: wikisource
+
+  - type: evolution-analysis
+    focus: Track language change across four universals
+    output: Evolution table
+
+  - type: comparative-study
+    focus: Compare UNR Universals with Khmelnytsky's Universals
+    output: Historical parallel analysis
+
+  - type: counterfactual
+    focus: What if independence declared earlier/later?
+    output: Counterfactual analysis
+
+  - type: essay-response
+    focus: "Чому Центральна Рада так повільно йшла до незалежності?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-23 (Khmelnytsky's Universals — parallel)
+  - c1-hist-33 (Franko's essays)
+
+connects_to:
+  - c1-hist-35 (Act of Unity 1919)
+  - c1-hist-91 (UNR strategic mistakes)
+  - c1-hist-95 (West and 1918)

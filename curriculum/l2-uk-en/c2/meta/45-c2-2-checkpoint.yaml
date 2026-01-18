@@ -1,0 +1,138 @@
+# C2 Module 45: C2.2 Checkpoint
+# Status: SPEC (ready for content development)
+
+id: c2-45
+title: Контрольна точка C2.2 — Літературна майстерність
+slug: c2-2-checkpoint
+module_type: checkpoint
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: CEFR C2 Literary Competence Descriptors
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: C2 literature-related can-do statements
+  - name: Ukrainian State Standard 2024 — C2 Level
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official C2 proficiency requirements for literary competence
+  - name: Національна академія наук України — літературознавство
+    url: https://www.nas.gov.ua/
+    type: reference
+    notes: Academic standards for literary scholarship assessment
+
+content_outline:
+  - section: Вступ — Структура контрольної оцінки
+    words: 300
+    points:
+      - Огляд компетенцій, що оцінюються
+      - Формат та критерії оцінювання
+      - Очікування від кожного розділу
+
+  - section: Частина I — Літературна теорія (М26-27)
+    words: 700
+    points:
+      - Теоретичні концепції та їх застосування
+      - Наратологічний аналіз
+      - Ідентифікація літературознавчих підходів
+
+  - section: Частина II — Поетика та стилістика (М28-29)
+    words: 700
+    points:
+      - Версифікаційний аналіз
+      - Прозова поетика
+      - Стилістичні прийоми та їх ефект
+
+  - section: Частина III — Інтертекстуальність та критика (М30-32)
+    words: 700
+    points:
+      - Розпізнавання інтертекстуальних зв'язків
+      - Критичний аналіз літературного твору
+      - Написання літературознавчого есе
+
+  - section: Частина IV — Переклад та творче письмо (М33-37)
+    words: 700
+    points:
+      - Перекладацький аналіз та практика
+      - Оригінальне творче письмо
+      - Демонстрація індивідуального голосу
+
+  - section: Частина V — Сучасна література (М38-41)
+    words: 600
+    points:
+      - Орієнтація в сучасному літературному процесі
+      - Знання літературних премій та канону
+      - Участь у літературній дискусії
+
+  - section: Підсумок та зворотний зв'язок
+    words: 300
+    points:
+      - Загальна оцінка та інтерпретація результатів
+      - Рекомендації для подальшого розвитку
+      - Перехід до Phase C2.3
+
+vocabulary_hints:
+  required:
+    - контрольна точка (checkpoint)
+    - оцінювання (assessment)
+    - критерій (criterion)
+    - компетенція (competency)
+    - рубрика (rubric)
+    - стандарт (standard)
+    - рівень володіння (proficiency level)
+    - зворотний зв'язок (feedback)
+    - результат (result)
+    - інтерпретація (interpretation)
+  recommended:
+    - діагностика (diagnostics)
+    - валідація (validation)
+    - еталонний (benchmark)
+    - підсумковий (summative)
+    - формативний (formative)
+
+activity_hints:
+  - type: quiz
+    focus: Літературна теорія та наратологія — тестування знань
+    items: "25+"
+
+  - type: critical-analysis
+    focus: Комплексний аналіз літературного твору
+    output: Есе з рубрикою оцінювання та моделлю відповіді
+
+  - type: essay-response
+    focus: Літературознавчий есей на задану тему
+    word_target: 800
+    output: Публікаційної якості есе з моделлю
+
+  - type: essay-response
+    focus: Переклад поетичного уривка з коментарем
+    word_target: 400
+    output: Переклад + перекладознавчий аналіз
+
+  - type: essay-response
+    focus: Оригінальний творчий текст (поезія або проза)
+    word_target: 500
+    output: Творчий текст з авторською рефлексією
+
+  - type: comparative-study
+    focus: Порівняльний аналіз двох літературних творів
+    output: Есе з інтертекстуальним фокусом
+
+  - type: quiz
+    focus: Сучасна українська література — премії, автори, тенденції
+    items: "15+"
+
+prerequisites:
+  - M26-44 (All C2.2 Literary Mastery modules including Review)
+  - M42-43 (Practice modules — portfolios completed)
+
+connects_to:
+  - c2-46 (Professional Language Overview — C2.3 begins)
+  - c2-25 (C2.1 Final Checkpoint — for cross-reference)
+
+naturalness:
+  score: null
+  status: PENDING

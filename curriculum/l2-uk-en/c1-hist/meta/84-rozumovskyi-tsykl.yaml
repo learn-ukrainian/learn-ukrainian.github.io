@@ -1,0 +1,129 @@
+# C1-HIST Module 84: Розумовський цикл — Останній гетьман
+# Status: SPEC (ready for content development)
+
+id: c1-hist-84
+title: "Розумовський цикл: Останній гетьман"
+slug: rozumovskyi-tsykl
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Кирило Розумовський (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Кирило_Розумовський
+    type: reference
+    notes: Biography
+  - name: Ліквідація Гетьманщини (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини
+    type: reference
+    notes: End of Hetmanate
+  - name: Олексій Розумовський (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Олексій_Розумовський
+    type: reference
+    notes: Brother context
+
+content_outline:
+  - section: Вступ — Фаворит, що скасував себе
+    words: 400
+    points:
+      - Розумовський — брат фаворита
+      - Гетьман з ласки цариці
+      - Як він завершив гетьманат
+      - Структура модуля
+
+  - section: Фаза 1 — Кооптація через родину
+    words: 700
+    points:
+      - Олексій Розумовський — коханець Єлизавети
+      - Кирило — президент Академії в 18 років
+      - Гетьманство — 1750
+      - Найвищий статус українця в імперії
+
+  - section: Фаза 2 — Ілюзія автономії
+    words: 600
+    points:
+      - Реформи гетьмана
+      - Батурин — нова столиця
+      - Культурне життя
+      - Але під контролем Петербурга
+
+  - section: Фаза 3 — Спроба спадковості
+    words: 500
+    points:
+      - Клопотання про спадкове гетьманство
+      - Катерина II — відмова
+      - «Що за гетьмани?»
+      - Виклик до Петербурга
+
+  - section: Фаза 4 — Добровільна (?) капітуляція
+    words: 600
+    points:
+      - 1764 — зречення
+      - Що отримав натомість
+      - Компенсація чи примус
+      - Кінець Гетьманщини
+
+  - section: Аналіз — чому погодився
+    words: 400
+    points:
+      - Особиста безпека
+      - Родинні інтереси
+      - Відсутність альтернатив
+      - Урок для еліт
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Розумовський — кооптована еліта
+      - Цикл завершився ліквідацією
+      - Перехід до радянського періоду
+
+vocabulary_hints:
+  required:
+    - Розумовський (Rozumovsky)
+    - останній гетьман (last hetman)
+    - фаворит (favorite)
+    - ліквідація (liquidation)
+    - зречення (abdication)
+    - спадковість (hereditary rule)
+    - Гетьманщина (Hetmanate)
+    - кооптація (co-optation)
+    - компенсація (compensation)
+    - капітуляція (capitulation)
+  recommended:
+    - Малоросійська колегія (Little Russia Collegium)
+    - губернія (governorate)
+    - інкорпорація (incorporation)
+    - імперська інтеграція (imperial integration)
+    - статус (status)
+
+activity_hints:
+  - type: cycle-mapping
+    focus: Map Rozumovsky through co-optation cycle
+    output: Cycle diagram
+
+  - type: family-analysis
+    focus: Rozumovsky brothers — different paths
+    output: Family dynamics study
+
+  - type: decision-analysis
+    focus: 1764 — what were Rozumovsky's real options?
+    output: Decision analysis
+
+  - type: comparative-study
+    focus: Compare Mazepa (resistance) vs. Rozumovsky (capitulation)
+    output: Strategy comparison
+
+  - type: essay-response
+    focus: "Чи міг Розумовський врятувати Гетьманщину?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-83 (Mazepa cycle)
+
+connects_to:
+  - c1-hist-85 (Soviet Ukrainization cycle)
+  - c1-hist-88 (Why cycle repeats)

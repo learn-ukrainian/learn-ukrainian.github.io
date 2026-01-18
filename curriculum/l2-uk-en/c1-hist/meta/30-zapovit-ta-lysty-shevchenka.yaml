@@ -1,0 +1,131 @@
+# C1-HIST Module 30: «Заповіт» і листи Шевченка
+# Status: SPEC (ready for content development)
+
+id: c1-hist-30
+title: "«Заповіт» і листи Шевченка"
+slug: zapovit-ta-lysty-shevchenka
+module_type: primary-source
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Заповіт (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
+    type: reference
+    notes: Poem overview
+  - name: Тарас Шевченко (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+    type: reference
+    notes: Biography
+  - name: Листування Шевченка
+    url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
+    type: primary
+    notes: Letters collection
+
+content_outline:
+  - section: Вступ — Шевченко як джерело
+    words: 400
+    points:
+      - Поезія vs. історичне джерело
+      - Листи — приватний голос
+      - "Заповіт" — політичний маніфест
+      - Як читати Шевченка критично
+
+  - section: «Заповіт» — аналіз тексту
+    words: 700
+    points:
+      - Текст із коментарями
+      - "Поховайте та вставайте"
+      - "Кайдани порвіте"
+      - Революційний заклик
+      - Чому став гімном
+
+  - section: Контекст написання
+    words: 500
+    points:
+      - 1845 рік — де, коли
+      - Особисті обставини
+      - Політичний клімат
+      - Чому саме цей текст
+
+  - section: Листи Шевченка
+    words: 700
+    points:
+      - До кого писав
+      - Листи з заслання — цензура
+      - Приватні думки
+      - Мова листів — українська vs. російська
+      - Що дізнаємося про людину
+
+  - section: Фрагмент — Лист із заслання
+    words: 500
+    points:
+      - Текст (з глосами)
+      - Умови заслання
+      - Заборона писати і малювати
+      - Внутрішній стан
+
+  - section: Шевченко в історичній пам'яті
+    words: 400
+    points:
+      - Культ Шевченка — як формувався
+      - Різні інтерпретації
+      - Радянський Шевченко vs. національний
+      - Критичний погляд сьогодні
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Поет як джерело
+      - Від особистого до політичного
+      - Зв'язок із культом і пам'яттю
+
+vocabulary_hints:
+  required:
+    - заповіт (testament)
+    - заслання (exile)
+    - кайдани (chains/shackles)
+    - революційний (revolutionary)
+    - культ особистості (cult of personality)
+    - цензура (censorship)
+    - приватний (private)
+    - політичний маніфест (political manifesto)
+    - інтерпретація (interpretation)
+    - пам'ять (memory)
+  recommended:
+    - мартирологія (martyrology)
+    - канонізація (canonization)
+    - міф (myth)
+    - символ (symbol)
+    - ідол (idol)
+
+activity_hints:
+  - type: close-reading
+    focus: Line-by-line analysis of "Zapovit"
+    output: Annotated text
+
+  - type: reading
+    focus: Letter from exile with glosses
+    source: wikisource
+
+  - type: comparative-study
+    focus: Compare "Zapovit" in Soviet vs. diaspora interpretations
+    output: Interpretation comparison
+
+  - type: source-evaluation
+    focus: What can letters tell us that poems cannot?
+    output: Source type comparison
+
+  - type: essay-response
+    focus: "Чи можна використовувати поезію як історичне джерело?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-29 (Kyrylo-Methodian Brotherhood)
+
+connects_to:
+  - c1-hist-10 (Historical memory and politics)
+  - c1-hist-122 (Cultural revival cycles)

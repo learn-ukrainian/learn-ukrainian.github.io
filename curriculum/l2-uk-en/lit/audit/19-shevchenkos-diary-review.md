@@ -1,21 +1,30 @@
 # Audit Report: 19-shevchenkos-diary.md
 **Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 19-shevchenkos-diary.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Шевченко і Щепкін', 'resource': {'type': 'biography', 'url': 'https://litgazeta.com.ua/articles/taras-shevchenko-i-myhajlo-shhepkin-druzhba-dvoh-geniyiv/', 'title': 'Тарас Шевченко і Михайло Щепкін'}, 'tasks': ['Чому театр був таким важливим для Шевченка?', 'Як він описує гру Щепкіна?']} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 3441/3500 (59 short)
-- **Activities:** ✅ 3/3
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 2/2 types
+- **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (3 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (literature))
 - **Richness:** ✅ 92% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

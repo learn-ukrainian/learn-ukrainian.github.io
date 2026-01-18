@@ -1,0 +1,136 @@
+# C1-HIST Module 56: Механізм знищення — 1930-1937
+# Status: SPEC (ready for content development)
+
+id: c1-hist-56
+title: "Механізм знищення: 1930-1937"
+slug: mekhanizm-znyshchennia
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Великий терор в Україні
+    url: https://uk.wikipedia.org/wiki/Великий_терор
+    type: reference
+    notes: Great Terror overview
+  - name: Сталінські репресії
+    url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
+    type: reference
+    notes: Ukrainian repressions
+  - name: Список жертв Розстріляного відродження
+    url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+    type: reference
+    notes: Victims list
+
+content_outline:
+  - section: Вступ — Як знищували культуру
+    words: 400
+    points:
+      - Від дискусій до репресій
+      - Механізм — як працював
+      - Чому культура — ціль
+      - Структура модуля
+
+  - section: Хронологія знищення
+    words: 600
+    points:
+      - 1930-1933 — перша хвиля
+      - Процес СВУ (1930)
+      - 1934-1936 — затишшя?
+      - 1937-1938 — Великий терор
+      - Масштаби — скільки загинуло
+
+  - section: Етапи знищення особистості
+    words: 700
+    points:
+      - Критика в пресі
+      - Вимога самокритики
+      - Виключення з організацій
+      - Арешт
+      - Табір або розстріл
+      - Паттерн — як повторювався
+
+  - section: Звинувачення — словник терору
+    words: 600
+    points:
+      - "Націоналізм" — що означало
+      - "Формалізм" — проти митців
+      - "Шпигунство" — абсурдні звинувачення
+      - "Троцькізм"
+      - Як звинувачення конструювалися
+
+  - section: Долі — приклади
+    words: 500
+    points:
+      - Курбас — розстріл
+      - Хвильовий — самогубство
+      - Куліш — розстріл
+      - Зеров — розстріл
+      - Хто вижив і як
+
+  - section: Чому знищили
+    words: 400
+    points:
+      - Національна культура = загроза
+      - "Українізація" — помилка для виправлення
+      - Паралель із Голодомором
+      - Культурний геноцид?
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Механізм як система
+      - Від індивідуальних трагедій до патерну
+      - Підготовка до синтезу
+
+vocabulary_hints:
+  required:
+    - механізм (mechanism)
+    - знищення (destruction)
+    - репресія (repression)
+    - терор (terror)
+    - арешт (arrest)
+    - розстріл (execution)
+    - табір (camp)
+    - звинувачення (accusation)
+    - самокритика (self-criticism)
+    - Великий терор (Great Terror)
+  recommended:
+    - виключення (expulsion)
+    - справа (case/file)
+    - допит (interrogation)
+    - вирок (sentence)
+    - реабілітація (rehabilitation)
+
+activity_hints:
+  - type: pattern-analysis
+    focus: Map the stages of persecution
+    output: Persecution flowchart
+
+  - type: vocabulary-study
+    focus: Analyze terror vocabulary — how accusations work
+    output: Terminology deconstruction
+
+  - type: statistical-analysis
+    focus: Numbers of repressions by year/type
+    output: Statistical overview
+
+  - type: biography-comparison
+    focus: Compare fates of 5 cultural figures
+    output: Fate comparison table
+
+  - type: essay-response
+    focus: "Чи було знищення Розстріляного відродження культурним геноцидом?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-54-55 (Khvylovyi and Kurbas)
+  - c1-hist-52 (Executed Renaissance context)
+
+connects_to:
+  - c1-hist-57 (Cultural genocide synthesis)
+  - c1-hist-85 (Soviet Ukrainization cycle)
+  - c1-hist-46-47 (Holodomor mechanisms — parallel)

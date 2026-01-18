@@ -1,0 +1,129 @@
+# C1-HIST Module 96: 1945 — Ялта і зрада
+# Status: SPEC (ready for content development)
+
+id: c1-hist-96
+title: "1945: Ялта і зрада"
+slug: zakhid-1945
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ялтинська конференція (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
+    type: reference
+    notes: Yalta conference
+  - name: Примусова репатріація (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
+    type: reference
+    notes: Forced repatriation
+  - name: Операція «Кіл Хаул» (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
+    type: reference
+    notes: Operation Keelhaul
+
+content_outline:
+  - section: Вступ — Друга зрада
+    words: 400
+    points:
+      - 1945 — новий світовий порядок
+      - Україна — знову забута
+      - Примусова репатріація — злочин
+      - Структура модуля
+
+  - section: Ялтинська конференція
+    words: 600
+    points:
+      - Велика трійка
+      - Поділ Європи
+      - Україна — в радянській сфері
+      - Жодних питань
+
+  - section: Західна Україна
+    words: 600
+    points:
+      - Галичина, Волинь — у СРСР
+      - Закарпаття — «добровільно»
+      - Польща отримує компенсацію
+      - Примусове переселення
+
+  - section: Примусова репатріація
+    words: 700
+    points:
+      - ДіПі — хто хотів повернутися
+      - Операція Keelhaul
+      - Самогубства, опір
+      - Західні союзники — співучасники
+
+  - section: Чому погодились
+    words: 500
+    points:
+      - Сталін — союзник
+      - Реальполітик — цинічний
+      - Незнання чи байдужість
+      - Масштаб злочину
+
+  - section: Наслідки для України
+    words: 400
+    points:
+      - Західна Україна — радянізація
+      - ДіПі — врятувалися хто зміг
+      - Травма і пам'ять
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Ялта — зрада заради миру
+      - Паттерн продовжується
+      - Перехід до «Курча по-київськи»
+
+vocabulary_hints:
+  required:
+    - Ялта (Yalta)
+    - конференція (conference)
+    - примусова репатріація (forced repatriation)
+    - ДіПі (DP - displaced persons)
+    - зрада (betrayal)
+    - сфера впливу (sphere of influence)
+    - «Велика трійка» (Big Three)
+    - реальполітик (realpolitik)
+    - співучасник (accomplice)
+    - радянізація (Sovietization)
+  recommended:
+    - операція Keelhaul (Operation Keelhaul)
+    - лінія Керзона (Curzon Line)
+    - примусове переселення (forced resettlement)
+    - табір ДіПі (DP camp)
+    - цинізм (cynicism)
+
+activity_hints:
+  - type: conference-analysis
+    focus: What was decided at Yalta about Ukraine?
+    output: Yalta decisions analysis
+
+  - type: moral-analysis
+    focus: Forced repatriation — Western responsibility
+    output: Ethical assessment
+
+  - type: testimony-study
+    focus: DP experiences with repatriation threat
+    output: Testimony analysis
+
+  - type: comparative-study
+    focus: 1918 vs. 1945 — patterns of Western betrayal
+    output: Pattern comparison
+
+  - type: essay-response
+    focus: "Чи мав Захід моральне право видавати біженців СРСР?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-95 (1918 — Entente betrayal)
+  - c1-hist-66 (DPs — third wave)
+
+connects_to:
+  - c1-hist-97 (Chicken Kyiv speech)
+  - c1-hist-102 (2022 — paradigm shift?)

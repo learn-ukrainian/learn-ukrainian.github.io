@@ -1,5 +1,6 @@
 - type: essay-response
   title: 'Есе-Роздум: Self-Made Man XIX Століття'
+  source_reading: "reading-shevchenko"
   prompt: |
     Напишіть есе (350-500 слів) на тему: «Тарас Шевченко як приклад Self-Made Man».
 
@@ -29,6 +30,7 @@
       points: 30
 - type: comparative-study
   title: 'Порівняння: Кріпак і Дворянин'
+  source_reading: "reading-shevchenko"
   items_to_compare:
     - Шевченко (Кріпак)
     - Квітка-Основ'яненко (Дворянин)
@@ -49,6 +51,7 @@
     3. **Народ:** Для Квітки народ — це об'єкт опіки, для Шевченка народ — це він сам.
 - type: critical-analysis
   title: 'Аналіз Картини: Портрет Жуковського'
+  source_reading: "reading-shevchenko"
   target_text: "Портрет Василя Жуковського роботи Карла Брюллова (1838) — ціна волі Шевченка (2500 рублів)."
   questions:
     - Чому саме портрет став валютою викупу?
@@ -63,10 +66,11 @@
     - Роль мистецтва.
     - Соціальна несправедливість.
 - type: reading
+  id: reading-shevchenko
   title: 'Читальна Зала: Автобіографія'
   resource:
     type: primary_source
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=1566
+    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
     title: Тарас Шевченко. Автобіографія (Лист до редактора)
   tasks:
     - Знайдіть опис дитинства.

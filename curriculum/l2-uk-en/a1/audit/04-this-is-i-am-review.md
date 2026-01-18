@@ -4,7 +4,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1592/300
+- **Words:** ✅ 1418/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -16,7 +16,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 12.9% (target 10-25% (M04))
+- **Immersion:** 🇺🇦 14.1% (target 10-25% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -24,10 +24,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 146 | Included in Core |
-| **Presentation** | ✅ | 788 | Included in Core |
-| **Practice** | ⚪️ | 214 | Skipped |
-| **Production** | ➖ | 126 | Excluded Type |
-| **Cultural Insight** | ✅ | 172 | Included in Core |
-| **Summary** | ✅ | 127 | Included in Core |
+| **Warm-up** | ✅ | 135 | Included in Core |
+| **Presentation** | ✅ | 672 | Included in Core |
+| **Practice** | ⚪️ | 180 | Skipped |
+| **Production** | ➖ | 119 | Excluded Type |
+| **Cultural Insight** | ✅ | 166 | Included in Core |
+| **Підсумок** | ✅ | 127 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

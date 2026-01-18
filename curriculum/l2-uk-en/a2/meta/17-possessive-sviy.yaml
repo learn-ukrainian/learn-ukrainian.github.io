@@ -1,29 +1,154 @@
-module: a2-17
+# A2 Module 17: Possessive Sviy
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-17
 title: Possessive Sviy
 subtitle: The Reflexive Possessive Pronoun
+slug: 17-possessive-sviy
+module_type: grammar
+word_target: 2800
+immersion: "55-65% Ukrainian"
+
 version: '1.0'
-phase: A2.1
+phase: A2.2
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- pronouns
-- possessive
-- reflexive
+  - grammar
+  - pronouns
+  - possessive
+  - reflexive
+
 grammar:
-- свій vs мій/твій/його
-- declension of свій
-- subject-object agreement
-- avoiding ambiguity
+  - свій vs мій/твій/його
+  - declension of свій
+  - subject-object agreement
+  - avoiding ambiguity
+
 objectives:
-- Learner can correctly use the reflexive possessive pronoun 'свій'
-- Learner can distinguish between 'свій' and other possessives
-- Learner can avoid ambiguity when referring to the subject's possession
-- Learner can decline 'свій' in common cases
-vocabulary_count: 25
-slug: 17-possessive-sviy
-focus: grammar
+  - Learner can correctly use the reflexive possessive pronoun 'свій'
+  - Learner can distinguish between 'свій' and other possessives
+  - Learner can avoid ambiguity when referring to the subject's possession
+  - Learner can decline 'свій' in common cases
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Pronouns
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Reflexive possessive pronoun requirements
+  - name: Ukrainian Pronoun Reference
+    url: https://uk.wikipedia.org/wiki/Займенник
+    type: reference
+    notes: Complete свій paradigm
+
+content_outline:
+  - section: What is свій?
+    words: 400
+    points:
+      - Reflexive possessive pronoun
+      - When possessor = subject
+      - Unique Slavic concept
+
+  - section: свій vs його/її Rule
+    words: 600
+    points:
+      - Він любить свою маму (his OWN mom)
+      - Він любить його маму (someone else's mom)
+      - Вона читає свою книгу (her OWN book)
+      - Вона читає її книгу (someone else's book)
+
+  - section: Forms of свій
+    words: 400
+    points:
+      - свій (m), своя (f), своє (n), свої (pl)
+      - Declines like мій
+      - Agreement with possessed noun
+
+  - section: Common Usage Patterns
+    words: 500
+    points:
+      - Я беру свою книгу (I take my own book)
+      - Ми любимо свою країну (We love our own country)
+      - Subject determines свій usage
+
+  - section: Ambiguity Resolution
+    words: 500
+    points:
+      - Why свій prevents confusion
+      - Contrastive pairs
+      - When to use which form
+
+  - section: Practice Scenarios
+    words: 400
+    points:
+      - Whose car is it?
+      - Family relationships
+      - Error correction drills
+
+vocabulary_hints:
+  required:
+    - свій (one's own - m)
+    - своя (one's own - f)
+    - своє (one's own - n)
+    - свої (one's own - pl)
+    - власний (own)
+    - особистий (personal)
+    - чужий (someone else's)
+    - його (his)
+    - її (her)
+    - їхній (their)
+    - мій (my)
+    - твій (your)
+    - наш (our)
+    - ваш (your pl./formal)
+    - ділитися (to share)
+  recommended:
+    - власне (precisely)
+    - самостійно (independently)
+    - спільний (shared/common)
+    - належати (to belong)
+    - володіти (to own)
+
+activity_hints:
+  - type: quiz
+    focus: Choice - свій or його?
+    items: "15+"
+
+  - type: quiz
+    focus: Diagram - whose car is it?
+    items: "10+"
+
+  - type: fill-in
+    focus: Translation - contrastive sentences
+    items: "12+"
+
+  - type: fill-in
+    focus: Complete sentences with свій forms
+    items: "12+"
+
+  - type: quiz
+    focus: Identify correct possessive
+    items: "10+"
+
+  - type: dialogue
+    focus: Family and possessions conversations
+    items: "4+"
+
+prerequisites:
+  - A1 possessive pronouns
+  - a2-01 (Dative pronouns)
+  - Basic sentence structure
+
+connects_to:
+  - a2-18 (Bigger Better Stronger)
+  - a2-20 (Preferences and Choices)
+  - a2-25 (Checkpoint)
+
 naturalness:
   score: 8
   status: PASS

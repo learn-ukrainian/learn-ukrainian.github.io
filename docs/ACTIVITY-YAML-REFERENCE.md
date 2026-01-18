@@ -438,19 +438,87 @@ Seminar tracks use academic-style activities for deeper engagement with literary
 
 ### reading (Required for seminar tracks)
 
+Two formats supported: **inline text** (primary source in YAML) or **external resource** (link to external URL).
+
+#### Format 1: Inline Primary Source Text
+
+Use when the text is short enough to include directly:
+
 ```yaml
 - type: reading
   id: reading-01                    # REQUIRED: unique ID for linking
   title: 'Джерело: Заповіт'
-  source: 'Тарас Шевченко (1845)'   # Optional: attribution
+  source: 'Тарас Шевченко (1845)'   # Attribution (author, year)
   text: |
     Як умру, то поховайте
     Мене на могилі,
     Серед степу широкого,
     На Вкраїні милій...
+  tasks:                            # Reading comprehension questions
+    - 'Де просить поет поховати його?'
+    - 'Яка емоція переважає в уривку?'
 ```
 
-> **Required field:** `id` must be present and unique within the module for linking to analytical activities.
+#### Format 2: External Resource Link
+
+Use when referring to longer external materials:
+
+```yaml
+- type: reading
+  id: reading-bio
+  title: 'Біографія письменника'
+  resource:
+    type: 'Biography'               # Type label (Biography, Article, etc.)
+    url: 'https://www.ukrlib.com.ua/bio/printit.php?tid=1815'
+    title: 'Іван Нечуй-Левицький. Життя і творчість'
+  tasks:
+    - 'Яким було повсякденне життя письменника в Києві?'
+    - 'Чому сучасники називали його "самітником"?'
+    - 'Які стосунки склалися у нього з "громадами"?'
+```
+
+<critical>
+
+**Field Reference:**
+
+| Field | Format 1 (inline) | Format 2 (external) | Description |
+|-------|-------------------|---------------------|-------------|
+| `id` | REQUIRED | REQUIRED | Unique ID for linking to analytical activities |
+| `title` | REQUIRED | REQUIRED | Display title |
+| `text` | REQUIRED | - | Inline primary source text (Ukrainian) |
+| `source` | Optional | - | Attribution (e.g., "Тарас Шевченко (1845)") |
+| `resource` | - | REQUIRED | External link object |
+| `resource.url` | - | REQUIRED | Full URL to external material |
+| `resource.title` | - | Optional | Display title for the link |
+| `resource.type` | - | Optional | Type label (Biography, Article, etc.) |
+| `tasks` | REQUIRED | REQUIRED | Array of reading comprehension questions |
+
+**Common Mistakes:**
+```yaml
+# ❌ WRONG - duplicate 'title' key
+- type: reading
+  title: 'First title'
+  source: 'UkrLib'          # Wrong: 'source' is for attribution, not website
+  title: 'Second title'     # YAML error: duplicate key
+  instruction: '...'        # Wrong: use 'tasks' array instead
+
+# ❌ WRONG - URL in text field
+- type: reading
+  text: 'Read at: https://example.com/...'  # Wrong: use resource.url
+
+# ✅ CORRECT
+- type: reading
+  id: reading-01
+  title: 'Біографія'
+  resource:
+    url: 'https://example.com/bio'
+    title: 'Біографія письменника'
+  tasks:
+    - 'Question 1?'
+    - 'Question 2?'
+```
+
+</critical>
 
 ### essay-response
 

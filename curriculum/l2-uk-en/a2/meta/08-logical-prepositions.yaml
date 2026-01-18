@@ -1,29 +1,156 @@
-module: a2-08
+# A2 Module 08: Logical Prepositions
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-08
 title: Logical Prepositions
 subtitle: Reasons, Time, and Relationships
+slug: 08-logical-prepositions
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- prepositions
-- logic
+  - grammar
+  - cases
+  - prepositions
+  - logic
+  - abstract
+  - temporal
+
 grammar:
-- prepositions of cause (через)
-- prepositions of purpose (для)
-- prepositions of time (після, до, о)
-- other logical prepositions (про, без, крім)
+  - prepositions of cause (через)
+  - prepositions of purpose (для)
+  - prepositions of time (після, до, о)
+  - other logical prepositions (про, без, крім)
+
 objectives:
-- Learner can use prepositions to express cause and purpose
-- Learner can use prepositions to express time relationships
-- Learner can use logical prepositions correctly with cases
-- Learner can connect ideas using appropriate prepositions
-vocabulary_count: 25
-slug: 08-logical-prepositions
-focus: grammar
+  - Learner can use prepositions to express cause and purpose
+  - Learner can use prepositions to express time relationships
+  - Learner can use logical prepositions correctly with cases
+  - Learner can connect ideas using appropriate prepositions
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Prepositions
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Abstract and temporal preposition requirements
+  - name: Ukrainian Grammar - Prepositions
+    url: https://uk.wikipedia.org/wiki/Прийменник
+    type: reference
+    notes: Full preposition inventory with case government
+
+content_outline:
+  - section: Purpose and Benefit Prepositions
+    words: 500
+    points:
+      - для + Gen for purpose/benefit (для тебе)
+      - заради + Gen for sake of
+      - Difference from instrumental accompaniment
+
+  - section: Absence and Exception
+    words: 400
+    points:
+      - без + Gen for without (без цукру)
+      - крім + Gen for except (крім мене)
+      - замість + Gen for instead of
+
+  - section: Causal Prepositions
+    words: 500
+    points:
+      - через + Acc for because of (через дощ)
+      - завдяки + Dat for thanks to (positive cause)
+      - всупереч + Dat for despite
+
+  - section: About and Concerning
+    words: 400
+    points:
+      - про + Acc for about (про фільм)
+      - щодо + Gen for regarding (formal)
+      - стосовно + Gen for concerning (formal)
+
+  - section: Source and Origin
+    words: 400
+    points:
+      - від + Gen for from person (лист від мами)
+      - з + Gen for from place (з України)
+      - Difference between від and з
+
+  - section: Time Prepositions
+    words: 600
+    points:
+      - о/об + Loc for time (о третій годині)
+      - після + Gen for after (після уроку)
+      - протягом + Gen for during (протягом дня)
+      - до + Gen for before/until
+
+vocabulary_hints:
+  required:
+    - для (for)
+    - без (without)
+    - через (because of/through)
+    - про (about)
+    - від (from person)
+    - з (from place)
+    - о (at time)
+    - після (after)
+    - крім (except)
+    - замість (instead of)
+    - завдяки (thanks to)
+    - всупереч (despite)
+    - протягом (during)
+    - щодо (regarding)
+    - стосовно (concerning)
+  recommended:
+    - заради (for the sake of)
+    - незважаючи на (despite)
+    - внаслідок (as a result of)
+    - по (after/along)
+    - при (at/during)
+
+activity_hints:
+  - type: match-up
+    focus: Preposition to logical function
+    items: "12+"
+
+  - type: fill-in
+    focus: Abstract context sentences
+    items: "12+"
+
+  - type: fill-in
+    focus: Translation - "because of", "instead of", "about"
+    items: "10+"
+
+  - type: quiz
+    focus: Time preposition selection
+    items: "10+"
+
+  - type: quiz
+    focus: Case selection with prepositions
+    items: "12+"
+
+  - type: dialogue
+    focus: Explaining reasons and purposes
+    items: "4+"
+
+prerequisites:
+  - a2-07 (Spatial prepositions)
+  - A1 time expressions
+  - All cases basic knowledge
+
+connects_to:
+  - a2-09 (All Cases Practice)
+  - a2-10 (Post Office & Bank)
+  - a2-11 (Checkpoint - Cases)
+
 naturalness:
   score: 10
   status: PASS

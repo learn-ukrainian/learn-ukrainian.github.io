@@ -1,0 +1,142 @@
+# C2 Module 04: Офіційний стиль Mastery
+# Status: SPEC (ready for content development)
+
+id: c2-04
+title: Офіційний стиль — Юридичні документи
+slug: ofitsiynyi-styl-mastery
+module_type: style
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Кодекс України — Законодавство
+    url: https://zakon.rada.gov.ua/
+    type: primary
+    notes: Official legal document examples
+  - name: Зразки юридичних документів
+    url: https://minjust.gov.ua/
+    type: reference
+    notes: Ministry of Justice document templates
+  - name: Ukrainian State Standard 2024 — Official style
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for official document production
+
+content_outline:
+  - section: Вступ — Офіційний стиль на рівні юриста
+    words: 400
+    points:
+      - Характеристика офіційно-ділового стилю
+      - Правова мова як підстиль
+      - Вимоги до юридичних документів
+
+  - section: Договори та угоди
+    words: 700
+    points:
+      - Структура договору (преамбула, предмет, умови)
+      - Формульні вирази — "Цим засвідчується..."
+      - Права та обов'язки сторін
+      - Санкції та відповідальність
+
+  - section: Процесуальні документи
+    words: 700
+    points:
+      - Позовна заява — структура та мова
+      - Скарга — апеляційна, касаційна
+      - Клопотання та заяви
+      - Судові рішення — структура ознайомлення
+
+  - section: Адміністративні документи
+    words: 600
+    points:
+      - Доручення (power of attorney)
+      - Акти та протоколи
+      - Службові записки
+      - Накази та розпорядження
+
+  - section: Мовні особливості правової мови
+    words: 600
+    points:
+      - Юридична термінологія
+      - Безособові та пасивні конструкції
+      - Умовні речення — "У разі..."
+      - Посилання — "Згідно зі статтею..."
+
+  - section: Редагування юридичних текстів
+    words: 500
+    points:
+      - Типові помилки в юридичних документах
+      - Юридична точність vs зрозумілість
+      - Адаптація міжнародних документів
+      - Переклад правових текстів
+
+  - section: Практикум — Створення документів
+    words: 500
+    points:
+      - Складання простого договору
+      - Написання скарги
+      - Аналіз реального судового рішення
+      - Редагування юридичного тексту
+
+vocabulary_hints:
+  required:
+    - договір (contract)
+    - угода (agreement)
+    - позов (lawsuit/claim)
+    - скарга (complaint)
+    - доручення (power of attorney)
+    - засвідчувати (to certify)
+    - сторона (party)
+    - відповідальність (responsibility/liability)
+    - санкція (sanction)
+    - клопотання (petition/motion)
+  recommended:
+    - преамбула (preamble)
+    - апеляція (appeal)
+    - касація (cassation)
+    - чинний (valid/in force)
+    - уповноважений (authorized)
+
+activity_hints:
+  - type: essay-response
+    focus: Draft a simple rental contract
+    word_target: 400
+    output: Complete contract with all required sections
+
+  - type: fill-in
+    focus: Complete legal document formulas
+    items: "15+"
+
+  - type: quiz
+    focus: Identify correct legal terminology usage
+    items: "15+"
+
+  - type: critical-analysis
+    focus: Analyze a court decision for language features
+    output: Identification of 10+ official style markers
+
+  - type: essay-response
+    focus: Transform an informal agreement into legal language
+    word_target: 350
+    output: Formal document with proper structure
+
+  - type: error-correction
+    focus: Fix errors in legal document drafts
+    items: "10+"
+
+prerequisites:
+  - C1 formal register mastery
+  - Understanding of document types
+  - c2-02 (Euphony in formal prose)
+  - c2-03 (Formal structure from academic style)
+
+connects_to:
+  - c2-11 (Transforming official to journalistic)
+  - c2-61 (Legal Ukrainian specialization)
+  - c2-56 (Professional correspondence)
+
+naturalness:
+  score: null
+  status: PENDING

@@ -1,6 +1,15 @@
-module: b1-25
+# B1 Module 25: Контрольна точка - Дієслова руху
+# Status: SPEC (ready for content development)
+
+id: b1-25
 title: 'Контрольна точка: Дієслова руху'
 subtitle: 'Checkpoint: Motion Verbs'
+slug: 25-checkpoint-motion-verbs
+module_type: checkpoint
+word_target: 2800
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '2.0'
 phase: B1.2 Motion Verbs Checkpoint
 pedagogy: Checkpoint
@@ -8,20 +17,143 @@ focus: checkpoint
 duration: 75
 transliteration: none
 tags:
-- checkpoint
-- integration
-- motion-verbs
+  - checkpoint
+  - integration
+  - motion-verbs
 grammar:
-- Integration of M16-M24
-- Comprehensive review and testing
+  - Integration of M16-M24
+  - Comprehensive review and testing
 objectives:
-- Learner can demonstrate mastery of motion verb pairs
-- Learner can use all directional prefixes correctly
-- Learner can apply figurative motion expressions
-- Learner can integrate motion verbs in complex narratives
-vocabulary_count: 38
-vocab_count: 34
-slug: 25-checkpoint-motion-verbs
+  - Learner can demonstrate mastery of motion verb pairs
+  - Learner can use all directional prefixes correctly
+  - Learner can apply figurative motion expressions
+  - Learner can integrate motion verbs in complex narratives
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Assessment
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official assessment criteria for B1 motion verbs
+  - name: CEFR B1 Descriptors
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: Can-do statements for B1 movement description
+
+content_outline:
+  - section: Вступ — Що ми вивчили
+    words: 300
+    points:
+      - Огляд M16-M24
+      - Структура контрольної точки
+      - Критерії оцінювання
+
+  - section: Діагностичний тест
+    words: 400
+    points:
+      - 25 завдань з усіх тем
+      - Пари дієслів руху
+      - Префікси напрямку
+      - Переносні вирази
+
+  - section: Сортування префіксів
+    words: 400
+    points:
+      - Групування за значенням
+      - Прибуття/вихід/вхід
+      - Перехід/обхід/досягнення
+
+  - section: Опис маршруту
+    words: 500
+    points:
+      - Давання напрямків
+      - Опис подорожі
+      - Використання карти
+
+  - section: Виправлення помилок
+    words: 400
+    points:
+      - 10 типових помилок
+      - Неправильні пари
+      - Неправильні префікси
+
+  - section: Писемне завдання
+    words: 500
+    points:
+      - 100+ слів про подорож
+      - Використання обох видів
+      - Буквальний і переносний рух
+
+  - section: Самооцінювання
+    words: 300
+    points:
+      - Що я вмію
+      - Що треба повторити
+      - Рекомендації для ремедіації
+
+vocabulary_hints:
+  required:
+    - односпрямований (unidirectional)
+    - різноспрямований (multidirectional)
+    - префікс (prefix)
+    - напрямок (direction)
+    - буквальний (literal)
+    - переносний (figurative)
+    - подорож (journey)
+    - маршрут (route)
+    - траєкторія (trajectory)
+    - контрольна точка (checkpoint)
+  recommended:
+    - діагностичний (diagnostic)
+    - оцінювання (assessment)
+    - критерій (criterion)
+    - ремедіація (remediation)
+    - інтеграція (integration)
+
+activity_hints:
+  - type: quiz
+    focus: Diagnostic - 25 items covering all motion concepts
+    items: "25+"
+
+  - type: group-sort
+    focus: Prefix sorting - Group verbs by prefix meaning
+    items: "15+"
+
+  - type: fill-in
+    focus: Direction description - Describe routes using motion verbs
+    items: "12+"
+
+  - type: error-correction
+    focus: 10 common motion verb mistakes
+    items: "10+"
+
+  - type: cloze
+    focus: Travel narrative with motion verb gaps
+    items: "15+"
+
+  - type: match-up
+    focus: Figurative matching - Match idioms to meanings
+    items: "12+"
+
+  - type: transform
+    focus: Verb transformation - Add/change prefixes to change meaning
+    items: "10+"
+
+prerequisites:
+  - b1-16 (Motion verbs full system)
+  - b1-17 (Motion - coming & going)
+  - b1-18 (Motion - passing & crossing)
+  - b1-19 (Motion - starting & returning)
+  - b1-20 (Motion - approaching & departing)
+  - b1-21 (Motion - figurative uses)
+  - b1-22 (Motion full prefix integration)
+  - b1-23 (Motion patterns in other verbs)
+  - b1-24 (Motion practice & integration)
+
+connects_to:
+  - b1-26 (Relative clauses - який review)
+
 naturalness:
   score: 9
   status: PASS

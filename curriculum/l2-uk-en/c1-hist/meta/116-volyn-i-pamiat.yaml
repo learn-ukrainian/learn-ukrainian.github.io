@@ -1,0 +1,127 @@
+# C1-HIST Module 116: Волинь 1943 — Трагедія і контекст
+# Status: SPEC (ready for content development)
+
+id: c1-hist-116
+title: "Волинь 1943: Трагедія і контекст"
+slug: volyn-i-pamiat
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Волинська трагедія (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+    type: reference
+    notes: Volhynia tragedy
+  - name: ОУН-УПА (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+    type: reference
+    notes: UPA context
+  - name: Армія Крайова (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Армія_Крайова
+    type: reference
+    notes: AK context
+
+content_outline:
+  - section: Вступ — Найболючіша тема
+    words: 400
+    points:
+      - Волинь 1943 — незагоєна рана
+      - Не виправдання, а розуміння
+      - Контекст ≠ виправдання
+      - Структура модуля
+
+  - section: Контекст — що передувало
+    words: 700
+    points:
+      - Міжвоєнний період — дискримінація
+      - Пацифікації 1930-х
+      - Нацистська окупація
+      - Голод і насильство з усіх боків
+
+  - section: Акція «Антиполяк»
+    words: 600
+    points:
+      - Рішення ОУН-УПА
+      - Масштаб — цифри
+      - Методи — жорстокість
+      - Чому так — версії
+
+  - section: Польська відповідь
+    words: 500
+    points:
+      - Армія Крайова
+      - Українські жертви
+      - Не лише «одна сторона»
+      - Масштаб відповіді
+
+  - section: Пам'ять і політика
+    words: 600
+    points:
+      - Польська пам'ять — «Wołyń»
+      - Українська пам'ять — контекст
+      - Законодавчі війни
+      - Інструменталізація
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Трагедія — для обох народів
+      - Визнання без релятивізації
+      - Перехід до 2022
+
+vocabulary_hints:
+  required:
+    - Волинська трагедія (Volhynia tragedy)
+    - ОУН-УПА (OUN-UPA)
+    - Армія Крайова (Home Army)
+    - контекст (context)
+    - жертва (victim)
+    - злочин (crime)
+    - пацифікація (pacification)
+    - етнічна чистка (ethnic cleansing)
+    - пам'ять (memory)
+    - примирення (reconciliation)
+  recommended:
+    - «Wołyń» (Wołyń/Volhynia)
+    - геноцид (genocide)
+    - інструменталізація (instrumentalization)
+    - декретизація (decree-based policy)
+    - колабораціонізм (collaboration)
+
+activity_hints:
+  - type: context-analysis
+    focus: What preceded Volhynia 1943
+    output: Contextual timeline
+
+  - type: source-comparison
+    focus: Polish vs Ukrainian sources on Volhynia
+    output: Source comparison
+
+  - type: memory-politics
+    focus: How Volhynia is used politically
+    output: Memory politics analysis
+
+  - type: ethical-analysis
+    focus: Context vs justification — where's the line?
+    output: Ethical framework
+
+  - type: essay-response
+    focus: "Як говорити про Волинь без релятивізації?"
+    word_target: 500
+    model_answer: Required (carefully balanced)
+
+prerequisites:
+  - c1-hist-115 (1918-1920 war and alliance)
+  - c1-hist-74 (Volhynia regional perspective)
+
+connects_to:
+  - c1-hist-117 (2022 breakthrough)
+  - c1-hist-119 (Holocaust in Ukraine)
+
+# NOTE: This is the most sensitive module in the curriculum
+# Balance is critical: acknowledge Ukrainian responsibility
+# without ignoring context or Polish actions
+# Model answer must demonstrate nuanced approach

@@ -1,5 +1,17 @@
+- type: reading
+  id: reading-eneida-war
+  title: 'Іван Котляревський: Енеїда (Війна)'
+  resource:
+    type: 'Module Text'
+    url: 'https://www.ukrlib.com.ua/books/printit.php?tid=1042&page=4'
+    title: 'Іван Котляревський. Енеїда (Частини IV-VI)'
+  tasks:
+    - 'Прочитайте батальні сцени (Частини IV-VI).'
+    - 'Зверніть увагу на опис зброї та смерті.'
+
 - type: essay-response
   title: 'Есе-Роздум: Естетика смішної смерті'
+  source_reading: "reading-eneida-war"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Чому Котляревський перетворює війну на фарс?'
 
@@ -74,18 +86,21 @@
         - text: Посадити в тюрму
           correct: false
       explanation: Іронічний евфемізм для фізичного покарання.
-- type: reading
-  title: 'Першоджерело: Бій Низа та Евріала'
-  resource:
-    type: primary_source
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=1022
-    title: Енеїда. Частина п'ята (Подвиг Низа та Евріала)
-  tasks:
-    - 'Знайдіть цитату, яка пояснює мотивацію героїв: ''Де общеє добро в упадку...'''
-    - Як Котляревський описує смерть героїв? Чи зберігається тут бурлескний тон?
-    - Проаналізуйте роль долі (фортуни) у цьому епізоді.
+    - question: Хто такі рутульці в контексті поеми?
+      options:
+        - text: Вороже військо на чолі з Турном
+          correct: true
+        - text: Союзники Енея з Карфагену
+          correct: false
+        - text: Місцеві селяни, що допомагали козакам
+          correct: false
+        - text: Римські легіонери
+          correct: false
+      explanation: Рутульці — це основні супротивники троянців (козаків) у другій частині поеми.
+
 - type: critical-analysis
   title: 'Аналіз Тексту: Географія Смерті'
+  source_reading: "reading-eneida-war"
   target_text: "Там кров, як квас, через поріг; Там трупу слой лежав, як дрова..."
   questions:
     - Які стилістичні засоби (порівняння) використовує автор?

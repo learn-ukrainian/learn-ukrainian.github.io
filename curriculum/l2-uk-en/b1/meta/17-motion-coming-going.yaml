@@ -1,6 +1,15 @@
-module: b1-17
+# B1 Module 17: Рух - Прибуття та вихід
+# Status: SPEC (ready for content development)
+
+id: b1-17
 title: 'Рух: Прибуття та вихід'
 subtitle: Motion - Coming & Going
+slug: 17-motion-coming-going
+module_type: grammar
+word_target: 3200
+immersion: "100% Ukrainian"
+
+# === EXISTING FIELDS ===
 version: '2.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -8,19 +17,118 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-- grammar
-- motion
-- prefixes
+  - grammar
+  - motion
+  - prefixes
 grammar:
-- Prefixes при-, ви-, в-/у- with motion verbs
-- Arrival, exit, and entry semantics
+  - Prefixes при-, ви-, в-/у- with motion verbs
+  - Arrival, exit, and entry semantics
 objectives:
-- Learner can form motion verbs with при-, ви-, в-/у- prefixes
-- Learner can choose correct prefix for arrival, exit, or entry
-- Learner can use prefixed motion verbs in sentences
-vocabulary_count: 25
-vocab_count: 30
-slug: 17-motion-coming-going
+  - Learner can form motion verbs with при-, ви-, в-/у- prefixes
+  - Learner can choose correct prefix for arrival, exit, or entry
+  - Learner can use prefixed motion verbs in sentences
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Motion Prefixes
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Official prefix meanings with motion verbs
+  - name: Ukrainian Verbal Prefixes
+    url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+    type: reference
+    notes: Comprehensive prefix system
+
+content_outline:
+  - section: Вступ — Префікси руху
+    words: 350
+    points:
+      - Як префікси змінюють значення
+      - Три основні групи сьогодні
+      - TTT — визначте напрямок
+
+  - section: Префікс при- (прибуття)
+    words: 550
+    points:
+      - прийти, приїхати, прибігти
+      - Приходити vs прийти (НДВ/ДВ)
+      - Прибуття до місця
+
+  - section: Префікс ви- (вихід)
+    words: 550
+    points:
+      - вийти, виїхати, вибігти
+      - Виходити vs вийти
+      - Вихід з приміщення
+
+  - section: Префікс в-/у- (вхід)
+    words: 500
+    points:
+      - увійти, в'їхати, убігти
+      - Входити vs увійти
+      - Вхід до приміщення
+
+  - section: Контрастивна практика
+    words: 600
+    points:
+      - Він прийшов — він вийшов — він увійшов
+      - Оповідання з рухом
+      - Типові помилки
+
+  - section: Підсумок
+    words: 250
+    points:
+      - Порівняльна таблиця
+      - Готовність до M18
+
+vocabulary_hints:
+  required:
+    - прийти/приходити (to arrive on foot)
+    - приїхати/приїжджати (to arrive by vehicle)
+    - вийти/виходити (to exit on foot)
+    - виїхати/виїжджати (to exit by vehicle)
+    - увійти/входити (to enter on foot)
+    - в'їхати/в'їжджати (to enter by vehicle)
+    - прибуття (arrival)
+    - вихід (exit)
+    - вхід (entrance)
+    - напрямок (direction)
+  recommended:
+    - прибігти/прибігати (to arrive running)
+    - вибігти/вибігати (to run out)
+    - убігти/убігати (to run in)
+    - прилетіти/прилітати (to arrive flying)
+    - вилетіти/вилітати (to fly out)
+
+activity_hints:
+  - type: quiz
+    focus: Which prefix for which direction?
+    items: "15+"
+
+  - type: fill-in
+    focus: Complete sentences with correct prefixed verb
+    items: "15+"
+
+  - type: transform
+    focus: Change direction (вхід → вихід)
+    items: "10+"
+
+  - type: cloze
+    focus: Narrative with movement
+    items: "12+"
+
+  - type: match-up
+    focus: Prefix → meaning
+    items: "12+"
+
+prerequisites:
+  - b1-16 (Motion verbs full system)
+
+connects_to:
+  - b1-18 (Motion - passing & crossing)
+  - b1-22 (Motion full prefix integration)
+
 naturalness:
   score: 9
   status: PASS

@@ -1,25 +1,143 @@
-title: 'Кость Гордієнко: Отаман Непокори та Лицар Волі'
-subtitle: 'Kost Hordiienko: Otaman of Defiance and Knight of Freedom'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- history
-- cossacks
-- zaporozhian-sich
-- 18th-century
-grammar:
-- Advanced historical narrative register
-- Terminology of military-political alliances
-objectives:
-- Learner can analyze the role of Kost Hordiienko in the anti-imperial struggle of
-  the early 18th century
-- Learner understands the ideological basis of the Sich-Hetmanate alliance against
-  Moscow
-- Learner can use specialized vocabulary related to Cossack self-governance and resistance
-vocabulary_count: 25
+# C1-BIO Module 13: Кость Гордієнко: Запорозький кошовий
+# Status: SPEC (ready for content development)
+
+id: c1-bio-13
+title: "Кость Гордієнко: Запорозький кошовий"
 slug: kost-hordiyenko
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Кость Гордієнко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
+    type: primary
+    notes: Biography, alliance with Mazepa, resistance
+  - name: Запорозька Січ (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+    type: reference
+    notes: Context of Sich governance
+  - name: Олешківська Січ
+    url: https://uk.wikipedia.org/wiki/Олешківська_Січ
+    type: reference
+    notes: Exile period
+
+content_outline:
+  - section: Вступ — Голос запорозької волі
+    words: 400
+    points:
+      - Гордієнко як символ козацького республіканізму
+      - Його роль у подіях 1708-1709 років
+      - Значення Січі в козацькій системі
+
+  - section: Запорозька Січ: устрій і традиції
+    words: 600
+    points:
+      - Козацька демократія
+      - Роль кошового отамана
+      - Відносини з Гетьманщиною
+      - Традиції самоврядування
+
+  - section: Шлях до кошового отаманства
+    words: 500
+    points:
+      - Походження та молодість
+      - Козацька кар'єра
+      - Обрання кошовим
+      - Політичні погляди
+
+  - section: Союз із Мазепою
+    words: 800
+    points:
+      - Переговори з гетьманом
+      - Рішення Січі підтримати Мазепу
+      - Маніфест до козаків
+      - Спільні дії проти Москви
+
+  - section: Руйнування Січі та вигнання
+    words: 800
+    points:
+      - Полтавська поразка
+      - Руйнування Чортомлицької Січі
+      - Втеча на Кримське ханство
+      - Олешківська Січ
+
+  - section: Продовження боротьби
+    words: 600
+    points:
+      - Дипломатичні зусилля
+      - Союз з Орликом
+      - Прутський похід
+      - Смерть та спадщина
+
+  - section: Підсумок — Воля до останнього
+    words: 300
+    points:
+      - Гордієнко як втілення козацького духу
+      - Січ як острів свободи
+      - Пам'ять про кошового
+
+vocabulary_hints:
+  required:
+    - кошовий (koshovyi - Sich leader)
+    - Січ (Sich)
+    - отаман (otaman/ataman)
+    - рада (council)
+    - козацька демократія (Cossack democracy)
+    - курінь (kurin - Cossack unit)
+    - клейноди (regalia)
+    - паланка (palanka - district)
+    - вигнання (exile)
+    - маніфест (manifesto)
+  recommended:
+    - довбиш (drummer)
+    - осавул (osavul)
+    - писар (scribe)
+    - суддя (judge)
+    - булава (mace)
+
+activity_hints:
+  - type: reading
+    focus: Hordiyenko's manifestos and appeals
+    source: Primary sources (adapted)
+    items: "3 passages"
+
+  - type: quiz
+    focus: Sich governance and Hordiyenko's actions
+    items: "12+"
+
+  - type: match-up
+    focus: Sich offices and their functions
+    items: "10+"
+
+  - type: essay-response
+    focus: Why did the Sich support Mazepa?
+    word_target: 250
+    output: Analysis of Sich interests
+
+  - type: group-sort
+    focus: Sich traditions vs. Hetmanate traditions
+    items: "12+"
+
+  - type: fill-in
+    focus: Cossack self-governance terminology
+    items: "8+"
+
+  - type: discussion
+    focus: Was Sich democracy genuine republicanism?
+    output: Political analysis
+
+prerequisites:
+  - c1-bio-12 (Ivan Mazepa - alliance context)
+  - Understanding of Cossack political structures
+
+connects_to:
+  - c1-bio-14 (Pylyp Orlyk - fellow exile)
+  - c1-bio-15 (Petro Kalnyshevskyy - last koshovyi)
+  - c1-bio-53 (Petro Bolbochan - later military leader)
+
+naturalness:
+  score: null
+  status: PENDING

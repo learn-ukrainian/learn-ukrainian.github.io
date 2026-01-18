@@ -1,0 +1,131 @@
+# C2 Module 61: Legal Ukrainian I
+# Status: SPEC (ready for content development)
+
+id: c2-61
+title: Юридична українська I — Основи правничої термінології
+slug: legal-ukrainian-i
+module_type: vocabulary
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Верховна Рада України — законодавство
+    url: https://zakon.rada.gov.ua/
+    type: primary
+    notes: Official Ukrainian legislation database — primary source for legal texts
+  - name: Конституція України
+    url: https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80
+    type: primary
+    notes: Constitution of Ukraine — foundational legal document
+  - name: Юридична енциклопедія
+    url: https://cyclop.com.ua/content/view/1284/
+    type: reference
+    notes: Ukrainian legal encyclopedia for terminology
+
+content_outline:
+  - section: Вступ — Правнича мова як система
+    words: 500
+    points:
+      - Особливості юридичної української
+      - Історія розвитку правничої термінології
+      - Вплив латини та інших мов
+
+  - section: Структура правової системи України
+    words: 700
+    points:
+      - Конституційне право
+      - Галузі права (цивільне, кримінальне, адміністративне)
+      - Судова система
+      - Правові акти та їх ієрархія
+
+  - section: Базова правнича термінологія
+    words: 800
+    points:
+      - Суб'єкти права (фізичні та юридичні особи)
+      - Правові відносини
+      - Права та обов'язки
+      - Відповідальність та санкції
+
+  - section: Читання правових текстів
+    words: 600
+    points:
+      - Структура закону
+      - Розуміння статей та пунктів
+      - Юридичні конструкції та формулювання
+      - Посилання на законодавство
+
+  - section: Юридична лексика в повсякденному житті
+    words: 600
+    points:
+      - Поширені правові терміни
+      - Юридичний жаргон vs. офіційна термінологія
+      - Правові документи громадян (паспорт, свідоцтво, договір)
+
+  - section: Практичні вправи
+    words: 500
+    points:
+      - Читання статей Конституції
+      - Аналіз простого договору
+      - Побудова юридичного глосарію
+
+vocabulary_hints:
+  required:
+    - право (law/right)
+    - закон (law/statute)
+    - юридична особа (legal entity)
+    - фізична особа (natural person)
+    - договір (contract)
+    - позов (lawsuit/claim)
+    - суд (court)
+    - суддя (judge)
+    - адвокат (lawyer/advocate)
+    - відповідальність (responsibility/liability)
+  recommended:
+    - правовідносини (legal relations)
+    - законодавство (legislation)
+    - нормативний акт (normative act)
+    - підсудність (jurisdiction)
+    - правоздатність (legal capacity)
+
+activity_hints:
+  - type: quiz
+    focus: Базова юридична термінологія
+    items: "20+"
+
+  - type: match-up
+    focus: Зіставлення термінів з їх визначеннями
+    items: "20+"
+
+  - type: critical-analysis
+    focus: Читання та аналіз статті Конституції
+    output: Пояснення змісту загальнодоступною мовою
+
+  - type: fill-in
+    focus: Юридичні конструкції в контексті
+    items: "15+"
+
+  - type: essay-response
+    focus: Побудова міні-глосарію юридичних термінів (20 слів)
+    word_target: 400
+    output: Структурований глосарій з моделлю
+
+  - type: group-sort
+    focus: Класифікація термінів за галузями права
+    items: "18+"
+
+prerequisites:
+  - M60 (Building Domain Expertise)
+  - M04 (Офіційний стиль — Legal Documents)
+  - M47-48 (Terminology Acquisition I-II)
+
+connects_to:
+  - c2-62 (Legal Ukrainian II — Contracts and agreements)
+  - c2-63 (Legal Ukrainian III — Court procedures)
+  - c2-64 (Legal Ukrainian IV — Legal writing)
+  - c2-65 (Legal Ukrainian V — Case analysis)
+
+naturalness:
+  score: null
+  status: PENDING

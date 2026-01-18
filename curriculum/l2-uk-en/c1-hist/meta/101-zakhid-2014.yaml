@@ -1,0 +1,128 @@
+# C1-HIST Module 101: 2014 — Анексія без відповіді
+# Status: SPEC (ready for content development)
+
+id: c1-hist-101
+title: "2014: Анексія без відповіді"
+slug: zakhid-2014
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Анексія Криму (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
+    type: reference
+    notes: Annexation
+  - name: Санкції проти Росії (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
+    type: reference
+    notes: Western response
+  - name: Мінські угоди (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Мінські_угоди
+    type: reference
+    notes: Minsk process
+
+content_outline:
+  - section: Вступ — Безкарність
+    words: 400
+    points:
+      - Лютий-березень 2014
+      - Росія захоплює Крим
+      - Захід — що зробив
+      - Структура модуля
+
+  - section: Анексія — хроніка
+    words: 600
+    points:
+      - «Зелені чоловічки»
+      - «Референдум»
+      - Анексія — 18 березня
+      - Швидкість шокує
+
+  - section: Західна реакція
+    words: 700
+    points:
+      - Заяви засудження
+      - Санкції — символічні
+      - «Летальна зброя» — відмова
+      - «Деескалація» — пріоритет
+
+  - section: Мінськ — капітуляція під виглядом дипломатії
+    words: 600
+    points:
+      - Мінськ I, Мінськ II
+      - Що підписали
+      - Чому невигідно Україні
+      - Меркель і Олланд — посередники чи?
+
+  - section: Чому слабка відповідь
+    words: 500
+    points:
+      - Економічні інтереси
+      - Nord Stream 2
+      - «Не провокувати»
+      - Нерозуміння загрози
+
+  - section: Наслідки
+    words: 400
+    points:
+      - Путін бачить безкарність
+      - 2015-2021 — підготовка
+      - Україна — сама
+
+  - section: Підсумок
+    words: 300
+    points:
+      - 2014 — повторення паттерну
+      - Але щось змінюється
+      - Перехід до 2022
+
+vocabulary_hints:
+  required:
+    - анексія (annexation)
+    - санкції (sanctions)
+    - Мінські угоди (Minsk Agreements)
+    - безкарність (impunity)
+    - «зелені чоловічки» (little green men)
+    - летальна зброя (lethal weapons)
+    - деескалація (de-escalation)
+    - посередник (mediator)
+    - капітуляція (capitulation)
+    - засудження (condemnation)
+  recommended:
+    - Nord Stream 2 (Nord Stream 2)
+    - «заморожений конфлікт» (frozen conflict)
+    - реальполітик (realpolitik)
+    - символічний (symbolic)
+    - двосторонні переговори (bilateral negotiations)
+
+activity_hints:
+  - type: response-analysis
+    focus: What did the West actually do in 2014?
+    output: Response inventory
+
+  - type: minsk-analysis
+    focus: Minsk Agreements — who benefited?
+    output: Agreement analysis
+
+  - type: motivation-study
+    focus: Why was Western response weak?
+    output: Motivation analysis
+
+  - type: pattern-analysis
+    focus: 2014 as continuation of Western pattern
+    output: Pattern confirmation
+
+  - type: essay-response
+    focus: "Чи слабка відповідь Заходу у 2014 спричинила 2022?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-100 (Bucharest 2008)
+  - c1-hist-93 (Revolution of Dignity)
+
+connects_to:
+  - c1-hist-102 (2022 — paradigm shift?)

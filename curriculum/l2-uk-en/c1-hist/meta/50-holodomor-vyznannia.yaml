@@ -1,0 +1,131 @@
+# C1-HIST Module 50: Визнання геноцидом — Правовий аспект
+# Status: SPEC (ready for content development)
+
+id: c1-hist-50
+title: "Визнання геноцидом: Правовий аспект"
+slug: holodomor-vyznannia
+module_type: thematic
+word_target: 3500
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Визнання Голодомору геноцидом
+    url: https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом
+    type: reference
+    notes: Recognition overview
+  - name: Конвенція ООН про геноцид
+    url: https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього
+    type: reference
+    notes: UN Convention
+  - name: Закон України про Голодомор
+    url: https://zakon.rada.gov.ua/laws/show/376-16
+    type: primary
+    notes: 2006 law text
+
+content_outline:
+  - section: Вступ — Від історії до права
+    words: 400
+    points:
+      - Чому визнання важливе
+      - Геноцид — правовий термін
+      - Політика визнання
+      - Структура модуля
+
+  - section: Конвенція ООН про геноцид (1948)
+    words: 600
+    points:
+      - Визначення геноциду
+      - П'ять ознак
+      - Намір — ключовий елемент
+      - Як Конвенція застосовується
+
+  - section: Чи Голодомор відповідає критеріям?
+    words: 700
+    points:
+      - Ознака за ознакою — аналіз
+      - Намір — що кажуть документи
+      - Контр-аргументи
+      - Юридичні думки експертів
+
+  - section: Визнання Україною
+    words: 500
+    points:
+      - Закон 2006 року — текст
+      - Що означає визнання
+      - Кримінальна відповідальність за заперечення?
+      - Дебати в Україні
+
+  - section: Міжнародне визнання
+    words: 600
+    points:
+      - Хто визнав — список країн
+      - Хто не визнав — чому
+      - ООН — чому не визнали
+      - Динаміка — що змінилося після 2022
+
+  - section: Російське заперечення
+    words: 400
+    points:
+      - Офіційна позиція РФ
+      - "Спільна трагедія" — що це означає
+      - Як заперечення працює
+      - Відповіді на заперечення
+
+  - section: Підсумок
+    words: 300
+    points:
+      - Визнання як процес
+      - Що дає визнання?
+      - Зв'язок із сьогоденням
+
+vocabulary_hints:
+  required:
+    - визнання (recognition)
+    - геноцид (genocide)
+    - конвенція (convention)
+    - намір (intent)
+    - ознака (criterion/sign)
+    - заперечення (denial)
+    - закон (law)
+    - кримінальна відповідальність (criminal responsibility)
+    - міжнародний (international)
+    - правовий (legal)
+  recommended:
+    - ратифікація (ratification)
+    - резолюція (resolution)
+    - трибунал (tribunal)
+    - юрисдикція (jurisdiction)
+    - прецедент (precedent)
+
+activity_hints:
+  - type: legal-analysis
+    focus: Apply genocide convention to Holodomor evidence
+    output: Legal assessment
+
+  - type: reading
+    focus: Analyze Ukraine's 2006 Holodomor law
+    source: zakon.rada.gov.ua
+
+  - type: mapping
+    focus: Map countries that recognize vs. don't recognize
+    output: Recognition map with analysis
+
+  - type: debate
+    focus: Legal debate — does Holodomor meet genocide definition?
+    format: Structured arguments
+
+  - type: essay-response
+    focus: "Чому міжнародне визнання Голодомору геноцидом залишається неповним?"
+    word_target: 400
+    model_answer: Required
+
+prerequisites:
+  - c1-hist-47 (Holodomor mechanisms II — intent evidence)
+  - c1-hist-49 (Holodomor witnesses)
+
+connects_to:
+  - c1-hist-51 (Holodomor synthesis)
+  - c1-hist-10 (Historical memory and politics)
+  - c1-hist-110 (Modern disinformation)

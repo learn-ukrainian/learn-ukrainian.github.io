@@ -1,5 +1,17 @@
+- type: reading
+  id: reading-natalka-poltavka
+  title: 'Іван Котляревський: Наталка Полтавка'
+  resource:
+    type: 'Module Text'
+    url: 'https://www.ukrlib.com.ua/books/printit.php?tid=50'
+    title: 'Іван Котляревський. Наталка Полтавка'
+  tasks:
+    - 'Прочитайте першу дію п''єси.'
+    - 'Зверніть увагу на пісню "Віють вітри".'
+
 - type: essay-response
   title: 'Есе-Роздум: Наталка як феміністичний ідеал'
+  source_reading: "reading-natalka-poltavka"
   prompt: |
     Напишіть есе (350-500 слів) на тему: 'Наталка Полтавка: Перша українська феміністка чи хранителька традиції?'.
 
@@ -30,6 +42,7 @@
       points: 30
 - type: comparative-study
   title: 'Творче Завдання: Діалог Наталки та Енея'
+  source_reading: "reading-natalka-poltavka"
   items_to_compare:
     - Наталка (Гідність)
     - Еней (Сила)
@@ -51,6 +64,7 @@
     Еней: «Душа — то розкіш. А рід рятувати треба...»
 - type: critical-analysis
   title: 'Аналіз Тексту: Мова Серця'
+  source_reading: "reading-natalka-poltavka"
   target_text: "Золото — не дівка!.. Окрім того, що красива... ще й розумна... і до всякого діла дотепна."
   questions:
     - Хто дає цю характеристику Наталці? (Виборний)

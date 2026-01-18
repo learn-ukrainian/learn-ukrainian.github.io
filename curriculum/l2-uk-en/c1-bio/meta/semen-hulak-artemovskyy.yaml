@@ -1,23 +1,148 @@
-title: 'Семен Гулак-Артемовський: Творець Національної Опери'
-phase: C1.3 Biographies
-duration: 120
-transliteration: none
-pedagogy: CBI
-register: публіцистичний
-focus: biography
-objectives:
-- Explore the life of Semen Hulak-Artemovskyy as a singer and composer
-- Analyze the significance of 'Zaporozhets za Dunayem' as the first national opera
-- Understand the cultural context of the 19th-century Ukrainian national awakening
-- Identify linguistic features of 19th-century literary and operatic texts
-tags:
-- biography
-- era: imperial
-- domain: arts
-grammar:
-- Historical narrative tenses
-- Operatic and theatrical terminology
-vocabulary_focus:
-- Theatrical vocabulary
-- National awakening terminology
+# C1-BIO Module 19: Семен Гулак-Артемовський: Оперний співак
+# Status: SPEC (ready for content development)
+
+id: c1-bio-19
+title: "Семен Гулак-Артемовський: Оперний співак"
 slug: semen-hulak-artemovskyy
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Семен Гулак-Артемовський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
+    type: primary
+    notes: Biography, opera career, composition
+  - name: Запорожець за Дунаєм (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
+    type: primary
+    notes: First Ukrainian opera details
+  - name: Михайло Глінка
+    url: https://uk.wikipedia.org/wiki/Михайло_Глінка
+    type: reference
+    notes: Mentorship context
+
+content_outline:
+  - section: Вступ — Творець першої української опери
+    words: 400
+    points:
+      - Значення "Запорожця за Дунаєм"
+      - Гулак-Артемовський як співак і композитор
+      - Його місце в історії українського театру
+
+  - section: Молодість та музична освіта
+    words: 600
+    points:
+      - Походження з Городища
+      - Ранні музичні здібності
+      - Навчання у Києві
+      - Дружба з Глінкою
+
+  - section: Оперна кар'єра в Петербурзі
+    words: 700
+    points:
+      - Дебют на оперній сцені
+      - Головні партії
+      - Визнання як баритона
+      - Гастролі Європою
+
+  - section: Створення "Запорожця за Дунаєм"
+    words: 900
+    points:
+      - Ідея національної опери
+      - Сюжет та персонажі
+      - Музична мова
+      - Прем'єра 1863 року
+      - Успіх та значення
+
+  - section: Останні роки
+    words: 600
+    points:
+      - Пізня творчість
+      - Викладацька діяльність
+      - Смерть у Москві
+      - Поховання в Україні
+
+  - section: Спадщина
+    words: 500
+    points:
+      - "Запорожець" як національний символ
+      - Вплив на українську оперу
+      - Постановки твору
+      - Сучасне значення
+
+  - section: Підсумок — Голос нації
+    words: 300
+    points:
+      - Гулак-Артемовський як піонер
+      - Українська опера після нього
+      - Його місце в культурній пам'яті
+
+vocabulary_hints:
+  required:
+    - опера (opera)
+    - баритон (baritone)
+    - лібрето (libretto)
+    - прем'єра (premiere)
+    - композитор (composer)
+    - постановка (staging)
+    - арія (aria)
+    - театр (theater)
+    - сцена (stage)
+    - партія (part/role)
+  recommended:
+    - антракт (intermission)
+    - увертюра (overture)
+    - хор (chorus)
+    - диригент (conductor)
+    - декорації (scenery)
+
+activity_hints:
+  - type: reading
+    focus: Reviews and descriptions of "Zaporozhets"
+    source: 19th century sources (adapted)
+    items: "3 passages"
+
+  - type: quiz
+    focus: Facts about Hulak-Artemovskyy and his opera
+    items: "12+"
+
+  - type: match-up
+    focus: Characters in the opera and their roles
+    items: "8+"
+
+  - type: essay-response
+    focus: Why was a Ukrainian opera significant in 1863?
+    word_target: 250
+    output: Analysis of cultural-political context
+
+  - type: group-sort
+    focus: Opera elements - music, text, characters
+    items: "12+"
+
+  - type: fill-in
+    focus: Opera and theatrical terminology
+    items: "8+"
+
+  - type: discussion
+    focus: Compare with European national operas (Verdi, Wagner)
+    output: Comparative analysis
+
+  - type: critical-analysis
+    focus: How does "Zaporozhets" represent Ukrainian identity?
+    output: Cultural analysis
+
+prerequisites:
+  - c1-bio-17 (Maksym Berezovskyy - earlier opera)
+  - c1-bio-18 (Dmytro Bortnyanskyy - earlier music)
+
+connects_to:
+  - c1-bio-23 (Mykola Lysenko - later national music)
+  - c1-bio-26 (Mariya Zankovetska - theater)
+  - c1-bio-41 (Solomiya Krushelnytska - opera star)
+
+naturalness:
+  score: null
+  status: PENDING

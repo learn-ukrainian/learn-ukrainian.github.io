@@ -1,28 +1,143 @@
-module: b2-18
+# B2 Module 18: Register - Academic Ukrainian
+# Status: SPEC (ready for content development)
+
+id: b2-18
 title: Науковий стиль української мови
-subtitle: Як писати та говорити академічно
-version: '1.0'
-phase: B2.1b [Participles & Register]
-pedagogy: TTT
-focus: grammar
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - register
-  - academic-writing
-grammar:
-  - Academic writing conventions
-  - Impersonal constructions in academic texts
-  - Мовне хеджування
-  - Citation conventions
-objectives:
-  - Учень може розпізнавати характерні риси наукового стилю
-  - Учень може використовувати академічну лексику та конструкції у власних текстах
-  - Учень може трансформувати розмовний текст в академічний
-vocabulary_count: 30
-vocab_count: 119
 slug: 18-register-academic-ukrainian
+module_type: grammar
+word_target: 3800
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Academic Writing
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Academic writing standards for B2
+  - name: Науковий стиль української мови
+    url: https://uk.wikipedia.org/wiki/Науковий_стиль
+    type: secondary
+    notes: Scientific writing conventions
+  - name: CEFR B2 Academic Skills
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+    type: reference
+    notes: B2 academic reading and writing
+
+content_outline:
+  - section: Вступ — Науковий стиль
+    words: 400
+    points:
+      - Характерні риси наукового стилю
+      - Підстилі (власне науковий, навчально-науковий, науково-популярний)
+      - Де зустрічаємо науковий стиль
+
+  - section: Лексичні особливості
+    words: 700
+    points:
+      - Загальнонаукова лексика
+      - Термінологія
+      - Абстрактні іменники
+      - Уникання емоційності
+
+  - section: Граматичні особливості
+    words: 700
+    points:
+      - Безособові конструкції (досліджено, виявлено)
+      - Пасивні конструкції
+      - Складні речення
+      - Дієприслівникові звороти
+
+  - section: Мовне хеджування
+    words: 600
+    points:
+      - Вираження невпевненості (можливо, ймовірно)
+      - Обережні твердження
+      - Посилання на джерела
+      - Уникання категоричності
+
+  - section: Цитування та посилання
+    words: 600
+    points:
+      - Пряме цитування
+      - Непряме цитування
+      - Формули посилань
+      - Бібліографічні записи
+
+  - section: Структура наукового тексту
+    words: 500
+    points:
+      - Анотація
+      - Вступ
+      - Основна частина
+      - Висновки
+
+  - section: Практика і підсумок
+    words: 300
+    points:
+      - Аналіз наукових текстів
+      - Написання академічних текстів
+      - Підготовка до модуля 19
+
+vocabulary_hints:
+  required:
+    - науковий стиль (scientific style)
+    - термін (term)
+    - дослідження (research)
+    - гіпотеза (hypothesis)
+    - висновок (conclusion)
+    - аналіз (analysis)
+    - методологія (methodology)
+    - цитування (citation)
+    - посилання (reference)
+    - анотація (abstract)
+  recommended:
+    - хеджування (hedging)
+    - об'єктивність (objectivity)
+    - аргументація (argumentation)
+    - інтерпретація (interpretation)
+    - синтез (synthesis)
+
+activity_hints:
+  - type: transform
+    focus: Convert colloquial text to academic style
+    items: "10+"
+
+  - type: quiz
+    focus: Identify academic style markers
+    items: "15+"
+
+  - type: fill-in
+    focus: Complete academic text with hedging expressions
+    items: "12+"
+
+  - type: match-up
+    focus: Colloquial expression → academic equivalent
+    items: "16+"
+
+  - type: reading
+    focus: Analyze structure of academic texts
+    items: "3 texts"
+
+  - type: error-correction
+    focus: Fix inappropriate register in academic context
+    items: "12+"
+
+  - type: essay-response
+    focus: Write academic paragraph with proper hedging
+    word_target: 150
+    output: Model answer with style analysis
+
+prerequisites:
+  - b2-15 (Register Introduction)
+  - b2-03 (Impersonal -но/-то)
+  - Complex sentence formation
+
+connects_to:
+  - b2-19 (Register: Official-Legal)
+  - b2-22 (Register: Literary Ukrainian)
+  - b2-25 (B2.1b Checkpoint)
+
 naturalness:
-  score: 8
-  status: PASS
+  score: null
+  status: PENDING

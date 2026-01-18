@@ -1,23 +1,128 @@
-module: c1-27
-title: 'Глобальний контекст: Україна, ЄС та НАТО'
-subtitle: 'Global Context: EU & NATO'
-version: '2.0'
-phase: 'C1.2 Society & State'
-focus: society
-pedagogy: 'Immersion'
-duration: 120
-transliteration: none
-tags:
-  - geopolitics
-  - eu
-  - nato
-  - diplomacy
-grammar:
-  - 'Diplomatic register'
-  - 'Passive voice in official documents'
-objectives:
-  - 'Discuss Ukraine''s path to EU and NATO'
-  - 'Analyze geopolitical challenges'
-  - 'Understand the structure of international organizations'
-vocabulary_count: 25
+# C1 Module 27: Global Context - EU & NATO
+# Status: SPEC (ready for content development)
+
+id: c1-27
+title: "Глобальний контекст: Україна, ЄС та НАТО"
 slug: 27-global-context
+module_type: cultural
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Європейська правда
+    url: https://www.eurointegration.com.ua/
+    type: reference
+    notes: EU integration news and analysis
+  - name: МЗС України
+    url: https://mfa.gov.ua/
+    type: primary
+    notes: Official foreign policy information
+
+content_outline:
+  - section: Вступ — Україна у світовому контексті
+    words: 400
+    points:
+      - Геополітичне положення
+      - Зовнішня політика
+      - Міжнародні відносини
+
+  - section: Європейський Союз
+    words: 800
+    points:
+      - Структура ЄС
+      - Кандидатство України
+      - Угода про асоціацію
+
+  - section: НАТО
+    words: 700
+    points:
+      - Структура НАТО
+      - Шлях України до членства
+      - Співпраця з альянсом
+
+  - section: Інші міжнародні організації
+    words: 600
+    points:
+      - ООН
+      - МВФ та Світовий банк
+      - Рада Європи
+
+  - section: Дипломатичний регістр
+    words: 600
+    points:
+      - Пасивний стан в документах
+      - Офіційно-ділова лексика
+      - Кліше дипломатичного мовлення
+
+  - section: Виклики та перспективи
+    words: 600
+    points:
+      - Умови членства
+      - Реформи для інтеграції
+      - Геополітичні виклики
+
+  - section: Практичне завдання
+    words: 300
+    points:
+      - Аналіз офіційних документів
+      - Дискусія про євроінтеграцію
+      - Написання аналітичної записки
+
+vocabulary_hints:
+  required:
+    - Європейський Союз (European Union)
+    - НАТО (NATO)
+    - інтеграція (integration)
+    - кандидат (candidate)
+    - членство (membership)
+    - переговори (negotiations)
+    - угода (agreement)
+    - реформа (reform)
+    - дипломатія (diplomacy)
+    - зовнішня політика (foreign policy)
+  recommended:
+    - євроатлантичний (Euro-Atlantic)
+    - імплементація (implementation)
+    - гармонізація (harmonization)
+    - ратифікація (ratification)
+    - безвіз (visa-free regime)
+
+activity_hints:
+  - type: quiz
+    focus: EU/NATO integration process
+    items: "15+"
+
+  - type: match-up
+    focus: Organization → function
+    items: "15+"
+
+  - type: fill-in
+    focus: Diplomatic document phrases
+    items: "12+"
+
+  - type: cloze
+    focus: International relations vocabulary
+    items: "10+"
+
+  - type: group-sort
+    focus: Organizations by type
+    items: "12+"
+
+  - type: essay-response
+    focus: Ukraine's European path
+    word_target: 200
+
+prerequisites:
+  - c1-25 (Political System)
+  - c1-26 (Media Landscape)
+
+connects_to:
+  - c1-28 (Dialects)
+  - c1-33 (Case Studies)
+  - c1-35 (C1.2 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

@@ -1,25 +1,139 @@
-title: Володимир і хрещення — 988 рік
-phase: B2.3a [Українська історія]
-pedagogy: CBI
-focus: history
-register: публіцистичний
-duration: 90
-transliteration: none
-tags:
-- history
-- medieval
-- christianization
-grammar:
-- Історичний наратив
-- Пасивний стан у науковому тексті
-vocabulary_focus: null
-vocab_count: 122 - "Релігійна термінологія" - "Політична та церковна лексика"
-objectives:
-- Учень може переказувати історію хрещення Русі
-- Учень може аналізувати політичні мотиви вибору християнства
-- Учень може розрізняти міф і історичну реальність щодо хрещення
-vocabulary_count: 35
-slug: volodymyr-i-khreshchennia
-naturalness:
-  score: 9
-  status: PASS
+# B2-HIST Module 11: Володимир і Хрещення Русі
+# Status: SPEC (ready for content development)
+
+id: b2-hist-11
+title: Володимир і Хрещення Русі
+slug: volodymyr-khreshchennia
+module_type: history
+word_target: 3750
+immersion: 100% Ukrainian
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Володимир Великий (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Володимир_Великий
+    type: reference
+    notes: Overview of Volodymyr the Great
+  - name: Хрещення Русі (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+    type: reference
+    notes: Overview of Christianization
+  - name: Повість минулих літ — про хрещення
+    url: https://litopys.org.ua/pvl/pvl.htm
+    type: primary
+    notes: Chronicle account of baptism
+
+content_outline:
+  - section: Вступ — Поворотний момент
+    words: 450
+    points:
+      - 988 рік як ключова дата української історії
+      - Володимир до хрещення — язичник
+      - Значення християнізації для держави
+      - Сучасні дискусії про хрещення
+
+  - section: Шлях до влади
+    words: 600
+    points:
+      - Боротьба за київський престол
+      - Вбивство Ярополка
+      - Язичницький період — "Перун срібної голови"
+      - Людські жертвоприношення?
+
+  - section: Вибір віри
+    words: 650
+    points:
+      - Легенда про вибір релігії
+      - Посольства від мусульман, юдеїв, католиків, православних
+      - "Русі є веселіє пити"
+      - Політичний контекст вибору
+
+  - section: Хрещення в Херсонесі
+    words: 600
+    points:
+      - Похід на Корсунь (988 р.)
+      - Одруження з Анною, сестрою візантійських імператорів
+      - Хрещення Володимира
+      - Значення візантійського зв'язку
+
+  - section: Хрещення Київа
+    words: 550
+    points:
+      - Повалення ідолів — Перун у Дніпрі
+      - Масове хрещення в Почайні
+      - "Хто не прийде — ворог мені"
+      - Поширення християнства на інші землі
+
+  - section: Наслідки хрещення
+    words: 550
+    points:
+      - Церковна організація — митрополія
+      - Писемність та освіта
+      - Архітектура — Десятинна церква
+      - Міжнародний статус Русі
+
+  - section: Підсумок
+    words: 350
+    points:
+      - Володимир як святий рівноапостольний
+      - Хрещення як цивілізаційний вибір
+      - Перехід до Ярослава Мудрого
+
+vocabulary_hints:
+  required:
+    - хрещення (baptism)
+    - християнство (Christianity)
+    - язичництво (paganism)
+    - Перун (Perun)
+    - ідол (idol)
+    - митрополія (metropolitanate)
+    - церква (church)
+    - святий (saint)
+    - рівноапостольний (equal-to-apostles)
+    - Херсонес (Chersonesus)
+    - Візантія (Byzantium)
+    - віра (faith)
+  recommended:
+    - Десятинна церква (Church of the Tithes)
+    - Почайна (Pochayna river)
+    - Корсунь (Korsun/Chersonesus)
+    - імператор (emperor)
+    - цивілізаційний вибір (civilizational choice)
+
+activity_hints:
+  - type: reading
+    focus: Chronicle account of the choice of faith
+    source: Provide in module
+
+  - type: timeline
+    focus: Events leading to and following baptism
+    items: "10+ events"
+
+  - type: vocabulary
+    focus: Religious and political terminology
+    items: "15+"
+
+  - type: map-activity
+    focus: Spread of Christianity across Rus
+    items: "Key centers of Christianization"
+
+  - type: quiz
+    focus: Facts about Volodymyr and baptism
+    items: "12+"
+
+  - type: compare-contrast
+    focus: Rus before and after Christianization
+    output: Two-column analysis
+
+  - type: discussion
+    focus: "Чи був вибір православ'я історичною необхідністю?"
+
+prerequisites:
+  - b2-hist-10 (Olha and Sviatoslav)
+  - b2-hist-03 (Greek city-states — Chersonesus)
+
+connects_to:
+  - b2-hist-12 (Yaroslav the Wise)
+  - b2-hist-14 (St. Sophia Cathedral)
+  - b2-hist-20 (Synthesis: Kyivan Rus)

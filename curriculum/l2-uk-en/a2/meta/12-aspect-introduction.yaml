@@ -1,29 +1,156 @@
-module: a2-12
+# A2 Module 12: Aspect Introduction
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-12
 title: Aspect Introduction
 subtitle: Process vs. Result
+slug: 12-aspect-introduction
+module_type: grammar
+word_target: 2800
+immersion: "55-65% Ukrainian"
+
 version: '1.0'
-phase: A2.1
+phase: A2.2
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- verbs
-- aspect
-- introduction
+  - grammar
+  - verbs
+  - aspect
+  - introduction
+
 grammar:
-- imperfective aspect (process)
-- perfective aspect (result)
-- aspect pairs
-- aspect usage rules
+  - imperfective aspect (process)
+  - perfective aspect (result)
+  - aspect pairs
+  - aspect usage rules
+
 objectives:
-- Learner can distinguish between process and result
-- Learner can identify perfective and imperfective verbs
-- Learner can match common aspect pairs
-- Learner can choose the correct aspect in simple sentences
-vocabulary_count: 25
-slug: 12-aspect-introduction
-focus: grammar
+  - Learner can distinguish between process and result
+  - Learner can identify perfective and imperfective verbs
+  - Learner can match common aspect pairs
+  - Learner can choose the correct aspect in simple sentences
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Verbal Aspect
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Aspect pair requirements for A2 level
+  - name: Ukrainian Verb Aspect Reference
+    url: https://uk.wikipedia.org/wiki/Вид_дієслова
+    type: reference
+    notes: Complete aspect system overview
+
+content_outline:
+  - section: What is Aspect?
+    words: 400
+    points:
+      - Unique feature of Slavic languages
+      - Process vs result distinction
+      - Why aspect matters for communication
+
+  - section: Imperfective Aspect (недоконаний вид)
+    words: 500
+    points:
+      - Ongoing actions (Я читаю книгу)
+      - Repeated actions (Я читаю щодня)
+      - Process focus (Він писав три години)
+
+  - section: Perfective Aspect (доконаний вид)
+    words: 500
+    points:
+      - Completed actions (Я прочитав книгу)
+      - Single events (Вона написала листа)
+      - Result focus (Ми вже зробили це)
+
+  - section: Common Aspect Pairs
+    words: 600
+    points:
+      - читати/прочитати (to read)
+      - писати/написати (to write)
+      - робити/зробити (to do/make)
+      - говорити/сказати (to say)
+      - бачити/побачити (to see)
+      - брати/взяти (to take)
+
+  - section: Choosing the Right Aspect
+    words: 500
+    points:
+      - Duration markers → imperfective
+      - Completion markers → perfective
+      - Context clues for aspect selection
+
+  - section: Practice Exercises
+    words: 300
+    points:
+      - Aspect pair matching
+      - Context-based selection
+      - Mini-dialogues with aspect
+
+vocabulary_hints:
+  required:
+    - читати/прочитати (to read)
+    - писати/написати (to write)
+    - робити/зробити (to do/make)
+    - говорити/сказати (to say/speak)
+    - бачити/побачити (to see)
+    - брати/взяти (to take)
+    - давати/дати (to give)
+    - їсти/з'їсти (to eat)
+    - пити/випити (to drink)
+    - вчити/вивчити (to learn)
+    - купувати/купити (to buy)
+    - продавати/продати (to sell)
+    - вид (aspect)
+    - недоконаний (imperfective)
+    - доконаний (perfective)
+  recommended:
+    - процес (process)
+    - результат (result)
+    - тривалість (duration)
+    - завершення (completion)
+    - повторення (repetition)
+
+activity_hints:
+  - type: match-up
+    focus: Imperfective to perfective pairs
+    items: "15+"
+
+  - type: fill-in
+    focus: Choose correct aspect for context
+    items: "12+"
+
+  - type: quiz
+    focus: Process or result?
+    items: "12+"
+
+  - type: quiz
+    focus: Identify aspect of underlined verb
+    items: "10+"
+
+  - type: fill-in
+    focus: Complete sentences with correct aspect
+    items: "10+"
+
+  - type: dialogue
+    focus: Aspect in conversation
+    items: "4+"
+
+prerequisites:
+  - a2-11 (Checkpoint - Cases)
+  - A1 verb conjugation
+  - A1 past/future tense basics
+
+connects_to:
+  - a2-13 (The Completed Past)
+  - a2-14 (Future Plans and Promises)
+  - a2-15 (Aspect Morphology)
+
 naturalness:
   score: 9
   status: PASS

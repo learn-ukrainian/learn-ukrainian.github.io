@@ -1,13 +1,13 @@
 # Audit Report: 09-ethnography.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 4085/3500
-- **Activities:** ✅ 3/3
+- **Words:** ✅ 4126/3500
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -44,7 +44,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |
-| **Частина I: Весільний Обряд: Велика Драма у Шести Діях** | ✅ | 777 | Included in Core |
+| **Summary** | ✅ | 39 | Included in Core |
+| **Частина I: Весільний Обряд: Велика Драма у Шести Діях** | ✅ | 778 | Included in Core |
 | **Частина II: Похоронний Обряд: Естетика Смерті** | ✅ | 357 | Included in Core |
 | **Частина III: Світ Речей і Матеріальна Культура** | ✅ | 165 | Included in Core |
 | **Частина IV: Топографія Села: Сакральне і Профанне** | ✅ | 206 | Included in Core |
@@ -63,4 +64,4 @@
 | **Частина XVII: Звуковий Ландшафт Творів** | ✅ | 193 | Included in Core |
 | **Частина XVIII: Скриня Української Емоційності** | ✅ | 15 | Included in Core |
 | **Частина XIX: Історична Географія: Слобожанщина Квітки** | ✅ | 102 | Included in Core |
-| **Аналітичний Практикум** | ⚪️ | 182 | Skipped |
+| **Аналітичний Практикум** | ⚪️ | 183 | Skipped |

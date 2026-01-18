@@ -1,0 +1,128 @@
+# C2 Module 42: C2.2 Practice I — Literary Portfolio
+# Status: SPEC (ready for content development)
+
+id: c2-42
+title: Практика C2.2 I — Літературне портфоліо
+slug: c2-2-practice-i
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Літературна Україна — творчі конкурси
+    url: https://litukraina.org.ua/
+    type: reference
+    notes: Guidelines for literary portfolio compilation and evaluation criteria
+  - name: Київський національний університет — творче письмо
+    url: https://www.univ.kiev.ua/
+    type: reference
+    notes: Academic standards for literary portfolio assessment
+  - name: Часопис "Кур'єр Кривбасу"
+    url: https://kr-elib.com.ua/
+    type: example
+    notes: Examples of contemporary Ukrainian literary works for portfolio models
+
+content_outline:
+  - section: Вступ — Мета літературного портфоліо
+    words: 400
+    points:
+      - Визначення літературного портфоліо як інструменту самооцінки
+      - Критерії відбору текстів для портфоліо
+      - Баланс між жанрами та стилями
+
+  - section: Аналітичне есе — Літературознавчий аналіз
+    words: 700
+    points:
+      - Структура літературознавчого есе
+      - Інтеграція теоретичних концепцій (М26-31)
+      - Цитування та посилання в академічному стилі
+
+  - section: Поетичний розділ
+    words: 600
+    points:
+      - Оригінальні вірші з різними формами (верлібр, сонет, рима)
+      - Коментар автора до власних творів
+      - Демонстрація володіння просодією (М22, М28)
+
+  - section: Прозовий розділ
+    words: 800
+    points:
+      - Оповідання або уривок з більшого твору
+      - Нарратологічний самоаналіз (М27, М29)
+      - Робота з індивідуальним голосом (М14-15)
+
+  - section: Перекладацький розділ
+    words: 700
+    points:
+      - Зразок літературного перекладу (поезія або проза)
+      - Коментар до перекладацьких рішень
+      - Порівняльний аналіз оригіналу та перекладу
+
+  - section: Рефлексія та висновки
+    words: 500
+    points:
+      - Самооцінка розвитку літературних навичок
+      - Ідентифікація сильних сторін та зон росту
+      - План подальшого вдосконалення
+
+vocabulary_hints:
+  required:
+    - портфоліо (portfolio)
+    - збірка (collection)
+    - самооцінка (self-assessment)
+    - рефлексія (reflection)
+    - демонстрація (demonstration)
+    - компетентність (competency)
+    - жанрова різноманітність (genre diversity)
+    - авторський коментар (author's commentary)
+    - майстерність (mastery/craftsmanship)
+    - критерій оцінювання (evaluation criterion)
+  recommended:
+    - еклектика (eclecticism)
+    - когерентність (coherence)
+    - репрезентативність (representativeness)
+    - стилістична цілісність (stylistic integrity)
+    - творча еволюція (creative evolution)
+
+activity_hints:
+  - type: essay-response
+    focus: Написання літературознавчого есе на заданий твір
+    word_target: 800
+    output: Аналітичне есе з моделлю відповіді
+
+  - type: critical-analysis
+    focus: Самоаналіз власного поетичного твору
+    output: Коментар із застосуванням термінології М22, М28
+
+  - type: essay-response
+    focus: Оповідання з авторською рефлексією
+    word_target: 600
+    output: Проза + метатекстовий коментар
+
+  - type: comparative-study
+    focus: Порівняння власного перекладу з оригіналом
+    output: Аналіз еквівалентності та перекладацьких стратегій
+
+  - type: quiz
+    focus: Ідентифікація літературних прийомів у текстах портфоліо
+    items: "15+"
+
+  - type: authorial-intent
+    focus: Реконструкція власних творчих рішень
+    output: Пояснення стилістичних виборів
+
+prerequisites:
+  - M26-36 (Literary theory, narratology, poetics, translation)
+  - M14-15 (Individual voice development)
+  - M22 (Rhythm & prosody)
+
+connects_to:
+  - c2-43 (C2.2 Practice II — Creative portfolio)
+  - c2-44 (C2.2 Review)
+  - c2-45 (C2.2 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

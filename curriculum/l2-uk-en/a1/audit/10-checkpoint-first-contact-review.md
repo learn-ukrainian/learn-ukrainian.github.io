@@ -7,7 +7,7 @@
 - **Words:** ✅ 1145/500
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/2
 - **Audio:** ℹ️ No audio
@@ -25,7 +25,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд** | ⚪️ | 79 | Skipped |
-| **Skill 1: Reading Cyrillic** | ✅ | 96 | Included in Core |
+| **Skill 1: Reading Cyrillic** | ⚪️ | 0 | Skipped (using YAML) |
 | **Skill 2: Identifying Gender** | ⚪️ | 162 | Skipped |
 | **Skill 3: Conjugating Verbs** | ⚪️ | 266 | Skipped |
 | **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |

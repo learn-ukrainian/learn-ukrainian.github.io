@@ -1,0 +1,141 @@
+# C2 Module 18: C2.1 Practice II
+# Status: SPEC (ready for content development)
+
+id: c2-18
+title: Практика C2.1 II — Вправи на трансформацію
+slug: c2-1-practice-ii
+module_type: practice
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Style transformation methodology
+    url: https://www.nbuv.gov.ua/
+    type: reference
+    notes: Academic research on register shifting
+  - name: Practical stylistics exercises
+    url: https://mon.gov.ua/
+    type: example
+    notes: Transformation exercise examples
+  - name: Ukrainian State Standard 2024 — Style flexibility
+    url: https://mon.gov.ua/
+    type: reference
+    notes: C2 requirements for register control
+
+content_outline:
+  - section: Вступ — Трансформація як майстерність
+    words: 400
+    points:
+      - Чому вміння трансформувати — ознака C2
+      - Збереження змісту при зміні форми
+      - Критерії успішної трансформації
+
+  - section: Трансформація 1 — Юридичний → Журналістський → Блог
+    words: 700
+    points:
+      - Вихідний юридичний документ
+      - Етапи спрощення
+      - Аналіз втрат та здобутків
+      - Три версії одного змісту
+
+  - section: Трансформація 2 — Наукова стаття → Популярна → Соцмережі
+    words: 700
+    points:
+      - Академічний оригінал
+      - Адаптація для журналу
+      - Скорочення для Twitter/Facebook
+      - Збереження точності
+
+  - section: Трансформація 3 — Формальна промова → Неформальне пояснення → Жарт
+    words: 600
+    points:
+      - Офіційний виступ
+      - Розмовне переказування
+      - Гумористична версія
+      - Межі трансформації
+
+  - section: Multi-step трансформація
+    words: 600
+    points:
+      - Ланцюжки перетворень
+      - Контроль якості на кожному етапі
+      - Зворотна трансформація
+      - Відновлення інформації
+
+  - section: Peer comparison
+    words: 500
+    points:
+      - Порівняння трансформацій з колегами
+      - Різні підходи до одного завдання
+      - Обговорення стратегій
+      - Найкращі практики
+
+  - section: Оцінка збереження інформації
+    words: 500
+    points:
+      - Що втрачається при трансформації
+      - Критичні елементи змісту
+      - Баланс форми та змісту
+      - Етичні питання спрощення
+
+vocabulary_hints:
+  required:
+    - трансформація (transformation)
+    - перетворення (conversion)
+    - адаптація (adaptation)
+    - версія (version)
+    - формат (format)
+    - канал (channel)
+    - платформа (platform)
+    - аудиторія (audience)
+    - спрощення (simplification)
+    - збереження (preservation)
+  recommended:
+    - ланцюжок (chain)
+    - етап (stage)
+    - зворотний (reverse)
+    - втрата (loss)
+    - здобуток (gain)
+
+activity_hints:
+  - type: essay-response
+    focus: Transform legal document to news story to blog post
+    word_target: 600
+    output: Three versions of same content with annotations
+
+  - type: essay-response
+    focus: Transform research abstract to popular article to social media
+    word_target: 500
+    output: Chain of transformations with analysis
+
+  - type: comparative-study
+    focus: Compare your transformations with peer versions
+    output: Analysis of different approaches
+
+  - type: quiz
+    focus: Evaluate information preservation in transformations
+    items: "12+"
+
+  - type: critical-analysis
+    focus: Assess quality of provided transformations
+    output: Feedback on style and content preservation
+
+  - type: discussion
+    focus: Ethical limits of simplification
+    output: Position statement on transformation ethics
+
+prerequisites:
+  - c2-10, c2-11 (Style transformation modules)
+  - c2-17 (Practice I — portfolio)
+  - All style modules (c2-03 through c2-09)
+
+connects_to:
+  - c2-19 (C2.1 Review consolidates skills)
+  - c2-20 (C2.1 Checkpoint assesses transformation ability)
+  - c2-24 (Style blending builds on transformation)
+
+naturalness:
+  score: null
+  status: PENDING

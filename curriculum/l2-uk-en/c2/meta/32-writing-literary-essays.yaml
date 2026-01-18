@@ -1,0 +1,145 @@
+# C2 Module 32: Writing Literary Essays
+# Status: SPEC (ready for content development)
+
+id: c2-32
+title: Написання літературознавчих есеїв
+slug: writing-literary-essays
+module_type: literature
+word_target: 4000
+immersion: "100% Ukrainian"
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Есей — Вікіпедія
+    url: https://uk.wikipedia.org/wiki/Есей
+    type: reference
+    notes: Essay genre characteristics
+  - name: Академічне письмо
+    url: https://uk.wikipedia.org/wiki/Академічне_письмо
+    type: reference
+    notes: Scholarly writing conventions
+  - name: Літературознавчі журнали
+    url: https://ukrlib.com.ua/
+    type: primary
+    notes: Examples of published literary essays
+
+content_outline:
+  - section: Вступ — Літературознавчий есей як жанр
+    words: 500
+    points:
+      - Есей vs. стаття vs. рецензія
+      - Академічний vs. есеїстичний стиль
+      - Вимоги до публікації
+
+  - section: Пошук теми та тези
+    words: 600
+    points:
+      - Від спостереження до питання
+      - Формулювання тези (thesis statement)
+      - Оригінальність і релевантність
+      - Масштаб дослідження
+
+  - section: Структура літературознавчого есею
+    words: 700
+    points:
+      - Вступ з контекстом і тезою
+      - Основна частина з аргументами
+      - Висновки з узагальненням
+      - Логічні переходи
+
+  - section: Робота з текстовими доказами
+    words: 700
+    points:
+      - Цитування: коли і як
+      - Парафраз vs. пряма цитата
+      - Аналіз цитати
+      - Інтеграція доказів в аргумент
+
+  - section: Стилістика академічного письма
+    words: 600
+    points:
+      - Тон і регістр
+      - Уникнення кліше
+      - Точність термінології
+      - Авторський голос в академічному тексті
+
+  - section: Редагування та вдосконалення
+    words: 500
+    points:
+      - Самоперевірка структури
+      - Перевірка аргументації
+      - Мовне редагування
+      - Форматування за стандартами
+
+  - section: Підсумок
+    words: 400
+    points:
+      - Від чернетки до публікації
+      - Рецензування та відгуки
+      - Портфоліо літературознавця
+
+vocabulary_hints:
+  required:
+    - есей (essay)
+    - теза (thesis)
+    - аргумент (argument)
+    - доказ (evidence)
+    - цитата (quotation)
+    - парафраз (paraphrase)
+    - структура (structure)
+    - редагування (editing)
+    - висновок (conclusion)
+    - публікація (publication)
+  recommended:
+    - чернетка (draft)
+    - рецензування (peer review)
+    - методологія (methodology)
+    - контекстуалізація (contextualization)
+    - синтез (synthesis)
+
+activity_hints:
+  - type: essay-response
+    focus: Draft thesis statement for three potential topics
+    word_target: 150
+    output: Three thesis statements with brief justification
+
+  - type: essay-response
+    focus: Write full literary essay on assigned topic
+    word_target: 1500
+    output: Publication-ready essay with proper citations
+
+  - type: critical-analysis
+    focus: Analyze structure of published literary essay
+    output: Map argument flow and evidence integration
+
+  - type: essay-response
+    focus: Revise own essay based on rubric self-assessment
+    word_target: 1500
+    output: Improved version with revision notes
+
+  - type: quiz
+    focus: Citation format and academic writing conventions
+    items: "15+"
+
+  - type: comparative-study
+    focus: Compare effective vs. weak literary essays
+    output: Identify what makes essay successful
+
+  - type: authorial-intent
+    focus: Peer review colleague's essay draft
+    output: Constructive feedback on argument and style
+
+prerequisites:
+  - c2-03 (Науковий стиль Mastery)
+  - c2-26-31 (Literary Theory and Criticism Methods)
+  - Strong analytical reading
+
+connects_to:
+  - c2-33 (Translation Theory)
+  - c2-40 (Literary Prizes & Canon)
+  - c2-45 (C2.2 Checkpoint)
+
+naturalness:
+  score: null
+  status: PENDING

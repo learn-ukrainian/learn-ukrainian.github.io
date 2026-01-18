@@ -1,29 +1,156 @@
-module: a2-07
+# A2 Module 07: Spatial Prepositions
+# Status: CONTENT (content exists, detailed spec added)
+
+id: a2-07
 title: Spatial Prepositions
 subtitle: Location and Motion
+slug: 07-spatial-prepositions
+module_type: grammar
+word_target: 2800
+immersion: "50-60% Ukrainian"
+
 version: '1.0'
 phase: A2.1
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
+
 tags:
-- grammar
-- cases
-- prepositions
-- location
+  - grammar
+  - cases
+  - prepositions
+  - location
+  - motion
+
 grammar:
-- prepositions of location
-- prepositions of motion
-- в/на + locative vs accusative
-- під/за/над + instrumental
+  - prepositions of location
+  - prepositions of motion
+  - в/на + locative vs accusative
+  - під/за/над + instrumental
+
 objectives:
-- Learner can use prepositions to describe location
-- Learner can use prepositions to describe motion
-- Learner can distinguish between location (locative/instrumental) and motion (accusative)
-- Learner can ask for and give directions
-vocabulary_count: 25
-slug: 07-spatial-prepositions
-focus: grammar
+  - Learner can use prepositions to describe location
+  - Learner can use prepositions to describe motion
+  - Learner can distinguish between location (locative/instrumental) and motion (accusative)
+  - Learner can ask for and give directions
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ukrainian State Standard 2024 - Prepositions
+    url: https://mon.gov.ua/
+    type: reference
+    notes: Spatial preposition + case combinations
+  - name: Ukrainian Preposition Reference
+    url: https://uk.wikipedia.org/wiki/Прийменник
+    type: reference
+    notes: Complete preposition system
+
+content_outline:
+  - section: Motion vs Location Concept
+    words: 400
+    points:
+      - Key distinction in Ukrainian (куди? vs де?)
+      - Same preposition, different cases
+      - Pattern recognition strategies
+
+  - section: в/у + Accusative vs Locative
+    words: 500
+    points:
+      - в/у + Acc for motion into (йти в кімнату)
+      - в/у + Loc for location in (бути в кімнаті)
+      - в vs у alternation rules
+
+  - section: на + Accusative vs Locative
+    words: 500
+    points:
+      - на + Acc for motion onto (класти на стіл)
+      - на + Loc for location on (лежати на столі)
+      - Special на uses (на Україні)
+
+  - section: Prepositions with Instrumental
+    words: 500
+    points:
+      - під + Instr for under (сидіти під столом)
+      - над + Instr for above (лампа над столом)
+      - перед + Instr for in front (перед будинком)
+      - за + Instr for behind (за хатою)
+      - між + Instr for between (між нами)
+
+  - section: Direction Prepositions with Genitive
+    words: 500
+    points:
+      - до + Gen for direction to (йти до школи)
+      - з/із + Gen for from (йти з роботи)
+      - біля/коло + Gen for near (біля магазину)
+
+  - section: Practice with Diagrams
+    words: 400
+    points:
+      - "Where is the cat?" exercises
+      - Motion sequences
+      - Command drills with prepositions
+
+vocabulary_hints:
+  required:
+    - в/у (in/into)
+    - на (on/onto)
+    - під (under)
+    - над (above)
+    - перед (in front of)
+    - за (behind)
+    - між (between)
+    - до (to)
+    - з/із (from)
+    - напроти (opposite)
+    - біля (near)
+    - коло (near)
+    - поруч (nearby)
+    - навколо (around)
+    - вздовж (along)
+  recommended:
+    - всередині (inside)
+    - ззовні (outside)
+    - посеред (in the middle)
+    - збоку (on the side)
+    - поміж (among)
+
+activity_hints:
+  - type: fill-in
+    focus: Motion vs location cases
+    items: "15+"
+
+  - type: quiz
+    focus: Diagram labeling - where is the cat?
+    items: "10+"
+
+  - type: fill-in
+    focus: Command drill - put it on/under/behind
+    items: "12+"
+
+  - type: match-up
+    focus: Preposition + case + meaning
+    items: "12+"
+
+  - type: quiz
+    focus: Direction vs position selection
+    items: "10+"
+
+  - type: dialogue
+    focus: Giving directions
+    items: "4+"
+
+prerequisites:
+  - A1 basic prepositions (в, на)
+  - a2-04 (Instrumental endings)
+  - A1 locative case basics
+
+connects_to:
+  - a2-08 (Logical Prepositions)
+  - a2-09 (All Cases Practice)
+  - a2-65 (Giving Directions)
+
 naturalness:
   score: 9
   status: PASS

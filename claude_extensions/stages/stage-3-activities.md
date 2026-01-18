@@ -357,26 +357,89 @@ reading (INPUT) → essay-response / critical-analysis / comparative-study (OUTP
 
 <critical>
 
-**Reading activities MUST have `id` field:**
+**Reading activities MUST have `id` field and use ONE of two formats:**
+
+**Format 1: Inline Text (for poems, short excerpts)**
 ```yaml
 - type: reading
-  id: reading-01
-  title: 'Джерело: Кобзар'
-  source: '**«Заповіт» (1845)** — Тарас Шевченко'
+  id: reading-testament            # REQUIRED for linking
+  title: 'Джерело: Заповіт'
+  source: 'Тарас Шевченко (1845)'  # Attribution (author, year)
   text: |
     Як умру, то поховайте
     Мене на могилі...
+  tasks:
+    - 'Які образи використовує поет?'
 ```
+
+**Format 2: External Resource (for biographies, full texts)**
+```yaml
+- type: reading
+  id: reading-bio                  # REQUIRED for linking
+  title: 'Біографія письменника'
+  resource:
+    type: Biography
+    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646  # VERIFY THIS!
+    title: 'Нечуй-Левицький. Життя і творчість'
+  tasks:
+    - 'Як вплинуло дитинство на творчість?'
+    - 'Які стосунки були з сучасниками?'
+```
+
+**⚠️ URL VERIFICATION (MANDATORY):**
+Before using external URLs, you MUST:
+1. Open the URL in a browser
+2. Verify the page is about the correct author/work
+3. Check the page title matches the expected content
+
+Common UkrLib biography IDs (always verify!):
+- Котляревський: tid=1672
+- Шевченко: tid=57
+- Куліш: tid=1621
+- Нечуй-Левицький: tid=1646 (NOT 1815!)
+- Франко: tid=71
 
 **Analytical activities MUST reference their source:**
 ```yaml
 - type: critical-analysis
   title: 'Аналіз: Заповіт'
-  source_reading: reading-01      # ← Links to reading above
+  source_reading: reading-testament  # ← Links to reading above
   target_text: 'Як умру, то поховайте...'
   questions:
     - 'Чому автор обрав наказовий спосіб?'
 ```
+
+</critical>
+
+### Self-Validation Checklist (MANDATORY)
+
+<critical>
+
+**Before outputting activities, YOU MUST verify against your knowledge:**
+
+1. **External URL Verification**
+   - Do you know this URL from your training data?
+   - Is the author/topic correct for this URL?
+   - If unsure, DO NOT use the URL - use inline text format instead
+   - Example: "Is UkrLib tid=1646 the correct ID for Nechuy-Levytsky?" → Verify before using
+
+2. **Reading-Analysis Coherence**
+   - Does the `target_text` in critical-analysis actually appear in the source reading?
+   - Do the `questions` relate directly to the reading content?
+   - Does the `prompt` in essay-response engage meaningfully with the source?
+   - Would a student be able to answer using ONLY the reading provided?
+
+3. **Model Answer Quality**
+   - Does the model answer actually address the prompt/questions?
+   - Does it reference specific elements from the reading?
+   - Is it at the appropriate academic level (B2/C1/post-C1)?
+
+4. **Factual Accuracy**
+   - Are dates, names, and historical facts correct?
+   - Are literary attributions accurate (author, year, work title)?
+   - Do biographical claims match known facts about the author?
+
+**If you cannot verify any of the above, STOP and ask the user for clarification.**
 
 </critical>
 
