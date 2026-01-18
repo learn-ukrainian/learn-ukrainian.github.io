@@ -3,25 +3,28 @@
 
 module: b2-hist-04
 id: b2-hist-04
-title: "Слов'яни: Походження та розселення"
-subtitle: 'Slavic Origins and Migration'
+title: Слов'яни на українських землях — Витоки державності
+subtitle: 'Slavic Origins and Statehood'
 slug: sloviany-origins
 version: '2.0'
-phase: 'HIST.1 Origins'
+phase: 'B2-HIST.1 [Витоки]'
 focus: history
-pedagogy: 'CBI'
-duration: 120
+pedagogy: 'seminar'
+register: публіцистичний
+duration: 150
 transliteration: none
 tags:
   - history
-  - ancient
+  - early-medieval
   - slavs
 grammar:
-  - 'B2 historical register'
+  - Історичний наратив
+  - Минулий час у науковому тексті
 objectives:
-  - 'Learner understands theories of Slavic origins'
-  - 'Learner can describe the Great Slavic Migration'
-vocabulary_count: 150
+  - Учень може описувати слов'янські племена на українських землях
+  - Учень може аналізувати свідчення античних авторів про слов'ян
+  - Учень може аргументувати зв'язок між племінною демократією і українською політичною традицією
+vocabulary_count: 30
 naturalness:
   score: 9
   status: PASS

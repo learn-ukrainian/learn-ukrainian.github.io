@@ -1,9 +1,34 @@
 # B2-HIST Module 06: Заснування Києва: Легенда і археологія
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Audit Passed)
 
+module: b2-hist-06
 id: b2-hist-06
-title: "Заснування Києва: Легенда і археологія"
+title: Заснування Києва — Легенда та історія
+subtitle: 'Founding of Kyiv: Legend and Archaeology'
 slug: zasnuvannia-kyieva
+version: '2.0'
+phase: 'B2-HIST.1 [Витоки]'
+focus: history
+pedagogy: 'seminar'
+register: публіцистичний
+duration: 150
+transliteration: none
+tags:
+  - history
+  - medieval
+  - kyiv-founding
+grammar:
+  - Історичний наратив
+  - Пасивний стан у науковому тексті
+objectives:
+  - Учень може переказувати легенду про заснування Києва
+  - Учень може аналізувати роль торговельного шляху «з варягів у греки»
+  - Учень може порівнювати міфологічні та історичні версії походження міста
+vocabulary_count: 35
+naturalness:
+  score: 9
+  status: PASS
+
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian

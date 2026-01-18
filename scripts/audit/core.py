@@ -1112,7 +1112,14 @@ def audit_module(file_path: str) -> bool:
                 items = count_items('', activity)
                 density_target = config['min_items_per_activity']
                 if act_type in ACTIVITY_COMPLEXITY:
-                    complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
+                    # Try specific key first (e.g. B2-history)
+                    specific_key = f"{level_code}-{module_focus}" if module_focus else level_code
+                    complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(specific_key)
+                    
+                    # Fallback to base level key (e.g. B2)
+                    if not complexity_rules:
+                        complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
+
                     if 'min_items' in complexity_rules:
                         density_target = complexity_rules['min_items']
 

@@ -1,11 +1,39 @@
 # B2-HIST Module 08: Синтез: Від Трипілля до Києва
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Audit Passed)
 
+module: b2-hist-08
 id: b2-hist-08
 title: "Синтез: Від Трипілля до Києва"
+subtitle: 'From Trypillia to Kyiv: Continuity of the People'
 slug: syntez-vytoky-1
+version: '2.0'
+phase: 'HIST.1 Origins Synthesis'
+focus: history
+pedagogy: 'seminar'
+register: публіцистичний
+duration: 150
+transliteration: none
+tags:
+  - history
+  - synthesis
+  - checkpoint
+  - trypillia
+  - kyivan-rus
+  - early-medieval
+grammar:
+  - Historical narrative synthesis
+  - Argumentative writing structures
+objectives:
+  - Learner can synthesize historical themes across eras from Trypillia to Kyiv
+  - Learner can construct historical arguments with evidence from primary sources
+  - Learner can identify continuities in Ukrainian history and deconstruct colonial myths
+vocabulary_count: 35
+naturalness:
+  score: 9
+  status: PASS
+
 module_type: synthesis
-word_target: 3750
+word_target: 2000
 immersion: 100% Ukrainian
 
 # === AGENT BUILD SPEC ===

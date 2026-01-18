@@ -1,13 +1,13 @@
 # Audit Report: slavic-tribes.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 3278/3000
-- **Activities:** ✅ 10/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Activities:** ✅ 14/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 12/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-6)
 - **Immersion:** 🇺🇦 97.1% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

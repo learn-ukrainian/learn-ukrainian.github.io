@@ -370,6 +370,7 @@ ACTIVITY_COMPLEXITY = {
         'A2': {'min_items': 2},
         'B1': {'min_items': 3},
         'B2': {'min_items': 3},
+        'B2-history': {'min_items': 1},
         'C1': {'min_items': 3},
         'C2': {'min_items': 3},
     },
@@ -580,15 +581,19 @@ LEVEL_CONFIG = {
     },
     'B2-history': {
         'target_words': 3000,
-        'min_activities': 10,
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 6,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 20,
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'min_immersion': 90,
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'essay_min_words': 150,
+        'essay_max_words': 250
     },
     'B2-biography': {
         'target_words': 3000,

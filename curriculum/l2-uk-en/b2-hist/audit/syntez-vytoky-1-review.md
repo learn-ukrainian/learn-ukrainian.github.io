@@ -1,22 +1,41 @@
 # Audit Report: syntez-vytoky-1.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Хронологія витоків' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'b2-history-module-template.md'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template.md'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
+  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1817/1750
-- **Activities:** ✅ 12/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Words:** ❌ 1817/3000
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 65/25
+- **Vocab:** ✅ 65/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.0% (target 90-100% (skills))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 97.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)

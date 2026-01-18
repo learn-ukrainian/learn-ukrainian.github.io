@@ -1,9 +1,36 @@
 # B2-HIST Module 07: Хозарський каганат і слов'яни
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Audit Passed)
 
+module: b2-hist-07
 id: b2-hist-07
 title: Хозарський каганат і слов'яни
+subtitle: 'Neighbors and Rivals'
 slug: khozary-i-sloviany
+version: '2.0'
+phase: 'HIST.1 Origins'
+focus: history
+pedagogy: 'seminar'
+duration: 150
+transliteration: none
+tags:
+  - history
+  - khazars
+  - slavic
+  - medieval
+  - tribute
+grammar:
+  - Historical narrative register
+  - Subordinate clauses of reason (оскільки, тому що)
+  - Participles in historical descriptions
+objectives:
+  - Learner understands the political structure of the Khazar Khaganate
+  - Learner can explain the relationship between Khazars and Slavic tribes
+  - Learner masters vocabulary related to nomadic states and tribute
+vocabulary_count: 28
+naturalness:
+  score: 9
+  status: PASS
+
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian

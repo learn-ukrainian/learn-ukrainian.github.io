@@ -4,7 +4,7 @@
   "title": "B2-HIST Track Module Activities",
   "description": "Activity schema for b2-hist track modules. Matches B2 core complexity but allows track-specific analytical activities.",
   "type": "array",
-  "minItems": 10,
+  "minItems": 5,
   "items": {
     "oneOf": [
       {

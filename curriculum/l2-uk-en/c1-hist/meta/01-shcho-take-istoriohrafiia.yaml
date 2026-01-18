@@ -1,9 +1,29 @@
 # C1-HIST Module 01: Що таке історіографія?
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Example for new meta format)
 
+module: c1-hist-01
 id: c1-hist-01
 title: Що таке історіографія?
+subtitle: 'What is Historiography?'
 slug: shcho-take-istoriohrafiia
+version: '2.0'
+phase: 'C1H.1 Historiography & Methodology'
+focus: history
+pedagogy: 'seminar'
+duration: 150
+transliteration: none
+tags:
+  - historiography
+  - methodology
+  - theory
+grammar:
+  - 'C1 academic syntax'
+  - 'Abstract nouns'
+objectives:
+  - 'Analyze the difference between history and historiography'
+  - 'Evaluate the impact of bias and narrative on historical writing'
+vocabulary_count: 30
+
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian

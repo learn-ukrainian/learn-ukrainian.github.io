@@ -1,5 +1,5 @@
 # Audit Report: sloviany-origins.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 

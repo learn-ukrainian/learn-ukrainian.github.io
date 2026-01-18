@@ -1,9 +1,29 @@
 # C1-HIST Module 02: Українська історіографічна традиція
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Example for new meta format)
 
+module: c1-hist-02
 id: c1-hist-02
 title: Українська історіографічна традиція
+subtitle: 'Ukrainian Historiographical Tradition'
 slug: ukrainska-istoriohrafichna-tradytsiia
+version: '2.0'
+phase: 'C1H.1 Historiography & Methodology'
+focus: history
+pedagogy: 'seminar'
+duration: 150
+transliteration: none
+tags:
+  - hrushevsky
+  - diaspora
+  - schools
+grammar:
+  - 'C1 biographical narrative'
+  - 'Complex periods'
+objectives:
+  - 'Trace the evolution of Ukrainian historical thought'
+  - 'Assess the contribution of Mykhailo Hrushevsky'
+vocabulary_count: 30
+
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian

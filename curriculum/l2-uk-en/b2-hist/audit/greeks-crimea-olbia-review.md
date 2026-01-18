@@ -1,13 +1,13 @@
 # Audit Report: greeks-crimea-olbia.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
-**Naturalness:** 9/10 (PASS)
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 3012/3000
-- **Activities:** ✅ 12/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Activities:** ✅ 12/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 12/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
@@ -15,11 +15,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (12 activities)
+- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-6)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

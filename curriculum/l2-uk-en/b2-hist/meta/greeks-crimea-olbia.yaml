@@ -4,26 +4,32 @@
 module: b2-hist-03
 id: b2-hist-03
 title: "Грецькі міста-держави: Ольвія, Херсонес"
-subtitle: 'Greek City-States: Olbia, Chersonesus'
+subtitle: 'Antiquity on Ukrainian Lands'
 slug: greeks-crimea-olbia
 version: '2.0'
-phase: 'HIST.1 Origins'
+phase: 'B2-HIST.1 [Витоки]'
 focus: history
-pedagogy: 'CBI'
-duration: 120
+pedagogy: 'seminar'
+register: публіцистичний
+duration: 150
 transliteration: none
 tags:
   - history
-  - ancient
-  - greece
+  - antiquity
+  - greeks
+  - crimea
+  - colonization
 grammar:
-  - 'B2 historical register'
+  - 'Historical narrative register'
+  - 'Past tense mastery'
 objectives:
-  - 'Learner understands the significance of Greek colonization'
-  - 'Learner can compare democratic poleis with monarchies'
-vocabulary_count: 120
+  - 'Understand the causes of Greek colonization in Ukraine'
+  - 'Describe the political structure of Olbia and Chersonesus'
+  - 'Analyze the interaction between Greeks and Scythians'
+  - 'Recognize the legacy of antiquity in Ukrainian history'
+vocabulary_count: 24
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 
 module_type: history
