@@ -218,6 +218,9 @@ STAGE_ORDER = {
     'TTT': ['diagnostic', 'recognition', 'presentation', 'controlled-production', 'free-production'],
     'CLIL': ['pre-engagement', 'immersion', 'narrative', 'deep-dive', 'recognition', 'controlled-production', 'free-production'],
     'NARRATIVE': ['pre-engagement', 'immersion', 'narrative', 'deep-dive', 'recognition', 'controlled-production', 'free-production'],
+    # Seminar-style tracks (LIT, HIST, BIO)
+    # reading is the INPUT (engage with source), analysis activities are the OUTPUT
+    'SEMINAR': ['reading', 'essay-response', 'critical-analysis', 'comparative-study'],
 }
 
 # Activity complexity rules by type and level
@@ -375,7 +378,8 @@ VALID_ACTIVITY_TYPES = [
     "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
     "error-correction", "anagram", "select", "translate", "cloze",
     "mark-the-words",
-    "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
+    # Seminar-style activities (LIT, HIST, BIO tracks)
+    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
 # Activity keywords for detection
@@ -383,7 +387,8 @@ ACTIVITY_KEYWORDS = [
     "match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble",
     "fill-in", "error-correction", "anagram", "cloze",
     "select", "translate", "mark-the-words",
-    "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
+    # Seminar-style activities
+    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
 # Core section keywords (not activities)
@@ -824,9 +829,12 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in'}
     },
     'LIT': {
+        # LIT Track: Pure seminar style (post-C1)
+        # Activities: reading + essay-response + critical-analysis + comparative-study
+        # NO traditional activities (quiz, match-up, fill-in)
         'target_words': 3500,  # 3500-4000 for substantial literary analysis
         'min_activities': 3,
-        'max_activities': 6,  # Set max activities to 6 for LIT modules
+        'max_activities': 6,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
         'min_types_unique': 2,
         'min_vocab': 0,
@@ -834,7 +842,72 @@ LEVEL_CONFIG = {
         'min_immersion': 95,  # Allow 5% for Latin/Greek scholarly terms
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'essay-response', 'critical-analysis', 'comparative-study'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},  # Must have all three
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    # =============================================================================
+    # SEMINAR-STYLE TRACKS (Quality over Quantity)
+    # =============================================================================
+    'B2-HIST-seminar': {
+        # B2-HIST Track: Transitional seminar style (B2 level)
+        # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
+        # Easier than LIT: shorter essays, some factual checks allowed
+        'target_words': 3000,
+        'min_activities': 3,
+        'max_activities': 6,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 20,
+        'min_engagement': 5,
+        'min_immersion': 90,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},  # Must have both
+        'allowed_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'true-false'},
+        'essay_min_words': 150,  # Shorter than LIT (150-200 vs 300-500)
+        'essay_max_words': 250
+    },
+    'C1-HIST-seminar': {
+        # C1-HIST Track: Academic seminar style (C1 level)
+        # Activities: reading + essay-response (full) + critical-analysis + comparative-study
+        # Academic rigor: longer essays, source criticism, historiographical analysis
+        'target_words': 3500,
+        'min_activities': 3,
+        'max_activities': 6,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 25,
+        'min_engagement': 6,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
+    },
+    'C1-BIO-seminar': {
+        # C1-BIO Track: Biography seminar style (C1 level)
+        # Activities: reading + essay-response + critical-analysis + comparative-study
+        # Focus: biographical analysis, legacy evaluation, era context
+        'target_words': 2500,
+        'min_activities': 3,
+        'max_activities': 6,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 24,
+        'min_engagement': 5,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'},
+        'essay_min_words': 250,
+        'essay_max_words': 400
     }
 }
 
