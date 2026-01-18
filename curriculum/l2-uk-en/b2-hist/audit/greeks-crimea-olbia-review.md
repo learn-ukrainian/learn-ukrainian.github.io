@@ -1,6 +1,6 @@
 # Audit Report: greeks-crimea-olbia.md
 **Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
-**Naturalness:** 10/10 (PASS)
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -19,7 +19,7 @@
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

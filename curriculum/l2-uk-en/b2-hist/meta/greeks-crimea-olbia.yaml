@@ -1,9 +1,31 @@
 # B2-HIST Module 03: Грецькі міста-держави: Ольвія, Херсонес
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Audit Passed)
 
+module: b2-hist-03
 id: b2-hist-03
 title: "Грецькі міста-держави: Ольвія, Херсонес"
+subtitle: 'Greek City-States: Olbia, Chersonesus'
 slug: greeks-crimea-olbia
+version: '2.0'
+phase: 'HIST.1 Origins'
+focus: history
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - history
+  - ancient
+  - greece
+grammar:
+  - 'B2 historical register'
+objectives:
+  - 'Learner understands the significance of Greek colonization'
+  - 'Learner can compare democratic poleis with monarchies'
+vocabulary_count: 120
+naturalness:
+  score: 9
+  status: PASS
+
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
