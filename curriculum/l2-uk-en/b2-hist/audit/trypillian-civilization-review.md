@@ -5,9 +5,9 @@
 
 ## Gates
 - **Words:** ⚠️ 2942/3000 (58 short)
-- **Activities:** ✅ 18/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 18 (target 3-6); 1 cloze with year blanks
+- **Content_heavy:** ⚠️ Too many activities: 7 (target 3-6)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

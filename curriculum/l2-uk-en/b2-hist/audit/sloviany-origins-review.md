@@ -5,9 +5,9 @@
 
 ## Gates
 - **Words:** ✅ 3014/3000
-- **Activities:** ✅ 16/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-6)
+- **Content_heavy:** ⚠️ Too many activities: 7 (target 3-6)
 - **Immersion:** 🇺🇦 97.3% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
