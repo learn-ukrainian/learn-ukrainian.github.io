@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-b2-hist.schema.json",
-  "title": "B2-HIST Track Module Activities (Seminar Style)",
-  "description": "Activity schema for b2-hist track modules (post-C1 specialization). Uses SEMINAR pedagogy: reading (INPUT) → analytical response (OUTPUT). Forbidden: quiz, match-up, fill-in, unjumble, cloze, anagram, mark-the-words. Required: reading + essay-response + critical-analysis.",
+  "title": "B2-HIST Track Module Activities",
+  "description": "Activity schema for b2-hist track modules. Matches B2 core complexity but allows track-specific analytical activities.",
   "type": "array",
-  "minItems": 3,
+  "minItems": 10,
   "items": {
     "oneOf": [
       {
@@ -76,7 +76,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 5,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -88,7 +88,7 @@
               "question": {
                 "type": "string",
                 "minLength": 1,
-                "description": "Question should be 20-40 words for LIT literary analysis (themes, motifs, literary movements, authorial style)"
+                "description": "Question should be 10-25 words for B2 complexity"
               },
               "options": {
                 "type": "array",
@@ -146,7 +146,7 @@
         },
         "pairs": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 10,
           "items": {
             "type": "object",
             "required": [
@@ -157,8 +157,7 @@
             "properties": {
               "left": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT pairs should match literary terms, quotations, authors, periods, or critical concepts"
+                "minLength": 1
               },
               "right": {
                 "type": "string",
@@ -191,7 +190,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 10,
           "items": {
             "type": "object",
             "required": [
@@ -203,8 +202,7 @@
             "properties": {
               "sentence": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT sentences should use literary vocabulary, quotations, or critical analysis language"
+                "minLength": 1
               },
               "answer": {
                 "type": "string",
@@ -260,8 +258,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT groups could be literary periods, genres, movements, or thematic categories"
+                "minLength": 1
               },
               "items": {
                 "type": "array",
@@ -294,7 +291,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -305,13 +302,13 @@
             "properties": {
               "words": {
                 "type": "array",
-                "minItems": 15,
-                "maxItems": 30,
+                "minItems": 8,
+                "maxItems": 25,
                 "items": {
                   "type": "string",
                   "minLength": 1
                 },
-                "description": "LIT unjumble requires 15-30 words per sentence for literary prose complexity and classical syntax"
+                "description": "B2 unjumble requires 8-25 words per sentence"
               },
               "answer": {
                 "type": "string",
@@ -348,7 +345,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 10,
           "items": {
             "type": "object",
             "required": [
@@ -359,8 +356,7 @@
             "properties": {
               "statement": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT statements should test literary interpretation, historical context, or thematic understanding"
+                "minLength": 1
               },
               "correct": {
                 "type": "boolean"
@@ -391,12 +387,11 @@
         },
         "passage": {
           "type": "string",
-          "minLength": 1,
-          "description": "LIT passages should be excerpts from classical Ukrainian literature with rich literary vocabulary"
+          "minLength": 1
         },
         "blanks": {
           "type": "array",
-          "minItems": 22,
+          "minItems": 12,
           "items": {
             "type": "object",
             "required": [
@@ -454,7 +449,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -468,8 +463,7 @@
             "properties": {
               "sentence": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT error correction should target literary language, stylistic choices, or classical grammar"
+                "minLength": 1
               },
               "error": {
                 "type": "string",
@@ -516,8 +510,7 @@
         },
         "instruction": {
           "type": "string",
-          "minLength": 1,
-          "description": "LIT tasks should identify literary devices, symbolic language, rhetorical figures, or key thematic words"
+          "minLength": 1
         },
         "text": {
           "type": "string",
@@ -551,7 +544,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -562,8 +555,7 @@
             "properties": {
               "question": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT select questions should test multi-layered literary interpretation and analysis"
+                "minLength": 1
               },
               "options": {
                 "type": "array",
@@ -621,7 +613,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 8,
           "items": {
             "type": "object",
             "required": [
@@ -632,8 +624,7 @@
             "properties": {
               "source": {
                 "type": "string",
-                "minLength": 1,
-                "description": "LIT translation should involve classical Ukrainian literary texts with period-appropriate vocabulary"
+                "minLength": 1
               },
               "options": {
                 "type": "array",
@@ -671,7 +662,7 @@
     },
     "essay-response-b2-hist": {
       "type": "object",
-      "description": "Literary analysis essay requiring deep textual interpretation. Should link to a reading activity via 'source_reading'.",
+      "description": "Analytical essay requiring textual interpretation. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
@@ -685,7 +676,7 @@
         "source_reading": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "ID of the reading activity this essay responds to (e.g., 'reading-01')"
+          "description": "ID of the reading activity this essay responds to"
         },
         "instruction": {
           "type": "string",
@@ -697,17 +688,14 @@
         },
         "prompt": {
           "type": "string",
-          "minLength": 10,
-          "description": "LIT prompts should require sophisticated literary analysis of themes, motifs, style, or cultural context"
+          "minLength": 10
         },
         "min_words": {
           "type": "integer",
-          "minimum": 150,
-          "description": "Minimum word count (LIT: 300-500, C1: 300-500, B2: 150-250)"
+          "minimum": 150
         },
         "model_answer": {
-          "type": "string",
-          "description": "Model answer should demonstrate expert literary analysis using critical terminology and textual evidence"
+          "type": "string"
         },
         "rubric": {
           "type": "array",
@@ -741,7 +729,7 @@
     },
     "critical-analysis-b2-hist": {
       "type": "object",
-      "description": "Deep literary analysis of a specific text excerpt. Should link to a reading activity via 'source_reading'.",
+      "description": "Analysis of a text or concept. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
@@ -755,7 +743,7 @@
         "source_reading": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
+          "description": "ID of the reading activity this analysis responds to"
         },
         "instruction": {
           "type": "string",
@@ -766,8 +754,7 @@
           "minLength": 1
         },
         "target_text": {
-          "type": "string",
-          "description": "Specific excerpt from source reading for focused analysis"
+          "type": "string"
         },
         "questions": {
           "type": "array",
@@ -775,29 +762,26 @@
           "items": {
             "type": "string",
             "minLength": 1
-          },
-          "description": "2-4 analytical questions about the text"
+          }
         },
         "model_answers": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1
-          },
-          "description": "Reference answers for each question"
+          }
         },
         "focus_points": {
           "type": "array",
           "items": {
             "type": "string"
-          },
-          "description": "Literary analytical dimensions (symbolism, narrative technique, intertextuality, authorial voice)"
+          }
         }
       }
     },
     "comparative-study-b2-hist": {
       "type": "object",
-      "description": "Comparison of literary texts, authors, periods, or movements. Can link to reading activity via 'source_reading'.",
+      "description": "Comparison of texts or concepts. Can link to reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
@@ -812,7 +796,7 @@
         "source_reading": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "ID of the reading activity providing context (e.g., 'reading-01')"
+          "description": "ID of the reading activity providing context"
         },
         "instruction": {
           "type": "string",
@@ -827,29 +811,26 @@
           "minItems": 2,
           "items": {
             "type": "string"
-          },
-          "description": "Literary works, authors, or periods for comparison"
+          }
         },
         "criteria": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "string"
-          },
-          "description": "Analytical dimensions (style, theme, historical context, literary movement)"
+          }
         },
         "prompt": {
           "type": "string"
         },
         "model_answer": {
-          "type": "string",
-          "description": "Reference comparative analysis"
+          "type": "string"
         }
       }
     },
     "authorial-intent-b2-hist": {
       "type": "object",
-      "description": "Analysis of authorial purpose, literary techniques, and rhetorical strategies. Should link to reading via 'source_reading'.",
+      "description": "Analysis of authorial purpose. Should link to reading via 'source_reading'.",
       "required": [
         "type",
         "title",
@@ -863,7 +844,7 @@
         "source_reading": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
+          "description": "ID of the reading activity this analysis responds to"
         },
         "instruction": {
           "type": "string",
@@ -874,8 +855,7 @@
           "minLength": 1
         },
         "text_excerpt": {
-          "type": "string",
-          "description": "Specific excerpt from source reading for analysis"
+          "type": "string"
         },
         "prompt": {
           "type": "string"
@@ -884,8 +864,7 @@
           "type": "array",
           "items": {
             "type": "string"
-          },
-          "description": "Literary devices (metaphor, irony, allegory, symbolism, narrative perspective)"
+          }
         },
         "model_answer": {
           "type": "string"
@@ -894,14 +873,21 @@
     },
     "reading-b2-hist": {
       "type": "object",
-      "description": "Primary source text for analysis. MUST have 'id' field for linking to analytical activities via 'source_reading'.",
+      "description": "Primary source text or external resource for analysis. MUST have 'id' for linking via 'source_reading'. Use 'text' for inline quotes OR 'resource' for external links.",
       "required": [
         "type",
         "title",
-        "id",
-        "text"
+        "id"
       ],
       "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["text"]
+        },
+        {
+          "required": ["resource"]
+        }
+      ],
       "properties": {
         "type": {
           "const": "reading"
@@ -909,24 +895,46 @@
         "id": {
           "type": "string",
           "pattern": "^reading-[a-z0-9-]+$",
-          "description": "REQUIRED: Unique identifier for linking (e.g., 'reading-01', 'reading-testament')"
+          "description": "REQUIRED: Unique identifier for linking"
         },
         "title": {
           "type": "string",
           "minLength": 1
         },
         "source": {
-          "type": "string",
-          "description": "Attribution (e.g., 'Тарас Шевченко (1845)')"
+          "type": "string"
         },
         "text": {
           "type": "string",
-          "minLength": 10,
-          "description": "Primary source text for analysis"
+          "minLength": 10
         },
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "resource": {
+          "type": "object",
+          "description": "External resource link. Use for longer materials.",
+          "required": ["url"],
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
         }
       }
     }

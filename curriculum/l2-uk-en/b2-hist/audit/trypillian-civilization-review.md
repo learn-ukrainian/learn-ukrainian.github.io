@@ -1,13 +1,13 @@
 # Audit Report: trypillian-civilization.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
+**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ⚠️ 2942/3000 (58 short)
-- **Activities:** ✅ 14/10
+- **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 14/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ 1 cloze with year blanks
+- **Content_heavy:** ⚠️ Too many activities: 18 (target 10-14); 1 cloze with year blanks
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

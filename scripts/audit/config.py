@@ -350,20 +350,8 @@ ACTIVITY_COMPLEXITY = {
         'C1': {'min_len': 9, 'max_len': 22, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 12)
         'C2': {'min_len': 11, 'max_len': 28, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 14)
     },
-    'essay-response': {
-        'B2': {'min_words': 250, 'min_items': 1},
-        'C1': {'min_words': 400, 'min_items': 1},
-        'C2': {'min_words': 600, 'min_items': 1},
-    },
-    'reading': {
-        'A1': {'min_items': 2},
-        'A2': {'min_items': 2},
-        'B1': {'min_items': 3},
-        'B2': {'min_items': 3},
-        'C1': {'min_items': 3},
-        'C2': {'min_items': 3},
-    },
     'critical-analysis': {
+        'B2': {'min_items': 1},
         'C1': {'min_items': 1},
         'C2': {'min_items': 1},
     },
@@ -373,9 +361,23 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'min_items': 1},
     },
     'authorial-intent': {
+        'B2': {'min_items': 1},
         'C1': {'min_items': 1},
         'C2': {'min_items': 1},
-    }
+    },
+    'reading': {
+        'A1': {'min_items': 2},
+        'A2': {'min_items': 2},
+        'B1': {'min_items': 3},
+        'B2': {'min_items': 3},
+        'C1': {'min_items': 3},
+        'C2': {'min_items': 3},
+    },
+    'essay-response': {
+        'B2': {'min_words': 150, 'min_items': 1},
+        'C1': {'min_words': 400, 'min_items': 1},
+        'C2': {'min_words': 600, 'min_items': 1},
+    },
 }
 
 # Valid activity types

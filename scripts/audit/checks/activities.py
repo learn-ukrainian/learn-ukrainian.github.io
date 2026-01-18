@@ -629,9 +629,12 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             return len(re.findall(r'\*([^\*]+)\*', activity.text))
         elif isinstance(activity, ReadingActivity):
             # Seminar tracks use 'text' (primary source), others use 'tasks'
+            count = 0
             if activity.text:
-                return 1  # Has primary source text
-            return len(activity.tasks)
+                count = 1
+            if activity.tasks:
+                count = max(count, len(activity.tasks))
+            return count
         elif isinstance(activity, (EssayResponseActivity, CriticalAnalysisActivity, 
                                    ComparativeStudyActivity, AuthorialIntentActivity)):
             return 1

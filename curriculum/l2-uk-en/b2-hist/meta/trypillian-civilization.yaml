@@ -1,140 +1,23 @@
-# B2-HIST Module 01: Трипільська цивілізація
-# Status: SPEC (ready for content development)
-
-id: b2-hist-01
-title: Трипільська цивілізація
+module: b2-hist-01
+title: 'Трипільська цивілізація'
+subtitle: 'Trypillian Civilization'
+version: '2.0'
+phase: 'HIST.1 Origins'
+focus: history
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - history
+  - ancient
+  - archaeology
+grammar:
+  - 'B2 historical register'
+objectives:
+  - 'Learner understands the significance of Trypillian culture'
+  - 'Learner can identify key features of proto-cities'
+vocabulary_count: 120
 slug: trypillian-civilization
-module_type: history
-word_target: 3750
-immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
-sources:
-  - name: Трипільська культура (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Трипільська_культура
-    type: reference
-    notes: Comprehensive overview of Trypillia civilization
-  - name: Трипілля — Енциклопедія історії України
-    url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Trypilska_kultura
-    type: reference
-    notes: Academic encyclopedia entry
-  - name: Археологічні пам'ятки Трипілля
-    url: https://litopys.org.ua/
-    type: primary
-    notes: Archaeological site descriptions
-
-content_outline:
-  - section: Вступ — Найдавніша цивілізація Європи
-    words: 500
-    points:
-      - Трипільська культура як одна з найдавніших в Європі (5500-2750 до н.е.)
-      - Географічне поширення — від Карпат до Дніпра
-      - Чому Трипілля важливе для української ідентичності
-      - Відкриття культури Вікентієм Хвойкою (1893)
-
-  - section: Суспільство та побут
-    words: 700
-    points:
-      - Велика Трипілля — протоміста до 15 000 населення
-      - Соціальна організація — матріархат чи егалітаризм?
-      - Землеробство — пшениця, ячмінь, просо
-      - Скотарство та ремесла
-
-  - section: Мистецтво та символіка
-    words: 600
-    points:
-      - Керамічний розпис — спіралі, меандри, зображення тварин
-      - Статуетки — культ родючості
-      - Орнаменти та їхнє значення
-      - Зв'язок із пізнішою українською орнаментикою
-
-  - section: Релігія та світогляд
-    words: 500
-    points:
-      - Культ Великої Богині
-      - Ритуальне спалення поселень
-      - Астрономічні знання
-      - Трипільський календар
-
-  - section: Занепад та спадщина
-    words: 600
-    points:
-      - Причини занепаду — кліматичні зміни, міграції
-      - Вплив на пізніші культури
-      - Трипілля в сучасній українській культурі
-      - Дискусії про автохтонність українців
-
-  - section: Музеї та археологія сьогодні
-    words: 500
-    points:
-      - Національний музей історії України
-      - Археологічний музей у Тальянках
-      - Сучасні розкопки та відкриття
-      - Цифрова реконструкція поселень
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Ключові факти про Трипільську культуру
-      - Значення для розуміння витоків України
-      - Перехід до наступного модуля — Скіфи та сармати
-
-vocabulary_hints:
-  required:
-    - трипільська культура (Trypillia culture)
-    - археологія (archaeology)
-    - енеоліт (Eneolithic/Chalcolithic)
-    - поселення (settlement)
-    - кераміка (ceramics)
-    - розпис (painting/ornamentation)
-    - статуетка (figurine)
-    - землеробство (agriculture)
-    - скотарство (animal husbandry)
-    - артефакт (artifact)
-    - розкопки (excavations)
-    - культ (cult)
-  recommended:
-    - протомісто (proto-city)
-    - матріархат (matriarchy)
-    - родючість (fertility)
-    - орнамент (ornament)
-    - спіраль (spiral)
-    - автохтонний (autochthonous)
-    - спадщина (heritage)
-
-activity_hints:
-  - type: reading
-    focus: Analyze archaeological descriptions of Trypillia sites
-    source: Provide excerpts in module
-
-  - type: timeline
-    focus: Place Trypillia in context with other ancient civilizations
-    items: "8+"
-
-  - type: vocabulary
-    focus: Archaeological and historical terminology
-    items: "15+"
-
-  - type: image-analysis
-    focus: Interpret Trypillian ceramic patterns and figurines
-    items: "4-5 images"
-
-  - type: quiz
-    focus: Key facts about Trypillia civilization
-    items: "12+"
-
-  - type: discussion
-    focus: "Чи можна вважати трипільців предками українців?"
-
-  - type: map-activity
-    focus: Locate major Trypillia settlements on modern map of Ukraine
-    items: "6+"
-
-prerequisites:
-  - B2 Core grammar completion
-  - Basic historical vocabulary
-
-connects_to:
-  - b2-hist-02 (Scythians and Sarmatians)
-  - b2-hist-08 (Synthesis: Origins to Kyiv)
+naturalness:
+  score: 9
+  status: PASS
