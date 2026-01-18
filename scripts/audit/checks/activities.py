@@ -628,6 +628,9 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             # Otherwise count asterisks in text
             return len(re.findall(r'\*([^\*]+)\*', activity.text))
         elif isinstance(activity, ReadingActivity):
+            # Seminar tracks use 'text' (primary source), others use 'tasks'
+            if activity.text:
+                return 1  # Has primary source text
             return len(activity.tasks)
         elif isinstance(activity, (EssayResponseActivity, CriticalAnalysisActivity, 
                                    ComparativeStudyActivity, AuthorialIntentActivity)):
