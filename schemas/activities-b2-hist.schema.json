@@ -1,64 +1,64 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://learn-ukrainian.github.io/schemas/activities-c2.schema.json",
-  "title": "C2 Module Activities",
-  "description": "Activity schema for C2 level modules with near-native complexity requirements: quiz questions (20-35 words), unjumble sentences (15-25 words), nuanced vocabulary, sophisticated discourse, idiomatic mastery, highest density.",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-b2-hist.schema.json",
+  "title": "B2-HIST Track Module Activities (Seminar Style)",
+  "description": "Activity schema for b2-hist track modules (post-C1 specialization). Uses SEMINAR pedagogy: reading (INPUT) → analytical response (OUTPUT). Forbidden: quiz, match-up, fill-in, unjumble, cloze, anagram, mark-the-words. Required: reading + essay-response + critical-analysis.",
   "type": "array",
-  "minItems": 5,
+  "minItems": 3,
   "items": {
     "oneOf": [
       {
-        "$ref": "#/definitions/quiz-c2"
+        "$ref": "#/definitions/quiz-b2-hist"
       },
       {
-        "$ref": "#/definitions/match-up-c2"
+        "$ref": "#/definitions/match-up-b2-hist"
       },
       {
-        "$ref": "#/definitions/fill-in-c2"
+        "$ref": "#/definitions/fill-in-b2-hist"
       },
       {
-        "$ref": "#/definitions/group-sort-c2"
+        "$ref": "#/definitions/group-sort-b2-hist"
       },
       {
-        "$ref": "#/definitions/unjumble-c2"
+        "$ref": "#/definitions/unjumble-b2-hist"
       },
       {
-        "$ref": "#/definitions/true-false-c2"
+        "$ref": "#/definitions/true-false-b2-hist"
       },
       {
-        "$ref": "#/definitions/cloze-c2"
+        "$ref": "#/definitions/cloze-b2-hist"
       },
       {
-        "$ref": "#/definitions/error-correction-c2"
+        "$ref": "#/definitions/error-correction-b2-hist"
       },
       {
-        "$ref": "#/definitions/mark-the-words-c2"
+        "$ref": "#/definitions/mark-the-words-b2-hist"
       },
       {
-        "$ref": "#/definitions/select-c2"
+        "$ref": "#/definitions/select-b2-hist"
       },
       {
-        "$ref": "#/definitions/translate-c2"
+        "$ref": "#/definitions/translate-b2-hist"
       },
       {
-        "$ref": "#/definitions/essay-response-c2"
+        "$ref": "#/definitions/essay-response-b2-hist"
       },
       {
-        "$ref": "#/definitions/critical-analysis-c2"
+        "$ref": "#/definitions/critical-analysis-b2-hist"
       },
       {
-        "$ref": "#/definitions/comparative-study-c2"
+        "$ref": "#/definitions/comparative-study-b2-hist"
       },
       {
-        "$ref": "#/definitions/authorial-intent-c2"
+        "$ref": "#/definitions/authorial-intent-b2-hist"
       },
       {
-        "$ref": "#/definitions/reading-c2"
+        "$ref": "#/definitions/reading-b2-hist"
       }
     ]
   },
   "definitions": {
-    "quiz-c2": {
+    "quiz-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -88,7 +88,7 @@
               "question": {
                 "type": "string",
                 "minLength": 1,
-                "description": "Question should be 20-35 words for C2 near-native complexity with nuanced distinctions"
+                "description": "Question should be 20-40 words for LIT literary analysis (themes, motifs, literary movements, authorial style)"
               },
               "options": {
                 "type": "array",
@@ -124,7 +124,7 @@
         }
       }
     },
-    "match-up-c2": {
+    "match-up-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -158,7 +158,7 @@
               "left": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 pairs should use idiomatic expressions, subtle stylistic variations, or cultural depth"
+                "description": "LIT pairs should match literary terms, quotations, authors, periods, or critical concepts"
               },
               "right": {
                 "type": "string",
@@ -169,7 +169,7 @@
         }
       }
     },
-    "fill-in-c2": {
+    "fill-in-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -204,7 +204,7 @@
               "sentence": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 sentences should demonstrate near-native mastery of style, idiom, and register"
+                "description": "LIT sentences should use literary vocabulary, quotations, or critical analysis language"
               },
               "answer": {
                 "type": "string",
@@ -227,7 +227,7 @@
         }
       }
     },
-    "group-sort-c2": {
+    "group-sort-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -260,7 +260,8 @@
             "properties": {
               "name": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "LIT groups could be literary periods, genres, movements, or thematic categories"
               },
               "items": {
                 "type": "array",
@@ -275,7 +276,7 @@
         }
       }
     },
-    "unjumble-c2": {
+    "unjumble-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -305,12 +306,12 @@
               "words": {
                 "type": "array",
                 "minItems": 15,
-                "maxItems": 25,
+                "maxItems": 30,
                 "items": {
                   "type": "string",
                   "minLength": 1
                 },
-                "description": "C2 unjumble requires 15-25 words per sentence for near-native complex structures"
+                "description": "LIT unjumble requires 15-30 words per sentence for literary prose complexity and classical syntax"
               },
               "answer": {
                 "type": "string",
@@ -325,7 +326,7 @@
         }
       }
     },
-    "true-false-c2": {
+    "true-false-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -359,7 +360,7 @@
               "statement": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 statements should test subtle cultural, idiomatic, or stylistic distinctions"
+                "description": "LIT statements should test literary interpretation, historical context, or thematic understanding"
               },
               "correct": {
                 "type": "boolean"
@@ -372,7 +373,7 @@
         }
       }
     },
-    "cloze-c2": {
+    "cloze-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -391,11 +392,11 @@
         "passage": {
           "type": "string",
           "minLength": 1,
-          "description": "C2 passages should feature literary, philosophical, or specialized discourse at near-native level"
+          "description": "LIT passages should be excerpts from classical Ukrainian literature with rich literary vocabulary"
         },
         "blanks": {
           "type": "array",
-          "minItems": 20,
+          "minItems": 22,
           "items": {
             "type": "object",
             "required": [
@@ -431,7 +432,7 @@
         }
       }
     },
-    "error-correction-c2": {
+    "error-correction-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -468,7 +469,7 @@
               "sentence": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 error correction should target very subtle register, idiom, or stylistic refinement"
+                "description": "LIT error correction should target literary language, stylistic choices, or classical grammar"
               },
               "error": {
                 "type": "string",
@@ -496,7 +497,7 @@
         }
       }
     },
-    "mark-the-words-c2": {
+    "mark-the-words-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -516,7 +517,7 @@
         "instruction": {
           "type": "string",
           "minLength": 1,
-          "description": "C2 tasks should identify subtle stylistic devices, rare idioms, or sophisticated discourse features"
+          "description": "LIT tasks should identify literary devices, symbolic language, rhetorical figures, or key thematic words"
         },
         "text": {
           "type": "string",
@@ -532,7 +533,7 @@
         }
       }
     },
-    "select-c2": {
+    "select-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -562,7 +563,7 @@
               "question": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 select questions should test highly nuanced cultural or linguistic understanding"
+                "description": "LIT select questions should test multi-layered literary interpretation and analysis"
               },
               "options": {
                 "type": "array",
@@ -602,7 +603,7 @@
         }
       }
     },
-    "translate-c2": {
+    "translate-b2-hist": {
       "type": "object",
       "required": [
         "type",
@@ -632,7 +633,7 @@
               "source": {
                 "type": "string",
                 "minLength": 1,
-                "description": "C2 translation should involve idiomatic precision, cultural nuance, and stylistic mastery"
+                "description": "LIT translation should involve classical Ukrainian literary texts with period-appropriate vocabulary"
               },
               "options": {
                 "type": "array",
@@ -668,19 +669,23 @@
         }
       }
     },
-    "essay-response-c2": {
+    "essay-response-b2-hist": {
       "type": "object",
-      "description": "Near-native writing task requiring sophisticated argumentation, stylistic mastery, and cultural depth",
+      "description": "Literary analysis essay requiring deep textual interpretation. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "prompt",
-        "model_answer"
+        "prompt"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "essay-response"
+        },
+        "source_reading": {
+          "type": "string",
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this essay responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -693,16 +698,16 @@
         "prompt": {
           "type": "string",
           "minLength": 10,
-          "description": "C2 prompts should require near-native precision, cultural insight, and sophisticated discourse"
+          "description": "LIT prompts should require sophisticated literary analysis of themes, motifs, style, or cultural context"
         },
         "min_words": {
           "type": "integer",
-          "minimum": 250
+          "minimum": 150,
+          "description": "Minimum word count (LIT: 300-500, C1: 300-500, B2: 150-250)"
         },
         "model_answer": {
           "type": "string",
-          "minLength": 150,
-          "description": "Model answer should exemplify near-native Ukrainian with idiomatic precision and cultural depth"
+          "description": "Model answer should demonstrate expert literary analysis using critical terminology and textual evidence"
         },
         "rubric": {
           "type": "array",
@@ -734,20 +739,23 @@
         }
       }
     },
-    "critical-analysis-c2": {
+    "critical-analysis-b2-hist": {
       "type": "object",
-      "description": "Near-native critical analysis requiring sophisticated literary, cultural, or philosophical interpretation",
+      "description": "Deep literary analysis of a specific text excerpt. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "target_text",
-        "questions",
-        "model_answers"
+        "questions"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "critical-analysis"
+        },
+        "source_reading": {
+          "type": "string",
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -759,7 +767,7 @@
         },
         "target_text": {
           "type": "string",
-          "description": "Literary, philosophical, or culturally complex text for near-native analysis"
+          "description": "Specific excerpt from source reading for focused analysis"
         },
         "questions": {
           "type": "array",
@@ -767,43 +775,44 @@
           "items": {
             "type": "string",
             "minLength": 1
-          }
+          },
+          "description": "2-4 analytical questions about the text"
         },
         "model_answers": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1
-          }
+          },
+          "description": "Reference answers for each question"
         },
         "focus_points": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Sophisticated analytical dimensions (intertextuality, cultural subtext, stylistic subtlety)"
+          "description": "Literary analytical dimensions (symbolism, narrative technique, intertextuality, authorial voice)"
         }
       }
     },
-    "comparative-study-c2": {
+    "comparative-study-b2-hist": {
       "type": "object",
-      "description": "Highly sophisticated comparison requiring near-native cultural and linguistic insight",
+      "description": "Comparison of literary texts, authors, periods, or movements. Can link to reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
         "items_to_compare",
-        "criteria",
-        "model_answer"
+        "criteria"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "comparative-study"
         },
-        "id": {
+        "source_reading": {
           "type": "string",
-          "description": "Unique identifier for the activity"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity providing context (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -819,7 +828,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Literary, philosophical, or culturally complex items requiring near-native comparison"
+          "description": "Literary works, authors, or periods for comparison"
         },
         "criteria": {
           "type": "array",
@@ -827,34 +836,34 @@
           "items": {
             "type": "string"
           },
-          "description": "Sophisticated analytical dimensions requiring cultural depth and stylistic precision"
+          "description": "Analytical dimensions (style, theme, historical context, literary movement)"
         },
         "prompt": {
           "type": "string"
         },
         "model_answer": {
-          "type": "string"
+          "type": "string",
+          "description": "Reference comparative analysis"
         }
       }
     },
-    "authorial-intent-c2": {
+    "authorial-intent-b2-hist": {
       "type": "object",
-      "description": "Near-native evaluation of sophisticated rhetorical and cultural strategies",
+      "description": "Analysis of authorial purpose, literary techniques, and rhetorical strategies. Should link to reading via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "text_excerpt",
-        "prompt",
-        "model_answer"
+        "prompt"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "authorial-intent"
         },
-        "id": {
+        "source_reading": {
           "type": "string",
-          "description": "Unique identifier for the activity"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -866,7 +875,7 @@
         },
         "text_excerpt": {
           "type": "string",
-          "description": "Literarily or culturally sophisticated text excerpt"
+          "description": "Specific excerpt from source reading for analysis"
         },
         "prompt": {
           "type": "string"
@@ -876,21 +885,21 @@
           "items": {
             "type": "string"
           },
-          "description": "Sophisticated rhetorical devices, cultural allusions, stylistic subtlety"
+          "description": "Literary devices (metaphor, irony, allegory, symbolism, narrative perspective)"
         },
         "model_answer": {
           "type": "string"
         }
       }
     },
-    "reading-c2": {
+    "reading-b2-hist": {
       "type": "object",
-      "description": "Reading comprehension with near-native authentic resources (literature, philosophy, specialized discourse)",
+      "description": "Primary source text for analysis. MUST have 'id' field for linking to analytical activities via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "resource",
-        "tasks"
+        "id",
+        "text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -899,44 +908,25 @@
         },
         "id": {
           "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "REQUIRED: Unique identifier for linking (e.g., 'reading-01', 'reading-testament')"
         },
         "title": {
           "type": "string",
           "minLength": 1
         },
-        "resource": {
-          "type": "object",
-          "required": [
-            "type",
-            "url",
-            "title"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "Literary work, philosophical text, specialized discourse"
-            },
-            "url": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            }
-          }
+        "source": {
+          "type": "string",
+          "description": "Attribution (e.g., 'Тарас Шевченко (1845)')"
         },
-        "tasks": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
+        "text": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Primary source text for analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         }
       }
     }

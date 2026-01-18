@@ -237,6 +237,11 @@ ACTIVITY_COMPLEXITY = {
         'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
         'C1': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 12 to 8
         'C2': {'min_len': 10, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 14 to 10
+        # Seminar tracks - quiz is supplementary, focus is analytical work
+        'lit': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'b2-hist': {'min_len': 8, 'max_len': 25, 'options': [4], 'min_items': 5},
+        'c1-hist': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'c1-bio': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},

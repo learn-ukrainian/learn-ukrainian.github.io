@@ -76,7 +76,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 14,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
