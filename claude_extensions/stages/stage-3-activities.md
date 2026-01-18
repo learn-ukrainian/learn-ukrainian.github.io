@@ -318,6 +318,139 @@ For EVERY quiz question in content-heavy modules:
 
 ---
 
+## Seminar Tracks: Reading-Analysis Pairs (LIT, HIST, BIO)
+
+**Seminar tracks** use a fundamentally different pedagogy from standard tracks. Instead of gamified drills, they use **academic reading → analytical response** workflow.
+
+### Affected Tracks
+
+| Track | Level | Activity Count | Essay Length |
+|-------|-------|----------------|--------------|
+| **LIT** | post-C1 | 3-6 | 300-500 words |
+| **C1-HIST** | C1 | 3-6 | 300-500 words |
+| **C1-BIO** | C1 | 3-5 | 250-400 words |
+| **B2-HIST** | B2 | 3-6 | 150-250 words (transitional) |
+
+### Core Principle: Reading-Analysis Pairs
+
+Every analytical activity MUST have an associated reading source:
+
+```
+reading (INPUT) → essay-response / critical-analysis / comparative-study (OUTPUT)
+```
+
+### Allowed Activity Types (Seminar)
+
+| Type | Role | Required |
+|------|------|----------|
+| `reading` | Source text input | ✅ Yes (at least 1) |
+| `essay-response` | Extended written response | ✅ Yes (at least 1) |
+| `critical-analysis` | Targeted text analysis | Recommended |
+| `comparative-study` | Compare/contrast items | Optional |
+| `true-false` | Comprehension check | B2-HIST only |
+
+### Forbidden Activity Types (Seminar)
+
+❌ quiz, match-up, fill-in, unjumble, anagram, cloze, mark-the-words, group-sort, select, error-correction, translate
+
+### YAML Structure: Paired Activities
+
+<critical>
+
+**Reading activities MUST have `id` field:**
+```yaml
+- type: reading
+  id: reading-01
+  title: 'Джерело: Кобзар'
+  source: '**«Заповіт» (1845)** — Тарас Шевченко'
+  text: |
+    Як умру, то поховайте
+    Мене на могилі...
+```
+
+**Analytical activities MUST reference their source:**
+```yaml
+- type: critical-analysis
+  title: 'Аналіз: Заповіт'
+  source_reading: reading-01      # ← Links to reading above
+  target_text: 'Як умру, то поховайте...'
+  questions:
+    - 'Чому автор обрав наказовий спосіб?'
+```
+
+</critical>
+
+### Valid Pairing Combinations
+
+| Input (reading) | Valid Outputs |
+|-----------------|---------------|
+| Primary source (poem, speech) | critical-analysis, essay-response |
+| Historical document | essay-response, comparative-study |
+| Two contrasting sources | comparative-study |
+
+### Example: Complete Seminar Module
+
+```yaml
+# 1. Primary reading
+- type: reading
+  id: reading-testament
+  title: 'Джерело: Заповіт'
+  source: 'Тарас Шевченко (1845)'
+  text: |
+    Як умру, то поховайте...
+
+# 2. Analytical response (references reading)
+- type: critical-analysis
+  title: 'Аналіз символіки'
+  source_reading: reading-testament
+  target_text: 'Поховайте та вставайте, кайдани порвіте...'
+  questions:
+    - 'Яку функцію виконує імперативний спосіб?'
+    - 'Як \"кайдани\" символізують політичний стан?'
+
+# 3. Extended response
+- type: essay-response
+  title: 'Есе: Націотворча роль'
+  source_reading: reading-testament
+  prompt: 'Проаналізуйте, як «Заповіт» сформував українську національну ідентичність.'
+  min_words: 300
+
+# 4. (Optional) Comparative study with second reading
+- type: reading
+  id: reading-context
+  title: 'Історичний контекст'
+  text: |
+    У 1845 році Шевченко написав «Заповіт» під час...
+
+- type: comparative-study
+  title: 'Порівняння: Романтики vs Шевченко'
+  source_reading: reading-context
+  items_to_compare:
+    - 'Європейський романтизм'
+    - 'Шевченківський месіанізм'
+  criteria:
+    - 'Роль поета'
+    - 'Ставлення до народу'
+```
+
+### Validation Rules (Enforced by Audit)
+
+1. **Every analytical activity must have `source_reading`** pointing to a valid reading `id`
+2. **Every reading should be referenced** by at least one analytical activity
+3. **Orphan readings** (unreferenced) trigger WARNING
+4. **Orphan analyses** (missing source) trigger ERROR
+
+### B2-HIST Transitional Rules
+
+B2-HIST is a stepping stone to C1-level seminar work:
+
+- ✅ Shorter essays (150-250 words)
+- ✅ `true-false` allowed for basic comprehension checks
+- ✅ Simpler critical questions
+- ❌ Still forbidden: quiz, match-up, fill-in, etc.
+
+---
+
 ## Activity Matrix by Level
 
 | Activity         | A1          | A2  | B1  | B2  | C1  | C2  |

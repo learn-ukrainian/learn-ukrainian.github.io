@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-lit.schema.json",
-  "title": "LIT Track Module Activities",
-  "description": "Activity schema for Literature track modules (post-C1 specialization) with literary analysis requirements: quiz questions (20-40 words) on literary concepts, unjumble sentences (15-30 words) from literary texts, textual interpretation, historical-literary context, highest density.",
+  "title": "LIT Track Module Activities (Seminar Style)",
+  "description": "Activity schema for Literature track modules (post-C1 specialization). Uses SEMINAR pedagogy: reading (INPUT) → analytical response (OUTPUT). Forbidden: quiz, match-up, fill-in, unjumble, cloze, anagram, mark-the-words. Required: reading + essay-response + critical-analysis.",
   "type": "array",
-  "minItems": 14,
+  "minItems": 3,
   "items": {
     "oneOf": [
       {
@@ -671,17 +671,21 @@
     },
     "essay-response-lit": {
       "type": "object",
-      "description": "Literary analysis essay requiring deep textual interpretation, thematic analysis, and historical-literary context",
+      "description": "Literary analysis essay requiring deep textual interpretation. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "prompt",
-        "model_answer"
+        "prompt"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "essay-response"
+        },
+        "source_reading": {
+          "type": "string",
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this essay responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -698,11 +702,11 @@
         },
         "min_words": {
           "type": "integer",
-          "minimum": 300
+          "minimum": 150,
+          "description": "Minimum word count (LIT: 300-500, C1: 300-500, B2: 150-250)"
         },
         "model_answer": {
           "type": "string",
-          "minLength": 200,
           "description": "Model answer should demonstrate expert literary analysis using critical terminology and textual evidence"
         },
         "rubric": {
@@ -737,18 +741,21 @@
     },
     "critical-analysis-lit": {
       "type": "object",
-      "description": "Deep literary analysis requiring sophisticated interpretation of texts, themes, literary devices, and cultural-historical context",
+      "description": "Deep literary analysis of a specific text excerpt. Should link to a reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "target_text",
-        "questions",
-        "model_answers"
+        "questions"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "critical-analysis"
+        },
+        "source_reading": {
+          "type": "string",
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -760,7 +767,7 @@
         },
         "target_text": {
           "type": "string",
-          "description": "Classical Ukrainian literary text or critical excerpt for analysis"
+          "description": "Specific excerpt from source reading for focused analysis"
         },
         "questions": {
           "type": "array",
@@ -768,15 +775,16 @@
           "items": {
             "type": "string",
             "minLength": 1
-          }
+          },
+          "description": "2-4 analytical questions about the text"
         },
         "model_answers": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1
-          }
+          },
+          "description": "Reference answers for each question"
         },
         "focus_points": {
           "type": "array",
@@ -789,22 +797,22 @@
     },
     "comparative-study-lit": {
       "type": "object",
-      "description": "Sophisticated comparison of literary texts, authors, periods, or movements",
+      "description": "Comparison of literary texts, authors, periods, or movements. Can link to reading activity via 'source_reading'.",
       "required": [
         "type",
         "title",
         "items_to_compare",
-        "criteria",
-        "model_answer"
+        "criteria"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "comparative-study"
         },
-        "id": {
+        "source_reading": {
           "type": "string",
-          "description": "Unique identifier for the activity"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity providing context (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -834,28 +842,28 @@
           "type": "string"
         },
         "model_answer": {
-          "type": "string"
+          "type": "string",
+          "description": "Reference comparative analysis"
         }
       }
     },
     "authorial-intent-lit": {
       "type": "object",
-      "description": "Analysis of authorial purpose, literary techniques, and rhetorical strategies in Ukrainian literature",
+      "description": "Analysis of authorial purpose, literary techniques, and rhetorical strategies. Should link to reading via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "text_excerpt",
-        "prompt",
-        "model_answer"
+        "prompt"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "authorial-intent"
         },
-        "id": {
+        "source_reading": {
           "type": "string",
-          "description": "Unique identifier for the activity"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "ID of the reading activity this analysis responds to (e.g., 'reading-01')"
         },
         "instruction": {
           "type": "string",
@@ -867,7 +875,7 @@
         },
         "text_excerpt": {
           "type": "string",
-          "description": "Excerpt from classical Ukrainian literature"
+          "description": "Specific excerpt from source reading for analysis"
         },
         "prompt": {
           "type": "string"
@@ -886,12 +894,12 @@
     },
     "reading-lit": {
       "type": "object",
-      "description": "Reading comprehension with authentic classical Ukrainian literary texts",
+      "description": "Primary source text for analysis. MUST have 'id' field for linking to analytical activities via 'source_reading'.",
       "required": [
         "type",
         "title",
-        "resource",
-        "tasks"
+        "id",
+        "text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -900,44 +908,25 @@
         },
         "id": {
           "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
+          "pattern": "^reading-[a-z0-9-]+$",
+          "description": "REQUIRED: Unique identifier for linking (e.g., 'reading-01', 'reading-testament')"
         },
         "title": {
           "type": "string",
           "minLength": 1
         },
-        "resource": {
-          "type": "object",
-          "required": [
-            "type",
-            "url",
-            "title"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "Classical literary work, poetry collection, critical essay, literary journal"
-            },
-            "url": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            }
-          }
+        "source": {
+          "type": "string",
+          "description": "Attribution (e.g., 'Тарас Шевченко (1845)')"
         },
-        "tasks": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
+        "text": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Primary source text for analysis"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         }
       }
     }

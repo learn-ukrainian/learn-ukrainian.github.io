@@ -432,6 +432,112 @@ npm run pipeline l2-uk-en b1 52
 
 ---
 
+## Seminar Track Activities (LIT, HIST, BIO)
+
+Seminar tracks use academic-style activities for deeper engagement with literary and historical content.
+
+### reading (Required for seminar tracks)
+
+```yaml
+- type: reading
+  id: reading-01                    # REQUIRED: unique ID for linking
+  title: 'Джерело: Заповіт'
+  source: 'Тарас Шевченко (1845)'   # Optional: attribution
+  text: |
+    Як умру, то поховайте
+    Мене на могилі,
+    Серед степу широкого,
+    На Вкраїні милій...
+```
+
+> **Required field:** `id` must be present and unique within the module for linking to analytical activities.
+
+### essay-response
+
+```yaml
+- type: essay-response
+  title: 'Есе: Національна ідентичність'
+  source_reading: reading-01        # Links to reading activity
+  prompt: |
+    Проаналізуйте, як образ України у «Заповіті» Шевченка формує
+    національну ідентичність. Розгляньте символіку могили, степу та Дніпра.
+  min_words: 300                    # Required: minimum word count
+  model_answer: |                   # Optional: reference answer
+    Шевченко у «Заповіті» створює...
+```
+
+> **Track-specific word counts:**
+> - LIT: 300-500 words
+> - C1-HIST: 300-500 words
+> - C1-BIO: 250-400 words
+> - B2-HIST: 150-250 words (transitional)
+
+### critical-analysis
+
+```yaml
+- type: critical-analysis
+  title: 'Аналіз: Символіка Заповіту'
+  source_reading: reading-01        # Links to reading activity
+  target_text: |                    # Specific excerpt to analyze
+    Поховайте та вставайте,
+    Кайдани порвіте...
+  questions:                        # 2-4 analytical questions
+    - 'Яку функцію виконує імперативний спосіб?'
+    - 'Як «кайдани» символізують політичний стан України?'
+  model_answers:                    # Optional: reference answers
+    - 'Імперативний спосіб створює...'
+    - 'Кайдани символізують...'
+```
+
+### comparative-study
+
+```yaml
+- type: comparative-study
+  title: 'Порівняння: Шевченко і Куліш'
+  source_reading: reading-context   # Optional: can link to reading
+  items_to_compare:
+    - 'Тарас Шевченко (емоційний підхід)'
+    - 'Пантелеймон Куліш (раціональний підхід)'
+  criteria:
+    - 'Ставлення до козацтва'
+    - 'Роль поета в суспільстві'
+    - 'Бачення майбутньої України'
+  model_answer: |
+    Шевченко і Куліш представляють...
+```
+
+### Reading-Analysis Pairing Rules
+
+<critical>
+
+**Every analytical activity MUST reference a reading:**
+```yaml
+- type: reading
+  id: reading-01          # ← Unique ID
+  ...
+
+- type: essay-response
+  source_reading: reading-01  # ← Links to reading above
+  ...
+```
+
+**Validation rules:**
+1. Every `critical-analysis`, `essay-response`, and `comparative-study` should have `source_reading`
+2. `source_reading` must reference a valid `id` in a `reading` activity in the same file
+3. Orphan readings (unreferenced) trigger WARNING
+4. Orphan analyses (missing source) trigger ERROR
+
+**Valid pairings:**
+| Reading Type | Valid Outputs |
+|--------------|---------------|
+| Primary source (poem, speech) | critical-analysis, essay-response |
+| Historical document | essay-response, comparative-study |
+| Two contrasting sources | comparative-study |
+
+</critical>
+
+---
+
 ## B1 Activity Requirements
 
 | Activity Type | Min Items | Notes |
