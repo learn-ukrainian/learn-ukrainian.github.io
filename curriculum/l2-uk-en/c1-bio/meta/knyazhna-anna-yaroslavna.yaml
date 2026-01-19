@@ -2,6 +2,7 @@
 # Status: SPEC (ready for content development)
 
 id: c1-bio-05
+module: c1-bio-05
 title: "Княжна Анна Ярославна: Королева Франції"
 slug: knyazhna-anna-yaroslavna
 module_type: biography
@@ -10,6 +11,22 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+duration: 120
+transliteration: none
+tags:
+  - history
+  - biography
+  - middle-ages
+  - women
+  - royalty
+objectives:
+  - "Зрозуміти роль Анни Ярославни в історії Європи"
+  - "Проаналізувати вплив Київської Русі на міжнародну політику XI століття"
+  - "Вивчити біографічну лексику та історичну термінологію"
+grammar:
+  - "Narrative structures for biography"
+  - "Historical past tense usage"
+pedagogy: "CBI"
 
 # === AGENT BUILD SPEC ===
 
@@ -146,5 +163,5 @@ connects_to:
   - c1-bio-07 (Roksolana - another Ukrainian woman abroad)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: APPROVED

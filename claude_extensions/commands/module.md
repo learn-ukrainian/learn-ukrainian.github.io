@@ -1,83 +1,178 @@
 # Module Management Command
 
-Review, fix, or create Ukrainian curriculum modules using the module-architect skill.
+> **Unified entry point** - auto-detects what to do based on module state.
 
 ## Usage
 
 ```
-/module review [LEVEL] [MODULE]
-/module fix [LEVEL] [MODULE]
-/module create [LEVEL] [MODULE] [TITLE]
-/module help
+/module [LEVEL] [NUM]                # Auto-detect action
+/module [LEVEL] [NUM] --review       # Review only (no fixes)
+/module [LEVEL] [NUM] --fix          # Stage 4 only
+/module [LEVEL] [NUM] --stage=N      # Force specific stage (1-4)
+/module [LEVEL] [START]-[END]        # Batch mode
 ```
 
 ## Arguments
 
-- `$ARGUMENTS` - The task mode and parameters
-
-## Instructions
-
-**This command uses the `module-architect` skill.** Invoke it first, then execute the task.
-
-Parse the user's arguments: $ARGUMENTS
-
-**Argument formats:**
-- `review a1` - Review ALL modules in level
-- `review a1 15` - Review single module
-- `review a1 1-10` - Review range of modules (1 through 10)
-- `fix a1 15` - Fix single module
-- `create a2 51 "Title"` - Create new module
-- `help` - Show usage information
-
-### Step 1: Locate the Module(s)
-
-Based on level and number/range, find the file(s):
-- A1: `curriculum/l2-uk-en/a1/XX-*.md` (modules 01-30)
-- A2: `curriculum/l2-uk-en/a2/XX-*.md` (modules 01-50)
-- B1: `curriculum/l2-uk-en/b1/XX-*.md` (modules 01-80)
-- B2: `curriculum/l2-uk-en/b2/XX-*.md` (modules 01-125)
-- C1: `curriculum/l2-uk-en/c1/XX-*.md` (modules 01-115)
-- C2: `curriculum/l2-uk-en/c2/XX-*.md` (modules 01-80)
-
-**For ranges (e.g., `1-10`):** Parse start and end numbers, process each module.
-
-### Step 2: Read Reference Documents
-
-**CRITICAL: Read ALL of these before any task:**
-
-1. `docs/l2-uk-en/module-architect-prompt.md` - Workflow, grammar constraints, fix strategies
-2. `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Activity counts, complexity, templates, engagement boxes
-3. `docs/MARKDOWN-FORMAT.md` - Activity syntax, vocabulary format
-4. `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` - Vocabulary lists, grammar scope
-
-### Step 3: Execute Task
-
-**review**: Analyze module(s) against all constraints, output review report
-- For ranges/all: Use parallel Task agents (batch 5-10 modules per agent) for efficiency
-- Summarize violations at end
-
-**fix**: Review first, then apply fixes, verify no new violations
-
-**create**: Copy vocabulary from curriculum plan, write module, verify all words in scope
-
-### Step 4: Model Selection
-
-Per module-architect skill:
-- **A1, A2, B1**: Use Sonnet
-- **B2, C1, C2**: Use Opus
-
-### Step 5: Output
-
-Use the review report format from the module-architect skill.
+- `$ARGUMENTS` - Level, module number, and optional flags
 
 ## Examples
 
 ```
-/module review a1           # Review all A1 modules
-/module review a1 15        # Review single module
-/module review a2 1-10      # Review modules 1-10
-/module review a2 11-20     # Review modules 11-20
-/module fix a1 15           # Fix violations in module
-/module create a2 51 "New Topic"  # Create new module
-/module help                # Show usage
+/module c1-bio 5           # Auto-detect and run
+/module b1 22 --fix        # Just run Stage 4
+/module a2 10-15           # Batch create/fix modules 10-15
+/module b2 45 --stage=2    # Force Stage 2 (content)
+/module c1-bio 5 --review  # Review without fixing
 ```
+
+---
+
+## Instructions
+
+Parse arguments: $ARGUMENTS
+
+### Step 1: Parse Input
+
+Extract from arguments:
+- `level`: The level code (a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, c1-hist, lit)
+- `num`: Module number (or range like `10-15`)
+- `flags`: --review, --fix, --stage=N (optional)
+
+**If batch range detected (e.g., `10-15`):** Jump to Batch Mode section.
+
+### Step 2: Resolve Module Path
+
+**For core levels (a1, a2, b1, b2, c1, c2):**
+```bash
+ls curriculum/l2-uk-en/{level}/{num:02d}-*.md 2>/dev/null
+```
+
+**For track levels (b2-hist, c1-bio, c1-hist, lit):**
+```bash
+slug=$(yq ".levels.\"{level}\".modules[{num-1}]" curriculum/l2-uk-en/curriculum.yaml)
+ls curriculum/l2-uk-en/{level}/{slug}.md 2>/dev/null
+```
+
+Store: `module_path`, `slug`, `meta_path`, `activities_path`, `vocab_path`
+
+### Step 3: Detect Module State
+
+Check what exists:
+
+```bash
+# Check each file
+test -f curriculum/l2-uk-en/{level}/meta/{slug}.yaml      # has_meta
+test -f curriculum/l2-uk-en/{level}/{slug}.md             # has_content
+test -f curriculum/l2-uk-en/{level}/activities/{slug}.yaml # has_activities
+
+# If has_content, check if it's just skeleton or has real content
+wc -w < {module_path}  # word_count
+```
+
+**State detection:**
+
+| has_meta | has_content | has_activities | word_count | State |
+|----------|-------------|----------------|------------|-------|
+| No | No | No | - | `NEW` |
+| Yes | No | No | - | `SKELETON_NEEDED` |
+| Yes | Yes | No | < 500 | `SKELETON_ONLY` |
+| Yes | Yes | No | >= 500 | `CONTENT_DONE` |
+| Yes | Yes | Yes | - | `COMPLETE` |
+
+### Step 4: Determine Action
+
+**If flag provided, use it:**
+
+| Flag | Action |
+|------|--------|
+| `--review` | Run audit only, report results, don't fix |
+| `--fix` | Run Stage 4 |
+| `--stage=1` | Run Stage 1 |
+| `--stage=2` | Run Stage 2 |
+| `--stage=3` | Run Stage 3 |
+| `--stage=4` | Run Stage 4 |
+
+**If no flag, auto-detect from state:**
+
+| State | Action |
+|-------|--------|
+| `NEW` | Run Stages 1 → 2 → 3 → 4 |
+| `SKELETON_NEEDED` | Run Stages 1 → 2 → 3 → 4 |
+| `SKELETON_ONLY` | Run Stages 2 → 3 → 4 |
+| `CONTENT_DONE` | Run Stages 3 → 4 |
+| `COMPLETE` | Run audit; if PASS → done; if FAIL → Stage 4 |
+
+### Step 5: Execute
+
+**Delegate to existing stage commands.** Do NOT duplicate their logic.
+
+For each stage to run:
+1. Report: "Running Stage N..."
+2. Follow instructions from `/module-stage-N`
+3. If stage fails, stop and report
+
+**Stage execution order:**
+```
+Stage 1 (skeleton) → Stage 2 (content) → Stage 3 (activities) → Stage 4 (review/fix)
+```
+
+### Step 6: Report
+
+On completion:
+```
+Module: {level}/{slug}
+State: {final_state}
+Stages run: {list}
+Audit: PASS/FAIL
+MDX: docusaurus/docs/{level}/module-{num}.mdx (if generated)
+```
+
+---
+
+## Batch Mode
+
+**When input contains a range (e.g., `b1 10-15`):**
+
+Use subagent pattern for context isolation:
+
+```
+For each module_num in range:
+  1. Spawn Task agent with subagent_type="general-purpose"
+  2. Prompt: "Run /module {level} {module_num} {flags}"
+  3. Wait for completion
+  4. Log result
+  5. Continue to next
+```
+
+**Output summary:**
+```
+Batch: {level} {start}-{end}
+Results:
+  - {num}: PASS
+  - {num}: PASS
+  - {num}: FAIL (Stage 3 - activity count)
+  - {num}: PASS
+
+Summary: 3/4 passed
+```
+
+---
+
+## Quick Reference
+
+**Levels and paths:**
+
+| Level | Path Pattern | Type |
+|-------|--------------|------|
+| a1, a2, b1, b2, c1, c2 | `{num:02d}-{slug}.md` | Core |
+| b2-hist, c1-bio, c1-hist, lit | `{slug}.md` | Track (seminar) |
+
+**Track detection:**
+If level is `b2-hist`, `c1-bio`, `c1-hist`, or `lit` → seminar track → uses slug-based paths.
+
+**Stage commands (for reference):**
+- `/module-stage-1` - Skeleton creation
+- `/module-stage-2` - Content generation
+- `/module-stage-3` - Activity generation
+- `/module-stage-4` - Review and fix loop
