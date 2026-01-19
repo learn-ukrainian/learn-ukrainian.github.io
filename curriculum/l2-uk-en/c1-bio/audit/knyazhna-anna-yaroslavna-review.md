@@ -3,28 +3,19 @@
 **Naturalness:** 10/10 (APPROVED)
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in knyazhna-anna-yaroslavna.yaml: Schema validation error at key '0': {'Мотиви релігійні': 'спокутування гріхів (своїх і чоловіка) та спасіння душі сина. Це стандартна формула середньовічного меценатства.'} is not of type 'string'
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 3708/4000
-- **Activities:** ✅ 18/4
+- **Words:** ✅ 4091/4000
+- **Activities:** ✅ 8/4
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 18 (target 4-8)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -38,10 +29,10 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 4 | 100% | 19% | 19.0% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
 | quotes | 9 | 3 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
@@ -54,7 +45,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 119 | Included in Core |
 | **Вступ — Руська принцеса на французькому троні** | ⚪️ | 353 | Skipped |
-| **Життєпис** | ⚪️ | 2471 | Skipped |
+| **Життєпис** | ⚪️ | 2854 | Skipped |
 | **Внесок** | ⚪️ | 212 | Skipped |
 | **Порівняльний аналіз** | ✅ | 165 | Included in Core |
 | **Критичне мислення** | ⚪️ | 112 | Skipped |
