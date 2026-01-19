@@ -2,6 +2,7 @@
 # Status: SPEC (ready for content development)
 
 id: c1-bio-08
+module: c1-bio-08
 title: "Йов Борецький: Захисник православ'я"
 slug: iov-boretskyi
 module_type: biography
@@ -10,6 +11,23 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+duration: 120
+transliteration: none
+pedagogy: "CBI"
+tags:
+  - history
+  - biography
+  - religion
+  - education
+  - cossacks
+objectives:
+  - "Проаналізувати роль Іова Борецького у відновленні православної ієрархії 1620 року"
+  - "Зрозуміти значення братського руху як прообразу громадянського суспільства"
+  - "Вивчити особливості полемічного стилю українського бароко"
+grammar:
+  - "Historical narrative register"
+  - "Rhetorical antithesis and periods"
+  - "Ecclesiastical and legal terminology"
 
 # === AGENT BUILD SPEC ===
 
@@ -143,5 +161,5 @@ connects_to:
   - c1-bio-98 (Ivan Ohienko - later Orthodox defender)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
