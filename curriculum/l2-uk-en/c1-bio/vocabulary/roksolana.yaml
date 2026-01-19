@@ -1,151 +1,80 @@
+module: c1-bio-07
+level: C1
+slug: roksolana
+version: '2.0'
 items:
-- lemma: султана
-  ipa: /suɫˈtɑnɑ/
-  translation: sultana
-  pos: noun
-  gender: f
-  note: дружина або донька султана
-- lemma: вплив
-  ipa: /ˈwpɫɪu̯/
-  translation: influence
-  pos: noun
-  gender: m
-  note: здатність діяти на когось/щось
-- lemma: дипломатія
-  ipa: /dɪpɫɔˈmɑtʲijɑ/
-  translation: diplomacy
-  pos: noun
-  gender: f
-  note: мистецтво ведення переговорів
-- lemma: гарем
-  ipa: /ɦɑˈrɛm/
-  translation: harem
-  pos: noun
-  gender: m
-  note: жіноча частина палацу
-- lemma: велич
-  ipa: /ˈwɛɫɪt͡ʃ/
-  translation: greatness/grandeur
-  pos: noun
-  gender: f
-  note: стан надзвичайної важливості
-- lemma: наступник
-  ipa: /nɑˈstupnɪk/
-  translation: successor
-  pos: noun
-  gender: m
-  note: той, хто займає посаду після когось
-- lemma: листування
-  ipa: /ɫɪstuˈwɑnʲːɑ/
-  translation: correspondence
-  pos: noun
-  gender: n
-  note: обмін листами
-- lemma: благодійність
-  ipa: /bɫɑɦɔˈdʲijnʲistʲ/
-  translation: charity
-  pos: noun
-  gender: f
-  note: надання безкоштовної допомоги
-- lemma: інтрига
-  ipa: /inˈtrɪɦɑ/
-  translation: intrigue
-  pos: noun
-  gender: f
-  note: таємні дії для досягнення мети
-- lemma: стратегія
-  ipa: /strɑˈtɛɦʲijɑ/
-  translation: strategy
-  pos: noun
-  gender: f
-  note: загальний план дій
-- lemma: походження
-  ipa: /pɔˈxɔdʒɛnʲːɑ/
-  translation: origin
-  pos: noun
-  gender: n
-  note: коріння, початок роду
-- lemma: невільниця
-  ipa: /nɛˈʋʲilʲnɪt͡sʲɑ/
-  translation: slave/captive woman
-  pos: noun
-  gender: f
-  note: жінка, позбавлена волі
-- lemma: панування
-  ipa: /pɑˈnuwɑnʲːɑ/
-  translation: reign/dominion
-  pos: noun
-  gender: n
-  note: період або стан володарювання
-- lemma: фаворитка
-  ipa: /fɑwɔˈrɪtkɑ/
-  translation: favorite
-  pos: noun
-  gender: f
-  note: улюблениця монарха
-- lemma: амбіції
-  ipa: /ɑmˈbʲit͡sʲiji/
-  translation: ambitions
-  pos: noun
-  gender: plural
-  note: прагнення до успіху та влади
-- lemma: меценатство
-  ipa: /mɛt͡sɛˈnɑtstwɔ/
-  translation: patronage of arts
-  pos: noun
-  gender: n
-  note: підтримка культури та мистецтва
-- lemma: легітимність
-  ipa: /ɫɛɦʲitˈɪmnʲistʲ/
-  translation: legitimacy
-  pos: noun
-  gender: f
-  note: законність влади
-- lemma: радниця
-  ipa: /ˈrɑdnɪt͡sʲɑ/
-  translation: advisor (female)
-  pos: noun
-  gender: f
-  note: жінка, що дає поради
-- lemma: посол
-  ipa: /pɔˈsɔɫ/
-  translation: ambassador
-  pos: noun
-  gender: m
-  note: офіційний представник держави
-- lemma: архітектура
-  ipa: /ɑrxʲitɛkˈturɑ/
-  translation: architecture
-  pos: noun
-  gender: f
-  note: мистецтво проєктування будівель
-- lemma: спадкоємець
-  ipa: /spɑdˈkɔjɛmɛt͡sʲ/
-  translation: heir
-  pos: noun
-  gender: m
-  note: особа, що отримує майно чи титул
-- lemma: союз
-  ipa: /ˈsɔjuz/
-  translation: alliance/union
-  pos: noun
-  gender: m
-  note: об'єднання для спільної мети
-- lemma: інтелект
-  ipa: /intɛˈɫɛkt/
-  translation: intellect
-  pos: noun
-  gender: m
-  note: розумові здібності
-- lemma: суверенітет
-  ipa: /suʋɛrɛnʲiˈtɛt/
-  translation: sovereignty
-  pos: noun
-  gender: m
-  note: повна незалежність держави
-- lemma: міф
-  ipa: /mʲif/
-  translation: myth
-  pos: noun
-  gender: m
-  note: вигадана історія або стереотип
+  - lemma: султанша
+    translation: sultana
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: хасекі
+    translation: haseki (favorite consort)
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: гарем
+    translation: harem
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: рабиня
+    translation: slave woman
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: полон
+    translation: captivity
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: набіг
+    translation: raid
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: спадкоємець
+    translation: heir
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: інтрига
+    translation: intrigue
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: благодійність
+    translation: charity
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: меценатство
+    translation: patronage
+    pos: noun
+    gender: n
+    ipa: ""
+  - lemma: візир
+    translation: vizier
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: євнух
+    translation: eunuch
+    pos: noun
+    gender: m
+    ipa: ""
+  - lemma: фаворитка
+    translation: favorite
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: мечеть
+    translation: mosque
+    pos: noun
+    gender: f
+    ipa: ""
+  - lemma: вакф
+    translation: waqf (charitable endowment)
+    pos: noun
+    gender: m
+    ipa: ""

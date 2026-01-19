@@ -1,0 +1,156 @@
+items:
+  - lemma: січ
+    ipa: /sʲit͡ʃ/
+    translation: Sich (Cossack fortress)
+    pos: noun
+    gender: f
+  - lemma: байда
+    ipa: /ˈbɑj.dɑ/
+    translation: carefree person / Baida (hero)
+    pos: noun
+    gender: m
+  - lemma: гак
+    ipa: /ɦɑk/
+    translation: hook
+    pos: noun
+    gender: m
+  - lemma: фронтир
+    ipa: /frɔnˈtɪr/
+    translation: frontier
+    pos: noun
+    gender: m
+  - lemma: фортеця
+    ipa: /fɔrˈtɛ.t͡sʲɑ/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: ватажок
+    ipa: /vɑ.tɑˈʒɔk/
+    translation: leader
+    pos: noun
+    gender: m
+  - lemma: дума
+    ipa: /ˈdu.mɑ/
+    translation: duma (epic song)
+    pos: noun
+    gender: f
+  - lemma: зрада
+    ipa: /ˈzrɑ.dɑ/
+    translation: betrayal
+    pos: noun
+    gender: f
+  - lemma: страта
+    ipa: /ˈstrɑ.tɑ/
+    translation: execution
+    pos: noun
+    gender: f
+  - lemma: князь
+    ipa: /knʲɑzʲ/
+    translation: prince
+    pos: noun
+    gender: m
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲ.mɑn/
+    translation: hetman
+    pos: noun
+    gender: m
+  - lemma: козак
+    ipa: /kɔˈzɑk/
+    translation: cossack
+    pos: noun
+    gender: m
+  - lemma: острів
+    ipa: /ˈɔ.str⁽ʲ⁾iu̯/
+    translation: island
+    pos: noun
+    gender: m
+  - lemma: лицар
+    ipa: /ˈlɪ.t͡sɑr/
+    translation: knight
+    pos: noun
+    gender: m
+  - lemma: мужність
+    ipa: /ˈmuʒ.n⁽ʲ⁾istʲ/
+    translation: courage
+    pos: noun
+    gender: f
+  - lemma: незламність
+    ipa: /nɛˈzlɑm.n⁽ʲ⁾istʲ/
+    translation: invincibility / resilience
+    pos: noun
+    gender: f
+  - lemma: віра
+    ipa: /ˈvi.rɑ/
+    translation: faith
+    pos: noun
+    gender: f
+  - lemma: султан
+    ipa: /sulˈtɑn/
+    translation: sultan
+    pos: noun
+    gender: m
+  - lemma: полон
+    ipa: /pɔˈlɔn/
+    translation: captivity
+    pos: noun
+    gender: m
+  - lemma: помста
+    ipa: /ˈpɔm.stɑ/
+    translation: revenge
+    pos: noun
+    gender: f
+  - lemma: легенда
+    ipa: /lɛˈɦɛn.dɑ/
+    translation: legend
+    pos: noun
+    gender: f
+  - lemma: пасіонарій
+    ipa: /pɑ.s⁽ʲ⁾i.ɔˈnɑ.r⁽ʲ⁾ij/
+    translation: passionate person / visionary
+    pos: noun
+    gender: m
+  - lemma: магнат
+    ipa: /mɑɦˈnɑt/
+    translation: magnate
+    pos: noun
+    gender: m
+  - lemma: пороги
+    ipa: /pɔˈrɔ.ɦɪ/
+    translation: rapids
+    pos: noun
+    gender: p
+  - lemma: чайка
+    ipa: /ˈt͡ʃɑj.kɑ/
+    translation: chaika (boat) / seagull
+    pos: noun
+    gender: f
+  - lemma: самопал
+    ipa: /sɑ.mɔˈpɑl/
+    translation: musket (homemade gun)
+    pos: noun
+    gender: m
+  - lemma: оборона
+    ipa: /ɔ.bɔˈrɔ.nɑ/
+    translation: defense
+    pos: noun
+    gender: f
+  - lemma: авантюра
+    ipa: /ɑ.vɑnˈtʲu.rɑ/
+    translation: adventure / venture
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪm.vɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑd.ʃt͡ʃɪ.nɑ/
+    translation: legacy / heritage
+    pos: noun
+    gender: f
+  - lemma: гідність
+    ipa: /ˈɦid.n⁽ʲ⁾istʲ/
+    translation: dignity
+    pos: noun
+    gender: f

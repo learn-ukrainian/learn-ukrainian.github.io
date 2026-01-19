@@ -1,165 +1,141 @@
-# B2-HIST Module 06: Заснування Києва: Легенда і археологія
-# Status: ACTIVE (Audit Passed)
-
 module: b2-hist-06
 id: b2-hist-06
 title: Заснування Києва — Легенда та історія
 subtitle: 'Founding of Kyiv: Legend and Archaeology'
 slug: zasnuvannia-kyieva
 version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
+phase: B2-HIST.1 [Витоки]
 focus: history
-pedagogy: 'seminar'
+pedagogy: seminar
 register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-  - history
-  - medieval
-  - kyiv-founding
+- history
+- medieval
+- kyiv-founding
 grammar:
-  - Історичний наратив
-  - Пасивний стан у науковому тексті
+- Історичний наратив
+- Пасивний стан у науковому тексті
 objectives:
-  - Учень може переказувати легенду про заснування Києва
-  - Учень може аналізувати роль торговельного шляху «з варягів у греки»
-  - Учень може порівнювати міфологічні та історичні версії походження міста
+- Учень може переказувати легенду про заснування Києва
+- Учень може аналізувати роль торговельного шляху «з варягів у греки»
+- Учень може порівнювати міфологічні та історичні версії походження міста
 vocabulary_count: 35
 naturalness:
   score: 9
   status: PASS
-
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Київ (історія)
-    url: https://uk.wikipedia.org/wiki/Київ#Історія
-    type: reference
-    notes: Historical overview of Kyiv
-  - name: Кий (легендарний засновник Києва)
-    url: https://uk.wikipedia.org/wiki/Кий_(легендарний_засновник_Києва)
-    type: reference
-    notes: Legend of Kyi
-  - name: Повість минулих літ — про заснування Києва
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Primary Chronicle account
-
+- name: Київ (історія)
+  url: https://uk.wikipedia.org/wiki/Київ#Історія
+  type: reference
+  notes: Historical overview of Kyiv
+- name: Кий (легендарний засновник Києва)
+  url: https://uk.wikipedia.org/wiki/Кий_(легендарний_засновник_Києва)
+  type: reference
+  notes: Legend of Kyi
+- name: Повість минулих літ — про заснування Києва
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Primary Chronicle account
 content_outline:
-  - section: Вступ — Місто на Дніпрових горах
-    words: 500
-    points:
-      - Київ як одне з найстаріших міст Східної Європи
-      - Стратегічне розташування на Дніпрі
-      - Проблема датування заснування
-      - Офіційна дата — 482 рік н.е.
-
-  - section: Легенда про Кия, Щека та Хорива
-    words: 650
-    points:
-      - Розповідь із Повісті минулих літ
-      - Три брати та сестра Либідь
-      - Кий — князь чи перевізник?
-      - Топоніми — Київ, Щекавиця, Хоревиця, Либідь
-
-  - section: Археологічні свідчення
-    words: 650
-    points:
-      - Поселення на Старокиївській горі
-      - Знахідки V-VI століть
-      - Городище на Замковій горі
-      - Розвиток поселення до IX століття
-
-  - section: Київ до приходу варягів
-    words: 550
-    points:
-      - Поляни та їхній центр
-      - Торгівля та ремесла
-      - Шлях "із варяг у греки"
-      - Контакти з хозарами та візантійцями
-
-  - section: Міфи та реальність
-    words: 500
-    points:
-      - Кий у візантійських джерелах?
-      - Альтернативні теорії походження назви
-      - Роль легенди в національній свідомості
-      - Сучасні історичні дискусії
-
-  - section: Київ — символ України
-    words: 550
-    points:
-      - Герб Києва — Архангел Михаїл
-      - Святині та пам'ятки раннього Києва
-      - День Києва — остання неділя травня
-      - Київ у сучасній українській ідентичності
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Київ як серце українських земель
-      - Від племінного центру до столиці
-      - Перехід до хозарського каганату
-
+- section: Вступ — Місто на Дніпрових горах
+  words: 533
+  points:
+  - Київ як одне з найстаріших міст Східної Європи
+  - Стратегічне розташування на Дніпрі
+  - Проблема датування заснування
+  - Офіційна дата — 482 рік н.е.
+- section: Легенда про Кия, Щека та Хорива
+  words: 693
+  points:
+  - Розповідь із Повісті минулих літ
+  - Три брати та сестра Либідь
+  - Кий — князь чи перевізник?
+  - Топоніми — Київ, Щекавиця, Хоревиця, Либідь
+- section: Археологічні свідчення
+  words: 693
+  points:
+  - Поселення на Старокиївській горі
+  - Знахідки V-VI століть
+  - Городище на Замковій горі
+  - Розвиток поселення до IX століття
+- section: Київ до приходу варягів
+  words: 586
+  points:
+  - Поляни та їхній центр
+  - Торгівля та ремесла
+  - Шлях "із варяг у греки"
+  - Контакти з хозарами та візантійцями
+- section: Міфи та реальність
+  words: 533
+  points:
+  - Кий у візантійських джерелах?
+  - Альтернативні теорії походження назви
+  - Роль легенди в національній свідомості
+  - Сучасні історичні дискусії
+- section: Київ — символ України
+  words: 586
+  points:
+  - Герб Києва — Архангел Михаїл
+  - Святині та пам'ятки раннього Києва
+  - День Києва — остання неділя травня
+  - Київ у сучасній українській ідентичності
+- section: Підсумок
+  words: 376
+  points:
+  - Київ як серце українських земель
+  - Від племінного центру до столиці
+  - Перехід до хозарського каганату
 vocabulary_hints:
   required:
-    - заснування (founding)
-    - легенда (legend)
-    - археологія (archaeology)
-    - городище (fortified settlement)
-    - перевізник (ferryman)
-    - гора (hill/mountain)
-    - князь (prince)
-    - топонім (toponym)
-    - джерело (source)
-    - датування (dating)
-    - поселення (settlement)
-    - торговий шлях (trade route)
+  - заснування (founding)
+  - легенда (legend)
+  - археологія (archaeology)
+  - городище (fortified settlement)
+  - перевізник (ferryman)
+  - гора (hill/mountain)
+  - князь (prince)
+  - топонім (toponym)
+  - джерело (source)
+  - датування (dating)
+  - поселення (settlement)
+  - торговий шлях (trade route)
   recommended:
-    - Старокиївська гора (Old Kyiv Hill)
-    - Щекавиця (Shchekavytsia)
-    - Хоревиця (Khorevytsia)
-    - Либідь (Lybid)
-    - Замкова гора (Castle Hill)
-    - герб (coat of arms)
-
+  - Старокиївська гора (Old Kyiv Hill)
+  - Щекавиця (Shchekavytsia)
+  - Хоревиця (Khorevytsia)
+  - Либідь (Lybid)
+  - Замкова гора (Castle Hill)
+  - герб (coat of arms)
 activity_hints:
-  - type: reading
-    focus: Primary Chronicle account of Kyiv's founding
-    source: Provide in module
-
-  - type: map-activity
-    focus: Locate legendary sites in modern Kyiv
-    items: "6+ locations"
-
-  - type: vocabulary
-    focus: Geographical and founding-related terms
-    items: "15+"
-
-  - type: compare-contrast
-    focus: Legend vs archaeological evidence
-    output: Two-column analysis
-
-  - type: quiz
-    focus: Kyiv founding facts and legends
-    items: "12+"
-
-  - type: image-analysis
-    focus: Archaeological artifacts and sites
-    items: "4-5 images"
-
-  - type: discussion
-    focus: "Яке значення має легенда про заснування Києва для сучасних українців?"
-
+- type: reading
+  focus: Primary Chronicle account of Kyiv's founding
+  source: Provide in module
+- type: map-activity
+  focus: Locate legendary sites in modern Kyiv
+  items: 6+ locations
+- type: vocabulary
+  focus: Geographical and founding-related terms
+  items: 15+
+- type: compare-contrast
+  focus: Legend vs archaeological evidence
+  output: Two-column analysis
+- type: quiz
+  focus: Kyiv founding facts and legends
+  items: 12+
+- type: image-analysis
+  focus: Archaeological artifacts and sites
+  items: 4-5 images
+- type: discussion
+  focus: Яке значення має легенда про заснування Києва для сучасних українців?
 prerequisites:
-  - b2-hist-05 (Slavic tribes)
-  - Understanding of legend vs history
-
+- b2-hist-05 (Slavic tribes)
+- Understanding of legend vs history
 connects_to:
-  - b2-hist-07 (Khazar Khaganate)
-  - b2-hist-09 (Oleh and Ihor)
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- b2-hist-07 (Khazar Khaganate)
+- b2-hist-09 (Oleh and Ihor)
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'

@@ -126,3 +126,71 @@ items:
   translation: liberator
   pos: noun
   gender: m
+- lemma: булава
+  ipa: /buˈlɑvɑ/
+  translation: mace (symbol of power)
+  pos: noun
+  gender: f
+- lemma: бунчук
+  ipa: /bunˈt͡ʃuk/
+  translation: bunchuk (Cossack standard)
+  pos: noun
+  gender: m
+- lemma: осавул
+  ipa: /osɐˈvul/
+  translation: osavul (Cossack officer)
+  pos: noun
+  gender: m
+- lemma: магнат
+  ipa: /mɐˈɦnɑt/
+  translation: magnate
+  pos: noun
+  gender: m
+- lemma: реєстр
+  ipa: /reˈjestr/
+  translation: register (list of official Cossacks)
+  pos: noun
+  gender: m
+- lemma: Січ
+  ipa: /sʲit͡ʃ/
+  translation: Sich (Cossack fortress/center)
+  pos: noun
+  gender: f
+- lemma: рада
+  ipa: /ˈrɑdɑ/
+  translation: council, assembly
+  pos: noun
+  gender: f
+- lemma: полковник
+  ipa: /polˈkɔvneɪ̯k/
+  translation: colonel
+  pos: noun
+  gender: m
+- lemma: суб'єктність
+  ipa: /subˈjɛktnʲistʲ/
+  translation: agency, subjectivity
+  pos: noun
+  gender: f
+- lemma: геополітика
+  ipa: /ɦeoˈpɔlʲitɪkɐ/
+  translation: geopolitics
+  pos: noun
+  gender: f
+- lemma: детермінувати
+  ipa: /determʲiˈnuvɑtɪ/
+  translation: to determine
+  pos: verb
+- lemma: легітимізація
+  ipa: /leɦʲitɪmʲizˈɑt͡sʲijɐ/
+  translation: legitimatization
+  pos: noun
+  gender: f
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: національно-визвольний
+  ipa: /nɐt͡sʲionˈɑlʲno-vezˈvolʲneɪ̯/
+  translation: national liberation (adj.)
+  pos: adj

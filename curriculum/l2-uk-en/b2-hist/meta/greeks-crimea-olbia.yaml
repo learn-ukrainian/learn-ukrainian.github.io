@@ -1,169 +1,145 @@
-# B2-HIST Module 03: Грецькі міста-держави: Ольвія, Херсонес
-# Status: ACTIVE (Audit Passed)
-
 module: b2-hist-03
 id: b2-hist-03
-title: "Грецькі міста-держави: Ольвія, Херсонес"
-subtitle: 'Antiquity on Ukrainian Lands'
+title: 'Грецькі міста-держави: Ольвія, Херсонес'
+subtitle: Antiquity on Ukrainian Lands
 slug: greeks-crimea-olbia
 version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
+phase: B2-HIST.1 [Витоки]
 focus: history
-pedagogy: 'seminar'
+pedagogy: seminar
 register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-  - history
-  - antiquity
-  - greeks
-  - crimea
-  - colonization
+- history
+- antiquity
+- greeks
+- crimea
+- colonization
 grammar:
-  - 'Historical narrative register'
-  - 'Past tense mastery'
+- Historical narrative register
+- Past tense mastery
 objectives:
-  - 'Understand the causes of Greek colonization in Ukraine'
-  - 'Describe the political structure of Olbia and Chersonesus'
-  - 'Analyze the interaction between Greeks and Scythians'
-  - 'Recognize the legacy of antiquity in Ukrainian history'
+- Understand the causes of Greek colonization in Ukraine
+- Describe the political structure of Olbia and Chersonesus
+- Analyze the interaction between Greeks and Scythians
+- Recognize the legacy of antiquity in Ukrainian history
 vocabulary_count: 24
 naturalness:
   score: 10
   status: PASS
-
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Античні міста Північного Причорномор'я (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
-    type: reference
-    notes: Overview of Greek colonies
-  - name: Ольвія (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Ольвія_(місто)
-    type: reference
-    notes: History of Olbia
-  - name: Херсонес Таврійський
-    url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
-    type: reference
-    notes: History of Chersonesus
-
+- name: Античні міста Північного Причорномор'я (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
+  type: reference
+  notes: Overview of Greek colonies
+- name: Ольвія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ольвія_(місто)
+  type: reference
+  notes: History of Olbia
+- name: Херсонес Таврійський
+  url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
+  type: reference
+  notes: History of Chersonesus
 content_outline:
-  - section: Вступ — Греки на українських землях
-    words: 500
-    points:
-      - Велика грецька колонізація VIII-VI ст. до н.е.
-      - Причини міграції — перенаселення, торгівля
-      - Північне Причорномор'я як привабливий регіон
-      - Головні грецькі міста на українських землях
-
-  - section: Ольвія — місто щасливих
-    words: 650
-    points:
-      - Заснування милетянами (647 р. до н.е.)
-      - Розташування біля гирла Південного Бугу
-      - Політичний устрій — демократія
-      - Торгівля зерном зі Скіфією
-
-  - section: Херсонес Таврійський
-    words: 650
-    points:
-      - Заснування дорійцями (422-421 р. до н.е.)
-      - Демократична республіка
-      - Присяга громадянина Херсонесу
-      - Виноробство та ремесла
-
-  - section: Боспорське царство
-    words: 600
-    points:
-      - Об'єднання грецьких міст на Боспорі
-      - Пантікапей — столиця
-      - Відносини зі скіфами
-      - Економічне процвітання
-
-  - section: Культура та повсякденне життя
-    words: 500
-    points:
-      - Архітектура — храми, агора, театр
-      - Мистецтво — кераміка, скульптура
-      - Освіта та філософія
-      - Релігійні культи
-
-  - section: Занепад та спадщина
-    words: 500
-    points:
-      - Готські навали III ст. н.е.
-      - Херсонес у візантійську добу
-      - Хрещення Володимира в Херсонесі
-      - Археологічні заповідники сьогодні
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Роль грецьких міст у розвитку регіону
-      - Культурний обмін античної доби
-      - Перехід до слов'янських племен
-
+- section: Вступ — Греки на українських землях
+  words: 533
+  points:
+  - Велика грецька колонізація VIII-VI ст. до н.е.
+  - Причини міграції — перенаселення, торгівля
+  - Північне Причорномор'я як привабливий регіон
+  - Головні грецькі міста на українських землях
+- section: Ольвія — місто щасливих
+  words: 693
+  points:
+  - Заснування милетянами (647 р. до н.е.)
+  - Розташування біля гирла Південного Бугу
+  - Політичний устрій — демократія
+  - Торгівля зерном зі Скіфією
+- section: Херсонес Таврійський
+  words: 693
+  points:
+  - Заснування дорійцями (422-421 р. до н.е.)
+  - Демократична республіка
+  - Присяга громадянина Херсонесу
+  - Виноробство та ремесла
+- section: Боспорське царство
+  words: 640
+  points:
+  - Об'єднання грецьких міст на Боспорі
+  - Пантікапей — столиця
+  - Відносини зі скіфами
+  - Економічне процвітання
+- section: Культура та повсякденне життя
+  words: 533
+  points:
+  - Архітектура — храми, агора, театр
+  - Мистецтво — кераміка, скульптура
+  - Освіта та філософія
+  - Релігійні культи
+- section: Занепад та спадщина
+  words: 533
+  points:
+  - Готські навали III ст. н.е.
+  - Херсонес у візантійську добу
+  - Хрещення Володимира в Херсонесі
+  - Археологічні заповідники сьогодні
+- section: Підсумок
+  words: 375
+  points:
+  - Роль грецьких міст у розвитку регіону
+  - Культурний обмін античної доби
+  - Перехід до слов'янських племен
 vocabulary_hints:
   required:
-    - колонія (colony)
-    - місто-держава (city-state)
-    - поліс (polis)
-    - агора (agora)
-    - демократія (democracy)
-    - торгівля (trade)
-    - храм (temple)
-    - гирло (river mouth)
-    - Причорномор'я (Black Sea region)
-    - античний (ancient/classical)
-    - громадянин (citizen)
-    - республіка (republic)
+  - колонія (colony)
+  - місто-держава (city-state)
+  - поліс (polis)
+  - агора (agora)
+  - демократія (democracy)
+  - торгівля (trade)
+  - храм (temple)
+  - гирло (river mouth)
+  - Причорномор'я (Black Sea region)
+  - античний (ancient/classical)
+  - громадянин (citizen)
+  - республіка (republic)
   recommended:
-    - милетяни (Miletians)
-    - дорійці (Dorians)
-    - виноробство (winemaking)
-    - амфора (amphora)
-    - некрополь (necropolis)
-    - акрополь (acropolis)
-
+  - милетяни (Miletians)
+  - дорійці (Dorians)
+  - виноробство (winemaking)
+  - амфора (amphora)
+  - некрополь (necropolis)
+  - акрополь (acropolis)
 activity_hints:
-  - type: reading
-    focus: Oath of Chersonesus citizens (translated excerpt)
-    source: Provide in module
-
-  - type: map-activity
-    focus: Locate Greek colonies on the Black Sea coast
-    items: "8+ cities"
-
-  - type: image-analysis
-    focus: Greek artifacts from Ukrainian museums
-    items: "5-6 images"
-
-  - type: vocabulary
-    focus: Classical and political terminology
-    items: "15+"
-
-  - type: compare-contrast
-    focus: Olbia vs Chersonesus — differences in founding and governance
-    output: Comparison table
-
-  - type: quiz
-    focus: Greek city-states facts
-    items: "12+"
-
-  - type: timeline
-    focus: Key events in Greek colonial history
-    items: "10+"
-
+- type: reading
+  focus: Oath of Chersonesus citizens (translated excerpt)
+  source: Provide in module
+- type: map-activity
+  focus: Locate Greek colonies on the Black Sea coast
+  items: 8+ cities
+- type: image-analysis
+  focus: Greek artifacts from Ukrainian museums
+  items: 5-6 images
+- type: vocabulary
+  focus: Classical and political terminology
+  items: 15+
+- type: compare-contrast
+  focus: Olbia vs Chersonesus — differences in founding and governance
+  output: Comparison table
+- type: quiz
+  focus: Greek city-states facts
+  items: 12+
+- type: timeline
+  focus: Key events in Greek colonial history
+  items: 10+
 prerequisites:
-  - b2-hist-02 (Scythians and Sarmatians)
-  - Basic classical history knowledge
-
+- b2-hist-02 (Scythians and Sarmatians)
+- Basic classical history knowledge
 connects_to:
-  - b2-hist-02 (Scythians — trade partners)
-  - b2-hist-11 (Volodymyr's baptism in Chersonesus)
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- b2-hist-02 (Scythians — trade partners)
+- b2-hist-11 (Volodymyr's baptism in Chersonesus)
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'

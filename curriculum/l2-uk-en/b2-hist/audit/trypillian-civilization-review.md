@@ -1,22 +1,22 @@
 # Audit Report: trypillian-civilization.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2942/3000 (58 short)
-- **Activities:** ✅ 7/3
+- **Words:** ✅ 4037/4000
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 138/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 7 (target 3-6)
-- **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -29,14 +29,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 10 | 3 | 100% | 24% | 23.8% |
-| engagement | 12 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 16 | 10 | 100% | 14% | 14.3% |
+| engagement | 13 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 17 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 17 | 4 | 100% | 10% | 9.5% |
 | variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
@@ -45,9 +45,9 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Трипільська цивілізація — Витоки української землі** | ⚪️ | 45 | Skipped |
 | **Вступ** | ⚪️ | 170 | Skipped |
-| **Читання** | ✅ | 950 | Included in Core |
-| **Первинні джерела** | ⚪️ | 453 | Skipped |
-| **Духовний світ, побут і суспільний устрій** | ⚪️ | 400 | Skipped |
+| **Читання** | ✅ | 1390 | Included in Core |
+| **Первинні джерела** | ⚪️ | 691 | Skipped |
+| **Духовний світ, побут і суспільний устрій** | ⚪️ | 817 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 319 | Skipped |
 | **Есе** | ⚪️ | 0 | Skipped |
 | **Тема** | ⚪️ | 93 | Skipped |

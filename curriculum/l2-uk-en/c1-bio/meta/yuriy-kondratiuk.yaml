@@ -1,140 +1,117 @@
-# C1-BIO Module 118: Юрій Кондратюк: Геній, що розрахував шлях до Місяця (Повернена спадщина)
-# Status: SPEC (ready for content development)
-
 id: c1-bio-118
-title: "Юрій Кондратюк: Геній, що розрахував шлях до Місяця"
+title: 'Юрій Кондратюк: Геній, що розрахував шлях до Місяця'
 slug: yuriy-kondratiuk
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: "Юрій Кондратюк (Wikipedia UA)"
-    url: "https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович"
-    type: primary
-    notes: "Biography, space calculations, lunar orbit rendezvous"
-  - name: "Траса Кондратюка"
-    url: "https://uk.wikipedia.org/wiki/Траса_Кондратюка"
-    type: reference
-    notes: "His lunar trajectory"
-  - name: "NASA Apollo acknowledgment"
-    url: "https://www.nasa.gov/"
-    type: reference
-    notes: "American recognition of his work"
-
+- name: Юрій Кондратюк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
+  type: primary
+  notes: Biography, space calculations, lunar orbit rendezvous
+- name: Траса Кондратюка
+  url: https://uk.wikipedia.org/wiki/Траса_Кондратюка
+  type: reference
+  notes: His lunar trajectory
+- name: NASA Apollo acknowledgment
+  url: https://www.nasa.gov/
+  type: reference
+  notes: American recognition of his work
 content_outline:
-  - section: "Вступ — Український геній за чужим ім'ям"
-    words: 400
-    points:
-      - "Кондратюк як теоретик місячного польоту"
-      - "Подвійна ідентичність заради виживання"
-      - '"Траса Кондратюка" у програмі Аполлон'
-
-  - section: "Справжнє ім'я — Олександр Шаргей"
-    words: 600
-    points:
-      - "Народження в Полтаві (1897)"
-      - "Навчання в Київському політехнічному"
-      - "Перша світова війна та революція"
-      - "Прийняття чужої ідентичності"
-
-  - section: "Теоретик космосу"
-    words: 700
-    points:
-      - '"Завоювання міжпланетних просторів" (1929)'
-      - "Розрахунки місячної траєкторії"
-      - "Ідея гравітаційного маневру"
-      - "Робота без фінансування та підтримки"
-
-  - section: "Інженер-практик"
-    words: 600
-    points:
-      - "Будівництво елеваторів у Сибіру"
-      - 'Арешт за "шкідництво"'
-      - "Робота на вітроелектростанціях"
-      - "Пропозиція Корольову працювати разом"
-
-  - section: "Загибель і забуття"
-    words: 500
-    points:
-      - "Друга світова війна"
-      - "Загибель у 1942 році"
-      - "Десятиліття забуття"
-      - "Відкриття його праць"
-
-  - section: "Визнання після смерті"
-    words: 700
-    points:
-      - "NASA використовує його траєкторію (1960-ті)"
-      - "Нагорода ім. Кондратюка від NASA"
-      - "Визнання в незалежній Україні"
-      - "Кондратюк як символ українського генія"
-
+- section: Вступ — Український геній за чужим ім'ям
+  words: 457
+  points:
+  - Кондратюк як теоретик місячного польоту
+  - Подвійна ідентичність заради виживання
+  - '"Траса Кондратюка" у програмі Аполлон'
+- section: Справжнє ім'я — Олександр Шаргей
+  words: 685
+  points:
+  - Народження в Полтаві (1897)
+  - Навчання в Київському політехнічному
+  - Перша світова війна та революція
+  - Прийняття чужої ідентичності
+- section: Теоретик космосу
+  words: 800
+  points:
+  - '"Завоювання міжпланетних просторів" (1929)'
+  - Розрахунки місячної траєкторії
+  - Ідея гравітаційного маневру
+  - Робота без фінансування та підтримки
+- section: Інженер-практик
+  words: 685
+  points:
+  - Будівництво елеваторів у Сибіру
+  - Арешт за "шкідництво"
+  - Робота на вітроелектростанціях
+  - Пропозиція Корольову працювати разом
+- section: Загибель і забуття
+  words: 571
+  points:
+  - Друга світова війна
+  - Загибель у 1942 році
+  - Десятиліття забуття
+  - Відкриття його праць
+- section: Визнання після смерті
+  words: 802
+  points:
+  - NASA використовує його траєкторію (1960-ті)
+  - Нагорода ім. Кондратюка від NASA
+  - Визнання в незалежній Україні
+  - Кондратюк як символ українського генія
 vocabulary_hints:
   required:
-    - "траєкторія"
-    - "орбіта"
-    - "гравітаційний маневр"
-    - "місячний модуль"
-    - "теоретик"
-    - "псевдонім"
-    - "ідентичність"
-    - "визнання"
-    - "космічний політ"
-    - "геній"
+  - траєкторія
+  - орбіта
+  - гравітаційний маневр
+  - місячний модуль
+  - теоретик
+  - псевдонім
+  - ідентичність
+  - визнання
+  - космічний політ
+  - геній
   recommended:
-    - "розрахунок"
-    - "маса"
-    - "паливо"
-    - "орбітальний"
-    - "траса"
-
+  - розрахунок
+  - маса
+  - паливо
+  - орбітальний
+  - траса
 activity_hints:
-  - type: "reading"
-    focus: 'Excerpts from "Завоювання міжпланетних просторів"'
-    source: "Scientific texts"
-    items: "3 passages"
-
-  - type: "quiz"
-    focus: "Kondratiuk's biography and contributions"
-    items: "12+"
-
-  - type: "match-up"
-    focus: "Scientific concepts and their applications"
-    items: "10+"
-
-  - type: "essay-response"
-    focus: "How did Kondratiuk's ideas reach NASA?"
-    word_target: 300
-    output: "Analysis of knowledge transfer"
-
-  - type: "group-sort"
-    focus: "His life as Sharhei vs. as Kondratiuk"
-    items: "12+"
-
-  - type: "fill-in"
-    focus: "Key scientific terms and dates"
-    items: "10+"
-
-  - type: "discussion"
-    focus: "Why did he have to hide his identity?"
-    output: "Soviet persecution analysis"
-
+- type: reading
+  focus: Excerpts from "Завоювання міжпланетних просторів"
+  source: Scientific texts
+  items: 3 passages
+- type: quiz
+  focus: Kondratiuk's biography and contributions
+  items: 12+
+- type: match-up
+  focus: Scientific concepts and their applications
+  items: 10+
+- type: essay-response
+  focus: How did Kondratiuk's ideas reach NASA?
+  word_target: 300
+  output: Analysis of knowledge transfer
+- type: group-sort
+  focus: His life as Sharhei vs. as Kondratiuk
+  items: 12+
+- type: fill-in
+  focus: Key scientific terms and dates
+  items: 10+
+- type: discussion
+  focus: Why did he have to hide his identity?
+  output: Soviet persecution analysis
 prerequisites:
-  - "Space exploration basics"
-  - "Soviet era history"
-  - "Apollo program context"
-
+- Space exploration basics
+- Soviet era history
+- Apollo program context
 connects_to:
-  - "c1-bio-117"
-  - "c1-bio-119"
-  - "c1-bio-112"
-
+- c1-bio-117
+- c1-bio-119
+- c1-bio-112
 naturalness:
   score: 1
-  status: "PENDING"
+  status: PENDING

@@ -1,0 +1,90 @@
+module: c1-bio-15
+id: c1-bio-severyn-nalyvaiko
+title: 'Северин Наливайко: Лідер козацького повстання'
+subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
+slug: severyn-nalyvaiko
+version: '2.0'
+phase: C1-BIO
+pedagogy: CBI
+focus: biography
+duration: 120
+transliteration: none
+word_target: 3000
+immersion: 100% Ukrainian
+tags:
+- history
+- biography
+- cossacks
+- rebellion
+- war
+grammar:
+- Military terminology
+- Action narrative
+objectives:
+- Understand the causes of the first Cossack rebellions
+- Analyze Nalyvaiko's tactics and goals
+vocabulary_count: 25
+naturalness:
+  score: 10
+  status: PASS
+sources:
+- name: Северин Наливайко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  type: primary
+- name: Повстання Наливайка
+  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  type: primary
+content_outline:
+- section: Вступ — Перший бунтар
+  words: 615
+  points:
+  - Лідер першого масштабного козацького повстання (1594-1596)
+  - Перехід від найманства до соціальної боротьби
+  - Трагічна смерть у Варшаві
+- section: Життєпис
+  words: 1538
+  points:
+  - Походження з дрібної шляхти (або міщан)
+  - Служба у князя Острозького (сотником)
+  - Конфлікт з Калиновським (особиста помста)
+  - Організація загонів і походи на Молдову
+  - Повстання: Лубни, Солоницька трагедія
+  - Зрада і страта
+- section: Історичний контекст
+  words: 615
+  points:
+  - Криза Речі Посполитої кінця XVI ст.
+  - Козацтво як нова сила, що вимагає прав
+  - Релігійний фактор (після Берестейської унії 1596)
+- section: Внесок та Спадщина
+  words: 615
+  points:
+  - Ідея "Козацької держави" (хоча ще нечітка)
+  - Тактика табору (вагенбург)
+  - Образ Наливайка в літературі (Рилєєв, Шевченко, Куліш)
+- section: Порівняльний аналіз
+  words: 617
+  points:
+  - Наливайко vs. Косинський (масштаб і цілі)
+  - Наливайко vs. Хмельницький (попередник)
+vocabulary_hints:
+  required:
+  - повстання (uprising)
+  - бунт (rebellion)
+  - ватажок (leader)
+  - табір (camp)
+  - облога (siege)
+  - страта (execution)
+  - зрада (betrayal)
+  - найманець (mercenary)
+  - поразка (defeat)
+activity_hints:
+- type: reading
+  focus: Chronicle description of Solonytsia
+- type: quiz
+  focus: Timeline of the uprising
+- type: essay-response
+  focus: Hero or Bandit? Perspectives on Nalyvaiko
+naturalness:
+  score: 10
+  status: PASS

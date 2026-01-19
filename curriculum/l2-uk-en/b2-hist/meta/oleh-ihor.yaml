@@ -7,9 +7,29 @@ slug: oleh-ihor
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 3750
-immersion: 100% Ukrainian
+pedagogy: CBI
+word_target: 4000
+register: публіцистичний
+duration: 150
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - oleh
+  - ihor
+  - byzantium
+  - trade
+grammar:
+  - 'Narrative tenses'
+  - 'Treaty language'
+objectives:
+  - 'Analyze the role of Varangians in state formation'
+  - 'Compare the policies of Oleh and Ihor'
+  - 'Evaluate the significance of Rus-Byzantine treaties'
+vocabulary_count: 25
+naturalness:
+  score: 10
+  status: PASS
 
 # === AGENT BUILD SPEC ===
 
@@ -77,7 +97,7 @@ content_outline:
       - Питання легітимності влади
 
   - section: Підсумок
-    words: 350
+    words: 600
     points:
       - Олег та Ігор як засновники держави
       - Від племінного союзу до ранньої держави

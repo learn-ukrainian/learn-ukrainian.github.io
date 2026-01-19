@@ -1,8 +1,5 @@
-# C1-HIST Module 118: Євреї в Україні до 1917
-# Status: SPEC (ready for content development)
-
 id: c1-hist-118
-title: "Євреї в Україні до 1917"
+title: Євреї в Україні до 1917
 slug: yevrei-v-ukraini-do-1917
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,120 +7,99 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Історія євреїв в Україні (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
-    type: reference
-    notes: Jewish history overview
-  - name: Погроми в Україні (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
-    type: reference
-    notes: Pogroms
-  - name: Штетл (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Штетл
-    type: reference
-    notes: Shtetl life
-
+- name: Історія євреїв в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
+  type: reference
+  notes: Jewish history overview
+- name: Погроми в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
+  type: reference
+  notes: Pogroms
+- name: Штетл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Штетл
+  type: reference
+  notes: Shtetl life
 content_outline:
-  - section: Вступ — Спільна земля
-    words: 400
-    points:
-      - Євреї в Україні — 1000 років
-      - Найбільша єврейська громада світу
-      - Співіснування і конфлікт
-      - Структура модуля
-
-  - section: Середньовіччя і Козацька доба
-    words: 600
-    points:
-      - Євреї в Речі Посполитій
-      - Орендарі і посередники
-      - Хмельниччина 1648
-      - Гайдамаччина
-
-  - section: Штетл — життя
-    words: 700
-    points:
-      - «Смуга осілості»
-      - Культура ідиш
-      - Професії — обмеження
-      - Взаємодія з українцями
-
-  - section: Погроми XIX-початок XX ст.
-    words: 600
-    points:
-      - 1881-1884
-      - 1903-1906
-      - Роль держави
-      - Роль місцевого населення
-
-  - section: Громадянська війна 1917-1921
-    words: 500
-    points:
-      - Масштаб погромів
-      - Хто чинив — всі сторони
-      - Петлюра — суперечлива фігура
-      - Наслідки
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Складна історія
-      - Не тільки погроми
-      - Перехід до Голокосту
-
+- section: Вступ — Спільна земля
+  words: 451
+  points:
+  - Євреї в Україні — 1000 років
+  - Найбільша єврейська громада світу
+  - Співіснування і конфлікт
+  - Структура модуля
+- section: Середньовіччя і Козацька доба
+  words: 677
+  points:
+  - Євреї в Речі Посполитій
+  - Орендарі і посередники
+  - Хмельниччина 1648
+  - Гайдамаччина
+- section: Штетл — життя
+  words: 790
+  points:
+  - «Смуга осілості»
+  - Культура ідиш
+  - Професії — обмеження
+  - Взаємодія з українцями
+- section: Погроми XIX-початок XX ст.
+  words: 677
+  points:
+  - 1881-1884
+  - 1903-1906
+  - Роль держави
+  - Роль місцевого населення
+- section: Громадянська війна 1917-1921
+  words: 564
+  points:
+  - Масштаб погромів
+  - Хто чинив — всі сторони
+  - Петлюра — суперечлива фігура
+  - Наслідки
+- section: Підсумок
+  words: 341
+  points:
+  - Складна історія
+  - Не тільки погроми
+  - Перехід до Голокосту
 vocabulary_hints:
   required:
-    - єврей (Jew)
-    - штетл (shtetl)
-    - погром (pogrom)
-    - «смуга осілості» (Pale of Settlement)
-    - ідиш (Yiddish)
-    - орендар (leaseholder)
-    - Хмельниччина (Khmelnytsky Uprising)
-    - гайдамаки (Haidamaks)
-    - громадянська війна (civil war)
-    - співіснування (coexistence)
+  - єврей (Jew)
+  - штетл (shtetl)
+  - погром (pogrom)
+  - «смуга осілості» (Pale of Settlement)
+  - ідиш (Yiddish)
+  - орендар (leaseholder)
+  - Хмельниччина (Khmelnytsky Uprising)
+  - гайдамаки (Haidamaks)
+  - громадянська війна (civil war)
+  - співіснування (coexistence)
   recommended:
-    - хасид (Hasid)
-    - кагал (kahal)
-    - Гаскала (Haskalah)
-    - сіоністський рух (Zionist movement)
-    - «Чорна сотня» (Black Hundreds)
-
+  - хасид (Hasid)
+  - кагал (kahal)
+  - Гаскала (Haskalah)
+  - сіоністський рух (Zionist movement)
+  - «Чорна сотня» (Black Hundreds)
 activity_hints:
-  - type: historical-analysis
-    focus: 1000 years of Jewish presence in Ukraine
-    output: Historical timeline
-
-  - type: context-study
-    focus: Why Jews became middlemen — structural analysis
-    output: Structural analysis
-
-  - type: violence-analysis
-    focus: Who was responsible for pogroms?
-    output: Responsibility analysis
-
-  - type: cultural-study
-    focus: Shtetl life and Ukrainian-Jewish interaction
-    output: Cultural analysis
-
-  - type: essay-response
-    focus: "Чи український антисемітизм — 'особливий'?"
-    word_target: 400
-    model_answer: Required (comparative)
-
+- type: historical-analysis
+  focus: 1000 years of Jewish presence in Ukraine
+  output: Historical timeline
+- type: context-study
+  focus: Why Jews became middlemen — structural analysis
+  output: Structural analysis
+- type: violence-analysis
+  focus: Who was responsible for pogroms?
+  output: Responsibility analysis
+- type: cultural-study
+  focus: Shtetl life and Ukrainian-Jewish interaction
+  output: Cultural analysis
+- type: essay-response
+  focus: Чи український антисемітизм — 'особливий'?
+  word_target: 400
+  model_answer: Required (comparative)
 prerequisites:
-  - c1-hist-117 (Polish-Ukrainian synthesis)
-  - c1-hist-114 (Commonwealth period)
-
+- c1-hist-117 (Polish-Ukrainian synthesis)
+- c1-hist-114 (Commonwealth period)
 connects_to:
-  - c1-hist-119 (Holocaust in Ukraine)
-  - c1-hist-121 (Zelensky synthesis)
-
-# === JEWISH-UKRAINIAN RELATIONS PHASE START ===
-# Phase C1H.18 begins here
-# The difficult conversation about shared land and contested memory
+- c1-hist-119 (Holocaust in Ukraine)
+- c1-hist-121 (Zelensky synthesis)

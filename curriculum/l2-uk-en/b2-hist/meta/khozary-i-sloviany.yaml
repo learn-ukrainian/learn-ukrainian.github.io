@@ -1,166 +1,142 @@
-# B2-HIST Module 07: Хозарський каганат і слов'яни
-# Status: ACTIVE (Audit Passed)
-
 module: b2-hist-07
 id: b2-hist-07
 title: Хозарський каганат і слов'яни
-subtitle: 'Neighbors and Rivals'
+subtitle: Neighbors and Rivals
 slug: khozary-i-sloviany
 version: '2.0'
-phase: 'HIST.1 Origins'
+phase: HIST.1 Origins
 focus: history
-pedagogy: 'seminar'
+pedagogy: seminar
 duration: 150
 transliteration: none
 tags:
-  - history
-  - khazars
-  - slavic
-  - medieval
-  - tribute
+- history
+- khazars
+- slavic
+- medieval
+- tribute
 grammar:
-  - Historical narrative register
-  - Subordinate clauses of reason (оскільки, тому що)
-  - Participles in historical descriptions
+- Historical narrative register
+- Subordinate clauses of reason (оскільки, тому що)
+- Participles in historical descriptions
 objectives:
-  - Learner understands the political structure of the Khazar Khaganate
-  - Learner can explain the relationship between Khazars and Slavic tribes
-  - Learner masters vocabulary related to nomadic states and tribute
+- Learner understands the political structure of the Khazar Khaganate
+- Learner can explain the relationship between Khazars and Slavic tribes
+- Learner masters vocabulary related to nomadic states and tribute
 vocabulary_count: 28
 naturalness:
   score: 9
   status: PASS
-
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Хозарський каганат (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Хозарський_каганат
-    type: reference
-    notes: Overview of Khazar Khaganate
-  - name: Хозари (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Хозари
-    type: reference
-    notes: Khazar people and culture
-  - name: Повість минулих літ — про хозарську данину
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Chronicle account of Khazar tribute
-
+- name: Хозарський каганат (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
+  type: reference
+  notes: Overview of Khazar Khaganate
+- name: Хозари (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хозари
+  type: reference
+  notes: Khazar people and culture
+- name: Повість минулих літ — про хозарську данину
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle account of Khazar tribute
 content_outline:
-  - section: Вступ — Хозарська імперія
-    words: 500
-    points:
-      - Хозарський каганат як велика степова держава VII-X ст.
-      - Географія — від Волги до Дніпра
-      - Столиця Ітіль на Волзі
-      - Унікальність — іудаїзм як державна релігія
-
-  - section: Хозари та східні слов'яни
-    words: 700
-    points:
-      - Слов'янські племена під хозарською владою
-      - Поляни, сіверяни, в'ятичі — данники хозар
-      - Данина "по білій вивірці від диму"
-      - Хозарський вплив на розвиток слов'ян
-
-  - section: Хозарська культура
-    words: 600
-    points:
-      - Прийняття іудаїзму верхівкою
-      - Релігійна толерантність у каганаті
-      - Торгівля та економіка
-      - Архітектура — фортеці Саркел
-
-  - section: Торгові шляхи
-    words: 550
-    points:
-      - Великий шовковий шлях через хозарські землі
-      - Торгівля з арабським світом
-      - Хозарський карбованець (срібляник)
-      - Роль слов'ян у торговій мережі
-
-  - section: Занепад і падіння каганату
-    words: 600
-    points:
-      - Конфлікт із Руссю — походи Святослава
-      - Зруйнування Саркела та Ітіля (965-969)
-      - Кінець хозарського панування
-      - Доля хозарського населення
-
-  - section: Спадщина хозар
-    words: 450
-    points:
-      - Вплив на формування Русі
-      - Хозарські запозичення в культурі
-      - Топоніми хозарського походження
-      - Хозари в історичній пам'яті
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Хозарський каганат як важливий сусід слов'ян
-      - Звільнення від хозарської данини
-      - Перехід до синтезу першого періоду
-
+- section: Вступ — Хозарська імперія
+  words: 533
+  points:
+  - Хозарський каганат як велика степова держава VII-X ст.
+  - Географія — від Волги до Дніпра
+  - Столиця Ітіль на Волзі
+  - Унікальність — іудаїзм як державна релігія
+- section: Хозари та східні слов'яни
+  words: 746
+  points:
+  - Слов'янські племена під хозарською владою
+  - Поляни, сіверяни, в'ятичі — данники хозар
+  - Данина "по білій вивірці від диму"
+  - Хозарський вплив на розвиток слов'ян
+- section: Хозарська культура
+  words: 640
+  points:
+  - Прийняття іудаїзму верхівкою
+  - Релігійна толерантність у каганаті
+  - Торгівля та економіка
+  - Архітектура — фортеці Саркел
+- section: Торгові шляхи
+  words: 586
+  points:
+  - Великий шовковий шлях через хозарські землі
+  - Торгівля з арабським світом
+  - Хозарський карбованець (срібляник)
+  - Роль слов'ян у торговій мережі
+- section: Занепад і падіння каганату
+  words: 640
+  points:
+  - Конфлікт із Руссю — походи Святослава
+  - Зруйнування Саркела та Ітіля (965-969)
+  - Кінець хозарського панування
+  - Доля хозарського населення
+- section: Спадщина хозар
+  words: 480
+  points:
+  - Вплив на формування Русі
+  - Хозарські запозичення в культурі
+  - Топоніми хозарського походження
+  - Хозари в історичній пам'яті
+- section: Підсумок
+  words: 375
+  points:
+  - Хозарський каганат як важливий сусід слов'ян
+  - Звільнення від хозарської данини
+  - Перехід до синтезу першого періоду
 vocabulary_hints:
   required:
-    - каганат (khaganate)
-    - каган (khagan)
-    - хозари (Khazars)
-    - данина (tribute)
-    - іудаїзм (Judaism)
-    - толерантність (tolerance)
-    - фортеця (fortress)
-    - похід (campaign)
-    - торгівля (trade)
-    - імперія (empire)
-    - степ (steppe)
-    - залежність (dependency)
+  - каганат (khaganate)
+  - каган (khagan)
+  - хозари (Khazars)
+  - данина (tribute)
+  - іудаїзм (Judaism)
+  - толерантність (tolerance)
+  - фортеця (fortress)
+  - похід (campaign)
+  - торгівля (trade)
+  - імперія (empire)
+  - степ (steppe)
+  - залежність (dependency)
   recommended:
-    - Ітіль (Itil)
-    - Саркел (Sarkel)
-    - в'ятичі (Vyatichi)
-    - верхівка (elite)
-    - карбованець (coin)
-    - шовковий шлях (Silk Road)
-
+  - Ітіль (Itil)
+  - Саркел (Sarkel)
+  - в'ятичі (Vyatichi)
+  - верхівка (elite)
+  - карбованець (coin)
+  - шовковий шлях (Silk Road)
 activity_hints:
-  - type: reading
-    focus: Chronicle account of Khazar tribute to Slavs
-    source: Provide in module
-
-  - type: map-activity
-    focus: Khazar Khaganate territory and Slavic lands
-    items: "2 maps — extent and trade routes"
-
-  - type: vocabulary
-    focus: Political and economic terminology
-    items: "15+"
-
-  - type: timeline
-    focus: Khazar-Slavic relations from 7th-10th century
-    items: "8+ events"
-
-  - type: quiz
-    focus: Khazar Khaganate facts
-    items: "12+"
-
-  - type: compare-contrast
-    focus: Khazar Khaganate vs early Rus
-    output: Comparison table
-
-  - type: discussion
-    focus: "Як хозарське панування вплинуло на формування Русі?"
-
+- type: reading
+  focus: Chronicle account of Khazar tribute to Slavs
+  source: Provide in module
+- type: map-activity
+  focus: Khazar Khaganate territory and Slavic lands
+  items: 2 maps — extent and trade routes
+- type: vocabulary
+  focus: Political and economic terminology
+  items: 15+
+- type: timeline
+  focus: Khazar-Slavic relations from 7th-10th century
+  items: 8+ events
+- type: quiz
+  focus: Khazar Khaganate facts
+  items: 12+
+- type: compare-contrast
+  focus: Khazar Khaganate vs early Rus
+  output: Comparison table
+- type: discussion
+  focus: Як хозарське панування вплинуло на формування Русі?
 prerequisites:
-  - b2-hist-05 (Slavic tribes)
-  - b2-hist-06 (Founding of Kyiv)
-
+- b2-hist-05 (Slavic tribes)
+- b2-hist-06 (Founding of Kyiv)
 connects_to:
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
-  - b2-hist-10 (Olha and Sviatoslav — defeat of Khazars)
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- b2-hist-10 (Olha and Sviatoslav — defeat of Khazars)

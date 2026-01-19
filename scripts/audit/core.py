@@ -1054,7 +1054,10 @@ def audit_module(file_path: str) -> bool:
     else:
         # Check for stale review (content hash mismatch)
         import hashlib
-        current_hash = hashlib.md5(content.encode('utf-8')).hexdigest()[:8]
+        # Use only core prose for hashing to reduce sensitivity to metadata/YAML churn (Issue #440)
+        core_content = extract_core_content(content)
+        stable_prose = clean_for_stats(core_content)
+        current_hash = hashlib.md5(stable_prose.encode('utf-8')).hexdigest()[:8]
 
         llm_review_content = llm_review_path.read_text(encoding='utf-8')
         hash_match = re.search(r'\*\*Content Hash:\*\*\s*([a-f0-9]{8})', llm_review_content)

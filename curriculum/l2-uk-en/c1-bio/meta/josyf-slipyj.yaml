@@ -1,140 +1,117 @@
-# C1-BIO Module 107: Патріарх Йосиф Сліпий: Незламний сповідник віри
-# Status: SPEC (ready for content development)
-
 id: c1-bio-107
-title: "Патріарх Йосиф Сліпий: Незламний сповідник віри"
+title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
 slug: josyf-slipyj
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Йосиф Сліпий (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
-    type: primary
-    notes: Biography, imprisonment, diaspora leadership
-  - name: УГКЦ - Патріарх Йосиф Сліпий
-    url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
-    type: reference
-    notes: Official church biography
-  - name: Український Католицький Університет
-    url: https://ucu.edu.ua/
-    type: reference
-    notes: Institution he founded
-
+- name: Йосиф Сліпий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
+  type: primary
+  notes: Biography, imprisonment, diaspora leadership
+- name: УГКЦ - Патріарх Йосиф Сліпий
+  url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
+  type: reference
+  notes: Official church biography
+- name: Український Католицький Університет
+  url: https://ucu.edu.ua/
+  type: reference
+  notes: Institution he founded
 content_outline:
-  - section: Вступ — 18 років у ГУЛАЗі
-    words: 400
-    points:
-      - Сліпий як символ незламності
-      - Найтриваліше ув'язнення церковного ієрарха XX ст.
-      - Від в'язня до патріарха
-
-  - section: Молодість і духовне покликання
-    words: 500
-    points:
-      - Народження в Галичині (1892)
-      - Богословська освіта в Римі
-      - Повернення до Львова
-      - Ректор Львівської богословської академії
-
-  - section: Арешт і табори
-    words: 800
-    points:
-      - Арешт 1945 року
-      - Відмова зректися Риму
-      - Сибірські табори та заслання
-      - 18 років страждань і стійкості
-
-  - section: Звільнення та місія в діаспорі
-    words: 700
-    points:
-      - Заступництво Папи Івана XXIII і Кеннеді
-      - Прибуття до Риму (1963)
-      - Об'єднання української діаспори
-      - Заснування УКУ в Римі
-
-  - section: Боротьба за патріархат
-    words: 600
-    points:
-      - Мрія про визнання УГКЦ патріархатом
-      - Конфлікт із Ватиканом
-      - Самопроголошення патріархом (1975)
-      - Символічне значення титулу
-
-  - section: Спадщина сповідника
-    words: 500
-    points:
-      - Смерть у Римі (1984)
-      - '"Заповіт" — духовний документ'
-      - Процес беатифікації
-      - Сліпий як взірець для всіх поколінь
-
+- section: Вступ — 18 років у ГУЛАЗі
+  words: 457
+  points:
+  - Сліпий як символ незламності
+  - Найтриваліше ув'язнення церковного ієрарха XX ст.
+  - Від в'язня до патріарха
+- section: Молодість і духовне покликання
+  words: 571
+  points:
+  - Народження в Галичині (1892)
+  - Богословська освіта в Римі
+  - Повернення до Львова
+  - Ректор Львівської богословської академії
+- section: Арешт і табори
+  words: 914
+  points:
+  - Арешт 1945 року
+  - Відмова зректися Риму
+  - Сибірські табори та заслання
+  - 18 років страждань і стійкості
+- section: Звільнення та місія в діаспорі
+  words: 800
+  points:
+  - Заступництво Папи Івана XXIII і Кеннеді
+  - Прибуття до Риму (1963)
+  - Об'єднання української діаспори
+  - Заснування УКУ в Римі
+- section: Боротьба за патріархат
+  words: 685
+  points:
+  - Мрія про визнання УГКЦ патріархатом
+  - Конфлікт із Ватиканом
+  - Самопроголошення патріархом (1975)
+  - Символічне значення титулу
+- section: Спадщина сповідника
+  words: 573
+  points:
+  - Смерть у Римі (1984)
+  - '"Заповіт" — духовний документ'
+  - Процес беатифікації
+  - Сліпий як взірець для всіх поколінь
 vocabulary_hints:
   required:
-    - патріарх (patriarch)
-    - сповідник (confessor of faith)
-    - ГУЛАГ (Gulag)
-    - заслання (exile)
-    - ієрарх (hierarch)
-    - беатифікація (beatification)
-    - незламність (unbreakability)
-    - зректися (to renounce)
-    - діаспора (diaspora)
-    - заповіт (testament)
+  - патріарх (patriarch)
+  - сповідник (confessor of faith)
+  - ГУЛАГ (Gulag)
+  - заслання (exile)
+  - ієрарх (hierarch)
+  - беатифікація (beatification)
+  - незламність (unbreakability)
+  - зректися (to renounce)
+  - діаспора (diaspora)
+  - заповіт (testament)
   recommended:
-    - ув'язнення (imprisonment)
-    - репресії (repressions)
-    - катакомбна церква (catacomb church)
-    - екуменізм (ecumenism)
-    - канонізація (canonization)
-
+  - ув'язнення (imprisonment)
+  - репресії (repressions)
+  - катакомбна церква (catacomb church)
+  - екуменізм (ecumenism)
+  - канонізація (canonization)
 activity_hints:
-  - type: reading
-    focus: Excerpts from Slipyj's "Заповіт"
-    source: Historical documents
-    items: "3 passages"
-
-  - type: quiz
-    focus: Slipyj's biography and persecution
-    items: "12+"
-
-  - type: match-up
-    focus: Stages of his life and key events
-    items: "10+"
-
-  - type: essay-response
-    focus: What gave Slipyj strength to survive 18 years?
-    word_target: 300
-    output: Analysis of faith and resistance
-
-  - type: group-sort
-    focus: Soviet persecution vs. diaspora achievements
-    items: "12+"
-
-  - type: fill-in
-    focus: Key dates and places in his journey
-    items: "10+"
-
-  - type: discussion
-    focus: Why is Slipyj called "confessor of faith"?
-    output: Theological and historical analysis
-
+- type: reading
+  focus: Excerpts from Slipyj's "Заповіт"
+  source: Historical documents
+  items: 3 passages
+- type: quiz
+  focus: Slipyj's biography and persecution
+  items: 12+
+- type: match-up
+  focus: Stages of his life and key events
+  items: 10+
+- type: essay-response
+  focus: What gave Slipyj strength to survive 18 years?
+  word_target: 300
+  output: Analysis of faith and resistance
+- type: group-sort
+  focus: Soviet persecution vs. diaspora achievements
+  items: 12+
+- type: fill-in
+  focus: Key dates and places in his journey
+  items: 10+
+- type: discussion
+  focus: Why is Slipyj called "confessor of faith"?
+  output: Theological and historical analysis
 prerequisites:
-  - c1-bio-106 (Andrey Sheptytsky - his predecessor)
-  - Understanding of Soviet religious persecution
-  - Cold War historical context
-
+- c1-bio-106 (Andrey Sheptytsky - his predecessor)
+- Understanding of Soviet religious persecution
+- Cold War historical context
 connects_to:
-  - c1-bio-106 (Sheptytsky - predecessor)
-  - c1-bio-77 (Vasyl Stus - fellow Soviet prisoner)
-  - c1-bio-71 (Levko Lukyanenko - fellow dissident)
-
+- c1-bio-106 (Sheptytsky - predecessor)
+- c1-bio-77 (Vasyl Stus - fellow Soviet prisoner)
+- c1-bio-71 (Levko Lukyanenko - fellow dissident)
 naturalness:
   score: 1
   status: PENDING

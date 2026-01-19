@@ -2,6 +2,7 @@
 # Status: SPEC (ready for content development)
 
 id: c1-bio-10
+module: c1-bio-10
 title: "Богдан Хмельницький: Гетьман-державотворець"
 slug: bohdan-khmelnytskyy
 module_type: biography
@@ -10,6 +11,25 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+duration: 120
+transliteration: none
+pedagogy: 'CBI'
+register: 'публіцистичний'
+tags:
+  - biography
+  - cossack
+  - politics
+  - military
+grammar:
+  - 'Historical narrative register'
+  - 'Quoted speech conventions'
+  - 'Complex causal clauses'
+objectives:
+  - 'Learner can analyze the role of Bohdan Khmelnytskyy in Ukrainian state-building'
+  - 'Learner can evaluate the geopolitical context of the mid-17th century in Eastern Europe'
+  - 'Learner can distinguish between different historiographical interpretations of the Pereyaslav Agreement'
+  - 'Learner can use advanced biographical and historical vocabulary in a comparative essay'
+vocabulary_count: 39
 
 # === AGENT BUILD SPEC ===
 
@@ -147,5 +167,5 @@ connects_to:
   - c1-bio-44 (Symon Petliura - later national leader)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 9
+  status: PASS

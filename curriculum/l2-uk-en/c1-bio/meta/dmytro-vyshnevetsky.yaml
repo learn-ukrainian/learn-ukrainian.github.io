@@ -1,0 +1,89 @@
+module: c1-bio-13
+id: c1-bio-dmytro-vyshnevetsky
+title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
+subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
+description: Biography of Dmytro Vyshnevetsky (Baida), the founder of the first Zaporozhian
+  Sich. Explores his life as a frontier prince, his legendary execution, and his transformation
+  into a folk hero.
+slug: dmytro-vyshnevetsky
+version: '2.0'
+phase: C1-BIO
+pedagogy: CBI
+focus: biography
+duration: 120
+transliteration: none
+word_target: 3000
+immersion: 100% Ukrainian
+tags:
+- history
+- biography
+- cossacks
+- zaporizhzhia
+- legend
+grammar:
+- Epic narrative style
+- Historical present tense
+objectives:
+- Explore the origins of the Zaporozhian Sich
+- Understand the legend of Baida and its cultural impact
+vocabulary_count: 25
+naturalness:
+  score: 10
+  status: PASS
+sources:
+- name: Дмитро Вишневецький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
+  type: primary
+- name: Пісня про Байду
+  url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
+  type: primary
+content_outline:
+- section: Вступ — Князь і Козак
+  words: 615
+  points:
+  - Аристократ, що став козаком
+  - Засновник першої Січі на Хортиці
+  - Легендарний Байда народних дум
+- section: Життєпис
+  words: 1538
+  points:
+  - Походження з роду Вишневецьких
+  - Будівництво фортеці на Хортиці (1550-ті)
+  - Походи проти татар і турків
+  - Служба різним монархам (Литва, Москва)
+  - Похід у Молдову і зрада
+  - Страта в Стамбулі (гак)
+- section: Історичний контекст
+  words: 615
+  points:
+  - Дике Поле як фронтир
+  - Зародження козацтва як соціального стану
+  - Геополітика: Литва, Туреччина, Крим
+- section: Внесок та Спадщина
+  words: 615
+  points:
+  - Прототип козацького устрою
+  - Міф про Байду як символ незламності
+  - Пісня про Байду як культурний код
+- section: Порівняльний аналіз
+  words: 617
+  points:
+  - Вишневецький vs. Сагайдачний (авантюризм vs державництво)
+vocabulary_hints:
+  required:
+  - січ (Sich)
+  - байда (carefree person/hero)
+  - гак (hook)
+  - фронтир (frontier)
+  - фортеця (fortress)
+  - ватажок (leader)
+  - дума (duma/epic song)
+  - зрада (betrayal)
+  - страта (execution)
+activity_hints:
+- type: reading
+  focus: '"Song of Baida" analysis'
+- type: quiz
+  focus: Biography facts
+- type: essay-response
+  focus: '"Myth vs. Reality of Baida"'

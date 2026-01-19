@@ -1,8 +1,5 @@
-# C1-HIST Module 133: Синтез — Від жертви до суб'єкта
-# Status: SPEC (ready for content development)
-
 id: c1-hist-133
-title: "Синтез: Від жертви до суб'єкта"
+title: 'Синтез: Від жертви до суб''єкта'
 slug: syntez-ahentsnist
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,123 +7,94 @@ focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Історія України (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Історія_України
-    type: reference
-    notes: History overview
-  - name: Українська ідентичність (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
-    type: reference
-    notes: National identity
-
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: History overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
+  type: reference
+  notes: National identity
 content_outline:
-  - section: Вступ — Наратив агентності
-    words: 400
-    points:
-      - Огляд модулів 126-132
-      - Україна — не лише жертва
-      - Активне творення історії
-      - Мета синтезу
-
-  - section: Стратегії виживання
-    words: 600
-    points:
-      - Культурна резистенція
-      - Громадянське суспільство
-      - Революційна традиція
-      - Накопичення досвіду
-
-  - section: Поворотні моменти агентності
-    words: 700
-    points:
-      - Гранітна революція 1990
-      - Помаранчева 2004
-      - Євромайдан 2014
-      - 24 лютого 2022
-
-  - section: Хто будував Україну
-    words: 600
-    points:
-      - Не лише еліти
-      - Жінки — прихована історія
-      - Волонтери — нова сила
-      - Звичайні люди — герої
-
-  - section: Від об'єкта до суб'єкта
-    words: 500
-    points:
-      - Імперська історія — Україна як об'єкт
-      - Власна історія — Україна як суб'єкт
-      - 2022 — точка переходу
-      - Що це означає
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Агентність — ключ до розуміння
-      - Україна — творець власної долі
-      - Перехід до фінального синтезу
-
+- section: Вступ — Наратив агентності
+  words: 451
+  points:
+  - Огляд модулів 126-132
+  - Україна — не лише жертва
+  - Активне творення історії
+  - Мета синтезу
+- section: Стратегії виживання
+  words: 677
+  points:
+  - Культурна резистенція
+  - Громадянське суспільство
+  - Революційна традиція
+  - Накопичення досвіду
+- section: Поворотні моменти агентності
+  words: 790
+  points:
+  - Гранітна революція 1990
+  - Помаранчева 2004
+  - Євромайдан 2014
+  - 24 лютого 2022
+- section: Хто будував Україну
+  words: 677
+  points:
+  - Не лише еліти
+  - Жінки — прихована історія
+  - Волонтери — нова сила
+  - Звичайні люди — герої
+- section: Від об'єкта до суб'єкта
+  words: 564
+  points:
+  - Імперська історія — Україна як об'єкт
+  - Власна історія — Україна як суб'єкт
+  - 2022 — точка переходу
+  - Що це означає
+- section: Підсумок
+  words: 341
+  points:
+  - Агентність — ключ до розуміння
+  - Україна — творець власної долі
+  - Перехід до фінального синтезу
 vocabulary_hints:
   required:
-    - синтез (synthesis)
-    - агентність (agency)
-    - суб'єкт (subject/actor)
-    - об'єкт (object)
-    - жертва (victim)
-    - творець (creator)
-    - стратегія виживання (survival strategy)
-    - поворотний момент (turning point)
-    - ідентичність (identity)
-    - самовизначення (self-determination)
+  - синтез (synthesis)
+  - агентність (agency)
+  - суб'єкт (subject/actor)
+  - об'єкт (object)
+  - жертва (victim)
+  - творець (creator)
+  - стратегія виживання (survival strategy)
+  - поворотний момент (turning point)
+  - ідентичність (identity)
+  - самовизначення (self-determination)
   recommended:
-    - наратив (narrative)
-    - деколонізація (decolonization)
-    - історична свідомість (historical consciousness)
-    - колективна пам'ять (collective memory)
-    - національне будівництво (nation building)
-
+  - наратив (narrative)
+  - деколонізація (decolonization)
+  - історична свідомість (historical consciousness)
+  - колективна пам'ять (collective memory)
+  - національне будівництво (nation building)
 activity_hints:
-  - type: synthesis
-    focus: Map Ukrainian agency across 500 years
-    output: Agency evolution map
-
-  - type: turning-points
-    focus: Connect all turning points of agency
-    output: Turning point synthesis
-
-  - type: actors-analysis
-    focus: Who built Ukraine — beyond elites
-    output: Actor identification
-
-  - type: transformation-analysis
-    focus: From object to subject — what changed
-    output: Transformation analysis
-
-  - type: essay-response
-    focus: "Як Україна стала суб'єктом історії?"
-    word_target: 500
-    model_answer: Required
-
+- type: synthesis
+  focus: Map Ukrainian agency across 500 years
+  output: Agency evolution map
+- type: turning-points
+  focus: Connect all turning points of agency
+  output: Turning point synthesis
+- type: actors-analysis
+  focus: Who built Ukraine — beyond elites
+  output: Actor identification
+- type: transformation-analysis
+  focus: From object to subject — what changed
+  output: Transformation analysis
+- type: essay-response
+  focus: Як Україна стала суб'єктом історії?
+  word_target: 500
+  model_answer: Required
 prerequisites:
-  - c1-hist-126-132 (All agency modules)
-
+- c1-hist-126-132 (All agency modules)
 connects_to:
-  - c1-hist-134 (Ukrainian question XXI)
-  - c1-hist-135 (Final synthesis)
-
-# === UKRAINIAN AGENCY PHASE COMPLETION NOTE ===
-# This module concludes Phase C1H.20
-# Students now have:
-# - Cultural resistance strategies documented
-# - Civil society as state substitute understood
-# - Revolutionary tradition traced
-# - Women's hidden agency recovered
-# - 2022 mobilization analyzed
-# - Soft power breakthrough documented
-#
-# Ready for Phase C1H.21: Final Synthesis
+- c1-hist-134 (Ukrainian question XXI)
+- c1-hist-135 (Final synthesis)

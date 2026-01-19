@@ -1,146 +1,117 @@
-# C1-BIO Module 117: Сергій Корольов: Батько космічної ери (Повернена спадщина)
-# Status: SPEC (ready for content development)
-
 id: c1-bio-117
-title: "Сергій Корольов: Батько космічної ери"
+title: 'Сергій Корольов: Батько космічної ери'
 slug: serhiy-korolyov
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
-# FRAMING NOTE: This is a "Reclaimed Heritage" module. Korolyov was a Ukrainian
-# whose identity was suppressed by the Soviet system. His mother spoke Ukrainian
-# to him, he was born in Zhytomyr, educated in Kyiv. The USSR erased his identity
-# and imprisoned him in the Gulag. This module reclaims him as part of Ukrainian
-# heritage while honestly addressing the complexity of his life.
-
 sources:
-  - name: Сергій Корольов (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
-    type: primary
-    notes: Biography, space achievements, Ukrainian origins
-  - name: Музей космонавтики Корольова в Житомирі
-    url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
-    type: reference
-    notes: Museum in his birthplace
-  - name: ГУЛАГ
-    url: https://uk.wikipedia.org/wiki/ГУЛАГ
-    type: reference
-    notes: His imprisonment
-
+- name: Сергій Корольов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
+  type: primary
+  notes: Biography, space achievements, Ukrainian origins
+- name: Музей космонавтики Корольова в Житомирі
+  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
+  type: reference
+  notes: Museum in his birthplace
+- name: ГУЛАГ
+  url: https://uk.wikipedia.org/wiki/ГУЛАГ
+  type: reference
+  notes: His imprisonment
 content_outline:
-  - section: Вступ — Українець, який відкрив космос
-    words: 400
-    points:
-      - Корольов як творець радянської космічної програми
-      - Українське походження та приховане ім'я
-      - Жертва ГУЛАГу, що став "головним конструктором"
-
-  - section: Українське коріння
-    words: 600
-    points:
-      - Народження в Житомирі (1907)
-      - Дитинство в українській родині
-      - Мати — вчителька, говорила українською
-      - Освіта в Київському політехнічному інституті
-
-  - section: Ракетна мрія
-    words: 600
-    points:
-      - Захоплення авіацією з молодості
-      - Перші ракетні експерименти
-      - Створення ракетного науково-дослідного інституту
-      - Арешт і вирок (1938)
-
-  - section: ГУЛАГ і виживання
-    words: 700
-    points:
-      - 6 років у таборах та "шарашках"
-      - Робота у в'язничних конструкторських бюро
-      - Підірване здоров'я
-      - Звільнення та реабілітація
-
-  - section: Творець космічної ери
-    words: 800
-    points:
-      - Перша міжконтинентальна ракета (1957)
-      - Перший супутник (Спутник-1)
-      - Перший космонавт (Гагарін, 1961)
-      - Секретне ім'я "Головний конструктор"
-
-  - section: Спадщина та повернення в Україну
-    words: 500
-    points:
-      - Рання смерть (1966)
-      - Музей у Житомирі
-      - Визнання українського походження
-      - Корольов як символ повернутої спадщини
-
+- section: Вступ — Українець, який відкрив космос
+  words: 444
+  points:
+  - Корольов як творець радянської космічної програми
+  - Українське походження та приховане ім'я
+  - Жертва ГУЛАГу, що став "головним конструктором"
+- section: Українське коріння
+  words: 666
+  points:
+  - Народження в Житомирі (1907)
+  - Дитинство в українській родині
+  - Мати — вчителька, говорила українською
+  - Освіта в Київському політехнічному інституті
+- section: Ракетна мрія
+  words: 666
+  points:
+  - Захоплення авіацією з молодості
+  - Перші ракетні експерименти
+  - Створення ракетного науково-дослідного інституту
+  - Арешт і вирок (1938)
+- section: ГУЛАГ і виживання
+  words: 777
+  points:
+  - 6 років у таборах та "шарашках"
+  - Робота у в'язничних конструкторських бюро
+  - Підірване здоров'я
+  - Звільнення та реабілітація
+- section: Творець космічної ери
+  words: 888
+  points:
+  - Перша міжконтинентальна ракета (1957)
+  - Перший супутник (Спутник-1)
+  - Перший космонавт (Гагарін, 1961)
+  - Секретне ім'я "Головний конструктор"
+- section: Спадщина та повернення в Україну
+  words: 559
+  points:
+  - Рання смерть (1966)
+  - Музей у Житомирі
+  - Визнання українського походження
+  - Корольов як символ повернутої спадщини
 vocabulary_hints:
   required:
-    - конструктор (designer/engineer)
-    - ракета (rocket)
-    - космонавт (cosmonaut)
-    - супутник (satellite)
-    - ГУЛАГ (Gulag)
-    - '"шарашка" (prison lab)'
-    - секретний (secret)
-    - походження (origin)
-    - спадщина (heritage)
-    - реабілітація (rehabilitation)
+  - конструктор (designer/engineer)
+  - ракета (rocket)
+  - космонавт (cosmonaut)
+  - супутник (satellite)
+  - ГУЛАГ (Gulag)
+  - '"шарашка" (prison lab)'
+  - секретний (secret)
+  - походження (origin)
+  - спадщина (heritage)
+  - реабілітація (rehabilitation)
   recommended:
-    - траєкторія (trajectory)
-    - орбіта (orbit)
-    - запуск (launch)
-    - міжконтинентальний (intercontinental)
-    - конструкторське бюро (design bureau)
-
+  - траєкторія (trajectory)
+  - орбіта (orbit)
+  - запуск (launch)
+  - міжконтинентальний (intercontinental)
+  - конструкторське бюро (design bureau)
 activity_hints:
-  - type: reading
-    focus: Korolyov's letters and memoirs
-    source: Historical archives
-    items: "3 passages"
-
-  - type: quiz
-    focus: Korolyov's biography and achievements
-    items: "12+"
-
-  - type: match-up
-    focus: Space missions and their significance
-    items: "10+"
-
-  - type: essay-response
-    focus: Why is Korolyov considered Ukrainian heritage?
-    word_target: 300
-    output: Analysis of reclaimed identity
-
-  - type: group-sort
-    focus: Ukrainian roots vs. Soviet suppression
-    items: "12+"
-
-  - type: fill-in
-    focus: Key dates and space achievements
-    items: "10+"
-
-  - type: discussion
-    focus: How did the USSR erase Ukrainian identities?
-    output: Cultural politics analysis
-
+- type: reading
+  focus: Korolyov's letters and memoirs
+  source: Historical archives
+  items: 3 passages
+- type: quiz
+  focus: Korolyov's biography and achievements
+  items: 12+
+- type: match-up
+  focus: Space missions and their significance
+  items: 10+
+- type: essay-response
+  focus: Why is Korolyov considered Ukrainian heritage?
+  word_target: 300
+  output: Analysis of reclaimed identity
+- type: group-sort
+  focus: Ukrainian roots vs. Soviet suppression
+  items: 12+
+- type: fill-in
+  focus: Key dates and space achievements
+  items: 10+
+- type: discussion
+  focus: How did the USSR erase Ukrainian identities?
+  output: Cultural politics analysis
 prerequisites:
-  - Space race historical context
-  - Soviet repression understanding
-  - c1-bio-118 (Kondratiuk - space theorist)
-
+- Space race historical context
+- Soviet repression understanding
+- c1-bio-118 (Kondratiuk - space theorist)
 connects_to:
-  - c1-bio-118 (Kondratiuk - intellectual predecessor)
-  - c1-bio-119 (Puliui - earlier reclaimed figure)
-  - c1-bio-112 (Yevhen Paton - contemporary engineer)
-
+- c1-bio-118 (Kondratiuk - intellectual predecessor)
+- c1-bio-119 (Puliui - earlier reclaimed figure)
+- c1-bio-112 (Yevhen Paton - contemporary engineer)
 naturalness:
   score: 1
   status: PENDING

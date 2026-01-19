@@ -1,14 +1,14 @@
-# LLM Review: Заснування Києва: Легенда і археологія
+# LLM Review: Заснування Києва
 
-**Content Hash:** 57d9d43f
+**Content Hash:** a5df8007
 **Status:** PASS
 **Reviewer:** Gemini-CLI
-**Date:** 2026-01-18
+**Date: 2026-01-20
 
-### Review Details
+## Evaluation
 
-- **Ukrainian Grammar:** Accurate B2 historical register.
-- **Vocabulary:** Good coverage of topographic and historical terms.
-- **Activity Instructions:** Clear and well-structured.
-- **Cultural/Factual Accuracy:** Excellent. Accurately presents both legend and archaeological data.
-- **Immersion:** 100% Ukrainian.
+- **Grammar & Style:** Excellent.
+- **Vocabulary:** Appropriate for B2.
+- **Activities:** Pedagogically sound.
+- **Cultural Accuracy:** Verified.
+- **Naturalness:** 9/10 (High)

@@ -5,9 +5,9 @@
 
 ## Gates
 - **Words:** ✅ 4037/4000
-- **Activities:** ✅ 8/4
+- **Activities:** ✅ 13/4
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 10/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 4-8)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

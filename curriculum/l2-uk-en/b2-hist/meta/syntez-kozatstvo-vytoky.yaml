@@ -6,5 +6,6 @@ track: history
 phase: "HIST.5 [Rise of Cossacks]"
 status: skeleton
 focus: history
+word_target: 3000
 prerequisites: []
 learning_outcomes: []

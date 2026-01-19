@@ -425,268 +425,278 @@ levels:
   b2-hist:
     type: track
     modules:
-      - trypillian-civilization
-      - scythians-sarmatians
-      - greeks-crimea-olbia
-      - sloviany-origins
-      - slavic-tribes
-      - zasnuvannia-kyieva
-      - khozary-i-sloviany
-      - syntez-vytoky-1
-      - oleh-ihor
-      - olha-sviatoslav
-      - volodymyr-khreshchennia
-      - yaroslav-wise
-      - ruska-pravda
-      - sofiya-kyivska
-      - volodymyr-monomakh
-      - kultura-kyivskoi-rusi
-      - kniazivski-usobiytsi
-      - ludy-rusi
-      - rus-ta-susidy
-      - syntez-kyivska-rus
-      - mongolska-navala
-      - mykhailo-chernigivskyi
-      - danylo-halytskyi
-      - galytsko-volynska-derzhava
-      - boiare-i-shliakhta
-      - kinets-halytsko-volyni
-      - krymske-khanstvo
-      - syntez-dvokniazivstvo
-      - velyke-kniazivstvo-lytovske
-      - ukrainski-zemli-u-vkl
-      - liublinska-uniia
-      - rich-pospolyta
-      - beresteyska-uniia
-      - pravoslavna-tserkva-17
-      - petro-mohyla
-      - bratstva-i-osvita
-      - bukovyna-zakarpattia
-      - slobozhanshchyna
-      - liudy-ricchi-pospolytoi
-      - syntez-lytva-polska
-      - kozatstvo-vytoky
-      - zaporizka-sich
-      - dmytro-vyshnevetskyi
-      - kozatski-povstannia-16
-      - petro-sahaidachnyi
-      - khotynska-viyna
-      - kozatska-kultura
-      - kozatske-viisko
-      - morski-pokhody
-      - syntez-kozatstvo-vytoky
-      - khmelnychchyna-prychyny
-      - bohdan-khmelnytskyi
-      - bitva-pid-zhovtymy-vodamy
-      - zborivska-bila-tserkva
-      - kozatska-derzhava
-      - pereyaslavska-uhoda
-      - yurii-nemyrych
-      - ruina-i
-      - ruina-ii
-      - andrusivske-peremyrya
-      - ivan-sirko
-      - syntez-khmelnychchyna
-      - ivan-mazepa-derzhavnyk
-      - ivan-mazepa-kultura
-      - kost-hordiyenko-sich
-      - ivan-mazepa-poltava
-      - pylyp-orlyk-konstytutsiia
-      - hryhorii-skovoroda
-      - pavlo-polubotok
-      - danylo-apostol
-      - koliivshchyna
-      - opryshky
-      - petro-kalnyshevskyi
-      - kinets-hetmanshchyny
-      - rosiiska-imperiia-ukraina
-      - habsburzka-halichyna
-      - pivden-novorosiia
-      - nova-serbiya
-      - krypatsvo-selo
-      - kyrylo-mefodiivtsi
-      - shevchenko-awakening
-      - valuevskyi-emskyi
-      - hromady
-      - drahomanov
-      - franko-lesia-hrinchenko
-      - syntez-imperska-doba
-      - hrushevskyi
-      - persha-svitova
-      - sichovi-striltsi
-      - tsentralna-rada
-      - skoropadskyi
-      - zunr
-      - dyrektoriia
-      - symon-petliura-revolution
-      - bilshovytsko-ukrainska-viyna
-      - kholodnyi-yar
-      - karpatska-ukraina
-      - syntez-revoliutsiia
-      - rozstriliane-vidrodzennia
-      - mekhanizm-teroru
-      - holodomor-mekhanizm
-      - holodomor-pamiat
-      - pacyfikatsiia
-      - oun
-      - druha-svitova-pochatok
-      - babyn-yar
-      - upa
-      - syntez-trahedii
-      - povoienne-vidbudova
-      - deportatsii-ukraintsiv
-      - surgunlik
-      - krym-1954
-      - destalinizatsiia
-      - shistdesiatnyky
-      - ukrainska-helsinska-hrupa
-      - afhanistan
-      - chornobyl
-      - diaspora
-      - shliakh-nezalezhnosti
-      - rukh
-      - nezalezhnist-1991
-      - ukraine-90s
-      - pomara-revoliutsiia
-      - tomos
-      - yanukovych
-      - movna-polityka
-      - revoliutsiia-hidnosti
-      - aneksiia-krymu
-      - krymski-tatary-pislia-2014
-      - syntez-nezalezhnist
-      - viyna-donbas
-      - povnomasshtabne-vtorhnessnia
-      - mariupol-azovstal
-      - bucha-irpin
-      - kakhovska-hes
-      - voienna-ekonomika
-      - hromadske-suspilstvo
-      - mizhnarodna-pidtrymka
-      - zlochyny-stiikist
-      - syntez-viyna
+      - trypillian-civilization # [1]
+      - scythians-sarmatians # [2]
+      - greeks-crimea-olbia # [3]
+      - sloviany-origins # [4]
+      - slavic-tribes # [5]
+      - zasnuvannia-kyieva # [6]
+      - khozary-i-sloviany # [7]
+      - syntez-vytoky-1 # [8]
+      - oleh-ihor # [9]
+      - olha-sviatoslav # [10]
+      - volodymyr-khreshchennia # [11]
+      - yaroslav-wise # [12]
+      - ruska-pravda # [13]
+      - sofiya-kyivska # [14]
+      - volodymyr-monomakh # [15]
+      - kultura-kyivskoi-rusi # [16]
+      - kniazivski-usobiytsi # [17]
+      - ludy-rusi # [18]
+      - rus-ta-susidy # [19]
+      - syntez-kyivska-rus # [20]
+      - mongolska-navala # [21]
+      - mykhailo-chernigivskyi # [22]
+      - danylo-halytskyi # [23]
+      - galytsko-volynska-derzhava # [24]
+      - boiare-i-shliakhta # [25]
+      - kinets-halytsko-volyni # [26]
+      - krymske-khanstvo # [27]
+      - syntez-dvokniazivstvo # [28]
+      - velyke-kniazivstvo-lytovske # [29]
+      - ukrainski-zemli-u-vkl # [30]
+      - liublinska-uniia # [31]
+      - rich-pospolyta # [32]
+      - beresteyska-uniia # [33]
+      - pravoslavna-tserkva-17 # [34]
+      - petro-mohyla # [35]
+      - bratstva-i-osvita # [36]
+      - bukovyna-zakarpattia # [37]
+      - slobozhanshchyna # [38]
+      - liudy-ricchi-pospolytoi # [39]
+      - syntez-lytva-polska # [40]
+      - kozatstvo-vytoky # [41]
+      - zaporizka-sich # [42]
+      - dmytro-vyshnevetskyi # [43]
+      - kozatski-povstannia-16 # [44]
+      - petro-sahaidachnyi # [45]
+      - khotynska-viyna # [46]
+      - kozatska-kultura # [47]
+      - kozatske-viisko # [48]
+      - morski-pokhody # [49]
+      - syntez-kozatstvo-vytoky # [50]
+      - khmelnychchyna-prychyny # [51]
+      - bohdan-khmelnytskyi # [52]
+      - bitva-pid-zhovtymy-vodamy # [53]
+      - zborivska-bila-tserkva # [54]
+      - kozatska-derzhava # [55]
+      - pereyaslavska-uhoda # [56]
+      - yurii-nemyrych # [57]
+      - ruina-i # [58]
+      - ruina-ii # [59]
+      - andrusivske-peremyrya # [60]
+      - ivan-sirko # [61]
+      - syntez-khmelnychchyna # [62]
+      - ivan-mazepa-derzhavnyk # [63]
+      - ivan-mazepa-kultura # [64]
+      - kost-hordiyenko-sich # [65]
+      - ivan-mazepa-poltava # [66]
+      - pylyp-orlyk-konstytutsiia # [67]
+      - hryhorii-skovoroda # [68]
+      - pavlo-polubotok # [69]
+      - danylo-apostol # [70]
+      - koliivshchyna # [71]
+      - opryshky # [72]
+      - petro-kalnyshevskyi # [73]
+      - kinets-hetmanshchyny # [74]
+      - rosiiska-imperiia-ukraina # [75]
+      - habsburzka-halichyna # [76]
+      - pivden-novorosiia # [77]
+      - nova-serbiya # [78]
+      - krypatsvo-selo # [79]
+      - kyrylo-mefodiivtsi # [80]
+      - shevchenko-awakening # [81]
+      - valuevskyi-emskyi # [82]
+      - hromady # [83]
+      - drahomanov # [84]
+      - franko-lesia-hrinchenko # [85]
+      - syntez-imperska-doba # [86]
+      - hrushevskyi # [87]
+      - persha-svitova # [88]
+      - sichovi-striltsi # [89]
+      - tsentralna-rada # [90]
+      - skoropadskyi # [91]
+      - zunr # [92]
+      - dyrektoriia # [93]
+      - symon-petliura-revolution # [94]
+      - bilshovytsko-ukrainska-viyna # [95]
+      - kholodnyi-yar # [96]
+      - karpatska-ukraina # [97]
+      - syntez-revoliutsiia # [98]
+      - rozstriliane-vidrodzennia # [99]
+      - mekhanizm-teroru # [100]
+      - holodomor-mekhanizm # [101]
+      - holodomor-pamiat # [102]
+      - pacyfikatsiia # [103]
+      - oun # [104]
+      - druha-svitova-pochatok # [105]
+      - babyn-yar # [106]
+      - upa # [107]
+      - syntez-trahedii # [108]
+      - povoienne-vidbudova # [109]
+      - deportatsii-ukraintsiv # [110]
+      - surgunlik # [111]
+      - krym-1954 # [112]
+      - destalinizatsiia # [113]
+      - shistdesiatnyky # [114]
+      - ukrainska-helsinska-hrupa # [115]
+      - afhanistan # [116]
+      - chornobyl # [117]
+      - diaspora # [118]
+      - shliakh-nezalezhnosti # [119]
+      - rukh # [120]
+      - nezalezhnist-1991 # [121]
+      - ukraine-90s # [122]
+      - pomara-revoliutsiia # [123]
+      - tomos # [124]
+      - yanukovych # [125]
+      - movna-polityka # [126]
+      - revoliutsiia-hidnosti # [127]
+      - aneksiia-krymu # [128]
+      - krymski-tatary-pislia-2014 # [129]
+      - syntez-nezalezhnist # [130]
+      - viyna-donbas # [131]
+      - povnomasshtabne-vtorhnessnia # [132]
+      - mariupol-azovstal # [133]
+      - bucha-irpin # [134]
+      - kakhovska-hes # [135]
+      - voienna-ekonomika # [136]
+      - hromadske-suspilstvo # [137]
+      - mizhnarodna-pidtrymka # [138]
+      - zlochyny-stiikist # [139]
+      - syntez-viyna # [140]
   c1-bio:
     type: track
     modules:
-      # C1-BIO chronological order by birth date (118 biographies)
-      - knyahynia-olha # 920-969
-      - kniaz-sviatoslav # 942-972
-      - volodymyr-velykii # 958-1015
-      - kniaz-yaroslav-mudryi # 978-1054
-      - knyazhna-anna-yaroslavna # 1030-1075
-      - mykhailo-chernihivskyi # 1179-1246
-      - roksolana # 1502-1558
-      - iov-boretskyi # 1560-1631
-      - sylvestr-kosiv # 1590-1657
-      - bohdan-khmelnytskyy # 1595-1657
-      - yuriy-nemyrych # 1612-1659
-      - ivan-mazepa # 1639-1709
-      - kost-hordiyenko # 1650-1733
-      - pylyp-orlyk # 1672-1742
-      - petro-kalnyshevskyy # 1691-1803
-      - hryhoriy-skovoroda # 1722-1794
-      - maksym-berezovskyy # 1745-1777
-      - dmytro-bortnyanskyy # 1751-1825
-      - ivan-kotliarevskyi # 1769-1838
-      - hryhoriy-kvitka-osnovianenko # 1778-1843
-      - semen-hulak-artemovskyy # 1813-1873
-      - taras-shevchenko # 1814-1861
-      - panteleimon-kulish # 1819-1897
-      - hanna-barvinok # 1828-1911
-      - marko-vovchok # 1833-1907
-      - oleksander-potebnya # 1835-1891
-      - ivan-nechuy-levytskyi # 1838-1918
-      - marko-kropyvnytskyi # 1840-1910
-      - mykhailo-drahomanov # 1841-1895
-      - mykola-lysenko # 1842-1912
-      - ivan-puliui # 1845-1918
-      - olena-pchilka # 1849-1930
-      - mariya-zankovetska # 1854-1934
-      - mariya-pavlova # 1854-1938
-      - nataliya-kobrynska # 1855-1920
-      - ivan-franko # 1856-1916
-      - yevhen-chykalenko # 1861-1929
-      - volodymyr-vernadskyi # 1863-1945
-      - borys-hrinchenko # 1863-1910
-      - olha-kobylianska # 1863-1942
-      - kyrylo-trylovskyi # 1864-1941
-      - andrey-sheptytsky # 1865-1944
-      - ivan-lypa # 1865-1923
-      - sofiya-okunevska # 1865-1926
-      - mykola-vasylenko # 1866-1935
-      - mykhailo-hrushevskyi-biography # 1866-1934
-      - mariia-voiakovska # 1868-1948
-      - liudmyla-starytska # 1868-1941
-      - yevhen-paton # 1870-1953
-      - yulian-bachynskyi # 1870-1940
-      - ahatanhel-krymskyi # 1871-1942
-      - lesya-ukrainka # 1871-1913
-      - solomiya-krushelnytska # 1872-1952
-      - mykola-mikhnovskyi # 1873-1924
-      - oleksandr-hrekiv # 1875-1958
-      - mykola-leontovych # 1877-1921
-      - symon-petliura # 1879-1926
-      - kazimir-malevich # 1879-1935
-      - oleksandr-bohomazov # 1880-1930
-      - viacheslav-lypynskyi # 1882-1931
-      - ivan-ohienko # 1882-1972
-      - petro-bolbochan # 1883-1919
-      - dmytro-dontsov # 1883-1973
-      - nataliia-polonska-vasylenko # 1884-1973
-      - valentyna-radzymovska # 1886-1966
-      - oleksandr-arkhypenko # 1887-1964
-      - les-kurbas # 1887-1937
-      - olha-basarab # 1889-1924
-      - klavdiya-latysheva # 1889-1956
-      - yevhen-konovalets # 1891-1938
-      - josyf-slipyj # 1892-1984
-      - milena-rudnytska # 1892-1976
-      - olena-stepaniv # 1892-1963
-      - mykola-khvylovyi # 1893-1933
-      - vira-kholodna # 1893-1919
-      - borys-liatoshynskyi # 1895-1968
-      - vasyl-vyshyvanyi # 1895-1948
-      - berta-rapoport # 1896-1952
-      - yuriy-kondratiuk # 1897-1942
-      - kateryna-bilokur # 1900-1961
-      - serge-lifar # 1905-1986
-      - olena-teliha # 1906-1942
-      - roman-shukhevych # 1907-1950
-      - serhiy-korolyov # 1907-1966
-      - george-shevelov # 1908-2002
-      - mariia-prymachenko # 1909-1997
-      - mykola-amosov # 1913-2002
-      - borys-paton # 1918-2020
-      - vasyl-sukhomlynskyi # 1918-1970
-      - kateryna-yushchenko # 1919-2001
-      - mykola-pohribnyi # 1921-2022
-      - levko-lukyanenko # 1928-2018
-      - alla-horska # 1929-1970
-      - dmytro-pavlychko # 1929-2023
-      - lina-kostenko # 1930-
-      - vasyl-symonenko # 1935-1963
-      - viacheslav-chornovil # 1937-1999
-      - vasyl-stus # 1938-1985
-      - myroslav-marynovych # 1949-
-      - volodymyr-ivasyuk # 1949-1979
-      - vasyl-shkliar # 1951-
-      - leonid-kadenyuk # 1951-2018
-      - yuriy-vynnychuk # 1952-
-      - kvitka-tsisyk # 1953-1998
-      - serhii-plokhy # 1957-
-      - halyna-pahutyak # 1958-
-      - mariya-matios # 1959-
-      - oksana-zabuzhko # 1960-
-      - yaroslav-hrytsak # 1960-
-      - vitaly-portnikov # 1967-
-      - taras-prokhasko # 1968-
-      - tamara-horikha-zernya # 1971-
-      - serhiy-zhadan # 1974-
-      - oleg-sentsov # 1976-
-      - sofia-andrukhovych # 1982-
-      - kateryna-kalytko # 1982-
-      - oleksandra-matviichuk # 1983-
-      - oleksandr-usyk # 1987-
+      # C1-BIO chronological order by birth date (128 biographies)
+      - knyahynia-olha # [1] 920-969
+      - kniaz-sviatoslav # [2] 942-972
+      - volodymyr-velykii # [3] 958-1015
+      - kniaz-yaroslav-mudryi # [4] 978-1054
+      - knyazhna-anna-yaroslavna # [5] 1030-1075
+      - roman-mstyslavych # [6] ~1152-1205
+      - mykhailo-chernihivskyi # [7] 1179-1246
+      - danylo-halytskyi # [8] 1201-1264
+      - lev-danylovych # [9] ~1228-1301
+      - yuriy-lvovych # [10] 1252-1308
+      - kostiantyn-ostrozky-elder # [11] 1460-1530
+      - roksolana # [12] 1502-1558
+      - dmytro-vyshnevetsky # [13] ~1517-1563
+      - kostiantyn-vasyl-ostrozky # [14] 1526-1608
+      - severyn-nalyvaiko # [15] ~1560-1597
+      - iov-boretskyi # [16] 1560-1631
+      - meletii-smotrytskyi # [17] ~1577-1633
+      - petro-sahaidachny # [18] 1582-1622
+      - sylvestr-kosiv # [19] 1590-1657
+      - bohdan-khmelnytskyy # [20] 1595-1657
+      - yuriy-nemyrych # [21] 1612-1659
+      - ivan-mazepa # [22] 1639-1709
+      - kost-hordiyenko # [23] 1650-1733
+      - pylyp-orlyk # [24] 1672-1742
+      - petro-kalnyshevskyy # [25] 1691-1803
+      - hryhoriy-skovoroda # [26] 1722-1794
+      - maksym-berezovskyy # [27] 1745-1777
+      - dmytro-bortnyanskyy # [28] 1751-1825
+      - ivan-kotliarevskyi # [29] 1769-1838
+      - hryhoriy-kvitka-osnovianenko # [30] 1778-1843
+      - semen-hulak-artemovskyy # [31] 1813-1873
+      - taras-shevchenko # [32] 1814-1861
+      - panteleimon-kulish # [33] 1819-1897
+      - hanna-barvinok # [34] 1828-1911
+      - marko-vovchok # [35] 1833-1907
+      - oleksander-potebnya # [36] 1835-1891
+      - ivan-nechuy-levytskyi # [37] 1838-1918
+      - marko-kropyvnytskyi # [38] 1840-1910
+      - mykhailo-drahomanov # [39] 1841-1895
+      - mykola-lysenko # [40] 1842-1912
+      - ivan-puliui # [41] 1845-1918
+      - olena-pchilka # [42] 1849-1930
+      - mariya-zankovetska # [43] 1854-1934
+      - mariya-pavlova # [44] 1854-1938
+      - nataliya-kobrynska # [45] 1855-1920
+      - ivan-franko # [46] 1856-1916
+      - yevhen-chykalenko # [47] 1861-1929
+      - volodymyr-vernadskyi # [48] 1863-1945
+      - borys-hrinchenko # [49] 1863-1910
+      - olha-kobylianska # [50] 1863-1942
+      - kyrylo-trylovskyi # [51] 1864-1941
+      - andrey-sheptytsky # [52] 1865-1944
+      - ivan-lypa # [53] 1865-1923
+      - sofiya-okunevska # [54] 1865-1926
+      - mykola-vasylenko # [55] 1866-1935
+      - mykhailo-hrushevskyi-biography # [56] 1866-1934
+      - mariia-voiakovska # [57] 1868-1948
+      - liudmyla-starytska # [58] 1868-1941
+      - yevhen-paton # [59] 1870-1953
+      - yulian-bachynskyi # [60] 1870-1940
+      - ahatanhel-krymskyi # [61] 1871-1942
+      - lesya-ukrainka # [62] 1871-1913
+      - solomiya-krushelnytska # [63] 1872-1952
+      - mykola-mikhnovskyi # [64] 1873-1924
+      - oleksandr-hrekiv # [65] 1875-1958
+      - mykola-leontovych # [66] 1877-1921
+      - symon-petliura # [67] 1879-1926
+      - kazimir-malevich # [68] 1879-1935
+      - oleksandr-bohomazov # [69] 1880-1930
+      - viacheslav-lypynskyi # [70] 1882-1931
+      - ivan-ohienko # [71] 1882-1972
+      - petro-bolbochan # [72] 1883-1919
+      - dmytro-dontsov # [73] 1883-1973
+      - nataliia-polonska-vasylenko # [74] 1884-1973
+      - valentyna-radzymovska # [75] 1886-1966
+      - oleksandr-arkhypenko # [76] 1887-1964
+      - les-kurbas # [77] 1887-1937
+      - olha-basarab # [78] 1889-1924
+      - klavdiya-latysheva # [79] 1889-1956
+      - yevhen-konovalets # [80] 1891-1938
+      - josyf-slipyj # [81] 1892-1984
+      - milena-rudnytska # [82] 1892-1976
+      - olena-stepaniv # [83] 1892-1963
+      - mykola-khvylovyi # [84] 1893-1933
+      - vira-kholodna # [85] 1893-1919
+      - borys-liatoshynskyi # [86] 1895-1968
+      - vasyl-vyshyvanyi # [87] 1895-1948
+      - berta-rapoport # [88] 1896-1952
+      - yuriy-kondratiuk # [89] 1897-1942
+      - kateryna-bilokur # [90] 1900-1961
+      - serge-lifar # [91] 1905-1986
+      - olena-teliha # [92] 1906-1942
+      - roman-shukhevych # [93] 1907-1950
+      - serhiy-korolyov # [94] 1907-1966
+      - george-shevelov # [95] 1908-2002
+      - mariia-prymachenko # [96] 1909-1997
+      - mykola-amosov # [97] 1913-2002
+      - borys-paton # [98] 1918-2020
+      - vasyl-sukhomlynskyi # [99] 1918-1970
+      - kateryna-yushchenko # [100] 1919-2001
+      - mykola-pohribnyi # [101] 1921-2022
+      - levko-lukyanenko # [102] 1928-2018
+      - alla-horska # [103] 1929-1970
+      - dmytro-pavlychko # [104] 1929-2023
+      - lina-kostenko # [105] 1930-
+      - vasyl-symonenko # [106] 1935-1963
+      - viacheslav-chornovil # [107] 1937-1999
+      - vasyl-stus # [108] 1938-1985
+      - myroslav-marynovych # [109] 1949-
+      - volodymyr-ivasyuk # [110] 1949-1979
+      - vasyl-shkliar # [111] 1951-
+      - leonid-kadenyuk # [112] 1951-2018
+      - yuriy-vynnychuk # [113] 1952-
+      - kvitka-tsisyk # [114] 1953-1998
+      - serhii-plokhy # [115] 1957-
+      - halyna-pahutyak # [116] 1958-
+      - mariya-matios # [117] 1959-
+      - oksana-zabuzhko # [118] 1960-
+      - yaroslav-hrytsak # [119] 1960-
+      - vitaly-portnikov # [120] 1967-
+      - taras-prokhasko # [121] 1968-
+      - tamara-horikha-zernya # [122] 1971-
+      - serhiy-zhadan # [123] 1974-
+      - oleg-sentsov # [124] 1976-
+      - sofia-andrukhovych # [125] 1982-
+      - kateryna-kalytko # [126] 1982-
+      - oleksandra-matviichuk # [127] 1983-
+      - oleksandr-usyk # [128] 1987-
   lit:
     type: track
     modules:
@@ -723,141 +733,141 @@ levels:
   c1-hist:
     type: track
     modules:
-      - shcho-take-istoriohrafiia
-      - ukrainska-istoriohrafichna-tradytsiia
-      - rosiiska-imperialna-istoriohrafiia
-      - radyanska-istoriohrafiia
-      - polskyi-pohliad
-      - diaspora-ta-zakhidni-istoriky
-      - nova-ukrainska-istoriohrafiia
-      - metodolohiia-dekolonizatsii
-      - krytyka-dzherel
-      - istorychna-pamiat-i-polityka
-      - povist-mynulykh-lit-i
-      - povist-mynulykh-lit-ii
-      - kyievo-pecherskyi-pateryk
-      - slovo-o-polku-ihorevim
-      - halytsko-volynskyi-litopys-i
-      - halytsko-volynskyi-litopys-ii
-      - hramoty-ta-akty
-      - syntez-serednovichni-dzherela
-      - kozatski-litopysy-ohliad
-      - litopys-samovidtsia
-      - litopys-hrabianky
-      - litopys-velychka
-      - universaly-khmelnytkoho
-      - pereyaslavski-statti
-      - konstytutsiia-orlyka
-      - lysty-mazepy
-      - sich-dokumenty
-      - syntez-kozatski-dzherela
-      - knyhy-butiia-shevchenko
-      - zapovit-ta-lysty-shevchenka
-      - valuevskyi-tsyrkuliar-tekst
-      - emskyi-ukaz-tekst
-      - franko-politychni-ese
-      - universaly-unr
-      - akt-zluki
-      - svidchennia-holodomoru-i
-      - svidchennia-holodomoru-ii
-      - syntez-moderni-dzherela
-      - samvydav-shcho-tse
-      - lysty-stusa
-      - ukrayinskyi-visnyk
-      - memorandum-uhh
-      - akt-nezalezhnosti-1991
-      - syntez-dysydentski-dzherela
-      - holodomor-istoriohrafiia
-      - holodomor-mekhanizmy-i
-      - holodomor-mekhanizmy-ii
-      - holodomor-heohrafiia
-      - holodomor-svidky
-      - holodomor-vyznannia
-      - syntez-holodomor-studiyi
-      - rozstriliane-kontekst
-      - literaturna-dyskusiia
-      - khvylovyi-kulish-debaty
-      - teatr-kurbasa
-      - mekhanizm-znyshchennia
-      - syntez-rozstriliane
-      - khreshchennia-spadshchyna
-      - beresteyska-uniia-analiz
-      - pravoslavna-identychnist
-      - hreko-katolytska-tserkva
-      - radianska-antyrelihiyna-polityka
-      - syntez-relihiina-identychnist
-      - persha-khvylia-emihratsiyi
-      - druha-khvylia-politychna
-      - tretia-khvylia-dipivtsi
-      - diaspora-orhanizatsiyi
-      - diaspora-naukovtsi
-      - syntez-diaspora
-      - halychyna-pid-avstriieyu
-      - halychyna-natsionalnyi-rukh
-      - bukovyna-mizh-imperiiamy
-      - zakarpattia-tysiacholittia
-      - volyn-pamiat-i-travma
-      - syntez-zakhidni-rehiony
-      - slobozhanshchyna-identychnist
-      - donbas-industrializatsiia
-      - krym-bahatosharovyi
-      - pivden-kolonizatsiia-mify
-      - syntez-rehionalna-riznomanitnist
-      - mekhanizm-kooptatsii
-      - pereiaslav-tsykl
-      - mazepa-tsykl
-      - rozumovskyi-tsykl
-      - radianska-ukrainizatsiia
-      - khrushchov-shelest-tsykl
-      - yanukovych-tsykl
-      - syntez-tsykl-zrady
-      - pereiaslav-alternatyvy
-      - poltava-naslidky
-      - unr-vybory
-      - 1991-referendum
-      - 2004-vs-2014
-      - syntez-rozdorizhzhia
-      - zakhid-1918
-      - zakhid-1945
-      - chicken-kyiv
-      - zakhid-1994
-      - chornomorskyi-flot
-      - zakhid-2008
-      - zakhid-2014
-      - syntez-zakhid-2022
-      - ekonomika-imperii
-      - radianska-industrializatsiia
-      - holodomor-ekonomika
-      - hazova-zbroia
-      - syntez-ekonomichna-kolonizatsiia
-      - malorosiia-konstrukt
-      - radianska-propaganda
-      - suchasna-dezinformatsiia
-      - zakhidni-media
-      - ukrainski-kontrnararyvy
-      - syntez-informatsiina-viina
-      - polska-i-ukraina-symbioz
-      - 1918-1920-viina-i-soiuz
-      - volyn-i-pamiat
-      - syntez-polska-ukraina-2022
-      - yevrei-v-ukraini-do-1917
-      - holokost-v-ukraini
-      - radianski-antysemityzm
-      - syntez-yevrei-ukraina
-      - tsykl-kulturnykh-vidrodzhen
-      - pislya-emsa-halychyna
-      - pislya-stalina-shistdesiatnyky
-      - syntez-pislya-2014
-      - kulturna-rezystentsiia
-      - hromadianske-suspilstvo
-      - hranitna-revoliutsiia
-      - 2004-krymska-kryza
-      - zhinky-v-revoiuutsiiakh
-      - chomu-2022-spratsiuvalo
-      - ukrainska-m-iaka-syla
-      - syntez-ahentsnist
-      - ukrainske-pytannia-xxi
-      - finalnyi-syntez
+      - shcho-take-istoriohrafiia # [1]
+      - ukrainska-istoriohrafichna-tradytsiia # [2]
+      - rosiiska-imperialna-istoriohrafiia # [3]
+      - radyanska-istoriohrafiia # [4]
+      - polskyi-pohliad # [5]
+      - diaspora-ta-zakhidni-istoriky # [6]
+      - nova-ukrainska-istoriohrafiia # [7]
+      - metodolohiia-dekolonizatsii # [8]
+      - krytyka-dzherel # [9]
+      - istorychna-pamiat-i-polityka # [10]
+      - povist-mynulykh-lit-i # [11]
+      - povist-mynulykh-lit-ii # [12]
+      - kyievo-pecherskyi-pateryk # [13]
+      - slovo-o-polku-ihorevim # [14]
+      - halytsko-volynskyi-litopys-i # [15]
+      - halytsko-volynskyi-litopys-ii # [16]
+      - hramoty-ta-akty # [17]
+      - syntez-serednovichni-dzherela # [18]
+      - kozatski-litopysy-ohliad # [19]
+      - litopys-samovidtsia # [20]
+      - litopys-hrabianky # [21]
+      - litopys-velychka # [22]
+      - universaly-khmelnytkoho # [23]
+      - pereyaslavski-statti # [24]
+      - konstytutsiia-orlyka # [25]
+      - lysty-mazepy # [26]
+      - sich-dokumenty # [27]
+      - syntez-kozatski-dzherela # [28]
+      - knyhy-butiia-shevchenko # [29]
+      - zapovit-ta-lysty-shevchenka # [30]
+      - valuevskyi-tsyrkuliar-tekst # [31]
+      - emskyi-ukaz-tekst # [32]
+      - franko-politychni-ese # [33]
+      - universaly-unr # [34]
+      - akt-zluki # [35]
+      - svidchennia-holodomoru-i # [36]
+      - svidchennia-holodomoru-ii # [37]
+      - syntez-moderni-dzherela # [38]
+      - samvydav-shcho-tse # [39]
+      - lysty-stusa # [40]
+      - ukrayinskyi-visnyk # [41]
+      - memorandum-uhh # [42]
+      - akt-nezalezhnosti-1991 # [43]
+      - syntez-dysydentski-dzherela # [44]
+      - holodomor-istoriohrafiia # [45]
+      - holodomor-mekhanizmy-i # [46]
+      - holodomor-mekhanizmy-ii # [47]
+      - holodomor-heohrafiia # [48]
+      - holodomor-svidky # [49]
+      - holodomor-vyznannia # [50]
+      - syntez-holodomor-studiyi # [51]
+      - rozstriliane-kontekst # [52]
+      - literaturna-dyskusiia # [53]
+      - khvylovyi-kulish-debaty # [54]
+      - teatr-kurbasa # [55]
+      - mekhanizm-znyshchennia # [56]
+      - syntez-rozstriliane # [57]
+      - khreshchennia-spadshchyna # [58]
+      - beresteyska-uniia-analiz # [59]
+      - pravoslavna-identychnist # [60]
+      - hreko-katolytska-tserkva # [61]
+      - radianska-antyrelihiyna-polityka # [62]
+      - syntez-relihiina-identychnist # [63]
+      - persha-khvylia-emihratsiyi # [64]
+      - druha-khvylia-politychna # [65]
+      - tretia-khvylia-dipivtsi # [66]
+      - diaspora-orhanizatsiyi # [67]
+      - diaspora-naukovtsi # [68]
+      - syntez-diaspora # [69]
+      - halychyna-pid-avstriieyu # [70]
+      - halychyna-natsionalnyi-rukh # [71]
+      - bukovyna-mizh-imperiiamy # [72]
+      - zakarpattia-tysiacholittia # [73]
+      - volyn-pamiat-i-travma # [74]
+      - syntez-zakhidni-rehiony # [75]
+      - slobozhanshchyna-identychnist # [76]
+      - donbas-industrializatsiia # [77]
+      - krym-bahatosharovyi # [78]
+      - pivden-kolonizatsiia-mify # [79]
+      - syntez-rehionalna-riznomanitnist # [80]
+      - mekhanizm-kooptatsii # [81]
+      - pereiaslav-tsykl # [82]
+      - mazepa-tsykl # [83]
+      - rozumovskyi-tsykl # [84]
+      - radianska-ukrainizatsiia # [85]
+      - khrushchov-shelest-tsykl # [86]
+      - yanukovych-tsykl # [87]
+      - syntez-tsykl-zrady # [88]
+      - pereiaslav-alternatyvy # [89]
+      - poltava-naslidky # [90]
+      - unr-vybory # [91]
+      - 1991-referendum # [92]
+      - 2004-vs-2014 # [93]
+      - syntez-rozdorizhzhia # [94]
+      - zakhid-1918 # [95]
+      - zakhid-1945 # [96]
+      - chicken-kyiv # [97]
+      - zakhid-1994 # [98]
+      - chornomorskyi-flot # [99]
+      - zakhid-2008 # [100]
+      - zakhid-2014 # [101]
+      - syntez-zakhid-2022 # [102]
+      - ekonomika-imperii # [103]
+      - radianska-industrializatsiia # [104]
+      - holodomor-ekonomika # [105]
+      - hazova-zbroia # [106]
+      - syntez-ekonomichna-kolonizatsiia # [107]
+      - malorosiia-konstrukt # [108]
+      - radianska-propaganda # [109]
+      - suchasna-dezinformatsiia # [110]
+      - zakhidni-media # [111]
+      - ukrainski-kontrnararyvy # [112]
+      - syntez-informatsiina-viina # [113]
+      - polska-i-ukraina-symbioz # [114]
+      - 1918-1920-viina-i-soiuz # [115]
+      - volyn-i-pamiat # [116]
+      - syntez-polska-ukraina-2022 # [117]
+      - yevrei-v-ukraini-do-1917 # [118]
+      - holokost-v-ukraini # [119]
+      - radianski-antysemityzm # [120]
+      - syntez-yevrei-ukraina # [121]
+      - tsykl-kulturnykh-vidrodzhen # [122]
+      - pislya-emsa-halychyna # [123]
+      - pislya-stalina-shistdesiatnyky # [124]
+      - syntez-pislya-2014 # [125]
+      - kulturna-rezystentsiia # [126]
+      - hromadianske-suspilstvo # [127]
+      - hranitna-revoliutsiia # [128]
+      - 2004-krymska-kryza # [129]
+      - zhinky-v-revoiuutsiiakh # [130]
+      - chomu-2022-spratsiuvalo # [131]
+      - ukrainska-m-iaka-syla # [132]
+      - syntez-ahentsnist # [133]
+      - ukrainske-pytannia-xxi # [134]
+      - finalnyi-syntez # [135]
   b2-pro:
     type: track
     modules:

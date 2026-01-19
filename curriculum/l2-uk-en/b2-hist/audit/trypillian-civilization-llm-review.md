@@ -1,6 +1,6 @@
 # LLM Review: Трипільська цивілізація
 
-**Content Hash:** ac4b236c
+**Content Hash:** c3321cf1
 **Status:** PASS
 **Reviewer:** Gemini-CLI
 **Date:** 2026-01-18

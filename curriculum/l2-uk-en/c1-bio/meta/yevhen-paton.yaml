@@ -1,140 +1,117 @@
-# C1-BIO Module 112: Євген Патон: Батько українського мостобудування
-# Status: SPEC (ready for content development)
-
 id: c1-bio-112
-title: "Євген Патон: Батько українського мостобудування"
+title: 'Євген Патон: Батько українського мостобудування'
 slug: yevhen-paton
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Євген Патон (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
-    type: primary
-    notes: Biography, engineering achievements, institute
-  - name: Інститут електрозварювання
-    url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
-    type: reference
-    notes: Institute he founded
-  - name: Міст Патона
-    url: https://uk.wikipedia.org/wiki/Міст_Патона
-    type: reference
-    notes: Kyiv bridge named after him
-
+- name: Євген Патон (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+  type: primary
+  notes: Biography, engineering achievements, institute
+- name: Інститут електрозварювання
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+  type: reference
+  notes: Institute he founded
+- name: Міст Патона
+  url: https://uk.wikipedia.org/wiki/Міст_Патона
+  type: reference
+  notes: Kyiv bridge named after him
 content_outline:
-  - section: Вступ — Інженер, який з'єднав береги
-    words: 400
-    points:
-      - Патон як засновник української школи зварювання
-      - Мости та технології, що змінили інженерію
-      - Київський міст як символ його спадщини
-
-  - section: Від Росії до України
-    words: 500
-    points:
-      - Народження в Ніцці (1870)
-      - Інженерна освіта в Петербурзі
-      - Переїзд до Києва (1904)
-      - Вибір України як батьківщини
-
-  - section: Мостобудівник
-    words: 700
-    points:
-      - Проектування мостів через Дніпро
-      - Інновації в конструкції мостів
-      - Підготовка українських інженерів
-      - Київський політехнічний інститут
-
-  - section: Революція зварювання
-    words: 800
-    points:
-      - Заснування Інституту електрозварювання (1934)
-      - Автоматичне зварювання
-      - Застосування у танкобудуванні (WWII)
-      - Підвищення продуктивності в 10 разів
-
-  - section: Післявоєнні досягнення
-    words: 500
-    points:
-      - Відбудова зруйнованих мостів
-      - Новий міст через Дніпро (1953)
-      - Підготовка наступного покоління
-      - Робота до останнього дня життя
-
-  - section: Спадщина двох поколінь
-    words: 600
-    points:
-      - Смерть 1953 року
-      - Син Борис — продовжувач справи
-      - Інститут Патона — світовий лідер
-      - Міст Патона — пам'ятка Києва
-
+- section: Вступ — Інженер, який з'єднав береги
+  words: 457
+  points:
+  - Патон як засновник української школи зварювання
+  - Мости та технології, що змінили інженерію
+  - Київський міст як символ його спадщини
+- section: Від Росії до України
+  words: 571
+  points:
+  - Народження в Ніцці (1870)
+  - Інженерна освіта в Петербурзі
+  - Переїзд до Києва (1904)
+  - Вибір України як батьківщини
+- section: Мостобудівник
+  words: 800
+  points:
+  - Проектування мостів через Дніпро
+  - Інновації в конструкції мостів
+  - Підготовка українських інженерів
+  - Київський політехнічний інститут
+- section: Революція зварювання
+  words: 914
+  points:
+  - Заснування Інституту електрозварювання (1934)
+  - Автоматичне зварювання
+  - Застосування у танкобудуванні (WWII)
+  - Підвищення продуктивності в 10 разів
+- section: Післявоєнні досягнення
+  words: 571
+  points:
+  - Відбудова зруйнованих мостів
+  - Новий міст через Дніпро (1953)
+  - Підготовка наступного покоління
+  - Робота до останнього дня життя
+- section: Спадщина двох поколінь
+  words: 687
+  points:
+  - Смерть 1953 року
+  - Син Борис — продовжувач справи
+  - Інститут Патона — світовий лідер
+  - Міст Патона — пам'ятка Києва
 vocabulary_hints:
   required:
-    - мостобудування (bridge construction)
-    - електрозварювання (electric welding)
-    - інженер (engineer)
-    - конструкція (construction/design)
-    - інститут (institute)
-    - автоматизація (automation)
-    - продуктивність (productivity)
-    - технологія (technology)
-    - проект (project/design)
-    - школа (school/tradition)
+  - мостобудування (bridge construction)
+  - електрозварювання (electric welding)
+  - інженер (engineer)
+  - конструкція (construction/design)
+  - інститут (institute)
+  - автоматизація (automation)
+  - продуктивність (productivity)
+  - технологія (technology)
+  - проект (project/design)
+  - школа (school/tradition)
   recommended:
-    - балка (beam)
-    - опора (support/pillar)
-    - прогін (span)
-    - метал (metal)
-    - плавлення (melting)
-
+  - балка (beam)
+  - опора (support/pillar)
+  - прогін (span)
+  - метал (metal)
+  - плавлення (melting)
 activity_hints:
-  - type: reading
-    focus: Technical descriptions and memoirs
-    source: Engineering archives
-    items: "3 passages"
-
-  - type: quiz
-    focus: Paton's biography and achievements
-    items: "12+"
-
-  - type: match-up
-    focus: Innovations and their applications
-    items: "10+"
-
-  - type: essay-response
-    focus: How did Paton's welding technology change industry?
-    word_target: 300
-    output: Technical impact analysis
-
-  - type: group-sort
-    focus: Pre-war vs. wartime vs. post-war work
-    items: "12+"
-
-  - type: fill-in
-    focus: Key dates and technological terms
-    items: "10+"
-
-  - type: discussion
-    focus: Why is engineering important for national development?
-    output: Technology and nation-building analysis
-
+- type: reading
+  focus: Technical descriptions and memoirs
+  source: Engineering archives
+  items: 3 passages
+- type: quiz
+  focus: Paton's biography and achievements
+  items: 12+
+- type: match-up
+  focus: Innovations and their applications
+  items: 10+
+- type: essay-response
+  focus: How did Paton's welding technology change industry?
+  word_target: 300
+  output: Technical impact analysis
+- type: group-sort
+  focus: Pre-war vs. wartime vs. post-war work
+  items: 12+
+- type: fill-in
+  focus: Key dates and technological terms
+  items: 10+
+- type: discussion
+  focus: Why is engineering important for national development?
+  output: Technology and nation-building analysis
 prerequisites:
-  - Basic understanding of engineering
-  - WWII industrial context
-  - Soviet-era Ukraine
-
+- Basic understanding of engineering
+- WWII industrial context
+- Soviet-era Ukraine
 connects_to:
-  - c1-bio-113 (Boris Paton - his son)
-  - c1-bio-117 (Korolyov - contemporary engineer)
-  - c1-bio-114 (Amosov - same era scientist)
-
+- c1-bio-113 (Boris Paton - his son)
+- c1-bio-117 (Korolyov - contemporary engineer)
+- c1-bio-114 (Amosov - same era scientist)
 naturalness:
   score: 1
   status: PENDING

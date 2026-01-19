@@ -1,8 +1,5 @@
-# C1-HIST Module 119: Голокост в Україні — Співучасть і рятування
-# Status: SPEC (ready for content development)
-
 id: c1-hist-119
-title: "Голокост в Україні: Співучасть і рятування"
+title: 'Голокост в Україні: Співучасть і рятування'
 slug: holokost-v-ukraini
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,121 +7,99 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Голокост в Україні (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
-    type: reference
-    notes: Holocaust overview
-  - name: Бабин Яр (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Бабин_Яр
-    type: reference
-    notes: Babi Yar
-  - name: Праведники народів світу (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
-    type: reference
-    notes: Righteous Among Nations
-
+- name: Голокост в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  type: reference
+  notes: Holocaust overview
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar
+- name: Праведники народів світу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  type: reference
+  notes: Righteous Among Nations
 content_outline:
-  - section: Вступ — Найтемніша сторінка
-    words: 400
-    points:
-      - Голокост в Україні — масштаб
-      - 1,5 мільйона жертв
-      - Співучасть І рятування
-      - Структура модуля
-
-  - section: «Голокост від куль»
-    words: 700
-    points:
-      - Айнзацгрупи
-      - Бабин Яр — символ
-      - Методи знищення
-      - Чому в Україні — особливо
-
-  - section: Українська поліція
-    words: 600
-    points:
-      - Допоміжна поліція — хто йшов
-      - Роль у Голокості
-      - Не виправдання — пояснення
-      - Масштаб участі
-
-  - section: ОУН і євреї
-    words: 600
-    points:
-      - Антисемітизм в ОУН
-      - Погроми 1941
-      - Еволюція позиції
-      - Суперечливість
-
-  - section: Праведники
-    words: 500
-    points:
-      - 2700+ українських праведників
-      - Митрополит Шептицький
-      - Ризик — смерть
-      - Індивідуальний вибір
-
-  - section: Підсумок
-    words: 300
-    points:
-      - І злочинці, і рятівники
-      - Не «українці» — окремі люди
-      - Перехід до радянського антисемітизму
-
+- section: Вступ — Найтемніша сторінка
+  words: 451
+  points:
+  - Голокост в Україні — масштаб
+  - 1,5 мільйона жертв
+  - Співучасть І рятування
+  - Структура модуля
+- section: «Голокост від куль»
+  words: 790
+  points:
+  - Айнзацгрупи
+  - Бабин Яр — символ
+  - Методи знищення
+  - Чому в Україні — особливо
+- section: Українська поліція
+  words: 677
+  points:
+  - Допоміжна поліція — хто йшов
+  - Роль у Голокості
+  - Не виправдання — пояснення
+  - Масштаб участі
+- section: ОУН і євреї
+  words: 677
+  points:
+  - Антисемітизм в ОУН
+  - Погроми 1941
+  - Еволюція позиції
+  - Суперечливість
+- section: Праведники
+  words: 564
+  points:
+  - 2700+ українських праведників
+  - Митрополит Шептицький
+  - Ризик — смерть
+  - Індивідуальний вибір
+- section: Підсумок
+  words: 341
+  points:
+  - І злочинці, і рятівники
+  - Не «українці» — окремі люди
+  - Перехід до радянського антисемітизму
 vocabulary_hints:
   required:
-    - Голокост (Holocaust)
-    - «Голокост від куль» (Holocaust by bullets)
-    - Бабин Яр (Babi Yar)
-    - айнзацгрупи (Einsatzgruppen)
-    - допоміжна поліція (auxiliary police)
-    - співучасть (collaboration)
-    - праведник (righteous)
-    - рятування (rescue)
-    - жертва (victim)
-    - злочин (crime)
+  - Голокост (Holocaust)
+  - «Голокост від куль» (Holocaust by bullets)
+  - Бабин Яр (Babi Yar)
+  - айнзацгрупи (Einsatzgruppen)
+  - допоміжна поліція (auxiliary police)
+  - співучасть (collaboration)
+  - праведник (righteous)
+  - рятування (rescue)
+  - жертва (victim)
+  - злочин (crime)
   recommended:
-    - гетто (ghetto)
-    - «юденрат» (Judenrat)
-    - «Яд Вашем» (Yad Vashem)
-    - Шептицький (Sheptytsky)
-    - колабораціонізм (collaborationism)
-
+  - гетто (ghetto)
+  - «юденрат» (Judenrat)
+  - «Яд Вашем» (Yad Vashem)
+  - Шептицький (Sheptytsky)
+  - колабораціонізм (collaborationism)
 activity_hints:
-  - type: scale-analysis
-    focus: Holocaust in Ukraine — numbers and geography
-    output: Scale documentation
-
-  - type: collaboration-analysis
-    focus: Who collaborated and why
-    output: Collaboration analysis
-
-  - type: rescue-stories
-    focus: Ukrainian Righteous — stories and patterns
-    output: Rescue documentation
-
-  - type: oun-analysis
-    focus: OUN and Jews — complex relationship
-    output: Nuanced analysis
-
-  - type: essay-response
-    focus: "Як оцінювати українську роль у Голокості?"
-    word_target: 500
-    model_answer: Required (balanced, acknowledging both)
-
+- type: scale-analysis
+  focus: Holocaust in Ukraine — numbers and geography
+  output: Scale documentation
+- type: collaboration-analysis
+  focus: Who collaborated and why
+  output: Collaboration analysis
+- type: rescue-stories
+  focus: Ukrainian Righteous — stories and patterns
+  output: Rescue documentation
+- type: oun-analysis
+  focus: OUN and Jews — complex relationship
+  output: Nuanced analysis
+- type: essay-response
+  focus: Як оцінювати українську роль у Голокості?
+  word_target: 500
+  model_answer: Required (balanced, acknowledging both)
 prerequisites:
-  - c1-hist-118 (Jews in Ukraine to 1917)
-  - c1-hist-52-57 (WWII period)
-
+- c1-hist-118 (Jews in Ukraine to 1917)
+- c1-hist-52-57 (WWII period)
 connects_to:
-  - c1-hist-120 (Soviet antisemitism)
-  - c1-hist-121 (Zelensky synthesis)
-
-# NOTE: Extremely sensitive topic
-# Must acknowledge collaboration without minimizing
-# Must highlight rescue without whitewashing
-# Model answer critical for balanced approach
+- c1-hist-120 (Soviet antisemitism)
+- c1-hist-121 (Zelensky synthesis)

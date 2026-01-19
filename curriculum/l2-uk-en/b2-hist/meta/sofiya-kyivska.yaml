@@ -1,141 +1,135 @@
-# B2-HIST Module 14: Софія Київська та культурний розквіт
-# Status: SPEC (ready for content development)
-
 id: b2-hist-14
 title: Софія Київська та культурний розквіт
 slug: sofiya-kyivska
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
+naturalness:
+  score: 9
+  status: PASS
+pedagogy: seminar
+duration: 150
+transliteration: none
+tags:
+- history
+- kyivan-rus
+- architecture
+- art
+grammar:
+- Historical narrative
+objectives:
+- Understand significance of St Sophia
+- Analyze mosaics and frescoes
+- Discuss cultural blooming of Kyivan Rus
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Софійський собор (Київ) (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
-    type: reference
-    notes: UNESCO World Heritage site
-  - name: Національний заповідник "Софія Київська"
-    url: https://uk.wikipedia.org/wiki/Національний_заповідник_«Софія_Київська»
-    type: reference
-    notes: Museum complex
-  - name: Мозаїки Софії Київської
-    url: https://uk.wikipedia.org/wiki/Мозаїки_Софійського_собору_в_Києві
-    type: reference
-    notes: Art analysis
-
+- name: Софійський собор (Київ) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+  type: reference
+  notes: UNESCO World Heritage site
+- name: Національний заповідник "Софія Київська"
+  url: https://uk.wikipedia.org/wiki/Національний_заповідник_«Софія_Київська»
+  type: reference
+  notes: Museum complex
+- name: Мозаїки Софії Київської
+  url: https://uk.wikipedia.org/wiki/Мозаїки_Софійського_собору_в_Києві
+  type: reference
+  notes: Art analysis
 content_outline:
-  - section: Вступ — Святиня нації
-    words: 450
-    points:
-      - Софія Київська як символ Київської Русі
-      - Заснування за Ярослава Мудрого (1037)
-      - Статус об'єкта ЮНЕСКО
-      - Значення для української ідентичності
-
-  - section: Архітектура собору
-    words: 650
-    points:
-      - Візантійський стиль з місцевими особливостями
-      - П'ятинефна хрестово-купольна споруда
-      - 13 куполів — символіка
-      - Первісний вигляд vs сучасний барокковий
-
-  - section: Мозаїки та фрески
-    words: 700
-    points:
-      - 'Богоматір Оранта — «Нерушима стіна«'
-      - Мозаїки XI століття — техніка та кольори
-      - Світські фрески — сцени полювання, ігри
-      - Портрети родини Ярослава
-
-  - section: Графіті Софії Київської
-    words: 550
-    points:
-      - Середньовічні написи на стінах
-      - Джерело знань про повсякденне життя
-      - Перша бібліотека Русі
-      - Собор як культурний центр
-
-  - section: Культурний розквіт XI століття
-    words: 600
-    points:
-      - 'Митрополит Іларіон — «Слово про закон і благодать«'
-      - Розвиток літописання
-      - Школи при монастирях
-      - Мистецтво іконопису
-
-  - section: Софія через віки
-    words: 500
-    points:
-      - Монгольська навала та руйнування
-      - Відновлення у XVII-XVIII ст.
-      - Радянський період — музей
-      - Сучасність — конфлікт юрисдикцій
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Софія як свідчення величі Київської Русі
-      - Унікальність київських мозаїк
-      - Перехід до Володимира Мономаха
-
+- section: Вступ — Святиня нації
+  words: 473
+  points:
+  - Софія Київська як символ Київської Русі
+  - Заснування за Ярослава Мудрого (1037)
+  - Статус об'єкта ЮНЕСКО
+  - Значення для української ідентичності
+- section: Архітектура собору
+  words: 684
+  points:
+  - Візантійський стиль з місцевими особливостями
+  - П'ятинефна хрестово-купольна споруда
+  - 13 куполів — символіка
+  - Первісний вигляд vs сучасний барокковий
+- section: Мозаїки та фрески
+  words: 736
+  points:
+  - Богоматір Оранта — «Нерушима стіна«
+  - Мозаїки XI століття — техніка та кольори
+  - Світські фрески — сцени полювання, ігри
+  - Портрети родини Ярослава
+- section: Графіті Софії Київської
+  words: 578
+  points:
+  - Середньовічні написи на стінах
+  - Джерело знань про повсякденне життя
+  - Перша бібліотека Русі
+  - Собор як культурний центр
+- section: Культурний розквіт XI століття
+  words: 631
+  points:
+  - Митрополит Іларіон — «Слово про закон і благодать«
+  - Розвиток літописання
+  - Школи при монастирях
+  - Мистецтво іконопису
+- section: Софія через віки
+  words: 526
+  points:
+  - Монгольська навала та руйнування
+  - Відновлення у XVII-XVIII ст.
+  - Радянський період — музей
+  - Сучасність — конфлікт юрисдикцій
+- section: Підсумок
+  words: 372
+  points:
+  - Софія як свідчення величі Київської Русі
+  - Унікальність київських мозаїк
+  - Перехід до Володимира Мономаха
 vocabulary_hints:
   required:
-    - собор (cathedral)
-    - мозаїка (mosaic)
-    - фреска (fresco)
-    - Оранта (Oranta)
-    - купол (dome)
-    - неф (nave)
-    - візантійський (Byzantine)
-    - бароко (Baroque)
-    - графіті (graffiti)
-    - митрополит (metropolitan)
-    - літописання (chronicle writing)
-    - іконопис (icon painting)
+  - собор (cathedral)
+  - мозаїка (mosaic)
+  - фреска (fresco)
+  - Оранта (Oranta)
+  - купол (dome)
+  - неф (nave)
+  - візантійський (Byzantine)
+  - бароко (Baroque)
+  - графіті (graffiti)
+  - митрополит (metropolitan)
+  - літописання (chronicle writing)
+  - іконопис (icon painting)
   recommended:
-    - хрестово-купольний (cross-domed)
-    - Нерушима стіна (Unbreakable Wall)
-    - смальта (smalto)
-    - заповідник (reserve/sanctuary)
-    - юрисдикція (jurisdiction)
-
+  - хрестово-купольний (cross-domed)
+  - Нерушима стіна (Unbreakable Wall)
+  - смальта (smalto)
+  - заповідник (reserve/sanctuary)
+  - юрисдикція (jurisdiction)
 activity_hints:
-  - type: image-analysis
-    focus: Analyze St. Sophia mosaics and frescoes
-    items: "8-10 images"
-
-  - type: vocabulary
-    focus: Architectural and artistic terminology
-    items: "15+"
-
-  - type: reading
-    focus: Excerpt from "Slovo pro zakon i blahodat"
-    source: Provide in module
-
-  - type: quiz
-    focus: St. Sophia Cathedral facts
-    items: "12+"
-
-  - type: compare-contrast
-    focus: Original 11th century vs modern appearance
-    output: Visual comparison
-
-  - type: virtual-tour
-    focus: Explore St. Sophia digitally
-    items: "Key locations within cathedral"
-
-  - type: discussion
-    focus: "Чому Софія Київська є символом України?"
-
+- type: image-analysis
+  focus: Analyze St. Sophia mosaics and frescoes
+  items: 8-10 images
+- type: vocabulary
+  focus: Architectural and artistic terminology
+  items: 15+
+- type: reading
+  focus: Excerpt from "Slovo pro zakon i blahodat"
+  source: Provide in module
+- type: quiz
+  focus: St. Sophia Cathedral facts
+  items: 12+
+- type: compare-contrast
+  focus: Original 11th century vs modern appearance
+  output: Visual comparison
+- type: virtual-tour
+  focus: Explore St. Sophia digitally
+  items: Key locations within cathedral
+- type: discussion
+  focus: Чому Софія Київська є символом України?
 prerequisites:
-  - b2-hist-12 (Yaroslav the Wise)
-  - b2-hist-11 (Volodymyr and Baptism)
-
+- b2-hist-12 (Yaroslav the Wise)
+- b2-hist-11 (Volodymyr and Baptism)
 connects_to:
-  - b2-hist-16 (Kyivan Rus culture)
-  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-16 (Kyivan Rus culture)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'

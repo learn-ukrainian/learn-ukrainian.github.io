@@ -1,0 +1,142 @@
+module: c1-bio-roman-mstyslavych
+id: c1-bio-roman-mstyslavych
+title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
+subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
+slug: roman-mstyslavych
+module_type: biography
+word_target: 4000
+immersion: 100% Ukrainian
+version: '2.0'
+phase: C1-BIO
+focus: biography
+pedagogy: seminar
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- medieval
+- galicia-volhynia
+- state-building
+grammar:
+- Historical narrative register
+- Chronicle quotations
+- Participial constructions
+objectives:
+- Analyze the political strategy of uniting Galicia and Volhynia
+- Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
+- Master vocabulary related to medieval state formation
+vocabulary_count: 25
+sources:
+- name: Роман Мстиславич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+  type: primary
+  notes: Biography, military campaigns, unification of principalities
+- name: Галицько-Волинське князівство
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  type: primary
+  notes: Context for state formation
+- name: Галицько-Волинський літопис
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Primary chronicle source
+content_outline:
+- section: Вступ — Самодержець усієї Русі
+  words: 421
+  points:
+  - Титул "великий князь, самодержець усієї Русі" у літописі
+  - Значення об'єднання Галичини та Волині
+  - Роман як попередник Данила Галицького
+- section: Походження та молодість
+  words: 526
+  points:
+  - Народження у родині Мстислава Ізяславича
+  - Княжіння в Новгороді (1168-1170)
+  - Успадкування Волині (1170)
+- section: Боротьба за Галич
+  words: 736
+  points:
+  - Політична ситуація в Галичині
+  - Конфлікт з боярством
+  - Перша спроба захопити Галич (1188)
+  - Остаточне об'єднання (1199)
+- section: Створення Галицько-Волинської держави
+  words: 842
+  points:
+  - Об'єднання двох князівств
+  - Політика централізації
+  - Боротьба з боярською опозицією
+  - Захоплення Києва (1202)
+- section: Зовнішня політика
+  words: 631
+  points:
+  - Відносини з Польщею та Угорщиною
+  - Походи на половців
+  - Контакти з папою Інокентієм III
+  - Пропозиція королівської корони
+- section: Загибель та спадщина
+  words: 526
+  points:
+  - Битва під Завихостом (1205)
+  - Польська засідка та смерть
+  - Криза після смерті Романа
+  - Значення для нащадків
+- section: Підсумок — Будівничий держави
+  words: 318
+  points:
+  - Роман як об'єднувач земель
+  - Порівняння з іншими європейськими монархами
+  - Спадщина для української державності
+vocabulary_hints:
+  required:
+  - самодержець (autocrat)
+  - князівство (principality)
+  - боярство (boyar class)
+  - об'єднання (unification)
+  - літопис (chronicle)
+  - усобиця (internecine strife)
+  - засідка (ambush)
+  - спадкоємець (heir)
+  - данина (tribute)
+  - похід (campaign)
+  recommended:
+  - престол (throne)
+  - династія (dynasty)
+  - васал (vassal)
+  - магнат (magnate)
+  - грамота (charter)
+activity_hints:
+- type: reading
+  focus: Chronicle descriptions of Roman's reign
+  source: Галицько-Волинський літопис (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Key events in Roman's life and reign
+  items: 12+
+- type: match-up
+  focus: Territories and their political status
+  items: 10+
+- type: essay-response
+  focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
+  word_target: 250
+  output: Analytical argument with evidence
+- type: group-sort
+  focus: Domestic vs. foreign policy actions
+  items: 12+
+- type: fill-in
+  focus: Key dates and places in Roman's campaigns
+  items: 8+
+- type: critical-analysis
+  focus: Why did Roman succeed where others failed?
+  output: Comparative analysis
+prerequisites:
+- c1-bio-05 (Anna Yaroslavna - earlier period)
+- c1-bio-06 (Mykhailo Chernihivskyi - later consequence)
+- Understanding of Kyivan Rus fragmentation
+connects_to:
+- c1-bio-danylo-halytskyi (Danylo - son)
+- c1-bio-lev-danylovych (Lev - grandson)
+- c1-bio-06 (Mykhailo Chernihivskyi - Mongol era)
+naturalness:
+  score: 10
+  status: PASS

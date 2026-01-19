@@ -1,6 +1,3 @@
-# B2-HIST Module 17: Княжі усобиці та роздроблення
-# Status: SPEC (ready for content development)
-
 id: b2-hist-17
 title: Княжі усобиці та роздроблення
 slug: kniazivski-usobiytsi
@@ -8,134 +5,114 @@ version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Роздроблення Київської Русі (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
-    type: reference
-    notes: Overview of fragmentation
-  - name: Любецький з'їзд (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
-    type: reference
-    notes: Congress that formalized division
-  - name: Повість минулих літ
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Chronicle accounts
-
+- name: Роздроблення Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
+  type: reference
+  notes: Overview of fragmentation
+- name: Любецький з'їзд (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+  type: reference
+  notes: Congress that formalized division
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts
 content_outline:
-  - section: Вступ — Від єдності до роздроблення
-    words: 450
-    points:
-      - Заповіт Ярослава як причина усобиць
-      - Система "лествичного права"
-      - Природа роздроблення — занепад чи розвиток?
-      - Хронологія процесу
-
-  - section: Причини роздроблення
-    words: 650
-    points:
-      - Система престолонаслідування — брат до брата
-      - Зростання місцевих еліт — бояри
-      - Економічний розвиток окремих земель
-      - Послаблення зовнішніх загроз?
-
-  - section: Любецький з'їзд 1097
-    words: 600
-    points:
-      - "Кожен хай держить отчину свою"
-      - Спроба врегулювання конфліктів
-      - Засліплення Василька Теребовльського
-      - Наслідки з'їзду
-
-  - section: Основні князівства
-    words: 700
-    points:
-      - Київське князівство — номінальний центр
-      - Галицько-Волинське — майбутній центр
-      - Чернігово-Сіверське
-      - Переяславське, Полоцьке та інші
-
-  - section: Половецька загроза
-    words: 550
-    points:
-      - Половці як постійний ворог
-      - Князівські союзи з половцями проти своїх
-      - Походи 1103, 1111 років — перемоги Мономаха
-      - Половецький слід у культурі
-
-  - section: Наслідки роздроблення
-    words: 450
-    points:
-      - Культурний розквіт окремих земель
-      - Ослаблення військової сили
-      - Підготовка до монгольської навали
-      - Збереження культурної єдності
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Роздроблення як загальноєвропейське явище
-      - Збереження ідеї єдності Русі
-      - Перехід до життя простих людей
-
+- section: Вступ — Від єдності до роздроблення
+  words: 480
+  points:
+  - Заповіт Ярослава як причина усобиць
+  - Система "лествичного права"
+  - Природа роздроблення — занепад чи розвиток?
+  - Хронологія процесу
+- section: Причини роздроблення
+  words: 693
+  points:
+  - Система престолонаслідування — брат до брата
+  - Зростання місцевих еліт — бояри
+  - Економічний розвиток окремих земель
+  - Послаблення зовнішніх загроз?
+- section: Любецький з'їзд 1097
+  words: 640
+  points:
+  - Кожен хай держить отчину свою
+  - Спроба врегулювання конфліктів
+  - Засліплення Василька Теребовльського
+  - Наслідки з'їзду
+- section: Основні князівства
+  words: 746
+  points:
+  - Київське князівство — номінальний центр
+  - Галицько-Волинське — майбутній центр
+  - Чернігово-Сіверське
+  - Переяславське, Полоцьке та інші
+- section: Половецька загроза
+  words: 586
+  points:
+  - Половці як постійний ворог
+  - Князівські союзи з половцями проти своїх
+  - Походи 1103, 1111 років — перемоги Мономаха
+  - Половецький слід у культурі
+- section: Наслідки роздроблення
+  words: 480
+  points:
+  - Культурний розквіт окремих земель
+  - Ослаблення військової сили
+  - Підготовка до монгольської навали
+  - Збереження культурної єдності
+- section: Підсумок
+  words: 375
+  points:
+  - Роздроблення як загальноєвропейське явище
+  - Збереження ідеї єдності Русі
+  - Перехід до життя простих людей
 vocabulary_hints:
   required:
-    - усобиця (internecine war)
-    - роздроблення (fragmentation)
-    - лествичне право (rota system)
-    - престолонаслідування (succession)
-    - отчина (patrimony)
-    - з'їзд (congress)
-    - боярин (boyar)
-    - князівство (principality)
-    - половці (Polovtsians)
-    - єдність (unity)
-    - центральна влада (central authority)
-    - місцева еліта (local elite)
+  - усобиця (internecine war)
+  - роздроблення (fragmentation)
+  - лествичне право (rota system)
+  - престолонаслідування (succession)
+  - отчина (patrimony)
+  - з'їзд (congress)
+  - боярин (boyar)
+  - князівство (principality)
+  - половці (Polovtsians)
+  - єдність (unity)
+  - центральна влада (central authority)
+  - місцева еліта (local elite)
   recommended:
-    - засліплення (blinding)
-    - номінальний (nominal)
-    - союз (alliance)
-    - культурний розквіт (cultural flourishing)
-
+  - засліплення (blinding)
+  - номінальний (nominal)
+  - союз (alliance)
+  - культурний розквіт (cultural flourishing)
 activity_hints:
-  - type: reading
-    focus: Chronicle account of Liubech Congress
-    source: Provide in module
-
-  - type: map-activity
-    focus: Major principalities after fragmentation
-    items: "8+ principalities"
-
-  - type: vocabulary
-    focus: Political and military terminology
-    items: "15+"
-
-  - type: timeline
-    focus: Key events of fragmentation 1054-1240
-    items: "12+ events"
-
-  - type: quiz
-    focus: Causes and consequences of fragmentation
-    items: "12+"
-
-  - type: compare-contrast
-    focus: Unified Rus vs fragmented Rus
-    output: Two-column analysis
-
-  - type: discussion
-    focus: "Чи було роздроблення неминучим?"
-
+- type: reading
+  focus: Chronicle account of Liubech Congress
+  source: Provide in module
+- type: map-activity
+  focus: Major principalities after fragmentation
+  items: 8+ principalities
+- type: vocabulary
+  focus: Political and military terminology
+  items: 15+
+- type: timeline
+  focus: Key events of fragmentation 1054-1240
+  items: 12+ events
+- type: quiz
+  focus: Causes and consequences of fragmentation
+  items: 12+
+- type: compare-contrast
+  focus: Unified Rus vs fragmented Rus
+  output: Two-column analysis
+- type: discussion
+  focus: Чи було роздроблення неминучим?
 prerequisites:
-  - b2-hist-12 (Yaroslav the Wise)
-  - b2-hist-15 (Volodymyr Monomakh)
-
+- b2-hist-12 (Yaroslav the Wise)
+- b2-hist-15 (Volodymyr Monomakh)
 connects_to:
-  - b2-hist-21 (Mongol invasion)
-  - b2-hist-23 (Danylo of Halych)
-  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-21 (Mongol invasion)
+- b2-hist-23 (Danylo of Halych)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'

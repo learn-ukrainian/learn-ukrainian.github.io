@@ -1,142 +1,136 @@
-# B2-HIST Module 12: Ярослав Мудрий: Золота доба
-# Status: SPEC (ready for content development)
-
 id: b2-hist-12
-title: "Ярослав Мудрий: Золота доба"
+title: 'Ярослав Мудрий: Золота доба'
 slug: yaroslav-wise
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
+pedagogy: CBI
 module_type: history
-word_target: 3750
+word_target: 4000
+duration: 120
+transliteration: none
+tags:
+- history
+- kyivan-rus
+- politics
+grammar:
+- Legal terminology
+- Diplomatic language
+objectives:
+- Understand the Golden Age of Kyivan Rus
+- Analyze Yaroslav's diplomatic strategy
+- Discuss the significance of Ruska Pravda
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
+naturalness:
+  score: 10
+  status: PASS
 sources:
-  - name: Ярослав Мудрий (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
-    type: reference
-    notes: Comprehensive overview
-  - name: Повість минулих літ
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Chronicle accounts of Yaroslav's reign
-  - name: Руська Правда (текст)
-    url: https://litopys.org.ua/oldukr2/oldukr51.htm
-    type: primary
-    notes: Legal code text
-
+- name: Ярослав Мудрий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+  type: reference
+  notes: Comprehensive overview
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of Yaroslav's reign
+- name: Руська Правда (текст)
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Legal code text
 content_outline:
-  - section: Вступ — Золота доба Русі
-    words: 450
-    points:
-      - Ярослав Мудрий як найвидатніший правитель Русі
-      - Правління 1019-1054 — найдовше в історії
-      - '«Мудрий« — чому таке прізвисько?'
-      - Київ як один з найбільших міст Європи
-
-  - section: Шлях до влади
-    words: 550
-    points:
-      - Міжусобна боротьба — вбивство Бориса і Гліба
-      - Боротьба зі Святополком Окаянним
-      - Битва на Альті (1019)
-      - Конфлікт з Мстиславом Тмутороканським
-
-  - section: Законодавча діяльність
-    words: 650
-    points:
-      - Руська Правда — перший писаний закон
-      - Система покарань — віра, продаж
-      - Захист прав різних верств населення
-      - Вплив на пізніше законодавство
-
-  - section: Будівнича діяльність
-    words: 600
-    points:
-      - Софія Київська — архітектурний шедевр
-      - Золоті ворота
-      - 'Розбудова Києва — «місто Ярослава«'
-      - Фортифікації та храми в інших містах
-
-  - section: Дипломатія та династичні зв'язки
-    words: 600
-    points:
-      - 'Шлюбна дипломатія — «тесть Європи«'
-      - Анна Ярославна — королева Франції
-      - Зв'язки з Норвегією, Угорщиною, Польщею
-      - Міжнародний авторитет Русі
-
-  - section: Культурний розквіт
-    words: 550
-    points:
-      - Розвиток писемності та книжності
-      - Перші школи та бібліотеки
-      - 'Митрополит Іларіон — «Слово про закон і благодать«'
-      - Мистецтво та архітектура
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Спадщина Ярослава Мудрого
-      - Заповіт синам — причина майбутніх усобиць
-      - Перехід до Руської Правди (детально)
-
+- section: Вступ — Золота доба Русі
+  words: 480
+  points:
+  - Ярослав Мудрий як найвидатніший правитель Русі
+  - Правління 1019-1054 — найдовше в історії
+  - «Мудрий« — чому таке прізвисько?
+  - Київ як один з найбільших міст Європи
+- section: Шлях до влади
+  words: 586
+  points:
+  - Міжусобна боротьба — вбивство Бориса і Гліба
+  - Боротьба зі Святополком Окаянним
+  - Битва на Альті (1019)
+  - Конфлікт з Мстиславом Тмутороканським
+- section: Законодавча діяльність
+  words: 693
+  points:
+  - Руська Правда — перший писаний закон
+  - Система покарань — віра, продаж
+  - Захист прав різних верств населення
+  - Вплив на пізніше законодавство
+- section: Будівнича діяльність
+  words: 640
+  points:
+  - Софія Київська — архітектурний шедевр
+  - Золоті ворота
+  - Розбудова Києва — «місто Ярослава«
+  - Фортифікації та храми в інших містах
+- section: Дипломатія та династичні зв'язки
+  words: 640
+  points:
+  - Шлюбна дипломатія — «тесть Європи«
+  - Анна Ярославна — королева Франції
+  - Зв'язки з Норвегією, Угорщиною, Польщею
+  - Міжнародний авторитет Русі
+- section: Культурний розквіт
+  words: 586
+  points:
+  - Розвиток писемності та книжності
+  - Перші школи та бібліотеки
+  - Митрополит Іларіон — «Слово про закон і благодать«
+  - Мистецтво та архітектура
+- section: Підсумок
+  words: 375
+  points:
+  - Спадщина Ярослава Мудрого
+  - Заповіт синам — причина майбутніх усобиць
+  - Перехід до Руської Правди (детально)
 vocabulary_hints:
   required:
-    - мудрий (wise)
-    - золота доба (golden age)
-    - законодавство (legislation)
-    - Руська Правда (Rus' Justice)
-    - віра (wergild/fine)
-    - Софія Київська (St. Sophia Cathedral)
-    - Золоті ворота (Golden Gate)
-    - дипломатія (diplomacy)
-    - династичний шлюб (dynastic marriage)
-    - митрополит (metropolitan)
-    - книжність (book learning)
-    - спадщина (legacy)
+  - мудрий (wise)
+  - золота доба (golden age)
+  - законодавство (legislation)
+  - Руська Правда (Rus' Justice)
+  - віра (wergild/fine)
+  - Софія Київська (St. Sophia Cathedral)
+  - Золоті ворота (Golden Gate)
+  - дипломатія (diplomacy)
+  - династичний шлюб (dynastic marriage)
+  - митрополит (metropolitan)
+  - книжність (book learning)
+  - спадщина (legacy)
   recommended:
-    - міжусобиця (internecine war)
-    - продаж (sale-fine)
-    - тесть (father-in-law)
-    - фортифікація (fortification)
-    - заповіт (testament)
-
+  - міжусобиця (internecine war)
+  - продаж (sale-fine)
+  - тесть (father-in-law)
+  - фортифікація (fortification)
+  - заповіт (testament)
 activity_hints:
-  - type: reading
-    focus: Excerpt from Ruska Pravda (translated)
-    source: Provide in module
-
-  - type: image-analysis
-    focus: St. Sophia Cathedral mosaics and architecture
-    items: "5-6 images"
-
-  - type: vocabulary
-    focus: Legal and political terminology
-    items: "15+"
-
-  - type: timeline
-    focus: Yaroslav's reign key events
-    items: "12+ events"
-
-  - type: map-activity
-    focus: Yaroslav's building projects and diplomatic ties
-    items: "European connections"
-
-  - type: quiz
-    focus: Facts about Yaroslav the Wise
-    items: "12+"
-
-  - type: discussion
-    focus: "Чому Ярослава називають 'тестем Європи'?"
-
+- type: reading
+  focus: Excerpt from Ruska Pravda (translated)
+  source: Provide in module
+- type: image-analysis
+  focus: St. Sophia Cathedral mosaics and architecture
+  items: 5-6 images
+- type: vocabulary
+  focus: Legal and political terminology
+  items: 15+
+- type: timeline
+  focus: Yaroslav's reign key events
+  items: 12+ events
+- type: map-activity
+  focus: Yaroslav's building projects and diplomatic ties
+  items: European connections
+- type: quiz
+  focus: Facts about Yaroslav the Wise
+  items: 12+
+- type: discussion
+  focus: Чому Ярослава називають 'тестем Європи'?
 prerequisites:
-  - b2-hist-11 (Volodymyr and Baptism)
-
+- b2-hist-11 (Volodymyr and Baptism)
 connects_to:
-  - b2-hist-13 (Ruska Pravda in detail)
-  - b2-hist-14 (St. Sophia and cultural flowering)
-  - b2-hist-17 (Princely feuds)
-  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-13 (Ruska Pravda in detail)
+- b2-hist-14 (St. Sophia and cultural flowering)
+- b2-hist-17 (Princely feuds)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'

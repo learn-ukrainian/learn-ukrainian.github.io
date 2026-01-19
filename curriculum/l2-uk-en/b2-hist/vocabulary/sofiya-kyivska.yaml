@@ -1,5 +1,103 @@
-# Vocabulary for Софія Київська та культурний розквіт
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: sofiya-kyivska
+level: B2
+version: '1.0'
+items:
+  - lemma: собор
+    ipa: /soˈbɔr/
+    translation: cathedral
+    pos: noun
+    gender: m
+  - lemma: мозаїка
+    ipa: /moˈzɑjikɑ/
+    translation: mosaic
+    pos: noun
+    gender: f
+  - lemma: фреска
+    ipa: /'frɛskɑ/
+    translation: fresco
+    pos: noun
+    gender: f
+  - lemma: купол
+    ipa: /'kupol/
+    translation: dome
+    pos: noun
+    gender: m
+  - lemma: неф
+    ipa: /nɛf/
+    translation: nave
+    pos: noun
+    gender: m
+  - lemma: візантійський
+    ipa: /vizɑn'tijçkɪj/
+    translation: Byzantine
+    pos: adj
+  - lemma: бароко
+    ipa: /bɑ'rɔko/
+    translation: Baroque
+    pos: noun
+    gender: n
+  - lemma: графіті
+    ipa: /ɡrɑ'fiti/
+    translation: graffiti
+    pos: noun
+    gender: n
+  - lemma: митрополит
+    ipa: /mɪtropolɪt/
+    translation: metropolitan (bishop)
+    pos: noun
+    gender: m
+  - lemma: літописання
+    ipa: /lʲitopɪ'sɑɲːɑ/
+    translation: chronicle writing
+    pos: noun
+    gender: n
+  - lemma: іконопис
+    ipa: /i'kɔnopɪs/
+    translation: icon painting
+    pos: noun
+    gender: m
+  - lemma: смальта
+    ipa: /'smɑlʲtɑ/
+    translation: smalto (colored glass)
+    pos: noun
+    gender: f
+  - lemma: заповідник
+    ipa: /zɑpo'vidnɪk/
+    translation: sanctuary / reserve (museum)
+    pos: noun
+    gender: m
+  - lemma: юрисдикція
+    ipa: /jurɪs'dɪkt͡sʲijɑ/
+    translation: jurisdiction
+    pos: noun
+    gender: f
+  - lemma: плінфа
+    ipa: /'plʲinfɑ/
+    translation: plinthos (thin brick)
+    pos: noun
+    gender: f
+  - lemma: Оранта
+    ipa: /o'rɑntɑ/
+    translation: Oranta (praying Virgin)
+    pos: noun
+    gender: f
+  - lemma: апсида
+    ipa: /ɑp'sɪdɑ/
+    translation: apse
+    pos: noun
+    gender: f
+  - lemma: саркофаг
+    ipa: /sɑrko'fɑɦ/
+    translation: sarcophagus
+    pos: noun
+    gender: m
+  - lemma: навала
+    ipa: /nɑ'vɑlɑ/
+    translation: invasion
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /'spɑdʒt͡ʃɪnɑ/
+    translation: heritage / legacy
+    pos: noun
+    gender: f

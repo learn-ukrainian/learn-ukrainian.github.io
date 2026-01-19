@@ -1,0 +1,141 @@
+items:
+  - lemma: повстання
+    ipa: /pɔu̯ˈstɑnʲːɑ/
+    translation: uprising
+    pos: noun
+    gender: n
+  - lemma: бунт
+    ipa: /bunt/
+    translation: rebellion / riot
+    pos: noun
+    gender: m
+  - lemma: ватажок
+    ipa: /vɑ.tɑˈʒɔk/
+    translation: leader / ringleader
+    pos: noun
+    gender: m
+  - lemma: табір
+    ipa: /ˈtɑ.bʲir/
+    translation: camp
+    pos: noun
+    gender: m
+  - lemma: облога
+    ipa: /ɔˈblɔ.ɦɑ/
+    translation: siege
+    pos: noun
+    gender: f
+  - lemma: страта
+    ipa: /ˈstrɑ.tɑ/
+    translation: execution
+    pos: noun
+    gender: f
+  - lemma: зрада
+    ipa: /ˈzrɑ.dɑ/
+    translation: betrayal
+    pos: noun
+    gender: f
+  - lemma: найманець
+    ipa: /ˈnɑj.mɑ.nɛt͡sʲ/
+    translation: mercenary
+    pos: noun
+    gender: m
+  - lemma: поразка
+    ipa: /pɔˈrɑz.kɑ/
+    translation: defeat
+    pos: noun
+    gender: f
+  - lemma: отаман
+    ipa: /ɔ.tɑˈmɑn/
+    translation: otaman (cossack commander)
+    pos: noun
+    gender: m
+  - lemma: сотник
+    ipa: /ˈsɔt.nɪk/
+    translation: sotnyk (captain)
+    pos: noun
+    gender: m
+  - lemma: реєстровець
+    ipa: /rɛ.jɛˈstrɔ.vɛt͡sʲ/
+    translation: registered cossack
+    pos: noun
+    gender: m
+  - lemma: чернь
+    ipa: /t͡ʃɛrnʲ/
+    translation: mob / common people
+    pos: noun
+    gender: f
+  - lemma: магнат
+    ipa: /mɑɦˈnɑt/
+    translation: magnate
+    pos: noun
+    gender: m
+  - lemma: свавілля
+    ipa: /svɑˈvʲilʲːɑ/
+    translation: arbitrariness / lawlessness
+    pos: noun
+    gender: n
+  - lemma: вагенбург
+    ipa: /vɑ.ɦɛnˈburk/
+    translation: wagenburg (wagon fort)
+    pos: noun
+    gender: m
+  - lemma: гармата
+    ipa: /ɦɑrˈmɑ.tɑ/
+    translation: cannon
+    pos: noun
+    gender: f
+  - lemma: кайдани
+    ipa: /kɑjˈdɑ.nɪ/
+    translation: shackles / chains
+    pos: noun
+    gender: p
+  - lemma: мученик
+    ipa: /ˈmu.t͡ʃɛ.nɪk/
+    translation: martyr
+    pos: noun
+    gender: m
+  - lemma: харизма
+    ipa: /xɑˈrɪz.mɑ/
+    translation: charisma
+    pos: noun
+    gender: f
+  - lemma: архетип
+    ipa: /ɑr.xɛˈtɪp/
+    translation: archetype
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑx.tɑ/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: жолнір
+    ipa: /ʒɔlˈnʲir/
+    translation: soldier (Polish)
+    pos: noun
+    gender: m
+  - lemma: контрибуція
+    ipa: /kɔn.trɪˈbu.t͡sʲi.jɑ/
+    translation: indemnity / contribution
+    pos: noun
+    gender: f
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲ.mɑn/
+    translation: hetman
+    pos: noun
+    gender: m
+  - lemma: хоругва
+    ipa: /xɔˈruɦ.vɑ/
+    translation: banner / company
+    pos: noun
+    gender: f
+  - lemma: помста
+    ipa: /ˈpɔm.stɑ/
+    translation: revenge
+    pos: noun
+    gender: f
+  - lemma: тиранія
+    ipa: /tɪ.rɑˈnʲi.jɑ/
+    translation: tyranny
+    pos: noun
+    gender: f

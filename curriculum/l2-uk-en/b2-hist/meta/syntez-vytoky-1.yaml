@@ -1,172 +1,147 @@
-# B2-HIST Module 08: Синтез: Від Трипілля до Києва
-# Status: ACTIVE (Audit Passed)
-
 module: b2-hist-08
 id: b2-hist-08
-title: "Синтез: Від Трипілля до Києва"
+title: 'Синтез: Від Трипілля до Києва'
 subtitle: 'From Trypillia to Kyiv: Continuity of the People'
 slug: syntez-vytoky-1
 version: '2.0'
-phase: 'HIST.1 Origins Synthesis'
+phase: HIST.1 Origins Synthesis
 focus: history
-pedagogy: 'seminar'
+pedagogy: seminar
 register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-  - history
-  - synthesis
-  - checkpoint
-  - trypillia
-  - kyivan-rus
-  - early-medieval
+- history
+- synthesis
+- checkpoint
+- trypillia
+- kyivan-rus
+- early-medieval
 grammar:
-  - Historical narrative synthesis
-  - Argumentative writing structures
+- Historical narrative synthesis
+- Argumentative writing structures
 objectives:
-  - Learner can synthesize historical themes across eras from Trypillia to Kyiv
-  - Learner can construct historical arguments with evidence from primary sources
-  - Learner can identify continuities in Ukrainian history and deconstruct colonial myths
+- Learner can synthesize historical themes across eras from Trypillia to Kyiv
+- Learner can construct historical arguments with evidence from primary sources
+- Learner can identify continuities in Ukrainian history and deconstruct colonial
+  myths
 vocabulary_count: 35
 naturalness:
   score: 9
   status: PASS
-
 module_type: synthesis
-word_target: 2000
+word_target: 3000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Історія України (загальні огляди)
-    url: https://uk.wikipedia.org/wiki/Історія_України
-    type: reference
-    notes: General overview for synthesis
-  - name: Prehistory of Ukraine
-    url: https://uk.wikipedia.org/wiki/Доісторичний_період_України
-    type: reference
-    notes: Prehistory overview
-
+- name: Історія України (загальні огляди)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: General overview for synthesis
+- name: Prehistory of Ukraine
+  url: https://uk.wikipedia.org/wiki/Доісторичний_період_України
+  type: reference
+  notes: Prehistory overview
 content_outline:
-  - section: Вступ — Тисячоліття до Русі
-    words: 400
-    points:
-      - Огляд періоду від 5500 до н.е. до IX ст. н.е.
-      - Українські землі як перехрестя цивілізацій
-      - Головні теми модулів 01-07
-      - Мета синтезу — зв'язки та закономірності
-
-  - section: Цивілізації українських земель
-    words: 600
-    points:
-      - Трипілля — перша велика цивілізація
-      - Скіфи та сармати — степові кочівники
-      - Грецькі міста-держави — античний світ
-      - Слов'яни — наші предки
-
-  - section: Культурна спадщина
-    words: 650
-    points:
-      - Трипільські орнаменти в українському мистецтві
-      - Скіфське золото як національний скарб
-      - Грецький вплив на культуру Причорномор'я
-      - Слов'янські традиції та вірування
-
-  - section: Економіка та торгівля
-    words: 550
-    points:
-      - Землеробство від Трипілля до слов'ян
-      - Торговельні шляхи через українські землі
-      - Зерно, хутро, раби — товари давнини
-      - Міста як торговельні центри
-
-  - section: Політичні утворення
-    words: 550
-    points:
-      - Від племен до держав
-      - Скіфське царство
-      - Грецькі поліси
-      - Слов'янські племінні союзи
-
-  - section: Зовнішні впливи
-    words: 500
-    points:
-      - Степові народи та їхній вплив
-      - Візантія та середземноморський світ
-      - Хозарський каганат
-      - Варяги та початок Русі
-
-  - section: Ключові терміни та поняття
-    words: 300
-    points:
-      - Археологічна термінологія
-      - Етнічні назви
-      - Географічні поняття
-      - Хронологічні рамки
-
-  - section: Підсумок та перехід
-    words: 200
-    points:
-      - Готовність земель до великої держави
-      - Від племен до Київської Русі
-      - Що далі — період Русі
-
+- section: Вступ — Тисячоліття до Русі
+  words: 320
+  points:
+  - Огляд періоду від 5500 до н.е. до IX ст. н.е.
+  - Українські землі як перехрестя цивілізацій
+  - Головні теми модулів 01-07
+  - Мета синтезу — зв'язки та закономірності
+- section: Цивілізації українських земель
+  words: 480
+  points:
+  - Трипілля — перша велика цивілізація
+  - Скіфи та сармати — степові кочівники
+  - Грецькі міста-держави — античний світ
+  - Слов'яни — наші предки
+- section: Культурна спадщина
+  words: 520
+  points:
+  - Трипільські орнаменти в українському мистецтві
+  - Скіфське золото як національний скарб
+  - Грецький вплив на культуру Причорномор'я
+  - Слов'янські традиції та вірування
+- section: Економіка та торгівля
+  words: 440
+  points:
+  - Землеробство від Трипілля до слов'ян
+  - Торговельні шляхи через українські землі
+  - Зерно, хутро, раби — товари давнини
+  - Міста як торговельні центри
+- section: Політичні утворення
+  words: 440
+  points:
+  - Від племен до держав
+  - Скіфське царство
+  - Грецькі поліси
+  - Слов'янські племінні союзи
+- section: Зовнішні впливи
+  words: 400
+  points:
+  - Степові народи та їхній вплив
+  - Візантія та середземноморський світ
+  - Хозарський каганат
+  - Варяги та початок Русі
+- section: Ключові терміни та поняття
+  words: 240
+  points:
+  - Археологічна термінологія
+  - Етнічні назви
+  - Географічні поняття
+  - Хронологічні рамки
+- section: Підсумок та перехід
+  words: 160
+  points:
+  - Готовність земель до великої держави
+  - Від племен до Київської Русі
+  - Що далі — період Русі
 vocabulary_hints:
   required:
-    - синтез (synthesis)
-    - цивілізація (civilization)
-    - спадщина (heritage)
-    - закономірність (pattern)
-    - перехрестя (crossroads)
-    - культурний обмін (cultural exchange)
-    - етнічний (ethnic)
-    - державотворення (state formation)
-    - археологія (archaeology)
-    - хронологія (chronology)
+  - синтез (synthesis)
+  - цивілізація (civilization)
+  - спадщина (heritage)
+  - закономірність (pattern)
+  - перехрестя (crossroads)
+  - культурний обмін (cultural exchange)
+  - етнічний (ethnic)
+  - державотворення (state formation)
+  - археологія (archaeology)
+  - хронологія (chronology)
   recommended:
-    - наступність (continuity)
-    - взаємовплив (mutual influence)
-    - автохтонний (autochthonous)
-    - міграція (migration)
-    - асиміляція (assimilation)
-
+  - наступність (continuity)
+  - взаємовплив (mutual influence)
+  - автохтонний (autochthonous)
+  - міграція (migration)
+  - асиміляція (assimilation)
 activity_hints:
-  - type: timeline
-    focus: Comprehensive timeline from Trypillia to Kyiv
-    items: "15+ key events"
-
-  - type: map-activity
-    focus: Overlay maps showing all civilizations
-    items: "Combined map activity"
-
-  - type: vocabulary
-    focus: Review of all terminology from Phase 1
-    items: "25+"
-
-  - type: compare-contrast
-    focus: Compare Trypillia, Scythians, Greeks, Slavs
-    output: Multi-column comparison
-
-  - type: essay-response
-    focus: "Яка цивілізація найбільше вплинула на формування України?"
-    word_target: 300
-    model_answer: Required
-
-  - type: quiz
-    focus: Comprehensive review of Phase 1
-    items: "20+"
-
-  - type: group-sort
-    focus: Match artifacts/terms to civilizations
-    items: "15+"
-
-  - type: discussion
-    focus: "Чи можна говорити про українську історію до появи українців як народу?"
-
+- type: timeline
+  focus: Comprehensive timeline from Trypillia to Kyiv
+  items: 15+ key events
+- type: map-activity
+  focus: Overlay maps showing all civilizations
+  items: Combined map activity
+- type: vocabulary
+  focus: Review of all terminology from Phase 1
+  items: 25+
+- type: compare-contrast
+  focus: Compare Trypillia, Scythians, Greeks, Slavs
+  output: Multi-column comparison
+- type: essay-response
+  focus: Яка цивілізація найбільше вплинула на формування України?
+  word_target: 3000
+  model_answer: Required
+- type: quiz
+  focus: Comprehensive review of Phase 1
+  items: 20+
+- type: group-sort
+  focus: Match artifacts/terms to civilizations
+  items: 15+
+- type: discussion
+  focus: Чи можна говорити про українську історію до появи українців як народу?
 prerequisites:
-  - b2-hist-01 through b2-hist-07 (all Phase 1 modules)
-
+- b2-hist-01 through b2-hist-07 (all Phase 1 modules)
 connects_to:
-  - b2-hist-09 (Beginning of Kyivan Rus - Phase 2)
-  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-09 (Beginning of Kyivan Rus - Phase 2)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'

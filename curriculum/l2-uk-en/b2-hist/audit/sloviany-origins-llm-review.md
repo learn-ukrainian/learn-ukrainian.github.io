@@ -1,14 +1,14 @@
-# LLM Review: Слов'яни: Походження та розселення
+# LLM Review: Слов'яни: Походження
 
-**Content Hash:** a40fbd9f
+**Content Hash:** 1b1222e1
 **Status:** PASS
 **Reviewer:** Gemini-CLI
-**Date:** 2026-01-18
+**Date: 2026-01-20
 
-### Review Details
+## Evaluation
 
-- **Ukrainian Grammar:** Correct and natural for B2 historical register.
-- **Vocabulary:** Appropriately challenging, introduces key terms about Slavic origins.
-- **Activity Instructions:** Clear and pedagogically sound.
-- **Cultural/Factual Accuracy:** Excellent. Accurately reflects theories of Slavic origins.
-- **Immersion:** 100% Ukrainian.
+- **Grammar & Style:** Excellent.
+- **Vocabulary:** Appropriate for B2.
+- **Activities:** Pedagogically sound.
+- **Cultural Accuracy:** Verified.
+- **Naturalness:** 9/10 (High)

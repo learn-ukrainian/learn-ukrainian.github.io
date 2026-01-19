@@ -1,0 +1,92 @@
+module: c1-bio-17
+id: c1-bio-meletii-smotrytskyi
+title: 'Мелетій Смотрицький: Архітектор слов''янської граматики'
+subtitle: 'Meletii Smotrytskyi: Architect of Slavic Grammar'
+slug: meletii-smotrytskyi
+version: '2.0'
+phase: C1-BIO
+pedagogy: CBI
+focus: biography
+duration: 120
+transliteration: none
+word_target: 4000
+immersion: 100% Ukrainian
+tags:
+- history
+- biography
+- linguistics
+- polemics
+- church
+- education
+grammar:
+- Linguistic terminology
+- Theological vocabulary
+objectives:
+- Evaluate the impact of Smotrytskyi's Grammar (1619)
+- Understand the tragedy of the 'Threnos' and his conversion to Uniatism
+vocabulary_count: 25
+sources:
+- name: Мелетій Смотрицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
+  type: primary
+- name: Тренос
+  url: https://uk.wikipedia.org/wiki/Тренос
+  type: primary
+- name: Граматика Смотрицького
+  url: https://uk.wikipedia.org/wiki/Граматика_слов%27янська_(1619)
+  type: primary
+content_outline:
+- section: Вступ — Голос плачучої церкви
+  words: 615
+  points:
+  - Автор "Треносу" (Плачу)
+  - Творець першої повної граматики церковнослов'янської мови
+  - Інтелектуал, що розірвався між Сходом і Заходом
+- section: Життєпис
+  words: 1538
+  points:
+  - Син Герасима Смотрицького (ректора Острозької академії)
+  - Освіта в Європі (Вільно, Лейпциг, Нюрнберг)
+  - '"Тренос" (1610) — бестселер епохи'
+  - '"Граматика" (1619) — науковий подвиг'
+  - Архієпископ Полоцький
+  - Таємний перехід в унію і драма відступництва
+  - Смерть у Дермані
+- section: Історичний контекст
+  words: 615
+  points:
+  - Релігійна полеміка XVII ст.
+  - Київське братство і відновлення православ'я
+  - Тиск католицької культури
+- section: Внесок та Спадщина
+  words: 615
+  points:
+  - Кодифікація мови (вплив на Ломоносова і всю славістику)
+  - Розвиток барокової літератури
+  - Трагедія українського інтелектуала
+- section: Порівняльний аналіз
+  words: 617
+  points:
+  - Смотрицький vs. Вишенський (західна освіта vs афонський аскетизм)
+vocabulary_hints:
+  required:
+  - граматика (grammar)
+  - полеміка (polemics)
+  - плач (lament/threnos)
+  - єресь (heresy)
+  - догмат (dogma)
+  - відступництво (apostasy)
+  - кодифікація (codification)
+  - синтаксис (syntax)
+  - православ'я (orthodoxy)
+  - унія (union)
+activity_hints:
+- type: reading
+  focus: Excerpts from "Threnos"
+- type: quiz
+  focus: Biography and works
+- type: essay-response
+  focus: 'The tragedy of choice: Faith vs. Unity'
+naturalness:
+  score: 10
+  status: PASS

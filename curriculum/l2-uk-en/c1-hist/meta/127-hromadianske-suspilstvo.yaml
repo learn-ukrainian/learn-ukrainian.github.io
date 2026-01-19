@@ -1,8 +1,5 @@
-# C1-HIST Module 127: Громадянське суспільство — Держава без держави
-# Status: SPEC (ready for content development)
-
 id: c1-hist-127
-title: "Громадянське суспільство: Держава без держави"
+title: 'Громадянське суспільство: Держава без держави'
 slug: hromadianske-suspilstvo
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,112 +7,95 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Громадянське суспільство в Україні (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
-    type: reference
-    notes: Civil society overview
-  - name: Євромайдан (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Євромайдан
-    type: reference
-    notes: Euromaidan self-organization
-
+- name: Громадянське суспільство в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  type: reference
+  notes: Civil society overview
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Euromaidan self-organization
 content_outline:
-  - section: Вступ — Самоорганізація
-    words: 400
-    points:
-      - Громадянське суспільство — що це
-      - Коли держава не працює
-      - Україна — особливий випадок
-      - Структура модуля
-
-  - section: Історичні корені
-    words: 600
-    points:
-      - Козацьке самоврядування
-      - «Просвіта» і кооперативи
-      - Радянський період — знищення
-      - Відродження після 1991
-
-  - section: Майдан як лабораторія
-    words: 700
-    points:
-      - 2004 — Помаранчева революція
-      - 2013-2014 — Євромайдан
-      - Самоорганізація — як працювала
-      - «Республіка Майдан»
-
-  - section: Волонтерський рух
-    words: 600
-    points:
-      - 2014 — армія без держави
-      - Волонтери — хто вони
-      - Масштаб — мільйони
-      - Паралельні структури
-
-  - section: Після 2022
-    words: 500
-    points:
-      - Миттєва мобілізація
-      - Територіальна оборона
-      - Гуманітарна допомога
-      - Держава + суспільство
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Громадянське суспільство — сила
-      - Коли держава слабка — суспільство сильне
-      - Перехід до Гранітної революції
-
+- section: Вступ — Самоорганізація
+  words: 451
+  points:
+  - Громадянське суспільство — що це
+  - Коли держава не працює
+  - Україна — особливий випадок
+  - Структура модуля
+- section: Історичні корені
+  words: 677
+  points:
+  - Козацьке самоврядування
+  - «Просвіта» і кооперативи
+  - Радянський період — знищення
+  - Відродження після 1991
+- section: Майдан як лабораторія
+  words: 790
+  points:
+  - 2004 — Помаранчева революція
+  - 2013-2014 — Євромайдан
+  - Самоорганізація — як працювала
+  - «Республіка Майдан»
+- section: Волонтерський рух
+  words: 677
+  points:
+  - 2014 — армія без держави
+  - Волонтери — хто вони
+  - Масштаб — мільйони
+  - Паралельні структури
+- section: Після 2022
+  words: 564
+  points:
+  - Миттєва мобілізація
+  - Територіальна оборона
+  - Гуманітарна допомога
+  - Держава + суспільство
+- section: Підсумок
+  words: 341
+  points:
+  - Громадянське суспільство — сила
+  - Коли держава слабка — суспільство сильне
+  - Перехід до Гранітної революції
 vocabulary_hints:
   required:
-    - громадянське суспільство (civil society)
-    - самоорганізація (self-organization)
-    - волонтер (volunteer)
-    - самоврядування (self-governance)
-    - Майдан (Maidan)
-    - територіальна оборона (territorial defense)
-    - паралельні структури (parallel structures)
-    - мобілізація (mobilization)
-    - солідарність (solidarity)
-    - держава (state)
+  - громадянське суспільство (civil society)
+  - самоорганізація (self-organization)
+  - волонтер (volunteer)
+  - самоврядування (self-governance)
+  - Майдан (Maidan)
+  - територіальна оборона (territorial defense)
+  - паралельні структури (parallel structures)
+  - мобілізація (mobilization)
+  - солідарність (solidarity)
+  - держава (state)
   recommended:
-    - краудфандинг (crowdfunding)
-    - НГО (NGO)
-    - горизонтальні зв'язки (horizontal ties)
-    - низова ініціатива (grassroots initiative)
-    - «Республіка Майдан» (Maidan Republic)
-
+  - краудфандинг (crowdfunding)
+  - НГО (NGO)
+  - горизонтальні зв'язки (horizontal ties)
+  - низова ініціатива (grassroots initiative)
+  - «Республіка Майдан» (Maidan Republic)
 activity_hints:
-  - type: historical-roots
-    focus: Trace civil society from Cossacks to Maidan
-    output: Historical evolution
-
-  - type: self-organization
-    focus: How Euromaidan self-organized — case study
-    output: Organization analysis
-
-  - type: volunteer-movement
-    focus: 2014 volunteer army — how it worked
-    output: Volunteer movement study
-
-  - type: 2022-analysis
-    focus: Instant mobilization — why it worked
-    output: Mobilization analysis
-
-  - type: essay-response
-    focus: "Чому українське громадянське суспільство сильніше за державу?"
-    word_target: 400
-    model_answer: Required
-
+- type: historical-roots
+  focus: Trace civil society from Cossacks to Maidan
+  output: Historical evolution
+- type: self-organization
+  focus: How Euromaidan self-organized — case study
+  output: Organization analysis
+- type: volunteer-movement
+  focus: 2014 volunteer army — how it worked
+  output: Volunteer movement study
+- type: 2022-analysis
+  focus: Instant mobilization — why it worked
+  output: Mobilization analysis
+- type: essay-response
+  focus: Чому українське громадянське суспільство сильніше за державу?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-126 (Cultural resistance)
-  - c1-hist-93 (2004 vs 2014)
-
+- c1-hist-126 (Cultural resistance)
+- c1-hist-93 (2004 vs 2014)
 connects_to:
-  - c1-hist-128 (Granite Revolution)
-  - c1-hist-131 (Why 2022 worked)
+- c1-hist-128 (Granite Revolution)
+- c1-hist-131 (Why 2022 worked)

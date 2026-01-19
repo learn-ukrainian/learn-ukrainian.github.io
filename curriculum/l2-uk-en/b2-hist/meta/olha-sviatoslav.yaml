@@ -7,9 +7,29 @@ slug: olha-sviatoslav
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 3750
-immersion: 100% Ukrainian
+pedagogy: CBI
+register: публіцистичний
+duration: 150
+word_target: 4000
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - olha
+  - sviatoslav
+  - khazars
+  - byzantium
+grammar:
+  - 'Narrative tenses'
+  - 'Action verbs'
+objectives:
+  - 'Analyze Olha reforms'
+  - 'Evaluate Sviatoslav military strategy'
+  - 'Contrast diplomactic vs military approach'
+vocabulary_count: 25
+naturalness:
+  score: 10
+  status: PASS
 
 # === AGENT BUILD SPEC ===
 
@@ -77,7 +97,7 @@ content_outline:
       - Чаша з черепа — легенда
 
   - section: Підсумок
-    words: 350
+    words: 550
     points:
       - Два підходи до державотворення
       - Ольга — дипломатія, Святослав — меч

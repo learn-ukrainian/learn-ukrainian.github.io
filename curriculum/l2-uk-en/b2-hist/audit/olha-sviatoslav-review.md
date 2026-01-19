@@ -1,0 +1,51 @@
+# Audit Report: olha-sviatoslav.md
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 4002/4000
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 6/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 3 | 3 | 100% | 24% | 23.8% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 8 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 0.99 | - | 99% | 5% | 4.7% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 68 | Included in Core |
+| **Вступ** | ⚪️ | 82 | Skipped |
+| **Читання** | ✅ | 1018 | Included in Core |
+| **Первинні джерела** | ⚪️ | 130 | Skipped |
+| **Деколонізаційний погляд** | ⚪️ | 103 | Skipped |
+| **Підсумок** | ✅ | 1285 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 1316 | Skipped |

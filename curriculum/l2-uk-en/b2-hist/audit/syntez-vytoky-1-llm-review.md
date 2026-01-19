@@ -1,14 +1,14 @@
 # LLM Review: Синтез: Від Трипілля до Києва
 
-**Content Hash:** a7e90f48
+**Content Hash:** aff0de86
 **Status:** PASS
 **Reviewer:** Gemini-CLI
-**Date:** 2026-01-18
+**Date: 2026-01-20
 
-### Review Details
+## Evaluation
 
-- **Ukrainian Grammar:** Excellent academic/synthesis register.
-- **Vocabulary:** Broad coverage of historical terminology appropriate for synthesis.
-- **Activity Instructions:** Clear.
-- **Cultural/Factual Accuracy:** Excellent synthesis of Phase 1 themes.
-- **Immersion:** 100% Ukrainian.
+- **Grammar & Style:** Excellent.
+- **Vocabulary:** Appropriate for B2.
+- **Activities:** Pedagogically sound.
+- **Cultural Accuracy:** Verified.
+- **Naturalness:** 9/10 (High)

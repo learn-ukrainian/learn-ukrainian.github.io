@@ -1,164 +1,141 @@
-# B2-HIST Module 04: Слов'яни: Походження та розселення
-# Status: ACTIVE (Audit Passed)
-
 module: b2-hist-04
 id: b2-hist-04
 title: Слов'яни на українських землях — Витоки державності
-subtitle: 'Slavic Origins and Statehood'
+subtitle: Slavic Origins and Statehood
 slug: sloviany-origins
 version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
+phase: B2-HIST.1 [Витоки]
 focus: history
-pedagogy: 'seminar'
+pedagogy: seminar
 register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-  - history
-  - early-medieval
-  - slavs
+- history
+- early-medieval
+- slavs
 grammar:
-  - Історичний наратив
-  - Минулий час у науковому тексті
+- Історичний наратив
+- Минулий час у науковому тексті
 objectives:
-  - Учень може описувати слов'янські племена на українських землях
-  - Учень може аналізувати свідчення античних авторів про слов'ян
-  - Учень може аргументувати зв'язок між племінною демократією і українською політичною традицією
+- Учень може описувати слов'янські племена на українських землях
+- Учень може аналізувати свідчення античних авторів про слов'ян
+- Учень може аргументувати зв'язок між племінною демократією і українською політичною
+  традицією
 vocabulary_count: 30
 naturalness:
   score: 9
   status: PASS
-
 module_type: history
-word_target: 3750
+word_target: 4000
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Слов'яни (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Слов%27яни
-    type: reference
-    notes: Overview of Slavic origins
-  - name: Праслов'яни (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Праслов%27яни
-    type: reference
-    notes: Proto-Slavic homeland theories
-  - name: Повість минулих літ
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Primary Chronicle on Slavic origins
-
+- name: Слов'яни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слов%27яни
+  type: reference
+  notes: Overview of Slavic origins
+- name: Праслов'яни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праслов%27яни
+  type: reference
+  notes: Proto-Slavic homeland theories
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Primary Chronicle on Slavic origins
 content_outline:
-  - section: Вступ — Хто такі слов'яни?
-    words: 500
-    points:
-      - Слов'яни як одна з найбільших етнічних груп Європи
-      - Мовна та культурна спорідненість
-      - Проблема визначення прабатьківщини
-      - Джерела знань — археологія, лінгвістика, писемні джерела
-
-  - section: Теорії походження
-    words: 700
-    points:
-      - Дунайська теорія (за Повістю минулих літ)
-      - Вісло-Дніпровська теорія
-      - Сучасні погляди — між Вислою та Середнім Дніпром
-      - Археологічні культури праслов'ян
-
-  - section: Праслов'янська мова та культура
-    words: 600
-    points:
-      - Відокремлення від індоєвропейської мовної сім'ї
-      - Спільнослов'янська лексика
-      - Язичницькі вірування
-      - Господарство та побут
-
-  - section: Велике розселення слов'ян
-    words: 600
-    points:
-      - Причини міграцій V-VII ст.
-      - Напрямки розселення — захід, південь, схід
-      - Формування трьох гілок — західні, південні, східні слов'яни
-      - Контакти з іншими народами
-
-  - section: Східні слов'яни
-    words: 500
-    points:
-      - Племена східних слов'ян за Повістю минулих літ
-      - Розселення на українських землях
-      - Поляни, древляни, сіверяни та інші
-      - Передумови формування Русі
-
-  - section: Слов'яни та сусіди
-    words: 500
-    points:
-      - Відносини з Візантією
-      - Аварський каганат
-      - Хозарський каганат
-      - Культурні запозичення
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Формування слов'янської ідентичності
-      - Українські землі як центр східного слов'янства
-      - Перехід до слов'янських племен на українських землях
-
+- section: Вступ — Хто такі слов'яни?
+  words: 533
+  points:
+  - Слов'яни як одна з найбільших етнічних груп Європи
+  - Мовна та культурна спорідненість
+  - Проблема визначення прабатьківщини
+  - Джерела знань — археологія, лінгвістика, писемні джерела
+- section: Теорії походження
+  words: 746
+  points:
+  - Дунайська теорія (за Повістю минулих літ)
+  - Вісло-Дніпровська теорія
+  - Сучасні погляди — між Вислою та Середнім Дніпром
+  - Археологічні культури праслов'ян
+- section: Праслов'янська мова та культура
+  words: 640
+  points:
+  - Відокремлення від індоєвропейської мовної сім'ї
+  - Спільнослов'янська лексика
+  - Язичницькі вірування
+  - Господарство та побут
+- section: Велике розселення слов'ян
+  words: 640
+  points:
+  - Причини міграцій V-VII ст.
+  - Напрямки розселення — захід, південь, схід
+  - Формування трьох гілок — західні, південні, східні слов'яни
+  - Контакти з іншими народами
+- section: Східні слов'яни
+  words: 533
+  points:
+  - Племена східних слов'ян за Повістю минулих літ
+  - Розселення на українських землях
+  - Поляни, древляни, сіверяни та інші
+  - Передумови формування Русі
+- section: Слов'яни та сусіди
+  words: 533
+  points:
+  - Відносини з Візантією
+  - Аварський каганат
+  - Хозарський каганат
+  - Культурні запозичення
+- section: Підсумок
+  words: 375
+  points:
+  - Формування слов'янської ідентичності
+  - Українські землі як центр східного слов'янства
+  - Перехід до слов'янських племен на українських землях
 vocabulary_hints:
   required:
-    - слов'яни (Slavs)
-    - праслов'яни (Proto-Slavs)
-    - прабатьківщина (homeland)
-    - розселення (settlement/migration)
-    - плем'я (tribe)
-    - язичництво (paganism)
-    - міграція (migration)
-    - археологічна культура (archaeological culture)
-    - лінгвістика (linguistics)
-    - етнос (ethnos)
-    - гілка (branch)
-    - спорідненість (kinship)
+  - слов'яни (Slavs)
+  - праслов'яни (Proto-Slavs)
+  - прабатьківщина (homeland)
+  - розселення (settlement/migration)
+  - плем'я (tribe)
+  - язичництво (paganism)
+  - міграція (migration)
+  - археологічна культура (archaeological culture)
+  - лінгвістика (linguistics)
+  - етнос (ethnos)
+  - гілка (branch)
+  - спорідненість (kinship)
   recommended:
-    - індоєвропейці (Indo-Europeans)
-    - Повість минулих літ (Primary Chronicle)
-    - каганат (khaganate)
-    - побут (everyday life)
-    - господарство (economy)
-
+  - індоєвропейці (Indo-Europeans)
+  - Повість минулих літ (Primary Chronicle)
+  - каганат (khaganate)
+  - побут (everyday life)
+  - господарство (economy)
 activity_hints:
-  - type: reading
-    focus: Excerpt from Primary Chronicle about Slavic origins
-    source: Provide in module
-
-  - type: map-activity
-    focus: Trace Slavic migration routes
-    items: "3 stages of migration"
-
-  - type: vocabulary
-    focus: Ethnographic and historical terminology
-    items: "15+"
-
-  - type: compare-contrast
-    focus: Different theories of Slavic homeland
-    output: Summary table
-
-  - type: quiz
-    focus: Slavic origins and migration
-    items: "12+"
-
-  - type: timeline
-    focus: Key periods in Slavic history
-    items: "8+"
-
-  - type: discussion
-    focus: "Чому важливо знати походження слов'ян для розуміння української історії?"
-
+- type: reading
+  focus: Excerpt from Primary Chronicle about Slavic origins
+  source: Provide in module
+- type: map-activity
+  focus: Trace Slavic migration routes
+  items: 3 stages of migration
+- type: vocabulary
+  focus: Ethnographic and historical terminology
+  items: 15+
+- type: compare-contrast
+  focus: Different theories of Slavic homeland
+  output: Summary table
+- type: quiz
+  focus: Slavic origins and migration
+  items: 12+
+- type: timeline
+  focus: Key periods in Slavic history
+  items: 8+
+- type: discussion
+  focus: Чому важливо знати походження слов'ян для розуміння української історії?
 prerequisites:
-  - b2-hist-03 (Greek city-states)
-  - Basic knowledge of European history
-
+- b2-hist-03 (Greek city-states)
+- Basic knowledge of European history
 connects_to:
-  - b2-hist-05 (Slavic tribes on Ukrainian lands)
-  - b2-hist-07 (Khazar Khaganate)
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- b2-hist-05 (Slavic tribes on Ukrainian lands)
+- b2-hist-07 (Khazar Khaganate)
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'

@@ -6,6 +6,7 @@ module: c1-bio-07
 title: "Роксолана: Від рабині до султанші"
 slug: roksolana
 module_type: biography
+description: "Biography of Roksolana (Hürrem Sultan), the Ukrainian slave girl who became the legal wife of Suleiman the Magnificent. Explores her political influence, patronage, and the 'Sultanate of Women' phenomenon."
 word_target: 4000
 immersion: "100% Ukrainian"
 version: '2.0'

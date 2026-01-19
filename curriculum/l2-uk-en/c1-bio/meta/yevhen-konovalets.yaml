@@ -1,144 +1,121 @@
-# C1-BIO Module 108: Євген Коновалець: Полковник і організатор
-# Status: SPEC (ready for content development)
-
 id: c1-bio-108
-title: "Євген Коновалець: Полковник і організатор"
+title: 'Євген Коновалець: Полковник і організатор'
 slug: yevhen-konovalets
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Євген Коновалець (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
-    type: primary
-    notes: Military career, OUN leadership, assassination
-  - name: Січові Стрільці
-    url: https://uk.wikipedia.org/wiki/Січові_стрільці
-    type: reference
-    notes: Military formation he led
-  - name: Організація українських націоналістів
-    url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
-    type: reference
-    notes: Organization he founded
-  - name: СЗР України - Коновалець
-    url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
-    type: reference
-    notes: Intelligence service historical page
-
+- name: Євген Коновалець (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
+  type: primary
+  notes: Military career, OUN leadership, assassination
+- name: Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Січові_стрільці
+  type: reference
+  notes: Military formation he led
+- name: Організація українських націоналістів
+  url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
+  type: reference
+  notes: Organization he founded
+- name: СЗР України - Коновалець
+  url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
+  type: reference
+  notes: Intelligence service historical page
 content_outline:
-  - section: Вступ — Архітектор національного руху
-    words: 400
-    points:
-      - Коновалець як творець організованого опору
-      - Від військового командира до політичного лідера
-      - Трагічна загибель від рук НКВД
-
-  - section: Молодість і Перша світова війна
-    words: 600
-    points:
-      - Народження в Галичині (1891)
-      - Юридична освіта у Львові
-      - Служба в австрійській армії
-      - Російський полон і формування Січових Стрільців
-
-  - section: Командир Січових Стрільців
-    words: 700
-    points:
-      - Бої за Київ (1918)
-      - Захист УНР
-      - Листопадовий чин у Львові
-      - Поразка і еміграція
-
-  - section: Створення ОУН
-    words: 700
-    points:
-      - Українська Військова Організація (1920)
-      - Підпільна боротьба в Польщі
-      - Заснування ОУН (1929)
-      - Ідеологія та стратегія руху
-
-  - section: Лідер в еміграції
-    words: 600
-    points:
-      - Дипломатична діяльність
-      - Пошук союзників для України
-      - Конфлікти всередині руху
-      - Підготовка до майбутньої боротьби
-
-  - section: Вбивство та спадщина
-    words: 500
-    points:
-      - Замах НКВД у Роттердамі (1938)
-      - Павло Судоплатов — вбивця
-      - Вплив на ОУН після смерті
-      - Коновалець як символ боротьби
-
+- section: Вступ — Архітектор національного руху
+  words: 457
+  points:
+  - Коновалець як творець організованого опору
+  - Від військового командира до політичного лідера
+  - Трагічна загибель від рук НКВД
+- section: Молодість і Перша світова війна
+  words: 685
+  points:
+  - Народження в Галичині (1891)
+  - Юридична освіта у Львові
+  - Служба в австрійській армії
+  - Російський полон і формування Січових Стрільців
+- section: Командир Січових Стрільців
+  words: 800
+  points:
+  - Бої за Київ (1918)
+  - Захист УНР
+  - Листопадовий чин у Львові
+  - Поразка і еміграція
+- section: Створення ОУН
+  words: 800
+  points:
+  - Українська Військова Організація (1920)
+  - Підпільна боротьба в Польщі
+  - Заснування ОУН (1929)
+  - Ідеологія та стратегія руху
+- section: Лідер в еміграції
+  words: 685
+  points:
+  - Дипломатична діяльність
+  - Пошук союзників для України
+  - Конфлікти всередині руху
+  - Підготовка до майбутньої боротьби
+- section: Вбивство та спадщина
+  words: 573
+  points:
+  - Замах НКВД у Роттердамі (1938)
+  - Павло Судоплатов — вбивця
+  - Вплив на ОУН після смерті
+  - Коновалець як символ боротьби
 vocabulary_hints:
   required:
-    - полковник (colonel)
-    - Січові Стрільці (Sich Riflemen)
-    - підпілля (underground)
-    - націоналізм (nationalism)
-    - еміграція (emigration)
-    - замах (assassination attempt)
-    - визвольний рух (liberation movement)
-    - організатор (organizer)
-    - диверсія (sabotage)
-    - конспірація (conspiracy)
+  - полковник (colonel)
+  - Січові Стрільці (Sich Riflemen)
+  - підпілля (underground)
+  - націоналізм (nationalism)
+  - еміграція (emigration)
+  - замах (assassination attempt)
+  - визвольний рух (liberation movement)
+  - організатор (organizer)
+  - диверсія (sabotage)
+  - конспірація (conspiracy)
   recommended:
-    - ідеологія (ideology)
-    - збройна боротьба (armed struggle)
-    - політв'язень (political prisoner)
-    - самостійність (independence)
-    - інтернований (interned)
-
+  - ідеологія (ideology)
+  - збройна боротьба (armed struggle)
+  - політв'язень (political prisoner)
+  - самостійність (independence)
+  - інтернований (interned)
 activity_hints:
-  - type: reading
-    focus: Konovalets's speeches and documents
-    source: Historical archives
-    items: "3 passages"
-
-  - type: quiz
-    focus: Konovalets's military and political career
-    items: "12+"
-
-  - type: match-up
-    focus: Organizations and their roles
-    items: "10+"
-
-  - type: essay-response
-    focus: How did Konovalets transform military defeat into political movement?
-    word_target: 300
-    output: Strategic analysis
-
-  - type: group-sort
-    focus: Military vs. political phases of his career
-    items: "12+"
-
-  - type: fill-in
-    focus: Key dates and events
-    items: "10+"
-
-  - type: discussion
-    focus: Why did Stalin order Konovalets killed?
-    output: Analysis of threat perception
-
+- type: reading
+  focus: Konovalets's speeches and documents
+  source: Historical archives
+  items: 3 passages
+- type: quiz
+  focus: Konovalets's military and political career
+  items: 12+
+- type: match-up
+  focus: Organizations and their roles
+  items: 10+
+- type: essay-response
+  focus: How did Konovalets transform military defeat into political movement?
+  word_target: 300
+  output: Strategic analysis
+- type: group-sort
+  focus: Military vs. political phases of his career
+  items: 12+
+- type: fill-in
+  focus: Key dates and events
+  items: 10+
+- type: discussion
+  focus: Why did Stalin order Konovalets killed?
+  output: Analysis of threat perception
 prerequisites:
-  - c1-bio-44 (Symon Petliura - UNR leader)
-  - c1-bio-53 (Petro Bolbochan - military figure)
-  - Understanding of interwar Ukrainian politics
-
+- c1-bio-44 (Symon Petliura - UNR leader)
+- c1-bio-53 (Petro Bolbochan - military figure)
+- Understanding of interwar Ukrainian politics
 connects_to:
-  - c1-bio-109 (Roman Shukhevych - his successor)
-  - c1-bio-52 (Dmytro Dontsov - ideologist)
-  - c1-bio-44 (Symon Petliura - earlier leader)
-
+- c1-bio-109 (Roman Shukhevych - his successor)
+- c1-bio-52 (Dmytro Dontsov - ideologist)
+- c1-bio-44 (Symon Petliura - earlier leader)
 naturalness:
   score: 1
   status: PENDING

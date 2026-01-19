@@ -1,156 +1,133 @@
-# C1-BIO Module 09: Сильвестр Косів: Освітянин і будівничий
-# Status: SPEC (ready for content development)
-
 id: c1-bio-09
 module: c1-bio-09
-title: "Сильвестр Косів: Освітянин і будівничий"
+title: 'Сильвестр Косів: Освітянин і будівничий'
 slug: sylvestr-kosiv
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
 duration: 120
 transliteration: none
-pedagogy: "CBI"
+pedagogy: CBI
 tags:
-  - history
-  - biography
-  - religion
-  - education
-  - diplomacy
+- history
+- biography
+- religion
+- education
+- diplomacy
 objectives:
-  - "Проаналізувати дипломатичну стратегію Сильвестра Косіва"
-  - "Зрозуміти роль православної церкви в подіях Хмельниччини"
-  - "Вивчити лексику, пов'язану з церковною автономією та правом"
+- Проаналізувати дипломатичну стратегію Сильвестра Косіва
+- Зрозуміти роль православної церкви в подіях Хмельниччини
+- Вивчити лексику, пов'язану з церковною автономією та правом
 grammar:
-  - "Historical narrative register"
-  - "Legal and ecclesiastical terminology"
-  - "Rhetorical argumentation"
-
-# === AGENT BUILD SPEC ===
-
+- Historical narrative register
+- Legal and ecclesiastical terminology
+- Rhetorical argumentation
 sources:
-  - name: Сильвестр Косів (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
-    type: primary
-    notes: Biography, metropolitanate, relations with Khmelnytskyi
-  - name: Києво-Могилянська академія
-    url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-    type: reference
-    notes: Educational institution context
-  - name: Повстання Хмельницького
-    url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
-    type: reference
-    notes: Historical context
-
+- name: Сильвестр Косів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  type: primary
+  notes: Biography, metropolitanate, relations with Khmelnytskyi
+- name: Києво-Могилянська академія
+  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  type: reference
+  notes: Educational institution context
+- name: Повстання Хмельницького
+  url: https://uk.wikipedia.org/wiki/Повстання_Хмельницького
+  type: reference
+  notes: Historical context
 content_outline:
-  - section: Вступ — Митрополит бурхливої епохи
-    words: 400
-    points:
-      - Косів між церквою та державою
-      - Його роль у період Хмельниччини
-      - Значення для церковної історії
-
-  - section: Освіта та кар'єра до митрополитства
-    words: 600
-    points:
-      - Походження та молодість
-      - Навчання в європейських університетах
-      - Викладацька діяльність
-      - Зв'язок із Петром Могилою
-
-  - section: Митрополит Київський
-    words: 700
-    points:
-      - Обрання на кафедру 1647 року
-      - Церковна реформа та управління
-      - Розвиток освіти та друкарства
-      - Будівельні проекти
-
-  - section: Церква і Хмельницький
-    words: 800
-    points:
-      - Позиція церкви щодо повстання
-      - Відносини з гетьманом
-      - Переяславська рада 1654 року
-      - Церковний статус після Переяслава
-
-  - section: Останні роки та суперечки
-    words: 700
-    points:
-      - Конфлікт із московським патріархатом
-      - Захист автономії Київської митрополії
-      - Смерть та обставини
-      - Спадщина в церковній традиції
-
-  - section: Підсумок — Дипломат духу
-    words: 300
-    points:
-      - Косів як будівничий церкви
-      - Його роль у збереженні автономії
-      - Актуальність його боротьби сьогодні
-
+- section: Вступ — Митрополит бурхливої епохи
+  words: 457
+  points:
+  - Косів між церквою та державою
+  - Його роль у період Хмельниччини
+  - Значення для церковної історії
+- section: Освіта та кар'єра до митрополитства
+  words: 685
+  points:
+  - Походження та молодість
+  - Навчання в європейських університетах
+  - Викладацька діяльність
+  - Зв'язок із Петром Могилою
+- section: Митрополит Київський
+  words: 800
+  points:
+  - Обрання на кафедру 1647 року
+  - Церковна реформа та управління
+  - Розвиток освіти та друкарства
+  - Будівельні проекти
+- section: Церква і Хмельницький
+  words: 914
+  points:
+  - Позиція церкви щодо повстання
+  - Відносини з гетьманом
+  - Переяславська рада 1654 року
+  - Церковний статус після Переяслава
+- section: Останні роки та суперечки
+  words: 800
+  points:
+  - Конфлікт із московським патріархатом
+  - Захист автономії Київської митрополії
+  - Смерть та обставини
+  - Спадщина в церковній традиції
+- section: Підсумок — Дипломат духу
+  words: 344
+  points:
+  - Косів як будівничий церкви
+  - Його роль у збереженні автономії
+  - Актуальність його боротьби сьогодні
 vocabulary_hints:
   required:
-    - митрополит (metropolitan)
-    - кафедра (see/cathedra)
-    - автономія (autonomy)
-    - патріархат (patriarchate)
-    - друкарня (printing house)
-    - академія (academy)
-    - єпископат (episcopate)
-    - ставропігія (stauropegia)
-    - собор (council)
-    - автокефалія (autocephaly)
+  - митрополит (metropolitan)
+  - кафедра (see/cathedra)
+  - автономія (autonomy)
+  - патріархат (patriarchate)
+  - друкарня (printing house)
+  - академія (academy)
+  - єпископат (episcopate)
+  - ставропігія (stauropegia)
+  - собор (council)
+  - автокефалія (autocephaly)
   recommended:
-    - архімандрит (archimandrite)
-    - лавра (lavra)
-    - грамота (charter)
-    - синод (synod)
-    - церковнослов'янська (Church Slavonic)
-
+  - архімандрит (archimandrite)
+  - лавра (lavra)
+  - грамота (charter)
+  - синод (synod)
+  - церковнослов'янська (Church Slavonic)
 activity_hints:
-  - type: reading
-    focus: Church documents from Kosiv's era
-    source: Adapted historical sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Facts about church-state relations in 17th century
-    items: "12+"
-
-  - type: match-up
-    focus: Key figures and their positions
-    items: "10+"
-
-  - type: essay-response
-    focus: How did Kosiv balance church autonomy and political realities?
-    word_target: 250
-    output: Analysis with specific examples
-
-  - type: group-sort
-    focus: Polish period vs. Muscovite period church status
-    items: "12+"
-
-  - type: fill-in
-    focus: Church administrative terminology
-    items: "8+"
-
-  - type: discussion
-    focus: Relevance of 17th century church struggles to modern autocephaly
-    output: Historical parallels
-
+- type: reading
+  focus: Church documents from Kosiv's era
+  source: Adapted historical sources
+  items: 3 passages
+- type: quiz
+  focus: Facts about church-state relations in 17th century
+  items: 12+
+- type: match-up
+  focus: Key figures and their positions
+  items: 10+
+- type: essay-response
+  focus: How did Kosiv balance church autonomy and political realities?
+  word_target: 250
+  output: Analysis with specific examples
+- type: group-sort
+  focus: Polish period vs. Muscovite period church status
+  items: 12+
+- type: fill-in
+  focus: Church administrative terminology
+  items: 8+
+- type: discussion
+  focus: Relevance of 17th century church struggles to modern autocephaly
+  output: Historical parallels
 prerequisites:
-  - c1-bio-08 (Iov Boretskyi - predecessor)
-  - Understanding of 17th century geopolitics
-
+- c1-bio-08 (Iov Boretskyi - predecessor)
+- Understanding of 17th century geopolitics
 connects_to:
-  - c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
-  - c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
-  - c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
-
+- c1-bio-10 (Bohdan Khmelnytskyi - secular counterpart)
+- c1-bio-11 (Yuriy Nemyrych - Treaty of Hadiach context)
+- c1-bio-98 (Ivan Ohienko - later autocephaly struggle)
 naturalness:
   score: 10
   status: PASS
