@@ -5,8 +5,8 @@ modules:
   # Medieval Era (pre-1500)
   - knyahynia-olha          # ~890-969
   - kniaz-sviatoslav        # ~942-972
-  - kniaz-yaroslav-mudryi   # 978-1054
   - volodymyr-velykii       # 958-1015 (Volodymyr the Great)
+  - kniaz-yaroslav-mudryi   # 978-1054
   - knyazhna-anna-yaroslavna # ~1030-1075
   - mykhailo-chernihivskyi  # ~1185-1246
 
@@ -40,23 +40,27 @@ modules:
   - mykola-lysenko          # 1842-1912
   - olena-pchilka           # 1849-1930
   - mariya-zankovetska      # 1854-1934
+  - mariya-pavlova          # 1854-1938 (Paleontologist)
   - nataliya-kobrynska      # 1855-1920
   - ivan-franko             # 1856-1916
   - yevhen-chykalenko       # 1861-1929
   - volodymyr-vernadskyi    # 1863-1945
   - borys-hrinchenko        # 1863-1910
+  - olha-kobylianska        # 1863-1942
   - kyrylo-trylovskyi       # 1864-1941
   - ivan-lypa               # 1865-1923
   - sofiya-okunevska        # 1865-1926
-  - olha-kobylianska        # 1863-1942
+
   - mykola-vasylenko        # 1866-1935
   - mykhailo-hrushevskyi-biography # 1866-1934
   - liudmyla-starytska      # 1868-1941
+  - mariia-voiakovska       # 1868-19?? (Wife of Hrushevsky)
   - yulian-bachynskyi       # 1870-1940
   - lesya-ukrainka          # 1871-1913
   - ahatanhel-krymskyi      # 1871-1942
   - solomiya-krushelnytska  # 1872-1952
   - mykola-mikhnovskyi      # 1873-1924
+  - oleksandr-hrekiv        # 1875-1959
   - mykola-leontovych       # 1877-1921
   - symon-petliura          # 1879-1926
   - kazimir-malevich        # 1879-1935
@@ -66,6 +70,7 @@ modules:
   - petro-bolbochan         # 1883-1919
   - dmytro-dontsov          # 1883-1973
   - nataliia-polonska-vasylenko # 1884-1973
+  - valentyna-radzymovska   # 1886-1953 (Biochemist)
   - oleksandr-arkhypenko    # 1887-1964
   - les-kurbas              # 1887-1937
   - olha-basarab            # 1889-1924
@@ -80,8 +85,8 @@ modules:
   - serge-lifar             # 1905-1986
   - olena-teliha            # 1906-1942
   - mariia-prymachenko      # 1909-1997
+  - kateryna-yushchenko     # 1919-2001 (Cyberneticist)
   - mykola-pohribnyi        # 1921-2022
-  - kateryna-yushchenko     # 1924-2001
   - levko-lukyanenko        # 1928-2018
   - alla-horska             # 1929-1970
   - dmytro-pavlychko        # 1929-2023
@@ -108,11 +113,7 @@ modules:
   - kateryna-kalytko        # 1982-
   - oleksandra-matviichuk   # 1983-
 
-  # Missing from my knowledge - need to verify:
-  # - mariia-voiakovska
-  # - mariya-pavlova
-  # - valentyna-radzymovska
-  # - oleksandr-hrekiv
+
 
   # Checkpoint (place at end)
   - c1-bio-checkpoint

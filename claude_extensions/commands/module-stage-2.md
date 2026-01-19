@@ -56,6 +56,22 @@ Then: `curriculum/l2-uk-en/{level}/{slug}.md`
 
 If file doesn't exist or has no skeleton, STOP and report: "Run Stage 1 first."
 
+### Step 2b: Check & Hydrate Plan (Fractal Generation)
+
+Before writing content, verify the module has a detailed `content_outline`.
+
+1. **Run Check:**
+   ```bash
+   .venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/{level}/meta/{slug}.yaml
+   ```
+
+2. **If Output says "needs hydration":**
+   - **Activate Skill:** `architect`
+   - **Instruction:** "Hydrate `meta/{slug}.yaml` using template `{template_path}` as identified by the script."
+   - **Wait:** Confirm hydration is complete (YAML updated) before proceeding.
+
+3. **If Output says "already hydrated":** Proceed to Step 3.
+
 ### Step 3: Determine Targets
 
 From the level, identify:

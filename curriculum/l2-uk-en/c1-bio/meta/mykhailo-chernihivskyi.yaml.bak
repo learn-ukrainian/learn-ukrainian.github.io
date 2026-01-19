@@ -10,26 +10,6 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
-duration: 120
-transliteration: none
-pedagogy: CBI
-tags:
-  - history
-  - biography
-  - middle-ages
-  - kyivan-rus
-  - resistance
-  - church
-grammar:
-  - 'Historical narrative register'
-  - 'Church Slavonicisms'
-  - 'Rhetorical antithesis'
-  - 'Vocative case nuances'
-objectives:
-  - 'Analyze the historical significance of Prince Mykhailo''s martyrdom'
-  - 'Understand the concept of spiritual resistance in Ukrainian history'
-  - 'Compare political strategies of Mykhailo Chernihivskyi and Alexander Nevsky'
-  - 'Master vocabulary related to martyrdom, canonization, and medieval politics'
 
 # === AGENT BUILD SPEC ===
 
@@ -162,5 +142,5 @@ connects_to:
   - c1-bio-77 (Vasyl Stus - another martyr for beliefs)
 
 naturalness:
-  score: 9
-  status: PASS
+  score: null
+  status: PENDING

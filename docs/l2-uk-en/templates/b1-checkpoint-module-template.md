@@ -12,7 +12,7 @@ TEMPLATE_METADATA:
   - Огляд
   - Підсумок
   pedagogy: TTT
-  min_word_count: 1500
+  min_word_count: 1200
   required_callouts: []
   description: B1 checkpoint uses TTT for comprehensive review and testing
 -->
@@ -28,7 +28,7 @@ Before submitting a B1 checkpoint module, verify all items from `b1-grammar-modu
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
 - [ ] **Word count:** 1200+ words (review content, not new teaching)
 - [ ] **Vocabulary:** 30-40 items (review vocabulary from ALL modules in phase)
-- [ ] **Activities:** 16+ comprehensive testing activities
+- [ ] **Activities:** 10+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase
 - [ ] **Self-assessment:** "Чи можете ви..." checklist at end
 - [ ] **Immersion:** 100% Ukrainian (English only in vocabulary translations)

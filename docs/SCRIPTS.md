@@ -126,11 +126,12 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 ### Meta & Vocabulary (Python)
 
-| Script                  | Purpose                     | Command                                                      |
-| ----------------------- | --------------------------- | ------------------------------------------------------------ |
-| `validate_meta_yaml.py` | Meta YAML schema validation | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
-| `vocab_init.py`         | Create fresh vocabulary DB  | `npm run vocab:init`                                         |
-| `populate_vocab_db.py`  | Populate DB from modules    | `npm run vocab:scan`                                         |
+| Script                  | Purpose                               | Command                                                      |
+| ----------------------- | ------------------------------------- | ------------------------------------------------------------ |
+| `validate_meta_yaml.py` | Meta YAML schema validation           | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
+| `check_hydration.py`    | Fractal outline status checker        | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
+| `vocab_init.py`         | Create fresh vocabulary DB            | `npm run vocab:init`                                         |
+| `populate_vocab_db.py`  | Populate DB from modules              | `npm run vocab:scan`                                         |
 
 ---
 
@@ -347,6 +348,24 @@ Or with issues:
 
 ---
 
+### check_hydration.py
+
+**Purpose:** Fractal hydration checker. Verifies if a Meta YAML has a detailed `content_outline` required for fractal generation. If missing, it provides instructions for the `architect` skill.
+
+**Usage:**
+
+```bash
+.venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/b2-hist/meta/afhanistan.yaml
+```
+
+**Logic:**
+
+1. **Check Existence:** Ensures `content_outline` field is present and non-empty.
+2. **Template Match:** Locates the corresponding pedagogical template in `docs/l2-uk-en/templates/`.
+3. **Action:** If missing, outputs a set of instructions for the AI Agent to activate the `architect` skill to "hydrate" the skeleton with a plan.
+
+---
+
 ### audit_module.py
 
 **Purpose:** Comprehensive module quality checker (Python). Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
@@ -376,7 +395,7 @@ Or with issues:
 
 ---
 
-## Staged Generation Scripts
+### Staged Generation Scripts
 
 These scripts support the staged module generation workflow where modules are built incrementally with hard gates between stages.
 
@@ -394,6 +413,24 @@ These scripts support the staged module generation workflow where modules are bu
 ```
 
 Each gate returns exit code 0 (PASS) or 1 (FAIL). Agent has NO discretion to override FAIL.
+
+### Fractal Generation Workflow (Experimental)
+
+For complex modules (B2/C1, History, Biography) that require rigorous planning and high word counts, the linear generation process often fails. The **Fractal Generation** workflow solves this by enforcing a detailed plan *before* content generation begins.
+
+**The Workflow:**
+
+1.  **Check Hydration (Step 0):**
+    Before writing content, the agent checks if the module has a detailed plan (`content_outline`) in its meta YAML.
+    ```bash
+    .venv/bin/python scripts/fractal/check_hydration.py --hydrate meta/{slug}.yaml
+    ```
+
+2.  **Architect (Skill):**
+    If the check fails (missing outline), the **Architect Skill** is activated. It reads the level-specific template (e.g., `b2-history-module-template.md`) and generates a budgeted, section-by-section outline, saving it to the YAML.
+
+3.  **Generate Content (Linear):**
+    The standard generation agent (Stage 2) reads the now-guaranteed `content_outline`. Instead of "making it up as it goes," it executes the plan, writing each section to meet the specific word count defined in the outline.
 
 ---
 

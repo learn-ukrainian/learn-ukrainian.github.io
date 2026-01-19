@@ -50,7 +50,7 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 - [ ] **Primary sources (≥2):** MANDATORY — include at least 2 excerpts from historical documents using `[!quote]` callout format
 - [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
 - [ ] **Essay assignment:** 400+ word essay with model answer and rubric
-- [ ] **Activity count:** 10-12 language-focused activities (reduced from 14+)
+- [ ] **Activity count:** 3-6 seminar-style activities (reading + essay-response + critical-analysis)
 - [ ] **Vocabulary in context:** Historical terms embedded in narrative, not listed
 - [ ] **Engagement boxes:** Historical context, myth-busting, modern relevance
 - [ ] **NO DIALOGS:** History modules are READING-CENTRIC. Do NOT include conversational dialogs — they waste space and distract from historical content. Use primary source excerpts instead.

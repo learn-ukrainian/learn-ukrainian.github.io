@@ -3,7 +3,7 @@
 **Module**: Князь Ярослав Мудрий: Законодавець
 **Date**: 2026-01-19
 **Reviewer**: Gemini-2.0-Flash-Thinking-Exp
-**Content Hash**: 0b19aaf4
+**Content Hash:** 314a3872
 
 ## 1. Linguistics & Grammar (Score: 10/10)
 

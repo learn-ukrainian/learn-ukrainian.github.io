@@ -17,7 +17,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Immersion
-  min_word_count: 3000
+  min_word_count: 4000
   required_callouts: []
   description: C1 biography modules focus on cultural figures
 -->
@@ -34,7 +34,7 @@ Before submitting a C1 biography module, verify all items from `c1-module-templa
 - [ ] **Primary sources (≥2):** Include quotes, letters, or speeches from the figure using `[!quote]` callouts
 - [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
 - [ ] **Essay assignment:** 400+ word comparative essay with model answer and rubric
-- [ ] **Activity count:** 10-12 language-focused activities (NOT 14+)
+- [ ] **Activity count:** 4-8 seminar-style activities (reading + essay-response + critical-analysis)
 - [ ] **Historical context:** Place figure in their era's political/cultural context
 - [ ] **Legacy section:** Connect to modern Ukraine
 - [ ] **Gender/era balance:** Follow curriculum diversity requirements

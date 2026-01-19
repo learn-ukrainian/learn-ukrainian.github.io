@@ -17,7 +17,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: varies
-  min_word_count: 1800
+  min_word_count: 1750
   required_callouts: []
   description: B2 base template - inherits common B2 standards
 -->
@@ -29,7 +29,7 @@ TEMPLATE_METADATA:
 Before submitting a B2 module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 1800+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 1750+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 30+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 300-500+ word authentic-style reading passages
 - [ ] **Writing support:** ALL writing tasks include Model Answers

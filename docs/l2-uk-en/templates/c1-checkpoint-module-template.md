@@ -13,7 +13,7 @@ TEMPLATE_METADATA:
   - Навички
   - Потрібно більше практики?
   pedagogy: TBL
-  min_word_count: 1200
+  min_word_count: 1750
 -->
 
 ---
@@ -24,9 +24,9 @@ Before submitting a C1 checkpoint module, verify all items from `c1-module-templ
 
 ### Checkpoint-Specific Requirements
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
-- [ ] **Word count:** 1800+ words (lower than regular C1 modules' 2000+)
+- [ ] **Word count:** 1750+ words
 - [ ] **Vocabulary:** 50-60 items (review vocabulary from ALL modules in phase)
-- [ ] **Activities:** 25+ comprehensive testing activities
+- [ ] **Activities:** 14+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase
 - [ ] **Self-assessment:** "Чи можете ви..." checklist at end
 - [ ] **Comparative analysis:** Integration across phase topics

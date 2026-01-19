@@ -15,7 +15,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Native
-  min_word_count: 2500
+  min_word_count: 3000
   required_callouts: []
   description: C2 base template for native-level mastery
 -->
@@ -27,7 +27,7 @@ TEMPLATE_METADATA:
 Before submitting a C2 module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 2200+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 3000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 40+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 600-1000+ word native-level texts
 - [ ] **Creative/productive tasks:** Original writing, translation, or transformation
@@ -35,7 +35,7 @@ Before submitting a C2 module, verify:
 - [ ] **Engagement boxes:** 7-8 boxes with expert-level depth
 
 ### Activity Requirements
-- [ ] **Activities:** 14-16 minimum (C2 standard — quality over quantity)
+- [ ] **Activities:** 16+ minimum (C2 standard)
 - [ ] **Activity density:**
   - Quiz: 10-12 items (complex)
   - Fill-in: 12+ items (nuanced, stylistic choices)

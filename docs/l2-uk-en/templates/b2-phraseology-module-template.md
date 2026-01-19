@@ -16,7 +16,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 1800
+  min_word_count: 1750
   required_callouts: []
   description: B2 phraseology uses CBI with semantic categories and cultural context
 -->

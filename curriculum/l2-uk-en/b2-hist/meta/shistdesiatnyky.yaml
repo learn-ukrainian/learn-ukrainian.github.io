@@ -1,28 +1,42 @@
-title: Шістдесятники
-subtitle: The Sixtiers Movement
-version: '2.0'
-phase: B2.3c Trauma & Resistance
-focus: history
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- history
-- culture
-- soviet-union
-- resistance
-- literature
-- cinema
-grammar:
-- Historical narrative tenses
-- Passive voice in historical context
-objectives:
-- Understand the cultural and political significance of the Sixtiers movement
-- Identify key figures of the movement (Symonenko, Stus, Kostenko, Parajanov)
-- Analyze the concept of 'Thaw' and subsequent repressions
-- Discuss the role of Samvydav in preserving freedom of speech
-vocabulary_count: 25
+# Meta for Шістдесятники
 slug: shistdesiatnyky
-naturalness:
-  score: 9
-  status: PASS
+title: "Шістдесятники: Бунт проти сірості"
+level: B2
+track: history
+phase: "HIST.11 [Post-War Soviet Ukraine]"
+status: skeleton
+focus: history
+prerequisites: []
+learning_outcomes: []
+content_outline:
+  - section: "Вступ — Хрущовська відлига"
+    words: 400
+    points:
+      - "The death of Stalin and the partial liberalization of the regime"
+      - "The emergence of a new generation of intellectuals who demanded truth"
+      - "The Club of Creative Youth 'Suchasnyk' in Kyiv"
+  - section: "Культурний вибух"
+    words: 1000
+    points:
+      - "Literature: Vasyl Symonenko, Lina Kostenko, Ivan Drach"
+      - "Cinema: Serhiy Parajanov and 'Shadows of Forgotten Ancestors'"
+      - "Art: Alla Horska and the destroyed stained glass window at Kyiv University"
+      - "The premiere of 'Shadows' (1965) as the first public political protest"
+  - section: "Первинні джерела"
+    words: 600
+    points:
+      - "Excerpts from Vasyl Symonenko's diary ('Bereh chekan')"
+      - "Fragments from Ivan Dzyuba's treatise 'Internationalism or Russification?'"
+      - "KGB memos reporting on 'bourgeois nationalism' among youth"
+  - section: "Деколонізаційний погляд"
+    words: 600
+    points:
+      - "The fight for the Ukrainian language as a political act"
+      - "Debunking the myth of 'Soviet People' (homo sovieticus)"
+      - "The regime's response: The arrests of 1965 and the 'Great Pogrom' of 1972"
+  - section: "Підсумок — Моральна перемога"
+    words: 400
+    points:
+      - "The transformation of cultural figures into political dissidents"
+      - "The continuity of resistance: From UPA to Sixtiers to the Helsinki Group"
+      - "The lasting impact on modern Ukrainian culture"

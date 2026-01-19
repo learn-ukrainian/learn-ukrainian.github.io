@@ -744,6 +744,26 @@ LEVEL_CONFIG = {
         'essay_min_words': 250,
         'essay_max_words': 400
     },
+    'C1-history': {
+        # C1-HIST Track: History seminar style (C1 level)
+        # Structure: Advanced Analysis + Conceptual Quiz only
+        # Focus: historical analysis, source criticism, historiographical debate
+        'target_words': 4000,
+        'min_activities': 4,
+        'max_activities': 8,
+        'min_items_per_activity': 1,
+        'min_types_unique': 3,
+        'min_vocab': 25,
+        'min_engagement': 6,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'match-up', 'fill-in', 'cloze', 'group-sort', 'unjumble', 'anagram', 'mark-the-words'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
+    },
     'C1-literature': {
         'target_words': 3500,
         'min_activities': 12,

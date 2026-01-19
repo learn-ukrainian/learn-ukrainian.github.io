@@ -1,28 +1,42 @@
-title: 'Чорнобиль: Ціна брехні'
-subtitle: 'Chornobyl: The Price of Lies'
-version: '2.0'
-phase: B2.3c Trauma & Resistance
-focus: history
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- history
-- chornobyl
-- ecology
-- disaster
-- soviet-union
-- resistance
-grammar:
-- Historical narrative tenses
-- Passive voice in scientific/technical context
-objectives:
-- Understand the causes and consequences of the Chornobyl disaster
-- Analyze the role of state lies and propaganda
-- Discuss the impact of the disaster on the Ukrainian independence movement
-- Learn vocabulary related to ecology and technology
-vocabulary_count: 25
+# Meta for Чорнобиль
 slug: chornobyl
-naturalness:
-  score: 9
-  status: PASS
+title: "Чорнобиль: Трагедія і Попередження"
+level: B2
+track: history
+phase: "HIST.11 [Post-War Soviet Ukraine]"
+status: skeleton
+focus: history
+prerequisites: []
+learning_outcomes: []
+content_outline:
+  - section: "Вступ — Мирний атом?"
+    words: 400
+    points:
+      - "Pripyat as a Soviet model city of the future"
+      - "The narrative of the 'safe' peaceful atom"
+      - "Ukraine's role as the energy hub of the USSR"
+  - section: "Аварія 1986 року"
+    words: 1000
+    points:
+      - "The night of April 26: The explosion and the first firefighters"
+      - "The 36-hour delay in evacuation and the radioactive cloud"
+      - "The 'Liquidators': heroism and sacrifice of mobilized reservists"
+      - "The construction of the Sarcophagus"
+  - section: "Первинні джерела"
+    words: 600
+    points:
+      - "Transcripts of emergency calls to the fire station"
+      - "The official announcement of evacuation (short, dry)"
+      - "Excerpts from diaries of Pripyat residents"
+  - section: "Деколонізаційний погляд"
+    words: 600
+    points:
+      - "Moscow's criminal silence: The May 1st Parade in Kyiv under radiation"
+      - "Colonial exploitation of Ukrainian territory for dangerous industries"
+      - "Chornobyl as the catalyst for the Ukrainian independence movement (eco-nationalism)"
+  - section: "Підсумок — Зона відчуження"
+    words: 400
+    points:
+      - "The Exclusion Zone as a nature reserve and tourist site"
+      - "The spiritual trauma of the nation"
+      - "Chornobyl in modern pop culture (HBO series, STALKER game)"

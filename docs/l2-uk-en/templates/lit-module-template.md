@@ -18,7 +18,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Seminar
-  min_word_count: 2000
+  min_word_count: 3500
   required_callouts: []
   description: LIT modules use graduate-level seminar approach with literary analysis
 -->

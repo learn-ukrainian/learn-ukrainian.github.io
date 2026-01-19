@@ -75,6 +75,7 @@
       "items": {
         "type": "object",
         "required": ["section", "words", "points"],
+        "additionalProperties": false,
         "properties": {
           "section": { "type": "string" },
           "words": { "type": "integer" },
