@@ -1,7 +1,7 @@
 # C1-BIO Curriculum Plan: Ukrainian Biographies Track
 
 **Status:** ✅ IMPLEMENTED (relocated from C1 Core, January 2026)
-**Modules:** 01-99 (99 modules)
+**Modules:** 01-119 (119 modules + 1 checkpoint)
 **Prerequisite:** B2-HIST Track (M01-61)
 **Vocabulary Target:** Content-driven (~24/module)
 **Immersion:** 100% Ukrainian
@@ -209,6 +209,66 @@ The C1-BIO track presents biographies of notable Ukrainians from Kyivan Rus to t
 |---|------|-------|------|
 | 101 | c1-bio-checkpoint | Контрольна точка: Біографії | Checkpoint |
 
+### Phase BIO.12: Literature Pioneers (M102-103)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 102 | hryhoriy-kvitka-osnovianenko | Григорій Квітка-Основ'яненко: Батько української прози | 1778-1843 |
+| 103 | ivan-nechuy-levytskyi | Іван Нечуй-Левицький: Майстер українського реалізму | 1838-1918 |
+
+### Phase BIO.13: Linguists & Scholars (M104-105)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 104 | oleksander-potebnya | Олександр Потебня: Філософ мови | 1835-1891 |
+| 105 | george-shevelov | Юрій Шевельов: Архітектор української лінгвістики | 1908-2002 |
+
+### Phase BIO.14: Church Leaders (M106-107)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 106 | andrey-sheptytsky | Митрополит Андрей Шептицький: Пастир і рятівник | 1865-1944 |
+| 107 | josyf-slipyj | Патріарх Йосиф Сліпий: Незламний сповідник віри | 1892-1984 |
+
+### Phase BIO.15: Liberation Movement (M108-109)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 108 | yevhen-konovalets | Євген Коновалець: Полковник і організатор | 1891-1938 |
+| 109 | roman-shukhevych | Роман Шухевич: Головний командир УПА | 1907-1950 |
+
+### Phase BIO.16: Activists & Educators (M110-111)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 110 | milena-rudnytska | Мілена Рудницька: Голос українського фемінізму | 1892-1976 |
+| 111 | vasyl-sukhomlynskyi | Василь Сухомлинський: Педагог серця | 1918-1970 |
+
+### Phase BIO.17: Scientists & Engineers (M112-114)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 112 | yevhen-paton | Євген Патон: Батько українського мостобудування | 1870-1953 |
+| 113 | borys-paton | Борис Патон: Академік століття | 1918-2020 |
+| 114 | mykola-amosov | Микола Амосов: Хірург і філософ здоров'я | 1913-2002 |
+
+### Phase BIO.18: Contemporary Voices (M115-116)
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 115 | serhii-plokhy | Сергій Плохій: Історик, який пояснив Україну світові | Contemporary |
+| 116 | oleksandr-usyk | Олександр Усик: Чемпіон із серцем воїна | Contemporary |
+
+### Phase BIO.19: Reclaimed Heritage (M117-119)
+
+> Figures whose Ukrainian identity was suppressed by empire but whom Ukraine now reclaims.
+
+| # | Slug | Title | Era |
+|---|------|-------|-----|
+| 117 | serhiy-korolyov | Сергій Корольов: Батько космічної ери | 1907-1966 |
+| 118 | yuriy-kondratiuk | Юрій Кондратюк: Геній, що розрахував шлях до Місяця | 1897-1942 |
+| 119 | ivan-puliui | Іван Пулюй: Фізик, який відкрив Х-промені | 1845-1918 |
+
 ---
 
 ## Thematic Coverage
@@ -218,14 +278,18 @@ The track covers diverse fields of Ukrainian achievement:
 | Category | Count | Examples |
 |----------|-------|----------|
 | **Political Leaders** | 18 | Olha, Khmelnytsky, Mazepa, Petliura |
-| **Writers & Poets** | 22 | Shevchenko, Franko, Lesya Ukrainka, Stus |
+| **Writers & Poets** | 24 | Shevchenko, Franko, Lesya Ukrainka, Stus, Kvitka-Osnovianenko, Nechuy-Levytsky |
 | **Artists & Musicians** | 14 | Lysenko, Bohomazov, Prymachenko, Bilokur |
-| **Scientists** | 7 | Vernadsky, Krymsky, Pavlova, Yushchenko, Rapoport |
-| **Religious Leaders** | 4 | Boretskyi, Kosiv, Mykhailo Chernihivskyi, Ohienko |
-| **Military Figures** | 6 | Sviatoslav, Hordiyenko, Bolbochan |
-| **Human Rights Activists** | 8 | Chornovil, Lukyanenko, Matviichuk |
-| **Women in History** | 20 | Roksolana, Kobylianska, Teliha, Zabuzhko |
-| **Linguists & Lexicographers** | 2 | Kulish, Ohienko |
+| **Scientists & Engineers** | 14 | Vernadsky, Krymsky, Pavlova, Both Patons, Korolyov, Kondratiuk, Puliui, Amosov |
+| **Religious Leaders** | 6 | Boretskyi, Kosiv, Mykhailo Chernihivskyi, Ohienko, Sheptytsky, Slipyj |
+| **Military Figures** | 8 | Sviatoslav, Hordiyenko, Bolbochan, Konovalets, Shukhevych |
+| **Human Rights Activists** | 9 | Chornovil, Lukyanenko, Matviichuk, Rudnytska |
+| **Women in History** | 21 | Roksolana, Kobylianska, Teliha, Zabuzhko, Rudnytska |
+| **Linguists & Scholars** | 4 | Kulish, Ohienko, Potebnya, Shevelov |
+| **Educators** | 2 | Sukhomlynskyi, Ohienko |
+| **Sports Patriots** | 1 | Usyk |
+| **Historians** | 3 | Hrushevskyi, Hrytsak, Plokhy |
+| **Reclaimed Heritage** | 3 | Korolyov, Kondratiuk, Puliui |
 
 ---
 
@@ -266,4 +330,4 @@ Students should complete B2-HIST for historical context before studying individu
 
 ---
 
-*Last updated: January 2026 (RFC #409 relocation, added Kulish & Ohienko)*
+*Last updated: January 2026 (RFC #409 relocation, added Kulish & Ohienko, expanded M102-119 with missing notable Ukrainians)*

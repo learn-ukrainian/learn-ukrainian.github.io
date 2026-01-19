@@ -4,6 +4,9 @@
 id: c2-58
 title: Міжгалузева комунікація
 slug: cross-domain-communication
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -13,15 +16,15 @@ immersion: "100% Ukrainian"
 sources:
   - name: Науково-популярний журнал "Світогляд"
     url: https://svitohlyad.org.ua/
-    type: example
+    type: reference
     notes: Examples of cross-domain scientific communication
   - name: Українське науково-популярне видання
     url: https://kunsht.com.ua/
-    type: example
+    type: reference
     notes: Examples of explaining complex topics to general audience
   - name: TED-Ed українською
     url: https://ed.ted.com/
-    type: example
+    type: reference
     notes: Educational content explaining specialized topics accessibly
 
 content_outline:
@@ -125,5 +128,5 @@ connects_to:
   - c2-05 (Публіцистичний стиль — Journalism)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

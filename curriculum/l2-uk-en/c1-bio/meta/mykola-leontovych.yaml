@@ -1,24 +1,137 @@
-title: 'Микола Леонтович: Маг українського хору'
-subtitle: 'Mykola Leontovych: Magician of Ukrainian Choir'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- revolutionary
-- arts
-- music
-- composer
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Mykola Leontovych’s contribution to world choral music and Ukrainian
-  culture
-- Learner can analyze musical and biographical narratives at C1 level
-- Learner masters musical and historical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 43: Микола Леонтович: Автор «Щедрика»
+# Status: SPEC (ready for content development)
+
+id: c1-bio-43
+title: "Микола Леонтович: Автор «Щедрика»"
 slug: mykola-leontovych
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Микола Леонтович (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Микола_Леонтович
+    type: primary
+    notes: Біографія, музична діяльність, загибель
+  - name: Щедрик
+    url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
+    type: reference
+    notes: Найвідоміший твір та його всесвітнє поширення
+  - name: Українська хорова музика
+    url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
+    type: reference
+    notes: Контекст розвитку хорового мистецтва
+
+content_outline:
+  - section: Вступ — Пісня, що підкорила світ
+    words: 400
+    points:
+      - Микола Леонтович — автор «Щедрика», відомого як Carol of the Bells
+      - Від сільського вчителя до класика хорової музики
+      - Трагічна загибель від рук більшовицького агента
+
+  - section: Ранні роки та освіта (1877-1903)
+    words: 600
+    points:
+      - Народження в селі Монастирок на Поділлі
+      - Навчання в Київській консерваторії
+      - Музична родина та раннє захоплення фольклором
+      - Перші композиторські спроби
+
+  - section: Педагогічна діяльність (1903-1917)
+    words: 700
+    points:
+      - Робота вчителем співів у Вінниці та інших містах
+      - Організація хорів та музичних гуртків
+      - Збирання та обробка народних пісень
+      - Створення «Щедрика» та інших хорових шедеврів
+
+  - section: Революційні роки (1917-1921)
+    words: 700
+    points:
+      - Активна культурна діяльність в добу УНР
+      - Робота в Київській консерваторії
+      - Співпраця з хором Кирила Стеценка
+      - Турне «Щедрика» Європою з хором Олександра Кошиця
+
+  - section: Загибель та пам'ять (1921)
+    words: 800
+    points:
+      - Арешт та вбивство 23 січня 1921 року
+      - Агент ЧК Грищенко як виконавець
+      - Обставини трагедії та її приховування
+      - Похорон у рідному селі
+
+  - section: Світове визнання «Щедрика»
+    words: 800
+    points:
+      - Адаптація Пітера Вільгоуського — Carol of the Bells
+      - Поширення у США та Європі
+      - «Щедрик» у сучасній культурі
+      - Повернення української ідентичності пісні
+
+vocabulary_hints:
+  required:
+    - композитор (composer)
+    - хор (choir)
+    - обробка (arrangement)
+    - фольклор (folklore)
+    - консерваторія (conservatory)
+    - мелодія (melody)
+    - колядка (Christmas carol)
+    - диригент (conductor)
+    - партитура (score)
+    - спадщина (legacy)
+  recommended:
+    - поліфонія (polyphony)
+    - акапела (a cappella)
+    - гармонія (harmony)
+    - етнографія (ethnography)
+    - репертуар (repertoire)
+
+activity_hints:
+  - type: reading
+    focus: Біографічні нариси та аналіз «Щедрика»
+    source: Музикознавчі статті
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та музична спадщина
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні характеристики
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому «Щедрик» став світовим хітом?
+    word_target: 300
+    output: Cultural analysis
+
+  - type: group-sort
+    focus: Етапи творчості та досягнення
+    items: "12+"
+
+  - type: fill-in
+    focus: Музична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як повернути українську ідентичність «викраденим» творам?
+    output: Contemporary reflection
+
+prerequisites:
+  - c1-bio-23-mykola-lysenko
+
+connects_to:
+  - c1-bio-64-borys-liatoshynskyi
+  - c1-bio-79-volodymyr-ivasyuk
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -1,0 +1,146 @@
+# C1-BIO Module 118: Юрій Кондратюк: Геній, що розрахував шлях до Місяця (Повернена спадщина)
+# Status: SPEC (ready for content development)
+
+id: c1-bio-118
+title: "Юрій Кондратюк: Геній, що розрахував шлях до Місяця"
+slug: yuriy-kondratiuk
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+# FRAMING NOTE: This is a "Reclaimed Heritage" module. Born Oleksandr Sharhei
+# in Poltava, he took a false identity to survive Soviet purges. His lunar
+# trajectory calculations were later used by NASA for Apollo missions.
+# Ukraine reclaims him as a brilliant Ukrainian scientist whose work
+# was appropriated by both the USSR and USA.
+
+sources:
+  - name: Юрій Кондратюк (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
+    type: primary
+    notes: Biography, space calculations, lunar orbit rendezvous
+  - name: Траса Кондратюка
+    url: https://uk.wikipedia.org/wiki/Траса_Кондратюка
+    type: reference
+    notes: His lunar trajectory
+  - name: NASA Apollo acknowledgment
+    url: https://www.nasa.gov/
+    type: reference
+    notes: American recognition of his work
+
+content_outline:
+  - section: Вступ — Український геній за чужим ім'ям
+    words: 400
+    points:
+      - Кондратюк як теоретик місячного польоту
+      - Подвійна ідентичність заради виживання
+      - "Траса Кондратюка" у програмі Аполлон
+
+  - section: Справжнє ім'я — Олександр Шаргей
+    words: 600
+    points:
+      - Народження в Полтаві (1897)
+      - Навчання в Київському політехнічному
+      - Перша світова війна та революція
+      - Прийняття чужої ідентичності
+
+  - section: Теоретик космосу
+    words: 700
+    points:
+      - "Завоювання міжпланетних просторів" (1929)
+      - Розрахунки місячної траєкторії
+      - Ідея гравітаційного маневру
+      - Робота без фінансування та підтримки
+
+  - section: Інженер-практик
+    words: 600
+    points:
+      - Будівництво елеваторів у Сибіру
+      - Арешт за "шкідництво"
+      - Робота на вітроелектростанціях
+      - Пропозиція Корольову працювати разом
+
+  - section: Загибель і забуття
+    words: 500
+    points:
+      - Друга світова війна
+      - Загибель у 1942 році
+      - Десятиліття забуття
+      - Відкриття його праць
+
+  - section: Визнання після смерті
+    words: 700
+    points:
+      - NASA використовує його траєкторію (1960-ті)
+      - Нагорода ім. Кондратюка від NASA
+      - Визнання в незалежній Україні
+      - Кондратюк як символ українського генія
+
+vocabulary_hints:
+  required:
+    - траєкторія (trajectory)
+    - орбіта (orbit)
+    - гравітаційний маневр (gravitational maneuver)
+    - місячний модуль (lunar module)
+    - теоретик (theorist)
+    - псевдонім (pseudonym)
+    - ідентичність (identity)
+    - визнання (recognition)
+    - космічний політ (space flight)
+    - геній (genius)
+  recommended:
+    - розрахунок (calculation)
+    - маса (mass)
+    - паливо (fuel)
+    - орбітальний (orbital)
+    - траса (route/path)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from "Завоювання міжпланетних просторів"
+    source: Scientific texts
+    items: "3 passages"
+
+  - type: quiz
+    focus: Kondratiuk's biography and contributions
+    items: "12+"
+
+  - type: match-up
+    focus: Scientific concepts and their applications
+    items: "10+"
+
+  - type: essay-response
+    focus: How did Kondratiuk's ideas reach NASA?
+    word_target: 300
+    output: Analysis of knowledge transfer
+
+  - type: group-sort
+    focus: His life as Sharhei vs. as Kondratiuk
+    items: "12+"
+
+  - type: fill-in
+    focus: Key scientific terms and dates
+    items: "10+"
+
+  - type: discussion
+    focus: Why did he have to hide his identity?
+    output: Soviet persecution analysis
+
+prerequisites:
+  - Space exploration basics
+  - Soviet era history
+  - Apollo program context
+
+connects_to:
+  - c1-bio-117 (Korolyov - later space pioneer)
+  - c1-bio-119 (Puliui - earlier reclaimed scientist)
+  - c1-bio-112 (Yevhen Paton - contemporary engineer)
+
+naturalness:
+  score: 1
+  status: PENDING

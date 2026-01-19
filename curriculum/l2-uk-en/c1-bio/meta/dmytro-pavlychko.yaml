@@ -1,22 +1,133 @@
-title: '«Дмитро Павличко: Два кольори мої»'
-subtitle: 'Dmytro Pavlychko: My Two Colors'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- poetry
-- music
-- politics
-grammar:
-- Poetic imagery and symbolism
-- Metaphors of color and destiny
-objectives:
-- Learner can describe Dmytro Pavlychkos dual role as a poet and politician
-- Learner understands the symbolism of the song Two Colors
-vocabulary_count: 25
+# C1-BIO Module 73: Дмитро Павличко
+# Status: SPEC (ready for content development)
+
+id: c1-bio-73
+title: "Дмитро Павличко: Поет і дипломат"
 slug: dmytro-pavlychko
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Дмитро Павличко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
+    type: primary
+    notes: Biography of the poet, translator, and diplomat
+  - name: Національна спілка письменників України
+    url: https://nspu.org.ua/
+    type: reference
+    notes: Literary biography and works
+
+content_outline:
+  - section: Вступ — Два кольори однієї душі
+    words: 400
+    points:
+      - Поет, перекладач, політик, дипломат
+      - Автор легендарної пісні «Два кольори»
+      - Життя між поезією та політикою
+
+  - section: Юність і формування (1929-1953)
+    words: 600
+    points:
+      - Народження на Івано-Франківщині
+      - Важке повоєнне дитинство
+      - Навчання у Львівському університеті
+      - Перші вірші та публікації
+
+  - section: Поетичний шлях (1953-1970)
+    words: 800
+    points:
+      - Входження в літературу
+      - Збірки «Любов і ненависть», «Правда кличе»
+      - Пісня «Два кольори» (1965)
+      - Шістдесятництво та його межі
+
+  - section: Перекладацька діяльність (1960-ті–1990-ті)
+    words: 700
+    points:
+      - Переклади Шекспіра
+      - Переклади світової поезії
+      - Роль перекладу у збереженні мови
+      - Визнання як перекладача
+
+  - section: Політик і дипломат (1988-2000-ні)
+    words: 800
+    points:
+      - Участь у Народному Русі
+      - Співавтор Акту незалежності
+      - Посол України в Польщі та Словаччині
+      - Політичні позиції та суперечки
+
+  - section: Спадщина — Голос України
+    words: 700
+    points:
+      - Вплив на українську поезію
+      - «Два кольори» як другий гімн
+      - Пізня творчість
+      - Місце в історії літератури
+
+vocabulary_hints:
+  required:
+    - поет (poet)
+    - перекладач (translator)
+    - дипломат (diplomat)
+    - пісня (song)
+    - символіка (symbolism)
+    - шістдесятництво (Sixtiers movement)
+    - Народний Рух (People's Movement)
+    - посол (ambassador)
+    - літературна спадщина (literary legacy)
+    - ліричний (lyrical)
+  recommended:
+    - патріотизм (patriotism)
+    - поетика (poetics)
+    - романтизм (romanticism)
+    - політична поезія (political poetry)
+    - національна свідомість (national consciousness)
+
+activity_hints:
+  - type: reading
+    focus: Українська поезія XX ст.
+    source: Literary sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та творчість Павличка
+    items: "12+"
+
+  - type: match-up
+    focus: Збірки та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як поезія може впливати на політичні зміни?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Діяльність Павличка за сферами
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературна та політична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи може поет бути успішним політиком?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-72
+
+connects_to:
+  - c1-bio-74
+  - c1-bio-79
+
+naturalness:
+  score: 1
+  status: PENDING

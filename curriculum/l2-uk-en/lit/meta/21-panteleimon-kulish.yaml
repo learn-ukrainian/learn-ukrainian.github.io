@@ -30,7 +30,7 @@ content_outline:
     words: 500
     points:
       - Куліш у трійці Шевченко-Куліш-Костомаров
-      - "Гарячий" характер і суперечливість
+      - Гарячий характер і суперечливість
       - Чому його менше знають
 
   - section: Біографія — від села до Європи
@@ -52,7 +52,7 @@ content_outline:
     points:
       - Переклади Шекспіра
       - Переклад Біблії
-      - "Кулішівка" — система правопису
+      - Кулішівка — система правопису
 
   - section: Хуторянство як філософія
     words: 600
@@ -135,6 +135,11 @@ tags:
   - kulish
   - romanticism
   - translation
+
+objectives:
+  - Evaluate Kulish's role as the "architect" of modern Ukrainian culture alongside Shevchenko.
+  - Understand the "Khutor" philosophy as a path to Europeanization.
+  - Analyze the impact of "Kulishivka" and his translations on Ukrainian identity.
 
 grammar:
   - Epistolary style

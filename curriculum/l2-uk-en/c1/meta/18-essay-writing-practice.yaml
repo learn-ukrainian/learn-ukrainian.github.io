@@ -1,128 +1,108 @@
-# C1 Module 18: Essay Writing Practice
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-18
 title: Практикум — Написання есе
 slug: 18-essay-writing-practice
+phase: C1.1 Academic Ukrainian
+focus: practice
 module_type: practice
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: C1 Writing Assessment Criteria
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Essay evaluation rubrics
-  - name: Academic Essay Models
-    url: https://mova.info/
-    type: secondary
-    notes: Sample essays with analysis
-
+- name: C1 Writing Assessment Criteria
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Essay evaluation rubrics
+- name: Academic Essay Models
+  url: https://mova.info/
+  type: secondary
+  notes: Sample essays with analysis
 content_outline:
-  - section: Вступ — Інтеграція навичок
-    words: 300
-    points:
-      - Огляд академічного письма M01-M17
-      - Чек-лист есеїста
-      - Критерії оцінювання
-
-  - section: Планування есе
-    words: 600
-    points:
-      - Аналіз теми (що вимагається)
-      - Мозковий штурм ідей
-      - Структурування плану
-
-  - section: Написання чернетки
-    words: 800
-    points:
-      - Від тези до абзаців
-      - Інтеграція цитат і доказів
-      - Логічні переходи
-
-  - section: Редагування
-    words: 700
-    points:
-      - Перевірка структури
-      - Стилістичне редагування
-      - Пунктуація і граматика
-
-  - section: Взірцеве есе з аналізом
-    words: 1000
-    points:
-      - Повний зразок академічного есе
-      - Коментарі до кожної частини
-      - Альтернативні підходи
-
-  - section: Типові помилки
-    words: 600
-    points:
-      - Структурні проблеми
-      - Стилістичні невідповідності
-      - Логічні прогалини
-
-  - section: Практичне завдання
-    words: 500
-    points:
-      - Тема для есе
-      - Поетапні інструкції
-      - Рубрика самооцінки
-
+- section: Вступ — Інтеграція навичок
+  words: 300
+  points:
+  - Огляд академічного письма M01-M17
+  - Чек-лист есеїста
+  - Критерії оцінювання
+- section: Планування есе
+  words: 600
+  points:
+  - Аналіз теми (що вимагається)
+  - Мозковий штурм ідей
+  - Структурування плану
+- section: Написання чернетки
+  words: 800
+  points:
+  - Від тези до абзаців
+  - Інтеграція цитат і доказів
+  - Логічні переходи
+- section: Редагування
+  words: 700
+  points:
+  - Перевірка структури
+  - Стилістичне редагування
+  - Пунктуація і граматика
+- section: Взірцеве есе з аналізом
+  words: 1000
+  points:
+  - Повний зразок академічного есе
+  - Коментарі до кожної частини
+  - Альтернативні підходи
+- section: Типові помилки
+  words: 600
+  points:
+  - Структурні проблеми
+  - Стилістичні невідповідності
+  - Логічні прогалини
+- section: Практичне завдання
+  words: 500
+  points:
+  - Тема для есе
+  - Поетапні інструкції
+  - Рубрика самооцінки
 vocabulary_hints:
   required:
-    - чернетка (draft)
-    - редагування (editing)
-    - планування (planning)
-    - структурування (structuring)
-    - логічний перехід (logical transition)
-    - доказ (evidence)
-    - теза (thesis)
-    - аргументація (argumentation)
-    - рубрика (rubric)
-    - самооцінка (self-assessment)
+  - чернетка (draft)
+  - редагування (editing)
+  - планування (planning)
+  - структурування (structuring)
+  - логічний перехід (logical transition)
+  - доказ (evidence)
+  - теза (thesis)
+  - аргументація (argumentation)
+  - рубрика (rubric)
+  - самооцінка (self-assessment)
   recommended:
-    - мозковий штурм (brainstorming)
-    - чек-лист (checklist)
-    - критерій (criterion)
-    - відповідність (compliance)
-    - когерентність (coherence)
-
+  - мозковий штурм (brainstorming)
+  - чек-лист (checklist)
+  - критерій (criterion)
+  - відповідність (compliance)
+  - когерентність (coherence)
 activity_hints:
-  - type: essay-response
-    focus: Write complete academic essay
-    word_target: 500
-
-  - type: quiz
-    focus: Essay structure and technique review
-    items: "20+"
-
-  - type: error-correction
-    focus: Edit sample essay draft
-    items: "15+"
-
-  - type: match-up
-    focus: Essay weakness to improvement strategy
-    items: "12+"
-
-  - type: cloze
-    focus: Complete essay transitions
-    items: "10+"
-
-  - type: fill-in
-    focus: Add evidence to argument
-    items: "10+"
-
+- type: essay-response
+  focus: Write complete academic essay
+  word_target: 500
+- type: quiz
+  focus: Essay structure and technique review
+  items: 20+
+- type: error-correction
+  focus: Edit sample essay draft
+  items: 15+
+- type: match-up
+  focus: Essay weakness to improvement strategy
+  items: 12+
+- type: cloze
+  focus: Complete essay transitions
+  items: 10+
+- type: fill-in
+  focus: Add evidence to argument
+  items: 10+
 prerequisites:
-  - c1-01 to c1-17 (Full C1.1 foundation)
-  - All academic writing skills
-
+- c1-01 to c1-17 (Full C1.1 foundation)
+- All academic writing skills
 connects_to:
-  - c1-19 (Article Critique)
-  - c1-20 (C1.1 Checkpoint)
-  - c1-32 (Professional Scenarios)
-
+- c1-19 (Article Critique)
+- c1-20 (C1.1 Checkpoint)
+- c1-32 (Professional Scenarios)
 naturalness:
   score: null
   status: PENDING

@@ -4,6 +4,9 @@
 id: b2-hist-20
 title: "Синтез: Київська Русь — спадщина"
 slug: syntez-kyivska-rus
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: synthesis
 word_target: 3750
 immersion: 100% Ukrainian
@@ -50,7 +53,7 @@ content_outline:
     points:
       - Соціальна структура
       - Місто і село
-      - Торгівля — шлях "із варяг у греки"
+      - 'Торгівля — шлях «із варяг у греки«'
       - Рівень життя порівняно з Європою
 
   - section: Русь у Європі
@@ -140,4 +143,4 @@ prerequisites:
 
 connects_to:
   - b2-hist-21 (Mongol invasion — Phase 3)
-  - b2-hist-28 (Synthesis: Mongol era and Galicia)
+  - 'b2-hist-28 (Synthesis: Mongol era and Galicia)'

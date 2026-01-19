@@ -1,23 +1,137 @@
-title: 'Марія Заньковецька: Королева Української Сцени'
-phase: C1.3 Biographies
-pedagogy: CBI
-focus: biography
-register: публіцистичний
-duration: 120
-transliteration: none
-tags:
-- biography
-- era: imperial
-- domain: arts
-grammar:
-- Historical narrative register
-- Passive voice in biography
-vocabulary_focus:
-- Theater and performing arts terminology
-- Biographical and emotional vocabulary
-objectives:
-- Understand the life and career of Maria Zankovetska as a pioneer of Ukrainian theater
-- Analyze the role of theater as a form of cultural resistance under imperial rule
-- Explore the linguistic features of late 19th-century biographical and dramatic texts
-- Evaluate the legacy of the 'coryphaei' in modern Ukrainian performing arts
+# C1-BIO Module 26: Марія Заньковецька: Перша леді сцени
+# Status: SPEC (ready for content development)
+
+id: c1-bio-26
+title: "Марія Заньковецька: Перша леді сцени"
 slug: mariya-zankovetska
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Марія Заньковецька (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Марія_Заньковецька
+    type: primary
+    notes: Біографія, театральна кар'єра, вплив на культуру
+  - name: Театр корифеїв
+    url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+    type: reference
+    notes: Український театр XIX століття
+  - name: Микола Садовський
+    url: https://uk.wikipedia.org/wiki/Микола_Садовський
+    type: reference
+    notes: Партнер по сцені та засновник театру
+
+content_outline:
+  - section: Вступ — Королева українського театру
+    words: 400
+    points:
+      - Марія Заньковецька — найвидатніша українська актриса XIX століття
+      - Від провінційної сцени до всеросійської слави
+      - Символ українського театрального відродження
+
+  - section: Дитинство та юність (1854-1875)
+    words: 600
+    points:
+      - Народження в селі Заньки на Чернігівщині
+      - Справжнє ім'я — Марія Адасовська
+      - Музична освіта та перші аматорські вистави
+      - Вплив народної культури на формування таланту
+
+  - section: Початок кар'єри (1875-1885)
+    words: 700
+    points:
+      - Дебют у трупі Михайла Старицького
+      - Роботи з Марком Кропивницьким
+      - Перші великі ролі — Наталка Полтавка, Катерина
+      - Формування неповторного стилю гри
+
+  - section: Зоряні роки (1885-1900)
+    words: 800
+    points:
+      - Гастролі імперією та європейські турне
+      - Запрошення до імператорських театрів
+      - Відмова залишити український театр
+      - Ролі Марусі Богуславки, Олесі, Галі
+
+  - section: Пізній період та УНР (1900-1920)
+    words: 700
+    points:
+      - Робота в театрі Миколи Садовського
+      - Участь у культурному житті УНР
+      - Присвоєння звання народної артистки
+      - Останні вистави та відхід від сцени
+
+  - section: Спадщина та пам'ять
+    words: 800
+    points:
+      - Смерть у 1934 році
+      - Вплив на українську акторську школу
+      - Театр імені Заньковецької у Львові
+      - Заньковецька як символ українського мистецтва
+
+vocabulary_hints:
+  required:
+    - актриса (actress)
+    - сцена (stage)
+    - вистава (performance)
+    - роль (role)
+    - трупа (theater company)
+    - гастролі (tour)
+    - корифей (coryphaeus)
+    - драма (drama)
+    - репертуар (repertoire)
+    - талант (talent)
+  recommended:
+    - амплуа (character type)
+    - бенефіс (benefit performance)
+    - антреприза (theatrical enterprise)
+    - прем'єра (premiere)
+    - оплески (applause)
+
+activity_hints:
+  - type: reading
+    focus: Спогади сучасників та рецензії на вистави
+    source: Архівні матеріали
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та театральна кар'єра
+    items: "12+"
+
+  - type: match-up
+    focus: Ролі та п'єси
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому Заньковецька відмовилась від кар'єри в імператорських театрах?
+    word_target: 300
+    output: Cultural analysis
+
+  - type: group-sort
+    focus: Етапи кар'єри та знакові ролі
+    items: "12+"
+
+  - type: fill-in
+    focus: Театральна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Яка роль театру в національному відродженні?
+    output: Historical reflection
+
+prerequisites:
+  - c1-bio-48-marko-kropyvnytskyi
+
+connects_to:
+  - c1-bio-41-solomiya-krushelnytska
+  - c1-bio-62-vira-kholodna
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -1,0 +1,140 @@
+# C1-BIO Module 109: Роман Шухевич: Головний командир УПА
+# Status: SPEC (ready for content development)
+
+id: c1-bio-109
+title: "Роман Шухевич: Головний командир УПА"
+slug: roman-shukhevych
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Роман Шухевич (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович
+    type: primary
+    notes: Biography, UPA command, death
+  - name: Українська повстанська армія
+    url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+    type: reference
+    notes: Organization he led
+  - name: Герой України — Шухевич
+    url: https://uk.wikipedia.org/wiki/Герой_України
+    type: reference
+    notes: State recognition
+
+content_outline:
+  - section: Вступ — Легенда УПА
+    words: 400
+    points:
+      - Шухевич як символ збройного опору
+      - Від молодого активіста до головнокомандувача
+      - Героїчна загибель 1950 року
+
+  - section: Молодість і формування
+    words: 600
+    points:
+      - Народження у Львові (1907)
+      - Гімназійні роки та перші організації
+      - Вступ до УВО та ОУН
+      - Ув'язнення польською владою
+
+  - section: Друга світова війна
+    words: 700
+    points:
+      - Батальйон "Нахтігаль"
+      - Розчарування в німцях
+      - Перехід до підпілля
+      - Формування УПА (1943)
+
+  - section: Головний командир УПА
+    words: 800
+    points:
+      - Обрання головнокомандувачем (1943)
+      - Боротьба на два фронти
+      - Організація партизанської війни
+      - Дипломатичні спроби
+
+  - section: Післявоєнний опір
+    words: 600
+    points:
+      - Боротьба проти радянської влади
+      - Підпільне життя
+      - МГБ полювання на командира
+      - Загибель у Білогорщі (1950)
+
+  - section: Спадщина та визнання
+    words: 400
+    points:
+      - Герой України (2007)
+      - Контроверсії та дискусії
+      - Шухевич у сучасній пам'яті
+      - Символ незламності
+
+vocabulary_hints:
+  required:
+    - головнокомандувач (commander-in-chief)
+    - повстанець (insurgent)
+    - партизанська війна (guerrilla warfare)
+    - підпілля (underground)
+    - збройний опір (armed resistance)
+    - окупація (occupation)
+    - визвольна боротьба (liberation struggle)
+    - конспірація (secrecy/conspiracy)
+    - Герой України (Hero of Ukraine)
+    - загибель (death in battle)
+  recommended:
+    - диверсія (sabotage)
+    - рейд (raid)
+    - командир (commander)
+    - присяга (oath)
+    - бункер (bunker)
+
+activity_hints:
+  - type: reading
+    focus: UPA documents and Shukhevych's orders
+    source: Historical archives
+    items: "3 passages"
+
+  - type: quiz
+    focus: Shukhevych's biography and UPA history
+    items: "12+"
+
+  - type: match-up
+    focus: Military operations and their outcomes
+    items: "10+"
+
+  - type: essay-response
+    focus: How did UPA fight on two fronts simultaneously?
+    word_target: 300
+    output: Military strategy analysis
+
+  - type: group-sort
+    focus: Phases of Shukhevych's career
+    items: "12+"
+
+  - type: fill-in
+    focus: Key dates and battles
+    items: "10+"
+
+  - type: discussion
+    focus: Why does Shukhevych remain controversial internationally?
+    output: Balanced historical analysis
+
+prerequisites:
+  - c1-bio-108 (Yevhen Konovalets - predecessor)
+  - c1-bio-52 (Dmytro Dontsov - ideologist)
+  - Understanding of WWII in Ukraine
+
+connects_to:
+  - c1-bio-108 (Konovalets - predecessor)
+  - c1-bio-59 (Olha Basarab - earlier resistance)
+  - c1-bio-68 (Olena Teliha - contemporary)
+
+naturalness:
+  score: 1
+  status: PENDING

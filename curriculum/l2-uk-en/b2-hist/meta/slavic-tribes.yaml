@@ -51,7 +51,7 @@ sources:
     notes: Detailed article on Polyany tribe
 
 content_outline:
-  - section: "Вступ — Племена та землі"
+  - section: 'Вступ — Племена та землі'
     words: 500
     points:
       - "Східні слов'яни на території сучасної України VII-IX ст."
@@ -59,7 +59,7 @@ content_outline:
       - "Проблема ототожнення археологічних культур із племенами"
       - "Племінні союзи як протодержавні утворення"
 
-  - section: "Поляни — засновники Києва"
+  - section: 'Поляни — засновники Києва'
     words: 650
     points:
       - "Розселення в середній течії Дніпра"
@@ -67,7 +67,7 @@ content_outline:
       - "Політичний та культурний центр — Київ"
       - "Поляни яко мудрі — за літописом"
 
-  - section: "Древляни — лісові люди"
+  - section: 'Древляни — лісові люди'
     words: 550
     points:
       - "Територія — Полісся, на захід від полян"
@@ -163,4 +163,4 @@ prerequisites:
 connects_to:
   - b2-hist-06 (Founding of Kyiv)
   - b2-hist-09 (Oleh and Ihor)
-  - b2-hist-08 (Synthesis: Origins to Kyiv)
+  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'

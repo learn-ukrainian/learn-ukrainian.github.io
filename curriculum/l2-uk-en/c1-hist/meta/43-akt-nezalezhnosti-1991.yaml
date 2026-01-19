@@ -4,6 +4,9 @@
 id: c1-hist-43
 title: "Акт проголошення незалежності: Текст і контекст"
 slug: akt-nezalezhnosti-1991
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -63,7 +66,7 @@ content_outline:
       - Чому потрібен був референдум
       - 90.32% — що означає
       - Регіональний розподіл
-      - Крим і Донбас теж голосували "так"
+      - "Крим і Донбас теж голосували «так»"
 
   - section: Міжнародне визнання
     words: 400

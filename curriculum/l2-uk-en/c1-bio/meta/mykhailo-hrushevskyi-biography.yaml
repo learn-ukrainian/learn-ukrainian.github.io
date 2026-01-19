@@ -1,22 +1,137 @@
-title: 'Михайло Грушевський: Архітектор української історії'
-subtitle: 'Mykhailo Hrushevsky: Architect of Ukrainian History'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- history
-- politics
-- academia
-grammar:
-- Formal academic and historiographical register
-- Political proclamations and legal language
-objectives:
-- Learner understands Mykhailo Hrushevskys role as the leader of the UNR.
-- Learner can analyze the "History of Ukraine-Rus" as a foundational national narrative.
-- Learner explores the challenges of political leadership during the Revolution.
-vocabulary_count: 24
+# C1-BIO Module 35: Михайло Грушевський: Історик і президент
+# Status: SPEC (ready for content development)
+
+id: c1-bio-35
+title: "Михайло Грушевський: Історик і президент"
 slug: mykhailo-hrushevskyi-biography
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Михайло Грушевський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Михайло_Грушевський
+    type: primary
+    notes: Біографія, наукова та політична діяльність
+  - name: Історія України-Руси
+    url: https://uk.wikipedia.org/wiki/Історія_України-Руси
+    type: reference
+    notes: Головна наукова праця
+  - name: Українська Центральна Рада
+    url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+    type: reference
+    notes: Політична діяльність 1917-1918
+
+content_outline:
+  - section: Вступ — Батько української історії
+    words: 400
+    points:
+      - Михайло Грушевський — найвидатніший український історик
+      - Від професора до голови Центральної Ради
+      - Творець української національної історіографії
+
+  - section: Ранні роки та освіта (1866-1894)
+    words: 600
+    points:
+      - Народження в Холмі в родині педагога
+      - Навчання в Київському університеті у Володимира Антоновича
+      - Перші наукові роботи
+      - Формування концепції окремішності української історії
+
+  - section: Львівський період (1894-1914)
+    words: 800
+    points:
+      - Професорство у Львівському університеті
+      - Керівництво Науковим товариством імені Шевченка
+      - Написання «Історії України-Руси»
+      - Розвиток української науки в Галичині
+
+  - section: Революція та УНР (1917-1918)
+    words: 800
+    points:
+      - Повернення до Києва після Лютневої революції
+      - Обрання головою Центральної Ради
+      - Проголошення Української Народної Республіки
+      - Четвертий Універсал та падіння Ради
+
+  - section: Еміграція та повернення (1919-1934)
+    words: 700
+    points:
+      - Еміграція до Австрії та Чехословаччини
+      - Наукова робота в еміграції
+      - Повернення до Радянської України (1924)
+      - Робота в Академії наук під наглядом
+
+  - section: Смерть та спадщина
+    words: 700
+    points:
+      - Загадкова смерть у 1934 році
+      - Посмертні репресії проти родини та учнів
+      - Реабілітація та повернення імені
+      - Грушевський на 50-гривневій банкноті
+
+vocabulary_hints:
+  required:
+    - історик (historian)
+    - історіографія (historiography)
+    - Центральна Рада (Central Rada)
+    - Універсал (Universal/proclamation)
+    - незалежність (independence)
+    - академія (academy)
+    - нація (nation)
+    - державність (statehood)
+    - еміграція (emigration)
+    - репресії (repressions)
+  recommended:
+    - архів (archive)
+    - джерелознавство (source studies)
+    - наратив (narrative)
+    - федерація (federation)
+    - автономія (autonomy)
+
+activity_hints:
+  - type: reading
+    focus: Уривки з «Історії України-Руси» та промов
+    source: Наукові та політичні твори
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія, наука та політика
+    items: "12+"
+
+  - type: match-up
+    focus: Періоди життя та досягнення
+    items: "10+"
+
+  - type: essay-response
+    focus: Як історик може змінити свідомість нації?
+    word_target: 300
+    output: Historical analysis
+
+  - type: group-sort
+    focus: Наукові та політичні здобутки
+    items: "12+"
+
+  - type: fill-in
+    focus: Історична та політична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи був Грушевський хорошим політиком?
+    output: Critical reflection
+
+prerequisites:
+  - c1-bio-22-mykhailo-drahomanov
+
+connects_to:
+  - c1-bio-37-mariia-voiakovska
+  - c1-bio-44-symon-petliura
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -4,6 +4,9 @@
 id: c1-hist-65
 title: "Друга хвиля: Політична (1920-1923)"
 slug: druha-khvylia-politychna
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian

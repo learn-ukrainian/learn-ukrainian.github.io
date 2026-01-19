@@ -1,131 +1,111 @@
-# C1 Module 24: Digital Communication
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-24
 title: Цифрова комунікація
 slug: 24-digital-communication
+phase: C1.2 Professional Communication
+focus: communication
 module_type: skills
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian Digital Etiquette
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Guidelines for professional digital communication
-  - name: Business Email Standards
-    url: https://chamber.ua/
-    type: secondary
-    notes: Ukrainian business correspondence norms
-
+- name: Ukrainian Digital Etiquette
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for professional digital communication
+- name: Business Email Standards
+  url: https://chamber.ua/
+  type: secondary
+  notes: Ukrainian business correspondence norms
 content_outline:
-  - section: Вступ — Регістри цифрової комунікації
-    words: 400
-    points:
-      - Формальний vs неформальний регістр
-      - Вибір каналу комунікації
-      - Особливості онлайн-спілкування
-
-  - section: Структура ділового листа
-    words: 800
-    points:
-      - Тема (Subject line)
-      - Звертання (Salutation)
-      - Основний текст (Body)
-      - Прощання (Closing)
-      - Підпис (Signature)
-
-  - section: Типи ділових листів
-    words: 700
-    points:
-      - Запит інформації
-      - Лист-подяка
-      - Лист-вибачення
-      - Лист-нагадування
-
-  - section: Месенджери в бізнесі
-    words: 600
-    points:
-      - Етикет робочих чатів
-      - Використання емодзі
-      - Час відповіді
-
-  - section: Відеоконференції
-    words: 600
-    points:
-      - Підготовка до онлайн-зустрічі
-      - Технічний етикет
-      - Модерація обговорення
-
-  - section: Типові помилки
-    words: 500
-    points:
-      - Надмірна неформальність
-      - Ігнорування повідомлень
-      - Помилки з копіями листів
-
-  - section: Практичне завдання
-    words: 400
-    points:
-      - Написання офіційного листа
-      - Трансформація стилів
-      - Аналіз листування
-
+- section: Вступ — Регістри цифрової комунікації
+  words: 400
+  points:
+  - Формальний vs неформальний регістр
+  - Вибір каналу комунікації
+  - Особливості онлайн-спілкування
+- section: Структура ділового листа
+  words: 800
+  points:
+  - Тема (Subject line)
+  - Звертання (Salutation)
+  - Основний текст (Body)
+  - Прощання (Closing)
+  - Підпис (Signature)
+- section: Типи ділових листів
+  words: 700
+  points:
+  - Запит інформації
+  - Лист-подяка
+  - Лист-вибачення
+  - Лист-нагадування
+- section: Месенджери в бізнесі
+  words: 600
+  points:
+  - Етикет робочих чатів
+  - Використання емодзі
+  - Час відповіді
+- section: Відеоконференції
+  words: 600
+  points:
+  - Підготовка до онлайн-зустрічі
+  - Технічний етикет
+  - Модерація обговорення
+- section: Типові помилки
+  words: 500
+  points:
+  - Надмірна неформальність
+  - Ігнорування повідомлень
+  - Помилки з копіями листів
+- section: Практичне завдання
+  words: 400
+  points:
+  - Написання офіційного листа
+  - Трансформація стилів
+  - Аналіз листування
 vocabulary_hints:
   required:
-    - електронний лист (email)
-    - тема листа (subject line)
-    - звертання (salutation)
-    - підпис (signature)
-    - вкладення (attachment)
-    - копія (CC)
-    - прихована копія (BCC)
-    - месенджер (messenger)
-    - відеоконференція (video conference)
-    - чат (chat)
+  - електронний лист (email)
+  - тема листа (subject line)
+  - звертання (salutation)
+  - підпис (signature)
+  - вкладення (attachment)
+  - копія (CC)
+  - прихована копія (BCC)
+  - месенджер (messenger)
+  - відеоконференція (video conference)
+  - чат (chat)
   recommended:
-    - пересилання (forwarding)
-    - автовідповідь (auto-reply)
-    - розсилка (mailing list)
-    - модерація (moderation)
-    - онлайн-етикет (online etiquette)
-
+  - пересилання (forwarding)
+  - автовідповідь (auto-reply)
+  - розсилка (mailing list)
+  - модерація (moderation)
+  - онлайн-етикет (online etiquette)
 activity_hints:
-  - type: essay-response
-    focus: Write formal email on given topic
-    word_target: 150
-
-  - type: quiz
-    focus: Digital communication etiquette
-    items: "15+"
-
-  - type: match-up
-    focus: Informal message → formal email
-    items: "12+"
-
-  - type: error-correction
-    focus: Fix email mistakes
-    items: "12+"
-
-  - type: cloze
-    focus: Email templates completion
-    items: "10+"
-
-  - type: group-sort
-    focus: Formal vs informal digital language
-    items: "12+"
-
+- type: essay-response
+  focus: Write formal email on given topic
+  word_target: 150
+- type: quiz
+  focus: Digital communication etiquette
+  items: 15+
+- type: match-up
+  focus: Informal message → formal email
+  items: 12+
+- type: error-correction
+  focus: Fix email mistakes
+  items: 12+
+- type: cloze
+  focus: Email templates completion
+  items: 10+
+- type: group-sort
+  focus: Formal vs informal digital language
+  items: 12+
 prerequisites:
-  - c1-23 (Business Etiquette)
-  - Academic writing skills
-
+- c1-23 (Business Etiquette)
+- Academic writing skills
 connects_to:
-  - c1-25 (Political System)
-  - c1-32 (Professional Scenarios)
-  - c1-35 (C1.2 Checkpoint)
-
+- c1-25 (Political System)
+- c1-32 (Professional Scenarios)
+- c1-35 (C1.2 Checkpoint)
 naturalness:
   score: null
   status: PENDING

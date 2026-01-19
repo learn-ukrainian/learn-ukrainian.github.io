@@ -1,131 +1,111 @@
-# C1 Module 20: C1.1 Checkpoint
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-20
 title: Контрольна точка — Академічна база
 slug: 20-c1-1-checkpoint
+phase: C1.1 Academic Ukrainian
+focus: checkpoint
 module_type: checkpoint
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: CEFR C1 Assessment Criteria
-    url: https://www.coe.int/
-    type: reference
-    notes: C1 level assessment descriptors
-  - name: Ukrainian State Standard C1 (2024)
-    url: https://mon.gov.ua/
-    type: reference
-    notes: National C1 competency requirements
-
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level assessment descriptors
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
 content_outline:
-  - section: Огляд C1.1 — Академічні основи
-    words: 500
-    points:
-      - Підсумок модулів M01-M19
-      - Ключові компетенції C1.1
-      - Структура контрольної точки
-
-  - section: Граматичний огляд
-    words: 700
-    points:
-      - Пасивний стан та регістри
-      - Дієприкметники та складні речення
-      - Неправильні дієслова
-      - Пунктуація
-
-  - section: Академічний стиль
-    words: 700
-    points:
-      - Безособові конструкції
-      - Номіналізація та хеджінг
-      - Логічні сполучники
-      - Формальний регістр
-
-  - section: Наукове письмо
-    words: 800
-    points:
-      - Структура есе та статті
-      - Цитування та парафразування
-      - Анотація та огляд літератури
-      - Тези та контраргументи
-
-  - section: Усна презентація
-    words: 600
-    points:
-      - Структура доповіді
-      - Мовні маркери
-      - Робота з аудиторією
-
-  - section: Критичний аналіз
-    words: 500
-    points:
-      - Оцінка методології
-      - Аналіз аргументації
-      - Написання рецензії
-
-  - section: Практичні завдання
-    words: 200
-    points:
-      - Есе на вибір теми
-      - Рецензія статті
-      - Самооцінка C1.1
-
+- section: Огляд C1.1 — Академічні основи
+  words: 500
+  points:
+  - Підсумок модулів M01-M19
+  - Ключові компетенції C1.1
+  - Структура контрольної точки
+- section: Граматичний огляд
+  words: 700
+  points:
+  - Пасивний стан та регістри
+  - Дієприкметники та складні речення
+  - Неправильні дієслова
+  - Пунктуація
+- section: Академічний стиль
+  words: 700
+  points:
+  - Безособові конструкції
+  - Номіналізація та хеджінг
+  - Логічні сполучники
+  - Формальний регістр
+- section: Наукове письмо
+  words: 800
+  points:
+  - Структура есе та статті
+  - Цитування та парафразування
+  - Анотація та огляд літератури
+  - Тези та контраргументи
+- section: Усна презентація
+  words: 600
+  points:
+  - Структура доповіді
+  - Мовні маркери
+  - Робота з аудиторією
+- section: Критичний аналіз
+  words: 500
+  points:
+  - Оцінка методології
+  - Аналіз аргументації
+  - Написання рецензії
+- section: Практичні завдання
+  words: 200
+  points:
+  - Есе на вибір теми
+  - Рецензія статті
+  - Самооцінка C1.1
 vocabulary_hints:
   required:
-    - консолідація (consolidation)
-    - оцінювання (assessment)
-    - компетенція (competency)
-    - інтеграція (integration)
-    - самооцінка (self-assessment)
-    - критерій (criterion)
-    - рівень (level)
-    - академічний (academic)
-    - науковий (scientific)
-    - професійний (professional)
+  - консолідація (consolidation)
+  - оцінювання (assessment)
+  - компетенція (competency)
+  - інтеграція (integration)
+  - самооцінка (self-assessment)
+  - критерій (criterion)
+  - рівень (level)
+  - академічний (academic)
+  - науковий (scientific)
+  - професійний (professional)
   recommended:
-    - підсумок (summary)
-    - огляд (review)
-    - контрольна точка (checkpoint)
-    - досягнення (achievement)
-    - прогрес (progress)
-
+  - підсумок (summary)
+  - огляд (review)
+  - контрольна точка (checkpoint)
+  - досягнення (achievement)
+  - прогрес (progress)
 activity_hints:
-  - type: quiz
-    focus: Comprehensive C1.1 grammar and vocabulary
-    items: "40+"
-
-  - type: essay-response
-    focus: Write argumentative essay
-    word_target: 500
-
-  - type: essay-response
-    focus: Write article critique
-    word_target: 300
-
-  - type: cloze
-    focus: Academic style markers integration
-    items: "15+"
-
-  - type: match-up
-    focus: Review all key concepts M01-M19
-    items: "20+"
-
-  - type: fill-in
-    focus: Citation and paraphrase practice
-    items: "12+"
-
+- type: quiz
+  focus: Comprehensive C1.1 grammar and vocabulary
+  items: 40+
+- type: essay-response
+  focus: Write argumentative essay
+  word_target: 500
+- type: essay-response
+  focus: Write article critique
+  word_target: 300
+- type: cloze
+  focus: Academic style markers integration
+  items: 15+
+- type: match-up
+  focus: Review all key concepts M01-M19
+  items: 20+
+- type: fill-in
+  focus: Citation and paraphrase practice
+  items: 12+
 prerequisites:
-  - c1-01 to c1-19 (Complete Phase C1.1)
-  - All academic foundation skills
-
+- c1-01 to c1-19 (Complete Phase C1.1)
+- All academic foundation skills
 connects_to:
-  - c1-21 (CV/Resume Writing - C1.2 start)
-  - c1-35 (Speaking Practice)
-  - c1-106 (Final C1 Checkpoint)
-
+- c1-21 (CV/Resume Writing - C1.2 start)
+- c1-35 (Speaking Practice)
+- c1-106 (Final C1 Checkpoint)
 naturalness:
   score: null
   status: PENDING

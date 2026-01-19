@@ -4,6 +4,9 @@
 id: c2-24
 title: Змішування стилів і гібридні регістри
 slug: style-blending
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -138,8 +141,8 @@ prerequisites:
 connects_to:
   - c2-25 (C2.1 Final Checkpoint)
   - c2-32 (Writing Literary Essays)
-  - c2-37 (Creative Writing: Prose)
+  - 'c2-37 (Creative Writing: Prose)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

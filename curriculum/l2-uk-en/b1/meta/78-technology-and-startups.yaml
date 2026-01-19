@@ -1,10 +1,10 @@
-module: 78
+module: '78'
 title: Технології та стартапи
 subtitle: Technology and Startups
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

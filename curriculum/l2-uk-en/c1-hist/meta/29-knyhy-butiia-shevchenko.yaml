@@ -4,6 +4,9 @@
 id: c1-hist-29
 title: "Книги Буття: Шевченко та Кирило-Мефодіївці"
 slug: knyhy-butiia-shevchenko
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -30,7 +33,7 @@ content_outline:
     points:
       - 1846-1847 — контекст
       - Кирило-Мефодіївське братство
-      - "Книги буття" — маніфест
+      - "«Книги буття» — маніфест"
       - Чому важливий документ
 
   - section: Історичний контекст
@@ -50,7 +53,7 @@ content_outline:
       - Інші члени
       - Як організувалися
 
-  - section: "Книги буття" — зміст
+  - section: '«Книги буття» — зміст'
     words: 700
     points:
       - Структура — біблійна форма
@@ -103,7 +106,7 @@ vocabulary_hints:
 
 activity_hints:
   - type: reading
-    focus: "Ukraine as Messiah" passage with glosses
+    focus: '«Ukraine as Messiah» passage with glosses'
     source: wikisource
 
   - type: comparative-study

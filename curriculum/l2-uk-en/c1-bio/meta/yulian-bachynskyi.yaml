@@ -1,23 +1,139 @@
-title: 'Юліан Бачинський: Пророк української незалежності'
-subtitle: 'Julian Bachynskyi: Prophet of Ukrainian Independence'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- revolutionary
-- politics
-- independence
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Julian Bachynskyi’s contribution to the ideology of Ukrainian
-  independence
-- Learner can analyze political and biographical narratives at C1 level
-- Learner masters biographical and historical vocabulary
-vocabulary_count: 24
+# C1-BIO Module 39: Юліан Бачинський: Теоретик незалежності
+# Status: SPEC (ready for content development)
+
+id: c1-bio-39
+title: "Юліан Бачинський: Теоретик незалежності"
 slug: yulian-bachynskyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Юліан Бачинський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Україна irredenta
+    url: https://diasporiana.org.ua/
+    type: reference
+    notes: Головна праця
+  - name: Історія української політичної думки
+    url: https://litopys.org.ua/
+    type: reference
+    notes: Контекст політичної думки
+
+content_outline:
+  - section: Вступ — Пророк незалежності
+    words: 400
+    points:
+      - Бачинський як перший, хто чітко сформулював ідею незалежності
+      - Україна irredenta 1895 року
+      - Чому його забули та чому варто пам'ятати
+
+  - section: Галицьке походження
+    words: 600
+    points:
+      - Народження в Галичині (1870)
+      - Освіта та формування поглядів
+      - Вплив соціалістичних ідей
+
+  - section: Україна irredenta
+    words: 800
+    points:
+      - Головна праця життя
+      - Аргументи на користь незалежності
+      - Рецепція та критика
+
+  - section: Соціалізм і національне питання
+    words: 700
+    points:
+      - Синтез соціалістичних та національних ідей
+      - Полеміка з марксистами
+      - Унікальність його позиції
+
+  - section: Політична діяльність
+    words: 700
+    points:
+      - Участь в українських організаціях
+      - Журналістська робота
+      - Роль у формуванні політичної свідомості
+
+  - section: Еміграція та останні роки
+    words: 600
+    points:
+      - Життя за кордоном
+      - Продовження публіцистичної діяльності
+      - Смерть та забуття
+
+  - section: Дискусія — Ідеї, що випереджають час
+    words: 200
+    points:
+      - Чому деякі ідеї реалізуються через століття
+      - Бачинський та незалежність 1991 року
+
+vocabulary_hints:
+  required:
+    - irredenta (irredenta - unredeemed territories)
+    - незалежність (independence)
+    - соціалізм (socialism)
+    - теоретик (theorist)
+    - політична думка (political thought)
+    - самостійність (self-sufficiency/sovereignty)
+    - публіцистика (publicistic writing)
+    - пророцтво (prophecy)
+    - еміграція (emigration)
+    - ідеологія (ideology)
+  recommended:
+    - національне питання (national question)
+    - марксизм (Marxism)
+    - соціал-демократія (social democracy)
+    - антиімперіалізм (anti-imperialism)
+    - політична програма (political program)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти Україна irredenta
+    source: Первинні джерела
+    items: "3 passages"
+
+  - type: quiz
+    focus: Ключові ідеї Бачинського
+    items: "12+"
+
+  - type: match-up
+    focus: Політичні терміни та визначення
+    items: "10+"
+
+  - type: essay-response
+    focus: Чи можна передбачити майбутнє нації?
+    word_target: 300
+    output: Аргументований есей
+
+  - type: group-sort
+    focus: Соціалізм vs націоналізм у Бачинського
+    items: "12+"
+
+  - type: fill-in
+    focus: Політологічна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чому ідея незалежності здавалася утопічною?
+    output: Історичний аналіз
+
+prerequisites:
+  - c1-bio-22-mykhailo-drahomanov
+
+connects_to:
+  - c1-bio-42-mykola-mikhnovskyi
+  - c1-bio-51-viacheslav-lypynskyi
+  - c1-bio-52-dmytro-dontsov
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -1,0 +1,140 @@
+# C1-BIO Module 114: Микола Амосов: Хірург і філософ здоров'я
+# Status: SPEC (ready for content development)
+
+id: c1-bio-114
+title: "Микола Амосов: Хірург і філософ здоров'я"
+slug: mykola-amosov
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Микола Амосов (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Амосов_Микола_Михайлович
+    type: primary
+    notes: Biography, medical achievements, philosophy
+  - name: Інститут серцево-судинної хірургії
+    url: https://uk.wikipedia.org/wiki/Національний_інститут_серцево-судинної_хірургії_імені_М._М._Амосова
+    type: reference
+    notes: Institute he led
+  - name: "Роздуми про здоров'я"
+    url: https://uk.wikipedia.org/wiki/Роздуми_про_здоров%27я
+    type: reference
+    notes: His famous book
+
+content_outline:
+  - section: Вступ — Лікар, який лікував Україну
+    words: 400
+    points:
+      - Амосов як піонер кардіохірургії
+      - Філософ здорового способу життя
+      - Автор, якого читали мільйони
+
+  - section: Молодість і війна
+    words: 600
+    points:
+      - Народження в Росії (1913)
+      - Медична освіта
+      - Польовий хірург на фронті
+      - Тисячі операцій у польових умовах
+
+  - section: Становлення кардіохірурга
+    words: 700
+    points:
+      - Переїзд до Києва
+      - Перші операції на серці
+      - Створення штучних клапанів серця
+      - Заснування Інституту (1983)
+
+  - section: Наукові досягнення
+    words: 700
+    points:
+      - Штучне кровообігове обладнання
+      - Тисячі операцій на серці
+      - Дослідження штучного інтелекту в медицині
+      - Кібернетичний підхід до організму
+
+  - section: Філософ здоров'я
+    words: 600
+    points:
+      - "Роздуми про здоров'я" — бестселер
+      - Система фізичних вправ
+      - Критика гіподинамії
+      - Обмеження в їжі та рух як ліки
+
+  - section: Спадщина лікаря-мислителя
+    words: 500
+    points:
+      - Смерть 2002 року
+      - Інститут його імені
+      - Вплив на профілактичну медицину
+      - Амосов як символ активного довголіття
+
+vocabulary_hints:
+  required:
+    - кардіохірургія (cardiac surgery)
+    - хірург (surgeon)
+    - операція на серці (heart surgery)
+    - штучний клапан (artificial valve)
+    - здоровий спосіб життя (healthy lifestyle)
+    - профілактика (prevention)
+    - гіподинамія (sedentary lifestyle)
+    - кібернетика (cybernetics)
+    - довголіття (longevity)
+    - фізичні вправи (physical exercises)
+  recommended:
+    - кровообіг (blood circulation)
+    - трансплантація (transplantation)
+    - реабілітація (rehabilitation)
+    - діагностика (diagnostics)
+    - пацієнт (patient)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from "Роздуми про здоров'я"
+    source: Medical and philosophical texts
+    items: "3 passages"
+
+  - type: quiz
+    focus: Amosov's biography and medical achievements
+    items: "12+"
+
+  - type: match-up
+    focus: Medical innovations and their significance
+    items: "10+"
+
+  - type: essay-response
+    focus: How did Amosov combine medicine with philosophy?
+    word_target: 300
+    output: Analysis of holistic approach to health
+
+  - type: group-sort
+    focus: Medical achievements vs. philosophical contributions
+    items: "12+"
+
+  - type: fill-in
+    focus: Key medical terms and dates
+    items: "10+"
+
+  - type: discussion
+    focus: Is Amosov's health philosophy relevant today?
+    output: Contemporary health analysis
+
+prerequisites:
+  - Basic medical vocabulary
+  - Understanding of Soviet-era medicine
+  - Health and wellness concepts
+
+connects_to:
+  - c1-bio-113 (Boris Paton - contemporary scientist)
+  - c1-bio-111 (Sukhomlynskyi - humanist of same era)
+  - c1-bio-112 (Yevhen Paton - contemporary)
+
+naturalness:
+  score: 1
+  status: PENDING

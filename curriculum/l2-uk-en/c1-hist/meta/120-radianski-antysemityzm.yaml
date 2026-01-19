@@ -4,6 +4,9 @@
 id: c1-hist-120
 title: "Радянський антисемітизм"
 slug: radianski-antysemityzm
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -97,11 +100,11 @@ activity_hints:
     output: Memory suppression study
 
   - type: campaign-analysis
-    focus: "Rootless cosmopolitans" — coded antisemitism
+    focus: '«Rootless cosmopolitans» — coded antisemitism'
     output: Campaign analysis
 
   - type: discrimination-study
-    focus: "Fifth paragraph" — practical discrimination
+    focus: '«Fifth paragraph» — practical discrimination'
     output: Discrimination documentation
 
   - type: legacy-analysis

@@ -1,28 +1,139 @@
-title: 'Оксана Забужко: Інтелектуальна провокація та фемінізм'
-subtitle: 'Oksana Zabuzhko: Intellectual Provocation and Feminism'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- feminism
-- philosophy
-grammar:
-- Complex syntactic structures
-- Essayistic style markers
-objectives:
-- Learner understands the role of Oksana Zabuzhko in shaping modern Ukrainian intellectual
-  discourse
-- Learner can analyze key themes in "Fieldwork in Ukrainian Sex" and "Museum of Abandoned
-  Secrets"
-- Learner masters vocabulary related to feminism, post-colonialism, and literary criticism
-vocabulary_count: 25
+# C1-BIO Module 86: Оксана Забужко
+# Status: SPEC (ready for content development)
+
+id: c1-bio-86
+title: "Оксана Забужко: Інтелектуал і феміністка"
 slug: oksana-zabuzhko
-vital_status: living
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Оксана Забужко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
+    type: primary
+    notes: Біографія, літературна діяльність, філософія
+  - name: Офіційний сайт Оксани Забужко
+    url: https://zabuzhko.com
+    type: reference
+    notes: Бібліографія та есеїстика
+  - name: PEN Ukraine
+    url: https://pen.org.ua
+    type: reference
+    notes: Громадська позиція та правозахисна діяльність
+
+content_outline:
+  - section: Вступ — Голос українського інтелектуалізму
+    words: 400
+    points:
+      - Забужко як найвпливовіша українська письменниця сучасності
+      - Поєднання літератури, філософії та публіцистики
+      - Роль у формуванні постколоніального дискурсу
+
+  - section: Ранні роки та формування (1960-1987)
+    words: 600
+    points:
+      - Народження в Луцьку в родині інтелігентів
+      - Батько — дисидент та дослідник Лесі Українки
+      - Навчання філософії в Київському університеті
+      - Перші поетичні збірки
+
+  - section: «Польові дослідження з українського сексу» (1996)
+    words: 800
+    points:
+      - Революційність роману для української літератури
+      - Тема травми та постколоніальної ідентичності
+      - Фемінізм та сексуальність у літературі
+      - Міжнародний успіх та переклади
+
+  - section: «Музей покинутих секретів» (2009)
+    words: 800
+    points:
+      - Епічний роман про українську історію XX століття
+      - Тема УПА та замовчуваної пам'яті
+      - Складна наративна структура
+      - Літературна премія Анджелуса
+
+  - section: Філософія та есеїстика
+    words: 700
+    points:
+      - Дисертація про естетику Шевченка
+      - Есеї про українську ідентичність
+      - «Notre Dame d'Ukraine» — дослідження Лесі Українки
+      - Публічний інтелектуал та коментатор
+
+  - section: Громадська позиція та сучасність
+    words: 700
+    points:
+      - Роль під час Революції гідності
+      - Коментування російсько-української війни
+      - Виступи на міжнародних форумах
+      - Вплив на сучасну українську культуру
+
+vocabulary_hints:
+  required:
+    - постколоніалізм (postcolonialism)
+    - фемінізм (feminism)
+    - інтелектуал (intellectual)
+    - есеїстика (essay writing)
+    - наратив (narrative)
+    - ідентичність (identity)
+    - травма (trauma)
+    - дискурс (discourse)
+    - деколонізація (decolonization)
+    - публіцистика (opinion journalism)
+  recommended:
+    - сексуальність (sexuality)
+    - пам'ять (memory)
+    - УПА (UPA)
+    - естетика (aesthetics)
+    - міжнародне визнання (international recognition)
+
+activity_hints:
+  - type: reading
+    focus: Літературна творчість
+    source: Уривки з романів та есеїв
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та ключові твори
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як література допомагає опрацювати колективну травму?
+    word_target: 300
+    output: Аналітичне есе
+
+  - type: group-sort
+    focus: Художня література vs есеїстика
+    items: "12+"
+
+  - type: fill-in
+    focus: Термінологія постколоніальної критики
+    items: "10+"
+
+  - type: discussion
+    focus: Роль публічного інтелектуала в сучасній Україні
+    output: Критичний аналіз
+
+prerequisites:
+  - c1-bio-40 (Леся Українка)
+  - c1-bio-74 (Ліна Костенко)
+
+connects_to:
+  - c1-bio-84 (Галина Пагутяк)
+  - c1-bio-85 (Марія Матіос)
+  - c1-bio-94 (Софія Андрухович)
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

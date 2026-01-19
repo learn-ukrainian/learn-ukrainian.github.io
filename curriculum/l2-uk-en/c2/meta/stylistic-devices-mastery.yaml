@@ -4,6 +4,9 @@
 id: c2-21
 title: Стилістичні засоби — Повне володіння
 slug: stylistic-devices-mastery
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -135,8 +138,8 @@ prerequisites:
 connects_to:
   - c2-22 (Rhythm & prosody builds on devices)
   - c2-23 (Intertextuality uses allusion as device)
-  - c2-28 (Poetics: verse analysis uses devices)
+  - 'c2-28 (Poetics: verse analysis uses devices)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

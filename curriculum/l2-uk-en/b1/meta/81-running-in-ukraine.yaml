@@ -1,10 +1,10 @@
-module: 81
+module: '81'
 title: Біг в Україні
 subtitle: Running Culture & Marathons
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

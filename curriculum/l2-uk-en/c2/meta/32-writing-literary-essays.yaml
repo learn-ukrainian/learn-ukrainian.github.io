@@ -4,6 +4,9 @@
 id: c2-32
 title: Написання літературознавчих есеїв
 slug: writing-literary-essays
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -51,7 +54,7 @@ content_outline:
   - section: Робота з текстовими доказами
     words: 700
     points:
-      - Цитування: коли і як
+      - 'Цитування: коли і як'
       - Парафраз vs. пряма цитата
       - Аналіз цитати
       - Інтеграція доказів в аргумент
@@ -141,5 +144,5 @@ connects_to:
   - c2-45 (C2.2 Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

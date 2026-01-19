@@ -1,128 +1,108 @@
-# C1 Module 30: History of the Language
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-30
-title: "Історія мови: Від Русі до сьогодення"
+title: 'Історія мови: Від Русі до сьогодення'
 slug: 30-history-of-language
+phase: C1.2 Professional Communication
+focus: history
 module_type: cultural
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Історія української мови
-    url: https://r2u.org.ua/
-    type: primary
-    notes: Comprehensive language history
-  - name: Шевельов - Історична фонологія
-    url: https://mova.info/
-    type: reference
-    notes: Academic linguistic history
-
+- name: Історія української мови
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Comprehensive language history
+- name: Шевельов - Історична фонологія
+  url: https://mova.info/
+  type: reference
+  notes: Academic linguistic history
 content_outline:
-  - section: Вступ — Давньоруський період
-    words: 500
-    points:
-      - Праслов'янська спадщина
-      - Давньоруська мова
-      - Формування східнослов'янських мов
-
-  - section: Середньоукраїнська доба
-    words: 700
-    points:
-      - XIV-XVIII століття
-      - Вплив церковнослов'янської
-      - Козацька доба
-
-  - section: Мовні заборони
-    words: 800
-    points:
-      - Валуєвський циркуляр (1863)
-      - Емський указ (1876)
-      - Наслідки для мови
-
-  - section: Відродження мови
-    words: 600
-    points:
-      - Котляревський та нова література
-      - Шевченко і літературна мова
-      - Стандартизація
-
-  - section: Радянський період
-    words: 600
-    points:
-      - Українізація 1920-х
-      - Репресії 1930-х
-      - Русифікація
-
-  - section: Сучасний період
-    words: 500
-    points:
-      - Незалежність
-      - Мовний закон 2019
-      - Мовна ситуація сьогодні
-
-  - section: Практичне завдання
-    words: 300
-    points:
-      - Аналіз історичних текстів
-      - Дискусія про мовну політику
-      - Порівняльний аналіз періодів
-
+- section: Вступ — Давньоруський період
+  words: 500
+  points:
+  - Праслов'янська спадщина
+  - Давньоруська мова
+  - Формування східнослов'янських мов
+- section: Середньоукраїнська доба
+  words: 700
+  points:
+  - XIV-XVIII століття
+  - Вплив церковнослов'янської
+  - Козацька доба
+- section: Мовні заборони
+  words: 800
+  points:
+  - Валуєвський циркуляр (1863)
+  - Емський указ (1876)
+  - Наслідки для мови
+- section: Відродження мови
+  words: 600
+  points:
+  - Котляревський та нова література
+  - Шевченко і літературна мова
+  - Стандартизація
+- section: Радянський період
+  words: 600
+  points:
+  - Українізація 1920-х
+  - Репресії 1930-х
+  - Русифікація
+- section: Сучасний період
+  words: 500
+  points:
+  - Незалежність
+  - Мовний закон 2019
+  - Мовна ситуація сьогодні
+- section: Практичне завдання
+  words: 300
+  points:
+  - Аналіз історичних текстів
+  - Дискусія про мовну політику
+  - Порівняльний аналіз періодів
 vocabulary_hints:
   required:
-    - давньоруський (Old East Slavic)
-    - праслов'янський (Proto-Slavic)
-    - церковнослов'янський (Church Slavonic)
-    - стандартизація (standardization)
-    - українізація (Ukrainization)
-    - русифікація (Russification)
-    - мовна політика (language policy)
-    - лінгвоцид (linguicide)
-    - відродження (revival)
-    - кодифікація (codification)
+  - давньоруський (Old East Slavic)
+  - праслов'янський (Proto-Slavic)
+  - церковнослов'янський (Church Slavonic)
+  - стандартизація (standardization)
+  - українізація (Ukrainization)
+  - русифікація (Russification)
+  - мовна політика (language policy)
+  - лінгвоцид (linguicide)
+  - відродження (revival)
+  - кодифікація (codification)
   recommended:
-    - глотоцид (glottocide)
-    - літературна мова (literary language)
-    - койне (koine)
-    - діахронія (diachrony)
-    - етимологія (etymology)
-
+  - глотоцид (glottocide)
+  - літературна мова (literary language)
+  - койне (koine)
+  - діахронія (diachrony)
+  - етимологія (etymology)
 activity_hints:
-  - type: quiz
-    focus: Language history timeline
-    items: "15+"
-
-  - type: match-up
-    focus: Historical event → consequence
-    items: "12+"
-
-  - type: fill-in
-    focus: Historical narrative completion
-    items: "12+"
-
-  - type: cloze
-    focus: Language policy vocabulary
-    items: "10+"
-
-  - type: group-sort
-    focus: Events by historical period
-    items: "12+"
-
-  - type: true-false
-    focus: Ukrainian language history facts
-    items: "12+"
-
+- type: quiz
+  focus: Language history timeline
+  items: 15+
+- type: match-up
+  focus: Historical event → consequence
+  items: 12+
+- type: fill-in
+  focus: Historical narrative completion
+  items: 12+
+- type: cloze
+  focus: Language policy vocabulary
+  items: 10+
+- type: group-sort
+  focus: Events by historical period
+  items: 12+
+- type: true-false
+  focus: Ukrainian language history facts
+  items: 12+
 prerequisites:
-  - c1-28 (Dialects)
-  - c1-29 (Surzhyk)
-
+- c1-28 (Dialects)
+- c1-29 (Surzhyk)
 connects_to:
-  - c1-31 (Diaspora Ukrainian)
-  - c1-47 (Archaic Verb Forms)
-  - c1-35 (C1.2 Checkpoint)
-
+- c1-31 (Diaspora Ukrainian)
+- c1-47 (Archaic Verb Forms)
+- c1-35 (C1.2 Checkpoint)
 naturalness:
   score: null
   status: PENDING

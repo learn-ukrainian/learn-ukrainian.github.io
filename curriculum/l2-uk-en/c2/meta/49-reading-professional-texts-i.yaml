@@ -4,6 +4,9 @@
 id: c2-49
 title: Читання фахових текстів I — Стратегії розуміння
 slug: reading-professional-texts-i
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Database of Ukrainian scientific periodicals for text examples
   - name: Українські наукові журнали — платформа
     url: https://usj.org.ua/
-    type: example
+    type: reference
     notes: Open access Ukrainian academic journals across fields
   - name: ДСТУ 3017:2015 — Видання
     url: https://dnaop.com/
@@ -122,5 +125,5 @@ connects_to:
   - c2-59 (Professional Research Skills)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

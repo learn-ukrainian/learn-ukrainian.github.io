@@ -4,6 +4,9 @@
 id: c2-06
 title: Художній стиль — Літературна творчість
 slug: khudozhniy-styl
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Classic and contemporary literary examples
   - name: Письменники України — біографії та твори
     url: https://ukrlib.com.ua/
-    type: example
+    type: reference
     notes: Author styles and creative techniques
   - name: Ukrainian State Standard 2024 — Literary style
     url: https://mon.gov.ua/
@@ -134,10 +137,10 @@ prerequisites:
 
 connects_to:
   - c2-21 (Stylistic devices mastery)
-  - c2-36 (Creative writing: poetry)
-  - c2-37 (Creative writing: prose)
-  - c2-28 (Poetics: verse analysis)
+  - 'c2-36 (Creative writing: poetry)'
+  - 'c2-37 (Creative writing: prose)'
+  - 'c2-28 (Poetics: verse analysis)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

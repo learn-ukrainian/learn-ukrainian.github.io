@@ -4,6 +4,9 @@
 id: c2-15
 title: Індивідуальний голос II — Вдосконалення стилю
 slug: individual-voice-ii
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -134,8 +137,8 @@ prerequisites:
 connects_to:
   - c2-16 (Text coherence uses consistent voice)
   - c2-17 (Practice I — style portfolio)
-  - c2-37 (Creative writing: prose)
+  - 'c2-37 (Creative writing: prose)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

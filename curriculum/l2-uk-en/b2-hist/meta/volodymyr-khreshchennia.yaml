@@ -4,6 +4,9 @@
 id: b2-hist-11
 title: Володимир і Хрещення Русі
 slug: volodymyr-khreshchennia
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -38,7 +41,7 @@ content_outline:
     points:
       - Боротьба за київський престол
       - Вбивство Ярополка
-      - Язичницький період — "Перун срібної голови"
+      - 'Язичницький період — «Перун срібної голови«'
       - Людські жертвоприношення?
 
   - section: Вибір віри
@@ -136,4 +139,4 @@ prerequisites:
 connects_to:
   - b2-hist-12 (Yaroslav the Wise)
   - b2-hist-14 (St. Sophia Cathedral)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

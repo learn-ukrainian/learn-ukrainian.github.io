@@ -1,10 +1,10 @@
-module: 83
+module: '83'
 title: Велосипед та водні види
 subtitle: Cycling & Water Sports
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

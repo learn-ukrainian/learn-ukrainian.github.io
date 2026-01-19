@@ -4,6 +4,9 @@
 id: c1-hist-41
 title: "«Український вісник» Чорновола"
 slug: ukrayinskyi-visnyk
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -28,7 +31,7 @@ content_outline:
   - section: Вступ — Хроніка опору
     words: 400
     points:
-      - Що таке "Український вісник"?
+      - "Що таке «Український вісник»?"
       - Чорновіл — редактор
       - Мета видання
       - Значення для руху
@@ -38,7 +41,7 @@ content_outline:
     points:
       - Біографія
       - Журналіст стає дисидентом
-      - "Лихо з розуму" — перша праця
+      - "«Лихо з розуму» — перша праця"
       - Арешти і заслання
 
   - section: Історія видання
@@ -77,7 +80,7 @@ content_outline:
   - section: Підсумок
     words: 300
     points:
-      - "Вісник" як модель
+      - "«Вісник» як модель"
       - Чорновіл — символ
       - Зв'язок із незалежністю
 

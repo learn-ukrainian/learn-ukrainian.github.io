@@ -1,10 +1,10 @@
-module: 79
+module: '79'
 title: Спорт в Україні
 subtitle: Spectator Sports in Ukraine
 version: '1.1'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

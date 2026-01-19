@@ -4,6 +4,9 @@
 id: c2-10
 title: Трансформація стилю I — Науковий → Популярний
 slug: style-transformation-i
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -13,7 +16,7 @@ immersion: "100% Ukrainian"
 sources:
   - name: Науково-популярні видання України
     url: https://www.nbuv.gov.ua/
-    type: example
+    type: reference
     notes: Examples of academic-to-popular transformation
   - name: Science popularization methodology
     url: https://mon.gov.ua/
@@ -137,5 +140,5 @@ connects_to:
   - c2-12 (Lexical stylistics for word choice)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

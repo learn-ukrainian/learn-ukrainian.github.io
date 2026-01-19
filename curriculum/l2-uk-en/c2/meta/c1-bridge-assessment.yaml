@@ -4,6 +4,9 @@
 id: c2-01
 title: Перехідний модуль C1→C2 та діагностика
 slug: c1-bridge-assessment
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: checkpoint
 module_type: checkpoint
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -116,5 +119,5 @@ connects_to:
   - c2-19 (C2.1 Review)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

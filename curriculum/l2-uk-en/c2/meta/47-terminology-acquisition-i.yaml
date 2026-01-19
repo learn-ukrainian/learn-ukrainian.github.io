@@ -4,6 +4,9 @@
 id: c2-47
 title: Опанування термінології I — Системний підхід
 slug: terminology-acquisition-i
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: vocabulary
 module_type: vocabulary
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -21,7 +24,7 @@ sources:
     notes: Ukrainian standard for terminology work methodology
   - name: Термінологічний вісник — наукове видання
     url: https://ium.org.ua/terminolohichnyy-visnyk/
-    type: example
+    type: reference
     notes: Academic journal on Ukrainian terminology
 
 content_outline:
@@ -124,5 +127,5 @@ connects_to:
   - c2-60 (Building Domain Expertise)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

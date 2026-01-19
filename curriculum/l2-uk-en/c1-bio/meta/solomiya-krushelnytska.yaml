@@ -1,24 +1,138 @@
-title: 'Соломія Крушельницька: Соловейко з України'
-subtitle: 'Solomiya Krushelnytska: Nightingale from Ukraine'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- arts
-- music
-- opera
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Solomiya Krushelnytska’s contribution to world opera and Ukrainian
-  culture
-- Learner can analyze musical and biographical narratives at C1 level
-- Learner masters musical and historical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 41: Соломія Крушельницька
+# Status: SPEC (ready for content development)
+
+id: c1-bio-41
+title: "Соломія Крушельницька: Оперна діва"
 slug: solomiya-krushelnytska
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Соломія Крушельницька (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Крушельницька_Соломія_Амвросіївна
+    type: primary
+    notes: Біографія, оперна кар'єра, репертуар
+  - name: Львівський національний театр опери та балету
+    url: https://opera.lviv.ua
+    type: reference
+    notes: Музей Крушельницької
+  - name: La Scala Archives
+    url: https://teatroallascala.org
+    type: reference
+    notes: Виступи в Ла Скала
+
+content_outline:
+  - section: Вступ — Соловейко з України
+    words: 400
+    points:
+      - Крушельницька як одна з найвидатніших оперних співачок світу
+      - Тріумфи на найпрестижніших сценах
+      - Українська ідентичність у світовій славі
+
+  - section: Галицьке дитинство (1872-1891)
+    words: 600
+    points:
+      - Народження в родині священика на Тернопільщині
+      - Раннє виявлення музичного таланту
+      - Навчання у Львівській консерваторії
+      - Перші виступи
+
+  - section: Навчання та початок кар'єри (1891-1900)
+    words: 700
+    points:
+      - Удосконалення в Італії та Відні
+      - Дебют на провідних європейських сценах
+      - Формування унікального голосу (сопрано)
+      - Перші міжнародні успіхи
+
+  - section: Світова слава (1900-1920)
+    words: 900
+    points:
+      - Тріумф у «Баттерфляй» Пуччіні (Ла Скала, 1904)
+      - Виступи в найпрестижніших театрах світу
+      - Особиста дружба з Пуччіні
+      - Широкий репертуар — від Вагнера до Верді
+
+  - section: Повернення до Львова (1920-1939)
+    words: 700
+    points:
+      - Рішення повернутися на батьківщину
+      - Викладання у Львівській консерваторії
+      - Концертна діяльність
+      - Пропаганда української музики
+
+  - section: Радянський період та пам'ять (1939-1952)
+    words: 700
+    points:
+      - Життя під радянською владою
+      - Продовження викладання
+      - Смерть у Львові
+      - Легенда та вшанування
+
+vocabulary_hints:
+  required:
+    - оперна співачка (opera singer)
+    - сопрано (soprano)
+    - прем'єра (premiere)
+    - репертуар (repertoire)
+    - дебют (debut)
+    - тріумф (triumph)
+    - консерваторія (conservatory)
+    - арія (aria)
+    - партія (role/part)
+    - Ла Скала (La Scala)
+  recommended:
+    - «Мадам Баттерфляй» (Madame Butterfly)
+    - Пуччіні (Puccini)
+    - бельканто (bel canto)
+    - вокальна техніка (vocal technique)
+    - Віденська опера (Vienna Opera)
+
+activity_hints:
+  - type: reading
+    focus: Оперна кар'єра та мистецька спадщина
+    source: Критичні статті та мемуари
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та ключові ролі
+    items: "12+"
+
+  - type: match-up
+    focus: Опери та ролі Крушельницької
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому Крушельницька вирішила повернутися до Львова?
+    word_target: 300
+    output: Біографічне есе
+
+  - type: group-sort
+    focus: Європейська кар'єра vs львівський період
+    items: "12+"
+
+  - type: fill-in
+    focus: Оперна та музична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Українська ідентичність у світовій культурі
+    output: Культурологічний аналіз
+
+prerequisites:
+  - c1-bio-23 (Микола Лисенко)
+
+connects_to:
+  - c1-bio-26 (Марія Заньковецька)
+  - c1-bio-67 (Серж Лифар)
+  - c1-bio-83 (Квітка Цісик)
+
+naturalness:
+  score: 1
+  status: PENDING

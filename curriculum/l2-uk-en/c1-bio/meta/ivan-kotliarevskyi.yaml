@@ -1,24 +1,133 @@
-title: 'Іван Котляревський: Батько нової літератури'
-subtitle: 'Ivan Kotliarevskyi: Father of Modern Literature'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- literature
-- classicism
-- humor
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Ivan Kotliarevskyi’s pivotal role in starting modern Ukrainian
-  literature
-- Learner can analyze literary and biographical narratives at C1 level
-- Learner masters literary and historical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 46: Іван Котляревський
+# Status: SPEC (ready for content development)
+
+id: c1-bio-46
+title: "Іван Котляревський: Батько нової літератури"
 slug: ivan-kotliarevskyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Іван Котляревський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
+    type: primary
+    notes: Biography of the founder of modern Ukrainian literature
+  - name: Полтавський літературно-меморіальний музей
+    url: https://kotliarevskyi.poltava.ua/
+    type: reference
+    notes: Museum dedicated to Kotliarevsky's life and work
+
+content_outline:
+  - section: Вступ — Народження нової літератури
+    words: 400
+    points:
+      - Автор «Енеїди» — першого твору нової української літератури
+      - Започаткування літературної мови на народній основі
+      - Полтавець, що змінив історію української культури
+
+  - section: Юність та освіта (1769-1789)
+    words: 600
+    points:
+      - Народження в Полтаві
+      - Семінарія та початкова освіта
+      - Служба в канцеляріях
+      - Інтерес до народної творчості
+
+  - section: Військова служба (1789-1808)
+    words: 700
+    points:
+      - Участь у російсько-турецькій війні
+      - Служба в Сіверському полку
+      - Початок роботи над «Енеїдою»
+      - Перші публікації
+
+  - section: «Енеїда» — літературна революція (1798-1842)
+    words: 900
+    points:
+      - Травестія Вергілія українською мовою
+      - Козацький колорит та гумор
+      - Частини поеми та їхнє видання
+      - Значення для становлення літературної мови
+
+  - section: Драматургія та громадська діяльність (1808-1838)
+    words: 700
+    points:
+      - «Наталка Полтавка» — перша українська опера
+      - «Москаль-чарівник» — водевіль
+      - Директор Полтавського театру
+      - Меценатство та просвітництво
+
+  - section: Спадщина — Батько нової літератури
+    words: 700
+    points:
+      - Смерть у Полтаві (1838)
+      - Вплив на наступні покоління
+      - Котляревський у сучасній Україні
+      - Значення для національної ідентичності
+
+vocabulary_hints:
+  required:
+    - травестія (travesty/burlesque)
+    - літературна мова (literary language)
+    - народна мова (folk language)
+    - поема (long poem)
+    - драматургія (dramaturgy)
+    - опера (opera)
+    - водевіль (vaudeville)
+    - класицизм (classicism)
+    - бурлеск (burlesque)
+    - просвітництво (enlightenment)
+  recommended:
+    - гумор (humor)
+    - сатира (satire)
+    - народність (folk character)
+    - меценат (patron)
+    - театр (theater)
+
+activity_hints:
+  - type: reading
+    focus: Становлення української літератури
+    source: Literary history sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та творчість Котляревського
+    items: "12+"
+
+  - type: match-up
+    focus: Літературні терміни та жанри
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому «Енеїду» вважають початком нової української літератури?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Твори за жанрами
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературознавча термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як Котляревський вплинув на формування української літературної мови?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-45
+
+connects_to:
+  - c1-bio-20
+  - c1-bio-102
+
+naturalness:
+  score: 1
+  status: PENDING

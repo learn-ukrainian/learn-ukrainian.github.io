@@ -2,7 +2,7 @@
 # Status: SPEC (ready for content development)
 
 id: b1-08
-title: 'Вид у минулому: результат vs процес'
+title: 'Вид у минулому: результат і процес'
 subtitle: 'Aspect in Past: Result vs Process'
 slug: 08-aspect-past-result-process
 module_type: grammar
@@ -69,7 +69,7 @@ content_outline:
     words: 500
     points:
       - Та сама ситуація — різний вид
-      - "Що ти робив?" vs "Що ти зробив?"
+      - '"Що ти робив?" vs "Що ти зробив?"'
       - Вибір виду як комунікативний інструмент
 
   - section: Практика з контекстом
@@ -118,7 +118,7 @@ activity_hints:
     items: "10+"
 
   - type: dialogue
-    focus: "Що ти робив?" vs "Що ти зробив?" exchanges
+    focus: '"Що ти робив?" vs "Що ти зробив?" exchanges'
     items: "8+"
 
   - type: cloze

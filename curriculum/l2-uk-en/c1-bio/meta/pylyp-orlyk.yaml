@@ -7,6 +7,9 @@ slug: pylyp-orlyk
 module_type: biography
 word_target: 4000
 immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 
 # === AGENT BUILD SPEC ===
 

@@ -1,130 +1,110 @@
-# C1 Module 22: Job Interview Strategies
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-22
-title: "Співбесіда: стратегії успіху"
+title: 'Співбесіда: стратегії успіху'
 slug: 22-job-interview
+phase: C1.2 Professional Communication
+focus: communication
 module_type: skills
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian HR Standards
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Professional interview practices in Ukraine
-  - name: STAR Method Guidelines
-    url: https://careers.gov.ua/
-    type: secondary
-    notes: Behavioral interview techniques
-
+- name: Ukrainian HR Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Professional interview practices in Ukraine
+- name: STAR Method Guidelines
+  url: https://careers.gov.ua/
+  type: secondary
+  notes: Behavioral interview techniques
 content_outline:
-  - section: Вступ — Підготовка до співбесіди
-    words: 400
-    points:
-      - Дослідження компанії
-      - Підготовка документів
-      - Психологічна підготовка
-
-  - section: Типові запитання співбесіди
-    words: 800
-    points:
-      - Розкажіть про себе
-      - Чому ви хочете працювати в нашій компанії?
-      - Які ваші сильні та слабкі сторони?
-      - Де ви бачите себе через 5 років?
-
-  - section: Метод STAR
-    words: 700
-    points:
-      - Ситуація (Situation)
-      - Завдання (Task)
-      - Дія (Action)
-      - Результат (Result)
-
-  - section: Переговори про умови
-    words: 600
-    points:
-      - Обговорення зарплати
-      - Робочий графік
-      - Додаткові пільги
-
-  - section: Складні запитання
-    words: 600
-    points:
-      - Чому ви пішли з попередньої роботи?
-      - Розкажіть про конфлікт
-      - Ваші очікування від зарплати
-
-  - section: Невербальна комунікація
-    words: 500
-    points:
-      - Зоровий контакт
-      - Поза та жести
-      - Одяг та зовнішність
-
-  - section: Практичне завдання
-    words: 400
-    points:
-      - Симуляція співбесіди
-      - Відповіді методом STAR
-      - Аналіз помилок
-
+- section: Вступ — Підготовка до співбесіди
+  words: 400
+  points:
+  - Дослідження компанії
+  - Підготовка документів
+  - Психологічна підготовка
+- section: Типові запитання співбесіди
+  words: 800
+  points:
+  - Розкажіть про себе
+  - Чому ви хочете працювати в нашій компанії?
+  - Які ваші сильні та слабкі сторони?
+  - Де ви бачите себе через 5 років?
+- section: Метод STAR
+  words: 700
+  points:
+  - Ситуація (Situation)
+  - Завдання (Task)
+  - Дія (Action)
+  - Результат (Result)
+- section: Переговори про умови
+  words: 600
+  points:
+  - Обговорення зарплати
+  - Робочий графік
+  - Додаткові пільги
+- section: Складні запитання
+  words: 600
+  points:
+  - Чому ви пішли з попередньої роботи?
+  - Розкажіть про конфлікт
+  - Ваші очікування від зарплати
+- section: Невербальна комунікація
+  words: 500
+  points:
+  - Зоровий контакт
+  - Поза та жести
+  - Одяг та зовнішність
+- section: Практичне завдання
+  words: 400
+  points:
+  - Симуляція співбесіди
+  - Відповіді методом STAR
+  - Аналіз помилок
 vocabulary_hints:
   required:
-    - співбесіда (job interview)
-    - роботодавець (employer)
-    - кандидат (candidate)
-    - посада (position)
-    - зарплата (salary)
-    - пільги (benefits)
-    - випробувальний термін (probation period)
-    - сильні сторони (strengths)
-    - слабкі сторони (weaknesses)
-    - мотивація (motivation)
+  - співбесіда (job interview)
+  - роботодавець (employer)
+  - кандидат (candidate)
+  - посада (position)
+  - зарплата (salary)
+  - пільги (benefits)
+  - випробувальний термін (probation period)
+  - сильні сторони (strengths)
+  - слабкі сторони (weaknesses)
+  - мотивація (motivation)
   recommended:
-    - кар'єрні цілі (career goals)
-    - командна робота (teamwork)
-    - лідерські якості (leadership qualities)
-    - стресостійкість (stress resistance)
-    - самовдосконалення (self-improvement)
-
+  - кар'єрні цілі (career goals)
+  - командна робота (teamwork)
+  - лідерські якості (leadership qualities)
+  - стресостійкість (stress resistance)
+  - самовдосконалення (self-improvement)
 activity_hints:
-  - type: quiz
-    focus: Interview questions and appropriate answers
-    items: "15+"
-
-  - type: match-up
-    focus: Question → appropriate response strategy
-    items: "12+"
-
-  - type: fill-in
-    focus: STAR method responses
-    items: "12+"
-
-  - type: cloze
-    focus: Interview dialogue completion
-    items: "10+"
-
-  - type: error-correction
-    focus: Fix inappropriate interview responses
-    items: "10+"
-
-  - type: essay-response
-    focus: Self-presentation paragraph
-    word_target: 150
-
+- type: quiz
+  focus: Interview questions and appropriate answers
+  items: 15+
+- type: match-up
+  focus: Question → appropriate response strategy
+  items: 12+
+- type: fill-in
+  focus: STAR method responses
+  items: 12+
+- type: cloze
+  focus: Interview dialogue completion
+  items: 10+
+- type: error-correction
+  focus: Fix inappropriate interview responses
+  items: 10+
+- type: essay-response
+  focus: Self-presentation paragraph
+  word_target: 150
 prerequisites:
-  - c1-21 (CV & Resume Writing)
-  - Formal dialogue skills
-
+- c1-21 (CV & Resume Writing)
+- Formal dialogue skills
 connects_to:
-  - c1-23 (Business Etiquette)
-  - c1-24 (Digital Communication)
-  - c1-32 (Professional Scenarios)
-
+- c1-23 (Business Etiquette)
+- c1-24 (Digital Communication)
+- c1-32 (Professional Scenarios)
 naturalness:
   score: null
   status: PENDING

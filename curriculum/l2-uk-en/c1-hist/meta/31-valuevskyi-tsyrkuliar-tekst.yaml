@@ -4,6 +4,9 @@
 id: c1-hist-31
 title: "Валуєвський циркуляр: Повний текст"
 slug: valuevskyi-tsyrkuliar-tekst
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -54,7 +57,7 @@ content_outline:
     words: 500
     points:
       - Аргументи циркуляра
-      - "Наріччя" vs. мова
+      - '«Наріччя» vs. мова'
       - Сепаратизм — удаваний чи реальний?
       - Імперська логіка
 

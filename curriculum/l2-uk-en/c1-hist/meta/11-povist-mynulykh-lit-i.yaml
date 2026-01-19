@@ -4,6 +4,9 @@
 id: c1-hist-11
 title: "Повість минулих літ I: Структура та автори"
 slug: povist-mynulykh-lit-i
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -36,7 +39,7 @@ content_outline:
   - section: Структура літопису
     words: 600
     points:
-      - Вступна частина — "звідки пішла Руська земля"
+      - "Вступна частина — «звідки пішла Руська земля»"
       - Недатована частина — легенди, походження
       - Датована частина — від 852 року
       - Принцип погодного запису

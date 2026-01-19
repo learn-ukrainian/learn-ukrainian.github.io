@@ -1,10 +1,10 @@
-module: 82
+module: '82'
 title: Гори та трейлраннінг
 subtitle: Hiking & Trail Running in Carpathians
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

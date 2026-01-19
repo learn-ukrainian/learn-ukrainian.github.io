@@ -4,6 +4,9 @@
 id: c1-hist-42
 title: Меморандум Української Гельсінської групи
 slug: memorandum-uhh
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -37,7 +40,7 @@ content_outline:
     words: 500
     points:
       - Що підписав СРСР
-      - "Третій кошик" — права людини
+      - "«Третій кошик» — права людини"
       - Як дисиденти використали
       - Міжнародний тиск
 
@@ -88,7 +91,7 @@ vocabulary_hints:
     - права людини (human rights)
     - правозахисник (human rights defender)
     - Гельсінські угоди (Helsinki Accords)
-    - "третій кошик" (third basket)
+    - '«третій кошик» (third basket)'
     - порушення (violation)
     - національні права (national rights)
     - міжнародний тиск (international pressure)

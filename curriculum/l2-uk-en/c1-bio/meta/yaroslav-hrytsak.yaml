@@ -1,29 +1,141 @@
-title: 'Ярослав Грицак: Глобальна історія та подолання минулого'
-subtitle: 'Yaroslav Hrytsak: Global History and Overcoming the Past'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- history
-- modernization
-- europe
-grammar:
-- Cause-and-effect structures
-- Academic and publicistic vocabulary
-objectives:
-- Learner understands Yaroslav Hrytsak's approach to Ukrainian history in a global
-  context
-- Learner can analyze key concepts such as modernization, overcoming the past, and
-  European integration
-- Learner masters vocabulary related to historical analysis, sociology, and political
-  science
-vocabulary_count: 25
+# C1-BIO Module 87: Ярослав Грицак: Публічний історик
+# Status: SPEC (ready for content development)
+
+id: c1-bio-87
+title: "Ярослав Грицак: Публічний історик"
 slug: yaroslav-hrytsak
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Ярослав Грицак (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Український католицький університет
+    url: https://ucu.edu.ua/
+    type: reference
+    notes: Академічна діяльність
+  - name: Книги та публікації
+    url: https://krytyka.com/
+    type: reference
+    notes: Наукові праці
+
+content_outline:
+  - section: Вступ — Історик, який говорить з людьми
+    words: 400
+    points:
+      - Грицак як найвпливовіший публічний історик України
+      - Від академічної науки до широкої аудиторії
+      - Роль у формуванні історичної свідомості
+
+  - section: Львівське дитинство та освіта
+    words: 600
+    points:
+      - Народження у Львові (1960)
+      - Навчання та академічне становлення
+      - Вплив львівської інтелектуальної традиції
+
+  - section: Академічна кариєра
+    words: 700
+    points:
+      - Дослідження української історії
+      - Біографія Франка як ключова праця
+      - Міжнародне визнання
+
+  - section: Подолання минулого
+    words: 800
+    points:
+      - Концепція подолання минулого
+      - Критика націоналістичних міфів
+      - Європейський контекст української історії
+
+  - section: Публічна історія
+    words: 700
+    points:
+      - Лекції та публічні виступи
+      - Роль в УКУ
+      - Історія для широкої аудиторії
+
+  - section: Війна та сучасність
+    words: 600
+    points:
+      - Реакція на російську агресію
+      - Переосмислення деяких позицій
+      - Роль інтелектуала під час війни
+
+  - section: Дискусія — Обов'язок історика
+    words: 200
+    points:
+      - Об'єктивність vs громадянська позиція
+      - Як говорити неприємну правду
+
+vocabulary_hints:
+  required:
+    - публічна історія (public history)
+    - модернізація (modernization)
+    - подолання минулого (overcoming the past)
+    - європеїзація (Europeanization)
+    - національний міф (national myth)
+    - історична память (historical memory)
+    - деконструкція (deconstruction)
+    - критичний аналіз (critical analysis)
+    - інтелектуал (intellectual)
+    - дискурс (discourse)
+  recommended:
+    - ревізіонізм (revisionism)
+    - історіографія (historiography)
+    - наратив (narrative)
+    - ідентичність (identity)
+    - травма (trauma)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти праць Грицака
+    source: Академічні та публіцистичні тексти
+    items: "3 passages"
+
+  - type: quiz
+    focus: Ключові ідеї Грицака
+    items: "12+"
+
+  - type: match-up
+    focus: Історичні концепції та їхній зміст
+    items: "10+"
+
+  - type: essay-response
+    focus: Чи повинен історик бути обєктивним?
+    word_target: 300
+    output: Аргументований есей
+
+  - type: group-sort
+    focus: Традиційна vs критична історія
+    items: "12+"
+
+  - type: fill-in
+    focus: Історіографічна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як говорити неприємну правду про минуле?
+    output: Етичний аналіз
+
+prerequisites:
+  - b2-hist-independence
+
+connects_to:
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-88-vitaly-portnikov
+  - c1-bio-86-oksana-zabuzhko
+
 vital_status: living
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

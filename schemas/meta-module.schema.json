@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Module Schema v2.0",
+  "description": "Schema for self-contained module specs that enable agent-driven generation",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "slug",
+    "version",
+    "phase",
+    "focus",
+    "word_target",
+    "sources",
+    "content_outline",
+    "vocabulary_hints",
+    "activity_hints"
+  ],
+  "properties": {
+    "module": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Module identifier (e.g., b2-hist-01)" },
+    "id": { "type": "string", "description": "Canonical module ID" },
+    "title": { "type": "string", "description": "Ukrainian title" },
+    "subtitle": { "type": "string", "description": "English subtitle" },
+    "slug": { "type": "string", "description": "URL-safe identifier" },
+    "version": { "type": "string" },
+    "phase": { "type": "string", "description": "Curriculum phase (e.g., B2-HIST.1 [Витоки])" },
+    "focus": {
+      "type": "string",
+      "enum": ["history", "biography", "grammar", "vocabulary", "style", "checkpoint", "lit", "literature", "practical", "review", "culture", "analysis", "narrative", "linguistics", "phraseology", "communication", "domain", "project", "integration", "skills", "bridge", "cultural", "fine-arts", "exam", "practice", "phonology", "stylistics", "translation", "methodology", "historiography"],
+      "description": "Module focus type (lowercase normalized)"
+    },
+    "pedagogy": {
+      "type": "string",
+      "enum": ["seminar", "Seminar", "PPP", "TTT", "CBI", "immersion", "Immersion", "Immersion & Analysis", "literature", "narrative", "Analysis", "analysis", "Checkpoint", "checkpoint", "Review", "review"],
+      "description": "Teaching approach"
+    },
+    "register": { "type": "string", "description": "Language register (e.g., публіцистичний)" },
+    "duration": { "type": "integer", "description": "Estimated duration in minutes", "default": 120 },
+    "transliteration": { 
+      "type": "string", 
+      "enum": ["none", "optional", "required"],
+      "default": "none"
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "grammar": { "type": "array", "items": { "type": "string" }, "description": "Grammar points covered" },
+    "objectives": { "type": "array", "items": { "type": "string" }, "description": "Learning objectives" },
+    "vocabulary_count": { "type": "integer", "description": "Target vocabulary count" },
+    "naturalness": {
+      "type": "object",
+      "properties": {
+        "score": { "type": ["integer", "null"], "minimum": 1, "maximum": 10 },
+        "status": { "type": "string", "enum": ["PASS", "FAIL", "PENDING"] }
+      }
+    },
+    "module_type": { "type": "string", "description": "Legacy field - use focus instead" },
+    "word_target": { "type": "integer", "description": "Target word count for content" },
+    "immersion": { "type": "string", "description": "Immersion level (e.g., 100% Ukrainian)" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "type": { "type": "string", "enum": ["reference", "primary", "secondary", "media"] },
+          "notes": { "type": "string" }
+        }
+      },
+      "description": "Research sources for content accuracy"
+    },
+    "content_outline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section", "words", "points"],
+        "properties": {
+          "section": { "type": "string" },
+          "words": { "type": "integer" },
+          "points": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "vocabulary_hints": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "array", "items": { "type": "string" } },
+        "recommended": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "activity_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "focus"],
+        "properties": {
+          "type": { "type": "string" },
+          "focus": { "type": "string" },
+          "items": { "type": ["string", "integer"] },
+          "source": { "type": "string" },
+          "output": { "type": "string" },
+          "model_answer": { "type": "string" }
+        }
+      }
+    },
+    "prerequisites": { "type": "array", "items": { "type": "string" } },
+    "connects_to": { "type": "array", "items": { "type": "string" } }
+  }
+}

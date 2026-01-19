@@ -1,128 +1,108 @@
-# C1 Module 17: Irregular Verbs Complete
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-17
 title: Неправильні дієслова — повний огляд
 slug: 17-irregular-verbs-complete
+phase: C1.1 Academic Ukrainian
+focus: grammar
 module_type: grammar
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Морфологія української мови
-    url: https://r2u.org.ua/
-    type: reference
-    notes: Complete verb morphology reference
-  - name: Ukrainian Verb Conjugation Patterns
-    url: https://mova.info/
-    type: secondary
-    notes: Irregular verb patterns and alternations
-
+- name: Морфологія української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Complete verb morphology reference
+- name: Ukrainian Verb Conjugation Patterns
+  url: https://mova.info/
+  type: secondary
+  notes: Irregular verb patterns and alternations
 content_outline:
-  - section: Вступ — Чому дієслова «неправильні»?
-    words: 400
-    points:
-      - Історичні причини нерегулярностей
-      - Типи нерегулярних дієслів
-      - Частотність і важливість
-
-  - section: Чергування приголосних
-    words: 800
-    points:
-      - "писати -> пишу, возити -> вожу"
-      - "ходити -> ходжу, сидіти -> сиджу"
-      - "любити -> люблю, ловити -> ловлю"
-
-  - section: Чергування голосних
-    words: 700
-    points:
-      - "брати -> беру, прати -> перу"
-      - "о/і чергування: носити -> ношу"
-      - "Нульовий ступінь: слати -> шлю"
-
-  - section: Суплетивні основи
-    words: 700
-    points:
-      - "іти -> йду -> ішов"
-      - "бути -> є -> був"
-      - Особливості дієслова «бути»
-
-  - section: Унікальні парадигми
-    words: 600
-    points:
-      - "дати -> дам, даси, дасть"
-      - "їсти -> їм, їси, їсть"
-      - "хотіти -> хочу, хочеш, хоче"
-
-  - section: Дієслова руху
-    words: 600
-    points:
-      - "Однонаправлені vs різноспрямовані"
-      - "йти/ходити, їхати/їздити"
-      - "нести/носити, вести/водити"
-
-  - section: Практика відмінювання
-    words: 200
-    points:
-      - Вправи на всі типи
-      - Контекстне використання
-      - Типові помилки
-
+- section: Вступ — Чому дієслова «неправильні»?
+  words: 400
+  points:
+  - Історичні причини нерегулярностей
+  - Типи нерегулярних дієслів
+  - Частотність і важливість
+- section: Чергування приголосних
+  words: 800
+  points:
+  - писати -> пишу, возити -> вожу
+  - ходити -> ходжу, сидіти -> сиджу
+  - любити -> люблю, ловити -> ловлю
+- section: Чергування голосних
+  words: 700
+  points:
+  - брати -> беру, прати -> перу
+  - 'о/і чергування: носити -> ношу'
+  - 'Нульовий ступінь: слати -> шлю'
+- section: Суплетивні основи
+  words: 700
+  points:
+  - іти -> йду -> ішов
+  - бути -> є -> був
+  - Особливості дієслова «бути»
+- section: Унікальні парадигми
+  words: 600
+  points:
+  - дати -> дам, даси, дасть
+  - їсти -> їм, їси, їсть
+  - хотіти -> хочу, хочеш, хоче
+- section: Дієслова руху
+  words: 600
+  points:
+  - Однонаправлені vs різноспрямовані
+  - йти/ходити, їхати/їздити
+  - нести/носити, вести/водити
+- section: Практика відмінювання
+  words: 200
+  points:
+  - Вправи на всі типи
+  - Контекстне використання
+  - Типові помилки
 vocabulary_hints:
   required:
-    - чергування (alternation)
-    - приголосний (consonant)
-    - голосний (vowel)
-    - основа (stem)
-    - суплетивний (suppletive)
-    - парадигма (paradigm)
-    - відмінювання (conjugation)
-    - неправильний (irregular)
-    - однонаправлений (unidirectional)
-    - різноспрямований (multidirectional)
+  - чергування (alternation)
+  - приголосний (consonant)
+  - голосний (vowel)
+  - основа (stem)
+  - суплетивний (suppletive)
+  - парадигма (paradigm)
+  - відмінювання (conjugation)
+  - неправильний (irregular)
+  - однонаправлений (unidirectional)
+  - різноспрямований (multidirectional)
   recommended:
-    - морфонологія (morphonology)
-    - історичний (historical)
-    - аналогія (analogy)
-    - продуктивний (productive)
-    - непродуктивний (unproductive)
-
+  - морфонологія (morphonology)
+  - історичний (historical)
+  - аналогія (analogy)
+  - продуктивний (productive)
+  - непродуктивний (unproductive)
 activity_hints:
-  - type: fill-in
-    focus: Conjugate irregular verbs
-    items: "20+"
-
-  - type: match-up
-    focus: Infinitive to conjugated form
-    items: "15+"
-
-  - type: quiz
-    focus: Identify correct form in context
-    items: "15+"
-
-  - type: group-sort
-    focus: Classify verbs by alternation type
-    items: "15+"
-
-  - type: cloze
-    focus: Complete text with verb forms
-    items: "12+"
-
-  - type: error-correction
-    focus: Fix incorrect verb forms
-    items: "10+"
-
+- type: fill-in
+  focus: Conjugate irregular verbs
+  items: 20+
+- type: match-up
+  focus: Infinitive to conjugated form
+  items: 15+
+- type: quiz
+  focus: Identify correct form in context
+  items: 15+
+- type: group-sort
+  focus: Classify verbs by alternation type
+  items: 15+
+- type: cloze
+  focus: Complete text with verb forms
+  items: 12+
+- type: error-correction
+  focus: Fix incorrect verb forms
+  items: 10+
 prerequisites:
-  - B2 verb conjugation basics
-  - Aspect pairs understanding
-
+- B2 verb conjugation basics
+- Aspect pairs understanding
 connects_to:
-  - c1-18 (Essay Writing Practice)
-  - c1-47 (Archaic Verb Forms)
-  - c1-20 (C1.1 Checkpoint)
-
+- c1-18 (Essay Writing Practice)
+- c1-47 (Archaic Verb Forms)
+- c1-20 (C1.1 Checkpoint)
 naturalness:
   score: null
   status: PENDING

@@ -4,6 +4,9 @@
 id: b2-14
 title: Стилістичні сполучники
 slug: 14-stylistic-connectors
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -139,9 +142,9 @@ prerequisites:
 
 connects_to:
   - b2-15 (Register Introduction)
-  - b2-22 (Register: Literary Ukrainian)
+  - 'b2-22 (Register: Literary Ukrainian)'
   - b2-25 (B2.1b Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

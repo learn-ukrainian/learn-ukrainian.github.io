@@ -4,6 +4,9 @@
 id: c2-78
 title: Регіональні різновиди
 slug: regional-varieties
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: culture
 module_type: culture
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -146,5 +149,5 @@ connects_to:
   - c2-95 (Final Review I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

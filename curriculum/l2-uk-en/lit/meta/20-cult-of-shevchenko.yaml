@@ -37,7 +37,7 @@ content_outline:
     words: 700
     points:
       - Канонізація в СРСР
-      - "Революційний демократ"
+      - Революційний демократ
       - Що приховували і що підкреслювали
 
   - section: Діаспорний Шевченко
@@ -134,6 +134,11 @@ tags:
   - culture
   - myth
   - identity
+
+objectives:
+  - Analyze the evolution of Shevchenko's image from poet to national myth.
+  - Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
+  - Critically evaluate the risks and benefits of cultural canonization.
 
 grammar:
   - Critical discourse

@@ -4,6 +4,9 @@
 id: b2-hist-13
 title: "Руська Правда: Перший законодавчий кодекс"
 slug: ruska-pravda
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -137,4 +140,4 @@ prerequisites:
 connects_to:
   - b2-hist-14 (St. Sophia — cultural context)
   - b2-hist-18 (People of Rus — social life)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

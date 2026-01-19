@@ -1,24 +1,139 @@
-title: 'В’ячеслав Липинський: Ідеолог українського консерватизму'
-subtitle: 'Viacheslav Lypynskyi: Ideologue of Ukrainian Conservatism'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- revolutionary
-- politics
-- history
-- conservatism
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Lypynskyi’s theory of territorial patriotism
-- Learner can analyze political and historical discourse at C1 level
-- Learner masters political and biographical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 51: В'ячеслав Липинський: Консерватор-державник
+# Status: SPEC (ready for content development)
+
+id: c1-bio-51
+title: "В'ячеслав Липинський: Консерватор-державник"
 slug: viacheslav-lypynskyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: В'ячеслав Липинський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Інститут В'ячеслава Липинського
+    url: https://lipynsky.org/
+    type: reference
+    notes: Наукова спадщина та дослідження
+  - name: Твори Липинського
+    url: https://diasporiana.org.ua/
+    type: reference
+    notes: Повні тексти праць
+
+content_outline:
+  - section: Вступ — Український консерватизм як ідея
+    words: 400
+    points:
+      - Липинський як найоригінальніший український мислитель XX ст.
+      - Від польського шляхтича до українського ідеолога
+      - Чому його ідеї актуальні сьогодні
+
+  - section: Шляхетське коріння
+    words: 600
+    points:
+      - Народження в польській родині (1882)
+      - Освіта в Києві та за кордоном
+      - Шлях до української ідентичності
+
+  - section: Історик як державотворець
+    words: 700
+    points:
+      - Дослідження козаччини
+      - Переосмислення української історії
+      - Роль шляхти в українському русі
+
+  - section: Гетьманат та політична діяльність
+    words: 800
+    points:
+      - Посол Української Держави у Відні
+      - Підтримка Скоропадського
+      - Концепція класократії
+
+  - section: Листи до братів-хліборобів
+    words: 800
+    points:
+      - Головний теоретичний твір
+      - Ідея територіального патріотизму
+      - Критика народництва та інтелігенції
+
+  - section: Еміграція та останні роки
+    words: 500
+    points:
+      - Життя в Австрії та Чехословаччині
+      - Важка хвороба (туберкульоз)
+      - Смерть та інтелектуальна спадщина
+
+  - section: Дискусія — Консерватизм vs народництво
+    words: 200
+    points:
+      - Два шляхи українського державотворення
+      - Релевантність Липинського для XXI століття
+
+vocabulary_hints:
+  required:
+    - консерватизм (conservatism)
+    - державник (statist)
+    - територіальний патріотизм (territorial patriotism)
+    - класократія (classocracy)
+    - шляхта (nobility/gentry)
+    - гетьманат (Hetmanate)
+    - народництво (populism/Narodnikism)
+    - еліта (elite)
+    - ідеолог (ideologue)
+    - традиція (tradition)
+  recommended:
+    - монархізм (monarchism)
+    - аристократія (aristocracy)
+    - легітимізм (legitimism)
+    - органічна держава (organic state)
+    - хлібороби (agrarians)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти Листів до братів-хліборобів
+    source: Первинні джерела
+    items: "3 passages"
+
+  - type: quiz
+    focus: Ключові ідеї Липинського
+    items: "12+"
+
+  - type: match-up
+    focus: Терміни політичної філософії
+    items: "10+"
+
+  - type: essay-response
+    focus: Чи актуальний консерватизм для України?
+    word_target: 300
+    output: Аргументований есей
+
+  - type: group-sort
+    focus: Консерватизм vs народництво
+    items: "12+"
+
+  - type: fill-in
+    focus: Політична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи може шляхтич бути українським патріотом?
+    output: Історичний аналіз
+
+prerequisites:
+  - b2-hist-ukrainian-revolution
+
+connects_to:
+  - c1-bio-44-symon-petliura
+  - c1-bio-52-dmytro-dontsov
+  - c1-bio-35-mykhailo-hrushevskyi
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -91,7 +91,7 @@ content_outline:
   - section: Practice Integration
     words: 400
     points:
-      - "How do you...?" question patterns
+      - '"How do you...?" question patterns'
       - Common expressions review
       - Mini-dialogues about transport and tools
 
@@ -129,7 +129,7 @@ activity_hints:
     items: "12+"
 
   - type: quiz
-    focus: "How do you...?" questions
+    focus: '"How do you...?" questions'
     items: "10+"
 
   - type: fill-in

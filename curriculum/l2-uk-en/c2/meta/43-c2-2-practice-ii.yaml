@@ -4,6 +4,9 @@
 id: c2-43
 title: Практика C2.2 II — Творче портфоліо
 slug: c2-2-practice-ii
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Standards for contemporary Ukrainian creative writing competitions
   - name: Видавництво "Старий Лев"
     url: https://starylev.com.ua/
-    type: example
+    type: reference
     notes: Contemporary Ukrainian prose and poetry for creative models
   - name: ЛітАкцент — сучасна література
     url: https://litakcent.com/
@@ -117,7 +120,7 @@ activity_hints:
 
 prerequisites:
   - M42 (C2.2 Practice I — Literary portfolio)
-  - M36-37 (Creative writing: poetry and prose)
+  - 'M36-37 (Creative writing: poetry and prose)'
   - M23 (Intertextuality)
 
 connects_to:
@@ -126,5 +129,5 @@ connects_to:
   - c2-41 (Literary community)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

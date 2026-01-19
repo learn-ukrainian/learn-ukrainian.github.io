@@ -4,6 +4,9 @@
 id: c2-37
 title: Творче письмо — проза
 slug: creative-writing-prose
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -137,7 +140,7 @@ activity_hints:
     output: Constructive critique addressing plot, character, style
 
 prerequisites:
-  - c2-29 (Poetyka: Prose Analysis)
+  - 'c2-29 (Poetyka: Prose Analysis)'
   - c2-27 (Narratology)
   - c2-24 (Style Blending)
 
@@ -147,5 +150,5 @@ connects_to:
   - c2-45 (C2.2 Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

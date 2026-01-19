@@ -4,6 +4,9 @@
 id: c1-hist-121
 title: "Синтез: Зеленський і нова сторінка"
 slug: syntez-yevrei-ukraina
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
@@ -52,7 +55,7 @@ content_outline:
   - section: «Денацифікація» — іронія
     words: 600
     points:
-      - Путін: «нацистська Україна»
+      - 'Путін: «нацистська Україна»'
       - Президент-єврей
       - Як Україна відповіла
       - Міжнародна реакція
@@ -101,7 +104,7 @@ activity_hints:
     output: Symbolic significance analysis
 
   - type: propaganda-deconstruction
-    focus: "Denazification" claim vs. Jewish president
+    focus: '«Denazification» claim vs. Jewish president'
     output: Propaganda deconstruction
 
   - type: community-study

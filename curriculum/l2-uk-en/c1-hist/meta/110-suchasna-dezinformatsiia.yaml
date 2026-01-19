@@ -4,6 +4,9 @@
 id: c1-hist-110
 title: "Сучасна російська дезінформація"
 slug: suchasna-dezinformatsiia
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -105,7 +108,7 @@ activity_hints:
     output: Infrastructure diagram
 
   - type: methodology-study
-    focus: "Firehose of falsehood" — how it works
+    focus: '«Firehose of falsehood» — how it works'
     output: Methodology analysis
 
   - type: case-study

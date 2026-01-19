@@ -4,6 +4,9 @@
 id: c2-45
 title: Контрольна точка C2.2 — Літературна майстерність
 slug: c2-2-checkpoint
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: checkpoint
 module_type: checkpoint
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -134,5 +137,5 @@ connects_to:
   - c2-25 (C2.1 Final Checkpoint — for cross-reference)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

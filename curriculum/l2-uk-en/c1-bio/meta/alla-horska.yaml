@@ -1,22 +1,133 @@
-title: '«Алла Горська: Душа шістдесятництва»'
-subtitle: 'Alla Horska: The Soul of the Sixtiers'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- art
-- dissident
-- history
-- monumental-art
-grammar:
-- Artistic and political terminology
-- Participial phrases in biographical descriptions
-objectives:
-- Learner can describe Alla Horskas contribution to Ukrainian art and dissent
-- Learner understands the vocabulary of monumentalism and political repression
-vocabulary_count: 25
+# C1-BIO Module 72: Алла Горська
+# Status: SPEC (ready for content development)
+
+id: c1-bio-72
+title: "Алла Горська: Художниця-дисидентка"
 slug: alla-horska
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Алла Горська (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна
+    type: primary
+    notes: Biography covering artistic career and dissident activity
+  - name: Музей шістдесятництва
+    url: https://60museum.org.ua/
+    type: reference
+    notes: Archives of Shistdesiatnyky movement
+
+content_outline:
+  - section: Вступ — Вітраж, розбитий владою
+    words: 400
+    points:
+      - Художниця-монументалістка з яскравим талантом
+      - Ключова постать руху шістдесятників
+      - Загадкова загибель у 1970 році
+
+  - section: Формування художниці (1929-1952)
+    words: 600
+    points:
+      - Народження в Ялті у родині інженера
+      - Евакуація під час війни
+      - Навчання в Київському художньому інституті
+      - Вплив вчителів на формування стилю
+
+  - section: Монументальне мистецтво (1952-1962)
+    words: 800
+    points:
+      - Робота над мозаїками та вітражами
+      - Співпраця з чоловіком Віктором Зарецьким
+      - Пошук національного стилю
+      - Знамениті роботи в Києві та інших містах
+
+  - section: Шістдесятництво та опір (1962-1968)
+    words: 800
+    points:
+      - Участь у русі шістдесятників
+      - Знищений вітраж у Київському університеті
+      - Підписання правозахисних листів
+      - Дружба з Василем Симоненком та іншими
+
+  - section: Переслідування та загибель (1968-1970)
+    words: 700
+    points:
+      - Виключення зі Спілки художників
+      - Постійний нагляд КДБ
+      - Загадкові обставини смерті
+      - Версії про вбивство
+
+  - section: Спадщина — Душа українського модернізму
+    words: 700
+    points:
+      - Збережені твори в музеях
+      - Вшанування пам'яті після незалежності
+      - Вплив на сучасне українське мистецтво
+      - Горська як символ незламності духу
+
+vocabulary_hints:
+  required:
+    - монументальне мистецтво (monumental art)
+    - вітраж (stained glass)
+    - мозаїка (mosaic)
+    - шістдесятництво (Sixtiers movement)
+    - дисидент (dissident)
+    - правозахисник (human rights defender)
+    - переслідування (persecution)
+    - КДБ (KGB)
+    - спілка художників (artists' union)
+    - творча спадщина (creative legacy)
+  recommended:
+    - авангард (avant-garde)
+    - національний стиль (national style)
+    - репресований (repressed)
+    - символіка (symbolism)
+    - мученик (martyr)
+
+activity_hints:
+  - type: reading
+    focus: Мистецтво шістдесятників
+    source: Art criticism sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та творчість Горської
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні характеристики
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому влада боялася мистецтва Горської?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Представники шістдесятництва за галузями
+    items: "12+"
+
+  - type: fill-in
+    focus: Термінологія монументального мистецтва
+    items: "10+"
+
+  - type: discussion
+    focus: Як мистецтво може бути формою опору?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-71
+
+connects_to:
+  - c1-bio-75
+  - c1-bio-77
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -1,131 +1,111 @@
-# C1 Module 31: Diaspora Ukrainian
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-31
 title: Українська діаспора
 slug: 31-diaspora-ukrainian
+phase: C1.2 Professional Communication
+focus: linguistics
 module_type: cultural
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Українська діаспора
-    url: https://diasporaua.org/
-    type: reference
-    notes: Diaspora community information
-  - name: Heritage Language Studies
-    url: https://mova.info/
-    type: secondary
-    notes: Research on diaspora language
-
+- name: Українська діаспора
+  url: https://diasporaua.org/
+  type: reference
+  notes: Diaspora community information
+- name: Heritage Language Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Research on diaspora language
 content_outline:
-  - section: Вступ — Історія еміграції
-    words: 500
-    points:
-      - Хвилі еміграції
-      - Причини переселення
-      - Географія діаспори
-
-  - section: Основні громади
-    words: 700
-    points:
-      - Канада (найбільша діаспора)
-      - США (великі громади)
-      - Бразилія (історичні спільноти)
-      - Австралія (повоєнна еміграція)
-      - Європа (нова хвиля)
-
-  - section: Мовні особливості
-    words: 800
-    points:
-      - Збереження архаїзмів
-      - Вплив місцевих мов
-      - Особливості heritage speakers
-
-  - section: Культурне життя
-    words: 600
-    points:
-      - Українські школи
-      - Церква і громада
-      - Культурні організації
-
-  - section: Мовна ідентичність
-    words: 500
-    points:
-      - Збереження мови за кордоном
-      - Виклики для нових поколінь
-      - Зв'язок з Україною
-
-  - section: Сучасна діаспора
-    words: 500
-    points:
-      - Нова еміграція (після 2022)
-      - Діджитал-зв'язок
-      - Підтримка України
-
-  - section: Практичне завдання
-    words: 400
-    points:
-      - Аналіз діаспорного тексту
-      - Порівняння з сучасною мовою
-      - Дискусія про збереження
-
+- section: Вступ — Історія еміграції
+  words: 500
+  points:
+  - Хвилі еміграції
+  - Причини переселення
+  - Географія діаспори
+- section: Основні громади
+  words: 700
+  points:
+  - Канада (найбільша діаспора)
+  - США (великі громади)
+  - Бразилія (історичні спільноти)
+  - Австралія (повоєнна еміграція)
+  - Європа (нова хвиля)
+- section: Мовні особливості
+  words: 800
+  points:
+  - Збереження архаїзмів
+  - Вплив місцевих мов
+  - Особливості heritage speakers
+- section: Культурне життя
+  words: 600
+  points:
+  - Українські школи
+  - Церква і громада
+  - Культурні організації
+- section: Мовна ідентичність
+  words: 500
+  points:
+  - Збереження мови за кордоном
+  - Виклики для нових поколінь
+  - Зв'язок з Україною
+- section: Сучасна діаспора
+  words: 500
+  points:
+  - Нова еміграція (після 2022)
+  - Діджитал-зв'язок
+  - Підтримка України
+- section: Практичне завдання
+  words: 400
+  points:
+  - Аналіз діаспорного тексту
+  - Порівняння з сучасною мовою
+  - Дискусія про збереження
 vocabulary_hints:
   required:
-    - діаспора (diaspora)
-    - еміграція (emigration)
-    - іміграція (immigration)
-    - громада (community)
-    - heritage speaker (носій спадкової мови)
-    - архаїзм (archaism)
-    - збереження мови (language maintenance)
-    - асиміляція (assimilation)
-    - ідентичність (identity)
-    - хвиля еміграції (wave of emigration)
+  - діаспора (diaspora)
+  - еміграція (emigration)
+  - іміграція (immigration)
+  - громада (community)
+  - heritage speaker (носій спадкової мови)
+  - архаїзм (archaism)
+  - збереження мови (language maintenance)
+  - асиміляція (assimilation)
+  - ідентичність (identity)
+  - хвиля еміграції (wave of emigration)
   recommended:
-    - переселенець (settler)
-    - репатріація (repatriation)
-    - двомовність (bilingualism)
-    - мовний зсув (language shift)
-    - інтерференція (interference)
-
+  - переселенець (settler)
+  - репатріація (repatriation)
+  - двомовність (bilingualism)
+  - мовний зсув (language shift)
+  - інтерференція (interference)
 activity_hints:
-  - type: quiz
-    focus: Diaspora communities and history
-    items: "15+"
-
-  - type: match-up
-    focus: Region → language features
-    items: "12+"
-
-  - type: fill-in
-    focus: Diaspora vocabulary
-    items: "12+"
-
-  - type: cloze
-    focus: Heritage language characteristics
-    items: "10+"
-
-  - type: group-sort
-    focus: Waves of emigration
-    items: "12+"
-
-  - type: essay-response
-    focus: Heritage language maintenance
-    word_target: 200
-
+- type: quiz
+  focus: Diaspora communities and history
+  items: 15+
+- type: match-up
+  focus: Region → language features
+  items: 12+
+- type: fill-in
+  focus: Diaspora vocabulary
+  items: 12+
+- type: cloze
+  focus: Heritage language characteristics
+  items: 10+
+- type: group-sort
+  focus: Waves of emigration
+  items: 12+
+- type: essay-response
+  focus: Heritage language maintenance
+  word_target: 200
 prerequisites:
-  - c1-28 (Dialects)
-  - c1-29 (Surzhyk)
-  - c1-30 (History of Language)
-
+- c1-28 (Dialects)
+- c1-29 (Surzhyk)
+- c1-30 (History of Language)
 connects_to:
-  - c1-32 (Professional Scenarios)
-  - c1-35 (C1.2 Checkpoint)
-  - c1-49 (Church Slavonicisms)
-
+- c1-32 (Professional Scenarios)
+- c1-35 (C1.2 Checkpoint)
+- c1-49 (Church Slavonicisms)
 naturalness:
   score: null
   status: PENDING

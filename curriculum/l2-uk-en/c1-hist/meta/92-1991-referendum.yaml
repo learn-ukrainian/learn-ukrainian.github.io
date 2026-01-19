@@ -4,6 +4,9 @@
 id: c1-hist-92
 title: "1991: Чому 90% сказали «так»?"
 slug: 1991-referendum
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian

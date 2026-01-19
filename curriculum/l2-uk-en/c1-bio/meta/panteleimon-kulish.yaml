@@ -1,26 +1,138 @@
-title: Пантелеймон Куліш
-subtitle: Будівничий української мови
-version: '1.0'
-phase: C1.3 Biography
-pedagogy: Immersion
-focus: biography
-duration: 45
-transliteration: none
-tags:
-- biography
-- language
-- history
-- literature
-grammar:
-- 'Professional terminology: правопис, кулішівка'
-- 'Stylistic nuances: полеміка, братство'
-objectives:
-- Analyze Kulish's role in creating Ukrainian orthography
-- Understand his relationship with Shevchenko
-- Evaluate his translation of the Bible
-vocabulary_count: 24
-vital_status: deceased
+# C1-BIO Module 97: Пантелеймон Куліш
+# Status: SPEC (ready for content development)
+
+id: c1-bio-97
+title: "Пантелеймон Куліш: Будівничий української мови"
 slug: panteleimon-kulish
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Пантелеймон Куліш (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович
+    type: primary
+    notes: Біографія, творчість, мовознавча діяльність
+  - name: Інститут української мови НАНУ
+    url: https://iulm.org.ua
+    type: reference
+    notes: Кулішівка та правопис
+  - name: Кирило-Мефодіївське братство
+    url: https://www.history.org.ua
+    type: reference
+    notes: Політична діяльність
+
+content_outline:
+  - section: Вступ — Архітектор української писемності
+    words: 400
+    points:
+      - Куліш як ключова постать у формуванні української літературної мови
+      - Створення «кулішівки» — основи сучасного правопису
+      - Багатогранність його діяльності
+
+  - section: Ранні роки та освіта (1819-1840)
+    words: 600
+    points:
+      - Народження на Чернігівщині
+      - Навчання в Київському університеті
+      - Перші літературні спроби
+      - Знайомство з українською інтелігенцією
+
+  - section: Кирило-Мефодіївське братство (1845-1847)
+    words: 700
+    points:
+      - Заснування братства разом із Шевченком та Костомаровим
+      - Ідеї слов'янської федерації
+      - Арешт та заслання
+      - Формування національної програми
+
+  - section: Дружба та полеміка з Шевченком
+    words: 700
+    points:
+      - Перша зустріч та взаємне захоплення
+      - Спільна робота над українською справою
+      - Ідейні розходження та критика
+      - Значення цієї дружби для української культури
+
+  - section: Мовотворча діяльність
+    words: 800
+    points:
+      - Створення фонетичного правопису («кулішівка»)
+      - Переклад Біблії українською мовою
+      - Літературна нормалізація української мови
+      - Боротьба з «язичієм»
+
+  - section: Літературна спадщина та пізні роки (1860-1897)
+    words: 800
+    points:
+      - Історичний роман «Чорна рада»
+      - Переклади Шекспіра та Байрона
+      - Еволюція поглядів у пізній період
+      - Смерть та оцінка спадщини
+
+vocabulary_hints:
+  required:
+    - правопис (orthography)
+    - кулішівка (Kulish orthography)
+    - фонетичний принцип (phonetic principle)
+    - мовотворення (language creation)
+    - братство (brotherhood)
+    - заслання (exile)
+    - переклад (translation)
+    - Біблія (Bible)
+    - літературна мова (literary language)
+    - полеміка (polemic)
+  recommended:
+    - Кирило-Мефодіївське братство (Cyril and Methodius Brotherhood)
+    - «язичіє» (macaronic language)
+    - слов'янська федерація (Slavic federation)
+    - «Чорна рада» (The Black Council)
+    - нормалізація (standardization)
+
+activity_hints:
+  - type: reading
+    focus: Мовознавча та літературна спадщина
+    source: Уривки з перекладу Біблії та «Чорної ради»
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та внесок у мову
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні жанри
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому правопис важливий для національної ідентичності?
+    word_target: 300
+    output: Аналітичне есе
+
+  - type: group-sort
+    focus: Літературна діяльність vs мовознавча діяльність
+    items: "12+"
+
+  - type: fill-in
+    focus: Термінологія правопису та мовознавства
+    items: "10+"
+
+  - type: discussion
+    focus: Стосунки Куліша та Шевченка — друзі чи суперники?
+    output: Біографічний аналіз
+
+prerequisites:
+  - c1-bio-20 (Тарас Шевченко)
+
+connects_to:
+  - c1-bio-98 (Іван Огієнко)
+  - c1-bio-96 (Микола Погрібний)
+  - c1-bio-30 (Борис Грінченко)
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

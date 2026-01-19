@@ -4,6 +4,9 @@
 id: c1-hist-34
 title: Універсали УНР
 slug: universaly-unr
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -70,7 +73,7 @@ content_outline:
     words: 500
     points:
       - Еволюція риторики
-      - Від "народ український" до "нація"
+      - "Від «народ український» до «нація»"
       - Таблиця — чотири універсали
       - Історична логіка
 

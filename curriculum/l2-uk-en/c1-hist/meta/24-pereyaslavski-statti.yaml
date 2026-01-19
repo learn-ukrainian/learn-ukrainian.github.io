@@ -4,6 +4,9 @@
 id: c1-hist-24
 title: "Переяславські статті: Текст і контекст"
 slug: pereyaslavski-statti
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian

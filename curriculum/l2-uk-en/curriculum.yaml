@@ -568,34 +568,38 @@ levels:
   c1-bio:
     type: track
     modules:
-      # C1-BIO chronological order by birth date
-      - knyahynia-olha # ~890-969
-      - kniaz-sviatoslav # ~942-972
+      # C1-BIO chronological order by birth date (118 biographies)
+      - knyahynia-olha # 920-969
+      - kniaz-sviatoslav # 942-972
       - volodymyr-velykii # 958-1015
       - kniaz-yaroslav-mudryi # 978-1054
-      - knyazhna-anna-yaroslavna # ~1030-1075
-      - mykhailo-chernihivskyi # ~1185-1246
-      - roksolana # ~1502-1558
-      - iov-boretskyi # ~1560-1631
-      - sylvestr-kosiv # ~1590-1657
+      - mykhailo-chernihivskyi # 985-1246
+      - knyazhna-anna-yaroslavna # 1030-1075
+      - roksolana # 1502-1558
+      - iov-boretskyi # 1560-1631
+      - sylvestr-kosiv # 1590-1657
       - bohdan-khmelnytskyy # 1595-1657
       - yuriy-nemyrych # 1612-1659
       - ivan-mazepa # 1639-1709
-      - kost-hordiyenko # ~1650-1733
+      - kost-hordiyenko # 1650-1733
       - pylyp-orlyk # 1672-1742
       - petro-kalnyshevskyy # 1691-1803
       - hryhoriy-skovoroda # 1722-1794
       - maksym-berezovskyy # 1745-1777
       - dmytro-bortnyanskyy # 1751-1825
       - ivan-kotliarevskyi # 1769-1838
+      - hryhoriy-kvitka-osnovianenko # 1778-1843
       - semen-hulak-artemovskyy # 1813-1873
       - taras-shevchenko # 1814-1861
-      - panteleimon-kulish # 1819-1827
+      - panteleimon-kulish # 1819-1897
       - hanna-barvinok # 1828-1911
       - marko-vovchok # 1833-1907
+      - oleksander-potebnya # 1835-1891
+      - ivan-nechuy-levytskyi # 1838-1918
       - marko-kropyvnytskyi # 1840-1910
       - mykhailo-drahomanov # 1841-1895
       - mykola-lysenko # 1842-1912
+      - ivan-puliui # 1845-1918
       - olena-pchilka # 1849-1930
       - mariya-zankovetska # 1854-1934
       - mariya-pavlova # 1854-1938
@@ -606,15 +610,17 @@ levels:
       - borys-hrinchenko # 1863-1910
       - olha-kobylianska # 1863-1942
       - kyrylo-trylovskyi # 1864-1941
+      - andrey-sheptytsky # 1865-1944
       - ivan-lypa # 1865-1923
       - sofiya-okunevska # 1865-1926
       - mykola-vasylenko # 1866-1935
       - mykhailo-hrushevskyi-biography # 1866-1934
-      - mariia-voiakovska # ~1868-1948
+      - mariia-voiakovska # 1868-1948
       - liudmyla-starytska # 1868-1941
+      - yevhen-paton # 1870-1953
       - yulian-bachynskyi # 1870-1940
-      - lesya-ukrainka # 1871-1913
       - ahatanhel-krymskyi # 1871-1942
+      - lesya-ukrainka # 1871-1913
       - solomiya-krushelnytska # 1872-1952
       - mykola-mikhnovskyi # 1873-1924
       - oleksandr-hrekiv # 1875-1958
@@ -632,16 +638,26 @@ levels:
       - les-kurbas # 1887-1937
       - olha-basarab # 1889-1924
       - klavdiya-latysheva # 1889-1956
+      - yevhen-konovalets # 1891-1938
+      - josyf-slipyj # 1892-1984
+      - milena-rudnytska # 1892-1976
       - olena-stepaniv # 1892-1963
       - mykola-khvylovyi # 1893-1933
       - vira-kholodna # 1893-1919
       - borys-liatoshynskyi # 1895-1968
       - vasyl-vyshyvanyi # 1895-1948
       - berta-rapoport # 1896-1952
+      - yuriy-kondratiuk # 1897-1942
       - kateryna-bilokur # 1900-1961
       - serge-lifar # 1905-1986
       - olena-teliha # 1906-1942
+      - roman-shukhevych # 1907-1950
+      - serhiy-korolyov # 1907-1966
+      - george-shevelov # 1908-2002
       - mariia-prymachenko # 1909-1997
+      - mykola-amosov # 1913-2002
+      - borys-paton # 1918-2020
+      - vasyl-sukhomlynskyi # 1918-1970
       - mykola-pohribnyi # 1921-2022
       - kateryna-yushchenko # 1924-2001
       - levko-lukyanenko # 1928-2018
@@ -657,6 +673,7 @@ levels:
       - leonid-kadenyuk # 1951-2018
       - yuriy-vynnychuk # 1952-
       - kvitka-tsisyk # 1953-1998
+      - serhii-plokhy # 1957-
       - halyna-pahutyak # 1958-
       - mariya-matios # 1959-
       - oksana-zabuzhko # 1960-
@@ -669,6 +686,7 @@ levels:
       - sofia-andrukhovych # 1982-
       - kateryna-kalytko # 1982-
       - oleksandra-matviichuk # 1983-
+      - oleksandr-usyk # 1987-
   lit:
     type: track
     modules:

@@ -4,6 +4,9 @@
 id: c2-04
 title: Офіційний стиль — Юридичні документи
 slug: ofitsiynyi-styl-mastery
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -138,5 +141,5 @@ connects_to:
   - c2-56 (Professional correspondence)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

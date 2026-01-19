@@ -1,129 +1,109 @@
-# C1 Module 08: Essay Structure
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-08
 title: Структура академічного есе
 slug: 08-essay-structure
+phase: C1.1 Academic Ukrainian
+focus: grammar
 module_type: grammar
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian Academic Essay Writing Guide
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official essay structure guidelines
-  - name: Науковий стиль сучасної української мови
-    url: https://mova.info/
-    type: secondary
-    notes: Academic text organization
-
+- name: Ukrainian Academic Essay Writing Guide
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official essay structure guidelines
+- name: Науковий стиль сучасної української мови
+  url: https://mova.info/
+  type: secondary
+  notes: Academic text organization
 content_outline:
-  - section: Вступ — Архітектура тексту
-    words: 400
-    points:
-      - Чому структура важлива
-      - Типи академічних есе
-      - Загальна тричастинна будова
-
-  - section: Вступна частина
-    words: 700
-    points:
-      - Привертання уваги (hook)
-      - Контекст і передумови
-      - Формулювання тези
-
-  - section: Основна частина — TEEL
-    words: 800
-    points:
-      - Topic sentence (тематичне речення)
-      - Explanation (пояснення)
-      - Evidence (докази)
-      - Link (зв'язок)
-
-  - section: Розвиток аргументів
-    words: 600
-    points:
-      - Послідовність аргументів
-      - Логічні переходи між абзацами
-      - Баланс аргументів
-
-  - section: Висновки
-    words: 600
-    points:
-      - Підсумок основних тез
-      - Ширші імплікації
-      - Заключне речення
-
-  - section: Структурна мова
-    words: 500
-    points:
-      - Мета цієї роботи — ...
-      - У цій статті розглядається ...
-      - На завершення варто зазначити ...
-
-  - section: Практика структурування
-    words: 400
-    points:
-      - Планування есе
-      - Аналіз структури зразків
-      - Редагування власного тексту
-
+- section: Вступ — Архітектура тексту
+  words: 400
+  points:
+  - Чому структура важлива
+  - Типи академічних есе
+  - Загальна тричастинна будова
+- section: Вступна частина
+  words: 700
+  points:
+  - Привертання уваги (hook)
+  - Контекст і передумови
+  - Формулювання тези
+- section: Основна частина — TEEL
+  words: 800
+  points:
+  - Topic sentence (тематичне речення)
+  - Explanation (пояснення)
+  - Evidence (докази)
+  - Link (зв'язок)
+- section: Розвиток аргументів
+  words: 600
+  points:
+  - Послідовність аргументів
+  - Логічні переходи між абзацами
+  - Баланс аргументів
+- section: Висновки
+  words: 600
+  points:
+  - Підсумок основних тез
+  - Ширші імплікації
+  - Заключне речення
+- section: Структурна мова
+  words: 500
+  points:
+  - Мета цієї роботи — ...
+  - У цій статті розглядається ...
+  - На завершення варто зазначити ...
+- section: Практика структурування
+  words: 400
+  points:
+  - Планування есе
+  - Аналіз структури зразків
+  - Редагування власного тексту
 vocabulary_hints:
   required:
-    - вступ (introduction)
-    - основна частина (body)
-    - висновки (conclusion)
-    - теза (thesis)
-    - аргумент (argument)
-    - абзац (paragraph)
-    - доказ (evidence)
-    - перехід (transition)
-    - імплікація (implication)
-    - резюмувати (to summarize)
+  - вступ (introduction)
+  - основна частина (body)
+  - висновки (conclusion)
+  - теза (thesis)
+  - аргумент (argument)
+  - абзац (paragraph)
+  - доказ (evidence)
+  - перехід (transition)
+  - імплікація (implication)
+  - резюмувати (to summarize)
   recommended:
-    - гіпотеза (hypothesis)
-    - постановка проблеми (problem statement)
-    - структурування (structuring)
-    - когерентність (coherence)
-    - зв'язність (cohesion)
-
+  - гіпотеза (hypothesis)
+  - постановка проблеми (problem statement)
+  - структурування (structuring)
+  - когерентність (coherence)
+  - зв'язність (cohesion)
 activity_hints:
-  - type: match-up
-    focus: Essay part to function
-    items: "12+"
-
-  - type: group-sort
-    focus: Arrange essay sections in order
-    items: "15+"
-
-  - type: cloze
-    focus: Structural phrases in context
-    items: "12+"
-
-  - type: quiz
-    focus: Identify TEEL elements in paragraphs
-    items: "12+"
-
-  - type: essay-response
-    focus: Write introduction with thesis
-    word_target: 200
-
-  - type: essay-response
-    focus: Write body paragraph using TEEL
-    word_target: 200
-
+- type: match-up
+  focus: Essay part to function
+  items: 12+
+- type: group-sort
+  focus: Arrange essay sections in order
+  items: 15+
+- type: cloze
+  focus: Structural phrases in context
+  items: 12+
+- type: quiz
+  focus: Identify TEEL elements in paragraphs
+  items: 12+
+- type: essay-response
+  focus: Write introduction with thesis
+  word_target: 200
+- type: essay-response
+  focus: Write body paragraph using TEEL
+  word_target: 200
 prerequisites:
-  - c1-01 to c1-07 (Academic Foundation)
-  - Logical connectors mastery
-
+- c1-01 to c1-07 (Academic Foundation)
+- Logical connectors mastery
 connects_to:
-  - c1-09 (Thesis Development)
-  - c1-10 (Counterarguments)
-  - c1-18 (Essay Writing Practice)
-
+- c1-09 (Thesis Development)
+- c1-10 (Counterarguments)
+- c1-18 (Essay Writing Practice)
 naturalness:
   score: null
   status: PENDING

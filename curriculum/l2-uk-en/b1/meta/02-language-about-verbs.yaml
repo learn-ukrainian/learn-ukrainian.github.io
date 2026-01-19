@@ -13,7 +13,7 @@ immersion: "75% Ukrainian"
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: PPP
-focus: bridge
+focus: integration
 duration: 75
 transliteration: none
 tags:
@@ -133,7 +133,7 @@ activity_hints:
     items: "8+"
 
   - type: match-up
-    focus: Verb forms (складна форма: буду читати vs синтетична форма: читатиму)
+    focus: 'Verb forms (складна форма: буду читати vs синтетична форма: читатиму)'
     items: "8+"
 
 prerequisites:

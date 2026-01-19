@@ -4,6 +4,9 @@
 id: b2-hist-16
 title: Культура Київської Русі
 slug: kultura-kyivskoi-rusi
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -44,10 +47,10 @@ content_outline:
   - section: Література
     words: 700
     points:
-      - Літописання — "Повість минулих літ"
-      - "Слово о полку Ігоревім" — шедевр давньої поезії
-      - Житія святих — Борис і Гліб
-      - "Слово про закон і благодать" Іларіона
+      - 'Літописання — «Повість минулих літ»'
+      - '«Слово о полку Ігоревім» — шедевр давньої поезії'
+      - 'Житія святих — Борис і Гліб'
+      - '«Слово про закон і благодать» Іларіона'
 
   - section: Архітектура
     words: 550
@@ -135,4 +138,4 @@ prerequisites:
 
 connects_to:
   - b2-hist-18 (People of Rus — everyday life)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

@@ -4,6 +4,9 @@
 id: b2-04
 title: Зворотний пасив із -ся
 slug: 04-reflexive-passive
+version: '1.0'
+phase: B2.1a [Passive Voice]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -133,9 +136,9 @@ prerequisites:
 connects_to:
   - b2-05 (3rd Person Plural Passive)
   - b2-06 (Passive in Context)
-  - b2-21 (Register: Technical/Scientific)
+  - 'b2-21 (Register: Technical/Scientific)'
   - b2-10 (B2.1a Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

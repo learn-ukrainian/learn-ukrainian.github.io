@@ -4,6 +4,9 @@
 id: c2-94
 title: Дипломний проєкт — Захист
 slug: capstone-defense
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -132,5 +135,5 @@ connects_to:
   - c2-98 (Final Exam)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

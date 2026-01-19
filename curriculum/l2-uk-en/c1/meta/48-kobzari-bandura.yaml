@@ -1,25 +1,29 @@
+version: '1.0'
 module: c1-48
-title: "Кобзарі та бандура: Душа України"
-subtitle: "Kobzari and Bandura: The Soul of Ukraine"
-version: "1.0"
-phase: "C1.5 Folk Culture & Fine Arts"
-pedagogy: "Cultural Immersion"
+title: 'Кобзарі та бандура: Душа України'
+subtitle: 'Kobzari and Bandura: The Soul of Ukraine'
+slug: 48-kobzari-bandura
+phase: C1.5 Folk Culture & Fine Arts
+focus: cultural
+pedagogy: Cultural Immersion
 duration: 120
 transliteration: none
 immersion: 100
 tags:
-  - music
-  - history
-  - folk-culture
-  - instruments
-focus: cultural
+- music
+- history
+- folk-culture
+- instruments
 grammar:
-  - "Musical terminology (музична термінологія)"
-  - "Historical narrative (історичний наратив)"
-  - "Epic style (епічний стиль)"
+- Musical terminology (музична термінологія)
+- Historical narrative (історичний наратив)
+- Epic style (епічний стиль)
 objectives:
-  - "Learner can describe the history and significance of kobzari tradition"
-  - "Learner can identify parts of the bandura and playing techniques"
-  - "Learner can discuss the tragic history of kobzari persecution"
+- Learner can describe the history and significance of kobzari tradition
+- Learner can identify parts of the bandura and playing techniques
+- Learner can discuss the tragic history of kobzari persecution
 vocabulary_count: 35
-summary: "This module explores the unique Ukrainian tradition of kobzari — blind wandering bards who preserved the nation's history through song. Students learn about the bandura, the epic genre of 'duma', and the tragic fate of kobzari in the Soviet era."
+summary: This module explores the unique Ukrainian tradition of kobzari — blind wandering
+  bards who preserved the nation's history through song. Students learn about the
+  bandura, the epic genre of 'duma', and the tragic fate of kobzari in the Soviet
+  era.

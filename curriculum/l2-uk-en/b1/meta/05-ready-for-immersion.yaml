@@ -13,7 +13,7 @@ immersion: "75% Ukrainian"
 version: '1.0'
 phase: B1.0 Bridge
 pedagogy: TTT
-focus: bridge
+focus: integration
 template: b1-metalanguage-module-template.md
 duration: 75
 transliteration: none

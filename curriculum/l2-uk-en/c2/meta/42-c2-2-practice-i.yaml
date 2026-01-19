@@ -4,6 +4,9 @@
 id: c2-42
 title: Практика C2.2 I — Літературне портфоліо
 slug: c2-2-practice-i
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -21,7 +24,7 @@ sources:
     notes: Academic standards for literary portfolio assessment
   - name: Часопис "Кур'єр Кривбасу"
     url: https://kr-elib.com.ua/
-    type: example
+    type: reference
     notes: Examples of contemporary Ukrainian literary works for portfolio models
 
 content_outline:
@@ -124,5 +127,5 @@ connects_to:
   - c2-45 (C2.2 Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

@@ -4,6 +4,9 @@
 id: b2-19
 title: "Офіційно-діловий стиль: документи, закони, заяви"
 slug: 19-register-official-legal
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: style
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -131,13 +134,13 @@ activity_hints:
 prerequisites:
   - b2-15 (Register Introduction)
   - b2-03 (Impersonal -но/-то)
-  - b2-17 (Register: Business Ukrainian)
+  - 'b2-17 (Register: Business Ukrainian)'
 
 connects_to:
-  - b2-20 (Register: Medical Ukrainian)
+  - 'b2-20 (Register: Medical Ukrainian)'
   - b2-25 (B2.1b Checkpoint)
   - b2-81 (Professional Communication II)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

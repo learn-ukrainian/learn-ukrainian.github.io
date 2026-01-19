@@ -1,27 +1,133 @@
-title: 'Галина Пагутяк: Майстриня українського химерного реалізму'
-subtitle: 'Halyna Pahutyak: Master of Ukrainian Chimerical Realism'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- mysticism
-- philosophy
-grammar:
-- Metaphorical and symbolic language
-- Complex descriptive structures
-objectives:
-- Learner understands the unique style of Halyna Pahutyak and her place in contemporary
-  Ukrainian literature
-- Learner can identify elements of chimerical realism and mysticism in her prose
-- Learner masters vocabulary related to philosophy, mysticism, and literary analysis
-vocabulary_count: 25
+# C1-BIO Module 84: Галина Пагутяк
+# Status: SPEC (ready for content development)
+
+id: c1-bio-84
+title: "Галина Пагутяк: Містична письменниця"
 slug: halyna-pahutyak
-vital_status: living
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Галина Пагутяк (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+    type: primary
+    notes: Biography of the mystical prose writer
+  - name: Видавництво «Піраміда»
+    url: https://www.pyramida.kiev.ua/
+    type: reference
+    notes: Publisher of Pahutyak's major works
+
+content_outline:
+  - section: Вступ — Голос з іншого світу
+    words: 400
+    points:
+      - Майстриня химерного реалізму
+      - Унікальний голос сучасної української прози
+      - Філософський та містичний світогляд
+
+  - section: Юність та формування (1958-1980)
+    words: 600
+    points:
+      - Народження на Львівщині
+      - Дитинство в Карпатах
+      - Навчання у Львівському університеті
+      - Перші літературні спроби
+
+  - section: Ранній період творчості (1980-1990-ті)
+    words: 800
+    points:
+      - Перша книжка «Діти» (1982)
+      - Формування унікального стилю
+      - Теми дитинства та пам'яті
+      - Візнання критиків
+
+  - section: Химерний реалізм (2000-ні)
+    words: 800
+    points:
+      - «Слуга з Добромиля» (2006)
+      - «Урізька готика» (2009)
+      - Магічні елементи та історична проза
+      - Карпати як простір таємниць
+
+  - section: Філософська проза (2010-ні)
+    words: 700
+    points:
+      - Роздуми про природу та людину
+      - Екологічна тематика
+      - Есеїстика та публіцистика
+      - Вплив на молодих письменників
+
+  - section: Спадщина — Архітекторка світів
+    words: 700
+    points:
+      - Місце в сучасній літературі
+      - Переклади іноземними мовами
+      - Літературні премії
+      - Пагутяк і майбутнє української прози
+
+vocabulary_hints:
+  required:
+    - химерний реалізм (chimerical realism)
+    - містика (mysticism)
+    - проза (prose)
+    - філософія (philosophy)
+    - готика (Gothic)
+    - магічний реалізм (magical realism)
+    - наратор (narrator)
+    - світогляд (worldview)
+    - метафора (metaphor)
+    - символізм (symbolism)
+  recommended:
+    - есеїстика (essay writing)
+    - екологія (ecology)
+    - фольклор (folklore)
+    - архетип (archetype)
+    - підтекст (subtext)
+
+activity_hints:
+  - type: reading
+    focus: Сучасна українська проза
+    source: Literary criticism
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та творчість Пагутяк
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Що таке «химерний реалізм» і як він проявляється у творах Пагутяк?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Романи за періодами творчості
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як карпатський простір формує літературу?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-83
+
+connects_to:
+  - c1-bio-85
+  - c1-bio-89
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

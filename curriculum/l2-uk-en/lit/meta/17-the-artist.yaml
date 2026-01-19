@@ -138,6 +138,12 @@ grammar:
   - Artistic Terminology
   - Biographical Narrative
 
+objectives:
+  - "Understand Shevchenko's dual talent as poet and painter"
+  - "Analyze the influence of Karl Bryullov on Shevchenko's style"
+  - "Discuss the autobiographical elements in the novella 'The Artist'"
+  - "Recognize key artistic terms in Ukrainian (etching, chiaroscuro)"
+
 naturalness:
   score: 10
   status: PASS

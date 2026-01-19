@@ -4,6 +4,9 @@
 id: c2-57
 title: Професійні дискусії
 slug: professional-discussions
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,11 +20,11 @@ sources:
     notes: Standards for professional negotiations and mediation
   - name: Національний інститут стратегічних досліджень
     url: https://niss.gov.ua/
-    type: example
+    type: reference
     notes: Examples of policy discussions and expert debates
   - name: Громадське телебачення — дебати
     url: https://hromadske.ua/
-    type: example
+    type: reference
     notes: Examples of professional discussions and debates
 
 content_outline:
@@ -68,7 +71,7 @@ content_outline:
     words: 500
     points:
       - Симуляція дебатів
-      - Рольова гра: переговори
+      - 'Рольова гра: переговори'
       - Модерація групової дискусії
 
 vocabulary_hints:
@@ -128,5 +131,5 @@ connects_to:
   - c2-73 (Professional Identity)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

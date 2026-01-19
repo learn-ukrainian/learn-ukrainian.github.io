@@ -1,26 +1,138 @@
-title: Микола Погрібний
-subtitle: Голос української вимови
-version: '1.0'
-phase: C1.3 Biography
-pedagogy: Immersion
-focus: biography
-duration: 45
-transliteration: none
-tags:
-- biography
-- language
-- pronunciation
-- radio
-grammar:
-- 'Professional terminology: орфоепія, дикція'
-- 'Stylistic nuances: еталон, норма'
-objectives:
-- Analyze the role of radio in language preservation
-- Understand the principles of Ukrainian orthoepy
-- Compare spoken and written language norms
-vocabulary_count: 24
-vital_status: deceased
+# C1-BIO Module 96: Микола Погрібний: Українська редакторська школа
+# Status: SPEC (ready for content development)
+
+id: c1-bio-96
+title: "Микола Погрібний: Українська редакторська школа"
 slug: mykola-pohribnyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+vital_status: deceased
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Микола Погрібний (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
+    type: primary
+    notes: Біографія, професійна діяльність, внесок у мовну культуру
+  - name: Українське радіомовлення
+    url: https://uk.wikipedia.org/wiki/Українське_радіо
+    type: reference
+    notes: Контекст роботи на радіо
+  - name: Культура української мови
+    url: https://uk.wikipedia.org/wiki/Культура_мови
+    type: reference
+    notes: Норми літературної мови та орфоепія
+
+content_outline:
+  - section: Вступ — Голос української вимови
+    words: 400
+    points:
+      - Микола Погрібний — легендарний диктор і редактор
+      - Еталон української літературної вимови
+      - Вплив на формування мовних стандартів
+
+  - section: Ранні роки та освіта (1931-1955)
+    words: 600
+    points:
+      - Народження на Полтавщині
+      - Навчання та формування як мовця
+      - Перші кроки в журналістиці
+      - Прихід на Українське радіо
+
+  - section: Кар'єра на радіо (1955-1990)
+    words: 800
+    points:
+      - Робота диктором Українського радіо
+      - Формування еталону радіомовлення
+      - Ведення культурних та новинних програм
+      - Визнання як голосу епохи
+
+  - section: Редакторська діяльність
+    words: 700
+    points:
+      - Робота редактором мовного відділу
+      - Боротьба за чистоту української мови
+      - Виправлення русизмів та суржику
+      - Навчання молодих дикторів
+
+  - section: Орфоепічна школа
+    words: 700
+    points:
+      - Принципи правильної вимови
+      - Робота над наголосом та інтонацією
+      - Зв'язок з мовознавцями та консультації
+      - Практичні посібники для дикторів
+
+  - section: Останні роки та спадщина (1990-2003)
+    words: 800
+    points:
+      - Продовження діяльності в незалежній Україні
+      - Передача досвіду новому поколінню
+      - Смерть у 2003 році
+      - Погрібний як символ мовної культури
+
+vocabulary_hints:
+  required:
+    - диктор (announcer/broadcaster)
+    - орфоепія (orthoepy/pronunciation)
+    - редактор (editor)
+    - вимова (pronunciation)
+    - наголос (stress/accent)
+    - літературна мова (literary language)
+    - норма (norm/standard)
+    - інтонація (intonation)
+    - дикція (diction)
+    - еталон (standard/model)
+  recommended:
+    - суржик (surzhyk)
+    - русизм (Russianism)
+    - мовлення (speech)
+    - артикуляція (articulation)
+    - фонетика (phonetics)
+
+activity_hints:
+  - type: reading
+    focus: Статті про культуру мови та спогади колег
+    source: Публіцистика та мемуари
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та внесок у мовну культуру
+    items: "12+"
+
+  - type: match-up
+    focus: Орфоепічні правила та приклади
+    items: "10+"
+
+  - type: essay-response
+    focus: Яка роль радіо у збереженні мови?
+    word_target: 300
+    output: Media analysis
+
+  - type: group-sort
+    focus: Етапи кар'єри та досягнення
+    items: "12+"
+
+  - type: fill-in
+    focus: Лінгвістична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи потрібні мовні еталони в епоху інтернету?
+    output: Contemporary reflection
+
+prerequisites:
+  - c1-bio-97-panteleimon-kulish
+
+connects_to:
+  - c1-bio-98-ivan-ohienko
+  - c1-bio-30-borys-hrinchenko
+
 naturalness:
   score: 9
   status: PASS

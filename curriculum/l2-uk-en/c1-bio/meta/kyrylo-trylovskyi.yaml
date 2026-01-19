@@ -1,24 +1,133 @@
-title: 'Кирило Трильовський: Батько «Січі» та адвокат народу'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-register: публіцистичний
-duration: 90
-transliteration: none
-tags:
-- biography
-- imperial
-- politics
-- activism
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-vocabulary_focus:
-- Political activism terminology
-- Organization building vocabulary
-objectives:
-- Understand the role of 'Sich' in Ukrainian history
-- Use political and organizational vocabulary in context
-- Analyze the strategy of legal resistance in Austria-Hungary
+# C1-BIO Module 32: Кирило Трильовський
+# Status: SPEC (ready for content development)
+
+id: c1-bio-32
+title: "Кирило Трильовський: Засновник Січі"
 slug: kyrylo-trylovskyi
-vocabulary_count: 25
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Кирило Трильовський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+    type: primary
+    notes: Biography of the founder of the Sich movement
+  - name: Українські Січові Стрільці
+    url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+    type: reference
+    notes: History of the movement Trylovsky founded
+
+content_outline:
+  - section: Вступ — Батько «Січі»
+    words: 400
+    points:
+      - Засновник гімнастичного руху «Січ»
+      - Адвокат і громадський діяч
+      - Творець українського спортивно-патріотичного руху
+
+  - section: Юність та освіта (1864-1890)
+    words: 600
+    points:
+      - Народження на Покутті
+      - Освіта у Відні
+      - Юридична кар'єра
+      - Формування патріотичних поглядів
+
+  - section: Заснування «Січі» (1900-1914)
+    words: 900
+    points:
+      - Ідея гімнастичних товариств
+      - Перша «Січ» у Заваллі (1900)
+      - Поширення руху Галичиною та Буковиною
+      - Вплив сокольського руху
+
+  - section: Адвокатська та громадська діяльність (1890-1914)
+    words: 700
+    points:
+      - Правовий захист селян
+      - Політична діяльність
+      - Депутат Галицького сейму
+      - Боротьба за права українців
+
+  - section: Воєнні роки та еміграція (1914-1941)
+    words: 700
+    points:
+      - Перша світова війна
+      - Українські Січові Стрільці
+      - Еміграція до Чехословаччини
+      - Смерть у Празі
+
+  - section: Спадщина — Батько українського спорту
+    words: 700
+    points:
+      - Вплив на український національний рух
+      - «Січ» і сучасні спортивні організації
+      - Трильовський у памяті нації
+      - Значення для формування нації
+
+vocabulary_hints:
+  required:
+    - Січ (Sich)
+    - гімнастичне товариство (gymnastics society)
+    - адвокат (lawyer)
+    - громадський діяч (public activist)
+    - патріотичний рух (patriotic movement)
+    - Галичина (Galicia)
+    - сейм (sejm/parliament)
+    - січовик (Sich member)
+    - фізичне виховання (physical education)
+    - національна свідомість (national consciousness)
+  recommended:
+    - сокольський рух (Sokol movement)
+    - Покуття (Pokuttia)
+    - селянство (peasantry)
+    - правовий захист (legal defense)
+    - стрільці (riflemen)
+
+activity_hints:
+  - type: reading
+    focus: Український національний рух у Галичині
+    source: Historical sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та діяльність Трильовського
+    items: "12+"
+
+  - type: match-up
+    focus: Терміни національного руху та спорту
+    items: "10+"
+
+  - type: essay-response
+    focus: Яку роль відіграв рух «Січ» у формуванні української нації?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Діяльність Трильовського за сферами
+    items: "12+"
+
+  - type: fill-in
+    focus: Політична та спортивна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як спорт може служити національному відродженню?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-31
+
+connects_to:
+  - c1-bio-28
+  - c1-bio-42
+
+naturalness:
+  score: 1
+  status: PENDING

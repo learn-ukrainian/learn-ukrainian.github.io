@@ -4,6 +4,9 @@
 id: c2-89
 title: Дипломний проєкт — Вибір теми
 slug: capstone-topic-selection
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -115,7 +118,7 @@ activity_hints:
   - type: essay-response
     focus: Написання project proposal (заявки)
     word_target: 600
-    output: Повна заявка: тема, мета, методи, план
+    output: 'Повна заявка: тема, мета, методи, план'
 
   - type: discussion
     focus: Презентація теми для групового обговорення
@@ -136,5 +139,5 @@ connects_to:
   - c2-91 (Capstone Drafting)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

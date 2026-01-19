@@ -4,6 +4,9 @@
 id: b2-hist-09
 title: "Олег та Ігор: Перші правителі"
 slug: oleh-ihor
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -52,7 +55,7 @@ content_outline:
   - section: Смерть Олега — легенда і реальність
     words: 450
     points:
-      - Пророцтво волхва — "смерть від коня"
+      - 'Пророцтво волхва — «смерть від коня«'
       - Могила на Щекавиці чи в Ладозі?
       - Олег в "Пісні про Віщого Олега" Пушкіна
       - Міфологізація образу
@@ -130,10 +133,10 @@ activity_hints:
     focus: "Чи можна вважати Олега засновником Київської Русі?"
 
 prerequisites:
-  - b2-hist-08 (Synthesis: Origins to Kyiv)
+  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
   - Understanding of tribal society
 
 connects_to:
   - b2-hist-10 (Olha and Sviatoslav)
   - b2-hist-11 (Volodymyr and Baptism)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

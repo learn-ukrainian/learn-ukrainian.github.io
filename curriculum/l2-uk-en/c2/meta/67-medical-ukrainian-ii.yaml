@@ -4,6 +4,9 @@
 id: c2-67
 title: Медична українська II — Спілкування з пацієнтами
 slug: medical-ukrainian-ii
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: domain
 module_type: professional
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -76,8 +79,8 @@ content_outline:
   - section: Практикум — Симуляційні діалоги
     words: 400
     points:
-      - Рольові ігри: збір анамнезу
-      - Рольові ігри: пояснення діагнозу
+      - 'Рольові ігри: збір анамнезу'
+      - 'Рольові ігри: пояснення діагнозу'
       - Складна розмова з родичами
 
 vocabulary_hints:
@@ -145,5 +148,5 @@ connects_to:
   - c2-71 (Professional Portfolio I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

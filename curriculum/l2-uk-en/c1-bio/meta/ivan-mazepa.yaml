@@ -7,6 +7,9 @@ slug: ivan-mazepa
 module_type: biography
 word_target: 4000
 immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 
 # === AGENT BUILD SPEC ===
 
@@ -40,7 +43,7 @@ content_outline:
       - Козацька кар'єра
       - Обрання гетьманом 1687 року
 
-  - section: Гетьманування: успіхи
+  - section: 'Гетьманування: успіхи'
     words: 700
     points:
       - Внутрішня політика та реформи

@@ -86,7 +86,7 @@ content_outline:
   - section: Plans and Promises Dialogues
     words: 400
     points:
-      - "I will do it" (promise) vs "I will be doing" (plan)
+      - '"I will do it" (promise) vs "I will be doing" (plan)'
       - Scheduling with future tense
       - Mini-dialogues for practice
 
@@ -124,7 +124,7 @@ activity_hints:
     items: "12+"
 
   - type: quiz
-    focus: "I will do it" vs "I will be doing it"
+    focus: '"I will do it" vs "I will be doing it"'
     items: "12+"
 
   - type: fill-in

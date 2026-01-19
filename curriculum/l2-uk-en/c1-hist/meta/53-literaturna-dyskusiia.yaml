@@ -4,6 +4,9 @@
 id: c1-hist-53
 title: Літературна дискусія 1925-1928
 slug: literaturna-dyskusiia
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -28,7 +31,7 @@ content_outline:
   - section: Вступ — Битва за культуру
     words: 400
     points:
-      - Що таке "літературна дискусія"?
+      - "Що таке «літературна дискусія»?"
       - Чому це не тільки про літературу
       - Політичний вимір
       - Структура модуля
@@ -49,9 +52,9 @@ content_outline:
       - Орієнтація — Москва чи Європа?
       - Мова — якою писати?
       - Традиція чи модернізм?
-      - "Азіатський ренесанс" — що це
+      - "«Азіатський ренесанс» — що це"
 
-  - section: "Геть від Москви!" — Хвильовий
+  - section: '«Геть від Москви!» — Хвильовий'
     words: 600
     points:
       - Тези Хвильового
@@ -91,7 +94,7 @@ vocabulary_hints:
     - модернізм (modernism)
     - пролетарський (proletarian)
     - самокритика (self-criticism)
-    - "Геть від Москви" (Away from Moscow)
+    - '«Геть від Москви» (Away from Moscow)'
     - авангард (avant-garde)
     - Європа (Europe)
     - ліквідація (liquidation)

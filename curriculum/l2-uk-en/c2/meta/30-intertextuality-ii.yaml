@@ -4,6 +4,9 @@
 id: c2-30
 title: Інтертекстуальність II — поглиблене вивчення
 slug: intertextuality-ii
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -139,5 +142,5 @@ connects_to:
   - c2-38 (Contemporary Literature)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

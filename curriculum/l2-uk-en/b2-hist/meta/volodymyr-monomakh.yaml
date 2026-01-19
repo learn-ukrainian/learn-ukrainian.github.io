@@ -4,6 +4,9 @@
 id: b2-hist-15
 title: Володимир Мономах
 slug: volodymyr-monomakh
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -36,10 +39,10 @@ content_outline:
   - section: Шлях до великого княжіння
     words: 600
     points:
-      - Боротьба з половцями — понад 80 походів
-      - Любецький з'їзд 1097 — "кожен хай держить отчину свою"
+      - 'Боротьба з половцями — понад 80 походів'
+      - 'Любецький з''їзд 1097 — «кожен хай держить отчину свою»'
       - Засліплення Василька Теребовльського
-      - Київське повстання 1113 — покликання на престол
+      - 'Київське повстання 1113 — покликання на престол'
 
   - section: Внутрішня політика
     words: 650
@@ -136,4 +139,4 @@ prerequisites:
 
 connects_to:
   - b2-hist-17 (Princely feuds and fragmentation)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

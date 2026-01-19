@@ -1,26 +1,141 @@
-title: 'Тамара Горіха Зерня: «Доця» і жіноче обличчя війни'
-subtitle: 'Tamara Horikha Zernya: "Dotsya" and the Female Face of War'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- war
-- volunteering
-grammar:
-- Emotional syntax in first-person narrative
-- Vocabulary of volunteer logistics
-objectives:
-- Learner understands the phenomenon of volunteer literature in Ukraine
-- Learner can analyze the novel "Dotsya" as a document of the epoch
-- Learner masters vocabulary related to volunteering, occupation, and resistance
-vocabulary_count: 25
+# C1-BIO Module 92: Тамара Горіха Зерня: Голос опору
+# Status: SPEC (ready for content development)
+
+id: c1-bio-92
+title: "Тамара Горіха Зерня: Голос опору"
 slug: tamara-horikha-zernya
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Тамара Горіха Зерня (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Інтервью та публікації
+    url: https://chytomo.com/
+    type: reference
+    notes: Інтервю про волонтерство та творчість
+  - name: Видавництво Клуб сімейного дозвілля
+    url: https://www.bookclub.ua/
+    type: reference
+    notes: Інформація про публікації
+
+content_outline:
+  - section: Вступ — Коли війна стає літературою
+    words: 400
+    points:
+      - Феномен роману Доця як літературного документа
+      - Від волонтерки до письменниці
+      - Жіноче обличчя українського опору
+
+  - section: Довоєнне життя та формування
+    words: 500
+    points:
+      - Біографічні відомості до 2014 року
+      - Професійна діяльність
+      - Шлях до літератури
+
+  - section: Волонтерство як покликання
+    words: 800
+    points:
+      - Початок російської агресії 2014 року
+      - Логістика гуманітарної допомоги
+      - Досвід роботи на передовій
+
+  - section: Народження Доці
+    words: 800
+    points:
+      - Як особистий досвід став романом
+      - Структура та стиль твору
+      - Рецепція та нагороди (премія BBC)
+
+  - section: Голос війни та опору
+    words: 700
+    points:
+      - Теми травми та зцілення в творчості
+      - Роль жінок у війні
+      - Література як свідчення
+
+  - section: Продовження творчого шляху
+    words: 600
+    points:
+      - Нові проекти після Доці
+      - Громадська позиція
+      - Вплив на українську літературу війни
+
+  - section: Дискусія — Література як документ епохи
+    words: 200
+    points:
+      - Як волонтерський досвід формує нову літературу
+      - Етика писання про війну
+
+vocabulary_hints:
+  required:
+    - волонтерство (volunteering)
+    - гуманітарна допомога (humanitarian aid)
+    - передова (front line)
+    - окупація (occupation)
+    - травма (trauma)
+    - опір (resistance)
+    - свідчення (testimony)
+    - логістика (logistics)
+    - евакуація (evacuation)
+    - зцілення (healing)
+  recommended:
+    - бойові дії (combat operations)
+    - тилові служби (rear services)
+    - документалістика (documentary literature)
+    - автофікція (autofiction)
+    - посттравматичний (post-traumatic)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти роману Доця
+    source: Художній текст
+    items: "3 passages"
+
+  - type: quiz
+    focus: Факти про волонтерський рух в Україні
+    items: "12+"
+
+  - type: match-up
+    focus: Волонтерська лексика та визначення
+    items: "10+"
+
+  - type: essay-response
+    focus: Як особистий досвід формує літературу?
+    word_target: 300
+    output: Критичний есей
+
+  - type: group-sort
+    focus: Художня література vs документалістика
+    items: "12+"
+
+  - type: fill-in
+    focus: Ключові терміни волонтерства
+    items: "10+"
+
+  - type: discussion
+    focus: Яка роль літератури під час війни?
+    output: Дискусійний аналіз
+
+prerequisites:
+  - b2-hist-euromaidan
+
+connects_to:
+  - c1-bio-93-kateryna-kalytko
+  - c1-bio-91-oleg-sentsov
+  - c1-bio-95-oleksandra-matviichuk
+
 vital_status: living
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

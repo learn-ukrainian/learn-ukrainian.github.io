@@ -4,6 +4,9 @@
 id: c2-52
 title: Написання професійних документів I — Звіти та реферати
 slug: writing-professional-documents-i
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -125,5 +128,5 @@ connects_to:
   - c2-56 (Professional Correspondence)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

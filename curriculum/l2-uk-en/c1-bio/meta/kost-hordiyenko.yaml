@@ -7,6 +7,9 @@ slug: kost-hordiyenko
 module_type: biography
 word_target: 4000
 immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 
 # === AGENT BUILD SPEC ===
 
@@ -32,7 +35,7 @@ content_outline:
       - Його роль у подіях 1708-1709 років
       - Значення Січі в козацькій системі
 
-  - section: Запорозька Січ: устрій і традиції
+  - section: 'Запорозька Січ: устрій і традиції'
     words: 600
     points:
       - Козацька демократія

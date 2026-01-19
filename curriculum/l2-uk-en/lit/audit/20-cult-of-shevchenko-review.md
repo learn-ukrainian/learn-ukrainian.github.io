@@ -3,15 +3,6 @@
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 20-cult-of-shevchenko.yaml: Schema validation error at key '1': {'type': 'reading', 'title': 'Шевченко на Майдані', 'resource': {'type': 'video', 'url': 'https://www.youtube.com/watch?v=CyFwXkHkZLg', 'title': 'Сергій Нігоян читає "Кавказ"'}, 'tasks': ['Які рядки звучать найбільш пророчо?', 'Як Шевченко став символом Революції Гідності?']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ⚠️ 3438/3500 (62 short)
 - **Activities:** ✅ 5/3
@@ -23,9 +14,9 @@
 - **Vocab:** ✅ 30/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.8% (target 95-100% (literature))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.8% (target 95-100%)
 - **Richness:** ✅ 96% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)

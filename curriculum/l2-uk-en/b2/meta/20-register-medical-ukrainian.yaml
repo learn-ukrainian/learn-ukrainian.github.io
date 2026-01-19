@@ -4,6 +4,9 @@
 id: b2-20
 title: "Медична українська: спілкування у сфері охорони здоров'я"
 slug: 20-register-medical-ukrainian
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: style
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -130,14 +133,14 @@ activity_hints:
 
 prerequisites:
   - b2-15 (Register Introduction)
-  - b2-16 (Register: Formal/Informal)
+  - 'b2-16 (Register: Formal/Informal)'
   - Body parts vocabulary from B1
 
 connects_to:
-  - b2-21 (Register: IT/Tech)
+  - 'b2-21 (Register: IT/Tech)'
   - b2-25 (B2.1b Checkpoint)
   - b2-82 (Professional Communication III)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

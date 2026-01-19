@@ -4,6 +4,9 @@
 id: c2-88
 title: Основи усного перекладу
 slug: interpretation-basics
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -131,5 +134,5 @@ connects_to:
   - c2-94 (Capstone Defense — oral skills)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

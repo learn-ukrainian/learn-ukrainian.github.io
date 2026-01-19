@@ -4,6 +4,9 @@
 id: c2-60
 title: Побудова галузевої експертизи
 slug: building-domain-expertise
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -21,7 +24,7 @@ sources:
     notes: Standards for continuous professional development
   - name: Prometheus — українська платформа онлайн-освіти
     url: https://prometheus.org.ua/
-    type: example
+    type: reference
     notes: Examples of professional development courses in Ukrainian
 
 content_outline:
@@ -129,5 +132,5 @@ connects_to:
   - c2-71-72 (Professional Portfolio I-II)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

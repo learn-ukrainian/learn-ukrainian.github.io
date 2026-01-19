@@ -4,6 +4,9 @@
 id: c1-hist-28
 title: "Синтез: Голоси козацької доби"
 slug: syntez-kozatski-dzherela
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
@@ -68,7 +71,7 @@ content_outline:
     words: 500
     points:
       - Одна подія — кілька джерел
-      - Наприклад: Полтава в різних джерелах
+      - 'Наприклад: Полтава в різних джерелах'
       - Що збігається, що суперечить
       - Реконструкція події
 

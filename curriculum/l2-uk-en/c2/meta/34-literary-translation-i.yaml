@@ -4,6 +4,9 @@
 id: c2-34
 title: Літературний переклад I — поезія
 slug: literary-translation-i
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -130,15 +133,15 @@ activity_hints:
     output: Self-assessment with improvement notes
 
 prerequisites:
-  - c2-28 (Poetyka: Verse Analysis)
+  - 'c2-28 (Poetyka: Verse Analysis)'
   - c2-33 (Translation Theory)
   - Strong bilingual competence
 
 connects_to:
   - c2-35 (Literary Translation II — Prose)
-  - c2-36 (Creative Writing: Poetry)
+  - 'c2-36 (Creative Writing: Poetry)'
   - c2-86 (C2.4 Translation Practice I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

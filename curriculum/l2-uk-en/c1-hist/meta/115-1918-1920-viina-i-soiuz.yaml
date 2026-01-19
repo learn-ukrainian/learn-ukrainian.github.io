@@ -4,6 +4,9 @@
 id: c1-hist-115
 title: "1918-1920: Війна і союз одночасно"
 slug: 1918-1920-viina-i-soiuz
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian

@@ -4,6 +4,9 @@
 id: c2-53
 title: Написання професійних документів II — Пропозиції та презентації
 slug: writing-professional-documents-ii
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -13,7 +16,7 @@ immersion: "100% Ukrainian"
 sources:
   - name: Фонд державного майна України — тендерна документація
     url: https://www.spfu.gov.ua/
-    type: example
+    type: reference
     notes: Examples of professional proposals and tender documentation
   - name: Національне агентство з питань державної служби
     url: https://nads.gov.ua/
@@ -21,7 +24,7 @@ sources:
     notes: Standards for official presentations and proposals
   - name: Prozorro — публічні закупівлі
     url: https://prozorro.gov.ua/
-    type: example
+    type: reference
     notes: Real examples of professional proposals in procurement
 
 content_outline:
@@ -124,5 +127,5 @@ connects_to:
   - c2-71 (Professional Portfolio I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

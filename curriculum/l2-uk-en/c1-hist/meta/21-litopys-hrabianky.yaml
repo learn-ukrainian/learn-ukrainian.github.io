@@ -4,6 +4,9 @@
 id: c1-hist-21
 title: "Літопис Грабянки: Козацький патріотизм"
 slug: litopys-hrabianky
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -56,7 +59,7 @@ content_outline:
       - Шляхетна генеалогія козаків
       - Козаки як захисники православ'я
       - Критика Москви — закамуфльована
-      - Ідеал козацької "республіки"
+      - "Ідеал козацької «республіки»"
 
   - section: Фрагмент — Козацьке походження
     words: 600

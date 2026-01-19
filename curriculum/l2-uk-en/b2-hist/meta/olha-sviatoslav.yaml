@@ -4,6 +4,9 @@
 id: b2-hist-10
 title: Ольга та Святослав
 slug: olha-sviatoslav
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -60,7 +63,7 @@ content_outline:
   - section: Святослав — князь-воїн
     words: 700
     points:
-      - "Іду на ви" — стиль ведення війни
+      - '«Іду на ви« — стиль ведення війни'
       - Розгром Хозарського каганату (965-969)
       - Балканські походи — війна з Болгарією та Візантією
       - Переяславець як мрія про нову столицю
@@ -135,4 +138,4 @@ prerequisites:
 connects_to:
   - b2-hist-11 (Volodymyr and Baptism)
   - b2-hist-07 (Khazar Khaganate — defeat)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

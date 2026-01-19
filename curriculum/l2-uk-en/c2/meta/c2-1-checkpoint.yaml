@@ -4,6 +4,9 @@
 id: c2-20
 title: Контрольна точка C2.1 — Стилістична майстерність
 slug: c2-1-checkpoint
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: checkpoint
 module_type: checkpoint
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -138,5 +141,5 @@ connects_to:
   - c2-26 (C2.2 Literary mastery begins)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

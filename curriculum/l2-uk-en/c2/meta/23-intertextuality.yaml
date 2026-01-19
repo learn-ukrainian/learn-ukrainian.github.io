@@ -4,6 +4,9 @@
 id: c2-23
 title: Інтертекстуальність
 slug: intertextuality
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -140,5 +143,5 @@ connects_to:
   - c2-26 (Literary Theory)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

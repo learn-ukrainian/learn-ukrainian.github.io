@@ -4,6 +4,9 @@
 id: b2-hist-17
 title: Княжі усобиці та роздроблення
 slug: kniazivski-usobiytsi
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -135,4 +138,4 @@ prerequisites:
 connects_to:
   - b2-hist-21 (Mongol invasion)
   - b2-hist-23 (Danylo of Halych)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

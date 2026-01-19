@@ -3,7 +3,7 @@
 
 id: lit-19
 title: Щоденник ("Журнал") Шевченка
-subtitle: 'Shevchenko's Diary: The Inner World'
+subtitle: "Shevchenko's Diary: The Inner World"
 slug: shevchenkos-diary
 module_type: literature
 word_target: 4500
@@ -29,7 +29,7 @@ content_outline:
   - section: Вступ — Публічний vs приватний Шевченко
     words: 500
     points:
-      - "Кобзар" vs "Журнал"
+      - Кобзар vs Журнал
       - Чому щоденник написаний російською
       - Жанр щоденника в літературі
 
@@ -133,6 +133,11 @@ tags:
   - shevchenko
   - diary
   - psychology
+  
+objectives:
+  - Understand the psychological shift in Shevchenko's diary from exile to freedom.
+  - Analyze the contrast between his public image ("prophet") and private self ("human").
+  - Examine his intellectual breadth (arts, technology, literature) and emotional depth.
 
 grammar:
   - Introspective language

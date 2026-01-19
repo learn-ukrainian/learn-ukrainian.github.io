@@ -4,6 +4,9 @@
 id: b2-hist-19
 title: "Русь та сусіди: Візантія, Польща, Угорщина"
 slug: rus-ta-susidy
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -61,7 +64,7 @@ content_outline:
     words: 600
     points:
       - Печеніги — постійна загроза
-      - Торки та берендеї — "чорні клобуки"
+      - 'Торки та берендеї — «чорні клобуки«'
       - Половці — вороги та союзники
       - Степовий кордон як виклик
 
@@ -133,5 +136,5 @@ prerequisites:
   - b2-hist-11 (Volodymyr and Baptism — Byzantine connection)
 
 connects_to:
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
   - b2-hist-24 (Galicia-Volhynia — Hungarian influence)

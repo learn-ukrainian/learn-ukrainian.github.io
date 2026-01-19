@@ -1,22 +1,22 @@
-id: 194
-slug: 98-franko-proza
-title: 'Франко: Проза'
-subtitle: "Franko's Prose"
 version: '2.0'
-phase: 'C1.6 Literature'
+id: c1-98
+title: 'Франко: Проза'
+subtitle: Franko's Prose
+slug: 98-franko-proza
+phase: C1.6 Literature
 focus: literature
-pedagogy: 'Literary Analysis'
+pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
-  - literature
-  - franko
-  - prose
-  - realism
+- literature
+- franko
+- prose
+- realism
 grammar:
-  - 'Narrative registers'
-  - 'Dialectal elements'
+- Narrative registers
+- Dialectal elements
 objectives:
-  - 'Learner can analyze the historical and social aspects of Franko’s major novels.'
-  - 'Learner can interpret the psychological depth of Franko’s short stories.'
-  - 'Learner can discuss Franko’s role as a pioneer of social realism in Ukrainian literature.'
+- Learner can analyze the historical and social aspects of Franko’s major novels.
+- Learner can interpret the psychological depth of Franko’s short stories.
+- Learner can discuss Franko’s role as a pioneer of social realism in Ukrainian literature.

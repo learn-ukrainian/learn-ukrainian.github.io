@@ -1,22 +1,133 @@
-title: 'Борис Лятошинський: Батько українського модернізму'
-subtitle: 'Borys Lyatoshynsky: The Father of Ukrainian Modernism'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- music
-- modernism
-- arts
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the life and musical style of Borys Lyatoshynsky.
-- Learner can discuss classical music, censorship, and artistic expression in Ukrainian.
-- Learner masters vocabulary for symphony, opera, and composition.
-vocabulary_count: 24
+# C1-BIO Module 64: Борис Лятошинський
+# Status: SPEC (ready for content development)
+
+id: c1-bio-64
+title: "Борис Лятошинський: Симфоніст"
 slug: borys-liatoshynskyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Борис Лятошинський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
+    type: primary
+    notes: Biography of the leading Ukrainian symphonic composer
+  - name: Національна музична академія України
+    url: https://knmau.com.ua/
+    type: reference
+    notes: Archives of the academy where Lyatoshynsky taught
+
+content_outline:
+  - section: Вступ — Голос української симфонії
+    words: 400
+    points:
+      - Найвидатніший український симфоніст XX століття
+      - Засновник української композиторської школи
+      - Творчість між модернізмом і соцреалізмом
+
+  - section: Юні роки та освіта (1895-1918)
+    words: 600
+    points:
+      - Народження в Житомирі
+      - Музична родина
+      - Навчання в Київській консерваторії
+      - Перші твори та визнання
+
+  - section: Розквіт модернізму (1918-1930)
+    words: 800
+    points:
+      - Перша симфонія (1919)
+      - Експериментальний період
+      - Опера «Золотий обруч»
+      - Зв'язки з європейським авангардом
+
+  - section: Під тиском системи (1930-1950)
+    words: 800
+    points:
+      - Критика «формалізму»
+      - Вимушена адаптація до соцреалізму
+      - Третя симфонія та її заборона
+      - Виживання як митця
+
+  - section: Пізній період (1950-1968)
+    words: 700
+    points:
+      - Часткова реабілітація
+      - П'ята симфонія «Слов'янська»
+      - Педагогічна діяльність
+      - Учні та послідовники
+
+  - section: Спадщина — Батько української симфонії
+    words: 700
+    points:
+      - Вплив на українську музику
+      - Визнання після незалежності
+      - Виконання творів у світі
+      - Лятошинський у сучасній культурі
+
+vocabulary_hints:
+  required:
+    - симфонія (symphony)
+    - композитор (composer)
+    - модернізм (modernism)
+    - соцреалізм (socialist realism)
+    - формалізм (formalism)
+    - оркестр (orchestra)
+    - партитура (score)
+    - консерваторія (conservatory)
+    - опера (opera)
+    - музична школа (musical school)
+  recommended:
+    - авангард (avant-garde)
+    - експресіонізм (expressionism)
+    - симфонічний (symphonic)
+    - педагог (pedagogue)
+    - музична спадщина (musical legacy)
+
+activity_hints:
+  - type: reading
+    focus: Українська класична музика XX ст.
+    source: Musicological sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та творчість Лятошинського
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні характеристики
+    items: "10+"
+
+  - type: essay-response
+    focus: Як Лятошинський балансував між мистецтвом і системою?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Музичні твори за жанрами
+    items: "12+"
+
+  - type: fill-in
+    focus: Музична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи можливе справжнє мистецтво під тиском цензури?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-63
+
+connects_to:
+  - c1-bio-23
+  - c1-bio-43
+
+naturalness:
+  score: 1
+  status: PENDING

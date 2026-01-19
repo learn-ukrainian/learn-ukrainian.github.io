@@ -4,6 +4,9 @@
 id: c2-36
 title: Творче письмо — поезія
 slug: creative-writing-poetry
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -60,7 +63,7 @@ content_outline:
     words: 600
     points:
       - Робота з ритмом
-      - Рима: використовувати чи ні
+      - 'Рима: використовувати чи ні'
       - Звукопис як інструмент
       - Читання вголос
 
@@ -137,15 +140,15 @@ activity_hints:
     output: Constructive critique with specific suggestions
 
 prerequisites:
-  - c2-28 (Poetyka: Verse Analysis)
+  - 'c2-28 (Poetyka: Verse Analysis)'
   - c2-22 (Rhythm & Prosody)
   - c2-30 (Intertextuality II)
 
 connects_to:
-  - c2-37 (Creative Writing: Prose)
+  - 'c2-37 (Creative Writing: Prose)'
   - c2-43 (C2.2 Practice II — Creative Portfolio)
   - c2-45 (C2.2 Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

@@ -1,0 +1,146 @@
+# C1-BIO Module 119: Іван Пулюй: Український фізик і патріот (Повернена спадщина)
+# Status: SPEC (ready for content development)
+
+id: c1-bio-119
+title: "Іван Пулюй: Фізик, який відкрив Х-промені"
+slug: ivan-puliui
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+# FRAMING NOTE: This is a "Reclaimed Heritage" module combined with active
+# patriotism. Puliui discovered X-rays before Röntgen but didn't publish
+# first. Unlike others in this category, Puliui was an active Ukrainian
+# patriot who translated the Bible into Ukrainian and advocated for
+# Ukrainian independence throughout his life in the diaspora.
+
+sources:
+  - name: Іван Пулюй (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+    type: primary
+    notes: Biography, physics discoveries, Ukrainian activism
+  - name: Рентгенівське випромінювання
+    url: https://uk.wikipedia.org/wiki/Рентгенівське_випромінювання
+    type: reference
+    notes: X-ray discovery context
+  - name: Переклад Біблії Пулюя-Куліша
+    url: https://uk.wikipedia.org/wiki/Біблія_в_перекладі_Куліша,_Пулюя_та_Нечуя-Левицького
+    type: reference
+    notes: His Bible translation work
+
+content_outline:
+  - section: Вступ — Фізик і патріот
+    words: 400
+    points:
+      - Пулюй як піонер рентгенівських досліджень
+      - Український патріот у європейській науці
+      - Перекладач Біблії українською
+
+  - section: Молодість у Галичині
+    words: 600
+    points:
+      - Народження в Гримайлові (1845)
+      - Навчання в духовній семінарії
+      - Вибір науки замість священства
+      - Віденський університет
+
+  - section: Наукові відкриття
+    words: 800
+    points:
+      - Дослідження катодних променів
+      - "Лампа Пулюя" (1880-ті)
+      - Перші рентгенівські знімки до Рентгена
+      - Чому Рентген отримав визнання першим
+
+  - section: Професор у Празі
+    words: 600
+    points:
+      - Празька політехніка
+      - Ректор німецької політехніки
+      - Електрифікація Праги
+      - Міжнародне наукове визнання
+
+  - section: Український патріот
+    words: 700
+    points:
+      - Переклад Біблії з Кулішем
+      - Публіцистика про Україну
+      - "Україна та її міжнародне становище"
+      - Зв'язки з українським рухом
+
+  - section: Спадщина вченого-патріота
+    words: 500
+    points:
+      - Смерть у Празі (1918)
+      - Забуття за радянських часів
+      - Відновлення пам'яті в незалежній Україні
+      - Пулюй як взірець поєднання науки та нації
+
+vocabulary_hints:
+  required:
+    - фізик (physicist)
+    - рентгенівські промені (X-rays)
+    - катодні промені (cathode rays)
+    - відкриття (discovery)
+    - патріот (patriot)
+    - переклад (translation)
+    - електрифікація (electrification)
+    - визнання (recognition)
+    - публіцистика (publicistics)
+    - ректор (rector)
+  recommended:
+    - випромінювання (radiation)
+    - лампа (lamp/tube)
+    - вакуум (vacuum)
+    - експеримент (experiment)
+    - політехніка (polytechnic)
+
+activity_hints:
+  - type: reading
+    focus: Puliui's scientific papers and political writings
+    source: Historical archives
+    items: "3 passages"
+
+  - type: quiz
+    focus: Puliui's biography and dual legacy
+    items: "12+"
+
+  - type: match-up
+    focus: Scientific vs. patriotic achievements
+    items: "10+"
+
+  - type: essay-response
+    focus: Why didn't Puliui receive credit for X-rays?
+    word_target: 300
+    output: Analysis of scientific recognition
+
+  - type: group-sort
+    focus: Physics work vs. Ukrainian activism
+    items: "12+"
+
+  - type: fill-in
+    focus: Key dates and scientific terms
+    items: "10+"
+
+  - type: discussion
+    focus: How did Puliui combine science with national duty?
+    output: Analysis of intellectual patriotism
+
+prerequisites:
+  - Basic physics concepts
+  - 19th century European context
+  - c1-bio-97 (Panteleimon Kulish - Bible co-translator)
+
+connects_to:
+  - c1-bio-97 (Kulish - Bible translation partner)
+  - c1-bio-117 (Korolyov - later reclaimed scientist)
+  - c1-bio-104 (Potebnya - contemporary intellectual)
+
+naturalness:
+  score: 1
+  status: PENDING

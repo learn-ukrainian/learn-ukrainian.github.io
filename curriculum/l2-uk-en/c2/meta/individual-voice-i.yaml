@@ -4,6 +4,9 @@
 id: c2-14
 title: Індивідуальний голос I — Розвиток особистого стилю
 slug: individual-voice-i
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Academic analysis of authorial voice
   - name: Українські письменники про творчість
     url: https://litopys.org.ua/
-    type: example
+    type: reference
     notes: Writers on their creative process
   - name: Ukrainian State Standard 2024 — Creative expression
     url: https://mon.gov.ua/
@@ -133,9 +136,9 @@ prerequisites:
 
 connects_to:
   - c2-15 (Individual voice II — refinement)
-  - c2-36 (Creative writing: poetry)
-  - c2-37 (Creative writing: prose)
+  - 'c2-36 (Creative writing: poetry)'
+  - 'c2-37 (Creative writing: prose)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

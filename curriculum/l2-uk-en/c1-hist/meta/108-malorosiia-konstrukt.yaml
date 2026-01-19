@@ -4,6 +4,9 @@
 id: c1-hist-108
 title: "«Малоросія»: Як створювався міф"
 slug: malorosiia-konstrukt
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -109,7 +112,7 @@ activity_hints:
     output: Source analysis
 
   - type: comparative-study
-    focus: "Little Russia" vs. other colonial naming
+    focus: '«Little Russia» vs. other colonial naming'
     output: Colonial comparison
 
   - type: contemporary-analysis

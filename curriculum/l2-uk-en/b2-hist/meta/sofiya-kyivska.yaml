@@ -4,6 +4,9 @@
 id: b2-hist-14
 title: Софія Київська та культурний розквіт
 slug: sofiya-kyivska
+version: '1.0'
+phase: B2-HIST.1 [Kyivan Rus]
+focus: history
 module_type: history
 word_target: 3750
 immersion: 100% Ukrainian
@@ -44,7 +47,7 @@ content_outline:
   - section: Мозаїки та фрески
     words: 700
     points:
-      - Богоматір Оранта — "Нерушима стіна"
+      - 'Богоматір Оранта — «Нерушима стіна«'
       - Мозаїки XI століття — техніка та кольори
       - Світські фрески — сцени полювання, ігри
       - Портрети родини Ярослава
@@ -60,7 +63,7 @@ content_outline:
   - section: Культурний розквіт XI століття
     words: 600
     points:
-      - Митрополит Іларіон — "Слово про закон і благодать"
+      - 'Митрополит Іларіон — «Слово про закон і благодать«'
       - Розвиток літописання
       - Школи при монастирях
       - Мистецтво іконопису
@@ -135,4 +138,4 @@ prerequisites:
 
 connects_to:
   - b2-hist-16 (Kyivan Rus culture)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

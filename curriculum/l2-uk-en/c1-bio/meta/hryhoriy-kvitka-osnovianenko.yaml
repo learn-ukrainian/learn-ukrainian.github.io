@@ -1,0 +1,159 @@
+# C1-BIO Module 102: Григорій Квітка-Основ'яненко: Батько української прози
+# Status: SPEC (ready for content development)
+
+id: c1-bio-102
+title: "Григорій Квітка-Основ'яненко: Батько української прози"
+slug: hryhoriy-kvitka-osnovianenko
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Григорій Квітка-Основ'яненко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко
+    type: primary
+    notes: Biography, works, literary significance
+  - name: Маруся (повість)
+    url: https://uk.wikipedia.org/wiki/Маруся_(повість)
+    type: reference
+    notes: His most famous sentimental work
+  - name: Конотопська відьма
+    url: https://uk.wikipedia.org/wiki/Конотопська_відьма
+    type: reference
+    notes: His satirical masterpiece
+  - name: Слобожанщина (історичний регіон)
+    url: https://uk.wikipedia.org/wiki/Слобожанщина
+    type: reference
+    notes: Regional context for his works
+  - name: Харківський університет
+    url: https://uk.wikipedia.org/wiki/Харківський_національний_університет
+    type: reference
+    notes: Intellectual center of his era
+
+content_outline:
+  - section: Вступ — Перший прозаїк
+    words: 400
+    points:
+      - Квітка як засновник української художньої прози
+      - Його роль у становленні літературної мови
+      - Значення для розвитку реалізму
+
+  - section: Походження та молодість
+    words: 600
+    points:
+      - Народження в дворянській родині (1778)
+      - Слобожанщина як культурний регіон
+      - Військова служба та відставка
+      - Перші літературні спроби російською
+
+  - section: Звернення до української мови
+    words: 600
+    points:
+      - Вплив Котляревського та "Енеїди"
+      - Рішення писати українською
+      - Полеміка про право української мови на літературу
+      - Псевдонім "Грицько Основ'яненко"
+
+  - section: Сентиментальна проза
+    words: 700
+    points:
+      - '"Маруся" (1834) — перша українська повість'
+      - Ідеалізація селянського життя
+      - Трагічна любов як центральний мотив
+      - Вплив європейського сентименталізму
+
+  - section: Сатирична проза
+    words: 700
+    points:
+      - '"Конотопська відьма" (1833)'
+      - Сатира на козацьку старшину
+      - Народні вірування та гумор
+      - Реалістичні елементи в сатирі
+
+  - section: Етнографічна спадщина
+    words: 500
+    points:
+      - Описи народних звичаїв та обрядів
+      - Весільні та поховальні традиції
+      - Слобожанський діалект у творах
+      - Внесок у фольклористику
+
+  - section: Останні роки та значення
+    words: 500
+    points:
+      - Робота в Харківському театрі
+      - Смерть 1843 року
+      - Вплив на Нечуя-Левицького та реалістів
+      - '"Батько української прози" — заслужений титул'
+
+vocabulary_hints:
+  required:
+    - прозаїк (prose writer)
+    - сентименталізм (sentimentalism)
+    - сатира (satire)
+    - повість (novella/tale)
+    - відьма (witch)
+    - етнографія (ethnography)
+    - Слобожанщина (Slobozhanshchyna region)
+    - псевдонім (pseudonym)
+    - дворянин (nobleman)
+    - селянство (peasantry)
+  recommended:
+    - козацька старшина (Cossack officers)
+    - народні звичаї (folk customs)
+    - полеміка (polemic)
+    - ідеалізація (idealization)
+    - трагічна любов (tragic love)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from "Маруся" and "Конотопська відьма"
+    source: UkrLib or Wikisource
+    items: "4 passages"
+
+  - type: quiz
+    focus: Kvitka's biography and literary contributions
+    items: "12+"
+
+  - type: match-up
+    focus: Works and their characteristics
+    items: "10+"
+
+  - type: essay-response
+    focus: Why is Kvitka called "Father of Ukrainian Prose"?
+    word_target: 300
+    output: Literary analysis with examples
+
+  - type: group-sort
+    focus: Sentimental vs. satirical elements in Kvitka's works
+    items: "12+"
+
+  - type: fill-in
+    focus: Key quotes and their context
+    items: "10+"
+
+  - type: discussion
+    focus: How did Kvitka influence later Ukrainian writers?
+    output: Literary influence analysis
+
+  - type: critical-analysis
+    focus: Compare Kvitka's sentimentalism with European models
+    output: Comparative literature analysis
+
+prerequisites:
+  - c1-bio-46 (Ivan Kotliarevskyi - predecessor)
+  - Understanding of sentimentalism and early realism
+
+connects_to:
+  - c1-bio-103 (Nechuy-Levytsky - artistic heir)
+  - c1-bio-47 (Marko Vovchok - female prose pioneer)
+  - lit-06 through lit-10 (Literary analysis of Kvitka's works)
+
+naturalness:
+  score: 1
+  status: PENDING

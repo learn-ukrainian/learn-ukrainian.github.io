@@ -65,6 +65,7 @@ from .checks.external_resource_validation import (
     check_external_resources,
     fix_external_resource_url,
 )
+from .checks.meta_validator import check_seminar_meta_requirements
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
@@ -1288,10 +1289,33 @@ def audit_module(file_path: str) -> bool:
     if results['lint'].status == 'FAIL':
         has_critical_failure = True
 
+    # Run Meta YAML requirements check (Seminar modules)
+    meta_violations = check_seminar_meta_requirements(meta_data, level_code, pedagogy)
+    if meta_violations:
+        print(f"  📜 Meta YAML Validation: {len(meta_violations)} issues")
+        for v in meta_violations:
+             severity_icon = "❌" if v['severity'] == 'critical' else "⚠️"
+             print(f"     {severity_icon} [{v['type']}] {v['message']}")
+             if v.get('fix'):
+                 print(f"        Fix: {v['fix']}")
+        
+        # Add to main violations list but mark critical ones as blocking
+        if any(v['severity'] == 'critical' for v in meta_violations):
+            has_critical_failure = True
+
     # Run pedagogical checks (with context-specific complexity)
     pedagogical_violations = run_pedagogical_checks(
         content, core_content, level_code, module_num, pedagogy, yaml_activities, module_focus
     )
+    
+    # Add meta violations to pedagogical violations for reporting
+    for v in meta_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'error' if v['severity'] == 'critical' else 'warning',
+            'issue': v['message'],
+            'fix': v.get('fix', '')
+        })
 
     # Run State Standard 2024 compliance checks
     # Note: immersion_score calculated later in the audit, so pass None here

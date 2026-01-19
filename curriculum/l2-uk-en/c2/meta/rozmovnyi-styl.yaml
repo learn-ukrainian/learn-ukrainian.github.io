@@ -4,6 +4,9 @@
 id: c2-07
 title: Розмовний стиль — Рівень носія
 slug: rozmovnyi-styl
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Scholarly analysis of colloquial Ukrainian
   - name: Українські діалоги — корпус усного мовлення
     url: https://mova.info/
-    type: example
+    type: reference
     notes: Authentic spoken Ukrainian examples
   - name: Ukrainian State Standard 2024 — Oral communication
     url: https://mon.gov.ua/
@@ -137,5 +140,5 @@ connects_to:
   - c2-81 (Native-like fluency)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

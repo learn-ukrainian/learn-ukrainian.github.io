@@ -1,24 +1,139 @@
-title: 'Василь Стус: Вертикальне стояння духу'
-subtitle: 'Vasyl Stus: Vertical Standing of the Spirit'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- dissident
-- poetry
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the life and martyrdom of Vasyl Stus as a moral peak of the
-  dissident movement
-- Learner can analyze existentialist and metaphorical language in Ukrainian poetry
-- Learner masters vocabulary related to moral resistance, repression, and intellectual
-  freedom
-vocabulary_count: 25
+# C1-BIO Module 77: Василь Стус: Вертикальне стояння духу
+# Status: SPEC (ready for content development)
+
+id: c1-bio-77
+title: "Василь Стус: Вертикальне стояння духу"
 slug: vasyl-stus
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Василь Стус (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Архів Українського правозахисного руху
+    url: https://archive.khpg.org/
+    type: reference
+    notes: Документи дисидентського руху
+  - name: Музей Василя Стуса
+    url: https://stus.museum/
+    type: reference
+    notes: Матеріали про життя та творчість
+
+content_outline:
+  - section: Вступ — Поезія як форма спротиву
+    words: 400
+    points:
+      - Стус як символ незламності українського духу
+      - Від поета до політв'язня
+      - Загибель у таборі як вершина трагедії
+
+  - section: Донбаське дитинство
+    words: 600
+    points:
+      - Народження в селі Рахнівка (1938)
+      - Повоєнне дитинство на Донбасі
+      - Шлях до освіти та літератури
+
+  - section: Літературне становлення
+    words: 700
+    points:
+      - Навчання в Донецькому університеті
+      - Перші поетичні спроби
+      - Переїзд до Києва та аспірантура
+
+  - section: Шістдесятництво та перший арешт
+    words: 800
+    points:
+      - Участь у русі шістдесятників
+      - Протести проти арештів 1965 року
+      - Ув'язнення та заборона публікуватися
+
+  - section: Другий арешт та табори
+    words: 800
+    points:
+      - Арешт 1972 року
+      - Роки в мордовських таборах
+      - Творчість за ґратами
+
+  - section: Загибель та безсмертя
+    words: 500
+    points:
+      - Третій арешт та Перм-36
+      - Обставини смерті (1985)
+      - Перепоховання та канонізація
+
+  - section: Дискусія — Ціна свободи
+    words: 200
+    points:
+      - Моральний вибір дисидента
+      - Стус як приклад для сучасників
+
+vocabulary_hints:
+  required:
+    - дисидент (dissident)
+    - політвязень (political prisoner)
+    - табір (camp/gulag)
+    - спротив (resistance)
+    - шістдесятник (Sixtier)
+    - незламність (unbreakability)
+    - заслання (exile)
+    - самвидав (samvydav/samizdat)
+    - правозахисник (human rights defender)
+    - реабілітація (rehabilitation)
+  recommended:
+    - екзистенціалізм (existentialism)
+    - метафізичний (metaphysical)
+    - страждання (suffering)
+    - моральний вибір (moral choice)
+    - духовна вертикаль (spiritual vertical)
+
+activity_hints:
+  - type: reading
+    focus: Поезії Стуса з таборів
+    source: Первинні джерела
+    items: "3 passages"
+
+  - type: quiz
+    focus: Хронологія репресій проти Стуса
+    items: "12+"
+
+  - type: match-up
+    focus: Збірки поезій та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Що означає вертикальне стояння духу?
+    word_target: 300
+    output: Філософський есей
+
+  - type: group-sort
+    focus: Етапи життя Стуса
+    items: "12+"
+
+  - type: fill-in
+    focus: Ключові дати та події
+    items: "10+"
+
+  - type: discussion
+    focus: Чи варта свобода такої ціни?
+    output: Етичний аналіз
+
+prerequisites:
+  - c1-bio-75-vasyl-symonenko
+
+connects_to:
+  - c1-bio-76-viacheslav-chornovil
+  - c1-bio-72-alla-horska
+  - c1-bio-71-levko-lukyanenko
+
+naturalness:
+  score: 1
+  status: PENDING

@@ -7,6 +7,9 @@ slug: dmytro-bortnyanskyy
 module_type: biography
 word_target: 4000
 immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 
 # === AGENT BUILD SPEC ===
 
@@ -63,7 +66,7 @@ content_outline:
       - Духовні твори
       - Світська музика
       - Стильові особливості
-      - "Чертог Твой" та інші шедеври
+      - '"Чертог Твой" та інші шедеври'
 
   - section: Спірне питання ідентичності
     words: 500

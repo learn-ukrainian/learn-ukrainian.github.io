@@ -1,23 +1,133 @@
-title: 'Дмитро Донцов: Апостол українського націоналізму'
-subtitle: 'Dmytro Dontsov: Apostle of Ukrainian Nationalism'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- revolutionary
-- politics
-- nationalism
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Dontsov’s theory of integral nationalism
-- Learner can analyze emotional and ideological discourse at C1 level
-- Learner masters political and philosophical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 52: Дмитро Донцов
+# Status: SPEC (ready for content development)
+
+id: c1-bio-52
+title: "Дмитро Донцов: Ідеолог націоналізму"
 slug: dmytro-dontsov
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Дмитро Донцов (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович
+    type: primary
+    notes: Biography of the controversial nationalist ideologue
+  - name: Енциклопедія українознавства
+    url: http://esu.com.ua/
+    type: reference
+    notes: Academic analysis of Dontsov's ideology
+
+content_outline:
+  - section: Вступ — Апостол волюнтаризму
+    words: 400
+    points:
+      - Найвпливовіший ідеолог українського націоналізму
+      - Творець концепції «вольового націоналізму»
+      - Суперечлива постать української історії
+
+  - section: Юність та ідейне формування (1883-1913)
+    words: 600
+    points:
+      - Народження в Мелітополі
+      - Юнацький соціалізм
+      - Навчання у Відні та Львові
+      - Еволюція до націоналізму
+
+  - section: Від соціаліста до націоналіста (1913-1926)
+    words: 800
+    points:
+      - «Модерне москвофільство» (1913)
+      - Діяльність під час Першої світової війни
+      - Еміграція та редакторська робота
+      - «Націоналізм» (1926) — головна праця
+
+  - section: Літературний Критик (1926-1939)
+    words: 700
+    points:
+      - Редактор «Літературно-наукового вісника»
+      - Формування «празької школи» поезії
+      - Вплив на молоде покоління
+      - Полеміка з опонентами
+
+  - section: Друга світова та еміграція (1939-1973)
+    words: 800
+    points:
+      - Ставлення до подій Другої світової війни
+      - Еміграція до Канади
+      - Подальша публіцистика
+      - Смерть у Монреалі
+
+  - section: Спадщина — Між генієм і демоном
+    words: 700
+    points:
+      - Вплив на українську політичну думку
+      - Критика ідеології Донцова
+      - Сучасні дискусії
+      - Донцов у контексті європейського націоналізму
+
+vocabulary_hints:
+  required:
+    - націоналізм (nationalism)
+    - ідеолог (ideologue)
+    - волюнтаризм (voluntarism)
+    - інтегральний націоналізм (integral nationalism)
+    - публіцист (publicist)
+    - редактор (editor)
+    - еміграція (emigration)
+    - ідеологія (ideology)
+    - полеміка (polemics)
+    - доктрина (doctrine)
+  recommended:
+    - москвофільство (Muscophilia)
+    - радикалізм (radicalism)
+    - політична філософія (political philosophy)
+    - пропаганда (propaganda)
+    - модерний (modern)
+
+activity_hints:
+  - type: reading
+    focus: Українська політична думка XX ст.
+    source: Political philosophy sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та ідеї Донцова
+    items: "12+"
+
+  - type: match-up
+    focus: Терміни політичної філософії
+    items: "10+"
+
+  - type: essay-response
+    focus: Як оцінювати суперечливих історичних постатей?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Праці Донцова за періодами
+    items: "12+"
+
+  - type: fill-in
+    focus: Ідеологічна термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Яку роль відіграв Донцов у формуванні українського націоналізму?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-51
+
+connects_to:
+  - c1-bio-42
+  - c1-bio-44
+
+naturalness:
+  score: 1
+  status: PENDING

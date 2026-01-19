@@ -4,6 +4,9 @@
 id: c1-hist-32
 title: "Емський указ: Повний текст"
 slug: emskyi-ukaz-tekst
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -107,7 +110,7 @@ activity_hints:
     source: wikisource
 
   - type: comparative-study
-    focus: Create detailed comparison table: Valuev vs. Ems
+    focus: 'Create detailed comparison table: Valuev vs. Ems'
     output: Feature comparison
 
   - type: consequence-analysis

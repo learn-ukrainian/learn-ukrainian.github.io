@@ -1,37 +1,133 @@
-title: 'Агатангел Кримський: Поліглот і мученик науки'
+# C1-BIO Module 100: Агатангел Кримський
+# Status: SPEC (ready for content development)
+
+id: c1-bio-100
+title: "Агатангел Кримський: Поліглот і мученик науки"
 slug: ahatanhel-krymskyi
-phase: C1.3 Biographies
-duration: 120
-transliteration: none
-pedagogy: CBI
-register: публіцистичний
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
 focus: biography
-objectives:
-  - Describe Krymsky's role in founding the Ukrainian Academy of Sciences
-  - Explain his unique multilingual abilities and scholarly achievements
-  - Analyze the fate of Ukrainian intellectuals under Soviet repression
-  - Identify his contributions to Oriental studies and Ukrainian linguistics
-tags:
-  - biography
-  - era: early-20th-century
-  - domain: linguistics
-  - domain: orientalism
-  - domain: education
-grammar:
-  - Complex historical narrative
-  - High-style literary syntax
-vocabulary_focus:
-  - Oriental studies terminology
-  - Linguistic and academic vocabulary
-  - Soviet repression terminology
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Агатангел Кримський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Кримський_Агатангел_Юхимович
+    type: primary
+    notes: Comprehensive biography covering life, scholarship, and tragic fate
+  - name: Національна академія наук України
+    url: https://www.nas.gov.ua/
+    type: reference
+    notes: Academy founding documents and Krymsky's role
+
+content_outline:
+  - section: Вступ — Людина тридцяти мов
+    words: 400
+    points:
+      - Феноменальні мовні здібності (понад 30 мов)
+      - Один із засновників Української академії наук
+      - Трагічна доля під час сталінських репресій
+
+  - section: Дитинство та освіта (1871-1892)
+    words: 600
+    points:
+      - Народження у Володимирі-Волинському
+      - Ранній талант до мов
+      - Навчання в Київському та Московському університетах
+      - Захоплення східними мовами
+
+  - section: Сходознавець європейського масштабу (1892-1918)
+    words: 800
+    points:
+      - Дослідження арабської, перської, турецької літератур
+      - Наукові праці з ісламознавства
+      - Переклади східної поезії українською
+      - Визнання в європейських наукових колах
+
+  - section: Засновник Академії наук (1918-1928)
+    words: 800
+    points:
+      - Участь у заснуванні Української академії наук (1918)
+      - Перший директор Інституту української наукової мови
+      - Праці з української лексикографії
+      - Організація наукової роботи в молодій державі
+
+  - section: Переслідування та арешт (1928-1941)
+    words: 700
+    points:
+      - Кампанія проти «буржуазного націоналізму»
+      - Арешт у 1930-х роках
+      - Заслання до Казахстану
+      - Смерть у засланні (1942)
+
+  - section: Спадщина — Повернення імені
+    words: 700
+    points:
+      - Реабілітація в період «відлиги»
+      - Вплив на українську орієнталістику
+      - Сучасне вшанування пам'яті
+      - Кримський як символ знищеної української науки
+
+vocabulary_hints:
+  required:
+    - сходознавство (Oriental studies)
+    - поліглот (polyglot)
+    - орієнталістика (Orientalism)
+    - лексикографія (lexicography)
+    - академік (academician)
+    - репресії (repressions)
+    - заслання (exile)
+    - реабілітація (rehabilitation)
+    - ісламознавство (Islamic studies)
+    - перекладознавство (translation studies)
+  recommended:
+    - арабістика (Arabic studies)
+    - тюркологія (Turkology)
+    - іраністика (Iranian studies)
+    - мученик (martyr)
+    - науковий доробок (scholarly legacy)
+
+activity_hints:
+  - type: reading
+    focus: Наукова біографія
+    source: Academic sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Факти життя та наукова спадщина
+    items: "12+"
+
+  - type: match-up
+    focus: Мови та їхні характеристики
+    items: "10+"
+
+  - type: essay-response
+    focus: Яку роль відіграв Кримський у заснуванні української науки?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Наукові праці за галузями
+    items: "12+"
+
+  - type: fill-in
+    focus: Терміни сходознавства
+    items: "10+"
+
+  - type: discussion
+    focus: Як репресії вплинули на розвиток української науки?
+    output: Critical analysis
+
 prerequisites:
   - c1-bio-99
-learning_outcomes:
-  - Describe Krymsky's role in founding the Ukrainian Academy of Sciences
-  - Explain his unique multilingual abilities and scholarly achievements
-  - Analyze the fate of Ukrainian intellectuals under Soviet repression
-  - Use academic and linguistic terminology in Ukrainian context
+
+connects_to:
+  - c1-bio-35
+  - c1-bio-99
+
 naturalness:
-  score: 10
-  status: PASS
-  checked: 2026-01-16
+  score: 1
+  status: PENDING

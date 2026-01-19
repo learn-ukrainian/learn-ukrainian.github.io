@@ -4,6 +4,9 @@
 id: c2-50
 title: Читання фахових текстів II — Критичний аналіз
 slug: reading-professional-texts-ii
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -13,7 +16,7 @@ immersion: "100% Ukrainian"
 sources:
   - name: Вища освіта України — науковий журнал
     url: https://vnz.org.ua/
-    type: example
+    type: reference
     notes: Examples of academic discourse for critical analysis
   - name: Бібліометрика української науки
     url: https://nbuviap.gov.ua/bpnu/
@@ -21,7 +24,7 @@ sources:
     notes: Metrics and standards for evaluating Ukrainian scholarship
   - name: Наукова думка — видавництво НАН України
     url: https://naukova-dumka.com.ua/
-    type: example
+    type: reference
     notes: High-quality academic publications across disciplines
 
 content_outline:
@@ -122,5 +125,5 @@ connects_to:
   - c2-32 (Writing Literary Essays — critical writing skills)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

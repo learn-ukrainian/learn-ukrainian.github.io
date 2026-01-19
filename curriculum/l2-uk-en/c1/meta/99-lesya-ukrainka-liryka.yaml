@@ -1,22 +1,23 @@
-id: 195
-slug: 99-lesya-ukrainka-liryka
-title: 'Леся Українка: Лірична поезія'
-subtitle: "Lesya Ukrainka's Lyric Poetry"
 version: '2.0'
-phase: 'C1.6 Literature'
+id: c1-99
+title: 'Леся Українка: Лірична поезія'
+subtitle: Lesya Ukrainka's Lyric Poetry
+slug: 99-lesya-ukrainka-liryka
+phase: C1.6 Literature
 focus: literature
-pedagogy: 'Literary Analysis'
+pedagogy: Literary Analysis
 duration: 120
 transliteration: none
 tags:
-  - literature
-  - lesya-ukrainka
-  - poetry
-  - stoicism
+- literature
+- lesya-ukrainka
+- poetry
+- stoicism
 grammar:
-  - 'Rhetorical questions'
-  - 'Complex metaphors'
+- Rhetorical questions
+- Complex metaphors
 objectives:
-  - 'Learner can analyze the philosophy of stoicism in "Contra Spem Spero".'
-  - 'Learner can interpret the patriotic and feminist motifs in Lesya Ukrainka’s lyric cycles.'
-  - 'Learner can discuss the role of nature and the artist in Lesya Ukrainka’s poetry.'
+- Learner can analyze the philosophy of stoicism in "Contra Spem Spero".
+- Learner can interpret the patriotic and feminist motifs in Lesya Ukrainka’s lyric
+  cycles.
+- Learner can discuss the role of nature and the artist in Lesya Ukrainka’s poetry.

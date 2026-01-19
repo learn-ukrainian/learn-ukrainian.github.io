@@ -4,6 +4,9 @@
 id: b2-16
 title: Формальне та неформальне спілкування
 slug: 16-register-formal-informal
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: style
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -133,11 +136,11 @@ prerequisites:
   - Social context awareness
 
 connects_to:
-  - b2-17 (Register: Business Ukrainian)
-  - b2-18 (Register: Academic Ukrainian)
-  - b2-19 (Register: Official-Legal)
+  - 'b2-17 (Register: Business Ukrainian)'
+  - 'b2-18 (Register: Academic Ukrainian)'
+  - 'b2-19 (Register: Official-Legal)'
   - b2-25 (B2.1b Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

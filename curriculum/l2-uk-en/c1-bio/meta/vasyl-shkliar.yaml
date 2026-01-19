@@ -1,27 +1,141 @@
-title: 'Василь Шкляр: Батько українського бестселера'
-subtitle: 'Vasyl Shkliar: Father of the Ukrainian Bestseller'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- history
-- independence
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the role of Vasyl Shkliar in popularizing Ukrainian historical
-  fiction
-- Learner can analyze the linguistic features of the "Black Raven" novel
-- Learner masters vocabulary related to partisan struggle and historical memory
-vocabulary_count: 25
+# C1-BIO Module 81: Василь Шкляр: Майстер історичного роману
+# Status: SPEC (ready for content development)
+
+id: c1-bio-81
+title: "Василь Шкляр: Майстер історичного роману"
 slug: vasyl-shkliar
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Василь Шкляр (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Видавництво Клуб сімейного дозвілля
+    url: https://www.bookclub.ua/
+    type: reference
+    notes: Бібліографія та видання
+  - name: Літературна критика
+    url: https://litakcent.com/
+    type: reference
+    notes: Рецензії та аналіз творчості
+
+content_outline:
+  - section: Вступ — Бестселер як національний феномен
+    words: 400
+    points:
+      - Чорний Ворон як культурне явище
+      - Від журналіста до найпопулярнішого письменника
+      - Історична проза як інструмент національної памяті
+
+  - section: Журналістські роки та формування
+    words: 600
+    points:
+      - Народження в Черкаській області (1951)
+      - Освіта та ранні кариєрні кроки
+      - Робота в журналістиці
+
+  - section: Шлях до літератури
+    words: 700
+    points:
+      - Перші прозові твори
+      - Жанрові експерименти
+      - Формування авторського стилю
+
+  - section: Чорний Ворон та історична память
+    words: 800
+    points:
+      - Створення роману про повстанців
+      - Тема боротьби з більшовиками
+      - Рецепція та комерційний успіх
+
+  - section: Залишенець та продовження циклу
+    words: 700
+    points:
+      - Розвиток теми антирадянського спротиву
+      - Художні особливості прози
+      - Роль у популяризації історії
+
+  - section: Вплив на українську культуру
+    words: 600
+    points:
+      - Екранізації та адаптації
+      - Громадська позиція автора
+      - Місце в сучасній літературі
+
+  - section: Дискусія — Історична правда vs художня вигадка
+    words: 200
+    points:
+      - Баланс між документальністю та белетристикою
+      - Роль письменника у формуванні історичної памяті
+
+vocabulary_hints:
+  required:
+    - бестселер (bestseller)
+    - історичний роман (historical novel)
+    - повстанці (insurgents)
+    - партизанський рух (partisan movement)
+    - спротив (resistance)
+    - екранізація (film adaptation)
+    - белетристика (fiction)
+    - пам'ять (memory)
+    - документальність (documentary quality)
+    - популяризація (popularization)
+  recommended:
+    - холоднояровці (Kholodny Yar insurgents)
+    - антирадянський (anti-Soviet)
+    - національно-визвольний (national liberation)
+    - літературна премія (literary prize)
+    - масова культура (popular culture)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти роману Чорний Ворон
+    source: Художній текст
+    items: "3 passages"
+
+  - type: quiz
+    focus: Факти про Холодний Яр та повстанський рух
+    items: "12+"
+
+  - type: match-up
+    focus: Персонажі та їхні прототипи
+    items: "10+"
+
+  - type: essay-response
+    focus: Як художня література формує історичну памятка?
+    word_target: 300
+    output: Аналітичний есей
+
+  - type: group-sort
+    focus: Факт vs художній домисел
+    items: "12+"
+
+  - type: fill-in
+    focus: Термінологія історичної прози
+    items: "10+"
+
+  - type: discussion
+    focus: Чи може письменник бути істориком?
+    output: Порівняльний аналіз
+
+prerequisites:
+  - b2-hist-civil-war
+
+connects_to:
+  - c1-bio-82-yuriy-vynnychuk
+  - c1-bio-85-mariya-matios
+  - c1-bio-90-serhiy-zhadan
+
 vital_status: living
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

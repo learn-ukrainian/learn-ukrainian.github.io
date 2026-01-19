@@ -4,6 +4,9 @@
 id: c1-hist-06
 title: Діаспора та західні історики
 slug: diaspora-ta-zakhidni-istoriky
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian
@@ -23,7 +26,7 @@ sources:
     url: https://uk.wikipedia.org/wiki/Субтельний_Орест
     type: reference
     notes: Author of most popular English-language history
-  - name: Ukraine: A History (book info)
+  - name: 'Ukraine: A History (book info)'
     url: https://www.utpress.utoronto.ca/9781442609914/ukraine
     type: secondary
     notes: Subtelny's standard text
@@ -52,14 +55,14 @@ content_outline:
       - Біографія — від Львова до Гарварду
       - Створення HURI (1973)
       - Методологія — тюркологія, орієнталістика
-      - "Походження Русі" — контроверсійна праця
+      - "«Походження Русі» — контроверсійна праця"
       - Спадщина — журнали, конференції, кадри
 
   - section: Орест Субтельний — популяризатор
     words: 500
     points:
       - Біографія — другe покоління діаспори
-      - "Ukraine: A History" (1988) — чому стала класикою
+      - "«Ukraine: A History» (1988) — чому стала класикою"
       - Доступність для неспеціалістів
       - Критика — що застаріло
       - Переклад українською
@@ -110,7 +113,7 @@ vocabulary_hints:
 
 activity_hints:
   - type: reading
-    focus: Preface from Subtelny's "Ukraine: A History"
+    focus: 'Preface from Subtelny''s «Ukraine: A History»'
     source: Provide excerpt
 
   - type: research

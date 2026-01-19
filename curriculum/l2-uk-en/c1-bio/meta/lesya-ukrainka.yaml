@@ -1,24 +1,138 @@
-title: 'Леся Українка: Дочка Прометея'
-subtitle: 'Lesya Ukrainka: Daughter of Prometheus'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- literature
-- drama
-- feminism
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Lesya Ukrainka’s contribution to Ukrainian literature and national
-  identity
-- Learner can analyze literary and biographical narratives at C1 level
-- Learner masters literary and historical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 40: Леся Українка: Прометей української літератури
+# Status: SPEC (ready for content development)
+
+id: c1-bio-40
+title: "Леся Українка: Прометей української літератури"
 slug: lesya-ukrainka
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Леся Українка (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Леся_Українка
+    type: primary
+    notes: Основна біографія, творчість, хвороба
+  - name: Драматургія Лесі Українки
+    url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+    type: reference
+    notes: Аналіз драматичних творів
+  - name: Родина Косачів
+    url: https://uk.wikipedia.org/wiki/Косачі
+    type: reference
+    notes: Літературна родина та виховання
+
+content_outline:
+  - section: Вступ — Прометей у жіночій подобі
+    words: 400
+    points:
+      - Леся Українка як символ незламності духу
+      - Від ліричної поетеси до драматурга світового рівня
+      - Боротьба з хворобою та імперією водночас
+
+  - section: Дитинство та родина (1871-1884)
+    words: 600
+    points:
+      - Народження у Новограді-Волинському в родині Косачів
+      - Мати Олена Пчілка — письменниця та громадська діячка
+      - Дядько Михайло Драгоманов — ідейний наставник
+      - Домашня освіта та ранній літературний талант
+
+  - section: Хвороба та творчий злет (1884-1900)
+    words: 700
+    points:
+      - Діагноз — кістковий туберкульоз у 13 років
+      - Поїздки на лікування — Крим, Єгипет, Грузія
+      - Перші поетичні збірки та переклади
+      - Знайомство з Сергієм Мержинським
+
+  - section: Драматургія та ідеї (1900-1913)
+    words: 800
+    points:
+      - Створення драматичних поем — «Лісова пісня», «Оргія», «Кассандра»
+      - Антиколоніальний та феміністичний дискурс у творах
+      - Міфологічні сюжети як засіб говорити про сучасність
+      - Шлюб з Климентом Квіткою — етнографом та музикознавцем
+
+  - section: Останні роки та смерть (1909-1913)
+    words: 700
+    points:
+      - Погіршення здоров'я та переїзд до Грузії
+      - Інтенсивна творчість попри фізичні страждання
+      - Смерть у Сурамі 1 серпня 1913 року
+      - Похорон у Києві та національна жалоба
+
+  - section: Спадщина та вплив
+    words: 800
+    points:
+      - Канонізація як національної святині
+      - Вплив на українську драматургію XX століття
+      - Леся Українка у сучасній культурі
+      - 200-гривнева банкнота та численні пам'ятники
+
+vocabulary_hints:
+  required:
+    - драматургія (dramaturgy)
+    - драматична поема (dramatic poem)
+    - туберкульоз (tuberculosis)
+    - незламність (indomitability)
+    - антиколоніальний (anti-colonial)
+    - міфологія (mythology)
+    - канонізація (canonization)
+    - спадщина (legacy)
+    - муза (muse)
+    - генійка (female genius)
+  recommended:
+    - прометеїзм (Prometheanism)
+    - неоромантизм (neo-romanticism)
+    - символізм (symbolism)
+    - маргіналізація (marginalization)
+    - еміграція (emigration)
+
+activity_hints:
+  - type: reading
+    focus: Уривки з «Лісової пісні» та «Contra spem spero»
+    source: Оригінальні твори
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та творчість Лесі Українки
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як хвороба вплинула на творчість Лесі Українки?
+    word_target: 300
+    output: Reflective essay
+
+  - type: group-sort
+    focus: Періоди творчості та жанри
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературознавча термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чому Лесю Українку називають феміністкою?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-22-mykhailo-drahomanov
+  - c1-bio-24-olena-pchilka
+
+connects_to:
+  - c1-bio-28-ivan-franko
+  - c1-bio-31-olha-kobylianska
+
+naturalness:
+  score: 1
+  status: PENDING

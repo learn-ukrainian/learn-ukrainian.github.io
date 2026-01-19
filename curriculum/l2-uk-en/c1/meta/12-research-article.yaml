@@ -1,129 +1,109 @@
-# C1 Module 12: Genre - Research Article
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-12
 title: Жанр — Наукова стаття
 slug: 12-research-article
+phase: C1.1 Academic Ukrainian
+focus: grammar
 module_type: grammar
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Вимоги до наукових публікацій
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official requirements for Ukrainian academic articles
-  - name: IMRaD Structure Guidelines
-    url: https://mova.info/
-    type: secondary
-    notes: International research article structure
-
+- name: Вимоги до наукових публікацій
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for Ukrainian academic articles
+- name: IMRaD Structure Guidelines
+  url: https://mova.info/
+  type: secondary
+  notes: International research article structure
 content_outline:
-  - section: Вступ — Що таке наукова стаття?
-    words: 400
-    points:
-      - Визначення та цілі наукової статті
-      - Типи наукових статей
-      - Українські вимоги до публікацій
-
-  - section: Структура IMRaD
-    words: 800
-    points:
-      - Вступ (Introduction) — проблема, мета, гіпотеза
-      - Методи (Methods) — як проводилося дослідження
-      - Результати (Results) — що виявлено
-      - Обговорення (Discussion) — що це означає
-
-  - section: Назва та ключові слова
-    words: 500
-    points:
-      - Формулювання інформативної назви
-      - Вибір ключових слів
-      - Оптимізація для пошуку
-
-  - section: Анотація (Abstract)
-    words: 600
-    points:
-      - Структура анотації (мета, методи, результати, висновки)
-      - Обсяг і стиль
-      - Типові помилки
-
-  - section: Висновки та література
-    words: 600
-    points:
-      - Формулювання висновків
-      - Оформлення списку літератури
-      - Імплікації та перспективи
-
-  - section: Мова наукової статті
-    words: 700
-    points:
-      - Безособовий стиль
-      - Термінологія
-      - Типові фрази кожного розділу
-
-  - section: Практика аналізу статей
-    words: 400
-    points:
-      - Читання та аналіз зразків
-      - Ідентифікація структурних елементів
-      - Критичне оцінювання
-
+- section: Вступ — Що таке наукова стаття?
+  words: 400
+  points:
+  - Визначення та цілі наукової статті
+  - Типи наукових статей
+  - Українські вимоги до публікацій
+- section: Структура IMRaD
+  words: 800
+  points:
+  - Вступ (Introduction) — проблема, мета, гіпотеза
+  - Методи (Methods) — як проводилося дослідження
+  - Результати (Results) — що виявлено
+  - Обговорення (Discussion) — що це означає
+- section: Назва та ключові слова
+  words: 500
+  points:
+  - Формулювання інформативної назви
+  - Вибір ключових слів
+  - Оптимізація для пошуку
+- section: Анотація (Abstract)
+  words: 600
+  points:
+  - Структура анотації (мета, методи, результати, висновки)
+  - Обсяг і стиль
+  - Типові помилки
+- section: Висновки та література
+  words: 600
+  points:
+  - Формулювання висновків
+  - Оформлення списку літератури
+  - Імплікації та перспективи
+- section: Мова наукової статті
+  words: 700
+  points:
+  - Безособовий стиль
+  - Термінологія
+  - Типові фрази кожного розділу
+- section: Практика аналізу статей
+  words: 400
+  points:
+  - Читання та аналіз зразків
+  - Ідентифікація структурних елементів
+  - Критичне оцінювання
 vocabulary_hints:
   required:
-    - стаття (article)
-    - анотація (abstract)
-    - методологія (methodology)
-    - результати (results)
-    - обговорення (discussion)
-    - висновки (conclusions)
-    - ключові слова (keywords)
-    - література (references)
-    - гіпотеза (hypothesis)
-    - дослідження (research)
+  - стаття (article)
+  - анотація (abstract)
+  - методологія (methodology)
+  - результати (results)
+  - обговорення (discussion)
+  - висновки (conclusions)
+  - ключові слова (keywords)
+  - література (references)
+  - гіпотеза (hypothesis)
+  - дослідження (research)
   recommended:
-    - публікація (publication)
-    - рецензування (peer review)
-    - редакція (editorial board)
-    - фахове видання (professional journal)
-    - імпакт-фактор (impact factor)
-
+  - публікація (publication)
+  - рецензування (peer review)
+  - редакція (editorial board)
+  - фахове видання (professional journal)
+  - імпакт-фактор (impact factor)
 activity_hints:
-  - type: group-sort
-    focus: Arrange article sections in order
-    items: "12+"
-
-  - type: match-up
-    focus: Section to content type
-    items: "15+"
-
-  - type: cloze
-    focus: Article section phrases
-    items: "12+"
-
-  - type: quiz
-    focus: Identify IMRaD elements in excerpts
-    items: "12+"
-
-  - type: essay-response
-    focus: Write abstract for given research
-    word_target: 200
-
-  - type: fill-in
-    focus: Match typical phrases to sections
-    items: "12+"
-
+- type: group-sort
+  focus: Arrange article sections in order
+  items: 12+
+- type: match-up
+  focus: Section to content type
+  items: 15+
+- type: cloze
+  focus: Article section phrases
+  items: 12+
+- type: quiz
+  focus: Identify IMRaD elements in excerpts
+  items: 12+
+- type: essay-response
+  focus: Write abstract for given research
+  word_target: 200
+- type: fill-in
+  focus: Match typical phrases to sections
+  items: 12+
 prerequisites:
-  - c1-08 to c1-11 (Essay and Citation skills)
-  - Academic style markers
-
+- c1-08 to c1-11 (Essay and Citation skills)
+- Academic style markers
 connects_to:
-  - c1-13 (Abstract Writing)
-  - c1-14 (Literature Review)
-  - c1-19 (Article Critique)
-
+- c1-13 (Abstract Writing)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)
 naturalness:
   score: null
   status: PENDING

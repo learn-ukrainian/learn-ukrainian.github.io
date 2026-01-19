@@ -4,6 +4,9 @@
 id: c2-54
 title: Усна професійна комунікація
 slug: professional-oral-communication
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,11 +20,11 @@ sources:
     notes: Standards for public speaking and presentation in Ukrainian
   - name: TED Talks Ukraine
     url: https://www.ted.com/
-    type: example
+    type: reference
     notes: Examples of professional presentations in Ukrainian
   - name: Національна академія наук — конференції
     url: https://www.nas.gov.ua/
-    type: example
+    type: reference
     notes: Academic conference presentation standards
 
 content_outline:
@@ -67,7 +70,7 @@ content_outline:
     points:
       - Підготовка та виголошення міні-презентації
       - Симуляція наради
-      - Рольова гра: конференційний нетворкінг
+      - 'Рольова гра: конференційний нетворкінг'
 
 vocabulary_hints:
   required:
@@ -126,5 +129,5 @@ connects_to:
   - c2-58 (Cross-Domain Communication)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

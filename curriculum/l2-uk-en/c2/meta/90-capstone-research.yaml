@@ -4,6 +4,9 @@
 id: c2-90
 title: Дипломний проєкт — Дослідження
 slug: capstone-research
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -134,5 +137,5 @@ connects_to:
   - c2-92 (Capstone Revision)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

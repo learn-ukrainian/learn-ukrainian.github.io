@@ -1,23 +1,23 @@
-module: c1-103
-id: 199
-slug: 103-literaturoznavcha-terminolohiia
-title: 'Літературознавча термінологія'
-subtitle: 'Literary Analysis Terminology'
 version: '2.0'
-phase: 'C1.6 Literature'
-focus: academic
-pedagogy: 'Academic'
+module: c1-103
+id: c1-103
+title: Літературознавча термінологія
+subtitle: Literary Analysis Terminology
+slug: 103-literaturoznavcha-terminolohiia
+phase: C1.6 Literature
+focus: analysis
+pedagogy: Academic
 duration: 120
 transliteration: none
 tags:
-  - literature
-  - terminology
-  - academic
-  - analysis
+- literature
+- terminology
+- academic
+- analysis
 grammar:
-  - 'Academic register syntax'
-  - 'Abstract noun derivation'
+- Academic register syntax
+- Abstract noun derivation
 objectives:
-  - 'Learner can define and use key literary terms (сюжет, фабула, метафора, алегорія).'
-  - 'Learner can distinguish between narrative modes and focalization.'
-  - 'Learner can apply academic register in literary criticism.'
+- Learner can define and use key literary terms (сюжет, фабула, метафора, алегорія).
+- Learner can distinguish between narrative modes and focalization.
+- Learner can apply academic register in literary criticism.

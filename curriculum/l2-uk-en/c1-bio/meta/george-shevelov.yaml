@@ -1,0 +1,140 @@
+# C1-BIO Module 105: Юрій Шевельов: Архітектор української лінгвістики
+# Status: SPEC (ready for content development)
+
+id: c1-bio-105
+title: "Юрій Шевельов: Архітектор української лінгвістики"
+slug: george-shevelov
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Юрій Шевельов (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
+    type: primary
+    notes: Biography, academic career, works
+  - name: Encyclopedia of Ukraine - Shevelov
+    url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+    type: reference
+    notes: Detailed academic biography
+  - name: Історична фонологія української мови
+    url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
+    type: reference
+    notes: His magnum opus
+
+content_outline:
+  - section: Вступ — Голос української мови у світі
+    words: 400
+    points:
+      - Шевельов як найвидатніший українознавець діаспори
+      - Його роль у міжнародному визнанні української мови
+      - Псевдонім Юрій Шерех
+
+  - section: Молодість у Харкові
+    words: 600
+    points:
+      - Народження 1908 року
+      - Навчання в Харківському університеті
+      - Початок наукової кар'єри
+      - Війна та еміграція
+
+  - section: Діаспорне життя
+    words: 600
+    points:
+      - Німеччина (табори переміщених осіб)
+      - Викладання в Гарварді
+      - Професура в Колумбійському університеті
+      - Інтеграція в західну славістику
+
+  - section: "Історична фонологія української мови" (1979)
+    words: 800
+    points:
+      - Головна праця життя
+      - Доведення безперервності української мови
+      - Спростування російських міфів
+      - Міжнародне визнання
+
+  - section: Інші наукові праці
+    words: 600
+    points:
+      - Понад 500 статей і книг
+      - Дослідження старослов'янської мови
+      - Літературна критика (як Юрій Шерех)
+      - Порівняльне слов'янознавство
+
+  - section: Спадщина та повернення в Україну
+    words: 500
+    points:
+      - Визнання в незалежній Україні
+      - Шевченківська премія (посмертно)
+      - Вплив на сучасну українську лінгвістику
+      - Шевельов як символ наукового спротиву
+
+vocabulary_hints:
+  required:
+    - фонологія (phonology)
+    - славістика (Slavic studies)
+    - діаспора (diaspora)
+    - мовознавство (linguistics)
+    - історична граматика (historical grammar)
+    - безперервність (continuity)
+    - еміграція (emigration)
+    - псевдонім (pseudonym)
+    - літературна критика (literary criticism)
+    - наукова школа (scholarly school)
+  recommended:
+    - етимологія (etymology)
+    - діалектологія (dialectology)
+    - ономастика (onomastics)
+    - морфологія (morphology)
+    - палеографія (paleography)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from Shevelov's works
+    source: Encyclopedia articles and adaptations
+    items: "3 passages"
+
+  - type: quiz
+    focus: Shevelov's biography and contributions
+    items: "12+"
+
+  - type: match-up
+    focus: His works and their significance
+    items: "10+"
+
+  - type: essay-response
+    focus: How did Shevelov prove Ukrainian language continuity?
+    word_target: 300
+    output: Summary of his arguments against Russian myths
+
+  - type: group-sort
+    focus: Shevelov's diaspora vs. Soviet-era linguistics
+    items: "12+"
+
+  - type: fill-in
+    focus: Key terms from Historical Phonology
+    items: "10+"
+
+  - type: discussion
+    focus: Why was diaspora scholarship important for Ukrainian identity?
+    output: Analysis of intellectual resistance
+
+prerequisites:
+  - c1-bio-104 (Oleksander Potebnya - predecessor)
+  - c1-bio-98 (Ivan Ohienko - contemporary defender)
+  - Understanding of Ukrainian language history
+
+connects_to:
+  - c1-bio-104 (Potebnya - intellectual predecessor)
+  - c1-bio-115 (Serhii Plokhy - contemporary diaspora scholar)
+  - c1-bio-100 (Ahatanhel Krymsky - pre-war linguist)
+
+naturalness:
+  score: 1
+  status: PENDING

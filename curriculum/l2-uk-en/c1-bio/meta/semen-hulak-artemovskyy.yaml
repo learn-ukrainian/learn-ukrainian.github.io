@@ -7,6 +7,9 @@ slug: semen-hulak-artemovskyy
 module_type: biography
 word_target: 4000
 immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 
 # === AGENT BUILD SPEC ===
 
@@ -68,7 +71,7 @@ content_outline:
   - section: Спадщина
     words: 500
     points:
-      - "Запорожець" як національний символ
+      - '"Запорожець" як національний символ'
       - Вплив на українську оперу
       - Постановки твору
       - Сучасне значення

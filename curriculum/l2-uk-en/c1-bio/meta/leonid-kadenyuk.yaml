@@ -1,24 +1,133 @@
-title: 'Леонід Каденюк: Перший космонавт незалежної України'
-subtitle: 'Leonid Kadenyuk: First Astronaut of Independent Ukraine'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- science
-- space
-- statehood
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the significance of Kadenyuk’s mission for Ukrainian statehood
-  and science
-- Learner can analyze scientific and descriptive registers in Ukrainian
-- Learner masters vocabulary related to space exploration, technology, and national
-  pride
-vocabulary_count: 25
+# C1-BIO Module 80: Леонід Каденюк
+# Status: SPEC (ready for content development)
+
+id: c1-bio-80
+title: "Леонід Каденюк: Перший космонавт незалежної України"
 slug: leonid-kadenyuk
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Леонід Каденюк (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
+    type: primary
+    notes: Biography of Ukraine's first astronaut
+  - name: NASA - STS-87
+    url: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
+    type: reference
+    notes: Mission information
+
+content_outline:
+  - section: Вступ — Український прапор у космосі
+    words: 400
+    points:
+      - Перший космонавт незалежної України
+      - Політ на шатлі «Колумбія» (1997)
+      - Символ української науки та гордості
+
+  - section: Юність та мрія про небо (1951-1971)
+    words: 600
+    points:
+      - Народження на Буковині
+      - Дитячі мрії про космос
+      - Льотне училище
+      - Перші кроки до неба
+
+  - section: Підготовка космонавта (1971-1996)
+    words: 800
+    points:
+      - Служба у ВПС
+      - Відбір до загону космонавтів
+      - Десятиліття очікування
+      - Радянська космічна програма
+
+  - section: Політ на «Колумбії» (1997)
+    words: 900
+    points:
+      - Місія STS-87
+      - Наукові експерименти
+      - Український прапор на орбіті
+      - 15 діб у космосі
+
+  - section: Після польоту (1997-2018)
+    words: 600
+    points:
+      - Герой України
+      - Громадська та політична діяльність
+      - Популяризація космонавтики
+      - Смерть у 2018 році
+
+  - section: Спадщина — Зірка України
+    words: 700
+    points:
+      - Значення для української космічної програми
+      - Вплив на молоде покоління
+      - Памятники та вшанування
+      - Каденюк як символ можливостей
+
+vocabulary_hints:
+  required:
+    - космонавт (astronaut)
+    - космос (space)
+    - політ (flight)
+    - шатл (shuttle)
+    - орбіта (orbit)
+    - місія (mission)
+    - експеримент (experiment)
+    - невагомість (weightlessness)
+    - Герой України (Hero of Ukraine)
+    - космічна програма (space program)
+  recommended:
+    - орбітальний (orbital)
+    - науковий (scientific)
+    - астронавтика (astronautics)
+    - стикування (docking)
+    - запуск (launch)
+
+activity_hints:
+  - type: reading
+    focus: Українська космічна програма
+    source: Scientific and historical sources
+    items: "3 passages"
+
+  - type: quiz
+    focus: Життя та космічний політ Каденюка
+    items: "12+"
+
+  - type: match-up
+    focus: Космічна термінологія
+    items: "10+"
+
+  - type: essay-response
+    focus: Яке значення мав політ Каденюка для незалежної України?
+    word_target: 300
+    output: Analytical essay
+
+  - type: group-sort
+    focus: Етапи космічної кар'єри
+    items: "12+"
+
+  - type: fill-in
+    focus: Технічна та наукова термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чому важливо мати національну космічну програму?
+    output: Critical analysis
+
+prerequisites:
+  - c1-bio-79
+
+connects_to:
+  - c1-bio-117
+  - c1-bio-118
+
+naturalness:
+  score: 1
+  status: PENDING

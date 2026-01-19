@@ -4,6 +4,9 @@
 id: c2-84
 title: Викладання української мови III — Розробка матеріалів
 slug: teaching-ukrainian-iii
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -132,5 +135,5 @@ connects_to:
   - c2-89 (Capstone Topic Selection)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

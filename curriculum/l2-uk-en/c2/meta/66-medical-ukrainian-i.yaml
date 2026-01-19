@@ -4,6 +4,9 @@
 id: c2-66
 title: Медична українська I — Основи термінології
 slug: medical-ukrainian-i
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: domain
 module_type: professional
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -140,5 +143,5 @@ connects_to:
   - c2-71 (Professional Portfolio I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

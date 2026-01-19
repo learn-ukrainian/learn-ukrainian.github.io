@@ -1,10 +1,10 @@
-module: 80
+module: '80'
 title: Активний відпочинок
 subtitle: Active Lifestyle Basics
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

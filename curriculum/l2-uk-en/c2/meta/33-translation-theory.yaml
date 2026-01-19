@@ -4,6 +4,9 @@
 id: c2-33
 title: Теорія перекладу
 slug: translation-theory
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: literature
 module_type: literature
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -141,5 +144,5 @@ connects_to:
   - c2-85-88 (C2.4 Translation Practice)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

@@ -4,6 +4,9 @@
 id: c2-17
 title: Практика C2.1 I — Стилістичне портфоліо
 slug: c2-1-practice-i
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Ukrainian education standards for portfolio evaluation
   - name: Writing portfolio examples
     url: https://www.nbuv.gov.ua/
-    type: example
+    type: reference
     notes: Sample portfolio structures and rubrics
   - name: Ukrainian State Standard 2024 — Production assessment
     url: https://mon.gov.ua/
@@ -141,5 +144,5 @@ connects_to:
   - c2-20 (C2.1 Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

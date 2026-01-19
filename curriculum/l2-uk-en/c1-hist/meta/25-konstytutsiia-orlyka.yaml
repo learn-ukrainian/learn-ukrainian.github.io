@@ -4,6 +4,9 @@
 id: c1-hist-25
 title: "Конституція Орлика: Перша європейська"
 slug: konstytutsiia-orlyka
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -30,7 +33,7 @@ content_outline:
     points:
       - 1710 рік — контекст
       - Після Полтави — еміграція
-      - Чому "перша європейська"?
+      - "Чому «перша європейська»?"
       - Значення документа
 
   - section: Історичний контекст

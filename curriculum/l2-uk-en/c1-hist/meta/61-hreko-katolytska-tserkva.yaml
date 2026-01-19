@@ -4,6 +4,9 @@
 id: c1-hist-61
 title: "Греко-католицька церква: Між Сходом і Заходом"
 slug: hreko-katolytska-tserkva
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -63,7 +66,7 @@ content_outline:
     words: 600
     points:
       - 1946 — Львівський псевдособор
-      - Примусове "возз'єднання" з РПЦ
+      - "Примусове «возз'єднання» з РПЦ"
       - Церква в катакомбах
       - Переслідування священиків
       - Діаспора — збереження

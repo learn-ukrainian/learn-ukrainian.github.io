@@ -4,6 +4,9 @@
 id: c1-hist-44
 title: "Синтез: Голоси опору"
 slug: syntez-dysydentski-dzherela
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
@@ -71,7 +74,7 @@ content_outline:
   - section: Підсумок
     words: 300
     points:
-      - Завершення "Джерельної" фази
+      - "Завершення «Джерельної» фази"
       - Від джерел до тематики
       - Чек-ліст для дисидентських джерел
 

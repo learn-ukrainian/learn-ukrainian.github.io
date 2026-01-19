@@ -1,0 +1,140 @@
+# C1-BIO Module 115: Сергій Плохій: Історик, який пояснив Україну світові
+# Status: SPEC (ready for content development)
+
+id: c1-bio-115
+title: "Сергій Плохій: Історик, який пояснив Україну світові"
+slug: serhii-plokhy
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Сергій Плохій (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
+    type: primary
+    notes: Biography, academic career, books
+  - name: Harvard Ukrainian Research Institute
+    url: https://huri.harvard.edu/
+    type: reference
+    notes: Institute he directs
+  - name: "Брама Європи"
+    url: https://uk.wikipedia.org/wiki/Брама_Європи
+    type: reference
+    notes: His major work on Ukrainian history
+
+content_outline:
+  - section: Вступ — Голос України в Гарварді
+    words: 400
+    points:
+      - Плохій як найвпливовіший історик України у світі
+      - Директор Гарвардського українського інституту
+      - Бестселери, що змінюють світове розуміння України
+
+  - section: Молодість і радянська освіта
+    words: 500
+    points:
+      - Народження в Горлівці (1957)
+      - Навчання в Дніпропетровську
+      - Дисертація з історії козацтва
+      - Викладання в Київському університеті
+
+  - section: Еміграція та Гарвард
+    words: 600
+    points:
+      - Переїзд до Канади (1996)
+      - Альбертський університет
+      - Запрошення до Гарварду (2007)
+      - Директорство в HURI (2013)
+
+  - section: Наукові праці
+    words: 800
+    points:
+      - "Брама Європи" — історія України
+      - "Остання імперія" — розпад СРСР
+      - "Чорнобиль" — історія катастрофи
+      - "Війна Путіна" — сучасність
+
+  - section: Популяризатор історії
+    words: 600
+    points:
+      - Книги для широкої аудиторії
+      - Численні інтерв'ю та лекції
+      - Переклади на десятки мов
+      - Формування світової думки про Україну
+
+  - section: Значення для України
+    words: 500
+    points:
+      - Деколонізація української історії
+      - Спростування російських наративів
+      - Підтримка України під час війни
+      - Плохій як інтелектуальний амбасадор
+
+vocabulary_hints:
+  required:
+    - історик (historian)
+    - дослідження (research)
+    - бестселер (bestseller)
+    - деколонізація (decolonization)
+    - наратив (narrative)
+    - інститут (institute)
+    - професор (professor)
+    - козацтво (Cossackdom)
+    - еміграція (emigration)
+    - популяризація (popularization)
+  recommended:
+    - архів (archive)
+    - монографія (monograph)
+    - первинні джерела (primary sources)
+    - рецензія (review)
+    - переклад (translation)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from Plokhy's books
+    source: Historical texts
+    items: "3 passages"
+
+  - type: quiz
+    focus: Plokhy's biography and works
+    items: "12+"
+
+  - type: match-up
+    focus: Books and their historical topics
+    items: "10+"
+
+  - type: essay-response
+    focus: How does Plokhy challenge traditional narratives?
+    word_target: 300
+    output: Historiographical analysis
+
+  - type: group-sort
+    focus: Academic works vs. popular books
+    items: "12+"
+
+  - type: fill-in
+    focus: Key dates and book titles
+    items: "10+"
+
+  - type: discussion
+    focus: Why is diaspora scholarship important for Ukraine?
+    output: Knowledge diplomacy analysis
+
+prerequisites:
+  - c1-bio-105 (Shevelov - earlier diaspora scholar)
+  - Understanding of modern historiography
+  - Current Ukraine context
+
+connects_to:
+  - c1-bio-105 (Shevelov - intellectual predecessor)
+  - c1-bio-100 (Krymsky - earlier historian)
+  - Contemporary Ukrainian historians
+
+naturalness:
+  score: 1
+  status: PENDING

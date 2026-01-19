@@ -4,6 +4,9 @@
 id: b2-17
 title: Ділова українська мова
 slug: 17-register-business-ukrainian
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: style
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -130,15 +133,15 @@ activity_hints:
 
 prerequisites:
   - b2-15 (Register Introduction)
-  - b2-16 (Register: Formal/Informal)
+  - 'b2-16 (Register: Formal/Informal)'
   - Basic letter writing
 
 connects_to:
-  - b2-18 (Register: Academic Ukrainian)
-  - b2-19 (Register: Official-Legal)
+  - 'b2-18 (Register: Academic Ukrainian)'
+  - 'b2-19 (Register: Official-Legal)'
   - b2-25 (B2.1b Checkpoint)
   - b2-80 (Professional Communication I)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

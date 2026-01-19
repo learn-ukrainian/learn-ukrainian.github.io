@@ -1,30 +1,21 @@
 # Audit Report: 17-the-artist.md
-**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** Immersion & Analysis | **Target:** 3500
+**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Immersion & Analysis | **Target:** 3500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 17-the-artist.yaml: Schema validation error at key '2': {'type': 'fill-in', 'title': 'Аналіз Картини', 'instruction': "Вставте пропущені слова в аналіз картини 'Катерина'.", 'items': [{'sentence': "Картина 'Катерина' написана олією в стилі {романтизму|академізму|імпресіонізму|реалізму}, але з елементами реалізму.", 'answer': 'романтизму', 'options': ['романтизму', 'академізму', 'імпресіонізму', 'реалізму']}, {'sentence': 'Центральна фігура — вагітна жінка, яка символізує {Україну|Росію|Польщу|Європу}, ошукану імперією.', 'answer': 'Україну', 'options': ['Україну', 'Росію', 'Польщу', 'Європу']}, {'sentence': "На задньому плані ми бачимо {москаля|козака|чумака|священика}, що від'їжджає на коні.", 'answer': 'москаля', 'options': ['москаля', 'козака', 'чумака', 'священика']}, {'sentence': 'Селянин, що сидить біля дуба, символізує {байдужість|гнів|співчуття|радість} суспільства.', 'answer': 'байдужість', 'options': ['байдужість', 'гнів', 'співчуття', 'радість']}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 3564/3500
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.0% (target 95-100% (biography))
 - **Richness:** ✅ 96% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

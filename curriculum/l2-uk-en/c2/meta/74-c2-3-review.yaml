@@ -4,6 +4,9 @@
 id: c2-74
 title: Повторення C2.3 — Консолідація професійної спеціалізації
 slug: c2-3-review
+version: '2.0'
+phase: 'C2.3 Translation & Creative Writing'
+focus: integration
 module_type: integration
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -146,8 +149,8 @@ prerequisites:
 connects_to:
   - c2-75 (C2.3 Checkpoint)
   - c2-76 (Complete Grammar Review)
-  - c2-89 (Capstone: Topic Selection)
+  - 'c2-89 (Capstone: Topic Selection)'
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

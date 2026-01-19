@@ -164,4 +164,4 @@ prerequisites:
 connects_to:
   - b2-hist-03 (Greek city-states in Crimea)
   - b2-hist-04 (Slavic origins)
-  - b2-hist-08 (Synthesis: Origins to Kyiv)
+  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'

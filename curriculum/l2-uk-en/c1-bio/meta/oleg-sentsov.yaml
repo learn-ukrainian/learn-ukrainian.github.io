@@ -1,28 +1,139 @@
-title: 'Олег Сенцов: Режисер, політв''язень, воїн'
-subtitle: 'Oleg Sentsov: Director, Political Prisoner, Warrior'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- cinema
-- resistance
-- crimea
-grammar:
-- Narrative of personal experience
-- Military and prison slang
-objectives:
-- Learner understands the significance of Oleg Sentsov as a symbol of Ukrainian resistance
-  against Russian aggression
-- Learner can analyze his films "Gamer" and "Rhino" in the context of post-Soviet
-  reality
-- Learner masters vocabulary related to filmmaking, human rights, and military service
-vocabulary_count: 25
+# C1-BIO Module 91: Олег Сенцов
+# Status: SPEC (ready for content development)
+
+id: c1-bio-91
+title: "Олег Сенцов: Режисер-в'язень"
 slug: oleg-sentsov
-vital_status: living
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Олег Сенцов (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
+    type: primary
+    notes: Біографія, ув'язнення, творчість
+  - name: Free Oleg Sentsov Campaign
+    url: https://www.freesentsov.org
+    type: reference
+    notes: Матеріали кампанії за звільнення
+  - name: European Film Academy
+    url: https://www.europeanfilmacademy.org
+    type: reference
+    notes: Нагороди та міжнародне визнання
+
+content_outline:
+  - section: Вступ — Символ опору
+    words: 400
+    points:
+      - Сенцов як символ української боротьби проти російської агресії
+      - Від кінорежисера до політв'язня і воїна
+      - Міжнародний резонанс справи
+
+  - section: Молодість у Криму (1976-2014)
+    words: 600
+    points:
+      - Народження та виховання в Сімферополі
+      - Робота підприємцем та громадським активістом
+      - Перші кроки в кінематографі
+      - Фільм «Геймер» (2011)
+
+  - section: Анексія Криму та арешт (2014)
+    words: 800
+    points:
+      - Проукраїнський активізм під час окупації
+      - Допомога українським військовим
+      - Арешт ФСБ та сфабриковані звинувачення
+      - Тортури та вибивання «зізнання»
+
+  - section: Суд та ув'язнення (2015-2019)
+    words: 800
+    points:
+      - Судовий фарс у Ростові-на-Дону
+      - 20-річний вирок за «тероризм»
+      - Умови утримання в російських колоніях
+      - Голодування 2018 року (145 днів)
+      - Міжнародна кампанія за звільнення
+
+  - section: Звільнення та повернення (2019-2022)
+    words: 700
+    points:
+      - Обмін полоненими у вересні 2019
+      - Повернення до кінематографу
+      - Фільм «Носоріг» (2021)
+      - Громадська та культурна діяльність
+
+  - section: Війна та військова служба (2022-сьогодні)
+    words: 700
+    points:
+      - Вступ до ЗСУ після повномасштабного вторгнення
+      - Служба на передовій
+      - Продовження творчої діяльності на війні
+      - Символ української незламності
+
+vocabulary_hints:
+  required:
+    - політв'язень (political prisoner)
+    - кінорежисер (film director)
+    - анексія (annexation)
+    - голодування (hunger strike)
+    - обмін полоненими (prisoner exchange)
+    - сфабрикована справа (fabricated case)
+    - тортури (torture)
+    - колонія (penal colony)
+    - активіст (activist)
+    - опір (resistance)
+  recommended:
+    - ФСБ (FSB)
+    - Крим (Crimea)
+    - документальний фільм (documentary)
+    - міжнародна солідарність (international solidarity)
+    - ЗСУ (Armed Forces of Ukraine)
+
+activity_hints:
+  - type: reading
+    focus: Історія ув'язнення та боротьби
+    source: Інтерв'ю та документальні матеріали
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та хронологія подій
+    items: "12+"
+
+  - type: match-up
+    focus: Фільми та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як мистецтво стає формою опору?
+    word_target: 300
+    output: Аналітичне есе
+
+  - type: group-sort
+    focus: Творча діяльність vs громадянський активізм
+    items: "12+"
+
+  - type: fill-in
+    focus: Термінологія політичних репресій
+    items: "10+"
+
+  - type: discussion
+    focus: Роль міжнародної солідарності у звільненні політв'язнів
+    output: Критичний аналіз
+
+prerequisites:
+  - c1-bio-77 (Василь Стус)
+
+connects_to:
+  - c1-bio-78 (Мирослав Маринович)
+  - c1-bio-95 (Олександра Матвійчук)
+  - c1-bio-90 (Сергій Жадан)
+
 naturalness:
-  score: 9
-  status: PASS
+  score: 1
+  status: PENDING

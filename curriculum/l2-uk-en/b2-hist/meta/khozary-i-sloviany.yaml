@@ -162,5 +162,5 @@ prerequisites:
   - b2-hist-06 (Founding of Kyiv)
 
 connects_to:
-  - b2-hist-08 (Synthesis: Origins to Kyiv)
+  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
   - b2-hist-10 (Olha and Sviatoslav — defeat of Khazars)

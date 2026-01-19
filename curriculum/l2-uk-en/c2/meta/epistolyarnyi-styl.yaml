@@ -4,6 +4,9 @@
 id: c2-09
 title: Епістолярний стиль — Повна кореспонденція
 slug: epistolyarnyi-styl
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -139,5 +142,5 @@ connects_to:
   - c2-14 (Personal voice in correspondence)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

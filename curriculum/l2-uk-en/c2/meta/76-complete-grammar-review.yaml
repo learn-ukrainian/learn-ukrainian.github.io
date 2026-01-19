@@ -4,6 +4,9 @@
 id: c2-76
 title: Повний огляд граматики
 slug: complete-grammar-review
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -144,5 +147,5 @@ connects_to:
   - c2-81 (Native-Like Fluency)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

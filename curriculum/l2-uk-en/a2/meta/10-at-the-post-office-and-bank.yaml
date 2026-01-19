@@ -44,7 +44,7 @@ sources:
     notes: Required service vocabulary for A2
   - name: Ukrposhta Official
     url: https://www.ukrposhta.ua/
-    type: example
+    type: reference
     notes: Authentic postal service terminology
 
 content_outline:
@@ -58,7 +58,7 @@ content_outline:
   - section: Post Office Interactions
     words: 500
     points:
-      - "Я хочу відправити листа другові" (Dat use)
+      - '"Я хочу відправити листа другові" (Dat use)'
       - Asking about prices and delivery time
       - Filling out forms (основні дані)
 
@@ -72,8 +72,8 @@ content_outline:
   - section: Bank Interactions
     words: 500
     points:
-      - "Де можна обміняти долари на гривні?" (Acc use)
-      - "Мені потрібно зняти гроші з рахунку" (Gen use)
+      - '"Де можна обміняти долари на гривні?" (Acc use)'
+      - '"Мені потрібно зняти гроші з рахунку" (Gen use)'
       - Currency exchange (курс обміну)
 
   - section: Numbers and Money
@@ -124,7 +124,7 @@ activity_hints:
     items: "12+"
 
   - type: quiz
-    focus: "I want to..." service phrases
+    focus: '"I want to..." service phrases'
     items: "10+"
 
   - type: match-up

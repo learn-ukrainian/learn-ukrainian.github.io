@@ -1,128 +1,108 @@
-# C1 Module 32: Professional Scenarios
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-32
 title: Професійні сценарії
 slug: 32-professional-scenarios
+phase: C1.2 Professional Communication
+focus: practice
 module_type: practice
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian Professional Standards
-    url: https://mon.gov.ua/
-    type: reference
-    notes: C1 professional communication requirements
-  - name: Business Ukrainian Guide
-    url: https://chamber.ua/
-    type: secondary
-    notes: Practical business scenarios
-
+- name: Ukrainian Professional Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 professional communication requirements
+- name: Business Ukrainian Guide
+  url: https://chamber.ua/
+  type: secondary
+  notes: Practical business scenarios
 content_outline:
-  - section: Вступ — Інтеграція навичок
-    words: 300
-    points:
-      - Огляд M21-M31
-      - Цілі практикуму
-      - Формат завдань
-
-  - section: Сценарій 1 — Влаштування на роботу
-    words: 700
-    points:
-      - Написання CV і супровідного листа
-      - Симуляція співбесіди
-      - Переговори про умови
-
-  - section: Сценарій 2 — Ділова зустріч
-    words: 700
-    points:
-      - Підготовка до наради
-      - Участь в обговоренні
-      - Протокол зустрічі
-
-  - section: Сценарій 3 — Ділове листування
-    words: 700
-    points:
-      - Ланцюжок електронних листів
-      - Запит і відповідь
-      - Вирішення конфлікту
-
-  - section: Сценарій 4 — Презентація
-    words: 600
-    points:
-      - Підготовка доповіді
-      - Виступ перед аудиторією
-      - Відповіді на запитання
-
-  - section: Самооцінка
-    words: 500
-    points:
-      - Критерії оцінювання
-      - Рубрика самооцінки
-      - Зворотний зв'язок
-
-  - section: Підсумок
-    words: 500
-    points:
-      - Сильні сторони
-      - Зони для покращення
-      - Рекомендації
-
+- section: Вступ — Інтеграція навичок
+  words: 300
+  points:
+  - Огляд M21-M31
+  - Цілі практикуму
+  - Формат завдань
+- section: Сценарій 1 — Влаштування на роботу
+  words: 700
+  points:
+  - Написання CV і супровідного листа
+  - Симуляція співбесіди
+  - Переговори про умови
+- section: Сценарій 2 — Ділова зустріч
+  words: 700
+  points:
+  - Підготовка до наради
+  - Участь в обговоренні
+  - Протокол зустрічі
+- section: Сценарій 3 — Ділове листування
+  words: 700
+  points:
+  - Ланцюжок електронних листів
+  - Запит і відповідь
+  - Вирішення конфлікту
+- section: Сценарій 4 — Презентація
+  words: 600
+  points:
+  - Підготовка доповіді
+  - Виступ перед аудиторією
+  - Відповіді на запитання
+- section: Самооцінка
+  words: 500
+  points:
+  - Критерії оцінювання
+  - Рубрика самооцінки
+  - Зворотний зв'язок
+- section: Підсумок
+  words: 500
+  points:
+  - Сильні сторони
+  - Зони для покращення
+  - Рекомендації
 vocabulary_hints:
   required:
-    - професійний (professional)
-    - діловий (business)
-    - офіційний (official)
-    - формальний (formal)
-    - етикет (etiquette)
-    - комунікація (communication)
-    - співбесіда (interview)
-    - переговори (negotiations)
-    - зустріч (meeting)
-    - презентація (presentation)
+  - професійний (professional)
+  - діловий (business)
+  - офіційний (official)
+  - формальний (formal)
+  - етикет (etiquette)
+  - комунікація (communication)
+  - співбесіда (interview)
+  - переговори (negotiations)
+  - зустріч (meeting)
+  - презентація (presentation)
   recommended:
-    - звіт (report)
-    - лист (letter)
-    - повідомлення (message)
-    - запит (request)
-    - відповідь (response)
-
+  - звіт (report)
+  - лист (letter)
+  - повідомлення (message)
+  - запит (request)
+  - відповідь (response)
 activity_hints:
-  - type: essay-response
-    focus: Write CV and cover letter
-    word_target: 300
-
-  - type: essay-response
-    focus: Business email chain
-    word_target: 200
-
-  - type: quiz
-    focus: Professional scenario decisions
-    items: "15+"
-
-  - type: fill-in
-    focus: Meeting protocol phrases
-    items: "12+"
-
-  - type: cloze
-    focus: Professional dialogue completion
-    items: "12+"
-
-  - type: match-up
-    focus: Situation → appropriate response
-    items: "12+"
-
+- type: essay-response
+  focus: Write CV and cover letter
+  word_target: 300
+- type: essay-response
+  focus: Business email chain
+  word_target: 200
+- type: quiz
+  focus: Professional scenario decisions
+  items: 15+
+- type: fill-in
+  focus: Meeting protocol phrases
+  items: 12+
+- type: cloze
+  focus: Professional dialogue completion
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate response
+  items: 12+
 prerequisites:
-  - c1-21 to c1-31 (Complete C1.2 content)
-  - All professional skills
-
+- c1-21 to c1-31 (Complete C1.2 content)
+- All professional skills
 connects_to:
-  - c1-33 (Case Studies)
-  - c1-34 (C1.2 Review)
-  - c1-35 (C1.2 Checkpoint)
-
+- c1-33 (Case Studies)
+- c1-34 (C1.2 Review)
+- c1-35 (C1.2 Checkpoint)
 naturalness:
   score: null
   status: PENDING

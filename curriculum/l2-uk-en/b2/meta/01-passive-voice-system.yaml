@@ -4,6 +4,9 @@
 id: b2-01
 title: "Пасивний стан: повна система"
 slug: 01-passive-voice-system
+version: '1.0'
+phase: B2.1a [Passive Voice]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -139,5 +142,5 @@ connects_to:
   - b2-10 (B2.1a Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

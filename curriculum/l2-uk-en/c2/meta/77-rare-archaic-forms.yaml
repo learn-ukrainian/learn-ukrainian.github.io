@@ -4,6 +4,9 @@
 id: c2-77
 title: Рідкісні та архаїчні форми
 slug: rare-archaic-forms
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: grammar
 module_type: grammar
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -128,7 +131,7 @@ activity_hints:
     output: Стилізований текст
 
   - type: group-sort
-    focus: Класифікація слів: архаїзм / історизм / поетизм
+    focus: "Класифікація слів: архаїзм / історизм / поетизм"
     items: "15+"
 
   - type: critical-analysis
@@ -137,7 +140,7 @@ activity_hints:
 
 prerequisites:
   - c2-76 (Complete Grammar Review)
-  - Religious style awareness (C2.1 M08)
+  - 'Religious style awareness (C2.1 M08)'
   - Literary analysis skills (C2.2)
 
 connects_to:
@@ -146,5 +149,5 @@ connects_to:
   - c2-81 (Native-Like Fluency)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

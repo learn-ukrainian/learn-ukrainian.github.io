@@ -1,22 +1,137 @@
-title: 'Микола Хвильовий: Бунтівний романтик революції'
-subtitle: 'Mykola Khvylovy: The Rebellious Romantic of the Revolution'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- politics
-- executed-renaissance
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the life, ideology, and tragic end of Mykola Khvylovy.
-- Learner can discuss literary discussions, political slogans, and suicide in Ukrainian.
-- Learner masters vocabulary for debate, ideology, and despair.
-vocabulary_count: 24
+# C1-BIO Module 63: Микола Хвильовий: Геть від Москви!
+# Status: SPEC (ready for content development)
+
+id: c1-bio-63
+title: "Микола Хвильовий: Геть від Москви!"
 slug: mykola-khvylovyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Микола Хвильовий (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Микола_Хвильовий
+    type: primary
+    notes: Біографія, творчість, літературна дискусія
+  - name: Літературна дискусія 1925-1928
+    url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років
+    type: reference
+    notes: Контекст полеміки «Геть від Москви!»
+  - name: Розстріляне відродження
+    url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+    type: reference
+    notes: Доля української інтелігенції 1920-30-х
+
+content_outline:
+  - section: Вступ — Бунтар, що обрав смерть
+    words: 400
+    points:
+      - Микола Хвильовий — найяскравіша постать Розстріляного відродження
+      - Від комуніста до ідеолога «психологічної Європи»
+      - Самогубство як останній акт спротиву
+
+  - section: Ранні роки та революція (1893-1921)
+    words: 600
+    points:
+      - Народження на Харківщині (справжнє ім'я — Микола Фітільов)
+      - Участь у революції та громадянській війні
+      - Вступ до Комуністичної партії
+      - Початок літературної діяльності
+
+  - section: Літературний злет (1921-1925)
+    words: 700
+    points:
+      - Збірки «Сині етюди» та «Осінь»
+      - Організація літературних об'єднань — ВАПЛІТЕ
+      - Імпресіоністичний стиль та психологізм
+      - Визнання як провідного прозаїка
+
+  - section: «Геть від Москви!» (1925-1928)
+    words: 800
+    points:
+      - Літературна дискусія про шляхи української культури
+      - Гасло «Геть від Москви!» — орієнтація на Європу
+      - Концепція «азійського ренесансу»
+      - Конфлікт з партійною лінією та примусове каяття
+
+  - section: Останні роки та самогубство (1928-1933)
+    words: 800
+    points:
+      - Тиск влади та творча криза
+      - Голодомор та знищення української інтелігенції
+      - Самогубство 13 травня 1933 року
+      - Передсмертний лист і його значення
+
+  - section: Спадщина та реабілітація
+    words: 700
+    points:
+      - Заборона творів на десятиліття
+      - Реабілітація у 1980-х роках
+      - Вплив на сучасну українську літературу
+      - Хвильовий як символ інтелектуального спротиву
+
+vocabulary_hints:
+  required:
+    - Розстріляне відродження (Executed Renaissance)
+    - орієнтація (orientation)
+    - імпресіонізм (impressionism)
+    - дискусія (discussion/debate)
+    - самогубство (suicide)
+    - каяття (repentance)
+    - ренесанс (renaissance)
+    - інтелігенція (intelligentsia)
+    - спротив (resistance)
+    - ідеологія (ideology)
+  recommended:
+    - авангард (avant-garde)
+    - психологізм (psychologism)
+    - модернізм (modernism)
+    - тоталітаризм (totalitarianism)
+    - цензура (censorship)
+
+activity_hints:
+  - type: reading
+    focus: Уривки з памфлетів та прози Хвильового
+    source: Оригінальні твори
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та літературна дискусія
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та ідеї
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому гасло «Геть від Москви!» актуальне сьогодні?
+    word_target: 300
+    output: Contemporary analysis
+
+  - type: group-sort
+    focus: Етапи творчості та ключові ідеї
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературознавча та ідеологічна лексика
+    items: "10+"
+
+  - type: discussion
+    focus: Чи виправдане самогубство як форма протесту?
+    output: Ethical reflection
+
+prerequisites:
+  - c1-bio-57-les-kurbas
+
+connects_to:
+  - c1-bio-68-olena-teliha
+  - c1-bio-77-vasyl-stus
+
+naturalness:
+  score: 1
+  status: PENDING

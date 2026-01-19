@@ -4,6 +4,9 @@
 id: c2-85
 title: Теорія перекладу II — Поглиблений курс
 slug: translation-theory-ii
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -133,5 +136,5 @@ connects_to:
   - c2-88 (Interpretation Basics)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

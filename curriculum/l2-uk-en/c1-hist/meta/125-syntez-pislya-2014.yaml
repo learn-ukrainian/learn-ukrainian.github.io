@@ -4,6 +4,9 @@
 id: c1-hist-125
 title: "Синтез: Після 2014 і 2022"
 slug: syntez-pislya-2014
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian

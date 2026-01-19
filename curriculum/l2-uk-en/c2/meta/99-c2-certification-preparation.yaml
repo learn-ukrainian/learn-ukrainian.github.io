@@ -4,6 +4,9 @@
 id: c2-99
 title: Підготовка до сертифікації C2
 slug: c2-certification-preparation
+version: '2.0'
+phase: 'C2.4 Academic Culmination'
+focus: practice
 module_type: practice
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -132,5 +135,5 @@ connects_to:
   - c2-100 (C2 РІВЕНЬ ЗАВЕРШЕНО)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

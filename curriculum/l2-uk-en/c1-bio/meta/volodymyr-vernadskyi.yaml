@@ -1,37 +1,139 @@
-title: 'Володимир Вернадський: Батько української науки'
+# C1-BIO Module 99: Володимир Вернадський: Батько української науки
+# Status: SPEC (ready for content development)
+
+id: c1-bio-99
+title: "Володимир Вернадський: Батько української науки"
 slug: volodymyr-vernadskyi
-phase: C1.3 Biographies
-duration: 120
-transliteration: none
-pedagogy: CBI
-register: публіцистичний
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
 focus: biography
-objectives:
-  - Describe Vernadsky's role in founding the Ukrainian Academy of Sciences
-  - Explain key concepts of biosphere and noosphere
-  - Analyze the connection between science and national identity
-  - Identify his contributions to Ukrainian scientific institutions
-tags:
-  - biography
-  - era: early-20th-century
-  - domain: science
-  - domain: geochemistry
-  - domain: education
-grammar:
-  - Complex scientific narrative
-  - High-style academic syntax
-vocabulary_focus:
-  - Scientific terminology (geochemistry, biosphere, noosphere)
-  - Academic institution vocabulary
-  - Ukrainian state-building terminology
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Володимир Вернадський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Національна академія наук України
+    url: https://nas.gov.ua/
+    type: reference
+    notes: Історія заснування та діяльність
+  - name: Інститут геохімії НАН України
+    url: https://igc.org.ua/
+    type: reference
+    notes: Наукова спадщина
+
+content_outline:
+  - section: Вступ — Вчений, який змінив науку
+    words: 400
+    points:
+      - Вернадський як один із найвидатніших науковців XX ст.
+      - Засновник української Академії наук
+      - Концепції біосфери та ноосфери
+
+  - section: Аристократичне походження
+    words: 600
+    points:
+      - Народження в Санкт-Петербурзі (1863)
+      - Українське коріння родини
+      - Освіта та ранні наукові інтереси
+
+  - section: Наукова кариєра в імперії
+    words: 700
+    points:
+      - Робота в Московському університеті
+      - Дослідження мінералогії та геохімії
+      - Формування наукової школи
+
+  - section: Заснування Української академії наук
+    words: 800
+    points:
+      - Революція та можливості
+      - Створення Академії в 1918 році
+      - Перший президент УАН
+
+  - section: Біосфера та ноосфера
+    words: 800
+    points:
+      - Концепція живої речовини
+      - Ідея ноосфери як еволюції
+      - Вплив на світову науку
+
+  - section: Останні роки та спадщина
+    words: 500
+    points:
+      - Життя в СРСР
+      - Смерть у 1945 році
+      - Значення для української науки
+
+  - section: Дискусія — Наука та нація
+    words: 200
+    points:
+      - Як вчений може служити нації
+      - Вернадський та українська ідентичність
+
+vocabulary_hints:
+  required:
+    - біосфера (biosphere)
+    - ноосфера (noosphere)
+    - геохімія (geochemistry)
+    - мінералогія (mineralogy)
+    - Академія наук (Academy of Sciences)
+    - науковець (scientist)
+    - дослідження (research)
+    - концепція (concept)
+    - еволюція (evolution)
+    - спадщина (legacy)
+  recommended:
+    - жива речовина (living matter)
+    - космізм (cosmism)
+    - біогеохімія (biogeochemistry)
+    - інституціалізація (institutionalization)
+    - науковий метод (scientific method)
+
+activity_hints:
+  - type: reading
+    focus: Фрагменти праць Вернадського
+    source: Наукові тексти
+    items: "3 passages"
+
+  - type: quiz
+    focus: Факти про життя та наукові ідеї Вернадського
+    items: "12+"
+
+  - type: match-up
+    focus: Наукові терміни та визначення
+    items: "10+"
+
+  - type: essay-response
+    focus: Чому ідеї Вернадського актуальні сьогодні?
+    word_target: 300
+    output: Науково-популярний есей
+
+  - type: group-sort
+    focus: Наукові дисципліни та їхні засновники
+    items: "12+"
+
+  - type: fill-in
+    focus: Наукова термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Як вчений може служити своїй нації?
+    output: Рефлексивний аналіз
+
 prerequisites:
-  - c1-bio-98
-learning_outcomes:
-  - Describe Vernadsky's role in founding the Ukrainian Academy of Sciences
-  - Explain key concepts of biosphere and noosphere
-  - Analyze the connection between science and national identity
-  - Use scientific terminology in Ukrainian context
+  - c1-bio-98-ivan-ohienko
+
+connects_to:
+  - c1-bio-100-ahatanhel-krymskyi
+  - c1-bio-35-mykhailo-hrushevskyi
+  - c1-bio-99-volodymyr-vernadskyi
+
 naturalness:
-  score: 10
-  status: PASS
-  checked: 2026-01-16
+  score: 1
+  status: PENDING

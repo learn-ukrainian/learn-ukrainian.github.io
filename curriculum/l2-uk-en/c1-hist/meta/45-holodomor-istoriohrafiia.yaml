@@ -4,6 +4,9 @@
 id: c1-hist-45
 title: "Голодомор: Історіографія теми"
 slug: holodomor-istoriohrafiia
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
@@ -18,7 +21,7 @@ sources:
   - name: Роберт Конквест
     url: https://uk.wikipedia.org/wiki/Роберт_Конквест
     type: reference
-    notes: "Harvest of Sorrow" author
+    notes: '«Harvest of Sorrow» author'
   - name: Джеймс Мейс
     url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
     type: reference
@@ -40,7 +43,7 @@ content_outline:
   - section: Радянське замовчування (1933-1991)
     words: 600
     points:
-      - Офіційна версія — "неврожай"
+      - "Офіційна версія — «неврожай»"
       - Заборона згадувати
       - Що знали на Заході
       - Джонс vs. Дюранті — два журналісти
@@ -56,7 +59,7 @@ content_outline:
   - section: Конквест і Мейс (1980-ті)
     words: 700
     points:
-      - "Harvest of Sorrow" (1986) — перший синтез
+      - "«Harvest of Sorrow» (1986) — перший синтез"
       - Комісія Конгресу США (1988)
       - Мейс — від дослідника до активіста
       - Визнання геноцидом — початок
@@ -73,7 +76,7 @@ content_outline:
     words: 400
     points:
       - Російський офіційний наратив
-      - "Спільна трагедія" — що це означає
+      - "«Спільна трагедія» — що це означає"
       - Академічний скептицизм
       - Як відповідати
 

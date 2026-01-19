@@ -1,28 +1,138 @@
-title: 'Марія Матіос: Солодка Даруся та залізний дух Буковини'
-subtitle: 'Mariya Matios: Sweet Darusia and the Iron Spirit of Bukovina'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- history
-- bukovina
-grammar:
-- Dialectal syntax and regionalisms
-- Emotional intensifiers in prose
-objectives:
-- Learner understands the role of Mariya Matios in contemporary Ukrainian literature
-  and her exploration of historical trauma
-- Learner can analyze the linguistic features of Bukovinian dialect in her works
-- Learner masters vocabulary related to family sagas, historical justice, and regional
-  identity
-vocabulary_count: 25
+# C1-BIO Module 85: Марія Матіос: Буковинський голос
+# Status: SPEC (ready for content development)
+
+id: c1-bio-85
+title: "Марія Матіос: Буковинський голос"
 slug: mariya-matios
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
 vital_status: living
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Марія Матіос (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Марія_Матіос
+    type: primary
+    notes: Біографія, творчість, громадська позиція
+  - name: Солодка Даруся
+    url: https://uk.wikipedia.org/wiki/Солодка_Даруся
+    type: reference
+    notes: Найвідоміший роман письменниці
+  - name: Буковина
+    url: https://uk.wikipedia.org/wiki/Буковина
+    type: reference
+    notes: Регіональний контекст творчості
+
+content_outline:
+  - section: Вступ — Голос гірського краю
+    words: 400
+    points:
+      - Марія Матіос — найвідоміша буковинська письменниця сучасності
+      - Від журналістки до лауреатки Шевченківської премії
+      - Історична травма та сімейна пам'ять як теми творчості
+
+  - section: Дитинство на Буковині (1959-1980)
+    words: 600
+    points:
+      - Народження в селі Ростоки Вижницького району
+      - Виховання в гуцульській родині
+      - Навчання на філологічному факультеті Чернівецького університету
+      - Перші журналістські та поетичні спроби
+
+  - section: Журналістська кар'єра (1980-2000)
+    words: 600
+    points:
+      - Робота в чернівецьких виданнях
+      - Переїзд до Києва та робота на телебаченні
+      - Перші поетичні збірки
+      - Входження в літературне життя столиці
+
+  - section: «Солодка Даруся» та слава (2004-2010)
+    words: 800
+    points:
+      - Публікація роману «Солодка Даруся» (2004)
+      - Шевченківська премія (2005)
+      - Історія травми — радянська депортація на Буковині
+      - Роман «Майже ніколи не навпаки» та інші твори
+
+  - section: Письменниця та громадянка (2010-сьогодні)
+    words: 800
+    points:
+      - Політична активність та критика влади
+      - Підтримка Революції гідності
+      - Волонтерська діяльність під час війни
+      - Нові романи та есеїстика
+
+  - section: Поетика та мова
+    words: 800
+    points:
+      - Буковинський діалект як літературна мова
+      - Жіночі голоси та родинні історії
+      - Тема історичної справедливості
+      - Місце Матіос у сучасній українській прозі
+
+vocabulary_hints:
+  required:
+    - буковинський (Bukovinian)
+    - діалект (dialect)
+    - травма (trauma)
+    - депортація (deportation)
+    - родинна сага (family saga)
+    - регіоналізм (regionalism)
+    - письменниця (writer, female)
+    - премія (prize/award)
+    - пам'ять (memory)
+    - справедливість (justice)
+  recommended:
+    - гуцульський (Hutsul)
+    - фольклор (folklore)
+    - репресії (repressions)
+    - волонтер (volunteer)
+    - есеїстика (essay writing)
+
+activity_hints:
+  - type: reading
+    focus: Уривки з «Солодкої Дарусі» та інтерв'ю
+    source: Оригінальні твори та публіцистика
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та творчість
+    items: "12+"
+
+  - type: match-up
+    focus: Твори та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як регіональна ідентичність впливає на літературу?
+    word_target: 300
+    output: Literary analysis
+
+  - type: group-sort
+    focus: Етапи творчості та жанри
+    items: "12+"
+
+  - type: fill-in
+    focus: Літературознавча та регіональна лексика
+    items: "10+"
+
+  - type: discussion
+    focus: Чому історична травма потребує літературного осмислення?
+    output: Philosophical reflection
+
+prerequisites:
+  - c1-bio-84-halyna-pahutyak
+
+connects_to:
+  - c1-bio-86-oksana-zabuzhko
+  - c1-bio-90-serhiy-zhadan
+
 naturalness:
   score: 9
   status: PASS

@@ -1,22 +1,137 @@
-title: 'Микола Василенко: Юрист, історик, державотворець'
-subtitle: 'Mykola Vasylenko: Jurist, Historian, Statesman'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- history
-- law
-- science
-grammar:
-- Legal and academic terminology
-- Complex syntactic structures in historical narrative
-objectives:
-- Learner understands Mykola Vasylenkos contribution to Ukrainian law and science.
-- Learner can analyze the political context of the Hetmanate period (1918).
-- Learner explores the repression of intellectuals in the 1920s-30s.
-vocabulary_count: 24
+# C1-BIO Module 36: Микола Василенко: Юрист і державник
+# Status: SPEC (ready for content development)
+
+id: c1-bio-36
+title: "Микола Василенко: Юрист і державник"
 slug: mykola-vasylenko
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Микола Василенко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Микола_Василенко
+    type: primary
+    notes: Біографія, юридична та наукова діяльність
+  - name: Гетьманат Павла Скоропадського
+    url: https://uk.wikipedia.org/wiki/Українська_Держава
+    type: reference
+    notes: Політичний контекст 1918 року
+  - name: Академія наук України
+    url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
+    type: reference
+    notes: Роль у заснуванні Академії
+
+content_outline:
+  - section: Вступ — Архітектор української юриспруденції
+    words: 400
+    points:
+      - Микола Василенко — видатний правознавець та державний діяч
+      - Від професора до міністра освіти Гетьманату
+      - Співзасновник Української академії наук
+
+  - section: Ранні роки та освіта (1866-1894)
+    words: 600
+    points:
+      - Народження в Полтаві в родині чиновника
+      - Навчання в Київському університеті
+      - Формування як історика права
+      - Перші наукові роботи
+
+  - section: Академічна кар'єра (1894-1917)
+    words: 700
+    points:
+      - Професорство в Київському університеті
+      - Дослідження історії українського права
+      - Участь в українському громадському русі
+      - Редакторська та публіцистична діяльність
+
+  - section: Гетьманат та державна служба (1918)
+    words: 800
+    points:
+      - Міністр освіти в уряді Скоропадського
+      - Заснування Української академії наук
+      - Реформа освітньої системи
+      - Падіння Гетьманату та відставка
+
+  - section: Радянський період (1919-1935)
+    words: 700
+    points:
+      - Продовження наукової роботи
+      - Віце-президент ВУАН
+      - Репресії проти української інтелігенції
+      - Арешти та домашній арешт
+
+  - section: Останні роки та спадщина (1935)
+    words: 800
+    points:
+      - Смерть у 1935 році
+      - Знищення спадщини в сталінські часи
+      - Посмертна реабілітація
+      - Василенко як символ української юридичної школи
+
+vocabulary_hints:
+  required:
+    - юрист (jurist/lawyer)
+    - правознавець (legal scholar)
+    - академія (academy)
+    - Гетьманат (Hetmanate)
+    - міністр (minister)
+    - право (law)
+    - освіта (education)
+    - історик (historian)
+    - репресії (repressions)
+    - реабілітація (rehabilitation)
+  recommended:
+    - юриспруденція (jurisprudence)
+    - конституція (constitution)
+    - законодавство (legislation)
+    - інтелігенція (intelligentsia)
+    - професор (professor)
+
+activity_hints:
+  - type: reading
+    focus: Юридичні праці та спогади сучасників
+    source: Наукові та біографічні статті
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та державна діяльність
+    items: "12+"
+
+  - type: match-up
+    focus: Посади та досягнення
+    items: "10+"
+
+  - type: essay-response
+    focus: Яку роль відіграла інтелігенція в українському державотворенні?
+    word_target: 300
+    output: Historical analysis
+
+  - type: group-sort
+    focus: Етапи кар'єри та наукові здобутки
+    items: "12+"
+
+  - type: fill-in
+    focus: Юридична та історична термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Чи можлива наука без свободи?
+    output: Philosophical reflection
+
+prerequisites:
+  - c1-bio-35-mykhailo-hrushevskyi-biography
+
+connects_to:
+  - c1-bio-99-volodymyr-vernadskyi
+  - c1-bio-100-ahatanhel-krymskyi
+
+naturalness:
+  score: 1
+  status: PENDING

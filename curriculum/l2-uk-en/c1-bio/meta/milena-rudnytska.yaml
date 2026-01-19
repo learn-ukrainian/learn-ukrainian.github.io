@@ -1,0 +1,140 @@
+# C1-BIO Module 110: Мілена Рудницька: Голос українського фемінізму
+# Status: SPEC (ready for content development)
+
+id: c1-bio-110
+title: "Мілена Рудницька: Голос українського фемінізму"
+slug: milena-rudnytska
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Мілена Рудницька (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
+    type: primary
+    notes: Biography, activism, political career
+  - name: Союз українок
+    url: https://uk.wikipedia.org/wiki/Союз_українок
+    type: reference
+    notes: Organization she led
+  - name: УНДО
+    url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
+    type: reference
+    notes: Political party she represented
+
+content_outline:
+  - section: Вступ — Піонерка жіночого руху
+    words: 400
+    points:
+      - Рудницька як перша жінка-посол у польському сеймі від українців
+      - Лідерка Союзу українок
+      - Борець за права жінок і національне визволення
+
+  - section: Молодість і освіта
+    words: 500
+    points:
+      - Народження у Збаражі (1892)
+      - Навчання у Відні
+      - Вплив європейського фемінізму
+      - Повернення до Галичини
+
+  - section: Політична кар'єра
+    words: 700
+    points:
+      - Депутатка польського сейму (1928-1935)
+      - Захист прав української меншини
+      - Боротьба за освіту українською мовою
+      - Протести проти пацифікації
+
+  - section: Союз українок
+    words: 700
+    points:
+      - Очолення найбільшої жіночої організації
+      - Програма економічної самодопомоги
+      - Освітня діяльність
+      - Міжнародні зв'язки
+
+  - section: Війна та еміграція
+    words: 600
+    points:
+      - Радянська окупація 1939
+      - Втеча на Захід
+      - Діяльність в еміграції
+      - Документування радянських злочинів
+
+  - section: Спадщина та визнання
+    words: 500
+    points:
+      - Смерть у Мюнхені (1976)
+      - Вплив на український фемінізм
+      - Перевидання праць в незалежній Україні
+      - Рудницька як взірець жінки-політика
+
+vocabulary_hints:
+  required:
+    - фемінізм (feminism)
+    - посол (representative/deputy)
+    - сейм (parliament/Sejm)
+    - меншина (minority)
+    - пацифікація (pacification)
+    - емансипація (emancipation)
+    - самодопомога (self-help)
+    - права жінок (women's rights)
+    - еміграція (emigration)
+    - громадська діячка (civic activist)
+  recommended:
+    - суфражистка (suffragette)
+    - виборче право (voting rights)
+    - петиція (petition)
+    - делегація (delegation)
+    - маніфест (manifesto)
+
+activity_hints:
+  - type: reading
+    focus: Rudnytska's speeches and articles
+    source: Historical archives
+    items: "3 passages"
+
+  - type: quiz
+    focus: Rudnytska's biography and achievements
+    items: "12+"
+
+  - type: match-up
+    focus: Women's organizations and their goals
+    items: "10+"
+
+  - type: essay-response
+    focus: How did Rudnytska combine feminism with national liberation?
+    word_target: 300
+    output: Analysis of intersectional activism
+
+  - type: group-sort
+    focus: Domestic vs. international activities
+    items: "12+"
+
+  - type: fill-in
+    focus: Key dates and organizations
+    items: "10+"
+
+  - type: discussion
+    focus: Why was women's activism important for Ukrainian nation-building?
+    output: Gender and nationalism analysis
+
+prerequisites:
+  - c1-bio-59 (Olha Basarab - earlier activist)
+  - c1-bio-68 (Olena Teliha - contemporary)
+  - Understanding of interwar Galicia
+
+connects_to:
+  - c1-bio-59 (Olha Basarab - earlier generation)
+  - c1-bio-68 (Olena Teliha - contemporary activist)
+  - c1-bio-108 (Konovalets - same political era)
+
+naturalness:
+  score: 1
+  status: PENDING

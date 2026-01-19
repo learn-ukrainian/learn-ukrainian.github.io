@@ -1,6 +1,3 @@
-# LIT Module 18: Women in Kobzar
-# Status: SPEC (ready for content development)
-
 id: lit-18
 title: Жіноча доля в "Кобзарі"
 subtitle: 'Women in Kobzar: The Tragic Archetype'
@@ -8,8 +5,6 @@ slug: women-in-kobzar
 module_type: literature
 word_target: 4500
 immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
 
 sources:
   - name: Катерина — поема
@@ -26,21 +21,21 @@ sources:
     notes: Літературознавчий аналіз
 
 content_outline:
-  - section: Вступ — Шевченко і жіноча доля
+  - section: Вступ
     words: 500
     points:
       - Чому жінки — центральні персонажі
       - Біографічний контекст (сирітство)
       - Емпатія як творчий метод
 
-  - section: "Катерина" — архетип покритки
+  - section: Катерина
     words: 800
     points:
       - Сюжет поеми
       - Образ покритки в суспільстві
       - Критика подвійних стандартів
 
-  - section: "Наймичка" — зрілий реалізм
+  - section: Наймичка
     words: 800
     points:
       - Сюжет поеми
@@ -61,7 +56,7 @@ content_outline:
       - Функція димінутивів
       - Катарсис через мову
 
-  - section: Підсумок — Шевченко як фемініст?
+  - section: Підсумок
     words: 400
     points:
       - Унікальність Шевченкової емпатії
@@ -89,27 +84,22 @@ vocabulary_hints:
 
 activity_hints:
   - type: reading
-    focus: "Катерина" і "Наймичка" (уривки)
+    focus: Катерина і Наймичка (уривки)
     source: UkrLib
     items: "6+"
-
   - type: quiz
     focus: Сюжети та образи поем
     items: "15+"
-
   - type: match-up
     focus: Жіночий образ → його характеристика
     items: "12+"
-
   - type: essay-response
     focus: Архетип Трагічної Матері у Шевченка
     word_target: 300
     output: Літературознавче есе
-
   - type: group-sort
     focus: Димінутиви у жіночих образах
     items: "20+"
-
   - type: discussion
     focus: Чи був Шевченко феміністом?
     output: Дискусія про гендер
@@ -137,6 +127,12 @@ tags:
 grammar:
   - Emotional pathos
   - Diminutives usage
+
+objectives:
+  - "Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works"
+  - "Compare the characters of Kateryna and Hanna (Naimychka)"
+  - "Discuss Shevchenko's ethical evolution from romanticism to realism"
+  - "Identify the function of diminutives in creating emotional pathos"
 
 naturalness:
   score: 10

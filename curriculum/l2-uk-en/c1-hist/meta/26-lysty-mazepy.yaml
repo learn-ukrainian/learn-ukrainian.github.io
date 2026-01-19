@@ -4,6 +4,9 @@
 id: c1-hist-26
 title: "Листи Мазепи: Дипломат і меценат"
 slug: lysty-mazepy
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -72,7 +75,7 @@ content_outline:
       - Офіційні листи — маска
       - Що можна дізнатися
       - Порівняння з іншими джерелами
-      - Чи знаємо "справжнього" Мазепу?
+      - "Чи знаємо «справжнього» Мазепу?"
 
   - section: Підсумок
     words: 300

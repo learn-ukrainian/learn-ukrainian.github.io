@@ -4,6 +4,9 @@
 id: c1-hist-33
 title: "Франко: Політичні есе"
 slug: franko-politychni-ese
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -30,7 +33,7 @@ content_outline:
     points:
       - Не тільки поет — публіцист
       - Політичні есе — окремий жанр
-      - "Поза межами можливого" — головний текст
+      - "«Поза межами можливого» — головний текст"
       - Чому важливо читати сьогодні
 
   - section: Контекст — Галичина кінця XIX ст.
@@ -41,11 +44,11 @@ content_outline:
       - Франко — соціаліст чи націоналіст?
       - Еволюція поглядів
 
-  - section: "Поза межами можливого" (1900)
+  - section: '«Поза межами можливого» (1900)'
     words: 800
     points:
       - Текст (фрагменти з глосами)
-      - Критика "реальної політики"
+      - "Критика «реальної політики»"
       - Ідеал незалежності
       - "Духовна суверенність"
       - Роль інтелігенції
@@ -55,7 +58,7 @@ content_outline:
     points:
       - Логіка есе
       - Полеміка з опонентами
-      - Що таке "можливе"?
+      - "Що таке «можливе»?"
       - Роль мрії в політиці
 
   - section: Інші політичні есе
@@ -110,7 +113,7 @@ activity_hints:
     output: Argument diagram
 
   - type: debate
-    focus: Franko vs. Drahomanov: Whose approach was better?
+    focus: 'Franko vs. Drahomanov: Whose approach was better?'
     format: Position papers
 
   - type: contemporary-connection

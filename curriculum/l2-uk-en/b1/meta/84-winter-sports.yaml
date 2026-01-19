@@ -1,10 +1,10 @@
-module: 84
+module: '84'
 title: Зимові види спорту
 subtitle: Skiing & Snowboarding
 version: '1.0'
 phase: B1.7
 level: B1
-focus: cultural
+focus: culture
 pedagogy: PPP
 duration: 75
 transliteration: none

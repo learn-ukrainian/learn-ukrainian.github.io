@@ -4,6 +4,9 @@
 id: b2-07
 title: Активні дієприкметники теперішнього часу (-учий/-ючий)
 slug: 07-active-participles-present
+version: '1.0'
+phase: B2.1a [Passive Voice]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -68,7 +71,7 @@ content_outline:
     words: 500
     points:
       - Дієприкметники, що стали прикметниками
-      - Приклади: завідуючий, керуючий, існуючий
+      - "Приклади: завідуючий, керуючий, існуючий"
       - Правильне вживання лексикалізованих форм
 
   - section: Практика і підсумок
@@ -134,9 +137,9 @@ prerequisites:
 connects_to:
   - b2-08 (Active Participles Past)
   - b2-09 (Participles vs Relative Clauses)
-  - b2-22 (Register: Literary Ukrainian)
+  - 'b2-22 (Register: Literary Ukrainian)'
   - b2-10 (B2.1a Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

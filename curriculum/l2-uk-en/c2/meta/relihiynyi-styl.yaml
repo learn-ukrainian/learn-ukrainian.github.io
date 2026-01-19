@@ -4,6 +4,9 @@
 id: c2-08
 title: Релігійний стиль — Сакральна мова
 slug: relihiynyi-styl
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: stylistics
 module_type: style
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -17,7 +20,7 @@ sources:
     notes: Standard Ukrainian Bible translation by Ivan Ohienko
   - name: Літургійні тексти УПЦ
     url: https://liturgia.cerkva.info/
-    type: example
+    type: reference
     notes: Liturgical texts and prayers in Ukrainian
   - name: Ukrainian State Standard 2024 — Confessional style
     url: https://mon.gov.ua/
@@ -137,5 +140,5 @@ connects_to:
   - c2-30 (Intertextuality in C2.2)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

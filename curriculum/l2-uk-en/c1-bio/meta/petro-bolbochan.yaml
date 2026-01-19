@@ -1,23 +1,138 @@
-title: 'Петро Болбочан: Полководець незалежності'
-subtitle: 'Petro Bolbochan: Commander of Independence'
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- imperial
-- revolutionary
-- military
-- history
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands Bolbochan’s role in the Crimea Operation 1918
-- Learner can analyze military and historical discourse at C1 level
-- Learner masters military and biographical vocabulary
-vocabulary_count: 25
+# C1-BIO Module 53: Петро Болбочан
+# Status: SPEC (ready for content development)
+
+id: c1-bio-53
+title: "Петро Болбочан: Полковник-герой"
 slug: petro-bolbochan
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Петро Болбочан (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
+    type: primary
+    notes: Біографія, Кримський похід, трагічна доля
+  - name: Інститут історії України НАНУ
+    url: https://www.history.org.ua
+    type: reference
+    notes: Дослідження Української революції
+  - name: Музей визвольної боротьби України
+    url: https://mvbu.org.ua
+    type: reference
+    notes: Військова історія УНР
+
+content_outline:
+  - section: Вступ — Герой Криму
+    words: 400
+    points:
+      - Болбочан як один із найталановитіших полководців УНР
+      - Легендарний Кримський похід 1918 року
+      - Трагічна доля та несправедливий вирок
+
+  - section: Ранні роки та військова освіта (1883-1914)
+    words: 600
+    points:
+      - Народження в Бессарабії
+      - Навчання в Одеському юнкерському училищі
+      - Служба в російській армії
+      - Офіцерська кар'єра до Першої світової
+
+  - section: Перша світова війна (1914-1917)
+    words: 700
+    points:
+      - Участь у бойових діях на фронті
+      - Відзнаки та підвищення
+      - Український рух в армії
+      - Формування національних частин
+
+  - section: Кримський похід (1918)
+    words: 900
+    points:
+      - Командування Запорозькою дивізією
+      - Блискавичний похід на Крим
+      - Визволення Криму від більшовиків
+      - Стратегічний геній операції
+
+  - section: Конфлікт з владою та арешт (1918-1919)
+    words: 700
+    points:
+      - Повернення з Криму та зміна уряду
+      - Конфлікт з Директорією
+      - Несправедливі звинувачення у зраді
+      - Арешт та ув'язнення
+
+  - section: Страта та реабілітація
+    words: 700
+    points:
+      - Військово-польовий суд
+      - Розстріл у липні 1919 року
+      - Реабілітація в незалежній Україні
+      - Пам'ять про героя Кримського походу
+
+vocabulary_hints:
+  required:
+    - полковник (colonel)
+    - полководець (military commander)
+    - Кримський похід (Crimean Campaign)
+    - дивізія (division)
+    - блискавичний (lightning-fast)
+    - стратегія (strategy)
+    - зрада (treason)
+    - військово-польовий суд (court-martial)
+    - розстріл (execution by shooting)
+    - реабілітація (rehabilitation)
+  recommended:
+    - Запорозька дивізія (Zaporozhian Division)
+    - Директорія (Directorate)
+    - більшовики (Bolsheviks)
+    - юнкер (junker/cadet)
+    - ув'язнення (imprisonment)
+
+activity_hints:
+  - type: reading
+    focus: Військова біографія та Кримський похід
+    source: Історичні дослідження та мемуари
+    items: "3 passages"
+
+  - type: quiz
+    focus: Біографія та Кримська операція
+    items: "12+"
+
+  - type: match-up
+    focus: Етапи походу та їхні результати
+    items: "10+"
+
+  - type: essay-response
+    focus: Чи була страта Болбочана справедливою?
+    word_target: 300
+    output: Історичне есе
+
+  - type: group-sort
+    focus: Військові успіхи vs політичні невдачі
+    items: "12+"
+
+  - type: fill-in
+    focus: Військова термінологія
+    items: "10+"
+
+  - type: discussion
+    focus: Трагедія внутрішніх конфліктів у визвольних рухах
+    output: Історичний аналіз
+
+prerequisites:
+  - c1-bio-44 (Симон Петлюра)
+
+connects_to:
+  - c1-bio-49 (Олександр Греків)
+  - c1-bio-51 (В'ячеслав Липинський)
+  - c1-bio-52 (Дмитро Донцов)
+
+naturalness:
+  score: 1
+  status: PENDING

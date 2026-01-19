@@ -33,6 +33,7 @@ npm run generate:json l2-uk-en a1 5
 ```
 
 **Note:** HTML validation requires Docusaurus dev server running:
+
 ```bash
 cd docusaurus && pnpm start  # In separate terminal
 ```
@@ -80,15 +81,15 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 ## Related Documentation
 
-| Document | Purpose |
-|----------|---------|
-| **`docs/B1-PLUS-MODULE-WORKFLOW.md`** | **Complete B1+ workflow** - End-to-end guide for B1/B2/C1/C2 modules with all quality validation systems |
-| `docs/ARCHITECTURE.md` | System architecture and quality validation overview |
-| `docs/STAGED-MODULE-CREATION.md` | 4-stage creation pipeline overview |
-| `docs/l2-uk-en/claude-review-prompt.md` | Review prompts for Claude - Use these to fix audit issues |
-| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated) |
-| `docs/MARKDOWN-FORMAT.md` | Markdown syntax specification |
-| `docs/CONTENT-QUALITY-AUDIT.md` | Content quality review system (LLM-based) |
+| Document                                         | Purpose                                                                                                  |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **`docs/B1-PLUS-MODULE-WORKFLOW.md`**            | **Complete B1+ workflow** - End-to-end guide for B1/B2/C1/C2 modules with all quality validation systems |
+| `docs/ARCHITECTURE.md`                           | System architecture and quality validation overview                                                      |
+| `docs/STAGED-MODULE-CREATION.md`                 | 4-stage creation pipeline overview                                                                       |
+| `docs/l2-uk-en/claude-review-prompt.md`          | Review prompts for Claude - Use these to fix audit issues                                                |
+| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated)                                                                |
+| `docs/MARKDOWN-FORMAT.md`                        | Markdown syntax specification                                                                            |
+| `docs/CONTENT-QUALITY-AUDIT.md`                  | Content quality review system (LLM-based)                                                                |
 
 ---
 
@@ -96,30 +97,40 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 ### Core Pipeline (Python)
 
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `pipeline.py` | Full validation pipeline | `npm run pipeline l2-uk-en a1 5` |
-| `generate_mdx.py` | Generate MDX for Docusaurus | `npm run generate l2-uk-en a1 5` |
-| `generate_json.py` | Generate JSON for Vibe app | `npm run generate:json l2-uk-en a1 5` |
-| `validate_mdx.py` | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5` |
-| `validate_html.py` | Validate browser rendering | `npm run validate:html l2-uk-en a1 5` |
-| `audit_module.py` | Module quality checker | `python3 scripts/audit_module.py <file>` |
+| Script                  | Purpose                        | Command                                                      |
+| ----------------------- | ------------------------------ | ------------------------------------------------------------ |
+| `pipeline.py`           | Full validation pipeline       | `npm run pipeline l2-uk-en a1 5`                             |
+| `generate_mdx.py`       | Generate MDX for Docusaurus    | `npm run generate l2-uk-en a1 5`                             |
+| `generate_json.py`      | Generate JSON for Vibe app     | `npm run generate:json l2-uk-en a1 5`                        |
+| `validate_mdx.py`       | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5`                         |
+| `validate_html.py`      | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
+| `audit_module.py`       | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
+| `validate_meta_yaml.py` | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
 
 ### Staged Generation (Python)
 
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `generate_skeleton.py` | Generate module skeleton | `python3 scripts/generate_skeleton.py l2-uk-en b1 43` |
-| `check_gate.py` | Hard gate checker | `python3 scripts/check_gate.py <stage> <file>` |
-| `calculate_richness.py` | Richness score (0-100) | `python3 scripts/calculate_richness.py <file>` |
-| `extract_for_activities.py` | Extract content for activities | `python3 scripts/extract_for_activities.py <file>` |
+| Script                      | Purpose                        | Command                                                        |
+| --------------------------- | ------------------------------ | -------------------------------------------------------------- |
+| `generate_skeleton.py`      | Generate module skeleton       | `.venv/bin/python scripts/generate_skeleton.py l2-uk-en b1 43` |
+| `check_gate.py`             | Hard gate checker              | `.venv/bin/python scripts/check_gate.py <stage> <file>`        |
+| `calculate_richness.py`     | Richness score (0-100)         | `.venv/bin/python scripts/calculate_richness.py <file>`        |
+| `extract_for_activities.py` | Extract content for activities | `.venv/bin/python scripts/extract_for_activities.py <file>`    |
 
-### Vocabulary (Python)
+### Seminar Workflow (Meta-Driven)
 
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `vocab_init.py` | Create fresh vocabulary DB | `npm run vocab:init` |
-| `populate_vocab_db.py` | Populate DB from modules | `npm run vocab:scan` |
+| Utility                          | Purpose                                   | Command                                      |
+| -------------------------------- | ----------------------------------------- | -------------------------------------------- |
+| `/generate-seminar-module`       | Generate high-fidelity module from Meta   | `/generate-seminar-module <level> <slug>`    |
+| `schemas/meta-module.schema.json`| **Source of Truth** for module generation | (Referenced by validator)                    |
+| `meta_validator.py`              | Enforces Meta YAML presence & schema      | (Integrated into `audit_module.py`)          |
+
+### Meta & Vocabulary (Python)
+
+| Script                  | Purpose                     | Command                                                      |
+| ----------------------- | --------------------------- | ------------------------------------------------------------ |
+| `validate_meta_yaml.py` | Meta YAML schema validation | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
+| `vocab_init.py`         | Create fresh vocabulary DB  | `npm run vocab:init`                                         |
+| `populate_vocab_db.py`  | Populate DB from modules    | `npm run vocab:scan`                                         |
 
 ---
 
@@ -130,12 +141,14 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 **Purpose:** Unified validation pipeline that runs all checks in sequence.
 
 **Pipeline Stages:**
+
 1. **Lint** - Markdown format compliance
 2. **Generate** - Creates MDX for Docusaurus
 3. **Validate MDX** - Ensures no content loss during conversion
 4. **Validate HTML** - Headless browser check for rendering errors
 
 **Usage:**
+
 ```bash
 npm run pipeline l2-uk-en a1        # Validate entire level
 npm run pipeline l2-uk-en a1 5      # Validate single module
@@ -150,6 +163,7 @@ npm run pipeline l2-uk-en a1 5      # Validate single module
 **Purpose:** Generates MDX files for Docusaurus web lessons (Python 3.12).
 
 **Usage:**
+
 ```bash
 npm run generate l2-uk-en           # Generate all levels
 npm run generate l2-uk-en a1        # Generate specific level
@@ -169,6 +183,7 @@ npm run generate l2-uk-en a1 5      # Generate single module
 **Purpose:** Generates Vibe-format JSON for app import (Python 3.12).
 
 **Usage:**
+
 ```bash
 npm run generate:json l2-uk-en      # Generate all levels
 npm run generate:json l2-uk-en a1   # Generate specific level
@@ -188,12 +203,14 @@ npm run generate:json l2-uk-en a1 5 # Generate single module
 **Purpose:** Validates MDX content integrity after generation.
 
 **Checks:**
+
 - Activity types present in MDX match source markdown
 - Vocabulary words from first column preserved
 - Ukrainian text content maintained
 - No content loss during conversion
 
 **Usage:**
+
 ```bash
 npm run validate:mdx l2-uk-en a1    # Validate entire level
 npm run validate:mdx l2-uk-en a1 5  # Validate single module
@@ -201,16 +218,24 @@ npm run validate:mdx l2-uk-en a1 5  # Validate single module
 
 **Review File Integration:**
 Results are automatically written to review files in `gemini/` folders:
+
 ```markdown
 ## MDX VALIDATION
+
 ✅ No issues found
 ```
+
 Or with issues:
+
 ```markdown
 ## MDX VALIDATION
+
 ### Errors
+
 - ❌ Activity types missing in MDX: cloze
+
 ### Warnings
+
 - ⚠️ Some Ukrainian content may be missing (15/50 words)
 ```
 
@@ -221,6 +246,7 @@ Or with issues:
 **Purpose:** Browser rendering validation using Playwright headless browser.
 
 **Checks:**
+
 - Page loads without HTTP errors
 - React components render (no error boundary)
 - No serious JavaScript errors in console
@@ -228,6 +254,7 @@ Or with issues:
 - Interactive activity elements render with content
 
 **Usage:**
+
 ```bash
 npm run validate:html l2-uk-en a1   # Validate entire level
 npm run validate:html l2-uk-en a1 5 # Validate single module
@@ -235,29 +262,88 @@ npm run validate:html l2-uk-en a1 5 # Validate single module
 
 **Graceful Skip:**
 When the dev server is not running, validation skips gracefully with exit code 0:
+
 ```
 ℹ️  Docusaurus dev server not running - skipping HTML validation
    To enable: cd docusaurus && pnpm start
 ```
+
 This allows the pipeline to continue without failing.
 
 **Review File Integration:**
 Results are automatically written to review files in `gemini/` folders:
+
 ```markdown
 ## HTML VALIDATION
+
 ✅ Renders correctly (10 interactive elements)
 ```
+
 Or with issues:
+
 ```markdown
 ## HTML VALIDATION
+
 ### Errors
+
 - ❌ Activity not rendering: Match Vocabulary (MatchUp)
 - ❌ 2 JS errors
 ```
 
 **Requires:**
+
 - Docusaurus dev server running (`cd docusaurus && pnpm start`)
 - Playwright installed (`playwright install`)
+
+---
+
+### validate_meta_yaml.py
+
+**Purpose:** Validates meta YAML files against the schema and reports missing fields. Supports auto-detection of full (agent spec) vs minimal (stub) schemas.
+
+**Schemas:**
+
+- `schemas/meta-module.schema.json` - Full agent spec (requires content_outline, sources, vocabulary_hints, activity_hints)
+- `schemas/meta-module-minimal.schema.json` - Minimal stub (requires only title, slug, focus)
+
+**Usage:**
+
+```bash
+# Validate all levels
+.venv/bin/python scripts/validate_meta_yaml.py
+
+# Validate specific level
+.venv/bin/python scripts/validate_meta_yaml.py --level lit
+.venv/bin/python scripts/validate_meta_yaml.py --level b2-hist
+
+# Show only errors (hide warnings)
+.venv/bin/python scripts/validate_meta_yaml.py --level lit --errors-only
+
+# Auto-fix missing optional fields
+.venv/bin/python scripts/validate_meta_yaml.py --level lit --fix
+
+# Verbose mode (show all files)
+.venv/bin/python scripts/validate_meta_yaml.py --level lit --verbose
+```
+
+**Checks:**
+
+- Required fields present per schema
+- JSON Schema validation
+- `content_outline` word sum vs `word_target`
+- `activity_hints` count (recommends 4+)
+- `module` vs `id` normalization
+
+**Auto-fix (`--fix`):**
+
+- Adds missing optional fields with defaults (duration: 120, transliteration: none, etc.)
+- Copies `id` to `module` if `module` is missing
+
+**Common Issues:**
+
+- **Unquoted colons:** Use `'Text: more text'` for strings containing colons
+- **ASCII quotes:** Replace `"..."` with `«...»` for Ukrainian text
+- **Missing fields:** Run with `--fix` to add defaults
 
 ---
 
@@ -266,6 +352,7 @@ Or with issues:
 **Purpose:** Comprehensive module quality checker (Python). Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
 
 **Checks:**
+
 - Frontmatter validity (module, title, pedagogy, objectives)
 - Required sections present
 - Activity count and diversity
@@ -273,14 +360,17 @@ Or with issues:
 - Sentence complexity
 - Grammar constraints by level
 - Linguistic purity (no Surzhyk)
+- **Meta YAML Validation (Seminar Modules):** Enforces strict adherence to `schemas/meta-module.schema.json`.
 
 **Usage:**
+
 ```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/06-*.md
 ```
 
 **Issue Categories:**
-- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax
+
+- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax, **Missing/Invalid Meta YAML**
 - **WARN (Should Fix):** Richness, variety, word count
 - **INFO (Consider):** Optional improvements
 
@@ -312,17 +402,20 @@ Each gate returns exit code 0 (PASS) or 1 (FAIL). Agent has NO discretion to ove
 **Purpose:** Generate module skeleton from curriculum plan and template.
 
 **Usage:**
+
 ```bash
 python3 scripts/generate_skeleton.py l2-uk-en b1 43
 ```
 
 **Inputs:**
+
 - `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` - Extracts title, focus, grammar, vocab
 - `docs/l2-uk-en/templates/{level}-{type}-module-template.md` - Structure guide
 
 **Output:** `curriculum/l2-uk-en/{level}/{NN}-skeleton.md`
 
 **Features:**
+
 - Determines module type based on level and number
 - Generates frontmatter with pedagogy, phase, word targets
 - Creates section headers from template
@@ -336,6 +429,7 @@ python3 scripts/generate_skeleton.py l2-uk-en b1 43
 **Purpose:** Hard gate checker for staged generation. Returns exit codes for CI/automation.
 
 **Usage:**
+
 ```bash
 python3 scripts/check_gate.py skeleton curriculum/l2-uk-en/b1/43-*.md
 python3 scripts/check_gate.py content curriculum/l2-uk-en/b1/43-*.md
@@ -344,13 +438,14 @@ python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
 
 **Gate Checks:**
 
-| Stage | Checks |
-|-------|--------|
-| `skeleton` | Frontmatter present, required sections, vocabulary section |
-| `content` | Word count, engagement boxes, examples, dialogues, immersion, vocabulary count |
-| `activities` | Activity count, type variety, priority types, item counts |
+| Stage        | Checks                                                                         |
+| ------------ | ------------------------------------------------------------------------------ |
+| `skeleton`   | Frontmatter present, required sections, vocabulary section                     |
+| `content`    | Word count, engagement boxes, examples, dialogues, immersion, vocabulary count |
+| `activities` | Activity count, type variety, priority types, item counts                      |
 
 **Exit Codes:**
+
 - `0` - PASS
 - `1` - FAIL (with failure reasons printed)
 
@@ -361,31 +456,34 @@ python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
 **Purpose:** Calculate 10-component richness score (0-100) for content quality.
 
 **Usage:**
+
 ```bash
 python3 scripts/calculate_richness.py curriculum/l2-uk-en/b1/43-*.md
 ```
 
 **Components (Weighted):**
 
-| Component | Weight | What It Measures |
-|-----------|--------|------------------|
-| Engagement | 15% | 💡🎬🌍🎯🎮 boxes |
-| Examples | 20% | Ukrainian example sentences |
-| Dialogues | 15% | А:/Б: or speaker patterns |
-| Variety | 10% | Sentence starter diversity |
-| Cultural | 10% | Cultural references |
-| Real-world | 10% | Practical usage scenarios |
-| Questions | 5% | Rhetorical questions |
-| Proverbs | 5% | Ukrainian sayings |
-| Visual | 5% | Tables and formatting |
-| Paragraph variation | 5% | Length diversity |
+| Component           | Weight | What It Measures            |
+| ------------------- | ------ | --------------------------- |
+| Engagement          | 15%    | 💡🎬🌍🎯🎮 boxes            |
+| Examples            | 20%    | Ukrainian example sentences |
+| Dialogues           | 15%    | А:/Б: or speaker patterns   |
+| Variety             | 10%    | Sentence starter diversity  |
+| Cultural            | 10%    | Cultural references         |
+| Real-world          | 10%    | Practical usage scenarios   |
+| Questions           | 5%     | Rhetorical questions        |
+| Proverbs            | 5%     | Ukrainian sayings           |
+| Visual              | 5%     | Tables and formatting       |
+| Paragraph variation | 5%     | Length diversity            |
 
 **Dryness Flags:**
+
 - `NO_ENGAGEMENT` - Zero engagement boxes
 - `WALL_OF_TEXT` - All paragraphs similar length
 - `REPETITIVE_STARTERS` - Same sentence beginnings
 
 **Output:**
+
 ```
 Richness: 87/100 (threshold: 70)
 Components: engagement=12/15, examples=18/20, ...
@@ -399,6 +497,7 @@ Flags: []
 **Purpose:** Extract content elements for activity generation.
 
 **Usage:**
+
 ```bash
 python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md
 python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md output.json
@@ -406,16 +505,17 @@ python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md output.
 
 **Extracts:**
 
-| Element | Description |
-|---------|-------------|
+| Element      | Description                                   |
+| ------------ | --------------------------------------------- |
 | `vocabulary` | Ukrainian-English pairs from vocabulary table |
-| `sentences` | Example sentences from content |
-| `dialogues` | А/Б dialogue pairs |
-| `paragraphs` | Content paragraphs for cloze/comprehension |
-| `proverbs` | Ukrainian sayings and proverbs |
-| `tables` | Grammar tables for reference |
+| `sentences`  | Example sentences from content                |
+| `dialogues`  | А/Б dialogue pairs                            |
+| `paragraphs` | Content paragraphs for cloze/comprehension    |
+| `proverbs`   | Ukrainian sayings and proverbs                |
+| `tables`     | Grammar tables for reference                  |
 
 **Output Format (JSON):**
+
 ```json
 {
   "module": "b1-43",
@@ -466,10 +566,12 @@ npm run pipeline l2-uk-en b1 43
 **Purpose:** Auto-updates website landing pages with accurate module counts and status.
 
 **Updates:**
+
 - `docusaurus/docs/intro.mdx` - Main curriculum overview table
 - `docusaurus/docs/{level}/index.mdx` - Level landing pages
 
 **Usage:**
+
 ```bash
 npm run sync:landing           # Apply changes
 npm run sync:landing:dry       # Preview only (dry run)
@@ -484,19 +586,22 @@ npm run sync:landing:dry       # Preview only (dry run)
 | Manual | ✅ Complete | Manually verified (in STATUS_OVERRIDES) |
 
 **Data Sources:**
+
 - Config file: `docs/l2-uk-en/level-status.yaml` (planned counts, status overrides)
 - Ready counts: MDX files in `docusaurus/docs/{level}/module-*.mdx`
 
 **Config File (`level-status.yaml`):**
+
 ```yaml
 b2:
-  planned: 145        # Total modules planned
-  status: auto        # 'auto' or 'complete'
-  description: "..."  # For intro.mdx table
+  planned: 145 # Total modules planned
+  status: auto # 'auto' or 'complete'
+  description: '...' # For intro.mdx table
 ```
 
 **Integration:**
 Run after completing a batch of modules to update the website:
+
 ```bash
 npm run pipeline l2-uk-en b2    # Build modules
 npm run sync:landing            # Update landing pages
@@ -568,6 +673,7 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 ```
 
 **Activity Types:**
+
 - **Type A (Easy):** match-up, true-false, group-sort
 - **Type B (Medium):** fill-in, quiz
 - **Type C (Hard):** unjumble, transform
@@ -579,6 +685,7 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 **Purpose:** Optional manual validation workflow for B1+ activity quality using deterministic checks + human semantic assessment.
 
 > **For complete workflow integration**, see **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Activity Quality Validation section, which includes:
+>
 > - When to use activity quality validation (recommended for high-stakes content: C1/C2, pre-publication)
 > - Step-by-step queue → validate → finalize workflow
 > - How to interpret CEFR gates and fix failed activities
@@ -593,23 +700,23 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 
 ### Quality Dimensions (5-Dimension Model)
 
-| Dimension | Scale | Measures |
-|-----------|-------|----------|
-| **Naturalness** | 1-5 | Robotic → Unnatural → Acceptable → Natural → Highly Natural |
-| **Difficulty** | 3-option | too_easy \| appropriate \| too_hard |
-| **Distractor Quality** | 1-5 | Nonsense → Weak → Acceptable → Good → Excellent |
-| **Engagement** | 1-5 | Boring → Low → Neutral → Engaging → Highly Engaging |
-| **Variety** | 0-100% | Mechanical pattern detection score |
+| Dimension              | Scale    | Measures                                                    |
+| ---------------------- | -------- | ----------------------------------------------------------- |
+| **Naturalness**        | 1-5      | Robotic → Unnatural → Acceptable → Natural → Highly Natural |
+| **Difficulty**         | 3-option | too_easy \| appropriate \| too_hard                         |
+| **Distractor Quality** | 1-5      | Nonsense → Weak → Acceptable → Good → Excellent             |
+| **Engagement**         | 1-5      | Boring → Low → Neutral → Engaging → Highly Engaging         |
+| **Variety**            | 0-100%   | Mechanical pattern detection score                          |
 
 ### CEFR Quality Gates
 
-| Level | Min Naturalness | Max Difficulty Inappropriate | Min Engagement | Min Distractor Quality | Min Variety |
-|-------|----------------|------------------------------|----------------|------------------------|-------------|
-| A1, A2 | None | None | None | None | None |
-| B1 | 3.5 | ≤20% | 3.0 | 4.0 | 60% |
-| B2 | 4.0 | ≤15% | 3.5 | 4.2 | 65% |
-| C1 | 4.5 | ≤10% | 4.0 | 4.5 | 70% |
-| C2 | 4.8 | ≤5% | 4.5 | 5.0 | 75% |
+| Level  | Min Naturalness | Max Difficulty Inappropriate | Min Engagement | Min Distractor Quality | Min Variety |
+| ------ | --------------- | ---------------------------- | -------------- | ---------------------- | ----------- |
+| A1, A2 | None            | None                         | None           | None                   | None        |
+| B1     | 3.5             | ≤20%                         | 3.0            | 4.0                    | 60%         |
+| B2     | 4.0             | ≤15%                         | 3.5            | 4.2                    | 65%         |
+| C1     | 4.5             | ≤10%                         | 4.0            | 4.5                    | 70%         |
+| C2     | 4.8             | ≤5%                          | 4.5            | 5.0                    | 75%         |
 
 ### Scripts
 
@@ -628,6 +735,7 @@ npm run quality:queue l2-uk-en b1 52
 **Output:** `curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml`
 
 **Deterministic Checks Run:**
+
 - `analyze_sentence_variety()` - Pattern repetition detection
 - `estimate_vocabulary_difficulty()` - Word length heuristics per CEFR
 - `analyze_distractor_quality()` - Word class matching, plausibility
@@ -635,6 +743,7 @@ npm run quality:queue l2-uk-en b1 52
 - `estimate_cognitive_load()` - Task complexity assessment
 
 **Queue File Structure:**
+
 ```yaml
 module: 52-module-slug
 level: B1
@@ -669,6 +778,7 @@ npm run quality:finalize l2-uk-en b1 52
 **Output:** `curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md`
 
 **Report Includes:**
+
 - Pass/Fail status against CEFR gates
 - Quality scores summary table
 - Difficulty breakdown (too easy/appropriate/too hard)
@@ -680,6 +790,7 @@ npm run quality:finalize l2-uk-en b1 52
 Quality validation is **optional and informational** (does not block audit pass/fail).
 
 When quality report exists, audit output shows:
+
 ```
 Activity_quality ⚠️ Quality gates: 1 failed (see report)
 Activity_quality ✅ Quality gates: All passed
@@ -689,11 +800,13 @@ Activity_quality 📋 Quality validation available (optional)
 ### Manual Validation Workflow
 
 1. **Generate queue:**
+
    ```bash
    npm run quality:queue l2-uk-en b1 52
    ```
 
 2. **Open queue file:**
+
    ```bash
    open curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml
    ```
@@ -706,11 +819,13 @@ Activity_quality 📋 Quality validation available (optional)
    - `variety_score:` 1-5 (Manual assessment of variety)
 
 4. **Finalize and generate report:**
+
    ```bash
    npm run quality:finalize l2-uk-en b1 52
    ```
 
 5. **Review report:**
+
    ```bash
    cat curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md
    ```
@@ -833,32 +948,40 @@ Review files are generated in `gemini/` subdirectories alongside source modules.
 **Location:** `curriculum/{lang}/{level}/gemini/{module-slug}-review.md`
 
 **Structure:**
+
 ```markdown
 # Audit Report: 05-my-world-objects.md
+
 **Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 600
 **Overall Status:** ✅ PASS
 
 ## Gates
+
 - **Words:** ✅ 650/600
 - **Activities:** ✅ 8/6
 - **Vocab:** ✅ 20/15
 - ...
 
 ## MDX VALIDATION
+
 ✅ No issues found
 
 ## HTML VALIDATION
+
 ✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
-| Section | Status | Count | Notes |
-|---------|--------|-------|-------|
-| **Intro** | ✅ | 85 | Included in Core |
-| **quiz: Test** | 🎮 | 10 | Activity (10 items) |
+
+| Section        | Status | Count | Notes               |
+| -------------- | ------ | ----- | ------------------- |
+| **Intro**      | ✅     | 85    | Included in Core    |
+| **quiz: Test** | 🎮     | 10    | Activity (10 items) |
+
 ...
 ```
 
 **Section Order:**
+
 1. **Header** - Module info and overall status
 2. **Gates** - Audit gate results (word count, activities, etc.)
 3. **MDX VALIDATION** - Content integrity check results
@@ -866,6 +989,7 @@ Review files are generated in `gemini/` subdirectories alongside source modules.
 5. **Section Audit** - Per-section breakdown
 
 **Generation:**
+
 - `audit_module.py` creates/updates Gates and Section Audit
 - `validate_mdx.py` adds/updates MDX VALIDATION section
 - `validate_html.py` adds/updates HTML VALIDATION section
@@ -895,7 +1019,8 @@ scripts/
 │   └── checks/           # Individual check modules
 │       ├── activities.py
 │       ├── grammar.py
-│       └── pedagogy.py
+│       ├── pedagogy.py
+│       └── meta_validator.py  # Meta YAML validation (NEW)
 │
 ├── # TypeScript (Vocabulary + Legacy)
 ├── vocab-*.ts            # Vocabulary scripts

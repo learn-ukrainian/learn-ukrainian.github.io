@@ -1,128 +1,108 @@
-# C1 Module 15: Oral Presentations
-# Status: SPEC (ready for content development)
-
+version: '2.0'
 id: c1-15
 title: Доповідь та презентація
 slug: 15-oral-presentations
+phase: C1.1 Academic Ukrainian
+focus: grammar
 module_type: grammar
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Академічна риторика
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Academic public speaking guidelines
-  - name: Presentation Skills in Ukrainian
-    url: https://mova.info/
-    type: secondary
-    notes: Oral presentation language and techniques
-
+- name: Академічна риторика
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic public speaking guidelines
+- name: Presentation Skills in Ukrainian
+  url: https://mova.info/
+  type: secondary
+  notes: Oral presentation language and techniques
 content_outline:
-  - section: Вступ — Мистецтво усної презентації
-    words: 400
-    points:
-      - Типи академічних доповідей
-      - Відмінності від письмового тексту
-      - Підготовка до презентації
-
-  - section: Структура доповіді
-    words: 700
-    points:
-      - Привітання і представлення теми
-      - Основна частина з чіткими розділами
-      - Підсумок і запрошення до питань
-
-  - section: Мовні маркери (Signposting)
-    words: 800
-    points:
-      - Сьогодні я хотів би поговорити про ...
-      - Перейдімо до наступного пункту ...
-      - На завершення хочу підкреслити ...
-
-  - section: Візуальні матеріали
-    words: 500
-    points:
-      - Мова для пояснення графіків
-      - Посилання на слайди
-      - Баланс тексту і візуалізації
-
-  - section: Робота з аудиторією
-    words: 600
-    points:
-      - Контакт з аудиторією
-      - Риторичні запитання
-      - Реагування на невербальні сигнали
-
-  - section: Відповіді на запитання
-    words: 600
-    points:
-      - Дякую за запитання ...
-      - Дозвольте уточнити ...
-      - Якщо я правильно зрозумів ваше питання ...
-
-  - section: Практика презентації
-    words: 400
-    points:
-      - Підготовка міні-доповіді
-      - Симуляція Q&A
-      - Взаємне оцінювання
-
+- section: Вступ — Мистецтво усної презентації
+  words: 400
+  points:
+  - Типи академічних доповідей
+  - Відмінності від письмового тексту
+  - Підготовка до презентації
+- section: Структура доповіді
+  words: 700
+  points:
+  - Привітання і представлення теми
+  - Основна частина з чіткими розділами
+  - Підсумок і запрошення до питань
+- section: Мовні маркери (Signposting)
+  words: 800
+  points:
+  - Сьогодні я хотів би поговорити про ...
+  - Перейдімо до наступного пункту ...
+  - На завершення хочу підкреслити ...
+- section: Візуальні матеріали
+  words: 500
+  points:
+  - Мова для пояснення графіків
+  - Посилання на слайди
+  - Баланс тексту і візуалізації
+- section: Робота з аудиторією
+  words: 600
+  points:
+  - Контакт з аудиторією
+  - Риторичні запитання
+  - Реагування на невербальні сигнали
+- section: Відповіді на запитання
+  words: 600
+  points:
+  - Дякую за запитання ...
+  - Дозвольте уточнити ...
+  - Якщо я правильно зрозумів ваше питання ...
+- section: Практика презентації
+  words: 400
+  points:
+  - Підготовка міні-доповіді
+  - Симуляція Q&A
+  - Взаємне оцінювання
 vocabulary_hints:
   required:
-    - доповідь (report/presentation)
-    - презентація (presentation)
-    - аудиторія (audience)
-    - слайд (slide)
-    - графік (chart)
-    - діаграма (diagram)
-    - перехід (transition)
-    - підсумок (summary)
-    - маркер (marker/signpost)
-    - візуалізація (visualization)
+  - доповідь (report/presentation)
+  - презентація (presentation)
+  - аудиторія (audience)
+  - слайд (slide)
+  - графік (chart)
+  - діаграма (diagram)
+  - перехід (transition)
+  - підсумок (summary)
+  - маркер (marker/signpost)
+  - візуалізація (visualization)
   recommended:
-    - риторика (rhetoric)
-    - невербальний (nonverbal)
-    - інтерактивний (interactive)
-    - імпровізація (improvisation)
-    - тайм-менеджмент (time management)
-
+  - риторика (rhetoric)
+  - невербальний (nonverbal)
+  - інтерактивний (interactive)
+  - імпровізація (improvisation)
+  - тайм-менеджмент (time management)
 activity_hints:
-  - type: match-up
-    focus: Signposting phrase to function
-    items: "15+"
-
-  - type: cloze
-    focus: Presentation language in context
-    items: "12+"
-
-  - type: quiz
-    focus: Identify appropriate Q&A responses
-    items: "12+"
-
-  - type: fill-in
-    focus: Complete presentation script sections
-    items: "10+"
-
-  - type: essay-response
-    focus: Write presentation introduction
-    word_target: 150
-
-  - type: dialogue
-    focus: Q&A role-play simulation
-    exchanges: "8+"
-
+- type: match-up
+  focus: Signposting phrase to function
+  items: 15+
+- type: cloze
+  focus: Presentation language in context
+  items: 12+
+- type: quiz
+  focus: Identify appropriate Q&A responses
+  items: 12+
+- type: fill-in
+  focus: Complete presentation script sections
+  items: 10+
+- type: essay-response
+  focus: Write presentation introduction
+  word_target: 150
+- type: dialogue
+  focus: Q&A role-play simulation
+  exchanges: 8+
 prerequisites:
-  - c1-01 to c1-12 (Academic Foundation)
-  - Academic register mastery
-
+- c1-01 to c1-12 (Academic Foundation)
+- Academic register mastery
 connects_to:
-  - c1-16 (Advanced Punctuation)
-  - c1-18 (Essay Writing Practice)
-  - c1-35 (Speaking Practice)
-
+- c1-16 (Advanced Punctuation)
+- c1-18 (Essay Writing Practice)
+- c1-35 (Speaking Practice)
 naturalness:
   score: null
   status: PENDING

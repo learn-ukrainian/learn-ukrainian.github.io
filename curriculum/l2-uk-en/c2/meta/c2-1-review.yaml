@@ -4,6 +4,9 @@
 id: c2-19
 title: Повторення C2.1 — Консолідація стилістики
 slug: c2-1-review
+version: '2.0'
+phase: 'C2.1 Stylistics Mastery'
+focus: integration
 module_type: integration
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -141,5 +144,5 @@ connects_to:
   - c2-26 (C2.2 Literary mastery)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

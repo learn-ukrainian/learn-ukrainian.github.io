@@ -1,0 +1,140 @@
+# C1-BIO Module 111: Василь Сухомлинський: Педагог серця
+# Status: SPEC (ready for content development)
+
+id: c1-bio-111
+title: "Василь Сухомлинський: Педагог серця"
+slug: vasyl-sukhomlynskyi
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Василь Сухомлинський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович
+    type: primary
+    notes: Biography, educational philosophy, works
+  - name: Павлиська школа
+    url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
+    type: reference
+    notes: School he directed for 22 years
+  - name: "Серце віддаю дітям"
+    url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
+    type: reference
+    notes: His most famous work
+
+content_outline:
+  - section: Вступ — Найвидатніший педагог України
+    words: 400
+    points:
+      - Сухомлинський як реформатор радянської освіти
+      - Філософія "педагогіки серця"
+      - Павлиська школа як лабораторія нового виховання
+
+  - section: Молодість і війна
+    words: 600
+    points:
+      - Народження на Кіровоградщині (1918)
+      - Рання педагогічна освіта
+      - Участь у Другій світовій війні
+      - Тяжке поранення та повернення до вчителювання
+
+  - section: Павлиська школа
+    words: 700
+    points:
+      - Призначення директором (1948)
+      - 22 роки експериментальної роботи
+      - Створення унікального освітнього середовища
+      - "Школа радості" для найменших
+
+  - section: Педагогічна філософія
+    words: 800
+    points:
+      - Виховання через красу і природу
+      - Важливість емоційного розвитку
+      - Критика авторитарної педагогіки
+      - Гуманізм проти ідеологізації
+
+  - section: Конфлікт із системою
+    words: 500
+    points:
+      - Критика з боку партійних ідеологів
+      - Обвинувачення в "абстрактному гуманізмі"
+      - Захист своїх принципів
+      - Підтримка вчителів та батьків
+
+  - section: Спадщина та вплив
+    words: 500
+    points:
+      - Рання смерть (1970)
+      - Перевидання творів після незалежності
+      - Вплив на світову педагогіку
+      - Сухомлинський як символ людяної освіти
+
+vocabulary_hints:
+  required:
+    - педагогіка (pedagogy)
+    - виховання (upbringing/education)
+    - гуманізм (humanism)
+    - директор школи (school principal)
+    - освітнє середовище (educational environment)
+    - емоційний розвиток (emotional development)
+    - авторитарний (authoritarian)
+    - експеримент (experiment)
+    - філософія виховання (philosophy of education)
+    - учитель (teacher)
+  recommended:
+    - методика (methodology)
+    - навчальний процес (learning process)
+    - творчість (creativity)
+    - естетичне виховання (aesthetic education)
+    - природничий (nature-based)
+
+activity_hints:
+  - type: reading
+    focus: Excerpts from "Серце віддаю дітям"
+    source: Educational texts
+    items: "3 passages"
+
+  - type: quiz
+    focus: Sukhomlynskyi's biography and ideas
+    items: "12+"
+
+  - type: match-up
+    focus: Educational principles and their applications
+    items: "10+"
+
+  - type: essay-response
+    focus: How did Sukhomlynskyi challenge Soviet educational orthodoxy?
+    word_target: 300
+    output: Analysis of humanist pedagogy
+
+  - type: group-sort
+    focus: Traditional vs. Sukhomlynskyi's methods
+    items: "12+"
+
+  - type: fill-in
+    focus: Key concepts from his philosophy
+    items: "10+"
+
+  - type: discussion
+    focus: Why is Sukhomlynskyi relevant to modern education?
+    output: Contemporary application analysis
+
+prerequisites:
+  - Understanding of Soviet educational system
+  - Basic pedagogical concepts
+  - Post-WWII Ukrainian context
+
+connects_to:
+  - c1-bio-98 (Ivan Ohienko - earlier educator)
+  - c1-bio-105 (Shevelov - intellectual of same era)
+  - Contemporary Ukrainian educators
+
+naturalness:
+  score: 1
+  status: PENDING

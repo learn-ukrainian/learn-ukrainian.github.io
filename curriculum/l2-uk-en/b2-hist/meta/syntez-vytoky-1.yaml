@@ -169,4 +169,4 @@ prerequisites:
 
 connects_to:
   - b2-hist-09 (Beginning of Kyivan Rus - Phase 2)
-  - b2-hist-20 (Synthesis: Kyivan Rus)
+  - 'b2-hist-20 (Synthesis: Kyivan Rus)'

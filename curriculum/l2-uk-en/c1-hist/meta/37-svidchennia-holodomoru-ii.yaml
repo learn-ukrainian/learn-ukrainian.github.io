@@ -4,6 +4,9 @@
 id: c1-hist-37
 title: "Свідчення Голодомору II: Документи"
 slug: svidchennia-holodomoru-ii
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -42,7 +45,7 @@ content_outline:
       - Звіти ОГПУ
       - Статистика смертей
 
-  - section: "Закон про п'ять колосків" (7.08.1932)
+  - section: "Закон про п'ять колосків (7.08.1932)"
     words: 700
     points:
       - Повний текст (з глосами)
@@ -53,7 +56,7 @@ content_outline:
   - section: Чорні дошки
     words: 600
     points:
-      - Що таке "чорна дошка"
+      - "Що таке «чорна дошка»"
       - Документальні свідчення
       - Приклад — постанова про село
       - Наслідки для населення
@@ -102,7 +105,7 @@ vocabulary_hints:
 
 activity_hints:
   - type: reading
-    focus: "Law of Five Ears" with glosses
+    focus: '«Law of Five Ears» with glosses'
     source: wikisource or archive
 
   - type: document-analysis

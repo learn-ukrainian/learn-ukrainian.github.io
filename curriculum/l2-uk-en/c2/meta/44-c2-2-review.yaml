@@ -4,6 +4,9 @@
 id: c2-44
 title: Повторення C2.2 — Літературна майстерність
 slug: c2-2-review
+version: '2.0'
+phase: 'C2.2 Literary Analysis'
+focus: integration
 module_type: integration
 word_target: 4000
 immersion: "100% Ukrainian"
@@ -21,7 +24,7 @@ sources:
     notes: International standards for Ukrainian literary scholarship
   - name: Слово і Час — науковий журнал
     url: http://dspace.nbuv.gov.ua/handle/123456789/8800
-    type: example
+    type: reference
     notes: Peer-reviewed literary criticism examples
 
 content_outline:
@@ -57,7 +60,7 @@ content_outline:
     words: 600
     points:
       - Перекладознавча теорія та практика
-      - Творче письмо: поезія та проза
+      - 'Творче письмо: поезія та проза'
       - Індивідуальний голос у перекладі та оригіналі
 
   - section: Сучасна література та спільнота (М38-41)
@@ -133,5 +136,5 @@ connects_to:
   - c2-46 (Professional Language Overview — C2.3 start)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

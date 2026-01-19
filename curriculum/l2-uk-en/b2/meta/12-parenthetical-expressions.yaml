@@ -4,6 +4,9 @@
 id: b2-12
 title: Вставні слова та вирази
 slug: 12-parenthetical-expressions
+version: '1.0'
+phase: B2.1b [Participles & Register Intro]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -136,5 +139,5 @@ connects_to:
   - b2-25 (B2.1b Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

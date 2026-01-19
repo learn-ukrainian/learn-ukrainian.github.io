@@ -4,6 +4,9 @@
 id: c1-hist-09
 title: "Критика джерел: Принципи та практика"
 slug: krytyka-dzherel
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian
@@ -55,7 +58,7 @@ content_outline:
       - Авторство — хто написав
       - Походження — звідки потрапив до нас
       - Збереженість — що могло змінитися
-      - Приклад — "Слово о полку Ігоревім" (дебати)
+      - "Приклад — «Слово о полку Ігоревім» (дебати)"
 
   - section: Внутрішня критика (достовірність)
     words: 700

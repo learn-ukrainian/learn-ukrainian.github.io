@@ -86,7 +86,7 @@ content_outline:
   - section: Practice Contexts
     words: 400
     points:
-      - "Did you finish?" dialogues
+      - '"Did you finish?" dialogues'
       - Story narration
       - Error correction
 
@@ -136,7 +136,7 @@ activity_hints:
     items: "10+"
 
   - type: dialogue
-    focus: "Did you...?" conversations
+    focus: '"Did you...?" conversations'
     items: "4+"
 
 prerequisites:

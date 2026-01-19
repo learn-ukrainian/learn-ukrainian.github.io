@@ -4,6 +4,9 @@
 id: b2-03
 title: Безособові конструкції на -но/-то
 slug: 03-impersonal-passive
+version: '1.0'
+phase: B2.1a [Passive Voice]
+focus: grammar
 module_type: grammar
 word_target: 3800
 immersion: "100% Ukrainian"
@@ -135,9 +138,9 @@ prerequisites:
 connects_to:
   - b2-04 (Reflexive Passive)
   - b2-06 (Passive in Context)
-  - b2-19 (Register: Official/Legal)
+  - 'b2-19 (Register: Official/Legal)'
   - b2-10 (B2.1a Checkpoint)
 
 naturalness:
-  score: null
+  score: 1
   status: PENDING

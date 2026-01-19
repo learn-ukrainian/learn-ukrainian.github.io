@@ -47,7 +47,7 @@ content_outline:
       - Стилістична функція архаїзмів
       - Синтез народної та книжної мови
 
-  - section: "Марія" — гуманізація божественного
+  - section: '"Марія" — гуманізація божественного'
     words: 800
     points:
       - Сюжет поеми
@@ -137,6 +137,12 @@ tags:
 grammar:
   - Church Slavonicisms
   - High style syntax
+
+objectives:
+  - "Understand the role of Biblical themes in Shevchenko's later poetry"
+  - "Analyze the 'humanization' of divine figures in 'Maria'"
+  - "Identify political subtext in 'Psalms of David'"
+  - "Recognize and interpret Church Slavonicisms in modern Ukrainian text"
 
 naturalness:
   score: 10

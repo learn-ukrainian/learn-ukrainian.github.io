@@ -1,25 +1,139 @@
-title: 'Василь Симоненко: Витязь молодої української поезії'
-subtitle: 'Vasyl Symonenko: Knight of Young Ukrainian Poetry'
-version: '1.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: CBI
-duration: 120
-transliteration: none
-tags:
-- biography
-- literature
-- sixtiers
-- soviet-era
-grammar:
-- Historical narrative tenses
-- Quoted speech conventions
-objectives:
-- Learner understands the significance of Vasyl Symonenko as a symbol of the Sixtiers
-  generation
-- Learner can analyze the linguistic features of Symonenko’s poetry and publicist
-  style
-- Learner masters biographical and historical vocabulary related to the Soviet era
-  and dissent
-vocabulary_count: 25
+# C1-BIO Module 75: Василь Симоненко: Ніжний бунтар
+# Status: SPEC (ready for content development)
+
+id: c1-bio-75
+title: "Василь Симоненко: Ніжний бунтар"
 slug: vasyl-symonenko
+module_type: biography
+word_target: 4000
+immersion: "100% Ukrainian"
+version: '2.0'
+phase: 'C1-BIO'
+focus: biography
+
+# === AGENT BUILD SPEC ===
+
+sources:
+  - name: Василь Симоненко (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
+    type: primary
+    notes: Основна біографічна інформація
+  - name: Літературний музей
+    url: https://litmuseum.org.ua/
+    type: reference
+    notes: Архівні матеріали
+  - name: Збірки поезій
+    url: https://ukrlib.com.ua/
+    type: reference
+    notes: Повні тексти творів
+
+content_outline:
+  - section: Вступ — Поет, який не встиг постаріти
+    words: 400
+    points:
+      - Трагічна коротка доля (1935-1963)
+      - Символ покоління шістдесятників
+      - Україно, ти моя молитва як гімн національного пробудження
+
+  - section: Полтавське дитинство
+    words: 600
+    points:
+      - Народження в селі Біївці (1935)
+      - Сирітське повоєнне дитинство
+      - Ранній інтерес до літератури
+
+  - section: Студентські роки
+    words: 700
+    points:
+      - Навчання в Київському університеті
+      - Перші публікації
+      - Формування поетичного голосу
+
+  - section: Журналіст і громадський діяч
+    words: 700
+    points:
+      - Робота в газетах Черкащини
+      - Казки для сина
+      - Публіцистика як форма спротиву
+
+  - section: Поезія як сповідь
+    words: 800
+    points:
+      - Тиша і грім — головна збірка
+      - Теми любові, нації, справедливості
+      - Цензура та заборона публікацій
+
+  - section: Загадкова смерть та посмертна слава
+    words: 600
+    points:
+      - Побиття та хвороба
+      - Смерть у 28 років
+      - Канонізація в незалежній Україні
+
+  - section: Дискусія — Чому молоді поети стають символами?
+    words: 200
+    points:
+      - Феномен ранньої смерті митця
+      - Симоненко vs Стус: два шляхи спротиву
+
+vocabulary_hints:
+  required:
+    - шістдесятник (Sixtier)
+    - публіцистика (publicistic writing)
+    - цензура (censorship)
+    - національне пробудження (national awakening)
+    - казка (fairy tale)
+    - сповідь (confession)
+    - молитва (prayer)
+    - побиття (beating)
+    - канонізація (canonization)
+    - посмертний (posthumous)
+  recommended:
+    - ліричний герой (lyrical hero)
+    - громадянська поезія (civic poetry)
+    - інтимна лірика (intimate lyrics)
+    - самвидав (samizdat)
+    - опозиційність (opposition)
+
+activity_hints:
+  - type: reading
+    focus: Поезії Симоненка
+    source: Первинні джерела
+    items: "3 passages"
+
+  - type: quiz
+    focus: Факти про життя Симоненка
+    items: "12+"
+
+  - type: match-up
+    focus: Вірші та їхні теми
+    items: "10+"
+
+  - type: essay-response
+    focus: Як поезія може бути спротивом?
+    word_target: 300
+    output: Аналітичний есей
+
+  - type: group-sort
+    focus: Жанри творчості Симоненка
+    items: "12+"
+
+  - type: fill-in
+    focus: Цитати та їх значення
+    items: "10+"
+
+  - type: discussion
+    focus: Чому коротке життя може мати великий вплив?
+    output: Рефлексивний аналіз
+
+prerequisites:
+  - c1-bio-74-lina-kostenko
+
+connects_to:
+  - c1-bio-77-vasyl-stus
+  - c1-bio-72-alla-horska
+  - c1-bio-73-dmytro-pavlychko
+
+naturalness:
+  score: 1
+  status: PENDING

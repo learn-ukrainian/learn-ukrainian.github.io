@@ -4,6 +4,9 @@
 id: c1-hist-39
 title: "Самвидав: Що це було?"
 slug: samvydav-shcho-tse
+version: '1.0'
+phase: C1-HIST.1 [Historiography]
+focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
@@ -37,7 +40,7 @@ content_outline:
     words: 600
     points:
       - Витоки — 1950-60-ті
-      - "Відлига" — відносна свобода
+      - "«Відлига» — відносна свобода"
       - Шістдесятники — нове покоління
       - Повернення репресій
 
@@ -64,7 +67,7 @@ content_outline:
     points:
       - Національне питання — центральне
       - Мова як опір
-      - "Український вісник" Чорновола
+      - "«Український вісник» Чорновола"
       - Зв'язок із загальносоюзним
 
   - section: Фрагмент — Перший номер
