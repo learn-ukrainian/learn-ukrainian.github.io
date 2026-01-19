@@ -71,13 +71,30 @@ Include authentic historical documents:
 - Excerpts from treaties and declarations
 - Literary passages
 
-### 4. Era Context
+## Era Context
 
 Every historical/biographical module must include:
 
 - Political situation of the era
 - Cultural movements
 - Language situation (Russification, national revival, etc.)
+
+---
+
+## Reference Materials
+
+Use these internal sources for linguistic grounding and factual data:
+
+| Source | Description | Use for... |
+|--------|-------------|------------|
+| `docs/reference/textbooks-txt/7-klas-history.txt` | 7th Grade History | Kyivan Rus, Medieval era |
+| `docs/reference/textbooks-txt/8-klas-history.txt` | 8th Grade History | Cossack Era, Early Modern |
+| `docs/reference/textbooks-txt/9-klas-history.txt` | 9th Grade History | 19th Century (Imperial) |
+| `docs/reference/textbooks-txt/10-klas-history.txt` | 10th Grade History | Early 20th Century, WWII |
+| `docs/reference/textbooks-txt/11-klas-history.txt` | 11th Grade History | Post-WWII, Independence |
+| `docs/reference/textbooks-txt/nation-builders.txt` | Biography Collection | Life details of prominent figures |
+
+**Instruction:** When creating content, search these files for the subject's name to extract authentic vocabulary and era-appropriate phrasing.
 
 ---
 

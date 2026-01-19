@@ -628,6 +628,13 @@ def audit_module(file_path: str) -> bool:
     # Get config
     config = get_level_config(level_code, module_focus)
     target = get_word_target(level_code, module_num, module_focus)
+    
+    # Metadata Override for Word Target
+    if meta_data:
+        if 'word_count' in meta_data:
+            target = int(meta_data['word_count'])
+        elif 'word_target' in meta_data:
+            target = int(meta_data['word_target'])
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 

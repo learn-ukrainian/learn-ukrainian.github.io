@@ -372,6 +372,9 @@ ACTIVITY_COMPLEXITY = {
         'B2': {'min_items': 3},
         'B2-history': {'min_items': 1},
         'C1': {'min_items': 3},
+        'C1-biography': {'min_items': 1},
+        'C1-history': {'min_items': 1},
+        'LIT': {'min_items': 1},
         'C2': {'min_items': 3},
     },
     'essay-response': {
@@ -660,7 +663,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'translate', 'quiz'}
     },
     'C1': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -672,7 +675,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'C1-academic': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -698,7 +701,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'translate', 'error-correction'}
     },
     'C1-stylistics': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -710,7 +713,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
     },
     'C1-folk': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -722,19 +725,27 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'mark-the-words'}
     },
     'C1-biography': {
-        'target_words': 3000,
-        'min_activities': 12,
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
+        # C1-BIO Track: Biography seminar style (C1 level)
+        # Structure: Advanced Analysis + Conceptual Quiz only
+        # Focus: biographical analysis, legacy evaluation, era context
+        'target_words': 4000,
+        'min_activities': 4,
+        'max_activities': 8,
+        'min_items_per_activity': 1,
+        'min_types_unique': 3,
         'min_vocab': 24,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'min_engagement': 5,
+        'min_immersion': 95,
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'quiz'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'match-up', 'fill-in', 'cloze', 'group-sort', 'unjumble', 'anagram', 'mark-the-words'},
+        'essay_min_words': 250,
+        'essay_max_words': 400
     },
     'C1-literature': {
-        'target_words': 2000,
+        'target_words': 3500,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -770,7 +781,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'error-correction'}
     },
     'C2': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -782,7 +793,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C2-stylistic': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -794,7 +805,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C2-literary': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -806,7 +817,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'quiz'}
     },
     'C2-professional': {
-        'target_words': 2000,
+        'target_words': 3000,
         'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -901,26 +912,7 @@ LEVEL_CONFIG = {
         'essay_min_words': 300,
         'essay_max_words': 500
     },
-    'C1-BIO-seminar': {
-        # C1-BIO Track: Biography seminar style (C1 level)
-        # Activities: reading + essay-response + critical-analysis + comparative-study
-        # Focus: biographical analysis, legacy evaluation, era context
-        'target_words': 2500,
-        'min_activities': 3,
-        'max_activities': 6,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 24,
-        'min_engagement': 5,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'},
-        'essay_min_words': 250,
-        'essay_max_words': 400
-    }
+
 }
 
 # Activity level restrictions

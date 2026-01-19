@@ -1,8 +1,10 @@
 # C1-BIO Module 01: Княгиня Ольга: Регент і Реформатор
-# Status: SPEC (ready for content development)
+# Status: ACTIVE (Biographical Seminar Standard)
 
+module: c1-bio-01
 id: c1-bio-01
 title: "Княгиня Ольга: Регент і Реформатор"
+subtitle: "Olha of Kyiv: Regent and Reformer"
 slug: knyahynia-olha
 module_type: biography
 word_target: 4000
@@ -10,6 +12,23 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+pedagogy: seminar
+duration: 150
+transliteration: none
+tags:
+  - history
+  - biography
+  - medieval
+  - kyivan-rus
+  - women-leaders
+grammar:
+  - "Academic biographical narrative"
+  - "Complex causal structures"
+objectives:
+  - "Analyze the administrative reforms of Princess Olha and their impact on state building"
+  - "Evaluate the synthesis of pagan tradition and Christian mission in early Rus"
+  - "Construct historical arguments based on chronicle excerpts"
+vocabulary_count: 24
 
 # === AGENT BUILD SPEC ===
 
@@ -29,7 +48,7 @@ sources:
 
 content_outline:
   - section: Вступ — Легендарна постать
-    words: 400
+    words: 500
     points:
       - Унікальність Ольги як жінки-правительки
       - Проблема розмежування легенди та історії
@@ -73,7 +92,7 @@ content_outline:
       - Місце в українській історичній пам'яті
 
   - section: Підсумок — Жінка, що творила історію
-    words: 300
+    words: 200
     points:
       - Ольга як символ жіночої влади
       - Її роль у формуванні Київської Русі
@@ -104,30 +123,26 @@ activity_hints:
     source: Повість минулих літ (adapted)
     items: "3 passages"
 
-  - type: quiz
-    focus: Historical facts vs. legendary elements
-    items: "12+"
-
-  - type: match-up
-    focus: Administrative terms and their functions
-    items: "10+"
-
-  - type: essay-response
-    focus: Analyze the significance of Olha's reforms
-    word_target: 250
-    output: Structured analysis with examples
-
-  - type: discussion
-    focus: Was Olha's revenge justified? Historical vs. moral perspectives
-    output: Oral or written response
-
-  - type: fill-in
-    focus: Biographical timeline completion
-    items: "8+"
-
   - type: critical-analysis
     focus: Compare chronicle narrative with modern historical interpretations
     output: Identify 3+ differences
+
+  - type: essay-response
+    focus: Analyze the significance of Olha's reforms
+    word_target: 300
+    output: Structured analysis with examples
+
+  - type: comparative-study
+    focus: Olha vs. Elizabeth I of England - female rulers in patriarchal societies
+    output: Comparative table
+
+  - type: authorial-intent
+    focus: 'Analyze the chroniclers intent: Why emphasize revenge?'
+    output: Analytical response
+
+  - type: quiz
+    focus: 'Conceptual check: Cause-and-effect of reforms'
+    items: "8 questions"
 
 prerequisites:
   - B2-HIST completion recommended
@@ -140,5 +155,5 @@ connects_to:
   - c1-bio-04 (Yaroslav Mudryi - continuation of reforms)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 9
+  status: PASS

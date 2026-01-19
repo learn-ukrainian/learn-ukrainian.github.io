@@ -15,7 +15,7 @@
 
 | Metric         | Target | WARN  | FAIL  |
 | -------------- | ------ | ----- | ----- |
-| Word count     | 3000   | <3000 | <2800 |
+| Word count     | 4000   | <4000 | <3800 |
 | Activities     | 10     | <10   | <8    |
 | Items/activity | 16     | <16   | <12   |
 
@@ -36,19 +36,19 @@
 
 ## Phase Structure (101 Modules)
 
-| Phase    | Modules | Focus                          | Notable Figures |
-| -------- | ------- | ------------------------------ | --------------- |
-| BIO.1    | M01-06  | Medieval Founders              | Olha, Yaroslav  |
-| BIO.2    | M07-15  | Early Modern Era               | Roksolana, Mazepa |
-| BIO.3    | M16-19  | Enlightenment & Baroque        | Skovoroda       |
-| BIO.4    | M20-35  | National Awakening             | Shevchenko, Franko |
-| BIO.5    | M36-53  | Revolutionary Era              | Lesya Ukrainka, Petliura |
-| BIO.6    | M54-69  | Soviet Era Tragedy             | Kurbas, Khvylovyi |
-| BIO.7    | M70-82  | Resistance & Diaspora          | Shukhevych, Bandera |
-| BIO.8    | M83-91  | Late Soviet & Independence     | Stus, Chornovil |
-| BIO.9    | M92-98  | Contemporary Ukraine           | Activists, Artists |
-| BIO.10   | M99-100 | Academy Founders               | Vernadskyi, Krymskyi |
-| BIO.11   | M101    | **Checkpoint**                 | Comprehensive review |
+| Phase  | Modules | Focus                      | Notable Figures          |
+| ------ | ------- | -------------------------- | ------------------------ |
+| BIO.1  | M01-06  | Medieval Founders          | Olha, Yaroslav           |
+| BIO.2  | M07-15  | Early Modern Era           | Roksolana, Mazepa        |
+| BIO.3  | M16-19  | Enlightenment & Baroque    | Skovoroda                |
+| BIO.4  | M20-35  | National Awakening         | Shevchenko, Franko       |
+| BIO.5  | M36-53  | Revolutionary Era          | Lesya Ukrainka, Petliura |
+| BIO.6  | M54-69  | Soviet Era Tragedy         | Kurbas, Khvylovyi        |
+| BIO.7  | M70-82  | Resistance & Diaspora      | Shukhevych, Bandera      |
+| BIO.8  | M83-91  | Late Soviet & Independence | Stus, Chornovil          |
+| BIO.9  | M92-98  | Contemporary Ukraine       | Activists, Artists       |
+| BIO.10 | M99-100 | Academy Founders           | Vernadskyi, Krymskyi     |
+| BIO.11 | M101    | **Checkpoint**             | Comprehensive review     |
 
 ---
 
@@ -81,7 +81,7 @@ objectives:
   - 'Learner can understand biographical narrative about...'
   - 'Learner can use vocabulary of achievements and legacy...'
 prerequisites:
-  - c1-bio-XX  # Previous module
+  - c1-bio-XX # Previous module
 naturalness:
   score: 0
   status: PENDING
@@ -92,7 +92,7 @@ naturalness:
 
 | Metric            | Biography Modules | Checkpoint |
 | ----------------- | ----------------- | ---------- |
-| Core Word Count   | 3000+             | 2000+      |
+| Core Word Count   | 4000+             | 2500+      |
 | Immersion         | **100%**          | **100%**   |
 | Vocabulary (YAML) | 20-25             | 50-55      |
 | Engagement Boxes  | 6+                | 4+         |
@@ -164,14 +164,14 @@ naturalness:
 
 Biography modules must achieve **95%+ richness score**:
 
-| Component        | Weight | Target |
-| ---------------- | ------ | ------ |
-| Primary sources  | 15%    | 1+ quote |
-| Engagement boxes | 15%    | 6+ boxes |
-| Quotes           | 10%    | 2+ quotes |
+| Component        | Weight | Target                  |
+| ---------------- | ------ | ----------------------- |
+| Primary sources  | 15%    | 1+ quote                |
+| Engagement boxes | 15%    | 6+ boxes                |
+| Quotes           | 10%    | 2+ quotes               |
 | Cultural refs    | 10%    | 4+ Ukrainian references |
-| Visual elements  | 10%    | 2+ tables |
-| Mini-dialogues   | 10%    | 1+ (if appropriate) |
+| Visual elements  | 10%    | 2+ tables               |
+| Mini-dialogues   | 10%    | 1+ (if appropriate)     |
 
 ---
 
@@ -184,6 +184,7 @@ All biography modules must pass naturalness check:
 - **Checker:** Use MCP `check_naturalness` tool
 
 Update meta YAML after validation:
+
 ```yaml
 naturalness:
   score: 10

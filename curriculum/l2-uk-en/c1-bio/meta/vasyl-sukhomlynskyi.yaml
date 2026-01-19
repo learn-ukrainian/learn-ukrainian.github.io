@@ -22,7 +22,7 @@ sources:
     url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
     type: reference
     notes: School he directed for 22 years
-  - name: "Серце віддаю дітям"
+  - name: '"Серце віддаю дітям"'
     url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
     type: reference
     notes: His most famous work
@@ -49,7 +49,7 @@ content_outline:
       - Призначення директором (1948)
       - 22 роки експериментальної роботи
       - Створення унікального освітнього середовища
-      - "Школа радості" для найменших
+      - '"Школа радості" для найменших'
 
   - section: Педагогічна філософія
     words: 800

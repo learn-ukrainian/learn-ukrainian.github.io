@@ -1557,8 +1557,11 @@ def main():
             
         meta_data = None
         if meta_file.exists():
-            with open(meta_file, 'r', encoding='utf-8') as f:
-                meta_data = yaml.safe_load(f)
+            try:
+                with open(meta_file, 'r', encoding='utf-8') as f:
+                    meta_data = yaml.safe_load(f)
+            except Exception as e:
+                print(f'    ⚠️ Error parsing YAML metadata for {mod.slug}: {e}')
                 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
@@ -1567,10 +1570,13 @@ def main():
             
         vocab_items = None
         if vocab_file.exists():
-            with open(vocab_file, 'r', encoding='utf-8') as f:
-                v_data = yaml.safe_load(f)
-                if v_data and 'items' in v_data:
-                    vocab_items = v_data['items']
+            try:
+                with open(vocab_file, 'r', encoding='utf-8') as f:
+                    v_data = yaml.safe_load(f)
+                    if v_data and 'items' in v_data:
+                        vocab_items = v_data['items']
+            except Exception as e:
+                print(f'    ⚠️ Error parsing YAML vocabulary for {mod.slug}: {e}')
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"

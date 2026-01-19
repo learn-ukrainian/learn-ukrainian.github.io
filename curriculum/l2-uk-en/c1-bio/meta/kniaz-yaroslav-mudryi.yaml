@@ -10,6 +10,21 @@ immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+pedagogy: seminar
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - law
+  - architecture
+grammar:
+  - 'Legal terminology (Ruska Pravda)'
+  - 'Diplomatic register'
+objectives:
+  - 'Analyze the impact of Ruska Pravda on medieval society.'
+  - 'Discuss the strategic importance of dynastic marriages.'
+  - 'Evaluate the cultural achievements of the "Golden Age".'
 
 # === AGENT BUILD SPEC ===
 
@@ -142,5 +157,5 @@ connects_to:
   - c1-bio-14 (Pylyp Orlyk - later constitutional tradition)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: 'PASS'

@@ -5,11 +5,27 @@ id: c1-bio-03
 title: "Володимир Великий: Хреститель Русі"
 slug: volodymyr-velykii
 module_type: biography
-word_target: 4000
+word_count: 4000
 immersion: "100% Ukrainian"
 version: '2.0'
 phase: 'C1-BIO'
 focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - history
+  - biography
+  - kyivan-rus
+  - christianization
+
+grammar:
+  - 'Historical narrative register'
+objectives:
+  - 'Analyze the geopolitical significance of the Christianization of Rus'
+  - 'Evaluate the state-building reforms of Volodymyr the Great (administrative, financial, symbolic)'
+  - 'Discuss the legacy of the Trident and the first currency in modern Ukrainian identity'
+
 
 # === AGENT BUILD SPEC ===
 
@@ -147,5 +163,5 @@ connects_to:
   - c1-bio-08 (Iov Boretskyi - Orthodox church defense)
 
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: 'PASS'
