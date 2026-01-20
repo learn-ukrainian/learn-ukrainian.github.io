@@ -467,11 +467,18 @@
               },
               "error": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "The incorrect word or phrase in the sentence"
               },
               "answer": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "The correct word or phrase"
+              },
+              "error_type": {
+                "type": "string",
+                "enum": ["word", "phrase", "register", "construction"],
+                "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
                 "type": "array",
