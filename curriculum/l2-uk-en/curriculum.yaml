@@ -303,7 +303,7 @@ levels:
       - 82-capstone-prezentatsiya
       - 83-b2-pidsumkovyy-ohlyad
       - 84-checkpoint-register-synthesis
-      - 85-communication-skills-85
+      - professional-email-basics
       - 86-communication-skills-86
       - 87-communication-skills-87
       - 88-communication-skills-88
@@ -965,7 +965,6 @@ levels:
       - c1-pro-integration
       - c1-pro-capstone
   c2:
-
     type: core
     modules:
       - c1-bridge-assessment
