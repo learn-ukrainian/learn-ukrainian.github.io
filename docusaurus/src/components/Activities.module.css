@@ -822,8 +822,21 @@
 }
 
 .wordWrong {
-  background: rgba(234, 67, 53, 0.15);
-  animation: shake 0.3s ease;
+  background: rgba(234, 67, 53, 0.3);
+  color: #EA4335;
+  border: 2px solid #EA4335;
+  animation: shake 0.3s ease, wrongPulse 0.5s ease;
+}
+
+@keyframes wrongPulse {
+  0% {
+    background: rgba(234, 67, 53, 0.5);
+    transform: scale(1.05);
+  }
+  100% {
+    background: rgba(234, 67, 53, 0.3);
+    transform: scale(1);
+  }
 }
 
 .wordSelected {
