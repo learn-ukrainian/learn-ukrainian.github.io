@@ -26,12 +26,24 @@ def generate_report(
     richness_data: dict = None,
     richness_flags: list = None,
     template_violations: list[dict] = None,
-    naturalness: dict = None
+    naturalness: dict = None,
+    module_num: int = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
-    report_lines.append(f"# Audit Report: {os.path.basename(file_path)}")
-    report_lines.append(f"**Phase:** {phase} | **Level:** {level_code} | **Pedagogy:** {pedagogy} | **Target:** {target}")
+
+    # Build header with module number if available
+    header_title = f"# Audit Report: {os.path.basename(file_path)}"
+    if module_num is not None:
+        header_title = f"# Audit Report: M{module_num:02d} — {os.path.basename(file_path)}"
+    report_lines.append(header_title)
+
+    # Metadata line with module number
+    meta_line = f"**Level:** {level_code}"
+    if module_num is not None:
+        meta_line += f" | **Module:** M{module_num:02d}"
+    meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"
+    report_lines.append(meta_line)
     
     # Add Naturalness Score to header if available
     if naturalness:

@@ -199,9 +199,9 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
     # Check frontmatter for explicit focus - recognize all valid config types
-    # Including content-heavy types: history, literature, biography, folk-culture, fine-arts
+    # Including content-heavy types: history, literature, biography, folk-culture, fine-arts, synthesis
     focus_match = re.search(
-        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge|history|literature|biography|folk-culture|fine-arts)["\']?$',
+        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge|history|literature|biography|folk-culture|fine-arts|synthesis)["\']?$',
         frontmatter_str, re.MULTILINE | re.IGNORECASE
     )
     if focus_match:
@@ -575,6 +575,75 @@ def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     except Exception:
         return None
 
+def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | None:
+    """
+    Look up module number from curriculum.yaml manifest.
+
+    Returns module number (1-based) or None if not found.
+    """
+    from pathlib import Path
+
+    # Get module slug from filename
+    module_slug = Path(file_path).stem
+
+    # Remove numeric prefix if exists (e.g., "01-passive-voice" -> "passive-voice")
+    # But keep it for lookup first
+    slug_variants = [module_slug]
+    if re.match(r'^\d{2,3}-', module_slug):
+        slug_variants.append(re.sub(r'^\d{2,3}-', '', module_slug))
+
+    # Find curriculum.yaml
+    curriculum_yaml_path = Path(file_path).parent.parent / 'curriculum.yaml'
+    if not curriculum_yaml_path.exists():
+        return None
+
+    try:
+        with open(curriculum_yaml_path, 'r', encoding='utf-8') as f:
+            curriculum = yaml.safe_load(f)
+
+        # Determine which level key to look under
+        # Map level codes to curriculum.yaml keys
+        level_key_map = {
+            'A1': 'a1',
+            'A2': 'a2',
+            'B1': 'b1',
+            'B2': 'b2',
+            'C1': 'c1',
+            'C2': 'c2',
+        }
+
+        # Check if file is in a track directory (b2-hist, c1-bio, etc.)
+        track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path)
+        if track_match:
+            level_key = track_match.group(1)  # e.g., 'b2-hist'
+        else:
+            level_key = level_key_map.get(level_code, level_code.lower())
+
+        # Get modules list for this level
+        level_data = curriculum.get('levels', {}).get(level_key)
+        if not level_data or 'modules' not in level_data:
+            return None
+
+        modules = level_data['modules']
+
+        # Find module number by slug
+        for idx, module_entry in enumerate(modules, start=1):
+            # Module entry might be a string "slug-name" or "slug-name # [N]"
+            module_slug_in_yaml = module_entry.split('#')[0].strip()
+
+            # Check if any slug variant matches
+            if module_slug_in_yaml in slug_variants:
+                return idx
+
+            # Also check if the original has a numeric prefix and matches
+            if module_slug.startswith(f"{idx:02d}-") and module_slug[3:] == module_slug_in_yaml:
+                return idx
+
+        return None
+
+    except Exception:
+        return None
+
 def audit_module(file_path: str) -> bool:
     """
     Main audit function for a module file.
@@ -592,6 +661,10 @@ def audit_module(file_path: str) -> bool:
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
+    # Initialize failure tracking early (used throughout audit)
+    has_critical_failure = False
+    critical_failure_reasons = []
+
     # Try loading YAML sidecars
     meta_data = load_yaml_meta(file_path)
     vocab_data = load_yaml_vocab(file_path)
@@ -600,7 +673,7 @@ def audit_module(file_path: str) -> bool:
     if meta_data:
         # Reconstruct frontmatter string for validation functions that expect it
         frontmatter_str = yaml.dump(meta_data, sort_keys=False, allow_unicode=True)
-        # Content is the body (file is stripped)
+        # Content is the body (file is stripped) - No frontmatter in MD, whole file is body
         body = content
         print(f"  📋 Loaded Metadata from YAML sidecar")
     else:
@@ -608,19 +681,24 @@ def audit_module(file_path: str) -> bool:
 
     if not frontmatter_str:
         print("Error: No YAML frontmatter found (checked embedded and sidecar).")
+        critical_failure_reasons.append("No YAML frontmatter found")
+        print("\nCritical Failures:")
+        for reason in critical_failure_reasons:
+            print(f"  • {reason}")
         sys.exit(1)
 
-    # Validate required metadata
-    missing_meta = validate_required_metadata(frontmatter_str)
-    if missing_meta:
-        print(f"❌ AUDIT FAILED: Missing Frontmatter Fields: {', '.join(missing_meta)}")
-        print("  -> These fields are REQUIRED for 'npm run generate'")
-        sys.exit(1)
-
-    # Detect level and module
+    # Detect Metadata
     level_code, module_num = detect_level(file_path, frontmatter_str)
 
-    # Parse phase
+    # If module number not detected (999), try curriculum.yaml lookup
+    if module_num == 999:
+        curriculum_module_num = get_module_number_from_curriculum(file_path, level_code)
+        if curriculum_module_num is not None:
+            module_num = curriculum_module_num
+
+    module_focus = detect_focus(frontmatter_str, level_code, module_num, meta_data.get('title') if meta_data else "")
+
+    # Parse phase (for report - defaults to level_code if not specified)
     phase_match = re.search(r'phase:\s*([A-Za-z0-9\.]+)', frontmatter_str)
     phase = phase_match.group(1) if phase_match else level_code
 
@@ -628,19 +706,27 @@ def audit_module(file_path: str) -> bool:
     title_match = re.search(r"title:\s*['\"]?([^'\"\n]+)['\"]?", frontmatter_str)
     module_title = title_match.group(1).strip() if title_match else os.path.basename(file_path)
 
-    # Detect focus (pass filename for checkpoint detection)
-    module_focus = detect_focus(frontmatter_str, level_code, module_num, os.path.basename(file_path))
+    print(f"\n📋 Auditing: {level_code} M{module_num:02d} — {module_title}")
+    
+    # Check word target
+    target = get_word_target(level_code, module_num, module_focus)
+    print(f"   File: {file_path} | Target: {target} words")
+
+    # Required Metadata Check
+    # For A1/A2 legacy, check frontmatter string. For B1+, assume YAML sidecar handles it (schema validated elsewhere)
+    if not meta_data: # Only validate embedded frontmatter if no sidecar
+        missing_meta = validate_required_metadata(frontmatter_str)
+        if missing_meta:
+            print(f"❌ AUDIT FAILED: Missing Frontmatter Fields: {', '.join(missing_meta)}")
+            print("  -> These fields are REQUIRED for 'npm run generate'")
+            critical_failure_reasons.append(f"Missing Frontmatter Fields: {', '.join(missing_meta)}")
+            print("\nCritical Failures:")
+            for reason in critical_failure_reasons:
+                print(f"  • {reason}")
+            sys.exit(1)
 
     # Get config
     config = get_level_config(level_code, module_focus)
-    target = get_word_target(level_code, module_num, module_focus)
-    
-    # Metadata Override for Word Target
-    if meta_data:
-        if 'word_count' in meta_data:
-            target = int(meta_data['word_count'])
-        elif 'word_target' in meta_data:
-            target = int(meta_data['word_target'])
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 
@@ -688,6 +774,10 @@ def audit_module(file_path: str) -> bool:
                 for violation in template_violations[:3]:
                     severity_icon = "🔴" if violation['severity'] == 'CRITICAL' else "⚠️" if violation['severity'] == 'WARNING' else "ℹ️"
                     print(f"     {severity_icon} [{violation['type']}] {violation['issue']}")
+
+                if critical_count > 0:
+                    has_critical_failure = True
+                    critical_failure_reasons.append(f"{critical_count} Critical Template Violations")
                     
         except ImportError as e:
             print(f"  ⚠️  Template compliance not available: {e}")
@@ -703,6 +793,10 @@ def audit_module(file_path: str) -> bool:
         for v in outline_violations[:3]:  # Show first 3
             severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
             print(f"     {severity_icon} [{v['type']}] {v['message'].split(chr(10))[0]}")  # First line only
+        
+        if error_count > 0:
+            has_critical_failure = True
+            critical_failure_reasons.append(f"{error_count} Outline Compliance Errors")
 
     # Extract pedagogy
     pedagogy = "Not Specified"
@@ -715,9 +809,11 @@ def audit_module(file_path: str) -> bool:
 
     # Tone validation
     tone_errors = validate_tone(content)
-    for err in tone_errors:
-        print(f"❌ AUDIT FAILED: {err}")
-        sys.exit(1)
+    if tone_errors:
+        has_critical_failure = True
+        for err in tone_errors:
+            print(f"❌ Tone violation: {err}")
+            critical_failure_reasons.append(err)
 
     # Summary check
     struct_flags = check_structure(content)
@@ -770,11 +866,9 @@ def audit_module(file_path: str) -> bool:
     )
 
     if structure_gate.status == 'FAIL':
-        print(f"❌ AUDIT FAILED: {structure_gate.msg}")
-        sys.exit(1)
-
-    # Initialize failure flag early (checkpoint validation may set it)
-    has_critical_failure = False
+        has_critical_failure = True
+        print(f"❌ Structure check failed: {structure_gate.msg}")
+        critical_failure_reasons.append(f"Structure: {structure_gate.msg}")
 
     # Duplicate vocabulary check (B1+ should have YAML-only, not both)
     if vocab_data and level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
@@ -798,11 +892,12 @@ def audit_module(file_path: str) -> bool:
         coverage_errors = validate_checkpoint_coverage(content, frontmatter_str)
         checkpoint_errors.extend(coverage_errors)
         if checkpoint_errors:
+            has_critical_failure = True
             print("❌ CHECKPOINT FORMAT ERRORS:")
             for err in checkpoint_errors:
                 print(f"  → {err}")
             print("  See: docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md")
-            has_critical_failure = True
+            critical_failure_reasons.append("Checkpoint Format Errors")
 
     # Fill-in options check
     for title, text in section_map.items():
@@ -867,6 +962,7 @@ def audit_module(file_path: str) -> bool:
     yaml_schema_violations = []
     
     # Pre-parse Linting (Issue #403)
+    # Pre-parse Linting (Issue #403)
     if yaml_file.exists():
         lint_errors = lint_yaml_file(str(yaml_file))
         if lint_errors:
@@ -888,15 +984,18 @@ def audit_module(file_path: str) -> bool:
                 print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
         # Check vocabulary integrity (Issue #439: words in activities must be in vocabulary YAML)
-        # Extract full level including track suffix (b2-hist, c1-bio, lit)
-        track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
-        full_level_for_vocab = track_match.group(1) if track_match else level_code.lower()
-        vocab_integrity_violations = check_vocabulary_integrity(file_path, full_level_for_vocab, module_num)
-        if vocab_integrity_violations:
-            print(f"  ❌ Vocabulary integrity violations: {len(vocab_integrity_violations)}")
-            for v in vocab_integrity_violations:
-                severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
-                print(f"     {severity_icon} [{v['type']}] {v['message']}")
+        # ONLY for A1-A2: At B1+ (90-100% immersion), students can infer meaning from context
+        # Vocabulary YAMLs at B1+ contain NEW/KEY words, not every word used in activities
+        if level_code in ('A1', 'A2'):
+            # Extract full level including track suffix (b2-hist, c1-bio, lit)
+            track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
+            full_level_for_vocab = track_match.group(1) if track_match else level_code.lower()
+            vocab_integrity_violations = check_vocabulary_integrity(file_path, full_level_for_vocab, module_num)
+            if vocab_integrity_violations:
+                print(f"  ❌ Vocabulary integrity violations: {len(vocab_integrity_violations)}")
+                for v in vocab_integrity_violations:
+                    severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
+                    print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
     # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
     mark_words_violations = []
@@ -1828,13 +1927,18 @@ def audit_module(file_path: str) -> bool:
         richness_data=richness_data,
         richness_flags=richness_flags_for_report,
         template_violations=template_violations,
-        naturalness=naturalness_data
+        naturalness=naturalness_data,
+        module_num=module_num
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")
 
     if has_critical_failure:
         print("\n❌ AUDIT FAILED. Correct errors before proceeding.")
+        if critical_failure_reasons:
+            print("\nCritical Failures:")
+            for reason in critical_failure_reasons:
+                print(f"  • {reason}")
         return False
     else:
         print("\n✅ AUDIT PASSED.")

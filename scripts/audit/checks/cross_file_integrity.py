@@ -4,6 +4,11 @@ Cross-File Vocabulary Integrity Check
 Validates that words used in activities exist in the vocabulary YAML files.
 Prevents the "Integrity Triangle" drift: Markdown ↔ Vocabulary ↔ Activities
 
+PEDAGOGICAL SCOPE:
+- A1-A2 ONLY: Vocabulary is tightly controlled, every word must be defined
+- B1+: DISABLED - Students can infer meaning from context at 90-100% immersion
+  Vocabulary YAMLs at B1+ contain NEW/KEY words, not every word in activities
+
 SMART MATCHING: Uses corpus-based fuzzy matching instead of external NLP libraries.
 - Extracts Ukrainian word stems (removes case endings)
 - Fuzzy string matching with edit distance
@@ -253,7 +258,19 @@ def smart_vocabulary_match(word: str, vocabulary: Set[str]) -> Tuple[bool, str]:
     best_match = None
     best_ratio = 0.0
 
-    for lemma in vocabulary:
+    word_len = len(word_lower)
+    word_start = word_lower[0] if word_len > 0 else ''
+
+    # Optimization: Filter candidates to avoid O(N*M) - Issue #443 logic
+    # Only check words with similar length (+/- 2 chars) and same first letter
+    # This reduces search space by ~99%
+    candidates = [
+        lemma for lemma in vocabulary
+        if abs(len(lemma) - word_len) <= 2
+        and (not word_start or lemma.startswith(word_start))
+    ]
+
+    for lemma in candidates:
         ratio = SequenceMatcher(None, word_lower, lemma.lower()).ratio()
         if ratio > best_ratio:
             best_ratio = ratio
@@ -402,6 +419,7 @@ def check_vocabulary_integrity(
     # Load available vocabulary (this module + all prior)
     available_vocab = load_cumulative_vocabulary(md_path, module_num)
     
+    
     if not available_vocab:
         # No vocabulary defined yet - skip check
         # This is common for skeleton modules
@@ -419,7 +437,7 @@ def check_vocabulary_integrity(
     matched_count = 0
     fuzzy_matched = []  # Track fuzzy matches for informational purposes
 
-    for word in used_words:
+    for idx, word in enumerate(used_words):
         matched, best_lemma = smart_vocabulary_match(word, available_vocab)
         if matched:
             matched_count += 1
