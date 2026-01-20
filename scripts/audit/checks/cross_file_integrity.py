@@ -62,41 +62,62 @@ def load_module_vocabulary(md_path: Path) -> Set[str]:
 
 def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
     """
-    Load vocabulary from all prior modules in this level.
-    
-    For regular levels (a1, a2, etc.), loads modules 01 through (module_num-1).
-    For track levels (b2-hist, c1-bio), loads all vocabulary files.
+    Load vocabulary from all prior modules in this level AND all prior levels.
+
+    For B2+ modules, loads all vocabulary from A1, A2, B1, and current level.
+    For track levels (b2-hist, c1-bio), loads all vocabulary from base levels + track.
     """
     level_dir = md_path.parent
-    vocab_dir = level_dir / 'vocabulary'
-    
-    if not vocab_dir.exists():
-        return set()
-    
-    all_vocab = set()
-    
-    # Load all vocabulary files
-    # TODO: Could be optimized to only load prior modules by number
-    for vocab_file in sorted(vocab_dir.glob('*.yaml')):
-        # For now, include all modules (conservative approach)
-        try:
-            with open(vocab_file, 'r', encoding='utf-8') as f:
-                data = yaml.safe_load(f)
+    curriculum_root = level_dir.parent  # e.g., curriculum/l2-uk-en
 
-            # Handle both old (bare list) and new (dict with 'items' key) formats
-            if isinstance(data, dict) and 'items' in data:
-                entries = data['items']
-            elif isinstance(data, list):
-                entries = data
-            else:
+    current_level = level_dir.name  # e.g., 'b2', 'c1-bio'
+
+    # Map levels to their prerequisites (levels whose vocabulary should be available)
+    level_hierarchy = {
+        'a1': [],
+        'a2': ['a1'],
+        'b1': ['a1', 'a2'],
+        'b2': ['a1', 'a2', 'b1'],
+        'b2-hist': ['a1', 'a2', 'b1', 'b2'],
+        'c1': ['a1', 'a2', 'b1', 'b2'],
+        'c1-bio': ['a1', 'a2', 'b1', 'b2', 'c1'],
+        'c2': ['a1', 'a2', 'b1', 'b2', 'c1'],
+        'lit': ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'],
+    }
+
+    # Get list of levels to load (prior levels + current level)
+    prior_levels = level_hierarchy.get(current_level, [])
+    levels_to_load = prior_levels + [current_level]
+
+    all_vocab = set()
+
+    # Load vocabulary from all relevant levels
+    for level_name in levels_to_load:
+        level_vocab_dir = curriculum_root / level_name / 'vocabulary'
+
+        if not level_vocab_dir.exists():
+            continue
+
+        # Load all vocabulary files from this level
+        for vocab_file in sorted(level_vocab_dir.glob('*.yaml')):
+            try:
+                with open(vocab_file, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                # Handle both old (bare list) and new (dict with 'items' key) formats
+                if isinstance(data, dict) and 'items' in data:
+                    entries = data['items']
+                elif isinstance(data, list):
+                    entries = data
+                else:
+                    continue
+
+                for entry in entries:
+                    if isinstance(entry, dict) and 'lemma' in entry:
+                        all_vocab.add(entry['lemma'].lower())
+            except Exception:
                 continue
 
-            for entry in entries:
-                if isinstance(entry, dict) and 'lemma' in entry:
-                    all_vocab.add(entry['lemma'].lower())
-        except Exception:
-            continue
-    
     return all_vocab
 
 
