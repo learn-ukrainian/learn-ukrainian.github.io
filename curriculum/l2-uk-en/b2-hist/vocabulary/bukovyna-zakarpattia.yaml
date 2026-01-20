@@ -1,5 +1,152 @@
-# Vocabulary for Буковина та Закарпаття під сусідами
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: bukovyna-zakarpattia
+level: B2
+version: '2.0'
+items:
+  - lemma: жупа
+    ipa: /ˈʒupɐ/
+    translation: zhupa (administrative unit)
+    pos: noun
+    gender: f
+  - lemma: господар
+    ipa: /ɦɔsˈpɔdɐr/
+    translation: hospodar (Moldavian ruler)
+    pos: noun
+    gender: m
+  - lemma: воєвода
+    ipa: /ʋɔjɛˈʋɔdɐ/
+    translation: voivode
+    pos: noun
+    gender: m
+  - lemma: опришок
+    ipa: /ˈɔprɪʃɔk/
+    translation: opryshok (rebel)
+    pos: noun
+    gender: m
+  - lemma: домінія
+    ipa: /dɔm⁽ʲ⁾iˈn⁽ʲ⁾ijɐ/
+    translation: dominion
+    pos: noun
+    gender: f
+  - lemma: закріпачення
+    ipa: /zɐkr⁽ʲ⁾iˈpɑt͡ʃɛnʲːɐ/
+    translation: enserfment
+    pos: noun
+    gender: n
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: васал
+    ipa: /ʋɐˈsɑl/
+    translation: vassal
+    pos: noun
+    gender: m
+  - lemma: данина
+    ipa: /dɐnɪˈnɑ/
+    translation: tribute
+    pos: noun
+    gender: f
+  - lemma: комітат
+    ipa: /kɔm⁽ʲ⁾iˈtɑt/
+    translation: comitat (county in Hungary)
+    pos: noun
+    gender: m
+  - lemma: мукачівський
+    ipa: /mʊˈkɑt͡ʃiu̯sʲkɪj/
+    translation: Mukachevo (adj)
+    pos: adj
+  - lemma: монастир
+    ipa: /mɔnɐsˈtɪr/
+    translation: monastery
+    pos: noun
+    gender: m
+  - lemma: грамота
+    ipa: /ˈɦrɑmɔtɐ/
+    translation: charter / deed
+    pos: noun
+    gender: f
+  - lemma: ізоляція
+    ipa: /izɔˈlʲɐt͡sʲijɐ/
+    translation: isolation
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /ɐsɪm⁽ʲ⁾iˈlʲɐt͡sʲijɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: збереження
+    ipa: /zbɛˈrɛʒɛnʲːɐ/
+    translation: preservation
+    pos: noun
+    gender: n
+  - lemma: діалект
+    ipa: /d⁽ʲ⁾iɐˈlɛkt/
+    translation: dialect
+    pos: noun
+    gender: m
+  - lemma: колонізація
+    ipa: /kɔlɔn⁽ʲ⁾iˈzɐt͡sʲijɐ/
+    translation: colonization
+    pos: noun
+    gender: f
+  - lemma: традиція
+    ipa: /trɐˈdɪt͡sʲijɐ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: вплив
+    ipa: /ˈʋplɪu̯/
+    translation: influence
+    pos: noun
+    gender: m
+  - lemma: кордон
+    ipa: /kɔrˈdɔn/
+    translation: border
+    pos: noun
+    gender: m
+  - lemma: замок
+    ipa: /ˈzɑmɔk/
+    translation: castle
+    pos: noun
+    gender: m
+  - lemma: фортеця
+    ipa: /fɔrˈtɛt͡sʲɐ/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: гірський
+    ipa: /ˈɦ⁽ʲ⁾irsʲkɪj/
+    translation: mountainous
+    pos: adj
+  - lemma: перевал
+    ipa: /pɛrɛˈʋɑl/
+    translation: pass (mountain)
+    pos: noun
+    gender: m
+  - lemma: торгівля
+    ipa: /tɔrˈɦ⁽ʲ⁾iu̯lʲɐ/
+    translation: trade
+    pos: noun
+    gender: f
+  - lemma: шлях
+    ipa: /ʃlʲɑx/
+    translation: path / way
+    pos: noun
+    gender: m
+  - lemma: деревообробка
+    ipa: /dɛrɛʋɔɔbˈrɔbkɐ/
+    translation: woodworking
+    pos: noun
+    gender: f
+  - lemma: скотарство
+    ipa: /skɔˈtɑrstwɔ/
+    translation: cattle breeding
+    pos: noun
+    gender: n
+  - lemma: солеварня
+    ipa: /sɔlɛˈʋɑrnʲɐ/
+    translation: saltworks
+    pos: noun
+    gender: f

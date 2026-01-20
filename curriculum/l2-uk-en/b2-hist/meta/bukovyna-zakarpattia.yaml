@@ -1,11 +1,45 @@
-# Meta for Буковина та Закарпаття під сусідами
-slug: bukovyna-zakarpattia
 title: "Буковина та Закарпаття під сусідами"
+slug: bukovyna-zakarpattia
 level: B2
 track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
-status: skeleton
+phase: "B2.3a [Українська історія]"
+status: content-ready
 focus: history
+pedagogy: CBI
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+duration: 120
+register: публіцистичний
+transliteration: none
+tags:
+  - history
+  - bukovyna
+  - zakarpattia
+  - regional-history
+grammar:
+  - 'Історичний наратив'
+  - 'Порівняння історичних процесів'
+objectives:
+  - 'Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.'
+  - 'Учень аналізує вплив іноземного панування на культуру регіонів'
+  - 'Учень володіє термінологією регіональної історії'
+vocabulary_count: 30
+content_outline:
+  - section: "Вступ"
+    words: 300
+  - section: "Буковина: Шипинська земля та Молдовське князівство"
+    words: 700
+  - section: "Закарпаття: від угорського панування до опришків"
+    words: 700
+  - section: "Культурний опір та збереження ідентичності"
+    words: 700
+  - section: "Читання"
+    words: 400
+  - section: "Первинні джерела"
+    words: 400
+  - section: "Деколонізаційний погляд"
+    words: 400
+  - section: "Есе"
+    words: 400
+naturalness:
+  score: 9
+  status: PASS
