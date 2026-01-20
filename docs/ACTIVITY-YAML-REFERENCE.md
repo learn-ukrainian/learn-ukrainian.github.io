@@ -384,27 +384,61 @@ npm run pipeline l2-uk-en b1 52
       explanation: Why it's wrong.
 ```
 
-**⚠️ Important Limitation:** The `error-correction` activity type is designed for **single-word corrections only**. The `answer` field expects a single word that replaces the `error` word.
+**✨ Extended Capabilities (Issue #442):** The `error-correction` activity now supports **multi-word corrections** via the optional `error_type` field, while maintaining full backward compatibility with existing single-word activities.
 
-**Not suitable for:**
-- Full sentence corrections
-- Style/register transformations (informal → formal)
-- Multi-word phrase corrections
+**Error Types:**
+- `word` (default): Single-word grammatical corrections
+- `phrase`: Multi-word phrase corrections
+- `register`: Style/register transformations (informal → formal)
+- `construction`: Grammatical construction corrections
 
-**For sentence-level corrections**, use `quiz` instead:
+**Example 1: Single-word correction (default behavior)**
 ```yaml
-- type: quiz
-  title: Офіційний варіант неформальних фраз
-  instruction: Як правильно написати офіційно?
+- type: error-correction
+  title: Виправте граматичні помилки
   items:
-    - prompt: Як офіційно написати: «Привіт, Іване»?
+    - sentence: Я їду до Київа кожний день.
+      error: кожний
+      answer: кожного
+      options: [кожний, кожного, кожному, кожним]
+      explanation: Після прийменника "до" використовується родовий відмінок.
+```
+
+**Example 2: Multi-word phrase correction**
+```yaml
+- type: error-correction
+  title: Замініть розмовні фрази на офіційні
+  items:
+    - sentence: Привіт, Іване, як справи?
+      error: Привіт, Іване
+      answer: Шановний Іване
+      error_type: phrase
       options:
+        - Привіт, Іване
         - Шановний Іване
         - Добрий день, Іване
-        - Привіт, Іване
         - Вітаю, Іване
-      answer: Шановний Іване
+      explanation: В офіційному листуванні використовується «Шановний + ім'я».
 ```
+
+**Example 3: Register transformation**
+```yaml
+- type: error-correction
+  title: Перетворіть неформальні звертання на офіційні
+  items:
+    - sentence: Дай мені знати, коли будеш готовий.
+      error: Дай мені знати
+      answer: Будь ласка, повідомте мене
+      error_type: register
+      options:
+        - Дай мені знати
+        - Будь ласка, повідомте мене
+        - Скажи мені
+        - Дайте знати
+      explanation: Офіційний регістр вимагає ввічливої форми «будь ласка, повідомте».
+```
+
+**Backward Compatibility:** All existing error-correction activities continue working unchanged. The `error_type` field is optional and defaults to `word` when omitted.
 
 ### mark-the-words (6+ correct words for B1)
 
