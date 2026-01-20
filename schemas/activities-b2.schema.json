@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-b2.schema.json",
   "title": "B2 Module Activities",
-  "description": "Activity schema for B2 level modules with increased complexity requirements: quiz questions (10-25 words), unjumble sentences (10-18 words), higher density.",
+  "description": "Activity schema for B2 level modules with increased complexity requirements: quiz questions (5-25 words), unjumble sentences (6-18 words), higher density.",
   "type": "array",
   "minItems": 10,
   "items": {
@@ -302,13 +302,13 @@
             "properties": {
               "words": {
                 "type": "array",
-                "minItems": 10,
+                "minItems": 6,
                 "maxItems": 18,
                 "items": {
                   "type": "string",
                   "minLength": 1
                 },
-                "description": "B2 unjumble requires 10-18 words per sentence"
+                "description": "B2 unjumble requires 6-18 words per sentence (relaxed from 10 to support natural formal phrases)"
               },
               "answer": {
                 "type": "string",
