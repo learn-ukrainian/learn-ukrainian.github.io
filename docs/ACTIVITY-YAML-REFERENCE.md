@@ -71,6 +71,25 @@ Use the exact property names defined in `schemas/activities-{level}.schema.json`
 
 **Note:** The asterisk format was used historically but causes issues. Always use explicit `answers` array.
 
+### 4. YAML Quoting for Quoted Text
+
+**Problem:** Statements containing quoted words cause parse errors.
+
+**Examples:**
+```yaml
+# ❌ WRONG - straight quotes conflict with YAML syntax
+statement: Слово "лист" означає email.
+# Error: "did not find expected key"
+
+# ✅ CORRECT - Ukrainian guillemets
+statement: Слово «лист» означає email.
+
+# ✅ ALSO CORRECT - wrap entire string in single quotes
+statement: 'Слово "лист" означає email.'
+```
+
+**Recommendation:** Use Ukrainian guillemets («») for quoted text - they're typographically correct and avoid YAML conflicts.
+
 </critical>
 
 ---
@@ -363,6 +382,28 @@ npm run pipeline l2-uk-en b1 52
         - distractor1
         - distractor2
       explanation: Why it's wrong.
+```
+
+**⚠️ Important Limitation:** The `error-correction` activity type is designed for **single-word corrections only**. The `answer` field expects a single word that replaces the `error` word.
+
+**Not suitable for:**
+- Full sentence corrections
+- Style/register transformations (informal → formal)
+- Multi-word phrase corrections
+
+**For sentence-level corrections**, use `quiz` instead:
+```yaml
+- type: quiz
+  title: Офіційний варіант неформальних фраз
+  instruction: Як правильно написати офіційно?
+  items:
+    - prompt: Як офіційно написати: «Привіт, Іване»?
+      options:
+        - Шановний Іване
+        - Добрий день, Іване
+        - Привіт, Іване
+        - Вітаю, Іване
+      answer: Шановний Іване
 ```
 
 ### mark-the-words (6+ correct words for B1)

@@ -232,7 +232,7 @@ ACTIVITY_COMPLEXITY = {
         'B1': {'min_len': 9, 'max_len': 20, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
         'B1-vocab': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
         'B1-cultural': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
-        'B2': {'min_len': 10, 'max_len': 25, 'options': [4], 'min_items': 8},  # CEFR: smooth +1 from B1
+        'B2': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 8},  # Relaxed to 5 for factual questions (Issue #441)
         'B2-history': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard (was 6, better alignment)
         'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
         'B2-skills': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Skills: allow short factual questions (5+ words)
@@ -290,9 +290,9 @@ ACTIVITY_COMPLEXITY = {
         'B1': {'words_min': 9, 'words_max': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
         'B1-vocab': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B1-cultural': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
-        'B2': {'words_min': 10, 'words_max': 18, 'min_items': 6},  # CEFR: smooth +1 from B1
-        'B2-history': {'words_min': 8, 'words_max': 15, 'min_items': 6},  # Context-specific: -2 from standard (was 7)
-        'B2-biography': {'words_min': 8, 'words_max': 15, 'min_items': 6},  # Context-specific: -2 from standard (was 7)
+        'B2': {'words_min': 6, 'words_max': 18, 'min_items': 6},  # Relaxed to 6 for natural formal phrases (Issue #441)
+        'B2-history': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
+        'B2-biography': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
         'C1': {'words_min': 12, 'words_max': 20, 'min_items': 5},  # CEFR: smooth +2 from B2
         'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # CEFR: smooth +2 from C1
     },
