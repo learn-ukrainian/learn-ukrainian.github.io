@@ -1,11 +1,45 @@
-# Meta for Берестейська унія: Церковний розкол
-slug: beresteyska-uniia
 title: "Берестейська унія: Церковний розкол"
+slug: beresteyska-uniia
 level: B2
 track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
-status: skeleton
+phase: "B2.3a [Українська історія]"
+status: content-ready
 focus: history
+pedagogy: CBI
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+duration: 120
+register: публіцистичний
+transliteration: none
+tags:
+  - history
+  - religion
+  - brest-union
+  - early-modern
+grammar:
+  - 'Історичний наратив'
+  - 'Складні синтаксичні конструкції'
+objectives:
+  - 'Учень може пояснити причини та передумови Берестейської унії 1596 року'
+  - 'Учень аналізує наслідки створення греко-католицької церкви для українського суспільства'
+  - 'Учень володіє термінологією релігійної полеміки та церковного устрою'
+vocabulary_count: 30
+content_outline:
+  - section: "Вступ"
+    words: 300
+  - section: "Передумови унії та криза православ’я"
+    words: 700
+  - section: "Берестейський собор 1596 року та створення УГКЦ"
+    words: 700
+  - section: "Соціально-політичні наслідки та релігійна боротьба"
+    words: 600
+  - section: "Читання"
+    words: 400
+  - section: "Первинні джерела"
+    words: 400
+  - section: "Деколонізаційний погляд"
+    words: 500
+  - section: "Есе"
+    words: 400
+naturalness:
+  score: 9
+  status: PASS
