@@ -1,10 +1,10 @@
 # Audit Report: 01-the-dative-i-pronouns.md
-**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 2800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 1063/1000
+- **Words:** ❌ 1063/2800
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types

@@ -122,10 +122,135 @@ def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]
 
 
 # =============================================================================
+# ERROR MESSAGE ENHANCEMENT
+# =============================================================================
+
+def generate_actionable_error(
+    activity: Dict,
+    error: 'jsonschema.ValidationError',
+    type_schema: Dict,
+    activity_index: Optional[int] = None
+) -> str:
+    """
+    Generate an actionable, human-friendly error message from a schema validation error.
+
+    Includes:
+    - Activity context (index, type, title)
+    - Clear explanation
+    - Example fix from schema
+    - Documentation link
+    """
+    activity_type = activity.get('type', 'unknown')
+    activity_title = activity.get('title', 'Untitled')
+
+    # Build activity identifier
+    activity_id = f"Activity"
+    if activity_index is not None:
+        activity_id = f"Activity #{activity_index + 1}"
+    activity_id += f" ({activity_type})"
+    if activity_title and activity_title != 'Untitled':
+        # Truncate long titles
+        display_title = activity_title[:40] + '...' if len(activity_title) > 40 else activity_title
+        activity_id += f' "{display_title}"'
+
+    # Extract error details
+    error_path = '.'.join(str(p) for p in error.path) if error.path else ''
+    error_message = error.message
+
+    # Build the error message parts
+    parts = [f"\n{activity_id}:"]
+    parts.append(f"  ❌ {error_message}")
+
+    # Add context about what field/path failed
+    if error_path:
+        parts.append(f"  📍 At: {error_path}")
+
+    # Generate helpful explanation based on error type
+    if "'items' is a required property" in error_message or "'pairs' is a required property" in error_message:
+        # Missing required field
+        required_fields = type_schema.get('required', [])
+        parts.append(f"  💡 {activity_type} requires: {', '.join(required_fields)}")
+    elif "is a required property" in error_message:
+        # Generic required property
+        missing_field = error_message.split("'")[1] if "'" in error_message else "field"
+        parts.append(f"  💡 Required field '{missing_field}' is missing")
+    elif "Additional properties are not allowed" in error_message:
+        # Extra field that shouldn't be there
+        parts.append(f"  💡 Remove unexpected properties or check for typos in field names")
+    elif "is not of type" in error_message:
+        # Wrong type
+        parts.append(f"  💡 Check the data type - expected {error.schema.get('type', 'unknown')}")
+
+    # Add example fix for common errors
+    example = _generate_example_fix(activity_type, error, type_schema)
+    if example:
+        parts.append(f"\n  Example fix:")
+        for line in example.split('\n'):
+            parts.append(f"  {line}")
+
+    # Add documentation link
+    doc_anchor = activity_type.lower()
+    parts.append(f"\n  📖 See: docs/ACTIVITY-YAML-REFERENCE.md#{doc_anchor}")
+
+    return '\n'.join(parts)
+
+
+def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError', type_schema: Dict) -> Optional[str]:
+    """Generate a minimal example fix for common schema errors."""
+
+    # For missing required fields, show minimal valid structure
+    if "is a required property" in error.message:
+        examples = {
+            'quiz': """- type: quiz
+  title: "Your quiz title"
+  items:
+    - question: "Question text?"
+      options:
+        - text: "Option 1"
+          correct: true
+        - text: "Option 2"
+          correct: false""",
+
+            'match-up': """- type: match-up
+  title: "Your match-up title"
+  pairs:
+    - left: "Item 1"
+      right: "Match 1"
+    - left: "Item 2"
+      right: "Match 2" """,
+
+            'fill-in': """- type: fill-in
+  title: "Your fill-in title"
+  items:
+    - sentence: "Київ — {столиця} України."
+      answer: "столиця" """,
+
+            'group-sort': """- type: group-sort
+  title: "Your group-sort title"
+  groups:
+    - name: "Group 1"
+      items: ["Item A", "Item B"]
+    - name: "Group 2"
+      items: ["Item C", "Item D"]""",
+
+            'cloze': """- type: cloze
+  title: "Your cloze title"
+  passage: "Text with {blank1} and {blank2} to fill."
+  blanks:
+    - options: ["correct", "wrong1", "wrong2"]
+    - options: ["correct", "wrong1", "wrong2"]""",
+        }
+
+        return examples.get(activity_type)
+
+    return None
+
+
+# =============================================================================
 # VALIDATION
 # =============================================================================
 
-def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
+def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optional[int] = None) -> List[str]:
     """
     Validate a single activity against its schema.
     
@@ -150,12 +275,9 @@ def validate_activity(activity: Dict, base_schema: Dict) -> List[str]:
     try:
         jsonschema.validate(instance=activity, schema=type_schema)
     except jsonschema.ValidationError as e:
-        # Extract the most useful error message
-        if e.path:
-            path = '.'.join(str(p) for p in e.path)
-            errors.append(f"{activity_type}: '{path}' - {e.message}")
-        else:
-            errors.append(f"{activity_type}: {e.message}")
+        # Generate actionable, human-friendly error message
+        actionable_error = generate_actionable_error(activity, e, type_schema, activity_index)
+        errors.append(actionable_error)
     except jsonschema.SchemaError as e:
         errors.append(f"Schema error for {activity_type}: {e.message}")
 
@@ -288,11 +410,10 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
                 errors.append(f"Activity {i}: not a dictionary")
                 continue
 
-            activity_errors = validate_activity(activity, base_schema)
+            activity_errors = validate_activity(activity, base_schema, activity_index=i)
             for err in activity_errors:
-                activity_id = activity.get('id', f'index-{i}')
-                activity_title = activity.get('title', '')[:30]
-                errors.append(f"[{activity_id}] {err}")
+                # Errors are now self-contained with context, don't add prefix
+                errors.append(err)
 
     return len(errors) == 0, errors
 

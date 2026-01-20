@@ -73,6 +73,12 @@ from .checks.yaml_lint import lint_yaml_file
 from .checks.state_standard_compliance import (
     check_state_standard_compliance,
 )
+from .checks.cross_file_integrity import (
+    check_vocabulary_integrity,
+)
+from .checks.outline_compliance import (
+    check_outline_compliance,
+)
 from .checks.vocabulary import (
     count_vocab_rows,
     extract_vocab_items,
@@ -688,6 +694,16 @@ def audit_module(file_path: str) -> bool:
         except Exception as e:
             print(f"  ⚠️  Template resolution error: {e}")
 
+    # Check outline compliance (Issue #440: structural validation)
+    outline_violations = check_outline_compliance(file_path, level_code, module_num)
+    if outline_violations:
+        error_count = sum(1 for v in outline_violations if v['severity'] == 'error')
+        warning_count = sum(1 for v in outline_violations if v['severity'] == 'warning')
+        print(f"  ⚠️  Outline compliance: {error_count} errors, {warning_count} warnings")
+        for v in outline_violations[:3]:  # Show first 3
+            severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
+            print(f"     {severity_icon} [{v['type']}] {v['message'].split(chr(10))[0]}")  # First line only
+
     # Extract pedagogy
     pedagogy = "Not Specified"
     pedagogy_match = re.search(r'^pedagogy:\s*(.+)$', frontmatter_str, re.MULTILINE)
@@ -868,6 +884,17 @@ def audit_module(file_path: str) -> bool:
         if yaml_schema_violations:
             print(f"  ❌ YAML schema violations: {len(yaml_schema_violations)}")
             for v in yaml_schema_violations:
+                severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
+                print(f"     {severity_icon} [{v['type']}] {v['message']}")
+
+        # Check vocabulary integrity (Issue #439: words in activities must be in vocabulary YAML)
+        # Extract full level including track suffix (b2-hist, c1-bio, lit)
+        track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
+        full_level_for_vocab = track_match.group(1) if track_match else level_code.lower()
+        vocab_integrity_violations = check_vocabulary_integrity(file_path, full_level_for_vocab, module_num)
+        if vocab_integrity_violations:
+            print(f"  ❌ Vocabulary integrity violations: {len(vocab_integrity_violations)}")
+            for v in vocab_integrity_violations:
                 severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
                 print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
