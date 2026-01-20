@@ -39,13 +39,19 @@ export function ErrorCorrectionItem({
     // Clean word for comparison (remove punctuation)
     const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
 
-    if (errorWord && cleanWord.toLowerCase() === errorWord.toLowerCase()) {
-      // Correct word identified
-      setSelectedWord(cleanWord);
-      setStep('fix');
-    } else if (cleanWord.trim()) {
-      // Wrong word selected
-      setWrongAttempts(prev => [...prev, cleanWord]);
+    if (errorWord) {
+      // For multi-word errors, check if the clicked word is part of the error phrase
+      const errorWords = errorWord.split(/\s+/);
+      const cleanErrorWords = errorWords.map(w => w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '').toLowerCase());
+
+      if (cleanErrorWords.includes(cleanWord.toLowerCase())) {
+        // Correct word/phrase identified
+        setSelectedWord(errorWord); // Store the full error phrase
+        setStep('fix');
+      } else if (cleanWord.trim()) {
+        // Wrong word selected
+        setWrongAttempts(prev => [...prev, cleanWord]);
+      }
     }
   };
 
@@ -98,14 +104,23 @@ export function ErrorCorrectionItem({
       <p className={styles.errorSentence}>
         {words.map((word, idx) => {
           const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
-          const isError = errorWord && cleanWord.toLowerCase() === errorWord.toLowerCase();
+
+          // Check if this word is part of a multi-word error
+          const errorWords = errorWord ? errorWord.split(/\s+/).map(w => w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '').toLowerCase()) : [];
+          const isError = errorWords.includes(cleanWord.toLowerCase());
           const isWrongAttempt = wrongAttempts.includes(cleanWord);
-          const isSelected = selectedWord && cleanWord.toLowerCase() === selectedWord.toLowerCase();
+          const isSelected = selectedWord && errorWords.includes(cleanWord.toLowerCase()) && step !== 'identify';
 
           // Non-word tokens (punctuation, spaces)
           if (!cleanWord) {
             return <span key={idx}>{word}</span>;
           }
+
+          // For complete step, show strikethrough for all error words, replacement after last error word
+          const isLastErrorWord = errorWord && isError && idx === words.findLastIndex(w => {
+            const cw = w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+            return errorWords.includes(cw.toLowerCase());
+          });
 
           return (
             <span
@@ -114,15 +129,16 @@ export function ErrorCorrectionItem({
                 ${styles.clickableWord}
                 ${step === 'identify' ? styles.wordHoverable : ''}
                 ${isWrongAttempt ? styles.wordWrong : ''}
-                ${isSelected && step !== 'identify' ? styles.wordSelected : ''}
+                ${isSelected ? styles.wordSelected : ''}
                 ${step === 'complete' && isError ? styles.wordError : ''}
               `}
               onClick={() => handleWordClick(word)}
             >
-              {step === 'complete' && isError && selectedFix ? (
-                <span className={styles.correctedWord}>
-                  <s>{word}</s> {selectedFix}
-                </span>
+              {step === 'complete' && isError ? (
+                <>
+                  <s>{word}</s>
+                  {isLastErrorWord && selectedFix ? ` ${selectedFix}` : ''}
+                </>
               ) : (
                 word
               )}
@@ -144,7 +160,7 @@ export function ErrorCorrectionItem({
       {/* Options - only in fix step */}
       {step === 'fix' && shuffledOptions.length > 0 && (
         <div className={styles.fixOptions}>
-          <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{selectedWord}</strong>":</p>
+          <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
           <div className={styles.optionChips}>
             {shuffledOptions.map((option, idx) => (
               <button
