@@ -164,17 +164,12 @@ Validate ALL Ukrainian text against these sources:
 
 ### Step 4b: Specialized Fix Protocols
 
-**1. STALE LLM REVIEW (`🔴 STALE LLM REVIEW`)**
-
-- **Action:** Update the hash in `audit/{slug}-llm-review.md`.
-- **CRITICAL:** You MUST run `audit_module.py` AGAIN immediately after updating the hash to verify the PASS state and update the report file.
-
-**2. URL Validation Failures (`INVALID_EXTERNAL_URL`)**
+**1. URL Validation Failures (`INVALID_EXTERNAL_URL`)**
 
 - **Action:** If the URL is correct and accessible in a browser (e.g., UkrLib, Wikipedia), but fails audit due to encoding/scraping issues:
 - **FIX:** Immediately add the domain to the whitelist in `scripts/audit/checks/external_resource_validation.py` (inside `validate_reading_url`). Do not waste turns trying to patch encoding logic repeatedly.
 
-**3. YAML Schema Violations**
+**2. YAML Schema Violations**
 
 - **Action:** Read the error message carefully. It usually points to missing fields (`id`) or insufficient item counts.
 - **Reference:** Check `schemas/activities-base.schema.json` or `schemas/activities-lit.schema.json` for the definitive rules.
