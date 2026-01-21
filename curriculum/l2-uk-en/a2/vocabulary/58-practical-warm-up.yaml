@@ -2,253 +2,218 @@ module: 58-practical-warm-up
 level: A2
 version: '2.0'
 items:
-- lemma: аліна
-  ipa: /ɐˈlʲinɐ/
-  translation: Alina
-  pos: propn
+- lemma: автентичний
+  ipa: /aʋtɛntˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: автобіографія
+  ipa: /aʋtɔbiɔɦrˈafija/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: аліно
-  ipa: /ɐˈlʲino/
-  translation: Alina (voc)
-  pos: propn
+- lemma: аліна
+  ipa: /ˈalina/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: анатомія
-  ipa: /ɐnɐˈtɔmʲijɐ/
-  translation: anatomy
+  ipa: /anatˈɔmija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: бал
-  ipa: /bɑl/
-  translation: ball; grade/score
+  ipa: /bal/
+  translation: ''
   pos: noun
   gender: m
+- lemma: бачитися
+  ipa: /bˈat͡ʃɪtɪsja/
+  translation: ''
+  pos: verb
 - lemma: браво
-  ipa: /ˈbrɑʋo/
-  translation: bravo
+  ipa: /brˈaʋɔ/
+  translation: ''
   pos: adv
 - lemma: бізнесмен
-  ipa: /biznesˈmɛn/
-  translation: businessman
+  ipa: /biznɛsmˈɛn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: ведучий
-  ipa: /veˈdut͡ʃɪj/
-  translation: presenter; host
+- lemma: біографія
+  ipa: /biɔɦrˈafija/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: венеція
-  ipa: /veˈnɛt͡sʲijɐ/
-  translation: Venice
-  pos: propn
   gender: f
+- lemma: ведучий
+  ipa: /ʋɛdˈut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: венеція
+  ipa: /ʋɛnˈɛt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: весілля
+  ipa: /ʋɛsˈillja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: взаємодія
+  ipa: /ʋzajɛmɔdˈija/
+  translation: ''
+  pos: noun
+- lemma: включити
+  ipa: /ʋkljut͡ʃˈɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: відрядження
-  ipa: /vidˈrʲɑdʒenʲːɐ/
-  translation: business trip
+  ipa: /ʋidrˈjadʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: вітання
-  ipa: /viˈtɑnʲːɐ/
-  translation: greeting
+  ipa: /ʋitˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: говерла
-  ipa: /hoˈvɛrlɐ/
-  translation: Hoverla
-  pos: propn
-  gender: f
 - lemma: грошовий
-  ipa: /hroʃoˈvɪj/
-  translation: monetary
+  ipa: /ɦrɔʃɔʋˈɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: долоня
-  ipa: /doˈlɔnʲɐ/
-  translation: palm (hand)
+  ipa: /dɔlˈɔnja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: дружба
-  ipa: /ˈdruʒbɐ/
-  translation: friendship
+  ipa: /drˈuʒba/
+  translation: ''
   pos: noun
   gender: f
 - lemma: ділити
-  ipa: /diˈlɪte/
-  translation: to share/divide
+  ipa: /dilˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: енергія
-  ipa: /eˈnɛrɦijɐ/
-  translation: energy
-  pos: noun
-  gender: f
 - lemma: залізниця
-  ipa: /zɐlizˈnɪt͡sʲɐ/
-  translation: railway
+  ipa: /zaliznˈɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: заміж
-  ipa: /ˈzɑmuʒ/
-  translation: married
+  ipa: /zˈamiʒ/
+  translation: ''
   pos: adv
+- lemma: зосередитися
+  ipa: /zɔsɛrˈɛdɪtɪsja/
+  translation: ''
+  pos: verb
 - lemma: кобзар
-  ipa: /kobˈzɑr/
-  translation: Kobzar (minstrel)
-  pos: propn
+  ipa: /kɔbzˈar/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: кпі
-  ipa: /kɐpeˈji/
-  translation: KPI
-  pos: propn
-  gender: f
-- lemma: лондон
-  ipa: /ˈlɔndon/
-  translation: London
-  pos: propn
+  ipa: /kpi/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: марк
-  ipa: /mɑrk/
-  translation: Mark
-  pos: propn
+- lemma: лондон
+  ipa: /lˈɔndɔn/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: медовий
-  ipa: /meˈdɔʋɪj/
-  translation: honey (adj)
+  ipa: /mɛdˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: метр
-  ipa: /mɛtr/
-  translation: meter
-  pos: noun
-  gender: m
-- lemma: микола
-  ipa: /mɪˈkɔlɐ/
-  translation: Mykola
-  pos: propn
-  gender: m
-- lemma: мир
-  ipa: /mɪr/
-  translation: peace
-  pos: noun
-  gender: m
-- lemma: мріяти
-  ipa: /ˈmrʲijɐte/
-  translation: to dream
-  pos: verb
 - lemma: недорого
-  ipa: /neˈdɔroho/
-  translation: inexpensively
+  ipa: /nɛdˈɔrɔɦɔ/
+  translation: ''
   pos: adv
+- lemma: нью-йорк
+  ipa: /nʲju-jˈɔrk/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: область
-  ipa: /ˈɔblɐsʲtʲ/
-  translation: oblast; region
+  ipa: /ˈɔblastʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: одеський
-  ipa: /oˈdɛsʲkɪj/
-  translation: Odessa (adj)
+  ipa: /ɔdˈɛsʲkɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: понад
-  ipa: /ˈpɔnɐd/
-  translation: over; more than
-  pos: other
-- lemma: проти
-  ipa: /ˈprɔtɪ/
-  translation: against
-  pos: other
-- lemma: підйом
-  ipa: /pidˈjɔm/
-  translation: rise; ascent
-  pos: noun
-  gender: m
+- lemma: продемонструвати
+  ipa: /prɔdɛmɔnstruʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: район
-  ipa: /rɐˈjɔn/
-  translation: district
+  ipa: /rajˈɔn/
+  translation: ''
   pos: noun
   gender: m
 - lemma: рахів
-  ipa: /ˈrɑxiu̯/
-  translation: Rakhiv
-  pos: propn
+  ipa: /rˈaxiʋ/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: рим
   ipa: /rɪm/
-  translation: Rome
-  pos: propn
+  translation: ''
+  pos: noun
   gender: m
 - lemma: розпалити
-  ipa: /rozpɐˈlɪte/
-  translation: to light/kindle
+  ipa: /rɔzpalˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: розробляти
-  ipa: /rozrobˈlʲɑte/
-  translation: to develop
+  ipa: /rɔzrɔblˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: розумно
-  ipa: /roˈzumno/
-  translation: intelligently
-  pos: adv
+- lemma: розігрітися
+  ipa: /rɔziɦrˈitɪsja/
+  translation: ''
+  pos: verb
+- lemma: рідне
+  ipa: /rˈidnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сценарний
+  ipa: /st͡sɛnˈarnɪj/
+  translation: ''
+  pos: adj
 - lemma: телевізійний
-  ipa: /telewiˈzʲijnɪj/
-  translation: television (adj)
+  ipa: /tɛlɛʋizˈijnɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: технічний
+  ipa: /tɛxnˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: туризм
-  ipa: /tuˈrɪzm/
-  translation: tourism
+  ipa: /turˈɪzm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: фантастика
-  ipa: /fɐnˈtɑstɪkɐ/
-  translation: science fiction; fantasy
+- lemma: фокус
+  ipa: /fˈɔkus/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
 - lemma: фінал
-  ipa: /fiˈnɑl/
-  translation: finale
+  ipa: /finˈal/
+  translation: ''
   pos: noun
   gender: m
-- lemma: церква
-  ipa: /t͡sɛrkʋɐ/
-  translation: church
+- lemma: інфраструктура
+  ipa: /infrastruktˈura/
+  translation: ''
   pos: noun
   gender: f
-- lemma: ігоря
-  ipa: /ˈiɦorʲɐ/
-  translation: Ihor (gen)
-  pos: propn
-  gender: m
 - lemma: італія
-  ipa: /iˈtɑlʲijɐ/
-  translation: Italy
-  pos: propn
-  gender: f
-- lemma: відмінок
-  ipa: /vʲidˈmʲinok/
-  translation: case (grammar)
+  ipa: /itˈalija/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: називний
-  ipa: /nɐzɪu̯ˈnɪj/
-  translation: nominative
-  pos: adj
-  gender: m
-- lemma: давальний
-  ipa: /dɐˈʋɑlʲnɪj/
-  translation: dative
-  pos: adj
-  gender: m
-- lemma: знахідний
-  ipa: /znɐˈxʲidnɪj/
-  translation: accusative
-  pos: adj
-  gender: m
-- lemma: орудний
-  ipa: /oˈrudnɪj/
-  translation: instrumental
-  pos: adj
-  gender: m
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: locative
-  pos: adj
-  gender: m
+  gender: f

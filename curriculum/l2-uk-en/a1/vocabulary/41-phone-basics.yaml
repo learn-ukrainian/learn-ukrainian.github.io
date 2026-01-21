@@ -1,54 +1,132 @@
 module: 41-phone-basics
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: алло
-    ipa: /ɑˈlɔ/
-    translation: hello (on phone)
-    pos: intj 
-    gender: n/a
-  - lemma: говорити
-    ipa: /ɦɔvɔˈrɪtɪ/
-    translation: to speak
-    pos: verb 
-    aspect: impf
-  - lemma: помилитися
-    ipa: /pɔmɪˈlɪtɪsʲɑ/
-    translation: to make a mistake
-    pos: verb 
-    aspect: pf
-  - lemma: передзвонити
-    ipa: /pɛrɛdzvɔˈnɪtɪ/
-    translation: to call back
-    pos: verb 
-    aspect: pf
-  - lemma: повідомлення
-    ipa: /pɔvʲiˈdɔmlɛnʲːɑ/
-    translation: message
-    pos: noun 
-    gender: n
-  - lemma: чути
-    ipa: /ˈt͡ʃutɪ/
-    translation: to hear
-    pos: verb 
-    aspect: impf
-  - lemma: зачекайте
-    ipa: /zɑt͡ʃɛˈkɑjtɛ/
-    translation: wait (imperative)
-    pos: verb 
-    aspect: pf
-  - lemma: зайнято
-    ipa: /ˈzɑjnʲɑtɔ/
-    translation: busy (line)
-    pos: adv 
-    gender: n/a
-  - lemma: недоступний
-    ipa: /nɛdɔˈstʊpnɪj/
-    translation: unavailable / out of reach
-    pos: adj 
-    gender: m
-  - lemma: номер
-    ipa: /ˈnɔmɛr/
-    translation: number
-    pos: noun 
-    gender: m
+- lemma: алла
+  ipa: /allˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: андрій
+  ipa: /andrˈij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: все
+  ipa: /ʋsɛ/
+  translation: ''
+  pos: part
+- lemma: відповідь
+  ipa: /ʋˈidpɔʋidʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: двадцять
+  ipa: /dʋˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: дзвонити
+  ipa: /dzʋɔnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: дзвінка
+  ipa: /dzʋinkˈa/
+  translation: ''
+  pos: noun
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: завершення
+  ipa: /zaʋˈɛrʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: зідзвонитися
+  ipa: /zidzʋɔnˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: номер
+  ipa: /nˈɔmɛr/
+  translation: ''
+  pos: noun
+- lemma: нуль-п'ятдесят
+  ipa: /nulʲ-pjatdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: оголошення
+  ipa: /ɔɦɔlˈɔʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: олена
+  ipa: /ɔlˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: п'ять
+  ipa: /pjatʲ/
+  translation: ''
+  pos: num
+- lemma: побачення
+  ipa: /pɔbˈat͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: помилитися
+  ipa: /pɔmɪlɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: почути
+  ipa: /pɔt͡ʃˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: представлення
+  ipa: /prɛdstˈaʋlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: проблема
+  ipa: /prɔblˈɛma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сей
+  ipa: /sɛj/
+  translation: ''
+  pos: pron
+- lemma: слухати
+  ipa: /slˈuxatɪ/
+  translation: ''
+  pos: verb
+- lemma: сорока
+  ipa: /sɔrˈɔka/
+  translation: ''
+  pos: noun
+- lemma: сто
+  ipa: /stɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: телефонний
+  ipa: /tɛlɛfˈɔnnɪj/
+  translation: ''
+  pos: adj
+- lemma: цілувати
+  ipa: /t͡siluʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: шістдесят
+  ipa: /ʃistdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: іван
+  ipa: /iʋˈan/
+  translation: ''
+  pos: noun
+  gender: m

@@ -2,92 +2,164 @@ module: 12-aspect-introduction
 level: A2
 version: '2.0'
 items:
-- lemma: аспект
-  ipa: ɐsˈpɛkt
-  translation: aspect
-  pos: noun
-  gender: m
-- lemma: вибирати
-  ipa: vɪbɪˈrɑte
-  translation: to choose; to select
+- lemma: весь
+  ipa: /ʋɛsʲ/
+  translation: ''
+  pos: pron
+- lemma: вибрати
+  ipa: /ʋˈɪbratɪ/
+  translation: ''
   pos: verb
-- lemma: вид
-  ipa: vɪd
-  translation: view; aspect (grammar)
+- lemma: вивчення
+  ipa: /ʋˈɪʋt͡ʃɛnnja/
+  translation: ''
   pos: noun
-  gender: m
+  gender: n
+- lemma: видовий
+  ipa: /ʋɪdɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: використати
+  ipa: /ʋˈɪkɔrɪstatɪ/
+  translation: ''
+  pos: verb
+- lemma: всередині
+  ipa: /ʋsɛrˈɛdɪni/
+  translation: ''
+  pos: adv
 - lemma: доконаний
-  ipa: doˈkɔnɐnɪj
-  translation: perfective (aspect)
+  ipa: /dɔkˈɔnanɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: дієслівний
+  ipa: /dijɛslˈiʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: есе
+  ipa: /ɛsˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: завершений
+  ipa: /zaʋˈɛrʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: звичка
+  ipa: /zʋˈɪt͡ʃka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: знайомий
-  ipa: znɐˈjɔmɪj
-  translation: familiar; acquaintance
+  ipa: /znajˈɔmɪj/
+  translation: ''
+  pos: adj
+- lemma: золоте
+  ipa: /zɔlɔtˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кінець
+  ipa: /kinˈɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: набагато
-  ipa: nɐbɐˈɦɑto
-  translation: much; far
+- lemma: найпоширеніший
+  ipa: /najpɔʃˈɪrɛniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: наставити
+  ipa: /nastˈaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: неймовірно
+  ipa: /nɛjmɔʋˈirnɔ/
+  translation: ''
   pos: adv
-- lemma: найважливіший
-  ipa: nɐjʋɐʒlɪˈʋiʃɪj
-  translation: most important
-  pos: adj
-  gender: m
-- lemma: недоконаний
-  ipa: nedoˈkɔnɐnɪj
-  translation: imperfective (aspect)
-  pos: adj
-  gender: m
-- lemma: носій
-  ipa: noˈsij
-  translation: carrier; native speaker
-  pos: noun
-  gender: m
 - lemma: німецький
-  ipa: niˈmɛt͡sʲkɪj
-  translation: German
+  ipa: /nimˈɛt͡sʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: одразу
-  ipa: odˈrɑzu
-  translation: immediately
-  pos: adv
-- lemma: помітний
-  ipa: poˈmitnɪj
-  translation: noticeable; distinct
-  pos: adj
-  gender: m
-- lemma: природніший
-  ipa: prɪˈrɔdnis̬hɪj
-  translation: more natural
-  pos: adj
-  gender: m
-- lemma: дієслово
-  translation: verb
+- lemma: обіцянка
+  ipa: /ɔbit͡sˈjanka/
+  translation: ''
   pos: noun
-  gender: m
-  ipa: /dʲijeˈslɔʋo/
-- lemma: час
-  translation: time; tense
+  gender: f
+- lemma: ого
+  ipa: /ɔɦˈɔ/
+  translation: ''
   pos: noun
-  gender: m
-  ipa: /t͡ʃɑs/
-- lemma: майбутній
-  translation: future
+- lemma: одноразовий
+  ipa: /ɔdnɔrazˈɔʋɪj/
+  translation: ''
   pos: adj
-  ipa: /mɐi̯ˈbutʲnʲij/
-- lemma: теперішній
-  translation: present
+- lemma: повторюваний
+  ipa: /pɔʋtˈɔrjuʋanɪj/
+  translation: ''
   pos: adj
-  ipa: /teˈpɛrʲiʃnʲij/
-- lemma: минулий
-  translation: past
-  pos: adj
-  ipa: /mɪˈnulɪj/
+- lemma: подивитися
+  ipa: /pɔdɪʋˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: практикуватися
+  ipa: /praktɪkuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: прислів'я
+  ipa: /prɪslˈiʋja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: проводити
+  ipa: /prɔʋɔdɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: процес
-  ipa: proˈt͡sɛs
-  translation: process
+  ipa: /prɔt͡sˈɛs/
+  translation: ''
   pos: noun
   gender: m
+- lemma: прочитаний
+  ipa: /prɔt͡ʃˈɪtanɪj/
+  translation: ''
+  pos: adj
+- lemma: розпізнавати
+  ipa: /rɔzpiznaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: розібрати
+  ipa: /rɔzibrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: світогляд
+  ipa: /sʋitˈɔɦljad/
+  translation: ''
+  pos: noun
+- lemma: теза
+  ipa: /tˈɛza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тривалість
+  ipa: /trɪʋˈalistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: увесь
+  ipa: /uʋˈɛsʲ/
+  translation: ''
+  pos: pron
+- lemma: філософія
+  ipa: /filɔsˈɔfija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: читання
+  ipa: /t͡ʃɪtˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: інформація
+  ipa: /infɔrmˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f

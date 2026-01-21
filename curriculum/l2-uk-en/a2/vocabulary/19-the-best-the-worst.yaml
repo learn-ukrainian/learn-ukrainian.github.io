@@ -2,233 +2,196 @@ module: 19-the-best-the-worst
 level: A2
 version: '2.0'
 items:
-- lemma: ан
-  ipa: ɑn
-  translation: An?
-  pos: propn
-  gender: m
+- lemma: абсолютний
+  ipa: /absɔlˈjutnɪj/
+  translation: ''
+  pos: adj
 - lemma: атака
-  ipa: ɐˈtɑkɐ
-  translation: attack
+  ipa: /atˈaka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: видання
-  ipa: vɪˈdɑnʲːɐ
-  translation: edition; publication
+- lemma: африка
+  ipa: /ˈafrɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: будь-який
+  ipa: /budʲ-jakˈɪj/
+  translation: ''
+  pos: pron
+- lemma: враження
+  ipa: /ʋrˈaʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: вкрай
-  ipa: vkrɑj
-  translation: extremely
+- lemma: гарніший
+  ipa: /ɦarnˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: гора
+  ipa: /ɦɔrˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: граматика
+  ipa: /ɦramˈatɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: довший
+  ipa: /dˈɔʋʃɪj/
+  translation: ''
+  pos: adj
+- lemma: еверест
+  ipa: /ɛʋɛrˈɛst/
+  translation: ''
   pos: noun
   gender: m
-- lemma: всюди
-  ipa: ˈvsʲudɪ
-  translation: everywhere
-  pos: adv
+- lemma: емоція
+  ipa: /ɛmˈɔt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: коли-небудь
+  ipa: /kɔlˈɪ-nɛbudʲ/
+  translation: ''
+  pos: pron
+- lemma: коротший
+  ipa: /kɔrˈɔtʃɪj/
+  translation: ''
+  pos: adj
 - lemma: ле
-  ipa: lɛ
-  translation: Le?
-  pos: other
-- lemma: можливо
-  ipa: moʒˈlɪʋo
-  translation: possibly
-  pos: adv
+  ipa: /lɛ/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: надзвичайно
-  ipa: nɐdzzvɪˈt͡ʃɑjno
-  translation: extraordinarily
+  ipa: /nadzʋɪt͡ʃˈajnɔ/
+  translation: ''
   pos: adv
 - lemma: най
-  ipa: nɑj
-  translation: most (prefix)
-  pos: other
+  ipa: /naj/
+  translation: ''
+  pos: part
+- lemma: най-
+  ipa: /naj-/
+  translation: ''
+  pos: noun
+- lemma: найбільше
+  ipa: /najbˈilʲʃɛ/
+  translation: ''
+  pos: adv
 - lemma: найбільший
-  ipa: nɑjˈbʲilʲʃɪj
-  translation: biggest
+  ipa: /najbˈilʲʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найвищий
-  ipa: nɑjˈvɪʃt͡ʃɪj
-  translation: highest
+  ipa: /najʋˈɪʃt͡ʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найвідоміший
-  ipa: nɑjviˈdɔmxiʃɪj
-  translation: most famous
+  ipa: /najʋidˈɔmiʃɪj/
+  translation: ''
   pos: adj
-- lemma: найгостинніший
-  ipa: nɑjhosˈtʲɪnːiʃɪj
-  translation: most hospitable
+- lemma: найгарніший
+  ipa: /najɦarnˈiʃɪj/
+  translation: ''
   pos: adj
 - lemma: найгірший
-  ipa: nɑjˈhʲirʃɪj
-  translation: worst
+  ipa: /najɦˈirʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: найдешевший
-  ipa: nɑjdeˈʃɛu̯ʃɪj
-  translation: cheapest
-  pos: adj
-  gender: m
 - lemma: найдивовижніший
-  ipa: nɑjdɪvoˈvɪʒnʲiʃɪj
-  translation: most amazing
+  ipa: /najdɪʋɔʋɪʒniʃɪj/
+  translation: ''
   pos: adj
-  gender: n
 - lemma: найдовший
-  ipa: nɑjˈdɔu̯ʃɪj
-  translation: longest
+  ipa: /najdˈɔʋʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найдорожчий
-  ipa: nɑjdoˈrɔʒt͡ʃɪj
-  translation: most expensive
+  ipa: /najdɔrˈɔʒt͡ʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найкоротший
-  ipa: nɑjkoˈrɔtʃɪj
-  translation: shortest
+  ipa: /najkɔrˈɔtʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найкрасивіший
-  ipa: nɑjkrɐsɪˈvʲiʃɪj
-  translation: most beautiful
+  ipa: /najkrasˈɪʋiʃɪj/
+  translation: ''
   pos: adj
 - lemma: найкраще
-  ipa: nɑjˈkrɑʃt͡ʃe
-  translation: best (adv)
+  ipa: /najkrˈaʃt͡ʃɛ/
+  translation: ''
+  pos: adv
+- lemma: найпростіше
+  ipa: /najprɔstˈiʃɛ/
+  translation: ''
+  pos: adv
+- lemma: найрозумніший
+  ipa: /najrɔzumnˈiʃɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: найменший
-  ipa: nɑjˈmɛnʃɪj
-  translation: smallest
-  pos: adj
-  gender: m
-- lemma: найнижчий
-  ipa: nɑjˈnɪʒt͡ʃɪj
-  translation: lowest
-  pos: adj
-  gender: m
-- lemma: найновіший
-  ipa: nɑjnoˈvʲiʃɪj
-  translation: newest
-  pos: adj
-  gender: m
-- lemma: найпотужніший
-  ipa: nɑjpoˈtuʒnʲiʃɪj
-  translation: most powerful
-  pos: adj
-  gender: m
-- lemma: найрідкісніший
-  ipa: nɑjˈrʲidkʲisʲnʲiʃɪj
-  translation: rarest
-  pos: adj
-  gender: f
 - lemma: найсмачніший
-  ipa: nɑjsmɐt͡ʃˈnʲiʃɪj
-  translation: tastiest
+  ipa: /najsmat͡ʃnˈiʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найстарший
-  ipa: nɑjˈstɑrʃɪj
-  translation: eldest
+  ipa: /najstˈarʃɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: найстаріший
-  ipa: nɑjstɐˈrʲiʃɪj
-  translation: oldest (objects)
+  ipa: /najstarˈiʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: найчарівніший
-  ipa: nɑjt͡ʃɐˈrʲivnʲiʃɪj
-  translation: most charming
+- lemma: найцікавіший
+  ipa: /najt͡sikaʋˈiʃɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: найшвидший
-  ipa: nɑjˈʃvɪdʃɪj
-  translation: fastest
+  ipa: /najʃʋˈɪdʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: найщиріший
-  ipa: nɑjʃt͡ʃɪˈrʲiʃɪj
-  translation: most sincere
-  pos: adj
-  gender: m
-- lemma: небудь
-  ipa: ˈnɛbudʲ
-  translation: any-
-  pos: pron
-  gender: n
-- lemma: неймовірно
-  ipa: nejmoˈvʲirno
-  translation: incredibly
-  pos: adv
-- lemma: новинка
-  ipa: noˈvɪnkɐ
-  translation: novelty
+- lemma: ніл
+  ipa: /nil/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
 - lemma: оборона
-  ipa: oboˈrɔnɐ
-  translation: defense
+  ipa: /ɔbɔrˈɔna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: оптимістичний
-  ipa: optɪmisˈtɪt͡ʃnɪj
-  translation: optimistic
-  pos: adj
-  gender: f
-- lemma: папорот
-  ipa: ˈpɑporotʲ
-  translation: fern
+- lemma: рекорд
+  ipa: /rɛkˈɔrd/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: печера
-  ipa: peˈt͡ʃɛrɐ
-  translation: cave
+- lemma: рішення
+  ipa: /rˈiʃɛnnja/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: прикметник
-  ipa: prɪkˈmɛtnɪk
-  translation: adjective (grammar)
-  pos: noun
-  gender: m
-- lemma: рідкісний
-  ipa: ˈrʲidkʲisnɪj
-  translation: rare
-  pos: adj
   gender: n
-- lemma: страшенно
-  ipa: strɐˈʃɛnːo
-  translation: terribly; awfully
-  pos: adv
+- lemma: світа
+  ipa: /sʋˈita/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: світовий
+  ipa: /sʋitɔʋˈɪj/
+  translation: ''
+  pos: adj
 - lemma: талановитий
-  ipa: tɐlɐnoˈvɪtɪj
-  translation: talented
+  ipa: /talanɔʋˈɪtɪj/
+  translation: ''
   pos: adj
+- lemma: формула
+  ipa: /fˈɔrmula/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: унікальний
-  ipa: uniˈkɑlʲnɪj
-  translation: unique
-  pos: adj
-  gender: n
-- lemma: хіта
-  ipa: ˈxʲitɐ
-  translation: hit (gen)
+- lemma: хіт
+  ipa: /xit/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: цвіт
-  ipa: t͡svʲit
-  translation: blossom
-  pos: noun
-  gender: m
-- lemma: шлях
-  ipa: ʃlʲɑx
-  translation: way; path
-  pos: noun
-  gender: m
-- lemma: іра
-  ipa: ˈirɐ
-  translation: Ira
-  pos: propn
-  gender: f

@@ -3,145 +3,237 @@ level: B1
 version: '2.0'
 items:
 - lemma: відбігти
-  ipa: /vidˈbihtɪ/
-  translation: to run away
+  ipa: /ʋidbˈiɦtɪ/
+  translation: ''
   pos: verb
-  gender: m
 - lemma: відплив
-  ipa: /vidˈplɪu̯/
-  translation: ebb/departure
+  ipa: /ʋidplˈɪʋ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: відплити
-  ipa: /vidˈplɪtɪ/
-  translation: to swim away
-  pos: verb
   gender: m
 - lemma: відставати
-  ipa: /vidstaˈvatɪ/
-  translation: to lag behind
+  ipa: /ʋidstaʋˈatɪ/
+  translation: ''
   pos: verb
+- lemma: дійшлий
+  ipa: /dˈijʃlɪj/
+  translation: ''
+  pos: adj
+- lemma: дієслов
+  ipa: /dijɛslɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: забігти
-  ipa: /zaˈbihtɪ/
-  translation: to run in
+  ipa: /zabˈiɦtɪ/
+  translation: ''
   pos: verb
+- lemma: заправка
+  ipa: /zaprˈaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: затримуватися
+  ipa: /zatrˈɪmuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зелень
+  ipa: /zˈɛlɛnʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: злетіти
-  ipa: /zlɛˈtʲitɪ/
-  translation: to take off
+  ipa: /zlɛtˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: зникати
+  ipa: /znɪkˈatɪ/
+  translation: ''
   pos: verb
 - lemma: катер
-  ipa: /ˈkatɛr/
-  translation: boat
+  ipa: /kˈatɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: катера
-  ipa: /ˈkatɛra/
-  translation: boats (gen.)
-  pos: noun
-  gender: f
-- lemma: когось
-  ipa: /kɔˈɦɔsʲ/
-  translation: someone (gen.)
-  pos: other
-  gender: m
-- lemma: малюка
-  ipa: /malʲuˈka/
-  translation: toddler (gen.)
+- lemma: корабель
+  ipa: /kɔrabˈɛlʲ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: малюк
+  ipa: /malˈjuk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: навесні
+  ipa: /naʋɛsnˈi/
+  translation: ''
+  pos: adv
 - lemma: напоготові
-  ipa: /napɔhɔˈtɔvʲi/
-  translation: at the ready
+  ipa: /napɔɦɔtˈɔʋi/
+  translation: ''
   pos: adv
 - lemma: насталий
-  ipa: /naˈstalɪj/
-  translation: occurred
+  ipa: /nastalɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: неквапливий
-  ipa: /nɛkvaˈplɪvɪj/
-  translation: unhurried
+  ipa: /nɛkʋaplˈɪʋɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: обігнати
+  ipa: /ɔbiɦnˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: однонапрямлений
-  ipa: /ɔdnɔnaˈprʲamlɛnɪj/
-  translation: unidirectional
+  ipa: /ɔdnɔnaprjamlɛnɪj/
+  translation: ''
   pos: adj
+- lemma: пасовище
+  ipa: /pasɔʋˈɪʃt͡ʃɛ/
+  translation: ''
+  pos: noun
 - lemma: перебігти
-  ipa: /pɛrɛˈbihtɪ/
-  translation: to run across
+  ipa: /pɛrɛbˈiɦtɪ/
+  translation: ''
   pos: verb
 - lemma: перекусити
-  ipa: /pɛrɛkuˈsɪtɪ/
-  translation: to have a snack
+  ipa: /pɛrɛkusˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: переміщати
-  ipa: /pɛrɛmiˈʃt͡ʃatɪ/
-  translation: to move
+  ipa: /pɛrɛmiʃt͡ʃˈatɪ/
+  translation: ''
   pos: verb
 - lemma: пересісти
-  ipa: /pɛrɛˈsʲistɪ/
-  translation: to change seats
+  ipa: /pɛrɛsˈistɪ/
+  translation: ''
   pos: verb
 - lemma: плинути
-  ipa: /ˈplɪnutɪ/
-  translation: to flow
+  ipa: /plˈɪnutɪ/
+  translation: ''
   pos: verb
-- lemma: полонина
-  ipa: /pɔlɔˈnɪna/
-  translation: mountain valley
+- lemma: повер-
+  ipa: /pɔʋɛr-/
+  translation: ''
   pos: noun
-  gender: f
+- lemma: позитивно
+  ipa: /pɔzɪtˈɪʋnɔ/
+  translation: ''
+  pos: adv
 - lemma: поплисти
-  ipa: /pɔplɪsˈtɪ/
-  translation: to start swimming
+  ipa: /pɔplɪstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: порт
+  ipa: /pɔrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: потьомкінський
+  ipa: /pɔtʲˈɔmkinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: поширюватися
+  ipa: /pɔʃˈɪrjuʋatɪsja/
+  translation: ''
   pos: verb
 - lemma: поштар
-  ipa: /pɔʃˈtar/
-  translation: postman
+  ipa: /pɔʃtˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поєднуватися
+  ipa: /pɔˈjɛdnuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: прибулий
+  ipa: /prɪbˈulɪj/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: приморський
+  ipa: /prɪmˈɔrsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: приступити
+  ipa: /prɪstupˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: пробігти
+  ipa: /prɔbˈiɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: пройда
+  ipa: /prˈɔjda/
+  translation: ''
   pos: noun
   gender: m
 - lemma: підбігти
-  ipa: /pidˈbihtɪ/
-  translation: to run up to
+  ipa: /pidbˈiɦtɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: підліт
-  ipa: /pidˈlʲit/
-  translation: approach (flight)
-  pos: noun
-  gender: m
-- lemma: підніс
-  ipa: /pidˈnʲis/
-  translation: tray
+- lemma: піднос
+  ipa: /pidnˈɔs/
+  translation: ''
   pos: noun
   gender: m
 - lemma: підскочити
-  ipa: /pidˈskɔt͡ʃɪtɪ/
-  translation: to jump up
+  ipa: /pidskˈɔt͡ʃɪtɪ/
+  translation: ''
   pos: verb
-- lemma: різнонапрямлений
-  ipa: /rʲiznɔnaˈprʲamlɛnɪj/
-  translation: multidirectional
-  pos: adj
-- lemma: спуститися
-  ipa: /spusˈtɪtɪsʲa/
-  translation: to descend
+- lemma: розпізнати
+  ipa: /rɔzpiznˈatɪ/
+  translation: ''
   pos: verb
-- lemma: убігти
-  ipa: /uˈbihtɪ/
-  translation: to run in
-  pos: verb
-- lemma: щонеділі
-  ipa: /ʃt͡ʃɔnɛˈdʲilʲi/
-  translation: every Sunday
-  pos: adv
-- lemma: інфографіка
-  ipa: /infɔˈhrafika/
-  translation: infographics
+- lemma: різка
+  ipa: /rizkˈa/
+  translation: ''
   pos: noun
   gender: f
+- lemma: різнонапрямлений
+  ipa: /riznɔnaprjamlɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: садка
+  ipa: /sadka/
+  translation: ''
+  pos: noun
+- lemma: садочок
+  ipa: /sadˈɔt͡ʃɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спуститися
+  ipa: /spustˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: стабілізуватися
+  ipa: /stabilizuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: убігти
+  ipa: /ubˈiɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: уздовж
+  ipa: /uzdˈɔʋʒ/
+  translation: ''
+  pos: adv
+- lemma: чутка
+  ipa: /t͡ʃˈutka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: щонеділі
+  ipa: /ʃt͡ʃɔnɛdˈili/
+  translation: ''
+  pos: adv
+- lemma: ійти
+  ipa: /ijtɪ/
+  translation: ''
+  pos: verb
 - lemma: ґуцульський
-  ipa: /huˈt͡sulʲsʲkɪj/
-  translation: Hutsul (adj)
+  ipa: /gut͡sulʲsʲkɪj/
+  translation: ''
   pos: adj

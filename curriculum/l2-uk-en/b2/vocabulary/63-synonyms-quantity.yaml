@@ -2,283 +2,43 @@ module: 63-synonyms-quantity
 level: B2
 version: '2.0'
 items:
-- lemma: астрономічний
-  ipa: /ɐstronoˈmʲit͡ʃnɪj/
-  translation: astronomical
-  pos: adj
-  gender: m
-- lemma: багатоманітність
-  ipa: /bɐɦɐtomɐˈnʲitnʲistʲ/
-  translation: diversity, variety
-  pos: noun
-  gender: f
-- lemma: біт
-  ipa: /bʲit/
-  translation: bit (computing)
-  pos: noun
-  gender: m
-- lemma: вагомість
-  ipa: /wɐˈɦomʲistʲ/
-  translation: weight, significance
-  pos: noun
-  gender: f
 - lemma: вистачити
-  ipa: /wɪˈstɑt͡ʃɪtɪ/
-  translation: to suffice, to be enough
+  ipa: /ʋˈɪstat͡ʃɪtɪ/
+  translation: ''
   pos: verb
-- lemma: вишиванок
-  ipa: /wɪʃɪˈwɑnok/
-  translation: vyshyvankas (embroidered shirts, genitive plural)
-  pos: noun
-  gender: f
-- lemma: влаштований
-  ipa: /wlɐʃˈtowɑnɪj/
-  translation: arranged, settled
-  pos: adj
-  gender: m
-- lemma: внеска
-  ipa: /ˈwnɛskɑ/
-  translation: contribution (genitive)
-  pos: noun
-  gender: m
-- lemma: гат
-  ipa: /ɦɑt/
-  translation: causeway, dam
-  pos: noun
-  gender: m
-- lemma: гати
-  ipa: /ɦɐˈtɪ/
-  translation: to dam, to build a causeway
+- lemma: гатити
+  ipa: /ɦatˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: глиняний
-  ipa: /ɦlɪˈnʲɑnɪj/
-  translation: clay (adj.)
-  pos: adj
-  gender: m
-- lemma: грамотність
-  ipa: /ɦrɐmotnʲistʲ/
-  translation: literacy
+- lemma: гребля
+  ipa: /ɦrˈɛblja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: граничний
-  ipa: /ɦrɐˈnɪt͡ʃnɪj/
-  translation: boundary, limit (adj.)
-  pos: adj
-  gender: f
-- lemma: гребль
-  ipa: /ɦrɛblʲ/
-  translation: dams (genitive plural)
+- lemma: крихта
+  ipa: /krˈɪxta/
+  translation: ''
   pos: noun
   gender: f
-- lemma: декілька
-  ipa: /dɛˈkʲilʲkɑ/
-  translation: several
-  pos: other
-- lemma: докласти
-  ipa: /doˈklɑstɪ/
-  translation: to apply, to add
+- lemma: кура
+  ipa: /kurˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: маковий
+  ipa: /mˈakɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: перелічити
+  ipa: /pɛrɛlit͡ʃˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: достатність
-  ipa: /dosˈtɑtnʲistʲ/
-  translation: sufficiency, adequacy
-  pos: noun
-  gender: f
-- lemma: енергоресурс
-  ipa: /ɛnɛrɦorɛˈsurs/
-  translation: energy resource
-  pos: noun
-  gender: m
-- lemma: заватися
-  ipa: /zɐˈwɑtɪsʲɑ/
-  translation: to get in the way
-  pos: verb
-- lemma: загатити
-  ipa: /zɐɦɐˈtɪtɪ/
-  translation: to dam up
-  pos: verb
-- lemma: київська
-  ipa: /kɪˈjiwsʲkɑ/
-  translation: Kyiv (adj., feminine)
-  pos: propn
-  gender: f
-- lemma: купа
-  ipa: /kuˈpɑ/
-  translation: pile, heap
-  pos: noun
-  gender: f
-- lemma: малість
-  ipa: /mɐˈlʲistʲ/
-  translation: smallness
-  pos: noun
-  gender: f
-- lemma: медикамент
-  ipa: /mɛdɪkɐˈmɛnt/
-  translation: medication, medicine
-  pos: noun
-  gender: m
-- lemma: мізер
-  ipa: /mʲiˈzɛr/
-  translation: pittance, trifle
-  pos: noun
-  gender: m
-- lemma: найяскравіший
-  ipa: /nɐjjɐsˈkrɑwʲiʃɪj/
-  translation: brightest, most vivid
-  pos: adj
-- lemma: наявний
-  ipa: /nɐˈjɑwnɪj/
-  translation: available, present
-  pos: adj
-- lemma: необмежений
-  ipa: /nɛobmɛˈʒɛnɪj/
-  translation: unlimited
-  pos: adj
-  gender: m
-- lemma: неосяжний
-  ipa: /nɛosʲɑʒnɪj/
-  translation: immense, incomprehensible
-  pos: adj
-- lemma: неправота
-  ipa: /nɛprɐˈwotɑ/
-  translation: being wrong
-  pos: noun
-  gender: f
-- lemma: новітній
-  ipa: /noˈwʲitnʲij/
-  translation: newest, modern
-  pos: adj
-- lemma: нікчемно
-  ipa: /nʲikt͡ʃɛmno/
-  translation: insignificantly, worthlessly
+- lemma: сила-силенна
+  ipa: /sˈɪla-sɪlɛnna/
+  translation: ''
   pos: adv
-- lemma: обчислення
-  ipa: /obt͡ʃɪsˈlɛnʲːɑ/
-  translation: calculation, computation
-  pos: noun
-  gender: n
-- lemma: ощадливий
-  ipa: /oʃt͡ʃɐdlɪwɪj/
-  translation: economical, thrifty
-  pos: adj
-- lemma: перебільшити
-  ipa: /pɛrɛˈbʲilʲʃɪtɪ/
-  translation: to exaggerate
-  pos: verb
-- lemma: переданий
-  ipa: /pɛrɛˈdɑnɪj/
-  translation: transmitted, passed on
-  pos: adj
-  gender: f
-- lemma: переконаність
-  ipa: /pɛrɛkoˈnɑnʲistʲ/
-  translation: conviction, certainty
-  pos: noun
-  gender: f
-- lemma: перелічуваний
-  ipa: /pɛrɛlʲit͡ʃuˈwɑnɪj/
-  translation: enumerable, countable
-  pos: adj
-  gender: f
-- lemma: перетворення
-  ipa: /pɛrɛtwoˈrɛnʲːɑ/
-  translation: transformation
-  pos: noun
-  gender: n
-- lemma: перетворюватися
-  ipa: /pɛrɛtworʲuˈwɑtɪsʲɑ/
-  translation: to transform, to turn into
-  pos: verb
-- lemma: покращити
-  ipa: /pokrɐˈʃɪtɪ/
-  translation: to improve
-  pos: verb
-- lemma: потрапляти
-  ipa: /potrɐpˈlʲɑtɪ/
-  translation: to get into, to hit
-  pos: verb
-- lemma: применшити
-  ipa: /prɪmɛnˈʃɪtɪ/
-  translation: to diminish, to belittle
-  pos: verb
-- lemma: протота
-  ipa: /proˈtotɑ/
-  translation: simplicity
-  pos: noun
-  gender: f
-- lemma: підписник
-  ipa: /pʲidˈpɪsnɪk/
-  translation: subscriber
-  pos: noun
-  gender: m
-- lemma: розма
-  ipa: /rozˈmɑ/
-  translation: variety (truncated form of розмаїття)
-  pos: noun
-  gender: m
-- lemma: розсипати
-  ipa: /rozsɪˈpɑtɪ/
-  translation: to scatter, to spill
-  pos: verb
-  gender: n
-- lemma: самореалізація
-  ipa: /sɐmorɛɐlʲizɑˈt͡sʲijɑ/
-  translation: self-realization
-  pos: noun
-  gender: f
-- lemma: сервера
-  ipa: /ˈsɛrwɛrɑ/
-  translation: server (genitive)
-  pos: noun
-  gender: m
-- lemma: силенний
-  ipa: /sɪˈlɛnːɪj/
-  translation: powerful, strong
-  pos: adj
-  gender: f
-- lemma: стежити
-  ipa: /stɛˈʒɪtɪ/
-  translation: to monitor, to watch
-  pos: verb
-- lemma: стримано
-  ipa: /strɪˈmɑno/
-  translation: restrainedly, moderately
-  pos: adv
-- lemma: терабайтний
-  ipa: /tɛrɐˈbɑjtnɪj/
-  translation: terabyte (adj.)
-  pos: adj
-  gender: m
-- lemma: трафік
-  ipa: /trɐˈfʲik/
-  translation: traffic (network)
-  pos: noun
-  gender: m
-- lemma: хаотичність
-  ipa: /xɐoˈtɪt͡ʃnʲistʲ/
-  translation: chaos, chaotic nature
-  pos: noun
-  gender: f
 - lemma: чаша
-  ipa: /ˈt͡ʃɑʃɑ/
-  translation: cup, bowl
+  ipa: /t͡ʃˈaʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: чималий
-  ipa: /t͡ʃɪˈmɑlɪj/
-  translation: considerable, sizable
-  pos: adj
-  gender: f
-- lemma: явно
-  ipa: /ˈjɑwno/
-  translation: obviously, clearly
-  pos: adv
-- lemma: ярмаркування
-  ipa: /jɑrmɐrkuˈwɑnʲːɑ/
-  translation: labeling, fair trade marking
-  pos: noun
-  gender: n
-- lemma: інгредієнт
-  ipa: /ʲinɦrɛdʲiˈjɛnt/
-  translation: ingredient
-  pos: noun
-  gender: m

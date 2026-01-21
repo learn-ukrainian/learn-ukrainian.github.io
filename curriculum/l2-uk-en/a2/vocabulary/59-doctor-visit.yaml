@@ -1,60 +1,103 @@
-module: 59-at-the-doctor
+module: 59-doctor-visit
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: симптом
-  translation: symptom
-  pos: noun
-  gender: m
-- lemma: діагноз
-  translation: diagnosis
-  pos: noun
-  gender: m
-- lemma: рецепт
-  translation: prescription
-  pos: noun
-  gender: m
-- lemma: приймати
-  translation: to take (medicine)
-  pos: verb
-- lemma: болить
-  translation: hurts (impersonal)
-  pos: verb
-- lemma: температура
-  translation: temperature/fever
+- lemma: ангіна
+  ipa: /anɦˈina/
+  translation: ''
   pos: noun
   gender: f
-- lemma: кашель
-  translation: cough
+- lemma: берегти
+  ipa: /bɛrɛɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: браун
+  ipa: /brˈaun/
+  translation: ''
   pos: noun
   gender: m
-- lemma: нежить
-  translation: runny nose
+- lemma: виписати
+  ipa: /ʋˈɪpɪsatɪ/
+  translation: ''
+  pos: verb
+- lemma: вітамін
+  ipa: /ʋitamˈin/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: алергія
-  translation: allergy
+- lemma: клініка
+  ipa: /klˈinika/
+  translation: ''
   pos: noun
   gender: f
-- lemma: огляд
-  translation: examination
+- lemma: лікарняний
+  ipa: /likarnˈjanɪj/
+  translation: ''
+  pos: adj
+- lemma: нормальний
+  ipa: /nɔrmˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: ніякий
+  ipa: /niˈjakɪj/
+  translation: ''
+  pos: pron
+- lemma: петрович
+  ipa: /pɛtrˈɔʋɪt͡ʃ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: аналіз
-  translation: test/analysis
-  pos: noun
-  gender: m
-- lemma: направлення
-  translation: referral
+  gender: f
+- lemma: поводитися
+  ipa: /pɔʋɔdɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: повторний
+  ipa: /pɔʋtˈɔrnɪj/
+  translation: ''
+  pos: adj
+- lemma: полоскати
+  ipa: /pɔlɔskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: поміряти
+  ipa: /pɔmˈirjatɪ/
+  translation: ''
+  pos: verb
+- lemma: прізвище
+  ipa: /prˈizʋɪʃt͡ʃɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: лікарняний
-  translation: sick leave
+- lemma: реєстратор
+  ipa: /rɛjɛstrˈatɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: хворіти
-  translation: to be sick
-  pos: verb
-- lemma: одужати
-  translation: to recover
-  pos: verb
+- lemma: реєстратура
+  ipa: /rɛjɛstratˈura/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розчин
+  ipa: /rˈɔzt͡ʃɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спрей
+  ipa: /sprɛj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: стресовий
+  ipa: /strˈɛsɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: термометр
+  ipa: /tɛrmˈɔmɛtr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фармацевт
+  ipa: /farmat͡sˈɛʋt/
+  translation: ''
+  pos: noun
+  gender: m

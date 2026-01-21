@@ -2,187 +2,226 @@ module: 11-the-accusative-i-things
 level: A1
 version: '2.0'
 items:
-  - lemma: автобус
-    ipa: /ɑwˈtɔbus/
-    translation: bus
-    pos: noun
-    gender: m
-  - lemma: аномалія
-    ipa: /ɑnɔˈmɑlʲijɑ/
-    translation: anomaly
-    pos: noun
-    gender: f
-  - lemma: брати
-    ipa: /ˈbrɑtɪ/
-    translation: to take
-    pos: verb
-  - lemma: валіза
-    ipa: /vɑˈlʲizɑ/
-    translation: suitcase
-    pos: noun
-    gender: f
-  - lemma: вже
-    ipa: /vʒɛ/
-    translation: already
-    pos: adv
-  - lemma: відкривати
-    ipa: /vidkrɪˈvɑtɪ/
-    translation: to open
-    pos: verb
-  - lemma: відмінок
-    ipa: /vidˈminɔk/
-    translation: case (grammar)
-    pos: noun
-    gender: m
-  - lemma: відправити
-    ipa: /vidˈprɑvɪtɪ/
-    translation: to send (perf)
-    pos: verb
-  - lemma: відправляти
-    ipa: /vidprɑwˈlʲɑtɪ/
-    translation: to send (imp)
-    pos: verb
-  - lemma: давати
-    ipa: /dɑˈvɑtɪ/
-    translation: to give (imp)
-    pos: verb
-  - lemma: дати
-    ipa: /ˈdɑtɪ/
-    translation: to give (perf)
-    pos: verb
-  - lemma: документ
-    ipa: /dɔkuˈmɛnt/
-    translation: document
-    pos: noun
-    gender: m
-  - lemma: дорога
-    ipa: /dɔˈrɔɦɑ/
-    translation: road/way
-    pos: noun
-    gender: f
-  - lemma: за
-    ipa: /zɑ/
-    translation: for/behind
-    pos: other
-  - lemma: забути
-    ipa: /zɑˈbutɪ/
-    translation: to forget
-    pos: verb
-  - lemma: знахідний
-    ipa: /znɑˈxidnɪj/
-    translation: accusative (adj)
-    pos: adj
-    gender: m
-  - lemma: квиток
-    ipa: /kvɪˈtɔk/
-    translation: ticket
-    pos: noun
-    gender: m
-  - lemma: конверт
-    ipa: /kɔnˈvɛrt/
-    translation: envelope
-    pos: noun
-    gender: m
-  - lemma: коробка
-    ipa: /kɔˈrɔbkɑ/
-    translation: box
-    pos: noun
-    gender: f
-  - lemma: мати
-    ipa: /ˈmɑtɪ/
-    translation: to have
-    pos: verb
-  - lemma: один
-    ipa: /ɔˈdɪn/
-    translation: one
-    pos: num
-    gender: m
-  - lemma: подарунок
-    ipa: /pɔdɑˈrunɔk/
-    translation: gift/present
-    pos: noun
-    gender: m
-  - lemma: показати
-    ipa: /pɔkɑˈzɑtɪ/
-    translation: to show (perf)
-    pos: verb
-  - lemma: показувати
-    ipa: /pɔˈkɑzuvɑtɪ/
-    translation: to show (imp)
-    pos: verb
-  - lemma: посилка
-    ipa: /pɔˈsɪlkɑ/
-    translation: parcel
-    pos: noun
-    gender: f
-  - lemma: свій
-    ipa: /sʲvij/
-    translation: one's own
-    pos: pron
-    gender: m
-  - lemma: цікавий
-    ipa: /t͡sʲiˈkɑvɪj/
-    translation: interesting
-    pos: adj
-    gender: m
-  - lemma: чути
-    ipa: /ˈt͡ʃutɪ/
-    translation: to hear
-    pos: verb
-  - lemma: іти
-    ipa: /iˈtɪ/
-    translation: to go
-    pos: verb
-  - lemma: бачити
-    ipa: /ˈbɑt͡ʃɪtɪ/
-    translation: to see
-    pos: verb
-  - lemma: нести
-    ipa: /nɛsˈtɪ/
-    translation: to carry
-    pos: verb
-  - lemma: класти
-    ipa: /ˈklɑstɪ/
-    translation: to put
-    pos: verb
-  - lemma: закривати
-    ipa: /zɑkrɪˈvɑtɪ/
-    translation: to close
-    pos: verb
-  - lemma: вмикати
-    ipa: /vmɪˈkɑtɪ/
-    translation: to turn on
-    pos: verb
-  - lemma: вимикати
-    ipa: /vɪmɪˈkɑtɪ/
-    translation: to turn off
-    pos: verb
-  - lemma: ховати
-    ipa: /xɔˈvɑtɪ/
-    translation: to hide
-    pos: verb
-  - lemma: газета
-    ipa: /ɦɑˈzɛtɑ/
-    translation: newspaper
-    pos: noun
-    gender: f
-  - lemma: журнал
-    ipa: /ʒurˈnɑl/
-    translation: magazine
-    pos: noun
-    gender: m
-  - lemma: лист
-    ipa: /lɪst/
-    translation: letter
-    pos: noun
-    gender: m
-  - lemma: паспорт
-    ipa: /ˈpɑspɔrt/
-    translation: passport
-    pos: noun
-    gender: m
-  - lemma: сумка
-    ipa: /ˈsumkɑ/
-    translation: bag
-    pos: noun
-    gender: f
+- lemma: автобус
+  ipa: /aʋtˈɔbus/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: аномалія
+  ipa: /anɔmˈalija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бачити
+  ipa: /bˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: брати
+  ipa: /brˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: валіза
+  ipa: /ʋalˈiza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: відкривати
+  ipa: /ʋidkrɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: відмінок
+  ipa: /ʋidmˈinɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: відправити
+  ipa: /ʋidprˈaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відправляти
+  ipa: /ʋidpraʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: вікно
+  ipa: /ʋiknˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: газета
+  ipa: /ɦazˈɛta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: давати
+  ipa: /daʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: дати
+  ipa: /dˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: добрий
+  ipa: /dˈɔbrɪj/
+  translation: ''
+  pos: adj
+- lemma: документ
+  ipa: /dɔkumˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дорога
+  ipa: /dɔrˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: журнал
+  ipa: /ʒurnˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: забути
+  ipa: /zabˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: знаходити
+  ipa: /znaxˈɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: знахідний
+  ipa: /znaxˈidnɪj/
+  translation: ''
+  pos: adj
+- lemma: квиток
+  ipa: /kʋɪtˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: конверт
+  ipa: /kɔnʋˈɛrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: коробк
+  ipa: /kɔrɔbk/
+  translation: ''
+  pos: noun
+- lemma: коробка
+  ipa: /kɔrˈɔbka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ласка
+  ipa: /lˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лист
+  ipa: /lɪst/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: море
+  ipa: /mˈɔrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: музика
+  ipa: /mˈuzɪka/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: паспорт
+  ipa: /pˈaspɔrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: подарунок
+  ipa: /pɔdarˈunɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: показати
+  ipa: /pɔkazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: показувати
+  ipa: /pɔkˈazuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: посилк
+  ipa: /pɔsɪlk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: посилка
+  ipa: /pɔsˈɪlka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сталкер
+  ipa: /stˈalkɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: стіл
+  ipa: /stil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сумк
+  ipa: /sumk/
+  translation: ''
+  pos: noun
+- lemma: сумка
+  ipa: /sˈumka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: цікавий
+  ipa: /t͡sikˈaʋɪj/
+  translation: ''
+  pos: adj
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: чути
+  ipa: /t͡ʃˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: іда
+  ipa: /ˈida/
+  translation: ''
+  pos: noun
+  gender: f

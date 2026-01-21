@@ -2,143 +2,105 @@ module: 06-aspect-complete-system
 level: B1
 version: '2.0'
 items:
-- lemma: вид
-  ipa: /wɪd/
-  translation: aspect (grammatical)
+- lemma: беркут
+  ipa: /bˈɛrkut/
+  translation: ''
   pos: noun
   gender: m
-  note: вид дієслова = verb aspect
-- lemma: доконаний
-  ipa: /dɔˈkɔnanɪj/
-  translation: perfective
+- lemma: взагалі
+  ipa: /ʋzaɦalˈi/
+  translation: ''
+  pos: adv
+- lemma: визначаючи
+  ipa: /ʋɪznat͡ʃˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: вічний
+  ipa: /ʋˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  note: доконаний вид = ДВ
-- lemma: недоконаний
-  ipa: /nɛdɔˈkɔnanɪj/
-  translation: imperfective
+- lemma: динамік
+  ipa: /dɪnˈamik/
+  translation: ''
+  pos: noun
+- lemma: дослівно
+  ipa: /dɔslˈiʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: досяг
+  ipa: /dɔsˈjaɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: драматичний
+  ipa: /dramatˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  note: недоконаний вид = НДВ
-- lemma: процес
-  ipa: /prɔˈtsɛs/
-  translation: process
+- lemma: задати
+  ipa: /zadˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: захар
+  ipa: /zaxˈar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: результат
-  ipa: /rɛzulʲˈtat/
-  translation: result
+- lemma: зроблений
+  ipa: /zrˈɔblɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: контроль
+  ipa: /kɔntrˈɔlʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: тривалість
-  ipa: /trɪˈvalʲisʲtʲ/
-  translation: duration
+- lemma: листівка
+  ipa: /lɪstˈiʋka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: повторення
-  ipa: /pɔwtɔˈrɛnːa/
-  translation: repetition
-  pos: noun
-  gender: n
-- lemma: завершення
-  ipa: /zawɛrˈʃɛnːa/
-  translation: completion
-  pos: noun
-  gender: n
+- lemma: неправильно
+  ipa: /nɛprˈaʋɪlʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: одноразово
+  ipa: /ɔdnɔrazˈɔʋɔ/
+  translation: ''
+  pos: adv
 - lemma: одноразовість
-  ipa: /ɔdnɔraˈzɔvisʲtʲ/
-  translation: singularity
+  ipa: /ɔdnɔrazˈɔʋistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: темпоральний
-  ipa: /tɛmpɔˈralʲnɪj/
-  translation: temporal
+- lemma: очевидний
+  ipa: /ɔt͡ʃɛʋˈɪdnɪj/
+  translation: ''
   pos: adj
-- lemma: маркер
-  ipa: /ˈmarkɛr/
-  translation: marker
+- lemma: плутанина
+  ipa: /plutanˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ритм
+  ipa: /rɪtm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: читати
-  ipa: /tʃɪˈtatɪ/
-  translation: to read (impf)
-  pos: verb
-  note: НДВ → ДВ прочитати
-- lemma: прочитати
-  ipa: /prɔtʃɪˈtatɪ/
-  translation: to read (perf)
-  pos: verb
-  note: ДВ від читати
-- lemma: писати
-  ipa: /pɪˈsatɪ/
-  translation: to write (impf)
-  pos: verb
-  note: НДВ → ДВ написати
-- lemma: написати
-  ipa: /napɪˈsatɪ/
-  translation: to write (perf)
-  pos: verb
-  note: ДВ від писати
-- lemma: робити
-  ipa: /rɔˈbɪtɪ/
-  translation: to do/make (impf)
-  pos: verb
-  note: НДВ → ДВ зробити
-- lemma: зробити
-  ipa: /zrɔˈbɪtɪ/
-  translation: to do/make (perf)
-  pos: verb
-  note: ДВ від робити
-- lemma: вчити
-  ipa: /ˈu̯tʃɪtɪ/
-  translation: to learn/teach (impf)
-  pos: verb
-  note: НДВ → ДВ вивчити
-- lemma: вивчити
-  ipa: /wɪˈu̯tʃɪtɪ/
-  translation: to learn/master (perf)
-  pos: verb
-  note: ДВ від вчити
-- lemma: готувати
-  ipa: /ɦɔtuˈwatɪ/
-  translation: to prepare/cook (impf)
-  pos: verb
-  note: НДВ → ДВ приготувати
-- lemma: приготувати
-  ipa: /prɪɦɔtuˈwatɪ/
-  translation: to prepare/cook (perf)
-  pos: verb
-  note: ДВ від готувати
-- lemma: пити
-  ipa: /ˈpɪtɪ/
-  translation: to drink (impf)
-  pos: verb
-  note: НДВ → ДВ випити
-- lemma: випити
-  ipa: /ˈwɪpɪtɪ/
-  translation: to drink (perf)
-  pos: verb
-  note: ДВ від пити
-- lemma: дивитися
-  ipa: /dɪˈwɪtɪsʲa/
-  translation: to watch (impf)
-  pos: verb
-  note: НДВ → ДВ подивитися
-- lemma: подивитися
-  ipa: /pɔdɪˈwɪtɪsʲa/
-  translation: to watch (perf)
-  pos: verb
-  note: ДВ від дивитися
-- lemma: звичка
-  ipa: /ˈzwɪtʃka/
-  translation: habit
+- lemma: строк
+  ipa: /strɔk/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: регулярність
-  ipa: /rɛɦuˈlʲarnisʲtʲ/
-  translation: regularity
+  gender: m
+- lemma: упалий
+  ipa: /upˈalɪj/
+  translation: ''
+  pos: adj
+- lemma: фон
+  ipa: /fɔn/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: послідовність
-  ipa: /pɔslʲiˈdɔwnisʲtʲ/
-  translation: sequence
-  pos: noun
-  gender: f
+  gender: m
+- lemma: чергувати
+  ipa: /t͡ʃɛrɦuʋˈatɪ/
+  translation: ''
+  pos: verb

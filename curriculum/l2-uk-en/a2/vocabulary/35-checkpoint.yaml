@@ -2,93 +2,28 @@ module: 35-checkpoint
 level: A2
 version: '2.0'
 items:
-  - lemma: бо
-    ipa: bɔ
-    translation: because (informal)
-    pos: conj
-  - lemma: щоб
-    ipa: ʃtɔb
-    translation: in order to; that (subjunctive)
-    pos: conj
-  - lemma: хоча
-    ipa: xoˈt͡ʃɑ
-    translation: although; though
-    pos: conj
-  - lemma: проте
-    ipa: proˈtɛ
-    translation: however; but; yet
-    pos: conj
-  - lemma: якщо
-    ipa: jɑkˈʃt͡ʃɔ
-    translation: if (real condition)
-    pos: conj
-  - lemma: якби
-    ipa: jɑkˈbɪ
-    translation: if (unreal condition)
-    pos: conj
-  - lemma: поки
-    ipa: ˈpɔkɪ
-    translation: while; until
-    pos: conj
-  - lemma: який
-    ipa: jɑˈkɪj
-    translation: which; what kind of
-    pos: pron
-    gender: m
-  - lemma: яка
-    ipa: jɑˈkɑ
-    translation: which; what kind of
-    pos: pron
-    gender: f
-  - lemma: яке
-    ipa: jɑˈkɛ
-    translation: which; what kind of
-    pos: pron
-    gender: n
-  - lemma: які
-    ipa: jɑˈki
-    translation: which; what kind of
-    pos: pron
-    gender: pl
-  - lemma: нарешті
-    ipa: nɐˈrɛʃti
-    translation: finally; at last
-    pos: adv
-  - lemma: потім
-    ipa: ˈpɔtim
-    translation: then; afterwards
-    pos: adv
-  - lemma: турбувати
-    ipa: turbuˈvɑte
-    translation: to bother; to trouble
-    pos: verb
-  - lemma: одужати
-    ipa: oˈduʒɐte
-    translation: to recover; to get well
-    pos: verb
-  - lemma: оглянути
-    ipa: oɦˈlʲɑnute
-    translation: to examine; to look over
-    pos: verb
-  - lemma: горло
-    ipa: ˈɦɔrlo
-    translation: throat
-    pos: noun
-    gender: n
-  - lemma: затор
-    ipa: zɐˈtɔr
-    translation: traffic jam
-    pos: noun
-    gender: m
-  - lemma: тому що
-    ipa: toˈmu ʃtɔ
-    translation: because
-    pos: conj
-  - lemma: через те що
-    ipa: ˈt͡ʃɛrɛz tɛ ʃtɔ
-    translation: due to the fact that
-    pos: conj
-  - lemma: після того як
-    ipa: ˈpisʲlʲɐ ˈtɔɦɔ jɑk
-    translation: after (conjunction)
-    pos: conj
+- lemma: величезний
+  ipa: /ʋɛlɪt͡ʃˈɛznɪj/
+  translation: ''
+  pos: adj
+- lemma: зв'язати
+  ipa: /zʋjazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: лікування
+  ipa: /likuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: оглядати
+  ipa: /ɔɦljadˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: уважний
+  ipa: /uʋˈaʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: уперед
+  ipa: /upɛrˈɛd/
+  translation: ''
+  pos: adv

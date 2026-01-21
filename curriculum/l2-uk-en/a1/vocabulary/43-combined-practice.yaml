@@ -1,54 +1,103 @@
 module: 43-combined-practice
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: план
-    ipa: /plɑn/
-    translation: plan
-    pos: noun 
-    gender: m
-  - lemma: встигнути
-    ipa: /vsˈtɪɦnʊtɪ/
-    translation: to be on time / to manage
-    pos: verb 
-    aspect: pf
-  - lemma: зайнятий
-    ipa: /ˈzɑjnʲɑtɪj/
-    translation: busy
-    pos: adj 
-    gender: m
-  - lemma: список
-    ipa: /ˈspɪsɔk/
-    translation: list
-    pos: noun 
-    gender: m
-  - lemma: справа
-    ipa: /ˈsprɑvɑ/
-    translation: matter / business
-    pos: noun 
-    gender: f
-  - lemma: зустріч
-    ipa: /ˈzustrʲit͡ʃ/
-    translation: meeting
-    pos: noun 
-    gender: f
-  - lemma: вільний
-    ipa: /ˈvʲilʲnɪj/
-    translation: free
-    pos: adj 
-    gender: m
-  - lemma: успіх
-    ipa: /ˈuspʲix/
-    translation: success
-    pos: noun 
-    gender: m
-  - lemma: нарешті
-    ipa: /nɑˈrɛʃtʲi/
-    translation: finally
-    pos: adv 
-    gender: n/a
-  - lemma: втомитися
-    ipa: /vtɔˈmɪtɪsʲɑ/
-    translation: to get tired
-    pos: verb 
-    aspect: pf
+- lemma: аптека
+  ipa: /aptˈɛka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вокзал
+  ipa: /ʋɔkzˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ворота
+  ipa: /ʋɔrˈɔta/
+  translation: ''
+  pos: noun
+- lemma: все
+  ipa: /ʋsɛ/
+  translation: ''
+  pos: part
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дія
+  ipa: /dˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: замовляти
+  ipa: /zamɔʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: зв'язний
+  ipa: /zʋˈjaznɪj/
+  translation: ''
+  pos: adj
+- lemma: золотий
+  ipa: /zɔlɔtˈɪj/
+  translation: ''
+  pos: noun
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: купувати
+  ipa: /kupuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: магазин
+  ipa: /maɦazˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мистецтво
+  ipa: /mɪstˈɛt͡stʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: місце
+  ipa: /mˈist͡sɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: платити
+  ipa: /platˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ринка
+  ipa: /rˈɪnka/
+  translation: ''
+  pos: noun
+- lemma: справа
+  ipa: /sprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: справжній
+  ipa: /sprˈaʋʒnij/
+  translation: ''
+  pos: adj
+- lemma: фраза
+  ipa: /frˈaza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шукати
+  ipa: /ʃukˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: їхати
+  ipa: /ˈjixatɪ/
+  translation: ''
+  pos: verb

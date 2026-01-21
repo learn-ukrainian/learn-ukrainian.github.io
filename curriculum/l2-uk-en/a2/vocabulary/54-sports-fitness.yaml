@@ -2,283 +2,449 @@ module: 54-sports-fitness
 level: A2
 version: '2.0'
 items:
+- lemma: атакувати
+  ipa: /atakuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: басейн
-  ipa: bɐˈsɛjn
-  translation: pool
+  ipa: /basˈɛjn/
+  translation: ''
   pos: noun
   gender: m
 - lemma: баскетбол
-  ipa: bɐsketˈbɔl
-  translation: basketball
+  ipa: /baskɛtbˈɔl/
+  translation: ''
   pos: noun
   gender: m
+- lemma: битися
+  ipa: /bˈɪtɪsja/
+  translation: ''
+  pos: verb
 - lemma: бокс
-  ipa: bɔks
-  translation: boxing
+  ipa: /bɔks/
+  translation: ''
   pos: noun
   gender: m
+- lemma: боксер
+  ipa: /bɔksˈɛr/
+  translation: ''
+  pos: noun
+- lemma: біатлоніст
+  ipa: /biatlɔnˈist/
+  translation: ''
+  pos: noun
 - lemma: біг
-  ipa: bih
-  translation: run/running
-  pos: noun
-  gender: m
-- lemma: біга
-  ipa: ˈbiɦɐ
-  translation: cart/running (gen?)
+  ipa: /biɦ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: біговий
-  ipa: bihoˈvɪj
-  translation: running (adj)
+  ipa: /biɦɔʋˈɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: важити
+  ipa: /ʋˈaʒɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: вболівальник
-  ipa: vbolʲiˈʋɑlʲnɪk
-  translation: fan/supporter
+  ipa: /ʋbɔliʋˈalʲnɪk/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: вболівати
-  ipa: vbolʲiˈʋɑte
-  translation: to support/cheer
+- lemma: вибухати
+  ipa: /ʋɪbuxatɪ/
+  translation: ''
   pos: verb
-- lemma: вдих
-  ipa: vdɪx
-  translation: inhale
-  pos: noun
-  gender: m
-- lemma: вид
-  ipa: vɪd
-  translation: type, kind, sport discipline
-  pos: noun
-  gender: m
 - lemma: вигравати
-  ipa: vɪhrɐˈʋɑte
-  translation: to win (imp)
+  ipa: /ʋɪɦraʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: видих
-  ipa: ˈvɪdɪx
-  translation: exhale
+- lemma: вигравувати
+  ipa: /ʋɪɦraʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: волейбол
+  ipa: /ʋɔlɛjbˈɔl/
+  translation: ''
   pos: noun
   gender: m
-- lemma: відмінок
-  ipa: vʲidˈmʲinok
-  translation: grammatical case
+- lemma: гооол
+  ipa: /ɦɔɔɔl/
+  translation: ''
   pos: noun
   gender: m
-- lemma: гол
-  ipa: hɔl
-  translation: goal
+- lemma: гооооол
+  ipa: /ɦɔɔɔɔɔl/
+  translation: ''
   pos: noun
   gender: m
 - lemma: гравець
-  ipa: hrɐˈvɛt͡sʲ
-  translation: player
+  ipa: /ɦraʋˈɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: гімн
-  ipa: himn
-  translation: anthem
+- lemma: град
+  ipa: /ɦrad/
+  translation: ''
   pos: noun
   gender: m
+- lemma: гру
+  ipa: /ɦru/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: гімнастика
-  ipa: himˈnɑstɪkɐ
-  translation: gymnastics
+  ipa: /ɦimnˈastɪka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: дистанція
-  ipa: dɪsˈtɑnt͡sʲijɐ
-  translation: distance
+- lemma: гімнастка
+  ipa: /ɦimnˈastka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: еліна
-  ipa: eˈlʲinɐ
-  translation: Elina
-  pos: propn
-  gender: f
-- lemma: займатися
-  ipa: zɐjˈmɑtɪsʲɐ
-  translation: to engage in/exercise
-  pos: verb
-- lemma: збірно
-  ipa: ˈzbʲirno
-  translation: team (typo збірна)
-  pos: noun
-  gender: f
-- lemma: змагання
-  ipa: zmɐˈhɑnʲːɐ
-  translation: competition
+- lemma: динамо
+  ipa: /dɪnˈamɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: знахідний
-  ipa: znɐˈxʲidnɪj
-  translation: accusative (case)
-  pos: adj
-  gender: m
-- lemma: йога
-  ipa: ˈjɔhɐ
-  translation: yoga
-  pos: noun
-  gender: f
-- lemma: йоги
-  ipa: ˈjɔhɪ
-  translation: yogis
-  pos: noun
-  gender: f
-- lemma: йогий
-  ipa: ˈjɔhɪj
-  translation: yogi (adj? typo)
-  pos: adj
-  gender: f
-- lemma: качатися
-  ipa: kɐˈt͡ʃɑtɪsʲɐ
-  translation: to swing/pump muscles
+- lemma: домінувати
+  ipa: /dɔminuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: класичний
-  ipa: klɐˈsɪt͡ʃnɪj
-  translation: classical
-  pos: adj
-  gender: n
-- lemma: класний
-  ipa: ˈklɑsnɪj
-  translation: cool/class (adj)
-  pos: adj
+- lemma: донецьк
+  ipa: /dɔnˈɛt͡sʲk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: доріжка
+  ipa: /dɔrˈiʒka/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: кличка
-  ipa: klɪt͡ʃˈkɔ
-  translation: Klitschko (typo Кличко)
-  pos: propn
-  gender: m
-- lemma: клуб
-  ipa: klub
-  translation: club
+- lemma: ель
+  ipa: /ɛlʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: кілометр
-  ipa: kiloˈmɛtr
-  translation: kilometer
-  pos: noun
-  gender: m
-- lemma: майданчик
-  ipa: mɐjˈdɑnt͡ʃɪk
-  translation: playground/court
-  pos: noun
-  gender: m
-- lemma: матч
-  ipa: mɑt͡ʃ
-  translation: match
-  pos: noun
-  gender: m
-- lemma: місцевий
-  ipa: mʲisˈt͡sɛvɪj
-  translation: locative (case)/local
+- lemma: забити
+  ipa: /zabˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: задихатися
+  ipa: /zadɪxatɪsja/
+  translation: ''
+  pos: verb
+- lemma: закохуватися
+  ipa: /zakˈɔxuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: засмучений
+  ipa: /zasmˈut͡ʃɛnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: нелегко
-  ipa: neˈlɛhko
-  translation: not easily
+- lemma: захищатися
+  ipa: /zaxɪʃt͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: звикати
+  ipa: /zʋɪkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: звикло
+  ipa: /zʋˈɪklɔ/
+  translation: ''
   pos: adv
-- lemma: одягнений
-  ipa: oˈdʲɑhnenɪj
-  translation: dressed
-  pos: adj
-- lemma: олімпійський
-  ipa: olʲimˈpijsʲkɪj
-  translation: Olympic
-  pos: adj
-  gender: m
-- lemma: пагорб
-  ipa: ˈpɑhorb
-  translation: hill
+- lemma: здоровити
+  ipa: /zdɔrˈɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: змагатися
+  ipa: /zmaɦˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зрівнювати
+  ipa: /zrˈiʋnjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: класіка
+  ipa: /klasika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кличко
+  ipa: /klˈɪt͡ʃkɔ/
+  translation: ''
+  pos: noun
+- lemma: коментатор
+  ipa: /kɔmɛntˈatɔr/
+  translation: ''
   pos: noun
   gender: m
+- lemma: ллятися
+  ipa: /llˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: м'яз
+  ipa: /mjaz/
+  translation: ''
+  pos: noun
+- lemma: м'язовий
+  ipa: /mˈjazɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: маса
+  ipa: /mˈasa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: матч
+  ipa: /matt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: медаль
+  ipa: /mɛdˈalʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: набрати
+  ipa: /nabrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: назар
+  ipa: /nazˈar/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: найсильніший
+  ipa: /najsɪlʲnˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: напружений
+  ipa: /naprˈuʒɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: новачка
+  ipa: /nɔʋat͡ʃkˈa/
+  translation: ''
+  pos: noun
+- lemma: нск
+  ipa: /nsk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обводити
+  ipa: /ɔbʋɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: обіймати
+  ipa: /ɔbijmˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: обійматися
+  ipa: /ɔbijmˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: олімпійський
+  ipa: /ɔlimpˈijsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: ох
+  ipa: /ɔx/
+  translation: ''
+  pos: noun
+- lemma: пенальті
+  ipa: /pɛnˈalʲti/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перестати
+  ipa: /pɛrɛstˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: персональний
+  ipa: /pɛrsɔnˈalʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: плавання
-  ipa: ˈplɑʋɐnʲːɐ
-  translation: swimming
+  ipa: /plˈaʋannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: подякувати
-  ipa: poˈdʲɑkuʋɐte
-  translation: to thank (perf)
+- lemma: планка
+  ipa: /plˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: покращити
+  ipa: /pɔkrˈaʃt͡ʃɪtɪ/
+  translation: ''
   pos: verb
-- lemma: пробігти
-  ipa: proˈbʲihte
-  translation: to run a distance (perf)
-  pos: verb
-  gender: m
+- lemma: пристрасний
+  ipa: /prˈɪstrasnɪj/
+  translation: ''
+  pos: adj
+- lemma: присідання
+  ipa: /prɪsidˈannja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: програвати
-  ipa: prohrɐˈʋɑte
-  translation: to lose (imp)
+  ipa: /prɔɦraʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: підніматися
-  ipa: pidnʲiˈmɑtɪsʲɐ
-  translation: to rise/climb
-  pos: verb
-- lemma: піз
-  ipa: piz
-  translation: late? (typo пізно)
-  pos: noun
-  gender: f
-- lemma: ранковий
-  ipa: rɐnˈkɔʋɪj
-  translation: morning (adj)
-  pos: adj
-  gender: m
-- lemma: роздягальний
-  ipa: rozdʲɐˈhɑlʲnɪj
-  translation: changing
-  pos: adj
-- lemma: світоліна
-  ipa: svitoˈlʲinɐ
-  translation: Svitolina
-  pos: propn
-  gender: f
-- lemma: сноуборд
-  ipa: snou̯ˈbɔrd
-  translation: snowboard
+- lemma: піт
+  ipa: /pit/
+  translation: ''
   pos: noun
   gender: m
+- lemma: регулярно
+  ipa: /rɛɦulˈjarnɔ/
+  translation: ''
+  pos: adv
+- lemma: розминка
+  ipa: /rɔzmˈɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: рівний
+  ipa: /rˈiʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: свистіти
+  ipa: /sʋɪstˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: сидячий
+  ipa: /sɪdˈjat͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: силовий
+  ipa: /sɪlɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: спин
+  ipa: /spɪn/
+  translation: ''
+  pos: noun
 - lemma: спортзал
-  ipa: sportˈzɑl
-  translation: gym
+  ipa: /spɔrtzˈal/
+  translation: ''
   pos: noun
   gender: m
 - lemma: спортивний
-  ipa: sporˈtɪʋnɪj
-  translation: sports (adj)
+  ipa: /spɔrtˈɪʋnɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: стадіон
-  ipa: stɐdʲiˈɔn
-  translation: stadium
+  ipa: /stadiˈɔn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: стрес
-  ipa: strɛs
-  translation: stress
-  pos: noun
-  gender: m
-- lemma: тренер
-  ipa: ˈtrɛner
-  translation: coach
-  pos: noun
-  gender: m
-- lemma: тренування
-  ipa: trenuˈʋɑnʲːɐ
-  translation: training
+- lemma: страшне
+  ipa: /straʃnˈɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: футбольний
-  ipa: fudˈbɔlʲnɪj
-  translation: football (adj)
-  pos: adj
+- lemma: стрибати
+  ipa: /strɪbˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: суддя
+  ipa: /suddˈja/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: суперництво
+  ipa: /supˈɛrnɪt͡stʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: схуднути
+  ipa: /sxˈudnutɪ/
+  translation: ''
+  pos: verb
+- lemma: тайм
+  ipa: /tajm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тремтіти
+  ipa: /trɛmtˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: тренер
+  ipa: /trˈɛnɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: трястися
+  ipa: /trjastˈɪsja/
+  translation: ''
+  pos: verb
+- lemma: тіль
+  ipa: /tilʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: удар
+  ipa: /udˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ураааа
+  ipa: /uraaaa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: футболіст
+  ipa: /futbɔlˈist/
+  translation: ''
+  pos: noun
 - lemma: фітнес
-  ipa: ˈfʲitnes
-  translation: fitness
+  ipa: /fˈitnɛs/
+  translation: ''
   pos: noun
   gender: m
-- lemma: інструктор
-  ipa: inˈstruktor
-  translation: instructor
+- lemma: фітнеслайф
+  ipa: /fitnɛslajf/
+  translation: ''
   pos: noun
   gender: m
+- lemma: хот-дог
+  ipa: /xɔt-dɔɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: циганков
+  ipa: /t͡sɪɦankˈɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чемпіон
+  ipa: /t͡ʃɛmpiˈɔn/
+  translation: ''
+  pos: noun
+- lemma: чемпіонат
+  ipa: /t͡ʃɛmpiɔnˈat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: шахтар
+  ipa: /ʃaxtˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: штовхати
+  ipa: /ʃtɔʋxˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: штрафний
+  ipa: /ʃtrafnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: іспанія
+  ipa: /ispˈanija/
+  translation: ''
+  pos: noun
+  gender: f

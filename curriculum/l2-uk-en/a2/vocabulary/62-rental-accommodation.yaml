@@ -1,65 +1,224 @@
 module: 62-rental-accommodation
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: оренда
-  translation: rent/rental
+- lemma: австрійський
+  ipa: /aʋstrˈijsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: вежа
+  ipa: /ʋˈɛʒa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: квартира
-  translation: apartment
-  pos: noun
-  gender: f
-- lemma: власник
-  translation: owner
-  pos: noun
-  gender: m
-- lemma: орендар
-  translation: tenant
-  pos: noun
-  gender: m
+- lemma: винайняти
+  ipa: /ʋˈɪnajnjatɪ/
+  translation: ''
+  pos: verb
+- lemma: вліво
+  ipa: /ʋlˈiʋɔ/
+  translation: ''
+  pos: adv
 - lemma: договір
-  translation: contract
+  ipa: /dˈɔɦɔʋir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: економно
+  ipa: /ɛkɔnˈɔmnɔ/
+  translation: ''
+  pos: adv
+- lemma: застав
+  ipa: /zastˈaʋ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: застава
-  translation: deposit
+  ipa: /zastˈaʋa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: затишний
+  ipa: /zˈatɪʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: зданий
+  ipa: /zdˈanɪj/
+  translation: ''
+  pos: adj
+- lemma: зекономити
+  ipa: /zɛkɔnˈɔmɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: знадобитися
+  ipa: /znadɔbˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: зранку
+  ipa: /zrˈanku/
+  translation: ''
+  pos: adv
+- lemma: комунальний
+  ipa: /kɔmunˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: комісія
+  ipa: /kɔmˈisija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: комунальні
-  translation: utilities
+- lemma: кран
+  ipa: /kran/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: опалення
-  translation: heating
+  gender: m
+- lemma: лічильник
+  ipa: /lit͡ʃˈɪlʲnɪk/
+  translation: ''
+  pos: noun
+- lemma: майно
+  ipa: /majnˈɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: електрика
-  translation: electricity
+- lemma: месенджер
+  ipa: /mɛsɛndʒɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: напрям
+  ipa: /nˈaprjam/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: наявність
+  ipa: /naˈjaʋnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: меблі
-  translation: furniture
+- lemma: недалеко
+  ipa: /nɛdalˈɛkɔ/
+  translation: ''
+  pos: adv
+- lemma: незручно
+  ipa: /nɛzrˈut͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: однокімнатний
+  ipa: /ɔdnɔkimnˈatnɪj/
+  translation: ''
+  pos: adj
+- lemma: околиця
+  ipa: /ɔkˈɔlɪt͡sja/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: умови
-  translation: conditions/terms
+  gender: f
+- lemma: опалення
+  ipa: /ɔpˈalɛnnja/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: підписати
-  translation: to sign
+  gender: n
+- lemma: оптоволокно
+  ipa: /ɔptɔʋɔlɔknɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: переконатися
+  ipa: /pɛrɛkɔnˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: оглянути
-  translation: to inspect/view
+- lemma: пожартувати
+  ipa: /pɔʒartuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: звільнити
-  translation: to vacate
+- lemma: потурбувати
+  ipa: /pɔturbuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: ремонт
-  translation: repair/renovation
+- lemma: пошук
+  ipa: /pˈɔʃuk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: час
-  translation: time
+- lemma: під'їзд
+  ipa: /pidˈjizd/
+  translation: ''
   pos: noun
   gender: m
+- lemma: підписання
+  ipa: /pidpɪsˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: підписувати
+  ipa: /pidpˈɪsuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: ратуша
+  ipa: /rˈatuʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: регулювати
+  ipa: /rɛɦuljuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: розкладатися
+  ipa: /rɔzkladˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: рієлтор
+  ipa: /rijɛltɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спокійне
+  ipa: /spɔkˈijnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: стабільно
+  ipa: /stabˈilʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: тобто
+  ipa: /tˈɔbtɔ/
+  translation: ''
+  pos: conj
+- lemma: угода
+  ipa: /uɦˈɔda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: упор
+  ipa: /upˈɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: цікавість
+  ipa: /t͡sikˈaʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чистота
+  ipa: /t͡ʃɪstɔtˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чомусь
+  ipa: /t͡ʃɔmˈusʲ/
+  translation: ''
+  pos: pron
+- lemma: шафа-купе
+  ipa: /ʃˈafa-kupɛ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: швидкісний
+  ipa: /ʃʋˈɪdkisnɪj/
+  translation: ''
+  pos: adj
+- lemma: індивідуальний
+  ipa: /indɪʋiduˈalʲnɪj/
+  translation: ''
+  pos: adj

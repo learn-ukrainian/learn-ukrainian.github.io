@@ -2,218 +2,308 @@ module: 53-shopping-services
 level: A2
 version: '2.0'
 items:
-- lemma: адміністратор
-  ipa: ɐdmʲinʲisˈtrɑtor
-  translation: administrator
+- lemma: банкомат
+  ipa: /bankɔmˈat/
+  translation: ''
   pos: noun
   gender: m
-- lemma: безконтактний
-  ipa: bezkonˈtɑktnɪj
-  translation: contactless
-  pos: adj
+- lemma: бланк
+  ipa: /blank/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: борода
+  ipa: /bɔrɔdˈa/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: брендовий
-  ipa: ˈbrɛndoʋɪj
-  translation: brand (adj)
-  pos: adj
+- lemma: бідна
+  ipa: /bˈidna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бізнес-сектор
+  ipa: /bˈiznɛs-sɛktɔr/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: витратити
-  ipa: vɪˈtrɑtɪte
-  translation: to spend (perf)
+- lemma: вгору
+  ipa: /ʋɦˈɔru/
+  translation: ''
+  pos: adv
+- lemma: вдячність
+  ipa: /ʋdˈjat͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вимити
+  ipa: /ʋˈɪmɪtɪ/
+  translation: ''
   pos: verb
+- lemma: винний
+  ipa: /ʋˈɪnnɪj/
+  translation: ''
+  pos: adj
+- lemma: вміст
+  ipa: /ʋmist/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: відділення
-  ipa: vidˈdʲilenʲːɐ
-  translation: branch/department
+  ipa: /ʋiddˈilɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: доставляти
-  ipa: dostɐu̯ˈlʲɑte
-  translation: to deliver (imp)
+- lemma: відслідковувати
+  ipa: /ʋidslidkˈɔʋuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: забирати
-  ipa: zɐbɪˈrɑte
-  translation: to take away (imp)
-  pos: verb
-- lemma: забронювати
-  ipa: zɐbronʲuˈʋɑte
-  translation: to book (perf)
-  pos: verb
-- lemma: зайняти
-  ipa: zɐjˈnʲɑte
-  translation: to occupy/borrow (perf)
-  pos: verb
-  gender: n
+- lemma: гребінець
+  ipa: /ɦrɛbinˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: грудка
+  ipa: /ɦrˈudka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: доставка
+  ipa: /dɔstˈaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дружня
+  ipa: /drˈuʒnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: економіка
+  ipa: /ɛkɔnˈɔmika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: експрес
+  ipa: /ɛksprˈɛs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: експрес-доставка
+  ipa: /ɛksprˈɛs-dɔstaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: екстравагантний
+  ipa: /ɛkstraʋaɦˈantnɪj/
+  translation: ''
+  pos: adj
 - lemma: залишати
-  ipa: zɐlɪˈʃɑte
-  translation: to leave (imp)
+  ipa: /zalɪʃˈatɪ/
+  translation: ''
   pos: verb
 - lemma: записаний
-  ipa: zɐˈpɪsɐnɪj
-  translation: recorded
+  ipa: /zapˈɪsanɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: зачіска
-  ipa: ˈzɑt͡ʃiskɐ
-  translation: hairstyle
-  pos: noun
-  gender: f
-- lemma: красуня
-  ipa: krɐˈsunʲɐ
-  translation: beauty
-  pos: noun
-  gender: f
-- lemma: куштувати
-  ipa: kuʃtuˈʋɑte
-  translation: to taste
+- lemma: заповнювати
+  ipa: /zapˈɔʋnjuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: магія
-  ipa: ˈmɑhʲijɐ
-  translation: magic
+- lemma: зважувати
+  ipa: /zʋˈaʒuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: клієнтка
+  ipa: /kliˈjɛntka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: молл
-  ipa: mɔl
-  translation: mall
-  pos: noun
-  gender: m
-- lemma: міряти
-  ipa: ˈmʲirʲɐte
-  translation: to measure/try on (imp)
-  pos: verb
-- lemma: місцевий
-  ipa: mʲisˈt͡sɛvɪj
-  translation: locative (case)/local
+- lemma: курячий
+  ipa: /kˈurjat͡ʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: одержувач
-  ipa: oˈdɛrʒuʋɐt͡ʃ
-  translation: recipient
-  pos: noun
-  gender: m
-- lemma: оператор
-  ipa: opeˈrɑtor
-  translation: operator
-  pos: noun
-  gender: m
-- lemma: отримання
-  ipa: otˈrɪmɐnʲːɐ
-  translation: receipt
+- lemma: кіло
+  ipa: /kilˈɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: оформлювати
-  ipa: oˈfɔrmlʲuʋɐte
-  translation: to process/register
+- lemma: м'ясний
+  ipa: /mjasnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: м'ясник
+  ipa: /mjasnˈɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: майстерня
+  ipa: /majstˈɛrnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: машинка
+  ipa: /maʃˈɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мобільний
+  ipa: /mɔbˈilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: накидка
+  ipa: /nakɪdka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: накривати
+  ipa: /nakrɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: невід'ємний
+  ipa: /nɛʋidˈjɛmnɪj/
+  translation: ''
+  pos: adj
+- lemma: нижчий
+  ipa: /nˈɪʒt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: одержувач
+  ipa: /ɔdˈɛrʒuʋat͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: округлювати
+  ipa: /ɔkrˈuɦljuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: онлайн-доставка
+  ipa: /ɔnlajn-dɔstˈaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пакувати
+  ipa: /pakuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: перукар
-  ipa: peruˈkɑr
-  translation: hairdresser
+  ipa: /pɛrukˈar/
+  translation: ''
   pos: noun
   gender: m
 - lemma: перукарня
-  ipa: peruˈkɑrnʲɐ
-  translation: barbershop/salon
+  ipa: /pɛrukˈarnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: плата
-  ipa: ˈplɑtɐ
-  translation: payment/fee
+- lemma: платіж
+  ipa: /platˈiʒ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: попробовать
-  ipa: poˈprobovɐtʲ
-  translation: to try (Russian, typo спробувати)
-  pos: other
-- lemma: прибути
-  ipa: prɪˈbute
-  translation: to arrive (perf)
-  pos: verb
-  gender: f
-- lemma: приватбанк
-  ipa: prɪvɐtˈbɑnk
-  translation: PrivatBank
-  pos: propn
   gender: m
-- lemma: прикласти
-  ipa: prɪˈklɑste
-  translation: to attach/apply (perf)
+- lemma: постригти
+  ipa: /pɔstrˈɪɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: постригтися
+  ipa: /pɔstrˈɪɦtɪsja/
+  translation: ''
+  pos: verb
+- lemma: пральня
+  ipa: /prˈalʲnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: прибути
+  ipa: /prɪbˈutɪ/
+  translation: ''
   pos: verb
 - lemma: продуктовий
-  ipa: produkˈtɔʋɪj
-  translation: grocery (adj)
+  ipa: /prɔduktˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: розпродаж
-  ipa: rɔzˈprodɐʒ
-  translation: sale
+- lemma: підрівняти
+  ipa: /pidriʋnˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: підстригти
+  ipa: /pidstrˈɪɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: регулярний
+  ipa: /rɛɦulˈjarnɪj/
+  translation: ''
+  pos: adj
+- lemma: ринковий
+  ipa: /rˈɪnkɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: ряд
+  ipa: /rjad/
+  translation: ''
   pos: noun
   gender: m
+- lemma: свинина
+  ipa: /sʋɪnˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: сервіс
-  ipa: ˈsɛrvis
-  translation: service
+  ipa: /sˈɛrʋis/
+  translation: ''
   pos: noun
   gender: m
-- lemma: сканувати
-  ipa: skɐnuˈʋɑte
-  translation: to scan
-  pos: verb
-- lemma: скинутися
-  ipa: ˈskɪnutɪsʲɐ
-  translation: to chip in (perf)
-  pos: verb
-- lemma: смс
-  ipa: smˈs (es-em-es)
-  translation: SMS
-  pos: noun
-  gender: m
-- lemma: стрижка
-  ipa: ˈstrɪʒkɐ
-  translation: haircut
-  pos: noun
-  gender: f
-- lemma: творог
-  ipa: tvoˈrɔh
-  translation: curd (Russian, typo сир)
-  pos: other
-- lemma: тойота
-  ipa: toˈjotɐ
-  translation: Toyota
-  pos: propn
-  gender: f
-- lemma: торговий
-  ipa: torˈhɔʋɪj
-  translation: trade (adj)
+- lemma: скоропсувний
+  ipa: /skɔrɔpsuʋnɪj/
+  translation: ''
   pos: adj
-- lemma: торгуватися
-  ipa: torhuˈʋɑtɪsʲɐ
-  translation: to bargain
-  pos: verb
-- lemma: тістечка
-  ipa: ˈtʲistet͡ʃkɐ
-  translation: pastries
+- lemma: смс-повідомлення
+  ipa: /sms-pɔʋidˈɔmlɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: фарбування
-  ipa: fɐrbuˈʋɑnʲːɐ
-  translation: dyeing/painting
+- lemma: стригти
+  ipa: /strˈɪɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: стригтися
+  ipa: /strˈɪɦtɪsja/
+  translation: ''
+  pos: verb
+- lemma: стрижка
+  ipa: /strˈɪʒka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сьогоднішній
+  ipa: /sʲɔɦˈɔdniʃnij/
+  translation: ''
+  pos: adj
+- lemma: торгування
+  ipa: /tɔrɦuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: трек-номер
+  ipa: /trɛk-nˈɔmɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: харчування
+  ipa: /xart͡ʃuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: хімчистка
-  ipa: ximˈt͡ʃɪstkɐ
-  translation: dry cleaning
+  ipa: /ximt͡ʃˈɪstka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: чайова
-  ipa: t͡ʃɐjoˈvɑ
-  translation: tip (money) gen? or чайові
+- lemma: чайові
+  ipa: /t͡ʃajɔʋˈi/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: черга
-  ipa: ˈt͡ʃɛrhɐ
-  translation: queue/turn
+- lemma: яловичина
+  ipa: /ˈjalɔʋɪt͡ʃɪna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: шопінг
-  ipa: ˈʃɔpinh
-  translation: shopping
-  pos: noun
-  gender: m

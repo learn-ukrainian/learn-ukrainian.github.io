@@ -2,125 +2,141 @@ module: 14-future-plans-and-promises
 level: A2
 version: '2.0'
 items:
-- lemma: обіцянка
-  ipa: oˈbit͡sʲɐnkɐ
-  translation: promise
+- lemma: акцент
+  ipa: /akt͡sˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вилетіти
+  ipa: /ʋˈɪlɛtitɪ/
+  translation: ''
+  pos: verb
+- lemma: віддати
+  ipa: /ʋiddˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: відраза
+  ipa: /ʋidrˈaza/
+  translation: ''
   pos: noun
   gender: f
-- lemma: плани
-  ipa: ˈplɑnɪ
-  translation: plans
+- lemma: горобець
+  ipa: /ɦɔrɔbˈɛt͡sʲ/
+  translation: ''
   pos: noun
-  gender: m
-  number: pl
-- lemma: обіцяти
-  ipa: oˈbit͡sʲɐte
-  translation: to promise
+  gender: f
+- lemma: допоміжний
+  ipa: /dɔpɔmˈiʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: завантажити
+  ipa: /zaʋantˈaʒɪtɪ/
+  translation: ''
   pos: verb
-- lemma: зроблю
-  ipa: zroˈblʲu
-  translation: will do/make (perf)
+- lemma: займатися
+  ipa: /zajmˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: напишу
-  ipa: nɐpɪˈʃu
-  translation: will write (perf)
+- lemma: залишатися
+  ipa: /zalɪʃˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: прочитаю
-  ipa: prot͡ʃɪˈtɑju
-  translation: will read (perf)
-  pos: verb
-- lemma: скажу
-  ipa: skɐˈʒu
-  translation: will say (perf)
-  pos: verb
-- lemma: побачу
-  ipa: poˈbɑt͡ʃu
-  translation: will see (perf)
-  pos: verb
-- lemma: почую
-  ipa: poˈt͡ʃuju
-  translation: will hear (perf)
-  pos: verb
-- lemma: візьму
-  ipa: ʋizʲˈmu
-  translation: will take (perf)
-  pos: verb
-- lemma: дам
-  ipa: dɑm
-  translation: will give (perf)
-  pos: verb
-- lemma: піду
-  ipa: piˈdu
-  translation: will go (on foot, perf)
-  pos: verb
-- lemma: прийду
-  ipa: prɪjˈdu
-  translation: will arrive (on foot, perf)
-  pos: verb
-- lemma: приїду
-  ipa: prɪˈjidu
-  translation: will arrive (by vehicle, perf)
-  pos: verb
-- lemma: вийду
-  ipa: ˈʋɪjdu
-  translation: will go out (perf)
-  pos: verb
-- lemma: увійду
-  ipa: uʋijˈdu
-  translation: will enter (perf)
-  pos: verb
-- lemma: почну
-  ipa: pot͡ʃˈnu
-  translation: will start (perf)
-  pos: verb
-- lemma: закінчу
-  ipa: zɐˈkint͡ʃu
-  translation: will finish (perf)
-  pos: verb
-- lemma: зрозумію
-  ipa: zrozuˈmʲiju
-  translation: will understand (perf)
-  pos: verb
-- lemma: забуду
-  ipa: zɐˈbudu
-  translation: will forget (perf)
-  pos: verb
-- lemma: запам'ятаю
-  ipa: zɐpɐmjɐˈtɑju
-  translation: will remember (perf)
-  pos: verb
-- lemma: знайду
-  ipa: znɐjˈdu
-  translation: will find (perf)
-  pos: verb
-- lemma: загублю
-  ipa: zɐhuˈblʲu
-  translation: will lose (perf)
-  pos: verb
-- lemma: вид
-  ipa: ʋɪd
-  translation: view; aspect (grammar)
+- lemma: заява
+  ipa: /zaˈjaʋa/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: недоконаний
-  translation: imperfective
-  pos: adj
-  ipa: /nedoˈkɔnɐnɪj/
-- lemma: доконаний
-  translation: perfective
-  pos: adj
-  ipa: /doˈkɔnɐnɪj/
-- lemma: майбутній
-  translation: future
-  pos: adj
-  ipa: /mɐi̯ˈbutʲnʲij/
-- lemma: час
-  translation: time; tense
-  pos: noun
-  gender: m
-  ipa: /t͡ʃɑs/
-- lemma: дієслово
-  translation: verb
+  gender: f
+- lemma: звучання
+  ipa: /zʋut͡ʃˈannja/
+  translation: ''
   pos: noun
   gender: n
-  ipa: /dʲijeˈslɔʋo/
+- lemma: змінений
+  ipa: /zmˈinɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: конкретний
+  ipa: /kɔnkrˈɛtnɪj/
+  translation: ''
+  pos: adj
+- lemma: купля
+  ipa: /kˈuplja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кінцевий
+  ipa: /kint͡sˈɛʋɪj/
+  translation: ''
+  pos: adj
+- lemma: наголос
+  ipa: /nˈaɦɔlɔs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: наприклад
+  ipa: /naprˈɪklad/
+  translation: ''
+  pos: adv
+- lemma: обережний
+  ipa: /ɔbɛrˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: останній
+  ipa: /ɔstˈannij/
+  translation: ''
+  pos: adj
+- lemma: падати
+  ipa: /pˈadatɪ/
+  translation: ''
+  pos: verb
+- lemma: перевіряти
+  ipa: /pɛrɛʋirˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: план
+  ipa: /plan/
+  translation: ''
+  pos: noun
+- lemma: повторюватися
+  ipa: /pɔʋtˈɔrjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: портрет
+  ipa: /pɔrtrˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: порівняти
+  ipa: /pɔriʋnˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: поєднувати
+  ipa: /pɔˈjɛdnuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: регулярність
+  ipa: /rɛɦulˈjarnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: семантичний
+  ipa: /sɛmantˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: серйозний
+  ipa: /sɛrjˈɔznɪj/
+  translation: ''
+  pos: adj
+- lemma: спіймати
+  ipa: /spijmˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: тривалий
+  ipa: /trɪʋˈalɪj/
+  translation: ''
+  pos: adj
+- lemma: флешка
+  ipa: /flɛʃka/
+  translation: ''
+  pos: noun
+  gender: f

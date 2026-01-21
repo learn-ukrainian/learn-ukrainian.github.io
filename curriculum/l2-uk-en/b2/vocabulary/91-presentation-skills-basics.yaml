@@ -1,203 +1,26 @@
-config:
-  standard: '2024'
+module: 91-presentation-skills-basics
+level: B2
+version: '2.0'
 items:
-  - lemma: презентація
-    ipa: /prɛzɛnˈtɑt͡sija/
-    translation: presentation
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: слайд
-    ipa: /slɑjd/
-    translation: slide
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: виступ
-    ipa: /ˈwɪstup/
-    translation: speech, presentation
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: аудиторія
-    ipa: /ɑudɪˈtɔrijɑ/
-    translation: audience
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: доповідач
-    ipa: /dopoˈwidɑt͡ʃ/
-    translation: presenter, speaker
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: вступ
-    ipa: /wstup/
-    translation: introduction, opening
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: висновок
-    ipa: /ˈwɪsnowok/
-    translation: conclusion
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: структура
-    ipa: /strukˈturɑ/
-    translation: structure
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: тема
-    ipa: /ˈtɛmɑ/
-    translation: topic, theme
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: мета
-    ipa: /ˈmɛtɑ/
-    translation: goal, objective
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: візуальний
-    ipa: /wizuˈɑlʲnɪj/
-    translation: visual
-    pos: adj
-    tags: []
-
-  - lemma: допоміжний
-    ipa: /dopoˈmiʒnɪj/
-    translation: auxiliary, supporting
-    pos: adj
-    tags: []
-
-  - lemma: ефективний
-    ipa: /ɛfɛkˈtɪwnɪj/
-    translation: effective
-    pos: adj
-    tags: []
-
-  - lemma: чіткий
-    ipa: /ˈt͡ʃitkɪj/
-    translation: clear, distinct
-    pos: adj
-    tags: []
-
-  - lemma: зрозумілий
-    ipa: /zrozuˈmilɪj/
-    translation: understandable, comprehensible
-    pos: adj
-    tags: []
-
-  - lemma: переконливий
-    ipa: /pɛrɛˈkonlɪwɪj/
-    translation: convincing, persuasive
-    pos: adj
-    tags: []
-
-  - lemma: представити
-    ipa: /prɛdstɑˈwɪtɪ/
-    translation: to present, to introduce
-    pos: verb
-    tags: []
-
-  - lemma: викладати
-    ipa: /wɪklɑˈdɑtɪ/
-    translation: to present, to explain (impf)
-    pos: verb
-    tags: []
-
-  - lemma: викласти
-    ipa: /ˈwɪklɑstɪ/
-    translation: to present, to explain (pf)
-    pos: verb
-    tags: []
-
-  - lemma: підкреслити
-    ipa: /pidˈkrɛslɪtɪ/
-    translation: to emphasize, to stress
-    pos: verb
-    tags: []
-
-  - lemma: привернути увагу
-    ipa: /prɪwɛrˈnutɪ ˈuwɑɦu/
-    translation: to attract attention
-    pos: phrase
-    tags: []
-
-  - lemma: перейти до
-    ipa: /pɛrɛjˈtɪ do/
-    translation: to move on to, to transition to
-    pos: phrase
-    tags: []
-
-  - lemma: зосередити увагу
-    ipa: /zosɛˈrɛdɪtɪ ˈuwɑɦu/
-    translation: to focus attention
-    pos: phrase
-    tags: []
-
-  - lemma: підвести підсумки
-    ipa: /pidˈwɛstɪ pidˈsumkɪ/
-    translation: to summarize, to sum up
-    pos: phrase
-    tags: []
-
-  - lemma: зоровий контакт
-    ipa: /zoˈrowɪj konˈtɑkt/
-    translation: eye contact
-    pos: phrase
-    tags: []
-
-  - lemma: темп мовлення
-    ipa: /tɛmp ˈmowlɛɲːɑ/
-    translation: speaking pace
-    pos: phrase
-    tags: []
-
-  - lemma: гучність
-    ipa: /ˈɦut͡ʃnistʲ/
-    translation: volume, loudness
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: жест
-    ipa: /ʒɛst/
-    translation: gesture
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: постава
-    ipa: /posˈtɑwɑ/
-    translation: posture, stance
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: впевненість
-    ipa: /ˈwpɛwnɛnistʲ/
-    translation: confidence
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: переконливість
-    ipa: /pɛrɛˈkonlɪwistʲ/
-    translation: persuasiveness
-    pos: noun
-    gender: f
-    tags: []
+- lemma: варіювати
+  ipa: /ʋarijuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: замовкати
+  ipa: /zamɔʋkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: постава
+  ipa: /pɔstˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: репетирувати
+  ipa: /rɛpɛtˈɪruʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: стовп
+  ipa: /stɔʋp/
+  translation: ''
+  pos: noun
+  gender: m

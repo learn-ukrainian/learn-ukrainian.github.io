@@ -1,177 +1,71 @@
-module: 89-b1-grammar-integration
+module: 89-checkpoint-grammar-synthesis
 level: B1
 version: '2.0'
 items:
-  - lemma: діагностика
-    ipa: /dʲiahˈnɔstɪka/
-    translation: diagnostics, assessment
-    pos: noun
-    gender: f
-  - lemma: інтеграція
-    ipa: /intɛˈhrat͡sʲija/
-    translation: integration
-    pos: noun
-    gender: f
-  - lemma: поглиблення
-    ipa: /pɔˈhlɪblɛnʲːa/
-    translation: deepening
-    pos: noun
-    gender: n
-  - lemma: означальне
-    ipa: /ɔznaˈt͡ʃalʲnɛ/
-    translation: attributive (clause)
-    pos: adj
-    gender: n
-  - lemma: допустове
-    ipa: /dɔpuˈstɔvɛ/
-    translation: concessive (clause)
-    pos: adj
-    gender: n
-  - lemma: причинове
-    ipa: /prɪt͡ʃɪˈnɔvɛ/
-    translation: causal (clause)
-    pos: adj
-    gender: n
-  - lemma: дієприслівник
-    ipa: /dʲijɛprɪˈslʲiu̯nɪk/
-    translation: adverbial participle (gerund)
-    pos: noun
-    gender: m
-  - lemma: безособовий
-    ipa: /bɛzɔˈsɔbɔvɪj/
-    translation: impersonal
-    pos: adj
-    gender: m
-  - lemma: пасив
-    ipa: /ˈpasɪu̯/
-    translation: passive
-    pos: noun
-    gender: m
-  - lemma: відправитися
-    ipa: /vʲidˈprau̯ɪtɪsʲa/
-    translation: to depart, to set off
-    pos: verb
-  - lemma: думський
-    ipa: /ˈdumsʲkɪj/
-    translation: Duma (adj), council (adj)
-    pos: adj
-    gender: m
-  - lemma: заходження
-    ipa: /zaˈxɔdʒɛnʲːa/
-    translation: entry, going in
-    pos: noun
-    gender: n
-  - lemma: катакомба
-    ipa: /kataˈkɔmba/
-    translation: catacomb
-    pos: noun
-    gender: f
-  - lemma: летіти
-    ipa: /lɛˈtʲitɪ/
-    translation: to fly
-    pos: verb
-  - lemma: переконатися
-    ipa: /pɛrɛkɔˈnatɪsʲa/
-    translation: to make sure, to be convinced
-    pos: verb
-  - lemma: принесений
-    ipa: /prɪˈnɛsɛnɪj/
-    translation: brought
-    pos: adj
-    gender: m
-  - lemma: сварити
-    ipa: /svaˈrɪtɪ/
-    translation: to scold
-    pos: verb
-  - lemma: увімкнений
-    ipa: /uˈvʲimknɛnɪj/
-    translation: switched on
-    pos: adj
-    gender: m
-  - lemma: удосконалити
-    ipa: /udɔskɔˈnalɪtɪ/
-    translation: to improve, to perfect
-    pos: verb
-  - lemma: вивчати
-    ipa: /vɪu̯ˈt͡ʃatɪ/
-    translation: to study, to learn
-    pos: verb
-  - lemma: тривалість
-    ipa: /trɪˈvalʲnʲisʲtʲ/
-    translation: duration
-    pos: noun
-    gender: f
-  - lemma: послідовність
-    ipa: /pɔsʲlʲidɔu̯ˈnʲisʲtʲ/
-    translation: sequence
-    pos: noun
-    gender: f
-  - lemma: односпрямований
-    ipa: /ɔdnɔsprʲaˈmɔvanɪj/
-    translation: unidirectional
-    pos: adj
-    gender: m
-  - lemma: різноспрямований
-    ipa: /rʲiznɔsprʲaˈmɔvanɪj/
-    translation: multidirectional
-    pos: adj
-    gender: m
-  - lemma: сполучник
-    ipa: /spɔˈlut͡ʃnɪk/
-    translation: conjunction
-    pos: noun
-    gender: m
-  - lemma: нереальний
-    ipa: /nɛrɛˈalʲnɪj/
-    translation: unreal, hypothetical
-    pos: adj
-    gender: m
-  - lemma: безособово
-    ipa: /bɛzɔˈsɔbɔvɔ/
-    translation: impersonally
-    pos: adv
-  - lemma: Потьомкінський
-    ipa: /pɔˈtʲɔmkʲinsʲkɪj/
-    translation: Potemkin (adj)
-    pos: adj
-    gender: m
-  - lemma: вуличний
-    ipa: /ˈvulɪt͡ʃnɪj/
-    translation: street (adj)
-    pos: adj
-    gender: m
-  - lemma: приготований
-    ipa: /prɪhɔˈtɔvanɪj/
-    translation: prepared
-    pos: adj
-    gender: m
-  - lemma: старовинний
-    ipa: /starɔˈvɪnːɪj/
-    translation: ancient, antique
-    pos: adj
-    gender: m
-  - lemma: завершений
-    ipa: /zavɛrˈʃɛnɪj/
-    translation: completed, finished
-    pos: adj
-    gender: m
-  - lemma: збірка
-    ipa: /ˈzbʲirka/
-    translation: collection
-    pos: noun
-    gender: f
-  - lemma: визначення
-    ipa: /vɪˈznat͡ʃɛnʲːa/
-    translation: definition, determination
-    pos: noun
-    gender: n
-  - lemma: похмурий
-    ipa: /pɔxˈmurɪj/
-    translation: gloomy, overcast
-    pos: adj
-    gender: m
-  - lemma: спогад
-    ipa: /ˈspɔhad/
-    translation: memory, recollection
-    pos: noun
-    gender: m
+- lemma: виплатити
+  ipa: /ʋˈɪplatɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відправитися
+  ipa: /ʋidprˈaʋɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: думський
+  ipa: /dˈumsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: катакомба
+  ipa: /katakˈɔmba/
+  translation: ''
+  pos: noun
+- lemma: одягнувшись
+  ipa: /ɔdjaɦnˈuʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: оригінал
+  ipa: /ɔrɪɦinˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перейшовши
+  ipa: /pɛrɛjʃˈɔʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: приготований
+  ipa: /prɪɦɔtˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: принесений
+  ipa: /prɪnˈɛsɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: сварити
+  ipa: /sʋarˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: синтез
+  ipa: /sˈɪntɛz/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сходинка
+  ipa: /sxˈɔdɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: увімкнений
+  ipa: /uʋˈimknɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: удосконалити
+  ipa: /udɔskɔnˈalɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ідучи
+  ipa: /idut͡ʃˈɪ/
+  translation: ''
+  pos: verb
+- lemma: їдучи
+  ipa: /ˈjidut͡ʃɪ/
+  translation: ''
+  pos: verb

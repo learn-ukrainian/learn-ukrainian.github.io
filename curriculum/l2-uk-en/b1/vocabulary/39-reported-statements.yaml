@@ -2,63 +2,190 @@ module: 39-reported-statements
 level: B1
 version: '2.0'
 items:
-- lemma: зауважити
-  ipa: /zauˈvaʒɪtɪ/
-  translation: to note
+- lemma: актуальність
+  ipa: /aktuˈalʲnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: визнання
+  ipa: /ʋɪznˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: визнати
+  ipa: /ʋˈɪznatɪ/
+  translation: ''
   pos: verb
-- lemma: зсува
-  ipa: /ˈzsuva/
-  translation: shift (gen.)
+- lemma: дослідник
+  ipa: /dɔslˈidnɪk/
+  translation: ''
+  pos: noun
+- lemma: діловий
+  ipa: /dilɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: замало
+  ipa: /zamˈalɔ/
+  translation: ''
+  pos: adv
+- lemma: затвердити
+  ipa: /zatʋɛrdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: зауважити
+  ipa: /zauʋˈaʒɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: зауважувати
+  ipa: /zauʋˈaʒuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: заявка
+  ipa: /zaˈjaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: змі
+  ipa: /zmi/
+  translation: ''
   pos: noun
   gender: m
+- lemma: зсув
+  ipa: /zsuʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: зізнання
+  ipa: /ziznˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: міністерство
+  ipa: /ministˈɛrstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: напередодні
-  ipa: /napɛrɛˈdɔdnʲi/
-  translation: the day before
+  ipa: /napɛrɛdˈɔdni/
+  translation: ''
   pos: adv
 - lemma: неактуальний
   ipa: /nɛaktuˈalʲnɪj/
-  translation: irrelevant
+  translation: ''
   pos: adj
-  gender: f
+- lemma: невигідний
+  ipa: /nɛʋɪɦidnɪj/
+  translation: ''
+  pos: adj
+- lemma: невимушено
+  ipa: /nɛʋˈɪmuʃɛnɔ/
+  translation: ''
+  pos: adv
 - lemma: незмінений
-  ipa: /nɛˈzmʲinɛnɪj/
-  translation: unchanged
+  ipa: /nɛzmˈinɛnɪj/
+  translation: ''
   pos: adj
 - lemma: неточність
-  ipa: /nɛˈtɔt͡ʃnʲisʲtʲ/
-  translation: inaccuracy
+  ipa: /nɛtˈɔt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+- lemma: новітній
+  ipa: /nɔʋˈitnij/
+  translation: ''
+  pos: adj
+- lemma: опозиція
+  ipa: /ɔpɔzˈɪt͡sija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: правдивість
-  ipa: /prau̯ˈdɪvisʲtʲ/
-  translation: truthfulness
+  ipa: /praʋdˈɪʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: представник
+  ipa: /prɛdstaʋnˈɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прес-конференція
+  ipa: /prɛs-kɔnfɛrˈɛnt͡sija/
+  translation: ''
+  pos: noun
+- lemma: претензія
+  ipa: /prɛtˈɛnzija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: продовжитися
+  ipa: /prɔdˈɔʋʒɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: продукція
+  ipa: /prɔdˈukt͡sija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: промовити
-  ipa: /prɔˈmɔvɪtɪ/
-  translation: to utter
+  ipa: /prɔmˈɔʋɪtɪ/
+  translation: ''
   pos: verb
+- lemma: просуватися
+  ipa: /prɔsuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: протест
+  ipa: /prɔtˈɛst/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: протоколювання
-  ipa: /prɔtɔkɔlʲuˈvanʲːa/
-  translation: logging
+  ipa: /prɔtɔkɔljuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: профілактика
+  ipa: /prɔfilˈaktɪka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: підсумовування
-  ipa: /pidsumɔˈvuvanʲːa/
-  translation: summarizing
+  ipa: /pidsumˈɔʋuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розширювати
+  ipa: /rɔzʃˈɪrjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: різноманітність
+  ipa: /riznɔmanˈitnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: спотворення
+  ipa: /spɔtʋˈɔrɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: спікер
-  ipa: /ˈspikɛr/
-  translation: speaker
+  ipa: /spˈikɛr/
+  translation: ''
+  pos: noun
+- lemma: строгий
+  ipa: /strˈɔɦɪj/
+  translation: ''
+  pos: adj
+- lemma: стіль
+  ipa: /stilʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: харчуватися
-  ipa: /xart͡ʃuˈvatɪsʲa/
-  translation: to eat
+- lemma: фіксувати
+  ipa: /fiksuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: інтуїтивніший
-  ipa: /intujitɪu̯ˈnʲiʃɪj/
-  translation: more intuitive
-  pos: adj
-  gender: f
+- lemma: харчуватися
+  ipa: /xart͡ʃuʋˈatɪsja/
+  translation: ''
+  pos: verb

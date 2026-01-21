@@ -1,128 +1,32 @@
-config:
-  standard: '2024'
+module: 79-capstone-research
+level: B2
+version: '2.0'
 items:
-  - lemma: проєкт
-    ipa: /proˈɛkt/
-    translation: project
-    pos: noun
-    gender: m
-  - lemma: дослідження
-    ipa: /dosˈlʲid͡ʒɛnnʲɐ/
-    translation: research, study
-    pos: noun
-    gender: n
-  - lemma: вибір
-    ipa: /ˈʋɪbʲir/
-    translation: choice
-    pos: noun
-    gender: m
-  - lemma: обґрунтування
-    ipa: /obɦrunˈtuʋɐnnʲɐ/
-    translation: justification, grounding
-    pos: noun
-    gender: n
-  - lemma: джерело
-    ipa: /d͡ʒɛˈrɛɫɔ/
-    translation: source
-    pos: noun
-    gender: n
-  - lemma: бібліографія
-    ipa: /bʲiblʲiɔˈɦrɑfʲijɐ/
-    translation: bibliography
-    pos: noun
-    gender: f
-  - lemma: анотація
-    ipa: /ɐnɔˈtɑt͡sʲijɐ/
-    translation: annotation, abstract
-    pos: noun
-    gender: f
-  - lemma: план
-    ipa: /pɫɑn/
-    translation: plan, outline
-    pos: noun
-    gender: m
-  - lemma: проспект
-    ipa: /proˈspɛkt/
-    translation: prospectus, outline
-    pos: noun
-    gender: m
-  - lemma: тези
-    ipa: /ˈtɛzɪ/
-    translation: theses, key points
-    pos: noun
-    gender: pl
-  - lemma: аргументація
-    ipa: /ɐrɦumɛnˈtɑt͡sʲijɐ/
-    translation: argumentation
-    pos: noun
-    gender: f
-  - lemma: актуальність
-    ipa: /ɐktuˈalʲnʲisʲtʲ/
-    translation: relevance, topicality
-    pos: noun
-    gender: f
-  - lemma: об’єкт
-    ipa: /obɛkt/
-    translation: object (of study)
-    pos: noun
-    gender: m
-  - lemma: предмет
-    ipa: /ˈprɛdmɛt/
-    translation: subject (of study)
-    pos: noun
-    gender: m
-  - lemma: мета
-    ipa: /mɛˈtɑ/
-    translation: goal, purpose
-    pos: noun
-    gender: f
-  - lemma: завдання
-    ipa: /zɐu̯ˈdɑnnʲɐ/
-    translation: task, objective
-    pos: noun
-    gender: n
-  - lemma: методологія
-    ipa: /mɛtɔdɔˈɫɔɦʲijɐ/
-    translation: methodology
-    pos: noun
-    gender: f
-  - lemma: пошук
-    ipa: /ˈpɔʃuk/
-    translation: search
-    pos: noun
-    gender: m
-  - lemma: опрацювання
-    ipa: /oprɐt͡sʲuˈʋɐnnʲɐ/
-    translation: processing, working through
-    pos: noun
-    gender: n
-  - lemma: систематизація
-    ipa: /sɪstɛmɐtɪˈzɑt͡sʲijɐ/
-    translation: systematization
-    pos: noun
-    gender: f
-  - lemma: структура
-    ipa: /strukˈturɐ/
-    translation: structure
-    pos: noun
-    gender: f
-  - lemma: чернетка
-    ipa: /t͡ʃɛrˈnɛtkɐ/
-    translation: draft
-    pos: noun
-    gender: f
-  - lemma: редагування
-    ipa: /rɛdɐˈɦuʋɐnnʲɐ/
-    translation: editing
-    pos: noun
-    gender: n
-  - lemma: презентація
-    ipa: /prɛzɛnˈtɑt͡sʲijɐ/
-    translation: presentation
-    pos: noun
-    gender: f
-  - lemma: підсумок
-    ipa: /ˈpʲidsumok/
-    translation: summary, result
-    pos: noun
-    gender: m
+- lemma: анотований
+  ipa: /anɔtˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: медіа-технологія
+  ipa: /mˈɛdia-tɛxnɔlɔɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: монографія
+  ipa: /mɔnɔɦrˈafija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: опрацювання
+  ipa: /ɔprat͡sjuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: оцифрований
+  ipa: /ɔt͡sɪfrɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: план-проспект
+  ipa: /plan-prɔspˈɛkt/
+  translation: ''
+  pos: noun
+  gender: m

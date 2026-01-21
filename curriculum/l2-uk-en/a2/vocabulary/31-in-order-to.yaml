@@ -2,257 +2,167 @@ module: 31-in-order-to
 level: A2
 version: '2.0'
 items:
-- lemma: щоб
-  ipa: ʃt͡ʃɔb
-  translation: in order to; that
-  pos: conj
-- lemma: для того щоб
-  translation: for the purpose of
-  pos: other
-  ipa: /dlʲɐ ˈtɔɦo ʃt͡ʃɔb/
 - lemma: аби
-  translation: so that; only if
-  pos: other
-  ipa: /ɐˈbɪ/
-- lemma: задля того щоб
-  translation: for the sake of
-  pos: other
-  ipa: /zɐˈdlʲɑ ˈtɔɦo ʃt͡ʃɔb/
-- lemma: з метою
-  translation: with the aim
-  pos: other
-  ipa: /z mɛˈtɔju/
-- lemma: прийти
-  ipa: prɪˈjtɪ
-  translation: to come
-  pos: verb
-- lemma: прийшов
-  translation: came (masc)
-  pos: verb
-  ipa: /prɪjˈʃɔu̯/
-- lemma: піти
-  ipa: piˈti
-  translation: to go
-  pos: verb
-- lemma: пішов
-  translation: went (masc)
-  pos: verb
-  ipa: /piˈʃɔu̯/
-- lemma: зробити
-  translation: to do/make
-  pos: verb
-  ipa: /zroˈbɪtɪ/
-- lemma: зробив
-  translation: did/made (masc)
-  pos: verb
-  ipa: /zroˈbɪu̯/
-- lemma: сказати
-  translation: to say
-  pos: verb
-  ipa: /skɐˈzɑtɪ/
-- lemma: сказав
-  translation: said (masc)
-  pos: verb
-  ipa: /skɐˈzɑu̯/
-- lemma: написати
-  translation: to write
-  pos: verb
-  ipa: /nɐpɪˈsɑtɪ/
-- lemma: написав
-  translation: wrote (masc)
-  pos: verb
-  ipa: /nɐpɪˈsɑu̯/
-- lemma: прочитати
-  translation: to read
-  pos: verb
-  ipa: /prot͡ʃɪˈtɑtɪ/
-- lemma: прочитав
-  translation: read (masc)
-  pos: verb
-  ipa: /prot͡ʃɪˈtɑu̯/
-- lemma: вивчити
-  translation: to learn
-  pos: verb
-  ipa: /ˈʋɪu̯t͡ʃɪtɪ/
-- lemma: вивчив
-  translation: learned (masc)
-  pos: verb
-  ipa: /ˈʋɪu̯t͡ʃɪu̯/
-- lemma: зрозуміти
-  translation: to understand
-  pos: verb
-  ipa: /zrozuˈmʲitɪ/
-- lemma: зрозумів
-  translation: understood (masc)
-  pos: verb
-  ipa: /zrozuˈmʲiu̯/
-- lemma: допомогти
-  translation: to help
-  pos: verb
-  ipa: /dopoˈmohˈtɪ/
-- lemma: допоміг
-  translation: helped (masc)
-  pos: verb
-  ipa: /dopoˈmʲiɦ/
-- lemma: дати
-  translation: to give
-  pos: verb
-  ipa: /ˈdɑtɪ/
-- lemma: дав
-  translation: gave (masc)
-  pos: verb
-  ipa: /dɑu̯/
-- lemma: показати
-  translation: to show
-  pos: verb
-  ipa: /pokɐˈzɑtɪ/
-- lemma: показав
-  translation: showed (masc)
-  pos: verb
-  ipa: /pokɐˈzɑu̯/
-- lemma: пояснити
-  translation: to explain
-  pos: verb
-  ipa: /pojɐsˈnɪtɪ/
-- lemma: пояснив
-  translation: explained (masc)
-  pos: verb
-  ipa: /pojɐsˈnʲiu̯/
-- lemma: розповісти
-  translation: to tell
-  pos: verb
-  ipa: /rozpoʋʲiˈstɪ/
-- lemma: розповів
-  translation: told (masc)
-  pos: verb
-  ipa: /rozpoˈʋʲiu̯/
-- lemma: купити
-  translation: to buy
-  pos: verb
-  ipa: /kuˈpɪtɪ/
-- lemma: купив
-  translation: bought (masc)
-  pos: verb
-  ipa: /kuˈpɪu̯/
-- lemma: принести
-  translation: to bring
-  pos: verb
-  ipa: /prɪnɛsˈtɪ/
-- lemma: скільки
-  translation: how much/many
-  pos: adv
-  ipa: /ˈskʲilʲkɪ/
-- lemma: ціна
-  translation: price
-  pos: noun
-  gender: f
-  ipa: /t͡sʲiˈnɑ/
-- lemma: коштувати
-  translation: to cost
-  pos: verb
-  ipa: /koʃtuˈʋɑtɪ/
-- lemma: дорогий
-  translation: expensive
+  ipa: /abˈɪ/
+  translation: ''
+  pos: conj
+- lemma: бажальний
+  ipa: /baʒˈalʲnɪj/
+  translation: ''
   pos: adj
-  ipa: /doroˈɦɪj/
-- lemma: дешевий
-  translation: cheap
-  pos: adj
-  ipa: /deˈʃɛʋɪj/
-- lemma: знижка
-  translation: discount
-  pos: noun
-  gender: f
-  ipa: /ˈznɪʒkɐ/
-- lemma: розпродаж
-  translation: sale
+- lemma: бажан
+  ipa: /baʒˈan/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /rozˈprɔdɐʒ/
-- lemma: каса
-  translation: cash desk
-  pos: noun
-  gender: f
-  ipa: /ˈkɑsɐ/
-- lemma: чек
-  translation: receipt
-  pos: noun
-  gender: m
-  ipa: /t͡ʃɛk/
-- lemma: платити
-  translation: to pay
-  pos: verb
-  ipa: /plɐˈtɪtɪ/
-- lemma: картка
-  translation: card
-  pos: noun
-  gender: f
-  ipa: /ˈkɑrtkɐ/
-- lemma: готівка
-  translation: cash
-  pos: noun
-  gender: f
-  ipa: /hoˈtʲiu̯kɐ/
-- lemma: решта
-  translation: change
-  pos: noun
-  gender: f
-  ipa: /ˈrɛʃtɐ/
-- lemma: пакет
-  translation: bag; packet
-  pos: noun
-  gender: m
-  ipa: /pɐˈkɛt/
-- lemma: дорого
-  translation: expensively
-  pos: adv
-  ipa: /ˈdoroɦo/
-- lemma: дешево
-  translation: cheaply
-  pos: adv
-  ipa: /ˈdeʃɛʋo/
-- lemma: продати
-  translation: to sell
-  pos: verb
-  ipa: /proˈdɑtɪ/
-- lemma: шукати
-  translation: to search/look for
-  pos: verb
-  ipa: /ʃuˈkɑtɪ/
-- lemma: знайти
-  translation: to find
-  pos: verb
-  ipa: /znɐjˈtɪ/
-- lemma: час
-  translation: time; tense
-  pos: noun
-  gender: m
-  ipa: /t͡ʃɑs/
-- lemma: минулий
-  translation: past
-  pos: adj
-  ipa: /mɪˈnulɪj/
-- lemma: відмінок
-  translation: gram. case
-  pos: noun
-  gender: m
-  ipa: /ʋʲidˈmʲinɔk/
-- lemma: того
-  translation: that (form)
-  pos: pron
-  ipa: /ˈtɔɦo/
-- lemma: метою
-  translation: goal/aim (form)
-  pos: noun
-  gender: f
-  ipa: /mɛˈtɔju/
-- lemma: життя
-  translation: life
-  pos: noun
-  gender: n
-  ipa: /ʒɪˈtʲːɑ/
 - lemma: бажання
-  translation: wish; desire
+  ipa: /baʒˈannja/
+  translation: ''
+  pos: noun
+- lemma: вимовляти
+  ipa: /ʋɪmɔʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: встигнути
+  ipa: /ʋstˈɪɦnutɪ/
+  translation: ''
+  pos: verb
+- lemma: вчинок
+  ipa: /ʋt͡ʃˈɪnɔk/
+  translation: ''
+  pos: noun
+- lemma: відтінок
+  ipa: /ʋidtˈinɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: досягнення
+  ipa: /dɔsˈjaɦnɛnnja/
+  translation: ''
   pos: noun
   gender: n
-  ipa: /bɐˈʒɑnʲːɐ/
+- lemma: дійовий
+  ipa: /dijɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: задля
+  ipa: /zˈadlja/
+  translation: ''
+  pos: prep
+- lemma: зазирнути
+  ipa: /zazɪrnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: залізня
+  ipa: /zalˈiznja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зв'язок
+  ipa: /zʋjazɔk/
+  translation: ''
+  pos: noun
+- lemma: званий
+  ipa: /zʋˈanɪj/
+  translation: ''
+  pos: adj
+- lemma: здоровий
+  ipa: /zdɔrˈɔʋɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: змістовний
+  ipa: /zmistˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: комі
+  ipa: /kˈɔmi/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кулінарний
+  ipa: /kulinˈarnɪj/
+  translation: ''
+  pos: adj
+- lemma: м'якість
+  ipa: /mˈjakistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мотив
+  ipa: /mɔtˈɪʋ/
+  translation: ''
+  pos: noun
+- lemma: ніби
+  ipa: /nˈibɪ/
+  translation: ''
+  pos: part
+- lemma: окрім
+  ipa: /ɔkrˈim/
+  translation: ''
+  pos: prep
+- lemma: пиріг
+  ipa: /pɪrˈiɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поведінка
+  ipa: /pɔʋɛdˈinka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поетичність
+  ipa: /pɔɛtˈɪt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: професійно
+  ipa: /prɔfɛsˈijnɔ/
+  translation: ''
+  pos: adv
+- lemma: підготувати
+  ipa: /pidɦɔtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: розділити
+  ipa: /rɔzdilˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: скорочений
+  ipa: /skɔrˈɔt͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: стільки
+  ipa: /stˈilʲkɪ/
+  translation: ''
+  pos: pron
+- lemma: суб'єкт
+  ipa: /subˈjɛkt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: суто
+  ipa: /sˈutɔ/
+  translation: ''
+  pos: adv
+- lemma: усвідомлено
+  ipa: /usʋidˈɔmlɛnɔ/
+  translation: ''
+  pos: adv
+- lemma: успішний
+  ipa: /uspˈiʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: ціль
+  ipa: /t͡silʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чогось
+  ipa: /t͡ʃɔɦˈɔsʲ/
+  translation: ''
+  pos: adv
+- lemma: шиплячий
+  ipa: /ʃɪplˈjat͡ʃɪj/
+  translation: ''
+  pos: adj

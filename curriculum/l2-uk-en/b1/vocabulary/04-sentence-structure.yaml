@@ -2,116 +2,131 @@ module: 04-sentence-structure
 level: B1
 version: '2.0'
 items:
-- lemma: підмет
-  ipa: /ˈpidmɛt/
-  translation: subject
-  pos: noun
-  gender: m
-- lemma: присудок
-  ipa: /ˈprɪsudɔk/
-  translation: predicate
-  pos: noun
-  gender: m
-- lemma: додаток
-  ipa: /dɔˈdɑtɔk/
-  translation: object (grammar)
-  pos: noun
-  gender: m
-- lemma: означення
-  ipa: /ɔˈznat͡ʃɛnʲːɐ/
-  translation: attribute; modifier
-  pos: noun
-  gender: n
-- lemma: обставина
-  ipa: /ɔbstɐˈʋɪnɐ/
-  translation: adverbial; circumstance
+- lemma: аналізувати
+  ipa: /analizuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: будова
+  ipa: /budˈɔʋa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: член речення
-  ipa: /t͡ʃɫɛn ˈrɛt͡ʃenʲːɐ/
-  translation: sentence part
-  pos: phrase
-- lemma: головний член
-  ipa: /ɦɔɫɔu̯ˈnɪj t͡ʃɫɛn/
-  translation: main sentence part
-  pos: phrase
-- lemma: другорядний член
-  ipa: /drʊɦɔˈrʲadnɪj t͡ʃɫɛn/
-  translation: secondary sentence part
-  pos: phrase
-- lemma: просте речення
-  ipa: /ˈprɔstɛ ˈrɛt͡ʃenʲːɐ/
-  translation: simple sentence
-  pos: phrase
-- lemma: складне речення
-  ipa: /skɫɐdˈnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: complex sentence
-  pos: phrase
-- lemma: складносурядне речення
-  ipa: /skɫɐdnɔsuˈrʲadnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: compound sentence
-  pos: phrase
-- lemma: складнопідрядне речення
-  ipa: /skɫɐdnɔpʲidˈrʲadnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: complex sentence (with subordinate clause)
-  pos: phrase
-- lemma: головне речення
-  ipa: /ɦɔɫɔu̯ˈnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: main clause
-  pos: phrase
-- lemma: підрядне речення
-  ipa: /pʲidˈrʲadnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: subordinate clause
-  pos: phrase
-- lemma: сполучник сурядності
-  ipa: /spɔˈlut͡ʃnɪk sʊˈrʲadnɔsʲtʲi/
-  translation: coordinating conjunction
-  pos: phrase
-- lemma: сполучник підрядності
-  ipa: /spɔˈlut͡ʃnɪk pʲidˈrʲadnɔsʲtʲi/
-  translation: subordinating conjunction
-  pos: phrase
-- lemma: пунктуація
-  ipa: /pʊnktʊˈat͡sʲijɐ/
-  translation: punctuation
-  pos: noun
-  gender: f
-- lemma: розділові знаки
-  ipa: /rɔzdʲiɫɔˈʋi ˈznakɪ/
-  translation: punctuation marks
-  pos: phrase
-- lemma: кома
-  ipa: /ˈkɔmɐ/
-  translation: comma
-  pos: noun
-  gender: f
-- lemma: крапка
-  ipa: /ˈkrapkɐ/
-  translation: period; full stop
-  pos: noun
-  gender: f
+- lemma: вводити
+  ipa: /ʋʋˈɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відмінковий
+  ipa: /ʋidminkˈɔʋɪj/
+  translation: ''
+  pos: adj
 - lemma: двокрапка
-  ipa: /dwɔˈkrapkɐ/
-  translation: colon
+  ipa: /dʋɔkrˈapka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: тире
-  ipa: /tɪˈrɛ/
-  translation: dash
+- lemma: другорядний
+  ipa: /druɦɔrˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: дієслово-зв'язка
+  ipa: /dijɛslˈɔʋɔ-zʋjazka/
+  translation: ''
   pos: noun
   gender: n
-- lemma: лапки
-  ipa: /ɫɐpˈkɪ/
-  translation: quotation marks
+- lemma: замінювати
+  ipa: /zamˈinjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: звичайне
+  ipa: /zʋɪt͡ʃˈajnɛ/
+  translation: ''
   pos: noun
-  gender: pl
+  gender: n
+- lemma: класифікувати
+  ipa: /klasɪfikuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: крапка
+  ipa: /krˈapka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лапка
+  ipa: /lˈapka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обставина
+  ipa: /ɔbstˈaʋɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: означення
+  ipa: /ɔznˈat͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: перерахування
+  ipa: /pɛrɛraxuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: половина
+  ipa: /pɔlɔʋˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пунктуація
+  ipa: /punktuˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: підрядність
+  ipa: /pidrˈjadnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: підсилення
+  ipa: /pidsˈɪlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ресурс
+  ipa: /rɛsˈurs/
+  translation: ''
+  pos: noun
+- lemma: розділовий
+  ipa: /rɔzdilˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: рівноправний
+  ipa: /riʋnɔprˈaʋnɪj/
+  translation: ''
+  pos: adj
 - lemma: синтаксис
-  ipa: /ˈsɪntɐksɪs/
-  translation: syntax
+  ipa: /sˈɪntaksɪs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: складнопідрядний
+  ipa: /skladnɔpidrˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: складносурядний
+  ipa: /skladnɔsurˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: сурядний
+  ipa: /surˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: тир
+  ipa: /tɪr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: інверсія
-  ipa: /inˈʋɛrsʲijɐ/
-  translation: inversion
+  ipa: /inʋˈɛrsija/
+  translation: ''
   pos: noun
   gender: f

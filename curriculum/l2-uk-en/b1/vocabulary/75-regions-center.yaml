@@ -2,145 +2,134 @@ module: 75-regions-center
 level: B1
 version: '2.0'
 items:
-  - lemma: борщ
-    ipa: /bɔrʃt͡ʃ/
-    translation: borscht
-    pos: noun
-    gender: m
-  - lemma: віл
-    ipa: /vʲil/
-    translation: ox
-    pos: noun
-    gender: m
-  - lemma: гідроелектростанція
-    ipa: /hʲidrɔɛlɛktrɔˈstante͡sʲija/
-    translation: hydroelectric power plant
-    pos: noun
-    gender: f
-  - lemma: Гідропарк
-    ipa: /hʲidrɔˈpark/
-    translation: Hydropark (area in Kyiv)
-    pos: propn
-    gender: m
-  - lemma: Диканька
-    ipa: /dɪˈkanʲka/
-    translation: Dykanka
-    pos: propn
-    gender: f
-  - lemma: дніпровий
-    ipa: /dnʲiˈprɔvɪj/
-    translation: Dnieper (adj)
-    pos: adj
-    gender: m
-  - lemma: засмагати
-    ipa: /zasmaˈhatɪ/
-    translation: to sunbathe
-    pos: verb
-  - lemma: кераміка
-    ipa: /kɛˈramʲika/
-    translation: ceramics
-    pos: noun
-    gender: f
-  - lemma: круїз
-    ipa: /kruˈjiz/
-    translation: cruise
-    pos: noun
-    gender: m
-  - lemma: Микола Мащенко
-    ipa: /mɪˈkɔla ˈmaʃt͡ʃɛnkɔ/
-    translation: Mykola Mashchenko
-    pos: propn
-    gender: m
-  - lemma: надихатися
-    ipa: /nadɪˈxatɪsʲa/
-    translation: to be inspired
-    pos: verb
-  - lemma: наймальовничіший
-    ipa: /najmalʲɔu̯nʲiˈt͡ʃʲiʃɪj/
-    translation: most picturesque
-    pos: adj
-    gender: m
-  - lemma: нечиста сила
-    ipa: /nɛˈt͡ʃɪsta ˈsɪla/
-    translation: evil force, evil spirit
-    pos: noun
-    gender: f
-  - lemma: Панас Мирний
-    ipa: /paˈnas ˈmɪrnɪj/
-    translation: Panas Myrnyi
-    pos: propn
-    gender: m
-  - lemma: полтавка
-    ipa: /pɔlˈtau̯ka/
-    translation: woman from Poltava
-    pos: noun
-    gender: f
-  - lemma: ревіти
-    ipa: /rɛˈvʲitɪ/
-    translation: to roar, to bellow
-    pos: verb
-  - lemma: сало
-    ipa: /ˈsalɔ/
-    translation: salo (cured pork fat)
-    pos: noun
-    gender: n
-  - lemma: Сорочинці
-    ipa: /sɔrɔˈt͡ʃɪnt͡sʲi/
-    translation: Sorochyntsi
-    pos: propn
-    gender: pl
-  - lemma: Тарасова гора
-    ipa: /taˈrasɔva hɔˈra/
-    translation: Taras's Hill (in Kaniv)
-    pos: propn
-    gender: f
-  - lemma: Труханів острів
-    ipa: /truˈxanʲiu̯ ˈɔstrʲiu̯/
-    translation: Trukhaniv Island
-    pos: propn
-    gender: m
-  - lemma: узвіз
-    ipa: /uzˈvʲiz/
-    translation: descent, steep street
-    pos: noun
-    gender: m
-  - lemma: центральноукраїнський
-    ipa: /t͡sɛntralʲnɔukraˈjinsʲkɪj/
-    translation: Central Ukrainian
-    pos: adj
-    gender: m
-  - lemma: Черкащина
-    ipa: /t͡ʃɛrˈkaʃt͡ʃɪna/
-    translation: Cherkasy region
-    pos: propn
-    gender: f
-  - lemma: ясла
-    ipa: /ˈjasla/
-    translation: manger, crèche
-    pos: noun
-    gender: pl
-  - lemma: Іринка
-    ipa: /iˈrɪnka/
-    translation: Irynka
-    pos: propn
-    gender: f
-  - lemma: державність
-    ipa: /dɛrˈʒau̯nʲisʲtʲ/
-    translation: statehood
-    pos: noun
-    gender: f
-  - lemma: ідентичність
-    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
-    translation: identity
-    pos: noun
-    gender: f
-  - lemma: козацтво
-    ipa: /kɔˈzat͡stvɔ/
-    translation: Cossacks (as a class/phenomenon)
-    pos: noun
-    gender: n
-  - lemma: хрещення
-    ipa: /xrɛˈʃt͡ʃɛnʲːa/
-    translation: baptism, christening
-    pos: noun
-    gender: n
+- lemma: витоки
+  ipa: /ʋˈɪtɔkɪ/
+  translation: ''
+  pos: noun
+- lemma: волити
+  ipa: /ʋˈɔlɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: гоголь
+  ipa: /ɦˈɔɦɔlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: диканька
+  ipa: /dɪkˈanʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: екскурсовод
+  ipa: /ɛkskursɔʋˈɔd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: зародитися
+  ipa: /zarɔdˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: збірка
+  ipa: /zbˈirka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: канів
+  ipa: /kˈaniʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: київщина
+  ipa: /kˈɪjiʋʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: козацьке
+  ipa: /kɔzˈat͡sʲkɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: купол
+  ipa: /kˈupɔl/
+  translation: ''
+  pos: noun
+- lemma: лісостеп
+  ipa: /lisɔstˈɛp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мальовничий
+  ipa: /malʲɔʋnˈɪt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: моринці
+  ipa: /mˈɔrɪnt͡si/
+  translation: ''
+  pos: noun
+- lemma: найвидатніший
+  ipa: /najʋɪdatnˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: найдавніше
+  ipa: /najdaʋnˈiʃɛ/
+  translation: ''
+  pos: adv
+- lemma: постать
+  ipa: /pˈɔstatʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: похований
+  ipa: /pɔxˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: поховання
+  ipa: /pɔxɔʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сорочинський
+  ipa: /sɔrˈɔt͡ʃɪnsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: тарасів
+  ipa: /tarˈasiʋ/
+  translation: ''
+  pos: adj
+- lemma: формуватися
+  ipa: /fɔrmuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: хутір
+  ipa: /xˈutir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: центральноукраїнський
+  ipa: /t͡sɛntralʲnɔukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: черкас
+  ipa: /t͡ʃɛrkˈas/
+  translation: ''
+  pos: noun
+- lemma: черкащина
+  ipa: /t͡ʃɛrkˈaʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чернігівщина
+  ipa: /t͡ʃɛrnˈiɦiʋʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чигирин
+  ipa: /t͡ʃɪɦɪrˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іринка
+  ipa: /irɪnka/
+  translation: ''
+  pos: noun
+  gender: f

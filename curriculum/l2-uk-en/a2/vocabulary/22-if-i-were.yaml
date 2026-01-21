@@ -3,159 +3,161 @@ level: A2
 version: '2.0'
 items:
 - lemma: австралія
-  ipa: ɐu̯strˈɑlʲijɐ
-  translation: Australia
-  pos: propn
+  ipa: /aʋstrˈalija/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: авто
+  ipa: /aʋtˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: багате
+  ipa: /baɦˈatɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: би
-  ipa: bɪ
-  translation: would (particle)
-  pos: other
-- lemma: багатий
-  ipa: bɐˈɦɑtɪj
-  translation: rich
-  pos: adj
-  gender: m
+  ipa: /bɪ/
+  translation: ''
+  pos: part
+- lemma: будуватися
+  ipa: /buduʋˈatɪsja/
+  translation: ''
+  pos: verb
 - lemma: білет
-  ipa: bʲiˈlɛt
-  translation: ticket
+  ipa: /bilˈɛt/
+  translation: ''
   pos: noun
   gender: m
+- lemma: ввічливий
+  ipa: /ʋʋˈit͡ʃlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: ввічливість
+  ipa: /ʋʋˈit͡ʃlɪʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: вибачитися
-  ipa: ˈʋɪbɐt͡ʃɪtɪsʲɐ
-  translation: to apologize (perf)
+  ipa: /ʋˈɪbat͡ʃɪtɪsja/
+  translation: ''
   pos: verb
 - lemma: виграти
-  ipa: ˈʋɪhrɐte
-  translation: to win (perf)
+  ipa: /ʋˈɪɦratɪ/
+  translation: ''
   pos: verb
+- lemma: висловлення
+  ipa: /ʋˈɪslɔʋlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: впасти
-  ipa: ˈvpɑste
-  translation: to fall (perf)
+  ipa: /ʋpˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: відчинити
+  ipa: /ʋidt͡ʃɪnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: гіпотеза
+  ipa: /ɦipˈɔtɛza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: домовлятися
+  ipa: /dɔmɔʋlˈjatɪsja/
+  translation: ''
   pos: verb
 - lemma: зачекати
-  ipa: zɐt͡ʃeˈkɑte
-  translation: to wait (perf)
+  ipa: /zat͡ʃɛkˈatɪ/
+  translation: ''
   pos: verb
 - lemma: лотерейний
-  ipa: loteˈrɛjnɪj
-  translation: lottery (adj)
+  ipa: /lɔtɛrˈɛjnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: мільйон
-  ipa: mʲilʲˈjɔn
-  translation: million
-  pos: other
-- lemma: наврочити
-  ipa: nɐˈvrɔt͡ʃɪte
-  translation: to jinx
-  pos: verb
-- lemma: незручно
-  ipa: neˈzrut͡ʃno
-  translation: uncomfortably; awkwardly
+- lemma: лотерея
+  ipa: /lɔtɛrˈɛja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мабуть
+  ipa: /mˈabutʲ/
+  translation: ''
   pos: adv
-- lemma: ого
-  ipa: oˈɦɔ
-  translation: wow
-  pos: other
+- lemma: мріти
+  ipa: /mrˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: мільйон
+  ipa: /milʲjˈɔn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: навколосвітній
+  ipa: /naʋkɔlɔsʋˈitnij/
+  translation: ''
+  pos: adj
+- lemma: напевно
+  ipa: /napˈɛʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: ну
+  ipa: /nu/
+  translation: ''
+  pos: part
+- lemma: нікуди
+  ipa: /nikudɪ/
+  translation: ''
+  pos: adv
+- lemma: по-українськи
+  ipa: /pɔ-ukraˈjinsʲkɪ/
+  translation: ''
+  pos: adv
+- lemma: пощастити
+  ipa: /pɔʃt͡ʃastˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: припущення
+  ipa: /prɪpˈuʃt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: підстелити
-  ipa: pʲidsteˈlɪte
-  translation: to spread (under)
+  ipa: /pidstɛlˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: реальність
-  ipa: reˈɑlʲnʲisʲtʲ
-  translation: reality
+  ipa: /rɛˈalʲnistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: соломка
-  ipa: soˈlɔmkɐ
-  translation: straw
+  ipa: /sɔlˈɔmka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: уявляти
-  ipa: ujɐʋˈlʲɑte
-  translation: to imagine
-  pos: verb
-- lemma: майбутній
-  translation: future
-  pos: adj
-  ipa: /mɐi̯ˈbutʲnʲij/
-- lemma: час
-  translation: time; tense
+- lemma: сполучник
+  ipa: /spɔlˈut͡ʃnɪk/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /t͡ʃɑs/
-- lemma: минулий
-  translation: past
-  pos: adj
-  ipa: /mɪˈnulɪj/
-- lemma: якби
-  ipa: jɐkˈbɪ
-  translation: if (unreal)
-  pos: other
-- lemma: якщо
-  ipa: jɐkˈʃɔ
-  translation: if (real)
-  pos: other
-- lemma: можливо
-  ipa: moʒˈlɪʋo
-  translation: perhaps; possibly
-  pos: adv
-- lemma: напевно
-  ipa: nɐˈpɛu̯no
-  translation: for sure; probably
-  pos: adv
-- lemma: мабуть
-  ipa: mɐˈbutʲ
-  translation: probably
-  pos: adv
-- lemma: певно
-  ipa: ˈpɛu̯no
-  translation: surely
-  pos: adv
-- lemma: обов'язково
-  ipa: oboˈʋjɐzkoʋo
-  translation: certainly; necessarily
-  pos: adv
-- lemma: купити
-  ipa: kuˈpɪte
-  translation: to buy (perf)
-  pos: verb
-- lemma: піти
-  ipa: piˈtɪ
-  translation: to go (on foot, perf)
-  pos: verb
-- lemma: поїхати
-  ipa: poˈjixɐte
-  translation: to go (by vehicle, perf)
-  pos: verb
-- lemma: сказати
-  ipa: skɐˈzɑte
-  translation: to say (perf)
-  pos: verb
-- lemma: знати
-  ipa: ˈznɑte
-  translation: to know
-  pos: verb
-- lemma: могти
-  ipa: mɔhˈtɪ
-  translation: to be able to
-  pos: verb
-- lemma: хотіти
-  ipa: xoˈtitɪ
-  translation: to want
-  pos: verb
-- lemma: дієслово
-  translation: verb
+- lemma: умова
+  ipa: /umˈɔʋa/
+  translation: ''
   pos: noun
-  gender: n
-  ipa: /dʲijeˈslɔʋo/
-- lemma: спосіб
-  translation: mood; way
-  pos: noun
-  gender: m
-  ipa: /ˈspɔsʲib/
+  gender: f
 - lemma: умовний
-  translation: conditional
+  ipa: /umˈɔʋnɪj/
+  translation: ''
   pos: adj
-  ipa: /uˈmɔu̯nɪj/
+- lemma: частка
+  ipa: /t͡ʃˈastka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: якби
+  ipa: /jakbˈɪ/
+  translation: ''
+  pos: conj

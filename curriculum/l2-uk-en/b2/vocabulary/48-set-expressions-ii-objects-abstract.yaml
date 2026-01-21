@@ -2,422 +2,70 @@ module: 48-set-expressions-ii-objects-abstract
 level: B2
 version: '2.0'
 items:
-- lemma: ані
-  ipa: /ɐˈnʲi/
-  translation: neither, nor
-  pos: other
-- lemma: афродіта
-  ipa: /ɐfroˈdʲitɑ/
-  translation: Aphrodite (genitive)
-  pos: propn
-  gender: f
-- lemma: афіна
-  ipa: /ɐˈfʲinɑ/
-  translation: Athena
-  pos: propn
-  gender: f
-- lemma: бавитися
-  ipa: /ˈbɑwɪtɪsʲɑ/
-  translation: to amuse oneself, to play
-  pos: verb
-- lemma: байдужість
-  ipa: /bɐjˈduʒʲistʲ/
-  translation: indifference
-  pos: noun
-  gender: f
-- lemma: безглуздий
-  ipa: /bɛzˈɦluzdɪj/
-  translation: senseless, absurd
-  pos: adj
-- lemma: бенкет
-  ipa: /bɛnˈkɛt/
-  translation: banquet, feast
+- lemma: біс
+  ipa: /bis/
+  translation: ''
   pos: noun
   gender: m
-- lemma: богиня
-  ipa: /boˈɦɪnʲɑ/
-  translation: goddess
-  pos: noun
-  gender: f
-- lemma: божевілля
-  ipa: /boʒɛˈwʲilʲːɑ/
-  translation: madness, insanity
-  pos: noun
-  gender: n
-- lemma: бочка
-  ipa: /ˈbot͡ʃkɑ/
-  translation: barrel
-  pos: noun
-  gender: f
-- lemma: біса
-  ipa: /ˈbʲisɑ/
-  translation: demon (genitive)
-  pos: noun
-  gender: m
-- lemma: важкість
-  ipa: /ˈwɑʒkʲistʲ/
-  translation: heaviness, difficulty
-  pos: noun
-  gender: f
-- lemma: виборець
-  ipa: /wɪˈborɛt͡sʲ/
-  translation: voter
-  pos: noun
-  gender: m
-- lemma: влізати
-  ipa: /wlʲiˈzɑtɪ/
-  translation: to climb in, to get into
-  pos: verb
-- lemma: водойма
-  ipa: /wodoˈjmɑ/
-  translation: body of water, reservoir
-  pos: noun
-  gender: f
-- lemma: волонтерський
-  ipa: /wolontɛrsʲkɪj/
-  translation: volunteer (adj.)
-  pos: adj
-- lemma: воріт
-  ipa: /woˈrʲit/
-  translation: gates
-  pos: noun
-  gender: f
-- lemma: вперед
-  ipa: /wpɛˈrɛd/
-  translation: forward, ahead
-  pos: adv
-- lemma: впустити
-  ipa: /wpusˈtɪtɪ/
-  translation: to let in, to admit
-  pos: verb
 - lemma: відсилати
-  ipa: /wʲidsɪˈlɑtɪ/
-  translation: to send away
+  ipa: /ʋidsɪlˈatɪ/
+  translation: ''
   pos: verb
-- lemma: відігнати
-  ipa: /wʲidʲiɦˈnɑtɪ/
-  translation: to drive away
-  pos: verb
-- lemma: гера
-  ipa: /ˈɦɛrɑ/
-  translation: Hera
-  pos: propn
+- lemma: гуска
+  ipa: /ɦˈuska/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: гусак
-  ipa: /ɦuˈsɑk/
-  translation: gander, goose
-  pos: noun
-  gender: m
-- lemma: гідний
-  ipa: /ˈɦʲidnɪj/
-  translation: worthy, dignified
-  pos: adj
-- lemma: диверсифікувати
-  ipa: /dɪwɛrsɪfʲikuˈwɑtɪ/
-  translation: to diversify
-  pos: verb
-- lemma: дністер
-  ipa: /dnʲisˈtɛr/
-  translation: Dnister (river)
-  pos: propn
-  gender: m
-- lemma: дратувати
-  ipa: /drɑtuˈwɑtɪ/
-  translation: to irritate, to annoy
-  pos: verb
-- lemma: духи
-  ipa: /duˈxɪ/
-  translation: perfume
-  pos: noun
-  gender: m
 - lemma: дьоготь
-  ipa: /ˈdʲoɦotʲ/
-  translation: tar
+  ipa: /dʲˈɔɦɔtʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: діжка
-  ipa: /ˈdʲiʒkɑ/
-  translation: small barrel, tub
-  pos: noun
-  gender: f
-- lemma: ерідан
-  ipa: /ɛrʲiˈdɑn/
-  translation: Eridanus (mythological river)
-  pos: propn
-  gender: m
-- lemma: журитися
-  ipa: /ʒuˈrɪtɪsʲɑ/
-  translation: to grieve, to worry
-  pos: verb
-- lemma: заглядати
-  ipa: /zɐɦlʲɑˈdɑtɪ/
-  translation: to look in, to peek
-  pos: verb
-- lemma: затопити
-  ipa: /zɐtoˈpɪtɪ/
-  translation: to flood, to sink
-  pos: verb
-- lemma: замкнений
-  ipa: /zɐmˈknɛnɪj/
-  translation: closed, withdrawn
-  pos: adj
-- lemma: застава
-  ipa: /zɐˈstɑwɑ/
-  translation: barrier, pledge
-  pos: noun
-  gender: f
-- lemma: застережливий
-  ipa: /zɐstɛˈrɛʒlɪwɪj/
-  translation: cautionary, warning
-  pos: adj
-- lemma: застрягнути
-  ipa: /zɐstrʲɑɦˈnutɪ/
-  translation: to get stuck
-  pos: verb
-- lemma: збожеволіти
-  ipa: /zboʒɛwoˈlʲitɪ/
-  translation: to go mad
-  pos: verb
 - lemma: зглазити
-  ipa: /zɦlɐˈzɪtɪ/
-  translation: to cast an evil eye
+  ipa: /zɦlazɪtɪ/
+  translation: ''
   pos: verb
-- lemma: зрушити
-  ipa: /zruˈʃɪtɪ/
-  translation: to move, to shift
-  pos: verb
-- lemma: крапель
-  ipa: /ˈkrɑpɛlʲ/
-  translation: drop (of liquid)
+- lemma: мисливець
+  ipa: /mɪslˈɪʋɛt͡sʲ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: крига
-  ipa: /ˈkrɪɦɑ/
-  translation: ice
-  pos: noun
-  gender: f
-- lemma: лізти
-  ipa: /ˈlʲiztɪ/
-  translation: to climb
-  pos: verb
-- lemma: мертвий
-  ipa: /ˈmɛrtwɪj/
-  translation: dead
-  pos: adj
-- lemma: метафоричний
-  ipa: /mɛtɐfoˈrɪt͡ʃnɪj/
-  translation: metaphorical
-  pos: adj
-- lemma: мисливка
-  ipa: /mɪsˈlɪwkɑ/
-  translation: huntress
-  pos: noun
-  gender: f
-- lemma: мисливський
-  ipa: /mɪsˈlɪwsʲkɪj/
-  translation: hunting (adj.)
-  pos: adj
+  gender: m
 - lemma: міфологія
-  ipa: /mʲifoˈloɦʲijɑ/
-  translation: mythology
+  ipa: /mifɔlˈɔɦija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: найважчий
-  ipa: /nɐjˈwɑʒt͡ʃɪj/
-  translation: the hardest, the heaviest
-  pos: adj
-- lemma: найвродливіший
-  ipa: /nɐjwrodˈlɪwʲiʃɪj/
-  translation: the most beautiful
-  pos: adj
-- lemma: невдалий
-  ipa: /nɛwˈdɑlɪj/
-  translation: unsuccessful, unfortunate
-  pos: adj
-- lemma: невдача
-  ipa: /nɛwˈdɑt͡ʃɑ/
-  translation: failure, setback
-  pos: noun
-  gender: f
-- lemma: невдоволення
-  ipa: /nɛwdowoˈlɛnʲːɑ/
-  translation: dissatisfaction
-  pos: noun
-  gender: n
-- lemma: нелогічний
-  ipa: /nɛloˈɦʲit͡ʃnɪj/
-  translation: illogical
-  pos: adj
-- lemma: неминучий
-  ipa: /nɛmɪˈnut͡ʃɪj/
-  translation: inevitable
-  pos: adj
 - lemma: неминучість
-  ipa: /nɛmɪˈnut͡ʃʲistʲ/
-  translation: inevitability
+  ipa: /nɛmɪnˈut͡ʃistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: необачно
-  ipa: /nɛoˈbɑt͡ʃno/
-  translation: carelessly, imprudently
-  pos: adv
-- lemma: непопулярний
-  ipa: /nɛpopulʲɑrnɪj/
-  translation: unpopular
-  pos: adj
-- lemma: неприйнятний
-  ipa: /nɛprɪjˈnʲɑtnɪj/
-  translation: unacceptable
-  pos: adj
-- lemma: нерегулярність
-  ipa: /nɛrɛɦulʲɑrnʲistʲ/
-  translation: irregularity
-  pos: noun
-  gender: f
-- lemma: нерозумно
-  ipa: /nɛˈrozumno/
-  translation: unreasonably
-  pos: adv
-- lemma: образливий
-  ipa: /obrɐzlɪwɪj/
-  translation: offensive, insulting
-  pos: adj
-- lemma: оточувати
-  ipa: /otot͡ʃuˈwɑtɪ/
-  translation: to surround
-  pos: verb
-- lemma: паркан
-  ipa: /pɑrˈkɑn/
-  translation: fence
+- lemma: пух
+  ipa: /pux/
+  translation: ''
   pos: noun
   gender: m
-- lemma: періодично
-  ipa: /pɛrʲioˈdɪt͡ʃno/
-  translation: periodically
-  pos: adv
-- lemma: поводитися
-  ipa: /powoˈdɪtɪsʲɑ/
-  translation: to behave
-  pos: verb
-- lemma: поворот
-  ipa: /powoˈrot/
-  translation: turn, turning point
-  pos: noun
-  gender: m
-- lemma: пожертва
-  ipa: /poˈʒɛrtwɑ/
-  translation: sacrifice, donation
-  pos: noun
-  gender: f
-- lemma: посмішка
-  ipa: /posˈmʲiʃkɑ/
-  translation: smile
-  pos: noun
-  gender: f
-- lemma: простір
-  ipa: /prosˈtʲir/
-  translation: space
-  pos: noun
-  gender: m
-- lemma: псувати
-  ipa: /psuˈwɑtɪ/
-  translation: to spoil, to ruin
-  pos: verb
-- lemma: підбадьорювати
-  ipa: /pʲidbɐdʲoˈrʲuwɑtɪ/
-  translation: to cheer up, to encourage
-  pos: verb
-- lemma: підставляти
-  ipa: /pʲidstɑwlʲɑtɪ/
-  translation: to substitute, to set up
-  pos: verb
 - lemma: розбрат
-  ipa: /rozˈbrɑt/
-  translation: discord, strife
+  ipa: /rˈɔzbrat/
+  translation: ''
   pos: noun
   gender: m
-- lemma: роздратування
-  ipa: /rozdrɑtuˈwɑnʲːɑ/
-  translation: irritation, annoyance
-  pos: noun
-  gender: n
-- lemma: розсудок
-  ipa: /rozˈsudok/
-  translation: reason, sanity
-  pos: noun
-  gender: m
-- lemma: ріжон
-  ipa: /rʲiˈʒon/
-  translation: awl, goad
-  pos: noun
-  gender: m
-- lemma: рішучість
-  ipa: /rʲiˈʃut͡ʃʲistʲ/
-  translation: determination, decisiveness
-  pos: noun
-  gender: f
-- lemma: селянський
-  ipa: /sɛlʲɑnsʲkɪj/
-  translation: peasant (adj.)
-  pos: adj
 - lemma: скреслити
-  ipa: /skrɛsˈlɪtɪ/
-  translation: to cross out, to strike through
-  pos: verb
-- lemma: смола
-  ipa: /smoˈlɑ/
-  translation: resin, tar
-  pos: noun
-  gender: f
-- lemma: сперечатися
-  ipa: /spɛrɛˈt͡ʃɑtɪsʲɑ/
-  translation: to argue, to dispute
-  pos: verb
-- lemma: спостерігати
-  ipa: /spostɛrʲiˈɦɑtɪ/
-  translation: to observe, to watch
+  ipa: /skrˈɛslɪtɪ/
+  translation: ''
   pos: verb
 - lemma: спотикання
-  ipa: /spotɪˈkɑnʲːɑ/
-  translation: stumbling, obstacle
+  ipa: /spɔtɪkˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: спотикатися
-  ipa: /spotɪˈkɑtɪsʲɑ/
-  translation: to stumble
-  pos: verb
-- lemma: стікати
-  ipa: /stʲiˈkɑtɪ/
-  translation: to flow down, to drip
-  pos: verb
-- lemma: суто
-  ipa: /ˈsuto/
-  translation: purely, solely
-  pos: adv
 - lemma: танення
-  ipa: /tɐˈnɛnʲːɑ/
-  translation: melting, thawing
+  ipa: /tˈanɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: тин
   ipa: /tɪn/
-  translation: fence, wattle
+  translation: ''
   pos: noun
   gender: m
-- lemma: троянський
-  ipa: /troˈjɑnsʲkɪj/
-  translation: Trojan
-  pos: adj
-- lemma: тріщати
-  ipa: /trʲiˈʃt͡ʃɑtɪ/
-  translation: to crack, to crackle
-  pos: verb
-- lemma: тягар
-  ipa: /tʲɑˈɦɑr/
-  translation: burden, load
-  pos: noun
-  gender: m
-- lemma: шо
-  ipa: /ʃo/
-  translation: what (dialectal)
-  pos: pron

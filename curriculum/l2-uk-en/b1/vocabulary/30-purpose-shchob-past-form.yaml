@@ -2,139 +2,182 @@ module: 30-purpose-shchob-past-form
 level: B1
 version: '2.0'
 items:
-- lemma: ала
-  ipa: /ˈala/
-  translation: Ala
-  pos: propn
-  gender: f
 - lemma: бажане
-  ipa: /baˈʒanɛ/
-  translation: desired
+  ipa: /bˈaʒanɛ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: бажано
-  ipa: /baˈʒanɔ/
-  translation: desirable
-  pos: adv
+  ipa: /bˈaʒanɔ/
+  translation: ''
+  pos: noun
 - lemma: благати
-  ipa: /blaˈhatɪ/
-  translation: to beg
+  ipa: /blaɦˈatɪ/
+  translation: ''
   pos: verb
 - lemma: виключити
-  ipa: /ˈvɪklʲut͡ʃɪtɪ/
-  translation: to turn off
+  ipa: /ʋˈɪkljut͡ʃɪtɪ/
+  translation: ''
   pos: verb
-- lemma: відділятися
-  ipa: /vidːiˈlʲatɪsʲa/
-  translation: to separate
-  pos: verb
-- lemma: відьмако
-  ipa: /vidʲˈmakɔ/
-  translation: Witcher (voc.)
+- lemma: випускник
+  ipa: /ʋɪpusknˈɪk/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: добитися
-  ipa: /dɔˈbɪtɪsʲa/
-  translation: to achieve
+- lemma: відділятися
+  ipa: /ʋiddilˈjatɪsja/
+  translation: ''
   pos: verb
-- lemma: домагтися
-  ipa: /dɔmahˈtɪsʲa/
-  translation: to achieve
-  pos: verb
-  gender: m
-- lemma: закріплення
-  ipa: /zaˈkriplɛnʲːa/
-  translation: consolidation
+- lemma: дієта
+  ipa: /diˈjɛta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: жирне
+  ipa: /ʒˈɪrnɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: квестовий
-  ipa: /ˈkvɛstɔvɪj/
-  translation: quest (adj)
-  pos: adj
-- lemma: кон'юнктива
-  ipa: /kɔnjunˈktɪva/
-  translation: conjunctiva
+- lemma: записка
+  ipa: /zapˈɪska/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: можливе
-  ipa: /mɔʒˈlɪvɛ/
-  translation: possible
-  pos: noun
-  gender: m
-- lemma: невпевнений
-  ipa: /nɛu̯ˈpɛu̯nɛnɪj/
-  translation: uncertain
-  pos: adj
-- lemma: олю
-  ipa: /ˈɔlʲu/
-  translation: Olya (voc.)
-  pos: propn
   gender: f
+- lemma: квартальний
+  ipa: /kʋartˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: ковбаса
+  ipa: /kɔʋbasˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: комбінований
+  ipa: /kɔmbinˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: кон'юнктив
+  ipa: /kɔnjunktˈɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: латин
+  ipa: /latˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лінгвіст
+  ipa: /linɦʋˈist/
+  translation: ''
+  pos: noun
+- lemma: механізм
+  ipa: /mɛxanˈizm/
+  translation: ''
+  pos: noun
+- lemma: наказати
+  ipa: /nakazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: наполягати
+  ipa: /napɔljaɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: нереальний
+  ipa: /nɛrɛˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: обмежити
+  ipa: /ɔbmˈɛʒɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: обсяг
+  ipa: /ˈɔbsjaɦ/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: паралель
-  ipa: /paraˈlɛlʲ/
-  translation: parallel
+  ipa: /paralˈɛlʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: побажати
-  ipa: /pɔbaˈʒatɪ/
-  translation: to wish
+- lemma: писатися
+  ipa: /pɪsˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: попросити
-  ipa: /pɔprɔˈsɪtɪ/
-  translation: to ask
+- lemma: побудувати
+  ipa: /pɔbuduʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: пропилососити
-  ipa: /prɔpɪlɔˈsɔsɪtɪ/
-  translation: to vacuum
+- lemma: подихати
+  ipa: /pɔdɪxatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: минуле
-  ipa: /mɪˈnulɛ/
-  translation: past
-  pos: other
-- lemma: розкуповувати
-  ipa: /rɔzkuˈpɔvuvatɪ/
-  translation: to buy out
-  pos: verb
-- lemma: смажений
-  ipa: /ˈsmaʒɛnɪj/
-  translation: fried
+- lemma: пояснювальний
+  ipa: /pɔˈjasnjuʋalʲnɪj/
+  translation: ''
   pos: adj
+- lemma: призначений
+  ipa: /prɪznˈat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: пропилососити
+  ipa: /prɔpɪlɔsˈɔsɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: рештка
+  ipa: /rˈɛʃtka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розкуповувати
+  ipa: /rɔzkupˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: сашка
+  ipa: /saʃkˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: слов'янськ
+  ipa: /slɔʋjansʲk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сподівання
+  ipa: /spɔdiʋˈannja/
+  translation: ''
+  pos: noun
   gender: n
 - lemma: справедливо
-  ipa: /spravɛdˈlɪvɔ/
-  translation: fairly
+  ipa: /spraʋɛdlˈɪʋɔ/
+  translation: ''
   pos: adv
 - lemma: тост
   ipa: /tɔst/
-  translation: toast
+  translation: ''
   pos: noun
-  gender: f
-- lemma: чол
-  ipa: /t͡ʃɔl/
-  translation: m. (masc.)
-  pos: noun
-  gender: m
-- lemma: щоб
-  ipa: /ʃt͡ʃɔb/
-  translation: in order to
-  pos: other
+- lemma: узгодити
+  ipa: /uzɦˈɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: фактичний
+  ipa: /faktˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: чудовисько
-  ipa: /t͡ʃuˈdɔvɪsʲkɔ/
-  translation: monster
+  ipa: /t͡ʃudˈɔʋɪsʲkɔ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: шипіт
-  ipa: /ˈʃɪpit/
-  translation: whisper
-  pos: propn
-  gender: m
-- lemma: щасливо
-  ipa: /ʃt͡ʃasˈlɪvɔ/
-  translation: happily
-  pos: adv
-- lemma: ірреаліс
-  ipa: /irːɛˈalʲis/
-  translation: irrealis
+  ipa: /ʃˈɪpit/
+  translation: ''
   pos: noun
   gender: m
+- lemma: щасливо
+  ipa: /ʃt͡ʃaslˈɪʋɔ/
+  translation: ''
+  pos: adv
+- lemma: ірреаліса
+  ipa: /irrɛalisa/
+  translation: ''
+  pos: noun

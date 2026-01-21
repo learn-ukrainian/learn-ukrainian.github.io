@@ -1,154 +1,166 @@
 module: 84-winter-sports
 level: B1
-version: '1.1'
+version: '2.0'
 items:
-- lemma: зима
-  ipa: /zɪˈmɑ/
-  translation: winter
-  pos: noun
-  gender: f
-- lemma: сніг
-  ipa: /snʲiɦ/
-  translation: snow
-  pos: noun
-  gender: m
-- lemma: лижі
-  ipa: /lˈɪʒi/
-  translation: skis
-  pos: noun
-  gender: pl
-- lemma: сноуборд
-  ipa: /snoʊˈbɔɾd/
-  translation: snowboard
+- lemma: вбік
+  ipa: /ʋbik/
+  translation: ''
+  pos: adv
+- lemma: вертеп
+  ipa: /ʋɛrtˈɛp/
+  translation: ''
   pos: noun
   gender: m
-- lemma: кататися
-  ipa: /kɑˈtɑtɪsʲɑ/
-  translation: to ride / slide
+- lemma: випробувати
+  ipa: /ʋɪprɔbuʋatɪ/
+  translation: ''
   pos: verb
-  gender: null
-- lemma: курорт
-  ipa: /kʊˈɾɔɾt/
-  translation: resort
-  pos: noun
-  gender: m
-- lemma: траса
-  ipa: /tˈɾɑsɑ/
-  translation: slope / track
-  pos: noun
-  gender: f
-- lemma: підйомник
-  ipa: /pidjˈɔmnɪk/
-  translation: ski lift
-  pos: noun
-  gender: m
-- lemma: інструктор
-  ipa: /insˈtɾʊktoɾ/
-  translation: instructor
-  pos: noun
-  gender: m
-- lemma: шолом
-  ipa: /ʃoˈɫɔm/
-  translation: helmet
-  pos: noun
-  gender: m
-- lemma: окуляри
-  ipa: /okʊˈlʲɑɾɪ/
-  translation: goggles / glasses
-  pos: noun
-  gender: pl
-- lemma: рукавиці
-  ipa: /ɾʊkɑˈwɪt͡sʲi/
-  translation: mittens / gloves
-  pos: noun
-  gender: pl
-- lemma: холод
-  ipa: /xˈɔɫod/
-  translation: cold
-  pos: noun
-  gender: m
-- lemma: мороз
-  ipa: /moˈɾɔz/
-  translation: frost
-  pos: noun
-  gender: m
-- lemma: лід
-  ipa: /lʲid/
-  translation: ice
-  pos: noun
-  gender: m
-- lemma: ковзани
-  ipa: /kowzɑˈnɪ/
-  translation: skates
-  pos: noun
-  gender: pl
-- lemma: падати
-  ipa: /pˈɑdɑtɪ/
-  translation: to fall
-  pos: verb
-  gender: null
-- lemma: безпека
-  ipa: /bezˈpɛkɑ/
-  translation: safety
-  pos: noun
-  gender: f
-- lemma: Буковель
-  ipa: /bʊkoˈwɛlʲ/
-  translation: Bukovel (resort)
-  pos: propn
-  gender: m
-- lemma: Драгобрат
-  ipa: /dɾɑɦoˈbɾɑt/
-  translation: Drahobrat (highest resort)
-  pos: propn
-  gender: m
-- lemma: скі-пас
-  ipa: /sʲkʲi pɑs/
-  translation: ski pass
-  pos: noun
-  gender: m
-- lemma: оренда
-  ipa: /oˈɾɛndɑ/
-  translation: rent / rental
-  pos: noun
-  gender: f
-- lemma: новачок
-  ipa: /nowɑˈt͡ʃɔk/
-  translation: beginner
-  pos: noun
-  gender: m
-- lemma: професіонал
-  ipa: /pɾofes⁽ʲ⁾ioˈnɑɫ/
-  translation: professional
-  pos: noun
-  gender: m
 - lemma: глінтвейн
-  ipa: /hlʲintˈwejn/
-  translation: mulled wine
+  ipa: /ɦlintʋɛjn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: схил
-  ipa: /sxɪɫ/
-  translation: slope / incline
+- lemma: гірськолижний
+  ipa: /ɦirsʲkɔlˈɪʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: етно-ресторан
+  ipa: /ˈɛtnɔ-rɛstɔran/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: спуск
-  ipa: /spʊsk/
-  translation: descent / run
+- lemma: жорсткий
+  ipa: /ʒɔrstkˈɪj/
+  translation: ''
+  pos: adj
+- lemma: забава
+  ipa: /zabˈaʋa/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: черевики
-  ipa: /t͡ʃeɾeˈwɪkɪ/
-  translation: boots
+  gender: f
+- lemma: заощадити
+  ipa: /zaɔʃt͡ʃˈadɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: засніжений
+  ipa: /zasnˈiʒɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: зігрітися
+  ipa: /ziɦrˈitɪsja/
+  translation: ''
+  pos: verb
+- lemma: ковзан
+  ipa: /kɔʋzˈan/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: спорядження
-  ipa: /spoˈɾʲɑd͡ʒenʲːɑ/
-  translation: equipment / gear
+- lemma: ковзанка
+  ipa: /kˈɔʋzanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ковзання
+  ipa: /kˈɔʋzannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: фрірайд
-  ipa: /fɾʲiˈɾɑjd/
-  translation: freeride
+- lemma: колиба
+  ipa: /kɔlˈɪba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: коль
+  ipa: /kɔlʲ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: колядка
+  ipa: /kɔlˈjadka/
+  translation: ''
+  pos: noun
+- lemma: комплект
+  ipa: /kɔmplˈɛkt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: масово
+  ipa: /mˈasɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: новачок
+  ipa: /nɔʋat͡ʃˈɔk/
+  translation: ''
+  pos: noun
+- lemma: палиця
+  ipa: /pˈalɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: плай
+  ipa: /plaj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пологий
+  ipa: /pɔlˈɔɦɪj/
+  translation: ''
+  pos: adj
+- lemma: поляна
+  ipa: /pɔlˈjana/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пухнастий
+  ipa: /puxnˈastɪj/
+  translation: ''
+  pos: adj
+- lemma: підйомник
+  ipa: /pidjˈɔmnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розкішний
+  ipa: /rɔzkˈiʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: різдвяний
+  ipa: /rizdʋˈjanɪj/
+  translation: ''
+  pos: adj
+- lemma: сало
+  ipa: /sˈalɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: скі-пас
+  ipa: /ski-pas/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: славський
+  ipa: /slˈaʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: смакування
+  ipa: /smakuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сноуборд
+  ipa: /snɔubˈɔrd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сноубординг
+  ipa: /snɔubɔrdɪnɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фрірайд
+  ipa: /frirajd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фрірайти
+  ipa: /frirajtɪ/
+  translation: ''
+  pos: verb

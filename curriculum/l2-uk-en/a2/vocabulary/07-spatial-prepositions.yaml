@@ -2,117 +2,121 @@ module: 07-spatial-prepositions
 level: A2
 version: '2.0'
 items:
-- lemma: вживання
-  ipa: vʒɪˈʋɑnʲːɐ
-  translation: usage
-  pos: noun
-  gender: n
 - lemma: висити
-  ipa: ˈvɪsɪte
-  translation: to hang - typo? висіти
-  pos: verb
-- lemma: висіти
-  ipa: vɪˈsʲite
-  translation: to hang
+  ipa: /ʋɪsɪtɪ/
+  translation: ''
   pos: verb
 - lemma: група
-  ipa: ˈɦrupɐ
-  translation: group
+  ipa: /ɦrˈupa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: двосторонній
-  ipa: dʋostoˈrɔnːij
-  translation: two-sided
+  ipa: /dʋɔstɔrˈɔnnij/
+  translation: ''
   pos: adj
+- lemma: з'єднувати
+  ipa: /zˈjɛdnuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: залежно
+  ipa: /zalˈɛʒnɔ/
+  translation: ''
+  pos: adv
+- lemma: запам'ятовувати
+  ipa: /zapamjatˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
 - lemma: знаходитися
-  ipa: znɐˈxɔdɪtɪsʲɐ
-  translation: to be located
+  ipa: /znaxˈɔdɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: зустрінутися
-  ipa: zustˈrinutɪsʲɐ
-  translation: to meet
-  pos: verb
-- lemma: камінь
-  ipa: ˈkɑminʲ
-  translation: stone
+- lemma: зошит
+  ipa: /zˈɔʃɪt/
+  translation: ''
+  pos: noun
+- lemma: камін
+  ipa: /kamˈin/
+  translation: ''
   pos: noun
   gender: m
 - lemma: картинка
-  ipa: kɐrˈtɪnkɐ
-  translation: picture; image
+  ipa: /kartˈɪnka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: килим
-  ipa: ˈkɪlɪm
-  translation: carpet; rug
+  ipa: /kˈɪlɪm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: класти
-  ipa: ˈklɑste
-  translation: to put
-  pos: verb
-- lemma: ключовий
-  ipa: klʲut͡ʃoˈʋei̯
-  translation: key (adj); pivotal
-  pos: adj
-- lemma: ко
-  ipa: ko
-  translation: to
-  pos: pron
+- lemma: клад
+  ipa: /klad/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: кошик
-  ipa: ˈkɔʃɪk
-  translation: basket
+  ipa: /kˈɔʃɪk/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
 - lemma: куток
-  ipa: kuˈtɔk
-  translation: corner
+  ipa: /kutˈɔk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: кілька
-  ipa: ˈkilʲkɐ
-  translation: several
-  pos: other
-- lemma: найцікавіший
-  ipa: nɐi̯t͡sʲikɐˈʋiʃei̯
-  translation: most interesting
-  pos: adj
+  ipa: /kˈilʲka/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: посередині
-  ipa: posereˈdɪnʲi
-  translation: in the middle
+- lemma: навчання
+  ipa: /naʋt͡ʃˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: одразу
+  ipa: /ɔdrˈazu/
+  translation: ''
   pos: adv
+- lemma: папір
+  ipa: /papˈir/
+  translation: ''
+  pos: noun
+- lemma: повинно
+  ipa: /pɔʋˈɪnnɔ/
+  translation: ''
+  pos: adv
+- lemma: посередині
+  ipa: /pɔsɛrˈɛdɪni/
+  translation: ''
+  pos: adv
+- lemma: принцип
+  ipa: /prˈɪnt͡sɪp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: роза
+  ipa: /rˈɔza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стратегія
+  ipa: /stratˈɛɦija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: таємниця
-  ipa: tɐjemˈnɪt͡sʲɐ
-  translation: secret; mystery
+  ipa: /tajɛmnˈɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: текст
-  ipa: tɛkst
-  translation: text
-  pos: noun
-  gender: m
-- lemma: удач
-  ipa: uˈdɑt͡ʃ
-  translation: luck (genitive pl?)
+- lemma: удача
+  ipa: /udˈat͡ʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: місцевий
-  translation: locative
+- lemma: єдиний
+  ipa: /jɛdˈɪnɪj/
+  translation: ''
   pos: adj
-  ipa: /mʲisˈt͡sɛʋɪj/
-- lemma: знахідний
-  translation: accusative
-  pos: adj
-  ipa: /znɐˈxʲidnɪj/
-- lemma: відмінок
-  translation: case
-  pos: noun
-  gender: m
-  ipa: /ʋʲidˈmʲinɔk/
-- lemma: фотографії
-  ipa: fotoˈɦrɑfiji
-  translation: photos
-  pos: noun
-  gender: f

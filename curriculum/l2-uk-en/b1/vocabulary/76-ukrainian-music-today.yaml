@@ -2,267 +2,228 @@ module: 76-ukrainian-music-today
 level: B1
 version: '2.0'
 items:
-  - lemma: альбом
-    ipa: /alʲˈbɔm/
-    translation: album
-    pos: noun
-    gender: m
-  - lemma: Бумбокс
-    ipa: /bumˈbɔks/
-    translation: Boombox (band)
-    pos: propn
-    gender: m
-  - lemma: Святослав Вакарчук
-    ipa: /sʲvjatɔˈslau̯ vakarˈt͡ʃuk/
-    translation: Sviatoslav Vakarchuk
-    pos: propn
-    gender: m
-  - lemma: виконавець
-    ipa: /vɪkɔˈnavɛt͡sʲ/
-    translation: performer (masc.)
-    pos: noun
-    gender: m
-  - lemma: виконавиця
-    ipa: /vɪkɔˈnavɪt͡sʲa/
-    translation: performer (fem.)
-    pos: noun
-    gender: f
-  - lemma: витвір
-    ipa: /ˈvɪtvʲir/
-    translation: creation, work of art
-    pos: noun
-    gender: m
-  - lemma: воплі
-    ipa: /ˈvɔplʲi/
-    translation: screams, cries
-    pos: noun
-    gender: pl
-  - lemma: відеогра
-    ipa: /vʲidɛɔˈhra/
-    translation: video game
-    pos: noun
-    gender: f
-  - lemma: Відоплясова
-    ipa: /vʲidɔˈplʲasɔva/
-    translation: Vidopliassova
-    pos: propn
-    gender: f
-  - lemma: гурт
-    ipa: /hurt/
-    translation: band, group
-    pos: noun
-    gender: m
-  - lemma: гімн
-    ipa: /hʲimn/
-    translation: anthem
-    pos: noun
-    gender: m
-  - lemma: депортований
-    ipa: /dɛpɔrˈtɔvanɪj/
-    translation: deported
-    pos: adj
-    gender: m
-  - lemma: Джамала
-    ipa: /dʒaˈmala/
-    translation: Jamala
-    pos: propn
-    gender: f
-  - lemma: євробачення
-    ipa: /jɛvrɔˈbat͡ʃɛnʲːa/
-    translation: Eurovision
-    pos: noun
-    gender: n
-  - lemma: експериментальний
-    ipa: /ɛkspɛrɪmɛnˈtalʲnɪj/
-    translation: experimental
-    pos: adj
-    gender: m
-  - lemma: електроніка
-    ipa: /ɛˈlɛktrɔnʲika/
-    translation: electronics
-    pos: noun
-    gender: f
-  - lemma: електровий
-    ipa: /ɛlɛkˈtrɔvɪj/
-    translation: electric (adj)
-    pos: adj
-    gender: m
-  - lemma: етно
-    ipa: /ˈɛtnɔ/
-    translation: ethno
-    pos: noun
-    gender: n
-  - lemma: каное
-    ipa: /kaˈnɔɛ/
-    translation: canoe
-    pos: noun
-    gender: n
-  - lemma: клубний
-    ipa: /ˈklubnɪj/
-    translation: club (adj)
-    pos: adj
-    gender: m
-  - lemma: кліп
-    ipa: /klʲip/
-    translation: music video
-    pos: noun
-    gender: m
-  - lemma: кобзарський
-    ipa: /kɔbˈzarsʲkɪj/
-    translation: kobzar (adj)
-    pos: adj
-    gender: m
-  - lemma: концерт
-    ipa: /kɔnˈt͡sɛrt/
-    translation: concert
-    pos: noun
-    gender: m
-  - lemma: мехенді
-    ipa: /mɛˈxɛndʲi/
-    translation: mehndi
-    pos: propn
-    gender: m
-  - lemma: мрія
-    ipa: /mrʲija/
-    translation: dream
-    pos: noun
-    gender: f
-  - lemma: наживо
-    ipa: /naˈʒɪvɔ/
-    translation: live
-    pos: adv
-  - lemma: неофолк
-    ipa: /nɛɔˈfɔlk/
-    translation: neofolk
-    pos: noun
-    gender: m
-  - lemma: однойменний
-    ipa: /ɔdnɔjˈmɛnːɪj/
-    translation: eponymous
-    pos: adj
-    gender: m
-  - lemma: пісня
-    ipa: /ˈpisʲnʲa/
-    translation: song
-    pos: noun
-    gender: f
-  - lemma: платиновий
-    ipa: /plaˈtɪnɔvɪj/
-    translation: platinum
-    pos: adj
-    gender: m
-  - lemma: плейлист
-    ipa: /plɛjˈlɪst/
-    translation: playlist
-    pos: noun
-    gender: m
-  - lemma: поп
-    ipa: /pɔp/
-    translation: pop
-    pos: noun
-    gender: m
-  - lemma: присвята
-    ipa: /prɪˈsvʲata/
-    translation: dedication
-    pos: noun
-    gender: f
-  - lemma: продюсер
-    ipa: /prɔˈdʲusɛr/
-    translation: producer
-    pos: noun
-    gender: m
-  - lemma: Олег Псюк
-    ipa: /ɔˈlɛh psʲuk/
-    translation: Oleh Psiuk
-    pos: propn
-    gender: m
-  - lemma: реп
-    ipa: /rɛp/
-    translation: rap
-    pos: noun
-    gender: m
-  - lemma: реперка
-    ipa: /rɛˈpɛrka/
-    translation: rapper (fem.)
-    pos: noun
-    gender: f
-  - lemma: реперок
-    ipa: /rɛpɛˈrɔk/
-    translation: rapper (dim.)
-    pos: noun
-    gender: m
-  - lemma: Руслана
-    ipa: /rusˈlana/
-    translation: Ruslana
-    pos: propn
-    gender: f
-  - lemma: саундтрек
-    ipa: /saunˈtrɛk/
-    translation: soundtrack
-    pos: noun
-    gender: m
-  - lemma: Юрій Сенько
-    ipa: /ˈjurʲij ˈsɛnʲkɔ/
-    translation: Yuriy Senko
-    pos: propn
-    gender: m
-  - lemma: Скрябін
-    ipa: /ˈskrʲabʲin/
-    translation: Skryabin (band)
-    pos: propn
-    gender: m
-  - lemma: співак
-    ipa: /spiˈvak/
-    translation: singer (masc.)
-    pos: noun
-    gender: m
-  - lemma: співачка
-    ipa: /spiˈvat͡ʃka/
-    translation: singer (fem.)
-    pos: noun
-    gender: f
-  - lemma: стадіон
-    ipa: /staˈdʲiɔn/
-    translation: stadium
-    pos: noun
-    gender: m
-  - lemma: стадіонний
-    ipa: /stadʲiˈɔnːɪj/
-    translation: stadium (adj)
-    pos: adj
-    gender: m
-  - lemma: Тартак
-    ipa: /tarˈtak/
-    translation: Tartak (band)
-    pos: propn
-    gender: m
-  - lemma: фестиваль
-    ipa: /fɛstɪˈvalʲ/
-    translation: festival
-    pos: noun
-    gender: m
-  - lemma: фолк
-    ipa: /fɔlk/
-    translation: folk
-    pos: noun
-    gender: m
-  - lemma: фортепіано
-    ipa: /fɔrtɛpiˈanɔ/
-    translation: piano
-    pos: noun
-    gender: m
-  - lemma: фронтмен
-    ipa: /frɔntˈmɛn/
-    translation: frontman
-    pos: noun
-    gender: m
-  - lemma: хіт
-    ipa: /xit/
-    translation: hit
-    pos: noun
-    gender: m
-  - lemma: інді
-    ipa: /ˈindʲi/
-    translation: indie
-    pos: noun
-    gender: n
+- lemma: альбом
+  ipa: /alʲbˈɔm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: артист
+  ipa: /artˈɪst/
+  translation: ''
+  pos: noun
+- lemma: бандура
+  ipa: /bandˈura/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: виконавиця
+  ipa: /ʋɪkɔnˈaʋɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: витвір
+  ipa: /ʋˈɪtʋir/
+  translation: ''
+  pos: noun
+- lemma: вопл
+  ipa: /ʋɔpl/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: відоплясов
+  ipa: /ʋidɔpljasɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: десятиліття
+  ipa: /dɛsjatɪlˈittja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: джаз
+  ipa: /dʒaz/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: джазовий
+  ipa: /dʒˈazɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: джамала
+  ipa: /dʒamala/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: електро-фолк
+  ipa: /ɛlɛktrɔ-fɔlk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: електроніка
+  ipa: /ɛlɛktrˈɔnika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: етно-хаос
+  ipa: /ˈɛtnɔ-xaɔs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: жанр
+  ipa: /ʒanr/
+  translation: ''
+  pos: noun
+- lemma: запорожець
+  ipa: /zapɔrˈɔʒɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: каное
+  ipa: /kanˈɔɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: клубний
+  ipa: /klˈubnɪj/
+  translation: ''
+  pos: adj
+- lemma: кліп
+  ipa: /klip/
+  translation: ''
+  pos: noun
+- lemma: мелодія
+  ipa: /mɛlˈɔdija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мехенді
+  ipa: /mɛxɛndi/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: нажива
+  ipa: /naʒˈɪʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: неофолк
+  ipa: /nɛɔfɔlk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: неофіційний
+  ipa: /nɛɔfit͡sˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: плейлист
+  ipa: /plɛjlɪst/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поп
+  ipa: /pɔp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: потужно
+  ipa: /pɔtˈuʒnɔ/
+  translation: ''
+  pos: adv
+- lemma: присвячений
+  ipa: /prɪsʋˈjat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: продюсер
+  ipa: /prɔdˈjusɛr/
+  translation: ''
+  pos: noun
+- lemma: псюк
+  ipa: /psjuk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ренесанс
+  ipa: /rɛnɛsˈans/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: реп
+  ipa: /rɛp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: реп-музика
+  ipa: /rɛp-mˈuzɪka/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: реп-сцена
+  ipa: /rɛp-st͡sˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: реперка
+  ipa: /rɛpɛrka/
+  translation: ''
+  pos: noun
+- lemma: рок-музика
+  ipa: /rɔk-mˈuzɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: руслан
+  ipa: /ruslˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: саундтрек
+  ipa: /saundtrˈɛk/
+  translation: ''
+  pos: noun
+- lemma: скрябін
+  ipa: /skrjabin/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: співак
+  ipa: /spiʋˈak/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: створюючи
+  ipa: /stʋˈɔrjujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: стійкість
+  ipa: /stˈijkistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: торкнутися
+  ipa: /tɔrknˈutɪsja/
+  translation: ''
+  pos: verb
+- lemma: фолк
+  ipa: /fɔlk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хіп-хоп
+  ipa: /xip-xɔp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ширший
+  ipa: /ʃˈɪrʃɪj/
+  translation: ''
+  pos: adj
+- lemma: шоу
+  ipa: /ʃˈɔu/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: інд
+  ipa: /ind/
+  translation: ''
+  pos: noun
+  gender: m

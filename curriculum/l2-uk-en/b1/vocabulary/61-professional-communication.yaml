@@ -3,74 +3,145 @@ level: B1
 version: '2.0'
 items:
 - lemma: айт
-  ipa: /ˈajt/
-  translation: IT (slang)
+  ipa: /ajt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: виплачуватися
-  ipa: /vɪˈplat͡ʃuvatɪsʲa/
-  translation: to be paid out
+- lemma: видатний
+  ipa: /ʋɪdatnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: вишуканіший
+  ipa: /ʋˈɪʃukaniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: гелікоптер
+  ipa: /ɦɛlikɔptˈɛr/
+  translation: ''
+  pos: noun
+- lemma: дотримання
+  ipa: /dɔtrˈɪmannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: еліта
+  ipa: /ɛlˈita/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: заздрити
+  ipa: /zˈazdrɪtɪ/
+  translation: ''
   pos: verb
 - lemma: заслужено
-  ipa: /zaˈsluʒɛnɔ/
-  translation: deservedly
+  ipa: /zaslˈuʒɛnɔ/
+  translation: ''
   pos: adv
 - lemma: кластер
-  ipa: /ˈklastɛr/
-  translation: cluster
+  ipa: /klˈastɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: концентрація
+  ipa: /kɔnt͡sɛntrˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: корольов
+  ipa: /kɔrɔlʲˈɔʋ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: корпорація
-  ipa: /kɔrpɔˈrat͡sʲija/
-  translation: corporation
+  ipa: /kɔrpɔrˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: лікарняний
-  ipa: /lʲikarˈnʲanɪj/
-  translation: sick leave
+- lemma: космонавтика
+  ipa: /kɔsmɔnˈaʋtɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лідирувати
+  ipa: /lidˈɪruʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: міцний
+  ipa: /mit͡snˈɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: нерідко
+  ipa: /nɛrˈidkɔ/
+  translation: ''
+  pos: adv
+- lemma: нібито
+  ipa: /nˈibɪtɔ/
+  translation: ''
+  pos: part
+- lemma: оновлюватися
+  ipa: /ɔnˈɔʋljuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: організаційний
-  ipa: /ɔrhanʲizaˈt͡sʲijnɪj/
-  translation: organizational
+  ipa: /ɔrɦanizat͡sˈijnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: переда
-  ipa: /pɛrɛˈda/
-  translation: transmit (trunc)
+- lemma: отримаути
+  ipa: /ɔtrɪmautɪ/
+  translation: ''
+  pos: verb
+- lemma: проведення
+  ipa: /prɔʋˈɛdɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: продакт-менеджмент
+  ipa: /prɔdakt-mˈɛnɛdʒmɛnt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: подібній
-  ipa: /pɔˈdʲibnʲij/
-  translation: similar (loc.)
-  pos: adj
+- lemma: продуктивність
+  ipa: /prɔduktˈɪʋnistʲ/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: пострадянський
-  ipa: /pɔstraˈdʲansʲkɪj/
-  translation: post-Soviet
-  pos: adj
-  gender: m
-- lemma: продакт
-  ipa: /ˈprɔdakt/
-  translation: product (slang)
+- lemma: професіоналізм
+  ipa: /prɔfɛsiɔnalˈizm/
+  translation: ''
   pos: noun
   gender: m
 - lemma: підпорядкований
-  ipa: /pidpɔrʲadˈkɔvanɪj/
-  translation: subordinate
+  ipa: /pidpɔrjadkˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: стажування
-  ipa: /staʒuˈvanʲːa/
-  translation: internship
-  pos: noun
-  gender: n
-- lemma: таска
-  ipa: /ˈtaska/
-  translation: task (slang)
-  pos: noun
-  gender: f
-- lemma: фідбек
-  ipa: /fidˈbɛk/
-  translation: feedback
+- lemma: становити
+  ipa: /stanɔʋˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: сікорський
+  ipa: /sikˈɔrsʲkɪj/
+  translation: ''
   pos: noun
   gender: m
+- lemma: упередження
+  ipa: /upɛrˈɛdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: фідбек
+  ipa: /fidbɛk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фінансовий
+  ipa: /finˈansɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: інвестор
+  ipa: /inʋˈɛstɔr/
+  translation: ''
+  pos: noun
+- lemma: інженерний
+  ipa: /inʒɛnˈɛrnɪj/
+  translation: ''
+  pos: adj

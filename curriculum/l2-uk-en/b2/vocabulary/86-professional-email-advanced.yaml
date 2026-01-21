@@ -1,194 +1,91 @@
-config:
-  standard: '2024'
+module: 86-professional-email-advanced
+level: B2
+version: '2.0'
 items:
-  - lemma: ланцюжок
-    ipa: /lɐnˈt͡sʲuʒɔk/
-    translation: thread (email chain)
-    pos: noun
-    gender: m
-    tags: [professional]
-  - lemma: відповіді
-    ipa: /widˈpowidʲi/
-    translation: replies
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: копія
-    ipa: /ˈkɔpʲijɐ/
-    translation: copy (CC)
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: прихована копія
-    ipa: /prɪxɔˈwɑnɐ ˈkɔpʲijɐ/
-    translation: blind carbon copy (BCC)
-    pos: phrase
-    tags: [professional]
-  - lemma: конфіденційність
-    ipa: /kɔnfʲidɛnˈt͡sʲijnʲistʲ/
-    translation: confidentiality
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: нагадування
-    ipa: /nɐɦɐˈduwɐnʲːɐ/
-    translation: reminder
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: подальші дії
-    ipa: /pɔˈdɑlʲʃʲi ˈdʲiji/
-    translation: follow-up
-    pos: phrase
-    tags: [professional]
-  - lemma: ескалація
-    ipa: /ɛskɐˈlɑt͡sʲijɐ/
-    translation: escalation
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: делегування
-    ipa: /dɛlɛɦuˈwɑnʲːɐ/
-    translation: delegation
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: підтвердження
-    ipa: /pidˈtwɛrdʒɛnʲːɐ/
-    translation: acknowledgment
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: пріоритет
-    ipa: /prʲiɔrɪˈtɛt/
-    translation: priority
-    pos: noun
-    gender: m
-    tags: [professional]
-  - lemma: терміновість
-    ipa: /tɛrmiˈnɔwistʲ/
-    translation: urgency
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: крайній термін
-    ipa: /ˈkrɑjnʲij ˈtɛrmʲin/
-    translation: deadline
-    pos: phrase
-    tags: [professional]
-  - lemma: координація
-    ipa: /kɔɔrdɪˈnɑt͡sʲijɐ/
-    translation: coordination
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: узгодження
-    ipa: /uzɦɔˈdʒɛnʲːɐ/
-    translation: alignment, coordination
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: погодження
-    ipa: /pɔɦɔˈdʒɛnʲːɐ/
-    translation: approval
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: відмова
-    ipa: /widˈmɔwɐ/
-    translation: refusal, decline
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: затримка
-    ipa: /zɐˈtrɪmkɐ/
-    translation: delay
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: переадресація
-    ipa: /pɛrɛɑdrɛˈsɑt͡sʲijɐ/
-    translation: forwarding (redirect)
-    pos: noun
-    gender: f
-    tags: [professional]
-  - lemma: цитування
-    ipa: /t͡sɪtuˈwɑnʲːɐ/
-    translation: quoting
-    pos: noun
-    gender: n
-    tags: [professional]
-  - lemma: контекст
-    ipa: /kɔnˈtɛkst/
-    translation: context
-    pos: noun
-    gender: m
-    tags: [professional]
-  - lemma: попередній
-    ipa: /pɔˈpɛrɛdnʲij/
-    translation: previous
-    pos: adjective
-    tags: [professional]
-  - lemma: наступний
-    ipa: /nɐˈstupnʲij/
-    translation: next, following
-    pos: adjective
-    tags: [professional]
-  - lemma: залучений
-    ipa: /zɐˈlut͡ʃɛnɪj/
-    translation: involved
-    pos: adjective
-    tags: [professional]
-  - lemma: відповідальний
-    ipa: /widpɔwiˈdɑlʲnɪj/
-    translation: responsible
-    pos: adjective
-    tags: [professional]
-  - lemma: узгоджувати
-    ipa: /uzɦɔˈdʒuwɐtɪ/
-    translation: to coordinate, align
-    pos: verb
-    aspect: imperfective
-    tags: [professional]
-  - lemma: узгодити
-    ipa: /uzɦɔˈdɪtɪ/
-    translation: to coordinate, align (perfective)
-    pos: verb
-    aspect: perfective
-    tags: [professional]
-  - lemma: ескалувати
-    ipa: /ɛskɐluˈwɑtɪ/
-    translation: to escalate
-    pos: verb
-    aspect: imperfective
-    tags: [professional]
-  - lemma: делегувати
-    ipa: /dɛlɛɦuˈwɑtɪ/
-    translation: to delegate
-    pos: verb
-    aspect: imperfective
-    tags: [professional]
-  - lemma: нагадати
-    ipa: /nɐɦɐˈdɑtɪ/
-    translation: to remind (perfective)
-    pos: verb
-    aspect: perfective
-    tags: [professional]
-  - lemma: відстежувати
-    ipa: /widˈstɛʒuwɐtɪ/
-    translation: to track, monitor
-    pos: verb
-    aspect: imperfective
-    tags: [professional]
-  - lemma: відстежити
-    ipa: /widˈstɛʒɪtɪ/
-    translation: to track, monitor (perfective)
-    pos: verb
-    aspect: perfective
-    tags: [professional]
-  - lemma: переадресувати
-    ipa: /pɛrɛɑdrɛsuˈwɑtɪ/
-    translation: to forward, redirect
-    pos: verb
-    aspect: imperfective
-    tags: [professional]
+- lemma: багатопунктовий
+  ipa: /baɦatɔpunktɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: варшавський
+  ipa: /ʋarʃˈaʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: васильович
+  ipa: /ʋasˈɪlʲɔʋɪt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вибірковий
+  ipa: /ʋɪbirkˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: делегування
+  ipa: /dɛlɛɦuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: делегувати
+  ipa: /dɛlɛɦuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: демотивувати
+  ipa: /dɛmɔtɪʋuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ескалація
+  ipa: /ɛskalˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ескалувати
+  ipa: /ɛskaluʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: мітка
+  ipa: /mˈitka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обмежуватися
+  ipa: /ɔbmɛʒuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: опрацювати
+  ipa: /ɔprat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: продуманий
+  ipa: /prɔdˈumanɪj/
+  translation: ''
+  pos: adj
+- lemma: процитувати
+  ipa: /prɔt͡sɪtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: релевантний
+  ipa: /rɛlɛʋˈantnɪj/
+  translation: ''
+  pos: adj
+- lemma: розсилка
+  ipa: /rɔzsˈɪlka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: скринька
+  ipa: /skrˈɪnʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тактовно
+  ipa: /taktˈɔʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: управляти
+  ipa: /upraʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: ім'я-батько
+  ipa: /imˈja-batʲkɔ/
+  translation: ''
+  pos: noun
+  gender: n

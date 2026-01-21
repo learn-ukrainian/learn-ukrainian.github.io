@@ -2,157 +2,83 @@ module: 02-language-about-verbs
 level: B1
 version: '2.0'
 items:
-- lemma: вид
-  ipa: /wɪd/
-  translation: aspect
+- lemma: аналітичний
+  ipa: /analitˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: вбити
+  ipa: /ʋbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: дв
+  ipa: /dʋ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: доконаний вид
-  ipa: /dɔˈkɔnɐnɪj wɪd/
-  translation: perfective aspect
-  pos: phrase
-- lemma: недоконаний вид
-  ipa: /nɛdɔˈkɔnɐnɪj wɪd/
-  translation: imperfective aspect
-  pos: phrase
-- lemma: дія
-  ipa: /ˈdʲijɐ/
-  translation: action
-  pos: noun
-  gender: f
-- lemma: процес
-  ipa: /prɔˈt͡sɛs/
-  translation: process
-  pos: noun
-  gender: m
-- lemma: результат
-  ipa: /rɛzulʲˈtɑt/
-  translation: result
-  pos: noun
-  gender: m
-- lemma: тривалість
-  ipa: /trɪˈʋɑlʲisʲtʲ/
-  translation: duration
-  pos: noun
-  gender: f
-- lemma: повторення
-  ipa: /pɔu̯ˈtɔrɛnʲːɐ/
-  translation: repetition
+- lemma: діло
+  ipa: /dˈilɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: завершення
-  ipa: /zɐˈwɛrʃenʲːɐ/
-  translation: completion
+- lemma: зно
+  ipa: /znɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: початок
-  ipa: /pɔˈt͡ʃɑtɔk/
-  translation: beginning
+- lemma: майч
+  ipa: /majt͡ʃ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: продовження
-  ipa: /prɔˈdɔu̯ʒenʲːɐ/
-  translation: continuation
+- lemma: минути
+  ipa: /mɪnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: му
+  ipa: /mu/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: tense; time
+- lemma: мч
+  ipa: /mt͡ʃ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: теперішній час
-  ipa: /tɛˈpɛrʲiʃnʲij t͡ʃɑs/
-  translation: present tense
-  pos: phrase
-- lemma: минулий час
-  ipa: /mɪˈnulɪj t͡ʃɑs/
-  translation: past tense
-  pos: phrase
-- lemma: майбутній час
-  ipa: /mɐi̯ˈbutnʲij t͡ʃɑs/
-  translation: future tense
-  pos: phrase
-- lemma: заперечення
-  ipa: /zɐpɛˈrɛt͡ʃenʲːɐ/
-  translation: negation
+- lemma: написаний
+  ipa: /napˈɪsanɪj/
+  translation: ''
+  pos: adj
+- lemma: ндв
+  ipa: /ndʋ/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: загальне заперечення
-  ipa: /zɐˈɦɑlʲne zɐpɛˈrɛt͡ʃenʲːɐ/
-  translation: general negation
-  pos: phrase
-- lemma: очікувана дія
-  ipa: /ɔˈt͡ʃikʊʋɐnɐ ˈdʲijɐ/
-  translation: expected action
-  pos: phrase
+- lemma: особовий
+  ipa: /ɔsɔbˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: очікуваний
+  ipa: /ɔt͡ʃˈikuʋanɪj/
+  translation: ''
+  pos: adj
 - lemma: попередження
-  ipa: /pɔpɛˈrɛdʒenʲːɐ/
-  translation: warning
+  ipa: /pɔpɛrˈɛdʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: заборона
-  ipa: /zɐbɔˈrɔnɐ/
-  translation: prohibition
-  pos: noun
-  gender: f
-- lemma: складна форма
-  ipa: /sklɐdˈnɑ ˈfɔrmɐ/
-  translation: compound form
-  pos: phrase
-- lemma: синтетична форма
-  ipa: /sɪntɛˈtɪt͡ʃnɐ ˈfɔrmɐ/
-  translation: synthetic form
-  pos: phrase
-- lemma: наказова форма
-  ipa: /nɐkɐˈzɔʋɐ ˈfɔrmɐ/
-  translation: imperative form
-  pos: phrase
-- lemma: парадигма
-  ipa: /pɐrɐˈdɪɦmɐ/
-  translation: paradigm
-  pos: noun
-  gender: f
-- lemma: однократний
-  ipa: /ɔdnɔˈkrɑtnɪj/
-  translation: single; one-time
+- lemma: піймати
+  ipa: /pijmˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: синтетичний
+  ipa: /sɪntɛtˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-- lemma: багаторазовий
-  ipa: /bɐɦɐtɔrɐˈzɔʋɪj/
-  translation: repeated; multiple
-  pos: adj
-- lemma: дієвідміна
-  ipa: /dʲijewidˈminɐ/
-  translation: verb conjugation
+- lemma: скорочено
+  ipa: /skɔrˈɔt͡ʃɛnɔ/
+  translation: ''
+  pos: adv
+- lemma: слабіти
+  ipa: /slabˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: тч
+  ipa: /tt͡ʃ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: особові закінчення
-  ipa: /ɔsɔˈbɔwi zɐˈkʲint͡ʃenʲːɐ/
-  translation: personal endings
-  pos: phrase
-- lemma: інфінітив
-  ipa: /infʲinʲiˈtɪu̯/
-  translation: infinitive
-  pos: noun
-  gender: m
-- lemma: наказовий спосіб
-  ipa: /nɐkɐˈzɔwɪj ˈspɔsib/
-  translation: imperative mood
-  pos: phrase
-- lemma: умовний спосіб
-  ipa: /uˈmɔwnɪj ˈspɔsib/
-  translation: conditional mood
-  pos: phrase
-- lemma: спосіб
-  ipa: /spɔsib/
-  translation: mood (grammar)
-  pos: noun
-  gender: m
-- lemma: стан
-  ipa: /stɑn/
-  translation: voice (grammar)
-  pos: noun
-  gender: m
-- lemma: активний стан
-  ipa: /ɐkˈtɪwnɪj stɑn/
-  translation: active voice
-  pos: phrase

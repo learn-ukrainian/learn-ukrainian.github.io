@@ -3,52 +3,108 @@ level: B1
 version: '2.0'
 items:
 - lemma: адаптований
-  ipa: /adapˈtɔvanɪj/
-  translation: adapted
+  ipa: /adaptˈɔʋanɪj/
+  translation: ''
   pos: adj
+- lemma: альтернатива
+  ipa: /alʲtɛrnatˈɪʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: арабський
+  ipa: /arˈabsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: введення
+  ipa: /ʋʋˈɛdɛnnja/
+  translation: ''
+  pos: noun
   gender: n
-- lemma: випаровуватися
-  ipa: /vɪparɔˈvuvatɪsʲa/
-  translation: to evaporate
+- lemma: виникнути
+  ipa: /ʋˈɪnɪknutɪ/
+  translation: ''
   pos: verb
-- lemma: дзвон
-  ipa: /dzvɔn/
-  translation: bell
+- lemma: грамота
+  ipa: /ɦrˈamɔta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дзвін
+  ipa: /dzʋin/
+  translation: ''
+  pos: noun
+- lemma: загроза
+  ipa: /zaɦrˈɔza/
+  translation: ''
+  pos: noun
+- lemma: квестовий
+  ipa: /kʋɛstɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: контрфактичний
+  ipa: /kɔntrfaktɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: магомет
+  ipa: /maɦɔmˈɛt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: зателефонуй
-  ipa: /zatɛlɛfɔˈnuj/
-  translation: call (imp.)
-  pos: other
-- lemma: кипіти
-  ipa: /kɪˈpʲitɪ/
-  translation: to boil
+- lemma: набувати
+  ipa: /nabuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: магомет
-  ipa: /mahɔˈmɛt/
-  translation: Mahomet
-  pos: propn
-  gender: m
 - lemma: нереально
   ipa: /nɛrɛˈalʲnɔ/
-  translation: unrealistically
+  translation: ''
   pos: adv
-- lemma: поліпшитися
-  ipa: /pɔˈlʲipʃɪtɪsʲa/
-  translation: to improve
+- lemma: опанувавши
+  ipa: /ɔpanuʋˈaʋʃɪ/
+  translation: ''
   pos: verb
-- lemma: прогноза
-  ipa: /prɔhˈnɔza/
-  translation: forecast
+- lemma: поліпшитися
+  ipa: /pɔlˈipʃɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: порушувати
+  ipa: /pɔrˈuʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: пропалий
+  ipa: /prɔpˈalɪj/
+  translation: ''
+  pos: adj
+- lemma: підписаний
+  ipa: /pidpˈɪsanɪj/
+  translation: ''
+  pos: adj
+- lemma: слов'янське
+  ipa: /slɔʋˈjansʲkɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: суперечити
+  ipa: /supɛrˈɛt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: тісно
+  ipa: /tˈisnɔ/
+  translation: ''
+  pos: adv
+- lemma: узгоджуючи
+  ipa: /uzɦˈɔdʒujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: ум
+  ipa: /um/
+  translation: ''
   pos: noun
   gender: m
-- lemma: пропалий
-  ipa: /prɔˈpalɪj/
-  translation: lost
-  pos: adj
-  gender: f
 - lemma: ща
   ipa: /ʃt͡ʃa/
-  translation: what (slang)
-  pos: propn
-  gender: f
+  translation: ''
+  pos: noun
+- lemma: яко
+  ipa: /ˈjakɔ/
+  translation: ''
+  pos: conj

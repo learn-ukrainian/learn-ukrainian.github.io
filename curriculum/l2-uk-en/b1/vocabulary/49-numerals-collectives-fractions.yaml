@@ -3,166 +3,228 @@ level: B1
 version: '2.0'
 items:
 - lemma: близня
-  ipa: /blɪzˈnʲa/
-  translation: twin
+  ipa: /blɪznˈja/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: виховуватися
-  ipa: /vɪˈxɔvuvatɪsʲa/
-  translation: to be raised
-  pos: verb
-- lemma: друга
-  ipa: /ˈdruha/
-  translation: second
+- lemma: взаємозамінний
+  ipa: /ʋzajɛmɔzamˈinnɪj/
+  translation: ''
+  pos: adj
+- lemma: виборець
+  ipa: /ʋˈɪbɔrɛt͡sʲ/
+  translation: ''
+  pos: noun
+- lemma: вислів
+  ipa: /ʋˈɪsliʋ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: десятеро
-  ipa: /dɛˈsʲatɛrɔ/
-  translation: ten (coll.)
-  pos: other
-- lemma: дитинчат
-  ipa: /dɪtɪnˈt͡ʃat/
-  translation: cubs (gen.)
+- lemma: виховуватися
+  ipa: /ʋɪxˈɔʋuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: ворт
+  ipa: /ʋɔrt/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: долька
-  ipa: /ˈdɔlʲka/
-  translation: wedge (dim.)
+  gender: m
+- lemma: граблі
+  ipa: /ɦrablˈi/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: збірня
-  ipa: /zbirˈnʲa/
-  translation: team/collection
+- lemma: дехто
+  ipa: /dˈɛxtɔ/
+  translation: ''
+  pos: pron
+- lemma: дитинча
+  ipa: /dɪtɪnt͡ʃˈa/
+  translation: ''
+  pos: noun
+- lemma: дріб
+  ipa: /drib/
+  translation: ''
   pos: noun
   gender: m
 - lemma: клопіт
-  ipa: /ˈklɔpit/
-  translation: trouble
-  pos: noun
-  gender: m
-- lemma: козенят
-  ipa: /kɔzɛˈnʲat/
-  translation: kids (gen.)
+  ipa: /klˈɔpit/
+  translation: ''
   pos: noun
   gender: m
 - lemma: косар
-  ipa: /kɔˈsar/
-  translation: mower
+  ipa: /kɔsˈar/
+  translation: ''
+  pos: noun
+- lemma: коток
+  ipa: /kɔtˈɔk/
+  translation: ''
+  pos: noun
+- lemma: кошеня
+  ipa: /kɔʃɛnˈja/
+  translation: ''
+  pos: noun
+- lemma: кількісний
+  ipa: /kˈilʲkisnɪj/
+  translation: ''
+  pos: adj
+- lemma: маля
+  ipa: /malˈja/
+  translation: ''
+  pos: noun
+- lemma: населення
+  ipa: /nasˈɛlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: невпевнений
+  ipa: /nɛʋpˈɛʋnɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: опитування
+  ipa: /ɔpˈɪtuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: п'ятеро
+  ipa: /pˈjatɛrɔ/
+  translation: ''
+  pos: num
+- lemma: парний
+  ipa: /parnɪj/
+  translation: ''
+  pos: adj
+- lemma: перепис
+  ipa: /pɛrˈɛpɪs/
+  translation: ''
   pos: noun
   gender: m
-- lemma: котка
-  ipa: /ˈkɔtka/
-  translation: cat (gen.)
-  pos: noun
-  gender: f
-- lemma: кошеня
-  ipa: /kɔʃɛˈnʲa/
-  translation: kitten
+- lemma: подвір'я
+  ipa: /pɔdʋˈirja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: кошенят
-  ipa: /kɔʃɛˈnʲat/
-  translation: kittens (gen.)
-  pos: noun
-  gender: f
-- lemma: кулінарний
-  ipa: /kulʲiˈnarnɪj/
-  translation: culinary
+- lemma: популяризований
+  ipa: /pɔpuljarɪzˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: лиж
-  ipa: /lɪʒ/
-  translation: skis (gen.)
+- lemma: порядковий
+  ipa: /pɔrjadkˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: природність
+  ipa: /prɪrˈɔdnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: малят
-  ipa: /maˈlʲat/
-  translation: toddlers (gen.)
+- lemma: причому
+  ipa: /prɪt͡ʃˈɔmu/
+  translation: ''
+  pos: conj
+- lemma: пропорція
+  ipa: /prɔpˈɔrt͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: немовлят
-  ipa: /nɛmɔu̯ˈlʲat/
-  translation: infants (gen.)
-  pos: noun
-  gender: f
-- lemma: п'ятеро
-  ipa: /ˈpjatɛrɔ/
-  translation: five (coll.)
-  pos: noun
-  gender: n
-- lemma: поросят
-  ipa: /pɔrɔˈsʲat/
-  translation: piglets (gen.)
+- lemma: процент
+  ipa: /prɔt͡sˈɛnt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: півтора
-  ipa: /piu̯tɔˈra/
-  translation: one and a half
-  pos: propn
-  gender: m
+  ipa: /piʋtɔrˈa/
+  translation: ''
+  pos: num
 - lemma: півтори
-  ipa: /piu̯tɔˈrɪ/
-  translation: one and a half (fem.)
-  pos: other
+  ipa: /piʋtɔrˈɪ/
+  translation: ''
+  pos: num
+- lemma: піднімаючись
+  ipa: /pidnimˈajut͡ʃɪsʲ/
+  translation: ''
+  pos: verb
 - lemma: пісочниця
-  ipa: /piˈsɔt͡ʃnɪt͡sʲa/
-  translation: sandbox
+  ipa: /pisˈɔt͡ʃnɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
+- lemma: респондент
+  ipa: /rɛspɔndˈɛnt/
+  translation: ''
+  pos: noun
 - lemma: рукавиця
-  ipa: /rukavɪˈt͡sʲa/
-  translation: mitten
+  ipa: /rukaʋˈɪt͡sja/
+  translation: ''
   pos: noun
-  gender: f
 - lemma: рукоділля
-  ipa: /rukɔˈdʲilʲːa/
-  translation: handicrafts
+  ipa: /rukɔdˈillja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: селянин
+  ipa: /sɛljanˈɪn/
+  translation: ''
+  pos: noun
 - lemma: семеро
-  ipa: /ˈsɛmɛrɔ/
-  translation: seven (coll.)
+  ipa: /sˈɛmɛrɔ/
+  translation: ''
+  pos: num
+- lemma: синтезувати
+  ipa: /sɪntɛzuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: словотворення
+  ipa: /slɔʋɔtʋˈɔrɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: сонцезахисний
-  ipa: /sɔnt͡sɛzaxɪsˈnɪj/
-  translation: sun-protection
+  ipa: /sɔnt͡sɛzaxɪsnˈɪj/
+  translation: ''
   pos: adj
 - lemma: соціолог
-  ipa: /sɔt͡sʲiˈɔlɔh/
-  translation: sociologist
+  ipa: /sɔt͡siˈɔlɔɦ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: цуценя
-  ipa: /t͡sut͡sɛˈnʲa/
-  translation: puppy
+- lemma: соціологічний
+  ipa: /sɔt͡siɔlɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: статистик
+  ipa: /statˈɪstɪk/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: цуценят
-  ipa: /t͡sut͡sɛˈnʲat/
-  translation: puppies (gen.)
+- lemma: сучасно
+  ipa: /sut͡ʃˈasnɔ/
+  translation: ''
+  pos: adv
+- lemma: термінологічний
+  ipa: /tɛrminɔlɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: традиційно
+  ipa: /tradɪt͡sˈijnɔ/
+  translation: ''
+  pos: adv
+- lemma: чверть
+  ipa: /t͡ʃʋɛrtʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: четверо
-  ipa: /ˈt͡ʃɛtvɛrɔ/
-  translation: four (coll.)
-  pos: other
-- lemma: четвертих
-  ipa: /t͡ʃɛtˈvɛrtɪx/
-  translation: fourth (gen.)
-  pos: noun
-  gender: m
-- lemma: чобіт
-  ipa: /ˈt͡ʃɔbit/
-  translation: boot (gen.)
-  pos: noun
-  gender: m
-- lemma: штани
-  ipa: /ʃtaˈnɪ/
-  translation: pants
-  pos: noun
-  gender: pl
+  ipa: /t͡ʃˈɛtʋɛrɔ/
+  translation: ''
+  pos: num
 - lemma: явка
-  ipa: /ˈjau̯ka/
-  translation: turnout
+  ipa: /ˈjaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: інтегрований
+  ipa: /intɛɦrˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: ініціатива
+  ipa: /init͡siatˈɪʋa/
+  translation: ''
   pos: noun
   gender: f

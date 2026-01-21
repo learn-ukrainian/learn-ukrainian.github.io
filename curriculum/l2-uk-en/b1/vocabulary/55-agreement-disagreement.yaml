@@ -2,87 +2,171 @@ module: 55-agreement-disagreement
 level: B1
 version: '2.0'
 items:
-- lemma: ветерано
-  ipa: /vɛtɛˈranɔ/
-  translation: veteran (voc.)
-  pos: propn
-  gender: f
-- lemma: вишикуваний
-  ipa: /vɪˈʃɪkuvanɪj/
-  translation: lined up
-  pos: adj
-- lemma: дискурсний
-  ipa: /dɪsˈkursnɪj/
-  translation: discourse (adj)
-  pos: adj
-- lemma: дискутувати
-  ipa: /dɪskutuˈvatɪ/
-  translation: to discuss
+- lemma: абзац
+  ipa: /abzˈat͡s/
+  translation: ''
+  pos: noun
+- lemma: вбивати
+  ipa: /ʋbɪʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: дійсність
-  ipa: /ˈdʲijsnʲisʲtʲ/
-  translation: reality
+- lemma: ветерана
+  ipa: /ʋɛtɛrˈana/
+  translation: ''
   pos: noun
   gender: f
-- lemma: зменшити
-  ipa: /ˈzmɛnʃɪtɪ/
-  translation: to decrease
-  pos: verb
+- lemma: графік
+  ipa: /ɦrˈafik/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: дискурсний
+  ipa: /dɪskursnɪj/
+  translation: ''
+  pos: adj
+- lemma: дискутувати
+  ipa: /dɪskutuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: дійсно
+  ipa: /dˈijsnɔ/
+  translation: ''
+  pos: adv
+- lemma: екологія
+  ipa: /ɛkɔlˈɔɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: жартівливий
+  ipa: /ʒartiʋlˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: забруднювати
+  ipa: /zabrˈudnjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: закупівля
+  ipa: /zakupˈiʋlja/
+  translation: ''
+  pos: noun
+- lemma: зменшити
+  ipa: /zmˈɛnʃɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: консенсус
-  ipa: /kɔnˈsɛnsus/
-  translation: consensus
+  ipa: /kɔnsˈɛnsus/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: круть
+  ipa: /krutʲ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: модератор
-  ipa: /mɔdɛˈratɔr/
-  translation: moderator
+  ipa: /mɔdɛrˈatɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: мудріше
-  ipa: /muˈdrʲiʃɛ/
-  translation: wiser
-  pos: adv
 - lemma: міняти
-  ipa: /mʲiˈnʲatɪ/
-  translation: to change
+  ipa: /minˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: найсильніше
-  ipa: /najsɪlʲˈnʲiʃɛ/
-  translation: strongest
-  pos: noun
-  gender: n
-- lemma: неправий
-  ipa: /nɛpraˈvɪj/
-  translation: wrong
+- lemma: недостатній
+  ipa: /nɛdɔstˈatnij/
+  translation: ''
   pos: adj
+- lemma: образливий
+  ipa: /ɔbrˈazlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: передчасний
+  ipa: /pɛrɛdt͡ʃˈasnɪj/
+  translation: ''
+  pos: adj
+- lemma: пластик
+  ipa: /plˈastɪk/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: пластиковий
-  ipa: /ˈplastɪkɔvɪj/
-  translation: plastic (adj)
+  ipa: /plˈastɪkɔʋɪj/
+  translation: ''
   pos: adj
-- lemma: радах
-  ipa: /ˈradax/
-  translation: councils (loc.)
+- lemma: по-друге
+  ipa: /pɔ-drˈuɦɛ/
+  translation: ''
+  pos: adv
+- lemma: по-перше
+  ipa: /pɔ-pˈɛrʃɛ/
+  translation: ''
+  pos: adv
+- lemma: постачальник
+  ipa: /pɔstat͡ʃˈalʲnɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: спецефект
-  ipa: /spɛt͡sɛˈfɛkt/
-  translation: special effect
-  pos: noun
-  gender: m
-- lemma: телерекл
-  ipa: /tɛlɛrɛkl/
-  translation: TV ad (trunc)
+- lemma: прийнятно
+  ipa: /prɪjnˈjatnɔ/
+  translation: ''
+  pos: adv
+- lemma: реорганізація
+  ipa: /rɛɔrɦanizˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: шій
-  ipa: /ʃij/
-  translation: suffix?
+- lemma: слабший
+  ipa: /slˈabʃɪj/
+  translation: ''
+  pos: adj
+- lemma: спецефект
+  ipa: /spɛt͡sɛfˈɛkt/
+  translation: ''
+  pos: noun
+- lemma: споживання
+  ipa: /spɔʒɪʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: співвідношення
+  ipa: /spiʋʋidnˈɔʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: суші
+  ipa: /sˈuʃi/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: суші-бар
+  ipa: /sˈuʃi-bar/
+  translation: ''
   pos: noun
   gender: m
+- lemma: телереклама
+  ipa: /tɛlɛrɛklˈama/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тестувати
+  ipa: /tɛstuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ток-шоу
+  ipa: /tɔk-ʃɔu/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: хибний
+  ipa: /xˈɪbnɪj/
+  translation: ''
+  pos: adj
+- lemma: цивілізований
+  ipa: /t͡sɪʋilizˈɔʋanɪj/
+  translation: ''
+  pos: adj
 - lemma: ірландія
-  ipa: /irˈlandʲija/
-  translation: Ireland
-  pos: propn
+  ipa: /irlˈandija/
+  translation: ''
+  pos: noun
   gender: f

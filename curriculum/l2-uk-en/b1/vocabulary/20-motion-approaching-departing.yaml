@@ -2,133 +2,241 @@ module: 20-motion-approaching-departing
 level: B1
 version: '2.0'
 items:
-- lemma: айвазовський
-  ipa: /ajvaˈzɔu̯sʲkɪj/
-  translation: Aivazovsky
-  pos: propn
+- lemma: айвазовське
+  ipa: /ajʋazˈɔʋsʲkɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: андріївський
+  ipa: /andrˈijiʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: бориспіль
+  ipa: /bɔrˈɪspilʲ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: апострофа
-  ipa: /aˈpɔstrɔfa/
-  translation: apostrophe (gen.)
+- lemma: борт
+  ipa: /bɔrt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: вантажник
-  ipa: /vanˈtaʒnɪk/
-  translation: loader
+  ipa: /ʋantˈaʒnɪk/
+  translation: ''
+  pos: noun
+- lemma: виживання
+  ipa: /ʋɪʒɪʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вимір
+  ipa: /ʋˈɪmir/
+  translation: ''
   pos: noun
   gender: m
-- lemma: ветеринар
-  ipa: /vɛtɛrɪˈnar/
-  translation: veterinarian
-  pos: noun
-  gender: m
+- lemma: встановляти
+  ipa: /ʋstanɔʋlˈjatɪ/
+  translation: ''
+  pos: verb
 - lemma: від'їхати
-  ipa: /vidˈjixatɪ/
-  translation: to drive away
+  ipa: /ʋidˈjixatɪ/
+  translation: ''
+  pos: verb
+- lemma: відвести
+  ipa: /ʋidʋɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: віддалитися
+  ipa: /ʋiddalˈɪtɪsja/
+  translation: ''
   pos: verb
 - lemma: віддалятися
-  ipa: /vidːaˈlʲatɪsʲa/
-  translation: to move away
+  ipa: /ʋiddalˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: відлетіти
+  ipa: /ʋidlɛtˈitɪ/
+  translation: ''
   pos: verb
 - lemma: відлітати
-  ipa: /vidlʲiˈtatɪ/
-  translation: to fly away
+  ipa: /ʋidlitˈatɪ/
+  translation: ''
   pos: verb
 - lemma: віднести
-  ipa: /vidnɛsˈtɪ/
-  translation: to take away
+  ipa: /ʋidnɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: відходити
+  ipa: /ʋidxɔdɪtɪ/
+  translation: ''
   pos: verb
 - lemma: диспетчер
-  ipa: /dɪsˈpɛt͡ʃɛr/
-  translation: dispatcher
+  ipa: /dɪspˈɛtt͡ʃɛr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: довезти
-  ipa: /dɔvɛzˈtɪ/
-  translation: to drive to
+  ipa: /dɔʋɛztˈɪ/
+  translation: ''
   pos: verb
-- lemma: доніс
-  ipa: /dɔˈnʲis/
-  translation: carried to
-  pos: noun
-  gender: m
-- lemma: качок
-  ipa: /kaˈt͡ʃɔk/
-  translation: jock (slang)
+- lemma: долетіти
+  ipa: /dɔlɛtˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: донести
+  ipa: /dɔnɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: доставляти
+  ipa: /dɔstaʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: експозиція
+  ipa: /ɛkspɔzˈɪt͡sija/
+  translation: ''
   pos: noun
   gender: f
+- lemma: капітан
+  ipa: /kapitˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: качка
+  ipa: /kˈat͡ʃka/
+  translation: ''
+  pos: noun
 - lemma: конструктор
-  ipa: /kɔnˈstruktɔr/
-  translation: constructor
+  ipa: /kɔnstrˈuktɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кілометр
+  ipa: /kilɔmˈɛtr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: листоноша
-  ipa: /lɪstɔˈnɔʃa/
-  translation: postman
+  ipa: /lɪstɔnˈɔʃa/
+  translation: ''
   pos: noun
   gender: m
 - lemma: меблевий
-  ipa: /mɛbˈlɛvɪj/
-  translation: furniture (adj)
+  ipa: /mˈɛblɛʋɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: неуспішний
-  ipa: /nɛuˈspʲiʃnɪj/
-  translation: unsuccessful
-  pos: adj
-  gender: f
-- lemma: передзвонити
-  ipa: /pɛrɛdzvɔˈnɪtɪ/
-  translation: to call back
+- lemma: наблизитися
+  ipa: /nablˈɪzɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: пробок
-  ipa: /ˈprɔbɔk/
-  translation: traffic jams (gen. pl.)
+- lemma: несучи
+  ipa: /nɛsut͡ʃˈɪ/
+  translation: ''
+  pos: verb
+- lemma: неуспішний
+  ipa: /nɛuspˈiʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: окей
+  ipa: /ɔkˈɛj/
+  translation: ''
   pos: noun
-  gender: f
+- lemma: орієнтування
+  ipa: /ɔrijɛntuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пакунок
+  ipa: /pakˈunɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: паркуватися
+  ipa: /parkuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: пробка
+  ipa: /prˈɔbka/
+  translation: ''
+  pos: noun
+- lemma: прогулюватися
+  ipa: /prɔɦˈuljuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: під'їсти
   ipa: /pidˈjistɪ/
-  translation: to eat a little
+  translation: ''
   pos: verb
-- lemma: підвести
-  ipa: /pidvɛsˈtɪ/
-  translation: to let down
+- lemma: підвезти
+  ipa: /pidʋɛztˈɪ/
+  translation: ''
   pos: verb
-- lemma: підвіз
-  ipa: /pidˈviz/
-  translation: gave a lift
-  pos: noun
-  gender: m
-- lemma: підійти
-  ipa: /pidiˈjtɪ/
-  translation: to approach
+- lemma: підлетіти
+  ipa: /pidlɛtˈitɪ/
+  translation: ''
   pos: verb
 - lemma: піднести
-  ipa: /pidnɛsˈtɪ/
-  translation: to lift
+  ipa: /pidnɛstˈɪ/
+  translation: ''
   pos: verb
-- lemma: під'їхати
-  ipa: /pidˈjixatɪ/
-  translation: to drive up
+- lemma: підїхати
+  ipa: /pidjixatɪ/
+  translation: ''
   pos: verb
+- lemma: режисер
+  ipa: /rɛʒɪsˈɛr/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: рецепція
-  ipa: /rɛˈt͡sɛpt͡sʲija/
-  translation: reception
+- lemma: рейс
+  ipa: /rɛjs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: реєстрація
+  ipa: /rɛjɛstrˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розрахунок
+  ipa: /rɔzraxˈunɔk/
+  translation: ''
+  pos: noun
+- lemma: софійський
+  ipa: /sɔfˈijsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: спроба
+  ipa: /sprˈɔba/
+  translation: ''
   pos: noun
   gender: f
 - lemma: стійка
-  ipa: /ˈstijka/
-  translation: counter
+  ipa: /stijkˈa/
+  translation: ''
   pos: noun
   gender: f
+- lemma: табір
+  ipa: /tˈabir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: таксист
+  ipa: /taksˈɪst/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: турбулентність
-  ipa: /turbuˈlɛntnʲisʲtʲ/
-  translation: turbulence
+  ipa: /turbulˈɛntnistʲ/
+  translation: ''
   pos: noun
   gender: f
+- lemma: узвіз
+  ipa: /uzʋˈiz/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: хірургічний
-  ipa: /xirurˈhʲit͡ʃnɪj/
-  translation: surgical
+  ipa: /xirurɦˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f

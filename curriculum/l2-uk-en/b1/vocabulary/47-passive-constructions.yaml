@@ -2,138 +2,329 @@ module: 47-passive-constructions
 level: B1
 version: '2.0'
 items:
+- lemma: агентство
+  ipa: /aɦˈɛntstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: армія
+  ipa: /ˈarmija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: верстатися
-  ipa: /vɛrˈstatɪsʲa/
-  translation: to be laid out
+  ipa: /ʋɛrstˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: виготовлятися
+  ipa: /ʋɪɦɔtɔʋlˈjatɪsja/
+  translation: ''
   pos: verb
 - lemma: вигулювати
-  ipa: /vɪˈhulʲuvatɪ/
-  translation: to walk (dog)
+  ipa: /ʋɪɦˈuljuʋatɪ/
+  translation: ''
   pos: verb
+- lemma: видаватися
+  ipa: /ʋɪdaʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: винуватець
+  ipa: /ʋɪnuʋˈatɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: випікатися
-  ipa: /vɪpiˈkatɪsʲa/
-  translation: to be baked
+  ipa: /ʋɪpikˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: виставлятися
-  ipa: /vɪstaˈu̯lʲatɪsʲa/
-  translation: to be exhibited
+  ipa: /ʋɪstaʋlˈjatɪsja/
+  translation: ''
   pos: verb
 - lemma: вичитати
-  ipa: /ˈvɪt͡ʃɪtatɪ/
-  translation: to proofread
+  ipa: /ʋˈɪt͡ʃɪtatɪ/
+  translation: ''
   pos: verb
-- lemma: друге
-  ipa: /ˈdruhɛ/
-  translation: secondly
-  pos: pron
-  gender: n
-- lemma: електрика
-  ipa: /ɛˈlɛktrɪka/
-  translation: electricity
+- lemma: вмикатися
+  ipa: /ʋmɪkˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: відповідальність
+  ipa: /ʋidpɔʋidˈalʲnistʲ/
+  translation: ''
   pos: noun
   gender: f
+- lemma: генрик
+  ipa: /ɦɛnrɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: гетьманщина
+  ipa: /ɦɛtʲmˈanʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: декан
+  ipa: /dɛkˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: електрик
+  ipa: /ɛlɛktrɪk/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: етикетка
-  ipa: /ɛtɪˈkɛtka/
-  translation: label
+  ipa: /ɛtɪkˈɛtka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: забезпечувати
+  ipa: /zabɛzpˈɛt͡ʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: законопроект
+  ipa: /zakɔnɔprɔɛkt/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: запікатися
-  ipa: /zapiˈkatɪsʲa/
-  translation: to be baked
+  ipa: /zapikˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: ліквідований
-  ipa: /lʲikviˈdɔvanɪj/
-  translation: liquidated
+- lemma: затримати
+  ipa: /zatrˈɪmatɪ/
+  translation: ''
+  pos: verb
+- lemma: змішуватися
+  ipa: /zmˈiʃuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зруйнований
+  ipa: /zrujnˈɔʋanɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: малюватися
-  ipa: /malʲuˈvatɪsʲa/
-  translation: to be painted
+- lemma: зруйнувати
+  ipa: /zrujnuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: обкладинка
-  ipa: /ɔbˈkladɪnka/
-  translation: cover
+- lemma: колективний
+  ipa: /kɔlɛktˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: конституція
+  ipa: /kɔnstɪtˈut͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: охолоджений
-  ipa: /ɔxɔˈlɔdʒɛnɪj/
-  translation: chilled
+- lemma: коректор
+  ipa: /kɔrˈɛktɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лихо
+  ipa: /lˈɪxɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ліквідований
+  ipa: /likʋidˈɔʋanɪj/
+  translation: ''
   pos: adj
-  gender: n
+- lemma: макет
+  ipa: /makˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: малюватися
+  ipa: /maljuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: надрукований
+  ipa: /nadrukˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: названий
+  ipa: /nazʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: обкладинка
+  ipa: /ɔbklˈadɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: окупант
+  ipa: /ɔkupˈant/
+  translation: ''
+  pos: noun
+- lemma: оливковий
+  ipa: /ɔlˈɪʋkɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: оптимальний
+  ipa: /ɔptɪmˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: охолоджений
+  ipa: /ɔxɔlˈɔdʒɛnɪj/
+  translation: ''
+  pos: adj
 - lemma: охолодити
-  ipa: /ɔxɔlɔˈdɪtɪ/
-  translation: to cool
+  ipa: /ɔxɔlɔdˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: очищуватися
-  ipa: /ɔˈt͡ʃɪʃt͡ʃuvatɪsʲa/
-  translation: to be purified
+  ipa: /ɔt͡ʃˈɪʃt͡ʃuʋatɪsja/
+  translation: ''
   pos: verb
-- lemma: пекти
-  ipa: /pɛkˈtɪ/
-  translation: to bake
+- lemma: пасив
+  ipa: /pasˈɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: побити
+  ipa: /pɔbˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: пектися
-  ipa: /pɛkˈtɪsʲa/
-  translation: to be baked
+- lemma: представляючи
+  ipa: /prɛdstaʋlˈjajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: прес-секретар
+  ipa: /prɛs-sɛkrɛtˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: призначатися
+  ipa: /prɪznat͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: прийматися
+  ipa: /prɪjmˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: приховування
+  ipa: /prɪxˈɔʋuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: прогулюючись
+  ipa: /prɔɦˈuljujut͡ʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: продаватися
+  ipa: /prɔdaʋˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: прокладатися
-  ipa: /prɔklaˈdatɪsʲa/
-  translation: to be laid
+  ipa: /prɔkladˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: рекорд
-  ipa: /rɛˈkɔrd/
-  translation: record
+- lemma: публікуватися
+  ipa: /publikuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підключатися
+  ipa: /pidkljut͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підкреслюючи
+  ipa: /pidkrˈɛsljujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: підсвідомо
+  ipa: /pidsʋidˈɔmɔ/
+  translation: ''
+  pos: adv
+- lemma: рада
+  ipa: /rˈada/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розмивати
+  ipa: /rɔzmɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: рошен
+  ipa: /rɔʃɛn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: рошен
-  ipa: /rɔˈʃɛn/
-  translation: Roshen
-  pos: propn
-  gender: m
-- lemma: вирішити
-  ipa: /vɪˈrʲiʃɪtɪ/
-  translation: to decide
+- lemma: рясніти
+  ipa: /rjasnˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: рішити
+  ipa: /riʃˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: сенкевич
-  ipa: /sɛnˈkɛvɪt͡ʃ/
-  translation: Senkevych
-  pos: propn
-  gender: m
-- lemma: соус
-  ipa: /ˈsɔus/
-  translation: sauce
+  ipa: /sɛnkˈɛʋɪt͡ʃ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: труби
-  ipa: /ˈtrubɪ/
-  translation: pipes
+- lemma: сертифікат
+  ipa: /sɛrtɪfikˈat/
+  translation: ''
+  pos: noun
+- lemma: соус
+  ipa: /sˈɔus/
+  translation: ''
+  pos: noun
+- lemma: стихійний
+  ipa: /stɪxˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: сухе
+  ipa: /suxˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: техніка
+  ipa: /tˈɛxnika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тканина
+  ipa: /tkanˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: труба
+  ipa: /trubˈa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: тушкуватися
-  ipa: /tuʃkuˈvatɪsʲa/
-  translation: to stew
+  ipa: /tuʃkuʋˈatɪsja/
+  translation: ''
   pos: verb
+- lemma: укрінформ
+  ipa: /ukrinfɔrm/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: уніан
-  ipa: /uniˈan/
-  translation: UNIAN
-  pos: propn
-  gender: m
-- lemma: упаковка
-  ipa: /upaˈkɔu̯ka/
-  translation: packaging
+  ipa: /unian/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
 - lemma: фокусувати
-  ipa: /fɔkusuˈvatɪ/
-  translation: to focus
+  ipa: /fɔkusuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: щоранка
-  ipa: /ʃt͡ʃɔˈranka/
-  translation: every morning
+- lemma: ілюстрація
+  ipa: /iljustrˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: інтерфакс
-  ipa: /intɛrˈfaks/
-  translation: Interfax
-  pos: propn
-  gender: m
+- lemma: інтерфакс-україна
+  ipa: /intɛrfˈaks-ukrajina/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: іронія
+  ipa: /irˈɔnija/
+  translation: ''
+  pos: noun
+  gender: f

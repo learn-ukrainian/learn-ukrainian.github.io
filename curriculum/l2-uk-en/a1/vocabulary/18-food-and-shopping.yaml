@@ -2,654 +2,364 @@ module: 18-food-and-shopping
 level: A1
 version: '2.0'
 items:
-- lemma: або
-  ipa: /ɑˈbɔ/
-  translation: or
-  pos: other
-- lemma: апетит
-  ipa: /ɑpɛˈtɪt/
-  translation: appetite
-  pos: noun
-  gender: m
 - lemma: атб
-  ipa: /ɑ tɛ bɛ/
-  translation: ATB (store)
-  pos: propn
-  gender: m
-- lemma: атмосфера
-  ipa: /ɑtmɔˈsfɛrɑ/
-  translation: atmosphere
+  ipa: /atb/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: багато
-  ipa: /bɑˈɦɑtɔ/
-  translation: many/much
-  pos: adv
+  gender: m
 - lemma: банан
-  ipa: /bɑˈnɑn/
-  translation: banana
+  ipa: /banˈan/
+  translation: ''
   pos: noun
   gender: m
-- lemma: без
-  ipa: /bɛz/
-  translation: without
-  pos: other
 - lemma: борщ
   ipa: /bɔrʃt͡ʃ/
-  translation: borshch
+  translation: ''
   pos: noun
   gender: m
+- lemma: буда
+  ipa: /bˈuda/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: буряк
-  ipa: /bʊˈrʲɑk/
-  translation: beet
-  pos: noun
-  gender: m
-- lemma: вага
-  ipa: /vɑˈɦɑ/
-  translation: weight/scale
+  ipa: /burˈjak/
+  translation: ''
   pos: noun
   gender: f
 - lemma: вареник
-  ipa: /vɑˈrɛnɪk/
-  translation: varenyk
+  ipa: /ʋarˈɛnɪk/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: варити
-  ipa: /vɑˈrɪtɪ/
-  translation: to cook/boil
-  pos: verb
 - lemma: вечеря
-  ipa: /vɛˈt͡ʃɛrʲɑ/
-  translation: dinner
+  ipa: /ʋɛt͡ʃˈɛrja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: вечеряти
-  ipa: /vɛt͡ʃɛˈrʲɑtɪ/
-  translation: to have dinner
+  ipa: /ʋɛt͡ʃˈɛrjatɪ/
+  translation: ''
   pos: verb
-- lemma: взяти
-  ipa: /ˈvzʲɑtɪ/
-  translation: to take
-  pos: verb
-- lemma: вино
-  ipa: /vɪˈnɔ/
-  translation: wine
-  pos: noun
-  gender: n
-- lemma: вишня
-  ipa: /ˈvɪʃnʲɑ/
-  translation: cherry
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: вина
+  ipa: /ʋɪna/
+  translation: ''
   pos: noun
   gender: f
 - lemma: вода
-  ipa: /vɔˈdɑ/
-  translation: water
+  ipa: /ʋɔdˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: вранці
-  ipa: /ˈvrɑnt͡sʲi/
-  translation: in the morning
-  pos: adv
-- lemma: гарячий
-  ipa: /ɦɑˈrʲɑt͡ʃɪj/
-  translation: hot
-  pos: adj
-  gender: m
+- lemma: водити
+  ipa: /ʋɔdˈɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: голова
-  ipa: /ɦɔlɔˈvɑ/
-  translation: head
-  pos: noun
-  gender: f
-- lemma: голод
-  ipa: /ˈɦɔlɔd/
-  translation: hunger/famine
+  ipa: /ɦɔlɔʋˈa/
+  translation: ''
   pos: noun
   gender: m
-- lemma: голодомор
-  ipa: /ɦɔlɔdɔˈmɔr/
-  translation: Holodomor
+- lemma: гривня
+  ipa: /ɦrˈɪʋnja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: голубець
-  ipa: /ɦɔluˈbɛt͡sʲ/
-  translation: cabbage roll
-  pos: noun
-  gender: m
-- lemma: готувати
-  ipa: /ɦɔtuˈvɑtɪ/
-  translation: to cook/prepare
+- lemma: дати
+  ipa: /dˈatɪ/
+  translation: ''
   pos: verb
-- lemma: гречка
-  ipa: /ˈhrɛt͡ʃkɑ/
-  translation: buckwheat
-  pos: noun
-  gender: f
-- lemma: гігієна
-  ipa: /hihiˈjɛnɑ/
-  translation: hygiene
-  pos: noun
-  gender: f
-- lemma: дерун
-  ipa: /dɛˈrun/
-  translation: potato pancake
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: десерт
-  ipa: /dɛˈsɛrt/
-  translation: dessert
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: дешево
-  ipa: /ˈdɛʃɛvɔ/
-  translation: cheap/cheaply
-  pos: adv
-- lemma: дитина
-  ipa: /dɪˈtɪnɑ/
-  translation: child
-  pos: noun
-  gender: f
-- lemma: дорогий
-  ipa: /dɔrɔˈɦɪj/
-  translation: expensive
+  gender: n
+- lemma: добрий
+  ipa: /dˈɔbrɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: душа
-  ipa: /duˈʃɑ/
-  translation: soul
+  ipa: /duʃˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: закуска
-  ipa: /zɑˈkuskɑ/
-  translation: appetizer/snack
-  pos: noun
-  gender: f
-- lemma: замовляти
-  ipa: /zɑmɔvˈlʲɑtɪ/
-  translation: to order
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: здоровий
-  ipa: /zdɔˈrɔvɪj/
-  translation: healthy
-  pos: adj
-  gender: m
-- lemma: знак
-  ipa: /znɑk/
-  translation: sign
-  pos: noun
-  gender: m
-- lemma: знижка
-  ipa: /ˈznɪʒkɑ/
-  translation: discount
-  pos: noun
-  gender: f
-- lemma: зошит
-  ipa: /ˈzɔʃɪt/
-  translation: notebook
-  pos: noun
-  gender: m
-- lemma: зубний
-  ipa: /zubˈnɪj/
-  translation: dental
-  pos: adj
-  gender: m
 - lemma: кава
-  ipa: /ˈkɑvɑ/
-  translation: coffee
-  pos: noun
-  gender: f
-- lemma: капуста
-  ipa: /kɑˈpustɑ/
-  translation: cabbage
+  ipa: /kˈaʋa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: картопля
-  ipa: /kɑrˈtɔplʲɑ/
-  translation: potato
+  ipa: /kartˈɔplja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: картопляний
-  ipa: /kɑrtɔˈplʲɑnɪj/
-  translation: potato (adj)
-  pos: adj
-  gender: m
 - lemma: каса
-  ipa: /ˈkɑsɑ/
-  translation: cashier/checkout
+  ipa: /kˈasa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: касир
-  ipa: /kɑˈsɪr/
-  translation: cashier (person)
-  pos: noun
-  gender: m
-- lemma: каша
-  ipa: /ˈkɑʃɑ/
-  translation: porridge
-  pos: noun
-  gender: f
-- lemma: компот
-  ipa: /kɔmˈpɔt/
-  translation: compote
-  pos: noun
-  gender: m
 - lemma: коровай
-  ipa: /kɔrɔˈvɑj/
-  translation: korovai (bread)
-  pos: noun
-  gender: m
-- lemma: купувати
-  ipa: /kupuˈvɑtɪ/
-  translation: to buy
-  pos: verb
-- lemma: курка
-  ipa: /ˈkurkɑ/
-  translation: chicken
+  ipa: /kɔrɔʋˈaj/
+  translation: ''
   pos: noun
   gender: f
-- lemma: куштувати
-  ipa: /kuʃtuˈvɑtɪ/
-  translation: to taste
+- lemma: коштувати
+  ipa: /kˈɔʃtuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: кількість
-  ipa: /ˈkilʲkisʲtʲ/
-  translation: quantity
+- lemma: купувати
+  ipa: /kupuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: курко
+  ipa: /kˈurkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кухня
+  ipa: /kˈuxnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кілограм
+  ipa: /kilɔɦrˈam/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ласка
+  ipa: /lˈaska/
+  translation: ''
   pos: noun
   gender: f
 - lemma: м'ясо
-  ipa: /ˈmjɑsɔ/
-  translation: meat
+  ipa: /mˈjasɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: магазин
-  ipa: /mɑɦɑˈzɪn/
-  translation: shop/store
+- lemma: мень
+  ipa: /mɛnʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: меню
-  ipa: /mɛˈnʲu/
-  translation: menu
-  pos: noun
-  gender: n
-- lemma: мило
-  ipa: /ˈmɪlɔ/
-  translation: soap
-  pos: noun
-  gender: n
-- lemma: молоко
-  ipa: /mɔlɔˈkɔ/
-  translation: milk
-  pos: noun
-  gender: n
-- lemma: молочний
-  ipa: /mɔˈlɔt͡ʃnɪj/
-  translation: dairy/milk (adj)
-  pos: adj
-  gender: m
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
 - lemma: напій
-  ipa: /nɑˈpij/
-  translation: drink
+  ipa: /napˈij/
+  translation: ''
   pos: noun
   gender: m
-- lemma: настрій
-  ipa: /ˈnɑstrij/
-  translation: mood
-  pos: noun
-  gender: m
-- lemma: національний
-  ipa: /nɑt͡sʲiɔˈnɑlʲnɪj/
-  translation: national
-  pos: adj
-  gender: m
-- lemma: немати
-  ipa: /nɛˈmɑtɪ/
-  translation: not to have
-  pos: verb
 - lemma: новус
-  ipa: /ˈnɔvus/
-  translation: Novus
-  pos: propn
+  ipa: /nɔʋus/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: обід
-  ipa: /ɔˈbid/
-  translation: lunch
+  ipa: /ɔbid/
+  translation: ''
   pos: noun
   gender: m
 - lemma: обідати
-  ipa: /ɔˈbidɑtɪ/
-  translation: to have lunch
+  ipa: /ɔbˈidatɪ/
+  translation: ''
   pos: verb
 - lemma: овоч
-  ipa: /ˈɔvɔt͡ʃ/
-  translation: vegetable
+  ipa: /ˈɔʋɔt͡ʃ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: огірок
-  ipa: /ɔɦiˈrɔk/
-  translation: cucumber
-  pos: noun
-  gender: m
-- lemma: окремо
-  ipa: /ɔˈkrɛmɔ/
-  translation: separately
-  pos: adv
-- lemma: олег
-  ipa: /ɔˈlɛɦ/
-  translation: Oleh
-  pos: propn
-  gender: m
-- lemma: омлет
-  ipa: /ɔmˈlɛt/
-  translation: omelet
+  ipa: /ɔɦirˈɔk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: основний
-  ipa: /ɔsnɔwˈnɪj/
-  translation: main/basic
+  ipa: /ɔsnɔʋnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: офіціант
-  ipa: /ɔfit͡sʲiˈɑnt/
-  translation: waiter
-  pos: noun
-  gender: m
-- lemma: пакет
-  ipa: /pɑˈkɛt/
-  translation: bag
-  pos: noun
-  gender: m
-- lemma: пампушка
-  ipa: /pɑmˈpuʃkɑ/
-  translation: pampushka
-  pos: noun
-  gender: f
-- lemma: папір
-  ipa: /pɑˈpir/
-  translation: paper
-  pos: noun
-  gender: m
-- lemma: паста
-  ipa: /ˈpɑstɑ/
-  translation: paste/pasta
-  pos: noun
-  gender: f
-- lemma: патерн
-  ipa: /pɑˈtɛrn/
-  translation: pattern
-  pos: noun
-  gender: m
 - lemma: пачка
-  ipa: /ˈpɑt͡ʃkɑ/
-  translation: pack
+  ipa: /pˈat͡ʃka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: перший
-  ipa: /ˈpɛrʃɪj/
-  translation: first
-  pos: adj
-  gender: m
 - lemma: пиво
-  ipa: /ˈpɪvɔ/
-  translation: beer
+  ipa: /pˈɪʋɔ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: пити
-  ipa: /ˈpɪtɪ/
-  translation: to drink
+  ipa: /pˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: покупка
-  ipa: /pɔˈkupkɑ/
-  translation: purchase
-  pos: noun
-  gender: f
-- lemma: помилка
-  ipa: /pɔˈmɪlkɑ/
-  translation: mistake
+- lemma: пляшка
+  ipa: /plˈjaʃka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: помідор
-  ipa: /pɔmiˈdɔr/
-  translation: tomato
+  ipa: /pɔmidˈɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: порада
-  ipa: /pɔˈrɑdɑ/
-  translation: advice
+- lemma: підсумок
+  ipa: /pidsumɔk/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: приказка
-  ipa: /ˈprɪkɑzkɑ/
-  translation: proverb
-  pos: noun
-  gender: f
-- lemma: принести
-  ipa: /prɪnɛˈstɪ/
-  translation: to bring
-  pos: verb
-- lemma: приходити
-  ipa: /prɪˈxɔdɪtɪ/
-  translation: to arrive/come
-  pos: verb
-- lemma: про
-  ipa: /prɔ/
-  translation: about
-  pos: other
-- lemma: продукт
-  ipa: /prɔˈdukt/
-  translation: product
-  pos: noun
-  gender: m
-- lemma: під
-  ipa: /pid/
-  translation: under
-  pos: other
-- lemma: рахунок
-  ipa: /rɑˈxunɔk/
-  translation: bill/check
-  pos: noun
-  gender: m
-- lemma: реальний
-  ipa: /rɛˈɑlʲnɪj/
-  translation: real
-  pos: adj
   gender: m
 - lemma: риба
-  ipa: /ˈrɪbɑ/
-  translation: fish
+  ipa: /rˈɪba/
+  translation: ''
   pos: noun
   gender: f
-- lemma: салат
-  ipa: /sɑˈlɑt/
-  translation: salad
+- lemma: ринка
+  ipa: /rˈɪnka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: сало
-  ipa: /ˈsɑlɔ/
-  translation: salo
-  pos: noun
-  gender: n
 - lemma: свіжий
-  ipa: /ˈsviʒɪj/
-  translation: fresh
+  ipa: /sʋˈiʒɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: світ
-  ipa: /svit/
-  translation: world
-  pos: noun
-  gender: m
-- lemma: секція
-  ipa: /ˈsɛkt͡sʲijɑ/
-  translation: section
-  pos: noun
-  gender: f
 - lemma: сир
   ipa: /sɪr/
-  translation: cheese
+  translation: ''
   pos: noun
   gender: m
-- lemma: сирний
-  ipa: /ˈsɪrnɪj/
-  translation: cheese (adj)
-  pos: adj
-  gender: m
-- lemma: сирник
-  ipa: /ˈsɪrnɪk/
-  translation: syrnyk
+- lemma: скільки
+  ipa: /skˈilʲkɪ/
+  translation: ''
+  pos: pron
+- lemma: смачне
+  ipa: /smat͡ʃnˈɛ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: смачний
-  ipa: /smɑt͡ʃˈnɪj/
-  translation: tasty
-  pos: adj
-  gender: m
-- lemma: смачно
-  ipa: /ˈsmɑt͡ʃnɔ/
-  translation: tasty (adv)
-  pos: adv
-- lemma: сметана
-  ipa: /smɛˈtɑnɑ/
-  translation: sour cream
-  pos: noun
-  gender: f
+  gender: n
 - lemma: сніданок
-  ipa: /sniˈdɑnɔk/
-  translation: breakfast
+  ipa: /snidˈanɔk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: снідати
-  ipa: /sniˈdɑtɪ/
-  translation: to have breakfast
+  ipa: /snˈidatɪ/
+  translation: ''
   pos: verb
 - lemma: страва
-  ipa: /ˈstrɑvɑ/
-  translation: dish/meal
+  ipa: /strˈaʋa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: суп
   ipa: /sup/
-  translation: soup
+  translation: ''
   pos: noun
   gender: m
 - lemma: супермаркет
-  ipa: /supɛrˈmɑrkɛt/
-  translation: supermarket
+  ipa: /supɛrmˈarkɛt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: сік
   ipa: /sik/
-  translation: juice
+  translation: ''
   pos: noun
   gender: m
 - lemma: сіль
   ipa: /silʲ/
-  translation: salt
+  translation: ''
   pos: noun
   gender: f
 - lemma: сільпо
-  ipa: /silʲˈpɔ/
-  translation: Silpo
-  pos: propn
+  ipa: /silʲpˈɔ/
+  translation: ''
+  pos: noun
   gender: n
-- lemma: традиційний
-  ipa: /trɑdɪˈt͡sʲijnɪj/
-  translation: traditional
-  pos: adj
-  gender: m
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: тридцять
+  ipa: /trˈɪdt͡sjatʲ/
+  translation: ''
+  pos: num
 - lemma: тушонка
-  ipa: /tuˈʃɔnkɑ/
-  translation: tushonka (canned meat)
+  ipa: /tuʃˈɔnka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: тільки
-  ipa: /ˈtilʲkɪ/
-  translation: only
-  pos: adv
-- lemma: увесь
-  ipa: /uˈvɛsʲ/
-  translation: all/whole
-  pos: other
-  gender: m
-- lemma: фора
-  ipa: /ˈfɔrɑ/
-  translation: Fora
-  pos: propn
-  gender: f
-- lemma: фрукти
-  ipa: /ˈfruktɪ/
-  translation: fruits
+- lemma: українська
+  ipa: /ukraˈjinsʲka/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
+- lemma: усе
+  ipa: /usˈɛ/
+  translation: ''
+  pos: pron
+- lemma: фрукт
+  ipa: /frukt/
+  translation: ''
+  pos: noun
 - lemma: хліб
   ipa: /xlib/
-  translation: bread
+  translation: ''
   pos: noun
-  gender: m
-- lemma: холодець
-  ipa: /xɔlɔˈdɛt͡sʲ/
-  translation: kholodets
-  pos: noun
-  gender: m
-- lemma: хороший
-  ipa: /xɔˈrɔʃɪj/
-  translation: good
-  pos: adj
   gender: m
 - lemma: цибуля
-  ipa: /t͡sɪˈbulʲɑ/
-  translation: onion
+  ipa: /t͡sɪbˈulja/
+  translation: ''
   pos: noun
   gender: f
+- lemma: цукор
+  ipa: /t͡sˈukɔr/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: ціна
-  ipa: /t͡sʲiˈnɑ/
-  translation: price
+  ipa: /t͡sinˈa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: чай
-  ipa: /t͡ʃɑj/
-  translation: tea
+  ipa: /t͡ʃaj/
+  translation: ''
   pos: noun
   gender: m
-- lemma: червоний
-  ipa: /t͡ʃɛrˈvɔnɪj/
-  translation: red
-  pos: adj
-  gender: m
-- lemma: шампунь
-  ipa: /ʃɑmˈpunʲ/
-  translation: shampoo
+- lemma: чашка
+  ipa: /t͡ʃˈaʃka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: швидкий
-  ipa: /ʃvɪdˈkɪj/
-  translation: fast
-  pos: adj
-  gender: m
+  gender: f
+- lemma: щось
+  ipa: /ʃt͡ʃɔsʲ/
+  translation: ''
+  pos: pron
 - lemma: яблуко
-  ipa: /ˈjɑblukɔ/
-  translation: apple
+  ipa: /ˈjablukɔ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: яйце
-  ipa: /jɑjˈt͡sɛ/
-  translation: egg
+  ipa: /jajt͡sˈɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: яєчня
-  ipa: /jɑˈjɛt͡ʃnʲɑ/
-  translation: scrambled eggs
-  pos: noun
-  gender: f
-- lemma: їдальня
-  ipa: /jiˈdɑlʲnʲɑ/
-  translation: canteen
-  pos: noun
-  gender: f
 - lemma: їжа
-  ipa: /ˈjiʒɑ/
-  translation: food
+  ipa: /ˈjiʒa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: їсти
   ipa: /ˈjistɪ/
-  translation: to eat
+  translation: ''
   pos: verb

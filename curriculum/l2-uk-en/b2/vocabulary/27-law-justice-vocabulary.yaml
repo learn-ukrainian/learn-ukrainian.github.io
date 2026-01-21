@@ -2,599 +2,220 @@ module: 27-law-justice-vocabulary
 level: B2
 version: '2.0'
 items:
-- lemma: алібі
-  ipa: /ɐlʲiˈbʲi/
-  translation: alibi
-  pos: noun
-  gender: n
+- lemma: антикорупційний
+  ipa: /antɪkɔrupt͡sˈijnɪj/
+  translation: ''
+  pos: adj
 - lemma: апеляційний
-  ipa: /ɐpɛlʲɑˈt͡sʲijnɪj/
-  translation: appellate
+  ipa: /apɛljat͡sˈijnɪj/
+  translation: ''
   pos: adj
 - lemma: апеляція
-  ipa: /ɐpɛˈlʲɑt͡sʲijɑ/
-  translation: appeal
+  ipa: /apɛlˈjat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: банківський
-  ipa: /bɐnˈkʲiwsʲkɪj/
-  translation: banking, bank (adj.)
-  pos: adj
-- lemma: Будсервіс
-  ipa: /budˈsɛrwʲis/
-  translation: Budservis (construction company)
-  pos: propn
-  gender: m
-- lemma: варта
-  ipa: /ˈwɑrtɑ/
-  translation: guard, watch
+- lemma: бпд
+  ipa: /bpd/
+  translation: ''
   pos: noun
   gender: f
-- lemma: венеціанський
-  ipa: /wɛnɛt͡sʲiˈɑnsʲkɪj/
-  translation: Venetian
-  pos: adj
-- lemma: вердикт
-  ipa: /wɛrˈdɪkt/
-  translation: verdict
-  pos: noun
-  gender: m
-- lemma: визнаний
-  ipa: /wɪˈznɑnɪj/
-  translation: recognized, acknowledged
-  pos: adj
-- lemma: викласти
-  ipa: /wɪˈklɑstɪ/
-  translation: to state, to present
+- lemma: виноситися
+  ipa: /ʋɪnɔsɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: винений
-  ipa: /wɪˈnɛnɪj/
-  translation: guilty (person)
-  pos: noun
-  gender: m
-- lemma: виносити
-  ipa: /wɪˈnosɪtɪ/
-  translation: to issue (verdict), to carry out
-  pos: verb
-- lemma: виписка
-  ipa: /ˈwɪpɪskɑ/
-  translation: extract, statement
-  pos: noun
-  gender: f
 - lemma: вирок
-  ipa: /ˈwɪrok/
-  translation: sentence, verdict
+  ipa: /ʋɪrɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вислухати
-  ipa: /ˈwɪsluxɑtɪ/
-  translation: to hear out, to listen
-  pos: verb
-- lemma: ВККС
-  ipa: /wɛ kɑ kɑ ɛs/
-  translation: High Qualification Commission of Judges
-  pos: noun
-  gender: f
-- lemma: власноруч
-  ipa: /wlɑsnoˈrut͡ʃ/
-  translation: by one's own hand
-  pos: adv
-- lemma: воля
-  ipa: /ˈwolʲɑ/
-  translation: will, freedom
-  pos: noun
-  gender: f
-- lemma: ВР
-  ipa: /wɛ ɛr/
-  translation: Verkhovna Rada (Parliament)
-  pos: noun
-  gender: f
-- lemma: ВРП
-  ipa: /wɛ ɛr pɛ/
-  translation: High Council of Justice
-  pos: noun
-  gender: f
-- lemma: врядування
-  ipa: /wrʲɑduˈwɑnʲːɑ/
-  translation: governance
-  pos: noun
-  gender: n
-- lemma: встаньте
-  ipa: /ˈwstɑnʲtɛ/
-  translation: stand up (imperative)
-  pos: verb
 - lemma: вчинення
-  ipa: /wt͡ʃɪˈnɛnʲːɑ/
-  translation: committing, perpetration
+  ipa: /ʋt͡ʃˈɪnɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: відбувати
-  ipa: /wʲidbuˈwɑtɪ/
-  translation: to serve (sentence)
-  pos: verb
+- lemma: відшкодування
+  ipa: /ʋidʃkɔduʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: відшкодувати
-  ipa: /wʲidʃkoduˈwɑtɪ/
-  translation: to compensate, to reimburse
+  ipa: /ʋidʃkɔduʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: голлівудський
-  ipa: /ɦolʲlʲiˈwudsʲkɪj/
-  translation: Hollywood (adj.)
-  pos: adj
-- lemma: делегування
-  ipa: /dɛlɛɦuˈwɑnʲːɑ/
-  translation: delegation
-  pos: noun
-  gender: n
 - lemma: дефект
-  ipa: /dɛˈfɛkt/
-  translation: defect, flaw
+  ipa: /dɛfˈɛkt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: дисциплінарний
-  ipa: /dɪst͡sɪplʲiˈnɑrnɪj/
-  translation: disciplinary
-  pos: adj
-- lemma: доброчесність
-  ipa: /doˈbrot͡ʃɛsnʲistʲ/
-  translation: integrity, virtue
+- lemma: заборгованість
+  ipa: /zabɔrɦˈɔʋanistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: довести
-  ipa: /doˈwɛstɪ/
-  translation: to prove
-  pos: verb
-- lemma: досудовий
-  ipa: /doˈsudowɪj/
-  translation: pre-trial
+- lemma: завданий
+  ipa: /zˈaʋdanɪj/
+  translation: ''
   pos: adj
-- lemma: експертиза
-  ipa: /ɛkspɛrˈtɪzɑ/
-  translation: expert examination
-  pos: noun
-  gender: f
-- lemma: заборонятися
-  ipa: /zɐboronʲɑˈtɪsʲɑ/
-  translation: to be prohibited
-  pos: verb
-- lemma: завдати
-  ipa: /zɐwˈdɑtɪ/
-  translation: to inflict, to cause
-  pos: verb
 - lemma: законний
-  ipa: /zɐˈkonnɪj/
-  translation: lawful
-  pos: adj
-- lemma: закріпитися
-  ipa: /zɐkrʲipɪˈtɪsʲɑ/
-  translation: to become established
-  pos: verb
-- lemma: запечатаний
-  ipa: /zɐpɛt͡ʃɑˈtɑnɪj/
-  translation: sealed
+  ipa: /zakˈɔnnɪj/
+  translation: ''
   pos: adj
 - lemma: запобіжний
-  ipa: /zɐˈpobʲiʒnɪj/
-  translation: preventive, precautionary
+  ipa: /zapɔbˈiʒnɪj/
+  translation: ''
   pos: adj
-- lemma: заспокоїтися
-  ipa: /zɐspokoˈjitɪsʲɑ/
-  translation: to calm down
-  pos: verb
-- lemma: засудити
-  ipa: /zɐˈsudɪtɪ/
-  translation: to condemn, to sentence
-  pos: verb
-- lemma: засідати
-  ipa: /zɐsʲiˈdɑtɪ/
-  translation: to sit (in session)
-  pos: verb
-- lemma: затримання
-  ipa: /zɐtrɪˈmɑnʲːɑ/
-  translation: detention, arrest
+- lemma: засуджений
+  ipa: /zasˈudʒɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: зловживання
+  ipa: /zlɔʋʒɪʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: захотіти
-  ipa: /zɐxoˈtʲitɪ/
-  translation: to want, to wish
-  pos: verb
-- lemma: зачитувати
-  ipa: /zɐt͡ʃɪˈtuwɑtɪ/
-  translation: to read aloud
-  pos: verb
-- lemma: здобуття
-  ipa: /zdobutʲːɑ/
-  translation: obtaining, acquisition
-  pos: noun
-  gender: n
-- lemma: зламатися
-  ipa: /zlɑˈmɑtɪsʲɑ/
-  translation: to break down
-  pos: verb
-- lemma: злодій
-  ipa: /zloˈdʲij/
-  translation: thief
-  pos: noun
-  gender: m
-- lemma: злочин
-  ipa: /zˈlot͡ʃɪn/
-  translation: crime
-  pos: noun
-  gender: m
 - lemma: зобов'язати
-  ipa: /zobowʲɑˈzɑtɪ/
-  translation: to oblige, to compel
+  ipa: /zɔbɔʋjazˈatɪ/
+  translation: ''
   pos: verb
-- lemma: касаційний
-  ipa: /kɐsɑˈt͡sʲijnɪj/
-  translation: cassation
+- lemma: кваліфікований
+  ipa: /kʋalifikˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: касація
-  ipa: /kɐˈsɑt͡sʲijɑ/
-  translation: cassation appeal
+- lemma: матвійчук
+  ipa: /matʋijt͡ʃˈuk/
+  translation: ''
   pos: noun
   gender: f
-- lemma: кваліфікаційний
-  ipa: /kwɐlʲifʲikɑˈt͡sʲijnɪj/
-  translation: qualification (adj.)
+- lemma: матеріальний
+  ipa: /matɛriˈalʲnɪj/
+  translation: ''
   pos: adj
-- lemma: конкурсний
-  ipa: /konˈkursnɪj/
-  translation: competition (adj.), competitive
-  pos: adj
-- lemma: конфіденційніший
-  ipa: /konfʲidɛnt͡sʲijˈnʲiʃɪj/
-  translation: more confidential
-  pos: adj
-- lemma: крадіжка
-  ipa: /krɑˈdʲiʒkɑ/
-  translation: theft
-  pos: noun
-  gender: f
-- lemma: кримінальний
-  ipa: /krɪmʲiˈnɑlʲnɪj/
-  translation: criminal
-  pos: adj
-- lemma: кровний
-  ipa: /ˈkrownɪj/
-  translation: blood (adj.), consanguineous
-  pos: adj
-- lemma: латинізм
-  ipa: /lɑtɪˈnʲizm/
-  translation: Latinism
-  pos: noun
-  gender: m
-- lemma: ліквідувати
-  ipa: /lʲikwʲiduˈwɑtɪ/
-  translation: to liquidate, to eliminate
-  pos: verb
 - lemma: медіатор
-  ipa: /mɛdʲiˈɑtor/
-  translation: mediator
+  ipa: /mɛdiˈatɔr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: медіація
-  ipa: /mɛdʲiˈɑt͡sʲijɑ/
-  translation: mediation
+  ipa: /mɛdiˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: механічний
-  ipa: /mɛxɐˈnʲit͡ʃnɪj/
-  translation: mechanical
+- lemma: обвинувальний
+  ipa: /ɔbʋɪnuʋˈalʲnɪj/
+  translation: ''
   pos: adj
-- lemma: набрати
-  ipa: /nɐˈbrɑtɪ/
-  translation: to enter into force, to recruit
-  pos: verb
-- lemma: найформалізованіший
-  ipa: /nɑjformɐlʲizoˈwɑnʲiʃɪj/
-  translation: most formalized
-  pos: adj
-- lemma: невинуватість
-  ipa: /nɛwɪnuwɑˈtʲistʲ/
-  translation: innocence
+- lemma: одеса-енерго
+  ipa: /ɔdˈɛsa-ɛnɛrɦɔ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: невідчужуваний
-  ipa: /nɛwʲidt͡ʃuˈʒuwɑnɪj/
-  translation: inalienable
-  pos: adj
-- lemma: незаконний
-  ipa: /nɛzɐˈkonnɪj/
-  translation: illegal
-  pos: adj
-- lemma: непорушний
-  ipa: /nɛpoˈruʃnɪj/
-  translation: inviolable
-  pos: adj
-- lemma: нотаріус
-  ipa: /noˈtɑrʲijus/
-  translation: notary
+- lemma: позивач
+  ipa: /pɔzˈɪʋat͡ʃ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: обвинувачений
-  ipa: /obwɪnuwɑˈt͡ʃɛnɪj/
-  translation: accused, defendant
-  pos: noun
-  gender: m
-- lemma: обікрати
-  ipa: /obʲiˈkrɑtɪ/
-  translation: to rob
-  pos: verb
-- lemma: окупація
-  ipa: /okupɑˈt͡sʲijɑ/
-  translation: occupation
-  pos: noun
-  gender: f
-- lemma: оскарити
-  ipa: /osˈkɑrɪtɪ/
-  translation: to appeal, to contest
-  pos: verb
-- lemma: палац
-  ipa: /pɐˈlɑt͡s/
-  translation: palace
-  pos: noun
-  gender: m
-- lemma: паралель
-  ipa: /pɐrɐˈlɛlʲ/
-  translation: parallel
-  pos: noun
-  gender: f
-- lemma: перекваліфікувати
-  ipa: /pɛrɛkwɐlʲifʲikuˈwɑtɪ/
-  translation: to requalify
-  pos: verb
-- lemma: повсякденно
-  ipa: /powsʲɑkˈdɛnːo/
-  translation: daily, everyday
-  pos: adv
-- lemma: позбавлення
-  ipa: /pozbɑwˈlɛnʲːɑ/
-  translation: deprivation
-  pos: noun
-  gender: n
 - lemma: позов
-  ipa: /ˈpozow/
-  translation: lawsuit, claim
+  ipa: /pˈɔzɔʋ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: позовний
-  ipa: /poˈzownɪj/
-  translation: claim (adj.), lawsuit (adj.)
+  ipa: /pɔzˈɔʋnɪj/
+  translation: ''
   pos: adj
 - lemma: покарання
-  ipa: /pokɐˈrɑnʲːɑ/
-  translation: punishment
+  ipa: /pɔkarˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: покарати
-  ipa: /pokɐˈrɑtɪ/
-  translation: to punish
-  pos: verb
-- lemma: поліція
-  ipa: /poˈlʲit͡sʲijɑ/
-  translation: police
+- lemma: поломка
+  ipa: /pɔlˈɔmka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: помста
-  ipa: /ˈpomstɑ/
-  translation: revenge, vengeance
-  pos: noun
-  gender: f
-- lemma: поновлення
-  ipa: /ponowˈlɛnʲːɑ/
-  translation: restoration, renewal
-  pos: noun
-  gender: n
-- lemma: посередник
-  ipa: /posɛˈrɛdnɪk/
-  translation: intermediary, mediator
-  pos: noun
-  gender: m
 - lemma: потерпілий
-  ipa: /potɛrˈpʲilɪj/
-  translation: victim
+  ipa: /pɔtɛrpˈilɪj/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: пошкодження
-  ipa: /poʃˈkodʒɛnʲːɑ/
-  translation: damage
+  ipa: /pɔʃkˈɔdʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: правосуддя
-  ipa: /prɑwoˈsudʲːɑ/
-  translation: justice
+  ipa: /praʋɔsˈuddja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: презумпція
-  ipa: /prɛˈzumpt͡sʲijɑ/
-  translation: presumption
-  pos: noun
-  gender: f
-- lemma: прискорення
-  ipa: /prɪskoˈrɛnʲːɑ/
-  translation: acceleration
-  pos: noun
-  gender: n
-- lemma: присяжний
-  ipa: /prɪˈsʲɑʒnɪj/
-  translation: juror
+- lemma: прецедент
+  ipa: /prɛt͡sɛdˈɛnt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: притягнути
-  ipa: /prɪtʲɑɦˈnutɪ/
-  translation: to bring to (justice)
-  pos: verb
-- lemma: провина
-  ipa: /proˈwɪnɑ/
-  translation: fault, guilt
-  pos: noun
-  gender: f
-- lemma: прокурор
-  ipa: /prokuˈror/
-  translation: prosecutor
-  pos: noun
-  gender: m
-- lemma: протиправний
-  ipa: /protɪˈprɑwnɪj/
-  translation: unlawful
-  pos: adj
-- lemma: професійність
-  ipa: /profɛˈsʲijnʲistʲ/
-  translation: professionalism
-  pos: noun
-  gender: f
 - lemma: підозра
-  ipa: /pʲiˈdozrɑ/
-  translation: suspicion
+  ipa: /pidˈɔzra/
+  translation: ''
   pos: noun
   gender: f
-- lemma: підозрюваний
-  ipa: /pʲidozrʲuˈwɑnɪj/
-  translation: suspect
-  pos: noun
-  gender: m
-- lemma: підписати
-  ipa: /pʲidpɪˈsɑtɪ/
-  translation: to sign
-  pos: verb
-- lemma: підприємництво
-  ipa: /pʲidprɪˈjɛmnɪt͡stwo/
-  translation: entrepreneurship
-  pos: noun
-  gender: n
-- lemma: підряд
-  ipa: /pʲidˈrʲɑd/
-  translation: contract, consecutively
-  pos: noun
-  gender: m
 - lemma: підсудний
-  ipa: /pʲidˈsudnɪj/
-  translation: defendant
-  pos: noun
-  gender: m
-- lemma: регулювати
-  ipa: /rɛɦulʲuˈwɑtɪ/
-  translation: to regulate
-  pos: verb
-- lemma: резонансний
-  ipa: /rɛzoˈnɑnsnɪj/
-  translation: high-profile, resonant
+  ipa: /pidsˈudnɪj/
+  translation: ''
   pos: adj
-- lemma: роботодавець
-  ipa: /robotoˈdɑwɛt͡sʲ/
-  translation: employer
-  pos: noun
-  gender: m
-- lemma: розслідування
-  ipa: /rozsˈlʲiduwɑnʲːɑ/
-  translation: investigation
-  pos: noun
-  gender: n
-- lemma: скоювати
-  ipa: /skoˈjuwɑtɪ/
-  translation: to commit (crime)
-  pos: verb
-- lemma: слідкувати
-  ipa: /slʲidkuˈwɑtɪ/
-  translation: to follow, to monitor
-  pos: verb
+- lemma: районний
+  ipa: /rajˈɔnnɪj/
+  translation: ''
+  pos: adj
 - lemma: слідство
-  ipa: /ˈslʲidstwo/
-  translation: investigation
+  ipa: /slˈidstʋɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: слідчий
-  ipa: /ˈslʲidt͡ʃɪj/
-  translation: investigator
+- lemma: справедливе
+  ipa: /spraʋɛdlˈɪʋɛ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: спор
-  ipa: /spor/
-  translation: dispute
-  pos: noun
-  gender: m
-- lemma: споруджений
-  ipa: /spoˈrudʒɛnɪj/
-  translation: constructed, built
-  pos: adj
-- lemma: столичний
-  ipa: /stoˈlɪt͡ʃnɪj/
-  translation: capital (city) (adj.)
-  pos: adj
-- lemma: страховий
-  ipa: /strɑˈxowɪj/
-  translation: insurance (adj.)
-  pos: adj
+  gender: n
 - lemma: стягнення
-  ipa: /stʲɑɦˈnɛnʲːɑ/
-  translation: penalty, collection
+  ipa: /stˈjaɦnɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: стягнути
-  ipa: /stʲɑɦˈnutɪ/
-  translation: to collect, to levy
+  ipa: /stjaɦnˈutɪ/
+  translation: ''
   pos: verb
-- lemma: суддівський
-  ipa: /sudʲːʲiwsʲkɪj/
-  translation: judicial, judge's
-  pos: adj
-- lemma: судження
-  ipa: /suˈdʒɛnʲːɑ/
-  translation: judgment, opinion
+- lemma: техномаркет
+  ipa: /tɛxnɔmarkɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ув'язнення
+  ipa: /uʋˈjaznɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: судоустрій
-  ipa: /sudouˈstrʲij/
-  translation: judicial system
-  pos: noun
-  gender: m
-- lemma: Техномаркет
-  ipa: /tɛxnoˈmɑrkɛt/
-  translation: Tekhnomarket (electronics store)
-  pos: propn
-  gender: m
-- lemma: тримання
-  ipa: /trɪˈmɑnʲːɑ/
-  translation: holding, detention
+- lemma: цивільне
+  ipa: /t͡sɪʋˈilʲnɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: тяжкий
-  ipa: /ˈtʲɑʒkɪj/
-  translation: grave, serious
-  pos: adj
-- lemma: уповноважений
-  ipa: /upownoˈwɑʒɛnɪj/
-  translation: authorized, commissioner
-  pos: noun
-  gender: m
-- lemma: Феміда
-  ipa: /fɛˈmʲidɑ/
-  translation: Themis (goddess of justice)
-  pos: propn
-  gender: f
-- lemma: формалізований
-  ipa: /formɐlʲizoˈwɑnɪj/
-  translation: formalized
-  pos: adj
-- lemma: фіктивний
-  ipa: /fʲikˈtɪwnɪj/
-  translation: fictitious
-  pos: adj
 - lemma: цивільний
-  ipa: /t͡sɪˈwʲilʲnɪj/
-  translation: civil
+  ipa: /t͡sɪʋˈilʲnɪj/
+  translation: ''
   pos: adj
 - lemma: шахрайство
-  ipa: /ʃɑxˈrɑjstwo/
-  translation: fraud
+  ipa: /ʃaxrˈajstʋɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: юрисдикція
-  ipa: /jurɪsdɪkˈt͡sʲijɑ/
-  translation: jurisdiction
+- lemma: інстанція
+  ipa: /instˈant͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: іспитовий
-  ipa: /ʲispɪˈtowɪj/
-  translation: probationary, trial
-  pos: adj
+- lemma: інтернет-магазин
+  ipa: /intɛrnˈɛt-maɦazɪn/
+  translation: ''
+  pos: noun
+  gender: m

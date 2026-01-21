@@ -1,129 +1,93 @@
-module: 133-tekhnolohii-ta-shi
+module: 72-tekhnolohii-ta-shi
 level: B2
 version: '2.0'
 items:
-- lemma: технологія
-  ipa: /texnoˈlɔɦʲija/
-  translation: technology
+- lemma: аутентифікація
+  ipa: /autɛntɪfikat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: програма
-  ipa: /proˈɦrama/
-  translation: program, application
+- lemma: баг
+  ipa: /baɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дата-центр
+  ipa: /dˈata-t͡sɛntr/
+  translation: ''
+  pos: noun
+- lemma: двофакторний
+  ipa: /dʋɔfaktɔrnɪj/
+  translation: ''
+  pos: adj
+- lemma: евакуація
+  ipa: /ɛʋakuˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: додаток
-  ipa: /doˈdatok/
-  translation: app, application
+- lemma: замовчуватися
+  ipa: /zamˈɔʋt͡ʃuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: кібератака
+  ipa: /kibɛrataka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: код
-  ipa: /ˈkɔd/
-  translation: code
-  pos: noun
-  gender: m
-- lemma: алгоритм
-  ipa: /alɦoˈrɪtm/
-  translation: algorithm
-  pos: noun
-  gender: m
-- lemma: дані
-  ipa: /ˈdanʲi/
-  translation: data
-  pos: noun
-  gender: pl
-- lemma: хмара
-  ipa: /ˈxmara/
-  translation: cloud (computing)
-  pos: noun
-  gender: f
-- lemma: сервер
-  ipa: /ˈserwer/
-  translation: server
-  pos: noun
-  gender: m
-- lemma: мережа
-  ipa: /meˈreʒa/
-  translation: network
+- lemma: кібервійна
+  ipa: /kibɛrʋijna/
+  translation: ''
   pos: noun
   gender: f
 - lemma: кіберзахист
-  ipa: /kʲiberˈzaxɪst/
-  translation: cybersecurity
+  ipa: /kibɛrzaxɪst/
+  translation: ''
   pos: noun
   gender: m
-- lemma: штучний інтелект
-  ipa: /ˈʃtutʃnɪj inteˈlekt/
-  translation: artificial intelligence
+- lemma: кібернетик
+  ipa: /kibɛrnˈɛtɪk/
+  translation: ''
+  pos: noun
+- lemma: лебедєв
+  ipa: /lˈɛbɛdjɛʋ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: нейромережа
-  ipa: /ˈnejromeˈreʒa/
-  translation: neural network
-  pos: noun
-  gender: f
-- lemma: інтерфейс
-  ipa: /interˈfejs/
-  translation: interface
-  pos: noun
-  gender: m
-- lemma: оновлення
-  ipa: /oˈnɔwlenʲːa/
-  translation: update
-  pos: noun
-  gender: n
-- lemma: баг
-  ipa: /ˈbaɦ/
-  translation: bug
-  pos: noun
-  gender: m
-- lemma: розробник
-  ipa: /rozˈrɔbnɪk/
-  translation: developer
-  pos: noun
-  gender: m
-- lemma: програміст
-  ipa: /proɦraˈmʲist/
-  translation: programmer
-  pos: noun
-  gender: m
-- lemma: завантажувати
-  ipa: /zawantaˈʒuwatɪ/
-  translation: to download/upload
+- lemma: обчислювальний
+  ipa: /ɔbt͡ʃˈɪsljuʋalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: пофіксити
+  ipa: /pɔfiksɪtɪ/
+  translation: ''
   pos: verb
-  aspect: impf
-- lemma: посилання
-  ipa: /posɪˈlanʲːa/
-  translation: link
+- lemma: провайдер
+  ipa: /prɔʋˈajdɛr/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: база даних
-  ipa: /ˈbaza ˈdanɪx/
-  translation: database
-  pos: noun
-  gender: f
-- lemma: зашифрувати
-  ipa: /zaʃɪfruˈwatɪ/
-  translation: to encrypt
-  pos: verb
-  aspect: pf
-- lemma: пароль
-  ipa: /paˈrolʲ/
-  translation: password
+- lemma: підозрілий
+  ipa: /pidɔzrˈilɪj/
+  translation: ''
+  pos: adj
+- lemma: резервний
+  ipa: /rɛzˈɛrʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: тестувальник
+  ipa: /tɛstuʋalʲnɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: аутентифікація
-  ipa: /autentɪfʲiˈkatsʲija/
-  translation: authentication
+- lemma: фіча
+  ipa: /fit͡ʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: резервна копія
-  ipa: /reˈzerwna ˈkɔpʲija/
-  translation: backup
-  pos: noun
-  gender: f
-- lemma: стартап
-  ipa: /starˈtap/
-  translation: startup
+- lemma: фішинг
+  ipa: /fiʃɪnɦ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: хакер
+  ipa: /xˈakɛr/
+  translation: ''
+  pos: noun

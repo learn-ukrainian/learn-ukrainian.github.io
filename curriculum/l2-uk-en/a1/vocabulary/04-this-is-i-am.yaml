@@ -2,209 +2,229 @@ module: 04-this-is-i-am
 level: A1
 version: '2.0'
 items:
-  - lemma: американець
-    ipa: /ɑmɛrɪˈkɑnɛt͡sʲ/
-    translation: American man
-    pos: noun
-    gender: m
-  - lemma: американка
-    ipa: /ɑmɛrɪˈkɑnkɑ/
-    translation: American woman
-    pos: noun
-    gender: f
-  - lemma: англійка
-    ipa: /ɑnˈhlij kɑ/
-    translation: English woman
-    pos: noun
-    gender: f
-  - lemma: англієць
-    ipa: /ɑnˈhlijɛt͡sʲ/
-    translation: English man
-    pos: noun
-    gender: m
-  - lemma: анна
-    ipa: /ˈɑnːɑ/
-    translation: Anna
-    pos: propn
-    gender: f
-  - lemma: ваш
-    ipa: /vɑʃ/
-    translation: your (formal)
-    pos: other
-    gender: n
-  - lemma: ви
-    ipa: /vɪ/
-    translation: you (pl/formal)
-    pos: pron
-  - lemma: вони
-    ipa: /vɔˈnɪ/
-    translation: they
-    pos: pron
-  - lemma: день
-    ipa: /dɛnʲ/
-    translation: day
-    pos: noun
-    gender: m
-  - lemma: добрий
-    ipa: /ˈdɔbrɪj/
-    translation: good
-    pos: adj
-    gender: m
-  - lemma: друг
-    ipa: /druh/
-    translation: friend (m)
-    pos: noun
-    gender: m
-  - lemma: дівчина
-    ipa: /ˈdivt͡ʃɪnɑ/
-    translation: girl
-    pos: noun
-    gender: f
-  - lemma: жінка
-    ipa: /ˈʒinkɑ/
-    translation: woman
-    pos: noun
-    gender: f
-  - lemma: звичайно
-    ipa: /zvɪˈt͡ʃɑjnɔ/
-    translation: of course
-    pos: adv
-  - lemma: канадець
-    ipa: /kɑˈnɑdɛt͡sʲ/
-    translation: Canadian man
-    pos: noun
-    gender: m
-  - lemma: канадка
-    ipa: /kɑˈnɑdkɑ/
-    translation: Canadian woman
-    pos: noun
-    gender: f
-  - lemma: людина
-    ipa: /lʲuˈdɪnɑ/
-    translation: person
-    pos: noun
-    gender: f
-  - lemma: лікар
-    ipa: /ˈlikɑr/
-    translation: doctor
-    pos: noun
-    gender: m
-  - lemma: лікарка
-    ipa: /ˈlikɑrkɑ/
-    translation: doctor (f)
-    pos: noun
-    gender: f
-  - lemma: ліки
-    ipa: /ˈlʲikɪ/
-    translation: medicine
-    pos: noun
-    gender: pl
-  - lemma: ми
-    ipa: /mɪ/
-    translation: we
-    pos: pron
-  - lemma: михайлович
-    ipa: /mɪˈxɑjlɔvɪt͡ʃ/
-    translation: Mykhailovych
-    pos: propn
-    gender: m
-  - lemma: могти
-    ipa: /mɔhˈtɪ/
-    translation: can/to be able
-    pos: verb
-  - lemma: можна
-    ipa: /ˈmɔʒnɑ/
-    translation: possible/allowed
-    pos: adv
-  - lemma: нульовий
-    ipa: /nulʲɔˈvɪj/
-    translation: zero (adj)
-    pos: adj
-    gender: f
-  - lemma: ольга
-    ipa: /ˈɔlʲhɑ/
-    translation: Olha
-    pos: propn
-    gender: f
-  - lemma: петрівна
-    ipa: /pɛˈtrivnɑ/
-    translation: Petrivna
-    pos: propn
-    gender: f
-  - lemma: подруга
-    ipa: /ˈpɔdruhɑ/
-    translation: friend (f)
-    pos: noun
-    gender: f
-  - lemma: професор
-    ipa: /prɔˈfɛsɔr/
-    translation: professor
-    pos: noun
-    gender: m
-  - lemma: професорка
-    ipa: /prɔˈfɛsɔrkɑ/
-    translation: professor (f)
-    pos: noun
-    gender: f
-  - lemma: софія
-    ipa: /sɔˈfijɑ/
-    translation: Sofiya
-    pos: propn
-    gender: f
-  - lemma: студент
-    ipa: /stuˈdɛnt/
-    translation: student
-    pos: noun
-    gender: m
-  - lemma: студентка
-    ipa: /stuˈdɛntkɑ/
-    translation: student (f)
-    pos: noun
-    gender: f
-  - lemma: ти
-    ipa: /tɪ/
-    translation: you (casual)
-    pos: pron
-  - lemma: українець
-    ipa: /ʊkrɑˈjinɛt͡sʲ/
-    translation: Ukrainian man
-    pos: noun
-    gender: m
-  - lemma: українка
-    ipa: /ʊkrɑˈjinkɑ/
-    translation: Ukrainian woman
-    pos: noun
-    gender: f
-  - lemma: хлопець
-    ipa: /ˈxlɔpɛt͡sʲ/
-    translation: guy/boy
-    pos: noun
-    gender: m
-  - lemma: цей
-    ipa: /t͡sɛj/
-    translation: this (m)
-    pos: other
-    gender: m
-  - lemma: чоловік
-    ipa: /t͡ʃɔlɔˈvik/
-    translation: man/husband
-    pos: noun
-    gender: m
-  - lemma: я
-    ipa: /jɑ/
-    translation: I
-    pos: pron
-  - lemma: іван
-    ipa: /iˈvɑn/
-    translation: Ivan
-    pos: propn
-    gender: m
-  - lemma: ґрут
-    ipa: /grunt/
-    translation: Groot
-    pos: propn
-    gender: m
-  - lemma: ось
-    ipa: /ɔsʲ/
-    translation: here (is)
-    pos: other
+- lemma: американець
+  ipa: /amɛrɪkˈanɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: американка
+  ipa: /amɛrɪkˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: англійка
+  ipa: /anɦlˈijka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: англієць
+  ipa: /anɦlˈijɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: анна
+  ipa: /ˈanna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ар
+  ipa: /ar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: добрий
+  ipa: /dˈɔbrɪj/
+  translation: ''
+  pos: adj
+- lemma: друг
+  ipa: /druɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дівчина
+  ipa: /dˈiʋt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зв'язка
+  ipa: /zʋˈjazka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: звичайно
+  ipa: /zʋɪt͡ʃˈajnɔ/
+  translation: ''
+  pos: adv
+- lemma: ка
+  ipa: /ka/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: канадець
+  ipa: /kanˈadɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: канадка
+  ipa: /kanˈadka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: київ
+  ipa: /kɪˈjiʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: людин
+  ipa: /ljudɪn/
+  translation: ''
+  pos: adj
+- lemma: лікар
+  ipa: /lˈikar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лікарка
+  ipa: /lˈikarka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ліки
+  ipa: /lˈikɪ/
+  translation: ''
+  pos: noun
+- lemma: марко
+  ipa: /mˈarkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мен
+  ipa: /mɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: михайлович
+  ipa: /mɪxˈajlɔʋɪt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: місто
+  ipa: /mˈistɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: нульовий
+  ipa: /nulʲɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: ольга
+  ipa: /ˈɔlʲɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: петрівна
+  ipa: /pɛtrˈiʋna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: подруга
+  ipa: /pˈɔdruɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: привіт
+  ipa: /prɪʋˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: професор
+  ipa: /prɔfˈɛsɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: професорка
+  ipa: /prɔfˈɛsɔrka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: софія
+  ipa: /sɔfˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: студент
+  ipa: /studˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: студентка
+  ipa: /studˈɛntka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стіл
+  ipa: /stil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: ти'
+  ipa: /tɪ/
+  translation: ''
+  pos: noun
+- lemma: українець
+  ipa: /ukraˈjinɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: українка
+  ipa: /ukraˈjinka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хлопець
+  ipa: /xlˈɔpɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іван
+  ipa: /iʋˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ім'я
+  ipa: /imˈja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ґрут
+  ipa: /grut/
+  translation: ''
+  pos: noun
+  gender: f

@@ -2,318 +2,41 @@ module: 33-word-formation-person-suffixes
 level: B2
 version: '2.0'
 items:
-- lemma: артист
-  ipa: /ɐrˈtɪst/
-  translation: artist, performer
-  pos: noun
-  gender: m
-- lemma: безпечний
-  ipa: /bɛzˈpɛt͡ʃnɪj/
-  translation: safe
-  pos: adj
-- lemma: бібліотекар
-  ipa: /bʲiblʲiotɛˈkɑr/
-  translation: librarian
-  pos: noun
-  gender: m
-- lemma: винахідник
-  ipa: /wɪnɐˈxʲidnɪk/
-  translation: inventor
-  pos: noun
-  gender: m
-- lemma: випасати
-  ipa: /wɪpɑˈsɑtɪ/
-  translation: to graze, to pasture
-  pos: verb
 - lemma: вносити
-  ipa: /wnoˈsɪtɪ/
-  translation: to bring in, to contribute
+  ipa: /ʋnˈɔsɪtɪ/
+  translation: ''
   pos: verb
 - lemma: воротар
-  ipa: /woroˈtɑr/
-  translation: goalkeeper
+  ipa: /ʋɔrɔtˈar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вівця
-  ipa: /ˈwʲiwt͡sʲɑ/
-  translation: sheep
-  pos: noun
-  gender: f
 - lemma: вівчар
-  ipa: /wʲiwˈt͡ʃɑr/
-  translation: shepherd
+  ipa: /ʋiʋt͡ʃˈar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: відбити
-  ipa: /wʲidˈbɪtɪ/
-  translation: to repel, to reflect
-  pos: verb
-- lemma: глядіти
-  ipa: /ɦlʲɑˈdʲitɪ/
-  translation: to watch, to look
-  pos: verb
-- lemma: гірський
-  ipa: /ˈɦʲirsʲkɪj/
-  translation: mountain (adj.)
-  pos: adj
-- lemma: дослід
-  ipa: /ˈdoslʲid/
-  translation: experiment, research
-  pos: noun
-  gender: m
-- lemma: досі
-  ipa: /doˈsʲi/
-  translation: until now, still
-  pos: adv
-- lemma: духовний
-  ipa: /duxˈownɪj/
-  translation: spiritual
-  pos: adj
-- lemma: заради
-  ipa: /zɐˈrɑdɪ/
-  translation: for the sake of
-  pos: other
-- lemma: затребуваний
-  ipa: /zɐtrɛˈbuwɑnɪj/
-  translation: in demand
-  pos: adj
-- lemma: збагачувати
-  ipa: /zbɑɦɑt͡ʃuˈwɑtɪ/
-  translation: to enrich
-  pos: verb
-- lemma: збірний
-  ipa: /ˈzbʲirnɪj/
-  translation: collective, assembled
-  pos: adj
-- lemma: згрупувати
-  ipa: /zɦrupuˈwɑtɪ/
-  translation: to group
-  pos: verb
 - lemma: каменяр
-  ipa: /kɐmɛˈnʲɑr/
-  translation: stonemason
+  ipa: /kamɛnˈjar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: книгозбірня
-  ipa: /knɪɦozˈbʲirnʲɑ/
-  translation: library
-  pos: noun
-  gender: f
 - lemma: кобза
-  ipa: /kobˈzɑ/
-  translation: kobza (Ukrainian musical instrument)
+  ipa: /kˈɔbza/
+  translation: ''
   pos: noun
   gender: f
-- lemma: кобзар
-  ipa: /kobˈzɑr/
-  translation: kobzar (traditional Ukrainian bard)
-  pos: noun
-  gender: m
-- lemma: купець
-  ipa: /kuˈpɛt͡sʲ/
-  translation: merchant
-  pos: noun
-  gender: m
-- lemma: ланцюжок
-  ipa: /lɐnt͡sʲuˈʒok/
-  translation: chain (diminutive)
-  pos: noun
-  gender: m
-- lemma: ломити
-  ipa: /loˈmɪtɪ/
-  translation: to break
-  pos: verb
-- lemma: лікар
-  ipa: /lʲiˈkɑr/
-  translation: doctor, physician
-  pos: noun
-  gender: m
-- lemma: мовознавець
-  ipa: /mowoˈznɑwɛt͡sʲ/
-  translation: linguist
-  pos: noun
-  gender: m
-- lemma: наведений
-  ipa: /nɐˈwɛdɛnɪj/
-  translation: given, cited
-  pos: adj
-- lemma: найменування
-  ipa: /nɑjmɛnuˈwɑnʲːɑ/
-  translation: naming, designation
-  pos: noun
-  gender: n
-- lemma: найпродуктивніший
-  ipa: /nɑjproduktɪwˈnʲiʃɪj/
-  translation: most productive
-  pos: adj
-- lemma: неможливий
-  ipa: /nɛˈmoʒlɪwɪj/
-  translation: impossible
-  pos: adj
-- lemma: основа
-  ipa: /osˈnowɑ/
-  translation: basis, foundation
-  pos: noun
-  gender: f
-- lemma: отара
-  ipa: /oˈtɑrɑ/
-  translation: flock
-  pos: noun
-  gender: f
-- lemma: охороняти
-  ipa: /oxoroˈnʲɑtɪ/
-  translation: to guard, to protect
-  pos: verb
-- lemma: пасовище
-  ipa: /pɐsoˈwɪʃt͡ʃɛ/
-  translation: pasture
-  pos: noun
-  gender: n
-- lemma: пенальті
-  ipa: /pɛˈnɑlʲtʲi/
-  translation: penalty (kick)
-  pos: noun
-  gender: m
-- lemma: письменник
-  ipa: /pɪsʲˈmɛnːɪk/
-  translation: writer
-  pos: noun
-  gender: m
-- lemma: письменництво
-  ipa: /pɪsʲmɛnˈnɪt͡stwo/
-  translation: literature, writing
-  pos: noun
-  gender: n
-- lemma: письменницький
-  ipa: /pɪsʲmɛnˈnɪt͡sʲkɪj/
-  translation: writer's, literary
-  pos: adj
-- lemma: помічати
-  ipa: /pomʲiˈt͡ʃɑtɪ/
-  translation: to notice
-  pos: verb
-- lemma: праця
-  ipa: /ˈprɑt͡sʲɑ/
-  translation: work, labor
-  pos: noun
-  gender: f
-- lemma: роль
-  ipa: /rolʲ/
-  translation: role
-  pos: noun
-  gender: f
-- lemma: рівняти
-  ipa: /rʲiwˈnʲɑtɪ/
-  translation: to equate, to level
-  pos: verb
-- lemma: сертифікат
-  ipa: /sɛrtɪfʲiˈkɑt/
-  translation: certificate
-  pos: noun
-  gender: m
-- lemma: скала
-  ipa: /skɑˈlɑ/
-  translation: rock, cliff
-  pos: noun
-  gender: f
-- lemma: слово
-  ipa: /ˈslowo/
-  translation: word
-  pos: noun
-  gender: n
-- lemma: словотворення
-  ipa: /slowotˈworɛnʲːɑ/
-  translation: word formation
-  pos: noun
-  gender: n
-- lemma: словотвірний
-  ipa: /slowotˈwʲirnɪj/
-  translation: word-formative
-  pos: adj
-- lemma: спеціалізація
-  ipa: /spɛt͡sʲiɑlʲizɑˈt͡sʲijɑ/
-  translation: specialization
-  pos: noun
-  gender: f
-- lemma: споживач
-  ipa: /spoʒɪˈwɑt͡ʃ/
-  translation: consumer
-  pos: noun
-  gender: m
-- lemma: споживати
-  ipa: /spoʒɪˈwɑtɪ/
-  translation: to consume
-  pos: verb
-- lemma: співець
-  ipa: /spʲiˈwɛt͡sʲ/
-  translation: singer (poetic)
-  pos: noun
-  gender: m
-- lemma: сумлінно
-  ipa: /sumˈlʲinːo/
-  translation: conscientiously
-  pos: adv
-- lemma: суфікс
-  ipa: /suˈfʲiks/
-  translation: suffix
-  pos: noun
-  gender: m
 - lemma: творець
-  ipa: /twoˈrɛt͡sʲ/
-  translation: creator
+  ipa: /tʋɔrˈɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: творити
-  ipa: /twoˈrɪtɪ/
-  translation: to create
-  pos: verb
-- lemma: телепрограма
-  ipa: /tɛlɛproˈɦrɑmɑ/
-  translation: TV program
-  pos: noun
-  gender: f
-- lemma: тираж
-  ipa: /tɪˈrɑʃ/
-  translation: circulation, print run
+- lemma: яр
+  ipa: /jar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вчений
-  ipa: /ˈwt͡ʃɛnɪj/
-  translation: scientist, scholar
+- lemma: іст
+  ipa: /ist/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: учень
-  ipa: /ˈut͡ʃɛnʲ/
-  translation: student, pupil
-  pos: noun
-  gender: m
-- lemma: ходок
-  ipa: /xoˈdok/
-  translation: walker, pedestrian
-  pos: noun
-  gender: m
-- lemma: читальня
-  ipa: /t͡ʃɪˈtɑlʲnʲɑ/
-  translation: reading room
-  pos: noun
-  gender: f
-- lemma: читацтво
-  ipa: /t͡ʃɪˈtɑt͡stwo/
-  translation: readership
-  pos: noun
-  gender: n
-- lemma: чумак
-  ipa: /t͡ʃuˈmɑk/
-  translation: chumak (historical Ukrainian salt trader)
-  pos: noun
-  gender: m
-- lemma: шанувальник
-  ipa: /ʃɑnuˈwɑlʲnɪk/
-  translation: admirer, fan
-  pos: noun
-  gender: m
-- lemma: школяр
-  ipa: /ʃkoˈlʲɑr/
-  translation: schoolboy, student
-  pos: noun
-  gender: m

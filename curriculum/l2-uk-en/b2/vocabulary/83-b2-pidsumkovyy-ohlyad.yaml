@@ -1,129 +1,13 @@
-module: 144-b2-pidsumkovyy-ohlyad
+module: 83-b2-pidsumkovyy-ohlyad
 level: B2
 version: '2.0'
 items:
-  - lemma: огляд
-    ipa: /ˈɔɦlʲɐd/
-    translation: review
-    pos: noun
-    gender: m
-  - lemma: повторення
-    ipa: /povˈtɔrenʲːɐ/
-    translation: repetition/review
-    pos: noun
-    gender: n
-  - lemma: підсумок
-    ipa: /ˈpidsʊmok/
-    translation: summary/result
-    pos: noun
-    gender: m
-  - lemma: граматика
-    ipa: /ɦrɐˈmɑtɪkɐ/
-    translation: grammar
-    pos: noun
-    gender: f
-  - lemma: лексика
-    ipa: /ˈlɛksɪkɐ/
-    translation: vocabulary
-    pos: noun
-    gender: f
-  - lemma: історія
-    ipa: /isˈtɔrʲijɐ/
-    translation: history
-    pos: noun
-    gender: f
-  - lemma: культура
-    ipa: /kulʲˈturɐ/
-    translation: culture
-    pos: noun
-    gender: f
-  - lemma: навичка
-    ipa: /ˈnɑvɪt͡ʃkɐ/
-    translation: skill
-    pos: noun
-    gender: f
-  - lemma: прогрес
-    ipa: /proˈɦrɛs/
-    translation: progress
-    pos: noun
-    gender: m
-  - lemma: результат
-    ipa: /rezulʲˈtɑt/
-    translation: result
-    pos: noun
-    gender: m
-  - lemma: помилка
-    ipa: /poˈmɪlkɐ/
-    translation: mistake
-    pos: noun
-    gender: f
-  - lemma: виправлення
-    ipa: /vɪˈprɑvlenʲːɐ/
-    translation: correction
-    pos: noun
-    gender: n
-  - lemma: самоперевірка
-    ipa: /sɐmopereˈvʲirkɐ/
-    translation: self-check
-    pos: noun
-    gender: f
-  - lemma: тренування
-    ipa: /trenuˈvɑnʲːɐ/
-    translation: training
-    pos: noun
-    gender: n
-  - lemma: вправа
-    ipa: /ˈvprɑvɐ/
-    translation: exercise
-    pos: noun
-    gender: f
-  - lemma: тест
-    ipa: /tɛst/
-    translation: test
-    pos: noun
-    gender: m
-  - lemma: екзамен
-    ipa: /ekˈzɑmen/
-    translation: exam
-    pos: noun
-    gender: m
-  - lemma: підготовка
-    ipa: /pidɦoˈtɔvkɐ/
-    translation: preparation
-    pos: noun
-    gender: f
-  - lemma: впевненість
-    ipa: /u̯ˈpɛvnenʲisʲtʲ/
-    translation: confidence
-    pos: noun
-    gender: f
-  - lemma: знання
-    ipa: /znɐˈnʲːɑ/
-    translation: knowledge
-    pos: noun
-    gender: pl
-  - lemma: розуміння
-    ipa: /rozuˈminʲːɐ/
-    translation: understanding
-    pos: noun
-    gender: n
-  - lemma: використання
-    ipa: /vɪkorɪsˈtɑnʲːɐ/
-    translation: usage
-    pos: noun
-    gender: n
-  - lemma: спілкування
-    ipa: /spilkuˈvɑnʲːɐ/
-    translation: communication
-    pos: noun
-    gender: n
-  - lemma: письмо
-    ipa: /pɪˈsmɔ/
-    translation: writing
-    pos: noun
-    gender: n
-  - lemma: читання
-    ipa: /t͡ʃɪˈtɑnʲːɐ/
-    translation: reading
-    pos: noun
-    gender: n
+- lemma: модерн
+  ipa: /mɔdˈɛrn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ухвалюватися
+  ipa: /uxʋˈaljuʋatɪsja/
+  translation: ''
+  pos: verb

@@ -2,113 +2,59 @@ module: 11-checkpoint-cases
 level: A2
 version: '2.0'
 items:
-  - lemma: багатий
-    ipa: bɐˈɦɑtɪj
-    translation: rich
-    pos: adj
-    gender: m
-  - lemma: ввести
-    ipa: vːeˈstɪ
-    translation: to introduce; to enter
-    pos: verb
-  - lemma: завершити
-    ipa: zɐʋerˈʃɪte
-    translation: to complete; to finish
-    pos: verb
-  - lemma: контрольний
-    ipa: konˈtrɔlʲnɪj
-    translation: control (adj); test
-    pos: adj
-    gender: m
-  - lemma: кошти
-    ipa: ˈkɔʃtɪ
-    translation: funds; money
-    pos: noun
-    gender: pl
-  - lemma: Людмила
-    ipa: lʲudˈmɪlɐ
-    translation: Liudmyla
-    pos: propn
-    gender: f
-  - lemma: модуль
-    ipa: ˈmɔdulʲ
-    translation: module
-    pos: noun
-    gender: m
-  - lemma: гра
-    ipa: ɦrɑ
-    translation: game
-    pos: noun
-    gender: f
-  - lemma: перевіряти
-    ipa: pereʋiˈrʲɑte
-    translation: to check; to verify
-    pos: verb
-  - lemma: перекладач
-    ipa: perɐklɐˈdɑt͡ʃ
-    translation: translator
-    pos: noun
-    gender: m
-  - lemma: плакати
-    ipa: ˈplɑkɐte
-    translation: to cry
-    pos: verb
-  - lemma: спадщина
-    ipa: ˈspɑdʃt͡ʃɪnɐ
-    translation: heritage; legacy
-    pos: noun
-    gender: f
-  - lemma: сума
-    ipa: ˈsumɐ
-    translation: sum; amount
-    pos: noun
-    gender: f
-  - lemma: тисячолітній
-    ipa: tɪsʲɐt͡ʃoˈlʲitnʲij
-    translation: millennial; thousand-year
-    pos: adj
-    gender: m
-  - lemma: торкатися
-    ipa: torˈkɑtɪsʲɐ
-    translation: to touch; to concern
-    pos: verb
-  - lemma: Україна
-    ipa: ukrɐˈjinɐ
-    translation: Ukraine
-    pos: propn
-    gender: f
-  - lemma: фаза
-    ipa: ˈfɑzɐ
-    translation: phase
-    pos: noun
-    gender: f
-  - lemma: число
-    ipa: t͡ʃɪsˈlɔ
-    translation: number; date
-    pos: noun
-    gender: n
-  - lemma: відмінок
-    ipa: vidˈminok
-    translation: case (grammar)
-    pos: noun
-    gender: m
-  - lemma: знахідний
-    ipa: znɐˈxidnij
-    translation: accusative
-    pos: adj
-    gender: m
-  - lemma: родовий
-    ipa: rodoˈvɪj
-    translation: genitive
-    pos: adj
-    gender: m
-  - lemma: давальний
-    ipa: dɐˈvɑlʲnɪj
-    translation: dative
-    pos: adj
-    gender: m
-  - lemma: орудний
-    ipa: oˈrudnɪj
-    translation: instrumental
-    pos: adj
-    gender: m
+- lemma: архітекторка
+  ipa: /arxitɛktɔrka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: аспект
+  ipa: /aspˈɛkt/
+  translation: ''
+  pos: noun
+- lemma: висловити
+  ipa: /ʋˈɪslɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: володіти
+  ipa: /ʋɔlɔdˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: завершити
+  ipa: /zaʋɛrʃˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: заплатити
+  ipa: /zaplatˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: зн
+  ipa: /zn/
+  translation: ''
+  pos: noun
+- lemma: ор
+  ipa: /ɔr/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: перевірити
+  ipa: /pɛrɛʋˈirɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: плач
+  ipa: /plat͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ранком
+  ipa: /rˈankɔm/
+  translation: ''
+  pos: adv
+- lemma: розповісти
+  ipa: /rɔzpɔʋˈistɪ/
+  translation: ''
+  pos: verb
+- lemma: фаза
+  ipa: /fˈaza/
+  translation: ''
+  pos: noun
+  gender: f

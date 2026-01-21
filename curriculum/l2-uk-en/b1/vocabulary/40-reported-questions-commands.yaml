@@ -3,63 +3,107 @@ level: B1
 version: '2.0'
 items:
 - lemma: авторитетно
-  ipa: /autɔrɪˈtɛtnɔ/
-  translation: authoritatively
+  ipa: /aʋtɔrɪtˈɛtnɔ/
+  translation: ''
   pos: adv
+- lemma: анкета
+  ipa: /ankˈɛta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: верховний
+  ipa: /ʋɛrxˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: висловлювання
+  ipa: /ʋɪslˈɔʋljuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дерибасівська
+  ipa: /dɛrɪbasiʋsʲka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: допитуватися
-  ipa: /dɔˈpɪtuvatɪsʲa/
-  translation: to interrogate
+  ipa: /dɔpˈɪtuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: емоційно
+  ipa: /ɛmɔt͡sˈijnɔ/
+  translation: ''
+  pos: adv
+- lemma: з'ясовувати
+  ipa: /zjasˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: завершальний
+  ipa: /zaʋɛrʃˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: закликати
+  ipa: /zaklɪkatɪ/
+  translation: ''
   pos: verb
 - lemma: звітування
-  ipa: /zviˈtuvanʲːa/
-  translation: reporting
+  ipa: /zʋituʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: мелодійніший
-  ipa: /mɛlɔˈdʲijnʲiʃɪj/
-  translation: more melodious
+- lemma: механічний
+  ipa: /mɛxanˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: непряме
-  ipa: /nɛprʲaˈmɛ/
-  translation: indirect
-  pos: noun
-  gender: n
+- lemma: наполегливо
+  ipa: /napɔlˈɛɦlɪʋɔ/
+  translation: ''
+  pos: adv
+- lemma: оригінальний
+  ipa: /ɔrɪɦinˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: переказувати
+  ipa: /pɛrɛkˈazuʋatɪ/
+  translation: ''
+  pos: verb
 - lemma: пересказ
-  ipa: /pɛrɛˈskaz/
-  translation: retelling
+  ipa: /pɛrɛskaz/
+  translation: ''
   pos: noun
   gender: m
+- lemma: поблизу
+  ipa: /pɔblɪzˈu/
+  translation: ''
+  pos: adv
 - lemma: понаднормово
-  ipa: /pɔnadnɔrˈmɔvɔ/
-  translation: overtime
+  ipa: /pɔnadnɔrmˈɔʋɔ/
+  translation: ''
   pos: adv
 - lemma: поцікавитися
-  ipa: /pɔt͡sʲiˈkavɪtɪsʲa/
-  translation: to inquire
+  ipa: /pɔt͡sikˈaʋɪtɪsja/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: привоз
-  ipa: /prɪˈvɔz/
-  translation: Privoz (market)
-  pos: propn
-  gender: m
-- lemma: пряме
-  ipa: /prʲaˈmɛ/
-  translation: direct
-  pos: noun
-  gender: n
-- lemma: відповідний
-  ipa: /vidpɔˈvidnɪj/
-  translation: suitable
+- lemma: підозрюваний
+  ipa: /pidˈɔzrjuʋanɪj/
+  translation: ''
   pos: adj
-  gender: n
+- lemma: слідчий
+  ipa: /slˈidt͡ʃɪj/
+  translation: ''
+  pos: adj
 - lemma: умовляти
-  ipa: /umɔu̯ˈlʲatɪ/
-  translation: to persuade
+  ipa: /umɔʋlˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: інвертований
-  ipa: /invɛrˈtɔvanɪj/
-  translation: inverted
+- lemma: уточнювати
+  ipa: /utˈɔt͡ʃnjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: формулювання
+  ipa: /fɔrmuljuʋˈannja/
+  translation: ''
   pos: noun
-  gender: m
+- lemma: інвертований
+  ipa: /inʋɛrtˈɔʋanɪj/
+  translation: ''
+  pos: adj

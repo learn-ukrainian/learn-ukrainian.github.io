@@ -2,142 +2,85 @@ module: 21-numerals-and-nouns
 level: A2
 version: '2.0'
 items:
-- lemma: автор
-  ipa: ˈɑu̯tor
-  translation: author
-  pos: noun
-  gender: m
-- lemma: груша
-  ipa: ˈhruʃɐ
-  translation: pear
-  pos: noun
-  gender: f
-- lemma: детектив
-  ipa: detekˈtɪʋ
-  translation: detective
-  pos: noun
-  gender: m
+- lemma: дев'ятсот
+  ipa: /dɛʋjatsˈɔt/
+  translation: ''
+  pos: num
 - lemma: диня
-  ipa: ˈdɪnʲɐ
-  translation: melon
+  ipa: /dˈɪnja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: зона
-  ipa: ˈzɔnɐ
-  translation: zone
+  ipa: /zɔna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: компота
-  ipa: komˈpɔtɐ
-  translation: compote (gen)
+- lemma: компот
+  ipa: /kɔmpˈɔt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: комікс
-  ipa: ˈkɔmʲiks
-  translation: comic book
+  ipa: /kˈɔmiks/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: котлета
-  ipa: kotˈlɛtɐ
-  translation: cutlet; mental
-  pos: noun
-  gender: m
-- lemma: логічний
-  ipa: loˈɦʲit͡ʃnɪj
-  translation: logical
-  pos: adj
 - lemma: миска
-  ipa: ˈmɪskɐ
-  translation: bowl
+  ipa: /mˈɪska/
+  translation: ''
   pos: noun
   gender: f
 - lemma: морква
-  ipa: ˈmɔrkʋɐ
-  translation: carrot
+  ipa: /mˈɔrkʋa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: огірка
-  ipa: oˈhʲirkɐ
-  translation: cucumber (gen)
-  pos: noun
-  gender: m
 - lemma: порахувати
-  ipa: porɐxuˈʋɑte
-  translation: to count (perf)
+  ipa: /pɔraxuʋˈatɪ/
+  translation: ''
   pos: verb
-  gender: m
 - lemma: порція
-  ipa: ˈpɔrt͡sʲijɐ
-  translation: portion
+  ipa: /pˈɔrt͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: піріжка
-  ipa: pʲiˈrʲiʒkɐ
-  translation: pie/patty (gen/typo?)
+- lemma: правило
+  ipa: /praʋɪlɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: піріжок
+  ipa: /piriʒɔk/
+  translation: ''
   pos: noun
   gender: m
+- lemma: реальний
+  ipa: /rɛˈalʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: роман
-  ipa: roˈmɑn
-  translation: novel
+  ipa: /rɔmˈan/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: сить
-  ipa: sʲitʲ
-  translation: satiety? (typo?)
+- lemma: сито
+  ipa: /sˈɪtɔ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: складний
-  ipa: sklɐdˈnɪj
-  translation: complex; difficult
-  pos: adj
+  gender: n
+- lemma: склянка
+  ipa: /sklˈjanka/
+  translation: ''
+  pos: noun
 - lemma: цінність
-  ipa: ˈt͡sʲinʲːisʲtʲ
-  translation: value
+  ipa: /t͡sˈinnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: множина
-  translation: plural
-  pos: noun
-  gender: f
-  ipa: /mnoˈʒɪnɐ/
-- lemma: називний
-  translation: nominative
-  pos: adj
-  ipa: /nɐzɪu̯ˈnɪj/
-- lemma: рід
-  translation: gender
-  pos: noun
-  gender: m
-  ipa: /rʲid/
-- lemma: чоловічий
-  translation: masculine
-  pos: adj
-  ipa: /t͡ʃoloˈʋʲit͡ʃɪj/
-- lemma: жіночий
-  translation: feminine
-  pos: adj
-  ipa: /ʒʲiˈnɔt͡ʃɪj/
 - lemma: числівник
-  ipa: t͡ʃɪsˈlʲiʋnɪk
-  translation: numeral
+  ipa: /t͡ʃɪslˈiʋnɪk/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: якийсь
-  ipa: jɐˈkɪjsʲ
-  translation: some; a certain
-  pos: other
-- lemma: іменник
-  ipa: /iˈmɛnːɪk/
-  translation: noun
-  pos: noun
-  gender: m
-- lemma: родовий
-  ipa: /rɔdɔˈvɪj/
-  translation: genitive (case)
-  pos: adj
-  gender: m
-- lemma: відмінок
-  ipa: /vidˈminɔk/
-  translation: case (grammatical)
-  pos: noun
-  gender: m
+  ipa: /jakˈɪjsʲ/
+  translation: ''
+  pos: pron

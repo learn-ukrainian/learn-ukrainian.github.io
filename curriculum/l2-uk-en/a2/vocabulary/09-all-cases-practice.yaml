@@ -2,275 +2,192 @@ module: 09-all-cases-practice
 level: A2
 version: '2.0'
 items:
-  - lemma: адресат
-    ipa: ɐdreˈsɑt
-    translation: addressee
-    pos: noun
-    gender: m
-  - lemma: базовий
-    ipa: ˈbɑzoʋei̯
-    translation: basic
-    pos: adj
-    gender: n
-  - lemma: взнначити
-    ipa: ˈvznːɐt͡ʃɪte
-    translation: to determine (typo? визначити)
-    pos: verb
-  - lemma: виділений
-    ipa: ˈvɪdile nei̯
-    translation: highlighted; selected
-    pos: adj
-  - lemma: визначити
-    ipa: ˈvɪznɐt͡ʃɪte
-    translation: to determine; to define
-    pos: verb
-  - lemma: виконати
-    ipa: ˈvɪkonɐte
-    translation: to execute; to perform
-    pos: verb
-  - lemma: виконувати
-    ipa: vɪˈkɔnuʋɐte
-    translation: to perform; to execute
-    pos: verb
-  - lemma: вміння
-    ipa: ˈvminʲːɐ
-    translation: skill; ability
-    pos: noun
-    gender: n
-  - lemma: володіння
-    ipa: voloˈdinʲːɐ
-    translation: possession; mastery
-    pos: noun
-    gender: n
-  - lemma: втрата
-    ipa: ˈvtrɑtɐ
-    translation: loss
-    pos: noun
-    gender: f
-  - lemma: відіграти
-    ipa: vidiˈɦrɑte
-    translation: to play
-    pos: verb
-  - lemma: вікторе
-    ipa: ˈviktore
-    translation: Viktor (vocative)
-    pos: propn
-    gender: m
-  - lemma: довідник
-    ipa: doˈvidnɪk
-    translation: guide; handbook
-    pos: noun
-    gender: m
-  - lemma: залежно
-    ipa: zɐˈlɛʒno
-    translation: depending
-    pos: adv
-  - lemma: звертання
-    ipa: zʋerˈtɑnʲːɐ
-    translation: address; appeal
-    pos: noun
-    gender: n
-  - lemma: звертатися
-    ipa: zʋerˈtɑtɪsʲɐ
-    translation: to address; to turn to
-    pos: verb
-  - lemma: згадати
-    ipa: zɦɐˈdɑte
-    translation: to recall; to mention
-    pos: verb
-  - lemma: знахідний
-    ipa: znɐˈxʲidnɪj
-    translation: accusative
-    pos: adj
-    gender: m
-  - lemma: кличний
-    ipa: ˈklɪt͡ʃnɪj
-    translation: vocative
-    pos: adj
-    gender: m
-  - lemma: комплексний
-    ipa: ˈkɔmpleksnei̯
-    translation: complex; comprehensive
-    pos: adj
-    gender: f
-  - lemma: критичний
-    ipa: krɪˈtɪt͡ʃnei̯
-    translation: critical
-    pos: adj
-  - lemma: навчання
-    ipa: nɐu̯ˈt͡ʃɑnʲːɐ
-    translation: learning; study
-    pos: noun
-    gender: n
-  - lemma: навіщо
-    ipa: nɐˈviʃt͡ʃo
-    translation: why; what for
-    pos: adv
-  - lemma: називний
-    ipa: nɐˈzɪʋnɪj
-    translation: nominative
-    pos: adj
-    gender: m
-  - lemma: наприклад
-    ipa: nɐˈprɪklɑd
-    translation: for example
-    pos: adv
-  - lemma: наприкінці
-    ipa: nɐprɪkinˈt͡sʲi
-    translation: at the end
-    pos: other
-  - lemma: обирати
-    ipa: obɪˈrɑte
-    translation: to choose
-    pos: verb
-  - lemma: обррати
-    ipa: obrɐte
-    translation: to choose (typo? обрати)
-    pos: verb
-  - lemma: орудний
-    ipa: oˈrudnɪj
-    translation: instrumental
-    pos: adj
-    gender: m
-  - lemma: родовий
-    ipa: roˈdovɪj
-    translation: genitive
-    pos: adj
-    gender: m
-  - lemma: давальний
-    ipa: dɐˈvɑlʲnɪj
-    translation: dative
-    pos: adj
-    gender: m
-  - lemma: відмінок
-    ipa: vidˈminok
-    translation: grammatical case
-    pos: noun
-    gender: m
-  - lemma: місцевий
-    ipa: misˈt͡sɛvɪj
-    translation: locative
-    pos: adj
-    gender: m
-  - lemma: перевірка
-    ipa: pereˈvirkɐ
-    translation: check; verification
-    pos: noun
-    gender: f
-  - lemma: перш
-    ipa: pɛrʃ
-    translation: first (adv)
-    pos: adv
-  - lemma: петре
-    ipa: ˈpetre
-    translation: Petro (vocative)
-    pos: propn
-    gender: m
-  - lemma: повторити
-    ipa: pou̯toˈrɪte
-    translation: to repeat
-    pos: verb
-  - lemma: повторювати
-    ipa: pou̯ˈtɔrʲuʋɐte
-    translation: to repeat
-    pos: verb
-  - lemma: позначати
-    ipa: poznɐˈt͡ʃɑte
-    translation: to verify; to mark
-    pos: verb
-  - lemma: порівняти
-    ipa: poriu̯ˈnʲɑte
-    translation: to compare
-    pos: verb
-  - lemma: послідовно
-    ipa: poslʲiˈdɔu̯no
-    translation: consistently; sequentially
-    pos: adv
-  - lemma: потренуватися
-    ipa: potrenuˈʋɑtɪsʲɐ
-    translation: to practice
-    pos: verb
-  - lemma: практичний
-    ipa: prɐkˈtɪt͡ʃnei̯
-    translation: practical
-    pos: adj
-  - lemma: презентація
-    ipa: prezenˈtɑt͡sʲijɐ
-    translation: presentation
-    pos: noun
-    gender: f
-  - lemma: при
-    ipa: prɪ
-    translation: at; by; during
-    pos: other
-  - lemma: природно
-    ipa: prɪˈrɔdno
-    translation: naturally
-    pos: adv
-  - lemma: провідмінювати
-    ipa: providmiˈnʲuʋɐte
-    translation: to decline (grammar)
-    pos: verb
-  - lemma: продовжувати
-    ipa: proˈdɔu̯ʒuʋɐte
-    translation: to continue
-    pos: verb
-  - lemma: підказати
-    ipa: pidkɐˈzɑte
-    translation: to prompt; to suggest
-    pos: verb
-  - lemma: розминка
-    ipa: rozˈmɪnkɐ
-    translation: warm-up
-    pos: noun
-    gender: f
-  - lemma: розрізняти
-    ipa: rozrizˈnʲɑte
-    translation: to distinguish
-    pos: verb
-  - lemma: роль
-    ipa: rɔlʲ
-    translation: role
-    pos: noun
-    gender: f
-  - lemma: спілкування
-    ipa: spilkuˈʋɑnʲːɐ
-    translation: communication
-    pos: noun
-    gender: n
-  - lemma: ставити
-    ipa: ˈstɑʋɪte
-    translation: to put; to place
-    pos: verb
-  - lemma: стратегія
-    ipa: strɐˈtɛɦijɐ
-    translation: strategy
-    pos: noun
-    gender: f
-  - lemma: супровід
-    ipa: ˈsuproʋid
-    translation: accompaniment
-    pos: noun
-    gender: m
-  - lemma: теорія
-    ipa: teˈɔrijɐ
-    translation: theory
-    pos: noun
-    gender: f
-  - lemma: увестися
-    ipa: uˈʋɛstɪsʲɐ
-    translation: to be introduced (typo? ввестися?)
-    pos: verb
-  - lemma: формувати
-    ipa: formuˈʋɑte
-    translation: to form
-    pos: verb
-  - lemma: функіка
-    ipa: ˈfiʃkɐ
-    translation: feature? (typo? функція? фішка?)
-    pos: noun
-    gender: f
-  - lemma: чого
-    ipa: t͡ʃoˈɦɔ
-    translation: why (coll); of what
-    pos: adv
+- lemma: адресат
+  ipa: /adrɛsˈat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: виділений
+  ipa: /ʋˈɪdilɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: визначити
+  ipa: /ʋˈɪznat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: виконати
+  ipa: /ʋˈɪkɔnatɪ/
+  translation: ''
+  pos: verb
+- lemma: виконувати
+  ipa: /ʋɪkˈɔnuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: вміння
+  ipa: /ʋmˈinnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: володіння
+  ipa: /ʋɔlɔdˈinnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: втрата
+  ipa: /ʋtrˈata/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: відіграти
+  ipa: /ʋidiɦrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: віктор
+  ipa: /ʋˈiktɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: довідник
+  ipa: /dɔʋˈidnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: додати
+  ipa: /dɔdˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: згадати
+  ipa: /zɦadˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: комплексний
+  ipa: /kˈɔmplɛksnɪj/
+  translation: ''
+  pos: adj
+- lemma: критичний
+  ipa: /krɪtˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: навіщо
+  ipa: /naʋˈiʃt͡ʃɔ/
+  translation: ''
+  pos: pron
+- lemma: наприкінці
+  ipa: /naprˈɪkint͡si/
+  translation: ''
+  pos: adv
+- lemma: об'єкт
+  ipa: /ɔbˈjɛkt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обирати
+  ipa: /ɔbɪrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перевірка
+  ipa: /pɛrˈɛʋirka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: перш
+  ipa: /pɛrʃ/
+  translation: ''
+  pos: adv
+- lemma: повторити
+  ipa: /pɔʋtɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: повторювати
+  ipa: /pɔʋtˈɔrjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: позначати
+  ipa: /pɔznat͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: порядок
+  ipa: /pɔrˈjadɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: послідовно
+  ipa: /pɔslidˈɔʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: потренуватися
+  ipa: /pɔtrɛnuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: практика
+  ipa: /prˈaktɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: приказка
+  ipa: /prˈɪkazka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: природно
+  ipa: /prɪrˈɔdnɔ/
+  translation: ''
+  pos: adv
+- lemma: провідмінювати
+  ipa: /prɔʋidmˈinjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: продовжувати
+  ipa: /prɔdˈɔʋʒuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: підказати
+  ipa: /pidkazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: розрізняти
+  ipa: /rɔzriznˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: розуміння
+  ipa: /rɔzumˈinnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: роль
+  ipa: /rɔlʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: секція
+  ipa: /sˈɛkt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: система
+  ipa: /sɪstˈɛma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: спілкування
+  ipa: /spilkuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сюди
+  ipa: /sjudˈɪ/
+  translation: ''
+  pos: pron
+- lemma: теорія
+  ipa: /tɛˈɔrija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: учитися
+  ipa: /ut͡ʃˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: єднати
+  ipa: /jɛdnˈatɪ/
+  translation: ''
+  pos: verb

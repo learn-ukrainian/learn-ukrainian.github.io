@@ -2,107 +2,152 @@ module: 17-possessive-sviy
 level: A2
 version: '2.0'
 items:
+- lemma: автоматичний
+  ipa: /aʋtɔmatˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: англомовний
+  ipa: /anɦlɔmˈɔʋnɪj/
+  translation: ''
+  pos: adj
 - lemma: бізнес
-  ipa: ˈbʲiznɛs
-  translation: business
+  ipa: /bˈiznɛs/
+  translation: ''
   pos: noun
   gender: m
-- lemma: власне
-  ipa: ˈvlɑsne
-  translation: actually; strictly speaking
-  pos: adj
-  gender: n
-- lemma: власний
-  ipa: ˈvlɑsnɪj
-  translation: own; personal
-  pos: adj
+- lemma: виправити
+  ipa: /ʋˈɪpraʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вказувати
+  ipa: /ʋkˈazuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: власник
+  ipa: /ʋlˈasnɪk/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: відвідувати
+  ipa: /ʋidʋˈiduʋatɪ/
+  translation: ''
+  pos: verb
 - lemma: гостинність
-  ipa: hosˈtɪnʲːisʲtʲ
-  translation: hospitality
+  ipa: /ɦɔstˈɪnnistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: житло
-  ipa: ʒɪtˈlɔ
-  translation: housing; accommodation
+  ipa: /ʒɪtlˈɔ/
+  translation: ''
   pos: noun
   gender: n
+- lemma: завдяки
+  ipa: /zaʋdjakˈɪ/
+  translation: ''
+  pos: prep
 - lemma: кивнути
-  ipa: kɪvˈnute
-  translation: to nod (perf)
+  ipa: /kɪʋnˈutɪ/
+  translation: ''
   pos: verb
-  gender: m
 - lemma: костюм
-  ipa: koˈsʲtʲum
-  translation: suit
+  ipa: /kɔstˈjum/
+  translation: ''
   pos: noun
   gender: m
-- lemma: країна
-  ipa: krɐˈjinɐ
-  translation: country
-  pos: noun
-  gender: f
+- lemma: матися
+  ipa: /mˈatɪsja/
+  translation: ''
+  pos: verb
 - lemma: менеджер
-  ipa: ˈmɛnedʒer
-  translation: manager
+  ipa: /mˈɛnɛdʒɛr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: надіти
-  ipa: nɐˈdʲite
-  translation: to put on (perf)
+  ipa: /nadˈitɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: обійняти
-  ipa: obʲijˈnʲɑte
-  translation: to hug (perf)
+- lemma: найкращий
+  ipa: /najkrˈaʃt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: належати
+  ipa: /nalˈɛʒatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: папк
-  ipa: ˈpɑpkɐ
-  translation: folder (typo for папка)
+- lemma: неможливий
+  ipa: /nɛmɔʒlˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: неоднозначність
+  ipa: /nɛɔdnɔznˈat͡ʃnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: повернутися
-  ipa: poʋerˈnutɪsʲɐ
-  translation: to return (perf)
+- lemma: обійняти
+  ipa: /ɔbijnˈjatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: поцілувати
-  ipa: pot͡sʲiluˈʋɑte
-  translation: to kiss (perf)
-  pos: verb
+- lemma: папка
+  ipa: /pˈapka/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: попросити
+  ipa: /pɔprɔsˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: поцілувати
+  ipa: /pɔt͡siluʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: право
-  ipa: ˈprɑʋo
-  translation: right; law
+  ipa: /prˈaʋɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: рада
-  ipa: ˈrɑdɐ
-  translation: council; advice
+- lemma: природніше
+  ipa: /prɪrɔdniʃɛ/
+  translation: ''
+  pos: adv
+- lemma: продавати
+  ipa: /prɔdaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: рад
+  ipa: /rad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рекомендація
+  ipa: /rɛkɔmɛndˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: серця
-  ipa: ˈsɛrt͡sʲɐ
-  translation: hearts (pl) / heart (gen)
-  pos: noun
-  gender: m
-- lemma: сплякти
-  ipa: speˈkɫɪ
-  translation: baked (typo for спекли?)
+- lemma: складати
+  ipa: /skladˈatɪ/
+  translation: ''
   pos: verb
-- lemma: чужий
-  ipa: t͡ʃuˈʒɪj
-  translation: foreign; alien; someone else's
+- lemma: спальний
+  ipa: /spˈalʲnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: час
-  translation: time; tense
+- lemma: точний
+  ipa: /tˈɔt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: унікальний
+  ipa: /unikˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: чужий
+  ipa: /t͡ʃuʒˈɪj/
+  translation: ''
   pos: noun
-  gender: m
-  ipa: /t͡ʃɑs/
+  gender: f
 - lemma: інтерес
-  ipa: inˈtɛrɛs
-  translation: interest
+  ipa: /intɛrˈɛs/
+  translation: ''
   pos: noun
   gender: m

@@ -3,158 +3,256 @@ level: A2
 version: '2.0'
 items:
 - lemma: аспектний
-  ipa: ɐsˈpɛktnɪj
-  translation: aspectual
+  ipa: /aspˈɛktnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: більшість
-  ipa: ˈbilʲʃisʲtʲ
-  translation: majority
+  ipa: /bˈilʲʃistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: -увати
-  ipa: uʋɐte
-  translation: -uvaty (suffix)
-  pos: suffix
-- lemma: вивчення
-  ipa: ˈvɪu̯t͡ʃenʲːɐ
-  translation: learning; study
+- lemma: ват
+  ipa: /ʋat/
+  translation: ''
+  pos: noun
+- lemma: ви-
+  ipa: /ʋɪ-/
+  translation: ''
+  pos: noun
+- lemma: видалення
+  ipa: /ʋˈɪdalɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: встати
-  ipa: ˈvstɑte
-  translation: to get up; to stand up
-  pos: verb
-- lemma: глибокий
-  ipa: hlɪˈbɔkɪj
-  translation: deep
+- lemma: висновок
+  ipa: /ʋˈɪsnɔʋɔk/
+  translation: ''
+  pos: noun
+- lemma: глибший
+  ipa: /ɦlˈɪbʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: дієслово
-  ipa: dijesˈlɔʋo
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: з'їсти
-  ipa: ˈzjiste
-  translation: to eat up (perf)
+- lemma: досягати
+  ipa: /dɔsjaɦˈatɪ/
+  translation: ''
   pos: verb
+- lemma: з-
+  ipa: /z-/
+  translation: ''
+  pos: noun
 - lemma: запас
-  ipa: zɐˈpɑs
-  translation: reserve; supply
+  ipa: /zapˈas/
+  translation: ''
   pos: noun
   gender: m
-- lemma: сказати
-  ipa: skɐˈzɑte
-  translation: to say (perf)
+- lemma: збити
+  ipa: /zbˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: зламати
-  ipa: zlɐˈmɑte
-  translation: to break (perf)
+- lemma: зказати
+  ipa: /zkazatɪ/
+  translation: ''
   pos: verb
-- lemma: створити
-  ipa: stvoˈrɪte
-  translation: to create (perf)
+- lemma: значний
+  ipa: /znat͡ʃnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: зтворити
+  ipa: /ztʋɔrɪtɪ/
+  translation: ''
   pos: verb
-- lemma: ламати
-  ipa: lɐˈmɑte
-  translation: to break (imp)
-  pos: verb
-- lemma: морфологія
-  ipa: morfoˈlɔhʲijɐ
-  translation: morphology
+- lemma: корень
+  ipa: /kɔrɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лінгвістичний
+  ipa: /linɦʋistˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: література
+  ipa: /litɛratˈura/
+  translation: ''
   pos: noun
   gender: f
-- lemma: намалювати
-  ipa: nɐmɐlʲuˈʋɑte
-  translation: to draw (perf)
+- lemma: морфологічний
+  ipa: /mɔrfɔlɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: на-
+  ipa: /na-/
+  translation: ''
+  pos: noun
+- lemma: надзвичайний
+  ipa: /nadzʋɪt͡ʃˈajnɪj/
+  translation: ''
+  pos: adj
+- lemma: найнадійніший
+  ipa: /najnadˈijniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: носій
+  ipa: /nɔsˈij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: нюанс
+  ipa: /njuˈans/
+  translation: ''
+  pos: noun
+- lemma: обговорювати
+  ipa: /ɔbɦɔʋˈɔrjuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: пара
-  ipa: ˈpɑrɐ
-  translation: pair
+- lemma: оволодівши
+  ipa: /ɔʋɔlɔdˈiʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: ознака
+  ipa: /ɔznˈaka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: пантелик
+  ipa: /pantɛlˈɪk/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: передбачати
-  ipa: peredbɐˈt͡ʃɑte
-  translation: to foresee; to predict
+  ipa: /pɛrɛdbat͡ʃˈatɪ/
+  translation: ''
   pos: verb
-- lemma: переписати
-  ipa: perepɪˈsɑte
-  translation: to rewrite (perf)
-  pos: verb
-- lemma: переписувати
-  ipa: pereˈpɪsuʋɐte
-  translation: to rewrite (imp)
-  pos: verb
-- lemma: писання
-  ipa: pɪˈsɑnʲːɐ
-  translation: writing
+- lemma: по-
+  ipa: /pɔ-/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: полюбити
-  ipa: polʲuˈbɪte
-  translation: to fall in love (perf)
+- lemma: повага
+  ipa: /pɔʋˈaɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: показ
+  ipa: /pˈɔkaz/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: попрактикуватися
+  ipa: /pɔpraktɪkuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: постійно
+  ipa: /pɔstˈijnɔ/
+  translation: ''
+  pos: adv
+- lemma: представляти
+  ipa: /prɛdstaʋlˈjatɪ/
+  translation: ''
   pos: verb
 - lemma: префікс
-  ipa: ˈprɛfiks
-  translation: prefix
+  ipa: /prɛfiks/
+  translation: ''
+  pos: noun
+- lemma: префіксація
+  ipa: /prɛfiksˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: про-
+  ipa: /prɔ-/
+  translation: ''
+  pos: noun
+- lemma: проти
+  ipa: /prˈɔtɪ/
+  translation: ''
+  pos: adv
+- lemma: розвиватися
+  ipa: /rɔzʋɪʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: розпізнавання
+  ipa: /rɔzpiznaʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розтягнутий
+  ipa: /rɔztˈjaɦnutɪj/
+  translation: ''
+  pos: adj
+- lemma: с-
+  ipa: /s-/
+  translation: ''
+  pos: noun
+- lemma: сигнал
+  ipa: /sɪɦnˈal/
+  translation: ''
   pos: noun
   gender: m
-- lemma: пролежати
-  ipa: proleˈʒɑte
-  translation: to lie
-  pos: verb
-- lemma: прослухати
-  ipa: proˈsluxɐte
-  translation: to listen through/to
-  pos: verb
-- lemma: підписати
-  ipa: pidpɪˈsɑte
-  translation: to sign (perf)
-  pos: verb
-- lemma: підписувати
-  ipa: pidˈpɪsuʋɐte
-  translation: to sign (imp)
-  pos: verb
-- lemma: розпізнавати
-  ipa: rozpiznɐˈʋɑte
-  translation: to recognize
-  pos: verb
-- lemma: системно
-  ipa: sɪsˈtɛmno
-  translation: systematically
-  pos: adv
+- lemma: сильне
+  ipa: /sˈɪlʲnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: системний
+  ipa: /sɪstˈɛmnɪj/
+  translation: ''
+  pos: adj
 - lemma: словниковий
-  ipa: slou̯nɪˈkɔʋɪj
-  translation: lexical; dictionary
+  ipa: /slɔʋnɪkˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: творення
-  ipa: ˈtʋɔrenʲːɐ
-  translation: formation; creation
+- lemma: слухач
+  ipa: /sluxˈat͡ʃ/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: хаотично
-  ipa: xɐoˈtɪt͡ʃno
-  translation: chaotically
+  gender: m
+- lemma: стало
+  ipa: /stˈalɔ/
+  translation: ''
   pos: adv
-- lemma: вид
-  translation: view; aspect (grammar)
+- lemma: суплетивний
+  ipa: /suplɛtˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: суфіксація
+  ipa: /sufiksˈat͡sija/
+  translation: ''
   pos: noun
-  gender: m
-  ipa: /ʋɪd/
-- lemma: недоконаний
-  translation: imperfective
-  pos: adj
-  gender: m
-  ipa: /nedoˈkɔnɐnɪj/
-- lemma: доконаний
-  translation: perfective
-  pos: adj
-  gender: m
-  ipa: /doˈkɔnɐnɪj/
-- lemma: читання
-  ipa: t͡ʃɪˈtɑnʲːɐ
-  translation: reading
+  gender: f
+- lemma: схоже
+  ipa: /sxˈɔʒɛ/
+  translation: ''
+  pos: adv
+- lemma: творення
+  ipa: /tʋˈɔrɛnnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: точність
+  ipa: /tˈɔt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: точніший
+  ipa: /tɔt͡ʃnˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: ува-
+  ipa: /uʋa-/
+  translation: ''
+  pos: noun
+- lemma: фразовий
+  ipa: /frˈazɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: щоденний
+  ipa: /ʃt͡ʃɔdˈɛnnɪj/
+  translation: ''
+  pos: adj
+- lemma: індикатор
+  ipa: /indɪkˈatɔr/
+  translation: ''
+  pos: noun
+- lemma: історичний
+  ipa: /istɔrˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj

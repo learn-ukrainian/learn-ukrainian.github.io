@@ -2,133 +2,276 @@ module: 09-aspect-future
 level: B1
 version: '2.0'
 items:
-- lemma: бігати
-  ipa: /ˈbihatɪ/
-  translation: to run
+- lemma: амбітно
+  ipa: /ambˈitnɔ/
+  translation: ''
+  pos: adv
+- lemma: аналогічний
+  ipa: /analɔɦˈit͡ʃnɪj/
+  translation: ''
   pos: adj
+- lemma: анкетування
+  ipa: /ankɛtuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: березна
+  ipa: /bɛrˈɛzna/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: вибирати
+  ipa: /ʋɪbɪrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: використаний
+  ipa: /ʋˈɪkɔrɪstanɪj/
+  translation: ''
+  pos: adj
 - lemma: ворожити
-  ipa: /vɔrɔˈʒɪtɪ/
-  translation: to tell fortunes
+  ipa: /ʋɔrɔʒˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: ворожіння
-  ipa: /vɔrɔˈʒinʲːa/
-  translation: fortune telling
+  ipa: /ʋɔrɔʒˈinnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: дві
-  ipa: /dvʲi/
-  translation: two (fem.)
-  pos: other
+- lemma: вплив
+  ipa: /ʋplɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вступний
+  ipa: /ʋstupnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: глава
+  ipa: /ɦlaʋˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: гнучкість
+  ipa: /ɦnˈut͡ʃkistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дисертація
+  ipa: /dɪsɛrtˈat͡sija/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: докторант
-  ipa: /dɔktɔˈrant/
-  translation: doctoral student
+  ipa: /dɔktɔrˈant/
+  translation: ''
   pos: noun
   gender: m
-- lemma: діалектизм
-  ipa: /dʲialɛkˈtɪzm/
-  translation: dialectism
-  pos: noun
-  gender: m
-- lemma: екзамена
-  ipa: /ɛkˈzamɛna/
-  translation: exam (gen.)
-  pos: noun
-  gender: m
-- lemma: завтрашній
-  ipa: /zau̯ˈtraʃnʲij/
-  translation: tomorrow's
-  pos: adj
-- lemma: збирати
-  ipa: /zbɪˈratɪ/
-  translation: to collect
-  pos: verb
-- lemma: зіпсута
-  ipa: /zʲipˈsuta/
-  translation: spoiled (fem.)
+- lemma: доля
+  ipa: /dˈɔlja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: канікули
-  ipa: /kaˈnʲikulɪ/
-  translation: vacation
+- lemma: дослідницький
+  ipa: /dɔslˈidnɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: діалектизм
+  ipa: /dialɛktˈɪzm/
+  translation: ''
   pos: noun
-  gender: pl
+- lemma: економічний
+  ipa: /ɛkɔnɔmˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: емпіричний
+  ipa: /ɛmpirˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: журналістика
+  ipa: /ʒurnalˈistɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: журналістський
+  ipa: /ʒurnalˈistsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: застаріти
+  ipa: /zastˈaritɪ/
+  translation: ''
+  pos: verb
+- lemma: захист
+  ipa: /zˈaxɪst/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: зберегтися
+  ipa: /zbɛrɛɦtˈɪsja/
+  translation: ''
+  pos: verb
+- lemma: змішування
+  ipa: /zmˈiʃuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: зібраний
+  ipa: /zˈibranɪj/
+  translation: ''
+  pos: adj
+- lemma: зіпсутий
+  ipa: /zipsˈutɪj/
+  translation: ''
+  pos: adj
+- lemma: ймовірно
+  ipa: /jmɔʋˈirnɔ/
+  translation: ''
+  pos: adv
+- lemma: курсовий
+  ipa: /kursɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: літературно
+  ipa: /litɛratˈurnɔ/
+  translation: ''
+  pos: adv
 - lemma: маргіналізувати
-  ipa: /marɦinalʲizuˈvatɪ/
-  translation: to marginalize
+  ipa: /marɦinalizuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: молодь
+  ipa: /mˈɔlɔdʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: називаючи
+  ipa: /nazɪʋˈajut͡ʃɪ/
+  translation: ''
   pos: verb
 - lemma: невідворотний
-  ipa: /nɛvidvɔˈrɔtnɪj/
-  translation: inevitable
+  ipa: /nɛʋidʋɔrˈɔtnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: новорічний
-  ipa: /nɔvɔˈrʲit͡ʃnɪj/
-  translation: New Year's
+  ipa: /nɔʋɔrˈit͡ʃnɪj/
+  translation: ''
   pos: adj
 - lemma: опрацьовувати
-  ipa: /ɔprat͡sʲˈɔvuvatɪ/
-  translation: to process
+  ipa: /ɔprat͡sʲˈɔʋuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: органічний
-  ipa: /ɔrɦaˈnʲit͡ʃnɪj/
-  translation: organic
+  ipa: /ɔrɦanˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: орендувати
-  ipa: /ɔrɛnduˈvatɪ/
-  translation: to rent
+- lemma: перебувати
+  ipa: /pɛrɛbuʋˈatɪ/
+  translation: ''
   pos: verb
+- lemma: пожати
+  ipa: /pɔʒˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: показник
+  ipa: /pɔkˈaznɪk/
+  translation: ''
+  pos: noun
 - lemma: полонізм
-  ipa: /pɔlɔˈnʲizm/
-  translation: Polonism
+  ipa: /pɔlɔnˈizm/
+  translation: ''
+  pos: noun
+- lemma: політик
+  ipa: /pɔlˈitɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: прадавній
-  ipa: /praˈdau̯nʲij/
-  translation: ancient
-  pos: adj
-  gender: f
-- lemma: соня
-  ipa: /ˈsɔnʲa/
-  translation: Sonya
-  pos: propn
-  gender: f
-- lemma: темо
-  ipa: /ˈtɛmɔ/
-  translation: theme (vocative)
-  pos: noun
-  gender: n
-- lemma: тете
-  ipa: /ˈtɛtɛ/
-  translation: Tete
-  pos: noun
-  gender: n
-- lemma: тиме
-  ipa: /ˈtɪmɛ/
-  translation: will (suffix 3sg)
-  pos: other
-- lemma: тиму
-  ipa: /ˈtɪmu/
-  translation: will (suffix 1sg)
-  pos: other
-- lemma: утворитися
-  ipa: /utvɔˈrɪtɪsʲa/
-  translation: to be formed
+- lemma: помітити
+  ipa: /pɔmˈitɪtɪ/
+  translation: ''
   pos: verb
+- lemma: посіяти
+  ipa: /pɔsˈijatɪ/
+  translation: ''
+  pos: verb
+- lemma: прадавній
+  ipa: /pradˈaʋnij/
+  translation: ''
+  pos: adj
+- lemma: представити
+  ipa: /prɛdstˈaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: принаймні
+  ipa: /prɪnˈajmni/
+  translation: ''
+  pos: adv
+- lemma: проміжний
+  ipa: /prɔmˈiʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: підкреслення
+  ipa: /pidkrˈɛslɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: рамка
+  ipa: /rˈamka/
+  translation: ''
+  pos: noun
+- lemma: соня
+  ipa: /sˈɔnja/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: іма
-  ipa: /ˈima/
-  translation: will (suffix 1pl)
+- lemma: спадок
+  ipa: /spˈadɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: іспанська
-  ipa: /iˈspanʲsʲka/
-  translation: Spanish
+- lemma: староукраїнський
+  ipa: /starɔukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: сти
+  ipa: /stɪ/
+  translation: ''
+  pos: verb
+- lemma: стило
+  ipa: /stɪlˈɔ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: їздити
-  ipa: /ˈjizdɪtɪ/
-  translation: to ride/go
+  gender: n
+- lemma: тет
+  ipa: /tɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: технічно
+  ipa: /tɛxnˈit͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: уривок
+  ipa: /urˈɪʋɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: утворитися
+  ipa: /utʋɔrˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: формування
+  ipa: /fɔrmuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: щомісяця
+  ipa: /ʃt͡ʃɔmˈisjat͡sja/
+  translation: ''
+  pos: adv
+- lemma: іму
+  ipa: /imu/
+  translation: ''
+  pos: noun
+- lemma: їдити
+  ipa: /jidɪtɪ/
+  translation: ''
   pos: verb

@@ -1,79 +1,170 @@
 module: 61-hotel-accommodation
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: готель
-  translation: hotel
+- lemma: адміністратор
+  ipa: /administrˈatɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: бронювання
-  translation: reservation
-  pos: noun
-  gender: n
-- lemma: номер
-  translation: room (hotel)
-  pos: noun
-  gender: m
-- lemma: одномісний
-  translation: single (room)
-  pos: adj
-- lemma: двомісний
-  translation: double (room)
-  pos: adj
-- lemma: люкс
-  translation: suite
-  pos: noun
-  gender: m
-- lemma: сніданок включено
-  translation: breakfast included
-  pos: phrase
-- lemma: кондиціонер
-  translation: air conditioning
-  pos: noun
-  gender: m
-- lemma: ключ-картка
-  translation: key card
-  pos: noun
-  gender: f
-- lemma: рецепція
-  translation: reception
-  pos: noun
-  gender: f
-- lemma: портьє
-  translation: receptionist
-  pos: noun
-  gender: m
-- lemma: виїзд
-  translation: checkout
-  pos: noun
-  gender: m
-- lemma: залишити багаж
-  translation: leave luggage
-  pos: phrase
-- lemma: скарга
-  translation: complaint
-  pos: noun
-  gender: f
-- lemma: послуга
-  translation: service
-  pos: noun
-  gender: f
 - lemma: багаж
-  translation: luggage
+  ipa: /baɦˈaʒ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: картка
-  translation: card
+- lemma: бронювати
+  ipa: /brɔnjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: вай-фай
+  ipa: /ʋaj-faj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: заселитися
+  ipa: /zasɛlˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: заселятися
+  ipa: /zasɛlˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: заїзд
+  ipa: /zaˈjizd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кавомашина
+  ipa: /kaʋɔmaʃɪna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: включено
-  translation: included
+- lemma: ключ-картка
+  ipa: /kljut͡ʃ-kˈartka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: комфорт
+  ipa: /kɔmfˈɔrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: комфортно
+  ipa: /kɔmfˈɔrtnɔ/
+  translation: ''
   pos: adv
-- lemma: вид
-  translation: view
+- lemma: кондиціонер
+  ipa: /kɔndɪt͡siɔnˈɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: час
-  translation: time
+- lemma: леополіс
+  ipa: /lɛɔpɔlis/
+  translation: ''
   pos: noun
   gender: m
+- lemma: люкс
+  ipa: /ljuks/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ліга
+  ipa: /lˈiɦa/
+  translation: ''
+  pos: noun
+- lemma: ліфт
+  ipa: /lift/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: майстер
+  ipa: /mˈajstɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: млинці
+  ipa: /mlɪnt͡sˈi/
+  translation: ''
+  pos: noun
+- lemma: міллер
+  ipa: /mˈillɛr/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: міні-бар
+  ipa: /mˈini-bar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: незручність
+  ipa: /nɛzrˈut͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: номерок
+  ipa: /nɔmɛrˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: нічний
+  ipa: /nit͡ʃnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: омлет
+  ipa: /ɔmlˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: оплатити
+  ipa: /ɔplatˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: п'ятизірковий
+  ipa: /pjatɪzirkˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: портьє
+  ipa: /pɔrtʲˈjɛ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: привітатися
+  ipa: /prɪʋitˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: прислати
+  ipa: /prɪslˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: рецепція
+  ipa: /rɛt͡sˈɛpt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сміт
+  ipa: /smit/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стандарт
+  ipa: /standˈart/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тапці
+  ipa: /tapt͡si/
+  translation: ''
+  pos: noun
+- lemma: хол
+  ipa: /xɔl/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хостел
+  ipa: /xɔstɛl/
+  translation: ''
+  pos: noun
+- lemma: шведський
+  ipa: /ʃʋˈɛdsʲkɪj/
+  translation: ''
+  pos: adj

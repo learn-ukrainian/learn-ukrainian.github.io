@@ -2,235 +2,343 @@ module: 16-motion-verbs-full-system
 level: B1
 version: '2.0'
 items:
-- lemma: бігати
-  ipa: /ˈbihatɪ/
-  translation: to run
-  pos: verb
-- lemma: вести
-  ipa: /vɛsˈtɪ/
-  translation: to lead
-  pos: propn
+- lemma: автомобіль
+  ipa: /aʋtɔmɔbˈilʲ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: високогірний
-  ipa: /vɪsɔkɔˈhʲirnɪj/
-  translation: high-mountain
+- lemma: басейний
+  ipa: /basˈɛjnɪj/
+  translation: ''
   pos: adj
-- lemma: водоспад
-  ipa: /vɔdɔˈspad/
-  translation: waterfall
+- lemma: вантажівка
+  ipa: /ʋantaʒˈiʋka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: воліти
-  ipa: /vɔˈlʲitɪ/
-  translation: to prefer
+  gender: f
+- lemma: високогірний
+  ipa: /ʋɪsɔkɔɦˈirnɪj/
+  translation: ''
+  pos: adj
+- lemma: витися
+  ipa: /ʋˈɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: ганяти
-  ipa: /haˈnʲatɪ/
-  translation: to chase
+- lemma: водопій
+  ipa: /ʋɔdɔpˈij/
+  translation: ''
   pos: noun
   gender: m
+- lemma: враховувати
+  ipa: /ʋraxˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: вівця
+  ipa: /ʋiʋt͡sˈja/
+  translation: ''
+  pos: noun
+- lemma: віз
+  ipa: /ʋiz/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: віл
+  ipa: /ʋil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ганяти
+  ipa: /ɦanˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: гнат
+  ipa: /ɦnat/
+  translation: ''
+  pos: noun
 - lemma: гнати
-  ipa: /hnatɪ/
-  translation: to drive/chase
+  ipa: /ɦnˈatɪ/
+  translation: ''
   pos: verb
 - lemma: голосіївський
-  ipa: /hɔlɔˈsʲijiu̯sʲkɪj/
-  translation: Holosiivskyi
+  ipa: /ɦɔlɔsˈijiʋsʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: даватися
-  ipa: /daˈvatɪsʲa/
-  translation: to be given
+  ipa: /daʋˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: депо
-  ipa: /dɛˈpɔ/
-  translation: depot
+  ipa: /dɛpˈɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: дуба
-  ipa: /ˈduba/
-  translation: oak (gen.)
-  pos: noun
-  gender: m
+- lemma: днями
+  ipa: /dnˈjamɪ/
+  translation: ''
+  pos: adv
+- lemma: доводитися
+  ipa: /dɔʋɔdɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: женити
+  ipa: /ʒɛnˈɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: заєць
-  ipa: /ˈzajɛt͡sʲ/
-  translation: hare
+  ipa: /zˈajɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: змія
   ipa: /zmiˈja/
-  translation: snake
+  translation: ''
   pos: noun
   gender: f
-- lemma: коза
-  ipa: /kɔˈza/
-  translation: goat
-  pos: noun
-  gender: f
-- lemma: колесо
-  ipa: /ˈkɔlɛsɔ/
-  translation: wheel
+- lemma: кача
+  ipa: /kat͡ʃˈa/
+  translation: ''
   pos: noun
   gender: n
-- lemma: комфортно
-  ipa: /kɔmˈfɔrtnɔ/
-  translation: comfortably
-  pos: adv
+- lemma: качатися
+  ipa: /kat͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: коза
+  ipa: /kɔzˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: корова
+  ipa: /kɔrˈɔʋa/
+  translation: ''
+  pos: noun
 - lemma: котити
-  ipa: /kɔˈtɪtɪ/
-  translation: to roll
+  ipa: /kɔtˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: котитися
-  ipa: /kɔˈtɪtɪsʲa/
-  translation: to roll (self)
+  ipa: /kɔtˈɪtɪsja/
+  translation: ''
   pos: verb
 - lemma: котячий
-  ipa: /kɔˈtʲat͡ʃɪj/
-  translation: cat's
+  ipa: /kɔtˈjat͡ʃɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: круглий
+  ipa: /krˈuɦlɪj/
+  translation: ''
+  pos: adj
+- lemma: кінь
+  ipa: /kinʲ/
+  translation: ''
+  pos: noun
 - lemma: лазити
-  ipa: /ˈlazɪtɪ/
-  translation: to crawl
-  pos: noun
-  gender: m
-- lemma: лізти
-  ipa: /ˈlʲiztɪ/
-  translation: to climb
+  ipa: /lˈazɪtɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: м'яч
-  ipa: /mjat͡ʃ/
-  translation: ball
+- lemma: ліз
+  ipa: /liz/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
+- lemma: лізти
+  ipa: /lˈiztɪ/
+  translation: ''
+  pos: verb
+- lemma: літати
+  ipa: /litˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: марафон
-  ipa: /maraˈfɔn/
-  translation: marathon
+  ipa: /marafˈɔn/
+  translation: ''
   pos: noun
   gender: m
 - lemma: марічка
-  ipa: /maˈrʲit͡ʃka/
-  translation: Marichka
-  pos: propn
+  ipa: /marit͡ʃka/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: мішка
+  ipa: /miʃkˈa/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: немовля
-  ipa: /nɛmɔu̯ˈlʲa/
-  translation: infant
+  ipa: /nɛmɔʋlˈja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: ноша
-  ipa: /ˈnɔʃa/
-  translation: burden
+  ipa: /nˈɔʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: ніж
-  ipa: /nʲiʒ/
-  translation: knife
+- lemma: ноші
+  ipa: /nˈɔʃi/
+  translation: ''
   pos: noun
-  gender: f
+- lemma: образ
+  ipa: /ˈɔbraz/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: односпрямований
-  ipa: /ɔdnɔsprʲaˈmɔvanɪj/
-  translation: unidirectional
+  ipa: /ɔdnɔsprjamˈɔʋanɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: освоїти
-  ipa: /ɔˈsvɔjɪtɪ/
-  translation: to master
+  ipa: /ɔsʋˈɔjitɪ/
+  translation: ''
   pos: verb
+- lemma: острова
+  ipa: /ˈɔstrɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: отара
+  ipa: /ɔtˈara/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: пастух
-  ipa: /pasˈtux/
-  translation: shepherd
+  ipa: /pastˈux/
+  translation: ''
   pos: noun
   gender: m
-- lemma: пильнувати
-  ipa: /pɪlʲnuˈvatɪ/
-  translation: to watch over
+- lemma: переслідувати
+  ipa: /pɛrɛslˈiduʋatɪ/
+  translation: ''
   pos: verb
-- lemma: плавати
-  ipa: /ˈplavatɪ/
-  translation: to swim
+- lemma: пильнувати
+  ipa: /pɪlʲnuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: пливти
+  ipa: /plɪʋtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: повзати
+  ipa: /pˈɔʋzatɪ/
+  translation: ''
   pos: verb
 - lemma: повзти
-  ipa: /pɔu̯zˈtɪ/
-  translation: to crawl
+  ipa: /pɔʋztˈɪ/
+  translation: ''
   pos: verb
+- lemma: полювання
+  ipa: /pɔljuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: політ
+  ipa: /pɔlˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: потрібне
+  ipa: /pɔtrˈibnɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: прискорювати
-  ipa: /prɪˈskɔrʲuvatɪ/
-  translation: to accelerate
+  ipa: /prɪskˈɔrjuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: пролазити
-  ipa: /prɔˈlazɪtɪ/
-  translation: to crawl through
+  ipa: /prɔlˈazɪtɪ/
+  translation: ''
   pos: verb
-- lemma: пішка
-  ipa: /ˈpiʃka/
-  translation: pawn
-  pos: noun
-  gender: m
-- lemma: різноспрямований
-  ipa: /rʲiznɔsprʲaˈmɔvanɪj/
-  translation: multidirectional
+- lemma: просторовий
+  ipa: /prɔstɔrˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: різноспрямований
+  ipa: /riznɔsprjamˈɔʋanɪj/
+  translation: ''
+  pos: adj
 - lemma: самогон
-  ipa: /samɔˈhɔn/
-  translation: moonshine
+  ipa: /samɔɦˈɔn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: санок
-  ipa: /saˈnɔk/
-  translation: sled (gen. pl.)
-  pos: noun
-  gender: m
-- lemma: санчат
-  ipa: /sanˈt͡ʃat/
-  translation: sleds (gen. pl.)
+- lemma: спершу
+  ipa: /spˈɛrʃu/
+  translation: ''
+  pos: adv
+- lemma: старослов'янський
+  ipa: /starɔslɔʋˈjansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: тичина
+  ipa: /tɪt͡ʃˈɪna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: спершу
-  ipa: /ˈspɛrʃu/
-  translation: at first
-  pos: adv
+- lemma: тощо
+  ipa: /tˈɔʃt͡ʃɔ/
+  translation: ''
+  pos: part
 - lemma: транзитивний
-  ipa: /tranzɪˈtɪvnɪj/
-  translation: transitive
+  ipa: /tranzɪtˈɪʋnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: транспортування
-  ipa: /transpɔrtuˈvanʲːa/
-  translation: transportation
+  ipa: /transpɔrtuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: транспортуватися
-  ipa: /transpɔrtuˈvatɪsʲa/
-  translation: to be transported
+  ipa: /transpɔrtuʋˈatɪsja/
+  translation: ''
   pos: verb
+- lemma: туди-сюди
+  ipa: /tudˈɪ-sjudɪ/
+  translation: ''
+  pos: adv
 - lemma: тягати
-  ipa: /tʲaˈhatɪ/
-  translation: to drag/pull
+  ipa: /tjaɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: тягнути
+  ipa: /tjaɦnˈutɪ/
+  translation: ''
   pos: verb
 - lemma: тягти
-  ipa: /tʲahˈtɪ/
-  translation: to pull/drag
+  ipa: /tjaɦtˈɪ/
+  translation: ''
   pos: verb
-- lemma: хмеля
-  ipa: /ˈxmɛlʲa/
-  translation: hops (gen.)
+- lemma: хмель
+  ipa: /xmɛlʲ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: чабан
-  ipa: /t͡ʃaˈban/
-  translation: shepherd
-  pos: propn
-  gender: m
-- lemma: щедрівка
-  ipa: /ʃt͡ʃɛˈdriu̯ka/
-  translation: shchedrivka
+  ipa: /t͡ʃabˈan/
+  translation: ''
   pos: noun
   gender: m
+- lemma: черепаха
+  ipa: /t͡ʃɛrɛpˈaxa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: човен
+  ipa: /t͡ʃˈɔʋɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: щедрівка
+  ipa: /ʃt͡ʃɛdrˈiʋka/
+  translation: ''
+  pos: noun
+- lemma: іграшка
+  ipa: /ˈiɦraʃka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: їзда
-  ipa: /jizˈda/
-  translation: riding
+  ipa: /jizdˈa/
+  translation: ''
   pos: noun
   gender: f

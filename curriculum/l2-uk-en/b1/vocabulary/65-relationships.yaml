@@ -2,136 +2,190 @@ module: 65-relationships
 level: B1
 version: '2.0'
 items:
+- lemma: болячий
+  ipa: /bɔlˈjat͡ʃɪj/
+  translation: ''
+  pos: adj
 - lemma: весільний
-  ipa: /vɛˈsʲilʲnɪj/
-  translation: wedding (adj)
+  ipa: /ʋɛsˈilʲnɪj/
+  translation: ''
   pos: adj
 - lemma: взаємини
-  ipa: /vzaˈjɛmɪnɪ/
-  translation: relations
+  ipa: /ʋzaˈjɛmɪnɪ/
+  translation: ''
   pos: noun
-  gender: pl
+- lemma: взаємний
+  ipa: /ʋzaˈjɛmnɪj/
+  translation: ''
+  pos: adj
 - lemma: викуп
-  ipa: /ˈvɪkup/
-  translation: ransom
+  ipa: /ʋˈɪkup/
+  translation: ''
   pos: noun
   gender: m
-- lemma: влаштовувати
-  ipa: /vlaʃˈtɔvuvatɪ/
-  translation: to arrange
+- lemma: виносити
+  ipa: /ʋɪnɔsɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вирішуватися
+  ipa: /ʋɪrˈiʃuʋatɪsja/
+  translation: ''
   pos: verb
 - lemma: вінок
-  ipa: /viˈnɔk/
-  translation: wreath
+  ipa: /ʋinˈɔk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: вінчання
-  ipa: /vinˈt͡ʃanʲːa/
-  translation: church wedding
+  ipa: /ʋint͡ʃˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: гарбуза
-  ipa: /harbuˈza/
-  translation: pumpkin (gen.)
+- lemma: вірність
+  ipa: /ʋˈirnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: гарбуз
+  ipa: /ɦarbˈuz/
+  translation: ''
   pos: noun
   gender: m
-- lemma: дара
-  ipa: /ˈdara/
-  translation: Dara
+- lemma: дар
+  ipa: /dar/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: дружити
-  ipa: /druˈʒɪtɪ/
-  translation: to be friends
+- lemma: два-три
+  ipa: /dʋa-trɪ/
+  translation: ''
+  pos: num
+- lemma: з'єднання
+  ipa: /zjɛdnannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: зрада
+  ipa: /zrˈada/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зрілість
+  ipa: /zrˈilistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: молодята
+  ipa: /mɔlɔdˈjata/
+  translation: ''
+  pos: noun
+- lemma: наречений
+  ipa: /narɛt͡ʃˈɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: неминучий
+  ipa: /nɛmɪnˈut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: неправий
+  ipa: /nɛprˈaʋɪj/
+  translation: ''
+  pos: adj
+- lemma: обряд
+  ipa: /ɔbrˈjad/
+  translation: ''
+  pos: noun
+- lemma: оспівувати
+  ipa: /ɔspˈiʋuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: дружний
-  ipa: /ˈdruʒnɪj/
-  translation: friendly
-  pos: adj
-- lemma: дідус
-  ipa: /diˈdus/
-  translation: grandpa (typo)
-  pos: noun
-  gender: m
-- lemma: згаслий
-  ipa: /ˈzhaslɪj/
-  translation: faded
-  pos: adj
-  gender: f
-- lemma: молодя
-  ipa: /mɔlɔˈdʲa/
-  translation: newlyweds (trunc)
-  pos: noun
-  gender: m
-- lemma: наречена
-  ipa: /narɛˈt͡ʃɛna/
-  translation: bride
-  pos: noun
-  gender: f
-- lemma: наречене
-  ipa: /narɛˈt͡ʃɛnɛ/
-  translation: fiancé (typo)
-  pos: noun
-  gender: m
 - lemma: погарячкувати
-  ipa: /pɔharʲat͡ʃkuˈvatɪ/
-  translation: to act rashly
+  ipa: /pɔɦarjat͡ʃkuʋˈatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: покохати
-  ipa: /pɔkɔˈxatɪ/
-  translation: to fall in love
-  pos: verb
-- lemma: рацсі
-  ipa: /ˈrat͡ssʲi/
-  translation: registry office (loc.)
-  pos: propn
+- lemma: прив'язаність
+  ipa: /prɪʋˈjazanistʲ/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: розлучення
-  ipa: /rɔzˈlut͡ʃɛnʲːa/
-  translation: divorce
+- lemma: примирення
+  ipa: /prɪmˈɪrɛnnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: протистояння
+  ipa: /prɔtɪstɔˈjannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: прояв
+  ipa: /prˈɔjaʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: півроку
+  ipa: /piʋrɔku/
+  translation: ''
+  pos: noun
+- lemma: рацс
+  ipa: /rat͡ss/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ритуал
+  ipa: /rɪtuˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: романтик
+  ipa: /rɔmˈantɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: романтика
+  ipa: /rɔmˈantɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: романтичний
+  ipa: /rɔmantˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: сватання
-  ipa: /ˈsvatanʲːa/
-  translation: matchmaking
+  ipa: /sʋˈatannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: скрай
-  ipa: /skraj/
-  translation: from the edge
-  pos: noun
-  gender: m
+- lemma: символізувати
+  ipa: /sɪmʋɔlizuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: соловій
-  ipa: /sɔlɔˈvij/
-  translation: Soloviy
-  pos: propn
-  gender: f
-- lemma: соціологія
-  ipa: /sɔt͡sʲiɔˈlɔhija/
-  translation: sociology
+  ipa: /sɔlɔʋˈij/
+  translation: ''
   pos: noun
   gender: f
 - lemma: спір
   ipa: /spir/
-  translation: dispute
+  translation: ''
   pos: noun
   gender: m
-- lemma: товаришувати
-  ipa: /tɔvarɪʃuˈvatɪ/
-  translation: to be friends
+- lemma: укласти
+  ipa: /uklˈastɪ/
+  translation: ''
   pos: verb
 - lemma: хворобливий
-  ipa: /xvɔrɔˈblɪvɪj/
-  translation: sickly
+  ipa: /xʋɔrɔblˈɪʋɪj/
+  translation: ''
   pos: adj
-- lemma: христина
-  ipa: /xrɪsˈtɪna/
-  translation: Khrystyna
-  pos: propn
-  gender: f
-- lemma: інтимність
-  ipa: /inˈtɪmnʲisʲtʲ/
-  translation: intimacy
+- lemma: хлібом-сіллю
+  ipa: /xlˈibɔm-sillju/
+  translation: ''
+  pos: adv
+- lemma: христини
+  ipa: /xrɪstˈɪnɪ/
+  translation: ''
   pos: noun
-  gender: f
+- lemma: явно
+  ipa: /ˈjaʋnɔ/
+  translation: ''
+  pos: adv

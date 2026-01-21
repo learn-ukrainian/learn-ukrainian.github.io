@@ -2,271 +2,510 @@ module: 22-tomorrow-future-tense
 level: A1
 version: '2.0'
 items:
-  - lemma: більше
-    ipa: /ˈbilʲʃɛ/
-    translation: more
-    pos: adv
-  - lemma: весна
-    ipa: /vɛsˈnɑ/
-    translation: spring
-    pos: noun
-    gender: f
-  - lemma: вирішити
-    ipa: /vɪˈriʃɪtɪ/
-    translation: to decide
-    pos: verb
-  - lemma: впевненість
-    ipa: /ˈvpɛvnɛnisʲtʲ/
-    translation: certainty
-    pos: noun
-    gender: f
-  - lemma: вчасно
-    ipa: /ˈvt͡ʃɑsnɔ/
-    translation: on time
-    pos: adv
-  - lemma: відвідати
-    ipa: /vidˈvidɑtɪ/
-    translation: to visit
-    pos: verb
-  - lemma: довідка
-    ipa: /ˈdɔvidkɑ/
-    translation: reference/certificate
-    pos: noun
-    gender: f
-  - lemma: допомогти
-    ipa: /dɔpɔmɔɦˈtɪ/
-    translation: to help
-    pos: verb
-  - lemma: дієслово
-    ipa: /dijɛˈslɔvɔ/
-    translation: verb
-    pos: noun
-    gender: n
-  - lemma: запізнюватися
-    ipa: /zɑˈpiznʲuvɑtɪsʲɑ/
-    translation: to be late
-    pos: verb
-  - lemma: зателефонувати
-    ipa: /zɑtɛlɛfɔnuˈvɑtɪ/
-    translation: to call (phone)
-    pos: verb
-  - lemma: збиратися
-    ipa: /zbɪˈrɑtɪsʲɑ/
-    translation: to gather/intend
-    pos: verb
-  - lemma: згодом
-    ipa: /ˈzɦɔdɔm/
-    translation: eventually
-    pos: adv
-  - lemma: змогти
-    ipa: /zmɔɦˈtɪ/
-    translation: to be able
-    pos: verb
-  - lemma: зрозуміти
-    ipa: /zrɔzuˈmitɪ/
-    translation: to understand
-    pos: verb
-  - lemma: інфінітив
-    ipa: /infiniˈtɪv/
-    translation: infinitive
-    pos: noun
-    gender: m
-  - lemma: котрий
-    ipa: /kɔtˈrɪj/
-    translation: which
-    pos: adj
-    gender: m
-  - lemma: курс
-    ipa: /kurs/
-    translation: course
-    pos: noun
-    gender: m
-  - lemma: кіно
-    ipa: /kiˈnɔ/
-    translation: cinema
-    pos: noun
-    gender: n
-  - lemma: майбутнє
-    ipa: /mɑjˈbutnʲɛ/
-    translation: future
-    pos: noun
-    gender: n
-  - lemma: буду
-    ipa: /ˈbudu/
-    translation: will be (I)
-    pos: verb
-  - lemma: обов'язково
-    ipa: /ɔbɔˈwjɑzkɔvɔ/
-    translation: definitely/necessarily
-    pos: adv
-  - lemma: наступного
-    ipa: /nɑˈstupnɔɦɔ/
-    translation: next (genitive)
-    pos: adj
-  - lemma: тижня
-    ipa: /ˈtɪʒnʲɑ/
-    translation: of the week
-    pos: noun
-  - lemma: місяця
-    ipa: /ˈmisʲɑt͡sʲɑ/
-    translation: of the month
-    pos: noun
-  - lemma: року
-    ipa: /ˈrɔku/
-    translation: of the year
-    pos: noun
-  - lemma: післязавтра
-    ipa: /pislʲɑˈzɑwtrɑ/
-    translation: day after tomorrow
-    pos: adv
-  - lemma: завтра
-    ipa: /ˈzɑwtrɑ/
-    translation: tomorrow
-    pos: adv
-  - lemma: скоро
-    ipa: /ˈskɔrɔ/
-    translation: soon
-    pos: adv
-  - lemma: пізніше
-    ipa: /pizˈniʃɛ/
-    translation: later
-    pos: adv
-  - lemma: потім
-    ipa: /ˈpɔtim/
-    translation: then/afterwards
-    pos: adv
-  - lemma: згодом
-    ipa: /ˈzɦɔdɔm/
-    translation: eventually
-    pos: adv
-  - lemma: мрія
-    ipa: /ˈmrijɑ/
-    translation: dream
-    pos: noun
-    gender: f
-  - lemma: мріяти
-    ipa: /ˈmrijɑtɪ/
-    translation: to dream
-    pos: verb
-  - lemma: надія
-    ipa: /nɑˈdijɑ/
-    translation: hope
-    pos: noun
-    gender: f
-  - lemma: намір
-    ipa: /ˈnɑmir/
-    translation: intention
-    pos: noun
-    gender: m
-  - lemma: обіцяти
-    ipa: /ɔbiˈt͡sʲɑtɪ/
-    translation: to promise
-    pos: verb
-  - lemma: одружитися
-    ipa: /ɔdruˈʒɪtɪsʲɑ/
-    translation: to marry
-    pos: verb
-  - lemma: особа
-    ipa: /ɔˈsɔbɑ/
-    translation: person
-    pos: noun
-    gender: f
-  - lemma: планування
-    ipa: /plɑnuˈvɑnʲːɑ/
-    translation: planning
-    pos: noun
-    gender: n
-  - lemma: планувати
-    ipa: /plɑnuˈvɑtɪ/
-    translation: to plan
-    pos: verb
-  - lemma: побачити
-    ipa: /pɔˈbɑt͡ʃɪtɪ/
-    translation: to see
-    pos: verb
-  - lemma: побачитися
-    ipa: /pɔˈbɑt͡ʃɪtɪsʲɑ/
-    translation: to see each other
-    pos: verb
-  - lemma: погода
-    ipa: /pɔˈhɔdɑ/
-    translation: weather
-    pos: noun
-    gender: f
-  - lemma: подзвонити
-    ipa: /pɔdzvɔˈnɪtɪ/
-    translation: to call
-    pos: verb
-  - lemma: постаратися
-    ipa: /pɔstɑˈrɑtɪsʲɑ/
-    translation: to try hard
-    pos: verb
-  - lemma: почати
-    ipa: /pɔˈt͡ʃɑtɪ/
-    translation: to start
-    pos: verb
-  - lemma: прибирати
-    ipa: /prɪbɪˈrɑtɪ/
-    translation: to clean
-    pos: verb
-  - lemma: приклад
-    ipa: /ˈprɪklɑd/
-    translation: example
-    pos: noun
-    gender: m
-  - lemma: прислівник
-    ipa: /prɪˈslivnɪk/
-    translation: adverb
-    pos: noun
-    gender: m
-  - lemma: пізніше
-    ipa: /pizˈniʃɛ/
-    translation: later
-    pos: adv
-  - lemma: післязавтра
-    ipa: /pislʲɑˈzɑwtrɑ/
-    translation: day after tomorrow
-    pos: adv
-  - lemma: рівень
-    ipa: /ˈrivɛnʲ/
-    translation: level
-    pos: noun
-    gender: m
-  - lemma: святкувати
-    ipa: /svjɑtkuˈvɑtɪ/
-    translation: to celebrate
-    pos: verb
-  - lemma: скоро
-    ipa: /ˈskɔrɔ/
-    translation: soon
-    pos: adv
-  - lemma: сподіватися
-    ipa: /spɔdiˈvɑtɪsʲɑ/
-    translation: to hope
-    pos: verb
-  - lemma: стати
-    ipa: /ˈstɑtɪ/
-    translation: to become
-    pos: verb
-  - lemma: японський
-    ipa: /jɑˈpɔnsʲkɪj/
-    translation: Japanese
-    pos: adj
-    gender: m
-  - lemma: японія
-    ipa: /jɑˈpɔnijɑ/
-    translation: Japan
-    pos: propn
-    gender: f
-  - lemma: мрію
-    ipa: /ˈmriju/
-    translation: I dream
-    pos: verb
-  - lemma: спробую
-    ipa: /ˈsprɔbuju/
-    translation: I will try
-    pos: verb
-  - lemma: думаю
-    ipa: /ˈdumaju/
-    translation: I think
-    pos: verb
+- lemma: бабуся
+  ipa: /babˈusja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: буда
+  ipa: /bˈuda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: більше
+  ipa: /bˈilʲʃɛ/
+  translation: ''
+  pos: adv
+- lemma: вдома
+  ipa: /ʋdˈɔma/
+  translation: ''
+  pos: adv
+- lemma: весна
+  ipa: /ʋɛsnˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вечеря
+  ipa: /ʋɛt͡ʃˈɛrja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: вивчити
+  ipa: /ʋˈɪʋt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вираз
+  ipa: /ʋˈɪraz/
+  translation: ''
+  pos: noun
+- lemma: вирішити
+  ipa: /ʋˈɪriʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: впевненість
+  ipa: /ʋpˈɛʋnɛnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вправа
+  ipa: /ʋprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: все
+  ipa: /ʋsɛ/
+  translation: ''
+  pos: part
+- lemma: вчасно
+  ipa: /ʋt͡ʃˈasnɔ/
+  translation: ''
+  pos: adv
+- lemma: вчити
+  ipa: /ʋt͡ʃˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відвідати
+  ipa: /ʋidʋˈidatɪ/
+  translation: ''
+  pos: verb
+- lemma: відпочивати
+  ipa: /ʋidpɔt͡ʃɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: гарний
+  ipa: /ɦˈarnɪj/
+  translation: ''
+  pos: adj
+- lemma: говорити
+  ipa: /ɦɔʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: година
+  ipa: /ɦɔdˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: готувати
+  ipa: /ɦɔtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: гуляти
+  ipa: /ɦulˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: довідка
+  ipa: /dˈɔʋidka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: допомогти
+  ipa: /dɔpɔmɔɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: думати
+  ipa: /dˈumatɪ/
+  translation: ''
+  pos: verb
+- lemma: жити
+  ipa: /ʒˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: забути
+  ipa: /zabˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: завтра
+  ipa: /zˈaʋtra/
+  translation: ''
+  pos: adv
+- lemma: запізнюватися
+  ipa: /zapˈiznjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зателефонувати
+  ipa: /zatɛlɛfɔnuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: збиратися
+  ipa: /zbɪrˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: змогти
+  ipa: /zmɔɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: знати
+  ipa: /znˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зробити
+  ipa: /zrɔbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: квартира
+  ipa: /kʋartˈɪra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кий
+  ipa: /kɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: київ
+  ipa: /kɪˈjiʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: купити
+  ipa: /kupˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: кіно
+  ipa: /kinˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: лікар
+  ipa: /lˈikar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: майбутній
+  ipa: /majbˈutnij/
+  translation: ''
+  pos: adj
+- lemma: машина
+  ipa: /maʃˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: мова
+  ipa: /mˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мрія
+  ipa: /mrˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: музей
+  ipa: /muzˈɛj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: музика
+  ipa: /mˈuzɪka/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: місяць
+  ipa: /mˈisjat͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: навчитися
+  ipa: /naʋt͡ʃˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: надія
+  ipa: /nadˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: намір
+  ipa: /nˈamir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: наступний
+  ipa: /nastˈupnɪj/
+  translation: ''
+  pos: adj
+- lemma: нова
+  ipa: /nɔʋˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: новий
+  ipa: /nɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: нікола
+  ipa: /nikɔla/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обов'язково
+  ipa: /ɔbɔʋjazkˈɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: обідати
+  ipa: /ɔbˈidatɪ/
+  translation: ''
+  pos: verb
+- lemma: обіцяти
+  ipa: /ɔbit͡sˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: одружитися
+  ipa: /ɔdruʒˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: парка
+  ipa: /parka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: переклад
+  ipa: /pɛrɛklad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перекласти
+  ipa: /pɛrɛklˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: планування
+  ipa: /planuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: планувати
+  ipa: /planuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: побачити
+  ipa: /pɔbˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: побачитися
+  ipa: /pɔbˈat͡ʃɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: погода
+  ipa: /pɔɦˈɔda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: подорожувати
+  ipa: /pɔdɔrɔʒuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: постаратися
+  ipa: /pɔstarˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: потім
+  ipa: /pˈɔtim/
+  translation: ''
+  pos: pron
+- lemma: почати
+  ipa: /pɔt͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: поїхати
+  ipa: /pɔˈjixatɪ/
+  translation: ''
+  pos: verb
+- lemma: практик
+  ipa: /prˈaktɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прибирати
+  ipa: /prɪbɪrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прийти
+  ipa: /prɪjtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: приклад
+  ipa: /prɪklad/
+  translation: ''
+  pos: noun
+- lemma: прислівник
+  ipa: /prɪslˈiʋnɪk/
+  translation: ''
+  pos: noun
+- lemma: підсумок
+  ipa: /pidsumɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пізніший
+  ipa: /piznˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: післязавтра
+  ipa: /pisljazˈaʋtra/
+  translation: ''
+  pos: adv
+- lemma: піта
+  ipa: /pˈita/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: разом
+  ipa: /rˈazɔm/
+  translation: ''
+  pos: adv
+- lemma: речення
+  ipa: /rɛt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: робити
+  ipa: /rɔbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: рок
+  ipa: /rɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рівня
+  ipa: /rˈiʋnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: святкувати
+  ipa: /sʋjatkuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: світ
+  ipa: /sʋit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: скоро
+  ipa: /skˈɔrɔ/
+  translation: ''
+  pos: adv
+- lemma: слово
+  ipa: /slˈɔʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: слухати
+  ipa: /slˈuxatɪ/
+  translation: ''
+  pos: verb
+- lemma: сподіватися
+  ipa: /spɔdiʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: спробувати
+  ipa: /sprˈɔbuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: стати
+  ipa: /stˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: страва
+  ipa: /strˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: тиждень
+  ipa: /tˈɪʒdɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: третій
+  ipa: /trˈɛtij/
+  translation: ''
+  pos: adj
+- lemma: україна
+  ipa: /ukraˈjina/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: українська
+  ipa: /ukraˈjinsʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: український
+  ipa: /ukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: урка
+  ipa: /ˈurka/
+  translation: ''
+  pos: noun
+- lemma: час
+  ipa: /t͡ʃas/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: часовий
+  ipa: /t͡ʃasɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: чудово
+  ipa: /t͡ʃudˈɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: швидка
+  ipa: /ʃʋɪdkˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: японський
+  ipa: /japˈɔnsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: японія
+  ipa: /japˈɔnija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ідея
+  ipa: /idˈɛja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: інфінітив
+  ipa: /infinitˈɪʋ/
+  translation: ''
+  pos: noun
+  gender: m

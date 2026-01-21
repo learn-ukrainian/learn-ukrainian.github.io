@@ -2,315 +2,481 @@ module: 23-what-time-is-it
 level: A1
 version: '2.0'
 items:
-  - lemma: березень
-    ipa: /ˈbɛrɛzɛnʲ/
-    translation: March
-    pos: noun
-    gender: m
-  - lemma: вересень
-    ipa: /ˈvɛrɛsɛnʲ/
-    translation: September
-    pos: noun
-    gender: m
-  - lemma: вечір
-    ipa: /ˈvɛt͡ʃir/
-    translation: evening
-    pos: noun
-    gender: m
-  - lemma: вівторок
-    ipa: /viwˈtɔrɔk/
-    translation: Tuesday
-    pos: noun
-    gender: m
-  - lemma: відкриватися
-    ipa: /vidkrɪˈvɑtɪsʲɑ/
-    translation: to open
-    pos: verb
-  - lemma: восьмий
-    ipa: /ˈvɔsʲmɪj/
-    translation: eighth
-    pos: adj
-    gender: m
-  - lemma: грудень
-    ipa: /ˈɦrudɛnʲ/
-    translation: December
-    pos: noun
-    gender: m
-  - lemma: дванадцятий
-    ipa: /dvɑˈnɑdt͡sʲɑtɪj/
-    translation: twelfth
-    pos: adj
-    gender: m
-  - lemma: десятий
-    ipa: /dɛˈsʲɑtɪj/
-    translation: tenth
-    pos: adj
-    gender: m
-  - lemma: діло
-    ipa: /ˈdilɔ/
-    translation: affair
-    pos: noun
-    gender: n
-  - lemma: же
-    ipa: /ʒɛ/
-    translation: (particle)
-    pos: other
-  - lemma: жовтень
-    ipa: /ˈʒɔwtɛnʲ/
-    translation: October
-    pos: noun
-    gender: m
-  - lemma: запізнитися
-    ipa: /zɑpizˈnɪtɪsʲɑ/
-    translation: to be late (perf)
-    pos: verb
-  - lemma: запізнюватися
-    ipa: /zɑˈpiznʲuvɑtɪsʲɑ/
-    translation: to be late (imp)
-    pos: verb
-  - lemma: зустрітися
-    ipa: /zustˈritɪsʲɑ/
-    translation: to meet
-    pos: verb
-  - lemma: квітень
-    ipa: /ˈkvitɛnʲ/
-    translation: April
-    pos: noun
-    gender: m
-  - lemma: квіти
-    ipa: /ˈkvitɪ/
-    translation: flowers
-    pos: noun
-    gender: m
-  - lemma: липень
-    ipa: /ˈlɪpɛnʲ/
-    translation: July
-    pos: noun
-    gender: m
-  - lemma: листопад
-    ipa: /lɪstɔˈpɑd/
-    translation: November
-    pos: noun
-    gender: m
-  - lemma: лютий
-    ipa: /ˈlʲutɪj/
-    translation: February
-    pos: noun
-    gender: m
-  - lemma: літо
-    ipa: /ˈlitɔ/
-    translation: summer
-    pos: noun
-    gender: n
-  - lemma: майже
-    ipa: /ˈmɑjʒɛ/
-    translation: almost
-    pos: adv
-  - lemma: модальний
-    ipa: /mɔˈdɑlʲnɪj/
-    translation: modal
-    pos: adj
-    gender: m
-  - lemma: назва
-    ipa: /ˈnɑzvɑ/
-    translation: name
-    pos: noun
-    gender: f
-  - lemma: народження
-    ipa: /nɑˈrɔdʒɛnʲːɑ/
-    translation: birth
-    pos: noun
-    gender: n
-  - lemma: неділя
-    ipa: /nɛˈdilʲɑ/
-    translation: Sunday
-    pos: noun
-    gender: f
-  - lemma: об
-    ipa: /ɔb/
-    translation: at
-    pos: other
-  - lemma: одинадцятий
-    ipa: /ɔdɪˈnɑdt͡sʲɑtɪj/
-    translation: eleventh
-    pos: adj
-    gender: m
-  - lemma: одиниця
-    ipa: /ɔdɪˈnɪt͡sʲɑ/
-    translation: unit
-    pos: noun
-    gender: f
-  - lemma: пів
-    ipa: /piw/
-    translation: half
-    pos: noun
-    gender: m
-  - lemma: пізно
-    ipa: /ˈpiznɔ/
-    translation: late
-    pos: adv
-  - lemma: пора
-    ipa: /pɔˈrɑ/
-    translation: time/season
-    pos: noun
-    gender: f
-  - lemma: починатися
-    ipa: /pɔt͡ʃɪˈnɑtɪsʲɑ/
-    translation: to start
-    pos: verb
-  - lemma: прийменник
-    ipa: /prɪjˈmɛnːɪk/
-    translation: preposition
-    pos: noun
-    gender: m
-  - lemma: природний
-    ipa: /prɪˈrɔdnɪj/
-    translation: natural
-    pos: adj
-    gender: m
-  - lemma: протягом
-    ipa: /ˈprɔtʲɑɦɔm/
-    translation: during
-    pos: other
-  - lemma: рано
-    ipa: /ˈrɑnɔ/
-    translation: early
-    pos: adv
-  - lemma: робочий
-    ipa: /rɔˈbɔt͡ʃɪj/
-    translation: working
-    pos: adj
-    gender: m
-  - lemma: різдво
-    ipa: /rizˈdvɔ/
-    translation: Christmas
-    pos: noun
-    gender: n
-  - lemma: свято
-    ipa: /ˈsvjɑtɔ/
-    translation: holiday
-    pos: noun
-    gender: n
-  - lemma: секунда
-    ipa: /sɛˈkundɑ/
-    translation: second
-    pos: noun
-    gender: f
-  - lemma: середа
-    ipa: /sɛrɛˈdɑ/
-    translation: Wednesday
-    pos: noun
-    gender: f
-  - lemma: серпень
-    ipa: /ˈsɛrpɛnʲ/
-    translation: August
-    pos: noun
-    gender: m
-  - lemma: субота
-    ipa: /suˈbɔtɑ/
-    translation: Saturday
-    pos: noun
-    gender: f
-  - lemma: сьомий
-    ipa: /ˈsʲɔmɪj/
-    translation: seventh
-    pos: adj
-    gender: m
-  - lemma: січень
-    ipa: /ˈsit͡ʃɛnʲ/
-    translation: January
-    pos: noun
-    gender: m
-  - lemma: тепло
-    ipa: /ˈtɛplɔ/
-    translation: warm
-    pos: adv
-  - lemma: травень
-    ipa: /ˈtrɑvɛnʲ/
-    translation: May
-    pos: noun
-    gender: m
-  - lemma: третій
-    ipa: /ˈtrɛtij/
-    translation: third
-    pos: adj
-    gender: m
-  - lemma: тривати
-    ipa: /trɪˈvɑtɪ/
-    translation: to last
-    pos: verb
-  - lemma: холодно
-    ipa: /ˈxɔlɔdnɔ/
-    translation: cold
-    pos: adv
-  - lemma: цвісти
-    ipa: /t͡svisˈtɪ/
-    translation: to bloom
-    pos: verb
-  - lemma: чверть
-    ipa: /t͡ʃvɛrtʲ/
-    translation: quarter
-    pos: noun
-    gender: f
-  - lemma: червень
-    ipa: /ˈt͡ʃɛrvɛnʲ/
-    translation: June
-    pos: noun
-    gender: m
-  - lemma: четвер
-    ipa: /t͡ʃɛtˈvɛr/
-    translation: Thursday
-    pos: noun
-    gender: m
-  - lemma: четвертий
-    ipa: /t͡ʃɛtˈvɛrtɪj/
-    translation: fourth
-    pos: adj
-    gender: m
-  - lemma: шостий
-    ipa: /ˈʃɔstɪj/
-    translation: sixth
-    pos: adj
-    gender: m
-  - lemma: п'ятниця
-    ipa: /pjɑtˈnɪt͡sʲɑ/
-    translation: Friday
-    pos: noun
-    gender: f
-  - lemma: тиждень
-    ipa: /ˈtɪʒdɛnʲ/
-    translation: week
-    pos: noun
-    gender: m
-  - lemma: понеділок
-    ipa: /pɔnɛˈdilɔk/
-    translation: Monday
-    pos: noun
-    gender: m
-  - lemma: вчасно
-    ipa: /ˈvt͡ʃɑsnɔ/
-    translation: on time
-    pos: adv
-  - lemma: сьогодні
-    ipa: /sʲɔˈɦɔdɲi/
-    translation: today
-    pos: adv
-  - lemma: вихідні
-    ipa: /vɪˈxidni/
-    translation: weekend
-    pos: noun
-    gender: pl
-  - lemma: котрій
-    ipa: /ˈkɔtrij/
-    translation: which (time)
-    pos: pron
-  - lemma: хвилина
-    ipa: /xvɪˈlɪnɑ/
-    translation: minute
-    pos: noun
-    gender: f
-  - lemma: година
-    ipa: /ɦɔˈdɪnɑ/
-    translation: hour
-    pos: noun
-    gender: f
+- lemma: весна
+  ipa: /ʋɛsnˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вечером
+  ipa: /ʋɛt͡ʃɛrɔm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: вибачити
+  ipa: /ʋˈɪbat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вивчити
+  ipa: /ʋˈɪʋt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вираз
+  ipa: /ʋˈɪraz/
+  translation: ''
+  pos: noun
+- lemma: вихідний
+  ipa: /ʋɪxidnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: восьмий
+  ipa: /ʋˈɔsʲmɪj/
+  translation: ''
+  pos: adj
+- lemma: вправа
+  ipa: /ʋprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: все
+  ipa: /ʋsɛ/
+  translation: ''
+  pos: part
+- lemma: вчасно
+  ipa: /ʋt͡ʃˈasnɔ/
+  translation: ''
+  pos: adv
+- lemma: вівторок
+  ipa: /ʋiʋtˈɔrɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: відкриватися
+  ipa: /ʋidkrɪʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: відпочивати
+  ipa: /ʋidpɔt͡ʃɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: вільний
+  ipa: /ʋˈilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: говорити
+  ipa: /ɦɔʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: година
+  ipa: /ɦɔdˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: грудень
+  ipa: /ɦrˈudɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: давати
+  ipa: /daʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: дев'ятий
+  ipa: /dɛʋˈjatɪj/
+  translation: ''
+  pos: adj
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: десятий
+  ipa: /dɛsˈjatɪj/
+  translation: ''
+  pos: adj
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: другий
+  ipa: /drˈuɦɪj/
+  translation: ''
+  pos: adj
+- lemma: дієслово
+  ipa: /dijɛslˈɔʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: же
+  ipa: /ʒɛ/
+  translation: ''
+  pos: conj
+- lemma: завжди
+  ipa: /zˈaʋʒdɪ/
+  translation: ''
+  pos: pron
+- lemma: завтра
+  ipa: /zˈaʋtra/
+  translation: ''
+  pos: adv
+- lemma: запізнитися
+  ipa: /zapiznˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: запізнюватися
+  ipa: /zapˈiznjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зараза
+  ipa: /zarˈaza/
+  translation: ''
+  pos: noun
+- lemma: зустрітися
+  ipa: /zustrˈitɪsja/
+  translation: ''
+  pos: verb
+- lemma: зустріч
+  ipa: /zˈustrit͡ʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: квітень
+  ipa: /kʋˈitɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: квіти
+  ipa: /kʋˈitɪ/
+  translation: ''
+  pos: noun
+- lemma: квітний
+  ipa: /kʋitnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: липень
+  ipa: /lˈɪpɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: листопад
+  ipa: /lɪstɔpˈad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: літо
+  ipa: /lˈitɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: магазин
+  ipa: /maɦazˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: мова
+  ipa: /mˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: модальний
+  ipa: /mɔdˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: місяць
+  ipa: /mˈisjat͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: навчитися
+  ipa: /naʋt͡ʃˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: назва
+  ipa: /nˈazʋa/
+  translation: ''
+  pos: noun
+- lemma: народження
+  ipa: /narˈɔdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: наступний
+  ipa: /nastˈupnɪj/
+  translation: ''
+  pos: adj
+- lemma: неділя
+  ipa: /nɛdˈilja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: незалежність
+  ipa: /nɛzalˈɛʒnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: новий
+  ipa: /nɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: об
+  ipa: /ɔb/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обід
+  ipa: /ɔbid/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: одиниця
+  ipa: /ɔdɪnˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: п'ятий
+  ipa: /pˈjatɪj/
+  translation: ''
+  pos: adj
+- lemma: п'ятниця
+  ipa: /pˈjatnɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: п'ять
+  ipa: /pjatʲ/
+  translation: ''
+  pos: num
+- lemma: переклад
+  ipa: /pɛrɛklad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перекласти
+  ipa: /pɛrɛklˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: побачитися
+  ipa: /pɔbˈat͡ʃɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: понеділок
+  ipa: /pɔnɛdˈilɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пора
+  ipa: /pɔra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: починатися
+  ipa: /pɔt͡ʃɪnˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: практик
+  ipa: /prˈaktɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: привіт
+  ipa: /prɪʋˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прийменник
+  ipa: /prɪjmˈɛnnɪk/
+  translation: ''
+  pos: noun
+- lemma: прийти
+  ipa: /prɪjtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: природний
+  ipa: /prɪrˈɔdnɪj/
+  translation: ''
+  pos: adj
+- lemma: приходити
+  ipa: /prɪxˈɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: приїхати
+  ipa: /prɪˈjixatɪ/
+  translation: ''
+  pos: verb
+- lemma: протягом
+  ipa: /prˈɔtjaɦɔm/
+  translation: ''
+  pos: adv
+- lemma: пів
+  ipa: /piʋ/
+  translation: ''
+  pos: num
+- lemma: підсумок
+  ipa: /pidsumɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пізно
+  ipa: /pˈiznɔ/
+  translation: ''
+  pos: adv
+- lemma: рана
+  ipa: /rˈana/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ранка
+  ipa: /rˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: речення
+  ipa: /rɛt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: робочий
+  ipa: /rɔbˈɔt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: різдво
+  ipa: /rizdʋˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ріка
+  ipa: /rikˈa/
+  translation: ''
+  pos: noun
+- lemma: свято
+  ipa: /sʋˈjatɔ/
+  translation: ''
+  pos: adv
+- lemma: секунда
+  ipa: /sɛkˈunda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: середа
+  ipa: /sɛrɛdˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: серпень
+  ipa: /sˈɛrpɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: скільки
+  ipa: /skˈilʲkɪ/
+  translation: ''
+  pos: pron
+- lemma: субота
+  ipa: /subˈɔta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сьогодні
+  ipa: /sʲɔɦˈɔdni/
+  translation: ''
+  pos: adv
+- lemma: січень
+  ipa: /sˈit͡ʃɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: січний
+  ipa: /sit͡ʃnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: тепло
+  ipa: /tɛplˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: тиждень
+  ipa: /tˈɪʒdɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: травний
+  ipa: /traʋnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: третій
+  ipa: /trˈɛtij/
+  translation: ''
+  pos: adj
+- lemma: тривати
+  ipa: /trɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: українська
+  ipa: /ukraˈjinsʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: урка
+  ipa: /ˈurka/
+  translation: ''
+  pos: noun
+- lemma: фільм
+  ipa: /filʲm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хвилина
+  ipa: /xʋɪlˈɪna/
+  translation: ''
+  pos: noun
+- lemma: холодно
+  ipa: /xˈɔlɔdnɔ/
+  translation: ''
+  pos: adv
+- lemma: цвісти
+  ipa: /t͡sʋistˈɪ/
+  translation: ''
+  pos: verb
+- lemma: час
+  ipa: /t͡ʃas/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чекати
+  ipa: /t͡ʃɛkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: червень
+  ipa: /t͡ʃˈɛrʋɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: четвер
+  ipa: /t͡ʃɛtʋˈɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чудово
+  ipa: /t͡ʃudˈɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: шостий
+  ipa: /ʃˈɔstɪj/
+  translation: ''
+  pos: adj

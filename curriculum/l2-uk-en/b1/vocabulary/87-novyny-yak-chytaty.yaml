@@ -2,179 +2,333 @@ module: 87-novyny-yak-chytaty
 level: B1
 version: '2.0'
 items:
-  - lemma: заголовок
-    ipa: /zaˈhɔlɔvɔk/
-    translation: headline, heading
-    pos: noun
-    gender: m
-  - lemma: лід
-    ipa: /lʲid/
-    translation: lead (journalism), first paragraph
-    pos: noun
-    gender: m
-  - lemma: підзаголовок
-    ipa: /pʲidzaˈhɔlɔvɔk/
-    translation: subheading
-    pos: noun
-    gender: m
-  - lemma: факт
-    ipa: /fakt/
-    translation: fact
-    pos: noun
-    gender: m
-  - lemma: думка
-    ipa: /ˈdumka/
-    translation: thought, opinion
-    pos: noun
-    gender: f
-  - lemma: джерело
-    ipa: /dʒɛˈrɛlɔ/
-    translation: source
-    pos: noun
-    gender: n
-  - lemma: аналіз
-    ipa: /aˈnalʲiz/
-    translation: analysis
-    pos: noun
-    gender: m
-  - lemma: коментар
-    ipa: /kɔmɛnˈtar/
-    translation: comment
-    pos: noun
-    gender: m
-  - lemma: альянс
-    ipa: /alʲˈjans/
-    translation: alliance
-    pos: noun
-    gender: m
-  - lemma: анотація
-    ipa: /anɔˈtat͡sʲija/
-    translation: annotation
-    pos: noun
-    gender: f
-  - lemma: британський
-    ipa: /brɪˈtansʲkɪj/
-    translation: British
-    pos: adj
-    gender: m
-  - lemma: Брюссель
-    ipa: /brʲuˈsɛlʲ/
-    translation: Brussels
-    pos: propn
-    gender: m
-  - lemma: вдруге
-    ipa: /ˈvdruhɛ/
-    translation: for the second time
-    pos: adv
-  - lemma: висвітлений
-    ipa: /vɪˈsvʲitlɛnɪj/
-    translation: highlighted, covered (in media)
-    pos: adj
-    gender: m
-  - lemma: висвітлювати
-    ipa: /vɪsˈvʲitlʲuvatɪ/
-    translation: to cover (an event), to highlight
-    pos: verb
-  - lemma: емоційно
-    ipa: /ɛmɔˈt͡sʲijnɔ/
-    translation: emotionally
-    pos: adv
-  - lemma: Естонія
-    ipa: /ɛˈstɔnʲija/
-    translation: Estonia
-    pos: propn
-    gender: f
-  - lemma: колонка
-    ipa: /kɔˈlɔnka/
-    translation: column (newspaper section)
-    pos: noun
-    gender: f
-  - lemma: оглядач
-    ipa: /ɔˈhlʲadat͡ʃ/
-    translation: observer, commentator
-    pos: noun
-    gender: m
-  - lemma: ООН
-    ipa: /ɔˈɔn/
-    translation: UN
-    pos: noun
-    gender: f
-  - lemma: оціночний
-    ipa: /ɔˈt͡sʲinɔt͡ʃnɪj/
-    translation: evaluative
-    pos: adj
-    gender: m
-  - lemma: пресконференція
-    ipa: /prɛskɔnfɛˈrɛnt͡sʲija/
-    translation: press conference
-    pos: noun
-    gender: f
-  - lemma: рослинний
-    ipa: /rɔˈslɪnːɪj/
-    translation: herbal, plant-based
-    pos: adj
-    gender: m
-  - lemma: телерадіокомпанія
-    ipa: /tɛlɛradʲiɔkɔmˈpanʲija/
-    translation: TV and radio company
-    pos: noun
-    gender: f
-  - lemma: Українська правда
-    ipa: /ukraˈjinsʲka ˈprau̯da/
-    translation: Ukrainska Pravda (news outlet)
-    pos: propn
-    gender: f
-  - lemma: фільтрувати
-    ipa: /fʲilʲtruˈvatɪ/
-    translation: to filter
-    pos: verb
-  - lemma: цьогорічний
-    ipa: /t͡sʲɔhɔˈrʲit͡ʃnɪj/
-    translation: this year's
-    pos: adj
-    gender: m
-  - lemma: імпортер
-    ipa: /impɔrˈtɛr/
-    translation: importer
-    pos: noun
-    gender: m
-  - lemma: Георгій Ґонґадзе
-    ipa: /hɛˈɔrhʲij hɔnˈhadzɛ/
-    translation: Georgiy Gongadze
-    pos: propn
-    gender: m
-  - lemma: ВР
-    ipa: /vɛ rɛ/
-    translation: VR (Verkhovna Rada)
-    pos: noun
-    gender: f
-  - lemma: законопроєкт
-    ipa: /zakɔnɔprɔˈjɛkt/
-    translation: bill, draft law
-    pos: noun
-    gender: m
-  - lemma: інфляція
-    ipa: /infˈlʲat͡sʲija/
-    translation: inflation
-    pos: noun
-    gender: f
-  - lemma: цифровізація
-    ipa: /t͡sɪfrɔvʲiˈzat͡sʲija/
-    translation: digitalization
-    pos: noun
-    gender: f
-  - lemma: експорт
-    ipa: /ˈɛkspɔrt/
-    translation: export
-    pos: noun
-    gender: m
-  - lemma: ВВП
-    ipa: /vɛ vɛ pɛ/
-    translation: GDP (Gross Domestic Product)
-    pos: noun
-    gender: m
-  - lemma: трансформація
-    ipa: /transfɔrˈmat͡sʲija/
-    translation: transformation
-    pos: noun
-    gender: f
+- lemma: альянс
+  ipa: /alʲˈjans/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: анонімний
+  ipa: /anɔnˈimnɪj/
+  translation: ''
+  pos: adj
+- lemma: анотація
+  ipa: /anɔtˈat͡sija/
+  translation: ''
+  pos: noun
+- lemma: британський
+  ipa: /brɪtˈansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: вдруге
+  ipa: /ʋdrˈuɦɛ/
+  translation: ''
+  pos: adv
+- lemma: взятися
+  ipa: /ʋzˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: викривати
+  ipa: /ʋɪkrɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: виплата
+  ipa: /ʋˈɪplata/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: впровадити
+  ipa: /ʋprɔʋˈadɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вр
+  ipa: /ʋr/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: врізка
+  ipa: /ʋrizka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: відокремлювати
+  ipa: /ʋidɔkrˈɛmljuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: гостре
+  ipa: /ɦˈɔstrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: емоційніший
+  ipa: /ɛmɔt͡sˈijniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: закликиподілитися
+  ipa: /zaklɪkɪpɔdilɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: заробітний
+  ipa: /zarɔbˈitnɪj/
+  translation: ''
+  pos: adj
+- lemma: кабмін
+  ipa: /kabmˈin/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: канцлер
+  ipa: /kˈant͡slɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: китай
+  ipa: /kɪtˈaj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кму
+  ipa: /kmu/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: конфронтація
+  ipa: /kɔnfrɔntˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: логістичний
+  ipa: /lɔɦistˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: лігачов
+  ipa: /liɦat͡ʃɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ліда
+  ipa: /lˈida/
+  translation: ''
+  pos: noun
+- lemma: лідіва
+  ipa: /lidiʋa/
+  translation: ''
+  pos: noun
+- lemma: медіаграмотний
+  ipa: /mɛdiaɦramɔtnɪj/
+  translation: ''
+  pos: adj
+- lemma: медіаексперт
+  ipa: /mɛdiaɛkspɛrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мзс
+  ipa: /mzs/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: наведений
+  ipa: /naʋˈɛdɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: нині
+  ipa: /nˈɪni/
+  translation: ''
+  pos: adv
+- lemma: ова
+  ipa: /ɔʋa/
+  translation: ''
+  pos: noun
+- lemma: олійний
+  ipa: /ɔlˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: онлайн-видання
+  ipa: /ɔnlajn-ʋɪdannja/
+  translation: ''
+  pos: noun
+- lemma: оперативний
+  ipa: /ɔpɛratˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: оцінний
+  ipa: /ɔt͡sˈinnɪj/
+  translation: ''
+  pos: adj
+- lemma: перевернутий
+  ipa: /pɛrɛʋˈɛrnutɪj/
+  translation: ''
+  pos: adj
+- lemma: посилатися
+  ipa: /pɔsɪlˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: посісти
+  ipa: /pɔsˈistɪ/
+  translation: ''
+  pos: verb
+- lemma: прапорець
+  ipa: /prapɔrˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пресконференція
+  ipa: /prɛskɔnfɛrˈɛnt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: проголосувати
+  ipa: /prɔɦɔlɔsuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: профспілка
+  ipa: /prɔfspˈilka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пріоритетний
+  ipa: /priɔrɪtˈɛtnɪj/
+  translation: ''
+  pos: adj
+- lemma: публіцист
+  ipa: /publit͡sˈɪst/
+  translation: ''
+  pos: noun
+- lemma: піддаватися
+  ipa: /piddaʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підзаголовок
+  ipa: /pidzaɦɔlˈɔʋɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підпільний
+  ipa: /pidpˈilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: піраміда
+  ipa: /piramˈida/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: реалістичність
+  ipa: /rɛalistˈɪt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: рейтинг
+  ipa: /rˈɛjtɪnɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рекордний
+  ipa: /rɛkˈɔrdnɪj/
+  translation: ''
+  pos: adj
+- lemma: репутація
+  ipa: /rɛputˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: реформування
+  ipa: /rɛfɔrmuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розгорнутий
+  ipa: /rɔzɦˈɔrnutɪj/
+  translation: ''
+  pos: adj
+- lemma: рослинний
+  ipa: /rɔslˈɪnnɪj/
+  translation: ''
+  pos: adj
+- lemma: рядок
+  ipa: /rjadˈɔk/
+  translation: ''
+  pos: noun
+- lemma: самвидав
+  ipa: /samʋɪdˈaʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: свідоцтво
+  ipa: /sʋidˈɔt͡stʋɔ/
+  translation: ''
+  pos: noun
+- lemma: статистичний
+  ipa: /statɪstˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: таємний
+  ipa: /taˈjɛmnɪj/
+  translation: ''
+  pos: adj
+- lemma: телеграм-канал
+  ipa: /tɛlɛɦrˈam-kanal/
+  translation: ''
+  pos: noun
+- lemma: телерадіокомпанія
+  ipa: /tɛlɛradiɔkɔmpˈanija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: транслювати
+  ipa: /transljuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: тсн
+  ipa: /tsn/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ужиток
+  ipa: /uʒˈɪtɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: уп
+  ipa: /up/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: фактчекер
+  ipa: /faktt͡ʃɛkɛr/
+  translation: ''
+  pos: noun
+- lemma: фактчекінг
+  ipa: /faktt͡ʃɛkinɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фактчекінговий
+  ipa: /faktt͡ʃɛkinɦɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: фільтрувати
+  ipa: /filʲtruʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: цьогорічний
+  ipa: /t͡sʲɔɦɔrˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: чернетка
+  ipa: /t͡ʃɛrnˈɛtka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шокуючий
+  ipa: /ʃɔkujut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: імпортер
+  ipa: /impɔrtˈɛr/
+  translation: ''
+  pos: noun
+- lemma: ґонґадзе
+  ipa: /gɔngadzɛ/
+  translation: ''
+  pos: noun
+  gender: m

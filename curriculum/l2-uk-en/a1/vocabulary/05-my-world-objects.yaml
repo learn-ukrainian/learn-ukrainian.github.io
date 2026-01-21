@@ -2,266 +2,223 @@ module: 05-my-world-objects
 level: A1
 version: '2.0'
 items:
-  - lemma: блюдо
-    ipa: /ˈblʲudɔ/
-    translation: dish
-    pos: noun
-    gender: n
-  - lemma: ванна
-    ipa: /ˈvɑnːɑ/
-    translation: bathtub
-    pos: propn
-    gender: f
-  - lemma: виделка
-    ipa: /vɪˈdɛlkɑ/
-    translation: fork
-    pos: noun
-    gender: f
-  - lemma: вітальня
-    ipa: /viˈtɑlʲnʲɑ/
-    translation: living room
-    pos: propn
-    gender: f
-  - lemma: гаманець
-    ipa: /ɦɑmɑˈnɛt͡sʲ/
-    translation: wallet
-    pos: noun
-    gender: m
-  - lemma: гарний
-    ipa: /ˈhɑrnɪj/
-    translation: nice/beautiful
-    pos: adj
-    gender: m
-  - lemma: годинник
-    ipa: /ɦɔˈdɪnːɪk/
-    translation: clock/watch
-    pos: noun
-    gender: m
-  - lemma: дзеркало
-    ipa: /ˈdzɛrkɑlɔ/
-    translation: mirror
-    pos: noun
-    gender: n
-  - lemma: дуже
-    ipa: /ˈduʒɛ/
-    translation: very
-    pos: adv
-  - lemma: заходити
-    ipa: /zɑˈxɔdɪtɪ/
-    translation: to enter
-    pos: verb
-  - lemma: картина
-    ipa: /kɑrˈtɪnɑ/
-    translation: picture/painting
-    pos: noun
-    gender: f
-  - lemma: квартира
-    ipa: /kvɑrˈtɪrɑ/
-    translation: apartment
-    pos: noun
-    gender: f
-  - lemma: ключ
-    ipa: /klʲut͡ʃ/
-    translation: key
-    pos: noun
-    gender: m
-  - lemma: кухня
-    ipa: /ˈkuxnʲɑ/
-    translation: kitchen
-    pos: noun
-    gender: f
-  - lemma: лампа
-    ipa: /ˈlɑmpɑ/
-    translation: lamp
-    pos: noun
-    gender: f
-  - lemma: ложка
-    ipa: /ˈlɔʒkɑ/
-    translation: spoon
-    pos: noun
-    gender: f
-  - lemma: меч
-    ipa: /mɛt͡ʃ/
-    translation: sword
-    pos: noun
-    gender: m
-  - lemma: мікрохвильовка
-    ipa: /mikrɔxvɪˈlʲɔvkɑ/
-    translation: microwave
-    pos: noun
-    gender: f
-  - lemma: наш
-    ipa: /nɑʃ/
-    translation: our
-    pos: other
-    gender: f
-  - lemma: не
-    ipa: /nɛ/
-    translation: not
-    pos: other
-  - lemma: ніж
-    ipa: /niʒ/
-    translation: knife
-    pos: other
-  - lemma: ось
-    ipa: /ɔsʲ/
-    translation: here is
-    pos: other
-  - lemma: пилосос
-    ipa: /pɪlɔˈsɔs/
-    translation: vacuum cleaner
-    pos: noun
-    gender: m
-  - lemma: плита
-    ipa: /plɪˈtɑ/
-    translation: stove
-    pos: noun
-    gender: f
-  - lemma: пляшка
-    ipa: /ˈplʲɑʃkɑ/
-    translation: bottle
-    pos: noun
-    gender: f
-  - lemma: праска
-    ipa: /ˈprɑskɑ/
-    translation: iron
-    pos: propn
-    gender: f
-  - lemma: працювати
-    ipa: /prɑt͡sʲuˈvɑtɪ/
-    translation: to work
-    pos: verb
-  - lemma: пульт
-    ipa: /pulʲt/
-    translation: remote control
-    pos: noun
-    gender: m
-  - lemma: рюкзак
-    ipa: /rʲʊkˈzɑk/
-    translation: backpack
-    pos: noun
-    gender: m
-  - lemma: склянка
-    ipa: /ˈsklʲɑnkɑ/
-    translation: glass
-    pos: noun
-    gender: f
-  - lemma: спальня
-    ipa: /ˈspɑlʲnʲɑ/
-    translation: bedroom
-    pos: noun
-    gender: f
-  - lemma: старий
-    ipa: /stɑˈrɪj/
-    translation: old
-    pos: adj
-    gender: m
-  - lemma: сумка
-    ipa: /ˈsumkɑ/
-    translation: bag
-    pos: noun
-    gender: f
-  - lemma: та
-    ipa: /tɑ/
-    translation: that (f)
-    pos: other
-  - lemma: тапочка
-    ipa: /ˈtɑpɔt͡ʃkɑ/
-    translation: slipper
-    pos: noun
-    gender: m
-  - lemma: тарілка
-    ipa: /tɑˈrilkɑ/
-    translation: plate
-    pos: noun
-    gender: f
-  - lemma: те
-    ipa: /tɛ/
-    translation: that (n)
-    pos: other
-    gender: n
-  - lemma: той
-    ipa: /tɔj/
-    translation: that (m)
-    pos: other
-    gender: m
-  - lemma: холодильник
-    ipa: /xɔlɔˈdɪlʲnɪk/
-    translation: fridge
-    pos: noun
-    gender: m
-  - lemma: хрущовка
-    ipa: /xruˈʃt͡ʃɔvkɑ/
-    translation: khrushchyovka
-    pos: noun
-    gender: m
-  - lemma: чашка
-    ipa: /ˈt͡ʃɑʃkɑ/
-    translation: cup
-    pos: noun
-    gender: f
-  - lemma: що
-    ipa: /ʃt͡ʃɔ/
-    translation: what
-    pos: pron
-    gender: n
-  - lemma: стіна
-    ipa: /stiˈnɑ/
-    translation: wall
-    pos: noun
-    gender: f
-  - lemma: стілець
-    ipa: /stiˈlɛt͡sʲ/
-    translation: chair
-    pos: noun
-    gender: m
-  - lemma: шафа
-    ipa: /ˈʃɑfɑ/
-    translation: wardrobe
-    pos: noun
-    gender: f
-  - lemma: ліжко
-    ipa: /ˈliʒkɔ/
-    translation: bed
-    pos: noun
-    gender: n
-  - lemma: двері
-    ipa: /ˈdvɛri/
-    translation: door
-    pos: noun
-    gender: pl
-  - lemma: вікно
-    ipa: /vikˈnɔ/
-    translation: window
-    pos: noun
-    gender: n
-  - lemma: комп'ютер
-    ipa: /kɔmpˈjutɛr/
-    translation: computer
-    pos: noun
-    gender: m
-  - lemma: телефон
-    ipa: /tɛlɛˈfɔn/
-    translation: phone
-    pos: noun
-    gender: m
-  - lemma: диван
-    ipa: /dɪˈvɑn/
-    translation: sofa
-    pos: noun
-    gender: m
-  - lemma: крісло
-    ipa: /ˈkrislɔ/
-    translation: armchair
-    pos: noun
-    gender: n
-  - lemma: стеля
-    ipa: /ˈstɛlʲɑ/
-    translation: ceiling
-    pos: noun
-    gender: f
-  - lemma: підлога
-    ipa: /pidˈlɔɦɑ/
-    translation: floor
-    pos: noun
-    gender: f
+- lemma: блюдо
+  ipa: /blˈjudɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: будинок
+  ipa: /budˈɪnɔk/
+  translation: ''
+  pos: noun
+- lemma: ванний
+  ipa: /ʋˈannɪj/
+  translation: ''
+  pos: adj
+- lemma: виделка
+  ipa: /ʋɪdˈɛlka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вікно
+  ipa: /ʋiknˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вітальня
+  ipa: /ʋitˈalʲnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: гарне
+  ipa: /ɦˈarnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: гарний
+  ipa: /ɦˈarnɪj/
+  translation: ''
+  pos: adj
+- lemma: годинник
+  ipa: /ɦɔdˈɪnnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дзеркало
+  ipa: /dzˈɛrkalɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: диван
+  ipa: /dɪʋˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: заходити
+  ipa: /zaxɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ка
+  ipa: /ka/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: квартира
+  ipa: /kʋartˈɪra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ключ
+  ipa: /kljut͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ключі
+  ipa: /kljut͡ʃˈi/
+  translation: ''
+  pos: noun
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: комп'ютер
+  ipa: /kɔmpˈjutɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: крісло
+  ipa: /krˈislɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кухня
+  ipa: /kˈuxnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кімната
+  ipa: /kimnˈata/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лампа
+  ipa: /lˈampa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ложка
+  ipa: /lˈɔʒka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: меч
+  ipa: /mɛt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мікрохвильовка
+  ipa: /mikrɔxʋɪlʲɔʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: нова
+  ipa: /nɔʋˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: новий
+  ipa: /nɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: ніж
+  ipa: /niʒ/
+  translation: ''
+  pos: conj
+- lemma: праска
+  ipa: /prˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: пульт
+  ipa: /pulʲt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рюкзак
+  ipa: /rjukzˈak/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спальня
+  ipa: /spˈalʲnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: старий
+  ipa: /starˈɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: стеля
+  ipa: /stˈɛlja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стіл
+  ipa: /stil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: стілець
+  ipa: /stilˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: стіна
+  ipa: /stinˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сумка
+  ipa: /sˈumka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тапочки
+  ipa: /tˈapɔt͡ʃkɪ/
+  translation: ''
+  pos: noun
+- lemma: телефон
+  ipa: /tɛlɛfˈɔn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: холодильник
+  ipa: /xɔlɔdˈɪlʲnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хрущовка
+  ipa: /xruʃt͡ʃˈɔʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чашка
+  ipa: /t͡ʃˈaʃka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шафа
+  ipa: /ʃˈafa/
+  translation: ''
+  pos: noun
+  gender: f

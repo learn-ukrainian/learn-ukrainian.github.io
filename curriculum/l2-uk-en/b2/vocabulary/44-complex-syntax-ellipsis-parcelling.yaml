@@ -3,331 +3,51 @@ level: B2
 version: '2.0'
 items:
 - lemma: безнадійно
-  ipa: /bɛznɐˈdʲijno/
-  translation: hopelessly
+  ipa: /bɛznadˈijnɔ/
+  translation: ''
   pos: adv
 - lemma: безутішно
-  ipa: /bɛzuˈtʲiʃno/
-  translation: inconsolably
+  ipa: /bɛzutˈiʃnɔ/
+  translation: ''
   pos: adv
-- lemma: берегися
-  ipa: /bɛrɛˈɦʲisʲɑ/
-  translation: beware, be careful (imperative)
-  pos: verb
-- lemma: болючий
-  ipa: /boˈlʲut͡ʃɪj/
-  translation: painful
-  pos: adj
-- lemma: вагатися
-  ipa: /wɐˈɦɑtɪsʲɑ/
-  translation: to hesitate
-  pos: verb
-- lemma: вислів
-  ipa: /ˈwɪslʲiw/
-  translation: saying, expression
-  pos: noun
-  gender: m
-- lemma: вміло
-  ipa: /ˈwmʲilo/
-  translation: skillfully
+- lemma: втомлено
+  ipa: /ʋtˈɔmlɛnɔ/
+  translation: ''
   pos: adv
-- lemma: востаннє
-  ipa: /wosˈtɑnːɛ/
-  translation: for the last time
-  pos: adv
-- lemma: втомити
-  ipa: /wtoˈmɪtɪ/
-  translation: to tire, to fatigue
-  pos: verb
-- lemma: відвернутися
-  ipa: /wʲidwɛrˈnutɪsʲɑ/
-  translation: to turn away
-  pos: verb
-- lemma: відвести
-  ipa: /wʲidˈwɛstɪ/
-  translation: to lead away, to take aside
-  pos: verb
 - lemma: відділений
-  ipa: /wʲidˈdʲilɛnɪj/
-  translation: separated, divided
+  ipa: /ʋiddˈilɛnɪj/
+  translation: ''
   pos: adj
-- lemma: відновлюватися
-  ipa: /wʲidnowlʲuˈwɑtɪsʲɑ/
-  translation: to recover, to be restored
-  pos: verb
-- lemma: відточувати
-  ipa: /wʲidˈtot͡ʃuwɑtɪ/
-  translation: to sharpen, to polish
-  pos: verb
-- lemma: геть
-  ipa: /ɦɛtʲ/
-  translation: away, completely
-  pos: adv
-- lemma: Глуха
-  ipa: /ˈɦluxɑ/
-  translation: Hlukha (surname)
-  pos: propn
-  gender: f
-- lemma: градація
-  ipa: /ɦrɐˈdɑt͡sʲijɑ/
-  translation: gradation, climax
-  pos: noun
-  gender: f
-- lemma: домислювати
-  ipa: /domɪslʲuˈwɑtɪ/
-  translation: to conjecture, to fill in mentally
-  pos: verb
-- lemma: діалогічний
-  ipa: /dʲiɐloˈɦʲit͡ʃnɪj/
-  translation: dialogic
-  pos: adj
-- lemma: діалог
-  ipa: /dʲiɐˈloɦ/
-  translation: dialogue
-  pos: noun
-  gender: m
 - lemma: еліптичний
-  ipa: /ɛlʲipˈtɪt͡ʃnɪj/
-  translation: elliptical
+  ipa: /ɛliptˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
 - lemma: ждати
-  ipa: /ˈʒdɑtɪ/
-  translation: to wait
+  ipa: /ʒdˈatɪ/
+  translation: ''
   pos: verb
-- lemma: завинити
-  ipa: /zɐwɪˈnɪtɪ/
-  translation: to be guilty, to cause
-  pos: verb
-- lemma: загудіти
-  ipa: /zɐɦuˈdʲitɪ/
-  translation: to start humming/buzzing
-  pos: verb
-- lemma: закоханий
-  ipa: /zɐˈkoxɑnɪj/
-  translation: in love, lover
-  pos: adj
 - lemma: зачинитися
-  ipa: /zɐt͡ʃɪˈnɪtɪsʲɑ/
-  translation: to close oneself in
+  ipa: /zat͡ʃɪnˈɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: збагатити
-  ipa: /zbɑɦɐˈtɪtɪ/
-  translation: to enrich
-  pos: verb
-- lemma: звичайно
-  ipa: /zwɪˈt͡ʃɑjno/
-  translation: usually, of course
-  pos: adv
-- lemma: зненацька
-  ipa: /znɛˈnɑt͡sʲkɑ/
-  translation: suddenly, unexpectedly
-  pos: adv
-- lemma: комбінувати
-  ipa: /kombʲinuˈwɑtɪ/
-  translation: to combine
-  pos: verb
-- lemma: крик
-  ipa: /krɪk/
-  translation: scream, cry
-  pos: noun
-  gender: m
-- lemma: кульмінація
-  ipa: /kulʲmʲinɑˈt͡sʲijɑ/
-  translation: culmination, climax
-  pos: noun
-  gender: f
-- lemma: коло
-  ipa: /ˈkolo/
-  translation: circle, near
-  pos: noun
-  gender: n
 - lemma: лаконічний
-  ipa: /lɐkoˈnʲit͡ʃnɪj/
-  translation: laconic, concise
+  ipa: /lakɔnˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-- lemma: мить
-  ipa: /mɪtʲ/
-  translation: instant, moment
-  pos: noun
-  gender: f
-- lemma: Мовчанко
-  ipa: /mowˈt͡ʃɑnko/
-  translation: Movchenko (surname)
-  pos: propn
-  gender: f
-- lemma: мовчки
-  ipa: /ˈmowt͡ʃkɪ/
-  translation: silently
-  pos: adv
 - lemma: наростання
-  ipa: /nɐrosˈtɑnʲːɑ/
-  translation: growth, increase
+  ipa: /narɔstˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: небажаний
-  ipa: /nɛbɐˈʒɑnɪj/
-  translation: undesirable
-  pos: adj
-- lemma: недомовленість
-  ipa: /nɛdomowˈlɛnʲistʲ/
-  translation: implication, something left unsaid
-  pos: noun
-  gender: f
-- lemma: незрозумілий
-  ipa: /nɛzrozuˈmʲilɪj/
-  translation: incomprehensible
-  pos: adj
-- lemma: незрозуміло
-  ipa: /nɛzrozuˈmʲilo/
-  translation: incomprehensibly, unclear
-  pos: adv
-- lemma: неминуче
-  ipa: /nɛmɪˈnut͡ʃɛ/
-  translation: inevitably
-  pos: adv
-- lemma: несамостійний
-  ipa: /nɛsɐmosˈtʲijnɪj/
-  translation: dependent, not independent
-  pos: adj
-- lemma: нескінченний
-  ipa: /nɛsˈkʲint͡ʃɛnːɪj/
-  translation: endless, infinite
-  pos: adj
-- lemma: несміливо
-  ipa: /nɛsˈmʲilɪwo/
-  translation: timidly
-  pos: adv
-- lemma: ніжно
-  ipa: /ˈnʲiʒno/
-  translation: tenderly, gently
-  pos: adv
-- lemma: оповідь
-  ipa: /opoˈwʲidʲ/
-  translation: narrative, story
-  pos: noun
-  gender: f
 - lemma: парцельований
-  ipa: /pɑrt͡sɛlʲoˈwɑnɪj/
-  translation: parceled (syntax)
+  ipa: /part͡sɛlʲˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: пауза
-  ipa: /ˈpɑuzɑ/
-  translation: pause
-  pos: noun
-  gender: f
-- lemma: Перон
-  ipa: /pɛˈron/
-  translation: Peron (surname)
-  pos: propn
-  gender: m
-- lemma: повнота
-  ipa: /pownoˈtɑ/
-  translation: fullness, completeness
-  pos: noun
-  gender: f
-- lemma: постукати
-  ipa: /postuˈkɑtɪ/
-  translation: to knock, to tap
-  pos: verb
-- lemma: похилитися
-  ipa: /poxɪˈlɪtɪsʲɑ/
-  translation: to lean, to bend
-  pos: verb
-- lemma: почути
-  ipa: /poˈt͡ʃutɪ/
-  translation: to hear
-  pos: verb
-- lemma: причаїтися
-  ipa: /prɪt͡ʃɐˈjitɪsʲɑ/
-  translation: to lurk, to lie in wait
-  pos: verb
-- lemma: пропускати
-  ipa: /propusˈkɑtɪ/
-  translation: to skip, to omit
-  pos: verb
-- lemma: прощати
-  ipa: /proˈʃt͡ʃɑtɪ/
-  translation: to forgive
-  pos: verb
-- lemma: прямувати
-  ipa: /prʲɑmuˈwɑtɪ/
-  translation: to head, to go towards
-  pos: verb
-- lemma: півслова
-  ipa: /pʲiwˈslowɑ/
-  translation: half a word
-  pos: noun
-  gender: n
-- lemma: ритмізація
-  ipa: /rɪtmʲizɑˈt͡sʲijɑ/
-  translation: rhythmization
-  pos: noun
-  gender: f
-- lemma: розбиття
-  ipa: /rozbɪtˈtʲɑ/
-  translation: breaking, division
-  pos: noun
-  gender: n
-- lemma: роздроблений
-  ipa: /rozdrobˈlɛnɪj/
-  translation: fragmented
+- lemma: пропущений
+  ipa: /prɔpˈuʃt͡ʃɛnɪj/
+  translation: ''
   pos: adj
-- lemma: розлогий
-  ipa: /rozˈloɦɪj/
-  translation: extensive, detailed
-  pos: adj
-- lemma: розчленування
-  ipa: /rot͡ʃlɛnuˈwɑnʲːɑ/
-  translation: segmentation, division
-  pos: noun
-  gender: n
-- lemma: рушити
-  ipa: /ruˈʃɪtɪ/
-  translation: to set off, to move
+- lemma: прошепотіти
+  ipa: /prɔʃɛpɔtˈitɪ/
+  translation: ''
   pos: verb
-- lemma: силует
-  ipa: /sɪluˈɛt/
-  translation: silhouette
-  pos: noun
-  gender: m
-- lemma: солончак
-  ipa: /soˈlont͡ʃɑk/
-  translation: salt marsh, solonchak
-  pos: noun
-  gender: m
-- lemma: спорожніти
-  ipa: /sporoʒˈnʲitɪ/
-  translation: to become empty
-  pos: verb
-- lemma: співучасник
-  ipa: /spʲiwut͡ʃɑsnɪk/
-  translation: accomplice
-  pos: noun
-  gender: m
-- lemma: стільки
-  ipa: /ˈstʲilʲkɪ/
-  translation: so much, so many
-  pos: adv
-- lemma: терпляче
-  ipa: /tɛrplʲɑt͡ʃɛ/
-  translation: patiently
-  pos: adv
-- lemma: універсальність
-  ipa: /unʲiwɛrsɑlʲnʲistʲ/
-  translation: universality
-  pos: noun
-  gender: f
-- lemma: Цезар
-  ipa: /ˈt͡sɛzɑr/
-  translation: Caesar
-  pos: propn
-  gender: m
-- lemma: чергувати
-  ipa: /t͡ʃɛrɦuˈwɑtɪ/
-  translation: to alternate
-  pos: verb
-- lemma: Юлій
-  ipa: /ˈjulʲij/
-  translation: Julius
-  pos: propn
-  gender: m

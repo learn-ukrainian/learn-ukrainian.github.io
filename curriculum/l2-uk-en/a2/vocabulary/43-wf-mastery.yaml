@@ -2,321 +2,301 @@ module: 43-wf-mastery
 level: A2
 version: '2.0'
 items:
+- lemma: артикулювати
+  ipa: /artɪkuljuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: ач
-  ipa: ɐt͡ʃ
-  translation: suffix -ach
-  pos: other
+  ipa: /at͡ʃ/
+  translation: ''
+  pos: part
 - lemma: бестселер
-  ipa: bestˈsɛler
-  translation: bestseller
+  ipa: /bɛstsˈɛlɛr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: будівельник
-  ipa: budʲiˈvɛlʲnɪk
-  translation: builder
+  ipa: /budiʋˈɛlʲnɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: виступ
-  ipa: ˈvɪstup
-  translation: performance/speech
+- lemma: бізнес-план
+  ipa: /bˈiznɛs-plan/
+  translation: ''
   pos: noun
   gender: m
-- lemma: виступати
-  ipa: vɪstuˈpɑte
-  translation: to perform
+- lemma: виголосити
+  ipa: /ʋˈɪɦɔlɔsɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вимовити
+  ipa: /ʋˈɪmɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: винайти
+  ipa: /ʋˈɪnajtɪ/
+  translation: ''
   pos: verb
 - lemma: вниз
-  ipa: vnɪz
-  translation: down
+  ipa: /ʋnɪz/
+  translation: ''
   pos: adv
-- lemma: всесвіт
-  ipa: ˈvsesʲvʲit
-  translation: universe
-  pos: noun
-  gender: m
 - lemma: газ
-  ipa: hɑz
-  translation: gas
+  ipa: /ɦaz/
+  translation: ''
   pos: noun
   gender: m
-- lemma: депресія
-  ipa: deˈprɛsʲijɐ
-  translation: depression
+- lemma: газа
+  ipa: /ɦˈaza/
+  translation: ''
   pos: noun
   gender: f
-- lemma: дум
-  ipa: dum
-  translation: thought (root)
+- lemma: депресія
+  ipa: /dɛprˈɛsija/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
+- lemma: дума
+  ipa: /dˈuma/
+  translation: ''
+  pos: noun
 - lemma: діл
-  ipa: dʲil
-  translation: part/share (root)
+  ipa: /dil/
+  translation: ''
   pos: noun
   gender: m
 - lemma: елемент
-  ipa: eleˈmɛnt
-  translation: element
-  pos: noun
-  gender: m
-- lemma: етап
-  ipa: eˈtɑp
-  translation: stage
+  ipa: /ɛlɛmˈɛnt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: ець
-  ipa: ɛt͡sʲ
-  translation: suffix -ets'
-  pos: other
+  ipa: /ɛt͡sʲ/
+  translation: ''
+  pos: noun
 - lemma: задум
-  ipa: ˈzɑdum
-  translation: idea/plan
+  ipa: /zˈadum/
+  translation: ''
   pos: noun
   gender: m
-- lemma: заслуга
-  ipa: zɐˈsluhɐ
-  translation: merit
+- lemma: заслухати
+  ipa: /zaslˈuxatɪ/
+  translation: ''
+  pos: verb
+- lemma: здатність
+  ipa: /zdˈatnistʲ/
+  translation: ''
   pos: noun
   gender: f
+- lemma: здогадатися
+  ipa: /zdɔɦadˈatɪsja/
+  translation: ''
+  pos: verb
 - lemma: зем
-  ipa: zɛm
-  translation: earth (root)
+  ipa: /zɛm/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: земляк
-  ipa: zemˈlʲɑk
-  translation: countryman
-  pos: propn
-  gender: m
-- lemma: земний
-  ipa: zemˈnɪj
-  translation: earthly
-  pos: adj
-  gender: m
 - lemma: золото
-  ipa: ˈzɔloto
-  translation: gold
+  ipa: /zˈɔlɔtɔ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: катастрофа
-  ipa: kɐtɐˈstrɔfɐ
-  translation: catastrophe
+  ipa: /katastrˈɔfa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: код
-  ipa: kɔd
-  translation: code
+- lemma: клич
+  ipa: /klɪt͡ʃ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: комунікація
-  ipa: komunʲiˈkɑt͡sʲijɐ
-  translation: communication
-  pos: noun
-  gender: f
-- lemma: конференція
-  ipa: konfeˈrɛnt͡sʲijɐ
-  translation: conference
-  pos: noun
-  gender: f
-- lemma: концепція
-  ipa: konˈt͡sɛpt͡sʲijɐ
-  translation: concept
-  pos: noun
-  gender: f
+- lemma: комбінувати
+  ipa: /kɔmbinuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: комбінуючи
+  ipa: /kɔmbinˈujut͡ʃɪ/
+  translation: ''
+  pos: verb
 - lemma: лікарь
-  ipa: lʲiˈkɑr
-  translation: doctor (typo лікар)
+  ipa: /likarʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: мовець
-  ipa: moˈʋɛt͡sʲ
-  translation: speaker
-  pos: propn
-  gender: m
+- lemma: майстерність
+  ipa: /majstˈɛrnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: мовити
-  ipa: ˈmɔʋɪte
-  translation: to speak
+  ipa: /mˈɔʋɪtɪ/
+  translation: ''
   pos: verb
 - lemma: міркування
-  ipa: mʲirkuˈʋɑnʲːɐ
-  translation: reasoning
+  ipa: /mirkuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: містян
-  ipa: mʲisˈtʲɑn
-  translation: townspeople
-  pos: noun
-  gender: m
 - lemma: містянин
-  ipa: mʲisˈtʲɑnɪn
-  translation: townsman
-  pos: propn
-  gender: m
-- lemma: народ
-  ipa: nɐˈrɔd
-  translation: people/nation
+  ipa: /mistjanˈɪn/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: науковець
-  ipa: nɐuˈkɔʋet͡sʲ
-  translation: scientist
+  ipa: /naukˈɔʋɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: нація
-  ipa: ˈnɑt͡sʲijɐ
-  translation: nation
+  ipa: /nˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: невчення
-  ipa: neˈvt͡ʃɛnʲːɐ
-  translation: ignorance
-  pos: noun
-  gender: n
-- lemma: нень
-  ipa: nɛnʲ
-  translation: suffix -nen'
+  ipa: /nɛʋt͡ʃˈɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: неслухняний
-  ipa: nesluxˈnʲɑnɪj
-  translation: disobedient
+  ipa: /nɛsluxnˈjanɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: опускати
-  ipa: opusˈkɑte
-  translation: to lower/drop
+- lemma: никнути
+  ipa: /nˈɪknutɪ/
+  translation: ''
   pos: verb
-- lemma: освіта
-  ipa: oˈsʲvʲitɐ
-  translation: education
+- lemma: ння
+  ipa: /nnja/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: передмістя
-  ipa: peredˈmʲisʲtʲɐ
-  translation: suburb
-  pos: noun
-  gender: f
+- lemma: опускати
+  ipa: /ɔpuskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: пасувати
+  ipa: /pasuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: переговорити
+  ipa: /pɛrɛɦɔʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: передумати
+  ipa: /pɛrɛdˈumatɪ/
+  translation: ''
+  pos: verb
+- lemma: перемовити
+  ipa: /pɛrɛmˈɔʋɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: перемога
-  ipa: pereˈmɔhɐ
-  translation: victory
+  ipa: /pɛrɛmˈɔɦa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: перерозподіл
-  ipa: pererozˈpɔdʲil
-  translation: redistribution
+  ipa: /pɛrɛrɔzpˈɔdil/
+  translation: ''
   pos: noun
   gender: m
-- lemma: перехрестя
-  ipa: pereˈxrɛsʲtʲɐ
-  translation: crossroads
+- lemma: погане
+  ipa: /pɔɦanɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: позитивний
-  ipa: pozɪˈtɪʋnɪj
-  translation: positive
-  pos: adj
-  gender: f
+- lemma: послух
+  ipa: /pˈɔslux/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: президент
+  ipa: /prɛzɪdˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: придумати
-  ipa: prɪˈdumɐte
-  translation: to invent (perf)
+  ipa: /prɪdˈumatɪ/
+  translation: ''
   pos: verb
 - lemma: промова
-  ipa: proˈmɔʋɐ
-  translation: speech
+  ipa: /prɔmˈɔʋa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: рід
-  ipa: rʲid
-  translation: lineage, genus, gender (grammar)
-  pos: noun
-  gender: m
 - lemma: психолог
-  ipa: psɪˈxɔloh
-  translation: psychologist
+  ipa: /psɪxˈɔlɔɦ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: розвиток
-  ipa: ˈrɔzvɪtok
-  translation: development
-  pos: noun
-  gender: m
-- lemma: світити
-  ipa: sʲvʲiˈtɪte
-  translation: to shine
+- lemma: розкласти
+  ipa: /rɔzklˈastɪ/
+  translation: ''
   pos: verb
-- lemma: серйозний
-  ipa: serˈjɔznɪj
-  translation: serious
-  pos: adj
+- lemma: словотвір
+  ipa: /slɔʋɔtʋˈir/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: слухатися
-  ipa: ˈsluxɐtɪsʲɐ
-  translation: to obey
+  ipa: /slˈuxatɪsja/
+  translation: ''
   pos: verb
 - lemma: слухняний
-  ipa: sluxˈnʲɑnɪj
-  translation: obedient
+  ipa: /sluxnˈjanɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: соціальний
-  ipa: sot͡sʲiˈɑlʲnɪj
-  translation: social
-  pos: adj
-- lemma: срібло
-  ipa: ˈsrʲiblo
-  translation: silver
-  pos: noun
-  gender: n
-- lemma: стиль
-  ipa: stɪlʲ
-  translation: style
-  pos: noun
-  gender: m
-- lemma: суб'єктивний
-  ipa: subjekˈtɪʋnɪj
-  translation: subjective
-  pos: adj
-  gender: m
-- lemma: темрява
-  ipa: ˈtɛmrʲɐʋɐ
-  translation: darkness
+- lemma: слухняність
+  ipa: /sluxnˈjanistʲ/
+  translation: ''
   pos: noun
   gender: f
+- lemma: соціальний
+  ipa: /sɔt͡siˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: срібло
+  ipa: /srˈiblɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сумний
+  ipa: /sumnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: темрявий
+  ipa: /tˈɛmrjaʋɪj/
+  translation: ''
+  pos: adj
 - lemma: фабрика
-  ipa: ˈfɑbrɪkɐ
-  translation: factory
+  ipa: /fˈabrɪka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: фінальний
-  ipa: fiˈnɑlʲnɪj
-  translation: final
+  ipa: /finˈalʲnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: хрест
-  ipa: xrɛst
-  translation: cross
-  pos: other
+  ipa: /xrɛst/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: чу
-  ipa: t͡ʃu
-  translation: hear (root)
-  pos: other
+  ipa: /t͡ʃu/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: язик
-  ipa: jɐˈzɪk
-  translation: tongue
+  ipa: /jazˈɪk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: ясний
-  ipa: jɐsˈnɪj
-  translation: clear
+  ipa: /ˈjasnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: іноземець
-  ipa: inoˈzemetsʲ
-  translation: foreigner
-  pos: noun
-  gender: m
 - lemma: ість
-  ipa: isʲtʲ
-  translation: suffix -ist'
+  ipa: /istʲ/
+  translation: ''
   pos: noun
-  gender: n
+  gender: f

@@ -1,81 +1,48 @@
 module: 70-a2-final-exam
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: іспит
-  ipa: /ˈisʲpɪt/
-  translation: exam
-  pos: noun
-  gender: m
-- lemma: оцінка
-  ipa: /ɔˈt͡sʲinkɐ/
-  translation: grade/score
+- lemma: варта
+  ipa: /ʋˈarta/
+  translation: ''
   pos: noun
   gender: f
-- lemma: завдання
-  ipa: /zɐu̯ˈdɑnʲːɐ/
-  translation: task/exercise
-  pos: noun
-  gender: n
-- lemma: відповідь
-  ipa: /ʋʲidˈpɔʋʲidʲ/
-  translation: answer
-  pos: noun
-  gender: f
-- lemma: перевірка
-  ipa: /pɛrɛˈʋʲirkɐ/
-  translation: check/review
-  pos: noun
-  gender: f
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
+- lemma: включаючи
+  ipa: /ʋkljut͡ʃˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: досягнутий
+  ipa: /dɔsˈjaɦnutɪj/
+  translation: ''
+  pos: adj
+- lemma: засвоїти
+  ipa: /zasʋˈɔjitɪ/
+  translation: ''
+  pos: verb
+- lemma: прогрес
+  ipa: /prɔɦrˈɛs/
+  translation: ''
   pos: noun
   gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: local
+- lemma: розташований
+  ipa: /rɔztaʃˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: відмінок
-  ipa: /ʋʲidˈmʲinɔk/
-  translation: grammatical case
-  pos: noun
-  gender: m
-- lemma: родовий
-  ipa: /rɔdɔˈʋɪj/
-  translation: genitive
-  pos: adj
-- lemma: недоконаний
-  ipa: /nɛdɔˈkɔnɐnɪj/
-  translation: imperfective
-  pos: adj
-- lemma: орудний
-  ipa: /ɔˈrudnɪj/
-  translation: instrumental
-  pos: adj
-- lemma: знахідний
-  ipa: /znɐˈxʲidnɪj/
-  translation: accusative
-  pos: adj
-- lemma: доконаний
-  ipa: /dɔˈkɔnɐnɪj/
-  translation: perfective
-  pos: adj
-- lemma: вид
-  ipa: /ʋɪd/
-  translation: aspect
+- lemma: сказити
+  ipa: /skazˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: спираючись
+  ipa: /spɪrˈajut͡ʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: тель
+  ipa: /tɛlʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: давальний
-  ipa: /dɐˈʋɑlʲnɪj/
-  translation: dative
-  pos: adj
-- lemma: кличний
-  ipa: /ˈkɫɪt͡ʃnɪj/
-  translation: vocative
-  pos: adj
+- lemma: шанс
+  ipa: /ʃans/
+  translation: ''
+  pos: noun
+  gender: m

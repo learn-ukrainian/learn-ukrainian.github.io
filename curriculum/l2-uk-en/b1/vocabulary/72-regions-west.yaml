@@ -2,265 +2,152 @@ module: 72-regions-west
 level: B1
 version: '2.0'
 items:
-  - lemma: австрійський
-    ipa: /au̯ˈstrʲijsʲkɪj/
-    translation: Austrian
-    pos: adj
-    gender: m
-  - lemma: ароматний
-    ipa: /arɔˈmatnɪj/
-    translation: fragrant
-    pos: adj
-    gender: m
-  - lemma: багатокультурний
-    ipa: /bahatɔkulʲˈturnɪj/
-    translation: multicultural
-    pos: adj
-    gender: m
-  - lemma: багатокультурність
-    ipa: /bahatɔkulʲˈturnʲisʲtʲ/
-    translation: multiculturalism
-    pos: noun
-    gender: f
-  - lemma: багатомовність
-    ipa: /bahatɔˈmɔu̯nʲisʲtʲ/
-    translation: multilingualism
-    pos: noun
-    gender: f
-  - lemma: бануш
-    ipa: /ˈbanuʃ/
-    translation: banosh (traditional dish)
-    pos: noun
-    gender: m
-  - lemma: берегово
-    ipa: /bɛrɛˈhɔvɔ/
-    translation: Berehove
-    pos: propn
-    gender: n
-  - lemma: бойко
-    ipa: /ˈbɔjkɔ/
-    translation: Boyko (ethnic group)
-    pos: noun
-    gender: m
-  - lemma: бойківський
-    ipa: /ˈbɔjkʲiu̯sʲkɪj/
-    translation: Boyko (adj)
-    pos: adj
-    gender: m
-  - lemma: бринза
-    ipa: /ˈbrɪnza/
-    translation: brynza (cheese)
-    pos: noun
-    gender: f
-  - lemma: брукований
-    ipa: /bruˈkɔvanɪj/
-    translation: paved (with cobbles)
-    pos: adj
-    gender: m
-  - lemma: випекти
-    ipa: /vɪpɛkˈtɪ/
-    translation: to bake
-    pos: verb
-  - lemma: високий
-    ipa: /vɪˈsɔkɪj/
-    translation: high
-    pos: adj
-    gender: m
-  - lemma: високогір'я
-    ipa: /vɪsɔkɔˈhʲirjːa/
-    translation: highlands
-    pos: noun
-    gender: n
-  - lemma: вуличка
-    ipa: /ˈvulɪt͡ʃka/
-    translation: small street
-    pos: noun
-    gender: f
-  - lemma: вірменський
-    ipa: /virˈmɛnsʲkɪj/
-    translation: Armenian
-    pos: adj
-    gender: m
-  - lemma: габсбурзький
-    ipa: /ˈhabsburzʲkɪj/
-    translation: Habsburg
-    pos: adj
-    gender: m
-  - lemma: галицький
-    ipa: /ˈhalɪt͡sʲkɪj/
-    translation: Galician
-    pos: adj
-    gender: m
-  - lemma: гастрономія
-    ipa: /hastrɔnɔˈmʲija/
-    translation: gastronomy
-    pos: noun
-    gender: f
-  - lemma: грибний
-    ipa: /hrɪbˈnɪj/
-    translation: mushroom (adj)
-    pos: adj
-    gender: m
-  - lemma: гуцульщина
-    ipa: /huˈt͡sulʲʃt͡ʃɪna/
-    translation: Hutsulshchyna
-    pos: propn
-    gender: f
-  - lemma: джазовий
-    ipa: /dʒaˈzɔvɪj/
-    translation: jazz (adj)
-    pos: adj
-    gender: m
-  - lemma: домініканський
-    ipa: /dɔminʲiˈkansʲkɪj/
-    translation: Dominican
-    pos: adj
-    gender: m
-  - lemma: дримба
-    ipa: /ˈdrɪmba/
-    translation: drymba (musical instrument)
-    pos: noun
-    gender: f
-  - lemma: духовий
-    ipa: /duxɔˈvɪj/
-    translation: wind (instrument)
-    pos: adj
-    gender: m
-  - lemma: забудова
-    ipa: /zabuˈdɔva/
-    translation: development, building
-    pos: noun
-    gender: f
-  - lemma: закарпатський
-    ipa: /zakarpatsʲkɪj/
-    translation: Transcarpathian
-    pos: adj
-    gender: m
-  - lemma: заснувати
-    ipa: /zasnuˈvatɪ/
-    translation: to found
-    pos: verb
-  - lemma: західнокарпатський
-    ipa: /zaxidnɔkarˈpatsʲkɪj/
-    translation: West Carpathian
-    pos: adj
-    gender: m
-  - lemma: класицизм
-    ipa: /klasɪˈt͡sɪzm/
-    translation: classicism
-    pos: noun
-    gender: m
-  - lemma: ковальство
-    ipa: /kɔˈvalʲstvɔ/
-    translation: blacksmithing
-    pos: noun
-    gender: n
-  - lemma: косино
-    ipa: /ˈkɔsɪnɔ/
-    translation: Kosyno
-    pos: propn
-    gender: n
-  - lemma: костьол
-    ipa: /kɔˈstʲɔl/
-    translation: Catholic church
-    pos: noun
-    gender: m
-  - lemma: кульчицький
-    ipa: /kulʲˈt͡ʃɪt͡sʲkɪj/
-    translation: Kulchytskyi
-    pos: propn
-    gender: m
-  - lemma: лемко
-    ipa: /ˈlɛmkɔ/
-    translation: Lemko (ethnic group)
-    pos: noun
-    gender: m
-  - lemma: лемківський
-    ipa: /ˈlɛmkʲiu̯sʲkɪj/
-    translation: Lemko (adj)
-    pos: adj
-    gender: m
-  - lemma: панорама
-    ipa: /panɔˈrama/
-    translation: panorama
-    pos: noun
-    gender: f
-  - lemma: попрактикувати
-    ipa: /pɔpraktɪkuˈvatɪ/
-    translation: to practice
-    pos: verb
-  - lemma: пряник
-    ipa: /ˈprʲanɪk/
-    translation: gingerbread
-    pos: noun
-    gender: m
-  - lemma: румун
-    ipa: /ruˈmun/
-    translation: Romanian
-    pos: noun
-    gender: m
-  - lemma: словак
-    ipa: /slɔˈvak/
-    translation: Slovak
-    pos: noun
-    gender: m
-  - lemma: словаччина
-    ipa: /slɔˈvat͡ʃt͡ʃɪna/
-    translation: Slovakia
-    pos: propn
-    gender: f
-  - lemma: собор
-    ipa: /sɔˈbɔr/
-    translation: cathedral
-    pos: noun
-    gender: m
-  - lemma: солодкість
-    ipa: /sɔˈlɔdkʲisʲtʲ/
-    translation: sweetness
-    pos: noun
-    gender: f
-  - lemma: сполука
-    ipa: /spɔˈluka/
-    translation: compound, connection
-    pos: noun
-    gender: f
-  - lemma: термальний
-    ipa: /tɛrˈmalʲnɪj/
-    translation: thermal
-    pos: adj
-    gender: m
-  - lemma: трембіта
-    ipa: /trɛmˈbita/
-    translation: trembita (long horn)
-    pos: noun
-    gender: f
-  - lemma: франківщина
-    ipa: /franˈkiu̯ʃt͡ʃɪna/
-    translation: Frankivsk region
-    pos: propn
-    gender: f
-  - lemma: цілющий
-    ipa: /t͡sʲilʲuˈʃt͡ʃɪj/
-    translation: healing
-    pos: adj
-    gender: m
-  - lemma: чернівецький
-    ipa: /t͡ʃɛrnʲiˈvɛt͡sʲkɪj/
-    translation: Chernivtsi (adj)
-    pos: adj
-    gender: m
-  - lemma: чехословаччина
-    ipa: /t͡ʃɛxɔslɔˈvat͡ʃt͡ʃɪna/
-    translation: Czechoslovakia
-    pos: propn
-    gender: f
-  - lemma: штрудель
-    ipa: /ˈʃtrudɛlʲ/
-    translation: strudel
-    pos: noun
-    gender: m
-  - lemma: юшка
-    ipa: /ˈjuʃka/
-    translation: soup (usually fish or mushroom)
-    pos: noun
-    gender: f
+- lemma: австро-угорський
+  ipa: /aʋstrɔ-uɦˈɔrsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: ароматний
+  ipa: /arɔmˈatnɪj/
+  translation: ''
+  pos: adj
+- lemma: багатокультурний
+  ipa: /baɦatɔkulʲtˈurnɪj/
+  translation: ''
+  pos: adj
+- lemma: багатокультурність
+  ipa: /baɦatɔkulʲturnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бануш
+  ipa: /bˈanuʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: бойко
+  ipa: /bˈɔjkɔ/
+  translation: ''
+  pos: noun
+- lemma: брукований
+  ipa: /brukˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: варений
+  ipa: /ʋarɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: високогір'я
+  ipa: /ʋɪsɔkɔɦˈirja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: габсбурзький
+  ipa: /ɦabsburzʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: гастрономія
+  ipa: /ɦastrɔnˈɔmija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: греко-католицький
+  ipa: /ɦrˈɛkɔ-katɔlɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: домініканський
+  ipa: /dɔminikˈansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: етнографічний
+  ipa: /ɛtnɔɦrafˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: західнокарпатський
+  ipa: /zaxidnɔkarpˈatsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: західноукраїнський
+  ipa: /zaxidnɔukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: католицький
+  ipa: /katɔlˈɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: лемко
+  ipa: /lˈɛmkɔ/
+  translation: ''
+  pos: noun
+- lemma: луцьк
+  ipa: /lut͡sʲk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: п'єрникнути
+  ipa: /pjɛrnɪknutɪ/
+  translation: ''
+  pos: verb
+- lemma: польський
+  ipa: /pˈɔlʲsʲkɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: попрактикувати
+  ipa: /pɔpraktɪkuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: приїздити
+  ipa: /prɪjizdˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: пряник
+  ipa: /prˈjanɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прянощі
+  ipa: /prˈjanɔʃt͡ʃi/
+  translation: ''
+  pos: noun
+- lemma: румунський
+  ipa: /rumˈunsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: різноманіття
+  ipa: /riznɔmanˈittja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сполука
+  ipa: /spɔlˈuka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стриманий
+  ipa: /strˈɪmanɪj/
+  translation: ''
+  pos: adj
+- lemma: термальний
+  ipa: /tɛrmˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: трембіта
+  ipa: /trɛmbˈita/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: турка
+  ipa: /tˈurka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: єдність
+  ipa: /ˈjɛdnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: івано-франківщина
+  ipa: /iʋanɔ-frankiʋʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f

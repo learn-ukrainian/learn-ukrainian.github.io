@@ -866,32 +866,60 @@ def comparative_study_to_jsx(data: ComparativeStudyData, title: str, is_ukrainia
 
 # Callout mapping
 CALLOUT_MAP = {
-    'tip': {'type': 'tip'},
-    'note': {'type': 'note'},
-    'warning': {'type': 'warning'},
-    'important': {'type': 'warning'},
-    'caution': {'type': 'caution'},
-    'info': {'type': 'info'},
-    'observe': {'type': 'tip', 'icon': '🔍', 'title': 'Pattern Discovery'},
-    'resources': {'type': 'info', 'icon': '🎧', 'title': 'External Resources'},
-    'example': {'type': 'info', 'icon': '📝', 'title': 'Example'},
-    'conversation': {'type': 'note', 'icon': '💬', 'title': 'Conversation'},
-    'summary': {'type': 'note', 'icon': '📋', 'title': 'Summary'},
+    'tip': {'type': 'tip', 'icon': '💡', 'title': 'Tip', 'uk_title': 'Порада'},
+    'note': {'type': 'note', 'icon': '📝', 'title': 'Note', 'uk_title': 'Примітка'},
+    'warning': {'type': 'warning', 'icon': '⚠️', 'title': 'Warning', 'uk_title': 'Увага'},
+    'important': {'type': 'warning', 'icon': '❗', 'title': 'Important', 'uk_title': 'Важливо'},
+    'caution': {'type': 'caution', 'icon': '☢️', 'title': 'Caution', 'uk_title': 'Обережно'},
+    'info': {'type': 'info', 'icon': 'ℹ️', 'title': 'Info', 'uk_title': 'Інформація'},
+    'observe': {'type': 'tip', 'icon': '🔍', 'title': 'Pattern Discovery', 'uk_title': 'Спостереження'},
+    'resources': {'type': 'info', 'icon': '🎧', 'title': 'External Resources', 'uk_title': 'Зовнішні ресурси'},
+    'example': {'type': 'info', 'icon': '📝', 'title': 'Example', 'uk_title': 'Приклад'},
+    'conversation': {'type': 'note', 'icon': '💬', 'title': 'Conversation', 'uk_title': 'Розмова'},
+    'summary': {'type': 'note', 'icon': '📋', 'title': 'Summary', 'uk_title': 'Підсумок'},
     'solution': {'type': 'solution'},  # Collapsible answer reveal for checkpoints
-    'model-answer': {'type': 'success', 'icon': '✅', 'title': 'Model Answer'},
-    'rubric': {'type': 'info', 'icon': '📊', 'title': 'Rubric'},
-    'analysis': {'type': 'info', 'icon': '🧐', 'title': 'Analysis'},
-    'history-bite': {'type': 'info', 'icon': '🕰️', 'title': 'History Bite'},
-    'myth-buster': {'type': 'danger', 'icon': '🛡️', 'title': 'Myth Buster'},
-    'quote': {'type': 'note', 'icon': '📜', 'title': 'Quote'},
-    'context': {'type': 'info', 'icon': '🌍', 'title': 'Context'},
-    'legacy': {'type': 'tip', 'icon': '💎', 'title': 'Legacy'},
-    'reflection': {'type': 'info', 'icon': '🤔', 'title': 'Reflection'},
-    'source': {'type': 'note', 'icon': '📖', 'title': 'Source'},
+    'model-answer': {'type': 'success', 'icon': '✅', 'title': 'Model Answer', 'uk_title': 'Модельна відповідь'},
+    'rubric': {'type': 'info', 'icon': '📊', 'title': 'Rubric', 'uk_title': 'Критерії оцінювання'},
+    'analysis': {'type': 'info', 'icon': '🧐', 'title': 'Analysis', 'uk_title': 'Аналіз'},
+    'history-bite': {'type': 'info', 'icon': '🕰️', 'title': 'History Bite', 'uk_title': 'Історична довідка'},
+    'myth-buster': {'type': 'danger', 'icon': '🛡️', 'title': 'Myth Buster', 'uk_title': 'Руйнівник міфів'},
+    'quote': {'type': 'note', 'icon': '📜', 'title': 'Quote', 'uk_title': 'Цитата'},
+    'context': {'type': 'info', 'icon': '🌍', 'title': 'Context', 'uk_title': 'Контекст'},
+    'legacy': {'type': 'tip', 'icon': '💎', 'title': 'Legacy', 'uk_title': 'Спадщина'},
+    'reflection': {'type': 'info', 'icon': '🤔', 'title': 'Reflection', 'uk_title': 'Роздуми'},
+    'source': {'type': 'note', 'icon': '📖', 'title': 'Source', 'uk_title': 'Джерело'},
+    'culture': {'type': 'note', 'icon': '🏺', 'title': 'Culture', 'uk_title': 'Культура'},
+    'cultural': {'type': 'note', 'icon': '🏺', 'title': 'Cultural Context', 'uk_title': 'Культура'},
+    'culture-note': {'type': 'note', 'icon': '🏺', 'title': 'Culture Note', 'uk_title': 'Культурна примітка'},
+    'culture-spot': {'type': 'info', 'icon': '🌍', 'title': 'Culture Spot', 'uk_title': 'Культурний куточок'},
+    'heritage': {'type': 'tip', 'icon': '💎', 'title': 'Heritage', 'uk_title': 'Спадщина'},
+    'history': {'type': 'info', 'icon': '🕰️', 'title': 'History', 'uk_title': 'Історія'},
+    'historical': {'type': 'info', 'icon': '🕰️', 'title': 'Historical Context', 'uk_title': 'Історичний контекст'},
+    'history-bite': {'type': 'info', 'icon': '🕰️', 'title': 'History Bite', 'uk_title': 'Історична довідка'},
+    'narrative': {'type': 'note', 'icon': '📖', 'title': 'Narrative', 'uk_title': 'Розповідь'},
+    'interactive': {'type': 'tip', 'icon': '🎮', 'title': 'Interactive', 'uk_title': 'Інтерактив'},
+    'vocabulary': {'type': 'info', 'icon': '📚', 'title': 'Vocabulary', 'uk_title': 'Словник'},
+    'grammar': {'type': 'info', 'icon': '⚙️', 'title': 'Grammar', 'uk_title': 'Граматика'},
+    'idiom': {'type': 'success', 'icon': '🗣️', 'title': 'Idiom', 'uk_title': 'Фразеологізм'},
+    'proverb': {'type': 'success', 'icon': '📜', 'title': 'Proverb', 'uk_title': 'Прислів’я'},
+    'language-note': {'type': 'info', 'icon': '🔍', 'title': 'Language Note', 'uk_title': 'Мовна примітка'},
+    'did-you-know': {'type': 'info', 'icon': '💡', 'title': 'Did You Know?', 'uk_title': 'Чи знали ви?'},
+    'fact': {'type': 'info', 'icon': 'ℹ️', 'title': 'Fact', 'uk_title': 'Факт'},
+    'profile': {'type': 'note', 'icon': '👤', 'title': 'Profile', 'uk_title': 'Портрет'},
+    'language-point': {'type': 'info', 'icon': '💡', 'title': 'Language Point', 'uk_title': 'Мовний момент'},
+    'ponder': {'type': 'info', 'icon': '💭', 'title': 'Ponder', 'uk_title': 'Поміркуйте'},
+    'real-world': {'type': 'tip', 'icon': '🌐', 'title': 'Real World', 'uk_title': 'Реальний світ'},
+    'realworld': {'type': 'tip', 'icon': '🌐', 'title': 'Real World', 'uk_title': 'Реальний світ'},
 }
 
-def convert_callouts(content: str) -> str:
-    """Convert GitHub-style callouts to Docusaurus admonitions."""
+def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
+    """Convert GitHub-style callouts to Docusaurus admonitions.
+    
+    Robustly handles:
+    1. Standard: > [!type]
+    2. Lazy: [!type] (missing marker)
+    3. Spaced: [!type] \n\n > content (blank lines before content)
+    """
     lines = content.split('\n')
     result = []
     i = 0
@@ -899,39 +927,82 @@ def convert_callouts(content: str) -> str:
     while i < len(lines):
         line = lines[i]
 
-        # Check for callout start: > [!type] (may have leading whitespace)
-        # Allow hyphens in type (e.g. model-answer)
-        callout_match = re.match(r'^(\s*)>\s*\[!([\w-]+)\]\s*(.*)', line)
+        # Check for callout start: any sequence of > and whitespace + [!type] or [\!type]
+        callout_match = re.match(r'^(\s*)[>\s]*\[\\?!([\w-]+)\]\s*(.*)', line)
         if callout_match:
-            indent = callout_match.group(1)  # Preserve indentation for output
+            indent = callout_match.group(1)
             callout_type = callout_match.group(2).lower()
             title_extra = callout_match.group(3).strip()
 
             config = CALLOUT_MAP.get(callout_type, {'type': 'note'})
             admon_type = config['type']
+            icon = config.get('icon', '')
 
             # Build title
             if title_extra:
-                title = title_extra
+                # If we have an icon, prepend it to the custom title
+                title = f"{icon} {title_extra}" if icon else title_extra
             elif 'title' in config:
-                icon = config.get('icon', '')
-                title = f"{icon} {config['title']}" if icon else config['title']
+                eng_title = config['title']
+                uk_title = config.get('uk_title', eng_title)
+                
+                display_title = uk_title if is_ukrainian_forced else eng_title
+                title = f"{icon} {display_title}" if icon else display_title
             else:
-                title = callout_type.title()
+                title = f"{icon} {callout_type.title()}" if icon else callout_type.title()
 
-            # Collect callout content - check for continuation lines (indented blockquotes too)
+            # Collect callout content
             callout_lines = []
             i += 1
-            while i < len(lines):
-                # Match continuation: optional whitespace + > + content
-                cont_match = re.match(r'^\s*>(.*)', lines[i])
-                if cont_match:
-                    callout_lines.append(cont_match.group(1).strip() if cont_match.group(1) else '')
-                    i += 1
-                else:
-                    break
+            
+            # Skip leading blank lines (lazy spacing)
+            while i < len(lines) and not lines[i].strip():
+                i += 1
+                
+            # Detect if content follows blockquote pattern
+            if i < len(lines) and lines[i].strip().startswith('>'):
+                # Blockquote continuation
+                while i < len(lines):
+                    # STOP if this line is a NEW callout header (even if nested)
+                    if re.match(r'^(\s*)[>\s]*\[\\?!([\w-]+)\]', lines[i]):
+                        break
 
-            # Special handling for solution callouts - use HTML details for collapsible
+                    # Match continuation: optional whitespace + > + optional space + content
+                    cont_match = re.match(r'^\s*>(.*)', lines[i])
+                    if cont_match:
+                        content_line = cont_match.group(1)
+                        if content_line.startswith(' '):
+                            content_line = content_line[1:]
+                        callout_lines.append(content_line)
+                        i += 1
+                    elif not lines[i].strip():
+                        # Peek at next line: if it has > and IS NOT a callout header, keep going
+                        if i + 1 < len(lines):
+                            next_line = lines[i+1]
+                            next_is_bq = next_line.strip().startswith('>')
+                            next_is_header = next_is_bq and re.match(r'^(\s*)[>\s]*\[![\w-]+\]', next_line)
+                            if next_is_bq and not next_is_header:
+                                callout_lines.append('')
+                                i += 1
+                                continue
+                        break
+                    else:
+                        break
+            else:
+                # Non-blockquote continuation (lazy format)
+                while i < len(lines):
+                    curr = lines[i]
+                    curr_stripped = curr.strip()
+                    if not curr_stripped:
+                        break
+                    if re.match(r'^#{1,6}\s', curr_stripped):
+                        break
+                    if re.match(r'^(\s*)[>\s]*\[\\?!([\w-]+)\]', curr_stripped):
+                        break
+                    callout_lines.append(curr)
+                    i += 1
+
+            # Special handling for solution callouts
             if callout_type == 'solution':
                 result.append(f'<details className="solution-block">')
                 result.append(f'<summary>{title}</summary>')
@@ -1145,9 +1216,9 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
     # Determine if Ukrainian headers are forced
     is_ukrainian_forced = False
     lvl = level.lower()
-    if lvl in ['b2', 'c1', 'c2', 'lit']:
+    if any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit']):
         is_ukrainian_forced = True
-    elif lvl == 'b1' and module_num > 5:
+    elif lvl.startswith('b1') and module_num > 5:
         is_ukrainian_forced = True
 
     # Component imports
@@ -1214,7 +1285,7 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
         processed = body
 
     # Convert callouts
-    processed = convert_callouts(processed)
+    processed = convert_callouts(processed, is_ukrainian_forced)
 
     # Resolve slug links (e.g., [slug:the-cyrillic-code-i] -> [The Cyrillic Code I](/a1/module-01))
     processed = resolve_slug_links(processed)
@@ -1237,7 +1308,11 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
         'Summary': 'Підсумок',
         'Vocabulary': 'Словник',
         'Self-Assessment': 'Самооцінка',
-        'External Resources': 'Зовнішні ресурси'
+        'External Resources': 'Зовнішні ресурси',
+        'Culture': 'Культура',
+        'Cultural Context': 'Культурний контекст',
+        'Heritage': 'Спадщина',
+        'Historical Context': 'Історичний контекст'
     }
 
     # Summary
@@ -1252,11 +1327,17 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     sa_text = header_map['Self-Assessment'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (Self-Assessment|Самооцінка)', f'## ✅ {sa_text}', processed, flags=re.MULTILINE)
     
-    # External Resources (Note: Resources from YAML are injected as callouts, but if converted to headers later, this catches them)
-    # Actually, resources from YAML use > [!resources] which converts to :::info. 
-    # But if there are manual H2 resources sections, this standardizes them.
+    # External Resources
     ext_text = header_map['External Resources'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (External Resources?|Зовнішні ресурси|Resources|Ресурси)', f'## 🔗 {ext_text}', processed, flags=re.MULTILINE)
+
+    # Culture / Cultural Context
+    cult_text = header_map['Culture'] if is_ukrainian_forced else r'\g<1>'
+    processed = re.sub(r'^#{1,2} (Culture|Культура|Cultural Context|Культурний контекст|Folk Culture|Народна культура)', f'## 🏺 {cult_text}', processed, flags=re.MULTILINE)
+
+    # Historical Context / Heritage
+    hist_text = header_map['Historical Context'] if is_ukrainian_forced else r'\g<1>'
+    processed = re.sub(r'^#{1,2} (History|Historical Context|Історичний контекст|Heritage|Спадщина)', f'## 🕰️ {hist_text}', processed, flags=re.MULTILINE)
 
     # Build MDX
     parts = [frontmatter, imports, '', processed]

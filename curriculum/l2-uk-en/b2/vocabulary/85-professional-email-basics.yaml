@@ -1,165 +1,18 @@
-config:
-  standard: '2024'
+module: 85-professional-email-basics
+level: B2
+version: '2.0'
 items:
-  - lemma: лист
-    ipa: /lɪst/
-    translation: letter, email
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: адресат
-    ipa: /ɐdresɐt/
-    translation: addressee, recipient
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: тема
-    ipa: /temɐ/
-    translation: subject (of email)
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: вкладення
-    ipa: /fklɐdenʲːɐ/
-    translation: attachment
-    pos: noun
-    gender: n
-    tags: []
-
-  - lemma: відповідь
-    ipa: /widpɔwʲidʲ/
-    translation: reply, response
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: пересилання
-    ipa: /peresɪlɐnʲːɐ/
-    translation: forwarding
-    pos: noun
-    gender: n
-    tags: []
-
-  - lemma: вітання
-    ipa: /witɐnʲːɐ/
-    translation: greeting, salutation
-    pos: noun
-    gender: n
-    tags: []
-
-  - lemma: прощання
-    ipa: /proɕːɐnʲːɐ/
-    translation: closing, farewell
-    pos: noun
-    gender: n
-    tags: []
-
-  - lemma: підпис
-    ipa: /pidpɪs/
-    translation: signature
-    pos: noun
-    gender: m
-    tags: []
-
-  - lemma: надіслати
-    ipa: /nɐdislɐtɪ/
-    translation: to send
-    pos: verb
-    aspect: pf
-    tags: []
-
-  - lemma: надсилати
-    ipa: /nɐdsɪlɐtɪ/
-    translation: to send (imperfective)
-    pos: verb
-    aspect: impf
-    tags: []
-
-  - lemma: отримати
-    ipa: /otrɪmɐtɪ/
-    translation: to receive
-    pos: verb
-    aspect: pf
-    tags: []
-
-  - lemma: отримувати
-    ipa: /otrɪmʊvɐtɪ/
-    translation: to receive (imperfective)
-    pos: verb
-    aspect: impf
-    tags: []
-
-  - lemma: офіційний
-    ipa: /ofitsijːnɪj/
-    translation: official, formal
-    pos: adj
-    tags: []
-
-  - lemma: діловий
-    ipa: /dilovɪj/
-    translation: business
-    pos: adj
-    tags: []
-
-  - lemma: поштовхня
-    ipa: /poʃtowxnʲɐ/
-    translation: inbox
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: копія
-    ipa: /kopijɐ/
-    translation: copy (CC)
-    pos: noun
-    gender: f
-    tags: []
-
-  - lemma: прихована
-    ipa: /prɪxovɐnɐ/
-    translation: hidden (BCC)
-    pos: adj
-    tags: []
-
-  - lemma: терміновий
-    ipa: /termʲinovɪj/
-    translation: urgent
-    pos: adj
-    tags: []
-
-  - lemma: шановний
-    ipa: /ʃɐnovnɪj/
-    translation: dear, respected
-    pos: adj
-    tags: []
-
-  - lemma: сподіватися
-    ipa: /spodiwɐtɪsʲɐ/
-    translation: to hope
-    pos: verb
-    aspect: impf
-    tags: []
-
-  - lemma: звертатися
-    ipa: /zʋertɐtɪsʲɐ/
-    translation: to address, to contact
-    pos: verb
-    aspect: impf
-    tags: []
-
-  - lemma: повідомити
-    ipa: /powidɔmɪtɪ/
-    translation: to inform, to notify
-    pos: verb
-    aspect: pf
-    tags: []
-
-  - lemma: повідомляти
-    ipa: /powidɔmlʲɐtɪ/
-    translation: to inform, to notify (imperfective)
-    pos: verb
-    aspect: impf
-    tags: []
+- lemma: емодзі
+  ipa: /ɛmˈɔdzi/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: неприйнятно
+  ipa: /nɛprɪjnˈjatnɔ/
+  translation: ''
+  pos: adv
+- lemma: пересилання
+  ipa: /pɛrɛsɪlˈannja/
+  translation: ''
+  pos: noun
+  gender: n

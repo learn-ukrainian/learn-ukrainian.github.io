@@ -1,7 +1,7 @@
-# Audit Report: 04-reflexive-passive.md
-**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M04 — 04-reflexive-passive.md
+**Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1962/1750
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 190/25
+- **Vocab:** ✅ 123/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,7 +19,7 @@
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -44,7 +44,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Вступ** | ⚪️ | 260 | Skipped |
+| **Вступ** | ✅ | 260 | Included in Core |
 | **Пояснення** | ⚪️ | 780 | Skipped |
 | **Трансформації** | ⚪️ | 237 | Skipped |
 | **Діалоги** | ✅ | 284 | Included in Core |

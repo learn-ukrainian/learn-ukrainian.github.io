@@ -3,185 +3,261 @@ level: A2
 version: '2.0'
 items:
 - lemma: аналіз
-  ipa: ɐˈnɑlʲiz
-  translation: analysis
+  ipa: /anˈaliz/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: баба
-  ipa: ˈbɑbɐ
-  translation: woman; grandma (coll.)
+  ipa: /bˈaba/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: бабі
-  ipa: ˈbɑbʲi
-  translation: woman/grandma (dat/loc)
-  pos: propn
   gender: f
 - lemma: бос
-  ipa: bɔs
-  translation: boss
+  ipa: /bɔs/
+  translation: ''
   pos: noun
   gender: m
 - lemma: брехати
-  ipa: breˈxɑte
-  translation: to lie (imp)
-  pos: other
+  ipa: /brɛxˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: бухгалтерія
+  ipa: /buxɦaltˈɛrija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: вагітний
-  ipa: vɐˈhʲitnɪj
-  translation: pregnant
+  ipa: /ʋaɦˈitnɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: вирішитися
+  ipa: /ʋˈɪriʃɪtɪsja/
+  translation: ''
+  pos: verb
 - lemma: вкрасти
-  ipa: ˈvkrɑste
-  translation: to steal (perf)
+  ipa: /ʋkrˈastɪ/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: відмінний
+  ipa: /ʋidmˈinnɪj/
+  translation: ''
+  pos: adj
 - lemma: галя
-  ipa: ˈhɑlʲɐ
-  translation: Halya
-  pos: propn
+  ipa: /ɦˈalja/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: дата
-  ipa: ˈdɑtɐ
-  translation: date
-  pos: noun
-  gender: m
-- lemma: джаз
-  ipa: dʒɑz
-  translation: jazz
-  pos: noun
-  gender: m
-- lemma: доповіти
-  ipa: dopoˈvʲite
-  translation: to report (perf)
+- lemma: голодний
+  ipa: /ɦɔlˈɔdnɪj/
+  translation: ''
+  pos: adj
+- lemma: добровільний
+  ipa: /dɔbrɔʋˈilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: доповісти
+  ipa: /dɔpɔʋˈistɪ/
+  translation: ''
   pos: verb
-  gender: f
 - lemma: дурень
-  ipa: ˈdurenʲ
-  translation: fool
+  ipa: /dˈurɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: загальний
+  ipa: /zaɦˈalʲnɪj/
+  translation: ''
   pos: adj
 - lemma: заперечити
-  ipa: zɐpeˈrɛt͡ʃɪte
-  translation: to deny/object (perf)
+  ipa: /zapɛrˈɛt͡ʃɪtɪ/
+  translation: ''
   pos: verb
-  gender: f
 - lemma: заперечувати
-  ipa: zɐpeˈrɛt͡ʃuʋɐte
-  translation: to deny/object (imp)
+  ipa: /zapɛrˈɛt͡ʃuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: звільнити
-  ipa: zʲvʲilʲˈnɪte
-  translation: to fire; to free (perf)
+- lemma: зарплата
+  ipa: /zarplˈata/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: звільняти
+  ipa: /zʋilʲnˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: здивований
+  ipa: /zdɪʋˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: значити
+  ipa: /znat͡ʃɪtɪ/
+  translation: ''
   pos: verb
 - lemma: критикувати
-  ipa: krɪtɪkuˈʋɑte
-  translation: to criticize
+  ipa: /krɪtɪkuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: кричати
+  ipa: /krɪt͡ʃˈatɪ/
+  translation: ''
   pos: verb
 - lemma: лавка
-  ipa: ˈlɑu̯kɐ
-  translation: bench
+  ipa: /lˈaʋka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: микола
+  ipa: /mɪkˈɔla/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: мовчати
-  ipa: mou̯ˈt͡ʃɑte
-  translation: to keep silent (imp)
+  ipa: /mɔʋt͡ʃˈatɪ/
+  translation: ''
   pos: verb
-- lemma: нагадати
-  ipa: nɐhɐˈdɑte
-  translation: to remind (perf)
-  pos: verb
+- lemma: наказ
+  ipa: /nakˈaz/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: наплутати
-  ipa: nɐˈplutɐte
-  translation: to mess up (perf)
+  ipa: /naplˈutatɪ/
+  translation: ''
   pos: verb
-  gender: f
 - lemma: нарада
-  ipa: nɐˈrɑdɐ
-  translation: conference; meeting
+  ipa: /narˈada/
+  translation: ''
   pos: noun
   gender: f
+- lemma: незадоволення
+  ipa: /nɛzadɔʋˈɔlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: незнайомий
-  ipa: neznɐˈjɔmɪj
-  translation: stranger; unknown
+  ipa: /nɛznajˈɔmɪj/
+  translation: ''
   pos: adj
+- lemma: оголосити
+  ipa: /ɔɦɔlɔsˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: перевести
+  ipa: /pɛrɛʋɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: передача
+  ipa: /pɛrɛdˈat͡ʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: переїзд
+  ipa: /pɛrɛjizd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: переїхати
+  ipa: /pɛrɛˈjixatɪ/
+  translation: ''
+  pos: verb
 - lemma: плітка
-  ipa: ˈplʲitkɐ
-  translation: gossip
+  ipa: /plˈitka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: повідомити
-  ipa: poʋiˈdɔmɪte
-  translation: to inform (perf)
+  ipa: /pɔʋidˈɔmɪtɪ/
+  translation: ''
   pos: verb
 - lemma: повідомляти
-  ipa: poʋidomˈlʲɑte
-  translation: to inform (imp)
+  ipa: /pɔʋidɔmlˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: політика
-  ipa: poˈlʲitɪkɐ
-  translation: politics
-  pos: noun
-  gender: f
 - lemma: пообіцяти
-  ipa: poobiˈt͡sʲɑte
-  translation: to promise (perf)
+  ipa: /pɔɔbit͡sˈjatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: поїти
-  ipa: poˈjite
-  translation: to water/give drink
-  pos: verb
-  gender: f
-- lemma: правий
-  ipa: prɐˈvɪj
-  translation: right
-  pos: adj
-  gender: m
-- lemma: прошепотіти
-  ipa: proʃepoˈtʲite
-  translation: to whisper (perf)
-  pos: verb
-  gender: f
-- lemma: підозріти
-  ipa: pʲidoˈzrʲite
-  translation: to suspect (typo pʲidozrʲuʋɐte?)
-  pos: verb
-  gender: n
-- lemma: підтвердити
-  ipa: pidˈtvɛrdɪte
-  translation: to confirm (perf)
-  pos: verb
-  gender: m
-- lemma: світлан
-  ipa: svʲitˈlɑn
-  translation: Svitlan (gen?)
-  pos: propn
-  gender: f
-- lemma: стверджувати
-  ipa: ˈstʋɛrdʒuʋɐte
-  translation: to assert (imp)
-  pos: verb
-- lemma: точно
-  ipa: ˈtɔt͡ʃno
-  translation: exactly
+- lemma: підозріло
+  ipa: /pidɔzrˈilɔ/
+  translation: ''
   pos: adv
-- lemma: цяцянка
-  ipa: t͡sʲɐˈt͡sʲɑnkɐ
-  translation: promise/toy
+- lemma: підтвердити
+  ipa: /pidtʋˈɛrdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: підходящий
+  ipa: /pidxɔdˈjaʃt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: ремонт
+  ipa: /rɛmˈɔnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розвиток
+  ipa: /rˈɔzʋɪtɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розширення
+  ipa: /rɔzʃˈɪrɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: світлана
+  ipa: /sʋitlˈana/
+  translation: ''
   pos: noun
   gender: f
-- lemma: шепотіт
-  ipa: ʃepoˈtʲit
-  translation: to whisper (typo?)
-  pos: propn
-  gender: m
+- lemma: скаржитися
+  ipa: /skˈarʒɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: спеціальний
+  ipa: /spɛt͡siˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: спростування
+  ipa: /sprɔstuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: стверджувати
+  ipa: /stʋˈɛrdʒuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: уява
+  ipa: /uˈjaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ха-ха
+  ipa: /xa-xˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: цяцянка
+  ipa: /t͡sjat͡sˈjanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чоловіків
+  ipa: /t͡ʃɔlɔʋikˈiʋ/
+  translation: ''
+  pos: adj
+- lemma: чулий
+  ipa: /t͡ʃˈulɪj/
+  translation: ''
+  pos: adj
+- lemma: шепотіти
+  ipa: /ʃɛpɔtˈitɪ/
+  translation: ''
+  pos: verb
 - lemma: шеф
-  ipa: ʃɛf
-  translation: chief; boss
+  ipa: /ʃɛf/
+  translation: ''
   pos: noun
   gender: m
-- lemma: шум
-  ipa: ʃum
-  translation: noise
-  pos: noun
-  gender: m
+- lemma: ірин
+  ipa: /irˈɪn/
+  translation: ''
+  pos: adj

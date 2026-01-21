@@ -13,7 +13,7 @@
 | ✅ 10/10 (5/5 all criteria) | 0 | 16 | +16 |
 | ⚠️ 9/10 (4.5+/5 avg) | 0 | 0 | 0 |
 | ⏳ 8/10 (needs manual review) | 16 | 0 | -16 |
-| ❌ <8/10 (incomplete) | 0 | 0 | 0 |
+| ❌ &lt;8/10 (incomplete) | 0 | 0 | 0 |
 
 **Average Score Improvement:** 4.0/5 → 5.0/5 (↑ 1.0)
 

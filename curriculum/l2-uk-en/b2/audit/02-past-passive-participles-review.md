@@ -1,7 +1,16 @@
-# Audit Report: 02-past-passive-participles.md
-**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M02 — 02-past-passive-participles.md
+**Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 02-past-passive-participles.yaml: Schema validation error at key 'blanks': [{'id': 1, 'answer': 'прийнято', 'options': ['прийнято', 'прийняв', 'прийняли', 'приймає']}, {'id': 2, 'answer': 'прийняв', 'options': ['прийняв', 'прийнято', 'приймається', 'приймав']}, {'id': 3, 'answer': 'виконано', 'options': ['виконано', 'виконали', 'виконуємо', 'виконана']}, {'id': 4, 'answer': 'виконали', 'options': ['виконали', 'виконано', 'виконується', 'виконуємо']}, {'id': 5, 'answer': 'написано', 'options': ['написано', 'написав', 'написана', 'пишеться']}, {'id': 6, 'answer': 'написав', 'options': ['написав', 'написано', 'написаний', 'пишу']}, {'id': 7, 'answer': 'прийнято', 'options': ['прийнято', 'прийняли', 'приймають', 'прийняв']}, {'id': 8, 'answer': 'прийняв', 'options': ['прийняв', 'прийнято', 'приймав', 'прийме']}, {'id': 9, 'answer': 'підписано', 'options': ['підписано', 'підписав', 'підписана', 'підписують']}, {'id': 10, 'answer': 'підписав', 'options': ['підписав', 'підписано', 'підписував', 'підпише']}, {'id': 11, 'answer': 'завершено', 'options': ['завершено', 'завершили', 'завершена', 'завершують']}, {'id': 12, 'answer': 'завершили', 'options': ['завершили', 'завершено', 'завершували', 'завершують']}, {'id': 13, 'answer': 'укладено', 'options': ['укладено', 'уклали', 'укладена', 'укладають']}, {'id': 14, 'answer': 'уклали', 'options': ['уклали', 'укладено', 'укладали', 'укладають']}] is too short
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2124/1750
@@ -11,15 +20,15 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 215/25
+- **Vocab:** ✅ 210/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -44,7 +53,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
-| **Вступ** | ⚪️ | 186 | Skipped |
+| **Вступ** | ✅ | 186 | Included in Core |
 | **Пояснення** | ⚪️ | 1279 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Трансформації** | ⚪️ | 133 | Skipped |

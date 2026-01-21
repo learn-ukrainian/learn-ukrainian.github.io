@@ -2,67 +2,111 @@ module: 37-temporal-clauses
 level: B1
 version: '2.0'
 items:
+- lemma: аплодувати
+  ipa: /aplɔduʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: багатогранність
+  ipa: /baɦatɔɦrˈannistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бесіда
+  ipa: /bˈɛsida/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: веселка
+  ipa: /ʋɛsˈɛlka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: виїсти
-  ipa: /vɪˈjistɪ/
-  translation: to eat out
+  ipa: /ʋˈɪjistɪ/
+  translation: ''
   pos: verb
-- lemma: впізнати
-  ipa: /u̯pizˈnatɪ/
-  translation: to recognize
+- lemma: відтоді
+  ipa: /ʋidtˈɔdi/
+  translation: ''
+  pos: pron
+- lemma: док
+  ipa: /dɔk/
+  translation: ''
+  pos: noun
+- lemma: закохатися
+  ipa: /zakɔxˈatɪsja/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: ледве
-  ipa: /ˈlɛdvɛ/
-  translation: barely
-  pos: other
-- lemma: замовкнути
-  ipa: /zaˈmɔu̯knutɪ/
-  translation: to fall silent
+- lemma: замовкти
+  ipa: /zamˈɔʋktɪ/
+  translation: ''
   pos: verb
+- lemma: книжно
+  ipa: /knˈɪʒnɔ/
+  translation: ''
+  pos: adv
 - lemma: моментальність
-  ipa: /mɔmɛnˈtalʲnʲisʲtʲ/
-  translation: instantaneity
+  ipa: /mɔmɛntˈalʲnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: нетерплячість
-  ipa: /nɛtɛrplʲaˈt͡ʃisʲtʲ/
-  translation: impatience
-  pos: noun
-  gender: f
-- lemma: остигати
-  ipa: /ɔstɪˈhatɪ/
-  translation: to cool down
+- lemma: наставати
+  ipa: /nastaʋˈatɪ/
+  translation: ''
   pos: verb
+- lemma: нетерплячість
+  ipa: /nɛtɛrplˈjat͡ʃistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: односкладний
+  ipa: /ɔdnɔsklˈadnɪj/
+  translation: ''
+  pos: adj
+- lemma: ойно
+  ipa: /ɔjnɔ/
+  translation: ''
+  pos: adv
+- lemma: остигати
+  ipa: /ɔstɪɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: паралельність
+  ipa: /paralˈɛlʲnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: повечеряти
-  ipa: /pɔvɛˈt͡ʃɛrʲatɪ/
-  translation: to have dinner
+  ipa: /pɔʋɛt͡ʃˈɛrjatɪ/
+  translation: ''
   pos: verb
 - lemma: попередність
-  ipa: /pɔpɛˈrɛdnʲisʲtʲ/
-  translation: precedence
+  ipa: /pɔpɛrɛdnistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: почутися
-  ipa: /pɔˈt͡ʃutɪsʲa/
-  translation: to be heard
+  ipa: /pɔt͡ʃˈutɪsja/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: пір
-  ipa: /pir/
-  translation: times (gen. pl.)
+- lemma: поєднуючи
+  ipa: /pɔˈjɛdnujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: ремонтувати
+  ipa: /rɛmɔntuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: роса
+  ipa: /rɔsˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: темніший
-  ipa: /tɛmˈnʲiʃɪj/
-  translation: darker
-  pos: adj
-  gender: n
-- lemma: тільки
-  ipa: /ˈtʲilʲkɪ/
-  translation: only
-  pos: other
+- lemma: темніше
+  ipa: /tɛmnˈiʃɛ/
+  translation: ''
+  pos: adv
 - lemma: хронологічний
-  ipa: /xrɔnɔlɔˈhʲit͡ʃnɪj/
-  translation: chronological
+  ipa: /xrɔnɔlɔɦˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f

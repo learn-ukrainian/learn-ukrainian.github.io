@@ -2,201 +2,264 @@ module: 23-motion-patterns-other-verbs
 level: B1
 version: '2.0'
 items:
-- lemma: абстрактно
-  ipa: /abˈstraktnɔ/
-  translation: abstractly
-  pos: adv
+- lemma: азія
+  ipa: /ˈazija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: атом
   ipa: /ˈatɔm/
-  translation: atom
+  translation: ''
   pos: noun
-  gender: m
-- lemma: вгадати
-  ipa: /vhaˈdatɪ/
-  translation: to guess
+- lemma: багатозначність
+  ipa: /baɦatɔznˈat͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бездоганно
+  ipa: /bɛzdɔɦˈannɔ/
+  translation: ''
+  pos: adv
+- lemma: вдосконалення
+  ipa: /ʋdɔskɔnˈalɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вестя
+  ipa: /ʋɛstja/
+  translation: ''
+  pos: noun
+- lemma: вивчивши
+  ipa: /ʋˈɪʋt͡ʃɪʋʃɪ/
+  translation: ''
   pos: verb
-- lemma: вивіз
-  ipa: /ˈvɪviz/
-  translation: export
-  pos: noun
-  gender: m
+- lemma: видавати
+  ipa: /ʋɪdaʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: винахід
-  ipa: /ˈvɪnaxid/
-  translation: invention
+  ipa: /ʋˈɪnaxid/
+  translation: ''
   pos: noun
   gender: m
-- lemma: витягувати
-  ipa: /vɪˈtʲahuvatɪ/
-  translation: to pull out
+- lemma: виправляти
+  ipa: /ʋɪpraʋlˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: виховати
-  ipa: /vɪˈxɔvatɪ/
-  translation: to raise
+- lemma: випускати
+  ipa: /ʋɪpuskˈatɪ/
+  translation: ''
   pos: verb
-- lemma: вичерпання
-  ipa: /vɪˈt͡ʃɛrpanʲːa/
-  translation: exhaustion
+- lemma: відмовити
+  ipa: /ʋidmˈɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відпрацювати
+  ipa: /ʋidprat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: десять-п'ятнадцять
+  ipa: /dˈɛsjatʲ-pjatnadt͡sjatʲ/
+  translation: ''
+  pos: adv
+- lemma: дорожче
+  ipa: /dɔrˈɔʒt͡ʃɛ/
+  translation: ''
+  pos: adv
+- lemma: забезпечення
+  ipa: /zabɛzpˈɛt͡ʃɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: вичерпати
-  ipa: /vɪˈt͡ʃɛrpatɪ/
-  translation: to exhaust
-  pos: verb
-- lemma: відреагувати
-  ipa: /vidrɛahuˈvatɪ/
-  translation: to react
-  pos: verb
-- lemma: відштовхнути
-  ipa: /vidʃtɔu̯xˈnutɪ/
-  translation: to push away
-  pos: verb
+- lemma: заголовок
+  ipa: /zˈaɦɔlɔʋɔk/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: закриття
-  ipa: /zakrɪtʲˈtʲa/
-  translation: closing
+  ipa: /zakrɪttˈja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: заслухатися
-  ipa: /zaˈsluxatɪsʲa/
-  translation: to listen with delight
+- lemma: зачинити
+  ipa: /zat͡ʃɪnˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: здогадка
+  ipa: /zdˈɔɦadka/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: затихнути
-  ipa: /zaˈtɪxnutɪ/
-  translation: to quiet down
+- lemma: значущий
+  ipa: /znat͡ʃˈuʃt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: зіпсувати
+  ipa: /zipsuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: здогадатися
-  ipa: /zdɔhaˈdatɪsʲa/
-  translation: to guess
-  pos: verb
+- lemma: крива
+  ipa: /krɪʋˈa/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: ля
-  ipa: /lʲa/
-  translation: La / Look!
-  pos: other
+  ipa: /lja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: мога
-  ipa: /ˈmɔha/
-  translation: possibility (arch.)
+  ipa: /mˈɔɦa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: назовний
-  ipa: /naˈzɔu̯nɪj/
-  translation: nominative
-  pos: adj
-- lemma: найдинамічніший
-  ipa: /najdɪnaˈmʲit͡ʃnʲiʃɪj/
-  translation: most dynamic
-  pos: adj
-  gender: m
-- lemma: нишком
-  ipa: /ˈnɪʃkɔm/
-  translation: stealthily
+- lemma: перебороти
+  ipa: /pɛrɛbɔrˈɔtɪ/
+  translation: ''
+  pos: verb
+- lemma: перебудувати
+  ipa: /pɛrɛbuduʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перевершити
+  ipa: /pɛrɛʋɛrʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: перегородка
+  ipa: /pɛrɛɦɔrˈɔdka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: перестаратися
-  ipa: /pɛrɛstaˈratɪsʲa/
-  translation: to overdo it
+  gender: f
+- lemma: переконати
+  ipa: /pɛrɛkɔnˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: переробляти
+  ipa: /pɛrɛrɔblˈjatɪ/
+  translation: ''
   pos: verb
 - lemma: перефарбувати
-  ipa: /pɛrɛfarbuˈvatɪ/
-  translation: to repaint
+  ipa: /pɛrɛfarbuʋˈatɪ/
+  translation: ''
   pos: verb
+- lemma: по-новому
+  ipa: /pɔ-nɔʋˈɔmu/
+  translation: ''
+  pos: adv
+- lemma: повнота
+  ipa: /pɔʋnɔtˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: повід
+  ipa: /pˈɔʋid/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: полісемія
-  ipa: /pɔlʲisɛˈmʲija/
-  translation: polysemy
+  ipa: /pɔlisɛmˈija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: постфікс
-  ipa: /ˈpɔstfʲiks/
-  translation: postfix
-  pos: noun
-  gender: m
-- lemma: привчити
-  ipa: /prɪu̯ˈt͡ʃɪtɪ/
-  translation: to accustom
-  pos: verb
-- lemma: прилягти
-  ipa: /prɪlʲahˈtɪ/
-  translation: to lie down
-  pos: verb
-- lemma: пристосування
-  ipa: /prɪstɔsuˈvanʲːa/
-  translation: adaptation
-  pos: noun
-  gender: n
-- lemma: пристосуватися
-  ipa: /prɪstɔsuˈvatɪsʲa/
-  translation: to adapt
-  pos: verb
-- lemma: присісти
-  ipa: /prɪˈsʲistɪ/
-  translation: to sit down
-  pos: verb
-- lemma: прихованість
-  ipa: /prɪˈxɔvanʲisʲtʲ/
-  translation: concealment
+- lemma: призма
+  ipa: /prˈɪzma/
+  translation: ''
   pos: noun
   gender: f
-- lemma: прозоріший
-  ipa: /prɔˈzɔrʲiʃɪj/
-  translation: more transparent
-  pos: adj
-- lemma: підводний
-  ipa: /pidˈvɔdnɪj/
-  translation: underwater
-  pos: adj
-  gender: m
-- lemma: підслухати
-  ipa: /pidˈsluxatɪ/
-  translation: to eavesdrop
+- lemma: приєднатися
+  ipa: /prɪjɛdnˈatɪsja/
+  translation: ''
   pos: verb
+- lemma: пробачати
+  ipa: /prɔbat͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: програмний
+  ipa: /prɔɦrˈamnɪj/
+  translation: ''
+  pos: adj
+- lemma: пря
+  ipa: /prja/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: рекрутер
-  ipa: /rɛkruˈtɛr/
-  translation: recruiter
+  ipa: /rɛkrutɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: розкласти
-  ipa: /rɔzˈklastɪ/
-  translation: to decompose
+- lemma: роздавати
+  ipa: /rɔzdaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: розподіл
+  ipa: /rɔzpˈɔdil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розподіляти
+  ipa: /rɔzpɔdilˈjatɪ/
+  translation: ''
   pos: verb
 - lemma: розрізати
-  ipa: /rɔzˈrʲizatɪ/
-  translation: to cut
+  ipa: /rɔzrizatɪ/
+  translation: ''
   pos: verb
-- lemma: різке
-  ipa: /rʲizˈkɛ/
-  translation: sharp
-  pos: noun
-  gender: n
-- lemma: скочити
-  ipa: /ˈskɔt͡ʃɪtɪ/
-  translation: to jump
+- lemma: розсіювати
+  ipa: /rɔzsˈijuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: смисл
-  ipa: /smɪsl/
-  translation: sense
-  pos: noun
-  gender: m
-- lemma: спів
-  ipa: /spiu̯/
-  translation: singing
-  pos: noun
-  gender: m
-- lemma: стос
-  ipa: /stɔs/
-  translation: stack
-  pos: noun
-  gender: m
-- lemma: тестовий
-  ipa: /ˈtɛstɔvɪj/
-  translation: test (adj)
+- lemma: різкий
+  ipa: /rizkˈɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: тишком
-  ipa: /ˈtɪʃkɔm/
-  translation: quietly
+- lemma: сваритися
+  ipa: /sʋarˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: спів-
+  ipa: /spiʋ-/
+  translation: ''
+  pos: noun
+- lemma: співпраця
+  ipa: /spiʋprˈat͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: суперсила
+  ipa: /supɛrsˈɪla/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: творити
+  ipa: /tʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: тестовий
+  ipa: /tˈɛstɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: трим
+  ipa: /trɪm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: інхоатив
-  ipa: /inxɔaˈtɪu̯/
-  translation: inchoative
+- lemma: чек-лист
+  ipa: /t͡ʃɛk-lɪst/
+  translation: ''
   pos: noun
   gender: m
+- lemma: якісно
+  ipa: /ˈjakisnɔ/
+  translation: ''
+  pos: adv
+- lemma: інновація
+  ipa: /innɔʋˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: інтуїція
+  ipa: /intuˈjit͡sija/
+  translation: ''
+  pos: noun
+  gender: f

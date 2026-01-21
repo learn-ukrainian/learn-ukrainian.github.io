@@ -2,202 +2,82 @@ module: 05-ready-for-immersion
 level: B1
 version: '2.0'
 items:
-- lemma: частина мови
-  ipa: /t͡ʃɐsˈtɪnɐ ˈmɔwɪ/
-  translation: part of speech
-  pos: phrase
-- lemma: іменник
-  ipa: /iˈmɛnːɪk/
-  translation: noun
+- lemma: виконавець
+  ipa: /ʋɪkɔnˈaʋɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: дієслово
-  ipa: /dʲijeˈslɔwo/
-  translation: verb
+- lemma: відмінювання
+  ipa: /ʋidmˈinjuʋannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: прикметник
-  ipa: /prɪkˈmɛtnɪk/
-  translation: adjective
+- lemma: відмінюватися
+  ipa: /ʋidmˈinjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: діагностик
+  ipa: /diaɦnˈɔstɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: прислівник
-  ipa: /prɪsˈlʲiu̯nɪk/
-  translation: adverb
-  pos: noun
-  gender: m
-- lemma: відмінок
-  ipa: /widˈminɔk/
-  translation: grammatical case
-  pos: noun
-  gender: m
-- lemma: називний
-  ipa: /nɐzɪu̯ˈnɪi̯/
-  translation: nominative
-  pos: adj
-- lemma: родовий
-  ipa: /rɔdɔˈwɪi̯/
-  translation: genitive
-  pos: adj
-- lemma: давальний
-  ipa: /dɐˈʋalʲnɪi̯/
-  translation: dative
-  pos: adj
-- lemma: знахідний
-  ipa: /znɐxidˈnɪi̯/
-  translation: accusative
-  pos: adj
-- lemma: орудний
-  ipa: /ɔˈrudnɪi̯/
-  translation: instrumental
-  pos: adj
-- lemma: місцевий
-  ipa: /misˈt͡sɛwɪi̯/
-  translation: locative
-  pos: adj
-- lemma: кличний
-  ipa: /ˈklɪt͡ʃnɪi̯/
-  translation: vocative
-  pos: adj
-- lemma: вид
-  ipa: /wɪd/
-  translation: aspect (grammar)
-  pos: noun
-  gender: m
-- lemma: доконаний
-  ipa: /dɔˈkɔnɐnɪj/
-  translation: perfective
-  pos: adj
-- lemma: недоконаний
-  ipa: /nɛdɔˈkɔnɐnɪj/
-  translation: imperfective
-  pos: adj
-- lemma: теперішній час
-  ipa: /tɛˈpɛrʲiʃnʲij t͡ʃɑs/
-  translation: present tense
-  pos: phrase
-- lemma: минулий час
-  ipa: /mɪˈnulɪj t͡ʃɑs/
-  translation: past tense
-  pos: phrase
-- lemma: майбутній час
-  ipa: /mɐi̯ˈbutnʲij t͡ʃɑs/
-  translation: future tense
-  pos: phrase
-- lemma: підмет
-  ipa: /ˈpidmɛt/
-  translation: subject (grammar)
-  pos: noun
-  gender: m
-- lemma: присудок
-  ipa: /ˈprɪsudɔk/
-  translation: predicate (grammar)
-  pos: noun
-  gender: m
-- lemma: додаток
-  ipa: /dɔˈdɑtɔk/
-  translation: object (grammar)
-  pos: noun
-  gender: m
-- lemma: означення
-  ipa: /ɔˈznat͡ʃɛnʲːɐ/
-  translation: attribute; modifier
+- lemma: дієвідмінювання
+  ipa: /dijɛʋidmˈinjuʋannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: обставина
-  ipa: /ɔbstɐˈʋɪnɐ/
-  translation: adverbial
-  pos: noun
-  gender: f
-- lemma: речення
-  ipa: /ˈrɛt͡ʃenʲːɐ/
-  translation: sentence
-  pos: noun
-  gender: n
-- lemma: складне речення
-  ipa: /skɫɐdˈnɛ ˈrɛt͡ʃenʲːɐ/
-  translation: complex sentence
-  pos: phrase
-- lemma: закінчення
-  ipa: /zɐˈkʲint͡ʃenʲːɐ/
-  translation: ending (grammar)
-  pos: noun
-  gender: n
-- lemma: корінь
-  ipa: /ˈkɔrʲinʲ/
-  translation: root (linguistics)
-  pos: noun
-  gender: m
-- lemma: суфікс
-  ipa: /ˈsufʲiks/
-  translation: suffix
-  pos: noun
-  gender: m
-- lemma: префікс
-  ipa: /ˈprɛfʲiks/
-  translation: prefix
-  pos: noun
-  gender: m
-- lemma: використовується
-  ipa: /wɪkɔˈrɪstɔwujɛtʲsʲɐ/
-  translation: is used
-  pos: verb
-- lemma: означає
-  ipa: /ɔˈznat͡ʃajɛ/
-  translation: means
-  pos: verb
-- lemma: виражає
-  ipa: /wɪrɐˈʒajɛ/
-  translation: expresses
-  pos: verb
-- lemma: зверніть увагу
-  ipa: /zwɛrˈnʲitʲ ɔˈʋɐɦu/
-  translation: pay attention
-  pos: phrase
-- lemma: порівняйте
-  ipa: /pɔrʲiu̯ˈnʲajtɛ/
-  translation: compare
-  pos: verb
+- lemma: залежний
+  ipa: /zalˈɛʒnɪj/
+  translation: ''
+  pos: adj
 - lemma: морфологія
-  ipa: /mɔrfɔˈɫɔɦʲijɐ/
-  translation: morphology
+  ipa: /mɔrfɔlˈɔɦija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: синтаксис
-  ipa: /ˈsɪntɐksɪs/
-  translation: syntax
-  pos: noun
-  gender: m
-- lemma: фонетика
-  ipa: /fɔˈnɛtɪkɐ/
-  translation: phonetics
+- lemma: павла
+  ipa: /paʋlˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: занурення
-  ipa: /zɐˈnurɛnʲːɐ/
-  translation: immersion
+- lemma: поглиблення
+  ipa: /pɔɦlˈɪblɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: готовий
-  ipa: /ɦɔˈtɔwɪj/
-  translation: ready
-  pos: adj
-- lemma: вживається
-  ipa: /wʒɪˈʋajɛtʲsʲɐ/
-  translation: is employed
+- lemma: поділяти
+  ipa: /pɔdilˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: сполучник
-  ipa: /spɔˈlut͡ʃnɪk/
-  translation: conjunction
+- lemma: пройдений
+  ipa: /prˈɔjdɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: словозміна
+  ipa: /slɔʋɔzmˈina/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: словосполучення
+  ipa: /slɔʋɔspɔlˈut͡ʃɛnnja/
+  translation: ''
+  pos: noun
+- lemma: слуга
+  ipa: /sluɦˈa/
+  translation: ''
   pos: noun
   gender: m
-- lemma: прийменник
-  ipa: /prɪi̯ˈmɛnːɪk/
-  translation: preposition
+- lemma: ужгород
+  ipa: /ˈuʒɦɔrɔd/
+  translation: ''
   pos: noun
   gender: m
-- lemma: число
-  ipa: /t͡ʃɪˈslɔ/
-  translation: number (grammar)
+- lemma: усюди
+  ipa: /usˈjudɪ/
+  translation: ''
+  pos: pron
+- lemma: фонетика
+  ipa: /fɔnˈɛtɪka/
+  translation: ''
   pos: noun
-  gender: n
+  gender: f

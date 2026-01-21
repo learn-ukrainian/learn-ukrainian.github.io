@@ -1,129 +1,83 @@
-module: 132-medytsyna-pohlybleno
+module: 71-medytsyna-pohlybleno
 level: B2
 version: '2.0'
 items:
-- lemma: діагноз
-  ipa: /dʲiaɦˈnɔz/
-  translation: diagnosis
+- lemma: амоксицилін
+  ipa: /amɔksɪt͡sɪlin/
+  translation: ''
   pos: noun
   gender: m
-- lemma: симптом
-  ipa: /sɪmpˈtɔm/
-  translation: symptom
-  pos: noun
-  gender: m
-- lemma: скарга
-  ipa: /ˈskarɦa/
-  translation: complaint
+- lemma: вакцинація
+  ipa: /ʋakt͡sɪnˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: огляд
-  ipa: /ˈɔɦlʲad/
-  translation: examination
+- lemma: гемоглобін
+  ipa: /ɦɛmɔɦlɔbˈin/
+  translation: ''
   pos: noun
   gender: m
-- lemma: терапевт
-  ipa: /teraˈpɛwt/
-  translation: general practitioner
+- lemma: еритроцит
+  ipa: /ɛrɪtrɔt͡sˈɪt/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: хірург
-  ipa: /xʲiˈrurɦ/
-  translation: surgeon
-  pos: noun
-  gender: m
-- lemma: кардіолог
-  ipa: /kardʲiˈɔlɔɦ/
-  translation: cardiologist
-  pos: noun
-  gender: m
-- lemma: тиск
-  ipa: /ˈtɪsk/
-  translation: blood pressure
-  pos: noun
-  gender: m
-- lemma: пульс
-  ipa: /ˈpulʲs/
-  translation: pulse
-  pos: noun
-  gender: m
-- lemma: аналіз
-  ipa: /aˈnalʲiz/
-  translation: test, analysis
-  pos: noun
-  gender: m
-- lemma: рентген
-  ipa: /rentˈɦen/
-  translation: X-ray
-  pos: noun
-  gender: m
-- lemma: запалення
-  ipa: /zapaˈlʲenʲːa/
-  translation: inflammation
+- lemma: зображення
+  ipa: /zɔbrˈaʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: інфекція
-  ipa: /inˈfektsʲija/
-  translation: infection
+- lemma: кт
+  ipa: /kt/
+  translation: ''
   pos: noun
   gender: f
-- lemma: імунітет
-  ipa: /imunʲiˈtɛt/
-  translation: immunity
+- lemma: лейкоцит
+  ipa: /lɛjkɔt͡sˈɪt/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: ліки
-  ipa: /ˈlʲikɪ/
-  translation: medicine, medication
+- lemma: непритомний
+  ipa: /nɛprɪtˈɔmnɪj/
+  translation: ''
+  pos: adj
+- lemma: нирка
+  ipa: /nˈɪrka/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: рецепт
-  ipa: /reˈtsɛpt/
-  translation: prescription
-  pos: noun
-  gender: m
-- lemma: дозування
-  ipa: /dozuˈwanʲːa/
-  translation: dosage
+- lemma: опромінення
+  ipa: /ɔprɔmˈinɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: побічна дія
-  ipa: /poˈbʲitʃna ˈdʲija/
-  translation: side effect
+- lemma: отоларинголог
+  ipa: /ɔtɔlarɪnɦˈɔlɔɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: печінка
+  ipa: /pɛt͡ʃˈinka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: алергія
-  ipa: /alerˈɦʲija/
-  translation: allergy
+- lemma: пневмонія
+  ipa: /pnɛʋmɔnˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: побічний
+  ipa: /pɔbˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: рецептурний
+  ipa: /rɛt͡sɛptˈurnɪj/
+  translation: ''
+  pos: adj
+- lemma: томографія
+  ipa: /tɔmɔɦrˈafija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: щеплення
-  ipa: /ʃtʃɛˈplʲenʲːa/
-  translation: vaccination
+  ipa: /ʃt͡ʃˈɛplɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: обстеження
-  ipa: /obstɛˈʒenʲːa/
-  translation: medical examination
-  pos: noun
-  gender: n
-- lemma: госпіталізація
-  ipa: /ɦospʲitalʲizaˈtsʲija/
-  translation: hospitalization
-  pos: noun
-  gender: f
-- lemma: реабілітація
-  ipa: /reabʲilʲitaˈtsʲija/
-  translation: rehabilitation
-  pos: noun
-  gender: f
-- lemma: профілактика
-  ipa: /profʲilakˈtɪka/
-  translation: prevention
-  pos: noun
-  gender: f
-- lemma: медична карта
-  ipa: /mɛˈdɪtʃna ˈkarta/
-  translation: medical record
-  pos: noun
-  gender: f

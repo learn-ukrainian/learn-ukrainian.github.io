@@ -1,64 +1,85 @@
 module: 38-at-the-store
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: каса
-    ipa: /ˈkɑsɑ/
-    translation: checkout / cash register
-    pos: noun 
-    gender: f
-  - lemma: касир
-    ipa: /kɑˈsɪr/
-    translation: cashier
-    pos: noun 
-    gender: m
-  - lemma: чек
-    ipa: /t͡ʃɛk/
-    translation: receipt
-    pos: noun 
-    gender: m
-  - lemma: картка
-    ipa: /ˈkɑrtkɑ/
-    translation: card
-    pos: noun 
-    gender: f
-  - lemma: готівка
-    ipa: /ɦɔˈtʲivkɑ/
-    translation: cash
-    pos: noun 
-    gender: f
-  - lemma: безконтактно
-    ipa: /bɛzkɔnˈtɑktnɔ/
-    translation: contactless
-    pos: adv 
-    gender: n/a
-  - lemma: оплатити
-    ipa: /ɔplɑˈtɪtɪ/
-    translation: to pay for
-    pos: verb 
-    aspect: pf
-  - lemma: готово
-    ipa: /ɦɔˈtɔvɔ/
-    translation: done / ready
-    pos: adv 
-    gender: n/a
-  - lemma: потрібен
-    ipa: /pɔˈtʲribɛn/
-    translation: needed / necessary
-    pos: adj 
-    gender: m
-  - lemma: черга
-    ipa: /ˈt͡ʃɛrɦɑ/
-    translation: queue / line
-    pos: noun 
-    gender: f
-  - lemma: пакет
-    ipa: /pɑˈkɛt/
-    translation: bag/plastic bag
-    pos: noun 
-    gender: m
-  - lemma: решта
-    ipa: /ˈrɛʃtɑ/
-    translation: change (money)
-    pos: noun 
-    gender: f
+- lemma: ашан
+  ipa: /aʃan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: безконтактно
+  ipa: /bɛzkɔntˈaktnɔ/
+  translation: ''
+  pos: adv
+- lemma: еко-сумка
+  ipa: /ɛkɔ-sˈumka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: завершення
+  ipa: /zaʋˈɛrʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: картка
+  ipa: /kˈartka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: каса
+  ipa: /kˈasa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: касир
+  ipa: /kasˈɪr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: магазин
+  ipa: /maɦazˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: оплата
+  ipa: /ɔplˈata/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пакет
+  ipa: /pakˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прикласти
+  ipa: /prɪklˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: продукт
+  ipa: /prɔdˈukt/
+  translation: ''
+  pos: noun
+- lemma: пін-код
+  ipa: /pin-kɔd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спосіб
+  ipa: /spˈɔsib/
+  translation: ''
+  pos: noun
+- lemma: супермаркет
+  ipa: /supɛrmˈarkɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сільпо
+  ipa: /silʲpˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: термінал
+  ipa: /tɛrminˈal/
+  translation: ''
+  pos: noun
+  gender: m

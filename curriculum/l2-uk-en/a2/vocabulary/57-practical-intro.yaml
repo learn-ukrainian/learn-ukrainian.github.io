@@ -2,274 +2,64 @@ module: 57-practical-intro
 level: A2
 version: '2.0'
 items:
-- lemma: аудиторія
-  ipa: /ɐudiˈtɔrʲijɐ/
-  translation: classroom; auditorium
-  pos: noun
-  gender: f
-- lemma: бабин
-  ipa: /ˈbɑbɪn/
-  translation: grandmother's
-  pos: propn
-  gender: m
-- lemma: бариста
-  ipa: /bɐˈrɪstɐ/
-  translation: barista
-  pos: noun
-  gender: m
-- lemma: біб
-  ipa: /bʲib/
-  translation: bean
-  pos: noun
-  gender: m
-- lemma: випрасти
-  ipa: /vɪˈprɑstɪ/
-  translation: to wash (perf) [dialect/rare]
-  pos: verb
-- lemma: ворон
-  ipa: /ˈvɔron/
-  translation: raven
-  pos: noun
-  gender: f
-- lemma: воронень
-  ipa: /ˈvɔronenʲ/
-  translation: raven
+- lemma: виправлення
+  ipa: /ʋˈɪpraʋlɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: засміятися
-  ipa: /zɐsmiˈjɑtɪsʲɐ/
-  translation: to start laughing (perf)
-  pos: verb
-  gender: f
-- lemma: злочинець
-  ipa: /zloˈt͡ʃɪnet͡sʲ/
-  translation: criminal (male)
+- lemma: дослівний
+  ipa: /dɔslˈiʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: керування
+  ipa: /kɛruʋˈannja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: злочинка
-  ipa: /zloˈt͡ʃɪnkɐ/
-  translation: criminal (female)
-  pos: noun
-  gender: m
-- lemma: зникнути
-  ipa: /ˈznɪknute/
-  translation: to disappear (perf)
-  pos: verb
   gender: n
-- lemma: зустрічати
-  ipa: /zustriˈt͡ʃɑte/
-  translation: to meet (imp)
-  pos: verb
-- lemma: кохати
-  ipa: /koˈxɑte/
-  translation: to love
-  pos: verb
-- lemma: легко
-  ipa: /ˈlɛxko/
-  translation: easily
-  pos: adv
-- lemma: лінуватися
-  ipa: /linuˈʋɑtɪsʲɐ/
-  translation: to be lazy
-  pos: verb
-- lemma: література
-  ipa: /literɐˈturɐ/
-  translation: literature
-  pos: noun
-  gender: f
 - lemma: майкл
-  ipa: /ˈmɑi̯kl/
-  translation: Michael
-  pos: propn
-  gender: m
-- lemma: морок
-  ipa: /ˈmɔrok/
-  translation: gloaming; darkness
+  ipa: /majkl/
+  translation: ''
   pos: noun
   gender: m
-- lemma: надихати
-  ipa: /nɐdɪˈxɑte/
-  translation: to inspire
-  pos: verb
-- lemma: нота
-  ipa: /ˈnɔtɐ/
-  translation: note (music)
-  pos: noun
-  gender: f
-- lemma: перехожий
-  ipa: /pereˈxɔʒɪj/
-  translation: passerby
+- lemma: олександр
+  ipa: /ɔlɛksˈandr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: поетка
-  ipa: /poˈɛtkɐ/
-  translation: poetess
-  pos: noun
-  gender: f
-- lemma: прилетіти
-  ipa: /prɪleˈtite/
-  translation: to arrive by air (perf)
-  pos: verb
-  gender: f
-- lemma: проводжати
-  ipa: /provoˈdʒɑte/
-  translation: to see off
-  pos: verb
-- lemma: проворонити
-  ipa: /provoˈrɔnɪte/
-  translation: to miss/overlook
-  pos: verb
-  gender: f
-- lemma: простіше
-  ipa: /proˈsʲtʲiʃe/
-  translation: simpler
-  pos: adv
-- lemma: піднімати
-  ipa: /pidnʲiˈmɑte/
-  translation: to lift; to raise
-  pos: verb
-- lemma: розслідувати
-  ipa: /rozˈsʲlʲiduʋɐte/
-  translation: to investigate
-  pos: verb
-- lemma: розцвіти
-  ipa: /rozt͡sʲviˈtɪ/
-  translation: to bloom (perf)
-  pos: verb
-  gender: m
-- lemma: скоромовка
-  ipa: /skoroˈmɔu̯kɐ/
-  translation: tongue twister
-  pos: propn
-  gender: m
-- lemma: іменник
-  ipa: /iˈmɛnːɪk/
-  translation: noun
-  pos: noun
-  gender: m
-- lemma: вид
-  ipa: /vɪd/
-  translation: aspect; view
-  pos: noun
-  gender: m
-- lemma: сорокий
-  ipa: /soˈrɔkɪj/
-  translation: magpie's (adj)
-  pos: adj
-  gender: f
-- lemma: тебе
-  ipa: /teˈbɛ/
-  translation: you (gen/acc)
-  pos: pron
-- lemma: том
-  ipa: /tɔm/
-  translation: volume; Tom
-  pos: propn
-  gender: m
-- lemma: томе
-  ipa: /ˈtɔme/
-  translation: Tom (voc)
-  pos: other
-- lemma: фея
-  ipa: /ˈfɛjɐ/
-  translation: fairy
-  pos: propn
-  gender: f
-- lemma: хитр
-  ipa: /xɪtr/
-  translation: cunning
-  pos: noun
-  gender: f
-- lemma: літературний
-  ipa: /literɐˈturnɪj/
-  translation: literary
-  pos: adj
-  gender: m
-- lemma: називний
-  ipa: /nɐzɪu̯ˈnɪj/
-  translation: nominative
-  pos: adj
-  gender: m
-- lemma: родовий
-  ipa: /rodoˈʋɪj/
-  translation: genitive
-  pos: adj
-  gender: m
-- lemma: давальний
-  ipa: /dɐˈʋɑlʲnɪj/
-  translation: dative
-  pos: adj
-  gender: m
-- lemma: знахідний
-  ipa: /znɐˈxʲidnɪj/
-  translation: accusative
-  pos: adj
-  gender: m
-- lemma: орудний
-  ipa: /oˈrudnɪj/
-  translation: instrumental
-  pos: adj
-  gender: m
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: locative
-  pos: adj
-  gender: m
-- lemma: кличний
-  ipa: /ˈklɪt͡ʃnɪj/
-  translation: vocative
-  pos: adj
-  gender: m
-- lemma: недоконаний
-  ipa: /nedoˈkɔnɐnɪj/
-  translation: imperfective
-  pos: adj
-  gender: m
-- lemma: доконаний
-  ipa: /doˈkɔnɐnɪj/
-  translation: perfective
-  pos: adj
-  gender: m
-- lemma: частий
-  ipa: /ˈt͡ʃɑstɪj/
-  translation: frequent
-  pos: adj
-- lemma: ідеально
-  ipa: /ideˈɑlʲno/
-  translation: perfectly
-  pos: adv
-- lemma: інспектор
-  ipa: /inˈspɛktor/
-  translation: inspector
-  pos: noun
-  gender: m
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time; tense
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijeˈslɔvɔ/
-  translation: verb
+- lemma: опанування
+  ipa: /ɔpanuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: майбутній
-  ipa: /mɐi̯ˈbutnʲij/
-  translation: future
-  pos: adj
-  gender: m
-- lemma: відмінок
-  ipa: /vʲidˈmʲinok/
-  translation: case (grammar)
+- lemma: оренда
+  ipa: /ɔrˈɛnda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: оцінити
+  ipa: /ɔt͡sinˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: проживання
+  ipa: /prɔʒɪʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розмовник
+  ipa: /rɔzmˈɔʋnɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: займенник
-  ipa: /zɐi̯ˈmɛnːɪk/
-  translation: pronoun
+- lemma: успішно
+  ipa: /uspˈiʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: усього
+  ipa: /usʲˈɔɦɔ/
+  translation: ''
+  pos: adv
+- lemma: шліфування
+  ipa: /ʃlifuʋˈannja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: прикметник
-  ipa: /prɪkˈmɛtnɪk/
-  translation: adjective
-  pos: noun
-  gender: m
+  gender: n

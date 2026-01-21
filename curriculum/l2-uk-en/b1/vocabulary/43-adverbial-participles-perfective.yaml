@@ -2,79 +2,244 @@ module: 43-adverbial-participles-perfective
 level: B1
 version: '2.0'
 items:
-- lemma: взя
-  ipa: /vzʲa/
-  translation: take (root)
-  pos: other
-- lemma: вийш
-  ipa: /vɪjʃ/
-  translation: go out (root)
-  pos: other
-- lemma: вставлятися
-  ipa: /ustau̯ˈlʲatɪsʲa/
-  translation: to be inserted
+- lemma: архаїчний
+  ipa: /arxaˈjit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: вважатися
+  ipa: /ʋʋaʒˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: вша
-  ipa: /u̯ʃa/
-  translation: suffix -vsha
+- lemma: вжити
+  ipa: /ʋʒˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вжиток
+  ipa: /ʋʒˈɪtɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вши
-  ipa: /u̯ʃɪ/
-  translation: suffix -vshy
+- lemma: вийш-
+  ipa: /ʋɪjʃ-/
+  translation: ''
+  pos: noun
+- lemma: вийшовши
+  ipa: /ʋˈɪjʃɔʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: виявити
+  ipa: /ʋˈɪjaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вставлятися
+  ipa: /ʋstaʋlˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: втрачений
+  ipa: /ʋtrˈat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: динамічність
+  ipa: /dɪnamˈit͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: допускати
+  ipa: /dɔpuskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: діалектний
+  ipa: /dialˈɛktnɪj/
+  translation: ''
+  pos: adj
+- lemma: дізнавшись
+  ipa: /diznˈaʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: експеримент
+  ipa: /ɛkspɛrɪmˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: елегантно
+  ipa: /ɛlɛɦˈantnɔ/
+  translation: ''
   pos: adv
 - lemma: забарвленість
-  ipa: /zaˈbaru̯lɛnʲisʲtʲ/
-  translation: tint
+  ipa: /zabˈarʋlɛnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: закодований
-  ipa: /zakɔˈdɔvanɪj/
-  translation: encoded
-  pos: adj
-  gender: f
-- lemma: овша
-  ipa: /ˈɔu̯ʃa/
-  translation: suffix -ovsha
-  pos: noun
-  gender: m
-- lemma: поча
-  ipa: /pɔˈt͡ʃa/
-  translation: start (root)
-  pos: adv
-- lemma: почу
-  ipa: /pɔˈt͡ʃu/
-  translation: hear (root)
-  pos: other
-- lemma: прийш
-  ipa: /prɪjʃ/
-  translation: come (root)
-  pos: other
-- lemma: прийти
-  ipa: /prɪjˈtɪ/
-  translation: to come
+- lemma: забувши
+  ipa: /zabˈuʋʃɪ/
+  translation: ''
   pos: verb
-- lemma: приїха
-  ipa: /prɪˈjixa/
-  translation: arrive (root)
+- lemma: завершивши
+  ipa: /zaʋɛrʃˈɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: завершитися
+  ipa: /zaʋɛrʃˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: закінчивши
+  ipa: /zakˈint͡ʃɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: замовивши
+  ipa: /zamˈɔʋɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: зобов'язуватися
+  ipa: /zɔbɔʋˈjazuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зробивши
+  ipa: /zrɔbˈɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: методологія
+  ipa: /mɛtɔdɔlˈɔɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: написавши
+  ipa: /napɪsˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: незамінний
+  ipa: /nɛzamˈinnɪj/
+  translation: ''
+  pos: adj
+- lemma: обмежений
+  ipa: /ɔbmˈɛʒɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: овши
+  ipa: /ɔʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: отримавши
+  ipa: /ɔtrˈɪmaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: побачивши
+  ipa: /pɔbˈat͡ʃɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: пов'язати
+  ipa: /pɔʋjazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: повернувшись
+  ipa: /pɔʋɛrnˈuʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: повечерявши
+  ipa: /pɔʋɛt͡ʃˈɛrjaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: повторивши
+  ipa: /pɔʋtɔrˈɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: подавши
+  ipa: /pɔdˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: познайомившись
+  ipa: /pɔznajˈɔmɪʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: полегшення
+  ipa: /pɔlˈɛɦʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: поснідавши
+  ipa: /pɔsnˈidaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: пошкодувати
+  ipa: /pɔʃkɔduʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: поївши
+  ipa: /pɔˈjiʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: працюючи
+  ipa: /prat͡sˈjujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: прийш-
+  ipa: /prɪjʃ-/
+  translation: ''
+  pos: noun
+- lemma: прийшвши
+  ipa: /prɪjʃʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: прийшовши
+  ipa: /prɪjʃˈɔʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: прийшів
+  ipa: /prɪjʃiʋ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: прочитати
-  ipa: /prɔt͡ʃɪˈtatɪ/
-  translation: to read
+- lemma: прийшівши
+  ipa: /prɪjʃiʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: приїхавши
+  ipa: /prɪˈjixaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: проаналізувавши
+  ipa: /prɔanalizuʋˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: прочита-
+  ipa: /prɔt͡ʃɪta-/
+  translation: ''
+  pos: noun
+- lemma: підвищити
+  ipa: /pidʋˈɪʃt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: підписавши
+  ipa: /pidpɪsˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: піш-
+  ipa: /piʃ-/
+  translation: ''
+  pos: noun
+- lemma: пішвши
+  ipa: /piʃʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: пішовши
+  ipa: /piʃˈɔʋʃɪ/
+  translation: ''
   pos: verb
 - lemma: реєстраційний
-  ipa: /rɛjɛstraˈt͡sʲijnɪj/
-  translation: registration (adj)
+  ipa: /rɛjɛstrat͡sˈijnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: ритмічність
-  ipa: /rɪtˈmʲit͡ʃnʲisʲtʲ/
-  translation: rhythmicity
+  ipa: /rɪtmˈit͡ʃnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: сказа
-  ipa: /skaˈza/
-  translation: say (root)
+- lemma: скуштувавши
+  ipa: /skuʃtuʋˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: хронологія
+  ipa: /xrɔnɔlˈɔɦija/
+  translation: ''
   pos: noun
   gender: f

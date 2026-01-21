@@ -1,69 +1,95 @@
 module: 39-buying-tickets
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: квиток
-    ipa: /kvɪˈtɔk/
-    translation: ticket
-    pos: noun 
-    gender: m
-  - lemma: туди
-    ipa: /tʊˈdɪ/
-    translation: there / one way
-    pos: adv 
-    gender: n/a
-  - lemma: назад
-    ipa: /nɑˈzɑd/
-    translation: back / return
-    pos: adv 
-    gender: n/a
-  - lemma: відправлення
-    ipa: /vʲidˈprɑvlɛnʲːɑ/
-    translation: departure
-    pos: noun 
-    gender: n
-  - lemma: прибуття
-    ipa: /prɪbʊˈtʲːɑ/
-    translation: arrival
-    pos: noun 
-    gender: n
-  - lemma: платформа
-    ipa: /plɑtˈfɔrmɑ/
-    translation: platform
-    pos: noun 
-    gender: f
-  - lemma: місце
-    ipa: /ˈmʲisʲt͡sɛ/
-    translation: seat / place
-    pos: noun 
-    gender: n
-  - lemma: вагон
-    ipa: /vɑˈɦɔn/
-    translation: carriage / wagon
-    pos: noun 
-    gender: m
-  - lemma: поїзд
-    ipa: /ˈpɔjizd/
-    translation: train
-    pos: noun 
-    gender: m
-  - lemma: автобус
-    ipa: /ɑvˈtɔbʊs/
-    translation: bus
-    pos: noun 
-    gender: m
-  - lemma: туди-назад
-    ipa: /tʊˈdɪ nɑˈzɑd/
-    translation: round trip
-    pos: adv
-    gender: n/a
-  - lemma: біля вікна
-    ipa: /ˈbʲilʲɑ vʲikˈnɑ/
-    translation: by the window
-    pos: phrase
-    gender: n/a
-  - lemma: при проході
-    ipa: /prɪ prɔˈxɔdʲi/
-    translation: by the aisle
-    pos: phrase
-    gender: n/a
+- lemma: вибір
+  ipa: /ʋˈɪbir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вокзал
+  ipa: /ʋɔkzˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: відправлення
+  ipa: /ʋidprˈaʋlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: каса
+  ipa: /kˈasa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: квиток
+  ipa: /kʋɪtˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: київ
+  ipa: /kɪˈjiʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: львов
+  ipa: /lʲʋɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: місце
+  ipa: /mˈist͡sɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: назад
+  ipa: /nazˈad/
+  translation: ''
+  pos: adv
+- lemma: напрямок
+  ipa: /nˈaprjamɔk/
+  translation: ''
+  pos: noun
+- lemma: одеса
+  ipa: /ɔdˈɛsa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: платформа
+  ipa: /platfˈɔrma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поїзд
+  ipa: /pˈɔjizd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прибуття
+  ipa: /prɪbuttˈja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розклад
+  ipa: /rˈɔzklad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тип
+  ipa: /tɪp/
+  translation: ''
+  pos: noun
+- lemma: туди
+  ipa: /tudˈɪ/
+  translation: ''
+  pos: pron
+- lemma: укрзалізниця
+  ipa: /ukrzaliznˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: харків
+  ipa: /xˈarkiʋ/
+  translation: ''
+  pos: noun
+  gender: m

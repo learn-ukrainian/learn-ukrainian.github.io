@@ -2,466 +2,641 @@ module: 15-around-the-city
 level: A1
 version: '2.0'
 items:
-  - lemma: близько
-    ipa: /ˈblɪzʲkɔ/
-    translation: close/near
-    pos: adv
-  - lemma: будівля
-    ipa: /buˈdivlʲɑ/
-    translation: building
-    pos: noun
-    gender: f
-  - lemma: велосипед
-    ipa: /vɛlɔsɪˈpɛd/
-    translation: bicycle
-    pos: noun
-    gender: m
-  - lemma: весь
-    ipa: /vɛsʲ/
-    translation: all/whole
-    pos: pron
-    gender: m
-  - lemma: вздовж
-    ipa: /vzdɔwʒ/
-    translation: along
-    pos: other
-  - lemma: вийти
-    ipa: /ˈvɪjtɪ/
-    translation: to exit/get off
-    pos: verb
-  - lemma: вимога
-    ipa: /vɪˈmɔɦɑ/
-    translation: demand/request
-    pos: noun
-    gender: f
-  - lemma: вокзал
-    ipa: /vɔkˈzɑl/
-    translation: station (train)
-    pos: noun
-    gender: m
-  - lemma: вхід
-    ipa: /xid/
-    translation: entrance
-    pos: noun
-    gender: m
-  - lemma: від
-    ipa: /vid/
-    translation: from
-    pos: other
-  - lemma: готуватися
-    ipa: /ɦɔtuˈvɑtɪsʲɑ/
-    translation: to prepare oneself
-    pos: verb
-  - lemma: гроші
-    ipa: /ˈhrɔʃi/
-    translation: money
-    pos: noun
-    gender: pl
-  - lemma: далеко
-    ipa: /dɑˈlɛkɔ/
-    translation: far
-    pos: adv
-  - lemma: два
-    ipa: /dvɑ/
-    translation: two
-    pos: num
-    gender: m
-  - lemma: двадцять
-    ipa: /ˈdvɑdt͡sʲɑtʲ/
-    translation: twenty
-    pos: num
-  - lemma: десять
-    ipa: /ˈdɛsʲɑtʲ/
-    translation: ten
-    pos: num
-  - lemma: для
-    ipa: /dlʲɑ/
-    translation: for
-    pos: other
-  - lemma: дорошенко
-    ipa: /dɔrɔˈʃɛnkɔ/
-    translation: Doroshenko (name)
-    pos: propn
-    gender: m
-  - lemma: досвід
-    ipa: /ˈdɔsvid/
-    translation: experience
-    pos: noun
-    gender: m
-  - lemma: діалог
-    ipa: /diɑˈlɔh/
-    translation: dialogue
-    pos: noun
-    gender: m
-  - lemma: діставати
-    ipa: /distɑˈvɑtɪ/
-    translation: to check/reach
-    pos: verb
-  - lemma: дістатися
-    ipa: /disˈtɑtɪsʲɑ/
-    translation: to reach/get to
-    pos: verb
-  - lemma: зазвичай
-    ipa: /zɑzʋɪˈt͡ʃɑj/
-    translation: usually
-    pos: adv
-  - lemma: зручно
-    ipa: /ˈzrut͡ʃnɔ/
-    translation: conveniently
-    pos: adv
-  - lemma: зупинятися
-    ipa: /zupɪˈnʲɑtɪsʲɑ/
-    translation: to stop
-    pos: verb
-  - lemma: киянин
-    ipa: /kɪˈjɑnɪn/
-    translation: Kyiv resident
-    pos: noun
-    gender: m
-  - lemma: книгарня
-    ipa: /knɪˈhɑrnʲɑ/
-    translation: bookstore
-    pos: noun
-    gender: f
-  - lemma: копальня
-    ipa: /kɔˈpɑlʲnʲɑ/
-    translation: mine
-    pos: noun
-    gender: f
-  - lemma: крикнути
-    ipa: /ˈkrɪknutɪ/
-    translation: to shout
-    pos: verb
-  - lemma: крім
-    ipa: /krim/
-    translation: besides/except
-    pos: other
-  - lemma: культурний
-    ipa: /kulʲˈturnɪj/
-    translation: cultural
-    pos: adj
-    gender: m
-  - lemma: купити
-    ipa: /kuˈpɪtɪ/
-    translation: to buy
-    pos: verb
-  - lemma: львівський
-    ipa: /ˈlʲviwsʲkɪj/
-    translation: Lviv (adj)
-    pos: adj
-    gender: m
-  - lemma: лінія
-    ipa: /ˈlinijɑ/
-    translation: line
-    pos: noun
-    gender: f
-  - lemma: майдан
-    ipa: /mɑjˈdɑn/
-    translation: square/Maidan
-    pos: noun
-    gender: m
-  - lemma: маршрут
-    ipa: /mɑrˈʃrut/
-    translation: route
-    pos: noun
-    gender: m
-  - lemma: маршрутка
-    ipa: /mɑrˈʃrutkɑ/
-    translation: marshrutka (minibus)
-    pos: noun
-    gender: f
-  - lemma: між
-    ipa: /miʒ/
-    translation: between
-    pos: other
-  - lemma: міні
-    ipa: /ˈmini/
-    translation: mini
-    pos: other
-  - lemma: мінівен
-    ipa: /miniˈvɛn/
-    translation: minivan
-    pos: noun
-    gender: m
-  - lemma: навпроти
-    ipa: /nɑwˈprɔtɪ/
-    translation: opposite
-    pos: other
-  - lemma: назад
-    ipa: /nɑˈzɑd/
-    translation: back/backwards
-    pos: adv
-  - lemma: наліво
-    ipa: /nɑˈlivɔ/
-    translation: to the left
-    pos: adv
-  - lemma: направо
-    ipa: /nɑˈprɑvɔ/
-    translation: to the right
-    pos: adv
-  - lemma: невеликий
-    ipa: /nɛvɛˈlɪkɪj/
-    translation: not big/small
-    pos: adj
-    gender: m
-  - lemma: незалежність
-    ipa: /nɛzɑˈlɛʒnisʲtʲ/
-    translation: independence
-    pos: noun
-    gender: f
-  - lemma: обожнювати
-    ipa: /ɔˈbɔʒnʲuvɑtɪ/
-    translation: to adore
-    pos: verb
-  - lemma: оперний
-    ipa: /ˈɔpɛrnɪj/
-    translation: opera (adj)
-    pos: adj
-    gender: m
-  - lemma: офіційний
-    ipa: /ɔfiˈt͡sʲijnɪj/
-    translation: official
-    pos: adj
-    gender: m
-  - lemma: п'ять
-    ipa: /pjɑtʲ/
-    translation: five
-    pos: num
-  - lemma: перед
-    ipa: /ˈpɛrɛd/
-    translation: before/in front
-    pos: other
-  - lemma: передавати
-    ipa: /pɛrɛdɑˈvɑtɪ/
-    translation: to pass/transmit
-    pos: verb
-  - lemma: перехрестя
-    ipa: /pɛrɛˈxrɛsʲtʲɑ/
-    translation: intersection
-    pos: noun
-    gender: n
-  - lemma: по
-    ipa: /pɔ/
-    translation: along/by
-    pos: other
-  - lemma: повернути
-    ipa: /pɔvɛrˈnutɪ/
-    translation: to turn
-    pos: verb
-  - lemma: подорожувати
-    ipa: /pɔdɔrɔʒuˈvɑtɪ/
-    translation: to travel
-    pos: verb
-  - lemma: покинутий
-    ipa: /pɔˈkɪnutɪj/
-    translation: abandoned
-    pos: adj
-    gender: m
-  - lemma: популярний
-    ipa: /pɔpuˈlʲɑrnɪj/
-    translation: popular
-    pos: adj
-    gender: m
-  - lemma: поруч
-    ipa: /ˈpɔrut͡ʃ/
-    translation: nearby
-    pos: adv
-  - lemma: пошта
-    ipa: /ˈpɔʃtɑ/
-    translation: post office
-    pos: noun
-    gender: f
-  - lemma: провулок
-    ipa: /prɔˈvulɔk/
-    translation: lane/alley
-    pos: noun
-    gender: m
-  - lemma: проспект
-    ipa: /prɔˈspɛkt/
-    translation: avenue
-    pos: noun
-    gender: m
-  - lemma: простір
-    ipa: /ˈprɔstir/
-    translation: space
-    pos: noun
-    gender: m
-  - lemma: прямо
-    ipa: /ˈprʲɑmɔ/
-    translation: straight
-    pos: adv
-  - lemma: після
-    ipa: /ˈpislʲɑ/
-    translation: after
-    pos: other
-  - lemma: пішки
-    ipa: /ˈpiʃkɪ/
-    translation: on foot
-    pos: adv
-  - lemma: світлофор
-    ipa: /svitlɔˈfɔr/
-    translation: traffic light
-    pos: noun
-    gender: m
-  - lemma: синій
-    ipa: /ˈsɪnʲij/
-    translation: blue
-    pos: adj
-    gender: m
-  - lemma: станція
-    ipa: /ˈstɑnt͡sʲijɑ/
-    translation: station
-    pos: noun
-    gender: f
-  - lemma: столиця
-    ipa: /stɔˈlɪt͡sʲɑ/
-    translation: capital city
-    pos: noun
-    gender: f
-  - lemma: театральний
-    ipa: /tɛɑˈtrɑlʲnɪj/
-    translation: theatrical
-    pos: adj
-    gender: m
-  - lemma: трамвай
-    ipa: /trɑmˈvɑj/
-    translation: tram
-    pos: noun
-    gender: m
-  - lemma: транспорт
-    ipa: /ˈtrɑnspɔrt/
-    translation: transport
-    pos: noun
-    gender: m
-  - lemma: три
-    ipa: /trɪ/
-    translation: three
-    pos: num
-  - lemma: тіснота
-    ipa: /tisnɔˈtɑ/
-    translation: tightness/crowd
-    pos: noun
-    gender: f
-  - lemma: уникати
-    ipa: /unɪˈkɑtɪ/
-    translation: to avoid
-    pos: verb
-  - lemma: фіксований
-    ipa: /fikˈsɔvɑnɪj/
-    translation: fixed
-    pos: adj
-    gender: m
-  - lemma: хвилина
-    ipa: /xvɪˈlɪnɑ/
-    translation: minute
-    pos: noun
-    gender: f
-  - lemma: центральний
-    ipa: /t͡sɛnˈtrɑlʲnɪj/
-    translation: central
-    pos: adj
-    gender: m
-  - lemma: через
-    ipa: /ˈt͡ʃɛrɛz/
-    translation: through/across
-    pos: other
-  - lemma: швидше
-    ipa: /ˈʃvɪdʃɛ/
-    translation: faster
-    pos: adv
-  - lemma: щодня
-    ipa: /ʃt͡ʃɔˈdnʲɑ/
-    translation: every day
-    pos: adv
-  - lemma: щоранку
-    ipa: /ʃt͡ʃɔˈrɑnku/
-    translation: every morning
-    pos: adv
-  - lemma: інший
-    ipa: /ˈinʃɪj/
-    translation: other
-    pos: adj
-    gender: m
-  - lemma: існувати
-    ipa: /isnuˈvɑtɪ/
-    translation: to exist
-    pos: verb
-  - lemma: їздити
-    ipa: /ˈjizdɪtɪ/
-    translation: to ride/drive
-    pos: verb
-  - lemma: їхати
-    ipa: /ˈjixɑtɪ/
-    translation: to go (vehicle)
-    pos: verb
-  - lemma: автобусом
-    ipa: /ɑwˈtɔbusɔm/
-    translation: by bus
-    pos: noun
-    gender: m
-  - lemma: звідти
-    ipa: /ˈzvidtɪ/
-    translation: from there
-    pos: adv
-  - lemma: міст
-    ipa: /mist/
-    translation: bridge
-    pos: noun
-    gender: m
-  - lemma: таксі
-    ipa: /tɑkˈsi/
-    translation: taxi
-    pos: noun
-    gender: n
-  - lemma: бульвар
-    ipa: /bulʲˈvɑr/
-    translation: boulevard
-    pos: noun
-    gender: m
-  - lemma: набережна
-    ipa: /nɑˈbɛrɛʒnɑ/
-    translation: embankment
-    pos: noun
-    gender: f
-  - lemma: сюди
-    ipa: /sʲuˈdɪ/
-    translation: here (to)
-    pos: adv
-  - lemma: туди
-    ipa: /tuˈdɪ/
-    translation: there (to)
-    pos: adv
-  - lemma: метро
-    ipa: /mɛtˈrɔ/
-    translation: metro
-    pos: noun
-    gender: n
-  - lemma: вулиця
-    ipa: /ˈvulɪt͡sʲɑ/
-    translation: street
-    pos: noun
-    gender: f
-  - lemma: машиною
-    ipa: /mɑˈʃɪnɔju/
-    translation: by car
-    pos: noun
-    gender: f
-  - lemma: трамваєм
-    ipa: /trɑmˈvɑjɛm/
-    translation: by tram
-    pos: noun
-    gender: m
-  - lemma: пішки
-    ipa: /ˈpiʃkɪ/
-    translation: on foot
-    pos: adv
-  - lemma: вихід
-    ipa: /ˈvɪxid/
-    translation: exit
-    pos: noun
-    gender: m
-  - lemma: площа
-    ipa: /ˈplɔʃt͡ʃɑ/
-    translation: square
-    pos: noun
-    gender: f
+- lemma: автобус
+  ipa: /aʋtˈɔbus/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: аптека
+  ipa: /aptˈɛka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: банка
+  ipa: /bˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: близько
+  ipa: /blˈɪzʲkɔ/
+  translation: ''
+  pos: adv
+- lemma: будинок
+  ipa: /budˈɪnɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: будівля
+  ipa: /budˈiʋlja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бульвар
+  ipa: /bulʲʋˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: великий
+  ipa: /ʋɛlˈɪkɪj/
+  translation: ''
+  pos: adj
+- lemma: велосипед
+  ipa: /ʋɛlɔsɪpˈɛd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вздовж
+  ipa: /ʋzdɔʋʒ/
+  translation: ''
+  pos: adv
+- lemma: вибачити
+  ipa: /ʋˈɪbat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вийти
+  ipa: /ʋˈɪjtɪ/
+  translation: ''
+  pos: verb
+- lemma: вимога
+  ipa: /ʋɪmˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вихід
+  ipa: /ʋˈɪxid/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: водій
+  ipa: /ʋɔdˈij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вокзал
+  ipa: /ʋɔkzˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: всі
+  ipa: /ʋsi/
+  translation: ''
+  pos: pron
+- lemma: вулиця
+  ipa: /ʋˈulɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вхід
+  ipa: /ʋxid/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: гарне
+  ipa: /ɦˈarnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: готуватися
+  ipa: /ɦɔtuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: гріш
+  ipa: /ɦriʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: далеко
+  ipa: /dalˈɛkɔ/
+  translation: ''
+  pos: adv
+- lemma: двадцять
+  ipa: /dʋˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: десять
+  ipa: /dˈɛsjatʲ/
+  translation: ''
+  pos: num
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дорошенко
+  ipa: /dɔrɔʃˈɛnkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: досвід
+  ipa: /dˈɔsʋid/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: друг
+  ipa: /druɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: діставатися
+  ipa: /distaʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: дістатися
+  ipa: /distˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: живий
+  ipa: /ʒɪʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: зазвичай
+  ipa: /zazʋɪt͡ʃˈaj/
+  translation: ''
+  pos: adv
+- lemma: зараза
+  ipa: /zarˈaza/
+  translation: ''
+  pos: noun
+- lemma: зелена
+  ipa: /zɛlˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зручно
+  ipa: /zrˈut͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: зупинка
+  ipa: /zupˈɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зупинятися
+  ipa: /zupɪnˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: йти
+  ipa: /jtɪ/
+  translation: ''
+  pos: verb
+- lemma: кав'ярня
+  ipa: /kaʋˈjarnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: квартира
+  ipa: /kʋartˈɪra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: киянин
+  ipa: /kɪˈjanɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: книгарня
+  ipa: /knɪɦˈarnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кожний
+  ipa: /kˈɔʒnɪj/
+  translation: ''
+  pos: pron
+- lemma: копальня
+  ipa: /kɔpˈalʲnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: крикнути
+  ipa: /krˈɪknutɪ/
+  translation: ''
+  pos: verb
+- lemma: крім
+  ipa: /krim/
+  translation: ''
+  pos: prep
+- lemma: культурний
+  ipa: /kulʲtˈurnɪj/
+  translation: ''
+  pos: adj
+- lemma: купити
+  ipa: /kupˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ласка
+  ipa: /lˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: львівський
+  ipa: /lʲʋˈiʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: лінія
+  ipa: /lˈinija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: майдан
+  ipa: /majdˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: маршрут
+  ipa: /marʃrˈut/
+  translation: ''
+  pos: noun
+- lemma: маршрутка
+  ipa: /marʃrˈutka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: машина
+  ipa: /maʃˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мен
+  ipa: /mɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: метро
+  ipa: /mɛtrˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: музей
+  ipa: /muzˈɛj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: міні-діалог
+  ipa: /mˈini-dialɔɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мінівен
+  ipa: /miniʋˈɛn/
+  translation: ''
+  pos: noun
+- lemma: міст
+  ipa: /mist/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: місто
+  ipa: /mˈistɔ/
+  translation: ''
+  pos: noun
+- lemma: набережний
+  ipa: /nˈabɛrɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: навпроти
+  ipa: /naʋprˈɔtɪ/
+  translation: ''
+  pos: adv
+- lemma: наліво
+  ipa: /nalˈiʋɔ/
+  translation: ''
+  pos: adv
+- lemma: направа
+  ipa: /naprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: невеликий
+  ipa: /nɛʋɛlˈɪkɪj/
+  translation: ''
+  pos: adj
+- lemma: незалежність
+  ipa: /nɛzalˈɛʒnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: нема
+  ipa: /nɛmˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: немати
+  ipa: /nɛmatɪ/
+  translation: ''
+  pos: verb
+- lemma: обожнювати
+  ipa: /ɔbˈɔʒnjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: оперний
+  ipa: /ˈɔpɛrnɪj/
+  translation: ''
+  pos: adj
+- lemma: особистий
+  ipa: /ɔsɔbˈɪstɪj/
+  translation: ''
+  pos: adj
+- lemma: офіційний
+  ipa: /ɔfit͡sˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: п'ять
+  ipa: /pjatʲ/
+  translation: ''
+  pos: num
+- lemma: парк
+  ipa: /park/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: парка
+  ipa: /parka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пасажир
+  ipa: /pasaʒˈɪr/
+  translation: ''
+  pos: noun
+- lemma: передавати
+  ipa: /pɛrɛdaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перехрест
+  ipa: /pɛrˈɛxrɛst/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перехрестя
+  ipa: /pɛrɛxrˈɛstja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: питати
+  ipa: /pɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: площа
+  ipa: /plˈɔʃt͡ʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: повернути
+  ipa: /pɔʋɛrnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: подорожувати
+  ipa: /pɔdɔrɔʒuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: покинутий
+  ipa: /pɔkˈɪnutɪj/
+  translation: ''
+  pos: adj
+- lemma: популярний
+  ipa: /pɔpulˈjarnɪj/
+  translation: ''
+  pos: adj
+- lemma: поруч
+  ipa: /pˈɔrut͡ʃ/
+  translation: ''
+  pos: adv
+- lemma: потім
+  ipa: /pˈɔtim/
+  translation: ''
+  pos: pron
+- lemma: пошта
+  ipa: /pˈɔʃta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: провулок
+  ipa: /prɔʋˈulɔk/
+  translation: ''
+  pos: noun
+- lemma: проспект
+  ipa: /prɔspˈɛkt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: простір
+  ipa: /prˈɔstir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прямо
+  ipa: /prˈjamɔ/
+  translation: ''
+  pos: adv
+- lemma: пішки
+  ipa: /pˈiʃkɪ/
+  translation: ''
+  pos: adv
+- lemma: ринка
+  ipa: /rˈɪnka/
+  translation: ''
+  pos: noun
+- lemma: робот
+  ipa: /rˈɔbɔt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: світлофор
+  ipa: /sʋitlɔfˈɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: синій
+  ipa: /sˈɪnij/
+  translation: ''
+  pos: adj
+- lemma: станція
+  ipa: /stˈant͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: столиця
+  ipa: /stɔlˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: таксі
+  ipa: /taksˈi/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: театр
+  ipa: /tɛˈatr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: театральний
+  ipa: /tɛatrˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: тим
+  ipa: /tɪm/
+  translation: ''
+  pos: conj
+- lemma: трамвай
+  ipa: /tramʋˈaj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: транспорт
+  ipa: /transpɔrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: туалет
+  ipa: /tualˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: турист
+  ipa: /turˈɪst/
+  translation: ''
+  pos: noun
+- lemma: тіснота
+  ipa: /tisnˈɔta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: україна
+  ipa: /ukraˈjina/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: українець
+  ipa: /ukraˈjinɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: український
+  ipa: /ukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: уникати
+  ipa: /unɪkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: університет
+  ipa: /uniʋɛrsɪtˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фіксований
+  ipa: /fiksˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: хвилина
+  ipa: /xʋɪlˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: центр
+  ipa: /t͡sɛntr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: центральне
+  ipa: /t͡sɛntrˈalʲnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: центральний
+  ipa: /t͡sɛntrˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: червона
+  ipa: /t͡ʃɛrʋˈɔna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: швидший
+  ipa: /ʃʋˈɪdʃɪj/
+  translation: ''
+  pos: adj
+- lemma: шевченко
+  ipa: /ʃɛʋt͡ʃˈɛnkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: шукати
+  ipa: /ʃukˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: щодня
+  ipa: /ʃt͡ʃɔdnˈja/
+  translation: ''
+  pos: adv
+- lemma: щоранку
+  ipa: /ʃt͡ʃɔrˈanku/
+  translation: ''
+  pos: adv
+- lemma: щось
+  ipa: /ʃt͡ʃɔsʲ/
+  translation: ''
+  pos: pron
+- lemma: іда
+  ipa: /ˈida/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: іноді
+  ipa: /ˈinɔdi/
+  translation: ''
+  pos: pron
+- lemma: інший
+  ipa: /ˈinʃɪj/
+  translation: ''
+  pos: pron
+- lemma: існувати
+  ipa: /isnuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: іти
+  ipa: /itˈɪ/
+  translation: ''
+  pos: verb
+- lemma: їда
+  ipa: /jidˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: їздити
+  ipa: /ˈjizdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: їхати
+  ipa: /ˈjixatɪ/
+  translation: ''
+  pos: verb

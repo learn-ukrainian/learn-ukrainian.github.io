@@ -1,0 +1,27 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2-hist/ludy-rusi.md",
+    "enrichments": {
+      "жити": {"ipa": "/ˈʒɪtɪ/", "en": "to live"},
+      "захищати": {"ipa": "/zɑxɪˈʃt͡ʃɑtɪ/", "en": "to protect"},
+      "землеволодіння": {"ipa": "/zɛmlɛwoloˈdʲinʲːɑ/", "en": "land ownership"},
+      "зникнути": {"ipa": "/ˈznɪknutɪ/", "en": "to disappear"},
+      "Київ": {"ipa": "/ˈkɪjiw/", "en": "Kyiv"},
+      "купець": {"ipa": "/kuˈpɛt͡sʲ/", "en": "merchant"},
+      "мудрий": {"ipa": "/ˈmudrɪj/", "en": "wise"},
+      "міський": {"ipa": "/mʲiˈsʲkɪj/", "en": "urban/city"},
+      "написати": {"ipa": "/nɑpɪˈsɑtɪ/", "en": "to write"},
+      "пересічний": {"ipa": "/pɛrɛˈsʲit͡ʃnɪj/", "en": "ordinary/average"},
+      "полягати": {"ipa": "/polʲɑˈɦɑtɪ/", "en": "to consist (in)"},
+      "родовий": {"ipa": "/rodoˈwɪj/", "en": "ancestral/clan"},
+      "роль": {"ipa": "/rolʲ/", "en": "role"},
+      "свій": {"ipa": "/sʲwʲij/", "en": "own"},
+      "слово": {"ipa": "/ˈslowo/", "en": "word"},
+      "той": {"ipa": "/toj/", "en": "that"},
+      "управитель": {"ipa": "/uprɑˈwɪtɛlʲ/", "en": "manager/steward"},
+      "увесь": {"ipa": "/uˈwɛsʲ/", "en": "all"},
+      "чернець": {"ipa": "/t͡ʃɛrˈnɛt͡sʲ/", "en": "monk"},
+      "ізгой": {"ipa": "/iˈzɦɔj/", "en": "outcast"}
+    }
+  }
+]

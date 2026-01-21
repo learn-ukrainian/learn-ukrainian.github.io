@@ -2,80 +2,175 @@ module: 33-conditionals-mixed-complex
 level: B1
 version: '2.0'
 items:
-- lemma: вивчитися
-  ipa: /ˈvɪu̯t͡ʃɪtɪsʲa/
-  translation: to learn
-  pos: verb
-  gender: m
-- lemma: думковий
-  ipa: /dumˈkɔvɪj/
-  translation: mental
-  pos: adj
-- lemma: ланжерон
-  ipa: /lanʒɛˈrɔn/
-  translation: Lanzheron
-  pos: propn
-  gender: m
-- lemma: ланцюговий
-  ipa: /lant͡sʲuˈhɔvɪj/
-  translation: chain (adj)
-  pos: adj
-- lemma: майб
-  ipa: /majb/
-  translation: future (abbr)
+- lemma: адвокат
+  ipa: /adʋɔkˈat/
+  translation: ''
   pos: noun
   gender: m
-- lemma: механіка
-  ipa: /mɛˈxanʲika/
-  translation: mechanics
+- lemma: архів
+  ipa: /arxˈiʋ/
+  translation: ''
+  pos: noun
+- lemma: вивчитися
+  ipa: /ʋˈɪʋt͡ʃɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: виникнення
+  ipa: /ʋˈɪnɪknɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вплинути
+  ipa: /ʋplˈɪnutɪ/
+  translation: ''
+  pos: verb
+- lemma: відчуватися
+  ipa: /ʋidt͡ʃuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: далекоглядний
+  ipa: /dalɛkɔɦlˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: допустовий
+  ipa: /dɔpustˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: думок
+  ipa: /dumˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: емпатія
+  ipa: /ɛmpˈatija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: запобігання
+  ipa: /zapɔbiɦˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: здібність
+  ipa: /zdˈibnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ланжерон
+  ipa: /lanʒɛrˈɔn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ланка
+  ipa: /lˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ланцюговий
+  ipa: /lant͡sjuɦˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: мавка
+  ipa: /mˈaʋka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: моделювати
-  ipa: /mɔdɛlʲuˈvatɪ/
-  translation: to model
+  ipa: /mɔdɛljuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: мріянь
-  ipa: /ˈmrʲijanʲ/
-  translation: dreams (gen. pl.)
+- lemma: мріяння
+  ipa: /mrˈijannja/
+  translation: ''
+  pos: noun
+- lemma: мудріший
+  ipa: /mudrˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: нав'язливий
+  ipa: /naʋˈjazlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: наслідковий
+  ipa: /naslidkˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: окупація
+  ipa: /ɔkupˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: осмислити
-  ipa: /ɔˈsmɪslɪtɪ/
-  translation: to comprehend
+  ipa: /ɔsmˈɪslɪtɪ/
+  translation: ''
   pos: verb
+- lemma: особисто
+  ipa: /ɔsɔbˈɪstɔ/
+  translation: ''
+  pos: adv
 - lemma: особистісний
-  ipa: /ɔsɔˈbɪstʲisnɪj/
-  translation: personal
+  ipa: /ɔsɔbˈɪstisnɪj/
+  translation: ''
   pos: adj
-- lemma: покрити
-  ipa: /pɔˈkrɪtɪ/
-  translation: to cover
-  pos: verb
-- lemma: пропусти
-  ipa: /prɔpuˈstɪ/
-  translation: skip (imp.)
+- lemma: прибуток
+  ipa: /prɪbˈutɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: причиновий
+  ipa: /prɪt͡ʃɪnˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: розраховувати
+  ipa: /rɔzraxˈɔʋuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: руминація
-  ipa: /rumʲiˈnat͡sʲija/
-  translation: rumination
+  ipa: /rumɪnat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: сміливіший
-  ipa: /smʲilɪˈvʲiʃɪj/
-  translation: braver
-  pos: adj
-  gender: m
-- lemma: старанній
-  ipa: /staˈranʲːɪj/
-  translation: diligent
-  pos: adj
-- lemma: теп
-  ipa: /tɛp/
-  translation: present (abbr)
-  pos: noun
-  gender: m
-- lemma: теперішнє
-  ipa: /tɛˈpɛrʲiʃnʲɛ/
-  translation: present (tense)
+- lemma: самопізнання
+  ipa: /samɔpiznˈannja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: сміливіший
+  ipa: /smilˈɪʋiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: соцмережа
+  ipa: /sɔt͡smɛrɛʒa/
+  translation: ''
+  pos: noun
+- lemma: сповнений
+  ipa: /spˈɔʋnɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: старання
+  ipa: /starˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сформулювати
+  ipa: /sfɔrmuljuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: тенденція
+  ipa: /tɛndˈɛnt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: усвідомлювати
+  ipa: /usʋidˈɔmljuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: фольклорний
+  ipa: /fɔlʲklˈɔrnɪj/
+  translation: ''
+  pos: adj
+- lemma: ясність
+  ipa: /ˈjasnistʲ/
+  translation: ''
+  pos: noun
+  gender: f

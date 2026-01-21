@@ -15,6 +15,7 @@ Output:
 
 import re
 import argparse
+import sqlite3
 from pathlib import Path
 from typing import Set, List, Dict
 import yaml
@@ -171,6 +172,37 @@ def load_prior_vocabulary(md_path: Path) -> Set[str]:
     return all_vocab
 
 
+def load_db_baseline() -> Set[str]:
+    """
+    Load vocabulary baseline from the vocabulary database.
+    
+    Returns all words from A1-B2 core levels.
+    """
+    db_path = Path("curriculum/l2-uk-en/vocabulary.db")
+    
+    if not db_path.exists():
+        print(f"  Warning: Database not found at {db_path}")
+        return set()
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Get all lemmas from core levels
+        cursor.execute("""
+            SELECT uk FROM lemmas 
+            WHERE level IN ('A1', 'A2', 'B1', 'B2')
+        """)
+        
+        words = {row[0].lower() for row in cursor.fetchall()}
+        conn.close()
+        
+        return words
+    except Exception as e:
+        print(f"  Warning: Could not load DB baseline: {e}")
+        return set()
+
+
 # =============================================================================
 # POS DETECTION (Simple Heuristics)
 # =============================================================================
@@ -321,6 +353,7 @@ def main():
     parser.add_argument('md_file', type=Path, help='Path to module .md file')
     parser.add_argument('--min-words', type=int, default=2, help='Minimum word length (default: 2)')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be extracted without writing files')
+    parser.add_argument('--use-db-baseline', action='store_true', help='Use vocabulary.db as baseline for deduplication (for tracks like b2-hist)')
     
     args = parser.parse_args()
     
@@ -338,8 +371,15 @@ def main():
     print(f"  Found {len(all_words)} unique words in content")
     
     # Step 3: Load prior vocabulary
-    prior_vocab = load_prior_vocabulary(args.md_file)
-    print(f"  Prior vocabulary: {len(prior_vocab)} words")
+    if args.use_db_baseline:
+        db_vocab = load_db_baseline()
+        print(f"  DB baseline (A1-B2): {len(db_vocab)} words")
+        level_vocab = load_prior_vocabulary(args.md_file)
+        print(f"  Level vocabulary: {len(level_vocab)} words")
+        prior_vocab = db_vocab | level_vocab
+    else:
+        prior_vocab = load_prior_vocabulary(args.md_file)
+    print(f"  Total prior vocabulary: {len(prior_vocab)} words")
     
     # Step 4: Filter to new words only
     new_words = all_words - prior_vocab

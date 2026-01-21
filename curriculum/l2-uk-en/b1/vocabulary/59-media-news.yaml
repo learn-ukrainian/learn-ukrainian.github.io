@@ -2,97 +2,188 @@ module: 59-media-news
 level: B1
 version: '2.0'
 items:
-- lemma: анонімний
-  ipa: /anɔˈnʲimnɪj/
-  translation: anonymous
-  pos: adj
+- lemma: аудіо
+  ipa: /ˈaudiɔ/
+  translation: ''
+  pos: noun
   gender: n
+- lemma: видання
+  ipa: /ʋɪdannja/
+  translation: ''
+  pos: noun
+- lemma: випуск
+  ipa: /ʋˈɪpusk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: всякий
+  ipa: /ʋsˈjakɪj/
+  translation: ''
+  pos: pron
 - lemma: вісімнадцятий
-  ipa: /visʲimˈnadet͡sʲatɪj/
-  translation: eighteenth
+  ipa: /ʋisimnˈadt͡sjatɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: глянцевий
-  ipa: /ˈhlʲant͡sɛvɪj/
-  translation: glossy
+- lemma: галицький
+  ipa: /ɦˈalɪt͡sʲkɪj/
+  translation: ''
   pos: adj
+- lemma: георгій
+  ipa: /ɦɛˈɔrɦij/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: гонгадзе
-  ipa: /hɔnˈhadzɛ/
-  translation: Gongadze
-  pos: propn
+  ipa: /ɦɔnɦˈadzɛ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: дмитре
-  ipa: /ˈdmɪtrɛ/
-  translation: Dmytro (voc.)
-  pos: propn
-  gender: m
+- lemma: дезінформація
+  ipa: /dɛzinfɔrmˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: достовірний
-  ipa: /dɔstɔˈvʲirnɪj/
-  translation: reliable
+  ipa: /dɔstɔʋˈirnɪj/
+  translation: ''
   pos: adj
+- lemma: достовірність
+  ipa: /dɔstɔʋˈirnistʲ/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: ексклюзивний
-  ipa: /ɛksklʲuˈzɪvnɪj/
-  translation: exclusive
+  ipa: /ɛkskljuzˈɪʋnɪj/
+  translation: ''
   pos: adj
-  gender: n
+- lemma: ефір
+  ipa: /ɛfˈir/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: зведення
-  ipa: /ˈzvɛdɛnʲːa/
-  translation: summary
+  ipa: /zʋˈɛdɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: кіносалони
-  ipa: /kinɔsaˈlɔnɪ/
-  translation: cinemas
+- lemma: зоря
+  ipa: /zɔrˈja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кореспондент
+  ipa: /kɔrɛspɔndˈɛnt/
+  translation: ''
   pos: noun
   gender: m
+- lemma: корупція
+  ipa: /kɔrˈupt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кіносалон
+  ipa: /kinɔsalˈɔn/
+  translation: ''
+  pos: noun
+- lemma: медіа-експерт
+  ipa: /mˈɛdia-ɛkspɛrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: медіа-контент
+  ipa: /mˈɛdia-kɔntɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: медіа-матеріал
+  ipa: /mˈɛdia-matɛrial/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: медіа-споживання
+  ipa: /mˈɛdia-spɔʒɪʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: медіа-сфера
+  ipa: /mˈɛdia-sfɛra/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: медіакомунікація
-  ipa: /mɛdʲiakɔmunʲiˈkat͡sʲija/
-  translation: media communication
+  ipa: /mɛdiakɔmunikat͡sija/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: мзс
-  ipa: /ɛm zɛ ɛs/
-  translation: MFA
+- lemma: надійне
+  ipa: /nadˈijnɛ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: неформальніше
-  ipa: /nɛfɔrˈmalʲnʲiʃɛ/
-  translation: more informally
-  pos: adv
-- lemma: пенсіонер
-  ipa: /pɛnsʲiɔˈnɛr/
-  translation: pensioner
-  pos: noun
-  gender: m
-- lemma: перевірець
-  ipa: /pɛrɛˈvʲirɛt͡sʲ/
-  translation: verifier
-  pos: noun
-  gender: f
-- lemma: подвоїтися
-  ipa: /pɔdˈvɔjɪtɪsʲa/
-  translation: to double
-  pos: verb
-  gender: f
-- lemma: привабливий
-  ipa: /prɪˈvablɪvɪj/
-  translation: attractive
+  gender: n
+- lemma: найвпливовіший
+  ipa: /najʋplɪʋˈɔʋiʃɪj/
+  translation: ''
   pos: adj
+- lemma: неперевірений
+  ipa: /nɛpɛrɛʋˈirɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: неформальніший
+  ipa: /nɛfɔrmalʲniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: прес
+  ipa: /prɛs/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: привертати
+  ipa: /prɪʋɛrtˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: рубрика
-  ipa: /ˈrubrɪka/
-  translation: column
+  ipa: /rˈubrɪka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: чуток
-  ipa: /t͡ʃuˈtɔk/
-  translation: rumors (gen.)
+- lemma: спеціалізуватися
+  ipa: /spɛt͡sializuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: студія
+  ipa: /stˈudija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: інтер
-  ipa: /inˈtɛr/
-  translation: Inter (TV)
+- lemma: телебачення
+  ipa: /tɛlɛbˈat͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: тираж
+  ipa: /tɪrˈaʒ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: фейк
+  ipa: /fɛjk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: формат
+  ipa: /fɔrmˈat/
+  translation: ''
+  pos: noun
+- lemma: фінанси
+  ipa: /finˈansɪ/
+  translation: ''
+  pos: noun
+- lemma: інтернет-видання
+  ipa: /intɛrnˈɛt-ʋɪdannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: інтернет-платформа
+  ipa: /intɛrnˈɛt-platfɔrma/
+  translation: ''
+  pos: noun
+  gender: f

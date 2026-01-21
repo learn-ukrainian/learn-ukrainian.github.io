@@ -1,124 +1,119 @@
-config:
-  standard: '2024'
+module: 75-modern-diaspora
+level: B2
+version: '2.0'
 items:
-  - lemma: діаспора
-    ipa: /dʲiˈɑspɔrɐ/
-    translation: diaspora
-    pos: noun
-    gender: f
-  - lemma: громада
-    ipa: /ɦroˈmɑdɐ/
-    translation: community
-    pos: noun
-    gender: f
-  - lemma: закордонний
-    ipa: /zɐkorˈdɔnnɪj/
-    translation: foreign, overseas
-    pos: adj
-  - lemma: світовий
-    ipa: /sʲʋʲitoˈʋɪj/
-    translation: world, global
-    pos: adj
-  - lemma: конгрес
-    ipa: /konˈɦrɛs/
-    translation: congress
-    pos: noun
-    gender: m
-  - lemma: СКУ
-    ipa: /ɛs kɑ u/
-    translation: UWC (Ukrainian World Congress)
-    pos: noun
-    gender: m
-  - lemma: лобізм
-    ipa: /loˈbʲizm/
-    translation: lobbying
-    pos: noun
-    gender: m
-  - lemma: дипломатія
-    ipa: /dɪploˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-  - lemma: м’яка сила
-    ipa: /ˈmjɑkɐ ˈsɪɫɐ/
-    translation: soft power
-    pos: noun
-    gender: f
-  - lemma: волонтер
-    ipa: /ʋoɫonˈtɛr/
-    translation: volunteer
-    pos: noun
-    gender: m
-  - lemma: гуманітарний
-    ipa: /ɦumɐnʲiˈtɑrnɪj/
-    translation: humanitarian
-    pos: adj
-  - lemma: допомога
-    ipa: /dopoˈmɔɦɐ/
-    translation: help, aid
-    pos: noun
-    gender: f
-  - lemma: мітинг
-    ipa: /ˈmʲitɪnɦ/
-    translation: rally, protest meeting
-    pos: noun
-    gender: m
-  - lemma: протест
-    ipa: /proˈtɛst/
-    translation: protest
-    pos: noun
-    gender: m
-  - lemma: посольство
-    ipa: /poˈsɔlʲstʋo/
-    translation: embassy
-    pos: noun
-    gender: n
-  - lemma: школа
-    ipa: /ˈʃkɔɫɐ/
-    translation: school
-    pos: noun
-    gender: f
-  - lemma: суботній
-    ipa: /suˈbɔtʲnʲij/
-    translation: Saturday (attr.)
-    pos: adj
-  - lemma: церква
-    ipa: /ˈt͡sɛr kʋɐ/
-    translation: church
-    pos: noun
-    gender: f
-  - lemma: осередок
-    ipa: /oˈsɛrɛdok/
-    translation: center, hub, core
-    pos: noun
-    gender: m
-  - lemma: асиміляція
-    ipa: /ɐsɪmʲiˈlʲɑt͡sʲijɐ/
-    translation: assimilation
-    pos: noun
-    gender: f
-  - lemma: інтеграція
-    ipa: /inˈtɛɦrɐt͡sʲijɐ/
-    translation: integration
-    pos: noun
-    gender: f
-  - lemma: ідентичність
-    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
-    translation: identity
-    pos: noun
-    gender: f
-  - lemma: коріння
-    ipa: /koˈrʲinnʲɐ/
-    translation: roots
-    pos: noun
-    gender: n
-  - lemma: повернення
-    ipa: /poˈʋɛrnɛnnʲɐ/
-    translation: return
-    pos: noun
-    gender: n
-  - lemma: громадянство
-    ipa: /ɦromɐˈdʲɑnstʋo/
-    translation: citizenship
-    pos: noun
-    gender: n
+- lemma: адвокація
+  ipa: /adʋɔkat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: амбасадор
+  ipa: /ambasadˈɔr/
+  translation: ''
+  pos: noun
+- lemma: аргентина
+  ipa: /arɦɛntˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вигнання
+  ipa: /ʋɪɦnˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: генерал-губернатор
+  ipa: /ɦɛnɛrˈal-ɦubɛrnatɔr/
+  translation: ''
+  pos: noun
+- lemma: емігрант
+  ipa: /ɛmiɦrˈant/
+  translation: ''
+  pos: noun
+- lemma: канадський
+  ipa: /kanˈadsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: конґрес
+  ipa: /kɔngrɛs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лобізм
+  ipa: /lɔbˈizm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: невід
+  ipa: /nˈɛʋid/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пам
+  ipa: /pam/
+  translation: ''
+  pos: noun
+- lemma: перти
+  ipa: /pˈɛrtɪ/
+  translation: ''
+  pos: verb
+- lemma: посольство
+  ipa: /pɔsˈɔlʲstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ску
+  ipa: /sku/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: суб
+  ipa: /sub/
+  translation: ''
+  pos: noun
+- lemma: суботній
+  ipa: /subˈɔtnij/
+  translation: ''
+  pos: adj
+- lemma: табори
+  ipa: /tabɔrˈɪ/
+  translation: ''
+  pos: noun
+- lemma: топ
+  ipa: /tɔp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: українство
+  ipa: /ukraˈjinstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: язка
+  ipa: /jazka/
+  translation: ''
+  pos: noun
+- lemma: язку
+  ipa: /jazku/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ята
+  ipa: /jata/
+  translation: ''
+  pos: noun
+- lemma: єднувати
+  ipa: /jɛdnuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: єкт
+  ipa: /jɛkt/
+  translation: ''
+  pos: noun
+- lemma: ємний
+  ipa: /ˈjɛmnɪj/
+  translation: ''
+  pos: adj
+- lemma: єр-міністр
+  ipa: /jɛr-minˈistr/
+  translation: ''
+  pos: noun

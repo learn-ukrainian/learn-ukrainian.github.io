@@ -2,72 +2,173 @@ module: 54-expressing-opinions
 level: B1
 version: '2.0'
 items:
-- lemma: важливіше
-  ipa: /vaʒlɪˈvʲiʃɛ/
-  translation: more important
-  pos: adv
-- lemma: дискусії
-  ipa: /dɪsˈkusʲiji/
-  translation: discussions
+- lemma: бездіяльність
+  ipa: /bɛzdiˈjalʲnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: діти
-  ipa: /ˈdʲitɪ/
-  translation: children
-  pos: verb
-- lemma: кво
-  ipa: /kvɔ/
-  translation: quo
+- lemma: безперечно
+  ipa: /bɛzpɛrˈɛt͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: безсумнівно
+  ipa: /bɛzsumnˈiʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: вартий
+  ipa: /ʋˈartɪj/
+  translation: ''
+  pos: adj
+- lemma: вартість
+  ipa: /ʋˈartistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вияв
+  ipa: /ʋˈɪjaʋ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: найменш
-  ipa: /najˈmɛnʃ/
-  translation: least
+- lemma: гадати
+  ipa: /ɦadˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: делікатний
+  ipa: /dɛlikˈatnɪj/
+  translation: ''
+  pos: adj
+- lemma: ефективність
+  ipa: /ɛfɛktˈɪʋnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: жвавий
+  ipa: /ʒʋˈaʋɪj/
+  translation: ''
+  pos: adj
+- lemma: категоричність
+  ipa: /katɛɦɔrˈɪt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: компроміс
+  ipa: /kɔmprɔmˈis/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: коректно
+  ipa: /kɔrˈɛktnɔ/
+  translation: ''
   pos: adv
-- lemma: найскладніше
-  ipa: /najskladˈnʲiʃɛ/
-  translation: most difficult
-  pos: noun
-  gender: n
-- lemma: найслабше
-  ipa: /najˈslabʃɛ/
-  translation: weakest
-  pos: noun
-  gender: n
+- lemma: найслабший
+  ipa: /najslˈabʃɪj/
+  translation: ''
+  pos: adj
 - lemma: неввічливість
-  ipa: /nɛu̯ˈvʲit͡ʃlɪvisʲtʲ/
-  translation: impoliteness
+  ipa: /nɛʋʋˈit͡ʃlɪʋistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: незгода
-  ipa: /nɛzˈhɔda/
-  translation: disagreement
+- lemma: невпевненість
+  ipa: /nɛʋpˈɛʋnɛnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: незгід
-  ipa: /nɛzˈhid/
-  translation: disagreements (gen.)
+- lemma: недооцінювати
+  ipa: /nɛdɔɔt͡sˈinjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: неефективний
+  ipa: /nɛɛfɛktˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: опонент
+  ipa: /ɔpɔnˈɛnt/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: педагога
-  ipa: /pɛdaˈhɔha/
-  translation: pedagogue (gen.)
+- lemma: опір
+  ipa: /ˈɔpir/
+  translation: ''
   pos: noun
   gender: m
+- lemma: педагог
+  ipa: /pɛdaɦˈɔɦ/
+  translation: ''
+  pos: noun
 - lemma: персоналізувати
-  ipa: /pɛrsɔnalʲizuˈvatɪ/
-  translation: to personalize
+  ipa: /pɛrsɔnalizuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: сада
-  ipa: /ˈsada/
-  translation: garden (gen.)
-  pos: propn
+- lemma: перспективний
+  ipa: /pɛrspɛktˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: по-іншому
+  ipa: /pɔ-ˈinʃɔmu/
+  translation: ''
+  pos: pron
+- lemma: помилятися
+  ipa: /pɔmɪlˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: поступ
+  ipa: /pˈɔstup/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: схвалювати
-  ipa: /sxvaˈlʲuvatɪ/
-  translation: to approve
+- lemma: приділяти
+  ipa: /prɪdilˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: формальніше
-  ipa: /fɔrˈmalʲnʲiʃɛ/
-  translation: more formally
+- lemma: припускати
+  ipa: /prɪpuskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: радикальний
+  ipa: /radɪkˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: раціональний
+  ipa: /rat͡siɔnˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: редакційний
+  ipa: /rɛdakt͡sˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: статус-кво
+  ipa: /stˈatus-kʋɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: темп
+  ipa: /tɛmp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: учитель
+  ipa: /ut͡ʃˈɪtɛlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фраза-вступ
+  ipa: /frˈaza-ʋstup/
+  translation: ''
+  pos: noun
+- lemma: частково
+  ipa: /t͡ʃastkˈɔʋɔ/
+  translation: ''
   pos: adv
+- lemma: шкала
+  ipa: /ʃkalˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: інвестиція
+  ipa: /inʋɛstˈɪt͡sija/
+  translation: ''
+  pos: noun
+- lemma: інфраструктурний
+  ipa: /infrastruktˈurnɪj/
+  translation: ''
+  pos: adj

@@ -2,156 +2,161 @@ module: 27-because-and-although
 level: A2
 version: '2.0'
 items:
-- lemma: тому що
-  ipa: toˈmu ʃt͡ʃɔ
-  translation: because
-  pos: other
-- lemma: бо
-  ipa: bɔ
-  translation: because (colloquial)
-  pos: other
-- lemma: оскільки
-  ipa: oˈskilʲkɪ
-  translation: since; as
-  pos: other
-- lemma: через те що
-  ipa: t͡ʃɛrɛz tɛ ʃt͡ʃɔ
-  translation: due to the fact that
-  pos: other
-- lemma: завдяки тому що
-  ipa: zɐu̯dʲɐˈke toˈmu ʃt͡ʃɔ
-  translation: thanks to the fact that
-  pos: other
-- lemma: хоча
-  ipa: xoˈt͡ʃɑ
-  translation: although
-  pos: other
-- lemma: незважаючи на те що
-  ipa: nezwɐˈʒɑjut͡ʃɪ nɐ tɛ ʃt͡ʃɔ
-  translation: despite the fact that
-  pos: other
-- lemma: проте
-  ipa: proˈtɛ
-  translation: however; but
-  pos: other
-- lemma: однак
-  ipa: odˈnɑk
-  translation: however
-  pos: other
-- lemma: але
-  ipa: ˈɑlɛ
-  translation: but
-  pos: other
-- lemma: зате
-  ipa: zɐˈtɛ
-  translation: on the other hand; but
-  pos: other
-- lemma: все-таки
-  ipa: ˈwsɛ tɐkɪ
-  translation: nevertheless
-  pos: other
-- lemma: все ж таки
-  ipa: ˈwsɛ ʒ tɐkɪ
-  translation: still; despite everything
-  pos: other
-- lemma: попри те що
-  ipa: ˈpɔprɪ tɛ ʃt͡ʃɔ
-  translation: despite the fact that
-  pos: other
-- lemma: хоч і
-  ipa: xɔt͡ʃ i
-  translation: even though
-  pos: other
-- lemma: хай
-  ipa: xɑj
-  translation: let; may
-  pos: other
-- lemma: нехай
-  ipa: neˈxɑj
-  translation: let it be; may
-  pos: other
-- lemma: хоч би
-  ipa: xɔt͡ʃ bɪ
-  translation: if only; at least
-  pos: other
-- lemma: дарма що
-  ipa: dɐrˈmɑ ʃt͡ʃɔ
-  translation: never mind that; even though
-  pos: other
-- lemma: якби не
-  ipa: jɐkˈbɪ nɛ
-  translation: if not for
-  pos: other
-- lemma: час
-  translation: time; tense
+- lemma: акцентувати
+  ipa: /akt͡sɛntuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: бюджет
+  ipa: /bjudʒˈɛt/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /t͡ʃɑs/
-- lemma: сказати
-  translation: to say
+- lemma: виразніший
+  ipa: /ʋɪrˈazniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: виступ
+  ipa: /ʋˈɪstup/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: всупереч
+  ipa: /ʋsˈupɛrɛt͡ʃ/
+  translation: ''
+  pos: prep
+- lemma: грамотність
+  ipa: /ɦrˈamɔtnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: доповідь
+  ipa: /dˈɔpɔʋidʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: досить
+  ipa: /dˈɔsɪtʲ/
+  translation: ''
+  pos: adv
+- lemma: жахливий
+  ipa: /ʒaxlˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: залишитися
+  ipa: /zalˈɪʃɪtɪsja/
+  translation: ''
   pos: verb
-  ipa: /skɐˈzɑtɪ/
-- lemma: розповідати
-  translation: to tell; to narrate
+- lemma: захворіти
+  ipa: /zaxʋɔrˈitɪ/
+  translation: ''
   pos: verb
-  ipa: /rozpoʋʲiˈdɑtɪ/
-- lemma: запитати
-  translation: to ask (perf)
+- lemma: зламатися
+  ipa: /zlamˈatɪsja/
+  translation: ''
   pos: verb
-  ipa: /zɐpɪˈtɑtɪ/
-- lemma: коментувати
-  translation: to comment
+- lemma: кома
+  ipa: /kˈɔma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: контраст
+  ipa: /kɔntrˈast/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: конференція
+  ipa: /kɔnfɛrˈɛnt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: купівля
+  ipa: /kupˈiʋlja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: логічно
+  ipa: /lɔɦˈit͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: навпаки
+  ipa: /naʋpakˈɪ/
+  translation: ''
+  pos: adv
+- lemma: найбільш
+  ipa: /najbˈilʲʃ/
+  translation: ''
+  pos: adv
+- lemma: незважаючи
+  ipa: /nɛzʋaʒˈajut͡ʃɪ/
+  translation: ''
+  pos: prep
+- lemma: пауза
+  ipa: /pˈauza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поганіти
+  ipa: /pɔɦanˈitɪ/
+  translation: ''
   pos: verb
-  ipa: /komentuˈʋɑtɪ/
-- lemma: попередити
-  translation: to warn (perf)
+- lemma: пояснення
+  ipa: /pɔˈjasnɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пропустити
+  ipa: /prɔpustˈɪtɪ/
+  translation: ''
   pos: verb
-  ipa: /poperɛˈdɪtɪ/
-- lemma: питати
-  translation: to ask
+- lemma: підсилювальний
+  ipa: /pidsˈɪljuʋalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: світити
+  ipa: /sʋitˈɪtɪ/
+  translation: ''
   pos: verb
-  ipa: /pɪˈtɑtɪ/
-- lemma: відповідати
-  translation: to answer
+- lemma: скріншот
+  ipa: /skrinʃɔt/
+  translation: ''
+  pos: noun
+- lemma: слухачів
+  ipa: /sluxat͡ʃˈiʋ/
+  translation: ''
+  pos: adj
+- lemma: ставити
+  ipa: /stˈaʋɪtɪ/
+  translation: ''
   pos: verb
-  ipa: /ʋʲidpoʋʲiˈdɑtɪ/
-- lemma: повідомити
-  translation: to inform (perf)
-  pos: verb
-  ipa: /poʋʲidoˈmɪtɪ/
-- lemma: пояснити
-  translation: to explain (perf)
-  pos: verb
-  ipa: /pojɐsˈnɪtɪ/
-- lemma: стверджувати
-  translation: to claim
-  pos: verb
-  ipa: /stʋɛrdʒuˈʋɑtɪ/
-- lemma: заперечувати
-  translation: to deny
-  pos: verb
-  ipa: /zɐperɛˈt͡ʃuʋɑtɪ/
-- lemma: обіцяти
-  translation: to promise
-  pos: verb
-  ipa: /oˈbit͡sʲɐte/
-- lemma: нагадати
-  translation: to remind (perf)
-  pos: verb
-  ipa: /nɐɦɐˈdɑtɪ/
-- lemma: переконувати
-  translation: to convince
-  pos: verb
-  ipa: /perɛˈkɔnuʋɑtɪ/
-- lemma: скаржитися
-  translation: to complain
-  pos: verb
-  ipa: /ˈskɑrʒɪtɪsʲɐ/
-- lemma: хвалити
-  translation: to praise
-  pos: verb
-  ipa: /xʋɐˈlɪtɪ/
-- lemma: критикувати
-  translation: to criticize
-  pos: verb
-  ipa: /krɪtɪkuˈʋɑtɪ/
+- lemma: стар
+  ipa: /star/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: страшно
+  ipa: /strˈaʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: таки
+  ipa: /takˈɪ/
+  translation: ''
+  pos: part
+- lemma: технік
+  ipa: /tˈɛxnik/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: формально
+  ipa: /fɔrmˈalʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: читач
+  ipa: /t͡ʃɪtˈat͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: шкода
+  ipa: /ʃkˈɔda/
+  translation: ''
+  pos: noun
+  gender: m

@@ -2,144 +2,209 @@ module: 63-health-wellness
 level: B1
 version: '2.0'
 items:
-- lemma: алкогольний
-  ipa: /alkɔˈhɔlʲnɪj/
-  translation: alcoholic
-  pos: adj
-  gender: f
-- lemma: білок
-  ipa: /biˈlɔk/
-  translation: protein
+- lemma: благополуччя
+  ipa: /blaɦɔpɔlˈut͡ʃt͡ʃja/
+  translation: ''
   pos: noun
-  gender: m
+  gender: n
 - lemma: веганський
-  ipa: /vɛhanˈsʲkɪj/
-  translation: vegan (adj)
+  ipa: /ʋɛɦansʲkɪj/
+  translation: ''
   pos: adj
-- lemma: вимотаний
-  ipa: /vɪˈmɔtanɪj/
-  translation: exhausted
-  pos: adj
-  gender: m
-- lemma: груповий
-  ipa: /hrupɔˈvɪj/
-  translation: group (adj)
-  pos: adj
-  gender: f
-- lemma: діт
-  ipa: /dʲit/
-  translation: children (trunc)
+- lemma: вигорання
+  ipa: /ʋɪɦɔrˈannja/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: дієта
-  ipa: /dʲiˈjɛta/
-  translation: diet
-  pos: noun
-  gender: f
+  gender: n
+- lemma: документальний
+  ipa: /dɔkumɛntˈalʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: жир
   ipa: /ʒɪr/
-  translation: fat
+  translation: ''
+  pos: noun
+- lemma: захисний
+  ipa: /zaxɪsnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: звернення
+  ipa: /zʋˈɛrnɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: здор
+  ipa: /zdɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: збалансований
-  ipa: /zbalanˈsɔvanɪj/
-  translation: balanced
-  pos: adj
-  gender: n
-- lemma: знижувати
-  ipa: /znɪˈʒuvatɪ/
-  translation: to lower
+- lemma: злість
+  ipa: /zlistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зміцнити
+  ipa: /zmit͡snˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: крапельний
-  ipa: /kraˈpɛlʲnɪj/
-  translation: drip (adj)
+- lemma: зниження
+  ipa: /znˈɪʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: знизити
+  ipa: /znˈɪzɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: зниклий
+  ipa: /znˈɪklɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: йога
+  ipa: /jˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: йога-студія
+  ipa: /jˈɔɦa-studija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: курортний
-  ipa: /kuˈrɔrtnɪj/
-  translation: resort (adj)
+  ipa: /kurˈɔrtnɪj/
+  translation: ''
+  pos: adj
+- lemma: лікарів
+  ipa: /likarˈiʋ/
+  translation: ''
   pos: adj
 - lemma: миргород
-  ipa: /ˈmɪrhɔrɔd/
-  translation: Myrhorod
-  pos: propn
+  ipa: /mˈɪrɦɔrɔd/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: моршин
-  ipa: /ˈmɔrʃɪn/
-  translation: Morshyn
-  pos: propn
+  ipa: /mˈɔrʃɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мучити
+  ipa: /mˈut͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: мінеральний
+  ipa: /minɛrˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: надмір
+  ipa: /nˈadmir/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: нездоровий
-  ipa: /nɛzdɔˈrɔvɪj/
-  translation: unhealthy
+  ipa: /nɛzdɔrˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: ослаблювати
+  ipa: /ɔslˈabljuʋatɪ/
+  translation: ''
+  pos: verb
 - lemma: паління
-  ipa: /paˈlʲinʲːa/
-  translation: smoking
+  ipa: /palˈinnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: певно
+  ipa: /pˈɛʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: покращувати
+  ipa: /pɔkrˈaʃt͡ʃuʋatɪ/
+  translation: ''
+  pos: verb
 - lemma: приплив
-  ipa: /prɪˈplɪu̯/
-  translation: influx
+  ipa: /prɪplˈɪʋ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: підвищений
-  ipa: /pidˈvɪʃt͡ʃɛnɪj/
-  translation: elevated
+- lemma: психічний
+  ipa: /psɪxˈit͡ʃnɪj/
+  translation: ''
   pos: adj
+- lemma: пульс
+  ipa: /pulʲs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ранній
+  ipa: /rˈannij/
+  translation: ''
+  pos: adj
+- lemma: реабілітація
+  ipa: /rɛabilitˈat͡sija/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: санаторний
-  ipa: /sanaˈtɔrnɪj/
-  translation: sanatorium (adj)
+  ipa: /sanatˈɔrnɪj/
+  translation: ''
   pos: adj
-  gender: n
+- lemma: санаторій
+  ipa: /sanatˈɔrij/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: сеанс
   ipa: /sɛˈans/
-  translation: session
+  translation: ''
   pos: noun
-  gender: m
-- lemma: синдр
-  ipa: /sɪndr/
-  translation: syndrome (trunc)
+- lemma: стадія
+  ipa: /stˈadija/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: суцільний
-  ipa: /suˈt͡sʲilʲnɪj/
-  translation: solid
+  ipa: /sut͡sˈilʲnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: таба
-  ipa: /taˈba/
-  translation: Tabata? (trunc)
+- lemma: табу
+  ipa: /tabˈu/
+  translation: ''
   pos: noun
-  gender: f
+  gender: n
 - lemma: терапія
-  ipa: /tɛraˈpʲija/
-  translation: therapy
+  ipa: /tɛrapˈija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: тривожний
-  ipa: /trɪˈvɔʒnɪj/
-  translation: anxious
-  pos: adj
-  gender: m
+- lemma: тривога
+  ipa: /trɪʋˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: усвідомлення
+  ipa: /usʋidˈɔmlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: фастфуд
-  ipa: /fastˈfud/
-  translation: fast food
-  pos: propn
+  ipa: /fastfud/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: хм
   ipa: /xm/
-  translation: hmm
-  pos: other
+  translation: ''
+  pos: noun
 - lemma: хронічний
-  ipa: /xrɔˈnʲit͡ʃnɪj/
-  translation: chronic
+  ipa: /xrɔnˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: інфекційний
-  ipa: /infɛkˈt͡sʲijnɪj/
-  translation: infectious
+- lemma: шкідливий
+  ipa: /ʃkidlˈɪʋɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: імунітет
+  ipa: /imunitˈɛt/
+  translation: ''
+  pos: noun
+  gender: m

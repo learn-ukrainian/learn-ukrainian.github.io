@@ -1,206 +1,155 @@
-config:
-  standard: '2024'
+module: 90-news-analysis-advanced
+level: B2
+version: '2.0'
 items:
-  - lemma: упередженість
-    ipa: /ʊpɛrɛdʒɛnʲisʲtʲ/
-    translation: bias
-    pos: noun
-    gender: f
-    tags: [media, critical-analysis]
-
-  - lemma: маніпуляція
-    ipa: /mɑnʲipʊlʲɑt͡sʲijɑ/
-    translation: manipulation
-    pos: noun
-    gender: f
-    tags: [media, propaganda]
-
-  - lemma: пропаганда
-    ipa: /prɔpɑɦɑndɑ/
-    translation: propaganda
-    pos: noun
-    gender: f
-    tags: [media, politics]
-
-  - lemma: достовірність
-    ipa: /dɔstɔwʲirnʲisʲtʲ/
-    translation: credibility, reliability
-    pos: noun
-    gender: f
-    tags: [media, verification]
-
-  - lemma: перевірка
-    ipa: /pɛrɛwʲirkɑ/
-    translation: verification, check
-    pos: noun
-    gender: f
-    tags: [media, fact-checking]
-
-  - lemma: фактчекінг
-    ipa: /fɑktʃɛkʲinɦ/
-    translation: fact-checking
-    pos: noun
-    gender: m
-    tags: [media, anglicism]
-
-  - lemma: редакційна позиція
-    ipa: /rɛdɑkt͡sʲijnɑ pɔzɪt͡sʲijɑ/
-    translation: editorial stance
-    pos: phrase
-    tags: [media, journalism]
-
-  - lemma: точка зору
-    ipa: /tɔt͡ʃkɑ zɔrʊ/
-    translation: point of view, perspective
-    pos: phrase
-    tags: [opinion, analysis]
-
-  - lemma: висвітлення
-    ipa: /wɪswʲitlɛnʲːɑ/
-    translation: coverage (of event)
-    pos: noun
-    gender: n
-    tags: [media, journalism]
-
-  - lemma: фреймінг
-    ipa: /frɛjmʲinɦ/
-    translation: framing
-    pos: noun
-    gender: m
-    tags: [media, anglicism]
-
-  - lemma: заголовок
-    ipa: /zɑɦɔlɔwɔk/
-    translation: headline
-    pos: noun
-    gender: m
-    tags: [journalism, text-structure]
-
-  - lemma: сенсаційність
-    ipa: /sɛnsɑt͡sʲijnʲisʲtʲ/
-    translation: sensationalism
-    pos: noun
-    gender: f
-    tags: [media, style]
-
-  - lemma: об'єктивність
-    ipa: /ɔbjɛktɪwnʲisʲtʲ/
-    translation: objectivity
-    pos: noun
-    gender: f
-    tags: [journalism, ethics]
-
-  - lemma: суб'єктивність
-    ipa: /sʊbjɛktɪwnʲisʲtʲ/
-    translation: subjectivity
-    pos: noun
-    gender: f
-    tags: [opinion, analysis]
-
-  - lemma: риторика
-    ipa: /rɪtɔrɪkɑ/
-    translation: rhetoric
-    pos: noun
-    gender: f
-    tags: [language, persuasion]
-
-  - lemma: емоційна забарвленість
-    ipa: /ɛmɔt͡sʲijnɑ zɑbɑrwlɛnʲisʲtʲ/
-    translation: emotional coloring
-    pos: phrase
-    tags: [language, style]
-
-  - lemma: наратив
-    ipa: /nɑrɑtɪw/
-    translation: narrative
-    pos: noun
-    gender: m
-    tags: [media, storytelling]
-
-  - lemma: дискурс
-    ipa: /dɪskʊrs/
-    translation: discourse
-    pos: noun
-    gender: m
-    tags: [linguistics, media]
-
-  - lemma: інформаційна війна
-    ipa: /ʲinfɔrmɑt͡sʲijnɑ wʲijnɑ/
-    translation: information warfare
-    pos: phrase
-    tags: [politics, propaganda]
-
-  - lemma: дезінформація
-    ipa: /dɛzʲinfɔrmɑt͡sʲijɑ/
-    translation: disinformation
-    pos: noun
-    gender: f
-    tags: [media, propaganda]
-
-  - lemma: фейк
-    ipa: /fɛjk/
-    translation: fake (news)
-    pos: noun
-    gender: m
-    tags: [media, anglicism]
-
-  - lemma: перекручування
-    ipa: /pɛrɛkrʊt͡ʃʊwɑnʲːɑ/
-    translation: distortion, twisting
-    pos: noun
-    gender: n
-    tags: [manipulation, bias]
-
-  - lemma: контекст
-    ipa: /kɔntɛkst/
-    translation: context
-    pos: noun
-    gender: m
-    tags: [analysis, interpretation]
-
-  - lemma: тональність
-    ipa: /tɔnɑlʲnʲisʲtʲ/
-    translation: tone, tonality
-    pos: noun
-    gender: f
-    tags: [style, language]
-
-  - lemma: стереотип
-    ipa: /stɛrɛɔtɪp/
-    translation: stereotype
-    pos: noun
-    gender: m
-    tags: [bias, society]
-
-  - lemma: цитування
-    ipa: /t͡sɪtʊwɑnʲːɑ/
-    translation: citation, quoting
-    pos: noun
-    gender: n
-    tags: [journalism, sources]
-
-  - lemma: експерт
-    ipa: /ɛkspɛrt/
-    translation: expert
-    pos: noun
-    gender: m
-    tags: [sources, credibility]
-
-  - lemma: аналітика
-    ipa: /ɑnɑlʲitɪkɑ/
-    translation: analytics, analysis
-    pos: noun
-    gender: f
-    tags: [journalism, research]
-
-  - lemma: порівняльний аналіз
-    ipa: /pɔrʲiwnʲɑlʲnɪj ɑnɑlʲiz/
-    translation: comparative analysis
-    pos: phrase
-    tags: [methodology, research]
-
-  - lemma: критичне мислення
-    ipa: /krɪtɪt͡ʃnɛ mɪslɛnʲːɑ/
-    translation: critical thinking
-    pos: phrase
-    tags: [skills, analysis]
+- lemma: агресивно
+  ipa: /aɦrɛsˈɪʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: антиукраїнський
+  ipa: /antɪukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: блокування
+  ipa: /blɔkuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: бульбашка
+  ipa: /bˈulʲbaʃka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: висловивши
+  ipa: /ʋˈɪslɔʋɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: глобалістський
+  ipa: /ɦlɔbalˈistsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: грабіжницький
+  ipa: /ɦrabˈiʒnɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: дегуманізація
+  ipa: /dɛɦumanizˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: декларуватися
+  ipa: /dɛklaruʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: диверсифікація
+  ipa: /dɪʋɛrsɪfikˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дискредитація
+  ipa: /dɪskrɛdɪtˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дожити
+  ipa: /dɔʒˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: дюранті
+  ipa: /djuranti/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: завищення
+  ipa: /zaʋˈɪʃt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: заворушення
+  ipa: /zaʋɔrˈuʃɛnnja/
+  translation: ''
+  pos: noun
+- lemma: заниження
+  ipa: /zanˈɪʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: контекстуалізація
+  ipa: /kɔntɛkstualizat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ліворадикальний
+  ipa: /liʋɔradɪkˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: медіаманіпуляція
+  ipa: /mɛdiamanipuljat͡sija/
+  translation: ''
+  pos: noun
+- lemma: налаштований
+  ipa: /nalaʃtˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: напад
+  ipa: /nˈapad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: односторонній
+  ipa: /ɔdnɔstɔrˈɔnnij/
+  translation: ''
+  pos: adj
+- lemma: пенсійний
+  ipa: /pɛnsˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: поліцейський
+  ipa: /pɔlit͡sˈɛjsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: пропагандистський
+  ipa: /prɔpaɦandˈɪstsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: радикалізація
+  ipa: /radɪkalizˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розміщення
+  ipa: /rɔzmˈiʃt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: селективність
+  ipa: /sɛlɛktˈɪʋnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сльозогінний
+  ipa: /slʲɔzɔɦˈinnɪj/
+  translation: ''
+  pos: adj
+- lemma: страйк
+  ipa: /strajk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: трудящий
+  ipa: /trudˈjaʃt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: фреймінг
+  ipa: /frɛjminɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хеджований
+  ipa: /xɛdʒɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: єдино
+  ipa: /jɛdˈɪnɔ/
+  translation: ''
+  pos: adv

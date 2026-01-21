@@ -2,138 +2,310 @@ module: 08-the-living-verb-ii
 level: A1
 version: '2.0'
 items:
-  - lemma: бачити
-    ipa: /ˈbɑt͡ʃɪtɪ/
-    translation: to see
-    pos: verb
-  - lemma: біля
-    ipa: /ˈbilʲɑ/
-    translation: near
-    pos: other
-  - lemma: вправа
-    ipa: /ˈwprɑvɑ/
-    translation: exercise
-    pos: noun
-    gender: f
-  - lemma: вчити
-    ipa: /ˈwt͡ʃɪtɪ/
-    translation: to teach/learn
-    pos: verb
-  - lemma: вчитися
-    ipa: /ˈwt͡ʃɪtɪsʲɑ/
-    translation: to learn (oneself)
-    pos: verb
-  - lemma: вітати
-    ipa: /viˈtɑtɪ/
-    translation: to greet/congratulate
-    pos: verb
-  - lemma: дивитися
-    ipa: /dɪˈvɪtɪsʲɑ/
-    translation: to look/watch
-    pos: verb
-  - lemma: допомога
-    ipa: /dɔpɔˈmɔɦɑ/
-    translation: help
-    pos: noun
-    gender: f
-  - lemma: катя
-    ipa: /ˈkɑtʲɑ/
-    translation: Katya
-    pos: propn
-    gender: f
-  - lemma: лежати
-    ipa: /lɛˈʒɑtɪ/
-    translation: to lie (down)
-    pos: verb
-  - lemma: олена
-    ipa: /ɔˈlɛnɑ/
-    translation: Olena
-    pos: propn
-    gender: f
-  - lemma: сидіти
-    ipa: /sɪˈditɪ/
-    translation: to sit
-    pos: verb
-  - lemma: спати
-    ipa: /ˈspɑtɪ/
-    translation: to sleep
-    pos: verb
-  - lemma: стояти
-    ipa: /stɔˈjɑtɪ/
-    translation: to stand
-    pos: verb
-  - lemma: також
-    ipa: /tɑˈkɔʒ/
-    translation: also
-    pos: adv
-  - lemma: телефонувати
-    ipa: /tɛlɛfɔnuˈvɑtɪ/
-    translation: to phone/call
-    pos: verb
-  - lemma: український
-    ipa: /ʊkrɑˈjinʲsʲkɪj/
-    translation: Ukrainian (adj)
-    pos: adj
-    gender: m
-  - lemma: фільм
-    ipa: /filʲm/
-    translation: film/movie
-    pos: noun
-    gender: m
-  - lemma: ходити
-    ipa: /xɔˈdɪtɪ/
-    translation: to walk
-    pos: verb
-  - lemma: хід
-    ipa: /xid/
-    translation: move/turn
-    pos: noun
-    gender: m
-  - lemma: їздити
-    ipa: /ˈjizdɪtɪ/
-    translation: to ride/drive
-    pos: verb
-  - lemma: їсти
-    ipa: /ˈjistɪ/
-    translation: to eat
-    pos: verb
-  - lemma: любити
-    ipa: /lʲuˈbɪtɪ/
-    translation: to love
-    pos: verb
-  - lemma: просити
-    ipa: /prɔˈsɪtɪ/
-    translation: to ask
-    pos: verb
-  - lemma: бігти
-    ipa: /ˈbiɦtɪ/
-    translation: to run
-    pos: verb
-  - lemma: летіти
-    ipa: /lɛˈtitɪ/
-    translation: to fly
-    pos: verb
-  - lemma: забувати
-    ipa: /zɑbuˈvɑtɪ/
-    translation: to forget
-    pos: verb
-  - lemma: хотіти
-    ipa: /xɔˈtitɪ/
-    translation: to want
-    pos: verb
-  - lemma: пити
-    ipa: /ˈpɪtɪ/
-    translation: to drink
-    pos: verb
-  - lemma: пам'ятати
-    ipa: /pɑmˈjɑtɑtɪ/
-    translation: to remember
-    pos: verb
-  - lemma: дякувати
-    ipa: /ˈdʲɑkuvɑtɪ/
-    translation: to thank
-    pos: verb
-  - lemma: купувати
-    ipa: /kupuˈvɑtɪ/
-    translation: to buy
-    pos: verb
+- lemma: ати
+  ipa: /ˈatɪ/
+  translation: ''
+  pos: noun
+- lemma: аю
+  ipa: /ˈaju/
+  translation: ''
+  pos: noun
+- lemma: бачити
+  ipa: /bˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: борщ
+  ipa: /bɔrʃt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вдома
+  ipa: /ʋdˈɔma/
+  translation: ''
+  pos: adv
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вправа
+  ipa: /ʋprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вчити
+  ipa: /ʋt͡ʃˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вчитися
+  ipa: /ʋt͡ʃˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: вікно
+  ipa: /ʋiknˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: говорити
+  ipa: /ɦɔʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: дивитися
+  ipa: /dɪʋˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: допомога
+  ipa: /dɔpɔmˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: другий
+  ipa: /drˈuɦɪj/
+  translation: ''
+  pos: adj
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: дієвідміна
+  ipa: /dijɛʋidmˈina/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: жу
+  ipa: /ʒu/
+  translation: ''
+  pos: noun
+- lemma: ити
+  ipa: /ɪtɪ/
+  translation: ''
+  pos: noun
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: катя
+  ipa: /katˈja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лежати
+  ipa: /lɛʒˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: лю
+  ipa: /lju/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: люба
+  ipa: /ljubˈa/
+  translation: ''
+  pos: noun
+- lemma: любити
+  ipa: /ljubˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: любя
+  ipa: /ljubja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: марко
+  ipa: /mˈarkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: марія
+  ipa: /marˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: мова
+  ipa: /mˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: ''
+  pos: adj
+- lemma: олена
+  ipa: /ɔlˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пам'ятати
+  ipa: /pamjatˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перший
+  ipa: /pˈɛrʃɪj/
+  translation: ''
+  pos: adj
+- lemma: писати
+  ipa: /pɪsˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: пити
+  ipa: /pˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: привіт
+  ipa: /prɪʋˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: просити
+  ipa: /prɔsˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: роб
+  ipa: /rɔb/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: робити
+  ipa: /rɔbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: робя
+  ipa: /rɔbja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сидіти
+  ipa: /sɪdˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: слово
+  ipa: /slˈɔʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: спити
+  ipa: /spˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: справа
+  ipa: /sprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стояти
+  ipa: /stɔˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: студент
+  ipa: /studˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сь
+  ipa: /sʲ/
+  translation: ''
+  pos: noun
+- lemma: ся
+  ipa: /sja/
+  translation: ''
+  pos: part
+- lemma: телефонувати
+  ipa: /tɛlɛfɔnuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: україна
+  ipa: /ukraˈjina/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: українська
+  ipa: /ukraˈjinsʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: університет
+  ipa: /uniʋɛrsɪtˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фільм
+  ipa: /filʲm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ход
+  ipa: /xɔd/
+  translation: ''
+  pos: noun
+- lemma: ходжа
+  ipa: /xɔdʒˈa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ходити
+  ipa: /xɔdˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ходь
+  ipa: /xɔdʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ять
+  ipa: /jatʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іван
+  ipa: /iʋˈan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іти
+  ipa: /itˈɪ/
+  translation: ''
+  pos: verb
+- lemma: їздити
+  ipa: /ˈjizdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: їсти
+  ipa: /ˈjistɪ/
+  translation: ''
+  pos: verb

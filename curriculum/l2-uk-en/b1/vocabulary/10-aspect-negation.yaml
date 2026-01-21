@@ -2,91 +2,145 @@ module: 10-aspect-negation
 level: B1
 version: '2.0'
 items:
-- lemma: '''не'''
-  ipa: /nɛ/
-  translation: not
-  pos: other
-- lemma: адреса
-  ipa: /aˈdrɛsa/
-  translation: address
+- lemma: алгоритм
+  ipa: /alɦɔrˈɪtm/
+  translation: ''
   pos: noun
   gender: m
 - lemma: вигуляти
-  ipa: /vɪɦuˈlʲatɪ/
-  translation: to walk (dog)
+  ipa: /ʋˈɪɦuljatɪ/
+  translation: ''
   pos: verb
-- lemma: впусти
-  ipa: /vpuˈstɪ/
-  translation: let in
-  pos: verb
+- lemma: го
+  ipa: /ɦɔ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: губитися
-  ipa: /ɦuˈbɪtɪsʲa/
-  translation: to get lost
+  ipa: /ɦubˈɪtɪsja/
+  translation: ''
   pos: verb
+- lemma: дедлайн
+  ipa: /dɛdlajn/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: дій
-  ipa: /dʲij/
-  translation: actions
+- lemma: дорожній
+  ipa: /dɔrˈɔʒnij/
+  translation: ''
+  pos: adj
+- lemma: забирати
+  ipa: /zabɪrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: заспокоєння
+  ipa: /zaspɔkˈɔjɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: застереження
+  ipa: /zastɛrˈɛʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: картопляний
+  ipa: /kartˈɔpljanɪj/
+  translation: ''
+  pos: adj
+- lemma: кінофестиваль
+  ipa: /kinɔfɛstɪʋˈalʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: не'
+  ipa: /nɛ/
+  translation: ''
+  pos: noun
+- lemma: неможливість
+  ipa: /nɛmɔʒlˈɪʋistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: загальне
-  ipa: /zaˈɦalʲnɛ/
-  translation: general
-  pos: noun
-  gender: n
-- lemma: заспокоєння
-  ipa: /zaspɔˈkɔjenʲːa/
-  translation: reassurance
-  pos: noun
-  gender: n
-- lemma: кінофестиваль
-  ipa: /kʲinɔfɛstɪˈvalʲ/
-  translation: film festival
-  pos: noun
-  gender: m
-- lemma: млинка
-  ipa: /ˈmlɪnka/
-  translation: pancake (dim.)
-  pos: noun
-  gender: m
+- lemma: неправильний
+  ipa: /nɛprˈaʋɪlʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: нерозуміння
-  ipa: /nɛrɔzuˈmʲinʲːa/
-  translation: misunderstanding
+  ipa: /nɛrɔzumˈinnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: останнє
+  ipa: /ɔstˈannjɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: очікуватися
+  ipa: /ɔt͡ʃˈikuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: паркувати
-  ipa: /parkuˈvatɪ/
-  translation: to park
+  ipa: /parkuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: передзвони
-  ipa: /pɛrɛdzvɔˈnɪ/
-  translation: call back
+- lemma: партія
+  ipa: /pˈartija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: переважно
+  ipa: /pɛrɛʋˈaʒnɔ/
+  translation: ''
+  pos: adv
+- lemma: передзвонити
+  ipa: /pɛrɛdzʋɔnˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: планувати
-  ipa: /planuˈvatɪ/
-  translation: to plan
+- lemma: плануюмоїти
+  ipa: /planujumɔjitɪ/
+  translation: ''
+  pos: verb
+- lemma: погань
+  ipa: /pˈɔɦanʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: польська
+  ipa: /pˈɔlʲsʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: призначити
+  ipa: /prɪznˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: примірник
+  ipa: /prɪmˈirnɪk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: припинений
-  ipa: /prɪˈpɪnɛnɪj/
-  translation: ceased
+  ipa: /prɪpˈɪnɛnɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: пристебнутися
-  ipa: /prɪstɛbˈnutɪsʲa/
-  translation: to buckle up
+  ipa: /prɪstɛbnˈutɪsja/
+  translation: ''
   pos: verb
-- lemma: спойлер
-  ipa: /ˈspɔjlɛr/
-  translation: spoiler
-  pos: noun
-  gender: m
-- lemma: ствердження
-  ipa: /stvɛrˈdʒɛnʲːa/
-  translation: affirmation
+- lemma: продати
+  ipa: /prɔdˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прохання-попередження
+  ipa: /prɔxˈannja-pɔpɛrɛdʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: читальний
+  ipa: /t͡ʃɪtˈalʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: імплікувати
-  ipa: /implʲikuˈvatɪ/
-  translation: to imply
+  ipa: /implikuʋˈatɪ/
+  translation: ''
   pos: verb

@@ -2,246 +2,430 @@ module: 51-hobbies-leisure
 level: A2
 version: '2.0'
 items:
-- lemma: антракт
-  ipa: ɐnˈtrɑkt
-  translation: intermission
-  pos: noun
-  gender: m
-- lemma: аплодувати
-  ipa: ɐploduˈʋɑte
-  translation: to applaud
-  pos: verb
-- lemma: борис
-  ipa: boˈrɪs
-  translation: Borys
-  pos: propn
-  gender: m
-- lemma: веселощі
-  ipa: veˈsɛloʃt͡ʃi
-  translation: fun/festivities
-  pos: noun
-  gender: pl
-- lemma: вечорниця
-  ipa: vet͡ʃɔrˈnɪt͡sʲɐ
-  translation: party/evening gathering
+- lemma: агенція
+  ipa: /aɦˈɛnt͡sija/
+  translation: ''
   pos: noun
   gender: f
+- lemma: арсенал
+  ipa: /arsɛnˈal/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: безмежний
+  ipa: /bɛzmˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: буковель
+  ipa: /bukɔʋˈɛlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вагатися
+  ipa: /ʋaɦˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: вдень
+  ipa: /ʋdɛnʲ/
+  translation: ''
+  pos: adv
+- lemma: веселитися
+  ipa: /ʋɛsɛlˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: веселощі
+  ipa: /ʋɛsˈɛlɔʃt͡ʃi/
+  translation: ''
+  pos: noun
+- lemma: вечорниця
+  ipa: /ʋɛt͡ʃɔrnɪt͡sja/
+  translation: ''
+  pos: noun
 - lemma: вистава
-  ipa: vɪˈstɑʋɐ
-  translation: performance/play
+  ipa: /ʋɪstˈaʋa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: виставка
-  ipa: ˈvɪstɐu̯kɐ
-  translation: exhibition
+  ipa: /ʋˈɪstaʋka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: відмінок
-  ipa: vʲidˈmʲinok
-  translation: grammatical case
-  pos: noun
-  gender: m
-- lemma: відвідувати
-  ipa: vidˈviduʋɐte
-  translation: to visit (imp)
+- lemma: виявитися
+  ipa: /ʋˈɪjaʋɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: вірш
-  ipa: vʲirʃ
-  translation: poem
+- lemma: вогонь
+  ipa: /ʋɔɦˈɔnʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: говерл
-  ipa: hoˈvɛrl
-  translation: Hoverla (gen?)
-  pos: propn
+- lemma: втома
+  ipa: /ʋtˈɔma/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: гопак
-  ipa: hoˈpɑk
-  translation: Hopak
+- lemma: вільно
+  ipa: /ʋˈilʲnɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: галерея
+  ipa: /ɦalɛrˈɛja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: глядач
+  ipa: /ɦljadˈat͡ʃ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: гм
+  ipa: /ɦm/
+  translation: ''
+  pos: noun
+- lemma: говерла
+  ipa: /ɦɔʋˈɛrla/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: гурт
-  ipa: hurt
-  translation: band/group
+  ipa: /ɦurt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: гуцульський
-  ipa: huˈt͡sulʲsʲkɪj
-  translation: Hutsul (adj)
+  ipa: /ɦut͡sˈulʲsʲkɪj/
+  translation: ''
   pos: adj
-- lemma: гучний
-  ipa: hut͡ʃˈnɪj
-  translation: loud
+- lemma: гірський
+  ipa: /ɦirsʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: гітарія
-  ipa: hʲiˈtɑrʲijɐ
-  translation: guitar (typo?)
+- lemma: гітара
+  ipa: /ɦitˈara/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
+- lemma: далекий
+  ipa: /dalˈɛkɪj/
+  translation: ''
+  pos: adj
+- lemma: дивлячись
+  ipa: /dˈɪʋljat͡ʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: дизайнерка
+  ipa: /dɪzˈajnɛrka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дитинство
+  ipa: /dɪtˈɪnstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дмитре
+  ipa: /dmɪtrɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: дмитро
-  ipa: dmɪˈtro
-  translation: Dmytro
-  pos: propn
-  gender: m
-- lemma: захват
-  ipa: ˈzɑxʋɐt
-  translation: delight
+  ipa: /dmɪtrˈɔ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: дозвілля
+  ipa: /dɔzʋˈillja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: драгобрат
+  ipa: /draɦɔbrat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: енеїда
+  ipa: /ɛnɛˈjida/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: живопис
+  ipa: /ʒɪʋˈɔpɪs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: запланувати
+  ipa: /zaplanuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: захоплення
-  ipa: zɐˈxɔplenʲːɐ
-  translation: hobby/passion
+  ipa: /zaxˈɔplɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: зорям
-  ipa: zoˈrʲɑm
-  translation: stars (dat)
-  pos: noun
-  gender: f
-- lemma: знахідний
-  ipa: znɐˈxʲidnɪj
-  translation: accusative (case)
+- lemma: звідти
+  ipa: /zʋˈidtɪ/
+  translation: ''
+  pos: pron
+- lemma: зоряний
+  ipa: /zˈɔrjanɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: караоке
-  ipa: kɐrɐˈɔke
-  translation: karaoke
-  pos: noun
-  gender: n
-- lemma: колекціонувати
-  ipa: kolekt͡sʲionuˈʋɑte
-  translation: to collect
+- lemma: зустріти
+  ipa: /zustrˈitɪ/
+  translation: ''
   pos: verb
-- lemma: комедія
-  ipa: koˈmɛdʲijɐ
-  translation: comedy
-  pos: noun
-  gender: f
-- lemma: мистецтво
-  ipa: mɪsˈtɛt͡stvo
-  translation: art
+- lemma: каміння
+  ipa: /kamˈinnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: місцевий
-  ipa: mʲisˈt͡sɛvɪj
-  translation: locative (case)/local
-  pos: adj
-  gender: m
-- lemma: монет
-  ipa: moˈnɛt
-  translation: coins (gen pl)
+- lemma: каремат
+  ipa: /karɛmat/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
+- lemma: клуб
+  ipa: /klub/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кохання
+  ipa: /kɔxˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: крутий
+  ipa: /krutˈɪj/
+  translation: ''
+  pos: adj
+- lemma: любий
+  ipa: /lˈjubɪj/
+  translation: ''
+  pos: adj
+- lemma: мак
+  ipa: /mak/
+  translation: ''
+  pos: noun
+- lemma: малювання
+  ipa: /maljuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: метр
+  ipa: /mɛtr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мистецький
+  ipa: /mɪstˈɛt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: мішок
+  ipa: /miʃˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: намет
-  ipa: nɐˈmɛt
-  translation: tent
+  ipa: /namˈɛt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: наталь
-  ipa: nɐˈtɑlʲ
-  translation: Natal (typo?)
-  pos: propn
+- lemma: наталя
+  ipa: /natˈalja/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: незвичайний
-  ipa: nezvɪˈt͡ʃɑjnɪj
-  translation: unusual
+- lemma: невесло
+  ipa: /nɛʋɛslɔ/
+  translation: ''
+  pos: noun
+- lemma: несамовитий
+  ipa: /nɛsamɔʋˈɪtɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: одягти
-  ipa: odʲɐhˈtɪ
-  translation: to dress (perf)
+- lemma: ночувати
+  ipa: /nɔt͡ʃuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: плівка
-  ipa: ˈplʲiu̯kɐ
-  translation: film
+- lemma: об'єднувати
+  ipa: /ɔbˈjɛdnuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: партер
+  ipa: /partˈɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пасовисько
+  ipa: /pasɔʋˈɪsʲkɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пензель
+  ipa: /pˈɛnzɛlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: побувати
+  ipa: /pɔbuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: повнити
+  ipa: /pˈɔʋnɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: погуляти
+  ipa: /pɔɦulˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: полонина
+  ipa: /pɔlɔnˈɪna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: принцеса
-  ipa: prɪnˈt͡sɛsɐ
-  translation: princess
-  pos: noun
-  gender: f
-- lemma: пристрасть
-  ipa: ˈprɪstrɐsʲtʲ
-  translation: passion
-  pos: noun
-  gender: f
-- lemma: професійний
-  ipa: profeˈsʲijnɪj
-  translation: professional
+- lemma: похмурий
+  ipa: /pɔxmˈurɪj/
+  translation: ''
   pos: adj
+- lemma: підйом
+  ipa: /pidjˈɔm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пішохідний
+  ipa: /piʃɔxˈidnɪj/
+  translation: ''
+  pos: adj
+- lemma: рекламний
+  ipa: /rɛklˈamnɪj/
+  translation: ''
+  pos: adj
+- lemma: розвага
+  ipa: /rɔzʋˈaɦa/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: розпалювати
-  ipa: rozˈpɑlʲuʋɐte
-  translation: to kindle/ignite
+  ipa: /rɔzpˈaljuʋatɪ/
+  translation: ''
   pos: verb
+- lemma: русь
+  ipa: /rusʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: самотність
+  ipa: /samˈɔtnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сенцов
+  ipa: /sɛnt͡sɔʋ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: спимти
-  ipa: spɪmˈtɪ
-  translation: sleep (typo?)
+- lemma: соняшник
+  ipa: /sˈɔnjaʃnɪk/
+  translation: ''
+  pos: noun
+- lemma: сотня
+  ipa: /sˈɔtnja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ставитися
+  ipa: /stˈaʋɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: спорт
-  ipa: spɔrt
-  translation: sport
+- lemma: схил
+  ipa: /sxɪl/
+  translation: ''
   pos: noun
   gender: m
-- lemma: танцюрист
-  ipa: tɐnt͡sʲuˈrɪst
-  translation: dancer
+- lemma: східній
+  ipa: /sxˈidnij/
+  translation: ''
+  pos: adj
+- lemma: сцена
+  ipa: /st͡sˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: танець
+  ipa: /tˈanɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: теніс
-  ipa: ˈtɛnʲis
-  translation: tennis
+- lemma: творчість
+  ipa: /tʋˈɔrt͡ʃistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: термін
+  ipa: /tˈɛrmin/
+  translation: ''
+  pos: noun
+- lemma: техно-рейвести
+  ipa: /tˈɛxnɔ-rɛjʋɛstɪ/
+  translation: ''
+  pos: verb
+- lemma: узяти
+  ipa: /uzˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: унікаль
+  ipa: /unikalʲ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: фестиваль
+  ipa: /fɛstɪʋˈalʲ/
+  translation: ''
+  pos: noun
 - lemma: фотоапарат
-  ipa: fotoɐpɐˈrɑt
-  translation: camera
+  ipa: /fɔtɔaparˈat/
+  translation: ''
   pos: noun
   gender: m
-- lemma: хіб
-  ipa: xib
-  translation: bread (typo хліб? or хіба?)
+- lemma: хоч
+  ipa: /xɔt͡ʃ/
+  translation: ''
+  pos: part
+- lemma: художниця
+  ipa: /xudˈɔʒnɪt͡sja/
+  translation: ''
   pos: noun
-  gender: n
+  gender: f
 - lemma: церква
-  ipa: ˈt͡sɛrkvɐ
-  translation: church
+  ipa: /t͡sˈɛrkʋa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: чарівний
-  ipa: t͡ʃɐˈrʲivnɪj
-  translation: magical
+- lemma: четвертий
+  ipa: /t͡ʃɛtʋˈɛrtɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: час
-  ipa: t͡ʃɑs
-  translation: time
-  pos: noun
-  gender: m
-- lemma: шампанський
-  ipa: ʃɐmˈpɑnsʲkɪj
-  translation: champagne (adj)
-  pos: adj
-  gender: n
 - lemma: шахи
-  ipa: ˈʃɑxɪ
-  translation: chess
+  ipa: /ʃˈaxɪ/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: шашлик
-  ipa: ʃɐʃˈlɪk
-  translation: shashlyk
-  pos: noun
-  gender: m
-- lemma: шепотіти
-  ipa: ʃepoˈtʲite
-  translation: to whisper
-  pos: verb
-  gender: f
 - lemma: щодо
-  ipa: ˈʃt͡ʃɔdo
-  translation: regarding
-  pos: other
+  ipa: /ʃt͡ʃˈɔdɔ/
+  translation: ''
+  pos: prep
+- lemma: яремча
+  ipa: /jarˈɛmt͡ʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: європейка
+  ipa: /jɛʋrɔpˈɛjka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: івано-франківський
+  ipa: /iʋanɔ-frankˈiʋsʲkɪj/
+  translation: ''
+  pos: adj

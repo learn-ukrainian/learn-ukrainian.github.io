@@ -2,104 +2,137 @@ module: 20-preferences-and-choices
 level: A2
 version: '2.0'
 items:
-- lemma: активний
-  ipa: ɐkˈtɪʋnɪj
-  translation: active
-  pos: adj
+- lemma: автор
+  ipa: /ˈaʋtɔr/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: важче
-  ipa: ˈʋɑʒt͡ʃe
-  translation: harder; heavier
+  ipa: /ʋˈaʒt͡ʃɛ/
+  translation: ''
   pos: adv
-- lemma: вибрати
-  ipa: ˈʋɪbrɐte
-  translation: to choose (perf)
-  pos: verb
-  gender: m
+- lemma: ввічливо
+  ipa: /ʋʋˈit͡ʃlɪʋɔ/
+  translation: ''
+  pos: adv
 - lemma: висловлювати
-  ipa: ʋɪˈslɔʋlʲuʋɐte
-  translation: to express
+  ipa: /ʋɪslˈɔʋljuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: вподобання
-  ipa: ʋpodɔˈbɑnʲːɐ
-  translation: preference
+  ipa: /ʋpɔdˈɔbannja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: відмова
+  ipa: /ʋidmˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: відпочинок
-  ipa: ʋidpoˈt͡ʃɪnok
-  translation: rest; vacation
+  ipa: /ʋidpɔt͡ʃˈɪnɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: гарячіший
-  ipa: hɐrʲɐˈt͡ʃiʃɪj
-  translation: hotter
+- lemma: грубий
+  ipa: /ɦrˈubɪj/
+  translation: ''
   pos: adj
+- lemma: гіпотетичний
+  ipa: /ɦipɔtɛtˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: детектив
+  ipa: /dɛtɛktˈɪʋ/
+  translation: ''
+  pos: noun
+- lemma: ефективніший
+  ipa: /ɛfɛktˈɪʋniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: зворотний
+  ipa: /zʋɔrˈɔtnɪj/
+  translation: ''
+  pos: adj
+- lemma: класичний
+  ipa: /klasˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: комфортніший
+  ipa: /kɔmfˈɔrtniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: корисніше
+  ipa: /kɔrˈɪsniʃɛ/
+  translation: ''
+  pos: adv
+- lemma: м'якший
+  ipa: /mˈjakʃɪj/
+  translation: ''
+  pos: adj
+- lemma: мовець
+  ipa: /mˈɔʋɛt͡sʲ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: голодний
-  ipa: hoˈlɔdnɪj
-  translation: hungry
-  pos: adj
-  gender: m
-- lemma: гірше
-  ipa: ˈhirʃe
-  translation: worse (adv)
+- lemma: можливо
+  ipa: /mɔʒlˈɪʋɔ/
+  translation: ''
   pos: adv
-- lemma: ефективніше
-  ipa: efekˈtɪʋnʲiʃe
-  translation: more effectively
-  pos: adv
-- lemma: затишніше
-  ipa: zɐˈtɪʃnʲiʃe
-  translation: cozier
-  pos: adv
-- lemma: корисніший
-  ipa: koˈrɪsnʲiʃɪj
-  translation: more useful
-  pos: adj
-  gender: n
 - lemma: нудніший
-  ipa: nudˈnʲiʃɪj
-  translation: more boring
+  ipa: /nudnˈiʃɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: порадити
-  ipa: poˈrɑdɪte
-  translation: to advise (perf)
+- lemma: парфум
+  ipa: /parfˈum/
+  translation: ''
+  pos: noun
+- lemma: перекладати
+  ipa: /pɛrɛkladˈatɪ/
+  translation: ''
   pos: verb
-- lemma: практичніше
-  ipa: prɐkˈtɪt͡ʃnʲiʃe
-  translation: more practically
+- lemma: письмово
+  ipa: /pɪsʲmˈɔʋɔ/
+  translation: ''
   pos: adv
-- lemma: суша
-  ipa: ˈsuʃɐ
-  translation: sushi
+- lemma: порадити
+  ipa: /pɔrˈadɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: пояснити
+  ipa: /pɔjasnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: практичніший
+  ipa: /praktˈɪt͡ʃniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: романтичніший
+  ipa: /rɔmantɪt͡ʃniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: смак
+  ipa: /smak/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: траторія
-  ipa: trɐˈtɔrʲijɐ
-  translation: trattoria
-  pos: propn
-  gender: f
-- lemma: цікавіше
-  ipa: t͡sʲikɐˈʋiʃe
-  translation: more interesting (adv)
-  pos: adv
-- lemma: чесно
-  ipa: ˈt͡ʃɛsno
-  translation: honestly
-  pos: adv
-- lemma: час
-  translation: time; tense
+- lemma: стиль
+  ipa: /stɪlʲ/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /t͡ʃɑs/
+- lemma: узгоджуватися
+  ipa: /uzɦˈɔdʒuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: формальний
+  ipa: /fɔrmˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: цінувати
+  ipa: /t͡sinuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: шкідливіший
-  ipa: ʃkʲidˈlɪʋiʃɪj
-  translation: more harmful
+  ipa: /ʃkidlɪʋiʃɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: італійський
-  ipa: itɐˈlʲijsʲkɪj
-  translation: Italian
-  pos: adj
-  gender: m

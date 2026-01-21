@@ -1,92 +1,110 @@
 module: 69-online-services
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: додаток
-  ipa: /dɔˈdɑtɔk/
-  translation: app
-  pos: noun
-  gender: m
-- lemma: доставка
-  ipa: /dɔˈstɑu̯kɐ/
-  translation: delivery
+- lemma: безпека
+  ipa: /bɛzpˈɛka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: замовлення
-  ipa: /zɐˈmɔu̯lɛnʲːɐ/
-  translation: order
+- lemma: важливсть
+  ipa: /ʋaʒlɪʋstʲ/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: оплата онлайн
-  ipa: /ɔˈpɫɑtɐ ɔnˈɫɑjn/
-  translation: online payment
-  pos: phrase
-- lemma: баланс
-  ipa: /bɐˈɫɑns/
-  translation: balance
-  pos: noun
-  gender: m
-- lemma: переказ
-  ipa: /pɛˈrɛkɐz/
-  translation: transfer
-  pos: noun
-  gender: m
-- lemma: бронювання
-  ipa: /brɔnʲʊˈʋɑnʲːɐ/
-  translation: booking
-  pos: noun
-  gender: n
-- lemma: підтвердження
-  ipa: /pʲidˈtʋɛrd͡ʒɛnʲːɐ/
-  translation: confirmation
-  pos: noun
-  gender: n
-- lemma: відстежити
-  ipa: /ʋʲidstɛˈʒɪtɪ/
-  translation: to track
+  gender: f
+- lemma: ввести
+  ipa: /ʋʋɛstˈɪ/
+  translation: ''
   pos: verb
-- lemma: код підтвердження
-  ipa: /kɔd pʲidˈtʋɛrd͡ʒɛnʲːɐ/
-  translation: confirmation code
-  pos: phrase
-- lemma: увійти
-  ipa: /ʊˈʋʲijtɪ/
-  translation: to log in
+- lemma: вчасний
+  ipa: /ʋt͡ʃˈasnɪj/
+  translation: ''
+  pos: adj
+- lemma: відстежити
+  ipa: /ʋidstˈɛʒɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: економія
+  ipa: /ɛkɔnˈɔmija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зареєструвати
+  ipa: /zarɛjɛstruʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: зареєструватися
-  ipa: /zɐrɛjɛstruˈʋɑtɪsʲɐ/
-  translation: to register
+  ipa: /zarɛjɛstruʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: пароль
-  ipa: /pɐˈrɔlʲ/
-  translation: password
+- lemma: здійснювати
+  ipa: /zdˈijsnjuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: здійснюватися
+  ipa: /zdˈijsnjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: кур'єр
+  ipa: /kurˈjɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: налаштування
-  ipa: /nɐɫɐʃˈtuʋɐnʲːɐ/
-  translation: settings
-  pos: noun
-  gender: n
-- lemma: повідомлення
-  ipa: /pɔʋʲidɔmˈlɛnʲːɐ/
-  translation: notification
-  pos: noun
-  gender: n
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: local
+- lemma: надійний
+  ipa: /nadˈijnɪj/
+  translation: ''
   pos: adj
-- lemma: онлайн
-  ipa: /ɔnˈɫɑjn/
-  translation: online
+- lemma: надійно
+  ipa: /nadˈijnɔ/
+  translation: ''
   pos: adv
+- lemma: онлайн-сервіс
+  ipa: /ɔnlajn-sˈɛrʋis/
+  translation: ''
+  pos: noun
+- lemma: оновитися
+  ipa: /ɔnɔʋˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: оператор
+  ipa: /ɔpɛrˈatɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: операція
+  ipa: /ɔpɛrˈat͡sija/
+  translation: ''
+  pos: noun
+- lemma: провідник
+  ipa: /prɔʋidnˈɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підтвердження
+  ipa: /pidtʋˈɛrdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: термінологія
+  ipa: /tɛrminɔlˈɔɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тридять
+  ipa: /trɪdjatʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: цифровізований
+  ipa: /t͡sɪfrɔʋizɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: численний
+  ipa: /t͡ʃɪslˈɛnnɪj/
+  translation: ''
+  pos: adj
+- lemma: інтерфейс
+  ipa: /intɛrfˈɛjs/
+  translation: ''
+  pos: noun
+  gender: m

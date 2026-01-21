@@ -1,75 +1,111 @@
 module: 65-giving-directions
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: орієнтир
-  ipa: /ɔrʲijɛnˈtɪr/
-  translation: landmark
+- lemma: автівка
+  ipa: /aʋtiʋka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: перехрестя
-  ipa: /pɛrɛˈxrɛsʲtʲɐ/
-  translation: intersection
+  gender: f
+- lemma: вказівка
+  ipa: /ʋkazˈiʋka/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: світлофор
-  ipa: /sʲʋʲitɫɔˈfɔr/
-  translation: traffic light
+  gender: f
+- lemma: вуличка
+  ipa: /ʋˈulɪt͡ʃka/
+  translation: ''
+  pos: noun
+- lemma: відвідувач
+  ipa: /ʋidʋˈiduʋat͡ʃ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: відстань
-  ipa: /ˈʋʲid͡stɐnʲ/
-  translation: distance
+  ipa: /ʋˈidstanʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: приблизно
-  ipa: /prɪˈblɪznɔ/
-  translation: approximately
-  pos: adv
-- lemma: пішки
-  ipa: /ˈpʲiʃkɪ/
-  translation: on foot
-  pos: adv
-- lemma: автівкою
-  ipa: /ɐu̯ˈtʲiu̯kɔju̯/
-  translation: by car
-  pos: adv
-- lemma: за рогом
-  ipa: /zɐ ˈrɔɦɔm/
-  translation: around the corner
-  pos: phrase
-- lemma: повз
-  ipa: /pɔu̯z/
-  translation: past
-  pos: prep
-- lemma: напроти
-  ipa: /nɐˈprɔtɪ/
-  translation: opposite
-  pos: prep
-- lemma: між
-  ipa: /mʲiʒ/
-  translation: between
-  pos: prep
-- lemma: далі
-  ipa: /ˈdɑlʲi/
-  translation: further
-  pos: adv
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: рогом
-  ipa: /ˈrɔɦɔm/
-  translation: corner (instrumental)
-  pos: noun
-  gender: m
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: local
+- lemma: десятихвилинний
+  ipa: /dɛsjatɪxʋɪlˈɪnnɪj/
+  translation: ''
   pos: adj
+- lemma: житель
+  ipa: /ʒˈɪtɛlʲ/
+  translation: ''
+  pos: noun
+- lemma: звідси
+  ipa: /zʋˈidsɪ/
+  translation: ''
+  pos: pron
+- lemma: знавець
+  ipa: /znaʋˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: корисніший
+  ipa: /kɔrˈɪsniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: кудись
+  ipa: /kudˈɪsʲ/
+  translation: ''
+  pos: pron
+- lemma: мікрорайон
+  ipa: /mikrɔrajˈɔn/
+  translation: ''
+  pos: noun
+- lemma: найближчий
+  ipa: /najblˈɪʒt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: найтаємничіший
+  ipa: /najtajɛmnˈɪt͡ʃiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: напроти
+  ipa: /naprˈɔtɪ/
+  translation: ''
+  pos: adv
+- lemma: незалежний
+  ipa: /nɛzalˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: орієнтир
+  ipa: /ɔrijɛntˈɪr/
+  translation: ''
+  pos: noun
+- lemma: повертати
+  ipa: /pɔʋɛrtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: покладатися
+  ipa: /pɔkladˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: покроковий
+  ipa: /pɔkrˈɔkɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: поліціянт
+  ipa: /pɔlit͡siˈjant/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: приблизний
+  ipa: /prɪblˈɪznɪj/
+  translation: ''
+  pos: adj
+- lemma: пізнати
+  ipa: /piznˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: скляний
+  ipa: /skljanˈɪj/
+  translation: ''
+  pos: adj
+- lemma: сіра
+  ipa: /sˈira/
+  translation: ''
+  pos: noun
+  gender: f

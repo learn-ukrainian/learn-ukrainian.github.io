@@ -1,96 +1,195 @@
 module: 64-scheduling-interviews
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: співбесіда
-  ipa: /sʲpʲiu̯ˈbɛsʲidɐ/
-  translation: interview
-  pos: noun
-  gender: f
-- lemma: посада
-  ipa: /ˈpɔsɐdɐ/
-  translation: position
-  pos: noun
-  gender: f
-- lemma: досвід
-  ipa: /ˈdɔsʲʋʲid/
-  translation: experience
+- lemma: безкоштовний
+  ipa: /bɛzkɔʃtˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: випробувальний
+  ipa: /ʋɪprˈɔbuʋalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: витрачати
+  ipa: /ʋɪtrat͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: включати
+  ipa: /ʋkljut͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: впевненіший
+  ipa: /ʋpˈɛʋnɛniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: віддалений
+  ipa: /ʋiddˈalɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: декілька
+  ipa: /dˈɛkilʲka/
+  translation: ''
+  pos: pron
+- lemma: дизайнер
+  ipa: /dɪzˈajnɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: обов'язки
-  ipa: /ɔˈbɔʋʲɑzkɪ/
-  translation: responsibilities
+- lemma: докладно
+  ipa: /dɔklˈadnɔ/
+  translation: ''
+  pos: adv
+- lemma: домовленість
+  ipa: /dɔmˈɔʋlɛnistʲ/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: зарплата
-  ipa: /zɐrˈplɑtɐ/
-  translation: salary
+  gender: f
+- lemma: дружний
+  ipa: /drˈuʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: ентузіазм
+  ipa: /ɛntuziˈazm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: заняття
+  ipa: /zanjattja/
+  translation: ''
+  pos: noun
+- lemma: запитання
+  ipa: /zapɪtˈannja/
+  translation: ''
+  pos: noun
+- lemma: зростання
+  ipa: /zrɔstˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кандидат
+  ipa: /kandɪdˈat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кваліфікація
+  ipa: /kʋalifikˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: колектив
+  ipa: /kɔlɛktˈɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: корпоративний
+  ipa: /kɔrpɔratˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: одинадцятий
+  ipa: /ɔdɪnˈadt͡sjatɪj/
+  translation: ''
+  pos: adj
+- lemma: оновити
+  ipa: /ɔnɔʋˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: посад
+  ipa: /pɔsˈad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: посада
+  ipa: /pɔsˈada/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: постійне
+  ipa: /pɔstˈijnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: потенційний
+  ipa: /pɔtɛnt͡sˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: працевлаштування
+  ipa: /prat͡sɛʋlaʃtuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: презентувати
+  ipa: /prɛzɛntuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прийняття
+  ipa: /prɪjnjattˈja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: продаж
+  ipa: /prˈɔdaʒ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: процедура
+  ipa: /prɔt͡sɛdˈura/
+  translation: ''
   pos: noun
   gender: f
 - lemma: резюме
-  ipa: /rɛzʲʊˈmɛ/
-  translation: resume/CV
+  ipa: /rɛzjumˈɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: працевлаштування
-  ipa: /prɐt͡sɛu̯lɐʃˈtuʋɐnʲːɐ/
-  translation: employment
-  pos: noun
-  gender: n
+- lemma: ретельно
+  ipa: /rɛtˈɛlʲnɔ/
+  translation: ''
+  pos: adv
 - lemma: роботодавець
-  ipa: /rɔbɔtɔˈdɑʋɛt͡sʲ/
-  translation: employer
+  ipa: /rɔbɔtɔdˈaʋɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: кандидат
-  ipa: /kɐndɪˈdɑt/
-  translation: candidate
-  pos: noun
-  gender: m
-- lemma: навички
-  ipa: /ˈnɑʋɪt͡ʃkɪ/
-  translation: skills
-  pos: noun
-  gender: pl
-- lemma: кваліфікація
-  ipa: /kʋɐlʲifʲiˈkɑt͡sʲijɐ/
-  translation: qualification
+- lemma: розробка
+  ipa: /rɔzrˈɔbka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: випробувальний термін
-  ipa: /ʋɪprɔˈbuʋɐlʲnɪj ˈtɛrmʲin/
-  translation: probation period
-  pos: phrase
-- lemma: соціальний пакет
-  ipa: /sɔt͡sʲiˈɑlʲnɪj pɐˈkɛt/
-  translation: benefits package
-  pos: phrase
-- lemma: графік
-  ipa: /ˈɦrɑfʲik/
-  translation: schedule
-  pos: noun
-  gender: m
-- lemma: віддалена робота
-  ipa: /ʋʲidˈdɑlɛnɐ rɔˈbɔtɐ/
-  translation: remote work
-  pos: phrase
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
+- lemma: різне
+  ipa: /rˈiznɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: термін
-  ipa: /ˈtɛrmʲin/
-  translation: term/period
+- lemma: стабільність
+  ipa: /stabˈilʲnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: страхування
+  ipa: /straxuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: уміння
+  ipa: /umˈinnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: частковий
+  ipa: /t͡ʃastkɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: інтерв'ю
+  ipa: /intɛrʋˈju/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: інтерв'юер
+  ipa: /intɛrʋjuˈɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: пакет
-  ipa: /pɐˈkɛt/
-  translation: package
+- lemma: іт
+  ipa: /it/
+  translation: ''
   pos: noun
-  gender: m

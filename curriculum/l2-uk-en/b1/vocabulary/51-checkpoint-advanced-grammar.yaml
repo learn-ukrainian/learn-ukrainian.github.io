@@ -3,133 +3,241 @@ level: B1
 version: '2.0'
 items:
 - lemma: бутербродик
-  ipa: /butɛrˈbrɔdɪk/
-  translation: sandwich (dim.)
+  ipa: /butɛrbrˈɔdɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вшись
-  ipa: /u̯ʃɪsʲ/
-  translation: suffix -vshys
-  pos: other
-- lemma: граючий
-  ipa: /ˈhrajut͡ʃɪj/
-  translation: playing
+- lemma: в'янучий
+  ipa: /ʋˈjanut͡ʃɪj/
+  translation: ''
   pos: adj
-- lemma: дискусійний
-  ipa: /dɪskuˈsʲijnɪj/
-  translation: controversial
-  pos: adj
-  gender: f
-- lemma: дієприкм
-  ipa: /dʲijɛprɪˈkm/
-  translation: participle (abbr)
-  pos: noun
-  gender: m
-- lemma: задуматися
-  ipa: /zaˈdumatɪsʲa/
-  translation: to ponder
+- lemma: випивши
+  ipa: /ʋˈɪpɪʋʃɪ/
+  translation: ''
   pos: verb
+- lemma: виступивши
+  ipa: /ʋˈɪstupɪʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: вшись
+  ipa: /ʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: граючий
+  ipa: /ɦrˈajut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: дж
+  ipa: /dʒ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дискусійний
+  ipa: /dɪskusˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: дніпр
+  ipa: /dnipr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: доречний
+  ipa: /dɔrˈɛt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: дробовий
+  ipa: /drɔbɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: дідів
+  ipa: /didiʋ/
+  translation: ''
+  pos: adj
+- lemma: задумавшись
+  ipa: /zadˈumaʋʃɪsʲ/
+  translation: ''
+  pos: verb
+- lemma: законопроєкт
+  ipa: /zakɔnɔprɔˈjɛkt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: закінчи-
+  ipa: /zakint͡ʃˈɪ-/
+  translation: ''
+  pos: noun
 - lemma: запакувати
-  ipa: /zapakuˈvatɪ/
-  translation: to pack
+  ipa: /zapakuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: заплативши
+  ipa: /zaplatˈɪʋʃɪ/
+  translation: ''
   pos: verb
 - lemma: затінений
-  ipa: /zaˈtʲinɛnɪj/
-  translation: shaded
+  ipa: /zatˈinɛnɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: змарнілий
-  ipa: /zmarˈnʲilɪj/
-  translation: haggard
+  ipa: /zmarnˈilɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: кавочка
-  ipa: /ˈkavɔt͡ʃka/
-  translation: coffee (dim.)
+- lemma: зобразити
+  ipa: /zɔbrazˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: зроби-
+  ipa: /zrɔbˈɪ-/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: каталожок
-  ipa: /kataˈlɔʒɔk/
-  translation: catalog (dim.)
+- lemma: йд-
+  ipa: /jd-/
+  translation: ''
+  pos: noun
+- lemma: канцеляризм
+  ipa: /kant͡sɛljarˈɪzm/
+  translation: ''
+  pos: noun
+- lemma: каталог
+  ipa: /katalˈɔɦ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: каталожка
+  ipa: /katalɔʒka/
+  translation: ''
+  pos: noun
 - lemma: мамочка
-  ipa: /ˈmamɔt͡ʃka/
-  translation: mommy
+  ipa: /mˈamɔt͡ʃka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: мутити
-  ipa: /muˈtɪtɪ/
-  translation: to stir/muddle
+  ipa: /mutˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: надаючи
+  ipa: /nadajut͡ʃˈɪ/
+  translation: ''
+  pos: verb
+- lemma: намальований
+  ipa: /namalʲˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: оглянувши
+  ipa: /ɔɦlˈjanuʋʃɪ/
+  translation: ''
   pos: verb
 - lemma: освітлений
-  ipa: /ɔˈsvitlɛnɪj/
-  translation: lit
+  ipa: /ɔsʋˈitlɛnɪj/
+  translation: ''
   pos: adj
+- lemma: печивечка
+  ipa: /pɛt͡ʃɪʋɛt͡ʃka/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: печивечко
-  ipa: /pɛˈt͡ʃɪvɛt͡ʃkɔ/
-  translation: cookie (dim.)
-  pos: noun
-  gender: n
-- lemma: побачень
-  ipa: /pɔˈbat͡ʃɛnʲ/
-  translation: dates (gen.)
-  pos: noun
-  gender: n
+- lemma: побачений
+  ipa: /pɔbˈat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
 - lemma: побуджений
-  ipa: /pɔˈbudʒɛnɪj/
-  translation: awakened
+  ipa: /pɔbˈudʒɛnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: побудити
-  ipa: /pɔbuˈdɪtɪ/
-  translation: to wake
+  ipa: /pɔbudˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: поверну-
+  ipa: /pɔʋɛrnˈu-/
+  translation: ''
+  pos: noun
+- lemma: повніти
+  ipa: /pɔʋnˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: полотно
+  ipa: /pɔlɔtnˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пороги
+  ipa: /pɔrˈɔɦɪ/
+  translation: ''
+  pos: noun
 - lemma: посмутнілий
-  ipa: /pɔsmutˈnʲilɪj/
-  translation: saddened
+  ipa: /pɔsmutnˈilɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: поставлений
+  ipa: /pɔstˈaʋlɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: прагматичний
+  ipa: /praɦmatˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: проведений
+  ipa: /prɔʋˈɛdɛnɪj/
+  translation: ''
+  pos: adj
 - lemma: продавчиня
-  ipa: /prɔdau̯ˈt͡ʃɪnʲa/
-  translation: saleswoman
+  ipa: /prɔdaʋt͡ʃɪnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: просунутий
-  ipa: /prɔˈsunutɪj/
-  translation: advanced
-  pos: adj
-  gender: f
-- lemma: ревти
-  ipa: /rɛu̯ˈtɪ/
-  translation: to roar
+- lemma: ревіти
+  ipa: /rɛʋˈitɪ/
+  translation: ''
   pos: verb
-- lemma: реготати
-  ipa: /rɛhɔˈtatɪ/
-  translation: to laugh loudly
+- lemma: регочучи
+  ipa: /rɛɦˈɔt͡ʃut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: розглядати
+  ipa: /rɔzɦljadˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: сид-
+  ipa: /sɪd-/
+  translation: ''
+  pos: noun
+- lemma: сказа-
+  ipa: /skˈaza-/
+  translation: ''
+  pos: noun
+- lemma: сказавши
+  ipa: /skazˈaʋʃɪ/
+  translation: ''
   pos: verb
 - lemma: таця
-  ipa: /ˈtat͡sʲa/
-  translation: tray
+  ipa: /tˈat͡sja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: усміха
-  ipa: /uˈsmʲixa/
-  translation: smiles
+- lemma: тримаючи
+  ipa: /trɪmˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: увійшовши
+  ipa: /uʋijʃˈɔʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: усміха-
+  ipa: /usmixa-/
+  translation: ''
   pos: noun
-  gender: m
+- lemma: уч-
+  ipa: /ut͡ʃ-/
+  translation: ''
+  pos: noun
 - lemma: хатинка
-  ipa: /xaˈtɪnka/
-  translation: hut (dim.)
+  ipa: /xatˈɪnka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: яблучко
-  ipa: /ˈjablut͡ʃkɔ/
-  translation: apple (dim.)
+- lemma: юч-
+  ipa: /jut͡ʃ-/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: яч
-  ipa: /jat͡ʃ/
-  translation: suffix -yach
-  pos: propn

@@ -477,7 +477,7 @@ Culture is **woven into grammar explanation**, not just decorative.
 **Cases:** 7 cases + full paradigm + mnemonic (well-scaffolded)
 **Sentence Terms:** 6 terms with examples (appropriate density)
 
-No section introduces >3 concepts without examples.
+No section introduces &gt;3 concepts without examples.
 
 ---
 
@@ -557,13 +557,13 @@ No "John eats hamburger" translations.
 |------|---------|--------|
 | TEXTBOOK_VOICE | No questions/metaphors in 300+ words | NOT PRESENT |
 | ROBOTIC_TRANSITIONS | No transitional phrases | NOT PRESENT |
-| REPETITIVE | Same structure >5 times | NOT PRESENT |
+| REPETITIVE | Same structure &gt;5 times | NOT PRESENT |
 | GENERIC_EXAMPLES | No named people/places | NOT PRESENT |
 | LIST_DUMP | Just lists without narrative | NOT PRESENT |
 | NO_CULTURAL_ANCHOR | Grammar without Ukrainian context | NOT PRESENT |
 | ENGAGEMENT_BOX_FILLER | Boxes restate content | NOT PRESENT |
-| WALL_OF_TEXT | >500 words without engagement | NOT PRESENT |
-| EUPHONY_VIOLATION | >3 euphony errors | NOT PRESENT |
+| WALL_OF_TEXT | &gt;500 words without engagement | NOT PRESENT |
+| EUPHONY_VIOLATION | &gt;3 euphony errors | NOT PRESENT |
 
 **Result:** ✅ ZERO DRYNESS FLAGS
 
@@ -578,7 +578,7 @@ Content is engaging, culturally grounded, well-paced.
 **English clichés:** "It's important to note", "Let's dive into", "Mastering X is crucial" → NOT FOUND
 **Ukrainian clichés:** "Важливо зазначити", "Як ми вже бачили" → NOT FOUND
 
-**Count: 0 clichés** (threshold <3)
+**Count: 0 clichés** (threshold &lt;3)
 
 ---
 
@@ -777,7 +777,7 @@ Opening uses specific motivation, not generic template:
 **Bullet lists: ~20%** (tables, checklists - functional)
 **Prose: ~80%**
 
-**Threshold: <50%** ✅
+**Threshold: &lt;50%** ✅
 
 ---
 
@@ -796,7 +796,7 @@ No encyclopedic tone. Conversational explanations with direct learner address th
 4. Pop Culture - Ukrainian schools ✅
 5. Mnemonic explanation ✅
 
-**Boxes restating content: 0/5 (0%)** (threshold <50%)
+**Boxes restating content: 0/5 (0%)** (threshold &lt;50%)
 
 ---
 
@@ -1072,7 +1072,7 @@ B1 Module 01 represents **reference-quality metalanguage instruction**. It achie
 **Status:** ✅ EXCEEDS STANDARD
 
 ### AI Fingerprint
-**Target:** <3 LLM clichés, score ≥4/5
+**Target:** &lt;3 LLM clichés, score ≥4/5
 **Achieved:** 0 clichés, score 10/10 (zero AI fingerprints)
 **Status:** ✅ EXCEEDS STANDARD
 

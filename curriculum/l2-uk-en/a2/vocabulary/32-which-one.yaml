@@ -2,59 +2,85 @@ module: 32-which-one
 level: A2
 version: '2.0'
 items:
-- lemma: авто
-  ipa: ɐu̯ˈtɔ
-  translation: car
-  pos: noun
-  gender: n
-- lemma: кода
-  ipa: ˈkɔdɐ
-  translation: code (gen)
+- lemma: антецедент
+  ipa: /antɛt͡sɛdˈɛnt/
+  translation: ''
   pos: noun
   gender: m
+- lemma: важкий
+  ipa: /ʋaʒkˈɪj/
+  translation: ''
+  pos: adj
+- lemma: відносний
+  ipa: /ʋidnˈɔsnɪj/
+  translation: ''
+  pos: adj
+- lemma: закривати
+  ipa: /zakrɪʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: кордон
-  ipa: korˈdɔn
-  translation: border
+  ipa: /kɔrdˈɔn/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: малюнок
-  ipa: mɐˈlʲunok
-  translation: drawing
+  ipa: /malˈjunɔk/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: міцно
-  ipa: ˈmʲit͡sno
-  translation: firmly; strongly
+  ipa: /mˈit͡snɔ/
+  translation: ''
   pos: adv
 - lemma: надихнути
-  ipa: nɐdɪxˈnute
-  translation: to inspire (perf)
+  ipa: /nadɪxnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: об'єднати
+  ipa: /ɔbjɛdnˈatɪ/
+  translation: ''
   pos: verb
 - lemma: обличчя
-  ipa: obˈlɪt͡ʃːɐ
-  translation: face
+  ipa: /ɔblˈɪt͡ʃt͡ʃja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: посміхатися
-  ipa: posmʲiˈxɑtɪsʲɐ
-  translation: to smile (imp)
+  ipa: /pɔsmixˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: програма
-  ipa: proˈhrɑmɐ
-  translation: program
+  ipa: /prɔɦrˈama/
+  translation: ''
   pos: noun
   gender: f
 - lemma: рог
-  ipa: rɔh
-  translation: horn; corner (typo for ріг?)
+  ipa: /rɔɦ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: рости
+  ipa: /rɔstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: ріст
+  ipa: /rist/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тримати
+  ipa: /trɪmˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: цікавити
-  ipa: t͡sʲiˈkɑʋɪte
-  translation: to interest (imp)
+  ipa: /t͡sikˈaʋɪtɪ/
+  translation: ''
   pos: verb
 - lemma: шапка
-  ipa: ˈʃɑpkɐ
-  translation: hat
+  ipa: /ʃˈapka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: яким
+  ipa: /jakˈɪm/
+  translation: ''
+  pos: noun

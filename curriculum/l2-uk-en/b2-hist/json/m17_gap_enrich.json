@@ -1,0 +1,23 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2-hist/kniazivski-usobiytsi.md",
+    "enrichments": {
+      "статися": {"ipa": "/ˈstɑtɪsʲɑ/", "en": "to happen"},
+      "стиль": {"ipa": "/stɪlʲ/", "en": "style"},
+      "Суздаль": {"ipa": "/ˈsuzdɑlʲ/", "en": "Suzdal"},
+      "тримати": {"ipa": "/trɪˈmɑtɪ/", "en": "to hold/keep"},
+      "узаконення": {"ipa": "/uzɑˈkɔnɛnʲːɑ/", "en": "legalization"},
+      "узаконити": {"ipa": "/uzɑˈkɔnɪtɪ/", "en": "to legalize"},
+      "увесь": {"ipa": "/uˈwɛsʲ/", "en": "all"},
+      "цей": {"ipa": "/t͡sʲɛj/", "en": "this"},
+      "честь": {"ipa": "/t͡ʃɛsʲtʲ/", "en": "honor"},
+      "чинити": {"ipa": "/t͡ʃɪˈnɪtɪ/", "en": "to do/act"},
+      "який": {"ipa": "/jɑˈkɪj/", "en": "which/what"},
+      "єдність": {"ipa": "/ˈjɛdnʲisʲtʲ/", "en": "unity"},
+      "імперативний": {"ipa": "/impɛrɑˈtɪwnɪj/", "en": "imperative"},
+      "іноземець": {"ipa": "/inoˈzɛmɛt͡sʲ/", "en": "foreigner"},
+      "інтерпретувати": {"ipa": "/intɛrprɛtuˈwɑtɪ/", "en": "to interpret"},
+      "їхній": {"ipa": "/ˈjixnʲij/", "en": "their"}
+    }
+  }
+]

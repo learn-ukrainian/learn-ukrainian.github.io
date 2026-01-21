@@ -2,403 +2,103 @@ module: 45-proverbs-work-wisdom-character
 level: B2
 version: '2.0'
 items:
-- lemma: аварія
-  ipa: /ɐˈwɑrʲijɑ/
-  translation: accident
-  pos: noun
-  gender: f
-- lemma: аграрний
-  ipa: /ɐˈɦrɑrnɪj/
-  translation: agrarian
-  pos: adj
-- lemma: балаканина
-  ipa: /bɑlɑkɑˈnɪnɑ/
-  translation: idle talk, chatter
-  pos: noun
-  gender: f
-- lemma: балакун
-  ipa: /bɑlɐˈkun/
-  translation: chatterbox
-  pos: noun
-  gender: m
-- lemma: біблійний
-  ipa: /bʲibˈlʲijnɪj/
-  translation: biblical
-  pos: adj
-- lemma: ведмідь
-  ipa: /wɛdˈmʲidʲ/
-  translation: bear
-  pos: noun
-  gender: m
-- lemma: взятися
-  ipa: /ˈwzʲɑtɪsʲɑ/
-  translation: to take on, to start
-  pos: verb
-- lemma: виживання
-  ipa: /wɪʒɪˈwɑnʲːɑ/
-  translation: survival
-  pos: noun
-  gender: n
-- lemma: вимова
-  ipa: /wɪˈmowɑ/
-  translation: pronunciation
-  pos: noun
-  gender: f
-- lemma: винагороджувати
-  ipa: /wɪnɐɦoˈrodʒuwɑtɪ/
-  translation: to reward
-  pos: verb
-- lemma: виростити
-  ipa: /wɪˈrostɪtɪ/
-  translation: to grow, to raise
-  pos: verb
-- lemma: витрачати
-  ipa: /wɪtrɑˈt͡ʃɑtɪ/
-  translation: to spend, to waste
-  pos: verb
-- lemma: вовк
-  ipa: /wowk/
-  translation: wolf
-  pos: noun
-  gender: m
-- lemma: врожай
-  ipa: /wroˈʒɑj/
-  translation: harvest, crop
-  pos: noun
-  gender: m
-- lemma: втілювати
-  ipa: /wtʲilʲuˈwɑtɪ/
-  translation: to embody, to implement
-  pos: verb
-- lemma: відкладання
-  ipa: /wʲidklɐˈdɑnʲːɑ/
-  translation: postponement
-  pos: noun
-  gender: n
-- lemma: вінець
-  ipa: /wʲiˈnɛt͡sʲ/
-  translation: crown, wreath
-  pos: noun
-  gender: m
-- lemma: долати
-  ipa: /doˈlɑtɪ/
-  translation: to overcome
-  pos: verb
-- lemma: доня
-  ipa: /doˈnʲɑ/
-  translation: daughter (colloquial)
-  pos: noun
-  gender: f
-- lemma: подітися
-  ipa: /poˈdʲitɪsʲɑ/
-  translation: to disappear, to go
-  pos: verb
-- lemma: жартівливий
-  ipa: /ʒɑrˈtʲiwlɪwɪj/
-  translation: humorous, joking
-  pos: adj
-- lemma: завдавати
-  ipa: /zɐwdɐˈwɑtɪ/
-  translation: to inflict, to cause
-  pos: verb
-- lemma: заспокоївати
-  ipa: ''
+- lemma: аксіологічний
+  ipa: /aksiɔlɔɦˈit͡ʃnɪj/
   translation: ''
-  pos: verb
-- lemma: застерігати
-  ipa: /zɐstɛrʲiˈɦɑtɪ/
-  translation: to warn
-  pos: verb
-- lemma: засуджувати
-  ipa: /zɐˈsudʒuwɑtɪ/
-  translation: to condemn
-  pos: verb
-- lemma: збанкрутувати
-  ipa: /zbɑnkrutuˈwɑtɪ/
-  translation: to go bankrupt
-  pos: verb
-- lemma: зібрання
-  ipa: /zʲiˈbrɑnʲːɑ/
-  translation: gathering, meeting
-  pos: noun
-  gender: n
-- lemma: колода
-  ipa: /koˈlodɑ/
-  translation: log, block
-  pos: noun
-  gender: f
-- lemma: корона
-  ipa: /koˈronɑ/
-  translation: crown
-  pos: noun
-  gender: f
-- lemma: котітися
-  ipa: /koˈtʲitɪsʲɑ/
-  translation: to roll
-  pos: verb
-- lemma: кохатися
-  ipa: /koˈxɑtɪsʲɑ/
-  translation: to be in love
-  pos: verb
-- lemma: ледарство
-  ipa: /lɛˈdɑrstwo/
-  translation: laziness, idleness
-  pos: noun
-  gender: n
-- lemma: лінощі
-  ipa: /lʲiˈnoʃt͡ʃʲi/
-  translation: laziness
+  pos: adj
+- lemma: антропоцентризм
+  ipa: /antrɔpɔt͡sɛntrˈɪzm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: Матвій
-  ipa: /mɑtˈwʲij/
-  translation: Matthew (biblical name)
-  pos: propn
+- lemma: архетип
+  ipa: /arxɛtˈɪp/
+  translation: ''
+  pos: noun
+- lemma: буття
+  ipa: /buttˈja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вербальний
+  ipa: /ʋɛrbˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: вінце
+  ipa: /ʋˈint͡sɛ/
+  translation: ''
+  pos: noun
+- lemma: гарт
+  ipa: /ɦart/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: медаль
-  ipa: /mɛˈdɑlʲ/
-  translation: medal
+- lemma: дисципліна
+  ipa: /dɪst͡sɪplˈina/
+  translation: ''
   pos: noun
   gender: f
+- lemma: етноментальний
+  ipa: /ɛtnɔmɛntalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: етос
+  ipa: /ɛtɔs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лінгвокультурологічний
+  ipa: /linɦʋɔkulʲturɔlɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: менталітет
-  ipa: /mɛntɑlʲiˈtɛt/
-  translation: mentality
+  ipa: /mɛntalitˈɛt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: москаль
-  ipa: /mosˈkɑlʲ/
-  translation: Muscovite (derogatory)
-  pos: noun
-  gender: m
-- lemma: мотивація
-  ipa: /motɪˈwɑt͡sʲijɑ/
-  translation: motivation
+- lemma: паремійний
+  ipa: /parɛmˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: пареміологія
+  ipa: /parɛmiɔlˈɔɦija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: найповніший
-  ipa: /nɑjˈpownʲiʃɪj/
-  translation: most complete
-  pos: adj
-- lemma: наполегливість
-  ipa: /nɐpolɛɦlɪwʲistʲ/
-  translation: persistence
-  pos: noun
-  gender: f
-- lemma: недалеко
-  ipa: /nɛdɐˈlɛko/
-  translation: not far
-  pos: adv
-- lemma: неприємний
-  ipa: /nɛprɪˈjɛmnɪj/
-  translation: unpleasant
-  pos: adj
-- lemma: неприємно
-  ipa: /nɛprɪˈjɛmno/
-  translation: unpleasantly
-  pos: adv
-- lemma: обманювати
-  ipa: /obmɐˈnʲuwɑtɪ/
-  translation: to deceive
-  pos: verb
-- lemma: образитися
-  ipa: /obrɐˈzɪtɪsʲɑ/
-  translation: to take offense
-  pos: verb
-- lemma: обігнати
-  ipa: /obʲiɦˈnɑtɪ/
-  translation: to overtake, to outrun
-  pos: verb
 - lemma: паремія
-  ipa: /pɐˈrɛmʲijɑ/
-  translation: proverb, paroemia
+  ipa: /parɛmiˈja/
+  translation: ''
+  pos: noun
+- lemma: рефлексія
+  ipa: /rɛflˈɛksija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: пасивність
-  ipa: /pɐsɪwnʲistʲ/
-  translation: passivity
-  pos: noun
-  gender: f
-- lemma: переносний
-  ipa: /pɛrɛˈnosnɪj/
-  translation: figurative, metaphorical
-  pos: adj
-- lemma: перетерпіти
-  ipa: /pɛrɛtɛrˈpʲitɪ/
-  translation: to endure, to suffer through
-  pos: verb
-- lemma: пилинка
-  ipa: /pɪˈlɪnkɑ/
-  translation: speck of dust
-  pos: noun
-  gender: f
-- lemma: повільніше
-  ipa: /poˈwʲilʲnʲiʃɛ/
-  translation: more slowly
-  pos: adv
-- lemma: подібно
-  ipa: /poˈdʲibno/
-  translation: similarly
-  pos: adv
-- lemma: Поділля
-  ipa: /poˈdʲilʲːɑ/
-  translation: Podillia (Ukrainian region)
-  pos: propn
-  gender: n
-- lemma: порошина
-  ipa: /poroˈʃɪnɑ/
-  translation: particle, speck
-  pos: noun
-  gender: f
-- lemma: поспіх
-  ipa: /posˈpʲix/
-  translation: haste, hurry
-  pos: noun
-  gender: m
-- lemma: поспішність
-  ipa: /posˈpʲiʃnʲistʲ/
-  translation: hastiness
-  pos: noun
-  gender: f
-- lemma: потекати
-  ipa: /potɛˈkɑtɪ/
-  translation: to flow
-  pos: verb
-- lemma: потрапити
-  ipa: /potrɐˈpɪtɪ/
-  translation: to get into, to hit
-  pos: verb
-- lemma: потребувати
-  ipa: /potrɛbuˈwɑtɪ/
-  translation: to need, to require
-  pos: verb
-- lemma: початок
-  ipa: /poˈt͡ʃɑtok/
-  translation: beginning
-  pos: noun
-  gender: m
-- lemma: привабливо
-  ipa: /prɪwɐblɪwo/
-  translation: attractively
-  pos: adv
-- lemma: призводити
-  ipa: /prɪzwoˈdɪtɪ/
-  translation: to lead to, to cause
-  pos: verb
-- lemma: приказка
-  ipa: /prɪˈkɑzkɑ/
-  translation: saying, adage
-  pos: noun
-  gender: f
-- lemma: прокрастинація
-  ipa: /prokrɑstɪˈnɑt͡sʲijɑ/
-  translation: procrastination
-  pos: noun
-  gender: f
-- lemma: промовчати
-  ipa: /promowˈt͡ʃɑtɪ/
-  translation: to keep silent
-  pos: verb
-- lemma: пустий
-  ipa: /ˈpustɪj/
-  translation: empty, vain
-  pos: adj
-- lemma: реалія
-  ipa: /rɛɑˈlʲijɑ/
-  translation: reality, realia
-  pos: noun
-  gender: f
-- lemma: рекламувати
-  ipa: /rɛklɐmuˈwɑtɪ/
-  translation: to advertise
-  pos: verb
 - lemma: розважливість
-  ipa: /rozwɑʒlɪwʲistʲ/
-  translation: prudence, thoughtfulness
-  pos: noun
-  gender: f
-- lemma: розвалитися
-  ipa: /rozwɐˈlɪtɪsʲɑ/
-  translation: to collapse, to fall apart
-  pos: verb
-- lemma: самоіронія
-  ipa: /sɐmoʲiˈronʲijɑ/
-  translation: self-irony
-  pos: noun
-  gender: f
-- lemma: сезонний
-  ipa: /sɛˈzonnɪj/
-  translation: seasonal
-  pos: adj
-- lemma: селянин
-  ipa: /sɛlʲɑˈnɪn/
-  translation: peasant
-  pos: noun
-  gender: m
-- lemma: систематизувати
-  ipa: /sɪstɛmɐtɪzuˈwɑtɪ/
-  translation: to systematize
-  pos: verb
-- lemma: скромність
-  ipa: /ˈskromnʲistʲ/
-  translation: modesty
+  ipa: /rɔzʋˈaʒlɪʋistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: скупий
-  ipa: /ˈskupɪj/
-  translation: stingy, miserly
+  ipa: /skupˈɪj/
+  translation: ''
   pos: adj
-- lemma: спокійно
-  ipa: /spoˈkʲijno/
-  translation: calmly
-  pos: adv
-- lemma: спортсменка
-  ipa: /sportˈsmɛnkɑ/
-  translation: sportswoman
+- lemma: стриманість
+  ipa: /strˈɪmanistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: тихіше
-  ipa: /ˈtɪxʲiʃɛ/
-  translation: quieter, more quietly
-  pos: adv
-- lemma: труд
-  ipa: /trud/
-  translation: labor, work
+- lemma: установка
+  ipa: /ustanˈɔʋka/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: успадковувати
-  ipa: /uspɐdˈkowuwɑtɪ/
-  translation: to inherit
+  gender: f
+- lemma: шліфуватися
+  ipa: /ʃlifuʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: фермер
-  ipa: /ˈfɛrmɛr/
-  translation: farmer
-  pos: noun
-  gender: m
-- lemma: філософ
-  ipa: /fʲiˈlosof/
-  translation: philosopher
-  pos: noun
-  gender: m
-- lemma: цінний
-  ipa: /t͡sʲinnɪj/
-  translation: valuable
-  pos: adj
-- lemma: широковживаний
-  ipa: /ʃɪrokoˈwʒɪwɑnɪj/
-  translation: widely used
-  pos: adj
-- lemma: яблунька
-  ipa: /jɐˈblunʲkɑ/
-  translation: little apple tree (diminutive)
+- lemma: інтертекстуальність
+  ipa: /intɛrtɛkstuˈalʲnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: яблуня
-  ipa: /jɐˈblunʲɑ/
-  translation: apple tree
-  pos: noun
-  gender: f
-- lemma: євангеліє
-  ipa: /jɛwɐnˈɦɛlʲijɛ/
-  translation: gospel
-  pos: noun
-  gender: n

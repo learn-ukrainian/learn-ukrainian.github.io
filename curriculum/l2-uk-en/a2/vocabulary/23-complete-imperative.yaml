@@ -2,156 +2,116 @@ module: 23-complete-imperative
 level: A2
 version: '2.0'
 items:
-- lemma: хай
-  ipa: xɑj
-  translation: let (particle)
-  pos: part
-  note: conversational
-- lemma: нехай
-  ipa: nɛˈxɑj
-  translation: let (particle)
-  pos: part
-  note: literary/formal
-- lemma: будь
-  ipa: budʲ
-  translation: be (imperative sg.)
+- lemma: боятися
+  ipa: /bɔˈjatɪsja/
+  translation: ''
   pos: verb
-  note: irregular
-- lemma: будьте
-  ipa: ˈbudʲtɛ
-  translation: be (imperative pl.)
-  pos: verb
-  note: irregular
-- lemma: дай
-  ipa: dɑj
-  translation: give (imperative sg.)
-  pos: verb
-  note: irregular
-- lemma: візьми
-  ipa: ˈvizʲmɪ
-  translation: take (imperative sg.)
-  pos: verb
-  note: irregular
-- lemma: їж
-  ipa: jiʒ
-  translation: eat (imperative sg.)
-  pos: verb
-  note: irregular
-- lemma: ходімо
-  ipa: xɔˈdimɔ
-  translation: let's go
-  pos: verb
-  note: 1st plural imperative
-- lemma: щастити
-  ipa: ʃt͡ʃɑˈstɪtɪ
-  translation: to be lucky
-  pos: verb
-  note: Хай щастить!
+- lemma: вибачення
+  ipa: /ʋˈɪbat͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: вирішувати
-  ipa: vɪriˈʃuvɑtɪ
-  translation: to decide
+  ipa: /ʋɪrˈiʃuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: здійснюватися
-  ipa: zd͡ʒijsʲnʲuˈvɑtɪsʲɑ
-  translation: to come true
-  pos: verb
-  note: for dreams, wishes
-- lemma: передавати
-  ipa: pɛrɛdɑˈvɑtɪ
-  translation: to pass on, convey
-  pos: verb
-- lemma: залишатися
-  ipa: zɑlɪˈʃɑtɪsʲɑ
-  translation: to stay, remain
-  pos: verb
-- lemma: допомагати
-  ipa: dɔpɔmɑˈɦɑtɪ
-  translation: to help
-  pos: verb
-- lemma: починати
-  ipa: pɔt͡ʃɪˈnɑtɪ
-  translation: to begin
-  pos: verb
-- lemma: наказовий
-  ipa: nɑkɑˈzɔvɪj
-  translation: imperative (adj.)
+- lemma: впевнений
+  ipa: /ʋpˈɛʋnɛnɪj/
+  translation: ''
   pos: adj
-  note: grammatical term
-- lemma: спосіб
-  ipa: ˈspɔsib
-  translation: mood; way; method
+- lemma: говорити-
+  ipa: /ɦɔʋɔrˈɪtɪ-/
+  translation: ''
+  pos: noun
+- lemma: ехаяти
+  ipa: /ɛxajatɪ/
+  translation: ''
+  pos: verb
+- lemma: заперечення
+  ipa: /zapɛrˈɛt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: здійснитися
+  ipa: /zdijsnˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: калька
+  ipa: /kˈalʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: наказовий
+  ipa: /nakazˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: нарізати
+  ipa: /narizatɪ/
+  translation: ''
+  pos: verb
+- lemma: нехай
+  ipa: /nɛxˈaj/
+  translation: ''
+  pos: part
+- lemma: парадигма
+  ipa: /paradˈɪɦma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: повний
+  ipa: /pˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: потужний
+  ipa: /pɔtˈuʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: приміряти
+  ipa: /prɪmirjatɪ/
+  translation: ''
+  pos: verb
+- lemma: реальне
+  ipa: /rɛˈalʲnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: роба
+  ipa: /rˈɔba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: російський
+  ipa: /rɔsˈijsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: сам
+  ipa: /sam/
+  translation: ''
+  pos: pron
+- lemma: символ
+  ipa: /sˈɪmʋɔl/
+  translation: ''
   pos: noun
   gender: m
-  note: grammatical term
-- lemma: основа
-  ipa: ɔsˈnɔvɑ
-  translation: stem; basis
+- lemma: слава
+  ipa: /slˈaʋa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: товар
+  ipa: /tɔʋˈar/
+  translation: ''
+  pos: noun
+- lemma: удома
+  ipa: /udˈɔma/
+  translation: ''
+  pos: adv
+- lemma: часть
+  ipa: /t͡ʃastʲ/
+  translation: ''
   pos: noun
   gender: f
-  note: grammatical term
-- lemma: закінчення
-  ipa: zɑkinˈt͡ʃɛnʲːɑ
-  translation: ending
+- lemma: читати-
+  ipa: /t͡ʃɪtˈatɪ-/
+  translation: ''
   pos: noun
-  gender: n
-  note: grammatical term
-- lemma: дієслово
-  ipa: diˈjɛslɔvɔ
-  translation: verb
-  pos: noun
-  gender: n
-  note: grammatical term
-- lemma: скажіть
-  ipa: skɑˈʒitʲ
-  translation: say, tell (imperative pl.)
-  pos: verb
-- lemma: читай
-  ipa: t͡ʃɪˈtɑj
-  translation: read (imperative sg.)
-  pos: verb
-- lemma: давайте
-  ipa: dɑˈvɑjtɛ
-  translation: let's (particle/verb pl.)
-  pos: part
-- lemma: зачекайте
-  ipa: zɑt͡ʃɛˈkɑjtɛ
-  translation: wait (imperative pl.)
-  pos: verb
-- lemma: пиши
-  ipa: pɪˈʃɪ
-  translation: write (imperative sg.)
-  pos: verb
-- lemma: прошу
-  ipa: ˈprɔʃu
-  translation: please; I beg
-  pos: verb
-- lemma: ласка
-  ipa: ˈlɑskɑ
-  translation: kindness; favor
-  pos: noun
-  gender: f
-  note: used in "будь ласка"
-- lemma: слухайте
-  ipa: ˈsluxɑjtɛ
-  translation: listen (imperative pl.)
-  pos: verb
-- lemma: роби
-  ipa: rɔˈbɪ
-  translation: do, make (imperative sg.)
-  pos: verb
-- lemma: робімо
-  ipa: rɔˈbimɔ
-  translation: let's do/make
-  pos: verb
-- lemma: покажіть
-  ipa: pɔkɑˈʒitʲ
-  translation: show (imperative pl.)
-  pos: verb
-- lemma: послухайте
-  ipa: pɔˈsluxɑjtɛ
-  translation: listen (imperative pl.)
-  pos: verb
-- lemma: говори
-  ipa: ɦɔvɔˈrɪ
-  translation: speak (imperative sg.)
-  pos: verb

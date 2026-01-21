@@ -661,14 +661,19 @@ class ActivityParser:
 
     def _essay_response_to_mdx(self, activity: EssayResponseActivity, is_ukrainian_forced: bool = False) -> str:
         rubric_md = ""
+        rows = []
         if activity.rubric:
-            rows = []
             for r in activity.rubric:
                 if isinstance(r, dict):
                     rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', 0)} |")
                 elif isinstance(r, str):
                     rows.append(f"| {r} | | |")
-            rubric_md = f"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
+        if is_ukrainian_forced:
+            if rows:
+                rubric_md = f"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(rows)
+        else:
+            if rows:
+                rubric_md = f"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
         # Using self._dump_safe_json for complex props might be safer than json.dumps inside {}
         # But here we are passing strings directly, not parsing JSON inside
         # Wait, the original code used json.dumps inside {}

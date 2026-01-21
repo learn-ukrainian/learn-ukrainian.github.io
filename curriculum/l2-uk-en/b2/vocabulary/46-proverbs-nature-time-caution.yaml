@@ -2,608 +2,76 @@ module: 46-proverbs-nature-time-caution
 level: B2
 version: '2.0'
 items:
-- lemma: Буковина
-  ipa: /bukoˈwɪnɑ/
-  translation: Bukovina (Ukrainian region)
-  pos: propn
-  gender: f
-- lemma: Вікіпедія
-  ipa: /wʲikʲiˈpɛdʲijɑ/
-  translation: Wikipedia
-  pos: propn
-  gender: f
-- lemma: Вінниця
-  ipa: /ˈwʲinːɪt͡sʲɑ/
-  translation: Vinnytsia (Ukrainian city)
-  pos: propn
-  gender: f
-- lemma: Голодомор
-  ipa: /ɦoloˈdomor/
-  translation: Holodomor (Ukrainian genocide)
-  pos: propn
-  gender: m
-- lemma: Житомир
-  ipa: /ʒɪˈtomɪr/
-  translation: Zhytomyr (Ukrainian city)
-  pos: propn
-  gender: m
-- lemma: Луцьк
-  ipa: /lut͡sʲk/
-  translation: Lutsk (Ukrainian city)
-  pos: propn
-  gender: m
-- lemma: Полтава
-  ipa: /polˈtɑwɑ/
-  translation: Poltava (Ukrainian city)
-  pos: propn
-  gender: f
-- lemma: альпініст
-  ipa: /ɑlʲpʲiˈnʲist/
-  translation: mountain climber
-  pos: noun
-  gender: m
-- lemma: античний
-  ipa: /ɐnˈtɪt͡ʃnɪj/
-  translation: ancient, antique
-  pos: adj
-- lemma: асоціювати
-  ipa: /ɐsot͡sʲijuˈwɑtɪ/
-  translation: to associate
-  pos: verb
-- lemma: асфальт
-  ipa: /ɑsˈfɑlʲt/
-  translation: asphalt
-  pos: noun
-  gender: m
-- lemma: багатовіковий
-  ipa: /bɑɦɐtowʲiˈkowɪj/
-  translation: centuries-old
-  pos: adj
-- lemma: балачка
-  ipa: /bɑˈlɑt͡ʃkɑ/
-  translation: chat, talk
-  pos: noun
-  gender: f
-- lemma: бандура
-  ipa: /bɐnˈdurɑ/
-  translation: bandura (Ukrainian musical instrument)
-  pos: noun
-  gender: f
-- lemma: банкрутство
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: берегти
-  ipa: /bɛˈrɛɦtɪ/
-  translation: to protect, to guard
-  pos: verb
-- lemma: берегтися
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: бережене
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: бережений
-  ipa: ''
+  ipa: /bɛrɛʒɛnɪj/
   translation: ''
   pos: adj
-- lemma: боягузтво
-  ipa: /bojɑˈɦuzstwo/
-  translation: cowardice
-  pos: noun
-  gender: n
-- lemma: вакансія
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: весною
-  ipa: /wɛsˈnoju/
-  translation: in spring
-  pos: adv
-- lemma: вечір
-  ipa: /ˈwɛtʃʲir/
-  translation: evening
-  pos: noun
-  gender: m
-- lemma: виважений
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: вигнанець
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: виключати
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: випуск
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: виховання
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: втрачити
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: віз
-  ipa: /wʲiz/
-  translation: cart, wagon
-  pos: noun
-  gender: m
-- lemma: гнатися
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: гоп
-  ipa: /ɦop/
-  translation: hop (exclamation)
-  pos: intj
-- lemma: гроші
-  ipa: /ˈɦroʃʲi/
-  translation: money
-  pos: noun
-- lemma: давньогрецький
-  ipa: /dɑwʲnoˈɦrɛt͡sʲkɪj/
-  translation: ancient Greek
-  pos: adj
-- lemma: донині
-  ipa: ''
-  translation: ''
-  pos: adv
-- lemma: життєво
-  ipa: ''
-  translation: ''
-  pos: adv
-- lemma: жменя
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: жнива
-  ipa: /ˈʒnɪwɑ/
-  translation: harvest time
+  ipa: /ʒnɪʋa/
+  translation: ''
   pos: noun
 - lemma: журавель
-  ipa: /ʒurɐˈwɛlʲ/
-  translation: crane (bird)
-  pos: noun
-  gender: m
-- lemma: заблукати
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: забруднити
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: забруднювати
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: закарпаття
-  ipa: /zɐkɑrˈpɑtʲːɑ/
-  translation: Transcarpathia
-  pos: propn
-  gender: n
-- lemma: замерзти
-  ipa: /zɐˈmɛrzti/
-  translation: to freeze
-  pos: verb
-- lemma: запорозький
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: застерегти
-  ipa: /zɐstɛˈrɛɦtɪ/
-  translation: to warn
-  pos: verb
-- lemma: захокти
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: захопити
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: зима
-  ipa: /zɪˈmɑ/
-  translation: winter
-  pos: noun
-  gender: f
-- lemma: зрештою
-  ipa: ''
-  translation: ''
-  pos: adv
-- lemma: зточити
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: календар
-  ipa: /kɑlɛnˈdɑr/
-  translation: calendar
-  pos: noun
-  gender: m
-- lemma: катаклізм
-  ipa: ''
+  ipa: /ʒuraʋˈɛlʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: квартальний
-  ipa: ''
+- lemma: журавлі
+  ipa: /ʒuraʋlˈi/
   translation: ''
-  pos: adj
-- lemma: конкурент
-  ipa: ''
+  pos: noun
+- lemma: колодязь
+  ipa: /kɔlˈɔdjazʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: крах
-  ipa: /krɑx/
-  translation: collapse, crash
-  pos: noun
-  gender: m
-- lemma: криниця
-  ipa: /krɪˈnɪt͡sʲɑ/
-  translation: well (water source)
-  pos: noun
-  gender: f
-- lemma: криничний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: крити
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: курликання
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: курча
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: ластівка
-  ipa: /lɑˈstʲiwkɑ/
-  translation: swallow (bird)
-  pos: noun
-  gender: f
-- lemma: латинь
-  ipa: ''
+  ipa: /lˈastiʋka/
   translation: ''
   pos: noun
   gender: f
-- lemma: лояльність
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: літо
-  ipa: /ˈlʲito/
-  translation: summer
-  pos: noun
-  gender: n
-- lemma: мандри
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мудріший
-  ipa: ''
-  translation: ''
-  pos: adj
 - lemma: міжмовний
-  ipa: ''
+  ipa: /miʒmˈɔʋnɪj/
   translation: ''
   pos: adj
-- lemma: мільйонер
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: навесні
-  ipa: /nɑwɛsˈnʲi/
-  translation: in spring
-  pos: adv
-- lemma: найродючіший
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: напитися
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: насмішити
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: недосяжний
-  ipa: ''
+  ipa: /nɛdɔsˈjaʒnɪj/
   translation: ''
   pos: adj
-- lemma: незадовільний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: неписаний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: обробити
-  ipa: /obroˈbɪtɪ/
-  translation: to process, to work
-  pos: verb
-- lemma: обробка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: оброблений
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: однокурсник
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: озброєний
-  ipa: ''
+  ipa: /ɔzbrˈɔjɛnɪj/
   translation: ''
   pos: adj
-- lemma: орати
-  ipa: /oˈrɑtɪ/
-  translation: to plow
-  pos: verb
-- lemma: осінній
-  ipa: /oˈsʲinːʲij/
-  translation: autumn (adj.)
-  pos: adj
-- lemma: передчасний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: перестрибнути
-  ipa: /pɛrɛstrɪbˈnutɪ/
-  translation: to jump over
-  pos: verb
-- lemma: пожати
-  ipa: /poˈʒɑtɪ/
-  translation: to reap, to harvest
-  pos: verb
-- lemma: порадник
-  ipa: ''
+- lemma: орава
+  ipa: /ɔrˈaʋa/
   translation: ''
   pos: noun
-  gender: m
-- lemma: поспішити
-  ipa: ''
+- lemma: плювати
+  ipa: /pljuʋˈatɪ/
   translation: ''
   pos: verb
-- lemma: поспішний
-  ipa: ''
+- lemma: попереджений
+  ipa: /pɔpɛrˈɛdʒɛnɪj/
   translation: ''
   pos: adj
-- lemma: посів
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: посіяти
-  ipa: /poˈsʲijɑtɪ/
-  translation: to sow (perfective)
-  pos: verb
-- lemma: пошкодувати
-  ipa: ''
-  translation: ''
-  pos: verb
-  gender: m
-- lemma: приготування
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: прилітати
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: примарний
-  ipa: ''
+  ipa: /prɪmˈarnɪj/
   translation: ''
   pos: adj
-- lemma: провідник
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: псути
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: пунктуальний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: підбадьорення
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: підгодовувати
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: раз
-  ipa: /rɑz/
-  translation: time (occurrence), once
-  pos: noun
-  gender: m
-- lemma: ранок
-  ipa: /ˈrɑnok/
-  translation: morning
-  pos: noun
-  gender: m
-- lemma: рейган
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: ремісник
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: рональд
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: рівне
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: санина
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: сані
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: семестр
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: синиця
-  ipa: /sɪˈnɪt͡sʲɑ/
-  translation: titmouse, chickadee
-  pos: noun
-  gender: f
-- lemma: скептицизм
-  ipa: ''
+  ipa: /sɪnˈɪt͡sja/
   translation: ''
   pos: noun
-  gender: m
-- lemma: специфічно
-  ipa: ''
-  translation: ''
-  pos: adv
-- lemma: срср
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
-- lemma: стрибок
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сумнівний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: сумщина
-  ipa: ''
-  translation: ''
-  pos: propn
   gender: f
 - lemma: сівба
-  ipa: /ˈsʲiwbɑ/
-  translation: sowing
+  ipa: /siʋbˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: сім
-  ipa: /sʲim/
-  translation: seven
-  pos: num
-- lemma: січі
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
-- lemma: сіяти
-  ipa: /ˈsʲijɑtɪ/
-  translation: to sow
-  pos: verb
-- lemma: тернопол
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: тісний
-  ipa: ''
+  ipa: /tisnˈɪj/
   translation: ''
   pos: adj
-- lemma: урожай
-  ipa: /uroˈʒɑj/
-  translation: harvest, crop
-  pos: noun
-  gender: m
-- lemma: хвалитися
-  ipa: ''
-  translation: ''
-  pos: verb
-  gender: m
-- lemma: хватися
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: цінуй
-  ipa: ''
+- lemma: широковживаний
+  ipa: /ʃɪrɔkɔʋʒˈɪʋanɪj/
   translation: ''
   pos: adj
-- lemma: час
-  ipa: /tʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: чернігівщина
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
-- lemma: чорніз
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: щоосені
-  ipa: ''
-  translation: ''
-  pos: adv
-- lemma: ясніший
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: іграшка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: інтернаціональний
-  ipa: ''
-  translation: ''
-  pos: adj
-- lemma: ґрунт
-  ipa: /ɡrunt/
-  translation: soil, ground
-  pos: noun
-  gender: m

@@ -477,7 +477,12 @@
               },
               "error_type": {
                 "type": "string",
-                "enum": ["word", "phrase", "register", "construction"],
+                "enum": [
+                  "word",
+                  "phrase",
+                  "register",
+                  "construction"
+                ],
                 "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
               },
               "options": {
@@ -884,7 +889,6 @@
       "required": [
         "type",
         "title",
-        "resource",
         "tasks"
       ],
       "additionalProperties": false,
@@ -931,6 +935,13 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "text": {
+          "type": "string",
+          "minLength": 10
+        },
+        "source": {
+          "type": "string"
         }
       }
     }

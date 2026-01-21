@@ -1,129 +1,43 @@
-module: 143-capstone-prezentatsiya
+module: 82-capstone-prezentatsiya
 level: B2
 version: '2.0'
 items:
-  - lemma: презентація
-    ipa: /prezenˈtɑt͡sʲijɐ/
-    translation: presentation
-    pos: noun
-    gender: f
-  - lemma: доповідь
-    ipa: /doˈpɔvidʲ/
-    translation: report/speech
-    pos: noun
-    gender: f
-  - lemma: виступ
-    ipa: /ˈvɪstup/
-    translation: performance/speech
-    pos: noun
-    gender: m
-  - lemma: слайд
-    ipa: /slɑid/
-    translation: slide
-    pos: noun
-    gender: m
-  - lemma: промова
-    ipa: /proˈmɔvɐ/
-    translation: speech/address
-    pos: noun
-    gender: f
-  - lemma: оратор
-    ipa: /oˈrɑtor/
-    translation: orator/speaker
-    pos: noun
-    gender: m
-  - lemma: публіка
-    ipa: /ˈpublikɐ/
-    translation: audience/public
-    pos: noun
-    gender: f
-  - lemma: запитання
-    ipa: /zɐpiˈtɑnʲːɐ/
-    translation: question
-    pos: noun
-    gender: n
-  - lemma: відповідь
-    ipa: /ˈvidpovidʲ/
-    translation: answer
-    pos: noun
-    gender: f
-  - lemma: дискусія
-    ipa: /dɪsˈkusijɐ/
-    translation: discussion
-    pos: noun
-    gender: f
-  - lemma: аргумент
-    ipa: /ɐrɦuˈmɛnt/
-    translation: argument
-    pos: noun
-    gender: m
-  - lemma: доказ
-    ipa: /ˈdɔkɐz/
-    translation: proof/evidence
-    pos: noun
-    gender: m
-  - lemma: ілюстрація
-    ipa: /ilʲusˈtrɑt͡sʲijɐ/
-    translation: illustration
-    pos: noun
-    gender: f
-  - lemma: графік
-    ipa: /ˈɦrɑfik/
-    translation: graph/schedule
-    pos: noun
-    gender: m
-  - lemma: діаграма
-    ipa: /diɐˈɦrɑmɐ/
-    translation: chart/diagram
-    pos: noun
-    gender: f
-  - lemma: висновок
-    ipa: /ˈvɪsnovok/
-    translation: conclusion
-    pos: noun
-    gender: m
-  - lemma: подяка
-    ipa: /poˈdʲɑkɐ/
-    translation: gratitude/thanks
-    pos: noun
-    gender: f
-  - lemma: увага
-    ipa: /uˈvɑɦɐ/
-    translation: attention
-    pos: noun
-    gender: f
-  - lemma: голос
-    ipa: /ˈɦɔlos/
-    translation: voice
-    pos: noun
-    gender: m
-  - lemma: інтонація
-    ipa: /intoˈnɑt͡sʲijɐ/
-    translation: intonation
-    pos: noun
-    gender: f
-  - lemma: жест
-    ipa: /ʒɛst/
-    translation: gesture
-    pos: noun
-    gender: m
-  - lemma: контакт
-    ipa: /kɔnˈtɑkt/
-    translation: contact
-    pos: noun
-    gender: m
-  - lemma: переконувати
-    ipa: /perekɔˈnuvɐti/
-    translation: to convince
-    pos: verb
-    aspect: imperfective
-  - lemma: захищати
-    ipa: /zɐxɪˈʃt͡ʃɑti/
-    translation: to defend
-    pos: verb
-    aspect: imperfective
-  - lemma: демонструвати
-    ipa: /demonstruˈvɑti/
-    translation: to demonstrate
-    pos: verb
-    aspect: imperfective
+- lemma: адреналін
+  ipa: /adrɛnalˈin/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: глософобія
+  ipa: /ɦlɔsɔfɔbija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: перехідник
+  ipa: /pɛrɛxidnˈɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поза
+  ipa: /pˈɔza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сек
+  ipa: /sɛk/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: слайд
+  ipa: /slajd/
+  translation: ''
+  pos: noun
+- lemma: слово-зв'язка
+  ipa: /slˈɔʋɔ-zʋjazka/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сторітелінг
+  ipa: /stɔritɛlinɦ/
+  translation: ''
+  pos: noun
+  gender: m

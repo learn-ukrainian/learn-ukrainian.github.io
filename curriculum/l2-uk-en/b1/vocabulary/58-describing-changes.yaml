@@ -2,153 +2,209 @@ module: 58-describing-changes
 level: B1
 version: '2.0'
 items:
-- lemma: активніше
-  ipa: /akˈtɪu̯nʲiʃɛ/
-  translation: more actively
-  pos: adv
-- lemma: антонімічний
-  ipa: /antɔnʲiˈmʲit͡ʃnɪj/
-  translation: antonymous
+- lemma: атмосферний
+  ipa: /atmɔsfˈɛrnɪj/
+  translation: ''
   pos: adj
-- lemma: артеріальний
-  ipa: /artɛrʲiˈalʲnɪj/
-  translation: arterial
-  pos: adj
-  gender: m
-- lemma: відкритіший
-  ipa: /vidˈkrɪtʲiʃɪj/
-  translation: more open
-  pos: adj
-  gender: n
-- lemma: відсотковий
-  ipa: /vidsɔtˈkɔvɪj/
-  translation: percentage (adj)
-  pos: adj
-- lemma: вісімома
-  ipa: /visʲiˈmɔma/
-  translation: eight (instr.)
-  pos: other
-- lemma: запальний
-  ipa: /zaˈpalʲnɪj/
-  translation: inflammatory
-  pos: adj
-  gender: m
-- lemma: захворювання
-  ipa: /zaˈxvɔrʲuvanʲːa/
-  translation: disease
+- lemma: безробіття
+  ipa: /bɛzrɔbˈittja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: бізнес-активність
+  ipa: /bˈiznɛs-aktɪʋnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: валюта
+  ipa: /ʋalˈjuta/
+  translation: ''
+  pos: noun
+- lemma: впад
+  ipa: /ʋpad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: врешті
+  ipa: /ʋrˈɛʃti/
+  translation: ''
+  pos: adv
+- lemma: відкритіший
+  ipa: /ʋidkrɪtiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: долучатися
+  ipa: /dɔlut͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: дохід
+  ipa: /dɔxˈid/
+  translation: ''
+  pos: noun
+- lemma: економіст
+  ipa: /ɛkɔnɔmˈist/
+  translation: ''
+  pos: noun
+- lemma: енергоносій
+  ipa: /ɛnɛrɦɔnɔsˈij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: запальний
+  ipa: /zapalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: заспокоїтися
+  ipa: /zaspɔkˈɔjitɪsja/
+  translation: ''
+  pos: verb
+- lemma: захворювання
+  ipa: /zaxʋˈɔrjuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: збільшення
+  ipa: /zbˈilʲʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: збільшитися
+  ipa: /zbˈilʲʃɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: збільшуватися
+  ipa: /zbˈilʲʃuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: звуження
-  ipa: /ˈzvuʒɛnʲːa/
-  translation: narrowing
+  ipa: /zʋˈuʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: звужуватися
-  ipa: /ˈzvuʒuvatɪsʲa/
-  translation: to narrow
+  ipa: /zʋˈuʒuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зменшення
+  ipa: /zmˈɛnʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: зменшитися
+  ipa: /zmˈɛnʃɪtɪsja/
+  translation: ''
   pos: verb
 - lemma: зменшуватися
-  ipa: /ˈzmɛnʃuvatɪsʲa/
-  translation: to decrease
+  ipa: /zmˈɛnʃuʋatɪsja/
+  translation: ''
   pos: verb
-- lemma: карантинний
-  ipa: /karanˈtɪnnɪj/
-  translation: quarantine (adj)
-  pos: adj
-- lemma: коригуватися
-  ipa: /kɔrɪhuˈvatɪsʲa/
-  translation: to be adjusted
+- lemma: кардинально
+  ipa: /kardɪnˈalʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: коливатися
+  ipa: /kɔlɪʋˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: маржа
-  ipa: /marˈʒa/
-  translation: margin
+  ipa: /mˈarʒa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: метеоролог
-  ipa: /mɛtɛɔˈrɔlɔh/
-  translation: meteorologist
+  ipa: /mɛtɛɔrˈɔlɔɦ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: напруженіший
-  ipa: /naˈpruʒɛnʲiʃɪj/
-  translation: tenser
+- lemma: напівформальний
+  ipa: /napiʋfɔrmalʲnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: нафта
-  ipa: /ˈnafta/
-  translation: oil
-  pos: noun
-  gender: f
-- lemma: незначно
-  ipa: /nɛˈznat͡ʃnɔ/
-  translation: insignificantly
-  pos: adv
-- lemma: пальне
-  ipa: /palʲˈnɛ/
-  translation: fuel
-  pos: noun
-  gender: n
-- lemma: повільніший
-  ipa: /pɔˈvilʲnʲiʃɪj/
-  translation: slower
-  pos: adj
-  gender: m
-- lemma: погіршуватися
-  ipa: /pɔˈhʲirʃuvatɪsʲa/
-  translation: to worsen
+- lemma: наростати
+  ipa: /narɔstˈatɪ/
+  translation: ''
   pos: verb
-- lemma: помітно
-  ipa: /pɔˈmʲitnɔ/
-  translation: noticeably
+- lemma: незначно
+  ipa: /nɛznˈat͡ʃnɔ/
+  translation: ''
   pos: adv
+- lemma: несподіваність
+  ipa: /nɛspɔdˈiʋanistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: опади
+  ipa: /ˈɔpadɪ/
+  translation: ''
+  pos: noun
+- lemma: погіршуватися
+  ipa: /pɔɦˈirʃuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: політика
+  ipa: /pɔlˈitɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: помітно
+  ipa: /pɔmˈitnɔ/
+  translation: ''
+  pos: adv
+- lemma: порівняно
+  ipa: /pɔrˈiʋnjanɔ/
+  translation: ''
+  pos: adv
+- lemma: посилюватися
+  ipa: /pɔsˈɪljuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: послаблюватися
-  ipa: /pɔˈslablʲuvatɪsʲa/
-  translation: to weaken
+  ipa: /pɔslˈabljuʋatɪsja/
+  translation: ''
   pos: verb
 - lemma: потеплішати
-  ipa: /pɔtɛˈplʲiʃatɪ/
-  translation: to get warmer
+  ipa: /pɔtɛplˈiʃatɪ/
+  translation: ''
   pos: verb
+- lemma: препарат
+  ipa: /prɛparˈat/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: протриматися
-  ipa: /prɔˈtrɪmatɪsʲa/
-  translation: to hold out
-  pos: verb
-- lemma: піднімитися
-  ipa: /pidnʲiˈmɪtɪsʲa/
-  translation: to rise (typo)
+  ipa: /prɔtrˈɪmatɪsja/
+  translation: ''
   pos: verb
 - lemma: розширюватися
-  ipa: /rɔzˈʃɪrʲuvatɪsʲa/
-  translation: to expand
+  ipa: /rɔzʃˈɪrjuʋatɪsja/
+  translation: ''
   pos: verb
-- lemma: сентенець
-  ipa: /sɛnˈtɛnɛt͡sʲ/
-  translation: ??? (typo)
+- lemma: самопочуття
+  ipa: /samɔpɔt͡ʃuttˈja/
+  translation: ''
   pos: noun
-  gender: f
+  gender: n
 - lemma: смог
-  ipa: /smɔh/
-  translation: smog
+  ipa: /smɔɦ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: спадати
-  ipa: /spaˈdatɪ/
-  translation: to fall
-  pos: verb
 - lemma: сповільнюватися
-  ipa: /spɔˈvilʲnʲuvatɪsʲa/
-  translation: to slow down
+  ipa: /spɔʋˈilʲnjuʋatɪsja/
+  translation: ''
   pos: verb
-- lemma: сприятливіший
-  ipa: /sprɪˈjatlɪvʲiʃɪj/
-  translation: more favorable
-  pos: adj
-- lemma: удвічі
-  ipa: /uˈdvʲit͡ʃʲi/
-  translation: twice
+- lemma: стабілізувати
+  ipa: /stabilizuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: стрімко
+  ipa: /strˈimkɔ/
+  translation: ''
   pos: adv
-- lemma: хвірий
-  ipa: /ˈxvʲirɪj/
-  translation: sick (typo)
-  pos: noun
-  gender: m
+- lemma: суперечливий
+  ipa: /supɛrˈɛt͡ʃlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: суттєво
+  ipa: /suttˈjɛʋɔ/
+  translation: ''
+  pos: adv

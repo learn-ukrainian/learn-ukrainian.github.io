@@ -3,34 +3,59 @@ level: B1
 version: '2.0'
 items:
 - lemma: вільніше
-  ipa: /vʲilʲˈnʲiʃɛ/
-  translation: freer
+  ipa: /ʋilʲnˈiʃɛ/
+  translation: ''
   pos: adv
-- lemma: знаходження
-  ipa: /znaˈxɔdʒɛnʲːa/
-  translation: location
-  pos: noun
-  gender: n
-- lemma: який
-  ipa: /jaˈkɪj/
-  translation: which
-  pos: other
+- lemma: давньоукраїнський
+  ipa: /daʋnʲɔukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: зрілий
+  ipa: /zrˈilɪj/
+  translation: ''
+  pos: adj
+- lemma: корелювати
+  ipa: /kɔrɛljuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: кіото
   ipa: /kiˈɔtɔ/
-  translation: Kyoto
-  pos: propn
+  translation: ''
+  pos: noun
   gender: n
 - lemma: обмеженіший
-  ipa: /ɔbˈmɛʒɛnʲiʃɪj/
-  translation: more limited
+  ipa: /ɔbmˈɛʒɛniʃɪj/
+  translation: ''
   pos: adj
-- lemma: токіо
-  ipa: /ˈtɔkʲiɔ/
-  translation: Tokyo
-  pos: propn
+- lemma: привіз
+  ipa: /prɪʋˈiz/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підсумувати
+  ipa: /pidsumuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: свідчити
+  ipa: /sʋˈidt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ст
+  ipa: /st/
+  translation: ''
+  pos: noun
   gender: n
-- lemma: фудзі
-  ipa: /ˈfudzi/
-  translation: Fuji
-  pos: propn
-  gender: f
+- lemma: токіо
+  ipa: /tˈɔkiɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: храм
+  ipa: /xram/
+  translation: ''
+  pos: noun
+- lemma: чекпойнт
+  ipa: /t͡ʃɛkpɔjnt/
+  translation: ''
+  pos: noun
+  gender: m

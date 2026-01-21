@@ -2,466 +2,99 @@ module: 47-set-expressions-i-body-animals
 level: B2
 version: '2.0'
 items:
-- lemma: абсурдніший
-  ipa: /ɐbˈsurdnʲiʃɪj/
-  translation: more absurd
-  pos: adj
-- lemma: агресивний
-  ipa: /ɐɦrɛˈsɪwnɪj/
-  translation: aggressive
-  pos: adj
-- lemma: бажання
-  ipa: /bɐˈʒɑnʲːɑ/
-  translation: desire, wish
-  pos: noun
-  gender: n
-- lemma: балакучість
-  ipa: /bɑlɑˈkut͡ʃʲistʲ/
-  translation: talkativeness, garrulousness
-  pos: noun
-  gender: f
-- lemma: безжальний
-  ipa: /bɛzˈʒɑlʲnɪj/
-  translation: merciless, ruthless
-  pos: adj
-- lemma: безжальність
-  ipa: /bɛzˈʒɑlʲnʲistʲ/
-  translation: mercilessness
-  pos: noun
-  gender: f
-- lemma: безстрашний
-  ipa: /bɛzˈstrɑʃnɪj/
-  translation: fearless
-  pos: adj
-- lemma: вгору
-  ipa: /ˈwɦoru/
-  translation: upward, up
-  pos: adv
-- lemma: вимовити
-  ipa: /wɪˈmowɪtɪ/
-  translation: to utter, to say
+- lemma: в'янути
+  ipa: /ʋˈjanutɪ/
+  translation: ''
   pos: verb
-- lemma: витрачений
-  ipa: /wɪˈtrɑt͡ʃɛnɪj/
-  translation: spent, wasted
-  pos: adj
-- lemma: вовк
-  ipa: /wowk/
-  translation: wolf
-  pos: noun
-  gender: m
 - lemma: вовчий
-  ipa: /ˈwowt͡ʃɪj/
-  translation: wolf's, lupine
+  ipa: /ʋˈɔʋt͡ʃɪj/
+  translation: ''
   pos: adj
-- lemma: ворожий
-  ipa: /woˈroʒɪj/
-  translation: hostile, enemy
-  pos: adj
-- lemma: ворона
-  ipa: /woˈronɑ/
-  translation: crow
-  pos: noun
-  gender: f
-- lemma: вродити
-  ipa: /wroˈdɪtɪ/
-  translation: to yield a good harvest
-  pos: verb
-- lemma: віл
-  ipa: /wʲil/
-  translation: ox
+- lemma: ворон
+  ipa: /ʋˈɔrɔn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: двадцятирічний
-  ipa: /dwɑd͡t͡sʲɑtɪˈrʲit͡ʃnɪj/
-  translation: twenty-year-old
-  pos: adj
 - lemma: дибки
-  ipa: /ˈdɪbkɪ/
-  translation: on hind legs, rearing up
+  ipa: /dˈɪbkɪ/
+  translation: ''
   pos: adv
-- lemma: дома
-  ipa: /ˈdomɑ/
-  translation: at home
-  pos: adv
-- lemma: достаток
-  ipa: /dosˈtɑtok/
-  translation: prosperity, wealth
+- lemma: дороса
+  ipa: /dɔrɔsa/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: досхочу
-  ipa: /dosˈxot͡ʃu/
-  translation: to one's heart's content
-  pos: adv
-- lemma: дочекатися
-  ipa: /dot͡ʃɛˈkɑtɪsʲɑ/
-  translation: to wait until, to live to see
-  pos: verb
-- lemma: етичний
-  ipa: /ɛˈtɪt͡ʃnɪj/
-  translation: ethical
-  pos: adj
-- lemma: жарт
-  ipa: /ʒɑrt/
-  translation: joke
-  pos: noun
-  gender: m
-- lemma: жартівливо
-  ipa: /ʒɑrˈtʲiwlɪwo/
-  translation: jokingly, playfully
-  pos: adv
-- lemma: жорстокість
-  ipa: /ˈʒorstokʲistʲ/
-  translation: cruelty
-  pos: noun
-  gender: f
-- lemma: загрозливий
-  ipa: /zɐɦrozlɪwɪj/
-  translation: threatening, menacing
-  pos: adj
-- lemma: зарозумілість
-  ipa: /zɐrozuˈmʲilʲistʲ/
-  translation: arrogance
-  pos: noun
-  gender: f
-- lemma: засвистити
-  ipa: /zɐswɪˈstɪtɪ/
-  translation: to start whistling
-  pos: verb
-- lemma: звільняти
-  ipa: /zwʲilʲˈnʲɑtɪ/
-  translation: to free, to dismiss
-  pos: verb
-- lemma: землетрус
-  ipa: /zɛmlɛˈtrus/
-  translation: earthquake
-  pos: noun
-  gender: m
 - lemma: зимувати
-  ipa: /zɪmuˈwɑtɪ/
-  translation: to winter, to hibernate
-  pos: verb
-- lemma: змарнувати
-  ipa: /zmɑrnuˈwɑtɪ/
-  translation: to waste
+  ipa: /zɪmuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: зоологічний
-  ipa: /zooloˈɦʲit͡ʃnɪj/
-  translation: zoological
+  ipa: /zɔɔlɔɦˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-- lemma: зсунутися
-  ipa: /zˈsunʊtɪsʲɑ/
-  translation: to shift, to slide
-  pos: verb
-- lemma: командувати
-  ipa: /komɐnduˈwɑtɪ/
-  translation: to command
-  pos: verb
-- lemma: літній
-  ipa: /ˈlʲitnʲij/
-  translation: summer (adj.), elderly
-  pos: adj
-- lemma: марно
-  ipa: /ˈmɑrno/
-  translation: in vain, uselessly
-  pos: adv
-- lemma: ментальність
-  ipa: /mɛntɑlʲˈnʲistʲ/
-  translation: mentality
-  pos: noun
-  gender: f
-- lemma: мікрокосм
-  ipa: /mʲikroˈkozm/
-  translation: microcosm
+- lemma: мішко
+  ipa: /mˈiʃkɔ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: наосліп
-  ipa: /nɐosˈlʲip/
-  translation: blindly
+  ipa: /naˈɔslip/
+  translation: ''
   pos: adv
 - lemma: наплакати
-  ipa: /nɐplɐˈkɑtɪ/
-  translation: to cry a lot
+  ipa: /naplˈakatɪ/
+  translation: ''
   pos: verb
-- lemma: напівсерйозно
-  ipa: /nɐpʲiwsɛrˈjozno/
-  translation: half-seriously
-  pos: adv
 - lemma: нарікання
-  ipa: /nɐrʲiˈkɑnʲːɑ/
-  translation: complaints, reproaches
+  ipa: /narikˈannja/
+  translation: ''
   pos: noun
-  gender: n
 - lemma: натура
-  ipa: /nɐˈturɑ/
-  translation: nature, character
-  pos: noun
-  gender: f
-- lemma: небезпечний
-  ipa: /nɛbɛzˈpɛt͡ʃnɪj/
-  translation: dangerous
-  pos: adj
-- lemma: недосвідчений
-  ipa: /nɛdosˈwʲidt͡ʃɛnɪj/
-  translation: inexperienced
-  pos: adj
-- lemma: недостача
-  ipa: /nɛdosˈtɑt͡ʃɑ/
-  translation: shortage, deficit
-  pos: noun
-  gender: f
-- lemma: недружньо
-  ipa: /nɛˈdruʒnʲo/
-  translation: unfriendly
-  pos: adv
-- lemma: нездійсненність
-  ipa: /nɛzdʲijsnɛnːʲistʲ/
-  translation: impossibility
-  pos: noun
-  gender: f
-- lemma: незначність
-  ipa: /nɛˈznɑt͡ʃnʲistʲ/
-  translation: insignificance
-  pos: noun
-  gender: f
-- lemma: незручність
-  ipa: /nɛˈzrut͡ʃnʲistʲ/
-  translation: inconvenience, awkwardness
-  pos: noun
-  gender: f
-- lemma: необдуманий
-  ipa: /nɛobˈdumɑnɪj/
-  translation: reckless, thoughtless
-  pos: adj
-- lemma: неприємність
-  ipa: /nɛprɪˈjɛmnʲistʲ/
-  translation: unpleasantness, trouble
-  pos: noun
-  gender: f
-- lemma: неспокійно
-  ipa: /nɛspoˈkʲijno/
-  translation: anxiously, restlessly
-  pos: adv
-- lemma: несхожий
-  ipa: /nɛsˈxoʒɪj/
-  translation: dissimilar, different
-  pos: adj
-- lemma: несхожість
-  ipa: /nɛsˈxoʒʲistʲ/
-  translation: dissimilarity
+  ipa: /natˈura/
+  translation: ''
   pos: noun
   gender: f
 - lemma: нетерплячка
-  ipa: /nɛtɛrplʲɑt͡ʃkɑ/
-  translation: impatient person (f.)
+  ipa: /nɛtɛrplˈjat͡ʃka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: нити
-  ipa: /ˈnɪtɪ/
-  translation: to bend down
-  pos: verb
-- lemma: нір
-  ipa: /nʲir/
-  translation: burrow, den
+- lemma: раки
+  ipa: /rˈakɪ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: нісенітниця
-  ipa: /nʲisɛˈnʲitnɪt͡sʲɑ/
-  translation: nonsense
-  pos: noun
-  gender: f
-- lemma: обман
-  ipa: /obˈmɑn/
-  translation: deception, fraud
-  pos: noun
-  gender: m
-- lemma: племінник
-  ipa: /plɛˈmʲinːɪk/
-  translation: nephew
-  pos: noun
-  gender: m
-- lemma: повільність
-  ipa: /poˈwʲilʲnʲistʲ/
-  translation: slowness
-  pos: noun
-  gender: f
-- lemma: погрожувати
-  ipa: /poɦroˈʒuwɑtɪ/
-  translation: to threaten
-  pos: verb
-- lemma: погроза
-  ipa: /poɦˈrozɑ/
-  translation: threat
-  pos: noun
-  gender: f
-- lemma: посилений
-  ipa: /posɪˈlɛnɪj/
-  translation: strengthened, intensified
-  pos: adj
-- lemma: почухати
-  ipa: /pot͡ʃuˈxɑtɪ/
-  translation: to scratch
-  pos: verb
-- lemma: прикраса
-  ipa: /prɪˈkrɑsɑ/
-  translation: decoration, ornament
-  pos: noun
-  gender: f
-- lemma: протиставлятися
-  ipa: /protɪstɑwlʲɑˈtɪsʲɑ/
-  translation: to oppose, to contrast
-  pos: verb
-- lemma: рак
-  ipa: /rɑk/
-  translation: crayfish, cancer
-  pos: noun
-  gender: m
 - lemma: розбігатися
-  ipa: /rozbʲiˈɦɑtɪsʲɑ/
-  translation: to scatter, to disperse
+  ipa: /rɔzbiɦatɪsja/
+  translation: ''
   pos: verb
-- lemma: розпитування
-  ipa: /rozpɪˈtuwɑnʲːɑ/
-  translation: interrogation, inquiry
-  pos: noun
-  gender: n
-- lemma: сварка
-  ipa: /ˈswɑrkɑ/
-  translation: quarrel, argument
-  pos: noun
-  gender: f
-- lemma: свербити
-  ipa: /swɛrˈbɪtɪ/
-  translation: to itch
-  pos: verb
-- lemma: свербіж
-  ipa: /swɛrˈbʲiʒ/
-  translation: itch, itching
-  pos: noun
-  gender: m
 - lemma: свиснути
-  ipa: /swɪsˈnutɪ/
-  translation: to whistle (once)
+  ipa: /sʋˈɪsnutɪ/
+  translation: ''
   pos: verb
-- lemma: свистити
-  ipa: /swɪˈstɪtɪ/
-  translation: to whistle
-  pos: verb
-- lemma: сердито
-  ipa: /ˈsɛrdɪto/
-  translation: angrily
-  pos: adv
-- lemma: символіка
-  ipa: /sɪmˈwolʲikɑ/
-  translation: symbolism, symbols
-  pos: noun
-  gender: f
-- lemma: слабнути
-  ipa: /slɑbˈnutɪ/
-  translation: to weaken
-  pos: verb
-- lemma: смаколик
-  ipa: /smɐˈkolɪk/
-  translation: delicacy, treat
-  pos: noun
-  gender: m
 - lemma: совість
-  ipa: /ˈsowʲistʲ/
-  translation: conscience
+  ipa: /sˈɔʋistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: соматичний
-  ipa: /somɐˈtɪt͡ʃnɪj/
-  translation: somatic, bodily
+  ipa: /sɔmatˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-- lemma: справлятися
-  ipa: /sprɑwlʲɑˈtɪsʲɑ/
-  translation: to cope, to manage
-  pos: verb
-- lemma: телятко
-  ipa: /tɛˈlʲɑtko/
-  translation: calf (diminutive)
-  pos: noun
-  gender: n
-- lemma: тривога
-  ipa: /trɪˈwoɦɑ/
-  translation: anxiety, alarm
-  pos: noun
-  gender: f
-- lemma: тривожно
-  ipa: /trɪˈwoʒno/
-  translation: anxiously, alarmingly
-  pos: adv
-- lemma: турбота
-  ipa: /turˈbotɑ/
-  translation: care, concern
-  pos: noun
-  gender: f
-- lemma: унікальність
-  ipa: /unʲikɑlʲnʲistʲ/
-  translation: uniqueness
-  pos: noun
-  gender: f
-- lemma: уособлювати
-  ipa: /uosobˈlʲuwɑtɪ/
-  translation: to personify, to embody
-  pos: verb
-- lemma: уявлення
-  ipa: /ujɑwˈlɛnʲːɑ/
-  translation: idea, notion, performance
-  pos: noun
-  gender: n
 - lemma: хвіст
-  ipa: /xwʲist/
-  translation: tail
+  ipa: /xʋist/
+  translation: ''
   pos: noun
   gender: m
-- lemma: хижий
-  ipa: /ˈxɪʒɪj/
-  translation: predatory
-  pos: adj
 - lemma: хижацтво
-  ipa: /xɪˈʒɑt͡stwo/
-  translation: predation
+  ipa: /xɪʒˈat͡stʋɔ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: хитрість
-  ipa: /ˈxɪtrʲistʲ/
-  translation: cunning, craftiness
-  pos: noun
-  gender: f
-- lemma: художниця
-  ipa: /xudoʒˈnɪt͡sʲɑ/
-  translation: artist (female)
-  pos: noun
-  gender: f
-- lemma: цікавість
-  ipa: /t͡sʲiˈkɑwʲistʲ/
-  translation: curiosity
+  ipa: /xˈɪtristʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: чесатися
-  ipa: /t͡ʃɛˈsɑtɪsʲɑ/
-  translation: to scratch oneself
+  ipa: /t͡ʃɛsˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: чимало
-  ipa: /t͡ʃɪˈmɑlo/
-  translation: quite a lot
-  pos: adv
-- lemma: чомусь
-  ipa: /t͡ʃoˈmusʲ/
-  translation: for some reason
-  pos: adv
-- lemma: шокуючий
-  ipa: /ʃokuˈjut͡ʃɪj/
-  translation: shocking
-  pos: adj
-- lemma: ідентичний
-  ipa: /ʲidɛnˈtɪt͡ʃnɪj/
-  translation: identical
-  pos: adj
-- lemma: ідея
-  ipa: /ʲiˈdɛjɑ/
-  translation: idea
-  pos: noun
-  gender: f

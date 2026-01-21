@@ -2,109 +2,97 @@ module: 24-smart-shopping
 level: A2
 version: '2.0'
 items:
-- lemma: грам
-  ipa: ɦrɑm
-  translation: gram
+- lemma: веста
+  ipa: /ʋˈɛsta/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: зручний
-  ipa: zrut͡ʃˈnɪj
-  translation: comfortable; convenient
-  pos: adj
+  gender: f
+- lemma: грам
+  ipa: /ɦram/
+  translation: ''
+  pos: noun
+- lemma: еко-торбинка
+  ipa: /ɛkɔ-tɔrbˈɪnka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: капуста
+  ipa: /kapˈusta/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: крамниця
-  ipa: krɐmˈnɪt͡sʲɐ
-  translation: shop
+  ipa: /kramnˈɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: літр
-  ipa: lʲitr
-  translation: liter
+  ipa: /litr/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: мінус
-  ipa: ˈmʲinus
-  translation: minus
-  pos: noun
-  gender: m
-- lemma: натуральний
-  ipa: nɐtuˈrɑlʲnɪj
-  translation: natural
+- lemma: найдешевший
+  ipa: /najdɛʃˈɛʋʃɪj/
+  translation: ''
   pos: adj
-  gender: f
+- lemma: носити
+  ipa: /nɔsˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: обман
+  ipa: /ɔbmˈan/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: остаточний
-  ipa: ostɐˈtɔt͡ʃnɪj
-  translation: final; definitive
+  ipa: /ɔstatˈɔt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: плям
-  ipa: plʲɑm
-  translation: stain (gen pl)
+- lemma: партнер
+  ipa: /partnˈɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: переговори
+  ipa: /pɛrɛɦɔʋɔrɪ/
+  translation: ''
+  pos: noun
+- lemma: пляма
+  ipa: /plˈjama/
+  translation: ''
   pos: noun
   gender: f
-- lemma: подумати
-  ipa: poˈdumɐte
-  translation: to think (perf)
-  pos: verb
-- lemma: поміряти
-  ipa: poˈmʲirʲɐte
-  translation: to measure/try on (perf)
-  pos: verb
 - lemma: постійний
-  ipa: poˈsʲtʲijnɪj
-  translation: constant; permanent
+  ipa: /pɔstˈijnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: приміряти
-  ipa: prɪˈmʲirʲɐte
-  translation: to try on
+- lemma: приймати
+  ipa: /prɪjmˈatɪ/
+  translation: ''
   pos: verb
 - lemma: пройтися
-  ipa: projˈtɪsʲɐ
-  translation: to walk around (perf)
+  ipa: /prɔjtˈɪsja/
+  translation: ''
   pos: verb
-- lemma: товар
-  ipa: toˈvɑr
-  translation: goods; item
-  pos: noun
-  gender: m
+- lemma: рольовий
+  ipa: /rɔlʲɔʋˈɪj/
+  translation: ''
+  pos: adj
 - lemma: торг
-  ipa: tɔrɦ
-  translation: bargaining
+  ipa: /tɔrɦ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: туфля
-  ipa: ˈtuflʲɐ
-  translation: shoe
+- lemma: торгуватися
+  ipa: /tɔrɦuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: цінник
+  ipa: /t͡sinnˈɪk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: чек
-  ipa: t͡ʃɛk
-  translation: receipt
+  ipa: /t͡ʃɛk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: родовий
-  translation: genitive
-  pos: adj
-  ipa: /rodoˈʋɪj/
-- lemma: знахідний
-  translation: accusative
-  pos: adj
-  ipa: /znɐˈxʲidnɪj/
-- lemma: орудний
-  translation: instrumental
-  pos: adj
-  ipa: /oˈrudnɪj/
-- lemma: давальний
-  translation: dative
-  pos: adj
-  ipa: /dɐˈʋɑlʲnɪj/
-- lemma: відмінок
-  translation: case
-  pos: noun
-  gender: m
-  ipa: /ʋʲidˈmʲinɔk/
-- lemma: шкіра
-  ipa: ˈʃkʲirɐ
-  translation: leather; skin
-  pos: noun
-  gender: f

@@ -2,206 +2,224 @@ module: 29-i-think-that
 level: A2
 version: '2.0'
 items:
-- lemma: думати
-  ipa: ˈdumɐte
-  translation: to think
-  pos: verb
-- lemma: вважати
-  ipa: uwɐˈʒɑte
-  translation: to believe; to consider
-  pos: verb
-- lemma: гадати
-  ipa: ɦɐˈdɑte
-  translation: to guess; to think
-  pos: verb
-- lemma: здаватися
-  ipa: zdɐˈʋɑtɪsʲɐ
-  translation: to seem
-  pos: verb
-- lemma: здається
-  ipa: zdɐˈjɛtʲsʲɐ
-  translation: it seems
-  pos: other
-- lemma: на мою думку
-  ipa: nɐ mɔˈju ˈdumku
-  translation: in my opinion
-  pos: other
-- lemma: на мій погляд
-  ipa: nɐ mʲij ˈpɔɦlʲɐd
-  translation: in my view
-  pos: other
-- lemma: з моєї точки зору
-  ipa: z mɔˈjejɪ ˈtɔt͡ʃke ˈzɔru
-  translation: from my point of view
-  pos: other
-- lemma: згоден
-  ipa: ˈzɦɔden
-  translation: agree (masc)
-  pos: adj
-- lemma: згодна
-  ipa: ˈzɦɔdnɐ
-  translation: agree (fem)
-  pos: adj
-- lemma: погоджуватися
-  ipa: poˈɦɔdʒuʋɐtɪsʲɐ
-  translation: to agree
-  pos: verb
-- lemma: правда
-  ipa: ˈprɑu̯dɐ
-  translation: truth; true
+- lemma: аргумент
+  ipa: /arɦumˈɛnt/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: неправда
-  ipa: neˈprɑu̯dɐ
-  translation: untruth; false
+- lemma: баланс
+  ipa: /balˈans/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: можливо
-  ipa: moʒˈlɪʋo
-  translation: maybe; perhaps
-  pos: adv
-- lemma: напевно
-  ipa: nɐˈpɛu̯no
-  translation: for sure; probably
-  pos: adv
+  gender: m
 - lemma: безумовно
-  ipa: bezuˈmɔu̯no
-  translation: absolutely; undoubtedly
+  ipa: /bɛzumˈɔʋnɔ/
+  translation: ''
   pos: adv
-- lemma: очевидно
-  ipa: ot͡ʃɛˈʋɪdno
-  translation: obviously
-  pos: adv
-- lemma: радий
-  ipa: ˈrɑdɪj
-  translation: happy; glad
+- lemma: важливіший
+  ipa: /ʋaʒlˈɪʋiʃɪj/
+  translation: ''
   pos: adj
-- lemma: рада
-  ipa: ˈrɑdɐ
-  translation: happy; glad (fem)
+- lemma: ввічливіший
+  ipa: /ʋʋˈit͡ʃlɪʋiʃɪj/
+  translation: ''
   pos: adj
-- lemma: радіти
-  ipa: rɐˈdʲite
-  translation: to rejoice; to be happy
+- lemma: вигідний
+  ipa: /ʋɪɦidnɪj/
+  translation: ''
+  pos: adj
+- lemma: виділяти
+  ipa: /ʋɪdilˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: щасливий
-  ipa: ʃt͡ʃɐsˈlɪʋɪj
-  translation: happy
-  pos: adj
-- lemma: задоволений
-  ipa: zɐdoˈʋɔlɛnɪj
-  translation: satisfied
-  pos: adj
-- lemma: сумний
-  ipa: sumˈnɪj
-  translation: sad
-  pos: adj
-- lemma: сумувати
-  ipa: sumuˈʋɑte
-  translation: to be sad; to miss
-  pos: verb
-- lemma: засмучений
-  ipa: zɐsˈmut͡ʃɛnɪj
-  translation: upset; saddened
-  pos: adj
-- lemma: здивований
-  ipa: zdɪˈʋɔʋɐnɪj
-  translation: surprised
-  pos: adj
-- lemma: дивуватися
-  ipa: dɪʋuˈʋɑtɪsʲɐ
-  translation: to be surprised
-  pos: verb
-- lemma: переляканий
-  ipa: perɛˈlʲɑkɐnɪj
-  translation: scared
-  pos: adj
-- lemma: боятися
-  ipa: boˈjɑtɪsʲɐ
-  translation: to be afraid
-  pos: verb
-- lemma: розчарований
-  ipa: rozt͡ʃɐˈrɔʋɐnɪj
-  translation: disappointed
-  pos: adj
-- lemma: хвилюватися
-  ipa: xʋɪlʲuˈʋɑtɪsʲɐ
-  translation: to worry; to be excited
-  pos: verb
-- lemma: турбуватися
-  ipa: turbuˈʋɑtɪsʲɐ
-  translation: to worry; to care
-  pos: verb
-- lemma: шкода
-  ipa: ʃkɔˈdɑ
-  translation: pity; too bad
-  pos: other
-- lemma: прикро
-  ipa: ˈprɪkro
-  translation: annoying; a pity
+- lemma: влучно
+  ipa: /ʋlˈut͡ʃnɔ/
+  translation: ''
   pos: adv
-- lemma: приємно
-  ipa: prɪˈjɛmno
-  translation: pleasant; nicely
-  pos: adv
-- lemma: цікаво
-  ipa: t͡sʲiˈkɑʋo
-  translation: interesting
-  pos: adv
-- lemma: нудно
-  ipa: ˈnudno
-  translation: boring
-  pos: adv
-- lemma: страшно
-  ipa: ˈstrɑʃno
-  translation: scary
-  pos: adv
-- lemma: відмінок
-  translation: gram. case
-  pos: noun
-  gender: m
-  ipa: /ʋʲidˈmʲinɔk/
-- lemma: час
-  translation: time; tense
-  pos: noun
-  gender: m
-  ipa: /t͡ʃɑs/
-- lemma: сполучник
-  translation: conjunction; connector
-  pos: noun
-  gender: m
-  ipa: /spoˈlut͡ʃnɪk/
-- lemma: думка
-  translation: thought; opinion
+- lemma: вставний
+  ipa: /ʋstaʋnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: дискусія
+  ipa: /dɪskˈusija/
+  translation: ''
   pos: noun
   gender: f
-  ipa: /ˈdumkɐ/
-- lemma: рід
-  translation: gram. gender
+- lemma: ділитися
+  ipa: /dilˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: дієприкметник
+  ipa: /dijɛprɪkmˈɛtnɪk/
+  translation: ''
+  pos: noun
+- lemma: елегантний
+  ipa: /ɛlɛɦˈantnɪj/
+  translation: ''
+  pos: adj
+- lemma: забуватися
+  ipa: /zabuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зберегти
+  ipa: /zbɛrɛɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: згода
+  ipa: /zɦˈɔda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зір
+  ipa: /zir/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /rʲid/
-- lemma: дієслово
-  translation: verb
+- lemma: категоричний
+  ipa: /katɛɦɔrˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: констатувати
+  ipa: /kɔnstatuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: магічний
+  ipa: /maɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: навчатися
+  ipa: /naʋt͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: найкрасивіше
+  ipa: /najkrasˈɪʋiʃɛ/
+  translation: ''
+  pos: adv
+- lemma: незгода
+  ipa: /nɛzɦˈɔda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обмін
+  ipa: /ˈɔbmin/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: освіта
+  ipa: /ɔsʋˈita/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: очевидно
+  ipa: /ɔt͡ʃɛʋˈɪdnɔ/
+  translation: ''
+  pos: adv
+- lemma: переконання
+  ipa: /pɛrɛkɔnˈannja/
+  translation: ''
+  pos: noun
+- lemma: переконливий
+  ipa: /pɛrɛkˈɔnlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: перетворити
+  ipa: /pɛrɛtʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: погляд
+  ipa: /pˈɔɦljad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: погоджуватися
+  ipa: /pɔɦˈɔdʒuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: погодитися
+  ipa: /pɔɦɔdɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: позиція
+  ipa: /pɔzˈɪt͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пом'якшувати
+  ipa: /pɔmˈjakʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: поєднання
+  ipa: /pɔjɛdnˈannja/
+  translation: ''
   pos: noun
   gender: n
-  ipa: /dʲijeˈslɔʋo/
-- lemma: мій
-  translation: my
-  pos: pron
-  ipa: /mʲij/
-- lemma: точка
-  translation: point
+- lemma: правий
+  ipa: /praʋɪj/
+  translation: ''
+  pos: adj
+- lemma: пропускати
+  ipa: /prɔpuskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: підготуватися
+  ipa: /pidɦɔtuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підрядний
+  ipa: /pidrˈjadnɪj/
+  translation: ''
+  pos: adj
+- lemma: реагувати
+  ipa: /rɛaɦuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: спокій
+  ipa: /spˈɔkij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: співрозмовник
+  ipa: /spiʋrɔzmˈɔʋnɪk/
+  translation: ''
+  pos: noun
+- lemma: стосунок
+  ipa: /stɔsˈunɔk/
+  translation: ''
+  pos: noun
+- lemma: структурний
+  ipa: /struktˈurnɪj/
+  translation: ''
+  pos: adj
+- lemma: сумнів
+  ipa: /sˈumniʋ/
+  translation: ''
+  pos: noun
+- lemma: тиша
+  ipa: /tˈɪʃa/
+  translation: ''
   pos: noun
   gender: f
-  ipa: /ˈtɔt͡ʃkɐ/
-- lemma: погляд
-  translation: view; look; glance
+- lemma: точок
+  ipa: /tˈɔt͡ʃɔk/
+  translation: ''
+  pos: noun
+- lemma: універсальний
+  ipa: /uniʋɛrsˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: формулювати
+  ipa: /fɔrmuljuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: фундамент
+  ipa: /fundˈamɛnt/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /ˈpɔɦlʲɐd/
-- lemma: зір
-  translation: sight; vision
-  pos: noun
-  gender: m
-  ipa: /zʲir/
+- lemma: цінуватися
+  ipa: /t͡sinuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: чітко
+  ipa: /t͡ʃˈitkɔ/
+  translation: ''
+  pos: adv

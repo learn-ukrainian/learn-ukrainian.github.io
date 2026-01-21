@@ -1,54 +1,103 @@
 module: 35-at-the-cafe
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-- lemma: напій
-  ipa: /nɑˈpij/
-  translation: beverage
+- lemma: буда
+  ipa: /bˈuda/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: гарячий
-  ipa: /ɦɑˈrʲɑt͡ʃɪj/
-  translation: hot
+  gender: f
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: вітрина
+  ipa: /ʋitrˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: десерт
+  ipa: /dɛsˈɛrt/
+  translation: ''
+  pos: noun
+- lemma: закуска
+  ipa: /zakˈuska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: замовлення
+  ipa: /zamˈɔʋlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кавовий
+  ipa: /kˈaʋɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: холодний
-  ipa: /xɔˈlɔdnɪj/
-  translation: cold
-  pos: adj
-  gender: m
-- lemma: з молоком
-  ipa: /z mɔlɔˈkɔm/
-  translation: with milk
-  pos: phrase
-  gender: n/a
-- lemma: без цукру
-  ipa: /bɛz ˈt͡sukrʊ/
-  translation: without sugar
-  pos: phrase
-  gender: n/a
-- lemma: тістечко
-  ipa: /tʲisˈtɛt͡ʃkɔ/
-  translation: pastry / small cake
+- lemma: капучино
+  ipa: /kaput͡ʃˈɪnɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: ''
   pos: noun
   gender: n
 - lemma: круасан
-  ipa: /krʊɑˈsɑn/
-  translation: croissant
+  ipa: /kruasˈan/
+  translation: ''
   pos: noun
   gender: m
+- lemma: кульчицький
+  ipa: /kˈulʲt͡ʃɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: лат
+  ipa: /lat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: молоко
+  ipa: /mɔlɔkˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: напій
+  ipa: /napˈij/
+  translation: ''
+  pos: noun
 - lemma: рахунок
-  ipa: /rɑˈxunɔk/
-  translation: bill / check
+  ipa: /raxˈunɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: сплатити
-  ipa: /splɑˈtɪtɪ/
-  translation: to pay
-  pos: verb
-  aspect: pf
-- lemma: чайові
-  ipa: /t͡ʃɑjɔˈvi/
-  translation: tips
+- lemma: солодке
+  ipa: /sɔlˈɔdkɛ/
+  translation: ''
   pos: noun
-  gender: pl
+  gender: n
+- lemma: столиця
+  ipa: /stɔlˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тістечко
+  ipa: /tˈistɛt͡ʃkɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: шоколадний
+  ipa: /ʃɔkɔlˈadnɪj/
+  translation: ''
+  pos: adj
+- lemma: юрій
+  ipa: /ˈjurij/
+  translation: ''
+  pos: noun
+  gender: m

@@ -2,63 +2,147 @@ module: 15-checkpoint-aspect-mastery
 level: B1
 version: '2.0'
 items:
-- lemma: впізнавати
-  ipa: /vpʲiznaˈvatɪ/
-  translation: to recognize
-  pos: verb
-- lemma: дивитися
-  ipa: /dɪˈvɪtɪsʲa/
-  translation: to look
-  pos: verb
-- lemma: доконаність
-  ipa: /dɔˈkɔnanʲisʲtʲ/
-  translation: perfectiveness
+- lemma: біблія
+  ipa: /bˈiblija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: липовий
-  ipa: /ˈlɪpɔvɪj/
-  translation: fake (slang)
-  pos: adj
+- lemma: гоп
+  ipa: /ɦɔp/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: днк
+  ipa: /dnk/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: доконаність
+  ipa: /dɔkˈɔnanistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: друкований
+  ipa: /drukˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: заклад
+  ipa: /zaklad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: липовий
+  ipa: /lˈɪpɔʋɪj/
+  translation: ''
+  pos: adj
 - lemma: множення
-  ipa: /ˈmnɔʒɛnʲːa/
-  translation: multiplication
+  ipa: /mnˈɔʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: недок
-  ipa: /nɛˈdɔk/
-  translation: Imperf.
+- lemma: одесит
+  ipa: /ɔdɛsˈɪt/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: паляниця
-  ipa: /palʲaˈnɪt͡sʲa/
-  translation: palianytsia
+  ipa: /paljanˈɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: допомогти
-  ipa: /dɔpɔmɔhˈtɪ/
-  translation: to help
+- lemma: париж
+  ipa: /parˈɪʒ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перемикаючись
+  ipa: /pɛrɛmɪkˈajut͡ʃɪsʲ/
+  translation: ''
   pos: verb
+- lemma: переносний
+  ipa: /pɛrɛnɔsnɪj/
+  translation: ''
+  pos: adj
+- lemma: перескочити
+  ipa: /pɛrɛskˈɔt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: перестрибнути
+  ipa: /pɛrɛstrɪbnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: поділ
+  ipa: /pɔdil/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: похожий
+  ipa: /pɔxˈɔʒɪj/
+  translation: ''
+  pos: adj
+- lemma: префіксальний
+  ipa: /prɛfiksˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: пункт
+  ipa: /punkt/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: раф
   ipa: /raf/
-  translation: raf (coffee)
+  translation: ''
   pos: noun
-  gender: m
-- lemma: здача
-  ipa: /ˈzdat͡ʃa/
-  translation: change (money)
+- lemma: сдача
+  ipa: /sdat͡ʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: супплетивний
-  ipa: /suplɛˈtɪvnɪj/
-  translation: suppletive
+- lemma: складений
+  ipa: /sklˈadɛnɪj/
+  translation: ''
   pos: adj
+- lemma: слов'янин
+  ipa: /slɔʋjanˈɪn/
+  translation: ''
+  pos: noun
+- lemma: специфічний
+  ipa: /spɛt͡sɪfˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: супплетивний
+  ipa: /supplɛtɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: суфіксальний
+  ipa: /sufiksˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: тонка
+  ipa: /tɔnkˈa/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: тримати
-  ipa: /trɪˈmatɪ/
-  translation: to hold
+- lemma: хвалитися
+  ipa: /xʋalˈɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: чіпляти
-  ipa: /t͡ʃiˈplʲatɪ/
-  translation: to hook/cling
+- lemma: хіх
+  ipa: /xix/
+  translation: ''
+  pos: noun
+- lemma: церковнослов'янський
+  ipa: /t͡sɛrkɔʋnɔslɔʋˈjansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: чіпати
+  ipa: /t͡ʃipˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: чіпнути
+  ipa: /t͡ʃipnutɪ/
+  translation: ''
+  pos: verb
+- lemma: ілюструвати
+  ipa: /iljustruʋˈatɪ/
+  translation: ''
   pos: verb

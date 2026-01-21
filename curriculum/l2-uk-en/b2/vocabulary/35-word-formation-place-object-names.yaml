@@ -2,635 +2,91 @@ module: 35-word-formation-place-object-names
 level: B2
 version: '2.0'
 items:
-- lemma: автомийка
-  ipa: /ɐwtoˈmɪjkɑ/
-  translation: car wash
+- lemma: альня
+  ipa: /alʲnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: автомийня
-  ipa: /ɐwtoˈmɪjnʲɑ/
-  translation: car wash (older form)
-  pos: noun
-  gender: f
-- lemma: ковальня
-  ipa: /koˈwɑlʲnʲɑ/
-  translation: smithy, forge
-  pos: noun
-  gender: f
-- lemma: аналогічний
-  ipa: /ɐnɐloˈɦʲit͡ʃnɪj/
-  translation: analogous, similar
-  pos: adj
-- lemma: аптекарня
-  ipa: /ɑptɛˈkɑrnʲɑ/
-  translation: pharmacy (archaic)
-  pos: noun
-  gender: f
-- lemma: аристократ
-  ipa: /ɑrɪstoˈkrɑt/
-  translation: aristocrat
-  pos: noun
-  gender: m
-- lemma: друкарня
-  ipa: /drukɑrˈnʲɑ/
-  translation: printing house, print shop
+- lemma: арня
+  ipa: /arnja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: археолог
-  ipa: /ɑrxɛˈoloɦ/
-  translation: archaeologist
+  ipa: /arxɛˈɔlɔɦ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: археологічний
-  ipa: /ɑrxɛoloˈɦʲit͡ʃnɪj/
-  translation: archaeological
-  pos: adj
-- lemma: бойня
-  ipa: /ˈbojnʲɑ/
-  translation: slaughterhouse
-  pos: noun
-  gender: f
-- lemma: болотище
-  ipa: /boloˈtɪʃt͡ʃɛ/
-  translation: large swamp
-  pos: noun
-  gender: n
-- lemma: більський
-  ipa: /ˈbʲilʲsʲkɪj/
-  translation: Bilsk (adj.)
-  pos: adj
-- lemma: варильня
-  ipa: /wɐˈrɪlʲnʲɑ/
-  translation: brewery
-  pos: noun
-  gender: f
-- lemma: ветеринарня
-  ipa: /wɛtɛrɪˈnɑrnʲɑ/
-  translation: veterinary clinic (archaic)
-  pos: noun
-  gender: f
-- lemma: вечор
-  ipa: /ˈwɛt͡ʃor/
-  translation: evening (archaic)
-  pos: noun
-  gender: m
-- lemma: виготовляти
-  ipa: /wɪɦotowlʲɑtɪ/
-  translation: to produce, to manufacture
-  pos: verb
-- lemma: вирісти
-  ipa: /ˈwɪrʲistɪ/
-  translation: to grow up
-  pos: verb
-- lemma: вмістилище
-  ipa: /wˈmʲistɪlɪʃt͡ʃɛ/
-  translation: container, receptacle
-  pos: noun
-  gender: n
-- lemma: відремонтувати
-  ipa: /wʲidrɛmontuˈwɑtɪ/
-  translation: to repair, to renovate
-  pos: verb
-- lemma: вітальний
-  ipa: /wʲiˈtɑlʲnɪj/
-  translation: living room (adj.)
-  pos: adj
 - lemma: городище
-  ipa: /ɦoroˈdɪʃt͡ʃɛ/
-  translation: ancient settlement site
+  ipa: /ɦɔrɔdˈɪʃt͡ʃɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: Горпинич
-  ipa: /ɦorˈpɪnɪt͡ʃ/
-  translation: Horpynych (surname)
-  pos: propn
-  gender: m
-- lemma: дериватологія
-  ipa: /dɛrɪwɐtoloˈɦʲijɑ/
-  translation: derivatology
-  pos: noun
-  gender: f
-- lemma: довідковий
-  ipa: /doˈwʲidkowɪj/
-  translation: reference (adj.)
-  pos: adj
 - lemma: друкар
-  ipa: /druˈkɑr/
-  translation: printer (person)
+  ipa: /drukˈar/
+  translation: ''
   pos: noun
   gender: m
 - lemma: друкарня
-  ipa: /druˈkɑrnʲɑ/
-  translation: printing house
-  pos: noun
-  gender: f
-- lemma: друкірня
-  ipa: /druˈkʲirnʲɑ/
-  translation: printing house (older form)
-  pos: noun
-  gender: f
-- lemma: етимологія
-  ipa: /ɛtɪmoloˈɦʲijɑ/
-  translation: etymology
-  pos: noun
-  gender: f
-- lemma: житлище
-  ipa: /ˈʒɪtlɪʃt͡ʃɛ/
-  translation: dwelling
-  pos: noun
-  gender: n
-- lemma: заводити
-  ipa: /zɐwoˈdɪtɪ/
-  translation: to start, to establish
-  pos: verb
-- lemma: зала
-  ipa: /ˈzɑlɑ/
-  translation: hall
+  ipa: /drukˈarnja/
+  translation: ''
   pos: noun
   gender: f
 - lemma: залишок
-  ipa: /zɐˈlɪʃok/
-  translation: remainder, leftover
+  ipa: /zˈalɪʃɔk/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: заправка
-  ipa: /zɐˈprɑwkɑ/
-  translation: gas station, filling
-  pos: noun
-  gender: f
-- lemma: заправляти
-  ipa: /zɐprɑwlʲɑtɪ/
-  translation: to fill up, to season
-  pos: verb
-- lemma: зареєструватися
-  ipa: /zɐrɛjɛstruˈwɑtɪsʲɑ/
-  translation: to register
-  pos: verb
-- lemma: затишній
-  ipa: /zɐˈtɪʃnʲij/
-  translation: cozy
-  pos: adj
-- lemma: звалище
-  ipa: /zwɐˈlɪʃt͡ʃɛ/
-  translation: dump, landfill
-  pos: noun
-  gender: m
-- lemma: звалювати
-  ipa: /zwɐˈlʲuwɑtɪ/
-  translation: to dump, to pile
-  pos: verb
-- lemma: звір
-  ipa: /zwʲir/
-  translation: beast, animal
-  pos: noun
-  gender: m
-- lemma: звірарня
-  ipa: /zwʲiˈrɑrnʲɑ/
-  translation: menagerie
+- lemma: ильня
+  ipa: /ɪlʲnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: звіринець
-  ipa: /zwʲiˈrɪnɛt͡sʲ/
-  translation: zoo, menagerie
+- lemma: ище
+  ipa: /ɪʃt͡ʃɛ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: зліва
-  ipa: /zˈlʲiwɑ/
-  translation: on the left, from the left
-  pos: adv
-- lemma: мильня
-  ipa: /ˈmɪlʲnʲɑ/
-  translation: soap factory
-  pos: noun
-  gender: f
-- lemma: вогнище
-  ipa: /woɦˈnɪʃt͡ʃɛ/
-  translation: hearth, fireplace
-  pos: noun
-  gender: n
-- lemma: капище
-  ipa: /kɑˈpɪʃt͡ʃɛ/
-  translation: pagan temple
-  pos: noun
-  gender: n
-- lemma: кардіолог
-  ipa: /kɑrdʲioˈloɦ/
-  translation: cardiologist
-  pos: noun
-  gender: m
-- lemma: кардіологічний
-  ipa: /kɑrdʲioloˈɦʲit͡ʃnɪj/
-  translation: cardiological
-  pos: adj
-- lemma: клад
-  ipa: /klɑd/
-  translation: treasure, cache
-  pos: noun
-  gender: m
 - lemma: кладовище
-  ipa: /klɐˈdowɪʃt͡ʃɛ/
-  translation: cemetery
+  ipa: /klˈadɔʋɪʃt͡ʃɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: книгокрамниця
-  ipa: /knɪɦokrɑmˈnɪt͡sʲɑ/
-  translation: bookstore (archaic)
+- lemma: ня
+  ipa: /nja/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: кондитерський
-  ipa: /kondɪˈtɛrsʲkɪj/
-  translation: confectionery (adj.)
-  pos: adj
-- lemma: контрактовий
-  ipa: /kontrɑkˈtowɪj/
-  translation: contract (adj.)
-  pos: adj
-- lemma: коптильня
-  ipa: /kopˈtɪlʲnʲɑ/
-  translation: smokehouse
-  pos: noun
-  gender: f
-- lemma: коптити
-  ipa: /kopˈtɪtɪ/
-  translation: to smoke (food)
-  pos: verb
-- lemma: коптіти
-  ipa: /kopˈtʲitɪ/
-  translation: to smoke (give off smoke)
-  pos: verb
-- lemma: копіювальний
-  ipa: /kopʲijuˈwɑlʲnɪj/
-  translation: copying (adj.)
-  pos: adj
-- lemma: корова
-  ipa: /koˈrowɑ/
-  translation: cow
-  pos: noun
-  gender: f
-- lemma: крамничка
-  ipa: /krɑmˈnɪt͡ʃkɑ/
-  translation: small shop
-  pos: noun
-  gender: f
-- lemma: кувати
-  ipa: /kuˈwɑtɪ/
-  translation: to forge
-  pos: verb
-- lemma: кузня
-  ipa: /ˈkuznʲɑ/
-  translation: smithy, forge
-  pos: noun
-  gender: f
-- lemma: купальня
-  ipa: /kuˈpɑlʲnʲɑ/
-  translation: bathhouse
-  pos: noun
-  gender: f
-- lemma: кінь
-  ipa: /kʲinʲ/
-  translation: horse
-  pos: noun
-  gender: m
-- lemma: лавра
-  ipa: /ˈlɑwrɑ/
-  translation: lavra (monastery)
-  pos: noun
-  gender: f
-- lemma: легенда
-  ipa: /lɛˈɦɛndɑ/
-  translation: legend
-  pos: noun
-  gender: f
-- lemma: личаківський
-  ipa: /lɪt͡ʃɐˈkʲiwsʲkɪj/
-  translation: Lychakiv (adj.)
-  pos: adj
-- lemma: лікувальний
-  ipa: /lʲikuˈwɑlʲnɪj/
-  translation: therapeutic, medical
-  pos: adj
-- lemma: лічниця
-  ipa: /lʲit͡ʃˈnɪt͡sʲɑ/
-  translation: hospital (archaic)
-  pos: noun
-  gender: f
-- lemma: майстерня
-  ipa: /mɑjˈstɛrnʲɑ/
-  translation: workshop
-  pos: noun
-  gender: f
-- lemma: майстриня
-  ipa: /mɑjˈstrɪnʲɑ/
-  translation: craftswoman
-  pos: noun
-  gender: f
-- lemma: мальовничо
-  ipa: /mɑlʲowˈnɪt͡ʃo/
-  translation: picturesquely
-  pos: adv
-- lemma: мийка
-  ipa: /ˈmɪjkɑ/
-  translation: washing, sink
-  pos: noun
-  gender: f
-- lemma: мийний
-  ipa: /ˈmɪjnɪj/
-  translation: washing (adj.)
-  pos: adj
-- lemma: монастир
-  ipa: /monɐˈstɪr/
-  translation: monastery
-  pos: noun
-  gender: m
-- lemma: мікрорайон
-  ipa: /mʲikrorɐˈjon/
-  translation: microdistrict
-  pos: noun
-  gender: m
-- lemma: містечко
-  ipa: /mʲisˈtɛt͡ʃko/
-  translation: small town
-  pos: noun
-  gender: n
-- lemma: найвідоміше
-  ipa: /nɑjwʲiˈdomʲiʃɛ/
-  translation: most famous
-  pos: noun
-  gender: n
-- lemma: некропол
-  ipa: /nɛˈkropol/
-  translation: necropolis
-  pos: noun
-  gender: m
-- lemma: непродуктивний
-  ipa: /nɛproduktɪwnɪj/
-  translation: unproductive
-  pos: adj
-- lemma: обмінка
-  ipa: /obˈmʲinkɑ/
-  translation: exchange point
-  pos: noun
-  gender: f
-- lemma: обмінювати
-  ipa: /obmʲinʲuˈwɑtɪ/
-  translation: to exchange
-  pos: verb
-- lemma: околиця
-  ipa: /okoˈlɪt͡sʲɑ/
-  translation: outskirts, vicinity
-  pos: noun
-  gender: f
-- lemma: пасти
-  ipa: /ˈpɑstɪ/
-  translation: to graze, to herd
-  pos: verb
-- lemma: пастися
-  ipa: /ˈpɑstɪsʲɑ/
-  translation: to graze (intransitive)
-  pos: verb
-- lemma: пекальня
-  ipa: /pɛˈkɑlʲnʲɑ/
-  translation: bakery (archaic)
+- lemma: паста
+  ipa: /pˈasta/
+  translation: ''
   pos: noun
   gender: f
 - lemma: пекар
-  ipa: /pɛˈkɑr/
-  translation: baker
+  ipa: /pˈɛkar/
+  translation: ''
   pos: noun
   gender: m
-- lemma: пекарня
-  ipa: /pɛˈkɑrnʲɑ/
-  translation: bakery
-  pos: noun
-  gender: f
-- lemma: передмість
-  ipa: /pɛrɛdˈmʲistʲ/
-  translation: suburb
-  pos: noun
-  gender: m
-- lemma: перукарня
-  ipa: /pɛruˈkɑrnʲɑ/
-  translation: hairdresser, barbershop
-  pos: noun
-  gender: f
-- lemma: печерний
-  ipa: /pɛˈt͡ʃɛrnɪj/
-  translation: cave (adj.)
-  pos: adj
-- lemma: печерський
-  ipa: /pɛˈt͡ʃɛrsʲkɪj/
-  translation: Pechersk (adj.)
-  pos: adj
-- lemma: пласт
-  ipa: /plɑst/
-  translation: layer, stratum
-  pos: noun
-  gender: m
-- lemma: поблизу
-  ipa: /ˈpoblɪzu/
-  translation: nearby
-  pos: adv
-- lemma: полтавщина
-  ipa: /poltɑwˈʃt͡ʃɪnɑ/
-  translation: Poltava region
-  pos: propn
-  gender: f
-- lemma: поліграфія
-  ipa: /polʲiɦrɐˈfʲijɑ/
-  translation: printing, polygraphy
-  pos: noun
-  gender: f
-- lemma: Полісся
-  ipa: /poˈlʲisːʲɑ/
-  translation: Polissya (region in northern Ukraine)
-  pos: propn
-  gender: n
-- lemma: померлий
-  ipa: /ˈpomɛrlɪj/
-  translation: deceased
-  pos: noun
-  gender: m
-- lemma: похований
-  ipa: /poxoˈwɑnɪj/
-  translation: buried
-  pos: adj
-- lemma: поховання
-  ipa: /poxoˈwɑnʲːɑ/
-  translation: burial
-  pos: noun
-  gender: n
-- lemma: пральня
-  ipa: /ˈprɑlʲnʲɑ/
-  translation: laundry
-  pos: noun
-  gender: f
-- lemma: приймальний
-  ipa: /prɪjˈmɑlʲnɪj/
-  translation: reception (adj.)
-  pos: adj
-- lemma: приміщення
-  ipa: /prɪˈmʲiʃt͡ʃɛnʲːɑ/
-  translation: premises, room
-  pos: noun
-  gender: n
-- lemma: птахарня
-  ipa: /ptɑˈxɑrnʲɑ/
-  translation: aviary
-  pos: noun
-  gender: f
-- lemma: районний
-  ipa: /rɐˈjonnɪj/
-  translation: district (adj.)
-  pos: adj
-- lemma: реєстрація
-  ipa: /rɛjɛsˈtrɑt͡sʲijɑ/
-  translation: registration
-  pos: noun
-  gender: f
-- lemma: розбитий
-  ipa: /ˈrozbɪtɪj/
-  translation: broken, laid out
-  pos: adj
-- lemma: розкинутися
-  ipa: /rozkɪˈnutɪsʲɑ/
-  translation: to spread out
-  pos: verb
-- lemma: самообслуговування
-  ipa: /sɐmoobsluɦowuˈwɑnʲːɑ/
-  translation: self-service
-  pos: noun
-  gender: n
-- lemma: скіфський
-  ipa: /sˈkʲifsʲkɪj/
-  translation: Scythian
-  pos: adj
-- lemma: слюсар
-  ipa: /slʲuˈsɑr/
-  translation: locksmith
-  pos: noun
-  gender: m
-- lemma: слюсарня
-  ipa: /slʲuˈsɑrnʲɑ/
-  translation: locksmith's workshop
-  pos: noun
-  gender: f
-- lemma: сортувальний
-  ipa: /sortuˈwɑlʲnɪj/
-  translation: sorting (adj.)
-  pos: adj
 - lemma: стародавній
-  ipa: /stɐroˈdɑwnʲij/
-  translation: ancient
+  ipa: /starɔdˈaʋnij/
+  translation: ''
   pos: adj
-- lemma: стригти
-  ipa: /ˈstrɪɦtɪ/
-  translation: to cut, to shear
-  pos: verb
-- lemma: стійбище
-  ipa: /stʲijˈbɪʃt͡ʃɛ/
-  translation: encampment
-  pos: noun
-  gender: n
-- lemma: сучасність
-  ipa: /suˈt͡ʃɑsnʲistʲ/
-  translation: modernity, present time
-  pos: noun
-  gender: f
-- lemma: сучасніший
-  ipa: /suˈt͡ʃɑsnʲiʃɪj/
-  translation: more modern
-  pos: adj
-- lemma: сушильня
-  ipa: /suˈʃɪlʲnʲɑ/
-  translation: drying room
-  pos: noun
-  gender: f
 - lemma: сховище
-  ipa: /sxoˈwɪʃt͡ʃɛ/
-  translation: storage, shelter
+  ipa: /sxˈɔʋɪʃt͡ʃɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: твірний
-  ipa: /ˈtwʲirnɪj/
-  translation: formative
-  pos: adj
-- lemma: товарний
-  ipa: /toˈwɑrnɪj/
-  translation: goods, freight (adj.)
-  pos: adj
-- lemma: токар
-  ipa: /toˈkɑr/
-  translation: turner, lathe operator
-  pos: noun
-  gender: m
-- lemma: токарня
-  ipa: /toˈkɑrnʲɑ/
-  translation: turner's workshop
-  pos: noun
-  gender: f
-- lemma: топонім
-  ipa: /topoˈnʲim/
-  translation: toponym, place name
-  pos: noun
-  gender: m
-- lemma: угорський
-  ipa: /uˈɦorsʲkɪj/
-  translation: Hungarian
-  pos: adj
-- lemma: укріплений
-  ipa: /ukrʲipˈlɛnɪj/
-  translation: fortified
-  pos: adj
 - lemma: укріплення
-  ipa: /ukrʲipˈlɛnʲːɑ/
-  translation: fortification
+  ipa: /ukrˈiplɛnnja/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: урочище
-  ipa: /uˈrot͡ʃɪʃt͡ʃɛ/
-  translation: tract of land, location
-  pos: noun
-  gender: n
-- lemma: Федорович
-  ipa: /fɛˈdorowɪt͡ʃ/
-  translation: Fedorovych (patronymic)
-  pos: propn
-  gender: m
-- lemma: ферма
-  ipa: /ˈfɛrmɑ/
-  translation: farm
-  pos: noun
-  gender: f
 - lemma: ховати
-  ipa: /xoˈwɑtɪ/
-  translation: to hide, to bury
+  ipa: /xɔʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: хрестильня
-  ipa: /xrɛsˈtɪlʲnʲɑ/
-  translation: baptistery
+- lemma: читальня
+  ipa: /t͡ʃɪtˈalʲnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: цвинтарище
-  ipa: /t͡swɪntɐˈrɪʃt͡ʃɛ/
-  translation: large cemetery
-  pos: noun
-  gender: n
-- lemma: цукерня
-  ipa: /t͡suˈkɛrnʲɑ/
-  translation: candy shop, confectionery
+- lemma: їдальня
+  ipa: /jidˈalʲnja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: читальна
-  ipa: /t͡ʃɪˈtɑlʲnɑ/
-  translation: reading room
-  pos: noun
-  gender: f
-- lemma: читарня
-  ipa: /t͡ʃɪˈtɑrnʲɑ/
-  translation: reading room (archaic)
-  pos: noun
-  gender: f
-- lemma: язичницький
-  ipa: /jɐzɪt͡ʃˈnɪt͡sʲkɪj/
-  translation: pagan
-  pos: adj

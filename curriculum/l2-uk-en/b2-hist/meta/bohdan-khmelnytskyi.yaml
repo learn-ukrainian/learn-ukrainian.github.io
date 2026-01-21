@@ -1,8 +1,139 @@
-slug: bohdan-khmelnytskyi
+module: b2-hist-52
+id: b2-hist-52
 title: "Богдан Хмельницький: Постать"
-level: B2
-track: history
+subtitle: "Bohdan Khmelnytsky: The Figure"
+slug: bohdan-khmelnytskyi
+version: '2.0'
 phase: "HIST.6 [Khmelnytsky & Cossack State]"
-status: skeleton
 focus: history
+pedagogy: seminar
+register: публіцистичний
+duration: 150
+transliteration: none
+
+# Learning objectives (in Ukrainian)
+objectives:
+  - "Учень може описати життєвий шлях Богдана Хмельницького до початку повстання"
+  - "Учень може аналізувати особистісні якості Хмельницького як військового лідера та дипломата"
+  - "Учень може оцінити роль Хмельницького у формуванні української державності"
+  - "Учень може порівняти різні історичні оцінки постаті Хмельницького"
+
+# Grammar focus
+grammar:
+  - "Історичний наратив у минулому часі"
+  - "Пасивні конструкції в історичному контексті"
+  - "Біографічна лексика та стиль"
+
+# Content structure
 word_target: 4000
+content_outline:
+  - section: "Вступ"
+    words: 200
+    points:
+      - Significance of Khmelnytsky in Ukrainian history
+      - Historical sources and perspectives
+  - section: "Ранні роки (1595-1647)"
+    words: 800
+    points:
+      - Birth and family background
+      - Education and early military service
+      - Experiences in Polish-Lithuanian Commonwealth
+      - Formation of character and worldview
+  - section: "Шлях до повстання"
+    words: 700
+    points:
+      - Conflict with Czaplinski
+      - Appeal to Polish authorities
+      - Decision to lead uprising
+      - Gathering support from Zaporozhian Cossacks
+  - section: "Військовий лідер"
+    words: 900
+    points:
+      - Military tactics and strategy
+      - Alliance with Crimean Tatars
+      - Major victories (1648-1649)
+      - Leadership style
+  - section: "Дипломат і державник"
+    words: 800
+    points:
+      - Diplomatic negotiations
+      - State-building efforts
+      - Relations with foreign powers
+      - Administrative reforms
+  - section: "Спадщина та оцінки"
+    words: 600
+    points:
+      - Different historical interpretations
+      - Ukrainian vs Russian vs Polish perspectives
+      - Modern scholarly consensus
+      - Legacy in Ukrainian national consciousness
+
+# Vocabulary guidance
+vocabulary_hints:
+  required:
+    - гетьман (hetman)
+    - повстання (uprising)
+    - козацтво (Cossackdom)
+    - Запорізька Січ (Zaporozhian Sich)
+    - старшина (Cossack officers)
+    - реєстр (register)
+    - шляхта (nobility)
+    - Річ Посполита (Polish-Lithuanian Commonwealth)
+    - дипломатія (diplomacy)
+    - державність (statehood)
+  recommended:
+    - булава (mace, symbol of hetman authority)
+    - полк (regiment)
+    - полковник (colonel)
+    - сотник (centurion)
+    - універсал (universal, decree)
+    - козацька рада (Cossack council)
+    - чорна рада (black council)
+
+# Activity planning
+activity_hints:
+  - type: reading
+    focus: "Primary source: Excerpt from contemporary chronicle"
+    source: "Літопис Самовидця або інші сучасні джерела"
+  - type: quiz
+    focus: "Key facts about Khmelnytsky's life and achievements"
+    items: 12+
+  - type: timeline
+    focus: "Major events in Khmelnytsky's life 1595-1657"
+    items: 10+
+  - type: essay-response
+    focus: "Evaluate Khmelnytsky's role in Ukrainian state formation"
+  - type: discussion
+    focus: "Compare Ukrainian, Russian, and Polish perspectives on Khmelnytsky"
+  - type: image-analysis
+    focus: "Analyze historical portraits and monuments"
+    items: 4-5 images
+
+# Sources (minimum 2)
+sources:
+  - name: "Богдан Хмельницький — Вікіпедія"
+    url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
+    type: reference
+    notes: "Comprehensive overview with Ukrainian perspective"
+  - name: "Богдан Хмельницький — Енциклопедія історії України"
+    url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khmelnytskyj_B"
+    type: academic
+    notes: "Scholarly encyclopedia entry"
+  - name: "Літопис Самовидця"
+    url: "https://litopys.org.ua/"
+    type: primary
+    notes: "Contemporary chronicle source"
+  - name: "Смолій, Степанков - Богдан Хмельницький"
+    url: "https://history.org.ua/"
+    type: academic
+    notes: "Modern Ukrainian historical scholarship"
+
+# Module connections
+prerequisites:
+  - "B2 Core grammar completion"
+  - "Previous modules on Cossack history (M41-51)"
+connects_to:
+  - "bitva-pid-zhovtymy-vodamy (M53)"
+  - "kozatska-derzhava (M55)"
+  - "pereyaslavska-uhoda (M56)"
+  - "syntez-khmelnychchyna (M62)"

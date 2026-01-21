@@ -2,180 +2,313 @@ module: 25-my-daily-routine
 level: A1
 version: '2.0'
 items:
-  - lemma: бігати
-    ipa: /ˈbiɦɑtɪ/
-    translation: to run
-    pos: verb
-  - lemma: ввечері
-    ipa: /vˈvɛt͡ʃɛri/
-    translation: in the evening
-    pos: adv
-  - lemma: виходити
-    ipa: /vɪˈxɔdɪtɪ/
-    translation: to go out
-    pos: verb
-  - lemma: вмиватися
-    ipa: /vmɪˈvɑtɪsʲɑ/
-    translation: to wash oneself
-    pos: verb
-  - lemma: вставати
-    ipa: /fstɑˈvɑtɪ/
-    translation: to get up
-    pos: verb
-  - lemma: голитися
-    ipa: /ɦɔˈlɪtɪsʲɑ/
-    translation: to shave
-    pos: verb
-  - lemma: десята
-    ipa: /dɛˈsʲɑtɑ/
-    translation: tenth (hour)
-    pos: adj
-    gender: f
-  - lemma: засинати
-    ipa: /zɑsɪˈnɑtɪ/
-    translation: to fall asleep
-    pos: verb
-  - lemma: зуб
-    ipa: /zub/
-    translation: tooth
-    pos: noun
-    gender: m
-  - lemma: лягати
-    ipa: /lʲɑˈɦɑtɪ/
-    translation: to lie down
-    pos: verb
-  - lemma: нарешті
-    ipa: /nɑˈrɛʃti/
-    translation: finally
-    pos: adv
-  - lemma: одягатися
-    ipa: /ɔdʲɑˈɦɑtɪsʲɑ/
-    translation: to dress oneself
-    pos: verb
-  - lemma: опівдні
-    ipa: /ɔˈpivdni/
-    translation: at noon
-    pos: adv
-  - lemma: повертатися
-    ipa: /pɔvɛrˈtɑtɪsʲɑ/
-    translation: to return
-    pos: verb
-  - lemma: прокидатися
-    ipa: /prɔkɪˈdɑtɪsʲɑ/
-    translation: to wake up
-    pos: verb
-  - lemma: розпорядок
-    ipa: /rɔzpɔˈrʲɑdɔk/
-    translation: schedule
-    pos: noun
-    gender: m
-  - lemma: спочатку
-    ipa: /spɔˈt͡ʃɑtku/
-    translation: at first
-    pos: adv
-  - lemma: сьома
-    ipa: /ˈsʲɔmɑ/
-    translation: seventh (hour)
-    pos: adj
-    gender: f
-  - lemma: телевізор
-    ipa: /tɛlɛˈvizɔr/
-    translation: television
-    pos: noun
-    gender: m
-  - lemma: типовий
-    ipa: /tɪˈpɔvɪj/
-    translation: typical
-    pos: adj
-    gender: m
-  - lemma: увечері
-    ipa: /uˈvɛt͡ʃɛri/
-    translation: in the evening
-    pos: adv
-  - lemma: чистити
-    ipa: /ˈt͡ʃɪstɪtɪ/
-    translation: to clean
-    pos: verb
-  - lemma: шоста
-    ipa: /ˈʃɔstɑ/
-    translation: sixth (hour)
-    pos: adj
-    gender: f
-  - lemma: їхати
-    ipa: /ˈjixɑtɪ/
-    translation: to go (by vehicle)
-    pos: verb
-  - lemma: приходити
-    ipa: /prɪˈxɔdɪtɪ/
-    translation: to arrive
-    pos: verb
-  - lemma: працювати
-    ipa: /prɑt͡sʲuˈvɑtɪ/
-    translation: to work
-    pos: verb
-  - lemma: обідати
-    ipa: /ɔˈbidɑtɪ/
-    translation: to have lunch
-    pos: verb
-  - lemma: вечеряти
-    ipa: /vɛt͡ʃɛˈrʲɑtɪ/
-    translation: to have dinner
-    pos: verb
-  - lemma: відпочивати
-    ipa: /vidpɔt͡ʃɪˈvɑtɪ/
-    translation: to rest
-    pos: verb
-  - lemma: читати
-    ipa: /t͡ʃɪˈtɑtɪ/
-    translation: to read
-    pos: verb
-  - lemma: гуляти
-    ipa: /ɦuˈlʲɑtɪ/
-    translation: to walk
-    pos: verb
-  - lemma: снідати
-    ipa: /sniˈdɑtɪ/
-    translation: to have breakfast
-    pos: verb
-  - lemma: звичка
-    ipa: /ˈzvɪt͡ʃkɑ/
-    translation: habit
-    pos: noun
-    gender: f
-  - lemma: щодня
-    ipa: /ʃt͡ʃɔˈdnʲɑ/
-    translation: every day
-    pos: adv
-  - lemma: зазвичай
-    ipa: /zɑzʋɪˈt͡ʃɑj/
-    translation: usually
-    pos: adv
-  - lemma: потім
-    ipa: /pɔˈtim/
-    translation: then/afterwards
-    pos: adv
-  - lemma: завжди
-    ipa: /ˈzɑvʒdɪ/
-    translation: always
-    pos: adv
-  - lemma: ніколи
-    ipa: /nʲiˈkɔlɪ/
-    translation: never
-    pos: adv
-  - lemma: дивитися
-    ipa: /dɪvɪˈtɪsʲɑ/
-    translation: to watch
-    pos: verb
-  - lemma: спати
-    ipa: /ˈspɑtɪ/
-    translation: to sleep
-    pos: verb
-  - lemma: зуби
-    ipa: /ˈzubɪ/
-    translation: teeth
-    pos: noun
-    gender: pl
-  - lemma: того
-    ipa: /tɔˈɦɔ/
-    translation: of that/then
-    pos: pron
+- lemma: бігти
+  ipa: /bˈiɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: вечеряти
+  ipa: /ʋɛt͡ʃˈɛrjatɪ/
+  translation: ''
+  pos: verb
+- lemma: вечір
+  ipa: /ʋˈɛt͡ʃir/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: ''
+  pos: pron
+- lemma: виходити
+  ipa: /ʋɪxɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вмиватися
+  ipa: /ʋmɪʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: восьмий
+  ipa: /ʋˈɔsʲmɪj/
+  translation: ''
+  pos: adj
+- lemma: вправа
+  ipa: /ʋprˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вставати
+  ipa: /ʋstaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: відпочивати
+  ipa: /ʋidpɔt͡ʃɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: година
+  ipa: /ɦɔdˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: голитися
+  ipa: /ɦɔlˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: готувати
+  ipa: /ɦɔtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: готуватися
+  ipa: /ɦɔtuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: гуляти
+  ipa: /ɦulˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: дев'ятий
+  ipa: /dɛʋˈjatɪj/
+  translation: ''
+  pos: adj
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: десятий
+  ipa: /dɛsˈjatɪj/
+  translation: ''
+  pos: adj
+- lemma: дивитися
+  ipa: /dɪʋˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: додому
+  ipa: /dɔdˈɔmu/
+  translation: ''
+  pos: adv
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: завжди
+  ipa: /zˈaʋʒdɪ/
+  translation: ''
+  pos: pron
+- lemma: зазвичай
+  ipa: /zazʋɪt͡ʃˈaj/
+  translation: ''
+  pos: adv
+- lemma: засинати
+  ipa: /zasɪnˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зуби
+  ipa: /zˈubɪ/
+  translation: ''
+  pos: noun
+- lemma: лягати
+  ipa: /ljaɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ми
+  ipa: /mɪ/
+  translation: ''
+  pos: pron
+- lemma: мова
+  ipa: /mˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: нарешті
+  ipa: /narˈɛʃti/
+  translation: ''
+  pos: adv
+- lemma: нікола
+  ipa: /nikɔla/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ніч
+  ipa: /nit͡ʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обідати
+  ipa: /ɔbˈidatɪ/
+  translation: ''
+  pos: verb
+- lemma: одягатися
+  ipa: /ɔdjaɦˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: опівдні
+  ipa: /ɔpˈiʋdni/
+  translation: ''
+  pos: adv
+- lemma: парка
+  ipa: /parka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: переклад
+  ipa: /pɛrɛklad/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: перекласти
+  ipa: /pɛrɛklˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: повертатися
+  ipa: /pɔʋɛrtˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: потім
+  ipa: /pˈɔtim/
+  translation: ''
+  pos: pron
+- lemma: практик
+  ipa: /prˈaktɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прокидатися
+  ipa: /prɔkɪdatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підсумок
+  ipa: /pidsumɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рана
+  ipa: /rˈana/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ранка
+  ipa: /rˈanka/
+  translation: ''
+  pos: noun
+- lemma: речення
+  ipa: /rɛt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: робити
+  ipa: /rɔbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: робот
+  ipa: /rˈɔbɔt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розпорядок
+  ipa: /rɔzpɔrˈjadɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сніданок
+  ipa: /snidˈanɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: снідати
+  ipa: /snˈidatɪ/
+  translation: ''
+  pos: verb
+- lemma: спати
+  ipa: /spˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: спочатку
+  ipa: /spɔt͡ʃˈatku/
+  translation: ''
+  pos: adv
+- lemma: сь
+  ipa: /sʲ/
+  translation: ''
+  pos: noun
+- lemma: сьомий
+  ipa: /sʲˈɔmɪj/
+  translation: ''
+  pos: adj
+- lemma: ся
+  ipa: /sja/
+  translation: ''
+  pos: part
+- lemma: телевізор
+  ipa: /tɛlɛʋˈizɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ти
+  ipa: /tɪ/
+  translation: ''
+  pos: pron
+- lemma: типовий
+  ipa: /tɪpɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: тися
+  ipa: /tɪsja/
+  translation: ''
+  pos: verb
+- lemma: того
+  ipa: /tɔɦˈɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: увечері
+  ipa: /uʋˈɛt͡ʃɛri/
+  translation: ''
+  pos: adv
+- lemma: українська
+  ipa: /ukraˈjinsʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: час
+  ipa: /t͡ʃas/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чистити
+  ipa: /t͡ʃˈɪstɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: швидко
+  ipa: /ʃʋˈɪdkɔ/
+  translation: ''
+  pos: adv
+- lemma: шостий
+  ipa: /ʃˈɔstɪj/
+  translation: ''
+  pos: adj
+- lemma: щодня
+  ipa: /ʃt͡ʃɔdnˈja/
+  translation: ''
+  pos: adv
+- lemma: іноді
+  ipa: /ˈinɔdi/
+  translation: ''
+  pos: pron
+- lemma: їда
+  ipa: /jidˈa/
+  translation: ''
+  pos: noun
+  gender: f

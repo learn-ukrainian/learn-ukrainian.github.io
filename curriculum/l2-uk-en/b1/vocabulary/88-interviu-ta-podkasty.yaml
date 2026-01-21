@@ -2,185 +2,258 @@ module: 88-interviu-ta-podkasty
 level: B1
 version: '2.0'
 items:
-  - lemma: аудіоконтент
-    ipa: /audʲiɔkɔnˈtɛnt/
-    translation: audio content
-    pos: noun
-    gender: m
-  - lemma: багатогодинний
-    ipa: /bahatɔhɔˈdɪnːɪj/
-    translation: multi-hour
-    pos: adj
-    gender: m
-  - lemma: бум
-    ipa: /bum/
-    translation: boom, sudden growth
-    pos: noun
-    gender: m
-  - lemma: вгадувати
-    ipa: /vhaˈduvatɪ/
-    translation: to guess
-    pos: verb
-  - lemma: ведучий
-    ipa: /vɛˈdut͡ʃɪj/
-    translation: host, presenter
-    pos: noun
-    gender: m
-  - lemma: вимовляти
-    ipa: /vɪmɔu̯ˈlʲatɪ/
-    translation: to pronounce
-    pos: verb
-  - lemma: демократизація
-    ipa: /dɛmɔkratɪˈzat͡sʲija/
-    translation: democratization
-    pos: noun
-    gender: f
-  - lemma: дилетантизм
-    ipa: /dɪlɛtanˈtɪzm/
-    translation: dilettantism
-    pos: noun
-    gender: m
-  - lemma: думаючий
-    ipa: /ˈdumajut͡ʃɪj/
-    translation: thinking, thoughtful
-    pos: adj
-    gender: m
-  - lemma: зупиняти
-    ipa: /zupɪˈnʲatɪ/
-    translation: to stop
-    pos: verb
-  - lemma: ліцензія
-    ipa: /lʲiˈt͡sɛnzʲija/
-    translation: license
-    pos: noun
-    gender: f
-  - lemma: медіасцена
-    ipa: /mɛdiasˈt͡sɛna/
-    translation: media scene
-    pos: noun
-    gender: f
-  - lemma: мозок
-    ipa: /ˈmɔzɔk/
-    translation: brain
-    pos: noun
-    gender: m
-  - lemma: нитка
-    ipa: /ˈnɪtka/
-    translation: thread
-    pos: noun
-    gender: f
-  - lemma: ніша
-    ipa: /ˈnʲiʃa/
-    translation: niche
-    pos: noun
-    gender: f
-  - lemma: перепитати
-    ipa: /pɛrɛpɪˈtatɪ/
-    translation: to ask again (perfective)
-    pos: verb
-  - lemma: перепитувати
-    ipa: /pɛrɛˈpɪtuvatɪ/
-    translation: to ask again, to keep asking (imperfective)
-    pos: verb
-  - lemma: переслуховувати
-    ipa: /pɛrɛsluˈxɔvuvatɪ/
-    translation: to listen again
-    pos: verb
-  - lemma: привід
-    ipa: /ˈprɪvʲid/
-    translation: reason, occasion
-    pos: noun
-    gender: m
-  - lemma: подкастер
-    ipa: /pɔdˈkastɛr/
-    translation: podcaster
-    pos: noun
-    gender: m
-  - lemma: подкастинг
-    ipa: /pɔdˈkastɪnh/
-    translation: podcasting
-    pos: noun
-    gender: m
-  - lemma: подкаст
-    ipa: /pɔdˈkast/
-    translation: podcast
-    pos: noun
-    gender: m
-  - lemma: сегмент
-    ipa: /sɛhˈmɛnt/
-    translation: segment
-    pos: noun
-    gender: m
-  - lemma: сигнальний
-    ipa: /sɪhˈnalʲnɪj/
-    translation: signal (adj)
-    pos: adj
-    gender: m
-  - lemma: текстовий
-    ipa: /tɛkˈstɔvɪj/
-    translation: text (adj)
-    pos: adj
-    gender: m
-  - lemma: уточнювати
-    ipa: /uˈtɔt͡ʃnʲuvatɪ/
-    translation: to specify, to clarify
-    pos: verb
-  - lemma: транскрипція
-    ipa: /transˈkrɪpt͡sʲija/
-    translation: transcription
-    pos: noun
-    gender: f
-  - lemma: фрустрація
-    ipa: /fruˈstrat͡sʲija/
-    translation: frustration
-    pos: noun
-    gender: f
-  - lemma: хвилювати
-    ipa: /xvɪlʲuˈvatɪ/
-    translation: to worry, to move, to excite
-    pos: verb
-  - lemma: Савік Шустер
-    ipa: /ˈsavʲik ˈʃustɛr/
-    translation: Savik Shuster
-    pos: propn
-    gender: m
-  - lemma: інтонація
-    ipa: /intɔˈnat͡sʲija/
-    translation: intonation
-    pos: noun
-    gender: f
-  - lemma: історичність
-    ipa: /istɔˈrɪt͡ʃnʲisʲtʲ/
-    translation: historicity
-    pos: noun
-    gender: f
-  - lemma: обговорення
-    ipa: /ɔbhɔˈvɔrɛnʲːa/
-    translation: discussion
-    pos: noun
-    gender: n
-  - lemma: нотатки
-    ipa: /nɔˈtatkɪ/
-    translation: notes
-    pos: noun
-    gender: pl
-  - lemma: резонанс
-    ipa: /rɛzɔˈnans/
-    translation: resonance
-    pos: noun
-    gender: m
-  - lemma: підписник
-    ipa: /pʲidˈpɪsnɪk/
-    translation: subscriber
-    pos: noun
-    gender: m
-  - lemma: ефір
-    ipa: /ɛˈfʲir/
-    translation: air (broadcast)
-    pos: noun
-    gender: m
-  - lemma: Оксана Забужко
-    ipa: /ɔkˈsana zaˈbuʒkɔ/
-    translation: Oxana Zabuzhko
-    pos: propn
-    gender: f
+- lemma: анонсувати
+  ipa: /anɔnsuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: аудіоконтент
+  ipa: /audiɔkɔntɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: багатогодинний
+  ipa: /baɦatɔɦɔdˈɪnnɪj/
+  translation: ''
+  pos: adj
+- lemma: будь-хто
+  ipa: /budʲ-xtˈɔ/
+  translation: ''
+  pos: pron
+- lemma: бум
+  ipa: /bum/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вгадувати
+  ipa: /ʋɦˈaduʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: виділення
+  ipa: /ʋˈɪdilɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: випустити
+  ipa: /ʋˈɪpustɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відносно
+  ipa: /ʋidnˈɔsnɔ/
+  translation: ''
+  pos: adv
+- lemma: демократизація
+  ipa: /dɛmɔkratɪzˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дилетантизм
+  ipa: /dɪlɛtantˈɪzm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: досконалість
+  ipa: /dɔskɔnˈalistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: думаючий
+  ipa: /dumaˈjut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: експертний
+  ipa: /ɛkspˈɛrtnɪj/
+  translation: ''
+  pos: adj
+- lemma: епізод
+  ipa: /ɛpizˈɔd/
+  translation: ''
+  pos: noun
+- lemma: з'ясувати
+  ipa: /zjasuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: забужко
+  ipa: /zabˈuʒkɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: задавати
+  ipa: /zadaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: здогадуватися
+  ipa: /zdɔɦˈaduʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: знаючи
+  ipa: /znˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: ліцензія
+  ipa: /lit͡sˈɛnzija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: медіасцена
+  ipa: /mɛdiast͡sɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: напр
+  ipa: /napr/
+  translation: ''
+  pos: adv
+- lemma: нитка
+  ipa: /nˈɪtka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ніша
+  ipa: /nˈiʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: перепитати
+  ipa: /pɛrɛpɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перепитувати
+  ipa: /pɛrɛpˈɪtuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: переслуховувати
+  ipa: /pɛrɛsluxɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: повтор
+  ipa: /pɔʋtˈɔr/
+  translation: ''
+  pos: noun
+- lemma: подкаст-сцена
+  ipa: /pɔdkast-st͡sˈɛna/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: подкастер
+  ipa: /pɔdkastɛr/
+  translation: ''
+  pos: noun
+- lemma: подкастерти
+  ipa: /pɔdkastɛrtɪ/
+  translation: ''
+  pos: verb
+- lemma: подкастинг
+  ipa: /pɔdkˈastɪnɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: подумавши
+  ipa: /pɔdˈumaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: позитив
+  ipa: /pɔzɪtˈɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: полегшувати
+  ipa: /pɔlˈɛɦʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: пропонуючи
+  ipa: /prɔpɔnˈujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: підручниковий
+  ipa: /pidrut͡ʃnɪkɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: підсумовувати
+  ipa: /pidsumˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: редагувати
+  ipa: /rɛdaɦuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: резонанс
+  ipa: /rɛzɔnˈans/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: самооцінка
+  ipa: /samɔɔt͡sˈinka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сигнальний
+  ipa: /sɪɦnˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: слідити
+  ipa: /slidˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: створюватися
+  ipa: /stʋˈɔrjuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: столичний
+  ipa: /stɔlˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: суржик
+  ipa: /sˈurʒɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сьогодення
+  ipa: /sʲɔɦɔdˈɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: точ-
+  ipa: /tɔt͡ʃ-/
+  translation: ''
+  pos: noun
+- lemma: фрагмент
+  ipa: /fraɦmˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фрустрація
+  ipa: /frustrˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хвилинний
+  ipa: /xʋɪlˈɪnnɪj/
+  translation: ''
+  pos: adj
+- lemma: хвилювати
+  ipa: /xʋɪljuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: шукаючи
+  ipa: /ʃukˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: шустер
+  ipa: /ʃˈustɛr/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ідентифікувати
+  ipa: /idɛntɪfikuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: інді-рок
+  ipa: /indi-rɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: історичність
+  ipa: /istɔrˈɪt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f

@@ -1,0 +1,26 @@
+module: 84-checkpoint-register-synthesis
+level: B2
+version: '2.0'
+items:
+- lemma: вимовлений
+  ipa: /ʋˈɪmɔʋlɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: донор
+  ipa: /dˈɔnɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: напівзахід
+  ipa: /napiʋzˈaxid/
+  translation: ''
+  pos: noun
+- lemma: подовження
+  ipa: /pɔdˈɔʋʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: спадний
+  ipa: /spadnˈɪj/
+  translation: ''
+  pos: adj

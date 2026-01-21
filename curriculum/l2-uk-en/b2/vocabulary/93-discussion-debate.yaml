@@ -1,105 +1,76 @@
+module: 93-discussion-debate
+level: B2
+version: '2.0'
 items:
-  - lemma: дискусія
-    translation: discussion
-    pos: noun
-    gender: f
-  - lemma: дебати
-    translation: debate
-    pos: noun
-    gender: pl
-  - lemma: аргумент
-    translation: argument
-    pos: noun
-    gender: m
-  - lemma: контраргумент
-    translation: counterargument
-    pos: noun
-    gender: m
-  - lemma: доказ
-    translation: evidence, proof
-    pos: noun
-    gender: m
-  - lemma: теза
-    translation: thesis, claim
-    pos: noun
-    gender: f
-  - lemma: позиція
-    translation: position, stance
-    pos: noun
-    gender: f
-  - lemma: точка зору
-    translation: point of view
-    pos: phrase
-  - lemma: погляд
-    translation: view, opinion
-    pos: noun
-    gender: m
-  - lemma: компроміс
-    translation: compromise
-    pos: noun
-    gender: m
-  - lemma: консенсус
-    translation: consensus
-    pos: noun
-    gender: m
-  - lemma: суперечка
-    translation: dispute, argument
-    pos: noun
-    gender: f
-  - lemma: полеміка
-    translation: polemic, debate
-    pos: noun
-    gender: f
-  - lemma: заперечення
-    translation: objection, rebuttal
-    pos: noun
-    gender: n
-  - lemma: висновок
-    translation: conclusion
-    pos: noun
-    gender: m
-  - lemma: доводити
-    translation: to prove, to argue
-    pos: verb
-  - lemma: обґрунтовувати
-    translation: to justify, to substantiate
-    pos: verb
-  - lemma: заперечувати
-    translation: to object, to refute
-    pos: verb
-  - lemma: погоджуватися
-    translation: to agree
-    pos: verb
-  - lemma: незгоджуватися
-    translation: to disagree
-    pos: verb
-  - lemma: переконувати
-    translation: to persuade, to convince
-    pos: verb
-  - lemma: відстоювати
-    translation: to defend, to uphold
-    pos: verb
-  - lemma: оспорювати
-    translation: to dispute, to challenge
-    pos: verb
-  - lemma: уточнювати
-    translation: to clarify, to specify
-    pos: verb
-  - lemma: перебивати
-    translation: to interrupt
-    pos: verb
-  - lemma: поступатися
-    translation: to concede, to yield
-    pos: verb
-  - lemma: обґрунтований
-    translation: substantiated, well-founded
-    pos: adjective
-  - lemma: переконливий
-    translation: convincing, persuasive
-    pos: adjective
-  - lemma: суперечливий
-    translation: controversial, contradictory
-    pos: adjective
-  - lemma: безпідставний
-    translation: unfounded, baseless
-    pos: adjective
+- lemma: дебат
+  ipa: /dɛbat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дебатера
+  ipa: /dɛbatɛra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дебатний
+  ipa: /dɛbatnɪj/
+  translation: ''
+  pos: adj
+- lemma: дослідж
+  ipa: /dɔslidʒ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: карл
+  ipa: /karl/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: контраргументація
+  ipa: /kɔntrarɦumɛntˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: нв
+  ipa: /nʋ/
+  translation: ''
+  pos: noun
+- lemma: нотування
+  ipa: /nɔtuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: перебивання
+  ipa: /pɛrɛbɪʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: перекручення
+  ipa: /pɛrɛkrˈut͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: переривання
+  ipa: /pɛrɛrɪʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: полеміка
+  ipa: /pɔlˈɛmika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поппер
+  ipa: /pˈɔppɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поступитися
+  ipa: /pɔstupˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: стовпець
+  ipa: /stɔʋpˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m

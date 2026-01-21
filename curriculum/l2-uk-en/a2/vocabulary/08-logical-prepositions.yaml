@@ -2,122 +2,206 @@ module: 08-logical-prepositions
 level: A2
 version: '2.0'
 items:
-  - lemma: акцент
-    ipa: ɐkˈt͡sɛnt
-    translation: accent
-    pos: noun
-    gender: m
-  - lemma: варення
-    ipa: ʋɐˈrɛnʲːɐ
-    translation: jam
-    pos: noun
-    gender: n
-  - lemma: вишень
-    ipa: ˈvɪʃenʲ
-    translation: cherries
-    pos: noun
-    gender: n
-  - lemma: виїжджати
-    ipa: vijiʒˈdʒɑte
-    translation: to depart; to drive out
-    pos: verb
-  - lemma: відпустка
-    ipa: vidˈpustkɐ
-    translation: vacation; leave
-    pos: noun
-    gender: f
-  - lemma: глютен
-    ipa: hlʲuˈtɛn
-    translation: gluten
-    pos: noun
-    gender: m
-  - lemma: домовитися
-    ipa: doˈmɔʋɪtɪsʲɐ
-    translation: to agree; to arrange
-    pos: verb
-  - lemma: дорослий
-    ipa: doˈrɔslei̯
-    translation: adult
-    pos: noun
-    gender: m
-  - lemma: жартувати
-    ipa: ʒɐrtuˈʋɑte
-    translation: to joke
-    pos: verb
-  - lemma: зайти
-    ipa: zɐi̯ˈtɪ
-    translation: to enter; to stop by
-    pos: verb
-    gender: f
-  - lemma: закритися
-    ipa: zɐˈkrɪtɪsʲɐ
-    translation: to close; to be closed
-    pos: verb
-    gender: n
-  - lemma: запросити
-    ipa: zɐproˈsɪte
-    translation: to invite
-    pos: verb
-    gender: f
-  - lemma: кашля
-    ipa: ˈkɑʃlʲɐ
-    translation: cough (genitive)
-    pos: noun
-    gender: m
-  - lemma: легше
-    ipa: ˈlɛɦʃe
-    translation: easier
-    pos: adv
-  - lemma: мало
-    ipa: ˈmɑlo
-    translation: little; few
-    pos: adv
-  - lemma: масло
-    ipa: ˈmɑslo
-    translation: butter; oil
-    pos: noun
-    gender: m
-  - lemma: надіслати
-    ipa: nɐdisˈlɑte
-    translation: to send
-    pos: verb
-    gender: f
-  - lemma: неважливо
-    ipa: neʋɐʒˈlɪʋo
-    translation: unimportant; it doesn't matter
-    pos: adv
-  - lemma: палатка
-    ipa: pɐˈlɑtkɐ
-    translation: tent
-    pos: noun
-    gender: f
-  - lemma: почитати
-    ipa: pot͡ʃɪˈtɑte
-    translation: to read
-    pos: verb
-  - lemma: підійти
-    ipa: pidiˈi̯tɪ
-    translation: to approach; to suit
-    pos: verb
-  - lemma: раптом
-    ipa: ˈrɑptom
-    translation: suddenly
-    pos: adv
-  - lemma: рекомендувати
-    ipa: rekomenduˈʋɑte
-    translation: to recommend
-    pos: verb
-  - lemma: скло
-    ipa: sklɔ
-    translation: glass (material)
-    pos: noun
-    gender: n
-  - lemma: хвороба
-    ipa: xʋoˈrɔbɐ
-    translation: illness; disease
-    pos: noun
-    gender: f
-  - lemma: хотітися
-    ipa: xoˈtitusʲɐ
-    translation: to want
-    pos: verb
+- lemma: абстрактний
+  ipa: /abstrˈaktnɪj/
+  translation: ''
+  pos: adj
+- lemma: варення
+  ipa: /ʋarɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вишня
+  ipa: /ʋˈɪʃnja/
+  translation: ''
+  pos: noun
+- lemma: виїжджати
+  ipa: /ʋɪjiʒdʒˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: власний
+  ipa: /ʋlˈasnɪj/
+  translation: ''
+  pos: adj
+- lemma: втомитися
+  ipa: /ʋtɔmˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: відносини
+  ipa: /ʋidnˈɔsɪnɪ/
+  translation: ''
+  pos: noun
+- lemma: відпустка
+  ipa: /ʋidpˈustka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: глютен
+  ipa: /ɦljutɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: голодомор
+  ipa: /ɦɔlɔdɔmˈɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: джерело
+  ipa: /dʒɛrɛlˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: домовитися
+  ipa: /dɔmˈɔʋɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: дорослий
+  ipa: /dɔrˈɔslɪj/
+  translation: ''
+  pos: adj
+- lemma: думка
+  ipa: /dˈumka/
+  translation: ''
+  pos: noun
+- lemma: жартувати
+  ipa: /ʒartuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зайти
+  ipa: /zajtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: зайшлий
+  ipa: /zˈajʃlɪj/
+  translation: ''
+  pos: adj
+- lemma: закритися
+  ipa: /zakrˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: занадто
+  ipa: /zanˈadtɔ/
+  translation: ''
+  pos: adv
+- lemma: заповнити
+  ipa: /zapˈɔʋnɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: запросити
+  ipa: /zaprɔsˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: кашель
+  ipa: /kˈaʃɛlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: легший
+  ipa: /lˈɛɦʃɪj/
+  translation: ''
+  pos: adj
+- lemma: листя
+  ipa: /lˈɪstja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: логічний
+  ipa: /lɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: мало
+  ipa: /mˈalɔ/
+  translation: ''
+  pos: adv
+- lemma: мета
+  ipa: /mɛtˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: надіслати
+  ipa: /nadislˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: наслідок
+  ipa: /nˈaslidɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: неважливо
+  ipa: /nɛʋaʒlˈɪʋɔ/
+  translation: ''
+  pos: adv
+- lemma: обрати
+  ipa: /ɔbrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: палатка
+  ipa: /palˈatka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: побудова
+  ipa: /pɔbudˈɔʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поганий
+  ipa: /pɔɦˈanɪj/
+  translation: ''
+  pos: adj
+- lemma: почитати
+  ipa: /pɔt͡ʃɪtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: присутність
+  ipa: /prɪsˈutnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пропуск
+  ipa: /prˈɔpusk/
+  translation: ''
+  pos: noun
+- lemma: підійти
+  ipa: /pidijtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: раптом
+  ipa: /rˈaptɔm/
+  translation: ''
+  pos: adv
+- lemma: рекомендувати
+  ipa: /rɛkɔmɛnduʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: складний
+  ipa: /skladnɪj/
+  translation: ''
+  pos: adj
+- lemma: скло
+  ipa: /sklɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: створити
+  ipa: /stʋɔrˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: таблиця
+  ipa: /tablˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хвороба
+  ipa: /xʋɔrˈɔba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хотітися
+  ipa: /xɔtˈitɪsja/
+  translation: ''
+  pos: verb
+- lemma: чого
+  ipa: /t͡ʃɔɦˈɔ/
+  translation: ''
+  pos: adv

@@ -2,211 +2,25 @@ module: 69-integration-practice
 level: B2
 version: '2.0'
 items:
-- lemma: акорд
-  ipa: /ɐˈkord/
-  translation: chord
+- lemma: байдики
+  ipa: /bˈajdɪkɪ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: байдик
-  ipa: /bɐjˈdɪk/
-  translation: idler, loafer
-  pos: noun
-  gender: m
-- lemma: вдосконалений
-  ipa: /wdoskoˈnɑlɛnɪj/
-  translation: perfected, improved
-  pos: adj
-- lemma: вивчене
-  ipa: /wɪˈwt͡ʃɛnɛ/
-  translation: learned, studied
-  pos: adj
-  gender: m
-- lemma: вплітати
-  ipa: /wplʲiˈtɑtɪ/
-  translation: to weave in, to incorporate
-  pos: verb
-- lemma: вставляти
-  ipa: /wstɐwˈlʲɑtɪ/
-  translation: to insert, to put in
-  pos: verb
-- lemma: втерти
-  ipa: /wˈtɛrtɪ/
-  translation: to rub in
-  pos: verb
-- lemma: відшліфовувати
-  ipa: /wʲidʃlʲifoˈwuwɑtɪ/
-  translation: to polish, to refine
-  pos: verb
-- lemma: дипломат
-  ipa: /dɪploˈmɑt/
-  translation: diplomat
-  pos: noun
-  gender: m
-- lemma: донести
-  ipa: /donɛˈstɪ/
-  translation: to convey, to deliver
-  pos: verb
-- lemma: еся
-  ipa: /ˈɛsʲɑ/
-  translation: essay (genitive plural)
-  pos: noun
-  gender: m
-- lemma: забаритися
-  ipa: /zɐbɐˈrɪtɪsʲɑ/
-  translation: to linger, to delay
-  pos: verb
-- lemma: змістовний
-  ipa: /zmʲistoˈwnɪj/
-  translation: substantial, meaningful
-  pos: adj
-  gender: m
-- lemma: зоровий
-  ipa: /zoˈrowɪj/
-  translation: visual
-  pos: adj
-  gender: m
-- lemma: кейс
-  ipa: /kɛjs/
-  translation: case (study)
-  pos: propn
-  gender: m
 - lemma: компетентний
-  ipa: /kompɛˈtɛntnɪj/
-  translation: competent
+  ipa: /kɔmpɛtˈɛntnɪj/
+  translation: ''
   pos: adj
-- lemma: контекстуально
-  ipa: /kontɛkstuˈɑlʲno/
-  translation: contextually
-  pos: adv
 - lemma: лямка
-  ipa: /ˈlʲɑmkɑ/
-  translation: strap, harness
-  pos: noun
-  gender: f
-- lemma: механік
-  ipa: /mɛˈxɑnʲik/
-  translation: mechanics (genitive plural)
-  pos: noun
-  gender: f
-- lemma: мотиваційний
-  ipa: /motɪwɐˈt͡sʲijnɪj/
-  translation: motivational
-  pos: adj
-  gender: m
-- lemma: найцінніший
-  ipa: /nɐjt͡sʲinˈnʲiʃɪj/
-  translation: most valuable
-  pos: adj
-  gender: m
-- lemma: нарад
-  ipa: /nɐˈrɑd/
-  translation: meetings (genitive plural)
-  pos: noun
-  gender: f
-- lemma: наступати
-  ipa: /nɐstuˈpɑtɪ/
-  translation: to advance, to approach
-  pos: verb
-- lemma: непосильний
-  ipa: /nɛpoˈsʲilʲnɪj/
-  translation: unbearable, impossible
-  pos: adj
-  gender: n
-- lemma: оживляти
-  ipa: /oʒɪwˈlʲɑtɪ/
-  translation: to enliven, to animate
-  pos: verb
-- lemma: перебивати
-  ipa: /pɛrɛbɪˈwɑtɪ/
-  translation: to interrupt
-  pos: verb
-- lemma: переконливо
-  ipa: /pɛrɛˈkonlɪwo/
-  translation: convincingly
-  pos: adv
-- lemma: покроковий
-  ipa: /pokroˈkowɪj/
-  translation: step-by-step
-  pos: adj
-  gender: f
-- lemma: порозумітися
-  ipa: /poroz uˈmʲitɪsʲɑ/
-  translation: to reach agreement
-  pos: verb
-- lemma: пряма
-  ipa: /prʲɑˈmɑ/
-  translation: straight line (genitive)
-  pos: noun
-  gender: f
-- lemma: підключати
-  ipa: /pʲidklʲut͡ʃɑˈtɪ/
-  translation: to connect, to involve
-  pos: verb
-- lemma: підкорити
-  ipa: /pʲidkoˈrɪtɪ/
-  translation: to conquer, to master
-  pos: verb
-- lemma: пілотаж
-  ipa: /pʲiloˈtɑʒ/
-  translation: piloting, aerobatics
-  pos: noun
-  gender: m
-- lemma: розберти
-  ipa: /rozbɛrˈtɪ/
-  translation: to disassemble, to analyze
-  pos: verb
-- lemma: розкутий
-  ipa: /rozˈkutɪj/
-  translation: relaxed, uninhibited
-  pos: adj
-- lemma: розрядити
-  ipa: /rozrʲɑˈdɪtɪ/
-  translation: to defuse, to relieve
-  pos: verb
-- lemma: рідковживаний
-  ipa: /rʲidkowʒɪˈwɑnɪj/
-  translation: rarely used
-  pos: adj
-- lemma: самовираження
-  ipa: /sɐmowɪˈrɑʒɛnʲːɑ/
-  translation: self-expression
-  pos: noun
-  gender: n
-- lemma: самопрезентація
-  ipa: /sɐmoprɛzɛnˈtɑt͡sʲijɑ/
-  translation: self-presentation
-  pos: noun
-  gender: f
-- lemma: скептик
-  ipa: /ˈskɛptɪk/
-  translation: skeptic
-  pos: noun
-  gender: m
-- lemma: складання
-  ipa: /sklɐˈdɑnʲːɑ/
-  translation: composition, folding
-  pos: noun
-  gender: n
-- lemma: суперсил
-  ipa: /supɛrsɪl/
-  translation: superpowers (genitive plural)
+  ipa: /lˈjamka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: твердо
-  ipa: /ˈtwɛrdo/
-  translation: firmly, solidly
+  ipa: /tʋˈɛrdɔ/
+  translation: ''
   pos: adv
-- lemma: утися
-  ipa: /uˈtɪsʲɑ/
-  translation: to find refuge, to settle
-  pos: verb
-- lemma: фінішний
-  ipa: /fʲiˈnʲiʃnɪj/
-  translation: final, finishing
-  pos: adj
-  gender: f
-- lemma: човен
-  ipa: /ˈt͡ʃowɛn/
-  translation: boat
+- lemma: човно
+  ipa: /t͡ʃɔʋnˈɔ/
+  translation: ''
   pos: noun
-  gender: m
+  gender: n

@@ -2,351 +2,52 @@ module: 38-one-member-sentences
 level: B2
 version: '2.0'
 items:
-- lemma: багаття
-  ipa: /bɑˈɦɑtʲːɑ/
-  translation: bonfire
-  pos: noun
-  gender: n
-- lemma: буттєвий
-  ipa: /butˈtʲɛwɪj/
-  translation: existential
-  pos: adj
-- lemma: визначений
-  ipa: /wɪznɑˈt͡ʃɛnɪj/
-  translation: definite
-  pos: adj
-- lemma: відчуження
-  ipa: /wʲidt͡ʃuˈʒɛnʲːɑ/
-  translation: alienation
-  pos: noun
-  gender: n
 - lemma: голодно
-  ipa: /ɦoˈlodno/
-  translation: hungrily, it is hungry
+  ipa: /ɦˈɔlɔdnɔ/
+  translation: ''
   pos: adv
-- lemma: горе
-  ipa: /ˈɦorɛ/
-  translation: grief, woe
-  pos: noun
-  gender: n
 - lemma: двоскладний
-  ipa: /dwosklɑdnɪj/
-  translation: two-member (sentence)
+  ipa: /dʋɔsklˈadnɪj/
+  translation: ''
   pos: adj
-- lemma: декорація
-  ipa: /dɛkorɑˈt͡sʲijɑ/
-  translation: decoration, scenery
-  pos: noun
-  gender: f
-- lemma: дефектний
-  ipa: /dɛˈfɛktnɪj/
-  translation: defective
+- lemma: неозначено-особовий
+  ipa: /nɛɔznat͡ʃɛnɔ-ɔsɔbˈɔʋɪj/
+  translation: ''
   pos: adj
-- lemma: динамічно
-  ipa: /dɪnɐˈmʲit͡ʃno/
-  translation: dynamically
-  pos: adv
-- lemma: експериментувати
-  ipa: /ɛkspɛrɪmɛntuˈwɑtɪ/
-  translation: to experiment
-  pos: verb
-- lemma: експресивніший
-  ipa: /ɛksprɛsɪwˈnʲiʃɪj/
-  translation: more expressive
-  pos: adj
-- lemma: жайворонок
-  ipa: /ʒɑjwoˈronok/
-  translation: lark (bird)
-  pos: noun
-  gender: m
-- lemma: жовкнути
-  ipa: /ʒowkˈnutɪ/
-  translation: to turn yellow
-  pos: verb
-- lemma: замріти
-  ipa: /zɐmˈrʲitɪ/
-  translation: to freeze, to become motionless
-  pos: verb
-- lemma: зловживати
-  ipa: /zloʒɪˈwɑtɪ/
-  translation: to abuse
-  pos: verb
-- lemma: кручя
-  ipa: /kruˈt͡ʃɑ/
-  translation: steep slope
-  pos: noun
-  gender: f
-- lemma: лаконічніший
-  ipa: /lɐkoˈnʲit͡ʃnʲiʃɪj/
-  translation: more laconic
-  pos: adj
-- lemma: ледь
-  ipa: /lɛdʲ/
-  translation: barely
-  pos: adv
-- lemma: летіти
-  ipa: /lɛˈtʲitɪ/
-  translation: to fly
-  pos: verb
-- lemma: мазок
-  ipa: /mɐˈzok/
-  translation: stroke, swab
-  pos: noun
-  gender: m
-- lemma: мак
-  ipa: /mɑk/
-  translation: poppy
-  pos: noun
-  gender: m
-- lemma: мінімалізм
-  ipa: /mʲinʲimɐˈlʲizm/
-  translation: minimalism
-  pos: noun
-  gender: m
-- lemma: надворі
-  ipa: /nɐdwoˈrʲi/
-  translation: outside, outdoors
-  pos: adv
-- lemma: надивитися
-  ipa: /nɐdɪˈwɪtɪsʲɑ/
-  translation: to have a good look
-  pos: verb
-- lemma: називання
-  ipa: /nɐzɪˈwɑnʲːɑ/
-  translation: naming
-  pos: noun
-  gender: n
-- lemma: невизначеність
-  ipa: /nɛwɪznɑˈt͡ʃɛnʲistʲ/
-  translation: uncertainty
-  pos: noun
-  gender: f
-- lemma: невідомий
-  ipa: /nɛˈwʲidomɪj/
-  translation: unknown
-  pos: adj
-- lemma: неозначено
-  ipa: /nɛoznɑˈt͡ʃɛno/
-  translation: indefinitely
-  pos: adv
-- lemma: неозначений
-  ipa: /nɛoznɑˈt͡ʃɛnɪj/
-  translation: indefinite
-  pos: adj
-- lemma: новеля
-  ipa: /noˈwɛlʲɑ/
-  translation: short story
-  pos: noun
-  gender: f
 - lemma: номінативний
-  ipa: /nomʲinɐˈtɪwnɪj/
-  translation: nominative
+  ipa: /nɔminatˈɪʋnɪj/
+  translation: ''
   pos: adj
-- lemma: однозначно
-  ipa: /odnozˈnɑt͡ʃno/
-  translation: unambiguously
+- lemma: означено-особовий
+  ipa: /ɔznˈat͡ʃɛnɔ-ɔsɔbɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: прохолодно
+  ipa: /prɔxɔlˈɔdnɔ/
+  translation: ''
   pos: adv
-- lemma: односкладний
-  ipa: /odnosklɑdnɪj/
-  translation: one-member (sentence)
-  pos: adj
-- lemma: означити
-  ipa: /oznɑˈt͡ʃɪtɪ/
-  translation: to define, to mark
-  pos: verb
-- lemma: побути
-  ipa: /poˈbutɪ/
-  translation: to stay for a while
-  pos: verb
-- lemma: показати
-  ipa: /pokɐˈzɑtɪ/
-  translation: to show
-  pos: verb
-- lemma: пожати
-  ipa: /poˈʒɑtɪ/
-  translation: to reap, to shake hands
-  pos: verb
-- lemma: привести
-  ipa: /prɪˈwɛstɪ/
-  translation: to bring, to lead
-  pos: verb
-- lemma: примітивний
-  ipa: /prɪmʲiˈtɪwnɪj/
-  translation: primitive
-  pos: adj
-- lemma: присудковий
-  ipa: /prɪsudˈkowɪj/
-  translation: predicate (adj.)
-  pos: adj
-- lemma: підзаголовка
-  ipa: /pʲidzɐɦoˈlowkɑ/
-  translation: subtitle
-  pos: noun
-  gender: f
-- lemma: рвати
-  ipa: /rwɑtɪ/
-  translation: to tear
-  pos: verb
-- lemma: ремарка
-  ipa: /rɛˈmɑrkɑ/
-  translation: stage direction, remark
-  pos: noun
-  gender: f
-- lemma: ритмічний
-  ipa: /rɪtˈmʲit͡ʃnɪj/
-  translation: rhythmic
-  pos: adj
-- lemma: розгорнутий
-  ipa: /rozɦorˈnutɪj/
-  translation: unfolded, developed
-  pos: adj
-- lemma: розстелитися
-  ipa: /rozsˈtɛlɪtɪsʲɑ/
-  translation: to spread out
-  pos: verb
-- lemma: різне
-  ipa: /ˈrʲiznɛ/
-  translation: various, different things
-  pos: noun
-  gender: n
-- lemma: самодостатній
-  ipa: /sɐmodoˈstɑtnʲij/
-  translation: self-sufficient
-  pos: adj
-- lemma: самота
-  ipa: /sɐmoˈtɑ/
-  translation: loneliness
-  pos: noun
-  gender: f
-- lemma: самотній
-  ipa: /sɐˈmotnʲij/
-  translation: lonely
-  pos: adj
 - lemma: свіжо
-  ipa: /ˈswʲiʒo/
-  translation: freshly
+  ipa: /sʋˈiʒɔ/
+  translation: ''
   pos: adv
 - lemma: світанок
-  ipa: /swʲiˈtɑnok/
-  translation: dawn
+  ipa: /sʋitˈanɔk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: світати
-  ipa: /swʲiˈtɑtɪ/
-  translation: to dawn
-  pos: verb
-- lemma: світлий
-  ipa: /ˈswʲitlɪj/
-  translation: bright, light
-  pos: adj
 - lemma: світліти
-  ipa: /swʲitˈlʲitɪ/
-  translation: to brighten
+  ipa: /sʋitlˈitɪ/
+  translation: ''
   pos: verb
-- lemma: словосполучення
-  ipa: /slowospolut͡ʃɛnʲːɑ/
-  translation: phrase, word combination
-  pos: noun
-  gender: n
-- lemma: смерть
-  ipa: /smɛrtʲ/
-  translation: death
-  pos: noun
-  gender: f
 - lemma: соромно
-  ipa: /soˈromno/
-  translation: shamefully, it is shameful
+  ipa: /sˈɔrɔmnɔ/
+  translation: ''
   pos: adv
-- lemma: спека
-  ipa: /spɛˈkɑ/
-  translation: heat
-  pos: noun
-  gender: f
-- lemma: стук
-  ipa: /stuk/
-  translation: knock, knocking
-  pos: noun
-  gender: m
-- lemma: суєта
-  ipa: /suˈjetɑ/
-  translation: vanity, hustle
-  pos: noun
-  gender: f
-- lemma: сценарій
-  ipa: /st͡sɛˈnɑrʲij/
-  translation: scenario, script
-  pos: noun
-  gender: f
-- lemma: сценічний
-  ipa: /st͡sɛˈnʲit͡ʃnɪj/
-  translation: scenic, stage (adj.)
-  pos: adj
-- lemma: сіно
-  ipa: /ˈsʲino/
-  translation: hay
-  pos: noun
-  gender: m
 - lemma: темніти
-  ipa: /tɛmˈnʲitɪ/
-  translation: to darken
+  ipa: /tɛmnˈitɪ/
+  translation: ''
   pos: verb
-- lemma: усвідомлювати
-  ipa: /uswʲidomlʲuˈwɑtɪ/
-  translation: to realize
-  pos: verb
-- lemma: фрагментарний
-  ipa: /frɑɦmɛnˈtɑrnɪj/
-  translation: fragmentary
-  pos: adj
-- lemma: фрагментарність
-  ipa: /frɑɦmɛntɑrnʲistʲ/
-  translation: fragmentariness
-  pos: noun
-  gender: f
-- lemma: хмара
-  ipa: /ˈxmɑrɑ/
-  translation: cloud
-  pos: noun
-  gender: f
-- lemma: хробак
-  ipa: /xroˈbɑk/
-  translation: worm
-  pos: noun
-  gender: m
-- lemma: чагар
-  ipa: /t͡ʃɑˈɦɑr/
-  translation: shrub
-  pos: noun
-  gender: m
-- lemma: іменниковий
-  ipa: /ʲimɛnnɪˈkowɪj/
-  translation: nominal
-  pos: adj
-- lemma: імпресіонізм
-  ipa: /ʲimprɛsʲioˈnʲizm/
-  translation: impressionism
-  pos: noun
-  gender: m
 - lemma: імпресіоністичний
-  ipa: /ʲimprɛsʲionʲisˈtɪt͡ʃnɪj/
-  translation: impressionistic
+  ipa: /imprɛsiɔnistˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-- lemma: імпресіоністичність
-  ipa: /ʲimprɛsʲionʲistɪt͡ʃnʲistʲ/
-  translation: impressionistic quality
-  pos: noun
-  gender: f
-- lemma: інтимний
-  ipa: /ʲinˈtɪmnɪj/
-  translation: intimate
-  pos: adj
-- lemma: існування
-  ipa: /ʲisnuˈwɑnʲːɑ/
-  translation: existence
-  pos: noun
-  gender: n
-- lemma: ґанок
-  ipa: /ˈɡɑnok/
-  translation: porch
-  pos: noun
-  gender: m

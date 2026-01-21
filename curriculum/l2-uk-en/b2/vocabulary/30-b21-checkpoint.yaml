@@ -3,144 +3,36 @@ level: B2
 version: '2.0'
 items:
 - lemma: багатосурядний
-  ipa: /bɑɦɑtosurʲɑdnɪj/
-  translation: multi-clause
+  ipa: /baɦatɔsurjadnɪj/
+  translation: ''
   pos: adj
 - lemma: вводитися
-  ipa: /wwodɪˈtɪsʲɑ/
-  translation: to be introduced
+  ipa: /ʋʋˈɔdɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: виголосити
-  ipa: /wɪɦoloˈsɪtɪ/
-  translation: to proclaim
-  pos: verb
-  gender: m
-- lemma: впорядковувати
-  ipa: /wporʲɑdkowuˈwɑtɪ/
-  translation: to organize
-  pos: verb
-- lemma: дебат
-  ipa: /dɛˈbɑt/
-  translation: debate (gen. pl.)
-  pos: noun
-  gender: m
-- lemma: делегація
-  ipa: /dɛlɛˈɦɑt͡sʲijɑ/
-  translation: delegation
+- lemma: зв'язність
+  ipa: /zʋˈjaznistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: домен
-  ipa: /doˈmɛn/
-  translation: domain
-  pos: noun
-  gender: m
-- lemma: завершувати
-  ipa: /zɐwɛrˈʃuwɑtɪ/
-  translation: to complete
-  pos: verb
-- lemma: заливати
-  ipa: /zɐlɪˈwɑtɪ/
-  translation: to pour over
-  pos: verb
-  gender: n
-- lemma: конектор
-  ipa: /koˈnɛktor/
-  translation: connector
-  pos: noun
-  gender: m
 - lemma: консультуватися
-  ipa: /konsulʲtuˈwɑtɪsʲɑ/
-  translation: to consult
+  ipa: /kɔnsulʲtuʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: контора
-  ipa: /konˈtorɑ/
-  translation: office
-  pos: noun
-  gender: f
-- lemma: користь
-  ipa: /ˈkorɪstʲ/
-  translation: benefit
-  pos: noun
-  gender: f
-- lemma: крилатий
-  ipa: /krɪˈlɑtɪj/
-  translation: winged
-  pos: adj
-- lemma: непрямо
-  ipa: /nɛˈprʲɑmo/
-  translation: indirectly
-  pos: adv
-- lemma: нотатка
-  ipa: /noˈtɑtkɑ/
-  translation: note
-  pos: noun
-  gender: f
-- lemma: огортати
-  ipa: /oɦorˈtɑtɪ/
-  translation: to wrap
-  pos: verb
-  gender: f
 - lemma: переключатися
-  ipa: /pɛrɛklʲut͡ʃɑˈtɪsʲɑ/
-  translation: to switch
-  pos: verb
-- lemma: посилювати
-  ipa: /posɪlʲuˈwɑtɪ/
-  translation: to strengthen
+  ipa: /pɛrɛkljut͡ʃˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: поінформований
-  ipa: /poʲinforˈmowɑnɪj/
-  translation: informed
+  ipa: /pɔinfɔrmˈɔʋanɪj/
+  translation: ''
   pos: adj
-- lemma: прибувати
-  ipa: /prɪbuˈwɑtɪ/
-  translation: to arrive
+- lemma: прийнявши
+  ipa: /prɪjnˈjaʋʃɪ/
+  translation: ''
   pos: verb
-- lemma: прибуваючий
-  ipa: /prɪbuˈwɑjut͡ʃɪj/
-  translation: arriving
-  pos: adj
-  gender: f
-- lemma: приністи
-  ipa: /prɪˈnʲistɪ/
-  translation: to bring (dialectal)
-  pos: verb
-- lemma: риторик
-  ipa: /rɪˈtorɪk/
-  translation: rhetorical (gen.)
-  pos: noun
-  gender: f
-- lemma: розширювати
-  ipa: /rozʃɪˈrʲuwɑtɪ/
-  translation: to expand
-  pos: verb
-- lemma: супровідний
-  ipa: /suproˈwʲidnɪj/
-  translation: accompanying
-  pos: adj
-  gender: f
-- lemma: тропи
-  ipa: /ˈtropɪ/
-  translation: tropes
-  pos: noun
-  gender: m
-- lemma: уривок
-  ipa: /ʊˈrɪvok/
-  translation: excerpt, fragment
-  pos: noun
-  gender: m
-- lemma: формуляр
-  ipa: /forˈmulʲɑr/
-  translation: form, blank
-  pos: noun
-  gender: m
-- lemma: формулярний
-  ipa: /formulʲɑrnɪj/
-  translation: form (adj.)
-  pos: adj
-  gender: m
-- lemma: ідіома
-  ipa: /iˈdʲiomɑ/
-  translation: idiom
+- lemma: імплементація
+  ipa: /implɛmɛntˈat͡sija/
+  translation: ''
   pos: noun
   gender: f

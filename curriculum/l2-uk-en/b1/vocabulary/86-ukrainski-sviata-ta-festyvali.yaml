@@ -3,232 +3,291 @@ level: B1
 version: '2.0'
 items:
 - lemma: анонс
-  ipa: /aˈnɔns/
-  translation: announcement
+  ipa: /anˈɔns/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вареничка
-  ipa: /varɛˈnɪt͡ʃka/
-  translation: varenyk (dim.)
+- lemma: багаття
+  ipa: /baɦˈattja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: вднг
-  ipa: /vɛ dɛ ɛn ɦɛ/
-  translation: VDNH
+  gender: n
+- lemma: вареничок
+  ipa: /ʋarˈɛnɪt͡ʃɔk/
+  translation: ''
   pos: noun
-  gender: f
 - lemma: верховинський
-  ipa: /vɛrxɔˈvɪnsʲkɪj/
-  translation: Verkhovyna (adj)
+  ipa: /ʋɛrxɔʋˈɪnsʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: виконанний
+  ipa: /ʋɪkɔnannɪj/
+  translation: ''
+  pos: adj
 - lemma: випас
-  ipa: /ˈvɪpas/
-  translation: grazing
+  ipa: /ʋˈɪpas/
+  translation: ''
   pos: noun
   gender: m
-- lemma: воскресіння
-  ipa: /vɔskrɛˈsʲinʲːa/
-  translation: resurrection
+- lemma: вироби
+  ipa: /ʋˈɪrɔbɪ/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: григоріанський
-  ipa: /hrɪhɔrʲiˈansʲkɪj/
-  translation: Gregorian
+- lemma: воскреснути
+  ipa: /ʋɔskrˈɛsnutɪ/
+  translation: ''
+  pos: verb
+- lemma: воістину
+  ipa: /ʋɔˈistɪnu/
+  translation: ''
+  pos: adv
+- lemma: вічність
+  ipa: /ʋˈit͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: геометричний
+  ipa: /ɦɛɔmɛtrˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: гуляння
-  ipa: /huˈlʲanʲːa/
-  translation: festivities
+  ipa: /ɦulˈjannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: дахабраха
-  ipa: /daxaˈbraxa/
-  translation: DakhaBrakha
-  pos: propn
-  gender: f
+- lemma: добробут
+  ipa: /dɔbrˈɔbut/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: дохристиянський
+  ipa: /dɔxrɪstɪˈjansʲkɪj/
+  translation: ''
+  pos: adj
 - lemma: дітки
-  ipa: /ˈdʲitkɪ/
-  translation: kiddies
+  ipa: /dˈitkɪ/
+  translation: ''
   pos: noun
-  gender: pl
-- lemma: засніжений
-  ipa: /zaˈsnʲiʒɛnɪj/
-  translation: snow-covered
-  pos: adj
+- lemma: етно-фестиваль
+  ipa: /ˈɛtnɔ-fɛstɪʋalʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: збора
+  ipa: /zbˈɔra/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: зловити
-  ipa: /zlɔˈvɪtɪ/
-  translation: to catch
+  ipa: /zlɔʋˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: колоски
+  ipa: /kɔlɔskˈɪ/
+  translation: ''
+  pos: noun
 - lemma: колядник
-  ipa: /kɔˈlʲadnɪk/
-  translation: caroler
+  ipa: /kɔlˈjadnɪk/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: колядування
-  ipa: /kɔlʲaduˈvanʲːa/
-  translation: caroling
+  ipa: /kɔljaduʋˈannja/
+  translation: ''
   pos: noun
-  gender: n
 - lemma: колядувати
-  ipa: /kɔlʲaduˈvatɪ/
-  translation: to carol
+  ipa: /kɔljaduʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: маслян
-  ipa: /ˈmaslʲan/
-  translation: Maslyana (trunc)
-  pos: propn
+- lemma: коханий
+  ipa: /kɔxanɪj/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: літний
+  ipa: /litnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: майстрів
+  ipa: /majstrˈiʋ/
+  translation: ''
+  pos: adj
+- lemma: масляний
+  ipa: /mˈasljanɪj/
+  translation: ''
+  pos: adj
 - lemma: масниця
-  ipa: /ˈmasnɪt͡sʲa/
-  translation: Masnytsia
-  pos: propn
+  ipa: /masnˈɪt͡sja/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: морен
-  ipa: /mɔˈrɛn/
-  translation: Morena (gen.)
-  pos: propn
+- lemma: морена
+  ipa: /mɔrˈɛna/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: найулюбленіший
-  ipa: /najulʲubˈlɛnʲiʃɪj/
-  translation: favorite
-  pos: adj
 - lemma: невихованість
-  ipa: /nɛvɪˈxɔvanʲisʲtʲ/
-  translation: bad manners
+  ipa: /nɛʋˈɪxɔʋanistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: обжинка
-  ipa: /ɔbˈʒɪnka/
-  translation: harvest festival
+- lemma: обжинки
+  ipa: /ɔbʒˈɪnkɪ/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: обливати
-  ipa: /ɔblɪˈvatɪ/
-  translation: to pour over
+  ipa: /ɔblɪʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: обмінюватися
-  ipa: /ɔbˈmʲinʲuvatɪsʲa/
-  translation: to exchange
+- lemma: облити
+  ipa: /ɔblˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: обіллити
-  ipa: /ɔbilːˈɪtɪ/
-  translation: to pour over (typo)
+- lemma: обмінятися
+  ipa: /ɔbminˈjatɪsja/
+  translation: ''
   pos: verb
-- lemma: огієнко
-  ipa: /ɔhiˈjɛnkɔ/
-  translation: Ohiyenko
-  pos: propn
-  gender: m
+- lemma: оленка
+  ipa: /ɔlˈɛnka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: опудало
-  ipa: /ɔˈpudalɔ/
-  translation: scarecrow
+  ipa: /ɔpˈudalɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: освятити
-  ipa: /ɔsvʲaˈtɪtɪ/
-  translation: to consecrate
+- lemma: освячений
+  ipa: /ɔsʋˈjat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: очищати
+  ipa: /ɔt͡ʃɪʃt͡ʃˈatɪ/
+  translation: ''
   pos: verb
-- lemma: отар
-  ipa: /ɔˈtar/
-  translation: flocks (gen.)
-  pos: noun
-  gender: m
 - lemma: папороть
-  ipa: /ˈpapɔrɔtʲ/
-  translation: fern
+  ipa: /pˈapɔrɔtʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: писанець
-  ipa: /pɪˈsanɛt͡sʲ/
-  translation: writer? (typo)
+- lemma: петрик
+  ipa: /pˈɛtrɪk/
+  translation: ''
   pos: noun
   gender: f
-- lemma: писанковий
-  ipa: /pɪsanˈkɔvɪj/
-  translation: pysanka (adj)
+- lemma: пироговий
+  ipa: /pɪrɔɦˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: плести
-  ipa: /plɛsˈtɪ/
-  translation: to weave
+  ipa: /plɛstˈɪ/
+  translation: ''
   pos: verb
-- lemma: пофарбований
-  ipa: /pɔfarˈbɔvanɪj/
-  translation: painted
-  pos: adj
 - lemma: поцілуватися
-  ipa: /pɔt͡sʲiluˈvatɪsʲa/
-  translation: to kiss
+  ipa: /pɔt͡siluʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: піст
-  ipa: /pist/
-  translation: fast
+- lemma: пробудження
+  ipa: /prɔbˈudʒɛnnja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: солодощі
-  ipa: /sɔˈlɔdɔʃt͡ʃi/
-  translation: sweets
-  pos: noun
-  gender: m
-- lemma: стрибати
-  ipa: /strɪˈbatɪ/
-  translation: to jump
-  pos: verb
-- lemma: сухофрукт
-  ipa: /suxɔˈfrukt/
-  translation: dried fruit
-  pos: noun
-  gender: m
-- lemma: тонути
-  ipa: /tɔˈnutɪ/
-  translation: to drown
-  pos: verb
-- lemma: укр
-  ipa: /ukr/
-  translation: Ukr.
-  pos: noun
-  gender: m
-- lemma: фестивальний
-  ipa: /fɛstɪˈvalʲnɪj/
-  translation: festival (adj)
-  pos: adj
-  gender: f
-- lemma: феєрверка
-  ipa: /fɛjɛrˈvɛrka/
-  translation: fireworks (gen.)
-  pos: noun
-  gender: m
-- lemma: франківський
-  ipa: /franˈkiu̯sʲkɪj/
-  translation: Frankivsk (adj)
-  pos: adj
-  gender: f
-- lemma: фудкорт
-  ipa: /fudˈkɔrt/
-  translation: food court
-  pos: noun
-  gender: m
-- lemma: христове
-  ipa: /xrɪˈstɔvɛ/
-  translation: Christ's
-  pos: propn
   gender: n
-- lemma: цілуватися
-  ipa: /t͡sʲiluˈvatɪsʲa/
-  translation: to kiss
+- lemma: проголосити
+  ipa: /prɔɦɔlɔsˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: проголошення
+  ipa: /prɔɦɔlˈɔʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пускати
+  ipa: /puskˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ранний
+  ipa: /rannɪj/
+  translation: ''
+  pos: adj
+- lemma: розпочатися
+  ipa: /rɔzpɔt͡ʃˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: сани
+  ipa: /sˈanɪ/
+  translation: ''
+  pos: noun
+- lemma: свічка
+  ipa: /sʋˈit͡ʃka/
+  translation: ''
+  pos: noun
+- lemma: символічно
+  ipa: /sɪmʋɔlˈit͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: синьо-жовтий
+  ipa: /sˈɪnʲɔ-ʒɔʋtɪj/
+  translation: ''
+  pos: adj
+- lemma: соборність
+  ipa: /sɔbˈɔrnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: солодощі
+  ipa: /sˈɔlɔdɔʃt͡ʃi/
+  translation: ''
+  pos: noun
+- lemma: сонцестояння
+  ipa: /sɔnt͡sɛstɔˈjannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: спіраль
+  ipa: /spirˈalʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: феєрверк
+  ipa: /fɛjɛrʋˈɛrk/
+  translation: ''
+  pos: noun
+- lemma: фудкорт
+  ipa: /fudkɔrt/
+  translation: ''
+  pos: noun
+- lemma: хор
+  ipa: /xɔr/
+  translation: ''
+  pos: noun
+- lemma: християнство
+  ipa: /xrɪstɪˈjanstʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: христос
+  ipa: /xrɪstˈɔs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: худоба
+  ipa: /xudˈɔba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: цикл
+  ipa: /t͡sɪkl/
+  translation: ''
+  pos: noun
+- lemma: чарівний
+  ipa: /t͡ʃariʋnˈɪj/
+  translation: ''
+  pos: adj
 - lemma: чарівно
-  ipa: /t͡ʃaˈrʲivnɔ/
-  translation: magically
+  ipa: /t͡ʃarˈiʋnɔ/
+  translation: ''
   pos: adv
 - lemma: щока
-  ipa: /ʃt͡ʃɔˈka/
-  translation: cheek
+  ipa: /ʃt͡ʃɔkˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: юліанський
-  ipa: /julʲiˈansʲkɪj/
-  translation: Julian
-  pos: adj
-  gender: m

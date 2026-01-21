@@ -3,132 +3,236 @@ level: B1
 version: '2.0'
 items:
 - lemma: автентично
-  ipa: /au̯tɛnˈtɪt͡ʃnɔ/
-  translation: authentically
+  ipa: /aʋtɛntɪt͡ʃnɔ/
+  translation: ''
   pos: adv
 - lemma: вдягнутися
-  ipa: /vdʲaɦˈnutɪsʲa/
-  translation: to get dressed
+  ipa: /ʋdjaɦnˈutɪsja/
+  translation: ''
   pos: verb
+- lemma: вибіг
+  ipa: /ʋˈɪbiɦ/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: вискочити
-  ipa: /ˈvɪskɔt͡ʃɪtɪ/
-  translation: to jump out
+  ipa: /ʋˈɪskɔt͡ʃɪtɪ/
+  translation: ''
   pos: verb
-  gender: m
 - lemma: вистрілити
-  ipa: /ˈvɪstrʲilɪtɪ/
-  translation: to shoot
+  ipa: /ʋˈɪstrilɪtɪ/
+  translation: ''
   pos: verb
+- lemma: вірш
+  ipa: /ʋirʃ/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: гасити
-  ipa: /ɦaˈsɪtɪ/
-  translation: to extinguish
+  ipa: /ɦasˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: депутат
+  ipa: /dɛputˈat/
+  translation: ''
+  pos: noun
 - lemma: додзвонитися
-  ipa: /dɔdzvɔˈnɪtɪsʲa/
-  translation: to get through
+  ipa: /dɔdzʋɔnˈɪtɪsja/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: доставити
+  ipa: /dɔstˈaʋɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: екшн
-  ipa: /ˈɛkʃn/
-  translation: action
-  pos: propn
+  ipa: /ɛkʃn/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: екшн-сцена
+  ipa: /ɛkʃn-st͡sˈɛna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: завершуватися
+  ipa: /zaʋˈɛrʃuʋatɪsja/
+  translation: ''
+  pos: verb
 - lemma: загасити
-  ipa: /zaɦaˈsɪtɪ/
-  translation: to extinguish
+  ipa: /zaɦasˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: закон
+  ipa: /zakˈɔn/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: застрибнути
-  ipa: /zastrɪbˈnutɪ/
-  translation: to jump in
+  ipa: /zastrɪbnutɪ/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: зброя
+  ipa: /zbrˈɔja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: калькуючи
+  ipa: /kalʲkˈujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: кинути
+  ipa: /kˈɪnutɪ/
+  translation: ''
+  pos: verb
 - lemma: кипіти
-  ipa: /kɪˈpʲitɪ/
-  translation: to boil
+  ipa: /kɪpˈitɪ/
+  translation: ''
   pos: verb
+- lemma: ланцюг
+  ipa: /lant͡sˈjuɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ланцюжок
+  ipa: /lant͡sjuʒˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: місяців
+  ipa: /misjat͡sˈiʋ/
+  translation: ''
+  pos: adj
 - lemma: наголошування
-  ipa: /naɦɔˈlɔʃuvanʲːa/
-  translation: stressing
+  ipa: /naɦɔlˈɔʃuʋannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: налий
-  ipa: /naˈlɪj/
-  translation: pour (imp.)
-  pos: adj
+- lemma: налив
+  ipa: /nalˈɪʋ/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: наратив
+  ipa: /naratˈɪʋ/
+  translation: ''
+  pos: noun
+- lemma: негайний
+  ipa: /nɛɦˈajnɪj/
+  translation: ''
+  pos: adj
+- lemma: несподіване
+  ipa: /nɛspɔdˈiʋanɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: оволодіти
-  ipa: /ɔvɔlɔˈdʲitɪ/
-  translation: to master
+  ipa: /ɔʋɔlɔdˈitɪ/
+  translation: ''
   pos: verb
-- lemma: одиничний
-  ipa: /ɔdɪˈnɪt͡ʃnɪj/
-  translation: single
-  pos: adj
-  gender: f
 - lemma: одягнутися
-  ipa: /ɔdʲaɦˈnutɪsʲa/
-  translation: to get dressed
+  ipa: /ɔdjaɦnˈutɪsja/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: патерн
+  ipa: /patɛrn/
+  translation: ''
+  pos: noun
+- lemma: перемикати
+  ipa: /pɛrɛmɪkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: перемикатися
+  ipa: /pɛrɛmɪkˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: перерваний
+  ipa: /pɛrˈɛrʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: перервати
+  ipa: /pɛrɛrʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: плавно
-  ipa: /ˈplau̯nɔ/
-  translation: smoothly
+  ipa: /plˈaʋnɔ/
+  translation: ''
   pos: adv
-- lemma: пожежник
-  ipa: /pɔˈʒɛʒnɪk/
-  translation: firefighter
-  pos: noun
-  gender: m
-- lemma: пожнеш
-  ipa: /pɔʒˈnɛʃ/
-  translation: you will reap
-  pos: noun
-  gender: m
-- lemma: проскочити
-  ipa: /prɔˈskɔt͡ʃɪtɪ/
-  translation: to slip through
-  pos: verb
-  gender: n
-- lemma: розслабити
-  ipa: /rɔzˈslabɪtɪ/
-  translation: to relax
-  pos: verb
-- lemma: слухавка
-  ipa: /ˈsluxau̯ka/
-  translation: receiver
+- lemma: пожежа
+  ipa: /pɔʒˈɛʒa/
+  translation: ''
   pos: noun
   gender: f
+- lemma: пожежник
+  ipa: /pɔʒˈɛʒnɪk/
+  translation: ''
+  pos: noun
+- lemma: помчати
+  ipa: /pɔmt͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: проскочити
+  ipa: /prɔskˈɔt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: розгортатися
+  ipa: /rɔzɦɔrtˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: розслаблено
+  ipa: /rɔzslˈablɛnɔ/
+  translation: ''
+  pos: adv
+- lemma: рушити
+  ipa: /rˈuʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: самобутній
+  ipa: /samɔbˈutnij/
+  translation: ''
+  pos: adj
 - lemma: споглядальний
-  ipa: /spɔhlʲaˈdalʲnɪj/
-  translation: contemplative
+  ipa: /spɔɦljadˈalʲnɪj/
+  translation: ''
   pos: adj
-- lemma: стрийський
-  ipa: /ˈstrɪjsʲkɪj/
-  translation: Stryi (adj)
-  pos: adj
-  gender: m
+- lemma: старанно
+  ipa: /starˈannɔ/
+  translation: ''
+  pos: adv
 - lemma: сукупний
-  ipa: /suˈkupnɪj/
-  translation: total
+  ipa: /sukˈupnɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: схопити
+  ipa: /sxɔpˈɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: темпоральний
-  ipa: /tɛmpɔˈralʲnɪj/
-  translation: temporal
+  ipa: /tɛmpɔrˈalʲnɪj/
+  translation: ''
   pos: adj
 - lemma: триваючий
-  ipa: /trɪˈvajut͡ʃɪj/
-  translation: ongoing
+  ipa: /trɪʋˈajut͡ʃɪj/
+  translation: ''
   pos: adj
+- lemma: україномовний
+  ipa: /ukrajinɔmˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: учити
+  ipa: /ut͡ʃˈɪtɪ/
+  translation: ''
+  pos: verb
 - lemma: цибулина
-  ipa: /t͡sɪbuˈlɪna/
-  translation: onion bulb
+  ipa: /t͡sɪbulˈɪna/
+  translation: ''
   pos: noun
   gender: f
 - lemma: ізоляція
-  ipa: /izɔˈlʲat͡sʲija/
-  translation: isolation
+  ipa: /izɔlˈjat͡sija/
+  translation: ''
   pos: noun
   gender: f
+- lemma: інтегрувати
+  ipa: /intɛɦruʋˈatɪ/
+  translation: ''
+  pos: verb

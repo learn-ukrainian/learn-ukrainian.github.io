@@ -5,17 +5,17 @@
 
 ## Gates
 - **Words:** ✅ 4021/4000
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 202/20
+- **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -47,8 +47,8 @@
 | **Розминка** | ⚪️ | 194 | Skipped |
 | **Читання** | ✅ | 1318 | Included in Core |
 | **Сармати: нові володарі степу** | ⚪️ | 866 | Skipped |
-| **Первинні джерела** | ⚪️ | 503 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 242 | Skipped |
+| **Первинні джерела** | ✅ | 503 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 242 | Included in Core |
 | **Есе** | ⚪️ | 0 | Skipped |
 | **Тема** | ⚪️ | 91 | Skipped |
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |

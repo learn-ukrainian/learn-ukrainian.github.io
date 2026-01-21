@@ -2,270 +2,73 @@ module: 62-synonyms-place
 level: B2
 version: '2.0'
 items:
-- lemma: безмежність
-  ipa: /bɛzˈmɛʒnʲistʲ/
-  translation: boundlessness, infinity
+- lemma: верста
+  ipa: /ʋɛrstˈa/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: безпосередній
-  ipa: /bɛzposɛˈrɛdnʲij/
-  translation: direct, immediate
-  pos: adj
-  gender: f
-- lemma: безцінний
-  ipa: /bɛzˈt͡sʲinːɪj/
-  translation: priceless, invaluable
-  pos: adj
-  gender: m
-- lemma: вдалині
-  ipa: /wdɐlɪˈnʲi/
-  translation: in the distance
-  pos: adv
-- lemma: висотній
-  ipa: /wɪˈsotnʲij/
-  translation: high-altitude
-  pos: adj
-- lemma: вказування
-  ipa: /wkɐzuˈwɑnʲːɑ/
-  translation: indication, pointing
-  pos: noun
-  gender: n
-- lemma: всюдити
-  ipa: /wsʲuˈdɪtɪ/
-  translation: to be everywhere
-  pos: verb
-- lemma: вшанування
-  ipa: /wʃɐnuˈwɑnʲːɑ/
-  translation: honoring, commemoration
-  pos: noun
-  gender: n
-- lemma: відвойовувати
-  ipa: /wʲidwojoˈwuwɑtɪ/
-  translation: to reconquer, to win back
-  pos: verb
-- lemma: віддаленість
-  ipa: /wʲiddɐˈlɛnʲistʲ/
-  translation: remoteness, distance
-  pos: noun
-  gender: f
-- lemma: відчутний
-  ipa: /wʲidt͡ʃutnɪj/
-  translation: tangible, noticeable
-  pos: adj
-  gender: f
-- lemma: візій
-  ipa: /wʲiˈzʲij/
-  translation: vision (genitive plural)
-  pos: noun
-  gender: f
-- lemma: віртуальний
-  ipa: /wʲirtuˈɑlʲnɪj/
-  translation: virtual
-  pos: adj
 - lemma: галас
-  ipa: /ɦɐˈlɑs/
-  translation: noise, din
+  ipa: /ɦˈalas/
+  translation: ''
   pos: noun
   gender: m
 - lemma: ген
   ipa: /ɦɛn/
-  translation: gene
+  translation: ''
   pos: noun
   gender: m
-- lemma: географ
-  ipa: /ɦɛoˈɦrɑf/
-  translation: geographer
-  pos: noun
-  gender: m
+- lemma: ген-ген
+  ipa: /ɦɛn-ɦˈɛn/
+  translation: ''
+  pos: adv
 - lemma: геометрія
-  ipa: /ɦɛomɛˈtrʲijɑ/
-  translation: geometry
+  ipa: /ɦɛɔmˈɛtrija/
+  translation: ''
   pos: noun
   gender: f
 - lemma: гніздечко
-  ipa: /ɦnʲizˈdɛt͡ʃko/
-  translation: little nest
+  ipa: /ɦnizdˈɛt͡ʃkɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: гористий
-  ipa: /ɦorɪstɪj/
-  translation: mountainous
-  pos: adj
-  gender: m
-- lemma: далечний
-  ipa: /dɐˈlɛt͡ʃnɪj/
-  translation: distant, faraway
-  pos: adj
-  gender: f
-- lemma: дбайливо
-  ipa: /dbɐjlɪwo/
-  translation: carefully, attentively
-  pos: adv
-- lemma: дистанційний
-  ipa: /dɪstɐnˈt͡sʲijnɪj/
-  translation: remote, distance
-  pos: adj
-- lemma: діагонально
-  ipa: /dʲiɐɦoˈnɑlʲno/
-  translation: diagonally
-  pos: adv
-- lemma: жест
-  ipa: /ʒɛst/
-  translation: gesture
+- lemma: кисель
+  ipa: /kɪsɛlʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: затишка
-  ipa: /zɐˈtɪʃkɑ/
-  translation: cozy corner, nook
-  pos: noun
-  gender: m
-- lemma: звідкись
-  ipa: /zwʲidˈkɪsʲ/
-  translation: from somewhere
-  pos: adv
-- lemma: згуртованість
-  ipa: /zɦurtoˈwɑnʲistʲ/
-  translation: cohesion, unity
+- lemma: макар
+  ipa: /makˈar/
+  translation: ''
   pos: noun
   gender: f
-- lemma: здалеку
-  ipa: /zdɐlɛˈku/
-  translation: from afar
-  pos: adv
-- lemma: зручніший
-  ipa: /zrut͡ʃˈnʲiʃɪj/
-  translation: more convenient
-  pos: adj
-  gender: m
-- lemma: кіберпростір
-  ipa: /kʲibɛrˈprostʲir/
-  translation: cyberspace
-  pos: noun
-  gender: m
-- lemma: лабіринт
-  ipa: /lɐbʲiˈrɪnt/
-  translation: labyrinth, maze
-  pos: noun
-  gender: m
-- lemma: логістик
-  ipa: /loˈɦʲistɪk/
-  translation: logistics (genitive plural)
-  pos: noun
-  gender: f
-- lemma: локація
-  ipa: /loˈkɑt͡sʲijɑ/
-  translation: location
-  pos: noun
-  gender: f
-- lemma: миколаєва
-  ipa: /mɪkoˈlɑjɛwɑ/
-  translation: Mykolaiv (city, genitive)
-  pos: propn
-  gender: m
-- lemma: місток
-  ipa: /mʲisˈtok/
-  translation: little bridge
-  pos: noun
-  gender: m
-- lemma: навігація
-  ipa: /nɐwʲiˈɦɑt͡sʲijɑ/
-  translation: navigation
-  pos: noun
-  gender: f
-- lemma: найзагальніший
-  ipa: /nɐjzɐˈɦɑlʲnʲiʃɪj/
-  translation: most general
-  pos: adj
-  gender: f
-- lemma: народжувати
-  ipa: /nɐrodʒuˈwɑtɪ/
-  translation: to give birth
-  pos: verb
-- lemma: неозорість
-  ipa: /nɛozoˈrʲistʲ/
-  translation: vastness, immensity
-  pos: noun
-  gender: f
-- lemma: обрій
-  ipa: /oˈbrʲij/
-  translation: horizon
-  pos: noun
-  gender: m
 - lemma: орієнтація
-  ipa: /orʲijɛnˈtɑt͡sʲijɑ/
-  translation: orientation
+  ipa: /ɔrijɛntˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: орієнтування
-  ipa: /orʲijɛntuˈwɑnʲːɑ/
-  translation: orientation, navigation
+- lemma: пас
+  ipa: /pas/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: охоплення
-  ipa: /oxopˈlɛnʲːɑ/
-  translation: coverage, scope
-  pos: noun
-  gender: n
-- lemma: паралельно
-  ipa: /pɑrɑˈlɛlʲno/
-  translation: in parallel
-  pos: adv
-- lemma: перпендикулярно
-  ipa: /pɛrpɛndɪkuˈlʲɑrno/
-  translation: perpendicularly
-  pos: adv
-- lemma: планета
-  ipa: /plɐˈnɛtɑ/
-  translation: planet
-  pos: noun
-  gender: f
-- lemma: покращений
-  ipa: /pokrɐˈʃɛnɪj/
-  translation: improved
-  pos: adj
-  gender: n
-- lemma: рекреаційний
-  ipa: /rɛkrɛɐˈt͡sʲijnɪj/
-  translation: recreational
-  pos: adj
-- lemma: розташовуватися
-  ipa: /roztɐˈʃowuwɑtɪsʲɑ/
-  translation: to be located
+  gender: m
+- lemma: позичати
+  ipa: /pɔzɪt͡ʃˈatɪ/
+  translation: ''
   pos: verb
-- lemma: рівнинний
-  ipa: /rʲiwˈnɪnːɪj/
-  translation: flat, plain
-  pos: adj
-  gender: m
-- lemma: статика
-  ipa: /stɐˈtɪkɑ/
-  translation: statics
+- lemma: сірка
+  ipa: /sˈirka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: сусідство
-  ipa: /suˈsʲidstwo/
-  translation: neighborhood, proximity
+- lemma: теля
+  ipa: /tɛlˈja/
+  translation: ''
   pos: noun
-  gender: n
-- lemma: тутечко
-  ipa: /tuˈtɛt͡ʃko/
-  translation: right here
-  pos: noun
-  gender: m
-- lemma: тутешній
-  ipa: /tuˈtɛʃnʲij/
-  translation: local
-  pos: adj
+- lemma: тутечки
+  ipa: /tˈutɛt͡ʃkɪ/
+  translation: ''
+  pos: pron
 - lemma: тутешність
-  ipa: /tuˈtɛʃnʲistʲ/
-  translation: localness
+  ipa: /tutɛʃnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: шепотати
-  ipa: /ʃɛpoˈtɑtɪ/
-  translation: to whisper
-  pos: verb
-- lemma: інклюзивний
-  ipa: /ʲinklʲuˈzɪwnɪj/
-  translation: inclusive
-  pos: adj

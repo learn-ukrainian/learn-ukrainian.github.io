@@ -1,54 +1,91 @@
 module: 42-emergencies
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: допомога
-    ipa: /dɔpɔˈmɔɦɑ/
-    translation: help
-    pos: noun 
-    gender: f
-  - lemma: допоможіть
-    ipa: /dɔpɔmɔˈʒʲitʲ/
-    translation: help! (imperative)
-    pos: verb 
-    aspect: pf
-  - lemma: загубити
-    ipa: /zɑɦʊˈbɪtɪ/
-    translation: to lose
-    pos: verb 
-    aspect: pf
-  - lemma: вкрасти
-    ipa: /ˈvkrɑstɪ/
-    translation: to steal
-    pos: verb 
-    aspect: pf
-  - lemma: поліція
-    ipa: /pɔˈlʲit͡sʲijɑ/
-    translation: police
-    pos: noun 
-    gender: f
-  - lemma: швидка
-    ipa: /ʃvɪdˈkɑ/
-    translation: ambulance
-    pos: noun 
-    gender: f
-  - lemma: посольство
-    ipa: /pɔˈsɔlʲstvɔ/
-    translation: embassy
-    pos: noun 
-    gender: n
-  - lemma: небезпечно
-    ipa: /nɛbɛzˈpɛt͡ʃnɔ/
-    translation: dangerous
-    pos: adv 
-    gender: n/a
-  - lemma: терміново
-    ipa: /tɛrmʲiˈnɔvɔ/
-    translation: urgently
-    pos: adv 
-    gender: n/a
-  - lemma: лікар
-    ipa: /ˈlʲikɑr/
-    translation: doctor
-    pos: noun 
-    gender: m
+- lemma: аптека
+  ipa: /aptˈɛka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: викликати
+  ipa: /ʋɪklɪkatɪ/
+  translation: ''
+  pos: verb
+- lemma: газовий
+  ipa: /ɦˈazɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: допомога
+  ipa: /dɔpɔmˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: допомогти
+  ipa: /dɔpɔmɔɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: екстрений
+  ipa: /ˈɛkstrɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: заклик
+  ipa: /zˈaklɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лікар
+  ipa: /lˈikar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мен
+  ipa: /mɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: номер
+  ipa: /nˈɔmɛr/
+  translation: ''
+  pos: noun
+- lemma: охорона
+  ipa: /ɔxɔrˈɔna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: повідомлення
+  ipa: /pɔʋidˈɔmlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пожежний
+  ipa: /pɔʒˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: поліція
+  ipa: /pɔlˈit͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: потрібний
+  ipa: /pɔtrˈibnɪj/
+  translation: ''
+  pos: adj
+- lemma: проблема
+  ipa: /prɔblˈɛma/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ситуація
+  ipa: /sɪtuˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: служба
+  ipa: /slˈuʒba/
+  translation: ''
+  pos: noun
+- lemma: швидка
+  ipa: /ʃʋɪdkˈa/
+  translation: ''
+  pos: noun
+  gender: f

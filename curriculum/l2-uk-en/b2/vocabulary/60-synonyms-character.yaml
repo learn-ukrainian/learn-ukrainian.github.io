@@ -2,553 +2,79 @@ module: 60-synonyms-character
 level: B2
 version: '2.0'
 items:
-- lemma: апелювати
-  ipa: /ɐpɛlʲuˈwɑtɪ/
-  translation: to appeal
+- lemma: бгати
+  ipa: /bɦˈatɪ/
+  translation: ''
   pos: verb
 - lemma: безсердечний
-  ipa: /bɛzsɛrˈdɛt͡ʃnɪj/
-  translation: heartless
+  ipa: /bɛzsɛrdˈɛt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: благо
-  ipa: /blɐˈɦo/
-  translation: good, benefit
+  ipa: /blˈaɦɔ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: болючіше
-  ipa: /bolʲuˈt͡ʃʲiʃɛ/
-  translation: more painfully
-  pos: adv
-- lemma: валентин
-  ipa: /wɐlɛnˈtɪn/
-  translation: Valentyn (name)
-  pos: propn
-  gender: m
-- lemma: вдач
-  ipa: /wdɑt͡ʃ/
-  translation: disposition (genitive plural)
-  pos: noun
-  gender: f
+  gender: n
 - lemma: вдача
-  ipa: /wdɐˈt͡ʃɑ/
-  translation: disposition, temperament
+  ipa: /ʋdˈat͡ʃa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: вдяч
-  ipa: /wdʲɑt͡ʃ/
-  translation: grateful (genitive plural)
-  pos: noun
-  gender: f
-- lemma: виваженість
-  ipa: /wɪˈwɑʒɛnʲistʲ/
-  translation: balance, poise
-  pos: noun
-  gender: f
-- lemma: визнавати
-  ipa: /wɪznɐˈwɑtɪ/
-  translation: to recognize, to acknowledge
-  pos: verb
-- lemma: викристалізувати
-  ipa: /wɪkrɪstɐlʲizuˈwɑtɪ/
-  translation: to crystallize, to form
-  pos: verb
-- lemma: винятковість
-  ipa: /wɪnʲɑtˈkowʲistʲ/
-  translation: exceptionality
-  pos: noun
-  gender: f
-- lemma: володар
-  ipa: /woloˈdɑr/
-  translation: ruler, master
-  pos: noun
-  gender: m
-- lemma: волонтерство
-  ipa: /wolontɛrstwo/
-  translation: volunteering
-  pos: noun
-  gender: n
 - lemma: вроджений
-  ipa: /ˈwrodʒɛnɪj/
-  translation: innate, congenital
+  ipa: /ʋrˈɔdʒɛnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: втовити
-  ipa: /wtoˈwɪtɪ/
-  translation: to drive in, to instill
-  pos: verb
-- lemma: вчизати
-  ipa: /wt͡ʃɪˈzɑtɪ/
-  translation: to rush in, to burst in
-  pos: verb
-- lemma: відгукуватися
-  ipa: /wʲidɦukuˈwɑtɪsʲɑ/
-  translation: to respond, to resonate
-  pos: verb
-- lemma: відображення
-  ipa: /wʲidobrɐˈʒɛnʲːɑ/
-  translation: reflection, representation
-  pos: noun
-  gender: n
-- lemma: віра
-  ipa: /ˈwʲirɑ/
-  translation: faith, belief
-  pos: noun
-  gender: f
-- lemma: гартованість
-  ipa: /ɦɑrtoˈwɑnʲistʲ/
-  translation: tempered character, hardiness
-  pos: noun
-  gender: f
-- lemma: героїнь
-  ipa: /ɦɛroˈjinʲ/
-  translation: heroine (genitive plural)
-  pos: noun
-  gender: f
-- lemma: гнучкий
-  ipa: /ɦnut͡ʃkɪj/
-  translation: flexible
-  pos: adj
-  gender: n
-- lemma: гуманний
-  ipa: /ɦumɐnːɪj/
-  translation: humane
-  pos: adj
-  gender: m
-- lemma: далекоглядний
-  ipa: /dɐlɛkoˈɦlʲɑdnɪj/
-  translation: farsighted, visionary
-  pos: adj
-  gender: m
-- lemma: дбайливий
-  ipa: /dbɐjlɪwɪj/
-  translation: caring, attentive
-  pos: adj
-  gender: m
-- lemma: дбати
-  ipa: /ˈdbɑtɪ/
-  translation: to care for, to look after
-  pos: verb
-- lemma: деструктивний
-  ipa: /dɛstrukˈtɪwnɪj/
-  translation: destructive
-  pos: adj
-  gender: m
 - lemma: егоїстичний
-  ipa: /ɛɦoˈjistɪt͡ʃnɪj/
-  translation: selfish, egoistic
+  ipa: /ɛɦɔjistˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: експедиція
-  ipa: /ɛkspɛˈdɪt͡sʲijɑ/
-  translation: expedition
-  pos: noun
-  gender: f
-- lemma: емпатія
-  ipa: /ɛmˈpɑtʲijɑ/
-  translation: empathy
-  pos: noun
-  gender: f
-- lemma: енергійний
-  ipa: /ɛnɛrˈɦʲijnɪj/
-  translation: energetic
-  pos: adj
-  gender: m
-- lemma: ерудований
-  ipa: /ɛrudoˈwɑnɪj/
-  translation: erudite, learned
-  pos: adj
-  gender: m
-- lemma: етимологічно
-  ipa: /ɛtɪmoloˈɦʲit͡ʃno/
-  translation: etymologically
-  pos: adv
 - lemma: жертовний
-  ipa: /ʒɛrˈtownɪj/
-  translation: sacrificial
+  ipa: /ʒɛrtˈɔʋnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: заспокоювати
-  ipa: /zɐspokojuˈwɑtɪ/
-  translation: to calm, to soothe
-  pos: verb
-  gender: m
-- lemma: застиглий
-  ipa: /zɐsˈtɪɦlɪj/
-  translation: frozen, stiff
-  pos: adj
-  gender: f
-- lemma: зауважувати
-  ipa: /zɐuwɐˈʒuwɑtɪ/
-  translation: to notice, to remark
-  pos: verb
-- lemma: злома
-  ipa: /zloˈmɑ/
-  translation: scrap metal (genitive)
-  pos: noun
-  gender: n
-- lemma: змалечку
-  ipa: /zmɐˈlɛt͡ʃku/
-  translation: from childhood
-  pos: adv
-- lemma: зруйнувати
-  ipa: /zrujnuˈwɑtɪ/
-  translation: to destroy, to ruin
-  pos: verb
-- lemma: зрілий
-  ipa: /ˈzrʲilɪj/
-  translation: mature, ripe
-  pos: adj
-  gender: f
-- lemma: зіткнення
-  ipa: /zʲitˈknɛnʲːɑ/
-  translation: collision, clash
-  pos: noun
-  gender: n
-- lemma: кваліфікований
-  ipa: /kwɑlʲifʲikoˈwɑnɪj/
-  translation: qualified
-  pos: adj
-  gender: m
-- lemma: кмітити
-  ipa: /ˈkmʲitɪtɪ/
-  translation: to grasp, to understand quickly
-  pos: verb
 - lemma: кмітливий
-  ipa: /ˈkmʲitlɪwɪj/
-  translation: clever, quick-witted
+  ipa: /kmitlˈɪʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: кобилянськ
-  ipa: /kobɪlʲɑnsʲk/
-  translation: Kobylianska (writer)
-  pos: propn
-  gender: f
-- lemma: комунікабеність
-  ipa: /komˌunʲikɐˈbɛnʲistʲ/
-  translation: sociability
-  pos: noun
-  gender: f
-- lemma: котигорошко
-  ipa: /kotɪɦoˈroʃko/
-  translation: Kotyhoroshko (folk hero)
-  pos: propn
-  gender: m
-- lemma: креативність
-  ipa: /krɛɐˈtɪwnʲistʲ/
-  translation: creativity
-  pos: noun
-  gender: f
+- lemma: лагідний
+  ipa: /lˈaɦidnɪj/
+  translation: ''
+  pos: adj
 - lemma: лагідність
-  ipa: /lɐˈɦʲidnʲistʲ/
-  translation: gentleness, mildness
+  ipa: /lˈaɦidnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: лисичка
-  ipa: /lɪˈsɪt͡ʃkɑ/
-  translation: little fox
-  pos: noun
-  gender: f
-- lemma: лідера
-  ipa: /lʲiˈdɛrɑ/
-  translation: leader (genitive)
-  pos: noun
-  gender: m
 - lemma: лідерський
-  ipa: /lʲiˈdɛrsʲkɪj/
-  translation: leadership (adj.)
+  ipa: /lˈidɛrsʲkɪj/
+  translation: ''
   pos: adj
-- lemma: лічений
-  ipa: /lʲiˈt͡ʃɛnɪj/
-  translation: counted, numbered
-  pos: adj
-- lemma: майн
-  ipa: /mɐjn/
-  translation: property (genitive plural)
-  pos: noun
-  gender: m
 - lemma: милосердний
-  ipa: /mɪlosɛrdnɪj/
-  translation: merciful
+  ipa: /mɪlɔsˈɛrdnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: милосердя
-  ipa: /mɪloˈsɛrdʲɑ/
-  translation: mercy, compassion
-  pos: noun
-  gender: n
-- lemma: мрійливий
-  ipa: /mˈrʲijlɪwɪj/
-  translation: dreamy
-  pos: adj
-  gender: m
-- lemma: мужний
-  ipa: /ˈmuʒnɪj/
-  translation: courageous, brave
-  pos: adj
-  gender: m
-- lemma: мужність
-  ipa: /muʒnʲistʲ/
-  translation: courage, bravery
-  pos: noun
-  gender: f
-- lemma: найсильніший
-  ipa: /nɐjsɪlʲˈnʲiʃɪj/
-  translation: strongest
-  pos: adj
-- lemma: найстрашніше
-  ipa: /nɐjstrɑʃˈnʲiʃɛ/
-  translation: scariest thing
-  pos: noun
-  gender: n
-- lemma: насильство
-  ipa: /nɐˈsɪlʲstwo/
-  translation: violence
-  pos: noun
-  gender: n
-- lemma: натур
-  ipa: /nɐˈtur/
-  translation: nature (genitive plural)
-  pos: noun
-  gender: f
-- lemma: нездатний
-  ipa: /nɛˈzdɑtnɪj/
-  translation: incapable
-  pos: adj
-  gender: f
-- lemma: нездатність
-  ipa: /nɛˈzdɑtnʲistʲ/
-  translation: inability, incapacity
-  pos: noun
-  gender: f
-- lemma: охоче
-  ipa: /oˈxot͡ʃɛ/
-  translation: willingly, eagerly
-  pos: adv
-- lemma: палагна
-  ipa: /pɐlɐɦˈnɑ/
-  translation: Palahna (name)
-  pos: propn
-  gender: f
-- lemma: переймати
-  ipa: /pɛrɛjˈmɑtɪ/
-  translation: to worry, to take to heart
-  pos: verb
-- lemma: перекритий
-  ipa: /pɛrɛˈkrɪtɪj/
-  translation: blocked, covered
-  pos: adj
-  gender: f
-- lemma: полонені
-  ipa: /polonɛnʲi/
-  translation: prisoners, captives
-  pos: noun
-  gender: m
-- lemma: портрет
-  ipa: /porˈtrɛt/
-  translation: portrait
-  pos: noun
-  gender: m
-- lemma: постраждал
-  ipa: /postrɐʒˈdɑl/
-  translation: victim (genitive plural)
-  pos: noun
-  gender: m
-- lemma: приземлений
-  ipa: /prɪzɛmˈlɛnɪj/
-  translation: grounded, down-to-earth
-  pos: adj
-  gender: f
-- lemma: проактивність
-  ipa: /proɐktɪwnʲistʲ/
-  translation: proactivity
-  pos: noun
-  gender: f
-- lemma: програмувати
-  ipa: /proɦrɐmuˈwɑtɪ/
-  translation: to program
-  pos: verb
-- lemma: прощення
-  ipa: /proʃt͡ʃɛnʲːɑ/
-  translation: forgiveness
-  pos: noun
-  gender: n
-- lemma: проявитися
-  ipa: /projɐˈwɪtɪsʲɑ/
-  translation: to appear, to manifest
-  pos: verb
-  gender: m
-- lemma: проявляти
-  ipa: /projɐwˈlʲɑtɪ/
-  translation: to show, to display
-  pos: verb
-- lemma: пізнати
-  ipa: /pʲizˈnɑtɪ/
-  translation: to know, to learn
-  pos: verb
-- lemma: ранити
-  ipa: /rɐˈnɪtɪ/
-  translation: to wound
-  pos: verb
-- lemma: репост
-  ipa: /rɛˈpost/
-  translation: repost
-  pos: noun
-  gender: m
-- lemma: рис
-  ipa: /rɪs/
-  translation: trait, feature (genitive plural)
-  pos: noun
-  gender: m
-- lemma: самокритичний
-  ipa: /sɐmokrɪˈtɪt͡ʃnɪj/
-  translation: self-critical
-  pos: adj
-  gender: m
-- lemma: самоповаг
-  ipa: /sɐmopoˈwɑɦ/
-  translation: self-respect (genitive plural)
-  pos: noun
-  gender: f
-- lemma: сильвестров
-  ipa: /sɪlʲwɛsˈtrow/
-  translation: Sylvestrov (composer)
-  pos: propn
-  gender: m
-- lemma: симфонія
-  ipa: /sɪmˈfonʲijɑ/
-  translation: symphony
-  pos: noun
-  gender: f
-- lemma: синонімічний
-  ipa: /sɪnonʲimʲit͡ʃnɪj/
-  translation: synonymous
-  pos: adj
-- lemma: скрут
-  ipa: /skrut/
-  translation: difficulty, hardship (genitive plural)
-  pos: noun
-  gender: f
-- lemma: солідарність
-  ipa: /solʲidɑrnʲistʲ/
-  translation: solidarity
-  pos: noun
-  gender: f
-- lemma: співпереживання
-  ipa: /spʲiwpɛrɛʒɪˈwɑnʲːɑ/
-  translation: empathy, compassion
-  pos: noun
-  gender: n
-- lemma: стрижня
-  ipa: /strɪʒˈnʲɑ/
-  translation: core, backbone (genitive)
-  pos: noun
-  gender: m
-- lemma: ступ
-  ipa: /stup/
-  translation: degree, level (genitive plural)
-  pos: noun
-  gender: m
 - lemma: сумлінний
-  ipa: /sumlʲinːɪj/
-  translation: conscientious
+  ipa: /sumlˈinnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: сумлінність
-  ipa: /sumlʲinːʲistʲ/
-  translation: conscientiousness
-  pos: noun
-  gender: f
-- lemma: суспільно
-  ipa: /susˈpʲilʲno/
-  translation: socially
-  pos: adv
-- lemma: сяйво
-  ipa: /sʲɑjˈwo/
-  translation: radiance, glow
-  pos: noun
-  gender: n
-- lemma: темперамент
-  ipa: /tɛmpɛrɐˈmɛnt/
-  translation: temperament
-  pos: noun
-  gender: m
 - lemma: турботливий
-  ipa: /turbotlɪwɪj/
-  translation: caring, concerned
+  ipa: /turbˈɔtlɪʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: тямати
-  ipa: /tʲɑˈmɑtɪ/
-  translation: to understand, to grasp
-  pos: verb
-- lemma: тямущий
-  ipa: /tʲɑˈmuʃt͡ʃɪj/
-  translation: clever, smart
-  pos: adj
-  gender: m
-- lemma: тямущість
-  ipa: /tʲɑˈmuʃt͡ʃʲistʲ/
-  translation: cleverness, wit
-  pos: noun
-  gender: f
-- lemma: уважність
-  ipa: /uˈwɑʒnʲistʲ/
-  translation: attentiveness
-  pos: noun
-  gender: f
-- lemma: харизм
-  ipa: /xɐˈrɪzm/
-  translation: charisma (genitive plural)
-  pos: noun
-  gender: f
-- lemma: харизматичний
-  ipa: /xɑrɪzmɐˈtɪt͡ʃnɪj/
-  translation: charismatic
-  pos: adj
-  gender: m
-- lemma: херсон
-  ipa: /xɛrˈson/
-  translation: Kherson (city)
-  pos: propn
-  gender: m
-- lemma: цивілізованість
-  ipa: /t͡sɪwʲilʲizoˈwɑnʲistʲ/
-  translation: civilization, being civilized
-  pos: noun
-  gender: f
-- lemma: цілеспрямованість
-  ipa: /t͡sʲilɛsprʲɑmoˈwɑnʲistʲ/
-  translation: purposefulness, determination
-  pos: noun
-  gender: f
-- lemma: чеснота
-  ipa: /t͡ʃɛsnoˈtɑ/
-  translation: virtue
-  pos: noun
-  gender: f
 - lemma: чуйний
-  ipa: /t͡ʃujnɪj/
-  translation: sensitive, responsive
+  ipa: /t͡ʃˈujnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: чуйність
-  ipa: /t͡ʃujnʲistʲ/
-  translation: sensitivity, responsiveness
-  pos: noun
-  gender: f
 - lemma: шляхетний
-  ipa: /ʃlʲɑˈxɛtnɪj/
-  translation: noble
+  ipa: /ʃljaxˈɛtnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: шляхетність
-  ipa: /ʃlʲɑˈxɛtnʲistʲ/
-  translation: nobility
+  ipa: /ʃljaxˈɛtnistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: щедрий
-  ipa: /ʃt͡ʃɛdrɪj/
-  translation: generous
+  ipa: /ʃt͡ʃˈɛdrɪj/
+  translation: ''
   pos: adj
-  gender: m

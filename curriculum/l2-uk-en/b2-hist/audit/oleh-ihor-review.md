@@ -1,7 +1,7 @@
 # Audit Report: M09 — oleh-ihor.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 4003/4000
@@ -43,10 +43,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |
-| **Вступ** | ⚪️ | 1132 | Skipped |
+| **Вступ** | ✅ | 1132 | Included in Core |
 | **Читання** | ✅ | 1158 | Included in Core |
-| **Первинні джерела** | ⚪️ | 399 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 155 | Skipped |
+| **Первинні джерела** | ✅ | 399 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 155 | Included in Core |
 | **Есе** | ⚪️ | 213 | Skipped |
 | **Підсумок** | ✅ | 645 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 235 | Skipped |

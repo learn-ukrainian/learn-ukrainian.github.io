@@ -3,109 +3,185 @@ level: B1
 version: '2.0'
 items:
 - lemma: аутсорсинг
-  ipa: /autˈsɔrsɪnɡ/
-  translation: outsourcing
+  ipa: /autsˈɔrsɪnɦ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: венчурний
-  ipa: /vɛnˈt͡ʃurnɪj/
-  translation: venture (adj)
+  ipa: /ʋˈɛnt͡ʃurnɪj/
+  translation: ''
   pos: adj
 - lemma: водійський
-  ipa: /vɔˈdʲijsʲkɪj/
-  translation: driver's
+  ipa: /ʋɔdˈijsʲkɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: віддатити
-  ipa: /vidːaˈtɪtɪ/
-  translation: ??? (typo)
+- lemma: ворожий
+  ipa: /ʋɔrˈɔʒɪj/
+  translation: ''
+  pos: adj
+- lemma: вступати
+  ipa: /ʋstupˈatɪ/
+  translation: ''
   pos: verb
-- lemma: галузз
-  ipa: /haˈluzː/
-  translation: branch (instr. typo)
+- lemma: військо
+  ipa: /ʋˈijsʲkɔ/
+  translation: ''
+  pos: noun
+- lemma: галуззя
+  ipa: /ɦalˈuzzja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: грузія
+  ipa: /ɦrˈuzija/
+  translation: ''
   pos: noun
   gender: f
+- lemma: гуманітарний
+  ipa: /ɦumanitˈarnɪj/
+  translation: ''
+  pos: adj
+- lemma: дивовижно
+  ipa: /dɪʋɔʋˈɪʒnɔ/
+  translation: ''
+  pos: adv
 - lemma: експортуватися
-  ipa: /ɛkspɔrtuˈvatɪsʲa/
-  translation: to be exported
+  ipa: /ɛkspɔrtuʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: естоній
-  ipa: /ɛˈstɔnʲij/
-  translation: Estonias (gen.)
-  pos: propn
+- lemma: естонія
+  ipa: /ɛstˈɔnija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: завантаження
+  ipa: /zaʋantˈaʒɛnnja/
+  translation: ''
+  pos: noun
+- lemma: запустити
+  ipa: /zapustˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: коворкінг
+  ipa: /kɔʋɔrkinɦ/
+  translation: ''
+  pos: noun
+- lemma: кібербезпека
+  ipa: /kibɛrbɛzpɛka/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: литвин
-  ipa: /lɪtˈvɪn/
-  translation: Lytvyn
-  pos: propn
+  ipa: /lɪtʋˈɪn/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: мінцифр
-  ipa: /minˈt͡sɪfr/
-  translation: Ministry of Digital (abbr)
+- lemma: лічений
+  ipa: /lˈit͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: макс
+  ipa: /maks/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: набравши
+  ipa: /nabrˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: надійність
+  ipa: /nadˈijnistʲ/
+  translation: ''
   pos: noun
   gender: f
 - lemma: наймолодший
-  ipa: /najmɔˈlɔdʃɪj/
-  translation: youngest
+  ipa: /najmɔlˈɔdʃɪj/
+  translation: ''
   pos: adj
-- lemma: переговорний
-  ipa: /pɛrɛhɔˈvɔrnɪj/
-  translation: negotiation (adj)
-  pos: adj
-- lemma: перспективно
-  ipa: /pɛrspɛkˈtɪvnɔ/
-  translation: promisingly
-  pos: adv
-- lemma: платник
-  ipa: /platˈnɪk/
-  translation: payer
-  pos: noun
-  gender: m
-- lemma: посвідчення
-  ipa: /pɔsˈvidt͡ʃɛnʲːa/
-  translation: license
+- lemma: налаштувати
+  ipa: /nalaʃtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: наслідування
+  ipa: /naslˈiduʋannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: радіоелектронік
-  ipa: /radʲiɔɛlɛkˈtrɔnʲik/
-  translation: radio electronics (gen.)
+- lemma: онлайн-навчання
+  ipa: /ɔnlajn-naʋt͡ʃˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: оплачуваний
+  ipa: /ɔplˈat͡ʃuʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: очолити
+  ipa: /ɔt͡ʃˈɔlɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: переговорний
+  ipa: /pɛrɛɦɔʋˈɔrnɪj/
+  translation: ''
+  pos: adj
+- lemma: перетворитися
+  ipa: /pɛrɛtʋɔrˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: перспективно
+  ipa: /pɛrspɛktˈɪʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: посвідчення
+  ipa: /pɔsʋˈidt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: програмування
+  ipa: /prɔɦramuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: реєструвати
+  ipa: /rɛjɛstruʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: спеціалізація
+  ipa: /spɛt͡sializˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: реєструвати
-  ipa: /rɛjɛstruˈvatɪ/
-  translation: to register
-  pos: verb
-- lemma: свідоцтво
-  ipa: /sviˈdɔt͡stvɔ/
-  translation: certificate
-  pos: noun
-  gender: n
-- lemma: сертифікований
-  ipa: /sɛrtɪfiˈkɔvanɪj/
-  translation: certified
-  pos: adj
 - lemma: співзасновник
-  ipa: /spiu̯zaˈsnɔu̯nɪk/
-  translation: co-founder
+  ipa: /spiʋzasnˈɔʋnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тринадцять
+  ipa: /trɪnˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: федоров
+  ipa: /fˈɛdɔrɔʋ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: фрілансер
-  ipa: /friˈlansɛr/
-  translation: freelancer
+  ipa: /frilansɛr/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: фінтя
-  ipa: /fʲinˈtʲa/
-  translation: fintech (typo)
-  pos: propn
-  gender: m
-- lemma: ідентифікаційний
-  ipa: /idɛntɪfikaˈt͡sʲijnɪj/
-  translation: identification
-  pos: adj
-  gender: m
-- lemma: іпн
-  ipa: /i pɛ ɛn/
-  translation: TIN
+- lemma: цікавитися
+  ipa: /t͡sikˈaʋɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: іт-спеціаліст
+  ipa: /it-spɛt͡sialˈist/
+  translation: ''
   pos: noun
-  gender: m
+- lemma: іт-хаб
+  ipa: /it-xab/
+  translation: ''
+  pos: noun
+- lemma: іт-індустрія
+  ipa: /it-indˈustrija/
+  translation: ''
+  pos: noun

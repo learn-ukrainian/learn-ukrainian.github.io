@@ -1,63 +1,118 @@
 module: 68-texting-messaging
 level: A2
-version: '1.0'
+version: '2.0'
 items:
+- lemma: ближчий
+  ipa: /blˈɪʒt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: бу
+  ipa: /bu/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: голосовий
+  ipa: /ɦɔlɔsɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: дяк
+  ipa: /djak/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: діма
+  ipa: /dima/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: емоджі
+  ipa: /ɛmɔdʒi/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: етикет
+  ipa: /ɛtɪkˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: корисне
+  ipa: /kˈɔrɪsnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: користувач
+  ipa: /kɔrˈɪstuʋat͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: кінотеатр
+  ipa: /kinɔtɛˈatr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мить
+  ipa: /mɪtʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: надсилання
+  ipa: /nadsɪlˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: неформально
+  ipa: /nɛfɔrmˈalʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: ніха
+  ipa: /nixa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: подяка
+  ipa: /pɔdˈjaka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: прити
+  ipa: /prɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: сергій
+  ipa: /sɛrɦˈij/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: скорочення
-  ipa: /skɔˈrɔt͡ʃɛnʲːɐ/
-  translation: abbreviation
+  ipa: /skɔrˈɔt͡ʃɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: сленг
   ipa: /slɛnɦ/
-  translation: slang
+  translation: ''
   pos: noun
   gender: m
-- lemma: неформально
-  ipa: /nɛfɔrˈmɑlʲnɔ/
-  translation: informally
-  pos: adv
-- lemma: швидко
-  ipa: /ˈʃʋɪdkɔ/
-  translation: quickly
-  pos: adv
-- lemma: голосове
-  ipa: /ɦɔɫɔˈsɔʋɛ/
-  translation: voice message
+- lemma: статус
+  ipa: /stˈatus/
+  translation: ''
   pos: noun
-  gender: n
+  gender: m
 - lemma: стікер
-  ipa: /ˈsʲtʲikɛr/
-  translation: sticker
+  ipa: /stikɛr/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: емоджі
-  ipa: /ɛˈmɔd͡ʒʲi/
-  translation: emoji
-  pos: noun
-  gender: n
-- lemma: друкувати
-  ipa: /drʊkʊˈʋɑtɪ/
-  translation: to type
-  pos: verb
-- lemma: надіслати
-  ipa: /nɐdʲisˈɫɑtɪ/
-  translation: to send
-  pos: verb
-- lemma: прочитано
-  ipa: /prɔˈt͡ʃɪtɐnɔ/
-  translation: read (status)
-  pos: part
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: local
+- lemma: текстовий
+  ipa: /tɛkstɔʋˈɪj/
+  translation: ''
   pos: adj
+- lemma: хвиля
+  ipa: /xʋˈɪlja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: юля
+  ipa: /ˈjulja/
+  translation: ''
+  pos: noun
+  gender: f

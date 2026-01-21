@@ -2,44 +2,99 @@ module: 70-collocations-expressions
 level: B1
 version: '2.0'
 items:
-- lemma: врегулювання
-  ipa: /vrɛhulʲuˈvanʲːa/
-  translation: settlement
-  pos: noun
-  gender: n
-- lemma: докладати
-  ipa: /dɔklaˈdatɪ/
-  translation: to apply/make effort
+- lemma: антонімічний
+  ipa: /antɔnimˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: встановлювати
+  ipa: /ʋstanˈɔʋljuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: колокації
-  ipa: /kɔlɔˈkat͡sʲiji/
-  translation: collocations
+- lemma: відень
+  ipa: /ʋˈidɛnʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: налагоджувати
-  ipa: /nalahɔˈdʒuvatɪ/
-  translation: to adjust
+- lemma: відігравати
+  ipa: /ʋidiɦraʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: наступне
-  ipa: /naˈstupnɛ/
-  translation: next
+- lemma: гілка
+  ipa: /ɦˈilka/
+  translation: ''
   pos: noun
-  gender: n
+- lemma: доброчесність
+  ipa: /dɔbrɔt͡ʃˈɛsnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: загарбник
+  ipa: /zaɦˈarbnɪk/
+  translation: ''
+  pos: noun
+- lemma: зазнавати
+  ipa: /zaznaʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: здобувати
+  ipa: /zdɔbuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: козаків
+  ipa: /kɔzakˈiʋ/
+  translation: ''
+  pos: adj
+- lemma: невдача
+  ipa: /nɛʋdˈat͡ʃa/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: нехтувати
-  ipa: /ˈnɛxtuvatɪ/
-  translation: to neglect
+  ipa: /nˈɛxtuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: підіймати
-  ipa: /pidijˈmatɪ/
-  translation: to raise
-  pos: verb
-- lemma: росіянізм
-  ipa: /rɔsʲijaˈnʲizm/
-  translation: Russism
+- lemma: орлик
+  ipa: /ˈɔrlɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: укртех
-  ipa: /ukrˈtɛx/
-  translation: Ukrtech (abbr)
-  pos: propn
+- lemma: пилип
+  ipa: /pɪlˈɪp/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: продовжуючи
+  ipa: /prɔdˈɔʋʒujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: справляти
+  ipa: /spraʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: стажування
+  ipa: /staʒuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: старшина
+  ipa: /starʃˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: укртех
+  ipa: /ukrtɛx/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: цілісний
+  ipa: /t͡sˈilisnɪj/
+  translation: ''
+  pos: adj
+- lemma: чинити
+  ipa: /t͡ʃɪnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: шкодити
+  ipa: /ʃkˈɔdɪtɪ/
+  translation: ''
+  pos: verb

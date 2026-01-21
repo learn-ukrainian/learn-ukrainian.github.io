@@ -2,154 +2,301 @@ module: 19-motion-starting-returning
 level: B1
 version: '2.0'
 items:
-- lemma: адресо
-  ipa: /aˈdrɛsɔ/
-  translation: address (vocative)
-  pos: noun
-  gender: m
+- lemma: асоціюватися
+  ipa: /asɔt͡sijuʋˈatɪsja/
+  translation: ''
+  pos: verb
 - lemma: босс
-  ipa: /bɔs/
-  translation: boss
-  pos: propn
-  gender: m
-- lemma: вирій
-  ipa: /ˈvɪrʲij/
-  translation: warm lands
+  ipa: /bɔss/
+  translation: ''
   pos: noun
   gender: m
-- lemma: віддалення
-  ipa: /vidˈdalɛnʲːa/
-  translation: distancing
+- lemma: вантаж
+  ipa: /ʋantˈaʒ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вино
+  ipa: /ʋɪnˈɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: домівок
-  ipa: /dɔˈmivɔk/
-  translation: homes (gen. pl.)
-  pos: noun
-  gender: f
-- lemma: завезти
-  ipa: /zavɛzˈtɪ/
-  translation: to deliver
+- lemma: вирушати
+  ipa: /ʋɪruʃˈatɪ/
+  translation: ''
   pos: verb
-- lemma: завести
-  ipa: /zavɛsˈtɪ/
-  translation: to start (engine)
+- lemma: вирушити
+  ipa: /ʋˈɪruʃɪtɪ/
+  translation: ''
   pos: verb
-- lemma: залетіти
-  ipa: /zalɛˈtʲitɪ/
-  translation: to fly in
-  pos: verb
-- lemma: залитися
-  ipa: /zaˈlɪtɪsʲa/
-  translation: to flood
-  pos: verb
-- lemma: занести
-  ipa: /zanɛsˈtɪ/
-  translation: to bring in
-  pos: verb
-- lemma: затягнутися
-  ipa: /zatʲaɦˈnutɪsʲa/
-  translation: to drag on
-  pos: verb
-- lemma: заїдати
-  ipa: /zajiˈdatɪ/
-  translation: to seize/eat after
-  pos: verb
-- lemma: заїзд
-  ipa: /zaˈjizd/
-  translation: check-in
+- lemma: вирій
+  ipa: /ʋˈɪrij/
+  translation: ''
   pos: noun
   gender: m
+- lemma: відвезти
+  ipa: /ʋidʋɛztˈɪ/
+  translation: ''
+  pos: verb
+- lemma: відвідування
+  ipa: /ʋidʋˈiduʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: віддалення
+  ipa: /ʋiddˈalɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: відрізняти
+  ipa: /ʋidriznˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: гончар
+  ipa: /ɦɔnt͡ʃˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: горе
+  ipa: /ɦˈɔrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: грубість
+  ipa: /ɦrˈubistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: додаватися
+  ipa: /dɔdaʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: домівка
+  ipa: /dɔmˈiʋka/
+  translation: ''
+  pos: noun
+- lemma: доповняти
+  ipa: /dɔpɔʋnˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: етимологічно
+  ipa: /ɛtɪmɔlɔɦˈit͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: завезти
+  ipa: /zaʋɛztˈɪ/
+  translation: ''
+  pos: verb
+- lemma: завести
+  ipa: /zaʋɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: завітати
+  ipa: /zaʋitˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зайда
+  ipa: /zˈajda/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: залетіти
+  ipa: /zalɛtˈitɪ/
+  translation: ''
+  pos: verb
+- lemma: занести
+  ipa: /zanˈɛstɪ/
+  translation: ''
+  pos: verb
+- lemma: запоріжжя
+  ipa: /zapɔrˈiʒʒja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: затягнутися
+  ipa: /zatjaɦnˈutɪsja/
+  translation: ''
+  pos: verb
+- lemma: заїда
+  ipa: /zˈajida/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: збори
+  ipa: /zbɔrɪ/
+  translation: ''
+  pos: noun
+- lemma: контрактовий
+  ipa: /kɔntraktˈɔʋɪj/
+  translation: ''
+  pos: adj
 - lemma: координатор
-  ipa: /kɔɔrdɪˈnatɔr/
-  translation: coordinator
+  ipa: /kɔɔrdɪnˈatɔr/
+  translation: ''
   pos: noun
   gender: m
 - lemma: короткочасність
-  ipa: /kɔrɔtkɔˈt͡ʃasnʲisʲtʲ/
-  translation: short duration
+  ipa: /kɔrɔtkɔt͡ʃˈasnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: печерська
-  ipa: /pɛˈt͡ʃɛrsʲka/
-  translation: Pecherska
-  pos: propn
+- lemma: мислити
+  ipa: /mˈɪslɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: міграція
+  ipa: /miɦrˈat͡sija/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: початок
-  ipa: /pɔˈt͡ʃatɔk/
-  translation: beginning
+- lemma: ненадовго
+  ipa: /nɛnadˈɔʋɦɔ/
+  translation: ''
+  pos: adv
+- lemma: опівночі
+  ipa: /ɔpˈiʋnɔt͡ʃi/
+  translation: ''
+  pos: adv
+- lemma: перебування
+  ipa: /pɛrɛbuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: печерський
+  ipa: /pɛt͡ʃˈɛrsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: повезти
+  ipa: /pɔʋɛztˈɪ/
+  translation: ''
+  pos: verb
+- lemma: повести
+  ipa: /pɔʋɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: поехала
+  ipa: /pɔɛxala/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: помічник
+  ipa: /pɔmit͡ʃnˈɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: повезти
-  ipa: /pɔvɛzˈtɪ/
-  translation: to take/get lucky
+- lemma: понести
+  ipa: /pɔnɛstˈɪ/
+  translation: ''
   pos: verb
-- lemma: поїхати
-  ipa: /pɔˈjixatɪ/
-  translation: to go (by vehicle)
+- lemma: привезти
+  ipa: /prɪʋɛztˈɪ/
+  translation: ''
   pos: verb
 - lemma: пуск
   ipa: /pusk/
-  translation: launch
+  translation: ''
   pos: noun
   gender: m
-- lemma: розлучитися
-  ipa: /rɔzluˈt͡ʃɪtɪsʲa/
-  translation: to divorce
+- lemma: півострів
+  ipa: /piʋˈɔstriʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: развестися
+  ipa: /razʋɛstɪsja/
+  translation: ''
   pos: verb
+- lemma: родинний
+  ipa: /rɔdˈɪnnɪj/
+  translation: ''
+  pos: adj
 - lemma: роз'їхатися
-  ipa: /rɔzˈjixatɪsʲa/
-  translation: to disperse
-  pos: verb
-- lemma: розв'язати
-  ipa: /rɔzvjuˈzatɪ/
-  translation: to untie/solve
+  ipa: /rɔzˈjixatɪsja/
+  translation: ''
   pos: verb
 - lemma: розвезти
-  ipa: /rɔzvɛzˈtɪ/
-  translation: to distribute
+  ipa: /rɔzʋɛztˈɪ/
+  translation: ''
   pos: verb
 - lemma: розвести
-  ipa: /rɔzvɛsˈtɪ/
-  translation: to breed/dilute
+  ipa: /rɔzʋɛstˈɪ/
+  translation: ''
   pos: verb
 - lemma: розділення
-  ipa: /rɔzˈdʲilɛnʲːa/
-  translation: separation
+  ipa: /rɔzdˈilɛnnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: розділитися
+  ipa: /rɔzdilˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: розділяти
+  ipa: /rɔzdilˈjatɪ/
+  translation: ''
+  pos: verb
 - lemma: розділятися
-  ipa: /rɔzdʲiˈlʲatɪsʲa/
-  translation: to separate
+  ipa: /rɔzdilˈjatɪsja/
+  translation: ''
   pos: verb
 - lemma: розлетітися
-  ipa: /rɔzlɛˈtʲitɪsʲa/
-  translation: to fly apart
+  ipa: /rɔzlɛtˈitɪsja/
+  translation: ''
   pos: verb
 - lemma: розминутися
-  ipa: /rɔzmɪˈnutɪsʲa/
-  translation: to miss each other
+  ipa: /rɔzmɪnˈutɪsja/
+  translation: ''
   pos: verb
 - lemma: рознести
-  ipa: /rɔznɛsˈtɪ/
-  translation: to distribute
+  ipa: /rɔznɛstˈɪ/
+  translation: ''
+  pos: verb
+- lemma: розпочинати
+  ipa: /rɔzpɔt͡ʃɪnˈatɪ/
+  translation: ''
   pos: verb
 - lemma: розсіювання
-  ipa: /rɔzˈsʲijuvanʲːa/
-  translation: scattering
+  ipa: /rɔzsˈijuʋannja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: розсіятися
+  ipa: /rɔzsˈijatɪsja/
+  translation: ''
+  pos: verb
+- lemma: розходження
+  ipa: /rɔzxˈɔdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: розходитися
+  ipa: /rɔzxɔdɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: специфічно
+  ipa: /spɛt͡sɪfˈit͡ʃnɔ/
+  translation: ''
+  pos: adv
 - lemma: стартувати
-  ipa: /startuˈvatɪ/
-  translation: to start
+  ipa: /startuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: уклон
-  ipa: /uˈklɔn/
-  translation: Uklon/slope
+  ipa: /uklˈɔn/
+  translation: ''
   pos: noun
   gender: m
+- lemma: усередину
+  ipa: /usɛrˈɛdɪnu/
+  translation: ''
+  pos: adv
 - lemma: учителька
-  ipa: /uˈt͡ʃɪtɛlʲka/
-  translation: teacher
+  ipa: /ut͡ʃˈɪtɛlʲka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: чернігів
+  ipa: /t͡ʃɛrnˈiɦiʋ/
+  translation: ''
+  pos: noun
+  gender: m

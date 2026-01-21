@@ -2,277 +2,422 @@ module: 50-technology-media
 level: A2
 version: '2.0'
 items:
-- lemma: безпека
-  ipa: bezˈpɛkɐ
-  translation: security
+- lemma: безшумний
+  ipa: /bɛzʃˈumnɪj/
+  translation: ''
+  pos: adj
+- lemma: блогер
+  ipa: /blˈɔɦɛr/
+  translation: ''
+  pos: noun
+- lemma: блогерка
+  ipa: /blɔɦɛrka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: блог
-  ipa: blɔh
-  translation: blog
+- lemma: в'язання
+  ipa: /ʋjazˈannja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: блогер
-  ipa: ˈbloher
-  translation: blogger
-  pos: noun
-  gender: m
-- lemma: блокувати
-  ipa: blokuˈʋɑte
-  translation: to block
-  pos: verb
+  gender: n
 - lemma: вебсайт
-  ipa: vɛbˈsɑjt
-  translation: website
+  ipa: /ʋɛbsˈajt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вподобайка
-  ipa: vpodɔˈbɑjkɐ
-  translation: like (noun)
-  pos: other
-- lemma: вподобати
-  ipa: vpodɔˈbɑte
-  translation: to like (perf)
+- lemma: вимикати
+  ipa: /ʋɪmɪkatɪ/
+  translation: ''
   pos: verb
+- lemma: виникати
+  ipa: /ʋɪnɪkatɪ/
+  translation: ''
+  pos: verb
+- lemma: вмикати
+  ipa: /ʋmɪkˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: вперше
+  ipa: /ʋpˈɛrʃɛ/
+  translation: ''
+  pos: adv
+- lemma: відеозв'язок
+  ipa: /ʋidɛɔzʋjazˈɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: віртуальний
+  ipa: /ʋirtuˈalʲnɪj/
+  translation: ''
+  pos: adj
 - lemma: гаджет
-  ipa: ˈhɑdʒet
-  translation: gadget
+  ipa: /ɦadʒɛt/
+  translation: ''
   pos: noun
   gender: m
 - lemma: галина
-  ipa: hɐˈlɪnɐ
-  translation: Halyna
-  pos: propn
+  ipa: /ɦalˈɪna/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: гугл
-  ipa: ɡuɡl
-  translation: Google
-  pos: propn
+- lemma: громадянин
+  ipa: /ɦrɔmadˈjanɪn/
+  translation: ''
+  pos: noun
+- lemma: дан
+  ipa: /dan/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: ділитися
-  ipa: dʲiˈlɪtɪsʲɐ
-  translation: to share
+- lemma: дистанційний
+  ipa: /dɪstant͡sˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: друкувати
+  ipa: /drukuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: експерт
+  ipa: /ɛkspˈɛrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: заблокувати
+  ipa: /zablɔkuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: завантажувати
-  ipa: zɐvɐnˈtɑʒuʋɐte
-  translation: to download/upload
+  ipa: /zaʋantˈaʒuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: залити
-  ipa: zɐˈlɪte
-  translation: to upload/pour (slang)
+- lemma: записати
+  ipa: /zapɪsˈatɪ/
+  translation: ''
   pos: verb
-- lemma: захотіти
-  ipa: zɐxoˈtʲite
-  translation: to want (perf)
+- lemma: засмутитися
+  ipa: /zasmutˈɪtɪsja/
+  translation: ''
   pos: verb
-  gender: m
 - lemma: знімати
-  ipa: znʲiˈmɑte
-  translation: to film/take off (imp)
+  ipa: /znimˈatɪ/
+  translation: ''
   pos: verb
-- lemma: зранку
-  ipa: ˈzrɑnku
-  translation: in the morning
-  pos: adv
+- lemma: зручний
+  ipa: /zrˈut͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: камера
-  ipa: ˈkɑmerɐ
-  translation: camera
+  ipa: /kˈamɛra/
+  translation: ''
   pos: noun
   gender: f
+- lemma: канал
+  ipa: /kanˈal/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: клавіатура
-  ipa: klɐviɐˈturɐ
-  translation: keyboard
+  ipa: /klaʋiatˈura/
+  translation: ''
   pos: noun
   gender: f
-- lemma: коментар
-  ipa: komenˈtɑr
-  translation: comment
-  pos: noun
-  gender: m
-- lemma: коментувати
-  ipa: komentuˈʋɑte
-  translation: to comment
+- lemma: клікнути
+  ipa: /kliknutɪ/
+  translation: ''
   pos: verb
+- lemma: колегий
+  ipa: /kɔlɛɦɪj/
+  translation: ''
+  pos: adj
+- lemma: коментар
+  ipa: /kɔmɛntˈar/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: красуня
+  ipa: /krasˈunja/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: лайк
-  ipa: lɑjk
-  translation: like
+  ipa: /lajk/
+  translation: ''
   pos: noun
   gender: m
+- lemma: лайка
+  ipa: /lˈajka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: логін
-  ipa: loˈhʲin
-  translation: login
+  ipa: /lɔɦˈin/
+  translation: ''
   pos: noun
   gender: m
+- lemma: лідер
+  ipa: /lˈidɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: медіа
+  ipa: /mˈɛdia/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: мережа
-  ipa: meˈrɛʒɐ
-  translation: network
+  ipa: /mɛrˈɛʒa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: мишка
-  ipa: ˈmɪʃkɐ
-  translation: mouse
+- lemma: мишко
+  ipa: /mˈɪʃkɔ/
+  translation: ''
   pos: noun
-  gender: f
-- lemma: мода
-  ipa: ˈmɔdɐ
-  translation: fashion
-  pos: noun
-  gender: f
+  gender: m
 - lemma: монтувати
-  ipa: montuˈʋɑte
-  translation: to edit (video)
+  ipa: /mɔntuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: мікрофон
-  ipa: mikroˈfɔn
-  translation: microphone
+  ipa: /mikrɔfˈɔn/
+  translation: ''
   pos: noun
   gender: m
 - lemma: навушник
-  ipa: nɐˈvuʃnɪk
-  translation: headphone
+  ipa: /naʋˈuʃnɪk/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: надійний
-  ipa: nɐˈdʲijnɪj
-  translation: reliable
+- lemma: нескінченний
+  ipa: /nɛskint͡ʃˈɛnnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: надішти
-  ipa: nɐˈdʲiʃtɪ
-  translation: send (typo надіслати?)
+- lemma: обговорити
+  ipa: /ɔbɦɔʋɔrˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: ноутбуця
-  ipa: noutˈbut͡sʲɐ
-  translation: laptop (gen/typo?)
-  pos: noun
-  gender: m
-- lemma: нічого
-  ipa: nʲiˈt͡ʃɔho
-  translation: nothing
-  pos: adv
 - lemma: онлайн
-  ipa: onˈlɑjn
-  translation: online
+  ipa: /ɔnlajn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: офлайн
-  ipa: ofˈlɑjn
-  translation: offline
-  pos: other
-- lemma: пароль
-  ipa: pɐˈrɔlʲ
-  translation: password
+- lemma: онлайн-зустріч
+  ipa: /ɔnlajn-zˈustrit͡ʃ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: пирог
-  ipa: pɪˈroh
-  translation: pie (typo пиріг?)
-  pos: noun
-  gender: m
-- lemma: планшет
-  ipa: plɐnˈʃɛt
-  translation: tablet
-  pos: noun
-  gender: m
-- lemma: посилання
-  ipa: posɪˈlɑnʲːɐ
-  translation: link
-  pos: noun
-  gender: n
-- lemma: пост
-  ipa: pɔst
-  translation: post
-  pos: noun
-  gender: m
-- lemma: поставати
-  ipa: postɐˈʋɑte
-  translation: to appear/arise
+- lemma: опублікувати
+  ipa: /ɔpublikuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: приватність
-  ipa: prɪˈvɑtnʲisʲtʲ
-  translation: privacy
+- lemma: офлайн
+  ipa: /ɔflajn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пандемія
+  ipa: /pandɛmˈija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: пристрій
-  ipa: ˈprɪstrʲij
-  translation: device
+- lemma: пароль
+  ipa: /parˈɔlʲ/
+  translation: ''
   pos: noun
   gender: m
+- lemma: перевірений
+  ipa: /pɛrɛʋˈirɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: перегляд
+  ipa: /pɛrˈɛɦljad/
+  translation: ''
+  pos: noun
+- lemma: пироги
+  ipa: /pɪrɔɦˈɪ/
+  translation: ''
+  pos: noun
+- lemma: пиріжки
+  ipa: /pɪriʒkˈɪ/
+  translation: ''
+  pos: noun
+- lemma: планшет
+  ipa: /planʃˈɛt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: податок
+  ipa: /pɔdˈatɔk/
+  translation: ''
+  pos: noun
+- lemma: подкаст
+  ipa: /pɔdkast/
+  translation: ''
+  pos: noun
+- lemma: поділитися
+  ipa: /pɔdilˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: полтавщина
+  ipa: /pɔltˈaʋʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: посилання
+  ipa: /pɔsɪlˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: прирівняти
+  ipa: /prɪriʋnˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: пробіжка
+  ipa: /prɔbˈiʒka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: профіль
-  ipa: ˈprɔfʲilʲ
-  translation: profile
+  ipa: /prˈɔfilʲ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: публікувати
-  ipa: publʲikuˈʋɑte
-  translation: to publish
+  ipa: /publikuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: резервний
-  ipa: reˈzɛrvnɪj
-  translation: backup (adj)
-  pos: adj
+- lemma: підписник
+  ipa: /pidpɪsnɪk/
+  translation: ''
+  pos: noun
+- lemma: підписуватися
+  ipa: /pidpˈɪsuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: підругама
+  ipa: /pidruɦama/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: підсвітка
+  ipa: /pidsʋitka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: розвинений
+  ipa: /rɔzʋˈɪnɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: розслабитися
+  ipa: /rɔzslˈabɪtɪsja/
+  translation: ''
+  pos: verb
 - lemma: садівництво
-  ipa: sɐdʲivˈnɪt͡stvo
-  translation: gardening
+  ipa: /sadiʋnˈɪt͡stʋɔ/
+  translation: ''
   pos: noun
   gender: n
+- lemma: сайт
+  ipa: /sajt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сегмент
+  ipa: /sɛɦmˈɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сервер
+  ipa: /sˈɛrʋɛr/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: серіал
-  ipa: serʲiˈɑl
-  translation: series
+  ipa: /sɛriˈal/
+  translation: ''
   pos: noun
   gender: m
 - lemma: скинути
-  ipa: ˈskɪnute
-  translation: to reset/drop (perf)
+  ipa: /skˈɪnutɪ/
+  translation: ''
   pos: verb
 - lemma: смартфон
-  ipa: smɐrtˈfɔn
-  translation: smartphone
+  ipa: /smartfˈɔn/
+  translation: ''
   pos: noun
   gender: m
-- lemma: технологія
-  ipa: texnoˈlɔhʲijɐ
-  translation: technology
+- lemma: сплачувати
+  ipa: /splˈat͡ʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: стаття
+  ipa: /stattˈja/
+  translation: ''
   pos: noun
   gender: f
+- lemma: стереотип
+  ipa: /stɛrɛɔtˈɪp/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: субтитр
+  ipa: /subtˈɪtr/
+  translation: ''
+  pos: noun
+- lemma: телеграм
+  ipa: /tɛlɛɦrˈam/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тревела-влог
+  ipa: /trɛʋɛla-ʋlɔɦ/
+  translation: ''
+  pos: noun
+- lemma: увімкнути
+  ipa: /uʋimknˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: урядування
+  ipa: /urjaduʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: файл
+  ipa: /fajl/
+  translation: ''
+  pos: noun
 - lemma: фейсбук
-  ipa: fejsˈbuk
-  translation: Facebook
-  pos: propn
+  ipa: /fɛjsbuk/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: хейтер
-  ipa: ˈxɛjter
-  translation: hater
+  ipa: /xˈɛjtɛr/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: цегло
-  ipa: t͡sɛhlo
-  translation: brick (typo цегла)
-  pos: noun
-  gender: f
 - lemma: цифровий
-  ipa: t͡sɪfroˈvɪj
-  translation: digital
+  ipa: /t͡sɪfrɔʋˈɪj/
+  translation: ''
   pos: adj
-  gender: f
 - lemma: чат
-  ipa: t͡ʃɑt
-  translation: chat
+  ipa: /t͡ʃat/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: час
-  ipa: t͡ʃɑs
-  translation: time/tense (grammar)
+- lemma: черга
+  ipa: /t͡ʃˈɛrɦa/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: шахрай
-  ipa: ʃɐxˈrɑj
-  translation: scammer
+  gender: f
+- lemma: штатив
+  ipa: /ʃtatˈɪʋ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: ютуб
-  ipa: juˈtub
-  translation: YouTube
-  pos: propn
+  ipa: /jutub/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: інтернет-звичка
+  ipa: /intɛrnˈɛt-zʋɪt͡ʃka/
+  translation: ''
+  pos: noun
+  gender: f

@@ -1,83 +1,72 @@
 module: 66-asking-for-directions
 level: A2
-version: '1.0'
+version: '2.0'
 items:
-- lemma: заблукати
-  ipa: /zɐbɫʊˈkɑtɪ/
-  translation: to get lost
+- lemma: березняківський
+  ipa: /bɛrɛznjakˈiʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: вперед
+  ipa: /ʋpɛrˈɛd/
+  translation: ''
+  pos: adv
+- lemma: впоратися
+  ipa: /ʋpˈɔratɪsja/
+  translation: ''
   pos: verb
-- lemma: дістатися
-  ipa: /dʲisˈtɑtɪsʲɐ/
-  translation: to get to/reach
+- lemma: заблукалий
+  ipa: /zablukˈalɪj/
+  translation: ''
+  pos: adj
+- lemma: заводський
+  ipa: /zaʋɔdsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: звернутися
+  ipa: /zʋɛrnˈutɪsja/
+  translation: ''
   pos: verb
-- lemma: маршрут
-  ipa: /mɐrˈʃrut/
-  translation: route
+- lemma: звертатися
+  ipa: /zʋɛrtˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: квест
+  ipa: /kʋɛst/
+  translation: ''
   pos: noun
   gender: m
-- lemma: карта
-  ipa: /ˈkɑrtɐ/
-  translation: map
+- lemma: метрополітен
+  ipa: /mɛtrɔpɔlitˈɛn/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
 - lemma: навігатор
-  ipa: /nɐʋʲiˈɦɑtɔr/
-  translation: GPS/navigator
+  ipa: /naʋiɦˈatɔr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: найближчий
-  ipa: /nɐjˈblɪʒt͡ʃɪj/
-  translation: nearest
-  pos: adj
-- lemma: метро
-  ipa: /mɛˈtrɔ/
-  translation: metro
-  pos: noun
-  gender: n
-- lemma: автобус
-  ipa: /ɐu̯ˈtɔbus/
-  translation: bus
-  pos: noun
-  gender: m
-- lemma: пересадка
-  ipa: /pɛrɛˈsɑdkɐ/
-  translation: transfer
-  pos: noun
-  gender: f
-- lemma: кінцева
-  ipa: /kʲinʲˈt͡сɛʋɐ/
-  translation: terminal/last stop
-  pos: noun
-  gender: f
-- lemma: куди їде
-  ipa: /kʊˈdɪ ˈjide/
-  translation: where (does it) go
-  pos: phrase
-- lemma: зупинка
-  ipa: /zʊˈpɪnkɐ/
-  translation: stop (bus/tram)
-  pos: noun
-  gender: f
-- lemma: час
-  ipa: /t͡ʃɑs/
-  translation: time
-  pos: noun
-  gender: m
-- lemma: дієслово
-  ipa: /dʲijɛˈslɔʋɔ/
-  translation: verb
-  pos: noun
-  gender: n
-- lemma: вокзал
-  ipa: /ʋɔkˈzɑɫ/
-  translation: station
-  pos: noun
-  gender: m
-- lemma: місцевий
-  ipa: /mʲisʲˈt͡sɛʋɪj/
-  translation: local
-  pos: adj
-- lemma: їде
-  ipa: /ˈjide/
-  translation: goes/travels
+- lemma: незабаром
+  ipa: /nɛzabˈarɔm/
+  translation: ''
+  pos: adv
+- lemma: панікувати
+  ipa: /panikuʋˈatɪ/
+  translation: ''
   pos: verb
+- lemma: переставити
+  ipa: /pɛrɛstˈaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: розрядитися
+  ipa: /rɔzrjadˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: табло
+  ipa: /tablˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: інформаційний
+  ipa: /infɔrmat͡sˈijnɪj/
+  translation: ''
+  pos: adj

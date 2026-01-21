@@ -2,106 +2,240 @@ module: 11-aspect-in-imperatives
 level: B1
 version: '2.0'
 items:
-- lemma: бюрократичність
-  ipa: /bʲurɔkraˈtɪt͡ʃnʲisʲtʲ/
-  translation: bureaucracy
+- lemma: австро-угорщина
+  ipa: /aʋstrɔ-uɦˈɔrʃt͡ʃɪna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: давати
-  ipa: /daˈvatɪ/
-  translation: to give
-  pos: verb
-- lemma: загорнути
-  ipa: /zahɔrˈnutɪ/
-  translation: to wrap
-  pos: verb
-- lemma: закрий
-  ipa: /zaˈkrɪj/
-  translation: close (imp.)
-  pos: verb
-- lemma: змалка
-  ipa: /ˈzmalka/
-  translation: from childhood
-  pos: noun
-  gender: f
-- lemma: змішаний
-  ipa: /ˈzmʲiʃanɪj/
-  translation: mixed
-  pos: adj
-  gender: m
-- lemma: команд
-  ipa: /kɔˈmand/
-  translation: commands (gen. pl.)
-  pos: noun
-  gender: f
-- lemma: найсвіжіший
-  ipa: /najsvʲiˈʒiʃɪj/
-  translation: freshest
-  pos: adj
-- lemma: п'ятій
-  ipa: /ˈpʲjatʲij/
-  translation: fifth (loc.)
-  pos: other
-- lemma: подвоювати
-  ipa: /pɔdˈvɔjuvatɪ/
-  translation: to double
-  pos: verb
-- lemma: понеділка
-  ipa: /pɔnɛˈdʲilka/
-  translation: Monday (gen.)
-  pos: noun
-  gender: m
-- lemma: привітно
-  ipa: /prɪˈvʲitnɔ/
-  translation: friendly
+- lemma: безкоштовно
+  ipa: /bɛzkɔʃtˈɔʋnɔ/
+  translation: ''
   pos: adv
-- lemma: пригодитися
-  ipa: /prɪɦɔˈdɪtɪsʲa/
-  translation: to come in handy
-  pos: verb
-- lemma: ріж
-  ipa: /rʲiʒ/
-  translation: cut (imp.)
+- lemma: бесарабський
+  ipa: /bɛsarˈabsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: бюрократичність
+  ipa: /bjurɔkratɪt͡ʃnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: виразно
+  ipa: /ʋɪrˈaznɔ/
+  translation: ''
+  pos: adv
+- lemma: відсоток
+  ipa: /ʋidsˈɔtɔk/
+  translation: ''
+  pos: noun
+- lemma: віко
+  ipa: /ʋˈikɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: гостинне
+  ipa: /ɦɔstˈɪnnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: груба
+  ipa: /ɦrˈuba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: давньослов'янський
+  ipa: /daʋnʲɔslɔʋˈjansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: дама
+  ipa: /dˈama/
+  translation: ''
+  pos: noun
+- lemma: дв-наказ
+  ipa: /dʋ-nakaz/
+  translation: ''
   pos: noun
   gender: m
-- lemma: старість
-  ipa: /ˈstarʲisʲtʲ/
-  translation: old age
+- lemma: загорнути
+  ipa: /zaɦɔrnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: заперечний
+  ipa: /zapɛrˈɛt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: запрошення
+  ipa: /zaprˈɔʃɛnnja/
+  translation: ''
+  pos: noun
+- lemma: застерігати
+  ipa: /zastɛriɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зачин
+  ipa: /zˈat͡ʃɪn/
+  translation: ''
+  pos: noun
+- lemma: зберігатися
+  ipa: /zbɛriɦˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: зворот
+  ipa: /zʋɔrˈɔt/
+  translation: ''
+  pos: noun
+- lemma: змішаний
+  ipa: /zmˈiʃanɪj/
+  translation: ''
+  pos: adj
+- lemma: зобов'язання
+  ipa: /zɔbɔʋˈjazannja/
+  translation: ''
+  pos: noun
+- lemma: категорично
+  ipa: /katɛɦɔrˈɪt͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: культовий
+  ipa: /kˈulʲtɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: куштувати
+  ipa: /kuʃtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: ласкавий
+  ipa: /laskˈaʋɪj/
+  translation: ''
+  pos: adj
+- lemma: люб'язний
+  ipa: /ljubˈjaznɪj/
+  translation: ''
+  pos: adj
+- lemma: м'яко
+  ipa: /mˈjakɔ/
+  translation: ''
+  pos: adv
+- lemma: найбагатший
+  ipa: /najbaɦˈatʃɪj/
+  translation: ''
+  pos: adj
+- lemma: найсвіжіший
+  ipa: /najsʋiʒˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: ндв-наказ
+  ipa: /ndʋ-nakˈaz/
+  translation: ''
+  pos: noun
+- lemma: невизначеність
+  ipa: /nɛʋˈɪznat͡ʃɛnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: незавершеність
+  ipa: /nɛzaʋˈɛrʃɛnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: незрозуміло
+  ipa: /nɛzrɔzumˈilɔ/
+  translation: ''
+  pos: adv
+- lemma: ненав'язливість
+  ipa: /nɛnaʋjazlɪʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обмеження
+  ipa: /ɔbmˈɛʒɛnnja/
+  translation: ''
+  pos: noun
+- lemma: понеділко
+  ipa: /pɔnɛdilkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: попереджати
+  ipa: /pɔpɛrɛdʒˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: послідовний
+  ipa: /pɔslidˈɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: поспіль
+  ipa: /pˈɔspilʲ/
+  translation: ''
+  pos: adv
+- lemma: поступовий
+  ipa: /pɔstupˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: привітно
+  ipa: /prɪʋˈitnɔ/
+  translation: ''
+  pos: adv
+- lemma: результативний
+  ipa: /rɛzulʲtatˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: святковий
+  ipa: /sʋjatkˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: середина
+  ipa: /sɛrˈɛdɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /spˈadʃt͡ʃɪna/
+  translation: ''
   pos: noun
   gender: f
 - lemma: стверджувальний
-  ipa: /stvɛrˈdʒuvalʲnɪj/
-  translation: affirmative
+  ipa: /stʋˈɛrdʒuʋalʲnɪj/
+  translation: ''
   pos: adj
-- lemma: телефонування
-  ipa: /tɛlɛfɔnuˈvanʲːa/
-  translation: calling
+- lemma: тарілка
+  ipa: /tarˈilka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: терміновість
+  ipa: /tɛrminˈɔʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тонко
+  ipa: /tˈɔnkɔ/
+  translation: ''
+  pos: adv
+- lemma: торговельний
+  ipa: /tɔrɦɔʋˈɛlʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: узгодженість
+  ipa: /uzɦˈɔdʒɛnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: уточнення
+  ipa: /utˈɔt͡ʃnɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: телефонуй
-  ipa: /tɛlɛfɔˈnuj/
-  translation: call (imp.)
-  pos: other
-- lemma: узгодженість
-  ipa: /uzˈɦɔdʒɛnʲisʲtʲ/
-  translation: consistency
+- lemma: централізація
+  ipa: /t͡sɛntralizˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: вчитися
-  ipa: /ˈvut͡ʃɪtɪsʲa/
-  translation: to learn
-  pos: noun
-  gender: f
-- lemma: фокус
-  ipa: /ˈfɔkus/
-  translation: focus/trick
-  pos: noun
-  gender: m
 - lemma: щотижневий
-  ipa: /ʃt͡ʃɔtɪʒˈnɛvɪj/
-  translation: weekly
+  ipa: /ʃt͡ʃɔtɪʒnˈɛʋɪj/
+  translation: ''
   pos: adj
 - lemma: інструктувати
-  ipa: /instruktuˈvatɪ/
-  translation: to instruct
+  ipa: /instruktuʋˈatɪ/
+  translation: ''
   pos: verb

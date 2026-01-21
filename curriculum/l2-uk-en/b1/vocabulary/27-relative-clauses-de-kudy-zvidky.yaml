@@ -2,62 +2,187 @@ module: 27-relative-clauses-de-kudy-zvidky
 level: B1
 version: '2.0'
 items:
-- lemma: деінде
-  ipa: /dɛˈindɛ/
-  translation: elsewhere
+- lemma: байдуже
+  ipa: /bˈajduʒɛ/
+  translation: ''
   pos: adv
-- lemma: звідусіль
-  ipa: /zviduˈsʲilʲ/
-  translation: from everywhere
-  pos: adv
-- lemma: летіти
-  ipa: /lɛˈtʲitɪ/
-  translation: to fly
+- lemma: близький
+  ipa: /blɪzʲkˈɪj/
+  translation: ''
+  pos: adj
+- lemma: будь-де
+  ipa: /bˈudʲ-dɛ/
+  translation: ''
+  pos: pron
+- lemma: вивезти
+  ipa: /ʋˈɪʋɛztɪ/
+  translation: ''
   pos: verb
-- lemma: місцезнаходження
-  ipa: /mʲist͡sɛznaˈxɔdʒɛnʲːa/
-  translation: location
+- lemma: вирости
+  ipa: /ʋˈɪrɔstɪ/
+  translation: ''
+  pos: verb
+- lemma: вказівний
+  ipa: /ʋkaziʋnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: вступити
+  ipa: /ʋstupˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: втекти
+  ipa: /ʋtɛktˈɪ/
+  translation: ''
+  pos: verb
+- lemma: відремонтувати
+  ipa: /ʋidrɛmɔntuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: гірш
+  ipa: /ɦirʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: евакуювати
+  ipa: /ɛʋakujuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: експортувати
+  ipa: /ɛkspɔrtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: завод
+  ipa: /zaʋˈɔd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: звідки-небудь
+  ipa: /zʋˈidkɪ-nɛbudʲ/
+  translation: ''
+  pos: pron
+- lemma: звідкись
+  ipa: /zʋˈidkɪsʲ/
+  translation: ''
+  pos: pron
+- lemma: звідусіль
+  ipa: /zʋidusˈilʲ/
+  translation: ''
+  pos: pron
+- lemma: здалеку
+  ipa: /zdˈalɛku/
+  translation: ''
+  pos: adv
+- lemma: зерно
+  ipa: /zˈɛrnɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: не бути
-  ipa: /nɛ ˈbutɪ/
-  translation: not to be
+- lemma: куди-небудь
+  ipa: /kudˈɪ-nɛbudʲ/
+  translation: ''
+  pos: pron
+- lemma: курорт
+  ipa: /kurˈɔrt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мешкати
+  ipa: /mˈɛʃkatɪ/
+  translation: ''
   pos: verb
-- lemma: поставка
-  ipa: /pɔˈstau̯ka/
-  translation: supply
+- lemma: монгол
+  ipa: /mɔnɦˈɔl/
+  translation: ''
+  pos: noun
+- lemma: місцезнаходження
+  ipa: /mist͡sɛznaxˈɔdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: міфічний
+  ipa: /mifˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: насамперед
+  ipa: /nasˈampɛrɛd/
+  translation: ''
+  pos: adv
+- lemma: невизначений
+  ipa: /nɛʋˈɪznat͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: ностальгія
+  ipa: /nɔstalʲɦˈija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: правильне
-  ipa: /ˈpravɪlʲnɛ/
-  translation: correct
+- lemma: перекритий
+  ipa: /pɛrɛkrˈɪtɪj/
+  translation: ''
+  pos: adj
+- lemma: поставка
+  ipa: /pɔstˈaʋka/
+  translation: ''
+  pos: noun
+- lemma: предок
+  ipa: /prˈɛdɔk/
+  translation: ''
+  pos: noun
+- lemma: престижний
+  ipa: /prɛstˈɪʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: пригодитися
+  ipa: /prɪɦɔdˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: прикарпаття
+  ipa: /prɪkarpˈattja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: прикарпаття
-  ipa: /prɪkarˈpatʲːa/
-  translation: Prykarpattia
-  pos: propn
-  gender: n
+- lemma: ремесло
+  ipa: /rɛmɛslˈɔ/
+  translation: ''
+  pos: noun
 - lemma: родовід
-  ipa: /rɔdɔˈvid/
-  translation: lineage
+  ipa: /rɔdɔʋˈid/
+  translation: ''
   pos: noun
   gender: m
 - lemma: статично
-  ipa: /staˈtɪt͡ʃnɔ/
-  translation: statically
+  ipa: /statˈɪt͡ʃnɔ/
+  translation: ''
   pos: adv
-- lemma: тухольце
-  ipa: /tuˈxɔlʲt͡sɛ/
-  translation: Tukholtsi
+- lemma: тур
+  ipa: /tur/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тухолька
+  ipa: /tˈuxɔlʲka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: узбережжя
+  ipa: /uzbɛrˈɛʒʒja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: харко
+  ipa: /xarkˈɔ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: узагальнюючий
-  ipa: /uzaˈhalʲnʲujut͡ʃɪj/
-  translation: generalizing
-  pos: adj
-  gender: m
 - lemma: чутно
-  ipa: /ˈt͡ʃutnɔ/
-  translation: audible
+  ipa: /t͡ʃˈutnɔ/
+  translation: ''
   pos: adv
+- lemma: щовечора
+  ipa: /ʃt͡ʃɔʋˈɛt͡ʃɔra/
+  translation: ''
+  pos: adv
+- lemma: із-за
+  ipa: /iz-za/
+  translation: ''
+  pos: prep

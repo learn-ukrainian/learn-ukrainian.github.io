@@ -2,175 +2,113 @@ module: 03-reading-grammar-rules
 level: B1
 version: '2.0'
 items:
-- lemma: використовується
-  ipa: /wɪkɔˈrɪstɔwujɛtʲsʲɐ/
-  translation: is used
+- lemma: а-
+  ipa: /a-/
+  translation: ''
+  pos: noun
+- lemma: аспектуальний
+  ipa: /aspɛktuˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: вже'
+  ipa: /ʋʒɛ/
+  translation: ''
+  pos: noun
+- lemma: виняток
+  ipa: /ʋˈɪnjatɔk/
+  translation: ''
+  pos: noun
+- lemma: відповідник
+  ipa: /ʋidpɔʋˈidnɪk/
+  translation: ''
+  pos: noun
+- lemma: да
+  ipa: /da/
+  translation: ''
+  pos: part
+- lemma: да'
+  ipa: /da/
+  translation: ''
+  pos: noun
+- lemma: доповнити
+  ipa: /dɔpˈɔʋnɪtɪ/
+  translation: ''
   pos: verb
-- lemma: вживається
-  ipa: /wʒɪˈʋajɛtʲsʲɐ/
-  translation: is employed
-  pos: verb
-- lemma: означає
-  ipa: /ɔˈznat͡ʃajɛ/
-  translation: means
-  pos: verb
-- lemma: показує
-  ipa: /pɔˈkazujɛ/
-  translation: shows
-  pos: verb
-- lemma: виражає
-  ipa: /wɪrɐˈʒajɛ/
-  translation: expresses
-  pos: verb
-- lemma: вказує на
-  ipa: /ˈu̯kazujɛ nɐ/
-  translation: indicates
-  pos: phrase
-- lemma: порівняйте
-  ipa: /pɔrʲiu̯ˈnʲajtɛ/
-  translation: compare (imperative)
-  pos: verb
-- lemma: зверніть увагу
-  ipa: /zwɛrˈnʲitʲ ɔˈʋɐɦu/
-  translation: pay attention
-  pos: phrase
-- lemma: наприклад
-  ipa: /nɐˈprɪklad/
-  translation: for example
+- lemma: доречно
+  ipa: /dɔrˈɛt͡ʃnɔ/
+  translation: ''
   pos: adv
-- lemma: тобто
-  ipa: /ˈtɔbtɔ/
-  translation: that is
-  pos: conj
-- lemma: отже
-  ipa: /ˈɔdʒɛ/
-  translation: therefore
-  pos: conj
-- lemma: таким чином
-  ipa: /ˈtakɪm ˈt͡ʃɪnɔm/
-  translation: thus; in this way
-  pos: phrase
-- lemma: на відміну від
-  ipa: /nɐ ˈwidmʲinu wid/
-  translation: in contrast to
-  pos: phrase
-- lemma: подібно до
-  ipa: /pɔˈdʲibnɔ dɔ/
-  translation: similar to
-  pos: phrase
-- lemma: правило
-  ipa: /ˈpraʋɪɫɔ/
-  translation: rule
+- lemma: дієслово-інструкція
+  ipa: /dijɛslˈɔʋɔ-instrukt͡sija/
+  translation: ''
   pos: noun
   gender: n
-- lemma: виняток
-  ipa: /ˈwɪnʲɐtɔk/
-  translation: exception
-  pos: noun
-  gender: m
-- lemma: форма
-  ipa: /ˈfɔrmɐ/
-  translation: form
+- lemma: залежність
+  ipa: /zalˈɛʒnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: основа
-  ipa: /ɔˈsnɔʋɐ/
-  translation: stem (linguistics)
-  pos: noun
-  gender: f
-- lemma: корінь
-  ipa: /ˈkɔrʲinʲ/
-  translation: root (linguistics)
-  pos: noun
-  gender: m
-- lemma: суфікс
-  ipa: /ˈsufʲiks/
-  translation: suffix
-  pos: noun
-  gender: m
-- lemma: префікс
-  ipa: /ˈprɛfʲiks/
-  translation: prefix
-  pos: noun
-  gender: m
-- lemma: виберіть
-  ipa: /wɪˈberʲitʲ/
-  translation: choose (imperative)
-  pos: verb
-- lemma: оберіть
-  ipa: /ɔˈberʲitʲ/
-  translation: select (imperative)
-  pos: verb
-- lemma: знайдіть
-  ipa: /znɐi̯ˈdʲitʲ/
-  translation: find (imperative)
-  pos: verb
-- lemma: з'єднайте
-  ipa: /zjɛdˈnɐi̯tɛ/
-  translation: connect; match (imperative)
-  pos: verb
-- lemma: розташуйте
-  ipa: /rɔztɐˈʃujtɛ/
-  translation: arrange (imperative)
-  pos: verb
-- lemma: доповніть
-  ipa: /dɔˈpɔunʲitʲ/
-  translation: complete (imperative)
-  pos: verb
-- lemma: натисніть
-  ipa: /nɐˈtɪsʲnʲitʲ/
-  translation: click (imperative)
-  pos: verb
-- lemma: перекладіть
-  ipa: /perɛklɐˈdʲitʲ/
-  translation: translate (imperative)
-  pos: verb
-- lemma: складіть
-  ipa: /sklɐˈdʲitʲ/
-  translation: compose (imperative)
-  pos: verb
-- lemma: контекст
-  ipa: /kɔnˈtɛkst/
-  translation: context
-  pos: noun
-  gender: m
 - lemma: маркер
-  ipa: /ˈmɐrkɛr/
-  translation: marker
+  ipa: /markɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: написа-
+  ipa: /napɪsa-/
+  translation: ''
+  pos: noun
+- lemma: оки
+  ipa: /ɔkˈɪ/
+  translation: ''
+  pos: noun
+- lemma: писати'
+  ipa: /pɪsˈatɪ/
+  translation: ''
+  pos: noun
+- lemma: подібно
+  ipa: /pɔdˈibnɔ/
+  translation: ''
+  pos: adv
+- lemma: проаналізувати
+  ipa: /prɔanalizuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: підпорядковуватися
+  ipa: /pidpɔrjadkˈɔʋuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: регістр
+  ipa: /rɛɦˈistr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розташувати
+  ipa: /rɔztaʃuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: самостійний
+  ipa: /samɔstˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: складатися
+  ipa: /skladˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: так'
+  ipa: /tak/
+  translation: ''
+  pos: noun
+- lemma: форум
+  ipa: /fˈɔrum/
+  translation: ''
   pos: noun
   gender: m
 - lemma: частота
-  ipa: /t͡ʃɐstɔˈtɑ/
-  translation: frequency
+  ipa: /t͡ʃastɔtˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: аспектуальна пара
-  ipa: /ɐspɛktuˈɑlʲnɐ ˈpɑrɐ/
-  translation: aspectual pair
-  pos: phrase
-- lemma: стиль
-  ipa: /stɪlʲ/
-  translation: style
+- lemma: чернівці
+  ipa: /t͡ʃɛrniʋt͡sˈi/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: регістр
-  ipa: /reˈɦʲistr/
-  translation: register
-  pos: noun
-  gender: m
-- lemma: розмовна мова
-  ipa: /rɔzˈmɔu̯nɐ ˈmɔʋɐ/
-  translation: colloquial language
-  pos: phrase
-- lemma: літературна мова
-  ipa: /lʲitɛrɐˈturnɐ ˈmɔʋɐ/
-  translation: literary language
-  pos: phrase
-- lemma: формальна мова
-  ipa: /fɔrˈmɑlʲnɐ ˈmɔʋɐ/
-  translation: formal language
-  pos: phrase
-- lemma: нейтральна мова
-  ipa: /nɛi̯ˈtrɑlʲnɐ ˈmɔʋɐ/
-  translation: neutral language
-  pos: phrase

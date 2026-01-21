@@ -1,154 +1,176 @@
 module: 82-mountains-trail
 level: B1
-version: '1.1'
+version: '2.0'
 items:
-- lemma: гора
-  ipa: /ɦoˈɾɑ/
-  translation: mountain
+- lemma: береги
+  ipa: /bɛrɛɦˈɪ/
+  translation: ''
+  pos: noun
+- lemma: велич
+  ipa: /ʋˈɛlɪt͡ʃ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: вершина
-  ipa: /weɾˈʃɪnɑ/
-  translation: peak / summit
+- lemma: вибігати
+  ipa: /ʋɪbiɦatɪ/
+  translation: ''
+  pos: verb
+- lemma: втомленість
+  ipa: /ʋtˈɔmlɛnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: похід
-  ipa: /poˈxid/
-  translation: hike / trek
+- lemma: гайнути
+  ipa: /ɦajnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: гребінь
+  ipa: /ɦrˈɛbinʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дика
+  ipa: /dˈɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дослідити
+  ipa: /dɔslidˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: дощовик
+  ipa: /dɔʃt͡ʃɔʋˈɪk/
+  translation: ''
+  pos: noun
+- lemma: збитися
+  ipa: /zbˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: кам'янистий
+  ipa: /kamjanˈɪstɪj/
+  translation: ''
+  pos: adj
+- lemma: камені
+  ipa: /kˈamɛni/
+  translation: ''
+  pos: noun
+- lemma: маркування
+  ipa: /markuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: найважче
+  ipa: /najʋˈaʒt͡ʃɛ/
+  translation: ''
+  pos: adv
+- lemma: натхнення
+  ipa: /natxnˈɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: неуважний
+  ipa: /nɛuʋˈaʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: обсерваторія
+  ipa: /ɔbsɛrʋatˈɔrija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: офлайн-карта
+  ipa: /ɔflajn-kˈarta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пересічений
+  ipa: /pɛrɛsˈit͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: поклик
+  ipa: /pˈɔklɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: полегшений
+  ipa: /pɔlˈɛɦʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: полонинський
+  ipa: /pɔlɔnˈɪnsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: піп
+  ipa: /pip/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рельєф
+  ipa: /rɛlʲˈjɛf/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розвалитися
+  ipa: /rɔzʋalˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: своєрідний
+  ipa: /sʋɔjɛrˈidnɪj/
+  translation: ''
+  pos: adj
+- lemma: спальник
+  ipa: /spˈalʲnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спорядження
+  ipa: /spɔrˈjadʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: спуск
+  ipa: /spusk/
+  translation: ''
+  pos: noun
+- lemma: трейл
+  ipa: /trɛjl/
+  translation: ''
   pos: noun
   gender: m
 - lemma: трейлраннінг
-  ipa: /tɾejlˈɾɑnʲːinɡ/
-  translation: trail running
+  ipa: /trɛjlranninɦ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: маршрут
-  ipa: /mɑɾˈʃɾut/
-  translation: route
+- lemma: трек
+  ipa: /trɛk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: стежка
-  ipa: /sˈtɛʒkɑ/
-  translation: path / trail
-  pos: noun
-  gender: f
-- lemma: маркування
-  ipa: /mɑɾkʊˈwɑnʲːɑ/
-  translation: marking (trail signs)
-  pos: noun
-  gender: n
-- lemma: намет
-  ipa: /nɑˈmɛt/
-  translation: tent
-  pos: noun
-  gender: m
-- lemma: спальник
-  ipa: /sˈpɑlʲnɪk/
-  translation: sleeping bag
-  pos: noun
-  gender: m
-- lemma: вогнище
-  ipa: /wˈɔɦnɪʃt͡ʃe/
-  translation: campfire
-  pos: noun
-  gender: n
-- lemma: підніматися
-  ipa: /pidnʲiˈmɑtɪsʲɑ/
-  translation: to ascend / climb up
+- lemma: триматися
+  ipa: /trɪmˈatɪsja/
+  translation: ''
   pos: verb
-  gender: null
-- lemma: спускатися
-  ipa: /spʊsˈkɑtɪsʲɑ/
-  translation: to descend / go down
-  pos: verb
-  gender: null
-- lemma: краєвид
-  ipa: /kɾɑjeˈwɪd/
-  translation: view / landscape
+- lemma: хайкінг
+  ipa: /xajkinɦ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хортиця
+  ipa: /xɔrtˈɪt͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хребет
+  ipa: /xrɛbˈɛt/
+  translation: ''
+  pos: noun
+- lemma: чорногора
+  ipa: /t͡ʃɔrnɔɦˈɔra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чорногірський
+  ipa: /t͡ʃɔrnɔɦˈirsʲkɪj/
+  translation: ''
   pos: noun
   gender: m
-- lemma: природа
-  ipa: /pɾɪˈɾɔdɑ/
-  translation: nature
-  pos: noun
-  gender: f
-- lemma: погода
-  ipa: /poˈɦɔdɑ/
-  translation: weather
-  pos: noun
-  gender: f
-- lemma: дощ
-  ipa: /dɔʃt͡ʃ/
-  translation: rain
-  pos: noun
-  gender: m
-- lemma: вітер
-  ipa: /wˈitɛɾ/
-  translation: wind
-  pos: noun
-  gender: m
-- lemma: безпека
-  ipa: /bezˈpɛkɑ/
-  translation: safety
-  pos: noun
-  gender: f
-- lemma: рятувальник
-  ipa: /ɾʲɑtʊˈwɑlʲnɪk/
-  translation: rescuer
-  pos: noun
-  gender: m
-- lemma: карта
-  ipa: /kˈɑɾtɑ/
-  translation: map
-  pos: noun
-  gender: f
-- lemma: компас
-  ipa: /kˈɔmpɑs/
-  translation: compass
-  pos: noun
-  gender: m
-- lemma: ліс
-  ipa: /lʲis/
-  translation: forest
-  pos: noun
-  gender: m
-- lemma: полонина
-  ipa: /poɫoˈnɪnɑ/
-  translation: polonyna (mountain meadow)
-  pos: noun
-  gender: f
-- lemma: Говерла
-  ipa: /ɦoˈwɛɾɫɑ/
-  translation: Hoverla (highest peak)
-  pos: propn
-  gender: f
-- lemma: Карпати
-  ipa: /kɑɾˈpɑtɪ/
-  translation: Carpathians
-  pos: propn
-  gender: pl
-- lemma: рюкзак
-  ipa: /ɾʲʊkˈzɑk/
-  translation: backpack
-  pos: noun
-  gender: m
-- lemma: взуття
-  ipa: /wˈzutʲːɑ/
-  translation: footwear / shoes
-  pos: noun
-  gender: n
-- lemma: спорядження
-  ipa: /spoˈɾʲɑd͡ʒenʲːɑ/
-  translation: equipment / gear
-  pos: noun
-  gender: n
-- lemma: панорама
-  ipa: /pɑnoˈɾɑmɑ/
-  translation: panorama
-  pos: noun
-  gender: f
-- lemma: пригода
-  ipa: /pɾɪˈɦɔdɑ/
-  translation: adventure
-  pos: noun
-  gender: f

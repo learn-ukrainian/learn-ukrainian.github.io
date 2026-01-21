@@ -3,111 +3,233 @@ level: B1
 version: '2.0'
 items:
 - lemma: айтема
-  ipa: /ˈajtɛma/
-  translation: item (slang)
+  ipa: /ajtɛma/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: апдейт
-  ipa: /apˈdɛjt/
-  translation: update
+  gender: f
+- lemma: англіцизм
+  ipa: /anɦlit͡sˈɪzm/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: банош
-  ipa: /ˈbanɔʃ/
-  translation: banosh
+  ipa: /banɔʃ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: білд
-  ipa: /bʲild/
-  translation: build (tech)
+  ipa: /bild/
+  translation: ''
   pos: noun
   gender: m
-- lemma: вихідний
-  ipa: /vɪxidˈnɪj/
-  translation: weekend
+- lemma: встиглий
+  ipa: /ʋstˈɪɦlɪj/
+  translation: ''
   pos: adj
-- lemma: вівторка
-  ipa: /viu̯ˈtɔrka/
-  translation: Tuesday (gen.)
+- lemma: встигти
+  ipa: /ʋstˈɪɦtɪ/
+  translation: ''
+  pos: verb
+- lemma: вівторок-четвер
+  ipa: /ʋiʋtˈɔrɔk-t͡ʃɛtʋɛr/
+  translation: ''
   pos: noun
   gender: m
-- lemma: відправити
-  ipa: /vidˈpravɪtɪ/
-  translation: to send
-  pos: verb
-- lemma: гуляй
-  ipa: /ɦuˈlʲaj/
-  translation: party (imp.)
+- lemma: від'їзд
+  ipa: /ʋidˈjizd/
+  translation: ''
   pos: noun
   gender: m
-- lemma: деплеїти
-  ipa: /dɛˈplɛjɪtɪ/
-  translation: to deploy
+- lemma: відображення
+  ipa: /ʋidɔbrˈaʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: відправа
+  ipa: /ʋidprˈaʋa/
+  translation: ''
+  pos: noun
+- lemma: відправка
+  ipa: /ʋidprˈaʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: геймер
+  ipa: /ɦˈɛjmɛr/
+  translation: ''
+  pos: noun
+- lemma: даний
+  ipa: /dˈanɪj/
+  translation: ''
+  pos: adj
+- lemma: деплоїти
+  ipa: /dɛplɔjitɪ/
+  translation: ''
   pos: verb
+- lemma: детальний
+  ipa: /dɛtˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: дністер
+  ipa: /dnistˈɛr/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: документація
+  ipa: /dɔkumɛntˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: доручення
-  ipa: /dɔˈrut͡ʃɛnʲːa/
-  translation: errand
+  ipa: /dɔrˈut͡ʃɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: емейл
-  ipa: /ɛˈmɛjl/
-  translation: email
-  pos: noun
-  gender: m
 - lemma: задеплоїти
-  ipa: /zadɛˈplɔjɪtɪ/
-  translation: to deploy (perf)
+  ipa: /zadɛplɔjitɪ/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: запозичений
+  ipa: /zapɔzˈɪt͡ʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: звинувачувати
+  ipa: /zʋɪnuʋˈat͡ʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: звітувати
+  ipa: /zʋituʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: змінитися
+  ipa: /zminˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: кварталий
+  ipa: /kʋartalɪj/
+  translation: ''
+  pos: adj
+- lemma: лежачий
+  ipa: /lɛʒˈat͡ʃɪj/
+  translation: ''
+  pos: adj
 - lemma: марнування
-  ipa: /marnuˈvanʲːa/
-  translation: wasting
+  ipa: /marnuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: нафармив
-  ipa: '/naˈfarmɪu̯/ '
-  translation: farmed (slang)
+- lemma: менеджмент
+  ipa: /mˈɛnɛdʒmɛnt/
+  translation: ''
   pos: noun
   gender: m
-- lemma: очам
-  ipa: /ɔˈt͡ʃam/
-  translation: eyes (dat.)
-  pos: adv
+- lemma: мудрість
+  ipa: /mˈudristʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мікрокосм
+  ipa: /mikrɔkˈɔsm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: нафармити
+  ipa: /nafarmɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: непорозуміння
+  ipa: /nɛpɔrɔzumˈinnja/
+  translation: ''
+  pos: noun
 - lemma: п'ятничний
-  ipa: /ˈpjatnɪt͡ʃnɪj/
-  translation: Friday (adj)
+  ipa: /pˈjatnɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: передати
-  ipa: /pɛrɛˈdatɪ/
-  translation: to pass/transmit
-  pos: verb
+- lemma: повчання
+  ipa: /pɔʋt͡ʃˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: позитивне
+  ipa: /pɔzɪtˈɪʋnɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: понеділковий
-  ipa: /pɔnɛdilˈkɔvɪj/
-  translation: Monday (adj)
+  ipa: /pɔnɛdˈilkɔʋɪj/
+  translation: ''
   pos: adj
-- lemma: пояснити
-  ipa: /pɔjasˈnɪtɪ/
-  translation: to explain
+- lemma: проводитися
+  ipa: /prɔʋˈɔdɪtɪsja/
+  translation: ''
   pos: verb
-- lemma: стендап
-  ipa: /stɛnˈdap/
-  translation: stand-up (meeting)
+- lemma: проєктний
+  ipa: /prɔˈjɛktnɪj/
+  translation: ''
+  pos: adj
+- lemma: пріоритет
+  ipa: /priɔrɪtˈɛt/
+  translation: ''
   pos: noun
   gender: m
+- lemma: підкорятися
+  ipa: /pidkɔrˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: розрізняючи
+  ipa: /rɔzriznˈjajut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: рутин
+  ipa: /rutˈɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: статус-апдейт
+  ipa: /stˈatus-apdɛjt/
+  translation: ''
+  pos: noun
+- lemma: стендап
+  ipa: /stɛndap/
+  translation: ''
+  pos: noun
+- lemma: суворо
+  ipa: /suʋˈɔrɔ/
+  translation: ''
+  pos: adv
+- lemma: схвалити
+  ipa: /sxʋalˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: твердження
+  ipa: /tʋˈɛrdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: термінов
+  ipa: /tɛrminɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: теча
+  ipa: /tˈɛt͡ʃa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: точка
+  ipa: /tˈɔt͡ʃka/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: трекінг
-  ipa: /ˈtrɛkʲinɡ/
-  translation: tracking
+  ipa: /trɛkinɦ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: фармити
-  ipa: /ˈfarmɪtɪ/
-  translation: to farm (slang)
+  ipa: /farmɪtɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: четвер
-  ipa: /t͡ʃɛtˈvɛr/
-  translation: Thursday
-  pos: noun
-  gender: m
+- lemma: фокусуватися
+  ipa: /fɔkusuʋˈatɪsja/
+  translation: ''
+  pos: verb

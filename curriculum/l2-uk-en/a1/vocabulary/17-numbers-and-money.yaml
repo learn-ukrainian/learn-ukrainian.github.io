@@ -2,287 +2,429 @@ module: 17-numbers-and-money
 level: A1
 version: '2.0'
 items:
-  - lemma: баріста
-    ipa: /bɑˈristɑ/
-    translation: barista
-    pos: noun
-    gender: m
-  - lemma: богдан
-    ipa: /bɔɦˈdɑn/
-    translation: Bohdan
-    pos: propn
-    gender: m
-  - lemma: вернадський
-    ipa: /vɛrnɑdˈsʲkɪj/
-    translation: Vernadsky
-    pos: propn
-    gender: m
-  - lemma: володимир
-    ipa: /vɔlɔˈdɪmɪr/
-    translation: Volodymyr
-    pos: propn
-    gender: m
-  - lemma: вісім
-    ipa: /ˈvisim/
-    translation: eight
-    pos: num
-  - lemma: вісімдесят
-    ipa: /visimdɛˈsʲɑt/
-    translation: eighty
-    pos: num
-  - lemma: вісімнадцять
-    ipa: /visimˈnɑdt͡sʲɑtʲ/
-    translation: eighteen
-    pos: num
-  - lemma: готівка
-    ipa: /ɦɔˈtivkɑ/
-    translation: cash
-    pos: noun
-    gender: f
-  - lemma: грива
-    ipa: /ˈɦrɪvɑ/
-    translation: mane
-    pos: noun
-    gender: f
-  - lemma: григорій
-    ipa: /ɦrɪˈɦɔrij/
-    translation: Hryhoriy
-    pos: propn
-    gender: m
-  - lemma: гривня
-    ipa: /ˈɦrɪvnʲɑ/
-    translation: hryvnia
-    pos: noun
-    gender: f
-  - lemma: грушевський
-    ipa: /ɦruˈʃɛwsʲkɪj/
-    translation: Hrushevsky
-    pos: propn
-    gender: m
-  - lemma: дванадцять
-    ipa: /dvɑˈnɑdt͡sʲɑtʲ/
-    translation: twelve
-    pos: num
-  - lemma: дешево
-    ipa: /ˈdɛʃɛvɔ/
-    translation: cheaply
-    pos: adv
-  - lemma: долар
-    ipa: /ˈdɔlɑr/
-    translation: dollar
-    pos: noun
-    gender: m
-  - lemma: дорого
-    ipa: /ˈdɔrɔɦɔ/
-    translation: expensively
-    pos: adv
-  - lemma: євро
-    ipa: /ˈjɛvrɔ/
-    translation: euro
-    pos: noun
-    gender: n
-  - lemma: замовляти
-    ipa: /zɑmɔvˈlʲɑtɪ/
-    translation: to order
-    pos: verb
-  - lemma: знижка
-    ipa: /ˈznɪʒkɑ/
-    translation: discount
-    pos: noun
-    gender: f
-  - lemma: зробити
-    ipa: /zrɔˈbɪtɪ/
-    translation: to do/make
-    pos: verb
-  - lemma: карбованець
-    ipa: /kɑrˈbɔvɑnɛt͡sʲ/
-    translation: karbovanets
-    pos: noun
-    gender: m
-  - lemma: картка
-    ipa: /ˈkɑrtkɑ/
-    translation: card
-    pos: noun
-    gender: f
-  - lemma: кілограм
-    ipa: /kilɔˈɦrɑm/
-    translation: kilogram
-    pos: noun
-    gender: m
-  - lemma: клієнт
-    ipa: /kliˈjɛnt/
-    translation: client
-    pos: noun
-    gender: m
-  - lemma: копійка
-    ipa: /kɔˈpijkɑ/
-    translation: kopeck
-    pos: noun
-    gender: f
-  - lemma: леся
-    ipa: /ˈlɛsʲɑ/
-    translation: Lesya
-    pos: propn
-    gender: f
-  - lemma: мазепа
-    ipa: /mɑˈzɛpɑ/
-    translation: Mazepa
-    pos: propn
-    gender: m
-  - lemma: михайло
-    ipa: /mɪˈxɑjlɔ/
-    translation: Mykhailo
-    pos: propn
-    gender: m
-  - lemma: мудрий
-    ipa: /ˈmudrɪj/
-    translation: the Wise
-    pos: adj
-    gender: m
-  - lemma: номер
-    ipa: /ˈnɔmɛr/
-    translation: number
-    pos: noun
-    gender: m
-  - lemma: нуль
-    ipa: /nulʲ/
-    translation: zero
-    pos: num
-    gender: m
-  - lemma: один
-    ipa: /ɔˈdɪn/
-    translation: one
-    pos: num
-    gender: m
-  - lemma: одинадцять
-    ipa: /ɔdɪˈnɑdt͡sʲɑtʲ/
-    translation: eleven
-    pos: num
-  - lemma: платити
-    ipa: /plɑˈtɪtɪ/
-    translation: to pay
-    pos: verb
-  - lemma: покупка
-    ipa: /pɔˈkupkɑ/
-    translation: purchase
-    pos: noun
-    gender: f
-  - lemma: рік
-    ipa: /rik/
-    translation: year
-    pos: noun
-    gender: m
-  - lemma: сковорода
-    ipa: /skɔvɔrɔˈdɑ/
-    translation: Skovoroda
-    pos: propn
-    gender: m
-  - lemma: сорок
-    ipa: /ˈsɔrɔk/
-    translation: forty
-    pos: num
-  - lemma: список
-    ipa: /ˈspɪsɔk/
-    translation: list
-    pos: noun
-    gender: m
-  - lemma: сім
-    ipa: /sim/
-    translation: seven
-    pos: num
-  - lemma: сімдесят
-    ipa: /simdɛˈsʲɑt/
-    translation: seventy
-    pos: num
-  - lemma: сімнадцять
-    ipa: /simˈnɑdt͡sʲɑtʲ/
-    translation: seventeen
-    pos: num
-  - lemma: тарас
-    ipa: /tɑˈrɑs/
-    translation: Taras
-    pos: propn
-    gender: m
-  - lemma: тридцять
-    ipa: /ˈtrɪdt͡sʲɑtʲ/
-    translation: thirty
-    pos: num
-  - lemma: тринадцять
-    ipa: /trɪˈnɑdt͡sʲɑtʲ/
-    translation: thirteen
-    pos: num
-  - lemma: франко
-    ipa: /frɑnˈkɔ/
-    translation: Franko
-    pos: propn
-    gender: m
-  - lemma: хмельницький
-    ipa: /xmɛlʲˈnɪt͡sʲkɪj/
-    translation: Khmelnytsky
-    pos: propn
-    gender: m
-  - lemma: ціна
-    ipa: /t͡sʲiˈnɑ/
-    translation: price
-    pos: noun
-    gender: f
-  - lemma: чотири
-    ipa: /t͡ʃɔˈtɪrɪ/
-    translation: four
-    pos: num
-  - lemma: чотирнадцять
-    ipa: /t͡ʃɔtɪrˈnɑdt͡sʲɑtʲ/
-    translation: fourteen
-    pos: num
-  - lemma: шістдесят
-    ipa: /ʃisdeˈsʲɑt/
-    translation: sixty
-    pos: num
-  - lemma: шістнадцять
-    ipa: /ʃistˈnɑdt͡sʲɑtʲ/
-    translation: sixteen
-    pos: num
-  - lemma: шість
-    ipa: /ʃisʲtʲ/
-    translation: six
-    pos: num
-  - lemma: яблуко
-    ipa: /ˈjɑblukɔ/
-    translation: apple
-    pos: noun
-    gender: n
-  - lemma: ярослав
-    ipa: /jɑrɔˈslɑw/
-    translation: Yaroslav
-    pos: propn
-    gender: m
-  - lemma: дев'яносто
-    ipa: /dɛvjɑˈnɔstɔ/
-    translation: ninety
-    pos: num
-  - lemma: сто
-    ipa: /stɔ/
-    translation: hundred
-    pos: num
-  - lemma: решта
-    ipa: /ˈrɛʃtɑ/
-    translation: change (money)
-    pos: noun
-    gender: f
-  - lemma: п'ятдесят
-    ipa: /pjɑtdɛˈsʲɑt/
-    translation: fifty
-    pos: num
-  - lemma: двадцять
-    ipa: /ˈdvɑdt͡sʲɑtʲ/
-    translation: twenty
-    pos: num
-  - lemma: коштує
-    ipa: /ˈkɔʃtujɛ/
-    translation: costs
-    pos: verb
-  - lemma: рахунок
-    ipa: /rɑˈxunɔk/
-    translation: bill/account
-    pos: noun
-    gender: m
+- lemma: автобус
+  ipa: /aʋtˈɔbus/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: артефакт
+  ipa: /artɛfˈakt/
+  translation: ''
+  pos: noun
+- lemma: бажати
+  ipa: /baʒˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: баріста
+  ipa: /barista/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: богдан
+  ipa: /bɔɦdan/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: великий
+  ipa: /ʋɛlˈɪkɪj/
+  translation: ''
+  pos: adj
+- lemma: вернадський
+  ipa: /ʋɛrnˈadsʲkɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вода
+  ipa: /ʋɔdˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: володимир
+  ipa: /ʋɔlɔdˈɪmɪr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: всього
+  ipa: /ʋsʲˈɔɦɔ/
+  translation: ''
+  pos: adv
+- lemma: вікно
+  ipa: /ʋiknˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: вісім
+  ipa: /ʋˈisim/
+  translation: ''
+  pos: num
+- lemma: вісімдесят
+  ipa: /ʋisimdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: готівка
+  ipa: /ɦɔtˈiʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: гривий
+  ipa: /ɦrˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: гривна
+  ipa: /ɦrˈɪʋna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: гривня
+  ipa: /ɦrˈɪʋnja/
+  translation: ''
+  pos: noun
+- lemma: григорій
+  ipa: /ɦrɪɦˈɔrij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: грн
+  ipa: /ɦrn/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: грушевський
+  ipa: /ɦruʃˈɛʋsʲkɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: гріш
+  ipa: /ɦriʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: двадцять
+  ipa: /dʋˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: дванадцять
+  ipa: /dʋanˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: дев'яносто
+  ipa: /dɛʋjanˈɔstɔ/
+  translation: ''
+  pos: num
+- lemma: дев'ять
+  ipa: /dˈɛʋjatʲ/
+  translation: ''
+  pos: num
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: десять
+  ipa: /dˈɛsjatʲ/
+  translation: ''
+  pos: num
+- lemma: дешево
+  ipa: /dˈɛʃɛʋɔ/
+  translation: ''
+  pos: adv
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: долар
+  ipa: /dˈɔlar/
+  translation: ''
+  pos: noun
+- lemma: дорого
+  ipa: /dˈɔrɔɦɔ/
+  translation: ''
+  pos: adv
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: замовляти
+  ipa: /zamɔʋlˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: звичайно
+  ipa: /zʋɪt͡ʃˈajnɔ/
+  translation: ''
+  pos: adv
+- lemma: знижка
+  ipa: /znˈɪʒka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зробити
+  ipa: /zrɔbˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: карбованець
+  ipa: /karbˈɔʋanɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: картка
+  ipa: /kˈartka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: картопля
+  ipa: /kartˈɔplja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: каса
+  ipa: /kˈasa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: квартира
+  ipa: /kʋartˈɪra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кг
+  ipa: /kɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: клієнт
+  ipa: /kliˈjɛnt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: копійка
+  ipa: /kɔpˈijka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: коштувати
+  ipa: /kˈɔʃtuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: кілограм
+  ipa: /kilɔɦrˈam/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ласка
+  ipa: /lˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лесь
+  ipa: /lɛsʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мазепа
+  ipa: /mazˈɛpa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: марія
+  ipa: /marˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мен
+  ipa: /mɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: михайло
+  ipa: /mɪxˈajlɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: молоко
+  ipa: /mɔlɔkˈɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: мудрий
+  ipa: /mˈudrɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: надцять
+  ipa: /nˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: номер
+  ipa: /nˈɔmɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: п'ятдесят
+  ipa: /pjatdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: п'ятнадцять
+  ipa: /pjatnˈadt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: п'ять
+  ipa: /pjatʲ/
+  translation: ''
+  pos: num
+- lemma: платити
+  ipa: /platˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: покупець
+  ipa: /pɔkupˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: покупка
+  ipa: /pɔkˈupka/
+  translation: ''
+  pos: noun
+- lemma: привіт
+  ipa: /prɪʋˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: продавець
+  ipa: /prɔdaʋˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ринка
+  ipa: /rˈɪnka/
+  translation: ''
+  pos: noun
+- lemma: рік
+  ipa: /rik/
+  translation: ''
+  pos: noun
+- lemma: сей
+  ipa: /sɛj/
+  translation: ''
+  pos: pron
+- lemma: сир
+  ipa: /sɪr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сковорода
+  ipa: /skɔʋɔrɔdˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: скільки
+  ipa: /skˈilʲkɪ/
+  translation: ''
+  pos: pron
+- lemma: сорока
+  ipa: /sɔrˈɔka/
+  translation: ''
+  pos: noun
+- lemma: список
+  ipa: /spˈɪsɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сто
+  ipa: /stɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: студент
+  ipa: /studˈɛnt/
+  translation: ''
+  pos: noun
+- lemma: тарас
+  ipa: /tarˈas/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: телефон
+  ipa: /tɛlɛfˈɔn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: тридцять
+  ipa: /trˈɪdt͡sjatʲ/
+  translation: ''
+  pos: num
+- lemma: українка
+  ipa: /ukraˈjinka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: франко
+  ipa: /frˈankɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: фіксований
+  ipa: /fiksˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: харків
+  ipa: /xˈarkiʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хвилина
+  ipa: /xʋɪlˈɪna/
+  translation: ''
+  pos: noun
+- lemma: хліб
+  ipa: /xlib/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хмельницький
+  ipa: /xmɛlʲnˈɪt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: ціна
+  ipa: /t͡sinˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шевченко
+  ipa: /ʃɛʋt͡ʃˈɛnkɔ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шістдесят
+  ipa: /ʃistdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: шість
+  ipa: /ʃistʲ/
+  translation: ''
+  pos: num
+- lemma: яблуко
+  ipa: /ˈjablukɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ярослав
+  ipa: /jarɔslaʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іван
+  ipa: /iʋˈan/
+  translation: ''
+  pos: noun
+  gender: m

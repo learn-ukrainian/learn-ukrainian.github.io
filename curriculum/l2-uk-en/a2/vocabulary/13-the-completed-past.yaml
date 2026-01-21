@@ -2,155 +2,138 @@ module: 13-the-completed-past
 level: A2
 version: '2.0'
 items:
+- lemma: блог
+  ipa: /blɔɦ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: варіант
+  ipa: /ʋariˈant/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вказати
+  ipa: /ʋkazˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: вчорашній
+  ipa: /ʋt͡ʃɔrˈaʃnij/
+  translation: ''
+  pos: adj
+- lemma: геть
+  ipa: /ɦɛtʲ/
+  translation: ''
+  pos: part
+- lemma: емейл
+  ipa: /ɛmɛjl/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: з'їсти
+  ipa: /zˈjistɪ/
+  translation: ''
+  pos: verb
+- lemma: завершеність
+  ipa: /zaʋˈɛrʃɛnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: закінчений
-  ipa: zɐˈkint͡ʃenɪj
-  translation: finished; completed
+  ipa: /zakˈint͡ʃɛnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: несподівано
-  ipa: nɛspoˈdiʋɐno
-  translation: unexpectedly
-  pos: adv
-- lemma: побудувати
-  ipa: pobuduˈʋɑte
-  translation: to build (perf)
-  pos: verb
-- lemma: світогляд
-  ipa: sʋitoˈɦlʲɑd
-  translation: worldview
+- lemma: звіт
+  ipa: /zʋit/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: стаття
-  ipa: stɐˈtʲːɑ
-  translation: article
-  pos: noun
-  gender: f
-- lemma: цікавитися
-  ipa: t͡siˈkɑʋɪtɪsʲɐ
-  translation: to be interested in
+- lemma: згадувати
+  ipa: /zɦˈaduʋatɪ/
+  translation: ''
   pos: verb
-- lemma: чіткий
-  ipa: t͡ʃitˈkɪj
-  translation: clear; distinct
-  pos: adj
-  gender: m
-- lemma: множина
-  translation: plural
-  pos: noun
-  gender: f
-  ipa: /mnoˈʒɪnɐ/
-- lemma: вид
-  translation: view; aspect (grammar)
-  pos: noun
-  gender: m
-  ipa: /ʋɪd/
-- lemma: недоконаний
-  translation: imperfective
-  pos: adj
-  ipa: /nedoˈkɔnɐnɪj/
-- lemma: середній
-  translation: middle; neuter
-  pos: adj
-  ipa: /seˈrɛdnʲij/
-- lemma: доконаний
-  translation: perfective
-  pos: adj
-  ipa: /doˈkɔnɐnɪj/
-- lemma: чітко
-  ipa: ˈt͡ʃitko
-  translation: clearly
-  pos: adv
-- lemma: зробив
-  ipa: zroˈbɪu̯
-  translation: did/made (perf)
+- lemma: знадоблятися
+  ipa: /znadɔbljatɪsja/
+  translation: ''
   pos: verb
-- lemma: написав
-  ipa: nɐpɪˈsɑu̯
-  translation: wrote (perf)
-  pos: verb
-- lemma: прочитав
-  ipa: prot͡ʃɪˈtɑu̯
-  translation: read (perf)
-  pos: verb
-- lemma: сказав
-  ipa: skɐˈzɑu̯
-  translation: said (perf)
-  pos: verb
-- lemma: побачив
-  ipa: poˈbɑt͡ʃɪu̯
-  translation: saw (perf)
-  pos: verb
-- lemma: почув
-  ipa: poˈt͡ʃuu̯
-  translation: heard (perf)
-  pos: verb
-- lemma: взяв
-  ipa: wzʲɑu̯
-  translation: took (perf)
-  pos: verb
-- lemma: дав
-  ipa: dɑu̯
-  translation: gave (perf)
-  pos: verb
-- lemma: пішов
-  ipa: piˈʃɔu̯
-  translation: went (on foot, perf)
-  pos: verb
-- lemma: прийшов
-  ipa: prɪjˈʃɔu̯
-  translation: arrived (on foot, perf)
-  pos: verb
-- lemma: приїхав
-  ipa: prɪˈjixɐu̯
-  translation: arrived (by vehicle, perf)
-  pos: verb
-- lemma: вийшов
-  ipa: ˈʋɪjʃɔu̯
-  translation: went out (perf)
-  pos: verb
-- lemma: увійшов
-  ipa: uʋijˈʃɔu̯
-  translation: entered (perf)
-  pos: verb
-- lemma: почав
-  ipa: poˈt͡ʃɑu̯
-  translation: started (perf)
-  pos: verb
-- lemma: закінчив
-  ipa: zɐˈkint͡ʃɪu̯
-  translation: finished (perf)
-  pos: verb
-- lemma: зрозумів
-  ipa: zrozuˈmʲiu̯
-  translation: understood (perf)
-  pos: verb
-- lemma: забув
-  ipa: zɐˈbuu̯
-  translation: forgot (perf)
-  pos: verb
-- lemma: запам'ятав
-  ipa: zɐpɐmjɐˈtɑu̯
-  translation: remembered (perf)
-  pos: verb
-- lemma: знайшов
-  ipa: znɐjˈʃɔu̯
-  translation: found (perf)
-  pos: verb
-- lemma: загубив
-  ipa: zɐɦuˈbɪu̯
-  translation: lost (perf)
-  pos: verb
-- lemma: минулий
-  translation: past
-  pos: adj
-  ipa: /mɪˈnulɪj/
-- lemma: дієслово
-  translation: verb
+- lemma: написання
+  ipa: /napɪsˈannja/
+  translation: ''
   pos: noun
   gender: n
-  ipa: /dʲijeˈslɔʋo/
-- lemma: час
-  translation: time; tense
+- lemma: несподівано
+  ipa: /nɛspɔdˈiʋanɔ/
+  translation: ''
+  pos: adv
+- lemma: опанувати
+  ipa: /ɔpanuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: повернутися
+  ipa: /pɔʋɛrnˈutɪsja/
+  translation: ''
+  pos: verb
+- lemma: подія
+  ipa: /pɔdˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: пообідати
+  ipa: /pɔɔbˈidatɪ/
+  translation: ''
+  pos: verb
+- lemma: праця
+  ipa: /prˈat͡sja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: прогулянка
+  ipa: /prɔɦˈuljanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: підказувати
+  ipa: /pidkˈazuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: підкреслювати
+  ipa: /pidkrˈɛsljuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: раптовий
+  ipa: /raptˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: редактор
+  ipa: /rɛdˈaktɔr/
+  translation: ''
   pos: noun
   gender: m
-  ipa: /t͡ʃɑs/
+- lemma: розповідь
+  ipa: /rˈɔzpɔʋidʲ/
+  translation: ''
+  pos: noun
+- lemma: селф-контроль
+  ipa: /sɛlf-kɔntrˈɔlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: слово-маркер
+  ipa: /slˈɔʋɔ-markɛr/
+  translation: ''
+  pos: noun
+- lemma: стать
+  ipa: /statʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: такий
+  ipa: /takˈɪj/
+  translation: ''
+  pos: pron
+- lemma: точно
+  ipa: /tˈɔt͡ʃnɔ/
+  translation: ''
+  pos: adv
+- lemma: чіткий
+  ipa: /t͡ʃitkˈɪj/
+  translation: ''
+  pos: adj

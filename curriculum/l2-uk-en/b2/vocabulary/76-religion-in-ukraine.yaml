@@ -1,128 +1,220 @@
-config:
-  standard: '2024'
+module: 76-religion-in-ukraine
+level: B2
+version: '2.0'
 items:
-  - lemma: релігія
-    ipa: /rɛˈlʲiɦʲijɐ/
-    translation: religion
-    pos: noun
-    gender: f
-  - lemma: конфесія
-    ipa: /konˈfɛsʲijɐ/
-    translation: denomination, confession
-    pos: noun
-    gender: f
-  - lemma: християнство
-    ipa: /xrɪstɪˈjɑnstʋo/
-    translation: Christianity
-    pos: noun
-    gender: n
-  - lemma: православ’я
-    ipa: /prɐʋoˈsɫɑu̯jɐ/
-    translation: Orthodoxy
-    pos: noun
-    gender: n
-  - lemma: католицизм
-    ipa: /kɐtoɫɪˈt͡sɪzm/
-    translation: Catholicism
-    pos: noun
-    gender: m
-  - lemma: греко-католики
-    ipa: /ˈɦrɛko kɐˈtɔɫɪkɪ/
-    translation: Greek Catholics
-    pos: noun
-    gender: pl
-  - lemma: протестанти
-    ipa: /protɛˈstɑntɪ/
-    translation: Protestants
-    pos: noun
-    gender: pl
-  - lemma: іслам
-    ipa: /isˈɫɑm/
-    translation: Islam
-    pos: noun
-    gender: m
-  - lemma: юдаїзм
-    ipa: /judɐˈjizm/
-    translation: Judaism
-    pos: noun
-    gender: m
-  - lemma: віруючий
-    ipa: /ʋʲiˈrujut͡ʃɪj/
-    translation: believer
-    pos: noun
-    gender: m
-  - lemma: атеїст
-    ipa: /ɐtɛˈjist/
-    translation: atheist
-    pos: noun
-    gender: m
-  - lemma: свобода
-    ipa: /sʋoˈbɔdɐ/
-    translation: freedom
-    pos: noun
-    gender: f
-  - lemma: совість
-    ipa: /ˈsɔʋʲisʲtʲ/
-    translation: conscience
-    pos: noun
-    gender: f
-  - lemma: свято
-    ipa: /ˈsʋʲɑto/
-    translation: holiday, feast
-    pos: noun
-    gender: n
-  - lemma: Різдво
-    ipa: /rizˈdʋɔ/
-    translation: Christmas
-    pos: noun
-    gender: n
-  - lemma: Великдень
-    ipa: /ʋɛˈɫɪkdɛnʲ/
-    translation: Easter
-    pos: noun
-    gender: m
-  - lemma: піст
-    ipa: /pʲist/
-    translation: fast, Lent
-    pos: noun
-    gender: m
-  - lemma: молитва
-    ipa: /moˈɫɪtʋɐ/
-    translation: prayer
-    pos: noun
-    gender: f
-  - lemma: служба
-    ipa: /ˈsɫuʒbɐ/
-    translation: service, worship
-    pos: noun
-    gender: f
-  - lemma: літургія
-    ipa: /lʲiˈturɦʲijɐ/
-    translation: liturgy
-    pos: noun
-    gender: f
-  - lemma: храм
-    ipa: /xrɑm/
-    translation: temple, church
-    pos: noun
-    gender: m
-  - lemma: синагога
-    ipa: /sɪnɐˈɦɔɦɐ/
-    translation: synagogue
-    pos: noun
-    gender: f
-  - lemma: мечеть
-    ipa: /mɛˈt͡ʃɛtʲ/
-    translation: mosque
-    pos: noun
-    gender: f
-  - lemma: толерантність
-    ipa: /toɫɛˈrɑntnʲisʲtʲ/
-    translation: tolerance
-    pos: noun
-    gender: f
-  - lemma: Рада церков
-    ipa: /ˈrɑdɐ t͡sɛrˈkɔu̯/
-    translation: Council of Churches
-    pos: noun
-    gender: f
+- lemma: атеїст
+  ipa: /atɛˈjist/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: багатоманіття
+  ipa: /baɦatɔmanˈittja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: білосніжний
+  ipa: /bilɔsnˈiʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: врціра
+  ipa: /ʋrt͡sira/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: всеукраїнський
+  ipa: /ʋsɛukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: віросповідання
+  ipa: /ʋirɔspɔʋidˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: віруючий
+  ipa: /ʋˈirujut͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: греко-католик
+  ipa: /ɦrˈɛkɔ-katɔlɪk/
+  translation: ''
+  pos: noun
+- lemma: законодавчо
+  ipa: /zakɔnɔdˈaʋt͡ʃɔ/
+  translation: ''
+  pos: adv
+- lemma: закріплений
+  ipa: /zakrˈiplɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: капелан
+  ipa: /kapɛlˈan/
+  translation: ''
+  pos: noun
+- lemma: католик
+  ipa: /katˈɔlɪk/
+  translation: ''
+  pos: noun
+- lemma: католицизм
+  ipa: /katɔlɪt͡sˈɪzm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: конфесія
+  ipa: /kɔnfˈɛsija/
+  translation: ''
+  pos: noun
+- lemma: літургія
+  ipa: /liturɦˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мечеть
+  ipa: /mɛt͡ʃɛtʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: митрополит
+  ipa: /mɪtrɔpɔlˈɪt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мощі
+  ipa: /mˈɔʃt͡ʃi/
+  translation: ''
+  pos: noun
+- lemma: мусульманин
+  ipa: /musulʲmˈanɪn/
+  translation: ''
+  pos: noun
+- lemma: міжконфесійний
+  ipa: /miʒkɔnfɛsˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: нахман
+  ipa: /naxman/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обов
+  ipa: /ɔbɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: оранта
+  ipa: /ɔranta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: освячення
+  ipa: /ɔsʋˈjat͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: передовий
+  ipa: /pɛrɛdɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: печера
+  ipa: /pɛt͡ʃˈɛra/
+  translation: ''
+  pos: noun
+- lemma: православити
+  ipa: /praʋɔslaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: протестант
+  ipa: /prɔtɛstˈant/
+  translation: ''
+  pos: noun
+- lemma: пцу
+  ipa: /pt͡su/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: піст
+  ipa: /pist/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: рабин
+  ipa: /rˈabɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: святість
+  ipa: /sʋˈjatistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: синагога
+  ipa: /sɪnaɦˈɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: служіння
+  ipa: /sluʒˈinnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: томос
+  ipa: /tɔmɔs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: угкц
+  ipa: /uɦkt͡s/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: уку
+  ipa: /uku/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: умань
+  ipa: /ˈumanʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хасидизм
+  ipa: /xasɪdˈɪzm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: християнський
+  ipa: /xrɪstɪˈjansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: цадик
+  ipa: /t͡sˈadɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: щедрик
+  ipa: /ʃt͡ʃˈɛdrɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: юдаїзм
+  ipa: /judaˈjizm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: юдей
+  ipa: /judˈɛj/
+  translation: ''
+  pos: noun
+- lemma: юдейський
+  ipa: /judˈɛjsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: єрусалим
+  ipa: /jɛrusalˈɪm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: іслам
+  ipa: /islˈam/
+  translation: ''
+  pos: noun
+  gender: m

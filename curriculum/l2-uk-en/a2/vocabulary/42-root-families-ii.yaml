@@ -2,199 +2,184 @@ module: 42-root-families-ii
 level: A2
 version: '2.0'
 items:
-- lemma: беззаперечний
-  ipa: bezzɐpeˈrɛt͡ʃnɪj
-  translation: undisputable
-  pos: adj
+- lemma: акт
+  ipa: /akt/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: вивчання
+  ipa: /ʋɪʋt͡ʃˈannja/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: внутрішній
-  ipa: ˈvnutrʲiʃnʲij
-  translation: internal
+  ipa: /ʋnˈutriʃnij/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: глял
-  ipa: hlʲɐl
-  translation: looked (typo?)
-  pos: other
+- lemma: глял-
+  ipa: /ɦljal-/
+  translation: ''
+  pos: noun
+- lemma: говор-
+  ipa: /ɦɔʋɔr-/
+  translation: ''
+  pos: noun
 - lemma: говоріння
-  ipa: hoˈʋoˈrʲinʲːɐ
-  translation: speaking
+  ipa: /ɦɔʋɔrˈinnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: дивл
-  ipa: dɪvl
-  translation: look (root)
-  pos: other
-- lemma: думл
-  ipa: duml
-  translation: think (root)
-  pos: other
-- lemma: думла
-  ipa: ˈdumlɐ
-  translation: thought (root)
+- lemma: десятка
+  ipa: /dɛsˈjatka/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
+- lemma: дивл-
+  ipa: /dɪʋl-/
+  translation: ''
+  pos: noun
+- lemma: досліджувати
+  ipa: /dɔslˈidʒuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: думл-
+  ipa: /duml-/
+  translation: ''
+  pos: noun
 - lemma: ення
-  ipa: ɛnʲːɐ
-  translation: suffix -ennya
+  ipa: /ɛnnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: заздалегідь
-  ipa: zɐzdɐleˈhʲidʲ
-  translation: in advance
+  ipa: /zazdalɛɦˈidʲ/
+  translation: ''
   pos: adv
-- lemma: записувати
-  ipa: zɐˈpɪsuʋɐte
-  translation: to record (imp)
+- lemma: застосовувати
+  ipa: /zastɔsˈɔʋuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: кореня
-  ipa: ˈkɔrenʲɐ
-  translation: root (gen)
+- lemma: зменшувати
+  ipa: /zmˈɛnʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: зміст
+  ipa: /zmist/
+  translation: ''
   pos: noun
   gender: m
-- lemma: корінь
-  ipa: ˈkɔrʲinʲ
-  translation: root
-  pos: noun
-  gender: m
-- lemma: логіка
-  ipa: ˈlɔhʲikɐ
-  translation: logic
-  pos: noun
-  gender: f
-- lemma: лінгвістика
-  ipa: lʲinɡˈvʲistɪkɐ
-  translation: linguistics
-  pos: noun
-  gender: f
-- lemma: мов
-  ipa: mɔu̯
-  translation: language/speak (root)
-  pos: other
-- lemma: мовч
-  ipa: mɔu̯t͡ʃ
-  translation: silent (root)
-  pos: noun
-  gender: m
-- lemma: мовчазний
-  ipa: moʋt͡ʃɐzˈnɪj
-  translation: silent (adj)
+- lemma: когнітивний
+  ipa: /kɔɦnitˈɪʋnɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: лінгвістика
+  ipa: /linɦʋˈistɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мов-
+  ipa: /mɔʋ-/
+  translation: ''
+  pos: noun
+- lemma: мовч-
+  ipa: /mɔʋt͡ʃ-/
+  translation: ''
+  pos: noun
+- lemma: мовчазний
+  ipa: /mɔʋt͡ʃaznˈɪj/
+  translation: ''
+  pos: adj
 - lemma: мовчання
-  ipa: moʋˈt͡ʃɑnʲːɐ
-  translation: silence
+  ipa: /mɔʋt͡ʃˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: обговорення
-  ipa: obhoˈvɔrenʲːɐ
-  translation: discussion
+- lemma: містити
+  ipa: /mistˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: навантаження
+  ipa: /naʋantˈaʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: оволодіння
+  ipa: /ɔʋɔlɔdˈinnja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: пасивний
-  ipa: pɐˈsɪʋnɪj
-  translation: passive
+  ipa: /pasˈɪʋnɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: послуха
-  ipa: poˈsluxɐ
-  translation: obedience?
+- lemma: пасивно
+  ipa: /pasˈɪʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: перед-
+  ipa: /pˈɛrɛd-/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: посміхнутися
-  ipa: posmʲixˈnutɪsʲɐ
-  translation: to smile (perf)
+- lemma: передбачити
+  ipa: /pɛrɛdbˈat͡ʃɪtɪ/
+  translation: ''
   pos: verb
-  gender: f
-- lemma: пташок
-  ipa: ˈptɑʃok
-  translation: birds (gen pl)
-  pos: noun
-  gender: f
-- lemma: радіослухач
-  ipa: rɐdʲiosluˈxɑt͡ʃ
-  translation: radio listener
-  pos: noun
-  gender: m
-- lemma: роздум
-  ipa: ˈrɔzdum
-  translation: reflection/thought
-  pos: noun
-  gender: m
-- lemma: романтичний
-  ipa: romɐnˈtɪt͡ʃnɪj
-  translation: romantic
+- lemma: пов'язаний
+  ipa: /pɔʋˈjazanɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: символ
-  ipa: ˈsɪmvol
-  translation: symbol
+- lemma: подібний
+  ipa: /pɔdˈibnɪj/
+  translation: ''
+  pos: adj
+- lemma: продуктивний
+  ipa: /prɔduktˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: професійний
+  ipa: /prɔfɛsˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: слух-
+  ipa: /slux-/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: словотвір
-  ipa: slovoˈtvʲir
-  translation: word formation
-  pos: noun
-  gender: m
-- lemma: слух
-  ipa: slux
-  translation: hearing
-  pos: noun
-  gender: m
 - lemma: слухання
-  ipa: ˈsluxɐnʲːɐ
-  translation: listening
+  ipa: /slˈuxannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: слухач
-  ipa: sluˈxɑt͡ʃ
-  translation: listener
+- lemma: споріднений
+  ipa: /spɔrˈidnɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: спорідненихсел
+  ipa: /spɔridnɛnɪxsɛl/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: спокій
-  ipa: ˈspɔkʲij
-  translation: calm/peace
-  pos: noun
-  gender: m
-- lemma: сприйняття
-  ipa: sprɪjnʲɐtˈtʲɑ
-  translation: perception
-  pos: noun
-  gender: n
-- lemma: суфікс
-  ipa: ˈsufiks
-  translation: suffix
-  pos: noun
-  gender: m
-- lemma: тиша
-  ipa: ˈtɪʃɐ
-  translation: silence
-  pos: noun
-  gender: f
 - lemma: уважно
-  ipa: uˈʋɑʒno
-  translation: attentively
+  ipa: /uʋˈaʒnɔ/
+  translation: ''
   pos: adv
 - lemma: художній
-  ipa: xuˈdɔʒnʲij
-  translation: artistic
+  ipa: /xudˈɔʒnij/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: чуй
-  ipa: t͡ʃuj
-  translation: hear/feel (root)
-  pos: other
-- lemma: чут
-  ipa: t͡ʃut
-  translation: hear (root)
-  pos: other
+- lemma: ч-
+  ipa: /t͡ʃ-/
+  translation: ''
+  pos: noun
+- lemma: чин
+  ipa: /t͡ʃɪn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чут-
+  ipa: /t͡ʃut-/
+  translation: ''
+  pos: noun
 - lemma: чуття
-  ipa: t͡ʃutˈtʲɑ
-  translation: sense/feeling
+  ipa: /t͡ʃuttˈja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: ідентичність
-  ipa: idenˈtɪt͡ʃnʲisʲtʲ
-  translation: identity
-  pos: noun
-  gender: f

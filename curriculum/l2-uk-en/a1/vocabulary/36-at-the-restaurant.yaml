@@ -1,98 +1,151 @@
 module: 36-at-the-restaurant
 level: A1
-version: '1.0'
+version: '2.0'
 items:
-  - lemma: столик
-    ipa: /ˈstɔlɪk/
-    translation: table (small/restaurant)
-    pos: noun
-    gender: m
-  - lemma: меню
-    ipa: /mɛˈnʲu/
-    translation: menu
-    pos: noun
-    gender: n
-  - lemma: страва
-    ipa: /ˈstrɑvɑ/
-    translation: dish
-    pos: noun
-    gender: f
-  - lemma: закуска
-    ipa: /zɑˈkuskɑ/
-    translation: appetizer
-    pos: noun
-    gender: f
-  - lemma: десерт
-    ipa: /dɛˈsɛrt/
-    translation: dessert
-    pos: noun
-    gender: m
-  - lemma: напій
-    ipa: /nɑˈpij/
-    translation: beverage
-    pos: noun
-    gender: m
-  - lemma: виделка
-    ipa: /vɪˈdɛlkɑ/
-    translation: fork
-    pos: noun
-    gender: f
-  - lemma: ложка
-    ipa: /ˈlɔʒkɑ/
-    translation: spoon
-    pos: noun
-    gender: f
-  - lemma: ніж
-    ipa: /niʒ/
-    translation: knife
-    pos: noun
-    gender: m
-  - lemma: рахунок
-    ipa: /rɑˈxunɔk/
-    translation: bill
-    pos: noun
-    gender: m
-  - lemma: гострий
-    ipa: /ˈɦɔstrɪj/
-    translation: spicy
-    pos: adjective
-  - lemma: солоний
-    ipa: /sɔˈlɔnɪj/
-    translation: salty
-    pos: adjective
-  - lemma: солодкий
-    ipa: /sɔˈlɔdkɪj/
-    translation: sweet
-    pos: adjective
-  - lemma: вегетаріанець
-    ipa: /vɛɦɛtɑrʲiˈɑnɛt͡sʲ/
-    translation: vegetarian (male)
-    pos: noun
-    gender: m
-  - lemma: алергія
-    ipa: /ɑlɛrˈɦijɑ/
-    translation: allergy
-    pos: noun
-    gender: f
-  - lemma: головна страва
-    ipa: /ɦɔlɔu̯ˈnɑ ˈstrɑvɑ/
-    translation: main dish
-    pos: noun
-    gender: f
-  - lemma: порекомендувати
-    ipa: /pɔrɛkɔmɛndʊˈvɑtɪ/
-    translation: to recommend
-    pos: verb
-  - lemma: спробувати
-    ipa: /ˈsprɔbʊvɑtɪ/
-    translation: to try/taste
-    pos: verb
-  - lemma: смачний
-    ipa: /smɑt͡ʃˈnɪj/
-    translation: tasty/delicious
-    pos: adjective
-  - lemma: бронювання
-    ipa: /brɔnʲʊˈvɑnnʲɑ/
-    translation: reservation/booking
-    pos: noun
-    gender: n
+- lemma: алергія
+  ipa: /alɛrɦˈija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: борщ
+  ipa: /bɔrʃt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: бронювання
+  ipa: /brɔnjuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: буда
+  ipa: /bˈuda/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вареник
+  ipa: /ʋarˈɛnɪk/
+  translation: ''
+  pos: noun
+- lemma: вегетаріанець
+  ipa: /ʋɛɦɛtariˈanɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вегетаріанка
+  ipa: /ʋɛɦɛtariˈanka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: година
+  ipa: /ɦɔdˈɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: головний
+  ipa: /ɦɔlɔʋnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: горіх
+  ipa: /ɦɔrˈix/
+  translation: ''
+  pos: noun
+- lemma: гостинний
+  ipa: /ɦɔstˈɪnnɪj/
+  translation: ''
+  pos: adj
+- lemma: замовити
+  ipa: /zamˈɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: замовлення
+  ipa: /zamˈɔʋlɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: котлета
+  ipa: /kɔtlˈɛta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ласка
+  ipa: /lˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: м'ясо
+  ipa: /mˈjasɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: мен
+  ipa: /mɛn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мень
+  ipa: /mɛnʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: особа
+  ipa: /ɔsˈɔba/
+  translation: ''
+  pos: noun
+- lemma: особливий
+  ipa: /ɔsɔblˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: перший
+  ipa: /pˈɛrʃɪj/
+  translation: ''
+  pos: adj
+- lemma: по-київськи
+  ipa: /pɔ-kˈɪjiʋsʲkɪ/
+  translation: ''
+  pos: adv
+- lemma: прохання
+  ipa: /prɔxˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: ресторан
+  ipa: /rɛstɔrˈan/
+  translation: ''
+  pos: noun
+- lemma: скільки
+  ipa: /skˈilʲkɪ/
+  translation: ''
+  pos: pron
+- lemma: столик
+  ipa: /stˈɔlɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: страва
+  ipa: /strˈaʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сьогодні
+  ipa: /sʲɔɦˈɔdni/
+  translation: ''
+  pos: adv
+- lemma: сьомий
+  ipa: /sʲˈɔmɪj/
+  translation: ''
+  pos: adj
+- lemma: цибуля
+  ipa: /t͡sɪbˈulja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: їжа
+  ipa: /ˈjiʒa/
+  translation: ''
+  pos: noun
+  gender: f

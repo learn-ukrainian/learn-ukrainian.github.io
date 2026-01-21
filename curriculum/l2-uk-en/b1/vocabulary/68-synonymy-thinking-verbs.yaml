@@ -3,79 +3,171 @@ level: B1
 version: '2.0'
 items:
 - lemma: агресивніший
-  ipa: /ahrɛˈsɪu̯nʲiʃɪj/
-  translation: more aggressive
+  ipa: /aɦrɛsˈɪʋniʃɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: доцільне
-  ipa: /dɔˈt͡sʲilʲnɛ/
-  translation: expedient
+- lemma: аналізуючи
+  ipa: /analizˈujut͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: гадання
+  ipa: /ɦadˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: міркувати
-  ipa: /mirkuˈvatɪ/
-  translation: to reason
-  pos: verb
-- lemma: невдаха
-  ipa: /nɛu̯ˈdaxa/
-  translation: loser
-  pos: noun
-  gender: f
-- lemma: невпевнено
-  ipa: /nɛu̯ˈpɛu̯nɛnɔ/
-  translation: uncertainly
+- lemma: гармонізований
+  ipa: /ɦarmɔnizˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: глибше
+  ipa: /ɦlˈɪbʃɛ/
+  translation: ''
   pos: adv
+- lemma: диференціювати
+  ipa: /dɪfɛrɛnt͡sijuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: етичний
+  ipa: /ɛtˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: зна
+  ipa: /zna/
+  translation: ''
+  pos: noun
+- lemma: кордоцентризм
+  ipa: /kɔrdɔt͡sɛntrˈɪzm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: міркувати
+  ipa: /mirkuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: найзагальніший
+  ipa: /najzaɦˈalʲniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: невдаха
+  ipa: /nɛʋdˈaxa/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: обдумування
-  ipa: /ɔbduˈmuvanʲːa/
-  translation: thinking over
+  ipa: /ɔbdˈumuʋannja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: обдумувати
-  ipa: /ɔbduˈmuvatɪ/
-  translation: to think over
-  pos: verb
-- lemma: обмірковувати
-  ipa: /ɔbmirˈkɔvuvatɪ/
-  translation: to deliberate
+  ipa: /ɔbdˈumuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: обміркувати
-  ipa: /ɔbmirkuˈvatɪ/
-  translation: to deliberate
+  ipa: /ɔbmirkuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: оруд
-  ipa: /ɔˈrud/
-  translation: Instr.
+- lemma: обробляти
+  ipa: /ɔbrɔblˈjatɪ/
+  translation: ''
+  pos: verb
+- lemma: одноманітно
+  ipa: /ɔdnɔmanˈitnɔ/
+  translation: ''
+  pos: adv
+- lemma: оруда
+  ipa: /ɔrˈuda/
+  translation: ''
+  pos: noun
+- lemma: осмислення
+  ipa: /ɔsmˈɪslɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: осмислювати
+  ipa: /ɔsmˈɪsljuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: осуд
+  ipa: /ˈɔsud/
+  translation: ''
   pos: noun
   gender: m
 - lemma: осуджувати
-  ipa: /ɔˈsudʒuvatɪ/
-  translation: to condemn
+  ipa: /ɔsˈudʒuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: осуди
-  ipa: /ɔˈsudɪ/
-  translation: condemn (imp.)
+- lemma: памфіл
+  ipa: /pamfˈil/
+  translation: ''
   pos: noun
   gender: m
+- lemma: помірний
+  ipa: /pɔmˈirnɪj/
+  translation: ''
+  pos: adj
 - lemma: поспішно
-  ipa: /pɔˈspʲiʃnɔ/
-  translation: hastily
+  ipa: /pɔspˈiʃnɔ/
+  translation: ''
   pos: adv
-- lemma: прогалини
-  ipa: /prɔˈhalɪnɪ/
-  translation: gaps
+- lemma: прогалина
+  ipa: /prɔɦˈalɪna/
+  translation: ''
   pos: noun
-  gender: m
+  gender: f
 - lemma: прогнозування
-  ipa: /prɔhnɔzuˈvanʲːa/
-  translation: forecasting
+  ipa: /prɔɦnɔzuʋˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: слабко
-  ipa: /ˈslabkɔ/
-  translation: weakly
-  pos: adv
-- lemma: сучасне
-  ipa: /suˈt͡ʃasnɛ/
-  translation: modern
+- lemma: пізнання
+  ipa: /piznˈannja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: рахування
+  ipa: /raxuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: роздумувати
+  ipa: /rɔzdˈumuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: розмірковувати
+  ipa: /rɔzmirkˈɔʋuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: розумовий
+  ipa: /rɔzumˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: синонімія
+  ipa: /sɪnɔnˈimija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: судити
+  ipa: /sudˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: судячи
+  ipa: /sˈudjat͡ʃɪ/
+  translation: ''
+  pos: verb
+- lemma: усвідомити
+  ipa: /usʋidˈɔmɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: юркевич
+  ipa: /jurkˈɛʋɪt͡ʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: інтелектуал
+  ipa: /intɛlɛktuˈal/
+  translation: ''
+  pos: noun
+- lemma: інтуїтивний
+  ipa: /intujitˈɪʋnɪj/
+  translation: ''
+  pos: adj

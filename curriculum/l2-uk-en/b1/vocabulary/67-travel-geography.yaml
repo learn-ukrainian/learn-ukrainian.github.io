@@ -2,188 +2,221 @@ module: 67-travel-geography
 level: B1
 version: '2.0'
 items:
-- lemma: автостоп
-  ipa: /autɔˈstɔp/
-  translation: hitchhiking
-  pos: noun
-  gender: m
 - lemma: авіаквиток
-  ipa: /aviakvɪˈtɔk/
-  translation: plane ticket
+  ipa: /aʋiakʋɪtˈɔk/
+  translation: ''
   pos: noun
   gender: m
+- lemma: авіакомпанія
+  ipa: /aʋiakɔmpˈanija/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: безвізовий
-  ipa: /bɛzˈvizɔvɪj/
-  translation: visa-free
+  ipa: /bɛzʋˈizɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: бронювання
-  ipa: /brɔnʲuˈvanʲːa/
-  translation: booking
+- lemma: буковина
+  ipa: /bukɔʋˈɪna/
+  translation: ''
   pos: noun
-  gender: n
+  gender: f
+- lemma: бюджетний
+  ipa: /bjudʒˈɛtnɪj/
+  translation: ''
+  pos: adj
 - lemma: біометричний
-  ipa: /biɔmɛˈtrɪt͡ʃnɪj/
-  translation: biometric
+  ipa: /biɔmɛtrˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: вилеот
-  ipa: /vɪˈlɛɔt/
-  translation: departure (typo)
+- lemma: ворохта
+  ipa: /ʋɔrˈɔxta/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: ворохт
-  ipa: /ˈvɔrɔxt/
-  translation: Vorokhta (trunc)
-  pos: propn
-  gender: m
-- lemma: готельний
-  ipa: /hɔˈtɛlʲnɪj/
-  translation: hotel (adj)
-  pos: adj
-  gender: m
+  gender: f
+- lemma: десяток
+  ipa: /dɛsˈjatɔk/
+  translation: ''
+  pos: noun
 - lemma: донбас
-  ipa: /dɔnˈbas/
-  translation: Donbas
-  pos: propn
-  gender: m
-- lemma: ділове
-  ipa: /dʲilɔˈvɛ/
-  translation: business (adj)
-  pos: propn
-  gender: n
-- lemma: економний
-  ipa: /ɛkɔˈnɔmnɪj/
-  translation: economical
-  pos: adj
-  gender: m
-- lemma: зміїний
-  ipa: /zmiˈjinɪj/
-  translation: Zmiinyi
-  pos: adj
-  gender: m
-- lemma: коліщаток
-  ipa: /kɔlʲiˈʃt͡ʃatɔk/
-  translation: wheels (dim. gen.)
+  ipa: /dɔnbˈas/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
+- lemma: закордонний
+  ipa: /zakɔrdˈɔnnɪj/
+  translation: ''
+  pos: adj
+- lemma: київ-львів
+  ipa: /kɪˈjiʋ-lʲʋiʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: км
+  ipa: /km/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: коліщатко
+  ipa: /kɔliʃt͡ʃˈatkɔ/
+  translation: ''
+  pos: noun
 - lemma: купе
-  ipa: /kuˈpɛ/
-  translation: compartment
+  ipa: /kupˈɛ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: мандрівка
-  ipa: /manˈdriu̯ka/
-  translation: journey
-  pos: noun
-  gender: f
-- lemma: митний
-  ipa: /ˈmɪtnɪj/
-  translation: customs (adj)
+- lemma: мандрівний
+  ipa: /mandrˈiʋnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: нічувати
-  ipa: /nʲit͡ʃuˈvatɪ/
-  translation: to spend the night
+- lemma: межувати
+  ipa: /mɛʒuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: одноденний
-  ipa: /ɔdnɔˈdɛnːɪj/
-  translation: one-day
-  pos: adj
-- lemma: пересадка
-  ipa: /pɛrɛˈsadka/
-  translation: transfer
+- lemma: митниця
+  ipa: /mˈɪtnɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: поетичніший
-  ipa: /pɔɛˈtɪt͡ʃnʲiʃɪj/
-  translation: more poetic
+- lemma: місцевість
+  ipa: /mist͡sˈɛʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: найвіддаленіший
+  ipa: /najʋiddˈalɛniʃɪj/
+  translation: ''
   pos: adj
-  gender: n
-- lemma: поклаж
-  ipa: /ˈpɔklaʒ/
-  translation: luggage (gen.)
+- lemma: одноденний
+  ipa: /ɔdnɔdˈɛnnɪj/
+  translation: ''
+  pos: adj
+- lemma: оформити
+  ipa: /ɔfˈɔrmɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: переліт
+  ipa: /pɛrɛlˈit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поетичніший
+  ipa: /pɔɛtɪt͡ʃniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: поклажа
+  ipa: /pɔklˈaʒa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: посадка
+  ipa: /pɔsˈadka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: посадковий
-  ipa: /pɔsadˈkɔvɪj/
-  translation: boarding (adj)
+  ipa: /pɔsadkˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: прикордонник
-  ipa: /prɪkɔrˈdɔnːɪk/
-  translation: border guard
-  pos: noun
-  gender: m
-- lemma: резервація
-  ipa: /rɛzɛrˈvat͡sʲija/
-  translation: reservation
+- lemma: потяга
+  ipa: /pˈɔtjaɦa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: ручний
-  ipa: /rut͡ʃˈnɪj/
-  translation: manual/hand
+- lemma: пред'явити
+  ipa: /prɛdjaʋˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: прикордонник
+  ipa: /prɪkɔrdˈɔnnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: причорноморʼь
+  ipa: /prɪt͡ʃɔrnɔmɔrʲ/
+  translation: ''
+  pos: verb
+- lemma: пролягати
+  ipa: /prɔljaɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: південний
+  ipa: /piʋdˈɛnnɪj/
+  translation: ''
   pos: adj
+- lemma: північ
+  ipa: /pˈiʋnit͡ʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: північний
+  ipa: /piʋnˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: росія
+  ipa: /rɔsˈija/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: синевир
-  ipa: /sɪnɛˈvɪr/
-  translation: Synevyr
-  pos: propn
+  ipa: /sɪnɛʋˈɪr/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: синевирський
-  ipa: /sɪnɛˈvɪrsʲkɪj/
-  translation: Synevyr (adj)
+  ipa: /sɪnɛʋˈɪrsʲkɪj/
+  translation: ''
   pos: adj
-  gender: n
 - lemma: спакувати
-  ipa: /spakuˈvatɪ/
-  translation: to pack
+  ipa: /spakuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: сходження
-  ipa: /sxɔˈdʒɛnʲːa/
-  translation: ascent
+- lemma: споглядання
+  ipa: /spɔɦljadˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: сімома
-  ipa: /sʲimɔˈma/
-  translation: seven (instr.)
-  pos: other
+- lemma: сходження
+  ipa: /sxˈɔdʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: сім
+  ipa: /sim/
+  translation: ''
+  pos: num
 - lemma: талон
-  ipa: /taˈlɔn/
-  translation: ticket/coupon
+  ipa: /talˈɔn/
+  translation: ''
   pos: noun
   gender: m
 - lemma: тижневий
-  ipa: /tɪʒˈnɛvɪj/
-  translation: weekly
+  ipa: /tɪʒnˈɛʋɪj/
+  translation: ''
   pos: adj
+- lemma: тура
+  ipa: /tˈura/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: турагентство
-  ipa: /turaˈhɛntstvɔ/
-  translation: travel agency
+  ipa: /turaɦɛntstʋɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: укрзалізниця
-  ipa: /ukrzalʲizˈnɪt͡sʲa/
-  translation: Ukrzaliznytsia
-  pos: propn
+- lemma: туреччина
+  ipa: /turˈɛt͡ʃt͡ʃɪna/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: хостел
-  ipa: /ˈxɔstɛl/
-  translation: hostel
-  pos: noun
-  gender: m
-- lemma: хостель
-  ipa: /ˈxɔstɛlʲ/
-  translation: hostel (typo)
-  pos: noun
-  gender: m
-- lemma: чернівці
-  ipa: /t͡ʃɛrnʲiu̯ˈt͡sʲi/
-  translation: Chernivtsi
-  pos: propn
 - lemma: юра
-  ipa: /ˈjura/
-  translation: Yura
-  pos: propn
+  ipa: /jurˈa/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: єгипет
+  ipa: /jɛɦˈɪpɛt/
+  translation: ''
+  pos: noun
   gender: m

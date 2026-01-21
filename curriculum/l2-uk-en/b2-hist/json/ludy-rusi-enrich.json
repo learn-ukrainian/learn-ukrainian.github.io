@@ -1,0 +1,34 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2-hist/ludy-rusi.md",
+    "enrichments": {
+      "боярин": {"ipa": "/boˈjɑrɪn/", "en": "boyar"},
+      "віче": {"ipa": "/ˈwʲit͡ʃɛ/", "en": "veche (assembly)"},
+      "вільний": {"ipa": "/ˈwʲilʲnɪj/", "en": "free"},
+      "громада": {"ipa": "/ɦroˈmɑdɑ/", "en": "community"},
+      "дружина": {"ipa": "/druˈʒɪnɑ/", "en": "druzhina (retinue)"},
+      "духовенство": {"ipa": "/duxoˈwɛnstwo/", "en": "clergy"},
+      "еліта": {"ipa": "/ɛˈlʲitɑ/", "en": "elite"},
+      "житло": {"ipa": "/ʒɪtˈlo/", "en": "dwelling"},
+      "закуп": {"ipa": "/ˈzɑkup/", "en": "zakup (bondsman)"},
+      "залежний": {"ipa": "/zɐˈlɛʒnɪj/", "en": "dependent"},
+      "землеробство": {"ipa": "/zɛmlɛˈrɔbstwo/", "en": "agriculture"},
+      "князь": {"ipa": "/knʲɑzʲ/", "en": "prince"},
+      "ковальство": {"ipa": "/koˈwɑlʲstwo/", "en": "blacksmithing"},
+      "купець": {"ipa": "/kuˈpɛt͡sʲ/", "en": "merchant"},
+      "міщанин": {"ipa": "/mʲiʃt͡ʃɐˈnɪn/", "en": "burgher"},
+      "побут": {"ipa": "/ˈpɔbut/", "en": "everyday life"},
+      "ремісник": {"ipa": "/rɛmʲisˈnɪk/", "en": "craftsman"},
+      "рядович": {"ipa": "/rʲɐˈdɔwɪt͡ʃ/", "en": "ryadovych (contract laborer)"},
+      "священик": {"ipa": "/sʲwʲɐˈʃt͡ʃɛnɪk/", "en": "priest"},
+      "селянин": {"ipa": "/sɛlʲɐˈnɪn/", "en": "peasant"},
+      "смерд": {"ipa": "/smɛrd/", "en": "smerd (peasant)"},
+      "суспільство": {"ipa": "/susˈpʲilʲstwo/", "en": "society"},
+      "терем": {"ipa": "/ˈtɛrɛm/", "en": "terem (tower chamber)"},
+      "торгівля": {"ipa": "/torˈɦʲiwlʲɐ/", "en": "trade"},
+      "холоп": {"ipa": "/xoˈlɔp/", "en": "kholop (serf)"},
+      "челядь": {"ipa": "/ˈt͡ʃɛlʲɐdʲ/", "en": "servants"},
+      "ювелірство": {"ipa": "/juwɛˈlʲirstwo/", "en": "jewelry making"}
+    }
+  }
+]

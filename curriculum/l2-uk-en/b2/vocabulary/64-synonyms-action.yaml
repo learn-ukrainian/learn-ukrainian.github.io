@@ -2,313 +2,62 @@ module: 64-synonyms-action
 level: B2
 version: '2.0'
 items:
-- lemma: алгорит
-  ipa: /ɑlɦoˈrɪt/
-  translation: algorithm (genitive plural)
+- lemma: бик
+  ipa: /bɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: асортимент
-  ipa: /ɐsortɪˈmɛnt/
-  translation: assortment, range
-  pos: noun
-  gender: m
-- lemma: буга
-  ipa: /buˈɦɑ/
-  translation: Buh (river, genitive)
-  pos: propn
-  gender: m
-- lemma: вихопити
-  ipa: /wɪˈxopɪtɪ/
-  translation: to snatch, to grab
+- lemma: засукати
+  ipa: /zasukˈatɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: вихоплювати
-  ipa: /wɪxopˈlʲuwɑtɪ/
-  translation: to snatch (imperfective)
-  pos: verb
-- lemma: втілений
-  ipa: /wtʲiˈlɛnɪj/
-  translation: embodied, implemented
-  pos: adj
-  gender: m
-- lemma: втілити
-  ipa: /wtʲiˈlɪtɪ/
-  translation: to embody, to implement
-  pos: verb
-  gender: m
-- lemma: вхопити
-  ipa: /wxoˈpɪtɪ/
-  translation: to grab, to seize
-  pos: verb
-  gender: f
-- lemma: відбудовувати
-  ipa: /wʲidbudoˈwuwɑtɪ/
-  translation: to rebuild
-  pos: verb
-- lemma: генія
-  ipa: /ˈɦɛnʲijɑ/
-  translation: genius (genitive)
-  pos: noun
-  gender: m
-- lemma: докладання
-  ipa: /doklɐˈdɑnʲːɑ/
-  translation: application, effort
-  pos: noun
-  gender: n
-- lemma: досконало
-  ipa: /doskoˈnɑlo/
-  translation: perfectly
-  pos: adv
-- lemma: енергетичний
-  ipa: /ɛnɛrɦɛˈtɪt͡ʃnɪj/
-  translation: energy (adj.)
-  pos: adj
-  gender: f
-- lemma: забирання
-  ipa: /zɐbɪˈrɑnʲːɑ/
-  translation: taking away
-  pos: noun
-  gender: n
 - lemma: злагоджений
-  ipa: /zlɐˈɦodʒɛnɪj/
-  translation: coordinated, harmonious
+  ipa: /zlˈaɦɔdʒɛnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: злагоджено
-  ipa: /zlɐˈɦodʒɛno/
-  translation: coordinately, harmoniously
-  pos: adv
-- lemma: кадр
-  ipa: /kɑdr/
-  translation: frame, personnel
-  pos: noun
-  gender: m
-- lemma: кодити
-  ipa: /koˈdɪtɪ/
-  translation: to code
-  pos: verb
-- lemma: конструкторський
-  ipa: /konstrukˈtorsʲkɪj/
-  translation: design, engineering (adj.)
-  pos: adj
-  gender: n
-- lemma: координація
-  ipa: /koordɪˈnɑt͡sʲijɑ/
-  translation: coordination
-  pos: noun
-  gender: f
-- lemma: легітимність
-  ipa: /lɛɦʲitɪmnʲistʲ/
-  translation: legitimacy
-  pos: noun
-  gender: f
 - lemma: лупати
-  ipa: /luˈpɑtɪ/
-  translation: to shell, to peel
+  ipa: /lupatɪ/
+  translation: ''
   pos: verb
-- lemma: майбутні
-  ipa: /mɐjˈbutnʲi/
-  translation: future (things/people)
-  pos: noun
-  gender: n
-- lemma: меседж
-  ipa: /mɛˈsɛdʒ/
-  translation: message
-  pos: noun
-  gender: m
 - lemma: модернізувати
-  ipa: /modɛrnʲizuˈwɑtɪ/
-  translation: to modernize
+  ipa: /mɔdɛrnizuʋˈatɪ/
+  translation: ''
   pos: verb
-- lemma: модулювати
-  ipa: /modulʲuˈwɑtɪ/
-  translation: to modulate
-  pos: verb
-- lemma: найвіддаленіший
-  ipa: /nɐjwʲiddɐˈlɛnʲiʃɪj/
-  translation: most remote
-  pos: adj
-- lemma: наставати
-  ipa: /nɐstɐˈwɑtɪ/
-  translation: to come, to arrive (of time)
-  pos: verb
-- lemma: нащадок
-  ipa: /nɐˈʃt͡ʃɑdok/
-  translation: descendant
-  pos: noun
-  gender: m
-- lemma: незабутній
-  ipa: /nɛzɐbutˈnʲij/
-  translation: unforgettable
-  pos: adj
-  gender: n
-- lemma: обстріл
-  ipa: /obˈstrʲil/
-  translation: shelling, bombardment
-  pos: noun
-  gender: m
-- lemma: оточуючий
-  ipa: /otot͡ʃuˈjut͡ʃɪj/
-  translation: surrounding
-  pos: adj
-  gender: m
-- lemma: переможний
-  ipa: /pɛrɛˈmoʒnɪj/
-  translation: victorious
-  pos: adj
-  gender: f
-- lemma: перформанс
-  ipa: /pɛrforˈmɑns/
-  translation: performance (art)
-  pos: noun
-  gender: m
-- lemma: поклик
-  ipa: /ˈpoklɪk/
-  translation: calling, vocation
-  pos: noun
-  gender: m
-- lemma: просувати
-  ipa: /prosuˈwɑtɪ/
-  translation: to advance, to promote
-  pos: verb
-- lemma: піклуватися
-  ipa: /pʲikluˈwɑtɪsʲɑ/
-  translation: to care for, to look after
-  pos: verb
+- lemma: оперативно
+  ipa: /ɔpɛratˈɪʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: по-людськи
+  ipa: /pɔ-lˈjudsʲkɪ/
+  translation: ''
+  pos: adv
 - lemma: реалізовувати
-  ipa: /rɛɐlʲizowuˈwɑtɪ/
-  translation: to realize, to implement
+  ipa: /rɛalizˈɔʋuʋatɪ/
+  translation: ''
   pos: verb
-- lemma: режисувати
-  ipa: /rɛʒɪsuˈwɑtɪ/
-  translation: to direct (film, theater)
-  pos: verb
-- lemma: результативний
-  ipa: /rɛzulʲtɐˈtɪwnɪj/
-  translation: effective, productive
-  pos: adj
-  gender: f
-- lemma: результативність
-  ipa: /rɛzulʲtɐˈtɪwnʲistʲ/
-  translation: effectiveness, productivity
+- lemma: роги
+  ipa: /rˈɔɦɪ/
+  translation: ''
+  pos: noun
+- lemma: рукав
+  ipa: /rukˈaʋ/
+  translation: ''
+  pos: noun
+- lemma: скала
+  ipa: /skˈala/
+  translation: ''
   pos: noun
   gender: f
-- lemma: реформувати
-  ipa: /rɛformuˈwɑtɪ/
-  translation: to reform
-  pos: verb
-- lemma: розбудова
-  ipa: /rozbuˈdowɑ/
-  translation: development, construction
+- lemma: сю
+  ipa: /sju/
+  translation: ''
   pos: noun
   gender: f
-- lemma: рутина
-  ipa: /ruˈtɪnɑ/
-  translation: routine
-  pos: noun
-  gender: f
-- lemma: різкість
-  ipa: /ˈrʲizkʲistʲ/
-  translation: sharpness, abruptness
-  pos: noun
-  gender: f
-- lemma: самовіддано
-  ipa: /sɐmowʲidˈdɑno/
-  translation: selflessly, devotedly
-  pos: adv
-- lemma: свідий
-  ipa: /ˈswʲidɪj/
-  translation: conscious, aware
-  pos: adj
-  gender: f
-- lemma: силовий
-  ipa: /sɪloˈwɪj/
-  translation: force (adj.), power
-  pos: adj
-  gender: f
-- lemma: спланований
-  ipa: /splɐnoˈwɑnɪj/
-  translation: planned
-  pos: adj
-  gender: f
-- lemma: спонукати
-  ipa: /sponu ˈkɑtɪ/
-  translation: to prompt, to motivate
-  pos: verb
-- lemma: спостерігач
-  ipa: /spostɛrʲiˈɦɑt͡ʃ/
-  translation: observer
-  pos: noun
-  gender: m
-- lemma: справляти
-  ipa: /sprɐwˈlʲɑtɪ/
-  translation: to make, to cause
-  pos: verb
-- lemma: спритно
-  ipa: /ˈsprɪtno/
-  translation: deftly, nimbly
-  pos: adv
-- lemma: суб'єктність
-  ipa: /subjɛktnʲistʲ/
-  translation: subjectivity, agency
-  pos: noun
-  gender: f
-- lemma: твар
-  ipa: /twɑr/
-  translation: creature, being
-  pos: noun
-  gender: m
-- lemma: транслювати
-  ipa: /trɑnslʲuˈwɑtɪ/
-  translation: to broadcast, to transmit
-  pos: verb
-- lemma: удосконалювати
-  ipa: /udoskonɐlʲuˈwɑtɪ/
-  translation: to improve, to perfect
-  pos: verb
 - lemma: учинити
-  ipa: /ut͡ʃɪˈnɪtɪ/
-  translation: to commit, to do
+  ipa: /ut͡ʃɪnˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: філігранно
-  ipa: /fʲilʲiˈɦrɑnːo/
-  translation: delicately, with precision
-  pos: adv
-- lemma: хапата
-  ipa: /xɐˈpɑtɑ/
-  translation: grabbing (genitive)
-  pos: noun
-  gender: m
 - lemma: хапати
-  ipa: /xɐˈpɑtɪ/
-  translation: to grab, to seize
+  ipa: /xapˈatɪ/
+  translation: ''
   pos: verb
-- lemma: ціннісний
-  ipa: /t͡sʲinːʲisnɪj/
-  translation: value (adj.)
-  pos: adj
-  gender: f
-- lemma: чернігів
-  ipa: /t͡ʃɛrˈnʲiɦʲiw/
-  translation: Chernihiv (city)
-  pos: propn
-  gender: m
-- lemma: чиний
-  ipa: /t͡ʃɪnɪj/
-  translation: valid, current
-  pos: adj
-  gender: m
-- lemma: шахра
-  ipa: /ʃɐxˈrɑ/
-  translation: swindler (genitive)
-  pos: noun
-  gender: m
-- lemma: ювелірно
-  ipa: /juwɛˈlʲirno/
-  translation: with jeweler's precision
-  pos: adv
-- lemma: ініціатив
-  ipa: /ʲinʲit͡sʲiɐˈtɪw/
-  translation: initiatives (genitive plural)
-  pos: noun
-  gender: f

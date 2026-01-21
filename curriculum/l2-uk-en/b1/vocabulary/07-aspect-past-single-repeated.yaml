@@ -2,64 +2,132 @@ module: 07-aspect-past-single-repeated
 level: B1
 version: '2.0'
 items:
-- lemma: докладний
-  ipa: /dɔˈkladnɪj/
-  translation: detailed
-  pos: adj
-  gender: f
-- lemma: еспресо
-  ipa: /ɛsˈprɛsɔ/
-  translation: espresso
+- lemma: відбутися
+  ipa: /ʋidbˈutɪsja/
+  translation: ''
+  pos: verb
+- lemma: відрізнити
+  ipa: /ʋidriznˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: далеке
+  ipa: /dalˈɛkɛ/
+  translation: ''
   pos: noun
   gender: n
+- lemma: еспресо
+  ipa: /ɛsprˈɛsɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: звертаючи
+  ipa: /zʋɛrtˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
 - lemma: знайомитися
-  ipa: /znajɔˈmɪtɪsʲa/
-  translation: to get acquainted
+  ipa: /znajˈɔmɪtɪsja/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: однораз
-  ipa: /ɔdnɔˈraz/
-  translation: once
-  pos: adj
-- lemma: повертати
-  ipa: /pɔvɛrˈtatɪ/
-  translation: to return
-  pos: verb
+- lemma: класика
+  ipa: /klˈasɪka/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: люб'язно
+  ipa: /ljubˈjaznɔ/
+  translation: ''
+  pos: adv
+- lemma: монета
+  ipa: /mɔnˈɛta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: міністр
+  ipa: /minˈistr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: небезпечний
+  ipa: /nɛbɛzpˈɛt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: незабутній
+  ipa: /nɛzabˈutnij/
+  translation: ''
+  pos: adj
+- lemma: неоднозначний
+  ipa: /nɛɔdnɔznˈat͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: організувати
+  ipa: /ɔrɦanizuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: період
+  ipa: /pɛrˈiɔd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: періодично
+  ipa: /pɛriɔdˈɪt͡ʃnɔ/
+  translation: ''
+  pos: adv
 - lemma: повторюваність
-  ipa: /pɔu̯ˈtɔrʲuvanʲisʲtʲ/
-  translation: repetition
+  ipa: /pɔʋtˈɔrjuʋanistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: поділитися
-  ipa: /pɔdiˈlɪtɪsʲa/
-  translation: to share
-  pos: verb
-- lemma: посварити
-  ipa: /pɔsvaˈrɪtɪ/
-  translation: to quarrel
-  pos: verb
+- lemma: поп-культура
+  ipa: /pɔp-kulʲtura/
+  translation: ''
+  pos: noun
   gender: f
-- lemma: промок
-  ipa: /prɔˈmɔk/
-  translation: got wet
+- lemma: посварити
+  ipa: /pɔsʋarˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: підвищення
+  ipa: /pidʋˈɪʃt͡ʃɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: підкреслюватися
+  ipa: /pidkrˈɛsljuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: сумніватися
+  ipa: /sumniʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: торговець
+  ipa: /tɔrɦˈɔʋɛt͡sʲ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: підкреслюватися
-  ipa: /pidˈkrɛslʲuvatɪsʲa/
-  translation: to be emphasized
-  pos: verb
 - lemma: цікавинка
-  ipa: /t͡sʲiˈkavɪnka/
-  translation: interesting detail
+  ipa: /t͡sikˈaʋɪnka/
+  translation: ''
   pos: noun
   gender: f
-- lemma: щовихідний
-  ipa: /ʃt͡ʃɔvɪxidˈnɪj/
-  translation: every weekend
-  pos: adj
-- lemma: юлія
-  ipa: /ˈjulʲija/
-  translation: Julia
-  pos: propn
+- lemma: чумак
+  ipa: /t͡ʃumˈak/
+  translation: ''
+  pos: noun
   gender: f
+- lemma: чумаки
+  ipa: /t͡ʃumakˈɪ/
+  translation: ''
+  pos: noun
+- lemma: щовихідних
+  ipa: /ʃt͡ʃɔʋɪxidnɪx/
+  translation: ''
+  pos: adv
+- lemma: щоліта
+  ipa: /ʃt͡ʃɔlˈita/
+  translation: ''
+  pos: adv
+- lemma: юлій
+  ipa: /ˈjulij/
+  translation: ''
+  pos: noun
+  gender: m

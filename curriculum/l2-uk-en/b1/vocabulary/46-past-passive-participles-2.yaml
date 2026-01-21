@@ -3,112 +3,278 @@ level: B1
 version: '2.0'
 items:
 - lemma: адресований
-  ipa: /adrɛˈsɔvanɪj/
-  translation: addressed
+  ipa: /adrɛsˈɔʋanɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: банка
-  ipa: /ˈbanka/
-  translation: jar
+- lemma: архітектор
+  ipa: /arxitˈɛktɔr/
+  translation: ''
   pos: noun
-  gender: f
 - lemma: бригадир
-  ipa: /brɪhaˈdɪr/
-  translation: foreman
+  ipa: /brɪɦadˈɪr/
+  translation: ''
   pos: noun
   gender: m
+- lemma: брошура
+  ipa: /brɔʃˈura/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: виготовити
+  ipa: /ʋˈɪɦɔtɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: визначено
+  ipa: /ʋˈɪznat͡ʃɛnɔ/
+  translation: ''
+  pos: adv
+- lemma: викладачка
+  ipa: /ʋɪkladˈat͡ʃka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вирішений
+  ipa: /ʋˈɪriʃɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: виставити
+  ipa: /ʋˈɪstaʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: вкорінений
+  ipa: /ʋkɔrˈinɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: встановити
+  ipa: /ʋstanɔʋˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: віденський
+  ipa: /ʋˈidɛnsʲkɪj/
+  translation: ''
+  pos: adj
 - lemma: гардероб
-  ipa: /hardɛˈrɔb/
-  translation: cloakroom
+  ipa: /ɦardɛrˈɔb/
+  translation: ''
   pos: noun
   gender: m
 - lemma: гельмер
-  ipa: /ˈhɛlʲmɛr/
-  translation: Helmer
-  pos: propn
+  ipa: /ɦɛlʲmɛr/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: генеральний
+  ipa: /ɦɛnɛrˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: гетьманський
+  ipa: /ɦɛtʲmansʲkɪj/
+  translation: ''
+  pos: adj
 - lemma: глядачка
-  ipa: /hlʲaˈdat͡ʃka/
-  translation: spectator
-  pos: propn
-  gender: m
+  ipa: /ɦljadˈat͡ʃka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дана
+  ipa: /dˈana/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: декорація
+  ipa: /dɛkɔrˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: демінутив
+  ipa: /dɛminutˈɪʋ/
+  translation: ''
+  pos: noun
 - lemma: дистанціюватися
-  ipa: /dɪstant͡sʲijuˈvatɪsʲa/
-  translation: to distance oneself
+  ipa: /dɪstant͡sijuʋˈatɪsja/
+  translation: ''
   pos: verb
 - lemma: додатково
-  ipa: /dɔdatˈkɔvɔ/
-  translation: additionally
+  ipa: /dɔdatkˈɔʋɔ/
+  translation: ''
   pos: adv
 - lemma: евакуюватися
-  ipa: /ɛvakujuˈvatɪsʲa/
-  translation: to evacuate
+  ipa: /ɛʋakujuʋˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: зачинити
-  ipa: /zat͡ʃɪˈnɪtɪ/
-  translation: to close
+- lemma: залити
+  ipa: /zalˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: кореспондентка
-  ipa: /kɔrɛspɔnˈdɛntka/
-  translation: correspondent
+- lemma: зникнути
+  ipa: /znˈɪknutɪ/
+  translation: ''
+  pos: verb
+- lemma: канцелярія
+  ipa: /kant͡sɛlˈjarija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: короткій
-  ipa: /kɔˈrɔtkʲij/
-  translation: short (loc.)
-  pos: adj
+- lemma: кореспондентка
+  ipa: /kɔrɛspɔndˈɛntka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: маска
+  ipa: /mˈaska/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: медіаграмотність
+  ipa: /mɛdiaɦramɔtnistʲ/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: монтаж
-  ipa: /mɔnˈtaʒ/
-  translation: montage
+  ipa: /mɔntˈaʒ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: озвучити
-  ipa: /ɔzˈvut͡ʃɪtɪ/
-  translation: to voice
-  pos: verb
-- lemma: перескладання
-  ipa: /pɛrɛsklaˈdanʲːa/
-  translation: retaking
+- lemma: надання
+  ipa: /nadˈannja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: погоджувати
-  ipa: /pɔˈhɔdʒuvatɪ/
-  translation: to coordinate
+- lemma: об'єктивний
+  ipa: /ɔbjɛktˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: об'єктивно
+  ipa: /ɔbjɛktˈɪʋnɔ/
+  translation: ''
+  pos: adv
+- lemma: озвучити
+  ipa: /ɔzʋˈut͡ʃɪtɪ/
+  translation: ''
   pos: verb
+- lemma: оприлюднити
+  ipa: /ɔprɪlˈjudnɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: пам'яткий
+  ipa: /pamjatkˈɪj/
+  translation: ''
+  pos: adj
+- lemma: парламентський
+  ipa: /parlˈamɛntsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: перескладання
+  ipa: /pɛrɛskladˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: пестливий
+  ipa: /pɛstlˈɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: полковник
+  ipa: /pɔlkˈɔʋnɪk/
+  translation: ''
+  pos: noun
 - lemma: постановка
-  ipa: /pɔstaˈnɔu̯ka/
-  translation: staging
+  ipa: /pɔstanˈɔʋka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: практично
+  ipa: /praktˈɪt͡ʃnɔ/
+  translation: ''
+  pos: adv
 - lemma: працівниця
-  ipa: /prat͡sʲiu̯ˈnɪt͡sʲa/
-  translation: worker
+  ipa: /prat͡siʋnˈɪt͡sja/
+  translation: ''
   pos: noun
   gender: f
-- lemma: припинути
-  ipa: /prɪpɪˈnutɪ/
-  translation: to stop
+- lemma: прекрасно
+  ipa: /prɛkrˈasnɔ/
+  translation: ''
+  pos: adv
+- lemma: припинити
+  ipa: /prɪpɪnˈɪtɪ/
+  translation: ''
   pos: verb
 - lemma: програмка
-  ipa: /prɔˈhramka/
-  translation: program (dim.)
+  ipa: /prɔɦrˈamka/
+  translation: ''
   pos: noun
   gender: f
 - lemma: прокласти
-  ipa: /prɔˈklastɪ/
-  translation: to pave
+  ipa: /prɔklˈastɪ/
+  translation: ''
+  pos: verb
+- lemma: підвищувати
+  ipa: /pidʋˈɪʃt͡ʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: підготовити
+  ipa: /pidɦɔtˈɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: підрахувати
+  ipa: /pidraxuʋˈatɪ/
+  translation: ''
   pos: verb
 - lemma: розмістити
-  ipa: /rɔzmʲisˈtɪtɪ/
-  translation: to place
+  ipa: /rɔzmistˈɪtɪ/
+  translation: ''
   pos: verb
-- lemma: фельнер
-  ipa: /ˈfɛlʲnɛr/
-  translation: Fellner
-  pos: propn
+- lemma: розпочати
+  ipa: /rɔzpɔt͡ʃˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: рідший
+  ipa: /rˈidʃɪj/
+  translation: ''
+  pos: adj
+- lemma: спеціально
+  ipa: /spɛt͡siˈalʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: судовий
+  ipa: /sudɔʋˈɪj/
+  translation: ''
+  pos: adj
+- lemma: телеканал
+  ipa: /tɛlɛkanˈal/
+  translation: ''
+  pos: noun
+- lemma: тимчасово
+  ipa: /tɪmt͡ʃasˈɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: типово
+  ipa: /tɪpˈɔʋɔ/
+  translation: ''
+  pos: adv
+- lemma: тринадцятий
+  ipa: /trɪnˈadt͡sjatɪj/
+  translation: ''
+  pos: adj
+- lemma: універсал
+  ipa: /uniʋɛrsˈal/
+  translation: ''
+  pos: noun
+- lemma: фасад
+  ipa: /fasˈad/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: цнапах
-  ipa: /ˈt͡snapax/
-  translation: admin centers (loc.)
-  pos: propn
+- lemma: фельнера
+  ipa: /fɛlʲnɛra/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: характерний
+  ipa: /xaraktɛrnɪj/
+  translation: ''
+  pos: adj
+- lemma: цнап
+  ipa: /t͡snap/
+  translation: ''
+  pos: noun

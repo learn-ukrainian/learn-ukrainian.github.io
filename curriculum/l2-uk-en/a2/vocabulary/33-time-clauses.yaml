@@ -3,119 +3,126 @@ level: A2
 version: '2.0'
 items:
 - lemma: божевільний
-  ipa: boʒeˈvʲilʲnɪj
-  translation: crazy; mad
+  ipa: /bɔʒɛʋˈilʲnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: вимкна
-  ipa: ˈvɪmknɐ
-  translation: turn off (imperative typo?)
-  pos: noun
-  gender: m
-- lemma: душ
-  ipa: duʃ
-  translation: shower
-  pos: noun
-  gender: f
-- lemma: задзвонити
-  ipa: zɐdzvoˈnɪte
-  translation: to start ringing (bis)
+- lemma: вимкнути
+  ipa: /ʋˈɪmknutɪ/
+  translation: ''
   pos: verb
-  gender: m
-- lemma: заснути
-  ipa: zɐˈsnute
-  translation: to fall asleep (perf)
-  pos: verb
-  gender: m
-- lemma: затор
-  ipa: zɐˈtɔr
-  translation: traffic jam
-  pos: noun
-  gender: m
-- lemma: збирати
-  ipa: zbɪˈrɑte
-  translation: to collect/gather (imp)
-  pos: verb
-- lemma: зібрати
-  ipa: zʲiˈbrɑte
-  translation: to collect/gather (perf)
-  pos: verb
-- lemma: лягти
-  ipa: lʲɐhˈtɪ
-  translation: to lie down (perf)
-  pos: verb
-- lemma: максим
-  ipa: mɐkˈsɪm
-  translation: Maksym
-  pos: propn
-  gender: m
-- lemma: народитися
-  ipa: nɐroˈdɪtɪsʲɐ
-  translation: to be born (perf)
-  pos: verb
-  gender: m
-- lemma: нервувати
-  ipa: nervuˈʋɑte
-  translation: to be nervous
-  pos: verb
-  gender: m
-- lemma: одягтися
-  ipa: odʲɐhˈtɪsʲɐ
-  translation: to get dressed (perf)
-  pos: verb
-  gender: f
-- lemma: перерва
-  ipa: peˈrɛrʋɐ
-  translation: break; pause
-  pos: noun
-  gender: f
-- lemma: побігти
-  ipa: poˈbʲihte
-  translation: to run
-  pos: verb
-  gender: f
-- lemma: подзвон
-  ipa: poˈdzvɔn
-  translation: call (imperative typo?)
-  pos: noun
-  gender: m
-- lemma: поки
-  ipa: ˈpɔkɪ
-  translation: while; until
+- lemma: водночас
+  ipa: /ʋɔdnˈɔt͡ʃas/
+  translation: ''
   pos: adv
-- lemma: пообідати
-  ipa: pooˈbʲidɐte
-  translation: to have lunch (perf)
-  pos: verb
-- lemma: поспішати
-  ipa: posʲpʲiˈʃɑte
-  translation: to hurry (imp)
-  pos: verb
-- lemma: розслаблятися
-  ipa: rozslɐbˈlʲɑtɪsʲɐ
-  translation: to relax (imp)
-  pos: verb
-- lemma: рухатися
-  ipa: ˈruxɐtɪsʲɐ
-  translation: to move (imp)
-  pos: verb
-  gender: f
-- lemma: світло
-  ipa: ˈsvʲitlo
-  translation: light
+- lemma: відношення
+  ipa: /ʋidnˈɔʃɛnnja/
+  translation: ''
   pos: noun
   gender: n
+- lemma: дванадцятий
+  ipa: /dʋanˈadt͡sjatɪj/
+  translation: ''
+  pos: adj
+- lemma: з'явитися
+  ipa: /zjaʋˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: закономірність
+  ipa: /zakɔnɔmˈirnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: заснути
+  ipa: /zasnˈutɪ/
+  translation: ''
+  pos: verb
+- lemma: збирати
+  ipa: /zbɪrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зібрати
+  ipa: /zibrˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: лягти
+  ipa: /ljaɦtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: миттєвість
+  ipa: /mɪttˈjɛʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: народитися
+  ipa: /narɔdˈɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: настати
+  ipa: /nastˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: нервувати
+  ipa: /nɛrʋuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: одночасний
+  ipa: /ɔdnɔt͡ʃˈasnɪj/
+  translation: ''
+  pos: adj
+- lemma: одночасність
+  ipa: /ɔdnɔt͡ʃˈasnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: одягтися
+  ipa: /ɔdjaɦtˈɪsja/
+  translation: ''
+  pos: verb
+- lemma: очікування
+  ipa: /ɔt͡ʃˈikuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: перерва
+  ipa: /pɛrˈɛrʋa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поки
+  ipa: /pˈɔkɪ/
+  translation: ''
+  pos: conj
+- lemma: посміхнутися
+  ipa: /pɔsmixnˈutɪsja/
+  translation: ''
+  pos: verb
+- lemma: протилежний
+  ipa: /prɔtɪlˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: радій
+  ipa: /rˈadij/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: розслаблятися
+  ipa: /rɔzslablˈjatɪsja/
+  translation: ''
+  pos: verb
+- lemma: рухатися
+  ipa: /rˈuxatɪsja/
+  translation: ''
+  pos: verb
 - lemma: щасливчик
-  ipa: ʃt͡ʃɐsˈlɪu̯t͡ʃɪk
-  translation: lucky person
+  ipa: /ʃt͡ʃaslˈɪʋt͡ʃɪk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: щойно
-  ipa: ˈʃt͡ʃɔjno
-  translation: just now
-  pos: adv
+  ipa: /ʃt͡ʃˈɔjnɔ/
+  translation: ''
+  pos: part
 - lemma: ідеальний
-  ipa: ideˈɑlʲnɪj
-  translation: ideal
+  ipa: /idɛˈalʲnɪj/
+  translation: ''
   pos: adj
-  gender: m

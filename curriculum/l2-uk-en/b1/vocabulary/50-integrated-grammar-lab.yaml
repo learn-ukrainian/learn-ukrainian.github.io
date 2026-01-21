@@ -2,194 +2,378 @@ module: 50-integrated-grammar-lab
 level: B1
 version: '2.0'
 items:
-- lemma: аудитор
-  ipa: /audɪˈtɔr/
-  translation: auditor
+- lemma: автентичність
+  ipa: /aʋtɛntˈɪt͡ʃnistʲ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: аутсорс
-  ipa: /autˈsɔrs/
-  translation: outsourcing
-  pos: noun
-  gender: m
-- lemma: бабусенький
-  ipa: /baˈbusɛnʲkɪj/
-  translation: granny (adj)
-  pos: adj
   gender: f
-- lemma: бюджетик
-  ipa: /bʲuˈdʒɛtɪk/
-  translation: budget (dim.)
+- lemma: аналізуватися
+  ipa: /analizuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: аналітик
+  ipa: /analˈitɪk/
+  translation: ''
   pos: noun
   gender: m
+- lemma: аудит
+  ipa: /audˈɪt/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: аудитор
+  ipa: /audˈɪtɔr/
+  translation: ''
+  pos: noun
+- lemma: аутсорс
+  ipa: /autsɔrs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: балакати
+  ipa: /balˈakatɪ/
+  translation: ''
+  pos: verb
+- lemma: безособовість
+  ipa: /bɛzɔsɔbˈɔʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: бюджетика
+  ipa: /bjudʒɛtɪka/
+  translation: ''
+  pos: noun
+- lemma: возьма
+  ipa: /ʋɔzʲma/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: врахувати
+  ipa: /ʋraxuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: відзначити
+  ipa: /ʋidznˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: відкриття
+  ipa: /ʋidkrɪttˈja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: відповідність
+  ipa: /ʋidpɔʋˈidnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: відсоточок
-  ipa: /vidˈsɔtɔt͡ʃɔk/
-  translation: percentage (dim.)
+  ipa: /ʋidsɔtɔt͡ʃɔk/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: гарненько
-  ipa: /harˈnɛnʲkɔ/
-  translation: nicely
+  ipa: /ɦarnˈɛnʲkɔ/
+  translation: ''
   pos: adv
 - lemma: городик
-  ipa: /hɔˈrɔdɪk/
-  translation: garden (dim.)
+  ipa: /ɦɔrˈɔdɪk/
+  translation: ''
   pos: noun
-  gender: m
 - lemma: готовенький
-  ipa: /hɔtɔˈvɛnʲkɪj/
-  translation: ready (dim.)
+  ipa: /ɦɔtɔʋˈɛnʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: держслужбовець
-  ipa: /dɛrʒsluʒˈbɔvɛt͡sʲ/
-  translation: civil servant
+  ipa: /dɛrʒsluʒbˈɔʋɛt͡sʲ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: дріб
-  ipa: /drib/
-  translation: fraction
+- lemma: допустимий
+  ipa: /dɔpustˈɪmɪj/
+  translation: ''
+  pos: adj
+- lemma: дружній
+  ipa: /drˈuʒnij/
+  translation: ''
+  pos: adj
+- lemma: діточки
+  ipa: /dˈitɔt͡ʃkɪ/
+  translation: ''
+  pos: noun
+- lemma: емоційність
+  ipa: /ɛmɔt͡sˈijnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: діточок
-  ipa: /dʲiˈtɔt͡ʃɔk/
-  translation: children (dim.)
+- lemma: живість
+  ipa: /ʒˈɪʋistʲ/
+  translation: ''
   pos: noun
-  gender: pl
+  gender: f
 - lemma: задіяний
-  ipa: /zaˈdʲijanɪj/
-  translation: involved
+  ipa: /zadˈijanɪj/
+  translation: ''
   pos: adj
 - lemma: задіяти
-  ipa: /zaˈdʲijatɪ/
-  translation: to involve
+  ipa: /zadˈijatɪ/
+  translation: ''
   pos: verb
+- lemma: зазначити
+  ipa: /zaznˈat͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: залучити
+  ipa: /zalut͡ʃˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: замовник
+  ipa: /zamˈɔʋnɪk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: звітний
+  ipa: /zʋˈitnɪj/
+  translation: ''
+  pos: adj
 - lemma: знеособленість
-  ipa: /znɛɔˈsɔblɛnʲisʲtʲ/
-  translation: depersonalization
+  ipa: /znɛɔsɔblɛnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: командній
-  ipa: /kɔˈmandnʲij/
-  translation: command (loc.)
-  pos: adj
-  gender: f
-- lemma: коригування
-  ipa: /kɔrɪhuˈvanʲːa/
-  translation: adjustment
+- lemma: кавочко
+  ipa: /kaʋɔt͡ʃkɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: нагородити
-  ipa: /nahɔrɔˈdɪtɪ/
-  translation: to reward
-  pos: verb
-- lemma: напекти
-  ipa: /napɛkˈtɪ/
-  translation: to bake
-  pos: verb
-  gender: f
-- lemma: начальничка
-  ipa: /nat͡ʃalʲˈnɪt͡ʃka/
-  translation: boss (fem. dim.)
+- lemma: киян
+  ipa: /kɪˈjan/
+  translation: ''
   pos: noun
   gender: m
-- lemma: новеньки
-  ipa: /nɔˈvɛnʲkɪ/
-  translation: new ones (dim.)
-  pos: noun
-  gender: m
-- lemma: новенький
-  ipa: /nɔˈvɛnʲkɪj/
-  translation: new (dim.)
+- lemma: комунікативний
+  ipa: /kɔmunikatˈɪʋnɪj/
+  translation: ''
   pos: adj
+- lemma: коригування
+  ipa: /kɔrɪɦuʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: лабораторія
+  ipa: /labɔratˈɔrija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: мер
+  ipa: /mɛr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мільярд
+  ipa: /milʲˈjard/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: навмисно
+  ipa: /naʋmˈɪsnɔ/
+  translation: ''
+  pos: adv
+- lemma: нагородити
+  ipa: /naɦɔrɔdˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: надійти
+  ipa: /nadijtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: найцінніший
+  ipa: /najt͡sinnˈiʃɪj/
+  translation: ''
+  pos: adj
+- lemma: напекти
+  ipa: /napɛktˈɪ/
+  translation: ''
+  pos: verb
+- lemma: наполегливий
+  ipa: /napɔlˈɛɦlɪʋɪj/
+  translation: ''
+  pos: adj
+- lemma: начальничок
+  ipa: /nat͡ʃˈalʲnɪt͡ʃɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: невідповідність
+  ipa: /nɛʋidpɔʋˈidnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: організатор
+  ipa: /ɔrɦanizˈatɔr/
+  translation: ''
+  pos: noun
 - lemma: оформлюватися
-  ipa: /ɔˈfɔrmlʲuvatɪsʲa/
-  translation: to be processed
+  ipa: /ɔfˈɔrmljuʋatɪsja/
+  translation: ''
   pos: verb
 - lemma: паперовий
-  ipa: /papɛˈrɔvɪj/
-  translation: paper (adj)
+  ipa: /papɛrˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: пиріжечка
-  ipa: /pɪriˈʒɛt͡ʃka/
-  translation: pie (dim. gen.)
-  pos: noun
-  gender: f
-- lemma: пиріжечок
-  ipa: /pɪriˈʒɛt͡ʃɔk/
-  translation: pie (dim.)
+- lemma: пасажиропотік
+  ipa: /pasaʒɪrɔpɔtˈik/
+  translation: ''
   pos: noun
   gender: m
-- lemma: посидіти
-  ipa: /pɔsɪˈdʲitɪ/
-  translation: to sit
+- lemma: перекладатися
+  ipa: /pɛrɛkladˈatɪsja/
+  translation: ''
   pos: verb
-- lemma: проєкт
-  ipa: /prɔˈjɛkt/
-  translation: project
-  pos: propn
+- lemma: перекладач
+  ipa: /pɛrɛkladˈat͡ʃ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: проектний
-  ipa: /prɔˈɛktnɪj/
-  translation: project (adj)
-  pos: adj
-  gender: f
-- lemma: проектування
-  ipa: /prɔɛktuˈvanʲːa/
-  translation: designing
+- lemma: пиріжечок
+  ipa: /pɪriʒˈɛt͡ʃɔk/
+  translation: ''
+  pos: noun
+- lemma: погодження
+  ipa: /pɔɦˈɔdʒɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: серйозність
-  ipa: /sɛrˈjɔznʲisʲtʲ/
-  translation: seriousness
-  pos: noun
-  gender: f
-- lemma: снідати
-  ipa: /ˈsnʲidatɪ/
-  translation: to have breakfast
+- lemma: подолати
+  ipa: /pɔdɔlˈatɪ/
+  translation: ''
   pos: verb
-- lemma: стажер
-  ipa: /staˈʒɛr/
-  translation: intern
+- lemma: посидіти
+  ipa: /pɔsˈɪditɪ/
+  translation: ''
+  pos: verb
+- lemma: прибігати
+  ipa: /prɪbiɦˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: прискорення
+  ipa: /prɪskˈɔrɛnnja/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: сусідок
-  ipa: /suˈsidɔk/
-  translation: neighbors (fem. gen.)
-  pos: noun
-  gender: m
-- lemma: сусідський
-  ipa: /suˈsidsʲkɪj/
-  translation: neighborly
-  pos: noun
-  gender: m
-- lemma: сіренький
-  ipa: /sʲiˈrɛnʲkɪj/
-  translation: grey (dim.)
+  gender: n
+- lemma: прогнозуватися
+  ipa: /prɔɦnɔzuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: проектний
+  ipa: /prɔɛktnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: третин
-  ipa: /trɛˈtɪn/
-  translation: thirds (gen.)
+- lemma: проектування
+  ipa: /prɔɛktuʋannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: реалізація
+  ipa: /rɛalizˈat͡sija/
+  translation: ''
   pos: noun
   gender: f
-- lemma: чашечка
-  ipa: /ˈt͡ʃaʃɛt͡ʃka/
-  translation: cup (dim.)
-  pos: noun
-  gender: f
-- lemma: чаєчок
-  ipa: /t͡ʃaˈjɛt͡ʃɔk/
-  translation: tea (dim.)
+- lemma: реалістичний
+  ipa: /rɛalistˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: репортаж
+  ipa: /rɛpɔrtˈaʒ/
+  translation: ''
   pos: noun
   gender: m
-- lemma: ізольовано
-  ipa: /izɔˈlʲɔvanɔ/
-  translation: isolatedly
+- lemma: розбіжність
+  ipa: /rɔzbˈiʒnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: серйозність
+  ipa: /sɛrjˈɔznistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: спеціаліст
+  ipa: /spɛt͡sialˈist/
+  translation: ''
+  pos: noun
+- lemma: спонтанність
+  ipa: /spɔntˈannistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стажер
+  ipa: /staʒˈɛr/
+  translation: ''
+  pos: noun
+- lemma: суб'єктивність
+  ipa: /subjɛktˈɪʋnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: суспільний
+  ipa: /suspˈilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: сусідський
+  ipa: /susˈidsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: сімдесят
+  ipa: /simdɛsˈjat/
+  translation: ''
+  pos: num
+- lemma: сіренький
+  ipa: /sirˈɛnʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: технологічний
+  ipa: /tɛxnɔlɔɦˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: трошки
+  ipa: /trˈɔʃkɪ/
+  translation: ''
   pos: adv
+- lemma: турбота
+  ipa: /turbˈɔta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: фразеологізм
+  ipa: /frazɛɔlɔɦˈizm/
+  translation: ''
+  pos: noun
+- lemma: характеризуватися
+  ipa: /xaraktɛrɪzuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: церемонія
+  ipa: /t͡sɛrɛmˈɔnija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: церковний
+  ipa: /t͡sɛrkˈɔʋnɪj/
+  translation: ''
+  pos: noun
+- lemma: чаєчка
+  ipa: /t͡ʃˈajɛt͡ʃka/
+  translation: ''
+  pos: noun
+- lemma: шматочок
+  ipa: /ʃmatˈɔt͡ʃɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ізолювати
+  ipa: /izɔljuʋˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: інструментарій
-  ipa: /instrumɛnˈtarʲij/
-  translation: toolkit
+  ipa: /instrumɛntˈarij/
+  translation: ''
   pos: noun
   gender: m

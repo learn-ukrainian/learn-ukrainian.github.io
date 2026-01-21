@@ -1,129 +1,77 @@
-module: 135-mystetstvo-i-literatura
+module: 74-mystetstvo-i-literatura
 level: B2
 version: '2.0'
 items:
-- lemma: мистецтво
-  ipa: /mɪsˈtetstwɔ/
-  translation: art
+- lemma: бойчук
+  ipa: /bɔjt͡ʃˈuk/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: геноцид
+  ipa: /ɦɛnɔt͡sˈɪd/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: гончарство
+  ipa: /ɦɔnt͡ʃˈarstʋɔ/
+  translation: ''
   pos: noun
   gender: n
-- lemma: література
-  ipa: /lʲiteraˈtura/
-  translation: literature
-  pos: noun
-  gender: f
-- lemma: живопис
-  ipa: /ˈʒɪwopɪs/
-  translation: painting
-  pos: noun
-  gender: m
-- lemma: скульптура
-  ipa: /skulʲpˈtura/
-  translation: sculpture
-  pos: noun
-  gender: f
-- lemma: музика
-  ipa: /ˈmuzɪka/
-  translation: music
-  pos: noun
-  gender: f
-- lemma: театр
-  ipa: /teˈatr/
-  translation: theater
-  pos: noun
-  gender: m
-- lemma: поезія
-  ipa: /poˈezʲija/
-  translation: poetry
-  pos: noun
-  gender: f
-- lemma: проза
-  ipa: /ˈprɔza/
-  translation: prose
-  pos: noun
-  gender: f
-- lemma: роман
-  ipa: /rɔˈman/
-  translation: novel
-  pos: noun
-  gender: m
-- lemma: оповідання
-  ipa: /opowʲiˈdanʲːa/
-  translation: short story
+- lemma: живописний
+  ipa: /ʒɪʋɔpˈɪsnɪj/
+  translation: ''
+  pos: adj
+- lemma: маріа
+  ipa: /maria/
+  translation: ''
   pos: noun
   gender: n
-- lemma: вірш
-  ipa: /ˈwʲirʃ/
-  translation: poem
+- lemma: модернізм
+  ipa: /mɔdɛrnˈizm/
+  translation: ''
   pos: noun
   gender: m
-- lemma: художник
-  ipa: /xuˈdɔʒnɪk/
-  translation: artist, painter
-  pos: noun
-  gender: m
-- lemma: письменник
-  ipa: /pɪsʲˈmennɪk/
-  translation: writer
-  pos: noun
-  gender: m
-- lemma: композитор
-  ipa: /kompɔˈzɪtor/
-  translation: composer
-  pos: noun
-  gender: m
-- lemma: виставка
-  ipa: /wɪˈstawka/
-  translation: exhibition
+- lemma: монументальний
+  ipa: /mɔnumɛntˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: наївний
+  ipa: /naˈjiʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: нематеріальний
+  ipa: /nɛmatɛriˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: образотворчий
+  ipa: /ɔbrazɔtʋˈɔrt͡ʃɪj/
+  translation: ''
+  pos: adj
+- lemma: передхристиянський
+  ipa: /pɛrɛdxrɪstɪjansʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: приймаченко
+  ipa: /prɪjmat͡ʃɛnkɔ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: галерея
-  ipa: /ɦaleˈreja/
-  translation: gallery
+- lemma: пікассо
+  ipa: /pikˈassɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спротив
+  ipa: /sprˈɔtɪʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: євробачення-
+  ipa: /jɛʋrɔbˈat͡ʃɛnnja-/
+  translation: ''
+  pos: noun
+- lemma: ікона
+  ipa: /ikˈɔna/
+  translation: ''
   pos: noun
   gender: f
-- lemma: стиль
-  ipa: /ˈstɪlʲ/
-  translation: style
-  pos: noun
-  gender: m
-- lemma: жанр
-  ipa: /ˈʒanr/
-  translation: genre
-  pos: noun
-  gender: m
-- lemma: сюжет
-  ipa: /sʲuˈʒet/
-  translation: plot
-  pos: noun
-  gender: m
-- lemma: образ
-  ipa: /ˈɔbraz/
-  translation: image, character
-  pos: noun
-  gender: m
-- lemma: символ
-  ipa: /ˈsɪmwol/
-  translation: symbol
-  pos: noun
-  gender: m
-- lemma: метафора
-  ipa: /meˈtafora/
-  translation: metaphor
-  pos: noun
-  gender: f
-- lemma: критика
-  ipa: /ˈkrɪtɪka/
-  translation: criticism
-  pos: noun
-  gender: f
-- lemma: натхнення
-  ipa: /natxˈnenʲːa/
-  translation: inspiration
-  pos: noun
-  gender: n
-- lemma: шедевр
-  ipa: /ʃeˈdewrt/
-  translation: masterpiece
-  pos: noun
-  gender: m

@@ -2,83 +2,149 @@ module: 69-synonymy-speaking-verbs
 level: B1
 version: '2.0'
 items:
-- lemma: аспекть
-  ipa: /asˈpɛktʲ/
-  translation: aspect (typo)
-  pos: noun
-  gender: m
-- lemma: безпечно
-  ipa: /bɛzˈpɛt͡ʃnɔ/
-  translation: safely
-  pos: adv
-- lemma: договорити
-  ipa: /dɔhɔvɔˈrɪtɪ/
-  translation: to finish speaking
-  pos: verb
-- lemma: значуще
-  ipa: /znaˈt͡ʃuʃt͡ʃɛ/
-  translation: significant
-  pos: noun
-  gender: n
-- lemma: кожне
-  ipa: /ˈkɔʒnɛ/
-  translation: every
-  pos: pron
-  gender: n
-- lemma: мимохідь
-  ipa: /mɪmɔˈxidʲ/
-  translation: in passing
-  pos: adv
-- lemma: наративний
-  ipa: /naraˈtɪvnɪj/
-  translation: narrative
-  pos: adj
-  gender: n
-- lemma: научатися
-  ipa: /naut͡ʃaˈtɪsʲa/
-  translation: to learn
-  pos: verb
-- lemma: очевидка
-  ipa: /ɔt͡ʃɛˈvɪdka/
-  translation: eyewitness (typo)
-  pos: noun
-  gender: m
-- lemma: поправок
-  ipa: /pɔˈpravɔk/
-  translation: amendments (gen.)
+- lemma: авторитетність
+  ipa: /aʋtɔrɪtˈɛtnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: просте
-  ipa: /prɔˈstɛ/
-  translation: simple
+- lemma: агресор
+  ipa: /aɦrˈɛsɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: білоруський
+  ipa: /bilɔrˈusʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: готовність
+  ipa: /ɦɔtˈɔʋnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: громадськість
+  ipa: /ɦrɔmˈadsʲkistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: деталізація
+  ipa: /dɛtalizˈat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: диктор
+  ipa: /dˈɪktɔr/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: доповнення
+  ipa: /dɔpˈɔʋnɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: підкрести
-  ipa: /pidˈkrɛstɪ/
-  translation: to emphasize (typo)
+- lemma: друк
+  ipa: /druk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: заявляти
+  ipa: /zajaʋlˈjatɪ/
+  translation: ''
   pos: verb
-- lemma: радше
-  ipa: /ˈradʃɛ/
-  translation: rather
+- lemma: збалансований
+  ipa: /zbalansˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: зіпсований
+  ipa: /zipsˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: малоросійський
+  ipa: /malɔrɔsˈijsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: медійний
+  ipa: /mɛdˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: наполягання
+  ipa: /napɔljaɦˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: наративний
+  ipa: /naratˈɪʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: необхідність
+  ipa: /nɛɔbxˈidnistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: нікакий
+  ipa: /nikakɪj/
+  translation: ''
+  pos: adj
+- lemma: очевидець
+  ipa: /ɔt͡ʃɛʋˈɪdɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прес-служба
+  ipa: /prɛs-slˈuʒba/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: проголошувати
+  ipa: /prɔɦɔlˈɔʃuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: публічно
+  ipa: /publˈit͡ʃnɔ/
+  translation: ''
   pos: adv
 - lemma: роз'яснити
-  ipa: /rɔzjasˈnɪtɪ/
-  translation: to explain
+  ipa: /rɔzjasnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: роз'яснювати
+  ipa: /rɔzˈjasnjuʋatɪ/
+  translation: ''
   pos: verb
 - lemma: різноманітніший
-  ipa: /rʲiznɔmaˈnʲitnʲiʃɪj/
-  translation: more diverse
+  ipa: /riznɔmanˈitniʃɪj/
+  translation: ''
   pos: adj
-- lemma: слушно
-  ipa: /ˈsluʃnɔ/
-  translation: rightly
-  pos: adv
-- lemma: трансляція
-  ipa: /transˈlʲat͡sʲija/
-  translation: broadcast
+- lemma: самобутність
+  ipa: /samɔbˈutnistʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: цуратися
-  ipa: /t͡suˈratɪsʲa/
-  translation: to shun
+- lemma: скептик
+  ipa: /skˈɛptɪk/
+  translation: ''
+  pos: noun
+- lemma: слабшати
+  ipa: /slˈabʃatɪ/
+  translation: ''
+  pos: verb
+- lemma: трансляція
+  ipa: /translˈjat͡sija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: цитувати
+  ipa: /t͡sɪtuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: чиновник
+  ipa: /t͡ʃɪnˈɔʋnɪk/
+  translation: ''
+  pos: noun
+- lemma: інтерпретація
+  ipa: /intɛrprɛtˈat͡sija/
+  translation: ''
+  pos: noun
+- lemma: інформувати
+  ipa: /infɔrmuʋˈatɪ/
+  translation: ''
   pos: verb

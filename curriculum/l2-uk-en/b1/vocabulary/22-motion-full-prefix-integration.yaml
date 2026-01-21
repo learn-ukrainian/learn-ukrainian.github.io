@@ -3,125 +3,255 @@ level: B1
 version: '2.0'
 items:
 - lemma: автовокзал
-  ipa: /autɔvɔkˈzal/
-  translation: bus station
+  ipa: /aʋtɔʋɔkzˈal/
+  translation: ''
   pos: noun
   gender: m
-- lemma: антон
-  ipa: /anˈtɔn/
-  translation: Anton
-  pos: propn
+- lemma: алея
+  ipa: /alˈɛja/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: антонім
+  ipa: /antˈɔnim/
+  translation: ''
+  pos: noun
+- lemma: вектор
+  ipa: /ʋˈɛktɔr/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: аудіо
-  ipa: /ˈaudʲiɔ/
-  translation: audio
-  pos: other
 - lemma: вибути
-  ipa: /vɪˈbutɪ/
-  translation: to drop out
+  ipa: /ʋˈɪbutɪ/
+  translation: ''
   pos: verb
 - lemma: виглянути
-  ipa: /vɪˈhlʲanutɪ/
-  translation: to look out
+  ipa: /ʋˈɪɦljanutɪ/
+  translation: ''
   pos: verb
-  gender: n
 - lemma: вилітати
-  ipa: /vɪlʲiˈtatɪ/
-  translation: to fly out
+  ipa: /ʋɪlitatɪ/
+  translation: ''
   pos: verb
-- lemma: входини
-  ipa: /ˈvxɔdɪnɪ/
-  translation: housewarming
+- lemma: висота
+  ipa: /ʋɪsɔtˈa/
+  translation: ''
   pos: noun
-  gender: m
+- lemma: влада
+  ipa: /ʋlˈada/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: входини
+  ipa: /ʋxˈɔdɪnɪ/
+  translation: ''
+  pos: noun
+- lemma: від'їжджати
+  ipa: /ʋidjiʒdʒˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: відбуття
-  ipa: /vidbutʲˈtʲa/
-  translation: departure
+  ipa: /ʋidbuttˈja/
+  translation: ''
   pos: noun
   gender: n
 - lemma: віддалити
-  ipa: /vidːaˈlɪtɪ/
-  translation: to distance
+  ipa: /ʋiddalˈɪtɪ/
+  translation: ''
   pos: verb
+- lemma: гармонія
+  ipa: /ɦarmˈɔnija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: громадське
+  ipa: /ɦrɔmadsʲkɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: заглиблення
-  ipa: /zaˈhlɪblɛnʲːa/
-  translation: deepening
+  ipa: /zaɦlˈɪblɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: загублений
-  ipa: /zaˈhublɛnɪj/
-  translation: lost
-  pos: adj
-  gender: m
-- lemma: згубити
-  ipa: /zhuˈbɪtɪ/
-  translation: to lose
+- lemma: збирання
+  ipa: /zbɪrˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: збожеволіти
+  ipa: /zbɔʒɛʋˈɔlitɪ/
+  translation: ''
   pos: verb
-  gender: m
+- lemma: зв
+  ipa: /zʋ/
+  translation: ''
+  pos: noun
+- lemma: зі-
+  ipa: /zi-/
+  translation: ''
+  pos: noun
+- lemma: зійти
+  ipa: /zijtˈɪ/
+  translation: ''
+  pos: verb
+- lemma: зійтися
+  ipa: /zijtˈɪsja/
+  translation: ''
+  pos: verb
 - lemma: лего
-  ipa: /ˈlɛhɔ/
-  translation: Lego
-  pos: propn
+  ipa: /lɛɦɔ/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: макдональдза
-  ipa: /makˈdɔnalʲdza/
-  translation: McDonald's (gen.)
-  pos: propn
+- lemma: логістик
+  ipa: /lɔɦˈistɪk/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: множити
-  ipa: /ˈmnɔʒɪtɪ/
-  translation: to multiply
+- lemma: максимально
+  ipa: /maksɪmˈalʲnɔ/
+  translation: ''
+  pos: adv
+- lemma: минати
+  ipa: /mɪnˈatɪ/
+  translation: ''
   pos: verb
-- lemma: оглядовий
-  ipa: /ɔhlʲaˈdɔvɪj/
-  translation: sightseeing
+- lemma: множити
+  ipa: /mnˈɔʒɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: назвавши
+  ipa: /nazʋˈaʋʃɪ/
+  translation: ''
+  pos: verb
+- lemma: націоналістичний
+  ipa: /nat͡siɔnalistˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: облетілий
+  ipa: /ɔblɛtˈilɪj/
+  translation: ''
+  pos: adj
+- lemma: образно
+  ipa: /ˈɔbraznɔ/
+  translation: ''
+  pos: adv
 - lemma: однонаправлений
-  ipa: /ɔdnɔnaprau̯ˈlɛnɪj/
-  translation: unidirectional
+  ipa: /ɔdnɔnaprˈaʋlɛnɪj/
+  translation: ''
   pos: adj
-- lemma: океана
-  ipa: /ɔkɛˈana/
-  translation: ocean (gen.)
-  pos: propn
+- lemma: оптимізм
+  ipa: /ɔptɪmˈizm/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: переможець
+  ipa: /pɛrɛmˈɔʒɛt͡sʲ/
+  translation: ''
+  pos: noun
+- lemma: питомий
+  ipa: /pɪtˈɔmɪj/
+  translation: ''
+  pos: adj
+- lemma: по-різному
+  ipa: /pɔ-rˈiznɔmu/
+  translation: ''
+  pos: adv
+- lemma: побудований
+  ipa: /pɔbudˈɔʋanɪj/
+  translation: ''
+  pos: adj
+- lemma: повертаючись
+  ipa: /pɔʋɛrtˈajut͡ʃɪsʲ/
+  translation: ''
+  pos: verb
 - lemma: покриття
-  ipa: /pɔkrɪtʲˈtʲa/
-  translation: coverage
+  ipa: /pɔkrɪttˈja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: протікати
-  ipa: /prɔtʲiˈkatɪ/
-  translation: to flow
-  pos: verb
-- lemma: пі
-  ipa: /pi/
-  translation: Pi
-  pos: other
-- lemma: розсердитися
-  ipa: /rɔzˈsɛrdɪtɪsʲa/
-  translation: to get angry
-  pos: verb
-- lemma: різнонаправлений
-  ipa: /rʲiznɔnaˈprau̯lɛnɪj/
-  translation: multidirectional
+- lemma: похідний
+  ipa: /pɔxidnɪj/
+  translation: ''
   pos: adj
-- lemma: трускавець
-  ipa: /truskaˈvɛt͡sʲ/
-  translation: Truskavets
-  pos: propn
-  gender: m
-- lemma: фразовий
-  ipa: /ˈfrazɔvɪj/
-  translation: phrasal
-  pos: adj
-- lemma: фігуральний
-  ipa: /fʲihuˈralʲnɪj/
-  translation: figurative
-  pos: adj
-- lemma: ізсередини
-  ipa: /izsɛˈrɛdɪnɪ/
-  translation: from inside
+- lemma: правопис
+  ipa: /praʋˈɔpɪs/
+  translation: ''
   pos: noun
   gender: m
+- lemma: протікати
+  ipa: /prɔtikˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: пі-
+  ipa: /pi-/
+  translation: ''
+  pos: noun
+- lemma: розсердитися
+  ipa: /rɔzsˈɛrdɪtɪsja/
+  translation: ''
+  pos: verb
+- lemma: рівняння
+  ipa: /riʋnˈjannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: різнонаправлений
+  ipa: /riznɔnaprˈaʋlɛnɪj/
+  translation: ''
+  pos: adj
+- lemma: скрипниківка
+  ipa: /skrɪpnɪkiʋka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: спливати
+  ipa: /splɪʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: старт
+  ipa: /start/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: сходити
+  ipa: /sxɔdɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: текти
+  ipa: /tɛktˈɪ/
+  translation: ''
+  pos: verb
+- lemma: трускавець
+  ipa: /truskaʋˈɛt͡sʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: уточнити
+  ipa: /utɔt͡ʃnˈɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: фотоальбом
+  ipa: /fɔtɔalʲbˈɔm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фразеологія
+  ipa: /frazɛɔlˈɔɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: фігуральний
+  ipa: /fiɦurˈalʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: фініш
+  ipa: /fˈiniʃ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: їжджати
+  ipa: /jiʒdʒatɪ/
+  translation: ''
+  pos: verb

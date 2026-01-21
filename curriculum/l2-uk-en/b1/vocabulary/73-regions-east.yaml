@@ -2,236 +2,184 @@ module: 73-regions-east
 level: B1
 version: '2.0'
 items:
-  - lemma: аерокосмічний
-    ipa: /aɛrɔkɔsˈmʲit͡ʃnɪj/
-    translation: aerospace
-    pos: adj
-    gender: m
-  - lemma: арена
-    ipa: /aˈrɛna/
-    translation: arena
-    pos: noun
-    gender: f
-  - lemma: легка атлетика
-    ipa: /lɛhˈka atˈlɛtɪka/
-    translation: track and field athletics
-    pos: noun
-    gender: f
-  - lemma: Сергій Бубка
-    ipa: /sɛrˈhʲij ˈbubka/
-    translation: Serhiy Bubka
-    pos: propn
-    gender: m
-  - lemma: вуглевидобуток
-    ipa: /vuhlɛvɪdɔˈbutɔk/
-    translation: coal mining
-    pos: noun
-    gender: m
-  - lemma: вугільний
-    ipa: /vuˈhilʲnɪj/
-    translation: coal (adj)
-    pos: adj
-    gender: m
-  - lemma: дванадцять
-    ipa: /dvaˈnadet͡sʲatʲ/
-    translation: twelve
-    pos: num
-  - lemma: донбаський
-    ipa: /dɔnˈbasʲkɪj/
-    translation: Donbas (adj)
-    pos: adj
-    gender: m
-  - lemma: Донецьк
-    ipa: /dɔˈnɛt͡sʲk/
-    translation: Donetsk
-    pos: propn
-    gender: m
-  - lemma: Енеїда
-    ipa: /ɛnɛˈjida/
-    translation: Eneida (poem by Kotliarevsky)
-    pos: noun
-    gender: f
-  - lemma: жердина
-    ipa: /ʒɛrˈdɪna/
-    translation: pole (for vaulting)
-    pos: noun
-    gender: f
-  - lemma: заселення
-    ipa: /zaˈsɛlɛnʲːa/
-    translation: settlement, colonisation
-    pos: noun
-    gender: n
-  - lemma: Каразін
-    ipa: /kaˈrazʲin/
-    translation: Karazin
-    pos: propn
-    gender: m
-  - lemma: каразінський
-    ipa: /karaˈzʲinsʲkɪj/
-    translation: Karazin (adj)
-    pos: adj
-    gender: m
-  - lemma: комбінат
-    ipa: /kɔmbʲiˈnat/
-    translation: industrial complex, combine
-    pos: noun
-    gender: m
-  - lemma: кубок
-    ipa: /ˈkubɔk/
-    translation: cup, trophy
-    pos: noun
-    gender: m
-  - lemma: Ландау
-    ipa: /ˈlandau̯/
-    translation: Landau
-    pos: propn
-    gender: m
-  - lemma: Луганськ
-    ipa: /luˈhansʲk/
-    translation: Luhansk
-    pos: propn
-    gender: m
-  - lemma: луганський
-    ipa: /luˈhansʲkɪj/
-    translation: Luhansk (adj)
-    pos: adj
-    gender: m
-  - lemma: Луганщина
-    ipa: /luˈhanʃt͡ʃɪna/
-    translation: Luhansk region
-    pos: propn
-    gender: f
-  - lemma: металургійний
-    ipa: /mɛtalurˈhʲijnɪj/
-    translation: metallurgical
-    pos: adj
-    gender: m
-  - lemma: Металіст
-    ipa: /mɛtaˈlʲist/
-    translation: Metalist (Kharkiv football club)
-    pos: propn
-    gender: m
-  - lemma: Мечников
-    ipa: /ˈmɛt͡ʃnɪkɔu̯/
-    translation: Mechnikov
-    pos: propn
-    gender: m
-  - lemma: мішаний
-    ipa: /ˈmʲiʃanɪj/
-    translation: mixed
-    pos: adj
-    gender: m
-  - lemma: найгустіший
-    ipa: /najhuˈstʲiʃɪj/
-    translation: densest
-    pos: adj
-    gender: m
-  - lemma: Остроградський
-    ipa: /ɔstrɔˈhradsʲkɪj/
-    translation: Ostrohradskyi
-    pos: propn
-    gender: m
-  - lemma: переселятися
-    ipa: /pɛrɛsɛˈlʲatɪsʲa/
-    translation: to resettle, to migrate
-    pos: verb
-  - lemma: покровський
-    ipa: /pɔˈkrɔu̯sʲkɪj/
-    translation: Pokrovsk (adj)
-    pos: adj
-    gender: m
-  - lemma: портовий
-    ipa: /pɔrtɔˈvɪj/
-    translation: port (adj)
-    pos: adj
-    gender: m
-  - lemma: прокат
-    ipa: /prɔˈkat/
-    translation: rolled metal
-    pos: noun
-    gender: m
-  - lemma: слобода
-    ipa: /slɔbɔˈda/
-    translation: sloboda (historical free settlement)
-    pos: noun
-    gender: f
-  - lemma: слобожани
-    ipa: /slɔbɔˈʒanɪ/
-    translation: Slobozhanians (people of Slobozhanshchyna)
-    pos: noun
-    gender: pl
-  - lemma: слобожанський
-    ipa: /slɔbɔˈʒansʲkɪj/
-    translation: Slobozhanskyi
-    pos: adj
-    gender: m
-  - lemma: слобідський
-    ipa: /slɔbidˈsʲkɪj/
-    translation: Slobidskyi (adj form of sloboda)
-    pos: adj
-    gender: m
-  - lemma: східноукраїнський
-    ipa: /sxidnɔukraˈjinsʲkɪj/
-    translation: East Ukrainian
-    pos: adj
-    gender: m
-  - lemma: УЄФА
-    ipa: /u jɛ fa/
-    translation: UEFA
-    pos: propn
-    gender: f
-  - lemma: ФК
-    ipa: /ɛf ka/
-    translation: FC (Football Club)
-    pos: noun
-    gender: m
-  - lemma: футбол
-    ipa: /futˈbɔl/
-    translation: football (soccer)
-    pos: noun
-    gender: m
-  - lemma: фізик
-    ipa: /ˈfʲizɪk/
-    translation: physicist
-    pos: noun
-    gender: m
-  - lemma: хокей
-    ipa: /ˈxɔkɛj/
-    translation: hockey
-    pos: noun
-    gender: m
-  - lemma: хокейний
-    ipa: /xɔˈkɛjnɪj/
-    translation: hockey (adj)
-    pos: adj
-    gender: m
-  - lemma: шахта
-    ipa: /ˈʃaxta/
-    translation: mine
-    pos: noun
-    gender: f
-  - lemma: Шахтар
-    ipa: /ʃaxˈtar/
-    translation: Shakhtar (Donetsk football club)
-    pos: propn
-    gender: m
-  - lemma: шахтарський
-    ipa: /ʃaxˈtarsʲkɪj/
-    translation: miner's
-    pos: adj
-    gender: m
-  - lemma: Джон Юз
-    ipa: /dʒɔn juz/
-    translation: John Hughes
-    pos: propn
-    gender: m
-  - lemma: Юзівка
-    ipa: /ˈjuziu̯ka/
-    translation: Yuzivka (historical name of Donetsk)
-    pos: propn
-    gender: f
-  - lemma: єврей
-    ipa: /jɛu̯ˈrɛj/
-    translation: Jew
-    pos: noun
-    gender: m
+- lemma: аерокосмічний
+  ipa: /aɛrɔkɔsmˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: вболівати
+  ipa: /ʋbɔliʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: величина
+  ipa: /ʋɛlɪt͡ʃɪnˈa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: вуглевидобуток
+  ipa: /ʋuɦlɛʋˈɪdɔbutɔk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вугільний
+  ipa: /ʋˈuɦilʲnɪj/
+  translation: ''
+  pos: adj
+- lemma: гімн
+  ipa: /ɦimn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: донбаський
+  ipa: /dɔnbˈasʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: донецький
+  ipa: /dɔnˈɛt͡sʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: донеччина
+  ipa: /dɔnˈɛt͡ʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: зустрінути
+  ipa: /zustrˈinutɪ/
+  translation: ''
+  pos: verb
+- lemma: каразінський
+  ipa: /karazinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: квітка-основ'яненко
+  ipa: /kʋˈitka-ɔsnɔʋjanɛnkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ландау
+  ipa: /landˈau/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лауреат
+  ipa: /laurɛˈat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: луганськ
+  ipa: /luɦˈansʲk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: луганщина
+  ipa: /luɦˈanʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: людмила
+  ipa: /ljudmˈɪla/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: лівобережний
+  ipa: /liʋɔbɛrˈɛʒnɪj/
+  translation: ''
+  pos: adj
+- lemma: маріуполь
+  ipa: /mariˈupɔlʲ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: металургійний
+  ipa: /mɛtalurɦˈijnɪj/
+  translation: ''
+  pos: adj
+- lemma: металургія
+  ipa: /mɛtalˈurɦija/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: неодмінно
+  ipa: /nɛɔdmˈinnɔ/
+  translation: ''
+  pos: adv
+- lemma: нобелівський
+  ipa: /nˈɔbɛliʋsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: покинути
+  ipa: /pɔkˈɪnutɪ/
+  translation: ''
+  pos: verb
+- lemma: портовий
+  ipa: /pɔrtˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: прокат
+  ipa: /prɔkˈat/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: самосвідомість
+  ipa: /samɔsʋidˈɔmistʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: славний
+  ipa: /slˈaʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: специфіка
+  ipa: /spɛt͡sˈɪfika/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сталь
+  ipa: /stalʲ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сформуватися
+  ipa: /sfɔrmuʋˈatɪsja/
+  translation: ''
+  pos: verb
+- lemma: східноукраїнський
+  ipa: /sxidnɔukraˈjinsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: фк
+  ipa: /fk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: харків'янин
+  ipa: /xarkiʋˈjanɪn/
+  translation: ''
+  pos: noun
+- lemma: харківщина
+  ipa: /xˈarkiʋʃt͡ʃɪna/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хокей
+  ipa: /xɔkˈɛj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: хокейний
+  ipa: /xɔkˈɛjnɪj/
+  translation: ''
+  pos: adj
+- lemma: шахта
+  ipa: /ʃˈaxta/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: шахтарський
+  ipa: /ʃaxtˈarsʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: індустрія
+  ipa: /indˈustrija/
+  translation: ''
+  pos: noun
+  gender: f

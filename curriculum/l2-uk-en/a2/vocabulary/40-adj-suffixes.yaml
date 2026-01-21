@@ -3,370 +3,538 @@ level: A2
 version: '2.0'
 items:
 - lemma: академічний
-  ipa: ɐkɐdeˈmʲit͡ʃnɪj
-  translation: academic
+  ipa: /akadɛmˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: актриса
-  ipa: ɐkˈtrɪsɐ
-  translation: actress
+  ipa: /aktrˈɪsa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: берег
-  ipa: ˈbɛreh
-  translation: shore
-  pos: noun
-  gender: m
 - lemma: бізнесовий
-  ipa: bʲizneˈsɔʋɪj
-  translation: business (adj)
+  ipa: /biznɛsˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: вечірній
-  ipa: veˈt͡ʃʲirnʲij
-  translation: evening (adj)
+  ipa: /ʋɛt͡ʃˈirnij/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: вигляд
-  ipa: ˈvɪhlʲɐd
-  translation: appearance
+  ipa: /ʋˈɪɦljad/
+  translation: ''
   pos: noun
   gender: m
+- lemma: виробництво
+  ipa: /ʋɪrɔbnˈɪt͡stʋɔ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: властивість
+  ipa: /ʋlastˈɪʋistʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: вовняний
-  ipa: vovˈnʲɑnɪj
-  translation: woolen
+  ipa: /ʋˈɔʋnjanɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: водний
-  ipa: ˈvɔdnɪj
-  translation: water (adj)
+  ipa: /ʋˈɔdnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: відділ
-  ipa: ˈvʲidːil
-  translation: department
+  ipa: /ʋiddil/
+  translation: ''
   pos: noun
   gender: m
+- lemma: відкинути
+  ipa: /ʋidkˈɪnutɪ/
+  translation: ''
+  pos: verb
+- lemma: відповідно
+  ipa: /ʋidpɔʋˈidnɔ/
+  translation: ''
+  pos: adv
+- lemma: галуза
+  ipa: /ɦalˈuza/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: галузь
+  ipa: /ɦˈaluzʲ/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: галушка
-  ipa: hɐˈluʃkɐ
-  translation: dumpling
+  ipa: /ɦalˈuʃka/
+  translation: ''
   pos: noun
   gender: f
+- lemma: гаряче
+  ipa: /ɦarˈjat͡ʃɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: географічний
-  ipa: heohrɐˈfʲit͡ʃnɪj
-  translation: geographic
+  ipa: /ɦɛɔɦrafˈit͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: географія
-  ipa: heoˈhrɑfʲijɐ
-  translation: geography
-  pos: noun
-  gender: f
 - lemma: гострий
-  ipa: ˈhɔstrɪj
-  translation: spicy/sharp
+  ipa: /ɦˈɔstrɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: дах
-  ipa: dɑx
-  translation: roof
+  ipa: /dax/
+  translation: ''
   pos: noun
   gender: m
 - lemma: двомісний
-  ipa: dvoˈmʲisnɪj
-  translation: double (room)
+  ipa: /dʋɔmˈisnɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: динамічний
+  ipa: /dɪnamˈit͡ʃnɪj/
+  translation: ''
+  pos: adj
 - lemma: дитячий
-  ipa: dɪˈtʲɑt͡ʃɪj
-  translation: children's
+  ipa: /dɪtˈjat͡ʃɪj/
+  translation: ''
   pos: adj
+- lemma: додавання
+  ipa: /dɔdaʋˈannja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дослідження
+  ipa: /dɔslˈidʒɛnnja/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: дотримуватися
+  ipa: /dɔtrˈɪmuʋatɪsja/
+  translation: ''
+  pos: verb
+- lemma: дружелюбніший
+  ipa: /druʒɛlˈjubniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: евити
+  ipa: /ɛʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: експериментувати
+  ipa: /ɛkspɛrɪmɛntuʋˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: еньк-ий
+  ipa: /ɛnʲk-ɪj/
+  translation: ''
+  pos: adj
+- lemma: енький
+  ipa: /ɛnʲkɪj/
+  translation: ''
+  pos: noun
   gender: m
-- lemma: доступний
-  ipa: doˈstupnɪj
-  translation: available/accessible
+- lemma: житт-ов-ий
+  ipa: /ʒɪtt-ɔʋ-ɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: евий
-  ipa: eʋɪj
-  translation: suffix -evyy
-  pos: other
-- lemma: житт
-  ipa: ʒɪt
-  translation: life (root)
-  pos: other
-- lemma: життєвий
-  ipa: ʒɪtʲˈtʲɛʋɪj
-  translation: life/vital
+- lemma: житт-єв-ий
+  ipa: /ʒɪtt-jɛʋ-ɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: записувати
+  ipa: /zapˈɪsuʋatɪ/
+  translation: ''
+  pos: verb
+- lemma: звертати
+  ipa: /zʋɛrtˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: зелені
+  ipa: /zɛlˈɛni/
+  translation: ''
+  pos: noun
+- lemma: зьк-
+  ipa: /zʲk-/
+  translation: ''
+  pos: noun
+- lemma: йтися
+  ipa: /jtˈɪsja/
+  translation: ''
+  pos: verb
+- lemma: кам'яний
+  ipa: /kamjanˈɪj/
+  translation: ''
+  pos: adj
 - lemma: каштановий
-  ipa: kɐʃˈtɑnoʋɪj
-  translation: chestnut/auburn
+  ipa: /kaʃtˈanɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: кислий
-  ipa: ˈkɪslɪj
-  translation: sour
+  ipa: /kˈɪslɪj/
+  translation: ''
   pos: adj
-- lemma: київний
-  ipa: kɪˈjiznɪj
-  translation: Kyiv (adj typo? київський?)
-  pos: adj
-  gender: m
-- lemma: ковбаса
-  ipa: kou̯bɐˈsɑ
-  translation: sausage
+- lemma: київнити
+  ipa: /kɪjiʋnɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: ковбас
+  ipa: /kɔʋbˈas/
+  translation: ''
   pos: noun
-  gender: f
+  gender: m
 - lemma: козацький
-  ipa: koˈzɑt͡sʲkɪj
-  translation: Cossack (adj)
+  ipa: /kɔzˈat͡sʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: кольоровий
-  ipa: kolʲoˈrɔʋɪj
-  translation: colored
+  ipa: /kɔlʲɔrˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: континентальний
-  ipa: kontɪnenˈtɑlʲnɪj
-  translation: continental
+  ipa: /kɔntɪnɛntˈalʲnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: корисний
-  ipa: koˈrɪsnɪj
-  translation: useful/healthy
-  pos: adj
-- lemma: лисенко
-  ipa: ˈlɪsenko
-  translation: Lysenko
-  pos: propn
-  gender: m
-- lemma: людський
-  ipa: lʲudˈsʲkɪj
-  translation: human (adj)
-  pos: adj
-  gender: m
-- lemma: мапа
-  ipa: ˈmɑpɐ
-  translation: map
+- lemma: концепція
+  ipa: /kɔnt͡sˈɛpt͡sija/
+  translation: ''
+  pos: noun
+- lemma: корінь
+  ipa: /kˈɔrinʲ/
+  translation: ''
   pos: noun
   gender: f
-- lemma: математик
-  ipa: mɐteˈmɑtɪk
-  translation: mathematician
+- lemma: котик
+  ipa: /kˈɔtɪk/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: красити
+  ipa: /krˈasɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: курс
+  ipa: /kurs/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лисенко
+  ipa: /lˈɪsɛnkɔ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: м'якенький
+  ipa: /mjakˈɛnʲkɪj/
+  translation: ''
+  pos: adj
+- lemma: мапа
+  ipa: /mˈapa/
+  translation: ''
   pos: noun
   gender: f
 - lemma: математичний
-  ipa: mɐtemɐˈtɪt͡ʃnɪj
-  translation: mathematical
+  ipa: /matɛmatˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
+- lemma: матеріал
+  ipa: /matɛriˈal/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: модний
-  ipa: ˈmɔdnɪj
-  translation: fashionable
+  ipa: /mˈɔdnɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: морський
-  ipa: morˈsʲkɪj
-  translation: marine/sea
+  ipa: /mɔrsʲkˈɪj/
+  translation: ''
   pos: adj
-  gender: f
-- lemma: музик
-  ipa: ˈmuzɪk
-  translation: musician (typo? музикант?)
-  pos: other
-- lemma: музич
-  ipa: muˈzɪt͡ʃ
-  translation: music (root)
-  pos: other
+- lemma: музик-
+  ipa: /muzˈɪk-/
+  translation: ''
+  pos: noun
+- lemma: музичити
+  ipa: /muzˈɪt͡ʃɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: музичити-нити
+  ipa: /muzˈɪt͡ʃɪtɪ-nɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: музичн
+  ipa: /muzɪt͡ʃn/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: музичний
-  ipa: muˈzɪt͡ʃnɪj
-  translation: musical
+  ipa: /muzˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
+- lemma: н-ий
+  ipa: /n-ɪj/
+  translation: ''
+  pos: adj
+- lemma: наук-
+  ipa: /naˈuk-/
+  translation: ''
+  pos: noun
+- lemma: науков
+  ipa: /naukɔʋ/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: науковий
-  ipa: nɐuˈkɔʋɪj
-  translation: scientific
+  ipa: /naukˈɔʋɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: науковний
+  ipa: /naukɔʋnɪj/
+  translation: ''
+  pos: adj
+- lemma: незмінний
+  ipa: /nɛzmˈinnɪj/
+  translation: ''
+  pos: adj
+- lemma: обираючи
+  ipa: /ɔbɪrˈajut͡ʃɪ/
+  translation: ''
+  pos: verb
 - lemma: ов
-  ipa: oʋ
-  translation: suffix -ov
-  pos: other
-- lemma: овий
-  ipa: oʋɪj
-  translation: suffix -ovyy
-  pos: other
-- lemma: одномісний
-  ipa: odnoˈmʲisnɪj
-  translation: single (room)
+  ipa: /ɔʋ/
+  translation: ''
+  pos: noun
+- lemma: ов-
+  ipa: /ɔʋ-/
+  translation: ''
+  pos: noun
+- lemma: ов-ий
+  ipa: /ɔʋ-ɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: овити
+  ipa: /ɔʋɪtɪ/
+  translation: ''
+  pos: verb
+- lemma: одномісний
+  ipa: /ɔdnɔmˈisnɪj/
+  translation: ''
+  pos: adj
 - lemma: ок
-  ipa: ɔk
-  translation: suffix -ok
-  pos: other
+  ipa: /ɔk/
+  translation: ''
+  pos: noun
 - lemma: пейзаж
-  ipa: pejˈzɑʒ
-  translation: landscape
+  ipa: /pɛjzˈaʒ/
+  translation: ''
   pos: noun
   gender: m
 - lemma: перець
-  ipa: ˈpɛret͡sʲ
-  translation: pepper
+  ipa: /pˈɛrɛt͡sʲ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: побут
-  ipa: ˈpɔbut
-  translation: daily life
-  pos: noun
-  gender: m
-- lemma: полтавський
-  ipa: polˈtɑu̯sʲkɪj
-  translation: Poltava (adj)
-  pos: adj
   gender: f
-- lemma: політичний
-  ipa: polʲiˈtɪt͡ʃnɪj
-  translation: political
+- lemma: полтавський
+  ipa: /pɔltˈaʋsʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: політичний
+  ipa: /pɔlitˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: помічати
+  ipa: /pɔmit͡ʃˈatɪ/
+  translation: ''
+  pos: verb
 - lemma: поселення
-  ipa: poˈsɛlenʲːɐ
-  translation: settlement
+  ipa: /pɔsˈɛlɛnnja/
+  translation: ''
   pos: noun
   gender: n
-- lemma: потужний
-  ipa: poˈtuʒnɪj
-  translation: powerful
-  pos: adj
-  gender: m
-- lemma: праг
-  ipa: prɑh
-  translation: Prague (root)
-  pos: propn
+- lemma: прага
+  ipa: /prˈaɦa/
+  translation: ''
+  pos: noun
   gender: f
 - lemma: празький
-  ipa: ˈprɑzʲkɪj
-  translation: Prague (adj)
+  ipa: /prˈazʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: рушник
-  ipa: ruʃˈnɪk
-  translation: embroidered towel
+- lemma: природніший
+  ipa: /prɪrɔdniʃɪj/
+  translation: ''
+  pos: adj
+- lemma: приєднати
+  ipa: /prɪjɛdnˈatɪ/
+  translation: ''
+  pos: verb
+- lemma: приємність
+  ipa: /prɪˈjɛmnistʲ/
+  translation: ''
   pos: noun
-  gender: m
-- lemma: рідний
-  ipa: ˈrʲidnɪj
-  translation: native
-  pos: adj
-  gender: m
-- lemma: різноманітний
-  ipa: rʲiznomɐˈnʲitnɪj
-  translation: diverse
-  pos: adj
   gender: f
+- lemma: ручний
+  ipa: /rut͡ʃnˈɪj/
+  translation: ''
+  pos: adj
+- lemma: рушник
+  ipa: /ruʃnˈɪk/
+  translation: ''
+  pos: noun
+- lemma: рідний
+  ipa: /rˈidnɪj/
+  translation: ''
+  pos: adj
+- lemma: різноманітний
+  ipa: /riznɔmanˈitnɪj/
+  translation: ''
+  pos: adj
+- lemma: само
+  ipa: /sˈamɔ/
+  translation: ''
+  pos: adv
 - lemma: свіженький
-  ipa: sʲvʲiˈʒɛnʲkɪj
-  translation: fresh
+  ipa: /sʋiʒˈɛnʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: симпатичний
-  ipa: sɪmpɐˈtɪt͡ʃnɪj
-  translation: nice/cute
+  ipa: /sɪmpatˈɪt͡ʃnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: смак
-  ipa: smɑk
-  translation: taste
+- lemma: синога
+  ipa: /sɪnɔɦa/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: сирник
+  ipa: /sˈɪrnɪk/
+  translation: ''
   pos: noun
   gender: m
-- lemma: сонний
-  ipa: ˈsɔnːɪj
-  translation: sleepy
+- lemma: солодкий
+  ipa: /sɔlˈɔdkɪj/
+  translation: ''
   pos: adj
-  gender: m
+- lemma: сонний
+  ipa: /sˈɔnnɪj/
+  translation: ''
+  pos: adj
 - lemma: співробітник
-  ipa: /spiu̯roˈbʲitnɪk/
-  translation: employee; coworker
+  ipa: /spiʋrɔbˈitnɪk/
+  translation: ''
   pos: noun
   gender: m
 - lemma: стандартний
-  ipa: stɐnˈdɑrtnɪj
-  translation: standard
+  ipa: /standˈartnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: старовинний
-  ipa: stɐroˈvɪnːɪj
-  translation: ancient
-  pos: adj
-  gender: m
-- lemma: сучасний
-  ipa: suˈt͡ʃɑsnɪj
-  translation: modern
-  pos: adj
-  gender: m
-- lemma: тепленький
-  ipa: teˈplɛnʲkɪj
-  translation: warm
-  pos: adj
-  gender: m
-- lemma: точний
-  ipa: ˈtɔt͡ʃnɪj
-  translation: exact
-  pos: adj
-- lemma: фундамент
-  ipa: funˈdɑment
-  translation: foundation
-  pos: noun
-  gender: m
-- lemma: фізика
-  ipa: ˈfʲizɪkɐ
-  translation: physics
+- lemma: стара
+  ipa: /starˈa/
+  translation: ''
   pos: noun
   gender: f
-- lemma: холод
-  ipa: ˈxɔlod
-  translation: cold
-  pos: propn
-  gender: m
-- lemma: чеський
-  ipa: ˈt͡ʃɛsʲkɪj
-  translation: Czech (adj)
+- lemma: старовинний
+  ipa: /starɔʋˈɪnnɪj/
+  translation: ''
   pos: adj
+- lemma: статичний
+  ipa: /statˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: ськ-ий
+  ipa: /sʲk-ɪj/
+  translation: ''
+  pos: adj
+- lemma: талант
+  ipa: /talˈant/
+  translation: ''
+  pos: noun
   gender: m
+- lemma: теоретичний
+  ipa: /tɛɔrɛtˈɪt͡ʃnɪj/
+  translation: ''
+  pos: adj
+- lemma: тихий
+  ipa: /tˈɪxɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: торговий
+  ipa: /tɔrɦˈɔʋɪj/
+  translation: ''
+  pos: adj
+- lemma: україн
+  ipa: /ukraˈjin/
+  translation: ''
+  pos: adj
+- lemma: україн-
+  ipa: /ukraˈjin-/
+  translation: ''
+  pos: noun
+- lemma: україн-ський
+  ipa: /ukrajin-sʲkɪj/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: українськ
+  ipa: /ukraˈjinsʲk/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: уникнути
+  ipa: /unˈɪknutɪ/
+  translation: ''
+  pos: verb
+- lemma: училище
+  ipa: /ut͡ʃˈɪlɪʃt͡ʃɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: характеристика
+  ipa: /xaraktɛrˈɪstɪka/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хлопців
+  ipa: /xlˈɔpt͡siʋ/
+  translation: ''
+  pos: adj
+- lemma: холодн
+  ipa: /xɔlɔdn/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: холодне
+  ipa: /xɔlˈɔdnɛ/
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: цьк-
+  ipa: /t͡sʲk-/
+  translation: ''
+  pos: noun
+- lemma: чеський
+  ipa: /t͡ʃˈɛsʲkɪj/
+  translation: ''
+  pos: adj
 - lemma: чех
-  ipa: t͡ʃɛx
-  translation: Czech (person)
-  pos: propn
+  ipa: /t͡ʃɛx/
+  translation: ''
+  pos: noun
   gender: m
 - lemma: чистенький
-  ipa: t͡ʃɪsˈtɛnʲkɪj
-  translation: clean
+  ipa: /t͡ʃɪstˈɛnʲkɪj/
+  translation: ''
   pos: adj
-  gender: m
 - lemma: шумний
-  ipa: ˈʃumnɪj
-  translation: noisy
+  ipa: /ʃˈumnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: чоловічий
-  ipa: t͡ʃoloˈvʲit͡ʃɪj
-  translation: male; men's (adj)
+- lemma: якісний
+  ipa: /ˈjakisnɪj/
+  translation: ''
   pos: adj
-  gender: m
-- lemma: жіночий
-  ipa: ʒʲiˈnɔt͡ʃɪj
-  translation: female; women's (adj)
-  pos: adj
-  gender: m
-- lemma: єв
-  ipa: jɛʋ
-  translation: suffix -yev
-  pos: other
-- lemma: євий
-  ipa: jɛʋɪj
-  translation: suffix -yevyy
-  pos: other
+- lemma: євити
+  ipa: /jɛʋɪtɪ/
+  translation: ''
+  pos: verb

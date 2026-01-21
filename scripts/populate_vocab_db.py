@@ -18,6 +18,9 @@ from pathlib import Path
 DB_PATH = "curriculum/l2-uk-en/vocabulary.db"
 CURRICULUM_PATH = "curriculum/l2-uk-en"
 
+# Core levels only - exclude tracks (b2-hist, c1-bio, etc.)
+CORE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -132,9 +135,13 @@ def populate_db():
     # User user's strict structure: curriculum/l2-uk-en/a1/*.md
     
     files = list(base_path.glob("**/*.md"))
-    files = [f for f in files if "legacy" not in str(f) and f.name[0].isdigit()]
+    # Filter: only core levels, no legacy, filename starts with digit
+    files = [f for f in files 
+             if "legacy" not in str(f) 
+             and f.name[0].isdigit()
+             and f.parent.name.lower() in CORE_LEVELS]
     
-    print(f"Found {len(files)} module files.")
+    print(f"Found {len(files)} module files in core levels ({', '.join(CORE_LEVELS)}).")
     
     # Sort files to process in order (A1 M01 -> C2 ...)
     files.sort(key=lambda x: (x.parent.name, x.name))
