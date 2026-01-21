@@ -98,6 +98,28 @@ Each phase prompt explicitly states:
 
 Rationale: If an agent cannot follow this simple instruction, the problem is the agent, not the tooling. Adding hash checks or write blockers adds complexity without solving the root cause.
 
+### Phase Rewind Protocol
+
+When a fundamental flaw is found in a locked file that blocks progress:
+
+1. Agent outputs: **"PHASE UNLOCK REQUIRED: [reason]"**
+2. Agent identifies which upstream phase needs correction
+3. Agent fixes the upstream file
+4. Agent re-runs the QA phase for that upstream file
+5. Only after upstream QA passes, agent resumes the blocked phase
+
+Example:
+```
+PHASE UNLOCK REQUIRED: meta.yaml activity_hints specify "quiz" but
+content has no factual recall material suitable for quiz questions.
+
+Rewinding to: module-meta
+Fix: Update activity_hints to match actual content possibilities
+Re-running: module-meta-qa
+```
+
+This ensures locked files are only modified through explicit, auditable rewind - not silently edited to pass validation.
+
 ---
 
 ## Design Details
@@ -271,6 +293,8 @@ sources:
 | Duplicates | script | None |
 
 ### Phase 9: module-integrate
+
+> **CRITICAL ADDITION:** This phase addresses a major gap in current workflows. Today, nothing verifies that `activity_hints` in meta actually match generated activities, or that content outline headings match the actual prose sections. Phase 9 catches cross-file misalignments that per-file QA cannot detect.
 
 **Final alignment check:**
 
@@ -464,13 +488,15 @@ After migration completes, legacy commands will be deprecated.
 
 ---
 
+## Design Decisions
+
+1. **No orchestrator command (for now).** Keep phases manual so agent/user validates each gate individually. Chaining can be automated later once prompts are stable.
+
+2. **Partial phase runs allowed.** If module-lesson-qa finds issues, re-run module-lesson without starting from module-meta. Use Phase Rewind Protocol only when upstream file itself is flawed.
+
 ## Open Questions
 
-1. **Orchestrator command?** Should there be a `/module-create` that runs all 9 phases in sequence, or always run phases individually?
-
-2. **Cumulative vocab database format?** Current per-level YAMLs vs unified database for cross-level queries.
-
-3. **Partial phase runs?** If module-lesson-qa finds issues, can we re-run module-lesson without starting from module-meta?
+1. **Cumulative vocab database format?** Current per-level YAMLs vs unified database for cross-level queries.
 
 ---
 
@@ -485,3 +511,7 @@ See `docs/dev/PHASE-WORKFLOW-ANALYSIS.md` for the complete mapping of all 42 cur
 | Date | Change |
 |------|--------|
 | 2026-01-21 | Initial draft |
+| 2026-01-21 | Add Phase Rewind Protocol (Gemini feedback) |
+| 2026-01-21 | Decide: no orchestrator command for now (Gemini feedback) |
+| 2026-01-21 | Emphasize Phase 9 as critical addition (Gemini feedback) |
+| 2026-01-21 | Update migration: all levels will migrate, not just tracks |
