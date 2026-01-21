@@ -39,14 +39,14 @@ This means:
 
 **Why does Ukrainian do this?** Historically, the genitive case was used to mark the **target** or **affected entity** of an action. When you «see someone,» that person is affected by your gaze — so genitive made sense! Over centuries, this became the standard for all animate direct objects.
 
-### Masculine Nouns Ending in -а
+### Masculine Nouns Ending in -о
 
-Some masculine nouns already end in -а (like **тато**, **дідусь**, **суддя**). For these, the accusative is **-у**:
+Some masculine nouns end in -о (like **тато**, **батько**, **Данило**). For these, the accusative is **-а**:
 
 | Nominative | Accusative | Example                                     |
 | ---------- | ---------- | ------------------------------------------- |
-| тато       | тат**у**   | Я люблю **тата**. (I love dad.)             |
-| дідусь     | дідус**я** | Вона бачить **дідуся**. (She sees grandpa.) |
+| тато       | тат**а**   | Я люблю **тата**. (I love dad.)             |
+| Данило     | Данил**а** | Вона бачить **Данило**. (She sees Danylo (Daniel).) |
 
 ### Feminine Animate Nouns
 
