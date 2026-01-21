@@ -861,13 +861,20 @@ Audit output categories:
 - **WARN**: Should fix (richness, variety)
 - **INFO**: Optional improvement
 
-## Iteration Limit
+## NO ITERATION LIMIT
 
-Maximum 3 fix iterations per stage. If still failing after 3:
+**DO NOT STOP UNTIL ALL GATES PASS.**
 
-1. Report the persistent issues
-2. Ask user for guidance
-3. Consider rebuilding from earlier stage
+There is NO maximum iteration count. Loop until 100% complete.
+
+- ❌ Do NOT stop at 80% and report "most issues fixed"
+- ❌ Do NOT ask user "is this good enough?"
+- ❌ Do NOT claim you "tried 3 times"
+- ✅ Keep fixing until ALL gates show ✅
+- ✅ If stuck on same issue, try different approach
+- ✅ If truly impossible (external dependency), THEN ask user
+
+**The only acceptable outcome is: ALL GATES PASS.**
 
 ## Output on PASS
 

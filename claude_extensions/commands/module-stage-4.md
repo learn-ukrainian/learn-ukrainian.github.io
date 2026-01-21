@@ -192,10 +192,11 @@ Validate ALL Ukrainian text against these sources:
 - Call appropriate stage command
 - Then return to this stage
 
-**Maximum 3 iterations.** If still failing:
+**NO ITERATION LIMIT.** Keep fixing until ALL gates pass.
 
-- Report persistent issues
-- Ask user for guidance
+- Do NOT stop at 80% and claim "most fixed"
+- Do NOT ask if "good enough"
+- Loop until 100% complete
 
 ### Step 5b: Vocabulary Sync Check (B2+)
 
@@ -309,14 +310,8 @@ Statistics:
 - Interactive elements: XX
 ```
 
-**On FAIL (after 3 iterations):**
+**FAIL IS NOT AN OPTION.**
 
-```
-MODULE NEEDS MANUAL REVIEW
+Do not output "NEEDS MANUAL REVIEW". Keep working until PASS.
 
-Persistent issues:
-1. [issue]
-2. [issue]
-
-Recommendation: [rebuild from stage X / manual edit / user decision]
-```
+The only acceptable output is "MODULE APPROVED" with ALL gates green.
