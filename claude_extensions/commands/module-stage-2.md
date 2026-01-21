@@ -1,5 +1,7 @@
 # Module Stage 2: Content
 
+> **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
+
 Fill the skeleton with rich instructional content.
 
 ## Usage
@@ -37,7 +39,12 @@ For each module in range:
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+### Step 0: Context Priming (MANDATORY)
+
+1. **Read Stage Instructions:** `claude_extensions/stages/stage-2-content.md`
+2. **Read Appropriate Template:** (See list in `stage-2-content.md`)
+3. **Load Architect Skill:** Identify and read the required architect skill from the table in Step 4.
+4. **Task Boundary Acknowledgement:** State in your task boundary: "I have read the targets for word count, immersion, and pedagogy and will apply them sequentially."
 
 ### Step 1: Read Stage Instructions
 
@@ -61,6 +68,7 @@ If file doesn't exist or has no skeleton, STOP and report: "Run Stage 1 first."
 Before writing content, verify the module has a detailed `content_outline`.
 
 1. **Run Check:**
+
    ```bash
    .venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/{level}/meta/{slug}.yaml
    ```
@@ -72,14 +80,27 @@ Before writing content, verify the module has a detailed `content_outline`.
 
 3. **If Output says "already hydrated":** Proceed to Step 3.
 
-### Step 3: Determine Targets
+### Step 3: Load Content Outline & Determine Targets
 
-From the level, identify:
-- Word count target
+**CRITICAL:** Read the module's meta YAML file to get section-level word targets:
+
+1. Read `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
+2. Extract the `content_outline` array
+3. For EACH section in content_outline:
+   - Section name (e.g., "Вступ")
+   - Word target (e.g., 400)
+   - Content points (guide topics to cover)
+
+From the level, also identify:
+
+- Overall module word count target
 - Immersion percentage
 - Example sentence minimum
 - Engagement box minimum
 - Mini-dialogue minimum
+
+**During writing:** Generate each section to meet its word target (±10%).
+Do NOT proceed to next section until current section meets its target.
 
 ### Step 4: Write Content
 
@@ -87,15 +108,15 @@ From the level, identify:
 
 **Use the appropriate architect skill** for focus-area guidance:
 
-| Module Type | Skill |
-|-------------|-------|
-| Grammar (B1-B2) | `grammar-module-architect` |
-| Vocabulary (B1) | `vocab-module-architect` |
-| Cultural (B1-C1) | `cultural-module-architect` |
-| History/Biography (B2-C1) | `history-module-architect` |
-| Integration (B1-B2) | `integration-module-architect` |
-| Checkpoint (All) | `checkpoint` |
-| Literature (LIT) | `literature-module-architect` |
+| Module Type               | Skill                          |
+| ------------------------- | ------------------------------ |
+| Grammar (B1-B2)           | `grammar-module-architect`     |
+| Vocabulary (B1)           | `vocab-module-architect`       |
+| Cultural (B1-C1)          | `cultural-module-architect`    |
+| History/Biography (B2-C1) | `history-module-architect`     |
+| Integration (B1-B2)       | `integration-module-architect` |
+| Checkpoint (All)          | `checkpoint`                   |
+| Literature (LIT)          | `literature-module-architect`  |
 
 Replace `[placeholder]` markers with rich content following template guidance:
 
@@ -105,49 +126,31 @@ Replace `[placeholder]` markers with rich content following template guidance:
 4. **Practice**: Pattern drills, model exercises
 
 **CRITICAL:** Use ONLY vocabulary from:
+
 - The module's vocabulary table
 - Prior modules (cumulative)
 
 **Template checklist:**
+
 - [ ] All required sections from template present
 - [ ] Common pitfalls from template avoided
 - [ ] Structure matches template pattern
 
-### Step 5: Verify
+### Step 5: Verify & Manual Review (MANDATORY)
 
-- [ ] Word count meets target
-- [ ] Example sentences meet minimum
-- [ ] Engagement boxes meet minimum
-- [ ] Mini-dialogues present
-- [ ] No vocabulary violations
-- [ ] Specific Ukrainian locations used
-- [ ] Immersion % appropriate
-- [ ] **Ukrainian grammar validated** (see below)
-
-**Ukrainian Grammar Validation (MANDATORY):**
-
-Validate ALL Ukrainian text against these sources:
-- ✅ **Словник.UA** (slovnyk.ua) - standard spelling
-- ✅ **Словарь Грінченка** - authentic Ukrainian forms
-- ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
-- ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
-
-**Auto-fail Russianisms:**
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| кушать | їсти |
-| да | так |
-| кто | хто |
-| нету | немає |
-| приймати участь | брати участь |
-| самий кращий | найкращий |
-| слідуючий | наступний |
-
-**Auto-fail Calques:**
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| робити сенс | мати сенс |
-| брати місце | відбуватися |
+1. **Self-Check:**
+   - [ ] **Section-level word counts:** Each section meets its target from content_outline (±10%)
+   - [ ] **Overall word count:** Total meets module target (instructional core only)
+   - [ ] Example sentences meet minimum
+   - [ ] Engagement boxes meet minimum
+   - [ ] Mini-dialogues present (if required)
+   - [ ] Uses ONLY vocabulary from YAML + prior modules
+2. **Naturalness Review:** Perform an internal linguistic review of all Ukrainian text. Follow the `Naturalness Quality Checklist` in the template.
+3. **Linguistic Purity:** Verify ZERO Russian phonetic or lexical "ghost words".
+4. **Generate Review File:**
+   - Calculate Content Hash using project logic.
+   - Manually write `curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md`.
+   - Set `Status: PASS` only if you have verified the content yourself.
 
 ### Step 6: Run Audit
 
@@ -158,6 +161,7 @@ Validate ALL Ukrainian text against these sources:
 ### Output
 
 Report:
+
 - Word count (instructional core)
 - Example sentences count
 - Engagement boxes count

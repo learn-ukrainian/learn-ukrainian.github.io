@@ -1,9 +1,29 @@
 # Stage 4: Review & Fix Loop
 
+> **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
+>
+> All audit gates MUST pass. NO exceptions. NO negotiation. Work until ✅ on ALL gates.
+
 > **⚠️ CRITICAL: Always use `.venv/bin/python` for ALL Python scripts.**
 > Never use `python3` or `python` directly - dependencies are in the venv.
 
 Review the module, fix violations, repeat until PASS.
+
+## SUCCESS CRITERIA
+
+**A module is COMPLETE when:**
+- ✅ ALL audit gates show green checkmarks
+- ✅ Naturalness score is 8+/10
+- ✅ Word count meets or exceeds target
+- ✅ NO violations remain
+
+**INCOMPLETE means:**
+- ❌ ANY gate shows red X
+- ⚠️ ANY gate shows warning
+- Word count below target
+- ANY violations remain
+
+**If incomplete: KEEP WORKING. Loop until complete.**
 
 ## Input
 
@@ -728,6 +748,88 @@ You are the last line of defense for core modules. Be aggressive in finding erro
 **Content Hash:** Run `md5 -q {module}.md | cut -c1-8` to get the hash. If module changes after review, audit will FAIL as stale.
 
 </critical>
+
+---
+
+## ⚡ Specialized Fix Protocols
+
+### Common YAML Schema Violations - Quick Reference
+
+**Use this table to diagnose and fix schema errors immediately:**
+
+**For minimum item counts:** Check `claude_extensions/quick-ref/{level}.md` (each level has different minimums)
+
+| Error Pattern | Root Cause | Fix |
+|--------------|------------|-----|
+| Quiz/fill-in/true-false has too few items | Below level-specific minimum | Check quick-ref for your level's minimum, add items |
+| Cloze has too few blanks | Below level-specific minimum | Check quick-ref for your level's minimum, add blanks |
+| Fill-in: "missing required 'options'" | `options` field required for each item | Add `options: [opt1, opt2, opt3, opt4]` |
+| Cloze: "not valid under any schema" | Has both `blanks:` array AND inline `{a\|b}` | Remove `blanks:` array OR switch to numbered format |
+| "Field 'instructions' not recognized" | Schema requires singular | Change to `instruction:` (no 's') |
+| "Field 'id' not allowed" | `additionalProperties: false` | Remove `id:` field (only for LIT activities) |
+| "Unexpected character near apostrophe" | Ukrainian apostrophe in single quotes | Change to double quotes: `"інтерв'ю"` |
+| "Activity type 'writing' invalid" | Wrong type name | Use `essay-response` instead |
+| Unjumble: "array too short" | Less than 6 words | Add words to reach 6+ per sentence |
+
+### Fix Protocol: YAML Parse Errors
+
+**If audit shows "Error parsing YAML":**
+
+1. **Check for apostrophe conflicts:**
+   ```bash
+   grep -n "answer: '" activities/file.yaml
+   ```
+   Fix: Change all single-quoted strings with apostrophes to double quotes
+
+2. **Check for unquoted colons:**
+   ```bash
+   grep -n ": " activities/file.yaml | grep -v "^  *-"
+   ```
+   Fix: Quote any string values containing colons
+
+3. **Validate YAML syntax:**
+   ```bash
+   .venv/bin/python -c "import yaml; yaml.safe_load(open('activities/file.yaml'))"
+   ```
+
+### Fix Protocol: Schema Validation Errors
+
+**Step-by-step diagnostic:**
+
+1. **Identify activity index** from error: `Schema validation error at key '9'`
+2. **Count activities** in YAML (0-indexed, so key '9' = 10th activity)
+3. **Check activity type** and **compare to schema requirements:**
+   - Read `schemas/activities-{level}.schema.json` for your level (e.g., `activities-b2.schema.json`)
+   - Check `minItems`, `required` fields, `additionalProperties`
+   - Cross-reference with `claude_extensions/quick-ref/{level}.md` for minimums
+
+4. **Common fixes:**
+   - **Missing fields:** Add required fields (`title`, `instruction`, `items`)
+   - **Extra fields:** Remove fields not in schema (`id`, `instructions` with 's')
+   - **Wrong minimum:** Add items to meet level minimums (see quick-ref)
+   - **Wrong structure:** Fix nested object format (e.g., `options` array must have exactly 4 items)
+
+### Fix Protocol: Stale LLM Review
+
+```bash
+# Calculate new content hash
+.venv/bin/python << 'EOF'
+import sys, hashlib
+sys.path.append('scripts')
+from audit.core import extract_core_content, clean_for_stats
+
+content = open('curriculum/l2-uk-en/{level}/{file}.md').read()
+core = extract_core_content(content)
+prose = clean_for_stats(core)
+new_hash = hashlib.md5(prose.encode('utf-8')).hexdigest()[:8]
+print(f"New hash: {new_hash}")
+EOF
+
+# Update hash in LLM review file
+# Then run audit again to verify PASS
+```
+
+**CRITICAL:** After updating hash, run audit immediately to ensure review is now valid.
 
 ---
 

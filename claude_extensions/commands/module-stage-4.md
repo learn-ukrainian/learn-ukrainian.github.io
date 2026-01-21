@@ -1,5 +1,9 @@
 # Module Stage 4: Review & Fix
 
+> **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
+>
+> ALL audit gates MUST pass. Loop until complete. NO shortcuts.
+
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
 Review module, fix violations, loop until PASS.

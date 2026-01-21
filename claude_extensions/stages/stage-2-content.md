@@ -1,5 +1,9 @@
 # Stage 2: Content
 
+> **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
+>
+> All requirements are MANDATORY. No negotiation. No shortcuts.
+
 Fill the skeleton with rich instructional content.
 
 ## ⚠️ CRITICAL: Read the Template First!
@@ -66,6 +70,67 @@ Write ONLY the instructional content sections. Do NOT write activities.
 | LIT   | all    | 2200+ (often 2500-3000) |
 
 **Note:** Templates specify exact word count requirements. These are minimums; consult the template for details.
+
+## ⚠️ CRITICAL: Follow Content Outline Section Targets
+
+**BEFORE writing content, you MUST read the section-level word count targets:**
+
+### Step 1: Load Content Outline from Meta YAML
+
+1. **Read** `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
+2. **Extract** the `content_outline` array
+3. **Note** each section's:
+   - `section`: Section name (e.g., "Вступ", "Шлях до унії")
+   - `words`: Target word count for this section (e.g., 400, 800)
+   - `points`: Content guidance (topics to cover)
+
+**Example content_outline:**
+```yaml
+content_outline:
+  - section: "Вступ"
+    words: 400
+    points:
+      - "Історичний контекст XVI століття"
+      - "Значення унії для України"
+  - section: "Шлях до унії"
+    words: 800
+    points:
+      - "Криза ВКЛ"
+      - "Московська загроза"
+```
+
+### Step 2: Write Each Section to Target
+
+**CRITICAL RULE:** Generate each section to meet its specified word count (±10% tolerance).
+
+**Process:**
+1. Start with first section in outline
+2. Write content covering all `points` from outline
+3. Count words in that section
+4. If under target: expand with more examples, engagement boxes, details
+5. If over target (>110%): acceptable, but don't exceed 120%
+6. **DO NOT proceed to next section** until current section meets target
+7. Repeat for each section in outline
+
+**Validation Command (optional):**
+```bash
+# Count words in a section (between two ## headers)
+sed -n '/^## Section Name$/,/^## Next Section$/p' file.md | wc -w
+```
+
+### Step 3: Final Word Count Check
+
+After writing all sections:
+- **MUST** meet or exceed the module's overall `word_target` from meta YAML
+- **MUST** hit each section target (±10% tolerance) - no cumulative compensation
+- Individual sections CANNOT be short just because another is long
+- Balanced content across ALL sections is REQUIRED
+
+**Why This Matters:**
+The Architect skill carefully budgets word counts per section based on pedagogical importance. Following these targets ensures:
+- Balanced coverage (not rushing through key concepts)
+- Meeting minimum content richness requirements
+- Proper pacing for learner comprehension
 
 ## Immersion Targets
 
@@ -162,7 +227,8 @@ Box types:
 
 ## Validation Before Completing
 
-- [ ] Word count meets target (instructional core only)
+- [ ] **Section-level word counts:** Each section meets its target from content_outline (±10%)
+- [ ] **Overall word count:** Total meets module's word_target from meta YAML
 - [ ] Example sentences meet minimum
 - [ ] Engagement boxes meet minimum
 - [ ] Mini-dialogues present

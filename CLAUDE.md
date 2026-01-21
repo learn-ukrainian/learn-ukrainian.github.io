@@ -1,5 +1,16 @@
 # CLAUDE.md - Project Instructions
 
+> **⚠️ READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`**
+>
+> **These rules are ABSOLUTE. No negotiation. No exceptions.**
+> - Word count targets: MUST meet them
+> - Audit gates: ALL must pass (✅)
+> - Section targets: MUST hit each one
+> - Stage 4 loop: Work until COMPLETE
+> - Quality standards: NO shortcuts
+>
+> **If you cannot commit to these rules, STOP NOW.**
+
 > **Status**: See `docs/CURRENT-STATUS.md` for completion status and current focus.
 
 ## Critical Rules

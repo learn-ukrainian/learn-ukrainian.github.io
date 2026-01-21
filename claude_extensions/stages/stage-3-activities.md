@@ -50,6 +50,66 @@ answers: []
 
 ---
 
+## ⚠️ Common Schema Errors (Auto-Fail)
+
+**CRITICAL: Each level has different minimum item counts!**
+- Check your level quick-ref (`claude_extensions/quick-ref/{level}.md`) for specific minimums
+- Example: A2 quiz requires 8+ items, B2 quiz requires 10+ items
+
+### Universal Field Name Rules
+
+- ✅ `instruction` (singular) — REQUIRED
+- ❌ `instructions` (plural) — Schema violation!
+- ✅ `title` — REQUIRED for all activities
+- ❌ `id` — NOT allowed in most activity types (`additionalProperties: false`)
+
+### Fill-in Activity Requirements
+```yaml
+# ❌ WRONG - Missing options
+- sentence: "Text [___] here"
+  answer: correct
+
+# ✅ CORRECT - Has options array
+- sentence: "Text [___] here"
+  answer: correct
+  options: [correct, wrong1, wrong2, wrong3]  # REQUIRED, exactly 4
+```
+
+### Cloze Format Requirements
+```yaml
+# ❌ WRONG - Both inline AND blanks array
+passage: "Text with {correct|wrong1|wrong2} choices"
+blanks:
+  - correct
+  - wrong1
+
+# ✅ CORRECT - Inline format only
+passage: "Text with {correct|wrong1|wrong2|wrong3} choices"
+# NO blanks array when using inline format
+
+# ✅ ALSO CORRECT - Numbered format with blanks array
+passage: "Text with {1} and {2} here"
+blanks:
+  - id: 1
+    answer: correct
+    options: [correct, wrong1, wrong2, wrong3]
+```
+
+### Ukrainian Text in YAML
+```yaml
+# ❌ WRONG - Single quotes conflict with apostrophe
+answer: 'інтерв'ю'  # YAML parse error
+
+# ✅ CORRECT - Use double quotes
+answer: "інтерв'ю"
+```
+
+### Activity Type Names
+- ✅ `essay-response` — Correct
+- ❌ `writing` — Not valid, use `essay-response`
+
+---
+
 ## ⚡ Direct YAML Creation (Recommended)
 
 **For new modules or recreation, write activities directly in YAML:**
