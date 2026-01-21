@@ -1,10 +1,10 @@
-# Audit Report: 12-the-accusative-ii-people.md
-**Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
+# Audit Report: M12 — 12-the-accusative-ii-people.md
+**Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1343/750
+- **Words:** ✅ 1342/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -20,12 +20,18 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (8 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 195 | Included in Core |
+| **Presentation** | ✅ | 194 | Included in Core |
 | **Practice** | ⚪️ | 284 | Skipped |
 | **Production** | ➖ | 448 | Excluded Type |
 | **Cultural Insight** | ✅ | 296 | Included in Core |

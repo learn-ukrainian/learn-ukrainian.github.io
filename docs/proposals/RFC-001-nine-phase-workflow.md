@@ -389,18 +389,23 @@ scripts/
 
 ### Scope
 
-**IN SCOPE (new workflow):**
-- b2-hist (all modules)
-- c1-bio (all modules)
-- lit (all modules)
-- C2 (all modules)
+**ALL LEVELS** - New workflow applies everywhere, but in phases:
 
-**OUT OF SCOPE (keep current workflow):**
-- A1 (mostly complete)
-- A2 (mostly complete)
-- B1 (in progress, current workflow sufficient)
-- B2 core (in progress, current workflow sufficient)
-- C1 core (in progress, current workflow sufficient)
+**Rollout Phase 1 - New Content:**
+- b2-hist (new modules)
+- c1-bio (new modules)
+- lit (new modules)
+- C2 (new modules)
+- Any new modules in core levels (B1, B2, C1)
+
+**Rollout Phase 2 - Migration:**
+- A1 (34 modules)
+- A2 (57 modules)
+- B1 (91 modules)
+- B2 core (94 modules)
+- C1 core
+
+> **Why migrate existing content?** Current review process misses errors. Example: A1 Module 12 had heading "Masculine Nouns Ending in -а" with examples ending in -о. Caught by human contributor in PR #443, not by AI review. Smaller, focused QA prompts will catch what monolithic reviews miss.
 
 ### Rollout Strategy
 
@@ -409,24 +414,22 @@ scripts/
    - Compare results with current workflow
    - Refine prompts based on findings
 
-2. **Phase 2: b2-hist**
-   - Apply new workflow to all remaining b2-hist modules
+2. **Phase 2: Tracks + C2**
+   - Apply new workflow to all track modules and C2
    - Collect metrics: time to complete, audit pass rate, revision count
 
-3. **Phase 3: c1-bio + lit**
-   - Extend to biography and literature tracks
-   - No changes to core levels
+3. **Phase 3: Core Level Migration**
+   - Run `module-lesson-qa` and `module-act-qa` on existing A1-C1 modules
+   - Fix issues found
+   - No full rebuild required - just QA pass and fixes
 
-4. **Phase 4: C2**
-   - Apply to C2 modules
-   - Evaluate for potential backport to B2/C1 core
+### Coexistence (Temporary)
 
-### Coexistence
+During migration, both workflows exist:
+- `/module-stage-1` through `/module-stage-4` - legacy, being phased out
+- `/module-meta` through `/module-integrate` - new standard
 
-Both workflows can run in parallel:
-- `/module-stage-1` through `/module-stage-4` continue for core levels
-- `/module-meta` through `/module-integrate` for tracks + C2
-- Documentation clearly states which to use where
+After migration completes, legacy commands will be deprecated.
 
 ---
 
