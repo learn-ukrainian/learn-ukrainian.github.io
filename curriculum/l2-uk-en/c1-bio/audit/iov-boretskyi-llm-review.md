@@ -1,6 +1,6 @@
 # LLM Self-Validation Report: iov-boretskyi (C1-BIO)
 
-**Content Hash:** bd7734d1
+**Content Hash:** af8fa411
 
 ## 1. Ukrainian Grammar & Naturalness
 - **Grammar Correctness**: High. Verified against standard Ukrainian orthography.

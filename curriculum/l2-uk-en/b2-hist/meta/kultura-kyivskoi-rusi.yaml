@@ -4,8 +4,20 @@ slug: kultura-kyivskoi-rusi
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 4000
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - culture
+grammar:
+  - Past tense narrative
+  - Art and culture vocabulary
+objectives:
+  - Understand the development of writing and education in Rus
+  - Analyze the literary masterpieces like "Slovo o polku Ihorevim"
+  - Discuss the synthesis of Byzantine and local artistic traditions
 immersion: 100% Ukrainian
 sources:
 - name: Культура Київської Русі (Вікіпедія)
@@ -21,54 +33,28 @@ sources:
   type: primary
   notes: Epic poem text
 content_outline:
+- section: Читання
+  words: 50
 - section: Вступ — Культурний світ Русі
-  words: 480
-  points:
-  - Київська Русь як культурний простір Європи
-  - Візантійський вплив та місцева творчість
-  - Християнство як основа культури
-  - Писемність як ключ до цивілізації
+  words: 550
 - section: Писемність та освіта
-  words: 693
-  points:
-  - Кирилиця та глаголиця
-  - Школи при церквах та монастирях
-  - Берестяні грамоти — писемність народу
-  - Бібліотеки та скрипторії
+  words: 780
 - section: Література
-  words: 746
-  points:
-  - Літописання — «Повість минулих літ»
-  - «Слово о полку Ігоревім» — шедевр давньої поезії
-  - Житія святих — Борис і Гліб
-  - «Слово про закон і благодать» Іларіона
+  words: 800
 - section: Архітектура
-  words: 586
-  points:
-  - Дерев'яна архітектура — втрачена спадщина
-  - Кам'яне будівництво — візантійська традиція
-  - Софійські собори — Київ, Новгород, Полоцьк
-  - Печерські лаври та монастирі
+  words: 700
 - section: Образотворче мистецтво
-  words: 586
-  points:
-  - Мозаїки та фрески
-  - Іконопис — візантійська школа
-  - Ювелірне мистецтво — емаль, скань
-  - Книжкова мініатюра
+  words: 800
 - section: Музика та усна творчість
-  words: 533
-  points:
-  - Церковний спів
-  - Билини та історичні пісні
-  - Боян — легендарний співець
-  - Народна творчість
+  words: 650
+- section: Деколонізаційний погляд
+  words: 500
 - section: Підсумок
-  words: 376
-  points:
-  - Синтез візантійського та слов'янського
-  - Унікальність культури Русі
-  - Перехід до княжих усобиць
+  words: 450
+- section: Первинні джерела
+  words: 250
+- section: Потрібно більше практики?
+  words: 100
 vocabulary_hints:
   required:
   - писемність (literacy)
@@ -91,28 +77,32 @@ vocabulary_hints:
   - церковний спів (church chant)
 activity_hints:
 - type: reading
-  focus: Excerpt from "Slovo o polku Ihorevim"
-  source: Provide in module
-- type: image-analysis
-  focus: Kyivan Rus art and architecture
-  items: 10+ images
-- type: vocabulary
-  focus: Cultural and artistic terminology
-  items: 18+
-- type: quiz
-  focus: Cultural achievements of Kyivan Rus
-  items: 15+
+  focus: Culture as a manifesto
+  items: 1
 - type: match-up
-  focus: Match cultural artifacts to their descriptions
-  items: 12+
-- type: group-sort
-  focus: Categorize cultural works by type (literature, art, architecture)
-  items: 15+
-- type: discussion
-  focus: Що унікального в культурі Київської Русі порівняно з Візантією?
+  focus: Cultural vocabulary
+  items: 12
+- type: quiz
+  focus: Cultural code
+  items: 5
+- type: critical-analysis
+  focus: Art and decolonization
+  items: 3
+- type: essay-response
+  focus: Heritage and security
+  items: 1
+- type: select
+  focus: Music
+  items: 2
 prerequisites:
 - b2-hist-14 (St. Sophia Cathedral)
 - b2-hist-12 (Yaroslav the Wise)
 connects_to:
 - b2-hist-18 (People of Rus — everyday life)
 - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+
+naturalness:
+  score: 10
+  status: PASS
+  reviewed_by: Gemini
+  date: '2026-01-20'

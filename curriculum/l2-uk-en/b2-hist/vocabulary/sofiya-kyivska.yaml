@@ -1,6 +1,6 @@
-module: sofiya-kyivska
+module: 14-sofiya-kyivska
 level: B2
-version: '1.0'
+version: '2.0'
 items:
   - lemma: собор
     ipa: /soˈbɔr/
@@ -13,12 +13,12 @@ items:
     pos: noun
     gender: f
   - lemma: фреска
-    ipa: /'frɛskɑ/
+    ipa: /ˈfrɛskɑ/
     translation: fresco
     pos: noun
     gender: f
   - lemma: купол
-    ipa: /'kupol/
+    ipa: /ˈkupol/
     translation: dome
     pos: noun
     gender: m
@@ -28,76 +28,274 @@ items:
     pos: noun
     gender: m
   - lemma: візантійський
-    ipa: /vizɑn'tijçkɪj/
+    ipa: /vizɑnˈtʲijsʲkɪj/
     translation: Byzantine
     pos: adj
   - lemma: бароко
-    ipa: /bɑ'rɔko/
+    ipa: /bɑˈrɔko/
     translation: Baroque
     pos: noun
     gender: n
   - lemma: графіті
-    ipa: /ɡrɑ'fiti/
+    ipa: /ɦrɑˈfʲitʲi/
     translation: graffiti
     pos: noun
     gender: n
   - lemma: митрополит
-    ipa: /mɪtropolɪt/
+    ipa: /mɪtropoˈlɪt/
     translation: metropolitan (bishop)
     pos: noun
     gender: m
   - lemma: літописання
-    ipa: /lʲitopɪ'sɑɲːɑ/
+    ipa: /lʲitopɪˈsɑnʲːɑ/
     translation: chronicle writing
     pos: noun
     gender: n
   - lemma: іконопис
-    ipa: /i'kɔnopɪs/
+    ipa: /iˈkɔnopɪs/
     translation: icon painting
     pos: noun
     gender: m
   - lemma: смальта
-    ipa: /'smɑlʲtɑ/
-    translation: smalto (colored glass)
+    ipa: /ˈsmɑlʲtɑ/
+    translation: smalt (colored glass)
     pos: noun
     gender: f
   - lemma: заповідник
-    ipa: /zɑpo'vidnɪk/
+    ipa: /zɑpoˈvidnɪk/
     translation: sanctuary / reserve (museum)
     pos: noun
     gender: m
   - lemma: юрисдикція
-    ipa: /jurɪs'dɪkt͡sʲijɑ/
+    ipa: /jurɪsˈdɪkt͡sʲijɑ/
     translation: jurisdiction
     pos: noun
     gender: f
   - lemma: плінфа
-    ipa: /'plʲinfɑ/
+    ipa: /ˈplʲinfɑ/
     translation: plinthos (thin brick)
     pos: noun
     gender: f
   - lemma: Оранта
-    ipa: /o'rɑntɑ/
+    ipa: /oˈrɑntɑ/
     translation: Oranta (praying Virgin)
-    pos: noun
+    pos: propn
     gender: f
   - lemma: апсида
-    ipa: /ɑp'sɪdɑ/
+    ipa: /ɐpˈsɪdɑ/
     translation: apse
     pos: noun
     gender: f
   - lemma: саркофаг
-    ipa: /sɑrko'fɑɦ/
+    ipa: /sɑrkoˈfɑɦ/
     translation: sarcophagus
     pos: noun
     gender: m
   - lemma: навала
-    ipa: /nɑ'vɑlɑ/
+    ipa: /nɑˈvɑlɑ/
     translation: invasion
     pos: noun
     gender: f
   - lemma: спадщина
-    ipa: /'spɑdʒt͡ʃɪnɑ/
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
     translation: heritage / legacy
     pos: noun
     gender: f
+  - lemma: вівтар
+    ipa: /vivˈtɑr/
+    translation: altar
+    pos: noun
+    gender: m
+  - lemma: інтер'єр
+    ipa: /intɛrˈjɛr/
+    translation: interior
+    pos: noun
+    gender: m
+  - lemma: екстер'єр
+    ipa: /ɛkstɛrˈjɛr/
+    translation: exterior
+    pos: noun
+    gender: m
+  - lemma: колона
+    ipa: /koˈlɔnɑ/
+    translation: column
+    pos: noun
+    gender: f
+  - lemma: мазепа
+    ipa: /mɑˈzɛpɑ/
+    translation: Mazepa (Hetman)
+    pos: propn
+    gender: m
+  - lemma: могила
+    ipa: /moˈɦɪlɑ/
+    translation: grave; tomb
+    pos: noun
+    gender: f
+  - lemma: петро
+    ipa: /pɛˈtrɔ/
+    translation: Peter (Mohyla)
+    pos: propn
+    gender: m
+  - lemma: іларіон
+    ipa: /ilɑrʲiˈɔn/
+    translation: Ilarion (Metropolitan)
+    pos: propn
+    gender: m
+  - lemma: пантократор
+    ipa: /pɑntokˈrɑtɔr/
+    translation: Pantocrator (Christ Almighty)
+    pos: propn
+    gender: m
+  - lemma: хори
+    ipa: /ˈxɔrɪ/
+    translation: choir gallery; loft
+    pos: noun
+    gender: pl
+  - lemma: баня
+    ipa: /ˈbɑɲɑ/
+    translation: cupola; dome (architectural)
+    pos: noun
+    gender: f
+  - lemma: вапно
+    ipa: /vɐpˈnɔ/
+    translation: lime (material)
+    pos: noun
+    gender: n
+  - lemma: цем'янка
+    ipa: /t͡sɛˈmjɑnkɑ/
+    translation: crushed brick mixed with mortar
+    pos: noun
+    gender: f
+  - lemma: мур
+    ipa: /mur/
+    translation: wall (defensive/stone)
+    pos: noun
+    gender: m
+  - lemma: реставрація
+    ipa: /rɛstɐvˈrɑt͡sʲijɑ/
+    translation: restoration
+    pos: noun
+    gender: f
+  - lemma: константинополь
+    ipa: /konstɐntɪˈnɔpolʲ/
+    translation: Constantinople
+    pos: propn
+    gender: m
+  - lemma: юнеско
+    ipa: /juˈnɛsko/
+    translation: UNESCO
+    pos: propn
+    gender: n
+  - lemma: ансамбль
+    ipa: /ɐnˈsɑmblʲ/
+    translation: ensemble (architectural)
+    pos: noun
+    gender: m
+  - lemma: перлина
+    ipa: /pɛrˈlɪnɑ/
+    translation: pearl (metaphorical)
+    pos: noun
+    gender: f
+  - lemma: свідок
+    ipa: /ˈsvidɔk/
+    translation: witness
+    pos: noun
+    gender: m
+  - lemma: тисячоліття
+    ipa: /tɪsʲɐt͡ʃoˈlʲitʲːɑ/
+    translation: millennium
+    pos: noun
+    gender: n
+  - lemma: автентичний
+    ipa: /ɐwtɛnˈtɪt͡ʃnɪj/
+    translation: authentic
+    pos: adj
+  - lemma: унікальний
+    ipa: /unʲiˈkɑlʲnɪj/
+    translation: unique
+    pos: adj
+  - lemma: святиня
+    ipa: /svʲɐˈtɪɲɑ/
+    translation: shrine; sacred place
+    pos: noun
+    gender: f
+  - lemma: мудрість
+    ipa: /ˈmudrʲisʲtʲ/
+    translation: wisdom
+    pos: noun
+    gender: f
+  - lemma: бібліотека
+    ipa: /biblʲioˈtɛkɑ/
+    translation: library
+    pos: noun
+    gender: f
+  - lemma: школа
+    ipa: /ˈʃkɔlɑ/
+    translation: school
+    pos: noun
+    gender: f
+  - lemma: держава
+    ipa: /dɛrˈʒɑvɑ/
+    translation: state
+    pos: noun
+    gender: f
+  - lemma: духовний
+    ipa: /duˈxɔvnɪj/
+    translation: spiritual
+    pos: adj
+  - lemma: культурний
+    ipa: /kulʲˈturnɪj/
+    translation: cultural
+    pos: adj
+  - lemma: центр
+    ipa: /t͡sɛntr/
+    translation: center
+    pos: noun
+    gender: m
+  - lemma: символ
+    ipa: /ˈsɪmvɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: незалежність
+    ipa: /nɛzɐˈlɛʒnʲisʲtʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: дзвіниця
+    ipa: /dzvʲiˈnɪt͡sʲɑ/
+    translation: bell tower
+    pos: noun
+    gender: f
+  - lemma: брама
+    ipa: /ˈbrɑmɑ/
+    translation: gate (large)
+    pos: noun
+    gender: f
+  - lemma: мурований
+    ipa: /muˈrɔvɐnɪj/
+    translation: stone-built
+    pos: adj
+  - lemma: дерев'яний
+    ipa: /dɛrɛˈvjɑnɪj/
+    translation: wooden
+    pos: adj
+  - lemma: золотоверхий
+    ipa: /zolotoˈvɛrxɪj/
+    translation: golden-domed
+    pos: adj
+  - lemma: мистецтво
+    ipa: /mɪsˈtɛt͡stvo/
+    translation: art
+    pos: noun
+    gender: n
+  - lemma: архітектура
+    ipa: /ɐrxʲitɛkˈturɑ/
+    translation: architecture
+    pos: noun
+    gender: f
+  - lemma: живопис
+    ipa: /ˈʒɪvopɪs/
+    translation: painting (art form)
+    pos: noun
+    gender: m

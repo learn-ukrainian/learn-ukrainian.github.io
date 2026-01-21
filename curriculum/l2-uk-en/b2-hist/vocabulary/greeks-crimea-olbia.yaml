@@ -122,3 +122,50 @@ items:
   translation: coin
   pos: noun
   gender: f
+- lemma: боспорський
+  ipa: /bosˈporsʲkɪj/
+  translation: Bosporan
+  pos: adj
+- lemma: геліос
+  ipa: /ˈɦɛlʲios/
+  translation: Helios
+  pos: propn
+  gender: m
+- lemma: гея
+  ipa: /ˈɦɛjɐ/
+  translation: Gaia
+  pos: propn
+  gender: f
+- lemma: еллінський
+  ipa: /eˈlʲːinsʲkɪj/
+  translation: Hellenic
+  pos: adj
+- lemma: зевс
+  ipa: /zɛws/
+  translation: Zeus
+  pos: propn
+  gender: m
+- lemma: він
+  ipa: /win/
+  translation: he
+  pos: pron
+- lemma: клястися
+  ipa: /klʲɐsˈtɪsʲɑ/
+  translation: to swear, to vow
+  pos: verb
+- lemma: найсправедливіший
+  ipa: /nɐjsprawɛdlɪˈwʲiʃɪj/
+  translation: most just, fairest
+  pos: adj
+- lemma: написати
+  ipa: /nɐpɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: приганяти
+  ipa: /prɪɦɐˈnʲɑtɪ/
+  translation: to drive (cattle), to bring
+  pos: verb
+- lemma: свій
+  ipa: /swʲij/
+  translation: one's own
+  pos: pron

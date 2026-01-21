@@ -1,11 +1,73 @@
-# Meta for Люди Речі Посполитої: Суспільство
-slug: liudy-ricchi-pospolytoi
 title: "Люди Речі Посполитої: Суспільство"
-level: B2
-track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
-status: skeleton
+subtitle: "Соціальна структура польсько-литовської держави"
+version: "2.0"
+phase: "HIST.4"
 focus: history
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - commonwealth
+  - society
+  - szlachta
+grammar:
+  - "Historical narrative register"
+  - "Passive voice constructions"
+  - "Social terminology"
+objectives:
+  - "Learner understands the social stratification of the Commonwealth"
+  - "Learner can describe the status of Ruthenian nobility"
+  - "Learner masters vocabulary of social categories"
+vocabulary_count: 28
+slug: liudy-ricchi-pospolytoi
+naturalness:
+  score: 9
+  status: PASS
+content_outline:
+  - section: "Вступ"
+    words: 350
+    points:
+      - "Річ Посполита як багатонаціональна держава"
+      - "Соціальні категорії та їхнє значення для українців"
+      - "Зв'язок суспільної структури з національним пробудженням"
+  - section: "Шляхта і магнати"
+    words: 800
+    points:
+      - "Шляхетські привілеї — «złota wolność» та сеймова демократія"
+      - "Руська (українська) шляхта — асиміляція чи збереження ідентичності"
+      - "Великі магнатські роди — Вишневецькі, Острозькі, Заславські"
+      - "Полонізація руської еліти — причини та наслідки"
+  - section: "Міщани і ремісники"
+    words: 650
+    points:
+      - "Магдебурзьке право — міське самоврядування"
+      - "Цехи та гільдії — економічне життя міст"
+      - "Православні та євреї — обмеження прав у містах"
+      - "Львів, Київ, Луцьк — регіональні центри"
+  - section: "Селяни і кріпацтво"
+    words: 700
+    points:
+      - "Посполиті та їхні обов'язки перед панами"
+      - "Фільварок як економічна система"
+      - "Шлях до закріпачення — погіршення становища XVI-XVII ст."
+      - "Селянські повстання як форма спротиву"
+  - section: "Первинні джерела"
+    words: 400
+    points:
+      - "Литовський статут 1588 — норми про кріпацтво"
+      - "Привілей Магдебурзького права для українського міста"
+      - "Лінгвістичний аналіз правових документів"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Міф про «золотий вік» Речі Посполитої для українців"
+      - "Реальність — соціальне та релігійне пригноблення"
+      - "Козацтво як відповідь на станову нерівність"
+      - "Сучасна україно-польська дискусія про спадщину Речі Посполитої"
+  - section: "Підсумок"
+    words: 300
+    points:
+      - "Соціальна структура як передумова Хмельниччини"
+      - "Спадщина станового суспільства в українській свідомості"

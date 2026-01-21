@@ -21,6 +21,27 @@ objectives:
 - Учень може пояснювати принципи релігійної толерантності в князівстві
 vocabulary_count: 35
 slug: velyke-kniazivstvo-lytovske
+content_outline:
+  - section: "Вступ"
+    words: 200
+  - section: "Династія Гедиміновичів: Від будівничих до захисників"
+    words: 200
+  - section: "Вітовт Великий: Золота доба та європейський тріумф"
+    words: 200
+  - section: "Релігійна толерантність і автономія"
+    words: 200
+  - section: "Первинні джерела"
+    words: 200
+  - section: "Читання"
+    words: 100
+  - section: "Деколонізаційний погляд"
+    words: 100
+  - section: "Есе"
+    words: 100
+  - section: "Підсумок"
+    words: 100
+  - section: "Потрібно більше практики?"
+    words: 100
 naturalness:
   score: 9
   status: PASS

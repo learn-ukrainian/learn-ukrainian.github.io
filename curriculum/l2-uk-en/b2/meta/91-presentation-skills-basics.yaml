@@ -1,0 +1,27 @@
+id: 91
+slug: 'presentation-skills-basics'
+title: 'Презентації: Основи'
+subtitle: 'Структура та подання професійних презентацій'
+version: '2.0'
+phase: 'B2.4 [Communication Skills]'
+pedagogy: 'CBI'
+focus: 'skills'
+duration: 90
+transliteration: 'none'
+immersion: 100
+tags:
+  - communication
+  - presentation
+  - professional-skills
+grammar:
+  - 'Imperative mood for instructions'
+  - 'Modal constructions for recommendations'
+objectives:
+  - 'Learner can structure a professional presentation with clear opening, body, and conclusion'
+  - 'Learner can use signposting language to guide the audience through presentation sections'
+  - 'Learner can apply basic delivery techniques including eye contact, pacing, and volume control'
+  - 'Learner understands how to create effective visual aids for Ukrainian-language presentations'
+register: 'публіцистичний'
+naturalness:
+  score: 8
+  status: "PASS"

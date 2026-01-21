@@ -1,5 +1,5 @@
-# Audit Report: sloviany-origins.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M04 — sloviany-origins.md
+**Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 

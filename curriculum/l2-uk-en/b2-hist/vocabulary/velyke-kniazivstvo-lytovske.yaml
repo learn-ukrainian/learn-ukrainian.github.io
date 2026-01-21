@@ -1,384 +1,178 @@
-module: 81-velyke-kniazivstvo-lytovske
+module: velyke-kniazivstvo-lytovske
 level: B2
 version: '2.0'
 items:
-- lemma: артикул
-  ipa: /ɐrˈtɪkul/
-  translation: articles (legal, genitive plural)
-  pos: noun
-  gender: m
-- lemma: братство
-  ipa: /ˈbrɑtstwo/
-  translation: brotherhoods (genitive plural)
-  pos: noun
-  gender: n
-- lemma: бурмистр
-  ipa: /burˈmʲistr/
-  translation: burgomaster (genitive plural)
-  pos: noun
-  gender: m
-- lemma: верховенство
-  ipa: /wɛrxoˈwɛnstwo/
-  translation: supremacy
-  pos: noun
-  gender: n
-- lemma: визволення
-  ipa: /wɪzwoˈlɛnʲːɑ/
-  translation: liberation
-  pos: noun
-  gender: n
-- lemma: визволитель
-  ipa: /wɪzwoˈlɪtɛlʲ/
-  translation: liberators (genitive plural)
-  pos: noun
-  gender: m
-- lemma: витіснення
-  ipa: /wɪˈtʲisnɛnʲːɑ/
-  translation: displacement
-  pos: noun
-  gender: n
-- lemma: водах
-  ipa: /ʋoˈdɑx/
-  translation: waters (locative pl.)
-  pos: noun
-  gender: f
-- lemma: встановляти
-  ipa: /fstɐˈnowlʲɑtɪ/
-  translation: to establish, to install
-  pos: verb
-- lemma: відігравати
-  ipa: /ʋʲidʲiɦˈrɑʋɑtɪ/
-  translation: to play (a role)
-  pos: verb
-- lemma: війт
-  ipa: /ʋʲijt/
-  translation: voyt (village head)
-  pos: noun
-  gender: m
-- lemma: вільнюс
-  ipa: /wʲilʲˈnʲus/
-  translation: Vilnius
-  pos: propn
-  gender: m
-- lemma: вітовт
-  ipa: /wʲiˈtowt/
-  translation: Vytautas (Vitovt the Great)
-  pos: propn
-  gender: m
-- lemma: гедимін
-  ipa: /ɦɛˈdɪmʲin/
-  translation: Gediminas
-  pos: propn
-  gender: m
-- lemma: гедиміна
-  ipa: /ɦɛdɪˈmʲinɑ/
-  translation: Gediminas (gen.)
-  pos: propn
-  gender: m
-- lemma: гедимінович
-  ipa: /ɦɛˈdɪmʲinowɪt͡ʃ/
-  translation: Gediminids (dynasty)
-  pos: propn
-  gender: m
-- lemma: говірка
-  ipa: /ɦoˈwʲirkɑ/
-  translation: dialects (genitive plural)
-  pos: noun
-  gender: f
-- lemma: городянин
-  ipa: /ɦoroˈdʲɑnɪn/
-  translation: townspeople (genitive plural)
-  pos: noun
-  gender: m
-- lemma: грюнвальда
-  ipa: /ɦrʲunˈwɑlʲdɑ/
-  translation: Grunwald (genitive)
-  pos: propn
-  gender: m
-- lemma: грюнвальдський
-  ipa: /ɦrʲunˈwɑlʲdsʲkɪj/
-  translation: Grunwald (adj., Battle of Grunwald/Tannenberg 1410)
-  pos: adj
-  gender: f
-- lemma: двомовність
-  ipa: /dwoˈmownʲistʲ/
-  translation: bilingualism
-  pos: noun
-  gender: f
-- lemma: жмудський
-  ipa: /ʒmudˈsʲkɪj/
-  translation: Samogitian (adj.)
-  pos: adj
-- lemma: замовчувати
-  ipa: /zɐmowˈt͡ʃuwɑtɪ/
-  translation: to hush up, to suppress
-  pos: verb
-- lemma: засновувати
-  ipa: /zɐsnoˈwuwɑtɪ/
-  translation: to found, to establish
-  pos: verb
-- lemma: канцелярія
-  ipa: /kɐnt͡sɛˈlʲɑrʲijɑ/
-  translation: chancelleries (genitive plural)
-  pos: noun
-  gender: f
-- lemma: київський
-  ipa: /kɪˈjiwsʲkɪj/
-  translation: Kyivan (adj.)
-  pos: adj
-- lemma: княжна
-  ipa: /knʲɑʒˈnɑ/
-  translation: princesses (genitive plural)
-  pos: noun
-  gender: m
-- lemma: командир
-  ipa: /komɐnˈdɪr/
-  translation: commander
-  pos: noun
-  gender: m
-- lemma: костел
-  ipa: /ˈkostɛl/
-  translation: Catholic churches (genitive plural)
-  pos: noun
-  gender: m
-- lemma: литві
-  ipa: /lɪtˈwʲi/
-  translation: Lithuania (locative)
-  pos: propn
-  gender: f
-- lemma: литовка
-  ipa: /lɪˈtowkɑ/
-  translation: Lithuanian woman
-  pos: noun
-  gender: f
-- lemma: люблінський
-  ipa: /lʲubˈlʲinsʲkɪj/
-  translation: Lublin (adj., Union of Lublin 1569)
-  pos: adj
-  gender: f
-- lemma: магістр
-  ipa: /mɐˈɦʲistr/
-  translation: Grand Master (Teutonic Order, genitive plural)
-  pos: noun
-  gender: m
-- lemma: магістрат
-  ipa: /mɐɦʲisˈtrɑt/
-  translation: magistracies (city councils, genitive plural)
-  pos: noun
-  gender: m
-- lemma: маєтність
-  ipa: /mɐˈjɛtnʲistʲ/
-  translation: estates (genitive plural)
-  pos: noun
-  gender: f
-- lemma: мирно
-  ipa: /ˈmɪrno/
-  translation: peacefully
-  pos: adv
-- lemma: модерний
-  ipa: /moˈdɛrnɪj/
-  translation: modern
-  pos: adj
-- lemma: найактивніший
-  ipa: /nɐjɑkˈtɪwnʲiʃɪj/
-  translation: most active
-  pos: adj
-- lemma: напрочуд
-  ipa: /nɐˈprot͡ʃud/
-  translation: surprisingly
-  pos: adv
-- lemma: невигідний
-  ipa: /nɛwɪˈɦʲidnɪj/
-  translation: unprofitable, disadvantageous
-  pos: adj
-- lemma: ольгерд
-  ipa: /olʲˈɦɛrd/
-  translation: Algirdas (Olgerd)
-  pos: propn
-  gender: m
-- lemma: осередка
-  ipa: /osɛˈrɛdkɑ/
-  translation: centers (genitive plural)
-  pos: noun
-  gender: m
-- lemma: палати
-  ipa: /pɐˈlɑtɪ/
-  translation: chambers, halls (plural)
-  pos: noun
-  gender: f
-- lemma: переслідувати
-  ipa: /pɛrɛˈslʲiduwɑtɪ/
-  translation: to persecute
-  pos: verb
-- lemma: повстання
-  ipa: /poʊˈstɑnʲːɑ/
-  translation: uprising, rebellion
-  pos: noun
-  gender: n
-- lemma: поділля
-  ipa: /poˈdʲilʲːɑ/
-  translation: Podillia (region)
-  pos: propn
-  gender: n
-- lemma: пожалування
-  ipa: /poʒɐˈluwɑnʲːɑ/
-  translation: grants (royal, genitive plural)
-  pos: noun
-  gender: n
-- lemma: полк
-  ipa: /pɔlk/
-  translation: regiment
-  pos: noun
-  gender: m
-- lemma: полонізація
-  ipa: /polonʲiˈzɑt͡sʲijɑ/
-  translation: Polonization
-  pos: noun
-  gender: f
-- lemma: посполит
-  ipa: /posˈpolɪt/
-  translation: Commonwealth (Polish-Lithuanian)
-  pos: propn
-  gender: f
-- lemma: посполитій
-  ipa: /pospoˈlɪtʲij/
-  translation: Commonwealth (locative)
-  pos: noun
-  gender: f
-- lemma: привілей
-  ipa: /prɪʋʲiˈlɛj/
-  translation: privilege
-  pos: noun
-  gender: m
-- lemma: проголошувати
-  ipa: /proɦoˈloʃuwɑtɪ/
-  translation: to proclaim
-  pos: verb
-- lemma: прогресивніший
-  ipa: /proɦrɛˈsɪwnʲiʃɪj/
-  translation: more progressive
-  pos: adj
-  gender: f
-- lemma: протистояти
-  ipa: /protɪstoˈjɑtɪ/
-  translation: to resist, to oppose
-  pos: verb
-- lemma: піддані
-  ipa: /pʲidˈdɑnʲi/
-  translation: subjects (people)
-  pos: noun
-  gender: m
-- lemma: піддань
-  ipa: /pʲidˈdɑnʲ/
-  translation: subjects (genitive plural)
-  pos: noun
-  gender: m
-- lemma: підкорений
-  ipa: /pʲidˈkorɛnɪj/
-  translation: subjugated
-  pos: adj
-  gender: f
-- lemma: підірвати
-  ipa: /pʲidʲirˈwɑtɪ/
-  translation: to undermine
-  pos: verb
-  gender: f
-- lemma: радник
-  ipa: /ˈrɑdnɪk/
-  translation: advisors, councilors (genitive plural)
-  pos: noun
-  gender: m
-- lemma: розгромити
-  ipa: /rozɦroˈmɪtɪ/
-  translation: to defeat, to rout
-  pos: verb
-  gender: n
-- lemma: розрив
-  ipa: /rozˈrɪw/
-  translation: ruptures (genitive plural)
-  pos: noun
-  gender: m
-- lemma: рівність
-  ipa: /ˈrʲiwnʲistʲ/
-  translation: equality
-  pos: noun
-  gender: f
-- lemma: сейм
-  ipa: /sɛjm/
-  translation: Sejm (parliament, genitive plural)
-  pos: noun
-  gender: m
-- lemma: синоводський
-  ipa: /sɪnoˈwodsʲkɪj/
-  translation: Blue Waters (adj., Battle of Blue Waters 1362)
-  pos: adj
-  gender: f
-- lemma: слабшати
-  ipa: /slɐbˈʃɑtɪ/
-  translation: to weaken
-  pos: verb
-- lemma: співвідноситися
-  ipa: /spʲiwwʲidˈnosɪtɪsʲɑ/
-  translation: to correlate
-  pos: verb
-- lemma: старшина
-  ipa: /stɑrˈʃɪnɑ/
-  translation: starshyna (Cossack officers, genitive plural)
-  pos: noun
-  gender: f
-- lemma: татарський
-  ipa: /tɐˈtɑrsʲkɪj/
-  translation: Tatar (adj.)
-  pos: adj
-- lemma: толерантний
-  ipa: /tolɛˈrɑntnɪj/
-  translation: tolerant
-  pos: adj
-- lemma: тракай
-  ipa: /trɐˈkɑj/
-  translation: Trakai (city)
-  pos: propn
-  gender: m
-- lemma: убогий
-  ipa: /uˈbohɪj/
-  translation: poor, wretched
-  pos: adj
-- lemma: ульріх
-  ipa: /ulʲˈrʲix/
-  translation: Ulrich (von Jungingen)
-  pos: propn
-  gender: m
-- lemma: уперше
-  ipa: /uˈpɛrʃɛ/
-  translation: for the first time
-  pos: adv
-- lemma: хрестонісець
-  ipa: /xrɛstoˈnʲisɛt͡sʲ/
-  translation: crusaders (genitive plural)
-  pos: noun
-  gender: m
-- lemma: цивілізований
-  ipa: /t͡sɪwʲilʲiˈzowɑnɪj/
-  translation: civilized
-  pos: adj
-  gender: m
-- lemma: шляхт
-  ipa: /ʃlʲɑxt/
-  translation: szlachta (nobility, genitive plural)
-  pos: noun
-  gender: f
-- lemma: юнгінген
-  ipa: /junˈɦʲinɦɛn/
-  translation: Jungingen (von Jungingen)
-  pos: propn
-  gender: m
-- lemma: ярма
-  ipa: /ˈjɑrmɑ/
-  translation: yoke (genitive)
-  pos: noun
-  gender: m
-- lemma: інквізиція
-  ipa: /ʲinkwʲiˈzɪt͡sʲijɑ/
-  translation: Inquisition
-  pos: noun
-  gender: f
+  - lemma: Велике князівство Литовське
+    ipa: /wɛˈlɪkɛ knʲɐˈzʲiu̯stwo lɪˈtɔu̯sʲkɛ/
+    translation: Grand Duchy of Lithuania
+    pos: propn
+    gender: n
+  - lemma: Гедиміновичі
+    ipa: /ɦɛdɪˈmʲinowɪt͡ʃʲi/
+    translation: Gediminids
+    pos: propn
+    gender: pl
+  - lemma: Литовський Статут
+    ipa: /lɪˈtɔu̯sʲkɪj stɐˈtut/
+    translation: Lithuanian Statute
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑxtɐ/
+    translation: szlachta (nobility)
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪʋʲiˈlɛj/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: канцелярія
+    ipa: /kɐnt͡sɛˈlʲɑrʲijɐ/
+    translation: chancellery
+    pos: noun
+    gender: f
+  - lemma: право
+    ipa: /ˈprɑwɔ/
+    translation: law / right
+    pos: noun
+    gender: n
+  - lemma: партнерство
+    ipa: /pɐrtˈnɛrstwɔ/
+    translation: partnership
+    pos: noun
+    gender: n
+  - lemma: окупація
+    ipa: /ɔkʊˈpɐt͡sʲijɐ/
+    translation: occupation
+    pos: noun
+    gender: f
+  - lemma: визволитель
+    ipa: /wɪzwɔˈlɪtɛlʲ/
+    translation: liberator
+    pos: noun
+    gender: m
+  - lemma: асиміляція
+    ipa: /ɐsɪm⁽ʲ⁾iˈlʲɐt͡sʲijɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: федерація
+    ipa: /fɛdɛˈrɐt͡sʲijɐ/
+    translation: federation
+    pos: noun
+    gender: f
+  - lemma: сеймик
+    ipa: /ˈsɛjɪmɪk/
+    translation: local assembly (sejmik)
+    pos: noun
+    gender: m
+  - lemma: дипломатія
+    ipa: /dɪplɔˈmɐt⁽ʲ⁾ijɐ/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: суверенітет
+    ipa: /sʊwɛrɛn⁽ʲ⁾iˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: вольності
+    ipa: /ˈwɔlʲnɔsʲt⁽ʲ⁾i/
+    translation: liberties
+    pos: noun
+    gender: pl
+  - lemma: недоторканність
+    ipa: /nɛdɔtɔrˈkɐnn⁽ʲ⁾isʲtʲ/
+    translation: inviolability
+    pos: noun
+    gender: f
+  - lemma: толерантність
+    ipa: /tɔlɛˈrɐntn⁽ʲ⁾isʲtʲ/
+    translation: tolerance
+    pos: noun
+    gender: f
+  - lemma: Братство
+    ipa: /ˈbrɑtstwɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: гуманізм
+    ipa: /ɦʊmɐˈn⁽ʲ⁾izm/
+    translation: humanism
+    pos: noun
+    gender: m
+  - lemma: лицарство
+    ipa: /ˈlɪt͡sɐrstwɔ/
+    translation: knighthood / chivalry
+    pos: noun
+    gender: n
+  - lemma: фортеця
+    ipa: /fɔrˈtɛt͡sʲɐ/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: деспотія
+    ipa: /dɛsˈpɔt⁽ʲ⁾ijɐ/
+    translation: despotism
+    pos: noun
+    gender: f
+  - lemma: холоп
+    ipa: /xɔˈlɔp/
+    translation: kholop (serf/slave)
+    pos: noun
+    gender: m
+  - lemma: суб'єктність
+    ipa: /sʊbˈjɛktn⁽ʲ⁾isʲtʲ/
+    translation: subjectivity / agency
+    pos: noun
+    gender: f
+  - lemma: можновладець
+    ipa: /mɔʒnɔˈwlɑdɛt͡sʲ/
+    translation: potentate / powerful person
+    pos: noun
+    gender: m
+  - lemma: звичаєве право
+    ipa: /zwɪˈt͡ʃɑjɛwɛ ˈprɑwɔ/
+    translation: customary law
+    pos: noun
+    gender: n
+  - lemma: державотворення
+    ipa: /dɛrʒɐwɔˈtwɔrɛnʲːɐ/
+    translation: state-building
+    pos: noun
+    gender: n
+  - lemma: інтеграція
+    ipa: /intɛˈɦrɐt͡sʲijɐ/
+    translation: integration
+    pos: noun
+    gender: f
+  - lemma: верховенство права
+    ipa: /wɛrxɔˈwɛnstwɔ ˈprɑwɐ/
+    translation: rule of law
+    pos: noun
+    gender: n
+  - lemma: толерувати
+    ipa: /tɔlɛrʊˈwɑtɪ/
+    translation: to tolerate
+    pos: verb
+  - lemma: легітимність
+    ipa: /lɛɦiˈtɪmn⁽ʲ⁾isʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: аристократія
+    ipa: /ɐrɪstɔˈkrɑt⁽ʲ⁾ijɐ/
+    translation: aristocracy
+    pos: noun
+    gender: f
+  - lemma: Магдебурзьке право
+    ipa: /mɐɦdɛˈburzʲkɛ ˈprɑwɔ/
+    translation: Magdeburg rights
+    pos: noun
+    gender: n

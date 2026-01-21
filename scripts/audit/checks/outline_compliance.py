@@ -68,9 +68,13 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
         if idx < skip_until:
             continue
 
-        # Detect ## headers (main sections)
-        header_match = re.match(r'^##\s+(.+)$', line)
+        # Detect # or ## headers (main sections)
+        header_match = re.match(r'^#{1,2}\s+(.+)$', line)
         if header_match:
+            # Skip the very first H1 header (likely the module Title)
+            if not sections and line.strip().startswith('# '):
+                continue
+                
             # Save previous section
             if current_section:
                 sections[current_section] = {
@@ -82,7 +86,7 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
             # Start new section
             current_section = header_match.group(1).strip()
             # Remove markdown formatting and emojis
-            current_section = re.sub(r'\s*—.*$', '', current_section)  # Remove "— Subtitle"
+            current_section = re.sub(r'\s*[—–:-]\s*.*$', '', current_section)  # Remove "— Subtitle" or ": Subtitle"
             current_section = re.sub(r'[📚🎯💡🔍]', '', current_section).strip()
             current_words = 0
             current_line = idx + 1
@@ -90,11 +94,21 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
             # Count words in non-header lines
             # Skip code blocks, blockquotes, and special markers
             if not line.strip().startswith('```') and \
-               not line.strip().startswith('>') and \
                not line.strip().startswith('---') and \
                not line.strip().startswith('#'):
+                
+                # Handle blockquotes/callouts
+                text_to_count = line
+                if line.strip().startswith('>'):
+                    # Strip leading > characters and whitespace
+                    text_to_count = re.sub(r'^[\s>]+', '', line)
+                    
+                    # Skip callout headers like "[!myth-buster]"
+                    if text_to_count.strip().startswith('[!'):
+                        continue
+
                 # Count Ukrainian and English words
-                words = re.findall(r'[а-яіїєґА-ЯІЇЄҐA-Za-z]+', line)
+                words = re.findall(r'[а-яіїєґА-ЯІЇЄҐA-Za-z]+', text_to_count)
                 current_words += len(words)
 
     # Save last section
@@ -162,8 +176,8 @@ def normalize_section_name(name: str) -> str:
     """
     name = name.lower().strip()
 
-    # Remove em-dash subtitles
-    name = re.sub(r'\s*[—–-]\s*.*$', '', name)
+    # Remove em-dash or colon subtitles
+    name = re.sub(r'\s*[—–:\-]\s*.*$', '', name)
 
     # Remove punctuation
     name = re.sub(r'[^\wа-яіїєґ\s]', ' ', name)

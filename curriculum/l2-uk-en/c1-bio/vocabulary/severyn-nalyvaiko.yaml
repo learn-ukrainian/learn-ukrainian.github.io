@@ -139,3 +139,387 @@ items:
     translation: tyranny
     pos: noun
     gender: f
+  - lemma: амністія
+    ipa: /ɑmˈn⁽ʲ⁾is.t⁽ʲ⁾i.jɑ/
+    translation: amnesty
+    pos: noun
+    gender: f
+  - lemma: аналітичний
+    ipa: /ɑ.nɑ.l⁽ʲ⁾iˈtɪt͡ʃ.nɪj/
+    translation: analytical
+    pos: adj
+  - lemma: бунтівник
+    ipa: /bun.t⁽ʲ⁾iu̯ˈnɪk/
+    translation: rebel
+    pos: noun
+    gender: m
+  - lemma: великий
+    ipa: /vɛˈlɪ.kɪj/
+    translation: great / big
+    pos: adj
+  - lemma: видати
+    ipa: /ˈvɪ.dɑ.tɪ/
+    translation: to hand over / to betray / to issue
+    pos: verb
+  - lemma: власний
+    ipa: /ˈvlɑs.nɪj/
+    translation: own
+    pos: adj
+  - lemma: вода
+    ipa: /vɔˈdɑ/
+    translation: water
+    pos: noun
+    gender: f
+  - lemma: віз
+    ipa: /v⁽ʲ⁾iz/
+    translation: wagon / cart
+    pos: noun
+    gender: m
+  - lemma: ворота
+    ipa: /vɔˈrɔ.tɑ/
+    translation: gates
+    pos: noun
+    gender: n
+  - lemma: всередині
+    ipa: /u̯sɛˈrɛ.dɪ.n⁽ʲ⁾i/
+    translation: inside
+    pos: adv
+  - lemma: відчинитися
+    ipa: /v⁽ʲ⁾id.t͡ʃɪˈnɪ.tɪ.sʲɑ/
+    translation: to open
+    pos: verb
+  - lemma: вісім
+    ipa: /ˈv⁽ʲ⁾i.s⁽ʲ⁾im/
+    translation: eight
+    pos: num
+  - lemma: герой
+    ipa: /ɦɛˈrɔj/
+    translation: hero
+    pos: noun
+    gender: m
+  - lemma: гризти
+    ipa: /ˈɦrɪ.ztɪ/
+    translation: to gnaw / to worry
+    pos: verb
+  - lemma: десять
+    ipa: /ˈdɛ.sʲɑtʲ/
+    translation: ten
+    pos: num
+  - lemma: довгий
+    ipa: /ˈdɔu̯.ɦɪj/
+    translation: long
+    pos: adj
+  - lemma: дитина
+    ipa: /dɪˈtɪ.nɑ/
+    translation: child
+    pos: noun
+    gender: f
+  - lemma: есе
+    ipa: /ɛˈsɛ/
+    translation: essay
+    pos: noun
+    gender: n
+  - lemma: Жолкевський
+    ipa: /ʒɔlˈkɛu̯.sʲkɪj/
+    translation: Zholkevsky (surname)
+    pos: noun
+    gender: m
+  - lemma: забути
+    ipa: /zɑˈbu.tɪ/
+    translation: to forget
+    pos: verb
+  - lemma: закликати
+    ipa: /zɑˈklɪ.кɑ.tɪ/
+    translation: to call / to urge
+    pos: verb
+  - lemma: земля
+    ipa: /zɛmˈlʲɑ/
+    translation: land / earth
+    pos: noun
+    gender: f
+  - lemma: змовитися
+    ipa: /ˈzmɔ.vɪ.tɪ.sʲɑ/
+    translation: to conspire / to agree
+    pos: verb
+  - lemma: зусібіч
+    ipa: /zuˈs⁽ʲ⁾i.b⁽ʲ⁾it͡ʃ/
+    translation: from all sides
+    pos: adv
+  - lemma: зчеплений
+    ipa: /ˈzt͡ʃɛ.plɛ.nɪj/
+    translation: chained / linked
+    pos: adj
+  - lemma: козацький
+    ipa: /kɔˈzɑt͡sʲ.kɪj/
+    translation: Cossack (adj)
+    pos: adj
+  - lemma: кінь
+    ipa: /k⁽ʲ⁾inʲ/
+    translation: horse
+    pos: noun
+    gender: m
+  - lemma: кривавий
+    ipa: /krɪˈvɑ.vɪj/
+    translation: bloody
+    pos: adj
+  - lemma: кров
+    ipa: /krɔu̯/
+    translation: blood
+    pos: noun
+    gender: f
+  - lemma: кінець
+    ipa: /k⁽ʲ⁾iˈnɛt͡sʲ/
+    translation: end
+    pos: noun
+    gender: m
+  - lemma: ланцюг
+    ipa: /lɑnˈt͡sʲuɦ/
+    translation: chain
+    pos: noun
+    gender: m
+  - lemma: людина
+    ipa: /lʲuˈdɪ.nɑ/
+    translation: person / human
+    pos: noun
+    gender: f
+  - lemma: малий
+    ipa: /mɑˈlɪj/
+    translation: small
+    pos: adj
+  - lemma: могила
+    ipa: /mɔˈɦɪ.lɑ/
+    translation: grave / tomb
+    pos: noun
+    gender: f
+  - lemma: надія
+    ipa: /nɑˈd⁽ʲ⁾i.jɑ/
+    translation: hope
+    pos: noun
+    gender: f
+  - lemma: Наливайко
+    ipa: /nɑ.lɪˈvɑj.кɔ/
+    translation: Nalyvaiko (surname)
+    pos: noun
+    gender: m
+  - lemma: наляканий
+    ipa: /nɑˈlʲɑ.кɑ.nɪj/
+    translation: scared / frightened
+    pos: adj
+  - lemma: написати
+    ipa: /nɑ.пɪˈsɑ.tɪ/
+    translation: to write
+    pos: verb
+  - lemma: обіцянка
+    ipa: /ɔ.b⁽ʲ⁾iˈt͡sʲɑn.кɑ/
+    translation: promise
+    pos: noun
+    gender: f
+  - lemma: останній
+    ipa: /ɔˈstɑn⁽ʲ⁾ːij/
+    translation: last
+    pos: adj
+  - lemma: оточений
+    ipa: /ɔˈtɔ.t͡ʃɛ.nɪj/
+    translation: surrounded
+    pos: adj
+  - lemma: оцінка
+    ipa: /ɔˈt͡s⁽ʲ⁾in.кɑ/
+    translation: evaluation / grade
+    pos: noun
+    gender: f
+  - lemma: пасовище
+    ipa: /pɑˈsɔ.vɪ.ʃt͡ʃɛ/
+    translation: pasture
+    pos: noun
+    gender: n
+  - lemma: перекрити
+    ipa: /pɛ.rɛˈkrɪ.tɪ/
+    translation: to block / to shut off
+    pos: verb
+  - lemma: пити
+    ipa: /ˈpɪ.tɪ/
+    translation: to drink
+    pos: verb
+  - lemma: понад
+    ipa: /ˈpɔ.nɑd/
+    translation: over / more than
+    pos: prep
+  - lemma: початися
+    ipa: /pɔˈt͡ʃɑ.tɪ.sʲɑ/
+    translation: to start / to begin
+    pos: verb
+  - lemma: причина
+    ipa: /prɪˈt͡ʃɪ.nɑ/
+    translation: reason / cause
+    pos: noun
+    gender: f
+  - lemma: проаналізувати
+    ipa: /prɔ.ɑ.nɑ.l⁽ʲ⁾i.zuˈvɑ.tɪ/
+    translation: to analyze
+    pos: verb
+  - lemma: прочитати
+    ipa: /prɔ.t͡ʃɪˈtɑ.tɪ/
+    translation: to read
+    pos: verb
+  - lemma: розбійник
+    ipa: /rɔzˈb⁽ʲ⁾ij.nɪk/
+    translation: bandit / robber
+    pos: noun
+    gender: m
+  - lemma: рік
+    ipa: /r⁽ʲ⁾ik/
+    translation: year
+    pos: noun
+    gender: m
+  - lemma: ряд
+    ipa: /rʲɑd/
+    translation: row / series
+    pos: noun
+    gender: m
+  - lemma: різанина
+    ipa: /r⁽ʲ⁾i.zɑˈnɪ.nɑ/
+    translation: massacre / slaughter
+    pos: noun
+    gender: f
+  - lemma: Северин
+    ipa: /sɛ.vɛˈrɪn/
+    translation: Severyn (name)
+    pos: noun
+    gender: m
+  - lemma: Солониця
+    ipa: /sɔ.lɔˈnɪ.t͡sʲɑ/
+    translation: Solonytsia (toponym)
+    pos: noun
+    gender: f
+  - lemma: стати
+    ipa: /ˈstɑ.tɪ/
+    translation: to become / to stand
+    pos: verb
+  - lemma: старий
+    ipa: /stɑˈrɪj/
+    translation: old
+    pos: adj
+  - lemma: стояти
+    ipa: /stɔˈjɑ.tɪ/
+    translation: to stand
+    pos: verb
+  - lemma: схопити
+    ipa: /sxɔˈpɪ.tɪ/
+    translation: to catch / to seize
+    pos: verb
+  - lemma: сім'я
+    ipa: /s⁽ʲ⁾imˈjɑ/
+    translation: family
+    pos: noun
+    gender: f
+  - lemma: тисяча
+    ipa: /ˈtɪ.sʲɑ.t͡ʃɑ/
+    translation: thousand
+    pos: num
+  - lemma: тримати
+    ipa: /trɪˈmɑ.tɪ/
+    translation: to hold / to keep
+    pos: verb
+  - lemma: тільки-но
+    ipa: /ˈt⁽ʲ⁾ilʲ.кɪ nɔ/
+    translation: just / as soon as
+    pos: adv
+  - lemma: фактор
+    ipa: /ˈfɑк.тɔr/
+    translation: factor
+    pos: noun
+    gender: m
+  - lemma: Хмельницький
+    ipa: /xmɛlʲˈnɪt͡sʲ.кɪj/
+    translation: Khmelnytsky (surname)
+    pos: noun
+    gender: m
+  - lemma: ціна
+    ipa: /t͡s⁽ʲ⁾iˈnɑ/
+    translation: price / value
+    pos: noun
+    gender: f
+  - lemma: щадити
+    ipa: /ʃt͡ʃɑˈdɪ.tɪ/
+    translation: to spare
+    pos: verb
+  - lemma: власну
+    ipa: /ˈvlɑs.nu/
+    translation: own (f. acc.)
+    pos: adj
+  - lemma: возів
+    ipa: /vɔˈz⁽ʲ⁾iu̯/
+    translation: wagons (pl. gen.)
+    pos: noun
+    gender: m
+  - lemma: довгі
+    ipa: /ˈdɔu̯.ɦʲi/
+    translation: long (pl. nom.)
+    pos: adj
+  - lemma: діти
+    ipa: /ˈd⁽ʲ⁾i.tɪ/
+    translation: children (pl. nom.)
+    pos: noun
+    gender: f
+  - lemma: жолкевському
+    ipa: /ʒɔlˈkɛu̯.sʲkɔ.mu/
+    translation: Zholkevsky (m. dat.)
+    pos: noun
+    gender: m
+  - lemma: козацької
+    ipa: /kɔˈzɑt͡sʲ.kɔ.ji/
+    translation: Cossack (f. gen.)
+    pos: adj
+  - lemma: коні
+    ipa: /ˈkɔ.n⁽ʲ⁾i/
+    translation: horses (pl. nom.)
+    pos: noun
+    gender: m
+  - lemma: кінця
+    ipa: /k⁽ʲ⁾inʲˈt͡sʲɑ/
+    translation: end (m. gen.)
+    pos: noun
+    gender: m
+  - lemma: людей
+    ipa: /lʲuˈdɛj/
+    translation: people (pl. gen.)
+    pos: noun
+    gender: f
+  - lemma: малого
+    ipa: /ˈmɑ.lɔ.ɦɔ/
+    translation: small (m. gen.)
+    pos: adj
+  - lemma: напишіть
+    ipa: /nɑ.pɪˈʃ⁽ʲ⁾itʲ/
+    translation: write (imp. pl.)
+    pos: verb
+  - lemma: останньої
+    ipa: /ɔˈstɑn⁽ʲ⁾ːɔ.ji/
+    translation: last (f. gen.)
+    pos: adj
+  - lemma: пили
+    ipa: /ˈpɪ.lɪ/
+    translation: drank (pl. past)
+    pos: verb
+  - lemma: почалася
+    ipa: /pɔ.t͡ʃɑˈlɑ.sʲɑ/
+    translation: started (f. past)
+    pos: verb
+  - lemma: роки
+    ipa: /ˈrɔ.kɪ/
+    translation: years (pl. nom.)
+    pos: noun
+    gender: m
+  - lemma: стала
+    ipa: /ˈstɑ.lɑ/
+    translation: became (f. past)
+    pos: verb
+  - lemma: старого
+    ipa: /stɑˈrɔ.ɦɔ/
+    translation: old (m. gen.)
+    pos: adj
+  - lemma: табору
+    ipa: /ˈtɑ.bɔ.ru/
+    translation: camp (m. gen.)
+    pos: noun
+    gender: m

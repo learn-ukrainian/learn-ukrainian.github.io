@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "file": "38-at-the-store.yaml",
+    "activity_index": 3,
+    "activity_type": "unjumble",
+    "context": "unjumble #7: Payment Sentences",
+    "text": "«Дякую за покупку гарного дня.»",
+    "score": 5,
+    "issues": [
+      "Missing punctuation creates a run-on sentence with ambiguous meaning ('Thank you for the purchase of a good day').",
+      "Native speakers would separate these distinct speech acts (thanking vs. wishing)."
+    ],
+    "recommendation": "Split into two sentences or separate with punctuation: 'Дякую за покупку! Гарного дня!' or 'Дякую за покупку, гарного дня.'",
+    "rewrite_needed": true
+  },
+  {
+    "file": "12-aspect-introduction.yaml",
+    "activity_index": 5,
+    "activity_type": "unjumble",
+    "context": "unjumble #6: Aspect Sentences",
+    "text": "Я бачив синє море вперше у моєму житті",
+    "score": 6,
+    "issues": [
+      "Redundant possessive: 'у моєму житті' sounds like an anglicism (in my life). 'В житті' is implied and sufficient.",
+      "Aspectual Friction: 'Вперше' (for the first time) strongly correlates with the Perfective aspect ('побачив') to denote the singular event of seeing it. Using Imperfective ('бачив') makes it sound like 'I was seeing it for the first time' (process), which is less natural for a simple statement of fact.",
+      "Word Order: Placing 'вперше...' at the end weakens the emphasis. 'Я вперше в житті бачив...' is more idiomatic."
+    ],
+    "recommendation": "Switch to Perfective 'побачив' for the specific event or change structure to 'Я вперше в житті побачив синє море'. Drop 'моєму'.",
+    "rewrite_needed": true
+  },
+  {
+    "file": "18-bigger-better-stronger.yaml",
+    "activity_index": 4,
+    "activity_type": "unjumble",
+    "context": "unjumble #1: Comparison Sentences",
+    "text": "Він набагато старіший за мене на п'ять років",
+    "score": 6,
+    "issues": [
+      "Word Choice: 'старіший' usually implies 'more aged/ancient' (like an object or physical aging), whereas 'старший' is the standard comparative for age difference between people.",
+      "Redundancy: Using 'набагато' (much) alongside a specific quantifier 'на п'ять років' (by five years) sounds slightly unnatural. Usually, you either emphasize the gap ('much older') or state the difference ('5 years older'), but rarely both unless 5 years is subjectively 'much' in context."
+    ],
+    "recommendation": "Change 'старіший' to 'старший' and remove 'набагато' for a standard phrasing.",
+    "rewrite_needed": true
+  },
+  {
+    "file": "18-bigger-better-stronger.yaml",
+    "activity_index": 8,
+    "activity_type": "mark-the-words",
+    "context": "mark-the-words: Find Comparatives",
+    "text": "Цей телефон кращий і швидший. Він новіший за мій старий телефон. Але він дорожчий. --- Вона вища за ...",
+    "score": 6,
+    "issues": [
+      "The text consists of three disconnected thematic blocks separated by dashes.",
+      "Lacks a single narrative or logical flow; jumps from comparing phones to physical height, then to abstract ideas, then to cars.",
+      "Feels like a collection of textbook examples rather than a natural cohesive text."
+    ],
+    "recommendation": "Try to weave these comparisons into a single scenario (e.g., visiting a store or moving to a new city) to improve narrative coherence while keeping the target comparative forms.",
+    "rewrite_needed": false
+  },
+  {
+    "file": "43-wf-mastery.yaml",
+    "activity_index": 3,
+    "activity_type": "unjumble",
+    "context": "unjumble #1: High Sentences",
+    "text": "Це дуже гарна думка про майбутнє проект",
+    "score": 3,
+    "issues": [
+      "Grammar Error: Severe adjective-noun agreement mismatch. 'майбутнє' (future) is neuter or a noun, while 'проект' (project) is masculine. It should be 'майбутній проект'.",
+      "Syntax: The current structure implies 'about the future [dangling noun] project', which is ungrammatical."
+    ],
+    "recommendation": "Change 'майбутнє' to 'майбутній' to agree with 'проект'. Correct sentence: 'Це дуже гарна думка про майбутній проект'.",
+    "rewrite_needed": true
+  }
+]

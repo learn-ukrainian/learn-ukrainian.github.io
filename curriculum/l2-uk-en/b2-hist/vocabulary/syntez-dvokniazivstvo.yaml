@@ -1,5 +1,371 @@
-# Vocabulary for Синтез: Від Русі до занепаду
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: syntez-dvokniazivstvo
+level: B2
+version: '2.0'
+items:
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: трансформація
+    ipa: /trɐnsformˈat͡sʲijɐ/
+    translation: transformation
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /sʊbˈjɛktn⁽ʲ⁾isʲtʲ/
+    translation: subjectivity / agency
+    pos: noun
+    gender: f
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦl⁽ʲ⁾isʲtʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+  - lemma: легітимність
+    ipa: /leɦitˈɪmn⁽ʲ⁾isʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: ойкумена
+    ipa: /ojkʊmˈɛnɐ/
+    translation: ecumene / inhabited world
+    pos: noun
+    gender: f
+  - lemma: парламентаризм
+    ipa: /pɐrlɐmentɐrˈɪzm/
+    translation: parliamentarism
+    pos: noun
+    gender: m
+  - lemma: ерозія
+    ipa: /erˈɔz⁽ʲ⁾ijɐ/
+    translation: erosion
+    pos: noun
+    gender: f
+  - lemma: інкорпорація
+    ipa: /inkorpʊrˈat͡sʲijɐ/
+    translation: incorporation
+    pos: noun
+    gender: f
+  - lemma: федерація
+    ipa: /federˈat͡sʲijɐ/
+    translation: federation
+    pos: noun
+    gender: f
+  - lemma: деспотизм
+    ipa: /despʊtˈɪzm/
+    translation: despotism
+    pos: noun
+    gender: m
+  - lemma: соборність
+    ipa: /sobˈɔrn⁽ʲ⁾isʲtʲ/
+    translation: unity / sobornost
+    pos: noun
+    gender: f
+  - lemma: міллет
+    ipa: /m⁽ʲ⁾ilˈɛt/
+    translation: millet (religious community)
+    pos: noun
+    gender: m
+  - lemma: аскер
+    ipa: /ɐskˈɛr/
+    translation: askar / soldier
+    pos: noun
+    gender: m
+  - lemma: поминки
+    ipa: /pomˈɪnkɪ/
+    translation: tribute / commemorative gifts
+    pos: noun
+    gender: pl
+  - lemma: ярлик
+    ipa: /jɐrlˈɪk/
+    translation: yarlyk (charter)
+    pos: noun
+    gender: m
+  - lemma: суверенітет
+    ipa: /sʊweren⁽ʲ⁾itˈɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /ɐftonˈɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: олігархія
+    ipa: /ol⁽ʲ⁾iɦˈarx⁽ʲ⁾ijɐ/
+    translation: oligarchy
+    pos: noun
+    gender: f
+  - lemma: Rex Russiae
+    ipa: /reks rˈusːie/
+    translation: King of Rus
+    pos: noun
+    gender: m
+  - lemma: бей
+    ipa: /bɛj/
+    translation: bey (nobility title)
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑxtɐ/
+    translation: gentry / nobility
+    pos: noun
+    gender: f
+  - lemma: Магдебурзьке право
+    ipa: /mɐɦdebˈʊrzʲke prˈɑvɔ/
+    translation: Magdeburg rights
+    pos: noun
+    gender: n
+  - lemma: деколонізація
+    ipa: /dekolon⁽ʲ⁾izˈat͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+  - lemma: вольності
+    ipa: /ˈvɔlʲnosʲt⁽ʲ⁾i/
+    translation: liberties / freedoms
+    pos: noun
+    gender: pl
+  - lemma: самоврядування
+    ipa: /sɐmowrʲɐdˈuwɐnʲːɐ/
+    translation: self-government
+    pos: noun
+    gender: n
+  - lemma: хрещення
+    ipa: /xrˈɛʃːenʲːɐ/
+    translation: baptism
+    pos: noun
+    gender: n
+  - lemma: злам
+    ipa: /zlˈɑm/
+    translation: fracture / breaking point
+    pos: noun
+    gender: m
+  - lemma: мозаїка
+    ipa: /mozˈajikɐ/
+    translation: mosaic
+    pos: noun
+    gender: f
+  - lemma: щит
+    ipa: /ʃt͡ʃɪt/
+    translation: shield
+    pos: noun
+    gender: m
+  - lemma: розпад
+    ipa: /rˈɔzpɐd/
+    translation: collapse / disintegration
+    pos: noun
+    gender: m
+  - lemma: безелітність
+    ipa: /bezel⁽ʲ⁾itn⁽ʲ⁾isʲtʲ/
+    translation: lack of elite
+    pos: noun
+    gender: f
+  - lemma: всього
+    ipa: /wsʲˈɔɦɔ/
+    translation: of everything
+    pos: pron
+  - lemma: ганза
+    ipa: /ˈɦɑnzɐ/
+    translation: Hanseatic League
+    pos: noun
+    gender: f
+  - lemma: грошового
+    ipa: /ɦroʃowˈɔɦɔ/
+    translation: monetary
+    pos: adj
+  - lemma: дике
+    ipa: /ˈdɪke/
+    translation: wild
+    pos: adj
+  - lemma: корінь
+    ipa: /ˈkɔr⁽ʲ⁾inʲ/
+    translation: root
+    pos: noun
+    gender: m
+  - lemma: культурного
+    ipa: /kʊlʲtˈurnɔɦɔ/
+    translation: cultural
+    pos: adj
+  - lemma: носієм
+    ipa: /nos⁽ʲ⁾ijˈɛm/
+    translation: by the carrier / bearer
+    pos: noun
+  - lemma: ординського
+    ipa: /ordˈɪnsʲkɔɦɔ/
+    translation: of the Horde
+    pos: adj
+  - lemma: писаного
+    ipa: /pˈɪsɐnɔɦɔ/
+    translation: written
+    pos: adj
+  - lemma: польського
+    ipa: /pˈɔlʲsʲkɔɦɔ/
+    translation: Polish
+    pos: adj
+  - lemma: постординського
+    ipa: /postordˈɪnsʲkɔɦɔ/
+    translation: post-Horde
+    pos: adj
+  - lemma: соляними
+    ipa: /solʲɐnˈɪmɪ/
+    translation: salt (adj)
+    pos: adj
+  - lemma: спростовує
+    ipa: /sprostˈɔwʊje/
+    translation: refutes
+    pos: verb
+  - lemma: титулатури
+    ipa: /tɪtʊlɐtˈurɪ/
+    translation: of the titulary
+    pos: noun
+  - lemma: угорців
+    ipa: /ʊɦˈort͡s⁽ʲ⁾iw/
+    translation: of Hungarians
+    pos: noun
+  - lemma: юрій
+    ipa: /ˈjur⁽ʲ⁾ij/
+    translation: Yuriy
+    pos: propn
+    gender: m
+  - lemma: європейцями
+    ipa: /jewropˈɛjt͡sʲɐmɪ/
+    translation: by Europeans
+    pos: noun
+  - lemma: єдину
+    ipa: /jedˈɪnʊ/
+    translation: single / united (fem)
+    pos: adj
+  - lemma: вигасання
+    ipa: /wɪɦɐsˈanʲːɐ/
+    translation: extinction / dying out
+    pos: noun
+    gender: n
+  - lemma: виграш
+    ipa: /ˈwɪɦrɐʃ/
+    translation: gain / winning
+    pos: noun
+    gender: m
+  - lemma: львович
+    ipa: /lʲwˈɔwɪt͡ʃ/
+    translation: Lvovych (patronymic)
+    pos: propn
+    gender: m
+  - lemma: представництво
+    ipa: /predstˈɑwnɪt͡stvwɔ/
+    translation: representation
+    pos: noun
+    gender: n
+  - lemma: русі'
+    ipa: /rˈus⁽ʲ⁾i/
+    translation: of Rus
+    pos: propn
+  - lemma: хаджи
+    ipa: /xɐd͡ʒˈɪ/
+    translation: Hadji
+    pos: propn
+    gender: m
+  - lemma: іі
+    ipa: /drˈʊɦɪj/
+    translation: II (second)
+    pos: num
+  - lemma: галицького
+    ipa: /ˈɦɑlɪt͡sʲkɔɦɔ/
+    translation: of Halych / Galician
+    pos: adj
+  - lemma: галицької
+    ipa: /ˈɦɑlɪt͡sʲkɔj/
+    translation: of Halych / Galician (gen f)
+    pos: adj
+  - lemma: доводять
+    ipa: /dowˈɔdʲɐtʲ/
+    translation: prove
+    pos: verb
+  - lemma: заходом
+    ipa: /zˈɑxɔdɔm/
+    translation: by the West
+    pos: noun
+  - lemma: зв'язків
+    ipa: /zvʲˈɐzk⁽ʲ⁾iw/
+    translation: of connections
+    pos: noun
+  - lemma: найпізнішої
+    ipa: /nɐjp⁽ʲ⁾izʲn⁽ʲ⁾ˈiʃoj/
+    translation: of the latest
+    pos: adj
+  - lemma: островська
+    ipa: /ostrˈɔwsʲkɐ/
+    translation: Ostrovska
+    pos: adj
+  - lemma: півстолітньої
+    ipa: /p⁽ʲ⁾iwstol⁽ʲ⁾ˈitnʲoj/
+    translation: of half-century
+    pos: adj
+  - lemma: євразійської
+    ipa: /jewrɐz⁽ʲ⁾ˈijsʲkɔj/
+    translation: of Eurasian
+    pos: adj
+  - lemma: безелітність'
+    ipa: /bezel⁽ʲ⁾itn⁽ʲ⁾isʲtʲ/
+    translation: lack of elite
+    pos: noun
+  - lemma: бейських
+    ipa: /ˈbɛjsʲkɪx/
+    translation: of the beys
+    pos: adj
+  - lemma: будь-яких
+    ipa: /ˈbʊdʲ jɐkɪx/
+    translation: any
+    pos: adj
+  - lemma: високорозвинена
+    ipa: /wɪsokorozwˈɪnenɐ/
+    translation: highly developed
+    pos: adj
+  - lemma: дозволило
+    ipa: /dozwˈɔlɪlɔ/
+    translation: allowed
+    pos: verb
+  - lemma: рабської
+    ipa: /rˈɑbsʲkɔj/
+    translation: slavish / of slavery
+    pos: adj
+  - lemma: коренів
+    ipa: /ˈkɔren⁽ʲ⁾iw/
+    translation: of roots
+    pos: noun
+  - lemma: гуманізму
+    ipa: /ɦʊmɐn⁽ʲ⁾ˈizmʊ/
+    translation: humanism
+    pos: noun
+    gender: m
+  - lemma: законотворенні
+    ipa: /zɐkonʊtwˈɔrenʲːi/
+    translation: lawmaking
+    pos: noun
+    gender: n
+  - lemma: міщанство
+    ipa: /m⁽ʲ⁾iʃːˈɑnctvwɔ/
+    translation: burghers
+    pos: noun
+    gender: n
+  - lemma: недоторканність
+    ipa: /nedotorkˈɑnn⁽ʲ⁾isʲtʲ/
+    translation: inviolability
+    pos: noun
+    gender: f
+  - lemma: урядовців
+    ipa: /ʊrʲɐdˈɔwt͡s⁽ʲ⁾iw/
+    translation: officials
+    pos: noun
+    gender: m
+  - lemma: ідей
+    ipa: /idˈɛj/
+    translation: ideas
+    pos: noun
+    gender: f
+  - lemma: європейськості
+    ipa: /jewropˈɛjsʲkosʲt⁽ʲ⁾i/
+    translation: Europeanness
+    pos: noun
+    gender: f

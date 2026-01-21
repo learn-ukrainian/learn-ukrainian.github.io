@@ -1,22 +1,22 @@
-# Audit Report: syntez-vytoky-1.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 3000
+# Audit Report: M08 — syntez-vytoky-1.md
+**Level:** B2 | **Module:** M08 | **Phase:** HIST.1 | **Pedagogy:** seminar | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3000/3000
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Words:** ✅ 3061/3000
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 12/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 65/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (synthesis))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -34,24 +34,24 @@
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 16 | 4 | 100% | 10% | 9.5% |
-| variety | 0.92 | - | 92% | 5% | 4.4% |
+| variety | 0.93 | - | 93% | 5% | 4.4% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 20 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.6%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Синтез: Від Трипілля до Києва** | ⚪️ | 60 | Skipped |
-| **Вступ** | ⚪️ | 739 | Skipped |
-| **Читання** | ✅ | 400 | Included in Core |
-| **Первинні джерела** | ⚪️ | 433 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 493 | Skipped |
-| **Хронологія: Від глини до каменю** | ⚪️ | 226 | Skipped |
-| **Зв'язок із сьогоденням** | ⚪️ | 167 | Skipped |
+| **Огляд періоду** | ⚪️ | 739 | Skipped |
+| **Ключові теми** | ⚪️ | 400 | Skipped |
+| **Первинні джерела** | ✅ | 433 | Included in Core |
+| **Аналіз** | ✅ | 493 | Included in Core |
+| **Хронологія: Від глини до каменю** | ✅ | 226 | Included in Core |
+| **Зв'язок із сьогоденням** | ✅ | 167 | Included in Core |
 | **Есе** | ⚪️ | 233 | Skipped |
-| **Підсумок** | ✅ | 44 | Included in Core |
-| **Ключові висновки епохи** | ⚪️ | 99 | Skipped |
+| **Підсумок** | ✅ | 105 | Included in Core |
+| **Ключові висновки епохи** | ✅ | 99 | Included in Core |
 | **Словник епохи: Витоки** | ⚪️ | 10 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 96 | Skipped |

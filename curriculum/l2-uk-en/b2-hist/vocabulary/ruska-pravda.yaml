@@ -1,5 +1,176 @@
-# Vocabulary for Руська Правда: Перший законодавчий кодекс
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: 13-ruska-pravda
+level: B2
+version: '2.0'
+items:
+  - lemma: правда
+    ipa: /ˈprau̯d̪ɑ/
+    translation: truth; justice; code of law
+    pos: noun
+    gender: f
+  - lemma: кодекс
+    ipa: /ˈkɔd̪eks/
+    translation: code (of law)
+    pos: noun
+    gender: m
+  - lemma: князь
+    ipa: /kɲɑzʲ/
+    translation: prince; knyaz
+    pos: noun
+    gender: m
+  - lemma: віра
+    ipa: /ˈvʲirɑ/
+    translation: weregild (blood money)
+    pos: noun
+    gender: f
+  - lemma: гривня
+    ipa: /ˈɦrɪu̯ɲɑ/
+    translation: hryvnia (currency/weight unit)
+    pos: noun
+    gender: f
+  - lemma: штраф
+    ipa: /ʃtrɑf/
+    translation: fine
+    pos: noun
+    gender: m
+  - lemma: вбивство
+    ipa: /ˈu̯bɪu̯st̪wo/
+    translation: murder
+    pos: noun
+    gender: n
+  - lemma: помста
+    ipa: /ˈpɔmst̪ɑ/
+    translation: revenge; vengeance
+    pos: noun
+    gender: f
+  - lemma: суд
+    ipa: /sud̪/
+    translation: court; trial
+    pos: noun
+    gender: m
+  - lemma: закон
+    ipa: /zɑˈkɔn/
+    translation: law
+    pos: noun
+    gender: m
+  - lemma: злочин
+    ipa: /ˈzlɔt͡ʃɪn/
+    translation: crime
+    pos: noun
+    gender: m
+  - lemma: покарання
+    ipa: /pokɑˈrɑɲːɑ/
+    translation: punishment
+    pos: noun
+    gender: n
+  - lemma: мудрий
+    ipa: /ˈmud̪rɪj/
+    translation: wise
+    pos: adj
+  - lemma: справедливість
+    ipa: /sprɑwed̪ˈlɪwistʲ/
+    translation: justice
+    pos: noun
+    gender: f
+  - lemma: власність
+    ipa: /ˈwɫɑsɲisʲtʲ/
+    translation: property
+    pos: noun
+    gender: f
+  - lemma: свідок
+    ipa: /ˈsvʲid̪ok/
+    translation: witness
+    pos: noun
+    gender: m
+  - lemma: видок
+    ipa: /ˈvɪd̪ok/
+    translation: eyewitness (archaic)
+    pos: noun
+    gender: m
+  - lemma: послух
+    ipa: /ˈpɔsɫux/
+    translation: witness (by hearsay); obedience
+    pos: noun
+    gender: m
+  - lemma: ізгой
+    ipa: /izˈɦɔj/
+    translation: outcast; social orphan
+    pos: noun
+    gender: m
+  - lemma: холоп
+    ipa: /xoˈɫɔp/
+    translation: kholop (serf/slave)
+    pos: noun
+    gender: m
+  - lemma: смерд
+    ipa: /smɛrd̪/
+    translation: smerd (feudal dependent peasant)
+    pos: noun
+    gender: m
+  - lemma: челядь
+    ipa: /ˈt͡ʃɛlʲɑdʲ/
+    translation: household servants/slaves
+    pos: noun
+    gender: f
+  - lemma: закуп
+    ipa: /ˈzɑkup/
+    translation: zakup (indentured laborer)
+    pos: noun
+    gender: m
+  - lemma: рядович
+    ipa: /rʲɑˈd̪ɔwɪt͡ʃ/
+    translation: ryadovych (contract laborer)
+    pos: noun
+    gender: m
+  - lemma: огнищанин
+    ipa: /oɦnɪˈʃt͡ʃɑnɪn/
+    translation: fire-keeper; estate manager
+    pos: noun
+    gender: m
+  - lemma: тіун
+    ipa: /tʲiˈun/
+    translation: tiun (princely official)
+    pos: noun
+    gender: m
+  - lemma: ябетник
+    ipa: /ˈjɑbet̪nɪk/
+    translation: official; agent of the court
+    pos: noun
+    gender: m
+  - lemma: верв
+    ipa: /vɛrv/
+    translation: verv (community responsible for crime)
+    pos: noun
+    gender: f
+  - lemma: головник
+    ipa: /ɦoˈlɔu̯nɪk/
+    translation: murderer (who pays "head price")
+    pos: noun
+    gender: m
+  - lemma: община
+    ipa: /obˈʃt͡ʃɪnɑ/
+    translation: community; commune
+    pos: noun
+    gender: f
+  - lemma: звичай
+    ipa: /ˈzwɪt͡ʃɑj/
+    translation: custom; tradition
+    pos: noun
+    gender: m
+  - lemma: право
+    ipa: /ˈprɑvo/
+    translation: law; right
+    pos: noun
+    gender: n
+  - lemma: приватний
+    ipa: /prɪˈvɑt̪nɪj/
+    translation: private
+    pos: adj
+  - lemma: майновий
+    ipa: /mɑjnoˈvɪj/
+    translation: property (adj)
+    pos: adj
+  - lemma: відповідальність
+    ipa: /vid̪povid̪ˈdɑlʲnizʲtʲ/
+    translation: responsibility; liability
+    pos: noun
+    gender: f

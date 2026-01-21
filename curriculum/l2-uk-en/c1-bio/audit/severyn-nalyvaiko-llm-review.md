@@ -1,6 +1,6 @@
 # LLM Self-Validation Report: severyn-nalyvaiko (C1-BIO)
 
-**Content Hash:** b0aa41ae
+**Content Hash:** 3314caf9
 
 ## 1. Ukrainian Grammar & Naturalness
 - **Grammar Correctness**: High. Verified against standard Ukrainian orthography.

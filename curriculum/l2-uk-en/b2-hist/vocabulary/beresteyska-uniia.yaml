@@ -1,5 +1,152 @@
-# Vocabulary for Берестейська унія: Церковний розкол
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: beresteyska-uniia
+level: B2
+version: '2.0'
+items:
+  - lemma: собор
+    ipa: /sɔˈbɔr/
+    translation: council (church) / cathedral
+    pos: noun
+    gender: m
+  - lemma: ієрарх
+    ipa: /ijɛˈrɑrx/
+    translation: hierarch
+    pos: noun
+    gender: m
+  - lemma: унія
+    ipa: /ˈun⁽ʲ⁾ijɐ/
+    translation: union
+    pos: noun
+    gender: f
+  - lemma: артикул
+    ipa: /ɐrˈtɪkʊl/
+    translation: article (of an agreement)
+    pos: noun
+    gender: m
+  - lemma: полеміка
+    ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
+    translation: polemic
+    pos: noun
+    gender: f
+  - lemma: схизма
+    ipa: /ˈsxɪzmɐ/
+    translation: schism
+    pos: noun
+    gender: f
+  - lemma: греко-католик
+    ipa: /ˌɦrɛkɔ kɐˈtɔlɪk/
+    translation: Greek Catholic
+    pos: noun
+    gender: m
+  - lemma: уніат
+    ipa: /ʊn⁽ʲ⁾iˈɑt/
+    translation: Uniate
+    pos: noun
+    gender: m
+  - lemma: обряд
+    ipa: /ɔˈbrʲɑd/
+    translation: rite / ritual
+    pos: noun
+    gender: m
+  - lemma: догмат
+    ipa: /ˈdɔɦmɐt/
+    translation: dogma
+    pos: noun
+    gender: m
+  - lemma: патріархат
+    ipa: /pɐtr⁽ʲ⁾ijɐrˈxɑt/
+    translation: patriarchate
+    pos: noun
+    gender: m
+  - lemma: митрополит
+    ipa: /mɪtrɔpɔˈlɪt/
+    translation: metropolitan (bishop)
+    pos: noun
+    gender: m
+  - lemma: єпископ
+    ipa: /jɛˈpɪskɔp/
+    translation: bishop
+    pos: noun
+    gender: m
+  - lemma: опір
+    ipa: /ˈɔp⁽ʲ⁾ir/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: переслідування
+    ipa: /pɛrɛˈsl⁽ʲ⁾idʊʋɐnʲːɐ/
+    translation: persecution
+    pos: noun
+    gender: n
+  - lemma: привілей
+    ipa: /prɪʋ⁽ʲ⁾iˈlɛj/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: денаціоналізація
+    ipa: /dɛnɐt͡sʲiɔnɐl⁽ʲ⁾iˈzɐt͡sʲijɐ/
+    translation: denationalization
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾isʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: розкол
+    ipa: /rɔzˈkɔl/
+    translation: split / schism
+    pos: noun
+    gender: m
+  - lemma: віровчення
+    ipa: /ʋ⁽ʲ⁾irɔu̯ˈt͡ʃɛnʲːɐ/
+    translation: creed / doctrine
+    pos: noun
+    gender: n
+  - lemma: канонічний
+    ipa: /kɐnɔˈn⁽ʲ⁾it͡ʃnɪj/
+    translation: canonical
+    pos: adj
+  - lemma: єзуїтський
+    ipa: /jɛzʊˈjit͡sʲkɪj/
+    translation: Jesuit (adj)
+    pos: adj
+  - lemma: папа
+    ipa: /ˈpɑpɐ/
+    translation: Pope
+    pos: noun
+    gender: m
+  - lemma: Апостольський престол
+    ipa: /ɐˈpɔstɔlʲsʲkɪj prɛˈstɔl/
+    translation: Apostolic See / Holy See
+    pos: noun
+    gender: m
+  - lemma: просвітництво
+    ipa: /prɔˈsʋ⁽ʲ⁾itnɪt͡stwɔ/
+    translation: enlightenment
+    pos: noun
+    gender: n
+  - lemma: друкар
+    ipa: /drʊˈkɑr/
+    translation: printer
+    pos: noun
+    gender: m
+  - lemma: братство
+    ipa: /ˈbrɑtstwɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: самосвідомість
+    ipa: /sɐmɔˈsʋ⁽ʲ⁾idɔm⁽ʲ⁾isʲtʲ/
+    translation: self-awareness
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /ɐsɪm⁽ʲ⁾iˈlʲɐt͡sʲijɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: гноблення
+    ipa: /ˈɦnɔblɛnʲːɐ/
+    translation: oppression
+    pos: noun
+    gender: n

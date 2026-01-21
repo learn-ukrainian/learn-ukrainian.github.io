@@ -1,0 +1,170 @@
+items:
+  - lemma: переконання
+    ipa: /perekoˈnɑnʲːɑ/
+    translation: persuasion
+    pos: noun
+    gender: n
+  - lemma: адаптуватися
+    ipa: /ɑdɑptoˈwɑtɪsʲɑ/
+    translation: to adapt
+    pos: verb
+    aspect: impf
+  - lemma: риторика
+    ipa: /rɪˈtɔrɪkɑ/
+    translation: rhetoric
+    pos: noun
+    gender: f
+  - lemma: етос
+    ipa: /ˈetɔs/
+    translation: ethos
+    pos: noun
+    gender: m
+  - lemma: пафос
+    ipa: /ˈpɑfɔs/
+    translation: pathos
+    pos: noun
+    gender: m
+  - lemma: логос
+    ipa: /ˈlɔɦɔs/
+    translation: logos
+    pos: noun
+    gender: m
+  - lemma: наратив
+    ipa: /nɑrɑˈtɪw/
+    translation: narrative
+    pos: noun
+    gender: m
+  - lemma: сторітелінг
+    ipa: /stoˈritelinh/
+    translation: storytelling
+    pos: noun
+    gender: m
+  - lemma: провокаційний
+    ipa: /prowokɑˈt͡sʲiɪ̯nɪɪ̯/
+    translation: provocative
+    pos: adj
+  - lemma: міст
+    ipa: /mist/
+    translation: bridge (technique)
+    pos: noun
+    gender: m
+  - lemma: перефразування
+    ipa: /perefrɑzuˈwɑnʲːɑ/
+    translation: paraphrasing
+    pos: noun
+    gender: n
+  - lemma: зондування
+    ipa: /zɔnduˈwɑnʲːɑ/
+    translation: probing, sounding out
+    pos: noun
+    gender: n
+  - lemma: модульний
+    ipa: /moˈdulʲnɪɪ̯/
+    translation: modular
+    pos: adj
+  - lemma: аналогія
+    ipa: /ɑnɑˈlɔɦiɪ̯ɑ/
+    translation: analogy
+    pos: noun
+    gender: f
+  - lemma: регістр
+    ipa: /reˈɦistr/
+    translation: register (linguistic)
+    pos: noun
+    gender: m
+  - lemma: мультимедійний
+    ipa: /mulʲtɪmeˈdiɪ̯nɪɪ̯/
+    translation: multimedia
+    pos: adj
+  - lemma: зайвість
+    ipa: /ˈzɑɪ̯wistʲ/
+    translation: redundancy
+    pos: noun
+    gender: f
+  - lemma: суміжність
+    ipa: /suˈmiʒnistʲ/
+    translation: proximity, adjacency
+    pos: noun
+    gender: f
+  - lemma: сигналізація
+    ipa: /sɪɦnɑlizɑˈt͡sʲiɪ̯ɑ/
+    translation: signaling, cueing
+    pos: noun
+    gender: f
+  - lemma: типографіка
+    ipa: /tɪpoɦrɑˈfikɑ/
+    translation: typography
+    pos: noun
+    gender: f
+  - lemma: читабельність
+    ipa: /t͡ʃɪˈtɑbelʲnistʲ/
+    translation: readability
+    pos: noun
+    gender: f
+  - lemma: зарубка
+    ipa: /zɑˈrupkɑ/
+    translation: serif
+    pos: noun
+    gender: f
+  - lemma: контраст
+    ipa: /konˈtrɑst/
+    translation: contrast
+    pos: noun
+    gender: m
+  - lemma: градієнт
+    ipa: /ɦrɑdiˈjent/
+    translation: gradient
+    pos: noun
+    gender: m
+  - lemma: візуалізація
+    ipa: /wizuɑlizɑˈt͡sʲiɪ̯ɑ/
+    translation: visualization
+    pos: noun
+    gender: f
+  - lemma: інфографіка
+    ipa: /infoɦrɑˈfikɑ/
+    translation: infographics
+    pos: noun
+    gender: f
+  - lemma: віртуальний
+    ipa: /wirtuˈɑlʲnɪɪ̯/
+    translation: virtual
+    pos: adj
+  - lemma: камера
+    ipa: /ˈkɑmerɑ/
+    translation: camera
+    pos: noun
+    gender: f
+  - lemma: мікрофон
+    ipa: /mikroˈfɔn/
+    translation: microphone
+    pos: noun
+    gender: m
+  - lemma: інтерактивність
+    ipa: /interɑktɪwˈnistʲ/
+    translation: interactivity
+    pos: noun
+    gender: f
+  - lemma: залучення
+    ipa: /zɑˈlut͡ʃenʲːɑ/
+    translation: engagement
+    pos: noun
+    gender: n
+  - lemma: енергія
+    ipa: /eˈnerɦiɪ̯ɑ/
+    translation: energy
+    pos: noun
+    gender: f
+  - lemma: когнітивний
+    ipa: /koɦniˈtɪwnɪɪ̯/
+    translation: cognitive
+    pos: adj
+  - lemma: переконливий
+    ipa: /pereˈkonlɪwɪɪ̯/
+    translation: persuasive
+    pos: adj
+  - lemma: авторитет
+    ipa: /ɑwtorɪˈtet/
+    translation: authority, credibility
+    pos: noun
+    gender: m

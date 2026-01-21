@@ -1,2 +1,237 @@
-module: 94-b2-final-exam
-words: []
+items:
+  # Professional Email (M85-86)
+  - lemma: електронна пошта
+    ipa: /eˌlekˈtrɔnːɑ ˈpɔʃtɑ/
+    translation: email
+    pos: noun phrase
+    gender: f
+  - lemma: адресат
+    ipa: /ɑdreˈsɑt/
+    translation: addressee
+    pos: noun
+    gender: m
+  - lemma: тема листа
+    ipa: /ˈtɛmɑ ˈlɪstɑ/
+    translation: email subject
+    pos: noun phrase
+    gender: f
+  - lemma: вкладення
+    ipa: /vklɑˈdɛnʲːɑ/
+    translation: attachment
+    pos: noun
+    gender: n
+  - lemma: відповідь
+    ipa: /ˈv⁽ʲ⁾idpɔv⁽ʲ⁾idʲ/
+    translation: reply
+    pos: noun
+    gender: f
+  - lemma: пересилання
+    ipa: /pereˈsɪlɑnʲːɑ/
+    translation: forwarding
+    pos: noun
+    gender: n
+  - lemma: офіційний тон
+    ipa: /ɔf⁽ʲ⁾iˈt͡s⁽ʲ⁾ijnɪj tɔn/
+    translation: formal tone
+    pos: noun phrase
+    gender: m
+  - lemma: звертання
+    ipa: /zverˈtɑnʲːɑ/
+    translation: salutation
+    pos: noun
+    gender: n
+
+  # Reports (M87-88)
+  - lemma: звіт
+    ipa: /zv⁽ʲ⁾it/
+    translation: report
+    pos: noun
+    gender: m
+  - lemma: структура
+    ipa: /strʊkˈtʊrɑ/
+    translation: structure
+    pos: noun
+    gender: f
+  - lemma: висновок
+    ipa: /ˈvɪsnɔwɔk/
+    translation: conclusion
+    pos: noun
+    gender: m
+  - lemma: рекомендація
+    ipa: /rekɔmenˈdɑt͡s⁽ʲ⁾ijɑ/
+    translation: recommendation
+    pos: noun
+    gender: f
+  - lemma: дані
+    ipa: /ˈdɑn⁽ʲ⁾i/
+    translation: data
+    pos: noun
+    gender: pl
+  - lemma: графік
+    ipa: /ˈɦrɑf⁽ʲ⁾ik/
+    translation: chart, graph
+    pos: noun
+    gender: m
+  - lemma: аналіз
+    ipa: /ɑnɑˈl⁽ʲ⁾iz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: презентація даних
+    ipa: /prezenˈtɑt͡s⁽ʲ⁾ijɑ ˈdɑnɪx/
+    translation: data presentation
+    pos: noun phrase
+    gender: f
+
+  # News Analysis (M89-90)
+  - lemma: джерело
+    ipa: /d͡ʒeˈrelɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: упередження
+    ipa: /ʊpereˈd͡ʒenʲːɑ/
+    translation: bias
+    pos: noun
+    gender: n
+  - lemma: факт
+    ipa: /fɑkt/
+    translation: fact
+    pos: noun
+    gender: m
+  - lemma: думка
+    ipa: /ˈdʊmkɑ/
+    translation: opinion
+    pos: noun
+    gender: f
+  - lemma: маніпуляція
+    ipa: /mɑn⁽ʲ⁾ipʊˈlʲɑt͡s⁽ʲ⁾ijɑ/
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: достовірність
+    ipa: /dɔstɔˈv⁽ʲ⁾irnʲistʲ/
+    translation: reliability, credibility
+    pos: noun
+    gender: f
+  - lemma: об'єктивність
+    ipa: /ɔbʲjekˈtɪwnʲistʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: заголовок
+    ipa: /zɑɦɔˈlɔwɔk/
+    translation: headline
+    pos: noun
+    gender: m
+
+  # Presentations (M91-92)
+  - lemma: слайд
+    ipa: /slɑjd/
+    translation: slide
+    pos: noun
+    gender: m
+  - lemma: виступ
+    ipa: /ˈvɪstʊp/
+    translation: presentation, speech
+    pos: noun
+    gender: m
+  - lemma: аудиторія
+    ipa: /ɑʊdɪˈtɔrijɑ/
+    translation: audience
+    pos: noun
+    gender: f
+  - lemma: питання
+    ipa: /pɪˈtɑnʲːɑ/
+    translation: question
+    pos: noun
+    gender: n
+  - lemma: відповідь на питання
+    ipa: /ˈv⁽ʲ⁾idpɔv⁽ʲ⁾idʲ nɑ pɪˈtɑnʲːɑ/
+    translation: answer to a question
+    pos: noun phrase
+    gender: f
+  - lemma: переконування
+    ipa: /perekɔˈnʊvɑnʲːɑ/
+    translation: persuasion
+    pos: noun
+    gender: n
+  - lemma: тези
+    ipa: /ˈtezɪ/
+    translation: key points, thesis points
+    pos: noun
+    gender: pl
+
+  # Discussion & Debate (M93)
+  - lemma: аргумент
+    ipa: /ɑrɦʊˈment/
+    translation: argument
+    pos: noun
+    gender: m
+  - lemma: контраргумент
+    ipa: /kɔntrɑrɦʊˈment/
+    translation: counterargument
+    pos: noun
+    gender: m
+  - lemma: компроміс
+    ipa: /kɔmprɔˈm⁽ʲ⁾is/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: консенсус
+    ipa: /kɔnˈsensʊs/
+    translation: consensus
+    pos: noun
+    gender: m
+  - lemma: обговорення
+    ipa: /ɔbɦɔˈwɔrenʲːɑ/
+    translation: discussion
+    pos: noun
+    gender: n
+  - lemma: дискусія
+    ipa: /dɪsˈkʊsijɑ/
+    translation: discussion, debate
+    pos: noun
+    gender: f
+  - lemma: позиція
+    ipa: /pɔˈzɪt͡s⁽ʲ⁾ijɑ/
+    translation: position, stance
+    pos: noun
+    gender: f
+  - lemma: обґрунтування
+    ipa: /ɔbɡrʊntʊˈvɑnʲːɑ/
+    translation: justification, reasoning
+    pos: noun
+    gender: n
+
+  # General Communication
+  - lemma: професійне спілкування
+    ipa: /prɔfeˈs⁽ʲ⁾ijnɔje spiɫkʊˈvɑnʲːɑ/
+    translation: professional communication
+    pos: noun phrase
+    gender: n
+  - lemma: ефективність
+    ipa: /efekˈtɪwnʲistʲ/
+    translation: effectiveness
+    pos: noun
+    gender: f
+  - lemma: критичне мислення
+    ipa: /krɪˈtɪt͡ʃnɔje ˈmɪslenʲːɑ/
+    translation: critical thinking
+    pos: noun phrase
+    gender: n
+  - lemma: переконливість
+    ipa: /perekɔnˈlɪwʲistʲ/
+    translation: persuasiveness
+    pos: noun
+    gender: f
+  - lemma: чіткість
+    ipa: /ˈt͡ʃitkʲistʲ/
+    translation: clarity
+    pos: noun
+    gender: f
+  - lemma: комунікативна компетенція
+    ipa: /kɔmʊn⁽ʲ⁾ikɑˈtɪwnɑ kɔmpeˈtent͡s⁽ʲ⁾ijɑ/
+    translation: communicative competence
+    pos: noun phrase
+    gender: f

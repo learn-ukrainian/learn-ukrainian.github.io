@@ -1,666 +1,189 @@
-module: 82-rich-pospolyta
+module: rich-pospolyta
 level: B2
 version: '2.0'
 items:
-- lemma: август
-  ipa: /ɐwˈɦust/
-  translation: Sigismund II Augustus
-  pos: propn
-  gender: m
-- lemma: арена
-  ipa: /ɐˈrɛnɑ/
-  translation: arena, stage
-  pos: noun
-  gender: f
-- lemma: асиміляція
-  ipa: /ɐsʲimʲiˈlʲɑt͡sʲijɑ/
-  translation: assimilation
-  pos: noun
-  gender: f
-- lemma: багатоденний
-  ipa: /bɐɦɐtoˈdɛnːɪj/
-  translation: multi-day, lasting many days
-  pos: adj
-  gender: f
-- lemma: батог
-  ipa: /bɐˈtoh/
-  translation: whips (genitive plural)
-  pos: noun
-  gender: m
-- lemma: безправний
-  ipa: /bɛzˈprɑwnɪj/
-  translation: rightless
-  pos: adj
-- lemma: берестейський
-  ipa: /bɛrɛsˈtɛjsʲkɪj/
-  translation: Brest (adj., Union of Brest 1596)
-  pos: adj
-  gender: f
-- lemma: бика
-  ipa: /bɪˈkɑ/
-  translation: bull (genitive)
-  pos: noun
-  gender: m
-- lemma: благородний
-  ipa: /blɐɦoˈrodnɪj/
-  translation: noble, virtuous
-  pos: adj
-- lemma: братський
-  ipa: /ˈbrɑt͡sʲkɪj/
-  translation: brotherhood (adj.)
-  pos: adj
-- lemma: брацлавщина
-  ipa: /brɐt͡sˈlɑwʃt͡ʃɪnɑ/
-  translation: Bratslav region
-  pos: propn
-  gender: f
-- lemma: біженець
-  ipa: /bʲiˈʒɛnɛt͡sʲ/
-  translation: refugees (genitive plural)
-  pos: noun
-  gender: m
-- lemma: вежа
-  ipa: /ˈwɛʒɑ/
-  translation: tower
-  pos: noun
-  gender: f
-- lemma: вишенський
-  ipa: /wɪˈʃɛnsʲkɪj/
-  translation: Vyshensky (Ivan Vyshensky, polemicist)
-  pos: propn
-  gender: m
-- lemma: вишневецький
-  ipa: /wɪʃnɛˈwɛt͡sʲkɪj/
-  translation: Vyshnevetsky (magnate family)
-  pos: propn
-  gender: m
-- lemma: втікач
-  ipa: /wˈtʲikɑt͡ʃ/
-  translation: fugitives (genitive plural)
-  pos: noun
-  gender: m
-- lemma: відбирати
-  ipa: /wʲidˈbɪrɑtɪ/
-  translation: to take away
-  pos: verb
-- lemma: відбиток
-  ipa: /wʲidˈbɪtok/
-  translation: imprint, reflection
-  pos: noun
-  gender: m
-- lemma: гданськ
-  ipa: /ɦdɑnʲsk/
-  translation: Gdańsk (Danzig)
-  pos: propn
-  gender: m
-- lemma: грішм
-  ipa: /ɦrʲiʃm/
-  translation: coins, money (genitive plural)
-  pos: noun
-  gender: m
-- lemma: давні
-  ipa: /dɐwˈnʲi/
-  translation: ancient ones (feminine plural)
-  pos: noun
-  gender: f
-- lemma: дедалі
-  ipa: /dɛˈdɑlʲi/
-  translation: increasingly
-  pos: adv
-- lemma: добровільний
-  ipa: /dobroˈwʲilʲnɪj/
-  translation: voluntary
-  pos: adj
-  gender: f
-- lemma: друкувати
-  ipa: /druˈkuwɑtɪ/
-  translation: to print
-  pos: verb
-- lemma: живцем
-  ipa: /ʒɪwˈt͡sɛm/
-  translation: alive, by force
-  pos: noun
-  gender: m
-- lemma: житниця
-  ipa: /ʒɪtˈnɪt͡sʲɑ/
-  translation: granaries (genitive plural)
-  pos: noun
-  gender: f
-- lemma: загострити
-  ipa: /zɐˈɦostrɪtɪ/
-  translation: to sharpen, to aggravate
-  pos: verb
-  gender: n
-- lemma: закріпачення
-  ipa: /zɐkrʲiˈpɑt͡ʃɛnʲːɑ/
-  translation: enserfment
-  pos: noun
-  gender: n
-- lemma: занедбати
-  ipa: /zɐnɛdˈbɑtɪ/
-  translation: to neglect
-  pos: verb
-- lemma: захарія
-  ipa: /zɐxɐˈrʲijɑ/
-  translation: Zakhariia (Kopystensky)
-  pos: propn
-  gender: m
-- lemma: захиститися
-  ipa: /zɐxɪˈstɪtɪsʲɑ/
-  translation: to defend oneself
-  pos: verb
-- lemma: згона
-  ipa: /zˈɦonɑ/
-  translation: forced labor (genitive plural)
-  pos: noun
-  gender: m
-- lemma: змиритися
-  ipa: /zmɪˈrɪtɪsʲɑ/
-  translation: to resign oneself
-  pos: verb
-- lemma: знаття
-  ipa: /ˈznɑtːɑ/
-  translation: knowledge (archaic)
-  pos: noun
-  gender: f
-- lemma: зостатися
-  ipa: /zostɐˈtɪsʲɑ/
-  translation: to remain (archaic form of залишитися)
-  pos: verb
-  gender: m
-- lemma: зрада
-  ipa: /ˈzrɑdɑ/
-  translation: betrayals (genitive plural)
-  pos: noun
-  gender: f
-- lemma: зрівнятися
-  ipa: /zˈrʲiwnʲɑtɪsʲɑ/
-  translation: to become equal
-  pos: verb
-- lemma: каплиця
-  ipa: /kɐˈplɪt͡sʲɑ/
-  translation: chapel
-  pos: noun
-  gender: f
-- lemma: караний
-  ipa: /kɐˈrɑnɪj/
-  translation: punished
-  pos: adj
-  gender: m
-- lemma: католик
-  ipa: /kɐˈtolɪk/
-  translation: Catholics (genitive plural)
-  pos: noun
-  gender: m
-- lemma: католицизм
-  ipa: /kɐtoˈlɪt͡sɪzm/
-  translation: Catholicism
-  pos: noun
-  gender: m
-- lemma: кишеня
-  ipa: /kɪˈʃɛnʲɑ/
-  translation: pocket (genitive)
-  pos: noun
-  gender: f
-- lemma: колегія
-  ipa: /koˈlɛɦʲijɑ/
-  translation: college (Jesuit colleges in Commonwealth)
-  pos: noun
-  gender: m
-- lemma: конєцпольський
-  ipa: /konɛt͡sˈpolʲsʲkɪj/
-  translation: Koniecpolski (magnate family)
-  pos: propn
-  gender: m
-- lemma: копистенський
-  ipa: /kopɪsˈtɛnsʲkɪj/
-  translation: Kopynstensky (Zakhariia Kopynstensky)
-  pos: propn
-  gender: m
-- lemma: корнякт
-  ipa: /korˈnʲɑkt/
-  translation: Korniakt (Peter Korniakt, merchant)
-  pos: propn
-  gender: m
-- lemma: косинський
-  ipa: /koˈsɪnsʲkɪj/
-  translation: Kosinski (Kryshtof Kosinski, Cossack leader)
-  pos: propn
-  gender: m
-- lemma: кривд
-  ipa: /krɪwd/
-  translation: grievances (genitive plural)
-  pos: noun
-  gender: f
-- lemma: криштоф
-  ipa: /krɪʃˈtof/
-  translation: Kryshtof (Christopher - Kosinski's first name)
-  pos: propn
-  gender: m
-- lemma: лава
-  ipa: /lɐˈwɑ/
-  translation: bench, pew
-  pos: noun
-  gender: f
-- lemma: латифундія
-  ipa: /lɐtɪˈfundʲijɑ/
-  translation: latifundia (genitive plural)
-  pos: noun
-  gender: f
-- lemma: люблін
-  ipa: /lʲubˈlʲin/
-  translation: Lublin
-  pos: propn
-  gender: m
-- lemma: магнат
-  ipa: /mɐɦˈnɑt/
-  translation: magnates (genitive plural)
-  pos: noun
-  gender: m
-- lemma: магната
-  ipa: /mɐɦˈnɑtɑ/
-  translation: magnate (genitive)
-  pos: noun
-  gender: m
-- lemma: магнатський
-  ipa: /mɐɦˈnɑt͡sʲkɪj/
-  translation: magnate (adj.)
-  pos: adj
-- lemma: материнський
-  ipa: /mɐtɛˈrɪnsʲkɪj/
-  translation: maternal, mother's
-  pos: adj
-  gender: f
-- lemma: маєтка
-  ipa: /mɐˈjɛtkɑ/
-  translation: estate (genitive)
-  pos: noun
-  gender: m
-- lemma: маєток
-  ipa: /mɐˈjɛtok/
-  translation: estates (genitive plural)
-  pos: noun
-  gender: f
-- lemma: мелетій
-  ipa: /mɛˈlɛtʲij/
-  translation: Meletii (Smotrytsky)
-  pos: propn
-  gender: m
-- lemma: механіз
-  ipa: /mɛxɐˈnʲizm/
-  translation: mechanism (genitive plural)
-  pos: noun
-  gender: m
-- lemma: мнігий
-  ipa: /mnʲiˈɦɪj/
-  translation: many (archaic Church Slavonic)
-  pos: adj
-- lemma: міщанин
-  ipa: /mʲiˈʃt͡ʃɑnɪn/
-  translation: townspeople (genitive plural)
-  pos: noun
-  gender: m
-- lemma: надрукувати
-  ipa: /nɐdruˈkuwɑtɪ/
-  translation: to print
-  pos: verb
-- lemma: найболючіший
-  ipa: /nɐjboˈlʲut͡ʃʲiʃɪj/
-  translation: most painful
-  pos: adj
-  gender: m
-- lemma: найвпливовіший
-  ipa: /nɐjwplɪˈwowʲiʃɪj/
-  translation: most influential
-  pos: adj
-- lemma: найзапекліший
-  ipa: /nɐjzɐˈpɛklʲiʃɪj/
-  translation: most fierce, most ardent
-  pos: adj
-- lemma: наливайка
-  ipa: /nɐlɪˈwɑjkɑ/
-  translation: Nalyvaiko (genitive)
-  pos: propn
-  gender: m
-- lemma: наливайко
-  ipa: /nɐlɪˈwɑjko/
-  translation: Nalyvaiko (Severyn Nalyvaiko, Cossack leader)
-  pos: propn
-  gender: m
-- lemma: неволя
-  ipa: /nɛˈwolʲɑ/
-  translation: bondage, captivity
-  pos: noun
-  gender: f
-- lemma: незаселений
-  ipa: /nɛzɐˈsɛlɛnɪj/
-  translation: uninhabited
-  pos: adj
-- lemma: немирів
-  ipa: /nɛˈmɪrʲiw/
-  translation: Nemyriv (town)
-  pos: propn
-  gender: m
-- lemma: нереєстровий
-  ipa: /nɛrɛˈjɛstrowɪj/
-  translation: unregistered (Cossacks)
-  pos: adj
-- lemma: оаз
-  ipa: /oˈɑz/
-  translation: oases (genitive plural)
-  pos: noun
-  gender: f
-- lemma: ополячення
-  ipa: /opoˈlʲɑt͡ʃɛnʲːɑ/
-  translation: Polonization
-  pos: noun
-  gender: n
-- lemma: ополячитися
-  ipa: /opoˈlʲɑt͡ʃɪtɪsʲɑ/
-  translation: to become Polonized
-  pos: verb
-- lemma: осередок
-  ipa: /osɛˈrɛdok/
-  translation: centers (genitive plural)
-  pos: noun
-  gender: m
-- lemma: османський
-  ipa: /osˈmɑnsʲkɪj/
-  translation: Ottoman
-  pos: adj
-  gender: f
-- lemma: острозький
-  ipa: /ostˈrozʲkɪj/
-  translation: Ostroh (adj., Ostroh Academy)
-  pos: adj
-  gender: f
-- lemma: пана
-  ipa: /ˈpɑnɑ/
-  translation: lord, master (genitive)
-  pos: noun
-  gender: m
-- lemma: панський
-  ipa: /ˈpɑnsʲkɪj/
-  translation: lordly, manorial
-  pos: adj
-  gender: m
-- lemma: панщина
-  ipa: /pɐnˈʃt͡ʃɪnɑ/
-  translation: corvée labor (serfdom)
-  pos: noun
-  gender: f
-- lemma: парасоль
-  ipa: /pɐrɐˈsolʲ/
-  translation: umbrella, parasol
-  pos: noun
-  gender: m
-- lemma: пастиря
-  ipa: /pɐsˈtɪrʲɑ/
-  translation: pastors (genitive plural)
-  pos: noun
-  gender: m
-- lemma: повинність
-  ipa: /poˈwɪnːʲistʲ/
-  translation: obligations (genitive plural)
-  pos: noun
-  gender: f
-- lemma: повстання
-  ipa: /powˈstɑnʲːɑ/
-  translation: uprisings (genitive plural)
-  pos: noun
-  gender: n
-- lemma: повстати
-  ipa: /powˈstɑtɪ/
-  translation: to rise up, to rebel
-  pos: verb
-  gender: m
-- lemma: погорда
-  ipa: /poˈɦordɑ/
-  translation: contempt, scorn
-  pos: noun
-  gender: m
-- lemma: полеміст
-  ipa: /poˈlɛmʲist/
-  translation: polemicists (genitive plural)
-  pos: noun
-  gender: m
-- lemma: полемічний
-  ipa: /poˈlɛmʲit͡ʃnɪj/
-  translation: polemic
-  pos: adj
-  gender: f
-- lemma: полонізуватися
-  ipa: /polonʲiˈzuwɑtɪsʲɑ/
-  translation: to become Polonized
-  pos: verb
-- lemma: поповнювати
-  ipa: /popowˈnʲuwɑtɪ/
-  translation: to replenish, to supplement
-  pos: verb
-- lemma: посполитай
-  ipa: /pospoˈlɪtɑj/
-  translation: Commonwealth (Rzeczpospolita)
-  pos: propn
-  gender: f
-- lemma: поступитися
-  ipa: /postupɪˈtɪsʲɑ/
-  translation: to give in, to concede
-  pos: verb
-- lemma: потоцький
-  ipa: /poˈtot͡sʲkɪj/
-  translation: Potocki (magnate family)
-  pos: propn
-  gender: m
-- lemma: православня
-  ipa: /prɐwoˈslɑwnʲɑ/
-  translation: Orthodox (genitive plural)
-  pos: noun
-  gender: m
-- lemma: пригод
-  ipa: /prɪˈɦod/
-  translation: adventures (genitive plural)
-  pos: noun
-  gender: f
-- lemma: придушення
-  ipa: /prɪˈduʃɛnʲːɑ/
-  translation: suppression
-  pos: noun
-  gender: n
-- lemma: прирівняти
-  ipa: /prɪˈrʲiwnʲɑtɪ/
-  translation: to equate
-  pos: verb
-- lemma: підданий
-  ipa: /pʲidˈdɑnɪj/
-  translation: subject
-  pos: adj
-  gender: m
-- lemma: резиденція
-  ipa: /rɛzɪˈdɛnt͡sʲijɑ/
-  translation: residence
-  pos: noun
-  gender: f
-- lemma: реєстр
-  ipa: /rɛˈjɛstr/
-  translation: registers (Cossack, genitive plural)
-  pos: noun
-  gender: m
-- lemma: рогатинець
-  ipa: /roɦɐˈtɪnɛt͡sʲ/
-  translation: Rohatynetsky (Adam Kysil)
-  pos: propn
-  gender: m
-- lemma: розділити
-  ipa: /rozdʲiˈlɪtɪ/
-  translation: to divide
-  pos: verb
-  gender: f
-- lemma: розкол
-  ipa: /rozˈkol/
-  translation: schisms (genitive plural)
-  pos: noun
-  gender: m
-- lemma: розколоти
-  ipa: /rozkoˈlotɪ/
-  translation: to split
-  pos: verb
-  gender: f
-- lemma: рукописно
-  ipa: /rukoˈpɪsno/
-  translation: by hand, in manuscript form
-  pos: adv
-- lemma: русинський
-  ipa: /ruˈsɪnsʲkɪj/
-  translation: Ruthenian
-  pos: adj
-- lemma: рівненщина
-  ipa: /ˈrʲiwn̪ɛnʃt͡ʃɪnɑ/
-  translation: Rivne region
-  pos: propn
-  gender: f
-- lemma: річчя
-  ipa: /ˈrʲit͡ʃːɑ/
-  translation: Rzeczpospolita
-  pos: propn
-  gender: f
-- lemma: сагайдачний
-  ipa: /sɐɦɐjˈdɑt͡ʃnɪj/
-  translation: Sahaidachny (Petro Sahaidachny)
-  pos: propn
-  gender: m
-- lemma: саджати
-  ipa: /sɐˈdʒɑtɪ/
-  translation: to plant
-  pos: verb
-- lemma: святитель
-  ipa: /swʲɑˈtɪtɛlʲ/
-  translation: hierarchs (genitive plural)
-  pos: noun
-  gender: m
-- lemma: северин
-  ipa: /sɛˈwɛrɪn/
-  translation: Severyn (Nalyvaiko)
-  pos: propn
-  gender: m
-- lemma: сигізмунд
-  ipa: /sɪˈɦʲizmundʲ/
-  translation: Sigismund
-  pos: propn
-  gender: m
-- lemma: скуповувати
-  ipa: /skupoˈwuwɑtɪ/
-  translation: to buy up
-  pos: verb
-- lemma: смотрицький
-  ipa: /smoˈtrɪt͡sʲkɪj/
-  translation: Smotrytsky (Meletii Smotrytsky)
-  pos: propn
-  gender: m
-- lemma: спричинити
-  ipa: /sprɪt͡ʃɪˈnɪtɪ/
-  translation: to cause
-  pos: verb
-  gender: n
-- lemma: спротив
-  ipa: /ˈsprotɪw/
-  translation: resistance (genitive plural)
-  pos: noun
-  gender: m
-- lemma: субтельний
-  ipa: /subˈtɛlʲnɪj/
-  translation: Subtelnyi (Herasym Subtelnyi, printer and Cossack leader)
-  pos: propn
-  gender: m
-- lemma: схизматик
-  ipa: /sxɪzˈmɑtɪk/
-  translation: schismatics (genitive plural)
-  pos: noun
-  gender: m
-- lemma: толерантніший
-  ipa: /tolɛˈrɑntnʲiʃɪj/
-  translation: more tolerant
-  pos: adj
-  gender: f
-- lemma: толок
-  ipa: /toˈlok/
-  translation: communal plowing (genitive plural)
-  pos: noun
-  gender: m
-- lemma: уніа
-  ipa: /uˈnʲijɑ/
-  translation: Uniate
-  pos: noun
-  gender: m
-- lemma: універсал
-  ipa: /unʲiwɛrˈsɑl/
-  translation: universal (decree, genitive plural)
-  pos: noun
-  gender: m
-- lemma: успенський
-  ipa: /usˈpɛnsʲkɪj/
-  translation: Dormition (adj., church)
-  pos: adj
-  gender: f
-- lemma: утиска
-  ipa: /uˈtɪskɑ/
-  translation: oppression (genitive plural)
-  pos: noun
-  gender: f
-- lemma: фільварка
-  ipa: /fʲilʲˈwɑrkɑ/
-  translation: folwark, manorial farm (genitive)
-  pos: noun
-  gender: f
-- lemma: фільварковий
-  ipa: /fʲilʲwɐrˈkowɪj/
-  translation: folwark (adj.)
-  pos: adj
-  gender: f
-- lemma: фільварок
-  ipa: /fʲilʲˈwɑrok/
-  translation: folwark (manorial farms, genitive plural)
-  pos: propn
-  gender: m
-- lemma: хмельниччина
-  ipa: /xmɛlʲˈnɪt͡ʃːɪnɑ/
-  translation: Khmelnytsky Uprising
-  pos: propn
-  gender: f
-- lemma: чинш
-  ipa: /t͡ʃɪnʃ/
-  translation: rent (genitive plural)
-  pos: noun
-  gender: m
-- lemma: шантаж
-  ipa: /ʃɐnˈtɑʒ/
-  translation: blackmail (genitive plural)
-  pos: noun
-  gender: m
-- lemma: шляхтич
-  ipa: /ʃlʲɑxˈtɪt͡ʃ/
-  translation: szlachta members (genitive plural)
-  pos: noun
-  gender: m
-- lemma: шукач
-  ipa: /ʃuˈkɑt͡ʃ/
-  translation: seeker, searcher (genitive plural)
-  pos: noun
-  gender: m
-- lemma: єзуїтський
-  ipa: /jɛzuˈjit͡sʲkɪj/
-  translation: Jesuit
-  pos: adj
-- lemma: єписокп
-  ipa: /jɛˈpɪskop/
-  translation: bishop (likely typo for єпископ)
-  pos: noun
-  gender: m
-- lemma: ідеалізувати
-  ipa: /ʲidɛɐlʲiˈzuwɑtɪ/
-  translation: to idealize
-  pos: verb
-- lemma: інкорпорація
-  ipa: /ʲinkorporɐˈt͡sʲijɑ/
-  translation: incorporation
-  pos: noun
-  gender: f
+  - lemma: кріпацтво
+    ipa: /kr⁽ʲ⁾iˈpɑt͡stwɔ/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: панщина
+    ipa: /ˈpɑnʃt͡ʃɪnɐ/
+    translation: corvée (forced labor)
+    pos: noun
+    gender: f
+  - lemma: фільварок
+    ipa: /f⁽ʲ⁾ilʲˈwɑrɔk/
+    translation: folwark (manorial farm)
+    pos: noun
+    gender: m
+  - lemma: полонізація
+    ipa: /pɔlɔn⁽ʲ⁾iˈzɐt͡sʲijɐ/
+    translation: Polonization
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /ɐsɪm⁽ʲ⁾iˈlʲɐt͡sʲijɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: братство
+    ipa: /ˈbrɑtstwɔ/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: полеміка
+    ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
+    translation: polemic
+    pos: noun
+    gender: f
+  - lemma: схизматик
+    ipa: /sxɪzˈmɑtɪk/
+    translation: schismatic
+    pos: noun
+    gender: m
+  - lemma: унія
+    ipa: /ˈun⁽ʲ⁾ijɐ/
+    translation: union
+    pos: noun
+    gender: f
+  - lemma: магнат
+    ipa: /mɐɦˈnɑt/
+    translation: magnate
+    pos: noun
+    gender: m
+  - lemma: реєстр
+    ipa: /rɛˈjɛstr/
+    translation: register (of Cossacks)
+    pos: noun
+    gender: m
+  - lemma: низовці
+    ipa: /nɪˈzɔu̯t͡sʲi/
+    translation: lowlanders (Zaporozhian Cossacks)
+    pos: noun
+    gender: pl
+  - lemma: визиск
+    ipa: /ˈʋɪzɪsk/
+    translation: exploitation
+    pos: noun
+    gender: m
+  - lemma: гніт
+    ipa: /ɦn⁽ʲ⁾it/
+    translation: oppression
+    pos: noun
+    gender: m
+  - lemma: повстання
+    ipa: /pɔu̯ˈstɐnʲːɐ/
+    translation: uprising
+    pos: noun
+    gender: n
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑxtɐ/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: єзуїт
+    ipa: /jɛzʊˈjit/
+    translation: Jesuit
+    pos: noun
+    gender: m
+  - lemma: колегіум
+    ipa: /kɔˈlɛɦ⁽ʲ⁾ijʊm/
+    translation: collegium
+    pos: noun
+    gender: m
+  - lemma: друкарня
+    ipa: /drʊˈkɑrnʲɐ/
+    translation: printing house
+    pos: noun
+    gender: f
+  - lemma: освіта
+    ipa: /ɔsˈʋ⁽ʲ⁾itɐ/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: дискримінація
+    ipa: /dɪskrɪm⁽ʲ⁾iˈnɐt͡sʲijɐ/
+    translation: discrimination
+    pos: noun
+    gender: f
+  - lemma: спротив
+    ipa: /ˈsprɔtɪu̯/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾isʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: латифундія
+    ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
+    translation: latifundium
+    pos: noun
+    gender: f
+  - lemma: хлопи
+    ipa: /ˈxlɔpɪ/
+    translation: peasants (derogatory)
+    pos: noun
+    gender: pl
+  - lemma: бидло
+    ipa: /ˈbɪdlɔ/
+    translation: cattle / rabble (derogatory)
+    pos: noun
+    gender: n
+  - lemma: Січ
+    ipa: /s⁽ʲ⁾it͡ʃ/
+    translation: Sich (Cossack fortress)
+    pos: noun
+    gender: f
+  - lemma: Дике поле
+    ipa: /ˈdɪkɛ ˈpɔlɛ/
+    translation: Wild Field
+    pos: noun
+    gender: n
+  - lemma: чинш
+    ipa: /t͡ʃɪnʃ/
+    translation: quitrent (rent in money)
+    pos: noun
+    gender: m
+  - lemma: толока
+    ipa: /tɔlɔˈkɑ/
+    translation: toloka (communal work)
+    pos: noun
+    gender: f
+  - lemma: згін
+    ipa: /zɦ⁽ʲ⁾in/
+    translation: forced labor drive
+    pos: noun
+    gender: m
+  - lemma: батіг
+    ipa: /bɐˈt⁽ʲ⁾ih/
+    translation: whip
+    pos: noun
+    gender: m
+  - lemma: мученик
+    ipa: /ˈmut͡ʃɛnɪk/
+    translation: martyr
+    pos: noun
+    gender: m
+  - lemma: страта
+    ipa: /ˈstrɑtɐ/
+    translation: execution
+    pos: noun
+    gender: f
+  - lemma: помста
+    ipa: /ˈpɔmstɐ/
+    translation: revenge
+    pos: noun
+    gender: f
+  - lemma: віросповідання
+    ipa: /ʋ⁽ʲ⁾irɔspɔʋ⁽ʲ⁾iˈdɐnʲːɐ/
+    translation: denomination / faith
+    pos: noun
+    gender: n
+  - lemma: толерантність
+    ipa: /tɔlɛˈrɐntn⁽ʲ⁾isʲtʲ/
+    translation: tolerance
+    pos: noun
+    gender: f

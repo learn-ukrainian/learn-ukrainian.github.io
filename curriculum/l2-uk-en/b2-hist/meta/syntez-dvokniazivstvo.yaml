@@ -1,11 +1,58 @@
-# Meta for Синтез: Від Русі до занепаду
 slug: syntez-dvokniazivstvo
-title: "Синтез: Від Русі до занепаду"
-level: B2
+title: "Синтез: Від монгольської навали до кримської державності"
+level: b2-hist
 track: history
-phase: "HIST.3 [Mongol Era & Galicia-Volhynia]"
-status: skeleton
-focus: history
+phase: "B2.3 [Ukrainian History] Synthesis"
+status: content
+focus: synthesis
+template: b2-history-synthesis-module-template.md
 word_target: 3000
-prerequisites: []
-learning_outcomes: []
+register: публіцистичний
+duration: 120
+transliteration: none
+tags:
+- history
+- synthesis
+- medieval
+- mongol-invasion
+- galicia-volhynia
+grammar:
+- "Historical narrative synthesis"
+- "Argumentative writing structures"
+vocabulary_focus:
+- "Historical terminology"
+- "Analytical vocabulary"
+objectives:
+- "Синтезувати знання про виживання української державності після 1240 року"
+- "Аналізувати трансформацію Русі у Королівство та Кримське ханство"
+- "Формулювати аргументовані висновки про західний вектор розвитку"
+vocabulary_count: 74
+content_outline:
+  - section: "Огляд періоду"
+    words: 500
+    points:
+      - "Монгольська навала як цивілізаційний злам"
+      - "Трансформація центрів: від Києва до Галича та Бахчисарая"
+  - section: "Ключові теми"
+    words: 700
+    points:
+      - "Легітимність як зброя (Данило, Хаджи Гірей)"
+      - "Магдебурзьке право та інституційна тяглість"
+      - "Соціальна еволюція та лицарський стан"
+  - section: "Аналіз"
+    words: 700
+    points:
+      - "Деколонізація та спростування міфу про 'одну колиску'"
+      - "Сучасні паралелі: від 1240 до 2022"
+      - "Порівняння первинних джерел"
+  - section: "Хронологія"
+    words: 50
+  - section: "Завдання для есе"
+    words: 200
+  - section: "Підсумок"
+    words: 100
+  - section: "Потрібно більше практики?"
+    words: 100
+naturalness:
+  score: 9
+  status: PASS

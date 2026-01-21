@@ -1,5 +1,5 @@
-# Audit Report: trypillian-civilization.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M01 — trypillian-civilization.md
+**Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 138/20
+- **Vocab:** ✅ 145/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

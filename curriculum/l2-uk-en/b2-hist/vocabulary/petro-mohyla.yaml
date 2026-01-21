@@ -1,5 +1,166 @@
-# Vocabulary for Петро Могила: Реформатор церкви
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: petro-mohyla
+level: B2
+version: "2.0"
+items:
+  - lemma: митрополит
+    ipa: /mɪtrɔpɔˈlɪt/
+    translation: metropolitan (bishop)
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: академія
+    ipa: /akadɛˈmʲija/
+    translation: academy
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: колегіум
+    ipa: /kɔˈlɛɦʲijʊm/
+    translation: collegium
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: полеміка
+    ipa: /pɔˈlɛmʲika/
+    translation: polemic / controversy
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: спудей
+    ipa: /spʊˈdɛj/
+    translation: student (archaic/historical)
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: меценат
+    ipa: /mɛt͡sɛˈnat/
+    translation: patron of arts
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: друкарня
+    ipa: /drʊˈkarnʲa/
+    translation: printing house
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: ієрархія
+    ipa: /ijɛˈrarxʲija/
+    translation: hierarchy
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: канонізація
+    ipa: /kanɔnʲiˈzat͡sʲija/
+    translation: canonization
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: бароко
+    ipa: /baˈrɔkɔ/
+    translation: baroque
+    pos: noun
+    gender: n
+    morphology:
+      family: 2
+  - lemma: руїна
+    ipa: /rʊˈjina/
+    translation: ruin
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: фундатор
+    ipa: /fʊnˈdatɔr/
+    translation: founder / benefactor
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: требник
+    ipa: /trɛbˈnɪk/
+    translation: missal / book of needs (religious)
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: освіта
+    ipa: /ɔsˈvʲita/
+    translation: education
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: схоластика
+    ipa: /sxɔˈlastɪka/
+    translation: scholasticism
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: патріархат
+    ipa: /patrʲiarˈxat/
+    translation: patriarchate
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: архімандрит
+    ipa: /arxʲimanˈdrɪt/
+    translation: archimandrite (abbot)
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: лавра
+    ipa: /laˈvra/
+    translation: lavra (monastery of highest rank)
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: собор
+    ipa: /sɔˈbɔr/
+    translation: cathedral / council
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: катехізис
+    ipa: /katɛˈxʲizɪs/
+    translation: catechism
+    pos: noun
+    gender: m
+    morphology:
+      family: 2
+  - lemma: посвята
+    ipa: /pɔsˈvʲata/
+    translation: dedication / initiation
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: відбудова
+    ipa: /vʲidbʊˈdɔva/
+    translation: reconstruction
+    pos: noun
+    gender: f
+    morphology:
+      family: 1
+  - lemma: західний
+    ipa: /zaˈxʲidnɪj/
+    translation: western
+    pos: adj
+  - lemma: східний
+    ipa: /sxʲidˈnɪj/
+    translation: eastern
+    pos: adj

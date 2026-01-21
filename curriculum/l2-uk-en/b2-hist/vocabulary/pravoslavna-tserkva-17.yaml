@@ -1,5 +1,52 @@
-# Vocabulary for Православна церква XVII століття
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: pravoslavna-tserkva-17
+level: B2
+version: '2.0'
+items:
+  - lemma: ієрархія
+    ipa: /ijerˈarxijɑ/
+    translation: hierarchy
+    pos: noun
+    gender: f
+  - lemma: митрополит
+    ipa: /mɪtropolˈɪt/
+    translation: metropolitan (bishop)
+    pos: noun
+    gender: m
+  - lemma: висвячення
+    ipa: /vɪsˈvʲat͡ʃenːjɑ/
+    translation: ordination, consecration
+    pos: noun
+    gender: n
+  - lemma: легітимність
+    ipa: /leɦitˈɪmnisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: братство
+    ipa: /brˈɑtstvo/
+    translation: brotherhood, confraternity
+    pos: noun
+    gender: n
+  - lemma: унія
+    ipa: /unˈijɑ/
+    translation: union (specifically Church Union)
+    pos: noun
+    gender: f
+  - lemma: полеміка
+    ipa: /polˈɛmikɑ/
+    translation: polemics, controversy
+    pos: noun
+    gender: f
+  - lemma: маєстат
+    ipa: /mɑjesˈtɑt/
+    translation: majesty (archaic)
+    pos: noun
+    gender: m
+  - lemma: сповідувати
+    ipa: /spovˈidʊvɑtɪ/
+    translation: to profess (a faith)
+    pos: verb
+  - lemma: занепадати
+    ipa: /zɑnepɑdˈɑtɪ/
+    translation: to decline, to fall into decay
+    pos: verb

@@ -1,11 +1,60 @@
-# Meta for Кінець Галицько-Волинської держави
 slug: kinets-halytsko-volyni
 title: "Кінець Галицько-Волинської держави"
 level: B2
 track: history
 phase: "HIST.3 [Mongol Era & Galicia-Volhynia]"
-status: skeleton
+status: content
 focus: history
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- medieval
+- galicia-volhynia
+- fall-of-state
+grammar:
+- Історичний наратив
+- Минулий час
+vocabulary_focus: null
+objectives:
+- Учень може пояснити причини занепаду Галицько-Волинської держави
+- Учень розуміє боротьбу за галицько-волинську спадщину між сусідами
+- Учень може аналізувати роль Юрія ІІ Болеслава у фіналі держави
+vocabulary_count: 35
+content_outline:
+  - section: "Контекст"
+    words: 400
+    points:
+      - "Останні десятиліття стабільності під Юрієм І"
+      - "Геополітичне оточення в XIV столітті"
+  - section: "Читання"
+    words: 1800
+    points:
+      - "Правління Юрія І та титул 'Короля Русі'"
+      - "Криза за Андрія та Лева ІІ Романовичів"
+      - "Юрій ІІ Болеслав: спроба реформ та боярська змова"
+      - "Війна за галицько-волинську спадщину (1340-1392)"
+      - "Поділ українських земель між Польщею та Литвою"
+  - section: "Первинні джерела"
+    words: 200
+    points:
+      - "Свідчення про отруєння Юрія ІІ"
+      - "Уривки з угод про поділ земель"
+  - section: "Деколонізаційний погляд"
+    words: 400
+    points:
+      - "Спростування міфу про 'добровільне приєднання' до Польщі"
+      - "Тяглість державності у формі автономних воєводств"
+  - section: "Есе"
+    words: 400
+    points:
+      - "Причини падіння та історичне значення Королівства Русі"
+  - section: "Підсумок"
+    words: 100
+  - section: "Потрібно більше практики?"
+    words: 100
+naturalness:
+  score: 9
+  status: PASS

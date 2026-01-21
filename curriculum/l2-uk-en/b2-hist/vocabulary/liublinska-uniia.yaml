@@ -1,5 +1,179 @@
-# Vocabulary for Люблінська унія 1569
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: liublinska-uniia
+level: B2
+version: '2.0'
+items:
+  - lemma: унія
+    ipa: /ˈun⁽ʲ⁾ijɐ/
+    translation: union (political/church)
+    pos: noun
+    gender: f
+  - lemma: Річ Посполита
+    ipa: /r⁽ʲ⁾it͡ʃ pɔspɔˈlɪtɐ/
+    translation: Polish-Lithuanian Commonwealth
+    pos: propn
+    gender: f
+  - lemma: сейм
+    ipa: /sɛjm/
+    translation: Sejm (parliament)
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑxtɐ/
+    translation: szlachta (nobility)
+    pos: noun
+    gender: f
+  - lemma: воєводство
+    ipa: /wɔjɛˈwɔdstwɔ/
+    translation: voivodeship
+    pos: noun
+    gender: n
+  - lemma: інкорпорація
+    ipa: /inkɔrpɔˈrɐt͡sʲijɐ/
+    translation: incorporation
+    pos: noun
+    gender: f
+  - lemma: федерація
+    ipa: /fɛdɛˈrɐt͡sʲijɐ/
+    translation: federation
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪʋʲiˈlɛj/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: полонізація
+    ipa: /pɔlɔn⁽ʲ⁾iˈzɐt͡sʲijɐ/
+    translation: Polonization
+    pos: noun
+    gender: f
+  - lemma: магнат
+    ipa: /mɐɦˈnɑt/
+    translation: magnate
+    pos: noun
+    gender: m
+  - lemma: фільварок
+    ipa: /f⁽ʲ⁾ilʲˈwɑrɔk/
+    translation: folwark (manorial farm)
+    pos: noun
+    gender: m
+  - lemma: Корона
+    ipa: /kɔˈrɔnɐ/
+    translation: The Crown (Kingdom of Poland)
+    pos: propn
+    gender: f
+  - lemma: універсал
+    ipa: /un⁽ʲ⁾iwɛrˈsɑl/
+    translation: universal (decree)
+    pos: noun
+    gender: m
+  - lemma: посол
+    ipa: /pɔˈsɔl/
+    translation: deputy (to the Sejm) / envoy
+    pos: noun
+    gender: m
+  - lemma: вольності
+    ipa: /ˈwɔlʲnɔsʲt⁽ʲ⁾i/
+    translation: liberties
+    pos: noun
+    gender: pl
+  - lemma: республіка
+    ipa: /rɛsˈpubl⁽ʲ⁾ikɐ/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: експансія
+    ipa: /ɛksˈpɐns⁽ʲ⁾ijɐ/
+    translation: expansion
+    pos: noun
+    gender: f
+  - lemma: компроміс
+    ipa: /kɔmprɔˈm⁽ʲ⁾is/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: гегемонія
+    ipa: /hɛhɛˈmɔn⁽ʲ⁾ijɐ/
+    translation: hegemony
+    pos: noun
+    gender: f
+  - lemma: дебати
+    ipa: /dɛˈbɑtɪ/
+    translation: debates
+    pos: noun
+    gender: pl
+  - lemma: присяга
+    ipa: /prɪˈsʲɑɦɐ/
+    translation: oath
+    pos: noun
+    gender: f
+  - lemma: каштелян
+    ipa: /kɐʃtɛˈlʲɑn/
+    translation: castellan
+    pos: noun
+    gender: m
+  - lemma: колегіум
+    ipa: /kɔˈlɛɦ⁽ʲ⁾ijʊm/
+    translation: collegium
+    pos: noun
+    gender: m
+  - lemma: латифундія
+    ipa: /lɐtɪˈfund⁽ʲ⁾ijɐ/
+    translation: latifundium (large estate)
+    pos: noun
+    gender: f
+  - lemma: окатоличення
+    ipa: /ɔkɐˈtɔlɪt͡ʃɛnʲːɐ/
+    translation: Catholicization
+    pos: noun
+    gender: n
+  - lemma: закріпачення
+    ipa: /zɐkr⁽ʲ⁾iˈpɐt͡ʃɛnʲːɐ/
+    translation: enserfment
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃn⁽ʲ⁾isʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: деспотія
+    ipa: /dɛsˈpɔt⁽ʲ⁾ijɐ/
+    translation: despotism
+    pos: noun
+    gender: f
+  - lemma: суб'єкт
+    ipa: /sʊbˈjɛkt/
+    translation: subject (political actor)
+    pos: noun
+    gender: m
+  - lemma: цивілізація
+    ipa: /t͡sɪʋ⁽ʲ⁾il⁽ʲ⁾iˈzɐt͡sʲijɐ/
+    translation: civilization
+    pos: noun
+    gender: f
+  - lemma: русин
+    ipa: /rʊˈsɪn/
+    translation: Ruthenian
+    pos: noun
+    gender: m
+  - lemma: адаптація
+    ipa: /ɐdɐpˈtɐt͡sʲijɐ/
+    translation: adaptation
+    pos: noun
+    gender: f
+  - lemma: дилема
+    ipa: /dɪˈlɛmɐ/
+    translation: dilemma
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɐ/
+    translation: heritage / legacy
+    pos: noun
+    gender: f

@@ -1,11 +1,23 @@
 id: b2-hist-18
 title: 'Люди Русі: Суспільство та побут'
 slug: ludy-rusi
-version: '1.0'
+version: '2.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 4000
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - society
+grammar:
+  - Past tense narrative
+  - Social and economic vocabulary
+objectives:
+  - Identify the main social classes of Kyivan Rus
+  - Understand the legal status of smerds, zakups, and kholops
+  - Describe the everyday life in cities and villages
 immersion: 100% Ukrainian
 sources:
 - name: Суспільство Київської Русі (Вікіпедія)
@@ -21,54 +33,56 @@ sources:
   type: primary
   notes: Legal text on social classes
 content_outline:
-- section: Вступ — Суспільство Русі
-  words: 480
+- section: Розминка
+  words: 30
   points:
-  - Соціальна структура за джерелами
-  - Вільні, напіввільні, невільні
-  - Місто і село — два світи
-  - Джерела знань — Руська Правда, археологія, літописи
-- section: Вільне населення
-  words: 693
+  - "Demographics of Kyiv vs London"
+  - "The concept of Estate (Stan)"
+  - "Vocabulary: Vira, Izgoy, Votchyna"
+- section: "Читання: Суспільство та повсякдення Київської Русі"
+  words: 2100
   points:
-  - Князь та княжа родина
-  - Бояри — земельна аристократія
-  - Дружина — військова еліта
-  - Купці та ремісники — міщани
-- section: Залежне населення
-  words: 640
+  - "The Prince and Druzhina: The top of the pyramid"
+  - "Military Affairs: Weapons (Sword, Saber, Chainmail) and Tactics"
+  - "Boyars as landed aristocracy (Votchyna system)"
+  - "Clergy: Black (Monks) vs White (Priests)"
+  - "Burghers: Merchants, Craftsmen, and Guilds"
+  - "Peasantry: Smerds (free), Zakups (debtors), Ryadovychi"
+  - "Kholops: Slavery in Rus context"
+  - "Women in Rus: Property rights and education"
+  - "Daily Life: Housing, Clothing, and Diet"
+  - "Entertainment: Skomorokhy, Chess, and Festivals"
+  - "Boyars as landed aristocracy (Votchyna system)"
+  - "Clergy: Black (Monks) vs White (Priests)"
+  - "Burghers: Merchants, Craftsmen, and Guilds"
+  - "Peasantry: Smerds (free), Zakups (debtors), Ryadovychi"
+  - "Kholops: Slavery in Rus context"
+  - "Women in Rus: Property rights and education"
+  - "Daily Life: Housing, Clothing, and Diet"
+- section: "Первинні джерела: Голоси епохи"
+  words: 100
   points:
-  - Смерди — основа сільського населення
-  - Закупи — боргова залежність
-  - Рядовичі — договірна залежність
-  - Холопи та челядь — раби
-- section: Міське життя
-  words: 640
+  - "Ruska Pravda: The price of life and honor"
+  - "Collective responsibility (Verv)"
+  - "Birch Bark Letters: Ordinary voices"
+- section: "Деколонізаційний погляд: Руйнування імперських міфів"
+  words: 200
   points:
-  - Київ як мегаполіс — 50 000 населення
-  - Ремесла — ковальство, ювелірство, ткацтво
-  - Торгівля — внутрішня та зовнішня
-  - Віче — міське самоврядування
-- section: Сільське життя
-  words: 586
+  - "Regional differences in housing (Mazanka vs Izba)"
+  - "Differences in clothing and traditions"
+  - "Political culture: Contractual vs Despotic"
+- section: Есе
+  words: 100
   points:
-  - Землеробство — рало та соха
-  - Тваринництво та промисли
-  - Громада — сільська спільнота
-  - Побут селянської родини
-- section: Повсякденне життя
-  words: 586
-  points:
-  - Житло — хата, городище, терем
-  - Одяг та прикраси
-  - Їжа та напої
-  - Свята та обряди — християнські та язичницькі
+  - "Prompt: Feudalism vs Slavery"
+  - "Analysis of social dependence"
+  - "Model Answer"
 - section: Підсумок
-  words: 375
+  words: 100
   points:
-  - Суспільство Русі у європейському контексті
-  - Соціальна мобільність та її межі
-  - Перехід до зовнішніх відносин
+  - "Complexity of social stratification"
+  - "European vector of development"
+  - "The legacy of Rus law and culture"
 vocabulary_hints:
   required:
   - суспільство (society)
@@ -89,30 +103,6 @@ vocabulary_hints:
   - терем (terem/tower)
   - городище (fortified settlement)
   - соха (sokha/plow)
-activity_hints:
-- type: reading
-  focus: Excerpts from Ruska Pravda on social classes
-  source: Provide in module
-- type: vocabulary
-  focus: Social and economic terminology
-  items: 18+
-- type: image-analysis
-  focus: Archaeological reconstructions of Rus life
-  items: 8-10 images
-- type: quiz
-  focus: Social structure and daily life
-  items: 15+
-- type: group-sort
-  focus: Categorize people by social status
-  items: 12+
-- type: compare-contrast
-  focus: City vs village life in Rus
-  output: Two-column comparison
-- type: discussion
-  focus: Яким було життя пересічного жителя Русі?
-prerequisites:
-- b2-hist-13 (Ruska Pravda)
-- b2-hist-16 (Kyivan Rus culture)
-connects_to:
-- b2-hist-19 (Rus and neighbors)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+naturalness:
+  score: 9
+  status: PASS

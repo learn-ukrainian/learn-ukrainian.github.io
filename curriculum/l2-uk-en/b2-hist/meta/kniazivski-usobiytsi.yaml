@@ -4,8 +4,20 @@ slug: kniazivski-usobiytsi
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 4000
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - fragmentation
+grammar:
+  - Past tense narrative
+  - Political and military terminology
+objectives:
+  - Understand the causes of Kyivan Rus fragmentation
+  - Analyze the decisions of the Liubech Congress
+  - Discuss the impact of Polovtsian threat on unity
 immersion: 100% Ukrainian
 sources:
 - name: Роздроблення Київської Русі (Вікіпедія)
@@ -21,54 +33,52 @@ sources:
   type: primary
   notes: Chronicle accounts
 content_outline:
-- section: Вступ — Від єдності до роздроблення
-  words: 480
+- section: Розминка
+  words: 50
   points:
-  - Заповіт Ярослава як причина усобиць
-  - Система "лествичного права"
-  - Природа роздроблення — занепад чи розвиток?
-  - Хронологія процесу
-- section: Причини роздроблення
-  words: 693
+  - "Defining sovereignty vs suzerainty"
+  - "The map of 1054 vs 1132"
+  - "Key vocabulary activation"
+- section: "Читання: Епоха роздробленості та спроби єдності"
+  words: 2500
   points:
-  - Система престолонаслідування — брат до брата
-  - Зростання місцевих еліт — бояри
-  - Економічний розвиток окремих земель
-  - Послаблення зовнішніх загроз?
-- section: Любецький з'їзд 1097
-  words: 640
+  - "The will of Yaroslav the Wise and the Rota System"
+  - "Triumvirate of Yaroslavychi and the Battle of Alta (1068)"
+  - "Kyiv Uprising and the collapse of unity"
+  - "Economic and political causes of fragmentation"
+  - "Liubech Congress (1097): Every man holds his own fatherland"
+  - "The blinding of Vasylko of Terebovl"
+  - "Volodymyr Monomakh: The last giant of unified Rus"
+  - "Monomakh's Reforms (Statute) and Instruction (Povchannia)"
+  - "Social Structure: Boyars, Druzhina, Smerds, Zakups, Kholops"
+  - "Culture and Church: St. Michael's and Nestor"
+- section: "Первинні джерела: Голоси минулого"
+  words: 100
   points:
-  - Кожен хай держить отчину свою
-  - Спроба врегулювання конфліктів
-  - Засліплення Василька Теребовльського
-  - Наслідки з'їзду
-- section: Основні князівства
-  words: 746
+  - "Deep analysis of Monomakh's Instruction"
+  - "Extract from the Primary Chronicle on Liubech"
+  - "Extract from Pravda Yaroslavychiv (social inequality)"
+- section: "Деколонізаційний погляд: Міф про занепад"
+  words: 100
   points:
-  - Київське князівство — номінальний центр
-  - Галицько-Волинське — майбутній центр
-  - Чернігово-Сіверське
-  - Переяславське, Полоцьке та інші
-- section: Половецька загроза
-  words: 586
+  - "Reframing Fragmentation as Decentralization"
+  - "European parallels (HRE, France)"
+  - "Why Moscow calls it Feudal Disunity to justify conquest"
+- section: Есе
+  words: 100
   points:
-  - Половці як постійний ворог
-  - Князівські союзи з половцями проти своїх
-  - Походи 1103, 1111 років — перемоги Мономаха
-  - Половецький слід у культурі
-- section: Наслідки роздроблення
-  words: 480
-  points:
-  - Культурний розквіт окремих земель
-  - Ослаблення військової сили
-  - Підготовка до монгольської навали
-  - Збереження культурної єдності
+  - "Essay prompt: Inevitability of fragmentation"
+  - "Model answer"
+  - "Rubric"
 - section: Підсумок
-  words: 375
+  words: 70
   points:
-  - Роздроблення як загальноєвропейське явище
-  - Збереження ідеї єдності Русі
-  - Перехід до життя простих людей
+  - "Recap of key figures and dates"
+  - "The legacy of the era"
+- section: Потрібно більше практики?
+  words: 30
+  points:
+  - Activities intro
 vocabulary_hints:
   required:
   - усобиця (internecine war)
@@ -116,3 +126,6 @@ connects_to:
 - b2-hist-21 (Mongol invasion)
 - b2-hist-23 (Danylo of Halych)
 - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+naturalness:
+  score: 9
+  status: PASS

@@ -305,13 +305,13 @@ levels:
       - 84-checkpoint-register-synthesis
       - professional-email-basics
       - professional-email-advanced
-      - 87-communication-skills-87
-      - 88-communication-skills-88
-      - 89-communication-skills-89
-      - 90-communication-skills-90
-      - 91-communication-skills-91
-      - 92-communication-skills-92
-      - 93-communication-skills-93
+      - 87-professional-reports-basics
+      - 88-professional-reports-advanced
+      - 89-news-analysis-basics
+      - 90-news-analysis-advanced
+      - 91-presentation-skills-basics
+      - 92-presentation-skills-advanced
+      - 93-discussion-debate
       - 94-b2-final-exam
   c1:
     type: core

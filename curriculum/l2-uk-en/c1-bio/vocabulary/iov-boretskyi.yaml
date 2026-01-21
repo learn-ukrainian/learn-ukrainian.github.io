@@ -4,148 +4,768 @@ items:
   translation: metropolitan
   pos: noun
   gender: m
-  note: високий церковний чин
 - lemma: братство
   ipa: /ˈbrɑtstwɔ/
   translation: brotherhood
   pos: noun
   gender: n
-  note: релігійно-громадська організація
 - lemma: просвітництво
   ipa: /prɔˈsʲʋʲitnɪtstwɔ/
   translation: enlightenment/education
   pos: noun
   gender: n
-  note: діяльність, спрямована на поширення знань
 - lemma: ієрархія
   ipa: /ijɛˈrɑrxʲijɑ/
   translation: hierarchy
   pos: noun
   gender: f
-  note: система підпорядкування
 - lemma: відродження
   ipa: /wʲidˈrɔdʒɛnʲːɑ/
   translation: revival/renaissance
   pos: noun
   gender: n
-  note: відновлення чогось після занепаду
 - lemma: полеміка
   ipa: /pɔˈɫɛmʲikɑ/
   translation: polemics/debate
   pos: noun
   gender: f
-  note: гостра дискусія в пресі чи літературі
 - lemma: собор
   ipa: /sɔˈbɔr/
   translation: council/cathedral
   pos: noun
   gender: m
-  note: збори вищого духовенства
 - lemma: рукоположення
   ipa: /rukɔpɔɫɔˈdʒɛnʲːɑ/
   translation: ordination
   pos: noun
   gender: n
-  note: церковний обряд надання духовного сану
 - lemma: захисник
   ipa: /zɑˈxɪsnɪк/
   translation: defender
   pos: noun
   gender: m
-  note: той, хто боронить щось/когось
 - lemma: гуманізм
   ipa: /ɦumɑˈnʲizm/
   translation: humanism
   pos: noun
   gender: m
-  note: інтелектуальна течія епохи Відродження
 - lemma: ректор
   ipa: /ˈrɛktɔr/
   translation: rector
   pos: noun
   gender: m
-  note: керівник вищого навчального закладу
 - lemma: меценат
   ipa: /mɛt͡sɛˈnɑt/
   translation: patron
   pos: noun
   gender: m
-  note: людина, що фінансує культуру
 - lemma: опір
   ipa: /ˈɔpʲir/
   translation: resistance
   pos: noun
   gender: m
-  note: протидія тиску або загарбникам
 - lemma: єдність
   ipa: /ˈjɛdnʲistʲ/
   translation: unity
   pos: noun
   gender: f
-  note: стан згуртованості
 - lemma: патріарх
   ipa: /pɑtrʲiˈɑrx/
   translation: patriarch
   pos: noun
   gender: m
-  note: найвищий титул у православній церкві
 - lemma: козацтво
-  ipa: /kɔˈzɑtstwɔ/
+  ipa: /kɔˈɑtstwɔ/
   translation: Cossacks
   pos: noun
   gender: n
-  note: військовий стан, опора віри
 - lemma: унія
   ipa: /ˈunʲijɑ/
   translation: union
   pos: noun
   gender: f
-  note: зазвичай Берестейська церковна унія
 - lemma: протест
   ipa: /prɔˈtɛst/
   translation: protest
   pos: noun
   gender: m
-  note: вияв незгоди
 - lemma: фундація
   ipa: /fundɑˈt͡sʲijɑ/
   translation: foundation
   pos: noun
   gender: f
-  note: заснування інституції
 - lemma: ідеолог
   ipa: /idɛɔˈɫɔɦ/
   translation: ideologue
   pos: noun
   gender: m
-  note: творець або теоретик ідеї
 - lemma: тяглість
   ipa: /ˈtʲɑɦɫʲistʲ/
   translation: continuity
   pos: noun
   gender: f
-  note: неперервність історичного процесу
 - lemma: суб'єктність
   ipa: /subjekˈtɪunʲistʲ/
   translation: agency/subjectivity
   pos: noun
   gender: f
-  note: здатність діяти самостійно
 - lemma: маніфест
   ipa: /mɑnʲiˈfɛst/
   translation: manifesto
   pos: noun
   gender: m
-  note: програмний документ
 - lemma: спадщина
   ipa: /ˈspɑdʃt͡ʃɪnɑ/
   translation: legacy
   pos: noun
   gender: f
-  note: те, що залишається нащадкам
 - lemma: канонізація
   ipa: /kɑnɔnʲizɑˈt͡sʲijɑ/
   translation: canonization
   pos: noun
   gender: f
-  note: зарахування до лику святих
+- lemma: аргументовано
+  ipa: /ɑr.ɦu.mɛn.tɔˈʋɑ.nɔ/
+  translation: argumentatively
+  pos: adv
+- lemma: берег
+  ipa: /ˈbɛ.rɛɦ/
+  translation: bank / shore
+  pos: noun
+  gender: m
+- lemma: благочестя
+  ipa: /blɑ.ɦɔˈt͡ʃɛ.sʲtʲɑ/
+  translation: piety
+  pos: noun
+  gender: n
+- lemma: бог
+  ipa: /bɔɦ/
+  translation: God
+  pos: noun
+  gender: m
+- lemma: Борецький
+  ipa: /bɔˈrɛt͡sʲ.kɪj/
+  translation: Boretskyi
+  pos: noun
+  gender: m
+- lemma: братський
+  ipa: /ˈbrɑt.sʲkɪj/
+  translation: brotherly / fraternal
+  pos: adj
+- lemma: ведення
+  ipa: /ˈʋɛ.dɛn⁽ʲ⁾ːɑ/
+  translation: conducting / leading
+  pos: noun
+  gender: n
+- lemma: великий
+  ipa: /ʋɛˈlɪ.kɪj/
+  translation: great / big
+  pos: adj
+- lemma: виживання
+  ipa: /ʋɪˈʒɪ.ʋɑn⁽ʲ⁾ːɑ/
+  translation: survival
+  pos: noun
+  gender: n
+- lemma: використання
+  ipa: /ʋɪ.kɔ.rɪˈstɑn⁽ʲ⁾ːɑ/
+  translation: use / utilization
+  pos: noun
+  gender: n
+- lemma: вимагати
+  ipa: /ʋɪ.mɑˈɦɑ.tɪ/
+  translation: to demand
+  pos: verb
+- lemma: випускник
+  ipa: /ʋɪ.pu.skˈnɪk/
+  translation: graduate
+  pos: noun
+  gender: m
+- lemma: влада
+  ipa: /ˈʋlɑ.dɑ/
+  translation: power / authority
+  pos: noun
+  gender: f
+- lemma: Володимир
+  ipa: /ʋɔ.lɔˈdɪ.mɪr/
+  translation: Volodymyr
+  pos: noun
+  gender: m
+- lemma: впровадити
+  ipa: /u̯ˈprɔ.ʋɑ.dɪ.tɪ/
+  translation: to implement / introduce
+  pos: verb
+- lemma: вівця
+  ipa: /ʋ⁽ʲ⁾iu̯ˈt͡sʲɑ/
+  translation: sheep
+  pos: noun
+  gender: f
+- lemma: відновити
+  ipa: /ʋ⁽ʲ⁾id.nɔˈʋɪ.tɪ/
+  translation: to restore / renew
+  pos: verb
+- lemma: вільний
+  ipa: /ˈʋ⁽ʲ⁾ilʲ.nɪj/
+  translation: free
+  pos: adj
+- lemma: грецький
+  ipa: /ˈɦrɛ.t͡sʲkɪj/
+  translation: Greek
+  pos: adj
+- lemma: громадянський
+  ipa: /ɦrɔ.mɑˈdʲɑnʲ.sʲkɪj/
+  translation: civil / civic
+  pos: adj
+- lemma: дебати
+  ipa: /dɛˈbɑ.tɪ/
+  translation: debates
+  pos: noun
+  gender: p
+- lemma: Дніпро
+  ipa: /dn⁽ʲ⁾iˈprɔ/
+  translation: Dnipro
+  pos: noun
+  gender: m
+- lemma: дозволити
+  ipa: /dɔˈzʋɔ.lɪ.tɪ/
+  translation: to allow / permit
+  pos: verb
+- lemma: допомагати
+  ipa: /dɔ.pɔ.mɑˈɦɑ.tɪ/
+  translation: to help
+  pos: verb
+- lemma: емоційний
+  ipa: /ɛ.mɔˈt͡s⁽ʲ⁾ij.nɪj/
+  translation: emotional
+  pos: adj
+- lemma: етнарх
+  ipa: /ɛtˈnɑrx/
+  translation: ethnarch (leader of a people)
+  pos: noun
+  gender: m
+- lemma: задум
+  ipa: /ˈzɑ.dum/
+  translation: intent / conception
+  pos: noun
+  gender: m
+- lemma: запитання
+  ipa: /zɑ.pɪˈtɑn⁽ʲ⁾ːɑ/
+  translation: question
+  pos: noun
+  gender: n
+- lemma: засіб
+  ipa: /ˈzɑ.s⁽ʲ⁾ib/
+  translation: means / tool
+  pos: noun
+  gender: m
+- lemma: західний
+  ipa: /ˈzɑ.x⁽ʲ⁾id.nɪj/
+  translation: western
+  pos: adj
+- lemma: здатний
+  ipa: /ˈzdɑt.nɪj/
+  translation: capable
+  pos: adj
+- lemma: земний
+  ipa: /zɛmˈnɪj/
+  translation: earthly
+  pos: adj
+- lemma: знаменитий
+  ipa: /znɑ.mɛˈnɪ.tɪj/
+  translation: famous / celebrated
+  pos: adj
+- lemma: йому
+  ipa: /jɔˈmu/
+  translation: to him
+  pos: pron
+- lemma: казати
+  ipa: /kɑˈzɑ.tɪ/
+  translation: to say
+  pos: verb
+- lemma: київський
+  ipa: /ˈkɪ.jiu̯.sʲkɪj/
+  translation: Kyivan
+  pos: adj
+- lemma: кожен
+  ipa: /ˈkɔ.ʒɛn/
+  translation: every / each
+  pos: pron
+- lemma: конкурувати
+  ipa: /kɔn.ku.ruˈʋɑ.tɪ/
+  translation: to compete
+  pos: verb
+- lemma: контроль
+  ipa: /kɔnˈtrɔlʲ/
+  translation: control
+  pos: noun
+  gender: m
+- lemma: краса
+  ipa: /krɑˈsɑ/
+  translation: beauty
+  pos: noun
+  gender: f
+- lemma: ласка
+  ipa: /ˈlɑ.skɑ/
+  translation: favor / kindness
+  pos: noun
+  gender: f
+- lemma: латинський
+  ipa: /lɑˈtɪnʲ.sʲkɪj/
+  translation: Latin
+  pos: adj
+- lemma: лексика
+  ipa: /ˈlɛk.sɪ.kɑ/
+  translation: vocabulary
+  pos: noun
+  gender: f
+- lemma: лише
+  ipa: /lɪˈʃɛ/
+  translation: only
+  pos: adv
+- lemma: мета
+  ipa: /mɛˈtɑ/
+  translation: goal / aim
+  pos: noun
+  gender: f
+- lemma: міжконфесійний
+  ipa: /mʲiʒ.kɔn.fɛˈs⁽ʲ⁾ij.nɪj/
+  translation: inter-confessional
+  pos: adj
+- lemma: міщанин
+  ipa: /mʲi.ʃt͡ʃɑˈnɪn/
+  translation: burgher / townsman
+  pos: noun
+  gender: m
+- lemma: надання
+  ipa: /nɑˈdɑn⁽ʲ⁾ːɑ/
+  translation: granting / provision
+  pos: noun
+  gender: n
+- lemma: надзвичайний
+  ipa: /nɑd.zʋɪˈt͡ʃɑj.nɪj/
+  translation: extraordinary
+  pos: adj
+- lemma: напруга
+  ipa: /nɑˈpru.ɦɑ/
+  translation: tension
+  pos: noun
+  gender: f
+- lemma: нас
+  ipa: /nɑs/
+  translation: us
+  pos: pron
+- lemma: нащадок
+  ipa: /nɑˈʃt͡ʃɑ.dɔk/
+  translation: descendant
+  pos: noun
+  gender: m
+- lemma: незаконний
+  ipa: /nɛ.zɑˈkɔn.nɪj/
+  translation: illegal / unlawful
+  pos: adj
+- lemma: опонент
+  ipa: /ɔ.pɔˈnɛnt/
+  translation: opponent
+  pos: noun
+  gender: m
+- lemma: освітній
+  ipa: /ɔˈsʲʋ⁽ʲ⁾it.n⁽ʲ⁾ij/
+  translation: educational
+  pos: adj
+- lemma: очолювати
+  ipa: /ɔˈt͡ʃɔ.lʲu.ʋɑ.tɪ/
+  translation: to lead / head
+  pos: verb
+- lemma: пастир
+  ipa: /ˈpɑ.stɪr/
+  translation: shepherd / pastor
+  pos: noun
+  gender: m
+- lemma: пафос
+  ipa: /ˈpɑ.fɔs/
+  translation: pathos
+  pos: noun
+  gender: m
+- lemma: переконати
+  ipa: /pɛ.rɛ.kɔˈnɑ.tɪ/
+  translation: to convince
+  pos: verb
+- lemma: перший
+  ipa: /ˈpɛr.ʃɪj/
+  translation: first
+  pos: num
+- lemma: Петро
+  ipa: /pɛˈtrɔ/
+  translation: Petro
+  pos: noun
+  gender: m
+- lemma: поганин
+  ipa: /pɔˈɦɑ.nɪn/
+  translation: pagan / heathen
+  pos: noun
+  gender: m
+- lemma: полемічний
+  ipa: /pɔ.lɛˈmʲit͡ʃ.nɪj/
+  translation: polemical
+  pos: adj
+- lemma: полягати
+  ipa: /pɔ.lʲɑˈɦɑ.tɪ/
+  translation: to consist in / lie in
+  pos: verb
+- lemma: політичний
+  ipa: /pɔ.l⁽ʲ⁾iˈtɪt͡ʃ.nɪj/
+  translation: political
+  pos: adj
+- lemma: поєднувати
+  ipa: /pɔˈjɛd.nu.ʋɑ.tɪ/
+  translation: to combine
+  pos: verb
+- lemma: приголомшити
+  ipa: /prɪ.ɦɔˈlɔm.ʃɪ.tɪ/
+  translation: to overwhelm / stun
+  pos: verb
+- lemma: прийти
+  ipa: /prɪjˈtɪ/
+  translation: to come
+  pos: verb
+- lemma: програма
+  ipa: /prɔˈɦrɑ.mɑ/
+  translation: program
+  pos: noun
+  gender: f
+- lemma: просити
+  ipa: /prɔˈsɪ.tɪ/
+  translation: to ask / request
+  pos: verb
+- lemma: просто
+  ipa: /ˈprɔ.stɔ/
+  translation: simply
+  pos: adv
+- lemma: прямий
+  ipa: /prʲɑˈmɪj/
+  translation: direct / straight
+  pos: adj
+- lemma: риторичний
+  ipa: /rɪ.tɔˈrɪt͡ʃ.nɪj/
+  translation: rhetorical
+  pos: adj
+- lemma: розуміти
+  ipa: /rɔ.zuˈmʲi.tɪ/
+  translation: to understand
+  pos: verb
+- lemma: руський
+  ipa: /ˈrusʲ.kɪj/
+  translation: Ruthenian / Rus' (adj)
+  pos: adj
+- lemma: рівний
+  ipa: /ˈr⁽ʲ⁾iu̯.nɪj/
+  translation: equal
+  pos: adj
+- lemma: сакральність
+  ipa: /sɑˈkrɑlʲ.n⁽ʲ⁾isʲtʲ/
+  translation: sacredness
+  pos: noun
+  gender: f
+- lemma: свій
+  ipa: /sʋ⁽ʲ⁾ij/
+  translation: one's own
+  pos: pron
+- lemma: синонім
+  ipa: /sɪˈnɔ.n⁽ʲ⁾im/
+  translation: synonym
+  pos: noun
+  gender: m
+- lemma: сила
+  ipa: /ˈsɪ.lɑ/
+  translation: strength / force
+  pos: noun
+  gender: f
+- lemma: складний
+  ipa: /sklɑdˈnɪj/
+  translation: complex / difficult
+  pos: adj
+- lemma: склад
+  ipa: /sklɑd/
+  translation: composition / warehouse
+  pos: noun
+  gender: m
+- lemma: славетний
+  ipa: /slɑˈʋɛt.nɪj/
+  translation: glorious / illustrious
+  pos: adj
+- lemma: слово
+  ipa: /ˈslɔ.ʋɔ/
+  translation: word
+  pos: noun
+  gender: n
+- lemma: спудей
+  ipa: /spuˈdɛj/
+  translation: student (archaic)
+  pos: noun
+  gender: m
+- lemma: ставати
+  ipa: /stɑˈʋɑ.tɪ/
+  translation: to become
+  pos: verb
+- lemma: створення
+  ipa: /stʋɔˈrɛn⁽ʲ⁾ːɑ/
+  translation: creation
+  pos: noun
+  gender: n
+- lemma: століття
+  ipa: /stɔˈl⁽ʲ⁾it.tʲɑ/
+  translation: century
+  pos: noun
+  gender: n
+- lemma: стояти
+  ipa: /stɔˈjɑ.tɪ/
+  translation: to stand
+  pos: verb
+- lemma: сукупність
+  ipa: /suˈkup.n⁽ʲ⁾isʲtʲ/
+  translation: aggregate / totality
+  pos: noun
+  gender: f
+- lemma: текст
+  ipa: /ˈtɛkst/
+  translation: text
+  pos: noun
+  gender: m
+- lemma: той
+  ipa: /tɔj/
+  translation: that
+  pos: pron
+- lemma: точність
+  ipa: /ˈtɔt͡ʃ.n⁽ʲ⁾isʲtʲ/
+  translation: accuracy / precision
+  pos: noun
+  gender: f
+- lemma: український
+  ipa: /u.krɑˈjinʲ.sʲkɪj/
+  translation: Ukrainian
+  pos: adj
+- lemma: уривок
+  ipa: /uˈrɪ.ʋɔk/
+  translation: excerpt / fragment
+  pos: noun
+  gender: m
+- lemma: характеризуватися
+  ipa: /xɑ.rɑk.tɛ.rɪ.zuˈʋɑ.tɪ.sʲɑ/
+  translation: to be characterized by
+  pos: verb
+- lemma: хреститися
+  ipa: /xrɛˈstɪ.tɪ.sʲɑ/
+  translation: to be baptized / to cross oneself
+  pos: verb
+- lemma: хіба
+  ipa: /x⁽ʲ⁾iˈbɑ/
+  translation: really? / is it?
+  pos: part
+- lemma: церква
+  ipa: /ˈt͡sɛr.kʋɑ/
+  translation: church
+  pos: noun
+  gender: f
+- lemma: церковно-козацький
+  ipa: /t͡sɛrˈkɔu̯.нɔ-кɔˈзɑт͡сʲ.кɪj/
+  translation: church-cossack (adj)
+  pos: adj
+- lemma: цей
+  ipa: /t͡sɛj/
+  translation: this
+  pos: pron
+- lemma: штурм
+  ipa: /ʃturm/
+  translation: assault / storming
+  pos: noun
+  gender: m
+- lemma: шість
+  ipa: /ʃ⁽ʲ⁾istʲ/
+  translation: six
+  pos: num
+- lemma: щит
+  ipa: /ʃt͡ʃɪt/
+  translation: shield
+  pos: noun
+  gender: m
+- lemma: щоб
+  ipa: /ʃt͡ʃɔb/
+  translation: in order to / so that
+  pos: conj
+- lemma: юридичний
+  ipa: /ju.rɪˈдɪт͡ʃ.нɪj/
+  translation: legal / juridical
+  pos: adj
+- lemma: єпископ
+  ipa: /jɛˈpɪ.skɔp/
+  translation: bishop
+  pos: noun
+  gender: m
+- lemma: Єрусалим
+  ipa: /jɛ.ru.sɑˈlɪm/
+  translation: Jerusalem
+  pos: noun
+  gender: m
+- lemma: Іов
+  ipa: /ˈi.ɔu̯/
+  translation: Iov (Job)
+  pos: noun
+  gender: m
+- lemma: існування
+  ipa: /i.snuˈʋɑн⁽ʲ⁾ːɑ/
+  translation: existence
+  pos: noun
+  gender: n
+- lemma: борецького
+  ipa: /bɔˈrɛt͡sʲ.kɔ.ɦɔ/
+  translation: Boretskyi (m. gen.)
+  pos: noun
+  gender: m
+- lemma: братського
+  ipa: /ˈbrɑt.sʲkɔ.ɦɔ/
+  translation: brotherly (m. gen.)
+  pos: adj
+- lemma: великого
+  ipa: /ʋɛˈlɪ.kɔ.ɦɔ/
+  translation: great (m. gen.)
+  pos: adj
+- lemma: великої
+  ipa: /ʋɛˈlɪ.kɔ.ji/
+  translation: great (f. gen.)
+  pos: adj
+- lemma: вершиною
+  ipa: /ʋɛrˈʃɪ.nɔ.ju/
+  translation: peak (f. ins.)
+  pos: noun
+  gender: f
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: you (pl.)
+  pos: pron
+- lemma: вивчіть
+  ipa: /ˈʋɪu̯.t͡ʃ⁽ʲ⁾itʲ/
+  translation: learn (imp. pl.)
+  pos: verb
+- lemma: вимагаємо
+  ipa: /ʋɪ.mɑˈɦɑ.jɛ.mɔ/
+  translation: we demand
+  pos: verb
+- lemma: грецької
+  ipa: /ˈɦrɛ.t͡sʲkɔ.ji/
+  translation: Greek (f. gen.)
+  pos: adj
+- lemma: дозволило
+  ipa: /dɔˈzʋɔ.lɪ.lɔ/
+  translation: allowed (n. past)
+  pos: verb
+- lemma: засоби
+  ipa: /ˈzɑ.sɔ.bɪ/
+  translation: means (pl. nom.)
+  pos: noun
+  gender: m
+- lemma: зі
+  ipa: /zʲi/
+  translation: with
+  pos: prep
+- lemma: кажете
+  ipa: /ˈkɑ.ʒɛ.tɛ/
+  translation: you say (pl.)
+  pos: verb
+- lemma: освітнього
+  ipa: /ɔˈsʲʋ⁽ʲ⁾it.nʲɔ.ɦɔ/
+  translation: educational (m. gen.)
+  pos: adj
+- lemma: очолювана
+  ipa: /ɔˈt͡ʃɔ.lʲu.ʋɑ.nɑ/
+  translation: headed (f. part.)
+  pos: adj
+- lemma: першими
+  ipa: /ˈpɛr.ʃɪ.mɪ/
+  translation: first (pl. ins.)
+  pos: num
+- lemma: полемічного
+  ipa: /pɔ.lɛˈmʲit͡ʃ.nɔ.ɦɔ/
+  translation: polemical (m. gen.)
+  pos: adj
+- lemma: політичного
+  ipa: /pɔ.l⁽ʲ⁾iˈtɪt͡ʃ.nɔ.ɦɔ/
+  translation: political (m. gen.)
+  pos: adj
+- lemma: поєднує
+  ipa: /pɔˈjɛd.nu.jɛ/
+  translation: combines (3s)
+  pos: verb
+- lemma: прийшов
+  ipa: /prɪjˈʃɔu̯/
+  translation: came (m. past)
+  pos: verb
+- lemma: просимо
+  ipa: /ˈprɔ.sɪ.mɔ/
+  translation: we ask
+  pos: verb
+- lemma: прямі
+  ipa: /prʲɑˈmʲi/
+  translation: direct (pl. nom.)
+  pos: adj
+- lemma: руського
+  ipa: /ˈrusʲ.kɔ.ɦɔ/
+  translation: Ruthenian (m. gen.)
+  pos: adj
+- lemma: свою
+  ipa: /sʋɔˈju/
+  translation: one's own (f. acc.)
+  pos: pron
+- lemma: свої
+  ipa: /sʋɔˈji/
+  translation: one's own (pl. nom.)
+  pos: pron
+- lemma: своїй
+  ipa: /sʋɔˈjij/
+  translation: one's own (f. dat./loc.)
+  pos: pron
+- lemma: себе
+  ipa: /sɛˈbɛ/
+  translation: oneself
+  pos: pron
+- lemma: семи
+  ipa: /sɛˈmɪ/
+  translation: seven (gen.)
+  pos: num
+- lemma: славетного
+  ipa: /slɑˈʋɛt.nɔ.ɦɔ/
+  translation: glorious (m. gen.)
+  pos: adj
+- lemma: слів
+  ipa: /sl⁽ʲ⁾iu̯/
+  translation: words (pl. gen.)
+  pos: noun
+  gender: n
+- lemma: спудеям
+  ipa: /spuˈdɛ.jɑm/
+  translation: students (pl. dat.)
+  pos: noun
+  gender: m
+- lemma: ставав
+  ipa: /stɑˈʋɑu̯/
+  translation: became (m. past)
+  pos: verb
+- lemma: стоїть
+  ipa: /stɔˈjɪtʲ/
+  translation: stands (3s)
+  pos: verb
+- lemma: того
+  ipa: /tɔˈɦɔ/
+  translation: that (m. gen.)
+  pos: pron
+- lemma: точності
+  ipa: /ˈtɔt͡ʃ.nɔ.sʲt⁽ʲ⁾i/
+  translation: precision (f. gen./dat./loc.)
+  pos: noun
+  gender: f
+- lemma: українського
+  ipa: /u.krɑˈjinʲ.sʲkɔ.ɦɔ/
+  translation: Ukrainian (m. gen.)
+  pos: adj
+- lemma: цю
+  ipa: /t͡sʲu/
+  translation: this (f. acc.)
+  pos: pron

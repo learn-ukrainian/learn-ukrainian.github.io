@@ -1,11 +1,52 @@
-# Meta for Люблінська унія 1569
 slug: liublinska-uniia
-title: "Люблінська унія 1569"
+title: "Люблінська унія 1569: Народження Речі Посполитої"
 level: B2
 track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
-status: skeleton
+phase: "B2.3b [Українська історія]"
+pedagogy: CBI
 focus: history
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+  - history
+  - medieval
+  - poland
+  - lithuania
+  - commonwealth
+grammar:
+  - "Політична термінологія"
+  - "Складні речення причини та наслідку"
+vocabulary_focus:
+  - "Державний устрій"
+  - "Парламентаризм"
+objectives:
+  - "Учень може пояснити причини та наслідки Люблінської унії для українських земель"
+  - "Учень може порівняти статус українських земель у складі Литви та Польщі"
+  - "Учень може аналізувати політичний устрій Речі Посполитої"
+vocabulary_count: 35
+content_outline:
+  - section: "Вступ"
+    words: 400
+  - section: "Шлях до унії: Криза та необхідність"
+    words: 800
+  - section: "Люблінський сейм 1569 року: Драма та компроміс"
+    words: 800
+  - section: "Нова карта Європи: Українські землі у складі Польщі"
+    words: 800
+  - section: "Читання"
+    words: 300
+  - section: "Первинні джерела"
+    words: 300
+  - section: "Деколонізаційний погляд"
+    words: 300
+  - section: "Есе"
+    words: 400
+  - section: "Підсумок"
+    words: 100
+  - section: "Потрібно більше практики?"
+    words: 100
+naturalness:
+  score: 9
+  status: PASS

@@ -1,0 +1,232 @@
+config:
+  standard: '2024'
+items:
+  - lemma: звіт
+    ipa: ''
+    translation: report
+    pos: noun
+    gender: m
+  - lemma: резюме
+    ipa: ''
+    translation: executive summary
+    pos: noun
+    gender: n
+  - lemma: вступ
+    ipa: ''
+    translation: introduction
+    pos: noun
+    gender: m
+  - lemma: мета
+    ipa: ''
+    translation: objective/goal
+    pos: noun
+    gender: f
+  - lemma: методологія
+    ipa: ''
+    translation: methodology
+    pos: noun
+    gender: f
+  - lemma: висновок
+    ipa: ''
+    translation: conclusion
+    pos: noun
+    gender: m
+  - lemma: рекомендація
+    ipa: ''
+    translation: recommendation
+    pos: noun
+    gender: f
+  - lemma: дані
+    ipa: ''
+    translation: data
+    pos: noun
+    gender: pl
+  - lemma: показник
+    ipa: ''
+    translation: indicator/metric
+    pos: noun
+    gender: m
+  - lemma: аналіз
+    ipa: ''
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: тенденція
+    ipa: ''
+    translation: trend
+    pos: noun
+    gender: f
+  - lemma: графік
+    ipa: ''
+    translation: chart/graph
+    pos: noun
+    gender: m
+  - lemma: таблиця
+    ipa: ''
+    translation: table
+    pos: noun
+    gender: f
+  - lemma: діаграма
+    ipa: ''
+    translation: diagram
+    pos: noun
+    gender: f
+  - lemma: відсоток
+    ipa: ''
+    translation: percentage
+    pos: noun
+    gender: m
+  - lemma: зростання
+    ipa: ''
+    translation: growth
+    pos: noun
+    gender: n
+  - lemma: зниження
+    ipa: ''
+    translation: decrease
+    pos: noun
+    gender: n
+  - lemma: порівняння
+    ipa: ''
+    translation: comparison
+    pos: noun
+    gender: n
+  - lemma: результат
+    ipa: ''
+    translation: result
+    pos: noun
+    gender: m
+  - lemma: дослідження
+    ipa: ''
+    translation: research/study
+    pos: noun
+    gender: n
+  - lemma: спостереження
+    ipa: ''
+    translation: observation
+    pos: noun
+    gender: n
+  - lemma: об'єктивний
+    ipa: ''
+    translation: objective
+    pos: adj
+  - lemma: детальний
+    ipa: ''
+    translation: detailed
+    pos: adj
+  - lemma: систематичний
+    ipa: ''
+    translation: systematic
+    pos: adj
+  - lemma: структурувати
+    ipa: ''
+    translation: to structure
+    pos: verb
+  - lemma: узагальнювати
+    ipa: ''
+    translation: to summarize
+    pos: verb
+  - lemma: аналізувати
+    ipa: ''
+    translation: to analyze
+    pos: verb
+  - lemma: виявляти
+    ipa: ''
+    translation: to identify/reveal
+    pos: verb
+  - lemma: порівнювати
+    ipa: ''
+    translation: to compare
+    pos: verb
+  - lemma: ілюструвати
+    ipa: ''
+    translation: to illustrate
+    pos: verb
+  - lemma: демонструвати
+    ipa: ''
+    translation: to demonstrate
+    pos: verb
+  - lemma: зазначати
+    ipa: ''
+    translation: to note/indicate
+    pos: verb
+  - lemma: підсумовувати
+    ipa: ''
+    translation: to conclude
+    pos: verb
+  - lemma: базуватися
+    ipa: ''
+    translation: to be based on
+    pos: verb
+  - lemma: ґрунтуватися
+    ipa: ''
+    translation: to be grounded in
+    pos: verb
+  - lemma: вважати
+    ipa: ''
+    translation: to consider
+    pos: verb
+  - lemma: думати
+    ipa: ''
+    translation: to think
+    pos: verb
+  - lemma: хотіти
+    ipa: ''
+    translation: to want
+    pos: verb
+  - lemma: мати
+    ipa: ''
+    translation: to have
+    pos: verb
+  - lemma: могти
+    ipa: ''
+    translation: can/to be able
+    pos: verb
+  - lemma: брати
+    ipa: ''
+    translation: to take
+    pos: verb
+  - lemma: додавати
+    ipa: ''
+    translation: to add
+    pos: verb
+  - lemma: описувати
+    ipa: ''
+    translation: to describe
+    pos: verb
+  - lemma: рекомендувати
+    ipa: ''
+    translation: to recommend
+    pos: verb
+  - lemma: великий
+    ipa: ''
+    translation: large/big
+    pos: adj
+  - lemma: всі
+    ipa: ''
+    translation: all/everyone
+    pos: pron
+  - lemma: дія
+    ipa: ''
+    translation: action
+    pos: noun
+    gender: f
+  - lemma: звітність
+    ipa: ''
+    translation: reporting
+    pos: noun
+    gender: f
+  - lemma: рядок
+    ipa: ''
+    translation: line/row
+    pos: noun
+    gender: m
+  - lemma: підхід
+    ipa: ''
+    translation: approach
+    pos: noun
+    gender: m
+  - lemma: п'ятнадцять
+    ipa: ''
+    translation: fifteen
+    pos: num

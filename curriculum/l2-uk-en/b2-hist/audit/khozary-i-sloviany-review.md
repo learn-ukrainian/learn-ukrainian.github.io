@@ -1,5 +1,5 @@
-# Audit Report: khozary-i-sloviany.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M07 — khozary-i-sloviany.md
+**Level:** B2 | **Module:** M07 | **Phase:** HIST.1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 41/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

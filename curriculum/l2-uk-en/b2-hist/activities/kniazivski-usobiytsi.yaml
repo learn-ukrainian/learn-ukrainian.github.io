@@ -426,6 +426,34 @@
       correct: false
     - text: Моральний обов'язок
       correct: true
+  - question: «Якщо ж буде він русин, або гридь, або купець... то 40 гривень.» Які висновки можна зробити з цього правового положення?
+    options:
+    - text: Існування соціальної ієрархії
+      correct: true
+    - text: Грошовий штраф як покарання
+      correct: true
+    - text: Рівність усіх перед законом
+      correct: false
+    - text: Захист життя вільної людини
+      correct: true
+    - text: Відсутність смертної кари за вбивство
+      correct: true
+    - text: Дискримінація іноземців
+      correct: false
+  - question: "«І мовили один одному: 'Нащо губимо землю Руську...?'» Які риторичні прийоми використано в цій промові?"
+    options:
+    - text: Риторичне запитання
+      correct: true
+    - text: Звернення до патріотизму
+      correct: true
+    - text: Протиставлення (ми самі vs земля)
+      correct: true
+    - text: Гіпербола
+      correct: false
+    - text: Емоційний заклик
+      correct: true
+    - text: Іронія
+      correct: false
 - type: match-up
   title: Історична лексика
   instruction: З'єднайте слова з їхніми визначеннями.

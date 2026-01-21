@@ -412,7 +412,8 @@ CORE_KEYWORDS = [
     "pattern", "summary",
     # Ukrainian equivalents for B1+ modules
     "діагностика", "аналіз", "занурення", "глибоке", "помилки",
-    "частина", "культур", "розмова", "текст", "діалог", "читання", "підсумок"
+    "частина", "культур", "розмова", "текст", "діалог", "читання", "підсумок",
+    "вступ", "джерела", "погляд", "хронологія", "висновки", "сьогодення"
 ]
 
 # Section keywords to exclude from core word count
@@ -586,7 +587,7 @@ LEVEL_CONFIG = {
     'B2-history': {
         'target_words': 4000,
         'min_activities': 3,
-        'max_activities': 6,
+        'max_activities': 10,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
         'min_vocab': 20,
@@ -745,7 +746,7 @@ LEVEL_CONFIG = {
         # Focus: biographical analysis, legacy evaluation, era context
         'target_words': 4000,
         'min_activities': 4,
-        'max_activities': 8,
+        'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
         'min_vocab': 24,
@@ -765,7 +766,7 @@ LEVEL_CONFIG = {
         # Focus: historical analysis, source criticism, historiographical debate
         'target_words': 4000,
         'min_activities': 4,
-        'max_activities': 8,
+        'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
         'min_vocab': 25,
@@ -892,7 +893,7 @@ LEVEL_CONFIG = {
         # NO traditional activities (quiz, match-up, fill-in)
         'target_words': 3500,  # 3500-4000 for substantial literary analysis
         'min_activities': 3,
-        'max_activities': 6,
+        'max_activities': 9,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
         'min_types_unique': 2,
         'min_vocab': 0,
@@ -913,7 +914,7 @@ LEVEL_CONFIG = {
         # Easier than LIT: shorter essays, some factual checks allowed
         'target_words': 3000,
         'min_activities': 3,
-        'max_activities': 6,
+        'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
         'min_vocab': 20,
@@ -933,7 +934,7 @@ LEVEL_CONFIG = {
         # Academic rigor: longer essays, source criticism, historiographical analysis
         'target_words': 3500,
         'min_activities': 3,
-        'max_activities': 6,
+        'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
         'min_vocab': 25,

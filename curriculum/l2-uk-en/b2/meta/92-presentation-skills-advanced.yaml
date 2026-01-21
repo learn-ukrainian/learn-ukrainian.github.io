@@ -1,0 +1,28 @@
+id: 92
+slug: 'presentation-skills-advanced'
+title: 'Презентації: Поглиблено'
+subtitle: 'Advanced Presentation Skills'
+version: '2.0'
+phase: 'B2.4'
+pedagogy: 'CBI'
+focus: 'skills'
+duration: 90
+transliteration: 'none'
+tags:
+  - communication
+  - presentation
+  - public-speaking
+  - persuasion
+grammar:
+  - 'Rhetorical devices'
+  - 'Persuasive language'
+objectives:
+  - 'Learner can handle Q&A sessions and difficult questions confidently'
+  - 'Learner can adapt presentation style to different audiences'
+  - 'Learner can use storytelling and persuasive techniques in presentations'
+  - 'Learner can apply advanced visual design principles'
+  - 'Learner can deliver effective virtual presentations'
+register: 'публіцистичний'
+naturalness:
+  score: 8
+  status: "PASS"

@@ -4,8 +4,20 @@ slug: syntez-kyivska-rus
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: synthesis
-word_target: 3000
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - synthesis
+grammar:
+  - Synthesis and review register
+  - Academic historical terminology
+objectives:
+  - Summarize the political and cultural development of Kyivan Rus
+  - Evaluate the legacy of Rus in modern Ukrainian identity
+  - Critically analyze conflicting historical claims to the Rus heritage
 immersion: 100% Ukrainian
 sources:
 - name: Київська Русь (Вікіпедія)

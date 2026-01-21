@@ -1,5 +1,312 @@
-# Vocabulary for Люди Русі: Суспільство та побут
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: ludy-rusi
+level: B2
+version: '2.0'
+items:
+- lemma: боярин
+  ipa: /boˈjɑrɪn/
+  translation: boyar
+  pos: noun
+  gender: m
+- lemma: віче
+  ipa: /ˈwʲit͡ʃɛ/
+  translation: veche (assembly)
+  pos: noun
+  gender: n
+- lemma: вільний
+  ipa: /ˈwʲilʲnɪj/
+  translation: free
+  pos: adj
+- lemma: громада
+  ipa: /ɦroˈmɑdɑ/
+  translation: community
+  pos: noun
+  gender: f
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: druzhina (retinue)
+  pos: noun
+  gender: f
+- lemma: духовенство
+  ipa: /duxoˈwɛnstwo/
+  translation: clergy
+  pos: noun
+  gender: n
+- lemma: еліта
+  ipa: /ɛˈlʲitɑ/
+  translation: elite
+  pos: noun
+  gender: f
+- lemma: житло
+  ipa: /ʒɪtˈlo/
+  translation: dwelling
+  pos: noun
+  gender: n
+- lemma: закуп
+  ipa: /ˈzɑkup/
+  translation: zakup (bondsman)
+  pos: noun
+  gender: m
+- lemma: залежний
+  ipa: /zɐˈlɛʒnɪj/
+  translation: dependent
+  pos: adj
+- lemma: землеробство
+  ipa: /zɛmlɛˈrɔbstwo/
+  translation: agriculture
+  pos: noun
+  gender: n
+- lemma: князь
+  ipa: /knʲɑzʲ/
+  translation: prince
+  pos: noun
+  gender: m
+- lemma: ковальство
+  ipa: /koˈwɑlʲstwo/
+  translation: blacksmithing
+  pos: noun
+  gender: n
+- lemma: купець
+  ipa: /kuˈpɛt͡sʲ/
+  translation: merchant
+  pos: noun
+  gender: m
+- lemma: міщанин
+  ipa: /mʲiʃt͡ʃɐˈnɪn/
+  translation: burgher
+  pos: noun
+  gender: m
+- lemma: побут
+  ipa: /ˈpɔbut/
+  translation: everyday life
+  pos: noun
+  gender: m
+- lemma: ремісник
+  ipa: /rɛmʲisˈnɪk/
+  translation: craftsman
+  pos: noun
+  gender: m
+- lemma: рядович
+  ipa: /rʲɐˈdɔwɪt͡ʃ/
+  translation: ryadovych (contract laborer)
+  pos: noun
+  gender: m
+- lemma: священик
+  ipa: /sʲwʲɐˈʃt͡ʃɛnɪk/
+  translation: priest
+  pos: noun
+  gender: m
+- lemma: селянин
+  ipa: /sɛlʲɐˈnɪn/
+  translation: peasant
+  pos: noun
+  gender: m
+- lemma: смерд
+  ipa: /smɛrd/
+  translation: smerd (peasant)
+  pos: noun
+  gender: m
+- lemma: суспільство
+  ipa: /susˈpʲilʲstwo/
+  translation: society
+  pos: noun
+  gender: n
+- lemma: терем
+  ipa: /ˈtɛrɛm/
+  translation: terem (tower chamber)
+  pos: noun
+  gender: m
+- lemma: торгівля
+  ipa: /torˈɦʲiwlʲɐ/
+  translation: trade
+  pos: noun
+  gender: f
+- lemma: холоп
+  ipa: /xoˈlɔp/
+  translation: kholop (serf)
+  pos: noun
+  gender: m
+- lemma: челядь
+  ipa: /ˈt͡ʃɛlʲɐdʲ/
+  translation: servants
+  pos: noun
+  gender: f
+- lemma: ювелірство
+  ipa: /juwɛˈlʲirstwo/
+  translation: jewelry making
+  pos: noun
+  gender: n
+- lemma: жити
+  ipa: /ˈʒɪtɪ/
+  translation: to live
+  pos: verb
+- lemma: захищати
+  ipa: /zɑxɪˈʃt͡ʃɑtɪ/
+  translation: to protect
+  pos: verb
+- lemma: землеволодіння
+  ipa: /zɛmlɛwoloˈdʲinʲːɑ/
+  translation: land ownership
+  pos: noun
+  gender: n
+- lemma: зникнути
+  ipa: /ˈznɪknutɪ/
+  translation: to disappear
+  pos: verb
+- lemma: Київ
+  ipa: /ˈkɪjiw/
+  translation: Kyiv
+  pos: noun
+  gender: m
+- lemma: мудрий
+  ipa: /ˈmudrɪj/
+  translation: wise
+  pos: adj
+- lemma: міський
+  ipa: /mʲiˈsʲkɪj/
+  translation: urban
+  pos: adj
+- lemma: написати
+  ipa: /nɑpɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: пересічний
+  ipa: /pɛrɛˈsʲit͡ʃnɪj/
+  translation: ordinary
+  pos: adj
+- lemma: полягати
+  ipa: /polʲɑˈɦɑtɪ/
+  translation: to consist (in)
+  pos: verb
+- lemma: родовий
+  ipa: /rodoˈwɪj/
+  translation: ancestral
+  pos: adj
+- lemma: роль
+  ipa: /rolʲ/
+  translation: role
+  pos: noun
+  gender: f
+- lemma: свій
+  ipa: /sʲwʲij/
+  translation: own
+  pos: pronoun
+- lemma: слово
+  ipa: /ˈslowo/
+  translation: word
+  pos: noun
+  gender: n
+- lemma: той
+  ipa: /toj/
+  translation: that
+  pos: pronoun
+- lemma: управитель
+  ipa: /uprɑˈwɪtɛlʲ/
+  translation: manager
+  pos: noun
+  gender: m
+- lemma: увесь
+  ipa: /uˈwɛsʲ/
+  translation: all
+  pos: pronoun
+- lemma: чернець
+  ipa: /t͡ʃɛrˈnɛt͡sʲ/
+  translation: monk
+  pos: noun
+  gender: m
+- lemma: ізгой
+  ipa: /iˈzɦɔj/
+  translation: outcast
+  pos: noun
+  gender: m
+- lemma: мудрого
+  ipa: ""
+  translation: wise (gen)
+  pos: adj
+- lemma: міського
+  ipa: ""
+  translation: urban (gen)
+  pos: adj
+- lemma: пересічного
+  ipa: ""
+  translation: ordinary (gen)
+  pos: adj
+- lemma: полягала
+  ipa: ""
+  translation: consisted
+  pos: verb
+- lemma: родової
+  ipa: ""
+  translation: ancestral (gen)
+  pos: adj
+- lemma: ролі
+  ipa: ""
+  translation: roles
+  pos: noun
+- lemma: ті
+  ipa: ""
+  translation: those
+  pos: pronoun
+- lemma: ченці
+  ipa: ""
+  translation: monks
+  pos: noun
+- lemma: ізгоями
+  ipa: ""
+  translation: outcasts (instr)
+  pos: noun
+- lemma: відпрацьовувала
+  ipa: ""
+  translation: worked off
+  pos: verb
+- lemma: героями
+  ipa: ""
+  translation: heroes (instr)
+  pos: noun
+- lemma: динар
+  ipa: ""
+  translation: dinar
+  pos: noun
+- lemma: договором
+  ipa: ""
+  translation: treaty (instr)
+  pos: noun
+- lemma: дружинник
+  ipa: ""
+  translation: druzhina member
+  pos: noun
+- lemma: дружинники
+  ipa: ""
+  translation: druzhina members
+  pos: noun
+- lemma: жили
+  ipa: ""
+  translation: lived
+  pos: verb
+- lemma: захищала
+  ipa: ""
+  translation: protected
+  pos: verb
+- lemma: зникли
+  ipa: ""
+  translation: disappeared
+  pos: verb
+- lemma: києві
+  ipa: ""
+  translation: Kyiv (loc)
+  pos: noun
+- lemma: купці
+  ipa: ""
+  translation: merchants
+  pos: noun
+- lemma: боржник
+  ipa: ""
+  translation: debtor
+  pos: noun
+- lemma: відновіть
+  ipa: ""
+  translation: restore (imperative)
+  pos: verb
+- lemma: боярського
+  ipa: ""
+  translation: boyar's (gen)
+  pos: adj

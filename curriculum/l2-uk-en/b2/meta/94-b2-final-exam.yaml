@@ -1,20 +1,29 @@
-module: b2-94
-title: 'B2 Final Exam'
-subtitle: 'Comprehensive B2 Assessment'
-version: '1.0'
-phase: 'B2.4'
-focus: checkpoint
-pedagogy: 'Test'
+id: 94
+slug: 'b2-final-exam'
+title: 'B2 Підсумковий іспит'
+subtitle: 'B2 Final Exam'
+version: '2.0'
+phase: 'B2.4 Communication Skills Checkpoint'
+pedagogy: 'TTT'
 duration: 180
 transliteration: 'none'
+immersion: 100
 tags:
-  - exam
-  - assessment
-  - final
+  - checkpoint
+  - final-exam
+  - integration
+  - communication-skills
 grammar:
-  - 'Comprehensive B2 grammar review'
+  - 'Integration of M85-93 Communication Skills'
+  - 'Comprehensive review and testing'
 objectives:
-  - 'Demonstrate B2 level proficiency'
-  - 'Pass final comprehensive assessment'
-vocabulary_count: 0
-slug: 94-b2-final-exam
+  - 'Learner can write professional emails and reports'
+  - 'Learner can analyze news and media critically'
+  - 'Learner can deliver effective presentations'
+  - 'Learner can participate in professional discussions'
+  - 'Learner can self-assess readiness for C1 level'
+vocabulary_count: 45
+register: 'varies'
+naturalness:
+  score: 8
+  status: "PASS"

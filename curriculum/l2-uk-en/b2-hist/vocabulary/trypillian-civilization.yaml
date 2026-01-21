@@ -659,3 +659,33 @@ items:
   translation: historiography
   pos: noun
   gender: f
+- lemma: великий
+  ipa: /wɛˈlɪkɪj/
+  translation: large, big
+  pos: adj
+- lemma: написати
+  ipa: /nɐpɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: один
+  ipa: /oˈdɪn/
+  translation: one
+  pos: num
+- lemma: першовідкривач
+  ipa: /pɛrʃowʲidkrɪˈwɑt͡ʃ/
+  translation: discoverer
+  pos: noun
+  gender: m
+- lemma: стародавній
+  ipa: /stɐroˈdɑwnʲij/
+  translation: ancient
+  pos: adj
+- lemma: трипілець
+  ipa: /trɪˈpʲilɛt͡sʲ/
+  translation: Trypillian (person)
+  pos: noun
+  gender: m
+- lemma: історичний
+  ipa: /ʲistoˈrɪt͡ʃnɪj/
+  translation: historical
+  pos: adj

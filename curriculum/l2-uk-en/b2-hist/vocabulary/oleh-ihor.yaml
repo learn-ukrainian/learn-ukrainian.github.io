@@ -1,5 +1,236 @@
-# Vocabulary for Олег та Ігор: Перші правителі
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: 09-oleh-ihor
+level: B2
+version: '2.0'
+items:
+  - lemma: данина
+    ipa: /d̪ɑˈnɪnɑ/
+    translation: tribute (tax)
+    pos: noun
+    gender: f
+  - lemma: щит
+    ipa: /ʃt͡ʃɪt̪/
+    translation: shield
+    pos: noun
+    gender: m
+  - lemma: похід
+    ipa: /poˈxid̪/
+    translation: campaign; march
+    pos: noun
+    gender: m
+  - lemma: віщий
+    ipa: /ˈvʲiʃt͡ʃɪj/
+    translation: prophetic; wise (epithet for Oleh)
+    pos: adj
+  - lemma: волхв
+    ipa: /vɔɫxv/
+    translation: sorcerer; magus; pagan priest
+    pos: noun
+    gender: m
+  - lemma: череп
+    ipa: /ˈt͡ʃɛrɛp/
+    translation: skull
+    pos: noun
+    gender: m
+  - lemma: змія
+    ipa: /zmʲiˈjɑ/
+    translation: snake; serpent
+    pos: noun
+    gender: f
+  - lemma: вкусити
+    ipa: /vkuˈsɪt̪ɪ/
+    translation: to bite
+    pos: verb
+  - lemma: древляни
+    ipa: /d̪rɛu̯ˈlʲɑnɪ/
+    translation: Drevlians (East Slavic tribe)
+    pos: noun
+    gender: pl
+  - lemma: повстання
+    ipa: /pou̯ˈst̪ɑɲːɑ/
+    translation: uprising; rebellion
+    pos: noun
+    gender: n
+  - lemma: жадібність
+    ipa: /ˈʒɑd̪ibɲisʲtʲ/
+    translation: greed
+    pos: noun
+    gender: f
+  - lemma: розірвати
+    ipa: /rozʲirˈvɑt̪ɪ/
+    translation: to tear apart
+    pos: verb
+  - lemma: полюддя
+    ipa: /poˈlʲud̪ːʲɑ/
+    translation: polyuddia (tribute collection journey)
+    pos: noun
+    gender: n
+  - lemma: договір
+    ipa: /d̪oˈɦɔvir/
+    translation: treaty; agreement
+    pos: noun
+    gender: m
+  - lemma: торгівля
+    ipa: /t̪orˈɦiu̯lʲɑ/
+    translation: trade; commerce
+    pos: noun
+    gender: f
+  - lemma: візантія
+    ipa: /vizɑn̪ˈt̪ijɑ/
+    translation: Byzantium
+    pos: noun
+    gender: f
+  - lemma: царгород
+    ipa: /ˈt͡sɑrɦorɔd̪/
+    translation: argorod (Constantinople)
+    pos: noun
+    gender: m
+  - lemma: ворота
+    ipa: /voˈrɔt̪ɑ/
+    translation: gates
+    pos: noun
+    gender: pl
+  - lemma: прибити
+    ipa: /prɪˈbɪt̪ɪ/
+    translation: to nail/fix (something to something)
+    pos: verb
+  - lemma: смерть
+    ipa: /smɛrtʲ/
+    translation: death
+    pos: noun
+    gender: f
+  - lemma: жорстокий
+    ipa: /ʒorˈst̪ɔkɪj/
+    translation: cruel
+    pos: adj
+  - lemma: пророцтво
+    ipa: /proˈrɔt͡st̪wo/
+    translation: prophecy
+    pos: noun
+    gender: n
+  - lemma: кінь
+    ipa: /kʲinʲ/
+    translation: horse
+    pos: noun
+    gender: m
+  - lemma: отруїти
+    ipa: /ot̪ruˈjit̪ɪ/
+    translation: to poison
+    pos: verb
+  - lemma: дипломатія
+    ipa: /d̪ɪploˈmɑt̪ijɑ/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: пільга
+    ipa: /ˈpʲilʲɦɑ/
+    translation: privilege; benefit (tax/trade exemption)
+    pos: noun
+    gender: f
+  - lemma: купець
+    ipa: /kuˈpɛt͡sʲ/
+    translation: merchant
+    pos: noun
+    gender: m
+  - lemma: правити
+    ipa: /ˈprɑvɪt̪ɪ/
+    translation: to rule; to govern
+    pos: verb
+  - lemma: легенда
+    ipa: /leˈɦɛnd̪ɑ/
+    translation: legend
+    pos: noun
+    gender: f
+  - lemma: літопис
+    ipa: /lʲiˈt̪ɔpɪs/
+    translation: chronicle
+    pos: noun
+    gender: m
+  - lemma: князь
+    ipa: /knʲazʲ/
+    translation: prince, ruler
+    pos: noun
+    gender: m
+  - lemma: варяги
+    ipa: /wɐˈrʲɑɦɪ/
+    translation: Varangians (Vikings)
+    pos: noun
+    gender: pl
+  - lemma: дружина
+    ipa: /druˈʒɪnɑ/
+    translation: retinue, princely army
+    pos: noun
+    gender: f
+  - lemma: об'єднання
+    ipa: /obˈjɛdnɑɲːɑ/
+    translation: unification
+    pos: noun
+    gender: n
+  - lemma: підкорення
+    ipa: /pʲidˈkɔrɛɲːɑ/
+    translation: subjugation, conquest
+    pos: noun
+    gender: n
+  - lemma: регент
+    ipa: /ˈrɛɦɛnt/
+    translation: regent
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /lɛɦʲiˈtɪmnistʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: багатолітній
+    ipa: /bɐɦɐtoˈlʲitʲnʲij/
+    translation: multi-year, long-term
+    pos: adj
+  - lemma: вбивця
+    ipa: /ˈwbɪwt͡sʲɑ/
+    translation: killer, murderer
+    pos: noun
+    gender: m
+  - lemma: вжалити
+    ipa: /ˈwʒɑlɪtɪ/
+    translation: to sting
+    pos: verb
+  - lemma: виповзти
+    ipa: /ˈwɪpowztɪ/
+    translation: to crawl out
+    pos: verb
+  - lemma: гість
+    ipa: /ɦʲistʲ/
+    translation: guest, trader
+    pos: noun
+    gender: m
+  - lemma: зватися
+    ipa: /ˈzwɑtɪsʲɑ/
+    translation: to be called
+    pos: verb
+  - lemma: злізти
+    ipa: /ˈzlʲiztɪ/
+    translation: to get down, to dismount
+    pos: verb
+  - lemma: насміятися
+    ipa: /nɐˈsmʲijɑtɪsʲɑ/
+    translation: to mock, to laugh at
+    pos: verb
+  - lemma: розхворітися
+    ipa: /rozxwoˈrʲitɪsʲɑ/
+    translation: to fall ill
+    pos: verb
+  - lemma: судитися
+    ipa: /suˈdɪtɪsʲɑ/
+    translation: to be destined
+    pos: verb
+  - lemma: умерти
+    ipa: /uˈmɛrtɪ/
+    translation: to die
+    pos: verb
+  - lemma: утекти
+    ipa: /uˈtɛktɪ/
+    translation: to escape, to flee
+    pos: verb
+  - lemma: який-небудь
+    ipa: /ˈjɑkɪjˌnɛbudʲ/
+    translation: some, any
+    pos: pron

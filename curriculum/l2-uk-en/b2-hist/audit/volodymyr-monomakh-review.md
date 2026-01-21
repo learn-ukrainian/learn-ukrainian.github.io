@@ -1,7 +1,7 @@
-# Audit Report: volodymyr-monomakh.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M15 — volodymyr-monomakh.md
+**Level:** B2 | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 4084/4000
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/20
+- **Vocab:** ✅ 116/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

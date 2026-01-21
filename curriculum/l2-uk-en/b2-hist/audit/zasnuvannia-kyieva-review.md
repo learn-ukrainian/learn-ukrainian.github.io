@@ -1,17 +1,17 @@
-# Audit Report: zasnuvannia-kyieva.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M06 — zasnuvannia-kyieva.md
+**Level:** B2 | **Module:** M06 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3999/4000 (1 short)
+- **Words:** ✅ 4008/4000
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 108/20
+- **Vocab:** ✅ 114/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -55,4 +55,4 @@
 | **Критерії оцінювання** | ⚪️ | 0 | Skipped |
 | **Зразок відповіді** | ⚪️ | 231 | Skipped |
 | **Підсумок** | ✅ | 227 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 234 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 243 | Skipped |

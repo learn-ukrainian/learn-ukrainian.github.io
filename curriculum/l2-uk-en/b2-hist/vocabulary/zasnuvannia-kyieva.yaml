@@ -523,3 +523,28 @@ items:
   translation: Judaism
   pos: noun
   gender: m
+- lemma: Київ
+  pos: propn
+  gender: m
+  ipa: /ˈkɪjiʋ/
+  translation: Kyiv
+- lemma: написати
+  pos: verb
+  ipa: /nɐpɪˈsɑtɪ/
+  translation: to write
+- lemma: полянський
+  pos: adj
+  ipa: /poˈlʲɑnsʲkɪj/
+  translation: Polianian
+- lemma: свій
+  pos: pron
+  ipa: /swʲij/
+  translation: one's own
+- lemma: єдиний
+  pos: adj
+  ipa: /jɛˈdɪnɪj/
+  translation: single, only, unified
+- lemma: існувати
+  pos: verb
+  ipa: /isnuˈwɑtɪ/
+  translation: to exist

@@ -1,5 +1,5 @@
-# Audit Report: scythians-sarmatians.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M02 — scythians-sarmatians.md
+**Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 188/20
+- **Vocab:** ✅ 202/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -4,8 +4,20 @@ slug: rus-ta-susidy
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
 focus: history
-module_type: history
-word_target: 4000
+pedagogy: CBI
+duration: 120
+transliteration: none
+tags:
+  - history
+  - kyivan-rus
+  - diplomacy
+grammar:
+  - Past tense narrative
+  - Diplomatic and international relations terminology
+objectives:
+  - Trace the history of Russo-Byzantine relations
+  - Understand the role of dynastic marriages in Rus foreign policy
+  - Analyze the relations with western and steppe neighbors
 immersion: 100% Ukrainian
 sources:
 - name: Зовнішня політика Київської Русі (Вікіпедія)

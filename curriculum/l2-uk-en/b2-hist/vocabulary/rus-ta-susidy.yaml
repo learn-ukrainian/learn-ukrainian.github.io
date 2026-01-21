@@ -1,5 +1,234 @@
-# Vocabulary for Русь та сусіди: Візантія, Польща, Угорщина
-# Status: skeleton - to be developed
-# Target: 24-30 terms
-
-terms: []
+module: 19-rus-ta-susidy
+level: B2
+version: '2.0'
+items:
+  - lemma: дипломатія
+    ipa: ''
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: договір
+    ipa: ''
+    translation: treaty
+    pos: noun
+    gender: m
+  - lemma: династичний шлюб
+    ipa: ''
+    translation: dynastic marriage
+    pos: phrase
+    gender: m
+  - lemma: союз
+    ipa: ''
+    translation: alliance
+    pos: noun
+    gender: m
+  - lemma: посольство
+    ipa: ''
+    translation: embassy
+    pos: noun
+    gender: n
+  - lemma: данина
+    ipa: ''
+    translation: tribute
+    pos: noun
+    gender: f
+  - lemma: легітимність
+    ipa: ''
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: гегемонія
+    ipa: ''
+    translation: hegemony
+    pos: noun
+    gender: f
+  - lemma: експансія
+    ipa: ''
+    translation: expansion
+    pos: noun
+    gender: f
+  - lemma: ратифікація
+    ipa: ''
+    translation: ratification
+    pos: noun
+    gender: f
+  - lemma: печеніги
+    ipa: ''
+    translation: Pechenegs
+    pos: noun
+    gender: pl
+  - lemma: половці
+    ipa: ''
+    translation: Polovtsians (Cumans)
+    pos: noun
+    gender: pl
+  - lemma: варяги
+    ipa: ''
+    translation: Varangians
+    pos: noun
+    gender: pl
+  - lemma: кочівник
+    ipa: ''
+    translation: nomad
+    pos: noun
+    gender: m
+  - lemma: набіг
+    ipa: ''
+    translation: raid
+    pos: noun
+    gender: m
+  - lemma: загроза
+    ipa: ''
+    translation: threat
+    pos: noun
+    gender: f
+  - lemma: степ
+    ipa: ''
+    translation: steppe
+    pos: noun
+    gender: m
+  - lemma: імперія
+    ipa: ''
+    translation: empire
+    pos: noun
+    gender: f
+  - lemma: королівство
+    ipa: ''
+    translation: kingdom
+    pos: noun
+    gender: n
+  - lemma: митрополит
+    ipa: ''
+    translation: metropolitan (bishop)
+    pos: noun
+    gender: m
+  - lemma: єпископ
+    ipa: ''
+    translation: bishop
+    pos: noun
+    gender: m
+  - lemma: місіонер
+    ipa: ''
+    translation: missionary
+    pos: noun
+    gender: m
+  - lemma: угода
+    ipa: ''
+    translation: agreement
+    pos: noun
+    gender: f
+  - lemma: вплив
+    ipa: ''
+    translation: influence
+    pos: noun
+    gender: m
+  - lemma: суперник
+    ipa: ''
+    translation: rival
+    pos: noun
+    gender: m
+  - lemma: оборона
+    ipa: ''
+    translation: defense
+    pos: noun
+    gender: f
+  - lemma: кордон
+    ipa: ''
+    translation: border
+    pos: noun
+    gender: m
+  - lemma: престиж
+    ipa: ''
+    translation: prestige
+    pos: noun
+    gender: m
+  - lemma: цивілізація
+    ipa: ''
+    translation: civilization
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: ''
+    translation: heritage
+    pos: noun
+    gender: f
+  - lemma: цесар
+    ipa: /t͡sɛsar/
+    translation: caesar/emperor
+    pos: noun
+    gender: m
+  - lemma: шведський
+    ipa: /ʃvɛdsʲkɪj/
+    translation: Swedish
+    pos: adj
+    gender: ''
+  - lemma: єднати
+    ipa: /jednatɪ/
+    translation: to unite/connect
+    pos: verb
+    gender: ''
+  - lemma: імущий
+    ipa: /imuʃtʃɪj/
+    translation: wealthy/possessing
+    pos: adj
+    gender: ''
+  - lemma: Інгігерда
+    ipa: /inɦiɦɛrda/
+    translation: Ingigerda (name)
+    pos: noun
+    gender: f
+  - lemma: історичний
+    ipa: /istɔrɪtʃnɪj/
+    translation: historical
+    pos: adj
+    gender: ''
+  - lemma: торговий
+    ipa: /tɔr'ɦɔvɪj/
+    translation: trade (adj)
+    pos: adj
+    gender: ''
+  - lemma: турецький
+    ipa: /tu'rɛt͡sʲkɪj/
+    translation: Turkish
+    pos: adj
+    gender: ''
+  - lemma: убивство
+    ipa: /ubɪu̯stwɔ/
+    translation: murder
+    pos: noun
+    gender: n
+  - lemma: укласти
+    ipa: /uklastɪ/
+    translation: to conclude (a treaty)
+    pos: verb
+    gender: ''
+  - lemma: увесь
+    ipa: /u'vɛsʲ/
+    translation: all/whole
+    pos: adj
+    gender: ''
+  - lemma: утекти
+    ipa: /utɛk'tɪ/
+    translation: to flee/escape
+    pos: verb
+    gender: ''
+  - lemma: червенський
+    ipa: /t͡ʃɛr'vɛnsʲkɪj/
+    translation: Cherven (adj)
+    pos: adj
+    gender: ''
+  - lemma: штаденський
+    ipa: /ʃta'dɛnsʲkɪj/
+    translation: Stade (adj)
+    pos: adj
+    gender: ''
+  - lemma: Євфимія
+    ipa: /jɛu̯'fɪmʲija/
+    translation: Euphemia
+    pos: noun
+    gender: f
+  - lemma: ізолювати
+    ipa: /izɔlʲu'vatɪ/
+    translation: to isolate
+    pos: verb
+    gender: ''

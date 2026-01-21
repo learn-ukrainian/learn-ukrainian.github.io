@@ -86,12 +86,13 @@
 11. **Virtual Environment**: Always run Python scripts in the virtual environment. Use `.venv/bin/python3` or `source .venv/bin/activate`. Never use system Python.
 12. **BROKEN TOOL AVOIDANCE**: The `search_file_content` tool is BROKEN (internal configuration error). DO NOT USE IT. Always use `run_shell_command("rg ...")` for searching the codebase. Use flags like `-i` (ignore case) or `-F` (fixed string) as needed.
 13. **Typography & JSX Safety (CRITICAL)**: ALWAYS use Ukrainian angular quotes `«...»` instead of ASCII double quotes `"` in all content (titles, text, values). ASCII double quotes break the JSX compiler when passed as props. The audit system will flag this.
-14. **Seminar Pedagogy & Legacy Activity Files (RFC #409)**: Reorganized tracks (`c1-bio`, `b2-hist`, `lit`) enforce a "Seminar" pedagogy (Reading -> Analysis -> Essay). 
+14. **Seminar Pedagogy & Legacy Activity Files (RFC #409)**: Reorganized tracks (`c1-bio`, `b2-hist`, `lit`) enforce a "Seminar" pedagogy (Reading -> Analysis -> Essay).
     - **Legacy Detection**: If you find existing activity YAMLs in these tracks containing `quiz`, `match-up`, or `fill-in`, treat them as INCOMPATIBLE fossils.
     - **Action**: Do NOT try to patch them. Immediately delete and rewrite them from scratch using the specialized schema (e.g., `schemas/activities-c1-bio.schema.json`).
     - **YAML Syntax**: Ukrainian text containing colons (e.g., in `model_answer` or `explanation`) MUST be wrapped in double quotes `"` to prevent YAML parsing errors.
-    - **Advanced Types**: Seminar tracks REQUIRE advanced types: `reading` (with embedded `text`), `critical-analysis`, and `essay-response`. 
+    - **Advanced Types**: Seminar tracks REQUIRE advanced types: `reading` (with embedded `text`), `critical-analysis`, and `essay-response`.
     - **Indentation**: Maintain strict 2-space indentation in activity YAMLs to avoid "block mapping" errors.
+15. **LLM Autonomy Rule (MANDATORY)**: You are the linguistic and pedagogical expert. **Do NOT use or create Python scripts to perform "LLM Reviews", "Grammar Checks", or "Content Migrations".** Scripts are strictly for technical statistics (word counts, file existence, schema validation). Linguistic quality, naturalness, historical accuracy, and decolonization alignment MUST be performed by you, the agent, using your internal reasoning skills before final verification.
 
 ## File Structure Reference
 

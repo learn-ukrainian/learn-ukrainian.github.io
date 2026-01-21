@@ -60,6 +60,9 @@ MODULE_TYPE_MAP = {
     # Professional types
     'professional': 'professional',
     'specialized': 'professional',
+    # Skills types
+    'skills': 'skills',
+    'communication': 'skills',
     # Literature types
     'literature': 'literature',
     'literary': 'literature',
@@ -177,6 +180,14 @@ MODULE_TYPE_TARGETS = {
         'visual': 3,
         'threshold': 85,  # Checkpoints focus on variety, lower threshold
     },
+    'skills': {  # Communication skills modules (M85-93)
+        'engagement': 5,
+        'examples': 15,
+        'realworld': 3,
+        'visual': 2,
+        'questions': 4,
+        'threshold': 80,  # Skills modules focus on practical application, not cultural anchoring
+    },
     'content': {  # Generic CBI fallback
         'engagement': 5,
         'examples': 15,
@@ -270,6 +281,17 @@ MODULE_TYPE_WEIGHTS = {
         'visual': 0.10,
         'review_sections': 0.20,  # Comprehensive review coverage
         'paragraph_var': 0.10,
+    },
+    'skills': {
+        # Skills modules focus on practical application with examples
+        'engagement': 0.19,  # Engagement boxes for tips and warnings
+        'examples': 0.25,    # Practical examples are critical
+        'variety': 0.12,
+        'realworld': 0.12,   # Real-world scenarios and applications
+        'visual': 0.06,
+        'questions': 0.06,
+        'paragraph_var': 0.06,
+        'cultural': 0.12,    # Some cultural context but not primary focus
     },
     'phraseology': {
         'engagement': 0.15,

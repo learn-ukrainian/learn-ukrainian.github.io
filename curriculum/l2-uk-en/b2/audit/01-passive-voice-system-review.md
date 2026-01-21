@@ -1,7 +1,7 @@
-# Audit Report: 01-passive-voice-system.md
-**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M01 — 01-passive-voice-system.md
+**Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 1943/1750
@@ -19,7 +19,7 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

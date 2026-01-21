@@ -907,3 +907,64 @@ items:
   translation: hierarchical
   pos: adj
   gender: n
+- lemma: вирізнятися
+  ipa: /wɪrʲizʲˈnʲɑtɪsʲɑ/
+  translation: to stand out, to be distinguished
+  pos: verb
+- lemma: воювати
+  ipa: /wojuˈwɑtɪ/
+  translation: to fight, to wage war
+  pos: verb
+- lemma: кинджал
+  ipa: /kɪnˈdʒɑl/
+  translation: dagger
+  pos: noun
+  gender: m
+- lemma: культурний
+  ipa: /kulʲˈturnɪj/
+  translation: cultural
+  pos: adj
+- lemma: написати
+  ipa: /nɐpɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: полювати
+  ipa: /polʲuˈwɑtɪ/
+  translation: to hunt
+  pos: verb
+- lemma: породити
+  ipa: /poroˈdɪtɪ/
+  translation: to give birth to, to engender
+  pos: verb
+- lemma: роль
+  ipa: /rolʲ/
+  translation: role
+  pos: noun
+  gender: f
+- lemma: рік
+  ipa: /rʲik/
+  translation: year
+  pos: noun
+  gender: m
+- lemma: світобудова
+  ipa: /swʲitobuˈdowɑ/
+  translation: world structure, universe
+  pos: noun
+  gender: f
+- lemma: світовий
+  ipa: /swʲitoˈwɪj/
+  translation: world (adj.), global
+  pos: adj
+- lemma: скіфський
+  ipa: /sʲkʲifˈsʲkɪj/
+  translation: Scythian
+  pos: adj
+- lemma: ярус
+  ipa: /ˈjɑrus/
+  translation: tier, level
+  pos: noun
+  gender: m
+- lemma: їздити
+  ipa: /ˈjizdɪtɪ/
+  translation: to ride, to travel
+  pos: verb

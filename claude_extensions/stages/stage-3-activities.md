@@ -50,6 +50,96 @@ answers: []
 
 ---
 
+## 🚨 CRITICAL FAILURE PATTERN: Writing from Memory
+
+<critical>
+
+**CASE STUDY: M92 B2 Module (January 2026)**
+
+An LLM agent was asked to create activities for B2 M92 and generated 14 activities **from memory without reading any schemas or reference files**. Result:
+
+| Activity | Error Made | Root Cause |
+|----------|-----------|------------|
+| **Quiz** | Used option-level `explanation` | Didn't read schema showing item-level explanations required |
+| **Match-up** | Used `groups:` with nested lists | Didn't read schema showing `pairs:` structure required |
+| **True-false** | Used `answer:` field | Didn't read schema showing `correct:` field required (B2-specific) |
+
+**Impact:** 3 schema violations, 2+ hours debugging, multiple failed audit runs.
+
+**What SHOULD have been done (M92 is a skills module):**
+
+```
+1. READ schemas/activities-b2.schema.json                    ← Skipped
+2. READ meta/92-*.yaml to identify type: 'skills'            ← Skipped
+3. READ activities/91-*.yaml (another B2 skills module)      ← Skipped
+4. VERIFY structure matches working skills module examples   ← Skipped
+5. WRITE activities using confirmed format                   ← Did this first (wrong)
+```
+
+**What was actually read:** Nothing (generated from memory)
+**What should have been read:** M91 or M85-M90 (B2 skills modules with similar activity patterns)
+
+**The agent's justification:** "I thought I knew the format" ← THIS IS THE FAILURE MODE
+
+### Why This Happens
+
+- **Speed pressure:** "Faster to generate than to read"
+- **Overconfidence:** "I've seen this pattern before"
+- **Pattern mixing:** Confusing A2/B1/B2 formats (each has different field names)
+
+### Mandatory Prevention Protocol
+
+**BEFORE writing ANY activity YAML, you MUST:**
+
+1. ✅ **Read the schema**: `schemas/activities-{level}.schema.json`
+   - Identifies: field names (`answer` vs `correct`), required properties, structure (`pairs` vs `groups`)
+
+2. ✅ **Read 1-2 working modules of the SAME TYPE** at the target level:
+   - **CRITICAL:** Module type determines activity patterns. Grammar ≠ Skills ≠ History ≠ Vocabulary
+   - B2 Grammar: `activities/01-passive-*.yaml`, `activities/02-*.yaml`
+   - B2 Skills: `activities/85-*.yaml`, `activities/86-*.yaml`, `activities/91-*.yaml`
+   - B2 History: `activities/71-*.yaml`, `activities/72-*.yaml`
+   - C1 Biography: `activities/bio-*.yaml` (seminar track)
+   - C1 Folk: `activities/folk-*.yaml` (seminar track)
+   - B1 Grammar: `activities/06-aspect-*.yaml`, `activities/07-*.yaml`
+   - B1 Vocabulary: `activities/52-*.yaml`, `activities/53-*.yaml`
+
+3. ✅ **Compare your draft** against the working examples BEFORE finalizing
+
+**If you skip ANY of these steps, you WILL create schema violations.**
+
+### Auto-Fail Indicators
+
+If you find yourself thinking:
+- ❌ "I remember the format from previous modules"
+- ❌ "This is probably correct"
+- ❌ "I'll just write it and fix errors later"
+
+**STOP. Read the schema first.**
+
+### Level-Specific Differences (Why Reading Matters)
+
+| Field | A2 | B2 | Reason |
+|-------|----|----|--------|
+| True-false boolean | `answer:` | `correct:` | B2 schema was updated for consistency |
+| Quiz explanation | Item-level | Item-level | Both same, but A1 uses option-level (must verify!) |
+| Match-up structure | `pairs:` | `pairs:` | Both same, but easy to confuse with `groups:` from group-sort |
+
+### Module Type Differences (Even More Critical)
+
+| Aspect | Grammar Module | Skills Module | History Module |
+|--------|---------------|---------------|----------------|
+| Activity mix | Heavy fill-in, error-correction | Essay-response, scenario-based | Reading-analysis pairs |
+| Quiz complexity | Form recognition (8-12 words) | Scenario judgment (12-18 words) | Text comprehension (15-25 words) |
+| Item count | Standard minimums (12-16) | Flexible (10-14 for essays) | Fewer activities (10-12), more depth |
+
+**Reading a grammar module when creating a skills module gives you the WRONG patterns.**
+**You cannot know these differences without reading modules of the same type.**
+
+</critical>
+
+---
+
 ## ⚠️ Common Schema Errors (Auto-Fail)
 
 **CRITICAL: Each level has different minimum item counts!**
@@ -130,20 +220,40 @@ answer: "інтерв'ю"
 
 ## Reference Existing Modules First
 
-**Before writing activities, study 1-2 similar existing modules:**
+**CRITICAL: Before writing activities, study 1-2 modules of THE SAME TYPE at the same level.**
 
-| Level | Module Type | Reference Examples | Look For                                   |
-| ----- | ----------- | ------------------ | ------------------------------------------ |
-| B1    | Grammar     | M06-10 (Aspect)    | Activity variety, sequencing, quiz prompts |
-| B1    | Vocabulary  | M52-53             | YAML format, cloze passage structure       |
-| A2    | All types   | M01-10             | Activity patterns, engagement integration  |
+**Why same type matters:**
+
+| Module Type | Activity Focus | Typical Mix | Example |
+|-------------|---------------|-------------|---------|
+| **Grammar** | Drill practice, form manipulation | Heavy fill-in, error-correction, cloze | B2 M01-M20 (Passive, Participles) |
+| **Skills** | Practical scenarios, communication | Essay-response, comparative-study, unjumble | B2 M85-M93 (Reports, Presentations) |
+| **History** | Comprehension, text analysis | Reading-analysis pairs, critical-analysis | B2 M71-M131 (History track) |
+| **Vocabulary** | Semantic grouping, collocations | Match-up, group-sort, select | B1 M52-M71 (Abstract concepts) |
+| **Cultural** | Regional knowledge, customs | Quiz (context-based), true-false, cloze | B1 M72-M81 (Music, Cinema, Cuisine) |
+
+**Reference Table by Module Type:**
+
+| Level | Module Type | Reference Examples | Look For |
+|-------|-------------|-------------------|----------|
+| B1 | Grammar | M06-10 (Aspect), M11-15 (Motion) | Form drills, aspect pairs, prefix patterns |
+| B1 | Vocabulary | M52-M56 (Abstract concepts) | Semantic fields, collocation practice |
+| B1 | Cultural | M72-M76 (Regions, Music) | Quiz with cultural context, authentic examples |
+| B2 | Grammar | M01-M05 (Passive), M06-M10 (Participles) | Advanced form manipulation, style nuance |
+| B2 | Skills | M85-M93 (Communication) | Scenario-based, essay-response, practical tasks |
+| B2 | History | M71-M75 (Early history) | Reading-comprehension focus, text-based quiz |
+| C1 | Biography | M36-M45 (Seminar track) | Reading-analysis pairs, critical essays |
+| C1 | Folk | M121-M130 (Seminar track) | Cultural analysis, comparative study |
 
 **Pattern extraction steps:**
 
-1. Read the `.md` file for activity section structure
-2. Read the `.activities.yaml` file (if exists) for YAML patterns
-3. Note: quiz question length, fill-in sentence structure, error types
-4. Adapt patterns to new content (don't copy actual items)
+1. **Identify your module type** from meta YAML `focus` field (grammar, skills, cultural, etc.)
+2. **Find 2 working modules** of the same type at your level
+3. Read the `.activities.yaml` files to observe:
+   - Activity type distribution (how many fill-in vs essay-response?)
+   - Item complexity (sentence length, question depth)
+   - Sequencing pattern (recognition → production)
+4. **Adapt patterns** to your content (don't copy items verbatim)
 
 ---
 

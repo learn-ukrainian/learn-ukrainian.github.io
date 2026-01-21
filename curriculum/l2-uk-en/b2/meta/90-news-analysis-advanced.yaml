@@ -1,0 +1,29 @@
+id: 90
+slug: 'news-analysis-advanced'
+title: 'Аналіз новин: Поглиблено'
+subtitle: 'Advanced media literacy and critical news analysis'
+version: '2.0'
+phase: 'B2.4 Communication Skills'
+pedagogy: 'CBI'
+duration: 90
+transliteration: 'none'
+immersion: 100
+tags:
+  - communication
+  - media
+  - critical-thinking
+  - journalism
+grammar:
+  - 'Риторичні прийоми у ЗМІ'
+  - 'Мовні маркери упередженості'
+  - 'Конструкції хеджування та модальності'
+objectives:
+  - 'Learner can identify editorial bias and political perspectives in news coverage'
+  - 'Learner can compare how different sources cover the same event'
+  - 'Learner can recognize propaganda techniques and rhetorical manipulation'
+  - 'Learner can evaluate source credibility and verify information'
+  - 'Learner can analyze framing, tone, and linguistic choices in journalism'
+register: 'публіцистичний'
+naturalness:
+  score: 8
+  status: "PASS"

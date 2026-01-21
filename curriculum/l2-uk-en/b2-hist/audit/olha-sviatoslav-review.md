@@ -1,7 +1,7 @@
-# Audit Report: olha-sviatoslav.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M10 — olha-sviatoslav.md
+**Level:** B2 | **Module:** M10 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 4002/4000
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 54/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

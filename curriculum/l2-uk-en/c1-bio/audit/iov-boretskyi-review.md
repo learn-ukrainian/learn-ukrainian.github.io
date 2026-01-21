@@ -4,14 +4,14 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 4057/4000
+- **Words:** ✅ 4280/4000
 - **Activities:** ✅ 8/4
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ✅ 172/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -31,11 +31,11 @@
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
 | quotes | 4 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 18 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
@@ -44,8 +44,12 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 111 | Included in Core |
-| **Вступ — Відновлення православної ієрархії** | ⚪️ | 380 | Skipped |
-| **Життєпис** | ⚪️ | 1775 | Skipped |
+| **Вступ — Відновлення православної ієрархії** | ⚪️ | 546 | Skipped |
+| **Життєпис** | ⚪️ | 372 | Skipped |
+| **Освітня діяльність: Ректорство як стратегія спротиву** | ⚪️ | 326 | Skipped |
+| **Берестейська унія та її наслідки: Криза і виклик** | ⚪️ | 381 | Skipped |
+| **Відновлення ієрархії 1620 року** | ⚪️ | 351 | Skipped |
+| **Останні роки** | ⚪️ | 402 | Skipped |
 | **Внесок: Творець інтелектуальної броні** | ⚪️ | 229 | Skipped |
 | **Спадщина** | ⚪️ | 431 | Skipped |
 | **Лінгвістичний аналіз та стратегія високого стилю** | ✅ | 446 | Included in Core |

@@ -1,7 +1,7 @@
-# Audit Report: sofiya-kyivska.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M14 — sofiya-kyivska.md
+**Level:** B2 | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 4055/4000
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/20
+- **Vocab:** ✅ 61/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

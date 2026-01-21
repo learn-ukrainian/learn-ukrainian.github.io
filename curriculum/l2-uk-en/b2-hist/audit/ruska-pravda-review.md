@@ -1,7 +1,7 @@
-# Audit Report: ruska-pravda.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M13 — ruska-pravda.md
+**Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ⚠️ 3990/4000 (10 short)
@@ -11,11 +11,11 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 7 (target 3-6)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

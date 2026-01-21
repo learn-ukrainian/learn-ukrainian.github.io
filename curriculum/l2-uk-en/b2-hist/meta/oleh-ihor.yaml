@@ -1,8 +1,5 @@
-# B2-HIST Module 09: Олег та Ігор: Перші правителі
-# Status: SPEC (ready for content development)
-
 id: b2-hist-09
-title: "Олег та Ігор: Перші правителі"
+title: 'Олег та Ігор: Перші правителі'
 slug: oleh-ihor
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
@@ -13,150 +10,132 @@ register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-  - history
-  - kyivan-rus
-  - oleh
-  - ihor
-  - byzantium
-  - trade
+- history
+- kyivan-rus
+- oleh
+- ihor
+- byzantium
+- trade
 grammar:
-  - 'Narrative tenses'
-  - 'Treaty language'
+- Narrative tenses
+- Treaty language
 objectives:
-  - 'Analyze the role of Varangians in state formation'
-  - 'Compare the policies of Oleh and Ihor'
-  - 'Evaluate the significance of Rus-Byzantine treaties'
+- Analyze the role of Varangians in state formation
+- Compare the policies of Oleh and Ihor
+- Evaluate the significance of Rus-Byzantine treaties
 vocabulary_count: 25
 naturalness:
   score: 10
   status: PASS
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Олег (князь київський) (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
-    type: reference
-    notes: Overview of Prince Oleh
-  - name: Ігор Рюрикович (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
-    type: reference
-    notes: Overview of Prince Ihor
-  - name: Повість минулих літ
-    url: https://litopys.org.ua/pvl/pvl.htm
-    type: primary
-    notes: Chronicle accounts of early rulers
-
+- name: Олег (князь київський) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
+  type: reference
+  notes: Overview of Prince Oleh
+- name: Ігор Рюрикович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
+  type: reference
+  notes: Overview of Prince Ihor
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of early rulers
 content_outline:
-  - section: Вступ — Початок династії
-    words: 500
-    points:
-      - Варязьке питання — хто такі варяги?
-      - Легенда про покликання Рюрика
-      - Олег як регент та князь
-      - Значення цього періоду для формування держави
-
-  - section: Князь Олег — об'єднавець земель
-    words: 700
-    points:
-      - Похід на Київ (882 р.) — об'єднання Новгорода і Києва
-      - "Се буди мати городом руським"
-      - Підкорення племен — древляни, сіверяни
-      - Похід на Константинополь (907 р.)
-
-  - section: Договори з Візантією
-    words: 600
-    points:
-      - Договір 907 року — торговельні привілеї
-      - Договір 911 року — текст як історичне джерело
-      - Значення договорів для міжнародного статусу Русі
-      - "Щит на вратах Цесароврата"
-
-  - section: Смерть Олега — легенда і реальність
-    words: 450
-    points:
-      - 'Пророцтво волхва — «смерть від коня«'
-      - Могила на Щекавиці чи в Ладозі?
-      - Олег в "Пісні про Віщого Олега" Пушкіна
-      - Міфологізація образу
-
-  - section: Князь Ігор — продовжувач справи
-    words: 650
-    points:
-      - Початок самостійного правління
-      - Повстання древлян 914 року
-      - Походи на Візантію 941 та 944 років
-      - Договір 944 року
-
-  - section: Загибель Ігоря
-    words: 500
-    points:
-      - Данина з древлян — жадібність князя
-      - Вбивство в Іскоростені (945 р.)
-      - Реакція Ольги та наслідки
-      - Питання легітимності влади
-
-  - section: Підсумок
-    words: 600
-    points:
-      - Олег та Ігор як засновники держави
-      - Від племінного союзу до ранньої держави
-      - Перехід до княгині Ольги
-
+- section: Вступ
+  words: 1081
+  points:
+  - Варязьке питання
+  - Інфраструктура ранньої держави
+  - Життя в ранньому Києві
+  - Загадка походження Олега
+  - 'Географія влади: Чому Київ?'
+  - Торгівля як двигун державності
+  - Повсякденне життя в епоху Олега та Ігоря
+- section: Читання
+  words: 888
+  points:
+  - Князь Олег — архітектор імперії (882–912)
+  - 'Договори з Візантією цю подію з епічним розмахом: 2000 кораблів, "кораблі на
+    колесах", щит, прибитий на воротах Царгорода. Хоча грецькі джерела мовчать про
+    цю конкретну битву (можливо, через сором або плутанину з 860 роком), результат
+    походу є беззаперечним — перший вигідний торговий договір.'
+  - Князь Ігор — воїн і невдаха? (912–945)
+  - Адміністрація ранньої держави
+  - 'Геоекономіка: Сіль і Хутро'
+  - 'Лінгвістичний детектив: Варязькі імена'
+- section: Первинні джерела
+  words: 257
+  points:
+  - Договір 911 року (Олег)
+  - Договір 944 року (Ігор)
+  - 'Джерела говорять: Правда чи Вигадка?'
+  - 'Історична паралель: Олег і Карл Великий'
+- section: Деколонізаційний погляд
+  words: 152
+  points:
+  - Міф про "норманське завоювання"
+  - '"Руський" чи "Російський"?'
+- section: Есе
+  words: 587
+  points:
+  - Завдання
+  - Зразок відповіді
+  - Культурне життя раннього Києва
+  - Релігійний світ давньої Русі
+  - Жінки у ранній Русі
+  - Спадщина епохи
+  - Уроки для сучасності
+- section: Потрібно більше практики?
+  words: 180
+  points:
+  - 🔄 Аналітичні завдання
+  - Візуальне занурення
+  - 🌐 Джерела для поглибленого вивчення
 vocabulary_hints:
   required:
-    - князь (prince)
-    - варяги (Varangians)
-    - дружина (druzhina/retinue)
-    - данина (tribute)
-    - похід (campaign)
-    - договір (treaty)
-    - Візантія (Byzantium)
-    - літопис (chronicle)
-    - об'єднання (unification)
-    - підкорення (subjugation)
-    - правитель (ruler)
-    - династія (dynasty)
+  - князь (prince)
+  - варяги (Varangians)
+  - дружина (druzhina/retinue)
+  - данина (tribute)
+  - похід (campaign)
+  - договір (treaty)
+  - Візантія (Byzantium)
+  - літопис (chronicle)
+  - об'єднання (unification)
+  - підкорення (subjugation)
+  - правитель (ruler)
+  - династія (dynasty)
   recommended:
-    - регент (regent)
-    - волхв (sorcerer/pagan priest)
-    - торговельні привілеї (trade privileges)
-    - легітимність (legitimacy)
-    - Щекавиця (Shchekavytsia)
-
+  - регент (regent)
+  - волхв (sorcerer/pagan priest)
+  - торговельні привілеї (trade privileges)
+  - легітимність (legitimacy)
+  - Щекавиця (Shchekavytsia)
 activity_hints:
-  - type: reading
-    focus: Excerpt from Primary Chronicle about Oleh's campaigns
-    source: Provide in module
-
-  - type: timeline
-    focus: Key events of Oleh's and Ihor's reigns
-    items: "10+ events"
-
-  - type: vocabulary
-    focus: Political and military terminology
-    items: "15+"
-
-  - type: map-activity
-    focus: Trace Oleh's campaigns and territorial expansion
-    items: "Routes and conquered territories"
-
-  - type: quiz
-    focus: Facts about early Rus rulers
-    items: "12+"
-
-  - type: compare-contrast
-    focus: Oleh vs Ihor — leadership styles and achievements
-    output: Comparison table
-
-  - type: discussion
-    focus: "Чи можна вважати Олега засновником Київської Русі?"
-
+- type: reading
+  focus: Excerpt from Primary Chronicle about Oleh's campaigns
+  source: Provide in module
+- type: timeline
+  focus: Key events of Oleh's and Ihor's reigns
+  items: 10+ events
+- type: vocabulary
+  focus: Political and military terminology
+  items: 15+
+- type: map-activity
+  focus: Trace Oleh's campaigns and territorial expansion
+  items: Routes and conquered territories
+- type: quiz
+  focus: Facts about early Rus rulers
+  items: 12+
+- type: compare-contrast
+  focus: Oleh vs Ihor — leadership styles and achievements
+  output: Comparison table
+- type: discussion
+  focus: Чи можна вважати Олега засновником Київської Русі?
 prerequisites:
-  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'
-  - Understanding of tribal society
-
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- Understanding of tribal society
 connects_to:
-  - b2-hist-10 (Olha and Sviatoslav)
-  - b2-hist-11 (Volodymyr and Baptism)
-  - 'b2-hist-20 (Synthesis: Kyivan Rus)'
+- b2-hist-10 (Olha and Sviatoslav)
+- b2-hist-11 (Volodymyr and Baptism)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'

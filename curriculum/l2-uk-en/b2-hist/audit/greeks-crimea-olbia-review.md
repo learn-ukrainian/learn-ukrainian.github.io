@@ -1,5 +1,5 @@
-# Audit Report: greeks-crimea-olbia.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M03 — greeks-crimea-olbia.md
+**Level:** B2 | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -11,7 +11,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/20
+- **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

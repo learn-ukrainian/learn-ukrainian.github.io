@@ -1,11 +1,138 @@
-# Meta for Петро Могила: Реформатор церкви
+id: b2-hist-35
+module: petro-mohyla
 slug: petro-mohyla
 title: "Петро Могила: Реформатор церкви"
+subtitle: "Petro Mohyla: The Church Reformer"
+version: "2.0"
+phase: "HIST.4 [Lithuanian-Polish Era]"
+focus: history
+pedagogy: CBI
 level: B2
 track: history
-phase: "HIST.4 [Lithuanian-Polish Era]"
-status: skeleton
-focus: history
+duration: 120
+transliteration: none
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+tags:
+  - history
+  - religion
+  - education
+  - 17th-century
+  - biography
+grammar:
+  - "Latinisms in Ukrainian language"
+  - "Rhetorical style of Baroque"
+  - "Passive voice in historical narrative"
+objectives:
+  - "Understand the significance of Petro Mohyla's educational reforms"
+  - "Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture"
+  - "Discuss the 'Mohylian Era' in Ukrainian history"
+  - "Use religious and educational terminology of the 17th century"
+vocabulary_count: 24
+vocabulary_hints:
+  required:
+    - митрополит
+    - академія
+    - реформа
+    - колегіум
+    - полеміка
+    - православ'я
+    - унія
+    - руїна
+    - канонізація
+    - друкарня
+  recommended:
+    - спудей
+    - риторика
+    - латина
+    - бароко
+    - меценат
+activity_hints:
+  - type: quiz
+    focus: comprehension
+  - type: match-up
+    focus: vocabulary
+  - type: fill-in
+    focus: context
+  - type: true-false
+    focus: facts
+  - type: unjumble
+    focus: syntax
+  - type: error-correction
+    focus: grammar
+  - type: cloze
+    focus: reconstruction
+  - type: select
+    focus: analysis
+  - type: translate
+    focus: production
+naturalness:
+  score: 9
+  status: PASS
+content_outline:
+  - section: "Вступ"
+    words: 500
+    points: 
+      - "Crisis of Orthodoxy post-Union"
+      - "Need for new strategy"
+  - section: "Шлях до митри"
+    words: 900
+    points:
+      - "Moldovan origins"
+      - "Western education"
+      - "Military service"
+      - "Tonsure at Lavra"
+  - section: "Заснування Академії"
+    words: 900
+    points:
+      - "Merger of schools (1632)"
+      - "Latin curriculum for Orthodox defense"
+      - "Resistance from traditionalists"
+      - "Role of 'spudei' (students)"
+  - section: "Реформатор церкви"
+    words: 600
+    points:
+      - "Legalization of hierarchy (1632/1633)"
+      - "Rebuilding St. Sophia and Desyatynna"
+      - "Liturgical reforms (Trebnyk)"
+      - "Discipline and education of clergy"
+  - section: "Спадщина Могили"
+    words: 250
+    points:
+      - "Kyiv as the 'New Jerusalem'"
+      - "Baroque culture"
+      - "Lasting impact on Ukrainian identity"
+  - section: "Читання"
+    words: 50
+    points:
+      - "Primary sources assignment"
+  - section: "Первинні джерела"
+    words: 500
+    points:
+      - "Testament of Mohyla"
+      - "Inscription on Desyatynna"
+      - "Linguistic analysis"
+  - section: "Деколонізаційний погляд"
+    words: 150
+    points:
+      - "Myth of Latinization"
+      - "Intellectual sovereignty"
+  - section: "Підсумок"
+    words: 80
+    points:
+      - "Summary of achievements"
+      - "Reflection on 'Western tools for Eastern faith'"
+  - section: "Потрібно більше практики?"
+    words: 15
+    points:
+      - "Engagement"
+  - section: "Есе"
+    words: 100
+    points:
+      - "Topic: Education as weapon"
+sources:
+  - name: "Історія України-Руси"
+    url: "http://litopys.org.ua/hrushrus/iur.htm"
+    type: secondary
+  - name: "Petro Mohyla (Encyclopedia of Ukraine)"
+    url: "http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm"
+    type: reference

@@ -1,0 +1,206 @@
+config:
+  standard: '2024'
+items:
+  - lemma: упередженість
+    ipa: /ʊpɛrɛdʒɛnʲisʲtʲ/
+    translation: bias
+    pos: noun
+    gender: f
+    tags: [media, critical-analysis]
+
+  - lemma: маніпуляція
+    ipa: /mɑnʲipʊlʲɑt͡sʲijɑ/
+    translation: manipulation
+    pos: noun
+    gender: f
+    tags: [media, propaganda]
+
+  - lemma: пропаганда
+    ipa: /prɔpɑɦɑndɑ/
+    translation: propaganda
+    pos: noun
+    gender: f
+    tags: [media, politics]
+
+  - lemma: достовірність
+    ipa: /dɔstɔwʲirnʲisʲtʲ/
+    translation: credibility, reliability
+    pos: noun
+    gender: f
+    tags: [media, verification]
+
+  - lemma: перевірка
+    ipa: /pɛrɛwʲirkɑ/
+    translation: verification, check
+    pos: noun
+    gender: f
+    tags: [media, fact-checking]
+
+  - lemma: фактчекінг
+    ipa: /fɑktʃɛkʲinɦ/
+    translation: fact-checking
+    pos: noun
+    gender: m
+    tags: [media, anglicism]
+
+  - lemma: редакційна позиція
+    ipa: /rɛdɑkt͡sʲijnɑ pɔzɪt͡sʲijɑ/
+    translation: editorial stance
+    pos: phrase
+    tags: [media, journalism]
+
+  - lemma: точка зору
+    ipa: /tɔt͡ʃkɑ zɔrʊ/
+    translation: point of view, perspective
+    pos: phrase
+    tags: [opinion, analysis]
+
+  - lemma: висвітлення
+    ipa: /wɪswʲitlɛnʲːɑ/
+    translation: coverage (of event)
+    pos: noun
+    gender: n
+    tags: [media, journalism]
+
+  - lemma: фреймінг
+    ipa: /frɛjmʲinɦ/
+    translation: framing
+    pos: noun
+    gender: m
+    tags: [media, anglicism]
+
+  - lemma: заголовок
+    ipa: /zɑɦɔlɔwɔk/
+    translation: headline
+    pos: noun
+    gender: m
+    tags: [journalism, text-structure]
+
+  - lemma: сенсаційність
+    ipa: /sɛnsɑt͡sʲijnʲisʲtʲ/
+    translation: sensationalism
+    pos: noun
+    gender: f
+    tags: [media, style]
+
+  - lemma: об'єктивність
+    ipa: /ɔbjɛktɪwnʲisʲtʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+    tags: [journalism, ethics]
+
+  - lemma: суб'єктивність
+    ipa: /sʊbjɛktɪwnʲisʲtʲ/
+    translation: subjectivity
+    pos: noun
+    gender: f
+    tags: [opinion, analysis]
+
+  - lemma: риторика
+    ipa: /rɪtɔrɪkɑ/
+    translation: rhetoric
+    pos: noun
+    gender: f
+    tags: [language, persuasion]
+
+  - lemma: емоційна забарвленість
+    ipa: /ɛmɔt͡sʲijnɑ zɑbɑrwlɛnʲisʲtʲ/
+    translation: emotional coloring
+    pos: phrase
+    tags: [language, style]
+
+  - lemma: наратив
+    ipa: /nɑrɑtɪw/
+    translation: narrative
+    pos: noun
+    gender: m
+    tags: [media, storytelling]
+
+  - lemma: дискурс
+    ipa: /dɪskʊrs/
+    translation: discourse
+    pos: noun
+    gender: m
+    tags: [linguistics, media]
+
+  - lemma: інформаційна війна
+    ipa: /ʲinfɔrmɑt͡sʲijnɑ wʲijnɑ/
+    translation: information warfare
+    pos: phrase
+    tags: [politics, propaganda]
+
+  - lemma: дезінформація
+    ipa: /dɛzʲinfɔrmɑt͡sʲijɑ/
+    translation: disinformation
+    pos: noun
+    gender: f
+    tags: [media, propaganda]
+
+  - lemma: фейк
+    ipa: /fɛjk/
+    translation: fake (news)
+    pos: noun
+    gender: m
+    tags: [media, anglicism]
+
+  - lemma: перекручування
+    ipa: /pɛrɛkrʊt͡ʃʊwɑnʲːɑ/
+    translation: distortion, twisting
+    pos: noun
+    gender: n
+    tags: [manipulation, bias]
+
+  - lemma: контекст
+    ipa: /kɔntɛkst/
+    translation: context
+    pos: noun
+    gender: m
+    tags: [analysis, interpretation]
+
+  - lemma: тональність
+    ipa: /tɔnɑlʲnʲisʲtʲ/
+    translation: tone, tonality
+    pos: noun
+    gender: f
+    tags: [style, language]
+
+  - lemma: стереотип
+    ipa: /stɛrɛɔtɪp/
+    translation: stereotype
+    pos: noun
+    gender: m
+    tags: [bias, society]
+
+  - lemma: цитування
+    ipa: /t͡sɪtʊwɑnʲːɑ/
+    translation: citation, quoting
+    pos: noun
+    gender: n
+    tags: [journalism, sources]
+
+  - lemma: експерт
+    ipa: /ɛkspɛrt/
+    translation: expert
+    pos: noun
+    gender: m
+    tags: [sources, credibility]
+
+  - lemma: аналітика
+    ipa: /ɑnɑlʲitɪkɑ/
+    translation: analytics, analysis
+    pos: noun
+    gender: f
+    tags: [journalism, research]
+
+  - lemma: порівняльний аналіз
+    ipa: /pɔrʲiwnʲɑlʲnɪj ɑnɑlʲiz/
+    translation: comparative analysis
+    pos: phrase
+    tags: [methodology, research]
+
+  - lemma: критичне мислення
+    ipa: /krɪtɪt͡ʃnɛ mɪslɛnʲːɑ/
+    translation: critical thinking
+    pos: phrase
+    tags: [skills, analysis]

@@ -1,0 +1,188 @@
+config:
+  standard: '2024'
+items:
+  - lemma: новина
+    ipa: ''
+    translation: news item
+    pos: noun
+    gender: f
+  - lemma: стаття
+    ipa: ''
+    translation: article
+    pos: noun
+    gender: f
+  - lemma: заголовок
+    ipa: ''
+    translation: headline
+    pos: noun
+    gender: m
+  - lemma: лід
+    ipa: ''
+    translation: lead (opening paragraph)
+    pos: noun
+    gender: m
+  - lemma: джерело
+    ipa: ''
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: факт
+    ipa: ''
+    translation: fact
+    pos: noun
+    gender: m
+  - lemma: думка
+    ipa: ''
+    translation: opinion
+    pos: noun
+    gender: f
+  - lemma: упередженість
+    ipa: ''
+    translation: bias
+    pos: noun
+    gender: f
+  - lemma: маніпуляція
+    ipa: ''
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: достовірність
+    ipa: ''
+    translation: credibility/reliability
+    pos: noun
+    gender: f
+  - lemma: репортаж
+    ipa: ''
+    translation: report/reportage
+    pos: noun
+    gender: m
+  - lemma: журналіст
+    ipa: ''
+    translation: journalist
+    pos: noun
+    gender: m
+  - lemma: видання
+    ipa: ''
+    translation: publication/outlet
+    pos: noun
+    gender: n
+  - lemma: цитата
+    ipa: ''
+    translation: quote/citation
+    pos: noun
+    gender: f
+  - lemma: контекст
+    ipa: ''
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: медіаграмотність
+    ipa: ''
+    translation: media literacy
+    pos: noun
+    gender: f
+  - lemma: інформація
+    ipa: ''
+    translation: information
+    pos: noun
+    gender: f
+  - lemma: аудиторія
+    ipa: ''
+    translation: audience
+    pos: noun
+    gender: f
+  - lemma: подія
+    ipa: ''
+    translation: event
+    pos: noun
+    gender: f
+  - lemma: коментар
+    ipa: ''
+    translation: comment/commentary
+    pos: noun
+    gender: m
+  - lemma: об'єктивність
+    ipa: ''
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: сенсація
+    ipa: ''
+    translation: sensation
+    pos: noun
+    gender: f
+  - lemma: перевірка
+    ipa: ''
+    translation: verification/check
+    pos: noun
+    gender: f
+  - lemma: висвітлення
+    ipa: ''
+    translation: coverage
+    pos: noun
+    gender: n
+  - lemma: деталь
+    ipa: ''
+    translation: detail
+    pos: noun
+    gender: f
+  - lemma: критичний
+    ipa: ''
+    translation: critical
+    pos: adj
+  - lemma: нейтральний
+    ipa: ''
+    translation: neutral
+    pos: adj
+  - lemma: емоційний
+    ipa: ''
+    translation: emotional
+    pos: adj
+  - lemma: об'єктивний
+    ipa: ''
+    translation: objective
+    pos: adj
+  - lemma: суб'єктивний
+    ipa: ''
+    translation: subjective
+    pos: adj
+  - lemma: повідомляти
+    ipa: ''
+    translation: to report/inform
+    pos: verb
+  - lemma: аналізувати
+    ipa: ''
+    translation: to analyze
+    pos: verb
+  - lemma: перевіряти
+    ipa: ''
+    translation: to verify/check
+    pos: verb
+  - lemma: цитувати
+    ipa: ''
+    translation: to quote/cite
+    pos: verb
+  - lemma: висвітлювати
+    ipa: ''
+    translation: to cover/illuminate
+    pos: verb
+  - lemma: інформувати
+    ipa: ''
+    translation: to inform
+    pos: verb
+  - lemma: коментувати
+    ipa: ''
+    translation: to comment
+    pos: verb
+  - lemma: розпізнавати
+    ipa: ''
+    translation: to recognize/identify
+    pos: verb
+  - lemma: порівнювати
+    ipa: ''
+    translation: to compare
+    pos: verb
+  - lemma: стверджувати
+    ipa: ''
+    translation: to assert/claim
+    pos: verb

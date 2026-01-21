@@ -26,7 +26,7 @@
     "phase": { "type": "string", "description": "Curriculum phase (e.g., B2-HIST.1 [Витоки])" },
     "focus": {
       "type": "string",
-      "enum": ["history", "biography", "grammar", "vocabulary", "style", "checkpoint", "lit", "literature", "practical", "review", "culture", "analysis", "narrative", "linguistics", "phraseology", "communication", "domain", "project", "integration", "skills", "bridge", "cultural", "fine-arts", "exam", "practice", "phonology", "stylistics", "translation", "methodology", "historiography"],
+      "enum": ["history", "biography", "grammar", "vocabulary", "style", "checkpoint", "lit", "literature", "practical", "review", "culture", "analysis", "narrative", "linguistics", "phraseology", "communication", "domain", "project", "integration", "skills", "bridge", "cultural", "fine-arts", "exam", "practice", "phonology", "stylistics", "translation", "methodology", "historiography", "synthesis"],
       "description": "Module focus type (lowercase normalized)"
     },
     "pedagogy": {

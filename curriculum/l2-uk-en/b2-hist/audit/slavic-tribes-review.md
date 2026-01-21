@@ -1,5 +1,5 @@
-# Audit Report: slavic-tribes.md
-**Phase:** HIST.1 | **Level:** B2 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M05 — slavic-tribes.md
+**Level:** B2 | **Module:** M05 | **Phase:** HIST.1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
@@ -11,11 +11,11 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 41/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 7 (target 3-6)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 97.6% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

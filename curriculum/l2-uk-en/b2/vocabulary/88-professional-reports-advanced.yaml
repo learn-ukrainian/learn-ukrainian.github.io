@@ -1,0 +1,256 @@
+config:
+  standard: '2024'
+items:
+  - lemma: аналітичний
+    ipa: ''
+    translation: analytical
+    pos: adj
+  - lemma: інтерпретація
+    ipa: ''
+    translation: interpretation
+    pos: noun
+    gender: f
+  - lemma: тенденція
+    ipa: ''
+    translation: trend
+    pos: noun
+    gender: f
+  - lemma: кореляція
+    ipa: ''
+    translation: correlation
+    pos: noun
+    gender: f
+  - lemma: причинність
+    ipa: ''
+    translation: causality
+    pos: noun
+    gender: f
+  - lemma: джерело
+    ipa: ''
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: надійність
+    ipa: ''
+    translation: reliability
+    pos: noun
+    gender: f
+  - lemma: об'єктивність
+    ipa: ''
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: упередження
+    ipa: ''
+    translation: bias
+    pos: noun
+    gender: n
+  - lemma: прогноз
+    ipa: ''
+    translation: forecast/prediction
+    pos: noun
+    gender: m
+  - lemma: ймовірно
+    ipa: ''
+    translation: probably
+    pos: adv
+  - lemma: можливо
+    ipa: ''
+    translation: possibly
+    pos: adv
+  - lemma: екстраполяція
+    ipa: ''
+    translation: extrapolation
+    pos: noun
+    gender: f
+  - lemma: регресія
+    ipa: ''
+    translation: regression
+    pos: noun
+    gender: f
+  - lemma: вибірка
+    ipa: ''
+    translation: sample
+    pos: noun
+    gender: f
+  - lemma: похибка
+    ipa: ''
+    translation: error/margin of error
+    pos: noun
+    gender: f
+  - lemma: значущість
+    ipa: ''
+    translation: significance
+    pos: noun
+    gender: f
+  - lemma: візуалізація
+    ipa: ''
+    translation: visualization
+    pos: noun
+    gender: f
+  - lemma: панель
+    ipa: ''
+    translation: dashboard/panel
+    pos: noun
+    gender: f
+  - lemma: показник
+    ipa: ''
+    translation: indicator/metric
+    pos: noun
+    gender: m
+  - lemma: презентація
+    ipa: ''
+    translation: presentation
+    pos: noun
+    gender: f
+  - lemma: інтервал
+    ipa: ''
+    translation: interval
+    pos: noun
+    gender: m
+  - lemma: модель
+    ipa: ''
+    translation: model
+    pos: noun
+    gender: f
+  - lemma: сценарій
+    ipa: ''
+    translation: scenario
+    pos: noun
+    gender: m
+  - lemma: benchmark
+    ipa: ''
+    translation: benchmark
+    pos: noun
+    gender: m
+  - lemma: свідчити
+    ipa: ''
+    translation: to indicate/testify
+    pos: verb
+  - lemma: вказувати
+    ipa: ''
+    translation: to point out/indicate
+    pos: verb
+  - lemma: припускати
+    ipa: ''
+    translation: to assume/suppose
+    pos: verb
+  - lemma: екстраполювати
+    ipa: ''
+    translation: to extrapolate
+    pos: verb
+  - lemma: моделювати
+    ipa: ''
+    translation: to model
+    pos: verb
+  - lemma: ймовірний
+    ipa: ''
+    translation: probable
+    pos: adj
+  - lemma: достовірний
+    ipa: ''
+    translation: reliable/credible
+    pos: adj
+  - lemma: репрезентативний
+    ipa: ''
+    translation: representative
+    pos: adj
+  - lemma: багатовимірний
+    ipa: ''
+    translation: multidimensional
+    pos: adj
+  - lemma: тріангуляція
+    ipa: ''
+    translation: triangulation
+    pos: noun
+    gender: f
+  - lemma: хеджування
+    ipa: ''
+    translation: hedging
+    pos: noun
+    gender: n
+  - lemma: модальність
+    ipa: ''
+    translation: modality
+    pos: noun
+    gender: f
+  - lemma: багатоджерельний
+    ipa: ''
+    translation: multi-source
+    pos: adj
+  - lemma: бізнес-аналітика
+    ipa: ''
+    translation: business analytics
+    pos: noun
+    gender: f
+  - lemma: фокус-група
+    ipa: ''
+    translation: focus group
+    pos: noun
+    gender: f
+  - lemma: кейс-стаді
+    ipa: ''
+    translation: case study
+    pos: noun
+    gender: n
+  - lemma: керівництво
+    ipa: ''
+    translation: management/leadership
+    pos: noun
+    gender: n
+  - lemma: стейкхолдер
+    ipa: ''
+    translation: stakeholder
+    pos: noun
+    gender: m
+  - lemma: слайд
+    ipa: ''
+    translation: slide
+    pos: noun
+    gender: m
+  - lemma: презентувати
+    ipa: ''
+    translation: to present
+    pos: verb
+  - lemma: базуватися
+    ipa: ''
+    translation: to be based on
+    pos: verb
+  - lemma: довірчий
+    ipa: ''
+    translation: confidence (adj)
+    pos: adj
+  - lemma: методологія
+    ipa: ''
+    translation: methodology
+    pos: noun
+    gender: f
+  - lemma: категоричний
+    ipa: ''
+    translation: categorical
+    pos: adj
+  - lemma: обмеження
+    ipa: ''
+    translation: limitation
+    pos: noun
+    gender: n
+  - lemma: маніпуляція
+    ipa: ''
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: прозорість
+    ipa: ''
+    translation: transparency
+    pos: noun
+    gender: f
+  - lemma: етика
+    ipa: ''
+    translation: ethics
+    pos: noun
+    gender: f
+  - lemma: відповідальність
+    ipa: ''
+    translation: responsibility
+    pos: noun
+    gender: f

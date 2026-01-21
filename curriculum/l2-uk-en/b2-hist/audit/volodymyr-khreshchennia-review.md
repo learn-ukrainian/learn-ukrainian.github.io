@@ -1,7 +1,7 @@
-# Audit Report: volodymyr-khreshchennia.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M11 — volodymyr-khreshchennia.md
+**Level:** B2 | **Module:** M11 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
 - **Words:** ✅ 4000/4000
@@ -15,7 +15,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-6)
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-10)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

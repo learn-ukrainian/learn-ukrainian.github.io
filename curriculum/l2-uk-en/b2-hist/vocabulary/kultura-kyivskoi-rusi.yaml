@@ -1,4 +1,4 @@
-module: 77-kultura-kyivskoi-rusi
+module: kultura-kyivskoi-rusi
 level: B2
 version: '2.0'
 items:
@@ -647,3 +647,246 @@ items:
   translation: hippodromes (genitive plural)
   pos: noun
   gender: m
+- lemma: алімпій
+  ipa: /ɐlʲimˈpʲij/
+  translation: Alimpiy (icon painter)
+  pos: propn
+  gender: m
+- lemma: баня
+  ipa: /ˈbɑnʲɑ/
+  translation: dome (cupola)
+  pos: noun
+  gender: f
+- lemma: богатир
+  ipa: /bohɐˈtɪr/
+  translation: bogatyr (hero)
+  pos: noun
+  gender: m
+- lemma: богослов
+  ipa: /bohoˈslow/
+  translation: theologian
+  pos: noun
+  gender: m
+- lemma: бубон
+  ipa: /ˈbubon/
+  translation: tambourine
+  pos: noun
+  gender: m
+- lemma: ведмідь
+  ipa: /wɛdˈmʲidʲ/
+  translation: bear
+  pos: noun
+  gender: m
+- lemma: великий
+  ipa: /wɛˈlɪkɪj/
+  translation: great
+  pos: adj
+- lemma: видряпаний
+  ipa: /wɪdrʲɐˈpɑnɪj/
+  translation: scratched out
+  pos: adj
+- lemma: вимагати
+  ipa: /wɪmɐˈhɑtɪ/
+  translation: to demand
+  pos: verb
+- lemma: вражати
+  ipa: /wrɐˈʒɑtɪ/
+  translation: to impress
+  pos: verb
+- lemma: вуличний
+  ipa: /ˈwulɪt͡ʃnɪj/
+  translation: street (adj.)
+  pos: adj
+- lemma: вітраж
+  ipa: /wʲiˈtrɑʒ/
+  translation: stained glass
+  pos: noun
+  gender: m
+- lemma: горщик
+  ipa: /ˈhorʃt͡ʃɪk/
+  translation: pot
+  pos: noun
+  gender: m
+- lemma: готичний
+  ipa: /hoˈtɪt͡ʃnɪj/
+  translation: Gothic
+  pos: adj
+- lemma: гравіювання
+  ipa: /hrɐwijuˈwɑnʲːɑ/
+  translation: engraving
+  pos: noun
+  gender: n
+- lemma: гуслі
+  ipa: /ˈhuslʲi/
+  translation: gusli (instrument)
+  pos: noun
+  gender: f
+- lemma: Гутенберг
+  ipa: /ˈhutɛnbɛrh/
+  translation: Gutenberg
+  pos: propn
+  gender: m
+- lemma: друкарський
+  ipa: /druˈkɑrsʲkɪj/
+  translation: printing (adj.)
+  pos: adj
+- lemma: електрогітара
+  ipa: /ɛlɛktrohiˈtɑrɑ/
+  translation: electric guitar
+  pos: noun
+  gender: f
+- lemma: зрілість
+  ipa: /ˈzrʲilʲistʲ/
+  translation: maturity
+  pos: noun
+  gender: f
+- lemma: Китай
+  ipa: /kɪˈtɑj/
+  translation: China
+  pos: propn
+  gender: m
+- lemma: Київ
+  ipa: /ˈkɪjiw/
+  translation: Kyiv
+  pos: propn
+  gender: m
+- lemma: лазутчик
+  ipa: /lɐˈzut͡ʃːɪk/
+  translation: scout (spy)
+  pos: noun
+  gender: m
+- lemma: маніфест
+  ipa: /mɐniˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+- lemma: мати
+  ipa: /ˈmɑtɪ/
+  translation: to have
+  pos: verb
+- lemma: мудрий
+  ipa: /ˈmudrɪj/
+  translation: wise
+  pos: adj
+- lemma: мудрість
+  ipa: /ˈmudrʲistʲ/
+  translation: wisdom
+  pos: noun
+  gender: f
+- lemma: напис-графіті
+  ipa: /ˈnɑpɪs hrɐˈfʲitʲi/
+  translation: graffiti inscription
+  pos: noun
+  gender: m
+- lemma: написати
+  ipa: /nɐpɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: напоювати
+  ipa: /nɐˈpojuwɐtɪ/
+  translation: to water (give drink)
+  pos: verb
+- lemma: непрозорий
+  ipa: /nɛproˈzorɪj/
+  translation: opaque
+  pos: adj
+- lemma: нерушимий
+  ipa: /nɛruˈʃɪmɪj/
+  translation: indestructible
+  pos: adj
+- lemma: одяг
+  ipa: /ˈodʲɑh/
+  translation: clothing
+  pos: noun
+  gender: m
+- lemma: питомо
+  ipa: /pɪˈtomo/
+  translation: originally/inherently
+  pos: adv
+- lemma: простежуватися
+  ipa: /prostɛˈʒuwɐtɪsʲɑ/
+  translation: to be traced
+  pos: verb
+- lemma: радянський
+  ipa: /rɐˈdʲɑnsʲkɪj/
+  translation: Soviet
+  pos: adj
+- lemma: розважати
+  ipa: /rozwɐˈʒɑtɪ/
+  translation: to entertain
+  pos: verb
+- lemma: річковий
+  ipa: /rʲit͡ʃkoˈwɪj/
+  translation: river (adj.)
+  pos: adj
+- lemma: смичковий
+  ipa: /smɪt͡ʃˈkowɪj/
+  translation: bowed (instrument)
+  pos: adj
+- lemma: Спасо-Преображенський
+  ipa: /spɐso prɛobrɐˈʒɛnsʲkɪj/
+  translation: Transfiguration (church)
+  pos: propn
+  gender: m
+- lemma: спростовувати
+  ipa: /sprosˈtowuwɐtɪ/
+  translation: to refute
+  pos: verb
+- lemma: співець-сказитель
+  ipa: /spiˈwɛt͡sʲ skɐˈzɪtɛlʲ/
+  translation: bard-storyteller
+  pos: noun
+  gender: m
+- lemma: стародавній
+  ipa: /stɐroˈdɑwnʲij/
+  translation: ancient
+  pos: adj
+- lemma: стінопис
+  ipa: /sʲtʲiˈnopɪs/
+  translation: mural painting
+  pos: noun
+  gender: m
+- lemma: творчий
+  ipa: /ˈtwort͡ʃɪj/
+  translation: creative
+  pos: adj
+- lemma: тиражування
+  ipa: /tɪrɐʒuˈwɑnʲːɑ/
+  translation: replication
+  pos: noun
+  gender: n
+- lemma: увесь
+  ipa: /uˈwɛsʲ/
+  translation: all
+  pos: pron
+- lemma: фонологія
+  ipa: /fonoloˈhʲijɑ/
+  translation: phonology
+  pos: noun
+  gender: f
+- lemma: художник-іконописець
+  ipa: /xuˈdoʒnɪk ikonoˈpɪsɛt͡sʲ/
+  translation: artist-iconographer
+  pos: noun
+  gender: m
+- lemma: церковнослов'янська
+  ipa: /t͡sɛrkomnosloˈwjansʲkɑ/
+  translation: Church Slavonic
+  pos: adj
+- lemma: цитуватися
+  ipa: /t͡sɪtuˈwɑtɪsʲɑ/
+  translation: to be quoted
+  pos: verb
+- lemma: єднати
+  ipa: /jɛdˈnɑtɪ/
+  translation: to unite
+  pos: verb
+- lemma: Єрусалим
+  ipa: /jɛrusɐˈlɪm/
+  translation: Jerusalem
+  pos: propn
+  gender: m
+- lemma: їхній
+  ipa: /ˈjixnʲij/
+  translation: their
+  pos: pron
