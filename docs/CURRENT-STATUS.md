@@ -1,7 +1,59 @@
 # Current Project Status
 
-**Last Updated**: January 18, 2026
-**Session**: C1-HIST Meta Specification Completion + LIT M29 Fix
+**Last Updated**: January 21, 2026
+**Session**: RFC-001 Seven-Phase Workflow Testing (In Progress)
+
+---
+
+## 🚧 Current Work (January 21, 2026)
+
+### RFC-001 Seven-Phase Workflow Testing 🔄 IN PROGRESS
+
+**Status**: Test Case 1 complete, Test Cases 2-3 pending
+**Location**: `docs/RFC-001-module-workflow.md`
+**Branch**: main
+
+**What Is Being Done**:
+Testing the new 7-phase module workflow that separates vocabulary enrichment from the main content pipeline.
+
+**Workflow Change**:
+- **Old (9 phases)**: meta → meta-qa → lesson → lesson-qa → act → act-qa → vocab → vocab-qa → integrate
+- **New (7 phases)**: meta → meta-qa → lesson → lesson-qa → act → act-qa → integrate
+- **Vocabulary**: Deferred to `/module-vocab-enrich {level}` after all modules complete
+
+**Test Cases**:
+1. ✅ **trypillian-civilization** (b2-hist M1) - Complete
+   - All 7 phases executed successfully
+   - Skeleton vocabulary created
+   - MDX deployed (vocabulary section missing - known issue, deferred)
+   - Location: `curriculum/l2-uk-en/b2-hist/`
+   - Audit: `curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-review.md`
+
+2. ⏳ **aneksiia-krymu** (b2-hist M128) - Ready to start after reset
+   - Regeneration test: 2056→4000 words
+   - Existing module needs full Phases 1-7 regeneration
+   - Current status: FAIL (YAML schema violation in activity #13, below word target)
+
+3. ⏳ **bohdan-khmelnytskyi** (b2-hist M50) - Ready to start after reset
+   - Full generation test: skeleton→4000 words
+   - Tests complete workflow from empty module
+
+**Key Findings**:
+- Phase 7 (integrate) executes in seconds (just file operations)
+- Skeleton vocabulary approach works: `items: []` in YAML
+- MDX generation needs update to show empty vocabulary section
+- Vocabulary extraction (1645 words) needs lemmatization - current script extracts all inflected forms
+
+**Next Steps After Reset**:
+1. Continue with Test Case 2: aneksiia-krymu regeneration
+2. Complete Test Case 3: bohdan-khmelnytskyi generation
+3. Address vocabulary enrichment workflow issues (lemmatization, YAML structure)
+4. Update MDX generation to display empty vocabulary section
+
+**Documentation**:
+- Phase prompts: `claude_extensions/phases/module-*.md` (Phases 1-7)
+- Workflow guide: `docs/SCRIPTS.md` (lines 96-203)
+- Integration report example: `curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-review.md`
 
 ---
 

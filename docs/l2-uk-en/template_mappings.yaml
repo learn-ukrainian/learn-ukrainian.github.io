@@ -67,12 +67,18 @@ mappings:
   # B2: Complex (by meta.focus field and module ranges)
   # =============================================================================
 
-  # Checkpoints (explicit module IDs)
+  # Checkpoints (by meta.focus field)
+  - meta_field: focus
+    value: checkpoint
+    level: b2
+    template: b2-checkpoint-module-template.md
+    description: 'B2 checkpoint modules (via focus field)'
+
   # Checkpoints (explicit module IDs)
   - pattern: '^b2-(10|25|30|40|70)(-.*)?$'
     level: b2
     template: b2-checkpoint-module-template.md
-    description: 'B2 checkpoints'
+    description: 'B2 checkpoints (explicit IDs)'
 
   # History modules (M71-145) - requires meta.focus: history
   - meta_field: focus

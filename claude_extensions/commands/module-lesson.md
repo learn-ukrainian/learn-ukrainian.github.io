@@ -1,6 +1,6 @@
 # /module-lesson
 
-> **TODO:** Implementation pending.
+Generate main lesson content from locked meta.yaml.
 
 ## Usage
 
@@ -10,4 +10,72 @@
 
 ## Instructions
 
+Parse arguments: $ARGUMENTS
+
+### Step 1: Read Phase Instructions
+
 Read: `claude_extensions/phases/module-lesson.md`
+
+### Step 2: Load Meta YAML
+
+**For tracks (b2-hist, c1-bio, lit, c1-hist, b2-pro):**
+
+1. Look up slug from manifest:
+   ```bash
+   yq ".levels.\"{level}\".modules[{module_num-1}]" curriculum/l2-uk-en/curriculum.yaml
+   ```
+
+2. Load meta file (LOCKED - read only):
+   ```
+   curriculum/l2-uk-en/{level}/meta/{slug}.yaml
+   ```
+
+**For core levels (a1, a2, b1, b2, c1, c2):**
+
+1. Determine slug from module number (usually zero-padded: 01, 02, etc.)
+
+2. Load meta file:
+   ```
+   curriculum/l2-uk-en/{level}/meta/{slug}.yaml
+   ```
+
+### Step 3: Generate Content
+
+Follow the generation process from phase instructions:
+
+1. Load meta.yaml and appropriate template
+2. Generate frontmatter from meta
+3. Generate SCOPE comment
+4. Generate title and introduction
+5. **Generate content sections (section-by-section with word count verification)**
+6. Generate summary
+7. Verify total word count
+
+### Step 4: Output
+
+Write generated content to:
+```
+curriculum/l2-uk-en/{level}/{slug}.md
+```
+
+**On success:**
+```
+LESSON GENERATED: curriculum/l2-uk-en/{level}/{slug}.md
+
+Word count breakdown:
+- {section}: {count}/{target} words
+...
+- Total: {total}/{word_target} words ({percentage}%)
+
+✓ Engagement boxes: {count} (min: {level_min})
+✓ Example sentences: {count} (min: {level_min})
+
+Next: Run /module-lesson-qa {level} {module_num}
+```
+
+**On error:**
+```
+LESSON GENERATION FAILED: {reason}
+
+Check meta.yaml and try again.
+```

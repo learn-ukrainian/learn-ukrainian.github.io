@@ -93,6 +93,93 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 ---
 
+## 7-Phase Module Workflow (RFC-001)
+
+> **NEW:** For track levels (b2-hist, c1-bio, c1-hist, lit) and C2, use the new 7-phase workflow.
+>
+> **Vocab enrichment runs separately** after all modules in a track are content-complete.
+
+### /module Command
+
+Unified entry point for building modules. Auto-detects state and runs appropriate phases.
+
+**Usage:**
+
+```bash
+/module {level} {num}               # Build single module (phases 1-7)
+/module {level} {start}-{end}       # Batch build
+/module {level} {num} --from=PHASE  # Resume from specific phase
+/module {level} {num} --check       # Check status only
+```
+
+**Examples:**
+
+```bash
+/module b2-hist 5               # Build module 5 (content + skeleton deploy)
+/module b2-hist 1-5             # Build modules 1-5
+/module b2-hist 5 --from=lesson # Resume from phase 3 (lesson)
+/module c1-bio 12 --check       # Show which phases are complete
+```
+
+### Phase Reference
+
+| Phase | Command           | Creates                                 | Validates            |
+| ----- | ----------------- | --------------------------------------- | -------------------- |
+| 1     | /module-meta      | meta/{slug}.yaml                        | -                    |
+| 2     | /module-meta-qa   | -                                       | Meta validity        |
+| 3     | /module-lesson    | {slug}.md                               | -                    |
+| 4     | /module-lesson-qa | -                                       | Content quality      |
+| 5     | /module-act       | activities/{slug}.yaml                  | -                    |
+| 6     | /module-act-qa    | -                                       | Activity schema      |
+| 7     | /module-integrate | vocabulary/{slug}.yaml (skeleton) + MDX | Cross-file alignment |
+
+### Resume Flags
+
+| --from value | Starts at Phase | Use when...                                |
+| ------------ | --------------- | ------------------------------------------ |
+| `meta`       | 1               | Fresh build from scratch                   |
+| `lesson`     | 3               | Meta is locked, need to regenerate content |
+| `act`        | 5               | Content is locked, need new activities     |
+| `integrate`  | 7               | All content ready, just need deploy        |
+
+### Batch Mode
+
+When building multiple modules, the command runs each through all phases and reports a summary:
+
+```
+Batch: b2-hist 1-5
+Results:
+  - 1: DEPLOYED
+  - 2: DEPLOYED
+  - 3: FAIL at phase 4 (lesson-qa: word count)
+  - 4: DEPLOYED
+  - 5: DEPLOYED
+
+Summary: 4/5 deployed
+```
+
+### Vocabulary Enrichment (Separate Pass)
+
+After all modules in a track are content-complete:
+
+```bash
+/module-vocab-enrich b2-hist    # Extract vocab M1→MN in order
+```
+
+This command:
+
+- Processes modules **sequentially** (M1 → M2 → ... → MN)
+- Deduplicates vocabulary (only NEW words per module)
+- Regenerates MDX with populated vocabulary tables
+- Updates vocabulary.db
+
+**Why separate?** Vocab extraction requires knowing what was introduced in previous modules. Running it after all content is complete ensures correct deduplication.
+
+**Phase files:** `claude_extensions/phases/module-*.md`
+**Command files:** `claude_extensions/commands/module-*.md`
+
+---
+
 ## Scripts Quick Reference
 
 ### Core Pipeline (Python)
@@ -118,20 +205,20 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 ### Seminar Workflow (Meta-Driven)
 
-| Utility                          | Purpose                                   | Command                                      |
-| -------------------------------- | ----------------------------------------- | -------------------------------------------- |
-| `/generate-seminar-module`       | Generate high-fidelity module from Meta   | `/generate-seminar-module <level> <slug>`    |
-| `schemas/meta-module.schema.json`| **Source of Truth** for module generation | (Referenced by validator)                    |
-| `meta_validator.py`              | Enforces Meta YAML presence & schema      | (Integrated into `audit_module.py`)          |
+| Utility                           | Purpose                                   | Command                                   |
+| --------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| `/generate-seminar-module`        | Generate high-fidelity module from Meta   | `/generate-seminar-module <level> <slug>` |
+| `schemas/meta-module.schema.json` | **Source of Truth** for module generation | (Referenced by validator)                 |
+| `meta_validator.py`               | Enforces Meta YAML presence & schema      | (Integrated into `audit_module.py`)       |
 
 ### Meta & Vocabulary (Python)
 
-| Script                  | Purpose                               | Command                                                      |
-| ----------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| `validate_meta_yaml.py` | Meta YAML schema validation           | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
-| `check_hydration.py`    | Fractal outline status checker        | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
-| `vocab_init.py`         | Create fresh vocabulary DB            | `npm run vocab:init`                                         |
-| `populate_vocab_db.py`  | Populate DB from modules              | `npm run vocab:scan`                                         |
+| Script                  | Purpose                        | Command                                                                |
+| ----------------------- | ------------------------------ | ---------------------------------------------------------------------- |
+| `validate_meta_yaml.py` | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit`           |
+| `check_hydration.py`    | Fractal outline status checker | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
+| `vocab_init.py`         | Create fresh vocabulary DB     | `npm run vocab:init`                                                   |
+| `populate_vocab_db.py`  | Populate DB from modules       | `npm run vocab:scan`                                                   |
 
 ---
 
@@ -416,12 +503,13 @@ Each gate returns exit code 0 (PASS) or 1 (FAIL). Agent has NO discretion to ove
 
 ### Fractal Generation Workflow (Experimental)
 
-For complex modules (B2/C1, History, Biography) that require rigorous planning and high word counts, the linear generation process often fails. The **Fractal Generation** workflow solves this by enforcing a detailed plan *before* content generation begins.
+For complex modules (B2/C1, History, Biography) that require rigorous planning and high word counts, the linear generation process often fails. The **Fractal Generation** workflow solves this by enforcing a detailed plan _before_ content generation begins.
 
 **The Workflow:**
 
 1.  **Check Hydration (Step 0):**
     Before writing content, the agent checks if the module has a detailed plan (`content_outline`) in its meta YAML.
+
     ```bash
     .venv/bin/python scripts/fractal/check_hydration.py --hydrate meta/{slug}.yaml
     ```
@@ -675,6 +763,7 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 ```
 
 **What it does:**
+
 1. Extracts Ukrainian text from markdown (skips frontmatter, code blocks, tables, English)
 2. Tokenizes into individual words
 3. Filters out common words (prepositions, pronouns, basic verbs)
@@ -686,10 +775,11 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 **Output:** Creates/updates `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
 
 **Example output:**
+
 ```yaml
 - lemma: лихварство
-  ipa: ''  # Empty - fill with enrichment
-  translation: ''  # Empty - fill with enrichment
+  ipa: '' # Empty - fill with enrichment
+  translation: '' # Empty - fill with enrichment
   pos: noun
   gender: n
 
@@ -724,12 +814,14 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 ```
 
 **What it checks:**
+
 1. Extracts Ukrainian words from activities YAML (`activities/{slug}.yaml`)
 2. Loads cumulative vocabulary (current module + all prior modules)
 3. Compares used words against available vocabulary
 4. Reports violations with actionable fix suggestions
 
 **Example output:**
+
 ```
 ❌ Vocabulary integrity violations: 482
    ✓ Smart matching enabled: 356/838 words matched
@@ -746,12 +838,14 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 ```
 
 **✨ SMART MATCHING:** Uses corpus-based fuzzy matching (no external dependencies!)
+
 - **Stem extraction:** Strips Ukrainian case endings (агресії → агрес)
 - **Prefix matching:** Handles word families (військовими → військовий)
 - **Fuzzy matching:** Edit distance (80% similarity threshold)
 - **Performance:** Reduces false positives by 36.8% compared to exact matching
 
 **Accuracy:**
+
 - A1-A2: ~90% accuracy (simple inflection)
 - B1-B2: ~60% accuracy (moderate inflection)
 - C1-C2: ~50% accuracy (complex inflection)
@@ -769,11 +863,13 @@ Remaining false positives are typically irregular forms, diminutives, or prefixe
 **Integration:** Runs automatically as part of `audit_module.py` (integrated check).
 
 **What it checks:**
+
 1. All outline sections exist as ## headers in markdown
 2. Word count per section meets minimum (-10% warning, -20% error). Over target is acceptable.
 3. Extra sections in markdown not in outline
 
 **Example output:**
+
 ```
 ⚠️  Outline compliance: 7 errors, 8 warnings
    ❌ [MISSING_OUTLINE_SECTION] Section 'Повчання Мономаха' not found...
@@ -782,16 +878,19 @@ Remaining false positives are typically irregular forms, diminutives, or prefixe
 ```
 
 **When it activates:**
+
 - Only for modules with `content_outline` in meta YAML
 - Gracefully skips modules without outlines
 - Common for B2-HIST modules using fractal generation
 
 **Fuzzy matching features:**
+
 - Normalizes section names (em-dashes, punctuation, case)
 - 60% similarity threshold via SequenceMatcher
 - Handles variations: "Вступ" matches "Вступ — Останній великий князь"
 
 **Thresholds (only for sections UNDER target):**
+
 - **10% under** = WARNING starts
 - **20% under** = ERROR starts
 - Over target = Acceptable (no violation)

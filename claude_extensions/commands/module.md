@@ -1,29 +1,62 @@
-# Module Management Command
+# /module
 
-> **Unified entry point** - auto-detects what to do based on module state.
+Unified entry point for building modules using the 7-phase workflow (content + skeleton deploy).
+
+> **Vocabulary enrichment runs separately** after the entire track/course is content-complete.
 
 ## Usage
 
 ```
-/module [LEVEL] [NUM]                # Auto-detect action
-/module [LEVEL] [NUM] --review       # Review only (no fixes)
-/module [LEVEL] [NUM] --fix          # Stage 4 only
-/module [LEVEL] [NUM] --stage=N      # Force specific stage (1-4)
-/module [LEVEL] [START]-[END]        # Batch mode
+/module {level} {num}               # Build single module (phases 1-7)
+/module {level} {start}-{end}       # Batch build
+/module {level} {num} --from=PHASE  # Resume from specific phase
+/module {level} {num} --rebuild     # Re-verify and rebuild artifacts (keeps existing .md)
+/module {level} {num} --check       # Check status only
 ```
-
-## Arguments
-
-- `$ARGUMENTS` - Level, module number, and optional flags
 
 ## Examples
 
+```bash
+/module b2-hist 5               # Build module 5 (content + skeleton deploy)
+/module b2-hist 1-5             # Build modules 1-5
+/module b2-hist 5 --from=lesson # Resume from phase 3 (lesson)
+/module c1-bio 12 --check       # Show which phases are complete
 ```
-/module c1-bio 5           # Auto-detect and run
-/module b1 22 --fix        # Just run Stage 4
-/module a2 10-15           # Batch create/fix modules 10-15
-/module b2 45 --stage=2    # Force Stage 2 (content)
-/module c1-bio 5 --review  # Review without fixing
+
+---
+
+## Workflow Overview
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ CONTENT BUILD (Phases 1-6) - Can run in parallel        │
+├─────────────────────────────────────────────────────────┤
+│ Phase 1: /module-meta        → meta/{slug}.yaml         │
+│ Phase 2: /module-meta-qa     → Validate meta            │
+│          ↓ LOCKED                                       │
+│ Phase 3: /module-lesson      → {slug}.md                │
+│ Phase 4: /module-lesson-qa   → Validate content         │
+│          ↓ LOCKED                                       │
+│ Phase 5: /module-act         → activities/{slug}.yaml   │
+│ Phase 6: /module-act-qa      → Validate activities      │
+│          ↓ LOCKED                                       │
+├─────────────────────────────────────────────────────────┤
+│ SKELETON DEPLOY (Phase 7)                               │
+├─────────────────────────────────────────────────────────┤
+│ Phase 7: /module-integrate   → Create skeleton vocab    │
+│                              → Generate MDX             │
+│                              → Deploy module            │
+└─────────────────────────────────────────────────────────┘
+
+              Later, when track is complete:
+
+┌─────────────────────────────────────────────────────────┐
+│ VOCAB ENRICHMENT (Separate command)                     │
+├─────────────────────────────────────────────────────────┤
+│ /module-vocab-enrich {level}  → Extract vocab M1→MN     │
+│                               → Update MDX with vocab   │
+│                               → Update vocabulary.db    │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -34,145 +67,194 @@ Parse arguments: $ARGUMENTS
 
 ### Step 1: Parse Input
 
-Extract from arguments:
-- `level`: The level code (a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, c1-hist, lit)
-- `num`: Module number (or range like `10-15`)
-- `flags`: --review, --fix, --stage=N (optional)
+Extract:
 
-**If batch range detected (e.g., `10-15`):** Jump to Batch Mode section.
+- `level`: a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, c1-hist, lit
+- `num`: Module number or range (e.g., `5` or `1-5`)
+- `flags`: --from=PHASE, --check, --rebuild (optional)
 
-### Step 2: Resolve Module Path
+**If range detected:** Jump to Batch Mode.
 
-**For core levels (a1, a2, b1, b2, c1, c2):**
+### Step 2: Resolve Module
+
+**For tracks (b2-hist, c1-bio, c1-hist, lit):**
+
 ```bash
-ls curriculum/l2-uk-en/{level}/{num:02d}-*.md 2>/dev/null
+slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
 ```
 
-**For track levels (b2-hist, c1-bio, c1-hist, lit):**
+**For core levels:**
+
 ```bash
-slug=$(yq ".levels.\"{level}\".modules[{num-1}]" curriculum/l2-uk-en/curriculum.yaml)
-ls curriculum/l2-uk-en/{level}/{slug}.md 2>/dev/null
+slug=$(ls curriculum/l2-uk-en/${level}/${num:02d}-*.md | head -1 | xargs basename | sed 's/.md$//')
 ```
 
-Store: `module_path`, `slug`, `meta_path`, `activities_path`, `vocab_path`
+### Step 3: Detect Current State
 
-### Step 3: Detect Module State
-
-Check what exists:
+Check which files exist:
 
 ```bash
-# Check each file
-test -f curriculum/l2-uk-en/{level}/meta/{slug}.yaml      # has_meta
-test -f curriculum/l2-uk-en/{level}/{slug}.md             # has_content
-test -f curriculum/l2-uk-en/{level}/activities/{slug}.yaml # has_activities
-
-# If has_content, check if it's just skeleton or has real content
-wc -w < {module_path}  # word_count
+has_meta=$(test -f curriculum/l2-uk-en/${level}/meta/${slug}.yaml && echo 1 || echo 0)
+has_lesson=$(test -f curriculum/l2-uk-en/${level}/${slug}.md && echo 1 || echo 0)
+has_activities=$(test -f curriculum/l2-uk-en/${level}/activities/${slug}.yaml && echo 1 || echo 0)
+# Check for either module-N.mdx (core) or slug.mdx (tracks)
+if [[ -f docusaurus/docs/${level}/module-${num}.mdx ]]; then
+  has_mdx=1
+elif [[ -f docusaurus/docs/${level}/${slug}.mdx ]]; then
+  has_mdx=1
+else
+  has_mdx=0
+fi
 ```
 
 **State detection:**
 
-| has_meta | has_content | has_activities | word_count | State |
-|----------|-------------|----------------|------------|-------|
-| No | No | No | - | `NEW` |
-| Yes | No | No | - | `SKELETON_NEEDED` |
-| Yes | Yes | No | < 500 | `SKELETON_ONLY` |
-| Yes | Yes | No | >= 500 | `CONTENT_DONE` |
-| Yes | Yes | Yes | - | `COMPLETE` |
+| has_meta | has_lesson | has_activities | has_mdx | State         |
+| -------- | ---------- | -------------- | ------- | ------------- |
+| 0        | 0          | 0              | 0       | `NEW`         |
+| 1        | 0          | 0              | 0       | `META_DONE`   |
+| 1        | 1          | 0              | 0       | `LESSON_DONE` |
+| 1        | 1          | 1              | 0       | `ACT_DONE`    |
+| 1        | 1          | 1              | 1       | `DEPLOYED`    |
 
-### Step 4: Determine Action
+### Step 4: Determine Start Phase
 
-**If flag provided, use it:**
+**If `--rebuild` provided:**
 
-| Flag | Action |
-|------|--------|
-| `--review` | Run audit only, report results, don't fix |
-| `--fix` | Run Stage 4 |
-| `--stage=1` | Run Stage 1 |
-| `--stage=2` | Run Stage 2 |
-| `--stage=3` | Run Stage 3 |
-| `--stage=4` | Run Stage 4 |
+Special flow (preserves `.md`, rebuilds everything else):
+1. Phase 2 (Meta QA)
+2. Phase 4 (Lesson QA) - *Skips Phase 3 generation*
+3. Phase 5 (Activities Gen) - *Regenerates activities*
+4. Phase 6 (Activities QA)
+5. Phase 7 (Integrate)
 
-**If no flag, auto-detect from state:**
+**If `--from=PHASE` provided:**
 
-| State | Action |
-|-------|--------|
-| `NEW` | Run Stages 1 → 2 → 3 → 4 |
-| `SKELETON_NEEDED` | Run Stages 1 → 2 → 3 → 4 |
-| `SKELETON_ONLY` | Run Stages 2 → 3 → 4 |
-| `CONTENT_DONE` | Run Stages 3 → 4 |
-| `COMPLETE` | Run audit; if PASS → done; if FAIL → Stage 4 |
+| --from value | Start at Phase |
+| ------------ | -------------- |
+| meta         | 1              |
+| lesson       | 3              |
+| act          | 5              |
+| integrate    | 7              |
 
-### Step 5: Execute
+**If `--check` provided:** Report state and exit.
 
-**Delegate to existing stage commands.** Do NOT duplicate their logic.
+**Otherwise auto-detect:**
 
-For each stage to run:
-1. Report: "Running Stage N..."
-2. Follow instructions from `/module-stage-N`
-3. If stage fails, stop and report
+| State         | Start Phase   |
+| ------------- | ------------- |
+| `NEW`         | 1 (meta)      |
+| `META_DONE`   | 3 (lesson)    |
+| `LESSON_DONE` | 5 (act)       |
+| `ACT_DONE`    | 7 (integrate) |
+| `DEPLOYED`    | Done          |
 
-**Stage execution order:**
-```
-Stage 1 (skeleton) → Stage 2 (content) → Stage 3 (activities) → Stage 4 (review/fix)
-```
+### Step 5: Execute Phases
+
+**If `--rebuild` mode:**
+Execute specific sequence: 2 → 4 → 5 → 6 → 7.
+
+**Otherwise (standard mode):**
+Run phases sequentially from start phase:
+
+**For each phase:**
+
+1. Read phase instructions from `claude_extensions/phases/module-{phase}.md`
+2. Execute phase
+3. If QA phase FAILS → stop and report
+4. If QA phase PASSES → continue to next phase
+
+**Phase 7 (integrate) creates skeleton vocab automatically.**
 
 ### Step 6: Report
 
-On completion:
 ```
-Module: {level}/{slug}
-State: {final_state}
-Stages run: {list}
-Audit: PASS/FAIL
-MDX: docusaurus/docs/{level}/module-{num}.mdx (if generated)
+MODULE DEPLOYED: {level}/{slug}
+
+Phases executed: {start_phase} → 7
+Files generated:
+  - meta/{slug}.yaml
+  - {slug}.md
+  - activities/{slug}.yaml
+  - vocabulary/{slug}.yaml (skeleton)
+  - docusaurus/docs/{level}/{mdx_filename}
+
+Preview: http://localhost:3000/docs/{level}/{slug_or_module_num}
+
+Note: Vocabulary table is empty. Run /module-vocab-enrich {level}
+      after all modules are content-complete.
 ```
 
 ---
 
 ## Batch Mode
 
-**When input contains a range (e.g., `b1 10-15`):**
-
-Use subagent pattern for context isolation:
+When input is a range (e.g., `/module b2-hist 1-5`):
 
 ```
 For each module_num in range:
-  1. Spawn Task agent with subagent_type="general-purpose"
-  2. Prompt: "Run /module {level} {module_num} {flags}"
-  3. Wait for completion
-  4. Log result
-  5. Continue to next
+  1. Run /module {level} {module_num}
+  2. If FAIL: Log and continue to next
+  3. If PASS: Log and continue to next
 ```
 
-**Output summary:**
+**Batch summary:**
+
 ```
-Batch: {level} {start}-{end}
+Batch: b2-hist 1-5
 Results:
-  - {num}: PASS
-  - {num}: PASS
-  - {num}: FAIL (Stage 3 - activity count)
-  - {num}: PASS
+  - 1: DEPLOYED
+  - 2: DEPLOYED
+  - 3: FAIL at phase 4 (lesson-qa: word count)
+  - 4: DEPLOYED
+  - 5: DEPLOYED
 
-Summary: 3/4 passed
+Summary: 4/5 deployed
+Failed: b2-hist-3 (needs manual fix)
+
+Next: When all modules pass, run /module-vocab-enrich b2-hist
 ```
 
 ---
 
-## Quick Reference
+## Phase Reference
 
-**Levels and paths:**
+| Phase | Command           | Creates                                 | Validates            |
+| ----- | ----------------- | --------------------------------------- | -------------------- |
+| 1     | /module-meta      | meta/{slug}.yaml                        | -                    |
+| 2     | /module-meta-qa   | -                                       | Meta validity        |
+| 3     | /module-lesson    | {slug}.md                               | -                    |
+| 4     | /module-lesson-qa | -                                       | Content quality      |
+| 5     | /module-act       | activities/{slug}.yaml                  | -                    |
+| 6     | /module-act-qa    | -                                       | Activity schema      |
+| 7     | /module-integrate | vocabulary/{slug}.yaml (skeleton) + MDX | Cross-file alignment |
 
-| Level | Path Pattern | Type |
-|-------|--------------|------|
-| a1, a2, b1, b2, c1, c2 | `{num:02d}-{slug}.md` | Core |
-| b2-hist, c1-bio, c1-hist, lit | `{slug}.md` | Track (seminar) |
+**Later:**
 
-**Track detection:**
-If level is `b2-hist`, `c1-bio`, `c1-hist`, or `lit` → seminar track → uses slug-based paths.
+| Command                      | What it does                             |
+| ---------------------------- | ---------------------------------------- |
+| /module-vocab-enrich {level} | Extract vocab M1→MN in order, update MDX |
 
-**Stage commands (for reference):**
-- `/module-stage-1` - Skeleton creation
-- `/module-stage-2` - Content generation
-- `/module-stage-3` - Activity generation
-- `/module-stage-4` - Review and fix loop
+---
+
+## Quick Examples
+
+```bash
+# Fresh build
+/module b2-hist 5
+
+# Resume after fixing lesson
+/module b2-hist 5 --from=lesson
+
+# Rebuild module artifacts (keeping lesson text)
+/module b2-hist 5 --rebuild
+
+# Check what's done
+/module b2-hist 5 --check
+
+# Build batch
+/module c1-bio 1-10
+
+# After track complete: enrich vocabulary
+/module-vocab-enrich b2-hist
+```
