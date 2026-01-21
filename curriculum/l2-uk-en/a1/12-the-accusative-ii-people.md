@@ -46,7 +46,7 @@ Some masculine nouns end in -о (like **тато**, **батько**, **Дани
 | Nominative | Accusative | Example                                     |
 | ---------- | ---------- | ------------------------------------------- |
 | тато       | тат**а**   | Я люблю **тата**. (I love dad.)             |
-| Данило     | Данил**а** | Вона бачить **Данило**. (She sees Danylo (Daniel).) |
+| Данило     | Данил**а** | Вона бачить **Данила**. (She sees Danylo.) |
 
 ### Feminine Animate Nouns
 
