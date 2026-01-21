@@ -25,41 +25,10 @@ Review the module, fix violations, repeat until PASS.
 
 **If incomplete: KEEP WORKING. Loop until complete.**
 
-## Input
-
-- **Module file**: Complete module from Stages 1-3
-- **Level**: Determines constraints and expectations
-
 ## Process
 
-```
-┌─────────────────────────────────────────────────┐
-│                 REVIEW MODULE                   │
-│         Run audit, check all constraints        │
-└─────────────────────────────────────────────────┘
-                        │
-                        ▼
-            ┌───────────────────────┐
-            │    VIOLATIONS?        │
-            └───────────────────────┘
-                   │         │
-                   │ NO      │ YES
-                   ▼         ▼
-        ┌─────────────┐   ┌─────────────────────────┐
-        │   PASS!     │   │  COUNT VIOLATIONS       │
-        │ Output MDX  │   │  ≤3 = FIX               │
-        │             │   │  >3 = REBUILD SECTION   │
-        └─────────────┘   └─────────────────────────┘
-                                    │
-                                    ▼
-                          ┌─────────────────────┐
-                          │   APPLY FIX or      │
-                          │   REBUILD SECTION   │
-                          └─────────────────────┘
-                                    │
-                                    ▼
-                              (loop back to REVIEW)
-```
+1. Run audit → 2. Violations? → YES: Fix (≤3) or Rebuild (>3) → Loop back to 1
+                              → NO: PASS, run pipeline
 
 ## Review Checklist
 
@@ -68,14 +37,11 @@ Review the module, fix violations, repeat until PASS.
 - [ ] **Read the appropriate template** for this module type:
   - **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
   - **B1 M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-  - **B1 Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+  - **B1 Checkpoints:** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
   - **B1 M52-71 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
   - **B1 M72-81 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
   - **B1 M82-86 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
-  - **B2:** `docs/l2-uk-en/templates/b2-module-template.md`
-  - **C1:** `docs/l2-uk-en/templates/c1-module-template.md`
-  - **C2:** `docs/l2-uk-en/templates/c2-module-template.md`
-  - **LIT:** `docs/l2-uk-en/templates/lit-module-template.md`
+  - **B2/C1/C2/LIT:** Respective templates
 - [ ] Module structure matches template sections
 - [ ] Word count meets template minimum
 - [ ] Activity count and types match template requirements
@@ -87,44 +53,38 @@ Review the module, fix violations, repeat until PASS.
 - [ ] Vocabulary YAML sidecar exists (no embedded table)
 - [ ] Activities YAML sidecar exists (no embedded activities)
 
-### 3. Grammar Constraints
+### 3. Grammar & Vocabulary
 
-- [ ] Only uses grammar allowed at this level
-- [ ] See `{LEVEL}-CURRICULUM-PLAN.md` Каталог В
-
-### 4. Vocabulary Constraints
-
-- [ ] Vocabulary YAML matches Schema (POS, Gender, IPA)
+- [ ] Grammar allowed at level (check `{LEVEL}-CURRICULUM-PLAN.md`)
+- [ ] Vocabulary YAML matches schema (POS, Gender, IPA)
 - [ ] Uses vocabulary from curriculum plan
-- [ ] `validate_vocab_yaml.py` passes
-- **Note:** Cross-module vocab validation deferred to pipeline
 
-### 5. Activity Constraints
+### 4. Activity Constraints
 
-- [ ] Count meets minimum (8-16+ by level)
+- [ ] Count meets minimum (8-16+ by level - check `quick-ref/{level}.md`)
 - [ ] Items per activity meets minimum (12-18+ by level)
-- [ ] Type variety (4-5+ types)
-- [ ] Correct syntax (fill-in `___`, unjumble `/`, etc.)
+- [ ] Type variety (4-5+ different activity types)
+- [ ] Correct syntax (fill-in `[___]`, unjumble `/`, cloze `{|}`)
 - [ ] All answers correct
 
-### 6. Richness Constraints (Counts)
+### 5. Richness Constraints (Counts)
 
 **CRITICAL: Read `docs/RICHNESS-SCORING-GUIDE.md` for scoring details and fix templates.**
 
 - [ ] Word count meets target
 - [ ] Example sentences meet minimum
-- [ ] Engagement boxes meet minimum
+- [ ] Engagement boxes meet minimum (💡, ⚠️, 🎯)
 - [ ] Mini-dialogues present
 
 When richness fails, check the audit report for **Dryness Flags** and use the exact fix templates from the guide.
 
-### 7. Content Richness Quality (B1+ Critical)
+### 6. Content Richness Quality (B1+ Critical)
 
 **This is not about counts. This is about whether the content is ALIVE or DEAD.**
 
 Check each section for these quality indicators:
 
-#### 7a. Engagement Quality
+#### 6a. Engagement Quality
 
 **DRY (robot wrote this):**
 
@@ -147,29 +107,25 @@ Check each section for these quality indicators:
 і речення звучить... дивно. Як фальшива нота в пісні.
 ```
 
-#### 7b. Variety Check
+#### 6b. Variety Check
 
-**Count unique sentence starters in each section.** If >50% of sentences start the same way, flag as DRY.
-
-❌ DRY pattern:
+**DRY:** >50% sentences start the same way
 
 ```markdown
 Доконаний вид означає...
 Доконаний вид використовується...
 Доконаний вид показує...
-Доконаний вид має...
 ```
 
-✅ RICH pattern:
+**RICH:** Varied sentence starters, rhythm
 
 ```markdown
 Коли дія завершена — це доконаний вид.
 Українці кажуть «я прочитав книгу», бо книга закінчена.
-А якщо ще читаю? Тоді «читаю» — без результату.
 Порівняйте: «він писав лист» vs «він написав лист».
 ```
 
-#### 7c. Emotional Hooks
+#### 6c. Emotional Hooks
 
 **Each major section needs at least one of:**
 
@@ -180,21 +136,20 @@ Check each section for these quality indicators:
 - Question to reader (а що якщо...? чому так?)
 
 ❌ No hooks = textbook voice = learner falls asleep
-
 ✅ Has hooks = conversation voice = learner stays engaged
 
-#### 7d. Cultural Depth (B1+)
+#### 6d. Cultural Depth (B1+)
 
 **Each module should include:**
 
-- [ ] At least 1 named Ukrainian place (Львів, Карпати, Дніпро)
-- [ ] At least 1 cultural reference (traditional, historical, or contemporary)
-- [ ] Real-world context showing WHY this grammar/vocab matters
+- [ ] 1+ named Ukrainian place (Львів, Карпати, Дніпро)
+- [ ] 1+ cultural reference
+- [ ] Real-world context showing WHY this matters
 
 ❌ Generic: "Людина купує хліб у магазині."
 ✅ Specific: "Оксана купує паляницю на Бесарабському ринку в Києві."
 
-#### 7e. Proverbs & Idioms (B1+)
+#### 6e. Proverbs & Idioms (B1+)
 
 **Each grammar module should include 1-2 proverbs or idioms that:**
 
@@ -210,25 +165,11 @@ Example for aspect:
 Чому? Бо йдеться про результат: перестрибнув чи ні.
 ```
 
-#### 7f. Richness Score Calculation
-
-For each section, mentally score:
-
-| Criterion       | 0                   | 1                | 2                         |
-| --------------- | ------------------- | ---------------- | ------------------------- |
-| Engagement      | Textbook voice      | Some personality | Conversational, memorable |
-| Variety         | Repetitive starters | Mixed            | Varied, rhythmic          |
-| Hooks           | None                | 1-2              | 3+ per section            |
-| Cultural depth  | Generic examples    | Some specifics   | Rich, placed content      |
-| Proverbs/idioms | None                | 1 (forced)       | 1-2 (natural)             |
-
-**Total 0-4:** ❌ REWRITE section
-**Total 5-7:** ⚠️ ENRICH section
-**Total 8-10:** ✅ PASS
-
-#### 7g. Quick Dryness Flags
+#### 6f. Quick Dryness Flags
 
 Flag content as DRY if ANY of these are true:
+
+**If 2+ flags: Section needs REWRITE, not just fix.**
 
 | Flag                  | Pattern                                                   |
 | --------------------- | --------------------------------------------------------- |
@@ -249,121 +190,80 @@ Flag content as DRY if ANY of these are true:
 - [ ] **NO Russian Characters**: Search for `ё`, `ъ`, `ы`, `э` (Forbidden).
 - [ ] **NO Russian Phonetics**: No comparisons like "Ukrainian И is like Russian Ы".
 
-### 9. Naturalness Check
+### 8. Naturalness Check
 
 After grammar and vocabulary validation, check ALL Ukrainian text for naturalness.
 
 **Purpose:** Prevent disconnected drills, template repetition, and robotic flow that grammar/vocabulary checks miss.
 
-**How it works:** You evaluate naturalness directly using your Ukrainian language knowledge. No external tools or MCP servers required. As an LLM trained on extensive Ukrainian text, you can assess flow, register, and authenticity.
+**CRITICAL:** Naturalness is NEVER "N/A" - every module with Ukrainian text requires evaluation.
 
-**CRITICAL:** Naturalness is NEVER "N/A" - every module with Ukrainian text requires evaluation, including alphabet modules with simple instructions.
+**Extract ALL Ukrainian:**
+- Activity instructions (e.g., "З'єднайте відповідні елементи")
+- Cloze passages
+- Fill-in sentences/paragraphs
+- Unjumble sentences
+- Quiz explanations in Ukrainian
+- Mark-the-words text passages
 
-#### 9.1 Extract ALL Ukrainian Text
+**Analyze naturalness based on:**
+1. Subject consistency - Are subjects maintained throughout passages?
+2. Discourse markers - Presence of connectors (а, але, потім, тому, також)
+3. Topic coherence - Do passages maintain unified topics or jump randomly?
+4. Redundancy - Are there repetitive patterns or disconnected sentences?
 
-Evaluate ALL Ukrainian content in the module:
-
-**Always evaluate:**
-- **Activity instructions** (e.g., "З'єднайте відповідні елементи", "Оберіть правильну відповідь")
-- **Cloze passages** (any length)
-- **Fill-in sentences/paragraphs**
-- **Unjumble sentences**
-- **Quiz explanations** in Ukrainian
-- **Mark-the-words text passages**
-
-**Minimal evaluation (just check instructions):**
-- `match-up`, `group-sort` - typically just have instruction text
-- `quiz`, `true-false`, `select` - check instruction + any Ukrainian explanations
-
-#### 9.2 Analyze Naturalness (Switch to Ukrainian Language Mode)
-
-Score each prose activity 1-10 based on:
-
-1. **Subject consistency** - Are subjects maintained throughout passages?
-2. **Discourse markers** - Presence of connectors (а, але, потім, тому, також, спочатку, нарешті)
-3. **Topic coherence** - Do passages maintain unified topics or jump randomly?
-4. **Redundancy** - Are there repetitive patterns or disconnected sentences?
-
-**Red flags (score < 8/10):**
+**Red flags (< 8/10):**
 
 | Issue | Example |
 |-------|---------|
-| **Template repetition** | Same sentence structure repeated across multiple activities in module |
-| **Excessive intensifiers** | "дуже" used 5+ times, or "надзвичайно/справжній" overused |
-| **Double superlatives** | "найвидатніший та найвідоміший" (semantically redundant) |
-| **Missing discourse markers** | List of disconnected factoids with no connectors |
-| **Robotic transitions** | "і це допомагає...", "тому що... тому" (mechanical constructions) |
+| Template repetition | Same structure across activities |
+| Excessive intensifiers | "дуже" 5+ times |
+| Double superlatives | "найвидатніший та найвідоміший" |
+| Missing discourse markers | No а, але, потім, тому |
+| Robotic transitions | "і це допомагає...", "тому що... тому" |
 
-#### 9.3 Scoring Standards
+**Standards:**
+- Content modules: 8/10
+- Checkpoints: 7/10
 
-| Module Type | Target Score | Flag If |
-|-------------|--------------|---------|
-| **Content modules** | 8/10 | < 8/10 |
-| **Checkpoints/Review** | 7/10 | < 7/10 |
-| **Minimal prose modules** | 8/10 | < 8/10 (still evaluate instructions) |
-
-**Score all Ukrainian text** in the module. If average is below target, flag for fixes.
-
-#### 9.3.1 Update Meta File After Scoring
-
-After evaluating naturalness, **always update the module's meta file**:
-
-```yaml
-# curriculum/l2-uk-en/{level}/meta/{num}-{slug}.yaml
-naturalness:
-  score: 9      # Your evaluated score (1-10)
-  status: PASS  # PASS if score >= 8 (or >= 7 for checkpoints), else PENDING/FAIL
-```
-
-**Status values:**
-- `PASS` - Score meets threshold, audit will pass
-- `PENDING` - Not yet evaluated (causes audit FAIL)
-- `FAIL` - Evaluated but below threshold
-
-The audit reads this meta file and will FAIL if status is not PASS or score < 8.
-
-#### 9.4 Fix Flagged Issues
-
-If module average score < target:
-
-1. **Identify specific patterns** causing issues (which red flags apply?)
-2. **Propose fixes** using ONLY:
+**If < target:**
+1. Identify specific patterns causing issues (which red flags apply?)
+2. Propose fixes using ONLY:
    - Vocabulary from M01-M{current} (check cumulative vocab)
    - Grammar from curriculum plan (check allowed constructs)
-3. **Apply fixes** to activities YAML file
-4. **Re-score** to verify improvement
+3. Apply fixes to activities YAML file
+4. Re-score to verify improvement
 
 **Common fix strategies:**
 
 | Issue | Fix |
 |-------|-----|
 | Template repetition | Vary sentence structures across activities |
-| Excessive intensifiers | Remove 50% of "дуже", eliminate "надзвичайно/справжній" unless essential |
+| Excessive intensifiers | Remove 50% of "дуже", eliminate "надзвичайно" unless essential |
 | Double superlatives | Replace with single precise descriptor |
-| Missing discourse markers | Add 2-3 connectors per 10-sentence passage (також, проте, тому, спочатку) |
+| Missing discourse markers | Add 2-3 connectors per 10-sentence passage (також, проте, тому) |
 | Robotic transitions | Simplify mechanical constructions, use natural flow |
 
-**See also:** For batch naturalness scanning of completed modules, use `/scan-naturalness {level} {start} {end}`
+**Update meta YAML:**
 
-### 10. Seminar Track Pairing (LIT, B2-HIST, C1-HIST, C1-BIO)
+```yaml
+naturalness:
+  score: 9
+  status: PASS  # PASS if ≥8 (≥7 for checkpoints)
+```
+
+### 9. Seminar Track Pairing (LIT, B2-HIST, C1-BIO)
 
 **Applies to:** LIT, B2-HIST, C1-HIST, C1-BIO tracks only.
 
-Seminar tracks use **Reading-Analysis Pairs** architecture:
-- Every analytical activity MUST link to a reading source
-- `reading` activities provide INPUT (source text)
-- `essay-response`, `critical-analysis`, `comparative-study` provide OUTPUT (analysis)
+Every analytical activity MUST link to reading source.
 
-#### 10.1 Audit Violations
+**Critical violations:**
+- `MISSING_SOURCE_READING` - Add `source_reading: reading-XX`
+- `READING_MISSING_ID` - Add `id: reading-XX`
+- `INVALID_SOURCE_READING` - Fix broken reference
 
-| Violation | Severity | Meaning |
-|-----------|----------|---------|
-| `READING_MISSING_ID` | CRITICAL | Reading activity lacks `id` field |
-| `MISSING_SOURCE_READING` | CRITICAL | Analytical activity lacks `source_reading` link |
-| `INVALID_SOURCE_READING` | CRITICAL | `source_reading` points to non-existent reading id |
-| `ORPHAN_READING` | WARNING | Reading defined but never referenced |
-
-#### 10.2 Fix: Add Missing Reading Activity
+**Fix: Add Missing Reading Activity**
 
 If module has analytical activities but no `reading` activity:
 
@@ -390,7 +290,7 @@ If module has analytical activities but no `reading` activity:
   prompt: '...'
 ```
 
-#### 10.3 Fix: Add source_reading to Existing Activities
+**Fix: Add source_reading to Existing Activities**
 
 For each `essay-response`, `critical-analysis`, `comparative-study`, or `authorial-intent`:
 
@@ -417,7 +317,7 @@ For each `essay-response`, `critical-analysis`, `comparative-study`, or `authori
     - 'Яку функцію виконує імператив?'
 ```
 
-#### 10.4 Fix: Reading Missing ID
+**Fix: Reading Missing ID**
 
 ```yaml
 # BEFORE (fails audit)
@@ -428,54 +328,13 @@ For each `essay-response`, `critical-analysis`, `comparative-study`, or `authori
 
 # AFTER (passes audit)
 - type: reading
-  id: reading-testament              # ← ADDED (pattern: reading-[slug])
+  id: reading-testament              # ← ADDED
   title: 'Джерело: Заповіт'
   text: |
     Як умру, то поховайте...
 ```
 
-#### 10.5 Multiple Readings Strategy
-
-For modules with multiple source texts:
-
-```yaml
-# First reading for first set of analyses
-- type: reading
-  id: reading-01
-  title: 'Джерело 1: ...'
-  text: '...'
-
-# Second reading for comparison
-- type: reading
-  id: reading-02
-  title: 'Джерело 2: ...'
-  text: '...'
-
-# Analytical activity referencing first reading
-- type: essay-response
-  source_reading: reading-01
-  title: 'Есе про джерело 1'
-
-# Comparative study using both
-- type: comparative-study
-  source_reading: reading-01        # Primary reference
-  title: 'Порівняння двох джерел'
-  items_to_compare:
-    - 'Джерело 1'
-    - 'Джерело 2'
-```
-
-#### 10.6 Quick Fix Checklist for Seminar Tracks
-
-- [ ] At least ONE `reading` activity exists
-- [ ] ALL `reading` activities have `id` field
-- [ ] ALL `essay-response` have `source_reading`
-- [ ] ALL `critical-analysis` have `source_reading`
-- [ ] ALL `comparative-study` have `source_reading`
-- [ ] ALL `authorial-intent` have `source_reading`
-- [ ] ALL `source_reading` values point to valid reading IDs
-
-#### 10.7 LLM Self-Validation (MANDATORY for Audit)
+### 10. LLM Self-Validation - Seminar Tracks (MANDATORY)
 
 <critical>
 
@@ -886,6 +745,35 @@ Audit output categories:
 - **FAIL**: Must fix (grammar, vocabulary, syntax)
 - **WARN**: Should fix (richness, variety)
 - **INFO**: Optional improvement
+
+---
+
+## Fix Strategy
+
+### Minor Violations (≤3 issues)
+
+Apply targeted fixes:
+
+- Missing vocabulary → Add to table
+- Wrong syntax → Correct the specific line
+- Missing engagement box → Add one
+- Spelling error → Fix it
+
+### Major Violations (>3 issues in same section)
+
+Rebuild the section:
+
+- Content section failing → Rewrite entire section
+- Multiple activity failures → Delete all activities, recreate
+- Grammar violations throughout → Rewrite affected paragraphs
+
+### Catastrophic (>10 violations OR structural issues)
+
+Rebuild from Stage 1:
+
+- Frontmatter wrong → Start over
+- Wrong pedagogy structure → Start over
+- Vocabulary fundamentally wrong → Start over
 
 ## Iteration Limit
 
