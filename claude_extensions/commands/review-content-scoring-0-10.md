@@ -7,10 +7,14 @@
 ## Scoring Philosophy
 
 **Score Distribution:**
-- **0-4 = FAIL** → Auto-fail gates, critical issues, must fix before passing
-- **5-6 = PASS (Minimum)** → Meets gates, acceptable quality, has noticeable weaknesses
-- **7-8 = GOOD** → Solid quality, minor improvements possible, above minimum standards
-- **9-10 = EXCELLENT** → Exceptional quality, reference-worthy, innovative or exemplary
+- **0-4 = FAIL** → Critical issues, must fix immediately
+- **5-6 = FAIL** → Below standard, must fix before passing
+- **7-8 = FAIL** → Not good enough, must improve to 9+
+- **9-10 = PASS** → Acceptable quality, module can proceed
+
+**ONLY 9-10 IS ACCEPTABLE. Everything below 9 requires fixes.**
+
+**There is no "good enough" at 7-8. There is no "acceptable" at 5-6. Fix until 9+.**
 
 **Mandatory Justification Rule:**
 - **For scores ≥8:** Explain what would make it higher (or why it's already 10/10)
@@ -28,9 +32,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Incoherent structure | Contradictory statements, missing sections, no logical flow, random order |
-| 5-6 | **Acceptable** - Basic structure | All sections present, some awkward transitions, occasional jumps, adequate sequencing |
-| 7-8 | **Good** - Clear flow | Logical progression, smooth transitions, clear section purpose, good pedagogical sequence |
-| 9-10 | **Excellent** - Seamless narrative | Perfect flow, each section builds on previous, transitions are natural, exemplary structure |
+| 5-6 | **FAIL** - Basic structure | All sections present, some awkward transitions, occasional jumps, adequate sequencing |
+| 7-8 | **INSUFFICIENT** - Clear flow | Logical progression, smooth transitions, clear section purpose, good pedagogical sequence |
+| 9-10 | **PASS** - Seamless narrative | Perfect flow, each section builds on previous, transitions are natural, exemplary structure |
 
 **Example justification:**
 > Coherence: 8/10 - Strong logical flow from Test → Explanation → Practice. Transitions between examples are smooth. However, the jump from Section 3 (Aspect basics) to Section 4 (Advanced usage) is abrupt - would benefit from a bridging paragraph. A 9/10 would have: "Тепер, коли ми розуміємо базові принципи, давайте подивимося на складніші випадки..."
@@ -44,9 +48,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Off-topic | Wrong grammar focus, unrelated vocabulary, doesn't match curriculum plan |
-| 5-6 | **Acceptable** - On-topic but loose | Covers required material but includes tangents, some vocabulary not in plan |
-| 7-8 | **Good** - Focused | Stays on topic, follows curriculum plan, all content serves learning goals |
-| 9-10 | **Excellent** - Laser-focused | Every sentence advances learning goals, perfect alignment with plan, no filler |
+| 5-6 | **FAIL** - On-topic but loose | Covers required material but includes tangents, some vocabulary not in plan |
+| 7-8 | **INSUFFICIENT** - Focused | Stays on topic, follows curriculum plan, all content serves learning goals |
+| 9-10 | **PASS** - Laser-focused | Every sentence advances learning goals, perfect alignment with plan, no filler |
 
 **Example justification:**
 > Relevance: 7/10 - Module covers all required aspect pairs from curriculum plan (зробити/робити, написати/писати, etc.). However, includes digression about historical development of aspect (150 words) that doesn't serve B1 learning goals. A 9/10 would cut tangents and use that space for more practice examples.
@@ -60,9 +64,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Confusing or wrong | Incorrect information, unclear explanations, missing key concepts |
-| 5-6 | **Acceptable** - Gets the job done | Explanations are adequate but dry, examples work but uninspiring, misses some nuances |
-| 7-8 | **Good** - Clear and helpful | Strong explanations, good examples, covers edge cases, learns from examples |
-| 9-10 | **Excellent** - Outstanding pedagogy | Crystal-clear explanations, memorable examples, anticipates confusion, "aha moments" |
+| 5-6 | **FAIL** - Gets the job done | Explanations are adequate but dry, examples work but uninspiring, misses some nuances |
+| 7-8 | **INSUFFICIENT** - Clear and helpful | Strong explanations, good examples, covers edge cases, learns from examples |
+| 9-10 | **PASS** - Outstanding pedagogy | Crystal-clear explanations, memorable examples, anticipates confusion, "aha moments" |
 
 **Example justification:**
 > Educational: 9/10 - Exceptional explanation quality. The analogy comparing perfective aspect to "taking a photo" vs imperfective as "filming video" is brilliant and memorable. Examples progress from simple (Я прочитав книгу) to complex (aspect with negation). Only minor gap: doesn't explicitly address why "Я читав книгу рік" (time duration) forces imperfective. A 10/10 would add this edge case.
@@ -76,9 +80,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Major errors | Multiple Russianisms (кушать, извините), calques (робити сенс), Surzhyk, broken grammar |
-| 5-6 | **Acceptable** - Functional | Mostly correct, 1-2 minor Russianisms, occasional unnatural phrasing, comprehensible |
-| 7-8 | **Good** - Natural Ukrainian | No Russianisms, natural phrasing, good euphony, appropriate register |
-| 9-10 | **Excellent** - Native-level mastery | Flawless Ukrainian, beautiful euphony, rich vocabulary, stylistically elegant |
+| 5-6 | **FAIL** - Functional | Mostly correct, 1-2 minor Russianisms, occasional unnatural phrasing, comprehensible |
+| 7-8 | **INSUFFICIENT** - Natural Ukrainian | No Russianisms, natural phrasing, good euphony, appropriate register |
+| 9-10 | **PASS** - Native-level mastery | Flawless Ukrainian, beautiful euphony, rich vocabulary, stylistically elegant |
 
 **Example justification:**
 > Language: 6/10 - No Russianisms detected, but several unnatural phrases: "в той самий час" (calque of "at the same time", should be "водночас" or "тим часом"), "робити вибір" (should be "робити вибір" is actually OK, scratch that - "обирати"). Grammar is correct but lacks euphonic flow. A 7/10 would fix calques, 8/10 would improve euphony with better word order.
@@ -92,9 +96,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Pedagogically broken | Wrong approach for module type, no scaffolding, inappropriate for level, violates TTT/CBI principles |
-| 5-6 | **Acceptable** - Basic pedagogy | Follows template loosely, some scaffolding, mostly appropriate for level |
-| 7-8 | **Good** - Solid pedagogy | Proper TTT/CBI/PPP structure, good scaffolding, level-appropriate, follows template |
-| 9-10 | **Excellent** - Exemplary teaching | Perfect template adherence, exceptional scaffolding, innovative approaches, ideal for level |
+| 5-6 | **FAIL** - Basic pedagogy | Follows template loosely, some scaffolding, mostly appropriate for level |
+| 7-8 | **INSUFFICIENT** - Solid pedagogy | Proper TTT/CBI/PPP structure, good scaffolding, level-appropriate, follows template |
+| 9-10 | **PASS** - Exemplary teaching | Perfect template adherence, exceptional scaffolding, innovative approaches, ideal for level |
 
 **Example justification:**
 > Pedagogy: 8/10 - Strong TTT structure (Test → Teach → Test). Discovery-based learning in Section 2 (observe-first) works well. Activities progress from recognition (quiz) to production (error-correction). However, cloze activity appears before error-correction, which reverses difficulty curve (cloze is harder). A 9/10 would sequence activities by cognitive load: quiz → match-up → fill-in → error-correction → cloze.
@@ -108,9 +112,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Wrong immersion level | A1 with 90% Ukrainian, B2 with 30% English, violates level requirements |
-| 5-6 | **Acceptable** - Slightly off target | Within 5-10% of target immersion, some unnecessary English or insufficient scaffolding |
-| 7-8 | **Good** - Hits target | Within target range, appropriate scaffolding for level, good balance |
-| 9-10 | **Excellent** - Optimal immersion | Perfect balance, scaffolding supports without over-translating, ideal for level |
+| 5-6 | **FAIL** - Slightly off target | Within 5-10% of target immersion, some unnecessary English or insufficient scaffolding |
+| 7-8 | **INSUFFICIENT** - Hits target | Within target range, appropriate scaffolding for level, good balance |
+| 9-10 | **PASS** - Optimal immersion | Perfect balance, scaffolding supports without over-translating, ideal for level |
 
 **Target ranges by level:**
 - A1.1 (M01-10): 20-40% Ukrainian
@@ -133,9 +137,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Broken activities | Wrong answers, broken YAML format, multiple valid answers marked wrong, <minimum activities |
-| 5-6 | **Acceptable** - Functional | Meets minimum count, some low density (<14 items), limited variety, answers correct |
-| 7-8 | **Good** - Solid activities | Good count (>minimum), all activities ≥14 items, good variety (6+ types), all answers correct |
-| 9-10 | **Excellent** - Outstanding | High count, high density (16+ items), exceptional variety (8+ types), creative formats |
+| 5-6 | **FAIL** - Functional | Meets minimum count, some low density (<14 items), limited variety, answers correct |
+| 7-8 | **INSUFFICIENT** - Solid activities | Good count (>minimum), all activities ≥14 items, good variety (6+ types), all answers correct |
+| 9-10 | **PASS** - Outstanding | High count, high density (16+ items), exceptional variety (8+ types), creative formats |
 
 **Example justification:**
 > Activities: 7/10 - 12 activities (meets B1 minimum), all answers verified correct, good variety (8 types). However, 3 activities have exactly 14 items (minimum density), and mark-the-words activity is too easy (only nouns, no distractors). A 9/10 would increase density to 16+ items and make mark-the-words more challenging (nouns + adjectives that look like nouns).
@@ -156,9 +160,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Below minimum | Richness score <minimum for module type, missing critical elements |
-| 5-6 | **Acceptable** - Meets minimum | Richness score at minimum, has required elements but barely, feels thin |
-| 7-8 | **Good** - Above minimum | Richness score 5-10% above minimum, solid content, good balance of elements |
-| 9-10 | **Excellent** - Rich and varied | Richness score 15%+ above minimum, exceptional variety, memorable content |
+| 5-6 | **FAIL** - Meets minimum | Richness score at minimum, has required elements but barely, feels thin |
+| 7-8 | **INSUFFICIENT** - Above minimum | Richness score 5-10% above minimum, solid content, good balance of elements |
+| 9-10 | **PASS** - Rich and varied | Richness score 15%+ above minimum, exceptional variety, memorable content |
 
 **Example justification:**
 > Richness: 8/10 - Richness score 98% (grammar module, minimum 95%). Has 32 examples (target 24), 6 engagement boxes (target 5), 12 dialogues (target 4). However, only 2 proverbs (target 3), and engagement boxes are slightly generic ("Did you know Ukrainian has 7 cases?" - obvious fact, not engaging). A 9/10 would add one more specific proverb and replace generic boxes with surprising facts or pop culture connections.
@@ -178,9 +182,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - Robotic | Zero direct address, no encouragement, textbook tone, no human voice |
-| 5-6 | **Acceptable** - Occasional warmth | 5-9 direct address, minimal encouragement, some personality but inconsistent |
-| 7-8 | **Good** - Warm teacher voice | 10-15 direct address, good encouragement, consistent personality, feels human |
-| 9-10 | **Excellent** - Exceptional warmth | 20+ direct address, frequent encouragement, memorable personality, inspiring |
+| 5-6 | **FAIL** - Occasional warmth | 5-9 direct address, minimal encouragement, some personality but inconsistent |
+| 7-8 | **INSUFFICIENT** - Warm teacher voice | 10-15 direct address, good encouragement, consistent personality, feels human |
+| 9-10 | **PASS** - Exceptional warmth | 20+ direct address, frequent encouragement, memorable personality, inspiring |
 
 **Example justification:**
 > Humanity: 7/10 - Direct address: 12 instances (meets threshold). Encouragement: 2 instances ("Чудово! Ви вже майже експерт з виду дієслова!"). Real-world validation: 1 ("Коли ви приїдете в Україну, ви зможете розповісти про свій день українською!"). However, tone is slightly formal/academic in explanation sections. A 9/10 would inject personality into grammar explanations: "Знаєте що? Українці часто помиляються тут теж!" or "Ось маленький секрет, який спростить вам життя..."
@@ -199,9 +203,9 @@
 | Score | Description | Indicators |
 |-------|-------------|------------|
 | 0-4 | **FAIL** - AI slop | Multiple auto-fail patterns, generic content, zero specificity, obvious AI generation |
-| 5-6 | **Acceptable** - Some AI patterns | Occasional generic phrases, limited specificity, feels slightly synthetic |
-| 7-8 | **Good** - Mostly authentic | Good specifics, minimal AI patterns, mostly natural voice, some predictability |
-| 9-10 | **Excellent** - Human mastery | Zero AI fingerprint, exceptional specificity, unpredictable, authentic cultural voice |
+| 5-6 | **FAIL** - Some AI patterns | Occasional generic phrases, limited specificity, feels slightly synthetic |
+| 7-8 | **INSUFFICIENT** - Mostly authentic | Good specifics, minimal AI patterns, mostly natural voice, some predictability |
+| 9-10 | **PASS** - Human mastery | Zero AI fingerprint, exceptional specificity, unpredictable, authentic cultural voice |
 
 **Key sub-dimensions (Section 13a-13i):**
 - AI clichés (embark, delve, tapestry, vibrant, rich)

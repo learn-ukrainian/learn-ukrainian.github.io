@@ -384,24 +384,25 @@ Evaluate if Ukrainian content sounds authentic vs robotic/translated:
 - Lack of natural discourse markers (ну, от, взагалі)
 - Example: "Я маю книгу. Я маю машину. Я маю час." (repetitive, pronoun-heavy)
 
-**3 = Acceptable**
+**3 = FAIL (fix required)**
 - Functional Ukrainian, no major errors
 - Minor unnaturalness but comprehensible
-- Adequate for learning context
-- Example: "Виберіть правильний варіант" (correct but formulaic)
+- NOT ACCEPTABLE - must improve to 5
+- Example: "Виберіть правильний варіант" (correct but formulaic) - FIX IT
 
-**4 = Natural**
+**4 = INSUFFICIENT (fix required)**
 - Sounds like native speaker wrote it
 - Natural word order variations
 - Appropriate discourse markers
-- Conversational tone when appropriate
-- Example: "Як правильно сказати?" (natural, conversational)
+- NOT ACCEPTABLE - must improve to 5
+- Example: "Як правильно сказати?" (natural, conversational) - STILL NOT ENOUGH
 
-**5 = Highly Natural**
+**5 = PASS (only acceptable score)**
 - Perfectly idiomatic Ukrainian
 - Stylistically appropriate for context
 - Cultural authenticity
 - Example: "Уявіть: ви на ринку..." (engaging, culturally grounded)
+- **THIS IS THE ONLY ACCEPTABLE SCORE**
 
 **Deterministic Naturalness Markers (from activity_quality.py):**
 - Pronoun density >1.5 per sentence → unnatural
@@ -717,38 +718,19 @@ If you find `> [!resources]` in a markdown file, it's stale (remove it - will be
 
 After evaluating all activities, check if module meets quality thresholds:
 
-**B1 Quality Gates:**
-- Minimum naturalness average: **3.5** (Acceptable+)
-- Maximum difficulty inappropriate: **20%** (≤20% of activities too_easy or too_hard)
-- Minimum engagement average: **3.0** (Neutral+)
-- Minimum distractor quality average: **4.0** (Good)
-- Minimum variety score average: **60%** (Good Variety)
-
-**B2 Quality Gates:**
-- Minimum naturalness average: **4.0** (Natural)
-- Maximum difficulty inappropriate: **15%**
-- Minimum engagement average: **3.5** (Neutral to Engaging)
-- Minimum distractor quality average: **4.2** (Good+)
-- Minimum variety score average: **65%**
-
-**C1 Quality Gates:**
-- Minimum naturalness average: **4.5** (Highly Natural)
-- Maximum difficulty inappropriate: **10%**
-- Minimum engagement average: **4.0** (Engaging)
-- Minimum distractor quality average: **4.5** (Good to Excellent)
-- Minimum variety score average: **70%**
-
-**C2 Quality Gates:**
-- Minimum naturalness average: **4.8** (Near-Native)
-- Maximum difficulty inappropriate: **5%**
-- Minimum engagement average: **4.5** (Highly Engaging)
-- Minimum distractor quality average: **5.0** (Excellent)
+**ALL LEVELS Quality Gates (B1-C2):**
+- Minimum naturalness average: **5.0** (ONLY 5/5 IS ACCEPTABLE)
+- Maximum difficulty inappropriate: **0%** (ALL activities must be calibrated)
+- Minimum engagement average: **5.0** (ONLY 5/5 IS ACCEPTABLE)
+- Minimum distractor quality average: **5.0** (ONLY 5/5 IS ACCEPTABLE)
 - Minimum variety score average: **75%**
 
 **A1-A2 Quality Gates:**
-- No strict quality gates (scaffolding phase)
-- Focus on correctness over naturalness
-- Engagement/variety encouraged but not required
+- Minimum naturalness average: **5.0** (SAME STANDARD)
+- Focus on correctness AND naturalness
+- Engagement/variety REQUIRED, not optional
+
+**THERE IS NO "GOOD ENOUGH". FIX UNTIL 5/5.**
 
 **Gate Evaluation:**
 
