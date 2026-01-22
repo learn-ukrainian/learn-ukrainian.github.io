@@ -5,17 +5,17 @@
 
 ## Gates
 - **Words:** ✅ 4011/4000
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/20
+- **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 97.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -44,12 +44,12 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 27 | Included in Core |
 | **Грецькі міста-держави: Ольвія, Херсонес** | ⚪️ | 66 | Skipped |
-| **Вступ** | ⚪️ | 293 | Skipped |
+| **Вступ** | ✅ | 293 | Included in Core |
 | **Читання** | ✅ | 2098 | Included in Core |
 | **Взаємовплив культур: Елліни та Варвари** | ✅ | 403 | Included in Core |
-| **Деколонізаційний погляд** | ⚪️ | 188 | Skipped |
+| **Деколонізаційний погляд** | ✅ | 188 | Included in Core |
 | **Занепад античного світу** | ⚪️ | 97 | Skipped |
-| **Первинні джерела** | ⚪️ | 201 | Skipped |
+| **Первинні джерела** | ✅ | 201 | Included in Core |
 | **Підсумок** | ✅ | 100 | Included in Core |
 | **Есе** | ⚪️ | 0 | Skipped |
 | **Тема** | ⚪️ | 98 | Skipped |
