@@ -1,29 +1,116 @@
+module: b2-hist-128
+id: 128
 title: 'Анексія Криму: Початок війни'
 subtitle: 'The Annexation of Crimea: The War Begins'
+slug: aneksiia-krymu
 version: '2.0'
 phase: B2.3e War for Existence
 focus: history
-word_target: 4000
 pedagogy: CBI
+word_target: 4000
 duration: 120
 transliteration: none
 tags:
-- history
-- war
-- crimea
-- annexation
-- hybrid-warfare
-- propaganda
-grammar:
-- Military and political terminology
-- Active vs Passive voice in news reporting
+  - history
+  - war
+  - crimea
+  - annexation
+  - hybrid-warfare
+  - propaganda
+
 objectives:
-- Analyze the chronology of the Crimean annexation in 2014
-- Understand the concept of 'hybrid warfare' and 'green men'
-- Discuss the resistance of Crimean Tatars and Ukrainians
-- Evaluate the international reaction and sanctions
+  - Учень може описати хронологію анексії Криму в лютому-березні 2014 року
+  - Учень може пояснити концепцію «гібридної війни» та тактику «зелених чоловічків»
+  - Учень може проаналізувати спротив кримських татар та українських патріотів
+  - Учень може оцінити міжнародну реакцію, санкції та їх ефективність
+
+grammar:
+  - Military and political terminology
+  - Active vs Passive voice in news reporting
+  - Complex sentence structures for historical narrative
+
+content_outline:
+  - section: Вступ
+    words: 350
+    points:
+      - Контекст лютого 2014 - перемога Євромайдану
+      - Момент максимальної вразливості України
+      - Поява «зелених чоловічків»
+  - section: 'Читання: Хроніка злочину'
+    words: 2400
+    points:
+      - Початок операції - медаль за повернення
+      - Захоплення адміністративних будівель
+      - Інформаційна агресія та міф про «Поїзд дружби»
+      - Спротив 26 лютого - День кримського спротиву
+      - Блокада українських частин та доля флоту
+      - Фейковий референдум 16 березня
+      - Мілітаризація та демографічні зміни
+  - section: Первинні джерела
+    words: 500
+    points:
+      - Будапештський меморандум (порушення)
+      - Виступ Путіна 18 березня
+      - Свідчення очевидця-кримської татарки
+  - section: Деколонізаційний погляд
+    words: 500
+    points:
+      - Міфи про «російськість» Криму
+      - Реальна історія півострова
+      - Аналіз гібридної війни
+      - Ключові висновки модуля
+      - Крим залишається Україною
+  - section: Словник
+    words: 10
+    points:
+      - Основна лексика модуля
+  - section: Потрібно більше практики?
+    words: 100
+    points:
+      - Додаткова література та ресурси
+
+vocabulary_hints:
+  - анексія
+  - окупація
+  - гібридна війна
+  - зелені чоловічки
+  - референдум
+  - санкції
+  - Меджліс
+  - депортація
+  - блокада
+  - спецназ
+  - пропаганда
+  - ІПСО
+  - сепаратизм
+  - мілітаризація
+  - політв'язень
+
+activity_hints:
+  - type: reading
+    focus: Primary source analysis - Budapest Memorandum
+  - type: quiz
+    focus: Factual recall of chronology and key terms
+  - type: critical-analysis
+    focus: Analyze Russian propaganda tactics
+  - type: essay-response
+    focus: Evaluate international response effectiveness
+
+sources:
+  - name: Invasion of Crimea (Wikipedia)
+    url: https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation
+    type: reference
+    notes: Comprehensive overview with citations
+  - name: Budapest Memorandum (Wikipedia)
+    url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
+    type: reference
+    notes: Ukrainian Wikipedia on security guarantees
+  - name: КримSOS Human Rights Organization
+    url: https://krymsos.com/
+    type: primary
+    notes: Eyewitness testimonies and documentation
+
 vocabulary_count: 25
-slug: aneksiia-krymu
 naturalness:
   score: 9
   status: PASS

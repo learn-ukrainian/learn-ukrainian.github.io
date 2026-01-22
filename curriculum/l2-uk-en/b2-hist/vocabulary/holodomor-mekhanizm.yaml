@@ -1,0 +1,128 @@
+module: holodomor-mekhanizm
+level: B2
+version: '2.0'
+items:
+  - lemma: геноцид
+    ipa: /ɦenoˈt͡sɪd/
+    translation: genocide
+    pos: noun
+    gender: m
+  - lemma: хлібозаготівлі
+    ipa: /xlʲibozɐhoˈtʲiu̯lʲi/
+    translation: grain requisitions
+    pos: noun
+    gender: f
+  - lemma: колективізація
+    ipa: /kolektɪvʲizɐˈt͡sʲijɐ/
+    translation: collectivization
+    pos: noun
+    gender: f
+  - lemma: конфіскація
+    ipa: /konfʲisˈkat͡sʲijɐ/
+    translation: confiscation
+    pos: noun
+    gender: f
+  - lemma: упокорення
+    ipa: /upoˈkorenʲnʲɐ/
+    translation: subjugation
+    pos: noun
+    gender: n
+  - lemma: репресії
+    ipa: /reˈpresʲiji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: чорні дошки
+    ipa: /ˈt͡ʃornʲi ˈdɔʃkɪ/
+    translation: black boards (lists of punished villages)
+    pos: noun
+    gender: f
+  - lemma: опір
+    ipa: /ˈopʲir/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: розкуркулення
+    ipa: /rozkurˈkulenʲnʲɐ/
+    translation: dekulakization
+    pos: noun
+    gender: n
+  - lemma: Голодомор
+    ipa: /ɦolodoˈmɔr/
+    translation: Holodomor (starvation-famine)
+    pos: noun
+    gender: m
+  - lemma: штучний голод
+    ipa: /ˈʃtut͡ʃnɪi̯ ˈɦɔlod/
+    translation: artificial famine
+    pos: noun
+    gender: m
+  - lemma: масове знищення
+    ipa: /ˈmɐsove ˈznɪʃt͡ʃenʲnʲɐ/
+    translation: mass destruction
+    pos: noun
+    gender: n
+  - lemma: селянство
+    ipa: /seˈlʲanstvo/
+    translation: peasantry
+    pos: noun
+    gender: n
+  - lemma: колгосп
+    ipa: /kolˈɦɔsp/
+    translation: kolkhoz (collective farm)
+    pos: noun
+    gender: m
+  - lemma: куркуль
+    ipa: /kurˈkulʲ/
+    translation: kulak (wealthy peasant)
+    pos: noun
+    gender: m
+  - lemma: саботаж
+    ipa: /sɐboˈtɐʒ/
+    translation: sabotage
+    pos: noun
+    gender: m
+  - lemma: депортація
+    ipa: /deporˈtat͡sʲijɐ/
+    translation: deportation
+    pos: noun
+    gender: f
+  - lemma: заслання
+    ipa: /zɐsˈlannʲɐ/
+    translation: exile/banishment
+    pos: noun
+    gender: n
+  - lemma: прикріплення
+    ipa: /prɪˈkrʲiplennʲɐ/
+    translation: attachment (to land)
+    pos: noun
+    gender: n
+  - lemma: блокада
+    ipa: /bloˈkadɐ/
+    translation: blockade
+    pos: noun
+    gender: f
+  - lemma: фальсифікація
+    ipa: /fɐlʲsɪfʲiˈkat͡sʲijɐ/
+    translation: falsification
+    pos: noun
+    gender: f
+  - lemma: заперечення
+    ipa: /zɐpeˈret͡ʃennʲɐ/
+    translation: denial
+    pos: noun
+    gender: n
+  - lemma: свідчення
+    ipa: /ˈsvʲidt͡ʃennʲɐ/
+    translation: testimony/evidence
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /idenˈtɪt͡ʃnʲistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: хлібозаготівельний
+    ipa: /xlʲibozɐhoˈtʲivennɪi̯/
+    translation: grain-requisition (adj)
+    pos: adj

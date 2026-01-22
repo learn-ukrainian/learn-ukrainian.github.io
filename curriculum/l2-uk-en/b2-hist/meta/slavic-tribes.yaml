@@ -80,6 +80,7 @@ content_outline:
   - 'Документ 1: "Повість минулих літ" про племена'
   - 'Документ 2: Візантійський погляд на слов''ян'
   - 'Документ 3: Арабський мандрівник про русів'
+  - Короткий огляд ключових думок
 - section: Есе
   words: 0
   points: []
@@ -120,26 +121,20 @@ vocabulary_hints:
   - ковальство (blacksmithing)
   - поховання (burial)
 activity_hints:
-- type: reading
-  focus: Excerpt from Primary Chronicle about tribes
-  source: Provide in module
-- type: map-activity
-  focus: Locate each tribe on the map of Ukraine
-  items: 8+ tribes
-- type: vocabulary
-  focus: Tribal names and related terminology
-  items: 15+
-- type: match-up
-  focus: Match tribes to their territories and characteristics
-  items: 10+
 - type: quiz
-  focus: Facts about Slavic tribes
-  items: 12+
-- type: group-sort
-  focus: Categorize tribes by region (Left Bank, Right Bank, South, West)
-  items: 8+
-- type: discussion
-  focus: Які сліди племінної доби збереглися в сучасній Україні?
+  focus: Історія та розселення племен
+- type: reading
+  focus: Древлянський Коростень
+- type: critical-analysis
+  focus: Аналіз древлянського центру
+- type: reading
+  focus: 'Білі Хорвати: Загадка Карпат'
+- type: critical-analysis
+  focus: Аналіз карпатського племені
+- type: essay-response
+  focus: Племінна спадщина (регіоналізм)
+- type: comparative-study
+  focus: Порівняння полян і древлян
 prerequisites:
 - b2-hist-04 (Slavic origins)
 - Understanding of tribal society

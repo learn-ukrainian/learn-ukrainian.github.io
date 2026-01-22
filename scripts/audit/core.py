@@ -51,6 +51,7 @@ from .checks import (
     check_content_quality,
     check_activity_header_format,
 )
+from .checks.content_purity import check_content_purity
 from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
 from .checks.vocabulary_integration import check_vocabulary_integration
 from .checks.activity_validation import (
@@ -646,13 +647,8 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
 def audit_module(file_path: str) -> bool:
     """
-    Main audit function for a module file.
-
-    Args:
-        file_path: Path to the module markdown file.
-
-    Returns:
-        True if audit passed, False otherwise.
+    Orchestrates the audit process for a single module file.
+    Returns True on success, False on failure.
     """
     if not os.path.exists(file_path):
         print(f"Error: File {file_path} not found.")
@@ -915,6 +911,7 @@ def audit_module(file_path: str) -> bool:
     core_content = extract_core_content(body)
 
     # Word count
+    raw_words = len(body.split())
     core_lines = [line for line in core_content.split('\n') if not line.strip().startswith('|')]
     core_no_tables = '\n'.join(core_lines)
     core_cleaned = clean_for_stats(core_no_tables)
@@ -938,6 +935,7 @@ def audit_module(file_path: str) -> bool:
     total_activities = 0
     table_rows = []
     low_density_activities = []  # Track activities with insufficient items
+    activity_details = []  # Track ALL activities for detailed report
 
     print(f"\n📋 Auditing: {level_code} M{module_num:02d} — {module_title}")
     print(f"   File: {file_path} | Target: {target} words\n")
@@ -1197,13 +1195,22 @@ def audit_module(file_path: str) -> bool:
                     # Try specific key first (e.g. B2-history)
                     specific_key = f"{level_code}-{module_focus}" if module_focus else level_code
                     complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(specific_key)
-                    
+
                     # Fallback to base level key (e.g. B2)
                     if not complexity_rules:
                         complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
 
                     if 'min_items' in complexity_rules:
                         density_target = complexity_rules['min_items']
+
+                # Track ALL activity details for report
+                activity_details.append({
+                    'title': getattr(activity, 'title', act_type),
+                    'type': act_type,
+                    'items': items,
+                    'target': density_target,
+                    'status': '✅' if items >= density_target else '❌'
+                })
 
                 if items >= density_target:
                     valid_density_count += 1
@@ -1266,6 +1273,15 @@ def audit_module(file_path: str) -> bool:
                  if 'min_items' in complexity_rules:
                      density_target = complexity_rules['min_items']
 
+            # Track ALL activity details for report
+            activity_details.append({
+                'title': title,
+                'type': matched_act_type,
+                'items': items,
+                'target': density_target,
+                'status': '✅' if items >= density_target else '❌'
+            })
+
             if items >= density_target:
                 valid_density_count += 1
             else:
@@ -1304,7 +1320,7 @@ def audit_module(file_path: str) -> bool:
     # Evaluate gates
     results = {}
 
-    results['words'] = evaluate_word_count(total_words, target)
+    results['words'] = evaluate_word_count(total_words, target, raw_words)
     if results['words'].status == 'FAIL':
         has_critical_failure = True
 
@@ -1490,6 +1506,23 @@ def audit_module(file_path: str) -> bool:
     
     # Run content quality checks (LLM-based + deterministic purity checks)
     content_quality_violations = check_content_quality(content, level_code, module_num)
+    
+    # Run content purity checks (Redundancy, Roboticness, Mirroring)
+    yaml_content_str = ""
+    if yaml_file.exists():
+        yaml_content_str = yaml_file.read_text(encoding='utf-8')
+    purity_violations = check_content_purity(content, yaml_content_str)
+    
+    if purity_violations:
+        print(f"  ✨ Purity violations found: {len(purity_violations)}")
+        for v in purity_violations:
+            print(f"     ❌ [{v['type']}] {v['issue']}")
+            
+        content_quality_violations.extend(purity_violations)
+            
+    
+            
+    # Convert purity violations to standard pedagogical violations for reporting
     for v in content_quality_violations:
         pedagogical_violations.append({
             'type': v['type'],
@@ -1873,7 +1906,11 @@ def audit_module(file_path: str) -> bool:
         richness_flags=richness_flags_for_report,
         template_violations=template_violations,
         naturalness=naturalness_data,
-        module_num=module_num
+        module_num=module_num,
+        config=config,
+        activity_details=activity_details,
+        unique_types=unique_types,
+        module_focus=module_focus
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

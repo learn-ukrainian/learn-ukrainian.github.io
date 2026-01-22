@@ -1,34 +1,35 @@
+module: mongolska-navala
+id: b2-hist-21
 title: Монгольська навала 1240
 subtitle: Падіння Києва та кінець Київської Русі
-version: '1.0'
-phase: B2.3a
+slug: mongolska-navala
+version: '2.0'
+phase: B2-HIST.2 [Fragmentation]
 focus: history
-word_target: 4000
 pedagogy: CBI
-duration: 90
+word_target: 3800
+duration: 120
 transliteration: none
 tags:
-- history
-- era:medieval
-- topic:mongol-invasion
+  - history
+  - mongol-invasion
+  - kyiv
+  - 1240
 grammar:
-- Historical narrative tenses
-- Passive voice in historical writing
-vocabulary_focus: null
-vocabulary_count: 40
+  - Historical narrative tenses
+  - Passive voice in historical writing
 objectives:
-- Розуміти причини та наслідки монгольської навали на Русь
-- Аналізувати історичні джерела про облогу та падіння Києва
-- Використовувати військову та історичну лексику в контексті
-slug: mongolska-navala-1240
+  - "Учень може проаналізувати причини та наслідки монгольської навали"
+  - "Учень може оцінити героїзм оборони Києва та роль Десятинної церкви"
+  - "Учень може порівняти спадщину Русі та Золотої Орди в контексті деколонізації"
 content_outline:
   - section: "Вступ"
     words: 400
     points:
-      - "Значення 1240 року як геополітичної катастрофи"
+      - "1240 рік як геополітична катастрофа"
       - "Київ як сакральний центр"
   - section: "Читання: Трагедія та злам епох"
-    words: 2400
+    words: 2200
     points:
       - "Політична роздробленість та Битва на Калці"
       - "Наступ Батия та облога Києва"
@@ -42,20 +43,53 @@ content_outline:
   - section: "Деколонізаційний погляд"
     words: 400
     points:
-      - "Міф про 'спільну колиску'"
+      - "Міф про 'спільну колиску' та монгольський вплив"
       - "Монгольський спадок Московії vs Європейськість України"
   - section: "Есе"
-    words: 400
+    words: 300
     points:
       - "Аналітичне есе про уроки навали"
-  - section: "Підсумок"
-    words: 100
-    points:
-      - "Основні висновки модуля"
   - section: "Потрібно більше практики?"
     words: 100
     points:
       - "Рекомендації для подальшого вивчення"
+vocabulary_hints:
+  required:
+    - навала (invasion)
+    - облога (siege)
+    - ярмо (yoke)
+    - орда (horde)
+    - хан (khan)
+    - баскак (tax collector)
+    - ярлик (yarlyk/decree)
+    - спустошення (devastation)
+    - оборона (defense)
+    - воєвода (voivode)
+  recommended:
+    - катапульта (catapult)
+    - таран (battering ram)
+    - данина (tribute)
+    - васал (vassal)
+    - улус (ulus)
+activity_hints:
+  - type: reading
+    focus: "Іпатіївський літопис про оборону Києва"
+  - type: map-activity
+    focus: "Шлях монгольської армії"
+  - type: critical-analysis
+    focus: "Свідчення Плано Карпіні про стан Києва"
+  - type: essay-response
+    focus: "Цивілізаційний вибір після 1240 року"
+sources:
+  - name: "Іпатіївський літопис"
+    url: "http://litopys.org.ua/ipatlet/ipat.htm"
+    type: primary
+    notes: "Основне джерело про події 1240 року"
+  - name: "Джованні да Плано Карпіні. Історія Монгалів"
+    url: "http://litopys.org.ua/travelj/travelj.htm"
+    type: primary
+    notes: "Свідчення європейського мандрівника"
+vocabulary_count: 25
 naturalness:
   score: 9
   status: PASS

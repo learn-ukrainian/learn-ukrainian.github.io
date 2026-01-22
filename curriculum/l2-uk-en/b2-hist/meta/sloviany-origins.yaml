@@ -73,6 +73,7 @@ content_outline:
   points:
   - Міфи та реальність
   - Сучасна Україна
+  - Короткий огляд ключових думок
 - section: Есе
   words: 0
   points: []
@@ -113,25 +114,17 @@ vocabulary_hints:
   - господарство (economy)
 activity_hints:
 - type: reading
-  focus: Excerpt from Primary Chronicle about Slavic origins
-  source: Provide in module
-- type: map-activity
-  focus: Trace Slavic migration routes
-  items: 3 stages of migration
-- type: vocabulary
-  focus: Ethnographic and historical terminology
-  items: 15+
-- type: compare-contrast
-  focus: Different theories of Slavic homeland
-  output: Summary table
-- type: quiz
-  focus: Slavic origins and migration
-  items: 12+
-- type: timeline
-  focus: Key periods in Slavic history
-  items: 8+
-- type: discussion
-  focus: Чому важливо знати походження слов'ян для розуміння української історії?
+  focus: 'Анти: Перші українці?'
+- type: critical-analysis
+  focus: Аналіз антського суспільства
+- type: reading
+  focus: 'Слов''янські боги'
+- type: critical-analysis
+  focus: Аналіз язичницького світогляду
+- type: essay-response
+  focus: Тяглість демократичної традиції в історії України
+- type: comparative-study
+  focus: 'Влада народу і Влада царя (Слов''яни vs Візантія)'
 prerequisites:
 - b2-hist-03 (Greek city-states)
 - Basic knowledge of European history

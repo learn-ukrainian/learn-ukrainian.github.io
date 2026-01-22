@@ -1,30 +1,84 @@
+id: holodomor-mekhanizm
+module: b2-hist-101
 title: 'Голодомор I: Механізм'
 subtitle: 'Holodomor I: Mechanism'
-version: '1.0'
-phase: B2.3c [Trauma & Resistance]
-pedagogy: CBI
+version: '2.14'
+phase: 'HIST.10'
 focus: history
-word_target: 4000
-duration: 90
+pedagogy: 'seminar'
+duration: 120
 transliteration: none
-immersion: 100
 tags:
-- history
-- decolonization
-- 1930s
-- holodomor
-- genocide
+  - history
+  - holodomor
+  - genocide
+  - trauma
 grammar:
-- Passive constructions
-- Impersonal sentences
+  - 'Historical narrative register'
+  - 'Passive voice (-no, -to) in documentation'
+  - 'Hypothetical structures in trauma narratives'
 objectives:
-- Учень розуміє механізми організації Голодомору 1932–1933 років
-- Учень може аналізувати роль колективізації та «закону про п'ять колосків»
-- Учень розпізнає Голодомор як геноцид українського народу
+  - 'Learner understands the legal and economic mechanisms of Holodomor'
+  - 'Learner can analyze official vs. survivor discourse'
+  - 'Learner can apply decolonial lens to Soviet history'
 vocabulary_count: 25
-register: публіцистичний
-vocab_count: 68
+word_target: 4000
+vocabulary_hints:
+  required:
+    - окупація
+    - геноцид
+    - розкуркулення
+    - колективізація
+    - чорна дошка
+  recommended:
+    - саботаж
+    - тоталітаризм
+activity_hints:
+  - type: reading
+    focus: 'Historical documents'
+  - type: critical-analysis
+    focus: 'Propaganda vs Evidence'
+  - type: essay-response
+    focus: 'Genocide mechanism'
+content_outline:
+  - section: "Вступ"
+    words: 462
+    points: ["Context of 1930s", "Social engineering"]
+  - section: "Читання"
+    words: 580
+    points: ["CBI approach", "Language of violence"]
+  - section: "Колективізація та опір селянства"
+    words: 1045
+    points: ["Traditional village storm", "Peasant resistance", "Dekulakization"]
+  - section: "Закон про п'ять колосків та Чорні дошки"
+    words: 1055
+    points: ["Law of Five Ears", "Black Boards mechanism"]
+  - section: "Терор голодом як інструмент упокорення"
+    words: 896
+    points: ["Red broom", "Blockade of borders"]
+  - section: "Первинні джерела"
+    words: 535
+    points: ["Survivor testimonies", "Secret circulars"]
+  - section: "Деколонізаційний погляд"
+    words: 299
+    points: ["Imperial crime", "Russification"]
+  - section: "Спадщина"
+    words: 479
+    points: ["Transgenerational trauma", "Memory as force"]
 slug: holodomor-mekhanizm
-naturalness:
-  score: 9
-  status: PASS
+sources:
+  - name: "Національний музей Голодомору-геноциду"
+    url: "https://holodomormuseum.org.ua/"
+    type: reference
+  - name: "Енциклопедія історії України: Голодомор"
+    url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe"
+    type: secondary
+  - name: "Джеймс Мейс. Повість про двох журналістів"
+    url: "https://day.kyiv.ua/"
+    type: secondary
+  - name: "Енн Епплбом. Червоний голод: Війна Сталіна проти України"
+    url: "https://www.anneapplebaum.com/"
+    type: secondary
+  - name: "Тімоті Снайдер. Криваві землі: Європа між Гітлером і Сталіним"
+    url: "https://timothysnyder.org/"
+    type: secondary

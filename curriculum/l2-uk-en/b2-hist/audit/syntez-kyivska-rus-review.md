@@ -2,16 +2,53 @@
 **Level:** B2 | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
 
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Хронологія епохи | 15 | 8 | ✅ |
+| 2 | quiz | Узагальнення: Політична історія | 8 | 8 | ✅ |
+| 3 | group-sort | Князі та їхні досягнення | 15 | 1 | ✅ |
+| 4 | fill-in | Терміни епохи | 10 | 8 | ✅ |
+| 5 | critical-analysis | Деколонізація: Спадщина Русі | 1 | 1 | ✅ |
+| 6 | essay-response | Есе: Ідентичність через історію | 1 | 1 | ✅ |
+| 7 | comparative-study | Русь і Європа | 1 | 1 | ✅ |
+| 8 | true-false | Факти про Русь: Правда чи Міф? | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 1/2 (essay-response) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+
 ## Gates
-- **Words:** ✅ 4748/4000
+- **Words:** ✅ 4748/4000 (raw: 4885)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/20
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
@@ -42,7 +79,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |
-| **Вступ — Три століття Русі** | ⚪️ | 285 | Skipped |
+| **Вступ — Три століття Русі** | ✅ | 285 | Included in Core |
 | **Політичний розвиток: від племені до імперії** | ⚪️ | 434 | Skipped |
 | **Культурні досягнення** | ✅ | 892 | Included in Core |
 | **Суспільство та економіка** | ⚪️ | 868 | Skipped |
@@ -50,8 +87,8 @@
 | **Русь у Європі: невід'ємна частина** | ✅ | 394 | Included in Core |
 | **Спадщина Русі — хто спадкоємець?** | ⚪️ | 583 | Skipped |
 | **Ключові терміни та дати** | ⚪️ | 400 | Skipped |
-| **Деколонізаційний погляд: битва за спадщину** | ⚪️ | 232 | Skipped |
+| **Деколонізаційний погляд: битва за спадщину** | ✅ | 232 | Included in Core |
 | **Читання** | ✅ | 71 | Included in Core |
-| **Первинні джерела** | ⚪️ | 113 | Skipped |
+| **Первинні джерела** | ✅ | 113 | Included in Core |
 | **Підсумок** | ✅ | 207 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 193 | Skipped |

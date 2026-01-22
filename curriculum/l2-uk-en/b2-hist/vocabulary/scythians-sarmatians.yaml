@@ -1,4 +1,94 @@
 module: scythians-sarmatians
 level: B2-HIST
 version: '2.0'
-items: []
+items:
+  - lemma: скіфи
+    ipa: /sʲkʲifɪ/
+    translation: Scythians
+    pos: noun
+    gender: pl
+  - lemma: сармати
+    ipa: /sarmˈɑtɪ/
+    translation: Sarmatians
+    pos: noun
+    gender: pl
+  - lemma: кочівник
+    ipa: /kɔt͡ʃiwˈnɪk/
+    translation: nomad
+    pos: noun
+    gender: m
+  - lemma: степ
+    ipa: /stɛp/
+    translation: steppe
+    pos: noun
+    gender: m
+  - lemma: курган
+    ipa: /kʊrˈɦɑn/
+    translation: burial mound
+    pos: noun
+    gender: m
+  - lemma: пектораль
+    ipa: /pɛktɔˈrɑlʲ/
+    translation: pectoral
+    pos: noun
+    gender: f
+  - lemma: кіннота
+    ipa: /kʲinːˈɔtɑ/
+    translation: cavalry
+    pos: noun
+    gender: f
+  - lemma: лучник
+    ipa: /lˈut͡ʃnɪk/
+    translation: archer
+    pos: noun
+    gender: m
+  - lemma: звіриний стиль
+    ipa: /zʲwʲiˈrɪnɪj stɪlʲ/
+    translation: animal style
+    pos: phrase
+    gender: m
+  - lemma: плем'я
+    ipa: /ˈplɛmʲɑ/
+    translation: tribe
+    pos: noun
+    gender: n
+  - lemma: цар
+    ipa: /t͡sɑr/
+    translation: king/tsar
+    pos: noun
+    gender: m
+  - lemma: золото
+    ipa: /ˈzɔlɔtɔ/
+    translation: gold
+    pos: noun
+    gender: n
+  - lemma: царство
+    ipa: /ˈt͡sɑrstwɔ/
+    translation: kingdom
+    pos: noun
+    gender: n
+  - lemma: завоювання
+    ipa: /zɑwɔjuˈwɑnʲːɑ/
+    translation: conquest
+    pos: noun
+    gender: n
+  - lemma: торгівля
+    ipa: /tɔrˈɦʲiwlʲɑ/
+    translation: trade
+    pos: noun
+    gender: f
+  - lemma: амазонка
+    ipa: /ɑmɑˈzɔnkɑ/
+    translation: Amazon warrior
+    pos: noun
+    gender: f
+  - lemma: топонім
+    ipa: /tɔˈpɔnʲim/
+    translation: toponym
+    pos: noun
+    gender: m
+  - lemma: сарматизм
+    ipa: /sɑrmɑˈtɪzm/
+    translation: Sarmatism
+    pos: noun
+    gender: m

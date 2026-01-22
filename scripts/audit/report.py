@@ -27,7 +27,11 @@ def generate_report(
     richness_flags: list = None,
     template_violations: list[dict] = None,
     naturalness: dict = None,
-    module_num: int = None
+    module_num: int = None,
+    config: dict = None,
+    activity_details: list[dict] = None,
+    unique_types: set = None,
+    module_focus: str = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
@@ -53,6 +57,97 @@ def generate_report(
         
     report_lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")
     report_lines.append("")
+
+    # Add Configuration section
+    if config:
+        report_lines.append("## Configuration")
+
+        # Build config type label
+        config_type = f"{level_code}"
+        if module_focus:
+            config_type += f"-{module_focus}"
+        report_lines.append(f"**Type:** {config_type}")
+
+        report_lines.append(f"**Word Target:** {target} words")
+
+        min_act = config.get('min_activities', 0)
+        max_act = config.get('max_activities', min_act + 4)
+        report_lines.append(f"**Activities:** {min_act}-{max_act} required")
+
+        report_lines.append(f"**Items per Activity:** ≥{config.get('min_items_per_activity', 1)} items")
+        report_lines.append(f"**Unique Types:** ≥{config.get('min_types_unique', 2)} types required")
+
+        priority_types = config.get('priority_types', set())
+        if priority_types:
+            report_lines.append(f"**Priority Types:** {', '.join(sorted(priority_types))}")
+
+        required_types = config.get('required_types', set())
+        if required_types:
+            report_lines.append(f"**Required Types:** {', '.join(sorted(required_types))}")
+
+        report_lines.append(f"**Engagement:** ≥{config.get('min_engagement', 3)} callouts")
+
+        min_imm = config.get('min_immersion', 0)
+        max_imm = config.get('max_immersion', 100)
+        report_lines.append(f"**Immersion:** {min_imm}-{max_imm}%")
+
+        report_lines.append(f"**Vocab Target:** ≥{config.get('min_vocab', 25)} words")
+
+        translit = "Not allowed" if not config.get('transliteration_allowed', True) else "Allowed"
+        report_lines.append(f"**Transliteration:** {translit}")
+
+        report_lines.append("")
+
+    # Add Activity Breakdown section
+    if activity_details:
+        report_lines.append("## Activity Breakdown")
+        report_lines.append("| # | Type | Title | Items | Min | Status |")
+        report_lines.append("|---|------|-------|-------|-----|--------|")
+
+        for idx, act in enumerate(activity_details, 1):
+            title = act['title']
+            act_type = act['type']
+            items = act['items']
+            target = act['target']
+            status = act['status']
+            report_lines.append(f"| {idx} | {act_type} | {title} | {items} | {target} | {status} |")
+
+        report_lines.append("")
+        report_lines.append("**Summary:**")
+
+        # Total activities
+        total_acts = len(activity_details)
+        min_act = config.get('min_activities', 0) if config else 0
+        max_act = config.get('max_activities', min_act + 4) if config else total_acts
+        act_status = '✅' if min_act <= total_acts <= max_act else '❌'
+        report_lines.append(f"- Total activities: {total_acts} (target: {min_act}-{max_act}) {act_status}")
+
+        # Unique types
+        if unique_types:
+            min_types = config.get('min_types_unique', 2) if config else 2
+            types_status = '✅' if len(unique_types) >= min_types else '❌'
+            report_lines.append(f"- Unique types: {len(unique_types)} (minimum: {min_types}) {types_status}")
+
+        # Priority types
+        if config and config.get('priority_types'):
+            priority_types = config['priority_types']
+            priority_used = unique_types & priority_types if unique_types else set()
+            priority_status = '✅' if priority_used else '❌'
+            report_lines.append(f"- Priority types used: {len(priority_used)}/{len(priority_types)} ({', '.join(sorted(priority_used)) if priority_used else 'none'}) {priority_status}")
+
+        # Required types
+        if config and config.get('required_types'):
+            required_types = config['required_types']
+            required_used = unique_types & required_types if unique_types else set()
+            all_required_present = required_types.issubset(unique_types) if unique_types else False
+            required_status = '✅' if all_required_present else '❌'
+            report_lines.append(f"- Required types used: {len(required_used)}/{len(required_types)} ({', '.join(sorted(required_used)) if required_used else 'none'}) {required_status}")
+
+        # Low density count
+        low_density_count = sum(1 for act in activity_details if act['status'] == '❌')
+        report_lines.append(f"- Low density activities: {low_density_count}")
+
+        report_lines.append("")
 
     if lint_errors:
         report_lines.append("## LINT ERRORS")

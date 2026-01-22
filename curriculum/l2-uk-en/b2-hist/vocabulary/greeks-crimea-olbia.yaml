@@ -1,4 +1,94 @@
-items: []
-level: B2-HIST
 module: greeks-crimea-olbia
+level: B2-HIST
 version: '2.0'
+items:
+  - lemma: колонія
+    ipa: /kɔˈlɔnʲijɑ/
+    translation: colony
+    pos: noun
+    gender: f
+  - lemma: місто-держава
+    ipa: /mʲistɔ dɛrˈʒɑwɑ/
+    translation: city-state
+    pos: noun
+    gender: n
+  - lemma: поліс
+    ipa: /ˈpɔlʲis/
+    translation: polis
+    pos: noun
+    gender: m
+  - lemma: агора
+    ipa: /ɑˈɦɔrɑ/
+    translation: agora
+    pos: noun
+    gender: f
+  - lemma: демократія
+    ipa: /dɛmɔˈkrɑtʲijɑ/
+    translation: democracy
+    pos: noun
+    gender: f
+  - lemma: торгівля
+    ipa: /tɔrˈɦʲiwlʲɑ/
+    translation: trade
+    pos: noun
+    gender: f
+  - lemma: храм
+    ipa: /xrɑm/
+    translation: temple
+    pos: noun
+    gender: m
+  - lemma: гирло
+    ipa: /ˈɦɪrlɔ/
+    translation: river mouth
+    pos: noun
+    gender: n
+  - lemma: Причорномор'я
+    ipa: /prɪt͡ʃɔrnɔˈmɔrjɑ/
+    translation: Black Sea region
+    pos: noun
+    gender: n
+  - lemma: античний
+    ipa: /ɑnˈtɪt͡ʃnɪj/
+    translation: ancient/classical
+    pos: adj
+    gender: m
+  - lemma: громадянин
+    ipa: /hrɔmɑdʲɑˈnɪn/
+    translation: citizen
+    pos: noun
+    gender: m
+  - lemma: республіка
+    ipa: /rɛsˈpublʲikɑ/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: милетяни
+    ipa: /mɪlɛˈtʲɑnɪ/
+    translation: Miletians
+    pos: noun
+    gender: pl
+  - lemma: дорійці
+    ipa: /dɔˈrʲijtsʲi/
+    translation: Dorians
+    pos: noun
+    gender: pl
+  - lemma: виноробство
+    ipa: /wɪnɔˈrɔbstwɔ/
+    translation: winemaking
+    pos: noun
+    gender: n
+  - lemma: амфора
+    ipa: /ˈɑmfɔrɑ/
+    translation: amphora
+    pos: noun
+    gender: f
+  - lemma: некрополь
+    ipa: /nɛˈkrɔpɔlʲ/
+    translation: necropolis
+    pos: noun
+    gender: m
+  - lemma: акрополь
+    ipa: /ɑˈkrɔpɔlʲ/
+    translation: acropolis
+    pos: noun
+    gender: m

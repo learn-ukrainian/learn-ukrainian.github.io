@@ -1,0 +1,125 @@
+module: aneksiia-krymu
+level: B2
+version: '2.0'
+items:
+  - lemma: анексія
+    ipa: /aˈnɛksʲija/
+    translation: annexation
+    pos: noun
+    gender: f
+  - lemma: окупація
+    ipa: /okʊˈpat͡sʲija/
+    translation: occupation
+    pos: noun
+    gender: f
+  - lemma: гібридна війна
+    ipa: /ɦʲiˈbrɪdnɐ vʲijˈna/
+    translation: hybrid warfare
+    pos: phrase
+  - lemma: зелені чоловічки
+    ipa: /zɛˈlɛnʲi t͡ʃoloˈvʲit͡ʃkɪ/
+    translation: green men (unmarked soldiers)
+    pos: phrase
+  - lemma: референдум
+    ipa: /rɛfɛˈrɛndʊm/
+    translation: referendum
+    pos: noun
+    gender: m
+  - lemma: санкції
+    ipa: /ˈsankt͡sʲiji/
+    translation: sanctions
+    pos: noun
+    gender: f-pl
+  - lemma: Меджліс
+    ipa: /mɛd͡ʒˈlʲis/
+    translation: Mejlis (representative body)
+    pos: noun
+    gender: m
+  - lemma: депортація
+    ipa: /dɛporˈtat͡sʲija/
+    translation: deportation
+    pos: noun
+    gender: f
+  - lemma: блокада
+    ipa: /bloˈkadɐ/
+    translation: blockade
+    pos: noun
+    gender: f
+  - lemma: спецназ
+    ipa: /spɛt͡sˈnaz/
+    translation: special forces
+    pos: noun
+    gender: m
+  - lemma: пропаганда
+    ipa: /propɐˈɦandɐ/
+    translation: propaganda
+    pos: noun
+    gender: f
+  - lemma: ІПСО
+    ipa: /ipˈsɔ/
+    translation: PSYOPS (Psy-ops)
+    pos: noun
+    gender: f
+  - lemma: сепаратизм
+    ipa: /sɛpɐrɐˈtɪzm/
+    translation: separatism
+    pos: noun
+    gender: m
+  - lemma: мілітаризація
+    ipa: /mʲilʲitɐrɪˈzat͡sʲija/
+    translation: militarization
+    pos: noun
+    gender: f
+  - lemma: політв'язень
+    ipa: /polʲitˈvjɐzɛnʲ/
+    translation: political prisoner
+    pos: noun
+    gender: m
+  - lemma: суверенітет
+    ipa: /sʊvɛrɛnʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: територіальна цілісність
+    ipa: /tɛrɪtorʲiˈalʲnɐ ˈt͡sʲilʲisʲnʲisʲtʲ/
+    translation: territorial integrity
+    pos: phrase
+  - lemma: нелегітимний
+    ipa: /nɛlɛˈɦʲitɪmnɪj/
+    translation: illegitimate
+    pos: adj
+  - lemma: деокупація
+    ipa: /dɛokʊˈpat͡sʲija/
+    translation: de-occupation
+    pos: noun
+    gender: f
+  - lemma: спротив
+    ipa: /ˈsprotɪu̯/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: зрада
+    ipa: /ˈzradɐ/
+    translation: treason/betrayal
+    pos: noun
+    gender: f
+  - lemma: присяга
+    ipa: /prɪˈsʲaɦɐ/
+    translation: oath/allegiance
+    pos: noun
+    gender: f
+  - lemma: бот
+    ipa: /bɔt/
+    translation: bot
+    pos: noun
+    gender: m
+  - lemma: троль
+    ipa: /trɔlʲ/
+    translation: troll
+    pos: noun
+    gender: m
+  - lemma: фейк
+    ipa: /fɛjk/
+    translation: fake/fake news
+    pos: noun
+    gender: m

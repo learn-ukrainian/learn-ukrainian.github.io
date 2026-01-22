@@ -17,7 +17,7 @@ class GateResult:
     msg: str
 
 
-def evaluate_word_count(total_words: int, target: int) -> GateResult:
+def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> GateResult:
     """Evaluate word count gate.
 
     - PASS: at or above target (no upper limit - we love words!)
@@ -25,16 +25,20 @@ def evaluate_word_count(total_words: int, target: int) -> GateResult:
     - FAIL: 100+ words below target
     """
     min_words = target - 100   # Hard fail threshold
+    
+    msg = f"{total_words}/{target}"
+    if raw_words > total_words:
+        msg += f" (raw: {raw_words})"
 
     if total_words >= target:
-        return GateResult('PASS', '✅', f"{total_words}/{target}")
+        return GateResult('PASS', '✅', msg)
     elif total_words >= min_words:
         # Within 100 words of target - warn but don't fail
         shortfall = target - total_words
-        return GateResult('WARN', '⚠️', f"{total_words}/{target} ({shortfall} short)")
+        return GateResult('WARN', '⚠️', f"{msg} ({shortfall} short)")
     else:
         # More than 100 words short - fail
-        return GateResult('FAIL', '❌', f"{total_words}/{target}")
+        return GateResult('FAIL', '❌', msg)
 
 
 def evaluate_activity_count(count: int, target: int) -> GateResult:
@@ -108,9 +112,9 @@ def evaluate_structure(
     
     if is_a2_plus:
         if not has_activities:
-            return GateResult('FAIL', '❌', "Missing '## Activities' header")
+            return GateResult('FAIL', '❌', "Missing '## Activities' header OR activities sidecar")
         if not has_vocab:
-            return GateResult('FAIL', '❌', "Missing '## Vocabulary' header")
+            return GateResult('FAIL', '❌', "Missing '## Vocabulary' header OR vocabulary sidecar")
     else:
         # Legacy/A1 checks
         if not has_vocab:

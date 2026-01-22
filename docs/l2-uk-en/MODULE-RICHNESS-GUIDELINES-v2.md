@@ -1,6 +1,8 @@
 # Module Quality Standards
 
 > **Single source of truth for module richness, activity requirements, and templates.**
+>
+> ⚠️ **TECHNICAL TRUTH:** For exact validation thresholds (word counts, item limits, allowed types), the Python configuration file `scripts/audit/config.py` is the **AUTHORITATIVE SOURCE OF TRUTH**. If this document conflicts with `config.py`, the code prevails.
 
 ---
 
@@ -50,19 +52,20 @@
 > 3. Resources callout comes AFTER intro, BEFORE first `##` header
 > 4. First content section is typically `## Diagnostic` or `## Діагностика`
 
-### Content Requirements by Level (Instructional Core Only\*)
+### Content Requirements by Level (Instructional Core Only*)
 
 | Metric                | A1              | A2           | B1         | B2          | C1        | C2        |
 | :-------------------- | :-------------- | :----------- | :--------- | :---------- | :-------- | :-------- |
 | **Module Range**      | M01-34          | M01-50       | **M01-80** | **M01-135** | M01-115   | M01-80    |
-| **Core Word Count**   | **Graduated\*** | **1000+**    | **1500+**  | **1750+**   | **2000+** | **2000+** |
-| **Immersion (% Ukr)** | **10-40%\***    | **40-75%\*** | **100%**   | **100%**    | **100%**  | **100%**  |
-| **Min Vocab Words**   | 20+             | 25+          | 20+/30+    | 20+/30+     | 25+       | 25+       |
+| **Core Word Count**   | **750+**        | **1000+**    | **1500+**  | **1750+**   | **3000+** | **3000+** |
+| **Immersion (% Ukr)** | **10-40%***     | **40-75%***  | **90-100%**| **100%**    | **100%**  | **100%**  |
+| **Min Activities**    | 8+              | 10+          | 8+         | 10+         | 12+       | 16+       |
+| **Min Vocab Words**   | 20+             | 25+          | 25+        | 25+         | 25+       | 25+       |
 | **Example Sentences** | 12+             | 18+          | 24+        | 24+         | 30+       | 32+       |
 | **Engagement Boxes**  | 3+              | 4+           | 5+         | 6+          | 7+        | 8+        |
 | **Mini-Dialogues**    | 2+              | 3+           | 4+         | 4+          | 5+        | 5+        |
 
-_\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagnostic/Analysis/Deep Dive (TTT); or Introduction/Narrative/Analysis/Grammar in Context (CLIL). Excludes tables, practice drills, and activity instructions._
+*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagnostic/Analysis/Deep Dive (TTT); or Introduction/Narrative/Analysis/Grammar in Context (CLIL). Excludes tables, practice drills, and activity instructions.*
 
 > **A1 Core Word Count Graduation:**
 >
@@ -256,17 +259,18 @@ See `docs/dev/CONTENT_MODULE_ENHANCEMENT.md` for complete strategy.
 
 </critical>
 
-#### Activity Requirements (10-12 total)
+#### Activity Requirements (3-10 total)
 
 | Activity Type               | Count | Key Requirement                                                  |
 | --------------------------- | ----- | ---------------------------------------------------------------- |
-| **quiz**                    | 4-5   | MUST start with "Згідно з текстом..."                            |
-| **fill-in / cloze**         | 3-4   | Test collocations (чинити спротив, відіграти роль, брати участь) |
-| **error-correction**        | 2-3   | Fix GRAMMAR errors, NOT factual inaccuracies                     |
+| **reading**                 | 1+    | Primary source analysis (Mandatory)                              |
+| **essay-response**          | 1+    | Analytical essay (Mandatory)                                     |
+| **quiz**                    | 1-2   | MUST start with "Згідно з текстом..."                            |
+| **fill-in / cloze**         | 1-2   | Test collocations (чинити спротив, відіграти роль, брати участь) |
+| **error-correction**        | 1-2   | Fix GRAMMAR errors, NOT factual inaccuracies                     |
 | **match-up**                | 1-2   | Ukrainian term ↔ Ukrainian definition                            |
-| **select / mark-the-words** | 1-2   | Find grammatical features in text                                |
 
-**Total:** 10-12 activities (reduced from standard 14+)
+**Total:** 3-10 activities (Strict limit per `config.py`)
 
 #### The Golden Rule
 
@@ -514,53 +518,58 @@ Each module should include review items from previous module(s) to reinforce ret
 
 ### B1 Module Types
 
-| Type              | Modules                    | Words | Vocab | Immersion | Focus                                                                          |
-| ----------------- | -------------------------- | ----- | ----- | --------- | ------------------------------------------------------------------------------ |
-| `B1-metalanguage` | 01-05                      | 1500+ | 25+   | flexible  | Grammar terminology in Ukrainian (B1.0 bridge)                                 |
-| `B1-grammar`      | 06-50 (excl. checkpoints)  | 1500+ | 25+   | 90-95%    | Grammar acquisition: aspect, motion verbs, complex sentences, advanced grammar |
-| `B1-vocab`        | 51-70 (excl. checkpoints)  | 1500+ | 35+   | 90-95%    | Thematic vocabulary: abstract concepts, opinions, discourse                    |
-| `B1-cultural`     | 71-79                      | 1500+ | 25+   | 90-95%    | Contemporary Ukraine: regions, music, cinema, tech, sports, cuisine            |
-| `B1-skills`       | 81-84                      | 1000+ | 15+   | 90-95%    | Receptive skills, reading/listening integration                                |
-| `B1-checkpoint`   | 15, 25, 40, 50, 60, 70, 80 | 800+  | 10+   | 90%+      | Review & self-assessment with CEFR rubrics                                     |
-| `B1-capstone`     | 85                         | 1000+ | 10    | 90-95%    | Final assessment with comprehensive rubric                                     |
+| Type              | Modules                    | Words | Activ | Vocab | Focus                                                                          |
+| ----------------- | -------------------------- | ----- | ----- | ----- | ------------------------------------------------------------------------------ |
+| `B1-metalanguage` | 01-05                      | 1200+ | 12    | 20+   | Grammar terminology in Ukrainian (B1.0 bridge)                                 |
+| `B1-grammar`      | 06-50 (excl. checkpoints)  | 1500+ | 8     | 25+   | Grammar acquisition: aspect, motion verbs, complex sentences, advanced grammar |
+| `B1-vocab`        | 51-70 (excl. checkpoints)  | 1500+ | 8     | 35+   | Thematic vocabulary: abstract concepts, opinions, discourse                    |
+| `B1-cultural`     | 71-79                      | 1500+ | 8     | 25+   | Contemporary Ukraine: regions, music, cinema, tech, sports, cuisine            |
+| `B1-skills`       | 81-84                      | 1500+ | 10    | 15+   | Receptive skills, reading/listening integration                                |
+| `B1-checkpoint`   | 15, 25, 40, 50, 60, 70, 80 | 1200+ | 10    | 10+   | Review & self-assessment with CEFR rubrics                                     |
+| `B1-capstone`     | 85                         | 1500+ | 5     | 10    | Final assessment with comprehensive rubric                                     |
 
 **Note:** All B1 modules use Ukrainian-first approach — grammar explained IN Ukrainian with metalanguage support.
 
 ### B2 Module Types
 
-| Type             | Modules                 | Words | Vocab | Immersion | Focus                                                     |
-| ---------------- | ----------------------- | ----- | ----- | --------- | --------------------------------------------------------- |
-| `B2-grammar`     | 01-09, 11-24, 26-39     | 1800+ | 20+   | 100%      | Passive voice, participles, register system, domain vocab |
-| `B2-phraseology` | 41-69                   | 1800+ | 25+   | 100%      | Phraseology: proverbs, idioms, synonyms                   |
-| `B2-history`     | 71-94                   | 1800+ | 25+   | 100%      | Ukrainian history narratives                              |
-| `B2-integration` | 96-109                  | 1800+ | 20+   | 100%      | Skills integration & capstone projects                    |
-| `B2-checkpoint`  | 10, 25, 40, 70, 95, 110 | 1500+ | 40-50 | 100%      | Phase review & assessment                                 |
+| Type             | Modules                 | Words | Activ | Vocab | Focus                                                     |
+| ---------------- | ----------------------- | ----- | ----- | ----- | --------------------------------------------------------- |
+| `B2-grammar`     | 01-09, 11-24, 26-39     | 1750+ | 10    | 25+   | Passive voice, participles, register system, domain vocab |
+| `B2-vocab`       | 41-69                   | 1750+ | 10    | 35+   | Phraseology: proverbs, idioms, synonyms                   |
+| `B2-history`     | 71-94                   | 4000+ | 3-10  | 20+   | Ukrainian history narratives (Seminar Style)              |
+| `B2-biography`   | 96-109                  | 3000+ | 10    | 20+   | Biographies of key figures                                |
+| `B2-skills`      | 85-94                   | 1750+ | 14    | 20+   | Communication skills & practical scenarios                |
+| `B2-synthesis`   | 83, 107, 119, 125, 131  | 3000+ | 10    | 20+   | Cross-era analysis and historical argumentation           |
+| `B2-checkpoint`  | 10, 25, 40, 70, 95, 110 | 1750+ | 15    | 10+   | Phase review & assessment                                 |
+| `B2-capstone`    | 135                     | 1750+ | 10    | 10    | Final assessment                                          |
 
 **Note:** B2 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 
 ### C1 Module Types
 
-| Type              | Modules                 | Words | Vocab | Immersion | Focus                                        |
-| ----------------- | ----------------------- | ----- | ----- | --------- | -------------------------------------------- |
-| `C1-academic`     | 01-20                   | 1750+ | 24+   | 100%      | Academic Ukrainian, morphology, syntax       |
-| `C1-professional` | 21-35                   | 1600+ | 24+   | 100%      | Professional & social register               |
-| `C1-stylistics`   | 36-55                   | 1600+ | 24+   | 100%      | 5 functional styles, rhetoric, argumentation |
-| `C1-folk`         | 56-80                   | 2000+ | 24+   | 100%      | Folk culture, arts, dialects, Surzhyk        |
-| `C1-literature`   | 81-115                  | 2000+ | 24+   | 100%      | Literary analysis: classics to contemporary  |
-| `C1-checkpoint`   | 20, 35, 55, 80, 95, 115 | 1200+ | 15    | 100%      | Phase review & CEFR self-assessment          |
-| `C1-capstone`     | 111-112                 | 1500+ | 15    | 100%      | Research paper (2000+ words) & oral defense  |
+| Type              | Modules                 | Words | Activ | Vocab | Focus                                        |
+| ----------------- | ----------------------- | ----- | ----- | ----- | -------------------------------------------- |
+| `C1-academic`     | 01-20                   | 3000+ | 12    | 24+   | Academic Ukrainian, morphology, syntax       |
+| `C1-professional` | 21-35                   | 3000+ | 12    | 35+   | Professional & social register               |
+| `C1-stylistics`   | 36-55                   | 3000+ | 12    | 24+   | 5 functional styles, rhetoric, argumentation |
+| `C1-folk`         | 56-80                   | 3000+ | 12    | 24+   | Folk culture, arts, dialects, Surzhyk        |
+| `C1-literature`   | 81-115                  | 3500+ | 12    | 24+   | Literary analysis: classics to contemporary  |
+| `C1-biography`    | 36-100                  | 4000+ | 4-9   | 24+   | Biography seminar style                      |
+| `C1-history`      | 101-115                 | 4000+ | 4-9   | 25+   | Historical analysis seminar style            |
+| `C1-checkpoint`   | 20, 35, 55, 80, 95, 115 | 1750+ | 14    | 15    | Phase review & CEFR self-assessment          |
+| `C1-capstone`     | 111-112                 | 1750+ | 12    | 15    | Research paper (2000+ words) & oral defense  |
 
 **Note:** C1 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 
 ### C2 Module Types
 
-| Type              | Modules        | Words | Vocab | Immersion | Focus                                                |
-| ----------------- | -------------- | ----- | ----- | --------- | ---------------------------------------------------- |
-| `C2-stylistic`    | 01-20          | 1800+ | 25+   | 100%      | 7 functional styles (incl. religious, epistolary)    |
-| `C2-literary`     | 21-40          | 1600+ | 25+   | 100%      | Literary mastery, creative writing, criticism        |
-| `C2-professional` | 41-60          | 1600+ | 25+   | 100%      | Professional meta-skills (domain-agnostic)           |
-| `C2-checkpoint`   | 20, 40, 60, 66 | 1400+ | 15    | 100%      | Phase review & assessment                            |
-| `C2-capstone`     | 67-80          | 1400+ | 15-25 | 100%      | Capstone project: 10,000-word paper OR literary work |
+| Type              | Modules        | Words | Activ | Vocab | Focus                                                |
+| ----------------- | -------------- | ----- | ----- | ----- | ---------------------------------------------------- |
+| `C2-stylistic`    | 01-20          | 3000+ | 16    | 25+   | 7 functional styles (incl. religious, epistolary)    |
+| `C2-literary`     | 21-40          | 3000+ | 16    | 25+   | Literary mastery, creative writing, criticism        |
+| `C2-professional` | 41-60          | 3000+ | 16    | 25+   | Professional meta-skills (domain-agnostic)           |
+| `C2-checkpoint`   | 20, 40, 60, 66 | 2000+ | 16    | 15    | Phase review & assessment                            |
+| `C2-capstone`     | 67-80          | 2000+ | 16    | 15    | Capstone project: 10,000-word paper OR literary work |
 
 **Note:** C2 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 

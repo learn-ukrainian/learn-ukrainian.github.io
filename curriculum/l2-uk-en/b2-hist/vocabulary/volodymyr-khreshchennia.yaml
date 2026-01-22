@@ -1,0 +1,89 @@
+module: volodymyr-khreshchennia
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: хрещення
+    ipa: /xrɛˈʃt͡ʃɛnʲːɑ/
+    translation: baptism
+    pos: noun
+    gender: n
+  - lemma: християнство
+    ipa: /xrɪstʲiˈjɑnstwɔ/
+    translation: Christianity
+    pos: noun
+    gender: n
+  - lemma: язичництво
+    ipa: /jɑˈzɪt͡ʃnɪt͡stvw/
+    translation: paganism
+    pos: noun
+    gender: n
+  - lemma: Перун
+    ipa: /pɛˈrun/
+    translation: Perun
+    pos: noun
+    gender: m
+  - lemma: ідол
+    ipa: /ˈidɔl/
+    translation: idol
+    pos: noun
+    gender: m
+  - lemma: митрополія
+    ipa: /mɪtrɔˈpɔlʲijɑ/
+    translation: metropolitanate
+    pos: noun
+    gender: f
+  - lemma: церква
+    ipa: /ˈt͡sɛrkwɑ/
+    translation: church
+    pos: noun
+    gender: f
+  - lemma: святий
+    ipa: /swjɑˈtɪj/
+    translation: saint
+    pos: adj
+    gender: m
+  - lemma: рівноапостольний
+    ipa: /riwnɔɑˈpɔstɔlʲnɪj/
+    translation: equal-to-apostles
+    pos: adj
+    gender: m
+  - lemma: Херсонес
+    ipa: /xɛrsɔˈnɛs/
+    translation: Chersonesus
+    pos: noun
+    gender: m
+  - lemma: Візантія
+    ipa: /wʲiˈzɑntʲijɑ/
+    translation: Byzantium
+    pos: noun
+    gender: f
+  - lemma: віра
+    ipa: /ˈwʲirɑ/
+    translation: faith
+    pos: noun
+    gender: f
+  - lemma: Десятинна церква
+    ipa: /dɛsʲɑˈtɪnːɑ ˈt͡sɛrkwɑ/
+    translation: Church of the Tithes
+    pos: phrase
+    gender: f
+  - lemma: Почайна
+    ipa: /pɔˈt͡ʃɑjnɑ/
+    translation: Pochayna river
+    pos: noun
+    gender: f
+  - lemma: Корсунь
+    ipa: /ˈkɔrsunʲ/
+    translation: Korsun
+    pos: noun
+    gender: m
+  - lemma: імператор
+    ipa: /impɛˈrɑtɔr/
+    translation: emperor
+    pos: noun
+    gender: m
+  - lemma: цивілізаційний вибір
+    ipa: /t͡sɪwʲilʲizɑˈt͡sʲijnɪj ˈwɪbʲir/
+    translation: civilizational choice
+    pos: phrase
+    gender: m

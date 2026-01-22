@@ -86,6 +86,51 @@ content_outline:
 - You do NOT argue "it's close enough"
 - **REWRITE OR FAIL**
 
+### 6. Meta.yaml is Sacred - NEVER Edit During Sync
+
+**Meta.yaml is the SPECIFICATION. Markdown is the IMPLEMENTATION.**
+
+**After Phase 2 (module-meta-qa), meta.yaml is LOCKED.**
+
+**You MUST:**
+- ✅ Write markdown content to MATCH meta.yaml
+- ✅ Hit word count targets defined in meta.yaml
+- ✅ Include all sections from content_outline
+- ✅ Fix markdown when it doesn't match spec
+
+**You MUST NOT:**
+- ❌ Edit meta.yaml to match your markdown output
+- ❌ Change word_target to match what you wrote
+- ❌ Update content_outline to reflect your sections
+- ❌ Modify vocabulary_hints, grammar, or objectives
+
+**This is MUTINY:**
+```yaml
+# User created meta with specification:
+word_target: 4000
+
+# You wrote only 3500 words, then changed meta to:
+word_target: 3500  # ← FORBIDDEN. This is changing the spec to match your failure.
+```
+
+**Correct behavior:**
+```
+Meta says: 4000 words
+You wrote: 3500 words
+Action: ADD 500 words to match specification
+```
+
+**Exception:** Only `/module-sync` uses different logic, and even then:
+- Read audit review file for context
+- Fix markdown to match meta specification
+- Work until ALL gates pass
+- **Still NEVER edit meta.yaml** (it's the specification)
+
+**If meta.yaml itself is wrong:**
+- Tell user to run `/module-meta {level} {num}` to rebuild it
+- Then run `/module-sync {level} {num}` to fix content
+- You do NOT edit meta.yaml directly
+
 ## Enforcement
 
 **If you (the agent) are found to:**

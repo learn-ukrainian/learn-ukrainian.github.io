@@ -1,125 +1,111 @@
-module: b2-hist-08
+# Module Metadata: Синтез: Від Трипілля до Києва
+# Phase: B2-HIST.1 [Origins]
+# Module 08 of B2-HIST track (Synthesis)
+
+module: syntez-vytoky-1
 id: b2-hist-08
-title: 'Синтез: Від Трипілля до Києва'
-subtitle: 'From Trypillia to Kyiv: Continuity of the People'
+title: "Синтез: Від Трипілля до Києва"
+subtitle: "Synthesis: From Trypillia to Kyiv"
 slug: syntez-vytoky-1
 version: '2.0'
-phase: HIST.1 Origins Synthesis
+phase: B2-HIST.1 [Origins]
 focus: synthesis
 pedagogy: seminar
 register: публіцистичний
-duration: 150
+duration: 180
 transliteration: none
-tags:
-- history
-- synthesis
-- checkpoint
-- trypillia
-- kyivan-rus
-- early-medieval
-grammar:
-- Historical narrative synthesis
-- Argumentative writing structures
+
+# Learning Objectives
 objectives:
-- Learner can synthesize historical themes across eras from Trypillia to Kyiv
-- Learner can construct historical arguments with evidence from primary sources
-- Learner can identify continuities in Ukrainian history and deconstruct colonial
-  myths
-vocabulary_count: 35
+  - "Учень може проаналізувати тяглість цивілізаційного розвитку на українських землях"
+  - "Учень може пояснити концепцію України як 'плавильного котла' культур"
+  - "Учень може спростувати імперські міфи про 'молоду націю' та 'спільну колиску'"
+  - "Учень може оцінити значення демократичних традицій від античності до слов'ян"
+
+# Grammar Focus
+grammar:
+  - "Синтез граматичних конструкцій: пасивні стани, складні речення"
+  - "Публіцистичний стиль: аналітична лексика"
+
+# Word Target and Content Structure
+word_target: 4000
+
+content_outline:
+  - section: "Огляд періоду"
+    words: 1553
+    points:
+      - "Глобальне перехрестя та економічний двигун"
+
+  - section: "Ключові теми"
+    words: 1118
+    points:
+      - "Мовна археологія та концепція плавильного котла"
+
+  - section: "Первинні джерела"
+    words: 567
+    points:
+      - "Зіставлення свідчень Геродота та Прокопія"
+
+  - section: "Текст: Тяглість у сьогодення"
+    words: 385
+    points:
+      - "Як давня історія впливає на сучасну ідентичність"
+
+  - section: "Підсумкове есе"
+    words: 546
+    points:
+      - "Аналіз демократичних традицій"
+
+  - section: "Словник епохи: Витоки"
+    words: 84
+    points:
+      - "Цивілізаційна та політична лексика"
+
+  - section: "Підсумок"
+    words: 150
+    points:
+      - "Загальні висновки етапу 'Витоки'"
+
+  - section: "Потрібно більше практики?"
+    words: 93
+    points:
+      - "Ресурси для самостійного поглиблення знань"
+
+# Naturalness Score
 naturalness:
   score: 9
-  status: PASS
-module_type: synthesis
-word_target: 3000
-immersion: 100% Ukrainian
-sources:
-- name: Історія України (загальні огляди)
-  url: https://uk.wikipedia.org/wiki/Історія_України
-  type: reference
-  notes: General overview for synthesis
-- name: Prehistory of Ukraine
-  url: https://uk.wikipedia.org/wiki/Доісторичний_період_України
-  type: reference
-  notes: Prehistory overview
-content_outline:
-- section: Огляд періоду
-  words: 610
-  points: []
-- section: Ключові теми
-  words: 338
-  points: []
-- section: Первинні джерела
-  words: 212
-  points: []
-- section: Аналіз
-  words: 425
-  points: []
-- section: 'Хронологія: Від глини до каменю'
-  words: 189
-  points: []
-- section: Зв'язок із сьогоденням
-  words: 129
-  points: []
-- section: Есе
-  words: 72
-  points: []
-- section: Підсумок
-  words: 100
-  points: []
-- section: Ключові висновки епохи
-  words: 28
-  points: []
-- section: 'Словник епохи: Витоки'
-  words: 10
-  points: []
-- section: Потрібно більше практики?
-  words: 58
-  points: []
+  status: "PASS"
+
+# Vocabulary Guidance
 vocabulary_hints:
   required:
-  - синтез (synthesis)
-  - цивілізація (civilization)
-  - спадщина (heritage)
-  - закономірність (pattern)
-  - перехрестя (crossroads)
-  - культурний обмін (cultural exchange)
-  - етнічний (ethnic)
-  - державотворення (state formation)
-  - археологія (archaeology)
-  - хронологія (chronology)
-  recommended:
-  - наступність (continuity)
-  - взаємовплив (mutual influence)
-  - автохтонний (autochthonous)
-  - міграція (migration)
-  - асиміляція (assimilation)
+    - автохтонність (autochthony)
+    - тяглість (continuity)
+    - суб'єктність (subjectivity/agency)
+    - синтез (synthesis)
+    - народоправство (democracy/folk-rule)
+    - цивілізація (civilization)
+    - деколонізація (decolonization)
+    - ідентичність (identity)
+
+# Activity Planning
 activity_hints:
-- type: timeline
-  focus: Comprehensive timeline from Trypillia to Kyiv
-  items: 15+ key events
-- type: map-activity
-  focus: Overlay maps showing all civilizations
-  items: Combined map activity
-- type: vocabulary
-  focus: Review of all terminology from Phase 1
-  items: 25+
-- type: compare-contrast
-  focus: Compare Trypillia, Scythians, Greeks, Slavs
-  output: Multi-column comparison
-- type: essay-response
-  focus: Яка цивілізація найбільше вплинула на формування України?
-  word_target: 3000
-  model_answer: Required
-- type: quiz
-  focus: Comprehensive review of Phase 1
-  items: 20+
-- type: group-sort
-  focus: Match artifacts/terms to civilizations
-  items: 15+
-- type: discussion
-  focus: Чи можна говорити про українську історію до появи українців як народу?
+  - type: reading
+    focus: "Синтез первинних джерел"
+  - type: critical-analysis
+    focus: "Спростування історичних міфів"
+  - type: essay-response
+    focus: "Демократичні традиції України"
+
+# Sources
+sources:
+  - name: "Історія України від найдавніших часів до сьогодення"
+    url: "http://history.org.ua"
+    type: reference
+
+# Module Connections
 prerequisites:
-- b2-hist-01 through b2-hist-07 (all Phase 1 modules)
+  - "b2-hist-01: Трипільська цивілізація"
+  - "b2-hist-07: Хозарський каганат"
 connects_to:
-- b2-hist-09 (Beginning of Kyivan Rus - Phase 2)
-- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+  - "b2-hist-09: Олег та Ігор"

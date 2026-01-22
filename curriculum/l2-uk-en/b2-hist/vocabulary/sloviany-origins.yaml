@@ -1,0 +1,64 @@
+module: sloviany-origins
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: слов'яни
+    ipa: /slɔˈvʲɑnɪ/
+    translation: Slavs
+    pos: noun
+    gender: pl
+  - lemma: праслов'яни
+    ipa: /prɑslɔˈvʲɑnɪ/
+    translation: Proto-Slavs
+    pos: noun
+    gender: pl
+  - lemma: прабатьківщина
+    ipa: /prɑbɑtʲkʲiwˈʃt͡ʃɪnɑ/
+    translation: homeland
+    pos: noun
+    gender: f
+  - lemma: розселення
+    ipa: /rɔzˈsɛlɛnʲːɑ/
+    translation: settlement/migration
+    pos: noun
+    gender: n
+  - lemma: плем'я
+    ipa: /ˈplɛmʲɑ/
+    translation: tribe
+    pos: noun
+    gender: n
+  - lemma: язичництво
+    ipa: /jɑˈzɪt͡ʃnɪt͡stvw/
+    translation: paganism
+    pos: noun
+    gender: n
+  - lemma: міграція
+    ipa: /mʲiˈɦrɑt͡sʲijɑ/
+    translation: migration
+    pos: noun
+    gender: f
+  - lemma: археологічна культура
+    ipa: /ɑrxɛɔlɔˈɦit͡ʃnɑ kʊlʲˈtʊrɑ/
+    translation: archaeological culture
+    pos: phrase
+    gender: f
+  - lemma: лінгвістика
+    ipa: /lʲinʲˈɦwʲistɪkɑ/
+    translation: linguistics
+    pos: noun
+    gender: f
+  - lemma: етнос
+    ipa: /ˈɛtnɔs/
+    translation: ethnos
+    pos: noun
+    gender: m
+  - lemma: гілка
+    ipa: /ˈɦilkɑ/
+    translation: branch
+    pos: noun
+    gender: f
+  - lemma: спорідненість
+    ipa: /spɔˈridnɛnʲistʲ/
+    translation: kinship
+    pos: noun
+    gender: f

@@ -1,0 +1,94 @@
+module: ruska-pravda
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: право
+    ipa: /ˈprɑwɔ/
+    translation: law
+    pos: noun
+    gender: n
+  - lemma: закон
+    ipa: /zɑˈkɔn/
+    translation: statute
+    pos: noun
+    gender: m
+  - lemma: віра
+    ipa: /ˈwʲirɑ/
+    translation: wergild
+    pos: noun
+    gender: f
+  - lemma: кровна помста
+    ipa: /ˈkrɔwnɑ ˈpɔmstɑ/
+    translation: blood feud
+    pos: phrase
+    gender: f
+  - lemma: смерд
+    ipa: /smɛrd/
+    translation: smerd (peasant)
+    pos: noun
+    gender: m
+  - lemma: холоп
+    ipa: /xɔˈlɔp/
+    translation: kholop (slave)
+    pos: noun
+    gender: m
+  - lemma: закуп
+    ipa: /ˈzɑkup/
+    translation: zakup (debt bondsman)
+    pos: noun
+    gender: m
+  - lemma: боярин
+    ipa: /bɔˈjɑrɪn/
+    translation: boyar
+    pos: noun
+    gender: m
+  - lemma: дружина
+    ipa: /druˈʒɪnɑ/
+    translation: druzhina
+    pos: noun
+    gender: f
+  - lemma: судочинство
+    ipa: /sudɔˈt͡ʃɪnstwɔ/
+    translation: judiciary
+    pos: noun
+    gender: n
+  - lemma: звід
+    ipa: /zwʲid/
+    translation: svod (legal procedure)
+    pos: noun
+    gender: m
+  - lemma: спадкування
+    ipa: /spɑdkuˈwɑnʲːɑ/
+    translation: inheritance
+    pos: noun
+    gender: n
+  - lemma: рядович
+    ipa: /rʲɑdɔˈwɪt͡ʃ/
+    translation: riadovych
+    pos: noun
+    gender: m
+  - lemma: челядь
+    ipa: /ˈt͡ʃɛlʲɑdʲ/
+    translation: household slaves
+    pos: noun
+    gender: f
+  - lemma: ордалія
+    ipa: /ɔrdɑˈlʲijɑ/
+    translation: ordeal
+    pos: noun
+    gender: f
+  - lemma: гоніння сліду
+    ipa: /hɔˈnʲinʲːɑ ˈsʲlʲidu/
+    translation: pursuit of trail
+    pos: phrase
+    gender: n
+  - lemma: присяга
+    ipa: /prɪˈsʲɑhɑ/
+    translation: oath
+    pos: noun
+    gender: f
+  - lemma: Просторова редакція
+    ipa: /prɔstɔˈrɔwɑ rɛˈdɑkt͡sʲijɑ/
+    translation: Expanded edition
+    pos: phrase
+    gender: f

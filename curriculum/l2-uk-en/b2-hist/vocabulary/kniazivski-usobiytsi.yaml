@@ -1,0 +1,84 @@
+module: kniazivski-usobiytsi
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: усобиця
+    ipa: /uˈsɔbɪt͡sʲɑ/
+    translation: internecine war
+    pos: noun
+    gender: f
+  - lemma: роздроблення
+    ipa: /rɔzˈdrɔblɛnʲːɑ/
+    translation: fragmentation
+    pos: noun
+    gender: n
+  - lemma: лествичне право
+    ipa: /lɛstwɪt͡ʃˈnɛ ˈprɑwɔ/
+    translation: rota system
+    pos: phrase
+    gender: n
+  - lemma: престолонаслідування
+    ipa: /prɛstɔlɔnɑsˈlʲiduwɑnʲːɑ/
+    translation: succession
+    pos: noun
+    gender: n
+  - lemma: отчина
+    ipa: /ˈɔtt͡ʃɪnɑ/
+    translation: patrimony
+    pos: noun
+    gender: f
+  - lemma: з'їзд
+    ipa: /zʲjizd/
+    translation: congress
+    pos: noun
+    gender: m
+  - lemma: боярин
+    ipa: /bɔˈjɑrɪn/
+    translation: boyar
+    pos: noun
+    gender: m
+  - lemma: князівство
+    ipa: /knʲɑˈzʲiwstwɔ/
+    translation: principality
+    pos: noun
+    gender: n
+  - lemma: половці
+    ipa: /ˈpɔlɔwt͡sʲi/
+    translation: Polovtsians
+    pos: noun
+    gender: pl
+  - lemma: єдність
+    ipa: /ˈjɛdnʲisʲtʲ/
+    translation: unity
+    pos: noun
+    gender: f
+  - lemma: центральна влада
+    ipa: /t͡sɛnˈtrɑlʲnɑ ˈwlɑdɑ/
+    translation: central authority
+    pos: phrase
+    gender: f
+  - lemma: місцева еліта
+    ipa: /mʲisˈt͡sɛwɑ ɛˈlʲitɑ/
+    translation: local elite
+    pos: phrase
+    gender: f
+  - lemma: засліплення
+    ipa: /zɑˈsʲlʲiplɛnʲːɑ/
+    translation: blinding
+    pos: noun
+    gender: n
+  - lemma: номінальний
+    ipa: /nɔmʲiˈnɑlʲnɪj/
+    translation: nominal
+    pos: adj
+    gender: m
+  - lemma: союз
+    ipa: /sɔˈjuz/
+    translation: alliance
+    pos: noun
+    gender: m
+  - lemma: культурний розквіт
+    ipa: /kulʲˈturnɪj rɔzˈkwʲit/
+    translation: cultural flourishing
+    pos: phrase
+    gender: m

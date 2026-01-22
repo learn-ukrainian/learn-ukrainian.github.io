@@ -1,0 +1,89 @@
+module: kultura-kyivskoi-rusi
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: писемність
+    ipa: /pɪˈsɛmnʲisʲtʲ/
+    translation: literacy
+    pos: noun
+    gender: f
+  - lemma: кирилиця
+    ipa: /kɪˈrɪlɪt͡sʲɑ/
+    translation: Cyrillic
+    pos: noun
+    gender: f
+  - lemma: літопис
+    ipa: /ˈlʲitɔpɪs/
+    translation: chronicle
+    pos: noun
+    gender: m
+  - lemma: житіє
+    ipa: /ʒɪˈtʲijɛ/
+    translation: hagiography
+    pos: noun
+    gender: n
+  - lemma: мозаїка
+    ipa: /mɔˈzɑjikɑ/
+    translation: mosaic
+    pos: noun
+    gender: f
+  - lemma: фреска
+    ipa: /ˈfrɛskɑ/
+    translation: fresco
+    pos: noun
+    gender: f
+  - lemma: іконопис
+    ipa: /ikɔˈnɔpɪs/
+    translation: icon painting
+    pos: noun
+    gender: m
+  - lemma: скань
+    ipa: /skɑnʲ/
+    translation: filigree
+    pos: noun
+    gender: f
+  - lemma: емаль
+    ipa: /ɛˈmɑlʲ/
+    translation: enamel
+    pos: noun
+    gender: f
+  - lemma: монастир
+    ipa: /mɔnɑsˈtɪr/
+    translation: monastery
+    pos: noun
+    gender: m
+  - lemma: скрипторій
+    ipa: /skrɪpˈtɔrʲij/
+    translation: scriptorium
+    pos: noun
+    gender: m
+  - lemma: билина
+    ipa: /ˈbɪlɪnɑ/
+    translation: bylina - epic poem
+    pos: noun
+    gender: f
+  - lemma: берестяна грамота
+    ipa: /bɛrɛsʲtʲɑˈnɑ ˈhrɑmɔtɑ/
+    translation: birch bark letter
+    pos: phrase
+    gender: f
+  - lemma: мініатюра
+    ipa: /mʲinʲiɑˈtʲurɑ/
+    translation: miniature
+    pos: noun
+    gender: f
+  - lemma: глаголиця
+    ipa: /ɦlɑˈhɔlɪt͡sʲɑ/
+    translation: Glagolitic
+    pos: noun
+    gender: f
+  - lemma: Боян
+    ipa: /bɔˈjɑn/
+    translation: Boyan
+    pos: noun
+    gender: m
+  - lemma: церковний спів
+    ipa: /t͡sɛrˈkɔwnɪj spʲiw/
+    translation: church chant
+    pos: phrase
+    gender: m

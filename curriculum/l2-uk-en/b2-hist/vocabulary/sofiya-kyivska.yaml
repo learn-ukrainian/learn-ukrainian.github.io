@@ -1,0 +1,89 @@
+module: sofiya-kyivska
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: собор
+    ipa: /sɔˈbɔr/
+    translation: cathedral
+    pos: noun
+    gender: m
+  - lemma: мозаїка
+    ipa: /mɔˈzɑjikɑ/
+    translation: mosaic
+    pos: noun
+    gender: f
+  - lemma: фреска
+    ipa: /ˈfrɛskɑ/
+    translation: fresco
+    pos: noun
+    gender: f
+  - lemma: Оранта
+    ipa: /ɔˈrɑntɑ/
+    translation: Oranta
+    pos: noun
+    gender: f
+  - lemma: купол
+    ipa: /ˈkupɔl/
+    translation: dome
+    pos: noun
+    gender: m
+  - lemma: неф
+    ipa: /nɛf/
+    translation: nave
+    pos: noun
+    gender: m
+  - lemma: візантійський
+    ipa: /wʲizɑnˈtʲijsʲkɪj/
+    translation: Byzantine
+    pos: adj
+    gender: m
+  - lemma: бароко
+    ipa: /bɑˈrɔkɔ/
+    translation: Baroque
+    pos: noun
+    gender: n
+  - lemma: графіті
+    ipa: /hrɑˈfʲitʲi/
+    translation: graffiti
+    pos: noun
+    gender: n
+  - lemma: митрополит
+    ipa: /mɪtrɔpɔˈlɪt/
+    translation: metropolitan
+    pos: noun
+    gender: m
+  - lemma: літописання
+    ipa: /lʲitɔpɪˈsɑnʲːɑ/
+    translation: chronicle writing
+    pos: noun
+    gender: n
+  - lemma: іконопис
+    ipa: /ikɔˈnɔpɪs/
+    translation: icon painting
+    pos: noun
+    gender: m
+  - lemma: хрестово-купольний
+    ipa: /xrɛstɔˈwɔ ˈkupɔlʲnɪj/
+    translation: cross-domed
+    pos: adj
+    gender: m
+  - lemma: Нерушима стіна
+    ipa: /nɛruˈʃɪmɑ sʲˈtʲinɑ/
+    translation: Unbreakable Wall
+    pos: phrase
+    gender: f
+  - lemma: смальта
+    ipa: /ˈsmɑlʲtɑ/
+    translation: smalto
+    pos: noun
+    gender: f
+  - lemma: заповідник
+    ipa: /zɑpɔˈwʲidnɪk/
+    translation: reserve/sanctuary
+    pos: noun
+    gender: m
+  - lemma: юрисдикція
+    ipa: /jurɪzˈdɪkt͡sʲijɑ/
+    translation: jurisdiction
+    pos: noun
+    gender: f

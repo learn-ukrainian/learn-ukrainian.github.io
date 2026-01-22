@@ -1,0 +1,89 @@
+module: yaroslav-wise
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: мудрий
+    ipa: /ˈmudrɪj/
+    translation: wise
+    pos: adj
+    gender: m
+  - lemma: золота доба
+    ipa: /zɔlɔˈtɑ dɔˈbɑ/
+    translation: golden age
+    pos: phrase
+    gender: f
+  - lemma: законодавство
+    ipa: /zɑkɔnɔˈdɑwstwɔ/
+    translation: legislation
+    pos: noun
+    gender: n
+  - lemma: Руська Правда
+    ipa: /ˈrusʲkɑ ˈprɑwdɑ/
+    translation: Rus' Justice
+    pos: phrase
+    gender: f
+  - lemma: віра
+    ipa: /ˈwʲirɑ/
+    translation: wergild/fine
+    pos: noun
+    gender: f
+  - lemma: Софія Київська
+    ipa: /sɔˈfʲijɑ kɪˈjiwsʲkɑ/
+    translation: St. Sophia Cathedral
+    pos: phrase
+    gender: f
+  - lemma: Золоті ворота
+    ipa: /zɔlɔˈtʲi wɔˈrɔtɑ/
+    translation: Golden Gate
+    pos: phrase
+    gender: pl
+  - lemma: дипломатія
+    ipa: /dɪplɔˈmɑtʲijɑ/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: династичний шлюб
+    ipa: /dɪnɑsˈtɪt͡ʃnɪj ʃlʲub/
+    translation: dynastic marriage
+    pos: phrase
+    gender: m
+  - lemma: митрополит
+    ipa: /mɪtrɔpɔˈlɪt/
+    translation: metropolitan
+    pos: noun
+    gender: m
+  - lemma: книжність
+    ipa: /ˈknɪʒnʲisʲtʲ/
+    translation: book learning
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: міжусобиця
+    ipa: /mʲiʒuˈsɔbɪt͡sʲɑ/
+    translation: internecine war
+    pos: noun
+    gender: f
+  - lemma: продаж
+    ipa: /ˈprɔdɑʒ/
+    translation: sale-fine
+    pos: noun
+    gender: m
+  - lemma: тесть
+    ipa: /tɛsʲtʲ/
+    translation: father-in-law
+    pos: noun
+    gender: m
+  - lemma: фортифікація
+    ipa: /fɔrtɪfʲiˈkɑt͡sʲijɑ/
+    translation: fortification
+    pos: noun
+    gender: f
+  - lemma: заповіт
+    ipa: /zɑpɔˈwʲit/
+    translation: testament
+    pos: noun
+    gender: m

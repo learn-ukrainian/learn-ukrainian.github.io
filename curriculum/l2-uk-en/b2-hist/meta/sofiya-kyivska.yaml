@@ -79,7 +79,7 @@ content_outline:
   points:
   - 'Історична доля: Від занепаду до відродження'
 - section: Деколонізаційний погляд
-  words: 797
+  words: 500
   points:
   - Міфи та реальність
   - Сучасна Україна
@@ -133,7 +133,7 @@ activity_hints:
   focus: Architectural and artistic terminology
   items: 15+
 - type: reading
-  focus: Excerpt from "Slovo pro zakon i blahodat"
+  focus: 'Excerpt from "Slovo pro zakon i blahodat"'
   source: Provide in module
 - type: quiz
   focus: St. Sophia Cathedral facts

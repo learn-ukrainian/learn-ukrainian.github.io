@@ -1,147 +1,116 @@
-module: b2-hist-07
+# Module Metadata: Хозарський каганат і слов'яни
+# Phase: B2-HIST.1 [Origins]
+# Module 07 of B2-HIST track
+
+module: khozary-i-sloviany
 id: b2-hist-07
-title: Хозарський каганат і слов'яни
-subtitle: Neighbors and Rivals
+title: "Хозарський каганат і слов'яни"
+subtitle: "The Khazar Khaganate and the Slavs"
 slug: khozary-i-sloviany
 version: '2.0'
-phase: HIST.1 Origins
+phase: B2-HIST.1 [Origins]
 focus: history
 pedagogy: seminar
+register: публіцистичний
 duration: 150
 transliteration: none
-tags:
-- history
-- khazars
-- slavic
-- medieval
-- tribute
-grammar:
-- Historical narrative register
-- Subordinate clauses of reason (оскільки, тому що)
-- Participles in historical descriptions
+
+# Learning Objectives
 objectives:
-- Learner understands the political structure of the Khazar Khaganate
-- Learner can explain the relationship between Khazars and Slavic tribes
-- Learner masters vocabulary related to nomadic states and tribute
-vocabulary_count: 28
+  - "Учень може пояснити систему двовладдя в Хозарському каганаті (каган і бек)"
+  - "Учень може проаналізувати причини прийняття іудаїзму хозарською елітою"
+  - "Учень може оцінити вплив Pax Khazarica на економічний розвиток слов'янських племен"
+  - "Учень може спростувати міф про «хозарське ярмо» як виключно негативне явище"
+
+# Grammar Focus
+grammar:
+  - "Складні речення з підрядними допустовими (хоч, незважаючи на)"
+  - "Безособові дієслівні форми на -но, -то у пасивному контексті"
+  - "Вживання термінології на позначення ієрархії та залежності"
+
+# Word Target and Content Structure
+word_target: 4000
+
+content_outline:
+  - section: "Вступ: Велетень на Сході"
+    words: 252
+    points:
+      - "Роль Хозарії як щита Європи"
+
+  - section: "Читання: Оповідь про каганат"
+    words: 1617
+    points:
+      - "Двовладдя, іудаїзм та Салтівська культура"
+
+  - section: "Первинні джерела"
+    words: 1186
+    points:
+      - "Аналіз Кембриджського документа, листа царя Йосипа та Ібн Фадлана"
+
+  - section: "Деколонізаційний погляд"
+    words: 327
+    points:
+      - "Спростування міфів про паразитарний характер каганату"
+
+  - section: "Підсумкове есе"
+    words: 424
+    points:
+      - "Аналітичне завдання про роль Хозарії в державотворенні Русі"
+
+  - section: "Підсумок"
+    words: 235
+    points:
+      - "Узагальнення історичного значення Хозарського каганату"
+
+  - section: "Потрібно більше практики?"
+    words: 229
+    points:
+      - "Ресурси для самостійного поглиблення знань"
+
+# Naturalness Score
 naturalness:
   score: 9
-  status: PASS
-module_type: history
-word_target: 4000
-immersion: 100% Ukrainian
-sources:
-- name: Хозарський каганат (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
-  type: reference
-  notes: Overview of Khazar Khaganate
-- name: Хозари (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хозари
-  type: reference
-  notes: Khazar people and culture
-- name: Повість минулих літ — про хозарську данину
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle account of Khazar tribute
-content_outline:
-- section: 'Вступ: Велетень на Сході'
-  words: 135
-  points: []
-- section: Читання
-  words: 1408
-  points:
-  - 'Політичний устрій: Двовладдя'
-  - Шлюбна дипломатія
-  - 'Релігійний феномен: Іудаїзм у степу'
-  - Хозарська переписка
-  - Міста і Юрти
-  - Військова машина
-  - Економічне процвітання
-  - Мова, що зникла
-  - Данницька залежність
-  - Торговий симбіоз
-  - Етнічна мозаїка
-  - Київ як хозарський форпост?
-  - 'Легенда про меч: Геополітичний прогноз'
-- section: Первинні джерела
-  words: 904
-  points:
-  - 'Документ 0: Кембриджський документ (Х ст.)'
-  - 'Документ 1: Лист царя Йосипа (Х ст.)'
-  - 'Документ 2: Ібн Фадлан про хозар (922 р.)'
-  - Культурний вплив на слов'ян
-  - Руський Каганат?
-  - Занепад Хозарії та піднесення Русі
-  - Кліматичний удар
-  - Падіння Гіганта
-  - Стратегічний вакуум
-- section: Деколонізаційний погляд
-  words: 66
-  points:
-  - Міфи та реальність
-- section: Есе
-  words: 0
-  points: []
-- section: Тема
-  words: 90
-  points: []
-- section: Критерії оцінювання
-  words: 0
-  points: []
-- section: Зразок відповіді
-  words: 203
-  points: []
-- section: Потрібно більше практики?
-  words: 170
-  points:
-  - 🔄 Інтеграція знань
-  - Реальне застосування
-  - 🌐 Онлайн-ресурси
+  status: "PASS"
+
+# Vocabulary Guidance
 vocabulary_hints:
   required:
-  - каганат (khaganate)
-  - каган (khagan)
-  - хозари (Khazars)
-  - данина (tribute)
-  - іудаїзм (Judaism)
-  - толерантність (tolerance)
-  - фортеця (fortress)
-  - похід (campaign)
-  - торгівля (trade)
-  - імперія (empire)
-  - степ (steppe)
-  - залежність (dependency)
-  recommended:
-  - Ітіль (Itil)
-  - Саркел (Sarkel)
-  - в'ятичі (Vyatichi)
-  - верхівка (elite)
-  - карбованець (coin)
-  - шовковий шлях (Silk Road)
+    - каганат (khaganate)
+    - двовладдя (diarchy)
+    - сюзерен (suzerain)
+    - васал (vassal)
+    - данина (tribute)
+    - протекторат (protectorate)
+    - толерантність (tolerance)
+    - іудаїзм (Judaism)
+    - кочівники (nomads)
+    - осілість (sedentarism)
+    - дирхем (dirham)
+    - транзитна торгівля (transit trade)
+    - форпост (outpost)
+    - асиміляція (assimilation)
+    - державотворення (state-building)
+
+# Activity Planning
 activity_hints:
-- type: reading
-  focus: Chronicle account of Khazar tribute to Slavs
-  source: Provide in module
-- type: map-activity
-  focus: Khazar Khaganate territory and Slavic lands
-  items: 2 maps — extent and trade routes
-- type: vocabulary
-  focus: Political and economic terminology
-  items: 15+
-- type: timeline
-  focus: Khazar-Slavic relations from 7th-10th century
-  items: 8+ events
-- type: quiz
-  focus: Khazar Khaganate facts
-  items: 12+
-- type: compare-contrast
-  focus: Khazar Khaganate vs early Rus
-  output: Comparison table
-- type: discussion
-  focus: Як хозарське панування вплинуло на формування Русі?
+  - type: reading
+    focus: "Аналіз хозарської переписки"
+  - type: critical-analysis
+    focus: "Сакральна влада кагана"
+  - type: essay-response
+    focus: "Хозарія як каталізатор Русі"
+
+# Sources
+sources:
+  - name: "Повість минулих літ"
+    url: "https://litopys.org.ua/pvl/pvl01.htm"
+    type: primary
+  - name: "Лист царя Йосипа"
+    url: "http://litopys.org.ua/khazar/kh02.htm"
+    type: primary
+
+# Module Connections
 prerequisites:
-- b2-hist-05 (Slavic tribes)
-- b2-hist-06 (Founding of Kyiv)
+  - "b2-hist-06: Заснування Києва"
 connects_to:
-- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
-- b2-hist-10 (Olha and Sviatoslav — defeat of Khazars)
+  - "b2-hist-08: Синтез: Від Трипілля до Києва"

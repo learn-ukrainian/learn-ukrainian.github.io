@@ -1,22 +1,56 @@
 # Audit Report: M15 — volodymyr-monomakh.md
 **Level:** B2 | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерело: Повчання дітям | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз: Моральний кодекс правителя | 1 | 1 | ✅ |
+| 3 | comparative-study | Князі-законодавці: Ярослав Мудрий vs Володимир Мономах | 1 | 1 | ✅ |
+| 4 | essay-response | Мономах — останній об’єднувач | 1 | 1 | ✅ |
+| 5 | quiz | Життя та реформи Мономаха | 8 | 8 | ✅ |
+| 6 | match-up | Ключові поняття епохи Мономаха | 12 | 8 | ✅ |
+| 7 | true-false | Міфи та істина про життя Мономаха | 10 | 8 | ✅ |
+| 8 | error-correction | Виправляємо історичні та граматичні помилки | 8 | 6 | ✅ |
+| 9 | unjumble | Відновлення історичних тез | 8 | 6 | ✅ |
+| 10 | translate | Переклад: Історичний контекст | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 3-10) ✅
+- Unique types: 10 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4084/4000
-- **Activities:** ✅ 6/3
+- **Words:** ✅ 4460/4000 (raw: 4823)
+- **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 10/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 116/20
+- **Vocab:** ✅ 22/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -28,31 +62,35 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| decolonization | 13 | 2 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 14 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 17 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 83 | Included in Core |
-| **Вступ** | ⚪️ | 227 | Skipped |
-| **Шлях до великого княжіння** | ⚪️ | 181 | Skipped |
-| **Внутрішня політика: Реформатор** | ⚪️ | 97 | Skipped |
-| **Зовнішня політика: "Тесть Європи-2"** | ⚪️ | 78 | Skipped |
-| **Читання** | ✅ | 113 | Included in Core |
-| **Первинні джерела** | ⚪️ | 198 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 179 | Skipped |
-| **Підсумок** | ✅ | 2514 | Included in Core |
-| **Есе** | ⚪️ | 0 | Skipped |
-| **Тема** | ⚪️ | 78 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 295 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 41 | Skipped |
+| **Intro/Narrative** | ✅ | 141 | Included in Core |
+| **Вступ** | ✅ | 78 | Included in Core |
+| **Читання: Момент істини в Києві** | ✅ | 322 | Included in Core |
+| **Хронологія: Шлях до великого княжіння** | ✅ | 658 | Included in Core |
+| **Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву** | ✅ | 194 | Included in Core |
+| **Аналіз: Любецький з'їзд 1097 року: Мистецтво компромісу** | ✅ | 139 | Included in Core |
+| **Внутрішня політика: Великий реформатор та Законодавець** | ⚪️ | 951 | Skipped |
+| **Культура: Культурний ренесанс епохи Мономаха** | ✅ | 208 | Included in Core |
+| **Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи** | ✅ | 233 | Included in Core |
+| **Розмова: Родина Мономаха: Династія великих справ та європейські зв'язки** | ✅ | 262 | Included in Core |
+| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 98 | Included in Core |
+| **Погляд: Військове мистецтво та Озброєння** | ✅ | 44 | Included in Core |
+| **Первинні джерела: Голоси вічності** | ✅ | 433 | Included in Core |
+| **Деколонізаційний погляд: Мономах — наш, а не їхній** | ✅ | 146 | Included in Core |
+| **Підсумкове есе** | ⚪️ | 59 | Skipped |
+| **Оцінювання есе** | ⚪️ | 416 | Skipped |
+| **Підсумок** | ✅ | 33 | Included in Core |
+| **Погляд: Потрібно більше практики?** | ✅ | 45 | Included in Core |

@@ -1267,7 +1267,15 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     # 3. Append new Vocabulary (appears last)
     if vocab_items:
         vocab_header = "Словник" if is_ukrainian_forced else "Vocabulary"
-        vocab_md = _vocab_items_to_markdown(vocab_items, vocab_header) if level.lower() != 'lit' else _lit_vocab_items_to_markdown(vocab_items, vocab_header)
+        
+        # Select vocabulary format based on headers policy
+        if is_ukrainian_forced:
+            # Tier 3/4: 5 columns (Ukrainian, IPA included) - B1 M06+, B2, C1, C2, Tracks
+            vocab_md = _b1_vocab_items_to_markdown(vocab_items, vocab_header)
+        else:
+            # Tier 1/2: 6 columns (English Scaffolding) - A1, A2, B1 M01-05
+            vocab_md = _vocab_items_to_markdown(vocab_items, vocab_header)
+            
         body = body.rstrip() + '\n\n' + vocab_md
 
     # 4. Process activities (Injected BEFORE Vocabulary)
@@ -1517,6 +1525,7 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
 # =============================================================================
 
 def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary") -> str:
+    """Tier 1/2 (A1/A2): 6 columns (Scaffolding)."""
     lines = [
         f"## {header_text}",
         "",
@@ -1534,6 +1543,29 @@ def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary")
         p_val = 'name' if raw_p == 'propn' else raw_p
         
         line = f"| {item.get('lemma')} | {item.get('ipa','')} | {item.get('translation','')} | {p_val} | {g_val} | {item.get('usage','')} |"
+        lines.append(line)
+        
+    return '\n'.join(lines)
+
+def _b1_vocab_items_to_markdown(items: list[dict], header_text: str = "Словник") -> str:
+    """Tier 3/4 (B1-C2): 5 columns (Ukrainian, IPA included)."""
+    lines = [
+        f"## {header_text}",
+        "",
+        "| Слово | Вимова | Переклад | ЧМ | Примітка |",
+        "| --- | --- | --- | --- | --- |"
+    ]
+    for item in items:
+        # Map POS to Ukrainian abbreviation
+        pos_map = {
+            'noun': 'ім', 'verb': 'дієсл', 'adj': 'прикм', 'adv': 'присл', 
+            'prep': 'прийм', 'conj': 'спол', 'pron': 'займ', 'phrase': 'фраза',
+            'propn': 'назва'
+        }
+        raw_p = item.get('pos', '')
+        p_val = pos_map.get(raw_p, raw_p)
+        
+        line = f"| **{item.get('lemma')}** | {item.get('ipa','')} | {item.get('translation','')} | {p_val} | {item.get('usage','')} |"
         lines.append(line)
         
     return '\n'.join(lines)
@@ -1710,23 +1742,6 @@ def main():
 # VOCABULARY HELPERS
 # =============================================================================
 
-def _lit_vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary") -> str:
-    lines = [
-        f"## {header_text}",
-        "",
-        "| Термін/Слово | Переклад | Примітки |",
-        "| --- | --- | --- |"
-    ]
-    for item in items:
-        # Use lemma, translation, notes (standardized fields)
-        lemma = item.get('lemma') or item.get('term', '')
-        translation = item.get('translation') or item.get('definition', '')
-        notes = item.get('notes') or item.get('comment', '')
-        
-        line = f"| **{lemma}** | {translation} | {notes} |"
-        lines.append(line)
-        
-    return '\n'.join(lines)
 
 if __name__ == '__main__':
     main()

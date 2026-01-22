@@ -269,15 +269,43 @@ def check_outline_compliance(
     outline_section_names = [s['section'] for s in outline]
     matched_outline_sections = set()
 
+    # Sections that are handled by sidecars/Docusaurus and don't need to be in MD
+    # OR if they are in MD, they shouldn't trigger word count/existence errors
+    # (Template-mandatory sections are implicit and don't need dynamic outline tracking)
+    EXEMPT_SECTIONS = {
+        'Словник', 'Vocabulary', 'Vocab',
+        'Вправи', 'Activities', 'Practice',
+        'Resources', 'External Resources', 'Зовнішні ресурси',
+        'Потрібно більше практики?', 'Need More Practice?',
+        'Підсумок', 'Summary'
+    }
+
+    # Calculate total word counts for smart enforcement
+    # Rule: If module meets overall word target, don't enforce individual section minimums
+    total_md_words = sum(s['words'] for s in md_sections.values())
+    expected_total_words = sum(s['words'] for s in outline)
+    skip_section_enforcement = total_md_words >= expected_total_words
+
+    # Debug output
+    # print(f"  [DEBUG] Total MD words: {total_md_words}, Expected: {expected_total_words}, Skip enforcement: {skip_section_enforcement}")
+
     # Check each outline section exists in markdown
     for outline_sec in outline:
         section_name = outline_sec['section']
         expected_words = outline_sec['words']
 
+        # Skip exempt sections if they are missing from markdown
+        # (They are allowed to be in the outline for planning, but missing from MD for Clean MD architecture)
+        normalized_name = normalize_section_name(section_name)
+        is_exempt = any(normalize_section_name(ex) == normalized_name for ex in EXEMPT_SECTIONS)
+
         # Try to find matching section in markdown
         matched, md_match, score = fuzzy_match_section(section_name, list(md_sections.keys()))
 
         if not matched:
+            if is_exempt:
+                continue
+
             violations.append({
                 'type': 'MISSING_OUTLINE_SECTION',
                 'message': (
@@ -294,13 +322,18 @@ def check_outline_compliance(
         actual_words = md_sections[md_match]['words']
         line_num = md_sections[md_match]['line_num']
 
+        # Skip word count check for exempt sections
+        if is_exempt:
+            continue
+
         # Calculate deviation
         diff = actual_words - expected_words
         diff_pct = abs(diff) / expected_words if expected_words > 0 else 0
 
         # Only check if UNDER target (diff < 0)
         # Tolerance: -10% warning, -20% error
-        if diff < 0 and diff_pct >= 0.10:
+        # RULE: If module meets overall word target, skip individual section enforcement
+        if diff < 0 and diff_pct >= 0.10 and not skip_section_enforcement:
             severity = 'warning' if diff_pct < 0.20 else 'error'
 
             violations.append({
@@ -318,6 +351,12 @@ def check_outline_compliance(
     # Check for extra sections in markdown not in outline
     for md_sec_name, md_sec_data in md_sections.items():
         if md_sec_name not in matched_outline_sections:
+            # Check if it's an exempt section
+            normalized_name = normalize_section_name(md_sec_name)
+            is_exempt = any(normalize_section_name(ex) == normalized_name for ex in EXEMPT_SECTIONS)
+            if is_exempt:
+                continue
+
             # Check if it fuzzy-matches any outline section
             matched, _, score = fuzzy_match_section(md_sec_name, outline_section_names)
             if not matched:

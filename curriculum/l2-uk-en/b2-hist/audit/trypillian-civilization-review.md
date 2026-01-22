@@ -3,8 +3,42 @@
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз первинного джерела: звіт Вікентія Хвойки | 4 | 1 | ✅ |
+| 2 | quiz | Перевірка розуміння: Трипільська цивілізація | 15 | 8 | ✅ |
+| 3 | fill-in | Заповніть пропуски: археологічна термінологія | 14 | 8 | ✅ |
+| 4 | match-up | Співставте терміни з визначеннями | 12 | 8 | ✅ |
+| 5 | true-false | Правда чи міф? | 10 | 8 | ✅ |
+| 6 | quiz | Хронологія та порівняння цивілізацій | 8 | 8 | ✅ |
+| 7 | quiz | Географія трипільських поселень | 8 | 8 | ✅ |
+| 8 | essay-response | Есе: Трипільці та сучасні українці | 1 | 1 | ✅ |
+| 9 | essay-response | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
+| 10 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 3-10) ✅
+- Unique types: 7 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 6442/4000
+- **Words:** ✅ 6403/4000 (raw: 6491)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/2 types
@@ -34,10 +68,10 @@
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 12 | 4 | 100% | 10% | 9.5% |
-| variety | 0.94 | - | 94% | 5% | 4.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -47,11 +81,11 @@
 | **Вступ** | ✅ | 491 | Included in Core |
 | **Читання** | ✅ | 493 | Included in Core |
 | **Історія відкриття** | ⚪️ | 509 | Skipped |
-| **Первинні джерела** | ✅ | 723 | Included in Core |
-| **Протоміста-гіганти: Майданецьке та Тальянки** | ⚪️ | 828 | Skipped |
+| **Первинні джерела** | ✅ | 347 | Included in Core |
+| **Протоміста-гіганти: Майданецьке та Тальянки** | ⚪️ | 1165 | Skipped |
 | **Господарство та економіка** | ⚪️ | 666 | Skipped |
 | **Ремесла та технології** | ⚪️ | 821 | Skipped |
 | **Духовний світ та суспільний устрій** | ⚪️ | 595 | Skipped |
 | **Деколонізаційний погляд** | ✅ | 401 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 397 | Skipped |
-| **Підсумок** | ✅ | 424 | Included in Core |
+| **Підсумок** | ✅ | 20 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 801 | Skipped |

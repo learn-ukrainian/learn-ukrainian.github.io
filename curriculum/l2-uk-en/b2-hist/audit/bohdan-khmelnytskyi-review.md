@@ -1,141 +1,56 @@
 # Audit Report: M52 — bohdan-khmelnytskyi.md
-**Level:** B2 | **Module:** M52 | **Phase:** HIST.6 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** B2 | **Module:** M52 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in bohdan-khmelnytskyi.yaml: Insufficient activities: 1 found, minimum 5 required for B2-HIST
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 52 has 16.2% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template.md'
-  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template.md'
-  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template.md'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md.md
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**🔄 REWRITE** (severity 100/100)
-
-- 11 violations (severe - consider revision)
-- Immersion 74% off target (major rebalancing needed)
-- Activity count below minimum
-- Activity density below minimum
-
 ## Gates
-- **Words:** ❌ 26/4000
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 0/5
+- **Words:** ✅ 6227/4000 (raw: 6529)
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 6/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-10)
-- **Immersion:** ❌ 16.2% LOW (target 90-100% (history))
-- **Richness:** ❌ 10% < 95% min (grammar) - REWRITE needed
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 10% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 0 | 24 | 0% | 20% | 0.0% |
-| engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.50 | - | 50% | 10% | 5.0% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 0 | 3 | 0% | 10% | 0.0% |
-| visual | 0 | 3 | 0% | 5% | 0.0% |
-| paragraph_var | 0.50 | - | 50% | 5% | 2.5% |
-| questions | 0 | 5 | 0% | 5% | 0.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **10.8%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **NO_EXAMPLES**
-  - FIX:
-    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
-- ❌ **ABSTRACT_ONLY**
-  - FIX:
-    Add 3+ real-world boxes. Use this exact format:
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-    > [Example sentence showing grammar in that context]
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 12 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 10 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 14 | Included in Core |
-| **Богдан Хмельницький: Постать** | ⚪️ | 0 | Skipped |
-| **Вступ** | ✅ | 2 | Included in Core |
-| **Основний зміст** | ⚪️ | 2 | Skipped |
-| **Історичне значення** | ⚪️ | 1 | Skipped |
-| **Ключові постаті** | ⚪️ | 2 | Skipped |
-| **Первинні джерела** | ✅ | 4 | Included in Core |
-| **Підсумок** | ✅ | 1 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ** | ✅ | 295 | Included in Core |
+| **Читання** | ✅ | 112 | Included in Core |
+| **Ранні роки та становлення (1595-1647)** | ⚪️ | 743 | Skipped |
+| **Конфлікт у Суботові та шлях до повстання** | ⚪️ | 766 | Skipped |
+| **Хмельницький як військовий стратег** | ⚪️ | 994 | Skipped |
+| **Творець держави: Дипломатія та адміністрування** | ⚪️ | 1615 | Skipped |
+| **Деколонізаційний погляд** | ✅ | 447 | Included in Core |
+| **Спадщина** | ⚪️ | 608 | Skipped |
+| **Первинні джерела** | ✅ | 331 | Included in Core |
+| **Підсумок** | ✅ | 316 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **Потрібно більше практики?** | ⚪️ | 29 | Skipped |

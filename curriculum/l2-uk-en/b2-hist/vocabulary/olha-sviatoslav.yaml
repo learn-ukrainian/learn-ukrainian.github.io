@@ -1,0 +1,89 @@
+module: olha-sviatoslav
+level: B2-HIST
+version: '2.0'
+items:
+  - lemma: княгиня
+    ipa: /knʲɑˈhɪnʲɑ/
+    translation: princess
+    pos: noun
+    gender: f
+  - lemma: помста
+    ipa: /ˈpɔmstɑ/
+    translation: revenge
+    pos: noun
+    gender: f
+  - lemma: реформа
+    ipa: /rɛˈfɔrmɑ/
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: хрещення
+    ipa: /xrɛˈʃt͡ʃɛnʲːɑ/
+    translation: baptism
+    pos: noun
+    gender: n
+  - lemma: погост
+    ipa: /pɔˈhɔst/
+    translation: pogost (tax station)
+    pos: noun
+    gender: m
+  - lemma: урок
+    ipa: /uˈrɔk/
+    translation: urok (fixed tribute)
+    pos: noun
+    gender: m
+  - lemma: данина
+    ipa: /dɑˈnɪnɑ/
+    translation: tribute
+    pos: noun
+    gender: f
+  - lemma: каганат
+    ipa: /kɑhɑˈnɑt/
+    translation: khaganate
+    pos: noun
+    gender: m
+  - lemma: завоювання
+    ipa: /zɑwɔjuˈwɑnʲːɑ/
+    translation: conquest
+    pos: noun
+    gender: n
+  - lemma: воїн
+    ipa: /ˈwɔjin/
+    translation: warrior
+    pos: noun
+    gender: m
+  - lemma: похід
+    ipa: /pɔˈxid/
+    translation: campaign
+    pos: noun
+    gender: m
+  - lemma: печеніги
+    ipa: /pɛt͡ʃɛˈnʲihɪ/
+    translation: Pechenegs
+    pos: noun
+    gender: pl
+  - lemma: рівноапостольна
+    ipa: /riwnɔɑˈpɔstɔlʲnɑ/
+    translation: equal-to-apostles
+    pos: adj
+    gender: f
+  - lemma: Доростол
+    ipa: /dɔrɔˈstɔl/
+    translation: Dorostolon
+    pos: noun
+    gender: m
+  - lemma: Балкани
+    ipa: /bɑlˈkɑnɪ/
+    translation: Balkans
+    pos: noun
+    gender: pl
+  - lemma: чаша
+    ipa: /ˈt͡ʃɑʃɑ/
+    translation: cup/chalice
+    pos: noun
+    gender: f
+  - lemma: дипломатія
+    ipa: /dɪplɔˈmɑtʲijɑ/
+    translation: diplomacy
+    pos: noun
+    gender: f

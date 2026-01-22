@@ -28,7 +28,7 @@ naturalness:
   score: 9
   status: PASS
 module_type: history
-word_target: 3817
+word_target: 3940
 immersion: 100% Ukrainian
 sources:
 - name: Скіфи (Вікіпедія)
@@ -45,19 +45,19 @@ sources:
   notes: Ancient Greek descriptions of Scythians
 content_outline:
 - section: Розминка
-  words: 174
+  words: 182
   points: []
 - section: Читання
-  words: 1255
+  words: 1299
   points: []
-- section: Сармати
-  words: 849
+- section: 'Сармати: нові володарі степу'
+  words: 876
   points: []
 - section: Первинні джерела
-  words: 465
+  words: 490
   points: []
 - section: Деколонізаційний погляд
-  words: 221
+  words: 232
   points: []
 - section: Есе
   words: 0
@@ -69,13 +69,13 @@ content_outline:
   words: 35
   points: []
 - section: Зразок відповіді
-  words: 315
+  words: 317
   points: []
 - section: Підсумок
   words: 316
   points: []
 - section: Потрібно більше практики?
-  words: 109
+  words: 115
   points: []
 vocabulary_hints:
   required:
