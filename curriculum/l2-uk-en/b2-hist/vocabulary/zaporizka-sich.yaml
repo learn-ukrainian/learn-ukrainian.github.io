@@ -1,0 +1,184 @@
+module: zaporizka-sich
+level: B2
+version: '2.0'
+items:
+  - lemma: січ
+    ipa: /sʲit͡ʃ/
+    translation: fortress / sich
+    pos: noun
+    gender: f
+  - lemma: козак
+    ipa: /koˈzak/
+    translation: cossack
+    pos: noun
+    gender: m
+  - lemma: республіка
+    ipa: /rɛˈspublʲika/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: пороги
+    ipa: /poˈrɔɦɪ/
+    translation: rapids
+    pos: noun
+    gender: m
+  - lemma: острів
+    ipa: /ˈɔstr⁽ʲ⁾iu̯/
+    translation: island
+    pos: noun
+    gender: m
+  - lemma: фортеця
+    ipa: /forˈtɛt͡sʲa/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: воля
+    ipa: /ˈwɔlʲa/
+    translation: freedom / will
+    pos: noun
+    gender: f
+  - lemma: рівність
+    ipa: /ˈrʲiu̯nʲisʲtʲ/
+    translation: equality
+    pos: noun
+    gender: f
+  - lemma: демократія
+    ipa: /dɛmoˈkrat⁽ʲ⁾ija/
+    translation: democracy
+    pos: noun
+    gender: f
+  - lemma: самоврядування
+    ipa: /samowrʲaduˈwanʲːa/
+    translation: self-government
+    pos: noun
+    gender: n
+  - lemma: побратимство
+    ipa: /pobraˈtɪmstwo/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: клейноди
+    ipa: /klɛjˈnɔdɪ/
+    translation: regalia
+    pos: noun
+    gender: m
+  - lemma: булава
+    ipa: /buˈlawa/
+    translation: mace
+    pos: noun
+    gender: f
+  - lemma: бунчук
+    ipa: /bunˈt͡ʃuk/
+    translation: horsetail standard
+    pos: noun
+    gender: m
+  - lemma: хоругва
+    ipa: /xoˈruɦwa/
+    translation: banner
+    pos: noun
+    gender: f
+  - lemma: литаври
+    ipa: /lɪˈtawrɪ/
+    translation: kettledrums
+    pos: noun
+    gender: f
+  - lemma: кіш
+    ipa: /kiʃ/
+    translation: kosh / settlement
+    pos: noun
+    gender: m
+  - lemma: курінь
+    ipa: /kuˈrʲinʲ/
+    translation: kurin / barracks
+    pos: noun
+    gender: m
+  - lemma: отаман
+    ipa: /otaˈman/
+    translation: ataman / leader
+    pos: noun
+    gender: m
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲman/
+    translation: hetman / leader
+    pos: noun
+    gender: m
+  - lemma: рада
+    ipa: /ˈrada/
+    translation: council
+    pos: noun
+    gender: f
+  - lemma: звичаєве право
+    ipa: /zwɪt͡ʃaˈjɛwɛ ˈprawo/
+    translation: customary law
+    pos: noun
+    gender: n
+  - lemma: чайка
+    ipa: /ˈt͡ʃajka/
+    translation: chaika / boat
+    pos: noun
+    gender: f
+  - lemma: піхота
+    ipa: /pʲiˈxɔta/
+    translation: infantry
+    pos: noun
+    gender: f
+  - lemma: артилерія
+    ipa: /artɪˈlɛrʲija/
+    translation: artillery
+    pos: noun
+    gender: f
+  - lemma: виборність
+    ipa: /ˈwɪbornʲisʲtʲ/
+    translation: electability
+    pos: noun
+    gender: f
+  - lemma: підзвітність
+    ipa: /pʲidˈzwʲitʲnʲisʲtʲ/
+    translation: accountability
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲisʲtʲ/
+    translation: agency / subjectivity
+    pos: noun
+    gender: f
+  - lemma: міф
+    ipa: /mʲif/
+    translation: myth
+    pos: noun
+    gender: m
+  - lemma: реальність
+    ipa: /reˈalʲnʲisʲtʲ/
+    translation: reality
+    pos: noun
+    gender: f
+  - lemma: деколонізація
+    ipa: /dɛkolonʲiˈzat͡sʲija/
+    translation: decolonization
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪna/
+    translation: heritage
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /krʲiˈpat͡stwo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: шляхта
+    ipa: /ʃlʲaxta/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: універсал
+    ipa: /unʲiwɛrˈsal/
+    translation: universal / decree
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /lɛɦʲiˈtɪmnʲisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f

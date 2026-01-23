@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, fill-in, group-sort, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -20,25 +20,26 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | reading | Уривок з Руської Правди | 3 | 1 | ✅ |
-| 2 | critical-analysis | Юридична термінологія | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз статті про побиття | 1 | 1 | ✅ |
 | 3 | quiz | Соціальна структура та право | 8 | 8 | ✅ |
 | 4 | true-false | Правда чи хибність | 10 | 8 | ✅ |
 | 5 | group-sort | Соціальні групи Київської Русі | 15 | 1 | ✅ |
 | 6 | comparative-study | Правда Ярослава vs Правда Ярославичів | 1 | 1 | ✅ |
 | 7 | essay-response | Еволюція справедливості | 1 | 1 | ✅ |
+| 8 | fill-in | Юридична термінологія | 18 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-10) ✅
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (comparative-study, essay-response, fill-in, group-sort, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ⚠️ 3902/4000 (raw: 4070) (98 short)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
@@ -46,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

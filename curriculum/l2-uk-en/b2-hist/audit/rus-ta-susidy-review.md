@@ -1,6 +1,7 @@
 # Audit Report: M19 — rus-ta-susidy.md
 **Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ❌ FAIL
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## Configuration
 **Type:** B2-history
@@ -9,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -28,36 +29,33 @@
 | 8 | true-false | Факти про Русь: Правда чи Міф? | 10 | 8 | ✅ |
 | 9 | match-up | Хронологія дипломатії | 12 | 8 | ✅ |
 | 10 | comparative-study | Порівняння: Дипломатія Русі та Візантії | 1 | 1 | ✅ |
+| 11 | fill-in | Дипломатична та політична термінологія | 15 | 8 | ✅ |
+| 12 | quiz | Географія сусідів Русі | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
+- Total activities: 12 (target: 3-10) ❌
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
-
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
 - **Words:** ✅ 4569/4000 (raw: 4616)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 12/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-10)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

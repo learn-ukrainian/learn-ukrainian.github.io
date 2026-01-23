@@ -1,0 +1,129 @@
+module: petro-sahaidachnyi
+level: B2
+version: '2.0'
+items:
+  - lemma: меценат
+    ipa: /met͡sɛˈnat/
+    translation: patron / benefactor
+    pos: noun
+    gender: m
+  - lemma: Сагайдачний
+    ipa: /sahaˈjdat͡ʃnɪj/
+    translation: Sahaidachnyi (surname)
+    pos: proper noun
+    gender: m
+  - lemma: козацтво
+    ipa: /koˈzat͡stwo/
+    translation: cossacks (collectively)
+    pos: noun
+    gender: n
+  - lemma: реєстр
+    ipa: /reˈjɛstr/
+    translation: register
+    pos: noun
+    gender: m
+  - lemma: дисципліна
+    ipa: /dɪst͡sɪˈplʲina/
+    translation: discipline
+    pos: noun
+    gender: f
+  - lemma: реформа
+    ipa: /rɛˈfɔrma/
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: Хотин
+    ipa: /xoˈtɪn/
+    translation: Khotyn (city)
+    pos: proper noun
+    gender: m
+  - lemma: битва
+    ipa: /ˈbɪtwa/
+    translation: battle
+    pos: noun
+    gender: f
+  - lemma: ієрархія
+    ipa: /ijeˈrarx⁽ʲ⁾ija/
+    translation: hierarchy
+    pos: noun
+    gender: f
+  - lemma: братство
+    ipa: /ˈbratstwo/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: колегіум
+    ipa: /koˈlɛɦ⁽ʲ⁾ium/
+    translation: collegium / school
+    pos: noun
+    gender: m
+  - lemma: флот
+    ipa: /flɔt/
+    translation: fleet
+    pos: noun
+    gender: m
+  - lemma: чайка
+    ipa: /ˈt͡ʃajka/
+    translation: chaika / boat
+    pos: noun
+    gender: f
+  - lemma: лицар
+    ipa: /ˈlɪt͡sar/
+    translation: knight
+    pos: noun
+    gender: m
+  - lemma: звитяга
+    ipa: /zwɪˈtʲaɦa/
+    translation: victory / valor
+    pos: noun
+    gender: f
+  - lemma: меценатство
+    ipa: /met͡sɛˈnatstwo/
+    translation: patronage
+    pos: noun
+    gender: n
+  - lemma: просвітництво
+    ipa: /prosw⁽ʲ⁾itˈnɪt͡stwo/
+    translation: enlightenment
+    pos: noun
+    gender: n
+  - lemma: ієрарх
+    ipa: /ijeˈrarx/
+    translation: hierarch / church leader
+    pos: noun
+    gender: m
+  - lemma: патріарх
+    ipa: /patr⁽ʲ⁾iˈarx/
+    translation: patriarch
+    pos: noun
+    gender: m
+  - lemma: епопея
+    ipa: /epoˈpɛja/
+    translation: epic / saga
+    pos: noun
+    gender: f
+  - lemma: тактика
+    ipa: /ˈtaktɪka/
+    translation: tactics
+    pos: noun
+    gender: f
+  - lemma: стратегія
+    ipa: /straˈtɛɦ⁽ʲ⁾ija/
+    translation: strategy
+    pos: noun
+    gender: f
+  - lemma: дипломатія
+    ipa: /dɪploˈmat⁽ʲ⁾ija/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲisʲtʲ/
+    translation: agency / subjectivity
+    pos: noun
+    gender: f
+  - lemma: пантеон
+    ipa: /panˈtɛon/
+    translation: pantheon
+    pos: noun
+    gender: m

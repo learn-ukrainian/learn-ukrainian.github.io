@@ -1,11 +1,84 @@
-# Meta for Козацькі повстання XVI століття
-slug: kozatski-povstannia-16
+module: kozatski-povstannia-16
+id: b2-hist-44
 title: "Козацькі повстання XVI століття"
-level: B2
-track: history
+subtitle: "The First Great Clashes for Rights and Freedoms"
+slug: kozatski-povstannia-16
+version: '2.0'
 phase: "HIST.5 [Rise of Cossacks]"
-status: skeleton
 focus: history
-word_target: 4000
-prerequisites: []
-learning_outcomes: []
+pedagogy: CBI
+word_target: 4800
+register: публіцистичний
+duration: 120
+transliteration: none
+tags:
+  - history
+  - cossack
+  - uprising
+  - kosynskyi
+  - nalyvaiko
+grammar:
+  - "Historical narrative: complex sentences with causal links"
+  - "Conditionals in historical analysis (якби... то...)"
+objectives:
+  - "Learner can identify the causes and consequences of the Kosynskyi and Nalyvaiko uprisings"
+  - "Learner can analyze the social and religious motivations behind the first cossack wars"
+  - "Learner can understand the significance of these uprisings for the formation of national identity"
+vocabulary_count: 25
+naturalness:
+  score: 9
+  status: PASS
+content_outline:
+  - section: "Вступ"
+    words: 442
+    points:
+      - "The accumulation of social tension in the late 16th century"
+      - "The conflict between 'registrove' and 'neregistrove' cossackdom"
+  - section: "Повстання Криштофа Косинського (1591–1593)"
+    words: 942
+    points:
+      - "Causes: Private conflict vs. social grievance"
+      - "Course of events: Battle of Piatka"
+      - "Consequences and the role of the Ostrozkyi princes"
+  - section: "Повстання Северина Наливайка (1594–1596)"
+    words: 930
+    points:
+      - "Scale and geography: From Podillia to Belarus"
+      - "The union of registered and non-registered cossacks"
+      - "The tragic finale at Solonytsia"
+      - "Political program of Nalyvaiko"
+  - section: "Читання"
+    words: 437
+    points:
+      - "Analysis of the 'Seim Constitutions' regarding cossacks"
+      - "Accounts of Stanislav Zholkevskyi"
+  - section: "Соціальний та Релігійний Вимір боротьби"
+    words: 548
+    points:
+      - "The struggle for rights and 'volnosti'"
+      - "The religious factor: Defense of Orthodoxy"
+  - section: "Первинні джерела та свідчення очевидців"
+    words: 436
+    points:
+      - "Excerpts from the accounts of contemporaries (Bielski, Heidenstein)"
+      - "Letter of Nalyvaiko to the King"
+  - section: "Деколонізаційний погляд на історію повстань"
+    words: 436
+    points:
+      - "Reconceptualizing 'rebellion' as 'liberation war'"
+      - "The myth of 'peasant riots' vs. professional military struggle"
+  - section: "Есе: Теми для роздумів та аналізу"
+    words: 654
+    points:
+      - "Evaluating the impact of 16th-century uprisings on the later Khmelnytskyi era"
+activity_hints:
+  - type: reading
+    focus: "Contemporary accounts of the Solonytsia massacre"
+  - type: quiz
+    focus: "Chronology and key figures of the Kosynskyi and Nalyvaiko uprisings"
+  - type: essay-response
+    focus: "The evolution of cossack demands from private grievances to national rights"
+  - type: comparative-study
+    focus: "Kosynskyi vs Nalyvaiko: Leadership styles and goals"
+  - type: critical-analysis
+    focus: "Analyzing the reasons for the failure of early uprisings"

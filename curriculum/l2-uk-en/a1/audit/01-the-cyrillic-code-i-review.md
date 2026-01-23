@@ -1,17 +1,47 @@
-# Audit Report: 01-the-cyrillic-code-i.md
-**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
+# Audit Report: M01 — 01-the-cyrillic-code-i.md
+**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
 
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 300 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | True Friends | 12 | 8 | ✅ |
+| 2 | match-up | False Friends Sound | 12 | 8 | ✅ |
+| 3 | group-sort | Letter Types | 18 | 12 | ✅ |
+| 4 | quiz | Reading Words | 12 | 8 | ✅ |
+| 5 | true-false | Letter Recognition | 12 | 8 | ✅ |
+| 6 | fill-in | Complete the Word | 12 | 8 | ✅ |
+| 7 | anagram | Build the Word | 12 | 8 | ✅ |
+| 8 | anagram | International Words | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 958/300
+- **Words:** ✅ 958/300 (raw: 1327)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/1
+- **Vocab:** ✅ 38/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,12 +49,6 @@
 - **Immersion:** 🇺🇦 7.1% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

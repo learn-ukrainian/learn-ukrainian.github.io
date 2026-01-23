@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -25,19 +25,23 @@
 | 4 | comparative-study | Олег vs Ігор | 1 | 1 | ✅ |
 | 5 | essay-response | Смерть Ігоря: Урок історії | 1 | 1 | ✅ |
 | 6 | comparative-study | Легенда про смерть Олега | 1 | 1 | ✅ |
+| 7 | match-up | Хронологія правління | 12 | 8 | ✅ |
+| 8 | fill-in | Військова та політична термінологія | 15 | 8 | ✅ |
+| 9 | quiz | Географія походів та експансії | 8 | 8 | ✅ |
+| 10 | quiz | Факти про перших правителів | 12 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-10) ✅
-- Unique types: 4 (minimum: 2) ✅
+- Total activities: 10 (target: 3-10) ✅
+- Unique types: 7 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (comparative-study, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4154/4000 (raw: 4388)
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
@@ -45,7 +49,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (10 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

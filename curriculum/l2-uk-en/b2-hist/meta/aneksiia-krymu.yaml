@@ -1,115 +1,92 @@
-module: b2-hist-128
-id: 128
-title: 'Анексія Криму: Початок війни'
-subtitle: 'The Annexation of Crimea: The War Begins'
+module: aneksiia-krymu
+id: b2-hist-128
+title: "Анексія Криму: Початок війни"
+subtitle: "Annexation of Crimea: The Beginning of War"
 slug: aneksiia-krymu
 version: '2.0'
-phase: B2.3e War for Existence
+phase: "B2-HIST.12 [Independence]"
 focus: history
 pedagogy: CBI
-word_target: 4000
+word_target: 4202
 duration: 120
 transliteration: none
 tags:
   - history
-  - war
   - crimea
-  - annexation
+  - 2014
   - hybrid-warfare
-  - propaganda
-
-objectives:
-  - Учень може описати хронологію анексії Криму в лютому-березні 2014 року
-  - Учень може пояснити концепцію «гібридної війни» та тактику «зелених чоловічків»
-  - Учень може проаналізувати спротив кримських татар та українських патріотів
-  - Учень може оцінити міжнародну реакцію, санкції та їх ефективність
-
 grammar:
-  - Military and political terminology
-  - Active vs Passive voice in news reporting
-  - Complex sentence structures for historical narrative
-
+  - "Historical narrative tenses"
+  - "Official vs. Informal register"
+objectives:
+  - "Учень може описати механізм анексії Криму та роль «зелених чоловічків»"
+  - "Учень може проаналізувати порушення Будапештського меморандуму"
+  - "Учень може спростувати основні міфи російської пропаганди про Крим"
 content_outline:
-  - section: Вступ
-    words: 350
+  - section: "Вступ"
+    words: 389
     points:
-      - Контекст лютого 2014 - перемога Євромайдану
-      - Момент максимальної вразливості України
-      - Поява «зелених чоловічків»
-  - section: 'Читання: Хроніка злочину'
-    words: 2400
+      - "Лютий 2014: контекст після Майдану"
+      - "Поява 'зелених чоловічків'"
+      - "Стратегічне значення півострова"
+  - section: "Читання: Хроніка злочину"
+    words: 2252
     points:
-      - Початок операції - медаль за повернення
-      - Захоплення адміністративних будівель
-      - Інформаційна агресія та міф про «Поїзд дружби»
-      - Спротив 26 лютого - День кримського спротиву
-      - Блокада українських частин та доля флоту
-      - Фейковий референдум 16 березня
-      - Мілітаризація та демографічні зміни
-  - section: Первинні джерела
-    words: 500
+      - "Початок операції: Медаль за повернення"
+      - "Інформаційна агресія: Міф про «Поїзд дружби»"
+      - "Спротив: 26 лютого"
+      - "Блокада, флот і вода"
+      - "Фейковий референдум: Театр абсурду"
+      - "Мілітаризація Криму та зміна демографічного ландшафту"
+      - "Міжнародна реакція та правові наслідки"
+  - section: "Первинні джерела"
+    words: 546
     points:
-      - Будапештський меморандум (порушення)
-      - Виступ Путіна 18 березня
-      - Свідчення очевидця-кримської татарки
-  - section: Деколонізаційний погляд
-    words: 500
+      - "Будапештський меморандум"
+      - "Виступ Путіна 18 березня 2014 року"
+      - "Свідчення очевидців"
+      - "Резолюція Генасамблеї ООН 68/262"
+  - section: "Деколонізаційний погляд"
+    words: 514
     points:
-      - Міфи про «російськість» Криму
-      - Реальна історія півострова
-      - Аналіз гібридної війни
-      - Ключові висновки модуля
-      - Крим залишається Україною
-  - section: Словник
-    words: 10
-    points:
-      - Основна лексика модуля
-  - section: Потрібно більше практики?
-    words: 100
-    points:
-      - Додаткова література та ресурси
-
+      - "Міфи та реальність: спростування 'споконвічно російського' Криму"
+      - "Імперські наративи та їх розвінчання"
 vocabulary_hints:
-  - анексія
-  - окупація
-  - гібридна війна
-  - зелені чоловічки
-  - референдум
-  - санкції
-  - Меджліс
-  - депортація
-  - блокада
-  - спецназ
-  - пропаганда
-  - ІПСО
-  - сепаратизм
-  - мілітаризація
-  - політв'язень
-
+  required:
+    - анексія (annexation)
+    - окупація (occupation)
+    - санкції (sanctions)
+    - референдум (referendum)
+    - меморандум (memorandum)
+    - суверенітет (sovereignty)
+    - територіальна цілісність (territorial integrity)
+    - гібридна війна (hybrid war)
+    - спротив (resistance)
+    - блокада (blockade)
+  recommended:
+    - півострів (peninsula)
+    - аеропорт (airport)
+    - парламент (parliament)
+    - громадяни (citizens)
+    - переселення (resettlement)
 activity_hints:
   - type: reading
-    focus: Primary source analysis - Budapest Memorandum
-  - type: quiz
-    focus: Factual recall of chronology and key terms
+    focus: "Резолюція ООН та Меморандум"
   - type: critical-analysis
-    focus: Analyze Russian propaganda tactics
+    focus: "Порівняння Анексії та Окупації"
   - type: essay-response
-    focus: Evaluate international response effectiveness
-
+    focus: "Наслідки порушення міжнародного права"
+  - type: quiz
+    focus: "Хронологія подій 2014 року"
 sources:
-  - name: Invasion of Crimea (Wikipedia)
-    url: https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation
-    type: reference
-    notes: Comprehensive overview with citations
-  - name: Budapest Memorandum (Wikipedia)
-    url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
-    type: reference
-    notes: Ukrainian Wikipedia on security guarantees
-  - name: КримSOS Human Rights Organization
-    url: https://krymsos.com/
+  - name: "Резолюція ГА ООН 68/262"
+    url: "https://undocs.org/ua/A/RES/68/262"
     type: primary
-    notes: Eyewitness testimonies and documentation
-
+    notes: "Офіційний міжнародний документ"
+  - name: "КримSOS"
+    url: "https://krymsos.com"
+    type: secondary
+    notes: "Свідчення очевидців та звіти про порушення прав людини"
 vocabulary_count: 25
 naturalness:
   score: 9

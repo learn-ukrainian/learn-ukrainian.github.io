@@ -1,0 +1,104 @@
+module: syntez-kozatstvo-vytoky
+level: B2
+version: '2.0'
+items:
+  - lemma: становлення
+    ipa: /stɐˈnɔu̯ɫenʲːɐ/
+    translation: formation / establishment
+    pos: noun
+    gender: n
+  - lemma: передумова
+    ipa: /peredʊˈmɔu̯ɐ/
+    translation: prerequisite / precondition
+    pos: noun
+    gender: f
+  - lemma: чинник
+    ipa: /ˈt͡ʃɪnːɪk/
+    translation: factor
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /identɪt͡ʃˈnisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /subjɛkˈtɪu̯nisʲtʲ/
+    translation: subjectivity / agency
+    pos: noun
+    gender: f
+  - lemma: феномен
+    ipa: /feˈnɔmɛn/
+    translation: phenomenon
+    pos: noun
+    gender: m
+  - lemma: консолідація
+    ipa: /konsoɫiˈdat͡sʲijɐ/
+    translation: consolidation
+    pos: noun
+    gender: f
+  - lemma: спадкоємність
+    ipa: /spɐdkoˈjɛmʲnisʲtʲ/
+    translation: continuity / succession
+    pos: noun
+    gender: f
+  - lemma: державність
+    ipa: /derˈʒɑu̯nisʲtʲ/
+    translation: statehood
+    pos: noun
+    gender: f
+  - lemma: вектор
+    ipa: /ˈu̯ɛktɔr/
+    translation: vector / direction
+    pos: noun
+    gender: m
+  - lemma: генеза
+    ipa: /ˈɦɛnezɐ/
+    translation: genesis
+    pos: noun
+    gender: f
+  - lemma: інтелектуалізація
+    ipa: /inteɫektʊɐɫiˈzat͡sʲijɐ/
+    translation: intellectualization
+    pos: noun
+    gender: f
+  - lemma: міфологізація
+    ipa: /mifoɫoɦiˈzat͡sʲijɐ/
+    translation: mythologization
+    pos: noun
+    gender: f
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: ідеологія
+    ipa: /ideoˈɫɔɦijɐ/
+    translation: ideology
+    pos: noun
+    gender: f
+  - lemma: меритокрітія
+    ipa: /merɪtoˈkrɑt͡sʲijɐ/
+    translation: meritocracy
+    pos: noun
+    gender: f
+  - lemma: емансипація
+    ipa: /emɐnt͡sɪˈpat͡sʲijɐ/
+    translation: emancipation
+    pos: noun
+    gender: f
+  - lemma: парадигма
+    ipa: /pɐrɐˈdɪɦmɐ/
+    translation: paradigm
+    pos: noun
+    gender: f
+  - lemma: рефлексія
+    ipa: /refˈɫɛk͡sʲijɐ/
+    translation: reflection
+    pos: noun
+    gender: f
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦɫisʲtʲ/
+    translation: continuity / endurance
+    pos: noun
+    gender: f

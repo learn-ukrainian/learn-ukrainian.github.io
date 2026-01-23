@@ -1,35 +1,51 @@
 # Audit Report: M39 — liudy-ricchi-pospolytoi.md
 **Level:** B2 | **Module:** M39 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння тексту' Q3 prompt length 7 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння тексту' Q8 prompt length 5 (target: 8-20)
-  - FIX: Adjust prompt length to 8-20 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in liudy-ricchi-pospolytoi.yaml: Schema validation error at key '3': {'type': 'comparative-study', 'title': 'Порівняльний аналіз: Суспільні стани', 'items_to_compare': ['Шляхта', 'Міщани', 'Селяни'], 'criteria': ['Політичні права', 'Економічні можливості', 'Судовий захист', 'Свобода пересування'], 'min_words': 150, 'model_answer': 'Порівняння трьох основних станів Речі Посполитої демонструє глибоку соціальну нерівність.\n\n**Політичні права:** Шляхта мала повні права — участь у сеймі, вибори короля. Міщани мали обмежене самоврядування. Селяни не мали жодних політичних прав.\n\n**Судовий захист:** Шляхтича не можна було арештувати без суду. Селян судив пан — тобто їхній гнобитель.\n\nВисновок: лише шляхта користувалася реальною свободою.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Читання: Литовський статут 1588 року | 3 | 1 | ✅ |
+| 2 | critical-analysis | Критичний аналіз: Литовський статут | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Суспільна нерівність у Речі Посполитій | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняльний аналіз: Суспільні стани | 1 | 1 | ✅ |
+| 5 | quiz | Перевірка розуміння тексту | 8 | 8 | ✅ |
 
-- 3 violations (minor)
+**Summary:**
+- Total activities: 5 (target: 3-10) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2535/4000
+- **Words:** ✅ 4000/4000 (raw: 4403)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/5
+- **Engagement:** ✅ 18/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -42,26 +58,26 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 19 | 6 | 100% | 14% | 14.3% |
+| engagement | 24 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 14 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 17 | 4 | 100% | 10% | 9.5% |
-| variety | 0.94 | - | 94% | 5% | 4.5% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.4% |
-| questions | 19 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.3%** |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 13 | 4 | 100% | 10% | 9.5% |
+| visual | 22 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.4% |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Вступ** | ⚪️ | 220 | Skipped |
-| **Шляхта і магнати** | ⚪️ | 536 | Skipped |
-| **Міщани і ремісники** | ⚪️ | 399 | Skipped |
-| **Селяни і кріпацтво** | ⚪️ | 486 | Skipped |
+| **Вступ** | ✅ | 374 | Included in Core |
+| **Шляхта і магнати** | ⚪️ | 740 | Skipped |
+| **Міщани і ремісники** | ⚪️ | 717 | Skipped |
+| **Селяни і кріпацтво** | ⚪️ | 962 | Skipped |
 | **Читання** | ✅ | 181 | Included in Core |
-| **Первинні джерела** | ⚪️ | 230 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 281 | Skipped |
-| **Підсумок** | ✅ | 110 | Included in Core |
+| **Первинні джерела** | ✅ | 252 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 509 | Included in Core |
+| **Підсумок** | ✅ | 173 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 35 | Skipped |

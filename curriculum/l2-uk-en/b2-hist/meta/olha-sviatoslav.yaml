@@ -1,4 +1,5 @@
 id: b2-hist-10
+module: b2-hist-10
 title: Ольга та Святослав
 slug: olha-sviatoslav
 version: '1.0'
@@ -108,22 +109,22 @@ activity_hints:
 - type: reading
   focus: Chronicle accounts of Olha's revenge
   source: Provide in module
-- type: map-activity
-  focus: Sviatoslav's campaigns — Khazaria and Balkans
-  items: Campaign routes
-- type: vocabulary
+- type: quiz
+  focus: Geography of Sviatoslav's campaigns
+  items: 8+
+- type: fill-in
   focus: Political and military terminology
   items: 15+
-- type: timeline
-  focus: Key events 945-972
+- type: match-up
+  focus: Key events 945-972 (Chronology)
   items: 12+ events
-- type: compare-contrast
+- type: comparative-study
   focus: Olha vs Sviatoslav — governance approaches
   output: Two-column comparison
 - type: quiz
   focus: Facts about Olha and Sviatoslav
   items: 12+
-- type: discussion
+- type: essay-response
   focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
 prerequisites:
 - b2-hist-09 (Oleh and Ihor)

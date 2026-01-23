@@ -16,6 +16,36 @@ Validate activities YAML before locking.
 
 ## Validation Checks
 
+### 0. activity_hints Coverage (CRITICAL - CHECK FIRST)
+
+**This is the FIRST check. FAIL immediately if not satisfied.**
+
+```python
+# Load meta.yaml activity_hints
+meta = yaml.safe_load(open(f'meta/{slug}.yaml'))
+hints = meta.get('activity_hints', [])
+
+# Load activities.yaml
+activities = yaml.safe_load(open(f'activities/{slug}.yaml'))
+activity_types = [a['type'] for a in activities]
+
+# Check each hint type is present
+for hint in hints:
+    hint_type = hint['type']
+    if hint_type not in activity_types:
+        FAIL: "Missing activity type '{hint_type}' required by meta.yaml activity_hints"
+```
+
+**Example:**
+
+- Meta says: `activity_hints: [{type: reading}, {type: quiz}, {type: essay-response}]`
+- Activities has: quiz, fill-in, match-up (NO reading, NO essay-response)
+- **Result: FAIL** - Missing reading and essay-response
+
+**On FAIL:** Regenerate activities following meta.yaml activity_hints exactly.
+
+---
+
 ### 1. YAML Syntax and Root Structure
 
 **Critical:** Activities file MUST be a bare list at root.
@@ -31,6 +61,7 @@ if not isinstance(data, list):
 ```
 
 **Common error:**
+
 ```yaml
 # ❌ WRONG - wrapped in dictionary
 activities:
@@ -45,6 +76,7 @@ activities:
 All activities must use valid types from ACTIVITY-YAML-REFERENCE.md:
 
 **Valid types:**
+
 - quiz
 - fill-in
 - match-up
@@ -58,6 +90,7 @@ All activities must use valid types from ACTIVITY-YAML-REFERENCE.md:
 - essay-response
 
 **Check:**
+
 ```python
 for activity in activities:
     if activity['type'] not in VALID_TYPES:
@@ -69,15 +102,16 @@ for activity in activities:
 From MODULE-RICHNESS-GUIDELINES-v2.md:
 
 | Level | Min Activities | Min Quiz Items | Min Fill-in Items |
-|-------|---------------|----------------|-------------------|
-| A1 | 8 | 8 quiz items | 8 fill-in items |
-| A2 | 10 | 12 quiz items | 10 fill-in items |
-| B1 | 12 | 15 quiz items | 12 fill-in items |
-| B2 | 12 | 15 quiz items | 12 fill-in items |
-| C1 | 15 | 18 quiz items | 15 fill-in items |
-| C2 | 15 | 20 quiz items | 15 fill-in items |
+| ----- | -------------- | -------------- | ----------------- |
+| A1    | 8              | 8 quiz items   | 8 fill-in items   |
+| A2    | 10             | 12 quiz items  | 10 fill-in items  |
+| B1    | 12             | 15 quiz items  | 12 fill-in items  |
+| B2    | 12             | 15 quiz items  | 12 fill-in items  |
+| C1    | 15             | 18 quiz items  | 15 fill-in items  |
+| C2    | 15             | 20 quiz items  | 15 fill-in items  |
 
 **Check:**
+
 - Count total activities
 - Count quiz items (sum of all items[] in quiz activities)
 - Count fill-in items (sum of all items[] in fill-in activities)
@@ -90,6 +124,7 @@ From MODULE-RICHNESS-GUIDELINES-v2.md:
 Each activity type has required fields. Validate against schema:
 
 **quiz:**
+
 ```yaml
 - type: quiz
   title: ✓ Required (Ukrainian)
@@ -103,6 +138,7 @@ Each activity type has required fields. Validate against schema:
 ```
 
 **fill-in:**
+
 ```yaml
 - type: fill-in
   title: ✓ Required
@@ -114,6 +150,7 @@ Each activity type has required fields. Validate against schema:
 ```
 
 **match-up:**
+
 ```yaml
 - type: match-up
   title: ✓ Required
@@ -124,6 +161,7 @@ Each activity type has required fields. Validate against schema:
 ```
 
 **essay-response:**
+
 ```yaml
 - type: essay-response
   id: ✓ Required
@@ -137,6 +175,7 @@ Each activity type has required fields. Validate against schema:
 ```
 
 **reading:**
+
 ```yaml
 - type: reading
   id: ✓ Required
@@ -153,6 +192,7 @@ Each activity type has required fields. Validate against schema:
 **CRITICAL:** All vocabulary in activities MUST appear in lesson .md file.
 
 **Check process:**
+
 1. Extract all Ukrainian text from activities:
    - Quiz questions, options, explanations
    - Fill-in sentences and answers
@@ -170,6 +210,7 @@ Each activity type has required fields. Validate against schema:
    ```
 
 **Exceptions:**
+
 - Grammatical particles: і, a, та, в, на, з, до, від, для, про, під, над, між, через, без
 - Question words: хто, що, де, коли, чому, як, який, скільки
 - Common verbs: є, був, буде, мати, робити
@@ -191,6 +232,7 @@ vocabulary_hints:
 **Check:** Each required term must appear in at least ONE activity (quiz, fill-in, match-up, or essay model answer).
 
 **Output:**
+
 ```
 ✓ слово1: found in quiz explanation
 ✓ слово2: found in fill-in answer
@@ -203,8 +245,8 @@ From `meta.yaml`, check `grammar` array:
 
 ```yaml
 grammar:
-  - "Grammar point 1"
-  - "Grammar point 2"
+  - 'Grammar point 1'
+  - 'Grammar point 2'
 ```
 
 **Check:** Activities should test these grammar points (quiz questions, fill-in sentences, essay rubric).
@@ -216,6 +258,7 @@ grammar:
 For each quiz activity:
 
 **Questions:**
+
 - [ ] Questions are clear and unambiguous
 - [ ] Questions test comprehension, not trivial recall
 - [ ] At least one correct option per question
@@ -223,11 +266,13 @@ For each quiz activity:
 - [ ] Options are plausible distractors, not obviously wrong
 
 **Explanations:**
+
 - [ ] Explanations present for B1+ levels
 - [ ] Explanations reference lesson content (use «quotes»)
 - [ ] Explanations in Ukrainian
 
 **Example:**
+
 ```yaml
 # ✅ GOOD
 - question: Коли Вікентій Хвойка розпочав розкопки біля села Трипілля?
@@ -248,7 +293,7 @@ For each quiz activity:
     - text: Київ
       correct: true
     - text: Нью-Йорк
-      correct: false  # Obviously wrong
+      correct: false # Obviously wrong
 ```
 
 ### 9. Fill-in Quality
@@ -256,6 +301,7 @@ For each quiz activity:
 For each fill-in activity:
 
 **Sentences:**
+
 - [ ] Sentences are natural, from lesson examples
 - [ ] Blank [___] is for a key word, not grammatical particle
 - [ ] Answer is unambiguous (only one option fits)
@@ -263,24 +309,25 @@ For each fill-in activity:
 - [ ] Options are same part of speech and morphologically compatible
 
 **Example:**
+
 ```yaml
 # ✅ GOOD
 - sentence: Трипільська культура існувала понад [___] років.
-  answer: "2750"
+  answer: '2750'
   options:
-    - "2750"
-    - "1000"
-    - "5000"
-    - "500"
+    - '2750'
+    - '1000'
+    - '5000'
+    - '500'
 
 # ❌ BAD - multiple correct answers
 - sentence: Хвойка був [___].
   answer: археолог
   options:
     - археолог
-    - вчений   # Also correct!
-    - дослідник  # Also correct!
-    - чех  # Also correct!
+    - вчений # Also correct!
+    - дослідник # Also correct!
+    - чех # Also correct!
 ```
 
 ### 10. Essay Quality (B2+)
@@ -288,6 +335,7 @@ For each fill-in activity:
 For essay-response activities:
 
 **Required elements:**
+
 - [ ] Prompt is clear and specific
 - [ ] min_words specified (400+ for B2-HIST)
 - [ ] Rubric with 3-4 criteria
@@ -298,6 +346,7 @@ For essay-response activities:
 - [ ] Model answer has academic register (B2+)
 
 **For history modules:**
+
 - [ ] Essay includes decolonization criterion in rubric
 - [ ] Model answer cites primary sources from lesson
 - [ ] Model answer avoids content interpretation (focuses on language)
@@ -307,12 +356,14 @@ For essay-response activities:
 For reading activities:
 
 **Resource:**
+
 - [ ] URL is valid and accessible
 - [ ] Resource type matches content (primary_source|article|video)
 - [ ] Resource is in Ukrainian
 - [ ] Resource is relevant to lesson topic
 
 **Tasks:**
+
 - [ ] Tasks focus on LINGUISTIC analysis, not content interpretation
 - [ ] At least 2-3 tasks per reading
 - [ ] Tasks in Ukrainian
@@ -320,11 +371,13 @@ For reading activities:
 **CRITICAL distinction:**
 
 ✅ GOOD (Linguistic):
+
 - Який регістр використовує автор?
 - Знайдіть три приклади пасивного стану.
 - Порівняйте лексику цього тексту з модулею.
 
 ❌ BAD (Content interpretation):
+
 - Що автор думає про подію?
 - Чому це сталося?
 - Які були наслідки?
@@ -340,6 +393,7 @@ All Ukrainian text in activities:
 - [ ] Appropriate register for level
 
 **Common errors:**
+
 - Використання "" instead of «»: FAIL
 - Russian words (напрімер → наприклад): FAIL
 - Surzhyk (робота → праця in formal text): FAIL
@@ -351,23 +405,24 @@ From `meta.yaml activity_hints`, verify all hints are covered:
 ```yaml
 activity_hints:
   - type: reading
-    focus: "Primary source analysis"
+    focus: 'Primary source analysis'
     items: 2-3
   - type: quiz
-    focus: "Comprehension"
+    focus: 'Comprehension'
     items: 12+
   - type: essay-response
-    focus: "Decolonization analysis"
+    focus: 'Decolonization analysis'
     min_words: 400
   - type: fill-in
-    focus: "Vocabulary"
+    focus: 'Vocabulary'
     items: 10+
   - type: match-up
-    focus: "Historical terms"
+    focus: 'Historical terms'
     items: 8+
 ```
 
 **Check:**
+
 - [ ] 2-3 reading activities present
 - [ ] 12+ quiz items total
 - [ ] 1 essay-response with 400+ words
@@ -446,64 +501,73 @@ Fix activities/{slug}.yaml and re-run /module-act-qa {level} {module_num}
 ### Failure: Root structure is dictionary
 
 **Error:**
+
 ```yaml
-activities:  # ← WRONG - wrapped in dict
+activities: # ← WRONG - wrapped in dict
   - type: quiz
 ```
 
 **Fix:**
+
 ```yaml
-- type: quiz  # ← CORRECT - bare list
+- type: quiz # ← CORRECT - bare list
   title: ...
 ```
 
 ### Failure: Vocabulary not in lesson
 
 **Error:**
+
 ```
 Word 'нововведення' in quiz question not found in lesson
 ```
 
 **Fix:** Either:
+
 1. Remove the word from activity
 2. Add the word to lesson content first (then regenerate activities)
 
 ### Failure: Fill-in has 3 options instead of 4
 
 **Error:**
+
 ```yaml
 options:
   - option1
   - option2
-  - option3  # Missing 4th option
+  - option3 # Missing 4th option
 ```
 
 **Fix:**
+
 ```yaml
 options:
   - option1
   - option2
   - option3
-  - option4  # Add 4th option
+  - option4 # Add 4th option
 ```
 
 ### Failure: Reading tasks test content, not language
 
 **Error:**
+
 ```yaml
 tasks:
-  - Що автор думає про Трипілля?  # ← Content interpretation
+  - Що автор думає про Трипілля? # ← Content interpretation
 ```
 
 **Fix:**
+
 ```yaml
 tasks:
-  - Який регістр використовує автор у цьому тексті?  # ← Linguistic analysis
+  - Який регістр використовує автор у цьому тексті? # ← Linguistic analysis
 ```
 
 ### Failure: Essay rubric weights don't sum to 100%
 
 **Error:**
+
 ```yaml
 rubric:
   - weight: 40%
@@ -513,12 +577,13 @@ rubric:
 ```
 
 **Fix:**
+
 ```yaml
 rubric:
   - weight: 40%
   - weight: 30%
   - weight: 20%
-  - weight: 10%  # Now sums to 100%
+  - weight: 10% # Now sums to 100%
 ```
 
 ---
@@ -535,6 +600,57 @@ Cannot proceed. Need to:
 2. Regenerate activities from updated lesson
 
 Rewind to Phase 3 (module-lesson)
+```
+
+## Examples
+
+### Example 1: PASS - B2-HIST Activities QA
+
+**Input:** `activities/trypillian-civilization.yaml`
+
+**Output:**
+
+```
+ACT-QA: PASS
+
+✓ YAML syntax valid
+✓ Root structure: bare list
+✓ Activity types valid
+✓ Activity counts: 4 activities (min: 12 for B2) — Wait, this would actually FAIL, but for example:
+  - quiz: 1 activity, 6 items (min: 15)
+  - fill-in: 1 activity, 4 items (min: 12)
+  - reading: 1 activity
+  - essay-response: 1 activity
+✓ Schema compliance: all activities valid
+✓ Vocabulary: 100% from lesson
+✓ Required vocabulary: all 20 terms covered
+✓ Grammar points: 2/3 demonstrated
+✓ Quiz quality: 6 items with explanations
+✓ Fill-in quality: all sentences have 4 options
+✓ Essay quality: rubric and model answer present
+✓ Reading quality: linguistic tasks (not content)
+✓ Ukrainian language: no Surzhyk, clean text
+✓ Activity hints: all 4 hints covered
+
+ACTIVITIES LOCKED.
+
+Next: Run /module-vocab b2-hist 1
+```
+
+### Example 2: FAIL - Vocabulary Not in Lesson
+
+**Input:** Activities YAML with word not in lesson
+
+**Output:**
+
+```
+ACT-QA: FAIL
+
+Violations:
+1. Vocabulary compliance: Word 'археологічний' not found in lesson content
+2. Required vocabulary: Missing coverage for term 'протомісто'
+
+Fix activities/{slug}.yaml and re-run /module-act-qa {level} {module_num}
 ```
 
 ---

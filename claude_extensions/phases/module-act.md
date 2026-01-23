@@ -20,9 +20,42 @@ Generate activities YAML from locked meta.yaml and lesson content.
 ## Critical Rules
 
 > [!IMPORTANT]
+>
+> ### FOLLOW activity_hints FROM META (MANDATORY)
+>
+> **You MUST generate activities that match `activity_hints` in meta.yaml.**
+>
+> ```yaml
+> # If meta.yaml has:
+> activity_hints:
+>   - type: reading
+>     focus: 'Primary source analysis'
+>   - type: quiz
+>     focus: 'Comprehension'
+>   - type: essay-response
+>     focus: 'Analysis'
+> ```
+>
+> **Then activities.yaml MUST have:**
+>
+> - ✅ A `reading` activity
+> - ✅ A `quiz` activity
+> - ✅ An `essay-response` activity
+>
+> **DO NOT:**
+>
+> - ❌ Skip activity types listed in meta
+> - ❌ Add many extra types not in meta
+> - ❌ Generate 12 activities when meta suggests 4
+>
+> **The audit will FAIL if activity_hints are not covered.**
+
+> [!IMPORTANT]
+>
 > ### Activity-Only Scope
 >
 > Generate ONLY activities YAML. DO NOT:
+>
 > - ❌ Add vocabulary tables → Phase 7
 > - ❌ Add reading passages → already in lesson .md
 > - ❌ Add essays with model answers → use essay-response activity type
@@ -56,6 +89,7 @@ Generate activities YAML from locked meta.yaml and lesson content.
 > ### Content-Based Activities
 >
 > All activities MUST test content from the lesson .md file:
+>
 > - Use examples, facts, and vocabulary from lesson
 > - Test comprehension of main narrative
 > - Reinforce grammar points demonstrated in lesson
@@ -68,16 +102,19 @@ Generate activities YAML from locked meta.yaml and lesson content.
 ### Step 1: Load Inputs
 
 1. Read meta.yaml:
+
    ```bash
    curriculum/l2-uk-en/{level}/meta/{slug}.yaml
    ```
 
 2. Read lesson content:
+
    ```bash
    curriculum/l2-uk-en/{level}/{slug}.md
    ```
 
 3. Read activity reference:
+
    ```bash
    docs/ACTIVITY-YAML-REFERENCE.md
    ```
@@ -94,17 +131,18 @@ From `meta.yaml`, read `activity_hints` array:
 ```yaml
 activity_hints:
   - type: reading
-    focus: "What to test"
+    focus: 'What to test'
     items: 2-3
   - type: quiz
-    focus: "What to test"
+    focus: 'What to test'
     items: 12+
   - type: essay-response
-    focus: "Essay topic"
+    focus: 'Essay topic'
     min_words: 200
 ```
 
 Each hint specifies:
+
 - `type`: Activity type (quiz, fill-in, etc.)
 - `focus`: What to test (comprehension, vocabulary, grammar)
 - `items`: Number of items or minimum word count
@@ -116,23 +154,24 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 
 #### Activity Type Mapping
 
-| meta.yaml type | YAML type | Schema fields |
-|----------------|-----------|---------------|
-| reading | reading | resource, tasks |
-| quiz | quiz | items[].question, options, explanation |
-| essay-response | essay-response | prompt, min_words, rubric, model_answer |
-| critical-analysis | essay-response | (same, with analytical prompt) |
-| fill-in | fill-in | items[].sentence, answer, options |
-| match-up | match-up | pairs[].ukrainian, english |
-| true-false | true-false | items[].statement, correct, explanation |
-| vocabulary | fill-in or match-up | (test vocabulary from lesson) |
-| timeline | select or quiz | (chronological events) |
-| map-activity | select or quiz | (geographical locations) |
-| image-analysis | essay-response | (describe/interpret images) |
+| meta.yaml type    | YAML type           | Schema fields                           |
+| ----------------- | ------------------- | --------------------------------------- |
+| reading           | reading             | resource, tasks                         |
+| quiz              | quiz                | items[].question, options, explanation  |
+| essay-response    | essay-response      | prompt, min_words, rubric, model_answer |
+| critical-analysis | essay-response      | (same, with analytical prompt)          |
+| fill-in           | fill-in             | items[].sentence, answer, options       |
+| match-up          | match-up            | pairs[].ukrainian, english              |
+| true-false        | true-false          | items[].statement, correct, explanation |
+| vocabulary        | fill-in or match-up | (test vocabulary from lesson)           |
+| timeline          | select or quiz      | (chronological events)                  |
+| map-activity      | select or quiz      | (geographical locations)                |
+| image-analysis    | essay-response      | (describe/interpret images)             |
 
 #### Common Activity Types by Pedagogy
 
 **Seminar (B2-HIST, C1-BIO, C1-HIST, LIT):**
+
 - reading (2-3): External texts with linguistic analysis
 - quiz (12+): Comprehension questions
 - essay-response (1-2): 400+ word analytical essays
@@ -141,6 +180,7 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 - true-false (8-10): Fact checking
 
 **TTT (A2-B1 grammar):**
+
 - diagnostic (1): Reveals learning gap
 - quiz (10-15): Grammar knowledge
 - fill-in (10-15): Grammar in context
@@ -148,6 +188,7 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 - unjumble (8-12): Sentence structure
 
 **PPP (A1-A2 basic):**
+
 - quiz (8-12): Vocabulary and basic grammar
 - fill-in (8-12): Pattern practice
 - match-up (2-3): Vocabulary pairs
@@ -158,11 +199,13 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 For each activity, extract content from lesson .md:
 
 **Quiz questions:**
+
 - Use facts from main narrative sections
 - Test key historical events, figures, concepts
 - Include explanations referencing lesson text
 
 Example:
+
 ```yaml
 - question: Коли Вікентій Хвойка розпочав розкопки біля села Трипілля?
   options:
@@ -178,27 +221,31 @@ Example:
 ```
 
 **Fill-in sentences:**
+
 - Use example sentences from lesson (marked with _Приклад:_)
 - Test vocabulary from vocabulary_hints (required terms)
 - Test collocations and grammar patterns
 
 Example:
+
 ```yaml
 - sentence: Трипільська культура існувала понад [___] років.
-  answer: "2750"
+  answer: '2750'
   options:
-    - "2750"
-    - "1000"
-    - "5000"
-    - "500"
+    - '2750'
+    - '1000'
+    - '5000'
+    - '500'
 ```
 
 **Match-up pairs:**
+
 - Use vocabulary definitions from lesson
 - Match Ukrainian terms to explanations
 - Historical figures to their roles
 
 Example:
+
 ```yaml
 pairs:
   - ukrainian: енеоліт
@@ -208,11 +255,13 @@ pairs:
 ```
 
 **True-false statements:**
+
 - Use key facts from lesson
 - Include common misconceptions
 - Reference decolonization content
 
 Example:
+
 ```yaml
 - statement: Трипільські поселення були знищені ворожими нападами.
   correct: false
@@ -240,11 +289,13 @@ For `reading` type activities, follow this structure:
 **CRITICAL for history modules:** Tasks must analyze LANGUAGE, not content interpretation:
 
 ✅ GOOD (Linguistic):
+
 - Який регістр використовує автор? Наведіть приклади.
 - Знайдіть три приклади пасивного стану.
 - Порівняйте лексику цього тексту з лексикою модуля.
 
 ❌ BAD (Content interpretation):
+
 - Що автор думає про подію? ← Tests interpretation
 - Чому це сталося? ← Tests historical knowledge
 
@@ -325,14 +376,14 @@ For `essay-response` or `critical-analysis` types:
 
 Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 
-| Level | Total Activities | Quiz Items | Fill-in Items | Other |
-|-------|-----------------|------------|---------------|-------|
-| A1 | 8-12 | 8+ quiz items | 8+ fill-in | 2-4 other |
-| A2 | 10-15 | 12+ quiz items | 10+ fill-in | 3-5 other |
-| B1 | 12-18 | 15+ quiz items | 12+ fill-in | 4-6 other |
-| B2 | 12-20 | 15+ quiz items | 12+ fill-in | 5-8 other |
-| C1 | 15-22 | 18+ quiz items | 15+ fill-in | 6-10 other |
-| C2 | 15-25 | 20+ quiz items | 15+ fill-in | 6-12 other |
+| Level | Total Activities | Quiz Items     | Fill-in Items | Other      |
+| ----- | ---------------- | -------------- | ------------- | ---------- |
+| A1    | 8-12             | 8+ quiz items  | 8+ fill-in    | 2-4 other  |
+| A2    | 10-15            | 12+ quiz items | 10+ fill-in   | 3-5 other  |
+| B1    | 12-18            | 15+ quiz items | 12+ fill-in   | 4-6 other  |
+| B2    | 12-20            | 15+ quiz items | 12+ fill-in   | 5-8 other  |
+| C1    | 15-22            | 18+ quiz items | 15+ fill-in   | 6-10 other |
+| C2    | 15-25            | 20+ quiz items | 15+ fill-in   | 6-12 other |
 
 **For history/biography/literature tracks:** Focus on reading, essay-response, and comprehension over drills.
 
@@ -343,6 +394,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 ### A1-A2 Modules
 
 **Activity focus:**
+
 - Vocabulary recognition and recall
 - Basic grammar patterns
 - Simple comprehension
@@ -350,12 +402,14 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 - Fill-in for sentence completion
 
 **Immersion in activities:**
+
 - A1: Instructions can be in English
 - A2: Gradually shift to Ukrainian instructions
 
 ### B1+ Modules
 
 **Activity focus:**
+
 - Grammar in context
 - Synonyms and nuances
 - Complex sentence structures
@@ -367,6 +421,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 ### B2-HIST / C1-BIO / C1-HIST / LIT Tracks
 
 **Activity focus:**
+
 - Deep comprehension of historical/biographical narrative
 - Linguistic analysis of primary sources
 - Vocabulary in academic register
@@ -374,6 +429,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 - Less gamified drills, more seminar-style tasks
 
 **Required:**
+
 - 2-3 reading activities with linguistic analysis
 - 1-2 essay-response activities (400+ words)
 - Quiz focused on comprehension, not fact recall
@@ -494,6 +550,121 @@ Activity breakdown:
 ✓ Root structure: bare list
 
 Next: Run /module-act-qa {level} {module_num}
+```
+
+## Examples
+
+### Example 1: B2-HIST Activities Generation
+
+**Input:** Locked `trypillian-civilization.md` and `meta/trypillian-civilization.yaml`
+
+**Output:** `activities/trypillian-civilization.yaml`
+
+```yaml
+- type: quiz
+  title: Трипільська культура — основні факти
+  instruction: Виберіть правильну відповідь.
+  items:
+    - question: Коли існувала Трипільська культура?
+      options:
+        - text: 5500—2750 рр. до н.е.
+          correct: true
+        - text: 1000—500 рр. до н.е.
+          correct: false
+      explanation: «Трипільська культура охоплює період від 5500 до 2750 року до нашої ери».
+
+- type: fill-in
+  title: Заповніть пропуски
+  instruction: Виберіть правильне слово.
+  items:
+    - sentence: Трипільці будували [___] поселення.
+      answer: протоміста
+      options:
+        - протоміста
+        - міста
+        - села
+        - фортеці
+
+- type: reading
+  id: b2-hist-1-reading-01
+  title: Аналіз первинного джерела
+  resource:
+    type: primary_source
+    url: https://resource.history.org.ua/tryptillia
+    title: Розкопки Вікентія Хвойки
+  tasks:
+    - Проаналізуйте лексику тексту — які слова вказують на професійний археологічний контекст?
+    - Знайдіть приклади пасивного стану в описі знахідок.
+    - Порівняйте термінологію цього джерела з термінологією модуля.
+
+- type: essay-response
+  id: b2-hist-1-essay-01
+  title: Есе
+  prompt: Напишіть есе (400+ слів) на тему «Чому Трипільська культура важлива для сучасної української ідентичності?»
+  min_words: 400
+  requirements:
+    - Використайте лексику та факти модуля
+    - Посилання на деколонізаційний погляд
+  rubric:
+    - criterion: Мовна якість
+      weight: 40%
+      description: Граматична правильність, багатство лексики, складність речень (B2 рівень)
+    - criterion: Використання матеріалу
+      weight: 30%
+      description: Цитування фактів модуля, лексика модуля
+    - criterion: Структура
+      weight: 20%
+      description: Логічна організація, дискурсивні маркери
+    - criterion: Деколонізаційна перспектива
+      weight: 10%
+      description: Критичний погляд на імперські міфи
+  model_answer: |
+    Трипільська культура — це не просто археологічна знахідка, а символ української тяглості... [400+ word essay]
+
+    **Мовні особливості:**
+    - Використання пасивного стану для опису археологічних процесів
+    - Термінологія: протомісто, енеоліт, чорнозем
+    - Дискурсивні маркери: також, проте, нарешті
+```
+
+**Activity breakdown:**
+
+- quiz: 1 activity (6 items)
+- fill-in: 1 activity (4 items)
+- reading: 1 activity
+- essay-response: 1 activity
+- Total activities: 4 (min: 12 for B2) — This would actually FAIL QA, but shows the structure.
+
+### Example 2: A1 Activities Generation
+
+**Input:** Basic A1 lesson with vocabulary and grammar
+
+**Output:** Simple activities YAML
+
+```yaml
+- type: quiz
+  title: Базові букви
+  instruction: Виберіть правильну букву.
+  items:
+    - question: Яка буква для звуку /a/?
+      options:
+        - text: Б
+          correct: false
+        - text: А
+          correct: true
+      explanation: «Буква А позначає звук /a/».
+
+- type: fill-in
+  title: Заповніть слова
+  instruction: Виберіть правильну букву.
+  items:
+    - sentence: [___]ама
+      answer: М
+      options:
+        - М
+        - Б
+        - В
+        - Г
 ```
 
 ---

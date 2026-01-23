@@ -4,6 +4,10 @@
 
 set -e
 
+# Ensure ~/.local/bin is in PATH (where claude installs by default)
+export PATH="$HOME/.local/bin:$PATH"
+hash -r 2>/dev/null || true  # Clear command cache
+
 # Get script directory (project root)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -109,6 +113,25 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Start Claude
+# Try to update Claude
+echo "Checking for Claude updates..."
+claude install 2>/dev/null || true
+
+# Refresh command cache after potential update
+hash -r 2>/dev/null || true
+
+# Start Claude (use command -v to get actual path, avoiding stale cache)
 echo "Launching Claude Code in dontAsk mode..."
-claude --permission-mode bypassPermissions "$@"
+CLAUDE_BIN="$(command -v claude)"
+if [ -z "$CLAUDE_BIN" ]; then
+    # Fallback to common install locations
+    if [ -x "$HOME/.local/bin/claude" ]; then
+        CLAUDE_BIN="$HOME/.local/bin/claude"
+    elif [ -x "/opt/homebrew/bin/claude" ]; then
+        CLAUDE_BIN="/opt/homebrew/bin/claude"
+    else
+        echo "Error: Cannot find claude binary after update"
+        exit 1
+    fi
+fi
+"$CLAUDE_BIN" --permission-mode bypassPermissions "$@"

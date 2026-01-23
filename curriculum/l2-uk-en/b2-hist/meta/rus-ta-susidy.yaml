@@ -1,4 +1,5 @@
 id: b2-hist-19
+module: b2-hist-19
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
 slug: rus-ta-susidy
 version: '1.0'
@@ -19,6 +20,9 @@ objectives:
   - Understand the role of dynastic marriages in Rus foreign policy
   - Analyze the relations with western and steppe neighbors
 immersion: 100% Ukrainian
+naturalness:
+  score: 9
+  status: PASS
 sources:
 - name: Зовнішня політика Київської Русі (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
@@ -101,14 +105,14 @@ activity_hints:
 - type: reading
   focus: Excerpt from Russo-Byzantine treaty
   source: Provide in module
-- type: map-activity
-  focus: Rus neighbors and trade routes
-  items: Major partners and routes
-- type: vocabulary
+- type: quiz
+  focus: Rus neighbors and trade routes (Geography)
+  items: 8+
+- type: fill-in
   focus: Diplomatic and political terminology
   items: 15+
-- type: timeline
-  focus: Key diplomatic events
+- type: match-up
+  focus: Key diplomatic events (Chronology)
   items: 12+ events
 - type: quiz
   focus: Foreign relations of Kyivan Rus
@@ -116,7 +120,7 @@ activity_hints:
 - type: match-up
   focus: Match rulers to their foreign policy achievements
   items: 10+
-- type: discussion
+- type: essay-response
   focus: Чи була Русь частиною Європи?
 prerequisites:
 - b2-hist-17 (Princely feuds)

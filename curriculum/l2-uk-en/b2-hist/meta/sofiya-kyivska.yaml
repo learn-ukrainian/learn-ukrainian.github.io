@@ -1,4 +1,5 @@
 id: b2-hist-14
+module: b2-hist-14
 title: Софія Київська та культурний розквіт
 slug: sofiya-kyivska
 version: '1.0'
@@ -126,10 +127,10 @@ vocabulary_hints:
   - заповідник (reserve/sanctuary)
   - юрисдикція (jurisdiction)
 activity_hints:
-- type: image-analysis
-  focus: Analyze St. Sophia mosaics and frescoes
+- type: critical-analysis
+  focus: Analyze St. Sophia mosaics and frescoes (Visual analysis)
   items: 8-10 images
-- type: vocabulary
+- type: fill-in
   focus: Architectural and artistic terminology
   items: 15+
 - type: reading
@@ -138,13 +139,13 @@ activity_hints:
 - type: quiz
   focus: St. Sophia Cathedral facts
   items: 12+
-- type: compare-contrast
+- type: comparative-study
   focus: Original 11th century vs modern appearance
   output: Visual comparison
-- type: virtual-tour
-  focus: Explore St. Sophia digitally
-  items: Key locations within cathedral
-- type: discussion
+- type: quiz
+  focus: Cathedral Topography (Virtual Tour)
+  items: 8+ locations
+- type: essay-response
   focus: Чому Софія Київська є символом України?
 prerequisites:
 - b2-hist-12 (Yaroslav the Wise)

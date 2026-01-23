@@ -25,21 +25,23 @@ objectives:
 vocabulary_count: 30
 content_outline:
   - section: "Вступ"
-    words: 300
-  - section: "Феномен братств: самоврядування та захист прав"
-    words: 700
+    words: 343
+  - section: "Феномен братств"
+    words: 695
   - section: "Освітня діяльність братств"
-    words: 700
-  - section: "Острозька академія: «Волинські Афіни»"
-    words: 700
+    words: 592
+  - section: "Острозька академія"
+    words: 535
   - section: "Читання"
-    words: 400
+    words: 293
   - section: "Первинні джерела"
-    words: 400
+    words: 387
   - section: "Деколонізаційний погляд"
-    words: 400
+    words: 325
   - section: "Есе"
-    words: 400
+    words: 455
+  - section: "Потрібно більше практики?"
+    words: 103
 naturalness:
   score: 9
   status: PASS

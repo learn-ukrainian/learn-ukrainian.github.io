@@ -1,17 +1,49 @@
 # Audit Report: M36 — bratstva-i-osvita.md
 **Level:** B2 | **Module:** M36 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Статут Львівського братства | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз демократичних засад | 1 | 1 | ✅ |
+| 3 | comparative-study | Братська школа vs Сучасна школа | 1 | 1 | ✅ |
+| 4 | essay-response | Освіта як зброя | 1 | 1 | ✅ |
+| 5 | quiz | Історія братств та освіти | 8 | 8 | ✅ |
+| 6 | match-up | Терміни та визначення | 12 | 8 | ✅ |
+| 7 | fill-in | Освіта і культура | 10 | 8 | ✅ |
+| 8 | error-correction | Виправлення історичних фактів | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4064/4000
+- **Words:** ✅ 4064/4000 (raw: 4311)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/20
+- **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,13 +76,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Братства та освіта: Острозька академія** | ⚪️ | 101 | Skipped |
-| **Вступ** | ⚪️ | 349 | Skipped |
+| **Вступ** | ✅ | 349 | Included in Core |
 | **Феномен братств: самоврядування та захист прав** | ⚪️ | 699 | Skipped |
 | **Освітня діяльність братств** | ⚪️ | 603 | Skipped |
 | **Острозька академія: «Волинські Афіни»** | ⚪️ | 536 | Skipped |
 | **Читання** | ✅ | 293 | Included in Core |
-| **Первинні джерела** | ⚪️ | 402 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 328 | Skipped |
+| **Первинні джерела** | ✅ | 402 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 328 | Included in Core |
 | **Есе** | ⚪️ | 434 | Skipped |
 | **Підсумок** | ✅ | 218 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 101 | Skipped |

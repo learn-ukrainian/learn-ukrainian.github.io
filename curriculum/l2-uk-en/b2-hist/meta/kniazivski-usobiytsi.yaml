@@ -1,4 +1,5 @@
 id: b2-hist-17
+module: b2-hist-17
 title: Княжі усобиці та роздроблення
 slug: kniazivski-usobiytsi
 version: '1.0'
@@ -99,22 +100,22 @@ activity_hints:
 - type: reading
   focus: Chronicle account of Liubech Congress
   source: Provide in module
-- type: map-activity
-  focus: Major principalities after fragmentation
+- type: quiz
+  focus: Major principalities after fragmentation (Geography)
   items: 8+ principalities
-- type: vocabulary
+- type: fill-in
   focus: Political and military terminology
   items: 15+
-- type: timeline
-  focus: Key events of fragmentation 1054-1240
+- type: match-up
+  focus: Key events of fragmentation 1054-1240 (Chronology)
   items: 12+ events
 - type: quiz
   focus: Causes and consequences of fragmentation
   items: 12+
-- type: compare-contrast
+- type: comparative-study
   focus: Unified Rus vs fragmented Rus
   output: Two-column analysis
-- type: discussion
+- type: essay-response
   focus: Чи було роздроблення неминучим?
 prerequisites:
 - b2-hist-12 (Yaroslav the Wise)

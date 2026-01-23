@@ -1,0 +1,129 @@
+module: dmytro-vyshnevetskyi
+level: B2
+version: '2.0'
+items:
+  - lemma: кошовий
+    ipa: /koʃoˈwɪj/
+    translation: kosh otaman / leader
+    pos: noun
+    gender: m
+  - lemma: Байда
+    ipa: /ˈbajda/
+    translation: folk name of Vyshnevetskyi
+    pos: proper noun
+    gender: m
+  - lemma: фортеця
+    ipa: /forˈtɛt͡sʲa/
+    translation: fortress
+    pos: noun
+    gender: f
+  - lemma: курінь
+    ipa: /kuˈrʲinʲ/
+    translation: kurin / barracks
+    pos: noun
+    gender: m
+  - lemma: клейноди
+    ipa: /klɛjˈnɔdɪ/
+    translation: regalia
+    pos: noun
+    gender: m
+  - lemma: булава
+    ipa: /buˈlawa/
+    translation: mace
+    pos: noun
+    gender: f
+  - lemma: ясир
+    ipa: /jaˈsɪr/
+    translation: prisoners / captives
+    pos: noun
+    gender: m
+  - lemma: пороги
+    ipa: /poˈrɔɦɪ/
+    translation: rapids
+    pos: noun
+    gender: m
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲman/
+    translation: hetman / leader
+    pos: noun
+    gender: m
+  - lemma: чайка
+    ipa: /ˈt͡ʃajka/
+    translation: chaika / boat
+    pos: noun
+    gender: f
+  - lemma: фронтир
+    ipa: /fronˈtɪr/
+    translation: frontier
+    pos: noun
+    gender: m
+  - lemma: лицарство
+    ipa: /ˈlɪt͡sarstwo/
+    translation: knighthood / chivalry
+    pos: noun
+    gender: n
+  - lemma: універсал
+    ipa: /un⁽ʲ⁾iwɛrˈsal/
+    translation: universal / decree
+    pos: noun
+    gender: m
+  - lemma: мучеництво
+    ipa: /ˈmut͡ʃɛnɪt͡stwo/
+    translation: martyrdom
+    pos: noun
+    gender: n
+  - lemma: коаліція
+    ipa: /koal⁽ʲ⁾iˈt͡s⁽ʲ⁾ija/
+    translation: coalition
+    pos: noun
+    gender: f
+  - lemma: староста
+    ipa: /staˈrɔsta/
+    translation: starost / local official
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ʃlʲaxta/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: ватага
+    ipa: /waˈtaɦa/
+    translation: band / group
+    pos: noun
+    gender: f
+  - lemma: дитинець
+    ipa: /dɪˈtɪnɛt͡sʲ/
+    translation: citadel
+    pos: noun
+    gender: m
+  - lemma: гак
+    ipa: /ɦak/
+    translation: hook
+    pos: noun
+    gender: m
+  - lemma: зрада
+    ipa: /ˈzrada/
+    translation: treason / betrayal
+    pos: noun
+    gender: f
+  - lemma: союз
+    ipa: /soˈjuz/
+    translation: alliance / union
+    pos: noun
+    gender: m
+  - lemma: пам'ять
+    ipa: /ˈpamjatʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: традиція
+    ipa: /traˈdɪt͡s⁽ʲ⁾ija/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: звитяга
+    ipa: /zwɪˈtʲaɦa/
+    translation: victory / valor
+    pos: noun
+    gender: f

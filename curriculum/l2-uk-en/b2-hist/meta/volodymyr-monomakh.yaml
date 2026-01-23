@@ -151,14 +151,28 @@ activity_hints:
   - type: reading
     focus: "Уривок з «Повчання дітям» про працелюбність"
 
-  - type: vocabulary
+  - type: fill-in
     focus: "Політична та моральна термінологія епохи"
+    items: 15+
 
   - type: quiz
     focus: "Факти про правління Мономаха"
+    items: 12+
 
   - type: essay-response
     focus: "Чому «Повчання дітям» є унікальним для середньовічної Європи?"
+
+  - type: match-up
+    focus: "Хронологія подій та правління"
+    items: 10+
+
+  - type: comparative-study
+    focus: "Любецький з'їзд vs Віче"
+    output: Comparison table
+
+  - type: critical-analysis
+    focus: "Аналіз 'Повчання дітям' як історичного джерела"
+    questions: 3+
 
 # Sources (minimum 2 for history track)
 sources:

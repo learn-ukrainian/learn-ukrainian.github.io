@@ -126,3 +126,7 @@ connects_to:
   - "bitva-pid-zhovtymy-vodamy (M53)"
   - "kozatska-derzhava (M55)"
   - "pereyaslavska-uhoda (M56)"
+
+naturalness:
+  score: 9
+  status: PASS

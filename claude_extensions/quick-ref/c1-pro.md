@@ -9,6 +9,26 @@
 
 > This track provides advanced professional and academic Ukrainian for executives, academics, and specialists.
 
+## Workflow Integration
+
+**C1-PRO uses the 7-phase track workflow:**
+
+1. **Meta** → Generate module metadata (hydrated content outline)
+2. **Meta-QA** → Validate metadata and word targets
+3. **Lesson** → Write lesson content following meta outline
+4. **Lesson-QA** → Validate lesson against requirements
+5. **Act** → Generate activities from lesson content
+6. **Act-QA** → Validate activities quality and coverage
+7. **Integrate** → Deploy to website (MDX generation)
+
+**Commands:**
+
+- Start: `/module c1-pro {num}`
+- Resume: `/module c1-pro {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module c1-pro {num} --check`
+
+**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+
 ---
 
 ## Audit Limits
@@ -34,12 +54,12 @@
 
 ## Phase Structure (50 Modules)
 
-| Phase     | Modules | Focus                        | Checkpoints |
-| --------- | ------- | ---------------------------- | ----------- |
-| PRO.1     | M01-15  | Executive Communication      | **M13**, **M15** |
-| PRO.2     | M16-30  | Academic Publishing          | **M28**, **M30** |
-| PRO.3     | M31-45  | Industry Specialization      | **M44**, **M45** |
-| PRO.4     | M46-50  | Mastery & Capstone           | **M50**     |
+| Phase | Modules | Focus                   | Checkpoints      |
+| ----- | ------- | ----------------------- | ---------------- |
+| PRO.1 | M01-15  | Executive Communication | **M13**, **M15** |
+| PRO.2 | M16-30  | Academic Publishing     | **M28**, **M30** |
+| PRO.3 | M31-45  | Industry Specialization | **M44**, **M45** |
+| PRO.4 | M46-50  | Mastery & Capstone      | **M50**          |
 
 ---
 
@@ -72,7 +92,7 @@ objectives:
   - 'Learner can communicate at executive level in...'
   - 'Learner can produce professional documents for...'
 prerequisites:
-  - c1-pro-XX  # Previous module
+  - c1-pro-XX # Previous module
 naturalness:
   score: 0
   status: PENDING
@@ -101,12 +121,12 @@ naturalness:
 
 ## Domain Coverage
 
-| Phase | Domain | Focus |
-|-------|--------|-------|
+| Phase | Domain                  | Focus                                        |
+| ----- | ----------------------- | -------------------------------------------- |
 | PRO.1 | Executive Communication | Leadership, strategy, stakeholder management |
-| PRO.2 | Academic Publishing | Research writing, peer review, conferences |
-| PRO.3 | Industry Specialization | IT, finance, legal, healthcare, translation |
-| PRO.4 | Mastery & Capstone | Portfolio, career development, integration |
+| PRO.2 | Academic Publishing     | Research writing, peer review, conferences   |
+| PRO.3 | Industry Specialization | IT, finance, legal, healthcare, translation  |
+| PRO.4 | Mastery & Capstone      | Portfolio, career development, integration   |
 
 ---
 
@@ -153,6 +173,7 @@ All professional mastery modules must pass naturalness check:
 - **Checker:** Use MCP `check_naturalness` tool
 
 Update meta YAML after validation:
+
 ```yaml
 naturalness:
   score: 10

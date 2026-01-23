@@ -1,0 +1,64 @@
+module: kozatstvo-vytoky
+level: B2
+version: '2.0'
+items:
+  - lemma: уходник
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: m
+  - lemma: здобичник
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: m
+  - lemma: ясир
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: m
+  - lemma: реєстр
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: m
+  - lemma: Дике поле
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: n
+  - lemma: побратимство
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: n
+  - lemma: етимологія
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: n
+  - lemma: промисел
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: m
+  - lemma: ватага
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: f
+  - lemma: шабля
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: f
+  - lemma: чайка
+    ipa: ""
+    translation: ""
+    pos: noun
+    gender: f

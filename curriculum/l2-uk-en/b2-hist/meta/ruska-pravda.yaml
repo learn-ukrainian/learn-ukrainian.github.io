@@ -1,4 +1,5 @@
 id: b2-hist-13
+module: b2-hist-13
 title: 'Руська Правда: Перший законодавчий кодекс'
 slug: ruska-pravda
 version: '1.0'
@@ -115,10 +116,10 @@ activity_hints:
 - type: reading
   focus: Excerpts from Ruska Pravda with translation
   source: Provide in module
-- type: vocabulary
+- type: fill-in
   focus: Legal and social terminology
   items: 18+
-- type: compare-contrast
+- type: comparative-study
   focus: Punishments for crimes against different social classes
   output: Table of wergild amounts
 - type: quiz
@@ -129,9 +130,7 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Що Руська Правда розповідає про суспільство Київської Русі?
-  word_target: 4000
-  model_answer: Required
-- type: discussion
+- type: essay-response
   focus: Чи була Руська Правда справедливою для всіх верств населення?
 prerequisites:
 - b2-hist-12 (Yaroslav the Wise)

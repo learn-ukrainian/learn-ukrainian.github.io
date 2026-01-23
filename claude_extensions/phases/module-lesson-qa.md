@@ -24,6 +24,7 @@ Validate lesson content before locking.
 ```
 
 This script verifies:
+
 - YAML frontmatter syntax is valid
 - Markdown structure is parseable
 - No broken formatting
@@ -56,6 +57,7 @@ This script verifies:
 - **LIT:** `docs/l2-uk-en/templates/lit-module-template.md`
 
 **Verify:**
+
 - [ ] Module structure matches template sections
 - [ ] Section headers follow template naming
 - [ ] Content follows pedagogy pattern from template
@@ -65,9 +67,10 @@ This script verifies:
 ### 2. File Structure
 
 **Required components:**
+
 ```markdown
 ---
-{YAML frontmatter}
+{ YAML frontmatter }
 ---
 
 <!-- SCOPE
@@ -88,6 +91,7 @@ This script verifies:
 ```
 
 All these MUST exist:
+
 - [ ] YAML frontmatter present and valid
 - [ ] SCOPE comment present
 - [ ] H1 title matches meta.title
@@ -103,6 +107,7 @@ All these MUST exist:
    - Count actual prose words
 
 2. **Compare to meta.yaml targets:**
+
    ```
    For each section in meta.content_outline:
      actual = count_words(section_content)
@@ -114,6 +119,7 @@ All these MUST exist:
    ```
 
 3. **Check total:**
+
    ```
    total_actual = sum(all_section_word_counts)
    total_target = meta.word_target
@@ -124,6 +130,7 @@ All these MUST exist:
    ```
 
 **Why 10% per section but 5% total?**
+
 - Individual sections can vary slightly
 - Variations should balance out
 - Overall target must be tight
@@ -145,6 +152,7 @@ For each section in meta.content_outline:
 Count callout blocks matching pattern `> [!type]`:
 
 **Minimum by level:**
+
 - A1: 3+
 - A2: 4+
 - B1: 5+
@@ -165,6 +173,7 @@ if count < level_minimum:
 Count sentences matching pattern `_Приклад:_ «{text}»`:
 
 **Minimum by level:**
+
 - A1: 12+
 - A2: 18+
 - B1: 24+
@@ -185,6 +194,7 @@ if count < level_minimum:
 Count dialogue blocks matching pattern `**Діалог:**`:
 
 **Minimum by level:**
+
 - A1: 2+
 - A2: 3+
 - B1: 4+
@@ -220,6 +230,7 @@ For each word in meta.vocabulary_hints.required:
 **Process:**
 
 1. **Read curriculum plan:**
+
    ```
    docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
    ```
@@ -242,6 +253,7 @@ For each word in meta.vocabulary_hints.required:
    ```
 
 **Special cases:**
+
 - Words in `meta.vocabulary_hints.recommended` are allowed even if not in cumulative list (pre-teaching)
 - Proper nouns (names, places) are exempt
 - International cognates are exempt at all levels
@@ -257,6 +269,7 @@ Content MUST NOT contain:
 - [ ] Practice recommendations section (auto-generated)
 
 **Red flags:**
+
 - Headers like "Activities", "Вправи", "Vocabulary", "Словник"
 - YAML table blocks in vocabulary format
 - "Потрібно більше практики?" section (should not be in Phase 3 output)
@@ -284,15 +297,15 @@ Frontmatter MUST match meta.yaml:
 
 ```yaml
 Required fields that must match:
-- module == meta.module
-- title == meta.title
-- subtitle == meta.subtitle
-- version == meta.version
-- phase == meta.phase
-- pedagogy == meta.pedagogy
-- focus == meta.focus
-- duration == meta.duration
-- transliteration == meta.transliteration
+  - module == meta.module
+  - title == meta.title
+  - subtitle == meta.subtitle
+  - version == meta.version
+  - phase == meta.phase
+  - pedagogy == meta.pedagogy
+  - focus == meta.focus
+  - duration == meta.duration
+  - transliteration == meta.transliteration
 ```
 
 If `register` present in meta, must be in frontmatter.
@@ -351,11 +364,11 @@ For each factual claim in content:
 
 **Examples of factual errors to catch:**
 
-| Error | Correction |
-|-------|-----------|
-| Нечуй-Левицький народився 1845 | народився 1838 |
+| Error                            | Correction                   |
+| -------------------------------- | ---------------------------- |
+| Нечуй-Левицький народився 1845   | народився 1838               |
 | Київська Русь заснована 988 року | хрещення 988, держава раніше |
-| Шевченко написав "Кобзар" 1860 | перше видання 1840 |
+| Шевченко написав "Кобзар" 1860   | перше видання 1840           |
 
 **For core modules (grammar/vocab):** Skip this check unless cultural references are present.
 
@@ -377,12 +390,12 @@ For each sample passage:
 
 **Common errors to check:**
 
-| ❌ Wrong | ✅ Correct | Issue |
-|----------|-----------|-------|
-| приймати участь | брати участь | Russicism |
-| самий кращий | найкращий | Superlative calque |
-| на протязі | протягом | Russicism |
-| робити сенс | мати сенс | English calque |
+| ❌ Wrong        | ✅ Correct   | Issue              |
+| --------------- | ------------ | ------------------ |
+| приймати участь | брати участь | Russicism          |
+| самий кращий    | найкращий    | Superlative calque |
+| на протязі      | протягом     | Russicism          |
+| робити сенс     | мати сенс    | English calque     |
 
 **If grammar errors found:** FAIL with specific corrections needed.
 
@@ -393,6 +406,7 @@ For each sample passage:
 **ZERO TOLERANCE checks - any violation is FAIL:**
 
 1. **NO Russian Characters:**
+
    ```bash
    # Search for forbidden characters
    grep -n '[ёъыэ]' {slug}.md
@@ -423,6 +437,7 @@ For each sample passage:
 4. **Verify Against LINGUISTIC-PURITY-GUIDE.md:**
 
    Check suspect words against:
+
    ```
    docs/l2-uk-en/LINGUISTIC-PURITY-GUIDE.md
    ```
@@ -440,6 +455,7 @@ For each major content section, evaluate:
 #### 14a. Engagement Quality
 
 **DRY (textbook voice - FAIL):**
+
 ```markdown
 Доконаний вид показує завершену дію.
 Недоконаний вид показує незавершену дію.
@@ -447,6 +463,7 @@ For each major content section, evaluate:
 ```
 
 **RICH (conversational - PASS):**
+
 ```markdown
 Уявіть: ви читаєте книгу весь вечір — це процес, недоконаний вид.
 Але ось ви закрили книгу — готово! Результат. Доконаний вид.
@@ -463,6 +480,7 @@ If >50% of sentences start the same way → FAIL as REPETITIVE
 ```
 
 ❌ DRY pattern:
+
 ```markdown
 Доконаний вид означає...
 Доконаний вид використовується...
@@ -470,6 +488,7 @@ If >50% of sentences start the same way → FAIL as REPETITIVE
 ```
 
 ✅ RICH pattern:
+
 ```markdown
 Коли дія завершена — це доконаний вид.
 Українці кажуть «я прочитав книгу», бо книга закінчена.
@@ -510,6 +529,7 @@ Each module should include:
 - Have cultural context explained
 
 Example for aspect:
+
 ```markdown
 Українці кажуть: «Не кажи гоп, поки не перескочиш».
 Зверніть увагу: **перескочиш** — доконаний вид.
@@ -531,6 +551,7 @@ For each section, score:
 | Proverbs/idioms | None                | 1 (forced)       | 1-2 (natural)             |
 
 **Scoring:**
+
 - **Total 0-4:** ❌ FAIL - Section needs REWRITE
 - **Total 5-7:** ⚠️ WARNING - Section needs ENRICHMENT
 - **Total 8-10:** ✅ PASS
@@ -581,21 +602,21 @@ Evaluate ALL Ukrainian prose content:
 
 **Red flags (score < 8/10):**
 
-| Issue | Example |
-|-------|---------|
-| **Template repetition** | Same sentence structure repeated across sections |
-| **Excessive intensifiers** | "дуже" used 5+ times, "надзвичайно/справжній" overused |
-| **Double superlatives** | "найвидатніший та найвідоміший" (semantically redundant) |
-| **Missing discourse markers** | List of disconnected factoids with no connectors |
-| **Robotic transitions** | "і це допомагає...", "тому що... тому" (mechanical) |
+| Issue                         | Example                                                  |
+| ----------------------------- | -------------------------------------------------------- |
+| **Template repetition**       | Same sentence structure repeated across sections         |
+| **Excessive intensifiers**    | "дуже" used 5+ times, "надзвичайно/справжній" overused   |
+| **Double superlatives**       | "найвидатніший та найвідоміший" (semantically redundant) |
+| **Missing discourse markers** | List of disconnected factoids with no connectors         |
+| **Robotic transitions**       | "і це допомагає...", "тому що... тому" (mechanical)      |
 
 #### 15.3 Scoring Standards
 
-| Module Type | Target Score | Threshold |
-|-------------|--------------|-----------|
-| **Content modules (grammar/vocab)** | 8/10 | FAIL if < 8 |
-| **History/cultural modules** | 8/10 | FAIL if < 8 |
-| **Checkpoints** | 7/10 | FAIL if < 7 |
+| Module Type                         | Target Score | Threshold   |
+| ----------------------------------- | ------------ | ----------- |
+| **Content modules (grammar/vocab)** | 8/10         | FAIL if < 8 |
+| **History/cultural modules**        | 8/10         | FAIL if < 8 |
+| **Checkpoints**                     | 7/10         | FAIL if < 7 |
 
 **Calculate average score across all prose sections.**
 
@@ -608,11 +629,12 @@ After evaluating, **ALWAYS update the meta file:**
 
 # ADD THIS SECTION:
 naturalness:
-  score: 9      # Your evaluated score (1-10)
-  status: PASS  # PASS if score >= threshold, else FAIL
+  score: 9 # Your evaluated score (1-10)
+  status: PASS # PASS if score >= threshold, else FAIL
 ```
 
 **Status values:**
+
 - `PASS` - Score meets threshold
 - `FAIL` - Score below threshold (module needs enrichment)
 
@@ -696,7 +718,7 @@ You are the last line of defense. Be aggressive in finding errors.
 
 **Template:**
 
-```markdown
+````markdown
 # LLM Self-Validation: {slug}
 
 **Validated by:** Claude Sonnet 4.5 | **Date:** {YYYY-MM-DD}
@@ -717,83 +739,99 @@ You are the last line of defense. Be aggressive in finding errors.
 ## Detailed Check Results
 
 ### 1. Template Compliance
+
 **Status:** ✅/❌
 **Evidence:** Template `{template_name}` loaded and compared. Structure matches/differs in: {details}
 
 ### 2. File Structure
+
 **Status:** ✅/❌
 **Evidence:** All required components present: frontmatter ✓, SCOPE ✓, title ✓, Підсумок ✓
 
 ### 3. Word Count Accuracy
+
 **Status:** ✅/❌
 **Total:** {actual}/{target} ({percentage}%)
 **Section breakdown:**
-  - {Section 1}: {count}/{target} words ({percentage}%)
-  - {Section 2}: {count}/{target} words ({percentage}%)
+
+- {Section 1}: {count}/{target} words ({percentage}%)
+- {Section 2}: {count}/{target} words ({percentage}%)
   ...
-**Violations:** {list any sections outside ±10% or "None"}
+  **Violations:** {list any sections outside ±10% or "None"}
 
 ### 4. Content Outline Coverage
+
 **Status:** ✅/❌
 **Expected sections:** {N}
 **Found sections:** {N}
 **Missing:** {list or "None"}
 
 ### 5. Engagement Boxes
+
 **Status:** ✅/❌
 **Count:** {actual} (minimum: {min})
 **Types found:** {list types}
 
 ### 6. Example Sentences
+
 **Status:** ✅/❌
 **Count:** {actual} (minimum: {min})
 **Sampled:** "{first example}" ... "{last example}"
 
 ### 7. Mini-Dialogues
+
 **Status:** ✅/❌/N/A
 **Count:** {actual} (minimum: {min})
 **Reason if N/A:** {history/cultural module}
 
 ### 8. Required Vocabulary
+
 **Status:** ✅/❌
 **Required terms:** {N}
 **All found:** Yes/No
 **Missing:** {list or "None"}
 
 ### 9. Vocabulary Level Appropriateness
+
 **Status:** ✅/❌/⚠️
 **Level:** {level}
 **Out-of-scope words found:** {N}
 **Details:** {list words that are too advanced, or "All vocabulary appropriate for level"}
 
 ### 10. Forbidden Content
+
 **Status:** ✅/❌
 **Activities found:** No/Yes {details}
 **Vocabulary tables found:** No/Yes {details}
 **Practice recommendations found:** No/Yes {details}
 
 ### 11. Immersion Percentage
+
 **Status:** ✅/❌/N/A
 **Percentage:** {percentage}% (target: {target}%)
 **Non-Ukrainian words:** {count}
 
 ### 12. YAML Frontmatter Match
+
 **Status:** ✅/❌
 **All fields match meta.yaml:** Yes/No
 **Mismatches:** {list or "None"}
 
 ### 13. Primary Sources
+
 **Status:** ✅/❌/N/A
 **Count:** {actual} (minimum: 2 for seminar modules)
 **Sources:** {list quote callout titles or "N/A for non-seminar"}
 
 ### 14. Factual Accuracy
+
 **Status:** ✅/❌/N/A
 **Checked:** {N} factual claims
 **Errors found:** {list specific errors with corrections, or "None"}
 **Uncertain claims flagged:** {list or "None"}
 
 ### 15. Primary Ukrainian Language Correctness
+
 **Status:** ✅/❌
 **Passages sampled:** {N}
 **Grammar errors:** {list specific errors, or "None found"}
@@ -801,6 +839,7 @@ You are the last line of defense. Be aggressive in finding errors.
 **English calques:** {list or "None found"}
 
 ### 16. Linguistic Purity
+
 **Status:** ✅/❌
 **Russian characters (ё,ъ,ы,э):** Found {N} / None
 **Russian phonetic comparisons:** Found {N} / None
@@ -808,15 +847,18 @@ You are the last line of defense. Be aggressive in finding errors.
 **LINGUISTIC-PURITY-GUIDE.md checked:** Yes
 
 ### 17. Content Richness Quality (B1+ only)
+
 **Status:** ✅/❌/⚠️/N/A
 **Average richness score:** {score}/10
 **Section scores:**
-  - {Section 1}: Engagement {score}, Variety {score}, Hooks {score}, Cultural {score}, Proverbs {score} = {total}/10
-  - {Section 2}: ...
-**Dryness flags:** {list flags or "None"}
-**Sections needing rewrite:** {list or "None"}
+
+- {Section 1}: Engagement {score}, Variety {score}, Hooks {score}, Cultural {score}, Proverbs {score} = {total}/10
+- {Section 2}: ...
+  **Dryness flags:** {list flags or "None"}
+  **Sections needing rewrite:** {list or "None"}
 
 ### 18. Naturalness Check
+
 **Status:** ✅/❌
 **Score:** {score}/10 (threshold: {8 or 7}/10)
 **Prose passages evaluated:** {N}
@@ -837,6 +879,7 @@ You are the last line of defense. Be aggressive in finding errors.
 {If any fixes were needed during validation, list them with before/after:}
 
 **Example:**
+
 1. **Section "Ранні роки"** - Removed Russicism "на протязі" → replaced with "протягом"
 2. **Naturalness** - Added discourse markers "також", "проте" to improve flow in Section 3
 3. **Word count** - Section "Військовий лідер" was 810 words (target: 900), added 90 words of detail
@@ -850,9 +893,10 @@ You are the last line of defense. Be aggressive in finding errors.
 
 ```yaml
 naturalness:
-  score: {score}
-  status: {PASS/FAIL}
+  score: { score }
+  status: { PASS/FAIL }
 ```
+````
 
 **Meta file path:** `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
 **Update applied:** Yes / No (if FAIL, will be applied after fixes)
@@ -870,6 +914,7 @@ naturalness:
 ---
 
 **Validation completed:** {timestamp}
+
 ```
 
 ### Evidence Requirements
@@ -897,48 +942,54 @@ For each check, you MUST provide:
 ### On PASS
 
 ```
+
 LESSON-QA: PASS
 
 ✓ File structure complete
 ✓ Word count: {total}/{target} ({percentage}%) - within tolerance
-  - Section 1: {count}/{target} words
-  - Section 2: {count}/{target} words
-  - ...
-✓ Content outline: All {N} sections present
-✓ Engagement boxes: {count} (min: {level_min})
-✓ Example sentences: {count} (min: {level_min})
-✓ Mini-dialogues: {count} (min: {level_min}) [if applicable]
-✓ Required vocabulary: All {N} terms used
-✓ No forbidden content
-✓ Immersion: {percentage}% [if B1+]
-✓ Frontmatter matches meta
-✓ Primary sources: {count} [if history module]
-✓ Ukrainian grammar: No errors found
-✓ Linguistic purity: PASS (no Russian chars, no AI contamination)
-✓ Content richness: {Average score {score}/10 | SKIPPED (A1-A2)}
-✓ Naturalness: {score}/10 - PASS (meta updated)
+
+- Section 1: {count}/{target} words
+- Section 2: {count}/{target} words
+- ...
+  ✓ Content outline: All {N} sections present
+  ✓ Engagement boxes: {count} (min: {level_min})
+  ✓ Example sentences: {count} (min: {level_min})
+  ✓ Mini-dialogues: {count} (min: {level_min}) [if applicable]
+  ✓ Required vocabulary: All {N} terms used
+  ✓ No forbidden content
+  ✓ Immersion: {percentage}% [if B1+]
+  ✓ Frontmatter matches meta
+  ✓ Primary sources: {count} [if history module]
+  ✓ Ukrainian grammar: No errors found
+  ✓ Linguistic purity: PASS (no Russian chars, no AI contamination)
+  ✓ Content richness: {Average score {score}/10 | SKIPPED (A1-A2)}
+  ✓ Naturalness: {score}/10 - PASS (meta updated)
 
 META UPDATED: naturalness.score = {score}, naturalness.status = PASS
 VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
 
 LESSON LOCKED. Proceed to: /module-act {level} {module_num}
+
 ```
 
 ### On FAIL
 
 ```
+
 LESSON-QA: FAIL
 
 Violations:
+
 1. [CHECK_NAME]: {specific issue}
 2. [CHECK_NAME]: {specific issue}
-...
+   ...
 
 VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
 See detailed log for evidence and fix recommendations.
 
 Apply {MINOR/MAJOR} fix strategy.
 Fix {slug}.md and re-run: /module-lesson-qa {level} {module_num}
+
 ```
 
 ### On PHASE REWIND
@@ -946,14 +997,17 @@ Fix {slug}.md and re-run: /module-lesson-qa {level} {module_num}
 If violations require meta.yaml changes:
 
 ```
+
 PHASE UNLOCK REQUIRED: {reason}
 
 Meta.yaml needs adjustment. Examples:
+
 - Word targets too low for content requirements
 - Missing sections in content_outline
 - Vocabulary_hints missing essential terms
 
 Fix meta.yaml, re-run /module-meta-qa, then regenerate lesson.
+
 ```
 
 ---
@@ -963,38 +1017,47 @@ Fix meta.yaml, re-run /module-meta-qa, then regenerate lesson.
 ### Count Words in Section
 
 ```
+
 Extract text between:
-  Start: ## {section_name}
-  End: Next ## or ---
+Start: ## {section_name}
+End: Next ## or ---
 
 Remove:
-  - Markdown formatting (**, *, _, etc.)
-  - Callout markers (> [!type])
-  - Links ([text](url) → text)
-  - Code blocks
+
+- Markdown formatting (\*_, _, \_, etc.)
+- Callout markers (> [!type])
+- Links ([text](url) → text)
+- Code blocks
 
 Count remaining words
+
 ```
 
 ### Extract Engagement Boxes
 
 ```
-Pattern: ^>\s*\[!(\w+)\]
+
+Pattern: ^>\s\*\[!(\w+)\]
 Capture group 1 = type (tip, history-bite, etc.)
+
 ```
 
 ### Extract Examples
 
 ```
-Pattern: _Приклад:_\s*«([^»]+)»
+
+Pattern: _Приклад:_\s\*«([^»]+)»
 Count occurrences
+
 ```
 
 ### Extract Dialogues
 
 ```
+
 Pattern: \*\*Діалог:\*\*
 Count occurrences
+
 ```
 
 ---
@@ -1014,6 +1077,90 @@ Count occurrences
 
 On PASS, output is LOCKED. User proceeds to Phase 5 (module-act).
 
+## Examples
+
+### Example 1: PASS - B2-HIST Lesson QA
+
+**Input:** `trypillian-civilization.md` and `meta/trypillian-civilization.yaml`
+
+**Output:**
+```
+
+LESSON-QA: PASS
+
+✓ File structure complete
+✓ Word count: 2700/2500 (108%) - within tolerance
+
+- Вступ: 500/500 words
+- Читання: 2000/2000 words
+- Підсумок: 200/200 words (not counted in target)
+  ✓ Content outline: All 3 sections present
+  ✓ Engagement boxes: 6 (min: 6 for B2)
+  ✓ Example sentences: 28 (min: 24 for B2)
+  ✓ Mini-dialogues: N/A (history module)
+  ✓ Required vocabulary: All 20 terms used
+  ✓ No forbidden content
+  ✓ Immersion: 99% (target: 98-100% for B2)
+  ✓ Frontmatter matches meta
+  ✓ Primary sources: 3 (min: 2 for seminar)
+  ✓ Ukrainian grammar: No errors found
+  ✓ Linguistic purity: PASS (no Russian chars, no AI contamination)
+  ✓ Content richness: 9/10 (B1+)
+  ✓ Naturalness: 9/10 - PASS (meta updated)
+
+META UPDATED: naturalness.score = 9, naturalness.status = PASS
+VALIDATION LOG: curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-llm-review.md
+
+LESSON LOCKED. Proceed to: /module-act b2-hist 1
+
+```
+
+### Example 2: FAIL - Word Count Issues
+
+**Input:** Module with sections over/under target
+
+**Output:**
+```
+
+LESSON-QA: FAIL
+
+Violations:
+
+1. Word count accuracy: Total 3100/4000 (77.5%) - below 95% tolerance
+2. Content outline coverage: Section "Читання" 1200/2000 words (60%) - below 90% tolerance
+3. Example sentences: 15 (minimum: 24 for B2)
+
+VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+See detailed log for evidence and fix recommendations.
+
+Apply MINOR fix strategy.
+Fix {slug}.md and re-run: /module-lesson-qa {level} {module_num}
+
+```
+
+### Example 3: FAIL - Naturalness Below Threshold
+
+**Input:** B1 grammar module with robotic prose
+
+**Output:**
+```
+
+LESSON-QA: FAIL
+
+Violations:
+
+1. Naturalness Check: 6/10 (threshold: 8/10 for B1+) - Multiple red flags: template repetition, missing discourse markers, robotic transitions
+
+VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+
+Apply MAJOR fix strategy.
+Fix {slug}.md and re-run: /module-lesson-qa {level} {module_num}
+
+```
+
+---
+
 On FAIL, user fixes lesson content and re-runs this phase.
 
 On PHASE REWIND, unlock meta.yaml and restart from Phase 1.
+```

@@ -1,8 +1,8 @@
 # /module-sync
 
-Fix existing module to match its specification (meta.yaml).
+Sync meta.yaml to match existing markdown content.
 
-**Use this when:** Module already exists but has audit violations
+**Use this when:** Markdown exists and is good, but meta.yaml is outdated or missing proper outline
 
 **Don't use when:** Building a new module from scratch (use `/module` instead)
 
@@ -15,37 +15,34 @@ Fix existing module to match its specification (meta.yaml).
 ## Examples
 
 ```bash
-/module-sync b2-hist 1      # Fix trypillian-civilization to match meta
-/module-sync b2 45          # Fix existing B2 module 45
-/module-sync c1-bio 12      # Fix biography module 12
+/module-sync b2-hist 1      # Sync meta to existing trypillian-civilization.md
+/module-sync b2 45          # Sync meta for existing B2 module 45
+/module-sync c1-bio 12      # Sync meta for biography module 12
 ```
 
 ---
 
-## CRITICAL: Meta.yaml is the Specification
+## CRITICAL: Markdown is the Source of Truth
 
-**Meta.yaml is LOCKED** - it defines what the module should be.
+**Markdown content is PRESERVED** - it's expensive to regenerate.
 
-**Markdown is the implementation** - it must conform to meta.yaml.
+**Meta.yaml gets UPDATED** - to match the actual markdown structure.
 
-**Your job:** Fix markdown and activities to match the specification.
+**Your job:** Extract sections from markdown, update meta.yaml, validate activities.
 
-**FORBIDDEN:** Editing meta.yaml to match existing markdown (this is mutiny).
-
-**Exception:** If user explicitly says "the meta.yaml is wrong", tell them to:
-1. Run `/module-meta {level} {num}` to rebuild meta
-2. Then run `/module-sync {level} {num}` to fix content
+**Meta is NEVER locked** - it's a living document that reflects reality.
 
 ---
 
 ## What This Does
 
-1. **Read meta.yaml** (the specification - LOCKED)
-2. **Read existing markdown** and activities
-3. **Run audit** and read detailed review file
-4. **Fix violations** by editing markdown/activities to match meta
-5. **Loop until ALL gates ✅** - no stopping until complete
-6. **Deploy** when clean
+1. **Read existing markdown** (source of truth - PRESERVED)
+2. **Extract actual sections** and word counts from markdown
+3. **Update meta.yaml** content_outline to match reality
+4. **Validate activities** against markdown content
+5. **Fix/regenerate activities** if violations found
+6. **Loop until ALL gates ✅**
+7. **Deploy** when clean
 
 ---
 
@@ -78,83 +75,68 @@ act_file=curriculum/l2-uk-en/${level}/activities/${slug}.yaml
 
 **If markdown doesn't exist:** ERROR - use `/module` to build from scratch
 
-**If meta doesn't exist:** ERROR - meta.yaml is required (specification), use `/module-meta` first
+**If meta doesn't exist:** Create skeleton meta from markdown structure
 
 **If activities don't exist:** Will regenerate in Step 5
 
-### Step 3: Read Specification (Meta.yaml)
+### Step 3: Extract Sections from Markdown
 
 ```bash
-# Load the specification - this is LOCKED, DO NOT EDIT
-meta=$(cat curriculum/l2-uk-en/${level}/meta/${slug}.yaml)
+# Read markdown and extract actual H2 sections with word counts
+# For each ## Section header:
+#   - Record section name
+#   - Count words until next section
+#   - Build content_outline from reality
 ```
 
-**Extract requirements from meta.yaml:**
-- `content_outline` - Required sections and word count targets
-- `vocabulary_hints.required` - Must appear in content
-- `grammar` - Grammar points to cover
-- `word_target` - Total word count target
+**Build actual structure:**
+- Extract all H2 headers as section names
+- Count actual words per section
+- Sum for total word count
+- Compare with current meta.yaml (if exists)
 
-**These are NON-NEGOTIABLE targets you must hit.**
-
-### Step 4: Run Audit and Read Review
+### Step 4: Update Meta.yaml
 
 ```bash
-# Run audit (creates review file)
+# Update content_outline to match extracted sections
+meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
+
+# Update word_target to actual total
+# Update content_outline sections with actual word counts
+```
+
+**If meta.yaml doesn't exist:** Create it from markdown structure.
+
+**If meta.yaml exists:** Update `content_outline` and `word_target` to match reality.
+
+### Step 5: Run Audit
+
+```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
-
-# Read the detailed review for context
-cat curriculum/l2-uk-en/${level}/audit/${slug}-review.md
 ```
 
-**Important:** Always read the `{slug}-review.md` file to see:
-- Detailed activity breakdown
-- Section-by-section analysis
-- Specific violations with line numbers
-- Richness scores and metrics
+**After syncing meta to markdown, outline compliance should pass.**
 
-### Step 5: Analyze Violations
+### Step 6: Analyze Remaining Violations
 
-**Categorize violations:**
-
-**Outline compliance:**
-- Missing sections → Add to markdown
-- Section word count under target → Expand content
-- Section word count over target → Usually OK (check total)
-- **Smart enforcement:** If total word count ≥ target, individual sections can be under 10%
+**After syncing meta, remaining violations are typically:**
 
 **Activity violations:**
 - Schema errors → Fix YAML syntax
 - Mirroring → Rephrase activities
-- Missing required vocabulary → Regenerate with correct vocab
 - Too few items → Add more items
 
-**Content violations:**
+**Content violations (if any):**
 - Grammar errors → Fix in markdown
-- Naturalness < 8 → Improve flow, vary structures
 - Missing engagement boxes → Add callouts
-- Vocabulary issues → Fix in markdown
 
-### Step 6: Fix Strategy
+### Step 7: Fix Activities
 
-**Based on violation count:**
+**If activity violations exist:**
+- Fix minor issues (≤3) directly
+- Regenerate activities if major issues (>3)
 
-**Minor (≤3 violations):**
-- Apply targeted fixes directly to files
-- Example: Add missing engagement box, fix typo, rephrase activity
-
-**Major (4-10 violations):**
-- Fix activities: Regenerate activities.yaml using `/module-act` instructions
-- Fix markdown: Edit specific sections to add content, fix grammar
-
-**Catastrophic (>10 violations OR missing sections):**
-- Regenerate markdown sections using meta.yaml content_outline as guide
-- Regenerate activities.yaml completely
-- **Last resort only:** Tell user meta.yaml needs rebuilding
-
-**CRITICAL: Fix markdown to match meta, NOT the reverse.**
-
-### Step 7: Loop Until ALL Gates Pass
+### Step 8: Loop Until ALL Gates Pass
 
 ```
 while true:
@@ -177,10 +159,10 @@ while true:
 **Success criteria:**
 - ✅ All audit gates green
 - ✅ No violations remain
-- ✅ Markdown matches meta.yaml specification
+- ✅ Meta.yaml reflects markdown reality
 - ✅ Activities validated
 
-### Step 8: Deploy
+### Step 9: Deploy
 
 When audit passes, run integration:
 
@@ -201,7 +183,7 @@ MODULE SYNCED: {level}/{slug}
 
 Iterations: {N} audit cycles
 Fixes applied:
-  ✓ Markdown: {description of changes}
+  ✓ Meta: Updated content_outline to match {N} sections
   ✓ Activities: {regenerated/fixed}
   ✓ All audit gates ✅
 
@@ -219,59 +201,43 @@ Audit report: curriculum/l2-uk-en/{level}/audit/{slug}-review.md
 
 ---
 
-## Difference from /module
+## Difference from /module and /module --refresh
 
-| Feature | /module | /module-sync |
-|---------|---------|--------------|
-| Markdown | Generates from meta.yaml | Fixes existing to match meta.yaml |
-| Meta | Creates from curriculum plan | Used as specification (NOT edited) |
-| Activities | Generates new | Validates + fixes/regenerates |
-| Cost | High (full generation) | Medium (editing + regeneration) |
-| Use when | New module or total rebuild | Fixing existing module with violations |
+| Feature | /module | /module --refresh | /module-sync |
+|---------|---------|-------------------|--------------|
+| Markdown | Generates new | **Preserves** | **Preserves** |
+| Meta | Creates via architect | Regenerates via architect | **Updates from markdown** |
+| Approach | Plan → Generate | Plan → Validate | Extract → Sync |
+| Activities | Generates new | Regenerates | Validates + fixes |
+| Use when | New module | Rehydrate outline properly | Sync meta to reality |
+
+**Key difference:**
+- `--refresh`: Uses **architect skill** to create proper hydrated outline (plan-driven)
+- `--sync`: **Extracts from markdown** to update meta (reality-driven)
 
 ---
 
 ## Example Workflow
 
 ```bash
-# User has module with violations
+# User has module where meta.yaml outline doesn't match markdown reality
 $ .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/trypillian-civilization.md
 
 ❌ AUDIT FAILED
-  • Outline compliance: Section "Розвиток культури" 580 words (target: 680)
+  • Outline compliance: meta has 5 sections, markdown has 7 sections
   • Activity mirroring: 3 violations
 
-# Fix it with sync (edits content to match meta.yaml specification)
+# Sync meta to match markdown reality
 $ /module-sync b2-hist 1
 
-→ Reading meta.yaml specification...
-→ Target: 6800 words across 8 sections
-→ Running audit, reading review...
-→ Found: Section "Розвиток культури" under target by 100 words
-→ Expanding section with additional content...
-→ Re-running audit... Still 3 activity violations
-→ Regenerating activities.yaml...
+→ Reading existing markdown...
+→ Extracting 7 sections with word counts...
+→ Updating meta.yaml content_outline...
+→ Running audit... Outline now matches ✅
+→ Still 3 activity violations...
+→ Fixing activities.yaml...
 → Re-running audit... ✅ ALL GATES PASS
 → Deploying...
 
 MODULE SYNCED: b2-hist/trypillian-civilization ✅
-```
-
----
-
-## If Meta.yaml is Actually Wrong
-
-If user says "the meta.yaml is wrong, not the content":
-
-```
-The specification (meta.yaml) appears incorrect for this module.
-
-To fix:
-1. Run: /module-meta {level} {num}
-   This rebuilds meta.yaml from curriculum plan
-
-2. Then run: /module-sync {level} {num}
-   This fixes content to match new specification
-
-I cannot edit meta.yaml during sync - it's the locked specification.
 ```

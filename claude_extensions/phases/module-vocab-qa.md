@@ -34,15 +34,17 @@ if 'items' not in data or not isinstance(data['items'], list):
 ```
 
 **Expected structure:**
+
 ```yaml
-module: {slug}
-level: {LEVEL}
+module: { slug }
+level: { LEVEL }
 version: '2.0'
 items:
   - lemma: ...
 ```
 
 **Common error:**
+
 ```yaml
 # ❌ WRONG - bare list at root
 - lemma: ...
@@ -58,12 +60,14 @@ items:
 ### 2. Metadata Fields
 
 Required fields at root:
+
 - `module`: {slug} (string)
 - `level`: {LEVEL} (A1|A2|B1|B2|C1|C2)
 - `version`: '2.0' (string)
 - `items`: array
 
 **Check:**
+
 ```python
 required_fields = ['module', 'level', 'version', 'items']
 for field in required_fields:
@@ -76,15 +80,18 @@ for field in required_fields:
 Each item must have 4-5 fields:
 
 **Required for all:**
+
 - `lemma`: string (the Ukrainian word/phrase)
 - `ipa`: string (IPA pronunciation in /slashes/)
 - `translation`: string (English translation)
 - `pos`: string (part of speech tag)
 
 **Required for nouns:**
+
 - `gender`: string (m|f|n)
 
 **Check:**
+
 ```python
 for i, item in enumerate(data['items']):
     # Check required fields
@@ -113,6 +120,7 @@ for i, item in enumerate(data['items']):
 ### 4. Part of Speech Validity
 
 Valid POS tags (from Universal Dependencies):
+
 - noun
 - verb
 - adj
@@ -123,6 +131,7 @@ Valid POS tags (from Universal Dependencies):
 - part (particle)
 
 **Check:**
+
 ```python
 VALID_POS = ['noun', 'verb', 'adj', 'adv', 'propn', 'num', 'pron', 'part']
 for item in data['items']:
@@ -135,6 +144,7 @@ for item in data['items']:
 IPA must be enclosed in /slashes/ with stress marked:
 
 **Check:**
+
 ```python
 import re
 for item in data['items']:
@@ -155,6 +165,7 @@ for item in data['items']:
 ```
 
 **Common IPA issues:**
+
 - Missing /slashes/: `trɪˈpʲilʲɑ` → `/trɪˈpʲilʲɑ/`
 - Using /g/ instead of /ɦ/: `/ɡrɑd/` → `/ɦrɑd/`
 - Missing stress: `/tripillia/` → `/trɪˈpʲilʲɑ/`
@@ -195,6 +206,7 @@ for term in required_terms:
 **CRITICAL:** All vocabulary items must appear in lesson .md file.
 
 **Check process:**
+
 1. Extract all Ukrainian text from lesson .md
 2. For each item in vocabulary:
    - Check if item['lemma'] appears in lesson
@@ -226,6 +238,7 @@ for item in data['items']:
 ```
 
 **Exceptions:**
+
 - Grammatical particles: і, a, та, в, на, з, до, від, для, про
 - Very common words: є, був, буде (if not lesson focus)
 
@@ -236,17 +249,18 @@ for item in data['items']:
 Check that item count meets level minimums:
 
 | Level | Min Items | Typical Range |
-|-------|-----------|---------------|
-| A1 | 25 | 25-40 |
-| A2 | 35 | 35-60 |
-| B1 | 50 | 50-90 |
-| B2 | 60 | 60-120 |
-| C1 | 80 | 80-150 |
-| C2 | 100 | 100-200 |
+| ----- | --------- | ------------- |
+| A1    | 25        | 25-40         |
+| A2    | 35        | 35-60         |
+| B1    | 50        | 50-90         |
+| B2    | 60        | 60-120        |
+| C1    | 80        | 80-150        |
+| C2    | 100       | 100-200       |
 
 **For tracks (B2-HIST, C1-BIO, LIT):** 150-300 items expected
 
 **Check:**
+
 ```python
 item_count = len(data['items'])
 level = data['level']
@@ -269,11 +283,13 @@ if item_count < MIN_COUNTS[level]:
 Items must be sorted by Ukrainian alphabet (not Latin):
 
 **Ukrainian alphabet order:**
+
 ```
 а б в г ґ д е є ж з и і ї й к л м н о п р с т у ф х ц ч ш щ ь ю я
 ```
 
 **Check:**
+
 ```python
 # Ukrainian alphabet collation
 import locale
@@ -304,6 +320,7 @@ if lemmas != sorted_lemmas:
 - [ ] No Russian/Surzhyk in translations
 
 **Examples of good translations:**
+
 ```yaml
 - lemma: археологія
   translation: archaeology
@@ -316,15 +333,16 @@ if lemmas != sorted_lemmas:
 ```
 
 **Examples of bad translations:**
+
 ```yaml
 - lemma: археологія
-  translation: arkheologiya  # ✗ Transliteration, not translation
+  translation: arkheologiya # ✗ Transliteration, not translation
 
 - lemma: вікентія
-  translation: Vikentiy  # ✗ Missing case indication
+  translation: Vikentiy # ✗ Missing case indication
 
 - lemma: будувати
-  translation: build  # ✗ Missing "to" for infinitive
+  translation: build # ✗ Missing "to" for infinitive
 ```
 
 ### 11. Gender Accuracy (Manual Spot Check)
@@ -336,15 +354,17 @@ if lemmas != sorted_lemmas:
 - [ ] Neuter: -о, -е, -я, -ення (місто, поле, знання, століття)
 
 **Check exceptions:**
+
 - тато → m (not n, despite -о ending)
 - кава → f
 - біль → m (not f, despite soft sign)
 
 **Common errors:**
+
 ```yaml
 # ✗ WRONG
 - lemma: тато
-  gender: n  # Should be m
+  gender: n # Should be m
 
 # ✓ CORRECT
 - lemma: тато
@@ -364,6 +384,7 @@ if duplicates:
 ```
 
 **Note:** Inflected forms are NOT duplicates:
+
 - вікентій, вікентія, вікентієм → separate entries (not duplicates)
 - археологія appearing twice → duplicate (FAIL)
 
@@ -376,17 +397,20 @@ if duplicates:
 3. Check each appears in vocabulary
 
 **For history modules:**
+
 - All historical figures (all cases if they appear in lesson)
 - All place names
 - All cultural/archaeological terms
 
 **For biography modules:**
+
 - Person's name (all cases)
 - Family members
 - Professions/roles
 - Life events
 
 **For literature modules:**
+
 - Author name
 - Literary terms
 - Genre vocabulary
@@ -462,22 +486,25 @@ Fix vocabulary/{slug}.yaml and re-run /module-vocab-qa {level} {module_num}
 ### Failure: Root structure is bare list
 
 **Error:**
+
 ```yaml
-- lemma: археологія  # ← WRONG - bare list
+- lemma: археологія # ← WRONG - bare list
 ```
 
 **Fix:**
+
 ```yaml
 module: trypillian-civilization
 level: B2
 version: '2.0'
 items:
-  - lemma: археологія  # ← CORRECT
+  - lemma: археологія # ← CORRECT
 ```
 
 ### Failure: Missing gender for noun
 
 **Error:**
+
 ```yaml
 - lemma: археологія
   ipa: /ɑrxɛoˈlɔɦʲijɑ/
@@ -487,24 +514,27 @@ items:
 ```
 
 **Fix:**
+
 ```yaml
 - lemma: археологія
   ipa: /ɑrxɛoˈlɔɦʲijɑ/
   translation: archaeology
   pos: noun
-  gender: f  # Added
+  gender: f # Added
 ```
 
 ### Failure: Gender present for non-noun
 
 **Error:**
+
 ```yaml
 - lemma: будувати
   pos: verb
-  gender: m  # ← WRONG - verbs don't have gender
+  gender: m # ← WRONG - verbs don't have gender
 ```
 
 **Fix:**
+
 ```yaml
 - lemma: будувати
   pos: verb
@@ -514,25 +544,29 @@ items:
 ### Failure: IPA missing slashes
 
 **Error:**
+
 ```yaml
 - lemma: трипілля
-  ipa: trɪˈpʲilʲːɑ  # ← Missing /slashes/
+  ipa: trɪˈpʲilʲːɑ # ← Missing /slashes/
 ```
 
 **Fix:**
+
 ```yaml
 - lemma: трипілля
-  ipa: /trɪˈpʲilʲːɑ/  # ← Added /slashes/
+  ipa: /trɪˈpʲilʲːɑ/ # ← Added /slashes/
 ```
 
 ### Failure: Required term not in vocabulary
 
 **Error:**
+
 ```
 Required term 'автохтонний' not in vocabulary
 ```
 
 **Fix:** Add the missing term:
+
 ```yaml
 - lemma: автохтонний
   ipa: /ɑwˈtoxtonnɪj/
@@ -543,11 +577,13 @@ Required term 'автохтонний' not in vocabulary
 ### Failure: Vocabulary not from lesson
 
 **Error:**
+
 ```
 Lemma 'нововведення' not found in lesson
 ```
 
 **Fix:** Either:
+
 1. Remove the term from vocabulary (if it doesn't appear in lesson)
 2. Add the term to lesson first (then regenerate vocabulary)
 
@@ -556,6 +592,7 @@ Lemma 'нововведення' not found in lesson
 ### Failure: Items not sorted alphabetically
 
 **Error:**
+
 ```
 Position 5: expected 'археологія', got 'бджіл'
 ```
@@ -576,6 +613,58 @@ Cannot proceed. Need to:
 2. Regenerate vocabulary from updated lesson
 
 Rewind to Phase 3 (module-lesson)
+```
+
+## Examples
+
+### Example 1: PASS - B2-HIST Vocabulary QA
+
+**Input:** `vocabulary/trypillian-civilization.yaml` and meta/lesson files
+
+**Output:**
+
+```
+VOCAB-QA: PASS
+
+✓ YAML syntax valid
+✓ Root structure: metadata + items array
+✓ Metadata fields: all present
+✓ Item schema: all 250 items valid
+  - Nouns: 120 (all have gender)
+  - Verbs: 30
+  - Adjectives: 40
+  - Proper nouns: 50
+  - Other: 10
+✓ POS tags: all valid
+✓ IPA format: all valid (2 warnings)
+✓ Required vocabulary: 15/15 terms present
+✓ Vocabulary source: 100% from lesson
+✓ Item count: 250 items (min: 150 for B2-HIST, typical: 150-300)
+✓ Alphabetical sorting: correct (Ukrainian alphabet)
+✓ Translation quality: sample check passed
+✓ Gender accuracy: spot check passed
+✓ No duplicates: 250 unique lemmas
+✓ Completeness: specialized terms covered
+
+VOCABULARY LOCKED.
+
+Next: Run /module-integrate b2-hist 1
+```
+
+### Example 2: FAIL - Missing Required Vocabulary
+
+**Input:** Vocabulary missing required terms
+
+**Output:**
+
+```
+VOCAB-QA: FAIL
+
+Violations:
+1. Required vocabulary: Missing coverage for term 'трипільська культура' (appears as 'трипільська' and 'культура' separately, but not full phrase)
+2. Required vocabulary: Missing coverage for term 'хвойка' (appears in genitive 'хвойки' but not nominative)
+
+Fix vocabulary/{slug}.yaml and re-run /module-vocab-qa {level} {module_num}
 ```
 
 ---

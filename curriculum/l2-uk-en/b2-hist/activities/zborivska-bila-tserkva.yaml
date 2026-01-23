@@ -1,10 +1,41 @@
-# Activities for Зборівська та Білоцерківська угоди
-# Status: skeleton - to be developed
+- type: reading
+  id: b2-hist-54-reading-01
+  title: 'Джерело: Зборівський договір'
+  resource:
+    type: primary_source
+    url: 'https://resource.history.org.ua/zboriv-1649'
+    title: 'Текст Зборівських статей'
+  tasks:
+    - Проаналізуйте офіційний стиль документа.
+    - Випишіть ключові політичні терміни.
 
-- type: comprehension-questions
-  title: "Питання на розуміння"
-  questions:
-    - question: "[Питання 1]"
-      answer: "[Відповідь]"
-    - question: "[Питання 2]"
-      answer: "[Відповідь]"
+- type: quiz
+  title: Зборів та Біла Церква
+  instruction: Виберіть правильну відповідь.
+  items:
+    - question: Який реєстр встановлював Зборівський договір?
+      options:
+        - text: 40 000 осіб
+          correct: true
+        - text: 20 000 осіб
+          correct: false
+        - text: 6 000 осіб
+          correct: false
+        - text: 100 000 осіб
+          correct: false
+      explanation: «Зборівський договір... 40 000 реєстру».
+
+- type: essay-response
+  id: b2-hist-54-essay-01
+  title: Есе
+  prompt: 'Порівняйте умови Зборівського та Білоцерківського договорів.'
+  min_words: 400
+  rubric:
+    - criterion: Зміст
+      weight: 50%
+      description: Порівняння фактів
+    - criterion: Мова
+      weight: 50%
+      description: Якість української мови
+  model_answer: |
+    Зборівський та Білоцерківський договори відображали динаміку воєнних дій... [Модельна відповідь]

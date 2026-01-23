@@ -11,119 +11,110 @@ register: публіцистичний
 duration: 150
 transliteration: none
 tags:
-- history
-- ancient
-- scythians
-- sarmatians
+  - history
+  - ancient
+  - scythians
+  - sarmatians
 grammar:
-- Історичний наратив
-- Минулий час у науковому тексті
+  - Історичний наратив
+  - Минулий час у науковому тексті
 objectives:
-- Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
-  степу
-- Учень може аналізувати первинні джерела про кочові народи
-- Учень може аргументувати значення скіфської спадщини для української культури
+  - Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
+    степу
+  - Учень може аналізувати первинні джерела про кочові народи
+  - Учень може аргументувати значення скіфської спадщини для української культури
 vocabulary_count: 35
 naturalness:
   score: 9
   status: PASS
 module_type: history
-word_target: 3940
+word_target: 4066
 immersion: 100% Ukrainian
 sources:
-- name: Скіфи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Скіфи
-  type: reference
-  notes: Overview of Scythian civilization
-- name: Сармати (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Сармати
-  type: reference
-  notes: Overview of Sarmatian peoples
-- name: Геродот про скіфів
-  url: https://litopys.org.ua/
-  type: primary
-  notes: Ancient Greek descriptions of Scythians
+  - name: Скіфи (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Скіфи
+    type: reference
+    notes: Overview of Scythian civilization
+  - name: Сармати (Вікіпедія)
+    url: https://uk.wikipedia.org/wiki/Сармати
+    type: reference
+    notes: Overview of Sarmatian peoples
+  - name: Геродот про скіфів
+    url: https://litopys.org.ua/
+    type: primary
+    notes: Ancient Greek descriptions of Scythians
 content_outline:
-- section: Розминка
-  words: 182
-  points: []
-- section: Читання
-  words: 1299
-  points: []
-- section: 'Сармати: нові володарі степу'
-  words: 876
-  points: []
-- section: Первинні джерела
-  words: 490
-  points: []
-- section: Деколонізаційний погляд
-  words: 232
-  points: []
-- section: Есе
-  words: 0
-  points: []
-- section: Тема
-  words: 78
-  points: []
-- section: Критерії оцінювання
-  words: 35
-  points: []
-- section: Зразок відповіді
-  words: 317
-  points: []
-- section: Підсумок
-  words: 316
-  points: []
-- section: Потрібно більше практики?
-  words: 115
-  points: []
+  - section: Розминка
+    words: 195
+    points: []
+  - section: Читання
+    words: 1319
+    points: []
+  - section: 'Сармати: нові володарі степу'
+    words: 867
+    points: []
+  - section: Первинні джерела
+    words: 504
+    points: []
+  - section: Деколонізаційний погляд
+    words: 244
+    points: []
+  - section: Есе
+    words: 506
+    points: []
+  - section: Підсумок
+    words: 320
+    points: []
+  - section: Потрібно більше практики?
+    words: 111
+    points: []
 vocabulary_hints:
   required:
-  - скіфи (Scythians)
-  - сармати (Sarmatians)
-  - кочівники (nomads)
-  - степ (steppe)
-  - курган (burial mound)
-  - пектораль (pectoral)
-  - кіннота (cavalry)
-  - лучник (archer)
-  - звіриний стиль (animal style)
-  - плем'я (tribe)
-  - цар (king/tsar)
-  - золото (gold)
+    - скіфи (Scythians)
+    - сармати (Sarmatians)
+    - кочівники (nomads)
+    - степ (steppe)
+    - курган (burial mound)
+    - пектораль (pectoral)
+    - кіннота (cavalry)
+    - лучник (archer)
+    - звіриний стиль (animal style)
+    - плем'я (tribe)
+    - цар (king/tsar)
+    - золото (gold)
   recommended:
-  - царство (kingdom)
-  - завоювання (conquest)
-  - торгівля (trade)
-  - амазонка (Amazon warrior)
-  - топонім (toponym)
-  - сарматизм (Sarmatism)
-  - алани (Alans)
+    - царство (kingdom)
+    - завоювання (conquest)
+    - торгівля (trade)
+    - амазонка (Amazon warrior)
+    - топонім (toponym)
+    - сарматизм (Sarmatism)
+    - алани (Alans)
 activity_hints:
-- type: reading
-  focus: Excerpt from Herodotus about Scythians (Ukrainian translation)
-  source: Provide in module
-- type: image-analysis
-  focus: Analyze Scythian gold artifacts including the pectoral
-  items: 5-6 images
-- type: map-activity
-  focus: Trace Scythian and Sarmatian territories
-  items: 2 maps
-- type: vocabulary
-  focus: Archaeological and nomadic terminology
-  items: 15+
-- type: compare-contrast
-  focus: Scythians vs Sarmatians — similarities and differences
-  output: Table or diagram
-- type: quiz
-  focus: Key facts about steppe civilizations
-  items: 12+
-- type: discussion
-  focus: Як кочівники вплинули на розвиток українських земель?
+  - type: reading
+    focus: Excerpt from Herodotus about Scythians (Ukrainian translation)
+    source: Provide in module
+  - type: critical-analysis
+    focus: Analyze Scythian gold artifacts including the pectoral
+    items: 5-6 images
+  - type: quiz
+    focus: Geography of Steppe (Scythian and Sarmatian territories)
+    items: 2 maps
+  - type: fill-in
+    focus: Archaeological and nomadic terminology
+    items: 15+
+  - type: comparative-study
+    focus: Scythians vs Sarmatians — similarities and differences
+    output: Table or diagram
+  - type: quiz
+    focus: Key facts about steppe civilizations
+    items: 12+
+  - type: essay-response
+    focus: Як кочівники вплинули на розвиток українських земель?
 prerequisites:
-- b2-hist-01 (Trypillia civilization)
-- Basic historical vocabulary
+  - b2-hist-01 (Trypillia civilization)
+  - Basic historical vocabulary
 connects_to:
-- b2-hist-03 (Greek city-states in Crimea)
-- b2-hist-04 (Slavic origins)
-- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+  - b2-hist-03 (Greek city-states in Crimea)
+  - b2-hist-04 (Slavic origins)
+  - 'b2-hist-08 (Synthesis: Origins to Kyiv)'

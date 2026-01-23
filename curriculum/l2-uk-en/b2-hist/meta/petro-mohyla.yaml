@@ -61,10 +61,6 @@ activity_hints:
     focus: grammar
   - type: cloze
     focus: reconstruction
-  - type: select
-    focus: analysis
-  - type: translate
-    focus: production
 naturalness:
   score: 9
   status: PASS

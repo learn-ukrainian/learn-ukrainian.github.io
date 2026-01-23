@@ -1,17 +1,47 @@
-# Audit Report: knyahynia-olha.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M01 — knyahynia-olha.md
+**Level:** C1 | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 4-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: «Повість минулих літ» про помсту Ольги | 1 | 1 | ✅ |
+| 2 | critical-analysis | Критичний аналіз: Легенда vs Історія | 1 | 1 | ✅ |
+| 3 | essay-response | Аналіз державних реформ | 1 | 1 | ✅ |
+| 4 | comparative-study | Ольга vs Єлизавета I: Жінки у владі | 1 | 1 | ✅ |
+| 5 | authorial-intent | Намір літописця: Сакралізація влади | 1 | 1 | ✅ |
+| 6 | quiz | Концептуальне розуміння | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 4-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 4062/4000
+- **Words:** ✅ 4064/4000 (raw: 4351)
 - **Activities:** ✅ 6/4
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,11 +74,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Легендарна постать у світлі історії та міфу** | ⚪️ | 426 | Skipped |
+| **Вступ — Легендарна постать у світлі історії та міфу** | ✅ | 426 | Included in Core |
 | **Життєпис: Від таємниці народження до вершини влади** | ⚪️ | 1186 | Skipped |
 | **Внесок у розбудову держави: Від сили до закону** | ⚪️ | 1022 | Skipped |
 | **Останні роки: Оборона Києва та духовний вибір** | ⚪️ | 283 | Skipped |
 | **Історіографічний та культурний аналіз постаті Ольги** | ✅ | 415 | Included in Core |
 | **Спадщина та канонізація: Вічна присутність у національному коді** | ⚪️ | 317 | Skipped |
 | **Підсумок** | ✅ | 130 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 283 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 285 | Skipped |

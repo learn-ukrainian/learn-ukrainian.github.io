@@ -1,4 +1,5 @@
 id: b2-hist-12
+module: b2-hist-12
 title: 'Ярослав Мудрий: Золота доба'
 slug: yaroslav-wise
 version: '1.0'
@@ -120,22 +121,22 @@ activity_hints:
 - type: reading
   focus: Excerpt from Ruska Pravda (translated)
   source: Provide in module
-- type: image-analysis
+- type: critical-analysis
   focus: St. Sophia Cathedral mosaics and architecture
   items: 5-6 images
-- type: vocabulary
+- type: fill-in
   focus: Legal and political terminology
   items: 15+
-- type: timeline
-  focus: Yaroslav's reign key events
+- type: match-up
+  focus: Yaroslav's reign key events (Chronology)
   items: 12+ events
-- type: map-activity
-  focus: Yaroslav's building projects and diplomatic ties
-  items: European connections
+- type: quiz
+  focus: Yaroslav's building projects and diplomatic ties (Geography & Diplomacy)
+  items: 8+
 - type: quiz
   focus: Facts about Yaroslav the Wise
   items: 12+
-- type: discussion
+- type: essay-response
   focus: Чому Ярослава називають 'тестем Європи'?
 prerequisites:
 - b2-hist-11 (Volodymyr and Baptism)

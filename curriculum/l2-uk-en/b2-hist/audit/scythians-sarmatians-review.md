@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -26,20 +26,21 @@
 | 5 | essay-response | Есе: Спадщина Володарів степу та національний код | 1 | 1 | ✅ |
 | 6 | quiz | Комплексна перевірка: Світ кочових цивілізацій | 10 | 8 | ✅ |
 | 7 | match-up | Термінологія степових воїнів | 12 | 8 | ✅ |
-| 8 | true-false | Міфи та історичні факти | 10 | 8 | ✅ |
+| 8 | fill-in | Заповніть пропуски: Археологічна та кочова термінологія | 15 | 8 | ✅ |
+| 9 | true-false | Міфи та історичні факти | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 9 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4104/4000 (raw: 4355)
-- **Activities:** ✅ 8/3
+- **Words:** ✅ 4131/4000 (raw: 4382)
+- **Activities:** ✅ 9/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
@@ -47,7 +48,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ✅ Content-heavy OK (9 activities)
 - **Immersion:** 🇺🇦 97.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -81,9 +82,6 @@
 | **Сармати: нові володарі степу** | ⚪️ | 866 | Skipped |
 | **Первинні джерела** | ✅ | 503 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 242 | Included in Core |
-| **Есе** | ⚪️ | 0 | Skipped |
-| **Тема** | ⚪️ | 91 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 322 | Skipped |
+| **Есе** | ⚪️ | 440 | Skipped |
 | **Підсумок** | ✅ | 320 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

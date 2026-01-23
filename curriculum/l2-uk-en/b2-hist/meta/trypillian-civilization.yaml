@@ -133,19 +133,19 @@ activity_hints:
     focus: "Чи можна вважати трипільців прямими предками сучасних українців? Аргументуйте."
     min_words: 200
 
-  - type: timeline
+  - type: match-up
     focus: "Порівняння Трипільської культури з іншими цивілізаціями (Єгипет, Шумер, Хараппа)"
     items: 8+
 
-  - type: vocabulary
+  - type: fill-in
     focus: "Археологічна та історична термінологія"
     items: 15+
 
-  - type: map-activity
+  - type: quiz
     focus: "Позначити на карті основні трипільські поселення (Майданецьке, Тальянки, Небелівка)"
     items: 6+
 
-  - type: image-analysis
+  - type: critical-analysis
     focus: "Інтерпретація орнаментів трипільської кераміки та статуеток богині-матері"
     items: 4-5
 

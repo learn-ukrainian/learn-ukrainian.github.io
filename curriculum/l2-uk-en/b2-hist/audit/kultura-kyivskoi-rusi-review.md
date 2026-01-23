@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, match-up, quiz, reading, select
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -26,19 +26,20 @@
 | 5 | essay-response | Культурна тяглість | 1 | 1 | ✅ |
 | 6 | comparative-study | Софія Київська vs Софія Константинопольська | 1 | 1 | ✅ |
 | 7 | true-false | Факти про мистецтво Русі | 10 | 8 | ✅ |
+| 8 | select | Вибір правильних тверджень про освіту | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-10) ✅
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (critical-analysis, essay-response, match-up, quiz, reading, select) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 5992/4000 (raw: 6078)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
@@ -46,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

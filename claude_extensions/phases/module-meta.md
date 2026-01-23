@@ -91,171 +91,126 @@ connects_to:
   - "Related modules"
 ```
 
-## YAML Safety Rules
+## Step 3: Generate Content Outline
 
-**Critical formatting requirements:**
+**INVOKE THE ARCHITECT SKILL**
 
-1. **Strings with colons MUST be double-quoted:**
-   ```yaml
-   title: "Козаки: епоха"        # ✓ CORRECT
-   title: Козаки: епоха          # ✗ WRONG - YAML parse error
-   ```
+Do not create the `content_outline` manually. Use the `/architect` skill:
 
-2. **Use «» not "" inside Ukrainian text:**
-   ```yaml
-   title: "Вона сказала: «Так»"  # ✓ CORRECT
-   title: "Вона сказала: "Так""  # ✗ WRONG - JSX compilation error
-   ```
+```bash
+/architect {level} {module_num}
+```
 
-3. **Quote version numbers:**
-   ```yaml
-   version: '2.0'                # ✓ CORRECT
-   version: 2.0                  # ✗ WRONG - treated as float
-   ```
+The architect will:
 
-4. **Arrays must have consistent indentation:**
-   ```yaml
-   objectives:                   # ✓ CORRECT
-     - "First objective"
-     - "Second objective"
-   ```
+- Analyze template requirements
+- Budget words per section (math must equal `word_target`)
+- Return a structured outline with Ukrainian points
+- Update the `meta.yaml` automatically
 
-5. **No unescaped special characters:** `#`, `:`, `{`, `}`, `[`, `]`, `&`, `*`, `!`, `|`, `>`, `'`, `"`, `%`, `@`, `` ` ``
+**Only proceed to module-meta-qa after architect completes.**
 
-## Required vs Optional Fields by Module Type
+## Meta is NEVER Locked
 
-### Core Levels (A1-C1 core, C2)
-**Required:**
-- module, id, title, subtitle, slug, version, phase, focus, pedagogy, duration, transliteration
-- objectives (3-5), grammar (2-4)
-- word_target, content_outline
-- vocabulary_hints, activity_hints
+The `meta.yaml` can be updated at ANY time:
 
-**Optional:**
-- sources (not required for grammar/vocab modules)
-- register (mainly for B2+)
-- prerequisites, connects_to
+- After content is written, sync meta to match actual sections
+- If word counts drift, update the outline
+- If sections are added/removed, update the outline
 
-### Track Levels (B2-HIST, C1-BIO, C1-HIST, LIT)
-**Required:**
-- All core fields PLUS:
-- sources (minimum 2, academic quality)
-- register (публіцистичний, науковий, etc.)
-- prerequisites, connects_to
-
-## Measurable Verbs for Objectives
-
-**For core levels (grammar/vocab):** Use English or Ukrainian based on level
-- A1-A2 (English): "Learner can describe...", "Learner can identify..."
-- B1+ (Ukrainian): "Учень може описати...", "Учень може визначити..."
-
-**For track levels (content-based):** Always Ukrainian
-- Use Bloom's taxonomy verbs:
-  - **Remember**: описати, визначити, перелічити, назвати
-  - **Understand**: пояснити, узагальнити, порівняти
-  - **Apply**: продемонструвати, використати, проілюструвати
-  - **Analyze**: проаналізувати, диференціювати, дослідити
-  - **Evaluate**: оцінити, аргументувати, обґрунтувати
-  - **Create**: створити, розробити, сконструювати
-
-## Word Targets by Level
-
-| Level | Target Range | Notes |
-|-------|-------------|-------|
-| A1 | 300-750 | Graduated: M01-05 (300-450), M06-10 (500-650), M11+ (750+) |
-| A2 | 1000-1500 | Core curriculum |
-| B1 | 1500-2000 | Core curriculum |
-| B2 (core) | 1750-2500 | Grammar/vocab modules |
-| B2-HIST | 3000-5000 | History track |
-| B2-PRO | 2000-3000 | Professional track |
-| C1 (core) | 2000-3000 | Advanced grammar/vocab |
-| C1-BIO | 4000-6000 | Biography track |
-| C1-HIST | 4000-6000 | History track |
-| LIT | 5000-8000 | Literature specialization |
-| C2 | 2000-4000 | Mastery level |
-
-## Process
-
-1. Read the curriculum plan for this module
-2. Extract title, phase, focus from plan
-3. Write 3-5 measurable objectives in Ukrainian
-4. Create content_outline with word targets (see algorithm below)
-5. List vocabulary_hints from plan (required vs recommended)
-6. Plan activity types matching pedagogy
-7. Add 2+ credible sources
-8. Write prerequisites and connections
-
-## Word Target Allocation Algorithm
-
-**Goal:** Distribute `word_target` across sections so they sum exactly.
-
-**Steps:**
-
-1. **Reserve intro/outro budget:**
-   - Intro section: ~200 words (5% of typical 4000)
-   - Summary (if separate): handled by module structure, not in outline
-
-2. **Count total key_points:**
-   - Go through all main sections
-   - Sum up number of key_points items
-
-3. **Calculate main budget:**
-   ```
-   main_budget = word_target - intro_words
-   ```
-
-4. **Allocate proportionally:**
-   ```
-   For each main section:
-     section_words = round((section_key_points / total_key_points) × main_budget)
-   ```
-
-5. **Adjust final section to match exactly:**
-   ```
-   current_sum = sum(all_section_words)
-   difference = word_target - current_sum
-   last_section_words += difference
-   ```
-
-**Example (word_target = 4000):**
-
-Sections with key_points:
-- Intro: 2 points
-- Early Years: 4 points
-- Path to Uprising: 4 points
-- Military Leader: 4 points
-- Diplomat: 4 points
-- Legacy: 4 points
-
-Total key_points = 2 + 4 + 4 + 4 + 4 + 4 = 22
-
-Allocation:
-- Intro: 200 (fixed)
-- Main budget: 4000 - 200 = 3800
-- Early Years: round(4/22 × 3800) = 691 → 700
-- Path: round(4/22 × 3800) = 691 → 700
-- Military: round(4/22 × 3800) = 691 → 900 (adjusted)
-- Diplomat: round(4/22 × 3800) = 691 → 800
-- Legacy: round(4/22 × 3800) = 691 → 700
-
-Sum: 200 + 700 + 700 + 900 + 800 + 700 = 4000 ✓
-
-**Notes:**
-- Round to nearest 50 or 100 for readability
-- Adjust sections based on content importance (e.g., Military Leader gets more weight)
-- Final check: sum MUST equal word_target exactly
+**The meta is a living document, not a locked contract.**
 
 ## Validation (Next Phase)
 
-This file will be validated by `module-meta-qa`. Do not proceed to content until meta passes QA.
+This file will be validated by `module-meta-qa`. Validation checks:
+
+- `content_outline` section words sum to `word_target`
+- All required fields present
+- YAML syntax valid
+
+## Examples
+
+### Example 1: B2-HIST Module 1 (Trypillian Civilization)
+
+**Input:** `/module-meta b2-hist 1`
+
+**Output:** `meta/trypillian-civilization.yaml`
+
+```yaml
+module: b2-hist-01
+id: b2-hist-01
+title: 'Трипільська цивілізація'
+subtitle: 'Trypillian Civilization — Origins of Ukrainian Land'
+slug: trypillian-civilization
+version: '2.0'
+phase: 'B2-HIST.1 [Витоки]'
+focus: history
+pedagogy: seminar
+register: публіцистичний
+tags: [history, era: eneolithic, archaeology, decolonization]
+duration: 150
+word_target: 4000
+activity_count: 8
+activity_types:
+  [quiz, reading, discussion, compare-contrast, image-analysis, map-activity, vocabulary]
+vocabulary_count: 20
+immersion_target: 0.98
+content_outline:
+  - section: Вступ
+    words: 500
+    content: [Історичне тло, Значення для України]
+  - section: Читання
+    words: 2000
+    content: [Господарство, Ремесла, Суспільство]
+  - section: Аналіз
+    words: 1000
+    content: [Порівняння з сучасністю, Деколонізація]
+  - section: Підсумок
+    words: 500
+    content: [Висновки, Вплив на українську ідентичність]
+prerequisites: [A1-B2 core completed]
+connects_to: [scythians-sarmatians, syntez-vytoky-1]
+sources:
+  - name: 'Трипільська культура'
+    url: 'https://uk.wikipedia.org/wiki/Трипільська_культура'
+    type: reference
+    notes: 'Основні факти для перевірки'
+```
+
+### Example 2: B1 Grammar Module
+
+**Input:** `/module-meta b1 15`
+
+**Output:** `meta/metalanguage-basics.yaml`
+
+```yaml
+module: b1-15
+title: 'Метамова граматики'
+subtitle: 'Talking About Grammar'
+slug: metalanguage-basics
+version: '2.0'
+phase: 'B1.2'
+focus: grammar
+pedagogy: TTT
+register: навчальний
+tags: [grammar, metalanguage]
+word_target: 2500
+activity_count: 6
+activity_types: [quiz, fill-in, match-up]
+vocabulary_count: 15
+immersion_target: 0.85
+# ... (full outline)
+```
 
 ## Example Command
 
 ```bash
 # For B2-HIST module 5
 /module-meta b2-hist 5
+# Then immediately:
+/architect b2-hist 5
 ```
 
 ---
 
-**Next phase:** `module-meta-qa` → validates this file before locking
+**Next phase:** `module-meta-qa` → validates the meta file

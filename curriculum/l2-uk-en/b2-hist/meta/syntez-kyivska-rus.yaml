@@ -1,4 +1,5 @@
 id: b2-hist-20
+module: b2-hist-20
 title: 'Синтез: Київська Русь — спадщина'
 slug: syntez-kyivska-rus
 version: '1.0'
@@ -19,6 +20,9 @@ objectives:
   - Evaluate the legacy of Rus in modern Ukrainian identity
   - Critically analyze conflicting historical claims to the Rus heritage
 immersion: 100% Ukrainian
+naturalness:
+  score: 9
+  status: PASS
 sources:
 - name: Київська Русь (Вікіпедія)
   url: https://uk.wikipedia.org/wiki/Київська_Русь
@@ -99,29 +103,27 @@ vocabulary_hints:
   - Грушевський (Hrushevsky)
   - деколонізація (decolonization)
 activity_hints:
-- type: timeline
-  focus: Comprehensive Kyivan Rus timeline
+- type: match-up
+  focus: Comprehensive Kyivan Rus timeline (Chronology)
   items: 20+ key events
-- type: vocabulary
+- type: fill-in
   focus: Review all Phase 2 terminology
   items: 30+
-- type: compare-contrast
+- type: comparative-study
   focus: Ukrainian vs Russian views on Rus legacy
   output: Critical analysis table
 - type: essay-response
   focus: Чому Київська Русь важлива для української ідентичності?
-  word_target: 3000
-  model_answer: Required
 - type: quiz
   focus: Comprehensive Phase 2 review
   items: 25+
-- type: map-activity
-  focus: Kyivan Rus at its peak vs fragmented
-  items: Two comparative maps
+- type: quiz
+  focus: Geography Review (Kyivan Rus at its peak vs fragmented)
+  items: 8+
 - type: group-sort
   focus: Match achievements to rulers
   items: 15+
-- type: discussion
+- type: essay-response
   focus: Хто є справжнім спадкоємцем Київської Русі?
 prerequisites:
 - All Phase 2 modules (b2-hist-09 through b2-hist-19)

@@ -9,6 +9,26 @@
 
 > This track was relocated from C1 M36-131. Biography content is now optional, separate from core academic path.
 
+## Workflow Integration
+
+**C1-BIO uses the 7-phase track workflow:**
+
+1. **Meta** → Generate module metadata (hydrated content outline)
+2. **Meta-QA** → Validate metadata and word targets
+3. **Lesson** → Write lesson content following meta outline
+4. **Lesson-QA** → Validate lesson against requirements
+5. **Act** → Generate activities from lesson content
+6. **Act-QA** → Validate activities quality and coverage
+7. **Integrate** → Deploy to website (MDX generation)
+
+**Commands:**
+
+- Start: `/module c1-bio {num}`
+- Resume: `/module c1-bio {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module c1-bio {num} --check`
+
+**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+
 ---
 
 ## Relaxed Audit Limits

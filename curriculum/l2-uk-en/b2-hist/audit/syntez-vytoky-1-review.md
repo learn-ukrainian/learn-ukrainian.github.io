@@ -10,6 +10,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, quiz, select, true-false
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥4 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -34,6 +35,7 @@
 - Total activities: 11 (target: 10-14) ✅
 - Unique types: 8 (minimum: 4) ✅
 - Priority types used: 2/4 (quiz, true-false) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates

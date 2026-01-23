@@ -2,10 +2,9 @@
 
 This document describes all scripts and workflows for module creation, validation, and generation.
 
-> **🚀 For B1+ module creation (B1, B2, C1, C2):**
+> **🚀 Module Creation Workflow:**
 >
-> - **👤 Human users:** See **`docs/HUMAN-WORKFLOW-B1-PLUS.md`** - Shows exactly what commands YOU run
-> - **🤖 AI agents:** See **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Comprehensive reference
+> Use `/module {level} {num}` as the main entry point. See [7-Phase Workflow](#7-phase-module-workflow-rfc-001) below.
 >
 > This document (SCRIPTS.md) is a **detailed reference** for individual scripts and commands.
 
@@ -42,11 +41,11 @@ cd docusaurus && pnpm start  # In separate terminal
 
 ```bash
 # Audit single module (Python)
-python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
 
 # Audit range (shell loop)
 for i in {1..20}; do
-  python3 scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
+  .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
 done
 ```
 
@@ -74,7 +73,7 @@ npm run validate:html l2-uk-en a1 5
 
 ```bash
 # Re-run audit to confirm all passes
-python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 ```
 
 ---
@@ -83,13 +82,56 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 | Document                                         | Purpose                                                                                                  |
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| **`docs/B1-PLUS-MODULE-WORKFLOW.md`**            | **Complete B1+ workflow** - End-to-end guide for B1/B2/C1/C2 modules with all quality validation systems |
+| `claude_extensions/phases/module-*.md`           | **7-Phase workflow** - Current module creation process (RFC-001)                                         |
+| `claude_extensions/commands/module*.md`          | Module commands reference (`/module`, `/module-sync`, etc.)                                              |
 | `docs/ARCHITECTURE.md`                           | System architecture and quality validation overview                                                      |
-| `docs/STAGED-MODULE-CREATION.md`                 | 4-stage creation pipeline overview                                                                       |
 | `docs/l2-uk-en/claude-review-prompt.md`          | Review prompts for Claude - Use these to fix audit issues                                                |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated)                                                                |
 | `docs/MARKDOWN-FORMAT.md`                        | Markdown syntax specification                                                                            |
 | `docs/CONTENT-QUALITY-AUDIT.md`                  | Content quality review system (LLM-based)                                                                |
+| `claude_extensions/commands/review-content-*.md` | Content quality review commands (`/review-content-scoring`, etc.)                                        |
+
+---
+
+## Content Quality Review Commands
+
+> **When to use:** After `audit_module.py` passes structural gates. Review-content focuses on **pedagogical quality** (coherence, engagement, naturalness).
+
+### Available Commands
+
+| Command | Purpose | Size |
+|---------|---------|------|
+| `/review-content-scoring` | **Primary** - Compact post-audit quality review with 0-10 scoring | 13k |
+| `/review-content-scoring-0-10` | Detailed 0-10 rubric reference (dimensions, examples) | 23k |
+| `/review-content-enhancements` | AI slop detection & humanity checks (optional addon) | 16k |
+
+### Archived (Obsolete)
+
+| Command | Reason |
+|---------|--------|
+| `review-content.md` | Superseded by `-scoring` version (was 74k, too bloated) |
+| `review-content-v2.md` | Orphaned consolidation attempt |
+
+### Usage
+
+```bash
+/review-content-scoring b2-hist 5      # Review single module
+/review-content-scoring b2-hist 1-10   # Review range (uses subagents)
+```
+
+### Key Criteria (9 Critical Sections)
+
+1. Template Compliance (auto-fail if violated)
+2. Activity Quality (auto-fail for structure/wrong answers)
+3. Richness Red Flags (auto-fail for AI slop)
+4. Red Flags (multiple auto-fails)
+5. Content Richness (B1+ critical)
+6. Humanity & Flow Audit
+7. Dryness Flags (rewrite if 2+)
+8. Human Warmth Checklist (<2 markers = fail)
+9. LLM Fingerprint Detection (B1+ critical)
+
+**Scoring:** Only 9-10/10 is acceptable. Everything below 9 requires fixes.
 
 ---
 
@@ -98,6 +140,20 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 > **NEW:** For track levels (b2-hist, c1-bio, c1-hist, lit) and C2, use the new 7-phase workflow.
 >
 > **Vocab enrichment runs separately** after all modules in a track are content-complete.
+
+### Which Command Should I Use?
+
+| Situation | Command | What it does |
+|-----------|---------|--------------|
+| **New module from scratch** | `/module b2-hist 5` | Full build: phases 1-7 |
+| **Module exists, meta needs update** | `/module-sync b2-hist 5` | Syncs meta to markdown reality |
+| **Rebuild meta+activities, keep content** | `/module b2-hist 5 --refresh` | Regenerates via architect, preserves .md |
+| **Resume after fixing lesson** | `/module b2-hist 5 --from=lesson` | Starts at phase 3 |
+| **Just check status** | `/module b2-hist 5 --check` | Reports current state |
+
+**Key difference:**
+- `--refresh`: Uses **architect skill** to regenerate outline (plan-driven)
+- `/module-sync`: **Extracts from markdown** to update meta (reality-driven)
 
 ### /module Command
 
@@ -109,6 +165,7 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 /module {level} {num}               # Build single module (phases 1-7)
 /module {level} {start}-{end}       # Batch build
 /module {level} {num} --from=PHASE  # Resume from specific phase
+/module {level} {num} --refresh     # Refresh meta+activities (preserves .md)
 /module {level} {num} --check       # Check status only
 ```
 
@@ -118,6 +175,7 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 /module b2-hist 5               # Build module 5 (content + skeleton deploy)
 /module b2-hist 1-5             # Build modules 1-5
 /module b2-hist 5 --from=lesson # Resume from phase 3 (lesson)
+/module b2-hist 5 --refresh     # Refresh meta+activities keeping lesson content
 /module c1-bio 12 --check       # Show which phases are complete
 ```
 
@@ -141,6 +199,24 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 | `lesson`     | 3               | Meta is locked, need to regenerate content |
 | `act`        | 5               | Content is locked, need new activities     |
 | `integrate`  | 7               | All content ready, just need deploy        |
+
+### /module-sync Command
+
+Sync meta.yaml to match existing markdown content. Use this when markdown exists and is good, but meta needs updating.
+
+```bash
+/module-sync b2-hist 1      # Sync meta to existing trypillian-civilization.md
+```
+
+**What it does:**
+1. Reads existing markdown (source of truth - PRESERVED)
+2. Extracts actual H2 sections with word counts
+3. Updates meta.yaml content_outline to match reality
+4. Validates and fixes activities if needed
+5. Loops until all audit gates pass
+6. Deploys when clean
+
+**Important:** Markdown is NEVER regenerated. Meta is updated to match reality.
 
 ### Batch Mode
 
@@ -193,23 +269,6 @@ This command:
 | `validate_html.py`      | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
 | `audit_module.py`       | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
 | `validate_meta_yaml.py` | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
-
-### Staged Generation (Python)
-
-| Script                      | Purpose                        | Command                                                        |
-| --------------------------- | ------------------------------ | -------------------------------------------------------------- |
-| `generate_skeleton.py`      | Generate module skeleton       | `.venv/bin/python scripts/generate_skeleton.py l2-uk-en b1 43` |
-| `check_gate.py`             | Hard gate checker              | `.venv/bin/python scripts/check_gate.py <stage> <file>`        |
-| `calculate_richness.py`     | Richness score (0-100)         | `.venv/bin/python scripts/calculate_richness.py <file>`        |
-| `extract_for_activities.py` | Extract content for activities | `.venv/bin/python scripts/extract_for_activities.py <file>`    |
-
-### Seminar Workflow (Meta-Driven)
-
-| Utility                           | Purpose                                   | Command                                   |
-| --------------------------------- | ----------------------------------------- | ----------------------------------------- |
-| `/generate-seminar-module`        | Generate high-fidelity module from Meta   | `/generate-seminar-module <level> <slug>` |
-| `schemas/meta-module.schema.json` | **Source of Truth** for module generation | (Referenced by validator)                 |
-| `meta_validator.py`               | Enforces Meta YAML presence & schema      | (Integrated into `audit_module.py`)       |
 
 ### Meta & Vocabulary (Python)
 
@@ -467,6 +526,7 @@ Or with issues:
 - Grammar constraints by level
 - Linguistic purity (no Surzhyk)
 - **Meta YAML Validation (Seminar Modules):** Enforces strict adherence to `schemas/meta-module.schema.json`.
+- **Activity Hints Enforcement:** Reads `activity_hints` from `meta.yaml` and **FAILS** if any specified activity types are missing from `activities.yaml`. This ensures activities match the meta specification.
 
 **Usage:**
 
@@ -476,211 +536,26 @@ Or with issues:
 
 **Issue Categories:**
 
-- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax, **Missing/Invalid Meta YAML**
+- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax, **Missing/Invalid Meta YAML**, **Missing required activity types from meta**
 - **WARN (Should Fix):** Richness, variety, word count
 - **INFO (Consider):** Optional improvements
 
----
+**Activity Hints Enforcement Example:**
 
-### Staged Generation Scripts
-
-These scripts support the staged module generation workflow where modules are built incrementally with hard gates between stages.
-
-### Workflow Overview
-
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  SKELETON    │ ──▶ │  CONTENT     │ ──▶ │  ACTIVITIES  │ ──▶ │  AUDIT       │ ──▶ │  OUTPUT      │
-│  Stage 1     │     │  Stage 2     │     │  Stage 3     │     │  Stage 4     │     │  Stage 5     │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
-       │                    │                    │
-       ▼                    ▼                    ▼
-  check_gate.py        check_gate.py        check_gate.py
-   skeleton             content              activities
+If `meta.yaml` specifies:
+```yaml
+activity_hints:
+  - type: reading
+  - type: quiz
+  - type: essay-response
 ```
 
-Each gate returns exit code 0 (PASS) or 1 (FAIL). Agent has NO discretion to override FAIL.
-
-### Fractal Generation Workflow (Experimental)
-
-For complex modules (B2/C1, History, Biography) that require rigorous planning and high word counts, the linear generation process often fails. The **Fractal Generation** workflow solves this by enforcing a detailed plan _before_ content generation begins.
-
-**The Workflow:**
-
-1.  **Check Hydration (Step 0):**
-    Before writing content, the agent checks if the module has a detailed plan (`content_outline`) in its meta YAML.
-
-    ```bash
-    .venv/bin/python scripts/fractal/check_hydration.py --hydrate meta/{slug}.yaml
-    ```
-
-2.  **Architect (Skill):**
-    If the check fails (missing outline), the **Architect Skill** is activated. It reads the level-specific template (e.g., `b2-history-module-template.md`) and generates a budgeted, section-by-section outline, saving it to the YAML.
-
-3.  **Generate Content (Linear):**
-    The standard generation agent (Stage 2) reads the now-guaranteed `content_outline`. Instead of "making it up as it goes," it executes the plan, writing each section to meet the specific word count defined in the outline.
-
----
-
-### generate_skeleton.py
-
-**Purpose:** Generate module skeleton from curriculum plan and template.
-
-**Usage:**
-
-```bash
-python3 scripts/generate_skeleton.py l2-uk-en b1 43
+And `activities.yaml` only has `quiz` and `fill-in`, the audit will FAIL:
 ```
-
-**Inputs:**
-
-- `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` - Extracts title, focus, grammar, vocab
-- `docs/l2-uk-en/templates/{level}-{type}-module-template.md` - Structure guide
-
-**Output:** `curriculum/l2-uk-en/{level}/{NN}-skeleton.md`
-
-**Features:**
-
-- Determines module type based on level and number
-- Generates frontmatter with pedagogy, phase, word targets
-- Creates section headers from template
-- Adds activity placeholders with specs
-- Includes vocabulary table structure
-
----
-
-### check_gate.py
-
-**Purpose:** Hard gate checker for staged generation. Returns exit codes for CI/automation.
-
-**Usage:**
-
-```bash
-python3 scripts/check_gate.py skeleton curriculum/l2-uk-en/b1/43-*.md
-python3 scripts/check_gate.py content curriculum/l2-uk-en/b1/43-*.md
-python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
-```
-
-**Gate Checks:**
-
-| Stage        | Checks                                                                         |
-| ------------ | ------------------------------------------------------------------------------ |
-| `skeleton`   | Frontmatter present, required sections, vocabulary section                     |
-| `content`    | Word count, engagement boxes, examples, dialogues, immersion, vocabulary count |
-| `activities` | Activity count, type variety, priority types, item counts                      |
-
-**Exit Codes:**
-
-- `0` - PASS
-- `1` - FAIL (with failure reasons printed)
-
----
-
-### calculate_richness.py
-
-**Purpose:** Calculate 10-component richness score (0-100) for content quality.
-
-**Usage:**
-
-```bash
-python3 scripts/calculate_richness.py curriculum/l2-uk-en/b1/43-*.md
-```
-
-**Components (Weighted):**
-
-| Component           | Weight | What It Measures            |
-| ------------------- | ------ | --------------------------- |
-| Engagement          | 15%    | 💡🎬🌍🎯🎮 boxes            |
-| Examples            | 20%    | Ukrainian example sentences |
-| Dialogues           | 15%    | А:/Б: or speaker patterns   |
-| Variety             | 10%    | Sentence starter diversity  |
-| Cultural            | 10%    | Cultural references         |
-| Real-world          | 10%    | Practical usage scenarios   |
-| Questions           | 5%     | Rhetorical questions        |
-| Proverbs            | 5%     | Ukrainian sayings           |
-| Visual              | 5%     | Tables and formatting       |
-| Paragraph variation | 5%     | Length diversity            |
-
-**Dryness Flags:**
-
-- `NO_ENGAGEMENT` - Zero engagement boxes
-- `WALL_OF_TEXT` - All paragraphs similar length
-- `REPETITIVE_STARTERS` - Same sentence beginnings
-
-**Output:**
-
-```
-Richness: 87/100 (threshold: 70)
-Components: engagement=12/15, examples=18/20, ...
-Flags: []
+❌ Missing required activity types from meta.yaml: essay-response, reading
 ```
 
 ---
-
-### extract_for_activities.py
-
-**Purpose:** Extract content elements for activity generation.
-
-**Usage:**
-
-```bash
-python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md
-python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md output.json
-```
-
-**Extracts:**
-
-| Element      | Description                                   |
-| ------------ | --------------------------------------------- |
-| `vocabulary` | Ukrainian-English pairs from vocabulary table |
-| `sentences`  | Example sentences from content                |
-| `dialogues`  | А/Б dialogue pairs                            |
-| `paragraphs` | Content paragraphs for cloze/comprehension    |
-| `proverbs`   | Ukrainian sayings and proverbs                |
-| `tables`     | Grammar tables for reference                  |
-
-**Output Format (JSON):**
-
-```json
-{
-  "module": "b1-43",
-  "title": "...",
-  "vocabulary": [{"uk": "слово", "en": "word", "ipa": "/.../"}, ...],
-  "sentences": ["Це речення.", ...],
-  "dialogues": [{"a": "Привіт!", "b": "Вітаю!"}, ...],
-  "paragraphs": ["...", ...],
-  "stats": {
-    "vocabulary_count": 25,
-    "sentence_count": 60,
-    ...
-  }
-}
-```
-
----
-
-### Staged Generation Quick Reference
-
-```bash
-# Stage 1: Generate skeleton
-python3 scripts/generate_skeleton.py l2-uk-en b1 43
-python3 scripts/check_gate.py skeleton curriculum/l2-uk-en/b1/43-skeleton.md
-
-# Stage 2: Fill content (agent fills in skeleton)
-python3 scripts/check_gate.py content curriculum/l2-uk-en/b1/43-*.md
-python3 scripts/calculate_richness.py curriculum/l2-uk-en/b1/43-*.md
-
-# Stage 3: Generate activities
-python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md
-# (agent generates activities from extracted content)
-python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
-
-# Stage 4: Full audit
-python3 scripts/audit_module.py curriculum/l2-uk-en/b1/43-*.md
-
-# Stage 5: Pipeline output
-npm run pipeline l2-uk-en b1 43
-```
 
 ---
 
@@ -906,7 +781,7 @@ Remaining false positives are typically irregular forms, diminutives, or prefixe
 ```bash
 npm run vocab:init                  # Create database
 npm run vocab:init:force            # Force recreate (deletes existing)
-python3 scripts/vocab_init.py l2-uk-en --force  # Direct invocation
+.venv/bin/python scripts/vocab_init.py l2-uk-en --force  # Direct invocation
 ```
 
 **Creates:** `curriculum/{lang}/vocabulary.db`
@@ -963,12 +838,7 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 
 **Purpose:** Optional manual validation workflow for B1+ activity quality using deterministic checks + human semantic assessment.
 
-> **For complete workflow integration**, see **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Activity Quality Validation section, which includes:
->
-> - When to use activity quality validation (recommended for high-stakes content: C1/C2, pre-publication)
-> - Step-by-step queue → validate → finalize workflow
-> - How to interpret CEFR gates and fix failed activities
-> - Integration with full module creation pipeline
+> **When to use:** Recommended for high-stakes content (C1/C2, pre-publication).
 
 ### Workflow Overview
 
@@ -1163,19 +1033,13 @@ cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validatio
 ### New Module Creation (Full Pipeline)
 
 ```bash
-# 1. Write module content (use /module-create command or manually)
+# Option 1: Use /module command (recommended - runs full 7-phase workflow)
+/module b2-hist 5
 
-# 2. Audit the module
-python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
-
-# 3. Fix any issues, then run full pipeline
+# Option 2: Manual pipeline after writing content
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 npm run pipeline l2-uk-en a1 5
-
-# 4. Generate JSON for Vibe app
 npm run generate:json l2-uk-en a1 5
-
-# 5. Verify all passes
-python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 ```
 
 ### Review Module Range
@@ -1183,7 +1047,7 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 ```bash
 # 1. Audit multiple modules
 for i in {1..20}; do
-  python3 scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
+  .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
 done
 
 # 2. Fix issues in failing modules

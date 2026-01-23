@@ -52,6 +52,7 @@ from .checks import (
     check_activity_header_format,
 )
 from .checks.content_purity import check_content_purity
+from .checks.outline_compliance import print_section_summary
 from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
 from .checks.vocabulary_integration import check_vocabulary_integration
 from .checks.activity_validation import (
@@ -723,6 +724,19 @@ def audit_module(file_path: str) -> bool:
 
     # Get config
     config = get_level_config(level_code, module_focus)
+
+    # Override required_types with meta.yaml activity_hints if available
+    # This ensures the audit checks against what the meta specifies, not hardcoded defaults
+    if meta_data and meta_data.get('activity_hints'):
+        meta_required_types = set()
+        for hint in meta_data['activity_hints']:
+            if isinstance(hint, dict) and 'type' in hint:
+                meta_required_types.add(hint['type'])
+        if meta_required_types:
+            config = dict(config)  # Make a copy to avoid modifying global config
+            config['required_types'] = meta_required_types
+            print(f"  📋 Required activity types from meta: {', '.join(sorted(meta_required_types))}")
+
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 
@@ -789,10 +803,13 @@ def audit_module(file_path: str) -> bool:
         for v in outline_violations[:3]:  # Show first 3
             severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
             print(f"     {severity_icon} [{v['type']}] {v['message'].split(chr(10))[0]}")  # First line only
-        
+
         if error_count > 0:
             has_critical_failure = True
             critical_failure_reasons.append(f"{error_count} Outline Compliance Errors")
+
+    # Show section word summary for hydration guidance
+    print_section_summary(file_path, word_target=target)
 
     # Extract pedagogy
     pedagogy = "Not Specified"
@@ -1148,35 +1165,8 @@ def audit_module(file_path: str) -> bool:
             # External URL mismatches are critical
             has_critical_failure = True
 
-    # Check for LLM self-validation review file (Issue #430)
-    # ALL modules REQUIRE an LLM review file to verify content accuracy
-    llm_review_missing = False
-    module_slug = Path(file_path).stem
-    audit_dir = Path(file_path).parent / 'audit'
-    llm_review_path = audit_dir / f"{module_slug}-llm-review.md"
-
-    is_seminar_track = level_code.lower() in ['lit', 'b2-hist', 'c1-hist', 'c1-bio']
-
-    if not llm_review_path.exists():
-        llm_review_missing = True
-        print(f"  🔴 MISSING LLM SELF-VALIDATION")
-        print(f"     File not found: {llm_review_path}")
-        if is_seminar_track:
-            print(f"     Seminar tracks require LLM verification of:")
-            print(f"       - External URLs (correct author/content)")
-            print(f"       - Reading-analysis coherence")
-            print(f"       - Model answer quality")
-            print(f"       - Factual accuracy")
-        else:
-            print(f"     Core modules require LLM verification of:")
-            print(f"       - Ukrainian grammar correctness")
-            print(f"       - Vocabulary appropriateness for level")
-            print(f"       - Activity instructions clarity")
-            print(f"       - Cultural/factual accuracy")
-        print(f"     Create: {llm_review_path.name}")
-        has_critical_failure = True
-    else:
-        print(f"  ✅ LLM self-validation file exists: {llm_review_path.name}")
+    # LLM review files removed (Issue #430 superseded)
+    # Validation happens during /review-content, not via separate files
 
     if use_yaml_activities:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
@@ -1346,6 +1336,17 @@ def audit_module(file_path: str) -> bool:
     results['priority'] = evaluate_priority_types(unique_types, config['priority_types'])
     if results['priority'].status == 'FAIL':
         has_critical_failure = True
+
+    # Check required_types (from meta.yaml activity_hints)
+    required_types = config.get('required_types', set())
+    if required_types:
+        missing_required = required_types - unique_types
+        if missing_required:
+            has_critical_failure = True
+            critical_failure_reasons.append(
+                f"Missing required activity types: {', '.join(sorted(missing_required))}"
+            )
+            print(f"  ❌ Missing required activity types from meta.yaml: {', '.join(sorted(missing_required))}")
 
     eng_target = config.get('min_engagement', 3)
     results['engagement'] = evaluate_engagement(engagement_count, eng_target)

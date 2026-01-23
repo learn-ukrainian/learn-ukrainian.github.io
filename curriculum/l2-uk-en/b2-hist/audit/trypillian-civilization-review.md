@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -27,21 +27,21 @@
 | 6 | quiz | Хронологія та порівняння цивілізацій | 8 | 8 | ✅ |
 | 7 | quiz | Географія трипільських поселень | 8 | 8 | ✅ |
 | 8 | essay-response | Есе: Трипільці та сучасні українці | 1 | 1 | ✅ |
-| 9 | essay-response | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
+| 9 | critical-analysis | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
 | 10 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 3-10) ✅
-- Unique types: 7 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 6/6 (critical-analysis, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 6403/4000 (raw: 6491)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio

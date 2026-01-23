@@ -34,15 +34,37 @@
 
 ---
 
+## Workflow Integration
+
+**B2-HIST uses the 7-phase track workflow:**
+
+1. **Meta** → Generate module metadata (hydrated content outline)
+2. **Meta-QA** → Validate metadata and word targets
+3. **Lesson** → Write lesson content following meta outline
+4. **Lesson-QA** → Validate lesson against requirements
+5. **Act** → Generate activities from lesson content
+6. **Act-QA** → Validate activities quality and coverage
+7. **Integrate** → Deploy to website (MDX generation)
+
+**Commands:**
+
+- Start: `/module b2-hist {num}`
+- Resume: `/module b2-hist {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module b2-hist {num} --check`
+
+**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+
+---
+
 ## Phase Structure (61 Modules)
 
-| Phase   | Modules | Focus                            | Synthesis      |
-| ------- | ------- | -------------------------------- | -------------- |
-| HIST.1  | M01-13  | Origins to Kyivan Rus            | **M13**        |
-| HIST.2  | M14-27  | Cossack Era                      | (none)         |
-| HIST.3  | M28-37  | Imperial Period & National Revival | **M37**      |
-| HIST.4  | M38-49  | Soviet Period & Tragedies        | **M49**        |
-| HIST.5  | M50-61  | Independence & Modern Ukraine    | **M55**, **M61** |
+| Phase  | Modules | Focus                              | Synthesis        |
+| ------ | ------- | ---------------------------------- | ---------------- |
+| HIST.1 | M01-13  | Origins to Kyivan Rus              | **M13**          |
+| HIST.2 | M14-27  | Cossack Era                        | (none)           |
+| HIST.3 | M28-37  | Imperial Period & National Revival | **M37**          |
+| HIST.4 | M38-49  | Soviet Period & Tragedies          | **M49**          |
+| HIST.5 | M50-61  | Independence & Modern Ukraine      | **M55**, **M61** |
 
 ---
 
@@ -75,7 +97,7 @@ objectives:
   - 'Learner can understand historical narrative about...'
   - 'Learner can use period-specific vocabulary...'
 prerequisites:
-  - b2-hist-XX  # Previous module
+  - b2-hist-XX # Previous module
 ```
 
 ## Content Requirements
@@ -137,15 +159,16 @@ prerequisites:
 
 Synthesis modules consolidate learning across multiple modules:
 
-| Module | Title                          | Scope                    |
-| ------ | ------------------------------ | ------------------------ |
-| M13    | Синтез: Витоки                 | Origins to Cossack       |
-| M37    | Синтез: Козаччина до 1920      | Cossack Era to Revival   |
-| M49    | Синтез: Трагедії XX століття   | Soviet tragedies         |
-| M55    | Синтез: Шлях до волі           | Independence path        |
-| M61    | Синтез: Війна за існування     | Revolution & War         |
+| Module | Title                        | Scope                  |
+| ------ | ---------------------------- | ---------------------- |
+| M13    | Синтез: Витоки               | Origins to Cossack     |
+| M37    | Синтез: Козаччина до 1920    | Cossack Era to Revival |
+| M49    | Синтез: Трагедії XX століття | Soviet tragedies       |
+| M55    | Синтез: Шлях до волі         | Independence path      |
+| M61    | Синтез: Війна за існування   | Revolution & War       |
 
 **Synthesis modules focus on:**
+
 - Cross-era analysis and comparison
 - Thematic connections across periods
 - Decolonization perspective

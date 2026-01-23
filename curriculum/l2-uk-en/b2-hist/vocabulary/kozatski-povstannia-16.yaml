@@ -1,0 +1,129 @@
+module: kozatski-povstannia-16
+level: B2
+version: '2.0'
+items:
+  - lemma: реєстр
+    ipa: /reˈjɛstr/
+    translation: register / list
+    pos: noun
+    gender: m
+  - lemma: виписчики
+    ipa: /wɪˈpɪst͡ʃɪkɪ/
+    translation: excluded from the register
+    pos: noun
+    gender: m
+  - lemma: вольності
+    ipa: /ˈwɔlʲnɔsʲtʲi/
+    translation: liberties / freedoms
+    pos: noun
+    gender: f
+  - lemma: унія
+    ipa: /ˈunʲija/
+    translation: union
+    pos: noun
+    gender: f
+  - lemma: магнат
+    ipa: /maɦˈnat/
+    translation: magnate / nobleman
+    pos: noun
+    gender: m
+  - lemma: шляхта
+    ipa: /ʃlʲaxta/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: ополчення
+    ipa: /opɔlˈt͡ʃɛnʲːa/
+    translation: militia
+    pos: noun
+    gender: n
+  - lemma: капітуляція
+    ipa: /kapʲitulʲaˈt͡sʲija/
+    translation: capitulation / surrender
+    pos: noun
+    gender: f
+  - lemma: урочище
+    ipa: /uˈrɔt͡ʃɪʃt͡ʃɛ/
+    translation: natural boundary / area
+    pos: noun
+    gender: n
+  - lemma: різанина
+    ipa: /rʲizaˈnɪna/
+    translation: massacre
+    pos: noun
+    gender: f
+  - lemma: віроломство
+    ipa: /wʲiroˈlɔmstwo/
+    translation: perfidy / treachery
+    pos: noun
+    gender: n
+  - lemma: мучеництво
+    ipa: /ˈmut͡ʃɛnɪt͡stwo/
+    translation: martyrdom
+    pos: noun
+    gender: n
+  - lemma: свавілля
+    ipa: /swaˈwʲilʲːa/
+    translation: arbitrariness / lawlessness
+    pos: noun
+    gender: n
+  - lemma: універсал
+    ipa: /unʲiwɛrˈsal/
+    translation: universal / decree
+    pos: noun
+    gender: m
+  - lemma: лицарство
+    ipa: /ˈlɪt͡sarstwo/
+    translation: knighthood / chivalry
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲisʲtʲ/
+    translation: agency / subjectivity
+    pos: noun
+    gender: f
+  - lemma: бунтівник
+    ipa: /bunˈtʲiu̯nɪk/
+    translation: rebel
+    pos: noun
+    gender: m
+  - lemma: опір
+    ipa: /ˈopʲir/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: пастка
+    ipa: /ˈpastka/
+    translation: trap
+    pos: noun
+    gender: f
+  - lemma: тортури
+    ipa: /ˈtɔrturɪ/
+    translation: torture
+    pos: noun
+    gender: m
+  - lemma: змова
+    ipa: /ˈzmɔwa/
+    translation: conspiracy / plot
+    pos: noun
+    gender: f
+  - lemma: передумова
+    ipa: /pɛrɛduˈmɔwa/
+    translation: prerequisite / condition
+    pos: noun
+    gender: f
+  - lemma: гасло
+    ipa: /ˈɦaslo/
+    translation: slogan / motto
+    pos: noun
+    gender: n
+  - lemma: щит
+    ipa: /ʃt͡ʃɪt/
+    translation: shield
+    pos: noun
+    gender: m

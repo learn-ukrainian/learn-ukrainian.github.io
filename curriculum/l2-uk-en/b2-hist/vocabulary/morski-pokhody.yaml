@@ -1,0 +1,129 @@
+module: morski-pokhody
+level: B2
+version: '2.0'
+items:
+  - lemma: чайка
+    ipa: /ˈt͡ʃɑi̯kɐ/
+    translation: chayka (Cossack boat)
+    pos: noun
+    gender: f
+  - lemma: галера
+    ipa: /ɦɐˈɫɛrɐ/
+    translation: galley (Ottoman ship)
+    pos: noun
+    gender: f
+  - lemma: весло
+    ipa: /u̯ɛsˈɫɔ/
+    translation: oar
+    pos: noun
+    gender: n
+  - lemma: щогла
+    ipa: /ˈʃt͡ʃɔɦɫɐ/
+    translation: mast
+    pos: noun
+    gender: f
+  - lemma: якір
+    ipa: /ˈjɑkir/
+    translation: anchor
+    pos: noun
+    gender: m
+  - lemma: десант
+    ipa: /deˈsɑnt/
+    translation: landing party / amphibious assault
+    pos: noun
+    gender: m
+  - lemma: абордаж
+    ipa: /ɐborˈdɑʒ/
+    translation: boarding (a ship)
+    pos: noun
+    gender: m
+  - lemma: Чорне море
+    ipa: /ˈt͡ʃɔrne ˈmɔre/
+    translation: Black Sea
+    pos: noun
+    gender: n
+  - lemma: Кафа
+    ipa: /ˈkɑfɐ/
+    translation: Caffa (modern Feodosia)
+    pos: noun
+    gender: f
+  - lemma: Стамбул
+    ipa: /stɐmˈbuɫ/
+    translation: Istanbul
+    pos: noun
+    gender: m
+  - lemma: дуб
+    ipa: /dub/
+    translation: oak / large Cossack transport boat
+    pos: noun
+    gender: m
+  - lemma: корма
+    ipa: /korˈmɑ/
+    translation: stern
+    pos: noun
+    gender: f
+  - lemma: ніс
+    ipa: /nis/
+    translation: bow (of a ship)
+    pos: noun
+    gender: m
+  - lemma: вітрило
+    ipa: /u̯iˈtrɪɫɔ/
+    translation: sail
+    pos: noun
+    gender: n
+  - lemma: фальконет
+    ipa: /fɐlʲkoˈnɛt/
+    translation: falconet (light cannon)
+    pos: noun
+    gender: m
+  - lemma: пороги
+    ipa: /poˈrɔɦɪ/
+    translation: rapids (of the Dnieper)
+    pos: noun
+    gender: pl
+  - lemma: очерет
+    ipa: /ot͡ʃeˈrɛt/
+    translation: reed
+    pos: noun
+    gender: m
+  - lemma: невільник
+    ipa: /neˈu̯ilʲnɪk/
+    translation: captive / slave
+    pos: noun
+    gender: m
+  - lemma: каторга
+    ipa: /kɐˈtɔrɦɐ/
+    translation: katorga (forced labor on galleys)
+    pos: noun
+    gender: f
+  - lemma: штиль
+    ipa: /ʃtɪlʲ/
+    translation: calm (no wind)
+    pos: noun
+    gender: m
+  - lemma: шторм
+    ipa: /ʃtɔrm/
+    translation: storm
+    pos: noun
+    gender: m
+  - lemma: компас
+    ipa: /ˈkɔmpɐs/
+    translation: compass
+    pos: noun
+    gender: m
+  - lemma: лоція
+    ipa: /ˈɫɔt͡sʲijɐ/
+    translation: sailing directions / pilotage
+    pos: noun
+    gender: f
+  - lemma: обрій
+    ipa: /ˈɔbrij/
+    translation: horizon
+    pos: noun
+    gender: m
+  - lemma: лиман
+    ipa: /ɫɪˈmɑn/
+    translation: estuary / liman
+    pos: noun
+    gender: m

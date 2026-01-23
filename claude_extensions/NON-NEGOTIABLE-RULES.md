@@ -86,7 +86,40 @@ content_outline:
 - You do NOT argue "it's close enough"
 - **REWRITE OR FAIL**
 
-### 6. Meta.yaml is Sacred - NEVER Edit During Sync
+### 6. LLM Self-Validation - NEVER FAKE IT
+
+**LLM review files (`{slug}-llm-review.md`) are quality assurance documentation.**
+
+**You MUST:**
+- ✅ Actually READ the module content before writing the review
+- ✅ Verify grammar by examining actual Ukrainian text
+- ✅ Verify vocabulary by listing specific words you found
+- ✅ Verify factual accuracy by checking dates, events, names
+- ✅ Provide SPECIFIC evidence in the review (not generic statements)
+
+**ABSOLUTELY FORBIDDEN:**
+- ❌ Creating placeholder/template review files without reading content
+- ❌ Writing "all checks passed" without evidence
+- ❌ Copying template structure and filling with generic text
+- ❌ Fabricating vocabulary lists you didn't actually find
+- ❌ Claiming to verify facts you didn't actually check
+- ❌ Using MCP tools as an excuse to skip your own review
+
+**Example of FAKE review (FORBIDDEN):**
+```markdown
+| **Ukrainian Grammar** | ✅ PASS | High-style analytical register with historical terms. |
+```
+
+**Example of HONEST review (REQUIRED):**
+```markdown
+| **Ukrainian Grammar** | ✅ PASS | Case endings correct (e.g., "Данилом Галицьким" - instrumental). Verb aspects: "зумів об'єднати" (pf), "прагнула" (impf). No Russianisms found. |
+```
+
+**The difference:** Honest reviews cite SPECIFIC EXAMPLES from the actual content.
+
+**If you create a fake LLM review, you have FAILED the task.**
+
+### 7. Meta.yaml is Sacred - NEVER Edit During Sync
 
 **Meta.yaml is the SPECIFICATION. Markdown is the IMPLEMENTATION.**
 

@@ -1,28 +1,108 @@
-title: 'Хмельниччина I: повстання'
-phase: B2.3b [Українська історія]
+module: khmelnychchyna-prychyny
+id: b2-hist-51
+title: "Хмельниччина I: причини та початок"
+subtitle: "The Khmelnytsky Uprising: Causes and Outbreak"
+slug: khmelnychchyna-prychyny
+version: '2.0'
+phase: "HIST.5 [Rise of Cossacks]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+word_target: 3000
 register: публіцистичний
-duration: 90
+duration: 120
 transliteration: none
 tags:
-- history
-- cossack-era
-- khmelnytsky
-- uprising
-- military
+  - history
+  - uprising
+  - khmelnytsky
+  - cossack
+  - liberation
 grammar:
-- Історичний наратив
-- Військова термінологія
-vocabulary_focus: null
-  доби"
+  - "Historical narrative: cause and effect"
+  - "Military and political terminology"
 objectives:
-- Учень може пояснити причини повстання Богдана Хмельницького
-- Учень може описати перебіг ключових битв 1648 року
-- Учень може аналізувати значення козацьких перемог для української історії
-vocabulary_count: 35
-slug: khmelnychchyna-i-povstannia
+  - "Учень може пояснити соціальні та релігійні причини повстання"
+  - "Учень може аналізувати особисту трагедію Хмельницького як каталізатор подій"
+  - "Учень може описати перші перемоги 1648 року (Жовті Води, Корсунь)"
+vocabulary_hints:
+  required:
+    - повстання
+    - гніт
+    - унія
+    - шляхта
+    - реєстр
+    - універсал
+    - союз
+    - засідка
+    - перемога
+    - воля
 naturalness:
   score: 9
   status: PASS
+content_outline:
+  - section: "Вступ: Україна напередодні вибуху"
+    words: 300
+    points:
+      - "The 'Golden Peace' of 1638-1648"
+      - "Social, religious, and national oppression"
+  - section: "Особиста драма Богдана Хмельницького"
+    words: 400
+    points:
+      - "The Subotiv conflict with Czapliński"
+      - "Injustice in the Polish courts"
+      - "From loyal subject to rebel leader"
+  - section: "Підготовка до повстання: Січ і Крим"
+    words: 250
+    points:
+      - "Escape to Zaporizhzhia"
+      - "Alliance with Islam III Giray"
+      - "Mobilization of the Cossacks"
+  - section: "Жовті Води: Перший грім"
+    words: 300
+    points:
+      - "Tactics of the battle"
+      - "The role of Tugay Bey"
+      - "Defeat of the Potocki son"
+  - section: "Корсунь: Розгром коронного війська"
+    words: 300
+    points:
+      - "The ambush at Horokhovad Dibrova"
+      - "Capture of the Grand Hetmans"
+      - "Panic in Poland"
+  - section: "Читання: Універсали Хмельницького"
+    words: 150
+    points:
+      - "Analysis of political rhetoric"
+  - section: "Первинні джерела: Листи та щоденники"
+    words: 150
+    points:
+      - "Contemporary accounts of the uprising"
+  - section: "Деколонізаційний погляд"
+    words: 250
+    points:
+      - "War of Liberation vs. 'Civil War' or 'Reunion'"
+      - "Subjectivity of the Ukrainian people"
+  - section: "Есе"
+    words: 300
+    points:
+      - "The role of personality in history"
+activity_hints:
+  - type: reading
+    focus: "Linguistic analysis of 17th-century documents"
+  - type: quiz
+    focus: "Chronology and key figures"
+  - type: essay-response
+    focus: "Causes of the uprising"
+  - type: comparative-study
+    focus: "Polish vs. Cossack perspective"
+  - type: true-false
+    focus: "Facts about the battles"
+sources:
+  - name: "History of Ukraine-Rus"
+    url: "http://litopys.org.ua/hrushrus/iur.htm"
+    type: reference
+    notes: "Classic historical account"
+  - name: "The Khmelnytsky Uprising"
+    url: "https://encyclopediaofukraine.com"
+    type: academic
+    notes: "Modern analysis"

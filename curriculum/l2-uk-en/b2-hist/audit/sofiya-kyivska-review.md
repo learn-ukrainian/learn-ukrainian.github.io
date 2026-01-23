@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -25,20 +25,21 @@
 | 4 | comparative-study | Софія Київська vs Софія Константинопольська | 1 | 1 | ✅ |
 | 5 | quiz | Архітектурні та мистецькі секрети Софії | 8 | 8 | ✅ |
 | 6 | match-up | Термінологія та образи | 12 | 8 | ✅ |
-| 7 | true-false | Істина про Софію | 10 | 8 | ✅ |
+| 7 | fill-in | Архітектурна та культурна термінологія Софії | 10 | 8 | ✅ |
+| 8 | true-false | Істина про Софію | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 3-10) ✅
-- Unique types: 7 (minimum: 2) ✅
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ⚠️ 3965/4000 (raw: 4235) (35 short)
-- **Activities:** ✅ 7/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -46,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

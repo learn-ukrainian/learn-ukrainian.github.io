@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        790 modules aligned with CEFR and Ukrainian State Standards.
+        687 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -162,7 +162,7 @@ export default function Home(): ReactNode {
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, communication skills"
-                modules={99}
+                modules={92}
                 color="#E65100"
               />
               <LevelCard
@@ -182,8 +182,8 @@ export default function Home(): ReactNode {
               <LevelCard
                 level="C2"
                 name="Mastery"
-                description="Native-level proficiency"
-                modules={100}
+                description="Native-level proficiency (coming soon)"
+                modules={0}
                 color="#C62828"
               />
             </div>
@@ -196,7 +196,7 @@ export default function Home(): ReactNode {
                 level="B2-HIST"
                 name="History"
                 description="Ukrainian history from origins to present"
-                modules={61}
+                modules={140}
                 color="#795548"
                 isTrack
               />
@@ -204,23 +204,23 @@ export default function Home(): ReactNode {
                 level="C1-BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
-                modules={96}
+                modules={111}
                 color="#607D8B"
                 isTrack
               />
               <LevelCard
                 level="B2-PRO"
                 name="Professional"
-                description="Business communication, technical domains"
-                modules={40}
+                description="Business communication, technical domains (coming soon)"
+                modules={0}
                 color="#455A64"
                 isTrack
               />
               <LevelCard
                 level="C1-PRO"
                 name="Professional Mastery"
-                description="Executive, academic, specialized"
-                modules={50}
+                description="Executive, academic, specialized (coming soon)"
+                modules={0}
                 color="#37474F"
                 isTrack
               />

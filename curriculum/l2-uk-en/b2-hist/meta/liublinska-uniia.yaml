@@ -28,21 +28,23 @@ objectives:
 vocabulary_count: 35
 content_outline:
   - section: "Вступ"
-    words: 400
+    words: 550
   - section: "Шлях до унії: Криза та необхідність"
-    words: 800
+    words: 700
   - section: "Люблінський сейм 1569 року: Драма та компроміс"
-    words: 800
+    words: 600
   - section: "Нова карта Європи: Українські землі у складі Польщі"
-    words: 800
-  - section: "Читання"
-    words: 300
+    words: 500
+  - section: "Читання: Культурний шок та адаптація"
+    words: 350
   - section: "Первинні джерела"
     words: 300
   - section: "Деколонізаційний погляд"
-    words: 300
+    words: 280
   - section: "Есе"
-    words: 400
+    words: 100
+  - section: "Підсумок"
+    words: 120
   - section: "Потрібно більше практики?"
     words: 100
 naturalness:

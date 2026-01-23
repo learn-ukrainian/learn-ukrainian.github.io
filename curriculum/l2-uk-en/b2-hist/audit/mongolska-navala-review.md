@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -19,29 +19,27 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Розуміння тексту | 10 | 8 | ✅ |
-| 2 | cloze | Історична лексика в контексті | 15 | 1 | ✅ |
-| 3 | error-correction | Граматика в історичних реченнях | 8 | 6 | ✅ |
-| 4 | select | Аналіз первинного джерела | 8 | 6 | ✅ |
-| 5 | match-up | Історична лексика | 12 | 8 | ✅ |
-| 6 | mark-the-words | Знайдіть пасивні конструкції | 6 | 6 | ✅ |
-| 7 | translate | Перекладіть | 8 | 6 | ✅ |
-| 8 | fill-in | Сталі вирази | 10 | 8 | ✅ |
-| 9 | essay-response | Аналітичне есе | 1 | 1 | ✅ |
-| 10 | comparative-study | Два шляхи розвитку | 1 | 1 | ✅ |
+| 1 | quiz | Розуміння тексту про навалу | 8 | 8 | ✅ |
+| 2 | match-up | Історична термінологія | 12 | 8 | ✅ |
+| 3 | fill-in | Події навали | 10 | 8 | ✅ |
+| 4 | true-false | Міфи та факти про навалу | 10 | 8 | ✅ |
+| 5 | reading | Свідчення очевидця: Плано Карпіні | 3 | 1 | ✅ |
+| 6 | critical-analysis | Аналіз стану Києва після навали | 1 | 1 | ✅ |
+| 7 | essay-response | Аналітичне есе про наслідки навали | 1 | 1 | ✅ |
+| 8 | comparative-study | Україна vs Московія під Ордою | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
-- Unique types: 10 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ⚠️ 3989/4000 (raw: 4200) (11 short)
-- **Activities:** ✅ 10/3
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 10/2 types
+- **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
@@ -49,7 +47,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

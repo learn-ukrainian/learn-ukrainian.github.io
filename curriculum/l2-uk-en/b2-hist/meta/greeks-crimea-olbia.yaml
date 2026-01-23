@@ -103,23 +103,23 @@ activity_hints:
 - type: reading
   focus: Oath of Chersonesus citizens (translated excerpt)
   source: Provide in module
-- type: map-activity
-  focus: Locate Greek colonies on the Black Sea coast
+- type: quiz
+  focus: Geography of Greek Colonies
   items: 8+ cities
-- type: image-analysis
-  focus: Greek artifacts from Ukrainian museums
+- type: critical-analysis
+  focus: Artifact Analysis (Greek artifacts from Ukrainian museums)
   items: 5-6 images
-- type: vocabulary
+- type: fill-in
   focus: Classical and political terminology
   items: 15+
-- type: compare-contrast
+- type: comparative-study
   focus: Olbia vs Chersonesus — differences in founding and governance
   output: Comparison table
 - type: quiz
   focus: Greek city-states facts
   items: 12+
-- type: timeline
-  focus: Key events in Greek colonial history
+- type: match-up
+  focus: Chronology of Colonization
   items: 10+
 prerequisites:
 - b2-hist-02 (Scythians and Sarmatians)

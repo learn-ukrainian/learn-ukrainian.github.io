@@ -21,43 +21,44 @@ All these fields MUST exist:
 ```yaml
 module: ✓
 id: ✓
-title: ✓          # Must be in Ukrainian
-subtitle: ✓       # English translation
+title: ✓ # Must be in Ukrainian
+subtitle: ✓ # English translation
 slug: ✓
 version: ✓
 phase: ✓
 focus: ✓
 pedagogy: ✓
-objectives: ✓     # Array with 3-5 items
-grammar: ✓        # Array with 2+ items
+objectives: ✓ # Array with 3-5 items
+grammar: ✓ # Array with 2+ items
 word_target: ✓
 content_outline: ✓
 vocabulary_hints: ✓
 activity_hints: ✓
-sources: ✓        # Required for tracks, optional for core
+sources: ✓ # Required for tracks, optional for core
 ```
 
 ### 2. Word Target in Range
 
-| Level | Min | Max | Notes |
-|-------|-----|-----|-------|
-| A1 | 300 | 750 | M01-05: 300-450, M06-10: 500-650, M11+: 750+ |
-| A2 | 1000 | 1500 | Core curriculum |
-| B1 | 1500 | 2000 | Core curriculum |
-| B2 (core) | 1750 | 2500 | Grammar/vocab |
-| B2-HIST | 3000 | 5000 | History track |
-| B2-PRO | 2000 | 3000 | Professional track |
-| C1 (core) | 2000 | 3000 | Advanced |
-| C1-BIO | 4000 | 6000 | Biography track |
-| C1-HIST | 4000 | 6000 | History track |
-| LIT | 5000 | 8000 | Literature spec |
-| C2 | 2000 | 4000 | Mastery level |
+| Level     | Min  | Max  | Notes                                        |
+| --------- | ---- | ---- | -------------------------------------------- |
+| A1        | 300  | 750  | M01-05: 300-450, M06-10: 500-650, M11+: 750+ |
+| A2        | 1000 | 1500 | Core curriculum                              |
+| B1        | 1500 | 2000 | Core curriculum                              |
+| B2 (core) | 1750 | 2500 | Grammar/vocab                                |
+| B2-HIST   | 3000 | 5000 | History track                                |
+| B2-PRO    | 2000 | 3000 | Professional track                           |
+| C1 (core) | 2000 | 3000 | Advanced                                     |
+| C1-BIO    | 4000 | 6000 | Biography track                              |
+| C1-HIST   | 4000 | 6000 | History track                                |
+| LIT       | 5000 | 8000 | Literature spec                              |
+| C2        | 2000 | 4000 | Mastery level                                |
 
 ### 3. Objectives Quality
 
 Each objective MUST:
 
 **For A1-A2 (English objectives):**
+
 - Start with "Learner can" or "Student can"
 - Use measurable verb (recognize, pronounce, read, write, etc.)
 - Be specific and testable
@@ -65,6 +66,7 @@ Each objective MUST:
 - ✓ GOOD: "Learner can recognize and pronounce 19 Cyrillic letters"
 
 **For B1+ (Ukrainian objectives):**
+
 - Start with "Учень може"
 - Use measurable verb (описати, пояснити, проаналізувати, оцінити, etc.)
 - Be specific and testable
@@ -74,6 +76,7 @@ Each objective MUST:
 ### 4. Content Outline Structure
 
 Each section MUST have:
+
 - `section`: Ukrainian heading
 - `words`: Word count target (number)
 - `points`: Array of key points (can be empty for intro/outro)
@@ -82,12 +85,12 @@ Sum of all section word counts MUST equal ±10% of `word_target`.
 
 ### 5. Activity Hints Match Pedagogy
 
-| Pedagogy | Required Activity Types |
-|----------|------------------------|
-| seminar | reading, quiz, essay-response or critical-analysis |
-| TTT | diagnostic, practice, error-correction |
-| PPP | presentation, practice, production |
-| CLIL | reading, vocabulary, discussion |
+| Pedagogy | Required Activity Types                            |
+| -------- | -------------------------------------------------- |
+| seminar  | reading, quiz, essay-response or critical-analysis |
+| TTT      | diagnostic, practice, error-correction             |
+| PPP      | presentation, practice, production                 |
+| CLIL     | reading, vocabulary, discussion                    |
 
 ### 6. Sources Credibility
 
@@ -96,12 +99,14 @@ Sum of all section word counts MUST equal ±10% of `word_target`.
 **Core modules (A1-C2 core):** Sources OPTIONAL (but recommended for B2+)
 
 When sources are present, each source MUST have:
+
 - `name`: Descriptive title
 - `url`: Valid URL
 - `type`: reference, primary, or academic
 - `notes`: Why this source is relevant
 
 Trusted domains for Ukrainian content:
+
 - uk.wikipedia.org
 - resource.history.org.ua
 - litopys.org.ua
@@ -127,6 +132,7 @@ Run mechanical validation:
 All checks must pass before proceeding.
 
 **Note:** This check verifies:
+
 - YAML syntax is parseable
 - All required fields exist
 - Word targets are within valid ranges
@@ -171,6 +177,60 @@ If meta cannot be fixed without changing curriculum plan:
 PHASE UNLOCK REQUIRED: {reason}
 
 Cannot proceed. Curriculum plan needs adjustment.
+```
+
+## Examples
+
+### Example 1: PASS - B2-HIST Module 1
+
+**Input:** Valid `meta/trypillian-civilization.yaml` (see module-meta examples)
+
+**Output:**
+
+```
+META-QA: PASS
+
+✓ Required fields present
+✓ Word target: 4000 (within range for B2-HIST)
+✓ Objectives: 3 measurable Ukrainian items
+✓ Content outline: 6 sections, 4000 words total
+✓ Activity hints: 7 types (seminar pedagogy match)
+✓ Sources: 3 credible sources (Wikipedia, academic journal, museum site)
+✓ YAML syntax valid
+✓ Script validation passed
+
+META LOCKED. Proceed to: /module-lesson b2-hist 1
+```
+
+### Example 2: FAIL - Missing Sources
+
+**Input:** `meta/example.yaml` missing sources for track module
+
+**Output:**
+
+```
+META-QA: FAIL
+
+Violations:
+1. Sources: 0 sources found (minimum 2 required for B2-HIST track)
+2. Content outline: Word sum 3800 != target 4000 (±10% = 3600-4400)
+
+Fix meta.yaml and re-run /module-meta-qa b2-hist 1
+```
+
+### Example 3: FAIL - Invalid Pedagogy Match
+
+**Input:** B1 grammar module with seminar pedagogy but only quiz activities
+
+**Output:**
+
+```
+META-QA: FAIL
+
+Violations:
+1. Activity hints: Only [quiz] provided, but seminar requires reading, quiz, essay-response or critical-analysis
+
+Fix meta.yaml and re-run /module-meta-qa b1 15
 ```
 
 ---

@@ -10,7 +10,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 /module {level} {num}               # Build single module (phases 1-7)
 /module {level} {start}-{end}       # Batch build
 /module {level} {num} --from=PHASE  # Resume from specific phase
-/module {level} {num} --rebuild     # Re-verify and rebuild artifacts (keeps existing .md)
+/module {level} {num} --refresh     # Refresh meta+activities (preserves .md content)
 /module {level} {num} --check       # Check status only
 ```
 
@@ -71,7 +71,7 @@ Extract:
 
 - `level`: a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, c1-hist, lit
 - `num`: Module number or range (e.g., `5` or `1-5`)
-- `flags`: --from=PHASE, --check, --rebuild (optional)
+- `flags`: --from=PHASE, --check, --refresh (optional)
 
 **If range detected:** Jump to Batch Mode.
 
@@ -119,7 +119,7 @@ fi
 
 ### Step 4: Determine Start Phase
 
-**If `--rebuild` provided:**
+**If `--refresh` provided:**
 
 Special flow (preserves `.md`, rebuilds everything else):
 1. Phase 2 (Meta QA)
@@ -151,7 +151,7 @@ Special flow (preserves `.md`, rebuilds everything else):
 
 ### Step 5: Execute Phases
 
-**If `--rebuild` mode:**
+**If `--refresh` mode:**
 Execute specific sequence: 2 → 4 → 5 → 6 → 7.
 
 **Otherwise (standard mode):**
@@ -247,7 +247,7 @@ Next: When all modules pass, run /module-vocab-enrich b2-hist
 /module b2-hist 5 --from=lesson
 
 # Rebuild module artifacts (keeping lesson text)
-/module b2-hist 5 --rebuild
+/module b2-hist 5 --refresh
 
 # Check what's done
 /module b2-hist 5 --check

@@ -25,21 +25,23 @@ objectives:
 vocabulary_count: 30
 content_outline:
   - section: "Вступ"
-    words: 300
-  - section: "Буковина: Шипинська земля та Молдовське князівство"
-    words: 700
-  - section: "Закарпаття: від угорського панування до опришків"
-    words: 700
+    words: 325
+  - section: "Буковина"
+    words: 496
+  - section: "Закарпаття"
+    words: 695
   - section: "Культурний опір та збереження ідентичності"
-    words: 700
+    words: 634
   - section: "Читання"
-    words: 400
+    words: 327
   - section: "Первинні джерела"
-    words: 400
+    words: 339
   - section: "Деколонізаційний погляд"
-    words: 400
+    words: 363
   - section: "Есе"
-    words: 400
+    words: 445
+  - section: "Потрібно більше практики?"
+    words: 95
 naturalness:
   score: 9
   status: PASS

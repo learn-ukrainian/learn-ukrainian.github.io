@@ -1,7 +1,39 @@
 # Audit Report: M128 — aneksiia-krymu.md
-**Level:** B2 | **Module:** M128 | **Phase:** B2.3e | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M128 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Хронологія та факти анексії Криму | 8 | 8 | ✅ |
+| 2 | fill-in | Лексика анексії та окупації | 10 | 8 | ✅ |
+| 3 | match-up | Постаті та поняття анексії Криму | 14 | 8 | ✅ |
+| 4 | true-false | Факти про анексію Криму | 10 | 8 | ✅ |
+| 5 | reading | Аналіз Будапештського меморандуму | 3 | 1 | ✅ |
+| 6 | critical-analysis | Порушення міжнародних гарантій | 1 | 1 | ✅ |
+| 7 | essay-response | Есе: Анексія Криму та міжнародне право | 1 | 1 | ✅ |
+| 8 | comparative-study | Порівняльний аналіз: Крим 1944 та 2014 | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 3-10) ✅
+- Unique types: 8 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (critical-analysis, essay-response, quiz, reading) ✅
+- Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4144/4000 (raw: 4300)

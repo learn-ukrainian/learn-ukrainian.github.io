@@ -1,11 +1,99 @@
-# Meta for Зборівська та Білоцерківська угоди
-slug: zborivska-bila-tserkva
+module: b2-hist-54
+id: b2-hist-54
 title: "Зборівська та Білоцерківська угоди"
-level: B2
-track: history
+subtitle: "The Treaties of Zboriv and Bila Tserkva"
+slug: zborivska-bila-tserkva
+version: "2.0"
 phase: "HIST.6 [Khmelnytsky & Cossack State]"
-status: skeleton
 focus: history
+pedagogy: seminar
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+register: публіцистичний
+duration: 150
+transliteration: none
+tags:
+  - history
+  - treaties
+  - diplomacy
+  - khmelnytsky
+  - compromise
+grammar:
+  - "Diplomatic register: official terminology"
+  - "Conditional sentences in negotiations"
+objectives:
+  - "Учень може пояснити умови Зборівського та Білоцерківського договорів"
+  - "Учень може проаналізувати причини дипломатичних поступок Хмельницького"
+  - "Учень може порівняти територіальні межі автономії за різними угодами"
+vocabulary_hints:
+  required:
+    - угода
+    - компроміс
+    - автономія
+    - ратифікація
+    - воєводство
+    - амністія
+    - шляхта
+    - реєстр
+    - легітимність
+    - поступка
+content_outline:
+  - section: "Вступ: Між перемогами та миром"
+    words: 400
+    points:
+      - "Diplomatic situation after Zboriv (1649)"
+      - "The goals of the Hetmanate vs. the Crown"
+  - section: "Зборівський договір (1649): Перше визнання"
+    words: 800
+    points:
+      - "Key conditions: 40,000 register, three voivodeships"
+      - "Legal status of the Hetmanate"
+      - "The role of the Orthodox Church"
+  - section: "Берестечко та поворот подій"
+    words: 500
+    points:
+      - "The impact of the 1651 defeat"
+      - "Shift in the balance of power"
+  - section: "Білоцерківський договір (1651): Гіркий компроміс"
+    words: 800
+    points:
+      - "Reduction of the register (20,000)"
+      - "Territorial losses (only Kyiv voivodeship)"
+      - "Social tension and dissatisfaction among Cossacks"
+  - section: "Аналіз: Дипломатія як мистецтво можливого"
+    words: 500
+    points:
+      - "Khmelnytsky's tactical retreat"
+      - "Preserving the core of the state"
+  - section: "Первинні джерела: Тексти угод"
+    words: 400
+    points:
+      - "Excerpt from the Zboriv articles"
+  - section: "Деколонізаційний погляд: Вихід з-під польського права"
+    words: 300
+    points:
+      - "Treaties as steps towards total sovereignty"
+      - "Debunking the 'betrayal' narrative"
+  - section: "Есе"
+    words: 300
+    points:
+      - "Comparing the two treaties"
+activity_hints:
+  - type: reading
+    focus: "Analysis of diplomatic documents"
+  - type: quiz
+    focus: "Conditions and dates of the treaties"
+  - type: essay-response
+    focus: "Evolution of Cossack autonomy"
+  - type: match-up
+    focus: "Legal and political terminology"
+  - type: true-false
+    focus: "Common myths about the compromises"
+sources:
+  - name: "History of Ukraine-Rus"
+    url: "http://litopys.org.ua/hrushrus/iur.htm"
+    type: reference
+    notes: "Detailed analysis of treaties"
+  - name: "Diplomacy of Bohdan Khmelnytsky"
+    url: "https://history.org.ua"
+    type: academic
+    notes: "International context"

@@ -9,6 +9,26 @@
 
 > This track provides career-focused Ukrainian language training separate from the core grammar path.
 
+## Workflow Integration
+
+**B2-PRO uses the 7-phase track workflow:**
+
+1. **Meta** → Generate module metadata (hydrated content outline)
+2. **Meta-QA** → Validate metadata and word targets
+3. **Lesson** → Write lesson content following meta outline
+4. **Lesson-QA** → Validate lesson against requirements
+5. **Act** → Generate activities from lesson content
+6. **Act-QA** → Validate activities quality and coverage
+7. **Integrate** → Deploy to website (MDX generation)
+
+**Commands:**
+
+- Start: `/module b2-pro {num}`
+- Resume: `/module b2-pro {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module b2-pro {num} --check`
+
+**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+
 ---
 
 ## Audit Limits
@@ -34,11 +54,11 @@
 
 ## Phase Structure (40 Modules)
 
-| Phase     | Modules | Focus                        | Checkpoints |
-| --------- | ------- | ---------------------------- | ----------- |
-| PRO.1     | M01-15  | Business Communication       | **M13**, **M15** |
-| PRO.2     | M16-30  | Technical & Domain-Specific  | **M28**, **M30** |
-| PRO.3     | M31-40  | Media & Public Discourse     | **M38**, **M40** |
+| Phase | Modules | Focus                       | Checkpoints      |
+| ----- | ------- | --------------------------- | ---------------- |
+| PRO.1 | M01-15  | Business Communication      | **M13**, **M15** |
+| PRO.2 | M16-30  | Technical & Domain-Specific | **M28**, **M30** |
+| PRO.3 | M31-40  | Media & Public Discourse    | **M38**, **M40** |
 
 ---
 
@@ -71,7 +91,7 @@ objectives:
   - 'Learner can communicate professionally in...'
   - 'Learner can use domain-specific vocabulary for...'
 prerequisites:
-  - b2-pro-XX  # Previous module
+  - b2-pro-XX # Previous module
 ```
 
 ## Content Requirements
@@ -96,11 +116,11 @@ prerequisites:
 
 ## Domain Coverage
 
-| Phase | Domain | Modules |
-|-------|--------|---------|
-| PRO.1 | Business Communication | Email, reports, meetings, presentations, negotiations |
-| PRO.2 | Technical Domains | IT, finance, legal, medical, HR, scientific |
-| PRO.3 | Media & Public Discourse | News analysis, journalism, public speaking |
+| Phase | Domain                   | Modules                                               |
+| ----- | ------------------------ | ----------------------------------------------------- |
+| PRO.1 | Business Communication   | Email, reports, meetings, presentations, negotiations |
+| PRO.2 | Technical Domains        | IT, finance, legal, medical, HR, scientific           |
+| PRO.3 | Media & Public Discourse | News analysis, journalism, public speaking            |
 
 ---
 

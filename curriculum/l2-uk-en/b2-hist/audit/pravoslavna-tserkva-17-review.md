@@ -3,15 +3,49 @@
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
 
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-10 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, fill-in, match-up, quiz, reading, true-false
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз 'Протестації' Йова Борецького | 3 | 1 | ✅ |
+| 2 | critical-analysis | Лінгвістичний аналіз джерела | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Козацтво і Церква | 1 | 1 | ✅ |
+| 4 | quiz | Перевірка розуміння | 10 | 8 | ✅ |
+| 5 | true-false | Правда чи міф? | 10 | 8 | ✅ |
+| 6 | match-up | Історична термінологія | 12 | 8 | ✅ |
+| 7 | fill-in | Лексика в контексті | 10 | 8 | ✅ |
+| 8 | match-up | Стилістичні відповідності | 12 | 8 | ✅ |
+| 9 | mark-the-words | Пасивний стан | 10 | 6 | ✅ |
+| 10 | comparative-study | Православ'я vs Унія | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 3-10) ✅
+- Unique types: 9 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 8/8 (comparative-study, critical-analysis, essay-response, fill-in, match-up, quiz, reading, true-false) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 5469/4000
+- **Words:** ✅ 5469/4000 (raw: 5647)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 21/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 10 < 20 (soft target)
+- **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -43,11 +77,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 40 | Included in Core |
 | **Православна церква XVII століття** | ⚪️ | 80 | Skipped |
-| **Вступ** | ⚪️ | 522 | Skipped |
+| **Вступ** | ✅ | 522 | Included in Core |
 | **Відновлення ієрархії** | ⚪️ | 2248 | Skipped |
 | **Читання: Голоси епохи** | ✅ | 206 | Included in Core |
-| **Первинні джерела** | ⚪️ | 955 | Skipped |
-| **Деколонізаційний погляд** | ⚪️ | 634 | Skipped |
+| **Первинні джерела** | ✅ | 955 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 634 | Included in Core |
 | **Підсумок** | ✅ | 205 | Included in Core |
 | **Есе** | ⚪️ | 446 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 133 | Skipped |

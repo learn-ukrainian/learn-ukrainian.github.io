@@ -10,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, fill-in, match-up, quiz, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -25,19 +25,22 @@
 | 4 | comparative-study | Мати і Син | 1 | 1 | ✅ |
 | 5 | essay-response | Ціна імперії | 1 | 1 | ✅ |
 | 6 | quiz | Перевірка знань | 10 | 8 | ✅ |
+| 7 | match-up | Хронологія епохи | 12 | 8 | ✅ |
+| 8 | fill-in | Військова та державна лексика | 15 | 8 | ✅ |
+| 9 | quiz | Географія походів Святослава | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-10) ✅
-- Unique types: 5 (minimum: 2) ✅
+- Total activities: 9 (target: 3-10) ✅
+- Unique types: 7 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 6/6 (comparative-study, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4228/4000 (raw: 4412)
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 9/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -45,7 +48,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (9 activities)
 - **Immersion:** 🇺🇦 100.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

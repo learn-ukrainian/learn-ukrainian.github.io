@@ -1,5 +1,7 @@
 id: b2-hist-09
+module: b2-hist-09
 title: 'Олег та Ігор: Перші правителі'
+subtitle: 'Oleh and Ihor: First Rulers'
 slug: oleh-ihor
 version: '1.0'
 phase: B2-HIST.1 [Kyivan Rus]
@@ -115,22 +117,22 @@ activity_hints:
 - type: reading
   focus: Excerpt from Primary Chronicle about Oleh's campaigns
   source: Provide in module
-- type: timeline
-  focus: Key events of Oleh's and Ihor's reigns
+- type: match-up
+  focus: Chronology of Oleh's and Ihor's reigns
   items: 10+ events
-- type: vocabulary
+- type: fill-in
   focus: Political and military terminology
   items: 15+
-- type: map-activity
-  focus: Trace Oleh's campaigns and territorial expansion
-  items: Routes and conquered territories
+- type: quiz
+  focus: Geography of Campaigns and Expansion
+  items: 6+
 - type: quiz
   focus: Facts about early Rus rulers
   items: 12+
-- type: compare-contrast
+- type: comparative-study
   focus: Oleh vs Ihor — leadership styles and achievements
   output: Comparison table
-- type: discussion
+- type: essay-response
   focus: Чи можна вважати Олега засновником Київської Русі?
 prerequisites:
 - 'b2-hist-08 (Synthesis: Origins to Kyiv)'

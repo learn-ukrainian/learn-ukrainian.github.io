@@ -1,6 +1,7 @@
 # Audit Report: M20 — syntez-kyivska-rus.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ❌ FAIL
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
 
 ## Configuration
 **Type:** B2-history
@@ -9,7 +10,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, fill-in, group-sort, match-up, quiz
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -31,13 +32,8 @@
 - Total activities: 8 (target: 3-10) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Required types used: 6/6 (comparative-study, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
-
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
 - **Words:** ✅ 4748/4000 (raw: 4885)
@@ -48,14 +44,14 @@
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

@@ -112,6 +112,14 @@ const config: Config = {
               value: '<hr style="margin: 4px 12px; border-color: var(--ifm-color-emphasis-300);">',
             },
             {
+              label: 'B2-HIST - Ukrainian History',
+              to: '/docs/b2-hist/',
+            },
+            {
+              label: 'C1-BIO - Biographies',
+              to: '/docs/c1-bio/',
+            },
+            {
               label: 'LIT - Literature & Classics',
               to: '/docs/lit/',
             },
