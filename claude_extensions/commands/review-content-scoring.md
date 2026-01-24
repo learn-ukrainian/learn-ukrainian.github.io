@@ -6,7 +6,7 @@
 
 **PYTHON ONLY:** Use `.venv/bin/python` (never `python3`).
 
-**CRITICAL WORKFLOW NOTE:** This is for **manual quality review AFTER audit_module.py passes**. audit_module.py validates structure (word counts, activity counts, richness metrics, immersion %). This focuses on pedagogical quality.
+**CRITICAL WORKFLOW NOTE:** This is for **manual quality review AFTER audit_module.py passes**. audit_module.py validates structure (word counts, activity counts, richness metrics, immersion %). This focuses on pedagogical quality AND linguistic accuracy.
 
 **Skill Metadata:**
 
@@ -14,7 +14,7 @@
 ---
 name: review-content-scoring
 description: 0-10 scoring rubric for content quality review after audit passes
-version: '2.0'
+version: '3.0'
 category: quality
 dependencies: audit_module.py
 ---
@@ -23,16 +23,17 @@ dependencies: audit_module.py
 ## Critical Sections Index (DO NOT SKIP)
 
 1. Template Compliance (auto-fail if violated)
-2. Activity Quality (auto-fail for structure/wrong answers)
-3. Richness Red Flags (auto-fail for AI slop)
-4. Red Flags (multiple auto-fails)
-5. Content Richness (B1+ critical)
-6. Humanity & Flow Audit
-7. Dryness Flags (rewrite if 2+)
-8. Human Warmth Checklist (<2 markers = fail)
-9. LLM Fingerprint Detection (B1+ critical)
+2. **Linguistic Accuracy (auto-fail for factual errors)** ← NEW
+3. Activity Quality (auto-fail for structure/wrong answers)
+4. Richness Red Flags (auto-fail for AI slop)
+5. Red Flags (multiple auto-fails)
+6. Content Richness (B1+ critical)
+7. Humanity & Flow Audit
+8. Dryness Flags (rewrite if 2+)
+9. Human Warmth Checklist (<2 markers = fail)
+10. LLM Fingerprint Detection (B1+ critical)
 
-**CHECKPOINT:** Evaluate ALL 9 sections.
+**CHECKPOINT:** Evaluate ALL 10 sections.
 
 ## Module Number to Slug Lookup
 
@@ -66,6 +67,15 @@ dependencies: audit_module.py
 
 Use subagents for each module (fresh context per module to avoid exhaustion).
 
+```
+For each module in range:
+  1. Spawn Task agent with subagent_type="general-purpose"
+  2. Agent prompt: "Run /review-content-scoring {level} {module_num}"
+  3. Wait for agent completion
+  4. Log result (score, issues)
+  5. Continue to next module (fresh context)
+```
+
 ## Single Module Mode
 
 ### Extract Content
@@ -89,14 +99,119 @@ Use subagents for each module (fresh context per module to avoid exhaustion).
 ### Evaluate Quality
 
 **Step 0: Template Compliance (Auto-fail if violated)**
-Verify against level template (e.g., B1 uses b1-grammar-module-template.md).
 
-- Sections match?
-- Word count meets min (core prose)?
-- Activity/vocab counts ok?
-- Pedagogy matches?
-- Focus-area (architect skill) met?
-- Ukrainian validation: Словник.UA, Грінченка, Антоненко-Давидович (no Russisms/Surzhik/calques).
+Verify against level template:
+
+| Level/Type | Template |
+|------------|----------|
+| B1 M01-05 (Metalanguage) | b1-metalanguage-module-template.md |
+| B1 M06-51 (Grammar) | b1-grammar-module-template.md |
+| B1 Checkpoints | b1-checkpoint-module-template.md |
+| B1 M52-71 (Vocabulary) | b1-vocab-module-template.md |
+| B1 M72-81 (Cultural) | b1-cultural-module-template.md |
+| B1 M82-86 (Integration) | b1-integration-module-template.md |
+| B2 | b2-module-template.md |
+| B2-HIST | b2-history-module-template.md |
+| C1 | c1-module-template.md |
+| C2 | c2-module-template.md |
+| LIT | lit-module-template.md |
+
+**Module Architect Skills Reference:**
+
+| Module Type | Skill | Review Focus |
+|-------------|-------|--------------|
+| Grammar (B1-B2) | `grammar-module-architect` | TTT pedagogy, aspect/motion verb teaching |
+| Vocabulary (B1) | `vocab-module-architect` | Collocations, synonymy, register |
+| Cultural (B1-C1) | `cultural-module-architect` | Authentic materials, regional balance |
+| History/Biography (B2-C1) | `history-module-architect` | Decolonization, primary sources |
+| Integration (B1-B2) | `integration-module-architect` | Skill coverage, no new content |
+| Checkpoint (All) | `checkpoint` | All skill groups tested, 16+ activities |
+| Literature (LIT) | `literature-module-architect` | 100% immersion, essays not drills |
+
+**Ukrainian Grammar Validation Sources:**
+
+- ✅ **Trusted:** Словник.UA, Словарь Грінченка, Антоненко-Давидович "Як ми говоримо", Ohoiko "500+ Ukrainian Verbs"
+- ✅ **Local Reference:** `docs/references/private/ohoiko-500-ukrainian-verbs.pdf` (if available)
+- ❌ **NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
+
+**Auto-fail Russianisms:**
+
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| кушать | їсти |
+| да | так |
+| кто | хто |
+| нету | немає |
+| приймати участь | брати участь |
+| самий кращий | найкращий |
+| слідуючий | наступний |
+| на протязі | протягом |
+
+**Auto-fail Calques:**
+
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| робити сенс | мати сенс |
+| брати місце | відбуватися |
+| дивитися вперед | чекати з нетерпінням |
+
+---
+
+## NEW: Section 1 — Linguistic Accuracy (AUTO-FAIL for factual errors)
+
+**CRITICAL CHECK for Grammar Modules:** Verify that all linguistic claims are factually correct.
+
+### 1a. Aspectual Pair Verification (Grammar Modules)
+
+**Definition:** An aspectual pair consists of two verbs with the **SAME core meaning** that differ ONLY in aspect (imperfective = process, perfective = result).
+
+**Verification Rule:** For each claimed aspectual pair, confirm:
+1. Both verbs share the same core semantic meaning
+2. They differ only in aspect, not in fundamental meaning
+3. Cross-reference with authoritative sources: Ohoiko "500+ Ukrainian Verbs", Dobra Forma, slovnyk.ua
+
+**Common Error Pattern — Semantic Complement Confusion:**
+
+| ❌ WRONG (different meanings) | ✅ CORRECT (same meaning) |
+|-------------------------------|---------------------------|
+| шукати / знайти (search / find) | шукати / пошукати (search / search-PFV) |
+| | знаходити / знайти (find / find-PFV) |
+| питати / відповідати (ask / answer) | питати / запитати (ask / ask-PFV) |
+| | відповідати / відповісти (answer / answer-PFV) |
+| починати / закінчувати (begin / finish) | починати / почати (begin / begin-PFV) |
+| | закінчувати / закінчити (finish / finish-PFV) |
+
+**Test:** Can you search (шукати) without finding (знайти)? YES → They are NOT aspectual pairs, they are semantic complements.
+
+**Auto-fail if:** Module claims semantically different verbs are aspectual pairs.
+
+### 1b. Grammar Rule Accuracy
+
+Verify grammar explanations against authoritative sources:
+- Case usage rules
+- Verb conjugation patterns
+- Agreement rules
+- Word order claims
+
+**Auto-fail if:** Grammar rule is incorrectly stated.
+
+### 1c. Etymology/Historical Claims
+
+For modules making historical or etymological claims:
+- Verify dates and facts
+- Check against scholarly sources
+- Flag unsupported claims
+
+### 1d. Linguistic Accuracy Score
+
+| Score | Meaning |
+|-------|---------|
+| 10 | All claims verified correct |
+| 7-9 | Minor inaccuracies (terminology, edge cases) |
+| 4-6 | Significant errors requiring correction |
+| 0-3 | Fundamental errors (wrong aspectual pairs, incorrect rules) → AUTO-FAIL |
+
+---
 
 **Score each dimension 0-10 (see Scoring Philosophy below):**
 
@@ -110,25 +225,86 @@ Verify against level template (e.g., B1 uses b1-grammar-module-template.md).
 8. **Richness (0-10):** Examples, engagement boxes, cultural references, proverbs, dialogues, visuals.
 9. **Humanity (0-10):** Teacher voice, direct address, encouragement, warmth, real-world validation.
 10. **LLM Fingerprint (0-10):** AI-generated patterns vs. authentic human writing.
+11. **Linguistic Accuracy (0-10):** Factual correctness of all grammar rules, verb pairs, linguistic claims.
 
-**Activity Quality Sub-Checks (Critical for Dimension 7):**
+---
 
-- **Structural Integrity (Auto-fail):** No duplicates/mixed types/broken YAML. Item count matches level (MODULE-RICHNESS-GUIDELINES-v2.md).
-- **Correctness + Naturalness (1-10 Scale):** Grammar/linguistic accuracy, Ukrainian authenticity.
-  - 1-3: FAIL (English syntax, calques, formality)
-  - 4-7: NEEDS FIXES (Stilted, pronoun overuse)
-  - 8-10: PASS (Idiomatic, stylistic, cultural)
-  - Level Gate: A1-A2 ≥5; B1+ ≥8.
-  - Auto-fail: Wrong answer, multiple valid not accepted, Russisms, naturalness <8 for B1+.
-- **Difficulty Calibration:** Tests taught material, activity type fits goal, clear instructions.
-- **Distractor Quality:** Plausible but wrong, same word class.
-- **Engagement:** Cultural relevance, interest.
-- **Variety & Repetition:** Diverse patterns, no mechanical repetition.
-- **External Resources:** Relevant, valid, level-appropriate.
+## Activity Quality Sub-Checks (Critical for Dimension 7)
+
+### 7a. Structural Integrity (Auto-fail if violated)
+
+- No duplicate items (same question twice)
+- No mixed activity types (e.g., `[!error]` in fill-in)
+- Correct callout format for activity type
+- Item count matches level requirements
+- YAML syntax valid
+
+### 7b. Grammar & Linguistic Correctness + Naturalness
+
+**Correctness Checks:**
+- **Single-answer activities:** Only ONE correct answer exists linguistically
+  - Flag: "читати → прочитати" when "почитати" is also valid perfective
+  - Flag: Fill-in where multiple grammatical options work
+- **Multi-answer activities (`select`):** All valid answers are included
+- **Error-correction:** The "error" is genuinely wrong, not just stylistic
+- Ukrainian spelling is correct
+- Grammar forms are correct (case endings, verb conjugations)
+- No Russianisms in options or answers
+
+**Naturalness Assessment (1-10 Scale):**
+
+| Score | Level | Description |
+|-------|-------|-------------|
+| 1-2 | Robotic | Direct English syntax, calques, unnatural formality |
+| 3-4 | Unnatural | Grammatically correct but stilted, pronoun overuse |
+| 5-6 | Functional | Minor unnaturalness, comprehensible |
+| 7-8 | Natural | Good word order, appropriate markers |
+| 9-10 | Native | Perfectly idiomatic, stylistically appropriate |
+
+**Level Gates:** A1-A2 ≥5; B1+ ≥8
+
+### 7c. Difficulty Calibration
+
+| Level | Description |
+|-------|-------------|
+| too_easy | Content 1+ level below target |
+| appropriate | Matches level, uses taught material |
+| too_hard | Content 1+ level above target |
+
+### 7d. Distractor Quality (1-5 Scale)
+
+| Score | Quality |
+|-------|---------|
+| 1 | Nonsense - different word class, unrelated |
+| 2 | Weak - same class but obviously wrong |
+| 3 | Acceptable - plausible but not challenging |
+| 4 | Good - targets common errors |
+| 5 | Excellent - all options plausible in different contexts |
+
+### 7e. Engagement Quality
+
+- Cultural relevance
+- Interesting topics
+- Age-appropriate for adult learners
+- No generic "textbook" examples
+
+### 7f. Variety & Repetition
+
+- Variety Score 0-100%
+- <40% = Mechanical (same pattern repeated)
+- 60-80% = Good variety
+- >80% = Excellent
+
+### 7g. External Resources
+
+Check `docs/resources/external_resources.yaml`:
+- URLs valid and accessible
+- Resources match module topic
+- Level-appropriate
 
 **CEFR Quality Gates (ALL Levels):**
 
-- Naturalness avg ≥5.0 (but B1+ ≥8.0)
+- Naturalness avg ≥5.0 (B1+ ≥8.0)
 - Difficulty inappropriate ≤0%
 - Engagement avg ≥3.5
 - Distractor quality avg ≥4.2
@@ -136,47 +312,209 @@ Verify against level template (e.g., B1 uses b1-grammar-module-template.md).
 
 **Activity Red Flags (Auto-fail):**
 
-- Structure: Duplicates, wrong format, < min items.
-- Correctness: Wrong answer, multiple valid not accepted.
-- Linguistic: Russisms, errors in correct answer.
-- Difficulty: Untaught, wrong level.
-- Distractors: Nonsense (1), spoiler hints.
-- Naturalness: 1 for B2+.
-- Variety: <40%.
-- Resources: Broken URLs, irrelevant.
+- ❌ Duplicate items
+- ❌ Wrong format/broken YAML
+- ❌ Wrong answer marked correct
+- ❌ Multiple valid answers but only one accepted
+- ❌ Russianisms in content
+- ❌ Testing untaught material
+- ❌ Nonsense distractors
+- ❌ Spoiler hints
+- ❌ Naturalness 1-2 for B2+
+- ❌ Variety <40%
 
-11. **Red Flags (Auto-fail):** Forced mixing, undefined terms, false friends, Russisms/Surzhik, inline activities.
+---
 
-12. **Content Richness Quality (B1+ Critical):**
-    - 12a. Engagement: Boring? No hooks/metaphors?
-    - 12b. Variety: Unique sentence starters (<50% repeat).
-    - 12c. Emotional Hooks: Metaphors, scenarios, questions (≥1/section).
-    - 12d. Cultural Depth: ≥1 named place/food/cultural ref; real Ukrainian scenarios.
-    - 12e. Proverbs/Idioms (Grammar Modules): ≥1 demonstrating grammar.
-    - Score per section 0-4: 0=Rewrite, 1-3=Enrich, 4=Pass.
+## Content Richness Quality (B1+ Critical)
 
-13. **Humanity & Flow Audit:**
-    - 13a. Cohesion: Logical paragraphs, transitional phrases.
-    - 13b. Naturalness: Clear teacher voice, euphony (no vowel clashes).
-    - 13c. Cognitive Load: Dense terms with explanations.
-    - 13d. Sentence Variety: Mix lengths.
-    - 13e. Figurative Language: Idioms/metaphors for B1+.
-    - 13f. Readability: Natural contractions, simple English.
-    - 13g. Cultural Authenticity: Ukrainian reality, not translated.
-    - 13h. "Aha!" Moments: Discovery insights.
-    - 13i. Accessibility: Inclusive, no stereotypes.
+### 10a. Engagement Quality
 
-14. **Dryness Flags (Rewrite if 2+):**
-    - TEXTBOOK_VOICE: No questions/hooks in 300+ words.
-    - ROBOTIC_TRANSITIONS: No phrases between paragraphs.
-    - REPETITIVE: Same pattern 5+ times.
-    - GENERIC_EXAMPLES: No named people/places.
-    - LIST_DUMP: Explanations as lists.
-    - NO_CULTURAL_ANCHOR: Grammar without Ukrainian context.
-    - ENGAGEMENT_BOX_FILLER: Boxes just restate.
-    - WALL_OF_TEXT: >500 words without boxes/dialogue (except history/bio/lit).
-    - EUPHONY_VIOLATION: >3 errors (u/v alternations).
-    - Note: A1/A2 focus on scaffolding; richness for B1+.
+❌ **DRY (robot wrote this):**
+```markdown
+Доконаний вид показує завершену дію.
+Недоконаний вид показує незавершену дію.
+Дивіться таблицю нижче.
+```
+
+✅ **RICH (learner will remember this):**
+```markdown
+Уявіть: ви читаєте книгу весь вечір — це процес, недоконаний вид.
+Але ось ви закрили книгу — готово! Результат. Доконаний вид.
+
+Це як різниця між «я йшов додому» (може, ще йду) і «я прийшов» (точка, фініш).
+```
+
+### 10b. Variety Check
+
+Count unique sentence starters. Flag if >50% same pattern.
+
+### 10c. Emotional Hooks (≥1 per section)
+
+- Metaphor or analogy
+- Real-world scenario
+- Cultural connection
+- Surprise or contrast
+- Question to reader
+
+### 10d. Cultural Depth
+
+- ≥1 named Ukrainian place
+- ≥1 cultural reference
+- Real-world context for grammar/vocab
+
+### 10e. Proverbs/Idioms (Grammar Modules)
+
+≥1 proverb demonstrating the grammar point, woven naturally.
+
+### 10f. Richness Score per Section
+
+| Total | Action |
+|-------|--------|
+| 0-4 | ❌ REWRITE section |
+| 5-7 | ⚠️ ENRICH section |
+| 8-10 | ✅ PASS |
+
+---
+
+## Humanity & Flow Audit
+
+- **Cohesion:** Logical paragraphs, transitional phrases
+- **Naturalness:** Clear teacher voice, euphony (no vowel clashes у/в, і/й)
+- **Cognitive Load:** Dense terms with explanations
+- **Sentence Variety:** Mix of short and long sentences
+- **Figurative Language:** Idioms/metaphors for B1+
+- **Readability:** Natural contractions, simple English explanations
+- **Cultural Authenticity:** Ukrainian reality, not translated Western scenarios
+- **"Aha!" Moments:** Discovery insights ("Now you see why...")
+- **Accessibility:** Inclusive language, no stereotypes
+
+---
+
+## Dryness Flags (Rewrite if 2+)
+
+| Flag | Pattern |
+|------|---------|
+| TEXTBOOK_VOICE | No questions/hooks in 300+ words |
+| ROBOTIC_TRANSITIONS | No phrases between paragraphs |
+| REPETITIVE | Same pattern 5+ times |
+| GENERIC_EXAMPLES | No named people/places |
+| LIST_DUMP | Explanations as lists only |
+| NO_CULTURAL_ANCHOR | Grammar without Ukrainian context |
+| ENGAGEMENT_BOX_FILLER | Boxes just restate content |
+| WALL_OF_TEXT | >500 words without boxes/dialogue |
+| EUPHONY_VIOLATION | >3 u/v or i/y alternation errors |
+
+---
+
+## LLM Fingerprint Detection (Detailed)
+
+### 15a. Overused AI Phrases (Flag 3+ → LLM_CLICHE_OVERUSE)
+
+**English:**
+- ❌ "It's important to note that..."
+- ❌ "Let's dive into..."
+- ❌ "Mastering [X] is crucial for..."
+- ❌ "In conclusion..." / "To summarize..."
+- ❌ "Additionally..." / "Furthermore..." / "Moreover..."
+
+**Ukrainian:**
+- ❌ "Важливо зазначити, що..."
+- ❌ "Давайте заглибимось у..."
+- ❌ "Оволодіння [X] є важливим для..."
+
+### 15b. False Specificity (<3 Ukrainian refs → FALSE_SPECIFICITY)
+
+❌ **Fake Specific:** "Уявіть: ви йдете до магазину і купуєте їжу."
+✅ **Real Specific:** "Уявіть: ви на Бесарабському ринку в Києві. Продавець пропонує свіжу паляницю."
+
+### 15c. Certainty Overload (>5 absolutes → OVERCONFIDENCE)
+
+❌ "Дієслова руху завжди використовуються з префіксами."
+✅ "Дієслова руху часто використовуються з префіксами."
+
+### 15d. Anecdotal Absence (No narratives → NO_NARRATIVE_VOICE)
+
+Module needs ≥1:
+- Student scenario with stakes
+- Cultural story
+- Historical context with narrative
+
+### 15e. Predictability (No surprises → PREDICTABLE_PEDAGOGY)
+
+Module needs ≥1:
+- Surprising fact
+- Counterintuitive example
+- Grammar "trick" reveal
+
+### 15f. Emotional Flatness (<1 marker/100 words → EMOTIONAL_FLATNESS)
+
+Check for: !, ?, emphatic words, evaluative language, direct address.
+
+### 15g. Voice Consistency (Shifts >2 → INCONSISTENT_VOICE)
+
+Consistent use of ви/formal or ти/informal throughout.
+
+### 15h. Depth of Explanation (No "why" → MISSING_WHY_LAYER)
+
+For each grammar concept verify:
+- ✅ What (definition)
+- ✅ How (examples)
+- ✅ Why it matters
+- ✅ Common mistake
+
+### 15i. Cultural Resonance (Random facts → DECORATIVE_CULTURE)
+
+Culture should BE the vehicle for teaching, not decoration.
+
+---
+
+## Human Warmth Checklist
+
+### 16a. Direct Address (≥10 instances)
+
+Search for: you, your, let's, we'll (English); ти, ви, давайте, ми (Ukrainian)
+
+### 16b. Encouragement (≥1 phrase)
+
+- "You've got this" / "З практикою це стане природним"
+- "Don't worry" / "Не хвилюйтеся"
+
+### 16c. Anticipates Confusion (≥2 instances)
+
+- "You might think..." / "Студенти часто плутають..."
+- "Common mistake..." / "Типова помилка..."
+
+### 16d. Real-World Validation (≥1 instance)
+
+- "After this module, you'll be able to..."
+- "In real conversation..." / "У реальному житті..."
+
+**Warmth Score:** Count passed checks (0-4). <2 → COLD_PEDAGOGY
+
+---
+
+## Richness Red Flags (AUTO-FAIL)
+
+### 17a. ChatGPT Default Voice
+```
+Welcome to Module X! In this lesson, we'll explore...
+First, let's understand... Then, we'll dive deeper...
+```
+→ **Auto-fail** if module opens with this structure.
+
+### 17b. Bullet Point Barrage
+
+>50% bullets without prose → **Auto-fail**
+
+### 17c. Wikipedia Tone
+
+Encyclopedic passive voice → **Auto-fail**
+
+### 17d. Engagement Box Faker
+
+>50% boxes just restate content → **Auto-fail**
+
+---
 
 ## Scoring Philosophy
 
@@ -188,50 +526,45 @@ Verify against level template (e.g., B1 uses b1-grammar-module-template.md).
 **ONLY 9-10 IS ACCEPTABLE. Everything below requires fixes.**
 
 **Justification Rule:**
-
 - ≥8: Explain why not higher
 - ≤6: Explain weaknesses
 - 7: Explain both good and missing
 
+---
+
 ## Dimension Rubrics (0-10 Scale)
 
 ### 1. Coherence
-
 - 0-4: FAIL - Incoherent (missing sections, jumps)
 - 5-6: FAIL - Basic (present, awkward transitions)
 - 7-8: INSUFFICIENT - Clear (logical, smooth)
 - 9-10: PASS - Seamless (perfect flow)
 
 ### 2. Relevance
-
 - 0-4: FAIL - Off-topic (wrong focus)
 - 5-6: FAIL - Loose (tangents)
 - 7-8: INSUFFICIENT - Focused (serves goals)
 - 9-10: PASS - Laser-focused
 
 ### 3. Educational
-
 - 0-4: FAIL - Confusing/wrong
 - 5-6: FAIL - Adequate, uninspiring
 - 7-8: INSUFFICIENT - Clear/helpful
 - 9-10: PASS - Outstanding ("aha" moments)
 
 ### 4. Language
-
 - 0-4: FAIL - Major errors (Russianisms, calques)
 - 5-6: FAIL - Functional, unnatural
 - 7-8: INSUFFICIENT - Natural, good euphony
 - 9-10: PASS - Native-level, elegant
 
 ### 5. Pedagogy
-
 - 0-4: FAIL - Broken (wrong approach)
 - 5-6: FAIL - Basic (template loose)
 - 7-8: INSUFFICIENT - Solid (proper TTT/CBI)
 - 9-10: PASS - Exemplary (innovative)
 
 ### 6. Immersion
-
 - 0-4: FAIL - Wrong level
 - 5-6: FAIL - Slightly off
 - 7-8: INSUFFICIENT - Hits target
@@ -240,86 +573,121 @@ Verify against level template (e.g., B1 uses b1-grammar-module-template.md).
 **Ranges:** A1.1: 20-40%; A1.2: 40-60%; A1.3: 60-80%; A2: 40-70%; B1.1: 70-85%; B1.2+: 85-100%; B2+: 98-100%
 
 ### 7. Activities
-
 - 0-4: FAIL - Broken (wrong answers, format)
 - 5-6: FAIL - Functional (low density/variety)
 - 7-8: INSUFFICIENT - Solid (good count/variety)
 - 9-10: PASS - Outstanding (high density, creative)
 
 ### 8. Richness
-
 **Min scores:** Grammar 95%, Vocab 92%, Cultural 90%, History 95%, Integration 88%
-
 - 0-4: FAIL - Below min
 - 5-6: FAIL - Meets min, thin
 - 7-8: INSUFFICIENT - Above min, solid
 - 9-10: PASS - Rich/varied (15%+ above)
 
 ### 9. Humanity
-
 **Thresholds:** Direct Address ≥10, Encouragement ≥1, Anticipation ≥2, Validation ≥1
-
 - 0-4: FAIL - Robotic
 - 5-6: FAIL - Occasional warmth
 - 7-8: INSUFFICIENT - Warm teacher voice
 - 9-10: PASS - Exceptional warmth
 
 ### 10. LLM Fingerprint
-
 - 0-4: FAIL - AI slop (multiple patterns)
 - 5-6: FAIL - Some patterns
 - 7-8: INSUFFICIENT - Minimal patterns
 - 9-10: PASS - Human mastery
 
-**Sub-dimensions:** AI clichés, false specificity, certainty overload, anecdotal absence, predictability, emotional flatness, voice inconsistency, shallow explanation, decorative culture.
+### 11. Linguistic Accuracy
+- 0-4: FAIL - Fundamental errors (wrong verb pairs, incorrect rules) → AUTO-FAIL
+- 5-6: FAIL - Significant errors requiring correction
+- 7-8: INSUFFICIENT - Minor inaccuracies
+- 9-10: PASS - All claims verified correct
 
-## Section 15: LLM Fingerprint Detection
+---
 
-- 15a. Overused Phrases: Flag 3+ clichés → **LLM_CLICHE_OVERUSE**
-- 15b. False Specificity: <3 Ukrainian refs → **FALSE_SPECIFICITY**
-- 15c. Certainty Overload: >5 absolutes → **OVERCONFIDENCE**
-- 15d. Anecdotal Absence: No narratives → **NO_NARRATIVE_VOICE**
-- 15e. Predictability: No surprises → **PREDICTABLE_PEDAGOGY**
-- 15f. Emotional Flatness: <1 marker/100 words → **EMOTIONAL_FLATNESS**
-- 15g. Voice Consistency: Shifts >2 → **INCONSISTENT_VOICE**
-- 15h. Shallow Explanation: No "why" → **MISSING_WHY_LAYER**
-- 15i. Decorative Culture: Random facts → **DECORATIVE_CULTURE**
+## Fix Categories (Apply ALL Safe Fixes)
 
-## Section 16: Human Warmth Checklist
+### Category 1: Structure & Format (ALWAYS SAFE)
 
-- 16a. Direct Address: "you" (ти/ви), "we" (ми)
-- 16b. Encouragement: ≥1 phrase ("You've got this!")
-- 16c. Anticipates Confusion: ≥2 ("you might think...")
-- 16d. Real-World Validation: ≥1 ("you'll be able to...")
+- Remove duplicate activities (keep YAML, delete markdown)
+- Fix typos, markdown artifacts
+- Fix broken tables
+- Fix euphony (у/в, і/й alternation)
 
-**Fail:** <2 markers → **COLD_PEDAGOGY**
+### Category 2: Language Quality (ALWAYS SAFE)
 
-## Section 17: Richness Red Flags (AUTO-FAIL)
+- Replace Russianisms with correct Ukrainian
+- Replace calques with idiomatic expressions
+- Fix grammar errors (case endings, conjugations)
+- Fix spelling errors
 
-- 17a. ChatGPT Voice: "Welcome... we'll explore..." → Auto-fail
-- 17b. Bullet Barrage: >50% bullets → Auto-fail
-- 17c. Wikipedia Tone: Encyclopedic → Auto-fail
-- 17d. Box Faker: >50% boxes restate → Auto-fail
+### Category 3: Pedagogy & Flow (SAFE IF <30% CHANGE)
 
-## Section 18: Fix Strategies
+- Add transitions between sections
+- Rewrite robotic sentences to conversational
+- Replace generic examples with Ukrainian cultural references
+- Add "why" layer to explanations
 
-1. Sensory Detail: Generic → Vivid
-2. Name Everything: Vague → Specific
-3. "Why" Layer: Shallow → Deep
-4. Certainty: Absolute → Nuanced
-5. Story: Factual → Narrative
+### Category 4: Content Enrichment (SAFE IF <40% CHANGE)
 
-## Section 19: Overall Score Calculation
+- Add sensory detail
+- Name specific places, foods, people
+- Add proverbs/idioms
+- Add surprise moments
+
+### Category 5: Activity Quality (SAFE IF FIXING ERRORS)
+
+- Fix wrong answers
+- Rephrase ambiguous questions
+- Improve distractor quality
+- Add variety to sentence patterns
+
+### Category 6: Human Warmth (ALWAYS SAFE)
+
+- Add direct address (ви, давайте)
+- Add encouragement phrases
+- Add confusion anticipation
+- Add real-world validation
+
+### Category 7: AI Slop Removal (ALWAYS SAFE)
+
+- Remove LLM clichés
+- Break up bullet barrages
+- Rewrite encyclopedic definitions
+- Replace useless engagement boxes
+
+### Category 8: Linguistic Accuracy (CRITICAL - Fix Immediately)
+
+- Correct aspectual pair errors (semantic complements → true pairs)
+- Fix incorrect grammar rules
+- Verify claims against authoritative sources
+- Add notes clarifying common misconceptions
+
+**Risky Fixes (Require User Approval):**
+- Rewriting >50% of content
+- Changing pedagogical approach
+- Removing entire sections
+
+---
+
+## Overall Score Calculation
 
 **Weighted:**
 
 ```
-Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language × 1.1 + Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 + Richness × 0.9 + Humanity × 0.8 + LLM × 1.1) / 10.4
+Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language × 1.1 +
+          Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 + Richness × 0.9 +
+          Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 11.9
 ```
+
+**Note:** Linguistic Accuracy has highest weight (1.5) because factual errors are critical.
 
 **Round:** Nearest 0.5.
 
-## Section 20: Final Report Format
+---
+
+## Final Report Format
 
 ```markdown
 ## Module [NUM]: [Title]
@@ -328,11 +696,26 @@ Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language �
 **Overall Score:** [X/10] ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (show X stars)
 **Status:** ✅ PASS / ❌ FAIL
 **AI Detection Flags:** [None / List]
+**Linguistic Accuracy Flags:** [None / List]
 
 ### Scores Breakdown
 
-- **Coherence:** X/10 - [Desc + justification if ≥8/≤6]
-  ... (all dimensions)
+- **Coherence:** X/10 - [Desc]
+- **Relevance:** X/10 - [Desc]
+- **Educational:** X/10 - [Desc]
+- **Language:** X/10 - [Desc]
+- **Pedagogy:** X/10 - [Desc]
+- **Immersion:** X/10 - [Desc]
+- **Activities:** X/10 - [Desc]
+- **Richness:** X/10 - [Desc]
+- **Humanity:** X/10 - [Desc]
+- **LLM Fingerprint:** X/10 - [Desc]
+- **Linguistic Accuracy:** X/10 - [Desc] ← NEW
+
+### Linguistic Accuracy Issues (if any)
+
+- [Issue 1: Quote → Correction → Source]
+- [Issue 2: Quote → Correction → Source]
 
 ### Strengths
 
@@ -340,12 +723,12 @@ Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language �
 
 ### Issues
 
-- [All issues]
+- [All issues by category]
 
 ### Examples
 
-> [Strong] - Strength: [Why]
-> [Weak] - Weakness: [Why]
+> [Strong passage] - Strength: [Why]
+> [Weak passage] - Weakness: [Why]
 
 ### Recommendation
 
@@ -353,22 +736,33 @@ Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language �
 
 ### Action Items
 
-[List fixes or "None"]
+1. [Fix with category] - ✅ APPLIED / ⏳ MANUAL
+2. [Fix with category] - ✅ APPLIED / ⏳ MANUAL
+...
 ```
+
+---
+
+## Save Review Files
+
+Save detailed review to: `curriculum/l2-uk-en/{level}/review/{module_number}-{slug}-review.md`
+
+---
 
 ## Calibration Examples
 
-**6/10:** Scores 6.2, repetition, generic.
-**8/10:** Scores 8.3, strong but gaps.
-**10/10:** Scores 10.0, reference quality.
+**4/10:** Major linguistic errors (wrong aspectual pairs), AI slop, poor structure.
+**6/10:** Scores 6.2, repetition, generic, minor accuracy issues.
+**8/10:** Scores 8.3, strong but gaps in warmth or variety.
+**10/10:** Scores 10.0, all claims verified, reference quality.
 
 ## Common Mistakes
 
-- Anchoring to 10/10
-- Ignoring issues
-- Not using low scores
+- Anchoring to 10/10 without verification
+- Ignoring linguistic accuracy (assuming content is correct)
+- Not using low scores when warranted
 - Missing justifications
 - Inconsistent standards
-- False equivalence
+- Not cross-referencing grammar claims with sources
 
-**High scores earned, not given. Recalibrate if mostly 9-10s.**
+**High scores earned, not given. Verify linguistic claims. Recalibrate if mostly 9-10s.**
