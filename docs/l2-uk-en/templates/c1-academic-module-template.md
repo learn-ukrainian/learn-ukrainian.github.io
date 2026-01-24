@@ -240,27 +240,41 @@ vocabulary_focus:
 
 ### Завдання 2: Академічне есе
 
-Напишіть академічне есе (400+ слів) на тему: [Topic]
+**CRITICAL:** Essay activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-**Структура:**
-1. Вступ (теза, актуальність)
-2. Аргументи з доказами (3-4 абзаци)
-3. Контраргумент та спростування
-4. Висновок
+**DO NOT include `## Есе` sections with model answers in markdown.** This causes:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added to content)
+- QA confusion (auditing both locations)
 
-**Зразок відповіді:**
+**Essay activity example in YAML:**
 
-> [Complete 400+ word model essay demonstrating academic register]
+```yaml
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Академічне есе'
+  prompt: |
+    Напишіть академічне есе (300-400 слів) на тему: "[Topic]"
 
-**Рубрика:**
-
-| Критерій | C1 очікування |
-|----------|---------------|
-| Структура | Чітка, логічна, академічна |
-| Аргументація | Теза + докази + спростування контраргументів |
-| Регістр | Науковий, безособові конструкції |
-| Цитування | Правильне оформлення посилань |
-| Граматика | Складні конструкції, безпомилково |
+    Структура:
+    1. Вступ (теза, актуальність)
+    2. Аргументи з доказами (2-3 абзаци)
+    3. Контраргумент та спростування
+    4. Висновок
+  rubric:
+    - criterion: Структура
+      weight: 25
+      description: Чітка, логічна, академічна
+    - criterion: Аргументація
+      weight: 25
+      description: Теза + докази + спростування контраргументів
+    - criterion: Регістр
+      weight: 25
+      description: Науковий, безособові конструкції
+    - criterion: Граматика
+      weight: 25
+      description: Складні конструкції, безпомилково
+```
 ```
 
 ---

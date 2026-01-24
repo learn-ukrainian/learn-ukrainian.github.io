@@ -18,7 +18,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Seminar
-  min_word_count: 3500
+  min_word_count: 4000
   required_callouts: []
   description: LIT modules use graduate-level seminar approach with literary analysis
 -->
@@ -73,7 +73,7 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 
 ### 1. The "Bulk Content" Strategy (Crucial for Word Count)
 
-- **Problem:** It is extremely difficult to generate 3500+ words of _pure analysis_ from scratch without hallucinating.
+- **Problem:** It is extremely difficult to generate 4000+ words of _pure analysis_ from scratch without hallucinating.
 - **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
 - **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
 - **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
@@ -428,6 +428,8 @@ Common UkrLib author IDs (verify before using):
 - Нечуй-Левицький: tid=1646
 - Франко: tid=71
 
+> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia is contested territory subject to Russian information warfare. **For author facts, ALWAYS prefer UkrLib and ЕСУ (esu.com.ua) over Wikipedia.**
+
 </critical>
 
 **Format 1: External Resource (for biographies, full texts)**
@@ -595,7 +597,7 @@ Common UkrLib author IDs (verify before using):
 | ---------- | ------------------------ | ------------------------- | ------------------------- |
 | Word count | 2000+                    | 2200+                     | 2200-3000+                |
 | Vocabulary | 35+ general              | 40+ general               | 30-40 literary/historical |
-| Activities | 16+ interactive          | 14-16 interactive         | 0 (essays only)           |
+| Activities | 12+ interactive          | 3-9 (seminar)             | 3-9 (essays only)         |
 | Essays     | 1 (400+ words)           | 1-2 (various)             | 1-2 (300-500 words)       |
 | Texts      | Excerpts (500-800 words) | Excerpts (600-1000 words) | Full works (external)     |
 | Focus      | Language mastery         | Creative production       | Philological analysis     |

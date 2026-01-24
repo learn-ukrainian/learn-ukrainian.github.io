@@ -6,6 +6,71 @@
 
 **Related Issue:** RFC #409 Curriculum Reorganization
 
+---
+
+## ⚠️ BEFORE WRITING: Research Professional Content First!
+
+**CRITICAL:** Professional content requires authentic terminology and real document formats. Do NOT generate professional vocabulary or document structures from memory.
+
+### Research Strategy
+
+**Step 1: Find Domain-Specific Resources**
+```
+WebSearch: "[domain] terminology Ukrainian"
+WebSearch: "[document type] зразок український"
+WebSearch: "діловий лист зразок" OR "службова записка шаблон"
+```
+
+**Step 2: Verify Terminology**
+```
+WebFetch: https://zakon.rada.gov.ua/... (for legal terms)
+WebSearch: "[term] визначення українською"
+```
+
+### Key Resources by Domain
+
+| Domain | Primary Resources |
+|--------|-------------------|
+| **Business/General** | zakon.rada.gov.ua, minjust.gov.ua |
+| **IT/Technical** | uk.wikipedia.org/wiki/[IT term], dou.ua |
+| **Finance** | bank.gov.ua, minfin.gov.ua |
+| **Legal** | zakon.rada.gov.ua, minjust.gov.ua |
+| **Medical** | moz.gov.ua, umj.com.ua |
+| **HR/Recruitment** | dcz.gov.ua, work.ua |
+| **Textbooks** | pidruchnyk.com.ua (pre-university level) |
+
+### Official Standards (MUST USE)
+
+| Standard | Purpose | URL |
+|----------|---------|-----|
+| **ДСТУ 4163:2020** | Document formatting | [undiasd.archives.gov.ua](https://undiasd.archives.gov.ua/doc/DSTU%204163.pdf) |
+| **NADS Courses** | Business correspondence | [pdp.nacs.gov.ua](https://pdp.nacs.gov.ua/courses/business-correspondence) |
+
+### Reference Textbooks (Use, Don't Copy!)
+
+| Source | Use For |
+|--------|---------|
+| Шевчук С.В. "Ділове мовлення: Модульний курс" | Business speech patterns, correspondence |
+| "Сучасне діловодство: зразки документів" | Document samples, business etiquette |
+| pidruchnyk.com.ua textbooks | Accessible business Ukrainian for B2 level |
+
+**⚠️ ANTI-PLAGIARISM RULES:**
+1. **SYNTHESIZE, don't copy** — use textbooks for patterns, write original examples
+2. **Cite standards** — reference ДСТУ when discussing document formats
+3. **Adapt for language learning** — textbooks teach procedures, we teach language
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent professional terminology** — verify real Ukrainian business terms
+2. **NEVER generate document formats from memory** — check ДСТУ 4163:2020
+3. **Use official government portals** — zakon.rada.gov.ua has legal document standards
+4. **Verify formulas and conventions** — formal Ukrainian varies by domain
+5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+> 💡 **Tip:** The [ДСТУ 4163:2020 PDF](https://undiasd.archives.gov.ua/doc/DSTU%204163.pdf) contains official document samples in Appendix B.
+
+---
+
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -26,8 +91,10 @@ TEMPLATE_METADATA:
 
 Before submitting a B2-PRO professional module, verify all items from `b2-module-template.md` PLUS:
 
-### Professional-Specific Requirements
-- [ ] **ESP pedagogy:** English for Specific Purposes adapted for Ukrainian
+### Professional-Specific Requirements (Seminar Style)
+- [ ] **Seminar pedagogy:** Production-focused, not drill-focused
+- [ ] **Activities:** 3-9 production activities (reading, essay-response, critical-analysis)
+- [ ] **Essay requirements:** 150-300 words per essay (with Model Answer)
 - [ ] **Practical focus:** Real-world professional scenarios and documents
 - [ ] **Professional immersion:** 100% Ukrainian in professional contexts
 - [ ] **Document templates:** At least one professional document format

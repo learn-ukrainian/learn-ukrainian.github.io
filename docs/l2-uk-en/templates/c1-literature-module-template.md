@@ -34,7 +34,7 @@ Before submitting a C1 literature module, verify all items from `c1-module-templ
 - [ ] **Historical context:** Author's era, literary movement, political context
 - [ ] **Rhetorical devices:** Identify and analyze метафора, іронія, символ, etc.
 - [ ] **Reading tasks (2-3):** External reading assignments with stylistic analysis questions
-- [ ] **Critical essay:** 400+ word essay with model answer and rubric
+- [ ] **Essay activity:** `essay-response` activity in YAML — NO essay section in markdown
 - [ ] **Activity count:** 10-12 language-focused activities (NOT 14+)
 - [ ] **NO CONVERSATIONAL DIALOGS:** Literature modules focus on TEXTUAL ANALYSIS. Do NOT add conversational dialogs between learners or fictional scenarios. If a literary work contains dialogue (e.g., drama, prose), analyze it—don't simulate it.
 
@@ -274,49 +274,51 @@ vocabulary_focus:
 4. Що робить цей текст класикою?
 ```
 
-#### Section 5: Critical Essay — 300-400 words
+#### Section 5: Essay Activities (In YAML Only)
 
-```markdown
-## Критичне есе
+**CRITICAL:** Essay activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-### Завдання
+**DO NOT include `## Критичне есе` sections with model answers in markdown.** This causes:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added)
+- QA confusion
 
-Напишіть критичне есе (400+ слів) на одну з тем:
+**Example essay-response activity in YAML:**
 
-1. [Essay topic 1 — thematic analysis]
-2. [Essay topic 2 — stylistic analysis]
-3. [Essay topic 3 — comparative analysis]
+```yaml
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Критичне есе'
+  prompt: |
+    Напишіть критичне есе на одну з тем:
+    1. [Тематичний аналіз]
+    2. [Стилістичний аналіз]
+    3. [Порівняльний аналіз]
 
-**Структура:**
-1. Вступ (теза про текст)
-2. Аналіз із цитатами (3-4 абзаци)
-3. Висновок
+    Структура:
+    1. Вступ (теза про текст)
+    2. Аналіз із цитатами (3-4 абзаци)
+    3. Висновок
 
-**Вимоги:**
-- Цитати з тексту з аналізом
-- Літературознавча термінологія
-- Власна інтерпретація
-
----
-
-### Зразок відповіді
-
-> [Complete 400+ word model essay demonstrating:
-> - Literary analysis techniques
-> - Proper citation of primary text
-> - Use of literary terminology
-> - Original interpretation
-> - Academic register]
-
-**Рубрика:**
-
-| Критерій | C1 очікування |
-|----------|---------------|
-| Теза | Чітка, оригінальна інтерпретація |
-| Аналіз | Детальний, із цитатами |
-| Термінологія | Правильне використання |
-| Аргументація | Логічна, переконлива |
-| Стиль | Академічний регістр |
+    Вимоги:
+    - Цитати з тексту
+    - Літературознавча термінологія
+  rubric:
+    - criterion: Теза
+      weight: 20
+      description: Чітка, оригінальна інтерпретація
+    - criterion: Аналіз
+      weight: 30
+      description: Детальний, із цитатами
+    - criterion: Термінологія
+      weight: 20
+      description: Правильне використання
+    - criterion: Аргументація
+      weight: 20
+      description: Логічна, переконлива
+    - criterion: Стиль
+      weight: 10
+      description: Академічний регістр
 ```
 
 ---

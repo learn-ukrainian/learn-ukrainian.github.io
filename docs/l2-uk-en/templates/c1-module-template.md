@@ -128,9 +128,9 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 | Aspect | B2 | C1 |
 |--------|----|----|
 | **Philosophy** | "Reading to learn" | "Studying IN Ukrainian" |
-| **Word count** | 1800+ | 2000+ |
+| **Word count** | 1750+ | 3000+ |
 | **Vocabulary** | 30+ | 35+ |
-| **Activities** | 14+ | 16+ |
+| **Activities** | 10+ | 12+ |
 | **Passages** | 300-500 words | 500-800+ words |
 | **Complexity** | Authentic-style | University-level authentic |
 | **Analysis** | Comprehension | Comparative, critical analysis |
@@ -166,7 +166,7 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 
 ---
 
-### 3. Content Sections (2000+ words total)
+### 3. Content Sections (3000+ words total)
 
 **Structure for Academic/Comparative Analysis:**
 
@@ -238,37 +238,41 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 - Model Answer provided
 - Rubric for self-assessment
 
-```markdown
-## Письмо: Критичне есе
+**CRITICAL:** Essay activities are defined in `activities/{slug}.yaml` as `type: essay-response`.
 
-**Завдання:**
-Напишіть критичне есе (400+ слів), порівнюючи два тексти.
+**DO NOT include essay sections with model answers in markdown.** This causes:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added)
+- QA confusion
 
-**Структура:**
-1. Вступ (теза)
-2. Аналіз тексту 1 (стиль, регістр, прийоми)
-3. Аналіз тексту 2
-4. Порівняння
-5. Висновок
+**Example essay-response activity in YAML:**
 
-**Зразок відповіді (Model Answer):**
+```yaml
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Критичне есе: Порівняльний аналіз'
+  prompt: |
+    Напишіть критичне есе, порівнюючи два тексти.
 
-[Provide complete 400+ word essay showing:
-- C1-level academic register
-- Comparative analysis
-- Sophisticated argumentation
-- Stylistic awareness
-- Proper citation/referencing]
-
-**Рубрика:**
-
-| Критерій | Опис | Очікування на C1 |
-|----------|------|------------------|
-| Аналіз | Глибина інтерпретації | Розпізнає стилістичні прийоми, пояснює їх функцію |
-| Порівняння | Систематичне зіставлення | Чітка структура порівняння |
-| Аргументація | Логіка, докази | Теза підтримана цитатами й аналізом |
-| Регістр | Академічний стиль | Науковий регістр, відповідна лексика |
-| Граматика | Складні конструкції | Безпомилкове використання |
+    Структура:
+    1. Вступ (теза)
+    2. Аналіз тексту 1 (стиль, регістр, прийоми)
+    3. Аналіз тексту 2
+    4. Порівняння
+    5. Висновок
+  rubric:
+    - criterion: Аналіз
+      weight: 25
+      description: Глибина інтерпретації, стилістичні прийоми
+    - criterion: Порівняння
+      weight: 25
+      description: Систематичне зіставлення
+    - criterion: Аргументація
+      weight: 25
+      description: Теза підтримана цитатами й аналізом
+    - criterion: Регістр та граматика
+      weight: 25
+      description: Науковий регістр, складні конструкції
 ```
 
 ---
@@ -303,7 +307,7 @@ items:
 
 ### 5. Activities Section (Активності)
 
-**Minimum:** 16+ activities (vs. 14+ for B2)
+**Minimum:** 12+ activities (vs. 10+ for B2)
 
 ### CRITICAL: Language Practice, Not Content Testing
 
@@ -509,9 +513,9 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 | Feature | B2 | C1 |
 |---------|----|----|
-| Word count | 1800+ | 2000+ |
+| Word count | 1800+ | 3000+ |
 | Vocabulary | 30+ | 35+ |
-| Activities | 14+ | 16+ |
+| Activities | 10+ | 12+ |
 | Quiz words/question | 15-25 | 18-30 |
 | Unjumble words/sentence | 15-20 | 18-25 |
 | Cloze blanks | 16+ | 20+ |
@@ -527,8 +531,8 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** Academic register, research writing, formal argumentation
 **Pedagogy:** Academic analysis
-**Activities:** 16+ (heavy on academic writing, text analysis)
-**Word count:** 2000+
+**Activities:** 12+ (heavy on academic writing, text analysis)
+**Word count:** 3000+
 **Passages:** Academic journal articles, textbook excerpts (500-800 words)
 
 **Example modules:**
@@ -541,8 +545,8 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** Professional registers, workplace communication, social contexts
 **Pedagogy:** Professional simulation
-**Activities:** 14-16 (professional writing, register transformation)
-**Word count:** 2000+
+**Activities:** 12+ (professional writing, register transformation)
+**Word count:** 3000+
 
 **Example modules:**
 - M21-25: Official/bureaucratic register
@@ -553,8 +557,8 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** Rhetorical devices, stylistic analysis, register shifting
 **Pedagogy:** Comparative stylistic analysis
-**Activities:** 16+ (stylistic identification, register transformation)
-**Word count:** 2000+
+**Activities:** 12+ (stylistic identification, register transformation)
+**Word count:** 3000+
 **Checkpoint:** M55
 
 **Example modules:**
@@ -567,7 +571,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Traditional Ukrainian culture (music, art, beliefs, crafts)
 **Pedagogy:** Cultural analysis
 **Activities:** 10-12 (cultural comprehension, vocabulary) — content-heavy modules
-**Word count:** 2000+
+**Word count:** 3000+
 **Checkpoint:** M85
 
 **Example modules:**
@@ -583,7 +587,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Ukrainian literary canon (classics + contemporary)
 **Pedagogy:** Literary analysis, close reading
 **Activities:** 10-12 (text analysis, stylistic devices) — content-heavy modules
-**Word count:** 2000+
+**Word count:** 3000+
 **Passages:** Poetry, prose excerpts (500-800 words)
 **Checkpoint:** M105
 **Final Exam:** M106
@@ -608,7 +612,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - **Don't use only one text** — Always compare perspectives
 - **Don't ignore register mastery** — C1 must demonstrate full register control
 - **Don't skip archaic/dialectal forms** — C1 includes full language awareness
-- **Don't under-count activities** — 16+ is the minimum
+- **Don't under-count activities** — 12+ is the minimum
 
 ### ✅ DO:
 - **Use authentic university-level texts** — Academic papers, literary excerpts
@@ -623,7 +627,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ## Pre-Submission Checklist
 
 ### Content
-- [ ] 2000+ words before activities
+- [ ] 3000+ words before activities
 - [ ] 35+ vocabulary items in 3-column format
 - [ ] 500-800+ word reading passages
 - [ ] Comparative analysis of 2+ texts
@@ -632,7 +636,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Academic rigor throughout
 
 ### Activities
-- [ ] 16+ activities minimum
+- [ ] 12+ activities minimum
 - [ ] All activity types represented
 - [ ] Activity density meets C1 standards
 - [ ] Writing tasks include rubrics

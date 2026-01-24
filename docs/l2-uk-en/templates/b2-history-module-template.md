@@ -8,6 +8,73 @@
 
 > **Note:** Synthesis modules (M83, M107, M119, M125, M131) use `b2-synthesis-module-template.md` instead.
 
+---
+
+## ⚠️ BEFORE WRITING: Research First!
+
+**CRITICAL:** Historical content requires verified facts. Do NOT generate historical content from memory—this leads to hallucination.
+
+### Research Strategy
+
+**Step 1: Use WebSearch for Initial Research**
+```
+WebSearch: "[Historical topic] Ukrainian Wikipedia"
+WebSearch: "[Historical topic] Encyclopedia of Modern Ukraine"
+WebSearch: "[Historical event/figure] Інститут історії України"
+```
+
+**Step 2: Verify with WebFetch**
+After finding URLs, use WebFetch to extract content:
+```
+WebFetch: https://uk.wikipedia.org/wiki/[Topic]
+WebFetch: https://esu.com.ua/article-[id]
+```
+
+**Step 3: Cross-Reference Sources**
+- Ukrainian Wikipedia (uk.wikipedia.org) — good starting point
+- Encyclopedia of Modern Ukraine (esu.com.ua) — authoritative
+- Institute of History of Ukraine (history.org.ua) — academic
+- Litopys.org.ua — primary sources
+
+### Key Resources by Era (Prioritize .gov.ua and academic)
+
+| Era | Primary Resources (SAFE) |
+|-----|--------------------------|
+| **Ancient/Medieval** | history.org.ua, esu.com.ua, litopys.org.ua |
+| **Cossack** | litopys.org.ua (chronicles), esu.com.ua |
+| **Imperial** | esu.com.ua, history.org.ua |
+| **Soviet/20th c.** | memory.gov.ua, uinp.gov.ua, esu.com.ua |
+| **Independence** | ukrinform.ua, president.gov.ua |
+
+> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia (uk.wikipedia.org) is a contested space subject to Russian information warfare. **ALWAYS verify Wikipedia claims against .gov.ua or academic sources.** Prefer ЕСУ (esu.com.ua) and Institute of History (history.org.ua) for historical facts.
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent dates, names, or events** — always verify
+2. **NEVER generate primary source quotes from memory** — find real sources
+3. **If you cannot find a source, use WebSearch** — do not guess
+4. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+### Reference Textbooks (Use, Don't Copy!)
+
+This curriculum aligns with Ukrainian school textbooks:
+
+| Source | Use For |
+|--------|---------|
+| Хлібовська Г.М. et al. "Історія України 7-11 класи" (2017-2025) | Factual framework, chronology |
+| Бурнейко І.О. "Історія України 9 клас" (2017) | 19th-20th century events |
+| Поліщук О. "Творці української нації" (2024) | Biographical details, decolonization |
+
+**⚠️ ANTI-PLAGIARISM RULES:**
+1. **SYNTHESIZE, don't copy** — use textbooks for facts, write in your own words
+2. **Cite properly** — if quoting directly, use `> [!quote]` with attribution
+3. **Add value** — our modules must include decolonization perspective textbooks may lack
+4. **Transform for language learning** — textbooks teach history, we teach Ukrainian through history
+
+> 💡 **Tip:** Use `WebSearch: "[topic] site:history.org.ua"` or `site:esu.com.ua` to search within trusted academic sources. **Avoid relying solely on Wikipedia** due to information warfare.
+
+---
+
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -49,8 +116,8 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 - [ ] **Decolonization lens:** Ukraine-centric perspective, not Russian imperial framing
 - [ ] **Primary sources (≥2):** MANDATORY — include at least 2 excerpts from historical documents using `[!quote]` callout format
 - [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
-- [ ] **Essay assignment:** 400+ word essay with model answer and rubric
-- [ ] **Activity count:** 3-6 seminar-style activities (reading + essay-response + critical-analysis)
+- [ ] **Essay activity:** `essay-response` activity in YAML (150-250 words per config.py) — NO essay section in markdown
+- [ ] **Activity count:** 3-10 seminar-style activities (must include reading + essay-response per config.py)
 - [ ] **Vocabulary in context:** Historical terms embedded in narrative, not listed
 - [ ] **Engagement boxes:** Historical context, myth-busting, modern relevance
 - [ ] **NO DIALOGS:** History modules are READING-CENTRIC. Do NOT include conversational dialogs — they waste space and distract from historical content. Use primary source excerpts instead.
@@ -257,55 +324,44 @@ History modules should include **2-3 external reading tasks** for deeper engagem
 
 ---
 
-## Essay Assignment
+## Essay Activities (In YAML Only)
 
-Each history module should include a **400+ word essay** with model answer and rubric.
+**CRITICAL:** Essay activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-```markdown
-# Есе
+**DO NOT include `## Есе` sections in markdown.** This was a legacy pattern that caused:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added to content)
+- QA confusion (auditing both locations)
 
-## Тема
+**Per config.py, B2-history essay-response requirements:**
+- **Word count:** 150-250 words (student response length)
+- **Required:** Every module must have an essay-response activity
 
-Напишіть есе (400+ слів) на тему: "[Деколонізаційний аналіз історичної події]"
+**Essay activity in YAML:**
+```yaml
+- type: essay-response
+  id: b2-XX-essay-01
+  title: 'Есе: Деколонізаційний аналіз'
+  prompt: |
+    Напишіть есе (150-250 слів) на тему: "[Topic]"
 
-**Вимоги:**
-
-- Використайте лексику та граматику модуля
-- Застосуйте деколонізаційний підхід до аналізу
-- Порівняйте українську та російську/радянську історіографію
-- Використайте цитати з первинних джерел
-
-**Структура:**
-
-1. Вступ (100 слів) — тема та теза
-2. Основна частина (200 слів) — аргументи з первинних джерел
-3. Висновок (100 слів) — деколонізаційна перспектива
-
-## Критерії оцінювання
-
-| Критерій                    | Вага | Опис                                                                      |
-| --------------------------- | ---- | ------------------------------------------------------------------------- |
-| **Мовна якість**            | 40%  | Граматична правильність, багатство лексики, складність речень (B2 рівень) |
-| **Використання матеріалу**  | 30%  | Цитування первинних джерел, використання лексики модуля                   |
-| **Структура та зв'язність** | 20%  | Логічна організація, дискурсивні маркери                                  |
-| **Деколонізаційний підхід** | 10%  | Критичний аналіз імперських наративів                                     |
-
-## Зразок відповіді
-
-[400+ word model essay demonstrating:]
-
-- B2-level grammar and syntax
-- Module vocabulary in context
-- Decolonization framework
-- Citations from primary sources
-- Academic register
-
-**Мовні особливості зразка:**
-
-- Пасивні конструкції: "було засновано", "був обраний"
-- Складні речення з підрядними
-- Історична лексика модуля
-- Академічний регістр
+    Вимоги:
+    - Використайте лексику модуля
+    - Застосуйте деколонізаційний підхід
+    - Наведіть приклади з первинних джерел
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+      description: Граматика, лексика, складність речень
+    - criterion: Використання матеріалу
+      weight: 30
+      description: Цитування джерел, лексика модуля
+    - criterion: Структура
+      weight: 20
+      description: Логічна організація, зв'язність
+    - criterion: Деколонізаційний підхід
+      weight: 10
+      description: Критичний аналіз імперських наративів
 ```
 
 ---
@@ -415,11 +471,10 @@ The build system will inject these sections at build time.
 
 # Підсумок
 
-# Словник [30+ historical terms]
+# Словник [defined in vocabulary/{slug}.yaml]
 
-# Активності [10-12 language-focused activities]
-
-# Есе [400+ word decolonization analysis with rubric]
+# Активності [defined in activities/{slug}.yaml, 3-10 seminar-style]
+# (must include reading + essay-response per config.py)
 ```
 
 ---

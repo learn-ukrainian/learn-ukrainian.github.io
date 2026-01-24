@@ -6,6 +6,48 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
+---
+
+## ⚠️ BEFORE WRITING: Research Meta-Skills Content First!
+
+**CRITICAL:** C2 professional modules teach transferable meta-skills, not domain jargon. However, authentic examples still require research.
+
+### Research Strategy
+
+**Step 1: Find Terminology Acquisition Examples**
+```
+WebSearch: "юридична термінологія українською словник"
+WebSearch: "медична термінологія українською"
+WebSearch: "термінологічний словник [domain]"
+```
+
+**Step 2: Professional Document Standards**
+```
+WebSearch: "ДСТУ 4163 діловодство" (document standards)
+WebSearch: "офіційно-діловий стиль приклади"
+WebFetch: zakon.rada.gov.ua/laws/show/[standard]
+```
+
+### Key Resources for Meta-Skills
+
+| Meta-Skill | Resources |
+|------------|-----------|
+| **Terminology Acquisition** | esu.com.ua, sum.in.ua (dictionaries) |
+| **Document Production** | zakon.rada.gov.ua (ДСТУ standards) |
+| **Professional Reading** | nbuv.gov.ua, domain journals |
+| **Cross-Domain Communication** | Popular science sites, TED-Ed UA |
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent Ukrainian word formation patterns** — verify with etymological dictionaries
+2. **NEVER generate professional document structures from memory** — check ДСТУ standards
+3. **Domain terminology examples must be real** — verify in specialized dictionaries
+4. **Cross-domain simplification examples need real sources** — find actual popularizations
+5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+> 💡 **Tip:** The goal is teaching HOW to acquire terminology, not specific jargon. Use real examples to illustrate meta-strategies.
+
+---
 
 <!--
 TEMPLATE_METADATA:
@@ -26,7 +68,10 @@ TEMPLATE_METADATA:
 
 Before submitting a C2 professional module, verify all items from `c2-module-template.md` PLUS:
 
-### Professional-Specific Requirements
+### Professional-Specific Requirements (Seminar Style)
+- [ ] **Seminar pedagogy:** Production-focused, not drill-focused
+- [ ] **Activities:** 3-9 production activities (reading, essay-response, critical-analysis)
+- [ ] **Essay requirements:** 300-500 words per essay (with Model Answer)
 - [ ] **Meta-skills focus:** Transferable professional skills, not domain jargon
 - [ ] **Universal templates:** Patterns applicable to ANY professional field
 - [ ] **Professional immersion:** 100% Ukrainian in professional scenarios

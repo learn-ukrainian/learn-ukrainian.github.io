@@ -352,7 +352,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 [Extended passage testing ALL aspect skills in context]
 ```
 
-### Comprehensive Testing (16+ activities required)
+### Comprehensive Testing (10+ activities required)
 
 Checkpoints must test ALL skill groups from the phase:
 
@@ -430,8 +430,8 @@ The build system will inject these sections at build time.
 
 ### 5. **Too Few Activities**
 
-- ❌ Problem: 12 activities (same as regular modules)
-- ✅ Solution: 16+ activities for comprehensive testing
+- ❌ Problem: Fewer than 10 activities
+- ✅ Solution: 10+ activities for comprehensive testing
 
 ### 6. **Missing Self-Assessment**
 

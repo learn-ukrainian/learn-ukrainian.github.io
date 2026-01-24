@@ -28,7 +28,7 @@ Before submitting a C2 literary module, verify all items from `c2-module-templat
 
 ### Literary-Specific Requirements
 - [ ] **Scholar-level analysis:** Literary theory and criticism, not surface reading
-- [ ] **Original production:** Poetry, prose, or literary essay (with Model Answer)
+- [ ] **Original production:** Poetry, prose, or literary essay — YAML only (`essay-response` activity)
 - [ ] **Translation component:** Literary translation theory or practice
 - [ ] **Ukrainian critical terminology:** All analysis in Ukrainian
 - [ ] **Canon awareness:** Connect to Ukrainian literary tradition
@@ -213,61 +213,48 @@ vocabulary_focus:
 > [Scholar-level insight about the text]
 ```
 
-#### Section 3: Creative Production — 500-700 words
+#### Section 3: Creative Production (YAML Only)
 
-```markdown
-## Творче завдання
+**CRITICAL:** Creative production activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-### Завдання: [Poetry/Prose/Essay]
+**DO NOT include creative task sections with model answers in markdown.** This causes:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added to content)
+- QA confusion (auditing both locations)
 
-**Тип:** [Specific form — сонет, оповідання, критичне есе]
+**Per config.py:** Check C2 essay_min_words and essay_max_words for word limits.
 
-**Завдання:**
-[Detailed creative task description — 50-100 words]
+**Creative activity example in YAML:**
 
-**Вимоги:**
-1. [Formal requirement]
-2. [Thematic requirement]
-3. [Stylistic requirement]
-4. [Length requirement]
+```yaml
+- type: essay-response
+  id: c2-XX-creative-01
+  title: 'Творче завдання: [Poetry/Prose/Essay]'
+  prompt: |
+    Тип: [Specific form — сонет, оповідання, критичне есе]
 
----
+    Завдання: [Detailed creative task description]
 
-### Зразок відповіді (Model Answer)
-
-**[Title of model work]**
-
-> [Complete model creative work:
-> - For poetry: 14+ lines
-> - For prose: 400+ words
-> - For essay: 500+ words
-> Demonstrating:
-> - Mastery of form
-> - Sophisticated use of literary devices
-> - Individual voice
-> - Native-like linguistic control]
-
----
-
-### Авторський коментар
-
-> [150+ word self-reflective commentary explaining:
-> - Creative choices made
-> - How theory was applied
-> - Intended effects
-> - Relationship to literary tradition]
-
----
-
-### Рубрика оцінювання
-
-| Критерій | Очікування на C2 |
-|----------|------------------|
-| Форма | Досконале володіння обраною формою |
-| Стиль | Індивідуальний голос, багата образність |
-| Техніка | Свідоме використання літературних засобів |
-| Оригінальність | Творчий внесок, не імітація |
-| Мова | Бездоганна граматика, багата лексика |
+    Вимоги:
+    1. [Formal requirement]
+    2. [Thematic requirement]
+    3. [Stylistic requirement]
+  rubric:
+    - criterion: Форма
+      weight: 20
+      description: Досконале володіння обраною формою
+    - criterion: Стиль
+      weight: 20
+      description: Індивідуальний голос, багата образність
+    - criterion: Техніка
+      weight: 20
+      description: Свідоме використання літературних засобів
+    - criterion: Оригінальність
+      weight: 20
+      description: Творчий внесок, не імітація
+    - criterion: Мова
+      weight: 20
+      description: Бездоганна граматика, багата лексика
 ```
 
 #### Section 4: Translation (if applicable) — 400-500 words

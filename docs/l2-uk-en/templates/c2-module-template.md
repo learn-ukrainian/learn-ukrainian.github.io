@@ -6,6 +6,46 @@
 
 **Related Issue:** [#294](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/294)
 
+---
+
+## ⚠️ BEFORE WRITING: Research Native-Level Content First!
+
+**CRITICAL:** C2 requires authentic native-level Ukrainian. Do NOT generate literary/stylistic content from memory.
+
+### Research Strategy
+
+**Step 1: Find Authentic Sources**
+```
+WebSearch: "[author/topic] site:ukrlib.com.ua"
+WebSearch: "[literary work] повний текст site:litopys.org.ua"
+WebSearch: "[stylistic topic] стилістика site:nbuv.gov.ua"
+```
+
+**Step 2: Academic Resources**
+```
+WebFetch: https://nbuv.gov.ua/... (National Library)
+WebFetch: https://esu.com.ua/... (Encyclopedia)
+```
+
+### Key Resources (Prioritize .gov.ua and academic)
+
+| Resource | URL | Use For |
+|----------|-----|---------|
+| **UkrLib** | [ukrlib.com.ua](https://ukrlib.com.ua) | Literary texts, author biographies |
+| **Litopys.org.ua** | [litopys.org.ua](https://litopys.org.ua) | Historical texts, chronicles |
+| **National Library** | [nbuv.gov.ua](https://nbuv.gov.ua) | Stylistic studies, academic works |
+| **ЕСУ** | [esu.com.ua](https://esu.com.ua) | Authors, movements, terminology |
+
+> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia is contested territory subject to information warfare. **Verify all claims against academic sources.**
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent literary quotes** — find actual texts on UkrLib or Litopys
+2. **NEVER generate stylistic analyses from memory** — verify patterns in academic sources
+3. **NEVER fabricate author biographical details** — verify in ЕСУ
+4. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+---
 
 <!--
 TEMPLATE_METADATA:
@@ -34,14 +74,12 @@ Before submitting a C2 module, verify:
 - [ ] **Writing support:** ALL creative tasks include Model Answers (gold standard)
 - [ ] **Engagement boxes:** 7-8 boxes with expert-level depth
 
-### Activity Requirements
-- [ ] **Activities:** 16+ minimum (C2 standard)
-- [ ] **Activity density:**
-  - Quiz: 10-12 items (complex)
-  - Fill-in: 12+ items (nuanced, stylistic choices)
-  - Unjumble: 10+ items
-  - Cloze: 20+ blanks in passage
-  - Transformation: 8+ items (register shift, style transformation)
+### Activity Requirements (Seminar Style)
+- [ ] **Activities:** 3-9 production-focused activities (C2 seminar standard)
+- [ ] **Activity types:**
+  - reading: Primary text presentation
+  - essay-response: 300-500 word analytical essays (with Model Answer)
+  - critical-analysis: Deep textual/stylistic analysis
   - Creative production: Poetry, prose, translation (with Model Answer)
   - Translation analysis: Compare translations, discuss choices
 
@@ -125,7 +163,7 @@ vocabulary_count: 40  # Must match count in vocabulary/{slug}.yaml
 | **Philosophy** | "Studying IN Ukrainian" | "Creating WITH Ukrainian" |
 | **Word count** | 2000+ | 2200+ |
 | **Vocabulary** | 35+ | 40+ |
-| **Activities** | 16+ | 14-16 (quality over quantity) |
+| **Activities** | 12+ | 3-9 (seminar) |
 | **Passages** | 500-800 words | 600-1000+ words |
 | **Complexity** | University-level | Native-level, literary |
 | **Analysis** | Comparative, critical | Expert, meta-linguistic |
@@ -324,7 +362,7 @@ items:
 
 ### 5. Activities Section (Активності)
 
-**Minimum:** 14-16 activities (C2 emphasizes **quality over quantity**)
+**Minimum:** 3-9 activities (C2 seminar standard)
 
 **Activity Mix for C2:**
 
@@ -517,7 +555,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 |---------|----|----|
 | Word count | 2000+ | 2200+ |
 | Vocabulary | 35+ | 40+ |
-| Activities | 16+ | 14-16 (quality over quantity) |
+| Activities | 12+ | 3-9 (seminar) |
 | Quiz words/question | 18-30 | 20-35 |
 | Unjumble words/sentence | 18-25 | 20-30 |
 | Cloze blanks | 20+ | 20+ |
@@ -534,7 +572,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** All 7 functional styles, style transformation, euphonic mastery
 **Pedagogy:** Creative Production
-**Activities:** 14-16 (heavy on transformation, production)
+**Activities:** 3-9 (seminar: reading, essay, analysis)
 **Word count:** 2200+
 **Creative tasks:** Style transformation, register shifting, original writing
 
@@ -548,7 +586,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** Literary theory, narratology, poetics, translation, creative writing
 **Pedagogy:** Creative Production
-**Activities:** 12-14 (creative writing, translation, analysis)
+**Activities:** 3-9 (seminar: reading, essay, analysis)
 **Word count:** 2200+
 **Creative tasks:** Poetry, prose, translation (with Model Answers)
 
@@ -562,7 +600,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Focus:** Meta-skills for professional domains (universal templates, not jargon)
 **Pedagogy:** Professional simulation
-**Activities:** 12-14 (professional writing, document templates)
+**Activities:** 3-9 (seminar: reading, essay, analysis)
 **Word count:** 2200+
 **Professional tasks:** Documents, reports, correspondence (with Model Answers)
 
@@ -630,7 +668,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - [ ] Native-level complexity throughout
 
 ### Activities
-- [ ] 14-16 activities minimum (quality over quantity)
+- [ ] 3-9 activities (seminar style)
 - [ ] All activity types represented
 - [ ] Creative production activities included
 - [ ] Writing tasks include rubrics AND Model Answers

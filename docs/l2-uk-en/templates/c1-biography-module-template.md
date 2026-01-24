@@ -6,6 +6,89 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
+---
+
+## ⚠️ BEFORE WRITING: Research First!
+
+**CRITICAL:** Biographical content requires verified facts. Do NOT generate biographies from memory—this leads to hallucination (wrong dates, invented quotes, fictional events).
+
+### Research Strategy
+
+**Step 1: Use WebSearch for Initial Research**
+```
+WebSearch: "[Figure name] Ukrainian Wikipedia"
+WebSearch: "[Figure name] Encyclopedia of Modern Ukraine"
+WebSearch: "[Figure name] біографія"
+```
+
+**Step 2: Verify with WebFetch**
+After finding URLs, use WebFetch to extract content:
+```
+WebFetch: https://uk.wikipedia.org/wiki/[Figure_name]
+WebFetch: https://esu.com.ua/article-[id]
+```
+
+**Step 3: Find Primary Sources**
+For quotes, letters, speeches:
+```
+WebSearch: "[Figure name] листи" OR "[Figure name] промови"
+WebSearch: "[Figure name] цитати site:uk.wikiquote.org"
+```
+
+### Key Resources by Domain (Prioritize .gov.ua and academic)
+
+| Domain | Primary Resources (SAFE) | Secondary |
+|--------|--------------------------|-----------|
+| **Literature** | esu.com.ua, litopys.org.ua, ukrlib.com.ua | — |
+| **Politics/Military** | memory.gov.ua, history.org.ua, esu.com.ua | — |
+| **Science/Academia** | nas.gov.ua, esu.com.ua | — |
+| **Arts/Culture** | esu.com.ua, namu.kiev.ua | — |
+| **Religious figures** | risu.ua, esu.com.ua | — |
+| **Contemporary** | ukrinform.ua, president.gov.ua | — |
+
+> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia (uk.wikipedia.org) is a contested space subject to information warfare. **ALWAYS verify Wikipedia claims against .gov.ua or academic sources.** Prefer ЕСУ (esu.com.ua) for biographical facts.
+
+### Primary Academic Sources (PRIORITIZE THESE)
+
+| Source | URL | Coverage |
+|--------|-----|----------|
+| **Енциклопедія Сучасної України (ЕСУ)** | [esu.com.ua](https://esu.com.ua) | 81,000+ peer-reviewed articles |
+| **Institute of National Memory** | [memory.gov.ua](https://memory.gov.ua) | 20th century, dissidents, Holodomor |
+| **Institute of History NANU** | [history.org.ua](https://history.org.ua) | Academic historical research |
+| **National Library of Ukraine** | [nbuv.gov.ua](https://nbuv.gov.ua) | Dissertations, academic works |
+
+### Reference Works (Use, Don't Copy!)
+
+| Source | Use For |
+|--------|---------|
+| ЕСУ biographical articles | Verified dates, achievements, context |
+| Поліщук О. "Творці української нації" (2024) | Decolonization perspective on key figures |
+| UINP biographical databases | Dissidents, Executed Renaissance, Holodomor witnesses |
+
+**⚠️ ANTI-PLAGIARISM RULES:**
+1. **SYNTHESIZE, don't copy** — use encyclopedias for facts, write original narrative
+2. **Quote properly** — if using figure's own words, use `> [!quote]` with attribution
+3. **Add language learning value** — encyclopedias inform, we teach Ukrainian through biography
+4. **Decolonize** — even ЕСУ may have Soviet-era remnants in older articles
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent birth/death dates** — verify from ЕСУ or .gov.ua sources
+2. **NEVER generate quotes from memory** — find actual documented quotes in academic sources
+3. **NEVER invent family members, teachers, or associates** — verify names in ЕСУ
+4. **PREFER ЕСУ over Wikipedia** — [esu.com.ua](https://esu.com.ua) is peer-reviewed by NANU scholars
+5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+### URL Verification (MANDATORY)
+
+Before using any external URL in reading activities:
+1. Use WebFetch to confirm the page exists
+2. Verify the page is about the correct person (common name collisions!)
+3. Check the page contains substantial biographical content
+
+> 💡 **Tip:** [Енциклопедія Сучасної України](https://esu.com.ua) (ЕСУ) is the authoritative source — 81,000+ peer-reviewed articles from NANU and NTSh scholars. **Avoid relying solely on Wikipedia** due to information warfare concerns.
+
+---
 
 <!--
 TEMPLATE_METADATA:
@@ -33,8 +116,8 @@ Before submitting a C1 biography module, verify all items from `c1-module-templa
 - [ ] **Extended narrative:** 800-1000 word biographical account
 - [ ] **Primary sources (≥2):** Include quotes, letters, or speeches from the figure using `[!quote]` callouts
 - [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
-- [ ] **Essay assignment:** 400+ word comparative essay with model answer and rubric
-- [ ] **Activity count:** 4-8 seminar-style activities (reading + essay-response + critical-analysis)
+- [ ] **Essay activity:** `essay-response` activity in YAML (250-400 words per config.py) — NO essay section in markdown
+- [ ] **Activity count:** 4-9 seminar-style activities (must include reading + essay-response + critical-analysis per config.py)
 - [ ] **Historical context:** Place figure in their era's political/cultural context
 - [ ] **Legacy section:** Connect to modern Ukraine
 - [ ] **Gender/era balance:** Follow curriculum diversity requirements
@@ -253,51 +336,44 @@ Biography modules should include **2-3 external reading tasks** for deeper engag
 
 ---
 
-## Essay Assignment
+## Essay Activities (In YAML Only)
 
-Each biography module should include a **400+ word comparative essay** with model answer and rubric.
+**CRITICAL:** Essay activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-```markdown
-# Есе
+**DO NOT include `## Есе` sections in markdown.** This was a legacy pattern that caused:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added to content)
+- QA confusion (auditing both locations)
 
-## Тема
+**Per config.py, C1-biography essay-response requirements:**
+- **Word count:** 250-400 words (student response length)
+- **Required:** Every module must have essay-response + critical-analysis activities
 
-Напишіть порівняльне есе (400+ слів): "[Figure 1] та [Figure 2]: Порівняльний аналіз внеску в українську культуру"
+**Essay activity in YAML:**
+```yaml
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Есе: Порівняльний аналіз'
+  prompt: |
+    Напишіть порівняльне есе (250-400 слів): "[Figure 1] та [Figure 2]"
 
-**Вимоги:**
-- Використайте лексику та граматику модуля
-- Порівняйте підходи, досягнення, спадщину двох постатей
-- Використайте цитати з первинних джерел
-- Застосуйте біографічну та історичну лексику
-
-**Структура:**
-1. Вступ (100 слів) — контекст та теза
-2. Основна частина (200 слів) — порівняльний аналіз
-3. Висновок (100 слів) — значення для сучасної України
-
-## Критерії оцінювання
-
-| Критерій | Вага | Опис |
-|----------|------|------|
-| **Мовна якість** | 40% | Граматична правильність, біографічна лексика, складність речень (C1 рівень) |
-| **Використання матеріалу** | 30% | Цитування первинних джерел, використання лексики модуля |
-| **Порівняльний аналіз** | 20% | Логічне порівняння двох постатей |
-| **Структура та зв'язність** | 10% | Організація, дискурсивні маркери |
-
-## Зразок відповіді
-
-[400+ word model essay demonstrating:]
-- C1-level grammar and syntax
-- Module biographical vocabulary (відіграти роль, творча спадщина, брати участь)
-- Comparative analysis structure
-- Citations from primary sources
-- Публіцистичний register
-
-**Мовні особливості зразка:**
-- Біографічні колокації: "відіграв визначну роль", "творча спадщина"
-- Порівняльні конструкції: "на відміну від", "подібно до"
-- Складні речення з підрядними
-- Публіцистичний регістр
+    Вимоги:
+    - Використайте лексику та граматику модуля
+    - Порівняйте підходи, досягнення, спадщину двох постатей
+    - Використайте цитати з первинних джерел
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+      description: Граматика, біографічна лексика, складність речень
+    - criterion: Використання матеріалу
+      weight: 30
+      description: Цитування джерел, лексика модуля
+    - criterion: Порівняльний аналіз
+      weight: 20
+      description: Логічне порівняння постатей
+    - criterion: Структура
+      weight: 10
+      description: Організація, зв'язність
 ```
 
 ---
@@ -359,19 +435,22 @@ Why GOOD: Requires understanding how the MODULE describes the figure's influence
 
 ---
 
-### Activity Mix for Biography Modules
+### Activity Mix for Biography Modules (per config.py)
 
-**Total: 10-12 activities** (focus on quality over quantity)
+**Total: 4-9 activities** (seminar-style, quality over quantity)
 
-| Activity Type | Count | Purpose | Example |
-|---------------|-------|---------|---------|
-| **quiz** | 4-5 | Reading comprehension | "Згідно з текстом, який внесок автор виділяє?" |
-| **fill-in / cloze** | 3-4 | Biographical vocabulary | "Постать [___] визначну роль" → відіграла |
-| **error-correction** | 2-3 | Grammar practice | Fix case/collocation errors in biographical sentences |
-| **match-up** | 1-2 | Terminology | Ukrainian term ↔ Ukrainian definition |
-| **select** | 1-2 | Source analysis | Linguistic features of primary source quotes |
+**REQUIRED activity types:**
+- `reading` - External reading assignments with linguistic analysis
+- `essay-response` - 250-400 word essay (in YAML only, NO model answer in markdown)
+- `critical-analysis` - Deep analytical questions
 
-**Note:** Plus 2-3 external reading tasks and 1 essay assignment (tracked in activities YAML).
+**OPTIONAL activity types:**
+- `comparative-study` - Cross-figure or cross-era comparisons
+- `authorial-intent` - Analysis of the figure's own writings
+- `quiz` - ONLY for conceptual questions (NOT factual recall)
+
+**FORBIDDEN activity types (per config.py):**
+- match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words
 
 ### Activity Format Quick Reference
 
@@ -382,163 +461,121 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Example `activities/c1-XX-biography.yaml`:**
 
 ```yaml
-- type: quiz
-  title: Розуміння біографії
-  items:
-    - question: Згідно з текстом, який головний внесок цієї постаті?
-      options:
-        - text: Розвиток літератури
-          correct: true
-        - text: Військові перемоги
-          correct: false
-      explanation: Текст наголошує на літературній спадщині.
+- type: reading
+  id: c1-XX-reading-01
+  title: 'Аналіз первинного джерела'
+  resource:
+    type: primary_source
+    url: 'https://...'
+    title: 'Лист/Промова/Твір'
+  tasks:
+    - 'Який регістр використовує автор? Наведіть приклади.'
+    - 'Знайдіть три приклади емоційно забарвленої лексики'
 
-- type: fill-in
-  title: Біографічна лексика
-  items:
-    - sentence: Ця постать _____ визначну роль в історії.
-      answer: відіграла
-      options:
-        - відіграла
-        - зробила
-        - мала
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Есе: Порівняльний аналіз'
+  prompt: |
+    Напишіть порівняльне есе (250-400 слів)...
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+
+- type: critical-analysis
+  id: c1-XX-analysis-01
+  title: 'Критичний аналіз спадщини'
+  questions:
+    - 'Як сучасна українська культура оцінює внесок цієї постаті?'
+    - 'Які аспекти діяльності залишаються дискусійними?'
 ```
 
 ---
 
-### 1. Reading Comprehension (quiz)
+## Seminar-Style Activity Examples
 
-**Purpose:** Test understanding of Ukrainian biography text, NOT recall of facts.
+**Per config.py, C1-BIO modules use ONLY seminar-style activities.** Traditional drill activities (fill-in, match-up, error-correction, group-sort, etc.) are FORBIDDEN.
 
-```markdown
-## quiz: Розуміння біографії
+### 1. Reading Activity
 
-> **Instruction:** Відповідайте на питання на основі прочитаного тексту.
-
-1. Згідно з текстом, що автор виділяє як головний внесок цієї постаті?
-   - [x] [Answer from text]
-   - [ ] [Distractor]
-   - [ ] [Distractor]
-   - [ ] [Distractor]
-   > Текст чітко формулює цей внесок у розділі "Головні досягнення".
-
-2. Як автор характеризує вплив цієї постаті на українську культуру?
-   - [ ] [Distractor]
-   - [x] [Answer from text]
-   - [ ] [Distractor]
-   - [ ] [Distractor]
-   > У тексті зазначено: "[quote from text]".
-
-[All questions must reference "згідно з текстом" or "у тексті"]
+```yaml
+- type: reading
+  id: c1-bio-XX-reading-01
+  title: 'Аналіз первинного джерела'
+  resource:
+    type: primary_source
+    url: 'https://...'
+    title: 'Лист/Промова постаті'
+  tasks:
+    - 'Який регістр використовує автор? Наведіть приклади.'
+    - 'Знайдіть три приклади емоційно забарвленої лексики'
+    - 'Порівняйте мову автора з сучасною українською'
 ```
 
-### 2. Primary Source Linguistic Analysis (select)
+### 2. Essay-Response Activity
 
-**Purpose:** Test close reading and linguistic features of primary sources.
+```yaml
+- type: essay-response
+  id: c1-bio-XX-essay-01
+  title: 'Есе: Порівняльний аналіз'
+  prompt: |
+    Напишіть порівняльне есе (250-400 слів):
+    "[Figure 1] та [Figure 2]: Порівняльний аналіз внеску"
 
-```markdown
-## select: Лінгвістичний аналіз джерела
-
-Прочитайте уривок із листа/промови/твору:
-
-> "[150-200 word excerpt]"
-
-Виберіть усі правильні твердження про мову тексту:
-
-- [x] Автор використовує емоційно забарвлену лексику
-- [ ] Текст написаний офіційним регістром
-- [x] У тексті є елементи публіцистичного стилю
-- [ ] Лексика тексту нейтральна
-- [x] Автор звертається до читача безпосередньо
-
-[Test LINGUISTIC analysis, not interpretation of content]
+    Вимоги:
+    - Використайте лексику модуля
+    - Наведіть цитати з первинних джерел
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+      description: Граматика, біографічна лексика, складність речень
+    - criterion: Використання матеріалу
+      weight: 30
+      description: Цитування джерел, лексика модуля
 ```
 
-### 3. Vocabulary in Biographical Context (fill-in)
+### 3. Critical-Analysis Activity
 
-**Purpose:** Test vocabulary and collocations from module.
-
-```markdown
-## fill-in: Біографічна лексика
-
-1. Ця постать [___] визначну роль у розвитку української культури.
-   > [!answer] відіграла
-   > [!options] відіграла | зробила | мала | дала
-   > Відіграти роль = to play a role (fixed collocation).
-
-2. Його/Її творча [___] охоплює понад 50 років.
-   > [!answer] спадщина
-   > [!options] спадщина | наслідок | залишок | результат
-   > Спадщина = legacy, intellectual/cultural inheritance.
-
-3. Він/Вона [___] участь у національно-визвольному русі.
-   > [!answer] брав/брала
-   > [!options] брав/брала | робив/робила | мав/мала | давав/давала
-   > Брати участь = to participate (fixed expression).
-
-[12+ items testing MODULE VOCABULARY, not biographical facts]
+```yaml
+- type: critical-analysis
+  id: c1-bio-XX-analysis-01
+  title: 'Критичний аналіз спадщини'
+  questions:
+    - 'Як сучасна українська культура оцінює внесок цієї постаті?'
+    - 'Які аспекти діяльності залишаються дискусійними?'
+    - 'Як деколонізаційний підхід змінює оцінку цієї постаті?'
 ```
 
-### 4. Grammar in Biographical Text (error-correction)
+### 4. Comparative-Study Activity (Optional)
 
-**Purpose:** Test grammar using biography content as context.
-
-```markdown
-## error-correction: Граматика в біографічному тексті
-
-1. Тарас Шевченко народився в родина кріпаків.
-   > [!error] родина
-   > [!answer] родині
-   > [!options] родина | родині | родиною | родину
-   > [!explanation] Прийменник "в" + місцевий відмінок: в чому? → в родині.
-
-2. Вона присвячувала все своє життя боротьба за права жінок.
-   > [!error] боротьба
-   > [!answer] боротьбі
-   > [!options] боротьба | боротьбі | боротьбою | боротьбу
-   > [!explanation] "Присвятити + давальний відмінок": чому? → боротьбі.
-
-[Focus on GRAMMAR errors, not biographical inaccuracies]
+```yaml
+- type: comparative-study
+  id: c1-bio-XX-compare-01
+  title: 'Порівняльний аналіз'
+  figures:
+    - '[Figure 1]'
+    - '[Figure 2]'
+  aspects:
+    - 'Епоха та контекст'
+    - 'Основний внесок'
+    - 'Сучасне значення'
 ```
 
-### 5. Vocabulary Matching (match-up)
+### 5. Quiz (Conceptual Only)
 
-**Purpose:** Test recognition of biographical vocabulary.
+**Quiz is allowed but ONLY for conceptual questions, NOT factual recall:**
 
-```markdown
-## match-up: Біографічна лексика
-
-| Слово | Значення |
-|-------|----------|
-| спадщина | те, що залишилося після когось |
-| внесок | те, що хтось дав суспільству |
-| постать | видатна особа |
-| сучасник | людина тієї ж епохи |
-| наставник | той, хто навчає |
-
-[Match Ukrainian words to Ukrainian definitions — tests vocabulary, not translation]
-```
-
-### 6. Register Identification (group-sort)
-
-**Purpose:** Test register awareness using quotes from module.
-
-```markdown
-## group-sort: Визначте регістр цитат
-
-### Офіційний регістр
-- "Цим засвідчуємо, що..."
-- "На підставі вищезазначеного..."
-
-### Публіцистичний регістр
-- "Чому ми маємо пам'ятати..."
-- "Її внесок неможливо переоцінити..."
-
-### Розмовний регістр
-- "Та він же геній!"
-- "Оце так талант!"
-
-[Test REGISTER identification using module content]
+```yaml
+- type: quiz
+  id: c1-bio-XX-quiz-01
+  title: 'Концептуальний аналіз'
+  items:
+    - question: 'Згідно з текстом, як автор характеризує вплив цієї постаті?'
+      options:
+        - text: 'Автор підкреслює революційний характер її творчості'
+          correct: true
+        - text: 'Автор оцінює її як консервативну фігуру'
+          correct: false
+      explanation: 'У тексті автор наголошує на...'
 ```
 
 ---

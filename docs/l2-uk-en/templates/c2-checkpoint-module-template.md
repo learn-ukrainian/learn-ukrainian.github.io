@@ -30,7 +30,7 @@ Before submitting a C2 checkpoint module, verify all items from `c2-module-templ
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
 - [ ] **Word count:** 2000+ words (review content, not new teaching)
 - [ ] **Vocabulary:** 50-60 items (review vocabulary from ALL modules in phase)
-- [ ] **Activities:** 16+ comprehensive testing activities
+- [ ] **Activities:** 12+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase
 - [ ] **Self-assessment:** "Чи можете ви..." checklist at end
 - [ ] **Production assessment:** Creative/professional tasks with rubrics
@@ -183,15 +183,21 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 ---
 
 ## production: Індивідуальний стиль (M14-15)
-> Напишіть есе (400+ слів), демонструючи власний авторський голос.
 
-**Вимоги:**
-- Оригінальна перспектива
-- Послідовний стилістичний вибір
-- Ефективне використання стилістичних засобів
+**CRITICAL:** Production activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-**Зразок відповіді:**
-> [Complete 400+ word model essay showing individual voice]
+**Per config.py:** Essay activities have specific word limits. Check level-specific config for requirements.
+
+**Example in YAML:**
+```yaml
+- type: essay-response
+  id: c2-XX-production-01
+  title: 'Індивідуальний стиль'
+  prompt: |
+    Напишіть есе, демонструючи власний авторський голос.
+    Вимоги: оригінальна перспектива, послідовний стилістичний вибір.
+  rubric: [...]
+```
 ```
 
 
@@ -346,19 +352,28 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 ### Творче/Професійне завдання
 
-Напишіть текст (400+ слів), що демонструє ваше повне опанування [phase topic].
+**CRITICAL:** Production activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-**Вимоги:**
-- [Requirement 1 — stylistic mastery]
-- [Requirement 2 — native-like control]
-- [Requirement 3 — integration of all phase skills]
+**DO NOT include essay sections with model answers in markdown.** This causes content redundancy and word count inflation.
 
-**Зразок відповіді:**
-
-> [Complete 400+ word model answer showing C2 mastery]
-
-**Критичний коментар:**
-> [100+ word analysis of the model answer's strengths]
+**Example in YAML:**
+```yaml
+- type: essay-response
+  id: c2-XX-checkpoint-production
+  title: 'Творче завдання'
+  prompt: |
+    Напишіть текст, що демонструє ваше повне опанування [phase topic].
+    Вимоги: stylistic mastery, native-like control, integration of all phase skills.
+  rubric:
+    - criterion: Зміст
+      description: Глибокий, оригінальний
+    - criterion: Стиль
+      description: Бездоганний контроль регістру
+    - criterion: Мова
+      description: Безпомилкова, багата
+    - criterion: Інтеграція
+      description: Повне застосування фази
+```
 
 ### Рубрика
 

@@ -286,50 +286,46 @@ Folk culture modules should include **2-3 external reading tasks** for deeper en
 
 ---
 
-## Essay Assignment
+## Essay Activities (In YAML Only)
 
-Each folk culture module should include a **400+ word cultural analysis essay** with model answer and rubric.
+**CRITICAL:** Essay activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-```markdown
-# Есе
+**DO NOT include `## Есе` sections with model answers in markdown.** This causes:
+- Content redundancy (essay prompt + model answer duplicated)
+- Word count inflation (~700 words added)
+- QA confusion
 
-## Тема
+**Example essay-response activity in YAML:**
 
-Напишіть культурознавчий аналіз (400+ слів): "[Folk Tradition]: Культурна функція та символіка"
+```yaml
+- type: essay-response
+  id: c1-XX-essay-01
+  title: 'Культурознавчий аналіз'
+  prompt: |
+    Напишіть культурознавчий аналіз: "[Folk Tradition]: Культурна функція та символіка"
 
-**Вимоги:**
-- Використайте лексику та граматику модуля
-- Проаналізуйте культурну функцію та символічне значення традиції
-- Використайте приклади з автентичних фольклорних текстів
-- Порівняйте регіональні варіанти (якщо є)
+    Вимоги:
+    - Використайте лексику модуля
+    - Проаналізуйте культурну функцію та символіку
+    - Наведіть приклади з автентичних текстів
 
-**Структура:**
-1. Вступ (100 слів) — культурний контекст
-2. Основна частина (200 слів) — функція та символіка
-3. Висновок (100 слів) — сучасне відродження та значення
-
-## Критерії оцінювання
-
-| Критерій | Вага | Опис |
-|----------|------|------|
-| **Мовна якість** | 40% | Граматична правильність, фольклорна термінологія, C1 рівень |
-| **Використання матеріалу** | 30% | Цитування автентичних текстів, використання лексики модуля |
-| **Культурний аналіз** | 20% | Розуміння функції та символіки традиції |
-| **Структура та зв'язність** | 10% | Організація, дискурсивні маркери |
-
-## Зразок відповіді
-
-[400+ word model essay demonstrating:]
-- C1-level grammar and syntax
-- Module folk culture vocabulary (відіграти роль, символізувати, втілювати)
-- Cultural analysis framework
-- Citations from authentic folk texts
-- Mix of художній and публіцистичний registers
-
-**Мовні особливості зразка:**
-- Фольклорна термінологія: "обрядова функція", "символічне значення"
-- Складні речення з підрядними
-- Академічні конструкції: "як свідчить", "на відміну від"
+    Структура:
+    1. Вступ (100 слів) — культурний контекст
+    2. Основна частина (200 слів) — функція та символіка
+    3. Висновок (100 слів) — сучасне відродження
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+      description: Граматика, фольклорна термінологія
+    - criterion: Використання матеріалу
+      weight: 30
+      description: Цитування текстів, лексика модуля
+    - criterion: Культурний аналіз
+      weight: 20
+      description: Функція та символіка традиції
+    - criterion: Структура
+      weight: 10
+      description: Організація, зв'язність
 ```
 
 ---

@@ -338,7 +338,7 @@ The build system will inject these sections at build time.
 
 # Словник [30+ expressions + terminology]
 
-# Активності [14+ activities]
+# Активності [10+ activities]
 ```
 
 ---

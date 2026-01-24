@@ -6,6 +6,71 @@
 
 **Related Issue:** RFC #409 Curriculum Reorganization
 
+---
+
+## ⚠️ BEFORE WRITING: Research Executive/Academic Content First!
+
+**CRITICAL:** C1-PRO content requires sophisticated professional Ukrainian at executive and academic levels. Do NOT generate complex professional content from memory.
+
+### Research Strategy
+
+**Step 1: Find Executive-Level Resources**
+```
+WebSearch: "[topic] корпоративний звіт зразок"
+WebSearch: "[topic] стратегічний план приклад"
+WebSearch: "наукова стаття структура ІМРАД українською"
+```
+
+**Step 2: Academic Publishing Resources**
+```
+WebSearch: "автореферат дисертації зразок"
+WebSearch: "наукова публікація вимоги НАН України"
+WebFetch: http://nbuv.gov.ua/... (National Library)
+```
+
+### Key Resources by C1-PRO Phase
+
+| Phase | Resources |
+|-------|-----------|
+| **PRO.1 Executive** | kse.ua, cases.media, forbes.ua |
+| **PRO.2 Academic** | nbuv.gov.ua, nas.gov.ua, ukrmova.com |
+| **PRO.3 Industry** | Domain-specific (see B2-PRO resources) |
+| **PRO.4 Mastery** | All of the above |
+
+### Official Standards (MUST USE)
+
+| Standard | Purpose | URL |
+|----------|---------|-----|
+| **ДСТУ 4163:2020** | Document formatting | [undiasd.archives.gov.ua](https://undiasd.archives.gov.ua/doc/DSTU%204163.pdf) |
+| **ДСТУ 8302:2015** | Bibliographic citations | [zakon.rada.gov.ua](https://zakon.rada.gov.ua) |
+| **ВАК вимоги** | Academic article structure | [blog.magistr.ua](https://blog.magistr.ua/pravyla-napysannya-statti-vak/) |
+
+### Academic Writing Requirements (for PRO.2)
+
+Ukrainian academic articles must include:
+- **Постановка проблеми** — problem statement
+- **Аналіз досліджень** — literature review
+- **Мета статті** — article objectives
+- **Виклад матеріалу** — main content
+- **Висновки** — conclusions
+
+**Abstract requirements:**
+- Ukrainian: 800-900 characters
+- English: 1800+ characters (extended)
+- 6-8 keywords in both languages
+
+### Anti-Hallucination Rules
+
+1. **NEVER invent executive communication patterns** — study real Ukrainian business leaders
+2. **NEVER generate academic citations or formats from memory** — verify ДСТУ 8302:2015
+3. **Strategic documents require real examples** — find actual board reports, proposals
+4. **Academic conventions differ** — Ukrainian scholarly writing follows ВАК structure
+5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
+
+> 💡 **Tip:** The [Kyiv School of Economics](https://kse.ua) publishes executive-level Ukrainian content. [National Library](https://nbuv.gov.ua) has academic publication standards.
+
+---
+
 <!--
 TEMPLATE_METADATA:
   required_sections:
@@ -27,8 +92,10 @@ TEMPLATE_METADATA:
 
 Before submitting a C1-PRO professional mastery module, verify all items from `c1-module-template.md` PLUS:
 
-### Professional Mastery-Specific Requirements
-- [ ] **ESP+CLIL pedagogy:** Combined approach for advanced professional learning
+### Professional Mastery-Specific Requirements (Seminar Style)
+- [ ] **Seminar pedagogy:** Production-focused, not drill-focused
+- [ ] **Activities:** 3-9 production activities (reading, essay-response, critical-analysis)
+- [ ] **Essay requirements:** 250-400 words per essay (with Model Answer)
 - [ ] **Executive-level focus:** C-suite, academic, or specialist communication
 - [ ] **Professional immersion:** 100% Ukrainian in high-stakes contexts
 - [ ] **Advanced documents:** Complex professional document production

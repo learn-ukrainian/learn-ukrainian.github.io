@@ -585,9 +585,10 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'B2-history': {
+        # B2-HIST Track: History seminar style
         'target_words': 4000,
         'min_activities': 3,
-        'max_activities': 10,
+        'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
         'min_vocab': 20,
@@ -665,18 +666,21 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'B2-professional': {
-        # B2-PRO Professional Track (M01-40)
+        # B2-PRO Professional Track (M01-40) - Seminar style
         # ESP (English for Specific Purposes adapted for Ukrainian)
         'target_words': 3000,
-        'min_activities': 10,
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 30,  # Domain-specific terminology
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'translate', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 150,
+        'essay_max_words': 300
     },
     'C1': {
         'target_words': 3000,
@@ -703,18 +707,21 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C1-professional': {
-        # C1-PRO Professional Mastery Track (M01-50)
+        # C1-PRO Professional Mastery Track (M01-50) - Seminar style
         # ESP + CLIL approach for executives, academics, specialists
         'target_words': 3000,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 35,  # Advanced domain-specific terminology
         'min_engagement': 6,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'translate', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 250,
+        'essay_max_words': 400
     },
     'C1-stylistics': {
         'target_words': 3000,
@@ -745,7 +752,7 @@ LEVEL_CONFIG = {
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
         'target_words': 4000,
-        'min_activities': 4,
+        'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -765,7 +772,7 @@ LEVEL_CONFIG = {
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
         'target_words': 4000,
-        'min_activities': 4,
+        'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -817,56 +824,72 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'error-correction'}
     },
     'C2': {
+        # C2 Track: Seminar style - production-focused
         'target_words': 3000,
-        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
-        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 25,
         'min_engagement': 6,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
     },
     'C2-stylistic': {
+        # C2 Stylistic Track: Seminar style - style mastery
         'target_words': 3000,
-        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
-        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 25,
         'min_engagement': 6,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
     },
     'C2-literary': {
+        # C2 Literary Track: Seminar style - literary production
         'target_words': 3000,
-        'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
-        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 25,
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
     },
     'C2-professional': {
+        # C2 Professional Track: Seminar style - professional mastery
         'target_words': 3000,
-        'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
-        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
         'min_vocab': 25,
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'translate'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'essay_min_words': 300,
+        'essay_max_words': 500
     },
     'C2-checkpoint': {
         'target_words': 2000,
-        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
+        'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -877,7 +900,7 @@ LEVEL_CONFIG = {
     },
     'C2-capstone': {
         'target_words': 2000,
-        'min_activities': 16,  # Increased from 10 (Jan 2026) - C2 mastery level
+        'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -891,7 +914,7 @@ LEVEL_CONFIG = {
         # LIT Track: Pure seminar style (post-C1)
         # Activities: reading + essay-response + critical-analysis + comparative-study
         # NO traditional activities (quiz, match-up, fill-in)
-        'target_words': 3500,  # 3500-4000 for substantial literary analysis
+        'target_words': 4000,  # Consistent with other seminar tracks
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient

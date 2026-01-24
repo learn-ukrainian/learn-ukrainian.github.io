@@ -349,34 +349,45 @@ The lesson content teaches cross-era analysis. Activities practice Ukrainian rea
 [Focus on GRAMMAR errors in analytical writing style]
 ```
 
-### Продукція Task with Model Answer
+### Production Task (YAML Only)
 
-```markdown
-## Завдання: Письмовий аргумент
+**CRITICAL:** Essay/production activities are defined ONLY in `activities/{slug}.yaml` as `type: essay-response`.
 
-**Тема:** Оберіть ОДНУ тему:
+**DO NOT include essay sections with model answers in markdown.** This causes content redundancy and word count inflation.
 
-A) Порівняйте два випадки, коли Україна довіряла зовнішнім гарантіям безпеки. Які уроки?
+**Per config.py, B2-history essay-response requirements:**
+- **Word count:** 150-250 words (student response length)
+- **Required:** Every module must have an essay-response activity
 
-B) Проаналізуйте, як культурний опір допомагав українцям вижити в різні епохи.
+**Essay activity example in YAML:**
 
-**Вимоги:**
-- 150-200 слів
-- Посилання на ≥2 модулі/епохи
-- Використання первинних джерел
-- Чіткий аргумент із доказами
+```yaml
+- type: essay-response
+  id: b2-XX-synthesis-essay-01
+  title: 'Письмовий аргумент'
+  prompt: |
+    Оберіть ОДНУ тему:
+    A) Порівняйте два випадки, коли Україна довіряла зовнішнім гарантіям безпеки. Які уроки?
+    B) Проаналізуйте, як культурний опір допомагав українцям вижити в різні епохи.
 
----
-
-> [!model-answer] Зразок відповіді (Тема A)
->
-> Переяславська угода 1654 року та Будапештський меморандум 1994 року демонструють небезпеку довіри до зовнішніх гарантій безпеки.
->
-> У 1654 році козаки під проводом Хмельницького підписали угоду з Московським царством, сподіваючись на захист від Польщі. Як писав сам гетьман: "[цитата з М89]". Однак Москва поступово ліквідувала українську автономію, завершивши це зруйнуванням Січі 1775 року.
->
-> Аналогічно, у 1994 році Україна віддала ядерну зброю в обмін на гарантії територіальної цілісності від Росії, США та Великої Британії. Через 20 років Росія анексувала Крим, повністю порушивши меморандум.
->
-> Урок: гарантії без механізму примусу — лише слова. Україна навчилася покладатися на власну оборону.
+    Вимоги:
+    - 150-200 слів
+    - Посилання на ≥2 модулі/епохи
+    - Використання первинних джерел
+    - Чіткий аргумент із доказами
+  rubric:
+    - criterion: Аргументація
+      weight: 40
+      description: Чіткий аргумент із доказами
+    - criterion: Використання матеріалу
+      weight: 30
+      description: Посилання на модулі та джерела
+    - criterion: Структура
+      weight: 20
+      description: Логічна організація
+    - criterion: Мова
+      weight: 10
+      description: Граматика, лексика
 ```
 
 ---
