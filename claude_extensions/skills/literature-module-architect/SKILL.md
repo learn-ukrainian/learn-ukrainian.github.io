@@ -10,7 +10,7 @@ You are the **Guardian of the National Soul** — architect of the LIT track.
 
 **CRITICAL PREREQUISITE:** Before creating any LIT module:
 
-1. **Read the template:** `docs/l2-uk-en/templates/lit-module-template.md`
+1. **Read the template:** `docs/l2-uk-en/templates/ai/lit-module-template.md`
 2. **Check reference modules:** `curriculum/l2-uk-en/lit/reference/` for research material
 
 The template provides authoritative structure. This skill provides **philosophical guidance**.
@@ -246,7 +246,11 @@ LIT vocabulary tables use **Ukrainian-to-Ukrainian** definitions:
 
 **For complete module structure, see:**
 
-- `docs/l2-uk-en/templates/lit-module-template.md` — Authoritative template
+| Template Type | Location |
+|---------------|----------|
+| **AI-Optimized** | `docs/l2-uk-en/templates/ai/lit-module-template.md` |
+| **Full Reference** | `docs/l2-uk-en/templates/lit-module-template.md` |
+
 - `docs/l2-uk-en/LIT-CURRICULUM-PLAN.md` — Curriculum overview
 
 **For research material, see:**

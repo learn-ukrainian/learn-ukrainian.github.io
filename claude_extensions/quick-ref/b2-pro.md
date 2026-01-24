@@ -11,7 +11,7 @@
 
 ## Workflow Integration
 
-**B2-PRO uses the 7-phase track workflow:**
+**B2-PRO uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -20,6 +20,8 @@
 5. **Act** → Generate activities from lesson content
 6. **Act-QA** → Validate activities quality and coverage
 7. **Integrate** → Deploy to website (MDX generation)
+8. **Vocab** → Extract vocabulary from lesson
+9. **Vocab-QA** → Validate vocabulary schema and uniqueness
 
 **Commands:**
 
@@ -27,7 +29,7 @@
 - Resume: `/module b2-pro {num} --from={phase}` (phase: meta, lesson, act, vocab)
 - Status: `/module b2-pro {num} --check`
 
-**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+**Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
 ---
 
@@ -47,8 +49,10 @@
 
 **Before writing any B2-PRO module, read:**
 
-- **Professional modules** → `docs/l2-uk-en/templates/b2-pro-module-template.md`
+- **Professional modules (AI)** → `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
 - **Checkpoint modules** (M13, M28, M38, M40) → Same template with checkpoint focus
+
+> **Full documentation:** See `docs/l2-uk-en/templates/b2-pro-module-template.md` for complete reference.
 
 ---
 
@@ -160,5 +164,6 @@ prerequisites:
 ## Related Documentation
 
 - **B2-PRO Curriculum Plan:** `docs/l2-uk-en/B2-PRO-CURRICULUM-PLAN.md`
-- **Professional Template:** `docs/l2-uk-en/templates/b2-pro-module-template.md`
+- **Professional Template (AI):** `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
+- **Professional Template (Full):** `docs/l2-uk-en/templates/b2-pro-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`

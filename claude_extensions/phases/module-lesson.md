@@ -89,10 +89,12 @@ fi
    - **A2**: `docs/l2-uk-en/templates/a2-module-template.md`
    - **B1**: `docs/l2-uk-en/templates/b1-grammar-module-template.md` (or cultural/vocabulary based on focus)
    - **B2 core**: `docs/l2-uk-en/templates/b2-grammar-module-template.md` (or others)
-   - **B2-HIST**: `docs/l2-uk-en/templates/b2-history-module-template.md`
-   - **B2-PRO**: `docs/l2-uk-en/templates/b2-pro-module-template.md`
-   - **C1-BIO**: `docs/l2-uk-en/templates/c1-biography-module-template.md`
-   - **LIT**: `docs/l2-uk-en/templates/lit-module-template.md`
+   - **B2-HIST**: `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
+   - **B2-PRO**: `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
+   - **C1-BIO**: `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
+   - **C1-HIST**: `docs/l2-uk-en/templates/ai/c1-history-module-template.md`
+   - **C1-PRO**: `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
+   - **LIT**: `docs/l2-uk-en/templates/ai/lit-module-template.md`
 
 3. Read quality standards:
    ```

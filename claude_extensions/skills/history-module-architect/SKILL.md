@@ -22,13 +22,14 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 
 ## Template Locations
 
-| Level        | Template                                                          | Modules                     |
-| ------------ | ----------------------------------------------------------------- | --------------------------- |
-| B2 History   | `docs/l2-uk-en/templates/b2-history-module-template.md`           | M71-131 (excl. synthesis)   |
-| B2 Synthesis | `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md` | M83, M108, M119, M125, M131 |
-| C1 Biography | `docs/l2-uk-en/templates/c1-biography-module-template.md`         | M36-100                     |
+| Level        | Template (AI-Optimized)                                           | Full Reference                                            | Modules                     |
+| ------------ | ----------------------------------------------------------------- | --------------------------------------------------------- | --------------------------- |
+| B2 History   | `docs/l2-uk-en/templates/ai/b2-history-module-template.md`        | `docs/l2-uk-en/templates/b2-history-module-template.md`   | M71-131 (excl. synthesis)   |
+| B2 Synthesis | `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md` | —                                                         | M83, M108, M119, M125, M131 |
+| C1 Biography | `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`      | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100                     |
+| C1 History   | `docs/l2-uk-en/templates/ai/c1-history-module-template.md`        | `docs/l2-uk-en/templates/c1-history-module-template.md`   | M01-135                     |
 
-**CRITICAL:** Read the template BEFORE creating a module.
+**CRITICAL:** Read the AI-optimized template BEFORE creating a module. Full reference provides additional context.
 
 > **Note:** Synthesis modules replace traditional checkpoints in B2.3 History. They test cross-era analysis and historical argumentation, not recall. See GitHub issue #332.
 

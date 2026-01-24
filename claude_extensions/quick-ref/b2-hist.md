@@ -11,17 +11,18 @@
 
 ---
 
-## Relaxed Audit Limits
+## Audit Limits (per config.py)
 
-| Metric         | Target | WARN  | FAIL  |
-| -------------- | ------ | ----- | ----- |
-| Word count     | 4000   | <4000 | <3500 |
-| Activities     | 10     | <10   | <8    |
-| Items/activity | 14     | <14   | <10   |
+| Metric           | Value   | Source              |
+| ---------------- | ------- | ------------------- |
+| Word count       | 4000    | target_words        |
+| Min activities   | 3       | min_activities      |
+| Max activities   | 10      | max_activities      |
+| Items/activity   | 1+      | min_items_per_activity |
+| Required types   | reading, essay-response | required_types |
+| Essay word range | 150-250 | essay_min/max_words |
 
-**WARN** = Passes with warning. **FAIL** = Blocks approval.
-
-**Note:** History modules have REDUCED activity counts (10-12) vs standard B2 (14+) because content depth is the focus.
+**Note:** B2-HIST uses seminar-style activities (reading + essay-response + critical-analysis), not traditional drill activities. Quality over quantity.
 
 ---
 
@@ -29,14 +30,16 @@
 
 **Before writing any B2-HIST module, read the appropriate template:**
 
-- **History modules** (M01-61, excluding synthesis) → `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **History modules** (M01-61, excluding synthesis) → `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
 - **Synthesis modules** (M13, M27, M37, M49, M55, M61) → `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`
+
+> **Full documentation:** See `docs/l2-uk-en/templates/b2-history-module-template.md` for complete reference.
 
 ---
 
 ## Workflow Integration
 
-**B2-HIST uses the 7-phase track workflow:**
+**B2-HIST uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -45,6 +48,8 @@
 5. **Act** → Generate activities from lesson content
 6. **Act-QA** → Validate activities quality and coverage
 7. **Integrate** → Deploy to website (MDX generation)
+8. **Vocab** → Extract vocabulary from lesson
+9. **Vocab-QA** → Validate vocabulary schema and uniqueness
 
 **Commands:**
 
@@ -52,7 +57,7 @@
 - Resume: `/module b2-hist {num} --from={phase}` (phase: meta, lesson, act, vocab)
 - Status: `/module b2-hist {num} --check`
 
-**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+**Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
 ---
 
@@ -76,7 +81,8 @@ Before writing, confirm:
 - [ ] **Read the appropriate template** (history or synthesis)
 - [ ] Identify if this is a synthesis module (M13, M27, M37, M49, M55, M61)
 - [ ] All metadata YAML fields ready
-- [ ] Activity plan: 10-12 activities (NOT 14+), 5+ types
+- [ ] Activity plan: 3-10 seminar-style activities (must include reading + essay-response)
+- [ ] Essay in YAML only (150-250 words) — NO essay section in markdown
 - [ ] Immersion target: **100%** Ukrainian
 
 ## Metadata YAML Template (`meta/{slug}.yaml`)
@@ -110,27 +116,43 @@ prerequisites:
 | Example Sentences | 24+             | 16+               |
 | Engagement Boxes  | 5+              | 3+                |
 
-## Activity Requirements
+## Activity Requirements (per config.py)
+
+**B2-HIST uses seminar-style pedagogy:**
 
 | Requirement        | History | Synthesis |
 | ------------------ | ------- | --------- |
-| Total Activities   | 10-12   | 12-14     |
-| Items per Activity | 14+     | 12+       |
-| Unique Types       | 5+      | 5+        |
+| Total Activities   | 3-10    | 3-10      |
+| Items per Activity | 1+      | 1+        |
+| Unique Types       | 2+      | 2+        |
 
-### Activity Complexity (Content-Heavy)
+### Required Activity Types
 
-**History modules use REDUCED complexity targets:**
+**Every module MUST include:**
+- `reading` - External reading assignments with linguistic analysis
+- `essay-response` - 150-250 word essay task (NO model answer in markdown)
 
-| Activity         | Min words | Max words |
-| ---------------- | --------- | --------- |
-| Quiz             | 6         | 20        |
-| Fill-in          | 8         | 14        |
-| Unjumble         | 7         | 15        |
-| Error-correction | 8         | 16        |
-| True-false       | 8         | 18        |
+**Optional activity types:**
+- `critical-analysis` - Analytical questions about source material
+- `comparative-study` - Cross-period or cross-figure comparisons
+- `true-false` - Only for factual checks (allowed in B2-HIST)
 
-> **Rationale:** Historical narratives don't need artificial elaboration. Quiz like "Згідно з текстом, коли Шевченко отримав волю?" is pedagogically effective at 8 words.
+### Essay Activities
+
+Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:
+
+```yaml
+- type: essay-response
+  id: b2-hist-XX-essay-01
+  title: 'Есе: [Topic]'
+  prompt: |
+    Напишіть есе (150-250 слів)...
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+```
+
+**Word range:** 150-250 (per config.py essay_min/max_words)
 
 ---
 
@@ -200,6 +222,7 @@ History modules must present Ukrainian history from Ukrainian perspective:
 ## Related Documentation
 
 - **B2-HIST Curriculum Plan:** `docs/l2-uk-en/B2-HIST-CURRICULUM-PLAN.md`
-- **History Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **History Template (AI):** `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
+- **History Template (Full):** `docs/l2-uk-en/templates/b2-history-module-template.md`
 - **Synthesis Template:** `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`

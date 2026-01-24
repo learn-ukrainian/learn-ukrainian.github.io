@@ -11,7 +11,7 @@
 
 ## Workflow Integration
 
-**C1-PRO uses the 7-phase track workflow:**
+**C1-PRO uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -20,6 +20,8 @@
 5. **Act** → Generate activities from lesson content
 6. **Act-QA** → Validate activities quality and coverage
 7. **Integrate** → Deploy to website (MDX generation)
+8. **Vocab** → Extract vocabulary from lesson
+9. **Vocab-QA** → Validate vocabulary schema and uniqueness
 
 **Commands:**
 
@@ -27,7 +29,7 @@
 - Resume: `/module c1-pro {num} --from={phase}` (phase: meta, lesson, act, vocab)
 - Status: `/module c1-pro {num} --check`
 
-**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+**Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
 ---
 
@@ -47,8 +49,10 @@
 
 **Before writing any C1-PRO module, read:**
 
-- **Professional mastery modules** → `docs/l2-uk-en/templates/c1-pro-module-template.md`
+- **Professional mastery modules (AI)** → `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
 - **Checkpoint modules** (M13, M28, M44, M50) → Same template with checkpoint focus
+
+> **Full documentation:** See `docs/l2-uk-en/templates/c1-pro-module-template.md` for complete reference.
 
 ---
 
@@ -186,6 +190,7 @@ naturalness:
 ## Related Documentation
 
 - **C1-PRO Curriculum Plan:** `docs/l2-uk-en/C1-PRO-CURRICULUM-PLAN.md`
-- **Professional Mastery Template:** `docs/l2-uk-en/templates/c1-pro-module-template.md`
+- **Professional Mastery Template (AI):** `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
+- **Professional Mastery Template (Full):** `docs/l2-uk-en/templates/c1-pro-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`
 - **Richness Guidelines:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`

@@ -4,7 +4,7 @@ This document describes all scripts and workflows for module creation, validatio
 
 > **🚀 Module Creation Workflow:**
 >
-> Use `/module {level} {num}` as the main entry point. See [7-Phase Workflow](#7-phase-module-workflow-rfc-001) below.
+> Use `/module {level} {num}` as the main entry point. See [9-Phase Workflow](#9-phase-module-workflow-rfc-001) below.
 >
 > This document (SCRIPTS.md) is a **detailed reference** for individual scripts and commands.
 
@@ -82,7 +82,7 @@ npm run validate:html l2-uk-en a1 5
 
 | Document                                         | Purpose                                                                                                  |
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `claude_extensions/phases/module-*.md`           | **7-Phase workflow** - Current module creation process (RFC-001)                                         |
+| `claude_extensions/phases/module-*.md`           | **9-Phase workflow** - Current module creation process (RFC-001)                                         |
 | `claude_extensions/commands/module*.md`          | Module commands reference (`/module`, `/module-sync`, etc.)                                              |
 | `docs/ARCHITECTURE.md`                           | System architecture and quality validation overview                                                      |
 | `docs/l2-uk-en/claude-review-prompt.md`          | Review prompts for Claude - Use these to fix audit issues                                                |
@@ -135,11 +135,11 @@ npm run validate:html l2-uk-en a1 5
 
 ---
 
-## 7-Phase Module Workflow (RFC-001)
+## 9-Phase Module Workflow (RFC-001)
 
-> **NEW:** For track levels (b2-hist, c1-bio, c1-hist, lit) and C2, use the new 7-phase workflow.
+> **NEW:** For track levels (b2-hist, c1-bio, c1-hist, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
 >
-> **Vocab enrichment runs separately** after all modules in a track are content-complete.
+> **See:** GitHub issue #444 for full RFC discussion and implementation status.
 
 ### Which Command Should I Use?
 
@@ -181,15 +181,17 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 
 ### Phase Reference
 
-| Phase | Command           | Creates                                 | Validates            |
-| ----- | ----------------- | --------------------------------------- | -------------------- |
-| 1     | /module-meta      | meta/{slug}.yaml                        | -                    |
-| 2     | /module-meta-qa   | -                                       | Meta validity        |
-| 3     | /module-lesson    | {slug}.md                               | -                    |
-| 4     | /module-lesson-qa | -                                       | Content quality      |
-| 5     | /module-act       | activities/{slug}.yaml                  | -                    |
-| 6     | /module-act-qa    | -                                       | Activity schema      |
-| 7     | /module-integrate | vocabulary/{slug}.yaml (skeleton) + MDX | Cross-file alignment |
+| Phase | Command           | Creates                    | Validates                 |
+| ----- | ----------------- | -------------------------- | ------------------------- |
+| 1     | /module-meta      | meta/{slug}.yaml           | -                         |
+| 2     | /module-meta-qa   | -                          | Meta validity             |
+| 3     | /module-lesson    | {slug}.md                  | -                         |
+| 4     | /module-lesson-qa | -                          | Content quality           |
+| 5     | /module-act       | activities/{slug}.yaml     | -                         |
+| 6     | /module-act-qa    | -                          | Activity schema           |
+| 7     | /module-integrate | MDX for Docusaurus         | Cross-file alignment      |
+| 8     | /module-vocab     | vocabulary/{slug}.yaml     | -                         |
+| 9     | /module-vocab-qa  | -                          | Vocabulary validity       |
 
 ### Resume Flags
 
@@ -198,7 +200,8 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 | `meta`       | 1               | Fresh build from scratch                   |
 | `lesson`     | 3               | Meta is locked, need to regenerate content |
 | `act`        | 5               | Content is locked, need new activities     |
-| `integrate`  | 7               | All content ready, just need deploy        |
+| `integrate`  | 7               | Activities locked, deploy to website       |
+| `vocab`      | 8               | Module deployed, batch vocab enrichment    |
 
 ### /module-sync Command
 
@@ -234,22 +237,22 @@ Results:
 Summary: 4/5 deployed
 ```
 
-### Vocabulary Enrichment (Separate Pass)
+### Vocabulary Enrichment (Batch Processing)
 
-After all modules in a track are content-complete:
+For batch vocabulary enrichment across a track after modules are content-complete:
 
 ```bash
-/module-vocab-enrich b2-hist    # Extract vocab M1→MN in order
+/module-vocab-enrich b2-hist    # Enrich vocab M1→MN in order
 ```
 
 This command:
 
 - Processes modules **sequentially** (M1 → M2 → ... → MN)
-- Deduplicates vocabulary (only NEW words per module)
-- Regenerates MDX with populated vocabulary tables
+- Adds IPA, translations, POS tags to skeleton vocabulary
+- Deduplicates (only NEW words per module)
 - Updates vocabulary.db
 
-**Why separate?** Vocab extraction requires knowing what was introduced in previous modules. Running it after all content is complete ensures correct deduplication.
+**When to use:** After Phase 7 (module-vocab) creates skeleton entries, use this for batch enrichment. For single modules, Phase 7-8 handles vocabulary creation and validation.
 
 **Phase files:** `claude_extensions/phases/module-*.md`
 **Command files:** `claude_extensions/commands/module-*.md`

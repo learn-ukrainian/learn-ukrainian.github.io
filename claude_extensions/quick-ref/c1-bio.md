@@ -11,7 +11,7 @@
 
 ## Workflow Integration
 
-**C1-BIO uses the 7-phase track workflow:**
+**C1-BIO uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -20,6 +20,8 @@
 5. **Act** → Generate activities from lesson content
 6. **Act-QA** → Validate activities quality and coverage
 7. **Integrate** → Deploy to website (MDX generation)
+8. **Vocab** → Extract vocabulary from lesson
+9. **Vocab-QA** → Validate vocabulary schema and uniqueness
 
 **Commands:**
 
@@ -27,21 +29,22 @@
 - Resume: `/module c1-bio {num} --from={phase}` (phase: meta, lesson, act, vocab)
 - Status: `/module c1-bio {num} --check`
 
-**Reference:** `docs/SCRIPTS.md` for full 7-phase documentation.
+**Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
 ---
 
-## Relaxed Audit Limits
+## Audit Limits (per config.py)
 
-| Metric         | Target | WARN  | FAIL  |
-| -------------- | ------ | ----- | ----- |
-| Word count     | 4000   | <4000 | <3800 |
-| Activities     | 10     | <10   | <8    |
-| Items/activity | 16     | <16   | <12   |
+| Metric           | Value   | Source              |
+| ---------------- | ------- | ------------------- |
+| Word count       | 4000    | target_words        |
+| Min activities   | 4       | min_activities      |
+| Max activities   | 9       | max_activities      |
+| Items/activity   | 1+      | min_items_per_activity |
+| Required types   | reading, essay-response, critical-analysis | required_types |
+| Essay word range | 250-400 | essay_min/max_words |
 
-**WARN** = Passes with warning. **FAIL** = Blocks approval.
-
-**Note:** Biography modules have REDUCED activity counts (10-12) vs standard C1 (16+) because content depth is the focus.
+**Note:** C1-BIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
 ---
 
@@ -49,8 +52,10 @@
 
 **Before writing any C1-BIO module, read:**
 
-- **Biography modules** → `docs/l2-uk-en/templates/c1-biography-module-template.md`
+- **Biography modules (AI)** → `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
 - **Checkpoint** (M101) → `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
+
+> **Full documentation:** See `docs/l2-uk-en/templates/c1-biography-module-template.md` for complete reference.
 
 ---
 
@@ -80,7 +85,9 @@ Before writing, confirm:
 - [ ] **Read the biography template** (`c1-biography-module-template.md`)
 - [ ] Research the historical figure thoroughly (use reliable Ukrainian sources)
 - [ ] All metadata YAML fields ready
-- [ ] Activity plan: 10-12 activities (NOT 16+), 5+ types
+- [ ] Activity plan: 4-9 seminar-style activities (must include reading + essay-response + critical-analysis)
+- [ ] Essay in YAML only (250-400 words) — NO essay section in markdown
+- [ ] NO traditional drill activities (fill-in, match-up, unjumble, etc. are FORBIDDEN)
 - [ ] Immersion target: **100%** Ukrainian
 
 ## Metadata YAML Template (`meta/{slug}.yaml`)
@@ -118,25 +125,55 @@ naturalness:
 | Engagement Boxes  | 6+                | 4+         |
 | Primary Sources   | 1+ quote          | Multiple   |
 
-## Activity Requirements
+## Activity Requirements (per config.py)
+
+**C1-BIO uses pure seminar-style pedagogy:**
 
 | Requirement        | Biography | Checkpoint |
 | ------------------ | --------- | ---------- |
-| Total Activities   | 10-12     | 16+        |
-| Items per Activity | 16+       | 14+        |
-| Unique Types       | 5+        | 6+         |
+| Total Activities   | 4-9       | 14+        |
+| Items per Activity | 1+        | 14+        |
+| Unique Types       | 3+        | 6+         |
 
-### Activity Complexity (Content-Heavy)
+### Required Activity Types
 
-**Biography modules use context-specific targets:**
+**Every module MUST include:**
+- `reading` - External reading assignments with linguistic analysis
+- `essay-response` - 250-400 word essay task (NO model answer in markdown)
+- `critical-analysis` - Deep analytical questions about sources/legacy
 
-| Activity         | Min words | Max words |
-| ---------------- | --------- | --------- |
-| Quiz             | 8         | 25        |
-| Fill-in          | 8         | 16        |
-| Unjumble         | 10        | 18        |
-| Error-correction | 8         | 18        |
-| True-false       | 8         | 20        |
+**Optional activity types:**
+- `comparative-study` - Cross-figure or cross-era comparisons
+- `authorial-intent` - Analysis of the figure's own writings
+- `quiz` - ONLY for conceptual questions (per config.py, quiz is allowed)
+
+### FORBIDDEN Activity Types (per config.py)
+
+**These traditional drill activities are NOT ALLOWED in C1-BIO:**
+- match-up
+- fill-in
+- cloze
+- group-sort
+- unjumble
+- anagram
+- mark-the-words
+
+### Essay Activities
+
+Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:
+
+```yaml
+- type: essay-response
+  id: c1-bio-XX-essay-01
+  title: 'Есе: Порівняльний аналіз'
+  prompt: |
+    Напишіть порівняльне есе (250-400 слів)...
+  rubric:
+    - criterion: Мовна якість
+      weight: 40
+```
+
+**Word range:** 250-400 (per config.py essay_min/max_words)
 
 ---
 
@@ -228,7 +265,8 @@ The track maintains diversity:
 ## Related Documentation
 
 - **C1-BIO Curriculum Plan:** `docs/l2-uk-en/C1-BIO-CURRICULUM-PLAN.md`
-- **Biography Template:** `docs/l2-uk-en/templates/c1-biography-module-template.md`
+- **Biography Template (AI):** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
+- **Biography Template (Full):** `docs/l2-uk-en/templates/c1-biography-module-template.md`
 - **Checkpoint Template:** `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`
 - **Richness Guidelines:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`

@@ -1,6 +1,6 @@
 # RFC-001: Nine-Phase Module Workflow
 
-**Status:** Draft
+**Status:** Implemented
 **Author:** Claude (with user direction)
 **Created:** 2026-01-21
 **Target:** Tracks (b2-hist, c1-bio, lit) + C2 levels
@@ -65,14 +65,14 @@ Replace the current 4-stage module workflow with a 9-phase workflow for content-
 └─────────────────┘     └────────┬────────┘
                                  │ LOCKED
                                  ▼
-┌─────────────────┐     ┌─────────────────┐
-│  module-vocab   │────▶│ module-vocab-qa │
-└─────────────────┘     └────────┬────────┘
-                                 │ LOCKED
-                                 ▼
                         ┌─────────────────┐
                         │ module-integrate│
-                        └─────────────────┘
+                        └────────┬────────┘
+                                 │ DEPLOYED
+                                 ▼
+┌─────────────────┐     ┌─────────────────┐
+│  module-vocab   │────▶│ module-vocab-qa │
+└─────────────────┘     └─────────────────┘
 ```
 
 ### Phase Descriptions
@@ -85,9 +85,9 @@ Replace the current 4-stage module workflow with a 9-phase workflow for content-
 | **4. module-lesson-qa** | - | meta.yaml, {slug}.md | Word count, sections, richness, naturalness, no AI contamination |
 | **5. module-act** | `activities/{slug}.yaml` | meta + content (LOCKED) | - |
 | **6. module-act-qa** | - | All above | Schema, counts, density, types, format rules |
-| **7. module-vocab** | `vocabulary/{slug}.yaml` | All above (LOCKED) | - |
-| **8. module-vocab-qa** | - | All files | Schema, counts, integration, uniqueness |
-| **9. module-integrate** | - | All files | Cross-file alignment, final validation |
+| **7. module-integrate** | MDX | All above (LOCKED) | Cross-file alignment, MDX generation |
+| **8. module-vocab** | `vocabulary/{slug}.yaml` | All files | - |
+| **9. module-vocab-qa** | - | All files | Schema, counts, integration, uniqueness |
 
 ### Locking Mechanism
 
@@ -263,11 +263,31 @@ sources:
 | English hints | check_english_hints_in_activities | None in B2+ |
 | morpheme patterns | check_morpheme_patterns | Valid |
 
-### Phase 7: module-vocab
+### Phase 7: module-integrate
+
+> **CRITICAL:** This phase deploys the module to the website. Activities and content are LOCKED at this point. Vocabulary enrichment happens after deployment, allowing batch processing across modules.
+
+**Creates:** MDX for Docusaurus
+
+**Input:** meta.yaml, {slug}.md, activities.yaml (all LOCKED)
+
+**Validates:**
+
+| Check | Description |
+|-------|-------------|
+| Meta-content alignment | content_outline headings match {slug}.md sections |
+| Meta-activities alignment | activity_hints types present in activities.yaml |
+| Content-activities alignment | Activities reference content appropriately |
+| File completeness | All 3 files exist and are non-empty |
+| MDX generation | `npm run pipeline` succeeds |
+
+**Output:** PASS (deployed to website) or FAIL with specific alignment issues.
+
+### Phase 8: module-vocab
 
 **Creates:** `vocabulary/{slug}.yaml`
 
-**Input:** All previous files (LOCKED)
+**Input:** All previous files (DEPLOYED)
 
 **Constraints:**
 - Extract vocabulary appearing in content AND activities
@@ -279,7 +299,9 @@ sources:
 - Tracks (b2-hist, c1-bio, lit): A1 → B2 core vocabulary
 - C2: A1 → C1 core vocabulary
 
-### Phase 8: module-vocab-qa
+**Note:** Vocabulary extraction can be done in batch across multiple modules since it happens after deployment. This allows working on modules out of sequence.
+
+### Phase 9: module-vocab-qa
 
 **Validates:**
 
@@ -292,22 +314,7 @@ sources:
 | IPA format | format check | Valid IPA |
 | Duplicates | script | None |
 
-### Phase 9: module-integrate
-
-> **CRITICAL ADDITION:** This phase addresses a major gap in current workflows. Today, nothing verifies that `activity_hints` in meta actually match generated activities, or that content outline headings match the actual prose sections. Phase 9 catches cross-file misalignments that per-file QA cannot detect.
-
-**Final alignment check:**
-
-| Check | Description |
-|-------|-------------|
-| Meta-content alignment | content_outline headings match {slug}.md sections |
-| Meta-activities alignment | activity_hints types present in activities.yaml |
-| Content-activities alignment | Activities reference content appropriately |
-| Vocabulary integration | All vocab words appear in content or activities |
-| File completeness | All 4 files exist and are non-empty |
-| MDX generation | `npm run pipeline` succeeds |
-
-**Output:** PASS (ready for publication) or FAIL with specific alignment issues.
+**Output:** PASS (vocabulary complete) or FAIL with specific issues.
 
 ---
 
@@ -325,6 +332,7 @@ sources:
 | Activity schema | module-act-qa |
 | Activity counts/density | module-act-qa |
 | Activity format checks | module-act-qa |
+| Cross-file alignment | module-integrate |
 | Vocabulary schema | module-vocab-qa |
 | Vocabulary integration | module-vocab-qa |
 
@@ -515,3 +523,5 @@ See `docs/dev/PHASE-WORKFLOW-ANALYSIS.md` for the complete mapping of all 42 cur
 | 2026-01-21 | Decide: no orchestrator command for now (Gemini feedback) |
 | 2026-01-21 | Emphasize Phase 9 as critical addition (Gemini feedback) |
 | 2026-01-21 | Update migration: all levels will migrate, not just tracks |
+| 2026-01-24 | Reorder phases: integrate at 7, vocab at 8-9 (enables batch vocab after deploy) |
+| 2026-01-24 | Status: Draft → Implemented |
