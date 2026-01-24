@@ -12,9 +12,9 @@
 
 ```yaml
 ---
-name: review-content-scoring
+name: review-content-v3
 description: 0-10 scoring rubric for content quality review after audit passes
-version: '3.0'
+version: '3.1'
 category: quality
 dependencies: audit_module.py
 ---
@@ -58,9 +58,9 @@ dependencies: audit_module.py
 ## Usage
 
 ```
-/review-content-scoring [LEVEL]              # Review all in level
-/review-content-scoring [LEVEL] [MODULE_NUM] # Single module
-/review-content-scoring [LEVEL] [START-END]  # Range
+/review-content-v3 [LEVEL]              # Review all in level
+/review-content-v3 [LEVEL] [MODULE_NUM] # Single module
+/review-content-v3 [LEVEL] [START-END]  # Range
 ```
 
 ## Batch Mode (Multiple Modules)
@@ -70,7 +70,7 @@ Use subagents for each module (fresh context per module to avoid exhaustion).
 ```
 For each module in range:
   1. Spawn Task agent with subagent_type="general-purpose"
-  2. Agent prompt: "Run /review-content-scoring {level} {module_num}"
+  2. Agent prompt: "Run /review-content-v3 {level} {module_num}"
   3. Wait for agent completion
   4. Log result (score, issues)
   5. Continue to next module (fresh context)
@@ -325,6 +325,61 @@ Check `docs/resources/external_resources.yaml`:
 
 ---
 
+## Common Activity Issues (Examples)
+
+### Issue 1: Multiple Valid Answers
+
+```yaml
+- type: fill-in
+  prompt: "читати → ___"
+  answer: прочитати
+  options: [прочитати, читати, почитати]
+```
+
+**Problem:** "почитати" is ALSO a valid perfective (means "to read for a while"). Activity wrongly treats it as incorrect.
+**Fix:** Rephrase to "Give the COMPLETIVE perfective" or add note "result-focused form".
+
+### Issue 2: Mixed Activity Syntax
+
+```yaml
+- type: fill-in
+  prompt: "говорити → ___ (suppletive pair)"
+  error: suppletive pair  # ← WRONG - this is error-correction syntax
+  answer: сказати
+```
+
+**Problem:** `error` field is error-correction syntax, not fill-in syntax.
+**Fix:** Use only `answer` and `options` for fill-in activities.
+
+### Issue 3: Duplicate Items
+
+```yaml
+items:
+  - prompt: "розуміти → ___"
+  - prompt: "готувати → ___"
+  - prompt: "розуміти → ___"  # ← DUPLICATE
+  - prompt: "готувати → ___"  # ← DUPLICATE
+```
+
+**Problem:** Items appear twice (copy-paste error).
+**Fix:** Remove duplicates.
+
+### Issue 4: Unrelated External Resources
+
+**NOTE:** Resources are in `docs/resources/external_resources.yaml`.
+
+```yaml
+a1-09-food-and-drinks:
+  youtube:
+    - title: 'Cat Videos Compilation'  # ← UNRELATED
+      url: 'https://youtube.com/...'
+```
+
+**Problem:** Resource has nothing to do with Ukrainian learning.
+**Fix:** Replace with relevant content or remove entry.
+
+---
+
 ## Content Richness Quality (B1+ Critical)
 
 ### 10a. Engagement Quality
@@ -376,17 +431,62 @@ Count unique sentence starters. Flag if >50% same pattern.
 
 ---
 
-## Humanity & Flow Audit
+## Humanity & Flow Audit (The "Robot Test")
 
-- **Cohesion:** Logical paragraphs, transitional phrases
-- **Naturalness:** Clear teacher voice, euphony (no vowel clashes у/в, і/й)
-- **Cognitive Load:** Dense terms with explanations
-- **Sentence Variety:** Mix of short and long sentences
-- **Figurative Language:** Idioms/metaphors for B1+
-- **Readability:** Natural contractions, simple English explanations
-- **Cultural Authenticity:** Ukrainian reality, not translated Western scenarios
-- **"Aha!" Moments:** Discovery insights ("Now you see why...")
-- **Accessibility:** Inclusive language, no stereotypes
+**Goal:** Ensure content feels like a human teacher speaking to a human learner.
+
+### 11a. Cohesion Index (The "Glue" Test)
+
+- **Check:** Do paragraphs flow logically or are they just stacked lists?
+- **Pass:** Uses transitional phrases (_However, For example, In this context, Consequently_).
+- **Fail:** Abrupt topic shifts without signaling.
+
+### 11b. Naturalness Metric (The "Uncanny Valley" Check)
+
+- **Check (English):** Friendly tutor or database export?
+  - ❌ _Robotic:_ "Do not use this form. It is incorrect."
+  - ✅ _Human:_ "Avoid this form—it sounds unnatural to native ears."
+- **Check (Ukrainian):** Euphony (Милозвучність)
+  - ❌ _Clunky:_ "В учителі є..." (Vowel clash)
+  - ✅ _Euphonic:_ "У вчителя є..." (Alternation respected)
+
+### 11c. Cognitive Load (Lexical Density)
+
+- **Check:** Too dense with bolded terms/jargon without breathing room?
+- **Pass:** Balance of new information vs. explanations/examples.
+- **Fail:** >3 new concepts in a paragraph without example breakdown.
+
+### 11d. Sentence Variety (Rhythm)
+
+- **Check:** Variation in sentence length.
+- **Fail:** 5 consecutive sentences of roughly equal length (S-V-O format).
+- **Pass:** Mix of short, punchy sentences and longer, complex explanations.
+
+### 11e. Figurative Language (The "Soul" Check)
+
+- **Check (B1+):** Presence of idioms, metaphors, or colorful language.
+- **Fail:** 100% literal, dry description.
+- **Pass:** Uses analogies ("Think of cases like role tags in a play").
+
+### 11f. Readability & Tone (English Instructions)
+
+- **Contractions:**
+  - ❌ _Robotic:_ "It is important that you do not forget..."
+  - ✅ _Human:_ "It's important that you don't forget..."
+- **Simplicity:** English explanations should be B1/B2 level.
+  - ❌ _Dense:_ "The semantic properties of the aspectual pair denote..."
+  - ✅ _Simple:_ "This pair shows us the difference between..."
+
+### 11g. Cultural Authenticity
+
+- **Check:** Ukrainian reality or translated English concept?
+- **Pass:** Uses Oksana, Taras (not John, Mary), борщ, вареники, Kyiv, Carpathians.
+- **Fail:** "John eats a hamburger in New York" translated to Ukrainian.
+
+### 11h. "Aha!" Moment Check
+
+- **Check:** Does the module facilitate a moment of discovery?
+- **Pass:** "Now you see why..." or "That explains..." moments.
 
 ---
 
@@ -671,6 +771,37 @@ Encyclopedic passive voice → **Auto-fail**
 
 ---
 
+## Fix Strategies for AI-Generated Content
+
+**When you detect AI slop, apply these concrete fixes:**
+
+### Strategy 1: Add Sensory Detail
+
+❌ **Generic:** "Людина готує їжу"
+✅ **Vivid:** "Запах борщу наповнює кухню — бурячки, часник, кріп"
+
+### Strategy 2: Name Everything
+
+❌ **Vague:** "Я купив хліб у магазині"
+✅ **Specific:** "Я купив паляницю в булочній 'Хлібний дім' на вулиці Хрещатик"
+
+### Strategy 3: Add "Why" Layer
+
+❌ **Shallow:** "Use perfective for results"
+✅ **Deep:** "Чому важливо? Бо українець почує 'я робив' і запитає: 'І що? Зробив чи ні?' Недоконаний вид залишає питання відкритим."
+
+### Strategy 4: Replace Certainty with Reality
+
+❌ **Absolute:** "Це завжди неправильно"
+✅ **Nuanced:** "Більшість українців скаже інакше. Хоч технічно обидва варіанти існують, один звучить природніше."
+
+### Strategy 5: Inject Story
+
+❌ **Factual:** "Genitive shows possession"
+✅ **Narrative:** "Марія йде до мами. Чому 'мами', а не 'мама'? Бо це — мамин дім, мамина вулиця, мамине місто. Родовий відмінок створює зв'язок: не просто 'йти до', а 'йти до когось свого'."
+
+---
+
 ## Overall Score Calculation
 
 **Weighted:**
@@ -749,6 +880,51 @@ Save detailed review to: `curriculum/l2-uk-en/{level}/review/{module_number}-{sl
 
 ---
 
+## Batch Summary Format (Level-Wide Reviews)
+
+When reviewing multiple modules, generate a summary:
+
+```markdown
+# Content Quality Summary - {Level}
+
+**Modules Reviewed:** {count}
+**Date:** {today}
+
+## Results
+
+| Status | Count | % |
+|--------|-------|---|
+| ✅ 9-10 (PASS) | {n} | {%} |
+| ⚠️ 7-8 (INSUFFICIENT) | {n} | {%} |
+| ❌ 0-6 (FAIL) | {n} | {%} |
+
+**Average Score:** {avg}/10
+
+## Patterns Across Level
+
+### Common Strengths
+- {pattern 1}
+- {pattern 2}
+
+### Common Issues
+- {pattern 1} (affects {n} modules)
+- {pattern 2} (affects {n} modules)
+
+### Priority Fixes
+1. **Critical:** {modules with score <5}
+2. **Important:** {modules with linguistic accuracy issues}
+3. **Enhancement:** {modules scoring 7-8}
+
+## Module Scores
+
+| # | Module | Score | Status | Key Issue |
+|---|--------|-------|--------|-----------|
+| 1 | {slug} | {X}/10 | ✅/⚠️/❌ | {issue} |
+...
+```
+
+---
+
 ## Calibration Examples
 
 **4/10:** Major linguistic errors (wrong aspectual pairs), AI slop, poor structure.
@@ -766,3 +942,12 @@ Save detailed review to: `curriculum/l2-uk-en/{level}/review/{module_number}-{sl
 - Not cross-referencing grammar claims with sources
 
 **High scores earned, not given. Verify linguistic claims. Recalibrate if mostly 9-10s.**
+
+---
+
+## Important Notes
+
+1. **Be specific** - Quote actual problematic text, don't describe vaguely
+2. **Provide actionable fixes** - Not "improve this" but "change X to Y"
+3. **Auto-fix safe issues** - Apply Categories 1-2, 6-7 immediately, run audit, verify pass
+4. **Save to review/ folder** - Don't append to audit/ folder (that's for automated audit reports)
