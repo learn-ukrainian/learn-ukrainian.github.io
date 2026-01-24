@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing history modules (B2) and 
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # History & Biography Module Architect Skill
 
 Create or review history (B2) and biography (C1) modules using the appropriate templates.

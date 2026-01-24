@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing cultural modules (B1-C1).
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # Cultural Module Architect Skill
 
 Create or review cultural modules using the appropriate level-specific template.

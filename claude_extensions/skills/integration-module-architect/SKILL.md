@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing integration modules (B1-B
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # Integration Module Architect Skill
 
 Create or review integration modules that consolidate all skills from a level.

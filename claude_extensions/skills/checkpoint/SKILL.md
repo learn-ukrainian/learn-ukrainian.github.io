@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing checkpoint modules. Check
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # Checkpoint Module Skill
 
 Create or review checkpoint modules using the appropriate level-specific template.

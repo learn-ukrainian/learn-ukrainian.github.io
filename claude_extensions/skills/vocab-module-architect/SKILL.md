@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing vocabulary expansion modu
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # Vocabulary Module Architect Skill
 
 Create or review vocabulary-focused modules using the B1 vocabulary template.

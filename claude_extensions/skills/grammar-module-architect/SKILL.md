@@ -4,6 +4,8 @@ description: Use this skill when creating or reviewing grammar-focused modules (
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
 ---
 
+> **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
+
 # Grammar Module Architect Skill
 
 Create or review grammar-focused modules using the appropriate level-specific template.
