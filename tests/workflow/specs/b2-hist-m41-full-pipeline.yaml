@@ -1,0 +1,113 @@
+# Test Case: B2-HIST M41 Full Pipeline
+# Purpose: Validate 9-phase workflow with AI-optimized templates
+
+test_id: b2-hist-m41-full-pipeline
+created: 2026-01-24
+issue: "#461"
+
+# Input specification
+input:
+  track: b2-hist
+  module_number: 41
+  slug: kozatstvo-vytoky
+  title: "Козацтво: Витоки"
+  era: "15th-16th century"
+
+# Phases to test
+phases:
+  - phase: 1
+    command: /module-meta
+    output: meta/kozatstvo-vytoky.yaml
+
+  - phase: 2
+    command: /module-meta-qa
+    validates: meta
+
+  - phase: 3
+    command: /module-lesson
+    output: kozatstvo-vytoky.md
+
+  - phase: 4
+    command: /module-lesson-qa
+    validates: lesson
+
+  - phase: 5
+    command: /module-act
+    output: activities/kozatstvo-vytoky.yaml
+
+  - phase: 6
+    command: /module-act-qa
+    validates: activities
+
+  - phase: 7
+    command: /module-integrate
+    output: docusaurus/docs/b2-hist/kozatstvo-vytoky.mdx
+
+  - phase: 8
+    command: /module-vocab
+    output: vocabulary/kozatstvo-vytoky.yaml
+
+  - phase: 9
+    command: /module-vocab-qa
+    validates: vocabulary
+
+# Evaluation criteria
+evaluation:
+  meta:
+    - field: word_target
+      expected: 4000
+      tolerance: 10%
+    - field: content_outline
+      check: sections_have_word_targets
+    - field: activity_hints
+      check: includes_reading_and_essay
+
+  lesson:
+    - metric: word_count
+      target: 4000
+      tolerance: 10%
+    - metric: sections_match_outline
+      required: true
+    - metric: immersion
+      target: 100%
+    - metric: naturalness_score
+      minimum: 8
+    - metric: ai_contamination
+      allowed: false
+
+  activities:
+    - metric: count
+      minimum: 3
+      maximum: 10
+    - metric: required_types
+      includes: [reading, essay-response]
+    - metric: schema_valid
+      required: true
+    - metric: items_per_activity
+      minimum: 1
+
+  vocabulary:
+    - metric: count
+      target: 20-25
+    - metric: schema_valid
+      required: true
+    - metric: all_in_content
+      required: true
+
+# Comparison dimensions
+comparison:
+  - dimension: template_compliance
+    weight: 30
+    description: Did the LLM follow AI template structure?
+
+  - dimension: phase_locking
+    weight: 20
+    description: Were locked files left unchanged?
+
+  - dimension: output_quality
+    weight: 30
+    description: Audit script pass rate
+
+  - dimension: naturalness
+    weight: 20
+    description: MCP validator naturalness score
