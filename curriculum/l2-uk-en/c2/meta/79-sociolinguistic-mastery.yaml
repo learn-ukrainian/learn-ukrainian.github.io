@@ -1,153 +1,125 @@
-# C2 Module 79: Sociolinguistic Mastery
-# Status: SPEC (ready for content development)
-
 id: c2-79
 title: Соціолінгвістична майстерність
 slug: sociolinguistic-mastery
 version: '2.0'
-phase: 'C2.4 Academic Culmination'
+phase: C2.4 Academic Culmination
 focus: culture
 module_type: culture
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Соціолінгвістика — НАНУ
-    url: https://inmo.org.ua/
-    type: primary
-    notes: Соціолінгвістичні дослідження
-  - name: Мовна політика України
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Законодавство про мову
-  - name: Rating Sociological Group — мовне питання
-    url: https://ratinggroup.ua/
-    type: reference
-    notes: Соціологічні дослідження мовної ситуації
-
+- name: Соціолінгвістика — НАНУ
+  url: https://inmo.org.ua/
+  type: primary
+  notes: Соціолінгвістичні дослідження
+- name: Мовна політика України
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Законодавство про мову
+- name: Rating Sociological Group — мовне питання
+  url: https://ratinggroup.ua/
+  type: reference
+  notes: Соціологічні дослідження мовної ситуації
 content_outline:
-  - section: Вступ — Мова і суспільство
-    words: 500
-    points:
-      - Соціолінгвістика як наука
-      - Мовна ситуація в Україні
-      - Мова як маркер ідентичності
-      - Мовні права та політика
-
-  - section: Українська мовна ситуація
-    words: 700
-    points:
-      - Історичний контекст
-      - Білінгвізм та диглосія
-      - Суржик — природа та сприйняття
-      - Регіональні відмінності у мовних практиках
-
-  - section: Мовна політика та законодавство
-    words: 600
-    points:
-      - Закон про забезпечення функціонування української мови
-      - Мова в освіті
-      - Мова в медіа
-      - Мовний омбудсмен
-
-  - section: Мовний вибір та перемикання кодів
-    words: 600
-    points:
-      - Чинники мовного вибору
-      - Перемикання кодів — типи та функції
-      - Мовна адаптація до співрозмовника
-      - Мовний етикет
-
-  - section: Соціальна варіативність мови
-    words: 600
-    points:
-      - Соціолекти та жаргони
-      - Гендерні особливості мовлення
-      - Вікові особливості
-      - Професійні мови
-
-  - section: Мовна ідентичність та ставлення до мови
-    words: 500
-    points:
-      - Мовні установки
-      - Престиж мови
-      - Мовна лояльність
-      - Зміни мовної поведінки
-
-  - section: Практикум — Соціолінгвістичний аналіз
-    words: 500
-    points:
-      - Аналіз мовних практик у різних контекстах
-      - Спостереження за мовною поведінкою
-      - Рефлексія про власну мовну ідентичність
-
+- section: Вступ — Мова і суспільство
+  words: 500
+  points:
+  - Соціолінгвістика як наука
+  - Мовна ситуація в Україні
+  - Мова як маркер ідентичності
+  - Мовні права та політика
+- section: Українська мовна ситуація
+  words: 700
+  points:
+  - Історичний контекст
+  - Білінгвізм та диглосія
+  - Суржик — природа та сприйняття
+  - Регіональні відмінності у мовних практиках
+- section: Мовна політика та законодавство
+  words: 600
+  points:
+  - Закон про забезпечення функціонування української мови
+  - Мова в освіті
+  - Мова в медіа
+  - Мовний омбудсмен
+- section: Мовний вибір та перемикання кодів
+  words: 600
+  points:
+  - Чинники мовного вибору
+  - Перемикання кодів — типи та функції
+  - Мовна адаптація до співрозмовника
+  - Мовний етикет
+- section: Соціальна варіативність мови
+  words: 600
+  points:
+  - Соціолекти та жаргони
+  - Гендерні особливості мовлення
+  - Вікові особливості
+  - Професійні мови
+- section: Мовна ідентичність та ставлення до мови
+  words: 500
+  points:
+  - Мовні установки
+  - Престиж мови
+  - Мовна лояльність
+  - Зміни мовної поведінки
+- section: Практикум — Соціолінгвістичний аналіз
+  words: 500
+  points:
+  - Аналіз мовних практик у різних контекстах
+  - Спостереження за мовною поведінкою
+  - Рефлексія про власну мовну ідентичність
 vocabulary_hints:
   required:
-    - соціолінгвістика (sociolinguistics)
-    - мовна ситуація (language situation)
-    - білінгвізм (bilingualism)
-    - диглосія (diglossia)
-    - мовний вибір (language choice)
-    - перемикання кодів (code-switching)
-    - соціолект (sociolect)
-    - мовна політика (language policy)
-    - мовна ідентичність (language identity)
-    - престиж (prestige)
+  - соціолінгвістика (sociolinguistics)
+  - мовна ситуація (language situation)
+  - білінгвізм (bilingualism)
+  - диглосія (diglossia)
+  - мовний вибір (language choice)
+  - перемикання кодів (code-switching)
+  - соціолект (sociolect)
+  - мовна політика (language policy)
+  - мовна ідентичність (language identity)
+  - престиж (prestige)
   recommended:
-    - мовний омбудсмен (language ombudsman)
-    - мовна лояльність (language loyalty)
-    - мовні установки (language attitudes)
-    - мовні права (language rights)
-    - гендерлект (genderlect)
-
+  - мовний омбудсмен (language ombudsman)
+  - мовна лояльність (language loyalty)
+  - мовні установки (language attitudes)
+  - мовні права (language rights)
+  - гендерлект (genderlect)
 activity_hints:
-  - type: reading
-    focus: Аналіз статті про мовну ситуацію в Україні
-    source: Академічне видання або якісна аналітика
-    items: "1 стаття"
-
-  - type: quiz
-    focus: Знання мовного законодавства
-    items: "15+"
-
-  - type: critical-analysis
-    focus: Аналіз перемикання кодів у реальному діалозі
-    output: Виявлення типів та функцій перемикання
-
-  - type: essay-response
-    focus: Есе про власну мовну біографію
-    word_target: 500
-    output: Рефлексивний текст про мовний досвід
-
-  - type: discussion
-    focus: Дискусія про мовну політику
-    output: Аргументований виступ з позицією
-
-  - type: match-up
-    focus: Соціолінгвістичний термін → визначення та приклад
-    items: "15+"
-
-  - type: comparative-study
-    focus: Порівняння мовних практик різних поколінь
-    output: Аналітична таблиця з висновками
-
-  - type: essay-response
-    focus: Аналіз мовних практик у конкретному середовищі
-    word_target: 400
-    output: Міні-дослідження з спостереженнями
-
+- type: reading
+  focus: Аналіз статті про мовну ситуацію в Україні
+  source: Академічне видання або якісна аналітика
+  items: 1 стаття
+- type: quiz
+  focus: Знання мовного законодавства
+  items: 15+
+- type: critical-analysis
+  focus: Аналіз перемикання кодів у реальному діалозі
+  output: Виявлення типів та функцій перемикання
+- type: essay-response
+  focus: Есе про власну мовну біографію
+  word_target: 500
+  output: Рефлексивний текст про мовний досвід
+- type: match-up
+  focus: Соціолінгвістичний термін → визначення та приклад
+  items: 15+
+- type: comparative-study
+  focus: Порівняння мовних практик різних поколінь
+  output: Аналітична таблиця з висновками
+- type: essay-response
+  focus: Аналіз мовних практик у конкретному середовищі
+  word_target: 400
+  output: Міні-дослідження з спостереженнями
 prerequisites:
-  - c2-78 (Regional Varieties)
-  - c2-77 (Rare/Archaic Forms)
-  - Cultural competence (C1)
-
+- c2-78 (Regional Varieties)
+- c2-77 (Rare/Archaic Forms)
+- Cultural competence (C1)
 connects_to:
-  - c2-80 (Error Analysis)
-  - c2-81 (Native-Like Fluency)
-  - c2-82 (Teaching Ukrainian I)
-
+- c2-80 (Error Analysis)
+- c2-81 (Native-Like Fluency)
+- c2-82 (Teaching Ukrainian I)
 naturalness:
   score: 1
   status: PENDING

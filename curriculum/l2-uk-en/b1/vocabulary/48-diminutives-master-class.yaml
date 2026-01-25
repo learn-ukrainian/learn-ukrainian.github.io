@@ -8,7 +8,7 @@ items:
   pos: adj
 - lemma: бабунечка
   ipa: /babunɛt͡ʃka/
-  translation: ''
+  translation: dear grandmother
   pos: noun
   gender: f
 - lemma: ближчий
@@ -75,7 +75,7 @@ items:
   pos: noun
 - lemma: директорика
   ipa: /dɪrɛktɔrɪka/
-  translation: ''
+  translation: director
   pos: noun
   gender: f
 - lemma: дмитро

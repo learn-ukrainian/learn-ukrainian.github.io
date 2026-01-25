@@ -1,8 +1,5 @@
-# C1-HIST Module 29: Книги Буття — Шевченко та Кирило-Мефодіївці
-# Status: SPEC (ready for content development)
-
 id: c1-hist-29
-title: "Книги Буття: Шевченко та Кирило-Мефодіївці"
+title: 'Книги Буття: Шевченко та Кирило-Мефодіївці'
 slug: knyhy-butiia-shevchenko
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,126 +7,108 @@ focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Кирило-Мефодіївське братство (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-    type: reference
-    notes: Brotherhood overview
-  - name: Книги буття українського народу
-    url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-    type: reference
-    notes: Brotherhood manifesto
-  - name: Текст "Книг буття"
-    url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
-    type: primary
-    notes: Full text
-
+- name: Кирило-Мефодіївське братство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: reference
+  notes: Brotherhood overview
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: reference
+  notes: Brotherhood manifesto
+- name: Текст "Книг буття"
+  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
+  type: primary
+  notes: Full text
 content_outline:
-  - section: Вступ — Перша політична програма
-    words: 400
-    points:
-      - 1846-1847 — контекст
-      - Кирило-Мефодіївське братство
-      - "«Книги буття» — маніфест"
-      - Чому важливий документ
-
-  - section: Історичний контекст
-    words: 500
-    points:
-      - Україна під Російською імперією
-      - Пробудження націй — європейський контекст
-      - Київський університет — інтелектуальне середовище
-      - Романтичний націоналізм
-
-  - section: Братство і його члени
-    words: 600
-    points:
-      - Костомаров — ідеолог
-      - Шевченко — поет
-      - Куліш — письменник
-      - Інші члени
-      - Як організувалися
-
-  - section: '«Книги буття» — зміст'
-    words: 700
-    points:
-      - Структура — біблійна форма
-      - Історія слов'ян
-      - Україна як месія народів
-      - Федерація — політичний ідеал
-      - Скасування кріпацтва
-
-  - section: Фрагмент — Україна як месія
-    words: 600
-    points:
-      - Текст (з глосами)
-      - Месіанський наратив
-      - Порівняння з польським месіанізмом
-      - Романтична мова
-
-  - section: Доля братства
-    words: 400
-    points:
-      - Донос і арешти
-      - Покарання — Шевченко найсуворіше
-      - Чому Шевченко?
-      - Довготривалий вплив
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Перша політична програма
-      - Від романтизму до політики
-      - Зв'язок із пізнішими рухами
-
+- section: Вступ — Перша політична програма
+  words: 400
+  points:
+  - 1846-1847 — контекст
+  - Кирило-Мефодіївське братство
+  - «Книги буття» — маніфест
+  - Чому важливий документ
+- section: Історичний контекст
+  words: 500
+  points:
+  - Україна під Російською імперією
+  - Пробудження націй — європейський контекст
+  - Київський університет — інтелектуальне середовище
+  - Романтичний націоналізм
+- section: Братство і його члени
+  words: 600
+  points:
+  - Костомаров — ідеолог
+  - Шевченко — поет
+  - Куліш — письменник
+  - Інші члени
+  - Як організувалися
+- section: «Книги буття» — зміст
+  words: 700
+  points:
+  - Структура — біблійна форма
+  - Історія слов'ян
+  - Україна як месія народів
+  - Федерація — політичний ідеал
+  - Скасування кріпацтва
+- section: Фрагмент — Україна як месія
+  words: 600
+  points:
+  - Текст (з глосами)
+  - Месіанський наратив
+  - Порівняння з польським месіанізмом
+  - Романтична мова
+- section: Доля братства
+  words: 400
+  points:
+  - Донос і арешти
+  - Покарання — Шевченко найсуворіше
+  - Чому Шевченко?
+  - Довготривалий вплив
+- section: Підсумок
+  words: 300
+  points:
+  - Перша політична програма
+  - Від романтизму до політики
+  - Зв'язок із пізнішими рухами
 vocabulary_hints:
   required:
-    - братство (brotherhood)
-    - маніфест (manifesto)
-    - месіанізм (messianism)
-    - федерація (federation)
-    - кріпацтво (serfdom)
-    - романтичний націоналізм (romantic nationalism)
-    - пробудження (awakening)
-    - донос (denunciation)
-    - покарання (punishment)
-    - програма (program)
+  - братство (brotherhood)
+  - маніфест (manifesto)
+  - месіанізм (messianism)
+  - федерація (federation)
+  - кріпацтво (serfdom)
+  - романтичний націоналізм (romantic nationalism)
+  - пробудження (awakening)
+  - донос (denunciation)
+  - покарання (punishment)
+  - програма (program)
   recommended:
-    - провіденціалізм (providentialism)
-    - панславізм (Pan-Slavism)
-    - утопія (utopia)
-    - змова (conspiracy)
-    - ідеологія (ideology)
-
+  - провіденціалізм (providentialism)
+  - панславізм (Pan-Slavism)
+  - утопія (utopia)
+  - змова (conspiracy)
+  - ідеологія (ideology)
 activity_hints:
-  - type: reading
-    focus: '«Ukraine as Messiah» passage with glosses'
-    source: wikisource
-
-  - type: comparative-study
-    focus: Compare with Polish messianism (Mickiewicz)
-    output: Parallel ideas table
-
-  - type: ideology-analysis
-    focus: Map political ideas in the manifesto
-    output: Ideology diagram
-
-  - type: source-evaluation
-    focus: Why biblical form? Who was the audience?
-    output: Rhetorical analysis
-
-  - type: essay-response
-    focus: "Чому Кирило-Мефодіївське братство важливе для українського руху?"
-    word_target: 400
-    model_answer: Required
-
+- type: reading
+  focus: «Ukraine as Messiah» passage with glosses
+  source: wikisource
+- type: comparative-study
+  focus: Compare with Polish messianism (Mickiewicz)
+  output: Parallel ideas table
+- type: critical-analysis
+  focus: Map political ideas in the manifesto
+  output: Ideology diagram
+- type: critical-analysis
+  focus: Why biblical form? Who was the audience?
+  output: Rhetorical analysis
+- type: essay-response
+  focus: Чому Кирило-Мефодіївське братство важливе для українського руху?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-28 (Synthesis — Cossack sources)
-  - c1-hist-07 (New Ukrainian historiography)
-
+- c1-hist-28 (Synthesis — Cossack sources)
+- c1-hist-07 (New Ukrainian historiography)
 connects_to:
-  - c1-hist-30 (Shevchenko's letters)
-  - c1-hist-122 (Cultural revival cycles)
+- c1-hist-30 (Shevchenko's letters)
+- c1-hist-122 (Cultural revival cycles)

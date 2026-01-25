@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and organizations
   items: 10+
-- type: discussion
-  focus: Why was women's activism important for Ukrainian nation-building?
-  output: Gender and nationalism analysis
 prerequisites:
 - c1-bio-59 (Olha Basarab - earlier activist)
 - c1-bio-68 (Olena Teliha - contemporary)

@@ -1,17 +1,58 @@
-# Audit Report: 02-the-cyrillic-code-ii.md
-**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
+# Audit Report: M02 — 02-the-cyrillic-code-ii.md
+**Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:53:55
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 300 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Letter Sounds | 12 | 8 | ✅ |
+| 2 | quiz | Alphabet Knowledge | 12 | 8 | ✅ |
+| 3 | group-sort | Letter Categories | 14 | 12 | ✅ |
+| 4 | anagram | Build Ukrainian Words | 12 | 8 | ✅ |
+| 5 | fill-in | Complete the Greetings | 13 | 8 | ✅ |
+| 6 | true-false | Alphabet Facts | 12 | 8 | ✅ |
+| 7 | match-up | Ukrainian Cities & Countries | 12 | 8 | ✅ |
+| 8 | match-up | Food Vocabulary | 12 | 8 | ✅ |
+| 9 | group-sort | Print vs Italic Confusion | 17 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): привіт, вибачте, буква, англійська, лондон...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1463/300
+- **Words:** ✅ 1463/300 (raw: 1964)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/1
+- **Vocab:** ✅ 55/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,9 +60,6 @@
 - **Immersion:** 🇺🇦 9.0% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

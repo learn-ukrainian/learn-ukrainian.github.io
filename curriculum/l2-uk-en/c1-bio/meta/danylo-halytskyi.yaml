@@ -131,9 +131,6 @@ activity_hints:
 - type: critical-analysis
   focus: Compare Danylo with Alexander Nevsky - different strategies
   output: Comparative analysis
-- type: discussion
-  focus: Why is Danylo important for modern Ukrainian identity?
-  output: Reflective response
 prerequisites:
 - c1-bio-roman-mstyslavych (Roman - father)
 - c1-bio-06 (Mykhailo Chernihivskyi - contemporary)

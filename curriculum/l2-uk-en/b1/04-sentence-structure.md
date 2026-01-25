@@ -4,7 +4,7 @@
 >
 > To understand complex Ukrainian sentences, you need to know how they're built. Ukrainian grammar books analyze sentences using terms like «підмет» (subject), «присудок» (predicate), and «підрядне речення» (subordinate clause). This module gives you the vocabulary to understand sentence analysis.
 
-## Вступ
+## Introduction - Understanding Sentence Structure
 
 ### Чому структура речення важлива
 
@@ -12,7 +12,7 @@ Ukrainians say **«Добре слово — половина справи.»** 
 
 When you read a complex Ukrainian sentence, understanding its structure helps you parse meaning. Consider:
 
-*«Книга, яку я читав учора, була цікавою.»*
+_«Книга, яку я читав учора, була цікавою.»_
 
 A grammar book would analyze this as: main clause + subordinate clause. The **головне речення** is «Книга була цікавою.» The **підрядне речення** is «яку я читав учора.» Without this terminology, you can't follow the analysis.
 
@@ -24,17 +24,15 @@ Where is this taught? Київ is home to the Institute of Linguistics, which st
 
 ---
 
-## Пояснення
-
-### Члени речення
+## Sentence Parts (Члени речення)
 
 #### Головні члени
 
 Кожне повне речення має дві основні частини:
 
-| Term | English | Function |
-|------|---------|----------|
-| **підмет** | subject | Who/what does the action |
+| Term         | English   | Function                 |
+| ------------ | --------- | ------------------------ |
+| **підмет**   | subject   | Who/what does the action |
 | **присудок** | predicate | What the subject does/is |
 
 In «Марія читає» — **Марія** is the підмет, **читає** is the присудок.
@@ -49,15 +47,15 @@ In «Марія читає» — **Марія** is the підмет, **чита�
 >
 > In Ukrainian schools, students are asked «Визначте підмет і присудок у реченні» (Identify the subject and predicate in the sentence). This is a standard grammar exercise from elementary school through university.
 
-### Другорядні члени
+### Secondary Sentence Parts
 
 These parts add information but aren't essential for a complete sentence:
 
-| Term | English | Function |
-|------|---------|----------|
-| **додаток** | object | Receives the action |
-| **означення** | attribute/modifier | Describes a noun |
-| **обставина** | adverbial | Describes circumstances (how, when, where) |
+| Term          | English            | Function                                   |
+| ------------- | ------------------ | ------------------------------------------ |
+| **додаток**   | object             | Receives the action                        |
+| **означення** | attribute/modifier | Describes a noun                           |
+| **обставина** | adverbial          | Describes circumstances (how, when, where) |
 
 **Додаток — це слово, на яке спрямована дія.** (The object is a word at which the action is directed.)
 
@@ -66,6 +64,7 @@ These parts add information but aren't essential for a complete sentence:
 **Обставина показує, як, де, коли або чому відбувається дія.** (An adverbial shows how, where, when, or why an action occurs.)
 
 In «Марія читає цікаву книгу в бібліотеці»:
+
 - **Марія** — підмет
 - **читає** — присудок
 - **книгу** — додаток (what she reads)
@@ -74,11 +73,11 @@ In «Марія читає цікаву книгу в бібліотеці»:
 
 ### The Master Term
 
-| Term | English | Meaning |
-|------|---------|---------|
-| **член речення** | sentence part | Any functional unit in a sentence |
-| **головний член** | main part | Subject or predicate |
-| **другорядний член** | secondary part | Object, attribute, or adverbial |
+| Term                 | English        | Meaning                           |
+| -------------------- | -------------- | --------------------------------- |
+| **член речення**     | sentence part  | Any functional unit in a sentence |
+| **головний член**    | main part      | Subject or predicate              |
+| **другорядний член** | secondary part | Object, attribute, or adverbial   |
 
 **Головний член речення — це підмет або присудок.** (The main sentence part is the subject or predicate.)
 
@@ -106,17 +105,17 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 ---
 
-### Види речень
+## Sentence Types
 
 #### Прості та складні
 
-| Term | English | Structure |
-|------|---------|-----------|
-| **просте речення** | simple sentence | One subject-predicate pair |
-| **складне речення** | complex sentence | Multiple clauses |
+| Term                | English          | Structure                  |
+| ------------------- | ---------------- | -------------------------- |
+| **просте речення**  | simple sentence  | One subject-predicate pair |
+| **складне речення** | complex sentence | Multiple clauses           |
 
-*«Я читаю»* — просте речення (one clause).
-*«Я читаю, бо люблю книги»* — складне речення (two clauses).
+_«Я читаю»_ — просте речення (one clause).
+_«Я читаю, бо люблю книги»_ — складне речення (two clauses).
 
 **Просте речення має один присудок.** (A simple sentence has one predicate.)
 
@@ -124,14 +123,14 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 **Діти граються у дворі, а батьки готують вечерю.** (Children play in the yard, and parents prepare dinner.)
 
-### Complex Sentence Types
+## Clause Types
 
-| Term | English | Connection |
-|------|---------|------------|
-| **складносурядне** | compound sentence | Clauses joined by coordinating conjunction |
-| **складнопідрядне** | complex sentence | Main clause + subordinate clause |
-| **головне речення** | main clause | Independent clause |
-| **підрядне речення** | subordinate clause | Dependent clause |
+| Term                 | English            | Connection                                 |
+| -------------------- | ------------------ | ------------------------------------------ |
+| **складносурядне**   | compound sentence  | Clauses joined by coordinating conjunction |
+| **складнопідрядне**  | complex sentence   | Main clause + subordinate clause           |
+| **головне речення**  | main clause        | Independent clause                         |
+| **підрядне речення** | subordinate clause | Dependent clause                           |
 
 **Головне речення може існувати самостійно.** (The main clause can exist independently.)
 
@@ -144,11 +143,11 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 > **Складносурядне** comes from «сурядний» (coordinate) — clauses are equal.
 > **Складнопідрядне** comes from «підрядний» (subordinate) — one clause depends on another.
 
-### Conjunctions
+## Conjunctions
 
-| Term | English | Examples |
-|------|---------|----------|
-| **сполучник сурядності** | coordinating conjunction | і, а, але, або |
+| Term                      | English                   | Examples           |
+| ------------------------- | ------------------------- | ------------------ |
+| **сполучник сурядності**  | coordinating conjunction  | і, а, але, або     |
 | **сполучник підрядності** | subordinating conjunction | що, бо, коли, якщо |
 
 **Сполучник «і» з'єднує рівноправні частини речення.** (The conjunction «i» connects equal sentence parts.)
@@ -159,18 +158,18 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 ---
 
-### Пунктуація
+## Punctuation Terms
 
 #### Розділові знаки (Punctuation Marks)
 
-| Term | English | Symbol |
-|------|---------|--------|
+| Term                | English           | Symbol         |
+| ------------------- | ----------------- | -------------- |
 | **розділові знаки** | punctuation marks | (general term) |
-| **кома** | comma | , |
-| **крапка** | period/full stop | . |
-| **двокрапка** | colon | : |
-| **тире** | dash | — |
-| **лапки** | quotation marks | « » |
+| **кома**            | comma             | ,              |
+| **крапка**          | period/full stop  | .              |
+| **двокрапка**       | colon             | :              |
+| **тире**            | dash              | —              |
+| **лапки**           | quotation marks   | « »            |
 
 **Кома ставиться перед сполучниками підрядності.** (A comma is placed before subordinating conjunctions.)
 
@@ -182,13 +181,13 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 >
 > Ukrainian punctuation follows different rules than English. Commas are mandatory before «що», «бо», «який» — subordinating conjunctions. Missing these commas is a spelling error in Ukrainian schools!
 
-### Additional Syntax Terms
+## Additional Syntax Terms
 
-| Term | English | Meaning |
-|------|---------|---------|
-| **синтаксис** | syntax | Sentence structure rules |
-| **пунктуація** | punctuation | Punctuation system |
-| **інверсія** | inversion | Non-standard word order |
+| Term           | English     | Meaning                  |
+| -------------- | ----------- | ------------------------ |
+| **синтаксис**  | syntax      | Sentence structure rules |
+| **пунктуація** | punctuation | Punctuation system       |
+| **інверсія**   | inversion   | Non-standard word order  |
 
 **Синтаксис вивчає будову речень у мові.** (Syntax studies sentence structure in language.)
 
@@ -198,15 +197,16 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 ---
 
-## Практика
+## Practice Analyzing Sentences
 
 ### Sentence Analysis
 
 Analyze this sentence:
 
-*«Студент, який вивчає українську мову, читає цікаву книгу в бібліотеці.»*
+_«Студент, який вивчає українську мову, читає цікаву книгу в бібліотеці.»_
 
 **Analysis:**
+
 - **Головне речення:** Студент читає цікаву книгу в бібліотеці.
 - **Підрядне речення:** який вивчає українську мову
 - **Підмет:** студент
@@ -219,19 +219,19 @@ Analyze this sentence:
 
 Identify the sentence type:
 
-1. *«Я читаю.»* — **просте речення**
-2. *«Я читаю, а сестра пише.»* — **складносурядне** (coordinate: «а»)
-3. *«Я читаю, бо люблю книги.»* — **складнопідрядне** (subordinate: «бо»)
+1. _«Я читаю.»_ — **просте речення**
+2. _«Я читаю, а сестра пише.»_ — **складносурядне** (coordinate: «а»)
+3. _«Я читаю, бо люблю книги.»_ — **складнопідрядне** (subordinate: «бо»)
 
 ### Recognizing Sentence Parts
 
 Practice identifying each sentence part:
 
-| Sentence | Підмет | Присудок | Додаток | Означення | Обставина |
-|----------|--------|----------|---------|-----------|-----------|
-| Мама готує смачний обід на кухні. | мама | готує | обід | смачний | на кухні |
-| Студенти читають нові книги в бібліотеці. | студенти | читають | книги | нові | в бібліотеці |
-| Брат швидко написав листа. | брат | написав | листа | — | швидко |
+| Sentence                                  | Підмет   | Присудок | Додаток | Означення | Обставина    |
+| ----------------------------------------- | -------- | -------- | ------- | --------- | ------------ |
+| Мама готує смачний обід на кухні.         | мама     | готує    | обід    | смачний   | на кухні     |
+| Студенти читають нові книги в бібліотеці. | студенти | читають  | книги   | нові      | в бібліотеці |
+| Брат швидко написав листа.                | брат     | написав  | листа   | —         | швидко       |
 
 > 🎯 **Fun Fact: Word Order Freedom**
 >
@@ -241,18 +241,18 @@ Practice identifying each sentence part:
 
 Ukrainian punctuation has strict rules for subordinate clauses:
 
-| Rule | Example | Note |
-|------|---------|------|
-| Comma before «що» | Я знаю**,** що він прийде. | Always! |
-| Comma before «бо» | Я читаю**,** бо люблю книги. | Always! |
+| Rule                | Example                          | Note    |
+| ------------------- | -------------------------------- | ------- |
+| Comma before «що»   | Я знаю**,** що він прийде.       | Always! |
+| Comma before «бо»   | Я читаю**,** бо люблю книги.     | Always! |
 | Comma before «коли» | Я прийду**,** коли буду вільний. | Always! |
-| Comma before «який» | Книга**,** яку я читав... | Always! |
+| Comma before «який» | Книга**,** яку я читав...        | Always! |
 
 These commas are not optional in Ukrainian — they are part of the grammar.
 
 ---
 
-## Міні-діалоги
+## Dialogues
 
 ### Діалог 1: На уроці
 
@@ -272,7 +272,7 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 **Оксана:** Яке це речення — просте чи складне?
 
-**Марко:** «Я читаю, бо люблю книги» — це складне речення.
+**Марко:** «Я вчуся, бо хочу знати мову» — це складне речення.
 
 **Оксана:** Складносурядне чи складнопідрядне?
 
@@ -342,22 +342,25 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 ---
 
-# Підсумок
+# Summary
 
 In this module, you learned the terminology for sentence structure. These terms are essential for understanding Ukrainian grammar books and academic materials.
 
 **Sentence Parts — Члени речення:**
 
 Main parts (головні члени):
+
 - **підмет** — subject (who/what performs the action)
 - **присудок** — predicate (what the subject does/is)
 
 Secondary parts (другорядні члени):
+
 - **додаток** — object (what the action is directed at)
 - **означення** — attribute (describes a noun)
 - **обставина** — adverbial (describes circumstances: where, when, how)
 
 **Clause Types — Види речень:**
+
 - **просте речення** — simple sentence (one subject-predicate pair)
 - **складне речення** — complex sentence (multiple clauses)
 - **складносурядне** — compound sentence (equal clauses with і, а, але)
@@ -366,6 +369,7 @@ Secondary parts (другорядні члени):
 - **підрядне речення** — subordinate clause (dependent)
 
 **Punctuation — Пунктуація:**
+
 - **кома** — comma (mandatory before що, бо, коли, який)
 - **крапка** — period
 - **двокрапка** — colon
@@ -373,6 +377,7 @@ Secondary parts (другорядні члени):
 - **лапки** — quotation marks
 
 **Other Terms:**
+
 - **синтаксис** — syntax (sentence structure rules)
 - **пунктуація** — punctuation (system of marks)
 - **інверсія** — inversion (non-standard word order)
@@ -382,6 +387,7 @@ With these terms, you can now follow sentence analysis in Ukrainian grammar book
 > ✅ **Self-Check**
 >
 > Before moving on, can you:
+>
 > - [ ] Name the main and secondary sentence parts?
 > - [ ] Distinguish simple from complex sentences?
 > - [ ] Identify main and subordinate clauses?

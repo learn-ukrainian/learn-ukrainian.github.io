@@ -1,8 +1,5 @@
-# C1-HIST Module 86: Хрущов — Шелест — Щербицький
-# Status: SPEC (ready for content development)
-
 id: c1-hist-86
-title: "Хрущов — Шелест — Щербицький"
+title: Хрущов — Шелест — Щербицький
 slug: khrushchov-shelest-tsykl
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,123 +7,105 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Петро Шелест (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Петро_Шелест
-    type: reference
-    notes: Ukrainian leader
-  - name: Володимир Щербицький (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
-    type: reference
-    notes: Successor
-  - name: Десталінізація (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Десталінізація
-    type: reference
-    notes: Thaw period
-
+- name: Петро Шелест (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Петро_Шелест
+  type: reference
+  notes: Ukrainian leader
+- name: Володимир Щербицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
+  type: reference
+  notes: Successor
+- name: Десталінізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Десталінізація
+  type: reference
+  notes: Thaw period
 content_outline:
-  - section: Вступ — Ще один цикл
-    words: 400
-    points:
-      - Після Сталіна — надія
-      - Хрущовська відлига
-      - Шелест — «свій» у владі
-      - Структура модуля
-
-  - section: Фаза 1 — Відлига (1953-1964)
-    words: 700
-    points:
-      - Десталінізація
-      - Реабілітації — частково
-      - Шістдесятники
-      - Культурне пожвавлення
-
-  - section: Фаза 2 — Шелест при владі (1963-1972)
-    words: 600
-    points:
-      - Перший секретар України
-      - Захист української мови
-      - «Україна наша радянська»
-      - Конфлікт з Москвою
-
-  - section: Фаза 3 — Знищення відлиги
-    words: 600
-    points:
-      - 1972 — арешти шістдесятників
-      - Шелеста знято
-      - «Націоналізм» — звинувачення
-      - Щербицький — русифікатор
-
-  - section: Фаза 4 — 17 років русифікації
-    words: 500
-    points:
-      - Щербицький — 1972-1989
-      - Русифікація освіти
-      - Придушення дисидентів
-      - «Зразкова республіка»
-
-  - section: Порівняння з 1920-ми
-    words: 400
-    points:
-      - Схожість — надія, розквіт, знищення
-      - Відмінності — масштаб, методи
-      - Чому цикл повторився
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Шелест — кооптований, але «надто український»
-      - Цикл у партійній еліті
-      - Перехід до Януковича
-
+- section: Вступ — Ще один цикл
+  words: 400
+  points:
+  - Після Сталіна — надія
+  - Хрущовська відлига
+  - Шелест — «свій» у владі
+  - Структура модуля
+- section: Фаза 1 — Відлига (1953-1964)
+  words: 700
+  points:
+  - Десталінізація
+  - Реабілітації — частково
+  - Шістдесятники
+  - Культурне пожвавлення
+- section: Фаза 2 — Шелест при владі (1963-1972)
+  words: 600
+  points:
+  - Перший секретар України
+  - Захист української мови
+  - «Україна наша радянська»
+  - Конфлікт з Москвою
+- section: Фаза 3 — Знищення відлиги
+  words: 600
+  points:
+  - 1972 — арешти шістдесятників
+  - Шелеста знято
+  - «Націоналізм» — звинувачення
+  - Щербицький — русифікатор
+- section: Фаза 4 — 17 років русифікації
+  words: 500
+  points:
+  - Щербицький — 1972-1989
+  - Русифікація освіти
+  - Придушення дисидентів
+  - «Зразкова республіка»
+- section: Порівняння з 1920-ми
+  words: 400
+  points:
+  - Схожість — надія, розквіт, знищення
+  - Відмінності — масштаб, методи
+  - Чому цикл повторився
+- section: Підсумок
+  words: 300
+  points:
+  - Шелест — кооптований, але «надто український»
+  - Цикл у партійній еліті
+  - Перехід до Януковича
 vocabulary_hints:
   required:
-    - відлига (thaw)
-    - Шелест (Shelest)
-    - Щербицький (Shcherbytsky)
-    - шістдесятники (Sixtiers)
-    - русифікація (Russification)
-    - десталінізація (de-Stalinization)
-    - перший секретар (First Secretary)
-    - «націоналізм» (nationalism — as accusation)
-    - кооптація (co-optation)
-    - цикл (cycle)
+  - відлига (thaw)
+  - Шелест (Shelest)
+  - Щербицький (Shcherbytsky)
+  - шістдесятники (Sixtiers)
+  - русифікація (Russification)
+  - десталінізація (de-Stalinization)
+  - перший секретар (First Secretary)
+  - «націоналізм» (nationalism — as accusation)
+  - кооптація (co-optation)
+  - цикл (cycle)
   recommended:
-    - реабілітація (rehabilitation)
-    - самвидав (samvydav)
-    - ідеологічний контроль (ideological control)
-    - партійна еліта (party elite)
-    - лояльність (loyalty)
-
+  - реабілітація (rehabilitation)
+  - самвидав (samvydav)
+  - ідеологічний контроль (ideological control)
+  - партійна еліта (party elite)
+  - лояльність (loyalty)
 activity_hints:
-  - type: cycle-mapping
-    focus: Map Shelest's career through co-optation cycle
-    output: Cycle diagram
-
-  - type: comparative-study
-    focus: 1920s vs. 1960s — same trap different packaging
-    output: Historical comparison
-
-  - type: policy-analysis
-    focus: Shcherbytsky's Russification — methods and results
-    output: Policy analysis
-
-  - type: counterfactual
-    focus: What if Shelest stayed in power?
-    output: Counterfactual analysis
-
-  - type: essay-response
-    focus: "Чому Шелеста усунули, а Щербицького ні?"
-    word_target: 400
-    model_answer: Required
-
+- type: critical-analysis
+  focus: Map Shelest's career through co-optation cycle
+  output: Cycle diagram
+- type: comparative-study
+  focus: 1920s vs. 1960s — same trap different packaging
+  output: Historical comparison
+- type: policy-analysis
+  focus: Shcherbytsky's Russification — methods and results
+  output: Policy analysis
+- type: essay-response
+  focus: What if Shelest stayed in power?
+  output: Counterfactual analysis
+- type: essay-response
+  focus: Чому Шелеста усунули, а Щербицького ні?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-85 (Soviet Ukrainization)
-  - c1-hist-39-44 (Dissident sources)
-
+- c1-hist-85 (Soviet Ukrainization)
+- c1-hist-39-44 (Dissident sources)
 connects_to:
-  - c1-hist-87 (Yanukovych cycle)
-  - c1-hist-88 (Why cycle repeats)
+- c1-hist-87 (Yanukovych cycle)
+- c1-hist-88 (Why cycle repeats)

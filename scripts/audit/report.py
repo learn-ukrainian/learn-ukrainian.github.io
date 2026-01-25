@@ -5,6 +5,7 @@ Generates markdown reports and console output for audit results.
 """
 
 import os
+from datetime import datetime
 from typing import Optional
 
 
@@ -54,8 +55,12 @@ def generate_report(
         score = naturalness.get('score', 0)
         status = naturalness.get('status', 'PENDING')
         report_lines.append(f"**Naturalness:** {score}/10 ({status})")
-        
+
     report_lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")
+
+    # Add timestamp
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    report_lines.append(f"**Generated:** {timestamp}")
     report_lines.append("")
 
     # Add Configuration section

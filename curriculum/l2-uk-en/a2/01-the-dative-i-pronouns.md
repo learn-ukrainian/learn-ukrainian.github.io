@@ -1,123 +1,143 @@
 # Давальний відмінок I — Займенники
 
-## Introduction
+## Introduction / Вступ
 
 Welcome to the sixth Ukrainian case: the **Dative** (давальний відмінок). After mastering Nominative, Accusative, Genitive, Locative, and Vocative, the Dative case completes your core understanding of how Ukrainian nouns and pronouns function. The Dative case is primarily used to mark the **indirect object** — the recipient of an action or the person experiencing a state.
 
-In this module, you will learn how to use personal pronouns in the Dative case (to me, to you, to him, etc.). You will discover that many common Ukrainian expressions require this case. For example, phrases like "I like," "I need," and descriptions of physical or emotional states ("I am cold," "I am bored") all use the Dative. This shift in perspective — from being the active "doer" to the "experiencer" — is a key milestone in reaching A2 proficiency. You will see that many important phrases are built according to this model. Understanding how we become "experiencers" of an action is a vital step. The Dative case makes your speech more natural and emotional.
+In this module, you will learn how to use personal pronouns in the Dative case (to me, to you, to him, etc.). You will discover that many common Ukrainian expressions require this case. For example, phrases like "I like," "I need," and descriptions of physical or emotional states ("I am cold," "I am bored") all use the Dative. This shift in perspective — from being the active "doer" to the "experiencer" — is a key milestone in reaching A2 proficiency.
 
-## Презентація
+### Чому давальний відмінок важливий?
 
-### Непрямий додаток та переживач
+Давальний відмінок в українській мові — це відмінок непрямого додатка та переживача стану. Ми використовуємо його, коли хочемо щось дати іншим. Також він потрібен, коли ми телефонуємо комусь або коли нам щось дуже подобається.
 
-В англійській мові ми часто використовуємо прийменники "to" або "for", щоб показати, хто отримує дію: "I give a book **to him**." В українській мові цей зв'язок показує давальний відмінок. Але давальний також охоплює багато ситуацій, де англійська мова використовує простий підмет.
+In Ukrainian, we use the Dative case when the person is the recipient or the one feeling something. Instead of "I am cold," we say "To me is cold." This is a major shift from English logic that you will master in this lesson. We will focus on how these pronouns change and how to use them in everyday situations like ordering in a cafe or talking to friends about your day. This case allows you to express your inner world, your physical sensations, and your social interactions with care.
+
+Це дуже важливий відмінок для спілкування. Він допомагає нам говорити про свої почуття та потреби. У цьому модулі ми вивчимо форми займенників та навчимося використовувати їх у типових ситуаціях. Коли ви даруєте подарунок другу або допомагаєте мамі, ви використовуєте давальний відмінок. Understanding the "Experiencer" concept is vital because it changes how you perceive the relationship between the speaker and the action.
+
+## Presentation / Презентація
+
+### The Experiencer Role (Непрямий додаток та переживач)
+
+In English, we often use the prepositions "to" or "for" to show who receives an action: "I give a book **to him**." In Ukrainian, this relationship is shown by the Dative case. But the Dative also covers many situations where English uses a simple subject. It provides a more nuanced way to describe how the world affects an individual rather than how an individual acts upon the world.
 
 > [!important] **Роль переживача**
 > В українській мові почуття та стани часто розглядаються як те, що "трапляється" з людиною. Замість того, щоб сказати "I am cold" (де "I" — підмет), українці кажуть "Мені холодно" (**To me is cold**). Тут людина не є активним "діячем", а тим, хто переживає стан.
 
 **Основні моделі вживання:**
+
 - **Уподобання:** "**Мені** подобається музика" (I like music)
 - **Потреби:** "**Їй** потрібно відпочити" (She needs to rest)
 - **Стани:** "**Їм** холодно" (They are cold)
 
-Питальні слова для давального відмінка — **кому?** та **чому?**.
+Питальні слова для давального відмінка — **кому?** (to whom?) та **чому?** (to what?).
 
-### Грамматична логіка
+### Personal Pronouns (Займенники в давальному відмінку)
 
-Давальний відмінок в українській мові — це не лише про дарування подарунків. Це відмінок наших почуттів та потреб. Ми використовуємо його, коли ми не є активними діячами, а коли щось «трапляється» з нами. This reflects a deep philosophy of the Ukrainian language: we perceive the world through our sensations.
+The personal pronouns change significantly in the Dative case. Notice that **він** and **воно** share the same form (**йому**). This table will be your main reference for this module! Comparing these to the **Називний** (Nominative) forms is the best way to memorize them.
 
-| Функція | Англійською | Українською | Логіка |
-| :--- | :--- | :--- | :--- |
-| **Отримувачі** | I give a book to my friend. | Я даю книгу другові. | Дієсл. + Зн. + **Дав.** |
-| **Переживачі** | I'm cold. | Мені холодно. | **Дав.** + прислівник |
-| **Потреби** | You need to rest. | Тобі потрібно відпочити. | **Дав.** + потрібно + інф. |
-| **Уподобання** | She likes music. | Їй подобається музика. | **Дав.** + подобатися + Наз. |
+| Називний (Nom) | Давальний (Dat) | Приклад (Example)          |
+| :------------- | :-------------- | :------------------------- |
+| я              | **мені**        | Дай мені руку.             |
+| ти             | **тобі**        | Я дякую тобі.              |
+| він            | **йому**        | Йому подобається сонце.    |
+| вона           | **їй**          | Дайте їй каву.             |
+| воно           | **йому**        | Йому (місту) тисяча років. |
+| ми             | **нам**         | Розкажи нам історію.       |
+| ви             | **вам**         | Вам потрібна допомога?     |
+| вони           | **їм**          | Я допомагаю їм.            |
+
+### Expressing Likes and Needs (Уподобання та потреби)
+
+The Dative case in Ukrainian is not just about giving gifts. It is the case of our feelings and needs. We use it when we are not active doers, but when something "happens" to us. This grammatical structure reflects a cultural emphasis on sensory experience over direct control.
+
+#### Конструкція "подобається"
+
+The verb **подобатися** (/poˈdɔbatɪsʲa/) is used to express preferences. In Ukrainian, the thing you like is the subject (**Називний**), while the person who likes it is the indirect object (**Давальний**).
+
+- **Мені подобається** ця книга. (I like this book.)
+- **Нам подобаються** українські пісні. (We like Ukrainian songs.)
+
+#### Конструкція "потрібно"
+
+When we need something, we use the word **потрібно** (/poˈtrʲibnɔ/) or **треба** (/ˈtrɛba/). These are impersonal words that never change their endings, making them very easy to use once you know your Dative pronouns.
+
+- **Мені потрібно** кави. (I need some coffee.)
+- **Йому потрібно** працювати. (He needs to work.)
 
 > [!tip] **Verbs of Communication**
-> Many verbs that involve speaking or communicating take the Dative case for the person being spoken to.
-> - **казати / сказати** (to say/tell) -> Скажи **мені**
-> - **дзвонити / зателефонувати** (to call) -> Я дзвоню **вам**
+> Many verbs that involve speaking or communicating take the Dative case for the person being spoken to. In these cases, the person is the intended target of the message.
+>
 > - **дякувати** (to thank) -> Я дякую **тобі**
+> - **дзвонити** (to call) -> Я дзвоню **вам**
 
-### Dative Pronouns Table
+### Physical and Emotional States (Стани)
 
-The personal pronouns change significantly in the Dative case. Notice that **він** and **воно** share the same form (**йому**).
+In Ukrainian, there are many "impersonal" expressions that describe states. These sentences don't have a traditional subject like "I" or "He." Instead, they use a Dative pronoun + an adverb. This is the most natural way to express how you are feeling physically or mentally.
 
-| Називний (Nom) | Давальний (Dat) | Приклад (Example) |
-| :--- | :--- | :--- |
-| я | **мені** | Дай мені руку. |
-| ти | **тобі** | Я дякую тобі. |
-| він | **йому** | Йому подобається сонце. |
-| вона | **їй** | Дайте їй каву. |
-| воно | **йому** | Йому (місту) тисяча років. |
-| ми | **нам** | Розкажи нам історію. |
-| ви | **вам** | Вам потрібна допомога? |
-| вони | **їм** | Я допомагаю їм. |
+- **Мені нудно** (I am bored)
+- **Тобі весело?** (Are you having fun?)
+- **Їм цікаво** (They are interested)
+- **Мені жарко.** (I am hot.)
+- **Їй сумно.** (She is sad.)
 
 > 🌍 **Real World: Hospitality**
 >
-> When you visit Ukrainians as a guest, you will often find yourself in the Dative case. You will be offered tea, given the best seat, and told the news. A host will always ask: "Вам ще борщу?" (Would you like more borscht?) or "Тобі не холодно?" (Are you not cold?). The Dative case is the language of care and attention.
+> When you visit Ukrainians as a guest, you will often find yourself in the Dative case. A host will always ask: "Вам ще борщу?" (Would you like more borscht?) or "Тобі не холодно?" (Are you not cold?). The Dative case is the language of care and attention. В Україні гості часто «переживають» турботу господарів. Коли ви прийдете в гості, вам обов'язково запропонують чай або каву. Вас запитають: «Вам не холодно?» або «Вам подобається цей торт?». Це вияв поваги та уваги до вашого стану.
 
-> [!note] **Impersonal Expressions**
-> In Ukrainian, there are many "impersonal" expressions that describe states. These sentences don't have a traditional subject (like "I" or "He"). Instead, they use a Dative pronoun + an adverb.
-> - **Мені нудно** (I am bored)
-> - **Тобі весело?** (Are you having fun?)
-> - **Їм цікаво** (They are interested)
+## Practice / Практика
 
-## Practice
-
-### 1. Емоційні та фізичні стани
+### 1. Фізичні та емоційні стани
 
 Опишіть, як почуваються ці люди, використовуючи давальний відмінок та прислівники: **холодно, тепло, жарко, добре, погано, весело, сумно, цікаво**.
 
-*Приклад: Марко взимку без куртки. → Йому холодно.*
-
-1. Олена отримала гарний подарунок. → ...
-2. Ми дивимося дуже нудний фільм. → ...
-3. Студенти слухають цікаву лекцію. → ...
-4. На вулиці +35 градусів. → ...
-5. Я хвора, у мене температура. → ...
+1. Олена отримала гарний подарунок. → **Їй весело.**
+2. Ми дивимося дуже нудний фільм. → **Нам нудно.**
+3. Студенти слухають цікаву лекцію. → **Їм цікаво.**
+4. На вулиці +35 градусів. → **Мені жарко.**
+5. Я хвора, у мене температура. → **Мені погано.**
 
 ### 2. Трансформація речень
 
 Змініть речення за зразком, використовуючи дієслово **подобатися** або слово **потрібно**.
 
-*Зразок: Я хочу каву. → Мені потрібна кава. / Мені подобається кава.*
+1. Ти хочеш відпочити. → **Тобі потрібно відпочити.**
+2. Він любить українські пісні. → **Йому подобаються українські пісні.**
+3. Вона хоче нову машину. → **Їй потрібна нова машина.**
+4. Ми любимо Одесу. → **Нам подобається Одеса.**
+5. Вони хочуть знати правду. → **Їм потрібно знати правду.**
 
-1. Ти хочеш відпочити. → ...
-2. Він любить українські пісні. → ...
-3. Вона хоче нову машину. → ...
-4. Ми любимо Одесу. → ...
-5. Вони хочуть знати правду. → ...
+> [!context] **Grammar in Context: Expressing Opinions**
+> The Dative case is also perfect for expressing how things "seem" to you. This is a softer, more natural way to share your opinion than simply using "I think." It invites the other person into a shared observation rather than stating a hard fact.
+>
+> - **Мені здається...** (It seems to me... / I think...)
+> - **Мені здається, що це гарна ідея.** (It seems to me that it's a good idea.)
 
-## Dialogues
+## Dialogues / Діалоги
 
-### Діалог 1: У кав'ярні (At the Cafe)
+### У кав'ярні (At the Cafe)
 
-In this dialogue, observe how the guest uses the Dative to ask for things and express preferences.
+**Офіціант:** Добрий день! Вам меню?
+**Гість:** Так, дайте мені, будь ласка. Що ви порекомендуєте?
+**Офіціант:** Мені дуже подобається наш фірмовий десерт.
+**Гість:** Добре, тоді принесіть мені каву і цей десерт. А йому — чай без цукру.
 
-**Офіціант:** Добрий день! Вам меню? (Good day! Would you like the menu?)
-**Гість:** Так, дайте мені, будь ласка. Що ви порекомендуєте? (Yes, give it to me, please. What do you recommend?)
-**Офіціант:** Мені дуже подобається наш фірмовий десерт. (I really like our signature dessert.)
-**Гість:** Добре, тоді принесіть мені каву і цей десерт. А йому — чай без цукру. (Good, then bring me a coffee and this dessert. And for him — tea without sugar.)
-**Офіціант:** Зрозумів. Вам рахунок разом чи окремо? (Understood. The bill for you together or separately?)
-**Гість:** Мені разом, дякую. (Together for me, thank you.)
+### Розмова друзів (Friends' Conversation)
 
-### Діалог 2: Розмова друзів (Friends' Conversation)
+**Андрій:** Привіт! Тобі не холодно тут? Може, закрити вікно?
+**Оксана:** Ні, дякую, мені тепло. Мені подобається свіже повітря.
+**Андрій:** А мені здається, що вже пізно. Тобі не потрібно йти додому?
+**Оксана:** Ой, справді! Мені потрібно бути вдома о восьмій.
 
-Pay attention to how the friends ask about each other's state and needs.
+# Summary / Підсумок
 
-**Андрій:** Привіт! Тобі не холодно тут? Може, закрити вікно? (Hi! Are you not cold here? Maybe close the window?)
-**Оксана:** Ні, дякую, мені тепло. Мені подобається свіже повітря. (No, thanks, I am warm. I like fresh air.)
-**Андрій:** А мені здається, що вже пізно. Тобі не потрібно йти додому? (And it seems to me that it is already late. Do you not need to go home?)
-**Оксана:** Ой, справді! Мені потрібно бути вдома о восьмій. Дякую, що нагадав! (Oh, really! I need to be home at eight. Thanks for reminding me!)
+У цьому модулі ви вивчили закономірності давального відмінка. Ви навчилися висловлювати свої уподобання та потреби. Також ви дізналися, як описувати свій стан. Це дуже важливо для вільного спілкування.
 
-# Summary
+- Займенники: **мені, тобі, йому, їй, нам, вам, їм**.
+- Конструкції: **подобається**, **потрібно**.
+- Стани: **мені весело**, **нам жарко**.
 
-In this module, you have mastered the personal pronouns in the Dative case: **мені, тобі, йому, їй, нам, вам, їм**. You have learned to express your preferences using the construction "мені подобається" (I like / it is pleasing to me) and needs with the word "потрібно" (it is necessary). Additionally, you have discovered how to describe your physical or emotional state using impersonal expressions like "мені холодно" (I am cold) or "нам весело" (we are having fun). 
-
-Understanding the Dative case is essential because it shifts the focus from who is doing the action to who is affected by it. This is a hallmark of natural-sounding Ukrainian. Remember that verbs of communication (like thanking or calling) also frequently use this case. Mastering these pronouns will allow you to engage in polite conversation and express your feelings with greater accuracy and cultural nuance.
+In this module, you have mastered the personal pronouns in the Dative case. You have learned to express your preferences and needs. This is a foundational step in understanding how Ukrainian speakers describe their environment and internal feelings.
 
 ## Need More Practice?
 
-Щоб закріпити знання, спробуйте написати короткий текст про свій типовий день. Що вам подобається робити вранці? Що вам потрібно для роботи? Як ви почуваєтеся ввечері? Використовуйте якнайбільше давальних займенників. Також ви можете переглянути відео про давальний відмінок на YouTube для додаткового аудіювання.
+Щоб закріпити знання, спробуйте написати короткий текст про свій типовий день. Що вам подобається робити вранці? Що вам потрібно для роботи? Як ви почуваєтеся ввечері? Використовуйте якнайбільше давальних займенників. Тільки активна практика допоможе вам автоматично змінювати форми слів у розмові. Спробуйте також телефонувати друзям і дякувати їм за допомогу!

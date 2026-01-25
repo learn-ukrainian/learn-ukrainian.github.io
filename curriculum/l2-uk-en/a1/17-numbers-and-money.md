@@ -44,17 +44,17 @@ Let's start with the basics. Ukrainian numbers 0-20 are unique and must be memor
 
 The tens follow a beautiful pattern:
 
-| Number | Ukrainian  | IPA | Pattern         |
-| ------ | ---------- | --- | --------------- |
-| 20     | двадцять   | /ˈdvɑdt͡sʲɑtʲ/ | два + дцять     |
-| 30     | тридцять   | /ˈtrɪdt͡sʲɑtʲ/ | три + дцять     |
-| 40     | сорок      | /ˈsɔrɔk/ | (unique)        |
-| 50     | п'ятдесят  | /pjɑtdɛˈsʲɑt/ | п'ять + десят   |
-| 60     | шістдесят  | /ʃisdeˈsʲɑt/ | шість + десят   |
-| 70     | сімдесят   | /simdɛˈsʲɑt/ | сім + десят     |
+| Number | Ukrainian  | IPA            | Pattern         |
+| ------ | ---------- | -------------- | --------------- |
+| 20     | двадцять   | /ˈdvɑdt͡sʲɑtʲ/  | два + дцять     |
+| 30     | тридцять   | /ˈtrɪdt͡sʲɑtʲ/  | три + дцять     |
+| 40     | сорок      | /ˈsɔrɔk/       | (unique)        |
+| 50     | п'ятдесят  | /pjɑtdɛˈsʲɑt/  | п'ять + десят   |
+| 60     | шістдесят  | /ʃisdeˈsʲɑt/   | шість + десят   |
+| 70     | сімдесят   | /simdɛˈsʲɑt/   | сім + десят     |
 | 80     | вісімдесят | /visimdɛˈsʲɑt/ | вісім + десят   |
-| 90     | дев'яносто | /dɛvjɑˈnɔstɔ/ | дев'ять + носто |
-| 100    | сто        | /stɔ/ | (unique)        |
+| 90     | дев'яносто | /dɛvjɑˈnɔstɔ/  | дев'ять + носто |
+| 100    | сто        | /stɔ/          | (unique)        |
 
 **Examples:**
 
@@ -139,7 +139,7 @@ Now let's learn key phrases for shopping:
 **Money and Prices:**
 
 13. **Скільки коштує хліб?** (How much does bread cost?)
-14. **Це коштує десять гривень.** (This costs ten hryvnias.)
+14. **Квиток коштує десять гривень.** (The ticket costs ten hryvnias.)
 15. **У мене є гроші.** (I have money.)
 16. **Це дорого!** (That's expensive!)
 17. **Це дешево.** (That's cheap.)
@@ -242,6 +242,7 @@ But don't expect it - Ukrainians respect fair pricing!
 ---
 
 # Підсумок
+
 In this module, you learned:
 
 - Numbers 0-100 in Ukrainian

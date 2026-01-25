@@ -1,11 +1,63 @@
-# Meta for Пилип Орлик: Перша конституція
+# Meta for Пилип Орлик і перша Конституція
 slug: pylyp-orlyk-konstytutsiia
-title: "Пилип Орлик: Перша конституція"
+title: "Пилип Орлик і перша Конституція"
+subtitle: "Pylyp Orlyk and the First Constitution"
 level: B2
 track: history
 phase: "HIST.7 [Mazepa & End of Hetmanate]"
-status: skeleton
+status: content_complete
 focus: history
+pedagogy: CBI
+transliteration: none
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+prerequisites:
+  - "b2-hist-66: Іван Мазепа III"
+learning_outcomes:
+  - "Учень розуміє значення Конституції Пилипа Орлика 1710 року"
+  - "Учень може описати структуру та основні ідеї документа"
+  - "Учень знає біографію Пилипа Орлика як наступника Мазепи"
+content_outline:
+  - section: "Вступ: Гетьман у вигнанні"
+    words: 450
+    points:
+      - "Orlyk's background and education"
+      - "Election as Hetman in Bendery"
+      - "The tragic context of exile"
+  - section: "Бендерська Конституція 1710 року"
+    words: 800
+    points:
+      - "Structure of the document (Pacts and Constitutions)"
+      - "Separation of powers (Hetman, Council, Court)"
+      - "Protection of social groups"
+  - section: "Демократичні ідеї: Україна vs Європа"
+    words: 600
+    points:
+      - "Comparison with European legal thought (Locke, Montesquieu)"
+      - "The uniqueness of the contract between the Hetman and the Army"
+      - "Anti-tyranny safeguards"
+  - section: "Дипломатична боротьба Орлика"
+    words: 650
+    points:
+      - "Anti-Moscow coalition (Sweden, Turkey, Crimea)"
+      - "Campaign of 1711 onto the Right Bank"
+      - "Years of wandering in Europe (Thessaloniki, Paris, London)"
+  - section: "Читання: Текст Конституції"
+    words: 500
+    points:
+      - "Analysis of specific articles (religion, borders, corruption)"
+      - "Language and style of the document (Latin/Old Ukrainian)"
+  - section: "Первинні джерела: Листи та діаріуш"
+    words: 500
+    points:
+      - "Excerpts from Orlyk's Diary ('Diariusz')"
+      - "Letters to European monarchs"
+  - section: "Деколонізаційний погляд: Правова культура"
+    words: 500
+    points:
+      - "Ukrainian constitutionalism vs Russian autocracy"
+      - "Myth of 'anarchy' debunked"
+      - "Orlyk as a symbol of European Ukraine"
+
+naturalness:
+  score: 9
+  status: PASS

@@ -1,139 +1,112 @@
-# C1-BIO Module 62: Віра Холодна: Королева німого кіно
-# Status: SPEC (ready for content development)
-
 id: c1-bio-62
-title: "Віра Холодна: Королева німого кіно"
+title: 'Віра Холодна: Королева німого кіно'
 slug: vira-kholodna
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Віра Холодна (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Історія українського кіно
-    url: https://kinokolo.ua/
-    type: reference
-    notes: Контекст раннього кінематографу
-  - name: Фільмографія
-    url: https://www.imdb.com/
-    type: reference
-    notes: Список фільмів
-
+- name: Віра Холодна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Історія українського кіно
+  url: https://kinokolo.ua/
+  type: reference
+  notes: Контекст раннього кінематографу
+- name: Фільмографія
+  url: https://www.imdb.com/
+  type: reference
+  notes: Список фільмів
 content_outline:
-  - section: Вступ — Зірка, яка згасла зарано
-    words: 400
-    points:
-      - Холодна як перша справжня кінозірка
-      - Феномен популярності в епоху німого кіно
-      - Загадкова смерть у 25 років
-
-  - section: Дитинство та юність
-    words: 600
-    points:
-      - Народження в Полтаві (1893)
-      - Переїзд до Москви
-      - Ранній інтерес до театру та балету
-
-  - section: Шлях до екрану
-    words: 700
-    points:
-      - Перші ролі в кіно
-      - Співпраця з режисерами
-      - Формування екранного образу
-
-  - section: Королева екрану
-    words: 800
-    points:
-      - Найпопулярніші фільми
-      - Феномен Віри Холодної
-      - Масова любов публіки
-
-  - section: Мистецтво німого кіно
-    words: 700
-    points:
-      - Особливості акторської гри
-      - Вираження емоцій без слів
-      - Вплив на розвиток кінематографу
-
-  - section: Трагічний фінал
-    words: 600
-    points:
-      - Революція та громадянська війна
-      - Перебування в Одесі
-      - Загадкова смерть (1919)
-
-  - section: Дискусія — Легенда та реальність
-    words: 200
-    points:
-      - Версії про причини смерті
-      - Холодна в українській культурній памяті
-
+- section: Вступ — Зірка, яка згасла зарано
+  words: 400
+  points:
+  - Холодна як перша справжня кінозірка
+  - Феномен популярності в епоху німого кіно
+  - Загадкова смерть у 25 років
+- section: Дитинство та юність
+  words: 600
+  points:
+  - Народження в Полтаві (1893)
+  - Переїзд до Москви
+  - Ранній інтерес до театру та балету
+- section: Шлях до екрану
+  words: 700
+  points:
+  - Перші ролі в кіно
+  - Співпраця з режисерами
+  - Формування екранного образу
+- section: Королева екрану
+  words: 800
+  points:
+  - Найпопулярніші фільми
+  - Феномен Віри Холодної
+  - Масова любов публіки
+- section: Мистецтво німого кіно
+  words: 700
+  points:
+  - Особливості акторської гри
+  - Вираження емоцій без слів
+  - Вплив на розвиток кінематографу
+- section: Трагічний фінал
+  words: 600
+  points:
+  - Революція та громадянська війна
+  - Перебування в Одесі
+  - Загадкова смерть (1919)
+- section: Дискусія — Легенда та реальність
+  words: 200
+  points:
+  - Версії про причини смерті
+  - Холодна в українській культурній памяті
 vocabulary_hints:
   required:
-    - німе кіно (silent cinema)
-    - кінозірка (film star)
-    - екран (screen)
-    - роль (role)
-    - режисер (director)
-    - акторська гра (acting)
-    - популярність (popularity)
-    - феномен (phenomenon)
-    - легенда (legend)
-    - трагедія (tragedy)
+  - німе кіно (silent cinema)
+  - кінозірка (film star)
+  - екран (screen)
+  - роль (role)
+  - режисер (director)
+  - акторська гра (acting)
+  - популярність (popularity)
+  - феномен (phenomenon)
+  - легенда (legend)
+  - трагедія (tragedy)
   recommended:
-    - мелодрама (melodrama)
-    - кінематограф (cinematography)
-    - кадр (frame)
-    - титри (intertitles)
-    - прем'єра (premiere)
-
+  - мелодрама (melodrama)
+  - кінематограф (cinematography)
+  - кадр (frame)
+  - титри (intertitles)
+  - прем'єра (premiere)
 activity_hints:
-  - type: reading
-    focus: Описи фільмів та рецензії епохи
-    source: Архівні матеріали
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про німе кіно
-    items: "12+"
-
-  - type: match-up
-    focus: Фільми та їхні сюжети
-    items: "10+"
-
-  - type: essay-response
-    focus: Чому німе кіно створювало такі сильні емоції?
-    word_target: 300
-    output: Культурологічний есей
-
-  - type: group-sort
-    focus: Технології німого vs звукового кіно
-    items: "12+"
-
-  - type: fill-in
-    focus: Кінематографічна термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як ранні зірки впливали на культуру?
-    output: Порівняльний аналіз
-
+- type: reading
+  focus: Описи фільмів та рецензії епохи
+  source: Архівні матеріали
+  items: 3 passages
+- type: quiz
+  focus: Факти про німе кіно
+  items: 12+
+- type: match-up
+  focus: Фільми та їхні сюжети
+  items: 10+
+- type: essay-response
+  focus: Чому німе кіно створювало такі сильні емоції?
+  word_target: 300
+  output: Культурологічний есей
+- type: group-sort
+  focus: Технології німого vs звукового кіно
+  items: 12+
+- type: fill-in
+  focus: Кінематографічна термінологія
+  items: 10+
 prerequisites:
-  - b2-hist-early-20th-century
-
+- b2-hist-early-20th-century
 connects_to:
-  - c1-bio-57-les-kurbas
-  - c1-bio-67-serge-lifar
-  - c1-bio-26-mariya-zankovetska
-
+- c1-bio-57-les-kurbas
+- c1-bio-67-serge-lifar
+- c1-bio-26-mariya-zankovetska
 naturalness:
   score: 1
   status: PENDING

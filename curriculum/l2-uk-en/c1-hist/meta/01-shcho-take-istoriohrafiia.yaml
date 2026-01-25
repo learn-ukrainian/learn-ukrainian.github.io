@@ -111,15 +111,13 @@ activity_hints:
 - type: critical-analysis
   focus: Apply 5 questions to a Soviet-era text about Ukrainian history
   output: Identify bias markers
-- type: vocabulary
+- type: match-up
   focus: Match historiographical terms to definitions
   items: 12+
 - type: essay-response
   focus: Чому важливо знати, хто написав історію?
   word_target: 300
   model_answer: Required
-- type: discussion
-  focus: Can history ever be "objective"? Argue both sides.
 prerequisites:
 - B2-HIST completion recommended
 - C1 Core grammar

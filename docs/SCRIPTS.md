@@ -221,6 +221,62 @@ Sync meta.yaml to match existing markdown content. Use this when markdown exists
 
 **Important:** Markdown is NEVER regenerated. Meta is updated to match reality.
 
+### /module-fix Command
+
+Comprehensive check-and-fix loop for a complete module. Orchestrates all QA checks and fixes issues until ALL gates pass.
+
+```bash
+/module-fix b1 12           # Fix B1 module 12
+/module-fix b2-hist 5       # Fix B2-HIST module 5
+```
+
+**What it does:**
+1. Runs comprehensive audit (`audit_module.py --fix`)
+2. Categorizes violations by component (meta, lesson, activities, vocab, naturalness)
+3. Fixes by category using existing QA phase docs
+4. Loops until ALL audit gates show ✅
+5. Runs pipeline when complete
+
+**Decision matrix:**
+| Violations | Action |
+|-----------|--------|
+| ≤3 total | Fix individually |
+| >3 in one component | Rebuild that component |
+| >10 or structural | Consider full rebuild |
+
+**Related QA phases:**
+- `phases/module-meta-qa.md` - Meta validation
+- `phases/module-lesson-qa.md` - Lesson validation
+- `phases/module-act-qa.md` - Activities validation
+- `phases/module-vocab-qa.md` - Vocabulary validation
+
+### /meta-fix Command
+
+Check and fix invalid activity types in meta.yaml files across the curriculum.
+
+```bash
+/meta-fix                   # Dry-run on all levels
+/meta-fix b1                # Dry-run on B1 only
+/meta-fix b2-hist --apply   # Fix B2-HIST modules
+/meta-fix --apply           # Fix all levels
+```
+
+**What it checks:** Invalid activity types in `activity_hints` section.
+
+**Valid activity types:** match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+
+**Common invalid types and mappings:**
+| Invalid | Action | Rationale |
+|---------|--------|-----------|
+| transform | → fill-in | Verb transformation |
+| conjugation | → fill-in | Verb conjugation |
+| dialogue | REMOVE | Content type, not activity |
+| roleplay | REMOVE | Content type, not activity |
+| flashcards | → match-up | Memorization |
+| discussion | REMOVE | Content type, not activity |
+
+**Script:** `scripts/fix_invalid_activity_types.py`
+
 ### Batch Mode
 
 When building multiple modules, the command runs each through all phases and reports a summary:
@@ -275,12 +331,13 @@ This command:
 
 ### Meta & Vocabulary (Python)
 
-| Script                  | Purpose                        | Command                                                                |
-| ----------------------- | ------------------------------ | ---------------------------------------------------------------------- |
-| `validate_meta_yaml.py` | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit`           |
-| `check_hydration.py`    | Fractal outline status checker | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
-| `vocab_init.py`         | Create fresh vocabulary DB     | `npm run vocab:init`                                                   |
-| `populate_vocab_db.py`  | Populate DB from modules       | `npm run vocab:scan`                                                   |
+| Script                        | Purpose                        | Command                                                                |
+| ----------------------------- | ------------------------------ | ---------------------------------------------------------------------- |
+| `validate_meta_yaml.py`       | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit`           |
+| `fix_invalid_activity_types.py` | Fix invalid activity types in meta | `.venv/bin/python scripts/fix_invalid_activity_types.py [--level b1] [--apply]` |
+| `check_hydration.py`          | Fractal outline status checker | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
+| `vocab_init.py`               | Create fresh vocabulary DB     | `npm run vocab:init`                                                   |
+| `populate_vocab_db.py`        | Populate DB from modules       | `npm run vocab:scan`                                                   |
 
 ---
 

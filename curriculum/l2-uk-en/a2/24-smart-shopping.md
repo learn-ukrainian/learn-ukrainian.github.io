@@ -1,239 +1,152 @@
-# Smart Shopping | Comparing Products and Making Decisions
+# Розумні покупки: Порівнюємо та вибираємо (Smart Shopping)
 
-## Introduction
+## Introduction / Вступ
 
-Time to put your comparison skills to practical use! This module takes you shopping in Ukrainian. You'll learn to compare products, ask for recommendations, and negotiate — all essential skills for real-world situations.
+**Ласкаво просимо до світу розумного шопінгу!** Тепер, коли ви вже маєте солідний багаж граматики — вмієте порівнювати речі, ставити їх у найвищий ступінь та використовувати числівники — настав час застосувати ці знання на практиці. Шопінг в Україні — це не просто обмін грошей на товари; це ціла культура взаємодії. Чи вибираєте ви новий смартфон у сучасному магазині електроніки, чи торгуєтеся за свіжі помідори на гамірному базарі, вам знадобляться спеціальні фрази та стратегії. Сьогодні ми навчимося бути не просто покупцями, а "розумними" покупцями, які знають, як спитати поради, порівняти варіанти та отримати найкращую ціну. Кожна покупка — це нова можливість для мовної практики на шляху до впевненого рівня A2.
 
-**What you'll learn:**
-- Shopping comparison vocabulary
-- How to ask for advice and recommendations
-- Negotiation phrases
-- Making purchase decisions
+Time to put your comparison skills into practical, everyday use! This module takes you shopping in the Ukrainian context. From high-tech malls to traditional open-air markets, you'll learn to navigate different retail environments. You'll master the vocabulary for comparing products on the fly, asking for expert recommendations, and even the subtle art of negotiation. In many ways, shopping is the ultimate test of your A2 communicative skills—it involves numbers, adjectives, social politeness, and decision-making under pressure. Let's make sure you're ready for your next trip to the store or the «bazar»! Кожен ваш вибір — це крок до мовної свободи.
 
----
+**Що ви вивчите в цьому модулі:**
 
-## Presentation
+- Словник для порівняння товарів: «який кращий?», «є щось дешевше?».
+- Як ввічливо запитувати поради та рекомендації у продавця.
+- Фрази для переговорів про ціну та отримання знижок.
+- Різницю між покупками в супермаркетах та на традиційних ринках (базарах).
+- Мистецтво ввічливої відмови: як сказати «я подумаю» і не образити продавця.
 
-### Розумні покупки — порівнюємо і вибираємо
+## Presentation / Презентація
 
-Розумні покупки — це не лише про гроші. Це про вміння порівнювати, питати поради і приймати рішення українською мовою. Коли ви робите покупки в Україні, важливо знати правильні фрази для порівняння товарів і переговорів про ціну.
+### 1. Key Shopping Vocabulary and Payment Options (Основний словник)
 
-**Чому це важливо?**
-На ринку, в магазині або онлайн — ви завжди порівнюєте варіанти. Який телефон кращий? Який дешевший? Яка різниця між ними? Без правильних фраз ви не зможете зробити розумний вибір.
+Перш ніж порівнювати, нам потрібні базові слова. Вони — ваш фундамент у будь-якій крамниці. В Україні система оплати дуже сучасна, але на ринках все ще цінують готівку. Важливо знати, як запитати про решту чи чек, щоб уникнути непорозумінь.
 
-**Основні навички для покупок:**
+| Українська  | Транслітерація | Переклад            |
+| :---------- | :------------- | :------------------ |
+| **Ціна**    | Tsina          | Price               |
+| **Знижка**  | Znyzhka        | Discount            |
+| **Чек**     | Chek           | Receipt / Bill      |
+| **Решта**   | Reshta         | Change (money back) |
+| **Готівка** | Hotivka        | Cash                |
+| **Карта**   | Karta          | Card                |
+| **Цінник**  | Tsynnyk        | Price tag           |
 
-1. **Порівняння товарів** — використовуйте порівняльний і найвищий ступені
-   - Цей кращий, але дорожчий.
-   - Який найдешевший?
-   - Мені більше подобається червоний.
+### 2. Comparing in Action: Quality, Price and Value (Порівняння в дії)
 
-2. **Запит поради** — питайте продавців про рекомендації
-   - Що ви порекомендуєте?
-   - Є щось краще?
-   - Яка різниця між ними?
+When you see two items, you need to use your comparative skills to decide. Remember that the adjective must agree with the item's gender! Pay attention to the labels on products, which often use superlatives to attract buyers. The words below are your best tools in any shop:
 
-3. **Переговори про ціну** — на ринках можна торгуватися
-   - Чи можна дешевше?
-   - Чи є знижка?
-   - Це занадто дорого.
+- **Який телефон кращий?** (Which phone is better? - Masculine)
+- **Яка книга цікавіша?** (Which book is more interesting? - Feminine)
+- **Це плаття дорожче, ніж те.** (This dress is more expensive than that one. - Neuter)
+- **Є щось дешевше?** (Is there something cheaper?)
+- **Який найдешевший варіант?** (Which is the cheapest option?)
 
-4. **Прийняття рішення** — позитивно або негативно
-   - Беру! (позитивно)
-   - Я подумаю. (ввічлива відмова)
+In food markets, you'll often hear: «Це **солодше**» (This is sweeter) or «Цей сир **свіжіший**» (This cheese is fresher). These comparative adjectives help you justify why you are buying one specific product over another.
 
-**Культурна особливість:**
-В Україні торгуватися можна тільки на ринках і базарах, але не в супермаркетах або бутиках. Завжди будьте ввічливі, коли питаєте про знижки. Фраза «Я подумаю» — це дуже ввічливий спосіб відмовитися від покупки.
+### 3. The Art of the Recommendation (Запит поради)
 
-**Практичне застосування:**
-Використовуйте ці фрази щодня: в магазині електроніки, на ринку, в інтернет-магазині. Порівнюйте ціни, питайте поради, торгуйтеся на ринку. Це зробить ваші покупки розумнішими і дешевшими!
+Don't be afraid to ask for help! Ukrainians value expert advice, especially in markets or specialty shops. Asking for a recommendation is a great way to start a conversation and build rapport with the seller.
 
-## Practice
+- **Що ви порекомендуєте?** (What do you recommend?)
+- **Що краще купити: цей ноутбук чи той?** (What is better to buy: this laptop or that one?)
+- **Яка різниця між цими моделями?** (What's the difference between these models?)
+- **Хто виробник?** (Who is the manufacturer?)
+- **Це надійний бренд?** (Is this a reliable brand?)
 
-**Comparing phones:**
-- Цей телефон кращий, але дорожчий.
-- Є щось дешевше?
-- Так, ось цей. Він дешевший, але екран менший.
-- Яка різниця в ціні?
-- Два тисячі гривень.
+### 4. Negotiation & Bartering: The Bazar Spirit (Переговори про ціну)
 
-**At the market:**
-- Скільки коштують яблука?
-- Тридцять гривень за кілограм.
-- Занадто дорого. Чи можна дешевше?
-- Добре, двадцять п'ять.
-- Беру два кілограми!
+In a **супермаркет** (supermarket), prices are fixed. But in a **ринок** (market / bazar), bargaining is expected and even enjoyed! It’s a social interaction that shows you value the seller’s time and goods. This is where your A2 numerals and comparative skills really shine.
 
-**Dialogue: Buying Shoes**
-- **Клієнт:** Добрий день! Я шукаю зручні туфлі.
-- **Продавець:** Який у вас розмір?
-- **Клієнт:** Тридцять восьмий.
-- **Продавець:** Ось ці дуже хороші. Це натуральна шкіра.
-- **Клієнт:** Вони гарні, але трохи дорогі. Чи є знижка?
-- **Продавець:** Так, на цю модель мінус 10%.
-- **Клієнт:** Чудово! Можна поміряти?
-- **Продавець:** Звичайно, приміряйте. Дзеркало там.
-- **Клієнт:** Вони мені підходять. Беру!
+- **Чи можна дешевше?** (Can it be cheaper?)
+- **Зробите знижку?** (Will you give a discount?)
+- **Якщо візьму три, буде дешевше?** (If I take three, will it be cheaper?)
+- **Це занадто дорого для мене.** (This is too expensive for me.)
 
-> [!tip] Розміри
-> В Україні використовують європейські розміри взуття (36, 37, 38...). Розміри одягу: S/M/L або 44, 46, 48.
+### 5. Digital Shopping and Cart Logic (Онлайн-покупки)
 
-## Basic Comparisons
+The digital landscape in Ukraine is incredibly advanced. Apps like "Silpo," "Rozetka," and "Glovo" use specific terms you should know to navigate your smartphone interface comfortably:
 
-- Цей **кращий**, але **дорожчий**. (This one is better, but more expensive.)
-- Той **дешевший** за цей. (That one is cheaper than this one.)
-- Який **найдешевший**? (Which is the cheapest?)
-- Мені **більше подобається** червоний. (I like the red one more.)
+- **Кошик** (Basket/Cart) — Where you put your temporary items.
+- **Оформити замовлення** (Place an order) — The final step of purchase.
+- **Доставка** (Delivery) — Getting the goods to your door or warehouse.
+- **Відгуки** (Reviews) — Always check these before making a final decision!
+- **Наявність** (Availability) — Is it in stock?
 
-When using these phrases, remember that adjectives like **кращий** (better) and **дорожчий** must agree in gender and number with the noun you are describing. If you are comparing two feminine items, you would use **краща** and **дорожча**. This grammatical agreement ensures that your sentences sound natural to native speakers.
+### 6. The Register of Refusal (Мистецтво ввічливої відмови)
 
-## Asking About Options
+In different environments, you refuse differently. At a market, you might be more descriptive, while in a mall, you might be more concise.
 
-- Що ви **порекомендуєте**? (What do you recommend?)
-- Є щось **краще**? (Is there something better?)
-- Є щось **дешевше**? (Is there something cheaper?)
-- Яка **різниця** між ними? (What's the difference between them?)
+- **Мал (Mall):** «Дякую, мені не підходить». (Thank you, it doesn't suit me.)
+- **Базар (Market):** «Дякую, я ще подумаю і, можливо, повернуся». (Thank you, I'll think about it and maybe come back.)
+- **Technical Shop:** «Я хочу порівняти характеристики». (I want to compare the specifications.)
 
-Asking for a recommendation (**рекомендація**) is a smart strategy because it shifts the responsibility of choosing onto the expert. They will often point you toward the most popular or highest quality items currently in stock.
+> [!tip] **The "I'll Think About It" Strategy**
+> If you want to refuse politely, use the phrase: «**Я подумаю**» (I'll think about it) or «**Я ще пройдуся**» (I'll walk around some more). It’s a universal code for "I’m not buying this right now," and it’s very polite. It allows the seller to "save face" and you to leave gracefully.
 
-> 💡 **Порада**
->
-> Українці люблять, коли ви питаєте їх пораду! «Що ви порекомендуєте?» — це чудовий спосіб почати розмову з продавцем.
+> [!important] **The "Bazar" Rule**
+> In Ukrainian markets, no price tag often means the price is negotiable. If you see a price tag (**цінник**), you can still ask for a discount if you buy in bulk. Always greet the seller first with a warm «Добрий день!» before asking for a price.
 
-## Negotiation Phrases
+## Practice / Практика
 
-In some contexts (markets, small shops), negotiation is possible:
+### 1. Match the Price Request (Знайдіть відповідність)
 
-## Asking for Discounts
+Match the situation to the correct phrase.
 
-- Чи можна **дешевше**? (Can it be cheaper?)
-- Чи є **знижка**? (Is there a discount?)
-- Якщо візьму два, буде **дешевше**? (If I take two, will it be cheaper?)
+1. You want a discount. -> **Чи можна дешевше?**
+2. You want to know the price. -> **Скільки це коштує?**
+3. You want a recommendation. -> **Що ви порадите?**
+4. You want to pay with a card. -> **Ви приймаєте карти?**
 
-## Expressing Hesitation
+### 2. Decision Making (Прийняття рішення)
 
-- Це **занадто** дорого. (This is too expensive.)
-- Я **подумаю**. (I'll think about it.)
-- Можливо, **повернуся**. (Maybe I'll come back.)
+Complete the sentences based on the context.
 
-В українській культурі фраза «Я подумаю» — це дуже ввічливий спосіб відмовитися від покупки. Якщо ціна занадто висока, сміливо використовуйте слово **занадто**.
+1. Цей кавун солодкий, а той ще \_\_\_ . -> **солодший**
+2. Ця куртка гарна, але мені \_\_\_ червона. -> **більше подобається**
+3. Мені це \_\_\_, я це купую! -> **підходить**
+4. Дякую за допомогу, я ще \_\_\_ . -> **подумаю**
 
-> 📜 **Культурна примітка**
->
-> Торгуватися можна на ринку чи базарі, але не в супермаркетах. Завжди будьте ввічливі, коли питаєте про знижки!
+### 3. Calculation Station (Розрахунок)
 
-## Positive Decision
+Use your numerals and currency rules.
 
-- Я **візьму** цей. (I'll take this one.)
-- **Беру**! (I'll take it!)
-- Це мені **підходить**. (This suits me.)
+1. Одне яблуко коштує 5 гривень. Скільки коштують 4 яблука? -> **Двадцять гривень.**
+2. Одна сумка коштує 500 гривень. Після знижки 10% вона коштує... -> **Чотириста п'ятдесят гривень.**
 
-## Negative Decision
+> [!reflection] **The Value of Choice**
+> Every purchase is a choice. In Ukrainian, having the vocabulary to express _why_ you choose something makes you a more conscious and integrated speaker. Comparisons are the colors of your decision-making palette. Кожна ваша покупка — це голос за якість та власну позицію!
 
-- Дякую, **не потрібно**. (Thank you, not needed.)
-- Я **ще подумаю**. (I'll still think about it.)
-- Мені не **підходить**. (It doesn't suit me.)
+> [!tip] **Eco-Friendly Choice**
+> Vendors often ask: «Пакет потрібен?» (Need a bag?). You can say «Ні, дякую, у мене є своя **еко-торбинка**» (No thanks, I have my own eco-bag). It’s a very modern and appreciated phrase in cities!
 
-Слово **підходити** дуже корисне: ціна підходить, розмір підходить, стиль підходить. Якщо ні — просто додайте **не**: «Мені не підходить».
+## Dialogues / Діалоги
 
-> [!tip] Ввічлива відмова
-> «Дякую, я подумаю» — це ввічливий спосіб відмовитися, не кажучи прямо «ні».
+### Buying a New Phone (Купуємо телефон)
 
----
+**Клієнт:** Добрий день! Я шукаю новий смартфон. (Good day! I am looking for a new smartphone.)
+**Продавець:** Добрий день! У нас є ця модель і та. Що вам більше подобається? (Good day! We have this model and that one. What do you like more?)
+**Клієнт:** Яка між ними **різниця**? (What is the difference between them?)
+**Продавець:** Цей телефон **новіший** і має **кращу** камеру, але той **дешевший**. (This phone is newer and has a better camera, but that one is cheaper.)
+**Клієнт:** Який **найпопулярніший** зараз? (Which is the most popular now?)
+**Продавець:** Ось цей. Він дуже **швидкий** і надійний. (This one. It is very fast and reliable.)
+**Клієнт:** Гарний вибір. Чи є на нього **знижка**? (Good choice. Is there a discount on it?)
+**Продавець:** Так, сьогодні мінус п'ять відсотків. (Yes, today it's minus five percent.)
+**Клієнт:** Чудово! Це мені **підходить**. Яку **карту** ви приймаєте? (Great! This suits me. Which card do you accept?)
 
-## Cultural Insight
+> [!context] **Digital vs. Physical Markets**
+> While modern electronics shops like "Rozetka" or "Comfy" are standard malls with fixed prices, the experience of a Ukrainian **базар** remains unique. It’s where people go for the freshest products and the best social experience. Even younger Ukrainians often prefer the market for fruits, vegetables, and home-made cheese because it’s "healthier" and more "authentic." Understanding the register for both will make you a true local.
 
-## Shopping in Ukraine
+# Summary / Підсумок
 
-Ukrainian shopping culture varies by location:
+У цьому модулі ми навчилися бути професійними покупцями:
 
-**Supermarkets (супермаркет):**
-- Fixed prices, no negotiation
-- Self-service
-- Common in cities
+- Опанували ключовий словник шопінгу: ціна, знижка, решта, чек.
+- Навчилися порівнювати товари в реальних ситуаціях.
+- Зрозуміли логіку переговорів про ціну та ввічливої відмови.
+- Дізналися різницю між супермаркетами та базарами в Україні.
+- Потренувалися приймати рішення про покупки та розраховувати ціну.
 
-**Markets (ринок, базар):**
-- Fresh produce, clothes, goods
-- Negotiation possible
-- Cash preferred
-
-**Small shops (магазин, крамниця):**
-- Personal service
-- May have loyalty discounts
-- Good for local products
-
-## Shopping Strategies
-
-## 1. The Art of Polite Negotiation
-
-Negotiation (**торг**) is an art form in Ukrainian markets. It's not just about saving money; it's social interaction. In Ukraine, the process of bargaining is seen as a sign of mutual respect and interest in the product. It's perfectly normal to spend several minutes discussing the merits of a specific item before agreeing on a final price.
-- **Start soft:** «Чи це остаточна ціна?» (Is this the final price?)
-- **Point out flaws (gently):** «Але тут маленька пляма...» (But there is a small spot here...)
-- **Walk away (theatre):** «Добре, я ще пройдуся...» (Okay, I'll walk around a bit more...)
-
-## 2. Genitive Plural: Weighing Your Options
-
-When buying food, you often count or weigh things. This triggers the **Genitive Case**.
-- **1 кілограм**
-- **2, 3, 4 кілограми**
-- **5+ кілограмів**
-
-> [!note] Grammar Check
-> Technically, «кілограм» has a zero ending in Genitive Plural in some dialects (5 кілограм), but standard literary Ukrainian prefers **кілограмів**.
-> - 200 **грамів** (grams)
-> - 5 **літрів** (liters)
-> - 10 **гривень** (hryvnias)
-
-## Cultural Insight
-
-## The Soul of the «Bazar»
-
-The Ukrainian **базар** (market) is more than a store; it's a community hub.
-- **Postiynyy Kliyent:** The goal is to become a «постійний клієнт». Once a seller knows you, they will pick the best tomatoes for you, hide the freshest meat under the counter for you, and give you discounts without asking.
-- **Taste it!** Sellers will often offer: «Спробуйте!» (Taste it!). Refusing can sometimes be seen as rude if you are genuinely interested.
-- **Morning Glory:** The best produce is sold by 8-9 AM. If you arrive at noon, you get leftovers.
-
-> 🧠 **Міф: «Немає цінника — це обман»**
->
-> На базарі відсутність цінника — це нормально. Ціна залежить від часу дня та вашого вміння торгуватися. Завжди питайте «По чому?» або «Скільки коштує?»
-
-> 🎭 **Рольова гра**
->
-> Уявіть, що у вас 500 гривень. Вам потрібно купити овочі для борщу (картопля, буряк, морква, капуста, цибуля) та м'ясо. Складіть список покупок і «торгуйтеся» з партнером!
-
-## Shopping for Clothes vs. Food
-
-| Feature | Clothes Shop | Food Market |
-|---------|--------------|-------------|
-| **Service** | «Can I help you?» leads to fitting room. | «Taste this!» leads to buying. |
-| **Space** | Personal space respected. | Crowded, pushy, lively. |
-| **Payment** | Card/Phone (NFC). | Cash (mostly), card-to-card transfer. |
-
-> [!tip] Пакет
-> «Пакет потрібен?» — найпоширеніша фраза на касі. Українці часто носять власні еко-торбинки.
-
----
-
-# Підсумок
-У цьому уроці ви навчилися:
-- Порівнювати товари (кращий, дешевший, найдешевший)
-- Питати про рекомендації («Що ви порекомендуєте?»)
-- Вести переговори про ціну («Чи можна дешевше?»)
-- Приймати рішення про покупку («Візьму!», «Я подумаю»)
-
----
+Smart shopping is a vital life skill, and now you have the Ukrainian tools to do it effectively. Whether you are hunting for a bargain or looking for the highest quality, your language skills will help you find exactly what you need. Happy shopping!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
-
-## 3. Payment Vocabulary
-
-- **Готівка** (Cash) — King of the market.
-- **Карта** (Card) — Standard in shops.
-- **Решта** (Change) — «У вас є решта з 500?» (Do you have change from 500?)
-- **Чек** (Receipt) — «Ваш чек, будь ласка.» (Your receipt, please.)
-
-Understanding these payment terms is crucial because while city supermarkets almost always accept contact-less payments, many older bazar sellers still rely exclusively on physical cash transactions.
-
----
+Сьогодні під час походу в магазин спробуйте подумки прокоментувати свої дії. Порівняйте два товари: «Цей хліб свіжіший». Спитайте себе: «Чи підходить мені ціна?». Запишіть три короткі діалоги про покупки різних речей: продуктів, одягу та техніки. Кожна покупка — це шанс для практики! Удачі у ваших нових придбаннях та розумному виборі!

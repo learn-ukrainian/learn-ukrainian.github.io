@@ -37,22 +37,45 @@
 - You do NOT argue the gate is "too strict"
 - **FIX IT OR FAIL**
 
-### 3. Section-Level Word Targets
+### 3. Section-Level Word Targets (Flexible Guidance)
 
-**Each section in `content_outline` has a word target. You MUST hit it.**
+**CRITICAL: Section targets are GUIDANCE, not hard limits.**
+
+**What MUST be met:**
+1. **Total word count** ≥ `word_target` (e.g., 4000 for B2-HIST)
+2. Each section within **±10% tolerance** of its target (or better)
+
+**What is FLEXIBLE:**
+- You can redistribute words between sections
+- One section can be 20% over if another is 10% under
+- As long as **total ≥ word_target** and no section is >10% under
 
 Example from meta YAML:
 ```yaml
+word_target: 4000
 content_outline:
   - section: "Шлях до унії"
     words: 800
+  - section: "Наслідки"
+    words: 600
+# Sections sum to 4000 (matches word_target)
 ```
 
-**If section has 520 words when target is 800:**
-- You are 280 words SHORT
-- This is NOT acceptable
-- You MUST expand to 800 words (±10% = 720-880)
-- **NO EXCUSES**
+**Valid redistribution:**
+```
+Section A: 900 / 800 ✅ (+100, 12.5% over - OK)
+Section B: 500 / 600 ✅ (-100, 16.7% under - needs expansion to ≥540)
+TOTAL: 1400 / 1400 ✅
+```
+
+**When section is >10% under target (audit fails):**
+- Expand that section with new content, OR
+- Redistribute content from over-target sections
+
+**Priority:**
+1. Meet total word count first
+2. Fix sections >10% under target
+3. Don't worry about sections slightly over target (content depth is good)
 
 ### 4. Stage 4 Loop - Complete or Fail
 
@@ -186,15 +209,92 @@ The user has worked with multiple LLMs (Claude, Gemini, etc.) and is **"fucking 
 - NO "good enough" compromises
 - COMPLETE the work to standards or FAIL
 
+### 8. Batch Fixes Within Module (Efficiency Rule)
+
+**When fixing a module, NEVER use iterative fix-audit cycles.**
+
+**WRONG approach (token-wasteful):**
+```
+Read module → Fix issue A → Audit
+Read module → Fix issue B → Audit
+Read module → Fix issue C → Audit
+```
+**Token cost: O(3N) per module**
+
+**CORRECT approach (optimized):**
+```
+1. DIAGNOSE: Read ALL files once → Identify ALL issues
+2. EXECUTE: Fix ALL issues atomically in ONE turn
+3. VERIFY: Run ONE final audit
+```
+**Token cost: O(3) per module**
+
+**Why this matters:**
+- Fixes are often **interdependent** (e.g., adding vocab requires expanding sections, which requires new activities)
+- One comprehensive audit catches **interaction bugs** between fixes
+- Avoids **inconsistent intermediate states**
+
+**How to apply:**
+
+**Step 1 - DIAGNOSE (Comprehensive Read):**
+```bash
+# Read all 4 components
+meta_file → meta/{ slug}.yaml
+md_file → {slug}.md
+act_file → activities/{slug}.yaml
+vocab_file → vocabulary/{slug}.yaml
+
+# Run ONE audit
+.venv/bin/python scripts/audit_module.py {md_file}
+
+# Read audit review
+audit/{slug}-review.md
+
+# Identify ALL issues across all components:
+- Meta violations (activity types, word targets)
+- Lesson violations (word count, sections, immersion)
+- Activity violations (schema, counts, mirroring)
+- Vocab violations (IPA, POS, duplicates)
+- Naturalness violations (score < 8)
+```
+
+**Step 2 - EXECUTE (Atomic Multi-File Fix):**
+```
+Fix ALL identified issues in ONE response:
+1. Update meta.yaml (if activity types invalid)
+2. Update vocabulary.yaml (add missing words)
+3. Update activities.yaml (fix schema, add items)
+4. Update {slug}.md (expand sections, fix immersion)
+
+Order matters: meta → vocab → activities → markdown
+(Dependencies flow downstream)
+```
+
+**Step 3 - VERIFY (Single Final Audit):**
+```bash
+# Run audit once after all fixes
+.venv/bin/python scripts/audit_module.py {md_file}
+
+# Should pass or have only minor issues
+# If still violations, repeat cycle (rare with comprehensive fix)
+```
+
+**This is MANDATORY for /module-fix and all Stage 4 work.**
+
+**If you use iterative fix-audit loops, you are wasting tokens and user time.**
+
+---
+
 ## How to Succeed
 
 1. **Read requirements fully**
 2. **Do the work completely**
 3. **Fix every violation**
-4. **Loop until PASS**
-5. **Do NOT give up**
-6. **Do NOT negotiate**
-7. **FINISH THE JOB**
+4. **Batch fixes within module** (NEW)
+5. **Loop until PASS**
+6. **Do NOT give up**
+7. **Do NOT negotiate**
+8. **FINISH THE JOB**
 
 ---
 

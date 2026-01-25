@@ -1,146 +1,118 @@
-# LIT Module 15: The Testament (Zapovit)
-# Status: SPEC (ready for content development)
-
 id: lit-15
 title: Заповіт
-subtitle: 'The Testament'
+subtitle: The Testament
 slug: the-testament
 module_type: literature
 word_target: 4500
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Заповіт — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=2
-    type: primary
-    notes: Вірш для детального аналізу
-  - name: 'Аналіз "Заповіту"'
-    url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
-    type: secondary
-    notes: Літературознавчий аналіз
-
+- name: Заповіт — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=2
+  type: primary
+  notes: Вірш для детального аналізу
+- name: Аналіз "Заповіту"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
+  type: secondary
+  notes: Літературознавчий аналіз
 content_outline:
-  - section: Вступ — Найвідоміший вірш України
-    words: 500
-    points:
-      - Історія написання (1845)
-      - '"Заповіт" як неофіційний гімн'
-      - Переклади на 150+ мов
-
-  - section: Граматичний аналіз
-    words: 800
-    points:
-      - Наказовий спосіб як політична інструкція
-      - Майбутній час і мрія про волю
-      - Умовні речення
-
-  - section: Поетика тексту
-    words: 700
-    points:
-      - Структура (три частини)
-      - Ритм і рима
-      - Лексичний аналіз
-
-  - section: Політичний зміст
-    words: 700
-    points:
-      - '"Вставайте, кайдани порвіте" — заклик до дії'
-      - '"І вражою злою кров''ю" — питання насильства'
-      - 'Концепція "сім''ї великої, вольної, нової"'
-
-  - section: Рецепція і використання
-    words: 500
-    points:
-      - '"Заповіт" у радянській ідеології'
-      - '"Заповіт" у діаспорі'
-      - Сучасне прочитання
-
-  - section: Підсумок — Текст як нація
-    words: 400
-    points:
-      - Чому цей вірш став символом
-      - Шевченко і національна ідентичність
-      - Перехід до біблійних тем
-
+- section: Вступ — Найвідоміший вірш України
+  words: 500
+  points:
+  - Історія написання (1845)
+  - '"Заповіт" як неофіційний гімн'
+  - Переклади на 150+ мов
+- section: Граматичний аналіз
+  words: 800
+  points:
+  - Наказовий спосіб як політична інструкція
+  - Майбутній час і мрія про волю
+  - Умовні речення
+- section: Поетика тексту
+  words: 700
+  points:
+  - Структура (три частини)
+  - Ритм і рима
+  - Лексичний аналіз
+- section: Політичний зміст
+  words: 700
+  points:
+  - '"Вставайте, кайдани порвіте" — заклик до дії'
+  - '"І вражою злою кров''ю" — питання насильства'
+  - Концепція "сім'ї великої, вольної, нової"
+- section: Рецепція і використання
+  words: 500
+  points:
+  - '"Заповіт" у радянській ідеології'
+  - '"Заповіт" у діаспорі'
+  - Сучасне прочитання
+- section: Підсумок — Текст як нація
+  words: 400
+  points:
+  - Чому цей вірш став символом
+  - Шевченко і національна ідентичність
+  - Перехід до біблійних тем
 vocabulary_hints:
   required:
-    - заповіт (testament)
-    - наказовий спосіб (imperative mood)
-    - воля (freedom)
-    - кайдани (chains)
-    - ворог (enemy)
-    - гімн (anthem)
-    - рецепція (reception)
-    - символ (symbol)
-    - ідентичність (identity)
-    - політичний (political)
+  - заповіт (testament)
+  - наказовий спосіб (imperative mood)
+  - воля (freedom)
+  - кайдани (chains)
+  - ворог (enemy)
+  - гімн (anthem)
+  - рецепція (reception)
+  - символ (symbol)
+  - ідентичність (identity)
+  - політичний (political)
   recommended:
-    - могила (grave)
-    - Дніпро (Dnipro)
-    - рев (roar)
-    - степ (steppe)
-    - сім'я (family)
-
+  - могила (grave)
+  - Дніпро (Dnipro)
+  - рев (roar)
+  - степ (steppe)
+  - сім'я (family)
 activity_hints:
-  - type: reading
-    focus: Повний текст "Заповіту" з граматичним розбором
-    source: UkrLib tid=2
-    items: "1"
-
-  - type: quiz
-    focus: Граматичні форми у вірші
-    items: "15+"
-
-  - type: match-up
-    focus: Рядок → його граматична функція
-    items: "12+"
-
-  - type: essay-response
-    focus: Чи закликає Шевченко до насильства?
-    word_target: 300
-    output: Інтерпретаційне есе
-
-  - type: cloze
-    focus: Текст напам'ять
-    items: "15+"
-
-  - type: discussion
-    focus: Як сучасна Україна читає "Заповіт"?
-    output: Дискусія про рецепцію
-
+- type: reading
+  focus: Повний текст "Заповіту" з граматичним розбором
+  source: UkrLib tid=2
+  items: '1'
+- type: quiz
+  focus: Граматичні форми у вірші
+  items: 15+
+- type: match-up
+  focus: Рядок → його граматична функція
+  items: 12+
+- type: essay-response
+  focus: Чи закликає Шевченко до насильства?
+  word_target: 300
+  output: Інтерпретаційне есе
+- type: cloze
+  focus: Текст напам'ять
+  items: 15+
 prerequisites:
-  - lit-11 to lit-14 (Shevchenko modules)
-  - Strong grammar foundation
-
+- lit-11 to lit-14 (Shevchenko modules)
+- Strong grammar foundation
 connects_to:
-  - lit-16 (Biblical Themes — високий стиль)
-  - lit-20 (Cult of Shevchenko — рецепція)
-
-version: "2.0"
+- lit-16 (Biblical Themes — високий стиль)
+- lit-20 (Cult of Shevchenko — рецепція)
+version: '2.0'
 phase: LIT.3 The Prophet (Taras Shevchenko)
 focus: literature
 pedagogy: Analysis
 duration: 90
 transliteration: none
 tags:
-  - shevchenko
-  - poetry
-  - grammar
-  - politics
-
+- shevchenko
+- poetry
+- grammar
+- politics
 grammar:
-  - Imperative Mood
-  - Future Tense
-  - Conditional Sentences
-
+- Imperative Mood
+- Future Tense
+- Conditional Sentences
 objectives:
-  - Analyze the grammar of the imperative mood in a political context
-  - Understand the historical context of 1845
-  - Discuss the concept of 'righteous violence' in the poem
-  - Recite key lines from memory
-
+- Analyze the grammar of the imperative mood in a political context
+- Understand the historical context of 1845
+- Discuss the concept of 'righteous violence' in the poem
+- Recite key lines from memory
 naturalness:
   score: 10
   status: PASS

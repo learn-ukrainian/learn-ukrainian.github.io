@@ -105,9 +105,6 @@ activity_hints:
 - type: fill-in
   focus: Key quotes from his works
   items: 10+
-- type: discussion
-  focus: Why is "inner form of word" still relevant today?
-  output: Application to modern linguistics
 prerequisites:
 - c1-bio-30 (Borys Hrinchenko - lexicographer)
 - c1-bio-97 (Panteleimon Kulish - language reformer)

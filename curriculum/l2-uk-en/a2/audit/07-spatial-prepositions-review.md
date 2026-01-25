@@ -1,46 +1,74 @@
-# Audit Report: 07-spatial-prepositions.md
-**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+# Audit Report: M07 — 07-spatial-prepositions.md
+**Level:** A2 | **Module:** M07 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 09:38:53
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Preposition Meanings | 12 | 8 | ✅ |
+| 2 | fill-in | Choose the Correct Preposition | 12 | 8 | ✅ |
+| 3 | quiz | Motion or Location? | 12 | 8 | ✅ |
+| 4 | true-false | Preposition Rules | 12 | 8 | ✅ |
+| 5 | group-sort | Prepositions by Case | 12 | 12 | ✅ |
+| 6 | unjumble | Preposition Sentences | 10 | 6 | ✅ |
+| 7 | error-correction | Fix the Case | 12 | 6 | ✅ |
+| 8 | cloze | Complete the Story | 12 | 12 | ✅ |
+| 9 | select | Asking for Directions | 6 | 6 | ✅ |
+| 10 | mark-the-words | Find Preposition + Case | 12 | 6 | ✅ |
+| 11 | translate | English to Ukrainian | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 10-14) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## LINT ERRORS
+- ❌ Line 31: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ✅ 1360/1000
+- **Words:** ✅ 1418/1000 (raw: 1579)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/1
+- **Vocab:** ✅ 60/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.3% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 40.7% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 106 | Included in Core |
-| **Presentation** | ✅ | 261 | Included in Core |
-| **Practice** | ⚪️ | 148 | Skipped |
-| **The Preposition-Case Connection** | ⚪️ | 82 | Skipped |
-| **Motion vs. Location: The Core Distinction** | ✅ | 77 | Included in Core |
-| **Prepositions by Case** | ⚪️ | 17 | Skipped |
-| **Genitive Prepositions** | ⚪️ | 29 | Skipped |
-| **Прийменники зі знахідним відмінком** | ⚪️ | 6 | Skipped |
-| **Прийменники з орудним відмінком** | ⚪️ | 46 | Skipped |
-| **Двосторонні прийменники (Two-Way Prepositions)** | ⚪️ | 43 | Skipped |
-| **The в/у Alternation** | ⚪️ | 132 | Skipped |
-| **Cultural Insight** | ✅ | 0 | Included in Core |
-| **Prepositions in Ukrainian Addresses** | ⚪️ | 30 | Skipped |
-| **Приклади вживання прийменників** | ⚪️ | 158 | Skipped |
-| **Building Sentences with Prepositions** | ⚪️ | 111 | Skipped |
-| **Dialogue: Де що знаходиться?** | ✅ | 84 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 220 | Included in Core |
+| **Presentation / Презентація** | ✅ | 613 | Included in Core |
+| **Practice / Практика** | ⚪️ | 223 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 232 | Included in Core |
+| **Summary / Підсумок** | ✅ | 92 | Included in Core |
+| **Need More Practice?** | ⚪️ | 38 | Skipped |

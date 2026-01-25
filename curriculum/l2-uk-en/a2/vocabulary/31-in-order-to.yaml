@@ -8,7 +8,7 @@ items:
   pos: conj
 - lemma: бажай
   ipa: /baʒˈaj/
-  translation: ''
+  translation: wish
   pos: noun
   gender: m
 - lemma: бажальний
@@ -56,7 +56,7 @@ items:
   pos: adj
 - lemma: комі
   ipa: /kˈɔmi/
-  translation: ''
+  translation: Komi
   pos: noun
   gender: m
 - lemma: кулінарний

@@ -1,6 +1,3 @@
-# C1-HIST Module 08: Методологія деколонізації
-# Status: SPEC (ready for content development)
-
 id: c1-hist-08
 title: Методологія деколонізації
 slug: metodolohiia-dekolonizatsii
@@ -10,131 +7,113 @@ focus: history
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Деколонізація (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Деколонізація
-    type: reference
-    notes: General concept
-  - name: Постколоніальні студії
-    url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
-    type: reference
-    notes: Theoretical framework
-  - name: Едвард Саїд — Орієнталізм
-    url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
-    type: reference
-    notes: Foundational postcolonial text
-  - name: Тамара Гундорова — Післячорнобильська бібліотека
-    url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
-    type: reference
-    notes: Ukrainian postcolonial scholar
-
+- name: Деколонізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Деколонізація
+  type: reference
+  notes: General concept
+- name: Постколоніальні студії
+  url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
+  type: reference
+  notes: Theoretical framework
+- name: Едвард Саїд — Орієнталізм
+  url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
+  type: reference
+  notes: Foundational postcolonial text
+- name: Тамара Гундорова — Післячорнобильська бібліотека
+  url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
+  type: reference
+  notes: Ukrainian postcolonial scholar
 content_outline:
-  - section: Вступ — Що таке деколонізація?
-    words: 400
-    points:
-      - Колоніалізм — не тільки заморський
-      - Росія як імперія — особливий випадок
-      - "Чому «постколоніальні студії» для України"
-      - Від політики до свідомості
-
-  - section: Теоретичні основи
-    words: 600
-    points:
-      - "Едвард Саїд — «Орієнталізм» (1978)"
-      - Гомі Баба — гібридність
-      - "Гаятрі Співак — «підпорядкований» (subaltern)"
-      - Франц Фанон — психологія колонізованого
-      - Як це застосувати до України
-
-  - section: Українська постколоніальна критика
-    words: 600
-    points:
-      - Тамара Гундорова — теорія
-      - Марко Павлишин — критика
-      - Оксана Забужко — література
-      - "Українська специфіка — «Друга Русь»"
-      - Чому Захід не бачив Україну як колонію
-
-  - section: Методи деколоніального аналізу
-    words: 700
-    points:
-      - Деконструкція імперського наративу
-      - "Виявлення «замовчаного»"
-      - Повернення agency (суб'єктності)
-      - "Критика універсалізму — чий досвід «нормальний»"
-      - Мова як поле битви
-      - Географія і топоніміка
-
-  - section: Практичне застосування
-    words: 500
-    points:
-      - Аналіз тексту — як виявити колоніальний дискурс
-      - Приклад — аналіз радянського тексту
-      - Приклад — аналіз сучасного російського тексту
-      - Самодеколонізація — критика власних стереотипів
-
-  - section: Критика і межі методу
-    words: 400
-    points:
-      - Ризик надмірної політизації
-      - Чи все — колоніалізм?
-      - Баланс — критика і конструктив
-      - Що далі — за горизонтом деколонізації
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Деколонізація як метод і як практика
-      - Інструменти для критичного аналізу
-      - Від теорії до дії
-
+- section: Вступ — Що таке деколонізація?
+  words: 400
+  points:
+  - Колоніалізм — не тільки заморський
+  - Росія як імперія — особливий випадок
+  - Чому «постколоніальні студії» для України
+  - Від політики до свідомості
+- section: Теоретичні основи
+  words: 600
+  points:
+  - Едвард Саїд — «Орієнталізм» (1978)
+  - Гомі Баба — гібридність
+  - Гаятрі Співак — «підпорядкований» (subaltern)
+  - Франц Фанон — психологія колонізованого
+  - Як це застосувати до України
+- section: Українська постколоніальна критика
+  words: 600
+  points:
+  - Тамара Гундорова — теорія
+  - Марко Павлишин — критика
+  - Оксана Забужко — література
+  - Українська специфіка — «Друга Русь»
+  - Чому Захід не бачив Україну як колонію
+- section: Методи деколоніального аналізу
+  words: 700
+  points:
+  - Деконструкція імперського наративу
+  - Виявлення «замовчаного»
+  - Повернення agency (суб'єктності)
+  - Критика універсалізму — чий досвід «нормальний»
+  - Мова як поле битви
+  - Географія і топоніміка
+- section: Практичне застосування
+  words: 500
+  points:
+  - Аналіз тексту — як виявити колоніальний дискурс
+  - Приклад — аналіз радянського тексту
+  - Приклад — аналіз сучасного російського тексту
+  - Самодеколонізація — критика власних стереотипів
+- section: Критика і межі методу
+  words: 400
+  points:
+  - Ризик надмірної політизації
+  - Чи все — колоніалізм?
+  - Баланс — критика і конструктив
+  - Що далі — за горизонтом деколонізації
+- section: Підсумок
+  words: 300
+  points:
+  - Деколонізація як метод і як практика
+  - Інструменти для критичного аналізу
+  - Від теорії до дії
 vocabulary_hints:
   required:
-    - деколонізація (decolonization)
-    - постколоніальний (postcolonial)
-    - імперський дискурс (imperial discourse)
-    - суб'єктність / агентність (agency)
-    - підпорядкований (subaltern)
-    - гібридність (hybridity)
-    - орієнталізм (orientalism)
-    - деконструкція (deconstruction)
-    - замовчування (silencing)
-    - самоколонізація (self-colonization)
+  - деколонізація (decolonization)
+  - постколоніальний (postcolonial)
+  - імперський дискурс (imperial discourse)
+  - суб'єктність / агентність (agency)
+  - підпорядкований (subaltern)
+  - гібридність (hybridity)
+  - орієнталізм (orientalism)
+  - деконструкція (deconstruction)
+  - замовчування (silencing)
+  - самоколонізація (self-colonization)
   recommended:
-    - гегемонія (hegemony)
-    - метанаратив (meta-narrative)
-    - інтерналізація (internalization)
-    - опір (resistance)
-    - емансипація (emancipation)
-
+  - гегемонія (hegemony)
+  - метанаратив (meta-narrative)
+  - інтерналізація (internalization)
+  - опір (resistance)
+  - емансипація (emancipation)
 activity_hints:
-  - type: reading
-    focus: Excerpt from Said's Orientalism (translated/summarized) — core concepts
-    source: Provide summary with key quotes
-
-  - type: critical-analysis
-    focus: Apply decolonial analysis to a Russian text about Ukraine
-    output: Identify 5 colonial discourse markers
-
-  - type: source-evaluation
-    focus: Analyze your own assumptions — what colonial stereotypes might you hold?
-    output: Reflective response
-
-  - type: essay-response
-    focus: "Чому Україну не сприймали як колонію?"
-    word_target: 400
-    model_answer: Required
-
-  - type: practical
-    focus: Rewrite a colonial description of an event in decolonial frame
-    example: Soviet description of 1654 → decolonial version
-
+- type: reading
+  focus: Excerpt from Said's Orientalism (translated/summarized) — core concepts
+  source: Provide summary with key quotes
+- type: critical-analysis
+  focus: Apply decolonial analysis to a Russian text about Ukraine
+  output: Identify 5 colonial discourse markers
+- type: critical-analysis
+  focus: Analyze your own assumptions — what colonial stereotypes might you hold?
+  output: Reflective response
+- type: essay-response
+  focus: Чому Україну не сприймали як колонію?
+  word_target: 400
+  model_answer: Required
+- type: reading
+  focus: Rewrite a colonial description of an event in decolonial frame
+  example: Soviet description of 1654 → decolonial version
 prerequisites:
-  - c1-hist-03, c1-hist-04 (Imperial and Soviet historiography)
-
+- c1-hist-03, c1-hist-04 (Imperial and Soviet historiography)
 connects_to:
-  - c1-hist-09 (Source criticism - practical application)
-  - All thematic modules use this methodology
+- c1-hist-09 (Source criticism - practical application)
+- All thematic modules use this methodology

@@ -1,139 +1,113 @@
-# C2 Module 83: Teaching Ukrainian II
-# Status: SPEC (ready for content development)
-
 id: c2-83
 title: Викладання української мови II — Планування курсів
 slug: teaching-ukrainian-ii
 version: '2.0'
-phase: 'C2.4 Academic Culmination'
+phase: C2.4 Academic Culmination
 focus: practice
 module_type: practice
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Типові програми з української мови як іноземної
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Standard curricula for Ukrainian as a foreign language
-  - name: Ukrainian State Standard 2024 — Рівні володіння
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official level descriptors A1-C2
-  - name: CEFR Action-Oriented Approach
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: secondary
-    notes: Task-based and action-oriented curriculum design
-
+- name: Типові програми з української мови як іноземної
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standard curricula for Ukrainian as a foreign language
+- name: Ukrainian State Standard 2024 — Рівні володіння
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official level descriptors A1-C2
+- name: CEFR Action-Oriented Approach
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: secondary
+  notes: Task-based and action-oriented curriculum design
 content_outline:
-  - section: Вступ — Від уроку до курсу
-    words: 400
-    points:
-      - Різниця між плануванням уроку і курсу
-      - Цілісність навчальної програми
-      - Прогресія і спіральний підхід
-
-  - section: Аналіз потреб учнів
-    words: 600
-    points:
-      - Методи визначення потреб
-      - Мотивація і цілі учнів
-      - Адаптація курсу до контексту
-      - Індивідуалізація навчання
-
-  - section: Визначення цілей і результатів
-    words: 700
-    points:
-      - SMART-цілі для мовного курсу
-      - Очікувані результати навчання
-      - Відповідність до CEFR і Держстандарту
-      - Вимірювані показники прогресу
-
-  - section: Структурування контенту
-    words: 700
-    points:
-      - Тематичний підхід
-      - Граматична прогресія
-      - Баланс навичок (слухання, читання, говоріння, письмо)
-      - Інтеграція культурного компонента
-
-  - section: Оцінювання і зворотний зв'язок
-    words: 600
-    points:
-      - Формувальне vs. підсумкове оцінювання
-      - Критерії успішності
-      - Самооцінювання учнів
-      - Корекція курсу на основі результатів
-
-  - section: Практика — Розробка силабусу
-    words: 700
-    points:
-      - Створення силабусу для конкретного рівня
-      - Календарне планування
-      - Розподіл годин і тем
-      - Рецензування колегами
-
+- section: Вступ — Від уроку до курсу
+  words: 400
+  points:
+  - Різниця між плануванням уроку і курсу
+  - Цілісність навчальної програми
+  - Прогресія і спіральний підхід
+- section: Аналіз потреб учнів
+  words: 600
+  points:
+  - Методи визначення потреб
+  - Мотивація і цілі учнів
+  - Адаптація курсу до контексту
+  - Індивідуалізація навчання
+- section: Визначення цілей і результатів
+  words: 700
+  points:
+  - SMART-цілі для мовного курсу
+  - Очікувані результати навчання
+  - Відповідність до CEFR і Держстандарту
+  - Вимірювані показники прогресу
+- section: Структурування контенту
+  words: 700
+  points:
+  - Тематичний підхід
+  - Граматична прогресія
+  - Баланс навичок (слухання, читання, говоріння, письмо)
+  - Інтеграція культурного компонента
+- section: Оцінювання і зворотний зв'язок
+  words: 600
+  points:
+  - Формувальне vs. підсумкове оцінювання
+  - Критерії успішності
+  - Самооцінювання учнів
+  - Корекція курсу на основі результатів
+- section: Практика — Розробка силабусу
+  words: 700
+  points:
+  - Створення силабусу для конкретного рівня
+  - Календарне планування
+  - Розподіл годин і тем
+  - Рецензування колегами
 vocabulary_hints:
   required:
-    - силабус (syllabus)
-    - навчальна програма (curriculum)
-    - аналіз потреб (needs analysis)
-    - результати навчання (learning outcomes)
-    - прогресія (progression)
-    - спіральний підхід (spiral approach)
-    - формувальне оцінювання (formative assessment)
-    - підсумкове оцінювання (summative assessment)
-    - компетентнісний підхід (competency-based approach)
-    - індивідуалізація (individualization)
+  - силабус (syllabus)
+  - навчальна програма (curriculum)
+  - аналіз потреб (needs analysis)
+  - результати навчання (learning outcomes)
+  - прогресія (progression)
+  - спіральний підхід (spiral approach)
+  - формувальне оцінювання (formative assessment)
+  - підсумкове оцінювання (summative assessment)
+  - компетентнісний підхід (competency-based approach)
+  - індивідуалізація (individualization)
   recommended:
-    - когнітивне навантаження (cognitive load)
-    - зона найближчого розвитку (zone of proximal development)
-    - інпут (input)
-    - аутпут (output)
-    - взаємодія (interaction)
-
+  - когнітивне навантаження (cognitive load)
+  - зона найближчого розвитку (zone of proximal development)
+  - інпут (input)
+  - аутпут (output)
+  - взаємодія (interaction)
 activity_hints:
-  - type: quiz
-    focus: Принципи планування курсів та програм
-    items: "15+"
-
-  - type: essay-response
-    focus: Аналіз потреб конкретної групи учнів
-    word_target: 400
-    output: Профіль групи та рекомендації
-
-  - type: critical-analysis
-    focus: Оцінка існуючого силабусу з української мови
-    output: Сильні сторони, недоліки, пропозиції
-
-  - type: essay-response
-    focus: Створення силабусу для курсу А2 (12 тижнів)
-    word_target: 600
-    output: Повний силабус із цілями, темами, оцінюванням
-
-  - type: match-up
-    focus: Типи оцінювання та їхні функції
-    items: "10+"
-
-  - type: discussion
-    focus: Рецензування силабусу колеги
-    output: Конструктивний зворотний зв'язок
-
-  - type: quiz
-    focus: Відповідність курсу до CEFR і Держстандарту
-    items: "12+"
-
+- type: quiz
+  focus: Принципи планування курсів та програм
+  items: 15+
+- type: essay-response
+  focus: Аналіз потреб конкретної групи учнів
+  word_target: 400
+  output: Профіль групи та рекомендації
+- type: critical-analysis
+  focus: Оцінка існуючого силабусу з української мови
+  output: Сильні сторони, недоліки, пропозиції
+- type: essay-response
+  focus: Створення силабусу для курсу А2 (12 тижнів)
+  word_target: 600
+  output: Повний силабус із цілями, темами, оцінюванням
+- type: match-up
+  focus: Типи оцінювання та їхні функції
+  items: 10+
+- type: quiz
+  focus: Відповідність курсу до CEFR і Держстандарту
+  items: 12+
 prerequisites:
-  - M82 (Teaching Ukrainian I — Pedagogical Foundations)
-  - Understanding of CEFR levels
-  - Experience as language learner
-
+- M82 (Teaching Ukrainian I — Pedagogical Foundations)
+- Understanding of CEFR levels
+- Experience as language learner
 connects_to:
-  - c2-84 (Teaching Ukrainian III — Materials Development)
-  - c2-85 (Translation Theory II)
-
+- c2-84 (Teaching Ukrainian III — Materials Development)
+- c2-85 (Translation Theory II)
 naturalness:
   score: 1
   status: PENDING

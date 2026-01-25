@@ -1,276 +1,129 @@
-## Introduction
+# Орудний відмінок? Ні, усі відмінки! Просторова орієнтація
 
-Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like «in,» «on,» «to,» and «from» are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!
+## Introduction / Вступ
 
-This module is your comprehensive guide to Ukrainian prepositions. By the end, you'll understand how to combine prepositions with the correct cases to express location, motion, time, and relationships accurately.
+Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like «in,» «on,» «to,» and «from» are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them! This is one of the most exciting parts of learning Ukrainian because it allows you to be extremely precise about where things are and where they are going. Mastering this is like unlocking a 3D map of the language.
 
-**Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise.
+This module is your comprehensive guide to Ukrainian spatial prepositions. By the end, you'll understand how to combine prepositions with the correct cases to express location and motion accurately. Understanding these spatial relationships is the key to navigating any Ukrainian city, describing your home, or simply finding your keys! Whether you are asking for directions to the Maidan or explaining that your cat is under the sofa, these tiny words are your best allies.
 
-## Presentation
+**Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise. It's not just about the words; it's about the logic of space. Коли ви розумієте просторову логіку, мова стає логічною структурою, а не просто набором звуків. Це фундамент для вільного спілкування.
 
-Прийменники — це маленькі, але дуже важливі слова. Вони з'єднують слова в реченні. В українській мові прийменники працюють разом із відмінками. Це означає, що після кожного прийменника слово повинно бути в певному відмінку.
+## Presentation / Презентація
 
-**Головний принцип:**
-Прийменник + Відмінок = Правильна конструкція
+### The Primary Logic: Motion vs. Location (Рух чи місце?)
 
-**Чому це важливо?**
-В англійській мові прийменники працюють окремо. Ви кажете «in the school», і слово «school» не змінюється. Але в українській мові слово змінюється після прийменника. Треба сказати **«в школі»** (місцевий відмінок) для місця. Або треба сказати **«в школу»** (знахідний відмінок) для руху. Вибір залежить від питання: де? або куди?
+The most important concept to master is the difference between "Where?" (**Де?**) and "Where to?" (**Куди?**). In Ukrainian, several prepositions change the case they govern based on this distinction. This is a brilliant feature of the language that prevents ambiguity.
 
-**Основна відмінність: РУХ vs МІСЦЕ**
+1. **РУХ** (Motion / Куди?): We use the **Accusative case** (**знахідний відмінок**). This shows the target or destination of an action.
+2. **МІСЦЕ** (Location / Де?): We use either the **Locative** (**місцевий**) or **Instrumental** (**орудний**) case. This shows a static state of being.
 
-Багато українських прийменників мають два значення залежно від відмінка:
+| Прийменник (Prep) | Рух (Motion - Acc)   | Місце (Location)               |
+| :---------------- | :------------------- | :----------------------------- |
+| **в / у**         | Йти **в школу**.     | Бути **в школі** (Loc).        |
+| **на**            | Класти **на стіл**.  | Лежати **на столі** (Loc).     |
+| **під**           | Класти **під стіл**. | Лежати **під столом** (Instr). |
+| **за**            | Йти **за будинок**.  | Бути **за будинком** (Instr).  |
 
-1. **РУХ** (Куди? Where to?) → Знахідний відмінок
-   - Йду **в школу** (accusative) — I'm going to school
-   - Кладу книгу **на стіл** (accusative) — I'm putting the book on the table
+Коли ви говорите про рух (куди?), ви наче "цілитеся" в об'єкт, тому використовуєте знахідний відмінок. Це дуже логічно: ви спрямовуєте свою енергію на предмет. Коли ви описуєте місце (де?), ви фіксуєте стан спокою, тому використовуєте місцевий або орудний відмінки. Вибір залежить від конкретного прийменника. Наприклад, **в** та **на** традиційно потребують місцевого відмінка для позначення знаходження.
 
-2. **МІСЦЕ** (Де? Where?) → Місцевий відмінок
-   - Я **в школі** (locative) — I'm in school
-   - Книга лежить **на столі** (locative) — The book is lying on the table
+### Prepositions with the Instrumental Case (З орудним відмінком)
 
-**Основні прийменники місця:**
-- **в/у** (in, into) — в кімнаті, в школу
-- **на** (on, onto) — на столі, на стіл
-- **біля** (near) — біля дверей
-- **під** (under) — під столом
-- **над** (above) — над столом
-- **перед** (in front of) — перед будинком
-- **за** (behind) — за будинком
-- **між** (between) — між вікнами
+As you learned in the previous modules, the Instrumental case is very versatile. Besides "means" and "roles," it is the standard case for prepositions that describe "static" spatial relationships like _under_, _above_, _behind_, or _between_. These prepositions help us pinpoint exactly where an object is located in relation to others.
 
-**Стратегія навчання:**
-Коли ви вивчаєте новий прийменник, одразу запитайте себе: «Який відмінок йде після цього прийменника?» Запам'ятовуйте прийменники разом з їхніми відмінками як єдину конструкцію.
+- **під** (under) -> Кіт спить **під столом**.
+- **над** (above) -> Лампа висить **над столом**.
+- **перед** (in front of) -> Машина стоїть **перед будинком**.
+- **за** (behind) -> Сад знаходиться **за будинком**.
+- **між** (between) -> Дзеркало висить **між вікнами**.
 
-Тепер давайте детально розглянемо кожну групу прийменників за відмінками.
+Ці прийменники завжди вимагають орудного відмінка, коли ми описуємо, де знаходиться предмет. Пам’ятайте про закінчення: **-ом / -ем** для чоловічого роду та **-ою / -ею** для жіночого. Наприклад: **перед школою**, **над містом**. Це дуже важливо для правильної вимови та письма. Використання орудного відмінка тут показує, що предмет знаходиться у певному просторовому контексті відносно іншого предмета.
 
-## Practice
+### Genitive Prepositions (З родовим відмінком)
 
-> Моя кімната знаходиться **на** другому поверсі. Вікно виходить **на** вулицю. **Біля** вікна стоїть стіл. **На** столі лежать книги і зошити. Лампа висить **над** столом.
->
-> **Під** столом стоїть кошик **для** паперів. **За** столом стоїть стілець. **Перед** столом лежить килим. Моя кішка любить спати **на** килимі.
->
-> **На** стіні висять фотографії. Одна фотографія — **від** бабусі. Це подарунок **для** мене. **Між** фотографіями висить дзеркало.
->
-> Шафа стоїть **у** кутку кімнати. **В** шафі лежить мій одяг. **На** шафі стоять коробки **з** книгами.
->
-> Я люблю свою кімнату. **Після** роботи я відпочиваю тут. Сиджу **на** ліжку і читаю книгу **про** подорожі.
+Many spatial prepositions also use the **Genitive case** (**родовий відмінок**), especially those indicating origin, purpose, or proximity. The Genitive case is often used to show starting points or limits.
 
-**Питання до тексту:**
+- **до** (to / towards) -> Я йду **до школи**. (Towards the school)
+- **з / із** (from) -> Я йду **з роботи**. (Originating from work)
+- **біля / коло** (near) -> Стіл стоїть **біля вікна**. (Proximity)
+- **від** (from / away from) -> Це далеко **від центру**. (Distance)
 
-1. Де знаходиться кімната? — На другому поверсі.
-2. Що лежить на столі? — Книги і зошити.
-3. Де спить кішка? — На килимі.
-4. Від кого фотографія? — Від бабусі.
-5. Що робить оповідач після роботи? — Відпочиває і читає книгу.
+Крім того, є прийменники, які описують складніші просторові відношення: **напроти** (opposite), **вздовж** (along) та **навколо** (around). Наприклад: «Він йде **вздовж** річки» або «Ми сидимо **навколо** вогнища». Всі ці слова вимагають родового відмінка. Це допомагає створити дуже точний опис простору. Коли ви кажете «Ми стоїмо **напроти** банку», ви чітко вказуєте локацію.
 
----
+### The в/у Alternation (Милозвучність)
 
-## The Preposition-Case Connection
+The choice between **в** and **у** is purely for sound (euphony). **У** is preferred after consonants or before words starting with several consonants. **В** is used after vowels.
 
-In Ukrainian, every preposition requires a specific grammatical case — or sometimes two different cases depending on whether you're describing motion or location. This is fundamentally different from English, where the same preposition works for both.
+- Він **у** лісі. (He is in the forest.)
+- Вона **в** офісі. (She is in the office.)
 
-For example, the preposition **в/у** can take either accusative or locative case:
+Цей принцип милозвучності робить українську мову однією з найспівучіших у світі. Намагайтеся звертати увагу на звуки навколо цих маленьких прийменників. Це не суворе правило, але ваша мова звучатиме набагато природніше, якщо ви будете його дотримуватися.
 
-- **В школу** = into the school (motion, going there)
-- **В школі** (locative) = in the school (location, already there)
+> [!reflection] **The Logic of Space**
+> Why do we use Accusative for motion? Think of it as the "target." The Accusative case marks the direct object of the motion. When the motion stops and becomes a state, we shift to cases that describe "presence" (Locative/Instrumental). This mental shift from dynamic to static is the key to mastering Ukrainian syntax.
 
-This motion-vs-location distinction applies to several Ukrainian prepositions and is crucial to understand.
+> [!tip] **The в vs у Rule**
+> Ukrainian loves harmony (euphony). Use **у** if the previous word ends in a consonant (Він **у** кімнаті). Use **в** if it ends in a vowel (Вона **в** офісі). This makes your speech flow smoothly! This rule is not a strict law but a strong recommendation for sounding like a native speaker.
 
-## Motion vs. Location: The Core Distinction
+## Practice / Практика
 
-Many prepositions have two uses. When you're describing WHERE something goes (motion), use accusative. When describing WHERE something is (location), use the locative or instrumental case.
+This section will test your ability to differentiate between static location and dynamic motion. Look closely at the context of each sentence.
 
-| Context  | Case       | Question          | Example          |
-| -------- | ---------- | ----------------- | ---------------- |
-| Motion   | Accusative | Куди? (Where to?) | Йти **в школу**  |
-| Location | Locative   | Де? (Where?)      | Бути **в школі** |
+### 1. Where is the cat? (Де кіт?)
 
-This pattern applies to these prepositions: **в/у**, **на**, **під**, **за**.
+Look at the sentences and choose the correct case (Instrumental, Locative, or Genitive).
 
-> 💡 **Did You Know?**
->
-> The motion-vs-location distinction exists in German too (accusative vs. dative with two-way prepositions). If you know German, this concept will feel familiar. English had this distinction in Old English but lost it over centuries!
+1. Кіт за (шафа) -> **Кіт за шафою.** (He is behind it.)
+2. Книга на (стіл) -> **Книга на столі.** (It is on it.)
+3. Лампа над (ліжко) -> **Лампа над ліжком.** (It hangs above.)
+4. Собака під (стілець) -> **Собака під стільцем.** (He is underneath.)
+5. Ми в (офіс) -> **Ми в офісі.** (We are inside.)
+6. Автобус біля (зупинка) -> **Автобус біля зупинки.** (It's by the stop.)
 
-## Prepositions by Case
+### 2. Motion vs. Location (Куди чи Де?)
 
-Let's organize prepositions by which case they require. This systematic approach will help you remember the patterns.
+Choose the correct ending (Accusative for motion, Locative for location or state).
 
-## Genitive Prepositions
+1. Я йду в (парк) -> **Я йду в парк.** (Motion / Acc)
+2. Я гуляю в (парк) -> **Я гуляю в парку.** (Location / Loc)
+3. Поклади зошит на (полиця) -> **Поклади зошит на полицю.** (Motion / Acc)
+4. Зошит лежить на (полиця) -> **Зошит лежить на полиці.** (Location / Loc)
+5. Він їде до (місто) -> **Він їде до міста.** (Direction / Gen)
 
-These prepositions always take the genitive case. Many express origin, absence, or purpose:
+> [!important] **Always Check the Question!**
+> Before you choose an ending, ask yourself: **Де?** (Location) or **Куди?** (Direction). This simple check will save you from 90% of prepositional mistakes in Ukrainian. If there is movement involved, aim for the Accusative target!
 
-| Preposition | Meaning       | Example Sentence                              |
-| ----------- | ------------- | --------------------------------------------- |
-| **з/із**    | from (origin) | Він іде з роботи. (He's coming from work.)    |
-| **до**      | to, until     | Вона йде до школи. (She's going to school.)   |
-| **від**     | from (person) | Лист від мами. (A letter from mom.)           |
-| **для**     | for (purpose) | Подарунок для тебе. (A gift for you.)         |
-| **без**     | without       | Кава без цукру. (Coffee without sugar.)       |
-| **біля**    | near, by      | Стояти біля дверей. (To stand near the door.) |
-| **після**   | after         | Після роботи. (After work.)                   |
+## Dialogues / Діалоги
 
-> [!tip] Порада для запам’ятовування
-> Сприймайте ці прийменники як відповіді на питання «кого/чого?» або «звідки?».
+### Пошук дороги (Finding the way)
 
-## Прийменники зі знахідним відмінком
+**А:** Вибачте, де тут **біля** метро є банк? (Excuse me, is there a bank near the metro?)
+**Б:** Так, ідіть прямо **до** перехрестя, а потім поверніть **за** той великий будинок. (Yes, go straight to the intersection, and then turn behind that big building.)
+**А:** Це далеко **від** парку? (Is it far from the park?)
+**Б:** Ні, це **напроти** аптеки, **між** магазином і кафе. (No, it's opposite the pharmacy, between the shop and the cafe.)
+**А:** Дякую! Це було дуже зрозуміло.
 
-Ці прийменники завжди вимагають знахідного відмінка:
+### У новій квартирі (In a new apartment)
 
-| Preposition | Meaning             | Example Sentence                          |
-| ----------- | ------------------- | ----------------------------------------- |
-| **про**     | about               | Говорити про тебе. (To talk about you.)   |
-| **через**   | through, because of | Йти через парк. (To go through the park.) |
+**А:** Тут дуже гарно! Де ми поставимо цей стіл? (It's very nice here! Where will we put this table?)
+**Б:** Давай поставимо його **біля** вікна. Нам потрібно багато світла. (Let's put it near the window. We need lots of light.)
+**А:** Добре. А куди повісимо картину? (Good. And where will we hang the picture?)
+**Б:** Можна повісити її **над** ліжком або **перед** входом. (We can hang it above the bed or in front of the entrance.)
+**А:** **Над** ліжком буде краще. Там вона завжди перед очима. (**Above** the bed will be better. It's always in sight there.)
 
-## Прийменники з орудним відмінком
+> [!context] **Ukrainian Towns**
+> Traditional Ukrainian towns often have a central square (**майдан** or **площа**). People meet **на площі** (Loc), go **до центру** (Gen), or walk **вздовж річки** (Gen/along the river). Spatial prepositions are the GPS of the Ukrainian soul! Navigation is not just about geography, but about the social heart of the city.
 
-Ці прийменники завжди вимагають орудного відмінка:
+# Summary / Підсумок
 
-| Preposition        | Meaning              | Example Sentence                                       |
-| ------------------ | -------------------- | ------------------------------------------------------ |
-| **з/із**           | with | Йти з другом. (To go with a friend.)                   |
-| **над**            | above                | Лампа над столом. (A lamp above the table.)            |
-| **під** (location) | under                | Кіт під столом. (A cat under the table.)               |
-| **перед**          | in front of          | Стояти перед дверима. (To stand in front of the door.) |
-| **за** (location)  | behind               | Бути за будинком. (To be behind the house.)            |
-| **між**            | between              | Між нами. (Between us.)                                |
+У цьому модулі ми розібрали основні принципи просторової орієнтації:
 
-> 📜 **History Bite**
->
-> The instrumental case gets its name from expressing «the instrument» used to do something. But its use with prepositions extends to spatial relationships — under, above, behind, between — all describe positions WITHOUT motion.
+- Різницю між рухом (**куди?**) та місцем (**де?**). (Difference between motion and location.)
+- Вживання прийменників з знахідним, місцевим, родовим та орудним відмінками. (Usage with Acc, Loc, Gen, and Instr cases.)
+- Чергування **у/в** для милозвучності. (Alternation of u/v for euphony.)
+- Основні просторові прийменники (**під, за, над, перед, між, до, з, біля, напроти, вздовж, навколо**).
 
-## Двосторонні прийменники (Two-Way Prepositions)
-
-Це найцікавіша група: вони вимагають знахідного відмінка для руху, але місцевого або орудного — для місця.
-
-| Preposition | Motion (Acc)     | Location                   |
-| ----------- | ---------------- | -------------------------- |
-| **в/у**     | Йти в школу.     | Бути в школі. (Loc)        |
-| **на**      | Класти на стіл.  | Лежати на столі. (Loc)     |
-| **під**     | Класти під стіл. | Лежати під столом. (Instr) |
-| **за**      | Йти за будинок.  | Бути за будинком. (Instr)  |
-
-> [!observe] Pattern Discovery
-> Notice that **в/у** and **на** use locative for location, while **під** and **за** use instrumental for location. This is an important distinction!
-
-## The в/у Alternation
-
-Ukrainian has two forms of «in/into»: **в** and **у**. They mean exactly the same thing, but you choose between them based on surrounding sounds to make speech flow smoothly.
-
-**Use у when:**
-
-- The previous word ends in a consonant
-- The next word starts with a consonant cluster
-
-**Use в when:**
-
-- The previous word ends in a vowel
-- The next word starts with a vowel
-
-Examples:
-
-- Він **у** школі. (He is in school.) — «Він» ends in consonant
-- Вона **в** університеті. (She is at university.) — «Вона» ends in vowel
-
-> 🌍 **Real World**
->
-> Native speakers switch between в and у naturally for euphony. As a learner, don't stress too much about this — both are correct! The important thing is getting the case right.
-
----
-
-## Cultural Insight
-
-## Prepositions in Ukrainian Addresses
-
-When giving directions or addresses, prepositions are essential. Here's how Ukrainians express locations:
-
-| Context   | Preposition + Case | Example             |
-| --------- | ------------------ | ------------------- |
-| Street    | на + Loc           | на вулиці Шевченка  |
-| Building  | в/у + Loc          | в будинку номер 5   |
-| Floor     | на + Loc           | на третьому поверсі |
-| Apartment | в/у + Loc          | у квартирі 12       |
-
-A full address: Я живу **на** вулиці Шевченка, **в** будинку 5, **на** третьому поверсі, **у** квартирі 12.
-
-## Приклади вживання прийменників
-
-Ось кілька речень для практики з прийменниками:
-
-**Прийменники з родовим відмінком:**
-
-- Студенти йдуть **до** університету.
-- Я отримав листа **від** друга.
-- Кава **без** цукру, будь ласка.
-- Магазин знаходиться **біля** станції метро.
-- **Після** уроку ми підемо на обід.
-
-**Прийменники з орудним відмінком:**
-
-- Вона гуляє **з** подругою в парку.
-- Картина висить **над** каміном.
-- Кіт сховався **під** ліжком.
-- Зустрінемося **перед** входом.
-- Таємниця **між** нами.
-
-**Двосторонні прийменники (рух vs. місце):**
-
-- Я йду **в** кіно. (Куди? — знахідний)
-- Я **в** кіно. (Де? — місцевий)
-- Поклади книгу **на** стіл. (Куди? — знахідний)
-- Книга лежить **на** столі. (Де? — місцевий)
-
-> 🔍 **Myth Buster**
->
-> Some learners think Ukrainian prepositions are «random» or that case choice is arbitrary. This is false! Every preposition-case combination follows logical patterns based on meaning. Once you understand the underlying logic of motion vs. location and the semantic role of each case, the system becomes predictable.
-
----
-
-## Building Sentences with Prepositions
-
-Practice forming sentences with the correct preposition + case combinations. Start with these patterns:
-
-**Genitive patterns:**
-
-- Я йду **з** роботи. (I'm coming from work.)
-- Це подарунок **для** мами. (This is a gift for mom.)
-- Кава **без** молока. (Coffee without milk.)
-
-**Accusative patterns:**
-
-- Вони говорять **про** мене. (They're talking about me.)
-- Ми йдемо **через** парк. (We're going through the park.)
-
-**Instrumental patterns:**
-
-- Він гуляє **з** друзями. (He's walking with friends.)
-- Лампа висить **над** столом. (The lamp hangs above the table.)
-
-**Motion vs. Location:**
-
-- Я йду **на** роботу. (I'm going to work.) — motion, accusative
-- Я **на** роботі. (I'm at work.) — location, locative
-
----
-
-## Dialogue: Де що знаходиться?
-
-> — Вибачте, ви знаєте, де знаходиться банк?
-> — Так, звичайно. Йдіть **через** парк, потім поверніть **за** будинок.
-> — Це далеко **від** станції метро?
-> — Ні, банк **біля** станції, **між** аптекою і магазином.
-> — А пошта?
-> — Пошта **перед** банком, **на** розі вулиці.
-> — Дякую! Це дуже корисно.
-> — Будь ласка! Удачі!
-
----
-
-> [!tip] Як запам'ятати прийменники
-> Уявіть кімнату. Стіл **посередині**. Лампа **над** столом. Кіт **під** столом. Стілець **за** столом. Вікно **біля** стіни. Ця картинка допоможе!
-
-# Підсумок
----
+Proximity and direction are fundamental to communication. By mastering these small words, you gain the power to describe the world around you with clarity, precision, and confidence.
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Подивіться навколо себе. Де знаходиться ваш телефон? Де стоїть ваш комп’ютер? Напишіть 5 речень про свою кімнату, використовуючи різні прийменники та відмінки. Наприклад: «Мій телефон лежить **на столі**». Ваша щоденна практика — це запорука вашого успіху в мові!

@@ -42,8 +42,8 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> List[Dict
             union = words.union(prev_words)
             similarity = len(intersection) / len(union) if union else 0
 
-            # STRICTER Threshold: 0.5 (50% word overlap is suspicious for different sentences)
-            if similarity > 0.5:
+            # RELAXED Threshold: 0.7 (70% word overlap is suspicious for different sentences)
+            if similarity > 0.7:
                 display_s = s[:100] + "..." if len(s) > 100 else s
                 violations.append({
                     'type': 'CONTENT_REDUNDANCY',
@@ -68,9 +68,14 @@ def check_robotic_structure(content: str) -> List[Dict]:
     for s in sentences:
         s = s.strip()
         # Ignore list items, headers, short lines, AND TABLES
-        if len(s) < 20 or s.startswith('-') or s.startswith('>') or s.startswith('*') or s.startswith('#') or s.startswith('|'):
+        if (len(s) < 20 or s.startswith('-') or s.startswith('>') or s.startswith('*') or 
+            s.startswith('#') or s.startswith('|') or s.startswith('(') or 
+            s.startswith('—') or s.startswith('_') or s.startswith('→') or
+            s.startswith('"') or s.startswith('«') or s.startswith("'") or
+            re.match(r'^\d+[.)]', s) or  # Ignore numbered lists 1. or 1)
+            s.lower().startswith('practice') or s.lower().startswith('you are')):
             continue
-        clean_sentences.append(re.sub(r'^[-*]\s+', '', s).strip())
+        clean_sentences.append(re.sub(r'^[-*—_]\s+', '', s).strip())
     
     window_size = 4
     for i in range(len(clean_sentences) - window_size):
@@ -79,7 +84,11 @@ def check_robotic_structure(content: str) -> List[Dict]:
         for s in window:
             words = s.split()
             if len(words) >= 2:
-                starters.append(f"{words[0]} {words[1]}".lower())
+                starter = f"{words[0]} {words[1]}".lower()
+                # EXEMPT common A1/A2 starters like "Це", "Я", "Він" etc.
+                if starter.startswith("це ") or starter.startswith("я ") or starter.startswith("він ") or starter.startswith("вона "):
+                    continue
+                starters.append(starter)
         
         if len(starters) >= 3:
             from collections import Counter

@@ -1,0 +1,201 @@
+]633;E;for f in curriculum/l2-uk-en/a2/*.md\x3b do .venv/bin/python scripts/audit_module.py "$f" | grep -E "Auditing|Overall Status|AUDIT|Words|Immersion|Naturalness|Engagement"\x3b echo "---"\x3b done > a2_audit_results.txt;44a8ec54-b572-472e-bf33-dc90d81a3af2]633;C📋 Auditing: A2 M01 — The Dative I — Pronouns
+📋 Auditing: A2 M01 — The Dative I — Pronouns
+Words        ✅ 1498/1000 (raw: 1775)
+Engagement   ✅ 6/4
+Naturalness  ✅ 8/10 (High)
+Immersion    ❌ 37.7% LOW (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M02 — The Dative II — Nouns
+📋 Auditing: A2 M02 — The Dative II — Nouns
+Words        ✅ 1303/1000 (raw: 1591)
+Engagement   ✅ 4/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 42.3% (target 40-50% (A2.1))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A2 M03 — Dative Verbs
+📋 Auditing: A2 M03 — Dative Verbs
+Words        ✅ 1848/1000 (raw: 2459)
+Engagement   ✅ 4/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 40.6% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M04 — The Instrumental I — Accompaniment
+📋 Auditing: A2 M04 — The Instrumental I — Accompaniment
+Words        ✅ 1731/1000 (raw: 2354)
+Engagement   ✅ 4/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 43.7% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M05 — The Instrumental II — Means and Tools
+📋 Auditing: A2 M05 — The Instrumental II — Means and Tools
+Words        ✅ 2010/1000 (raw: 2665)
+Engagement   ✅ 4/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 45.6% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M06 — Being and Becoming
+📋 Auditing: A2 M06 — Being and Becoming
+Words        ✅ 1596/1000 (raw: 2144)
+Engagement   ✅ 4/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 45.0% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M07 — Spatial Prepositions
+📋 Auditing: A2 M07 — Spatial Prepositions
+Words        ✅ 1360/1000 (raw: 1859)
+Engagement   ✅ 5/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 46.3% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M08 — Logical Prepositions
+📋 Auditing: A2 M08 — Logical Prepositions
+Words        ✅ 1415/1000 (raw: 2320)
+Engagement   ✅ 6/4
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 41.8% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M09 — All Cases Practice
+📋 Auditing: A2 M09 — All Cases Practice
+Words        ✅ 1124/1000 (raw: 1464)
+Engagement   ✅ 5/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 47.3% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M10 — At the Post Office and Bank
+📋 Auditing: A2 M10 — At the Post Office and Bank
+Words        ✅ 1198/1000 (raw: 1496)
+Engagement   ✅ 5/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 40.0% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M11 — Checkpoint — Cases
+📋 Auditing: A2 M11 — Checkpoint — Cases
+Words        ✅ 1127/800 (raw: 1280)
+Engagement   ✅ 4/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 33.8% (checkpoint - no gate)
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M12 — Aspect Introduction
+📋 Auditing: A2 M12 — Aspect Introduction
+Words        ✅ 1375/1000 (raw: 1651)
+Engagement   ✅ 6/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 49.4% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M13 — The Completed Past
+📋 Auditing: A2 M13 — The Completed Past
+Words        ✅ 1005/1000 (raw: 1343)
+Engagement   ✅ 5/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 42.6% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M14 — Future Plans and Promises
+📋 Auditing: A2 M14 — Future Plans and Promises
+Words        ✅ 1205/1000 (raw: 1586)
+Engagement   ✅ 4/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 48.2% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M15 — Aspect Morphology
+📋 Auditing: A2 M15 — Aspect Morphology
+Words        ✅ 1426/1000 (raw: 1748)
+Engagement   ✅ 6/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 44.7% (target 40-50% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M16 — Aspect Mastery — Pairs
+📋 Auditing: A2 M16 — Aspect Mastery — Pairs
+Words        ✅ 1408/1000 (raw: 1885)
+Engagement   ✅ 5/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 54.8% (target 50-65% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M17 — Possessive Sviy
+📋 Auditing: A2 M17 — Possessive Sviy
+Words        ✅ 1619/1000 (raw: 2198)
+Engagement   ✅ 5/4
+Naturalness  ✅ 8/10 (High)
+Immersion    🇺🇦 53.7% (target 50-65% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M18 — Bigger, Better, Stronger
+📋 Auditing: A2 M18 — Bigger, Better, Stronger
+Words        ✅ 1473/1000 (raw: 1737)
+Engagement   ✅ 5/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 55.7% (target 50-65% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M19 — The Best, The Worst
+📋 Auditing: A2 M19 — The Best, The Worst
+Words        ✅ 1570/1000 (raw: 1873)
+Engagement   ✅ 7/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 51.4% (target 50-65% (A2.1))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A2 M20 — Preferences and Choices
+📋 Auditing: A2 M20 — Preferences and Choices
+  > Find Preference Words: 9 items (min 6)
+Words        ✅ 1520/1000 (raw: 1669)
+Engagement   ✅ 6/4
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 51.0% (target 50-65% (A2.1))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M21 — Numerals and Nouns
+📋 Auditing: A2 M21 — Numerals and Nouns
+Words        ✅ 1603/1000 (raw: 2104)
+Engagement   ✅ 8/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 59.0% (target 50-65% (A2.2))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A2 M22 — If I Were
+📋 Auditing: A2 M22 — If I Were
+Words        ✅ 1123/1000 (raw: 1339)
+Engagement   ✅ 6/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 52.1% (target 50-65% (A2.2))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A2 M23 — Complete Imperative
+📋 Auditing: A2 M23 — Complete Imperative
+Words        ✅ 1320/1000 (raw: 2253)
+--
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 50.9% (target 50-65% (A2.2))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A2 M28 — She Said That...
+📋 Auditing: A2 M28 — She Said That...
+Words        ✅ 1842/1000 (raw: 2004)
+Engagement   ✅ 7/4
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 50.2% (target 50-65% (A2.2))
+❌ AUDIT FAILED. Correct errors before proceeding.
+---
+📋 Auditing: A2 M29 — I Think That...
+📋 Auditing: A2 M29 — I Think That...
+Words        ✅ 1308/1000 (raw: 1543)
+Engagement   ✅ 6/4
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 51.7% (target 50-65% (A2.2))
+✅ AUDIT PASSED.
+---

@@ -2,6 +2,7 @@
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:53:54
 
 ## Configuration
 **Type:** A1-grammar
@@ -33,6 +34,15 @@
 - Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): музика, тато, хокей, студент, турист...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 958/300 (raw: 1327)
 - **Activities:** ✅ 8/8
@@ -41,7 +51,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/1
+- **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

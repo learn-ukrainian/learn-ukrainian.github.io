@@ -2,6 +2,11 @@
 
 Unified entry point for building modules using the 7-phase workflow (content + skeleton deploy).
 
+> **⚠️ ONE RULE: Module is NOT done until audit PASSES.**
+>
+> This command includes an audit+fix loop. Keep fixing until all gates pass.
+> Do NOT report "DEPLOYED" until audit shows 100% pass. No exceptions.
+
 > **Vocabulary enrichment runs separately** after the entire track/course is content-complete.
 
 ## Usage
@@ -65,6 +70,19 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 Parse arguments: $ARGUMENTS
 
+**Quick Reference - File Naming:**
+
+| Level Type | Example | File Path |
+|------------|---------|-----------|
+| Core (a1, a2, b1, b2, c1, c2) | `/module a1 5` | `curriculum/l2-uk-en/a1/05-daily-routine.md` |
+| Track (b2-hist, c1-bio, etc.) | `/module b2-hist 41` | `curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md` |
+
+**Tracks use slug-only filenames (no number prefix). Always resolve via curriculum.yaml.**
+
+**Extra Resources:** `docs/l2-uk-en/resources/external_resources.yaml` contains podcasts, videos, and external links that can be referenced in modules.
+
+---
+
 ### Step 1: Parse Input
 
 Extract:
@@ -75,18 +93,29 @@ Extract:
 
 **If range detected:** Jump to Batch Mode.
 
-### Step 2: Resolve Module
+### Step 2: Resolve Module Slug
+
+> **⚠️ CRITICAL: Track files have NO numbered prefix!**
+> - Core levels: `01-slug.md`, `02-slug.md` (numbered)
+> - Tracks (b2-hist, c1-bio, etc.): `slug.md` (NO number prefix)
+>
+> **NEVER construct paths manually. ALWAYS use curriculum.yaml lookup.**
 
 **For tracks (b2-hist, c1-bio, c1-hist, lit):**
 
 ```bash
+# Get slug from curriculum.yaml (module numbers are 1-indexed, array is 0-indexed)
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
+# Example: module 41 → slug="kozatstvo-vytoky"
+# File path: curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md (NO "41-" prefix!)
 ```
 
-**For core levels:**
+**For core levels (a1, a2, b1, b2, c1, c2):**
 
 ```bash
 slug=$(ls curriculum/l2-uk-en/${level}/${num:02d}-*.md | head -1 | xargs basename | sed 's/.md$//')
+# Example: module 5 → slug="05-daily-routine"
+# File path: curriculum/l2-uk-en/a1/05-daily-routine.md (HAS number prefix)
 ```
 
 ### Step 3: Detect Current State
@@ -115,11 +144,26 @@ fi
 | 1        | 0          | 0              | 0       | `META_DONE`   |
 | 1        | 1          | 0              | 0       | `LESSON_DONE` |
 | 1        | 1          | 1              | 0       | `ACT_DONE`    |
-| 1        | 1          | 1              | 1       | `DEPLOYED`    |
+| 1        | 1          | 1              | 1       | `FILES_EXIST` |
+
+**CRITICAL: Files exist ≠ DEPLOYED. Must run audit to verify:**
+
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
+```
+
+| Files | Audit | True State |
+|-------|-------|------------|
+| FILES_EXIST | ❌ FAIL | `NEEDS_FIX` → Run /module-fix |
+| FILES_EXIST | ✅ PASS | `DEPLOYED` |
 
 ### Step 4: Determine Start Phase
 
 **If `--refresh` provided:**
+
+> **⚠️ WARNING: `--refresh` keeps existing .md content!**
+> Only use when .md already meets word count targets.
+> For incomplete content, use `--from=lesson` to regenerate.
 
 Special flow (preserves `.md`, rebuilds everything else):
 1. Phase 2 (Meta QA)
@@ -166,12 +210,127 @@ Run phases sequentially from start phase:
 
 **Phase 7 (integrate) creates skeleton vocab automatically.**
 
-### Step 6: Report
+### Step 6: Audit + Fix Loop (MANDATORY - BATCH FIX PATTERN)
+
+**Keep fixing until audit passes. No exceptions.**
+
+**CRITICAL:** Use **batch-fix-within-module** pattern (see NON-NEGOTIABLE-RULES.md #8).
+
+**NEVER use iterative fix-audit cycles. Instead:**
 
 ```
-MODULE DEPLOYED: {level}/{slug}
+WHILE true:
 
-Phases executed: {start_phase} → 7
+  # ========================================
+  # 6.1 DIAGNOSE (Comprehensive Read)
+  # ========================================
+
+  1. Run audit:
+     .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
+
+  2. IF audit PASSES → break loop, go to Step 7
+
+  3. IF audit FAILS:
+
+     Read ALL 4 component files:
+     - curriculum/l2-uk-en/${level}/meta/${slug}.yaml
+     - curriculum/l2-uk-en/${level}/${slug}.md
+     - curriculum/l2-uk-en/${level}/activities/${slug}.yaml
+     - curriculum/l2-uk-en/${level}/vocabulary/${slug}.yaml
+
+     Read audit review:
+     - curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+
+     Identify ALL violations across ALL components:
+
+     Meta violations:
+       - INVALID_ACTIVITY_TYPE → which types?
+       - Word target mismatch → actual vs target?
+       - Activity_hints gaps → missing types?
+
+     Lesson violations:
+       - Word count shortfall → which sections under?
+       - Missing sections → which ones from content_outline?
+       - Missing callouts → how many needed?
+       - Low immersion → where is English?
+
+     Activity violations:
+       - YAML schema errors → which items?
+       - Item count below minimum → how many needed?
+       - Mirroring → which activities copy lesson?
+
+     Vocab violations:
+       - Missing IPA → how many items?
+       - Wrong POS → which entries?
+       - Count below target → how many needed?
+
+     Naturalness violations:
+       - Score < 7 → which sections?
+       - Red flags → template repetition? robotic text?
+
+  # ========================================
+  # 6.2 EXECUTE (Fix ALL Issues Atomically)
+  # ========================================
+
+  Apply ALL fixes in ONE response:
+
+  Order: meta → vocab → activities → markdown
+  (Dependencies flow downstream)
+
+  Meta fixes:
+    - Replace invalid activity types
+    - Fix activity_hints coverage
+
+  Vocab fixes:
+    - Add missing vocabulary items
+    - Fix POS tags
+    - Run enrichment if needed:
+      .venv/bin/python scripts/vocab_enrich_nlp.py ${vocab_file}
+
+  Activity fixes:
+    - Fix YAML schema errors
+    - Add items to meet minimums
+    - Rephrase mirroring activities
+    - Ensure activity_hints coverage
+
+  Lesson fixes:
+    - Expand sections to meet word targets
+      (OR redistribute from over-target sections - see SUBSECTION-FLEXIBILITY-GUIDE.md)
+    - Add missing sections from content_outline
+    - Add missing callouts/engagement boxes
+    - Increase immersion (reduce English)
+    - Fix naturalness (vary structures, discourse markers)
+
+  # ========================================
+  # 6.3 VERIFY (Loop to Re-Audit)
+  # ========================================
+
+  Continue loop → Re-audit with all fixes applied
+
+END WHILE
+```
+
+**Why This Works:**
+
+1. **Efficiency:** One comprehensive read + one atomic fix + one audit = O(3) instead of O(3N)
+2. **Coherence:** Fixes reference each other (new vocab drives section expansion)
+3. **Consistency:** No intermediate states where components are misaligned
+4. **Speed:** Fewer API calls, less token usage
+
+**CRITICAL: Do NOT exit this step until audit shows ALL GATES PASS.**
+
+### Step 7: Report Success
+
+**Only reached after audit passes:**
+
+```
+MODULE DEPLOYED: {level}/{slug} ✅
+
+Audit: PASS
+  - Words: {actual}/{target} ✅
+  - Activities: {count} ✅
+  - Naturalness: {score}/10 ✅
+
 Files generated:
   - meta/{slug}.yaml
   - {slug}.md
@@ -194,25 +353,27 @@ When input is a range (e.g., `/module b2-hist 1-5`):
 ```
 For each module_num in range:
   1. Run /module {level} {module_num}
-  2. If FAIL: Log and continue to next
-  3. If PASS: Log and continue to next
+     - This includes the audit+fix loop (Step 6)
+     - Module is NOT done until audit passes
+  2. Only move to next module after current one DEPLOYED
 ```
 
-**Batch summary:**
+**Each module must pass audit before proceeding to the next.**
+
+**Batch summary (all should be DEPLOYED):**
 
 ```
 Batch: b2-hist 1-5
 Results:
-  - 1: DEPLOYED
-  - 2: DEPLOYED
-  - 3: FAIL at phase 4 (lesson-qa: word count)
-  - 4: DEPLOYED
-  - 5: DEPLOYED
+  - 1: ✅ DEPLOYED (4235/4000 words, audit PASS)
+  - 2: ✅ DEPLOYED (4102/4000 words, audit PASS)
+  - 3: ✅ DEPLOYED (4050/4000 words, audit PASS)
+  - 4: ✅ DEPLOYED (4310/4000 words, audit PASS)
+  - 5: ✅ DEPLOYED (4200/4000 words, audit PASS)
 
-Summary: 4/5 deployed
-Failed: b2-hist-3 (needs manual fix)
+Summary: 5/5 deployed
 
-Next: When all modules pass, run /module-vocab-enrich b2-hist
+Next: Run /module-vocab-enrich b2-hist
 ```
 
 ---
@@ -243,10 +404,11 @@ Next: When all modules pass, run /module-vocab-enrich b2-hist
 # Fresh build
 /module b2-hist 5
 
-# Resume after fixing lesson
+# Regenerate lesson content (for incomplete modules)
 /module b2-hist 5 --from=lesson
 
-# Rebuild module artifacts (keeping lesson text)
+# Rebuild artifacts ONLY (when lesson already complete)
+# WARNING: This keeps existing .md - don't use for incomplete content!
 /module b2-hist 5 --refresh
 
 # Check what's done

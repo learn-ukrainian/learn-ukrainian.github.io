@@ -77,7 +77,7 @@ vocabulary_hints:
   - асиметрія (asymmetry)
   - самодостатність (self-sufficiency)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: Create economic colonization evolution diagram
   output: Historical economic map
 - type: mechanism-comparison

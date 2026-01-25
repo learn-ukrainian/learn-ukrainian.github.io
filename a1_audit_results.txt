@@ -1,0 +1,365 @@
+]633;E;for f in curriculum/l2-uk-en/a1/*.md\x3b do .venv/bin/python scripts/audit_module.py "$f" | grep -E "Auditing|Overall Status|AUDIT|Words|Immersion|Naturalness|Engagement"\x3b echo "---"\x3b done > a1_audit_results.txt;8fadd7cd-8ffb-480a-ad99-fa96bcdc99b7]633;C📋 Auditing: A1 M01 — The Cyrillic Code I
+📋 Auditing: A1 M01 — The Cyrillic Code I
+  > Reading Words: 12 items (min 8)
+  > International Words: 12 items (min 8)
+Words        ✅ 958/300 (raw: 1327)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 7.1% (target 5-15% (M01))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M02 — The Cyrillic Code II
+📋 Auditing: A1 M02 — The Cyrillic Code II
+  > Build Ukrainian Words: 12 items (min 8)
+Words        ✅ 1463/300 (raw: 1964)
+Engagement   ✅ 4/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 9.0% (target 5-15% (M02))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M03 — The Gender Code
+📋 Auditing: A1 M03 — The Gender Code
+  > More Words: 12 items (min 8)
+Words        ✅ 1045/300 (raw: 1260)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 14.5% (target 10-25% (M03))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M04 — This Is / I Am
+📋 Auditing: A1 M04 — This Is / I Am
+  > Build the Words: 12 items (min 8)
+Words        ✅ 1418/300 (raw: 1818)
+Engagement   ✅ 7/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 14.1% (target 10-25% (M04))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M05 — My World: Objects
+📋 Auditing: A1 M05 — My World: Objects
+Words        ✅ 1603/300 (raw: 1840)
+Engagement   ✅ 6/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 15.1% (target 10-25% (M05))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M06 — The Living Verb I - First Conjugation: -ати Verbs
+📋 Auditing: A1 M06 — The Living Verb I - First Conjugation: -ати Verbs
+Words        ✅ 1407/500 (raw: 1721)
+Engagement   ✅ 8/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 17.8% (target 15-35% (M06))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M07 — Questions & Negation
+📋 Auditing: A1 M07 — Questions & Negation
+  > Question Words to Context: 10 items (min 8)
+  > Question Words: 12 items (min 8)
+  > Frequency Words: 12 items (min 8)
+Words        ✅ 1041/500 (raw: 1455)
+Engagement   ✅ 6/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 20.1% (target 15-35% (M07))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M08 — The Living Verb II - Second Conjugation: -ити Verbs
+📋 Auditing: A1 M08 — The Living Verb II - Second Conjugation: -ити Verbs
+Words        ✅ 972/500 (raw: 1337)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 21.9% (target 15-35% (M08))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M09 — Reflexive Verbs (-ся)
+📋 Auditing: A1 M09 — Reflexive Verbs (-ся)
+Words        ✅ 557/500 (raw: 710)
+Engagement   ✅ 3/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 26.4% (target 15-35% (M09))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M10 — Checkpoint - First Contact
+📋 Auditing: A1 M10 — Checkpoint - First Contact
+  > Question Words: 12 items (min 8)
+Words        ✅ 1145/500 (raw: 1409)
+Engagement   ✅ 3/2
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 29.5% (checkpoint - no gate)
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M11 — The Accusative I - Things
+📋 Auditing: A1 M11 — The Accusative I - Things
+Words        ✅ 921/750 (raw: 1203)
+Engagement   ✅ 3/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 27.5% (target 25-40% (M11))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M12 — The Accusative II: People
+📋 Auditing: A1 M12 — The Accusative II: People
+Words        ✅ 1342/750 (raw: 1662)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 26.8% (target 25-40% (M12))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M13 — The Locative - Where Things Are
+📋 Auditing: A1 M13 — The Locative - Where Things Are
+Words        ✅ 1396/750 (raw: 1716)
+Engagement   ✅ 7/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 28.3% (target 25-40% (M13))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M14 — Mine and Yours
+📋 Auditing: A1 M14 — Mine and Yours
+Words        ✅ 1430/750 (raw: 1786)
+Engagement   ✅ 10/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 29.6% (target 25-40% (M14))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M15 — Around the City
+📋 Auditing: A1 M15 — Around the City
+Words        ✅ 1839/750 (raw: 1983)
+Engagement   ✅ 7/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 30.4% (target 25-40% (M15))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M16 — The Genitive I - Absence
+📋 Auditing: A1 M16 — The Genitive I - Absence
+Words        ✅ 1091/750 (raw: 1435)
+Engagement   ✅ 3/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 30.4% (target 25-40% (M16))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M17 — Numbers & Money
+📋 Auditing: A1 M17 — Numbers & Money
+  > Numbers and Words: 10 items (min 8)
+Words        ✅ 1133/750 (raw: 1485)
+Engagement   ✅ 4/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 29.9% (target 25-40% (M17))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M18 — Food, Drinks & Shopping
+📋 Auditing: A1 M18 — Food, Drinks & Shopping
+Words        ✅ 810/750 (raw: 879)
+Engagement   ✅ 3/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 27.8% (target 25-40% (M18))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M19 — At the Café
+📋 Auditing: A1 M19 — At the Café
+Words        ✅ 1165/750 (raw: 1374)
+Engagement   ✅ 3/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 28.2% (target 25-40% (M19))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M20 — Checkpoint - Navigation
+📋 Auditing: A1 M20 — Checkpoint - Navigation
+Words        ✅ 1406/750 (raw: 1709)
+Engagement   ✅ 4/2
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 39.0% (checkpoint - no gate)
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M21 — Yesterday - Past Tense
+📋 Auditing: A1 M21 — Yesterday - Past Tense
+Words        ✅ 1121/750 (raw: 1612)
+Engagement   ✅ 5/3
+Naturalness  ✅ 9/10 (High)
+Immersion    🇺🇦 35.5% (target 35-55% (M21))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M22 — Tomorrow - Future Tense
+📋 Auditing: A1 M22 — Tomorrow - Future Tense
+Words        ✅ 1217/750 (raw: 1741)
+Engagement   ✅ 7/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 38.4% (target 35-55% (M22))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M23 — What Time Is It?
+📋 Auditing: A1 M23 — What Time Is It?
+Words        ✅ 1073/750 (raw: 1703)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 38.9% (target 35-55% (M23))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M24 — Can, Must, Want - Modals
+📋 Auditing: A1 M24 — Can, Must, Want - Modals
+  > Obligation Words: 12 items (min 8)
+Words        ✅ 962/750 (raw: 1707)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 41.4% (target 35-55% (M24))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M25 — My Daily Routine
+📋 Auditing: A1 M25 — My Daily Routine
+  > Sequence Words: 12 items (min 8)
+Words        ✅ 845/750 (raw: 978)
+Engagement   ✅ 3/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 46.2% (target 35-55% (M25))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M26 — Describing Things - Adjectives
+📋 Auditing: A1 M26 — Describing Things - Adjectives
+Words        ✅ 962/750 (raw: 1337)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 43.7% (target 35-55% (M26))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M27 — Colors & Clothing
+📋 Auditing: A1 M27 — Colors & Clothing
+Words        ✅ 846/750 (raw: 1060)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 37.5% (target 35-55% (M27))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M28 — Description: Adverbs
+📋 Auditing: A1 M28 — Description: Adverbs
+Words        ✅ 886/750 (raw: 1129)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 38.9% (target 35-55% (M28))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M29 — Weather & Nature
+📋 Auditing: A1 M29 — Weather & Nature
+Words        ✅ 937/750 (raw: 1296)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 39.1% (target 35-55% (M29))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M30 — Prepositions III
+📋 Auditing: A1 M30 — Prepositions III
+  > Question Words: 10 items (min 8)
+Words        ✅ 1050/750 (raw: 1418)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 39.5% (target 35-55% (M30))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M31 — Body & Health
+📋 Auditing: A1 M31 — Body & Health
+Words        ✅ 800/750 (raw: 1159)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 39.4% (target 35-55% (M31))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M32 — My Family
+📋 Auditing: A1 M32 — My Family
+Words        ✅ 912/750 (raw: 1358)
+Engagement   ✅ 7/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 46.6% (target 35-55% (M32))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M33 — Holidays & Traditions
+📋 Auditing: A1 M33 — Holidays & Traditions
+Words        ✅ 805/750 (raw: 1063)
+Engagement   ✅ 6/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 46.6% (target 35-55% (M33))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M34 — Checkpoint: Core Grammar (Базова граматика)
+📋 Auditing: A1 M34 — Checkpoint: Core Grammar (Базова граматика)
+Words        ✅ 1351/750 (raw: 1490)
+Engagement   ✅ 2/2
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 41.5% (checkpoint - no gate)
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M35 — At the Café
+📋 Auditing: A1 M35 — At the Café
+Words        ✅ 851/750 (raw: 1140)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 38.4% (target 35-55% (M35))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M36 — At the Restaurant
+📋 Auditing: A1 M36 — At the Restaurant
+Words        ✅ 808/750 (raw: 1037)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 46.7% (target 35-55% (M36))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M37 — At the Market
+📋 Auditing: A1 M37 — At the Market
+Words        ✅ 812/750 (raw: 1024)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 49.4% (target 35-55% (M37))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M38 — At the Store
+📋 Auditing: A1 M38 — At the Store
+Words        ✅ 754/750 (raw: 1051)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 39.7% (target 35-55% (M38))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M39 — Buying Tickets
+📋 Auditing: A1 M39 — Buying Tickets
+Words        ✅ 769/750 (raw: 987)
+Engagement   ✅ 3/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 40.2% (target 35-55% (M39))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M40 — Taking Transport
+📋 Auditing: A1 M40 — Taking Transport
+Words        ✅ 820/750 (raw: 967)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 43.4% (target 35-55% (M40))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M41 — Phone Basics
+📋 Auditing: A1 M41 — Phone Basics
+Words        ✅ 813/750 (raw: 963)
+Engagement   ✅ 3/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 43.2% (target 35-55% (M41))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M42 — Emergencies
+📋 Auditing: A1 M42 — Emergencies
+Words        ✅ 798/750 (raw: 940)
+Engagement   ✅ 4/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 53.3% (target 35-55% (M42))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M43 — Combined Practice
+📋 Auditing: A1 M43 — Combined Practice
+Words        ✅ 810/750 (raw: 920)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 50.1% (target 35-55% (M43))
+✅ AUDIT PASSED.
+---
+📋 Auditing: A1 M44 — A1 Final Exam
+📋 Auditing: A1 M44 — A1 Final Exam
+Words        ✅ 834/750 (raw: 892)
+Engagement   ✅ 5/3
+Naturalness  ✅ 10/10 (High)
+Immersion    🇺🇦 46.5% (target 35-55% (M44))
+✅ AUDIT PASSED.
+---

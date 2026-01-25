@@ -86,7 +86,7 @@ activity_hints:
 - type: repression-documentation
   focus: 1965-1972 repressions — timeline
   output: Repression timeline
-- type: legacy-tracing
+- type: critical-analysis
   focus: Sixtiers → Ukrainian Helsinki Group → 1991
   output: Legacy chain
 - type: essay-response

@@ -77,7 +77,7 @@ vocabulary_hints:
   - поляризація (polarization)
   - когнітивна війна (cognitive warfare)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: Create information warfare evolution timeline
   output: Historical information war map
 - type: battlefield-analysis

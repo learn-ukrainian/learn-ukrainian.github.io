@@ -1,8 +1,5 @@
-# C1-HIST Module 38: Синтез — Джерела нової доби
-# Status: SPEC (ready for content development)
-
 id: c1-hist-38
-title: "Синтез: Джерела нової доби"
+title: 'Синтез: Джерела нової доби'
 slug: syntez-moderni-dzherela
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,122 +7,101 @@ focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Джерелознавство (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Джерелознавство
-    type: reference
-    notes: Source studies
-  - name: Історичне джерело
-    url: https://uk.wikipedia.org/wiki/Історичне_джерело
-    type: reference
-    notes: Source types
-
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+- name: Історичне джерело
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  type: reference
+  notes: Source types
 content_outline:
-  - section: Вступ — Від козаків до XX століття
-    words: 400
-    points:
-      - Огляд модулів 29-37
-      - Нові типи джерел
-      - Нові проблеми
-      - Мета синтезу
-
-  - section: Типологія джерел XIX-XX ст.
-    words: 600
-    points:
-      - Політичні маніфести
-      - Імперські документи (заборони)
-      - Публіцистика
-      - Усна історія
-      - Архівні документи
-      - Таблиця порівняння
-
-  - section: Особливості модерних джерел
-    words: 600
-    points:
-      - Більша кількість — більше голосів
-      - Масова грамотність — ширший спектр
-      - Преса — новий тип джерела
-      - Фотографія і кіно
-      - Проблема надлишку
-
-  - section: Джерела репресій
-    words: 600
-    points:
-      - Імперські vs. радянські
-      - Як читати мову репресора
-      - Голос жертви — де шукати
-      - Етичні питання
-
-  - section: Методологічні уроки
-    words: 500
-    points:
-      - Порівняння офіційного і підпільного
-      - Імперський дискурс — розпізнавання
-      - Пропаганда vs. документ
-      - Усна історія — місце в дослідженні
-
-  - section: Практикум
-    words: 500
-    points:
-      - Одна подія — різні джерела
-      - 'Наприклад: 1933 рік'
-      - Радянські документи + свідчення + преса
-      - Комплексна реконструкція
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Готовність до дисидентських джерел
-      - Чек-ліст для модерних джерел
-      - Від минулого до сучасності
-
+- section: Вступ — Від козаків до XX століття
+  words: 400
+  points:
+  - Огляд модулів 29-37
+  - Нові типи джерел
+  - Нові проблеми
+  - Мета синтезу
+- section: Типологія джерел XIX-XX ст.
+  words: 600
+  points:
+  - Політичні маніфести
+  - Імперські документи (заборони)
+  - Публіцистика
+  - Усна історія
+  - Архівні документи
+  - Таблиця порівняння
+- section: Особливості модерних джерел
+  words: 600
+  points:
+  - Більша кількість — більше голосів
+  - Масова грамотність — ширший спектр
+  - Преса — новий тип джерела
+  - Фотографія і кіно
+  - Проблема надлишку
+- section: Джерела репресій
+  words: 600
+  points:
+  - Імперські vs. радянські
+  - Як читати мову репресора
+  - Голос жертви — де шукати
+  - Етичні питання
+- section: Методологічні уроки
+  words: 500
+  points:
+  - Порівняння офіційного і підпільного
+  - Імперський дискурс — розпізнавання
+  - Пропаганда vs. документ
+  - Усна історія — місце в дослідженні
+- section: Практикум
+  words: 500
+  points:
+  - Одна подія — різні джерела
+  - 'Наприклад: 1933 рік'
+  - Радянські документи + свідчення + преса
+  - Комплексна реконструкція
+- section: Підсумок
+  words: 300
+  points:
+  - Готовність до дисидентських джерел
+  - Чек-ліст для модерних джерел
+  - Від минулого до сучасності
 vocabulary_hints:
   required:
-    - синтез (synthesis)
-    - типологія (typology)
-    - модерний (modern)
-    - публіцистика (publicistic writing)
-    - преса (press)
-    - репресія (repression)
-    - офіційний (official)
-    - підпільний (underground)
-    - пропаганда (propaganda)
-    - комплексний (comprehensive)
+  - синтез (synthesis)
+  - типологія (typology)
+  - модерний (modern)
+  - публіцистика (publicistic writing)
+  - преса (press)
+  - репресія (repression)
+  - офіційний (official)
+  - підпільний (underground)
+  - пропаганда (propaganda)
+  - комплексний (comprehensive)
   recommended:
-    - масмедіа (mass media)
-    - фотодокумент (photo document)
-    - кіно хроніка (newsreel)
-    - цензура (censorship)
-    - самвидав (samizdat)
-
+  - масмедіа (mass media)
+  - фотодокумент (photo document)
+  - кіно хроніка (newsreel)
+  - цензура (censorship)
+  - самвидав (samizdat)
 activity_hints:
-  - type: synthesis
-    focus: Create source matrix for modules 29-37
-    output: Comprehensive typology
-
-  - type: multi-source-analysis
-    focus: One event from 4+ source types
-    output: Multi-perspective reconstruction
-
-  - type: methodology
-    focus: Create checklist for analyzing 20th-century sources
-    output: Methodology checklist
-
-  - type: portfolio
-    focus: Best analyses from modules 29-37
-    output: Portfolio with reflection
-
-  - type: essay-response
-    focus: "Чим джерела XX ст. відрізняються від козацьких?"
-    word_target: 400
-    model_answer: Required
-
+- type: essay-response
+  focus: Create source matrix for modules 29-37
+  output: Comprehensive typology
+- type: multi-source-analysis
+  focus: One event from 4+ source types
+  output: Multi-perspective reconstruction
+- type: methodology
+  focus: Create checklist for analyzing 20th-century sources
+  output: Methodology checklist
+- type: essay-response
+  focus: Чим джерела XX ст. відрізняються від козацьких?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-29 through c1-hist-37 (All modern source modules)
-
+- c1-hist-29 through c1-hist-37 (All modern source modules)
 connects_to:
-  - c1-hist-39 (Samvydav — dissident sources)
-  - c1-hist-44 (Synthesis — dissident sources)
+- c1-hist-39 (Samvydav — dissident sources)
+- c1-hist-44 (Synthesis — dissident sources)

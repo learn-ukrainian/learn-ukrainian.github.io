@@ -91,11 +91,11 @@ sources:
     url: "https://shron1.chtyvo.org.ua/Hrytsak_Yaroslav/Podolaty_mynule_hlobalna_istoriia_Ukrainy.pdf"
     type: secondary
     notes: "Сучасний синтез історії України з акцентом на глобальних процесах"
+naturalness:
+  score: 9
+  status: PASS
 prerequisites:
   - "Знання історії Великого князівства Литовського та Люблінської унії"
 connects_to:
   - "b2-hist-42: Запорізька Січ"
   - "b2-hist-43: Дмитро Вишневецький"
-naturalness:
-  score: 9
-  status: PASS

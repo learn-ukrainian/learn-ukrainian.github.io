@@ -1,154 +1,107 @@
-# A2 Module 10: At the Post Office & Bank
-# Status: CONTENT (content exists, detailed spec added)
-
 id: a2-10
 title: At the Post Office and Bank
 subtitle: Services and Money
 slug: 10-at-the-post-office-and-bank
 module_type: vocabulary
-word_target: 2800
-immersion: "50-60% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.1
 focus: vocabulary
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - vocabulary
-  - services
-  - post office
-  - bank
-  - functional
-
+- vocabulary
+- services
+- post office
+- bank
+- functional
 grammar:
-  - accusative for services (відправити листа)
-  - numbers 100-1000
-  - currency and exchange rates
-  - polite requests (я хочу...)
-
+- accusative for services (відправити листа)
+- numbers 100-1000
+- currency and exchange rates
+- polite requests (я хочу...)
 objectives:
-  - Learner can send a letter or package
-  - Learner can buy stamps and envelopes
-  - Learner can exchange currency
-  - Learner can withdraw money from an ATM
-
-# === AGENT BUILD SPEC ===
-
+- Learner can send a letter or package
+- Learner can buy stamps and envelopes
+- Learner can exchange currency
+- Learner can withdraw money from an ATM
 sources:
-  - name: Ukrainian State Standard 2024 - Services Theme
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Required service vocabulary for A2
-  - name: Ukrposhta Official
-    url: https://www.ukrposhta.ua/
-    type: reference
-    notes: Authentic postal service terminology
-
+- name: Ukrainian State Standard 2024 - Services Theme
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Required service vocabulary for A2
+- name: Ukrposhta Official
+  url: https://www.ukrposhta.ua/
+  type: reference
+  notes: Authentic postal service terminology
 content_outline:
-  - section: Post Office Vocabulary
-    words: 500
-    points:
-      - лист, посилка, бандероль (letter, package, parcel)
-      - марка, конверт, адреса, індекс
-      - відправляти/надсилати vs отримувати
-
-  - section: Post Office Interactions
-    words: 500
-    points:
-      - '"Я хочу відправити листа другові" (Dat use)'
-      - Asking about prices and delivery time
-      - Filling out forms (основні дані)
-
-  - section: Bank Vocabulary
-    words: 500
-    points:
-      - гроші, рахунок, картка
-      - готівка, валюта, переказ
-      - Банкомат (ATM) operations
-
-  - section: Bank Interactions
-    words: 500
-    points:
-      - '"Де можна обміняти долари на гривні?" (Acc use)'
-      - '"Мені потрібно зняти гроші з рахунку" (Gen use)'
-      - Currency exchange (курс обміну)
-
-  - section: Numbers and Money
-    words: 400
-    points:
-      - Numbers 100-1000
-      - Price expressions (гривня, копійка)
-      - Percentage and interest (відсоток)
-
-  - section: Service Dialogues
-    words: 400
-    points:
-      - Complete post office transaction
-      - Complete bank transaction
-      - Common problems and solutions
-
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Practical services context
+  - Importance of politeness
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Post Office terminology (лист, посилка, марка)
+  - Bank terminology (рахунок, картка, обмін)
+  - Polite service formulas (я хочу, мені потрібно)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Case analysis in service sentences
+  - Service vocabulary matching
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - At the Post Office
+  - At the Bank
 vocabulary_hints:
   required:
-    - пошта (post office)
-    - банк (bank)
-    - лист (letter)
-    - посилка (package)
-    - бандероль (parcel)
-    - марка (stamp)
-    - конверт (envelope)
-    - адреса (address)
-    - індекс (postal code)
-    - відправляти (to send)
-    - отримувати (to receive)
-    - гроші (money)
-    - рахунок (account)
-    - картка (card)
-    - готівка (cash)
+  - пошта (post office)
+  - банк (bank)
+  - лист (letter)
+  - посилка (package)
+  - бандероль (parcel)
+  - марка (stamp)
+  - конверт (envelope)
+  - адреса (address)
+  - індекс (postal code)
+  - відправляти (to send)
+  - отримувати (to receive)
+  - гроші (money)
+  - рахунок (account)
+  - картка (card)
+  - готівка (cash)
   recommended:
-    - валюта (currency)
-    - переказ (transfer)
-    - знімати (to withdraw)
-    - вкладати (to deposit)
-    - обмінювати (to exchange)
-
+  - валюта (currency)
+  - переказ (transfer)
+  - знімати (to withdraw)
+  - вкладати (to deposit)
+  - обмінювати (to exchange)
 activity_hints:
-  - type: dialogue
-    focus: Post office interaction
-    items: "4+"
-
-  - type: fill-in
-    focus: Banking sentences with correct cases
-    items: "12+"
-
-  - type: quiz
-    focus: '"I want to..." service phrases'
-    items: "10+"
-
-  - type: match-up
-    focus: Service term + definition
-    items: "12+"
-
-  - type: fill-in
-    focus: Number and price expressions
-    items: "10+"
-
-  - type: dialogue
-    focus: Bank interaction
-    items: "4+"
-
+- type: fill-in
+  focus: Banking sentences with correct cases
+  items: 12+
+- type: quiz
+  focus: '"I want to..." service phrases'
+  items: 10+
+- type: match-up
+  focus: Service term + definition
+  items: 12+
+- type: fill-in
+  focus: Number and price expressions
+  items: 10+
 prerequisites:
-  - a2-01 through a2-09 (all case knowledge)
-  - A1 numbers 1-100
-  - A1 basic transactions
-
+- a2-01 through a2-09 (all case knowledge)
+- A1 numbers 1-100
+- A1 basic transactions
 connects_to:
-  - a2-11 (Checkpoint - Cases)
-  - a2-53 (Shopping & Services)
-  - a2-69 (Online Services)
-
+- a2-11 (Checkpoint - Cases)
+- a2-53 (Shopping & Services)
+- a2-69 (Online Services)
 naturalness:
   score: 9
   status: PASS

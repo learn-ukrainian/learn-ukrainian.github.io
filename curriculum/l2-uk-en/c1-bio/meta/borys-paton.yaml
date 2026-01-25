@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and inventions
   items: 10+
-- type: discussion
-  focus: What makes a great science administrator?
-  output: Leadership in science analysis
 prerequisites:
 - c1-bio-112 (Yevhen Paton - his father)
 - Understanding of Soviet/Ukrainian science

@@ -249,30 +249,11 @@ vocabulary_focus:
 > [What makes this author's language distinctive]
 ```
 
-#### Section 4: Comparative Analysis — 300-400 words
+#### Section 4: Comparative Analysis (YAML-ONLY)
 
-```markdown
-## Порівняльний аналіз
+**CRITICAL: DO NOT include an `## Аналіз` or `## Порівняльний аналіз` section in the markdown file.** This analysis is defined exclusively in `activities/{slug}.yaml` as an `essay-response` or `comparative-study` activity.
 
-### [Text 1] vs. [Text 2]
-
-[Compare two texts — same author different periods, or different authors same theme]
-
-| Аспект | [Text 1] | [Text 2] |
-|--------|----------|----------|
-| Тема | [Theme] | [Theme] |
-| Настрій | [Mood] | [Mood] |
-| Стиль | [Style] | [Style] |
-| Символіка | [Symbols] | [Symbols] |
-
-### Критичне мислення
-
-**Питання для роздуму:**
-1. Як історичний контекст впливає на текст?
-2. Яка позиція автора? Як вона виражена?
-3. Як цей текст перегукується із сучасністю?
-4. Що робить цей текст класикою?
-```
+---
 
 #### Section 5: Essay Activities (In YAML Only)
 

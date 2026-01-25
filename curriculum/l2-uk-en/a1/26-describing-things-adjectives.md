@@ -25,12 +25,12 @@ In English, adjectives don't change («big house», «big houses»). In Ukrainia
 
 Most Ukrainian adjectives use these endings:
 
-| Gender | Ending | Example | IPA | Meaning |
-| --- | --- | --- | --- | --- |
-| Masculine | -**ий** | новий будинок | /nɔˈvɪj/ | new house |
-| Feminine | -**а** | нова книга | /nɔˈvɑ/ | new book |
-| Neuter | -**е** | нове місто | /nɔˈvɛ/ | new city |
-| Plural | -**і** | нові друзі | /nɔˈʋi/ | new friends |
+| Gender    | Ending  | Example       | IPA      | Meaning     |
+| --------- | ------- | ------------- | -------- | ----------- |
+| Masculine | -**ий** | новий будинок | /nɔˈvɪj/ | new house   |
+| Feminine  | -**а**  | нова книга    | /nɔˈvɑ/  | new book    |
+| Neuter    | -**е**  | нове місто    | /nɔˈvɛ/  | new city    |
+| Plural    | -**і**  | нові друзі    | /nɔˈʋi/  | new friends |
 
 ### More Examples
 
@@ -58,12 +58,12 @@ Some adjectives have «soft» stems (those ending in soft consonants). They use 
 
 ### Soft Stem Endings Table
 
-| Gender | Ending | Example | IPA | Meaning |
-| --- | --- | --- | --- | --- |
-| Masculine | -**ій** | синій колір | /ˈsɪnʲij/ | blue color |
-| Feminine | -**я** | синя сорочка | /ˈsɪnʲɑ/ | blue shirt |
-| Neuter | -**є** | синє небо | /ˈsɪnʲɛ/ | blue sky |
-| Plural | -**і** | сині очі | /ˈsɪnʲi/ | blue eyes |
+| Gender    | Ending  | Example      | IPA       | Meaning    |
+| --------- | ------- | ------------ | --------- | ---------- |
+| Masculine | -**ій** | синій колір  | /ˈsɪnʲij/ | blue color |
+| Feminine  | -**я**  | синя сорочка | /ˈsɪnʲɑ/  | blue shirt |
+| Neuter    | -**є**  | синє небо    | /ˈsɪnʲɛ/  | blue sky   |
+| Plural    | -**і**  | сині очі     | /ˈsɪnʲi/  | blue eyes  |
 
 Most common soft-stem adjectives include colors ending in -ій and some other adjectives.
 

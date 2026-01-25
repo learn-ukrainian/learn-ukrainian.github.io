@@ -253,7 +253,11 @@ def generate_skeleton(
     slug = slugify(title)
 
     # Build skeleton
-    skeleton = f'''---
+    skeleton = ""
+    
+    # ONLY add frontmatter for A1/A2 legacy support. B1+ uses sidecars.
+    if level in ('A1', 'A2'):
+        skeleton += f'''---
 module: {level.lower()}-{module_num:02d}
 title: "{title}"
 subtitle: "<!-- Add subtitle -->"
@@ -274,11 +278,28 @@ objectives:
 vocabulary_count: <!-- N -->
 ---
 
-# {title if level in ('A1', 'A2') else '<!-- Ukrainian Title -->'}
+'''
+
+    skeleton += f'''# {title if level in ('A1', 'A2') else '<!-- Ukrainian Title -->'}
 
 <!-- Word target: {word_targets['total']} words total -->
 
 '''
+
+    # ... [Pedagogy sections added here] ...
+
+    # Add Clean MD Note for B1+
+    if level not in ('A1', 'A2'):
+        skeleton += '''
+<!-- 
+  NOTE: Clean MD Architecture (B1+). 
+  - Metadata goes in meta/{slug}.yaml
+  - Vocabulary goes in vocabulary/{slug}.yaml
+  - Activities go in activities/{slug}.yaml
+  - DO NOT add ## Activities or ## Словник headers to this file.
+-->
+'''
+
 
     # Add section structure based on pedagogy
     if pedagogy == 'PPP':
@@ -391,18 +412,19 @@ vocabulary_count: <!-- N -->
 
 '''
 
-    # Add activities section
-    skeleton += '''## Activities
+    # Add activities section (A1/A2 only)
+    if level in ('A1', 'A2'):
+        skeleton += '''## Activities
 
 '''
-    for act_type, min_items, description in activity_specs:
-        skeleton += f'''## {act_type}: <!-- Title -->
+        for act_type, min_items, description in activity_specs:
+            skeleton += f'''## {act_type}: <!-- Title -->
 <!-- {description} -->
 <!-- Minimum {min_items} items -->
 
 '''
 
-    # Add vocabulary section
+    # Add vocabulary section (A1/A2 only)
     if level in ('A1', 'A2'):
         skeleton += '''## Vocabulary
 
@@ -411,14 +433,7 @@ vocabulary_count: <!-- N -->
 | <!-- слово --> | /.../ | <!-- translation --> | noun/verb/adj | m/f/n | — |
 
 '''
-    else:
-        skeleton += '''## Словник
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| <!-- слово --> | /.../ | <!-- translation --> | ім/дієсл | <!-- note --> |
-
-'''
 
     # Add vocab notes if available
     if vocab_notes:

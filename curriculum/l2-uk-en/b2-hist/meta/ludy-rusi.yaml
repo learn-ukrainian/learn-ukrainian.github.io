@@ -34,72 +34,60 @@ sources:
   notes: Legal text on social classes
 content_outline:
 - section: Розминка
-  words: 30
+  words: 160
   points:
   - "Demographics of Kyiv vs London"
   - "The concept of Estate (Stan)"
   - "Vocabulary: Vira, Izgoy, Votchyna"
 - section: "Читання: Суспільство та повсякдення Київської Русі"
-  words: 2100
+  words: 3200
   points:
   - "The Prince and Druzhina: The top of the pyramid"
-  - "Military Affairs: Weapons (Sword, Saber, Chainmail) and Tactics"
   - "Boyars as landed aristocracy (Votchyna system)"
   - "Clergy: Black (Monks) vs White (Priests)"
   - "Burghers: Merchants, Craftsmen, and Guilds"
+  - "Economy: Trade Routes (Greeks, Salt, Zalozny) and Currency"
   - "Peasantry: Smerds (free), Zakups (debtors), Ryadovychi"
   - "Kholops: Slavery in Rus context"
   - "Women in Rus: Property rights and education"
   - "Daily Life: Housing, Clothing, and Diet"
   - "Entertainment: Skomorokhy, Chess, and Festivals"
-  - "Boyars as landed aristocracy (Votchyna system)"
-  - "Clergy: Black (Monks) vs White (Priests)"
-  - "Burghers: Merchants, Craftsmen, and Guilds"
-  - "Peasantry: Smerds (free), Zakups (debtors), Ryadovychi"
-  - "Kholops: Slavery in Rus context"
-  - "Women in Rus: Property rights and education"
-  - "Daily Life: Housing, Clothing, and Diet"
+  - "Literacy and Education: Birch Bark Letters and Graffiti"
 - section: "Первинні джерела: Голоси епохи"
-  words: 100
+  words: 400
   points:
   - "Ruska Pravda: The price of life and honor"
   - "Collective responsibility (Verv)"
   - "Birch Bark Letters: Ordinary voices"
 - section: "Деколонізаційний погляд: Руйнування імперських міфів"
-  words: 200
+  words: 240
   points:
   - "Regional differences in housing (Mazanka vs Izba)"
   - "Differences in clothing and traditions"
   - "Political culture: Contractual vs Despotic"
-- section: Есе
-  words: 100
-  points:
-  - "Prompt: Feudalism vs Slavery"
-  - "Analysis of social dependence"
-  - "Model Answer"
-  - "Complexity of social stratification"
-  - "European vector of development"
-  - "The legacy of Rus law and culture"
 vocabulary_hints:
   required:
-  - суспільство (society)
-  - побут (everyday life)
-  - смерд (smerd/peasant)
-  - закуп (zakup/debt bondsman)
-  - холоп (kholop/slave)
-  - боярин (boyar)
-  - дружина (druzhina)
-  - купець (merchant)
-  - ремісник (craftsman)
-  - віче (veche - assembly)
-  - громада (community)
-  - рало (ard/plow)
+  - суспільство
+  - побут
+  - смерд
+  - закуп
+  - холоп
+  - боярин
+  - дружина
+  - купець
+  - ремісник
+  - віче
+  - громада
+  - рало
   recommended:
-  - рядович (contract laborer)
-  - челядь (household slaves)
-  - терем (terem/tower)
-  - городище (fortified settlement)
-  - соха (sokha/plow)
+  - рядович
+  - челядь
+  - терем
+  - городище
+  - соха
+  - ізгой
+  - верв
+  - тіун
 naturalness:
   score: 9
   status: PASS

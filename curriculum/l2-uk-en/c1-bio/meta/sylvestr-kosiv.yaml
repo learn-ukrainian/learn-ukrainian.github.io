@@ -118,9 +118,6 @@ activity_hints:
 - type: fill-in
   focus: Church administrative terminology
   items: 8+
-- type: discussion
-  focus: Relevance of 17th century church struggles to modern autocephaly
-  output: Historical parallels
 prerequisites:
 - c1-bio-08 (Iov Boretskyi - predecessor)
 - Understanding of 17th century geopolitics

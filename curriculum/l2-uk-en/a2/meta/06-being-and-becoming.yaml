@@ -1,155 +1,112 @@
-# A2 Module 06: Being and Becoming
-# Status: CONTENT (content exists, detailed spec added)
-
 id: a2-06
 title: Being and Becoming
 subtitle: Professions and Instrumental Case
 slug: 06-being-and-becoming
 module_type: grammar
-word_target: 2800
-immersion: "50-60% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.1
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - cases
-  - instrumental
-  - professions
-  - бути
-  - стати
-
+- grammar
+- cases
+- instrumental
+- professions
+- бути
+- стати
 grammar:
-  - бути + instrumental
-  - стати + instrumental
-  - працювати + instrumental
-  - past tense of бути
-
+- бути + instrumental
+- стати + instrumental
+- працювати + instrumental
+- past tense of бути
 objectives:
-  - Learner can describe professions using instrumental case
-  - Learner can use verbs бути and стати with correct case government
-  - Learner can describe past roles and future aspirations
-  - Learner can distinguish between nominative (identity) and instrumental (role/function)
-
-# === AGENT BUILD SPEC ===
-
+- Learner can describe professions using instrumental case
+- Learner can use verbs бути and стати with correct case government
+- Learner can describe past roles and future aspirations
+- Learner can distinguish between nominative (identity) and instrumental (role/function)
 sources:
-  - name: Ukrainian State Standard 2024 - Professions
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Profession vocabulary and instrumental usage
-  - name: Ukrainian Grammar - Predicate Instrumental
-    url: https://uk.wikipedia.org/wiki/Орудний_відмінок
-    type: reference
-    notes: Predicate instrumental with бути/стати
-
+- name: Ukrainian State Standard 2024 - Professions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Profession vocabulary and instrumental usage
+- name: Ukrainian Grammar - Predicate Instrumental
+  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  type: reference
+  notes: Predicate instrumental with бути/стати
 content_outline:
-  - section: Professions in Ukrainian
-    words: 400
-    points:
-      - Two patterns - Nom (Він лікар) vs Instr (Він є лікарем)
-      - When to use nominative vs instrumental
-      - Gender forms of professions
-
-  - section: бути + Instrumental
-    words: 600
-    points:
-      - Past - Він був студентом (He was a student)
-      - Future - Вона буде вчителькою (She will be a teacher)
-      - Present - optional є (Він є лікарем / Він лікар)
-
-  - section: стати/ставати + Instrumental
-    words: 500
-    points:
-      - Вона стала вчителькою (She became a teacher)
-      - Process vs result (ставати vs стати)
-      - Career change expressions
-
-  - section: працювати + Instrumental
-    words: 500
-    points:
-      - Я працюю програмістом (I work as a programmer)
-      - Difference from працювати в (work at/in)
-      - Job description patterns
-
-  - section: Profession Vocabulary
-    words: 500
-    points:
-      - Common professions masculine forms
-      - Feminine profession forms
-      - Student, teacher, doctor, engineer, etc.
-
-  - section: Career Dialogues
-    words: 300
-    points:
-      - '"What do you do?" conversations'
-      - Career aspirations
-      - Past and future profession talk
-
+- section: Introduction / Вступ
+  words: 250
+  points:
+  - Concept of role vs identity
+  - Present tense (Nom) vs Past/Future (Instr)
+- section: Presentation / Презентація
+  words: 550
+  points:
+  - '"бути" + instrumental (Past/Future)'
+  - '"стати/ставати" + instrumental (Change)'
+  - '"працювати" + instrumental (Current)'
+  - Gender forms of professions
+- section: Practice / Практика
+  words: 150
+  points:
+  - Transformation drills (Present to Past)
+  - Career aspiration exercises
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - '"What do you do?" conversations'
+  - Career history scenarios
 vocabulary_hints:
   required:
-    - бути (to be)
-    - стати (to become)
-    - ставати (to be becoming)
-    - працювати (to work)
-    - служити (to serve)
-    - залишатися (to remain)
-    - виявитися (to turn out)
-    - здаватися (to seem)
-    - лікар (doctor)
-    - вчитель (teacher)
-    - інженер (engineer)
-    - програміст (programmer)
-    - журналіст (journalist)
-    - юрист (lawyer)
-    - економіст (economist)
+  - бути (to be)
+  - стати (to become)
+  - ставати (to be becoming)
+  - працювати (to work)
+  - служити (to serve)
+  - залишатися (to remain)
+  - виявитися (to turn out)
+  - здаватися (to seem)
+  - лікар (doctor)
+  - вчитель (teacher)
+  - інженер (engineer)
+  - програміст (programmer)
+  - журналіст (journalist)
+  - юрист (lawyer)
+  - економіст (economist)
   recommended:
-    - художник (artist)
-    - музикант (musician)
-    - письменник (writer)
-    - актор (actor)
-    - директор (director)
-
+  - художник (artist)
+  - музикант (musician)
+  - письменник (writer)
+  - актор (actor)
+  - директор (director)
 activity_hints:
-  - type: fill-in
-    focus: Transform present to past with instrumental
-    items: "12+"
-
-  - type: fill-in
-    focus: Profession sentences with бути/стати
-    items: "12+"
-
-  - type: quiz
-    focus: "What does he/she work as?"
-    items: "10+"
-
-  - type: match-up
-    focus: Person + profession
-    items: "10+"
-
-  - type: fill-in
-    focus: Career aspiration sentences
-    items: "8+"
-
-  - type: dialogue
-    focus: Talking about jobs and careers
-    items: "4+"
-
+- type: fill-in
+  focus: Transform present to past with instrumental
+  items: 12+
+- type: fill-in
+  focus: Profession sentences with бути/стати
+  items: 12+
+- type: quiz
+  focus: What does he/she work as?
+  items: 10+
+- type: match-up
+  focus: Person + profession
+  items: 10+
+- type: fill-in
+  focus: Career aspiration sentences
+  items: 8+
 prerequisites:
-  - a2-04 (Instrumental endings)
-  - a2-05 (Instrumental means)
-  - A1 present tense
-
+- a2-04 (Instrumental endings)
+- a2-05 (Instrumental means)
+- A1 present tense
 connects_to:
-  - a2-07 (Spatial Prepositions)
-  - a2-09 (All Cases Practice)
-  - a2-49 (Work & Professions - vocab expansion)
-
+- a2-07 (Spatial Prepositions)
+- a2-09 (All Cases Practice)
+- a2-49 (Work & Professions - vocab expansion)
 naturalness:
   score: 9
   status: PASS

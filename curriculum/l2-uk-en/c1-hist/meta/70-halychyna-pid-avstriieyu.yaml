@@ -1,8 +1,5 @@
-# C1-HIST Module 70: Галичина під Австрією — Особлива доля
-# Status: SPEC (ready for content development)
-
 id: c1-hist-70
-title: "Галичина під Австрією: Особлива доля"
+title: 'Галичина під Австрією: Особлива доля'
 slug: halychyna-pid-avstriieyu
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,125 +7,107 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Галичина (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Галичина
-    type: reference
-    notes: Regional overview
-  - name: Королівство Галичини та Володимирії (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
-    type: reference
-    notes: Habsburg period
-  - name: Українці в Австро-Угорщині (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
-    type: reference
-    notes: Ukrainian status
-
+- name: Галичина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Regional overview
+- name: Королівство Галичини та Володимирії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
+  type: reference
+  notes: Habsburg period
+- name: Українці в Австро-Угорщині (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
+  type: reference
+  notes: Ukrainian status
 content_outline:
-  - section: Вступ — Інший шлях
-    words: 400
-    points:
-      - Галичина — не під Росією
-      - 1772 — поділ Польщі
-      - Габсбурзька імперія — інша система
-      - Структура модуля
-
-  - section: Правовий статус
-    words: 600
-    points:
-      - Королівство Галичини та Володимирії
-      - Конституційний період (після 1867)
-      - Права українців — порівняно з Росією
-      - Обмеження — польська домінація
-
-  - section: Освіта і церква
-    words: 700
-    points:
-      - Греко-католицька церква — легальна
-      - Семінарії — українською
-      - Університет — доступ
-      - Порівняння з Наддніпрянщиною
-
-  - section: «Весна народів» 1848
-    words: 600
-    points:
-      - Головна Руська Рада
-      - Перша легальна організація
-      - Скасування панщини
-      - Чому не вдалося більше
-
-  - section: Польсько-український конфлікт
-    words: 500
-    points:
-      - Польська шляхта — домінація
-      - Сейм — нерівність
-      - Конкуренція за Галичину
-      - «Полякування» vs. українізація
-
-  - section: Порівняння з Росією
-    words: 400
-    points:
-      - Що можна в Австрії
-      - Чого не можна в Росії
-      - Різні траєкторії
-      - Чому це важливо
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Австрія — не ідеал, але краще
-      - Галичина — «Український П'ємонт»
-      - Підготовка до національного руху
-
+- section: Вступ — Інший шлях
+  words: 400
+  points:
+  - Галичина — не під Росією
+  - 1772 — поділ Польщі
+  - Габсбурзька імперія — інша система
+  - Структура модуля
+- section: Правовий статус
+  words: 600
+  points:
+  - Королівство Галичини та Володимирії
+  - Конституційний період (після 1867)
+  - Права українців — порівняно з Росією
+  - Обмеження — польська домінація
+- section: Освіта і церква
+  words: 700
+  points:
+  - Греко-католицька церква — легальна
+  - Семінарії — українською
+  - Університет — доступ
+  - Порівняння з Наддніпрянщиною
+- section: «Весна народів» 1848
+  words: 600
+  points:
+  - Головна Руська Рада
+  - Перша легальна організація
+  - Скасування панщини
+  - Чому не вдалося більше
+- section: Польсько-український конфлікт
+  words: 500
+  points:
+  - Польська шляхта — домінація
+  - Сейм — нерівність
+  - Конкуренція за Галичину
+  - «Полякування» vs. українізація
+- section: Порівняння з Росією
+  words: 400
+  points:
+  - Що можна в Австрії
+  - Чого не можна в Росії
+  - Різні траєкторії
+  - Чому це важливо
+- section: Підсумок
+  words: 300
+  points:
+  - Австрія — не ідеал, але краще
+  - Галичина — «Український П'ємонт»
+  - Підготовка до національного руху
 vocabulary_hints:
   required:
-    - Галичина (Galicia)
-    - Габсбурги (Habsburgs)
-    - конституційний (constitutional)
-    - автономія (autonomy)
-    - греко-католицький (Greek Catholic)
-    - сейм (sejm/diet)
-    - панщина (serfdom)
-    - «весна народів» (Spring of Nations)
-    - шляхта (nobility)
-    - право (law/right)
+  - Галичина (Galicia)
+  - Габсбурги (Habsburgs)
+  - конституційний (constitutional)
+  - автономія (autonomy)
+  - греко-католицький (Greek Catholic)
+  - сейм (sejm/diet)
+  - панщина (serfdom)
+  - «весна народів» (Spring of Nations)
+  - шляхта (nobility)
+  - право (law/right)
   recommended:
-    - Головна Руська Рада (Supreme Ruthenian Council)
-    - намісник (viceroy)
-    - крайовий (regional)
-    - конституція (constitution)
-    - громадянські права (civil rights)
-
+  - Головна Руська Рада (Supreme Ruthenian Council)
+  - намісник (viceroy)
+  - крайовий (regional)
+  - конституція (constitution)
+  - громадянські права (civil rights)
 activity_hints:
-  - type: legal-comparison
-    focus: Rights of Ukrainians in Austria vs. Russia
-    output: Comparative legal analysis
-
-  - type: 1848-analysis
-    focus: What did 1848 achieve for Galicia?
-    output: Revolutionary assessment
-
-  - type: church-analysis
-    focus: UGCC under Habsburg rule
-    output: Institutional analysis
-
-  - type: counterfactual
-    focus: What if Galicia was under Russia?
-    output: Counterfactual analysis
-
-  - type: essay-response
-    focus: "Чому Галичину називали 'українським П'ємонтом'?"
-    word_target: 400
-    model_answer: Required
-
+- type: legal-comparison
+  focus: Rights of Ukrainians in Austria vs. Russia
+  output: Comparative legal analysis
+- type: 1848-analysis
+  focus: What did 1848 achieve for Galicia?
+  output: Revolutionary assessment
+- type: church-analysis
+  focus: UGCC under Habsburg rule
+  output: Institutional analysis
+- type: essay-response
+  focus: What if Galicia was under Russia?
+  output: Counterfactual analysis
+- type: essay-response
+  focus: Чому Галичину називали 'українським П'ємонтом'?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - b2-hist (Habsburg Galicia narrative)
-  - c1-hist-61 (Greek Catholic Church)
-
+- b2-hist (Habsburg Galicia narrative)
+- c1-hist-61 (Greek Catholic Church)
 connects_to:
-  - c1-hist-71 (Galician national movement)
-  - c1-hist-75 (Western regions synthesis)
-  - c1-hist-64 (First emigration wave)
+- c1-hist-71 (Galician national movement)
+- c1-hist-75 (Western regions synthesis)
+- c1-hist-64 (First emigration wave)

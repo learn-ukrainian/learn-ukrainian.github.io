@@ -4,8 +4,58 @@ title: "Синтез: Козацька революція"
 level: B2
 track: history
 phase: "HIST.6 [Khmelnytsky & Cossack State]"
-status: skeleton
+status: content_complete
 focus: history
-word_target: 3000
+pedagogy: CBI
+transliteration: none
+word_target: 4000
 prerequisites: []
 learning_outcomes: []
+content_outline:
+  - section: "Вступ: Вибух, що змінив усе"
+    words: 400
+    points:
+      - "The definition of the Khmelnytsky Uprising as a revolution"
+      - "The scale of changes: social, political, geopolitical"
+  - section: "Причини революції: Чому вибухнуло?"
+    words: 500
+    points:
+      - "Social oppression (serfdom)"
+      - "Religious discrimination (Uniate Church)"
+      - "Political lack of rights for Cossacks"
+      - "Personal tragedy of Khmelnytsky"
+  - section: "Етапи боротьби: Від тріумфу до компромісу"
+    words: 1000
+    points:
+      - "Initial victories (Yellow Waters, Korsun)"
+      - "The Treaty of Zboriv (1649) and statehood"
+      - "Defeats (Berestechko) and the Treaty of Bila Tserkva"
+      - "The Pereiaslav Council (1654) and the alliance with Moscow"
+      - "The death of Khmelnytsky and the start of the Ruin"
+  - section: "Соціальні трансформації: Народження нації"
+    words: 600
+    points:
+      - "Liquidation of serfdom"
+      - "Formation of the Cossack starshyna as a new elite"
+      - "The role of the Orthodox Church"
+  - section: "Читання: Аналіз історичних документів"
+    words: 400
+    points:
+      - "Analysis of the Zboriv Treaty"
+      - "Analysis of the March Articles"
+  - section: "Первинні джерела"
+    words: 400
+    points:
+      - "Eyewitness accounts (Paul of Aleppo, etc.)"
+      - "Khmelnytsky's universals"
+  - section: "Деколонізаційний погляд"
+    words: 700
+    points:
+      - "Debunking the myth of 'reunification'"
+      - "Ukraine as a subject of international law"
+      - "The European context of the revolution"
+      - "Legacy: The birth of the modern Ukrainian state tradition"
+
+naturalness:
+  score: 9
+  status: PASS

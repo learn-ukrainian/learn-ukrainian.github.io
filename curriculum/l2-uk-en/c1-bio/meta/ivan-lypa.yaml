@@ -1,133 +1,107 @@
-# C1-BIO Module 34: Іван Липа
-# Status: SPEC (ready for content development)
-
 id: c1-bio-34
-title: "Іван Липа: Лікар і письменник"
+title: 'Іван Липа: Лікар і письменник'
 slug: ivan-lypa
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Іван Липа (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
-    type: primary
-    notes: Biography of the doctor, writer, and patriot
-  - name: Братство тарасівців
-    url: https://uk.wikipedia.org/wiki/Братство_тарасівців
-    type: reference
-    notes: Information about the organization Lypa co-founded
-
+- name: Іван Липа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
+  type: primary
+  notes: Biography of the doctor, writer, and patriot
+- name: Братство тарасівців
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  type: reference
+  notes: Information about the organization Lypa co-founded
 content_outline:
-  - section: Вступ — Лікар душ українських
-    words: 400
-    points:
-      - Лікар, письменник, громадський діяч
-      - Засновник Братства тарасівців
-      - Ідеолог української незалежності
-
-  - section: Юність та освіта (1865-1891)
-    words: 600
-    points:
-      - Народження на Полтавщині
-      - Медична освіта в Харкові
-      - Перші літературні спроби
-      - Формування національної свідомості
-
-  - section: Братство тарасівців (1891-1898)
-    words: 800
-    points:
-      - Заснування таємної організації
-      - Ідеологія українського націоналізму
-      - Члени та діяльність
-      - Розгром братства царською владою
-
-  - section: Лікарська практика та література (1890-ті–1920)
-    words: 800
-    points:
-      - Робота лікарем в Одесі
-      - Повісті та оповідання
-      - Публіцистика
-      - Поєднання медицини та літератури
-
-  - section: Революційні роки (1917-1923)
-    words: 700
-    points:
-      - Участь у боротьбі за незалежність
-      - Робота в УНР
-      - Еміграція
-      - Загибель у 1923 році
-
-  - section: Спадщина — Пророк незалежності
-    words: 700
-    points:
-      - Вплив на український націоналізм
-      - Син Юрій Липа — продовжувач справи
-      - Сучасне вшанування
-      - Липа як символ інтелігенції
-
+- section: Вступ — Лікар душ українських
+  words: 400
+  points:
+  - Лікар, письменник, громадський діяч
+  - Засновник Братства тарасівців
+  - Ідеолог української незалежності
+- section: Юність та освіта (1865-1891)
+  words: 600
+  points:
+  - Народження на Полтавщині
+  - Медична освіта в Харкові
+  - Перші літературні спроби
+  - Формування національної свідомості
+- section: Братство тарасівців (1891-1898)
+  words: 800
+  points:
+  - Заснування таємної організації
+  - Ідеологія українського націоналізму
+  - Члени та діяльність
+  - Розгром братства царською владою
+- section: Лікарська практика та література (1890-ті–1920)
+  words: 800
+  points:
+  - Робота лікарем в Одесі
+  - Повісті та оповідання
+  - Публіцистика
+  - Поєднання медицини та літератури
+- section: Революційні роки (1917-1923)
+  words: 700
+  points:
+  - Участь у боротьбі за незалежність
+  - Робота в УНР
+  - Еміграція
+  - Загибель у 1923 році
+- section: Спадщина — Пророк незалежності
+  words: 700
+  points:
+  - Вплив на український націоналізм
+  - Син Юрій Липа — продовжувач справи
+  - Сучасне вшанування
+  - Липа як символ інтелігенції
 vocabulary_hints:
   required:
-    - лікар (doctor)
-    - письменник (writer)
-    - громадський діяч (public activist)
-    - братство (brotherhood)
-    - націоналізм (nationalism)
-    - ідеолог (ideologue)
-    - підпільна організація (underground organization)
-    - медицина (medicine)
-    - публіцистика (journalism)
-    - незалежність (independence)
+  - лікар (doctor)
+  - письменник (writer)
+  - громадський діяч (public activist)
+  - братство (brotherhood)
+  - націоналізм (nationalism)
+  - ідеолог (ideologue)
+  - підпільна організація (underground organization)
+  - медицина (medicine)
+  - публіцистика (journalism)
+  - незалежність (independence)
   recommended:
-    - тарасівці (Tarasivtsi)
-    - патріотизм (patriotism)
-    - інтелігенція (intelligentsia)
-    - еміграція (emigration)
-    - самостійність (independence/self-determination)
-
+  - тарасівці (Tarasivtsi)
+  - патріотизм (patriotism)
+  - інтелігенція (intelligentsia)
+  - еміграція (emigration)
+  - самостійність (independence/self-determination)
 activity_hints:
-  - type: reading
-    focus: Український національний рух XIX-XX ст.
-    source: Historical sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та діяльність Липи
-    items: "12+"
-
-  - type: match-up
-    focus: Терміни національного руху
-    items: "10+"
-
-  - type: essay-response
-    focus: Яку роль відіграло Братство тарасівців в історії України?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Діяльність Липи за сферами
-    items: "12+"
-
-  - type: fill-in
-    focus: Політична та літературна термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як професія лікаря поєднується з громадською діяльністю?
-    output: Critical analysis
-
+- type: reading
+  focus: Український національний рух XIX-XX ст.
+  source: Historical sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та діяльність Липи
+  items: 12+
+- type: match-up
+  focus: Терміни національного руху
+  items: 10+
+- type: essay-response
+  focus: Яку роль відіграло Братство тарасівців в історії України?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Діяльність Липи за сферами
+  items: 12+
+- type: fill-in
+  focus: Політична та літературна термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-33
-
+- c1-bio-33
 connects_to:
-  - c1-bio-42
-  - c1-bio-44
-
+- c1-bio-42
+- c1-bio-44
 naturalness:
   score: 1
   status: PENDING

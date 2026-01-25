@@ -1,11 +1,31 @@
 # Current Project Status
 
-**Last Updated**: January 21, 2026
-**Session**: RFC-001 Seven-Phase Workflow Testing (In Progress)
+**Last Updated**: January 24, 2026
+**Session**: B2-HIST Module Testing (Claude vs Gemini)
 
 ---
 
-## 🚧 Current Work (January 21, 2026)
+## 🚧 Current Work (January 24, 2026)
+
+### B2-HIST Module Testing ✅ M41 COMPLETE
+
+**M41 kozatstvo-vytoky**: ✅ PASS
+- Word count: 4143/4000
+- Activities: 9 (within 3-9 target)
+- Naturalness: 9/10 (MCP validated)
+- Audit: `curriculum/l2-uk-en/b2-hist/audit/kozatstvo-vytoky-review.md`
+
+**M61 ivan-sirko**: ⏳ Ready for Gemini test
+- Current state: Skeleton (110 words)
+- Test command: `/module b2-hist 61 --from=lesson`
+- Test prompt: `tests/workflow/scenarios/gemini-prompt-b2-hist-m61.md`
+
+**Scripts fixed**:
+- `scripts/vocab_enrich_nlp.py` - Now handles wrapper format YAML (`{module:..., items:[...]}`)
+
+---
+
+## 🚧 Previous Work (January 21, 2026)
 
 ### RFC-001 Seven-Phase Workflow Testing 🔄 IN PROGRESS
 

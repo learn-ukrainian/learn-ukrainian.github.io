@@ -2421,3 +2421,90 @@
       correct: false
     explanation: Вітаємо = Congratulations!
   instruction: Оберіть правильний переклад.
+- type: quiz
+  title: "Читання граматичного тексту: Частина 1"
+  instruction: |
+    Прочитайте текст і дайте відповіді на запитання.
+    
+    _Дієслова в українській мові мають дві граматичні категорії: вид і час. Категорія виду поділяє дієслова на дві групи: дієслова недоконаного виду (НДВ) і дієслова доконаного виду (ДВ). Недоконаний вид виражає процес дії, її тривалість або повторення. Доконаний вид виражає результат дії, її завершення._
+  items:
+    - question: На які дві основні групи поділяються всі дієслова в українській мові за категорією виду?
+      options:
+        - text: НДВ і ДВ
+          correct: true
+        - text: Теперішній і майбутній
+          correct: false
+        - text: Однина і множина
+          correct: false
+        - text: Чоловічий і жіночий
+          correct: false
+    - question: Яке значення зазвичай виражає недоконаний вид дієслова в реченні?
+      options:
+        - text: Процес, тривалість, повторення
+          correct: true
+        - text: Результат, завершення
+          correct: false
+        - text: Наказ
+          correct: false
+        - text: Умову
+          correct: false
+    - question: Яке основне значення передає доконаний вид дієслова в українській мові?
+      options:
+        - text: Результат, завершення
+          correct: true
+        - text: Процес
+          correct: false
+        - text: Час
+          correct: false
+        - text: Спосіб
+          correct: false
+    - question: Скільки всього граматичних категорій мають українські дієслова згідно з текстом?
+      options:
+        - text: Дві
+          correct: true
+        - text: Три
+          correct: false
+        - text: Чотири
+          correct: false
+        - text: П'ять
+          correct: false
+    - question: Який саме вид дієслова фокусується на тривалості або повторюваності дії?
+      options:
+        - text: Недоконаний
+          correct: true
+        - text: Доконаний
+          correct: false
+        - text: Жоден
+          correct: false
+        - text: Обидва
+          correct: false
+    - question: Який вид дієслова завжди вказує на досягнення результату дії?
+      options:
+        - text: Доконаний
+          correct: true
+        - text: Недоконаний
+          correct: false
+        - text: Майбутній
+          correct: false
+        - text: Минулий
+          correct: false
+    - question: Як розшифровується граматична абревіатура НДВ у цьому контексті?
+      options:
+        - text: Недоконаний вид
+          correct: true
+        - text: Новий дієсловний вид
+          correct: false
+        - text: Невідомий вид
+          correct: false
+        - text: Неправильний вид
+          correct: false
+    - question: Що означає поширене скорочення ДВ у сучасній граматичній термінології?
+      options:
+        - text: Доконаний вид
+          correct: true
+        - text: Довгий вид
+          correct: false
+        - text: Добрий вид
+          correct: false
+        - text: Дивний вид
+          correct: false

@@ -1,8 +1,5 @@
-# C1-HIST Module 74: Волинь — Пам'ять і травма
-# Status: SPEC (ready for content development)
-
 id: c1-hist-74
-title: "Волинь: Пам'ять і травма"
+title: 'Волинь: Пам''ять і травма'
 slug: volyn-pamiat-i-travma
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,126 +7,108 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Волинь (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Волинь
-    type: reference
-    notes: Regional overview
-  - name: Волинська трагедія (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Волинська_трагедія
-    type: reference
-    notes: 1943 events
-  - name: Польсько-українські відносини (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
-    type: reference
-    notes: Bilateral context
-
+- name: Волинь (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинь
+  type: reference
+  notes: Regional overview
+- name: Волинська трагедія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+  type: reference
+  notes: 1943 events
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Bilateral context
 content_outline:
-  - section: Вступ — Більше ніж 1943
-    words: 400
-    points:
-      - Волинь — не тільки трагедія
-      - Століття співіснування
-      - Чому потрібен контекст
-      - Структура модуля
-
-  - section: Історична Волинь
-    words: 600
-    points:
-      - Волинське князівство
-      - Під Литвою і Польщею
-      - Православна Волинь
-      - Етнічний склад
-
-  - section: Міжвоєнний період (1921-1939)
-    words: 700
-    points:
-      - Польська влада
-      - Пацифікація
-      - Колонізація — осадники
-      - Українська відповідь
-      - Наростання напруги
-
-  - section: Війна і трагедія (1939-1944)
-    words: 700
-    points:
-      - Радянська окупація (1939-1941)
-      - Німецька окупація
-      - УПА і польське підпілля
-      - 1943 — етнічні чистки
-      - Жертви обох сторін
-
-  - section: Контекст і причини
-    words: 500
-    points:
-      - Не виправдання — пояснення
-      - Нацистська окупація
-      - Польські репресії — реакція
-      - Радикалізація
-
-  - section: Пам'ять і примирення
-    words: 300
-    points:
-      - Різні наративи
-      - Діалог після 1991
-      - 2022 — несподіване примирення
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Волинь — складна історія
-      - Пам'ять без спрощення
-      - Перехід до синтезу
-
+- section: Вступ — Більше ніж 1943
+  words: 400
+  points:
+  - Волинь — не тільки трагедія
+  - Століття співіснування
+  - Чому потрібен контекст
+  - Структура модуля
+- section: Історична Волинь
+  words: 600
+  points:
+  - Волинське князівство
+  - Під Литвою і Польщею
+  - Православна Волинь
+  - Етнічний склад
+- section: Міжвоєнний період (1921-1939)
+  words: 700
+  points:
+  - Польська влада
+  - Пацифікація
+  - Колонізація — осадники
+  - Українська відповідь
+  - Наростання напруги
+- section: Війна і трагедія (1939-1944)
+  words: 700
+  points:
+  - Радянська окупація (1939-1941)
+  - Німецька окупація
+  - УПА і польське підпілля
+  - 1943 — етнічні чистки
+  - Жертви обох сторін
+- section: Контекст і причини
+  words: 500
+  points:
+  - Не виправдання — пояснення
+  - Нацистська окупація
+  - Польські репресії — реакція
+  - Радикалізація
+- section: Пам'ять і примирення
+  words: 300
+  points:
+  - Різні наративи
+  - Діалог після 1991
+  - 2022 — несподіване примирення
+- section: Підсумок
+  words: 300
+  points:
+  - Волинь — складна історія
+  - Пам'ять без спрощення
+  - Перехід до синтезу
 vocabulary_hints:
   required:
-    - Волинь (Volhynia)
-    - трагедія (tragedy)
-    - етнічна чистка (ethnic cleansing)
-    - пацифікація (pacification)
-    - осадник (settler)
-    - співіснування (coexistence)
-    - примирення (reconciliation)
-    - пам'ять (memory)
-    - жертва (victim)
-    - контекст (context)
+  - Волинь (Volhynia)
+  - трагедія (tragedy)
+  - етнічна чистка (ethnic cleansing)
+  - пацифікація (pacification)
+  - осадник (settler)
+  - співіснування (coexistence)
+  - примирення (reconciliation)
+  - пам'ять (memory)
+  - жертва (victim)
+  - контекст (context)
   recommended:
-    - міжвоєнний (interwar)
-    - радикалізація (radicalization)
-    - окупація (occupation)
-    - підпілля (underground)
-    - двосторонній (bilateral)
-
+  - міжвоєнний (interwar)
+  - радикалізація (radicalization)
+  - окупація (occupation)
+  - підпілля (underground)
+  - двосторонній (bilateral)
 activity_hints:
-  - type: historical-context
-    focus: Pre-1943 Polish-Ukrainian relations in Volhynia
-    output: Contextual analysis
-
-  - type: cause-analysis
-    focus: Factors leading to 1943 violence
-    output: Causal analysis
-
-  - type: memory-study
-    focus: Polish vs. Ukrainian narratives
-    output: Memory comparison
-
-  - type: reconciliation-analysis
-    focus: Post-1991 dialogue — what worked
-    output: Reconciliation study
-
-  - type: essay-response
-    focus: "Чому контекст важливий для розуміння волинських подій?"
-    word_target: 400
-    model_answer: Required (showing complexity without excusing)
-
+- type: historical-context
+  focus: Pre-1943 Polish-Ukrainian relations in Volhynia
+  output: Contextual analysis
+- type: cause-analysis
+  focus: Factors leading to 1943 violence
+  output: Causal analysis
+- type: critical-analysis
+  focus: Polish vs. Ukrainian narratives
+  output: Memory comparison
+- type: reconciliation-analysis
+  focus: Post-1991 dialogue — what worked
+  output: Reconciliation study
+- type: essay-response
+  focus: Чому контекст важливий для розуміння волинських подій?
+  word_target: 400
+  model_answer: Required (showing complexity without excusing)
 prerequisites:
-  - c1-hist-70-73 (Other western regions)
-  - c1-hist-114-116 (Polish-Ukrainian relations)
-
+- c1-hist-70-73 (Other western regions)
+- c1-hist-114-116 (Polish-Ukrainian relations)
 connects_to:
-  - c1-hist-75 (Western regions synthesis)
-  - c1-hist-117 (2022 — historic breakthrough)
-  - c1-hist-80 (Regional diversity synthesis)
+- c1-hist-75 (Western regions synthesis)
+- c1-hist-117 (2022 — historic breakthrough)
+- c1-hist-80 (Regional diversity synthesis)

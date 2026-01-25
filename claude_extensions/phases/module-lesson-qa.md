@@ -103,6 +103,25 @@ All these MUST exist:
 
 **CRITICAL:** This is the primary validation.
 
+> **📖 READ THIS FIRST: Section Flexibility**
+>
+> Section word targets are FLEXIBLE guidance, not strict limits.
+> See: `docs/SUBSECTION-FLEXIBILITY-GUIDE.md`
+>
+> **Quick examples:**
+> - Section A: 1200/600 (+600 over) + Section B: 400/600 (-200 under) = Redistribute 200 words from A to B
+> - Total: 3500/4000 (under) = Must expand with new content (can't just redistribute)
+> - Total: 4100/4000 (over) + some sections under = Redistribute only (no expansion needed)
+
+**Priority hierarchy:**
+1. **Total word count** ≥ word_target (MOST IMPORTANT)
+2. Individual sections within ±10% tolerance (flexible guidance)
+
+**Section word counts are FLEXIBLE:**
+- You can redistribute words between sections
+- One section can be 20% over if another is 5% under
+- As long as total ≥ word_target and no section >10% under
+
 1. **Count words in each section:**
    - Extract content between H2 headers
    - Exclude YAML, SCOPE comment, Підсумок
@@ -116,8 +135,11 @@ All these MUST exist:
      target = meta.content_outline[i].words
      tolerance = ±10% of target
 
-     if actual < (target * 0.9) or actual > (target * 1.1):
-       FAIL: Section "{section}" word count violation
+     if actual < (target * 0.9):
+       WARNING: Section "{section}" under target (but can redistribute)
+
+     if actual > (target * 1.1):
+       NOTE: Section "{section}" over target (content depth - OK)
    ```
 
 3. **Check total:**
@@ -127,9 +149,26 @@ All these MUST exist:
    total_target = meta.word_target
    tolerance = ±5% of target
 
-   if total_actual < (target * 0.95) or total_actual > (target * 1.05):
-     FAIL: Total word count outside tolerance
+   if total_actual < (target * 0.95):
+     FAIL: Total word count below minimum
    ```
+
+**Fix strategy for section mismatches:**
+
+If total is met but some sections are >10% under:
+- **Option A:** Expand under-target sections with new content
+- **Option B:** Redistribute content from over-target sections
+- **Option C:** Combination of both
+
+Example:
+```
+Section A: 1200 / 600 (+600 words over)
+Section B: 400 / 600 (-200 words under)
+Total: 4000 / 4000 ✅
+
+Fix: Move ~200 words from Section A to Section B
+Result: Both sections balanced, total unchanged
+```
 
 **Why 10% per section but 5% total?**
 

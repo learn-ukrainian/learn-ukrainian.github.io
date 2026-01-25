@@ -1,62 +1,83 @@
-# Audit Report: 16-aspect-mastery-pairs.md
-**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+# Audit Report: M16 — 16-aspect-mastery-pairs.md
+**Level:** A2 | **Module:** M16 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 09:52:06
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Tier 1 Pairs | 10 | 8 | ✅ |
+| 2 | match-up | Tier 2 Pairs | 10 | 8 | ✅ |
+| 3 | match-up | Tier 3 Pairs | 10 | 8 | ✅ |
+| 4 | fill-in | Transform to Perfective | 10 | 8 | ✅ |
+| 5 | fill-in | Transform to Imperfective | 8 | 8 | ✅ |
+| 6 | quiz | Aspect Selection | 8 | 8 | ✅ |
+| 7 | cloze | Context Selection | 12 | 12 | ✅ |
+| 8 | unjumble | Aspect Sentences | 8 | 6 | ✅ |
+| 9 | error-correction | Wrong Aspect | 6 | 6 | ✅ |
+| 10 | group-sort | Formation Pattern | 15 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## LINT ERRORS
+- ❌ Line 7: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): відремонтувати, знаходити, платити, побудувати, подзвонити...
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми перетворимо ваші знання...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ввечері перед сном спробуйте...'
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): відремонтувати, дзвонити, відповідати, платити, пам'ятати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 7/100)
 
-- 1 violations (minor)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1408/1000
+- **Words:** ✅ 1454/1000 (raw: 1535)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 47/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Lint:** ❌ 1 Format Errors
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 54.8% (target 50-65% (A2.1))
+- **Immersion:** ❌ 49.8% LOW (target 50-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Presentation** | ✅ | 209 | Included in Core |
-| **The Core 30 Pairs** | ✅ | 0 | Included in Core |
-| **Tier 1: Essential Everyday Pairs** | ⚪️ | 54 | Skipped |
-| **Tier 2: Learning & Communication** | ⚪️ | 48 | Skipped |
-| **Tier 3: Action & Movement** | ⚪️ | 7 | Skipped |
-| **How to Choose: The Decision Tree** | ⚪️ | 159 | Skipped |
-| **Drill Patterns** | ✅ | 0 | Included in Core |
-| **Pattern A: Past Tense Drill** | ✅ | 65 | Included in Core |
-| **Pattern B: Future Tense Drill** | ✅ | 75 | Included in Core |
-| **Practice** | ⚪️ | 94 | Skipped |
-| **Rapid Fire Drills** | ⚪️ | 0 | Skipped |
-| **Drill 1: Instant Recall** | ⚪️ | 39 | Skipped |
-| **Drill 2: Reverse Recall** | ⚪️ | 22 | Skipped |
-| **Drill 3: Context Switch** | ✅ | 42 | Included in Core |
-| **Story Time: The Exam** | ✅ | 109 | Included in Core |
-| **Story Time Part 2: The Routine** | ✅ | 89 | Included in Core |
-| **Common Mistakes** | ⚪️ | 0 | Skipped |
-| **Mistake 1: Using Imperfective for Results** | ⚪️ | 20 | Skipped |
-| **Mistake 2: Using Perfective for Ongoing Actions** | ⚪️ | 26 | Skipped |
-| **Mistake 3: Using Perfective for Habits** | ⚪️ | 18 | Skipped |
-| **Language Learning Tip** | ✅ | 121 | Included in Core |
-| **Story Time Part 3: Вечір з Друзями** | ✅ | 98 | Included in Core |
-| **Підсумок** | ✅ | 34 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 222 | Included in Core |
+| **Presentation / Презентація** | ✅ | 693 | Included in Core |
+| **Practice / Практика** | ⚪️ | 174 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 214 | Included in Core |
+| **Summary / Підсумок** | ✅ | 93 | Included in Core |
+| **Need More Practice?** | ⚪️ | 58 | Skipped |

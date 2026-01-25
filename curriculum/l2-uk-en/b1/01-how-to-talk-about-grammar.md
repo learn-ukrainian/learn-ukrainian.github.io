@@ -2,13 +2,13 @@
 
 > 🎯 **Why This Module Matters**
 >
-> You're at B1 now. From this point forward, you'll encounter grammar explanations written *in Ukrainian* — in textbooks, online resources, and conversations with native speakers. To understand these resources, you need to know what Ukrainians call the parts of speech, the cases, and other grammar concepts. This module gives you that vocabulary. By the end, you'll be able to read a Ukrainian grammar explanation and understand what it's talking about.
+> You're at B1 now. From this point forward, you'll encounter grammar explanations written _in Ukrainian_ — in textbooks, online resources, and conversations with native speakers. To understand these resources, you need to know what Ukrainians call the parts of speech, the cases, and other grammar concepts. This module gives you that vocabulary. By the end, you'll be able to read a Ukrainian grammar explanation and understand what it's talking about.
 
-## Вступ
+## Introduction - Why Learn Grammar in Ukrainian?
 
 ### Виклик вивчення граматики новою мовою
 
-Think about how you learned grammar in school. Someone taught you terms like "noun," "verb," "adjective." Now imagine picking up a Ukrainian grammar book. You open it and see: *"Іменник стоїть у родовому відмінку після прийменника..."*
+Think about how you learned grammar in school. Someone taught you terms like "noun," "verb," "adjective." Now imagine picking up a Ukrainian grammar book. You open it and see: _"Іменник стоїть у родовому відмінку після прийменника..."_
 
 If you don't know that **іменник** means "noun," **родовий відмінок** means "genitive case," and **прийменник** means "preposition," you're lost. This module solves that problem.
 
@@ -20,13 +20,11 @@ Every Ukrainian schoolchild learns these terms in school. When a Ukrainian teach
 
 > 💡 **Did You Know?**
 >
-> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word).
+> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions. The word **відмінок** literally means "change" or "variation" — because the word _changes_ form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word).
 
 ---
 
-## Пояснення
-
-### Частини мови (The Parts of Speech)
+## Parts of Speech (Частини мови)
 
 Українська мова має десять частин мови. На рівні B1 вам потрібно впізнавати всі їх за українськими назвами. Розуміння цих термінів є важливим, тому що відтепер ви будете зустрічати пояснення граматики, написані повністю українською мовою. Носії мови не думають про граматику, використовуючи англійську термінологію — вони використовують власну багату систему термінів, яка розвивалася століттями.
 
@@ -36,18 +34,18 @@ The ten parts of speech divide into two main groups: самостійні час
 
 These are the words that carry meaning:
 
-| Термін | English | Example |
-|--------|---------|---------|
-| **іменник** | noun | книга, стіл, Київ |
-| **дієслово** | verb | читати, писати, бігти |
+| Термін         | English   | Example                |
+| -------------- | --------- | ---------------------- |
+| **іменник**    | noun      | книга, стіл, Київ      |
+| **дієслово**   | verb      | читати, писати, бігти  |
 | **прикметник** | adjective | гарний, великий, синій |
-| **прислівник** | adverb | швидко, добре, тут |
-| **займенник** | pronoun | я, ти, він, вона |
-| **числівник** | numeral | один, два, перший |
+| **прислівник** | adverb    | швидко, добре, тут     |
+| **займенник**  | pronoun   | я, ти, він, вона       |
+| **числівник**  | numeral   | один, два, перший      |
 
-Let's see these in action. **Студентка читає цікаву книгу.** Here, **студентка** is the іменник (who's reading?), **читає** is the дієслово (what's she doing?), and **цікаву** is the прикметник (what kind of book?).
+Let's see these in action. **Оксана читає «Кобзар».** Here, **Оксана** is the іменник (who's reading?), **читає** is the дієслово (what's she doing?), and **«Кобзар»** is the іменник (what is she reading?).
 
-Or consider: **Він швидко біжить до зупинки.** The word **він** is a займенник replacing someone's name, **швидко** is a прислівник telling us how he runs, and **біжить** is the дієслово — the action itself.
+Or consider: **Тарас швидко біжить на метро «Хрещатик».** The word **Тарас** is an іменник, **швидко** is a прислівник telling us how he runs, and **біжить** is the дієслово.
 
 > 🌍 **Real World: Grammar Discussions**
 >
@@ -59,12 +57,12 @@ Notice how each Ukrainian term describes what the word category does. The іме
 
 These words don't carry meaning on their own — they connect and modify. Think of them as the glue that holds sentences together. Without прийменники, you couldn't show relationships between objects. Without сполучники, you couldn't connect clauses. These words are essential for constructing complex sentences:
 
-| Термін | English | Example |
-|--------|---------|---------|
-| **прийменник** | preposition | в, на, до, з |
-| **сполучник** | conjunction | і, але, бо, що |
-| **частка** | particle | не, ні, хай, би |
-| **вигук** | interjection | ой, ах, гей |
+| Термін         | English      | Example         |
+| -------------- | ------------ | --------------- |
+| **прийменник** | preposition  | в, на, до, з    |
+| **сполучник**  | conjunction  | і, але, бо, що  |
+| **частка**     | particle     | не, ні, хай, би |
+| **вигук**      | interjection | ой, ах, гей     |
 
 Watch how these work: **Книга лежить на столі.** The word **на** is a прийменник — it connects the book to the table and tells us where. **Я хочу піти, але не маю часу.** Here **але** is a сполучник joining two ideas. **Вона не прийде сьогодні.** The tiny word **не** is a частка — it flips the meaning from "she will come" to "she won't come."
 
@@ -72,29 +70,29 @@ And when you stub your toe? **Ой, як боляче!** That **ой** is a ви
 
 ### The Master Category
 
-| Термін | English | Meaning |
-|--------|---------|---------|
+| Термін           | English        | Meaning                        |
+| ---------------- | -------------- | ------------------------------ |
 | **частина мови** | part of speech | The category a word belongs to |
 
 The частка is particularly interesting — it's a small word that adds nuance to sentences. The most common частка is "не", which negates verbs and adjectives. The word "частка" itself means "small part" — these are the smallest functional elements of speech. Other common частки include "хай" for imperatives, "би" for conditionals, and "ні" for emphatic negation.
 
 ---
 
-### Сім відмінків (The Seven Cases)
+## Case Names (Відмінки)
 
 You've been using Ukrainian cases since A1. Now you'll learn their Ukrainian names. Ukrainian is a highly inflected language, meaning that word endings change based on grammatical function. These changes are organized into seven відмінків. When a Ukrainian grammar book tells you to put a noun in the родовий відмінок, you need to know exactly which ending patterns to apply.
 
 Each case has a specific function and a specific set of question words that help you identify it. Memorizing the питання for each case is just as important as memorizing the case names themselves:
 
-| Number | Українська назва | English | Question | Example |
-|--------|-----------------|---------|----------|---------|
-| 1 | **називний** | nominative | хто? що? | книга |
-| 2 | **родовий** | genitive | кого? чого? | книги |
-| 3 | **давальний** | dative | кому? чому? | книзі |
-| 4 | **знахідний** | accusative | кого? що? | книгу |
-| 5 | **орудний** | instrumental | ким? чим? | книгою |
-| 6 | **місцевий** | locative | на кому? на чому? | на книзі |
-| 7 | **кличний** | vocative | — | книго! |
+| Number | Українська назва | English      | Question          | Example  |
+| ------ | ---------------- | ------------ | ----------------- | -------- |
+| 1      | **називний**     | nominative   | хто? що?          | книга    |
+| 2      | **родовий**      | genitive     | кого? чого?       | книги    |
+| 3      | **давальний**    | dative       | кому? чому?       | книзі    |
+| 4      | **знахідний**    | accusative   | кого? що?         | книгу    |
+| 5      | **орудний**      | instrumental | ким? чим?         | книгою   |
+| 6      | **місцевий**     | locative     | на кому? на чому? | на книзі |
+| 7      | **кличний**      | vocative     | —                 | книго!   |
 
 Let's trace one noun through all seven cases. Take **сестра** — sister:
 
@@ -109,6 +107,7 @@ Let's trace one noun through all seven cases. Take **сестра** — sister:
 > 💡 **Did You Know?**
 >
 > The case names come from their functions:
+>
 > - **Називний** (from "називати" — to name) is for naming the subject
 > - **Родовий** (from "рід" — origin/kind) shows origin or possession
 > - **Давальний** (from "давати" — to give) marks the recipient
@@ -119,28 +118,28 @@ Let's trace one noun through all seven cases. Take **сестра** — sister:
 
 ### The Master Term
 
-| Термін | English | Meaning |
-|--------|---------|---------|
+| Термін       | English          | Meaning                               |
+| ------------ | ---------------- | ------------------------------------- |
 | **відмінок** | grammatical case | The category that shows a noun's role |
 
 The mnemonic in Діалог 4 — "На Різдво Дід Загубив Орішки Між Ковбасками" — is a genuine Ukrainian school tradition. Students learn this phrase early on, and it stays with them for life. You'll find that native speakers can recite the cases in order without thinking, because this mnemonic made the sequence automatic.
 
 ---
 
-### Основні терміни речення (Basic Sentence Terms)
+## Basic Sentence Terms
 
 To understand grammar explanations, you need words for sentence structure. These terms appear constantly in grammar textbooks, online resources, and language learning apps. When you read an explanation like "Дієслово змінюється за особами та числами" (The verb changes according to person and number), you need to know what особа and число mean.
 
 The concept of рід is fundamental to Ukrainian grammar. Every noun has a gender — чоловічий, жіночий, or середній — and this gender determines how adjectives, pronouns, and past-tense verbs agree with the noun. The term число refers to whether something is однина or множина:
 
-| Термін | English | Example |
-|--------|---------|---------|
-| **слово** | word | "книга" — це слово |
-| **речення** | sentence | Це коротке речення. |
-| **рід** | gender | чоловічий, жіночий, середній |
-| **число** | number | однина, множина |
-| **особа** | person | перша, друга, третя |
-| **закінчення** | ending | -а, -ою, -і |
+| Термін         | English  | Example                      |
+| -------------- | -------- | ---------------------------- |
+| **слово**      | word     | "книга" — це слово           |
+| **речення**    | sentence | Це коротке речення.          |
+| **рід**        | gender   | чоловічий, жіночий, середній |
+| **число**      | number   | однина, множина              |
+| **особа**      | person   | перша, друга, третя          |
+| **закінчення** | ending   | -а, -ою, -і                  |
 
 See how these work together: **Новий студент прийшов.** vs. **Нова студентка прийшла.** The adjective **новий/нова** and the past tense verb **прийшов/прийшла** both change based on the рід of the noun.
 
@@ -164,29 +163,29 @@ The good news is that once you learn these twenty-five terms, they unlock an ent
 
 ---
 
-## Практика
+## Practice Reading Grammar Explanations
 
 ### Pattern Recognition
 
 Look at these Ukrainian grammar instructions and identify what they're asking:
 
-1. *"Поставте іменник у родовому відмінку."*
+1. _"Поставте іменник у родовому відмінку."_
    - Put the **noun** in the **genitive case**.
 
-2. *"Знайдіть усі дієслова в тексті."*
+2. _"Знайдіть усі дієслова в тексті."_
    - Find all the **verbs** in the text.
 
-3. *"Визначте рід цих іменників."*
+3. _"Визначте рід цих іменників."_
    - Determine the **gender** of these **nouns**.
 
-4. *"Утворіть прислівник від прикметника."*
+4. _"Утворіть прислівник від прикметника."_
    - Form an **adverb** from the **adjective**.
 
 ### Reading Ukrainian Grammar
 
 Here's a sample grammar explanation. Can you understand it?
 
-> *Іменник "книга" — жіночого роду. У знахідному відмінку він має форму "книгу". Після прийменника "на" вживається місцевий відмінок: "на книзі".*
+> _Іменник "книга" — жіночого роду. У знахідному відмінку він має форму "книгу". Після прийменника "на" вживається місцевий відмінок: "на книзі"._
 
 **Translation:** The noun "книга" is feminine gender. In the accusative case, it has the form "книгу". After the preposition "на", the locative case is used: "на книзі".
 
@@ -216,7 +215,7 @@ Here's a sample grammar explanation. Can you understand it?
 
 **Оксана:** А, зрозуміло! Тобто замість "книга" буде "книзі"?
 
-**Марко:** Так, правильно. Я даю книгу — кому? — сестрі.
+**Марко:** Так, правильно. Я даю книгу — кому? — Марії. Це як давати подарунок на день народження — завжди давальний відмінок.
 
 ---
 
@@ -240,7 +239,7 @@ Here's a sample grammar explanation. Can you understand it?
 
 **Тетяна:** Так, усі сім. Називний, родовий, давальний, знахідний, орудний, місцевий, кличний.
 
-**Ігор:** А як запам'ятати порядок?
+**Ігор:** А як запам'ятати порядок? Я постійно плутаю орудний і місцевий.
 
 **Тетяна:** Є мнемоніка: "На Різдво Дід Загубив Орішки Між Ковбасками."
 
@@ -252,23 +251,27 @@ Here's a sample grammar explanation. Can you understand it?
 
 ---
 
-# Підсумок
+## Summary and Self-Assessment
 
 In this module, you learned the core grammar terminology in Ukrainian:
 
 **Parts of Speech (Частини мови):**
+
 - іменник, дієслово, прикметник, прислівник, займенник, числівник
 - прийменник, сполучник, частка, вигук
 
 **The Seven Cases (Відмінки):**
+
 - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 
 **Sentence Elements:**
+
 - слово, речення, рід, число, особа, закінчення
 
 > ✅ **Self-Check**
 >
 > Before moving on, can you:
+>
 > - [ ] Name all ten parts of speech in Ukrainian?
 > - [ ] List all seven cases in order?
 > - [ ] Understand a basic Ukrainian grammar instruction?
@@ -280,7 +283,6 @@ In this module, you learned the core grammar terminology in Ukrainian:
 ---
 
 ## Потрібно більше практики?
-
 
 Ви завершили цей модуль! Ось кілька способів закріпити матеріал:
 

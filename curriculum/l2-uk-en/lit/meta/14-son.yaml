@@ -1,149 +1,122 @@
-# LIT Module 14: Son (The Dream)
-# Status: SPEC (ready for content development)
-
 id: lit-14
 title: 'Політична Сатира: Сон'
 subtitle: 'LIT-014: Сміхове руйнування влади'
 slug: son
 module_type: literature
 word_target: 4500
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 grammar:
-  - Satirical stylistic devices
-  - Grotesque and caricature
-  - Political rhetoric
-
+- Satirical stylistic devices
+- Grotesque and caricature
+- Political rhetoric
 objectives:
-  - Analyze the political satire in "The Dream"
-  - Deconstruct the myth of the "Good Tsar"
-  - Compare Shevchenko's view with Pushkin's
-
-# === AGENT BUILD SPEC ===
-
+- Analyze the political satire in "The Dream"
+- Deconstruct the myth of the "Good Tsar"
+- Compare Shevchenko's view with Pushkin's
 sources:
-  - name: Сон — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=18
-    type: primary
-    notes: Поема для детального аналізу
-  - name: Аналіз "Сну"
-    url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
-    type: secondary
-    notes: Літературознавчий аналіз
-  - name: Російська імперія — контекст
-    url: https://uk.wikipedia.org/wiki/Російська_імперія
-    type: reference
-    notes: Політичний контекст 1844 року
-
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  type: reference
+  notes: Політичний контекст 1844 року
 content_outline:
-  - section: Вступ — Найсміливіший маніфест XIX століття
-    words: 500
-    points:
-      - Історія написання (1844)
-      - Чому "Сон" — це революція
-      - Доля твору і автора
-
-  - section: Структура подорожі
-    words: 700
-    points:
-      - Україна — пейзаж поневолення
-      - Сибір — пекло на землі
-      - Петербург — театр абсурду
-
-  - section: Сатира на царя
-    words: 800
-    points:
-      - Образ «ведмедя» (Миколи I)
-      - 'Сцена балу: гротеск і карикатура'
-      - '«Сміхове руйнування» авторитету'
-
-  - section: Техніка гротеску
-    words: 700
-    points:
-      - Що таке гротеск і іронія
-      - Контраст і парадокс
-      - Сон як форма критики
-
-  - section: Наслідки для Шевченка
-    words: 500
-    points:
-      - Арешт і заслання
-      - '"Сон" у справі Кирило-Мефодіївського братства'
-      - Ціна правди
-
-  - section: Підсумок — Сатира як зброя
-    words: 400
-    points:
-      - Роль сатири в десакралізації влади
-      - Шевченко vs імперія
-      - Актуальність твору сьогодні
-
+- section: Вступ — Найсміливіший маніфест XIX століття
+  words: 500
+  points:
+  - Історія написання (1844)
+  - Чому "Сон" — це революція
+  - Доля твору і автора
+- section: Структура подорожі
+  words: 700
+  points:
+  - Україна — пейзаж поневолення
+  - Сибір — пекло на землі
+  - Петербург — театр абсурду
+- section: Сатира на царя
+  words: 800
+  points:
+  - Образ «ведмедя» (Миколи I)
+  - 'Сцена балу: гротеск і карикатура'
+  - «Сміхове руйнування» авторитету
+- section: Техніка гротеску
+  words: 700
+  points:
+  - Що таке гротеск і іронія
+  - Контраст і парадокс
+  - Сон як форма критики
+- section: Наслідки для Шевченка
+  words: 500
+  points:
+  - Арешт і заслання
+  - '"Сон" у справі Кирило-Мефодіївського братства'
+  - Ціна правди
+- section: Підсумок — Сатира як зброя
+  words: 400
+  points:
+  - Роль сатири в десакралізації влади
+  - Шевченко vs імперія
+  - Актуальність твору сьогодні
 vocabulary_hints:
   required:
-    - сатира (satire)
-    - гротеск (grotesque)
-    - іронія (irony)
-    - десакралізація (desacralization)
-    - карикатура (caricature)
-    - імперія (empire)
-    - цар (tsar)
-    - заслання (exile)
-    - пейзаж (landscape)
-    - контраст (contrast)
+  - сатира (satire)
+  - гротеск (grotesque)
+  - іронія (irony)
+  - десакралізація (desacralization)
+  - карикатура (caricature)
+  - імперія (empire)
+  - цар (tsar)
+  - заслання (exile)
+  - пейзаж (landscape)
+  - контраст (contrast)
   recommended:
-    - парадокс (paradox)
-    - абсурд (absurd)
-    - бал (ball)
-    - маніфест (manifesto)
-    - критика (criticism)
-
+  - парадокс (paradox)
+  - абсурд (absurd)
+  - бал (ball)
+  - маніфест (manifesto)
+  - критика (criticism)
 activity_hints:
-  - type: reading
-    focus: Повний текст поеми "Сон"
-    source: UkrLib tid=18
-    items: "1"
-
-  - type: quiz
-    focus: Структура і сюжет поеми
-    items: "15+"
-
-  - type: match-up
-    focus: Образ → його сатиричне значення
-    items: "12+"
-
-  - type: essay-response
-    focus: Роль сатири в десакралізації влади
-    word_target: 300
-    output: Політологічне есе
-
-  - type: group-sort
-    focus: Пейзажі (Україна / Сибір / Петербург)
-    items: "15+"
-
-  - type: discussion
-    focus: Чи актуальна сатира Шевченка сьогодні?
-    output: Дискусія про актуальність
-
+- type: reading
+  focus: Повний текст поеми "Сон"
+  source: UkrLib tid=18
+  items: '1'
+- type: quiz
+  focus: Структура і сюжет поеми
+  items: 15+
+- type: match-up
+  focus: Образ → його сатиричне значення
+  items: 12+
+- type: essay-response
+  focus: Роль сатири в десакралізації влади
+  word_target: 300
+  output: Політологічне есе
+- type: group-sort
+  focus: Пейзажі (Україна / Сибір / Петербург)
+  items: 15+
 prerequisites:
-  - lit-11 to lit-13 (Shevchenko biography and early works)
-  - lit-08 (Konotop Witch — для порівняння сатири)
-
+- lit-11 to lit-13 (Shevchenko biography and early works)
+- lit-08 (Konotop Witch — для порівняння сатири)
 connects_to:
-  - lit-15 (Zapovit — політичний заповіт)
-  - lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
-
-version: "1.0"
+- lit-15 (Zapovit — політичний заповіт)
+- lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
+version: '1.0'
 phase: LIT.3 The Prophet (Taras Shevchenko)
 focus: literature
 pedagogy: literature
 duration: 120
 transliteration: none
 tags:
-  - література
-  - шевченко
-  - сатира
-  - імперія
-  - сон
-
+- література
+- шевченко
+- сатира
+- імперія
+- сон
 naturalness:
   score: 10
   status: PASS

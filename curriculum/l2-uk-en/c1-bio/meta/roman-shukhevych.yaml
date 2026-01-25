@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and battles
   items: 10+
-- type: discussion
-  focus: Why does Shukhevych remain controversial internationally?
-  output: Balanced historical analysis
 prerequisites:
 - c1-bio-108 (Yevhen Konovalets - predecessor)
 - c1-bio-52 (Dmytro Dontsov - ideologist)

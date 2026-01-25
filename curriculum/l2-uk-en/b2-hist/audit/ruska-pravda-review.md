@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 10:17:12
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -29,26 +30,26 @@
 | 8 | fill-in | Юридична термінологія | 18 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
+- Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, essay-response, fill-in, group-sort, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3902/4000 (raw: 4070) (98 short)
+- **Words:** ✅ 4274/4000 (raw: 4438)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -61,15 +62,15 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| engagement | 9 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 11 | 2 | 100% | 14% | 14.3% |
+| decolonization | 10 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.2% |
-| questions | 17 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.2%** |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 22 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -78,8 +79,13 @@
 | **Вступ** | ✅ | 222 | Included in Core |
 | **Правда Ярослава (1016–1036)** | ⚪️ | 344 | Skipped |
 | **Правда Ярославичів та соціальна структура** | ⚪️ | 427 | Skipped |
-| **Первинні джерела** | ✅ | 227 | Included in Core |
+| **Первинні джерела** | ✅ | 345 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 186 | Included in Core |
-| **Читання** | ✅ | 2171 | Included in Core |
-| **Підсумок** | ✅ | 171 | Included in Core |
+| **Читання: Ярослав Мудрий — законодавець** | ✅ | 280 | Included in Core |
+| **Соціальні ліфти та Економіка** | ⚪️ | 497 | Skipped |
+| **Порівняльний аналіз правових систем** | ✅ | 157 | Included in Core |
+| **Жінки, Суд та Мова** | ⚪️ | 221 | Skipped |
+| **Спадщина та Сучасність** | ⚪️ | 1042 | Skipped |
+| **Повсякденне правосуддя: Казуси** | ⚪️ | 257 | Skipped |
+| **Підсумок** | ✅ | 142 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 102 | Skipped |

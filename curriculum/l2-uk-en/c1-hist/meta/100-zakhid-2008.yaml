@@ -1,8 +1,5 @@
-# C1-HIST Module 100: Бухарест 2008 — NATO каже «ні»
-# Status: SPEC (ready for content development)
-
 id: c1-hist-100
-title: "Бухарест 2008: NATO каже «ні»"
+title: 'Бухарест 2008: NATO каже «ні»'
 slug: zakhid-2008
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,122 +7,104 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Бухарестський саміт (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
-    type: reference
-    notes: Summit decisions
-  - name: План дій щодо членства (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
-    type: reference
-    notes: MAP explanation
-  - name: Розширення НАТО (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Розширення_НАТО
-    type: reference
-    notes: Enlargement context
-
+- name: Бухарестський саміт (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
+  type: reference
+  notes: Summit decisions
+- name: План дій щодо членства (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
+  type: reference
+  notes: MAP explanation
+- name: Розширення НАТО (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
+  type: reference
+  notes: Enlargement context
 content_outline:
-  - section: Вступ — Вето на безпеку
-    words: 400
-    points:
-      - Квітень 2008 — Бухарест
-      - Україна і Грузія — просять MAP
-      - Меркель і Саркозі — «ні»
-      - Структура модуля
-
-  - section: Контекст — Що таке MAP
-    words: 500
-    points:
-      - План дій щодо членства
-      - Не членство — шлях до нього
-      - Чому важливо
-      - Хто вже отримав
-
-  - section: Хто за, хто проти
-    words: 600
-    points:
-      - США — за
-      - Німеччина, Франція — проти
-      - Аргументи проти
-      - «Провокація Росії»
-
-  - section: Компроміс — гірший за відмову
-    words: 700
-    points:
-      - «Колись стануть членами»
-      - Але без MAP зараз
-      - Найгірший варіант
-      - Сигнал для Росії
-
-  - section: Серпень 2008 — Грузія
-    words: 500
-    points:
-      - Війна через 4 місяці
-      - Зв'язок з Бухарестом
-      - «Бачите — НАТО провокує»
-      - Урок — не засвоєний
-
-  - section: Наслідки для України
-    words: 500
-    points:
-      - 2014 — без захисту
-      - «Двері відчинені» — порожня фраза
-      - Меркель визнала помилку (2022)
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Бухарест — ключова помилка
-      - Зелене світло для Путіна
-      - Перехід до 2014
-
+- section: Вступ — Вето на безпеку
+  words: 400
+  points:
+  - Квітень 2008 — Бухарест
+  - Україна і Грузія — просять MAP
+  - Меркель і Саркозі — «ні»
+  - Структура модуля
+- section: Контекст — Що таке MAP
+  words: 500
+  points:
+  - План дій щодо членства
+  - Не членство — шлях до нього
+  - Чому важливо
+  - Хто вже отримав
+- section: Хто за, хто проти
+  words: 600
+  points:
+  - США — за
+  - Німеччина, Франція — проти
+  - Аргументи проти
+  - «Провокація Росії»
+- section: Компроміс — гірший за відмову
+  words: 700
+  points:
+  - «Колись стануть членами»
+  - Але без MAP зараз
+  - Найгірший варіант
+  - Сигнал для Росії
+- section: Серпень 2008 — Грузія
+  words: 500
+  points:
+  - Війна через 4 місяці
+  - Зв'язок з Бухарестом
+  - «Бачите — НАТО провокує»
+  - Урок — не засвоєний
+- section: Наслідки для України
+  words: 500
+  points:
+  - 2014 — без захисту
+  - «Двері відчинені» — порожня фраза
+  - Меркель визнала помилку (2022)
+- section: Підсумок
+  words: 300
+  points:
+  - Бухарест — ключова помилка
+  - Зелене світло для Путіна
+  - Перехід до 2014
 vocabulary_hints:
   required:
-    - Бухарест (Bucharest)
-    - саміт (summit)
-    - MAP (Membership Action Plan)
-    - вето (veto)
-    - розширення (enlargement)
-    - «провокація» (provocation)
-    - компроміс (compromise)
-    - сигнал (signal)
-    - безпека (security)
-    - членство (membership)
+  - Бухарест (Bucharest)
+  - саміт (summit)
+  - MAP (Membership Action Plan)
+  - вето (veto)
+  - розширення (enlargement)
+  - «провокація» (provocation)
+  - компроміс (compromise)
+  - сигнал (signal)
+  - безпека (security)
+  - членство (membership)
   recommended:
-    - Меркель (Merkel)
-    - Саркозі (Sarkozy)
-    - колективна безпека (collective security)
-    - стаття 5 (Article 5)
-    - умиротворення (appeasement)
-
+  - Меркель (Merkel)
+  - Саркозі (Sarkozy)
+  - колективна безпека (collective security)
+  - стаття 5 (Article 5)
+  - умиротворення (appeasement)
 activity_hints:
-  - type: decision-analysis
-    focus: Why did Germany and France block MAP?
-    output: Veto analysis
-
-  - type: signal-analysis
-    focus: What signal did Bucharest send to Putin?
-    output: Signal interpretation
-
-  - type: counterfactual
-    focus: What if Ukraine got MAP in 2008?
-    output: Alternative scenario
-
-  - type: Georgia-connection
-    focus: Bucharest → Georgia 2008 → Ukraine 2014
-    output: Causal chain analysis
-
-  - type: essay-response
-    focus: "Чи Бухарест 2008 спровокував агресію Росії?"
-    word_target: 400
-    model_answer: Required
-
+- type: decision-analysis
+  focus: Why did Germany and France block MAP?
+  output: Veto analysis
+- type: signal-analysis
+  focus: What signal did Bucharest send to Putin?
+  output: Signal interpretation
+- type: essay-response
+  focus: What if Ukraine got MAP in 2008?
+  output: Alternative scenario
+- type: Georgia-connection
+  focus: Bucharest → Georgia 2008 → Ukraine 2014
+  output: Causal chain analysis
+- type: essay-response
+  focus: Чи Бухарест 2008 спровокував агресію Росії?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-98-99 (Budapest, Black Sea Fleet)
-
+- c1-hist-98-99 (Budapest, Black Sea Fleet)
 connects_to:
-  - c1-hist-101 (2014 non-response)
-  - c1-hist-102 (2022 — paradigm shift?)
+- c1-hist-101 (2014 non-response)
+- c1-hist-102 (2022 — paradigm shift?)

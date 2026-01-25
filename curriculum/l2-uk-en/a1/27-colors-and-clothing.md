@@ -25,14 +25,14 @@
 
 ### Color Agreement Table
 
-| Color (m) | IPA | Feminine | Neuter | Plural |
-| --------- | --- | -------- | ------ | ------ |
-| білий | /ˈbilɪj/ | біла | біле | білі |
-| чорний | /ˈt͡ʃɔrnɪj/ | чорна | чорне | чорні |
-| червоний | /t͡ʃɛrˈvɔnɪj/ | червона | червоне | червоні |
-| зелений | /zɛˈlɛnɪj/ | зелена | зелене | зелені |
-| синій | /ˈsɪnʲij/ | синя | синє | сині |
-| жовтий | /ˈʒɔwtɪj/ | жовта | жовте | жовті |
+| Color (m) | IPA          | Feminine | Neuter  | Plural  |
+| --------- | ------------ | -------- | ------- | ------- |
+| білий     | /ˈbilɪj/     | біла     | біле    | білі    |
+| чорний    | /ˈt͡ʃɔrnɪj/   | чорна    | чорне   | чорні   |
+| червоний  | /t͡ʃɛrˈvɔnɪj/ | червона  | червоне | червоні |
+| зелений   | /zɛˈlɛnɪj/   | зелена   | зелене  | зелені  |
+| синій     | /ˈsɪnʲij/    | синя     | синє    | сині    |
+| жовтий    | /ˈʒɔwtɪj/    | жовта    | жовте   | жовті   |
 
 ---
 
@@ -67,13 +67,13 @@ Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sen
 
 Some clothing words are ALWAYS plural in Ukrainian:
 
-| Word | IPA | Meaning | Why? |
-| -------- | --- | -------- | -------- |
-| штани | /ʃtɑˈnɪ/ | pants | Two legs |
-| джинси | /ˈdʒɪnsɪ/ | jeans | Two legs |
-| шорти | /ˈʃɔrtɪ/ | shorts | Two legs |
-| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots | Two feet |
-| кросівки | /krɔˈsivkɪ/ | sneakers | Two feet |
+| Word     | IPA          | Meaning  | Why?     |
+| -------- | ------------ | -------- | -------- |
+| штани    | /ʃtɑˈnɪ/     | pants    | Two legs |
+| джинси   | /ˈdʒɪnsɪ/    | jeans    | Two legs |
+| шорти    | /ˈʃɔrtɪ/     | shorts   | Two legs |
+| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots    | Two feet |
+| кросівки | /krɔˈsivkɪ/  | sneakers | Two feet |
 
 These words take **plural adjectives**:
 

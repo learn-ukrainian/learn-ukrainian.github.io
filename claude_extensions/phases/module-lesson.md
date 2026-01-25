@@ -36,14 +36,25 @@ fi
 >
 > ### Word Count Accuracy
 >
-> The PRIMARY goal of this phase is hitting word targets EXACTLY.
+> The PRIMARY goal of this phase is hitting the **total word target**.
+>
+> **Priority hierarchy:**
+> 1. **Total word count** ≥ `word_target` (MOST IMPORTANT)
+> 2. Individual sections within ±10% of target (flexible guidance)
+>
+> **Section targets are FLEXIBLE:**
+> - You can redistribute words between sections
+> - One section can be 20% over if another is 5% under
+> - As long as total ≥ word_target and no section >10% under
+> - See: `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` for examples
 >
 > **Process:**
 >
 > 1. Generate each section independently
 > 2. Count words after EACH section
 > 3. Adjust if needed BEFORE moving to next section
-> 4. Final check: total must equal ±5% of word_target
+> 4. Final check: **total must be ≥95% of word_target**
+> 5. Sections >10% under target? Expand OR redistribute from over-sections
 >
 > **Why this matters:**
 >
@@ -101,30 +112,9 @@ fi
    docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
    ```
 
-### Step 2: Generate Frontmatter
+### Step 2: Generate SCOPE Comment
 
-Create YAML frontmatter from meta.yaml:
-
-```yaml
----
-module: { module }
-title: '{title}'
-subtitle: '{subtitle}'
-version: '{version}'
-phase: '{phase}'
-pedagogy: '{pedagogy}'
-focus: '{focus}'
-duration: { duration }
-transliteration: { transliteration }
-register: '{register}' # if present
-tags:
-  - { derived from focus and phase }
----
-```
-
-### Step 3: Generate SCOPE Comment
-
-For all modules, add SCOPE comment after frontmatter:
+For all modules, start with SCOPE comment (NO frontmatter - metadata is in meta.yaml):
 
 ```markdown
 <!-- SCOPE
@@ -136,7 +126,7 @@ Related: [connected slugs from meta.connects_to]
 -->
 ```
 
-### Step 4: Generate Title and Introduction
+### Step 3: Generate Title and Introduction
 
 **Title (H1):**
 
@@ -165,7 +155,7 @@ Based on pedagogy and focus:
 > [What learner will be able to do after this lesson]
 ```
 
-### Step 5: Generate Content Sections
+### Step 4: Generate Content Sections
 
 **CRITICAL: Section-by-section generation with word count verification**
 
@@ -248,7 +238,7 @@ For each section in `content_outline`:
 
 6. **Move to next section** only after current section is accurate
 
-### Step 6: Generate Summary
+### Step 5: Generate Summary
 
 After all content sections, add summary:
 
@@ -265,7 +255,7 @@ After all content sections, add summary:
 
 **Summary word count:** ~150-200 words (NOT counted toward word_target)
 
-### Step 7: Verify Total Word Count
+### Step 6: Verify Total Word Count
 
 **Final check:**
 
@@ -450,11 +440,9 @@ If outside range: Adjust largest section(s) to compensate.
 
 ## Output Format
 
-```markdown
----
-{ YAML frontmatter }
----
+**IMPORTANT:** NO frontmatter in .md files. Metadata lives in `meta/{slug}.yaml`.
 
+```markdown
 <!-- SCOPE
 {scope comment}
 -->
@@ -505,8 +493,8 @@ Before outputting, verify:
 - [ ] Objectives language matches level (English A1-A2, Ukrainian B1+)
 - [ ] No activities/exercises included (those are Phase 5)
 - [ ] No vocabulary tables (those are Phase 7)
-- [ ] YAML frontmatter complete
-- [ ] SCOPE comment present
+- [ ] NO frontmatter (metadata in meta.yaml)
+- [ ] SCOPE comment present at start of file
 
 ---
 
@@ -539,20 +527,6 @@ Next: Run /module-lesson-qa {level} {module_num}
 **Output:** `trypillian-civilization.md` (excerpt)
 
 ```markdown
----
-module: b2-hist-01
-title: 'Трипільська цивілізація'
-subtitle: 'Trypillian Civilization — Origins of Ukrainian Land'
-version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
-pedagogy: seminar
-focus: history
-duration: 150
-transliteration: none
-register: публіцистичний
-tags: [history, era: eneolithic, archaeology, decolonization]
----
-
 <!-- SCOPE
 Covers: Трипільська культура як одна з найдавніших цивілізацій Європи — історія відкриття, протоміста, господарство, ремесла, духовний світ
 Not covered:

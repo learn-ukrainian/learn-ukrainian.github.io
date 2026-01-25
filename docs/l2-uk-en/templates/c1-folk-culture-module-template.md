@@ -204,32 +204,13 @@ vocabulary_focus:
 > [Pre-Christian origins, Soviet era changes, modern revival]
 ```
 
-#### Section 3: Comparative Analysis — 300-400 words
+#### Section 4: Comparative Analysis (YAML-ONLY)
 
-```markdown
-## Порівняльний аналіз
+**CRITICAL: DO NOT include an `## Аналіз` or `## Порівняльний аналіз` section in the markdown file.** This analysis is defined exclusively in `activities/{slug}.yaml` as an `essay-response` activity.
 
-### [Tradition 1] vs. [Tradition 2]
+---
 
-[Compare two related traditions, regional variants, or historical periods]
-
-| Аспект | [Tradition 1] | [Tradition 2] |
-|--------|---------------|---------------|
-| Регіон | [Region] | [Region] |
-| Функція | [Function] | [Function] |
-| Символіка | [Symbolism] | [Symbolism] |
-| Сучасний стан | [Current status] | [Current status] |
-
-### Критичне мислення
-
-**Питання для роздуму:**
-1. Як ця традиція відображає українську ідентичність?
-2. Як вона змінилася за радянських часів?
-3. Як вона відроджується сьогодні?
-4. Які регіональні відмінності найбільш виразні?
-```
-
-#### Section 4: Modern Context — 200-300 words
+#### Section 5: Essay Activities (In YAML Only)
 
 ```markdown
 ## Сучасна Україна

@@ -1,6 +1,3 @@
-# C1-HIST Module 13: Києво-Печерський патерик
-# Status: SPEC (ready for content development)
-
 id: c1-hist-13
 title: Києво-Печерський патерик
 slug: kyievo-pecherskyi-pateryk
@@ -10,125 +7,107 @@ focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Києво-Печерський патерик (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
-    type: reference
-    notes: Overview
-  - name: Патерик (повний текст)
-    url: https://litopys.org.ua/paterikon/pat.htm
-    type: primary
-    notes: Full text
-  - name: Києво-Печерська лавра
-    url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
-    type: reference
-    notes: Monastery history
-
+- name: Києво-Печерський патерик (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
+  type: reference
+  notes: Overview
+- name: Патерик (повний текст)
+  url: https://litopys.org.ua/paterikon/pat.htm
+  type: primary
+  notes: Full text
+- name: Києво-Печерська лавра
+  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
+  type: reference
+  notes: Monastery history
 content_outline:
-  - section: Вступ — Агіографія як джерело
-    words: 400
-    points:
-      - Що таке патерик?
-      - Києво-Печерський патерик — унікальність
-      - Житія святих — історія чи пропаганда?
-      - Як читати агіографію критично
-
-  - section: Історія тексту
-    words: 500
-    points:
-      - Коли написано? XIII ст.
-      - Автори — Симон і Полікарп
-      - Листування як форма
-      - Редакції — Касіянівські та інші
-
-  - section: Структура патерика
-    words: 500
-    points:
-      - Житія засновників — Антоній, Феодосій
-      - Оповіді про ченців
-      - Чудеса та видіння
-      - Бесоборство та аскеза
-
-  - section: Фрагмент — Житіє Феодосія Печерського
-    words: 700
-    points:
-      - Текст (з глосами)
-      - Біографічні факти vs. агіографічні топоси
-      - Відносини з князями
-      - Що нам каже про XI ст.?
-
-  - section: Патерик як історичне джерело
-    words: 600
-    points:
-      - Побутові деталі — цінна інформація
-      - Соціальна історія — хто йшов у монастир?
-      - Політична історія — зв'язки з князями
-      - Економіка монастиря
-      - Що замовчано?
-
-  - section: Критика джерела
-    words: 500
-    points:
-      - Чудеса — як інтерпретувати?
-      - Агіографічні топоси — що запозичено
-      - Мета тексту — виховання ченців
-      - Що достовірно, що сумнівно
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Патерик — вікно в Київську Русь
-      - Методи роботи з агіографією
-      - Зв'язок із релігійною ідентичністю
-
+- section: Вступ — Агіографія як джерело
+  words: 400
+  points:
+  - Що таке патерик?
+  - Києво-Печерський патерик — унікальність
+  - Житія святих — історія чи пропаганда?
+  - Як читати агіографію критично
+- section: Історія тексту
+  words: 500
+  points:
+  - Коли написано? XIII ст.
+  - Автори — Симон і Полікарп
+  - Листування як форма
+  - Редакції — Касіянівські та інші
+- section: Структура патерика
+  words: 500
+  points:
+  - Житія засновників — Антоній, Феодосій
+  - Оповіді про ченців
+  - Чудеса та видіння
+  - Бесоборство та аскеза
+- section: Фрагмент — Житіє Феодосія Печерського
+  words: 700
+  points:
+  - Текст (з глосами)
+  - Біографічні факти vs. агіографічні топоси
+  - Відносини з князями
+  - Що нам каже про XI ст.?
+- section: Патерик як історичне джерело
+  words: 600
+  points:
+  - Побутові деталі — цінна інформація
+  - Соціальна історія — хто йшов у монастир?
+  - Політична історія — зв'язки з князями
+  - Економіка монастиря
+  - Що замовчано?
+- section: Критика джерела
+  words: 500
+  points:
+  - Чудеса — як інтерпретувати?
+  - Агіографічні топоси — що запозичено
+  - Мета тексту — виховання ченців
+  - Що достовірно, що сумнівно
+- section: Підсумок
+  words: 300
+  points:
+  - Патерик — вікно в Київську Русь
+  - Методи роботи з агіографією
+  - Зв'язок із релігійною ідентичністю
 vocabulary_hints:
   required:
-    - патерик (patericon)
-    - агіографія (hagiography)
-    - житіє (vita/life of saint)
-    - чернець (monk)
-    - аскеза (asceticism)
-    - топос (topos/literary commonplace)
-    - чудо (miracle)
-    - видіння (vision)
-    - подвижник (ascetic practitioner)
-    - преподобний (venerable/monk-saint)
+  - патерик (patericon)
+  - агіографія (hagiography)
+  - житіє (vita/life of saint)
+  - чернець (monk)
+  - аскеза (asceticism)
+  - топос (topos/literary commonplace)
+  - чудо (miracle)
+  - видіння (vision)
+  - подвижник (ascetic practitioner)
+  - преподобний (venerable/monk-saint)
   recommended:
-    - бесоборство (battle with demons)
-    - печера (cave)
-    - лавра (lavra)
-    - ігумен (abbot)
-    - мощі (relics)
-
+  - бесоборство (battle with demons)
+  - печера (cave)
+  - лавра (lavra)
+  - ігумен (abbot)
+  - мощі (relics)
 activity_hints:
-  - type: reading
-    focus: Excerpt from Life of Theodosius — childhood narrative
-    source: litopys.org.ua
-
-  - type: source-evaluation
-    focus: Identify hagiographic topoi vs. historical facts
-    output: Classification table
-
-  - type: comparative-study
-    focus: Compare with Byzantine paterica — what's borrowed?
-    output: Parallel passages
-
-  - type: research
-    focus: What does Patericon tell us about 11th century economics?
-    output: Evidence collection
-
-  - type: essay-response
-    focus: "Чи можна використовувати агіографію як історичне джерело?"
-    word_target: 400
-    model_answer: Required
-
+- type: reading
+  focus: Excerpt from Life of Theodosius — childhood narrative
+  source: litopys.org.ua
+- type: critical-analysis
+  focus: Identify hagiographic topoi vs. historical facts
+  output: Classification table
+- type: comparative-study
+  focus: Compare with Byzantine paterica — what's borrowed?
+  output: Parallel passages
+- type: reading
+  focus: What does Patericon tell us about 11th century economics?
+  output: Evidence collection
+- type: essay-response
+  focus: Чи можна використовувати агіографію як історичне джерело?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-11 (PVL I)
-  - c1-hist-09 (Source criticism)
-
+- c1-hist-11 (PVL I)
+- c1-hist-09 (Source criticism)
 connects_to:
-  - c1-hist-58 (Religious identity — Byzantine heritage)
-  - c1-hist-60 (Orthodox identity 17th-18th c.)
+- c1-hist-58 (Religious identity — Byzantine heritage)
+- c1-hist-60 (Orthodox identity 17th-18th c.)

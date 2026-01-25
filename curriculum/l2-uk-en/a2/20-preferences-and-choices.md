@@ -1,257 +1,122 @@
-## Introduction
+# Куди ми підемо? Мистецтво вибору (Preferences and Choices)
 
-Now that you can form comparatives and superlatives, let's use them to express preferences! This module teaches you how to say what you like better, make choices, and explain why you prefer one thing over another.
+## Introduction / Вступ
 
-**What you'll learn:**
-- How to say «I prefer X to Y»
-- Comparing actions
-- Making and explaining choices
-- Useful expressions for everyday decisions
+**Ласкаво просимо до модуля про вибір та вподобання!** Кожен день ми стикаємося з безліччю рішень: чай чи кава, піти в кіно чи залишитися вдома, яку книгу прочитати першою. Тепер, коли ви вже вмієте порівнювати речі, настав час навчитися висловлювати своє ставлення до них. В українській мові вираження вподобань — це не просто передача інформації, а тонкий соціальний танець. Вміння ввічливо висловити свою думку, порадити щось або делікатно відмовитися допоможе вам почуватися впевнено в будь-якій українській компанії. Сьогодні ми навчимося обирати не лише правильні слова, а й правильні граматичні конструкції для кожного випадку.
 
-## Presentation
+Now that you can form comparatives and superlatives, let's use them to express your unique tastes! This module teaches you how to say what you like better, make intentional choices, and explain the reasoning behind them. In Ukrainian, expressing a preference is often about more than just liking something—it's about navigating hospitality and social norms with grace. Whether you are at a restaurant, a friend's house, or a shop, these expressions will help you sound natural and polite. Let's explore how to navigate the world of options with linguistic precision!
 
-### Як висловлювати вподобання українською — вибір між варіантами
+**Що ви вивчите в цьому модулі:**
 
-Вибір — це основа щоденного життя. Ми постійно обираємо: чай чи кава, книга чи фільм, залишатися вдома чи піти гуляти. В українській мові є кілька способів висловити свої вподобання і пояснити, чому один варіант кращий за інший.
+- Як використовувати конструкцію «Мені більше подобається...» для щоденних вподобань.
+- Різницю між нейтральним «подобається» та формальним «віддаю перевагу».
+- Як порівнювати дії за допомогою інфінітивів (краще читати, ніж дивитися).
+- Використання частки **б/би** для гіпотетичного вибору (Я б вибрав...).
+- Мистецтво ввічливої відмови та пропозиції в українському контексті.
 
-**Чому це важливо?**
-Коли ви вмієте правильно висловлювати свої вподобання, ви звучите природно і ввічливо. В українській культурі прямі відмови можуть здаватися грубими. Замість цього українці часто пояснюють свій вибір через порівняння: «Я більше люблю чай» звучить м'якше, ніж «Я не хочу каву».
+## Presentation / Презентація
 
-**Основні способи вираження вподобань:**
+### 1. Dative Preference Logic (Логіка «Мені подобається»)
 
-1. **Мені більше подобається X (ніж Y)** — найпоширеніший спосіб
-   - Використовуйте для особистих смаків і переваг
-   - Приклад: Мені більше подобається кава, ніж чай.
+In English, "I like coffee" is a straight line: I (Subject) -> like (Verb) -> coffee (Object). Ukrainian works differently. The thing you like is actually the **Subject** that "pleases" you. You, the person, are the recipient of this feeling, so you must be in the **Dative** case.
 
-2. **Я віддаю перевагу X (Dative case)** — формальний стиль
-   - Використовуйте в офіційних ситуаціях або письмово
-   - Приклад: Я віддаю перевагу класичній музиці.
-   - Важливо: слово після цього виразу завжди в давальному відмінку!
+- **Мені** (To me) **подобається** (pleases) **кава** (coffee).
+- **Мені більше подобається** кава, ніж чай. (I like coffee more than tea.)
 
-3. **Краще X, ніж Y** — для порівняння варіантів
-   - Використовуйте, коли хочете пояснити логіку вибору
-   - Приклад: Краще читати, ніж дивитися телевізор.
+When you have more than one thing that you like, the verb must change to match the objects:
 
-4. **Я б вибрав/вибрала X** — для гіпотетичного вибору
-   - Використовуйте, коли говорите про можливості
-   - Приклад: Я б вибрав зелений колір.
-   - Важливо: форма залежить від статі мовця (чоловік: вибрав, жінка: вибрала)
+- Мені **подобається** цей _фільм_ (sg).
+- Мені **подобаються** ці _фільми_ (pl).
 
-**Ключова відмінність від англійської:**
-В англійській мові «I like coffee» — це просте речення: підмет виконує дію. В українській мові «Мені подобається кава» — це зворотна конструкція: кава (підмет) викликає відчуття у мене (Dative case). Це означає, що the verb «подобається» узгоджується з річчю, яка подобається, а не з людиною!
+### 2. Formal Preference: Віддавати перевагу
 
-**Практичне застосування:**
-Коли ви в ресторані, магазині або в розмові з друзями, використовуйте ці вирази для вибору. Українці цінують, коли ви можете пояснити свій вибір і порівняти варіанти. Це показує, що ви думаєте українською, а не просто перекладаєте з англійської!
+If you want to sound more formal, or when you are in a professional setting, use the verb **віддавати перевагу** (to give preference). This verb is powerful because it shows a clear decision-making process. Note that the object you prefer must be in the **Dative case**.
 
-## Practice
+- Я **віддаю перевагу** (I give preference) **активному відпочинку** (to active rest - Dative).
+- Він **віддає перевагу** (He gives preference) **класичній музиці** (to classical music - Dative).
 
-Express these preferences in Ukrainian:
+### 3. Comparing Actions (Порівняння дій)
 
-1. **I like tea more than coffee.**
-   → Мені більше подобається чай, ніж кава.
+When you are not choosing between objects, but between actions, you use comparative adverbs with infinitives. This is a very common way to justify your behavior or give advice to others.
 
-2. **I prefer books.** (formal)
-   → Я віддаю перевагу книгам.
+- **Краще** (Better) **читати**, ніж **дивитися** телевізор.
+- **Цікавіше** (More interesting) **подорожувати**, ніж **сидіти** вдома.
+- **Легше** (Easier) **сказати**, ніж **зробити**. (Easier said than done!)
 
-3. **It's better to read.**
-   → Краще читати.
+### 4. Hypothetical Choices: The "Would" Structure (Гіпотетичний вибір)
 
-4. **I would choose the red one.**
-   → Я б вибрав/вибрала червоний.
+What if you aren't choosing yet, but just imagining? Use the conditional particle **б / би** with the past tense form of the verb "to choose" (**вибрати**). Remember that the verb must agree with your gender!
 
-5. **It is more interesting to listen music than to sleep.**
-   → Цікавіше слухати музику, ніж спати.
+- **Чоловік:** Я **б вибрав** каву. (I would choose coffee.)
+- **Жінка:** Я **б вибрала** чай. (I would choose tea.)
 
-6. **I prefer active rest.**
-   → Я віддаю перевагу активному відпочинку.
+> [!tip] **The "Would" Politeness**
+> In Ukrainian homes, using the «б» form sounds more polite and humble. Instead of saying "I want water" (Я хочу воду), try "I would choose water" (Я б вибрав воду). It makes you sound like a guest with excellent manners!
 
-## Expressing Preferences
+> [!important] **The Hospitality Logic**
+> In Ukraine, hosts might offer you something several times. A direct "No" can sometimes feel a bit short. Using a preference instead (e.g., «Дякую, але я більше люблю воду») is a softer, more culturally appropriate way to decline.
 
-There are several ways to express what you like better in Ukrainian:
+## Practice / Практика
 
-## 1. Мені більше подобається X (ніж Y)
+### 1. Match the Construction (Оберіть конструкцію)
 
-«I like X more» — the most common way:
+Select the best phrase for each situation.
 
-- Мені **більше подобається** кава. (I like coffee more.)
-- Мені більше подобається кава, **ніж** чай. (I like coffee more than tea.)
-- Мені більше подобаються книги, ніж фільми. (I like books more than movies.)
+1. Talking to a close friend about movies. -> **Мені більше подобається...**
+2. Writing a business proposal about a strategy. -> **Ми віддаємо перевагу...**
+3. Giving a friendly piece of advice. -> **Краще...**
+4. Imagining what car you might buy. -> **Я б вибрав...**
 
-> 💡 **Grammar Deep Dive: The Logic of «Like»**
->
-> In English, «I like coffee» is a simple Subject-Verb-Object sentence. You (Subject) do the action of liking.
->
-> In Ukrainian, «Мені подобається кава» is reversed: «To me (Dative) pleases coffee (Subject).»
-> - **Coffee** is the active subject that causes the feeling.
-> - **You** are the passive recipient in the Dative case.
->
-> This is why the verb **подобається** agrees with the thing being liked, not you!
-> - Мені **подобається** цей *фільм*. (The movie pleases me.)
-> - Мені **подобаються** ці *фільми*. (The movies please me.)
+### 2. Dative Check (Перевірка відмінків)
 
-## 2. Я віддаю перевагу X (Dative)
+Put the pronoun and the object in the correct case.
 
-«I give preference to X» — more formal:
+1. (Я) подобається (кава). -> **Мені подобається кава.**
+2. Я віддаю перевагу (книга). -> **Я віддаю перевагу книгам / книзі.**
+3. (Ми) більше подобаються (суші). -> **Нам більше подобаються суші.**
+4. (Він) подобається (подорож). -> **Йому подобається подорож.**
 
-- Я **віддаю перевагу** каві. (I prefer coffee.) — Dative!
-- Я віддаю перевагу книгам. (I prefer books.) — Dative plural!
+### 3. Action Logic (Логіка дії)
 
-**Note:** The thing you prefer goes in **Dative case**!
+Complete the sentences using comparative adverbs like «краще», «цікавіше», «важче».
 
-## 3. Краще X ніж Y
+1. \_\_\_ вчити мову щодня, ніж один раз на тиждень. -> **Краще**
+2. \_\_\_ розмовляти з людьми, ніж читати підручник. -> **Цікавіше**
+3. \_\_\_ робити вправи, ніж слухати теорію. -> **Важче**
+4. \_\_\_ пити чисту воду, ніж колу. -> **Корисніше**
 
-«X is better than Y» — for comparing options:
+> [!reflection] **The Mirror of Taste**
+> Your preferences are a mirror of your personality. In Ukrainian, expressing them clearly allows people to get to know you better. Don't be afraid to use «Я б вибрав...» to show your unique perspective. Кожен вибір — це частина вашої історії.
 
-- **Краще** кава, ніж чай. (Coffee is better than tea.)
-- Краще читати, ніж дивитися телевізор. (It's better to read than to watch TV.)
+> [!tip] **Asking for Advice**
+> If you cannot choose, ask: «Що ти порадиш?» (What do you advise?). This invites the other person into your decision process and is a great way to start a conversation.
 
-## 4. Я б вибрав/вибрала X
+## Dialogues / Діалоги
 
-«I would choose X» — for expressing choices:
+### Choosing a Restaurant (Вибір ресторану)
 
-- Я б **вибрав** зелений. (I would choose the green one.) — masculine speaker
-- Я б **вибрала** каву. (I would choose coffee.) — feminine speaker
+**Максим:** Куди підемо вечорі? В італійський ресторан чи в суші-бар? (Where shall we go tonight? To an Italian restaurant or a sushi bar?)
+**Олена:** Чесно кажучи, я **віддаю перевагу** італійському меню. (To be honest, I prefer the Italian menu.)
+**Максим:** Чому? Тобі не подобаються суші? (Why? Do you not like sushi?)
+**Олена:** Подобаються, але сьогодні дуже холодно. **Краще** з'їсти щось гаряче. (I do, but it's very cold today. It's better to eat something hot.)
+**Максим:** Згоден. Тоді я **б вибрав** піцерію в центрі. Там дуже затишно. (Agreed. Then I would choose the pizzeria downtown. It's very cozy there.)
+**Олена:** Чудова ідея! Це **найкращий** варіант для такого вечора. (Great idea! That's the best option for such an evening.)
 
-> �️ **Pronunciation Tip: «В» in «Вибрав»**
->
-> The verb **вибрав** has two 'v' sounds. The first is a clear [v], the last one is a softer bilabial [w] (like in 'wow'), because it's at the end of a syllable followed by a consonant or end of word. Pronounce it like «vy-brau».
+> [!context] **Choice as a Social Act**
+> In Ukraine, reaching a consensus on where to go or what to do is a collaborative process. People often express their preferences and then wait for the other person to "balance" them. Using «Я б вибрав...» allows for this flexibility, making sure everyone's voice is heard.
 
-> �📜 **Formality Scale**
->
-> Most casual: Мені більше подобається
-> Neutral: Краще
-> More formal: Я віддаю перевагу
-> Hypothetical: Я б вибрав/вибрала
+# Summary / Підсумок
 
-## Comparing Actions
+У цьому модулі ми навчилися навігувати у світі варіантів:
 
-You can compare actions using comparatives + infinitives:
+- Зрозуміли давальну логіку конструкції «Мені подобається».
+- Розрізнили нейтральні та формальні способи вираження вподобань.
+- Навчилися порівнювати дії за допомогою вищого ступеня прислівників.
+- Опанували гіпотетичний вибір із часткою **б/би**.
+- Познайомилися з культурними нюансами прийняття та відхилення пропозицій.
 
-## Pattern: Comparative adverb + infinitive
-
-| Comparison | Example | English |
-|------------|---------|---------|
-| краще | Краще читати. | It's better to read. |
-| гірше | Гірше нічого не робити. | It's worse to do nothing. |
-| легше | Легше говорити. | It's easier to say. |
-; важче | Важче робити. | It's harder to do. |
-| цікавіше | Цікавіше подорожувати. | It's more interesting to travel. |
-
-**Full comparison:**
-- Краще **читати**, ніж **дивитися** телевізор.
-- Легше **говорити**, ніж **робити**.
-- Цікавіше **подорожувати**, ніж **сидіти** вдома.
-- Це **корисніше** для здоров'я. (This is more useful for health.)
-- Це **шкідливіше**. (This is more harmful.)
-- Це **ефективніше**. (This is more effective.)
-- Це **нудніше**. (This is more boring.)
-- Я **волію** чай. (I prefer tea.)
-- Тут **комфортніше**. (It is more comfortable here.)
-- Цей чай **гарячіший**. (This tea is hotter.)
-- Це **практичніше**. (This is more practical.)
-
-> [!tip] Common Wisdom
-> «Легше сказати, ніж зробити» (It's easier said than done) is a popular Ukrainian saying!
-
----
-
-## Cultural Insight
-
-## The Art of Hospitality & Refusal
-
-Ukrainians are famous for their hospitality (**гостинність**). If you visit a Ukrainian home, you will likely be offered food and drink multiple times.
-
-**The «Three Offers» Rule:**
-It is polite for a host to offer something even if you refuse the first time. Often, you might hear «Proshu, proshu!» (Please, please!).
-If you really want to refuse, simply saying «No» (Ні) can be too direct. Instead, express a preference or a reason:
-
-- **Дякую, але я більше люблю чай.** (Thank you, but I like tea more.)
-- **Я б вибрав воду, якщо можна.** (I would choose water, if possible.)
-- **Мені це не дуже подобається.** (I don't like this very much - *use cautiously!*)
-- **Я вже не голодний/не голодна.** (I am not hungry anymore.)
-
-## Dialogue: Choosing a Restaurant
-
-**Андрій:** Куди підемо вечорі? В італійський ресторан чи в суші-бар?
-**Олена:** Чесно кажучи, я **віддаю перевагу** італійській кухні.
-**Андрій:** Чому? Тобі не подобаються суші?
-**Олена:** Подобаються, але сьогодні холодно. **Краще** з'їсти щось гаряче, наприклад, пасту чи піцу.
-**Андрій:** Згоден. Гаряча їжа взимку — це **найкращий** вибір.
-**Олена:** Тоді я б **вибрала** «Траторію» в центрі. Там **затишніше**.
-
-> 🔍 **Why Preferences Matter**
->
-> Expressing preferences politely is important in Ukrainian social settings. Using «б» (would) forms sounds more polite than direct statements.
-
-## Asking for Advice
-
-Sometimes making a choice is hard! In these cases, it is very common to ask for advice (**порада**).
-Here is how you can ask someone to help you choose:
-
-- **Що ти порадиш?** (What do you advise? - *Informal*)
-- **Що ви порадите?** (What do you advise? - *Formal/Plural*)
-- **Яку страву краще вибрати?** (Which dish is better to choose?)
-- **На твою думку, що краще?** (In your opinion, what is better?)
-
-**Example:**
-- **А:** Я не знаю, що купити. Що ти порадиш?
-- **Б:** На мою думку, краще купити цей телефон. Він новіший.
-
-> [!note] Grammar: Радити
-> The verb **радити | порадити** takes the **Dative** case for the person being advised (Раджу **тобі**...), but usually, you just ask «Що порадиш?» implicating «to me».
-
-> 🍲 **Cultural Context: Ordering in a Café**
->
-> In Ukrainian cafés, the waiter might ask: «Що ви вибрали?» (What have you chosen?) or «Ви вже готові замовити?» (Are you ready to order?).
-> A polite way to order is using «Я буду...» (I will have...) or «Мені, будь ласка...» (For me, please...).
-> If you can't decide, ask the waiter: «**Що ви порадите?**» (What do you recommend?). They will appreciate your trust!
-
-> 🎬 **Media Recommendation**
->
-> To see people making difficult choices, watch episodes of the TV show **«Kitchen» (Кухня)** or similar sitcoms popular in Ukraine. Pay attention to how characters argue about what is «better» or «worse» using comparatives: «Це краще, ніж...» (This is better than...).
-
----
-
-## What is your choice?
-
-Think about these pairs. What do you prefer?
-- Кава чи чай?
-- Кіт чи собака?
-- Літо чи зима?
-- Книга чи фільм?
-
-Try to answer using different structures:
-*   «Мені більше подобається...»
-*   «Я б вибрав/вибрала...»
-*   «Я віддаю перевагу...»
-
----
-
-## Story Time: Вибір Подарунка
-
-Завтра день народження у Марини. Олег хоче купити їй подарунок, але не знає, що вибрати.
-
-— Мамо, що краще: книга чи парфуми? — питає Олег.
-— Я думаю, Марині більше подобаються книги. Вона багато читає.
-— Але парфуми — це романтичніше!
-— Можливо. А що б ти вибрав?
-— Я б вибрав книгу. Це практичніше і дешевше.
-
-Олег іде в книгарню. Там він бачить багато книг.
-
-— Що ви порадите? — питає він продавця.
-— Яку літературу вона віддає перевагу?
-— Їй більше подобаються детективи.
-
-Продавець показує новий детектив українського автора.
-
-— Чудово! Я беру цю книгу. Дякую за пораду!
-
-Олег радий. Він знає, що зробив правильний вибір.
-
-# Підсумок
----
+Expressing your choices confidently is a sign of linguistic maturity. You are no longer just reacting to the world; you are actively shaping your experience in it. Use these tools to share your tastes and build deeper connections with Ukrainian speakers!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Сьогодні спробуйте зробити «карту вподобань». Запишіть 5 пар речей і виберіть одну в кожній парі, пояснюючи чому. Наприклад: «Я вибираю літо, тому що воно тепліше за зиму». Це допоможе вам автоматизувати граматику порівняння та вподобання одночасно. Кожен ваш вибір робить вашу українську мову **багатшою** та **цікавішою**! Успіхів у ваших нових відкриттях!

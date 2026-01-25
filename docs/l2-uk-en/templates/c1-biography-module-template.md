@@ -273,30 +273,11 @@ vocabulary_focus:
 > [Provide Ukrainian perspective based on primary sources]
 ```
 
-#### Section 4: Порівняльний аналіз — 300-400 words
+#### Section 4: Comparative Analysis (YAML-ONLY)
 
-```markdown
-## Порівняльний аналіз
+**CRITICAL: DO NOT include a `## Порівняльний аналіз` or `## Есе` section in the markdown file.** This analysis is defined exclusively in `activities/{slug}.yaml` as an `essay-response` or `comparative-study` activity.
 
-### [Figure] vs. [Contemporary or Contrasting Figure]
-
-| Аспект | [Figure 1] | [Figure 2] |
-|--------|------------|------------|
-| Епоха | [Era] | [Era] |
-| Домен | [Domain] | [Domain] |
-| Підхід | [Approach] | [Approach] |
-| Спадщина | [Legacy] | [Legacy] |
-
-**Аналіз:**
-[200-250 words comparing the two figures' contributions, approaches, or legacies]
-
-### Критичне мислення
-
-**Питання для роздуму:**
-1. Чому ця постать важлива для української ідентичності?
-2. Як би її життя відрізнялося в інших обставинах?
-3. Які уроки можна винести з її досвіду?
-```
+The markdown file ends with the **Історичний контекст** and **Підсумок** sections.
 
 ---
 

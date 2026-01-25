@@ -1,154 +1,112 @@
-# A2 Module 01: The Dative I - Pronouns
-# Status: CONTENT (content exists, detailed spec added)
-
 id: a2-01
 title: The Dative I — Pronouns
 subtitle: I Like, I Need, and How I Feel
 slug: 01-the-dative-i-pronouns
 module_type: grammar
-word_target: 2800
-immersion: "50-60% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.1
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - cases
-  - dative
-  - pronouns
-
+- grammar
+- cases
+- dative
+- pronouns
 grammar:
-  - dative pronouns
-  - impersonal constructions
-  - подобатися
-  - потрібно
-  - states
-
+- dative pronouns
+- impersonal constructions
+- подобатися
+- потрібно
+- states
 objectives:
-  - Learner can use dative pronouns correctly
-  - Learner can express likes using подобатися
-  - Learner can express needs using потрібно
-  - Learner can describe physical and emotional states
-
-# === AGENT BUILD SPEC ===
-
+- Learner can use dative pronouns correctly
+- Learner can express likes using подобатися
+- Learner can express needs using потрібно
+- Learner can describe physical and emotional states
 sources:
-  - name: Ukrainian State Standard 2024 - Dative Case
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official dative pronoun paradigm and usage requirements for A2
-  - name: CEFR A2 Grammar Descriptors
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: A2 level grammar complexity expectations
-
+- name: Ukrainian State Standard 2024 - Dative Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official dative pronoun paradigm and usage requirements for A2
+- name: CEFR A2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 level grammar complexity expectations
 content_outline:
-  - section: Introduction to the Dative Case
-    words: 400
-    points:
-      - The sixth case in Ukrainian (давальний відмінок)
-      - Key question - кому? чому? (to whom? to what?)
-      - Why dative matters for expressing needs and feelings
-
-  - section: Dative Pronouns - Full Paradigm
-    words: 600
-    points:
-      - Personal pronoun forms (мені, тобі, йому, їй, нам, вам, їм)
-      - Comparison with nominative forms
-      - Pronunciation and stress patterns
-
-  - section: Expressing Likes with подобатися
-    words: 500
-    points:
-      - Structure - Dat + подобається + Nom (Мені подобається музика)
-      - Singular vs plural subjects (подобається vs подобаються)
-      - Negative forms (не подобається)
-
-  - section: Expressing Needs with потрібно
-    words: 500
-    points:
-      - Structure - Dat + потрібно + infinitive/noun
-      - Difference from хотіти (want) vs потрібно (need)
-      - Time expressions with needs
-
-  - section: Physical and Emotional States
-    words: 500
-    points:
-      - Temperature states (холодно, тепло, жарко)
-      - Emotional states (весело, сумно, цікаво)
-      - Physical sensations (боляче, важко, легко)
-
-  - section: Practice and Integration
-    words: 300
-    points:
-      - Common expressions review
-      - Error patterns to avoid
-      - Mini-dialogues for practice
-
+- section: Introduction / Вступ
+  words: 300
+  points:
+  - The sixth case in Ukrainian (давальний відмінок)
+  - Key question - кому? чому? (to whom? to what?)
+  - Why dative matters for expressing needs and feelings
+- section: Presentation / Презентація
+  words: 500
+  points:
+  - Personal pronoun forms (мені, тобі, йому, їй, нам, вам, їм)
+  - Comparison with nominative forms
+  - Structure - Dat + подобається + Nom (Мені подобається музика)
+  - Structure - Dat + потрібно + infinitive/noun
+  - Temperature and emotional states
+- section: Practice / Практика
+  words: 150
+  points:
+  - Common expressions review
+  - Transformation exercises
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Mini-dialogues for practice
 vocabulary_hints:
   required:
-    - мені (to me)
-    - тобі (to you)
-    - йому (to him)
-    - їй (to her)
-    - нам (to us)
-    - вам (to you pl./formal)
-    - їм (to them)
-    - подобатися (to like/please)
-    - здаватися (to seem)
-    - потрібно (need)
-    - необхідно (necessary)
-    - цікаво (interesting)
-    - важко (difficult)
-    - легко (easy)
-    - приємно (pleasant)
+  - мені (to me)
+  - тобі (to you)
+  - йому (to him)
+  - їй (to her)
+  - нам (to us)
+  - вам (to you pl./formal)
+  - їм (to them)
+  - подобатися (to like/please)
+  - здаватися (to seem)
+  - потрібно (need)
+  - необхідно (necessary)
+  - цікаво (interesting)
+  - важко (difficult)
+  - легко (easy)
+  - приємно (pleasant)
   recommended:
-    - боляче (painful)
-    - сумно (sad)
-    - весело (fun)
-    - гарно (nice/well)
-    - погано (bad)
-
+  - боляче (painful)
+  - сумно (sad)
+  - весело (fun)
+  - гарно (nice/well)
+  - погано (bad)
 activity_hints:
-  - type: quiz
-    focus: Choose correct dative pronoun for context
-    items: "12+"
-
-  - type: fill-in
-    focus: Transform nominative pronouns to dative
-    items: "10+"
-
-  - type: match-up
-    focus: Match nominative pronoun to dative form
-    items: "8+"
-
-  - type: fill-in
-    focus: Complete sentences with подобатися structure
-    items: "10+"
-
-  - type: quiz
-    focus: Physical/emotional states with dative
-    items: "10+"
-
-  - type: dialogue
-    focus: Mini-dialogues expressing likes and needs
-    items: "4+"
-
+- type: quiz
+  focus: Choose correct dative pronoun for context
+  items: 12+
+- type: fill-in
+  focus: Transform nominative pronouns to dative
+  items: 10+
+- type: match-up
+  focus: Match nominative pronoun to dative form
+  items: 8+
+- type: fill-in
+  focus: Complete sentences with подобатися structure
+  items: 10+
+- type: quiz
+  focus: Physical/emotional states with dative
+  items: 10+
 prerequisites:
-  - A1 completion (personal pronouns in nominative)
-  - Basic sentence structure
-  - Present tense conjugation
-
+- A1 completion (personal pronouns in nominative)
+- Basic sentence structure
+- Present tense conjugation
 connects_to:
-  - a2-02 (Dative II - Nouns)
-  - a2-03 (Dative Verbs)
-  - a2-07 (Spatial Prepositions)
-
+- a2-02 (Dative II - Nouns)
+- a2-03 (Dative Verbs)
+- a2-07 (Spatial Prepositions)
 naturalness:
   score: 8
   status: PASS

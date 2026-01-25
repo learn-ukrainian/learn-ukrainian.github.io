@@ -1,6 +1,3 @@
-# C1-HIST Module 42: Меморандум Української Гельсінської групи
-# Status: SPEC (ready for content development)
-
 id: c1-hist-42
 title: Меморандум Української Гельсінської групи
 slug: memorandum-uhh
@@ -10,126 +7,108 @@ focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Українська Гельсінська група (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
-    type: reference
-    notes: Group overview
-  - name: Установчий документ УГГ
-    url: https://khpg.org/
-    type: primary
-    notes: Founding documents
-  - name: Гельсінські угоди
-    url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
-    type: reference
-    notes: Helsinki Accords context
-
+- name: Українська Гельсінська група (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
+  type: reference
+  notes: Group overview
+- name: Установчий документ УГГ
+  url: https://khpg.org/
+  type: primary
+  notes: Founding documents
+- name: Гельсінські угоди
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
+  type: reference
+  notes: Helsinki Accords context
 content_outline:
-  - section: Вступ — Права людини як зброя
-    words: 400
-    points:
-      - 1976 рік — контекст
-      - Гельсінські угоди — можливість
-      - УГГ — перша правозахисна організація
-      - Значення меморандуму
-
-  - section: Гельсінські угоди
-    words: 500
-    points:
-      - Що підписав СРСР
-      - "«Третій кошик» — права людини"
-      - Як дисиденти використали
-      - Міжнародний тиск
-
-  - section: Створення УГГ
-    words: 600
-    points:
-      - Засновники — хто вони
-      - Руденко, Лук'яненко, Тихий
-      - Мотивація — чому ризикували
-      - Перші дії
-
-  - section: Меморандум — аналіз тексту
-    words: 800
-    points:
-      - Текст (фрагменти з глосами)
-      - Правова аргументація
-      - Порушення прав в Україні
-      - Національні права
-      - Адресати — хто мав читати
-
-  - section: Діяльність групи
-    words: 500
-    points:
-      - Документи — що публікували
-      - Міжнародні контакти
-      - Репресії — арешти членів
-      - Трагічні долі
-
-  - section: Спадщина УГГ
-    words: 400
-    points:
-      - Від УГГ до Руху
-      - Правозахисна традиція
-      - Сучасні організації
-      - Уроки
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Меморандум як документ епохи
-      - Права людини і нація
-      - Зв'язок із незалежністю
-
+- section: Вступ — Права людини як зброя
+  words: 400
+  points:
+  - 1976 рік — контекст
+  - Гельсінські угоди — можливість
+  - УГГ — перша правозахисна організація
+  - Значення меморандуму
+- section: Гельсінські угоди
+  words: 500
+  points:
+  - Що підписав СРСР
+  - «Третій кошик» — права людини
+  - Як дисиденти використали
+  - Міжнародний тиск
+- section: Створення УГГ
+  words: 600
+  points:
+  - Засновники — хто вони
+  - Руденко, Лук'яненко, Тихий
+  - Мотивація — чому ризикували
+  - Перші дії
+- section: Меморандум — аналіз тексту
+  words: 800
+  points:
+  - Текст (фрагменти з глосами)
+  - Правова аргументація
+  - Порушення прав в Україні
+  - Національні права
+  - Адресати — хто мав читати
+- section: Діяльність групи
+  words: 500
+  points:
+  - Документи — що публікували
+  - Міжнародні контакти
+  - Репресії — арешти членів
+  - Трагічні долі
+- section: Спадщина УГГ
+  words: 400
+  points:
+  - Від УГГ до Руху
+  - Правозахисна традиція
+  - Сучасні організації
+  - Уроки
+- section: Підсумок
+  words: 300
+  points:
+  - Меморандум як документ епохи
+  - Права людини і нація
+  - Зв'язок із незалежністю
 vocabulary_hints:
   required:
-    - Гельсінська група (Helsinki Group)
-    - меморандум (memorandum)
-    - права людини (human rights)
-    - правозахисник (human rights defender)
-    - Гельсінські угоди (Helsinki Accords)
-    - '«третій кошик» (third basket)'
-    - порушення (violation)
-    - національні права (national rights)
-    - міжнародний тиск (international pressure)
-    - репресія (repression)
+  - Гельсінська група (Helsinki Group)
+  - меморандум (memorandum)
+  - права людини (human rights)
+  - правозахисник (human rights defender)
+  - Гельсінські угоди (Helsinki Accords)
+  - «третій кошик» (third basket)
+  - порушення (violation)
+  - національні права (national rights)
+  - міжнародний тиск (international pressure)
+  - репресія (repression)
   recommended:
-    - дисидент (dissident)
-    - моніторинг (monitoring)
-    - декларація (declaration)
-    - конвенція (convention)
-    - політв'язень (political prisoner)
-
+  - дисидент (dissident)
+  - моніторинг (monitoring)
+  - декларація (declaration)
+  - конвенція (convention)
+  - політв'язень (political prisoner)
 activity_hints:
-  - type: reading
-    focus: Memorandum excerpts with glosses
-    source: khpg.org
-
-  - type: legal-analysis
-    focus: How does UHH use international law as argument?
-    output: Legal strategy analysis
-
-  - type: biography-study
-    focus: Research fates of founding members
-    output: Biographical profiles
-
-  - type: legacy-tracing
-    focus: Trace UHH influence to modern organizations
-    output: Genealogy of activism
-
-  - type: essay-response
-    focus: "Як Гельсінські угоди стали зброєю дисидентів?"
-    word_target: 400
-    model_answer: Required
-
+- type: reading
+  focus: Memorandum excerpts with glosses
+  source: khpg.org
+- type: critical-analysis
+  focus: How does UHH use international law as argument?
+  output: Legal strategy analysis
+- type: reading
+  focus: Research fates of founding members
+  output: Biographical profiles
+- type: critical-analysis
+  focus: Trace UHH influence to modern organizations
+  output: Genealogy of activism
+- type: essay-response
+  focus: Як Гельсінські угоди стали зброєю дисидентів?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-41 (Ukrainskyi visnyk)
-  - c1-hist-39 (Samvydav)
-
+- c1-hist-41 (Ukrainskyi visnyk)
+- c1-hist-39 (Samvydav)
 connects_to:
-  - c1-hist-43 (Independence Act)
-  - c1-hist-127 (Civil society)
-  - c1-hist-102 (West 2022 — Helsinki legacy)
+- c1-hist-43 (Independence Act)
+- c1-hist-127 (Civil society)
+- c1-hist-102 (West 2022 — Helsinki legacy)

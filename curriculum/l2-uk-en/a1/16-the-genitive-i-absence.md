@@ -34,13 +34,13 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 
 ### Genitive Endings for Absence
 
-| Gender        | Nominative | Genitive | IPA | Example         |
-| ------------- | ---------- | -------- | --- | --------------- |
-| **Masculine** | стіл       | столу    | /ˈstɔlu/ | немає столу     |
-| **Masculine** | друг       | друга    | /ˈdruɦɑ/ | немає друга     |
-| **Feminine**  | книга      | книги    | /ˈknɪɦɪ/ | немає книги     |
-| **Feminine**  | вода       | води     | /vɔˈdɪ/  | немає води      |
-| **Neuter**    | вікно      | вікна    | /ˈvʲiknɑ/ | немає вікна     |
+| Gender        | Nominative | Genitive | IPA       | Example     |
+| ------------- | ---------- | -------- | --------- | ----------- |
+| **Masculine** | стіл       | столу    | /ˈstɔlu/  | немає столу |
+| **Masculine** | друг       | друга    | /ˈdruɦɑ/  | немає друга |
+| **Feminine**  | книга      | книги    | /ˈknɪɦɪ/  | немає книги |
+| **Feminine**  | вода       | води     | /vɔˈdɪ/   | немає води  |
+| **Neuter**    | вікно      | вікна    | /ˈvʲiknɑ/ | немає вікна |
 
 **Pattern Recognition:**
 
@@ -112,14 +112,14 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 
 Let's practice the full pattern. Notice how the person changes but немає stays the same:
 
-| Person   | Pattern              | IPA | Example                 |
-| -------- | -------------------- | --- | ----------------------- |
-| я        | У мене немає...      | /u ˈmɛnɛ nɛˈmɑjɛ/ | У мене немає часу.      |
-| ти       | У тебе немає...      | /u ˈtɛbɛ nɛˈmɑjɛ/ | У тебе немає грошей.    |
+| Person   | Pattern              | IPA                  | Example                 |
+| -------- | -------------------- | -------------------- | ----------------------- |
+| я        | У мене немає...      | /u ˈmɛnɛ nɛˈmɑjɛ/    | У мене немає часу.      |
+| ти       | У тебе немає...      | /u ˈtɛbɛ nɛˈmɑjɛ/    | У тебе немає грошей.    |
 | він/вона | У неї/нього немає... | /u ˈnɛji/ /u ˈnʲɔɦɔ/ | У неї немає ідеї.       |
-| ми       | У нас немає...       | /u nɑs nɛˈmɑjɛ/ | У нас немає вибору.     |
-| ви       | У вас немає...       | /u vɑs nɛˈmɑjɛ/ | У вас немає досвіду.    |
-| вони     | У них немає...       | /u nɪx nɛˈmɑjɛ/ | У них немає інформації. |
+| ми       | У нас немає...       | /u nɑs nɛˈmɑjɛ/      | У нас немає вибору.     |
+| ви       | У вас немає...       | /u vɑs nɛˈmɑjɛ/      | У вас немає досвіду.    |
+| вони     | У них немає...       | /u nɪx nɛˈmɑjɛ/      | У них немає інформації. |
 
 ### Without: Без + Genitive
 

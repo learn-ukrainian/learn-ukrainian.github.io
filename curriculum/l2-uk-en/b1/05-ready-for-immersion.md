@@ -6,19 +6,21 @@
 
 Ukrainians have a proverb: **«Хто мову знає, той усюди буває.»** — "Whoever knows the language, goes everywhere." You now have the metalanguage to go everywhere in Ukrainian grammar!
 
+## Presentation
+
 Where does this metalanguage come from? Київ is home to the Institute of Ukrainian Language at the Academy of Sciences, which defines standard terminology. Львів has the oldest Ukrainian-language university, where philologists refined these terms over centuries. Одеса universities train teachers who spread this metalanguage across the country. From Харків to Ужгород, all use the same grammatical terms you've now mastered.
 
-## Діагностика
+## Diagnostic Assessment
 
 ### Тест: Чи готові ви?
 
 Read this Ukrainian grammar text and answer the questions that follow:
 
-> *Дієслово «читати» — недоконаного виду. Воно використовується, коли дія триває або повторюється. Доконана пара — «прочитати». Доконаний вид означає завершену дію з результатом.*
+> _Дієслово «читати» — недоконаного виду. Воно використовується, коли дія триває або повторюється. Доконана пара — «прочитати». Доконаний вид означає завершену дію з результатом._
 >
-> *У реченні «Студент читає книгу» підмет — «студент», присудок — «читає», додаток — «книгу». Це просте речення.*
+> _У реченні «Студент читає книгу» підмет — «студент», присудок — «читає», додаток — «книгу». Це просте речення._
 >
-> *У складнопідрядному реченні «Студент читає, бо любить книги» головне речення — «Студент читає», підрядне речення — «бо любить книги». Сполучник «бо» — сполучник підрядності. Перед ним ставимо кому.*
+> _У складнопідрядному реченні «Студент читає, бо любить книги» головне речення — «Студент читає», підрядне речення — «бо любить книги». Сполучник «бо» — сполучник підрядності. Перед ним ставимо кому._
 
 **Comprehension Check — Перевірка розуміння:**
 
@@ -46,18 +48,20 @@ If you answered all four questions correctly, you're ready for full immersion in
 
 ---
 
-## Аналіз
+## Parts of Speech Review
 
 ### What You've Learned
 
 In the Bridge phase (M01-05), you learned:
 
 **Module 01: Parts of Speech & Cases**
+
 - 10 частин мови: іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук
 - 7 відмінків: називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 - Basic sentence terms: слово, речення, рід, число, особа, закінчення
 
-**Module 02: Verb Terminology**
+## Verb Terminology Review
+
 - Вид: доконаний, недоконаний
 - Час: теперішній, минулий, майбутній
 - Дія, процес, результат, тривалість, повторення
@@ -65,7 +69,8 @@ In the Bridge phase (M01-05), you learned:
 - Negation: заперечення, загальне заперечення, очікувана дія, попередження, заборона
 - Verb forms: складна форма, синтетична форма, наказова форма, парадигма
 
-**Module 03: Grammar Patterns**
+## Grammar Explanation Patterns
+
 - Explanation patterns: використовується, означає, показує, виражає
 - Instructions: порівняйте, зверніть увагу, наприклад, тобто, отже
 - Activity instruction verbs: виберіть/оберіть, знайдіть, з'єднайте, розташуйте, доповніть, натисніть, перекладіть, складіть
@@ -74,13 +79,15 @@ In the Bridge phase (M01-05), you learned:
 - Comparison: на відміну від, подібно до
 - Word parts: корінь, суфікс, префікс, основа
 
-**Module 04: Sentence Structure**
+## Sentence Structure Review
+
 - Члени речення: підмет, присудок, додаток, означення, обставина
 - Види речень: просте, складне, складносурядне, складнопідрядне
 - Частини: головне речення, підрядне речення
 - Пунктуація: кома, крапка, двокрапка, тире, лапки
 
 **Module 05: This Module — Final Integration**
+
 - Complete review of all terminology from M01-04
 - Reading comprehension of Ukrainian grammar texts
 - Self-assessment and readiness check
@@ -102,23 +109,24 @@ In the Bridge phase (M01-05), you learned:
 
 ---
 
-## Поглиблення
+## Full Grammar Explanation Comprehension
 
 ### Reading a Real Grammar Explanation
 
 Here's an excerpt adapted from a Ukrainian grammar textbook. Read it and test your comprehension:
 
-> *Дієслова в українській мові мають дві граматичні категорії: вид і час. Категорія виду поділяє дієслова на дві групи: дієслова недоконаного виду (НДВ) і дієслова доконаного виду (ДВ).*
+> _Дієслова в українській мові мають дві граматичні категорії: вид і час. Категорія виду поділяє дієслова на дві групи: дієслова недоконаного виду (НДВ) і дієслова доконаного виду (ДВ)._
 >
-> *Недоконаний вид виражає процес дії, її тривалість або повторення. Наприклад: "Я читав книгу дві години" — тривала дія. "Я читав книги щодня" — повторювана дія.*
+> _Недоконаний вид виражає процес дії, її тривалість або повторення. Наприклад: "Я читав книгу дві години" — тривала дія. "Я читав книги щодня" — повторювана дія._
 >
-> *Доконаний вид виражає результат дії, її завершення. Наприклад: "Я прочитав книгу" — дія завершена, є результат.*
+> _Доконаний вид виражає результат дії, її завершення. Наприклад: "Я прочитав книгу" — дія завершена, є результат._
 >
-> *Зверніть увагу: дієслова доконаного виду не мають теперішнього часу. Форма "прочитаю" — це майбутній час, не теперішній.*
+> _Зверніть увагу: дієслова доконаного виду не мають теперішнього часу. Форма "прочитаю" — це майбутній час, не теперішній._
 
 **Test Your Understanding:**
 
 Can you identify:
+
 - Which terms are used for aspect? (вид, доконаний, недоконаний)
 - What explanation pattern is used? (виражає, означає)
 - What instruction is given? (зверніть увагу)
@@ -132,11 +140,11 @@ Can you identify:
 
 **Дієслова доконаного виду не мають форми теперішнього часу.** (Perfective verbs don't have a present tense form.)
 
-| Термін | Значення | Приклад |
-|--------|----------|---------|
-| вид | aspect category | читати — прочитати |
-| НДВ | imperfective | читати, писати |
-| ДВ | perfective | прочитати, написати |
+| Термін | Значення        | Приклад             |
+| ------ | --------------- | ------------------- |
+| вид    | aspect category | читати — прочитати  |
+| НДВ    | imperfective    | читати, писати      |
+| ДВ     | perfective      | прочитати, написати |
 
 ---
 
@@ -146,21 +154,21 @@ Can you identify:
 
 From this point forward, grammar explanations will look like this:
 
-> *Відмінювання іменників жіночого роду*
+> _Відмінювання іменників жіночого роду_
 >
-> *Іменники жіночого роду на -а/-я відмінюються за першою відміною. Порівняйте форми слова "книга":*
+> _Іменники жіночого роду на -а/-я відмінюються за першою відміною. Порівняйте форми слова "книга":_
 >
-> | Відмінок | Форма |
-> |----------|-------|
-> | Називний | книга |
-> | Родовий | книги |
-> | Давальний | книзі |
-> | Знахідний | книгу |
-> | Орудний | книгою |
-> | Місцевий | на книзі |
-> | Кличний | книго! |
+> | Відмінок  | Форма    |
+> | --------- | -------- |
+> | Називний  | книга    |
+> | Родовий   | книги    |
+> | Давальний | книзі    |
+> | Знахідний | книгу    |
+> | Орудний   | книгою   |
+> | Місцевий  | на книзі |
+> | Кличний   | книго!   |
 >
-> *Зверніть увагу на чергування приголосних у давальному та місцевому відмінках: г → з (книга → книзі).*
+> _Зверніть увагу на чергування приголосних у давальному та місцевому відмінках: г → з (книга → книзі)._
 
 If you can understand this explanation — congratulations! You're ready for full immersion.
 
@@ -258,17 +266,19 @@ If you can understand this explanation — congratulations! You're ready for ful
 
 ---
 
-# Підсумок
+# Summary
 
 You've completed the Bridge phase! You now know:
 
 **Vocabulary for Full Immersion:**
+
 - ~100 grammatical terms in Ukrainian
 - Explanation and instruction patterns
 - Word formation terminology
 - Sentence analysis vocabulary
 
 **Your Grammar Metalanguage Arsenal:**
+
 - **10 частин мови** — іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук
 - **7 відмінків** — називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 - **2 види дієслова** — доконаний (результат), недоконаний (процес)
@@ -277,6 +287,7 @@ You've completed the Bridge phase! You now know:
 - **4 частини слова** — корінь, суфікс, префікс, закінчення
 
 **What Changes After This Module:**
+
 - Grammar explanations will be entirely in Ukrainian
 - Instructions and examples will be in Ukrainian
 - You'll learn NEW grammar concepts using UKRAINIAN terminology
@@ -285,6 +296,7 @@ You've completed the Bridge phase! You now know:
 > ✅ **Self-Check: Готові до занурення?**
 >
 > Can you:
+>
 > - [ ] Name all 10 parts of speech in Ukrainian?
 > - [ ] Name all 7 cases in Ukrainian?
 > - [ ] Explain the difference between ДВ and НДВ?

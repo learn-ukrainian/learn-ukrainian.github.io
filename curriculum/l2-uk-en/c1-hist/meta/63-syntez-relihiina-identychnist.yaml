@@ -1,8 +1,5 @@
-# C1-HIST Module 63: Синтез — Релігія і національна ідентичність
-# Status: SPEC (ready for content development)
-
 id: c1-hist-63
-title: "Синтез: Релігія і національна ідентичність"
+title: 'Синтез: Релігія і національна ідентичність'
 slug: syntez-relihiina-identychnist
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,135 +7,106 @@ focus: history
 module_type: synthesis
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Релігія в Україні (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
-    type: reference
-    notes: Overview
-  - name: Православна церква України
-    url: https://uk.wikipedia.org/wiki/Православна_церква_України
-    type: reference
-    notes: 2018-19 autocephaly
-
+- name: Релігія в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
+  type: reference
+  notes: Overview
+- name: Православна церква України
+  url: https://uk.wikipedia.org/wiki/Православна_церква_України
+  type: reference
+  notes: 2018-19 autocephaly
 content_outline:
-  - section: Вступ — Релігія і нація
-    words: 400
-    points:
-      - Огляд модулів 58-62
-      - Як релігія формує ідентичність
-      - Українська специфіка
-      - Мета синтезу
-
-  - section: Релігійний ландшафт України
-    words: 600
-    points:
-      - ПЦУ — автокефальна
-      - УПЦ МП — московська юрисдикція
-      - УГКЦ — греко-католики
-      - Протестанти
-      - Інші — мусульмани, юдеї
-      - Карта розподілу
-
-  - section: Церковні розколи і нація
-    words: 700
-    points:
-      - 1596 — перший розкол
-      - 1686 — втрата Київської митрополії
-      - 1946 — ліквідація УГКЦ
-      - 1991-2019 — боротьба за автокефалію
-      - Томос 2019 — що змінилося
-
-  - section: 2022 — Релігія на війні
-    words: 600
-    points:
-      - УПЦ МП — криза лояльності
-      - ПЦУ — церква опору
-      - УГКЦ — капелани і допомога
-      - Релігійний вимір деколонізації
-      - Заборона УПЦ МП?
-
-  - section: Секуляризація vs. відродження
-    words: 500
-    points:
-      - Радянська спадщина — атеїзм
-      - Релігійне відродження 1990-х
-      - Молодь і релігія
-      - Майбутнє — прогнози
-
-  - section: Уроки для розуміння України
-    words: 400
-    points:
-      - Релігія — не тільки віра
-      - Церква як політичний актор
-      - Ідентичність — складна
-      - Регіональні відмінності
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Релігія і нація — переплетені
-      - Від минулого до сьогодення
-      - Перехід до діаспорних студій
-
+- section: Вступ — Релігія і нація
+  words: 400
+  points:
+  - Огляд модулів 58-62
+  - Як релігія формує ідентичність
+  - Українська специфіка
+  - Мета синтезу
+- section: Релігійний ландшафт України
+  words: 600
+  points:
+  - ПЦУ — автокефальна
+  - УПЦ МП — московська юрисдикція
+  - УГКЦ — греко-католики
+  - Протестанти
+  - Інші — мусульмани, юдеї
+  - Карта розподілу
+- section: Церковні розколи і нація
+  words: 700
+  points:
+  - 1596 — перший розкол
+  - 1686 — втрата Київської митрополії
+  - 1946 — ліквідація УГКЦ
+  - 1991-2019 — боротьба за автокефалію
+  - Томос 2019 — що змінилося
+- section: 2022 — Релігія на війні
+  words: 600
+  points:
+  - УПЦ МП — криза лояльності
+  - ПЦУ — церква опору
+  - УГКЦ — капелани і допомога
+  - Релігійний вимір деколонізації
+  - Заборона УПЦ МП?
+- section: Секуляризація vs. відродження
+  words: 500
+  points:
+  - Радянська спадщина — атеїзм
+  - Релігійне відродження 1990-х
+  - Молодь і релігія
+  - Майбутнє — прогнози
+- section: Уроки для розуміння України
+  words: 400
+  points:
+  - Релігія — не тільки віра
+  - Церква як політичний актор
+  - Ідентичність — складна
+  - Регіональні відмінності
+- section: Підсумок
+  words: 300
+  points:
+  - Релігія і нація — переплетені
+  - Від минулого до сьогодення
+  - Перехід до діаспорних студій
 vocabulary_hints:
   required:
-    - синтез (synthesis)
-    - автокефалія (autocephaly)
-    - томос (tomos)
-    - ПЦУ (Orthodox Church of Ukraine)
-    - УПЦ МП (UOC Moscow Patriarchate)
-    - секуляризація (secularization)
-    - відродження (revival)
-    - лояльність (loyalty)
-    - юрисдикція (jurisdiction)
-    - ландшафт (landscape)
+  - синтез (synthesis)
+  - автокефалія (autocephaly)
+  - томос (tomos)
+  - ПЦУ (Orthodox Church of Ukraine)
+  - УПЦ МП (UOC Moscow Patriarchate)
+  - секуляризація (secularization)
+  - відродження (revival)
+  - лояльність (loyalty)
+  - юрисдикція (jurisdiction)
+  - ландшафт (landscape)
   recommended:
-    - екуменізм (ecumenism)
-    - конфесія (confession/denomination)
-    - капелан (chaplain)
-    - деномінація (denomination)
-    - плюралізм (pluralism)
-
+  - екуменізм (ecumenism)
+  - конфесія (confession/denomination)
+  - капелан (chaplain)
+  - деномінація (denomination)
+  - плюралізм (pluralism)
 activity_hints:
-  - type: synthesis
-    focus: Create religious identity evolution diagram
-    output: Historical map
-
-  - type: contemporary-analysis
-    focus: Analyze 2022 religious dimension of war
-    output: Current events analysis
-
-  - type: regional-mapping
-    focus: Map religious distribution in Ukraine
-    output: Annotated map
-
-  - type: prediction
-    focus: Future of religion in Ukraine — scenarios
-    output: Scenario analysis
-
-  - type: essay-response
-    focus: "Як релігія впливає на українську національну ідентичність сьогодні?"
-    word_target: 500
-    model_answer: Required
-
+- type: essay-response
+  focus: Create religious identity evolution diagram
+  output: Historical map
+- type: contemporary-analysis
+  focus: Analyze 2022 religious dimension of war
+  output: Current events analysis
+- type: regional-mapping
+  focus: Map religious distribution in Ukraine
+  output: Annotated map
+- type: prediction
+  focus: Future of religion in Ukraine — scenarios
+  output: Scenario analysis
+- type: essay-response
+  focus: Як релігія впливає на українську національну ідентичність сьогодні?
+  word_target: 500
+  model_answer: Required
 prerequisites:
-  - c1-hist-58 through c1-hist-62 (All religious identity modules)
-
+- c1-hist-58 through c1-hist-62 (All religious identity modules)
 connects_to:
-  - c1-hist-64 (Diaspora studies)
-  - c1-hist-10 (Historical memory)
-  - c1-hist-125 (Post-2014 decolonization)
-
-# === RELIGIOUS IDENTITY PHASE COMPLETION NOTE ===
-# This module concludes Phase C1H.8
-# Students now have:
-# - Byzantine heritage understanding
-# - Union of Brest analysis
-# - Orthodox and Greek Catholic identity knowledge
-# - Soviet anti-religious policy understanding
-# - Contemporary religious landscape awareness
-#
-# Ready for Phase C1H.9: Diaspora Studies
+- c1-hist-64 (Diaspora studies)
+- c1-hist-10 (Historical memory)
+- c1-hist-125 (Post-2014 decolonization)

@@ -1,17 +1,57 @@
-# Audit Report: 05-my-world-objects.md
-**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
+# Audit Report: M05 — 05-my-world-objects.md
+**Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:53:57
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 300 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Demonstratives and Gender | 13 | 8 | ✅ |
+| 2 | match-up | Objects and Translations | 14 | 8 | ✅ |
+| 3 | group-sort | Sort by Gender | 30 | 12 | ✅ |
+| 4 | quiz | Choose the Correct Demonstrative | 12 | 8 | ✅ |
+| 5 | fill-in | Complete with Demonstratives | 12 | 8 | ✅ |
+| 6 | true-false | Demonstrative Agreement | 12 | 8 | ✅ |
+| 7 | anagram | Build the Word | 12 | 8 | ✅ |
+| 8 | fill-in | Complete the Dialogue | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): пилосос, картина, пляшка, плита, гаманець...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1604/300
+- **Words:** ✅ 1603/300 (raw: 1840)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/1
+- **Vocab:** ✅ 27/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -20,15 +60,12 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 171 | Included in Core |
-| **Presentation** | ✅ | 380 | Included in Core |
+| **Presentation** | ✅ | 379 | Included in Core |
 | **Practice** | ⚪️ | 411 | Skipped |
 | **Cultural Insight** | ✅ | 398 | Included in Core |
 | **Production** | ➖ | 91 | Excluded Type |

@@ -1,141 +1,111 @@
-# B1 Module 10: Вид у запереченні
-# Status: SPEC (ready for content development)
-
-id: b1-10
-title: Вид у запереченні
-subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
-slug: 10-aspect-negation
-module_type: grammar
-word_target: 3200
+module: "b1-10"
+title: "Вид у запереченні"
+subtitle: "Aspect in Negation: How 'не' Changes Aspect Selection"
+slug: "10-aspect-negation"
+module_type: "grammar"
+word_target: 1800
 immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
-version: '1.0'
-phase: B1.1 Aspect
-pedagogy: TTT
-focus: grammar
+version: "1.0"
+phase: "B1.1 Aspect"
+pedagogy: "TTT"
+focus: "grammar"
 duration: 90
-transliteration: none
+transliteration: "none"
 tags:
-  - grammar
-  - aspect
-  - negation
-  - imperatives
+  - "grammar"
+  - "aspect"
+  - "negation"
+  - "imperatives"
 grammar:
-  - Imperfective preference with не
-  - ще не + perfective - expected completion
-  - не + imperfective - general negation
-  - Negative imperatives - наказові форми
+  - "Imperfective preference with не"
+  - "ще не + perfective - expected completion"
+  - "не + imperfective - general negation"
+  - "Negative imperatives - наказові форми"
 objectives:
-  - Learner understands why negation favors imperfective aspect
-  - Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
-  - Learner can form negative imperatives with correct aspect
-  - Learner recognizes exceptions to imperfective preference
-
-# === AGENT BUILD SPEC ===
-
+  - "Learner understands why negation favors imperfective aspect"
+  - "Learner can distinguish 'ще не' + perfective vs 'не' + imperfective"
+  - "Learner can form negative imperatives with correct aspect"
+  - "Learner recognizes exceptions to imperfective preference"
 sources:
-  - name: Ukrainian State Standard 2024 - Negation and Aspect
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official rules for aspect in negative contexts
-  - name: Ukrainian Negation Patterns
-    url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
-    type: reference
-    notes: Negation with aspect selection
-
+  - name: "Ukrainian State Standard 2024 - Negation and Aspect"
+    url: "https://mon.gov.ua/"
+    type: "reference"
+    notes: "Official rules for aspect in negative contexts"
+  - name: "Ukrainian Negation Patterns"
+    url: "https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)"
+    type: "reference"
+    notes: "Negation with aspect selection"
 content_outline:
-  - section: Вступ — Заперечення і вид
-    words: 350
+  - section: "Тест"
+    words: 150
     points:
-      - Чому заперечення впливає на вибір виду
-      - TTT — спробуйте самі
-      - Зв'язок з попередніми модулями
-
-  - section: Загальне заперечення — недоконаний вид
-    words: 550
-    points:
-      - Я не читав цієї книги (ніколи, взагалі)
-      - Він не дзвонив (факт відсутності)
-      - Загальна відмова від дії
-
-  - section: '"Ще не" — доконаний вид'
-    words: 550
-    points:
-      - Я ще не прочитав (очікуване завершення)
-      - Він ще не прийшов (очікуваний результат)
-      - Заперечення з очікуванням
-
-  - section: Заперечні накази
+      - "Three types of negation"
+      - "Intuition check"
+  - section: "Пояснення"
     words: 500
     points:
-      - Не читай цю книгу! (загальна заборона — недок.)
-      - Не прочитай випадково! (попередження — док.)
-      - Різниця в інтенції
-
-  - section: Винятки і нюанси
-    words: 500
-    points:
-      - Коли заперечення з доконаним
-      - Контекст визначає вибір
-      - Типові помилки
-
-  - section: Практика і підсумок
+      - "General negation (imperfective)"
+      - "'Not yet' exception (perfective)"
+      - "'Don''t do it' warnings (perfective)"
+      - "Negative imperatives"
+  - section: "Практика"
     words: 350
     points:
-      - Комплексні вправи
-      - Готовність до M11
-
+      - "Decision algorithm"
+      - "Common mistakes"
+      - "Scenarios"
+  - section: "Діалоги"
+    words: 650
+    points:
+      - "Bookstore"
+      - "Movie discussion"
+      - "Academic work"
+  - section: "Підсумок"
+    words: 250
+    points:
+      - "Summary table"
+      - "Self-check"
 vocabulary_hints:
   required:
-    - заперечення (negation)
-    - не (not)
-    - ще не (not yet)
-    - ніколи (never)
-    - взагалі (at all)
-    - заборона (prohibition)
-    - попередження (warning)
-    - очікувана дія (expected action)
-    - загальне заперечення (general negation)
-    - відмова (refusal)
+    - "заперечення"
+    - "не"
+    - "Я не читав цієї книги"
+    - "Він не дзвонив"
+    - "ще не"
+    - "ніколи"
+    - "взагалі"
+    - "заборона"
+    - "попередження"
+    - "очікувана дія"
+    - "загальне заперечення"
+    - "відмова"
   recommended:
-    - нікуди (nowhere - direction)
-    - ніяк (in no way)
-    - ніщо (nothing)
-    - випадково (accidentally)
-    - навмисне (on purpose)
-
+    - "нікуди"
+    - "ніяк"
+    - "ніщо"
+    - "випадково"
+    - "навмисне"
 activity_hints:
-  - type: quiz
-    focus: Which aspect in negation?
-    items: "15+"
-
-  - type: fill-in
-    focus: ще не + perfective patterns
-    items: "12+"
-
-  - type: transform
-    focus: Affirmative → negative with correct aspect
-    items: "10+"
-
-  - type: match-up
-    focus: Negation type → aspect
-    items: "12+"
-
-  - type: dialogue
-    focus: Negative responses with aspect choice
-    items: "8+"
-
+  - type: "quiz"
+    focus: "Which aspect in negation?"
+    items: 15
+  - type: "fill-in"
+    focus: "ще не + perfective patterns"
+    items: 12
+  - type: "fill-in"
+    focus: "Affirmative → negative with correct aspect"
+    items: 10
+  - type: "match-up"
+    focus: "Negation type → aspect"
+    items: 12
 prerequisites:
-  - b1-06 (Aspect complete system)
-  - b1-07 (Aspect past)
-  - b1-08 (Aspect past)
-  - b1-09 (Aspect future)
-
+  - "b1-06 (Aspect complete system)"
+  - "b1-07 (Aspect past)"
+  - "b1-08 (Aspect past)"
+  - "b1-09 (Aspect future)"
 connects_to:
-  - b1-11 (Aspect in imperatives)
-  - b1-14 (Aspect integration practice)
-
+  - "b1-11 (Aspect in imperatives)"
+  - "b1-14 (Aspect integration practice)"
 naturalness:
   score: 9
-  status: PASS
+  status: "PASS"

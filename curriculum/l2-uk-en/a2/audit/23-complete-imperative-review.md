@@ -1,51 +1,75 @@
-# Audit Report: 23-complete-imperative.md
-**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M23 — 23-complete-imperative.md
+**Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 10:00:22
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Утворіть наказову форму | 8 | 8 | ✅ |
+| 2 | match-up | Наказові частки | 10 | 8 | ✅ |
+| 3 | fill-in | Доповніть хай або нехай | 8 | 8 | ✅ |
+| 4 | group-sort | Розсортуйте за стилем | 12 | 12 | ✅ |
+| 5 | quiz | Розуміння наказового способу | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 6 | 6 | ✅ |
+| 8 | cloze | Доповніть діалог | 12 | 12 | ✅ |
+| 9 | translate | Перекладіть українською | 6 | 6 | ✅ |
+| 10 | true-false | Правда чи ні? | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Stem ends in a consonant with stress on the stem**: Add **-ь** (sg) / **-ьте** (pl).". Shares significant keywords with sentence at index 19.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): допоможіть, давайте, ходімо, їж, послухайте...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1320/1000
+- **Words:** ✅ 1064/1000 (raw: 1226)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/1
+- **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 59.7% (target 50-65% (A2.2))
+- **Immersion:** ❌ 45.5% LOW (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction** | ✅ | 75 | Included in Core |
-| **Presentation** | ✅ | 232 | Included in Core |
-| **Practice** | ⚪️ | 150 | Skipped |
-| **The Complete Imperative System** | ⚪️ | 8 | Skipped |
-| **Наказовий спосіб 2-ї особи — 2nd Person Imperative** | ⚪️ | 0 | Skipped |
-| **Як утворити — How to Form** | ⚪️ | 9 | Skipped |
-| **Закінчення — Endings** | ⚪️ | 6 | Skipped |
-| **Приклади з дієсловами — Verb Examples** | ⚪️ | 28 | Skipped |
-| **Наказовий спосіб 1-ї особи множини — 1st Person Plural («Let's...»)** | ⚪️ | 0 | Skipped |
-| **Приклади — Examples** | ⚪️ | 82 | Skipped |
-| **Наказовий спосіб 3-ї особи — 3rd Person Imperative** | ⚪️ | 0 | Skipped |
-| **хай vs. нехай — Register Difference** | ⚪️ | 0 | Skipped |
-| **Типові вирази — Common Expressions** | ⚪️ | 0 | Skipped |
-| **Повна парадигма — Complete Paradigm** | ⚪️ | 7 | Skipped |
-| **Більше прикладів — More Examples** | ⚪️ | 52 | Skipped |
-| **Dialogues** | ✅ | 225 | Included in Core |
-| **Ситуації — Situations** | ⚪️ | 103 | Skipped |
-| **Формула ввічливості — Politeness Formula** | ⚪️ | 82 | Skipped |
-| **Заперечення — Negative Imperatives** | ⚪️ | 42 | Skipped |
-| **Повторення форм — Form Review** | ✅ | 58 | Included in Core |
-| **Підсумок** | ✅ | 53 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Introduction / Вступ** | ✅ | 238 | Included in Core |
+| **Presentation / Презентація** | ✅ | 346 | Included in Core |
+| **Practice / Практика** | ⚪️ | 212 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 138 | Included in Core |
+| **Summary / Підсумок** | ✅ | 86 | Included in Core |
+| **Need More Practice?** | ⚪️ | 44 | Skipped |

@@ -1,139 +1,112 @@
-# C1-BIO Module 29: Євген Чикаленко: Меценат і видавець
-# Status: SPEC (ready for content development)
-
 id: c1-bio-29
-title: "Євген Чикаленко: Меценат і видавець"
+title: 'Євген Чикаленко: Меценат і видавець'
 slug: yevhen-chykalenko
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Євген Чикаленко (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Щоденники Чикаленка
-    url: https://diasporiana.org.ua/
-    type: reference
-    notes: Первинні джерела
-  - name: Газета Рада
-    url: https://archives.gov.ua/
-    type: reference
-    notes: Видавнича діяльність
-
+- name: Євген Чикаленко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Щоденники Чикаленка
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Первинні джерела
+- name: Газета Рада
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Видавнича діяльність
 content_outline:
-  - section: Вступ — Людина, яка платила за Україну
-    words: 400
-    points:
-      - Чикаленко як найбільший меценат українського руху
-      - Від заможного землевласника до патріота-видавця
-      - Чому його роль недооцінена
-
-  - section: Полтавщина та формування світогляду
-    words: 600
-    points:
-      - Народження в заможній родині (1861)
-      - Освіта та перші політичні погляди
-      - Вплив народницьких ідей
-
-  - section: Господарська діяльність
-    words: 700
-    points:
-      - Успішне землеробство
-      - Економічна незалежність як основа діяльності
-      - Модернізація сільського господарства
-
-  - section: Меценат і видавець
-    words: 800
-    points:
-      - Фінансування газети Рада
-      - Підтримка письменників та культурних ініціатив
-      - Видавничі проекти
-
-  - section: Громадська діяльність
-    words: 700
-    points:
-      - Участь в українському русі
-      - Співпраця з Грушевським та іншими діячами
-      - Роль у Центральній Раді
-
-  - section: Еміграція та щоденники
-    words: 600
-    points:
-      - Виїзд з України після революції
-      - Життя в еміграції
-      - Щоденники як історичне джерело
-
-  - section: Дискусія — Роль меценатства в національному русі
-    words: 200
-    points:
-      - Гроші vs ідеї у визвольній боротьбі
-      - Чикаленко як модель для сучасності
-
+- section: Вступ — Людина, яка платила за Україну
+  words: 400
+  points:
+  - Чикаленко як найбільший меценат українського руху
+  - Від заможного землевласника до патріота-видавця
+  - Чому його роль недооцінена
+- section: Полтавщина та формування світогляду
+  words: 600
+  points:
+  - Народження в заможній родині (1861)
+  - Освіта та перші політичні погляди
+  - Вплив народницьких ідей
+- section: Господарська діяльність
+  words: 700
+  points:
+  - Успішне землеробство
+  - Економічна незалежність як основа діяльності
+  - Модернізація сільського господарства
+- section: Меценат і видавець
+  words: 800
+  points:
+  - Фінансування газети Рада
+  - Підтримка письменників та культурних ініціатив
+  - Видавничі проекти
+- section: Громадська діяльність
+  words: 700
+  points:
+  - Участь в українському русі
+  - Співпраця з Грушевським та іншими діячами
+  - Роль у Центральній Раді
+- section: Еміграція та щоденники
+  words: 600
+  points:
+  - Виїзд з України після революції
+  - Життя в еміграції
+  - Щоденники як історичне джерело
+- section: Дискусія — Роль меценатства в національному русі
+  words: 200
+  points:
+  - Гроші vs ідеї у визвольній боротьбі
+  - Чикаленко як модель для сучасності
 vocabulary_hints:
   required:
-    - меценат (patron/philanthropist)
-    - видавець (publisher)
-    - землевласник (landowner)
-    - газета (newspaper)
-    - філантропія (philanthropy)
-    - фінансування (financing)
-    - національний рух (national movement)
-    - щоденник (diary)
-    - еміграція (emigration)
-    - спонсорство (sponsorship)
+  - меценат (patron/philanthropist)
+  - видавець (publisher)
+  - землевласник (landowner)
+  - газета (newspaper)
+  - філантропія (philanthropy)
+  - фінансування (financing)
+  - національний рух (national movement)
+  - щоденник (diary)
+  - еміграція (emigration)
+  - спонсорство (sponsorship)
   recommended:
-    - просвітництво (enlightenment)
-    - громадська діяльність (public activity)
-    - культурне будівництво (cultural construction)
-    - народництво (populism)
-    - благодійність (charity)
-
+  - просвітництво (enlightenment)
+  - громадська діяльність (public activity)
+  - культурне будівництво (cultural construction)
+  - народництво (populism)
+  - благодійність (charity)
 activity_hints:
-  - type: reading
-    focus: Фрагменти щоденників Чикаленка
-    source: Первинні джерела
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про меценатську діяльність
-    items: "12+"
-
-  - type: match-up
-    focus: Меценати та їхні проекти
-    items: "10+"
-
-  - type: essay-response
-    focus: Яка роль грошей у національному русі?
-    word_target: 300
-    output: Аналітичний есей
-
-  - type: group-sort
-    focus: Форми підтримки культури
-    items: "12+"
-
-  - type: fill-in
-    focus: Термінологія меценатства
-    items: "10+"
-
-  - type: discussion
-    focus: Чи можна купити свободу?
-    output: Філософський аналіз
-
+- type: reading
+  focus: Фрагменти щоденників Чикаленка
+  source: Первинні джерела
+  items: 3 passages
+- type: quiz
+  focus: Факти про меценатську діяльність
+  items: 12+
+- type: match-up
+  focus: Меценати та їхні проекти
+  items: 10+
+- type: essay-response
+  focus: Яка роль грошей у національному русі?
+  word_target: 300
+  output: Аналітичний есей
+- type: group-sort
+  focus: Форми підтримки культури
+  items: 12+
+- type: fill-in
+  focus: Термінологія меценатства
+  items: 10+
 prerequisites:
-  - c1-bio-28-ivan-franko
-
+- c1-bio-28-ivan-franko
 connects_to:
-  - c1-bio-35-mykhailo-hrushevskyi
-  - c1-bio-22-mykhailo-drahomanov
-  - c1-bio-30-borys-hrinchenko
-
+- c1-bio-35-mykhailo-hrushevskyi
+- c1-bio-22-mykhailo-drahomanov
+- c1-bio-30-borys-hrinchenko
 naturalness:
   score: 1
   status: PENDING

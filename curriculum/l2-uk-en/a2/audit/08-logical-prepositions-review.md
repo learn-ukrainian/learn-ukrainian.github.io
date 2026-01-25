@@ -1,57 +1,78 @@
-# Audit Report: 08-logical-prepositions.md
-**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+# Audit Report: M08 — 08-logical-prepositions.md
+**Level:** A2 | **Module:** M08 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:40:09
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Preposition Meaning | 10 | 8 | ✅ |
+| 2 | group-sort | Case Requirements | 13 | 12 | ✅ |
+| 3 | fill-in | Complete the Sentence | 8 | 8 | ✅ |
+| 4 | quiz | Logical Prepositions | 8 | 8 | ✅ |
+| 5 | cloze | Story Gaps | 12 | 12 | ✅ |
+| 6 | unjumble | Logical Sentences | 8 | 6 | ✅ |
+| 7 | error-correction | Wrong Preposition | 6 | 6 | ✅ |
+| 8 | true-false | Preposition Rules | 12 | 8 | ✅ |
+| 9 | translate | English to Ukrainian | 6 | 6 | ✅ |
+| 10 | match-up | Contrast Pairs | 10 | 8 | ✅ |
+| 11 | cloze | Pharmacy Dialogue | 14 | 12 | ✅ |
+| 12 | match-up | Case Endings | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, родовий, іменник
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1415/1000
+- **Words:** ✅ 1377/1000 (raw: 1471)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/4
+- **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 65/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.8% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 47.6% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 68 | Included in Core |
-| **Presentation** | ✅ | 90 | Included in Core |
-| **Part 1: Benefit & Absence** | ⚪️ | 0 | Skipped |
-| **Understanding Logical Prepositions** | ⚪️ | 61 | Skipped |
-| **Для + Genitive (For)** | ⚪️ | 91 | Skipped |
-| **Без + Genitive (Without)** | ⚪️ | 29 | Skipped |
-| **Part 2: Cause & Topic** | ⚪️ | 0 | Skipped |
-| **Через + Accusative (Because of | Through)** | ⚪️ | 78 | Skipped |
-| **Про + Accusative (About)** | ⚪️ | 15 | Skipped |
-| **Learning Note: Why Cases Matter** | ⚪️ | 177 | Skipped |
-| **Part 3: Source & Accompaniment** | ⚪️ | 0 | Skipped |
-| **Від + Genitive (From - Source)** | ⚪️ | 41 | Skipped |
-| **З + Instrumental (With)** | ⚪️ | 15 | Skipped |
-| **Part 4: Time & Exception** | ⚪️ | 0 | Skipped |
-| **О/Об + Locative (At - Time)** | ⚪️ | 9 | Skipped |
-| **Після + Genitive (After)** | ⚪️ | 7 | Skipped |
-| **Крім + Genitive (Except | Besides)** | ⚪️ | 5 | Skipped |
-| **Замість + Genitive** | ⚪️ | 4 | Skipped |
-| **Practice** | ⚪️ | 168 | Skipped |
-| **Story Time: The Letter** | ✅ | 96 | Included in Core |
-| **Story Time Part 2: The Café** | ✅ | 143 | Included in Core |
-| **Вправа: Оберіть правильний прийменник** | ⚪️ | 31 | Skipped |
-| **Dialogues** | ✅ | 0 | Included in Core |
-| **Dialogue: At the Pharmacy** | ✅ | 45 | Included in Core |
-| **Dialogue: Planning a Trip** | ✅ | 57 | Included in Core |
-| **Dialogue: About a Book** | ✅ | 89 | Included in Core |
-| **Таблиця прийменників та відмінків** | ⚪️ | 39 | Skipped |
-| **Підсумок** | ✅ | 27 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 215 | Included in Core |
+| **Presentation / Презентація** | ✅ | 577 | Included in Core |
+| **Practice / Практика** | ⚪️ | 190 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 246 | Included in Core |
+| **Summary / Підсумок** | ✅ | 103 | Included in Core |
+| **Need More Practice?** | ⚪️ | 46 | Skipped |

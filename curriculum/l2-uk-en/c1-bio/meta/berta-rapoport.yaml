@@ -1,133 +1,107 @@
-# C1-BIO Module 60: Берта Рапопорт
-# Status: SPEC (ready for content development)
-
 id: c1-bio-60
-title: "Берта Рапопорт: Лікарка і громадська діячка"
+title: 'Берта Рапопорт: Лікарка і громадська діячка'
 slug: berta-rapoport
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Берта Рапопорт (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
-    type: primary
-    notes: Biography of the pioneering woman doctor and activist
-  - name: Одеська медична спадщина
-    url: https://omu.odessa.ua/
-    type: reference
-    notes: Historical medical archives of Odesa
-
+- name: Берта Рапопорт (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
+  type: primary
+  notes: Biography of the pioneering woman doctor and activist
+- name: Одеська медична спадщина
+  url: https://omu.odessa.ua/
+  type: reference
+  notes: Historical medical archives of Odesa
 content_outline:
-  - section: Вступ — Жінка, що лікувала і надихала
-    words: 400
-    points:
-      - Одна з перших жінок-лікарів в Україні
-      - Громадська діячка та феміністка
-      - Боротьба за права жінок у медицині
-
-  - section: Походження та освіта (1860-ті–1880-ті)
-    words: 600
-    points:
-      - Єврейська родина в Одесі
-      - Прагнення до освіти попри перешкоди
-      - Навчання за кордоном (Швейцарія)
-      - Здобуття медичного диплома
-
-  - section: Медична практика (1880-ті–1900-ті)
-    words: 800
-    points:
-      - Повернення до Одеси
-      - Робота в лікарнях та приватна практика
-      - Спеціалізація в гінекології
-      - Допомога бідним верствам населення
-
-  - section: Громадська діяльність (1890-ті–1910-ті)
-    words: 800
-    points:
-      - Участь у жіночому русі
-      - Боротьба за доступ жінок до освіти
-      - Благодійність та соціальна робота
-      - Публіцистична діяльність
-
-  - section: Революційні роки (1917-1920-ті)
-    words: 700
-    points:
-      - Продовження роботи під час хаосу
-      - Ставлення до революційних змін
-      - Останні роки життя
-      - Смерть та забуття в радянський час
-
-  - section: Спадщина — Повернення з небуття
-    words: 700
-    points:
-      - Дослідження істориків
-      - Внесок у розвиток жіночої медицини
-      - Роль у феміністичному русі
-      - Приклад для сучасних жінок-лікарів
-
+- section: Вступ — Жінка, що лікувала і надихала
+  words: 400
+  points:
+  - Одна з перших жінок-лікарів в Україні
+  - Громадська діячка та феміністка
+  - Боротьба за права жінок у медицині
+- section: Походження та освіта (1860-ті–1880-ті)
+  words: 600
+  points:
+  - Єврейська родина в Одесі
+  - Прагнення до освіти попри перешкоди
+  - Навчання за кордоном (Швейцарія)
+  - Здобуття медичного диплома
+- section: Медична практика (1880-ті–1900-ті)
+  words: 800
+  points:
+  - Повернення до Одеси
+  - Робота в лікарнях та приватна практика
+  - Спеціалізація в гінекології
+  - Допомога бідним верствам населення
+- section: Громадська діяльність (1890-ті–1910-ті)
+  words: 800
+  points:
+  - Участь у жіночому русі
+  - Боротьба за доступ жінок до освіти
+  - Благодійність та соціальна робота
+  - Публіцистична діяльність
+- section: Революційні роки (1917-1920-ті)
+  words: 700
+  points:
+  - Продовження роботи під час хаосу
+  - Ставлення до революційних змін
+  - Останні роки життя
+  - Смерть та забуття в радянський час
+- section: Спадщина — Повернення з небуття
+  words: 700
+  points:
+  - Дослідження істориків
+  - Внесок у розвиток жіночої медицини
+  - Роль у феміністичному русі
+  - Приклад для сучасних жінок-лікарів
 vocabulary_hints:
   required:
-    - лікарка (woman doctor)
-    - медична освіта (medical education)
-    - гінекологія (gynecology)
-    - феміністка (feminist)
-    - громадська діячка (public activist)
-    - благодійність (charity)
-    - жіночий рух (women's movement)
-    - дискримінація (discrimination)
-    - емансипація (emancipation)
-    - соціальна робота (social work)
+  - лікарка (woman doctor)
+  - медична освіта (medical education)
+  - гінекологія (gynecology)
+  - феміністка (feminist)
+  - громадська діячка (public activist)
+  - благодійність (charity)
+  - жіночий рух (women's movement)
+  - дискримінація (discrimination)
+  - емансипація (emancipation)
+  - соціальна робота (social work)
   recommended:
-    - акушерство (obstetrics)
-    - приватна практика (private practice)
-    - медична етика (medical ethics)
-    - просвітництво (enlightenment)
-    - рівноправність (equal rights)
-
+  - акушерство (obstetrics)
+  - приватна практика (private practice)
+  - медична етика (medical ethics)
+  - просвітництво (enlightenment)
+  - рівноправність (equal rights)
 activity_hints:
-  - type: reading
-    focus: Жінки в медицині XIX-XX ст.
-    source: Historical medical sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та діяльність Берти Рапопорт
-    items: "12+"
-
-  - type: match-up
-    focus: Терміни медицини та громадської діяльності
-    items: "10+"
-
-  - type: essay-response
-    focus: Які перешкоди долали перші жінки-лікарі?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Сфери діяльності (медицина, благодійність, публіцистика)
-    items: "12+"
-
-  - type: fill-in
-    focus: Медична та феміністична термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як Рапопорт вплинула на права жінок в Україні?
-    output: Critical analysis
-
+- type: reading
+  focus: Жінки в медицині XIX-XX ст.
+  source: Historical medical sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та діяльність Берти Рапопорт
+  items: 12+
+- type: match-up
+  focus: Терміни медицини та громадської діяльності
+  items: 10+
+- type: essay-response
+  focus: Які перешкоди долали перші жінки-лікарі?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Сфери діяльності (медицина, благодійність, публіцистика)
+  items: 12+
+- type: fill-in
+  focus: Медична та феміністична термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-59
-
+- c1-bio-59
 connects_to:
-  - c1-bio-33
-  - c1-bio-61
-
+- c1-bio-33
+- c1-bio-61
 naturalness:
   score: 1
   status: PENDING

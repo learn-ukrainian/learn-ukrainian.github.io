@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and book titles
   items: 10+
-- type: discussion
-  focus: Why is diaspora scholarship important for Ukraine?
-  output: Knowledge diplomacy analysis
 prerequisites:
 - c1-bio-105 (Shevelov - earlier diaspora scholar)
 - Understanding of modern historiography

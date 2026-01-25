@@ -23,7 +23,15 @@ objectives:
 - Учень може проаналізувати наслідки Полтавської битви для України
 - Учень може охарактеризувати Конституцію Пилипа Орлика як важливий документ державності
 vocabulary_count: 35
-slug: ivan-mazepa-iii-poltava
+slug: ivan-mazepa-poltava
+activity_types:
+- quiz
+- match-up
+- reading
+- true-false
+- select
+- essay-response
+- comparative-study
 naturalness:
   score: 9
   status: PASS

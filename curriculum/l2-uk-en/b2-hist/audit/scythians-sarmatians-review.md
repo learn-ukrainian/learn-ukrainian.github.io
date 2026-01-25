@@ -1,12 +1,13 @@
 # Audit Report: M02 — scythians-sarmatians.md
 **Level:** B2 | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 14:40:26
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -30,29 +31,29 @@
 | 9 | true-false | Міфи та історичні факти | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 3-10) ✅
+- Total activities: 9 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4131/4000 (raw: 4382)
+- **Words:** ✅ 4038/4000 (raw: 4217)
 - **Activities:** ✅ 9/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 18 < 20 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (9 activities)
-- **Immersion:** 🇺🇦 97.5% (target 90-100% (history))
+- **Immersion:** 🇺🇦 97.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -64,13 +65,13 @@
 | primary_sources | 12 | 3 | 100% | 24% | 23.8% |
 | engagement | 14 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 17 | 4 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| decolonization | 11 | 2 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 15 | 4 | 100% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -78,10 +79,10 @@
 | **Intro/Narrative** | ✅ | 83 | Included in Core |
 | **Скіфи та сармати — Володарі степу** | ⚪️ | 55 | Skipped |
 | **Розминка** | ⚪️ | 194 | Skipped |
-| **Читання** | ✅ | 1318 | Included in Core |
-| **Сармати: нові володарі степу** | ⚪️ | 866 | Skipped |
+| **Читання: Скіфи: Імперія золота** | ✅ | 696 | Included in Core |
+| **Сармати: Жінки-воїни та Катафракти** | ⚪️ | 889 | Skipped |
+| **Культура та Мистецтво** | ✅ | 678 | Included in Core |
 | **Первинні джерела** | ✅ | 503 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 242 | Included in Core |
-| **Есе** | ⚪️ | 440 | Skipped |
-| **Підсумок** | ✅ | 320 | Included in Core |
+| **Підсумок** | ✅ | 394 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

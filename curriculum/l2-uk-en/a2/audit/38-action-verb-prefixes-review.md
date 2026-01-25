@@ -1,54 +1,75 @@
-# Audit Report: 38-action-verb-prefixes.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M38 — 38-action-verb-prefixes.md
+**Level:** A2 | **Module:** M38 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 15:17:10
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | The Transformers | 10 | 8 | ✅ |
+| 2 | cloze | The Editor | 12 | 12 | ✅ |
+| 3 | fill-in | The Perfectionist | 8 | 8 | ✅ |
+| 4 | group-sort | Open vs Close | 12 | 12 | ✅ |
+| 5 | quiz | Meaning Check | 8 | 8 | ✅ |
+| 6 | true-false | Propaganda Check | 8 | 8 | ✅ |
+| 7 | cloze | The Test | 12 | 12 | ✅ |
+| 8 | error-correction | Fix the Verb | 6 | 6 | ✅ |
+| 9 | match-up | Give and Take | 10 | 8 | ✅ |
+| 10 | unjumble | The Office | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 8 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, час
+- **[GRAMMAR]** Participle used before B1: 'передбачуваний'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, доконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1727/1000
+- **Words:** ✅ 1367/1000 (raw: 1488)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 73/1
+- **Vocab:** ✅ 46/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 66.5% (target 65-75% (A2.2))
+- **Immersion:** 🇺🇦 70.8% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 116 | Included in Core |
-| **Presentation** | ✅ | 253 | Included in Core |
-| **The Meaning Map** | ⚪️ | 7 | Skipped |
-| **Практика** | ⚪️ | 392 | Skipped |
-| **Story Time: The Writer's Deadline** | ✅ | 179 | Included in Core |
-| **Deep Dive - Open and Close (Відкрити | Закрити)** | ✅ | 87 | Included in Core |
-| **Deep Dive - To Give (The «Give» Family)** | ✅ | 87 | Included in Core |
-| **Deep Dive - Connect and Disconnect** | ✅ | 47 | Included in Core |
-| **Language in Action** | ⚪️ | 0 | Skipped |
-| **Dialogue: Office Chaos** | ✅ | 98 | Included in Core |
-| **Monologue: The Renovator** | ⚪️ | 106 | Skipped |
-| **Reflection Point** | ⚪️ | 53 | Skipped |
-| **Deep Dive - The Logic of «Na-»** | ✅ | 46 | Included in Core |
-| **Deep Dive - The «Za-» Trap** | ✅ | 91 | Included in Core |
-| **Anti-Propaganda Showcase** | ⚪️ | 85 | Skipped |
-| **Підсумок** | ✅ | 50 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 290 | Included in Core |
+| **Presentation / Презентація** | ✅ | 559 | Included in Core |
+| **Practice / Практика** | ⚪️ | 202 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 183 | Included in Core |
+| **Summary / Підсумок** | ✅ | 96 | Included in Core |
+| **Need More Practice?** | ⚪️ | 37 | Skipped |

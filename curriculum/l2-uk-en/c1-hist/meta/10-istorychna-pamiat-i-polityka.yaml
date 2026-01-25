@@ -1,6 +1,3 @@
-# C1-HIST Module 10: Історична пам'ять і політика
-# Status: SPEC (ready for content development)
-
 id: c1-hist-10
 title: Історична пам'ять і політика
 slug: istorychna-pamiat-i-polityka
@@ -10,150 +7,118 @@ focus: history
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Історична пам'ять (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Історична_пам'ять
-    type: reference
-    notes: Concept overview
-  - name: Політика пам'яті
-    url: https://uk.wikipedia.org/wiki/Політика_пам'яті
-    type: reference
-    notes: Memory politics
-  - name: П'єр Нора — Місця пам'яті
-    url: https://uk.wikipedia.org/wiki/Нора_П'єр
-    type: reference
-    notes: Key theorist of memory
-  - name: Закон про Голодомор (2006)
-    url: https://zakon.rada.gov.ua/laws/show/376-16
-    type: primary
-    notes: Example of memory legislation
-
+- name: Історична пам'ять (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історична_пам'ять
+  type: reference
+  notes: Concept overview
+- name: Політика пам'яті
+  url: https://uk.wikipedia.org/wiki/Політика_пам'яті
+  type: reference
+  notes: Memory politics
+- name: П'єр Нора — Місця пам'яті
+  url: https://uk.wikipedia.org/wiki/Нора_П'єр
+  type: reference
+  notes: Key theorist of memory
+- name: Закон про Голодомор (2006)
+  url: https://zakon.rada.gov.ua/laws/show/376-16
+  type: primary
+  notes: Example of memory legislation
 content_outline:
-  - section: Вступ — Пам'ять як поле битви
-    words: 400
-    points:
-      - Що таке історична пам'ять?
-      - Пам'ять vs. історія — в чому різниця
-      - Хто формує колективну пам'ять
-      - Чому це політично важливо
-
-  - section: Теоретичні основи
-    words: 600
-    points:
-      - Моріс Альбвакс — колективна пам'ять
-      - "П'єр Нора — «Місця пам'яті» (lieux de mémoire)"
-      - Ян Ассман — культурна пам'ять
-      - Алейда Ассман — функціональна vs. накопичувальна пам'ять
-      - Як застосувати до України
-
-  - section: Інструменти політики пам'яті
-    words: 600
-    points:
-      - Закони про пам'ять — що можна/не можна казати
-      - Свята і пам'ятні дати
-      - Пам'ятники і меморіали
-      - Музеї та виставки
-      - Підручники і освіта
-      - Топоніміка — назви вулиць як пам'ять
-
-  - section: Війни пам'яті — Україна vs. Росія
-    words: 600
-    points:
-      - Переяслав 1654 — два наративи
-      - "Голодомор — геноцид vs. «спільна трагедія»"
-      - Друга світова — хто переможець?
-      - Бандера — герой чи злочинець?
-      - "2022 — «денацифікація» як зброя пам'яті"
-
-  - section: Законодавство про пам'ять в Україні
-    words: 500
-    points:
-      - Закон про Голодомор (2006)
-      - Закони про декомунізацію (2015)
-      - Закон про УПА (2015)
-      - Критика — внутрішня і зовнішня
-      - Порівняння з іншими країнами
-
-  - section: Місця пам'яті в Україні
-    words: 400
-    points:
-      - Бабин Яр — багатошарова пам'ять
-      - "Биківня — «конкуренція жертв»"
-      - Майдан Незалежності — нова сакралізація
-      - "Пам'ятники Шевченку — «громадянська релігія»"
-      - Що зникло — ленінопад
-
-  - section: Виклики і перспективи
-    words: 400
-    points:
-      - "Чи можлива «правильна» пам'ять?"
-      - Регіональні відмінності в Україні
-      - Примирення — чи можливе?
-      - Війна і пам'ять — що формується зараз
-
+- section: Вступ — Пам'ять як поле битви
+  words: 400
+  points:
+  - Що таке історична пам'ять?
+  - Пам'ять vs. історія — в чому різниця
+  - Хто формує колективну пам'ять
+  - Чому це політично важливо
+- section: Теоретичні основи
+  words: 600
+  points:
+  - Моріс Альбвакс — колективна пам'ять
+  - П'єр Нора — «Місця пам'яті» (lieux de mémoire)
+  - Ян Ассман — культурна пам'ять
+  - Алейда Ассман — функціональна vs. накопичувальна пам'ять
+  - Як застосувати до України
+- section: Інструменти політики пам'яті
+  words: 600
+  points:
+  - Закони про пам'ять — що можна/не можна казати
+  - Свята і пам'ятні дати
+  - Пам'ятники і меморіали
+  - Музеї та виставки
+  - Підручники і освіта
+  - Топоніміка — назви вулиць як пам'ять
+- section: Війни пам'яті — Україна vs. Росія
+  words: 600
+  points:
+  - Переяслав 1654 — два наративи
+  - Голодомор — геноцид vs. «спільна трагедія»
+  - Друга світова — хто переможець?
+  - Бандера — герой чи злочинець?
+  - 2022 — «денацифікація» як зброя пам'яті
+- section: Законодавство про пам'ять в Україні
+  words: 500
+  points:
+  - Закон про Голодомор (2006)
+  - Закони про декомунізацію (2015)
+  - Закон про УПА (2015)
+  - Критика — внутрішня і зовнішня
+  - Порівняння з іншими країнами
+- section: Місця пам'яті в Україні
+  words: 400
+  points:
+  - Бабин Яр — багатошарова пам'ять
+  - Биківня — «конкуренція жертв»
+  - Майдан Незалежності — нова сакралізація
+  - Пам'ятники Шевченку — «громадянська релігія»
+  - Що зникло — ленінопад
+- section: Виклики і перспективи
+  words: 400
+  points:
+  - Чи можлива «правильна» пам'ять?
+  - Регіональні відмінності в Україні
+  - Примирення — чи можливе?
+  - Війна і пам'ять — що формується зараз
 vocabulary_hints:
   required:
-    - історична пам'ять (historical memory)
-    - колективна пам'ять (collective memory)
-    - політика пам'яті (memory politics)
-    - місце пам'яті (lieu de mémoire)
-    - меморіал (memorial)
-    - комеморація (commemoration)
-    - пам'ятна дата (memorial date)
-    - війна пам'яті (memory war)
-    - закон про пам'ять (memory law)
-    - травма (trauma)
+  - історична пам'ять (historical memory)
+  - колективна пам'ять (collective memory)
+  - політика пам'яті (memory politics)
+  - місце пам'яті (lieu de mémoire)
+  - меморіал (memorial)
+  - комеморація (commemoration)
+  - пам'ятна дата (memorial date)
+  - війна пам'яті (memory war)
+  - закон про пам'ять (memory law)
+  - травма (trauma)
   recommended:
-    - сакралізація (sacralization)
-    - міфологізація (mythologization)
-    - примирення (reconciliation)
-    - жертва (victim)
-    - злочинець (perpetrator)
-
+  - сакралізація (sacralization)
+  - міфологізація (mythologization)
+  - примирення (reconciliation)
+  - жертва (victim)
+  - злочинець (perpetrator)
 activity_hints:
-  - type: reading
-    focus: Article 1 of the Holodomor Law (2006) — what does it declare?
-    source: zakon.rada.gov.ua
-
-  - type: research
-    focus: Find a "lieu de mémoire" in your area — describe its significance
-    output: Case study (300 words)
-
-  - type: comparative-study
-    focus: Compare Ukraine and Poland memory laws — what's similar/different?
-    output: Comparison table
-
-  - type: critical-analysis
-    focus: Analyze a monument — what does it remember, what does it forget?
-    output: Visual analysis
-
-  - type: essay-response
-    focus: "Чи повинна держава законодавчо регулювати історичну пам'ять?"
-    word_target: 500
-    model_answer: Required (showing both sides)
-
-  - type: debate
-    focus: Should there be a single "correct" national memory?
-
+- type: reading
+  focus: Article 1 of the Holodomor Law (2006) — what does it declare?
+  source: zakon.rada.gov.ua
+- type: reading
+  focus: Find a "lieu de mémoire" in your area — describe its significance
+  output: Case study (300 words)
+- type: comparative-study
+  focus: Compare Ukraine and Poland memory laws — what's similar/different?
+  output: Comparison table
+- type: critical-analysis
+  focus: Analyze a monument — what does it remember, what does it forget?
+  output: Visual analysis
+- type: essay-response
+  focus: Чи повинна держава законодавчо регулювати історичну пам'ять?
+  word_target: 500
+  model_answer: Required (showing both sides)
 prerequisites:
-  - c1-hist-07 (New Ukrainian historiography)
-  - c1-hist-08 (Decolonization methodology)
-
+- c1-hist-07 (New Ukrainian historiography)
+- c1-hist-08 (Decolonization methodology)
 connects_to:
-  - All thematic modules (memory is present in each)
-  - c1-hist-45-51 (Holodomor studies - memory dimension)
-  - c1-hist-114-121 (Interethnic relations - contested memory)
-
-# === PHASE 1 SYNTHESIS NOTE ===
-# This module concludes Phase C1H.1 (Historiography & Methodology)
-# Students should now have:
-# - Understanding of what historiography is
-# - Knowledge of major historiographical traditions
-# - Decolonial analysis toolkit
-# - Source criticism skills
-# - Memory/politics framework
-#
-# Ready for Phase C1H.2: Primary Sources (Medieval)
+- All thematic modules (memory is present in each)
+- c1-hist-45-51 (Holodomor studies - memory dimension)
+- c1-hist-114-121 (Interethnic relations - contested memory)

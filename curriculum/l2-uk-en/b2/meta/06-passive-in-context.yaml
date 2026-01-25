@@ -1,6 +1,3 @@
-# B2 Module 06: Passive in Context - Register Selection
-# Status: SPEC (ready for content development)
-
 id: b2-06
 title: Пасив у контексті — вибір за регістром
 slug: 06-passive-in-context
@@ -9,137 +6,116 @@ phase: B2.1a [Passive Voice]
 focus: grammar
 module_type: grammar
 word_target: 3800
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian State Standard 2024 - Register System
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Functional styles and passive voice distribution
-  - name: Функціональні стилі української мови
-    url: https://uk.wikipedia.org/wiki/Стиль_мовлення
-    type: secondary
-    notes: Overview of Ukrainian functional styles
-  - name: CEFR B2 Sociolinguistic Competence
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: B2 register awareness requirements
-
+- name: Ukrainian State Standard 2024 - Register System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Functional styles and passive voice distribution
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  type: secondary
+  notes: Overview of Ukrainian functional styles
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 register awareness requirements
 content_outline:
-  - section: Вступ — Регістр і пасив
-    words: 400
-    points:
-      - Що таке регістр
-      - Чому вибір пасиву залежить від контексту
-      - Підсумок чотирьох форм пасиву
-
-  - section: Таблиця регістрів і форм пасиву
-    words: 600
-    points:
-      - Юридичний документ → -но/-то
-      - Наукова стаття → -ся
-      - Літературний текст → -ний/-тий
-      - Розмовна оповідь → 3-я особа множини
-
-  - section: Практичні сценарії — Юридичний контекст
-    words: 600
-    points:
-      - Оголошення, накази, постанови
-      - Чому -но/-то є обов'язковим
-      - Зразки документів
-
-  - section: Практичні сценарії — Науковий контекст
-    words: 600
-    points:
-      - Опис експерименту, методології
-      - Чому -ся підходить найкраще
-      - Зразки наукових текстів
-
-  - section: Практичні сценарії — Літературний та журналістичний контекст
-    words: 600
-    points:
-      - Художній опис, новини
-      - Дієприкметники в літературі
-      - Комбінування форм у журналістиці
-
-  - section: Практичні сценарії — Розмовний контекст
-    words: 500
-    points:
-      - Побутові оповіді, чутки
-      - Чому 3-я особа множини є природною
-      - Уникання формальності
-
-  - section: Інтегрована практика
-    words: 500
-    points:
-      - Один зміст у чотирьох формах
-      - Критерії вибору
-      - Типові помилки
-
+- section: Вступ — Регістр і пасив
+  words: 400
+  points:
+  - Що таке регістр
+  - Чому вибір пасиву залежить від контексту
+  - Підсумок чотирьох форм пасиву
+- section: Таблиця регістрів і форм пасиву
+  words: 600
+  points:
+  - Юридичний документ → -но/-то
+  - Наукова стаття → -ся
+  - Літературний текст → -ний/-тий
+  - Розмовна оповідь → 3-я особа множини
+- section: Практичні сценарії — Юридичний контекст
+  words: 600
+  points:
+  - Оголошення, накази, постанови
+  - Чому -но/-то є обов'язковим
+  - Зразки документів
+- section: Практичні сценарії — Науковий контекст
+  words: 600
+  points:
+  - Опис експерименту, методології
+  - Чому -ся підходить найкраще
+  - Зразки наукових текстів
+- section: Практичні сценарії — Літературний та журналістичний контекст
+  words: 600
+  points:
+  - Художній опис, новини
+  - Дієприкметники в літературі
+  - Комбінування форм у журналістиці
+- section: Практичні сценарії — Розмовний контекст
+  words: 500
+  points:
+  - Побутові оповіді, чутки
+  - Чому 3-я особа множини є природною
+  - Уникання формальності
+- section: Інтегрована практика
+  words: 500
+  points:
+  - Один зміст у чотирьох формах
+  - Критерії вибору
+  - Типові помилки
 vocabulary_hints:
   required:
-    - регістр (register)
-    - контекст (context)
-    - вибір (choice/selection)
-    - юридичний (legal)
-    - науковий (scientific)
-    - літературний (literary)
-    - журналістичний (journalistic)
-    - розмовний (colloquial)
-    - доречний (appropriate)
-    - недоречний (inappropriate)
+  - регістр (register)
+  - контекст (context)
+  - вибір (choice/selection)
+  - юридичний (legal)
+  - науковий (scientific)
+  - літературний (literary)
+  - журналістичний (journalistic)
+  - розмовний (colloquial)
+  - доречний (appropriate)
+  - недоречний (inappropriate)
   recommended:
-    - стилістика (stylistics)
-    - комунікативна ситуація (communicative situation)
-    - мовленнєва компетенція (speech competence)
-    - прагматика (pragmatics)
-    - соціолінгвістика (sociolinguistics)
-
+  - стилістика (stylistics)
+  - комунікативна ситуація (communicative situation)
+  - мовленнєва компетенція (speech competence)
+  - прагматика (pragmatics)
+  - соціолінгвістика (sociolinguistics)
 activity_hints:
-  - type: rewrite
-    focus: Same information in 4 passive forms
-    items: "8+"
-    output: Model versions provided
-
-  - type: match-up
-    focus: Context → appropriate passive form
-    items: "16+"
-
-  - type: quiz
-    focus: '«Which passive would you use?» — scenario-based'
-    items: "15+"
-
-  - type: error-correction
-    focus: Fix register-inappropriate passive usage
-    items: "12+"
-
-  - type: compare
-    focus: Analyze same content in different registers
-    items: "8+"
-
-  - type: transform
-    focus: Register-appropriate rewriting
-    items: "10+"
-
-  - type: essay-response
-    focus: Write same news in 3 different registers
-    word_target: 200
-    output: Model answers for each register
-
+- type: error-correction
+  focus: Same information in 4 passive forms
+  items: 8+
+  output: Model versions provided
+- type: match-up
+  focus: Context → appropriate passive form
+  items: 16+
+- type: quiz
+  focus: «Which passive would you use?» — scenario-based
+  items: 15+
+- type: error-correction
+  focus: Fix register-inappropriate passive usage
+  items: 12+
+- type: group-sort
+  focus: Analyze same content in different registers
+  items: 8+
+- type: fill-in
+  focus: Register-appropriate rewriting
+  items: 10+
+- type: essay-response
+  focus: Write same news in 3 different registers
+  word_target: 200
+  output: Model answers for each register
 prerequisites:
-  - b2-01 (Passive Voice System)
-  - b2-02 (Past Passive Participles)
-  - b2-03 (Impersonal -но/-то)
-  - b2-04 (Reflexive Passive)
-  - b2-05 (3rd Person Plural Passive)
-
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- b2-04 (Reflexive Passive)
+- b2-05 (3rd Person Plural Passive)
 connects_to:
-  - b2-07 (Active Participles Present)
-  - b2-15 (Register Introduction)
-  - b2-10 (B2.1a Checkpoint)
-
+- b2-07 (Active Participles Present)
+- b2-15 (Register Introduction)
+- b2-10 (B2.1a Checkpoint)
 naturalness:
   score: 1
   status: PENDING

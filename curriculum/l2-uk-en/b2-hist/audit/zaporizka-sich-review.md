@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M42 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:21:15
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -29,7 +30,7 @@
 | 8 | essay-response | Запорозька Січ як взірець демократії | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
+- Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 5/5 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅

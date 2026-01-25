@@ -1,133 +1,107 @@
-# C1-BIO Module 45: Казимир Малевич
-# Status: SPEC (ready for content development)
-
 id: c1-bio-45
-title: "Казимир Малевич: Революція в мистецтві"
+title: 'Казимир Малевич: Революція в мистецтві'
 slug: kazimir-malevich
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Казимир Малевич (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
-    type: primary
-    notes: Biography covering Ukrainian roots and artistic revolution
-  - name: MoMA - Kazimir Malevich
-    url: https://www.moma.org/artists/3710
-    type: reference
-    notes: International context of Malevich's work
-
+- name: Казимир Малевич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
+  type: primary
+  notes: Biography covering Ukrainian roots and artistic revolution
+- name: MoMA - Kazimir Malevich
+  url: https://www.moma.org/artists/3710
+  type: reference
+  notes: International context of Malevich's work
 content_outline:
-  - section: Вступ — Чорний квадрат і нуль форми
-    words: 400
-    points:
-      - Творець супрематизму
-      - Українське коріння світового генія
-      - Революція в образотворчому мистецтві
-
-  - section: Юність в Україні (1879-1904)
-    words: 600
-    points:
-      - Народження в Києві в польській родині
-      - Дитинство на Україні
-      - Перші мистецькі враження
-      - Переїзд до Курська та Москви
-
-  - section: Пошуки стилю (1904-1913)
-    words: 800
-    points:
-      - Імпресіонізм та постімпресіонізм
-      - Вплив народного мистецтва
-      - Кубофутуризм
-      - Робота з українськими художниками
-
-  - section: Супрематизм (1913-1920)
-    words: 900
-    points:
-      - «Чорний квадрат» (1915)
-      - Теорія супрематизму
-      - «Білий квадрат на білому тлі»
-      - Революційне мистецтво
-
-  - section: Радянський період (1920-1935)
-    words: 600
-    points:
-      - Викладання в Вітебську
-      - Повернення до фігуративності
-      - Тиск соцреалізму
-      - Смерть у Ленінграді
-
-  - section: Спадщина — Українець у світовому мистецтві
-    words: 700
-    points:
-      - Вплив на XX століття
-      - Малевич і Україна
-      - Боротьба за спадщину
-      - Сучасне визнання
-
+- section: Вступ — Чорний квадрат і нуль форми
+  words: 400
+  points:
+  - Творець супрематизму
+  - Українське коріння світового генія
+  - Революція в образотворчому мистецтві
+- section: Юність в Україні (1879-1904)
+  words: 600
+  points:
+  - Народження в Києві в польській родині
+  - Дитинство на Україні
+  - Перші мистецькі враження
+  - Переїзд до Курська та Москви
+- section: Пошуки стилю (1904-1913)
+  words: 800
+  points:
+  - Імпресіонізм та постімпресіонізм
+  - Вплив народного мистецтва
+  - Кубофутуризм
+  - Робота з українськими художниками
+- section: Супрематизм (1913-1920)
+  words: 900
+  points:
+  - «Чорний квадрат» (1915)
+  - Теорія супрематизму
+  - «Білий квадрат на білому тлі»
+  - Революційне мистецтво
+- section: Радянський період (1920-1935)
+  words: 600
+  points:
+  - Викладання в Вітебську
+  - Повернення до фігуративності
+  - Тиск соцреалізму
+  - Смерть у Ленінграді
+- section: Спадщина — Українець у світовому мистецтві
+  words: 700
+  points:
+  - Вплив на XX століття
+  - Малевич і Україна
+  - Боротьба за спадщину
+  - Сучасне визнання
 vocabulary_hints:
   required:
-    - супрематизм (Suprematism)
-    - авангард (avant-garde)
-    - абстракціонізм (abstract art)
-    - кубофутуризм (Cubo-Futurism)
-    - композиція (composition)
-    - форма (form)
-    - геометрія (geometry)
-    - революція в мистецтві (artistic revolution)
-    - маніфест (manifesto)
-    - безпредметне мистецтво (non-objective art)
+  - супрематизм (Suprematism)
+  - авангард (avant-garde)
+  - абстракціонізм (abstract art)
+  - кубофутуризм (Cubo-Futurism)
+  - композиція (composition)
+  - форма (form)
+  - геометрія (geometry)
+  - революція в мистецтві (artistic revolution)
+  - маніфест (manifesto)
+  - безпредметне мистецтво (non-objective art)
   recommended:
-    - квадрат (square)
-    - площина (plane)
-    - кольорова гама (color palette)
-    - концепція (concept)
-    - філософія мистецтва (philosophy of art)
-
+  - квадрат (square)
+  - площина (plane)
+  - кольорова гама (color palette)
+  - концепція (concept)
+  - філософія мистецтва (philosophy of art)
 activity_hints:
-  - type: reading
-    focus: Український авангард XX ст.
-    source: Art history sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та творчість Малевича
-    items: "12+"
-
-  - type: match-up
-    focus: Мистецькі терміни та напрямки
-    items: "10+"
-
-  - type: essay-response
-    focus: Чому «Чорний квадрат» став революцією в мистецтві?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Твори за періодами творчості
-    items: "12+"
-
-  - type: fill-in
-    focus: Мистецтвознавча термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Чи є Малевич українським чи російським художником?
-    output: Critical analysis
-
+- type: reading
+  focus: Український авангард XX ст.
+  source: Art history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Малевича
+  items: 12+
+- type: match-up
+  focus: Мистецькі терміни та напрямки
+  items: 10+
+- type: essay-response
+  focus: Чому «Чорний квадрат» став революцією в мистецтві?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Твори за періодами творчості
+  items: 12+
+- type: fill-in
+  focus: Мистецтвознавча термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-44
-
+- c1-bio-44
 connects_to:
-  - c1-bio-50
-  - c1-bio-56
-
+- c1-bio-50
+- c1-bio-56
 naturalness:
   score: 1
   status: PENDING

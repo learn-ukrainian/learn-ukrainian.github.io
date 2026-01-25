@@ -1,307 +1,136 @@
-## Introduction
+# Час і послідовність: Коли, поки та після того як (Time Clauses)
 
-Life is a sequence of events.
-- **When** I woke up, I drank coffee.
-- **While** I was drinking coffee, I checked the news.
-- **After** I finished coffee, I went to work.
+## Introduction / Вступ
 
-In Ukrainian, these structures control the flow of your story.
+**Життя — це послідовність подій.** Кожен наш день складається з моментів, які йдуть один за одним або відбуваються одночасно. Щоб розповісти цікаву історію або просто пояснити свій розклад, вам потрібно вміти логічно поєднувати ці моменти в часі. До цього ми вчилися казати «Я снідаю» та «Я йду на роботу». Тепер ми навчимося казати: «**Коли** я снідаю, я читаю новини» або «**Після того як** я поснідав, я пішов на роботу». Сьогодні ми опануємо «часовий клей» української мови. Ви дізнаєтеся, як розрізняти тривалі процеси та миттєві дії, як правильно вибудовувати хронологію та як використовувати частку «не» для того, щоб сказати «поки не». Наприкінці цього модуля ви станете справжніми майстрами сторітелінгу!
 
-**We will cover:**
-- **The Trigger:** *Коли* (When).
-- **The Process:** *Поки* (While).
-- **The Sequence:** *Після того як* (After) vs *Перед тим як* (Before).
+Life is a sequence of events. From the moment we wake up until we fall asleep, everything we do is interconnected by time. In Ukrainian, these temporal relationships are controlled by a specific set of conjunctions that dictate the flow of your narrative. Up until now, you've stated facts in isolation. Now, you'll learn how to weave them together: "When I wake up, I drink coffee" or "After I finished coffee, I went to work." This module will teach you the "temporal glue" of the Ukrainian language. We’ll explore the difference between simultaneous actions and sequential triggers, the logic of "until," and how to choose the right verb aspect to show whether an action is ongoing or completed. By the end of this lesson, you'll be able to structure your daily stories with clarity and chronological precision.
 
-> [!note] Pronunciation
-> **Поки** /ˈpɔkɪ/ means «while» or «until». It connects simultaneous actions.
+**Що ви вивчите в цьому модулі:**
 
----
+- Головний тригер часу — **коли** (when).
+- Як описувати одночасні процеси за допомогою **поки** (while).
+- Логіку послідовності: **після того як** (after) та **перед тим як** (before).
+- Миттєві реакції: **як тільки** та **щойно**.
+- Пастку слова «поки не» (until).
+- Як вибір аспекту (доконаний чи недоконаний) змінює сприйняття часу в реченні.
 
-## Presentation
+## Presentation / Презентація
 
-### 1. Simultaneous Actions: Поки
+### 1. Simultaneous Actions: Поки (Process)
 
-When two things happen at the same time.
-Usually requires **Imperfective Aspect** (process).
+Коли дві дії відбуваються в один і той самий час, ми використовуємо **поки**. Оскільки обидві дії тривають, ми зазвичай використовуємо **недоконаний вид** (process).
 
 - **Поки** я читав, вона спала. (While I was reading, she was sleeping).
-- Ми говорили, **поки** йшли додому..
-- Не дзвони мені, **поки** я працюю! (Don't call me while I'm working!).
+- Ми говорили, **поки** йшли додому.
+- Не дзвони мені, **поки** я працюю!
 
-> [!tip] Comma Rule
-> Just like with «щоб» and «який», always put a comma before the connector if it's in the middle!
+### 2. Sequential Logic: Коли & Після того як
 
-### 2. Sequential Actions: Коли & Після того як
+### А. Simple «When» (Коли)
 
-### A. Simple «When» (Коли)
+**Коли** — це універсальний сполучник. Він може означати і момент часу, і умову. Часто він поєднує дію-тригер з результатом.
 
-Usually implies one thing happens after another.
+- **Коли** я прийшов, ми почали їсти. (When I arrived, we started eating).
 
-- **Коли** я прийшов, ми почали їсти. (When I arrived [point], we started eating).
-- Я подзвоню, **коли** закінчу..
+### Б. Explicit «After» (Після того як)
 
-### B. Explicit «After» (Після того як)
+Use this when the order of events is the most important part of your message.
 
-Used when you want to emphasize the sequence.
+- **Після того як** я закінчив роботу, я пішов у спортзал. (After I finished work, I went to the gym).
 
-- **Після того як** я з'їв обід, я пішов гуляти. (After I ate lunch, I went for a walk).
-- Він заснув **після того як** прочитав книгу.
+### 3. Immediate Action: Як тільки & Щойно
 
-### 3. Immediate Action: Як тільки
+Коли ви хочете підкреслити, що друга дія сталася миттєво після першої, використовуйте ці сильні сполучники.
 
-Use this for instant reaction.
+- **Як тільки** я побачив його, я все зрозумів. (As soon as I saw him, I understood everything).
+- Ми поїдемо, **як тільки** ти будеш готовий.
+- **Щойно** він зайшов, зазвонив телефон.
 
-- **Як тільки** я побачив його, я все зрозумів. (As soon as I saw him...).
-- Ми поїдемо, **як тільки** ти будеш готовий..
-- **Щойно** я зайшов, телефон задзвонив. (Just as I entered...).
+### 4. The "Until" Trap: Поки не
 
----
+Це дуже цікава особливість української граматики. Щоб сказати «Until», ми кажемо «While... NOT».
 
-## Deep Dive: Before vs After
+- **Поки** я **не** закінчу звіт, я не піду додому. (Until I finish the report, I won't go home).
+  Logic: I am staying in the office while the state of "finished report" has NOT happened yet.
 
-«Before» is tricky in Ukrainian because it forces you to think about «Before WHAT?». Unlike English, where you can say «before going,» Ukrainian requires a full clause structure.
+### 5. Aspect and Time Coordination
 
-**Understanding the Structure:**
+Вибір виду дієслова (Aspect) критично важливий у часових реченнях.
 
-In English, we often use gerunds (verb + -ing) after «before»: «before eating,» «before leaving,» «before speaking.» Ukrainian doesn't work this way. Instead, you need to use a full clause with a conjugated verb.
+- **Коли я снідала** (Imperf.), він прийшов. -> He arrived _during_ the breakfast.
+- **Коли я поснідала** (Perf.), він прийшов. -> He arrived _after_ the breakfast was over.
 
-- **Перед тим як** (Before [doing something]) - Literally: «Before that, how...»
-- *Перед тим як вийти, вимкни світло.* (Before going out, turn off the light).
-  - Analysis: «вийти» is the infinitive «to go out,» used after «як»
+> [!important] **Comma Placement**
+> Always put a **comma** before **коли**, **поки**, **після того як** та **перед тим як**, коли вони знаходяться в середині речення. Якщо речення починається зі сполучника, кома ставиться після закінчення всієї підрядної частини.
 
-- **Перш ніж** (Before | Prior to) - Synonym, slightly more literary and formal.
-- *Перш ніж сказати, подумай.* (Before speaking, think).
-  - Note: This is more common in written or formal Ukrainian
+> [!tip] **Using "Перед тим як"**
+> Remember that in Ukrainian, we cannot say «before going». We must say «Before that, how I go» (**Перед тим як піти**). This structure is mandatory!
 
-**Step-by-Step Translation:**
+## Practice / Практика
 
-English: «Call me before getting home.»
+### 1. Simultaneous or Sequential? (Одночасно чи послідовно?)
 
-Breakdown:
-1. Identify the main action: «Call me» = «Подзвони мені»
-2. Identify the time reference: «before getting home»
-3. Convert to Ukrainian clause structure: «before that, how you arrive home»
-4. Result: *Подзвони мені **перед тим як** прийдеш додому.*
+Choose the best connector (**коли** or **поки**).
 
-It requires a full verb phrase - you can't just say *«перед прийти додому» without the «тим як» structure.
+1. \_\_\_ я працюю, ти відпочиваєш. -> **Поки**
+2. \_\_\_ я повернувся, вдома було тихо. -> **Коли**
+3. Ми співали, \_\_\_ їхали в машині. -> **поки**
+4. Я зателефоную, \_\_\_ буду мати час. -> **коли**
 
-> [!cultural] Myth: «Punctuality»
-> In Ukraine, usually «коли я прийду» is flexible. But trains are very punctual.
-> If the train says 18:02, it leaves at 18:02. **Як тільки** the clock strikes, it moves. Don't be late!
+### 2. The Chain of Events (Ланцюжок подій)
 
----
+Use **перед тим як** or **після того як**.
 
-## Deep Dive: Complex Time Connectors
+1. (Помив руки / Сів їсти). -> **Перед тим як сісти їсти, я помив руки.**
+2. (Прочитав лист / Написав відповідь). -> **Після того як я прочитав лист, я написав відповідь.**
+3. (Випив каву / Прокинувся). -> **Після того як я прокинувся, я випив каву.**
 
-Sometimes simple «when» is not enough. You need precision to express nuanced time relationships. Ukrainian offers several sophisticated time connectors that allow you to be very specific about how events relate to each other temporally.
+### 3. Until Challenge (Поки не)
 
-**Why Use Complex Connectors?**
+Complete the sentences using **поки не**.
 
-While basic connectors like «коли» and «поки» work for most situations, complex connectors add:
-- **Emphasis**: Highlighting the frequency or uniqueness of an event
-- **Contrast**: Showing how two simultaneous actions differ in nature
-- **Specificity**: Pinpointing exact moments or dates
+1. Я буду чекати тут, \_\_\_. (until you call) -> **поки ти не подзвониш.**
+2. Не їж це, \_\_\_. (until it cools down) -> **поки воно не охолоне.**
+3. Ми не почнемо нараду, \_\_\_. (until the boss arrives) -> **поки бос не прийде.**
 
-## 1. The Loop: Кожного разу, коли...
+> [!reflection] **The Rhythm of Time**
+> Time is not just a measurement; it’s a feeling. Using words like **щойно** adds a sense of urgency, while **поки** creates a sense of peaceful duration. Your choice of words tells the listener how you _felt_ about the time passing. Кожне слово — це інтонація вашого життя.
 
-«Every time when...» - Use this to emphasize repetition or patterns.
+> [!tip] **Repetition with "Кожного разу"**
+> To say "Every time when...", use «**Кожного разу, коли...**». It’s a great way to talk about habits!
 
-- *Кожного разу, коли я бачу її, я радію.* (Every time I see her, I rejoice).
-  - Analysis: This emphasizes the consistent pattern of the reaction
-- *Раз у раз, коли ми зустрічаємося...* (Time and again, when we meet...).
-  - Note: «Раз у раз» is more emphatic, suggesting «without fail»
+## Dialogues / Діалоги
 
-## 2. The Parallel: Тим часом як...
+### The Busy Morning (Насичений ранок)
 
-«Meanwhile, as...» or «Whereas...» - Use this to contrast two simultaneous actions or to show background context.
+**Андрій:** Олю, ти чому така втомлена? (Olia, why are you so tired?)
+**Оля:** Ой, це був божевільний ранок. **Коли** я прокинулася, води не було. (Oh, it was a crazy morning. When I woke up, there was no water.)
+**Андрій:** І що ти зробила? (And what did you do?)
+**Оля:** Я чекала. **Поки** я чекала, я читала новини. (I waited. While I was waiting, I read the news.)
+**Андрій:** І довго ти чекала? (And did you wait long?)
+**Оля:** Годину! **Як тільки** вода з'явилася, я побігла в душ. (An hour! As soon as the water appeared, I ran to the shower.)
+**Андрій:** А сніданок? (And breakfast?)
+**Оля:** Я поснідала **після того як** одяглася. А ти? (I had breakfast after I got dressed. And you?)
+**Андрій:** А я спав, **поки** ти бігала. (And I was sleeping while you were running around.)
+**Оля:** Ти щасливчик! Але **перед тим як** піти, ти зробиш мені каву? (You lucky guy! But before leaving, will you make me coffee?)
+**Андрій:** **Звичайно!** (Certainly!)
 
-- *Я працював, тим часом як він спав.* (I worked, meanwhile he slept).
-  - Analysis: Emphasizes the contrast between the two activities
-- *В той час як усі святкували, я вчився.* (At that time as everyone celebrated, I studied).
-  - Note: «В той час як» is a synonym, slightly more formal
+> [!context] **Punctuality in Ukraine**
+> While individual plans can be flexible, public transport in Ukraine (especially the **Укрзалізниця** trains) is famously punctual. **Як тільки** годинник б'є час відправлення, поїзд рушає. Не запізнюйтеся на поїзди, навіть якщо «поки ви збиралися», ви трохи забарилися!
 
-## 3. The Date: Того дня, коли...
+# Summary / Підсумок
 
-«On that day when...» - Use this to mark a specific, memorable moment in time.
+У цьому модулі ми опанували мистецтво керування часом у мові:
 
-- *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).
-  - Analysis: Creates a narrative anchor for the story
-  - This construction is common in storytelling and reminiscences
+- Вивчили сполучники одночасності (**поки**) та послідовності (**коли**, **після того як**).
+- Зрозуміли логіку миттєвих дій через **як тільки** та **щойно**.
+- Навчилися будувати речення зі значенням «until» за допомогою **поки не**.
+- Побачили, як вид дієслова (Aspect) впливає на хронологію подій.
+- Потренувалися правильно ставити коми в складних часових реченнях.
 
-> [!tip] Logic Check
-> Unlike English «While X, Y», Ukrainian prefers «X, тим часом як Y» if you want to contrast the two actions heavily. But for simple background action («I listened to music while cooking»), use **поки** instead. The choice depends on whether you want to emphasize the contrast or just show simultaneity.
-
----
-
-## Practice
-
-Тепер практикуйте використовувати часові сполучники! Пам'ятайте про логіку послідовності та одночасності дій.
-
-**Вправа 1: Оберіть правильний сполучник**
-
-Виберіть найбільш підходящий сполучник для кожного речення:
-
-1. _______ (Коли / Поки / Перед тим як) я прокинувся, вже було десять годин.
-   → **Коли** (точний момент дії)
-
-2. Я читав книгу, _______ (коли / поки / після того як) чекав на автобус.
-   → **поки** (дві дії водночас)
-
-3. _______ (Як тільки / Після того як / Перш ніж) ти підеш, вимкни світло!
-   → **Перш ніж** (дія перед іншою дією)
-
-4. Ми почали їсти _______ (поки / коли / перед тим як) всі прийшли.
-   → **коли** (момент початку дії)
-
-5. _______ (Як тільки / Поки / Тим часом як) він побачив мене, він посміхнувся.
-   → **Як тільки** (миттєва реакція)
-
-**Вправа 2: З'єднайте два речення**
-
-Об'єднайте два прості речення в одне складне, використовуючи часовий сполучник:
-
-1. Я дивився телевізор. Мама готувала вечерю. (поки)
-   → **Я дивився телевізор, поки мама готувала вечерю.**
-
-2. Я поснідав. Я пішов на роботу. (після того як)
-   → **Після того як я поснідав, я пішов на роботу.**
-
-3. Я помив руки. Я сів за стіл. (перед тим як)
-   → **Перед тим як сісти за стіл, я помив руки.**
-
-4. Він прийшов додому. Він одразу заснув. (як тільки)
-   → **Як тільки він прийшов додому, він одразу заснув.**
-
-**Вправа 3: Визначте тип відношення**
-
-Поясніть, який тип часового відношення виражає кожен сполучник:
-
-1. Я буду чекати, **поки** ти не прийдеш.
-   → **«До того часу, поки»** — тривалість очікування до завершення дії
-
-2. **Кожного разу, коли** я бачу його, я згадую старі часи.
-   → **Повторення** — підкреслює закономірність події
-
-3. Вона працювала, **тим часом як** він відпочивав.
-   → **Контраст** — дві одночасні дії з протилежним характером
-
-4. **Того дня, коли** ми познайомилися, була весна.
-   → **Конкретний момент** — вказує на важливу точку в часі
-
-**Вправа 4: Створіть власні речення**
-
-Напишіть три речення про ваш вчорашній день, використовуючи часові сполучники:
-
-1. **З «коли» або «після того як»:** Приклад: «Коли я прийшов додому, я випив чай.»
-2. **З «поки»:** Приклад: «Поки я працював, я слухав музику.»
-3. **З «перед тим як» або «як тільки»:** Приклад: «Перед тим як лягти спати, я прочитав книгу.»
-
----
-
-## Story Time: The Late Traveller
-
-Це історія про Максима, який завжди запізнювався.
-**Того дня, коли** він мав їхати у відпустку, він встав рано.
-**Перш ніж** почати збирати речі, він вирішив випити каву.
-**Поки** він пив каву, він читав новини.
-Він читав так довго, що забув про час.
-**Як тільки** він подивився на годинник, він зрозумів, що має мало часу.
-**Перед тим як** вийти з дому, він почав шукати паспорт.
-Він шукав його **довго**, **поки не** знайшов під ліжком.
-**Після того як** він знайшов паспорт, він викликав таксі.
-Таксі приїхало швидко. **Але** був затор.
-**В той час як** таксі стояло в заторі, Максим нервував.
-**Кожного разу, коли** машина рухалася, він радів.
-Але було пізно.
-**Коли** він приїхав на вокзал, поїзд уже поїхав.
-Максим зрозумів: **перш ніж** розслаблятися, треба зробити справу.
-Тепер він знає: **ніж** пити каву, краще зібрати речі!
-
----
-
-## Cultural Insight
-
-> [!cultural] «Поспішай повільно»
-> This is a famous Latin phrase that Ukrainians love: «Hurry slowly».
-> It means: Do things quickly but carefully. Don't rush into mistakes.
-> Think **перед тим як** діяти. Але дій **як тільки** маєш план!
-
----
-
-## Language in Action
-
-## Dialogue: The Busy Morning
-
-**Andriy:** Що ти робив вранці?
-**Olya:** О, це був божевільний ранок. **Коли** я прокинулася, води не було.
-**Andriy:** І що ти зробила?
-**Olya:** Я чекала. **Поки** я чекала, я читала новини.
-**Andriy:** І довго ти чекала?
-**Olya:** Годину! **Як тільки** вода з'явилася, я побігла в душ.
-**Andriy:** А сніданок?
-**Olya:** Я поснідала **після того як** одяглася. А ти?
-**Andriy:** А я спав, **поки** ти бігала.
-**Olya:** Ти щасливчик.
-**Andriy:** Але **перед тим як** вийти, я зробив тобі каву.
-**Olya:** О, дякую! Ти найкращий.
-
-## Analysis
-
-1. **Коли я прокинулася** - Single point in time trigger.
-2. **Поки я чекала** - Duration/Process.
-3. **Як тільки вода з'явилася** - Immediate reaction.
-4. **Після того як одяглася** - Clear sequence.
-5. **Перед тим як вийти** - Action before another action.
-
-## Monologue: My Strategy
-
-Я люблю планувати свій день.
-**Перш ніж** почати роботу, я пишу список завдань.
-**Коли** я працюю, я не дивлюся в телефон.
-Я роблю перерву тільки **після того як** закінчу важливе завдання.
-**Поки** я п'ю каву, я думаю про майбутнє.
-Я пообідаю, **як тільки** настане дванадцята година.
-А ввечері, **коли** я прийду додому, я буду відпочивати.
-Але **перед тим як** лягти спати, я буду читати книгу.
-Це мій ідеальний день, **про який** я мрію.
-
----
-
-## Pro-Tip: The «Until» Dual Meaning
-
-The word **поки** means «while».
-But **поки не** means «until» (literally «while not»).
-
-- *Я буду тут, **поки** ти працюєш.* (I will be here **while** you work).
-- *Я буду тут, **поки** ти **не** закінчиш.* (I will be here **while** you do **not** finish -> **Until** you finish).
-
-It's logical: I stay in the state of «waiting» during the time that «finishing» has NOT happened yet.
-
-# Підсумок
-У цьому модулі ви вивчили часові сполучники:
-
-**Послідовність:**
-- **коли** — вказує на момент дії
-- **після того як** — одна дія відбувається після іншої
-- **перед тим як** — одна дія відбувається перед іншою
-
-**Одночасність:**
-- **поки** — дві дії відбуваються водночас
-- **в той час як** — контраст між двома одночасними діями
-- **тим часом як** — підкреслює одночасність
-
-**Миттєвість:**
-- **як тільки** — одразу після чогось
-- **щойно** — тільки-но, зараз
-
-**Особливі випадки:**
-- **поки не** — означає «до того часу, поки»
-- **перш ніж** — літературний варіант «перед тим як»
-
-Тепер ви можете описувати часові відношення між діями українською мовою! Практикуйте щодня!
-
----
+Storytelling is the heart of human connection. By mastering time clauses, you’ve gained the ability to tell clear, engaging, and logical stories about your life. Your Ukrainian is now ready for the flow of time. Keep narrating, keep connecting!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Подумайте про свій вчорашній вечір. Запишіть п'ять речень про нього, використовуючи різні часові сполучники: «Після того як я...», «Поки я...», «Як тільки я...». Спробуйте розказати цю історію другу. Це найкращий спосіб звикнути до логіки послідовності дій. Удачі у ваших розповідях!

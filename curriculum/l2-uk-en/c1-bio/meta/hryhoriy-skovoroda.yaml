@@ -1,151 +1,123 @@
-# C1-BIO Module 16: Григорій Сковорода: Мандрівний філософ
-# Status: SPEC (ready for content development)
-
 id: c1-bio-16
-title: "Григорій Сковорода: Мандрівний філософ"
+title: 'Григорій Сковорода: Мандрівний філософ'
 slug: hryhoriy-skovoroda
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Григорій Сковорода (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Григорій_Сковорода
-    type: primary
-    notes: Biography, philosophy, works
-  - name: Українське Просвітництво
-    url: https://uk.wikipedia.org/wiki/Українське_Просвітництво
-    type: reference
-    notes: Intellectual context
-  - name: Києво-Могилянська академія
-    url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
-    type: reference
-    notes: Educational background
-
+- name: Григорій Сковорода (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Григорій_Сковорода
+  type: primary
+  notes: Biography, philosophy, works
+- name: Українське Просвітництво
+  url: https://uk.wikipedia.org/wiki/Українське_Просвітництво
+  type: reference
+  notes: Intellectual context
+- name: Києво-Могилянська академія
+  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  type: reference
+  notes: Educational background
 content_outline:
-  - section: Вступ — Український Сократ
-    words: 400
-    points:
-      - Сковорода як унікальна постать
-      - Його місце у світовій філософії
-      - Значення його життєвого вибору
-
-  - section: Молодість та освіта
-    words: 600
-    points:
-      - Походження з козацької родини
-      - Навчання в Києво-Могилянській академії
-      - Придворний співак
-      - Подорожі до Європи
-
-  - section: Відмова від кар'єри
-    words: 600
-    points:
-      - Повернення до України
-      - Викладацька діяльність
-      - Конфлікти з церковною владою
-      - Вибір мандрівного життя
-
-  - section: Філософія Сковороди
-    words: 900
-    points:
-      - Концепція "сродної праці"
-      - "Три світи: макрокосмос, мікрокосмос, символічний"
-      - Ідея самопізнання
-      - Вплив античної філософії та Біблії
-      - "Світ ловив мене, та не впіймав"
-
-  - section: Літературна спадщина
-    words: 600
-    points:
-      - Філософські діалоги та трактати
-      - Байки та притчі
-      - Поезія ("Сад божественних пісень")
-      - Мовні особливості
-
-  - section: Останні роки та смерть
-    words: 500
-    points:
-      - Мандри Слобожанщиною
-      - Коло учнів та друзів
-      - Смерть та епітафія
-      - Поховання в Сковородинівці
-
-  - section: Підсумок — Філософ свободи
-    words: 400
-    points:
-      - Сковорода як символ внутрішньої свободи
-      - Його вплив на українську культуру
-      - Актуальність його ідей сьогодні
-
+- section: Вступ — Український Сократ
+  words: 400
+  points:
+  - Сковорода як унікальна постать
+  - Його місце у світовій філософії
+  - Значення його життєвого вибору
+- section: Молодість та освіта
+  words: 600
+  points:
+  - Походження з козацької родини
+  - Навчання в Києво-Могилянській академії
+  - Придворний співак
+  - Подорожі до Європи
+- section: Відмова від кар'єри
+  words: 600
+  points:
+  - Повернення до України
+  - Викладацька діяльність
+  - Конфлікти з церковною владою
+  - Вибір мандрівного життя
+- section: Філософія Сковороди
+  words: 900
+  points:
+  - Концепція "сродної праці"
+  - 'Три світи: макрокосмос, мікрокосмос, символічний'
+  - Ідея самопізнання
+  - Вплив античної філософії та Біблії
+  - Світ ловив мене, та не впіймав
+- section: Літературна спадщина
+  words: 600
+  points:
+  - Філософські діалоги та трактати
+  - Байки та притчі
+  - Поезія ("Сад божественних пісень")
+  - Мовні особливості
+- section: Останні роки та смерть
+  words: 500
+  points:
+  - Мандри Слобожанщиною
+  - Коло учнів та друзів
+  - Смерть та епітафія
+  - Поховання в Сковородинівці
+- section: Підсумок — Філософ свободи
+  words: 400
+  points:
+  - Сковорода як символ внутрішньої свободи
+  - Його вплив на українську культуру
+  - Актуальність його ідей сьогодні
 vocabulary_hints:
   required:
-    - філософ (philosopher)
-    - мандрівник (wanderer)
-    - самопізнання (self-knowledge)
-    - сродна праця (congenial work)
-    - макрокосмос (macrocosm)
-    - мікрокосмос (microcosm)
-    - притча (parable)
-    - байка (fable)
-    - просвітництво (Enlightenment)
-    - епітафія (epitaph)
+  - філософ (philosopher)
+  - мандрівник (wanderer)
+  - самопізнання (self-knowledge)
+  - сродна праця (congenial work)
+  - макрокосмос (macrocosm)
+  - мікрокосмос (microcosm)
+  - притча (parable)
+  - байка (fable)
+  - просвітництво (Enlightenment)
+  - епітафія (epitaph)
   recommended:
-    - аскетизм (asceticism)
-    - символ (symbol)
-    - трактат (treatise)
-    - діалог (dialogue)
-    - мудрець (sage)
-
+  - аскетизм (asceticism)
+  - символ (symbol)
+  - трактат (treatise)
+  - діалог (dialogue)
+  - мудрець (sage)
 activity_hints:
-  - type: reading
-    focus: Excerpts from Skovoroda's dialogues
-    source: Original texts (adapted)
-    items: "4 passages"
-
-  - type: quiz
-    focus: Skovoroda's biography and key concepts
-    items: "12+"
-
-  - type: match-up
-    focus: Philosophical concepts and their meanings
-    items: "10+"
-
-  - type: essay-response
-    focus: How is "сродна праця" relevant today?
-    word_target: 300
-    output: Personal reflection with philosophical analysis
-
-  - type: group-sort
-    focus: Skovoroda's ideas vs. Western Enlightenment
-    items: "12+"
-
-  - type: fill-in
-    focus: Famous aphorisms and their context
-    items: "10+"
-
-  - type: discussion
-    focus: Why did Skovoroda reject worldly success?
-    output: Philosophical analysis
-
-  - type: critical-analysis
-    focus: Compare Skovoroda with Socrates or Diogenes
-    output: Comparative philosophy
-
+- type: reading
+  focus: Excerpts from Skovoroda's dialogues
+  source: Original texts (adapted)
+  items: 4 passages
+- type: quiz
+  focus: Skovoroda's biography and key concepts
+  items: 12+
+- type: match-up
+  focus: Philosophical concepts and their meanings
+  items: 10+
+- type: essay-response
+  focus: How is "сродна праця" relevant today?
+  word_target: 300
+  output: Personal reflection with philosophical analysis
+- type: group-sort
+  focus: Skovoroda's ideas vs. Western Enlightenment
+  items: 12+
+- type: fill-in
+  focus: Famous aphorisms and their context
+  items: 10+
+- type: critical-analysis
+  focus: Compare Skovoroda with Socrates or Diogenes
+  output: Comparative philosophy
 prerequisites:
-  - c1-bio-15 (Petro Kalnyshevskyy - same era)
-  - Understanding of Enlightenment philosophy
-
+- c1-bio-15 (Petro Kalnyshevskyy - same era)
+- Understanding of Enlightenment philosophy
 connects_to:
-  - c1-bio-17 (Maksym Berezovskyy - contemporary artist)
-  - c1-bio-20 (Taras Shevchenko - spiritual heir)
-  - c1-bio-77 (Vasyl Stus - later philosopher-poet)
-
+- c1-bio-17 (Maksym Berezovskyy - contemporary artist)
+- c1-bio-20 (Taras Shevchenko - spiritual heir)
+- c1-bio-77 (Vasyl Stus - later philosopher-poet)
 naturalness:
   score: null
   status: PENDING

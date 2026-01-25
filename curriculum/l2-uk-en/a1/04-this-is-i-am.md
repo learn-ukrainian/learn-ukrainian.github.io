@@ -273,6 +273,7 @@ Saying «Я українець» or «Я українка» isn't just a stateme
 ---
 
 # Підсумок
+
 **What You Learned:**
 
 - ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони

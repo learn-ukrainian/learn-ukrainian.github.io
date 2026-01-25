@@ -1,371 +1,128 @@
-## Introduction
+# Чому? Для кого? Логічні прийменники
 
-In Module 07, you learned **where** things are.
-Now, let's learn **why** and **for whom**.
+## Introduction / Вступ
 
-Spatial prepositions answer: _Де? Куди?_ (Where? Where to?)
-Logical prepositions answer: _Для кого? Чому? Про що?_ (For whom? Why? About what?)
+In Module 07, you learned how to describe **where** things are and **where** they are going. You mastered spatial prepositions like _under_, _on_, _above_, and _behind_. Now, it's time to move from the physical world to the logical world. Today, we will learn **why** things happen and **for whom**. Logical connections are the invisible threads that tie our sentences together and allow us to share our motivations and feelings.
 
-Today we unlock:
+Logical prepositions answer questions like: _For whom?_ (**Для кого?**), _Why?_ (**Чому?**), and _About what?_ (**Про що?**). These tiny words are the glue that connects your ideas. They allow you to explain your reasons, express your purpose, and discuss topics beyond the immediate physical space. Mastering logical prepositions is a massive step towards fluency because it enables you to tell stories and communicate complex thoughts. Без них ваша мова була б просто набором фактів. З ними вона стає живою історією.
 
-- **Для** (For - Benefit)
-- **Без** (Without - Absence)
-- **Через** (Because of | Through)
-- **Про** (About)
-- **Від** (From - Source)
-- **З** (With - Accompaniment)
+**Why this matters:** In English, we use words like «for», «about», «without», and «because of» almost every few seconds. In Ukrainian, these same concepts exist, but they are tied to specific grammatical cases. Understanding this connection will make your speech structured, logical, and very natural to a native speaker's ear. Логічні прийменники — це інструменти вашого мислення. Вони показують, як ви бачите зв’язки між подіями та людьми.
 
-## Presentation
+## Presentation / Презентація
 
-Логічні прийменники виражають абстрактні відносини між словами: причину, мету, тему розмови. Вони відповідають на питання «Чому?» (Why?), «Для кого?» (For whom?), «Про що?» (About what?). Ці прийменники дуже важливі для побудови складних речень та вираження думок.
+### Purpose and Benefit (Для кого? Для чого?)
 
-In English, we rely heavily on prepositions like «for», «about», «without», and «because of» to connect ideas. Ukrainian uses similar logical prepositions, but they govern specific cases. Mastering these prepositions allows you to express complex relationships: причина та наслідок (cause and effect), присутність та відсутність (presence and absence), джерело та мета (source and purpose).
+When you do something for someone or for a specific purpose, you use the preposition **для**. This preposition always governs the **Genitive case** (**родовий відмінок**).
 
-## Part 1: Benefit & Absence
+- **для** (for / benefit) -> Подарунок **для мами**. (A gift for mom)
+- **для** (for / purpose) -> Це важливо **для здоров'я**. (This is important for health)
 
-## Understanding Logical Prepositions
+Цей прийменник допомагає показати мету вашої дії. Наприклад: «Я купив квитки **для друзів**». Пам'ятайте, що після «для» завжди йде родовий відмінок. Це дуже чітка і зрозуміла структура. Використання її робить ваші наміри очевидними для співрозмовника. Коли ви готуєте вечерю для сім'ї або купуєте квіти для подруги, ви використовуєте цей прийменник. Це слово професійної поваги та особистої турботи.
 
-Logical prepositions express abstract relationships between words. Unlike spatial prepositions (in, on, under), these prepositions answer questions about purpose, cause, source, and topic. Learning them is essential for expressing «why» and «for whom» in Ukrainian.
+### Cause and Path (Чому? Яким шляхом?)
 
-The most important thing to remember is that each preposition requires a specific grammatical case. This module will teach you which case goes with each preposition.
+The preposition **через** is extremely common because it covers two distinct meanings: physical path and abstract cause. It always takes the **Accusative case** (**знахідний відмінок**).
 
-## Для + Genitive (For)
+1. **Path** (Through): Ми йшли **через парк**. (We went through the park)
+2. **Cause** (Because of): **Через дощ** ми залишилися вдома. (Because of the rain we stayed home)
 
-Use **для** to show purpose or benefit.
+Це слово дуже корисне для пояснення причин. Якщо ви запізнилися, ви можете сказати: «Я запізнився **через затори**» (I'm late because of traffic). Зверніть увагу, що у знахідному відмінку неістоти чоловічого роду не змінюються. Важливо розрізняти **через + іменник** та **тому що + речення**. Якщо у вас є тільки одна причина (слово), використовуйте «через». Наприклад: «Я не спав **через шум**».
 
-- _Для кого?_ (For whom?)
-- _Для чого?_ (For what purpose?)
+### About and Concerning (Про що? Кого?)
 
-| Pattern       | Example                      | Meaning                       |
-| :------------ | :--------------------------- | :---------------------------- |
-| для + **Gen** | Подарунок для **мами**.      | A gift for mom.               |
-| для + **Gen** | Це важливо для **здоров'я**. | This is important for health. |
-| для + **Gen** | Вода для **квітів**.         | Water for the flowers.        |
+When giving a topic for a conversation, book, or movie, use **про**. This preposition also takes the **Accusative case**.
 
-> [!tip] Для vs На: A Common Mistake
-> Both «для» and «на» can translate to English «for», but they have different meanings:
-> **Для** = benefit/purpose: _Гроші для тебе._ (Money for you - a gift.)
-> **На** = exchange/allocation: _Гроші на каву._ (Money for coffee - payment.)
->
-> Quick test: «For whom?» → Для. «For what item/purchase?» → На.
-> This distinction does not exist in English, so pay extra attention!
+- **про** (about) -> Ми говорили **про тебе**. (We talked about you)
+- **про** (about) -> Новий фільм **про війну**. (A new movie about the war)
 
-## Без + Genitive (Without)
+Це один із найпростіших прийменників для вивчення. Коли ви хочете запитати друга, чим він займався, ви можете спочатку запитати: «Розкажи мені **про свій день**». Це відкриває шлях до спілкування про будь-які теми — від приватної розмови до серйозної лекції. Українська література багата на твори **про кохання**, **про історію** та **про свободу**.
 
-Use **без** to indicate absence. This is straightforward - it simply means «without» and always takes the Genitive case.
+### Absence and Source (Без кого? Від кого?)
 
-- _Без кого?_ (Without whom?)
-- _Без чого?_ (Without what?)
+To express that something is missing or comes from a professional source/person, we use **без** and **від**. Both require the **Genitive case**.
 
-| Pattern       | Example                 | Meaning                     |
-| :------------ | :---------------------- | :-------------------------- |
-| без + **Gen** | Кава без **цукру**.     | Coffee without sugar.       |
-| без + **Gen** | Я не можу без **тебе**. | I can't (live) without you. |
-| без + **Gen** | Мова без **акценту**.   | Speech without an accent.   |
+- **без** (without) -> Кава **без цукру**. (Coffee without sugar)
+- **від** (from person) -> Лист **від батька**. (A letter from father)
 
----
+Важливо не плутати **від** із просторовим **з**. Ми кажемо «Я **з Києва**» (place), але «Я отримав подарунок **від Анни**» (person). Використання «без» є незамінним у кафе та ресторанах: «Я буду чай **без лимона**, будь ласка». Родовий відмінок тут показує відсутність або походження об'єкта.
 
-## Part 2: Cause & Topic
+### Time and Sequence (Коли? Після чого?)
 
-## Через + Accusative (Because of | Through)
+Logical prepositions also help us organize time and sequence in our lives.
 
-Use **через** to show cause or path.
+- **о / об** (at time) -> Зустрінемося **о п'ятій**. (Let's meet at five / Locative)
+- **після** (after) -> **Після роботи** я йду додому. (After work I go home / Genitive)
 
-**Cause:**
+Зверніть увагу на чергування **о/об**. Ми використовуємо **об**, якщо наступне слово починається на голосну: «Зустрінемося **об одинадцятій**». Це правило милозвучності допомагає мові текти гладко, як пісня. Також прийменник **після** вказує на логічну послідовність подій у вашому дні. Наприклад: «**Після уроку** я буду обідати».
 
-- _Через що?_ (Because of what?)
-- Через **дощ** ми залишилися вдома. (Because of rain, we stayed home.)
+> [!reflection] **Functional Differences**
+> Why use different prepositions for "from"? Ukrainian distinguishes between escaping a place (**з**) and receiving from a person (**від**). This precision prevents confusion in storytelling! It's one of the ways the language clarifies social vs. physical relationships.
 
-**Path:**
+> [!tip] **Для vs На**
+> A common mistake is using **на** instead of **для**. Remember: **Для** is for the beneficiary (Це для тебе). **На** is often for the purpose of spending or allocation (Гроші на каву/автобус). Think of "для" as "dedicated to".
 
-- Ми йшли **через парк**. (We walked through the park.)
+## Practice / Практика
 
-| Pattern                 | Example                           | Meaning                            |
-| :---------------------- | :-------------------------------- | :--------------------------------- |
-| через + **Acc** (cause) | Через **хворобу** він не прийшов. | He didn't come because of illness. |
-| через + **Acc** (path)  | Вона подивилася через **вікно**.  | She looked through the window.     |
+### 1. Choose the Correct Preposition (Оберіть прийменник)
 
-> [!tip] Через vs Тому що
-> **Через + Noun** = Because of: _Через дощ._
-> **Тому що + Clause** = Because: _Тому що йде дощ._
->
-> Both mean «because,» but **через** takes a noun, **тому що** takes a clause.
+Fill in the blanks with: **для, без, через, про, від, після**.
 
-## Про + Accusative (About)
+1. Я замовив піцу \_\_\_ друзів. -> **для**
+2. Чай \_\_\_ молока, будь ласка. -> **без**
+3. Ми не пішли гуляти \_\_\_ сніг. -> **через**
+4. Ти читав статтю \_\_\_ Україну? -> **про**
+5. Я отримав смс \_\_\_ брата. -> **від**
+6. \_\_\_ вечері ми дивимося кіно. -> **після**
+7. Ця книга \_\_\_ мого дідуся. -> **від**
 
-Use **про** to indicate topic.
+### 2. Logical Sentence Building (Побудова речень)
 
-- _Про що?_ (About what?)
-- _Про кого?_ (About whom?)
+Translate the ideas into Ukrainian using the patterns above. Be careful with endings!
 
-| Pattern       | Example                        | Meaning                              |
-| :------------ | :----------------------------- | :----------------------------------- |
-| про + **Acc** | Фільм про **кохання**.         | A film about love.                   |
-| про + **Acc** | Ми говорили про **тебе**.      | We talked about you.                 |
-| про + **Acc** | Книга про **історію** України. | A book about the history of Ukraine. |
+1. A gift for mother. -> **Подарунок для мами.** (Genitive)
+2. A book about history. -> **Книга про історію.** (Accusative)
+3. Coffee without milk. -> **Кава без молока.** (Genitive)
+4. Because of traffic. -> **Через затори.** (Accusative plural)
+5. At six o'clock (at 6:00). -> **О шостій годині.** (Locative)
+6. After university. -> **Після університету.** (Genitive)
 
-## Learning Note: Why Cases Matter
+> [!important] **Consistency is Key!**
+> Prepositions and cases are a pair. Every time you learn a new preposition, memorize its case "partner." For logical prepositions, the Genitive case is the most common partner (для, без, від, після, замість, крім). This covers about 70% of the logical constructions you'll need at this level.
 
-You might wonder why Ukrainian prepositions require specific cases. The case system is a powerful feature of Slavic languages that makes sentences more flexible and precise.
+## Dialogues / Діалоги
 
-In English, word order is rigid: «I gave the book to mom.» In Ukrainian, you can say the same thing in multiple orders, and the case endings tell you who did what to whom.
+### В аптеці (At the Pharmacy)
 
-When you see a preposition like **для** (for), think: «This preposition always wants the Genitive case.» The genitive ending tells you the relationship even if the words are in a different order.
+**А:** Добрий день! У вас є ліки **від кашлю**? (Hello! Do you have medicine for /from/ cough?)
+**Б:** Так, ось сироп і таблетки. **Для** кого вони? (Yes, here is syrup and tablets. Who are they for?)
+**А:** **Для** мого сина. Йому п'ять років. (For my son. He is five years old.)
+**Б:** Тоді візьміть сироп **без** цукру. Це краще **для** дітей. (Then take the sugar-free syrup. It's better for children.)
+**А:** Дякую. А щось **від** головного болю? (Thanks. And something for headache?)
+**Б:** Ось ці таблетки. Приймайте їх **після** їжі. (Here are these tablets. Take them after food.)
 
-Think of it like color-coding in a spreadsheet - each case has its «color» that marks its role in the sentence. Once you internalize these patterns, you'll read Ukrainian much more naturally.
+### Планування подорожі (Planning a trip)
 
-**Quick Case Review:**
+**А:** Ти вже знаєш новини **про** нашу відпустку? (Do you already know the news about our vacation?)
+**Б:** Ні, що трапилося? (No, what happened?)
+**А:** **Через** роботу директора нам потрібно змінити дату. (**Because of** the director's work, we need to change the date.)
+**Б:** Шкода. І на коли? (Pity. And for when?)
+**А:** Зустрінемося **о восьмій** вечора, я розкажу всі деталі. (Let's meet **at eight** in the evening, I'll tell all the details.)
+**Б:** Добре. Я прийду **з** ноутбуком, щоб усе записати. (Good. I'll come **with** a laptop to write everything down.)
 
-- **Genitive** answers «of whom? of what?» - used for possession, absence, and many prepositions
-- **Accusative** answers «whom? what?» - used for direct objects and some prepositions
-- **Instrumental** answers «by whom? with what?» - used for tools, accompaniment
-- **Locative** answers «where? on what?» - used for location
+> [!context] **Euphony in Time**
+> Ukrainians are very sensitive to how sounds flow. That's why we have **о восьмій** (at eight) but **об одинадцятій** (at eleven). The "б" in "об" acts as a bridge between the vowels. This is the same logic as "a" vs "an" in English, but applied much more frequently in Ukrainian!
 
----
+# Summary / Підсумок
 
-## Part 3: Source & Accompaniment
+У цьому модулі ми розібрали основні логічні прийменники, які допоможуть вам будувати складніші речення:
 
-## Від + Genitive (From - Source)
+- **Для** (мета/користь), **Без** (відсутність), **Від** (джерело), **Після** (час) — всі вони вимагають родового відмінка.
+- **Про** (тема розмови) та **Через** (причина або фізичний шлях) — вимагають знахідного відмінка.
+- **О / Об** (час зустрічі) — вимагає місцевого відмінка.
+- **З** (супровід, компанія) — вимагає орудного відмінка.
 
-Use **від** to show origin or sender.
-
-- _Від кого?_ (From whom?)
-
-| Pattern       | Example                      | Meaning                            |
-| :------------ | :--------------------------- | :--------------------------------- |
-| від + **Gen** | Лист від **мами**.           | A letter from mom.                 |
-| від + **Gen** | Подарунок від **друга**.     | A gift from a friend.              |
-| від + **Gen** | Ліки від **головного болю**. | Medicine for (lit. from) headache. |
-
-> [!tip] Від vs З
-> **Від** = from a person/source: _Лист від Марії._ (Letter from Maria.)
-> **З** = from a place: _Він з Києва._ (He's from Kyiv.)
-
-## З + Instrumental (With)
-
-Use **з** to show accompaniment.
-
-- _З ким?_ (With whom?)
-- _З чим?_ (With what?)
-
-| Pattern       | Example             | Meaning                  |
-| :------------ | :------------------ | :----------------------- |
-| з + **Instr** | Кава з **молоком**. | Coffee with milk.        |
-| з + **Instr** | Я йду з **другом**. | I'm going with a friend. |
-| з + **Instr** | Хліб з **маслом**.  | Bread with butter.       |
-
----
-
-## Part 4: Time & Exception
-
-## О/Об + Locative (At - Time)
-
-Use **о** (or **об** before vowels) for clock time.
-
-| Pattern      | Example              | Meaning                 |
-| :----------- | :------------------- | :---------------------- |
-| о + **Loc**  | О **третій** годині. | At three o'clock.       |
-| о + **Loc**  | О **п'ятій** ранку.  | At five in the morning. |
-| об + **Loc** | Об **одинадцятій**.  | At eleven.              |
-
-## Після + Genitive (After)
-
-Use **після** to indicate sequence in time.
-
-| Pattern         | Example           | Meaning           |
-| :-------------- | :---------------- | :---------------- |
-| після + **Gen** | Після **уроку**.  | After the lesson. |
-| після + **Gen** | Після **роботи**. | After work.       |
-| після + **Gen** | Після **обіду**.  | After lunch.      |
-
-## Крім + Genitive (Except | Besides)
-
-Use **крім** to indicate exception.
-
-| Pattern        | Example                       | Meaning                       |
-| :------------- | :---------------------------- | :---------------------------- |
-| крім + **Gen** | Всі прийшли, крім **Олега**.  | Everyone came except Oleh.    |
-| крім + **Gen** | Я все зробив, крім **цього**. | I did everything except this. |
-
-## Замість + Genitive
-
-Use **замість** for substitution.
-
-| Pattern           | Example                       | Meaning                |
-| :---------------- | :---------------------------- | :--------------------- |
-| замість + **Gen** | Чай замість **кави**.         | Tea instead of coffee. |
-| замість + **Gen** | Він прийшов замість **мене**. | He came instead of me. |
-
----
-
-## Practice
-
-Тепер практикуйте! Заповніть пропуски правильним прийменником:
-
-1. Це подарунок ___ тебе. (This is a gift for you.) → **для**
-2. Я не можу жити ___ музики. (I can't live without music.) → **без**
-3. Ми говоримо ___ фільм. (We're talking about the film.) → **про**
-4. Він не прийшов ___ хвороби. (He didn't come because of illness.) → **через**
-5. Вона отримала листа ___ брата. (She received a letter from her brother.) → **від**
-6. Я йду в кіно ___ другом. (I'm going to the cinema with a friend.) → **з**
-7. ___ роботи ми підемо додому. (After work we'll go home.) → **Після**
-8. Усі прийшли, ___ Петра. (Everyone came except Peter.) → **крім**
-9. Я п'ю воду ___ соку. (I drink water instead of juice.) → **замість**
-10. Зустрінемося ___ п'ятій годині. (Let's meet at five o'clock.) → **о**
-
-**Створіть власні речення:**
-- Напишіть три речення з прийменником **для** (for).
-- Напишіть два речення з прийменником **про** (about).
-- Напишіть одне речення з прийменником **з** (with).
-
----
-
-## Story Time: The Letter
-
-Марія отримала **лист від мами**.
-У листі було написано **про сім'ю**.
-Мама писала **про** здоров'я батька, **про** погоду в селі.
-Вона надіслала посилку **для Марії**.
-У посилці було варення **з вишень** і мед **без цукру**.
-
-Марія прочитала лист **о восьмій ранку**.
-**Після сніданку** вона вирішила зателефонувати мамі.
-Вона сказала: «Дякую **за** посилку! Я не можу **без вас**!»
-
-**Через роботу** Марія не може часто їздити додому.
-Але вона думає **про** родину щодня.
-Всі в офісі люблять її, **крім** одного колеги.
-Але це неважливо.
-
-**Замість** сумувати, Марія планує відпустку.
-Вона поїде додому **з подругою**.
-Це буде чудова подорож!
-
----
-
-## Story Time Part 2: The Café
-
-Оля зайшла в кафе **після роботи**.
-Вона замовила каву **з молоком** і торт **без глютену**.
-Офіціант запитав: «**Для** вас щось ще?»
-«Ні, дякую. Це все,» — відповіла Оля.
-
-Вона сіла біля вікна і дивилася **через скло** на вулицю.
-**Через** погану погоду мало людей гуляло надворі.
-Оля думала **про** свій день.
-
-Раптом вона побачила подругу **з чоловіком**.
-Вони зайшли в кафе.
-«Оля! Ми тут **замість** кіно — там занадто дорого!»
-«Сідайте **зі мною**!» — запросила Оля.
-
-Вони сиділи і розмовляли **про** життя.
-Всі були щасливі, **крім** офіціанта — він втомився.
-Але **після восьмої** кафе закрилося, і всі пішли додому.
-
-> [!cultural] Cultural Insight: Gift Giving
-> In Ukrainian culture, gifts are always **для** someone.
-> When you give flowers, chocolates, or anything, you say:
-> _Це для тебе._ (This is for you.)
-> Never give an even number of flowers — that's for funerals!
-
----
-
-## Вправа: Оберіть правильний прийменник
-
-1. Це подарунок \_\_\_\_ мами. (для / без)
-2. Кава \_\_\_\_ цукру. (для / без)
-3. Ми йшли \_\_\_\_ парк. (через / про)
-4. Я думаю \_\_\_\_ тебе. (через / про)
-
-## Dialogues
-
-## Dialogue: At the Pharmacy
-
-**Pharmacist:** Добрий день! Чим можу допомогти?
-**Customer:** Мені потрібні ліки **від головного болю**.
-**Pharmacist:** У нас є таблетки. **Для** дітей чи **для** дорослих?
-**Customer:** **Для** дорослих. І щось **від** кашлю.
-**Pharmacist:** Сироп **без** цукру підійде?
-**Customer:** Так, дякую. Скільки коштує?
-**Pharmacist:** Сто гривень **за** все.
-
-## Dialogue: Planning a Trip
-
-**Ira:** Ти вже думала **про** відпустку?
-**Oleh:** Так! Я хочу поїхати **з тобою** в гори.
-**Ira:** О, я не можу **без** інтернету!
-**Oleh:** **Через** це ми не поїдемо?!
-**Ira:** Жартую! **Після** роботи в п'ятницю виїжджаємо?
-**Oleh:** Домовились! Я візьму все, **крім** палатки — вона у тебе.
-**Ira:** Добре. Чай **замість** кави?
-**Oleh:** Чай **з лимоном**, будь ласка!
-
-## Dialogue: About a Book
-
-**Anna:** Ти читала книгу **про** Голодомор?
-**Maria:** Так. Це важливо **для** кожного українця.
-**Anna:** Правда. Я дізналася багато **про** ті часи.
-**Maria:** **Через** цю книгу я краще розумію історію.
-**Anna:** Рекомендую її всім, **крім** дітей — занадто важко.
-**Maria:** Згодна. **Після** неї хочеться щось легше почитати.
-
-> [!cultural] Cultural Insight: Politeness
-> When offering something in Ukrainian, use **для**:
-> _Це для вас._ (This is for you - formal.)
-> _Це для тебе._ (This is for you - informal.)
-> Always use the correct register based on your relationship!
-
-## Таблиця прийменників та відмінків
-
-All logical prepositions require a specific case:
-
-| Preposition | Case         | Question      | Example      |
-| :---------- | :----------- | :------------ | :----------- |
-| **для**     | Genitive     | Для кого?     | для мами     |
-| **без**     | Genitive     | Без чого?     | без цукру    |
-| **від**     | Genitive     | Від кого?     | від друга    |
-| **після**   | Genitive     | Після чого?   | після роботи |
-| **крім**    | Genitive     | Крім кого?    | крім мене    |
-| **замість** | Genitive     | Замість чого? | замість чаю  |
-| **через**   | Accusative   | Через що?     | через дощ    |
-| **про**     | Accusative   | Про що?       | про книгу    |
-| **о/об**    | Locative     | О котрій?     | о третій     |
-| **з**       | Instrumental | З ким?        | з другом     |
-
-> [!tip] Memory Trick
-> Most abstract prepositions take **Genitive** (від, для, без, після, крім, замість).
-> **Про** and **Через** take **Accusative** (think: direct object).
-> **З** takes **Instrumental** (with = tool/companion).
-
----
-
-# Підсумок
-Today you learned 10 logical prepositions:
-
-| Preposition | Meaning              | Case         |
-| :---------- | :------------------- | :----------- |
-| **для**     | for (benefit)        | Genitive     |
-| **без**     | without              | Genitive     |
-| **від**     | from (source)        | Genitive     |
-| **після**   | after                | Genitive     |
-| **крім**    | except               | Genitive     |
-| **замість** | instead of           | Genitive     |
-| **через**   | because of / through | Accusative   |
-| **про**     | about                | Accusative   |
-| **о/об**    | at (time)            | Locative     |
-| **з**       | with                 | Instrumental |
-
-Key distinctions:
-
-- **Для** (benefit) vs **На** (payment).
-- **Через + Noun** vs **Тому що + Clause**.
-- **Від** vs **З**.
-
----
-
----
+Logical connections are the foundation of storytelling and argumentation. By mastering these prepositions, you can explain not just what you are doing, but why you are doing it and who it affects. This is the bridge from simple sentences to real conversation.
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Подивіться на свій розклад на сьогодні. Напишіть 5 речень про свої плани на вечір. Що ви будете робити **після** роботи? **Для** кого ви готуєте вечерю? **Про** що ви будете розмовляти з друзями по телефону? Використовуйте ці питання як підказки! Наприклад: «Після роботи я піду в спортзал».

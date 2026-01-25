@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and boxing terms
   items: 10+
-- type: discussion
-  focus: Why is Usyk a role model for Ukrainians?
-  output: Character and values analysis
 prerequisites:
 - Understanding of boxing
 - 2022 Russian invasion context

@@ -1,17 +1,58 @@
-# Audit Report: 33-holidays-and-traditions.md
-**Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
+# Audit Report: M33 — 33-holidays-and-traditions.md
+**Level:** A1 | **Module:** M33 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:54:17
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Holidays and Greetings | 10 | 8 | ✅ |
+| 2 | match-up | Celebration Vocabulary | 10 | 8 | ✅ |
+| 3 | group-sort | Holidays by Season | 13 | 12 | ✅ |
+| 4 | group-sort | Holiday Activities | 13 | 12 | ✅ |
+| 5 | fill-in | Привітання (Greetings) | 12 | 8 | ✅ |
+| 6 | fill-in | Святкування (Celebrating) | 12 | 8 | ✅ |
+| 7 | quiz | Holiday Knowledge | 8 | 8 | ✅ |
+| 8 | unjumble | Holiday Sentences | 12 | 6 | ✅ |
+| 9 | true-false | Holiday Facts | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): дарувати, листівка, торт, отримувати, гості...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 805/750
+- **Words:** ✅ 805/750 (raw: 1063)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 49/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,12 +60,6 @@
 - **Immersion:** 🇺🇦 46.6% (target 35-55% (M33))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

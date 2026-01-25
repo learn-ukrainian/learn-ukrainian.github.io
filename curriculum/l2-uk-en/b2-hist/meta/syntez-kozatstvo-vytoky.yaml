@@ -41,7 +41,7 @@ naturalness:
   status: PASS
 content_outline:
   - section: "Вступ: Козацтво як точка збірки нації"
-    words: 300
+    words: 350
     points:
       - "Synthesis of previous modules (41-49)"
   - section: "Огляд періоду: Хронологія та генеза"
@@ -68,7 +68,7 @@ content_outline:
     points:
       - "Synthesis of key documents"
   - section: "Деколонізаційний погляд: Козацька правда"
-    words: 350
+    words: 300
     points:
       - "Debunking the 'peasant culture' myth"
   - section: "Есе"

@@ -1,141 +1,112 @@
-# C2 Module 98: Final Exam — Integrated Skills
-# Status: SPEC (ready for content development)
-
 id: c2-98
 title: Фінальний екзамен — Інтегровані навички
 slug: final-exam-integrated-skills
 version: '2.0'
-phase: 'C2.4 Academic Culmination'
+phase: C2.4 Academic Culmination
 focus: checkpoint
 module_type: checkpoint
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian State Standard 2024 — C2 Assessment Criteria
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official C2 assessment standards and rubrics
-  - name: CEFR C2 Assessment Guidelines
-    url: https://www.coe.int/
-    type: reference
-    notes: European framework for C2 assessment
-  - name: Іспит з української мови як іноземної — Зразки
-    url: https://naqa.gov.ua/
-    type: secondary
-    notes: Sample exam formats and tasks
-
+- name: Ukrainian State Standard 2024 — C2 Assessment Criteria
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 assessment standards and rubrics
+- name: CEFR C2 Assessment Guidelines
+  url: https://www.coe.int/
+  type: reference
+  notes: European framework for C2 assessment
+- name: Іспит з української мови як іноземної — Зразки
+  url: https://naqa.gov.ua/
+  type: secondary
+  notes: Sample exam formats and tasks
 content_outline:
-  - section: Вступ — Структура фінального екзамену
-    words: 400
-    points:
-      - Огляд компонентів екзамену
-      - Критерії оцінювання
-      - Часові рамки та організація
-      - Стратегії підготовки
-
-  - section: Компонент I — Аудіювання
-    words: 600
-    points:
-      - Формат завдань (вибір, заповнення, відкриті відповіді)
-      - Типи аудіо (лекції, інтерв'ю, дискусії, новини)
-      - Критерії оцінювання
-      - Зразки завдань
-
-  - section: Компонент II — Читання
-    words: 600
-    points:
-      - Формат завдань (розуміння, аналіз, критика)
-      - Типи текстів (наукові, публіцистичні, літературні)
-      - Критерії оцінювання
-      - Зразки завдань
-
-  - section: Компонент III — Письмо
-    words: 700
-    points:
-      - Формат завдань (есе, трансформація, аналіз)
-      - Вимоги до обсягу та змісту
-      - Критерії оцінювання (зміст, мова, стиль)
-      - Зразки завдань із рубриками
-
-  - section: Компонент IV — Говоріння
-    words: 600
-    points:
-      - Формат завдань (монолог, дискусія, рольова гра)
-      - Критерії оцінювання (флуентність, точність, взаємодія)
-      - Процедура усної частини
-      - Зразки тем і завдань
-
-  - section: Пробний екзамен — Повна симуляція
-    words: 700
-    points:
-      - Проходження повного екзамену (3-4 години)
-      - Самооцінювання за рубриками
-      - Аналіз результатів
-      - Рекомендації до доопрацювання
-
+- section: Вступ — Структура фінального екзамену
+  words: 400
+  points:
+  - Огляд компонентів екзамену
+  - Критерії оцінювання
+  - Часові рамки та організація
+  - Стратегії підготовки
+- section: Компонент I — Аудіювання
+  words: 600
+  points:
+  - Формат завдань (вибір, заповнення, відкриті відповіді)
+  - Типи аудіо (лекції, інтерв'ю, дискусії, новини)
+  - Критерії оцінювання
+  - Зразки завдань
+- section: Компонент II — Читання
+  words: 600
+  points:
+  - Формат завдань (розуміння, аналіз, критика)
+  - Типи текстів (наукові, публіцистичні, літературні)
+  - Критерії оцінювання
+  - Зразки завдань
+- section: Компонент III — Письмо
+  words: 700
+  points:
+  - Формат завдань (есе, трансформація, аналіз)
+  - Вимоги до обсягу та змісту
+  - Критерії оцінювання (зміст, мова, стиль)
+  - Зразки завдань із рубриками
+- section: Компонент IV — Говоріння
+  words: 600
+  points:
+  - Формат завдань (монолог, дискусія, рольова гра)
+  - Критерії оцінювання (флуентність, точність, взаємодія)
+  - Процедура усної частини
+  - Зразки тем і завдань
+- section: Пробний екзамен — Повна симуляція
+  words: 700
+  points:
+  - Проходження повного екзамену (3-4 години)
+  - Самооцінювання за рубриками
+  - Аналіз результатів
+  - Рекомендації до доопрацювання
 vocabulary_hints:
   required:
-    - екзамен (exam)
-    - оцінювання (assessment)
-    - критерії (criteria)
-    - рубрика (rubric)
-    - бал (score/grade)
-    - поріг проходження (passing threshold)
-    - аудіювання (listening)
-    - читання (reading)
-    - письмо (writing)
-    - говоріння (speaking)
+  - екзамен (exam)
+  - оцінювання (assessment)
+  - критерії (criteria)
+  - рубрика (rubric)
+  - бал (score/grade)
+  - поріг проходження (passing threshold)
+  - аудіювання (listening)
+  - читання (reading)
+  - письмо (writing)
+  - говоріння (speaking)
   recommended:
-    - формувальне оцінювання (formative assessment)
-    - підсумкове оцінювання (summative assessment)
-    - валідність (validity)
-    - надійність (reliability)
-    - зворотний вплив (washback effect)
-
+  - формувальне оцінювання (formative assessment)
+  - підсумкове оцінювання (summative assessment)
+  - валідність (validity)
+  - надійність (reliability)
+  - зворотний вплив (washback effect)
 activity_hints:
-  - type: quiz
-    focus: Аудіювання — 3 аудіозаписи різних жанрів
-    items: "20+"
-
-  - type: critical-analysis
-    focus: Читання — аналіз 3 текстів різних стилів
-    output: Відповіді на запитання + критичний аналіз
-
-  - type: essay-response
-    focus: Письмо — есе на задану тему
-    word_target: 600
-    output: Аргументований текст за рубрикою
-
-  - type: essay-response
-    focus: Письмо — стилістична трансформація
-    word_target: 400
-    output: Переписаний текст в іншому стилі
-
-  - type: discussion
-    focus: Говоріння — монолог на задану тему (5 хв)
-    output: Структурований виступ
-
-  - type: discussion
-    focus: Говоріння — дискусія з екзаменатором
-    output: Аргументована участь
-
-  - type: essay-response
-    focus: Самооцінка за результатами пробного екзамену
-    word_target: 300
-    output: Аналіз сильних і слабких сторін
-
+- type: quiz
+  focus: Аудіювання — 3 аудіозаписи різних жанрів
+  items: 20+
+- type: critical-analysis
+  focus: Читання — аналіз 3 текстів різних стилів
+  output: Відповіді на запитання + критичний аналіз
+- type: essay-response
+  focus: Письмо — есе на задану тему
+  word_target: 600
+  output: Аргументований текст за рубрикою
+- type: essay-response
+  focus: Письмо — стилістична трансформація
+  word_target: 400
+  output: Переписаний текст в іншому стилі
+- type: essay-response
+  focus: Самооцінка за результатами пробного екзамену
+  word_target: 300
+  output: Аналіз сильних і слабких сторін
 prerequisites:
-  - M95-97 (Final Review I-III)
-  - All C2 modules completed
-  - Capstone project defended
-
+- M95-97 (Final Review I-III)
+- All C2 modules completed
+- Capstone project defended
 connects_to:
-  - c2-99 (C2 Certification Preparation)
-  - c2-100 (C2 РІВЕНЬ ЗАВЕРШЕНО)
-
+- c2-99 (C2 Certification Preparation)
+- c2-100 (C2 РІВЕНЬ ЗАВЕРШЕНО)
 naturalness:
   score: 1
   status: PENDING

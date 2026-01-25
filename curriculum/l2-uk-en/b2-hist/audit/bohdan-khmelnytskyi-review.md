@@ -1,15 +1,16 @@
 # Audit Report: M52 — bohdan-khmelnytskyi.md
-**Level:** B2 | **Module:** M52 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-24 20:26:57
 
 ## Configuration
-**Type:** B2-history
-**Word Target:** 4000 words
-**Activities:** 3-10 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥2 types required
-**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Type:** B2-biography
+**Word Target:** 3000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, fill-in, quiz, true-false
 **Required Types:** comparative-study, essay-response, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
@@ -19,69 +20,84 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | «Квест: Гетьман Богдан» | 8 | 8 | ✅ |
-| 2 | true-false | «Політика та особисте життя Богдана» | 10 | 8 | ✅ |
-| 3 | match-up | «Термінологія Козацької держави» | 12 | 8 | ✅ |
-| 4 | reading | «Голоси епохи: Документи Хмельниччини» | 2 | 1 | ✅ |
-| 5 | essay-response | «Переяславська рада: Кризовий менеджмент чи стратегічний провал?» | 1 | 1 | ✅ |
-| 6 | comparative-study | «Зборівська та Білоцерківська угоди» | 1 | 1 | ✅ |
+| 1 | reading | Джерело: Промова у Києві | 3 | 3 | ✅ |
+| 2 | quiz | Біографія Гетьмана | 8 | 8 | ✅ |
+| 3 | essay-response | Есе: Роль особистості | 1 | 1 | ✅ |
+| 4 | match-up | Біографічні факти | 12 | 8 | ✅ |
+| 5 | true-false | Міфи про Хмельницького | 10 | 8 | ✅ |
+| 6 | comparative-study | Хмельницький та Кромвель | 1 | 1 | ✅ |
+| 7 | fill-in | Біографія в контексті | 10 | 8 | ✅ |
+| 8 | unjumble | Цитати Гетьмана | 8 | 6 | ✅ |
+| 9 | select | Аналіз документа | 8 | 6 | ✅ |
+| 10 | mark-the-words | Ключові поняття | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-10) ✅
-- Unique types: 6 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, quiz, true-false) ✅
 - Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'він був...'.
+  - FIX: Vary sentence structure.
+
+## TEMPLATE COMPLIANCE
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 5960/4000 (raw: 6262)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Words:** ✅ 3142/3000 (raw: 3192)
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ 1 fill-in with year answers
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (biography))
+- **Richness:** ❌ 92% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** history
+**Score:** 92% (minimum: 95%)
+**Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 12 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 9 | 2 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **92.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 295 | Included in Core |
-| **Читання** | ✅ | 112 | Included in Core |
-| **Ранні роки та становлення (1595-1647)** | ⚪️ | 743 | Skipped |
-| **Конфлікт у Суботові та шлях до повстання** | ⚪️ | 766 | Skipped |
-| **Хмельницький як військовий стратег** | ⚪️ | 994 | Skipped |
-| **Творець держави: Дипломатія та адміністрування** | ⚪️ | 1615 | Skipped |
-| **Деколонізаційний погляд** | ✅ | 447 | Included in Core |
-| **Спадщина** | ⚪️ | 341 | Skipped |
-| **Первинні джерела** | ✅ | 331 | Included in Core |
-| **Підсумок** | ✅ | 316 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **Потрібно більше практики?** | ⚪️ | 29 | Skipped |
+| **Intro/Narrative** | ✅ | 85 | Included in Core |
+| **Вступ: Батько нації чи суперечлива фігура?** | ✅ | 401 | Included in Core |
+| **Ранні роки: Освіта і служба** | ⚪️ | 525 | Skipped |
+| **Особиста драма як іскра повстання** | ⚪️ | 389 | Skipped |
+| **Геній дипломатії та війни** | ⚪️ | 491 | Skipped |
+| **Будівничий держави** | ⚪️ | 284 | Skipped |
+| **Первинні джерела: Листи та промови** | ✅ | 344 | Included in Core |
+| **Деколонізаційний погляд: Лідер, а не васал** | ✅ | 331 | Included in Core |
+| **Читання** | ✅ | 124 | Included in Core |
+| **Підсумок** | ✅ | 168 | Included in Core |

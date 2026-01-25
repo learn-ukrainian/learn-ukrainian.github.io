@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: атб
   ipa: /atb/
-  translation: ''
+  translation: ATB
   pos: noun
   gender: m
 - lemma: душа

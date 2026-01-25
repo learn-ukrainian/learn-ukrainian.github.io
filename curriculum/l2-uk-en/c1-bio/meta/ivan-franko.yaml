@@ -1,133 +1,107 @@
-# C1-BIO Module 28: Іван Франко
-# Status: SPEC (ready for content development)
-
 id: c1-bio-28
-title: "Іван Франко: Каменяр"
+title: 'Іван Франко: Каменяр'
 slug: ivan-franko
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Іван Франко (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
-    type: primary
-    notes: Comprehensive biography of the titan of Ukrainian culture
-  - name: Інститут Івана Франка НАН України
-    url: https://ifnan.gov.ua/
-    type: reference
-    notes: Academic institution dedicated to Franko studies
-
+- name: Іван Франко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  type: primary
+  notes: Comprehensive biography of the titan of Ukrainian culture
+- name: Інститут Івана Франка НАН України
+  url: https://ifnan.gov.ua/
+  type: reference
+  notes: Academic institution dedicated to Franko studies
 content_outline:
-  - section: Вступ — Титан праці
-    words: 400
-    points:
-      - Письменник, поет, вчений, громадський діяч
-      - Символ Галичини і всієї України
-      - Автор понад 6000 творів
-
-  - section: Юність у Нагуєвичах (1856-1874)
-    words: 600
-    points:
-      - Народження в родині сільського коваля
-      - Рання освіта та таланти
-      - Смерть батька та вплив мачухи
-      - Дрогобицька гімназія
-
-  - section: Студентські роки (1874-1880)
-    words: 800
-    points:
-      - Львівський університет
-      - Участь у соціалістичному русі
-      - Перші арешти
-      - Початок літературної діяльності
-
-  - section: Каменяр української культури (1880-1905)
-    words: 800
-    points:
-      - «Мойсей», «Захар Беркут», «Перехресні стежки»
-      - Наукова діяльність та докторат
-      - Журналістика та редакторська робота
-      - Номінація на Нобелівську премію (1916)
-
-  - section: Хвороба та останні роки (1905-1916)
-    words: 700
-    points:
-      - Прогресуюча хвороба
-      - Продовження творчої роботи
-      - Перша світова війна
-      - Смерть у Львові
-
-  - section: Спадщина — Вічний каменяр
-    words: 700
-    points:
-      - Вплив на українську літературу
-      - Франко як національний символ
-      - Університет та інститути його імені
-      - Актуальність ідей Франка сьогодні
-
+- section: Вступ — Титан праці
+  words: 400
+  points:
+  - Письменник, поет, вчений, громадський діяч
+  - Символ Галичини і всієї України
+  - Автор понад 6000 творів
+- section: Юність у Нагуєвичах (1856-1874)
+  words: 600
+  points:
+  - Народження в родині сільського коваля
+  - Рання освіта та таланти
+  - Смерть батька та вплив мачухи
+  - Дрогобицька гімназія
+- section: Студентські роки (1874-1880)
+  words: 800
+  points:
+  - Львівський університет
+  - Участь у соціалістичному русі
+  - Перші арешти
+  - Початок літературної діяльності
+- section: Каменяр української культури (1880-1905)
+  words: 800
+  points:
+  - «Мойсей», «Захар Беркут», «Перехресні стежки»
+  - Наукова діяльність та докторат
+  - Журналістика та редакторська робота
+  - Номінація на Нобелівську премію (1916)
+- section: Хвороба та останні роки (1905-1916)
+  words: 700
+  points:
+  - Прогресуюча хвороба
+  - Продовження творчої роботи
+  - Перша світова війна
+  - Смерть у Львові
+- section: Спадщина — Вічний каменяр
+  words: 700
+  points:
+  - Вплив на українську літературу
+  - Франко як національний символ
+  - Університет та інститути його імені
+  - Актуальність ідей Франка сьогодні
 vocabulary_hints:
   required:
-    - каменяр (stonemason/pioneer)
-    - титан (titan)
-    - письменник (writer)
-    - громадський діяч (public figure)
-    - соціалізм (socialism)
-    - наукова діяльність (scholarly activity)
-    - журналіст (journalist)
-    - редактор (editor)
-    - поема (long poem)
-    - повість (novella)
+  - каменяр (stonemason/pioneer)
+  - титан (titan)
+  - письменник (writer)
+  - громадський діяч (public figure)
+  - соціалізм (socialism)
+  - наукова діяльність (scholarly activity)
+  - журналіст (journalist)
+  - редактор (editor)
+  - поема (long poem)
+  - повість (novella)
   recommended:
-    - позитивізм (positivism)
-    - народництво (populism)
-    - просвіта (enlightenment)
-    - Галичина (Galicia)
-    - національне відродження (national revival)
-
+  - позитивізм (positivism)
+  - народництво (populism)
+  - просвіта (enlightenment)
+  - Галичина (Galicia)
+  - національне відродження (national revival)
 activity_hints:
-  - type: reading
-    focus: Українська література XIX ст.
-    source: Literary history sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та творчість Франка
-    items: "12+"
-
-  - type: match-up
-    focus: Твори та їхні жанри
-    items: "10+"
-
-  - type: essay-response
-    focus: Чому Франка називають «титаном праці»?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Діяльність Франка за сферами
-    items: "12+"
-
-  - type: fill-in
-    focus: Літературна та суспільно-політична термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як порівняти внесок Франка та Шевченка?
-    output: Critical analysis
-
+- type: reading
+  focus: Українська література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Франка
+  items: 12+
+- type: match-up
+  focus: Твори та їхні жанри
+  items: 10+
+- type: essay-response
+  focus: Чому Франка називають «титаном праці»?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Діяльність Франка за сферами
+  items: 12+
+- type: fill-in
+  focus: Літературна та суспільно-політична термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-27
-
+- c1-bio-27
 connects_to:
-  - c1-bio-20
-  - c1-bio-40
-
+- c1-bio-20
+- c1-bio-40
 naturalness:
   score: 1
   status: PENDING

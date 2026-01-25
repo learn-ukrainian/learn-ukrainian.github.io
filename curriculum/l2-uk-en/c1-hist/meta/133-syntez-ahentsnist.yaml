@@ -77,7 +77,7 @@ vocabulary_hints:
   - колективна пам'ять (collective memory)
   - національне будівництво (nation building)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: Map Ukrainian agency across 500 years
   output: Agency evolution map
 - type: turning-points

@@ -1,6 +1,3 @@
-# B2 Module 11: Multi-Clause Sentences
-# Status: SPEC (ready for content development)
-
 id: b2-11
 title: Багатоскладні речення
 slug: 11-multi-clause-sentences
@@ -9,136 +6,112 @@ phase: B2.1b [Participles & Register Intro]
 focus: grammar
 module_type: grammar
 word_target: 3800
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian State Standard 2024 - Syntax
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Complex sentence structure requirements for B2
-  - name: Сучасна українська літературна мова - Синтаксис
-    url: https://uk.wikipedia.org/wiki/Синтаксис
-    type: secondary
-    notes: Academic reference for sentence structure
-  - name: CEFR B2 Grammar Complexity
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: B2 complex sentence requirements
-
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complex sentence structure requirements for B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Academic reference for sentence structure
+- name: CEFR B2 Grammar Complexity
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 complex sentence requirements
 content_outline:
-  - section: Вступ — Багатоскладні речення
-    words: 400
-    points:
-      - Різниця між простими та складними реченнями
-      - Типи зв'язку в складних реченнях
-      - Чому це важливо для вираження складних думок
-
-  - section: Складносурядні речення
-    words: 700
-    points:
-      - Сполучники і, та, а, але, або, чи
-      - Протиставні відношення (а, але, проте)
-      - Розділові відношення (або, чи)
-      - Приєднувальні відношення (і, та)
-
-  - section: Складнопідрядні речення з одним підрядним
-    words: 600
-    points:
-      - Типи підрядних речень (означальні, з'ясувальні, обставинні)
-      - Сполучники та сполучні слова
-      - Позиція підрядного речення
-
-  - section: Складнопідрядні речення з кількома підрядними
-    words: 700
-    points:
-      - Послідовне підпорядкування
-      - Однорідне підпорядкування
-      - Неоднорідне підпорядкування
-      - Комбіновані типи
-
-  - section: Вкладені підрядні речення
-    words: 600
-    points:
-      - Структура вкладених речень
-      - Обмеження глибини вкладення
-      - Стилістичні міркування
-
-  - section: Пунктуація у багатоскладних реченнях
-    words: 500
-    points:
-      - Кома між частинами складносурядного речення
-      - Кома перед підрядними сполучниками
-      - Виділення вставлених підрядних речень
-      - Типові помилки
-
-  - section: Практика і підсумок
-    words: 300
-    points:
-      - Побудова складних речень
-      - Аналіз структури речень
-      - Підготовка до модуля 12
-
+- section: Вступ — Багатоскладні речення
+  words: 400
+  points:
+  - Різниця між простими та складними реченнями
+  - Типи зв'язку в складних реченнях
+  - Чому це важливо для вираження складних думок
+- section: Складносурядні речення
+  words: 700
+  points:
+  - Сполучники і, та, а, але, або, чи
+  - Протиставні відношення (а, але, проте)
+  - Розділові відношення (або, чи)
+  - Приєднувальні відношення (і, та)
+- section: Складнопідрядні речення з одним підрядним
+  words: 600
+  points:
+  - Типи підрядних речень (означальні, з'ясувальні, обставинні)
+  - Сполучники та сполучні слова
+  - Позиція підрядного речення
+- section: Складнопідрядні речення з кількома підрядними
+  words: 700
+  points:
+  - Послідовне підпорядкування
+  - Однорідне підпорядкування
+  - Неоднорідне підпорядкування
+  - Комбіновані типи
+- section: Вкладені підрядні речення
+  words: 600
+  points:
+  - Структура вкладених речень
+  - Обмеження глибини вкладення
+  - Стилістичні міркування
+- section: Пунктуація у багатоскладних реченнях
+  words: 500
+  points:
+  - Кома між частинами складносурядного речення
+  - Кома перед підрядними сполучниками
+  - Виділення вставлених підрядних речень
+  - Типові помилки
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Побудова складних речень
+  - Аналіз структури речень
+  - Підготовка до модуля 12
 vocabulary_hints:
   required:
-    - складносурядне речення (compound sentence)
-    - складнопідрядне речення (complex sentence)
-    - підрядне речення (subordinate clause)
-    - головне речення (main clause)
-    - сполучник (conjunction)
-    - сполучне слово (relative word)
-    - послідовне підпорядкування (sequential subordination)
-    - однорідне підпорядкування (homogeneous subordination)
-    - пунктуація (punctuation)
-    - кома (comma)
+  - складносурядне речення (compound sentence)
+  - складнопідрядне речення (complex sentence)
+  - підрядне речення (subordinate clause)
+  - головне речення (main clause)
+  - сполучник (conjunction)
+  - сполучне слово (relative word)
+  - послідовне підпорядкування (sequential subordination)
+  - однорідне підпорядкування (homogeneous subordination)
+  - пунктуація (punctuation)
+  - кома (comma)
   recommended:
-    - вкладене речення (embedded clause)
-    - синтаксис (syntax)
-    - зв'язок (connection)
-    - структура (structure)
-    - ясність (clarity)
-
+  - вкладене речення (embedded clause)
+  - синтаксис (syntax)
+  - зв'язок (connection)
+  - структура (structure)
+  - ясність (clarity)
 activity_hints:
-  - type: quiz
-    focus: Identify sentence type (compound vs complex)
-    items: "15+"
-
-  - type: transform
-    focus: Combine simple sentences into complex structures
-    items: "12+"
-
-  - type: fill-in
-    focus: Insert appropriate conjunctions
-    items: "15+"
-
-  - type: match-up
-    focus: Clause type → example sentence
-    items: "12+"
-
-  - type: error-correction
-    focus: Fix punctuation in complex sentences
-    items: "12+"
-
-  - type: diagram
-    focus: Analyze sentence structure visually
-    items: "8+"
-
-  - type: essay-response
-    focus: Write paragraph using all sentence types
-    word_target: 150
-    output: Model answer with structure analysis
-
+- type: quiz
+  focus: Identify sentence type (compound vs complex)
+  items: 15+
+- type: fill-in
+  focus: Combine simple sentences into complex structures
+  items: 12+
+- type: fill-in
+  focus: Insert appropriate conjunctions
+  items: 15+
+- type: match-up
+  focus: Clause type → example sentence
+  items: 12+
+- type: error-correction
+  focus: Fix punctuation in complex sentences
+  items: 12+
+- type: essay-response
+  focus: Write paragraph using all sentence types
+  word_target: 150
+  output: Model answer with structure analysis
 prerequisites:
-  - b2-01 through b2-10 (Passive Voice phase)
-  - Simple sentence structure
-  - Basic conjunctions
-
+- b2-01 through b2-10 (Passive Voice phase)
+- Simple sentence structure
+- Basic conjunctions
 connects_to:
-  - b2-12 (Parenthetical Expressions)
-  - b2-14 (Stylistic Connectors)
-  - b2-25 (B2.1b Checkpoint)
-
+- b2-12 (Parenthetical Expressions)
+- b2-14 (Stylistic Connectors)
+- b2-25 (B2.1b Checkpoint)
 naturalness:
   score: 1
   status: PENDING

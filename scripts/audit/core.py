@@ -67,7 +67,7 @@ from .checks.external_resource_validation import (
     check_external_resources,
     fix_external_resource_url,
 )
-from .checks.meta_validator import check_seminar_meta_requirements
+from .checks.meta_validator import check_seminar_meta_requirements, check_activity_hints_valid
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
@@ -1389,6 +1389,11 @@ def audit_module(file_path: str) -> bool:
 
     # Run Meta YAML requirements check (Seminar modules)
     meta_violations = check_seminar_meta_requirements(meta_data, level_code, pedagogy)
+
+    # Run activity type validation for ALL modules with meta.yaml
+    activity_type_violations = check_activity_hints_valid(meta_data)
+    meta_violations.extend(activity_type_violations)
+
     if meta_violations:
         print(f"  📜 Meta YAML Validation: {len(meta_violations)} issues")
         for v in meta_violations:

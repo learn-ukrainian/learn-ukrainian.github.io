@@ -254,61 +254,23 @@ vocabulary_count: 30  # Must match count in vocabulary/{slug}.yaml
 [... 8-10 contextual exercises]
 ```
 
-### 5. Analytical Essay Section
+### 5. Analytical Essay (YAML-ONLY)
 
-```markdown
----
+**CRITICAL: DO NOT include an `## Есе` section in the markdown file.** This section is defined exclusively in `activities/{slug}.yaml` as an `essay-response` activity.
 
-## Есе-аналіз: [Thematic Question]
+#### Essay Requirements (for YAML `model_answer`):
+1. **Word Count:** 300-400 words.
+2. **Structure:** Thesis → 2 Arguments with historical evidence → Conclusion with modern connection.
+3. **Perspective:** Must maintain a decolonization lens.
 
-### Завдання
-
-Напишіть есе на 250-400 слів на одну з наступних тем:
-
-**Тема 1:** [Compare/contrast question]
-> Наприклад: "Порівняйте роль [X] та [Y] у формуванні української державності."
-
-**Тема 2:** [Cause/effect question]
-> Наприклад: "Як події [X] вплинули на [Y]?"
-
-**Тема 3:** [Evaluation question]
-> Наприклад: "Чи можна вважати [X] поворотним моментом в історії України? Аргументуйте."
-
-### Структура есе
-
-1. **Вступ (50-75 слів):** Сформулюйте тезу — вашу головну думку
-2. **Аргумент 1 (75-100 слів):** Перший доказ з прикладом з епохи
-3. **Аргумент 2 (75-100 слів):** Другий доказ з прикладом з епохи
-4. **Висновок (50-75 слів):** Підсумуйте та зв'яжіть із сучасністю
-
-### Корисні конструкції для аргументації
-
-| Функція | Вирази |
+#### Useful Argumentation Phrases (Use in YAML `model_answer`):
+| Function | Expressions |
 |---------|--------|
-| Теза | На мою думку... / Я вважаю, що... / Очевидно, що... |
-| Аргумент | По-перше... / По-друге... / Крім того... |
-| Приклад | Наприклад... / Яскравим прикладом є... / Це підтверджує... |
-| Протиставлення | Однак... / З іншого боку... / Незважаючи на це... |
-| Висновок | Отже... / Таким чином... / Підсумовуючи... |
-
-### Зразок есе (Тема 1)
-
-> **Тема:** [Essay prompt]
->
-> [300-400 word model essay demonstrating:
-> - Clear thesis statement
-> - Two well-developed arguments with historical evidence
-> - Proper use of argumentative language
-> - Connection to modern Ukraine
-> - Decolonization perspective]
->
-> *Цей зразок демонструє структуру та стиль академічного есе.*
-
-> ⚠️ **Деколонізація в аргументації**
->
-> [Reminder about avoiding Russian imperial framing in essays]
-> [Encourage use of Ukrainian primary sources and historians]
-```
+| Thesis | На мою думку... / Я вважаю, що... / Очевидно, що... |
+| Argument | По-перше... / По-друге... / Крім того... |
+| Example | Наприклад... / Яскравим прикладом є... / Це підтверджує... |
+| Contrast | Однак... / З іншого боку... / Незважаючи на це... |
+| Conclusion | Отже... / Таким чином... / Підсумовуючи... |
 
 ### 6. Connection to Present Section
 

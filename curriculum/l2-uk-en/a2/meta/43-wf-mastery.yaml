@@ -1,29 +1,22 @@
 module: a2-43
-title: Word Formation Mastery
-subtitle: Prefixes, Suffixes, Roots
-version: '1.0'
-phase: A2.3
+title: 'Майстерня слів: Велика гра'
+subtitle: 'Word Formation Mastery'
+version: '2.0'
+phase: A2.4
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-- grammar
-- word formation
-- roots
-- prefixes
+  - word-formation
+  - roots
+  - mastery
 grammar:
-- prefix/suffix review
-- root identification practice
-- forming nouns from verbs
-- forming adjectives from nouns
+  - 'word formation synthesis'
+  - 'prefix-root-suffix analysis'
 objectives:
-- Learner can analyze complex words into parts
-- Learner can identify the meaning of common prefixes and suffixes
-- Learner can create nouns and adjectives from roots
-- Learner can use context to guess the meaning of new words
+  - 'Learner can synthesize words from parts'
+  - 'Learner can predict meaning relative to root'
+  - 'Learner can analyze complex words'
 vocabulary_count: 25
 slug: 43-wf-mastery
-focus: grammar
-naturalness:
-  score: 9
-  status: PASS

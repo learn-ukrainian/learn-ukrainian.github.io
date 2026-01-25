@@ -125,9 +125,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and territorial acquisitions
   items: 8+
-- type: discussion
-  focus: How did Lviv shape Ukrainian identity?
-  output: Reflective response
 prerequisites:
 - c1-bio-danylo-halytskyi (Danylo - father)
 - Understanding of post-Mongol political situation

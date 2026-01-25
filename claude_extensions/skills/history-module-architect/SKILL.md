@@ -209,6 +209,20 @@ For EVERY quiz question:
 2. If YES → You're testing history. STOP and rewrite.
 3. If NO → You're testing Ukrainian. Proceed.
 
+## CRITICAL: NO ESSAYS IN MARKDOWN
+
+<critical>
+**ESSAY CONTAMINATION PREVENTION:**
+
+Essays (Analytical or Biography) MUST exist ONLY in `activities/{slug}.yaml` as an `essay-response` activity.
+
+- **NEVER** add `## Есе`, `## Есе-аналіз`, or `## Порівняльний аналіз` headers to the Markdown file.
+- **NEVER** include the essay prompt or model answer in the Markdown.
+- **Why?** It causes word count inflation, content redundancy, and fails the audit.
+
+If you find a legacy module with a Markdown essay section, **DELETE IT** and move the content to the activity YAML.
+</critical>
+
 ### Synthesis Module Structure (Different from Regular History)
 
 | Section                    | Purpose                                           |
@@ -216,7 +230,7 @@ For EVERY quiz question:
 | **Узагальнення епохи**     | 500+ word synthesis connecting all modules in era |
 | **Хронологія**             | Timeline reconstruction activity (12+ events)     |
 | **Словник епохи**          | Era vocabulary REVIEW (not new vocab)             |
-| **Есе-аналіз**             | 250-400 word analytical essay with model answer   |
+| **Есе-аналіз (YAML ONLY)** | Analytical essay prompt + model answer in YAML    |
 | **Зв'язок із сьогоденням** | Connection to modern Ukraine                      |
 
 See `b2-history-synthesis-module-template.md` for full structure and example essay prompts

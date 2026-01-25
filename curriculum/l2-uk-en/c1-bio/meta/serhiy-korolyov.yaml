@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and space achievements
   items: 10+
-- type: discussion
-  focus: How did the USSR erase Ukrainian identities?
-  output: Cultural politics analysis
 prerequisites:
 - Space race historical context
 - Soviet repression understanding

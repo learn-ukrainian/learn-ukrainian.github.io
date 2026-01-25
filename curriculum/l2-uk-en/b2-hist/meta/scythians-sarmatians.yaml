@@ -1,5 +1,5 @@
-module: b2-hist-02
 id: b2-hist-02
+module: b2-hist-02
 title: Скіфи та сармати — Володарі степу
 subtitle: Scythians and Sarmatians
 slug: scythians-sarmatians
@@ -19,16 +19,15 @@ grammar:
   - Історичний наратив
   - Минулий час у науковому тексті
 objectives:
-  - Учень може описувати скіфську та сарматську культури як важливі етапи історії українського
-    степу
+  - Учень може описувати скіфську та сарматську культури як важливі етапи історії українського степу
   - Учень може аналізувати первинні джерела про кочові народи
   - Учень може аргументувати значення скіфської спадщини для української культури
 vocabulary_count: 35
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 module_type: history
-word_target: 4066
+word_target: 4000
 immersion: 100% Ukrainian
 sources:
   - name: Скіфи (Вікіпедія)
@@ -44,30 +43,44 @@ sources:
     type: primary
     notes: Ancient Greek descriptions of Scythians
 content_outline:
-  - section: Розминка
-    words: 195
-    points: []
-  - section: Читання
-    words: 1319
-    points: []
-  - section: 'Сармати: нові володарі степу'
-    words: 867
-    points: []
-  - section: Первинні джерела
-    words: 504
-    points: []
-  - section: Деколонізаційний погляд
-    words: 244
-    points: []
-  - section: Есе
-    words: 506
-    points: []
-  - section: Підсумок
-    words: 320
-    points: []
-  - section: Потрібно більше практики?
-    words: 111
-    points: []
+  - section: "Розминка"
+    words: 200
+    points:
+    - "Географія Степу"
+    - "Хто такі кочівники?"
+  - section: "Читання: Скіфи: Імперія золота"
+    words: 750
+    points:
+    - "Історичне тло"
+    - "Війна з Дарієм"
+    - "Повсякденне життя"
+  - section: "Сармати: Жінки-воїни та Катафракти"
+    words: 1000
+    points:
+    - "Важка кіннота"
+    - "Матріархат і амазонки"
+    - "Сарматський побут"
+  - section: "Культура та Мистецтво"
+    words: 750
+    points:
+    - "Звіриний стиль"
+    - "Металургія та ремесла"
+    - "Ритуал поховання (Товста Могила)"
+  - section: "Первинні джерела"
+    words: 550
+    points:
+    - "Геродот про скіфів"
+    - "Страбон про сарматів"
+  - section: "Деколонізаційний погляд"
+    words: 250
+    points:
+    - "Міф про 'диких кочівників'"
+    - "Скіфська спадщина України"
+  - section: "Підсумок"
+    words: 500
+    points:
+    - "Вплив на українську культуру"
+    - "Генетичний та культурний код"
 vocabulary_hints:
   required:
     - скіфи (Scythians)

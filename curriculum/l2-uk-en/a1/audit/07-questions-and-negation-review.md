@@ -1,17 +1,58 @@
-# Audit Report: 07-questions-and-negation.md
-**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
+# Audit Report: M07 — 07-questions-and-negation.md
+**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:53:58
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Question Word Meanings | 12 | 8 | ✅ |
+| 2 | match-up | Question Words to Context | 10 | 8 | ✅ |
+| 3 | fill-in | Complete Questions | 12 | 8 | ✅ |
+| 4 | true-false | Question and Negation Rules | 12 | 8 | ✅ |
+| 5 | group-sort | Frequency Adverbs | 12 | 12 | ✅ |
+| 6 | fill-in | Add Negation | 12 | 8 | ✅ |
+| 7 | anagram | Question Words | 12 | 8 | ✅ |
+| 8 | anagram | Frequency Words | 12 | 8 | ✅ |
+| 9 | quiz | Negative Sentence Order | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): іноді, звичайно...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1041/500
+- **Words:** ✅ 1041/500 (raw: 1455)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 6/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,9 +60,6 @@
 - **Immersion:** 🇺🇦 20.1% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

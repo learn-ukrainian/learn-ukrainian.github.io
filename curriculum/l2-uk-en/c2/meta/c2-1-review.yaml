@@ -1,148 +1,122 @@
-# C2 Module 19: C2.1 Review
-# Status: SPEC (ready for content development)
-
 id: c2-19
 title: Повторення C2.1 — Консолідація стилістики
 slug: c2-1-review
 version: '2.0'
-phase: 'C2.1 Stylistics Mastery'
+phase: C2.1 Stylistics Mastery
 focus: integration
 module_type: integration
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: C2.1 module summaries
-    url: internal
-    type: reference
-    notes: Key concepts from modules 01-18
-  - name: Stylistics comprehensive review
-    url: https://www.nbuv.gov.ua/
-    type: reference
-    notes: Integration of stylistic concepts
-  - name: Ukrainian State Standard 2024 — Review methodology
-    url: https://mon.gov.ua/
-    type: reference
-    notes: C2 consolidation requirements
-
+- name: C2.1 module summaries
+  url: internal
+  type: reference
+  notes: Key concepts from modules 01-18
+- name: Stylistics comprehensive review
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Integration of stylistic concepts
+- name: Ukrainian State Standard 2024 — Review methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 consolidation requirements
 content_outline:
-  - section: Огляд — Сім функціональних стилів
-    words: 700
-    points:
-      - Науковий — ключові характеристики
-      - Офіційний — формальні ознаки
-      - Публіцистичний — прийоми впливу
-      - Художній — літературні засоби
-      - Розмовний — маркери усності
-      - Релігійний — сакральна мова
-      - Епістолярний — кореспонденція
-
-  - section: Трансформація стилів
-    words: 600
-    points:
-      - Науковий → популярний
-      - Офіційний → публіцистичний
-      - Стратегії адаптації
-      - Збереження змісту
-
-  - section: Милозвучність та евфонія
-    words: 500
-    points:
-      - Система чергувань
-      - у/в, і/й, з/зі/із
-      - Комплексне застосування
-      - Редагування для милозвучності
-
-  - section: Лексична та синтаксична стилістика
-    words: 600
-    points:
-      - Вибір слова — синоніми, антоніми
-      - Стилістично маркована лексика
-      - Структура речення
-      - Риторичні фігури
-
-  - section: Індивідуальний голос
-    words: 500
-    points:
-      - Елементи авторського стилю
-      - Тон, ритм, лексика
-      - Розвиток та вдосконалення
-      - Консистентність голосу
-
-  - section: Когерентність тексту
-    words: 500
-    points:
-      - Засоби зв'язності
-      - Тематична прогресія
-      - Конектори та переходи
-      - Плинність тексту
-
-  - section: Рефлексія та планування
-    words: 600
-    points:
-      - Самооцінка прогресу
-      - Сильні сторони після C2.1
-      - Зони для покращення
-      - Цілі для C2.2
-
+- section: Огляд — Сім функціональних стилів
+  words: 700
+  points:
+  - Науковий — ключові характеристики
+  - Офіційний — формальні ознаки
+  - Публіцистичний — прийоми впливу
+  - Художній — літературні засоби
+  - Розмовний — маркери усності
+  - Релігійний — сакральна мова
+  - Епістолярний — кореспонденція
+- section: Трансформація стилів
+  words: 600
+  points:
+  - Науковий → популярний
+  - Офіційний → публіцистичний
+  - Стратегії адаптації
+  - Збереження змісту
+- section: Милозвучність та евфонія
+  words: 500
+  points:
+  - Система чергувань
+  - у/в, і/й, з/зі/із
+  - Комплексне застосування
+  - Редагування для милозвучності
+- section: Лексична та синтаксична стилістика
+  words: 600
+  points:
+  - Вибір слова — синоніми, антоніми
+  - Стилістично маркована лексика
+  - Структура речення
+  - Риторичні фігури
+- section: Індивідуальний голос
+  words: 500
+  points:
+  - Елементи авторського стилю
+  - Тон, ритм, лексика
+  - Розвиток та вдосконалення
+  - Консистентність голосу
+- section: Когерентність тексту
+  words: 500
+  points:
+  - Засоби зв'язності
+  - Тематична прогресія
+  - Конектори та переходи
+  - Плинність тексту
+- section: Рефлексія та планування
+  words: 600
+  points:
+  - Самооцінка прогресу
+  - Сильні сторони після C2.1
+  - Зони для покращення
+  - Цілі для C2.2
 vocabulary_hints:
   required:
-    - повторення (review/revision)
-    - узагальнення (generalization/summary)
-    - консолідація (consolidation)
-    - закріплення (reinforcement)
-    - систематизація (systematization)
-    - оцінювання (assessment/evaluation)
-    - рефлексія (reflection)
-    - прогрес (progress)
-    - досягнення (achievement)
-    - перспектива (perspective)
+  - повторення (review/revision)
+  - узагальнення (generalization/summary)
+  - консолідація (consolidation)
+  - закріплення (reinforcement)
+  - систематизація (systematization)
+  - оцінювання (assessment/evaluation)
+  - рефлексія (reflection)
+  - прогрес (progress)
+  - досягнення (achievement)
+  - перспектива (perspective)
   recommended:
-    - синтез (synthesis)
-    - інтеграція (integration)
-    - компетенція (competence)
-    - готовність (readiness)
-    - ретроспекція (retrospection)
-
+  - синтез (synthesis)
+  - інтеграція (integration)
+  - компетенція (competence)
+  - готовність (readiness)
+  - ретроспекція (retrospection)
 activity_hints:
-  - type: quiz
-    focus: Comprehensive style identification
-    items: "25+"
-    output: All 7 styles covered
-
-  - type: quiz
-    focus: Euphonic rule application
-    items: "15+"
-
-  - type: essay-response
-    focus: Self-assessment reflection on C2.1 progress
-    word_target: 400
-    output: Structured reflection with evidence
-
-  - type: fill-in
-    focus: Review of key terminology
-    items: "20+"
-
-  - type: match-up
-    focus: Connect stylistic features to styles
-    items: "20+"
-
-  - type: discussion
-    focus: Goal setting for C2.2
-    output: Personal learning plan
-
+- type: quiz
+  focus: Comprehensive style identification
+  items: 25+
+  output: All 7 styles covered
+- type: quiz
+  focus: Euphonic rule application
+  items: 15+
+- type: essay-response
+  focus: Self-assessment reflection on C2.1 progress
+  word_target: 400
+  output: Structured reflection with evidence
+- type: fill-in
+  focus: Review of key terminology
+  items: 20+
+- type: match-up
+  focus: Connect stylistic features to styles
+  items: 20+
 prerequisites:
-  - c2-01 through c2-18 (All C2.1 modules)
-  - Portfolio from c2-17
-  - Transformations from c2-18
-
+- c2-01 through c2-18 (All C2.1 modules)
+- Portfolio from c2-17
+- Transformations from c2-18
 connects_to:
-  - c2-20 (C2.1 Checkpoint — formal assessment)
-  - c2-21 (Stylistic devices mastery begins C2.1b)
-  - c2-26 (C2.2 Literary mastery)
-
+- c2-20 (C2.1 Checkpoint — formal assessment)
+- c2-21 (Stylistic devices mastery begins C2.1b)
+- c2-26 (C2.2 Literary mastery)
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,13 @@
-module: a2-25
-title: Checkpoint — Aspect & Comparison
-subtitle: Review and Mastery
-version: '1.0'
+id: a2-25
+title: 'Checkpoint: Aspect, Comparison & Modality'
+subtitle: Review of Modules 11-24
+slug: 25-checkpoint-aspect-comparison
+module_type: checkpoint
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
+focus: checkpoint
 pedagogy: TTT
 duration: 60
 transliteration: none
@@ -11,19 +16,43 @@ tags:
 - review
 - aspect
 - comparison
+- imperative
+- conditional
 grammar:
-- aspect system review
-- comparative/superlative review
-- conditional mood review
-- shopping skills
+- Aspect pairs review (process vs result)
+- Degrees of comparison (Regular/Irregular)
+- Conditional mood (Real vs Unreal)
+- Imperative system (Direct/Indirect)
+- Numeral-noun agreement (1-2-5 rule)
 objectives:
-- Learner can confidently choose between perfective and imperfective aspect
-- Learner can use comparative and superlative forms in conversation
-- Learner can construct conditional sentences
-- Learner can integrate grammar skills in shopping scenarios
-vocabulary_count: 25
-slug: 25-checkpoint-aspect-comparison
-focus: checkpoint
-naturalness:
-  score: 8
-  status: PASS
+- Learner can integrate aspect, comparison, and mood in complex scenarios
+- Learner can count objects and money with correct agreement
+- Learner can make polite requests and hypothetical dreams
+- Learner can distinguish between process and result across tenses
+sources:
+- name: Ukrainian State Standard 2024 - A2 Review
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for integrating intermediate A2 skills
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Consolidating the 'Quality and Time' block
+  - The map of skills from M11 to M24
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Mega-Review: Aspect Logic (Process vs Result)'
+  - 'Mega-Review: Comparison Logic (Degrees of Value)'
+  - 'Mega-Review: Modality Logic (Imperatives and Ifs)'
+  - 'Agreement Logic: Numbers and Nouns'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Error correction marathon
+  - Cumulative role-play scenarios
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Synthesizing all skills in a complex life situation (Moving/Buying)

@@ -6,95 +6,61 @@ title: Aspect Morphology
 subtitle: Prefixes and Suffixes
 slug: 15-aspect-morphology
 module_type: grammar
-word_target: 2800
-immersion: "55-65% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - verbs
-  - aspect
-  - morphology
-  - word-formation
-
+- grammar
+- verbs
+- aspect
+- morphology
+- word-formation
 grammar:
-  - prefixes (про-, на-, з-, по-)
-  - suffixes (-ва-, -ува-)
-  - stem changes
-  - suppletive pairs
-
+- prefixes (про-, на-, з-, по-)
+- suffixes (-ва-, -ува-)
+- stem changes
+- suppletive pairs
 objectives:
-  - Learner can identify aspect based on morphology
-  - Learner can form perfective verbs using common prefixes
-  - Learner can form imperfective verbs using suffixes
-  - Learner can recognize irregular aspect pairs
-
-# === AGENT BUILD SPEC ===
-
+- Learner can identify aspect based on morphology
+- Learner can form perfective verbs using common prefixes
+- Learner can form imperfective verbs using suffixes
+- Learner can recognize irregular aspect pairs
 sources:
-  - name: Ukrainian State Standard 2024 - Word Formation
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Verbal prefix and suffix patterns
-  - name: Ukrainian Verb Morphology
-    url: https://uk.wikipedia.org/wiki/Словотвір
-    type: reference
-    notes: Aspect formation patterns
-
+- name: Ukrainian State Standard 2024 - Word Formation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Verbal prefix and suffix patterns
+- name: Ukrainian Verb Morphology
+  url: https://uk.wikipedia.org/wiki/Словотвір
+  type: reference
+  notes: Aspect formation patterns
 content_outline:
-  - section: How Aspect Pairs Form
-    words: 400
-    points:
-      - Prefixation (impf → pf)
-      - Suffixation (pf → impf secondary)
-      - Suppletive pairs (different roots)
-
-  - section: Prefixation Patterns
-    words: 600
-    points:
-      - на- completion (писати → написати)
-      - про- through (читати → прочитати)
-      - з- completion (робити → зробити)
-      - по- completion (бачити → побачити)
-      - ви- mastery (вчити → вивчити)
-
-  - section: Suffixation Patterns
-    words: 500
-    points:
-      - -ва- removal creates perfective
-      - давати → дати
-      - вставати → встати
-      - відпочивати → відпочити
-
-  - section: Suppletive Pairs
-    words: 400
-    points:
-      - говорити / сказати (different roots)
-      - брати / взяти
-      - класти / покласти
-      - Memory strategies for irregulars
-
-  - section: Extended Aspect Pairs
-    words: 500
-    points:
-      - відпочивати/відпочити
-      - вставати/встати
-      - відкривати/відкрити
-      - закривати/закрити
-      - вмикати/увімкнути
-
-  - section: Pattern Recognition Practice
-    words: 400
-    points:
-      - Identify prefix/suffix
-      - Predict aspect from form
-      - Build aspect pairs
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Concept of aspectual pairs as a family
+  - Morphological predictability
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Prefixation (the primary method: про-, на-, з-, по-)
+  - Suffixation (secondary imperfectives: -ва-, -ува-)
+  - Suppletive pairs (irregular roots)
+  - Spelling rules for prefixes (з- vs с-)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Pattern recognition drills
+  - Matching and transformation
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Dialogue on learning patterns
 
 vocabulary_hints:
   required:

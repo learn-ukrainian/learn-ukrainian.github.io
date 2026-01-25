@@ -1,139 +1,112 @@
-# C1-BIO Module 58: Василь Вишиваний: Князь-українець
-# Status: SPEC (ready for content development)
-
 id: c1-bio-58
-title: "Василь Вишиваний: Князь-українець"
+title: 'Василь Вишиваний: Князь-українець'
 slug: vasyl-vyshyvanyi
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Вільгельм Габсбург (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Тімоті Снайдер Червоний князь
-    url: https://bookclub.ua/
-    type: reference
-    notes: Біографічне дослідження
-  - name: Архіви Січових Стрільців
-    url: https://archives.gov.ua/
-    type: reference
-    notes: Документи військової служби
-
+- name: Вільгельм Габсбург (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
+  type: primary
+  notes: Основна біографічна інформація
+- name: Тімоті Снайдер Червоний князь
+  url: https://bookclub.ua/
+  type: reference
+  notes: Біографічне дослідження
+- name: Архіви Січових Стрільців
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Документи військової служби
 content_outline:
-  - section: Вступ — Ерцгерцог, що обрав Україну
-    words: 400
-    points:
-      - Унікальна доля Габсбурга, який став українцем
-      - Від імперської знаті до полковника УСС
-      - Чому Україна для нього стала долею
-
-  - section: Імперське дитинство
-    words: 600
-    points:
-      - Народження в родині Габсбургів (1895)
-      - Виховання в Австро-Угорщині
-      - Перші контакти з українською культурою
-
-  - section: Становлення українського патріота
-    words: 700
-    points:
-      - Служба в Галичині
-      - Зустріч з Українськими Січовими Стрільцями
-      - Прийняття імені Василь Вишиваний
-
-  - section: Військова кариєра та УНР
-    words: 800
-    points:
-      - Командування підрозділами УСС
-      - Роль у визвольних змаганнях
-      - Спроби здобути український трон
-
-  - section: Еміграція та таємна діяльність
-    words: 700
-    points:
-      - Життя в міжвоєнній Європі
-      - Співпраця з українськими організаціями
-      - Небезпечні політичні ігри
-
-  - section: Радянський полон та загибель
-    words: 600
-    points:
-      - Арешт радянськими спецслужбами (1947)
-      - Ув'язнення в Києві
-      - Смерть у в'язниці (1948)
-
-  - section: Дискусія — Національний вибір проти крові
-    words: 200
-    points:
-      - Чи можна обрати націю?
-      - Спадщина Вишиваного для України
-
+- section: Вступ — Ерцгерцог, що обрав Україну
+  words: 400
+  points:
+  - Унікальна доля Габсбурга, який став українцем
+  - Від імперської знаті до полковника УСС
+  - Чому Україна для нього стала долею
+- section: Імперське дитинство
+  words: 600
+  points:
+  - Народження в родині Габсбургів (1895)
+  - Виховання в Австро-Угорщині
+  - Перші контакти з українською культурою
+- section: Становлення українського патріота
+  words: 700
+  points:
+  - Служба в Галичині
+  - Зустріч з Українськими Січовими Стрільцями
+  - Прийняття імені Василь Вишиваний
+- section: Військова кариєра та УНР
+  words: 800
+  points:
+  - Командування підрозділами УСС
+  - Роль у визвольних змаганнях
+  - Спроби здобути український трон
+- section: Еміграція та таємна діяльність
+  words: 700
+  points:
+  - Життя в міжвоєнній Європі
+  - Співпраця з українськими організаціями
+  - Небезпечні політичні ігри
+- section: Радянський полон та загибель
+  words: 600
+  points:
+  - Арешт радянськими спецслужбами (1947)
+  - Ув'язнення в Києві
+  - Смерть у в'язниці (1948)
+- section: Дискусія — Національний вибір проти крові
+  words: 200
+  points:
+  - Чи можна обрати націю?
+  - Спадщина Вишиваного для України
 vocabulary_hints:
   required:
-    - ерцгерцог (archduke)
-    - Габсбург (Habsburg)
-    - Січові Стрільці (Sich Riflemen)
-    - національний вибір (national choice)
-    - полковник (colonel)
-    - аристократія (aristocracy)
-    - еміграція (emigration)
-    - полон (captivity)
-    - спецслужби (secret services)
-    - ідентичність (identity)
+  - ерцгерцог (archduke)
+  - Габсбург (Habsburg)
+  - Січові Стрільці (Sich Riflemen)
+  - національний вибір (national choice)
+  - полковник (colonel)
+  - аристократія (aristocracy)
+  - еміграція (emigration)
+  - полон (captivity)
+  - спецслужби (secret services)
+  - ідентичність (identity)
   recommended:
-    - династія (dynasty)
-    - імперська знать (imperial nobility)
-    - патріотизм (patriotism)
-    - конспірація (conspiracy)
-    - реабілітація (rehabilitation)
-
+  - династія (dynasty)
+  - імперська знать (imperial nobility)
+  - патріотизм (patriotism)
+  - конспірація (conspiracy)
+  - реабілітація (rehabilitation)
 activity_hints:
-  - type: reading
-    focus: Спогади про Вишиваного
-    source: Мемуарна література
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про життя Вишиваного
-    items: "12+"
-
-  - type: match-up
-    focus: Етапи життя та місця
-    items: "10+"
-
-  - type: essay-response
-    focus: Чи можна обрати національну ідентичність?
-    word_target: 300
-    output: Філософський есей
-
-  - type: group-sort
-    focus: Австрійське vs українське в його житті
-    items: "12+"
-
-  - type: fill-in
-    focus: Військова термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Чому Габсбург став українцем?
-    output: Психологічний аналіз
-
+- type: reading
+  focus: Спогади про Вишиваного
+  source: Мемуарна література
+  items: 3 passages
+- type: quiz
+  focus: Факти про життя Вишиваного
+  items: 12+
+- type: match-up
+  focus: Етапи життя та місця
+  items: 10+
+- type: essay-response
+  focus: Чи можна обрати національну ідентичність?
+  word_target: 300
+  output: Філософський есей
+- type: group-sort
+  focus: Австрійське vs українське в його житті
+  items: 12+
+- type: fill-in
+  focus: Військова термінологія
+  items: 10+
 prerequisites:
-  - b2-hist-wwi-ukraine
-
+- b2-hist-wwi-ukraine
 connects_to:
-  - c1-bio-44-symon-petliura
-  - c1-bio-61-olena-stepaniv
-  - c1-bio-41-solomiya-krushelnytska
-
+- c1-bio-44-symon-petliura
+- c1-bio-61-olena-stepaniv
+- c1-bio-41-solomiya-krushelnytska
 naturalness:
   score: 1
   status: PENDING

@@ -1,301 +1,139 @@
-## Introduction
+# У лікаря: Здоров'я та тіло (At the Doctor)
 
-«Health is wealth.»
-In Ukraine, talking about health is a national sport. We love to discuss symptoms!
+## Introduction / Вступ
 
-**We will cover:**
-- **The Complaint:** «У мене болить...» (My... hurts).
-- **The Condition:** «У мене температура...».
-- **The Solution:** «Приймайте ці ліки...» (Take this medicine...).
+**Здоров'я — це найбільше багатство.** Ласкаво просимо до модуля, який навчить вас піклуватися про себе та інших у найвідповідальніші моменти. Тема медицини та здоров'я — одна з найважливіших у будь-якій мові. В Україні до здоров'я ставляться дуже серйозно: ми любимо детально обговорювати симптоми, ділитися бабусиними рецептами та вчасно звертатися до фахівців. На попередніх рівнях ми вчилися казати «Мені погано». Тепер ми навчимося точно локалізувати біль, описувати симптоми (кашель, нежить, температуру) та правильно спілкуватися в аптеці. Ви дізнаєтеся, як попросити про допомогу, як зрозуміти поради лікаря та як орієнтуватися в українській медичній системі. Сьогодні ми будуємо ваш «запас міцності» в українській мові.
 
-> [!note] Pronunciation
-> **Лікар** /ˈlʲikɑr/ (Doctor). Connects to «лікувати».
-> Note the soft 'L'.
+Health is the greatest wealth. Welcome to the module that will teach you how to take care of yourself and others during critical moments. Health and medical vocabulary is a cornerstone of daily communication in any language. In Ukraine, health is often a central topic of conversation; people love to discuss symptoms in detail, exchange traditional folk remedies, and seek timely professional advice. While at earlier levels you might have simply said "I feel sick," you're now ready to be much more specific. You'll learn how to pinpoint pain, describe symptoms like a cough or a fever, and navigate a pharmacy with confidence. We’ll explore the "anatomical logic" of the Ukrainian language, common medical imperatives, and the cultural nuances of the "Poliklinika" system. Today, we are building your safety net in the Ukrainian language.
 
----
+**Що ви вивчите в цьому модулі:**
 
-## Presentation
+- Головну конструкцію для болю: **У мене болить...** (Singular) vs **Болять...** (Plural).
+- Карту людського тіла: голова, живіт, спина, горло та інші частини.
+- Основні симптоми: **температура**, **кашель**, **нежить**, **слабкість**.
+- Як поводитися в аптеці та купувати ліки.
+- Побутову медицину: «бабусині методи» (малина, часник, гірчичники).
+- Як розуміти інструкції лікаря: «дихайте», «відкрийте рот», «приймайте таблетки».
 
-### 1. Expressing Pain: Болить
+## Presentation / Презентація
 
-We use the verb **боліти**.
-Construction: **У мене** (Genitive 'In me') + **болить** (hurts) + **Part**.
+### 1. The Anatomy of Complaint (Як висловити біль)
 
-- **У мене болить голова.**.
-- **У мене болить живіт.**.
-- **У мене болить горло.**.
-- **У мене болить спина.**.
-- **У мене болить рука.**.
-- **У мене болить зуб.**.
-- **У мене болить вухо.**.
+В українській мові ми використовуємо дієслово **боліти**. Важливо пам'ятати, що суб'єктом речення є саме та частина тіла, яка болить.
 
-**PLURAL:** If multiple things hurt, use **болять**.
-- **У мене болять ноги.**.
-- **У мене болять очі.**.
+**Граматична формула:**
+**У мене** + **болить / болять** + [Частина тіла]
 
-> [!tip] Grammar Hack
-> Think of it as: «There is pain in me regarding the head.»
-> The head is the *subject* of the sentence grammatically!
+| Однина (Singular)         | Множина (Plural)        |
+| :------------------------ | :---------------------- |
+| **У мене болить голова.** | **У мене болять очі.**  |
+| **У мене болить живіт.**  | **У мене болять ноги.** |
+| **У мене болить горло.**  | **У мене болять зуби.** |
+| **У мене болить спина.**  | **У мене болять руки.** |
 
-### 2. Other Symptoms
+> [!important] **Pain vs. Sickness**
+> Don't confuse **Боліти** with **Хворіти**.
+>
+> - **Боліти** (to hurt): describes a localized sensation. «У мене болить вухо».
+> - **Хворіти** (to be sick/ill): describes the state of being unhealthy. «Я хворію на грип».
 
-We use «У мене...» + Noun.
+### 2. Common Symptoms and Conditions (Симптоми та стани)
 
-- **У мене температура.**.
-- **У мене кашель.**.
-- **У мене нежить.**.
-- **У мене грип.**.
-- **Мені погано.** (I feel bad | sick).
+Коли ви приходите до лікаря, він запитає: «Що вас турбує?». Ось що ви можете відповісти:
 
-### 3. At the Pharmacy (Аптека)
+- **У мене температура.** (I have a temperature).
+- **У мене кашель.** (I have a cough).
+- **У мене нежить.** (I have a runny nose).
+- **Мені погано.** (I feel sick / bad).
+- **Я відчуваю слабкість.** (I feel weak).
 
-When you need to buy medicine in Ukraine, you'll visit an «аптека» (pharmacy). Ukrainian pharmacies are well-stocked and pharmacists are knowledgeable - they can often recommend over-the-counter remedies for common ailments.
+### 3. At the Pharmacy (В аптеці)
 
-**Key Phrases for the Pharmacy:**
+Українські аптеки — це сучасні заклади, де фармацевти часто можуть дати корисну пораду.
 
-- **Мені потрібні ліки від...** (I need medicine for...) - Use this to describe your symptom
-  - Example: «Мені потрібні ліки від голови»
-  
-- **Дайте, будь ласка, таблетки від голови.** - Direct request
-  - Note: This is a polite imperative form using «будь ласка» (please)
-  
-- **Це за рецептом?** (Is this by prescription?) - Important question for controlled medications
-  - Some medicines require a doctor's prescription («рецепт»), while others are available over the counter
+- **Мені потрібні таблетки від голови.** (I need headache pills).
+- **Це за рецептом?** (Is this by prescription?).
+- **Як приймати ці ліки?** (How should I take this medicine?).
+- **Дайте щось від кашлю, будь ласка.** (Give me something for a cough, please).
 
-**Understanding Prescription Requirements:**
+### 4. Medical Imperatives (Команди лікаря)
 
-In Ukraine, antibiotics and strong painkillers typically require a prescription, while common remedies for colds, headaches, and minor ailments are usually available without one. Always ask if you're unsure!
+Під час огляду лікар буде давати вам короткі інструкції:
 
----
+- **Дихайте.** (Breathe).
+- **Не дихайте.** (Don't breathe).
+- **Відкрийте рот.** (Open your mouth).
+- **Одягніться.** (Get dressed).
+- **Видужуйте!** (Get well soon!).
 
-## Practice
+> [!tip] **The "36.6" Standard**
+> In Ukraine, the normal body temperature is considered to be exactly **36.6°C**. If your temperature is **37.0°C**, we call it «subfebrile» and many people already feel sick and stay home. **38.5°C** is considered quite high.
 
-Тепер практикуйте описувати симптоми та спілкуватися з лікарем! Пам'ятайте про правильну конструкцію «У мене болить».
+> [!important] **Likar vs. Doktor**
+> Use the word **Лікар** for a medical practitioner. The word **Доктор** is usually reserved for someone with a PhD degree (**Доктор наук**). Although you might hear people say «Доктор» colloquially, «Лікар» is the proper term.
 
-**Вправа 1: Опишіть біль**
+## Practice / Практика
 
-Використайте конструкцію «У мене болить» або «У мене болять» для кожної ситуації:
+### 1. Pinpoint the Pain (Де болить?)
 
-1. Your head hurts.
-   → **У мене болить голова.**
+Describe the pain in the following situations.
 
-2. Your legs hurt.
-   → **У мене болять ноги.**
+1. You walked too much. -> **У мене болять ноги.**
+2. You ate something bad. -> **У мене болить живіт.**
+3. You spoke too much on a cold day. -> **У мене болить горло.**
+4. You looked at the screen for 10 hours. -> **У мене болять очі.**
 
-3. Your throat hurts.
-   → **У мене болить горло.**
+### 2. Pharmacy Shopping (В аптеці)
 
-4. Your stomach hurts.
-   → **У мене болить живіт.**
+Translate the request into Ukrainian.
 
-5. Your teeth hurt.
-   → **У мене болять зуби.**
+1. "Please give me medicine for a cold." -> **Дайте, будь ласка, ліки від нежиті.**
+2. "I need something for fever." -> **Мені потрібно щось від температури.**
+3. "Do I need a prescription for these pills?" -> **Мені потрібен рецепт на ці таблетки?**
 
-**Вправа 2: Опишіть симптоми**
+### 3. Doctor's Orders (Слухайте лікаря)
 
-Складіть речення з симптомами, використовуючи конструкцію «У мене...»:
+Match the symptom with the doctor's command.
 
-1. You have a temperature (38°C).
-   → **У мене температура тридцять вісім градусів.**
+1. Cough. -> **Дихайте глибоко.**
+2. Throat pain. -> **Відкрийте рот.**
+3. High fever. -> **Приймайте ці таблетки тричі на день.**
 
-2. You have a cough.
-   → **У мене кашель.**
-
-3. You have a cold (runny nose).
-   → **У мене нежить.**
-
-4. You feel bad.
-   → **Мені погано.**
-
-**Вправа 3: В аптеці**
-
-Складіть правильні фрази для аптеки:
-
-1. Ask for medicine for headache.
-   → **Дайте, будь ласка, таблетки від голови.** або **Мені потрібні ліки від голови.**
-
-2. Ask if this medicine needs a prescription.
-   → **Це за рецептом?**
-
-3. Ask how to take the medicine.
-   → **Як приймати ці ліки?**
-
-**Вправа 4: У лікаря**
-
-Напишіть короткий діалог (3-4 репліки) між лікарем і пацієнтом. Використайте фрази:
-- Що вас турбує?
-- У мене болить...
-- У вас є температура?
-- Приймайте ці ліки...
-
-**Приклад:**
-**Лікар:** Що вас турбує?
-**Пацієнт:** У мене болить горло і голова.
-**Лікар:** У вас є температура?
-**Пацієнт:** Так, тридцять сім і п'ять.
-
----
-
-## Deep Dive: The Ukrainian Medical System
-
-> [!cultural] Myth: «Ambulance costs money»
-> In Ukraine, state emergency ambulance («Швидка допомога» - 103) is free.
-> However, for routine visits, you go to a **Поліклініка**. It's a huge building with many specialists.
-> You first see a **Сімейний лікар**, who gives you a referral («направлення»).
-
-**Key Phrases for the Visit:**
-1. **Що вас турбує?** (What bothers you? | What's wrong?).
-2. **Дихайте | Не дихайте.** (Breathe | Don't breathe).
-3. **Відкрийте рот.**.
-4. **Видужуйте!** (Get well soon! | Imperative).
-
----
-
-## Deep Dive: Traditional Medicine
-
-> [!cultural] Grandma's Cure
-> Before going to the doctor, most Ukrainians try «Grandma's methods» (Бабусині методи).
-> 1. **Malyana** in tea: The ultimate cure for EVERYTHING, especially temperature.
-> 2. **Garlic/Onion**: Eat it to kill viruses. Smell it to scare them away.
-> 3. **Mustard Plasters** (Гірчичники): Hot paper with mustard put on your back. It burns, but it «warms up the lungs».
-> 4. **Horilka with Pepper**: Only for adults. This spicy mix is believed to burn any virus instantly.
-> If these don't work... then maybe call a doctor.
-
-> [!note] Fact: Likar vs Doktor
-> We say **Лікар**.
-> **Доктор** usually refers to a PhD holder (Доктор наук).
-> Though in casual speech, people sometimes say «Доктор», «Лікар» is the proper Ukrainian term.
-
----
-
-## Story Time: The Pharmacy Mistake
-
-Це смішна історія про туриста на ім'я Джон.
-Джон приїхав у Київ і захворів.
-У нього боліла голова.
-Він пішов в аптеку.
-Він хотів сказати: «У мене біль».
-Але він забув слово «біль».
-Він сказав: «У мене білий».
-Аптекар здивувався: «Що у вас біле?»
-Джон показав на голову: «Тут білий!»
-Аптекар подумав, що Джон хоче фарбу для волосся.
-Він дав йому фарбу.
-Джон подивився і сказав: «Ні, ні. Мені треба таблетку від білого!»
-Тут зайшла бабуся. Вона зрозуміла все.
-Вона сказала: «Сину, у тебе болить голова? На тобі малину!»
-Джон випив чай з малиною і одужав.
-Мораль: Вчіть слова правильно, або носіть з собою малину!
-
-> [!note] Language Note: Pain vs White
-> This story highlights the importance of pronunciation.
-> **Біль** (Pain) /bʲilʲ/ has a soft 'L'.
-> **Білий** (White) /bʲilɪj/ has a hard 'L' sound and an extra syllable.
-> Be careful not to ask the pharmacist for «white»!
-
-> [!tip] Gender of Professions
-> In the story, the pharmacist is called **Аптекар**.
-> In modern Ukrainian, you might hear **Аптекарка** for a woman.
-> The same applies to **Лікар** (doctor) and **Лікарка**.
-> Both are correct, but the masculine form is often used as the general term for the profession.
-
-## Dialogue: The Visit
-
-**Doctor:** Доброго дня. Що вас турбує?
-**Patient:** Доброго дня, лікарю. Мені дуже погано.
-**Doctor:** Що саме болить?
-**Patient:** У мене болить голова і горло. І я відчуваю слабкість.
-**Doctor:** У вас є температура?
-**Patient:** Так, тридцять вісім і п'ять (38.5).
-**Doctor:** У вас є кашель?
-**Patient:** Трішки. Але у мене жахливий нежить.
-**Doctor:** Зрозуміло. Давайте я вас огляну. Відкрийте рот.
-**
-**Doctor:** Так, горло червоне. Це грип.
-**Patient:** Це серйозно?
-**Doctor:** Ні, але треба лікуватися.
-**Patient:** Що мені робити?
-**Doctor:** Ось рецепт. Купіть ці ліки в аптеці.
-**Patient:** Як їх приймати?
-**Doctor:** Одну таблетку три рази на день після їжі.
-**Patient:** Дякую.
-**Doctor:** І багато пийте! Чай з лимоном. Видужуйте!
-
-## Dialogue: Calling an Ambulance
-
-**Operator:** Швидка допомога. Слухаю.
-**Caller:** Алло! Мені потрібна допомога.
-**Operator:** Що сталося?
-**Caller:** Мій друг впав. Він не може встати.
-**Operator:** Де ви?
-**Caller:** Парк Шевченка, біля фонтану.
-**Operator:** Він дихає?
-**Caller:** Так, але важко. У нього болить нога. Дуже сильно.
-**Operator:** Виїжджаємо. Чекайте. Не рухайте його.
-
----
-
-## Deep Dive: Heart Metaphors
-
-The word **серце** (heart) is huge in Ukrainian culture.
-
-- **Мати добре серце**.
-- **Від щирого серця** (From a sincere heart - used in greetings).
-- **Серце болить за Україну** (My heart aches for Ukraine - metaphorical pain/worry).
-- **Брати близько до серця** (To take close to heart - to worry too much).
-
----
-
-## Monologue: The Hypochondriac
-
-Привіт, мене звати Олег, і я думаю, що я хворий.
-Сьогодні вранці у мене боліло ліве вухо.
-Потім почала боліти права нога.
-Зараз у мене болить голова, але тільки коли я думаю про роботу.
-Моя дружина каже, що я здоровий.
-Вона каже: «У тебе немає температури, у тебе немає кашлю, йди працювати!»
-Але я відчуваю, що мені потрібен лікар.
-Може, мені треба таблетку? Або дві?
-Я люблю ходити в аптеку. Там так гарно пахне ліками.
-Мій лікар каже, що моя хвороба називається «лінь» (laziness).
-Але я не згоден. Мені справді погано!
-Ой, тепер у мене болить живіт. Треба лягти.
-Я вип'ю чай з лимоном і буду думати про своє бідне здоров'я.
-
----
-
-## Pro-Tip: «Being Sick» vs «Sicking»
-
-In English «To be sick» is a state.
-In Ukrainian **Хворіти** is an active ongoing process.
-
-- *Я хворію.* (I am sicking | I am ill).
-- *Вона часто хворіє.*.
-
-- *Він хворів минулого тижня.*.
-- *Я хворію на грип.*.
-- *У мене болить голова.*.
-
-Don't confuse with **Боліти**.
-- *Я хворію.*.
-- *У мене болить.*.
-
-> [!note] Fact: Temperature
-> In Ukraine, normal temperature is 36.6°C.
-> 37.0°C is already considered «sick» suitable for staying home.
-> 38.0°C is «high».
-
-# Підсумок
-1.  **Botlily:** *У мене болить [Subject].*
-2.  **Part of Body:** Learner nouns (голова, горло, живіт).
-3.  **Symptoms:** Температура, кашель, нежить.
-4.  **Action:** Приймати ліки, пити чай, лежати.
-5.  **Place:** Лікарня, Поліклініка, Аптека.
-
----
-
----
+> [!reflection] **The Value of Health**
+> In Ukrainian culture, health is often discussed with a lot of empathy. When a friend says they are sick, the standard response is «**Одужуй швидше!**» (Recover faster!) or «**Бережи себе!**» (Take care of yourself!). It's not just a formality; it's a sign of true care. Кожне «видужуйте» — це підтримка.
+
+> [!tip] **Grandma's Magic: Malyna**
+> Before going to the doctor, most Ukrainians try «Grandma's methods». **Чай з малиною** (Tea with raspberries) is considered the ultimate cure for any fever. If that fails, try eating **часник** (garlic) to scare away the viruses!
+
+## Dialogues / Діалоги
+
+### At the Poliklinika (У поліклініці)
+
+**Лікар:** Доброго дня. Що вас турбує? (Good day. What's bothering you?)
+**Пацієнт:** Доброго дня, лікарю. **У мене болить** горло і голова. (Good day, doctor. My throat and head hurt.)
+**Лікар:** У вас є **температура**? (Do you have a temperature?)
+**Пацієнт:** Так, тридцять вісім і п'ять. (Yes, 38.5.)
+**Лікар:** У вас є **кашель**? (Do you have a cough?)
+**Пацієнт:** Трішки. Але у мене жахливий **нежить**. (A bit. But I have a terrible runny nose.)
+**Лікар:** Зрозуміло. **Відкрийте рот**. Горло дуже червоне. Це грип. (I see. Open your mouth. Your throat is very red. It’s the flu.)
+**Пацієнт:** Що мені треба робити? (What should I do?)
+**Лікар:** Приймайте ці ліки тричі на день і багато пийте. **Бережіть себе** та **видужуйте**! (Take this medicine three times a day and drink a lot. Take care of yourself and get well soon!)
+
+> [!context] **Emergency Numbers**
+> If you are in Ukraine and need urgent help, call **103** for the state ambulance (**Швидка допомога**). It is free and available 24/7. Always remember your address and the word «**Терміново!**» (Urgent!).
+
+# Summary / Підсумок
+
+У цьому модулі ми навчилися дбати про своє здоров'я за допомогою мови:
+
+- Опанували конструкцію для вираження болю: **У мене болить/болять...**.
+- Вивчили назви головних частин тіла та основних симптомів.
+- Навчилися впевнено спілкуватися в аптеці та розуміти рецепти.
+- Вивчили команди, які використовують лікарі під час огляду.
+- Ознайомилися з культурними особливостями української медицини та народних методів.
+
+Being able to describe your physical state is a vital milestone for your safety and integration. You can now seek help, explain your symptoms, and follow medical advice in Ukrainian. Your vocabulary is now a tool for your well-being. Stay healthy!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Сьогодні ввечері зробіть «інвентаризацію» свого здоров'я. Навіть якщо ви почуваєтеся чудово, скажіть собі: «Сьогодні у мене нічого не болить. У мене немає температури». Потім уявіть, що ви в аптеці, і попросіть вітаміни: «Мені потрібні вітаміни для здоров'я». Це допоможе вам закріпити медичну лексику в позитивному контексті. Удачі та міцного здоров'я!

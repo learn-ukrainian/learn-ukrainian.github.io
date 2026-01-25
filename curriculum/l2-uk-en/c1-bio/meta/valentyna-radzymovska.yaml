@@ -1,139 +1,112 @@
-# C1-BIO Module 55: Валентина Радзимовська: Жертва терору
-# Status: SPEC (ready for content development)
-
 id: c1-bio-55
-title: "Валентина Радзимовська: Жертва терору"
+title: 'Валентина Радзимовська: Жертва терору'
 slug: valentyna-radzymovska
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Валентина Радзимовська (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Меморіал жертв репресій
-    url: https://www.reabit.org.ua/
-    type: reference
-    notes: База даних репресованих
-  - name: Історія української біохімії
-    url: https://biochemistry.org.ua/
-    type: reference
-    notes: Науковий контекст
-
+- name: Валентина Радзимовська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Меморіал жертв репресій
+  url: https://www.reabit.org.ua/
+  type: reference
+  notes: База даних репресованих
+- name: Історія української біохімії
+  url: https://biochemistry.org.ua/
+  type: reference
+  notes: Науковий контекст
 content_outline:
-  - section: Вступ — Наука як жертва режиму
-    words: 400
-    points:
-      - Доля української науки в 1930-х роках
-      - Радзимовська як символ знищеного покоління
-      - Чому її історія важлива сьогодні
-
-  - section: Ранні роки та освіта
-    words: 600
-    points:
-      - Народження та походження
-      - Шлях до наукової кариєри
-      - Формування як вченої
-
-  - section: Наукова діяльність
-    words: 800
-    points:
-      - Робота в галузі біохімії
-      - Наукові досягнення та публікації
-      - Місце в українській науці 1920-30-х
-
-  - section: Українізація та наукове середовище
-    words: 700
-    points:
-      - Розвиток української науки в 1920-х
-      - Роль жінок в академічному світі
-      - Надії та сподівання покоління
-
-  - section: Сталінські репресії
-    words: 800
-    points:
-      - Хвиля терору проти інтелігенції
-      - Арешт та звинувачення
-      - Доля в системі ГУЛАГу
-
-  - section: Памятка та відновлення імені
-    words: 500
-    points:
-      - Реабілітація в незалежній Україні
-      - Значення для історії української науки
-      - Уроки для сучасності
-
-  - section: Дискусія — Ціна репресій для нації
-    words: 200
-    points:
-      - Втрачені покоління науковців
-      - Як репресії вплинули на розвиток України
-
+- section: Вступ — Наука як жертва режиму
+  words: 400
+  points:
+  - Доля української науки в 1930-х роках
+  - Радзимовська як символ знищеного покоління
+  - Чому її історія важлива сьогодні
+- section: Ранні роки та освіта
+  words: 600
+  points:
+  - Народження та походження
+  - Шлях до наукової кариєри
+  - Формування як вченої
+- section: Наукова діяльність
+  words: 800
+  points:
+  - Робота в галузі біохімії
+  - Наукові досягнення та публікації
+  - Місце в українській науці 1920-30-х
+- section: Українізація та наукове середовище
+  words: 700
+  points:
+  - Розвиток української науки в 1920-х
+  - Роль жінок в академічному світі
+  - Надії та сподівання покоління
+- section: Сталінські репресії
+  words: 800
+  points:
+  - Хвиля терору проти інтелігенції
+  - Арешт та звинувачення
+  - Доля в системі ГУЛАГу
+- section: Памятка та відновлення імені
+  words: 500
+  points:
+  - Реабілітація в незалежній Україні
+  - Значення для історії української науки
+  - Уроки для сучасності
+- section: Дискусія — Ціна репресій для нації
+  words: 200
+  points:
+  - Втрачені покоління науковців
+  - Як репресії вплинули на розвиток України
 vocabulary_hints:
   required:
-    - репресії (repressions)
-    - біохімія (biochemistry)
-    - інтелігенція (intelligentsia)
-    - терор (terror)
-    - арешт (arrest)
-    - реабілітація (rehabilitation)
-    - ГУЛАГ (Gulag)
-    - українізація (Ukrainization)
-    - розстріл (execution by shooting)
-    - памятка (memory/memorial)
+  - репресії (repressions)
+  - біохімія (biochemistry)
+  - інтелігенція (intelligentsia)
+  - терор (terror)
+  - арешт (arrest)
+  - реабілітація (rehabilitation)
+  - ГУЛАГ (Gulag)
+  - українізація (Ukrainization)
+  - розстріл (execution by shooting)
+  - памятка (memory/memorial)
   recommended:
-    - справа-фабрикація (fabricated case)
-    - конвеєр смерті (death conveyor)
-    - Великий терор (Great Terror)
-    - посмертно (posthumously)
-    - меморіалізація (memorialization)
-
+  - справа-фабрикація (fabricated case)
+  - конвеєр смерті (death conveyor)
+  - Великий терор (Great Terror)
+  - посмертно (posthumously)
+  - меморіалізація (memorialization)
 activity_hints:
-  - type: reading
-    focus: Документи репресій
-    source: Архівні матеріали
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про Великий терор
-    items: "12+"
-
-  - type: match-up
-    focus: Терміни репресій та визначення
-    items: "10+"
-
-  - type: essay-response
-    focus: Як зберігати памятка про жертв?
-    word_target: 300
-    output: Рефлексивний есей
-
-  - type: group-sort
-    focus: Хвилі репресій в Україні
-    items: "12+"
-
-  - type: fill-in
-    focus: Хронологія терору
-    items: "10+"
-
-  - type: discussion
-    focus: Чому важливо знати імена жертв?
-    output: Етичний аналіз
-
+- type: reading
+  focus: Документи репресій
+  source: Архівні матеріали
+  items: 3 passages
+- type: quiz
+  focus: Факти про Великий терор
+  items: 12+
+- type: match-up
+  focus: Терміни репресій та визначення
+  items: 10+
+- type: essay-response
+  focus: Як зберігати памятка про жертв?
+  word_target: 300
+  output: Рефлексивний есей
+- type: group-sort
+  focus: Хвилі репресій в Україні
+  items: 12+
+- type: fill-in
+  focus: Хронологія терору
+  items: 10+
 prerequisites:
-  - b2-hist-holodomor
-
+- b2-hist-holodomor
 connects_to:
-  - c1-bio-63-mykola-khvylovyi
-  - c1-bio-57-les-kurbas
-  - c1-bio-54-nataliia-polonska-vasylenko
-
+- c1-bio-63-mykola-khvylovyi
+- c1-bio-57-les-kurbas
+- c1-bio-54-nataliia-polonska-vasylenko
 naturalness:
   score: 1
   status: PENDING

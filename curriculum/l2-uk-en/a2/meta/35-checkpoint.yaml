@@ -1,8 +1,13 @@
-module: a2-35
+id: a2-35
 title: Checkpoint
 subtitle: Complex Sentences & Health
-version: '1.0'
+slug: 35-checkpoint
+module_type: checkpoint
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
+focus: checkpoint
 pedagogy: TTT
 duration: 60
 transliteration: none
@@ -21,9 +26,37 @@ objectives:
 - Learner can use relative clauses to define and describe
 - Learner can navigate medical situations confidently
 - Learner can correct common errors in complex sentences
-vocabulary_count: 25
-slug: 35-checkpoint
-focus: checkpoint
-naturalness:
-  score: 8
-  status: PASS
+sources:
+- name: 'Ukrainian State Standard 2024 - A2.2 Assessment'
+  url: 'https://mon.gov.ua/'
+  type: reference
+  notes: 'Proficiency benchmarks for complex sentences and health communication at A2.2'
+- name: 'Review of Ukrainian Syntax for A2'
+  url: 'https://uk.wikipedia.org/wiki/Синтаксис_української_мови'
+  type: reference
+  notes: 'Synthesized logic for coordinating multiple subordinate clauses'
+content_outline:
+- section: 'Introduction / Вступ'
+  words: 200
+  points:
+  - 'Transitioning from simple reports to complex ideas'
+  - 'The map of Level A2.2 proficiency'
+- section: 'Presentation / Презентація'
+  words: 600
+  points:
+  - 'Synthesis 1: Cause & Effect (Тому що, бо, через)'
+  - 'Synthesis 2: Purpose & Desire (Щоб + Inf vs Щоб + Past)'
+  - 'Synthesis 3: Relative Precision (Який in all cases)'
+  - 'Synthesis 4: Contextual Logic (Хоча, але, проте)'
+  - 'Synthesis 5: Time Coordination (Коли, поки, після того як)'
+  - 'The Medical Masterclass: Integrating body parts and symptoms'
+  - 'The Comma Masterlist: When to pause'
+- section: 'Practice / Практика'
+  words: 150
+  points:
+  - 'Complex sentence construction drills'
+  - "'Fix the Logic' diagnostic exercises"
+- section: 'Dialogues / Діалоги'
+  words: 50
+  points:
+  - "A summary dialogue combining review items: A doctor's visit with elaborate explanations and plans"

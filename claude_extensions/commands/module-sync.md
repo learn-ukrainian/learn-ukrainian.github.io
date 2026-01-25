@@ -136,16 +136,93 @@ meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
 - Fix minor issues (≤3) directly
 - Regenerate activities if major issues (>3)
 
-### Step 8: Loop Until ALL Gates Pass
+### Step 8: Loop Until ALL Gates Pass (BATCH FIX PATTERN)
+
+**CRITICAL:** Use **batch-fix-within-module** pattern (see NON-NEGOTIABLE-RULES.md #8).
+
+**NEVER use iterative fix-audit cycles. Instead:**
 
 ```
 while true:
-  1. Apply fixes (edit markdown, regenerate activities)
-  2. Run audit again
-  3. Read review file
-  4. Check gates
-  5. If ALL ✅ → break
-  6. Else → analyze new violations, continue loop
+
+  # ========================================
+  # 8.1 DIAGNOSE (Comprehensive Read)
+  # ========================================
+
+  1. Run audit:
+     .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
+
+  2. Read review file:
+     curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+
+  3. If ALL gates ✅ → break loop, go to Step 9
+
+  4. If violations exist:
+
+     Read ALL component files:
+     - curriculum/l2-uk-en/${level}/meta/${slug}.yaml
+     - curriculum/l2-uk-en/${level}/${slug}.md (PRESERVED - minimal edits only)
+     - curriculum/l2-uk-en/${level}/activities/${slug}.yaml
+     - curriculum/l2-uk-en/${level}/vocabulary/${slug}.yaml
+
+     Identify ALL violations across ALL components:
+
+     Meta violations:
+       - content_outline mismatch → which sections need sync?
+       - word_target mismatch → actual vs target?
+       - activity_hints gaps → missing types?
+
+     Lesson violations (minimal edits only):
+       - Missing engagement boxes → how many needed?
+       - Grammar errors → which lines?
+       - Low immersion → where is English?
+
+     Activity violations:
+       - Schema errors → which items?
+       - Mirroring → which activities copy lesson?
+       - Item count below minimum → how many needed?
+
+     Vocab violations:
+       - Missing IPA → how many items?
+       - Count below target → how many needed?
+
+  # ========================================
+  # 8.2 EXECUTE (Fix ALL Issues Atomically)
+  # ========================================
+
+  Apply ALL fixes in ONE response:
+
+  Order: meta → vocab → activities → markdown
+  (Dependencies flow downstream)
+
+  Meta fixes:
+    - Sync content_outline to match markdown sections
+    - Update word_target to match actual total
+    - Fix activity_hints coverage
+
+  Vocab fixes:
+    - Add missing items if needed
+    - Run enrichment: .venv/bin/python scripts/vocab_enrich_nlp.py ${vocab_file}
+
+  Activity fixes:
+    - Fix YAML schema errors
+    - Rephrase mirroring activities
+    - Add items to meet minimums
+    - Ensure activity_hints coverage
+
+  Lesson fixes (MINIMAL - markdown is source of truth):
+    - Add missing engagement boxes
+    - Fix grammar errors
+    - Reduce English if immersion low
+    - DO NOT restructure or rewrite large sections
+
+  # ========================================
+  # 8.3 VERIFY (Loop to Re-Audit)
+  # ========================================
+
+  Continue loop → Re-audit with all fixes applied
+
+end while
 ```
 
 **NO STOPPING UNTIL COMPLETE:**
@@ -161,6 +238,11 @@ while true:
 - ✅ No violations remain
 - ✅ Meta.yaml reflects markdown reality
 - ✅ Activities validated
+
+**Why This Works:**
+1. **Efficiency:** One comprehensive read + one atomic fix + one audit = O(3) instead of O(3N)
+2. **Coherence:** Meta sync + activity fixes + minimal markdown edits applied together
+3. **Consistency:** No intermediate states where components misaligned
 
 ### Step 9: Deploy
 

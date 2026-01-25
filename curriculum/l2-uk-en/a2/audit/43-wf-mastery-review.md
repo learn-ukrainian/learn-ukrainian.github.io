@@ -1,64 +1,87 @@
-# Audit Report: 43-wf-mastery.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M43 — 43-wf-mastery.md
+**Level:** A2 | **Module:** M43 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 15:24:56
+
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | group-sort | Reverse Engineering | 0 | 12 | ❌ |
+| 2 | match-up | Word Architect Challenge | 0 | 8 | ❌ |
+
+**Summary:**
+- Total activities: 2 (target: 10-14) ❌
+- Unique types: 2 (minimum: 4) ❌
+- Priority types used: 0/3 (none) ❌
+- Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): підземний, родина, міський, рідний, природа...
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ви побачите як один маленький...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Використовуйте цю логіку щодня ви...'
+- **[COMPLEXITY]** group-sort 'Reverse Engineering' has 0 groups (target: 2-4)
+  - FIX: Adjust number of sorting categories to 2-4.
+- **[COMPLEXITY]** group-sort 'Reverse Engineering' has 0 items (target: 10-999)
+  - FIX: Adjust number of items to sort to 10-999.
+- **[COMPLEXITY]** match-up 'Word Architect Challenge' has 0 pairs (target: 10-12)
+  - FIX: Adjust number of pairs to 10-12.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-wf-mastery.yaml: Schema validation error at key '1': {'id': 2, 'type': 'match-up', 'title': 'Word Architect Challenge', 'concept': 'Synthesis', 'items': [{'id': 1, 'text': 'Переписати', 'match': 'Rewrite'}, {'id': 2, 'text': 'Вхід', 'match': 'Entrance (In + Walk)'}, {'id': 3, 'text': 'Вигляд', 'match': 'Appearance (Out + Look)'}, {'id': 4, 'text': 'Промова', 'match': 'Speech (For + Speech)'}, {'id': 5, 'text': 'Вихід', 'match': 'Exit (Out + Walk)'}, {'id': 6, 'text': 'Запис', 'match': 'Record (In + Write)'}, {'id': 7, 'text': 'Огляд', 'match': 'Review (Around + Look)'}, {'id': 8, 'text': 'Прочитати', 'match': 'Read through (Through + Read)'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): всесвіт, світити, земний, світло, рідний...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 55/100)
 
-- 1 violations (minor)
+- Revision recommended (severity 55/100)
+- 7 violations (significant)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1535/1000
-- **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Words:** ✅ 1129/1000 (raw: 1222)
+- **Activities:** ❌ 2/10
+- **Density:** ❌ 2 < 12
+- **Unique_types:** ❌ 2/4 types
+- **Priority:** ❌ No priority types
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 66/1
+- **Vocab:** ✅ 4/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 69.5% (target 65-75% (A2.3))
+- **Immersion:** 🇺🇦 70.4% (target 65-75% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Reverse Engineering | group-sort | 0 | 12 | Add 12 more items |
+| Word Architect Challenge | match-up | 0 | 8 | Add 8 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Presentation** | ✅ | 152 | Included in Core |
-| **Part 1: New Roots** | ⚪️ | 0 | Skipped |
-| **Family 1: Speech - МОВ** | ⚪️ | 30 | Skipped |
-| **Family 2: Hearing - СЛУХ** | ⚪️ | 6 | Skipped |
-| **Family 3: ДУМ** | ⚪️ | 9 | Skipped |
-| **Family 4: Kin/Nature - РІД** | ⚪️ | 15 | Skipped |
-| **Deep Dive: The Logic of Obedience** | ✅ | 83 | Included in Core |
-| **Family 5: World & Light - СВІТ** | ⚪️ | 41 | Skipped |
-| **Family 6: Earth & Place - ЗЕМ | МІСТ** | ⚪️ | 80 | Skipped |
-| **Deep Dive: Feeling vs Sensation** | ✅ | 73 | Included in Core |
-| **Deep Dive: The Power of Roots** | ✅ | 95 | Included in Core |
-| **Part 2: Review - The Machine** | ✅ | 10 | Included in Core |
-| **1. The «In/Out» Logic** | ⚪️ | 16 | Skipped |
-| **2. The «Re/Cross» Logic (Пере-)** | ⚪️ | 16 | Skipped |
-| **3. The «People» Suffixes (-ач, -ець, -ник)** | ⚪️ | 12 | Skipped |
-| **Story Time: The Conference** | ✅ | 75 | Included in Core |
-| **Story Time Part 2: The Psychologist** | ✅ | 70 | Included in Core |
-| **Story Time Part 3: The Success** | ✅ | 118 | Included in Core |
-| **Language in Action** | ⚪️ | 0 | Skipped |
-| **Dialogue: The Order** | ✅ | 38 | Included in Core |
-| **Dialogue: The Idea** | ✅ | 42 | Included in Core |
-| **Dialogue: The Look** | ✅ | 40 | Included in Core |
-| **Dialogue: The Interview** | ✅ | 105 | Included in Core |
-| **Практика** | ⚪️ | 298 | Skipped |
-| **Підсумок** | ✅ | 17 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 308 | Included in Core |
+| **Presentation / Презентація** | ✅ | 289 | Included in Core |
+| **Practice / Практика** | ⚪️ | 201 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 207 | Included in Core |
+| **Summary / Підсумок** | ✅ | 90 | Included in Core |
+| **Need More Practice?** | ⚪️ | 34 | Skipped |

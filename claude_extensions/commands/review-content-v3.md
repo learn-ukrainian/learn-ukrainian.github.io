@@ -2,6 +2,60 @@
 
 ---
 
+## ⚠️ MANDATORY OUTPUT FORMAT — NO EXCEPTIONS
+
+**READ THIS FIRST. FOLLOW EXACTLY. NO VARIATIONS.**
+
+### File Naming (EXACT)
+```
+{slug}-review.md
+```
+Examples: `12-aspect-pairs-essential-40-review.md`, `trypillian-civilization-review.md`
+
+**FORBIDDEN names:** `-review-v3.md`, `-content-review.md`, `-llm-review.md`, `.review.md`, `-review-claude.md`
+
+### Save Location (EXACT)
+```
+curriculum/l2-uk-en/{level}/review/{slug}-review.md
+```
+
+**NEVER save to:** `audit/` folder (that's for automated audit_module.py output only)
+
+### Header Format (COPY EXACTLY)
+```markdown
+# Module {NUM}: {Ukrainian Title}
+
+**Template:** {template-name}.md | **Compliance:** ✅ PASS / ❌ FAIL
+**Overall Score:** {X.X}/10
+**Status:** ✅ PASS / ❌ FAIL
+**Generated:** {YYYY-MM-DD HH:MM:SS}
+**Reviewer:** Claude / Gemini
+
+## Scores Breakdown
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Coherence | X/10 | {note} |
+| Relevance | X/10 | {note} |
+| Educational | X/10 | {note} |
+| Language | X/10 | {note} |
+| Pedagogy | X/10 | {note} |
+| Immersion | X/10 | {note} |
+| Activities | X/10 | {note} |
+| Richness | X/10 | {note} |
+| Humanity | X/10 | {note} |
+| LLM Fingerprint | X/10 | {note} |
+| Linguistic Accuracy | X/10 | {note} |
+```
+
+**MANDATORY elements:**
+- Title MUST be `# Module {NUM}: {Ukrainian Title}` (not "Content Review", not "Review V3")
+- Timestamp MUST include time: `2026-01-24 20:43:15` (not just date)
+- Scores table MUST use pipe format (not bullet list)
+- ALL 11 dimensions MUST be scored
+
+---
+
 > **PERSONA:** Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
 
 ---
@@ -20,7 +74,7 @@
 ---
 name: review-content-v3
 description: 0-10 scoring rubric for content quality review after audit passes
-version: '3.1'
+version: '3.2'
 category: quality
 dependencies: audit_module.py
 ---
@@ -826,63 +880,40 @@ Overall = (Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 + Language �
 
 ## Final Report Format
 
+**⚠️ USE THE MANDATORY FORMAT FROM THE TOP OF THIS FILE.**
+
+There is ONE format. No variations. See "⚠️ MANDATORY OUTPUT FORMAT" section above.
+
+**Quick reference:**
+- File: `{slug}-review.md`
+- Location: `curriculum/l2-uk-en/{level}/review/`
+- Header: `# Module {NUM}: {Ukrainian Title}`
+- Scores: Table format with all 11 dimensions
+- Timestamp: Full datetime `YYYY-MM-DD HH:MM:SS`
+
+### Additional Sections (after scores table)
+
 ```markdown
-## Module [NUM]: [Title]
+## Linguistic Accuracy Issues
 
-**Template:** [template] | **Compliance:** ✅ PASS / ❌ FAIL
-**Overall Score:** [X/10] ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (show X stars)
-**Status:** ✅ PASS / ❌ FAIL
-**AI Detection Flags:** [None / List]
-**Linguistic Accuracy Flags:** [None / List]
+- {Quote} → {Correction} — {Source}
 
-### Scores Breakdown
+## Strengths
 
-- **Coherence:** X/10 - [Desc]
-- **Relevance:** X/10 - [Desc]
-- **Educational:** X/10 - [Desc]
-- **Language:** X/10 - [Desc]
-- **Pedagogy:** X/10 - [Desc]
-- **Immersion:** X/10 - [Desc]
-- **Activities:** X/10 - [Desc]
-- **Richness:** X/10 - [Desc]
-- **Humanity:** X/10 - [Desc]
-- **LLM Fingerprint:** X/10 - [Desc]
-- **Linguistic Accuracy:** X/10 - [Desc] ← NEW
+- {3-5 specific strengths}
 
-### Linguistic Accuracy Issues (if any)
+## Issues
 
-- [Issue 1: Quote → Correction → Source]
-- [Issue 2: Quote → Correction → Source]
+- {All issues by category}
 
-### Strengths
+## Recommendation
 
-- [3-5 specific]
+{✅ PASS / ❌ FAIL} — {One-line summary}
 
-### Issues
+## Action Items
 
-- [All issues by category]
-
-### Examples
-
-> [Strong passage] - Strength: [Why]
-> [Weak passage] - Weakness: [Why]
-
-### Recommendation
-
-[✅ PASS / ❌ FAIL] - [Summary]
-
-### Action Items
-
-1. [Fix with category] - ✅ APPLIED / ⏳ MANUAL
-2. [Fix with category] - ✅ APPLIED / ⏳ MANUAL
-...
+1. {Fix description} — ✅ APPLIED / ⏳ MANUAL
 ```
-
----
-
-## Save Review Files
-
-Save detailed review to: `curriculum/l2-uk-en/{level}/review/{module_number}-{slug}-review.md`
 
 ---
 
@@ -894,7 +925,7 @@ When reviewing multiple modules, generate a summary:
 # Content Quality Summary - {Level}
 
 **Modules Reviewed:** {count}
-**Date:** {today}
+**Generated:** {YYYY-MM-DD HH:MM:SS}
 
 ## Results
 

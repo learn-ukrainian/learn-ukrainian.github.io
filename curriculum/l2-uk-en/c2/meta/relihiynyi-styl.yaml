@@ -1,144 +1,118 @@
-# C2 Module 08: Релігійний стиль
-# Status: SPEC (ready for content development)
-
 id: c2-08
 title: Релігійний стиль — Сакральна мова
 slug: relihiynyi-styl
 version: '2.0'
-phase: 'C2.1 Stylistics Mastery'
+phase: C2.1 Stylistics Mastery
 focus: stylistics
 module_type: style
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Біблія українською мовою (Огієнко)
-    url: https://bible.ua/
-    type: primary
-    notes: Standard Ukrainian Bible translation by Ivan Ohienko
-  - name: Літургійні тексти УПЦ
-    url: https://liturgia.cerkva.info/
-    type: reference
-    notes: Liturgical texts and prayers in Ukrainian
-  - name: Ukrainian State Standard 2024 — Confessional style
-    url: https://mon.gov.ua/
-    type: reference
-    notes: C2 requirements for understanding religious register
-
+- name: Біблія українською мовою (Огієнко)
+  url: https://bible.ua/
+  type: primary
+  notes: Standard Ukrainian Bible translation by Ivan Ohienko
+- name: Літургійні тексти УПЦ
+  url: https://liturgia.cerkva.info/
+  type: reference
+  notes: Liturgical texts and prayers in Ukrainian
+- name: Ukrainian State Standard 2024 — Confessional style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for understanding religious register
 content_outline:
-  - section: Вступ — Релігійний стиль в українській мові
-    words: 400
-    points:
-      - Історія релігійної мови в Україні
-      - Церковнослов'янська спадщина
-      - Сучасна українська сакральна мова
-
-  - section: Біблійний стиль
-    words: 700
-    points:
-      - Переклад Огієнка — мовні особливості
-      - Лексика біблійного тексту
-      - Синтаксис біблійних речень
-      - Порівняння перекладів (Огієнко, Хоменко)
-
-  - section: Молитовний дискурс
-    words: 600
-    points:
-      - Структура молитви
-      - Звертання до Бога
-      - Кличний відмінок у молитвах
-      - Отче наш — детальний аналіз
-
-  - section: Церковнослов'янські елементи
-    words: 700
-    points:
-      - Лексика — благо, глас, воістину
-      - Фонетичні особливості — врата, глава
-      - Граматичні архаїзми
-      - Функції церковнослов'янізмів
-
-  - section: Проповідь та гомілетика
-    words: 600
-    points:
-      - Структура проповіді
-      - Риторичні прийоми
-      - Тематика та образність
-      - Сучасна проповідь vs традиційна
-
-  - section: Релігійний стиль у літературі
-    words: 500
-    points:
-      - Біблійні алюзії у Шевченка
-      - Релігійна образність у Франка
-      - Сучасні автори та сакральне
-      - Секуляризація релігійної мови
-
-  - section: Практикум — Аналіз та інтерпретація
-    words: 500
-    points:
-      - Читання біблійного уривка
-      - Аналіз молитви
-      - Словник церковнослов'янізмів
-      - Дискусія — релігія в українській культурі
-
+- section: Вступ — Релігійний стиль в українській мові
+  words: 400
+  points:
+  - Історія релігійної мови в Україні
+  - Церковнослов'янська спадщина
+  - Сучасна українська сакральна мова
+- section: Біблійний стиль
+  words: 700
+  points:
+  - Переклад Огієнка — мовні особливості
+  - Лексика біблійного тексту
+  - Синтаксис біблійних речень
+  - Порівняння перекладів (Огієнко, Хоменко)
+- section: Молитовний дискурс
+  words: 600
+  points:
+  - Структура молитви
+  - Звертання до Бога
+  - Кличний відмінок у молитвах
+  - Отче наш — детальний аналіз
+- section: Церковнослов'янські елементи
+  words: 700
+  points:
+  - Лексика — благо, глас, воістину
+  - Фонетичні особливості — врата, глава
+  - Граматичні архаїзми
+  - Функції церковнослов'янізмів
+- section: Проповідь та гомілетика
+  words: 600
+  points:
+  - Структура проповіді
+  - Риторичні прийоми
+  - Тематика та образність
+  - Сучасна проповідь vs традиційна
+- section: Релігійний стиль у літературі
+  words: 500
+  points:
+  - Біблійні алюзії у Шевченка
+  - Релігійна образність у Франка
+  - Сучасні автори та сакральне
+  - Секуляризація релігійної мови
+- section: Практикум — Аналіз та інтерпретація
+  words: 500
+  points:
+  - Читання біблійного уривка
+  - Аналіз молитви
+  - Словник церковнослов'янізмів
+  - Дискусія — релігія в українській культурі
 vocabulary_hints:
   required:
-    - благо (good/blessing)
-    - глас (voice — archaic)
-    - воістину (truly/verily)
-    - проповідь (sermon)
-    - молитва (prayer)
-    - сакральний (sacred)
-    - літургія (liturgy)
-    - церковнослов'янізм (Church Slavonicism)
-    - гомілетика (homiletics)
-    - кличний (vocative)
+  - благо (good/blessing)
+  - глас (voice — archaic)
+  - воістину (truly/verily)
+  - проповідь (sermon)
+  - молитва (prayer)
+  - сакральний (sacred)
+  - літургія (liturgy)
+  - церковнослов'янізм (Church Slavonicism)
+  - гомілетика (homiletics)
+  - кличний (vocative)
   recommended:
-    - врата (gates — archaic)
-    - псалом (psalm)
-    - благословення (blessing)
-    - покаяння (repentance)
-    - причастя (communion)
-
+  - врата (gates — archaic)
+  - псалом (psalm)
+  - благословення (blessing)
+  - покаяння (repentance)
+  - причастя (communion)
 activity_hints:
-  - type: reading
-    focus: Analyze biblical excerpt from Ohienko translation
-    source: Psalm or Gospel passage
-    output: Identification of stylistic features
-
-  - type: quiz
-    focus: Match Church Slavonic words to modern equivalents
-    items: "15+"
-
-  - type: critical-analysis
-    focus: Analyze language of traditional prayer
-    output: Essay on stylistic devices and function
-
-  - type: discussion
-    focus: Role of religion in Ukrainian culture and language
-    output: Structured discussion points
-
-  - type: fill-in
-    focus: Complete religious formulas and phrases
-    items: "12+"
-
-  - type: comparative-study
-    focus: Compare Bible translations (Ohienko vs Khomenko)
-    output: Analysis of translation choices and style
-
+- type: reading
+  focus: Analyze biblical excerpt from Ohienko translation
+  source: Psalm or Gospel passage
+  output: Identification of stylistic features
+- type: quiz
+  focus: Match Church Slavonic words to modern equivalents
+  items: 15+
+- type: critical-analysis
+  focus: Analyze language of traditional prayer
+  output: Essay on stylistic devices and function
+- type: fill-in
+  focus: Complete religious formulas and phrases
+  items: 12+
+- type: comparative-study
+  focus: Compare Bible translations (Ohienko vs Khomenko)
+  output: Analysis of translation choices and style
 prerequisites:
-  - C1 literary analysis
-  - Cultural knowledge of Ukrainian traditions
-  - c2-06 (Literary style foundations)
-  - c2-02 (Euphony in elevated prose)
-
+- C1 literary analysis
+- Cultural knowledge of Ukrainian traditions
+- c2-06 (Literary style foundations)
+- c2-02 (Euphony in elevated prose)
 connects_to:
-  - c2-23 (Intertextuality includes biblical allusions)
-  - c2-77 (Rare/archaic forms)
-  - c2-30 (Intertextuality in C2.2)
-
+- c2-23 (Intertextuality includes biblical allusions)
+- c2-77 (Rare/archaic forms)
+- c2-30 (Intertextuality in C2.2)
 naturalness:
   score: 1
   status: PENDING

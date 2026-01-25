@@ -1,6 +1,3 @@
-# B2 Module 16: Register - Formal and Informal Communication
-# Status: SPEC (ready for content development)
-
 id: b2-16
 title: Формальне та неформальне спілкування
 slug: 16-register-formal-informal
@@ -9,138 +6,114 @@ phase: B2.1b [Participles & Register Intro]
 focus: style
 module_type: grammar
 word_target: 3800
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian State Standard 2024 - Address Forms
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Ти/Ви distinction and forms of address
-  - name: Етикет українського спілкування
-    url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
-    type: secondary
-    notes: Speech etiquette in Ukrainian culture
-  - name: CEFR B2 Sociolinguistic Competence
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: B2 politeness conventions
-
+- name: Ukrainian State Standard 2024 - Address Forms
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Ти/Ви distinction and forms of address
+- name: Етикет українського спілкування
+  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
+  type: secondary
+  notes: Speech etiquette in Ukrainian culture
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 politeness conventions
 content_outline:
-  - section: Вступ — Формальність у спілкуванні
-    words: 400
-    points:
-      - Що визначає формальність
-      - Соціальні фактори (вік, статус, знайомство)
-      - Культурні норми в Україні
-
-  - section: Ти/Ви-розрізнення
-    words: 700
-    points:
-      - Коли "ти" (друзі, родина, діти, однолітки)
-      - Коли "Ви" (незнайомі, старші, офіційні ситуації)
-      - Перехід від "Ви" до "ти"
-      - Типові помилки іноземців
-
-  - section: Форми звертання
-    words: 700
-    points:
-      - Пан/Пані (Mr./Mrs.)
-      - Шановний/Шановна (Respected)
-      - Вельмишановний (Most respected - very formal)
-      - По батькові — коли і як використовувати
-      - Колегіальні звертання
-
-  - section: Формальні/неформальні лексичні пари
-    words: 600
-    points:
-      - Нейтральні vs розмовні слова
-      - Книжні vs розмовні синоніми
-      - Вибір відповідного варіанту
-
-  - section: Трансформація регістру
-    words: 600
-    points:
-      - З неформального у формальний
-      - З формального у неформальний
-      - Збереження значення при зміні тону
-
-  - section: Соціальні ситуації
-    words: 500
-    points:
-      - Робоче середовище
-      - Університет
-      - Магазини та сервіс
-      - Офіційні заходи
-
-  - section: Практика і підсумок
-    words: 300
-    points:
-      - Рольові ситуації
-      - Критерії вибору
-      - Підготовка до модуля 17
-
+- section: Вступ — Формальність у спілкуванні
+  words: 400
+  points:
+  - Що визначає формальність
+  - Соціальні фактори (вік, статус, знайомство)
+  - Культурні норми в Україні
+- section: Ти/Ви-розрізнення
+  words: 700
+  points:
+  - Коли "ти" (друзі, родина, діти, однолітки)
+  - Коли "Ви" (незнайомі, старші, офіційні ситуації)
+  - Перехід від "Ви" до "ти"
+  - Типові помилки іноземців
+- section: Форми звертання
+  words: 700
+  points:
+  - Пан/Пані (Mr./Mrs.)
+  - Шановний/Шановна (Respected)
+  - Вельмишановний (Most respected - very formal)
+  - По батькові — коли і як використовувати
+  - Колегіальні звертання
+- section: Формальні/неформальні лексичні пари
+  words: 600
+  points:
+  - Нейтральні vs розмовні слова
+  - Книжні vs розмовні синоніми
+  - Вибір відповідного варіанту
+- section: Трансформація регістру
+  words: 600
+  points:
+  - З неформального у формальний
+  - З формального у неформальний
+  - Збереження значення при зміні тону
+- section: Соціальні ситуації
+  words: 500
+  points:
+  - Робоче середовище
+  - Університет
+  - Магазини та сервіс
+  - Офіційні заходи
+- section: Практика і підсумок
+  words: 300
+  points:
+  - Рольові ситуації
+  - Критерії вибору
+  - Підготовка до модуля 17
 vocabulary_hints:
   required:
-    - формальний (formal)
-    - неформальний (informal)
-    - звертання (form of address)
-    - пан/пані (Mr./Mrs.)
-    - шановний (respected/dear - formal)
-    - по батькові (patronymic)
-    - етикет (etiquette)
-    - ввічливість (politeness)
-    - офіційний (official)
-    - розмовний (colloquial)
+  - формальний (formal)
+  - неформальний (informal)
+  - звертання (form of address)
+  - пан/пані (Mr./Mrs.)
+  - шановний (respected/dear - formal)
+  - по батькові (patronymic)
+  - етикет (etiquette)
+  - ввічливість (politeness)
+  - офіційний (official)
+  - розмовний (colloquial)
   recommended:
-    - колегіальний (collegial)
-    - субординація (subordination)
-    - соціальна дистанція (social distance)
-    - тон (tone)
-    - доречність (appropriateness)
-
+  - колегіальний (collegial)
+  - субординація (subordination)
+  - соціальна дистанція (social distance)
+  - тон (tone)
+  - доречність (appropriateness)
 activity_hints:
-  - type: quiz
-    focus: Choose appropriate address form for situation
-    items: "15+"
-
-  - type: transform
-    focus: Convert informal text to formal (and vice versa)
-    items: "12+"
-
-  - type: match-up
-    focus: Situation → appropriate register
-    items: "15+"
-
-  - type: role-play
-    focus: Dialogue in different register levels
-    items: "8+"
-
-  - type: fill-in
-    focus: Complete sentences with appropriate address forms
-    items: "12+"
-
-  - type: error-correction
-    focus: Fix register-inappropriate language
-    items: "12+"
-
-  - type: essay-response
-    focus: Write same request formally and informally
-    word_target: 150
-    output: Model answers for both registers
-
+- type: quiz
+  focus: Choose appropriate address form for situation
+  items: 15+
+- type: fill-in
+  focus: Convert informal text to formal (and vice versa)
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate register
+  items: 15+
+- type: fill-in
+  focus: Complete sentences with appropriate address forms
+  items: 12+
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 12+
+- type: essay-response
+  focus: Write same request formally and informally
+  word_target: 150
+  output: Model answers for both registers
 prerequisites:
-  - b2-15 (Register Introduction)
-  - Basic pronoun usage
-  - Social context awareness
-
+- b2-15 (Register Introduction)
+- Basic pronoun usage
+- Social context awareness
 connects_to:
-  - 'b2-17 (Register: Business Ukrainian)'
-  - 'b2-18 (Register: Academic Ukrainian)'
-  - 'b2-19 (Register: Official-Legal)'
-  - b2-25 (B2.1b Checkpoint)
-
+- 'b2-17 (Register: Business Ukrainian)'
+- 'b2-18 (Register: Academic Ukrainian)'
+- 'b2-19 (Register: Official-Legal)'
+- b2-25 (B2.1b Checkpoint)
 naturalness:
   score: 1
   status: PENDING

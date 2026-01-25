@@ -44,12 +44,11 @@ Read: `claude_extensions/phases/module-lesson.md`
 Follow the generation process from phase instructions:
 
 1. Load meta.yaml and appropriate template
-2. Generate frontmatter from meta
-3. Generate SCOPE comment
-4. Generate title and introduction
-5. **Generate content sections (section-by-section with word count verification)**
-6. Generate summary
-7. Verify total word count
+2. Generate SCOPE comment (NO frontmatter - metadata is in meta.yaml)
+3. Generate title and introduction
+4. **Generate content sections (section-by-section with word count verification)**
+5. Generate summary
+6. Verify total word count
 
 ### Step 4: Output
 

@@ -1,153 +1,107 @@
-# A2 Module 13: The Completed Past
-# Status: CONTENT (content exists, detailed spec added)
-
 id: a2-13
 title: The Completed Past
 subtitle: Using Perfective Aspect
 slug: 13-the-completed-past
 module_type: grammar
-word_target: 2800
-immersion: "55-65% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - verbs
-  - aspect
-  - past tense
-
+- grammar
+- verbs
+- aspect
+- past tense
 grammar:
-  - perfective past tense
-  - formation of past tense
-  - narrative sequencing
-  - result-focused actions
-
+- perfective past tense
+- formation of past tense
+- narrative sequencing
+- result-focused actions
 objectives:
-  - Learner can form the past tense of perfective verbs
-  - Learner can use perfective past to describe completed actions
-  - Learner can narrate a sequence of events
-  - Learner can distinguish between 'did' and 'done' contexts
-
-# === AGENT BUILD SPEC ===
-
+- Learner can form the past tense of perfective verbs
+- Learner can use perfective past to describe completed actions
+- Learner can narrate a sequence of events
+- Learner can distinguish between 'did' and 'done' contexts
 sources:
-  - name: Ukrainian State Standard 2024 - Past Tense
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Perfective past tense requirements
-  - name: Ukrainian Verb Conjugation
-    url: https://uk.wikipedia.org/wiki/Дієслово
-    type: reference
-    notes: Past tense formation patterns
-
+- name: Ukrainian State Standard 2024 - Past Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Perfective past tense requirements
+- name: Ukrainian Verb Conjugation
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Past tense formation patterns
 content_outline:
-  - section: Perfective Past Overview
-    words: 400
-    points:
-      - Completed actions with clear results
-      - Building on aspect pairs from M12
-      - Past tense formation review
-
-  - section: Imperfective vs Perfective Past
-    words: 500
-    points:
-      - Impf past (process) - Він читав книгу
-      - Pf past (result) - Він прочитав книгу
-      - Context determines aspect choice
-
-  - section: Aspect Choice in Past
-    words: 500
-    points:
-      - Duration → imperfective (Я писав дві години)
-      - Completion → perfective (Я написав листа)
-      - Repeated → imperfective (Я читав багато разів)
-      - Single event → perfective (Я прочитав вчора)
-
-  - section: Common Perfective Past Forms
-    words: 500
-    points:
-      - зробив, написав, прочитав
-      - сказав, побачив, почув
-      - взяв, дав, пішов
-
-  - section: Narrative Sequencing
-    words: 500
-    points:
-      - Series of completed actions
-      - Using perfective for story events
-      - спочатку...потім...нарешті
-
-  - section: Practice Contexts
-    words: 400
-    points:
-      - '"Did you finish?" dialogues'
-      - Story narration
-      - Error correction
-
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Perfective past overview
+  - Result-focused mindset
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Formation of perfective past (-в, -ла, -ло, -ли)
+  - Usage scenarios (Single event, Result, Markers)
+  - Narrative sequencing (Building stories)
+- section: Practice / Практика
+  words: 150
+  points:
+  - Situation-based aspect choice
+  - Narrative transformations
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Yesterday evening dialogue
 vocabulary_hints:
   required:
-    - зробив (did/made - m)
-    - написав (wrote - m)
-    - прочитав (read - m)
-    - сказав (said - m)
-    - побачив (saw - m)
-    - почув (heard - m)
-    - взяв (took - m)
-    - дав (gave - m)
-    - пішов (went - m)
-    - прийшов (came - m)
-    - приїхав (arrived - m)
-    - почав (began - m)
-    - закінчив (finished - m)
-    - зрозумів (understood - m)
-    - забув (forgot - m)
+  - зробив (did/made - m)
+  - написав (wrote - m)
+  - прочитав (read - m)
+  - сказав (said - m)
+  - побачив (saw - m)
+  - почув (heard - m)
+  - взяв (took - m)
+  - дав (gave - m)
+  - пішов (went - m)
+  - прийшов (came - m)
+  - приїхав (arrived - m)
+  - почав (began - m)
+  - закінчив (finished - m)
+  - зрозумів (understood - m)
+  - забув (forgot - m)
   recommended:
-    - запам'ятав (remembered - m)
-    - знайшов (found - m)
-    - загубив (lost - m)
-    - вийшов (exited - m)
-    - увійшов (entered - m)
-
+  - запам'ятав (remembered - m)
+  - знайшов (found - m)
+  - загубив (lost - m)
+  - вийшов (exited - m)
+  - увійшов (entered - m)
 activity_hints:
-  - type: fill-in
-    focus: Transform imperfective to perfective past
-    items: "12+"
-
-  - type: fill-in
-    focus: Choose aspect based on context
-    items: "15+"
-
-  - type: quiz
-    focus: Did they finish or were they doing?
-    items: "12+"
-
-  - type: fill-in
-    focus: Narrative sequencing with perfective
-    items: "10+"
-
-  - type: quiz
-    focus: Complete the story with perfective verbs
-    items: "10+"
-
-  - type: dialogue
-    focus: '"Did you...?" conversations'
-    items: "4+"
-
+- type: fill-in
+  focus: Transform imperfective to perfective past
+  items: 12+
+- type: fill-in
+  focus: Choose aspect based on context
+  items: 15+
+- type: quiz
+  focus: Did they finish or were they doing?
+  items: 12+
+- type: fill-in
+  focus: Narrative sequencing with perfective
+  items: 10+
+- type: quiz
+  focus: Complete the story with perfective verbs
+  items: 10+
 prerequisites:
-  - a2-12 (Aspect introduction)
-  - A1 past tense formation
-
+- a2-12 (Aspect introduction)
+- A1 past tense formation
 connects_to:
-  - a2-14 (Future Plans and Promises)
-  - a2-15 (Aspect Morphology)
-  - a2-26 (Telling Stories)
-
+- a2-14 (Future Plans and Promises)
+- a2-15 (Aspect Morphology)
+- a2-26 (Telling Stories)
 naturalness:
   score: 8
   status: PASS

@@ -1,6 +1,3 @@
-# C1-HIST Module 06: Діаспора та західні історики
-# Status: SPEC (ready for content development)
-
 id: c1-hist-06
 title: Діаспора та західні історики
 slug: diaspora-ta-zakhidni-istoriky
@@ -10,132 +7,111 @@ focus: history
 module_type: historiography
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Harvard Ukrainian Research Institute (HURI)
-    url: https://huri.harvard.edu/
-    type: reference
-    notes: Key Western academic institution
-  - name: Омелян Пріцак
-    url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
-    type: reference
-    notes: Founder of HURI
-  - name: Орест Субтельний
-    url: https://uk.wikipedia.org/wiki/Субтельний_Орест
-    type: reference
-    notes: Author of most popular English-language history
-  - name: 'Ukraine: A History (book info)'
-    url: https://www.utpress.utoronto.ca/9781442609914/ukraine
-    type: secondary
-    notes: Subtelny's standard text
-
+- name: Harvard Ukrainian Research Institute (HURI)
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Key Western academic institution
+- name: Омелян Пріцак
+  url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
+  type: reference
+  notes: Founder of HURI
+- name: Орест Субтельний
+  url: https://uk.wikipedia.org/wiki/Субтельний_Орест
+  type: reference
+  notes: Author of most popular English-language history
+- name: 'Ukraine: A History (book info)'
+  url: https://www.utpress.utoronto.ca/9781442609914/ukraine
+  type: secondary
+  notes: Subtelny's standard text
 content_outline:
-  - section: Вступ — Історія в екзилі
-    words: 400
-    points:
-      - Чому діаспора писала історію
-      - Держава без держави — наука як замінник
-      - Збереження пам'яті для майбутнього
-      - Зв'язок із батьківщиною
-
-  - section: Українські наукові інституції на Заході
-    words: 600
-    points:
-      - НТШ (Наукове товариство імені Шевченка)
-      - У|ван (Українська Вільна Академія Наук)
-      - Гарвардський українознавчий інститут (HURI)
-      - Канадський інститут українських студій (CIUS)
-      - Чому університети, а не уряд
-
-  - section: Омелян Пріцак і Гарвард
-    words: 600
-    points:
-      - Біографія — від Львова до Гарварду
-      - Створення HURI (1973)
-      - Методологія — тюркологія, орієнталістика
-      - "«Походження Русі» — контроверсійна праця"
-      - Спадщина — журнали, конференції, кадри
-
-  - section: Орест Субтельний — популяризатор
-    words: 500
-    points:
-      - Біографія — другe покоління діаспори
-      - "«Ukraine: A History» (1988) — чому стала класикою"
-      - Доступність для неспеціалістів
-      - Критика — що застаріло
-      - Переклад українською
-
-  - section: Інші ключові постаті
-    words: 500
-    points:
-      - Пол Роберт Маґочі — Закарпаття
-      - Джон-Пол Химка — соціальна історія
-      - Сергій Плохій — сучасний лідер
-      - Тімоті Снайдер — глобальна аудиторія
-      - Марк фон Гаґен — імперська історія
-
-  - section: Методологічні особливості західної школи
-    words: 500
-    points:
-      - Об'єктивність vs. національний наратив
-      - Доступ до архівів — переваги і межі
-      - Аудиторія — хто читає
-      - Вплив на політику — експертиза
-
-  - section: Діалог із Україною після 1991
-    words: 400
-    points:
-      - Повернення праць на батьківщину
-      - Спільні проєкти
-      - Нове покоління — вже не діаспора
-      - Що далі
-
+- section: Вступ — Історія в екзилі
+  words: 400
+  points:
+  - Чому діаспора писала історію
+  - Держава без держави — наука як замінник
+  - Збереження пам'яті для майбутнього
+  - Зв'язок із батьківщиною
+- section: Українські наукові інституції на Заході
+  words: 600
+  points:
+  - НТШ (Наукове товариство імені Шевченка)
+  - У|ван (Українська Вільна Академія Наук)
+  - Гарвардський українознавчий інститут (HURI)
+  - Канадський інститут українських студій (CIUS)
+  - Чому університети, а не уряд
+- section: Омелян Пріцак і Гарвард
+  words: 600
+  points:
+  - Біографія — від Львова до Гарварду
+  - Створення HURI (1973)
+  - Методологія — тюркологія, орієнталістика
+  - «Походження Русі» — контроверсійна праця
+  - Спадщина — журнали, конференції, кадри
+- section: Орест Субтельний — популяризатор
+  words: 500
+  points:
+  - Біографія — другe покоління діаспори
+  - '«Ukraine: A History» (1988) — чому стала класикою'
+  - Доступність для неспеціалістів
+  - Критика — що застаріло
+  - Переклад українською
+- section: Інші ключові постаті
+  words: 500
+  points:
+  - Пол Роберт Маґочі — Закарпаття
+  - Джон-Пол Химка — соціальна історія
+  - Сергій Плохій — сучасний лідер
+  - Тімоті Снайдер — глобальна аудиторія
+  - Марк фон Гаґен — імперська історія
+- section: Методологічні особливості західної школи
+  words: 500
+  points:
+  - Об'єктивність vs. національний наратив
+  - Доступ до архівів — переваги і межі
+  - Аудиторія — хто читає
+  - Вплив на політику — експертиза
+- section: Діалог із Україною після 1991
+  words: 400
+  points:
+  - Повернення праць на батьківщину
+  - Спільні проєкти
+  - Нове покоління — вже не діаспора
+  - Що далі
 vocabulary_hints:
   required:
-    - діаспора (diaspora)
-    - українознавство (Ukrainian studies)
-    - наукова інституція (academic institution)
-    - архів (archive)
-    - методологія (methodology)
-    - орієнталістика (Oriental studies)
-    - популяризація (popularization)
-    - об'єктивність (objectivity)
-    - експертиза (expertise)
-    - спадщина (legacy)
+  - діаспора (diaspora)
+  - українознавство (Ukrainian studies)
+  - наукова інституція (academic institution)
+  - архів (archive)
+  - методологія (methodology)
+  - орієнталістика (Oriental studies)
+  - популяризація (popularization)
+  - об'єктивність (objectivity)
+  - експертиза (expertise)
+  - спадщина (legacy)
   recommended:
-    - екзиль (exile)
-    - академічна свобода (academic freedom)
-    - наукова школа (school of thought)
-    - рецензія (peer review)
-    - синтез (synthesis)
-
+  - екзиль (exile)
+  - академічна свобода (academic freedom)
+  - наукова школа (school of thought)
+  - рецензія (peer review)
+  - синтез (synthesis)
 activity_hints:
-  - type: reading
-    focus: 'Preface from Subtelny''s «Ukraine: A History»'
-    source: Provide excerpt
-
-  - type: research
-    focus: Explore HURI website — list 3 current research projects
-    output: Summary with relevance
-
-  - type: comparative-study
-    focus: Compare chapter on Khmelnytsky in Subtelny vs. Soviet textbook
-    output: Key differences in framing
-
-  - type: essay-response
-    focus: "Яку роль відіграла діаспора у збереженні української історичної пам'яті?"
-    word_target: 400
-    model_answer: Required
-
-  - type: bibliography
-    focus: Create reading list of 5 key Western works on Ukrainian history
-    output: Annotated bibliography
-
+- type: reading
+  focus: 'Preface from Subtelny''s «Ukraine: A History»'
+  source: Provide excerpt
+- type: reading
+  focus: Explore HURI website — list 3 current research projects
+  output: Summary with relevance
+- type: comparative-study
+  focus: Compare chapter on Khmelnytsky in Subtelny vs. Soviet textbook
+  output: Key differences in framing
+- type: essay-response
+  focus: Яку роль відіграла діаспора у збереженні української історичної пам'яті?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-02 (Ukrainian historiographical tradition)
-
+- c1-hist-02 (Ukrainian historiographical tradition)
 connects_to:
-  - c1-hist-64-69 (Diaspora studies deep dive)
-  - c1-hist-07 (New Ukrainian historiography - convergence)
+- c1-hist-64-69 (Diaspora studies deep dive)
+- c1-hist-07 (New Ukrainian historiography - convergence)

@@ -1,149 +1,121 @@
-# LIT Module 20: Cult of Shevchenko
-# Status: SPEC (ready for content development)
-
 id: lit-20
 title: 'Культ Шевченка: Рецепція і Міфи'
 subtitle: 'The Cult of Shevchenko: Modern Reception'
 slug: cult-of-shevchenko
 module_type: culture
 word_target: 4500
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Шевченко — Вікіпедія
-    url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
-    type: primary
-    notes: Загальна інформація та рецепція
-  - name: Пам'ятники Шевченку
-    url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
-    type: secondary
-    notes: Меморіальна культура
-  - name: Шевченко в поп-культурі
-    url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
-    type: reference
-    notes: Сучасні інтерпретації
-
+- name: Шевченко — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: primary
+  notes: Загальна інформація та рецепція
+- name: Пам'ятники Шевченку
+  url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
+  type: secondary
+  notes: Меморіальна культура
+- name: Шевченко в поп-культурі
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
+  type: reference
+  notes: Сучасні інтерпретації
 content_outline:
-  - section: Вступ — Від Пророка до Ікони
-    words: 500
-    points:
-      - Еволюція образу Шевченка
-      - Поет → символ → міф
-      - Чому це важливо аналізувати
-
-  - section: Радянський Шевченко
-    words: 700
-    points:
-      - Канонізація в СРСР
-      - Революційний демократ
-      - Що приховували і що підкреслювали
-
-  - section: Діаспорний Шевченко
-    words: 700
-    points:
-      - Шевченко як "батько нації"
-      - Пам'ятники по світу
-      - Ритуали (марші, декламації)
-
-  - section: Сучасні реінтерпретації
-    words: 800
-    points:
-      - Андрій Грехов і "Кобзар 2.0"
-      - Шевченко в мемах і поп-культурі
-      - Деканонізація vs нова канонізація
-
-  - section: Концепція "Національного Батька"
-    words: 500
-    points:
-      - Ризики сакралізації
-      - Шевченко як "шкільний тягар"
-      - Як читати класика по-новому
-
-  - section: Підсумок — Живий чи бронзовий?
-    words: 400
-    points:
-      - Шевченко для XXI століття
-      - Від культу до діалогу
-      - Перехід до наступного автора
-
+- section: Вступ — Від Пророка до Ікони
+  words: 500
+  points:
+  - Еволюція образу Шевченка
+  - Поет → символ → міф
+  - Чому це важливо аналізувати
+- section: Радянський Шевченко
+  words: 700
+  points:
+  - Канонізація в СРСР
+  - Революційний демократ
+  - Що приховували і що підкреслювали
+- section: Діаспорний Шевченко
+  words: 700
+  points:
+  - Шевченко як "батько нації"
+  - Пам'ятники по світу
+  - Ритуали (марші, декламації)
+- section: Сучасні реінтерпретації
+  words: 800
+  points:
+  - Андрій Грехов і "Кобзар 2.0"
+  - Шевченко в мемах і поп-культурі
+  - Деканонізація vs нова канонізація
+- section: Концепція "Національного Батька"
+  words: 500
+  points:
+  - Ризики сакралізації
+  - Шевченко як "шкільний тягар"
+  - Як читати класика по-новому
+- section: Підсумок — Живий чи бронзовий?
+  words: 400
+  points:
+  - Шевченко для XXI століття
+  - Від культу до діалогу
+  - Перехід до наступного автора
 vocabulary_hints:
   required:
-    - культ (cult)
-    - рецепція (reception)
-    - канонізація (canonization)
-    - деканонізація (decanonization)
-    - міф (myth)
-    - ікона (icon)
-    - пам'ятник (monument)
-    - реінтерпретація (reinterpretation)
-    - сакралізація (sacralization)
-    - ідентичність (identity)
+  - культ (cult)
+  - рецепція (reception)
+  - канонізація (canonization)
+  - деканонізація (decanonization)
+  - міф (myth)
+  - ікона (icon)
+  - пам'ятник (monument)
+  - реінтерпретація (reinterpretation)
+  - сакралізація (sacralization)
+  - ідентичність (identity)
   recommended:
-    - мем (meme)
-    - поп-культура (pop culture)
-    - діаспора (diaspora)
-    - ритуал (ritual)
-    - класик (classic)
-
+  - мем (meme)
+  - поп-культура (pop culture)
+  - діаспора (diaspora)
+  - ритуал (ritual)
+  - класик (classic)
 activity_hints:
-  - type: reading
-    focus: Критичні статті про рецепцію Шевченка
-    source: Wikipedia and academic sources
-    items: "4+"
-
-  - type: quiz
-    focus: Факти про меморіальну культуру
-    items: "15+"
-
-  - type: match-up
-    focus: Інтерпретація → її контекст (радянська / діаспорна / сучасна)
-    items: "12+"
-
-  - type: essay-response
-    focus: Концепція "Національного Батька" — ризики і переваги
-    word_target: 300
-    output: Критичне есе
-
-  - type: discussion
-    focus: Як читати Шевченка у XXI столітті?
-    output: Дискусія про актуальність
-
-  - type: group-sort
-    focus: Факти vs міфи про Шевченка
-    items: "15+"
-
+- type: reading
+  focus: Критичні статті про рецепцію Шевченка
+  source: Wikipedia and academic sources
+  items: 4+
+- type: quiz
+  focus: Факти про меморіальну культуру
+  items: 15+
+- type: match-up
+  focus: Інтерпретація → її контекст (радянська / діаспорна / сучасна)
+  items: 12+
+- type: essay-response
+  focus: Концепція "Національного Батька" — ризики і переваги
+  word_target: 300
+  output: Критичне есе
+- type: group-sort
+  focus: Факти vs міфи про Шевченка
+  items: 15+
 prerequisites:
-  - lit-11 to lit-19 (all Shevchenko modules)
-  - Critical thinking skills
-
+- lit-11 to lit-19 (all Shevchenko modules)
+- Critical thinking skills
 connects_to:
-  - lit-21 (Panteleimon Kulish — наступний автор)
-  - c1-hist (Historical modules — культурна пам'ять)
-
-version: "1.0"
+- lit-21 (Panteleimon Kulish — наступний автор)
+- c1-hist (Historical modules — культурна пам'ять)
+version: '1.0'
 phase: LIT.3 The Prophet (Taras Shevchenko)
 focus: culture
 pedagogy: Seminar
 duration: 120
 transliteration: none
 tags:
-  - literature
-  - shevchenko
-  - culture
-  - myth
-  - identity
-
+- literature
+- shevchenko
+- culture
+- myth
+- identity
 objectives:
-  - Analyze the evolution of Shevchenko's image from poet to national myth.
-  - Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
-  - Critically evaluate the risks and benefits of cultural canonization.
-
+- Analyze the evolution of Shevchenko's image from poet to national myth.
+- Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
+- Critically evaluate the risks and benefits of cultural canonization.
 grammar:
-  - Critical discourse
-  - Modern essayistic style
-
+- Critical discourse
+- Modern essayistic style
 naturalness:
   score: 10
   status: PASS

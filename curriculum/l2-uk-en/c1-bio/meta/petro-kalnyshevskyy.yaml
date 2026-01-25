@@ -1,152 +1,124 @@
-# C1-BIO Module 15: Петро Калнишевський: Останній кошовий
-# Status: SPEC (ready for content development)
-
 id: c1-bio-15
-title: "Петро Калнишевський: Останній кошовий"
+title: 'Петро Калнишевський: Останній кошовий'
 slug: petro-kalnyshevskyy
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Петро Калнишевський (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
-    type: primary
-    notes: Biography, last koshovyi, imprisonment
-  - name: Знищення Запорозької Січі
-    url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
-    type: primary
-    notes: Events of 1775
-  - name: Соловецький монастир
-    url: https://uk.wikipedia.org/wiki/Соловецький_монастир
-    type: reference
-    notes: Place of imprisonment
-
+- name: Петро Калнишевський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+  type: primary
+  notes: Biography, last koshovyi, imprisonment
+- name: Знищення Запорозької Січі
+  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+  type: primary
+  notes: Events of 1775
+- name: Соловецький монастир
+  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+  type: reference
+  notes: Place of imprisonment
 content_outline:
-  - section: Вступ — Останній лицар степу
-    words: 400
-    points:
-      - Калнишевський як символ кінця козацької епохи
-      - Трагедія ліквідації Січі
-      - Його мученицька доля
-
-  - section: Шлях до кошового отаманства
-    words: 600
-    points:
-      - Походження та молодість
-      - Козацька кар'єра
-      - Обрання кошовим 1762 року
-      - Характер та лідерські якості
-
-  - section: Розквіт Нової Січі
-    words: 700
-    points:
-      - Економічний розвиток
-      - Адміністративні реформи
-      - Церковне будівництво
-      - Відносини з Російською імперією
-
-  - section: Наростання загрози
-    words: 700
-    points:
-      - Імперська політика Катерини II
-      - Обмеження козацьких свобод
-      - Спроби дипломатичного опору
-      - Потьомкін і плани щодо Січі
-
-  - section: Ліквідація Січі 1775 року
-    words: 800
-    points:
-      - Військова операція
-      - Зречення Калнишевського клейнодів
-      - Арешт старшини
-      - Кінець козацької автономії
-
-  - section: Ув'язнення та смерть
-    words: 500
-    points:
-      - Соловецький монастир
-      - 25 років в одиночній камері
-      - Умови ув'язнення
-      - Смерть у 112 років (?)
-      - Канонізація
-
-  - section: Підсумок — Мученик за волю
-    words: 300
-    points:
-      - Калнишевський як символ опору імперії
-      - Кінець козацької України
-      - Пам'ять про останнього кошового
-
+- section: Вступ — Останній лицар степу
+  words: 400
+  points:
+  - Калнишевський як символ кінця козацької епохи
+  - Трагедія ліквідації Січі
+  - Його мученицька доля
+- section: Шлях до кошового отаманства
+  words: 600
+  points:
+  - Походження та молодість
+  - Козацька кар'єра
+  - Обрання кошовим 1762 року
+  - Характер та лідерські якості
+- section: Розквіт Нової Січі
+  words: 700
+  points:
+  - Економічний розвиток
+  - Адміністративні реформи
+  - Церковне будівництво
+  - Відносини з Російською імперією
+- section: Наростання загрози
+  words: 700
+  points:
+  - Імперська політика Катерини II
+  - Обмеження козацьких свобод
+  - Спроби дипломатичного опору
+  - Потьомкін і плани щодо Січі
+- section: Ліквідація Січі 1775 року
+  words: 800
+  points:
+  - Військова операція
+  - Зречення Калнишевського клейнодів
+  - Арешт старшини
+  - Кінець козацької автономії
+- section: Ув'язнення та смерть
+  words: 500
+  points:
+  - Соловецький монастир
+  - 25 років в одиночній камері
+  - Умови ув'язнення
+  - Смерть у 112 років (?)
+  - Канонізація
+- section: Підсумок — Мученик за волю
+  words: 300
+  points:
+  - Калнишевський як символ опору імперії
+  - Кінець козацької України
+  - Пам'ять про останнього кошового
 vocabulary_hints:
   required:
-    - кошовий (koshovyi)
-    - ліквідація (liquidation)
-    - ув'язнення (imprisonment)
-    - мученик (martyr)
-    - клейноди (regalia)
-    - зречення (abdication)
-    - монастир (monastery)
-    - каземат (dungeon)
-    - канонізація (canonization)
-    - автономія (autonomy)
+  - кошовий (koshovyi)
+  - ліквідація (liquidation)
+  - ув'язнення (imprisonment)
+  - мученик (martyr)
+  - клейноди (regalia)
+  - зречення (abdication)
+  - монастир (monastery)
+  - каземат (dungeon)
+  - канонізація (canonization)
+  - автономія (autonomy)
   recommended:
-    - одиночна камера (solitary cell)
-    - амністія (amnesty)
-    - преподобний (venerable)
-    - старшина (officer class)
-    - архів (archive)
-
+  - одиночна камера (solitary cell)
+  - амністія (amnesty)
+  - преподобний (venerable)
+  - старшина (officer class)
+  - архів (archive)
 activity_hints:
-  - type: reading
-    focus: Documents about the liquidation of the Sich
-    source: Imperial decrees and reports (adapted)
-    items: "3 passages"
-
-  - type: quiz
-    focus: Facts about Kalnyshevskyi and the end of the Sich
-    items: "12+"
-
-  - type: match-up
-    focus: Key figures in 1775 events and their roles
-    items: "10+"
-
-  - type: essay-response
-    focus: Why did the Empire destroy the Sich?
-    word_target: 250
-    output: Analysis of imperial motivations
-
-  - type: group-sort
-    focus: Achievements of the Sich vs. reasons for destruction
-    items: "12+"
-
-  - type: fill-in
-    focus: Terminology of repression and martyrdom
-    items: "8+"
-
-  - type: discussion
-    focus: Compare Kalnyshevskyi's fate with other political prisoners
-    output: Comparative analysis across eras
-
-  - type: critical-analysis
-    focus: Evaluate the claim that he lived to 112
-    output: Historical source criticism
-
+- type: reading
+  focus: Documents about the liquidation of the Sich
+  source: Imperial decrees and reports (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Facts about Kalnyshevskyi and the end of the Sich
+  items: 12+
+- type: match-up
+  focus: Key figures in 1775 events and their roles
+  items: 10+
+- type: essay-response
+  focus: Why did the Empire destroy the Sich?
+  word_target: 250
+  output: Analysis of imperial motivations
+- type: group-sort
+  focus: Achievements of the Sich vs. reasons for destruction
+  items: 12+
+- type: fill-in
+  focus: Terminology of repression and martyrdom
+  items: 8+
+- type: critical-analysis
+  focus: Evaluate the claim that he lived to 112
+  output: Historical source criticism
 prerequisites:
-  - c1-bio-13 (Kost Hordiyenko - earlier Sich leader)
-  - c1-bio-14 (Pylyp Orlyk - emigration alternative)
-  - Understanding of 18th century Russian imperialism
-
+- c1-bio-13 (Kost Hordiyenko - earlier Sich leader)
+- c1-bio-14 (Pylyp Orlyk - emigration alternative)
+- Understanding of 18th century Russian imperialism
 connects_to:
-  - c1-bio-16 (Hryhoriy Skovoroda - same era, different path)
-  - c1-bio-71 (Levko Lukyanenko - later political prisoner)
-  - c1-bio-77 (Vasyl Stus - prison martyrdom)
-
+- c1-bio-16 (Hryhoriy Skovoroda - same era, different path)
+- c1-bio-71 (Levko Lukyanenko - later political prisoner)
+- c1-bio-77 (Vasyl Stus - prison martyrdom)
 naturalness:
   score: null
   status: PENDING

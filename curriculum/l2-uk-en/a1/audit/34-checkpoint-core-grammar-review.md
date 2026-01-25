@@ -1,17 +1,52 @@
-# Audit Report: 34-checkpoint-core-grammar.md
-**Phase:** A1.3 | **Level:** A1 | **Pedagogy:** Review | **Target:** 750
+# Audit Report: M34 — 34-checkpoint-core-grammar.md
+**Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** Review | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:54:18
+
+## Configuration
+**Type:** A1-checkpoint
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥10 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz
+**Engagement:** ≥2 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Cyrillic Mastery | 12 | 8 | ✅ |
+| 2 | match-up | Gender Recognition | 10 | 8 | ✅ |
+| 3 | fill-in | Demonstrative Agreement | 12 | 8 | ✅ |
+| 4 | fill-in | Verb Tenses - Present | 12 | 8 | ✅ |
+| 5 | fill-in | Verb Tenses - Past | 12 | 8 | ✅ |
+| 6 | fill-in | Case Usage | 12 | 8 | ✅ |
+| 7 | group-sort | Parts of Speech | 12 | 10 | ✅ |
+| 8 | group-sort | Gender Recognition | 12 | 10 | ✅ |
+| 9 | quiz | Daily Life Situations | 12 | 8 | ✅ |
+| 10 | true-false | A1 Knowledge Check | 12 | 8 | ✅ |
+| 11 | unjumble | Sentence Building | 12 | 6 | ✅ |
+| 12 | match-up | Time Expressions | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1351/750
+- **Words:** ✅ 1351/750 (raw: 1490)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 133/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,12 +54,6 @@
 - **Immersion:** 🇺🇦 41.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

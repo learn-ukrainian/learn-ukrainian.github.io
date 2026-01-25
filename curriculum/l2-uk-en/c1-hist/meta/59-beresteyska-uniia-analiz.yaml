@@ -1,8 +1,5 @@
-# C1-HIST Module 59: Берестейська унія — Глибокий аналіз
-# Status: SPEC (ready for content development)
-
 id: c1-hist-59
-title: "Берестейська унія: Глибокий аналіз"
+title: 'Берестейська унія: Глибокий аналіз'
 slug: beresteyska-uniia-analiz
 version: '1.0'
 phase: C1-HIST.1 [Historiography]
@@ -10,129 +7,111 @@ focus: history
 module_type: thematic
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Берестейська унія (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Берестейська_унія
-    type: reference
-    notes: Overview
-  - name: Греко-католицька церква (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
-    type: reference
-    notes: UGCC history
-  - name: Православна опозиція унії
-    url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
-    type: reference
-    notes: Opposition
-
+- name: Берестейська унія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  type: reference
+  notes: Overview
+- name: Греко-католицька церква (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: UGCC history
+- name: Православна опозиція унії
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
+  type: reference
+  notes: Opposition
 content_outline:
-  - section: Вступ — Розкол, що визначив історію
-    words: 400
-    points:
-      - 1596 рік — що відбулося
-      - Чому це важливо
-      - Наслідки на століття
-      - Структура модуля
-
-  - section: Контекст — чому унія стала можливою
-    words: 600
-    points:
-      - Криза православної церкви
-      - Занепад освіти
-      - Тиск католицизму
-      - Флорентійська унія — прецедент
-      - Політичні мотиви єпископів
-
-  - section: Що підписали в Бересті
-    words: 600
-    points:
-      - Умови унії
-      - Збереження обряду
-      - Підпорядкування Папі
-      - Хто підписав, хто відмовився
-      - Два собори — унійний і православний
-
-  - section: Хто підтримав, хто відкинув
-    words: 700
-    points:
-      - Єпископи — за
-      - Козаки — проти
-      - Братства — проти
-      - Шляхта — розділена
-      - Магнати — переважно за
-      - Класовий і регіональний розподіл
-
-  - section: Наслідки розколу
-    words: 600
-    points:
-      - Конфлікт на століття
-      - Козацькі війни — релігійний вимір
-      - Православне відродження (Могила)
-      - Два українські народи?
-
-  - section: Унія в історичній пам'яті
-    words: 400
-    points:
-      - Православна інтерпретація — зрада
-      - Греко-католицька інтерпретація — порятунок
-      - Сучасний погляд — складність
-      - Екуменічні спроби
-
-  - section: Підсумок
-    words: 200
-    points:
-      - Унія як розлом
-      - Два шляхи — захід і схід
-      - Підготовка до православної ідентичності
-
+- section: Вступ — Розкол, що визначив історію
+  words: 400
+  points:
+  - 1596 рік — що відбулося
+  - Чому це важливо
+  - Наслідки на століття
+  - Структура модуля
+- section: Контекст — чому унія стала можливою
+  words: 600
+  points:
+  - Криза православної церкви
+  - Занепад освіти
+  - Тиск католицизму
+  - Флорентійська унія — прецедент
+  - Політичні мотиви єпископів
+- section: Що підписали в Бересті
+  words: 600
+  points:
+  - Умови унії
+  - Збереження обряду
+  - Підпорядкування Папі
+  - Хто підписав, хто відмовився
+  - Два собори — унійний і православний
+- section: Хто підтримав, хто відкинув
+  words: 700
+  points:
+  - Єпископи — за
+  - Козаки — проти
+  - Братства — проти
+  - Шляхта — розділена
+  - Магнати — переважно за
+  - Класовий і регіональний розподіл
+- section: Наслідки розколу
+  words: 600
+  points:
+  - Конфлікт на століття
+  - Козацькі війни — релігійний вимір
+  - Православне відродження (Могила)
+  - Два українські народи?
+- section: Унія в історичній пам'яті
+  words: 400
+  points:
+  - Православна інтерпретація — зрада
+  - Греко-католицька інтерпретація — порятунок
+  - Сучасний погляд — складність
+  - Екуменічні спроби
+- section: Підсумок
+  words: 200
+  points:
+  - Унія як розлом
+  - Два шляхи — захід і схід
+  - Підготовка до православної ідентичності
 vocabulary_hints:
   required:
-    - унія (union)
-    - Берестейська унія (Union of Brest)
-    - греко-католицький (Greek Catholic)
-    - православний (Orthodox)
-    - обряд (rite)
-    - собор (council/synod)
-    - єпископ (bishop)
-    - братство (brotherhood)
-    - розкол (schism)
-    - екуменізм (ecumenism)
+  - унія (union)
+  - Берестейська унія (Union of Brest)
+  - греко-католицький (Greek Catholic)
+  - православний (Orthodox)
+  - обряд (rite)
+  - собор (council/synod)
+  - єпископ (bishop)
+  - братство (brotherhood)
+  - розкол (schism)
+  - екуменізм (ecumenism)
   recommended:
-    - Флорентійська унія (Council of Florence)
-    - унійний (Uniate)
-    - примас (primate)
-    - архієпископ (archbishop)
-    - апостольський (apostolic)
-
+  - Флорентійська унія (Council of Florence)
+  - унійний (Uniate)
+  - примас (primate)
+  - архієпископ (archbishop)
+  - апостольський (apostolic)
 activity_hints:
-  - type: stakeholder-analysis
-    focus: Map who supported/opposed union and why
-    output: Stakeholder diagram
-
-  - type: document-analysis
-    focus: Analyze Union agreement terms
-    output: Legal analysis
-
-  - type: perspective-comparison
-    focus: Orthodox vs. Greek Catholic interpretation
-    output: Dual narrative analysis
-
-  - type: long-term-impact
-    focus: Trace consequences to present day
-    output: Impact timeline
-
-  - type: essay-response
-    focus: "Чи була Берестейська унія 'зрадою' чи 'порятунком'?"
-    word_target: 400
-    model_answer: Required (showing both perspectives)
-
+- type: critical-analysis
+  focus: Map who supported/opposed union and why
+  output: Stakeholder diagram
+- type: critical-analysis
+  focus: Analyze Union agreement terms
+  output: Legal analysis
+- type: comparative-study
+  focus: Orthodox vs. Greek Catholic interpretation
+  output: Dual narrative analysis
+- type: critical-analysis
+  focus: Trace consequences to present day
+  output: Impact timeline
+- type: essay-response
+  focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
+  word_target: 400
+  model_answer: Required (showing both perspectives)
 prerequisites:
-  - c1-hist-58 (Byzantine heritage)
-  - c1-hist-19-22 (Cossack chronicles context)
-
+- c1-hist-58 (Byzantine heritage)
+- c1-hist-19-22 (Cossack chronicles context)
 connects_to:
-  - c1-hist-60 (Orthodox identity)
-  - c1-hist-61 (Greek Catholic Church)
-  - c1-hist-114-117 (Polish-Ukrainian relations)
+- c1-hist-60 (Orthodox identity)
+- c1-hist-61 (Greek Catholic Church)
+- c1-hist-114-117 (Polish-Ukrainian relations)

@@ -211,9 +211,11 @@ History modules must present Ukrainian history from Ukrainian perspective:
 
 ## Structure (CBI/Narrative)
 
+**CRITICAL: NO ESSAYS IN MARKDOWN.** All analytical prompts and model answers must be in `activities/{slug}.yaml`.
+
 1. `## Вступ` - Historical context and hook
 2. `## Наратив` - Extended historical narrative (500+ words)
-3. `## Аналіз` - Analysis of events/significance
+3. `## Аналіз` - Historical analysis (prose only, no task prompts)
 4. `## Джерела` - Primary source excerpts (when available)
 5. `## Підсумок` - Summary and legacy
 

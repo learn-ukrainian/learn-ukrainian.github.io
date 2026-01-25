@@ -1,141 +1,113 @@
-# C1-BIO Module 82: Юрій Винничук: Львівський казкар
-# Status: SPEC (ready for content development)
-
 id: c1-bio-82
-title: "Юрій Винничук: Львівський казкар"
+title: 'Юрій Винничук: Львівський казкар'
 slug: yuriy-vynnychuk
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Юрій Винничук (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Видавництво Фоліо
-    url: https://folio.com.ua/
-    type: reference
-    notes: Бібліографія
-  - name: Літературна критика
-    url: https://litakcent.com/
-    type: reference
-    notes: Аналіз творчості
-
+- name: Юрій Винничук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Фоліо
+  url: https://folio.com.ua/
+  type: reference
+  notes: Бібліографія
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
 content_outline:
-  - section: Вступ — Майстер львівської містики
-    words: 400
-    points:
-      - Винничук як унікальний голос української літератури
-      - Львів як головний герой його творчості
-      - Від андеграунду до визнання
-
-  - section: Львівське дитинство
-    words: 600
-    points:
-      - Народження у Львові (1952)
-      - Формування в атмосфері старого Львова
-      - Ранні літературні спроби
-
-  - section: Андеграунд та перші публікації
-    words: 700
-    points:
-      - Творчість у радянський період
-      - Цензура та обмеження
-      - Самвидав та неофіційна культура
-
-  - section: Містифікації та гра з читачем
-    words: 800
-    points:
-      - Легенди Львова як літературний проект
-      - Створення псевдоісторичних текстів
-      - Гра між фактом і вигадкою
-
-  - section: Танґо смерті та великі романи
-    words: 700
-    points:
-      - Аналіз головного роману
-      - Тема Голокосту та міжнаціональних стосунків
-      - Нагороди та визнання
-
-  - section: Сучасна творчість
-    words: 600
-    points:
-      - Нові проекти та теми
-      - Громадська позиція
-      - Вплив на молоде покоління
-
-  - section: Дискусія — Літературна містифікація як жанр
-    words: 200
-    points:
-      - Етика вигадування історії
-      - Роль уяви у збереженні памяті
-
+- section: Вступ — Майстер львівської містики
+  words: 400
+  points:
+  - Винничук як унікальний голос української літератури
+  - Львів як головний герой його творчості
+  - Від андеграунду до визнання
+- section: Львівське дитинство
+  words: 600
+  points:
+  - Народження у Львові (1952)
+  - Формування в атмосфері старого Львова
+  - Ранні літературні спроби
+- section: Андеграунд та перші публікації
+  words: 700
+  points:
+  - Творчість у радянський період
+  - Цензура та обмеження
+  - Самвидав та неофіційна культура
+- section: Містифікації та гра з читачем
+  words: 800
+  points:
+  - Легенди Львова як літературний проект
+  - Створення псевдоісторичних текстів
+  - Гра між фактом і вигадкою
+- section: Танґо смерті та великі романи
+  words: 700
+  points:
+  - Аналіз головного роману
+  - Тема Голокосту та міжнаціональних стосунків
+  - Нагороди та визнання
+- section: Сучасна творчість
+  words: 600
+  points:
+  - Нові проекти та теми
+  - Громадська позиція
+  - Вплив на молоде покоління
+- section: Дискусія — Літературна містифікація як жанр
+  words: 200
+  points:
+  - Етика вигадування історії
+  - Роль уяви у збереженні памяті
 vocabulary_hints:
   required:
-    - містифікація (mystification)
-    - постмодернізм (postmodernism)
-    - легенда (legend)
-    - андеграунд (underground)
-    - ретро (retro)
-    - іронія (irony)
-    - псевдоісторичний (pseudo-historical)
-    - багатокультурність (multiculturalism)
-    - гра (game/play)
-    - фантасмагорія (phantasmagoria)
+  - містифікація (mystification)
+  - постмодернізм (postmodernism)
+  - легенда (legend)
+  - андеграунд (underground)
+  - ретро (retro)
+  - іронія (irony)
+  - псевдоісторичний (pseudo-historical)
+  - багатокультурність (multiculturalism)
+  - гра (game/play)
+  - фантасмагорія (phantasmagoria)
   recommended:
-    - пастиш (pastiche)
-    - інтертекстуальність (intertextuality)
-    - міська культура (urban culture)
-    - ностальгія (nostalgia)
-    - деконструкція (deconstruction)
-
+  - пастиш (pastiche)
+  - інтертекстуальність (intertextuality)
+  - міська культура (urban culture)
+  - ностальгія (nostalgia)
+  - деконструкція (deconstruction)
 activity_hints:
-  - type: reading
-    focus: Фрагменти Танґо смерті
-    source: Художній текст
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про творчість Винничука
-    items: "12+"
-
-  - type: match-up
-    focus: Твори та їхні теми
-    items: "10+"
-
-  - type: essay-response
-    focus: Чи етично вигадувати історію?
-    word_target: 300
-    output: Критичний есей
-
-  - type: group-sort
-    focus: Реальні vs вигадані елементи
-    items: "12+"
-
-  - type: fill-in
-    focus: Літературознавча термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як літературний Львів відрізняється від реального?
-    output: Порівняльний аналіз
-
+- type: reading
+  focus: Фрагменти Танґо смерті
+  source: Художній текст
+  items: 3 passages
+- type: quiz
+  focus: Факти про творчість Винничука
+  items: 12+
+- type: match-up
+  focus: Твори та їхні теми
+  items: 10+
+- type: essay-response
+  focus: Чи етично вигадувати історію?
+  word_target: 300
+  output: Критичний есей
+- type: group-sort
+  focus: Реальні vs вигадані елементи
+  items: 12+
+- type: fill-in
+  focus: Літературознавча термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-81-vasyl-shkliar
-
+- c1-bio-81-vasyl-shkliar
 connects_to:
-  - c1-bio-89-taras-prokhasko
-  - c1-bio-86-oksana-zabuzhko
-  - c1-bio-84-halyna-pahutyak
-
+- c1-bio-89-taras-prokhasko
+- c1-bio-86-oksana-zabuzhko
+- c1-bio-84-halyna-pahutyak
 vital_status: living
-
 naturalness:
   score: 1
   status: PENDING

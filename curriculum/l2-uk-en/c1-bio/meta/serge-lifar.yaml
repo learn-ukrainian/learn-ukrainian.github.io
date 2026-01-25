@@ -1,138 +1,112 @@
-# C1-BIO Module 67: Серж Лифар
-# Status: SPEC (ready for content development)
-
 id: c1-bio-67
-title: "Серж Лифар: Зірка балету"
+title: 'Серж Лифар: Зірка балету'
 slug: serge-lifar
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Серж Лифар (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
-    type: primary
-    notes: Біографія, балетна кар'єра, хореографія
-  - name: Opéra national de Paris
-    url: https://www.operadeparis.fr
-    type: reference
-    notes: Паризька опера та балет
-  - name: Archives du XXe siècle
-    url: https://ina.fr
-    type: reference
-    notes: Документальні матеріали
-
+- name: Серж Лифар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
+  type: primary
+  notes: Біографія, балетна кар'єра, хореографія
+- name: Opéra national de Paris
+  url: https://www.operadeparis.fr
+  type: reference
+  notes: Паризька опера та балет
+- name: Archives du XXe siècle
+  url: https://ina.fr
+  type: reference
+  notes: Документальні матеріали
 content_outline:
-  - section: Вступ — Бог танцю з Києва
-    words: 400
-    points:
-      - Лифар як один із найвидатніших танцівників та хореографів XX століття
-      - Українське походження та французька слава
-      - Революція в класичному балеті
-
-  - section: Київська молодість (1905-1921)
-    words: 600
-    points:
-      - Народження в Києві
-      - Перші кроки в балеті
-      - Вплив революційних подій на родину
-      - Рішення емігрувати
-
-  - section: «Російські сезони» та Дягілєв (1921-1929)
-    words: 800
-    points:
-      - Приєднання до трупи Дягілєва
-      - Стрімкий злет до статусу прем'єра
-      - Співпраця з Стравінським та Кокто
-      - Смерть Дягілєва та кінець епохи
-
-  - section: Паризька опера (1929-1958)
-    words: 800
-    points:
-      - Призначення директором балету
-      - Реформа французького балету
-      - Створення неокласичного стилю
-      - Понад 200 хореографічних постановок
-
-  - section: Суперечлива спадщина
-    words: 700
-    points:
-      - Діяльність під час німецької окупації
-      - Звинувачення у колабораціонізмі
-      - Виправдання та повернення
-      - Оцінка його ролі істориками
-
-  - section: Останні роки та пам'ять (1958-1986)
-    words: 700
-    points:
-      - Робота поза Паризькою оперою
-      - Викладання та теоретичні праці
-      - Українська ідентичність до кінця життя
-      - Смерть у Лозанні та поховання в Києві
-
+- section: Вступ — Бог танцю з Києва
+  words: 400
+  points:
+  - Лифар як один із найвидатніших танцівників та хореографів XX століття
+  - Українське походження та французька слава
+  - Революція в класичному балеті
+- section: Київська молодість (1905-1921)
+  words: 600
+  points:
+  - Народження в Києві
+  - Перші кроки в балеті
+  - Вплив революційних подій на родину
+  - Рішення емігрувати
+- section: «Російські сезони» та Дягілєв (1921-1929)
+  words: 800
+  points:
+  - Приєднання до трупи Дягілєва
+  - Стрімкий злет до статусу прем'єра
+  - Співпраця з Стравінським та Кокто
+  - Смерть Дягілєва та кінець епохи
+- section: Паризька опера (1929-1958)
+  words: 800
+  points:
+  - Призначення директором балету
+  - Реформа французького балету
+  - Створення неокласичного стилю
+  - Понад 200 хореографічних постановок
+- section: Суперечлива спадщина
+  words: 700
+  points:
+  - Діяльність під час німецької окупації
+  - Звинувачення у колабораціонізмі
+  - Виправдання та повернення
+  - Оцінка його ролі істориками
+- section: Останні роки та пам'ять (1958-1986)
+  words: 700
+  points:
+  - Робота поза Паризькою оперою
+  - Викладання та теоретичні праці
+  - Українська ідентичність до кінця життя
+  - Смерть у Лозанні та поховання в Києві
 vocabulary_hints:
   required:
-    - балет (ballet)
-    - танцівник (dancer)
-    - хореограф (choreographer)
-    - прем'єр (premier danseur)
-    - Паризька опера (Paris Opera)
-    - неокласицизм (neoclassicism)
-    - постановка (production)
-    - трупа (troupe)
-    - еміграція (emigration)
-    - колабораціонізм (collaborationism)
+  - балет (ballet)
+  - танцівник (dancer)
+  - хореограф (choreographer)
+  - прем'єр (premier danseur)
+  - Паризька опера (Paris Opera)
+  - неокласицизм (neoclassicism)
+  - постановка (production)
+  - трупа (troupe)
+  - еміграція (emigration)
+  - колабораціонізм (collaborationism)
   recommended:
-    - «Російські сезони» (Ballets Russes)
-    - Дягілєв (Diaghilev)
-    - pas de deux (pas de deux)
-    - хореографія (choreography)
-    - сценографія (scenography)
-
+  - «Російські сезони» (Ballets Russes)
+  - Дягілєв (Diaghilev)
+  - pas de deux (pas de deux)
+  - хореографія (choreography)
+  - сценографія (scenography)
 activity_hints:
-  - type: reading
-    focus: Мистецька біографія
-    source: Уривки з мемуарів та критичних статей
-    items: "3 passages"
-
-  - type: quiz
-    focus: Біографія та балетна кар'єра
-    items: "12+"
-
-  - type: match-up
-    focus: Балети та їхні характеристики
-    items: "10+"
-
-  - type: essay-response
-    focus: Чи виправдовує геніальність суперечливі рішення?
-    word_target: 300
-    output: Етичне есе
-
-  - type: group-sort
-    focus: Танцівник vs хореограф
-    items: "12+"
-
-  - type: fill-in
-    focus: Балетна термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Українська ідентичність Лифаря
-    output: Біографічний аналіз
-
+- type: reading
+  focus: Мистецька біографія
+  source: Уривки з мемуарів та критичних статей
+  items: 3 passages
+- type: quiz
+  focus: Біографія та балетна кар'єра
+  items: 12+
+- type: match-up
+  focus: Балети та їхні характеристики
+  items: 10+
+- type: essay-response
+  focus: Чи виправдовує геніальність суперечливі рішення?
+  word_target: 300
+  output: Етичне есе
+- type: group-sort
+  focus: Танцівник vs хореограф
+  items: 12+
+- type: fill-in
+  focus: Балетна термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-41 (Соломія Крушельницька)
-
+- c1-bio-41 (Соломія Крушельницька)
 connects_to:
-  - c1-bio-56 (Олександр Архипенко)
-  - c1-bio-62 (Віра Холодна)
-  - c1-bio-64 (Борис Лятошинський)
-
+- c1-bio-56 (Олександр Архипенко)
+- c1-bio-62 (Віра Холодна)
+- c1-bio-64 (Борис Лятошинський)
 naturalness:
   score: 1
   status: PENDING

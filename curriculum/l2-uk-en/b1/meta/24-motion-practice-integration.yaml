@@ -1,15 +1,10 @@
-# B1 Module 24: Дієслова руху - практика та інтеграція
-# Status: SPEC (ready for content development)
-
 id: b1-24
 title: 'Дієслова руху: практика та інтеграція'
 subtitle: 'Motion verbs: practice and integration'
 slug: 24-motion-practice-integration
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1500
+immersion: 100% Ukrainian
 version: '2.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -17,132 +12,99 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - integration
-  - practice
-  - prepositions
+- grammar
+- motion-verbs
+- integration
+- practice
+- prepositions
 grammar:
-  - Integration of pure and prefixed motion verbs
-  - Prepositions governing motion (в, на, до, через, повз)
-  - Figurative idioms with motion verbs
+- Integration of pure and prefixed motion verbs
+- Prepositions governing motion (в, на, до, через, повз)
+- Figurative idioms with motion verbs
 objectives:
-  - Master complex travel narratives
-  - Correctly use prepositions with specific motion prefixes
-  - Understand and use high-frequency motion idioms
-
-# === AGENT BUILD SPEC ===
-
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
 sources:
-  - name: Ukrainian State Standard 2024 - Motion and Prepositions
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official guidance on preposition-verb combinations
-  - name: Ukrainian Motion Verbs
-    url: https://uk.wikipedia.org/wiki/Дієслова_руху
-    type: reference
-    notes: Comprehensive motion verb reference
-  - name: Ukrainian Prepositions
-    url: https://uk.wikipedia.org/wiki/Прийменник
-    type: reference
-    notes: Preposition usage with motion verbs
-
+- name: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on preposition-verb combinations
+- name: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Comprehensive motion verb reference
+- name: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Preposition usage with motion verbs
 content_outline:
-  - section: Вступ — Інтеграція всього вивченого
-    words: 350
-    points:
-      - Огляд M16-M23
-      - TTT — комплексний тест
-      - Підготовка до контрольної точки
-
-  - section: Опис подорожі
-    words: 600
-    points:
-      - Послідовність дій (вийшов, пішов, дійшов...)
-      - Часові маркери (спочатку, потім, нарешті)
-      - Приклад оповідання
-
-  - section: Прийменники з дієсловами руху
-    words: 600
-    points:
-      - в/на + accusative (напрямок)
-      - до + genitive (мета)
-      - через/повз + accusative (траєкторія)
-      - з/від + genitive (початок)
-
-  - section: Давання напрямків
-    words: 500
-    points:
-      - Ідіть прямо, поверніть...
-      - Перейдіть вулицю, пройдіть повз...
-      - Практика з картою
-
-  - section: Оповідання з рухом
-    words: 600
-    points:
-      - Використання 10+ префіксованих дієслів
-      - Буквальний і переносний рух
-      - Комплексні вправи
-
-  - section: Підсумок
-    words: 350
-    points:
-      - Підготовка до M25
-      - Самоперевірка
-
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 900
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 100
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 250
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
 vocabulary_hints:
   required:
-    - спочатку (at first)
-    - потім (then)
-    - нарешті (finally)
-    - напрямок (direction)
-    - траєкторія (trajectory)
-    - маршрут (route)
-    - повернути (to turn)
-    - прямо (straight)
-    - праворуч (to the right)
-    - ліворуч (to the left)
+  - спочатку (at first)
+  - потім (then)
+  - нарешті (finally)
+  - напрямок (direction)
+  - траєкторія (trajectory)
+  - маршрут (route)
+  - повернути (to turn)
+  - прямо (straight)
+  - праворуч (to the right)
+  - ліворуч (to the left)
   recommended:
-    - на розі (at the corner)
-    - на перехресті (at the intersection)
-    - світлофор (traffic light)
-    - пішохідний перехід (pedestrian crossing)
-    - кілька кварталів (a few blocks)
-
+  - на розі (at the corner)
+  - на перехресті (at the intersection)
+  - світлофор (traffic light)
+  - пішохідний перехід (pedestrian crossing)
+  - кілька кварталів (a few blocks)
 activity_hints:
-  - type: cloze
-    focus: Extended writing - "A journey I took"
-    items: "15+"
-
-  - type: fill-in
-    focus: Map-based - Give complex directions
-    items: "12+"
-
-  - type: dialogue
-    focus: Travel planning with motion verbs
-    items: "10+"
-
-  - type: transform
-    focus: Change direction/destination
-    items: "12+"
-
-  - type: quiz
-    focus: Preposition + motion verb combinations
-    items: "15+"
-
+- type: cloze
+  focus: Extended writing - "A journey I took"
+  items: 15+
+- type: fill-in
+  focus: Map-based - Give complex directions
+  items: 12+
+- type: fill-in
+  focus: Change direction/destination
+  items: 12+
+- type: quiz
+  focus: Preposition + motion verb combinations
+  items: 15+
 prerequisites:
-  - b1-16 (Motion verbs full system)
-  - b1-17 (Motion - coming & going)
-  - b1-18 (Motion - passing & crossing)
-  - b1-19 (Motion - starting & returning)
-  - b1-20 (Motion - approaching & departing)
-  - b1-21 (Motion - figurative uses)
-  - b1-22 (Motion full prefix integration)
-  - b1-23 (Motion patterns in other verbs)
-
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+- b1-21 (Motion - figurative uses)
+- b1-22 (Motion full prefix integration)
+- b1-23 (Motion patterns in other verbs)
 connects_to:
-  - b1-25 (Checkpoint - motion verbs)
-
+- b1-25 (Checkpoint - motion verbs)
 naturalness:
   score: 9
   status: PASS

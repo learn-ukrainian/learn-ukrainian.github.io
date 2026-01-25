@@ -1,292 +1,120 @@
-## Introduction
+# Який? (Which One?): Відносні речення (Relative Clauses)
 
-How do you describe things?
-- The car **red**.
-- The car **of my father**. (Genitive)
-- The car **that I bought**.
+## Introduction / Вступ
 
-In Ukrainian, «that/which/who» corresponds to one flexible word: **Який**.
+**Як ви описуєте світ навколо?** До цього моменту ми вчилися додавати прості прикметники перед іменниками: «червона машина», «цікава книга». Але наше життя набагато складніше. Іноді нам потрібно описати предмет через дію або через його відношення до інших речей. Наприклад: «машина, **яку** купив мій батько» або «книга, **яка** лежить на столі». В українській мові для цього існує універсальне слово-хамелеон — **який**. Це слово є ключем до побудови складних речень. Воно дозволяє вам поєднувати дві думки в одну й робити ваше мовлення точним та елегантним. Сьогодні ми навчимося використовувати **який** для опису людей, місць та предметів, а також зрозуміємо, як це слово змінюється залежно від своєї ролі в реченні.
 
-**We will cover:**
-- **The Linker:** Using *який* to connect sentences.
-- **The Chameleon:** Changing *який* for gender and case.
-- **The Comma:** Always separating the clause!
+How do you describe the world around you? Up until now, we've focused on placing simple adjectives before nouns: "a red car," "an interesting book." But life is more complex than that. Often, we need to describe an object through an action or its relationship to other things: "the car **that** my father bought" or "the book **which** is lying on the table." In Ukrainian, this is the job of the word **який**. This flexible relative pronoun acts as a bridge, allowing you to merge two ideas into one cohesive, sophisticated sentence. Whether you're describing a person you met or a place you visited, **який** is your ultimate tool for precision. This module will show you how this "grammatical chameleon" adapts to the gender and case of your subject, turning basic reports into detailed narratives.
 
-> [!note] Pronunciation
-> **Який** /jɑˈkɪj/. It rhymes with «key» but starts with «ya».
+**Що ви вивчите в цьому модулі:**
 
----
+- Головний сполучний займенник — **який** (which/who/that).
+- Як узгоджувати **який** за родом і числом з головним словом.
+- Магію «детективу відмінків»: чому відмінок займенника залежить від його ролі в підрядному реченні.
+- Як поєднувати абстрактні ідеї за допомогою конструкції **те, що**.
+- Пунктуаційне правило «обов'язкової коми».
 
-## Presentation
+## Presentation / Презентація
 
-### 1. Simple Linking
+### 1. The Chameleon of Choice: Gender and Number
 
-Use **який** to explain *which* object you mean.
-It must match the **Gender** and **Number** of the main word.
+Спочатку розглянемо найпростіше правило. Займенник **який** поводиться як прикметник. Він повинен мати той самий Рід та Число, що й слово, яке він описує.
 
-| Antecedent | Relative Pronoun | Example |
-|------------|------------------|---------|
-| **Чоловік** (m) | **який** | Це чоловік, **який** тут працює. (This is the man **who** works here). |
-| **Жінка** (f) | **яка** | Це жінка, **яка** співає. (This is the woman **who** sings). |
-| **Місто** (n) | **яке** | Це місто, **яке** спить. (This is the city **which** sleeps). |
-| **Люди** (pl) | **які** | Це люди, **які** знають все. (These are people **who** know everything). |
+| Головне слово (Antecedent) | Займенник (Relative Pronoun) | Приклад                            |
+| :------------------------- | :--------------------------- | :--------------------------------- |
+| **Чоловік** (m)            | **який**                     | Це чоловік, **який** тут працює.   |
+| **Жінка** (f)              | **яка**                      | Це жінка, **яка** співає.          |
+| **Місто** (n)              | **яке**                      | Це місто, **яке** ніколи не спить. |
+| **Люди** (pl)              | **які**                      | Це люди, **які** знають все.       |
 
-> [!tip] Comma Rule
-> Always put a comma before **який**!
-> *Це книга, про яку я говорив.*
+### 2. The Case Detective (Детектив відмінків)
 
-## 2. The Case Detective
+Це найважливіша частина цього модуля. Відмінок займенника **який** залежить від його ролі **всередині** тієї частини речення, яку він вводить. Це ніби маленьке речення в реченні зі своїми правилами.
 
-This is the tricky part, but it's also what makes Ukrainian relative clauses so precise and elegant.
+- **Називний (Subject):** Це хлопець, **який** любить музику. («Який» — суб'єкт, він любить).
+- **Знахідний (Object):** Це хлопець, **якого** я знаю. («Якого» — об'єкт, я знаю кого?).
+- **Місцевий (Location):** Це місто, **у якому** я живу. (Препозиція «у» вимагає місцевого відмінка).
 
-Inside the relative clause, **який** acts like a noun or adjective. Its case depends on its **role within the clause**, not on the main sentence.
+### 3. "Who" vs. "Which" (Універсальність української мови)
 
-**Understanding the Logic:**
+В англійській мові ми кажемо "who" про людей і "which" про предмети. В українській мові ми використовуємо **який** для всього!
 
-When you use a relative clause, you're essentially embedding a mini-sentence inside your main sentence. The word **який** plays a role in that mini-sentence (subject, object, etc.), and its case reflects that role.
+- Людина, **яка**...
+- Книга, **яка**...
 
-**Scenario A: Subject**
-- *Я знаю хлопця, **який** любить мене.* (I know a boy **who** loves me).
-- Analysis: In the relative clause «який любить мене,» the word «який» is the subject. Therefore, it's in the Nominative case.
+### 4. Abstract Links: Те, що (That which / What)
 
-**Scenario B: Object**
-- *Я знаю хлопця, **якого** люблю я.* (I know a boy **whom** I love).
-- Analysis: In the relative clause «якого люблю я,» the word «якого» is the direct object (I love whom?). Therefore, it's in the Accusative case. Note that for animate masculine nouns, Accusative = Genitive form.
+Якщо ви описуєте не конкретний предмет, а цілу ідею, використовуйте конструкцію **те, що**.
 
-**Scenario C: Prepositional (Locative)**
-- *Це будинок, **у якому** я живу.* (This is the house **in which** I live).
-- Analysis: The preposition «у» (in) requires the Locative case when indicating location. Therefore, «якому» is in the Locative case.
+- Я чую **те, що** ти кажеш. (I hear what you are saying.)
+- Роби **те, що** тобі подобається. (Do what you like.)
 
-**Step-by-Step Strategy:**
+> [!important] **The Comma Anchor**
+> В українській мові ми **завжди** ставимо кому перед **який** та **що** у відносних реченнях. Це правило є залізним. Кома — це ваш гачок, на якому тримається нова думка.
 
-To determine the correct case of **який**, follow these steps:
+> [!tip] **Що vs. Який**
+> Ви можете почути, як українці кажуть «Людина, **що** прийшла». Це розмовна альтернатива слову **який**. Вона простіша, бо **що** не змінюється. Але для красивого і правильного мовлення на рівні A2 намагайтеся використовувати **який** — це звучить професійніше.
 
-1. **Isolate the relative clause**: Look ONLY at the part after the comma.
-2. **Identify the role**: What role does «який» play in that clause? (subject, object, with a preposition, etc.)
-3. **Apply case rules**: Use the same case rules you already know for nouns.
-4. **Check agreement**: Make sure «який» agrees in gender and number with the antecedent.
+## Practice / Практика
 
-**Example Walkthrough:**
+### 1. Merge the Thoughts (З'єднайте речення)
 
-Sentence: *Це будинок, у якому я живу.*
+Combine two simple sentences into one using **який**.
 
-1. Isolate: «у якому я живу»
-2. Role: «якому» follows the preposition «у» indicating location
-3. Case: «у» + location = Locative case
-4. Agreement: «будинок» is masculine, so «який» → «якому»
-5. Result: «у якому» ✓
+1. Це лікар. Він допоміг мені. -> **Це лікар, який допоміг мені.**
+2. Я бачу машину. Тато купив цю машину. -> **Я бачу машину, яку купив тато.**
+3. Ми живемо в готелі. Готель знаходиться в центрі. -> **Ми живемо в готелі, який знаходиться в центрі.**
+4. Я маю друзів. Я подорожую з цими друзями. -> **Я маю друзів, з якими я подорожую.**
 
----
+### 2. Case Selection (Оберіть відмінок)
 
-## Deep Dive: «Who» vs «Which»
+Choose the correct form based on the role in the sub-clause.
 
-In English:
-- People = Who (*The man **who** came*)
-- Things = Which/That (*The car **which** stopped*)
+1. Це будинок, \_\_\_ (який / у якому) я народився. -> **у якому** (Location)
+2. Ось жінка, \_\_\_ (яка / яку) ми бачили вчора. -> **яку** (Object)
+3. Я знаю людей, \_\_\_ (які / яких) працюють тут. -> **які** (Subject)
+4. Це книга, \_\_\_ (яку / якої) я не читав. -> **якої** (Genitive - negative object)
 
-In Ukrainian:
-- Everything = **Який**
-- *Чоловік, який...* (Person)
-- *Стіл, який...* (Thing)
+### 3. Abstract Logic (Те, що...)
 
-> [!cultural] Myth: «Що» implies an object?
-> Sometimes you hear *Людина, що прийшла* instead of *Людина, яка прийшла*.
-> **Що** is an indeclinable alternative. It's simpler but less precise. For A2, focus on masterfully using **який**. It sounds richer and clearer.
+Fill in the gaps with **те, що**.
 
----
+1. Я не розумію \_\_\_, ти написав. -> **те, що**
+2. Мені подобається \_\_\_, ми сьогодні зробили. -> **те, що**
 
-## Deep Dive: The «Те, що» Connector
+> [!reflection] **The Precision of "Yakyi"**
+> Relative clauses give you the power of detail. Instead of using ten adjectives, you can describe an object by its function or history. This makes you a much more persuasive speaker. Кожне уточнення — це ваша чітка думка.
 
-Sometimes you don't have a specific noun to describe. You just want to refer to an abstract idea: «That which...» or «What...».
+> [!tip] **Rhyme and Rhythm**
+> Ukrainian **який** часто використовується в поезії для створення довгих, мелодійних описів. Спробуйте прочитати свої довгі речення вголос — вони мають звучати як одна цілісна мелодія.
 
-In Ukrainian, we use the combination **те, що** (that, which).
+## Dialogues / Діалоги
 
-- **I hear what you say.** -> **Я чую те, що ти кажеш.** (Lit: I hear that, which you say).
-- **Do what you love.** -> **Роби те, що ти любиш.**
-- **I don't believe in what I see.** -> **Я не вірю в те, що я бачу.**
+### Finding the Lost Key (Пошук ключа)
 
-**Grammar Note:**
-The first part (**те**) declines in the main sentence.
-The second part (**що**) acts as the subject/object of the second sentence.
+**Ганна:** Максиме, ти не бачив мого ключа? (Maksym, have you seen my key?)
+**Максим:** Якого ключа? Того, **який** лежить на столі? (Which key? The one that is lying on the table?)
+**Ганна:** Ні, того, **який** має червоний брелок. (No, the one which has a red keychain.)
+**Максим:** А, це той ключ, **який** ти загубила вчора? (Ah, is it the key that you lost yesterday?)
+**Ганна:** Так! Я шукаю місце, **у якому** я могла його залишити. (Yes! I am looking for the place in which I could have left it.)
+**Максим:** Дивись! Він у куртці, **яку** ти вдягла сьогодні вранці! (Look! It's in the jacket that you put on this morning!)
+**Ганна:** Ой, **те, що** ти кажеш — правда! Дякую! (Oh, what you say is true! Thanks!)
 
-- *Я думаю про **те**, **що** сталося.* (I think about [Loc] that, [Nom] which happened).
+> [!context] **Detail in Description**
+> In Ukrainian culture, clarity is highly valued, especially when identifying objects or people. Using «який» allows you to differentiate between similar items. It is considered polite to be as specific as possible to avoid confusion. «Той чоловік, який...» is much better than just «Він».
 
-> [!tip] Mental Model
-> Imagine **те** is an anchor in the main sentence. **Що** is the hook for the new sentence. You always need both!
+# Summary / Підсумок
 
----
+У цьому модулі ми опанували мистецтво детального опису:
 
-## Practice
+- Вивчили відносний займенник **який** та його узгодження за родом.
+- Навчилися визначати відмінок займенника залежно від його ролі в реченні.
+- Розрізнили **який** (для предметів) та **те, що** (для ідей).
+- Навчилися правильно ставити коми для відокремлення описів.
+- Побачили, як складні речення роблять наше мовлення багатшим.
 
-Тепер практикуйте використовувати відносні займенники! Пам'ятайте про узгодження роду та відмінка.
-
-**Вправа 1: Оберіть правильну форму**
-
-Виберіть правильну форму займенника **який** для кожного речення:
-
-1. Це чоловік, _______ (який / яка / яке) працює в школі.
-   → **який** (чоловічий рід, називний відмінок)
-
-2. Я бачу жінку, _______ (який / яка / яке) читає книгу.
-   → **яка** (жіночий рід, називний відмінок)
-
-3. Це місто, _______ (який / яка / яке) мені подобається.
-   → **яке** (середній рід, називний відмінок)
-
-4. Ось люди, _______ (який / яка / які) допомагають нам.
-   → **які** (множина, називний відмінок)
-
-**Вправа 2: З'єднайте два речення**
-
-Об'єднайте два прості речення в одне складне, використовуючи відносний займенник:
-
-1. Це книга. Я читаю цю книгу.
-   → **Це книга, яку я читаю.**
-
-2. Я знаю чоловіка. Цей чоловік говорить п'ять мов.
-   → **Я знаю чоловіка, який говорить п'ять мов.**
-
-3. Вона живе в будинку. У цьому будинку двадцять квартир.
-   → **Вона живе в будинку, у якому двадцять квартир.**
-
-4. Я маю друзів. З цими друзями я гуляю в парку.
-   → **Я маю друзів, з якими гуляю в парку.**
-
-**Вправа 3: Визначте відмінок**
-
-Поясніть, чому використовується саме ця форма займенника:
-
-1. Це студент, **якого** я бачу щодня.
-   → **Знахідний відмінок** — «якого» є об'єктом дієслова «бачу» (кого?)
-
-2. Це місце, **у якому** я відпочиваю.
-   → **Місцевий відмінок** — прийменник «у» + місце (де?)
-
-3. Ось друг, **якому** я допомагаю.
-   → **Давальний відмінок** — «якому» є об'єктом дієслова «допомагаю» (кому?)
-
-4. Це дівчина, **з якою** я навчаюся.
-   → **Орудний відмінок** — прийменник «з» + орудний (з ким?)
-
-**Вправа 4: Створіть власні речення**
-
-Напишіть три речення про себе, використовуючи відносні займенники:
-
-1. **Опишіть місце, де ви живете:** Приклад: «Я живу в місті, яке дуже велике.»
-2. **Опишіть людину, яку ви знаєте:** Приклад: «У мене є друг, який працює лікарем.»
-3. **Опишіть річ, яка вам подобається:** Приклад: «Це телефон, який я купив минулого року.»
-
----
-
-## Cultural Insight
-
-> [!cultural] The Art of Description
-> Ukrainians love detailed descriptions. Unlike English, where you might say «The tall guy», a Ukrainian might say «Той хлопець, який дуже високий» (That guy, who is very tall).
-> Using relative clauses makes you sound more precise and deliberate. It is considered elegant to unfold your thought using **який**, rather than piling up adjectives before a noun.
->
-> *English style:* «Accurate, detailed, beautiful map.»
-> *Ukrainian style:* «Map, which is accurate, which is detailed, and which is beautiful.»
-
----
-
-## Language in Action
-
-## Dialogue: The Police Witness
-
-A detective interviews a witness about a robbery.
-
-**Detective:** Опишіть чоловіка, **якого** ви бачили.
-**Witness:** Ну, це був чоловік, **який** швидко біг.
-**Detective:** Який одяг він мав?
-**Witness:** Він мав куртку, **яка** була чорна. І шапку, **яка** закривала обличчя.
-**Detective:** Ви бачили сумку?
-**Witness:** Так. Це була сумка, **у якій** було щось важке.
-**Detective:** Чому ви так думаєте?
-**Witness:** Тому що він біг важко. Це була річ, **яку** він тримав дуже міцно.
-**Detective:** Ви пам'ятаєте машину, **у яку** він сів?
-**Witness:** Так! Це було авто, **яке** стояло за рогом. Номер, **який** я запам'ятав, — АА 1234.
-**Detective:** Чудово. Це інформація, **яка** нам допоможе. Дякую.
-
-## Monologue: The Object That Changed My Life
-
-Я хочу розповісти про річ, **яка** змінила моє життя.
-Це був комп'ютер, **який** купив мій батько.
-До цього я був хлопцем, **який** грав у футбол на вулиці.
-Але потім я став хлопцем, **якого** цікавили тільки коди і програми.
-Я знайшов світ, **у якому** я міг будувати все.
-Це світ, **який** не має кордонів.
-Друзі, **з якими** я грав у футбол, не розуміли мене.
-Але я знайшов нових друзів, **які** жили в інтернеті.
-Комп'ютер — це інструмент, **завдяки якому** я маю роботу, **яку** люблю.
-І тепер я пишу цю програму, **яка** вчить вас української мови!
-Це історія, **яку** я розповідаю всім.
-І я сподіваюся, що це історія, **яка** надихне вас.
-
-## Dialogue: The Lost Item (Revamped)
-
-**Oksana:** Ти бачив книгу?
-**Mark:** Яку книгу?
-**Oksana:** Книгу, **яку** я читала вчора.
-**Mark:** Це та синя книга, **яка** лежала на столі?
-**Oksana:** Ні, це книга, **про яку** мені говорила мама.
-**Mark:** А, це та книга, **у якій** багато малюнків?
-**Oksana:** Так! Це книга, **яка** коштує сто доларів!
-**Mark:** Ого. Я бачив людину, **яка** взяла її.
-**Oksana:** Хто це був?
-**Mark:** Це був пес, **який** живе у нас.
-**Oksana:** Боже мій! Пес, **якого** ти приніс?!
-
-## Analysis
-
-1. **Книгу (Acc), яку (Acc) я читала**: Direct object of «read».
-2. **Книга (Nom), яка (Nom) лежала**: Subject of «lay».
-3. **Книга, про яку (Prep + Loc)**: Object of «spoke about».
-4. **Книга, у якій (Prep + Loc)**: Location «in which».
-5. **Людину (Acc), яка (Nom) взяла**: Subject of «took» (Wait! «Person» is Accusative in main clause, but «who» is Nominative in relative clause because SHE took it).
-   - This proves the rule: Case depends on role inside the clause!
-
-## Monologue: My Ideal City
-
-Я хочу жити в місті, **яке** має багато парків.
-Це місто, **у якому** люди посміхаються.
-Це місце, **де** є робота, **яка** мені подобається.
-Я шукаю друзів, **з якими** можна говорити про все.
-Мені потрібен будинок, **який** стоїть біля річки.
-Це мрія, **до якої** я йду.
-Я знаю людину, **яка** допоможе мені. Це я!
-Також я хочу мати сад, **у якому** ростуть квіти.
-Це буде місце, **де** я буду читати книги.
-Я хочу, **щоб** мої друзі приходили до мене в гості.
-Ми будемо пити чай і говорити про життя.
-
-# Підсумок
-У цьому модулі ви вивчили відносні займенники:
-
-**Форми за родами:**
-- **який** — чоловічий рід (чоловік, який працює)
-- **яка** — жіночий рід (жінка, яка співає)
-- **яке** — середній рід (місто, яке росте)
-- **які** — множина (люди, які допомагають)
-
-**Відмінки:**
-- **Називний:** Це людина, **яка** знає все.
-- **Знахідний:** Це книга, **яку** я читаю.
-- **Родовий:** Хлопець, **якого** я бачу.
-- **Давальний:** Друг, **якому** я допомагаю.
-- **Орудний:** Друзі, **з якими** я гуляю.
-- **Місцевий:** Місто, **у якому** я живу.
-
-**Важливі правила:**
-1. Завжди ставте кому перед «який»
-2. Рід узгоджується з антецедентом
-3. Відмінок залежить від функції в реченні
-
-Тепер ви можете будувати складні речення українською!
-
----
-
----
+Relative clauses are the scaffolding of complex language. By mastering **який**, you've moved from simple lists to layered, intellectual communication. Your descriptions are now as unique as your thoughts. Continue building these bridges!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Оберіть будь-який предмет у вашій кімнаті. Опишіть його трьома реченнями, використовуючи «який» у різних відмінках. Наприклад: «Це стіл, який стоїть біля вікна. Це стіл, за яким я працюю. Це стіл, який я дуже люблю». Це допоможе вам відчути гнучкість цієї граматичної структури! Удачі у ваших описах!

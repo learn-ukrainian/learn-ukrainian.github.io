@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:46:24
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -29,7 +30,7 @@
 | 8 | true-false | Істина про Софію | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
+- Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, critical-analysis, essay-response, fill-in, quiz, reading) ✅

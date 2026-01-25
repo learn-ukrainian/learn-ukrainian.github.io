@@ -2,19 +2,19 @@
 
 > 🎯 **Why This Module Matters**
 >
-> You've learned the names for parts of speech, cases, aspects, and tenses. Now you need to understand *how* Ukrainian grammar books explain rules. This module teaches you the patterns and phrases that appear in every Ukrainian grammar resource — so you can learn independently from materials written for native speakers.
+> You've learned the names for parts of speech, cases, aspects, and tenses. Now you need to understand _how_ Ukrainian grammar books explain rules. This module teaches you the patterns and phrases that appear in every Ukrainian grammar resource — so you can learn independently from materials written for native speakers.
 
-## Вступ
+## Introduction - Reading Grammar in Ukrainian
 
 ### Мова граматичних пояснень
 
-Ukrainians have a proverb: **«Без правил і мова — не мова.»** — «Without rules, even language isn't language.» This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language *of* grammar.
+Ukrainians have a proverb: **«Без правил і мова — не мова.»** — «Without rules, even language isn't language.» This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language _of_ grammar.
 
 When you open a Ukrainian grammar book, you see patterns like:
 
-- *«X використовується, коли...»* (X is used when...)
-- *«X означає...»* (X means...)
-- *«Порівняйте:»* (Compare:)
+- _«X використовується, коли...»_ (X is used when...)
+- _«X означає...»_ (X means...)
+- _«Порівняйте:»_ (Compare:)
 
 These aren't random — they're standard patterns that every grammar book uses. Learn them once, understand them everywhere.
 
@@ -26,20 +26,18 @@ Where do Ukrainians learn these patterns? Київ is home to the National Acade
 
 ---
 
-## Пояснення
-
-### Моделі пояснень: Пояснювальні конструкції
+## Grammar Explanation Patterns
 
 #### «Використовується, коли...»
 
 Найпоширеніша модель пояснює, коли вживати ту чи іншу граматичну форму:
 
-| Pattern | English | Example |
-|---------|---------|---------|
-| **використовується** | is used | «Родовий відмінок використовується після прийменника 'без'.» |
-| **вживається** | is employed | «Недоконаний вид вживається для повторюваних дій.» |
+| Pattern              | English     | Example                                                      |
+| -------------------- | ----------- | ------------------------------------------------------------ |
+| **використовується** | is used     | «Родовий відмінок використовується після прийменника 'без'.» |
+| **вживається**       | is employed | «Недоконаний вид вживається для повторюваних дій.»           |
 
-When you see «X використовується, коли...» or «X вживається для...», the grammar is telling you *when* to use X.
+When you see «X використовується, коли...» or «X вживається для...», the grammar is telling you _when_ to use X.
 
 **Родовий відмінок використовується після прийменника «без».** (The genitive is used after the preposition «without.»)
 
@@ -49,14 +47,14 @@ When you see «X використовується, коли...» or «X вжив
 
 ### «Means / Shows / Expresses»
 
-These patterns explain *what* a form means:
+These patterns explain _what_ a form means:
 
-| Pattern | English | Example |
-|---------|---------|---------|
-| **означає** | means | «Доконаний вид означає завершену дію.» |
-| **показує** | shows | «Цей суфікс показує зменшувальне значення.» |
-| **виражає** | expresses | «Давальний відмінок виражає адресата.» |
-| **вказує на** | indicates | «Закінчення -а вказує на жіночий рід.» |
+| Pattern       | English   | Example                                     |
+| ------------- | --------- | ------------------------------------------- |
+| **означає**   | means     | «Доконаний вид означає завершену дію.»      |
+| **показує**   | shows     | «Цей суфікс показує зменшувальне значення.» |
+| **виражає**   | expresses | «Давальний відмінок виражає адресата.»      |
+| **вказує на** | indicates | «Закінчення -а вказує на жіночий рід.»      |
 
 **Доконаний вид означає завершену дію з результатом.** (Perfective means a completed action with result.)
 
@@ -70,20 +68,20 @@ These patterns explain *what* a form means:
 
 ---
 
-### Моделі інструкцій: Інструкції
+## Instruction Words
 
 #### Команди в граматичних вправах
 
 Grammar exercises use imperative forms. Learn these instruction verbs:
 
-| Verb | English | Context |
-|------|---------|---------|
-| **порівняйте** | compare | «Порівняйте ці два речення.» |
-| **зверніть увагу** | note, pay attention | «Зверніть увагу на закінчення.» |
-| **наприклад** | for example | «Наприклад: книга → книги.» |
-| **тобто** | that is, in other words | «Це прислівник, тобто частина мови.» |
-| **отже** | therefore, so | «Отже, цей іменник жіночого роду.» |
-| **таким чином** | thus, in this way | «Таким чином утворюється множина.» |
+| Verb               | English                 | Context                              |
+| ------------------ | ----------------------- | ------------------------------------ |
+| **порівняйте**     | compare                 | «Порівняйте ці два речення.»         |
+| **зверніть увагу** | note, pay attention     | «Зверніть увагу на закінчення.»      |
+| **наприклад**      | for example             | «Наприклад: книга → книги.»          |
+| **тобто**          | that is, in other words | «Це прислівник, тобто частина мови.» |
+| **отже**           | therefore, so           | «Отже, цей іменник жіночого роду.»   |
+| **таким чином**    | thus, in this way       | «Таким чином утворюється множина.»   |
 
 **Порівняйте ці два речення і знайдіть відмінності.** (Compare these two sentences and find the differences.)
 
@@ -95,14 +93,14 @@ Grammar exercises use imperative forms. Learn these instruction verbs:
 >
 > Apps like Duolingo use simplified instructions. But advanced resources — such as Ukrainian grammar sites, native textbooks, and academic materials — use these exact phrases. For example, a Ukrainian textbook might say «Порівняйте ці форми» while Duolingo just shows you the answer. Master these instructions and you unlock the next level of learning.
 
-### Comparison and Contrast
+## Comparison Patterns
 
 Grammar often compares forms:
 
-| Pattern | English | Example |
-|---------|---------|---------|
+| Pattern            | English        | Example                                                     |
+| ------------------ | -------------- | ----------------------------------------------------------- |
 | **на відміну від** | in contrast to | «На відміну від англійської, українська має сім відмінків.» |
-| **подібно до** | similar to | «Подібно до російської, українська має вид.» |
+| **подібно до**     | similar to     | «Подібно до російської, українська має вид.»                |
 
 **На відміну від англійської, українська має сім відмінків.** (In contrast to English, Ukrainian has seven cases.)
 
@@ -110,21 +108,21 @@ Grammar often compares forms:
 
 ---
 
-### Терміни словотвору: Словотвір
+## Word Formation Terms
 
 #### Частини слова
 
 To understand how words are built, you need these terms:
 
-| Term | English | Example |
-|------|---------|---------|
-| **правило** | rule | «Це основне правило.» |
-| **виняток** | exception | «Це виняток із правила.» |
-| **форма** | form | «Утворіть форму множини.» |
-| **основа** | stem | «Основа слова — 'книг-'.» |
-| **корінь** | root | «Корінь — найменша частина.» |
-| **суфікс** | suffix | «Суфікс -ок означає зменшення.» |
-| **префікс** | prefix | «Префікс при- означає наближення.» |
+| Term        | English   | Example                            |
+| ----------- | --------- | ---------------------------------- |
+| **правило** | rule      | «Це основне правило.»              |
+| **виняток** | exception | «Це виняток із правила.»           |
+| **форма**   | form      | «Утворіть форму множини.»          |
+| **основа**  | stem      | «Основа слова — 'книг-'.»          |
+| **корінь**  | root      | «Корінь — найменша частина.»       |
+| **суфікс**  | suffix    | «Суфікс -ок означає зменшення.»    |
+| **префікс** | prefix    | «Префікс при- означає наближення.» |
 
 **Основа слова «написати» складається з префікса і кореня.** (The stem of «napisaty» consists of prefix and root.)
 
@@ -138,20 +136,20 @@ To understand how words are built, you need these terms:
 
 ---
 
-### Дієслова-інструкції до вправ: Інструкції для вправ
+## Activity Instruction Verbs
 
 When you work with grammar exercises, you'll see these specific instruction verbs:
 
-| Verb | English | Used in |
-|------|---------|---------|
-| **виберіть / оберіть** | choose, select | Multiple choice questions |
-| **знайдіть** | find | Finding errors, locating elements |
-| **з'єднайте** | match, connect | Matching exercises |
-| **розташуйте** | arrange, put in order | Sequencing tasks |
-| **доповніть** | complete, fill in | Gap-fill exercises |
-| **натисніть** | click | Interactive exercises |
-| **перекладіть** | translate | Translation tasks |
-| **складіть** | compose, create | Writing tasks |
+| Verb                   | English               | Used in                           |
+| ---------------------- | --------------------- | --------------------------------- |
+| **виберіть / оберіть** | choose, select        | Multiple choice questions         |
+| **знайдіть**           | find                  | Finding errors, locating elements |
+| **з'єднайте**          | match, connect        | Matching exercises                |
+| **розташуйте**         | arrange, put in order | Sequencing tasks                  |
+| **доповніть**          | complete, fill in     | Gap-fill exercises                |
+| **натисніть**          | click                 | Interactive exercises             |
+| **перекладіть**        | translate             | Translation tasks                 |
+| **складіть**           | compose, create       | Writing tasks                     |
 
 **Виберіть правильну форму дієслова з варіантів.** (Choose the correct verb form from the options.)
 
@@ -160,6 +158,7 @@ When you work with grammar exercises, you'll see these specific instruction verb
 **З'єднайте українські слова з їхніми англійськими відповідниками.** (Match Ukrainian words with their English equivalents.)
 
 **Examples in exercises:**
+
 - «**Виберіть** правильну форму дієслова.» (Choose the correct verb form.)
 - «**Знайдіть** помилку в реченні.» (Find the error in the sentence.)
 - «**З'єднайте** українські слова з англійськими.» (Match Ukrainian words with English.)
@@ -172,16 +171,16 @@ When you work with grammar exercises, you'll see these specific instruction verb
 
 ---
 
-### Аналітичні терміни: Аналітична лексика
+## Analytical Terms
 
 Grammar discussions use these analytical terms to describe linguistic concepts:
 
-| Term | English | Meaning |
-|------|---------|---------|
-| **контекст** | context | The surrounding words/situation that determine meaning |
-| **маркер** | marker | A word/element that signals grammar category |
-| **частота** | frequency | How often something occurs |
-| **аспектуальна пара** | aspectual pair | Pair of imperfective/perfective verbs |
+| Term                  | English        | Meaning                                                |
+| --------------------- | -------------- | ------------------------------------------------------ |
+| **контекст**          | context        | The surrounding words/situation that determine meaning |
+| **маркер**            | marker         | A word/element that signals grammar category           |
+| **частота**           | frequency      | How often something occurs                             |
+| **аспектуальна пара** | aspectual pair | Pair of imperfective/perfective verbs                  |
 
 **У цьому контексті доречно використовувати доконаний вид.** (In this context, it is appropriate to use perfective aspect.)
 
@@ -190,6 +189,7 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 **Частота вживання цієї форми в розмовній мові дуже висока.** (The frequency of this form's usage in colloquial speech is very high.)
 
 **Examples in grammar texts:**
+
 - «У цьому **контексті** використовується доконаний вид.» (In this context, perfective is used.)
 - «Слово 'вже' є **маркером** результату.» ('Вже' is a marker of result.)
 - «**Частота** вживання цієї форми висока.» (The frequency of this form's use is high.)
@@ -201,18 +201,18 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 
 ---
 
-### Стиль і регістр: Стиль і регістр
+## Style and Register Terminology
 
 Grammar books discuss different language styles:
 
-| Term | English | Used for |
-|------|---------|----------|
-| **стиль** | style | General way of speaking/writing |
-| **регістр** | register | Formality level |
-| **розмовна мова** | colloquial language | Everyday informal speech |
-| **літературна мова** | literary language | Standard written Ukrainian |
-| **формальна мова** | formal language | Official, academic contexts |
-| **нейтральна мова** | neutral language | Neither formal nor informal |
+| Term                 | English             | Used for                        |
+| -------------------- | ------------------- | ------------------------------- |
+| **стиль**            | style               | General way of speaking/writing |
+| **регістр**          | register            | Formality level                 |
+| **розмовна мова**    | colloquial language | Everyday informal speech        |
+| **літературна мова** | literary language   | Standard written Ukrainian      |
+| **формальна мова**   | formal language     | Official, academic contexts     |
+| **нейтральна мова**  | neutral language    | Neither formal nor informal     |
 
 **Це слово належить до розмовної мови.** (This word belongs to colloquial language.)
 
@@ -221,6 +221,7 @@ Grammar books discuss different language styles:
 **Формальна мова вимагає повних форм дієслів.** (Formal language requires full verb forms.)
 
 **Examples:**
+
 - «Це слово належить до **розмовної мови**.» (This word belongs to colloquial language.)
 - «У **літературній мові** вживають 'так', а не 'да'.» (In literary language, use 'так', not 'да'.)
 - «Цей **регістр** підходить для офіційних документів.» (This register suits official documents.)
@@ -232,13 +233,13 @@ Grammar books discuss different language styles:
 
 ---
 
-## Практика
+## Practice
 
 ### Reading a Grammar Explanation
 
 Here's a real grammar text. Can you understand it now?
 
-> *Прикметник змінюється за родами, числами і відмінками. Він узгоджується з іменником. Наприклад: «гарна книга» — жіночий рід, «гарний стіл» — чоловічий рід. Зверніть увагу на закінчення: -а для жіночого, -ий для чоловічого роду.*
+> _Прикметник змінюється за родами, числами і відмінками. Він узгоджується з іменником. Наприклад: «гарна книга» — жіночий рід, «гарний стіл» — чоловічий рід. Зверніть увагу на закінчення: -а для жіночого, -ий для чоловічого роду._
 
 **Translation:** The adjective changes by gender, number, and case. It agrees with the noun. For example: «good book» is feminine, «good table» is masculine. Note the endings: -а for feminine, -ий for masculine.
 
@@ -246,23 +247,23 @@ Here's a real grammar text. Can you understand it now?
 
 Identify the function of each phrase:
 
-1. *«Використовується після прийменника.»*
+1. _«Використовується після прийменника.»_
    - Explains **when** to use something.
 
-2. *«Означає завершену дію.»*
+2. _«Означає завершену дію.»_
    - Explains **what** something means.
 
-3. *«Порівняйте ці два приклади.»*
+3. _«Порівняйте ці два приклади.»_
    - **Instruction** to compare.
 
-4. *«Зверніть увагу на корінь слова.»*
+4. _«Зверніть увагу на корінь слова.»_
    - **Instruction** to pay attention.
 
 ### Reading Another Grammar Text
 
 Here's a more complex explanation about verb aspect:
 
-> *Дієслівний вид показує характер дії. Недоконаний вид використовується для повторюваних або тривалих дій. На відміну від недоконаного, доконаний вид означає завершену дію з результатом. Порівняйте: «писати» — недоконаний, «написати» — доконаний. Тобто, «писати» — процес, а «написати» — результат. Зверніть увагу на префікс «на-», який часто утворює доконаний вид.*
+> _Дієслівний вид показує характер дії. Недоконаний вид використовується для повторюваних або тривалих дій. На відміну від недоконаного, доконаний вид означає завершену дію з результатом. Порівняйте: «писати» — недоконаний, «написати» — доконаний. Тобто, «писати» — процес, а «написати» — результат. Зверніть увагу на префікс «на-», який часто утворює доконаний вид._
 
 **Translation:** Verbal aspect shows the character of action. Imperfective is used for repeated or ongoing actions. In contrast to imperfective, perfective means a completed action with result. Compare: «pisaty» is imperfective, «napysaty» is perfective. That is, «pisaty» is process, and «napysaty» is result. Note the prefix «na-», which often forms perfective.
 
@@ -270,7 +271,7 @@ Here's a more complex explanation about verb aspect:
 
 Look at how Ukrainian grammar books explain word formation:
 
-> *Слово «написати» складається з таких частин: префікс «на-», корінь «пис-», суфікс «-а-», закінчення «-ти». Основа слова — «написа-». Корінь «пис-» є в усіх споріднених словах: писати, письмо, письменник. Отже, корінь несе основне значення слова.*
+> _Слово «написати» складається з таких частин: префікс «на-», корінь «пис-», суфікс «-а-», закінчення «-ти». Основа слова — «написа-». Корінь «пис-» є в усіх споріднених словах: писати, письмо, письменник. Отже, корінь несе основне значення слова._
 
 **Translation:** The word «napysaty» consists of these parts: prefix «na-», root «pys-», suffix «-a-», ending «-ty». The stem is «napysa-». The root «pys-» is in all related words: pisaty, pysmo, pysmennyk. Therefore, the root carries the main meaning of the word.
 
@@ -282,19 +283,19 @@ Look at how Ukrainian grammar books explain word formation:
 
 Grammar books use specific logical connectors:
 
-| Connector | Function | Example |
-|-----------|----------|---------|
-| **отже** | conclusion | «Отже, це іменник.» |
-| **тобто** | clarification | «Це прислівник, тобто незмінна частина мови.» |
-| **таким чином** | summary | «Таким чином утворюється множина.» |
-| **наприклад** | example | «Наприклад: книга → книги.» |
-| **однак** | contrast | «Однак є винятки.» |
+| Connector       | Function      | Example                                       |
+| --------------- | ------------- | --------------------------------------------- |
+| **отже**        | conclusion    | «Отже, це іменник.»                           |
+| **тобто**       | clarification | «Це прислівник, тобто незмінна частина мови.» |
+| **таким чином** | summary       | «Таким чином утворюється множина.»            |
+| **наприклад**   | example       | «Наприклад: книга → книги.»                   |
+| **однак**       | contrast      | «Однак є винятки.»                            |
 
 When you see these words, you know the grammar is signaling a logical step. «Отже» means a conclusion follows. «Тобто» means a clarification. «Однак» means an exception or contrast.
 
 ---
 
-## Міні-діалоги
+## Dialogues
 
 ### Діалог 1: Читання підручника
 
@@ -384,15 +385,17 @@ When you see these words, you know the grammar is signaling a logical step. «О
 
 ---
 
-# Підсумок
+# Summary
 
 In this module, you learned the patterns used in Ukrainian grammar explanations. These patterns appear in every textbook, every grammar reference, and every academic resource.
 
 **Explanation Patterns — What and When:**
+
 - використовується, вживається — explains when to use a form
 - означає, показує, виражає, вказує на — explains what a form means
 
 **Instruction Words:**
+
 - порівняйте — compare (two examples)
 - зверніть увагу — pay attention (to a detail)
 - наприклад — for example (introducing examples)
@@ -401,10 +404,12 @@ In this module, you learned the patterns used in Ukrainian grammar explanations.
 - таким чином — thus (summary)
 
 **Comparison Patterns:**
+
 - на відміну від — in contrast to (showing difference)
 - подібно до — similar to (showing similarity)
 
 **Word Formation Terms:**
+
 - правило — rule (general pattern)
 - виняток — exception (irregular form)
 - форма — form (specific variant)
@@ -414,6 +419,7 @@ In this module, you learned the patterns used in Ukrainian grammar explanations.
 - префікс — prefix (before root)
 
 **Activity Instruction Verbs:**
+
 - виберіть/оберіть — choose, select
 - знайдіть — find
 - з'єднайте — match, connect
@@ -424,12 +430,14 @@ In this module, you learned the patterns used in Ukrainian grammar explanations.
 - складіть — compose
 
 **Analytical Terms:**
+
 - контекст — context
 - маркер — marker
 - частота — frequency
 - аспектуальна пара — aspectual pair
 
 **Style and Register:**
+
 - стиль — style
 - регістр — register
 - розмовна мова — colloquial language
@@ -439,9 +447,8 @@ In this module, you learned the patterns used in Ukrainian grammar explanations.
 
 With these terms, you can now read grammar explanations in Ukrainian textbooks and online resources, follow exercise instructions, and understand linguistic discussions. This is your key to independent learning.
 
-> ✅ **Self-Check**
->
 > Before moving on, can you:
+>
 > - [ ] Understand «X використовується, коли...» patterns?
 > - [ ] Follow Ukrainian grammar instructions?
 > - [ ] Identify parts of a word (корінь, суфікс, префікс)?

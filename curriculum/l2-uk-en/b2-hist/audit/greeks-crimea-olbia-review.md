@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 14:07:59
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -29,26 +30,26 @@
 | 8 | fill-in | Історичний контекст та лексика | 12 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
+- Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, critical-analysis, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4042/4000 (raw: 4331)
+- **Words:** ✅ 4371/4000 (raw: 4609)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 18 < 20 (soft target)
+- **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 97.6% (target 90-100% (history))
+- **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -60,31 +61,29 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
 | engagement | 9 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 14 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 23 | 10 | 100% | 14% | 14.3% |
 | decolonization | 12 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+| questions | 7 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 27 | Included in Core |
 | **Грецькі міста-держави: Ольвія, Херсонес** | ⚪️ | 66 | Skipped |
-| **Вступ** | ✅ | 293 | Included in Core |
-| **Читання** | ✅ | 2129 | Included in Core |
-| **Взаємовплив культур: Елліни та Варвари** | ✅ | 403 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 188 | Included in Core |
-| **Занепад античного світу** | ⚪️ | 97 | Skipped |
-| **Первинні джерела** | ✅ | 201 | Included in Core |
-| **Есе** | ⚪️ | 0 | Skipped |
-| **Тема** | ⚪️ | 98 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 0 | Skipped |
-| **Зразок відповіді** | ⚪️ | 330 | Skipped |
-| **Підсумок** | ✅ | 100 | Included in Core |
+| **Вступ: Греки на Понті** | ✅ | 302 | Included in Core |
+| **Читання: Ольвія — демократія в степу** | ✅ | 598 | Included in Core |
+| **Херсонес Таврійський: Держава присяги** | ⚪️ | 326 | Skipped |
+| **Боспорське царство та Тіра** | ⚪️ | 384 | Skipped |
+| **Економіка та Культура** | ✅ | 1737 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 208 | Included in Core |
+| **Занепад античного світу** | ⚪️ | 150 | Skipped |
+| **Первинні джерела: Голоси епохи** | ✅ | 236 | Included in Core |
+| **Підсумок** | ✅ | 227 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

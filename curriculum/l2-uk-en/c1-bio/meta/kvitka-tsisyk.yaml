@@ -1,133 +1,107 @@
-# C1-BIO Module 83: Квітка Цісик
-# Status: SPEC (ready for content development)
-
 id: c1-bio-83
-title: "Квітка Цісик: Голос української діаспори"
+title: 'Квітка Цісик: Голос української діаспори'
 slug: kvitka-tsisyk
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Квітка Цісик (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Цісик_Квітка
-    type: primary
-    notes: Biography of the Ukrainian-American singer
-  - name: Kvitka Cisyk Official
-    url: https://www.kvitka.com/
-    type: reference
-    notes: Official site with discography and biography
-
+- name: Квітка Цісик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
+  type: primary
+  notes: Biography of the Ukrainian-American singer
+- name: Kvitka Cisyk Official
+  url: https://www.kvitka.com/
+  type: reference
+  notes: Official site with discography and biography
 content_outline:
-  - section: Вступ — Голос, що повернув Україну американцям
-    words: 400
-    points:
-      - Американська співачка українського походження
-      - Популяризація української пісні у світі
-      - Альбоми, що стали культовими
-
-  - section: Юність у Нью-Йорку (1953-1970-ті)
-    words: 600
-    points:
-      - Народження в родині українських емігрантів
-      - Зростання в українській громаді
-      - Музична освіта
-      - Перші виступи
-
-  - section: Кар'єра в американській музиці (1970-1980-ті)
-    words: 800
-    points:
-      - Робота студійною співачкою
-      - Реклама та джингли
-      - Знаменитий голос «You Deserve a Break Today»
-      - Робота з відомими музикантами
-
-  - section: Українські альбоми (1980-1989)
-    words: 900
-    points:
-      - «Kvitka: Songs of Ukraine» (1980)
-      - «Two Colors: Kvitka Sings Ukrainian Folk Songs» (1989)
-      - Унікальні аранжування
-      - Значення для діаспори
-
-  - section: Хвороба та смерть (1989-1998)
-    words: 600
-    points:
-      - Боротьба з раком
-      - Продовження творчості
-      - Остання платівка
-      - Смерть у Нью-Йорку
-
-  - section: Спадщина — Голос української душі
-    words: 700
-    points:
-      - Вплив на українську музику
-      - Популярність в незалежній Україні
-      - «Два кольори» та її версія
-      - Цісик як символ діаспори
-
+- section: Вступ — Голос, що повернув Україну американцям
+  words: 400
+  points:
+  - Американська співачка українського походження
+  - Популяризація української пісні у світі
+  - Альбоми, що стали культовими
+- section: Юність у Нью-Йорку (1953-1970-ті)
+  words: 600
+  points:
+  - Народження в родині українських емігрантів
+  - Зростання в українській громаді
+  - Музична освіта
+  - Перші виступи
+- section: Кар'єра в американській музиці (1970-1980-ті)
+  words: 800
+  points:
+  - Робота студійною співачкою
+  - Реклама та джингли
+  - Знаменитий голос «You Deserve a Break Today»
+  - Робота з відомими музикантами
+- section: Українські альбоми (1980-1989)
+  words: 900
+  points:
+  - «Kvitka: Songs of Ukraine» (1980)
+  - «Two Colors: Kvitka Sings Ukrainian Folk Songs» (1989)
+  - Унікальні аранжування
+  - Значення для діаспори
+- section: Хвороба та смерть (1989-1998)
+  words: 600
+  points:
+  - Боротьба з раком
+  - Продовження творчості
+  - Остання платівка
+  - Смерть у Нью-Йорку
+- section: Спадщина — Голос української душі
+  words: 700
+  points:
+  - Вплив на українську музику
+  - Популярність в незалежній Україні
+  - «Два кольори» та її версія
+  - Цісик як символ діаспори
 vocabulary_hints:
   required:
-    - діаспора (diaspora)
-    - співачка (singer, female)
-    - українська пісня (Ukrainian song)
-    - народна пісня (folk song)
-    - аранжування (arrangement)
-    - альбом (album)
-    - запис (recording)
-    - голос (voice)
-    - спадщина (legacy)
-    - еміграція (emigration)
+  - діаспора (diaspora)
+  - співачка (singer, female)
+  - українська пісня (Ukrainian song)
+  - народна пісня (folk song)
+  - аранжування (arrangement)
+  - альбом (album)
+  - запис (recording)
+  - голос (voice)
+  - спадщина (legacy)
+  - еміграція (emigration)
   recommended:
-    - вокал (vocals)
-    - студійний запис (studio recording)
-    - популяризація (popularization)
-    - культурна ідентичність (cultural identity)
-    - музична кар'єра (musical career)
-
+  - вокал (vocals)
+  - студійний запис (studio recording)
+  - популяризація (popularization)
+  - культурна ідентичність (cultural identity)
+  - музична кар'єра (musical career)
 activity_hints:
-  - type: reading
-    focus: Українська музика в діаспорі
-    source: Cultural history sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та творчість Цісик
-    items: "12+"
-
-  - type: match-up
-    focus: Музичні терміни та альбоми
-    items: "10+"
-
-  - type: essay-response
-    focus: Яку роль відіграла Цісик у збереженні української культури за кордоном?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Пісні за альбомами
-    items: "12+"
-
-  - type: fill-in
-    focus: Музична термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Як діаспора зберігає національну культуру?
-    output: Critical analysis
-
+- type: reading
+  focus: Українська музика в діаспорі
+  source: Cultural history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та творчість Цісик
+  items: 12+
+- type: match-up
+  focus: Музичні терміни та альбоми
+  items: 10+
+- type: essay-response
+  focus: Яку роль відіграла Цісик у збереженні української культури за кордоном?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Пісні за альбомами
+  items: 12+
+- type: fill-in
+  focus: Музична термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-82
-
+- c1-bio-82
 connects_to:
-  - c1-bio-79
-  - c1-bio-73
-
+- c1-bio-79
+- c1-bio-73
 naturalness:
   score: 1
   status: PENDING

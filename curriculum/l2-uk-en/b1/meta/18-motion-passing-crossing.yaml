@@ -1,15 +1,10 @@
-# B1 Module 18: Рух - перехід і обхід
-# Status: SPEC (ready for content development)
-
 id: b1-18
 title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
 slug: 18-motion-passing-crossing
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1500
+immersion: 100% Ukrainian
 version: '1.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -17,118 +12,95 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - prefixes
+- grammar
+- motion-verbs
+- prefixes
 grammar:
-  - Prefixes пере-, про-, об-
-  - Crossing, passing, going around patterns
+- Prefixes пере-, про-, об-
+- Crossing, passing, going around patterns
 objectives:
-  - Learner can use пере- for crossing
-  - Learner can use про- for passing through/by
-  - Learner can use об- for going around
-
-# === AGENT BUILD SPEC ===
-
+- Learner can use пере- for crossing
+- Learner can use про- for passing through/by
+- Learner can use об- for going around
 sources:
-  - name: Ukrainian State Standard 2024 - Motion Prefixes
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official prefix meanings for crossing/passing
-  - name: Ukrainian Verbal Prefixes
-    url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
-    type: reference
-    notes: пере-, про-, об- semantics
-
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for crossing/passing
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: пере-, про-, об- semantics
 content_outline:
-  - section: Вступ — Перетин і обхід
-    words: 350
-    points:
-      - Три нові префікси
-      - TTT — визначте тип руху
-      - Зв'язок з M17
-
-  - section: Префікс пере- (перетин)
-    words: 550
-    points:
-      - перейти вулицю (to cross the street)
-      - переїхати міст (to cross the bridge)
-      - Переходити vs перейти
-
-  - section: Префікс про- (проходження)
-    words: 550
-    points:
-      - пройти повз магазин (to pass by)
-      - проїхати через місто (to pass through)
-      - Проходити vs пройти
-
-  - section: Префікс об- (обхід)
-    words: 500
-    points:
-      - обійти будинок (to go around)
-      - об'їхати яму (to drive around)
-      - Обходити vs обійти
-
-  - section: Контрастивна практика
-    words: 600
-    points:
-      - Він перейшов — він пройшов — він обійшов
-      - Опис маршруту
-      - Типові помилки
-
-  - section: Підсумок
-    words: 250
-    points:
-      - Порівняльна таблиця
-      - Готовність до M19
-
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 600
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Поглиблення
+  words: 400
+  points:
+  - Content for Поглиблення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 100
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 600
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
 vocabulary_hints:
   required:
-    - перейти/переходити (to cross on foot)
-    - переїхати/переїжджати (to cross by vehicle)
-    - пройти/проходити (to pass on foot)
-    - проїхати/проїжджати (to pass by vehicle)
-    - обійти/обходити (to go around on foot)
-    - об'їхати/об'їжджати (to drive around)
-    - перехід (crossing)
-    - маршрут (route)
-    - вулиця (street)
-    - міст (bridge)
+  - перейти/переходити (to cross on foot)
+  - переїхати/переїжджати (to cross by vehicle)
+  - пройти/проходити (to pass on foot)
+  - проїхати/проїжджати (to pass by vehicle)
+  - обійти/обходити (to go around on foot)
+  - об'їхати/об'їжджати (to drive around)
+  - перехід (crossing)
+  - маршрут (route)
+  - вулиця (street)
+  - міст (bridge)
   recommended:
-    - перебігти/перебігати (to run across)
-    - пробігти/пробігати (to run past)
-    - оббігти/оббігати (to run around)
-    - яма (hole/pit)
-    - перешкода (obstacle)
-
+  - перебігти/перебігати (to run across)
+  - пробігти/пробігати (to run past)
+  - оббігти/оббігати (to run around)
+  - яма (hole/pit)
+  - перешкода (obstacle)
 activity_hints:
-  - type: quiz
-    focus: пере- vs про- vs об- selection
-    items: "15+"
-
-  - type: fill-in
-    focus: Route descriptions with correct prefixes
-    items: "12+"
-
-  - type: transform
-    focus: Change movement type (cross → pass → around)
-    items: "10+"
-
-  - type: cloze
-    focus: Narrative describing a journey
-    items: "12+"
-
-  - type: match-up
-    focus: Situation → prefixed verb
-    items: "12+"
-
+- type: quiz
+  focus: пере- vs про- vs об- selection
+  items: 15+
+- type: fill-in
+  focus: Route descriptions with correct prefixes
+  items: 12+
+- type: fill-in
+  focus: Change movement type (cross → pass → around)
+  items: 10+
+- type: cloze
+  focus: Narrative describing a journey
+  items: 12+
+- type: match-up
+  focus: Situation → prefixed verb
+  items: 12+
 prerequisites:
-  - b1-17 (Motion - coming & going)
-
+- b1-17 (Motion - coming & going)
 connects_to:
-  - b1-19 (Motion - starting & returning)
-  - b1-22 (Motion full prefix integration)
-
+- b1-19 (Motion - starting & returning)
+- b1-22 (Motion full prefix integration)
 naturalness:
   score: 9
   status: PASS

@@ -81,16 +81,16 @@ vocabulary_hints:
   - прометеїзм (Prometheism)
   - «санітарний кордон» (cordon sanitaire)
 activity_hints:
-- type: paradox-analysis
+- type: critical-analysis
   focus: How war and alliance coexisted 1918-1920
   output: Paradox explanation
 - type: treaty-analysis
   focus: Warsaw Treaty 1920 — terms and consequences
   output: Treaty analysis
-- type: perspective-comparison
+- type: comparative-study
   focus: Polish vs Ukrainian views on 1920 alliance
   output: Dual perspective study
-- type: counterfactual
+- type: essay-response
   focus: What if Petliura refused alliance?
   output: Counterfactual analysis
 - type: essay-response

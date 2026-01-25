@@ -1,10 +1,41 @@
-# Audit Report: 40-taking-transport.md
-**Phase:** A1.4 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
+# Audit Report: M40 — 40-taking-transport.md
+**Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:54:24
+
+## Configuration
+**Type:** A1
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Transport Vocabulary | 10 | 8 | ✅ |
+| 2 | fill-in | In the Metro | 12 | 8 | ✅ |
+| 3 | quiz | Transport Situations | 12 | 8 | ✅ |
+| 4 | unjumble | Ask for Directions | 12 | 6 | ✅ |
+| 5 | group-sort | Transport Types | 12 | 12 | ✅ |
+| 6 | true-false | Transport Rules | 12 | 8 | ✅ |
+| 7 | quiz | Transport Signs | 10 | 8 | ✅ |
+| 8 | fill-in | Taxi Dialogue | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): двері...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): наступна, вхід, триматися, станція, кінцева...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,14 +44,14 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 820/750
+- **Words:** ✅ 820/750 (raw: 967)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 10/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -28,12 +59,6 @@
 - **Immersion:** 🇺🇦 43.4% (target 35-55% (M40))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

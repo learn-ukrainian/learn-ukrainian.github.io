@@ -34,49 +34,56 @@ sources:
   type: primary
   notes: Chronicle accounts
 content_outline:
-- section: Розминка
-  words: 50
+- section: "Розминка"
+  words: 200
   points:
   - "Defining sovereignty vs suzerainty"
   - "The map of 1054 vs 1132"
-  - "Key vocabulary activation"
-- section: "Читання: Епоха роздробленості та спроби єдності"
-  words: 2500
+- section: "Читання: Тріумвірат Ярославичів"
+  words: 700
   points:
-  - "The will of Yaroslav the Wise and the Rota System"
-  - "Triumvirate of Yaroslavychi and the Battle of Alta (1068)"
-  - "Kyiv Uprising and the collapse of unity"
-  - "Economic and political causes of fragmentation"
-  - "Liubech Congress (1097): Every man holds his own fatherland"
-  - "The blinding of Vasylko of Terebovl"
-  - "Volodymyr Monomakh: The last giant of unified Rus"
-  - "Monomakh's Reforms (Statute) and Instruction (Povchannia)"
-  - "Social Structure: Boyars, Druzhina, Smerds, Zakups, Kholops"
-  - "Culture and Church: St. Michael's and Nestor"
-- section: "Первинні джерела: Голоси минулого"
-  words: 100
+  - "The will of Yaroslav the Wise"
+  - "Battle of Alta (1068)"
+  - "Kyiv Uprising"
+- section: "Любецький з'їзд (1097)"
+  words: 450
   points:
-  - "Deep analysis of Monomakh's Instruction"
+  - "Every man holds his own fatherland"
+  - "The blinding of Vasylko"
+  - "Consequences of the Congress"
+- section: "Володимир Мономах"
+  words: 700
+  points:
+  - "Crusades against Polovtsians"
+  - "Monomakh's Reforms (Statute)"
+  - "Instruction (Povchannia)"
+- section: "Соціальна структура та Економіка"
+  words: 700
+  points:
+  - "Economic causes of fragmentation"
+  - "Boyars, Druzhina, Smerds"
+  - "Urban growth"
+- section: "Культура та Церква"
+  words: 250
+  points:
+  - "Architecture (St. Michael's)"
+  - "Chronicle writing (Nestor)"
+  - "Church as unifying force"
+- section: "Первинні джерела"
+  words: 400
+  points:
   - "Extract from the Primary Chronicle on Liubech"
-  - "Extract from Pravda Yaroslavychiv (social inequality)"
-- section: "Деколонізаційний погляд: Міф про занепад"
-  words: 100
+  - "Extract from Monomakh's Instruction"
+- section: "Деколонізаційний погляд"
+  words: 350
   points:
   - "Reframing Fragmentation as Decentralization"
-  - "European parallels (HRE, France)"
-  - "Why Moscow calls it Feudal Disunity to justify conquest"
-- section: Есе
-  words: 100
+  - "European parallels"
+  - "Myth of 'Feudal Disunity'"
+- section: "Підсумок"
+  words: 150
   points:
-  - "Essay prompt: Inevitability of fragmentation"
-  - "Model answer"
-  - "Rubric"
-  - "Recap of key figures and dates"
-  - "The legacy of the era"
-- section: Потрібно більше практики?
-  words: 30
-  points:
-  - Activities intro
+  - "Legacy of the era"
 vocabulary_hints:
   required:
   - усобиця (internecine war)
@@ -125,5 +132,5 @@ connects_to:
 - b2-hist-23 (Danylo of Halych)
 - 'b2-hist-20 (Synthesis: Kyivan Rus)'
 naturalness:
-  score: 9
+  score: 10
   status: PASS

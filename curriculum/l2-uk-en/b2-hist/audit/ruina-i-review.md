@@ -1,16 +1,17 @@
 # Audit Report: M58 — ruina-i.md
-**Level:** B2 | **Module:** M58 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 4000
+**Level:** B2 | **Module:** M58 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:07:55
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -34,75 +35,63 @@
 | 13 | quiz | Аналіз первинних джерел | 16 | 8 | ✅ |
 | 14 | essay-response | Аналітичне есе | 1 | 1 | ✅ |
 | 15 | comparative-study | Порівняння політичних лідерів | 1 | 1 | ✅ |
+| 16 | reading | Літопис Самійла Величка про Руїну | 2 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-10) ❌
-- Unique types: 13 (minimum: 2) ✅
-- Priority types used: 2/4 (comparative-study, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 16 (target: 3-9) ❌
+- Unique types: 14 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Він розуміє, що козацька держава не виживе без союзу з великою державою.". Shares significant keywords with sentence at index 26.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Але він не хоче бути васалом Москви, бо знає, що цар поглине Україну.". Shares significant keywords with sentence at index 27.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ruina-i.yaml: Schema validation error at key 'words': ['Україна', 'трагічно', 'розпалася', 'на', 'дві', 'ворогуючі', 'частини'] is too short
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 3 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 1987/4000 (raw: 2328)
-- **Activities:** ✅ 15/3
+- **Words:** ✅ 4719/4000 (raw: 4796)
+- **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 13/2 types
+- **Unique_types:** ✅ 14/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 15/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-10)
-- **Immersion:** 🇺🇦 97.0% (target 90-100% (history))
-- **Richness:** ✅ 98% (history)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (history))
+- **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 15 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 0.74 | - | 74% | 5% | 3.5% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **98.5%** |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 22 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Руїна I: Виговщина і розкол** | ⚪️ | 72 | Skipped |
-| **Вступ: Руїна I, Виговщина і розкол** | ✅ | 173 | Included in Core |
-| **Читання: Іван Виговський: спроба зберегти державу** | ✅ | 303 | Included in Core |
-| **Гадяцька угода: альтернатива Москві** | ⚪️ | 193 | Skipped |
-| **Конотопська битва: тріумф і трагедія** | ⚪️ | 273 | Skipped |
-| **Чорна рада і розкол** | ⚪️ | 342 | Skipped |
-| **Первинні джерела** | ✅ | 181 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 216 | Included in Core |
-| **Підсумок** | ✅ | 124 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 93 | Included in Core |
+| **Вступ: Епоха великих надій і розчарувань** | ✅ | 485 | Included in Core |
+| **Гетьман Іван Виговський: Курс на Європу** | ⚪️ | 634 | Skipped |
+| **Гадяцька унія і війна з Москвою** | ⚪️ | 551 | Skipped |
+| **Конотопська битва 1659: Втрачена перемога** | ⚪️ | 588 | Skipped |
+| **Падіння Виговського і початок хаосу** | ⚪️ | 497 | Skipped |
+| **Чорна рада 1663: Тріумф охлократії** | ⚪️ | 589 | Skipped |
+| **Первинні джерела: Літопис Самовидця** | ✅ | 374 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 429 | Included in Core |
+| **Читання** | ✅ | 182 | Included in Core |
+| **Підсумок** | ✅ | 116 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 181 | Skipped |

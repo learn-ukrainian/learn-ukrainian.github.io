@@ -1,12 +1,115 @@
-# Meta for Юрій Немирич: Гадяцька угода
-slug: yurii-nemyrych
+module: yurii-nemyrych
+id: b2-hist-57
 title: "Юрій Немирич: Гадяцька угода"
-level: B2
-track: history
+subtitle: "Yurii Nemyrych: The Treaty of Hadiach"
+slug: yurii-nemyrych
+version: '2.0'
 phase: "HIST.6 [Khmelnytsky & Cossack State]"
-status: skeleton
 focus: history
-transliteration: none
+pedagogy: CBI
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+register: публіцистичний
+duration: 120
+transliteration: none
+tags:
+  - history
+  - treaty
+  - hadiach
+  - nemyrych
+  - vyhovsky
+grammar:
+  - "Political terminology: federation vs. protectorate"
+  - "Historical conditionals: 'what if' scenarios"
+objectives:
+  - "Учень може пояснити суть проекту 'Великого Князівства Руського'"
+  - "Учень може проаналізувати причини провалу Гадяцької угоди"
+  - "Учень може оцінити роль Юрія Немирича як інтелектуала в політиці"
+vocabulary_hints:
+  required:
+    - федерація
+    - канцлер
+    - шляхта
+    - сенат
+    - академія
+    - триєдина держава
+    - аріанин
+    - унія
+    - розкол
+    - Руїна
+vocabulary_count: 25
+naturalness:
+  score: 9
+  status: PASS
+content_outline:
+  - section: "Вступ"
+    words: 400
+    points:
+      - "Nemyrych as a unique figure: intellectual and politician"
+      - "The crisis after Khmelnytsky's death"
+  - section: "Юрій Немирич: Портрет інтелектуала"
+    words: 600
+    points:
+      - "Education in Europe (Leiden, Oxford, Paris)"
+      - "Protestant faith (Arianism) and tolerance"
+      - "Political career in the Commonwealth"
+  - section: "Гадяцька угода 1658: Проект трьох народів"
+    words: 800
+    points:
+      - "The concept of the Grand Duchy of Rus'"
+      - "Equality of rights: religion, language, administration"
+      - "The vision of a federal state"
+  - section: "Освіта і культура в проекті Немирича"
+    words: 500
+    points:
+      - "Plans for two academies (universities)"
+      - "Freedom of the press and schools"
+      - "Intellectual foundation for the state"
+  - section: "Конотопська битва: Тріумф зброї"
+    words: 600
+    points:
+      - "The war with Muscovy (1658-1659)"
+      - "Victory at Konotop as a defense of the Treaty"
+      - "Vyhovsky's military leadership"
+  - section: "Крах великої ідеї: Чому не вийшло?"
+    words: 500
+    points:
+      - "Internal opposition (Pushkar, Barabash)"
+      - "Muscovite propaganda and incitement of the masses"
+      - "The tragic death of Nemyrych"
+  - section: "Читання"
+    words: 250
+    points:
+      - "Analysis of the Hadiach Treaty text"
+  - section: "Первинні джерела"
+    words: 300
+    points:
+      - "Analysis of Nemyrych's speech to the Sejm"
+  - section: "Деколонізаційний погляд"
+    words: 300
+    points:
+      - "Hadiach as an alternative to Pereiaslav"
+      - "The myth of 'inevitable unity' with Russia"
+  - section: "Підсумок"
+    words: 150
+    points:
+      - "Final evaluation of the project"
+activity_hints:
+  - type: reading
+    focus: "Analysis of the Hadiach Treaty text"
+  - type: quiz
+    focus: "Biography of Nemyrych and terms of the treaty"
+  - type: essay-response
+    focus: "Why the European choice failed in the 17th century"
+  - type: comparative-study
+    focus: "Pereiaslav vs. Hadiach models"
+  - type: true-false
+    focus: "Facts about the Grand Duchy of Rus'"
+sources:
+  - name: "The Treaty of Hadiach - Encyclopedia of Ukraine"
+    url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm"
+    type: reference
+    notes: "Academic summary"
+  - name: "Yurii Nemyrych's Speech"
+    url: "http://litopys.org.ua/"
+    type: primary
+    notes: "Original text of the speech"

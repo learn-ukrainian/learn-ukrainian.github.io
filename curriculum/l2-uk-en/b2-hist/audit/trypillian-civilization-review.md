@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:46:14
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -31,7 +32,7 @@
 | 10 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
+- Total activities: 10 (target: 3-9) ❌
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (critical-analysis, essay-response, fill-in, match-up, quiz, reading) ✅
@@ -49,7 +50,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

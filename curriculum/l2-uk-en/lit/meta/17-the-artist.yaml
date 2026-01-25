@@ -1,149 +1,121 @@
-# LIT Module 17: The Artist
-# Status: SPEC (ready for content development)
-
 id: lit-17
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
 slug: the-artist
 module_type: biography
 word_target: 4500
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Художник — повість
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=43
-    type: primary
-    notes: Автобіографічна повість
-  - name: Живопис Шевченка
-    url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
-    type: primary
-    notes: Огляд художньої спадщини
-  - name: Шевченко і Брюллов
-    url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
-    type: reference
-    notes: Контекст навчання
-
+- name: Художник — повість
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=43
+  type: primary
+  notes: Автобіографічна повість
+- name: Живопис Шевченка
+  url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
+  type: primary
+  notes: Огляд художньої спадщини
+- name: Шевченко і Брюллов
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: reference
+  notes: Контекст навчання
 content_outline:
-  - section: Вступ — Поет чи художник?
-    words: 500
-    points:
-      - Шевченко як "подвійний талант"
-      - Академія мистецтв vs поезія
-      - Чому живопис менш відомий
-
-  - section: Навчання у Брюллова
-    words: 700
-    points:
-      - Карл Брюллов як вчитель
-      - Академічна школа живопису
-      - Техніка і стиль раннього Шевченка
-
-  - section: Портрети та офорти
-    words: 700
-    points:
-      - Портретний живопис
-      - Серія офортів (техніка гравюри)
-      - Автопортрети
-
-  - section: Пейзажі заслання
-    words: 700
-    points:
-      - Казахські степи в акварелях
-      - Документальна функція малюнків
-      - Мистецтво vs заборона писати
-
-  - section: Повість "Художник"
-    words: 600
-    points:
-      - Автобіографічні елементи
-      - Образ митця в суспільстві
-      - Російська мова повісті
-
-  - section: Підсумок — Слово і образ
-    words: 400
-    points:
-      - Взаємодія поезії та живопису
-      - Шевченко як візіонер
-      - Перехід до жіночих образів
-
+- section: Вступ — Поет чи художник?
+  words: 500
+  points:
+  - Шевченко як "подвійний талант"
+  - Академія мистецтв vs поезія
+  - Чому живопис менш відомий
+- section: Навчання у Брюллова
+  words: 700
+  points:
+  - Карл Брюллов як вчитель
+  - Академічна школа живопису
+  - Техніка і стиль раннього Шевченка
+- section: Портрети та офорти
+  words: 700
+  points:
+  - Портретний живопис
+  - Серія офортів (техніка гравюри)
+  - Автопортрети
+- section: Пейзажі заслання
+  words: 700
+  points:
+  - Казахські степи в акварелях
+  - Документальна функція малюнків
+  - Мистецтво vs заборона писати
+- section: Повість "Художник"
+  words: 600
+  points:
+  - Автобіографічні елементи
+  - Образ митця в суспільстві
+  - Російська мова повісті
+- section: Підсумок — Слово і образ
+  words: 400
+  points:
+  - Взаємодія поезії та живопису
+  - Шевченко як візіонер
+  - Перехід до жіночих образів
 vocabulary_hints:
   required:
-    - художник (artist/painter)
-    - живопис (painting)
-    - офорт (etching)
-    - акварель (watercolor)
-    - портрет (portrait)
-    - автопортрет (self-portrait)
-    - гравюра (engraving)
-    - академія (academy)
-    - пейзаж (landscape)
-    - техніка (technique)
+  - художник (artist/painter)
+  - живопис (painting)
+  - офорт (etching)
+  - акварель (watercolor)
+  - портрет (portrait)
+  - автопортрет (self-portrait)
+  - гравюра (engraving)
+  - академія (academy)
+  - пейзаж (landscape)
+  - техніка (technique)
   recommended:
-    - полотно (canvas)
-    - пензель (brush)
-    - ескіз (sketch)
-    - композиція (composition)
-    - світлотінь (chiaroscuro)
-
+  - полотно (canvas)
+  - пензель (brush)
+  - ескіз (sketch)
+  - композиція (composition)
+  - світлотінь (chiaroscuro)
 activity_hints:
-  - type: reading
-    focus: Уривки з повісті "Художник"
-    source: UkrLib tid=43
-    items: "4+"
-
-  - type: quiz
-    focus: Факти про живопис Шевченка
-    items: "15+"
-
-  - type: match-up
-    focus: Жанр → приклади творів
-    items: "12+"
-
-  - type: essay-response
-    focus: Взаємодія слова і образу у Шевченка
-    word_target: 300
-    output: Мистецтвознавче есе
-
-  - type: discussion
-    focus: Чому Шевченко-маляр менш відомий?
-    output: Дискусія про рецепцію
-
-  - type: cloze
-    focus: Художня термінологія
-    items: "12+"
-
+- type: reading
+  focus: Уривки з повісті "Художник"
+  source: UkrLib tid=43
+  items: 4+
+- type: quiz
+  focus: Факти про живопис Шевченка
+  items: 15+
+- type: match-up
+  focus: Жанр → приклади творів
+  items: 12+
+- type: essay-response
+  focus: Взаємодія слова і образу у Шевченка
+  word_target: 300
+  output: Мистецтвознавче есе
+- type: cloze
+  focus: Художня термінологія
+  items: 12+
 prerequisites:
-  - lit-11 (Young Shevchenko — біографія)
-  - lit-16 (Biblical Themes)
-
+- lit-11 (Young Shevchenko — біографія)
+- lit-16 (Biblical Themes)
 connects_to:
-  - lit-18 (Women in Kobzar — образи)
-  - lit-19 (Diary — внутрішній світ)
-
-version: "1.0"
+- lit-18 (Women in Kobzar — образи)
+- lit-19 (Diary — внутрішній світ)
+version: '1.0'
 phase: LIT.3 The Prophet (Taras Shevchenko)
 focus: biography
 pedagogy: Immersion & Analysis
 duration: 120
 transliteration: none
 tags:
-  - shevchenko
-  - art
-  - biography
-  - painting
-
+- shevchenko
+- art
+- biography
+- painting
 grammar:
-  - Artistic Terminology
-  - Biographical Narrative
-
+- Artistic Terminology
+- Biographical Narrative
 objectives:
-  - "Understand Shevchenko's dual talent as poet and painter"
-  - "Analyze the influence of Karl Bryullov on Shevchenko's style"
-  - "Discuss the autobiographical elements in the novella 'The Artist'"
-  - "Recognize key artistic terms in Ukrainian (etching, chiaroscuro)"
-
+- Understand Shevchenko's dual talent as poet and painter
+- Analyze the influence of Karl Bryullov on Shevchenko's style
+- Discuss the autobiographical elements in the novella 'The Artist'
+- Recognize key artistic terms in Ukrainian (etching, chiaroscuro)
 naturalness:
   score: 10
   status: PASS

@@ -1,152 +1,125 @@
-# LIT Module 13: Haidamaky
-# Status: SPEC (ready for content development)
-
 id: lit-13
 title: 'Гайдамаки: Кривава Свобода'
 subtitle: 'LIT-013: Епос Гніву і Спокути'
 slug: haidamaky
 module_type: literature
 word_target: 4500
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 grammar:
-  - Epic poetry stylistics
-  - Historical terminology
-  - Rhetorical questions and exclamations
-
+- Epic poetry stylistics
+- Historical terminology
+- Rhetorical questions and exclamations
 objectives:
-  - Analyze the historical context of Koliivshchyna
-  - evaluate the ethical conflict of Gonta
-  - Discuss the concept of "Holy Knife"
-
-# === AGENT BUILD SPEC ===
-
+- Analyze the historical context of Koliivshchyna
+- evaluate the ethical conflict of Gonta
+- Discuss the concept of "Holy Knife"
 sources:
-  - name: Гайдамаки — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=10
-    type: primary
-    notes: Поема для детального аналізу
-  - name: Аналіз "Гайдамаків"
-    url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
-    type: secondary
-    notes: Літературознавчий аналіз
-  - name: Коліївщина — історія
-    url: https://uk.wikipedia.org/wiki/Коліївщина
-    type: reference
-    notes: Історичний контекст
-
+- name: Гайдамаки — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=10
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Гайдамаків"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Коліївщина — історія
+  url: https://uk.wikipedia.org/wiki/Коліївщина
+  type: reference
+  notes: Історичний контекст
 content_outline:
-  - section: Вступ — Коліївщина 1768 року
-    words: 600
-    points:
-      - Історичне підґрунтя повстання
-      - Гайдамаки, конфедерати, уніати
-      - Чому Шевченко звернувся до цієї теми
-
-  - section: Структура поеми
-    words: 600
-    points:
-      - Жанрова специфіка (епос + лірика)
-      - Три сюжетні лінії
-      - Авторські відступи
-
-  - section: Ярема і Оксана — любовний роман
-    words: 700
-    points:
-      - Образ Яреми як "нового козака"
-      - Кохання посеред хаосу
-      - Художня вигадка vs історія
-
-  - section: Гонта і сини — античний фатум
-    words: 800
-    points:
-      - Іван Гонта як трагічний герой
-      - Синовбивство — кульмінація поеми
-      - Конфлікт обов'язку і почуття
-
-  - section: Етика бунту
-    words: 600
-    points:
-      - Чи виправдовує мета засоби?
-      - Насильство і спокута
-      - Шевченко як суддя історії
-
-  - section: Підсумок — Пам'ять і травма
-    words: 400
-    points:
-      - Як пам'ятати страшне минуле
-      - Українсько-польські відносини
-      - Сучасне прочитання поеми
-
+- section: Вступ — Коліївщина 1768 року
+  words: 600
+  points:
+  - Історичне підґрунтя повстання
+  - Гайдамаки, конфедерати, уніати
+  - Чому Шевченко звернувся до цієї теми
+- section: Структура поеми
+  words: 600
+  points:
+  - Жанрова специфіка (епос + лірика)
+  - Три сюжетні лінії
+  - Авторські відступи
+- section: Ярема і Оксана — любовний роман
+  words: 700
+  points:
+  - Образ Яреми як "нового козака"
+  - Кохання посеред хаосу
+  - Художня вигадка vs історія
+- section: Гонта і сини — античний фатум
+  words: 800
+  points:
+  - Іван Гонта як трагічний герой
+  - Синовбивство — кульмінація поеми
+  - Конфлікт обов'язку і почуття
+- section: Етика бунту
+  words: 600
+  points:
+  - Чи виправдовує мета засоби?
+  - Насильство і спокута
+  - Шевченко як суддя історії
+- section: Підсумок — Пам'ять і травма
+  words: 400
+  points:
+  - Як пам'ятати страшне минуле
+  - Українсько-польські відносини
+  - Сучасне прочитання поеми
 vocabulary_hints:
   required:
-    - гайдамаки (haidamaks)
-    - коліївщина (Koliivshchyna uprising)
-    - конфедерати (confederates)
-    - уніати (Greek Catholics)
-    - синовбивство (filicide)
-    - фатум (fate)
-    - епос (epic)
-    - бунт (rebellion)
-    - спокута (atonement)
-    - травма (trauma)
+  - гайдамаки (haidamaks)
+  - коліївщина (Koliivshchyna uprising)
+  - конфедерати (confederates)
+  - уніати (Greek Catholics)
+  - синовбивство (filicide)
+  - фатум (fate)
+  - епос (epic)
+  - бунт (rebellion)
+  - спокута (atonement)
+  - травма (trauma)
   recommended:
-    - ксьондз (Catholic priest)
-    - повстання (uprising)
-    - помста (revenge)
-    - катарсис (catharsis)
-    - пам'ять (memory)
-
+  - ксьондз (Catholic priest)
+  - повстання (uprising)
+  - помста (revenge)
+  - катарсис (catharsis)
+  - пам'ять (memory)
 activity_hints:
-  - type: reading
-    focus: Ключові епізоди поеми
-    source: UkrLib tid=10
-    items: "5+"
-
-  - type: quiz
-    focus: Історичні факти і сюжет поеми
-    items: "15+"
-
-  - type: match-up
-    focus: Персонаж → його роль (історична / вигадана)
-    items: "12+"
-
-  - type: essay-response
-    focus: Етика бунту — чи виправдовує мета засоби?
-    word_target: 300
-    output: Філософське есе
-
-  - type: discussion
-    focus: Як пам'ятати травми минулого?
-    output: Дискусія про історичну пам'ять
-
-  - type: cloze
-    focus: Цитати з поеми
-    items: "12+"
-
+- type: reading
+  focus: Ключові епізоди поеми
+  source: UkrLib tid=10
+  items: 5+
+- type: quiz
+  focus: Історичні факти і сюжет поеми
+  items: 15+
+- type: match-up
+  focus: Персонаж → його роль (історична / вигадана)
+  items: 12+
+- type: essay-response
+  focus: Етика бунту — чи виправдовує мета засоби?
+  word_target: 300
+  output: Філософське есе
+- type: cloze
+  focus: Цитати з поеми
+  items: 12+
 prerequisites:
-  - lit-11 (Young Shevchenko)
-  - lit-12 (The Ballads)
-
+- lit-11 (Young Shevchenko)
+- lit-12 (The Ballads)
 connects_to:
-  - lit-14 (Son — політична сатира)
-  - lit-04 (Eneida War — порівняння воєнної тематики)
-  - c1-hist (Historical modules — Руїна)
-
-version: "1.0"
+- lit-14 (Son — політична сатира)
+- lit-04 (Eneida War — порівняння воєнної тематики)
+- c1-hist (Historical modules — Руїна)
+version: '1.0'
 phase: LIT.3 The Prophet (Taras Shevchenko)
 focus: literature
 pedagogy: literature
 duration: 120
 transliteration: none
 tags:
-  - література
-  - шевченко
-  - історія
-  - коліївщина
-  - гайдамаки
-  - епос
-  - трагедія
-
+- література
+- шевченко
+- історія
+- коліївщина
+- гайдамаки
+- епос
+- трагедія
 naturalness:
   score: 10
   status: PASS

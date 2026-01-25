@@ -6,94 +6,60 @@ title: All Cases Practice
 subtitle: Consolidating the Case System
 slug: 09-all-cases-practice
 module_type: grammar
-word_target: 2800
-immersion: "50-60% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.1
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - cases
-  - review
-  - practice
-  - integration
-
+- grammar
+- cases
+- review
+- practice
+- integration
 grammar:
-  - all 7 cases review
-  - case selection logic
-  - common prepositions
-  - case endings
-
+- all 7 cases review
+- case selection logic
+- common prepositions
+- case endings
 objectives:
-  - Learner can identify which case is required in a given context
-  - Learner can form correct endings for all 7 cases
-  - Learner can switch between cases fluently in conversation
-  - Learner can correct common case errors
-
-# === AGENT BUILD SPEC ===
-
+- Learner can identify which case is required in a given context
+- Learner can form correct endings for all 7 cases
+- Learner can switch between cases fluently in conversation
+- Learner can correct common case errors
 sources:
-  - name: Ukrainian State Standard 2024 - Case System
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Complete 7-case paradigm requirements for A2
-  - name: Ukrainian Case System Reference
-    url: https://uk.wikipedia.org/wiki/Відмінок
-    type: reference
-    notes: Complete declension tables
-
+- name: Ukrainian State Standard 2024 - Case System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Complete 7-case paradigm requirements for A2
+- name: Ukrainian Case System Reference
+  url: https://uk.wikipedia.org/wiki/Відмінок
+  type: reference
+  notes: Complete declension tables
 content_outline:
-  - section: Case System Overview
-    words: 500
-    points:
-      - All 7 cases with questions
-      - Nominative (хто? що?) - subject
-      - Genitive (кого? чого?) - possession, absence
-      - Dative (кому? чому?) - indirect object
-      - Accusative (кого? що?) - direct object
-      - Instrumental (ким? чим?) - means, with
-      - Locative (на кому? на чому?) - location
-      - Vocative - address
-
-  - section: Case Recognition Strategies
-    words: 500
-    points:
-      - Ending patterns by gender
-      - Context clues (verbs, prepositions)
-      - Question word method
-
-  - section: Masculine Noun Full Paradigm
-    words: 400
-    points:
-      - Hard stem example (друг)
-      - Soft stem example (вчитель)
-      - Animate vs inanimate accusative
-
-  - section: Feminine Noun Full Paradigm
-    words: 400
-    points:
-      - Hard stem -а example (книга)
-      - Soft stem -я example (земля)
-      - Consonant alternations
-
-  - section: Neuter and Plural Paradigms
-    words: 400
-    points:
-      - Neuter -о/-е patterns
-      - Plural endings all genders
-      - Common irregular plurals
-
-  - section: Integration Exercises
-    words: 600
-    points:
-      - Mixed case practice
-      - Error correction drills
-      - Full sentence transformation
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Importance of the 7-case system
+  - Quick reference table
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - Case-by-case review (Nom to Voc)
+  - Gender forms summary
+  - Strategic question-based approach
+- section: Practice / Практика
+  words: 150
+  points:
+  - Mixed case identification
+  - Paradigms for key nouns (друг, книга)
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Real-world application of mixed cases
 
 vocabulary_hints:
   required:

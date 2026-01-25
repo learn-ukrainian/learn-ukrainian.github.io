@@ -1,8 +1,13 @@
-module: a2-26
+id: a2-26
 title: Telling Stories
 subtitle: Sequencing Events in Narrative
-version: '1.0'
+slug: 26-telling-stories
+module_type: vocabulary
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
+focus: vocabulary
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -21,9 +26,35 @@ objectives:
 - Learner can tell a simple story with a beginning, middle, and end
 - Learner can describe unexpected events
 - Learner can use time markers to structure narrative
-vocabulary_count: 25
-slug: 26-telling-stories
-focus: vocabulary
-naturalness:
-  score: 9
-  status: PASS
+sources:
+- name: Ukrainian State Standard 2024 - Narration
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Narrative and sequence requirements for A2
+- name: Stylistics of Ukrainian Language - Narrative Flow
+  url: https://uk.wikipedia.org/wiki/Оповідь
+  type: reference
+  notes: Logical connectors in Ukrainian prose
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - The power of sequence in daily life
+  - Why 'Robot Style' fails in social situations
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Road signs of time: Спочатку, Потім, Нарешті'
+  - 'Drama and Twists: Раптом, Несподівано'
+  - 'Relative Time: Раніше, Недавно, Давно'
+  - 'Advanced Connectors: Тільки-но, Ледве'
+  - 'Registers: Fairytale vs Report vs Anecdote'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Sequencing a chaotic morning
+  - 'Anekdot completion drills'
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Telling a fishing story or travel adventure

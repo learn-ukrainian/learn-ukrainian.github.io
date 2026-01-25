@@ -1,15 +1,10 @@
-# B1 Module 07: Вид у минулому - одного разу vs щодня
-# Status: SPEC (ready for content development)
-
 id: b1-07
 title: 'Вид у минулому: одного разу vs щодня'
 subtitle: 'Aspect in Past: Single vs Repeated Actions'
 slug: 07-aspect-past-single-repeated
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1700
+immersion: 100% Ukrainian
 version: '1.0'
 phase: B1.1 Aspect
 pedagogy: TTT
@@ -17,121 +12,97 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - past-tense
-  - adverbs
+- grammar
+- aspect
+- past-tense
+- adverbs
 grammar:
-  - Aspect selection with time markers
-  - Single events vs habitual actions
-  - Frequency adverbs and aspect
+- Aspect selection with time markers
+- Single events vs habitual actions
+- Frequency adverbs and aspect
 objectives:
-  - Learner can distinguish single from repeated past actions
-  - Learner can select correct aspect based on time markers
-  - Learner understands how frequency affects aspect choice
-  - Learner can transform between single and habitual narratives
-
-# === AGENT BUILD SPEC ===
-
+- Learner can distinguish single from repeated past actions
+- Learner can select correct aspect based on time markers
+- Learner understands how frequency affects aspect choice
+- Learner can transform between single and habitual narratives
 sources:
-  - name: Ukrainian State Standard 2024 - Past Tense Aspect
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official rules for aspect in past tense contexts
-  - name: Ukrainian Aspectual Pairs
-    url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-    type: reference
-    notes: Comprehensive list of aspectual pairs
-
+- name: Ukrainian State Standard 2024 - Past Tense Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in past tense contexts
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Comprehensive list of aspectual pairs
 content_outline:
-  - section: Вступ — Минулий час і вид
-    words: 350
-    points:
-      - Чому вибір виду важливий у минулому часі
-      - TTT — спробуйте самі перед поясненням
-      - Зв'язок з M06
-
-  - section: Одноразові дії — доконаний вид
-    words: 600
-    points:
-      - Одного разу він написав листа
-      - Того разу вона приготувала борщ
-      - Маркери одноразовості (одного разу, того дня, вчора ввечері)
-
-  - section: Повторювані дії — недоконаний вид
-    words: 600
-    points:
-      - Він щодня писав листи
-      - Іноді вона готувала борщ
-      - Маркери повторення (щодня, часто, зазвичай, іноді)
-
-  - section: Трансформація між видами
-    words: 500
-    points:
-      - Одноразова → повторювана дія
-      - Повторювана → одноразова дія
-      - Як зміна виду змінює значення
-
-  - section: Практика з текстами
-    words: 700
-    points:
-      - Читання оповідань з вибором виду
-      - Заповнення пропусків
-      - Створення власних речень
-
-  - section: Підсумок
-    words: 250
-    points:
-      - Ключові маркери часу
-      - Готовність до M08
-
+- section: Тест
+  words: 120
+  points:
+  - Compare two narratives
+  - Deduce rule (One vs Many)
+- section: Пояснення
+  words: 700
+  points:
+  - Single events (markers: once, that time)
+  - Repeated actions (markers: always, often)
+  - Contrast table
+  - Special cases (once, long ago)
+- section: Практика
+  words: 300
+  points:
+  - Selection algorithm
+  - Common mistakes
+  - Aspect in daily life
+- section: Діалоги
+  words: 350
+  points:
+  - School memories
+  - Summer stories
+  - Work experience
+- section: Підсумок
+  words: 230
+  points:
+  - Summary of markers
+  - Self-check
 vocabulary_hints:
   required:
-    - одного разу (once)
-    - щодня (every day)
-    - часто (often)
-    - іноді (sometimes)
-    - зазвичай (usually)
-    - того разу (that time)
-    - того дня (that day)
-    - завжди (always)
-    - ніколи (never)
-    - рідко (rarely)
+  - одного разу (once)
+  - щодня (every day)
+  - часто (often)
+  - іноді (sometimes)
+  - зазвичай (usually)
+  - того разу (that time)
+  - того дня (that day)
+  - завжди (always)
+  - ніколи (never)
+  - рідко (rarely)
   recommended:
-    - регулярно (regularly)
-    - постійно (constantly)
-    - вперше (for the first time)
-    - востаннє (for the last time)
-    - неодноразово (repeatedly)
-
+  - регулярно (regularly)
+  - постійно (constantly)
+  - вперше (for the first time)
+  - востаннє (for the last time)
+  - неодноразово (repeatedly)
 activity_hints:
-  - type: fill-in
-    focus: Time marker → aspect selection
-    items: "15+"
-
-  - type: transform
-    focus: Single event → habitual (and vice versa)
-    items: "10+"
-
-  - type: quiz
-    focus: Which aspect for which context?
-    items: "12+"
-
-  - type: cloze
-    focus: Narrative with aspect choices
-    items: "10+"
-
-  - type: match-up
-    focus: Time marker → aspect
-    items: "12+"
-
+- type: fill-in
+  focus: Time marker → aspect selection
+  items: 15+
+- type: fill-in
+  focus: Single event → habitual (and vice versa)
+  items: 10+
+- type: quiz
+  focus: Which aspect for which context?
+  items: 12+
+- type: cloze
+  focus: Narrative with aspect choices
+  items: 10+
+- type: match-up
+  focus: Time marker → aspect
+  items: 12+
 prerequisites:
-  - b1-06 (Aspect complete system)
-
+- b1-06 (Aspect complete system)
 connects_to:
-  - b1-08 (Aspect in past - result vs process)
-  - b1-14 (Aspect integration practice)
-
+- b1-08 (Aspect in past - result vs process)
+- b1-14 (Aspect integration practice)
 naturalness:
   score: 9
   status: PASS

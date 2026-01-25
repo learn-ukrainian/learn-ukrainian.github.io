@@ -77,7 +77,7 @@ vocabulary_hints:
   - популізм (populism)
   - стратегічне партнерство (strategic partnership)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: 600 years → 2022 transformation
   output: Historical transformation map
 - type: change-analysis

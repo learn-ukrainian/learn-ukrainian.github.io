@@ -87,7 +87,16 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 
 ## 🏗️ YAML Architecture (Required)
 
-LIT modules now follow a **multi-file architecture**. The Markdown file contains ONLY the lecture narrative. All other components reside in YAML sidecars.
+<critical>
+**ESSAY CONTAMINATION PREVENTION:**
+
+Even though LIT modules are analytical, ALL specific Essay Prompts and complete Model Answers MUST reside in `activities/{slug}.yaml`.
+
+- **DO NOT** include `## Есе` or `## Аналітичний практикум` headers in the Markdown.
+- The Markdown should contain the **Lecture Prose** (the analysis itself), but the **Tasks** based on that analysis go in YAML.
+</critical>
+
+LIT modules now follow a **multi-file architecture**.
 
 | Component      | Location                     | Description                                        |
 | -------------- | ---------------------------- | -------------------------------------------------- |

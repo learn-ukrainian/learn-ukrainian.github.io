@@ -1,151 +1,123 @@
-# C1-BIO Module 12: Іван Мазепа: Меценат і трагічний герой
-# Status: SPEC (ready for content development)
-
 id: c1-bio-12
-title: "Іван Мазепа: Меценат і трагічний герой"
+title: 'Іван Мазепа: Меценат і трагічний герой'
 slug: ivan-mazepa
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Іван Мазепа (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Іван_Мазепа
-    type: primary
-    notes: Biography, hetmanate, Poltava
-  - name: Полтавська битва (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Полтавська_битва
-    type: reference
-    notes: Military context and consequences
-  - name: Мазепинське бароко
-    url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
-    type: reference
-    notes: Cultural patronage
-
+- name: Іван Мазепа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: primary
+  notes: Biography, hetmanate, Poltava
+- name: Полтавська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Military context and consequences
+- name: Мазепинське бароко
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  type: reference
+  notes: Cultural patronage
 content_outline:
-  - section: Вступ — Між зрадою та героїзмом
-    words: 400
-    points:
-      - Суперечливість постаті Мазепи
-      - Його місце в українській та російській історіографії
-      - Значення його вибору 1708 року
-
-  - section: Молодість та шлях до влади
-    words: 600
-    points:
-      - Шляхетське походження
-      - Освіта та служба при дворах
-      - Козацька кар'єра
-      - Обрання гетьманом 1687 року
-
-  - section: 'Гетьманування: успіхи'
-    words: 700
-    points:
-      - Внутрішня політика та реформи
-      - Військові походи з Петром I
-      - Культурний розквіт — мазепинське бароко
-      - Меценатство та будівництво
-
-  - section: Шлях до розриву з Москвою
-    words: 800
-    points:
-      - Наростання суперечностей
-      - Обмеження автономії
-      - Північна війна та її тягар
-      - Переговори з Карлом XII
-
-  - section: Полтава та вигнання
-    words: 800
-    points:
-      - Відкритий виступ 1708 року
-      - Руйнування Батурина
-      - Полтавська катастрофа
-      - Втеча до Бендер
-      - Смерть та анафема
-
-  - section: Спадщина та реабілітація
-    words: 400
-    points:
-      - Образ Мазепи в літературі
-      - Байрон, Пушкін, Словацький
-      - Реабілітація в незалежній Україні
-      - Мазепа на банкноті
-
-  - section: Підсумок — Трагічний вибір
-    words: 300
-    points:
-      - Мазепа як символ боротьби за незалежність
-      - Уроки його історії
-      - Актуальність сьогодні
-
+- section: Вступ — Між зрадою та героїзмом
+  words: 400
+  points:
+  - Суперечливість постаті Мазепи
+  - Його місце в українській та російській історіографії
+  - Значення його вибору 1708 року
+- section: Молодість та шлях до влади
+  words: 600
+  points:
+  - Шляхетське походження
+  - Освіта та служба при дворах
+  - Козацька кар'єра
+  - Обрання гетьманом 1687 року
+- section: 'Гетьманування: успіхи'
+  words: 700
+  points:
+  - Внутрішня політика та реформи
+  - Військові походи з Петром I
+  - Культурний розквіт — мазепинське бароко
+  - Меценатство та будівництво
+- section: Шлях до розриву з Москвою
+  words: 800
+  points:
+  - Наростання суперечностей
+  - Обмеження автономії
+  - Північна війна та її тягар
+  - Переговори з Карлом XII
+- section: Полтава та вигнання
+  words: 800
+  points:
+  - Відкритий виступ 1708 року
+  - Руйнування Батурина
+  - Полтавська катастрофа
+  - Втеча до Бендер
+  - Смерть та анафема
+- section: Спадщина та реабілітація
+  words: 400
+  points:
+  - Образ Мазепи в літературі
+  - Байрон, Пушкін, Словацький
+  - Реабілітація в незалежній Україні
+  - Мазепа на банкноті
+- section: Підсумок — Трагічний вибір
+  words: 300
+  points:
+  - Мазепа як символ боротьби за незалежність
+  - Уроки його історії
+  - Актуальність сьогодні
 vocabulary_hints:
   required:
-    - гетьман (hetman)
-    - меценат (patron)
-    - бароко (baroque)
-    - анафема (anathema)
-    - зрада (treason - in Russian narrative)
-    - автономія (autonomy)
-    - союз (alliance)
-    - вигнання (exile)
-    - універсал (decree)
-    - резиденція (residence)
+  - гетьман (hetman)
+  - меценат (patron)
+  - бароко (baroque)
+  - анафема (anathema)
+  - зрада (treason - in Russian narrative)
+  - автономія (autonomy)
+  - союз (alliance)
+  - вигнання (exile)
+  - універсал (decree)
+  - резиденція (residence)
   recommended:
-    - клейноди (regalia)
-    - старшина (officer class)
-    - гетьманщина (Hetmanate)
-    - протекторат (protectorate)
-    - капітуляція (capitulation)
-
+  - клейноди (regalia)
+  - старшина (officer class)
+  - гетьманщина (Hetmanate)
+  - протекторат (protectorate)
+  - капітуляція (capitulation)
 activity_hints:
-  - type: reading
-    focus: Mazepa's manifesto and correspondence
-    source: Primary sources (adapted)
-    items: "3 passages"
-
-  - type: quiz
-    focus: Facts about Mazepa's hetmanate and decision
-    items: "15+"
-
-  - type: match-up
-    focus: Mazepa's cultural projects and their locations
-    items: "10+"
-
-  - type: essay-response
-    focus: Was Mazepa a traitor or a patriot?
-    word_target: 300
-    output: Analysis of competing narratives
-
-  - type: group-sort
-    focus: Cultural achievements vs. political actions
-    items: "12+"
-
-  - type: fill-in
-    focus: Key dates and events of Mazepa's life
-    items: "10+"
-
-  - type: discussion
-    focus: Compare Mazepa's choice with modern geopolitical decisions
-    output: Historical parallels
-
-  - type: critical-analysis
-    focus: Analyze Mazepa in Ukrainian vs. Russian historiography
-    output: Comparative historiography
-
+- type: reading
+  focus: Mazepa's manifesto and correspondence
+  source: Primary sources (adapted)
+  items: 3 passages
+- type: quiz
+  focus: Facts about Mazepa's hetmanate and decision
+  items: 15+
+- type: match-up
+  focus: Mazepa's cultural projects and their locations
+  items: 10+
+- type: essay-response
+  focus: Was Mazepa a traitor or a patriot?
+  word_target: 300
+  output: Analysis of competing narratives
+- type: group-sort
+  focus: Cultural achievements vs. political actions
+  items: 12+
+- type: fill-in
+  focus: Key dates and events of Mazepa's life
+  items: 10+
+- type: critical-analysis
+  focus: Analyze Mazepa in Ukrainian vs. Russian historiography
+  output: Comparative historiography
 prerequisites:
-  - c1-bio-10 (Bohdan Khmelnytskyi - earlier hetman)
-  - c1-bio-11 (Yuriy Nemyrych - European orientation)
-
+- c1-bio-10 (Bohdan Khmelnytskyi - earlier hetman)
+- c1-bio-11 (Yuriy Nemyrych - European orientation)
 connects_to:
-  - c1-bio-13 (Kost Hordiyenko - ally)
-  - c1-bio-14 (Pylyp Orlyk - successor)
-  - c1-bio-15 (Petro Kalnyshevskyy - end of autonomy)
-
+- c1-bio-13 (Kost Hordiyenko - ally)
+- c1-bio-14 (Pylyp Orlyk - successor)
+- c1-bio-15 (Petro Kalnyshevskyy - end of autonomy)
 naturalness:
   score: null
   status: PENDING

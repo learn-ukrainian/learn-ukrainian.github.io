@@ -6,7 +6,7 @@ title: Готові до занурення
 subtitle: Metalanguage mastery checkpoint
 slug: 05-ready-for-immersion
 module_type: checkpoint
-word_target: 3000
+word_target: 1700
 immersion: "75% Ukrainian"
 
 # === EXISTING FIELDS ===
@@ -47,54 +47,62 @@ sources:
     notes: Proficiency standards for checkpoint assessment
 
 content_outline:
+  - section: Presentation
+    words: 80
+    points:
+      - Why This Module Matters
+      - Proverb and cultural context
+
   - section: Diagnostic Assessment
-    words: 500
+    words: 150
     points:
       - Initial test of M01-04 metalanguage
       - Identify areas needing review
-      - Self-assessment of readiness
 
   - section: Parts of Speech Review
-    words: 400
+    words: 50
     points:
       - All 10 parts of speech in Ukrainian
       - Quick identification exercises
-      - Common confusions addressed
 
   - section: Verb Terminology Review
-    words: 500
+    words: 50
     points:
       - Aspect and tense terms
-      - Negation terminology
-      - Verb form vocabulary
 
   - section: Grammar Explanation Patterns
-    words: 400
+    words: 50
     points:
       - Reading authentic grammar texts
-      - Following instruction patterns
-      - Style and register recognition
 
   - section: Sentence Structure Review
-    words: 400
+    words: 150
     points:
       - Sentence parts identification
-      - Clause types recognition
-      - Complex sentence analysis
 
   - section: Full Grammar Explanation Comprehension
-    words: 600
+    words: 200
     points:
       - Extended grammar text in Ukrainian
       - Comprehension questions
-      - Discussion of rules in Ukrainian
 
-  - section: Summary and Certification
-    words: 200
+  - section: Practice
+    words: 250
+    points:
+      - The Real Test
+      - Pop Culture Moment
+
+  - section: Mini-Dialogues
+    words: 250
+    points:
+      - Practical application
+      - Key term usage in context
+
+  - section: Summary
+    words: 150
     points:
       - Final self-assessment
-      - Readiness confirmation for B1.1
-      - Remediation guidance if needed
+      - Readiness confirmation
 
 vocabulary_hints:
   required:
@@ -120,21 +128,9 @@ activity_hints:
     focus: Complete a full grammar explanation passage
     items: "15+"
 
-  - type: true-false
-    focus: Statements about grammar rules (all in Ukrainian)
-    items: "12+"
-
   - type: quiz
     focus: Comprehensive metalanguage review
     items: "20+"
-
-  - type: reading
-    focus: Real grammar text from Ukrainian textbook
-    output: Answer comprehension questions
-
-  - type: essay-response
-    focus: Explain a grammar rule using Ukrainian terminology
-    word_target: 100
 
   - type: match-up
     focus: Term → definition (all in Ukrainian)

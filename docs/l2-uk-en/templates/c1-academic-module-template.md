@@ -189,36 +189,13 @@ vocabulary_focus:
 > [How this writing convention differs from English academic traditions]
 ```
 
-#### Section 3: Порівняльний аналіз (Comparative Analysis) — 400-500 words
+#### Section 4: Comparative Analysis (YAML-ONLY)
 
-```markdown
-## Порівняльний аналіз
+**CRITICAL: DO NOT include an `## Аналіз` or `## Порівняльний аналіз` section in the markdown file.** This analysis is defined exclusively in `activities/{slug}.yaml` as an `essay-response` activity.
 
-### Текст 1 vs. Текст 2
+---
 
-**Порівняйте два підходи до однієї теми:**
-
-| Аспект | Текст 1 | Текст 2 |
-|--------|---------|---------|
-| Позиція автора | [Position] | [Position] |
-| Аргументи | [Arguments] | [Arguments] |
-| Методологія | [Method] | [Method] |
-| Регістр | [Register] | [Register] |
-
-### Критичний аналіз
-
-**Питання для роздуму:**
-1. Яка позиція є більш переконливою? Чому?
-2. Які припущення лежать в основі кожного тексту?
-3. Як стиль аргументації відрізняється?
-4. Чи є упередженість? Як вона проявляється?
-
-> 🔍 **Критичне мислення**
->
-> [Teach critical reading strategies for academic texts]
-```
-
-#### Section 4: Практика написання (Writing Practice) — 400-500 words
+#### Section 5: Essay Activities (In YAML Only)
 
 ```markdown
 ## Практика

@@ -1,11 +1,40 @@
-# Meta for Павло Полуботок: Останній наказний
-slug: pavlo-polubotok
-title: "Павло Полуботок: Останній наказний"
-level: B2
-track: history
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
-status: skeleton
+title: 'Павло Полуботок: Останній наказний'
+phase: B2.3b [Українська історія]
 focus: history
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- polubotok
+- russian-empire
+- repression
+- legend
+grammar:
+- Історичний наратив
+- Пасивний стан в історичному тексті
+vocabulary_focus: null
+objectives:
+- Учень може описати конфлікт між Полуботком і Малоросійською колегією
+- Учень може пояснити суть легенди про золото Полуботка
+- Учень може проаналізувати промову Полуботка перед Петром I
+- Учень може охарактеризувати економічну діяльність гетьмана
+vocabulary_count: 35
+slug: pavlo-polubotok
+activity_types:
+- reading
+- quiz
+- essay-response
+- comparative-study
+- true-false
+- match-up
+- unjumble
+- fill-in
+- error-correction
+- select
+naturalness:
+  score: 9
+  status: PASS

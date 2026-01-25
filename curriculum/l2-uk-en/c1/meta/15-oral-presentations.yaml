@@ -93,9 +93,6 @@ activity_hints:
 - type: essay-response
   focus: Write presentation introduction
   word_target: 150
-- type: dialogue
-  focus: Q&A role-play simulation
-  exchanges: 8+
 prerequisites:
 - c1-01 to c1-12 (Academic Foundation)
 - Academic register mastery

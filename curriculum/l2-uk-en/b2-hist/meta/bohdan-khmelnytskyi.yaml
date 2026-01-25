@@ -1,132 +1,104 @@
-module: b2-hist-52
+module: bohdan-khmelnytskyi
 id: b2-hist-52
-title: "Богдан Хмельницький: Постать"
-subtitle: "Bohdan Khmelnytsky: The Figure"
+title: "Богдан Хмельницький: Постать в історії"
+subtitle: "Bohdan Khmelnytsky: A Figure in History"
 slug: bohdan-khmelnytskyi
 version: '2.0'
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
-focus: history
-pedagogy: seminar
+phase: "HIST.5 [Rise of Cossacks]"
+focus: biography
+pedagogy: CBI
+word_target: 3000
 register: публіцистичний
-duration: 150
+duration: 120
 transliteration: none
-
-# Learning objectives (in Ukrainian)
-objectives:
-  - "Учень може описати життєвий шлях Богдана Хмельницького до початку повстання"
-  - "Учень може аналізувати особистісні якості Хмельницького як військового лідера та дипломата"
-  - "Учень може оцінити роль Хмельницького у формуванні української державності"
-  - "Учень може порівняти різні історичні оцінки постаті Хмельницького"
-
-# Grammar focus
+tags:
+  - history
+  - biography
+  - khmelnytsky
+  - hetman
+  - state-building
 grammar:
-  - "Історичний наратив у минулому часі"
-  - "Пасивні конструкції в історичному контексті"
-  - "Біографічна лексика та стиль"
-
-# Content structure
-word_target: 4000
-content_outline:
-  - section: "Вступ"
-    words: 300
-    points:
-      - Significance of Khmelnytsky in Ukrainian history
-      - Historical sources and perspectives
-  - section: "Читання"
-    words: 100
-    points:
-      - Introduction to the reading section
-  - section: "Ранні роки та становлення (1595-1647)"
-    words: 800
-    points:
-      - Birth and family background
-      - Education and early military service
-  - section: "Конфлікт у Суботові та шлях до повстання"
-    words: 700
-    points:
-      - Conflict with Czaplinski
-      - Decision to lead uprising
-  - section: "Хмельницький як військовий стратег"
-    words: 900
-    points:
-      - Military tactics and strategy
-      - Major victories (1648-1649)
-  - section: "Творець держави: Дипломатія та адміністрування"
-    words: 800
-    points:
-      - State-building efforts (Hetmanate)
-      - Relations with foreign powers
-  - section: "Первинні джерела"
-    words: 300
-    points:
-      - Analysis of letters and chronicles
-  - section: "Деколонізаційний погляд"
-    words: 300
-    points:
-      - Ukrainian vs imperial Russian vs Polish perspectives
-  - section: "Спадщина"
-    words: 200
-    points:
-      - Modern scholarly consensus
-      - Legacy in Ukrainian national consciousness
-      - Key conclusions
-  - section: "Словник"
-    words: 10
-    points:
-      - Core vocabulary
-  - section: "Потрібно більше практики?"
-    words: 10
-    points:
-      - External resources
-
-# Activity planning
+  - "Biographical narrative structure"
+  - "Verbs of political action"
+objectives:
+  - "Учень може описати життєвий шлях Богдана Хмельницького"
+  - "Учень може проаналізувати роль особистості в історії"
+  - "Учень може оцінити внесок гетьмана у розбудову держави"
 vocabulary_hints:
   required:
-    - 'гетьман'
-    - 'булава'
-    - 'державотворення'
-    - 'союз'
-    - 'зрада'
-  recommended:
-    - 'реєстр'
-    - 'канцелярія'
-    - 'універсал'
-activity_hints:
-  - type: reading
-    focus: "Primary source: Excerpt from contemporary chronicle"
-  - type: quiz
-    focus: "Key facts about Khmelnytsky's life and achievements"
-  - type: true-false
-    focus: "Debunking myths about Khmelnytsky"
-  - type: essay-response
-    focus: "Evaluate Khmelnytsky's role in Ukrainian state formation"
-  - type: comparative-study
-    focus: "Compare Ukrainian and imperial narratives of Khmelnytsky"
-
-# Sources (minimum 2)
-sources:
-  - name: "Богдан Хмельницький — Вікіпедія"
-    url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
-    type: reference
-  - name: "Богдан Хмельницький — Енциклопедія історії України"
-    url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe"
-    type: secondary
-  - name: "Літопис Самовидця"
-    url: "https://litopys.org.ua/"
-    type: primary
-  - name: "Смолій, Степанков - Богдан Хмельницький"
-    url: "https://history.org.ua/"
-    type: secondary
-
-# Module connections
-prerequisites:
-  - "B2 Core grammar completion"
-  - "Previous modules on Cossack history (M41-51)"
-connects_to:
-  - "bitva-pid-zhovtymy-vodamy (M53)"
-  - "kozatska-derzhava (M55)"
-  - "pereyaslavska-uhoda (M56)"
-
+    - гетьман
+    - державотворення
+    - дипломатія
+    - союз
+    - універсал
+    - полк
+    - сотня
+    - булава
+    - автономія
+    - суверенітет
 naturalness:
   score: 9
   status: PASS
+content_outline:
+  - section: "Вступ: Батько нації чи суперечлива фігура?"
+    words: 400
+    points:
+      - "Khmelnytsky's place in Ukrainian historical memory"
+      - "Different interpretations of his legacy"
+  - section: "Ранні роки: Освіта і служба"
+    words: 600
+    points:
+      - "Education at Lviv Jesuit College"
+      - "Battle of Cecora and Turkish captivity"
+      - "Service as a registered Cossack"
+  - section: "Особиста драма як іскра повстання"
+    words: 600
+    points:
+      - "The Subotiv conflict with Czaplinski"
+      - "Failure of the Polish legal system"
+      - "Flight to the Sich"
+  - section: "Геній дипломатії та війни"
+    words: 800
+    points:
+      - "Alliance with the Crimean Khanate"
+      - "Victories at Zhovti Vody, Korsun, Pyliavtsi"
+      - "Entry into Kyiv"
+  - section: "Будівничий держави"
+    words: 600
+    points:
+      - "Creation of the Hetmanate's administrative system"
+      - "Social and economic reforms"
+  - section: "Первинні джерела: Листи та промови"
+    words: 500
+    points:
+      - "Excerpts from letters to European monarchs"
+      - "Speech to the Polish commissioners"
+  - section: "Деколонізаційний погляд: Лідер, а не васал"
+    words: 500
+    points:
+      - "Debunking the myth of 'reunification'"
+      - "Khmelnytsky as a sovereign ruler"
+  - section: "Читання"
+    words: 100
+    points:
+      - "Intro to reading tasks"
+activity_hints:
+  - type: reading
+    focus: "Analysis of Khmelnytsky's universals"
+  - type: quiz
+    focus: "Biographical facts"
+  - type: essay-response
+    focus: "Evaluation of his political decisions"
+  - type: comparative-study
+    focus: "Khmelnytsky vs. Cromwell"
+  - type: true-false
+    focus: "Myths and facts"
+sources:
+  - name: "History of Ukraine-Rus"
+    url: "http://litopys.org.ua/hrushrus/iur.htm"
+    type: reference
+    notes: "Classic historical account"
+  - name: "The Khmelnytsky Uprising"
+    url: "https://encyclopediaofukraine.com"
+    type: secondary
+    notes: "Modern analysis"

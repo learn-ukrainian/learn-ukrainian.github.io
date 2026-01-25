@@ -146,6 +146,7 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
 | **Current status** | `docs/CURRENT-STATUS.md` |
 | **YAML activities** | `docs/ACTIVITY-YAML-REFERENCE.md` |
 | **Quality standards** | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` |
+| **Subsection flexibility** | `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` ⭐ |
 | **Markdown format** | `docs/MARKDOWN-FORMAT.md` |
 | **Scripts reference** | `docs/SCRIPTS.md` |
 | **Architecture** | `docs/ARCHITECTURE.md` |

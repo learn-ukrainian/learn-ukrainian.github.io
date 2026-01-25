@@ -1,8 +1,13 @@
-module: a2-34
+id: a2-34
 title: At the Doctor
 subtitle: Health and Medical Vocabulary
-version: '1.0'
+slug: 34-at-the-doctor
+module_type: vocabulary
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
+focus: vocabulary
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -12,7 +17,7 @@ tags:
 - medicine
 - body parts
 grammar:
-- describing pain (у мене болит...)
+- describing pain (у мене болить...)
 - giving advice (вам треба...)
 - medical terminology
 - polite requests to doctors
@@ -21,9 +26,36 @@ objectives:
 - Learner can make a doctor's appointment
 - Learner can understand medical advice and prescriptions
 - Learner can buy medicine at a pharmacy
-vocabulary_count: 25
-slug: 34-at-the-doctor
-focus: vocabulary
-naturalness:
-  score: 9
-  status: PASS
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for medical consultation and describing physical conditions at A2
+- name: Medical Ukrainian for Foreigners
+  url: https://uk.wikipedia.org/wiki/Охорона_здоров'я_в_Україні
+  type: reference
+  notes: Common terminology and social norms in Ukrainian medical system
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - Health as wealth: Social etiquette of symptoms
+  - Navigating the Ukrainian 'Poliklinika'
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'The Complaint: У мене болить (Singular) vs Болять (Plural)'
+  - 'Symptoms & Conditions: Температура, Кашель, Нежить'
+  - 'The Body Parts: A map of human anatomy'
+  - 'At the Pharmacy (Аптека): Asking for help'
+  - 'Medical Imperatives: Дихайте, Відкрийте рот'
+  - 'Traditional Remedies: Malyna, Garlic, and Mustard Plasters'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Role-playing a doctor's visit
+  - Pharmacy shopping list drills
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Calling an ambulance or explaining a flu to a family doctor

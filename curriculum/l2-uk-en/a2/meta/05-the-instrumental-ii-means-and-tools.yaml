@@ -1,159 +1,110 @@
-# A2 Module 05: The Instrumental II - Means & Tools
-# Status: CONTENT (content exists, detailed spec added)
-
 id: a2-05
 title: The Instrumental II — Means and Tools
 subtitle: How? By What Means?
 slug: 05-the-instrumental-ii-means-and-tools
 module_type: grammar
-word_target: 2800
-immersion: "50-60% Ukrainian"
-
-version: '1.0'
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.1
 focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
-
 tags:
-  - grammar
-  - cases
-  - instrumental
-  - transport
-  - tools
-  - usage
-
+- grammar
+- cases
+- instrumental
+- transport
+- tools
+- usage
 grammar:
-  - instrumental of means
-  - instrumental without prepositions
-  - transport
-  - tools
-
+- instrumental of means
+- instrumental without prepositions
+- transport
+- tools
 objectives:
-  - Learner can use instrumental case to describe means of transport
-  - Learner can use instrumental case to describe tools and instruments
-  - Learner can distinguish between instrumental with and without prepositions
-  - Learner can describe how actions are performed
-
-# === AGENT BUILD SPEC ===
-
+- Learner can use instrumental case to describe means of transport
+- Learner can use instrumental case to describe tools and instruments
+- Learner can distinguish between instrumental with and without prepositions
+- Learner can describe how actions are performed
 sources:
-  - name: Ukrainian State Standard 2024 - Instrumental Uses
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Instrumental without preposition for means and tools
-  - name: Ukrainian Transport Vocabulary
-    url: https://uk.wikipedia.org/wiki/Транспорт
-    type: reference
-    notes: Transport modes vocabulary
-
+- name: Ukrainian State Standard 2024 - Instrumental Uses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Instrumental without preposition for means and tools
+- name: Ukrainian Transport Vocabulary
+  url: https://uk.wikipedia.org/wiki/Транспорт
+  type: reference
+  notes: Transport modes vocabulary
 content_outline:
-  - section: Instrumental Without Preposition
-    words: 400
-    points:
-      - Contrast with з + instrumental (accompaniment)
-      - Direct instrumental for means/manner
-      - Building on M04 instrumental endings
-
-  - section: Transport by Instrumental
-    words: 600
-    points:
-      - їхати автобусом (to go by bus)
-      - їхати метро (metro as exception)
-      - їхати машиною (by car)
-      - Common transport modes
-
-  - section: Tools and Instruments
-    words: 500
-    points:
-      - писати ручкою (to write with a pen)
-      - різати ножем (to cut with a knife)
-      - їсти виделкою (to eat with a fork)
-      - Common tool vocabulary
-
-  - section: Body Parts in Instrumental
-    words: 400
-    points:
-      - махати рукою (to wave with hand)
-      - бачити очима (to see with eyes)
-      - думати головою (to think with head)
-      - Physical action expressions
-
-  - section: Manner Expressions
-    words: 500
-    points:
-      - говорити голосом (to speak in a voice)
-      - говорити пошепки (to speak in a whisper)
-      - йти повільним кроком (to walk slowly)
-      - Adverb-like instrumental phrases
-
-  - section: Practice Integration
-    words: 400
-    points:
-      - '"How do you...?" question patterns'
-      - Common expressions review
-      - Mini-dialogues about transport and tools
-
+- section: Introduction / Вступ
+  words: 250
+  points:
+  - Contrast with з + instrumental (accompaniment)
+  - Direct instrumental for means/manner
+- section: Presentation / Презентація
+  words: 550
+  points:
+  - Transport by Instrumental (їхати автобусом)
+  - Tools and Instruments (писати ручкою)
+  - Body Parts as Instruments
+- section: Practice / Практика
+  words: 150
+  points:
+  - '"How do you...?" question patterns'
+  - Common expressions review
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Commute and tool usage scenarios
 vocabulary_hints:
   required:
-    - автобусом (by bus)
-    - трамваєм (by tram)
-    - тролейбусом (by trolleybus)
-    - метро (by metro)
-    - машиною (by car)
-    - таксі (by taxi)
-    - поїздом (by train)
-    - літаком (by plane)
-    - ручкою (with a pen)
-    - олівцем (with a pencil)
-    - ножем (with a knife)
-    - виделкою (with a fork)
-    - ложкою (with a spoon)
-    - комп'ютером (with computer)
-    - телефоном (by phone)
+  - автобус
+  - трамвай
+  - тролейбус
+  - метро
+  - машина
+  - таксі
+  - поїзд
+  - літак
+  - ручка
+  - олівець
+  - ніж
+  - виделка
+  - ложка
+  - комп'ютер
+  - телефон
   recommended:
-    - ножицями (with scissors)
-    - голкою (with a needle)
-    - молотком (with a hammer)
-    - пензлем (with a brush)
-    - очима (with eyes)
-
+  - ножиці
+  - голка
+  - молоток
+  - пензель
+  - очі
 activity_hints:
-  - type: fill-in
-    focus: Choose correct transport instrumental
-    items: "12+"
-
-  - type: match-up
-    focus: Action + tool in instrumental
-    items: "12+"
-
-  - type: quiz
-    focus: '"How do you...?" questions'
-    items: "10+"
-
-  - type: fill-in
-    focus: Complete sentences with tool instrumental
-    items: "10+"
-
-  - type: quiz
-    focus: Transport mode selection
-    items: "10+"
-
-  - type: dialogue
-    focus: Getting around the city
-    items: "4+"
-
+- type: fill-in
+  focus: Choose correct transport instrumental
+  items: 12+
+- type: match-up
+  focus: Action + tool in instrumental
+  items: 12+
+- type: quiz
+  focus: '"How do you...?" questions'
+  items: 10+
+- type: fill-in
+  focus: Complete sentences with tool instrumental
+  items: 10+
+- type: quiz
+  focus: Transport mode selection
+  items: 10+
 prerequisites:
-  - a2-04 (Instrumental endings)
-  - A1 transport vocabulary
-  - A1 daily activities
-
+- a2-04 (Instrumental endings)
+- A1 transport vocabulary
+- A1 daily activities
 connects_to:
-  - a2-06 (Being and Becoming)
-  - a2-07 (Spatial Prepositions)
-  - a2-09 (All Cases Practice)
-
+- a2-06 (Being and Becoming)
+- a2-07 (Spatial Prepositions)
+- a2-09 (All Cases Practice)
 naturalness:
   score: 9
   status: PASS

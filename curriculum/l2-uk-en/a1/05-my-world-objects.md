@@ -40,7 +40,7 @@ The pattern is simple: match the demonstrative to the noun's gender. If the noun
 
 ### The Far Demonstratives: той, та, те, ті (that/those)
 
-When you point to something **far from you**, use forms of **той** (toy):
+For objects located **at a distance**, we use forms of **той** (toy):
 
 | Gender           | Singular | Example     | Transliteration | English     |
 | ---------------- | -------- | ----------- | --------------- | ----------- |
@@ -209,6 +209,7 @@ Try building full sentences: «Це моя чашка. Та чашка не мо
 ---
 
 # Підсумок
+
 In this module, you learned:
 
 **Near Demonstratives (this/these):**

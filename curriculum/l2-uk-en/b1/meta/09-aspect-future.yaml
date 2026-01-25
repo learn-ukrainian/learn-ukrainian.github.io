@@ -1,15 +1,10 @@
-# B1 Module 09: Вид у майбутньому часі
-# Status: SPEC (ready for content development)
-
 id: b1-09
 title: Вид у майбутньому часі
 subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
 slug: 09-aspect-future
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1800
+immersion: 100% Ukrainian
 version: '1.0'
 phase: B1.1 Aspect
 pedagogy: TTT
@@ -17,124 +12,99 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - future-tense
-  - verb-conjugation
+- grammar
+- aspect
+- future-tense
+- verb-conjugation
 grammar:
-  - 'Compound future: буду + infinitive'
-  - Synthetic future forms (-тиму/-тимеш/-тиме)
-  - Perfective future (simple future)
-  - Future aspect selection patterns
+- 'Compound future: буду + infinitive'
+- Synthetic future forms (-тиму/-тимеш/-тиме)
+- Perfective future (simple future)
+- Future aspect selection patterns
 objectives:
-  - Learner can form all three types of future constructions
-  - Learner understands when to use compound vs synthetic imperfective future
-  - Learner can select appropriate aspect for future actions
-  - Learner recognizes stylistic differences between future forms
-
-# === AGENT BUILD SPEC ===
-
+- Learner can form all three types of future constructions
+- Learner understands when to use compound vs synthetic imperfective future
+- Learner can select appropriate aspect for future actions
+- Learner recognizes stylistic differences between future forms
 sources:
-  - name: Ukrainian State Standard 2024 - Future Tense
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official future tense forms and usage
-  - name: Ukrainian Future Tense (Wikipedia)
-    url: https://uk.wikipedia.org/wiki/Майбутній_час
-    type: reference
-    notes: Three future forms with examples
-
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official future tense forms and usage
+- name: Ukrainian Future Tense (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  type: reference
+  notes: Three future forms with examples
 content_outline:
-  - section: Вступ — Три майбутніх часи
-    words: 400
-    points:
-      - Огляд трьох форм
-      - TTT — спробуйте визначити
-      - Чому три форми, а не одна?
-
-  - section: Складний недоконаний майбутній
-    words: 550
-    points:
-      - буду + інфінітив
-      - Я буду читати, ти будеш читати...
-      - Коли використовувати (процес, тривалість)
-
-  - section: Синтетичний недоконаний майбутній
-    words: 550
-    points:
-      - Читатиму, читатимеш, читатиме...
-      - Повна парадигма
-      - Стилістичні відмінності (формальніший)
-
-  - section: Простий доконаний майбутній
-    words: 500
-    points:
-      - Прочитаю, зроблю, напишу
-      - Коли використовувати (результат, завершення)
-      - Обіцянки та плани
-
-  - section: Вибір форми за контекстом
-    words: 600
-    points:
-      - '"Завтра буду працювати" vs "Завтра працюватиму" vs "Завтра зроблю"'
-      - Стилістичні відтінки
-      - Практика вибору
-
-  - section: Підсумок і вправи
-    words: 300
-    points:
-      - Порівняльна таблиця
-      - Готовність до M10
-
+- section: Тест
+  words: 200
+  points:
+  - Three ways to express future
+  - Intuition check
+- section: Пояснення
+  words: 800
+  points:
+  - Compound future (will be doing)
+  - Synthetic future (-tymu)
+  - Perfective future (simple)
+- section: Практика
+  words: 350
+  points:
+  - Selection rules
+  - Common mistakes
+  - Scenarios (plans, formal, academic)
+- section: Діалоги
+  words: 350
+  points:
+  - Plans (conversational)
+  - Formal discussion
+  - Resolutions
+- section: Підсумок
+  words: 100
+  points:
+  - Comparison table
+  - Self-check
 vocabulary_hints:
   required:
-    - майбутній час (future tense)
-    - складна форма (compound form)
-    - синтетична форма (synthetic form)
-    - простий майбутній (simple future)
-    - буду (I will - auxiliary)
-    - завтра (tomorrow)
-    - через тиждень (in a week)
-    - потім (then/later)
-    - скоро (soon)
-    - планувати (to plan)
+  - майбутній час (future tense)
+  - складна форма (compound form)
+  - синтетична форма (synthetic form)
+  - простий майбутній (simple future)
+  - буду (I will - auxiliary)
+  - завтра (tomorrow)
+  - через тиждень (in a week)
+  - потім (then/later)
+  - скоро (soon)
+  - планувати (to plan)
   recommended:
-    - обіцяти (to promise)
-    - мати намір (to intend)
-    - збиратися (to be going to)
-    - сподіватися (to hope)
-    - гадати (to think/suppose)
-
+  - обіцяти (to promise)
+  - мати намір (to intend)
+  - збиратися (to be going to)
+  - сподіватися (to hope)
+  - гадати (to think/suppose)
 activity_hints:
-  - type: transform
-    focus: Compound → synthetic future
-    items: "12+"
-
-  - type: quiz
-    focus: Which future form for planned vs completed action?
-    items: "15+"
-
-  - type: fill-in
-    focus: Future aspect selection
-    items: "12+"
-
-  - type: conjugation
-    focus: Synthetic future paradigm practice
-    items: "10+"
-
-  - type: match-up
-    focus: Context → future form
-    items: "12+"
-
+- type: fill-in
+  focus: Compound → synthetic future
+  items: 12+
+- type: quiz
+  focus: Which future form for planned vs completed action?
+  items: 15+
+- type: fill-in
+  focus: Future aspect selection
+  items: 12+
+- type: fill-in
+  focus: Synthetic future paradigm practice
+  items: 10+
+- type: match-up
+  focus: Context → future form
+  items: 12+
 prerequisites:
-  - b1-06 (Aspect complete system)
-  - b1-07 (Aspect past - single vs repeated)
-  - b1-08 (Aspect past - result vs process)
-
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past - single vs repeated)
+- b1-08 (Aspect past - result vs process)
 connects_to:
-  - b1-10 (Aspect in negation)
-  - b1-11 (Aspect in imperatives)
-
+- b1-10 (Aspect in negation)
+- b1-11 (Aspect in imperatives)
 naturalness:
   score: 9
   status: PASS

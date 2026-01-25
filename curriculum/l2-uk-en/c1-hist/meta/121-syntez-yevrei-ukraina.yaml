@@ -81,7 +81,7 @@ vocabulary_hints:
   - пропаганда (propaganda)
   - культурне відродження (cultural revival)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: 1000 years → Zelensky moment
   output: Historical transformation map
 - type: symbolism-analysis

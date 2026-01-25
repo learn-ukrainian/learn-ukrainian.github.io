@@ -10,35 +10,25 @@ Understanding the accusative case is essential for basic communication in Ukrain
 
 ### How It Works: Direct Objects
 
-
-
 In Ukrainian, when something RECEIVES the action (the direct object), it changes form. This is the **accusative case** (знахідний відмінок). It answers the question: **Що?** /ʃt͡ʃɔ/ (What?)
-
-
 
 **The pattern for inanimate objects:**
 
-
-
-| Gender                | Nominative | Accusative | IPA | Example                   |
+| Gender | Nominative | Accusative | IPA | Example |
 
 | --------------------- | ---------- | ---------- | --- | ------------------------- |
 
-| Masculine (inanimate) | стіл       | стіл       | /stil/ | Я бачу **стіл**.          |
+| Masculine (inanimate) | стіл | стіл | /stil/ | Я бачу **стіл**. |
 
-| Feminine -а           | книга      | книгу      | /ˈknɪɦu/ | Я читаю **книгу**.        |
+| Feminine -а | книга | книгу | /ˈknɪɦu/ | Я читаю **книгу**. |
 
-| Feminine -я           | земля      | землю      | /ˈzɛmlʲu/ | Ми любимо **землю**.      |
+| Feminine -я | земля | землю | /ˈzɛmlʲu/ | Ми любимо **землю**. |
 
-| Neuter -о             | вікно      | вікно      | /vʲiˈknɔ/ | Вона відкриває **вікно**. |
+| Neuter -о | вікно | вікно | /vʲiˈknɔ/ | Вона відкриває **вікно**. |
 
-| Neuter -е             | море       | море       | /ˈmɔrɛ/ | Ми бачимо **море**.       |
-
-
+| Neuter -е | море | море | /ˈmɔrɛ/ | Ми бачимо **море**. |
 
 **Key insight:** Only feminine nouns ending in -а/-я change their endings in accusative. Masculine inanimate and neuter nouns stay the same!
-
-
 
 > [!tip] **Did You Know?**
 
@@ -46,7 +36,7 @@ In Ukrainian, when something RECEIVES the action (the direct object), it changes
 
 > The accusative case is called **знахідний** /znɑˈxʲidnɪj/ from the word **знаходити** /znɑˈxɔdɪtɪ/ (to find).
 
- You «find» the object of the action! This makes it one of the most frequently used cases in Ukrainian — you use it dozens of times every day.
+You «find» the object of the action! This makes it one of the most frequently used cases in Ukrainian — you use it dozens of times every day.
 
 ### Common Verbs That Take Accusative
 
@@ -193,6 +183,7 @@ It is a birthday party in Odesa. Practice saying:
 ---
 
 # Підсумок
+
 In this module, you learned:
 
 - ✅ How to form **accusative case** for inanimate objects

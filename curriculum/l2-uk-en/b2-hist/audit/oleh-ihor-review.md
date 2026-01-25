@@ -1,12 +1,13 @@
 # Audit Report: M09 — oleh-ihor.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 10:32:42
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -29,27 +30,28 @@
 | 8 | fill-in | Військова та політична термінологія | 15 | 8 | ✅ |
 | 9 | quiz | Географія походів та експансії | 8 | 8 | ✅ |
 | 10 | quiz | Факти про перших правителів | 12 | 8 | ✅ |
+| 11 | essay-response | Дипломатія меча і пера | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
+- Total activities: 11 (target: 3-9) ❌
 - Unique types: 7 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4154/4000 (raw: 4388)
-- **Activities:** ✅ 10/3
+- **Words:** ✅ 4047/4000 (raw: 4256)
+- **Activities:** ✅ 11/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 16 < 20 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ⚠️ Too many activities: 11 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -62,25 +64,29 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
-| engagement | 11 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 20 | 3 | 100% | 5% | 4.8% |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |
-| **Вступ** | ✅ | 1132 | Included in Core |
-| **Читання** | ✅ | 988 | Included in Core |
-| **Первинні джерела** | ✅ | 524 | Included in Core |
+| **Вступ: Варяги та Київ** | ✅ | 787 | Included in Core |
+| **Суспільство та Культура** | ✅ | 495 | Included in Core |
+| **Читання: Князь Олег: Об'єднання земель** | ✅ | 317 | Included in Core |
+| **Походи на Царгород і Договори** | ⚪️ | 380 | Skipped |
+| **Князь Ігор: Криза експансії** | ⚪️ | 506 | Skipped |
+| **Геоекономіка та Торгівля** | ⚪️ | 146 | Skipped |
+| **Первинні джерела: Голоси епохи** | ✅ | 524 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 351 | Included in Core |
-| **Есе** | ⚪️ | 784 | Skipped |
-| **Підсумок** | ✅ | 74 | Included in Core |
+| **Спадщина** | ⚪️ | 81 | Skipped |
+| **Підсумок** | ✅ | 159 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 235 | Skipped |

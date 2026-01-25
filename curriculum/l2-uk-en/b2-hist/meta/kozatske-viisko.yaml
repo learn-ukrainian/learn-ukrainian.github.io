@@ -52,7 +52,7 @@ content_outline:
       - "Territorial and functional divisions"
       - "Discipline and military code"
   - section: "Озброєння: Шабля, самопал та гармата"
-    words: 700
+    words: 600
     points:
       - "Individual weaponry: fire and steel"
       - "The cult of the sabre (shablya)"
@@ -69,7 +69,7 @@ content_outline:
       - "Bulava, bunchuk, and seals"
       - "The sacred meaning of the banner (khoruhva)"
   - section: "Читання: Опис козацького вишколу"
-    words: 232
+    words: 250
     points:
       - "Account of a foreign observer on Cossack training"
   - section: "Первинні джерела: Голоси епохи"
@@ -77,13 +77,13 @@ content_outline:
     points:
       - "Analysis of official documents and letters"
   - section: "Деколонізаційний погляд"
-    words: 500
+    words: 400
     points:
       - "Cossacks as a modern professional army, not a 'rabble'"
       - "Influence on European military science"
       - "Ukraine's military subjectivity"
   - section: "Есе"
-    words: 500
+    words: 450
     points:
       - "The impact of the Cossack military tradition on modern Ukraine"
 activity_hints:

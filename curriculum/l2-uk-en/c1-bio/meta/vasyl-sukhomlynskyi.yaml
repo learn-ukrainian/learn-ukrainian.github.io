@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key concepts from his philosophy
   items: 10+
-- type: discussion
-  focus: Why is Sukhomlynskyi relevant to modern education?
-  output: Contemporary application analysis
 prerequisites:
 - Understanding of Soviet educational system
 - Basic pedagogical concepts

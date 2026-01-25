@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M32 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:21:08
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -31,7 +32,7 @@
 | 10 | mark-the-words | Соціальні групи | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
+- Total activities: 10 (target: 3-9) ❌
 - Unique types: 10 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
@@ -49,7 +50,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ 1 fill-in with year answers
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9); 1 fill-in with year answers
 - **Immersion:** 🇺🇦 98.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

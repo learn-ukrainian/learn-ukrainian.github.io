@@ -7,7 +7,7 @@ version: '2.0'
 phase: "HIST.6 [Khmelnytsky & Cossack State]"
 focus: history
 pedagogy: CBI
-word_target: 3000
+word_target: 4000
 register: публіцистичний
 duration: 120
 transliteration: none
@@ -41,44 +41,44 @@ naturalness:
   status: PASS
 content_outline:
   - section: "Вступ: Перший грім"
-    words: 350
+    words: 450
     points:
       - "The strategic situation in spring 1648"
       - "Potocki's plan to split forces"
   - section: "Сили сторін: Давид проти Голіафа?"
-    words: 400
+    words: 500
     points:
       - "Structure of the Polish vanguard (Stefan Potocki)"
       - "Cossack-Tatar coalition forces"
       - "Armament and morale comparison"
   - section: "Початок битви: Блокада табору"
-    words: 350
+    words: 500
     points:
       - "Establishing the camp at Zhovti Vody"
       - "First skirmishes and tactical stalemate"
       - "The role of Tugay Bey's cavalry"
   - section: "Переломний момент: Бунт на Дніпрі"
-    words: 400
+    words: 550
     points:
       - "The register Cossacks' journey down the Dnieper"
       - "The uprising at Kamianyi Zaton"
       - "Killing of Barabash and joining Khmelnytsky"
   - section: "Розгром: Княжі Байраки"
-    words: 400
+    words: 550
     points:
       - "The failed attempt to break out"
       - "Total destruction of the Polish vanguard"
       - "Death of Stefan Potocki"
   - section: "Читання: Опис битви в літописі"
-    words: 250
+    words: 400
     points:
       - "Excerpt from the Eyewitness Chronicle"
   - section: "Первинні джерела: Листи про поразку"
-    words: 250
+    words: 350
     points:
       - "Potocki's last letter to his father"
   - section: "Деколонізаційний погляд"
-    words: 300
+    words: 400
     points:
       - "Debunking the myth of 'accidental victory'"
       - "Cossack military art vs. feudal arrogance"
@@ -104,5 +104,5 @@ sources:
     notes: "Detailed reconstruction of the battle"
   - name: "Military Art of Ukraine"
     url: "https://history.org.ua"
-    type: academic
+    type: secondary
     notes: "Tactical analysis"

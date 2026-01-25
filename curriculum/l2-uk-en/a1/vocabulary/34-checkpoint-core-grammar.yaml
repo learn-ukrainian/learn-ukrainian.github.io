@@ -116,7 +116,7 @@ items:
   pos: verb
 - lemma: граматик
   ipa: /ɦramˈatɪk/
-  translation: ''
+  translation: grammarian
   pos: noun
   gender: m
 - lemma: граматичний
@@ -151,7 +151,7 @@ items:
   pos: adj
 - lemma: друзь
   ipa: /druzʲ/
-  translation: ''
+  translation: friends
   pos: noun
   gender: m
 - lemma: дякувати

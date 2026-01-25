@@ -6,7 +6,7 @@
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -25,19 +25,20 @@
 | 4 | comparative-study | Морські гіганти vs Степові вовки | 1 | 1 | ✅ |
 | 5 | true-false | Морські таємниці запорожців | 10 | 8 | ✅ |
 | 6 | essay-response | Морська ідентичність України | 1 | 1 | ✅ |
+| 7 | fill-in | Морська термінологія | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-10) ✅
-- Unique types: 6 (minimum: 2) ✅
+- Total activities: 7 (target: 3-9) ✅
+- Unique types: 7 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 4349/4000 (raw: 4608)
-- **Activities:** ✅ 6/3
+- **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
@@ -45,7 +46,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

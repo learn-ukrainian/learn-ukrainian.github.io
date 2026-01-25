@@ -1,367 +1,125 @@
-## Introduction
+# Свій чи його? У світі речей (The World of Possessions)
 
-In A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.
+## Introduction / Вступ
 
-Now you'll learn a special pronoun that causes confusion for English speakers: **свій**.
+**Ласкаво просимо до світу українських присвійних займенників!** У рівні A1 ви вже вивчили основні займенники: мій, твій, його, її, наш, ваш, їхній. Сьогодні ми розширимо ваші знання та познайомимося з унікальним словом, яке часто викликає труднощі у тих, хто вивчає українську мову — **свій**. Це слово є справжньою лінгвістичною перлиною, яка дозволяє уникати двозначності та робити ваше мовлення точним, елегантним і по-справжньому українським. Розуміння логіки «свого» — це великий крок до мислення мовою, а не просто перекладу слів.
 
-English has no equivalent to свій. This single word means «one's own» and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.
+Now that you've mastered the basic possessives (my, your, his), it's time to learn a special pronoun that has no direct equivalent in English: **свій**. This single word means "one's own" and refers back to the subject of the sentence. In English, we often rely on context to know if "his" means "his own" or "someone else's." Ukrainian solves this problem with surgical precision. By the end of this module, you'll be able to claim your possessions and describe others' belongings with the accuracy of a native speaker.
 
-## Presentation
+**Що ви опануєте в цьому модулі:**
 
-### Слово «свій» — унікальна особливість української мови
+- Головне правило використання «свій» (Підмет = Власник).
+- Різницю між «своїм» та «його/її/їхнім» у реальних ситуаціях.
+- Як відмінювати «свій» за родами, числами та відмінками.
+- Коли використання «свій» є обов'язковим, а коли — факультативним.
 
-В українській мові є особливе слово **свій**, яке не має точного еквівалента в англійській мові. Це слово означає «власний», «свій власний» і завжди вказує на те, що належить підмету речення.
+## Presentation / Презентація
 
-**Чому це важливо?**
-В англійській мові речення «He loves his mother» має два можливі значення:
-1. Він любить **свою** маму (свій — належить йому самому)
-2. Він любить **його** маму (чужу маму, іншого чоловіка)
+### The Power of "Own" (Слово «свій» — власність і точність)
 
-В українській мові ця неоднозначність неможлива завдяки слову **свій**!
+В українській мові слово **свій** завжди вказує на те, що належить підмету речення. Це дозволяє уникнути плутанини, яка часто трапляється в англійській мові. Наприклад, англійське речення "He loves his mother" може означати дві різні речі. В українській мові ми чітко розрізняємо ці ситуації:
 
-**Золоте правило використання:**
-Якщо власник і підмет — **одна і та сама особа** → використовуйте **свій**
-Якщо власник і підмет — **різні особи** → використовуйте **його/її/їхній**
+1. Він любить **свою** маму (свою власну маму).
+2. Він любить **його** маму (маму іншого чоловіка).
 
-**Приклади для порівняння:**
+**Золоте правило (The Golden Rule):**
 
-**Ситуація 1: Власник = Підмет**
-- Вона читає **свою** книгу. (She reads her own book.)
-- Він любить **свою** роботу. (He loves his own job.)
-- Ми продаємо **свій** будинок. (We're selling our own house.)
+- Якщо власник і підмет — **одна і та сама особа** → використовуйте **свій**.
+- Якщо власник і підмет — **різні особи** → використовуйте **його/її/їхній**.
 
-**Ситуація 2: Власник ≠ Підмет**
-- Вона читає **його** книгу. (She reads his book — someone else's book.)
-- Він любить **її** роботу. (He loves her job — another person's job.)
-- Ми продаємо **їхній** будинок. (We're selling their house — not ours.)
+| Ситуація         | Підмет | Власник | Займенник | Приклад                     |
+| :--------------- | :----- | :------ | :-------- | :-------------------------- |
+| Власник = Підмет | Марія  | Марія   | **свою**  | Марія читає **свою** книгу. |
+| Власник ≠ Підмет | Марія  | Петро   | **його**  | Марія читає **його** книгу. |
+| Власник = Підмет | Ми     | Ми      | **свій**  | Ми любимо **свій** дім.     |
+| Власник ≠ Підмет | Ми     | Вони    | **їхній** | Ми любимо **їхній** дім.    |
 
-**Типова помилка англомовних учнів:**
-Англомовні учні часто кажуть: «Я люблю **мою** маму» замість правильного «Я люблю **свою** маму». Запам'ятайте: коли підмет володіє чимось, завжди використовуйте **свій**, а не мій/твій/наш/ваш!
+### Declension of «Свій» (Відмінювання)
 
-**Як думати українською:**
-Коли складаєте речення, запитайте себе: «Чи належить це підмету речення?» Якщо так — використовуйте **свій**. Це стане автоматичним з практикою!
+The pronoun «свій» declines exactly like the pronouns you already know, such as **мій** or **твій**. It must agree with the noun it describes in gender, number, and case. This means the ending changes based on the object owned, not the person who owns it!
 
-Тепер давайте детально розглянемо правила та приклади використання слова **свій**.
+**Forms by Gender and Number:**
 
-## The Problem: Ambiguity
+- **Masculine:** свій (Nom), свого (Gen), своєму (Dat), своїм (Instr).
+- **Feminine:** своя (Nom), своєї (Gen), своїй (Dat), свою (Acc), своєю (Instr).
+- **Neuter:** своє (Nom), свого (Gen), своєму (Dat), своїм (Instr).
+- **Plural:** свої (Nom), своїх (Gen), своїм (Dat), своїми (Instr).
 
-Look at this English sentence:
-- «He loves his mother.»
+> [!important] **The Agreement Logic**
+> Remember: The gender of «свій» is determined by the **object**, not the owner.
+>
+> - Він (m) любить свою (f) маму (f).
+> - Вона (f) любить свого (m) брата (m).
+> - Вони (pl) люблять своє (n) місто (n).
 
-In English, this is ambiguous. Does «his» refer to:
-- His OWN mother? (He loves his own mother.)
-- Someone ELSE's mother? (He loves [another man's] mother.)
+### Optionality for 1st and 2nd Person
 
-Context usually clarifies, but the sentence itself is ambiguous.
+When the subject is **Я** (I) or **Ти** (You), «свій» is often preferred for naturalness, but using **мій** or **твій** is not a grammatical error. Native speakers almost always choose «свій» because it sounds more concise and highlights the personal connection.
 
-Ukrainian solves this problem elegantly with **свій**.
+**Compare:**
 
-> [!tip] Why This Matters
-> Without свій, Ukrainian would have the same ambiguity as English.
-> This pronoun is one of the elegant features of Slavic languages.
-> Master it and your Ukrainian will sound much more natural!
+- Я люблю **мою** маму. (Grammatically okay, sounds like a textbook).
+- Я люблю **свою** маму. (100% natural, sounds like a native speaker).
 
----
+However, for the **3rd person** (He, She, They), the rule is strict! If you use «його» instead of «свою», you are changing the meaning of the sentence entirely (referring to someone else). This is the "danger zone" where свій becomes mandatory.
 
-## The Rule: Свій = Subject's Own
+> [!reflection] **The Clarity of Свій**
+> Think of «свій» as a linguistic mirror. It always reflects back to the person doing the action. If the mirror points elsewhere, use a personal possessive. This clarity is part of the architectural beauty of Ukrainian.
 
-## When to Use Свій
+> [!tip] **The "One's Own" Test**
+> If you can replace "his/her" with "his/her own" in English and the sentence still makes sense, you should almost certainly use **свій** in Ukrainian.
 
-Use **свій** when the possessor IS the subject of the sentence.
+## Practice / Практика
 
-| Subject | Possessor | Pronoun | Example |
-|---------|-----------|---------|---------|
-| Я | Я | свій | Я люблю **свою** маму. (I love my own mom.) |
-| Ти | Ти | свій | Ти любиш **свою** маму. (You love your own mom.) |
-| Він | Він | свій | Він любить **свою** маму. (He loves his own mom.) |
-| Вона | Вона | свій | Вона любить **свою** маму. (She loves her own mom.) |
-| Ми | Ми | свій | Ми любимо **свою** маму. (We love our mom.) |
+### 1. Identify the Owner (Хто власник?)
 
-## When to Use Його/Її/Їхній
+Choose the correct pronoun based on whether the owner is the subject or someone else.
 
-Use **його/її/їхній** when the possessor is NOT the subject.
+1. Петро взяв (свою / його) папку зі столу. (His own folder) -> **свою**
+2. Ганна бачила Петра та (свою / його) дружину. (Petro's wife) -> **його**
+3. Ми розповіли про (своє / наше) життя. (Preferred form) -> **своє**
+4. Студенти принесли (свої / їхні) зошити. (Their own notebooks) -> **свої**
+5. Мама взяла (свою / її) сумку і пішла. (Someone else's bag) -> **її**
 
-| Subject | Possessor | Pronoun | Example |
-|---------|-----------|---------|---------|
-| Я | Він | його | Я люблю **його** маму. (I love his mom.) |
-| Вона | Він | його | Вона любить **його** маму. (She loves his mom.) |
-| Він | Вона | її | Він любить **її** маму. (He loves her mom.) |
-| Ми | Вони | їхній | Ми любимо **їхню** маму. (We love their mom.) |
+### 2. Declension Drill (Відмінювання в контексті)
 
----
+Put the word «свій» in the correct case and gender.
 
-## The Contrast in Action
+1. Я розмовляю зі \_\_\_ (свій) братом. (Instr) -> **своїм**
+2. Вона думає про \_\_\_ (свій) майбутнє. (Acc/Loc) -> **своє**
+3. Ми йдемо до \_\_\_ (свій) друзів. (Gen pl) -> **своїх**
+4. Ти даєш книгу \_\_\_ (свій) сестрі? (Dat) -> **своїй**
+5. Вони живуть у \_\_\_ (свій) домі. (Loc) -> **своєму**
 
-Here is the key difference illustrated clearly:
+> [!important] **Common Mistake: Nom vs. Acc**
+> When the object is masculine and inanimate (like a house), the Accusative looks like the Nominative: «Я бачу **свій** дім». But for people, it looks like the Genitive: «Я бачу **свого** друга». Always check your animacy!
 
-**Він любить свою маму.**
-→ He loves **his own** mother. (Subject = Він, Possessor = Він)
+## Dialogues / Діалоги
 
-**Він любить його маму.**
-→ He loves **[someone else's]** mother. (Subject = Він, Possessor = another male)
+### Сімейний обід (Family Dinner)
 
-This distinction is critical in Ukrainian and must be observed in all sentences.
-
-> [!cultural] Cultural Note: Possession in Slavic Languages
-> All Slavic languages (Russian, Polish, Czech, etc.) have a reflexive possessive like свій.
-> If you ever learn another Slavic language, this concept will transfer directly.
-> It shows how Slavic languages value precision in expressing relationships.
-
----
-
-## Declension of Свій
-
-Свій declines exactly like мій/твій. Here are the forms:
-
-## Masculine
-
-| Case  | Form         | Example             |
-| ----- | ------------ | ------------------- |
-| Nom   | свій         | свій дім            |
-| Gen   | свого        | без свого дому      |
-| Dat   | своєму       | своєму братові      |
-| Acc   | свій / свого | свій дім, свого брата |
-| Instr | своїм        | зі своїм братом     |
-| Loc   | своєму / своїм | у своєму домі     |
-
-## Feminine
-
-| Case | Form | Example |
-|------|------|---------|
-| Nom | своя | своя мама |
-| Gen | своєї | без своєї мами |
-| Dat | своїй | своїй сестрі |
-| Acc | свою | свою маму |
-| Instr | своєю | зі своєю сестрою |
-| Loc | своїй | у своїй кімнаті |
-
-## Neuter
-
-| Case | Form | Example |
-|------|------|---------|
-| Nom | своє | своє життя |
-| Gen | свого | без свого життя |
-| Dat | своєму | своєму серцю |
-| Acc | своє | своє життя |
-| Instr | своїм | зі своїм серцем |
-| Loc | своєму | у своєму житті |
-
-## Plural
-
-| Case  | Form           | Example              |
-| ----- | -------------- | -------------------- |
-| Nom   | свої           | свої книги           |
-| Gen   | своїх          | без своїх книг       |
-| Dat   | своїм          | своїм батькам        |
-| Acc   | свої / своїх   | свої книги, своїх батьків |
-| Instr | своїми         | зі своїми друзями    |
-| Loc   | своїх          | у своїх книгах       |
-
----
-
-## Common Patterns
-
-## Pattern 1: Subject = 1st/2nd Person
-
-When the subject is «я» or «ти», свій is optional but preferred.
-
-Both are correct:
-- Я читаю **свою** книгу.
-- Я читаю **мою** книгу.
-
-## Pattern 2: Subject = 3rd Person
-
-When the subject is «він/вона/вони», свій is REQUIRED to mean «one's own.»
-
-Only correct way to say «He reads his own book»:
-- Він читає **свою** книгу. ✓
-
-This is WRONG for «his own»:
-- Він читає **його** книгу. ✗ (means another person's book)
-
-## Pattern 3: Different Subjects
-
-When possessor differs from subject, use його/її/їхній.
-
-- Марія читає **його** книгу. (Maria reads his [not her own] book.)
-- Петро бачив **її** маму. (Petro saw her [not his own] mom.)
-
----
-
-## Story Time: The Family Dinner
-
-Сьогодні у Марії сімейний обід. Вона готує вечерю у **своїй** кухні. Її мама приїхала з **своїм** чоловіком — **її** батьком.
-
-Марія показала мамі **свою** нову квартиру. Мама сказала: «Мені подобається! А де **твоя** кімната?»
-
-Марія відповіла: «Я сплю у **своїй** спальні. А гості можуть спати у **своїй** кімнаті для гостей.»
-
-Під час обіду всі розмовляли про **своє** життя. Батько говорив про **свою** роботу. Мама розповідала про **своїх** подруг. Марія слухала і думала про **своє** майбутнє.
-
-Після обіду мама взяла **свою** сумку і поцілувала Марію. «Дякую за **твою** гостинність!» — сказала вона.
-
-> [!tip] Notice the Pattern
-> - «своїй кухні» - Maria is the subject, so «свій» refers to HER OWN kitchen.
-> - «її батьком» - Maria is the subject, but the father belongs to Maria AND her mother, so «її» is used.
-> - «твою гостинність» - The mother is speaking TO Maria, so «твою» (your) is used, not «свою».
-
----
-
-## Story Time Part 2: The Job Interview
-
-Петро пішов на співбесіду. Він надів **свій** найкращий костюм. Він взяв **свою** папку з документами. Він поцілував **свою** дружину і пішов.
-
-На співбесіді менеджер запитав про **його** досвід. Петро розповів про **свою** попередню роботу. Він показав **свої** рекомендації.
-
-Менеджер подивився на **свого** колегу. **Його** колега кивнув. Вони вирішили взяти Петра на роботу!
-
-Петро повернувся додому і обійняв **свою** дружину. Він сказав: «Я отримав **свою** нову роботу!»
-
-**Його** дружина була дуже рада. Вона приготувала **свою** найкращу страву на вечерю. Вони святкували **свій** успіх разом.
-
-> [!tip] Key Observations
-> When Петро does something to HIS OWN things: свій.
-> When the text talks about someone else's things: його/її.
-> This pattern is consistent throughout Ukrainian narratives.
-
----
-
-## Deep Dive: Edge Cases
-
-## Case 1: Infinitive Constructions
-
-When the subject controls an infinitive, свій refers to that subject:
-- Він попросив мене взяти **свою** книгу. (He asked me to take **his own** book.)
-- Вона хоче, щоб я прочитав **свою** статтю. (She wants me to read **her own** article.)
-
-## Case 2: Impersonal Constructions
-
-With impersonal constructions, свій refers to the logical subject:
-- Треба любити **свою** країну. (One must love one's country.)
-- Добре мати **своє** власне житло. (It's good to have one's own housing.)
-- Це **чужий** дім. (This is someone else's house.)
-- У нас є **спільний** інтерес. (We have a common interest.)
-- Це **власне** моя думка. (This is strictly my opinion.)
-- Я маю **власний** бізнес. (I have my own business.)
-- Вона любить **своє** життя. (She loves her life.)
-- Вони знають **свої** права. (They know their rights.)
-- Це **моя власна** ідея. (This is my own idea.)
-
-## Case 3: Embedded Clauses
-
-In subordinate clauses, свій typically refers to the subject of that clause:
-- Марія знає, що Петро любить **свою** роботу. (Maria knows that Petro loves **his own** work.)
-
-These advanced patterns become natural with practice. Focus first on the basic rule before tackling these edge cases.
-
-## Common Mistakes
-
-## Mistake 1: Using Його for Own Possession
-
-❌ Він любить його маму. (Means someone else's mom!)
-✅ Він любить свою маму. (His own mom.)
-
-## Mistake 2: Using Свій When Subject Differs
-
-❌ Я бачив свою маму Петра.
-✅ Я бачив його маму. (I saw his mom - Petro's mom.)
-
-## Mistake 3: Forgetting to Decline Свій
-
-❌ Вона говорить з свій брат.
-✅ Вона говорить зі своїм братом. (Instrumental required after «з».)
-
----
-
-## Language Learning Tip
-
-A helpful way to remember the rule is to ask yourself: «Is the possessor doing the action?»
-
-- If YES → use свій
-- If NO → use його/її/їхній
-
-Another tip: In English, try replacing the possessive with «one's own.» If it makes sense, use свій in Ukrainian.
-
-- «He loves his own mother» → use свій
-- «He loves one's own mother» → makes sense → свій is correct
-
-This mental check will help you until the pattern becomes automatic through practice.
-
-> [!cultural] Language Elegance
-> The свій system shows Ukrainian's grammatical elegance.
-> Where English needs extra words («his own»), Ukrainian uses one form.
-> This efficiency is part of what makes Ukrainian beautiful to speak.
-
-## Practice
-
-Тепер давайте практикуватися! Виберіть правильне слово для кожного речення.
-
-**Вправа 1: Свій чи Його/Її?**
-
-Виберіть правильну форму:
-
-1. Марія читає _______ (свою / її) книгу.
-   → **свою** (підмет = Марія, власник = Марія)
-
-2. Марія читає _______ (свою / його) книгу.
-   → **його** (підмет = Марія, власник = хтось інший)
-
-3. Петро любить _______ (свою / його) роботу.
-   → **свою** (підмет = Петро, власник = Петро)
-
-4. Я бачив Петра з _______ (своєю / його) сестрою.
-   → **його** (підмет = я, власник = Петро)
-
-5. Ти розмовляєш зі _______ (своїм / твоїм) братом?
-   → **своїм** (підмет = ти, власник = ти — обидва варіанти правильні, але «своїм» природніше)
-
-6. Вони продають _______ (свій / їхній) будинок.
-   → **свій** (підмет = вони, власник = вони)
-
-**Вправа 2: Перекладіть з англійської**
-
-Перекладіть ці речення українською, правильно використовуючи свій:
-
-1. I love my parents. → Я люблю **своїх** батьків.
-2. He reads his book. (his own) → Він читає **свою** книгу.
-3. She visits her friend. (someone else's friend) → Вона відвідує **її** подругу.
-4. We cook our dinner. → Ми готуємо **свою** вечерю.
-5. They sell their car. (their own) → Вони продають **свою** машину.
-
-**Вправа 3: Виправте помилки**
-
-Знайдіть і виправте помилки в цих реченнях:
-
-1. ❌ Він любить його маму. (якщо мається на увазі «свою»)
-   → ✅ Він любить **свою** маму.
-
-2. ❌ Я читаю мою книгу.
-   → ✅ Я читаю **свою** книгу. (природніше, хоча «мою» не помилка)
-
-3. ❌ Вона бачить свою брата Петра.
-   → ✅ Вона бачить **його** брата. (підмет = вона, власник = Петро)
-
-4. ❌ Ми пишемо наших листів.
-   → ✅ Ми пишемо **свої** листи.
-
-**Вправа 4: Створіть власні речення**
-
-Напишіть по два речення з кожним варіантом:
-1. Використайте **свій** (підмет = власник)
-2. Використайте **його/її** (підмет ≠ власник)
-
-**Приклади:**
-- Марія любить **свою** роботу. (Марія = підмет і власник)
-- Марія любить **його** роботу. (Марія = підмет, хтось інший = власник)
-
-# Підсумок
-У цьому модулі ви вивчили:
-- Основні поняття та правила
-- Практичне застосування
-- Вправи для закріплення
-
----
+**Марія:** Сьогодні у нас сімейний обід. Я готую вечерю у **своїй** кухні. (Today we have a family dinner. I'm cooking dinner in my kitchen.)
+**Мама:** Як приємно! А де **твій** батько? (How nice! And where is your father?)
+**Марія:** Він розмовляє зі **своїм** другом у вітальні. (He is talking with his friend in the living room.)
+**Мама:** Дивись, Петро прийшов. Але він прийшов не зі **своєю** дружиною. (Look, Petro has arrived. But he didn't come with his wife.)
+**Марія:** Так, його дружина зараз у **своєї** мами в гостях. (Yes, his wife is currently visiting her own mother.)
+**Мама:** Зрозуміло. А ми вже можемо сідати на **свої** місця? (I see. And can we already sit in our seats?)
+**Марія:** Звичайно! Будь ласка, сідайте! (Of course! Please, sit down!)
+
+> [!context] **Digital Possessions**
+> In the modern digital world, we use «свій» for our tech: **свій** телефон, **свій** пароль, **своя** сторінка в Інстаграмі. If you share a password, you give **свій** пароль to someone else. Precision matters even more online!
+
+# Summary / Підсумок
+
+У цьому модулі ми розібралися з одним із найбільш характерних займенників української мови:
+
+- **Свій** використовується тоді, коли власник і підмет — це одна особа.
+- **Його/Її/Їхній** використовуються тоді, коли власник і підмет — різні особи.
+- Займенник «свій» обов'язково відмінюється за родами та відмінками відповідно до об'єкта.
+- Використання «свій» робить ваше мовлення точним, природним та позбавленим двозначності.
+
+Mastering the logic of possession creates a clear landscape in your Ukrainian. You now have the tools to define boundaries and express relationships with clarity.
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+To fully integrate «свій» into your active vocabulary, try describing your room or your workspace. List five things that are YOURS using the pronoun «свій». Then describe someone else's space (a friend or family member) and contrast it with yours. Practicing this shift daily will make the choice of possessive automatic. Спробуйте написати 5 речень про те, що ви робите зі **своїми** речами. Удачі у вивченні мови!

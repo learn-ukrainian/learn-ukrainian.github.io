@@ -39,14 +39,12 @@ When you dictate a number, you usually group digits: 050-123-45-67 (нуль-п'
 
 Sometimes things go wrong.
 
-| Problem | IPA | English |
-| :--- | :--- | :--- |
-| **Я вас не чую.** | /jɑ vɑs nɛ ˈt͡ʃujʊ/ | I don't hear you. |
-| **Ви помилилися номером.** | /vɪ pɔmɪˈlɪlɪsʲɑ ˈnɔmɛrɔm/ | You have the wrong number. |
-| **Поганий зв'язок.** | /pɔˈɦɑnɪj zvjɑˈzɔk/ | Bad connection. |
-| **Передзвоніть, будь ласка.** | /pɛrɛdzvɔˈnʲitʲ budʲ ˈlɑskɑ/ | Call back, please. |
-
-> 💡 **Tip:** «Ви помилилися номером» is the standard phrase for «Wrong number». It literally means «You made a mistake with the number».
+| Problem                       | IPA                          | English                    |
+| :---------------------------- | :--------------------------- | :------------------------- |
+| **Я вас не чую.**             | /jɑ vɑs nɛ ˈt͡ʃujʊ/           | I don't hear you.          |
+| **Ви помилилися номером.**    | /vɪ pɔmɪˈlɪlɪsʲɑ ˈnɔmɛrɔm/   | You have the wrong number. |
+| **Поганий зв'язок.**          | /pɔˈɦɑnɪj zvjɑˈzɔk/          | Bad connection.            |
+| **Передзвоніть, будь ласка.** | /pɛrɛdzvɔˈnʲitʲ budʲ ˈlɑskɑ/ | Call back, please.         |
 
 ### Ending the Call (Завершення)
 
@@ -127,6 +125,7 @@ Read about a common situation: receiving a delivery.
 You successfully handled a phone conversation! This is a big step in language learning.
 
 You learned:
+
 - How to start a call: **Алло**, **Слухаю**, **Це...**.
 - How to handle mistakes: **Ви помилилися номером**.
 - How to deal with bad connection: **Я вас не чую**, **Поганий зв'язок**.
@@ -134,11 +133,7 @@ You learned:
 
 ### Texting and Messaging (Листування)
 
-
-
 Most Ukrainians prefer texting over calling. Here are some short phrases you can use in Viber or Telegram:
-
-
 
 - **Привіт! Як справи?** (Hi! How are things?)
 
@@ -154,24 +149,18 @@ Most Ukrainians prefer texting over calling. Here are some short phrases you can
 
 - **До зустрічі!** (See you soon!)
 
-
-
 > 💡 **Tip:** In informal chats, Ukrainians often use English loanwords like "**Ок**", "**Пліз**" (please), or "**Сорі**" (sorry). But using the Ukrainian versions is always better for learning!
-
-
 
 Don't be afraid to ask people to speak slowly (**говоріть повільніше**). Usually, people are happy to help.
 
-
+> 🌍 **Real World: Dialing Codes**
+>
+> When calling a Ukrainian mobile number from abroad, always use **+380**. If you are inside Ukraine calling from a local SIM, you can start with **0**. For example, +380 50... becomes 050...
 
 ## Need More Practice?
-
-
 
 - **Change Language:** Change your phone's language to Ukrainian for a day. You will learn words like **дзвінок** (call), **повідомлення** (message), and **налаштування** (settings).
 
 - **Record Yourself:** Record yourself saying the phrases "Алло, це..." and "Ви помилилися номером". Listen and check your pronunciation.
 
 - **Listen:** Listen to Ukrainians talking on the phone in movies. Do they say "Алло" or "Так"?
-
-

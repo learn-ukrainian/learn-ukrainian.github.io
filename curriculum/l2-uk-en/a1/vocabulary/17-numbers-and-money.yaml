@@ -36,11 +36,11 @@ items:
   gender: f
 - lemma: гривий
   ipa: /ɦrˈɪʋɪj/
-  translation: ''
+  translation: maned
   pos: adj
 - lemma: гривна
   ipa: /ɦrˈɪʋna/
-  translation: ''
+  translation: hryvnia
   pos: noun
   gender: f
 - lemma: григорій

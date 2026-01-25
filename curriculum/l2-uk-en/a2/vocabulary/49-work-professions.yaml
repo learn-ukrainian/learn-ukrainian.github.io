@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: ава
   ipa: /ˈaʋa/
-  translation: ''
+  translation: Ava
   pos: noun
 - lemma: автомобільний
   ipa: /aʋtɔmɔbˈilʲnɪj/

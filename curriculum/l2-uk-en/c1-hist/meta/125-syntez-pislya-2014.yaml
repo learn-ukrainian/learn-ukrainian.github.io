@@ -81,7 +81,7 @@ vocabulary_hints:
   - воєнний час (wartime)
   - національна консолідація (national consolidation)
 activity_hints:
-- type: synthesis
+- type: essay-response
   focus: Map cultural cycles from Ems to 2022
   output: Cycle evolution map
 - type: decommunization-analysis

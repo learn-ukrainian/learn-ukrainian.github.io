@@ -1,15 +1,10 @@
-# B1 Module 16: Дієслова руху - повна система
-# Status: SPEC (ready for content development)
-
 id: b1-16
 title: 'Дієслова руху: повна система'
 subtitle: Motion Verbs - The Full System
 slug: 16-motion-verbs-full-system
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1500
+immersion: 100% Ukrainian
 version: '1.0'
 phase: B1.2 Motion
 pedagogy: TTT
@@ -17,119 +12,90 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - motion-verbs
-  - verbs
+- grammar
+- motion-verbs
+- verbs
 grammar:
-  - 14 motion verb pairs
-  - Unidirectional vs multidirectional distinction
+- 14 motion verb pairs
+- Unidirectional vs multidirectional distinction
 objectives:
-  - Learner knows all 14 motion verb pairs
-  - Learner understands unidirectional vs multidirectional
-  - Learner can choose correct motion verb for context
-
-# === AGENT BUILD SPEC ===
-
+- Learner knows all 14 motion verb pairs
+- Learner understands unidirectional vs multidirectional
+- Learner can choose correct motion verb for context
 sources:
-  - name: Ukrainian State Standard 2024 - Motion Verbs
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official system of motion verb pairs
-  - name: Ukrainian Motion Verbs (Wikipedia)
-    url: https://uk.wikipedia.org/wiki/Дієслова_руху
-    type: reference
-    notes: Complete list of motion verb pairs
-
+- name: Ukrainian State Standard 2024 - Motion Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official system of motion verb pairs
+- name: Ukrainian Motion Verbs (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Complete list of motion verb pairs
 content_outline:
-  - section: Вступ — Система дієслів руху
-    words: 400
-    points:
-      - Чому окрема категорія?
-      - 14 пар — огляд
-      - TTT — визначте тип руху
-
-  - section: Односпрямовані дієслова
-    words: 600
-    points:
-      - йти, їхати, бігти, летіти, пливти
-      - нести, вести, везти
-      - Коли використовувати
-
-  - section: Різноспрямовані дієслова
-    words: 600
-    points:
-      - ходити, їздити, бігати, літати, плавати
-      - носити, водити, возити
-      - Коли використовувати
-
-  - section: Контрастивний аналіз
-    words: 500
-    points:
-      - Я йду в магазин vs Я ходжу до магазину
-      - Одноразовий рух vs регулярний/загальний
-      - Типові помилки
-
-  - section: Менш частотні пари
-    words: 500
-    points:
-      - лізти/лазити, повзти/повзати
-      - тягти/тягати, котити/качати
-      - Контекст вживання
-
-  - section: Практика і підсумок
-    words: 300
-    points:
-      - Комплексні вправи
-      - Готовність до M17
-
+- section: Вступ
+  words: 200
+  points:
+  - Content for Вступ
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 350
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 900
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 400
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
 vocabulary_hints:
   required:
-    - односпрямований (unidirectional)
-    - різноспрямований (multidirectional)
-    - йти/ходити (to go on foot)
-    - їхати/їздити (to go by vehicle)
-    - бігти/бігати (to run)
-    - летіти/літати (to fly)
-    - пливти/плавати (to swim/sail)
-    - нести/носити (to carry)
-    - вести/водити (to lead)
-    - везти/возити (to transport)
+  - односпрямований (unidirectional)
+  - різноспрямований (multidirectional)
+  - йти/ходити (to go on foot)
+  - їхати/їздити (to go by vehicle)
+  - бігти/бігати (to run)
+  - летіти/літати (to fly)
+  - пливти/плавати (to swim/sail)
+  - нести/носити (to carry)
+  - вести/водити (to lead)
+  - везти/возити (to transport)
   recommended:
-    - лізти/лазити (to climb)
-    - повзти/повзати (to crawl)
-    - тягти/тягати (to pull)
-    - котити/качати (to roll)
-    - брести/бродити (to wade)
-
+  - лізти/лазити (to climb)
+  - повзти/повзати (to crawl)
+  - тягти/тягати (to pull)
+  - котити/качати (to roll)
+  - брести/бродити (to wade)
 activity_hints:
-  - type: match-up
-    focus: Unidirectional → Multidirectional pairs
-    items: "14+"
-
-  - type: quiz
-    focus: Which motion verb for which context?
-    items: "15+"
-
-  - type: fill-in
-    focus: Choose correct motion verb
-    items: "15+"
-
-  - type: group-sort
-    focus: Single trip vs regular/general movement
-    items: "14+"
-
-  - type: transform
-    focus: Single event → habitual movement
-    items: "10+"
-
+- type: match-up
+  focus: Unidirectional → Multidirectional pairs
+  items: 14+
+- type: quiz
+  focus: Which motion verb for which context?
+  items: 15+
+- type: fill-in
+  focus: Choose correct motion verb
+  items: 15+
+- type: group-sort
+  focus: Single trip vs regular/general movement
+  items: 14+
+- type: fill-in
+  focus: Single event → habitual movement
+  items: 10+
 prerequisites:
-  - b1-15 (Aspect mastery checkpoint)
-  - A2 motion verbs basics
-
+- b1-15 (Aspect mastery checkpoint)
+- A2 motion verbs basics
 connects_to:
-  - b1-17 (Motion - coming & going)
-  - b1-25 (Motion verbs checkpoint)
-
+- b1-17 (Motion - coming & going)
+- b1-25 (Motion verbs checkpoint)
 naturalness:
   score: 9
   status: PASS

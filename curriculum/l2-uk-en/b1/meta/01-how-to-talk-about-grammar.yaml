@@ -44,21 +44,21 @@ sources:
 
 content_outline:
   - section: Introduction - Why Learn Grammar in Ukrainian?
-    words: 400
+    words: 180
     points:
       - Benefits of learning grammar terminology in target language
       - How native speakers learn grammar in school
       - Preparation for full immersion in B1.1+
 
   - section: Parts of Speech (Частини мови)
-    words: 700
+    words: 600
     points:
       - дієслово, іменник, прикметник, прислівник, займенник
       - сполучник, прийменник, частка
       - Identifying parts of speech in sentences
 
   - section: Case Names (Відмінки)
-    words: 600
+    words: 400
     points:
       - називний, родовий, давальний, знахідний
       - орудний, місцевий, кличний
@@ -72,14 +72,21 @@ content_outline:
       - Basic structural vocabulary
 
   - section: Practice Reading Grammar Explanations
-    words: 600
+    words: 100
     points:
       - Simple grammar explanations in Ukrainian
       - Recognizing patterns in textbook language
       - Comprehension exercises
 
-  - section: Summary and Self-Assessment
+  - section: Mini-Dialogues
     words: 200
+    points:
+      - Terminology in conversation
+      - Teacher-student dialogues
+      - Real-world usage scenarios
+
+  - section: Summary and Self-Assessment
+    words: 50
     points:
       - Key terms review
       - Readiness check for M02
@@ -122,9 +129,7 @@ activity_hints:
     focus: Categorize terms by category (parts of speech vs cases)
     items: "15+"
 
-  - type: reading
-    focus: Simple grammar explanation comprehension
-    source: in module
+
 
 prerequisites:
   - A2 completion required

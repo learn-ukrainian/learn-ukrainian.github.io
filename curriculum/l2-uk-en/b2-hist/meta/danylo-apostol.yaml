@@ -1,11 +1,40 @@
-# Meta for Данило Апостол та Кирило Розумовський
-slug: danylo-apostol
-title: "Данило Апостол та Кирило Розумовський"
-level: B2
-track: history
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
-status: skeleton
+title: 'Данило Апостол та Кирило Розумовський'
+phase: B2.3b [Українська історія]
 focus: history
 word_target: 4000
-prerequisites: []
-learning_outcomes: []
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+- history
+- cossack-era
+- apostol
+- razumovsky
+- reforms
+- culture
+grammar:
+- Історичний наратив
+- Пасивний стан в історичному тексті
+vocabulary_focus: null
+objectives:
+- Учень може порівняти правління Данила Апостола та Кирила Розумовського
+- Учень може пояснити причини ліквідації гетьманства
+- Учень може охарактеризувати культурний розвиток Глухова
+- Учень може проаналізувати "Рішительні пункти"
+vocabulary_count: 35
+slug: danylo-apostol
+activity_types:
+- reading
+- quiz
+- essay-response
+- comparative-study
+- true-false
+- match-up
+- unjumble
+- fill-in
+- error-correction
+- select
+naturalness:
+  score: 9
+  status: PASS

@@ -1,27 +1,109 @@
-title: Переяславська угода
-phase: B2.3b [Українська історія]
+module: pereyaslavska-uhoda
+id: b2-hist-56
+title: "Переяславська угода 1654: Міфи та реальність"
+subtitle: "The Treaty of Pereiaslav 1654: Myths and Reality"
+slug: pereyaslavska-uhoda
+version: '2.0'
+phase: "HIST.6 [Khmelnytsky & Cossack State]"
 focus: history
-word_target: 4000
 pedagogy: CBI
+word_target: 4000
 register: публіцистичний
-duration: 90
+duration: 120
 transliteration: none
 tags:
-- history
-- cossack-era
-- pereiaslav
-- decolonization
-- myth-busting
+  - history
+  - treaty
+  - pereiaslav
+  - myth-busting
+  - decolonization
 grammar:
-- Історичний наратив
-- Деколонізаційна лексика
-vocabulary_focus: null
+  - "Political terminology and diplomatic language"
+  - "Passive voice in official documents"
 objectives:
-- Учень може пояснити реальний зміст Переяславської угоди 1654 року
-- Учень може спростувати міф про «возз'єднання» України з Росією
-- Учень може аналізувати первинні джерела про події 1654 року
-vocabulary_count: 36
-slug: pereiaslav-treaty
+  - "Учень може пояснити реальний зміст Переяславської угоди як військового союзу"
+  - "Учень може проаналізувати причини звернення Хмельницького до Москви"
+  - "Учень може спростувати імперський міф про «возз'єднання»"
+vocabulary_hints:
+  required:
+    - протекторат
+    - присяга
+    - статті
+    - автономія
+    - легітимність
+    - суб'єктність
+    - возз'єднання
+    - деколонізація
+    - зрада
+    - союзник
 naturalness:
   score: 9
   status: PASS
+content_outline:
+  - section: "Вступ"
+    words: 400
+    points:
+      - "The exhaustion of the Khmelnytsky Uprising by 1653"
+      - "The search for a reliable ally against Poland"
+  - section: "Дипломатична гра: Спроби знайти союзника"
+    words: 600
+    points:
+      - "Relations with Turkey, Crimea, and Sweden"
+      - "The religious factor (Orthodoxy) in negotiations"
+      - "Previous diplomatic missions"
+  - section: "Переяславська рада: Зіткнення політичних світів"
+    words: 800
+    points:
+      - "The arrival of Buturlin's mission"
+      - "The refusal of the envoy to swear an oath for the Tsar"
+      - "The reaction of the Cossack officers (starshyna)"
+  - section: "Березневі статті: Суверенітет під прицілом"
+    words: 700
+    points:
+      - "The rights and liberties of the Zaporozhian Host"
+      - "The 60,000 register and independent foreign policy"
+      - "The Tsar's title vs. reality of the protectorate"
+  - section: "Глас вопіющого: Опозиція та незгодні"
+    words: 500
+    points:
+      - "Those who refused to swear allegiance"
+      - "The position of the Kyiv Metropolitan"
+      - "The fear of losing autonomy"
+  - section: "Віленська зрада та пошук нової стратегії"
+    words: 400
+    points:
+      - "The violation of the treaty by Moscow (Vilna Truce 1656)"
+      - "Khmelnytsky's search for new allies (Sweden)"
+  - section: "Читання: Аналіз історичних документів"
+    words: 250
+    points:
+      - "Reading excerpts from the March Articles"
+  - section: "Первинні джерела"
+    words: 300
+    points:
+      - "Accounts of foreign diplomats on the event"
+  - section: "Деколонізаційний погляд"
+    words: 500
+    points:
+      - "Debunking the 'Reunification' myth (1954 propaganda)"
+      - "Pereiaslav as a military alliance, not annexation"
+activity_hints:
+  - type: reading
+    focus: "Analysis of the March Articles text"
+  - type: quiz
+    focus: "Events and terms of 1654"
+  - type: essay-response
+    focus: "The myth of reunification vs historical reality"
+  - type: comparative-study
+    focus: "Cossack vs. Muscovite political culture"
+  - type: true-false
+    focus: "Facts about the oath and opposition"
+sources:
+  - name: "Treaty of Pereyaslav - Encyclopedia of Ukraine"
+    url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm"
+    type: reference
+    notes: "Academic overview"
+  - name: "Breznevi statti"
+    url: "http://litopys.org.ua/volosh/volosh60.htm"
+    type: primary
+    notes: "Text of the March Articles"

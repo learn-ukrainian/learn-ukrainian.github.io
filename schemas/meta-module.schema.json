@@ -97,7 +97,14 @@
         "type": "object",
         "required": ["type", "focus"],
         "properties": {
-          "type": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
+                     "error-correction", "anagram", "select", "translate", "cloze",
+                     "mark-the-words", "reading", "essay-response", "critical-analysis",
+                     "comparative-study", "authorial-intent"],
+            "description": "Must be a valid activity type from VALID_ACTIVITY_TYPES"
+          },
           "focus": { "type": "string" },
           "items": { "type": ["string", "integer"] },
           "source": { "type": "string" },

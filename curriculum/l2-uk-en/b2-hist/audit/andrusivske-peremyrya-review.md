@@ -1,15 +1,17 @@
 # Audit Report: M60 — andrusivske-peremyrya.md
-**Level:** B2 | **Module:** M60 | **Phase:** HIST.6 | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ❌ FAIL
+**Level:** B2 | **Module:** M60 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 4000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:07:56
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, quiz, reading, true-false
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
@@ -28,23 +30,14 @@
 | 8 | select | Головні факти | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-10) ✅
+- Total activities: 8 (target: 3-9) ✅
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in andrusivske-peremyrya.yaml: Schema validation error at key '6': {'type': 'fill-in', 'title': 'Речення про поділ', 'items': [{'sentence': "Андрусівське перемир'я було укладене в _____.", 'answer': 1667, 'options': ['1654', '1667', '1648', '1709']}, {'sentence': 'Україну розділили по річці _____.', 'answer': 'Дніпро', 'options': ['Дніпро', 'Дністер', 'Буг', 'Дунай']}, {'sentence': 'Київ відійшов до _____ царства.', 'answer': 'Московського', 'options': ['Московського', 'Польського', 'Турецького', 'Шведського']}, {'sentence': 'Лівобережжя залишилося під контролем _____.', 'answer': 'Москви', 'options': ['Москви', 'Варшави', 'Стамбула', 'Бахчисарая']}, {'sentence': 'Правобережжя відійшло до _____.', 'answer': 'Польщі', 'options': ['Польщі', 'Москви', 'Литви', 'Угорщини']}, {'sentence': 'Запорозька Січ опинилася під _____ управлінням.', 'answer': 'подвійним', 'options': ['подвійним', 'одинарним', 'потрійним', 'власним']}, {'sentence': 'Історики називають цю подію політичною _____ України.', 'answer': 'смертю', 'options': ['смертю', 'перемогою', 'народженням', 'радістю']}, {'sentence': 'Гетьман Дорошенко шукав союзу з _____.', 'answer': 'Туреччиною', 'options': ['Туреччиною', 'Москвою', 'Польщею', 'Китаєм']}, {'sentence': 'Угода була _____ для українців.', 'answer': 'зрадою', 'options': ['зрадою', 'подарунком', 'сюрпризом', 'святом']}, {'sentence': 'Мир уклали на _____ років.', 'answer': '13,5', 'options': ['13,5', '5', '50', '100']}], 'instruction': 'Заповніть пропуски фактами.'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 946/4000 (raw: 1036)
+- **Words:** ✅ 4883/4000 (raw: 4950)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/2 types
@@ -54,12 +47,12 @@
 - **Vocab:** ⚠️ 0 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ 1 fill-in with year answers
-- **Immersion:** 🇺🇦 97.9% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -68,28 +61,29 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 13 | 10 | 100% | 14% | 14.3% |
-| decolonization | 6 | 2 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 4 | 4 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.6%** |
+| questions | 24 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Андрусівське перемир'я: Велика зрада та поділ України** | ⚪️ | 80 | Skipped |
-| **Історичний контекст** | ✅ | 115 | Included in Core |
-| **Умови «Миру»** | ⚪️ | 121 | Skipped |
-| **Наслідки: Політична смерть?** | ⚪️ | 89 | Skipped |
-| **Читання** | ✅ | 93 | Included in Core |
-| **Первинні джерела** | ✅ | 60 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 116 | Included in Core |
-| **Есе** | ⚪️ | 184 | Skipped |
-| **Підсумок** | ✅ | 41 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 47 | Skipped |
+| **Intro/Narrative** | ✅ | 101 | Included in Core |
+| **Вступ: Ніч дипломатії в Андрусові** | ✅ | 557 | Included in Core |
+| **Архітектор поділу: Афанасій Ордин-Нащокін** | ⚪️ | 494 | Skipped |
+| **Умови договору: Геополітична ампутація** | ⚪️ | 585 | Skipped |
+| **Реакція України: Шок і гнів** | ⚪️ | 583 | Skipped |
+| **Соціальні наслідки: Життя на розломі** | ⚪️ | 553 | Skipped |
+| **Чому світ промовчав?** | ⚪️ | 514 | Skipped |
+| **Читання** | ✅ | 125 | Included in Core |
+| **Первинні джерела: Текст договору** | ✅ | 381 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 589 | Included in Core |
+| **Підсумок** | ✅ | 143 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 258 | Skipped |

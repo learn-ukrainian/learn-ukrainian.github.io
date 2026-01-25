@@ -1,8 +1,13 @@
-module: a2-36
+id: a2-36
 title: Basic Motion Prefixes
 subtitle: In and Out
-version: '1.0'
+slug: 36-basic-motion-prefixes
+module_type: grammar
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.3
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -21,9 +26,36 @@ objectives:
 - Learner can use prefixes в-/у- and ви- correctly
 - Learner can choose the correct preposition for motion verbs
 - Learner can describe daily commute actions
-vocabulary_count: 25
-slug: 36-basic-motion-prefixes
-focus: grammar
-naturalness:
-  score: 9
-  status: PASS
+sources:
+- name: 'Ukrainian State Standard 2024 - Verbs of Motion'
+  url: 'https://mon.gov.ua/'
+  type: reference
+  notes: 'Standards for prefixed verbs of motion and spatial orientation at A2'
+- name: 'Morphology of Ukrainian Verb - Prefixes'
+  url: 'https://uk.wikipedia.org/wiki/Префікси_в_українській_мові'
+  type: reference
+  notes: "Structural rules for V- and VY- prefixes with motion stems"
+content_outline:
+- section: 'Introduction / Вступ'
+  words: 200
+  points:
+  - 'Prefixes as the GPS of Slavic verbs'
+  - "Why direction is 'built-in' in Ukrainian"
+- section: 'Presentation / Презентація'
+  words: 600
+  points:
+  - 'The Binary: В- (Into) vs Ви- (Out)'
+  - 'Prepositional Hooks: В/На (Acc) vs З/Із (Gen)'
+  - "Perfective Shift: How a prefix creates a 'result' state"
+  - "The Apostrophe Rule: В’їхати vs Виїхати"
+  - 'The Space Rule: Enclosed (В) vs Surface (На)'
+  - 'Urban Navigation: Entering the Metro (Увійти)'
+- section: 'Practice / Практика'
+  words: 150
+  points:
+  - 'Directional transformation drills'
+  - 'City commute narrative construction'
+- section: 'Dialogues / Діалоги'
+  words: 50
+  points:
+  - 'A morning in Kyiv: Navigating from house to metro to office'

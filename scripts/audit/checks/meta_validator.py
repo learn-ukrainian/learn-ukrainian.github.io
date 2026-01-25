@@ -1,12 +1,55 @@
 """
 Meta YAML validation checks.
 Enforces strict metadata requirements for Seminar-style modules.
+Also validates activity_hints types against VALID_ACTIVITY_TYPES for all modules.
 """
 
 import json
 import os
 from pathlib import Path
 import jsonschema
+
+from ..config import VALID_ACTIVITY_TYPES
+
+
+def check_activity_hints_valid(meta_data: dict | None) -> list[dict]:
+    """
+    Validate that activity_hints types are valid activity types.
+
+    This runs for ALL modules with meta.yaml, not just seminar modules.
+
+    Args:
+        meta_data: The loaded Meta YAML dict (or None).
+
+    Returns:
+        List of violation dictionaries.
+    """
+    violations = []
+
+    if not meta_data:
+        return violations
+
+    activity_hints = meta_data.get('activity_hints', [])
+    if not activity_hints:
+        return violations
+
+    invalid_types = []
+    for hint in activity_hints:
+        if isinstance(hint, dict):
+            activity_type = hint.get('type')
+            if activity_type and activity_type not in VALID_ACTIVITY_TYPES:
+                invalid_types.append(activity_type)
+
+    if invalid_types:
+        violations.append({
+            'type': 'INVALID_ACTIVITY_TYPE',
+            'severity': 'critical',
+            'message': f"Invalid activity types in activity_hints: {invalid_types}. Valid types: {VALID_ACTIVITY_TYPES}",
+            'fix': f"Replace invalid types with valid ones from: {', '.join(VALID_ACTIVITY_TYPES)}"
+        })
+
+    return violations
+
 
 def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, pedagogy: str) -> list[dict]:
     """

@@ -1,6 +1,3 @@
-# C1-HIST Module 23: Універсали Хмельницького
-# Status: SPEC (ready for content development)
-
 id: c1-hist-23
 title: Універсали Хмельницького
 slug: universaly-khmelnytkoho
@@ -10,128 +7,110 @@ focus: history
 module_type: primary-source
 word_target: 3500
 immersion: 100% Ukrainian
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Універсал (Вікіпедія)
-    url: https://uk.wikipedia.org/wiki/Універсал_(документ)
-    type: reference
-    notes: Document type
-  - name: Богдан Хмельницький
-    url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
-    type: reference
-    notes: Hetman biography
-  - name: Універсали Хмельницького (колекція)
-    url: https://litopys.org.ua/
-    type: primary
-    notes: Document collection
-
+- name: Універсал (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Універсал_(документ)
+  type: reference
+  notes: Document type
+- name: Богдан Хмельницький
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: reference
+  notes: Hetman biography
+- name: Універсали Хмельницького (колекція)
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Document collection
 content_outline:
-  - section: Вступ — Голос гетьмана
-    words: 400
-    points:
-      - Що таке універсал?
-      - Хмельницький як автор
-      - Політична риторика XVII ст.
-      - Чому це важливе джерело
-
-  - section: Типи універсалів
-    words: 500
-    points:
-      - Військові — заклики до повстання
-      - Адміністративні — накази
-      - Дипломатичні — до іноземних володарів
-      - Привілейні — пожалування
-      - Формуляр — структура документа
-
-  - section: Ключові універсали
-    words: 700
-    points:
-      - Перші заклики 1648 року
-      - Звернення до козаків
-      - Звернення до селян
-      - Дипломатичні — до Москви, Варшави
-      - Еволюція риторики
-
-  - section: Фрагмент — Універсал 1648 року
-    words: 600
-    points:
-      - Текст (з глосами)
-      - До кого звернено
-      - Аргументація — чому повстання справедливе
-      - Релігійні мотиви
-      - Соціальні мотиви
-
-  - section: Політична риторика
-    words: 600
-    points:
-      - Образ ворога — поляки, євреї
-      - "Образ «народу руського»"
-      - Легітимація насильства
-      - Православ'я як ідентичність
-      - Порівняння з польською пропагандою
-
-  - section: Критика джерела
-    words: 400
-    points:
-      - Пропаганда vs. реальні наміри
-      - Що замовчано
-      - Різні аудиторії — різні меседжі
-      - Як верифікувати
-
-  - section: Підсумок
-    words: 300
-    points:
-      - Універсали як первинне джерело
-      - Голос влади — критичне читання
-      - Зв'язок із Переяславом
-
+- section: Вступ — Голос гетьмана
+  words: 400
+  points:
+  - Що таке універсал?
+  - Хмельницький як автор
+  - Політична риторика XVII ст.
+  - Чому це важливе джерело
+- section: Типи універсалів
+  words: 500
+  points:
+  - Військові — заклики до повстання
+  - Адміністративні — накази
+  - Дипломатичні — до іноземних володарів
+  - Привілейні — пожалування
+  - Формуляр — структура документа
+- section: Ключові універсали
+  words: 700
+  points:
+  - Перші заклики 1648 року
+  - Звернення до козаків
+  - Звернення до селян
+  - Дипломатичні — до Москви, Варшави
+  - Еволюція риторики
+- section: Фрагмент — Універсал 1648 року
+  words: 600
+  points:
+  - Текст (з глосами)
+  - До кого звернено
+  - Аргументація — чому повстання справедливе
+  - Релігійні мотиви
+  - Соціальні мотиви
+- section: Політична риторика
+  words: 600
+  points:
+  - Образ ворога — поляки, євреї
+  - Образ «народу руського»
+  - Легітимація насильства
+  - Православ'я як ідентичність
+  - Порівняння з польською пропагандою
+- section: Критика джерела
+  words: 400
+  points:
+  - Пропаганда vs. реальні наміри
+  - Що замовчано
+  - Різні аудиторії — різні меседжі
+  - Як верифікувати
+- section: Підсумок
+  words: 300
+  points:
+  - Універсали як первинне джерело
+  - Голос влади — критичне читання
+  - Зв'язок із Переяславом
 vocabulary_hints:
   required:
-    - універсал (universal/proclamation)
-    - гетьман (hetman)
-    - риторика (rhetoric)
-    - пропаганда (propaganda)
-    - легітимація (legitimation)
-    - формуляр (formulary)
-    - повстання (uprising)
-    - православ'я (Orthodoxy)
-    - народ руський (Ruthenian people)
-    - привілей (privilege)
+  - універсал (universal/proclamation)
+  - гетьман (hetman)
+  - риторика (rhetoric)
+  - пропаганда (propaganda)
+  - легітимація (legitimation)
+  - формуляр (formulary)
+  - повстання (uprising)
+  - православ'я (Orthodoxy)
+  - народ руський (Ruthenian people)
+  - привілей (privilege)
   recommended:
-    - інвектива (invective)
-    - апеляція (appeal)
-    - декларація (declaration)
-    - маніфест (manifesto)
-    - публіцистика (publicistic writing)
-
+  - інвектива (invective)
+  - апеляція (appeal)
+  - декларація (declaration)
+  - маніфест (manifesto)
+  - публіцистика (publicistic writing)
 activity_hints:
-  - type: reading
-    focus: 1648 Universal with glosses
-    source: litopys.org.ua
-
-  - type: rhetoric-analysis
-    focus: Identify persuasive techniques
-    output: Rhetoric mapping
-
-  - type: comparative-study
-    focus: Compare early vs. late Khmelnytsky universals
-    output: Evolution analysis
-
-  - type: source-evaluation
-    focus: Who is the audience? What is the purpose?
-    output: Communication analysis
-
-  - type: essay-response
-    focus: "Як Хмельницький виправдовував повстання?"
-    word_target: 400
-    model_answer: Required
-
+- type: reading
+  focus: 1648 Universal with glosses
+  source: litopys.org.ua
+- type: critical-analysis
+  focus: Identify persuasive techniques
+  output: Rhetoric mapping
+- type: comparative-study
+  focus: Compare early vs. late Khmelnytsky universals
+  output: Evolution analysis
+- type: critical-analysis
+  focus: Who is the audience? What is the purpose?
+  output: Communication analysis
+- type: essay-response
+  focus: Як Хмельницький виправдовував повстання?
+  word_target: 400
+  model_answer: Required
 prerequisites:
-  - c1-hist-19-22 (Cossack chronicle modules)
-  - c1-hist-17 (Charters and documents)
-
+- c1-hist-19-22 (Cossack chronicle modules)
+- c1-hist-17 (Charters and documents)
 connects_to:
-  - c1-hist-24 (Pereiaslav Articles)
-  - c1-hist-34 (UNR Universals - parallel)
+- c1-hist-24 (Pereiaslav Articles)
+- c1-hist-34 (UNR Universals - parallel)

@@ -1,307 +1,135 @@
-## Introduction
+# Майстерність аспекту: Видові пари (Aspect Mastery)
 
-In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!
+## Introduction / Вступ
 
-This module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency.
+**Ласкаво просимо до фінального етапу вивчення аспектів у цьому блоці!** У модулях 12-15 ви вивчили теорію: що таке аспект, як обирати між процесом і результатом та як утворюються видові пари. Тепер настав час **тренуватися**, доки ці пари не стануть автоматичними. Майстерність аспекту — це не про знання правил, а про відчуття мови. Коли ви перестаєте думати про "префікси" чи "суфікси" і просто відчуваєте завершеність дії — це і є справжній успіх. Сьогодні ми перетворимо ваші знання на навичку, яка дозволить вам говорити впевнено та природно в будь-якій ситуації.
 
-**Goal:** When you hear «читати» you should instantly think «прочитати».
+In the previous modules, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic! This module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency. Goal: When you hear «читати», you should instantly think «прочитати». In Ukrainian, verbs work like partners in a dance; they lead and follow each other through the story. Mastering these pairs is like having a well-stocked toolbox for any conversation. Кожна вивчена пара — це ще одна цеглинка у вашому фундаменті вільного володіння українською мовою.
 
-## Presentation
+**Цілі цього модуля:**
 
-### Стратегія засвоєння видових пар
+- Довести до автоматизму вживання 30 найважливіших видових пар.
+- Навчитися миттєво обирати правильний вид у розмові без використання "дерева рішень".
+- Закріпити знання моделей творення (префіксація, суфіксація, суплетивізм).
+- Розширити словниковий запас дієсловами щоденного вжитку.
 
-Тепер, коли ви розумієте теорію аспекту, настав момент тренуватися до автоматизму. Мета цього модуля — зробити так, щоб ви думали видовими парами без зусиль. Коли ви чуєте «читати», ваш мозок автоматично має думати «прочитати».
+## Presentation / Презентація
 
-**Чому це важливо?**
+### Секрет автоматизму (The Secret of Automaticity)
+
 Носії української мови не думають про аспект свідомо. Вони просто знають, яке слово використати. Для них це природно, як дихання. Ви теж можете досягти цього рівня, але тільки через практику!
-
-**Три рівні засвоєння:**
-
-1. **Рівень 1: Розпізнавання** — Ви бачите пару і розумієте різницю
-2. **Рівень 2: Вибір** — Ви можете вибрати правильний аспект у контексті
-3. **Рівень 3: Автоматизм** — Ви не думаєте, ви просто знаєте
-
-**Метод навчання:**
-В цьому модулі ми працюємо над рівнем 3 — автоматизмом. Ми будемо вчити 30 найважливіших видових пар через повторення, контекст і практику. Ці 30 пар покривають близько 80% повсякденного мовлення!
-
-**Золоте правило засвоєння:**
+Золоте правило засвоєння:
 Недостатньо просто знати переклад. Ви маєте **відчути** різницю між процесом і результатом. Недоконаний вид — це фільм (ви бачите дію). Доконаний вид — це фотографія (ви бачите результат).
 
-**План роботи:**
-Спочатку ми вивчимо 30 пар, поділених на 3 рівні важливості. Потім ми будемо тренувати їх через швидкі вправи, контекстні завдання та історії. Наприкінці ви зможете використовувати ці пари автоматично!
-
-Готові? Почнемо з найважливіших пар, які ви будете використовувати кожен день.
-
-## The Core 30 Pairs
-
-## Tier 1: Essential Everyday Pairs
-
-These are the most common verbs. You'll use them every single day. Master these first!
-
-| # | Imperfective | Perfective | English |
-|---|---|---|---|
-| 1 | читати | прочитати | to read |
-| 2 | писати | написати | to write |
-| 3 | робити | зробити | to do/make |
-| 4 | говорити | сказати | to say/tell |
-| 5 | бачити | побачити | to see |
-| 6 | чути | почути | to hear |
-| 7 | брати | взяти | to take |
-| 8 | давати | дати | to give |
-| 9 | їсти | з'їсти | to eat |
-| 10 | пити | випити | to drink |
-
-> [!tip] Pattern Recognition
-> Notice: Many perfective verbs are formed by adding a prefix:
-> - **про-** (читати → прочитати)
-> - **на-** (писати → написати)
-> - **з-/зро-** (робити → зробити)
-> - **по-** (бачити → побачити)
-
-## Tier 2: Learning & Communication
+**Три рівні засвоєння, які ми пройдемо сьогодні:**
 
-These verbs are essential for language learning and social interaction.
+1.  **Рівень 1: Розпізнавання** — Ви бачите пару і миттєво розумієте різницю.
+2.  **Рівень 2: Вибір** — Ви можете безпомилково вибрати правильний аспект у живому контексті.
+3.  **Рівень 3: Автоматизм** — Ви не думаєте про граматику, ви просто говорите правильно.
 
-| # | Imperfective | Perfective | English |
-|---|---|---|---|
-| 11 | вчити | вивчити | to learn/teach |
-| 12 | вчитися | навчитися | to learn (oneself) |
-| 13 | розуміти | зрозуміти | to understand |
-| 14 | знати | дізнатися | to know / find out |
-| 15 | питати | запитати | to ask |
-| 16 | відповідати | відповісти | to answer |
-| 17 | пояснювати | пояснити | to explain |
-| 18 | повторювати | повторити | to repeat |
-| 19 | пам'ятати | запам'ятати | to remember |
-| 20 | забувати | забути | to forget |
+### The Core 30 Pairs: Your Linguistic Toolbox
 
-> [!tip] Suppletive Pairs
-> Some pairs have completely different roots:
-> - говорити | **сказати** (different roots!)
-> - брати | **взяти** (different roots!)
-> - шукати | **знайти** (different roots!)
-> These must be memorized individually.
+We have divided the 30 most essential pairs into three tiers. Master them layer by layer. Each tier represents a different domain of human activity, from personal needs to social interactions.
 
-## Tier 3: Action & Movement
+**Tier 1: Essential Everyday Pairs (Базові пари)**
+These are the verbs of your daily life. You cannot go a single day without them. They form the skeleton of your daily narrative.
 
-These verbs describe physical actions and changes.
+1. читати / про**читати** (to read)
+2. писати / на**писати** (to write)
+3. робити / **з**робити (to do/make)
+4. говорити / **сказати** (to say/tell)
+5. бачити / **по**бачити (to see)
+6. чути / **по**чути (to hear)
+7. брати / **взяти** (to take)
+8. давати / **дати** (to give)
+9. їсти / **з**'їсти (to eat)
+10. пити / **ви**пити (to drink)
 
-| # | Imperfective | Perfective | English |
-|---|---|---|---|
-| 21 | купувати | купити | to buy |
-| 22 | продавати | продати | to sell |
-| 23 | відкривати | відкрити | to open |
-| 24 | закривати | закрити | to close |
-| 25 | починати | почати | to begin |
-| 26 | закінчувати | закінчити | to finish |
-| 27 | готувати | приготувати | to cook/prepare |
-| 28 | мити | помити | to wash |
-| 29 | прибирати | прибрати | to clean up |
-| 30 | знаходити | знайти | to find |
+**Tier 2: Learning & Communication (Навчання та спілкування)**
+Essential for social interaction, learning, and expressing your thoughts clearly to others. 11. вчити / **ви**вчити (to learn/master) 12. розуміти / **з**розуміти (to understand) 13. питати / **за**питати (to ask) 14. відповідати / відповісти (to answer) 15. пояснювати / пояснити (to explain) 16. повторювати / повторити (to repeat) 17. пам'ятати / **за**пам'ятати (to remember) 18. забувати / забути (to forget) 19. дзвонити / **по**дзвонити (to call) 20. просити / **по**просити (to request)
 
----
+**Tier 3: Action & Result (Дія та результат)**
+Verbs describing movement, changes, and physical world interactions. 21. купувати / купити (to buy) 22. продавати / продати (to sell) 23. відкривати / відкрити (to open) 24. закривати / закрити (to close) 25. починати / почати (to begin) 26. закінчувати / закінчити (to finish) 27. готувати / **при**готувати (to cook) 28. мити / **по**мити (to wash) 29. прибирати / прибрати (to clean) 30. знаходити / знайти (to find)
 
-## How to Choose: The Decision Tree
+### Strategic Drilling: How to Choose Fast
 
-Choosing between aspects can be challenging for English speakers because English does not have the same system. In English, we use different verb tenses and context to convey similar information. In Ukrainian, the choice between perfective and imperfective is grammatically required and changes the form of the verb itself.
+When you are speaking, you don't have time to think about grammatical rules. You need a "fast-track" mental process. Use these three "Mental Switches" to make your decision instantly:
 
-Here is a simple decision process to help you choose:
+**Switch 1: The Timeline Test**
 
-**Step 1: Is the action completed with a clear result?**
-- YES → Perfective
-- NO → Go to Step 2
+- Is the action a dot on the timeline? -> **Perfective** (I finished).
+- Is the action a line on the timeline? -> **Imperfective** (I was doing).
 
-**Step 2: Is the action ongoing, repeated, or habitual?**
-- YES → Imperfective
-- NO → Go to Step 3
+**Switch 2: The "Ready" Signal**
 
-**Step 3: Are you describing the process itself?**
-- YES → Imperfective
-- NO → Default to Perfective
+- Can you say the product is "ready"? (The letter is ready, the food is ready). -> **Perfective**.
+- Is the energy still being spent? -> **Imperfective**.
 
-**Examples:**
-- «I read the book» → Я **прочитав** книгу. (Perfective - result)
-- «I was reading when you called» → Я **читав**, коли ти подзвонив. (Imperfective - process)
-- «I read every day» → Я **читаю** щодня. (Imperfective - habitual)
+**Switch 3: The "Wait" Signal**
 
----
+- If you can imagine someone saying "Wait, I'm still doing it!", use the **Imperfective**.
 
-## Drill Patterns
+### Common Pitfalls (Поширені помилки)
 
-## Pattern A: Past Tense Drill
+One of the most common mistakes for English speakers is using the imperfective past just because it sounds simpler. For example, saying «Я **писав** листа» when you actually mean «I wrote (and sent) the letter». In Ukrainian, this sounds unfinished, like you left the task halfway. Always reach for the **perfective** if the job is done!
 
-Use **perfective** for completed actions:
-- Я **прочитав** книгу. (I read/finished the book.)
-- Вона **написала** листа. (She wrote the letter.)
-- Ми **зробили** домашнє завдання. (We did the homework.)
+Also, be careful with future promises. If you say «Я **буду робити**» (Imp) to your boss, they might hear "I will be busy doing it, but I might not finish it." If you want to impress them, say «Я **зроблю**» (Perf) — "I will get it done."
 
-Use **imperfective** for process/duration:
-- Я **читав** три години. (I was reading for 3 hours.)
-- Вона **писала** весь день. (She was writing all day.)
-- Ми **робили** це вчора. (We were doing this yesterday.)
+> [!reflection] **Thinking in Pairs**
+> Advanced learners don't learn one verb; they learn the **pair**. When you add a new verb to your vocabulary, always leave a space for its partner. This mental map is what creates the "fluency bridge" in your brain. Це перетворює граматику на інтуїцію.
 
-## Pattern B: Future Tense Drill
+> [!tip] **The "Did you finish?" Test**
+> When in doubt, ask yourself: Can I ask "Did you finish doing this?" and get a "Yes"? If yes, the answer you seek is almost certainly the **Perfective** form. Це найпростіший спосіб уникнути помилок.
 
-**Perfective future**:
-- Я **прочитаю** цю книгу. (I will read this book - and finish it.)
-- Вона **напише** листа. (She will write the letter.)
-- Ми **зробимо** це завтра. (We will do this tomorrow.)
+## Practice / Практика
 
-**Imperfective future** (буду + infinitive):
-- Я **буду читати** увечері. (I will be reading in the evening.)
-- Вона **буде писати** листи. (She will be writing letters.)
-- Ми **будемо робити** це щодня. (We will be doing this every day.)
+### 1. Rapid Fire Recall (Миттєва реакція)
 
----
+Для кожного недоконаного дієслова негайно назвіть його доконану пару. Мета — відповідати миттєво!
 
-## Practice
+- робити -> **зробити**
+- писати -> **написати**
+- говорити -> **сказати**
+- вчити -> **вивчити**
+- бачити -> **побачити**
+- купувати -> **купити**
+- брати -> **взяти**
+- відкривати -> **відкрити**
 
-### Тренування на швидкість
+### 2. Context Story: The Busy Saturday (Зайнята субота)
 
-Тепер давайте практикуватися! Ці вправи допоможуть вам автоматизувати знання видових пар. Мета — відповідати миттєво, без роздумів. Спочатку це буде повільно, але з часом ви станете швидшими!
+Read the story and notice the interplay between process and result.
+Минулої суботи Оксана (цілий день) **прибирала** (Impf - process) свою квартиру. Вона **мила** (Impf) вікна та **готувала** (Impf) обід. Вона **хотіла** (Impf) зробити все красиво. Нарешті вона **прибрала** (Perf - result) останню кімнату. Потім вона **помила** (Perf) посуд і **приготувала** (Perf) чудовий торт. Ввечері вона **запросила** (Perf) друзів. Друзі **прийшли** (Perf) вчасно. Вони **побачили** (Perf) торт і **сказали** (Perf): «Це неймовірно!». Оксана **відчула** (Perf) радість, бо вона успішно **закінчила** (Perf) всю роботу.
 
-**Інструкція:**
-Для кожного недоконаного дієслова негайно назвіть його доконану пару. Не думайте довго — просто кажіть першу відповідь, що спадає на думку. Якщо помилилися, повторіть пару 5 разів вголос.
+> [!important] **Narrative Pattern**
+> Note how the story starts with imperfective verbs to set the scene and show the long effort, then switches to perfective verbs to mark the sequence of achievements and the happy ending. This is the classic "Story Arc" of Ukrainian aspect.
 
-**Поради для ефективного тренування:**
-1. Працюйте щодня по 10-15 хвилин
-2. Промовляйте пари вголос, не тільки думайте
-3. Створюйте прості речення з кожною парою
-4. Поверніться до складних пар наступного дня
+## Dialogues / Діалоги
 
-Почнемо з базових вправ на миттєве згадування!
+### Помилки та вдосконалення (Mistakes and Progress)
 
-## Rapid Fire Drills
+**Марк:** Ганно, я знову **забув** (Perf), як сказати "I will finish writing". (Anna, I again forgot how to say "I will finish writing".)
+**Ганна:** Це просто. Якщо ти обіцяєш результат, кажи: «Я **напишу**» (Perf). (It's simple. If you promise a result, say: «I will write».)
+**Марк:** А якщо я хочу сказати, що буду в процесі? (And if I want to say that I'll be in the process?)
+**Ганна:** Тоді кажи: «Я **буду писати**» (Impf). (Then say: «I will be writing».)
+**Марк:** О, я **зрозумів** (Perf)! Тобто «Я **буду писати** листа» — це про мій час, а «Я **напишу** листа» — це про мій результат? (Oh, I understood! So "I'll be writing the letter" is about my time, and "I'll write the letter" is about my result?)
+**Ганна:** Саме так! Ти дуже швидко **вчишся** (Impf)! (Exactly! You are learning very fast!)
+**Марк:** Дякую, я буду **старатися** (Impf) і скоро все **вивчу** (Perf). (Thanks, I will be trying and will soon master everything.)
 
-## Drill 1: Instant Recall
+> [!context] **Cultural Nuance: The Humble Process**
+> Often, Ukrainians use imperfective for invitations or offers to sound more polite and less demanding: «Приходьте!» (Come over!) or «Пишіть!» (Write to us!). This focuses on the pleasant ongoing relationship rather than a single technical result. Mastery of aspect is also mastery of social tone!
 
-When you see the imperfective, say the perfective instantly!
+# Summary / Підсумок
 
-читати → **прочитати**
-писати → **написати**
-робити → **зробити**
-бачити → **побачити**
-чути → **почути**
-пам'ятати → **запам'ятати**
-питати → **запитати**
-купувати → **купити**
-платити → **заплатити**
-малювати → **намалювати**
+У цьому модулі ми відшліфували ваші знання аспектних пар:
 
-## Drill 2: Reverse Recall
+- Ми вивчили та натренували **30 найважливіших пар** українського дієслова.
+- Ми розібралися, як переходити від теорії до **автоматизму** в розмові.
+- Ми побачили, як аспекти працюють у реальних історіях про досягнення та рутину.
+- Ви навчилися розрізняти "планування часу" та "гарантування результату".
 
-Now the opposite - perfective to imperfective:
-
-прочитати → **читати**
-написати → **писати**
-зробити → **робити**
-взяти → **брати**
-дати → **давати**
-
-## Drill 3: Context Switch
-
-«Did you finish?» → Perfective
-«Were you doing?» → Imperfective
-
-- Ти вже **прочитав**? (Did you finish reading?)
-- Ти ще **читаєш**? (Are you still reading?)
-- Вона вже **зробила**? (Did she finish doing?)
-- Вона ще **робить**? (Is she still doing?)
-
----
-
-## Story Time: The Exam
-
-Сьогодні в Оксани іспит. Вона **готувалася** весь тиждень. Вона **прочитала** всі конспекти. Вона **вивчила** всі правила. Вона **повторила** все двічі.
-
-Вранці вона **встала** рано. Вона **поснідала** швидко. Вона **випила** каву і **пішла** в університет.
-
-На іспиті вона **написала** все правильно. Викладач **прочитав** її роботу і **сказав**: «Відмінно!»
-
-Оксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: «Я горджуся тобою!»
-
-> [!tip] Notice the Pattern
-> The story uses mostly perfective verbs because it describes a sequence of completed actions.
-> Each action is finished before the next one begins.
-> This is very common in narrative storytelling.
-
----
-
-## Story Time Part 2: The Routine
-
-Кожного дня Андрій **встає** о сьомій. Він **снідає**, **п'є** каву і **їде** на роботу.
-
-На роботі він **пише** звіти, **відповідає** на листи і **говорить** з клієнтами. Він **працює** до шостої.
-
-Увечері він **повертається** додому. Він **готує** вечерю, **дивиться** телевізор і **читає** книги.
-
-Це його звичайний день. Він **робить** це щодня.
-
-> [!tip] Notice the Pattern
-> The story uses imperfective verbs because it describes habitual, repeated actions.
-> These are things Andriy does routinely, not one-time completed events.
-> This is very common when describing daily routines or habits.
-
----
-
-## Common Mistakes
-
-## Mistake 1: Using Imperfective for Results
-
-❌ Я читав цю книгу. (Ambiguous - did you finish?)
-✅ Я прочитав цю книгу. (Clear - I finished it.)
-
-## Mistake 2: Using Perfective for Ongoing Actions
-
-❌ Я зробив домашнє завдання, коли ти подзвонив.
-✅ Я робив домашнє завдання, коли ти подзвонив.
-(I was doing homework when you called - process interrupted.)
-
-## Mistake 3: Using Perfective for Habits
-
-❌ Я прочитаю книги щодня.
-✅ Я читаю книги щодня.
-(I read books every day - habitual action.)
-
----
-
-## Language Learning Tip
-
-The best way to master aspect pairs is through massive input and repeated practice. Here are some strategies:
-
-1. **Flashcard drilling** - Create cards with imperfective on one side, perfective on the other. Drill both directions until automatic.
-
-2. **Sentence shadowing** - Listen to Ukrainian content and repeat sentences, paying attention to which aspect is used and why.
-
-3. **Writing practice** - When writing in Ukrainian, consciously choose aspects and check your choices against the decision tree.
-
-4. **Native speaker observation** - When listening to Ukrainian, notice which aspect native speakers use in different contexts.
-
-Remember: Making mistakes is part of learning. Native speakers will understand you even if you use the wrong aspect. The goal is gradual improvement through practice.
-
-## Story Time Part 3: Вечір з Друзями
-
-Минулої суботи Марія **запросила** друзів на вечерю. Вона **приготувала** борщ і вареники. Вона **накрила** стіл і **почекала** гостей.
-
-О сьомій годині **прийшли** Олег і Наталка. Вони **принесли** торт і квіти. Марія **подякувала** їм і **запросила** до столу.
-
-Вони **поїли**, **поговорили** і **посміялися**. Олег **розповів** смішну історію. Наталка **показала** фотографії з подорожі. Марія **зробила** каву.
-
-Увечері гості **попрощалися** і **пішли** додому. Марія **помила** посуд і **прибрала** кухню. Вона **задоволена**: вечір **пройшов** чудово!
-
-> [!cultural] Українське гостинство
-> Українці дуже гостинні. Гості завжди приносять щось — торт, цукерки, квіти або вино. Хазяйка готує багато їжі. Відмовитися від їжі — неввічливо!
-
-# Підсумок
-У цьому модулі ви вивчили:
-- Основні поняття та правила
-- Практичне застосування
-- Вправи для закріплення
-
-**Запам'ятайте:** Аспект — це серце української дієслівної системи. Доконаний вид показує результат, недоконаний — процес. Практикуйте щодня!
-
----
+Automation of aspect pairs is the "secret sauce" of fluency in Ukrainian. By treating verbs as inseparable pairs, you have built a solid foundation for more complex levels. Keep drilling these pairs, and soon you will sound like a native speaker!
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Сьогодні ввечері, перед сном, спробуйте згадати 5 речей, які ви сьогодні **робили** (процес) і 5 речей, які ви **зробили** (результат). Використовуйте дієслова з нашого списку 30-ти пар. Наприклад: «Я **пив** каву» та «Я **купив** квитки». Ця проста вправа перед сном допоможе вашому мозку автоматизувати аспектну логіку. Успіхів у вашому прагненні до досконалості! Пам'ятайте: кожен крок веде до майстерності.

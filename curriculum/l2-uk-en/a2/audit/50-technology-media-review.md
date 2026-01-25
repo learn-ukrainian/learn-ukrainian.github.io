@@ -1,10 +1,43 @@
-# Audit Report: 50-technology-media.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+# Audit Report: M50 — 50-technology-media.md
+**Level:** A2 | **Module:** M50 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:58:32
+
+## Configuration
+**Type:** A2-vocab
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Tech Quiz | 8 | 8 | ✅ |
+| 2 | match-up | Digital Terms | 12 | 8 | ✅ |
+| 3 | cloze | Tech Sentences | 12 | 12 | ✅ |
+| 4 | true-false | Tech Facts | 12 | 8 | ✅ |
+| 5 | group-sort | Hardware vs Software | 15 | 12 | ✅ |
+| 6 | unjumble | Digital Sentences | 8 | 6 | ✅ |
+| 7 | error-correction | Fix the Tech | 12 | 6 | ✅ |
+| 8 | cloze | Digital Morning | 12 | 12 | ✅ |
+| 9 | mark-the-words | Find the Gadgets | 10 | 6 | ✅ |
+| 10 | select | Choose Best Word | 12 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (error-correction, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1153/1000
+- **Words:** ✅ 1153/1000 (raw: 1641)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -20,14 +53,11 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ⚪️ | 183 | Skipped |
+| **Вступ** | ✅ | 183 | Included in Core |
 | **Граматика** | ⚪️ | 253 | Skipped |
 | **Практика** | ⚪️ | 588 | Skipped |
 | **Підсумок** | ✅ | 109 | Included in Core |

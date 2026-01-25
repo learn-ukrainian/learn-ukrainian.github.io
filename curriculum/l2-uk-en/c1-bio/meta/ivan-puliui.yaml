@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and scientific terms
   items: 10+
-- type: discussion
-  focus: How did Puliui combine science with national duty?
-  output: Analysis of intellectual patriotism
 prerequisites:
 - Basic physics concepts
 - 19th century European context

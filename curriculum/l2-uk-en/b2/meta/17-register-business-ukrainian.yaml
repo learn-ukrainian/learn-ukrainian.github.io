@@ -1,6 +1,3 @@
-# B2 Module 17: Register - Business Ukrainian
-# Status: SPEC (ready for content development)
-
 id: b2-17
 title: Ділова українська мова
 slug: 17-register-business-ukrainian
@@ -9,139 +6,118 @@ phase: B2.1b [Participles & Register Intro]
 focus: style
 module_type: grammar
 word_target: 3800
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Ukrainian State Standard 2024 - Business Communication
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Business correspondence and communication standards
-  - name: Ділова українська мова
-    url: https://uk.wikipedia.org/wiki/Ділова_мова
-    type: secondary
-    notes: Business writing conventions
-  - name: CEFR B2 Professional Communication
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: B2 workplace language requirements
-
+- name: Ukrainian State Standard 2024 - Business Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Business correspondence and communication standards
+- name: Ділова українська мова
+  url: https://uk.wikipedia.org/wiki/Ділова_мова
+  type: secondary
+  notes: Business writing conventions
+- name: CEFR B2 Professional Communication
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 workplace language requirements
 content_outline:
-  - section: Вступ — Ділове спілкування
-    words: 400
-    points:
-      - Що таке діловий стиль
-      - Відмінність від офіційно-ділового
-      - Сучасні тенденції в діловій комунікації
-
-  - section: Ділове листування
-    words: 700
-    points:
-      - Структура ділового листа
-      - Формули вітання та прощання
-      - Формулювання прохань
-      - Формулювання пропозицій
-
-  - section: Електронне листування
-    words: 600
-    points:
-      - Специфіка електронних листів
-      - Тема листа (Subject line)
-      - Лаконічність і чіткість
-      - Підпис та контактна інформація
-
-  - section: Переговори та зустрічі
-    words: 600
-    points:
-      - Лексика переговорів
-      - Фрази для вираження згоди/незгоди
-      - Компроміс та домовленості
-      - Підсумовування результатів
-
-  - section: Корпоративна комунікація
-    words: 600
-    points:
-      - Внутрішня комунікація
-      - Звіти та доповіді
-      - Презентації
-      - Корпоративна культура
-
-  - section: Типові помилки та русизми
-    words: 500
-    points:
-      - Калькування з російської
-      - Англіцизми у діловій мові
-      - Правильні українські еквіваленти
-      - Сучасна норма
-
-  - section: Практика і підсумок
-    words: 400
-    points:
-      - Написання ділових листів
-      - Рольові ділові ситуації
-      - Підготовка до модуля 18
-
+- section: Вступ — Ділове спілкування
+  words: 400
+  points:
+  - Що таке діловий стиль
+  - Відмінність від офіційно-ділового
+  - Сучасні тенденції в діловій комунікації
+- section: Ділове листування
+  words: 700
+  points:
+  - Структура ділового листа
+  - Формули вітання та прощання
+  - Формулювання прохань
+  - Формулювання пропозицій
+- section: Електронне листування
+  words: 600
+  points:
+  - Специфіка електронних листів
+  - Тема листа (Subject line)
+  - Лаконічність і чіткість
+  - Підпис та контактна інформація
+- section: Переговори та зустрічі
+  words: 600
+  points:
+  - Лексика переговорів
+  - Фрази для вираження згоди/незгоди
+  - Компроміс та домовленості
+  - Підсумовування результатів
+- section: Корпоративна комунікація
+  words: 600
+  points:
+  - Внутрішня комунікація
+  - Звіти та доповіді
+  - Презентації
+  - Корпоративна культура
+- section: Типові помилки та русизми
+  words: 500
+  points:
+  - Калькування з російської
+  - Англіцизми у діловій мові
+  - Правильні українські еквіваленти
+  - Сучасна норма
+- section: Практика і підсумок
+  words: 400
+  points:
+  - Написання ділових листів
+  - Рольові ділові ситуації
+  - Підготовка до модуля 18
 vocabulary_hints:
   required:
-    - ділове листування (business correspondence)
-    - переговори (negotiations)
-    - пропозиція (proposal/offer)
-    - домовленість (agreement)
-    - компроміс (compromise)
-    - звіт (report)
-    - презентація (presentation)
-    - корпоративний (corporate)
-    - співпраця (cooperation)
-    - партнерство (partnership)
+  - ділове листування (business correspondence)
+  - переговори (negotiations)
+  - пропозиція (proposal/offer)
+  - домовленість (agreement)
+  - компроміс (compromise)
+  - звіт (report)
+  - презентація (presentation)
+  - корпоративний (corporate)
+  - співпраця (cooperation)
+  - партнерство (partnership)
   recommended:
-    - угода (contract/agreement)
-    - умови (terms/conditions)
-    - дедлайн (deadline)
-    - бюджет (budget)
-    - результат (result)
-
+  - угода (contract/agreement)
+  - умови (terms/conditions)
+  - дедлайн (deadline)
+  - бюджет (budget)
+  - результат (result)
 activity_hints:
-  - type: transform
-    focus: Convert casual message to business format
-    items: "10+"
-
-  - type: fill-in
-    focus: Complete business letter with appropriate formulas
-    items: "15+"
-
-  - type: match-up
-    focus: Situation → appropriate business phrase
-    items: "16+"
-
-  - type: error-correction
-    focus: Fix russisms in business texts
-    items: "12+"
-
-  - type: reading
-    focus: Analyze authentic business correspondence
-    items: "4 texts"
-
-  - type: writing
-    focus: Write business email responding to scenario
-    items: "5+"
-
-  - type: essay-response
-    focus: Draft business proposal letter
-    word_target: 200
-    output: Model answer with annotations
-
+- type: fill-in
+  focus: Convert casual message to business format
+  items: 10+
+- type: fill-in
+  focus: Complete business letter with appropriate formulas
+  items: 15+
+- type: match-up
+  focus: Situation → appropriate business phrase
+  items: 16+
+- type: error-correction
+  focus: Fix russisms in business texts
+  items: 12+
+- type: reading
+  focus: Analyze authentic business correspondence
+  items: 4 texts
+- type: essay-response
+  focus: Write business email responding to scenario
+  items: 5+
+- type: essay-response
+  focus: Draft business proposal letter
+  word_target: 200
+  output: Model answer with annotations
 prerequisites:
-  - b2-15 (Register Introduction)
-  - 'b2-16 (Register: Formal/Informal)'
-  - Basic letter writing
-
+- b2-15 (Register Introduction)
+- 'b2-16 (Register: Formal/Informal)'
+- Basic letter writing
 connects_to:
-  - 'b2-18 (Register: Academic Ukrainian)'
-  - 'b2-19 (Register: Official-Legal)'
-  - b2-25 (B2.1b Checkpoint)
-  - b2-80 (Professional Communication I)
-
+- 'b2-18 (Register: Academic Ukrainian)'
+- 'b2-19 (Register: Official-Legal)'
+- b2-25 (B2.1b Checkpoint)
+- b2-80 (Professional Communication I)
 naturalness:
   score: 1
   status: PENDING

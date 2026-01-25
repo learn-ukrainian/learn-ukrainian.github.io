@@ -1,15 +1,10 @@
-# B1 Module 15: Контрольна точка - Опанування виду
-# Status: SPEC (ready for content development)
-
 id: b1-15
 title: 'Контрольна точка: Опанування виду'
 subtitle: Aspect Mastery Phase Checkpoint
 slug: 15-checkpoint-aspect-mastery
 module_type: checkpoint
-word_target: 3000
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1200
+immersion: 100% Ukrainian
 version: '2.1'
 phase: B1.1 Aspect Mastery Checkpoint
 focus: checkpoint
@@ -18,124 +13,105 @@ template: b1-checkpoint-module-template.md
 duration: 75
 transliteration: none
 tags:
-  - checkpoint
-  - integration
-  - aspect
+- checkpoint
+- integration
+- aspect
 grammar:
-  - Integration of M06-14
-  - Comprehensive review and testing
+- Integration of M06-14
+- Comprehensive review and testing
 objectives:
-  - Learner can demonstrate mastery of verbal aspect
-  - Learner can integrate knowledge from M06-14
-  - Learner can select correct aspect in all contexts
-  - Learner can self-assess readiness for Motion Verbs phase
-
-# === AGENT BUILD SPEC ===
-
+- Learner can demonstrate mastery of verbal aspect
+- Learner can integrate knowledge from M06-14
+- Learner can select correct aspect in all contexts
+- Learner can self-assess readiness for Motion Verbs phase
 sources:
-  - name: CEFR B1 Descriptors - Grammar
-    url: https://www.coe.int/en/web/common-european-framework-reference-languages
-    type: reference
-    notes: Assessment standards for B1 grammar competence
-  - name: Ukrainian State Standard 2024 - Aspect Assessment
-    url: https://mon.gov.ua/
-    type: reference
-    notes: Official criteria for aspect mastery
-
+- name: CEFR B1 Descriptors - Grammar
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Assessment standards for B1 grammar competence
+- name: Ukrainian State Standard 2024 - Aspect Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official criteria for aspect mastery
 content_outline:
-  - section: Діагностичний тест
-    words: 400
-    points:
-      - 25 питань на всі контексти виду
-      - Визначення сильних і слабких сторін
-      - Самооцінка
-
-  - section: Огляд - Контексти виду
-    words: 500
-    points:
-      - Процес vs результат
-      - Одноразовість vs повторення
-      - Минулий, теперішній, майбутній
-
-  - section: Огляд - Вид у спеціальних контекстах
-    words: 500
-    points:
-      - Заперечення (не vs ще не)
-      - Накази (НДВ vs ДВ)
-      - Часові сполучники
-
-  - section: Огляд - 40 видових пар
-    words: 400
-    points:
-      - Швидке повторення
-      - Проблемні пари
-      - Практика вживання
-
-  - section: Комплексний тест
-    words: 700
-    points:
-      - Читання з вибором виду
-      - Трансформація речень
-      - Написання короткого тексту
-
-  - section: Самооцінка і планування
-    words: 300
-    points:
-      - Що я опанував
-      - Що потребує повторення
-      - Готовність до B1.2 (Motion Verbs)
-
+- section: Огляд
+  words: 100
+  points:
+  - Content for Огляд
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 1: Вид у минулому часі'
+  words: 250
+  points:
+  - 'Content for Skill 1: Вид у минулому часі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 2: Вид у майбутньому часі'
+  words: 150
+  points:
+  - 'Content for Skill 2: Вид у майбутньому часі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 3: Вид у запереченні'
+  words: 250
+  points:
+  - 'Content for Skill 3: Вид у запереченні'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 4: Вид у наказовому способі'
+  words: 200
+  points:
+  - 'Content for Skill 4: Вид у наказовому способі'
+  - Examples and explanation
+  - Practice or application
+- section: 'Skill 5: Видові пари'
+  words: 150
+  points:
+  - 'Content for Skill 5: Видові пари'
+  - Examples and explanation
+  - Practice or application
+- section: Інтеграційне завдання
+  words: 300
+  points:
+  - Content for Інтеграційне завдання
+  - Examples and explanation
+  - Practice or application
 vocabulary_hints:
   required:
-    - опанування (mastery)
-    - контрольна точка (checkpoint)
-    - самооцінка (self-assessment)
-    - готовність (readiness)
-    - повторення (review)
-    - закріплення (consolidation)
-    - перевірка (verification)
-    - прогрес (progress)
-    - слабка сторона (weakness)
-    - сильна сторона (strength)
+  - опанування (mastery)
+  - контрольна точка (checkpoint)
+  - самооцінка (self-assessment)
+  - готовність (readiness)
+  - повторення (review)
+  - закріплення (consolidation)
+  - перевірка (verification)
+  - прогрес (progress)
+  - слабка сторона (weakness)
+  - сильна сторона (strength)
   recommended:
-    - досягнення (achievement)
-    - рівень (level)
-    - компетенція (competence)
-    - навичка (skill)
-    - знання (knowledge)
-
+  - досягнення (achievement)
+  - рівень (level)
+  - компетенція (competence)
+  - навичка (skill)
+  - знання (knowledge)
 activity_hints:
-  - type: quiz
-    focus: Comprehensive aspect test (all contexts)
-    items: "25+"
-
-  - type: cloze
-    focus: Extended text with aspect selection
-    items: "15+"
-
-  - type: error-correction
-    focus: Find and fix aspect errors
-    items: "10+"
-
-  - type: essay-response
-    focus: Write about your week using all aspect contexts
-    word_target: 120
-
-  - type: self-assessment
-    focus: Skill group checklist (M06-14)
-    items: "9 skill groups"
-
-  - type: match-up
-    focus: Context → aspect selection rule
-    items: "12+"
-
+- type: quiz
+  focus: Comprehensive aspect test (all contexts)
+  items: 25+
+- type: cloze
+  focus: Extended text with aspect selection
+  items: 15+
+- type: error-correction
+  focus: Find and fix aspect errors
+  items: 10+
+- type: match-up
+  focus: Context → aspect selection rule
+  items: 12+
 prerequisites:
-  - All B1.1 modules (M06-14)
-
+- All B1.1 modules (M06-14)
 connects_to:
-  - b1-16 (Motion verbs - full system)
-  - b1-25 (Motion verbs checkpoint)
-
+- b1-16 (Motion verbs - full system)
+- b1-25 (Motion verbs checkpoint)
 naturalness:
   score: 9
   status: PASS

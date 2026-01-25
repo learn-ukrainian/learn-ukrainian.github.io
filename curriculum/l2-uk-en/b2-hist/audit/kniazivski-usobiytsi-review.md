@@ -1,12 +1,13 @@
 # Audit Report: M17 — kniazivski-usobiytsi.md
 **Level:** B2 | **Module:** M17 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 13:26:13
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -31,29 +32,29 @@
 | 10 | error-correction | Виправте історичні неточності | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 3-10) ✅
+- Total activities: 10 (target: 3-9) ❌
 - Unique types: 10 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 6/6 (comparative-study, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4191/4000 (raw: 4389)
+- **Words:** ✅ 4007/4000 (raw: 4101)
 - **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 16 < 20 (soft target)
+- **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (10 activities)
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -62,15 +63,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 3 | 100% | 24% | 23.8% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| primary_sources | 10 | 3 | 100% | 24% | 23.8% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
+| visual | 13 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -78,10 +79,12 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 85 | Included in Core |
 | **Розминка** | ⚪️ | 232 | Skipped |
-| **Читання: Епоха роздробленості та спроби єдності** | ✅ | 2706 | Included in Core |
-| **Первинні джерела: Голоси минулого** | ✅ | 389 | Included in Core |
-| **Деколонізаційний погляд: Міф про занепад** | ✅ | 225 | Included in Core |
-| **Есе** | ⚪️ | 113 | Skipped |
-| **Критерії оцінювання** | ⚪️ | 289 | Skipped |
+| **Читання: Тріумвірат Ярославичів** | ✅ | 736 | Included in Core |
+| **Любецький з'їзд (1097): "Кожен хай держить отчину свою"** | ⚪️ | 495 | Skipped |
+| **Володимир Мономах: Останній велетень єдиної Русі** | ⚪️ | 672 | Skipped |
+| **Соціальна структура та Економіка** | ⚪️ | 688 | Skipped |
+| **Культура та Церква** | ✅ | 243 | Included in Core |
+| **Первинні джерела** | ✅ | 392 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 312 | Included in Core |
 | **Підсумок** | ✅ | 86 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 66 | Skipped |

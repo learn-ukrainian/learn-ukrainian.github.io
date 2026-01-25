@@ -1,312 +1,140 @@
-## Introduction
+# Дієслова з давальним відмінком
 
-In this module, you'll discover which Ukrainian verbs require the Dative case — these are verbs of helping, thanking, believing, and trusting. Understanding verb «case government» is essential for speaking Ukrainian correctly.
+## Introduction / Вступ
 
-**What you'll learn:**
+In previous modules, we learned the Dative endings for pronouns and nouns. Now, we will look at **verb government** (керування) — how specific verbs "demand" the Dative case for their objects. In English, we often use the preposition "to" (I'm talking **to** you), but in Ukrainian, the verb itself dictates the case. Understanding these "Dative-hungry" verbs is essential for natural communication.
 
-- **Dative-only verbs** that always take Dative objects: допомагати, заважати, подобатися, вірити, довіряти, дякувати
-- **Dative + Accusative verbs** that need both a recipient and a thing: давати, показувати, пояснювати
-- **Dative + Infinitive patterns** for permission and prohibition: дозволяти, забороняти
-- The special structure of **подобатися** — where English says «I like coffee,» Ukrainian says «Coffee pleases to me»
+**What you'll learn in this module:**
 
-## Presentation
+- Verbs that take only a Dative object (допомагати, дякувати)
+- Verbs that take both Dative and Accusative objects (давати, показувати)
+- Impersonal verbs used with the Dative case (здаватися, личити)
 
-**Why this matters:**
-English uses the same direct object for «I help my mother» and «I see my mother.» But Ukrainian distinguishes them by case: Я допомагаю мамі (Dative — helping is directed TO someone) vs. Я бачу маму (Accusative — seeing affects someone directly).
+### Що таке дієслівне керування?
 
-## Practice
+В українській мові багато дієслів вимагають певного відмінка. Це називається «керування». Якщо дієслово «вимагає» давального відмінка, ми повинні змінювати іменник або займенник. Наприклад, ми **дякуємо** мамі, а не маму.
 
-Now let's practice using Dative verbs in context. The key skill is identifying whether a verb takes Dative alone or needs both Dative and Accusative objects.
+In English, we say "I thank my mom" (no preposition), but in Ukrainian, it's strictly "Я дякую мамі." This is a common trap for learners! Always remember that the recipient of your thanks, your help, or your phone call must be in the Dative case. This case shows who the action is "given" to. This is why it is called the "Giving Case" (давальний відмінок).
 
-**Quick reference:**
+Це важливо для вільного спілкування. Ви не можете просто перекладати з англійської. Вам потрібно знати, які дієслова «люблять» давальний відмінок. Сьогодні ми вивчимо список таких слів та навчимося використовувати їх правильно. Розуміння того, кому ви допомагаєте, дуже важливе. Ваші речення стануть зрозумілими та граматично правильними.
 
-- **Dative only:** допомагати, заважати, подобатися, вірити, довіряти, дякувати — the verb only needs a recipient
-- **Dative + Accusative:** давати, показувати, пояснювати, розповідати — the verb needs both a recipient AND a thing being transferred
+Mastering these verbs allows you to build more complex and polite sentences. Instead of simple statements, you will be able to describe interactions between people, feelings of gratitude, and professional assistance. This is the hallmark of transitioning from basic A1 survival phrases to more nuanced A2 conversation. Let's dive into the patterns!
 
-This reading presents a teacher's diary entries over one week. Each entry uses multiple Dative verbs — пояснювати, допомагати, показувати, дозволяти, забороняти, дякувати, вірити.
+## Presentation / Презентація
 
-**Reading strategy:** As you read, underline every Dative object. Then answer the comprehension questions to verify you've found them all.
+### Dative-Only Verbs (Дієслова лише з давальним відмінком)
 
-**Vocabulary preview:**
+Some verbs primarily focus on the person receiving the action. These verbs do not take a direct object in the Accusative; instead, they go straight to the Dative. The relationship is inherently interactive.
 
-- методика — teaching method
-- директор — principal
-- результати — results
-- старатися — to try hard
+| Verb       | Meaning    | Example                          |
+| :--------- | :--------- | :------------------------------- |
+| допомагати | to help    | Я допомагаю **другові**.         |
+| заважати   | to bother  | Не заважай **мені**, будь ласка. |
+| дякувати   | to thank   | Він дякує **батькам**.           |
+| вірити     | to believe | Ми віримо **тобі**.              |
+| довіряти   | to trust   | Вона довіряє **сестрі**.         |
 
-> Понеділок
-> Сьогодні я пояснювала учням нову тему. Вона важка, але я допомагала кожному учневі. Олег не розумів — я показувала йому приклади. Марія розуміла швидко — я дозволяла їй допомагати іншим.
+Ці дієслова завжди вживаються з давальним відмінком. Ви допомагаєте **комусь**. Ви дякуєте **комусь**. Це дуже природно для української мови. Пам’ятайте: ми не кажемо «дякувати когось», тільки «дякувати **комусь**». Наприклад: «Я дуже дякую **вам** за допомогу». Ви також можете вірити **другові** або довіряти **сестрі**. Ці дії спрямовані на людину, тому ми використовуємо давальний відмінок, а не знахідний. Розуміння цієї різниці допоможе вам уникнути помилок, які часто роблять іноземці. Коли ви дякуєте, ви даруєте свою вдячність — тому це давальний відмінок.
+
+> [!tip] **Grammar Shortcut**
+> If a verb involves "sending" something (message, help, gift, thanks, call) to a person, that person is almost always in the Dative case. Think of the Dative case as the "Recipient Case."
+
+Another common verb in this category is **заважати** (/zaʋˈaʒatɪ/) — to bother or disturb. If someone is making noise while you study, you can say: "Ти **мені** заважаєш." (You are bothering me.) Notice how the person who is being bothered is the indirect object in the Dative case. This pattern stays the same regardless of the verb's tense or mood. Similarly, verbs like **заздрити** (to envy) or **співчувати** (to sympathize) also follow this "Target of Feeling" logic. If you sympathize with a family in need, you say "Я співчуваю **цій родині**" (Dative).
+
+### Dative + Accusative Verbs (Давальний та знахідний відмінки разом)
+
+Many "giving" verbs involve two things: the object being given (Accusative) and the person receiving it (Dative). The word order is flexible, but the cases are strict. This allows you to emphasize different parts of the sentence without losing the meaning.
+
+- **давати** (to give) + Acc (what) + Dat (to whom)
+- **показувати** (to show) + Acc (what) + Dat (to whom)
+- **пояснювати** (to explain) + Acc (what) + Dat (to whom)
+- **надсилати** (to send) + Acc (what) + Dat (to whom)
+- **дарувати** (to gift) + Acc (what) + Dat (to whom)
+
+Я даю **книгу** (Acc) **сестрі** (Dat).
+Він показує **місто** (Acc) **друзям** (Dat).
+Вона надсилає **посилку** (Acc) **бабусі** (Dat).
+
+Ви можете змінювати порядок слів: «Я даю сестрі книгу» або «Я даю книгу сестрі». Обидва варіанти правильні. Головне — правильно вибрати закінчення. Те, що ми даємо, — це **знахідний** відмінок (**іменник** або **займенник**). Той, хто отримує, — це **давальний** відмінок. Це логічна структура, яка допомагає уникнути плутанини в реченні. Коли у вас є два об’єкти, ви повинні бути уважними. Наприклад, у реченні «Я показую місто друзям», місто — це те, на що спрямована дія, а друзі — це ті, хто отримує враження. В українській мові відмінки — це як коди, які кажуть нам, хто що робить.
+
+This double-object pattern is common with verbs of communication like **розповідати** (to tell) and **ранити** (to advise). For instance: "Я розповідаю **тобі** (Dat) **історію** (Acc)." You are giving information to someone. By keeping these cases distinct, your meaning remains clear even if you shuffle the words for emphasis. If you say "Я розповідаю історію тобі" or "Тобі я розповідаю історію," the Dative ending on "тобі" and Accusative on "історію" anchor the meaning.
+
+### Impersonal Usage (Безособове вживання)
+
+Some verbs don't have a clear subject. Instead, the person experiencing the action is the focal point (in the Dative). These are often used for feelings, sensations, or subjective impressions.
+
+- **здаватися** (to seem): **Мені** здається... (It seems to me...)
+- **личити** (to suit): Цей колір **тобі** личить. (This color suits you.)
+- **бракувати** (to lack): **Йому** бракує часу. (He lacks time.)
+- **підходити** (to fit/suit): Цей час **нам** підходить. (This time suits us.)
+
+Ці дієслова допомагають описати стан або враження. Коли ми кажемо «Мені здається», ми висловлюємо власну думку. Коли ми кажемо «Тобі личить це плаття», ми робимо комплімент. Це дуже ввічливі та корисні конструкції для щоденних розмов. Використовуйте їх, щоб зробити свою мову більш живою. Також зверніть увагу на дієслово **бракувати** — воно допомагає сказати, що вам чогось не вистачає. Наприклад: «Мені бракує часу на відпочинок». Тут «мені» — переживач потреби. Коли ви чогось потребуєте або коли вам чогось не вистачає, ви використовуєте саме цю модель.
+
+> [!context] **Subjectivity vs Objectivity**
+> In Ukrainian, using the Dative case for opinions (**Мені здається...**) sounds less aggressive than stating a hard fact with "I think." It emphasizes that this is your personal experience of the world.
+
+Impersonal dative constructions are extremely common in Ukrainian culture. They allow you to shift the focus away from a specific "actor" and focus on the situation or the experience itself. Instead of saying "I don't have enough money," which can sound very direct or even harsh, saying "Мені бракує грошей" (To me lacks money) is more descriptive and sounds more natural in many contexts. It frames the lack as a circumstance rather than a personal failure. This subtle linguistic distinction is a great way to sound more like a native speaker at the A2 level.
+
+> [!important] **Verbs of Apology**
+> In Ukrainian, "to forgive" or "to excuse" can be tricky. Both **вибачати** (/ʋɪbat͡ʃˈatɪ/) and **пробачати** (/prɔbat͡ʃˈatɪ/) require the Dative case for the person being forgiven. This is because you are "giving" your forgiveness to someone.
 >
-> Вівторок
-> Батьки Олега телефонували мені. Вони дякували мені за допомогу їхньому синові. Мені приємно, коли батьки довіряють мені.
->
-> Середа
-> Сьогодні я забороняла учням користуватися телефонами. Один учень не слухав — це заважало всьому класу. Я пояснювала йому правила.
->
-> Четвер
-> Директор радив мені нову методику. Я показувала йому результати учнів. Він дякував мені за роботу.
->
-> П'ятниця
-> Учні подарували мені квіти! Мені так подобаються мої учні! Я вірю їм — вони стараються.
-
-**Questions:**
-
-1. Кому вчителька пояснювала нову тему? — Учням.
-2. Кому вона допомагала? — Кожному учневі.
-3. Кому батьки дякували? — Вчительці.
-4. Що директор радив вчительці? — Нову методику.
-5. Що учні подарували вчительці? — Квіти.
-
-## Warm-up
-
-Ви вже знаєте, як утворювати давальний відмінок займенників і іменників. Тепер час дізнатися, які дієслова «люблять» давальний відмінок!
-
-Some verbs in Ukrainian are «dative-hungry» — they always need a dative object. When you help someone, you допомагаєш **комусь** (help _to someone_). When you believe someone, you віриш **комусь** (believe _to someone_). The dative is built into how these verbs work.
-
-Think about English: «I help my mother» uses a direct object. But Ukrainian says «I help _to_ my mother» — Я допомагаю мамі.
-
-## Дієслова, що вимагають лише давального відмінка (Dative-Only Verbs)
-
-В українській мові певні дієслова фундаментально відрізняються від своїх англійських еквівалентів — вони завжди вимагають давального відмінка. Це означає, що саме дієслово визначає відмінок додатка.
-
-Для тих, хто розмовляє англійською, це потребує певної зміни мислення. Ви можете думати, що речення «I help my mother» має прямий додаток. Але українська мова сприймає це як «Я допомагаю (кому?) мамі». Дія спрямована на когось, тому давальний відмінок тут природний.
-
-Ці дієслова ЗАВЖДИ вимагають давального відмінка:
-
-| Дієслово      | Значення           | Приклад                    |
-| ------------- | ------------------ | -------------------------- |
-| допомагати    | to help            | Я допомагаю мамі.          |
-| заважати      | to bother/disturb  | Музика заважає сусідам.    |
-| подобатися    | to please/be liked | Мені подобається ця книга. |
-| вірити        | to believe         | Я вірю другові.            |
-| довіряти      | to trust           | Ми довіряємо лікареві.     |
-| дякувати      | to thank           | Дякую вчителеві!           |
-| вибачати      | to forgive         | Я вибачаю тобі.            |
-| заздрити      | to envy            | Вона заздрить подрузі.     |
-| симпатизувати | to sympathize      | Я симпатизую цій ідеї.     |
-| співчувати    | to feel for        | Ми співчуваємо родині.     |
-
-> [!tip] Подобатися — A Special Verb That Flips the Sentence
-> In English, «I like the book» makes «I» the subject and «book» the object. Ukrainian flips this completely! «The book pleases _to me_» — Книга подобається **мені**. The thing liked becomes the grammatical subject, and the person experiencing the liking is in the dative case.
->
-> **Think of it this way:** In Ukrainian, you don't actively «do» liking — rather, things please YOU. This passive experience is expressed with dative.
-
-## Модель подобатися (The Подобатися Pattern)
-
-Це дієслово заслуговує на особливу увагу, оскільки воно повністю змінює типову англійську структуру речення. Замість того, щоб сказати «I like coffee», українці кажуть «Кава подобається мені». Особа, яка відчуває симпатію, стоїть у давальному відмінку, а предмет, який подобається, стає граматичним підметом.
-
-| Англійською        | Українською                | Порядок слів                  |
-| ------------------ | -------------------------- | ----------------------------- |
-| I like coffee      | Мені подобається кава      | Давальний + дієслово + підмет |
-| You like music     | Тобі подобається музика    | Давальний + дієслово + підмет |
-| He likes this film | Йому подобається цей фільм | Давальний + дієслово + підмет |
-
-Мені подобаються ці книги. (I like these books.)
-Їй не подобається ця ідея. (She doesn't like this idea.)
-Нам подобається Україна! (We like Ukraine!)
-Мені **сподобалася** ця книга. (I liked this book - perfective, completed reaction.)
-
-> [!example] У кінотеатрі в Одесі
-> — Тобі сподобався фільм? (Did you like the film?)
-> — Так! Мені дуже сподобалася головна героїня. (Yes! I really liked the main heroine.)
-> — А мені сподобалась музика. (And I liked the music.)
-> — Нам обом сподобався цей вечір! (We both liked this evening!)
-
-## Дієслова з давальним та знахідним відмінками (Verbs with Dative + Accusative)
-
-Багатьом українським дієсловам потрібні два додатки: предмет, який передають, і особа, яка його отримує. В українській мові отримувач стоїть у давальному відмінку, а предмет — у знахідному.
-
-Ці дієслова мають ДВА додатки: давальний (отримувач) та знахідний (предмет):
-
-| Дієслово    | Модель    | Приклад                         |
-| ----------- | --------- | ------------------------------- |
-| давати      | Dat + Acc | Я даю мамі квіти.               |
-| дарувати    | Dat + Acc | Він дарує дівчині подарунок.    |
-| показувати  | Dat + Acc | Вона показує друзям фото.       |
-| пояснювати  | Dat + Acc | Вчитель пояснює учням правило.  |
-| розповідати | Dat + Acc | Бабуся розповідає дітям казку.  |
-| посилати    | Dat + Acc | Ми посилаємо батькам листа.     |
-| писати      | Dat + Acc | Я пишу другові повідомлення.    |
-| радити      | Dat + Acc | Лікар радить пацієнтові ліки.   |
-| підходити   | Dat       | Цей колір пасує/підходить тобі. |
-| вистачати   | Dat       | Нам вистачає часу.              |
-| бракувати   | Dat       | Мені бракує слів.               |
-
-> [!info] Word Order Flexibility — Cases Set You Free
-> In Ukrainian, word order is remarkably flexible because case endings do the work of showing grammatical relationships. You can emphasize different elements by moving them to sentence-initial position:
->
-> - **Я даю мамі квіти.**
-> - **Мамі я даю квіти.** (emphasis: it's specifically to MOM I give flowers)
-> - **Квіти я даю мамі.** (emphasis: FLOWERS are what I give to mom)
->
-> In English, changing word order often changes meaning or creates ungrammatical sentences. In Ukrainian, the case endings (мамі = dative, квіти = accusative) guarantee clarity regardless of order. This flexibility is one of the beautiful features of Ukrainian grammar!
-
-## The Double Object Pattern
-
-Think of these as «transfer» verbs — something moves from one person to another:
+> - Вибач **мені**. (Forgive me.)
+> - Пробач **Олені**. (Forgive Olena.)
+> - Ми пробачаємо **друзям**. (We forgive friends.)
 
-| Subject | Verb      | Dative | Accusative (thing) |
-| ------- | --------- | ------------------ | ------------------ |
-| Я       | даю       | мамі               | книгу              |
-| Він     | показує   | другові            | фото               |
-| Ми      | пояснюємо | учням              | правило            |
-
-Батько читає дітям казку. (Father reads the children a story.)
-Офіціант приносить гостям меню. (The waiter brings the guests a menu.)
-Я пишу бабусі листа кожного тижня. (I write grandma a letter every week.)
-
-## Дієслова дозволу та заборони
+## Practice / Практика
 
-Ці дієслова вимагають конструкції: особа в давальному відмінку + дія (інфінітив):
-
-| Дієслово   | Значення   | Модель    |
-| ---------- | ---------- | --------- |
-| дозволяти  | to allow   | Dat + Inf |
-| забороняти | to forbid  | Dat + Inf |
-| заважати   | to prevent | Dat + Inf |
-| допомагати | to help    | Dat + Inf |
+### 1. Fill in the Recipient
 
-Мама дозволяє дітям гратися. (Mom allows the children to play.)
-Лікар забороняє пацієнтові курити. (The doctor forbids the patient to smoke.)
-Дощ заважає нам гуляти. (Rain prevents us from walking.)
-Я допомагаю братові вчитися. (I help my brother study.)
+Поставте слова в дужках у правильну форму (давальний відмінок).
 
-> [!warning] Common Mistake: Forgetting the Dative
-> A very common error for English speakers is using accusative instead of dative with these verbs. This happens because English uses direct objects («I help my mother») where Ukrainian uses dative («I help to my mother»).
->
-> **Watch out for this pattern:**
->
-> - ❌ Я допомагаю маму. (wrong — accusative)
-> - ✅ Я допомагаю мамі. (correct — dative)
-> - ❌ Я вірю тебе. (wrong — accusative)
-> - ✅ Я вірю тобі. (correct — dative)
->
-> The verb determines the case — these verbs ALWAYS require dative, no exceptions!
+1. Я телефоную (мама) щодня. → **мамі**
+2. Він пояснює правило (студенти). → **студентам**
+3. Ми віримо (цей чоловік). → **цьому чоловікові**
+4. Допоможіть, будь ласка (я)! → **мені**
+5. Вона дякує (вчитель) за уроки. → **вчителеві**
 
----
+> [!reflection] **Cultural Insight: Gratitude**
+> In Ukraine, the phrase **«Дякую вам!»** (I thank you!) is ubiquitous. It’s polite to thank not just for big favors, but also for small services. For example, after a meal, it’s polite to say **«Дякую мамі за смачну вечерю»** (I thank mom for the delicious dinner). Gratitude is often expressed towards a specific person, reinforcing the social connection through the Dative case. В українській культурі вдячність — це не просто ввічливість, а спосіб зміцнити стосунки між людьми.
 
-## Cultural Insight
+### 2. Practice: Find the Mistake
 
-Understanding how Ukrainians express gratitude and ask for forgiveness reveals deeper cultural values. The verbs in this section — дякувати, вибачати, and пробачати — all take Dative objects, reflecting the idea that these acts are directed TO someone.
+Reviewing common mistakes is one of the most effective ways to solidify your understanding of verb government. By identifying why a case is wrong, you learn to avoid the same trap in your own speech.
 
-## Дякувати — The Art of Thanking
+1. Я дякую він.
 
-Ukrainians have a rich culture of expressing gratitude, and the language provides multiple ways to thank someone with varying levels of formality and warmth. The verb дякувати always takes a Dative object — the person being thanked.
+   > [!error] він
+   > [!answer] йому
+   > [!explanation] Verb 'дякувати' requires Dative: він → йому.
 
-Дякувати takes the dative:
+2. Ми допомагаємо сестру.
 
-| Expression  | Meaning              | Formality     |
-| ----------- | -------------------- | ------------- |
-| Дякую!      | Thanks!              | neutral       |
-| Дякую тобі! | Thank you!           | informal      |
-| Дякую вам!  | Thank you!           | formal/plural |
-| Щиро дякую! | Heartfelt thanks!    | warm          |
-| Дуже дякую! | Thank you very much! | emphatic      |
+   > [!error] сестру
+   > [!answer] сестрі
+   > [!explanation] Verb 'допомагати' requires Dative: сестра (Acc) → сестрі (Dat).
 
-Дякую лікареві за допомогу. (Thank the doctor for help.)
-Дякуємо вчителеві за урок. (We thank the teacher for the lesson.)
-Я щиро дякую вам. (I sincerely thank you.)
+3. Тобі здається, що це легко? (Correct)
 
-> [!tip] Дякую vs. Спасибі — When to use each
-> Both words mean «thank you,» but they have different origins and connotations:
->
-> - **Дякую** — the native Ukrainian word, derived from an ancient Slavic root meaning «to give thanks.» Preferred in formal contexts, written Ukrainian, and official speech.
-> - **Спасибі** — derived from the phrase «спаси Боже». More casual and commonly used in everyday conversation.
->
-> In professional settings, academic environments, and when writing, Ukrainians tend to prefer дякую. Among friends and family, спасибі is perfectly natural.
+## Dialogues / Діалоги
 
-## Вибачати і Пробачати — Two Levels of Forgiveness
+**А:** Привіт! Тобі не **заважає** музика? Вона не надто гучна?
+**Б:** Ні, мені **подобається** ця пісня. Вона дуже енергійна. А **тобі**?
+**А:** Мені теж. Ця музика **пасує** до нашої вечірки сьогодні.
 
-Ukrainian distinguishes between two levels of forgiveness, each with its own verb. Both take Dative objects — the person being forgiven. Understanding this distinction helps you choose the right word for the situation.
+**А:** Чому ти не віриш **Петрові**? Він же твій старий знайомий.
+**Б:** Я **довіряю** лише об'єктивним фактам. А Петро часто перебільшує події.
+**А:** Мені **здається**, що він просто дуже емоційна людина. Йому **бракує** спокою.
 
-- **вибачати** — to excuse, forgive (for minor things like bumping into someone, being late, or small mistakes)
-- **пробачати** — to forgive (for serious offenses that hurt someone deeply, betrayals, or major wrongdoing)
+# Summary / Підсумок
 
-Вибачте мені! (Excuse me!)
-Я вибачаю тобі цю помилку. (I forgive you this mistake.)
-Чи можеш ти пробачити мені? (Can you forgive me?)
+У цьому модулі ми вивчили дієслова, які вимагають давального відмінка. Ви навчилися допомагати іншим, дякувати за послуги та висловлювати свої думки. Це важливий крок до правильної граматики.
 
-> [!note] Language Evolution and Cultural Values
-> The distinction between вибачати and пробачати reflects deeper cultural values embedded in the Ukrainian language. Ukrainian traditionally reserves stronger, more emotionally weighted words for serious matters, while using lighter variants for everyday situations.
->
-> This careful gradation of meaning shows how the language encourages thoughtful, measured communication about sensitive topics like forgiveness. You wouldn't use пробачати for stepping on someone's toe — that would feel dramatically out of proportion. Conversely, using вибачати for a serious betrayal would seem dismissive.
->
-> Learning to choose the right word for the situation is part of developing cultural fluency, not just grammatical accuracy.
+- Тільки Давальний: **допомагати**, **дякувати**, **вірити**, **заважати**.
+- Давальний + Знахідний: **давати**, **показувати**, **пояснювати**, **радити**.
+- Безособові: **здаватися**, **личити**, **бракувати**.
 
-> [!example] Родинна сцена в Харкові
-> — Мамо, вибач мені. Я розбив твою вазу. (Mom, excuse me. I broke your vase.)
-> — Ти знаєш, як я люблю цю вазу! (You know how I love that vase!)
-> — Я дуже шкодую. Ти пробачаєш мені? (I'm very sorry. Do you forgive me?)
-> — Звичайно пробачаю. Ти мій син. (Of course I forgive you. You're my son.)
-
----
-
-## Dative-Only or Dative + Accusative?
-
-Classify these verbs:
-
-| Verb       | Type                |
-| ---------- | ------------------- |
-| допомагати | Dative only         |
-| давати     | Dative + Accusative |
-| заважати   | Dative only         |
-| показувати | Dative + Accusative |
-| вірити     | Dative only         |
-| пояснювати | Dative + Accusative |
-
-## Complete the Pattern
-
-1. Я допомагаю \_\_\_. (брат) → братові
-2. Вона дає \_\_\_ книгу. (сестра) → сестрі
-3. Мені подобається \_\_\_. (цей фільм) → цей фільм (subject!)
-4. Він розповідає \_\_\_ казку. (діти) → дітям
-5. Ми дякуємо \_\_\_. (вчитель) → вчителеві
-
-## Mini-Dialogues
-
-The following dialogues show Dative verbs in natural conversation. Notice how допомагати, подобатися, заважати, and радити all take Dative objects.
-
-**Dialogue 1: У бібліотеці**
-
-This dialogue demonstrates допомагати with Dative — notice the librarian says «Я покажу вам» (I'll show to you).
-
-**У бібліотеці:**
-— Вибачте, ви можете допомогти мені?
-— Звичайно! Що вам потрібно?
-— Я шукаю книгу про історію України.
-— Я покажу вам, де вона стоїть.
-— Дякую вам!
-
-**Dialogue 2: На вечірці**
-
-Here заважати and подобатися both need Dative: тобі, мені.
-
-**На вечірці:**
-— Ця музика заважає тобі?
-— Ні, мені подобається ця музика!
-— Справді? Мені вона не подобається.
-— Кожному своє!
-
-**Dialogue 3: У лікарні**
-
-Here радити takes Dat + Acc, and забороняти takes Dat + Inf.
-
-**У лікарні:**
-— Лікарю, що ви радите мені?
-— Я раджу вам відпочивати.
-— Ви забороняєте мені працювати?
-— Так, я забороняю вам працювати цього тижня.
-
----
-
-# Підсумок
-У цьому модулі ви вивчили:
-- Основні поняття та правила
-- Практичне застосування
-- Вправи для закріплення
-
----
+In this module, you have learned the verbs that demand the Dative case. This marks your transition into understanding "Verb Government" in Ukrainian. You now have the tools to describe social interactions and express personal opinions naturally. Mastering these patterns makes your Ukrainian sound refined and authentic.
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+Спробуйте написати список справ на наступний тиждень. Кому ви будете допомагати? Кому зателефонуєте? Кому хочете подякувати? Використовуйте дієслова з цього модуля та перевіряйте закінчення іменників. Також ви можете переглянути короткі відео про український етикет, щоб почути ці дієслова в реальних ситуаціях. Чим більше ви практикуєтеся, тим природніше звучить ваша українська мова! Не бійтеся робити помилки, адже саме так ви вчитеся відчувати мову.

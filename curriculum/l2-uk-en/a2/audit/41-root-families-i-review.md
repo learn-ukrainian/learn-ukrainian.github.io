@@ -1,59 +1,64 @@
-# Audit Report: 41-root-families-i.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M41 — 41-root-families-i.md
+**Level:** A2 | **Module:** M41 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 15:23:22
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, місцевий, час, доконаний, дієслово
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): погляд, ходити, опис, побачення, огляд...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | group-sort | Root Sorter | 18 | 12 | ✅ |
+| 2 | match-up | Definitions | 10 | 8 | ✅ |
+| 3 | cloze | Where to Go? | 12 | 12 | ✅ |
+| 4 | unjumble | Document Logic | 6 | 6 | ✅ |
+| 5 | quiz | Root Logic | 8 | 8 | ✅ |
+| 6 | fill-in | Medical Form | 8 | 8 | ✅ |
+| 7 | cloze | The Date | 12 | 12 | ✅ |
+| 8 | error-correction | Wrong Root | 6 | 6 | ✅ |
+| 9 | match-up | Verb to Noun | 10 | 8 | ✅ |
+| 10 | fill-in | Prefixes | 8 | 8 | ✅ |
 
-- 2 violations (minor)
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1633/1000
+- **Words:** ✅ 1445/1000 (raw: 1565)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/1
+- **Vocab:** ✅ 118/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 66.4% (target 65-75% (A2.3))
+- **Immersion:** 🇺🇦 71.7% (target 65-75% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 72 | Included in Core |
-| **Presentation** | ✅ | 175 | Included in Core |
-| **Родина 1: Мандрівники (-ХІД-)** | ⚪️ | 9 | Skipped |
-| **Родина 2: Письменники (-ПИС-)** | ⚪️ | 11 | Skipped |
-| **Родина 3: Сприйняття (-ЧИТ- | -БАЧ-)** | ⚪️ | 7 | Skipped |
-| **Читачі (-ЧИТ-)** | ⚪️ | 36 | Skipped |
-| **Ті, хто бачать (-БАЧ- | -ГЛЯД-)** | ⚪️ | 49 | Skipped |
-| **Глибоке занурення: Гра «Вгадай слово» (Deep Dive: Guessing Game)** | ✅ | 86 | Included in Core |
-| **Чому родини слів важливі: Стратегія навчання** | ⚪️ | 315 | Skipped |
-| **Глибоке занурення: Сила префікса 'Пере-'** | ✅ | 53 | Included in Core |
-| **Час історії: Прогулянка містом** | ⚪️ | 135 | Skipped |
-| **Час історії Частина 2: Будинок письменника** | ✅ | 108 | Included in Core |
-| **Мова в дії** | ⚪️ | 0 | Skipped |
-| **Діалог: Охоронець** | ✅ | 36 | Included in Core |
-| **Діалог: Контракт** | ✅ | 38 | Included in Core |
-| **Діалог: Питаємо дорогу** | ✅ | 58 | Included in Core |
-| **Діалог: Відгук про фільм** | ✅ | 126 | Included in Core |
-| **Практика** | ⚪️ | 240 | Skipped |
-| **Підсумок** | ✅ | 49 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **ДНК мови: Корені слова (Root Families I)** | ⚪️ | 0 | Skipped |
+| **Introduction / Вступ** | ✅ | 301 | Included in Core |
+| **Presentation / Презентація** | ✅ | 579 | Included in Core |
+| **Practice / Практика** | ⚪️ | 209 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 202 | Included in Core |
+| **Summary / Підсумок** | ✅ | 112 | Included in Core |
+| **Need More Practice?** | ⚪️ | 42 | Skipped |

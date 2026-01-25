@@ -86,7 +86,7 @@ activity_hints:
 - type: participant-study
   focus: Who were the students — where are they now
   output: Participant profiles
-- type: legacy-tracing
+- type: critical-analysis
   focus: Granite → Orange → Dignity — continuity
   output: Revolution lineage
 - type: essay-response

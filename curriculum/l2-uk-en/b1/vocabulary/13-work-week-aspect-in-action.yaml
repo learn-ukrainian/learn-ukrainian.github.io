@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: айтема
   ipa: /ajtɛma/
-  translation: ''
+  translation: item
   pos: noun
   gender: f
 - lemma: активність
@@ -90,7 +90,7 @@ items:
   pos: adj
 - lemma: деплоїти
   ipa: /dɛplɔjitɪ/
-  translation: ''
+  translation: to deploy
   pos: verb
 - lemma: детальний
   ipa: /dɛtˈalʲnɪj/

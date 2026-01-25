@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:46:19
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -27,7 +28,7 @@
 | 6 | comparative-study | Імперії степу і лісу | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-10) ✅
+- Total activities: 6 (target: 3-9) ✅
 - Unique types: 4 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅

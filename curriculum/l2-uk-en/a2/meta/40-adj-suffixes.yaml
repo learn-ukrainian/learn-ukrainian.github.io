@@ -1,8 +1,13 @@
-module: a2-40
+id: a2-40
 title: Adjective Suffixes — Types
 subtitle: Materials and Origins
-version: '1.0'
+slug: 40-adj-suffixes
+module_type: grammar
+word_target: 1000
+immersion: 65-75% Ukrainian
+version: '2.0'
 phase: A2.3
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -11,19 +16,41 @@ tags:
 - adjectives
 - suffixes
 - materials
-grammar:
-- material suffixes (-овий, -яний)
-- origin suffixes (-ський)
-- abstract suffixes (-ний, -ічний)
-- adjective classification
 objectives:
 - Learner can describe what things are made of
 - Learner can describe origin and nationality
 - Learner can form abstract adjectives
 - Learner can classify adjectives by meaning
-vocabulary_count: 25
-slug: 40-adj-suffixes
-focus: grammar
-naturalness:
-  score: 8
-  status: PASS
+- Learner can handle consonant mutations in origin suffixes
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for material and origin adjective suffixes at A2
+- name: Ukrainian Word Formation - Consonant Changes
+  url: https://uk.wikipedia.org/wiki/Чергування_приголосних_при_творенні_прикметників
+  type: reference
+  notes: Rules for mutations like k->ts, h->z when adding -sk-
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - From Nouns to Identity: The magic of the material bridge
+  - Why 'wooden' is more than a word in Ukrainian
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'The Materialist Logic: -Ов- (Standard) vs -Ян- (Natural/Traditional)'
+  - 'The Geography of Suffixes: -Ськ- and its many faces'
+  - 'Consonant Mutations: Crossing the bridge from Prague to Odesa'
+  - 'Abstract Logic: -Ічн- vs -Н-'
+  - 'Prefix-Suffix Combinations (Intro): Настільний, Підземний'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Material conversion drills
+  - City-to-Adjective mutation challenge
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - At the handicraft fair: Discussing wooden toys and woolen shawls

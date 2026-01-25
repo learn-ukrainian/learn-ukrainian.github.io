@@ -800,8 +800,8 @@
     - числівник
     - займенник
     - іменник
-    - прислівник
-    explanation: «Він» — займенник, не числівник.
+    - дієслово
+    explanation: «Він» — займенник.
   - sentence: Давальний відповідає на «кого?»
     error: кого
     answer: кому
@@ -1177,3 +1177,100 @@
       correct: true
     - text: орудний відмінок
       correct: false
+- type: quiz
+  title: Читання граматичного правила
+  instruction: |
+    Прочитайте текст і дайте відповіді на запитання:
+    
+    Іменник «книга» — жіночого роду. У знахідному відмінку він має форму «книгу».
+    Після прийменника «на» вживається місцевий відмінок: «на книзі».
+    Це правило пояснює, як змінюється слово «книга» в різних ситуаціях.
+  items:
+    - question: Визначте граматичний рід іменника «книга», про який йде мова в тексті?
+      options:
+        - text: чоловічого роду
+          correct: false
+        - text: жіночого роду
+          correct: true
+        - text: середнього роду
+          correct: false
+        - text: спільного роду
+          correct: false
+      explanation: У тексті сказано «Іменник "книга" — жіночого роду».
+    - question: Яку форму має іменник «книга» у знахідному відмінку?
+      options:
+        - text: книги
+          correct: false
+        - text: книзі
+          correct: false
+        - text: книгу
+          correct: true
+        - text: книгою
+          correct: false
+      explanation: У тексті сказано «У знахідному відмінку він має форму "книгу"».
+    - question: Який відмінок вживається після прийменника «на» для позначення місця?
+      options:
+        - text: родовий
+          correct: false
+        - text: давальний
+          correct: false
+        - text: місцевий
+          correct: true
+        - text: орудний
+          correct: false
+      explanation: У тексті сказано «Після прийменника "на" вживається місцевий відмінок».
+    - question: Яка форма правильна для місцевого відмінка з прийменником «на»?
+      options:
+        - text: на книгу
+          correct: false
+        - text: на книги
+          correct: false
+        - text: на книзі
+          correct: true
+        - text: на книгою
+          correct: false
+      explanation: У тексті наведено приклад «на книзі».
+    - question: До якої частини мови належить слово «книга» згідно з граматичною класифікацією?
+      options:
+        - text: дієслово
+          correct: false
+        - text: іменник
+          correct: true
+        - text: прикметник
+          correct: false
+        - text: прислівник
+          correct: false
+      explanation: Перше речення починається словами «Іменник "книга"».
+    - question: Що саме пояснює це граматичне правило про зміну слова «книга»?
+      options:
+        - text: як змінюється слово
+          correct: true
+        - text: як писати слово
+          correct: false
+        - text: як перекладати слово
+          correct: false
+        - text: як вимовляти слово
+          correct: false
+      explanation: "Останнє речення: «пояснює, як змінюється слово \"книга\"»."
+    - question: Знайдіть у тексті слово, яке виконує функцію прийменника.
+      options:
+        - text: книга
+          correct: false
+        - text: на
+          correct: true
+        - text: має
+          correct: false
+        - text: це
+          correct: false
+      explanation: «На» — це прийменник.
+    - question: Знайдіть у тексті слово, яке позначає дію (дієслово).
+      options:
+        - text: правило
+          correct: false
+        - text: жіночого
+          correct: false
+        - text: пояснює
+          correct: true
+        - text: ситуаціях
+          correct: false
+      explanation: «Пояснює» — це дієслово (що робить?).

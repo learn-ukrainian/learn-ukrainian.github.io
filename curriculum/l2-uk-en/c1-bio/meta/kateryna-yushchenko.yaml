@@ -1,133 +1,107 @@
-# C1-BIO Module 70: Катерина Ющенко
-# Status: SPEC (ready for content development)
-
 id: c1-bio-70
-title: "Катерина Ющенко: Піонерка кібернетики"
+title: 'Катерина Ющенко: Піонерка кібернетики'
 slug: kateryna-yushchenko
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Катерина Ющенко (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
-    type: primary
-    notes: Biography of the pioneering computer scientist
-  - name: Інститут кібернетики ім. В.М. Глушкова НАН України
-    url: https://icyb.kiev.ua/
-    type: reference
-    notes: Institute where Yushchenko worked
-
+- name: Катерина Ющенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
+  type: primary
+  notes: Biography of the pioneering computer scientist
+- name: Інститут кібернетики ім. В.М. Глушкова НАН України
+  url: https://icyb.kiev.ua/
+  type: reference
+  notes: Institute where Yushchenko worked
 content_outline:
-  - section: Вступ — Мати мови програмування
-    words: 400
-    points:
-      - Піонерка програмування в СРСР
-      - Творець адресної мови — першої високорівневої мови програмування
-      - Жінка-вчений у чоловічому світі
-
-  - section: Юність та війна (1919-1945)
-    words: 600
-    points:
-      - Народження в Чигирині
-      - Освіта в Узбекистані
-      - Математичні здібності
-      - Війна та евакуація
-
-  - section: Шлях до кібернетики (1945-1955)
-    words: 800
-    points:
-      - Аспірантура з математики
-      - Знайомство з комп'ютерами
-      - Робота з МСЕМ та «Київ»
-      - Входження в команду Глушкова
-
-  - section: Адресна мова (1955-1965)
-    words: 900
-    points:
-      - Створення першої високорівневої мови програмування
-      - Концепція адресної мови
-      - Вплив на розвиток програмування
-      - Визнання в науковому світі
-
-  - section: Пізній період (1965-2001)
-    words: 600
-    points:
-      - Педагогічна діяльність
-      - Наукові праці
-      - Визнання та нагороди
-      - Смерть у Києві
-
-  - section: Спадщина — Забутий геній
-    words: 700
-    points:
-      - Значення для світової інформатики
-      - Чому її не знають на Заході
-      - Сучасне вшанування
-      - Ющенко як символ жінок у науці
-
+- section: Вступ — Мати мови програмування
+  words: 400
+  points:
+  - Піонерка програмування в СРСР
+  - Творець адресної мови — першої високорівневої мови програмування
+  - Жінка-вчений у чоловічому світі
+- section: Юність та війна (1919-1945)
+  words: 600
+  points:
+  - Народження в Чигирині
+  - Освіта в Узбекистані
+  - Математичні здібності
+  - Війна та евакуація
+- section: Шлях до кібернетики (1945-1955)
+  words: 800
+  points:
+  - Аспірантура з математики
+  - Знайомство з комп'ютерами
+  - Робота з МСЕМ та «Київ»
+  - Входження в команду Глушкова
+- section: Адресна мова (1955-1965)
+  words: 900
+  points:
+  - Створення першої високорівневої мови програмування
+  - Концепція адресної мови
+  - Вплив на розвиток програмування
+  - Визнання в науковому світі
+- section: Пізній період (1965-2001)
+  words: 600
+  points:
+  - Педагогічна діяльність
+  - Наукові праці
+  - Визнання та нагороди
+  - Смерть у Києві
+- section: Спадщина — Забутий геній
+  words: 700
+  points:
+  - Значення для світової інформатики
+  - Чому її не знають на Заході
+  - Сучасне вшанування
+  - Ющенко як символ жінок у науці
 vocabulary_hints:
   required:
-    - кібернетика (cybernetics)
-    - програмування (programming)
-    - мова програмування (programming language)
-    - адресна мова (address language)
-    - комп'ютер (computer)
-    - алгоритм (algorithm)
-    - обчислювальна машина (computing machine)
-    - математик (mathematician)
-    - вчена (woman scientist)
-    - піонер (pioneer)
+  - кібернетика (cybernetics)
+  - програмування (programming)
+  - мова програмування (programming language)
+  - адресна мова (address language)
+  - комп'ютер (computer)
+  - алгоритм (algorithm)
+  - обчислювальна машина (computing machine)
+  - математик (mathematician)
+  - вчена (woman scientist)
+  - піонер (pioneer)
   recommended:
-    - високорівнева мова (high-level language)
-    - код (code)
-    - операційна система (operating system)
-    - інформатика (computer science)
-    - технічний прогрес (technological progress)
-
+  - високорівнева мова (high-level language)
+  - код (code)
+  - операційна система (operating system)
+  - інформатика (computer science)
+  - технічний прогрес (technological progress)
 activity_hints:
-  - type: reading
-    focus: Історія кібернетики в Україні
-    source: Scientific history sources
-    items: "3 passages"
-
-  - type: quiz
-    focus: Життя та наукова діяльність Ющенко
-    items: "12+"
-
-  - type: match-up
-    focus: Терміни інформатики та кібернетики
-    items: "10+"
-
-  - type: essay-response
-    focus: Чому адресна мова Ющенко важлива для історії програмування?
-    word_target: 300
-    output: Analytical essay
-
-  - type: group-sort
-    focus: Етапи розвитку кібернетики в Україні
-    items: "12+"
-
-  - type: fill-in
-    focus: Технічна термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Чому жінки-вчені часто залишаються невідомими?
-    output: Critical analysis
-
+- type: reading
+  focus: Історія кібернетики в Україні
+  source: Scientific history sources
+  items: 3 passages
+- type: quiz
+  focus: Життя та наукова діяльність Ющенко
+  items: 12+
+- type: match-up
+  focus: Терміни інформатики та кібернетики
+  items: 10+
+- type: essay-response
+  focus: Чому адресна мова Ющенко важлива для історії програмування?
+  word_target: 300
+  output: Analytical essay
+- type: group-sort
+  focus: Етапи розвитку кібернетики в Україні
+  items: 12+
+- type: fill-in
+  focus: Технічна термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-69
-
+- c1-bio-69
 connects_to:
-  - c1-bio-99
-  - c1-bio-112
-
+- c1-bio-99
+- c1-bio-112
 naturalness:
   score: 1
   status: PENDING

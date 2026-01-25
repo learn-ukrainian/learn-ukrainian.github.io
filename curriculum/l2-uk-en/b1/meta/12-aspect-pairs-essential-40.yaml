@@ -1,15 +1,10 @@
-# B1 Module 12: Видові пари - 40 найважливіших
-# Status: SPEC (ready for content development)
-
 id: b1-12
 title: 'Видові пари: 40 найважливіших'
 subtitle: Essential Aspect Pairs - The 40 most common verb pairs
 slug: 12-aspect-pairs-essential-40
 module_type: grammar
-word_target: 3200
-immersion: "100% Ukrainian"
-
-# === EXISTING FIELDS ===
+word_target: 1500
+immersion: 100% Ukrainian
 version: '1.0'
 phase: B1.1 Aspect
 pedagogy: TTT
@@ -17,121 +12,88 @@ focus: grammar
 duration: 90
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - verbs
-  - vocabulary
+- grammar
+- aspect
+- verbs
+- vocabulary
 grammar:
-  - 40 essential aspect pairs
-  - Imperfective-perfective correspondence
+- 40 essential aspect pairs
+- Imperfective-perfective correspondence
 objectives:
-  - Learner knows the 40 most essential aspect pairs
-  - Learner can recognize and use both forms correctly
-  - Learner understands common aspect formation patterns
-
-# === AGENT BUILD SPEC ===
-
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
 sources:
-  - name: Ukrainian Frequency Dictionaries
-    url: https://uk.wikipedia.org/wiki/Частотний_словник
-    type: reference
-    notes: Most frequent verbs in Ukrainian corpus
-  - name: Ukrainian Aspectual Pairs
-    url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-    type: reference
-    notes: Formation patterns for aspectual pairs
-
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
 content_outline:
-  - section: Вступ — Чому 40 пар?
-    words: 300
-    points:
-      - Найчастотніші дієслова
-      - Стратегія запам'ятовування
-      - Організація за типами
-
-  - section: Пари з префіксом (робити/зробити)
-    words: 600
-    points:
-      - 15 пар з префіксацією
-      - Найчастіші префікси (з-, по-, на-, ви-)
-      - Практика розпізнавання
-
-  - section: Пари з суфіксацією (пояснювати/пояснити)
-    words: 550
-    points:
-      - 10 пар з суфіксальною різницею
-      - Типові суфікси (-юва-/-и-)
-      - Практика вживання
-
-  - section: Суплетивні пари (брати/взяти)
-    words: 500
-    points:
-      - 10 нерегулярних пар
-      - Стратегії запам'ятовування
-      - Контекстна практика
-
-  - section: Двовидові дієслова
-    words: 400
-    points:
-      - 5 дієслів з одною формою (атакувати, використовувати)
-      - Контекст визначає вид
-      - Відмінність від аспектуальних пар
-
-  - section: Інтенсивна практика
-    words: 600
-    points:
-      - Вправи на всі 40 пар
-      - Контекстний вибір
-      - Готовність до M13
-
+- section: Тест
+  words: 100
+  points:
+  - Content for Тест
+  - Examples and explanation
+  - Practice or application
+- section: Пояснення
+  words: 750
+  points:
+  - Content for Пояснення
+  - Examples and explanation
+  - Practice or application
+- section: Практика
+  words: 300
+  points:
+  - Content for Практика
+  - Examples and explanation
+  - Practice or application
+- section: Діалоги
+  words: 450
+  points:
+  - Content for Діалоги
+  - Examples and explanation
+  - Practice or application
 vocabulary_hints:
   required:
-    - робити/зробити (to do/make)
-    - писати/написати (to write)
-    - читати/прочитати (to read)
-    - говорити/сказати (to speak/say)
-    - брати/взяти (to take)
-    - давати/дати (to give)
-    - їсти/з'їсти (to eat)
-    - пити/випити (to drink)
-    - класти/покласти (to put)
-    - ставити/поставити (to put standing)
+  - робити/зробити (to do/make)
+  - писати/написати (to write)
+  - читати/прочитати (to read)
+  - говорити/сказати (to speak/say)
+  - брати/взяти (to take)
+  - давати/дати (to give)
+  - їсти/з'їсти (to eat)
+  - пити/випити (to drink)
+  - класти/покласти (to put)
+  - ставити/поставити (to put standing)
   recommended:
-    - відкривати/відкрити (to open)
-    - закривати/закрити (to close)
-    - починати/почати (to begin)
-    - закінчувати/закінчити (to finish)
-    - вчити/вивчити (to study/learn)
-
+  - відкривати/відкрити (to open)
+  - закривати/закрити (to close)
+  - починати/почати (to begin)
+  - закінчувати/закінчити (to finish)
+  - вчити/вивчити (to study/learn)
 activity_hints:
-  - type: match-up
-    focus: Imperfective → Perfective pairs
-    items: "40+"
-
-  - type: fill-in
-    focus: Choose correct form in context
-    items: "20+"
-
-  - type: group-sort
-    focus: By formation type (prefix, suffix, suppletive)
-    items: "40+"
-
-  - type: quiz
-    focus: Identify pair type and use correctly
-    items: "15+"
-
-  - type: flashcards
-    focus: Memorization drill
-    items: "40+"
-
+- type: match-up
+  focus: Imperfective → Perfective pairs
+  items: 40+
+- type: fill-in
+  focus: Choose correct form in context
+  items: 20+
+- type: group-sort
+  focus: By formation type (prefix, suffix, suppletive)
+  items: 40+
+- type: quiz
+  focus: Identify pair type and use correctly
+  items: 15+
 prerequisites:
-  - b1-11 (Aspect in imperatives)
-  - All aspect theory modules M06-11
-
+- b1-11 (Aspect in imperatives)
+- All aspect theory modules M06-11
 connects_to:
-  - b1-13 (Work week - aspect in action)
-  - b1-14 (Aspect integration practice)
-
+- b1-13 (Work week - aspect in action)
+- b1-14 (Aspect integration practice)
 naturalness:
   score: 9
   status: PASS

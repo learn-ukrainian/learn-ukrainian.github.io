@@ -86,7 +86,7 @@ activity_hints:
 - type: logic-analysis
   focus: Stalin's economic rationality behind genocide
   output: Logic reconstruction
-- type: long-term-impact
+- type: critical-analysis
   focus: Economic consequences of Holodomor
   output: Impact assessment
 - type: essay-response

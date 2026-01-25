@@ -101,9 +101,6 @@ activity_hints:
 - type: fill-in
   focus: Key medical terms and dates
   items: 10+
-- type: discussion
-  focus: Is Amosov's health philosophy relevant today?
-  output: Contemporary health analysis
 prerequisites:
 - Basic medical vocabulary
 - Understanding of Soviet-era medicine

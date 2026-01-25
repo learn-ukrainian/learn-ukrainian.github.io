@@ -1,141 +1,113 @@
-# C1-BIO Module 89: Тарас Прохасько: Станіславівський феномен
-# Status: SPEC (ready for content development)
-
 id: c1-bio-89
-title: "Тарас Прохасько: Станіславівський феномен"
+title: 'Тарас Прохасько: Станіславівський феномен'
 slug: taras-prokhasko
 module_type: biography
 word_target: 4000
-immersion: "100% Ukrainian"
+immersion: 100% Ukrainian
 version: '2.0'
-phase: 'C1-BIO'
+phase: C1-BIO
 focus: biography
-
-# === AGENT BUILD SPEC ===
-
 sources:
-  - name: Тарас Прохасько (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
-    type: primary
-    notes: Основна біографічна інформація
-  - name: Видавництво Кальварія
-    url: https://www.calvaria.com.ua/
-    type: reference
-    notes: Бібліографія та видання
-  - name: Літературна критика
-    url: https://litakcent.com/
-    type: reference
-    notes: Аналіз творчості
-
+- name: Тарас Прохасько (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Кальварія
+  url: https://www.calvaria.com.ua/
+  type: reference
+  notes: Бібліографія та видання
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
 content_outline:
-  - section: Вступ — Письменник як ботанік і філософ
-    words: 400
-    points:
-      - Унікальний стиль Прохаська в українській літературі
-      - Станіславівський феномен як літературне явище
-      - Від ботаніка до культового письменника
-
-  - section: Івано-Франківське дитинство
-    words: 600
-    points:
-      - Народження в 1968 році
-      - Вплив Карпат на формування світогляду
-      - Освіта та інтерес до природничих наук
-
-  - section: Ботаніка як філософія життя
-    words: 700
-    points:
-      - Наукова діяльність
-      - Як природознавство впливає на творчість
-      - Паралелі між ботанікою та літературою
-
-  - section: НепрОсті та альтернативна історія
-    words: 800
-    points:
-      - Аналіз головного роману
-      - Теми памяті, ідентичності, місця
-      - Карпати як метафора та простір
-
-  - section: Станіславівський феномен
-    words: 700
-    points:
-      - Літературне угруповання у Франківську
-      - Співавтори та однодумці
-      - Вплив на сучасну українську прозу
-
-  - section: Медитативна проза та філософія буття
-    words: 600
-    points:
-      - Особливості стилю Прохаська
-      - Теми спостереження та споглядання
-      - Есеїстика та малі форми
-
-  - section: Дискусія — Література як спосіб бачити світ
-    words: 200
-    points:
-      - Як науковий погляд збагачує художню прозу
-      - Регіональна ідентичність в українській літературі
-
+- section: Вступ — Письменник як ботанік і філософ
+  words: 400
+  points:
+  - Унікальний стиль Прохаська в українській літературі
+  - Станіславівський феномен як літературне явище
+  - Від ботаніка до культового письменника
+- section: Івано-Франківське дитинство
+  words: 600
+  points:
+  - Народження в 1968 році
+  - Вплив Карпат на формування світогляду
+  - Освіта та інтерес до природничих наук
+- section: Ботаніка як філософія життя
+  words: 700
+  points:
+  - Наукова діяльність
+  - Як природознавство впливає на творчість
+  - Паралелі між ботанікою та літературою
+- section: НепрОсті та альтернативна історія
+  words: 800
+  points:
+  - Аналіз головного роману
+  - Теми памяті, ідентичності, місця
+  - Карпати як метафора та простір
+- section: Станіславівський феномен
+  words: 700
+  points:
+  - Літературне угруповання у Франківську
+  - Співавтори та однодумці
+  - Вплив на сучасну українську прозу
+- section: Медитативна проза та філософія буття
+  words: 600
+  points:
+  - Особливості стилю Прохаська
+  - Теми спостереження та споглядання
+  - Есеїстика та малі форми
+- section: Дискусія — Література як спосіб бачити світ
+  words: 200
+  points:
+  - Як науковий погляд збагачує художню прозу
+  - Регіональна ідентичність в українській літературі
 vocabulary_hints:
   required:
-    - ботаніка (botany)
-    - феномен (phenomenon)
-    - споглядання (contemplation)
-    - альтернативна історія (alternative history)
-    - медитативний (meditative)
-    - ідентичність (identity)
-    - краєзнавство (local studies)
-    - есеїстика (essay writing)
-    - простір (space)
-    - памятка (memory/memorial)
+  - ботаніка (botany)
+  - феномен (phenomenon)
+  - споглядання (contemplation)
+  - альтернативна історія (alternative history)
+  - медитативний (meditative)
+  - ідентичність (identity)
+  - краєзнавство (local studies)
+  - есеїстика (essay writing)
+  - простір (space)
+  - памятка (memory/memorial)
   recommended:
-    - гербарій (herbarium)
-    - філософія буття (philosophy of being)
-    - топографія (topography)
-    - ностальгія (nostalgia)
-    - феноменологія (phenomenology)
-
+  - гербарій (herbarium)
+  - філософія буття (philosophy of being)
+  - топографія (topography)
+  - ностальгія (nostalgia)
+  - феноменологія (phenomenology)
 activity_hints:
-  - type: reading
-    focus: Фрагменти роману НепрОсті
-    source: Художній текст
-    items: "3 passages"
-
-  - type: quiz
-    focus: Факти про Станіславівський феномен
-    items: "12+"
-
-  - type: match-up
-    focus: Літературні терміни та визначення
-    items: "10+"
-
-  - type: essay-response
-    focus: Як місце формує письменника?
-    word_target: 300
-    output: Аналітичний есей
-
-  - type: group-sort
-    focus: Теми у творчості Прохаська
-    items: "12+"
-
-  - type: fill-in
-    focus: Літературознавча термінологія
-    items: "10+"
-
-  - type: discussion
-    focus: Чи може науковець бути великим письменником?
-    output: Порівняльний аналіз
-
+- type: reading
+  focus: Фрагменти роману НепрОсті
+  source: Художній текст
+  items: 3 passages
+- type: quiz
+  focus: Факти про Станіславівський феномен
+  items: 12+
+- type: match-up
+  focus: Літературні терміни та визначення
+  items: 10+
+- type: essay-response
+  focus: Як місце формує письменника?
+  word_target: 300
+  output: Аналітичний есей
+- type: group-sort
+  focus: Теми у творчості Прохаська
+  items: 12+
+- type: fill-in
+  focus: Літературознавча термінологія
+  items: 10+
 prerequisites:
-  - c1-bio-82-yuriy-vynnychuk
-
+- c1-bio-82-yuriy-vynnychuk
 connects_to:
-  - c1-bio-86-oksana-zabuzhko
-  - c1-bio-90-serhiy-zhadan
-  - c1-bio-84-halyna-pahutyak
-
+- c1-bio-86-oksana-zabuzhko
+- c1-bio-90-serhiy-zhadan
+- c1-bio-84-halyna-pahutyak
 vital_status: living
-
 naturalness:
   score: 1
   status: PENDING

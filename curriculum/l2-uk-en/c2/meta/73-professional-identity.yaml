@@ -1,154 +1,126 @@
-# C2 Module 73: Professional Identity — Personal Brand in Ukrainian
-# Status: SPEC (ready for content development)
-
 id: c2-73
 title: Професійна ідентичність — Особистий бренд українською
 slug: professional-identity
 version: '2.0'
-phase: 'C2.3 Translation & Creative Writing'
+phase: C2.3 Translation & Creative Writing
 focus: domain
 module_type: professional
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: Українські бізнес-медіа
-    url: https://mind.ua/
-    type: reference
-    notes: Кейси особистого брендингу
-  - name: Forbes Україна
-    url: https://forbes.ua/
-    type: reference
-    notes: Профілі успішних професіоналів
-  - name: Лідери думок у професійних спільнотах
-    url: https://dou.ua/
-    type: reference
-    notes: IT-спільнота як приклад
-
+- name: Українські бізнес-медіа
+  url: https://mind.ua/
+  type: reference
+  notes: Кейси особистого брендингу
+- name: Forbes Україна
+  url: https://forbes.ua/
+  type: reference
+  notes: Профілі успішних професіоналів
+- name: Лідери думок у професійних спільнотах
+  url: https://dou.ua/
+  type: reference
+  notes: IT-спільнота як приклад
 content_outline:
-  - section: Вступ — Професійна ідентичність як інструмент
-    words: 500
-    points:
-      - Що таке професійна ідентичність
-      - Особистий бренд vs корпоративний
-      - Автентичність та цінності
-      - Українська специфіка
-
-  - section: Формулювання професійного позиціонування
-    words: 700
-    points:
-      - Унікальна ціннісна пропозиція
-      - Цільова авдиторія
-      - Ключові меседжі
-      - Elevator pitch українською
-
-  - section: Голос та тон комунікації
-    words: 600
-    points:
-      - Визначення особистого стилю
-      - Консистентність голосу
-      - Адаптація тону для контексту
-      - Автентичність vs професіоналізм
-
-  - section: Публічна присутність
-    words: 600
-    points:
-      - Експертні публікації
-      - Виступи та подкасти
-      - Соціальні мережі
-      - Networking українською
-
-  - section: Репутаційний менеджмент
-    words: 600
-    points:
-      - Моніторинг репутації
-      - Робота з негативом
-      - Кризові комунікації
-      - Відновлення репутації
-
-  - section: Розвиток та еволюція бренду
-    words: 500
-    points:
-      - Стратегія розвитку
-      - Pivoting професійної ідентичності
-      - Нові ринки та авдиторії
-      - Довгострокове планування
-
-  - section: Практикум — Побудова особистого бренду
-    words: 500
-    points:
-      - Аудит поточної присутності
-      - Розробка позиціонування
-      - Створення контент-плану
-
+- section: Вступ — Професійна ідентичність як інструмент
+  words: 500
+  points:
+  - Що таке професійна ідентичність
+  - Особистий бренд vs корпоративний
+  - Автентичність та цінності
+  - Українська специфіка
+- section: Формулювання професійного позиціонування
+  words: 700
+  points:
+  - Унікальна ціннісна пропозиція
+  - Цільова авдиторія
+  - Ключові меседжі
+  - Elevator pitch українською
+- section: Голос та тон комунікації
+  words: 600
+  points:
+  - Визначення особистого стилю
+  - Консистентність голосу
+  - Адаптація тону для контексту
+  - Автентичність vs професіоналізм
+- section: Публічна присутність
+  words: 600
+  points:
+  - Експертні публікації
+  - Виступи та подкасти
+  - Соціальні мережі
+  - Networking українською
+- section: Репутаційний менеджмент
+  words: 600
+  points:
+  - Моніторинг репутації
+  - Робота з негативом
+  - Кризові комунікації
+  - Відновлення репутації
+- section: Розвиток та еволюція бренду
+  words: 500
+  points:
+  - Стратегія розвитку
+  - Pivoting професійної ідентичності
+  - Нові ринки та авдиторії
+  - Довгострокове планування
+- section: Практикум — Побудова особистого бренду
+  words: 500
+  points:
+  - Аудит поточної присутності
+  - Розробка позиціонування
+  - Створення контент-плану
 vocabulary_hints:
   required:
-    - професійна ідентичність (professional identity)
-    - особистий бренд (personal brand)
-    - позиціонування (positioning)
-    - ціннісна пропозиція (value proposition)
-    - цільова авдиторія (target audience)
-    - голос бренду (brand voice)
-    - меседж (message)
-    - репутація (reputation)
-    - нетворкінг (networking)
-    - автентичність (authenticity)
+  - професійна ідентичність (professional identity)
+  - особистий бренд (personal brand)
+  - позиціонування (positioning)
+  - ціннісна пропозиція (value proposition)
+  - цільова авдиторія (target audience)
+  - голос бренду (brand voice)
+  - меседж (message)
+  - репутація (reputation)
+  - нетворкінг (networking)
+  - автентичність (authenticity)
   recommended:
-    - elevator pitch (elevator pitch)
-    - контент-план (content plan)
-    - експертність (expertise)
-    - лідер думок (thought leader)
-    - pivoting (pivoting)
-
+  - elevator pitch (elevator pitch)
+  - контент-план (content plan)
+  - експертність (expertise)
+  - лідер думок (thought leader)
+  - pivoting (pivoting)
 activity_hints:
-  - type: reading
-    focus: Аналіз профілю успішного українського професіонала
-    source: Forbes.ua або Mind.ua
-    items: "1 повний профіль"
-
-  - type: essay-response
-    focus: Написання власного elevator pitch
-    word_target: 150
-    output: Лаконічна самопрезентація на 30-60 секунд
-
-  - type: essay-response
-    focus: Розробка ціннісної пропозиції
-    word_target: 300
-    output: Структуроване позиціонування
-
-  - type: quiz
-    focus: Вибір доречного тону для різних контекстів
-    items: "12+"
-
-  - type: critical-analysis
-    focus: Аналіз консистентності бренду публічної особи
-    output: Виявлення сильних сторін та розбіжностей
-
-  - type: essay-response
-    focus: Написання експертної публікації для LinkedIn
-    word_target: 500
-    output: Публікація, що демонструє експертність
-
-  - type: dialogue
-    focus: Симуляція networking-розмови
-    output: Природний діалог на професійну тему
-
-  - type: fill-in
-    focus: Заповнення шаблону контент-плану
-    items: "10+"
-
+- type: reading
+  focus: Аналіз профілю успішного українського професіонала
+  source: Forbes.ua або Mind.ua
+  items: 1 повний профіль
+- type: essay-response
+  focus: Написання власного elevator pitch
+  word_target: 150
+  output: Лаконічна самопрезентація на 30-60 секунд
+- type: essay-response
+  focus: Розробка ціннісної пропозиції
+  word_target: 300
+  output: Структуроване позиціонування
+- type: quiz
+  focus: Вибір доречного тону для різних контекстів
+  items: 12+
+- type: critical-analysis
+  focus: Аналіз консистентності бренду публічної особи
+  output: Виявлення сильних сторін та розбіжностей
+- type: essay-response
+  focus: Написання експертної публікації для LinkedIn
+  word_target: 500
+  output: Публікація, що демонструє експертність
+- type: fill-in
+  focus: Заповнення шаблону контент-плану
+  items: 10+
 prerequisites:
-  - c2-72 (Professional Portfolio II)
-  - c2-71 (Professional Portfolio I)
-  - Individual voice development (C2.1 M14-15)
-
+- c2-72 (Professional Portfolio II)
+- c2-71 (Professional Portfolio I)
+- Individual voice development (C2.1 M14-15)
 connects_to:
-  - c2-74 (C2.3 Review)
-  - c2-75 (C2.3 Checkpoint)
-  - 'c2-89 (Capstone: Topic Selection)'
-
+- c2-74 (C2.3 Review)
+- c2-75 (C2.3 Checkpoint)
+- 'c2-89 (Capstone: Topic Selection)'
 naturalness:
   score: 1
   status: PENDING

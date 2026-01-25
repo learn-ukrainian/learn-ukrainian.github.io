@@ -46,7 +46,7 @@ content_outline:
       - "Cultural intersection: East and West"
       - "The Golden Age of Hetmanate culture"
   - section: "Кобзарі та лірники: голос народу"
-    words: 600
+    words: 500
     points:
       - "The guild system (cekhy) and hierarchy"
       - "Lebiiska language: the secret code"
@@ -58,7 +58,7 @@ content_outline:
       - "Improvisation and emotional depth"
       - "The role of dumas in shaping language"
   - section: "Козацьке бароко: Тріумф національного стилю"
-    words: 600
+    words: 500
     points:
       - "Differences from Western Baroque"
       - "Symbolism and decorative richness"
@@ -84,7 +84,7 @@ content_outline:
       - "Debunking the 'peasant culture' myth"
       - "Imperial appropriation of Ukrainian achievements"
   - section: "Есе"
-    words: 300
+    words: 500
     points:
       - "Reflecting on the legacy of kobzarstvo"
 activity_hints:

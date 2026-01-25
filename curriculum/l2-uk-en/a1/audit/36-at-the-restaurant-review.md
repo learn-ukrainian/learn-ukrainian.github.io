@@ -1,17 +1,57 @@
-# Audit Report: 36-at-the-restaurant.md
-**Phase:** A1.4 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
+# Audit Report: M36 — 36-at-the-restaurant.md
+**Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 08:54:20
+
+## Configuration
+**Type:** A1
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Vocabulary Match | 10 | 8 | ✅ |
+| 2 | fill-in | Complete the Dialogue | 12 | 8 | ✅ |
+| 3 | group-sort | Taste Categories | 12 | 12 | ✅ |
+| 4 | unjumble | Order the Sentences | 12 | 6 | ✅ |
+| 5 | quiz | Menu Comprehension | 12 | 8 | ✅ |
+| 6 | true-false | Restaurant Etiquette | 12 | 8 | ✅ |
+| 7 | match-up | Dish Description | 10 | 8 | ✅ |
+| 8 | quiz | Special Requests Quiz | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): десерт, страва, солоний, порекомендувати, спробувати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 808/750
+- **Words:** ✅ 808/750 (raw: 1037)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,12 +59,6 @@
 - **Immersion:** 🇺🇦 46.7% (target 35-55% (M36))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

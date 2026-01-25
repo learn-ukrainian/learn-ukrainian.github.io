@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:20:57
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -33,7 +34,7 @@
 | 12 | quiz | Географія сусідів Русі | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-10) ❌
+- Total activities: 12 (target: 3-9) ❌
 - Unique types: 8 (minimum: 2) ✅
 - Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
 - Required types used: 5/5 (essay-response, fill-in, match-up, quiz, reading) ✅
@@ -51,7 +52,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-10)
+- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

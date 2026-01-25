@@ -105,9 +105,6 @@ activity_hints:
 - type: fill-in
   focus: Key dates and events in his life
   items: 10+
-- type: discussion
-  focus: Why is Sheptytsky a symbol of Ukrainian moral leadership?
-  output: Analysis of spiritual resistance
 prerequisites:
 - c1-bio-08 (Iov Boretskyi - earlier church leader)
 - Understanding of UGCC history

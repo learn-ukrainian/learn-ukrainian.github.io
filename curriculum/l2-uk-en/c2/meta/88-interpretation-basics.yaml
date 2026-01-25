@@ -1,138 +1,109 @@
-# C2 Module 88: Interpretation Basics
-# Status: SPEC (ready for content development)
-
 id: c2-88
 title: Основи усного перекладу
 slug: interpretation-basics
 version: '2.0'
-phase: 'C2.4 Academic Culmination'
+phase: C2.4 Academic Culmination
 focus: practice
 module_type: practice
 word_target: 4000
-immersion: "100% Ukrainian"
-
-# === AGENT BUILD SPEC ===
-
+immersion: 100% Ukrainian
 sources:
-  - name: AIIC — Training for Conference Interpreters
-    url: https://aiic.org/
-    type: reference
-    notes: International standards for interpreter training
-  - name: Чернов — Теорія і практика синхронного перекладу
-    url: https://uk.wikipedia.org/wiki/Синхронний_переклад
-    type: primary
-    notes: Classic Soviet/Ukrainian interpretation methodology
-  - name: Gile — Basic Concepts and Models for Interpreter Training
-    url: https://benjamins.com/
-    type: secondary
-    notes: Cognitive load model for interpretation
-
+- name: AIIC — Training for Conference Interpreters
+  url: https://aiic.org/
+  type: reference
+  notes: International standards for interpreter training
+- name: Чернов — Теорія і практика синхронного перекладу
+  url: https://uk.wikipedia.org/wiki/Синхронний_переклад
+  type: primary
+  notes: Classic Soviet/Ukrainian interpretation methodology
+- name: Gile — Basic Concepts and Models for Interpreter Training
+  url: https://benjamins.com/
+  type: secondary
+  notes: Cognitive load model for interpretation
 content_outline:
-  - section: Вступ — Усний переклад як професія
-    words: 500
-    points:
-      - Різниця між письмовим і усним перекладом
-      - Типи усного перекладу (послідовний, синхронний, шептання)
-      - Ринок усного перекладу в Україні
-
-  - section: Послідовний переклад
-    words: 700
-    points:
-      - Техніка ведення нотаток (нотація)
-      - Символи та скорочення
-      - Тренування пам'яті
-      - Відтворення змісту українською
-
-  - section: Синхронний переклад — Знайомство
-    words: 700
-    points:
-      - Когнітивні вимоги синхронного перекладу
-      - Модель зусиль Gile
-      - Техніка відставання (décalage)
-      - Обладнання та робоче місце
-
-  - section: Розвиток ключових навичок
-    words: 600
-    points:
-      - Активне слухання
-      - Shadowing (тіньове повторення)
-      - Parafrasing (перефразування)
-      - Розширення робочої пам'яті
-
-  - section: Етика та професійні стандарти
-    words: 500
-    points:
-      - Конфіденційність
-      - Нейтральність перекладача
-      - Робота в стресових ситуаціях
-      - Професійні асоціації
-
-  - section: Практична майстерня
-    words: 700
-    points:
-      - Вправи на розвиток пам'яті
-      - Практика нотації
-      - Послідовний переклад короткого виступу
-      - Shadowing та парафразування
-
+- section: Вступ — Усний переклад як професія
+  words: 500
+  points:
+  - Різниця між письмовим і усним перекладом
+  - Типи усного перекладу (послідовний, синхронний, шептання)
+  - Ринок усного перекладу в Україні
+- section: Послідовний переклад
+  words: 700
+  points:
+  - Техніка ведення нотаток (нотація)
+  - Символи та скорочення
+  - Тренування пам'яті
+  - Відтворення змісту українською
+- section: Синхронний переклад — Знайомство
+  words: 700
+  points:
+  - Когнітивні вимоги синхронного перекладу
+  - Модель зусиль Gile
+  - Техніка відставання (décalage)
+  - Обладнання та робоче місце
+- section: Розвиток ключових навичок
+  words: 600
+  points:
+  - Активне слухання
+  - Shadowing (тіньове повторення)
+  - Parafrasing (перефразування)
+  - Розширення робочої пам'яті
+- section: Етика та професійні стандарти
+  words: 500
+  points:
+  - Конфіденційність
+  - Нейтральність перекладача
+  - Робота в стресових ситуаціях
+  - Професійні асоціації
+- section: Практична майстерня
+  words: 700
+  points:
+  - Вправи на розвиток пам'яті
+  - Практика нотації
+  - Послідовний переклад короткого виступу
+  - Shadowing та парафразування
 vocabulary_hints:
   required:
-    - усний переклад (interpretation)
-    - послідовний переклад (consecutive interpretation)
-    - синхронний переклад (simultaneous interpretation)
-    - нотація (note-taking)
-    - відставання (décalage/time lag)
-    - робоча пам'ять (working memory)
-    - когнітивне навантаження (cognitive load)
-    - shadowing (shadow interpreting)
-    - парафразування (paraphrasing)
-    - конфіденційність (confidentiality)
+  - усний переклад (interpretation)
+  - послідовний переклад (consecutive interpretation)
+  - синхронний переклад (simultaneous interpretation)
+  - нотація (note-taking)
+  - відставання (décalage/time lag)
+  - робоча пам'ять (working memory)
+  - когнітивне навантаження (cognitive load)
+  - shadowing (shadow interpreting)
+  - парафразування (paraphrasing)
+  - конфіденційність (confidentiality)
   recommended:
-    - кабіна перекладача (interpreter booth)
-    - переклад шепотінням (whispered interpretation)
-    - релейний переклад (relay interpretation)
-    - ретур (retour/B language)
-    - модель зусиль (effort model)
-
+  - кабіна перекладача (interpreter booth)
+  - переклад шепотінням (whispered interpretation)
+  - релейний переклад (relay interpretation)
+  - ретур (retour/B language)
+  - модель зусиль (effort model)
 activity_hints:
-  - type: quiz
-    focus: Типи усного перекладу та їхні характеристики
-    items: "15+"
-
-  - type: discussion
-    focus: Практика shadowing (3-хвилинний аудіо)
-    output: Запис тіньового повторення
-
-  - type: essay-response
-    focus: Створення системи нотації для послідовного перекладу
-    word_target: 300
-    output: Перелік символів із поясненнями
-
-  - type: critical-analysis
-    focus: Аналіз відеозапису професійного перекладача
-    output: Ідентифікація технік і стратегій
-
-  - type: discussion
-    focus: Послідовний переклад 2-хвилинного виступу
-    output: Запис перекладу з нотаток
-
-  - type: quiz
-    focus: Етичні стандарти та професійні вимоги
-    items: "10+"
-
-  - type: match-up
-    focus: Символи нотації та їхні значення
-    items: "15+"
-
+- type: quiz
+  focus: Типи усного перекладу та їхні характеристики
+  items: 15+
+- type: essay-response
+  focus: Створення системи нотації для послідовного перекладу
+  word_target: 300
+  output: Перелік символів із поясненнями
+- type: critical-analysis
+  focus: Аналіз відеозапису професійного перекладача
+  output: Ідентифікація технік і стратегій
+- type: quiz
+  focus: Етичні стандарти та професійні вимоги
+  items: 10+
+- type: match-up
+  focus: Символи нотації та їхні значення
+  items: 15+
 prerequisites:
-  - M85-87 (Translation Theory and Practice)
-  - Native-like fluency in Ukrainian
-  - Excellent English comprehension
-
+- M85-87 (Translation Theory and Practice)
+- Native-like fluency in Ukrainian
+- Excellent English comprehension
 connects_to:
-  - c2-89 (Capstone Topic Selection)
-  - c2-94 (Capstone Defense — oral skills)
-
+- c2-89 (Capstone Topic Selection)
+- c2-94 (Capstone Defense — oral skills)
 naturalness:
   score: 1
   status: PENDING

@@ -192,92 +192,20 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 [500-800 word text providing contrasting perspective or complementary analysis]
 ```
 
-#### Section 2: Comparative Analysis — 800-1000 words
+#### Section 2: Comparative Analysis (YAML-ONLY)
 
-- Guide learners through systematic comparison
-- Analyze style, register, rhetorical devices
-- Discuss cultural/historical context
-- Encourage critical thinking
+- Guide learners through systematic comparison via analytical activities.
+- Analyze style, register, rhetorical devices in Activity YAML `model_answer`.
+- **CRITICAL: DO NOT include an `## Аналіз` or `## Порівняльний аналіз` header in the markdown file.** These sections are defined exclusively in `activities/{slug}.yaml`.
 
-```markdown
-## Порівняльний аналіз
+#### Section 3: Academic Writing/Production (YAML-ONLY)
 
-### Стилістичні засоби
-
-**Текст 1:**
-- [Analysis of stylistic devices: metaphor, irony, hyperbole, etc.]
-- Приклад: [Quote + analysis]
-
-**Текст 2:**
-- [Analysis of stylistic devices in second text]
-- Приклад: [Quote + analysis]
-
-### Регістр і тон
-
-| Аспект | Текст 1 | Текст 2 |
-|--------|---------|---------|
-| Регістр | [Identify register] | [Identify register] |
-| Тон | [Analyze tone] | [Analyze tone] |
-| Лексика | [Vocabulary characteristics] | [Vocabulary characteristics] |
-
-### Культурний контекст
-
-[Discuss how cultural/historical context shapes each text]
-
-### Критичне мислення
-
-[Questions for deeper reflection]
-- Яка позиція автора?
-- Як стиль підтримує аргумент?
-- Які припущення лежать в основі тексту?
-```
-
-#### Section 3: Academic Writing/Production — 400-600 words
-
-- Writing task requiring C1-level production
-- Model Answer provided
-- Rubric for self-assessment
-
-**CRITICAL:** Essay activities are defined in `activities/{slug}.yaml` as `type: essay-response`.
-
-**DO NOT include essay sections with model answers in markdown.** This causes:
-- Content redundancy (essay prompt + model answer duplicated)
-- Word count inflation (~700 words added)
-- QA confusion
-
-**Example essay-response activity in YAML:**
-
-```yaml
-- type: essay-response
-  id: c1-XX-essay-01
-  title: 'Критичне есе: Порівняльний аналіз'
-  prompt: |
-    Напишіть критичне есе, порівнюючи два тексти.
-
-    Структура:
-    1. Вступ (теза)
-    2. Аналіз тексту 1 (стиль, регістр, прийоми)
-    3. Аналіз тексту 2
-    4. Порівняння
-    5. Висновок
-  rubric:
-    - criterion: Аналіз
-      weight: 25
-      description: Глибина інтерпретації, стилістичні прийоми
-    - criterion: Порівняння
-      weight: 25
-      description: Систематичне зіставлення
-    - criterion: Аргументація
-      weight: 25
-      description: Теза підтримана цитатами й аналізом
-    - criterion: Регістр та граматика
-      weight: 25
-      description: Науковий регістр, складні конструкції
-```
+- Writing tasks requiring C1-level production (Essays, Abstracts).
+- **CRITICAL: DO NOT include essay sections with model answers in markdown.** This causes content redundancy and QA confusion. All production tasks go in `activities/{slug}.yaml`.
 
 ---
 
-### 4. Vocabulary Section (Словник)
+### 4. Vocabulary Section (Словник) (YAML-ONLY)
 
 **CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 

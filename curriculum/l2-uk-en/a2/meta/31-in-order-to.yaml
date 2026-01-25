@@ -1,8 +1,13 @@
-module: a2-31
+id: a2-31
 title: In Order To
 subtitle: Expressing Purpose with Щоб
-version: '1.0'
+slug: 31-in-order-to
+module_type: grammar
+word_target: 1000
+immersion: 40-50% Ukrainian
+version: '2.0'
 phase: A2.2
+focus: grammar
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -22,9 +27,36 @@ objectives:
 - Learner can express purpose using щоб + past tense (different subjects)
 - Learner can distinguish between щоб and тому що
 - Learner can use для того щоб for emphasis
-vocabulary_count: 25
-slug: 31-in-order-to
-focus: grammar
-naturalness:
-  score: 9
-  status: PASS
+sources:
+- name: Ukrainian State Standard 2024 - Purpose Clauses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for expressing intentionality and purpose at A2
+- name: Syntax of Ukrainian Language - Purpose Clauses
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_мети
+  type: reference
+  notes: Rules for mood and tense in purpose clauses
+content_outline:
+- section: Introduction / Вступ
+  words: 200
+  points:
+  - The logic of intentionality
+  - Why 'Purpose' requires a specific grammar bridge
+- section: Presentation / Презентація
+  words: 600
+  points:
+  - 'Same Subject Logic: Щоб + Infinitive'
+  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist)'
+  - 'Formal Emphasis: Для того щоб'
+  - 'Gentle Purpose: Аби'
+  - 'Purpose with Nouns: Для + Genitive'
+  - 'Wishes as Commands: Щоб ти був здоровий!'
+- section: Practice / Практика
+  words: 150
+  points:
+  - Subject-shifting drills
+  - Planning an event with diverse goals
+- section: Dialogues / Діалоги
+  words: 50
+  points:
+  - Discussing career goals, travel plans, or helping a colleague

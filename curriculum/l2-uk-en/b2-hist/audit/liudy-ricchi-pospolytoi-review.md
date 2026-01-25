@@ -2,11 +2,12 @@
 **Level:** B2 | **Module:** M39 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 09:21:13
 
 ## Configuration
 **Type:** B2-history
 **Word Target:** 4000 words
-**Activities:** 3-10 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥2 types required
 **Priority Types:** comparative-study, critical-analysis, essay-response, reading
@@ -26,7 +27,7 @@
 | 5 | quiz | Перевірка розуміння тексту | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 3-10) ✅
+- Total activities: 5 (target: 3-9) ✅
 - Unique types: 5 (minimum: 2) ✅
 - Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
