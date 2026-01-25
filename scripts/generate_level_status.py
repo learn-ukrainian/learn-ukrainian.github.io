@@ -63,7 +63,7 @@ def audit_module(md_file: Path) -> dict:
         status = "✅ PASS" if "✅ AUDIT PASSED" in output else "❌ FAIL"
 
         # Word counts
-        word_match = re.search(r'Words\s+[✅❌⚠️]\s+(\d+)/(\d+)', output)
+        word_match = re.search(r'Words\s+\S+\s+(\d+)/(\d+)', output)
         if word_match:
             actual_words = int(word_match.group(1))
             target_words = int(word_match.group(2))
