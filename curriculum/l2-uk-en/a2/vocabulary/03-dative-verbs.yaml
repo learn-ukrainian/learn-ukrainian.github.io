@@ -17,6 +17,10 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: бракувати
+  ipa: /brakuʋˈatɪ/
+  translation: to lack, to be wanting
+  pos: verb
 - lemma: вечірка
   ipa: /ʋɛt͡ʃˈirka/
   translation: party
@@ -60,6 +64,14 @@ items:
   ipa: /ʋidt͡ʃuʋˈatɪ/
   translation: to feel, to sense
   pos: verb
+- lemma: вірити
+  ipa: /ʋˈiritɪ/
+  translation: to believe
+  pos: verb
+- lemma: вистачати
+  ipa: /ʋɪstat͡ʃˈatɪ/
+  translation: to be enough
+  pos: verb
 - lemma: героїня
   ipa: /ɦɛrɔˈjinja/
   translation: heroine
@@ -101,14 +113,27 @@ items:
   translation: rain
   pos: noun
   gender: m
-- lemma: дізнатися
-  ipa: /diznˈatɪsja/
-  translation: to find out, to learn
+- lemma: давальний
+  ipa: /daʋˈalʲnɪj/
+  translation: dative (case)
+  pos: adj
+- lemma: давати
+  ipa: /daʋˈatɪ/
+  translation: to give
+  pos: verb
+- lemma: довіряти
+  ipa: /dɔʋʲirˈʲatɪ/
+  translation: to trust
+  pos: verb
+- lemma: дякувати
+  ipa: /dʲˈakʊʋatɪ/
+  translation: to thank
   pos: verb
 - lemma: діти
   ipa: /dˈitɪ/
   translation: children
-  pos: verb
+  pos: noun
+  gender: m-p
 - lemma: еквівалент
   ipa: /ɛkʋiʋalˈɛnt/
   translation: equivalent
@@ -149,10 +174,22 @@ items:
   translation: structure, construction
   pos: noun
   gender: f
-- lemma: користуватися
-  ipa: /kɔrˈɪstuʋatɪsja/
-  translation: to use, to enjoy
+- lemma: знахідний
+  ipa: /znaxˈidnɪj/
+  translation: accusative (case)
+  pos: adj
+- lemma: заважати
+  ipa: /zaʋˈaʒatɪ/
+  translation: to bother, to disturb
   pos: verb
+- lemma: заздрити
+  ipa: /zˈazdrɪtɪ/
+  translation: to envy
+  pos: verb
+- lemma: займенник
+  ipa: /zajmˈɛnnɪk/
+  translation: pronoun
+  pos: noun
 - lemma: курити
   ipa: /kurˈɪtɪ/
   translation: to smoke
@@ -228,6 +265,10 @@ items:
   translation: subject, object
   pos: noun
   gender: m
+- lemma: належати
+  ipa: /nalˈɛʒatɪ/
+  translation: to belong
+  pos: verb
 - lemma: приносити
   ipa: /prɪnˈɔsɪtɪ/
   translation: to bring (imperfective)
@@ -240,15 +281,26 @@ items:
   ipa: /prɪˈjɛmnɔ/
   translation: pleasantly, it's a pleasure
   pos: adv
-- lemma: прямий
-  ipa: /prjamˈɪj/
-  translation: straight, direct
-  pos: adj
-- lemma: раджа
-  ipa: /rˈadʒa/
-  translation: rajah
+- lemma: і
+  ipa: /i/
+  translation: and
+  pos: conj
+- lemma: іменник
+  ipa: /imˈɛnnɪk/
+  translation: noun
   pos: noun
-  gender: m
+- lemma: личити
+  ipa: /lˈɪt͡ʃɪtɪ/
+  translation: to suit, to become
+  pos: verb
+- lemma: радити
+  ipa: /rˈadɪtɪ/
+  translation: to advise
+  pos: verb
+- lemma: підходити
+  ipa: /pidxˈɔdɪtɪ/
+  translation: to suit, to fit
+  pos: verb
 - lemma: розповідати
   ipa: /rɔzpɔʋidˈatɪ/
   translation: to tell, to narrate
@@ -287,9 +339,21 @@ items:
   ipa: /staʋˈatɪ/
   translation: to become, to stand (imperfective)
   pos: verb
+- lemma: шкодити
+  ipa: /ʃkˈɔdɪtɪ/
+  translation: to harm
+  pos: verb
 - lemma: старатися
   ipa: /starˈatɪsja/
   translation: to try, to strive
+  pos: verb
+- lemma: служити
+  ipa: /sluʒˈɪtɪ/
+  translation: to serve
+  pos: verb
+- lemma: співчувати
+  ipa: /spiʋt͡ʃuʋˈatɪ/
+  translation: to sympathize
   pos: verb
 - lemma: тихнути
   ipa: /tˈɪxnutɪ/

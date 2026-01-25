@@ -141,9 +141,9 @@ items:
   ipa: /zʋɪkˈatɪ/
   translation: to get used to
   pos: verb
-- lemma: звикло
+- lemma: звикнути
   ipa: /zʋˈɪklɔ/
-  translation: ''
+  translation: to get used to
   pos: adv
 - lemma: здоровити
   ipa: /zdɔrˈɔʋɪtɪ/
@@ -326,7 +326,7 @@ items:
   gender: m
 - lemma: ураааа
   ipa: /uraaaa/
-  translation: ''
+  translation: hurray
   pos: noun
   gender: m
 - lemma: футболіст

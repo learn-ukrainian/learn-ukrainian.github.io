@@ -2,16 +2,288 @@ module: 41-phone-basics
 level: A1
 version: '2.0'
 items:
-- lemma: зідзвонитися
-  ipa: /zidzʋɔnˈɪtɪsja/
-  translation: to call each other
-  pos: verb
-- lemma: нуль-п'ятдесят
-  ipa: /nulʲ-pjatdɛsˈjat/
-  translation: ''
-  pos: num
-- lemma: представлення
-  ipa: /prɛdstˈaʋlɛnnja/
-  translation: presentation, introduction
+- lemma: алло
+  ipa: /aˈllɔ/
+  translation: hello (on phone)
+  pos: interj
+- lemma: номер
+  ipa: /ˈnɔmɛr/
+  translation: number
+  pos: noun
+  gender: m
+- lemma: повідомлення
+  ipa: /pɔʋidˈɔmlɛnnja/
+  translation: message
   pos: noun
   gender: n
+- lemma: дзвонити
+  ipa: /dzʋɔnˈɪtɪ/
+  translation: to call
+  pos: verb
+- lemma: слухаю
+  ipa: /ˈsluxaju/
+  translation: I'm listening (answering phone)
+  pos: verb
+- lemma: помилитися
+  ipa: /pɔmɪlˈɪtɪsja/
+  translation: to make a mistake
+  pos: verb
+- lemma: передзвонити
+  ipa: /pɛrɛdzʋɔnˈɪtɪ/
+  translation: to call back
+  pos: verb
+- lemma: зв'язок
+  ipa: /zʋjazˈɔk/
+  translation: connection, link
+  pos: noun
+  gender: m
+- lemma: зайнято
+  ipa: /zˈajnʲatɔ/
+  translation: busy (line)
+  pos: adv
+- lemma: недоступний
+  ipa: /nɛdɔstˈupnɪj/
+  translation: unavailable
+  pos: adj
+- lemma: телефон
+  ipa: /tɛlɛfˈɔn/
+  translation: phone
+  pos: noun
+  gender: m
+- lemma: мобільний
+  ipa: /mɔbˈilʲnɪj/
+  translation: mobile
+  pos: adj
+- lemma: зачекайте
+  ipa: /zat͡ʃɛkˈajte/
+  translation: wait (formal/plural)
+  pos: verb
+- lemma: гучномовець
+  ipa: /ɦut͡ʃnɔmˈɔʋɛt͡sʲ/
+  translation: loudspeaker
+  pos: noun
+  gender: m
+- lemma: зарядка
+  ipa: /zarˈjadka/
+  translation: charging, charger
+  pos: noun
+  gender: f
+- lemma: месенджер
+  ipa: /mˈɛsɛndʒɛr/
+  translation: messenger
+  pos: noun
+  gender: m
+- lemma: телеграм
+  ipa: /tɛlɛɦrˈam/
+  translation: Telegram
+  pos: noun
+  gender: m
+- lemma: вайбер
+  ipa: /ʋˈajbɛr/
+  translation: Viber
+  pos: noun
+  gender: m
+- lemma: ватсап
+  ipa: /ʋat͡sˈap/
+  translation: WhatsApp
+  pos: noun
+  gender: m
+- lemma: текст
+  ipa: /tɛkst/
+  translation: text
+  pos: noun
+  gender: m
+- lemma: голос
+  ipa: /ɦˈɔlɔs/
+  translation: voice
+  pos: noun
+  gender: m
+- lemma: відео
+  ipa: /ʋˈidɛɔ/
+  translation: video
+  pos: noun
+  gender: n
+- lemma: зустріч
+  ipa: /zˈustrit͡ʃ/
+  translation: meeting
+  pos: noun
+  gender: f
+- lemma: зідзвонимося
+  ipa: /zidzʋɔnˈɪmɔsja/
+  translation: we will call each other
+  pos: verb
+- lemma: чути
+  ipa: /t͡ʃˈutɪ/
+  translation: to hear
+  pos: verb
+- lemma: говорити
+  ipa: /ɦɔʋɔrˈɪtɪ/
+  translation: to speak
+  pos: verb
+- lemma: швидше
+  ipa: /ʃʋˈɪdʃɛ/
+  translation: faster
+  pos: adv
+- lemma: повільніше
+  ipa: /pɔʋilʲnˈiʃɛ/
+  translation: slower
+  pos: adv
+- lemma: голосніше
+  ipa: /ɦɔlɔsnˈiʃɛ/
+  translation: louder
+  pos: adv
+- lemma: тихіше
+  ipa: /tɪxˈiʃɛ/
+  translation: quieter
+  pos: adv
+- lemma: зараз
+  ipa: /zˈaras/
+  translation: now
+  pos: adv
+- lemma: пізніше
+  ipa: /piznˈiʃɛ/
+  translation: later
+  pos: adv
+- lemma: вчора
+  ipa: /ʋt͡ʃˈɔra/
+  translation: yesterday
+  pos: adv
+- lemma: сьогодні
+  ipa: /sʲɔhˈɔdnʲi/
+  translation: today
+  pos: adv
+- lemma: олена
+  ipa: /ɔlˈɛna/
+  translation: Olena (name)
+  pos: noun
+  gender: f
+- lemma: оксана
+  ipa: /ɔksˈana/
+  translation: Oksana (name)
+  pos: noun
+  gender: f
+- lemma: кур'єр
+  ipa: /kurjˈɛr/
+  translation: courier
+  pos: noun
+  gender: m
+- lemma: доставка
+  ipa: /dɔstˈaʋka/
+  translation: delivery
+  pos: noun
+  gender: f
+- lemma: піца
+  ipa: /pˈit͡sa/
+  translation: pizza
+  pos: noun
+  gender: f
+- lemma: поверх
+  ipa: /pˈɔʋɛrx/
+  translation: floor, story
+  pos: noun
+  gender: m
+- lemma: код
+  ipa: /kɔd/
+  translation: code
+  pos: noun
+  gender: m
+- lemma: під'їзд
+  ipa: /pidjˈizd/
+  translation: entrance (of a building)
+  pos: noun
+  gender: m
+- lemma: ліфт
+  ipa: /lift/
+  translation: elevator, lift
+  pos: noun
+  gender: m
+- lemma: працює
+  ipa: /prat͡sʲˈujɛ/
+  translation: works, is working
+  pos: verb
+- lemma: відкрию
+  ipa: /ʋidkrˈɪju/
+  translation: I will open
+  pos: verb
+- lemma: пішки
+  ipa: /pˈiʃkɪ/
+  translation: on foot
+  pos: adv
+- lemma: хвилина
+  ipa: /xʋɪlˈɪna/
+  translation: minute
+  pos: noun
+  gender: f
+- lemma: решта
+  ipa: /rˈɛʃta/
+  translation: change (money), rest
+  pos: noun
+  gender: f
+- lemma: смачного
+  ipa: /smat͡ʃnˈɔɦɔ/
+  translation: bon appétit
+  pos: phrase
+- lemma: гарний
+  ipa: /ɦˈarnɪj/
+  translation: good, beautiful
+  pos: adj
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: day
+  pos: noun
+  gender: m
+- lemma: абонент
+  ipa: /abɔnˈɛnt/
+  translation: subscriber
+  pos: noun
+  gender: m
+- lemma: сигнал
+  ipa: /sɪɦnˈal/
+  translation: signal
+  pos: noun
+  gender: m
+- lemma: замовити
+  ipa: /zamˈɔʋɪtɪ/
+  translation: to order
+  pos: verb
+- lemma: невідомий
+  ipa: /nɛʋidˈɔmɪj/
+  translation: unknown
+  pos: adj
+- lemma: термінал
+  ipa: /tɛrminˈal/
+  translation: terminal
+  pos: noun
+  gender: m
+- lemma: готівка
+  ipa: /ɦɔtˈiʋka/
+  translation: cash
+  pos: noun
+  gender: f
+- lemma: смачно
+  ipa: /smˈat͡ʃnɔ/
+  translation: tasty, delicious
+  pos: adv
+- lemma: кіно
+  ipa: /kinˈɔ/
+  translation: cinema, movie
+  pos: noun
+  gender: n
+- lemma: ідея
+  ipa: /idˈɛja/
+  translation: idea
+  pos: noun
+  gender: f
+- lemma: відповідь
+  ipa: /ʋidpˈɔʋidʲ/
+  translation: answer, response
+  pos: noun
+  gender: f
+- lemma: залишити
+  ipa: /zalɪʃˈɪtɪ/
+  translation: to leave
+  pos: verb
+- lemma: змінитися
+  ipa: /zminˈɪtɪsja/
+  translation: to change
+  pos: verb

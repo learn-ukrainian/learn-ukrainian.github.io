@@ -299,7 +299,7 @@ items:
   pos: verb
 - lemma: острова
   ipa: /ˈɔstrɔʋa/
-  translation: ''
+  translation: island
   pos: noun
   gender: f
 - lemma: отара
@@ -313,7 +313,7 @@ items:
   pos: num
 - lemma: пасовисько
   ipa: /pasɔʋˈɪsʲkɔ/
-  translation: ''
+  translation: pasture
   pos: noun
   gender: n
 - lemma: пастух
@@ -366,9 +366,9 @@ items:
   translation: flight
   pos: noun
   gender: m
-- lemma: потрібне
+- lemma: потрібний
   ipa: /pɔtrˈibnɛ/
-  translation: ''
+  translation: necessary
   pos: noun
   gender: n
 - lemma: поїздка

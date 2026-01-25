@@ -2,9 +2,9 @@ module: 20-preferences-and-choices
 level: A2
 version: '2.0'
 items:
-- lemma: важче
+- lemma: важчий
   ipa: /ʋˈaʒt͡ʃɛ/
-  translation: ''
+  translation: heavier
   pos: adv
 - lemma: викликати
   ipa: /ʋɪklɪkatɪ/

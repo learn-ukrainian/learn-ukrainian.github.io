@@ -80,7 +80,7 @@ items:
   pos: noun
 - lemma: готовенький
   ipa: /ɦɔtɔʋˈɛnʲkɪj/
-  translation: ''
+  translation: ready (diminutive)
   pos: adj
 - lemma: держслужбовець
   ipa: /dɛrʒsluʒbˈɔʋɛt͡sʲ/
@@ -286,7 +286,7 @@ items:
   pos: adj
 - lemma: проектування
   ipa: /prɔɛktuʋannja/
-  translation: ''
+  translation: design, planning
   pos: noun
   gender: n
 - lemma: реалізація

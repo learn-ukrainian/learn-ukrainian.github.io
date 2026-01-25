@@ -17,7 +17,7 @@ items:
   gender: n
 - lemma: гармонізований
   ipa: /ɦarmɔnizˈɔʋanɪj/
-  translation: ''
+  translation: harmonized
   pos: adj
 - lemma: глибше
   ipa: /ɦlˈɪbʃɛ/
@@ -98,7 +98,7 @@ items:
   pos: verb
 - lemma: памфіл
   ipa: /pamfˈil/
-  translation: ''
+  translation: Pamphilus
   pos: noun
   gender: m
 - lemma: помірний

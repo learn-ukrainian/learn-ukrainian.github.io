@@ -100,11 +100,11 @@ items:
   gender: m
 - lemma: жванецький
   ipa: /ʒʋanˈɛt͡sʲkɪj/
-  translation: ''
+  translation: Zhvanetsky
   pos: adj
 - lemma: заводи
   ipa: /zaʋɔdɪ/
-  translation: ''
+  translation: factories
   pos: noun
 - lemma: запорізький
   ipa: /zapɔrˈizʲkɪj/
@@ -116,7 +116,7 @@ items:
   pos: verb
 - lemma: збагативши
   ipa: /zbaɦatˈɪʋʃɪ/
-  translation: ''
+  translation: to enrich
   pos: verb
 - lemma: збагатити
   ipa: /zbaɦatˈɪtɪ/
@@ -215,9 +215,9 @@ items:
   translation: mixing
   pos: noun
   gender: n
-- lemma: мілке
+- lemma: мілкий
   ipa: /milkˈɛ/
-  translation: ''
+  translation: shallow
   pos: noun
   gender: n
 - lemma: найнижчий
@@ -284,7 +284,7 @@ items:
   gender: n
 - lemma: потьомкін
   ipa: /pɔtʲˈɔmkin/
-  translation: ''
+  translation: Potemkin
   pos: noun
   gender: m
 - lemma: приазов'я

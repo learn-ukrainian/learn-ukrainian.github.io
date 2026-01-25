@@ -114,3 +114,97 @@ items:
   translation: Groot (character)
   pos: noun
   gender: f
+- lemma: студент
+  ipa: /studˈent/
+  translation: student (male)
+  pos: noun
+  gender: m
+- lemma: студентка
+  ipa: /studˈentka/
+  translation: student (female)
+  pos: noun
+  gender: f
+- lemma: професор
+  ipa: /prɔfˈɛsɔr/
+  translation: professor (male)
+  pos: noun
+  gender: m
+- lemma: лікар
+  ipa: /lˈikar/
+  translation: doctor (male)
+  pos: noun
+  gender: m
+- lemma: чоловік
+  ipa: /t͡ʃɔlɔˈʋik/
+  translation: man, husband
+  pos: noun
+  gender: m
+- lemma: жінка
+  ipa: /ʒˈinka/
+  translation: woman, wife
+  pos: noun
+  gender: f
+- lemma: людина
+  ipa: /lʲudˈɪna/
+  translation: person, human
+  pos: noun
+  gender: f
+- lemma: друг
+  ipa: /druh/
+  translation: friend (male)
+  pos: noun
+  gender: m
+- lemma: подруга
+  ipa: /pˈɔdruɦa/
+  translation: friend (female)
+  pos: noun
+  gender: f
+- lemma: українець
+  ipa: /ukraˈjinɛt͡sʲ/
+  translation: Ukrainian (male)
+  pos: noun
+  gender: m
+- lemma: я
+  ipa: /ja/
+  translation: I
+  pos: pronoun
+- lemma: ти
+  ipa: /tɪ/
+  translation: you (informal)
+  pos: pronoun
+- lemma: він
+  ipa: /ʋin/
+  translation: he
+  pos: pronoun
+- lemma: вона
+  ipa: /ʋɔnˈa/
+  translation: she
+  pos: pronoun
+- lemma: воно
+  ipa: /ʋɔnˈɔ/
+  translation: it
+  pos: pronoun
+- lemma: ми
+  ipa: /mɪ/
+  translation: we
+  pos: pronoun
+- lemma: ви
+  ipa: /ʋɪ/
+  translation: you (plural/formal)
+  pos: pronoun
+- lemma: вони
+  ipa: /ʋɔnˈɪ/
+  translation: they
+  pos: pronoun
+- lemma: це
+  ipa: /t͡sɛ/
+  translation: this, it
+  pos: particle
+- lemma: то
+  ipa: /tɔ/
+  translation: that
+  pos: particle
+- lemma: ось
+  ipa: /ɔsʲ/
+  translation: here, behold
+  pos: particle

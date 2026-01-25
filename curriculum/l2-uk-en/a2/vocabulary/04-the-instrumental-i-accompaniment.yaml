@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: ами
   ipa: /amɪ/
-  translation: ''
+  translation: -amy (case ending)
   pos: noun
 - lemma: вечірка-сюрприз
   ipa: /ʋɛt͡ʃˈirka-sjurprɪz/
@@ -65,7 +65,7 @@ items:
   pos: noun
 - lemma: ею
   ipa: /ɛju/
-  translation: ''
+  translation: -eyu (case ending)
   pos: noun
 - lemma: зазвичай
   ipa: /zazʋɪt͡ʃˈaj/
@@ -154,13 +154,37 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (case)
+  pos: adj
+- lemma: називний
+  ipa: /nazɪʋnɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative (case)
+  pos: adj
+- lemma: кличний
+  ipa: /klˈɪt͡ʃnɪj/
+  translation: vocative (case)
+  pos: adj
+- lemma: разом
+  ipa: /rˈazɔm/
+  translation: together
+  pos: adv
 - lemma: освіжати
   ipa: /ɔsʋiʒˈatɪ/
   translation: to refresh
   pos: verb
 - lemma: ою
   ipa: /ɔju/
-  translation: ''
+  translation: -oyu (case ending)
   pos: noun
 - lemma: пила
   ipa: /pɪlˈa/

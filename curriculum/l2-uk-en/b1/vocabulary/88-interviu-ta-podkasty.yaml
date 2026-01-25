@@ -74,7 +74,7 @@ items:
   pos: verb
 - lemma: забужко
   ipa: /zabˈuʒkɔ/
-  translation: ''
+  translation: Zabuzhko
   pos: noun
   gender: f
 - lemma: задавати
@@ -131,7 +131,7 @@ items:
   pos: noun
 - lemma: подкаст-сцена
   ipa: /pɔdkast-st͡sˈɛna/
-  translation: ''
+  translation: podcast scene
   pos: noun
   gender: m
 - lemma: подкастер
@@ -227,7 +227,7 @@ items:
   pos: verb
 - lemma: шустер
   ipa: /ʃˈustɛr/
-  translation: ''
+  translation: Schuster
   pos: noun
   gender: f
 - lemma: ідентифікувати

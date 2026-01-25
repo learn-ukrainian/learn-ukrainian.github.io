@@ -150,9 +150,9 @@ items:
   ipa: /znˈɪʒuʋatɪsja/
   translation: to decrease, to lower (passive)
   pos: verb
-- lemma: золота
+- lemma: золотий
   ipa: /zˈɔlɔta/
-  translation: ''
+  translation: golden
   pos: noun
   gender: f
 - lemma: камінка
@@ -464,7 +464,7 @@ items:
   gender: f
 - lemma: художників
   ipa: /xudˈɔʒnɪkiʋ/
-  translation: ''
+  translation: artists
   pos: adj
 - lemma: цвіт
   ipa: /t͡sʋit/

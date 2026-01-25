@@ -2,13 +2,18 @@ module: 02-the-dative-ii-nouns
 level: A2
 version: '2.0'
 items:
-- lemma: ам
-  ipa: /am/
-  translation: ''
-  pos: noun
 - lemma: бабуся
   ipa: /babˈusja/
   translation: grandmother
+  pos: noun
+  gender: f
+- lemma: давальний
+  ipa: /daˈʋalʲnɪj/
+  translation: dative
+  pos: adj
+- lemma: множина
+  ipa: /mnɔʒɪˈna/
+  translation: plural
   pos: noun
   gender: f
 - lemma: батьки
@@ -99,13 +104,9 @@ items:
   translation: road, way
   pos: noun
   gender: f
-- lemma: другів
-  ipa: /drˈuɦiʋ/
-  translation: ''
-  pos: adj
-- lemma: друзь
-  ipa: /druzʲ/
-  translation: ''
+- lemma: друг
+  ipa: /druɦ/
+  translation: friend
   pos: noun
   gender: m
 - lemma: ева
@@ -181,9 +182,9 @@ items:
   translation: letter, leaf
   pos: noun
   gender: m
-- lemma: львов
-  ipa: /lʲʋɔʋ/
-  translation: ''
+- lemma: Львів
+  ipa: /lʲʋiu̯/
+  translation: Lviv
   pos: noun
   gender: m
 - lemma: лікар
@@ -272,7 +273,7 @@ items:
   pos: adj
 - lemma: ові
   ipa: /ɔʋi/
-  translation: ''
+  translation: -ovi (case ending)
   pos: noun
 - lemma: однаковий
   ipa: /ɔdnˈakɔʋɪj/
@@ -315,11 +316,11 @@ items:
   ipa: /pɛrɛdbˈat͡ʃuʋanɪj/
   translation: predictable
   pos: adj
-- lemma: петра
-  ipa: /pɛtrˈa/
-  translation: ''
+- lemma: Петро
+  ipa: /pɛˈtrɔ/
+  translation: Petro
   pos: noun
-  gender: f
+  gender: m
 - lemma: петро
   ipa: /pɛtrˈɔ/
   translation: Petro (name)

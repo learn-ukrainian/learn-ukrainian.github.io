@@ -97,9 +97,9 @@ items:
   translation: burdock, simpleton
   pos: noun
   gender: m
-- lemma: ліва
+- lemma: лівий
   ipa: /lˈiʋa/
-  translation: ''
+  translation: left
   pos: noun
   gender: f
 - lemma: мазати

@@ -2,194 +2,176 @@ module: 43-wf-mastery
 level: A2
 version: '2.0'
 items:
-- lemma: артикулювати
-  ipa: /artɪkuljuʋˈatɪ/
-  translation: to articulate
-  pos: verb
-- lemma: ач
-  ipa: /at͡ʃ/
-  translation: ''
-  pos: part
-- lemma: будівельник
-  ipa: /budiʋˈɛlʲnɪk/
-  translation: builder
-  pos: noun
-  gender: m
-- lemma: бізнес-план
-  ipa: /bˈiznɛs-plan/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: виголосити
-  ipa: /ʋˈɪɦɔlɔsɪtɪ/
-  translation: to deliver (a speech)
-  pos: verb
-- lemma: газ
-  ipa: /ɦaz/
-  translation: gas
-  pos: noun
-  gender: m
-- lemma: газа
-  ipa: /ɦˈaza/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: депресія
-  ipa: /dɛprˈɛsija/
-  translation: depression
-  pos: noun
-  gender: f
-- lemma: ець
-  ipa: /ɛt͡sʲ/
-  translation: ''
-  pos: noun
-- lemma: задум
-  ipa: /zˈadum/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: заслухати
-  ipa: /zaslˈuxatɪ/
-  translation: to listen to, to hear
-  pos: verb
-- lemma: зем
-  ipa: /zɛm/
-  translation: ''
-  pos: noun
-- lemma: катастрофа
-  ipa: /katastrˈɔfa/
-  translation: catastrophe, disaster
-  pos: noun
-  gender: f
-- lemma: клич
-  ipa: /klɪt͡ʃ/
-  translation: call, appeal
-  pos: noun
-  gender: m
-- lemma: комбінуючи
-  ipa: /kɔmbinˈujut͡ʃɪ/
-  translation: combining (gerund)
-  pos: verb
-- lemma: лікарь
-  ipa: /likarʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: міркування
-  ipa: /mirkuʋˈannja/
-  translation: consideration, reasoning
-  pos: noun
-  gender: n
-- lemma: містянин
-  ipa: /mistjanˈɪn/
-  translation: city dweller
-  pos: noun
-- lemma: науковець
-  ipa: /naukˈɔʋɛt͡sʲ/
-  translation: scientist
-  pos: noun
-  gender: m
-- lemma: нація
-  ipa: /nˈat͡sija/
-  translation: nation
-  pos: noun
-  gender: f
-- lemma: невчення
-  ipa: /nɛʋt͡ʃˈɛnnja/
-  translation: ignorance, non-learning
-  pos: noun
-  gender: n
-- lemma: неслухняний
-  ipa: /nɛsluxnˈjanɪj/
-  translation: disobedient
-  pos: adj
-- lemma: никнути
-  ipa: /nˈɪknutɪ/
-  translation: to droop, to fade
-  pos: verb
-- lemma: ння
-  ipa: /nnja/
-  translation: ''
-  pos: noun
-- lemma: переговорити
-  ipa: /pɛrɛɦɔʋɔrˈɪtɪ/
-  translation: to talk through, to discuss
-  pos: verb
-- lemma: передумати
-  ipa: /pɛrɛdˈumatɪ/
-  translation: to change one's mind
-  pos: verb
-- lemma: перемовити
-  ipa: /pɛrɛmˈɔʋɪtɪ/
-  translation: to have a word
-  pos: verb
-- lemma: перерозподіл
-  ipa: /pɛrɛrɔzpˈɔdil/
-  translation: redistribution
-  pos: noun
-  gender: m
-- lemma: погане
-  ipa: /pɔɦanɛ/
-  translation: bad (neuter)
-  pos: noun
-  gender: n
-- lemma: послух
-  ipa: /pˈɔslux/
-  translation: obedience
-  pos: noun
-  gender: m
-- lemma: промова
-  ipa: /prɔmˈɔʋa/
-  translation: speech
-  pos: noun
-  gender: f
-- lemma: слухатися
-  ipa: /slˈuxatɪsja/
-  translation: to obey
-  pos: verb
-- lemma: слухняний
-  ipa: /sluxnˈjanɪj/
-  translation: obedient
-  pos: adj
-- lemma: слухняність
-  ipa: /sluxnˈjanistʲ/
-  translation: obedience
-  pos: noun
-  gender: f
-- lemma: срібло
-  ipa: /srˈiblɔ/
-  translation: silver
-  pos: noun
-  gender: n
-- lemma: темрявий
-  ipa: /tˈɛmrjaʋɪj/
-  translation: dark (rare variant)
-  pos: adj
-- lemma: фабрика
-  ipa: /fˈabrɪka/
-  translation: factory
-  pos: noun
-  gender: f
-- lemma: фінальний
-  ipa: /finˈalʲnɪj/
-  translation: final (adj)
-  pos: adj
-- lemma: хрест
-  ipa: /xrɛst/
-  translation: cross
-  pos: noun
-  gender: m
-- lemma: чу
-  ipa: /t͡ʃu/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ясний
-  ipa: /ˈjasnɪj/
-  translation: clear, bright, lucid
-  pos: adj
-- lemma: ість
-  ipa: /istʲ/
-  translation: ''
-  pos: noun
-  gender: f
+  - lemma: словотворення
+    ipa: /slɔʋɔt͡ʋˈɔrɛnnja/
+    translation: word formation
+    pos: noun
+    gender: n
+  - lemma: ланцюжок
+    ipa: /lant͡sʲuʒˈɔk/
+    translation: chain
+    pos: noun
+    gender: m
+  - lemma: складний
+    ipa: /skladnˈɪj/
+    translation: complex, complicated
+    pos: adj
+  - lemma: фундамент
+    ipa: /fundˈamɛnt/
+    translation: foundation
+    pos: noun
+    gender: m
+  - lemma: архітектор
+    ipa: /arxitˈɛktɔr/
+    translation: architect
+    pos: noun
+    gender: m
+  - lemma: конструктор
+    ipa: /kɔnstrˈuktɔr/
+    translation: constructor, designer
+    pos: noun
+    gender: m
+  - lemma: розбирати
+    ipa: /rɔzbɪrˈatɪ/
+    translation: to take apart, to analyze
+    pos: verb
+  - lemma: складати
+    ipa: /skladˈatɪ/
+    translation: to put together, to compose
+    pos: verb
+  - lemma: передбачати
+    ipa: /pɛrɛdbat͡ʃˈatɪ/
+    translation: to predict, to foresee
+    pos: verb
+  - lemma: значення
+    ipa: /znat͡ʃˈɛnnja/
+    translation: meaning, significance
+    pos: noun
+    gender: n
+  - lemma: зв'язок
+    ipa: /zʋjˈazɔk/
+    translation: connection, link
+    pos: noun
+    gender: m
+  - lemma: елемент
+    ipa: /ɛlɛmˈɛnt/
+    translation: element, part
+    pos: noun
+    gender: m
+  - lemma: система
+    ipa: /sɪstˈɛma/
+    translation: system
+    pos: noun
+    gender: f
+  - lemma: творчість
+    ipa: /tʋˈɔrt͡ʃistʲ/
+    translation: creativity, work
+    pos: noun
+    gender: f
+  - lemma: записування
+    ipa: /zapˈɪsuʋannja/
+    translation: recording, writing down (process)
+    pos: noun
+    gender: n
+  - lemma: перечитування
+    ipa: /pɛrɛt͡ʃˈɪtuʋannja/
+    translation: rereading
+    pos: noun
+    gender: n
+  - lemma: обговорення
+    ipa: /ɔbɦɔʋˈɔrɛnnja/
+    translation: discussion
+    pos: noun
+    gender: n
+  - lemma: висловлення
+    ipa: /ʋɪslˈɔʋlɛnnja/
+    translation: expression, utterance
+    pos: noun
+    gender: n
+  - lemma: підручник
+    ipa: /pіdrut͡ʃnɪk/
+    translation: textbook
+    pos: noun
+    gender: m
+  - lemma: досвід
+    ipa: /dɔsʋid/
+    translation: experience
+    pos: noun
+    gender: m
+  - lemma: успіх
+    ipa: /uspіx/
+    translation: success
+    pos: noun
+    gender: m
+  - lemma: логіка
+    ipa: /lɔɦіka/
+    translation: logic
+    pos: noun
+    gender: f
+  - lemma: впевненість
+    ipa: /ʋpɛʋnɛnistʲ/
+    translation: confidence
+    pos: noun
+    gender: f
+  - lemma: майстерність
+    ipa: /majstɛrnistʲ/
+    translation: mastery, skill
+    pos: noun
+    gender: f
+  - lemma: підземний
+    ipa: /pidzɛmnɪj/
+    translation: underground
+    pos: adj
+  - lemma: земляк
+    ipa: /zɛmljak/
+    translation: fellow countryman
+    pos: noun
+    gender: m
+  - lemma: світло
+    ipa: /sʋitɫɔ/
+    translation: light
+    pos: noun
+    gender: n
+  - lemma: народитися
+    ipa: /narɔdɪtɪsʲa/
+    translation: to be born
+    pos: verb
+  - lemma: освіта
+    ipa: /ɔsʋita/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: розвиток
+    ipa: /rɔzʋɪtɔk/
+    translation: development
+    pos: noun
+    gender: m
+  - lemma: творчий
+    ipa: /tʋɔrt͡ʃɪj/
+    translation: creative
+    pos: adj
+  - lemma: професія
+    ipa: /prɔfɛsʲija/
+    translation: profession
+    pos: noun
+    gender: f
+  - lemma: громадянин
+    ipa: /ɦrɔmadʲanɪn/
+    translation: citizen
+    pos: noun
+    gender: m
+  - lemma: держава
+    ipa: /dɛrʒaʋa/
+    translation: state, country
+    pos: noun
+    gender: f
+  - lemma: знання
+    ipa: /znannja/
+    translation: knowledge
+    pos: noun
+    gender: n
+  - lemma: розум
+    ipa: /rɔzum/
+    translation: mind, intellect
+    pos: noun
+    gender: m

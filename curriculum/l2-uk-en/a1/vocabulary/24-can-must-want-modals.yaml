@@ -21,7 +21,7 @@ items:
   pos: verb
 - lemma: проект
   ipa: /prɔɛkt/
-  translation: ''
+  translation: project
   pos: noun
   gender: m
 - lemma: піаніно
@@ -37,8 +37,8 @@ items:
   ipa: /fɔtɔɦrafuʋˈatɪ/
   translation: to photograph
   pos: verb
-- lemma: холодна
+- lemma: холодний
   ipa: /xɔlˈɔdna/
-  translation: ''
+  translation: cold
   pos: noun
   gender: f

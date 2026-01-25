@@ -142,6 +142,30 @@ items:
   ipa: /lɛtˈitɪ/
   translation: to fly
   pos: verb
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (case)
+  pos: adj
+- lemma: називний
+  ipa: /nazɪʋnɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative (case)
+  pos: adj
+- lemma: кличний
+  ipa: /klˈɪt͡ʃnɪj/
+  translation: vocative (case)
+  pos: adj
+- lemma: разом
+  ipa: /rˈazɔm/
+  translation: together
+  pos: adv
 - lemma: логічніший
   ipa: /lɔɦˈit͡ʃniʃɪj/
   translation: more logical
@@ -186,6 +210,26 @@ items:
   translation: movement, locomotion
   pos: noun
   gender: n
+- lemma: олівець
+  ipa: /ɔlˈiʋɛt͡sʲ/
+  translation: pencil
+  pos: noun
+  gender: m
+- lemma: молоток
+  ipa: /mɔlɔtˈɔk/
+  translation: hammer
+  pos: noun
+  gender: m
+- lemma: голка
+  ipa: /ɦˈɔlka/
+  translation: needle
+  pos: noun
+  gender: f
+- lemma: пензель
+  ipa: /pˈɛnzɛlʲ/
+  translation: brush (artistic)
+  pos: noun
+  gender: m
 - lemma: пересуватися
   ipa: /pɛrɛsuʋˈatɪsja/
   translation: to move, to travel

@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: абраменко
   ipa: /abramɛnkɔ/
-  translation: ''
+  translation: Abramenko
   pos: noun
   gender: f
 - lemma: атлет
@@ -81,7 +81,7 @@ items:
   pos: verb
 - lemma: віта
   ipa: /ʋˈita/
-  translation: ''
+  translation: Vita
   pos: noun
   gender: f
 - lemma: віталій
@@ -109,7 +109,7 @@ items:
   gender: m
 - lemma: ентоні
   ipa: /ɛntɔni/
-  translation: ''
+  translation: Anthony
   pos: noun
   gender: m
 - lemma: естафета
@@ -231,7 +231,7 @@ items:
   gender: f
 - lemma: перемігши
   ipa: /pɛrɛmˈiɦʃɪ/
-  translation: ''
+  translation: to win
   pos: verb
 - lemma: переоцінити
   ipa: /pɛrɛɔt͡sinˈɪtɪ/
@@ -262,7 +262,7 @@ items:
   gender: f
 - lemma: підгрушна
   ipa: /pidɦruʃna/
-  translation: ''
+  translation: Pidhrushna
   pos: noun
   gender: f
 - lemma: підкорити
@@ -364,7 +364,7 @@ items:
   gender: f
 - lemma: федерація
   ipa: /fɛdɛrˈat͡sija/
-  translation: ''
+  translation: federation
   pos: noun
   gender: f
 - lemma: фристайл

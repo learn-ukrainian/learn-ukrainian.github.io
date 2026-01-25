@@ -204,3 +204,343 @@ items:
   ipa: /t͡ʃɪt-/
   translation: ''
   pos: noun
+- lemma: відхід
+  ipa: /ʋidxiid/
+  translation: departure
+  pos: noun
+  gender: m
+- lemma: ходити
+  ipa: /xɔdɪtɪ/
+  translation: to walk, to go
+  pos: verb
+- lemma: вигляд
+  ipa: /ʋɪɦljad/
+  translation: appearance
+  pos: noun
+  gender: m
+- lemma: погляд
+  ipa: /pɔɦljad/
+  translation: look, view, opinion
+  pos: noun
+  gender: m
+- lemma: прихід
+  ipa: /prɪxiid/
+  translation: arrival
+  pos: noun
+  gender: m
+- lemma: вхід
+  ipa: /ʋxiid/
+  translation: entrance
+  pos: noun
+  gender: m
+- lemma: вихід
+  ipa: /ʋɪxiid/
+  translation: exit
+  pos: noun
+  gender: m
+- lemma: перехід
+  ipa: /pɛrɛxiid/
+  translation: crossing
+  pos: noun
+  gender: m
+- lemma: підпис
+  ipa: /pidpɪs/
+  translation: signature
+  pos: noun
+  gender: m
+- lemma: опис
+  ipa: /ɔpɪs/
+  translation: description
+  pos: noun
+  gender: m
+- lemma: якщо
+  ipa: /jakʃt͡ʃɔ/
+  translation: if
+  pos: conj
+- lemma: сюжет
+  ipa: /sʲuʒˈɛt/
+  translation: plot
+  pos: noun
+  gender: m
+- lemma: роль
+  ipa: /rɔlʲ/
+  translation: role
+  pos: noun
+  gender: f
+- lemma: гра
+  ipa: /ɦra/
+  translation: game, play
+  pos: noun
+  gender: f
+- lemma: дочитати
+  ipa: /dɔt͡ʃɪtatɪ/
+  translation: to finish reading
+  pos: verb
+- lemma: прочитати
+  ipa: /prɔt͡ʃɪtatɪ/
+  translation: to read (perf)
+- lemma: письменник
+  ipa: /pɪsʲmɛnnɪk/
+  translation: writer
+  pos: noun
+  gender: m
+- lemma: похід
+  ipa: /pɔxid/
+  translation: campaign, hike
+  pos: noun
+  gender: m
+- lemma: напис
+  ipa: /napɪs/
+  translation: inscription
+  pos: noun
+  gender: m
+- lemma: відхід
+  ipa: /ʋidxid/
+  translation: departure
+  pos: noun
+  gender: m
+- lemma: прихід
+  ipa: /prɪxid/
+  translation: arrival
+  pos: noun
+  gender: m
+- lemma: вхід
+  ipa: /ʋxiid/
+  translation: entrance
+  pos: noun
+  gender: m
+- lemma: вихід
+  ipa: /ʋɪxiid/
+  translation: exit
+  pos: noun
+  gender: m
+- lemma: перехід
+  ipa: /pɛrɛxiid/
+  translation: crossing
+  pos: noun
+  gender: m
+- lemma: підпис
+  ipa: /pidpɪs/
+  translation: signature
+  pos: noun
+  gender: m
+- lemma: опис
+  ipa: /ɔpɪs/
+  translation: description
+  pos: noun
+  gender: m
+- lemma: якщо
+  ipa: /jakʃt͡ʃɔ/
+  translation: if
+  pos: conj
+- lemma: сюжет
+  ipa: /sʲuʒˈɛt/
+  translation: plot
+  pos: noun
+  gender: m
+- lemma: роль
+  ipa: /rɔlʲ/
+  translation: role
+  pos: noun
+  gender: f
+- lemma: шоп
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: перехідний
+  ipa: /pɛrɛxidnɪj/
+  translation: transition (adj)
+  pos: adj
+- lemma: переходка
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: підписи
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: підписник
+  ipa: /pidpɪsnɪk/
+  translation: subscriber
+  pos: noun
+  gender: m
+- lemma: підписака
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: ввійти
+  ipa: /ʋʋijti/
+  translation: to enter
+  pos: verb
+- lemma: вхідний
+  ipa: /ʋxidnɪj/
+  translation: entrance (adj)
+  pos: adj
+- lemma: вхідець
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: письменний
+  ipa: /pɪsʲmɛnnɪj/
+  translation: literate
+  pos: adj
+- lemma: писарій
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: писака
+  ipa: /pɪsaka/
+  translation: scribbler
+  pos: noun
+  gender: m
+- lemma: поїхати
+  ipa: /pɔjixatɪ/
+  translation: to go (by vehicle)
+  pos: verb
+- lemma: ходи
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: ходений
+  ipa: ''
+  translation: 'distractor'
+  pos: adj
+- lemma: поглядний
+  ipa: /pɔɦljadnɪj/
+  translation: visual
+  pos: adj
+- lemma: поглядець
+  ipa: ''
+  translation: 'distractor'
+  pos: noun
+- lemma: читне
+  ipa: ''
+  translation: 'distractor'
+  pos: adj
+- lemma: читацький
+  ipa: /t͡ʃɪtat͡sʲkɪj/
+  translation: reader's
+  pos: adj
+- lemma: чительний
+  ipa: ''
+  translation: 'distractor'
+  pos: adj
+- lemma: дописувати
+  ipa: /dɔpɪsuʋatɪ/
+  translation: to finish writing
+  pos: verb
+- lemma: підписувати
+  ipa: /pidpɪsuʋatɪ/
+  translation: to sign
+  pos: verb
+- lemma: переписувати
+  ipa: /pɛrɛpɪsuʋatɪ/
+  translation: to rewrite
+  pos: verb
+- lemma: записувати
+  ipa: /zapɪsuʋatɪ/
+  translation: to record
+  pos: verb
+- lemma: описувати
+  ipa: /ɔpɪsuʋatɪ/
+  translation: to describe
+  pos: verb
+- lemma: переглядати
+  ipa: /pɛrɛɦljadatɪ/
+  translation: to review, to browse
+  pos: verb
+- lemma: доглядати
+  ipa: /dɔɦljadatɪ/
+  translation: to look after
+  pos: verb
+- lemma: виглядати
+  ipa: /ʋɪɦljadatɪ/
+  translation: to look (appearance)
+  pos: verb
+- lemma: заглядати
+  ipa: /zaɦljadatɪ/
+  translation: to peek
+  pos: verb
+- lemma: оглядати
+  ipa: /ɔɦljadatɪ/
+  translation: to inspect
+  pos: verb
+- lemma: шукаємо
+  ipa: /ʃukajɛmɔ/
+  translation: we look for
+  pos: verb
+- lemma: шукали
+  ipa: /ʃukalɪ/
+  translation: they looked for
+  pos: verb
+- lemma: щоденнику
+  ipa: /ʃt͡ʃɔdɛnnɪku/
+  translation: diary (dat/loc)
+  pos: noun
+  gender: m
+- lemma: журналі
+  ipa: /ʒurnalі/
+  translation: journal (loc)
+  pos: noun
+  gender: m
+- lemma: книзі
+  ipa: /knɪzi/
+  translation: book (loc)
+  pos: noun
+  gender: f
+- lemma: рядку
+  ipa: /rjadku/
+  translation: line (loc)
+  pos: noun
+  gender: m
+- lemma: списку
+  ipa: /spɪsku/
+  translation: list (loc)
+  pos: noun
+  gender: m
+- lemma: листі
+  ipa: /lɪsti/
+  translation: letter (loc)
+  pos: noun
+  gender: m
+- lemma: швидкості
+  ipa: /ʃʋɪdkɔsti/
+  translation: speed (gen/dat/loc)
+  pos: noun
+  gender: f
+- lemma: швидко
+  ipa: /ʃʋɪdkɔ/
+  translation: fast
+  pos: adv
+- lemma: швидкого
+  ipa: ''
+  translation: 'distractor'
+  pos: adj
+- lemma: пішохід
+  ipa: /piʃɔxid/
+  translation: pedestrian
+  pos: noun
+  gender: m
+- lemma: надпис
+  ipa: /nadpɪs/
+  translation: inscription
+  pos: noun
+  gender: m
+- lemma: письменник
+  ipa: /pɪsʲmɛnnɪk/
+  translation: writer
+  pos: noun
+  gender: m
+- lemma: похід
+  ipa: /pɔxid/
+  translation: campaign, hike
+  pos: noun
+  gender: m
+- lemma: прочитати
+  ipa: /prɔt͡ʃɪtatɪ/
+  translation: to read (perf)
+  pos: verb
+- lemma: дочитати
+  ipa: /dɔt͡ʃɪtatɪ/
+  translation: to finish reading
+  pos: verb

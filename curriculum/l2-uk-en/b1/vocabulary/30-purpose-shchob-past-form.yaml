@@ -46,9 +46,9 @@ items:
   translation: diet
   pos: noun
   gender: f
-- lemma: жирне
+- lemma: жирний
   ipa: /ʒˈɪrnɛ/
-  translation: ''
+  translation: fat
   pos: noun
   gender: n
 - lemma: записка

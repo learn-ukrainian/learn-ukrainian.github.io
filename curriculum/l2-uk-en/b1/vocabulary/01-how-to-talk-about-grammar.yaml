@@ -152,7 +152,7 @@ items:
   pos: verb
 - lemma: застосування
   ipa: /zastɔsuʋˈannja/
-  translation: ''
+  translation: application
   pos: noun
   gender: n
 - lemma: зв'язок
@@ -445,9 +445,9 @@ items:
   translation: professor
   pos: noun
   gender: m
-- lemma: реальне
+- lemma: реальний
   ipa: /rɛˈalʲnɛ/
-  translation: ''
+  translation: real
   pos: noun
   gender: n
 - lemma: регулярно

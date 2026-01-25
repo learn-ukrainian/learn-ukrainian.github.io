@@ -21,14 +21,14 @@ items:
   translation: ring, circle
   pos: noun
   gender: n
-- lemma: мале
+- lemma: малий
   ipa: /malˈɛ/
-  translation: ''
+  translation: small
   pos: noun
   gender: m
-- lemma: тиха
+- lemma: тихий
   ipa: /tˈɪxa/
-  translation: ''
+  translation: quiet
   pos: noun
   gender: f
 - lemma: інваріантний

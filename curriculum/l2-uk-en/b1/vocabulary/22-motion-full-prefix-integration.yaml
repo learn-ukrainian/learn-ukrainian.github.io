@@ -79,7 +79,7 @@ items:
   gender: f
 - lemma: голови
   ipa: /ɦˈɔlɔʋɪ/
-  translation: ''
+  translation: heads
   pos: noun
 - lemma: громадське
   ipa: /ɦrɔmadsʲkɛ/
@@ -331,5 +331,5 @@ items:
   pos: adv
 - lemma: їжджати
   ipa: /jiʒdʒatɪ/
-  translation: ''
+  translation: to travel (by vehicle)
   pos: verb

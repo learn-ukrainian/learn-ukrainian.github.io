@@ -141,6 +141,85 @@ items:
   ipa: /rik/
   translation: year
   pos: noun
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (case)
+  pos: adj
+- lemma: називний
+  ipa: /nazɪʋnɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative (case)
+  pos: adj
+- lemma: кличний
+  ipa: /klˈɪt͡ʃnɪj/
+  translation: vocative (case)
+  pos: adj
+- lemma: однина
+  ipa: /ɔdnɪnˈa/
+  translation: singular
+  pos: noun
+  gender: f
+- lemma: множина
+  ipa: /mnɔʒɪnˈa/
+  translation: plural
+  pos: noun
+  gender: f
+- lemma: секретар
+  ipa: /sɛkrɛtˈar/
+  translation: secretary
+  pos: noun
+  gender: m
+- lemma: працювати
+  ipa: /prat͡sʲuʋˈatɪ/
+  translation: to work
+  pos: verb
+- lemma: менеджер
+  ipa: /mˈɛnɛdʒɛr/
+  translation: manager
+  pos: noun
+  gender: m
+- lemma: художник
+  ipa: /xudˈɔʒnɪk/
+  translation: artist, painter
+  pos: noun
+  gender: m
+- lemma: юрист
+  ipa: /jurˈɪst/
+  translation: lawyer
+  pos: noun
+  gender: m
+- lemma: економіст
+  ipa: /ɛkɔnɔmˈist/
+  translation: economist
+  pos: noun
+  gender: m
+- lemma: лікар
+  ipa: /lʲikˈar/
+  translation: doctor
+  pos: noun
+  gender: m
+- lemma: вчитель
+  ipa: /ʋt͡ʃˈɪtɛlʲ/
+  translation: teacher
+  pos: noun
+  gender: m
+- lemma: вчителька
+  ipa: /ʋt͡ʃˈɪtɛlʲka/
+  translation: teacher (female)
+  pos: noun
+  gender: f
+- lemma: лікарка
+  ipa: /lʲikˈarka/
+  translation: doctor (female)
+  pos: noun
+  gender: f
 - lemma: співбесіда
   ipa: /spiʋbˈɛsida/
   translation: interview (job)
@@ -192,6 +271,26 @@ items:
   translation: engineer
   pos: noun
   gender: m
+- lemma: служити
+  ipa: /sluʒˈɪtɪ/
+  translation: to serve
+  pos: verb
+- lemma: залишатися
+  ipa: /zalɪʃˈatɪsja/
+  translation: to remain, to stay
+  pos: verb
+- lemma: виявитися
+  ipa: /ʋɪˈjaʋɪtɪsja/
+  translation: to turn out to be
+  pos: verb
+- lemma: здаватися
+  ipa: /zdaʋˈatɪsja/
+  translation: to seem
+  pos: verb
+- lemma: вважатися
+  ipa: /ʋʋaʒˈatɪsja/
+  translation: to be considered
+  pos: verb
 - lemma: інститут
   ipa: /instɪtˈut/
   translation: institute

@@ -78,9 +78,9 @@ items:
   translation: distant (thing)
   pos: noun
   gender: n
-- lemma: довга
+- lemma: довгий
   ipa: /dˈɔʋɦa/
-  translation: ''
+  translation: long
   pos: noun
   gender: f
 - lemma: досвід
@@ -517,7 +517,7 @@ items:
   gender: f
 - lemma: чумаки
   ipa: /t͡ʃumakˈɪ/
-  translation: ''
+  translation: chumaky (salt traders)
   pos: noun
 - lemma: шкільний
   ipa: /ʃkilʲnˈɪj/

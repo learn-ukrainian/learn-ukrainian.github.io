@@ -83,7 +83,7 @@ items:
   pos: adj
 - lemma: звідки-небудь
   ipa: /zʋˈidkɪ-nɛbudʲ/
-  translation: ''
+  translation: from somewhere
   pos: pron
 - lemma: звідкись
   ipa: /zʋˈidkɪsʲ/
@@ -108,7 +108,7 @@ items:
   gender: n
 - lemma: куди-небудь
   ipa: /kudˈɪ-nɛbudʲ/
-  translation: ''
+  translation: somewhere
   pos: pron
 - lemma: курорт
   ipa: /kurˈɔrt/

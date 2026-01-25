@@ -21,9 +21,9 @@ items:
   translation: white (male)
   pos: noun
   gender: m
-- lemma: білі
+- lemma: білий
   ipa: /bˈili/
-  translation: ''
+  translation: white
   pos: noun
 - lemma: взуття
   ipa: /ʋzuttˈja/
@@ -79,13 +79,13 @@ items:
   translation: shirt
   pos: noun
   gender: f
-- lemma: сіро-білі
+- lemma: сіро-білий
   ipa: /sˈirɔ-bili/
-  translation: ''
+  translation: grey-white
   pos: noun
-- lemma: темна
+- lemma: темний
   ipa: /tˈɛmna/
-  translation: ''
+  translation: dark
   pos: noun
   gender: f
 - lemma: темно-коричневий

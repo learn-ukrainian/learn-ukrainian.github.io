@@ -94,9 +94,9 @@ items:
   translation: realtor
   pos: noun
   gender: m
-- lemma: спокійне
+- lemma: спокійний
   ipa: /spɔkˈijnɛ/
-  translation: ''
+  translation: calm
   pos: noun
   gender: n
 - lemma: стабільно

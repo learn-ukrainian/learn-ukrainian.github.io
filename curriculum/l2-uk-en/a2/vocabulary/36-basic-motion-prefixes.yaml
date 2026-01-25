@@ -7,6 +7,15 @@ items:
   translation: barista
   pos: noun
   gender: m
+- lemma: вид
+  ipa: /vɪd/
+  translation: aspect, view
+  pos: noun
+  gender: m
+- lemma: доконаний
+  ipa: /dɔkˈɔnɑnɪj/
+  translation: perfective
+  pos: adj
 - lemma: брама
   ipa: /brˈama/
   translation: gate
@@ -160,6 +169,10 @@ items:
   ipa: /t͡ʃitkˈiʃɪj/
   translation: clearer
   pos: adj
+- lemma: їхати
+  ipa: /jˈixatɪ/
+  translation: to go (by vehicle), to drive
+  pos: verb
 - lemma: як-от
   ipa: /jak-ɔt/
   translation: such as, for example

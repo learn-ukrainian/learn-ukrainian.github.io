@@ -344,11 +344,15 @@ items:
   ipa: /napɪsˈatɪ/
   translation: to write (perfective)
   pos: verb
+- lemma: називний
+  ipa: /nazɪʋnɪj/
+  translation: nominative (case)
+  pos: adj
 - lemma: непрямий
   ipa: /nɛprjamˈɪj/
   translation: indirect
   pos: adj
-- lemma: нова
+- lemma: новий
   ipa: /nɔʋˈa/
   translation: ''
   pos: noun
@@ -537,7 +541,7 @@ items:
   pos: noun
 - lemma: робити
   ipa: /rɔbˈɪtɪ/
-  translation: ''
+  translation: to do
   pos: verb
 - lemma: робот
   ipa: /rˈɔbɔt/
@@ -622,12 +626,12 @@ items:
   pos: adj
 - lemma: тобі
   ipa: /tɔbˈi/
-  translation: ''
+  translation: to you
   pos: noun
   gender: m
 - lemma: того
   ipa: /tɔɦˈɔ/
-  translation: ''
+  translation: of that
   pos: noun
   gender: m
 - lemma: тоді

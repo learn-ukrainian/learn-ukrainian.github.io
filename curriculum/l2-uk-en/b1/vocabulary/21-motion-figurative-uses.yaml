@@ -340,9 +340,9 @@ items:
   translation: fashion
   pos: noun
   gender: f
-- lemma: модерна
+- lemma: модерний
   ipa: /mɔdˈɛrna/
-  translation: ''
+  translation: modern
   pos: noun
   gender: f
 - lemma: мінський
@@ -623,7 +623,7 @@ items:
   pos: adv
 - lemma: філософськи
   ipa: /filɔsˈɔfsʲkɪ/
-  translation: ''
+  translation: philosophically
   pos: adv
 - lemma: фінансування
   ipa: /finansuʋˈannja/

@@ -73,7 +73,7 @@ items:
   pos: noun
 - lemma: вожений
   ipa: /ʋˈɔʒɛnɪj/
-  translation: ''
+  translation: led
   pos: adj
 - lemma: воля
   ipa: /ʋˈɔlja/
@@ -300,7 +300,7 @@ items:
   pos: verb
 - lemma: написан
   ipa: /napɪsan/
-  translation: ''
+  translation: written (truncated)
   pos: noun
   gender: m
 - lemma: насильство
@@ -498,7 +498,7 @@ items:
   gender: m
 - lemma: тий
   ipa: /tɪj/
-  translation: ''
+  translation: -ty (suffix)
   pos: noun
 - lemma: убогий
   ipa: /ubˈɔɦɪj/
@@ -524,7 +524,7 @@ items:
   pos: adj
 - lemma: ути
   ipa: /utɪ/
-  translation: ''
+  translation: -uty (suffix)
   pos: noun
 - lemma: ухвалений
   ipa: /uxʋˈalɛnɪj/
@@ -540,7 +540,7 @@ items:
   pos: adj
 - lemma: ходжений
   ipa: /xˈɔdʒɛnɪj/
-  translation: ''
+  translation: walked
   pos: adj
 - lemma: цитата
   ipa: /t͡sɪtˈata/

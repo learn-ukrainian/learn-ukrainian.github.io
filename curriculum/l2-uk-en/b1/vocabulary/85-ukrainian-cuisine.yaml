@@ -144,7 +144,7 @@ items:
   gender: f
 - lemma: континенталь
   ipa: /kɔntɪnɛntalʲ/
-  translation: ''
+  translation: Continental
   pos: noun
   gender: m
 - lemma: крашанка
@@ -269,9 +269,9 @@ items:
   ipa: /suʃɛnɪj/
   translation: dried (fruits/fish)
   pos: adj
-- lemma: типове
+- lemma: типовий
   ipa: /tɪpɔʋɛ/
-  translation: ''
+  translation: typical
   pos: noun
   gender: n
 - lemma: трапеза

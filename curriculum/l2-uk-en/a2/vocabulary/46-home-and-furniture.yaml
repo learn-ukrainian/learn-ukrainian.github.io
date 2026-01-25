@@ -77,7 +77,7 @@ items:
   pos: adj
 - lemma: застеляти
   ipa: /zastɛlˈjatɪ/
-  translation: ''
+  translation: to make the bed
   pos: verb
 - lemma: затишок
   ipa: /zˈatɪʃɔk/
@@ -192,7 +192,7 @@ items:
   pos: verb
 - lemma: пятниця
   ipa: /pjatnɪt͡sja/
-  translation: ''
+  translation: Friday
   pos: noun
   gender: f
 - lemma: раковина

@@ -235,9 +235,9 @@ items:
   ipa: /sxˈidnɪj/
   translation: eastern
   pos: adj
-- lemma: тонка
+- lemma: тонкий
   ipa: /tɔnkˈa/
-  translation: ''
+  translation: thin
   pos: noun
   gender: f
 - lemma: угода

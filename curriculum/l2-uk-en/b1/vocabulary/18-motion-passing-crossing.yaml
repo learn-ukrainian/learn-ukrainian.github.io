@@ -71,7 +71,7 @@ items:
   pos: adj
 - lemma: горою
   ipa: /ɦɔrˈɔju/
-  translation: ''
+  translation: uphill
   pos: adv
 - lemma: губити
   ipa: /ɦubˈɪtɪ/
@@ -103,7 +103,7 @@ items:
   gender: f
 - lemma: заходячи
   ipa: /zaxˈɔdjat͡ʃɪ/
-  translation: ''
+  translation: entering
   pos: verb
 - lemma: зліва
   ipa: /zlˈiʋa/

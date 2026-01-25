@@ -17,7 +17,7 @@ items:
   gender: m
 - lemma: вийшовши
   ipa: /ʋˈɪjʃɔʋʃɪ/
-  translation: ''
+  translation: to go out
   pos: verb
 - lemma: виявити
   ipa: /ʋˈɪjaʋɪtɪ/
@@ -46,7 +46,7 @@ items:
   pos: adj
 - lemma: дізнавшись
   ipa: /diznˈaʋʃɪsʲ/
-  translation: ''
+  translation: to find out
   pos: verb
 - lemma: експеримент
   ipa: /ɛkspɛrɪmˈɛnt/
@@ -64,11 +64,11 @@ items:
   gender: f
 - lemma: забувши
   ipa: /zabˈuʋʃɪ/
-  translation: ''
+  translation: to forget
   pos: verb
 - lemma: завершивши
   ipa: /zaʋɛrʃˈɪʋʃɪ/
-  translation: ''
+  translation: to complete
   pos: verb
 - lemma: завершитися
   ipa: /zaʋɛrʃˈɪtɪsja/
@@ -76,11 +76,11 @@ items:
   pos: verb
 - lemma: закінчивши
   ipa: /zakˈint͡ʃɪʋʃɪ/
-  translation: ''
+  translation: to finish
   pos: verb
 - lemma: замовивши
   ipa: /zamˈɔʋɪʋʃɪ/
-  translation: ''
+  translation: to order
   pos: verb
 - lemma: зобов'язуватися
   ipa: /zɔbɔʋˈjazuʋatɪsja/
@@ -88,7 +88,7 @@ items:
   pos: verb
 - lemma: зробивши
   ipa: /zrɔbˈɪʋʃɪ/
-  translation: ''
+  translation: to do
   pos: verb
 - lemma: методологія
   ipa: /mɛtɔdɔlˈɔɦija/
@@ -97,7 +97,7 @@ items:
   gender: f
 - lemma: написавши
   ipa: /napɪsˈaʋʃɪ/
-  translation: ''
+  translation: to write
   pos: verb
 - lemma: невід'ємний
   ipa: /nɛʋidˈjɛmnɪj/
@@ -117,7 +117,7 @@ items:
   pos: verb
 - lemma: отримавши
   ipa: /ɔtrˈɪmaʋʃɪ/
-  translation: ''
+  translation: to receive
   pos: verb
 - lemma: побачивши
   ipa: /pɔbˈat͡ʃɪʋʃɪ/
@@ -211,7 +211,7 @@ items:
   pos: verb
 - lemma: пішовши
   ipa: /piʃˈɔʋʃɪ/
-  translation: ''
+  translation: to go
   pos: verb
 - lemma: реєстраційний
   ipa: /rɛjɛstrat͡sˈijnɪj/

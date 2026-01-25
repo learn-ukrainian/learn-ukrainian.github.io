@@ -44,9 +44,9 @@ items:
   ipa: /sam/
   translation: self, alone
   pos: pron
-- lemma: хай
+- lemma: хаяти
   ipa: /xaj/
-  translation: ''
+  translation: to criticize
   pos: part
 - lemma: часть
   ipa: /t͡ʃastʲ/

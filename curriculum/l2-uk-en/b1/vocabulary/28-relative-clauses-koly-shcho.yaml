@@ -14,7 +14,7 @@ items:
   gender: m
 - lemma: антецедент-час
   ipa: /antɛt͡sɛdˈɛnt-t͡ʃas/
-  translation: ''
+  translation: antecedent time
   pos: noun
   gender: m
 - lemma: бажання
@@ -174,9 +174,9 @@ items:
   ipa: /krˈɪtɪj/
   translation: covered
   pos: adj
-- lemma: кругла
+- lemma: круглий
   ipa: /krˈuɦla/
-  translation: ''
+  translation: round
   pos: noun
   gender: f
 - lemma: латинський

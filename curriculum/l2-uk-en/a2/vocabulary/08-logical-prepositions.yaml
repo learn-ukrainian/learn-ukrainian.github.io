@@ -76,13 +76,13 @@ items:
   ipa: /zajtˈɪ/
   translation: to enter, to drop by
   pos: verb
-- lemma: зайшлий
-  ipa: /zˈajʃlɪj/
-  translation: ''
-  pos: adj
 - lemma: закритися
   ipa: /zakrˈɪtɪsja/
   translation: to close (passive)
+  pos: verb
+- lemma: занапастити
+  ipa: /zanapastˈɪtɪ/
+  translation: to ruin, to destroy
   pos: verb
 - lemma: занадто
   ipa: /zanˈadtɔ/
@@ -113,11 +113,6 @@ items:
   ipa: /krim/
   translation: except, besides
   pos: prep
-- lemma: листя
-  ipa: /lˈɪstja/
-  translation: leaves, foliage
-  pos: noun
-  gender: n
 - lemma: логічний
   ipa: /lɔɦˈit͡ʃnɪj/
   translation: logical
@@ -143,11 +138,6 @@ items:
   ipa: /nɛʋaʒlˈɪʋɔ/
   translation: it doesn't matter, unimportant
   pos: adv
-- lemma: об
-  ipa: /ɔb/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: п'ятий
   ipa: /pˈjatɪj/
   translation: fifth
@@ -184,10 +174,6 @@ items:
   translation: presence
   pos: noun
   gender: f
-- lemma: пропуск
-  ipa: /prˈɔpusk/
-  translation: pass, skip, permit
-  pos: noun
 - lemma: підійти
   ipa: /pidijtˈɪ/
   translation: to approach, to be suitable (perfective)
@@ -196,11 +182,6 @@ items:
   ipa: /rɛkɔmɛnduʋˈatɪ/
   translation: to recommend
   pos: verb
-- lemma: сель
-  ipa: /sɛlʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сироп
   ipa: /sɪrˈɔp/
   translation: syrup
@@ -211,19 +192,11 @@ items:
   translation: glass
   pos: noun
   gender: n
-- lemma: сідати
-  ipa: /sidˈatɪ/
-  translation: to sit down (imperfective)
-  pos: verb
 - lemma: сім'я
   ipa: /simˈja/
   translation: family
   pos: noun
   gender: f
-- lemma: сісти
-  ipa: /sˈistɪ/
-  translation: to sit down (perfective)
-  pos: verb
 - lemma: таблетка
   ipa: /tablˈɛtka/
   translation: tablet, pill
@@ -243,11 +216,67 @@ items:
   ipa: /xɔtˈitɪsja/
   translation: to be desired (it feels like)
   pos: verb
-- lemma: чого
-  ipa: /t͡ʃɔɦˈɔ/
-  translation: ''
-  pos: adv
 - lemma: щасливий
   ipa: /ʃt͡ʃaslˈɪʋɪj/
   translation: happy
-  pos: noun
+  pos: adj
+- lemma: для
+  ipa: /dlʲa/
+  translation: for (benefit)
+  pos: prep
+- lemma: без
+  ipa: /bɛz/
+  translation: without
+  pos: prep
+- lemma: через
+  ipa: /t͡ʃˈɛrɛz/
+  translation: through, because of
+  pos: prep
+- lemma: про
+  ipa: /prɔ/
+  translation: about, concerning
+  pos: prep
+- lemma: від
+  ipa: /ʋid/
+  translation: from (person/source)
+  pos: prep
+- lemma: з
+  ipa: /z/
+  translation: from (place), with (instrumental)
+  pos: prep
+- lemma: о
+  ipa: /ɔ/
+  translation: at (time)
+  pos: prep
+- lemma: об
+  ipa: /ɔb/
+  translation: at (time before vowel)
+  pos: prep
+- lemma: після
+  ipa: /pˈisʲlʲa/
+  translation: after
+  pos: prep
+- lemma: замість
+  ipa: /zˈamistʲ/
+  translation: instead of
+  pos: prep
+- lemma: завдяки
+  ipa: /zaʋdjˈakɪ/
+  translation: thanks to
+  pos: prep
+- lemma: всупереч
+  ipa: /ʋsˈupɛrɛt͡ʃ/
+  translation: despite, contrary to
+  pos: prep
+- lemma: протягом
+  ipa: /prˈɔtʲaɦɔm/
+  translation: during, throughout
+  pos: prep
+- lemma: щодо
+  ipa: /ʃʃˈɔdɔ/
+  translation: regarding, as for
+  pos: prep
+- lemma: стосовно
+  ipa: /stɔsˈɔʋnɔ/
+  translation: concerning
+  pos: prep

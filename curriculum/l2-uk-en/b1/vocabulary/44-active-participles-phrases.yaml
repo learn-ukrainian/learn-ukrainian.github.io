@@ -124,7 +124,7 @@ items:
   pos: verb
 - lemma: замерзлий
   ipa: /zamˈɛrzlɪj/
-  translation: ''
+  translation: frozen
   pos: adj
 - lemma: замерзнути
   ipa: /zamˈɛrznutɪ/
@@ -136,7 +136,7 @@ items:
   pos: adj
 - lemma: збіжний
   ipa: /zbiʒnɪj/
-  translation: ''
+  translation: convergent
   pos: adj
 - lemma: звертатися
   ipa: /zʋɛrtˈatɪsja/
@@ -256,7 +256,7 @@ items:
   pos: adv
 - lemma: окання
   ipa: /ˈɔkannja/
-  translation: ''
+  translation: okanye (pronunciation feature)
   pos: noun
   gender: n
 - lemma: опадати

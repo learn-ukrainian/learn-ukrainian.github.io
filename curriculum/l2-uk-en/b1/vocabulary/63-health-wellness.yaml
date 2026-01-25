@@ -70,9 +70,9 @@ items:
   translation: yoga studio
   pos: noun
   gender: f
-- lemma: корисне
+- lemma: корисний
   ipa: /kˈɔrɪsnɛ/
-  translation: ''
+  translation: useful
   pos: noun
   gender: n
 - lemma: курортний
@@ -81,7 +81,7 @@ items:
   pos: adj
 - lemma: лікарів
   ipa: /likarˈiʋ/
-  translation: ''
+  translation: doctor's
   pos: adj
 - lemma: миргород
   ipa: /mˈɪrɦɔrɔd/

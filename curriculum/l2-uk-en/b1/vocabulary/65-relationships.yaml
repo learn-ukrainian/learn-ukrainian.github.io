@@ -55,9 +55,9 @@ items:
   ipa: /dar/
   translation: gift, talent
   pos: noun
-- lemma: два-три
+- lemma: два-терти
   ipa: /dʋa-trɪ/
-  translation: ''
+  translation: two-thirds
   pos: num
 - lemma: з'єднання
   ipa: /zjɛdnannja/
@@ -179,11 +179,11 @@ items:
   pos: adj
 - lemma: хлібом-сіллю
   ipa: /xlˈibɔm-sillju/
-  translation: ''
+  translation: with bread and salt
   pos: adv
 - lemma: христини
   ipa: /xrɪstˈɪnɪ/
-  translation: ''
+  translation: christening
   pos: noun
 - lemma: явно
   ipa: /ˈjaʋnɔ/

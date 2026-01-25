@@ -216,9 +216,9 @@ items:
   ipa: /nɛɦˈajnɪj/
   translation: immediate
   pos: adj
-- lemma: несподіване
+- lemma: несподіваний
   ipa: /nɛspɔdˈiʋanɛ/
-  translation: ''
+  translation: unexpected
   pos: noun
   gender: n
 - lemma: оволодіти
@@ -295,9 +295,9 @@ items:
   ipa: /pɔraxuʋˈatɪ/
   translation: to count (perfective)
   pos: verb
-- lemma: постав
+- lemma: постати
   ipa: /pɔstˈaʋ/
-  translation: ''
+  translation: to arise
   pos: noun
   gender: m
 - lemma: право

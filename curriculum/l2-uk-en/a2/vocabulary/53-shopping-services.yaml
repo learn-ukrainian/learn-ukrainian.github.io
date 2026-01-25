@@ -19,7 +19,7 @@ items:
   gender: f
 - lemma: бізнес-сектор
   ipa: /bˈiznɛs-sɛktɔr/
-  translation: ''
+  translation: business sector
   pos: noun
   gender: m
 - lemma: вдячність
@@ -55,9 +55,9 @@ items:
   translation: lump, chest
   pos: noun
   gender: f
-- lemma: дружня
+- lemma: дружній
   ipa: /drˈuʒnja/
-  translation: ''
+  translation: friendly
   pos: noun
   gender: f
 - lemma: експрес

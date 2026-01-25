@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: вечером
   ipa: /ʋɛt͡ʃɛrɔm/
-  translation: ''
+  translation: in the evening (Russian)
   pos: noun
   gender: m
 - lemma: відкриватися

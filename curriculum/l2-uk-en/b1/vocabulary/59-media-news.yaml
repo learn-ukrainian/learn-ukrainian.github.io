@@ -35,7 +35,7 @@ items:
   gender: m
 - lemma: гонгадзе
   ipa: /ɦɔnɦˈadzɛ/
-  translation: ''
+  translation: Gongadze
   pos: noun
   gender: m
 - lemma: дезінформація
@@ -102,12 +102,12 @@ items:
   gender: m
 - lemma: медіа-споживання
   ipa: /mˈɛdia-spɔʒɪʋannja/
-  translation: ''
+  translation: media consumption
   pos: noun
   gender: n
 - lemma: медіа-сфера
   ipa: /mˈɛdia-sfɛra/
-  translation: ''
+  translation: media sphere
   pos: noun
   gender: f
 - lemma: медіакомунікація
@@ -119,9 +119,9 @@ items:
   translation: linguist, language teacher
   pos: noun
   gender: m
-- lemma: надійне
+- lemma: надійний
   ipa: /nadˈijnɛ/
-  translation: ''
+  translation: reliable
   pos: noun
   gender: n
 - lemma: найвпливовіший

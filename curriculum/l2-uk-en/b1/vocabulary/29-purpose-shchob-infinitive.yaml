@@ -188,7 +188,7 @@ items:
   pos: adj
 - lemma: познати
   ipa: /pɔznatɪ/
-  translation: ''
+  translation: to know
   pos: verb
 - lemma: помічаючи
   ipa: /pɔmit͡ʃˈajut͡ʃɪ/
@@ -303,7 +303,7 @@ items:
   pos: noun
 - lemma: щоб-речення
   ipa: /ʃt͡ʃɔb-rɛt͡ʃɛnnja/
-  translation: ''
+  translation: that-clause
   pos: noun
   gender: n
 - lemma: інвестувати

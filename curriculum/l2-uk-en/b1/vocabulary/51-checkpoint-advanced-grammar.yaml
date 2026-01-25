@@ -17,7 +17,7 @@ items:
   pos: verb
 - lemma: випивши
   ipa: /ʋˈɪpɪʋʃɪ/
-  translation: ''
+  translation: having drunk
   pos: verb
 - lemma: виступивши
   ipa: /ʋˈɪstupɪʋʃɪ/
@@ -59,7 +59,7 @@ items:
   pos: adj
 - lemma: задумавшись
   ipa: /zadˈumaʋʃɪsʲ/
-  translation: ''
+  translation: having thought
   pos: verb
 - lemma: законопроєкт
   ipa: /zakɔnɔprɔˈjɛkt/
@@ -72,7 +72,7 @@ items:
   pos: verb
 - lemma: заплативши
   ipa: /zaplatˈɪʋʃɪ/
-  translation: ''
+  translation: having paid
   pos: verb
 - lemma: затінений
   ipa: /zatˈinɛnɪj/
@@ -135,7 +135,7 @@ items:
   pos: adj
 - lemma: побуджений
   ipa: /pɔbˈudʒɛnɪj/
-  translation: ''
+  translation: awakened
   pos: adj
 - lemma: побудити
   ipa: /pɔbudˈɪtɪ/
@@ -189,7 +189,7 @@ items:
   pos: verb
 - lemma: сказавши
   ipa: /skazˈaʋʃɪ/
-  translation: ''
+  translation: to say
   pos: verb
 - lemma: таця
   ipa: /tˈat͡sja/

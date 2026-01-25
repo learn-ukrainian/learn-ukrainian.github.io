@@ -80,7 +80,7 @@ items:
   pos: verb
 - lemma: перш
   ipa: /pɛrʃ/
-  translation: ''
+  translation: first
   pos: adv
 - lemma: повторити
   ipa: /pɔʋtɔrˈɪtɪ/
@@ -135,8 +135,51 @@ items:
   ipa: /jɛdnˈatɪ/
   translation: to unite, to join
   pos: verb
-- lemma: іда
-  ipa: /ˈida/
-  translation: ''
+- lemma: називний
+  ipa: /nazɪʋnˈɪj/
+  translation: nominative
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive
+  pos: adj
+- lemma: давальний
+  ipa: /daʋˈalʲnɪj/
+  translation: dative
+  pos: adj
+- lemma: знахідний
+  ipa: /znaxˈidnɪj/
+  translation: accusative
+  pos: adj
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative
+  pos: adj
+- lemma: кличний
+  ipa: /klˈɪt͡ʃnɪj/
+  translation: vocative
+  pos: adj
+- lemma: відмінок
+  ipa: /ʋidmˈinɔk/
+  translation: case
+  pos: noun
+  gender: m
+- lemma: закінчення
+  ipa: /zakˈint͡ʃɛnnja/
+  translation: ending, termination
+  pos: noun
+  gender: n
+- lemma: однина
+  ipa: /ɔdnɪnˈa/
+  translation: singular
+  pos: noun
+  gender: f
+- lemma: множина
+  ipa: /mnɔʒɪnˈa/
+  translation: plural
   pos: noun
   gender: f

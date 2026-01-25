@@ -6,20 +6,20 @@ items:
   ipa: /aʋtɔmatˈɪt͡ʃnɔ/
   translation: automatically
   pos: adv
-- lemma: адрес
-  ipa: /ˈadrɛs/
-  translation: ''
+- lemma: адреса
+  ipa: /adrˈɛsa/
+  translation: address
   pos: noun
-  gender: m
+  gender: f
 - lemma: базовий
   ipa: /bˈazɔʋɪj/
   translation: basic
   pos: adj
-- lemma: банка
-  ipa: /bˈanka/
-  translation: jar, can
+- lemma: банк
+  ipa: /bank/
+  translation: bank
   pos: noun
-  gender: f
+  gender: m
 - lemma: бюрократія
   ipa: /bjurɔkrˈatija/
   translation: bureaucracy
@@ -35,21 +35,21 @@ items:
   pos: adv
 - lemma: відкрити
   ipa: /ʋidkrˈɪtɪ/
-  translation: to open, to discover (perfective)
+  translation: to open
   pos: verb
 - lemma: відправлення
   ipa: /ʋidprˈaʋlɛnnja/
-  translation: departure, sending
+  translation: sending, dispatch
   pos: noun
   gender: n
 - lemma: довідка
   ipa: /dˈɔʋidka/
-  translation: reference, information
+  translation: reference, info
   pos: noun
   gender: f
 - lemma: зважити
   ipa: /zʋˈaʒɪtɪ/
-  translation: to weigh, to consider
+  translation: to weigh
   pos: verb
 - lemma: звичайний
   ipa: /zʋɪt͡ʃˈajnɪj/
@@ -57,7 +57,7 @@ items:
   pos: adj
 - lemma: зняти
   ipa: /znˈjatɪ/
-  translation: to take off, to film, to rent
+  translation: to withdraw (money), to take off
   pos: verb
 - lemma: картка
   ipa: /kˈartka/
@@ -66,7 +66,7 @@ items:
   gender: f
 - lemma: квитанція
   ipa: /kʋɪtˈant͡sija/
-  translation: receipt, bill
+  translation: receipt
   pos: noun
   gender: f
 - lemma: конверт
@@ -74,31 +74,27 @@ items:
   translation: envelope
   pos: noun
   gender: m
-- lemma: коротка
-  ipa: /kɔrˈɔtka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: купувати
   ipa: /kupuʋˈatɪ/
-  translation: to buy (imperfective)
+  translation: to buy
   pos: verb
 - lemma: кілограм
   ipa: /kilɔɦrˈam/
   translation: kilogram
   pos: noun
+  gender: m
 - lemma: марка
   ipa: /mˈarka/
-  translation: brand, stamp
+  translation: stamp
   pos: noun
   gender: f
 - lemma: надаватися
   ipa: /nadaʋˈatɪsja/
-  translation: to be suitable, to be granted
+  translation: to be provided
   pos: verb
 - lemma: непростий
   ipa: /nɛprˈɔstɪj/
-  translation: not simple, complicated
+  translation: not simple, complex
   pos: adj
 - lemma: німеччина
   ipa: /nimˈɛt͡ʃt͡ʃɪna/
@@ -111,12 +107,12 @@ items:
   pos: verb
 - lemma: отримання
   ipa: /ɔtrˈɪmannja/
-  translation: receiving, acquisition
+  translation: receipt, receiving
   pos: noun
   gender: n
 - lemma: оформлення
   ipa: /ɔfˈɔrmlɛnnja/
-  translation: arrangement, decoration, document processing
+  translation: processing (of documents)
   pos: noun
   gender: n
 - lemma: п'ятсот
@@ -125,16 +121,16 @@ items:
   pos: num
 - lemma: передати
   ipa: /pɛrɛdˈatɪ/
-  translation: to hand over, to transmit (perfective)
+  translation: to hand over
   pos: verb
 - lemma: переказ
   ipa: /pɛrˈɛkaz/
-  translation: legend, retelling, wire transfer
+  translation: wire transfer
   pos: noun
   gender: m
 - lemma: переказати
   ipa: /pɛrɛkazˈatɪ/
-  translation: to retell, to transfer (money)
+  translation: to transfer (money)
   pos: verb
 - lemma: платити
   ipa: /platˈɪtɪ/
@@ -144,34 +140,103 @@ items:
   ipa: /pɔsluɦa/
   translation: service
   pos: noun
+  gender: f
 - lemma: рекомендований
   ipa: /rɛkɔmɛndˈɔʋanɪj/
   translation: recommended
   pos: adj
 - lemma: розвінчання
   ipa: /rɔzʋint͡ʃˈannja/
-  translation: debunking, exposure
+  translation: debunking
   pos: noun
   gender: n
 - lemma: складно
   ipa: /sklˈadnɔ/
-  translation: difficult, complexly
+  translation: difficult
   pos: adv
-- lemma: сорока
-  ipa: /sɔrˈɔka/
-  translation: magpie
-  pos: noun
 - lemma: сфера
   ipa: /sfˈɛra/
-  translation: sphere, field, domain
+  translation: sphere, field
   pos: noun
   gender: f
 - lemma: тисяча
   ipa: /tˈɪsjat͡ʃa/
   translation: thousand
-  pos: noun
-  gender: f
+  pos: num
 - lemma: шаблон
   ipa: /ʃablˈɔn/
   translation: template, pattern
   pos: noun
+  gender: m
+- lemma: пошта
+  ipa: /pˈɔʃta/
+  translation: post office
+  pos: noun
+  gender: f
+- lemma: лист
+  ipa: /lɪst/
+  translation: letter
+  pos: noun
+  gender: m
+- lemma: посилка
+  ipa: /pɔsˈɪlka/
+  translation: package
+  pos: noun
+  gender: f
+- lemma: бандероль
+  ipa: /bandɛrˈɔlʲ/
+  translation: parcel
+  pos: noun
+  gender: f
+- lemma: індекс
+  ipa: /indɛks/
+  translation: postal code
+  pos: noun
+  gender: m
+- lemma: відправляти
+  ipa: /ʋidpraʋlʲˈatɪ/
+  translation: to send (imperfective)
+  pos: verb
+- lemma: отримувати
+  ipa: /ɔtrˈɪmuʋatɪ/
+  translation: to receive (imperfective)
+  pos: verb
+- lemma: гроші
+  ipa: /ɦrˈɔʃi/
+  translation: money
+  pos: noun
+  gender: pl
+- lemma: рахунок
+  ipa: /raxˈunɔk/
+  translation: account, bill
+  pos: noun
+  gender: m
+- lemma: готівка
+  ipa: /ɦɔtˈiʋka/
+  translation: cash
+  pos: noun
+  gender: f
+- lemma: валюта
+  ipa: /ʋalʲˈuta/
+  translation: currency
+  pos: noun
+  gender: f
+- lemma: вкладати
+  ipa: /ʋkladˈatɪ/
+  translation: to deposit, to put in
+  pos: verb
+- lemma: банкомат
+  ipa: /bankɔmˈat/
+  translation: ATM
+  pos: noun
+  gender: m
+- lemma: курс
+  ipa: /kurs/
+  translation: exchange rate, course
+  pos: noun
+  gender: m
+- lemma: відсоток
+  ipa: /ʋidpˈɔtɔk/
+  translation: percentage, interest
+  pos: noun
+  gender: m

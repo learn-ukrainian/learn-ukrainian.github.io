@@ -22,7 +22,7 @@ items:
   gender: m
 - lemma: виночко
   ipa: /ʋɪnɔt͡ʃkɔ/
-  translation: ''
+  translation: little wine (diminutive)
   pos: noun
   gender: n
 - lemma: водичка
@@ -41,7 +41,7 @@ items:
   gender: f
 - lemma: гарнесенький
   ipa: /ɦarnˈɛsɛnʲkɪj/
-  translation: ''
+  translation: pretty (diminutive)
   pos: adj
 - lemma: гендерний
   ipa: /ɦˈɛndɛrnɪj/
@@ -53,7 +53,7 @@ items:
   pos: verb
 - lemma: голохвастов
   ipa: /ɦɔlɔxʋastɔʋ/
-  translation: ''
+  translation: Holokhvastov (surname)
   pos: noun
   gender: m
 - lemma: гурт
@@ -71,7 +71,7 @@ items:
   pos: adj
 - lemma: денечок
   ipa: /dɛnɛt͡ʃɔk/
-  translation: ''
+  translation: little day (diminutive)
   pos: noun
 - lemma: директорика
   ipa: /dɪrɛktɔrɪka/
@@ -118,7 +118,7 @@ items:
   pos: noun
 - lemma: есенький
   ipa: /ɛsɛnʲkɪj/
-  translation: ''
+  translation: little (diminutive suffix)
   pos: noun
   gender: m
 - lemma: естрадний
@@ -265,7 +265,7 @@ items:
   gender: f
 - lemma: мамонько
   ipa: /mˈamɔnʲkɔ/
-  translation: ''
+  translation: mommy (diminutive)
   pos: noun
   gender: f
 - lemma: маніпуляція
@@ -421,7 +421,7 @@ items:
   gender: f
 - lemma: проектик
   ipa: /prɔɛktɪk/
-  translation: ''
+  translation: little project
   pos: noun
   gender: m
 - lemma: півкіло

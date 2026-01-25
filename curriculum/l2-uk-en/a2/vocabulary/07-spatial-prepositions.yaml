@@ -106,7 +106,7 @@ items:
   translation: immediately
   pos: adv
 - lemma: одяг
-  ipa: /ˈɔdjaɦ/
+  ipa: /'ɔdjaɦ/
   translation: clothing
   pos: noun
   gender: m
@@ -172,6 +172,90 @@ items:
   ipa: /ujaʋˈɪtɪ/
   translation: to imagine (perfective)
   pos: verb
+- lemma: в
+  ipa: /ʋ/
+  translation: in, into, at
+  pos: prep
+- lemma: у
+  ipa: /u/
+  translation: in, into, at
+  pos: prep
+- lemma: на
+  ipa: /na/
+  translation: on, onto, at
+  pos: prep
+- lemma: під
+  ipa: /pid/
+  translation: under, beneath
+  pos: prep
+- lemma: над
+  ipa: /nad/
+  translation: over, above
+  pos: prep
+- lemma: перед
+  ipa: /pˈɛrɛd/
+  translation: in front of, before
+  pos: prep
+- lemma: за
+  ipa: /za/
+  translation: behind, beyond, for
+  pos: prep
+- lemma: між
+  ipa: /miʒ/
+  translation: between, among
+  pos: prep
+- lemma: до
+  ipa: /dɔ/
+  translation: to, into, until
+  pos: prep
+- lemma: з
+  ipa: /z/
+  translation: from, with, since
+  pos: prep
+- lemma: із
+  ipa: /iz/
+  translation: from, with (euphonic variant)
+  pos: prep
+- lemma: біля
+  ipa: /bˈilʲa/
+  translation: near, beside
+  pos: prep
+- lemma: коло
+  ipa: /kˈɔlɔ/
+  translation: near, around, circle
+  pos: prep
+- lemma: поруч
+  ipa: /pˈɔrut͡ʃ/
+  translation: nearby, next to
+  pos: adv
+- lemma: навколо
+  ipa: /naʋkˈɔlɔ/
+  translation: around
+  pos: adv
+- lemma: вздовж
+  ipa: /ʋzdɔu̯ʒ/
+  translation: along
+  pos: adv
+- lemma: напроти
+  ipa: /naprˈɔtɪ/
+  translation: opposite
+  pos: adv
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative (case)
+  pos: adj
+- lemma: знахідний
+  ipa: /znaxˈidnɪj/
+  translation: accusative (case)
+  pos: adj
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
 - lemma: єдиний
   ipa: /jɛdˈɪnɪj/
   translation: single, unique, only

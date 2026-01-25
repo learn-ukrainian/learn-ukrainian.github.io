@@ -23,7 +23,7 @@ items:
   gender: m
 - lemma: бізнес-нарада
   ipa: /bˈiznɛs-narada/
-  translation: ''
+  translation: business meeting
   pos: noun
   gender: f
 - lemma: ввп

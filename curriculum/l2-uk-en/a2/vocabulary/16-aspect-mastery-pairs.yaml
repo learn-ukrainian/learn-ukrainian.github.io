@@ -170,3 +170,36 @@ items:
   translation: candy
   pos: noun
   gender: f
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective
+  pos: adj
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective
+  pos: adj
+- lemma: подзвонити
+  ipa: /pɔdzʋɔnˈɪtɪ/
+  translation: to call (perfective)
+  pos: verb
+- lemma: ремонтувати
+  ipa: /rɛmɔntuʋˈatɪ/
+  translation: to repair
+  pos: verb
+- lemma: будувати
+  ipa: /buduʋˈatɪ/
+  translation: to build
+  pos: verb
+- lemma: побудувати
+  ipa: /pɔbuduʋˈatɪ/
+  translation: to build (perfective)
+  pos: verb
+- lemma: продати
+  ipa: /prɔdˈatɪ/
+  translation: to sell (perfective)
+  pos: verb

@@ -231,7 +231,7 @@ items:
   pos: verb
 - lemma: ити
   ipa: /ɪtɪ/
-  translation: ''
+  translation: to go (truncated)
   pos: noun
 - lemma: кава
   ipa: /kˈaʋa/
@@ -356,9 +356,9 @@ items:
   ipa: /nɛmatɪ/
   translation: to not have
   pos: verb
-- lemma: нова
+- lemma: новий
   ipa: /nɔʋˈa/
-  translation: ''
+  translation: new
   pos: noun
   gender: f
 - lemma: нове
@@ -478,9 +478,9 @@ items:
   ipa: /sɔrˈɔka/
   translation: magpie
   pos: noun
-- lemma: старе
+- lemma: старий
   ipa: /starˈɛ/
-  translation: ''
+  translation: old
   pos: noun
   gender: n
 - lemma: студент
