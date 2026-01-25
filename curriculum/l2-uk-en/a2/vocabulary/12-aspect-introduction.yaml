@@ -2,164 +2,64 @@ module: 12-aspect-introduction
 level: A2
 version: '2.0'
 items:
-- lemma: весь
-  ipa: /ʋɛsʲ/
-  translation: ''
-  pos: pron
-- lemma: вибрати
-  ipa: /ʋˈɪbratɪ/
-  translation: ''
-  pos: verb
-- lemma: вивчення
-  ipa: /ʋˈɪʋt͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: видовий
-  ipa: /ʋɪdɔʋˈɪj/
-  translation: ''
-  pos: adj
-- lemma: використати
-  ipa: /ʋˈɪkɔrɪstatɪ/
-  translation: ''
-  pos: verb
 - lemma: всередині
   ipa: /ʋsɛrˈɛdɪni/
-  translation: ''
+  translation: inside (location)
   pos: adv
-- lemma: доконаний
-  ipa: /dɔkˈɔnanɪj/
-  translation: ''
-  pos: adj
-- lemma: дієслівний
-  ipa: /dijɛslˈiʋnɪj/
-  translation: ''
-  pos: adj
 - lemma: есе
   ipa: /ɛsˈɛ/
-  translation: ''
+  translation: essay
   pos: noun
   gender: n
-- lemma: завершений
-  ipa: /zaʋˈɛrʃɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: звичка
-  ipa: /zʋˈɪt͡ʃka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: знайомий
-  ipa: /znajˈɔmɪj/
-  translation: ''
-  pos: adj
 - lemma: золоте
   ipa: /zɔlɔtˈɛ/
   translation: ''
   pos: noun
   gender: n
-- lemma: кінець
-  ipa: /kinˈɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: найпоширеніший
   ipa: /najpɔʃˈɪrɛniʃɪj/
-  translation: ''
+  translation: the most widespread
   pos: adj
-- lemma: наставити
-  ipa: /nastˈaʋɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: неймовірно
   ipa: /nɛjmɔʋˈirnɔ/
-  translation: ''
+  translation: incredibly
   pos: adv
 - lemma: німецький
   ipa: /nimˈɛt͡sʲkɪj/
-  translation: ''
+  translation: German
   pos: adj
-- lemma: обіцянка
-  ipa: /ɔbit͡sˈjanka/
-  translation: ''
+- lemma: пиво
+  ipa: /pˈɪʋɔ/
+  translation: beer
   pos: noun
-  gender: f
-- lemma: ого
-  ipa: /ɔɦˈɔ/
-  translation: ''
-  pos: noun
-- lemma: одноразовий
-  ipa: /ɔdnɔrazˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: повторюваний
-  ipa: /pɔʋtˈɔrjuʋanɪj/
-  translation: ''
-  pos: adj
-- lemma: подивитися
-  ipa: /pɔdɪʋˈɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: практикуватися
   ipa: /praktɪkuʋˈatɪsja/
-  translation: ''
+  translation: to practice (oneself)
   pos: verb
-- lemma: прислів'я
-  ipa: /prɪslˈiʋja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: проводити
   ipa: /prɔʋɔdɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: процес
-  ipa: /prɔt͡sˈɛs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: прочитаний
-  ipa: /prɔt͡ʃˈɪtanɪj/
-  translation: ''
-  pos: adj
-- lemma: розпізнавати
-  ipa: /rɔzpiznaʋˈatɪ/
-  translation: ''
+  translation: to conduct, to lead (imperfective)
   pos: verb
 - lemma: розібрати
   ipa: /rɔzibrˈatɪ/
-  translation: ''
+  translation: to disassemble, to sort out, to understand
   pos: verb
 - lemma: світогляд
   ipa: /sʋitˈɔɦljad/
-  translation: ''
+  translation: worldview
   pos: noun
 - lemma: теза
   ipa: /tˈɛza/
-  translation: ''
+  translation: thesis, point
   pos: noun
   gender: f
-- lemma: тривалість
-  ipa: /trɪʋˈalistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: увесь
-  ipa: /uʋˈɛsʲ/
-  translation: ''
-  pos: pron
 - lemma: філософія
   ipa: /filɔsˈɔfija/
-  translation: ''
+  translation: philosophy
   pos: noun
   gender: f
-- lemma: читання
-  ipa: /t͡ʃɪtˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: інформація
   ipa: /infɔrmˈat͡sija/
-  translation: ''
+  translation: information
   pos: noun
   gender: f

@@ -4,25 +4,25 @@ version: '2.0'
 items:
 - lemma: вбік
   ipa: /ʋbik/
-  translation: ''
+  translation: aside, to the side
   pos: adv
 - lemma: вертеп
   ipa: /ʋɛrtˈɛp/
-  translation: ''
+  translation: vertep (puppet theater)
   pos: noun
   gender: m
 - lemma: випробувати
   ipa: /ʋɪprɔbuʋatɪ/
-  translation: ''
+  translation: to test, to try out
   pos: verb
 - lemma: глінтвейн
   ipa: /ɦlintʋɛjn/
-  translation: ''
+  translation: mulled wine
   pos: noun
   gender: m
 - lemma: гірськолижний
   ipa: /ɦirsʲkɔlˈɪʒnɪj/
-  translation: ''
+  translation: ski (adj)
   pos: adj
 - lemma: етно-ресторан
   ipa: /ˈɛtnɔ-rɛstɔran/
@@ -30,42 +30,42 @@ items:
   pos: noun
 - lemma: жорсткий
   ipa: /ʒɔrstkˈɪj/
-  translation: ''
+  translation: hard, tough, rigid
   pos: adj
 - lemma: забава
   ipa: /zabˈaʋa/
-  translation: ''
+  translation: fun, game
   pos: noun
   gender: f
 - lemma: заощадити
   ipa: /zaɔʃt͡ʃˈadɪtɪ/
-  translation: ''
+  translation: to save (money)
   pos: verb
 - lemma: засніжений
   ipa: /zasnˈiʒɛnɪj/
-  translation: ''
+  translation: snow-covered
   pos: adj
 - lemma: зігрітися
   ipa: /ziɦrˈitɪsja/
-  translation: ''
+  translation: to warm oneself
   pos: verb
 - lemma: ковзан
   ipa: /kɔʋzˈan/
-  translation: ''
+  translation: skate
   pos: noun
 - lemma: ковзанка
   ipa: /kˈɔʋzanka/
-  translation: ''
+  translation: skating rink
   pos: noun
   gender: f
 - lemma: ковзання
   ipa: /kˈɔʋzannja/
-  translation: ''
+  translation: sliding, skating
   pos: noun
   gender: n
 - lemma: колиба
   ipa: /kɔlˈɪba/
-  translation: ''
+  translation: kolyba (traditional shepherd's hut/restaurant)
   pos: noun
   gender: f
 - lemma: коль
@@ -75,92 +75,92 @@ items:
   gender: m
 - lemma: колядка
   ipa: /kɔlˈjadka/
-  translation: ''
+  translation: koliadka (Christmas carol)
   pos: noun
 - lemma: комплект
   ipa: /kɔmplˈɛkt/
-  translation: ''
+  translation: set
   pos: noun
   gender: m
 - lemma: масово
   ipa: /mˈasɔʋɔ/
-  translation: ''
+  translation: en masse
   pos: adv
 - lemma: новачок
   ipa: /nɔʋat͡ʃˈɔk/
-  translation: ''
+  translation: beginner, newbie
   pos: noun
 - lemma: палиця
   ipa: /pˈalɪt͡sja/
-  translation: ''
+  translation: stick, cane
   pos: noun
   gender: f
 - lemma: плай
   ipa: /plaj/
-  translation: ''
+  translation: mountain path (Carpathian)
   pos: noun
   gender: m
 - lemma: пологий
   ipa: /pɔlˈɔɦɪj/
-  translation: ''
+  translation: sloping, gentle
   pos: adj
 - lemma: поляна
   ipa: /pɔlˈjana/
-  translation: ''
+  translation: glade, meadow
   pos: noun
   gender: f
 - lemma: пухнастий
   ipa: /puxnˈastɪj/
-  translation: ''
+  translation: fluffy
   pos: adj
 - lemma: підйомник
   ipa: /pidjˈɔmnɪk/
-  translation: ''
+  translation: lift, elevator (ski)
   pos: noun
   gender: m
 - lemma: розкішний
   ipa: /rɔzkˈiʃnɪj/
-  translation: ''
+  translation: luxurious, splendid
   pos: adj
 - lemma: різдвяний
   ipa: /rizdʋˈjanɪj/
-  translation: ''
+  translation: Christmas (adj)
   pos: adj
 - lemma: сало
   ipa: /sˈalɔ/
-  translation: ''
+  translation: salo (pork fat)
   pos: noun
   gender: f
 - lemma: скі-пас
   ipa: /ski-pas/
-  translation: ''
+  translation: ski-pass
   pos: noun
   gender: m
 - lemma: славський
   ipa: /slˈaʋsʲkɪj/
-  translation: ''
+  translation: Slavske (adj)
   pos: adj
 - lemma: смакування
   ipa: /smakuʋˈannja/
-  translation: ''
+  translation: savoring
   pos: noun
   gender: n
 - lemma: сноуборд
   ipa: /snɔubˈɔrd/
-  translation: ''
+  translation: snowboard
   pos: noun
   gender: m
 - lemma: сноубординг
   ipa: /snɔubɔrdɪnɦ/
-  translation: ''
+  translation: snowboarding
   pos: noun
   gender: m
 - lemma: фрірайд
   ipa: /frirajd/
-  translation: ''
+  translation: freeride
   pos: noun
   gender: m
 - lemma: фрірайти
   ipa: /frirajtɪ/
-  translation: ''
+  translation: to freeride (rare/slang)
   pos: verb

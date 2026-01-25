@@ -9,139 +9,153 @@ items:
   gender: m
 - lemma: видатний
   ipa: /ʋɪdatnˈɪj/
-  translation: ''
+  translation: outstanding, prominent
   pos: adj
 - lemma: вишуканіший
   ipa: /ʋˈɪʃukaniʃɪj/
-  translation: ''
+  translation: more exquisite
   pos: adj
 - lemma: гелікоптер
   ipa: /ɦɛlikɔptˈɛr/
-  translation: ''
+  translation: helicopter
   pos: noun
 - lemma: дотримання
   ipa: /dɔtrˈɪmannja/
-  translation: ''
+  translation: compliance, adherence
   pos: noun
   gender: n
 - lemma: еліта
   ipa: /ɛlˈita/
-  translation: ''
+  translation: elite
   pos: noun
   gender: f
 - lemma: заздрити
   ipa: /zˈazdrɪtɪ/
-  translation: ''
+  translation: to envy
   pos: verb
 - lemma: заслужено
   ipa: /zaslˈuʒɛnɔ/
-  translation: ''
+  translation: deservedly
   pos: adv
+- lemma: кваліфікація
+  ipa: /kʋalifikˈat͡sija/
+  translation: qualification
+  pos: noun
+  gender: f
 - lemma: кластер
   ipa: /klˈastɛr/
-  translation: ''
+  translation: cluster
   pos: noun
   gender: m
 - lemma: концентрація
   ipa: /kɔnt͡sɛntrˈat͡sija/
-  translation: ''
+  translation: concentration
   pos: noun
   gender: f
 - lemma: корольов
   ipa: /kɔrɔlʲˈɔʋ/
-  translation: ''
+  translation: Koroliov (name)
   pos: noun
   gender: m
 - lemma: корпорація
   ipa: /kɔrpɔrˈat͡sija/
-  translation: ''
+  translation: corporation
   pos: noun
   gender: f
 - lemma: космонавтика
   ipa: /kɔsmɔnˈaʋtɪka/
-  translation: ''
+  translation: cosmonautics
   pos: noun
   gender: f
 - lemma: лідирувати
   ipa: /lidˈɪruʋatɪ/
-  translation: ''
+  translation: to lead, to be in the lead
   pos: verb
 - lemma: міцний
   ipa: /mit͡snˈɪj/
-  translation: ''
+  translation: strong, firm
   pos: adj
 - lemma: нерідко
   ipa: /nɛrˈidkɔ/
-  translation: ''
+  translation: not rarely, often
   pos: adv
 - lemma: нібито
   ipa: /nˈibɪtɔ/
-  translation: ''
+  translation: allegedly
   pos: part
 - lemma: оновлюватися
   ipa: /ɔnˈɔʋljuʋatɪsja/
-  translation: ''
+  translation: to be updated (imperfective)
   pos: verb
 - lemma: організаційний
   ipa: /ɔrɦanizat͡sˈijnɪj/
-  translation: ''
+  translation: organizational
   pos: adj
 - lemma: отримаути
   ipa: /ɔtrɪmautɪ/
   translation: ''
   pos: verb
+- lemma: працевлаштування
+  ipa: /prat͡sɛʋlaʃtuʋˈannja/
+  translation: employment, job placement
+  pos: noun
+  gender: n
 - lemma: проведення
   ipa: /prɔʋˈɛdɛnnja/
-  translation: ''
+  translation: conducting, carrying out
   pos: noun
   gender: n
 - lemma: продакт-менеджмент
   ipa: /prɔdakt-mˈɛnɛdʒmɛnt/
-  translation: ''
+  translation: product management
   pos: noun
   gender: m
 - lemma: продуктивність
   ipa: /prɔduktˈɪʋnistʲ/
-  translation: ''
+  translation: productivity
   pos: noun
   gender: f
 - lemma: професіоналізм
   ipa: /prɔfɛsiɔnalˈizm/
-  translation: ''
+  translation: professionalism
   pos: noun
   gender: m
 - lemma: підпорядкований
   ipa: /pidpɔrjadkˈɔʋanɪj/
-  translation: ''
+  translation: subordinate, subject to
   pos: adj
+- lemma: скасувати
+  ipa: /skasuʋˈatɪ/
+  translation: to cancel (perfective)
+  pos: verb
 - lemma: становити
   ipa: /stanɔʋˈɪtɪ/
-  translation: ''
+  translation: to constitute, to make up
   pos: verb
 - lemma: сікорський
   ipa: /sikˈɔrsʲkɪj/
-  translation: ''
+  translation: Sikorsky (name)
   pos: noun
   gender: m
 - lemma: упередження
   ipa: /upɛrˈɛdʒɛnnja/
-  translation: ''
+  translation: prejudice, bias
   pos: noun
   gender: n
 - lemma: фідбек
   ipa: /fidbɛk/
-  translation: ''
+  translation: feedback
   pos: noun
   gender: m
 - lemma: фінансовий
   ipa: /finˈansɔʋɪj/
-  translation: ''
+  translation: financial
   pos: adj
 - lemma: інвестор
   ipa: /inʋˈɛstɔr/
-  translation: ''
+  translation: investor
   pos: noun
 - lemma: інженерний
   ipa: /inʒɛnˈɛrnɪj/
-  translation: ''
+  translation: engineering (adj)
   pos: adj

@@ -2,23 +2,51 @@ module: 06-being-and-becoming
 level: A2
 version: '2.0'
 items:
-- lemma: геніальний
-  ipa: /ɦɛniˈalʲnɪj/
-  translation: ''
+- lemma: великий
+  ipa: /ʋɛlˈɪkɪj/
+  translation: big, large, great
   pos: adj
-- lemma: деталь
-  ipa: /dɛtˈalʲ/
-  translation: ''
+- lemma: водій
+  ipa: /ʋɔdˈij/
+  translation: driver
+  pos: noun
+  gender: m
+- lemma: відсутність
+  ipa: /ʋidsˈutnistʲ/
+  translation: absence
   pos: noun
   gender: f
+- lemma: геніальний
+  ipa: /ɦɛniˈalʲnɪj/
+  translation: brilliant, ingenious
+  pos: adj
+- lemma: двадцять
+  ipa: /dʋˈadt͡sjatʲ/
+  translation: twenty
+  pos: num
+- lemma: деталь
+  ipa: /dɛtˈalʲ/
+  translation: detail
+  pos: noun
+  gender: f
+- lemma: директорка
+  ipa: /dɪrˈɛktɔrka/
+  translation: director (female)
+  pos: noun
+  gender: f
+- lemma: дідусь
+  ipa: /didˈusʲ/
+  translation: grandfather
+  pos: noun
+  gender: m
 - lemma: журналіст
   ipa: /ʒurnalˈist/
-  translation: ''
+  translation: journalist
   pos: noun
   gender: m
 - lemma: журналістка
   ipa: /ʒurnalˈistka/
-  translation: ''
+  translation: journalist (female)
   pos: noun
   gender: f
 - lemma: заводь
@@ -26,78 +54,96 @@ items:
   translation: ''
   pos: noun
   gender: f
-- lemma: залежати
-  ipa: /zalˈɛʒatɪ/
-  translation: ''
-  pos: verb
 - lemma: запитувати
   ipa: /zapˈɪtuʋatɪ/
-  translation: ''
+  translation: to ask (imperfective)
   pos: verb
+- lemma: круто
+  ipa: /krˈutɔ/
+  translation: cool!
+  pos: adv
 - lemma: кріпак
   ipa: /kripˈak/
+  translation: serf
+  pos: noun
+  gender: m
+- lemma: лесь
+  ipa: /lɛsʲ/
   translation: ''
   pos: noun
   gender: m
+- lemma: мрія
+  ipa: /mrˈija/
+  translation: dream, aspiration
+  pos: noun
+  gender: f
 - lemma: мріяти
   ipa: /mrˈijatɪ/
-  translation: ''
+  translation: to dream
   pos: verb
 - lemma: музикант
   ipa: /muzɪkˈant/
-  translation: ''
+  translation: musician
   pos: noun
   gender: m
-- lemma: однина
-  ipa: /ɔdnɪnˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: оповідач
   ipa: /ɔpɔʋˈidat͡ʃ/
-  translation: ''
+  translation: narrator
   pos: noun
   gender: m
 - lemma: особливість
   ipa: /ɔsɔblˈɪʋistʲ/
-  translation: ''
+  translation: feature, peculiarity
   pos: noun
   gender: f
 - lemma: письменниця
   ipa: /pɪsʲmˈɛnnɪt͡sja/
-  translation: ''
+  translation: writer (female)
   pos: noun
   gender: f
 - lemma: поет
   ipa: /pɔˈɛt/
-  translation: ''
+  translation: poet
   pos: noun
   gender: m
 - lemma: політехнічний
   ipa: /pɔlitɛxnˈit͡ʃnɪj/
-  translation: ''
+  translation: polytechnic
   pos: adj
 - lemma: поточний
   ipa: /pɔtˈɔt͡ʃnɪj/
-  translation: ''
+  translation: current, ongoing
   pos: adj
 - lemma: програміст
   ipa: /prɔɦramˈist/
-  translation: ''
+  translation: programmer
   pos: noun
   gender: m
 - lemma: пропускатися
   ipa: /prɔpuskˈatɪsja/
-  translation: ''
+  translation: to be skipped
   pos: verb
 - lemma: професія
   ipa: /prɔfˈɛsija/
-  translation: ''
+  translation: profession
   pos: noun
   gender: f
+- lemma: раніше
+  ipa: /ranˈiʃɛ/
+  translation: earlier, before
+  pos: adv
+- lemma: родина
+  ipa: /rɔdˈɪna/
+  translation: family
+  pos: noun
+  gender: f
+- lemma: рік
+  ipa: /rik/
+  translation: year
+  pos: noun
 - lemma: співбесіда
   ipa: /spiʋbˈɛsida/
-  translation: ''
+  translation: interview (job)
   pos: noun
   gender: f
 - lemma: став
@@ -107,24 +153,47 @@ items:
   gender: m
 - lemma: сталий
   ipa: /stˈalɪj/
-  translation: ''
+  translation: steady, stable, established
   pos: adj
+- lemma: старший
+  ipa: /starʃɪj/
+  translation: senior, older
+  pos: adj
+- lemma: стати
+  ipa: /stˈatɪ/
+  translation: to become, to stand (perfective)
+  pos: verb
+- lemma: тарас
+  ipa: /tarˈas/
+  translation: Taras (name)
+  pos: noun
+  gender: m
+- lemma: тато
+  ipa: /tˈatɔ/
+  translation: dad
+  pos: noun
+  gender: m
 - lemma: творчий
   ipa: /tʋˈɔrt͡ʃɪj/
-  translation: ''
+  translation: creative
   pos: adj
 - lemma: хороше
   ipa: /xɔrɔʃɛ/
   translation: ''
   pos: noun
   gender: n
+- lemma: шевченко
+  ipa: /ʃɛʋt͡ʃˈɛnkɔ/
+  translation: Shevchenko (name)
+  pos: noun
+  gender: f
 - lemma: інженер
   ipa: /inʒɛnˈɛr/
-  translation: ''
+  translation: engineer
   pos: noun
   gender: m
 - lemma: інститут
   ipa: /instɪtˈut/
-  translation: ''
+  translation: institute
   pos: noun
   gender: m

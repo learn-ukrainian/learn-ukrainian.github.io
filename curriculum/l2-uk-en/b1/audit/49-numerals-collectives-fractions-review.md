@@ -1,17 +1,51 @@
-# Audit Report: 49-numerals-collectives-fractions.md
-**Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M49 — 49-numerals-collectives-fractions.md
+**Level:** B1 | **Module:** M49 | **Phase:** B1.4 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:23:28
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння збірних числівників | 8 | 8 | ✅ |
+| 2 | match-up | Кількісні та збірні числівники | 12 | 8 | ✅ |
+| 3 | cloze | Виберіть правильну форму | 12 | 12 | ✅ |
+| 4 | true-false | Правила числівників | 8 | 8 | ✅ |
+| 5 | group-sort | Тип числівника | 21 | 12 | ✅ |
+| 6 | unjumble | Побудуйте речення | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 6 | 6 | ✅ |
+| 8 | cloze | Статистичний звіт | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть числівники | 8 | 6 | ✅ |
+| 10 | select | Правильні форми | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть українською | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (cloze, error-correction, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1730/1500
+- **Words:** ✅ 1733/1500 (raw: 2519)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 19/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/25
+- **Vocab:** ✅ 52/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -49,5 +83,5 @@
 | **Дроби та відсотки** | ⚪️ | 325 | Skipped |
 | **Практика** | ⚪️ | 181 | Skipped |
 | **Діалоги** | ✅ | 309 | Included in Core |
-| **Підсумок** | ✅ | 159 | Included in Core |
+| **Підсумок** | ✅ | 162 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

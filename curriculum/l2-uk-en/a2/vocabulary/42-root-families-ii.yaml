@@ -2,20 +2,11 @@ module: 42-root-families-ii
 level: A2
 version: '2.0'
 items:
-- lemma: акт
-  ipa: /akt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: вивчання
   ipa: /ʋɪʋt͡ʃˈannja/
-  translation: ''
+  translation: learning, studying
   pos: noun
   gender: n
-- lemma: внутрішній
-  ipa: /ʋnˈutriʃnij/
-  translation: ''
-  pos: adj
 - lemma: глял-
   ipa: /ɦljal-/
   translation: ''
@@ -26,22 +17,13 @@ items:
   pos: noun
 - lemma: говоріння
   ipa: /ɦɔʋɔrˈinnja/
-  translation: ''
+  translation: speaking (skill)
   pos: noun
   gender: n
-- lemma: десятка
-  ipa: /dɛsˈjatka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: дивл-
   ipa: /dɪʋl-/
   translation: ''
   pos: noun
-- lemma: досліджувати
-  ipa: /dɔslˈidʒuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: думл-
   ipa: /duml-/
   translation: ''
@@ -51,32 +33,10 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: заздалегідь
-  ipa: /zazdalɛɦˈidʲ/
-  translation: ''
-  pos: adv
-- lemma: застосовувати
-  ipa: /zastɔsˈɔʋuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: зменшувати
   ipa: /zmˈɛnʃuʋatɪ/
-  translation: ''
+  translation: to reduce (imperfective)
   pos: verb
-- lemma: зміст
-  ipa: /zmist/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: когнітивний
-  ipa: /kɔɦnitˈɪʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: лінгвістика
-  ipa: /linɦʋˈistɪka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: мов-
   ipa: /mɔʋ-/
   translation: ''
@@ -87,58 +47,33 @@ items:
   pos: noun
 - lemma: мовчазний
   ipa: /mɔʋt͡ʃaznˈɪj/
-  translation: ''
+  translation: silent, taciturn
   pos: adj
-- lemma: мовчання
-  ipa: /mɔʋt͡ʃˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: містити
   ipa: /mistˈɪtɪ/
-  translation: ''
+  translation: to contain
   pos: verb
 - lemma: навантаження
   ipa: /naʋantˈaʒɛnnja/
-  translation: ''
+  translation: load, workload
   pos: noun
   gender: n
 - lemma: оволодіння
   ipa: /ɔʋɔlɔdˈinnja/
-  translation: ''
+  translation: mastery, acquisition
   pos: noun
   gender: n
-- lemma: пасивний
-  ipa: /pasˈɪʋnɪj/
-  translation: ''
-  pos: adj
 - lemma: пасивно
   ipa: /pasˈɪʋnɔ/
-  translation: ''
+  translation: passively
   pos: adv
 - lemma: перед-
   ipa: /pˈɛrɛd-/
   translation: ''
   pos: noun
-- lemma: передбачити
-  ipa: /pɛrɛdbˈat͡ʃɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: пов'язаний
-  ipa: /pɔʋˈjazanɪj/
-  translation: ''
-  pos: adj
-- lemma: подібний
-  ipa: /pɔdˈibnɪj/
-  translation: ''
-  pos: adj
 - lemma: продуктивний
   ipa: /prɔduktˈɪʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: професійний
-  ipa: /prɔfɛsˈijnɪj/
-  translation: ''
+  translation: productive
   pos: adj
 - lemma: слух-
   ipa: /slux-/
@@ -146,40 +81,23 @@ items:
   pos: noun
 - lemma: слухання
   ipa: /slˈuxannja/
-  translation: ''
+  translation: listening, hearing
   pos: noun
   gender: n
-- lemma: споріднений
-  ipa: /spɔrˈidnɛnɪj/
-  translation: ''
-  pos: adj
 - lemma: спорідненихсел
   ipa: /spɔridnɛnɪxsɛl/
   translation: ''
   pos: noun
-- lemma: уважно
-  ipa: /uʋˈaʒnɔ/
-  translation: ''
-  pos: adv
-- lemma: художній
-  ipa: /xudˈɔʒnij/
-  translation: ''
-  pos: adj
 - lemma: ч-
   ipa: /t͡ʃ-/
   translation: ''
   pos: noun
-- lemma: чин
-  ipa: /t͡ʃɪn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: чут-
   ipa: /t͡ʃut-/
   translation: ''
   pos: noun
 - lemma: чуття
   ipa: /t͡ʃuttˈja/
-  translation: ''
+  translation: sense, feeling
   pos: noun
   gender: n

@@ -4,128 +4,210 @@ version: '2.0'
 items:
 - lemma: автобусний
   ipa: /aʋtˈɔbusnɪj/
-  translation: ''
+  translation: bus (adj)
   pos: adj
+- lemma: банкомат
+  ipa: /bankɔmˈat/
+  translation: ATM, cash machine
+  pos: noun
+  gender: m
 - lemma: брести
   ipa: /brɛstˈɪ/
-  translation: ''
+  translation: to wade, to stroll
   pos: verb
 - lemma: відповідний
   ipa: /ʋidpɔʋidnɪj/
-  translation: ''
+  translation: appropriate, relevant
   pos: adj
 - lemma: гарантувати
   ipa: /ɦarantuʋˈatɪ/
-  translation: ''
+  translation: to guarantee
   pos: verb
+- lemma: гол
+  ipa: /ɦɔl/
+  translation: goal (sports)
+  pos: noun
+  gender: m
 - lemma: доїжджати
   ipa: /dɔjiʒdʒˈatɪ/
-  translation: ''
+  translation: to reach (by vehicle), to commute
+  pos: verb
+- lemma: житель
+  ipa: /ʒˈɪtɛlʲ/
+  translation: resident, inhabitant
+  pos: noun
+  gender: m
+- lemma: заблукати
+  ipa: /zablukˈatɪ/
+  translation: to get lost
   pos: verb
 - lemma: залізничний
   ipa: /zaliznˈɪt͡ʃnɪj/
-  translation: ''
+  translation: railway (adj)
   pos: adj
 - lemma: замінити
   ipa: /zaminˈɪtɪ/
-  translation: ''
+  translation: to replace
   pos: verb
 - lemma: заходжий
   ipa: /zaxˈɔdʒɪj/
   translation: ''
   pos: adj
+- lemma: зібратися
+  ipa: /zibrˈatɪsja/
+  translation: to gather, to intend (perfective)
+  pos: verb
+- lemma: кар'єра
+  ipa: /karˈjɛra/
+  translation: career
+  pos: noun
+  gender: f
 - lemma: командний
   ipa: /kɔmˈandnɪj/
-  translation: ''
+  translation: team (adj)
   pos: adj
 - lemma: компас
   ipa: /kˈɔmpas/
-  translation: ''
+  translation: compass
   pos: noun
   gender: m
 - lemma: кінетичний
   ipa: /kinɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: kinetic
   pos: adj
 - lemma: лізима
   ipa: /lizɪma/
   translation: ''
   pos: noun
   gender: f
+- lemma: майстерність
+  ipa: /majstˈɛrnistʲ/
+  translation: mastery
+  pos: noun
+  gender: f
 - lemma: мандри
   ipa: /mˈandrɪ/
-  translation: ''
+  translation: travels, wanderings
   pos: noun
 - lemma: мерзнути
   ipa: /mˈɛrznutɪ/
-  translation: ''
+  translation: to freeze, to feel cold
   pos: verb
 - lemma: молекула
   ipa: /mɔlˈɛkula/
-  translation: ''
+  translation: molecule
   pos: noun
   gender: f
 - lemma: навігаційний
   ipa: /naʋiɦat͡sˈijnɪj/
-  translation: ''
+  translation: navigational
   pos: adj
 - lemma: найти
   ipa: /najtˈɪ/
-  translation: ''
+  translation: to find (perfective)
   pos: verb
+- lemma: незнайомець
+  ipa: /nɛznajˈɔmɛt͡sʲ/
+  translation: stranger
+  pos: noun
+  gender: m
 - lemma: ні-ні
   ipa: /ni-nˈi/
   translation: ''
   pos: part
+- lemma: ніякий
+  ipa: /niˈjakɪj/
+  translation: none, no kind of
+  pos: pron
 - lemma: одіссея
   ipa: /ɔdissˈɛja/
-  translation: ''
+  translation: odyssey
   pos: noun
   gender: f
 - lemma: описування
   ipa: /ɔpˈɪsuʋannja/
-  translation: ''
+  translation: describing
   pos: noun
   gender: n
+- lemma: по-київськи
+  ipa: /pɔ-kˈɪjiʋsʲkɪ/
+  translation: Kyiv-style
+  pos: adv
+- lemma: походження
+  ipa: /pɔxˈɔdʒɛnnja/
+  translation: origin, descent
+  pos: noun
+  gender: n
+- lemma: поєднати
+  ipa: /pɔjɛdnˈatɪ/
+  translation: to combine, to unite
+  pos: verb
+- lemma: природніший
+  ipa: /prɪrɔdniʃɪj/
+  translation: more natural
+  pos: adj
 - lemma: проговорювати
   ipa: /prɔɦɔʋˈɔrjuʋatɪ/
-  translation: ''
+  translation: to talk through
+  pos: verb
+- lemma: продемонструвати
+  ipa: /prɔdɛmɔnstruʋˈatɪ/
+  translation: to demonstrate
   pos: verb
 - lemma: пхатися
   ipa: /pxˈatɪsja/
-  translation: ''
+  translation: to push, to intrude
   pos: verb
 - lemma: підійматися
   ipa: /pidijmˈatɪsja/
-  translation: ''
+  translation: to rise, to climb (imperfective)
   pos: verb
+- lemma: пікнік
+  ipa: /piknik/
+  translation: picnic
+  pos: noun
+  gender: m
 - lemma: ризикувати
   ipa: /rɪzɪkuʋˈatɪ/
-  translation: ''
+  translation: to risk
   pos: verb
 - lemma: сеньйор
   ipa: /sɛnʲjˈɔr/
-  translation: ''
+  translation: senior
   pos: noun
   gender: m
 - lemma: систематизувати
   ipa: /sɪstɛmatɪzuʋˈatɪ/
-  translation: ''
+  translation: to systematize
   pos: verb
 - lemma: соватися
   ipa: /sˈɔʋatɪsja/
-  translation: ''
+  translation: to fidget, to move about
+  pos: verb
+- lemma: спускатися
+  ipa: /spuskˈatɪsja/
+  translation: to descend, to go down (imperfective)
   pos: verb
 - lemma: сунути
   ipa: /sunutɪ/
-  translation: ''
+  translation: to move, to shove, to push
   pos: verb
 - lemma: тріада
   ipa: /triˈada/
-  translation: ''
+  translation: triad
   pos: noun
   gender: f
+- lemma: туризм
+  ipa: /turˈɪzm/
+  translation: tourism
+  pos: noun
+  gender: m
+- lemma: шанс
+  ipa: /ʃans/
+  translation: chance
+  pos: noun
+  gender: m
 - lemma: якомога
   ipa: /jakɔmˈɔɦa/
-  translation: ''
+  translation: as much/fast as possible
   pos: adv

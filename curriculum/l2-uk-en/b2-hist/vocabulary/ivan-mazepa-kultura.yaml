@@ -1,0 +1,104 @@
+module: ivan-mazepa-kultura
+level: B2
+version: '2.0'
+items:
+  - lemma: бароко
+    ipa: /baˈrɔko/
+    translation: baroque
+    pos: noun
+    gender: n
+  - lemma: меценат
+    ipa: /met͡senat/
+    translation: patron of arts
+    pos: noun
+    gender: m
+  - lemma: академія
+    ipa: /akademija/
+    translation: academy
+    pos: noun
+    gender: f
+  - lemma: колегія
+    ipa: /koleɦija/
+    translation: collegium
+    pos: noun
+    gender: f
+  - lemma: ренесанс
+    ipa: /renesans/
+    translation: renaissance
+    pos: noun
+    gender: m
+  - lemma: архітектура
+    ipa: /arxitektura/
+    translation: architecture
+    pos: noun
+    gender: f
+  - lemma: собор
+    ipa: /sobor/
+    translation: cathedral
+    pos: noun
+    gender: m
+  - lemma: монастир
+    ipa: /monastyr/
+    translation: monastery
+    pos: noun
+    gender: m
+  - lemma: гравюра
+    ipa: /hravjura/
+    translation: engraving
+    pos: noun
+    gender: f
+  - lemma: панегірик
+    ipa: /panehiryk/
+    translation: panegyric (praise)
+    pos: noun
+    gender: m
+  - lemma: друкарня
+    ipa: /drukarnʲa/
+    translation: printing house
+    pos: noun
+    gender: f
+  - lemma: освіта
+    ipa: /osvita/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: інтелектуал
+    ipa: /intelektual/
+    translation: intellectual
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /spadʃt͡ʃyna/
+    translation: heritage
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /identyt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: вандалізм
+    ipa: /vandalizm/
+    translation: vandalism
+    pos: noun
+    gender: m
+  - lemma: анафема
+    ipa: /anafema/
+    translation: anathema
+    pos: noun
+    gender: f
+  - lemma: герб
+    ipa: /herb/
+    translation: coat of arms
+    pos: noun
+    gender: m
+  - lemma: дзвін
+    ipa: /dzvin/
+    translation: bell
+    pos: noun
+    gender: m
+  - lemma: естетика
+    ipa: /estetyka/
+    translation: aesthetics
+    pos: noun
+    gender: f

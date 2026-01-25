@@ -4,173 +4,234 @@ version: '2.0'
 items:
 - lemma: адвокат
   ipa: /adʋɔkˈat/
-  translation: ''
+  translation: lawyer, attorney
   pos: noun
   gender: m
 - lemma: архів
   ipa: /arxˈiʋ/
-  translation: ''
+  translation: archive
   pos: noun
+- lemma: бракувати
+  ipa: /brakuʋˈatɪ/
+  translation: to be lacking
+  pos: verb
 - lemma: вивчитися
   ipa: /ʋˈɪʋt͡ʃɪtɪsja/
-  translation: ''
+  translation: to qualify, to finish studying
+  pos: verb
+- lemma: винайти
+  ipa: /ʋˈɪnajtɪ/
+  translation: to invent
   pos: verb
 - lemma: виникнення
   ipa: /ʋˈɪnɪknɛnnja/
-  translation: ''
+  translation: emergence, origin
   pos: noun
   gender: n
 - lemma: вплинути
   ipa: /ʋplˈɪnutɪ/
-  translation: ''
+  translation: to influence (perfective)
   pos: verb
 - lemma: відчуватися
   ipa: /ʋidt͡ʃuʋˈatɪsja/
-  translation: ''
+  translation: to be felt
   pos: verb
+- lemma: громадянин
+  ipa: /ɦrɔmadˈjanɪn/
+  translation: citizen
+  pos: noun
+  gender: m
 - lemma: далекоглядний
   ipa: /dalɛkɔɦlˈjadnɪj/
-  translation: ''
+  translation: far-sighted
   pos: adj
 - lemma: допустовий
   ipa: /dɔpustˈɔʋɪj/
-  translation: ''
+  translation: concessive (grammar)
   pos: adj
+- lemma: доступ
+  ipa: /dˈɔstup/
+  translation: access
+  pos: noun
+  gender: m
 - lemma: думок
   ipa: /dumˈɔk/
-  translation: ''
+  translation: of thoughts
   pos: noun
   gender: m
 - lemma: емпатія
   ipa: /ɛmpˈatija/
-  translation: ''
+  translation: empathy
   pos: noun
   gender: f
+- lemma: жаліти
+  ipa: /ʒalˈitɪ/
+  translation: to pity, to regret, to save (somebody)
+  pos: verb
 - lemma: запобігання
   ipa: /zapɔbiɦˈannja/
-  translation: ''
+  translation: prevention
   pos: noun
   gender: n
 - lemma: здібність
   ipa: /zdˈibnistʲ/
-  translation: ''
+  translation: ability, talent
   pos: noun
   gender: f
+- lemma: зростання
+  ipa: /zrɔstˈannja/
+  translation: growth, increase
+  pos: noun
+  gender: n
+- lemma: кар'єрний
+  ipa: /karˈjɛrnɪj/
+  translation: career (adj)
+  pos: adj
 - lemma: ланжерон
   ipa: /lanʒɛrˈɔn/
-  translation: ''
+  translation: Lanzheron (beach/wing part)
   pos: noun
   gender: m
 - lemma: ланка
   ipa: /lˈanka/
-  translation: ''
+  translation: link, unit
   pos: noun
   gender: f
 - lemma: ланцюговий
   ipa: /lant͡sjuɦˈɔʋɪj/
-  translation: ''
+  translation: chain (adj), nodal
+  pos: adj
+- lemma: лісовий
+  ipa: /lisɔʋˈɪj/
+  translation: forest (adj)
   pos: adj
 - lemma: мавка
   ipa: /mˈaʋka/
-  translation: ''
+  translation: mavka (forest nymph)
   pos: noun
   gender: f
 - lemma: моделювати
   ipa: /mɔdɛljuʋˈatɪ/
-  translation: ''
+  translation: to model
   pos: verb
 - lemma: мріяння
   ipa: /mrˈijannja/
-  translation: ''
+  translation: dreaming
   pos: noun
 - lemma: мудріший
   ipa: /mudrˈiʃɪj/
-  translation: ''
+  translation: wiser
   pos: adj
 - lemma: нав'язливий
   ipa: /naʋˈjazlɪʋɪj/
-  translation: ''
+  translation: intrusive, obsessive
   pos: adj
 - lemma: наслідковий
   ipa: /naslidkˈɔʋɪj/
-  translation: ''
+  translation: consecutive, resulting
   pos: adj
 - lemma: окупація
   ipa: /ɔkupˈat͡sija/
-  translation: ''
+  translation: occupation
   pos: noun
   gender: f
+- lemma: організований
+  ipa: /ɔrɦanizˈɔʋanɪj/
+  translation: organized
+  pos: adj
 - lemma: осмислити
   ipa: /ɔsmˈɪslɪtɪ/
-  translation: ''
+  translation: to comprehend, to rethink
   pos: verb
 - lemma: особисто
   ipa: /ɔsɔbˈɪstɔ/
-  translation: ''
+  translation: personally
   pos: adv
 - lemma: особистісний
   ipa: /ɔsɔbˈɪstisnɪj/
-  translation: ''
+  translation: personal (adj)
   pos: adj
+- lemma: покращити
+  ipa: /pɔkrˈaʃt͡ʃɪtɪ/
+  translation: to improve (perfective)
+  pos: verb
 - lemma: прибуток
   ipa: /prɪbˈutɔk/
-  translation: ''
+  translation: profit
   pos: noun
   gender: m
 - lemma: причиновий
   ipa: /prɪt͡ʃɪnˈɔʋɪj/
-  translation: ''
+  translation: causal
   pos: adj
+- lemma: психолог
+  ipa: /psɪxˈɔlɔɦ/
+  translation: psychologist
+  pos: noun
+- lemma: рис
+  ipa: /rɪs/
+  translation: rice, feature (rare - use риса)
+  pos: noun
+  gender: m
 - lemma: розраховувати
   ipa: /rɔzraxˈɔʋuʋatɪ/
-  translation: ''
+  translation: to count on, to calculate
   pos: verb
 - lemma: руминація
   ipa: /rumɪnat͡sija/
-  translation: ''
+  translation: rumination
   pos: noun
   gender: f
 - lemma: самопізнання
   ipa: /samɔpiznˈannja/
-  translation: ''
+  translation: self-knowledge
   pos: noun
   gender: n
 - lemma: сміливіший
   ipa: /smilˈɪʋiʃɪj/
-  translation: ''
+  translation: braver
   pos: adj
 - lemma: соцмережа
   ipa: /sɔt͡smɛrɛʒa/
-  translation: ''
+  translation: social network
   pos: noun
 - lemma: сповнений
   ipa: /spˈɔʋnɛnɪj/
-  translation: ''
+  translation: full of, filled with
   pos: adj
+- lemma: справитися
+  ipa: /sprˈaʋɪtɪsja/
+  translation: to cope, to manage (perfective)
+  pos: verb
 - lemma: старання
   ipa: /starˈannja/
-  translation: ''
+  translation: effort, diligence
   pos: noun
   gender: n
-- lemma: сформулювати
-  ipa: /sfɔrmuljuʋˈatɪ/
-  translation: ''
-  pos: verb
+- lemma: сьогодення
+  ipa: /sʲɔɦɔdˈɛnnja/
+  translation: the present, nowadays
+  pos: noun
+  gender: n
 - lemma: тенденція
   ipa: /tɛndˈɛnt͡sija/
-  translation: ''
+  translation: tendency, trend
   pos: noun
   gender: f
 - lemma: усвідомлювати
   ipa: /usʋidˈɔmljuʋatɪ/
-  translation: ''
+  translation: to realize, to be aware (imperfective)
   pos: verb
 - lemma: фольклорний
   ipa: /fɔlʲklˈɔrnɪj/
-  translation: ''
+  translation: folklore (adj)
+  pos: adj
+- lemma: щасливіший
+  ipa: /ʃt͡ʃaslˈɪʋiʃɪj/
+  translation: happier
   pos: adj
 - lemma: ясність
   ipa: /ˈjasnistʲ/
-  translation: ''
+  translation: clarity, lucidity
   pos: noun
   gender: f

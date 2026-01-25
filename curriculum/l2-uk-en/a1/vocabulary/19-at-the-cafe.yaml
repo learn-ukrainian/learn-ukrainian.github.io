@@ -2,268 +2,44 @@ module: 19-at-the-cafe
 level: A1
 version: '2.0'
 items:
-- lemma: борщ
-  ipa: /bɔrʃt͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: вареник
-  ipa: /ʋarˈɛnɪk/
-  translation: ''
-  pos: noun
-- lemma: вечеря
-  ipa: /ʋɛt͡ʃˈɛrja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вечір
-  ipa: /ʋˈɛt͡ʃir/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: взяти
-  ipa: /ʋzˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: вода
-  ipa: /ʋɔdˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: водити
-  ipa: /ʋɔdˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: все
-  ipa: /ʋsɛ/
-  translation: ''
-  pos: part
-- lemma: вікно
-  ipa: /ʋiknˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: день
-  ipa: /dɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: десерт
-  ipa: /dɛsˈɛrt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: добре
-  ipa: /dˈɔbrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: добрий
-  ipa: /dˈɔbrɪj/
-  translation: ''
-  pos: adj
 - lemma: достатньо
   ipa: /dɔstˈatnʲɔ/
-  translation: ''
+  translation: enough, sufficiently
   pos: adv
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: замовляти
-  ipa: /zamɔʋlˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: звісно
-  ipa: /zʋˈisnɔ/
-  translation: ''
-  pos: adv
-- lemma: кава
-  ipa: /kˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кавовий
-  ipa: /kˈaʋɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: київський
-  ipa: /kˈɪjiʋsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: круасан
-  ipa: /kruasˈan/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: культура
-  ipa: /kulʲtˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: любити
-  ipa: /ljubˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: медівник
   ipa: /mɛdiʋnˈɪk/
   translation: ''
   pos: noun
   gender: m
-- lemma: мень
-  ipa: /mɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
-- lemma: молоко
-  ipa: /mɔlɔkˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: наполеон
-  ipa: /napɔlɛˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: обслуговування
   ipa: /ɔbsluɦˈɔʋuʋannja/
-  translation: ''
+  translation: service, maintenance
   pos: noun
   gender: n
-- lemma: обід
-  ipa: /ɔbid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: окремий
-  ipa: /ɔkrˈɛmɪj/
-  translation: ''
-  pos: adj
-- lemma: окремо
-  ipa: /ɔkrˈɛmɔ/
-  translation: ''
-  pos: adv
 - lemma: по-львівськи
   ipa: /pɔ-lʲʋˈiʋsʲkɪ/
-  translation: ''
+  translation: Lviv-style
   pos: adv
-- lemma: порекомендувати
-  ipa: /pɔrɛkɔmɛnduʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: принести
-  ipa: /prɪnɛstˈɪ/
-  translation: ''
-  pos: verb
-- lemma: разом
-  ipa: /rˈazɔm/
-  translation: ''
-  pos: adv
-- lemma: рахунок
-  ipa: /raxˈunɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: решта
   ipa: /rˈɛʃta/
-  translation: ''
+  translation: rest, remainder, change (money)
   pos: noun
   gender: f
-- lemma: риба
-  ipa: /rˈɪba/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: салат
-  ipa: /salˈat/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: смачний
-  ipa: /smat͡ʃnˈɪj/
-  translation: ''
-  pos: adj
 - lemma: смачно
   ipa: /smˈat͡ʃnɔ/
-  translation: ''
+  translation: tastily, delicious!
   pos: adv
-- lemma: сніданок
-  ipa: /snidˈanɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: спробувати
-  ipa: /sprˈɔbuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: столик
   ipa: /stˈɔlɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: торт
-  ipa: /tɔrt/
-  translation: ''
+  translation: small table
   pos: noun
   gender: m
 - lemma: трав'яний
   ipa: /traʋjanˈɪj/
-  translation: ''
+  translation: herbal, grass (adj)
   pos: adj
-- lemma: туалет
-  ipa: /tualˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: хвилина
-  ipa: /xʋɪlˈɪna/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: хвилинка
   ipa: /xʋɪlˈɪnka/
-  translation: ''
+  translation: moment, minute (diminutive)
   pos: noun
   gender: f
-- lemma: хліб
-  ipa: /xlib/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: цукор
-  ipa: /t͡sˈukɔr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чай
-  ipa: /t͡ʃaj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чорний
-  ipa: /t͡ʃˈɔrnɪj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чудовий
-  ipa: /t͡ʃudˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: чудово
-  ipa: /t͡ʃudˈɔʋɔ/
-  translation: ''
-  pos: adv

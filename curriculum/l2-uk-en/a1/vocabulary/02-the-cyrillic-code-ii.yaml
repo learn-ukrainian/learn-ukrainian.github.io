@@ -8,35 +8,25 @@ items:
   pos: noun
 - lemma: алфавіт
   ipa: /alfˈaʋit/
-  translation: ''
+  translation: alphabet
   pos: noun
   gender: m
 - lemma: бб
   ipa: /bb/
   translation: ''
   pos: noun
-- lemma: борщ
-  ipa: /bɔrʃt͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: буква
-  ipa: /bˈukʋa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: вв
   ipa: /ʋʋ/
   translation: ''
   pos: noun
 - lemma: відьма
   ipa: /ʋˈidʲma/
-  translation: ''
+  translation: witch
   pos: noun
   gender: f
 - lemma: відьмак
   ipa: /ʋidʲmˈak/
-  translation: ''
+  translation: witcher
   pos: noun
   gender: m
 - lemma: гг
@@ -49,30 +39,21 @@ items:
   pos: noun
 - lemma: джинса
   ipa: /dʒɪnsa/
-  translation: ''
+  translation: jeans, surreptitious advertising
   pos: noun
   gender: f
 - lemma: дніпро
   ipa: /dniprˈɔ/
-  translation: ''
+  translation: Dnipro
   pos: noun
   gender: m
-- lemma: добре
-  ipa: /dˈɔbrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: ее
   ipa: /ɛɛ/
   translation: ''
   pos: noun
 - lemma: желе
   ipa: /ʒɛlˈɛ/
-  translation: ''
+  translation: jelly
   pos: noun
   gender: n
 - lemma: жж
@@ -94,12 +75,7 @@ items:
   pos: noun
 - lemma: йогурт
   ipa: /jˈɔɦurt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: київ
-  ipa: /kɪˈjiʋ/
-  translation: ''
+  translation: yogurt
   pos: noun
   gender: m
 - lemma: кк
@@ -109,44 +85,34 @@ items:
   gender: m
 - lemma: край
   ipa: /kraj/
-  translation: ''
+  translation: edge, border, land
   pos: noun
   gender: m
 - lemma: ла
   ipa: /la/
   translation: ''
   pos: part
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: ласкаво
   ipa: /laskˈaʋɔ/
-  translation: ''
+  translation: kindly, warmly
   pos: adv
 - lemma: лл
   ipa: /ll/
   translation: ''
   pos: noun
-- lemma: львів
-  ipa: /lʲʋiʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: любов
   ipa: /ljubˈɔʋ/
-  translation: ''
+  translation: love
   pos: noun
   gender: f
 - lemma: майонез
   ipa: /majɔnˈɛz/
-  translation: ''
+  translation: mayonnaise
   pos: noun
   gender: m
 - lemma: мама
   ipa: /mˈama/
-  translation: ''
+  translation: mother, mom
   pos: noun
   gender: f
 - lemma: мм
@@ -154,20 +120,10 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: мова
-  ipa: /mˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: нн
   ipa: /nn/
   translation: ''
   pos: noun
-- lemma: одеса
-  ipa: /ɔdˈɛsa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: оо
   ipa: /ɔɔ/
   translation: ''
@@ -175,7 +131,7 @@ items:
   gender: f
 - lemma: побачення
   ipa: /pɔbˈat͡ʃɛnnja/
-  translation: ''
+  translation: date, meeting
   pos: noun
   gender: n
 - lemma: пп
@@ -183,14 +139,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: просити
   ipa: /prɔsˈɪtɪ/
-  translation: ''
+  translation: to ask, to beg
   pos: verb
 - lemma: рр
   ipa: /rr/
@@ -202,14 +153,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: слово
-  ipa: /slˈɔʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: справа
   ipa: /sprˈaʋa/
-  translation: ''
+  translation: matter, business, case
   pos: noun
   gender: f
 - lemma: сс
@@ -223,7 +169,7 @@ items:
   gender: m
 - lemma: україна
   ipa: /ukraˈjina/
-  translation: ''
+  translation: Ukraine
   pos: noun
   gender: f
 - lemma: уу
@@ -236,7 +182,7 @@ items:
   pos: noun
 - lemma: харків
   ipa: /xˈarkiʋ/
-  translation: ''
+  translation: Kharkiv
   pos: noun
   gender: m
 - lemma: хх
@@ -245,12 +191,7 @@ items:
   pos: noun
 - lemma: центр
   ipa: /t͡sɛntr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: цукор
-  ipa: /t͡sˈukɔr/
-  translation: ''
+  translation: center
   pos: noun
   gender: m
 - lemma: цц
@@ -263,7 +204,7 @@ items:
   pos: noun
 - lemma: шоколад
   ipa: /ʃɔkɔlˈad/
-  translation: ''
+  translation: chocolate
   pos: noun
   gender: m
 - lemma: шш
@@ -289,7 +230,7 @@ items:
   pos: noun
 - lemma: європа
   ipa: /jɛʋrˈɔpa/
-  translation: ''
+  translation: Europe
   pos: noun
   gender: f
 - lemma: єє
@@ -302,7 +243,7 @@ items:
   pos: noun
 - lemma: їсти
   ipa: /ˈjistɪ/
-  translation: ''
+  translation: to eat
   pos: verb
 - lemma: ґґ
   ipa: /gg/

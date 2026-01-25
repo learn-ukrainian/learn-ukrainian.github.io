@@ -1,0 +1,129 @@
+module: ivan-sirko
+level: B2
+version: '2.0'
+items:
+  - lemma: кошовий отаман
+    ipa: "[kɔʃɔˈvɪj ɔtɐˈmɑn]"
+    translation: koshovyi otaman (chief of the Sich)
+    pos: noun
+    gender: m
+  - lemma: Січ
+    ipa: "[sʲit͡ʃ]"
+    translation: Sich (the Cossack fortress and republic)
+    pos: noun
+    gender: f
+  - lemma: Руїна
+    ipa: "[rʊˈjinɐ]"
+    translation: The Ruin (period of civil war)
+    pos: noun
+    gender: f
+  - lemma: ясир
+    ipa: "[jɐˈsɪr]"
+    translation: captives taken by Tatars
+    pos: noun
+    gender: m
+  - lemma: характерник
+    ipa: "[xɐrɐkˈtɛrnɪk]"
+    translation: sorcerer-warrior in Cossack mythology
+    pos: noun
+    gender: m
+  - lemma: клейноди
+    ipa: "[klejnoˈdɪ]"
+    translation: insignia of power
+    pos: noun
+    gender: m, pl
+  - lemma: орда
+    ipa: "[ɔrˈdɑ]"
+    translation: horde (referring to Tatars)
+    pos: noun
+    gender: f
+  - lemma: літопис
+    ipa: "[lʲiˈtɔpɪs]"
+    translation: chronicle
+    pos: noun
+    gender: m
+  - lemma: зимівник
+    ipa: "[zɪmiu̯ˈnɪk]"
+    translation: winter settlement of Cossacks
+    pos: noun
+    gender: m
+  - lemma: старшина
+    ipa: "[stɐrʃɪˈnɑ]"
+    translation: Cossack officers or elders
+    pos: noun
+    gender: f
+  - lemma: бусурманин
+    ipa: "[bʊsʊrˈmɑnɪn]"
+    translation: (archaic) infidel, Muslim
+    pos: noun
+    gender: m
+  - lemma: ятаган
+    ipa: "[jɐtɐˈɦɑn]"
+    translation: yatagan (a type of Turkish sword)
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: "[ɐu̯tɔˈnɔmija]"
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: ультиматум
+    ipa: "[ʊlʲtɪˈmɑtʊm]"
+    translation: ultimatum
+    pos: noun
+    gender: m
+  - lemma: рейд
+    ipa: "[rɛjd]"
+    translation: raid
+    pos: noun
+    gender: m
+  - lemma: пасіка
+    ipa: "[ˈpɑsʲikɐ]"
+    translation: apiary, bee-garden
+    pos: noun
+    gender: f
+  - lemma: вольниця
+    ipa: "[ˈwɔlʲnɪt͡sʲɐ]"
+    translation: (land of) free people, liberties
+    pos: noun
+    gender: f
+  - lemma: побратимство
+    ipa: "[pɔbrɐˈtɪmstwɔ]"
+    translation: sworn brotherhood
+    pos: noun
+    gender: n
+  - lemma: улус
+    ipa: "[ʊˈlus]"
+    translation: ulus (a Tatar district or settlement)
+    pos: noun
+    gender: m
+  - lemma: гетьман
+    ipa: "[ˈɦɛtʲmɐn]"
+    translation: hetman
+    pos: noun
+    gender: m
+  - lemma: суб'єктність
+    ipa: "[sʊbˈjɛktnʲisʲtʲ]"
+    translation: subjecthood, agency
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: "[ˈspɑdʃt͡ʃɪnɐ]"
+    translation: heritage, legacy
+    pos: noun
+    gender: f
+  - lemma: уособлення
+    ipa: "[wɔˈsɔblennʲɐ]"
+    translation: personification, embodiment
+    pos: noun
+    gender: n
+  - lemma: міфологізація
+    ipa: "[mifɔlɔɦiˈzɑt͡sijɐ]"
+    translation: mythologization
+    pos: noun
+    gender: f
+  - lemma: інтервенція
+    ipa: "[intɛrˈwɛnt͡sijɐ]"
+    translation: intervention
+    pos: noun
+    gender: f

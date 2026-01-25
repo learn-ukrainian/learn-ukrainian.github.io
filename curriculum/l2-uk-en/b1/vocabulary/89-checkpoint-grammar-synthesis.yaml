@@ -2,70 +2,57 @@ module: 89-checkpoint-grammar-synthesis
 level: B1
 version: '2.0'
 items:
-- lemma: виплатити
-  ipa: /ʋˈɪplatɪtɪ/
-  translation: ''
+- lemma: вдосконалити
+  ipa: /ʋdɔskɔnˈalɪtɪ/
+  translation: to improve, to perfect
   pos: verb
 - lemma: відправитися
   ipa: /ʋidprˈaʋɪtɪsja/
-  translation: ''
+  translation: to set off, to depart
   pos: verb
 - lemma: думський
   ipa: /dˈumsʲkɪj/
-  translation: ''
+  translation: Duma (adj), council (adj)
   pos: adj
 - lemma: катакомба
   ipa: /katakˈɔmba/
-  translation: ''
+  translation: catacomb
   pos: noun
-- lemma: одягнувшись
-  ipa: /ɔdjaɦnˈuʋʃɪsʲ/
-  translation: ''
-  pos: verb
-- lemma: оригінал
-  ipa: /ɔrɪɦinˈal/
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: мотивований
+  ipa: /mɔtɪʋˈɔʋanɪj/
+  translation: motivated
+  pos: adj
 - lemma: перейшовши
   ipa: /pɛrɛjʃˈɔʋʃɪ/
   translation: ''
   pos: verb
+- lemma: перекладений
+  ipa: /pɛrɛklˈadɛnɪj/
+  translation: translated
+  pos: adj
+- lemma: прибувши
+  ipa: /prɪbˈuʋʃɪ/
+  translation: having arrived
+  pos: verb
 - lemma: приготований
   ipa: /prɪɦɔtˈɔʋanɪj/
-  translation: ''
+  translation: prepared
   pos: adj
-- lemma: принесений
-  ipa: /prɪnˈɛsɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: сварити
-  ipa: /sʋarˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: синтез
   ipa: /sˈɪntɛz/
-  translation: ''
+  translation: synthesis
   pos: noun
   gender: m
+- lemma: ставропігійський
+  ipa: /staʋrɔpiɦˈijsʲkɪj/
+  translation: Stauropegiac
+  pos: adj
 - lemma: сходинка
   ipa: /sxˈɔdɪnka/
-  translation: ''
+  translation: step, stair, rung
   pos: noun
   gender: f
-- lemma: увімкнений
-  ipa: /uʋˈimknɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: удосконалити
-  ipa: /udɔskɔnˈalɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: ідучи
-  ipa: /idut͡ʃˈɪ/
-  translation: ''
-  pos: verb
 - lemma: їдучи
   ipa: /ˈjidut͡ʃɪ/
-  translation: ''
+  translation: going (by vehicle - gerund)
   pos: verb

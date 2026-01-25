@@ -4,125 +4,36 @@ version: '2.0'
 items:
 - lemma: божевільний
   ipa: /bɔʒɛʋˈilʲnɪj/
-  translation: ''
+  translation: crazy, insane
   pos: adj
-- lemma: вимкнути
-  ipa: /ʋˈɪmknutɪ/
-  translation: ''
-  pos: verb
-- lemma: водночас
-  ipa: /ʋɔdnˈɔt͡ʃas/
-  translation: ''
-  pos: adv
-- lemma: відношення
-  ipa: /ʋidnˈɔʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дванадцятий
-  ipa: /dʋanˈadt͡sjatɪj/
-  translation: ''
-  pos: adj
-- lemma: з'явитися
-  ipa: /zjaʋˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: закономірність
-  ipa: /zakɔnɔmˈirnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: заснути
-  ipa: /zasnˈutɪ/
-  translation: ''
-  pos: verb
-- lemma: збирати
-  ipa: /zbɪrˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: зібрати
-  ipa: /zibrˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: лягти
-  ipa: /ljaɦtˈɪ/
-  translation: ''
-  pos: verb
 - lemma: миттєвість
   ipa: /mɪttˈjɛʋistʲ/
-  translation: ''
+  translation: moment, instant
   pos: noun
   gender: f
-- lemma: народитися
-  ipa: /narɔdˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: настати
-  ipa: /nastˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: нервувати
   ipa: /nɛrʋuʋˈatɪ/
-  translation: ''
+  translation: to be nervous
   pos: verb
-- lemma: одночасний
-  ipa: /ɔdnɔt͡ʃˈasnɪj/
-  translation: ''
-  pos: adj
-- lemma: одночасність
-  ipa: /ɔdnɔt͡ʃˈasnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: одягтися
   ipa: /ɔdjaɦtˈɪsja/
-  translation: ''
+  translation: to get dressed (perfective)
   pos: verb
-- lemma: очікування
-  ipa: /ɔt͡ʃˈikuʋannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: перерва
-  ipa: /pɛrˈɛrʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: поки
-  ipa: /pˈɔkɪ/
-  translation: ''
-  pos: conj
 - lemma: посміхнутися
   ipa: /pɔsmixnˈutɪsja/
-  translation: ''
+  translation: to smile (perfective)
   pos: verb
-- lemma: протилежний
-  ipa: /prɔtɪlˈɛʒnɪj/
-  translation: ''
-  pos: adj
 - lemma: радій
   ipa: /rˈadij/
-  translation: ''
+  translation: radium, rejoice! (imp)
   pos: noun
   gender: m
 - lemma: розслаблятися
   ipa: /rɔzslablˈjatɪsja/
-  translation: ''
-  pos: verb
-- lemma: рухатися
-  ipa: /rˈuxatɪsja/
-  translation: ''
+  translation: to relax (oneself)
   pos: verb
 - lemma: щасливчик
   ipa: /ʃt͡ʃaslˈɪʋt͡ʃɪk/
-  translation: ''
+  translation: lucky person
   pos: noun
   gender: m
-- lemma: щойно
-  ipa: /ʃt͡ʃˈɔjnɔ/
-  translation: ''
-  pos: part
-- lemma: ідеальний
-  ipa: /idɛˈalʲnɪj/
-  translation: ''
-  pos: adj

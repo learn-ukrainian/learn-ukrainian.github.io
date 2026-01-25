@@ -3,62 +3,101 @@ level: B2
 version: '2.0'
 items:
   - lemma: уходник
-    ipa: ""
-    translation: ""
+    ipa: /uxɔdnɪk/
+    translation: frontier industrialist, seasonal worker in Wild Fields
     pos: noun
     gender: m
   - lemma: здобичник
-    ipa: ""
-    translation: ""
+    ipa: /zdɔbɪt͡ʃnɪk/
+    translation: booty seeker, raider
     pos: noun
     gender: m
   - lemma: ясир
-    ipa: ""
-    translation: ""
+    ipa: /jasɪr/
+    translation: captives (taken by Tatars)
     pos: noun
     gender: m
   - lemma: реєстр
-    ipa: ""
-    translation: ""
+    ipa: /rɛˈjɛstr/
+    translation: register (of Cossacks)
     pos: noun
     gender: m
   - lemma: Дике поле
-    ipa: ""
-    translation: ""
+    ipa: /dɪkɛ ˈpɔlɛ/
+    translation: Wild Fields (frontier steppe)
     pos: noun
     gender: n
   - lemma: побратимство
-    ipa: ""
-    translation: ""
+    ipa: /pɔbraˈtɪmstʋɔ/
+    translation: brotherhood, blood brotherhood
     pos: noun
     gender: n
   - lemma: етимологія
-    ipa: ""
-    translation: ""
+    ipa: /ɛtɪmɔˈlɔɦija/
+    translation: etymology
     pos: noun
     gender: f
   - lemma: кріпацтво
-    ipa: ""
-    translation: ""
+    ipa: /kriˈpat͡stʋɔ/
+    translation: serfdom
     pos: noun
     gender: n
   - lemma: промисел
-    ipa: ""
-    translation: ""
+    ipa: /ˈprɔmɪsɛl/
+    translation: trade, industry, craft
     pos: noun
     gender: m
   - lemma: ватага
-    ipa: ""
-    translation: ""
+    ipa: /ʋaˈtaɦa/
+    translation: band, group (of Cossacks)
     pos: noun
     gender: f
   - lemma: шабля
-    ipa: ""
-    translation: ""
+    ipa: /ˈʃablʲa/
+    translation: sabre
     pos: noun
     gender: f
   - lemma: чайка
-    ipa: ""
-    translation: ""
+    ipa: /ˈt͡ʃajka/
+    translation: Cossack boat (light vessel)
     pos: noun
     gender: f
+  - lemma: курінь
+    ipa: /kuˈrinʲ/
+    translation: barracks, military unit
+    pos: noun
+    gender: m
+  - lemma: кошовий
+    ipa: /kɔʃɔˈʋɪj/
+    translation: Sich commander (koshovy otaman)
+    pos: noun
+    gender: m
+  - lemma: Запорожжя
+    ipa: /zapɔˈrɔʒːa/
+    translation: Zaporizhzhia (land beyond the rapids)
+    pos: noun
+    gender: n
+  - lemma: гетьман
+    ipa: /ˈɦɛtʲman/
+    translation: hetman (Cossack leader)
+    pos: noun
+    gender: m
+  - lemma: фронтир
+    ipa: /frɔnˈtir/
+    translation: frontier
+    pos: noun
+    gender: m
+  - lemma: поріг
+    ipa: /ˈpɔriɦ/
+    translation: rapid (on a river)
+    pos: noun
+    gender: m
+  - lemma: козакувати
+    ipa: /kɔzakuˈʋatɪ/
+    translation: to live as a Cossack, to be a Cossack
+    pos: verb
+  - lemma: отаман
+    ipa: /ɔtaˈman/
+    translation: ataman (Cossack leader)
+    pos: noun
+    gender: m

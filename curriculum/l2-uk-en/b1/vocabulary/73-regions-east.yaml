@@ -4,29 +4,29 @@ version: '2.0'
 items:
 - lemma: аерокосмічний
   ipa: /aɛrɔkɔsmˈit͡ʃnɪj/
-  translation: ''
+  translation: aerospace
   pos: adj
 - lemma: вболівати
   ipa: /ʋbɔliʋˈatɪ/
-  translation: ''
+  translation: to cheer, to support (a team)
   pos: verb
 - lemma: величина
   ipa: /ʋɛlɪt͡ʃɪnˈa/
-  translation: ''
+  translation: size, quantity
   pos: noun
   gender: f
 - lemma: вуглевидобуток
   ipa: /ʋuɦlɛʋˈɪdɔbutɔk/
-  translation: ''
+  translation: coal mining
   pos: noun
   gender: m
 - lemma: вугільний
   ipa: /ʋˈuɦilʲnɪj/
-  translation: ''
+  translation: coal (adj)
   pos: adj
 - lemma: гімн
   ipa: /ɦimn/
-  translation: ''
+  translation: anthem, hymn
   pos: noun
   gender: m
 - lemma: донбаський
@@ -35,11 +35,11 @@ items:
   pos: adj
 - lemma: донецький
   ipa: /dɔnˈɛt͡sʲkɪj/
-  translation: ''
+  translation: Donetsk (adj)
   pos: adj
 - lemma: донеччина
   ipa: /dɔnˈɛt͡ʃt͡ʃɪna/
-  translation: ''
+  translation: Donetsk region
   pos: noun
   gender: f
 - lemma: зустрінути
@@ -48,103 +48,103 @@ items:
   pos: verb
 - lemma: каразінський
   ipa: /karazinsʲkɪj/
-  translation: ''
+  translation: Karazin (adj)
   pos: adj
 - lemma: квітка-основ'яненко
   ipa: /kʋˈitka-ɔsnɔʋjanɛnkɔ/
-  translation: ''
+  translation: Kvitka-Osnovianenko (name)
   pos: noun
   gender: m
 - lemma: ландау
   ipa: /landˈau/
-  translation: ''
+  translation: Landau (name)
   pos: noun
   gender: m
 - lemma: лауреат
   ipa: /laurɛˈat/
-  translation: ''
+  translation: laureate
   pos: noun
   gender: m
 - lemma: луганськ
   ipa: /luɦˈansʲk/
-  translation: ''
+  translation: Luhansk
   pos: noun
   gender: m
 - lemma: луганщина
   ipa: /luɦˈanʃt͡ʃɪna/
-  translation: ''
+  translation: Luhansk region
   pos: noun
   gender: f
 - lemma: людмила
   ipa: /ljudmˈɪla/
-  translation: ''
+  translation: Lyudmyla (name)
   pos: noun
   gender: f
 - lemma: лівобережний
   ipa: /liʋɔbɛrˈɛʒnɪj/
-  translation: ''
+  translation: Left Bank (adj)
   pos: adj
 - lemma: маріуполь
   ipa: /mariˈupɔlʲ/
-  translation: ''
+  translation: Mariupol
   pos: noun
   gender: m
 - lemma: металургійний
   ipa: /mɛtalurɦˈijnɪj/
-  translation: ''
+  translation: metallurgical
   pos: adj
 - lemma: металургія
   ipa: /mɛtalˈurɦija/
-  translation: ''
+  translation: metallurgy
   pos: noun
   gender: f
 - lemma: неодмінно
   ipa: /nɛɔdmˈinnɔ/
-  translation: ''
+  translation: certainly, without fail
   pos: adv
 - lemma: нобелівський
   ipa: /nˈɔbɛliʋsʲkɪj/
-  translation: ''
+  translation: Nobel (adj)
   pos: adj
 - lemma: покинути
   ipa: /pɔkˈɪnutɪ/
-  translation: ''
+  translation: to leave, to abandon (perfective)
   pos: verb
 - lemma: портовий
   ipa: /pɔrtˈɔʋɪj/
-  translation: ''
+  translation: port (adj)
   pos: adj
 - lemma: прокат
   ipa: /prɔkˈat/
-  translation: ''
+  translation: rental
   pos: noun
   gender: m
 - lemma: самосвідомість
   ipa: /samɔsʋidˈɔmistʲ/
-  translation: ''
+  translation: self-awareness
   pos: noun
   gender: f
 - lemma: славний
   ipa: /slˈaʋnɪj/
-  translation: ''
+  translation: glorious, famous
   pos: adj
 - lemma: специфіка
   ipa: /spɛt͡sˈɪfika/
-  translation: ''
+  translation: specificity, unique features
   pos: noun
   gender: f
 - lemma: сталь
   ipa: /stalʲ/
-  translation: ''
+  translation: steel
   pos: noun
   gender: f
 - lemma: сформуватися
   ipa: /sfɔrmuʋˈatɪsja/
-  translation: ''
+  translation: to form (oneself perfective)
   pos: verb
 - lemma: східноукраїнський
   ipa: /sxidnɔukraˈjinsʲkɪj/
-  translation: ''
+  translation: East Ukrainian
   pos: adj
 - lemma: фк
   ipa: /fk/
@@ -153,33 +153,33 @@ items:
   gender: m
 - lemma: харків'янин
   ipa: /xarkiʋˈjanɪn/
-  translation: ''
+  translation: Kharkivite
   pos: noun
 - lemma: харківщина
   ipa: /xˈarkiʋʃt͡ʃɪna/
-  translation: ''
+  translation: Kharkiv region
   pos: noun
   gender: f
 - lemma: хокей
   ipa: /xɔkˈɛj/
-  translation: ''
+  translation: hockey
   pos: noun
   gender: m
 - lemma: хокейний
   ipa: /xɔkˈɛjnɪj/
-  translation: ''
+  translation: hockey (adj)
   pos: adj
 - lemma: шахта
   ipa: /ʃˈaxta/
-  translation: ''
+  translation: mine (coal/etc)
   pos: noun
   gender: f
 - lemma: шахтарський
   ipa: /ʃaxtˈarsʲkɪj/
-  translation: ''
+  translation: miner (adj), Shakhtar (adj)
   pos: adj
 - lemma: індустрія
   ipa: /indˈustrija/
-  translation: ''
+  translation: industry
   pos: noun
   gender: f

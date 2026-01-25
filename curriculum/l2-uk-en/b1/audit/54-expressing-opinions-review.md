@@ -1,17 +1,56 @@
-# Audit Report: 54-expressing-opinions.md
-**Phase:** B1.5 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+# Audit Report: M54 — 54-expressing-opinions.md
+**Level:** B1 | **Module:** M54 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:34:12
+
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Дієслова думки — вибір правильного слова | 14 | 8 | ✅ |
+| 2 | quiz | Колокації з дієсловами думки | 14 | 8 | ✅ |
+| 3 | match-up | Рівні впевненості | 14 | 8 | ✅ |
+| 4 | match-up | Дієслова та їх значення | 14 | 8 | ✅ |
+| 5 | match-up | Формальний та розмовний реєстр | 14 | 8 | ✅ |
+| 6 | fill-in | Вибір правильного виразу | 14 | 8 | ✅ |
+| 7 | fill-in | Колокації з прийменниками | 14 | 8 | ✅ |
+| 8 | true-false | Правда чи неправда про вирази думки | 14 | 8 | ✅ |
+| 9 | group-sort | Групування за значенням | 16 | 12 | ✅ |
+| 10 | unjumble | Складання речень з виразами думки | 14 | 6 | ✅ |
+| 11 | error-correction | Виправлення помилок у колокаціях | 14 | 6 | ✅ |
+| 12 | cloze | Дискусія про освіту | 14 | 12 | ✅ |
+| 13 | cloze | Робоча нарада | 12 | 12 | ✅ |
+| 14 | select | Вирази для формальних ситуацій | 8 | 6 | ✅ |
+| 15 | translate | Переклад виразів думки | 14 | 6 | ✅ |
+| 16 | mark-the-words | Знайдіть вирази думки | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1632/1500
+- **Words:** ✅ 1632/1500 (raw: 2348)
 - **Activities:** ✅ 16/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 35 (soft target)
+- **Vocab:** ✅ 39/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Вступ** | ⚪️ | 99 | Skipped |
+| **Вступ** | ✅ | 99 | Included in Core |
 | **Вивчення слів** | ⚪️ | 277 | Skipped |
 | **Вживання** | ⚪️ | 268 | Skipped |
 | **Читання** | ✅ | 339 | Included in Core |

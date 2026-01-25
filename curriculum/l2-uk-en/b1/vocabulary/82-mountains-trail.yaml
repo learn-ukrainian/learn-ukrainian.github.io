@@ -8,25 +8,25 @@ items:
   pos: noun
 - lemma: велич
   ipa: /ʋˈɛlɪt͡ʃ/
-  translation: ''
+  translation: grandeur, greatness
   pos: noun
   gender: f
 - lemma: вибігати
   ipa: /ʋɪbiɦatɪ/
-  translation: ''
+  translation: to run out
   pos: verb
 - lemma: втомленість
   ipa: /ʋtˈɔmlɛnistʲ/
-  translation: ''
+  translation: tiredness
   pos: noun
   gender: f
 - lemma: гайнути
   ipa: /ɦajnˈutɪ/
-  translation: ''
+  translation: to rush off
   pos: verb
 - lemma: гребінь
   ipa: /ɦrˈɛbinʲ/
-  translation: ''
+  translation: crest, comb
   pos: noun
   gender: f
 - lemma: дика
@@ -36,11 +36,11 @@ items:
   gender: f
 - lemma: дослідити
   ipa: /dɔslidˈɪtɪ/
-  translation: ''
+  translation: to research, to investigate (perfective)
   pos: verb
 - lemma: дощовик
   ipa: /dɔʃt͡ʃɔʋˈɪk/
-  translation: ''
+  translation: raincoat
   pos: noun
 - lemma: збитися
   ipa: /zbˈɪtɪsja/
@@ -48,129 +48,129 @@ items:
   pos: verb
 - lemma: кам'янистий
   ipa: /kamjanˈɪstɪj/
-  translation: ''
+  translation: stony, rocky
   pos: adj
 - lemma: камені
   ipa: /kˈamɛni/
-  translation: ''
+  translation: stones
   pos: noun
 - lemma: маркування
   ipa: /markuʋˈannja/
-  translation: ''
+  translation: marking, labeling
   pos: noun
   gender: n
 - lemma: найважче
   ipa: /najʋˈaʒt͡ʃɛ/
-  translation: ''
+  translation: hardest
   pos: adv
 - lemma: натхнення
   ipa: /natxnˈɛnnja/
-  translation: ''
+  translation: inspiration
   pos: noun
   gender: n
 - lemma: неуважний
   ipa: /nɛuʋˈaʒnɪj/
-  translation: ''
+  translation: inattentive
   pos: adj
 - lemma: обсерваторія
   ipa: /ɔbsɛrʋatˈɔrija/
-  translation: ''
+  translation: observatory
   pos: noun
   gender: f
 - lemma: офлайн-карта
   ipa: /ɔflajn-kˈarta/
-  translation: ''
+  translation: offline map
   pos: noun
   gender: f
 - lemma: пересічений
   ipa: /pɛrɛsˈit͡ʃɛnɪj/
-  translation: ''
+  translation: intersected, average (person)
   pos: adj
 - lemma: поклик
   ipa: /pˈɔklɪk/
-  translation: ''
+  translation: call, vocational call
   pos: noun
   gender: m
 - lemma: полегшений
   ipa: /pɔlˈɛɦʃɛnɪj/
-  translation: ''
+  translation: simplified, lightened
   pos: adj
 - lemma: полонинський
   ipa: /pɔlɔnˈɪnsʲkɪj/
-  translation: ''
+  translation: polonyna (adj)
   pos: adj
 - lemma: піп
   ipa: /pip/
-  translation: ''
+  translation: priest (archaic/colloquial)
   pos: noun
   gender: m
 - lemma: рельєф
   ipa: /rɛlʲˈjɛf/
-  translation: ''
+  translation: relief, terrain
   pos: noun
   gender: m
 - lemma: розвалитися
   ipa: /rɔzʋalˈɪtɪsja/
-  translation: ''
+  translation: to fall apart, to collapse
   pos: verb
 - lemma: своєрідний
   ipa: /sʋɔjɛrˈidnɪj/
-  translation: ''
+  translation: peculiar, unique
   pos: adj
 - lemma: спальник
   ipa: /spˈalʲnɪk/
-  translation: ''
+  translation: sleeping bag
   pos: noun
   gender: m
 - lemma: спорядження
   ipa: /spɔrˈjadʒɛnnja/
-  translation: ''
+  translation: equipment, gear
   pos: noun
   gender: n
 - lemma: спуск
   ipa: /spusk/
-  translation: ''
+  translation: descent, slope
   pos: noun
 - lemma: трейл
   ipa: /trɛjl/
-  translation: ''
+  translation: trail
   pos: noun
   gender: m
 - lemma: трейлраннінг
   ipa: /trɛjlranninɦ/
-  translation: ''
+  translation: trail running
   pos: noun
   gender: m
 - lemma: трек
   ipa: /trɛk/
-  translation: ''
+  translation: track (music/racing)
   pos: noun
   gender: m
 - lemma: триматися
   ipa: /trɪmˈatɪsja/
-  translation: ''
+  translation: to hold on, to persist
   pos: verb
 - lemma: хайкінг
   ipa: /xajkinɦ/
-  translation: ''
+  translation: hiking
   pos: noun
   gender: f
 - lemma: хортиця
   ipa: /xɔrtˈɪt͡sja/
-  translation: ''
+  translation: Khortytsia
   pos: noun
   gender: f
 - lemma: хребет
   ipa: /xrɛbˈɛt/
-  translation: ''
+  translation: spine, ridge
   pos: noun
 - lemma: чорногора
   ipa: /t͡ʃɔrnɔɦˈɔra/
-  translation: ''
+  translation: Chornohora
   pos: noun
   gender: f
 - lemma: чорногірський
   ipa: /t͡ʃɔrnɔɦˈirsʲkɪj/
-  translation: ''
+  translation: Chornohora (adj)
   pos: noun
   gender: m

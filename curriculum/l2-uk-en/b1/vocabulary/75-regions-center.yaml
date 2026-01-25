@@ -4,110 +4,119 @@ version: '2.0'
 items:
 - lemma: витоки
   ipa: /ʋˈɪtɔkɪ/
-  translation: ''
+  translation: origins, sources
   pos: noun
+- lemma: волелюбність
+  ipa: /ʋɔlɛlˈjubnistʲ/
+  translation: love of freedom
+  pos: noun
+  gender: f
 - lemma: волити
   ipa: /ʋˈɔlɪtɪ/
-  translation: ''
+  translation: to wish, to desire
   pos: verb
 - lemma: гоголь
   ipa: /ɦˈɔɦɔlʲ/
-  translation: ''
+  translation: Gogol (name)
   pos: noun
   gender: m
 - lemma: диканька
   ipa: /dɪkˈanʲka/
-  translation: ''
+  translation: Dikanka (place)
   pos: noun
   gender: f
 - lemma: екскурсовод
   ipa: /ɛkskursɔʋˈɔd/
-  translation: ''
+  translation: tour guide
   pos: noun
   gender: m
 - lemma: зародитися
   ipa: /zarɔdˈɪtɪsja/
-  translation: ''
+  translation: to originate
   pos: verb
 - lemma: збірка
   ipa: /zbˈirka/
-  translation: ''
+  translation: collection (of stories/poems)
   pos: noun
   gender: f
 - lemma: канів
   ipa: /kˈaniʋ/
-  translation: ''
+  translation: Kaniv
   pos: noun
   gender: m
 - lemma: київщина
   ipa: /kˈɪjiʋʃt͡ʃɪna/
-  translation: ''
+  translation: Kyiv region
   pos: noun
   gender: f
 - lemma: козацьке
   ipa: /kɔzˈat͡sʲkɛ/
-  translation: ''
+  translation: Cossack (neuter)
   pos: noun
   gender: n
 - lemma: купол
   ipa: /kˈupɔl/
-  translation: ''
+  translation: dome
   pos: noun
 - lemma: лісостеп
   ipa: /lisɔstˈɛp/
-  translation: ''
+  translation: forest-steppe
   pos: noun
   gender: m
 - lemma: мальовничий
   ipa: /malʲɔʋnˈɪt͡ʃɪj/
-  translation: ''
+  translation: picturesque
   pos: adj
 - lemma: моринці
   ipa: /mˈɔrɪnt͡si/
-  translation: ''
+  translation: Moryntsi (village)
   pos: noun
 - lemma: найвидатніший
   ipa: /najʋɪdatnˈiʃɪj/
-  translation: ''
+  translation: the most outstanding
   pos: adj
 - lemma: найдавніше
   ipa: /najdaʋnˈiʃɛ/
-  translation: ''
+  translation: the earliest, since longest ago
   pos: adv
+- lemma: організуватися
+  ipa: /ɔrɦanizuʋˈatɪsja/
+  translation: to organize oneself
+  pos: verb
 - lemma: постать
   ipa: /pˈɔstatʲ/
-  translation: ''
+  translation: figure, personality
   pos: noun
   gender: f
 - lemma: похований
   ipa: /pɔxˈɔʋanɪj/
-  translation: ''
+  translation: buried
   pos: adj
 - lemma: поховання
   ipa: /pɔxɔʋˈannja/
-  translation: ''
+  translation: burial
   pos: noun
   gender: n
 - lemma: сорочинський
   ipa: /sɔrˈɔt͡ʃɪnsʲkɪj/
-  translation: ''
+  translation: Sorochyntsi (adj)
   pos: adj
 - lemma: тарасів
   ipa: /tarˈasiʋ/
-  translation: ''
+  translation: Taras's (adj)
   pos: adj
 - lemma: формуватися
   ipa: /fɔrmuʋˈatɪsja/
-  translation: ''
+  translation: to be formed
   pos: verb
 - lemma: хутір
   ipa: /xˈutir/
-  translation: ''
+  translation: khutir (homestead)
   pos: noun
   gender: m
 - lemma: центральноукраїнський
   ipa: /t͡sɛntralʲnɔukraˈjinsʲkɪj/
-  translation: ''
+  translation: Central Ukrainian
   pos: adj
 - lemma: черкас
   ipa: /t͡ʃɛrkˈas/
@@ -115,21 +124,21 @@ items:
   pos: noun
 - lemma: черкащина
   ipa: /t͡ʃɛrkˈaʃt͡ʃɪna/
-  translation: ''
+  translation: Cherkasy region
   pos: noun
   gender: f
 - lemma: чернігівщина
   ipa: /t͡ʃɛrnˈiɦiʋʃt͡ʃɪna/
-  translation: ''
+  translation: Chernihiv region
   pos: noun
   gender: f
 - lemma: чигирин
   ipa: /t͡ʃɪɦɪrˈɪn/
-  translation: ''
+  translation: Chyhyryn
   pos: noun
   gender: m
 - lemma: іринка
   ipa: /irɪnka/
-  translation: ''
+  translation: Irynka (name)
   pos: noun
   gender: f

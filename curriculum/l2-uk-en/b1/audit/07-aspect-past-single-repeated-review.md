@@ -1,17 +1,54 @@
-# Audit Report: 07-aspect-past-single-repeated.md
-**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M07 — 07-aspect-past-single-repeated.md
+**Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:13:38
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Маркери частоти | 14 | 8 | ✅ |
+| 2 | group-sort | Класифікація ситуацій | 16 | 12 | ✅ |
+| 3 | mark-the-words | Знайдіть повторювані дії | 9 | 6 | ✅ |
+| 4 | quiz | Вибір виду в минулому | 8 | 8 | ✅ |
+| 5 | true-false | Одноразовість чи регулярність? | 12 | 8 | ✅ |
+| 6 | fill-in | Заповніть пропуски маркерами | 14 | 8 | ✅ |
+| 7 | select | Оберіть правильні пари | 8 | 6 | ✅ |
+| 8 | unjumble | Складіть розповідь про минуле | 8 | 6 | ✅ |
+| 9 | cloze | Звички проти подій | 16 | 12 | ✅ |
+| 10 | error-correction | Виправте помилки частоти | 8 | 6 | ✅ |
+| 11 | translate | Переклад контексту | 8 | 6 | ✅ |
+| 12 | select | Аналіз речень | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1711/1500
+- **Words:** ✅ 1711/1500 (raw: 2144)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 13 < 25 (soft target)
+- **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

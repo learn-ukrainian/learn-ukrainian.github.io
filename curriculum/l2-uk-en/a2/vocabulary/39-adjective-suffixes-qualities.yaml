@@ -4,20 +4,20 @@ version: '2.0'
 items:
 - lemma: безпосередньо
   ipa: /bɛzpɔsɛrˈɛdnʲɔ/
-  translation: ''
+  translation: directly
   pos: adv
 - lemma: близькість
   ipa: /blˈɪzʲkistʲ/
-  translation: ''
+  translation: closeness, proximity
   pos: noun
   gender: f
 - lemma: вбудовувати
   ipa: /ʋbudˈɔʋuʋatɪ/
-  translation: ''
+  translation: to build in, to embed
   pos: verb
 - lemma: великенний
   ipa: /ʋɛlɪkɛnnɪj/
-  translation: ''
+  translation: huge, giant
   pos: adj
 - lemma: велико
   ipa: /ʋˈɛlɪkɔ/
@@ -25,29 +25,25 @@ items:
   pos: noun
 - lemma: весло
   ipa: /ʋɛslˈɔ/
-  translation: ''
+  translation: oar, paddle
   pos: noun
 - lemma: вигукнути
   ipa: /ʋˈɪɦuknutɪ/
-  translation: ''
+  translation: to exclaim, to shout out
   pos: verb
 - lemma: висок
   ipa: /ʋɪsˈɔk/
-  translation: ''
+  translation: temple (of head)
   pos: noun
   gender: m
 - lemma: високезний
   ipa: /ʋɪsɔkɛznɪj/
-  translation: ''
+  translation: towering, very tall
   pos: adj
 - lemma: високотехнологічний
   ipa: /ʋɪsɔkɔtɛxnɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: high-tech
   pos: adj
-- lemma: вражати
-  ipa: /ʋraʒˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: гарн
   ipa: /ɦarn/
   translation: ''
@@ -55,33 +51,28 @@ items:
   gender: m
 - lemma: гарненький
   ipa: /ɦarnˈɛnʲkɪj/
-  translation: ''
+  translation: pretty, nice
   pos: adj
 - lemma: гігантський
   ipa: /ɦiɦˈantsʲkɪj/
-  translation: ''
+  translation: giant (adj), gigantic
   pos: adj
 - lemma: дерев'яний
   ipa: /dɛrɛʋˈjanɪj/
-  translation: ''
+  translation: wooden
   pos: adj
 - lemma: дотик
   ipa: /dˈɔtɪk/
-  translation: ''
+  translation: touch, contact
   pos: noun
   gender: m
-- lemma: драматичність
-  ipa: /dramatˈɪt͡ʃnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: дружелюбний
   ipa: /druʒɛlˈjubnɪj/
-  translation: ''
+  translation: friendly
   pos: adj
 - lemma: дружелюбність
   ipa: /druʒɛlˈjubnistʲ/
-  translation: ''
+  translation: friendliness
   pos: noun
   gender: f
 - lemma: езн
@@ -94,11 +85,11 @@ items:
   pos: noun
 - lemma: екстремальний
   ipa: /ɛkstrɛmˈalʲnɪj/
-  translation: ''
+  translation: extreme
   pos: adj
 - lemma: екстремальність
   ipa: /ɛkstrɛmˈalʲnistʲ/
-  translation: ''
+  translation: extremeness
   pos: noun
   gender: f
 - lemma: енн
@@ -130,12 +121,12 @@ items:
   pos: noun
 - lemma: жах-фільм
   ipa: /ʒax-filʲm/
-  translation: ''
+  translation: horror film
   pos: noun
   gender: m
 - lemma: здоровенний
   ipa: /zdɔrɔʋˈɛnnɪj/
-  translation: ''
+  translation: huge, strapping
   pos: adj
 - lemma: зелененький
   ipa: /zɛlɛnˈɛnʲkɪj/
@@ -143,15 +134,11 @@ items:
   pos: adj
 - lemma: зимний
   ipa: /zˈɪmnɪj/
-  translation: ''
-  pos: adj
-- lemma: зменшувальний
-  ipa: /zmˈɛnʃuʋalʲnɪj/
-  translation: ''
+  translation: wintry, cold
   pos: adj
 - lemma: кавун
   ipa: /kaʋˈun/
-  translation: ''
+  translation: watermelon
   pos: noun
   gender: m
 - lemma: книж
@@ -161,33 +148,25 @@ items:
   gender: m
 - lemma: книжковий
   ipa: /knɪʒkˈɔʋɪj/
-  translation: ''
+  translation: book (adj)
   pos: adj
-- lemma: лякати
-  ipa: /ljakˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: мал
   ipa: /mal/
   translation: ''
   pos: noun
 - lemma: масштаб
   ipa: /masʃtˈab/
-  translation: ''
+  translation: scale
   pos: noun
   gender: m
-- lemma: милий
-  ipa: /mˈɪlɪj/
-  translation: ''
-  pos: adj
 - lemma: милість
   ipa: /mˈɪlistʲ/
-  translation: ''
+  translation: mercy, grace
   pos: noun
   gender: f
 - lemma: місцями
   ipa: /mist͡sˈjamɪ/
-  translation: ''
+  translation: in places
   pos: adv
 - lemma: міськ
   ipa: /misʲk/
@@ -200,53 +179,33 @@ items:
   pos: noun
 - lemma: напівпровідниковий
   ipa: /napiʋprɔʋidnɪkˈɔʋɪj/
-  translation: ''
+  translation: semiconductor (adj)
   pos: adj
-- lemma: нейтральний
-  ipa: /nɛjtrˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: нейтрально
-  ipa: /nɛjtrˈalʲnɔ/
-  translation: ''
-  pos: adv
-- lemma: необхідний
-  ipa: /nɛɔbxˈidnɪj/
-  translation: ''
-  pos: adj
-- lemma: нести
-  ipa: /nɛstˈɪ/
-  translation: ''
-  pos: verb
 - lemma: нити
   ipa: /nˈɪtɪ/
-  translation: ''
+  translation: to ache, to whine
   pos: verb
 - lemma: ніжність
   ipa: /nˈiʒnistʲ/
-  translation: ''
+  translation: tenderness, gentleness
   pos: noun
   gender: f
 - lemma: ніжніший
   ipa: /niʒnˈiʃɪj/
-  translation: ''
+  translation: more tender
   pos: adj
 - lemma: обстановка
   ipa: /ɔbstanˈɔʋka/
-  translation: ''
+  translation: situation, environment
   pos: noun
   gender: f
 - lemma: описовий
   ipa: /ɔpɪsˈɔʋɪj/
-  translation: ''
+  translation: descriptive
   pos: adj
-- lemma: особливо
-  ipa: /ɔsɔblˈɪʋɔ/
-  translation: ''
-  pos: adv
 - lemma: палітра
   ipa: /palˈitra/
-  translation: ''
+  translation: palette
   pos: noun
   gender: f
 - lemma: певне
@@ -255,11 +214,11 @@ items:
   pos: adv
 - lemma: пензлик
   ipa: /pˈɛnzlɪk/
-  translation: ''
+  translation: small brush
   pos: noun
 - lemma: печиво
   ipa: /pˈɛt͡ʃɪʋɔ/
-  translation: ''
+  translation: cookies, biscuits
   pos: noun
   gender: n
 - lemma: питаль
@@ -269,40 +228,18 @@ items:
   gender: m
 - lemma: побут
   ipa: /pˈɔbut/
-  translation: ''
+  translation: everyday life, way of life
   pos: noun
   gender: m
-- lemma: позитивний
-  ipa: /pɔzɪtˈɪʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: походження
-  ipa: /pɔxˈɔdʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: прихильність
   ipa: /prɪxˈɪlʲnistʲ/
-  translation: ''
+  translation: attachment, favor
   pos: noun
   gender: f
 - lemma: приємний
   ipa: /prɪˈjɛmnɪj/
-  translation: ''
+  translation: pleasant
   pos: adj
-- lemma: пропонувати
-  ipa: /prɔpɔnuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: підкреслити
-  ipa: /pidkrˈɛslɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: підтримка
-  ipa: /pidtrˈɪmka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: робоч
   ipa: /rɔbɔt͡ʃ/
   translation: ''
@@ -310,29 +247,21 @@ items:
   gender: m
 - lemma: розмір
   ipa: /rɔzmir/
-  translation: ''
+  translation: size, dimension
   pos: noun
   gender: m
-- lemma: різний
-  ipa: /rˈiznɪj/
-  translation: ''
-  pos: adj
 - lemma: свіжесенький
   ipa: /sʋiʒˈɛsɛnʲkɪj/
-  translation: ''
+  translation: very fresh
   pos: adj
-- lemma: словом
-  ipa: /slˈɔʋɔm/
-  translation: ''
-  pos: adv
 - lemma: слух
   ipa: /slux/
-  translation: ''
+  translation: hearing
   pos: noun
   gender: m
 - lemma: солоденький
   ipa: /sɔlɔdˈɛnʲkɪj/
-  translation: ''
+  translation: sweet (diminutive)
   pos: adj
 - lemma: соняч
   ipa: /sɔnjat͡ʃ/
@@ -341,26 +270,21 @@ items:
   gender: m
 - lemma: сонячненька
   ipa: /sɔnjat͡ʃnɛnʲka/
-  translation: ''
+  translation: sunny (adj diminutive female)
   pos: noun
   gender: f
 - lemma: сонячний
   ipa: /sˈɔnjat͡ʃnɪj/
-  translation: ''
+  translation: sunny
   pos: adj
 - lemma: спокійний
   ipa: /spɔkˈijnɪj/
-  translation: ''
+  translation: calm, quiet, peaceful
   pos: adj
 - lemma: справити
   ipa: /sprˈaʋɪtɪ/
-  translation: ''
+  translation: to celebrate (e.g. wedding), to make an impression
   pos: verb
-- lemma: ставлення
-  ipa: /stˈaʋlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: страш
   ipa: /straʃ/
   translation: ''
@@ -368,20 +292,16 @@ items:
   gender: f
 - lemma: страшенний
   ipa: /straʃˈɛnnɪj/
-  translation: ''
+  translation: terrible, awful, huge
   pos: adj
 - lemma: страшний
   ipa: /straʃnˈɪj/
-  translation: ''
+  translation: scary, terrible
   pos: adj
 - lemma: суб'єктивний
   ipa: /subjɛktˈɪʋnɪj/
-  translation: ''
+  translation: subjective
   pos: adj
-- lemma: суфікс
-  ipa: /sˈufiks/
-  translation: ''
-  pos: noun
 - lemma: ськ
   ipa: /sʲk/
   translation: ''
@@ -397,21 +317,21 @@ items:
   gender: m
 - lemma: тепленький
   ipa: /tɛplˈɛnʲkɪj/
-  translation: ''
+  translation: warm (diminutive)
   pos: adj
 - lemma: теплота
   ipa: /tɛplɔtˈa/
-  translation: ''
+  translation: warmth (emotional/physical)
   pos: noun
   gender: f
 - lemma: тон
   ipa: /tɔn/
-  translation: ''
+  translation: tone
   pos: noun
   gender: m
 - lemma: тоненький
   ipa: /tɔnˈɛnʲkɪj/
-  translation: ''
+  translation: thin (diminutive)
   pos: adj
 - lemma: українськийський
   ipa: /ukrajinsʲkɪjsʲkɪj/
@@ -423,12 +343,12 @@ items:
   pos: adj
 - lemma: хустка
   ipa: /xˈustka/
-  translation: ''
+  translation: headscarf, shawl
   pos: noun
   gender: f
 - lemma: чашечка
   ipa: /t͡ʃˈaʃɛt͡ʃka/
-  translation: ''
+  translation: cup (diminutive)
   pos: noun
   gender: f
 - lemma: чист
@@ -438,20 +358,16 @@ items:
   gender: m
 - lemma: чистесенький
   ipa: /t͡ʃɪstˈɛsɛnʲkɪj/
-  translation: ''
+  translation: perfectly clean
   pos: adj
 - lemma: шкіль
   ipa: /ʃkilʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: шкільний
-  ipa: /ʃkilʲnˈɪj/
-  translation: ''
-  pos: adj
 - lemma: щасливенький
   ipa: /ʃt͡ʃaslɪʋɛnʲkɪj/
-  translation: ''
+  translation: happy (diminutive)
   pos: adj
 - lemma: янити
   ipa: /janɪtɪ/
@@ -459,19 +375,19 @@ items:
   pos: verb
 - lemma: ярмарок
   ipa: /ˈjarmarɔk/
-  translation: ''
+  translation: fair, market
   pos: noun
   gender: m
 - lemma: яскравіший
   ipa: /jaskrˈaʋiʃɪj/
-  translation: ''
+  translation: brighter (adj)
   pos: adj
 - lemma: інтенсивний
   ipa: /intɛnsˈɪʋnɪj/
-  translation: ''
+  translation: intensive
   pos: adj
 - lemma: інтенсивність
   ipa: /intɛnsˈɪʋnistʲ/
-  translation: ''
+  translation: intensity
   pos: noun
   gender: f

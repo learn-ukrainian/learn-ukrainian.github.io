@@ -4,33 +4,33 @@ version: '2.0'
 items:
 - lemma: благополуччя
   ipa: /blaɦɔpɔlˈut͡ʃt͡ʃja/
-  translation: ''
+  translation: well-being, prosperity
   pos: noun
   gender: n
 - lemma: веганський
   ipa: /ʋɛɦansʲkɪj/
-  translation: ''
+  translation: vegan
   pos: adj
 - lemma: вигорання
   ipa: /ʋɪɦɔrˈannja/
-  translation: ''
+  translation: burnout
   pos: noun
   gender: n
 - lemma: документальний
   ipa: /dɔkumɛntˈalʲnɪj/
-  translation: ''
+  translation: documentary (adj)
   pos: adj
 - lemma: жир
   ipa: /ʒɪr/
-  translation: ''
+  translation: fat
   pos: noun
 - lemma: захисний
   ipa: /zaxɪsnˈɪj/
-  translation: ''
+  translation: protective
   pos: adj
 - lemma: звернення
   ipa: /zʋˈɛrnɛnnja/
-  translation: ''
+  translation: appeal, address
   pos: noun
   gender: n
 - lemma: здор
@@ -40,39 +40,44 @@ items:
   gender: m
 - lemma: злість
   ipa: /zlistʲ/
-  translation: ''
+  translation: anger, spite
   pos: noun
   gender: f
 - lemma: зміцнити
   ipa: /zmit͡snˈɪtɪ/
-  translation: ''
+  translation: to strengthen, to consolidate
   pos: verb
 - lemma: зниження
   ipa: /znˈɪʒɛnnja/
-  translation: ''
+  translation: reduction, lowering
   pos: noun
   gender: n
 - lemma: знизити
   ipa: /znˈɪzɪtɪ/
-  translation: ''
+  translation: to lower, to reduce (perfective)
   pos: verb
 - lemma: зниклий
   ipa: /znˈɪklɪj/
-  translation: ''
+  translation: disappeared, missing
   pos: adj
 - lemma: йога
   ipa: /jˈɔɦa/
-  translation: ''
+  translation: yoga
   pos: noun
   gender: f
 - lemma: йога-студія
   ipa: /jˈɔɦa-studija/
-  translation: ''
+  translation: yoga studio
   pos: noun
   gender: f
+- lemma: корисне
+  ipa: /kˈɔrɪsnɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: курортний
   ipa: /kurˈɔrtnɪj/
-  translation: ''
+  translation: resort (adj)
   pos: adj
 - lemma: лікарів
   ipa: /likarˈiʋ/
@@ -80,115 +85,115 @@ items:
   pos: adj
 - lemma: миргород
   ipa: /mˈɪrɦɔrɔd/
-  translation: ''
+  translation: Myrhorod
   pos: noun
   gender: m
 - lemma: моршин
   ipa: /mˈɔrʃɪn/
-  translation: ''
+  translation: Morshyn
   pos: noun
   gender: m
 - lemma: мучити
   ipa: /mˈut͡ʃɪtɪ/
-  translation: ''
+  translation: to torment, to torture
   pos: verb
 - lemma: мінеральний
   ipa: /minɛrˈalʲnɪj/
-  translation: ''
+  translation: mineral
   pos: adj
 - lemma: надмір
   ipa: /nˈadmir/
-  translation: ''
+  translation: excess
   pos: noun
   gender: m
 - lemma: нездоровий
   ipa: /nɛzdɔrˈɔʋɪj/
-  translation: ''
+  translation: unhealthy
   pos: adj
 - lemma: ослаблювати
   ipa: /ɔslˈabljuʋatɪ/
-  translation: ''
+  translation: to weaken
   pos: verb
 - lemma: паління
   ipa: /palˈinnja/
-  translation: ''
+  translation: smoking, burning
   pos: noun
   gender: n
 - lemma: певно
   ipa: /pˈɛʋnɔ/
-  translation: ''
+  translation: probably, certainly
   pos: adv
 - lemma: покращувати
   ipa: /pɔkrˈaʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to improve (imperfective)
   pos: verb
 - lemma: приплив
   ipa: /prɪplˈɪʋ/
-  translation: ''
+  translation: tide, influx
   pos: noun
   gender: m
 - lemma: психічний
   ipa: /psɪxˈit͡ʃnɪj/
-  translation: ''
+  translation: mental, psychic
   pos: adj
 - lemma: пульс
   ipa: /pulʲs/
-  translation: ''
+  translation: pulse
   pos: noun
   gender: m
 - lemma: ранній
   ipa: /rˈannij/
-  translation: ''
+  translation: early
   pos: adj
 - lemma: реабілітація
   ipa: /rɛabilitˈat͡sija/
-  translation: ''
+  translation: rehabilitation
   pos: noun
   gender: f
 - lemma: санаторний
   ipa: /sanatˈɔrnɪj/
-  translation: ''
+  translation: sanatorium (adj)
   pos: adj
 - lemma: санаторій
   ipa: /sanatˈɔrij/
-  translation: ''
+  translation: sanatorium
   pos: noun
   gender: m
 - lemma: сеанс
   ipa: /sɛˈans/
-  translation: ''
+  translation: session, showing
   pos: noun
 - lemma: стадія
   ipa: /stˈadija/
-  translation: ''
+  translation: stage, phase
   pos: noun
 - lemma: суцільний
   ipa: /sut͡sˈilʲnɪj/
-  translation: ''
+  translation: solid, continuous, whole
   pos: adj
 - lemma: табу
   ipa: /tabˈu/
-  translation: ''
+  translation: taboo
   pos: noun
   gender: n
 - lemma: терапія
   ipa: /tɛrapˈija/
-  translation: ''
+  translation: therapy
   pos: noun
   gender: f
 - lemma: тривога
   ipa: /trɪʋˈɔɦa/
-  translation: ''
+  translation: alarm, anxiety
   pos: noun
   gender: f
 - lemma: усвідомлення
   ipa: /usʋidˈɔmlɛnnja/
-  translation: ''
+  translation: realization, awareness
   pos: noun
   gender: n
 - lemma: фастфуд
   ipa: /fastfud/
-  translation: ''
+  translation: fast food
   pos: noun
   gender: m
 - lemma: хм
@@ -197,14 +202,14 @@ items:
   pos: noun
 - lemma: хронічний
   ipa: /xrɔnˈit͡ʃnɪj/
-  translation: ''
+  translation: chronic
   pos: adj
 - lemma: шкідливий
   ipa: /ʃkidlˈɪʋɪj/
-  translation: ''
+  translation: harmful
   pos: adj
 - lemma: імунітет
   ipa: /imunitˈɛt/
-  translation: ''
+  translation: immunity
   pos: noun
   gender: m

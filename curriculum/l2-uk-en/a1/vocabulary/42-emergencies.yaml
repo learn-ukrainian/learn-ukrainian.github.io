@@ -2,90 +2,29 @@ module: 42-emergencies
 level: A1
 version: '2.0'
 items:
-- lemma: аптека
-  ipa: /aptˈɛka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: викликати
-  ipa: /ʋɪklɪkatɪ/
-  translation: ''
-  pos: verb
 - lemma: газовий
   ipa: /ɦˈazɔʋɪj/
-  translation: ''
+  translation: gas (adj)
   pos: adj
-- lemma: допомога
-  ipa: /dɔpɔmˈɔɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: допомогти
-  ipa: /dɔpɔmɔɦtˈɪ/
-  translation: ''
-  pos: verb
 - lemma: екстрений
   ipa: /ˈɛkstrɛnɪj/
-  translation: ''
+  translation: emergency, urgent
   pos: adj
-- lemma: заклик
-  ipa: /zˈaklɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: лікар
-  ipa: /lˈikar/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: номер
-  ipa: /nˈɔmɛr/
-  translation: ''
-  pos: noun
 - lemma: охорона
   ipa: /ɔxɔrˈɔna/
-  translation: ''
+  translation: security, protection
   pos: noun
   gender: f
-- lemma: повідомлення
-  ipa: /pɔʋidˈɔmlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: пожежний
   ipa: /pɔʒˈɛʒnɪj/
-  translation: ''
+  translation: fire (adj)
   pos: adj
 - lemma: поліція
   ipa: /pɔlˈit͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: потрібний
-  ipa: /pɔtrˈibnɪj/
-  translation: ''
-  pos: adj
-- lemma: проблема
-  ipa: /prɔblˈɛma/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ситуація
-  ipa: /sɪtuˈat͡sija/
-  translation: ''
+  translation: police
   pos: noun
   gender: f
 - lemma: служба
   ipa: /slˈuʒba/
-  translation: ''
+  translation: service
   pos: noun
-- lemma: швидка
-  ipa: /ʃʋɪdkˈa/
-  translation: ''
-  pos: noun
-  gender: f

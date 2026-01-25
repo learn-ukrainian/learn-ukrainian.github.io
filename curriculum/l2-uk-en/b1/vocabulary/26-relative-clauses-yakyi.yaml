@@ -4,200 +4,323 @@ version: '2.0'
 items:
 - lemma: адресувати
   ipa: /adrɛsuʋˈatɪ/
-  translation: ''
+  translation: to address
   pos: verb
+- lemma: антецедент
+  ipa: /antɛt͡sɛdˈɛnt/
+  translation: antecedent
+  pos: noun
+  gender: m
 - lemma: аудиторія
   ipa: /audɪtˈɔrija/
-  translation: ''
+  translation: audience, classroom
   pos: noun
   gender: f
+- lemma: бестселер
+  ipa: /bɛstsˈɛlɛr/
+  translation: bestseller
+  pos: noun
+  gender: m
 - lemma: вимогливий
   ipa: /ʋɪmˈɔɦlɪʋɪj/
-  translation: ''
+  translation: demanding, exactin
   pos: adj
+- lemma: виявитися
+  ipa: /ʋˈɪjaʋɪtɪsja/
+  translation: to turn out to be
+  pos: verb
+- lemma: включати
+  ipa: /ʋkljut͡ʃˈatɪ/
+  translation: to include, to turn on
+  pos: verb
+- lemma: вражати
+  ipa: /ʋraʒˈatɪ/
+  translation: to impress, to strike
+  pos: verb
 - lemma: відеогра
   ipa: /ʋidɛɔɦrˈa/
-  translation: ''
+  translation: video game
   pos: noun
 - lemma: відмінювати
   ipa: /ʋidmˈinjuʋatɪ/
-  translation: ''
+  translation: to decline, to conjugate
+  pos: verb
+- lemma: відокремлюватися
+  ipa: /ʋidɔkrˈɛmljuʋatɪsja/
+  translation: to separate (passive)
   pos: verb
 - lemma: геній
   ipa: /ɦˈɛnij/
-  translation: ''
+  translation: genius
   pos: noun
   gender: m
 - lemma: глядачів
   ipa: /ɦljadat͡ʃˈiʋ/
-  translation: ''
+  translation: of spectators
   pos: adj
 - lemma: детальніший
   ipa: /dɛtˈalʲniʃɪj/
-  translation: ''
+  translation: more detailed
   pos: adj
-- lemma: діаспора
-  ipa: /diaspɔra/
-  translation: ''
+- lemma: дзвінка
+  ipa: /dzʋinkˈa/
+  translation: ringing, call (adj)
+  pos: noun
+- lemma: дитинство
+  ipa: /dɪtˈɪnstʋɔ/
+  translation: childhood
+  pos: noun
+  gender: n
+- lemma: досить
+  ipa: /dˈɔsɪtʲ/
+  translation: enough, quite
+  pos: adv
+- lemma: драматичність
+  ipa: /dramatˈɪt͡ʃnistʲ/
+  translation: dramatic nature
   pos: noun
   gender: f
+- lemma: діаспора
+  ipa: /diaspɔra/
+  translation: diaspora
+  pos: noun
+  gender: f
+- lemma: енергійний
+  ipa: /ɛnɛrɦˈijnɪj/
+  translation: energetic
+  pos: adj
+- lemma: жін
+  ipa: /ʒin/
+  translation: ''
+  pos: noun
 - lemma: завдавати
   ipa: /zaʋdaʋˈatɪ/
-  translation: ''
+  translation: to cause, to inflict
   pos: verb
 - lemma: замітка
   ipa: /zamˈitka/
-  translation: ''
+  translation: note, article
   pos: noun
   gender: f
 - lemma: захопити
   ipa: /zaxɔpˈɪtɪ/
-  translation: ''
+  translation: to capture, to fascinate
   pos: verb
 - lemma: захопливий
   ipa: /zaxˈɔplɪʋɪj/
-  translation: ''
+  translation: exciting, fascinating
   pos: adj
 - lemma: заявити
   ipa: /zajaʋˈɪtɪ/
-  translation: ''
+  translation: to state, to announce
   pos: verb
 - lemma: збігатися
   ipa: /zbiɦatɪsja/
-  translation: ''
+  translation: to coincide, to match
   pos: verb
+- lemma: звернутися
+  ipa: /zʋɛrnˈutɪsja/
+  translation: to address, to turn to
+  pos: verb
+- lemma: зручний
+  ipa: /zrˈut͡ʃnɪj/
+  translation: convenient, comfortable
+  pos: adj
+- lemma: квест
+  ipa: /kʋɛst/
+  translation: quest
+  pos: noun
+- lemma: композитор
+  ipa: /kɔmpɔzˈɪtɔr/
+  translation: composer
+  pos: noun
+  gender: m
 - lemma: критик
   ipa: /krˈɪtɪk/
-  translation: ''
+  translation: critic
   pos: noun
 - lemma: легенда
   ipa: /lɛɦˈɛnda/
-  translation: ''
+  translation: legend
   pos: noun
 - lemma: маркетинг
   ipa: /mˈarkɛtɪnɦ/
-  translation: ''
+  translation: marketing
   pos: noun
   gender: m
 - lemma: механік
   ipa: /mɛxˈanik/
-  translation: ''
+  translation: mechanic
   pos: noun
 - lemma: набирати
   ipa: /nabɪrˈatɪ/
-  translation: ''
+  translation: to dial, to collect, to recruit
   pos: verb
 - lemma: нагадувати
   ipa: /naɦˈaduʋatɪ/
-  translation: ''
+  translation: to remind (imperfective)
+  pos: verb
+- lemma: надавати
+  ipa: /nadaʋˈatɪ/
+  translation: to provide, to give, to grant
+  pos: verb
+- lemma: народитися
+  ipa: /narɔdˈɪtɪsja/
+  translation: to be born (perfective)
   pos: verb
 - lemma: настя
   ipa: /nˈastja/
-  translation: ''
+  translation: Nastya (name)
   pos: noun
   gender: f
 - lemma: невідомий
   ipa: /nɛʋidˈɔmɪj/
-  translation: ''
+  translation: unknown
   pos: adj
 - lemma: неживий
   ipa: /nɛʒɪʋˈɪj/
-  translation: ''
+  translation: inanimate, lifeless
   pos: adj
+- lemma: об'єднати
+  ipa: /ɔbjɛdnˈatɪ/
+  translation: to unite, to join
+  pos: verb
 - lemma: означальний
   ipa: /ɔznat͡ʃˈalʲnɪj/
-  translation: ''
+  translation: defining, attributive
   pos: adj
 - lemma: офіційність
   ipa: /ɔfit͡sˈijnistʲ/
-  translation: ''
+  translation: officially, formality
   pos: noun
   gender: f
 - lemma: парламент
   ipa: /parlˈamɛnt/
-  translation: ''
+  translation: parliament
   pos: noun
   gender: m
+- lemma: перевести
+  ipa: /pɛrɛʋɛstˈɪ/
+  translation: to transfer, to translate (rare - use перекласти)
+  pos: verb
 - lemma: подвійний
   ipa: /pɔdʋˈijnɪj/
-  translation: ''
+  translation: double (adj)
   pos: adj
 - lemma: поетичний
   ipa: /pɔɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: poetic
   pos: adj
+- lemma: полиця
+  ipa: /pɔlˈɪt͡sja/
+  translation: shelf
+  pos: noun
+  gender: f
 - lemma: праслов'янський
   ipa: /praslɔʋˈjansʲkɪj/
-  translation: ''
+  translation: Proto-Slavic
   pos: adj
 - lemma: приналежність
   ipa: /prɪnalˈɛʒnistʲ/
-  translation: ''
+  translation: affiliation, belonging
   pos: noun
   gender: f
 - lemma: присвятити
   ipa: /prɪsʋjatˈɪtɪ/
-  translation: ''
+  translation: to dedicate
   pos: verb
 - lemma: реклама
   ipa: /rɛklˈama/
-  translation: ''
+  translation: advertising, advertisement
+  pos: noun
+  gender: f
+- lemma: реформа
+  ipa: /rɛfˈɔrma/
+  translation: reform
   pos: noun
   gender: f
 - lemma: рол
   ipa: /rɔl/
-  translation: ''
+  translation: roll (sushi)
+  pos: noun
+  gender: m
+- lemma: сер
+  ipa: /sɛr/
+  translation: sir
   pos: noun
   gender: m
 - lemma: скарб
   ipa: /skarb/
-  translation: ''
+  translation: treasure
   pos: noun
 - lemma: справедливість
   ipa: /spraʋɛdlˈɪʋistʲ/
-  translation: ''
+  translation: justice, fairness
   pos: noun
   gender: f
 - lemma: стипендія
   ipa: /stɪpˈɛndija/
-  translation: ''
+  translation: scholarship, stipend
   pos: noun
   gender: f
 - lemma: схований
   ipa: /sxˈɔʋanɪj/
-  translation: ''
+  translation: hidden, concealed
   pos: adj
 - lemma: ухвалити
   ipa: /uxʋalˈɪtɪ/
-  translation: ''
+  translation: to approve, to adopt
   pos: verb
 - lemma: фактор
   ipa: /fˈaktɔr/
-  translation: ''
+  translation: factor
   pos: noun
 - lemma: чинність
   ipa: /t͡ʃˈɪnnistʲ/
-  translation: ''
+  translation: validity, effectiveness
   pos: noun
   gender: f
-- lemma: шеф-кухар
-  ipa: /ʃɛf-kˈuxar/
+- lemma: чол
+  ipa: /t͡ʃɔl/
   translation: ''
   pos: noun
+- lemma: шеф-кухар
+  ipa: /ʃɛf-kˈuxar/
+  translation: head chef
+  pos: noun
   gender: m
+- lemma: шкода
+  ipa: /ʃkˈɔda/
+  translation: harm, pity/shame
+  pos: noun
+  gender: m
+- lemma: юля
+  ipa: /ˈjulja/
+  translation: Yulia (name)
+  pos: noun
+  gender: f
+- lemma: якісний
+  ipa: /ˈjakisnɪj/
+  translation: high-quality
+  pos: adj
 - lemma: ігровий
   ipa: /iɦrɔʋˈɪj/
-  translation: ''
+  translation: game (adj), gambling (adj)
   pos: adj
 - lemma: індоєвропейський
   ipa: /indɔjɛʋrɔpˈɛjsʲkɪj/
-  translation: ''
+  translation: Indo-European
   pos: adj
 - lemma: інформативний
   ipa: /infɔrmatˈɪʋnɪj/
-  translation: ''
+  translation: informative
   pos: adj
 - lemma: істота
   ipa: /istˈɔta/
-  translation: ''
+  translation: being, creature
   pos: noun
+- lemma: італія
+  ipa: /itˈalija/
+  translation: Italy
+  pos: noun
+  gender: f

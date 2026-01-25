@@ -2,137 +2,91 @@ module: 20-preferences-and-choices
 level: A2
 version: '2.0'
 items:
-- lemma: автор
-  ipa: /ˈaʋtɔr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: важче
   ipa: /ʋˈaʒt͡ʃɛ/
   translation: ''
   pos: adv
-- lemma: ввічливо
-  ipa: /ʋʋˈit͡ʃlɪʋɔ/
-  translation: ''
-  pos: adv
+- lemma: викликати
+  ipa: /ʋɪklɪkatɪ/
+  translation: to cause, to call
+  pos: verb
 - lemma: висловлювати
   ipa: /ʋɪslˈɔʋljuʋatɪ/
-  translation: ''
+  translation: to express (imperfective)
   pos: verb
 - lemma: вподобання
   ipa: /ʋpɔdˈɔbannja/
-  translation: ''
+  translation: preferences, likes
   pos: noun
   gender: n
 - lemma: відмова
   ipa: /ʋidmˈɔʋa/
-  translation: ''
+  translation: refusal, failure
   pos: noun
   gender: f
-- lemma: відпочинок
-  ipa: /ʋidpɔt͡ʃˈɪnɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: грубий
   ipa: /ɦrˈubɪj/
-  translation: ''
+  translation: rude, coarse, thick
   pos: adj
 - lemma: гіпотетичний
   ipa: /ɦipɔtɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: hypothetical
   pos: adj
 - lemma: детектив
   ipa: /dɛtɛktˈɪʋ/
-  translation: ''
+  translation: detective
   pos: noun
 - lemma: ефективніший
   ipa: /ɛfɛktˈɪʋniʃɪj/
-  translation: ''
+  translation: more effective
   pos: adj
-- lemma: зворотний
-  ipa: /zʋɔrˈɔtnɪj/
-  translation: ''
-  pos: adj
-- lemma: класичний
-  ipa: /klasˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
+- lemma: жінка
+  ipa: /ʒˈinka/
+  translation: woman, wife
+  pos: noun
+  gender: f
+- lemma: колір
+  ipa: /kˈɔlir/
+  translation: color
+  pos: noun
+  gender: m
 - lemma: комфортніший
   ipa: /kɔmfˈɔrtniʃɪj/
-  translation: ''
+  translation: more comfortable
   pos: adj
 - lemma: корисніше
   ipa: /kɔrˈɪsniʃɛ/
-  translation: ''
-  pos: adv
-- lemma: м'якший
-  ipa: /mˈjakʃɪj/
-  translation: ''
-  pos: adj
-- lemma: мовець
-  ipa: /mˈɔʋɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: можливо
-  ipa: /mɔʒlˈɪʋɔ/
-  translation: ''
+  translation: more useful
   pos: adv
 - lemma: нудніший
   ipa: /nudnˈiʃɪj/
-  translation: ''
+  translation: more boring
   pos: adj
 - lemma: парфум
   ipa: /parfˈum/
-  translation: ''
+  translation: perfume
   pos: noun
-- lemma: перекладати
-  ipa: /pɛrɛkladˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: письмово
   ipa: /pɪsʲmˈɔʋɔ/
-  translation: ''
+  translation: in writing
   pos: adv
-- lemma: порадити
-  ipa: /pɔrˈadɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: пояснити
-  ipa: /pɔjasnˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: практичніший
   ipa: /praktˈɪt͡ʃniʃɪj/
-  translation: ''
+  translation: more practical
+  pos: adj
+- lemma: радий
+  ipa: /rˈadɪj/
+  translation: glad
   pos: adj
 - lemma: романтичніший
   ipa: /rɔmantɪt͡ʃniʃɪj/
-  translation: ''
+  translation: more romantic
   pos: adj
 - lemma: смак
   ipa: /smak/
-  translation: ''
+  translation: taste, flavor
   pos: noun
-- lemma: стиль
-  ipa: /stɪlʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: узгоджуватися
-  ipa: /uzɦˈɔdʒuʋatɪsja/
-  translation: ''
-  pos: verb
-- lemma: формальний
-  ipa: /fɔrmˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: цінувати
-  ipa: /t͡sinuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: шкідливіший
   ipa: /ʃkidlɪʋiʃɪj/
-  translation: ''
+  translation: more harmful
   pos: adj

@@ -4,12 +4,8 @@ version: '2.0'
 items:
 - lemma: блакитний
   ipa: /blakˈɪtnɪj/
-  translation: ''
+  translation: light blue, azure
   pos: adj
-- lemma: брати
-  ipa: /brˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: біл
   ipa: /bil/
   translation: ''
@@ -17,12 +13,12 @@ items:
   gender: m
 - lemma: біла
   ipa: /bˈila/
-  translation: ''
+  translation: white (female)
   pos: noun
   gender: f
 - lemma: білий
   ipa: /bˈilɪj/
-  translation: ''
+  translation: white (male)
   pos: noun
   gender: m
 - lemma: білі
@@ -31,246 +27,58 @@ items:
   pos: noun
 - lemma: взуття
   ipa: /ʋzuttˈja/
-  translation: ''
+  translation: footwear, shoes
   pos: noun
   gender: n
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вивчити
-  ipa: /ʋˈɪʋt͡ʃɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: вишиванка
   ipa: /ʋɪʃˈɪʋanka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вправа
-  ipa: /ʋprˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: гарний
-  ipa: /ɦˈarnɪj/
-  translation: ''
-  pos: adj
-- lemma: день
-  ipa: /dɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: джинса
-  ipa: /dʒɪnsa/
-  translation: ''
+  translation: vyshyvanka (embroidered shirt)
   pos: noun
   gender: f
 - lemma: жовтий
   ipa: /ʒˈɔʋtɪj/
-  translation: ''
+  translation: yellow
   pos: adj
-- lemma: забутий
-  ipa: /zabˈutɪj/
-  translation: ''
-  pos: adj
-- lemma: зелена
-  ipa: /zɛlˈɛna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: зелений
-  ipa: /zɛlˈɛnɪj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: земля
-  ipa: /zɛmlˈja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: знати
-  ipa: /znˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: класно
-  ipa: /klˈasnɔ/
-  translation: ''
-  pos: adv
-- lemma: колір
-  ipa: /kˈɔlir/
-  translation: ''
-  pos: noun
 - lemma: коричневий
   ipa: /kɔrˈɪt͡ʃnɛʋɪj/
-  translation: ''
+  translation: brown
   pos: adj
 - lemma: красиво
   ipa: /krasˈɪʋɔ/
-  translation: ''
-  pos: adv
-- lemma: кросівка
-  ipa: /krɔsˈiʋka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: куртка
-  ipa: /kˈurtka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кіно
-  ipa: /kinˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
-- lemma: мова
-  ipa: /mˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: море
-  ipa: /mˈɔrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: навколо
-  ipa: /naʋkˈɔlɔ/
-  translation: ''
+  translation: beautifully
   pos: adv
 - lemma: небо
   ipa: /nˈɛbɔ/
-  translation: ''
+  translation: sky
   pos: noun
   gender: n
-- lemma: новий
-  ipa: /nɔʋˈɪj/
-  translation: ''
-  pos: adj
-- lemma: ніч
-  ipa: /nit͡ʃ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: одяг
-  ipa: /ˈɔdjaɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: одягати
-  ipa: /ɔdjaɦˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: описати
-  ipa: /ɔpɪsˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: пальто
   ipa: /palʲtˈɔ/
-  translation: ''
+  translation: coat
   pos: noun
   gender: n
-- lemma: переклад
-  ipa: /pɛrɛklad/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: перекласти
-  ipa: /pɛrɛklˈastɪ/
-  translation: ''
-  pos: verb
-- lemma: подобатися
-  ipa: /pɔdˈɔbatɪsja/
-  translation: ''
-  pos: verb
-- lemma: практик
-  ipa: /prˈaktɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: предків
-  ipa: /prˈɛdkiʋ/
-  translation: ''
-  pos: adj
-- lemma: підсумок
-  ipa: /pidsumɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: речення
-  ipa: /rɛt͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: робот
-  ipa: /rˈɔbɔt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: светр
-  ipa: /sʋɛtr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: світлий
   ipa: /sʋˈitlɪj/
-  translation: ''
+  translation: light, bright
   pos: adj
 - lemma: світло-зелений
   ipa: /sʋˈitlɔ-zɛlɛnɪj/
-  translation: ''
+  translation: light green
   pos: adj
 - lemma: синь
   ipa: /sɪnʲ/
-  translation: ''
+  translation: blueness
   pos: noun
   gender: f
-- lemma: синій
-  ipa: /sˈɪnij/
-  translation: ''
-  pos: adj
 - lemma: синіти
   ipa: /sɪnˈitɪ/
-  translation: ''
+  translation: to turn blue, to appear blue
   pos: verb
-- lemma: слово
-  ipa: /slˈɔʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сніг
-  ipa: /sniɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сонце
-  ipa: /sˈɔnt͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: сорочка
   ipa: /sɔrˈɔt͡ʃka/
-  translation: ''
+  translation: shirt
   pos: noun
   gender: f
-- lemma: сукня
-  ipa: /sˈuknja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: сьогодні
-  ipa: /sʲɔɦˈɔdni/
-  translation: ''
-  pos: adv
 - lemma: сіро-білі
   ipa: /sˈirɔ-bili/
   translation: ''
@@ -282,98 +90,39 @@ items:
   gender: f
 - lemma: темно-коричневий
   ipa: /tˈɛmnɔ-kɔrɪt͡ʃnɛʋɪj/
-  translation: ''
+  translation: dark brown
   pos: adj
 - lemma: темно-синій
   ipa: /tˈɛmnɔ-sɪnij/
-  translation: ''
+  translation: dark blue
   pos: adj
-- lemma: тепер
-  ipa: /tɛpˈɛr/
-  translation: ''
-  pos: pron
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
-- lemma: трава
-  ipa: /traʋˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тінь
-  ipa: /tinʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: україна
-  ipa: /ukraˈjina/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: футболка
   ipa: /futbˈɔlka/
-  translation: ''
+  translation: T-shirt
   pos: noun
   gender: f
-- lemma: фільм
-  ipa: /filʲm/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: червона
-  ipa: /t͡ʃɛrʋˈɔna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: червоний
-  ipa: /t͡ʃɛrʋˈɔnɪj/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: черевик
   ipa: /t͡ʃɛrɛʋˈɪk/
-  translation: ''
+  translation: shoe, boot
   pos: noun
 - lemma: чорна
   ipa: /t͡ʃˈɔrna/
-  translation: ''
+  translation: black (female)
   pos: noun
   gender: f
-- lemma: чорний
-  ipa: /t͡ʃˈɔrnɪj/
-  translation: ''
-  pos: noun
 - lemma: чорно-білий
   ipa: /t͡ʃˈɔrnɔ-bilɪj/
-  translation: ''
+  translation: black and white
   pos: adj
-- lemma: чудовий
-  ipa: /t͡ʃudˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: чудово
-  ipa: /t͡ʃudˈɔʋɔ/
-  translation: ''
-  pos: adv
 - lemma: шорти
   ipa: /ʃˈɔrtɪ/
-  translation: ''
-  pos: noun
-- lemma: штани
-  ipa: /ʃtanˈɪ/
-  translation: ''
+  translation: shorts
   pos: noun
 - lemma: яскравий
   ipa: /jaskrˈaʋɪj/
-  translation: ''
+  translation: bright, vivid
   pos: adj
 - lemma: яскраво-жовтий
   ipa: /jaskrˈaʋɔ-ʒɔʋtɪj/
-  translation: ''
+  translation: bright yellow
   pos: adj

@@ -2,60 +2,78 @@ module: 46-past-passive-participles-2
 level: B1
 version: '2.0'
 items:
+- lemma: адміністратор
+  ipa: /administrˈatɔr/
+  translation: administrator
+  pos: noun
+  gender: m
 - lemma: адресований
   ipa: /adrɛsˈɔʋanɪj/
-  translation: ''
+  translation: addressed
   pos: adj
 - lemma: архітектор
   ipa: /arxitˈɛktɔr/
-  translation: ''
+  translation: architect (male)
   pos: noun
 - lemma: бригадир
   ipa: /brɪɦadˈɪr/
-  translation: ''
+  translation: ' бригадир, foreman'
   pos: noun
   gender: m
 - lemma: брошура
   ipa: /brɔʃˈura/
-  translation: ''
+  translation: brochure
+  pos: noun
+  gender: f
+- lemma: ведучий
+  ipa: /ʋɛdˈut͡ʃɪj/
+  translation: host, presenter
+  pos: adj
+- lemma: вежа
+  ipa: /ʋˈɛʒa/
+  translation: tower
   pos: noun
   gender: f
 - lemma: виготовити
   ipa: /ʋˈɪɦɔtɔʋɪtɪ/
-  translation: ''
+  translation: to manufacture, to make
   pos: verb
 - lemma: визначено
   ipa: /ʋˈɪznat͡ʃɛnɔ/
-  translation: ''
+  translation: defined, determined
   pos: adv
 - lemma: викладачка
   ipa: /ʋɪkladˈat͡ʃka/
-  translation: ''
+  translation: teacher (female)
   pos: noun
   gender: f
 - lemma: вирішений
   ipa: /ʋˈɪriʃɛnɪj/
-  translation: ''
+  translation: decided, solved
   pos: adj
 - lemma: виставити
   ipa: /ʋˈɪstaʋɪtɪ/
-  translation: ''
+  translation: to display, to exhibit
   pos: verb
 - lemma: вкорінений
   ipa: /ʋkɔrˈinɛnɪj/
-  translation: ''
+  translation: rooted, established
   pos: adj
 - lemma: встановити
   ipa: /ʋstanɔʋˈɪtɪ/
-  translation: ''
+  translation: to establish, to install
   pos: verb
 - lemma: віденський
   ipa: /ʋˈidɛnsʲkɪj/
-  translation: ''
+  translation: Viennese
   pos: adj
+- lemma: відкрито
+  ipa: /ʋidkrˈɪtɔ/
+  translation: openly
+  pos: adv
 - lemma: гардероб
   ipa: /ɦardɛrˈɔb/
-  translation: ''
+  translation: wardrobe
   pos: noun
   gender: m
 - lemma: гельмер
@@ -65,7 +83,7 @@ items:
   gender: m
 - lemma: генеральний
   ipa: /ɦɛnɛrˈalʲnɪj/
-  translation: ''
+  translation: general, main
   pos: adj
 - lemma: гетьманський
   ipa: /ɦɛtʲmansʲkɪj/
@@ -73,7 +91,7 @@ items:
   pos: adj
 - lemma: глядачка
   ipa: /ɦljadˈat͡ʃka/
-  translation: ''
+  translation: spectator (female)
   pos: noun
   gender: f
 - lemma: дана
@@ -83,78 +101,92 @@ items:
   gender: f
 - lemma: декорація
   ipa: /dɛkɔrˈat͡sija/
-  translation: ''
+  translation: decoration, scenery
   pos: noun
   gender: f
 - lemma: демінутив
   ipa: /dɛminutˈɪʋ/
-  translation: ''
+  translation: diminutive
   pos: noun
+- lemma: дизайнер
+  ipa: /dɪzˈajnɛr/
+  translation: designer
+  pos: noun
+  gender: m
 - lemma: дистанціюватися
   ipa: /dɪstant͡sijuʋˈatɪsja/
-  translation: ''
+  translation: to distance oneself
   pos: verb
 - lemma: додатково
   ipa: /dɔdatkˈɔʋɔ/
-  translation: ''
+  translation: additionally
   pos: adv
 - lemma: евакуюватися
   ipa: /ɛʋakujuʋˈatɪsja/
-  translation: ''
+  translation: to be evacuated
   pos: verb
 - lemma: залити
   ipa: /zalˈɪtɪ/
-  translation: ''
+  translation: to pour
   pos: verb
 - lemma: зникнути
   ipa: /znˈɪknutɪ/
-  translation: ''
+  translation: to disappear (perfective)
   pos: verb
 - lemma: канцелярія
   ipa: /kant͡sɛlˈjarija/
-  translation: ''
+  translation: office, chancellery
   pos: noun
   gender: f
+- lemma: коментар
+  ipa: /kɔmɛntˈar/
+  translation: comment
+  pos: noun
+  gender: m
 - lemma: кореспондентка
   ipa: /kɔrɛspɔndˈɛntka/
-  translation: ''
+  translation: correspondent (female)
   pos: noun
   gender: f
 - lemma: маска
   ipa: /mˈaska/
-  translation: ''
+  translation: mask
   pos: noun
   gender: f
 - lemma: медіаграмотність
   ipa: /mɛdiaɦramɔtnistʲ/
-  translation: ''
+  translation: media literacy
   pos: noun
   gender: f
 - lemma: монтаж
   ipa: /mɔntˈaʒ/
-  translation: ''
+  translation: editing, montage, assembly
   pos: noun
   gender: m
 - lemma: надання
   ipa: /nadˈannja/
-  translation: ''
+  translation: provision, granting
   pos: noun
   gender: n
 - lemma: об'єктивний
   ipa: /ɔbjɛktˈɪʋnɪj/
-  translation: ''
+  translation: objective
   pos: adj
 - lemma: об'єктивно
   ipa: /ɔbjɛktˈɪʋnɔ/
-  translation: ''
+  translation: objectively
   pos: adv
 - lemma: озвучити
   ipa: /ɔzʋˈut͡ʃɪtɪ/
-  translation: ''
+  translation: to voice, to announce
+  pos: verb
+- lemma: оновити
+  ipa: /ɔnɔʋˈɪtɪ/
+  translation: to update, to renew
   pos: verb
 - lemma: оприлюднити
   ipa: /ɔprɪlˈjudnɪtɪ/
-  translation: ''
+  translation: to publish, to make public
   pos: verb
 - lemma: пам'яткий
   ipa: /pamjatkˈɪj/
@@ -162,107 +194,107 @@ items:
   pos: adj
 - lemma: парламентський
   ipa: /parlˈamɛntsʲkɪj/
-  translation: ''
+  translation: parliamentary
   pos: adj
 - lemma: перескладання
   ipa: /pɛrɛskladˈannja/
-  translation: ''
+  translation: retaking (exam)
   pos: noun
   gender: n
 - lemma: пестливий
   ipa: /pɛstlˈɪʋɪj/
-  translation: ''
+  translation: affectionate (grammar), diminutive
   pos: adj
 - lemma: полковник
   ipa: /pɔlkˈɔʋnɪk/
-  translation: ''
+  translation: colonel
   pos: noun
 - lemma: постановка
   ipa: /pɔstanˈɔʋka/
-  translation: ''
+  translation: production, staging, setting
   pos: noun
   gender: f
 - lemma: практично
   ipa: /praktˈɪt͡ʃnɔ/
-  translation: ''
+  translation: practically
   pos: adv
 - lemma: працівниця
   ipa: /prat͡siʋnˈɪt͡sja/
-  translation: ''
+  translation: employee (female)
   pos: noun
   gender: f
 - lemma: прекрасно
   ipa: /prɛkrˈasnɔ/
-  translation: ''
+  translation: wonderful, perfectly
   pos: adv
 - lemma: припинити
   ipa: /prɪpɪnˈɪtɪ/
-  translation: ''
+  translation: to stop, to terminate
   pos: verb
 - lemma: програмка
   ipa: /prɔɦrˈamka/
-  translation: ''
+  translation: small program, guide
   pos: noun
   gender: f
 - lemma: прокласти
   ipa: /prɔklˈastɪ/
-  translation: ''
+  translation: to lay (path/rails perfective)
   pos: verb
 - lemma: підвищувати
   ipa: /pidʋˈɪʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to increase, to raise (imperfective)
   pos: verb
 - lemma: підготовити
   ipa: /pidɦɔtˈɔʋɪtɪ/
-  translation: ''
+  translation: to prepare
   pos: verb
 - lemma: підрахувати
   ipa: /pidraxuʋˈatɪ/
-  translation: ''
+  translation: to count, to calculate
   pos: verb
 - lemma: розмістити
   ipa: /rɔzmistˈɪtɪ/
-  translation: ''
+  translation: to place, to host, to post (online)
   pos: verb
 - lemma: розпочати
   ipa: /rɔzpɔt͡ʃˈatɪ/
-  translation: ''
+  translation: to begin, to initiate (perfective)
   pos: verb
 - lemma: рідший
   ipa: /rˈidʃɪj/
-  translation: ''
+  translation: rarer, thinner (liquid)
   pos: adj
 - lemma: спеціально
   ipa: /spɛt͡siˈalʲnɔ/
-  translation: ''
+  translation: specially, on purpose
   pos: adv
 - lemma: судовий
   ipa: /sudɔʋˈɪj/
-  translation: ''
+  translation: judicial, court (adj)
   pos: adj
 - lemma: телеканал
   ipa: /tɛlɛkanˈal/
-  translation: ''
+  translation: TV channel
   pos: noun
 - lemma: тимчасово
   ipa: /tɪmt͡ʃasˈɔʋɔ/
-  translation: ''
+  translation: temporarily
   pos: adv
 - lemma: типово
   ipa: /tɪpˈɔʋɔ/
-  translation: ''
+  translation: typically
   pos: adv
 - lemma: тринадцятий
   ipa: /trɪnˈadt͡sjatɪj/
-  translation: ''
+  translation: thirteenth
   pos: adj
 - lemma: універсал
   ipa: /uniʋɛrsˈal/
-  translation: ''
+  translation: universal person, wagon (car), Universal (historical document)
   pos: noun
 - lemma: фасад
   ipa: /fasˈad/
-  translation: ''
+  translation: facade
   pos: noun
   gender: m
 - lemma: фельнера
@@ -272,9 +304,13 @@ items:
   gender: f
 - lemma: характерний
   ipa: /xaraktɛrnɪj/
-  translation: ''
+  translation: characteristic, typical
   pos: adj
 - lemma: цнап
   ipa: /t͡snap/
-  translation: ''
+  translation: TSNAP (service center)
   pos: noun
+- lemma: інформаційний
+  ipa: /infɔrmat͡sˈijnɪj/
+  translation: information (adj)
+  pos: adj

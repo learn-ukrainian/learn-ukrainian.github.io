@@ -2,10 +2,6 @@ module: 68-texting-messaging
 level: A2
 version: '2.0'
 items:
-- lemma: ближчий
-  ipa: /blˈɪʒt͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: бу
   ipa: /bu/
   translation: ''
@@ -13,64 +9,35 @@ items:
   gender: f
 - lemma: голосовий
   ipa: /ɦɔlɔsɔʋˈɪj/
-  translation: ''
+  translation: vocal, voice (adj)
   pos: adj
 - lemma: дяк
   ipa: /djak/
-  translation: ''
+  translation: clerk (church/historical)
   pos: noun
   gender: f
 - lemma: діма
   ipa: /dima/
-  translation: ''
+  translation: Dima (name)
   pos: noun
   gender: m
 - lemma: емоджі
   ipa: /ɛmɔdʒi/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: етикет
-  ipa: /ɛtɪkˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: корисне
-  ipa: /kˈɔrɪsnɛ/
-  translation: ''
+  translation: emoji
   pos: noun
   gender: n
 - lemma: користувач
   ipa: /kɔrˈɪstuʋat͡ʃ/
-  translation: ''
+  translation: user
   pos: noun
   gender: m
-- lemma: кінотеатр
-  ipa: /kinɔtɛˈatr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мить
-  ipa: /mɪtʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: надсилання
   ipa: /nadsɪlˈannja/
-  translation: ''
+  translation: sending
   pos: noun
   gender: n
-- lemma: неформально
-  ipa: /nɛfɔrmˈalʲnɔ/
-  translation: ''
-  pos: adv
 - lemma: ніха
   ipa: /nixa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: подяка
-  ipa: /pɔdˈjaka/
   translation: ''
   pos: noun
   gender: f
@@ -78,41 +45,16 @@ items:
   ipa: /prɪtɪ/
   translation: ''
   pos: verb
-- lemma: сергій
-  ipa: /sɛrɦˈij/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: скорочення
-  ipa: /skɔrˈɔt͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сленг
-  ipa: /slɛnɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: статус
-  ipa: /stˈatus/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: стікер
   ipa: /stikɛr/
-  translation: ''
+  translation: sticker
   pos: noun
 - lemma: текстовий
   ipa: /tɛkstɔʋˈɪj/
-  translation: ''
+  translation: textual
   pos: adj
 - lemma: хвиля
   ipa: /xʋˈɪlja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: юля
-  ipa: /ˈjulja/
-  translation: ''
+  translation: wave
   pos: noun
   gender: f

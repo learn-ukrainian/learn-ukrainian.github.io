@@ -2,82 +2,53 @@ module: 25-checkpoint-aspect-comparison
 level: A2
 version: '2.0'
 items:
-- lemma: багатший
-  ipa: /baɦˈatʃɪj/
-  translation: ''
-  pos: adj
 - lemma: бренд
   ipa: /brɛnd/
-  translation: ''
+  translation: brand
   pos: noun
   gender: m
 - lemma: вагання
   ipa: /ʋaɦˈannja/
-  translation: ''
+  translation: hesitation, vibration
   pos: noun
-- lemma: етап
-  ipa: /ɛtˈap/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: контрольний
-  ipa: /kɔntrˈɔlʲnɪj/
-  translation: ''
+- lemma: дешевий
+  ipa: /dɛʃˈɛʋɪj/
+  translation: cheap, inexpensive
   pos: adj
-- lemma: мов
-  ipa: /mɔʋ/
-  translation: ''
-  pos: part
-- lemma: називати
-  ipa: /nazɪʋˈatɪ/
-  translation: ''
-  pos: verb
+- lemma: навичка
+  ipa: /nˈaʋɪt͡ʃka/
+  translation: skill
+  pos: noun
 - lemma: найменший
   ipa: /najmˈɛnʃɪj/
-  translation: ''
+  translation: the smallest
   pos: adj
 - lemma: найновіший
   ipa: /najnɔʋˈiʃɪj/
-  translation: ''
+  translation: the newest
   pos: adj
 - lemma: ноутбук
   ipa: /nɔutbˈuk/
-  translation: ''
+  translation: laptop
   pos: noun
   gender: m
-- lemma: пошукати
-  ipa: /pɔʃukˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: рубіж
   ipa: /rubˈiʒ/
-  translation: ''
+  translation: border, milestone
   pos: noun
   gender: m
-- lemma: слов'янський
-  ipa: /slɔʋˈjansʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: тривало
-  ipa: /trɪʋˈalɔ/
-  translation: ''
-  pos: adv
-- lemma: фундаментальний
-  ipa: /fundamɛntˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: чохол
   ipa: /t͡ʃɔxˈɔl/
-  translation: ''
+  translation: cover, case (phone/couch)
   pos: noun
   gender: m
 - lemma: шарф
   ipa: /ʃarf/
-  translation: ''
+  translation: scarf
   pos: noun
   gender: m
 - lemma: шопінг
   ipa: /ʃˈɔpinɦ/
-  translation: ''
+  translation: shopping
   pos: noun
   gender: m

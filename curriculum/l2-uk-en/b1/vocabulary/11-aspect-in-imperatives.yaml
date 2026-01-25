@@ -4,33 +4,84 @@ version: '2.0'
 items:
 - lemma: австро-угорщина
   ipa: /aʋstrɔ-uɦˈɔrʃt͡ʃɪna/
-  translation: ''
+  translation: Austria-Hungary
   pos: noun
   gender: f
+- lemma: акуратно
+  ipa: /akurˈatnɔ/
+  translation: neatly, carefully
+  pos: adv
+- lemma: аспектний
+  ipa: /aspˈɛktnɪj/
+  translation: aspectual
+  pos: adj
+- lemma: базар
+  ipa: /bazˈar/
+  translation: market, bazaar
+  pos: noun
+  gender: m
 - lemma: безкоштовно
   ipa: /bɛzkɔʃtˈɔʋnɔ/
-  translation: ''
+  translation: for free
   pos: adv
+- lemma: безпека
+  ipa: /bɛzpˈɛka/
+  translation: safety, security
+  pos: noun
+  gender: f
 - lemma: бесарабський
   ipa: /bɛsarˈabsʲkɪj/
-  translation: ''
+  translation: Besarabian
   pos: adj
 - lemma: бюрократичність
   ipa: /bjurɔkratɪt͡ʃnistʲ/
-  translation: ''
+  translation: bureaucracy
   pos: noun
   gender: f
+- lemma: ввічливий
+  ipa: /ʋʋˈit͡ʃlɪʋɪj/
+  translation: polite
+  pos: adj
+- lemma: ввічливо
+  ipa: /ʋʋˈit͡ʃlɪʋɔ/
+  translation: politely
+  pos: adv
+- lemma: ввічливість
+  ipa: /ʋʋˈit͡ʃlɪʋistʲ/
+  translation: politeness
+  pos: noun
+  gender: f
+- lemma: вголос
+  ipa: /ʋɦˈɔlɔs/
+  translation: aloud
+  pos: adv
+- lemma: вздовж
+  ipa: /ʋzdɔʋʒ/
+  translation: along
+  pos: adv
+- lemma: випадковий
+  ipa: /ʋɪpadkˈɔʋɪj/
+  translation: accidental, random
+  pos: adj
 - lemma: виразно
   ipa: /ʋɪrˈaznɔ/
-  translation: ''
+  translation: distinctly, expressively
   pos: adv
+- lemma: включити
+  ipa: /ʋkljut͡ʃˈɪtɪ/
+  translation: to include, to turn on (perfective)
+  pos: verb
+- lemma: впливати
+  ipa: /ʋplɪʋˈatɪ/
+  translation: to influence
+  pos: verb
 - lemma: відсоток
   ipa: /ʋidsˈɔtɔk/
-  translation: ''
+  translation: percent
   pos: noun
 - lemma: віко
   ipa: /ʋˈikɔ/
-  translation: ''
+  translation: lid, eyelid
   pos: noun
   gender: n
 - lemma: гостинне
@@ -38,204 +89,467 @@ items:
   translation: ''
   pos: noun
   gender: n
+- lemma: гостинність
+  ipa: /ɦɔstˈɪnnistʲ/
+  translation: hospitality
+  pos: noun
+  gender: f
+- lemma: гра
+  ipa: /ɦra/
+  translation: game
+  pos: noun
+  gender: f
 - lemma: груба
   ipa: /ɦrˈuba/
   translation: ''
   pos: noun
   gender: f
+- lemma: гумор
+  ipa: /ɦˈumɔr/
+  translation: humor
+  pos: noun
+  gender: m
 - lemma: давньослов'янський
   ipa: /daʋnʲɔslɔʋˈjansʲkɪj/
-  translation: ''
+  translation: Old Slavic
   pos: adj
 - lemma: дама
   ipa: /dˈama/
-  translation: ''
+  translation: lady
   pos: noun
 - lemma: дв-наказ
   ipa: /dʋ-nakaz/
   translation: ''
   pos: noun
   gender: m
+- lemma: етикет
+  ipa: /ɛtɪkˈɛt/
+  translation: etiquette
+  pos: noun
+  gender: m
 - lemma: загорнути
   ipa: /zaɦɔrnˈutɪ/
-  translation: ''
+  translation: to wrap
+  pos: verb
+- lemma: закінчитися
+  ipa: /zakˈint͡ʃɪtɪsja/
+  translation: to end
   pos: verb
 - lemma: заперечний
   ipa: /zapɛrˈɛt͡ʃnɪj/
-  translation: ''
+  translation: negative (adj)
   pos: adj
 - lemma: запрошення
   ipa: /zaprˈɔʃɛnnja/
-  translation: ''
+  translation: invitation
   pos: noun
-- lemma: застерігати
-  ipa: /zastɛriɦˈatɪ/
-  translation: ''
+- lemma: запрошувати
+  ipa: /zaprˈɔʃuʋatɪ/
+  translation: to invite (imperfective)
   pos: verb
 - lemma: зачин
   ipa: /zˈat͡ʃɪn/
-  translation: ''
+  translation: beginning, start
   pos: noun
+- lemma: зберегти
+  ipa: /zbɛrɛɦtˈɪ/
+  translation: to save, to preserve
+  pos: verb
+- lemma: зберігати
+  ipa: /zbɛriɦˈatɪ/
+  translation: to save, to preserve (imperfective)
+  pos: verb
 - lemma: зберігатися
   ipa: /zbɛriɦˈatɪsja/
-  translation: ''
+  translation: to be saved/preserved
   pos: verb
 - lemma: зворот
   ipa: /zʋɔrˈɔt/
-  translation: ''
+  translation: turn, phrase, reversal
   pos: noun
 - lemma: змішаний
   ipa: /zmˈiʃanɪj/
-  translation: ''
+  translation: mixed
   pos: adj
+- lemma: знижка
+  ipa: /znˈɪʒka/
+  translation: discount
+  pos: noun
+  gender: f
 - lemma: зобов'язання
   ipa: /zɔbɔʋˈjazannja/
-  translation: ''
+  translation: obligation, commitment
   pos: noun
+- lemma: кавовий
+  ipa: /kˈaʋɔʋɪj/
+  translation: coffee (adj)
+  pos: adj
+- lemma: категоричний
+  ipa: /katɛɦɔrˈɪt͡ʃnɪj/
+  translation: categorical
+  pos: adj
 - lemma: категорично
   ipa: /katɛɦɔrˈɪt͡ʃnɔ/
-  translation: ''
+  translation: categorically
   pos: adv
+- lemma: класичний
+  ipa: /klasˈɪt͡ʃnɪj/
+  translation: classic, classical
+  pos: adj
+- lemma: конспект
+  ipa: /kɔnspˈɛkt/
+  translation: lecture notes, summary
+  pos: noun
+  gender: m
+- lemma: контрольний
+  ipa: /kɔntrˈɔlʲnɪj/
+  translation: control (adj)
+  pos: adj
 - lemma: культовий
   ipa: /kˈulʲtɔʋɪj/
-  translation: ''
+  translation: cult (adj), iconic
   pos: adj
 - lemma: куштувати
   ipa: /kuʃtuʋˈatɪ/
-  translation: ''
+  translation: to taste, to try
   pos: verb
+- lemma: кінцевий
+  ipa: /kint͡sˈɛʋɪj/
+  translation: final, terminal
+  pos: adj
 - lemma: ласкавий
   ipa: /laskˈaʋɪj/
-  translation: ''
+  translation: kind, affectionate
   pos: adj
 - lemma: люб'язний
   ipa: /ljubˈjaznɪj/
-  translation: ''
+  translation: kind, courteous
   pos: adj
 - lemma: м'яко
   ipa: /mˈjakɔ/
-  translation: ''
+  translation: softly
+  pos: adv
+- lemma: м'якший
+  ipa: /mˈjakʃɪj/
+  translation: softer
+  pos: adj
+- lemma: менше
+  ipa: /mˈɛnʃɛ/
+  translation: less
   pos: adv
 - lemma: найбагатший
   ipa: /najbaɦˈatʃɪj/
-  translation: ''
+  translation: richest
   pos: adj
 - lemma: найсвіжіший
   ipa: /najsʋiʒˈiʃɪj/
-  translation: ''
+  translation: the freshest
   pos: adj
+- lemma: наказ
+  ipa: /nakˈaz/
+  translation: order, command
+  pos: noun
+  gender: m
+- lemma: накрити
+  ipa: /nakrˈɪtɪ/
+  translation: to cover (perfective)
+  pos: verb
 - lemma: ндв-наказ
   ipa: /ndʋ-nakˈaz/
   translation: ''
   pos: noun
+- lemma: небажаний
+  ipa: /nɛbˈaʒanɪj/
+  translation: undesirable
+  pos: adj
 - lemma: невизначеність
   ipa: /nɛʋˈɪznat͡ʃɛnistʲ/
-  translation: ''
+  translation: uncertainty
   pos: noun
   gender: f
+- lemma: негайно
+  ipa: /nɛɦˈajnɔ/
+  translation: immediately
+  pos: adv
 - lemma: незавершеність
   ipa: /nɛzaʋˈɛrʃɛnistʲ/
-  translation: ''
+  translation: incompleteness
   pos: noun
   gender: f
+- lemma: незнайомий
+  ipa: /nɛznajˈɔmɪj/
+  translation: unfamiliar, unknown
+  pos: adj
 - lemma: незрозуміло
   ipa: /nɛzrɔzumˈilɔ/
-  translation: ''
+  translation: it is unclear
+  pos: adv
+- lemma: нейтрально
+  ipa: /nɛjtrˈalʲnɔ/
+  translation: neutrally
   pos: adv
 - lemma: ненав'язливість
   ipa: /nɛnaʋjazlɪʋistʲ/
-  translation: ''
+  translation: unobtrusiveness
   pos: noun
   gender: f
+- lemma: неформально
+  ipa: /nɛfɔrmˈalʲnɔ/
+  translation: informally
+  pos: adv
+- lemma: нотатка
+  ipa: /nɔtˈatka/
+  translation: note, memo
+  pos: noun
+  gender: f
+- lemma: обережний
+  ipa: /ɔbɛrˈɛʒnɪj/
+  translation: careful, cautious
+  pos: adj
+- lemma: обережно
+  ipa: /ɔbɛrˈɛʒnɔ/
+  translation: carefully, cautiously
+  pos: adv
 - lemma: обмеження
   ipa: /ɔbmˈɛʒɛnnja/
-  translation: ''
+  translation: limitation, restriction
   pos: noun
+- lemma: оглянути
+  ipa: /ɔɦlˈjanutɪ/
+  translation: to inspect, to review (perfective)
+  pos: verb
+- lemma: оновлення
+  ipa: /ɔnˈɔʋlɛnnja/
+  translation: update, renewal
+  pos: noun
+  gender: n
+- lemma: опалення
+  ipa: /ɔpˈalɛnnja/
+  translation: heating
+  pos: noun
+  gender: n
+- lemma: переходити
+  ipa: /pɛrɛxɔdɪtɪ/
+  translation: to cross, to switch (imperfective)
+  pos: verb
+- lemma: пов'язаний
+  ipa: /pɔʋˈjazanɪj/
+  translation: connected, linked
+  pos: adj
+- lemma: повинний
+  ipa: /pɔʋˈɪnnɪj/
+  translation: must, should
+  pos: adj
+- lemma: повнити
+  ipa: /pˈɔʋnɪtɪ/
+  translation: to fill up
+  pos: verb
+- lemma: повідомити
+  ipa: /pɔʋidˈɔmɪtɪ/
+  translation: to inform, to notify
+  pos: verb
+- lemma: подзвонити
+  ipa: /pɔdzʋɔnˈɪtɪ/
+  translation: to call (perfective)
+  pos: verb
+- lemma: позиція
+  ipa: /pɔzˈɪt͡sija/
+  translation: position
+  pos: noun
+  gender: f
 - lemma: понеділко
   ipa: /pɔnɛdilkɔ/
   translation: ''
   pos: noun
   gender: m
-- lemma: попереджати
-  ipa: /pɔpɛrɛdʒˈatɪ/
-  translation: ''
+- lemma: порадити
+  ipa: /pɔrˈadɪtɪ/
+  translation: to advise
   pos: verb
+- lemma: порівняльний
+  ipa: /pɔriʋnˈjalʲnɪj/
+  translation: comparative
+  pos: adj
 - lemma: послідовний
   ipa: /pɔslidˈɔʋnɪj/
-  translation: ''
+  translation: consistent, sequential
   pos: adj
+- lemma: послідовність
+  ipa: /pɔslidˈɔʋnistʲ/
+  translation: sequence, consistency
+  pos: noun
 - lemma: поспіль
   ipa: /pˈɔspilʲ/
-  translation: ''
+  translation: in a row, consecutively
   pos: adv
 - lemma: поступовий
   ipa: /pɔstupˈɔʋɪj/
-  translation: ''
+  translation: gradual
   pos: adj
 - lemma: привітно
   ipa: /prɪʋˈitnɔ/
-  translation: ''
+  translation: friendly, welcomingly
   pos: adv
+- lemma: прихід
+  ipa: /prɪxˈid/
+  translation: arrival, coming
+  pos: noun
+  gender: m
+- lemma: пробувати
+  ipa: /prɔbuʋatɪ/
+  translation: to try, to attempt
+  pos: verb
+- lemma: пропонувати
+  ipa: /prɔpɔnuʋˈatɪ/
+  translation: to offer, to suggest
+  pos: verb
 - lemma: результативний
   ipa: /rɛzulʲtatˈɪʋnɪj/
-  translation: ''
+  translation: effective, result-oriented
   pos: adj
+- lemma: ринка
+  ipa: /rˈɪnka/
+  translation: ''
+  pos: noun
 - lemma: святковий
   ipa: /sʋjatkˈɔʋɪj/
-  translation: ''
+  translation: festive
   pos: adj
 - lemma: середина
   ipa: /sɛrˈɛdɪna/
-  translation: ''
+  translation: middle, center
   pos: noun
   gender: f
+- lemma: скоро
+  ipa: /skˈɔrɔ/
+  translation: soon
+  pos: adv
+- lemma: словом
+  ipa: /slˈɔʋɔm/
+  translation: in a word, in short
+  pos: adv
 - lemma: спадщина
   ipa: /spˈadʃt͡ʃɪna/
-  translation: ''
+  translation: heritage, legacy
   pos: noun
   gender: f
+- lemma: спектр
+  ipa: /spɛktr/
+  translation: spectrum
+  pos: noun
+  gender: m
+- lemma: список
+  ipa: /spˈɪsɔk/
+  translation: list
+  pos: noun
+  gender: m
 - lemma: стверджувальний
   ipa: /stʋˈɛrdʒuʋalʲnɪj/
-  translation: ''
+  translation: affirmative
   pos: adj
+- lemma: створювати
+  ipa: /stʋˈɔrjuʋatɪ/
+  translation: to create (imperfective)
+  pos: verb
+- lemma: сторінка
+  ipa: /stɔrˈinka/
+  translation: page
+  pos: noun
+  gender: f
+- lemma: стосуватися
+  ipa: /stɔsuʋˈatɪsja/
+  translation: to relate to, to concern
+  pos: verb
 - lemma: тарілка
   ipa: /tarˈilka/
-  translation: ''
+  translation: plate
   pos: noun
   gender: f
 - lemma: терміновість
   ipa: /tɛrminˈɔʋistʲ/
-  translation: ''
+  translation: urgency
   pos: noun
   gender: f
+- lemma: тиск
+  ipa: /tɪsk/
+  translation: pressure
+  pos: noun
+  gender: m
+- lemma: товар
+  ipa: /tɔʋˈar/
+  translation: goods, product
+  pos: noun
+  gender: m
 - lemma: тонко
   ipa: /tˈɔnkɔ/
-  translation: ''
+  translation: thinly, subtly
   pos: adv
 - lemma: торговельний
   ipa: /tɔrɦɔʋˈɛlʲnɪj/
-  translation: ''
+  translation: trade (adj), merchant (adj)
   pos: adj
+- lemma: традиційний
+  ipa: /tradɪt͡sˈijnɪj/
+  translation: traditional
+  pos: adj
+- lemma: увімкнути
+  ipa: /uʋimknˈutɪ/
+  translation: to turn on, to switch on (perfective)
+  pos: verb
+- lemma: удома
+  ipa: /udˈɔma/
+  translation: at home
+  pos: adv
 - lemma: узгодженість
   ipa: /uzɦˈɔdʒɛnistʲ/
-  translation: ''
+  translation: consistency, coordination
   pos: noun
   gender: f
 - lemma: уточнення
   ipa: /utˈɔt͡ʃnɛnnja/
-  translation: ''
+  translation: clarification, specification
   pos: noun
   gender: n
+- lemma: файл
+  ipa: /fajl/
+  translation: file
+  pos: noun
+  gender: m
 - lemma: централізація
   ipa: /t͡sɛntralizˈat͡sija/
-  translation: ''
+  translation: centralization
   pos: noun
   gender: f
+- lemma: цінувати
+  ipa: /t͡sinuʋˈatɪ/
+  translation: to value, to appreciate
+  pos: verb
+- lemma: червоний
+  ipa: /t͡ʃɛrʋˈɔnɪj/
+  translation: red
+  pos: noun
 - lemma: щотижневий
   ipa: /ʃt͡ʃɔtɪʒnˈɛʋɪj/
-  translation: ''
+  translation: weekly (adj)
   pos: adj
+- lemma: європейський
+  ipa: /jɛʋrɔpˈɛjsʲkɪj/
+  translation: European
+  pos: adj
+- lemma: ідентичність
+  ipa: /idɛntˈɪt͡ʃnistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: інакше
+  ipa: /inˈakʃɛ/
+  translation: otherwise, differently
+  pos: pron
 - lemma: інструктувати
   ipa: /instruktuʋˈatɪ/
-  translation: ''
+  translation: to instruct
   pos: verb
+- lemma: історичний
+  ipa: /istɔrˈɪt͡ʃnɪj/
+  translation: historical
+  pos: adj

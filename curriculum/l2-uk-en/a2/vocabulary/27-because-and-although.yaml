@@ -2,161 +2,81 @@ module: 27-because-and-although
 level: A2
 version: '2.0'
 items:
-- lemma: акцентувати
-  ipa: /akt͡sɛntuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: бюджет
-  ipa: /bjudʒˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: виразніший
-  ipa: /ʋɪrˈazniʃɪj/
-  translation: ''
-  pos: adj
 - lemma: виступ
   ipa: /ʋˈɪstup/
-  translation: ''
+  translation: performance, speech, ledge
   pos: noun
   gender: m
 - lemma: всупереч
   ipa: /ʋsˈupɛrɛt͡ʃ/
-  translation: ''
+  translation: despite, contrary to
   pos: prep
+- lemma: вітряно
+  ipa: /ʋˈitrjanɔ/
+  translation: windy
+  pos: adv
 - lemma: грамотність
   ipa: /ɦrˈamɔtnistʲ/
-  translation: ''
+  translation: literacy
   pos: noun
   gender: f
 - lemma: доповідь
   ipa: /dˈɔpɔʋidʲ/
-  translation: ''
+  translation: report, speech
   pos: noun
   gender: f
-- lemma: досить
-  ipa: /dˈɔsɪtʲ/
-  translation: ''
-  pos: adv
-- lemma: жахливий
-  ipa: /ʒaxlˈɪʋɪj/
-  translation: ''
-  pos: adj
-- lemma: залишитися
-  ipa: /zalˈɪʃɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: захворіти
   ipa: /zaxʋɔrˈitɪ/
-  translation: ''
+  translation: to fall ill
   pos: verb
 - lemma: зламатися
   ipa: /zlamˈatɪsja/
-  translation: ''
+  translation: to break down
   pos: verb
-- lemma: кома
-  ipa: /kˈɔma/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: контраст
-  ipa: /kɔntrˈast/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: конференція
-  ipa: /kɔnfɛrˈɛnt͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: купівля
   ipa: /kupˈiʋlja/
-  translation: ''
+  translation: purchase
   pos: noun
   gender: f
-- lemma: логічно
-  ipa: /lɔɦˈit͡ʃnɔ/
-  translation: ''
-  pos: adv
-- lemma: навпаки
-  ipa: /naʋpakˈɪ/
-  translation: ''
-  pos: adv
 - lemma: найбільш
   ipa: /najbˈilʲʃ/
-  translation: ''
+  translation: most
   pos: adv
 - lemma: незважаючи
   ipa: /nɛzʋaʒˈajut͡ʃɪ/
-  translation: ''
+  translation: despite, notwithstanding
   pos: prep
 - lemma: пауза
   ipa: /pˈauza/
-  translation: ''
+  translation: pause
   pos: noun
   gender: f
 - lemma: поганіти
   ipa: /pɔɦanˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: пояснення
-  ipa: /pɔˈjasnɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: пропустити
-  ipa: /prɔpustˈɪtɪ/
-  translation: ''
+  translation: to get worse
   pos: verb
 - lemma: підсилювальний
   ipa: /pidsˈɪljuʋalʲnɪj/
-  translation: ''
+  translation: amplifying, reinforcing
   pos: adj
 - lemma: світити
   ipa: /sʋitˈɪtɪ/
-  translation: ''
+  translation: to shine
   pos: verb
 - lemma: скріншот
   ipa: /skrinʃɔt/
-  translation: ''
+  translation: screenshot
   pos: noun
 - lemma: слухачів
   ipa: /sluxat͡ʃˈiʋ/
-  translation: ''
+  translation: of listeners
   pos: adj
-- lemma: ставити
-  ipa: /stˈaʋɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: стар
-  ipa: /star/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: страшно
-  ipa: /strˈaʃnɔ/
-  translation: ''
-  pos: adv
 - lemma: таки
   ipa: /takˈɪ/
-  translation: ''
+  translation: still, nevertheless (particle)
   pos: part
 - lemma: технік
   ipa: /tˈɛxnik/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: формально
-  ipa: /fɔrmˈalʲnɔ/
-  translation: ''
-  pos: adv
-- lemma: читач
-  ipa: /t͡ʃɪtˈat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: шкода
-  ipa: /ʃkˈɔda/
-  translation: ''
+  translation: technician
   pos: noun
   gender: m

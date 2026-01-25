@@ -4,164 +4,27 @@ version: '2.0'
 items:
 - lemma: америка
   ipa: /amˈɛrɪka/
-  translation: ''
+  translation: America
   pos: noun
   gender: f
-- lemma: англійський
-  ipa: /anɦlˈijsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вивчати
-  ipa: /ʋɪʋt͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: говорити
-  ipa: /ɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: добре
-  ipa: /dˈɔbrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: завжди
-  ipa: /zˈaʋʒdɪ/
-  translation: ''
-  pos: pron
 - lemma: звати
   ipa: /zʋˈatɪ/
-  translation: ''
+  translation: to call (by name)
   pos: verb
-- lemma: звичайно
-  ipa: /zʋɪt͡ʃˈajnɔ/
-  translation: ''
-  pos: adv
-- lemma: знати
-  ipa: /znˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: йти
-  ipa: /jtɪ/
-  translation: ''
-  pos: verb
-- lemma: кава
-  ipa: /kˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: київ
-  ipa: /kɪˈjiʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: книга
-  ipa: /knˈɪɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: львов
-  ipa: /lʲʋɔʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: марко
-  ipa: /mˈarkɔ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
 - lemma: нормально
   ipa: /nɔrmˈalʲnɔ/
-  translation: ''
+  translation: normally, okay
   pos: adv
-- lemma: нікола
-  ipa: /nikɔla/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ніщо
   ipa: /niʃt͡ʃˈɔ/
-  translation: ''
+  translation: nothing
   pos: pron
-- lemma: оля
-  ipa: /ɔlja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: пити
-  ipa: /pˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: правда
-  ipa: /prˈaʋda/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: робити
-  ipa: /rɔbˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: розуміти
-  ipa: /rɔzumˈitɪ/
-  translation: ''
-  pos: verb
 - lemma: рідко
   ipa: /rˈidkɔ/
-  translation: ''
+  translation: rarely
   pos: adv
-- lemma: скільки
-  ipa: /skˈilʲkɪ/
-  translation: ''
-  pos: pron
-- lemma: справа
-  ipa: /sprˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
 - lemma: туалет
   ipa: /tualˈɛt/
-  translation: ''
+  translation: toilet, restroom
   pos: noun
   gender: m
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: часто
-  ipa: /t͡ʃˈastɔ/
-  translation: ''
-  pos: adv
-- lemma: читати
-  ipa: /t͡ʃɪtˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: іноді
-  ipa: /ˈinɔdi/
-  translation: ''
-  pos: pron

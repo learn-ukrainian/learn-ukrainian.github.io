@@ -1,0 +1,104 @@
+module: pylyp-orlyk-konstytutsiia
+level: B2
+version: '2.0'
+items:
+  - lemma: конституція
+    ipa: /konstɪˈtut͡sʲijɐ/
+    translation: constitution
+    pos: noun
+    gender: f
+  - lemma: еміграція
+    ipa: /emiˈɦrat͡sʲijɐ/
+    translation: emigration / exile
+    pos: noun
+    gender: f
+  - lemma: розподіл влади
+    ipa: /rozˈpodil ˈʋladɪ/
+    translation: separation of powers
+    pos: noun
+    gender: m
+  - lemma: гарант
+    ipa: /ɦɐˈrant/
+    translation: guarantor
+    pos: noun
+    gender: m
+  - lemma: корупція
+    ipa: /koˈrupt͡sʲijɐ/
+    translation: corruption
+    pos: noun
+    gender: f
+  - lemma: тиранія
+    ipa: /tɪrɐˈnʲijɐ/
+    translation: tyranny
+    pos: noun
+    gender: f
+  - lemma: правонаступництво
+    ipa: /praʋonɐˈstupnɪt͡stʋo/
+    translation: succession (legal)
+    pos: noun
+    gender: n
+  - lemma: коаліція
+    ipa: /koɐˈlʲit͡sʲijɐ/
+    translation: coalition
+    pos: noun
+    gender: f
+  - lemma: маніфест
+    ipa: /mɐnʲiˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: діаріуш
+    ipa: /dʲiɐˈrʲijuʃ/
+    translation: diary (archaic)
+    pos: noun
+    gender: m
+  - lemma: вольності
+    ipa: /ˈʋɔlʲnosʲtʲi/
+    translation: liberties / freedoms
+    pos: noun
+    gender: f
+  - lemma: генеральна рада
+    ipa: /hɛneˈralʲnɐ ˈrada/
+    translation: general council
+    pos: noun
+    gender: f
+  - lemma: скарбниця
+    ipa: /skɐrbˈnɪt͡sʲɐ/
+    translation: treasury
+    pos: noun
+    gender: f
+  - lemma: протекторат
+    ipa: /protektoˈrat/
+    translation: protectorate
+    pos: noun
+    gender: m
+  - lemma: дипломатія
+    ipa: /dɪploˈmatʲijɐ/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: вигнанець
+    ipa: /ʋɪˈɦnane t͡sʲ/
+    translation: exile (person)
+    pos: noun
+    gender: m
+  - lemma: узурпація
+    ipa: /uzurˈpat͡sʲijɐ/
+    translation: usurpation
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪʋiˈlɛj/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: суверенітет
+    ipa: /suʋerenʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: спадкоємець
+    ipa: /spɐdkoˈjɛmet͡sʲ/
+    translation: heir / successor
+    pos: noun
+    gender: m

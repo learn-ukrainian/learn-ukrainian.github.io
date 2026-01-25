@@ -1,17 +1,52 @@
-# Audit Report: 32-conditionals-unreal-yakby.md
-**Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M32 — 32-conditionals-unreal-yakby.md
+**Level:** B1 | **Module:** M32 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:55:01
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Виберіть правильну відповідь | 12 | 8 | ✅ |
+| 2 | match-up | З'єднайте умову з наслідком | 12 | 8 | ✅ |
+| 3 | cloze | Доповніть речення правильною формою | 12 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть речення за категоріями | 16 | 12 | ✅ |
+| 6 | unjumble | Складіть речення з розсипаних слів | 12 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 12 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Позначте частку «б» або «би» та сполучник «якби» | 14 | 6 | ✅ |
+| 10 | select | Виберіть усі граматично правильні речення | 12 | 6 | ✅ |
+| 11 | translate | Перекладіть на українську мову | 12 | 6 | ✅ |
+| 12 | fill-in | Вставте правильне слово | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1725/1500
+- **Words:** ✅ 1725/1500 (raw: 2131)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 37/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

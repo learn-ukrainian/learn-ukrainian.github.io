@@ -2,82 +2,203 @@ module: 05-ready-for-immersion
 level: B1
 version: '2.0'
 items:
+- lemma: бувати
+  ipa: /buʋˈatɪ/
+  translation: to be, to happen, to visit
+  pos: verb
 - lemma: виконавець
   ipa: /ʋɪkɔnˈaʋɛt͡sʲ/
-  translation: ''
+  translation: performer, executor
   pos: noun
   gender: m
+- lemma: властивість
+  ipa: /ʋlastˈɪʋistʲ/
+  translation: property, characteristic
+  pos: noun
+  gender: f
+- lemma: володіти
+  ipa: /ʋɔlɔdˈitɪ/
+  translation: to possess, to master
+  pos: verb
+- lemma: вчити
+  ipa: /ʋt͡ʃˈɪtɪ/
+  translation: to teach, to learn
+  pos: verb
 - lemma: відмінювання
   ipa: /ʋidmˈinjuʋannja/
-  translation: ''
+  translation: declension, conjugation
   pos: noun
   gender: n
 - lemma: відмінюватися
   ipa: /ʋidmˈinjuʋatɪsja/
-  translation: ''
+  translation: to be declined/conjugated
   pos: verb
-- lemma: діагностик
-  ipa: /diaɦnˈɔstɪk/
+- lemma: вітати
+  ipa: /ʋitˈatɪ/
+  translation: to greet, to congratulate
+  pos: verb
+- lemma: година
+  ipa: /ɦɔdˈɪna/
+  translation: hour
+  pos: noun
+  gender: f
+- lemma: гот
+  ipa: /ɦɔt/
   translation: ''
   pos: noun
   gender: m
+- lemma: готовий
+  ipa: /ɦɔtˈɔʋɪj/
+  translation: ready
+  pos: adj
+- lemma: група
+  ipa: /ɦrˈupa/
+  translation: group
+  pos: noun
+  gender: f
+- lemma: досліджувати
+  ipa: /dɔslˈidʒuʋatɪ/
+  translation: to research, to study (imperfective)
+  pos: verb
 - lemma: дієвідмінювання
   ipa: /dijɛʋidmˈinjuʋannja/
-  translation: ''
+  translation: conjugation
   pos: noun
   gender: n
 - lemma: залежний
   ipa: /zalˈɛʒnɪj/
-  translation: ''
+  translation: dependent
+  pos: adj
+- lemma: залежно
+  ipa: /zalˈɛʒnɔ/
+  translation: depending (on)
+  pos: adv
+- lemma: занурення
+  ipa: /zanˈurɛnnja/
+  translation: immersion
+  pos: noun
+  gender: n
+- lemma: звук
+  ipa: /zʋuk/
+  translation: sound
+  pos: noun
+- lemma: змогти
+  ipa: /zmɔɦtˈɪ/
+  translation: to be able to (perfective)
+  pos: verb
+- lemma: лінгвістичний
+  ipa: /linɦʋistˈɪt͡ʃnɪj/
+  translation: linguistic
   pos: adj
 - lemma: морфологія
   ipa: /mɔrfɔlˈɔɦija/
-  translation: ''
+  translation: morphology
   pos: noun
   gender: f
+- lemma: найважливіший
+  ipa: /najʋaʒlˈɪʋiʃɪj/
+  translation: the most important
+  pos: adj
+- lemma: напрямок
+  ipa: /nˈaprjamɔk/
+  translation: direction, course
+  pos: noun
+- lemma: народ
+  ipa: /narˈɔd/
+  translation: people, nation
+  pos: noun
+  gender: m
+- lemma: огляд
+  ipa: /ˈɔɦljad/
+  translation: review, overview
+  pos: noun
+  gender: m
 - lemma: павла
   ipa: /paʋlˈa/
-  translation: ''
+  translation: Pavla (name)
   pos: noun
   gender: f
-- lemma: поглиблення
-  ipa: /pɔɦlˈɪblɛnnja/
-  translation: ''
+- lemma: перевіряти
+  ipa: /pɛrɛʋirˈjatɪ/
+  translation: to check, to verify (imperfective)
+  pos: verb
+- lemma: повня
+  ipa: /pˈɔʋnja/
+  translation: full moon
   pos: noun
-  gender: n
+  gender: f
+- lemma: повторюватися
+  ipa: /pɔʋtˈɔrjuʋatɪsja/
+  translation: to recur (imperfective)
+  pos: verb
 - lemma: поділяти
   ipa: /pɔdilˈjatɪ/
-  translation: ''
+  translation: to share (opinion), to divide
   pos: verb
 - lemma: пройдений
   ipa: /prˈɔjdɛnɪj/
-  translation: ''
+  translation: passed, covered
   pos: adj
+- lemma: самоперевірка
+  ipa: /samɔpɛrˈɛʋirka/
+  translation: self-check
+  pos: noun
+  gender: f
 - lemma: словозміна
   ipa: /slɔʋɔzmˈina/
-  translation: ''
+  translation: inflection
   pos: noun
   gender: f
 - lemma: словосполучення
   ipa: /slɔʋɔspɔlˈut͡ʃɛnnja/
-  translation: ''
+  translation: phrase, word combination
   pos: noun
 - lemma: слуга
   ipa: /sluɦˈa/
-  translation: ''
+  translation: servant
   pos: noun
   gender: m
+- lemma: страшно
+  ipa: /strˈaʃnɔ/
+  translation: scarily, it's scary
+  pos: adv
+- lemma: термін
+  ipa: /tˈɛrmin/
+  translation: term (word), deadline, period
+  pos: noun
+- lemma: термінологія
+  ipa: /tɛrminɔlˈɔɦija/
+  translation: terminology
+  pos: noun
+  gender: f
+- lemma: тест
+  ipa: /tɛst/
+  translation: test
+  pos: noun
+  gender: m
+- lemma: тривати
+  ipa: /trɪʋˈatɪ/
+  translation: to last, to continue
+  pos: verb
+- lemma: трохи
+  ipa: /trˈɔxɪ/
+  translation: a little, some
+  pos: adv
 - lemma: ужгород
   ipa: /ˈuʒɦɔrɔd/
-  translation: ''
+  translation: Uzhhorod
   pos: noun
   gender: m
 - lemma: усюди
   ipa: /usˈjudɪ/
-  translation: ''
+  translation: everywhere
   pos: pron
 - lemma: фонетика
   ipa: /fɔnˈɛtɪka/
-  translation: ''
+  translation: phonetics
   pos: noun
   gender: f
+- lemma: хвилюватися
+  ipa: /xʋɪljuʋˈatɪsja/
+  translation: to worry (oneself)
+  pos: verb

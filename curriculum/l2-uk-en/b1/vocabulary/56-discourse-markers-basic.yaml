@@ -4,62 +4,75 @@ version: '2.0'
 items:
 - lemma: батьківський
   ipa: /bˈatʲkiʋsʲkɪj/
-  translation: ''
+  translation: parental, fatherly
   pos: adj
 - lemma: відверто
   ipa: /ʋidʋˈɛrtɔ/
-  translation: ''
+  translation: frankly, openly
   pos: adv
+- lemma: відвідувач
+  ipa: /ʋidʋˈiduʋat͡ʃ/
+  translation: visitor
+  pos: noun
 - lemma: глобалізація
   ipa: /ɦlɔbalizˈat͡sija/
-  translation: ''
+  translation: globalization
   pos: noun
   gender: f
 - lemma: дискурсивний
   ipa: /dɪskursˈɪʋnɪj/
-  translation: ''
+  translation: discursive
+  pos: adj
+- lemma: дружний
+  ipa: /drˈuʒnɪj/
+  translation: united, harmonious
   pos: adj
 - lemma: жорсткіший
   ipa: /ʒɔrstkˈiʃɪj/
-  translation: ''
+  translation: tougher
   pos: adj
+- lemma: залізниця
+  ipa: /zaliznˈɪt͡sja/
+  translation: railway
+  pos: noun
+  gender: f
 - lemma: західній
   ipa: /zaxidnij/
   translation: ''
   pos: adj
 - lemma: зв'язно
   ipa: /zʋˈjaznɔ/
-  translation: ''
+  translation: coherently
   pos: adv
 - lemma: згадуватися
   ipa: /zɦˈaduʋatɪsja/
-  translation: ''
+  translation: to be mentioned
   pos: verb
 - lemma: зокрема
   ipa: /zɔkrˈɛma/
-  translation: ''
+  translation: in particular
   pos: adv
 - lemma: клей
   ipa: /klɛj/
-  translation: ''
+  translation: glue
   pos: noun
   gender: m
 - lemma: конектор
   ipa: /kɔnɛktɔr/
-  translation: ''
+  translation: connector
   pos: noun
 - lemma: маркетолог
   ipa: /markɛtˈɔlɔɦ/
-  translation: ''
+  translation: marketer
   pos: noun
   gender: m
 - lemma: меншина
   ipa: /mɛnʃˈɪna/
-  translation: ''
+  translation: minority
   pos: noun
 - lemma: негатив
   ipa: /nɛɦatˈɪʋ/
-  translation: ''
+  translation: negative
   pos: noun
 - lemma: неймовірне
   ipa: /nɛjmɔʋˈirnɛ/
@@ -68,15 +81,15 @@ items:
   gender: n
 - lemma: оптимістично
   ipa: /ɔptɪmistˈɪt͡ʃnɔ/
-  translation: ''
+  translation: optimistically
   pos: adv
 - lemma: перебільшувати
   ipa: /pɛrɛbˈilʲʃuʋatɪ/
-  translation: ''
+  translation: to exaggerate
   pos: verb
 - lemma: переконливо
   ipa: /pɛrɛkˈɔnlɪʋɔ/
-  translation: ''
+  translation: convincingly
   pos: adv
 - lemma: переходи
   ipa: /pɛrɛxˈɔdɪ/
@@ -84,45 +97,45 @@ items:
   pos: noun
 - lemma: плавний
   ipa: /plaʋnɪj/
-  translation: ''
+  translation: smooth, fluid
   pos: adj
 - lemma: плюралістичний
   ipa: /pljuralistˈɪt͡ʃnɪj/
-  translation: ''
+  translation: pluralistic
   pos: adj
 - lemma: приваблювати
   ipa: /prɪʋˈabljuʋatɪ/
-  translation: ''
+  translation: to attract, to entice
   pos: verb
 - lemma: прогнозувати
   ipa: /prɔɦnɔzuʋˈatɪ/
-  translation: ''
+  translation: to forecast
   pos: verb
 - lemma: ствердження
   ipa: /stʋˈɛrdʒɛnnja/
-  translation: ''
+  translation: assertion, affirmation
   pos: noun
   gender: n
 - lemma: структурування
   ipa: /strukturuʋˈannja/
-  translation: ''
+  translation: structuring
   pos: noun
   gender: n
 - lemma: узагальнення
   ipa: /uzaɦˈalʲnɛnnja/
-  translation: ''
+  translation: generalization
   pos: noun
   gender: n
 - lemma: унітарний
   ipa: /unitˈarnɪj/
-  translation: ''
+  translation: unitary
   pos: adj
 - lemma: уривчасто
   ipa: /urˈɪʋt͡ʃastɔ/
-  translation: ''
+  translation: abruptly, in fits and starts
   pos: adv
 - lemma: фракція
   ipa: /frˈakt͡sija/
-  translation: ''
+  translation: fraction, parliamentary group
   pos: noun
   gender: f

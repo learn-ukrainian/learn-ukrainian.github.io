@@ -4,28 +4,28 @@ version: '2.0'
 items:
 - lemma: аутсорсинг
   ipa: /autsˈɔrsɪnɦ/
-  translation: ''
+  translation: outsourcing
   pos: noun
   gender: m
 - lemma: венчурний
   ipa: /ʋˈɛnt͡ʃurnɪj/
-  translation: ''
+  translation: venture (adj)
   pos: adj
 - lemma: водійський
   ipa: /ʋɔdˈijsʲkɪj/
-  translation: ''
+  translation: driver's
   pos: adj
 - lemma: ворожий
   ipa: /ʋɔrˈɔʒɪj/
-  translation: ''
+  translation: hostile
   pos: adj
 - lemma: вступати
   ipa: /ʋstupˈatɪ/
-  translation: ''
+  translation: to enter (a club/university)
   pos: verb
 - lemma: військо
   ipa: /ʋˈijsʲkɔ/
-  translation: ''
+  translation: army, troops
   pos: noun
 - lemma: галуззя
   ipa: /ɦalˈuzzja/
@@ -34,154 +34,154 @@ items:
   gender: n
 - lemma: грузія
   ipa: /ɦrˈuzija/
-  translation: ''
+  translation: Georgia (country)
   pos: noun
   gender: f
 - lemma: гуманітарний
   ipa: /ɦumanitˈarnɪj/
-  translation: ''
+  translation: humanitarian
   pos: adj
 - lemma: дивовижно
   ipa: /dɪʋɔʋˈɪʒnɔ/
-  translation: ''
+  translation: wonderfully, amazingly
   pos: adv
 - lemma: експортуватися
   ipa: /ɛkspɔrtuʋˈatɪsja/
-  translation: ''
+  translation: to be exported
   pos: verb
 - lemma: естонія
   ipa: /ɛstˈɔnija/
-  translation: ''
+  translation: Estonia
   pos: noun
   gender: f
 - lemma: завантаження
   ipa: /zaʋantˈaʒɛnnja/
-  translation: ''
+  translation: loading, download
   pos: noun
 - lemma: запустити
   ipa: /zapustˈɪtɪ/
-  translation: ''
+  translation: to launch, to start
   pos: verb
 - lemma: коворкінг
   ipa: /kɔʋɔrkinɦ/
-  translation: ''
+  translation: coworking
   pos: noun
 - lemma: кібербезпека
   ipa: /kibɛrbɛzpɛka/
-  translation: ''
+  translation: cybersecurity
   pos: noun
   gender: f
 - lemma: литвин
   ipa: /lɪtʋˈɪn/
-  translation: ''
+  translation: Lytvyn (name/person)
   pos: noun
   gender: m
 - lemma: лічений
   ipa: /lˈit͡ʃɛnɪj/
-  translation: ''
+  translation: counted, few
   pos: adj
 - lemma: макс
   ipa: /maks/
-  translation: ''
+  translation: Max (name)
   pos: noun
   gender: m
 - lemma: набравши
   ipa: /nabrˈaʋʃɪ/
-  translation: ''
+  translation: having collected/dialed
   pos: verb
 - lemma: надійність
   ipa: /nadˈijnistʲ/
-  translation: ''
+  translation: reliability
   pos: noun
   gender: f
 - lemma: наймолодший
   ipa: /najmɔlˈɔdʃɪj/
-  translation: ''
+  translation: the youngest
   pos: adj
 - lemma: налаштувати
   ipa: /nalaʃtuʋˈatɪ/
-  translation: ''
+  translation: to set up, to configure
   pos: verb
 - lemma: наслідування
   ipa: /naslˈiduʋannja/
-  translation: ''
+  translation: imitation, following
   pos: noun
   gender: n
 - lemma: онлайн-навчання
   ipa: /ɔnlajn-naʋt͡ʃˈannja/
-  translation: ''
+  translation: online learning
   pos: noun
   gender: n
 - lemma: оплачуваний
   ipa: /ɔplˈat͡ʃuʋanɪj/
-  translation: ''
+  translation: paid
   pos: adj
 - lemma: очолити
   ipa: /ɔt͡ʃˈɔlɪtɪ/
-  translation: ''
+  translation: to lead, to head
   pos: verb
 - lemma: переговорний
   ipa: /pɛrɛɦɔʋˈɔrnɪj/
-  translation: ''
+  translation: negotiating (adj)
   pos: adj
 - lemma: перетворитися
   ipa: /pɛrɛtʋɔrˈɪtɪsja/
-  translation: ''
+  translation: to transform (oneself)
   pos: verb
 - lemma: перспективно
   ipa: /pɛrspɛktˈɪʋnɔ/
-  translation: ''
+  translation: promisingly
   pos: adv
 - lemma: посвідчення
   ipa: /pɔsʋˈidt͡ʃɛnnja/
-  translation: ''
+  translation: ID, certificate
   pos: noun
   gender: n
 - lemma: програмування
   ipa: /prɔɦramuʋˈannja/
-  translation: ''
+  translation: programming
   pos: noun
   gender: n
 - lemma: реєструвати
   ipa: /rɛjɛstruʋˈatɪ/
-  translation: ''
+  translation: to register (imperfective)
   pos: verb
 - lemma: спеціалізація
   ipa: /spɛt͡sializˈat͡sija/
-  translation: ''
+  translation: specialization
   pos: noun
   gender: f
 - lemma: співзасновник
   ipa: /spiʋzasnˈɔʋnɪk/
-  translation: ''
+  translation: co-founder
   pos: noun
   gender: m
 - lemma: тринадцять
   ipa: /trɪnˈadt͡sjatʲ/
-  translation: ''
+  translation: thirteen
   pos: num
 - lemma: федоров
   ipa: /fˈɛdɔrɔʋ/
-  translation: ''
+  translation: Fedorov (name)
   pos: noun
   gender: m
 - lemma: фрілансер
   ipa: /frilansɛr/
-  translation: ''
+  translation: freelancer
   pos: noun
 - lemma: цікавитися
   ipa: /t͡sikˈaʋɪtɪsja/
-  translation: ''
+  translation: to be interested in
   pos: verb
 - lemma: іт-спеціаліст
   ipa: /it-spɛt͡sialˈist/
-  translation: ''
+  translation: IT specialist
   pos: noun
 - lemma: іт-хаб
   ipa: /it-xab/
-  translation: ''
+  translation: IT hub
   pos: noun
 - lemma: іт-індустрія
   ipa: /it-indˈustrija/
-  translation: ''
+  translation: IT industry
   pos: noun

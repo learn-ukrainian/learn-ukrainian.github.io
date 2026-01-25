@@ -4,15 +4,15 @@ version: '2.0'
 items:
 - lemma: агресивніший
   ipa: /aɦrɛsˈɪʋniʃɪj/
-  translation: ''
+  translation: more aggressive
   pos: adj
 - lemma: аналізуючи
   ipa: /analizˈujut͡ʃɪ/
-  translation: ''
+  translation: analyzing
   pos: verb
 - lemma: гадання
   ipa: /ɦadˈannja/
-  translation: ''
+  translation: fortune-telling, guessing
   pos: noun
   gender: n
 - lemma: гармонізований
@@ -21,15 +21,15 @@ items:
   pos: adj
 - lemma: глибше
   ipa: /ɦlˈɪbʃɛ/
-  translation: ''
+  translation: deeper
   pos: adv
 - lemma: диференціювати
   ipa: /dɪfɛrɛnt͡sijuʋˈatɪ/
-  translation: ''
+  translation: to differentiate
   pos: verb
 - lemma: етичний
   ipa: /ɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: ethical
   pos: adj
 - lemma: зна
   ipa: /zna/
@@ -37,64 +37,64 @@ items:
   pos: noun
 - lemma: кордоцентризм
   ipa: /kɔrdɔt͡sɛntrˈɪzm/
-  translation: ''
+  translation: cordocentrism (philosophy of heart)
   pos: noun
   gender: m
 - lemma: міркувати
   ipa: /mirkuʋˈatɪ/
-  translation: ''
+  translation: to reason, to consider
   pos: verb
 - lemma: найзагальніший
   ipa: /najzaɦˈalʲniʃɪj/
-  translation: ''
+  translation: the most general
   pos: adj
 - lemma: невдаха
   ipa: /nɛʋdˈaxa/
-  translation: ''
+  translation: loser, failure (person)
   pos: noun
   gender: m
 - lemma: обдумування
   ipa: /ɔbdˈumuʋannja/
-  translation: ''
+  translation: thinking over
   pos: noun
   gender: n
 - lemma: обдумувати
   ipa: /ɔbdˈumuʋatɪ/
-  translation: ''
+  translation: to think over (imperfective)
   pos: verb
 - lemma: обміркувати
   ipa: /ɔbmirkuʋˈatɪ/
-  translation: ''
+  translation: to consider, to think through
   pos: verb
 - lemma: обробляти
   ipa: /ɔbrɔblˈjatɪ/
-  translation: ''
+  translation: to process, to treat
   pos: verb
 - lemma: одноманітно
   ipa: /ɔdnɔmanˈitnɔ/
-  translation: ''
+  translation: monotonously
   pos: adv
 - lemma: оруда
   ipa: /ɔrˈuda/
-  translation: ''
+  translation: instrumental case (archaic usage), tool
   pos: noun
 - lemma: осмислення
   ipa: /ɔsmˈɪslɛnnja/
-  translation: ''
+  translation: comprehension, reflection
   pos: noun
   gender: n
 - lemma: осмислювати
   ipa: /ɔsmˈɪsljuʋatɪ/
-  translation: ''
+  translation: to comprehend (imperfective)
   pos: verb
 - lemma: осуд
   ipa: /ˈɔsud/
-  translation: ''
+  translation: condemnation
   pos: noun
   gender: m
 - lemma: осуджувати
   ipa: /ɔsˈudʒuʋatɪ/
-  translation: ''
+  translation: to condemn
   pos: verb
 - lemma: памфіл
   ipa: /pamfˈil/
@@ -103,71 +103,71 @@ items:
   gender: m
 - lemma: помірний
   ipa: /pɔmˈirnɪj/
-  translation: ''
+  translation: moderate
   pos: adj
 - lemma: поспішно
   ipa: /pɔspˈiʃnɔ/
-  translation: ''
+  translation: hastily
   pos: adv
 - lemma: прогалина
   ipa: /prɔɦˈalɪna/
-  translation: ''
+  translation: gap, loophole
   pos: noun
   gender: f
 - lemma: прогнозування
   ipa: /prɔɦnɔzuʋˈannja/
-  translation: ''
+  translation: forecasting
   pos: noun
   gender: n
 - lemma: пізнання
   ipa: /piznˈannja/
-  translation: ''
+  translation: cognition, knowledge
   pos: noun
   gender: n
 - lemma: рахування
   ipa: /raxuʋˈannja/
-  translation: ''
+  translation: counting
   pos: noun
   gender: n
 - lemma: роздумувати
   ipa: /rɔzdˈumuʋatɪ/
-  translation: ''
+  translation: to reflect, to ponder
   pos: verb
 - lemma: розмірковувати
   ipa: /rɔzmirkˈɔʋuʋatɪ/
-  translation: ''
+  translation: to ponder, to reason
   pos: verb
 - lemma: розумовий
   ipa: /rɔzumˈɔʋɪj/
-  translation: ''
+  translation: mental, intellectual
   pos: adj
 - lemma: синонімія
   ipa: /sɪnɔnˈimija/
-  translation: ''
+  translation: synonymy
   pos: noun
   gender: f
 - lemma: судити
   ipa: /sudˈɪtɪ/
-  translation: ''
+  translation: to judge, to trial
   pos: verb
 - lemma: судячи
   ipa: /sˈudjat͡ʃɪ/
-  translation: ''
+  translation: judging (gerund)
   pos: verb
 - lemma: усвідомити
   ipa: /usʋidˈɔmɪtɪ/
-  translation: ''
+  translation: to realize, to become aware (perfective)
   pos: verb
 - lemma: юркевич
   ipa: /jurkˈɛʋɪt͡ʃ/
-  translation: ''
+  translation: Yurkevych (name)
   pos: noun
   gender: f
 - lemma: інтелектуал
   ipa: /intɛlɛktuˈal/
-  translation: ''
+  translation: intellectual
   pos: noun
 - lemma: інтуїтивний
   ipa: /intujitˈɪʋnɪj/
-  translation: ''
+  translation: intuitive
   pos: adj

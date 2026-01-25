@@ -1,0 +1,104 @@
+module: ivan-mazepa-derzhavnyk
+level: B2
+version: '2.0'
+items:
+  - lemma: меценат
+    ipa: /met͡senat/
+    translation: patron of arts
+    pos: noun
+    gender: m
+  - lemma: бароко
+    ipa: /baroko/
+    translation: baroque
+    pos: noun
+    gender: n
+  - lemma: стабільність
+    ipa: /stabilʲnisʲtʲ/
+    translation: stability
+    pos: noun
+    gender: f
+  - lemma: еліта
+    ipa: /elita/
+    translation: elite
+    pos: noun
+    gender: f
+  - lemma: аристократія
+    ipa: /arystokratija/
+    translation: aristocracy
+    pos: noun
+    gender: f
+  - lemma: колегіум
+    ipa: /koleɦium/
+    translation: collegium
+    pos: noun
+    gender: m
+  - lemma: освіта
+    ipa: /osvita/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: друкарня
+    ipa: /drukarnʲa/
+    translation: printing house
+    pos: noun
+    gender: f
+  - lemma: собор
+    ipa: /sobor/
+    translation: cathedral
+    pos: noun
+    gender: m
+  - lemma: ренесанс
+    ipa: /renesans/
+    translation: renaissance
+    pos: noun
+    gender: m
+  - lemma: дипломатія
+    ipa: /dyplomatija/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: інтрига
+    ipa: /intryha/
+    translation: intrigue
+    pos: noun
+    gender: f
+  - lemma: макіавеллізм
+    ipa: /makiavellizm/
+    translation: machiavellianism
+    pos: noun
+    gender: m
+  - lemma: лояльність
+    ipa: /lojalʲnisʲtʲ/
+    translation: loyalty
+    pos: noun
+    gender: f
+  - lemma: компроміс
+    ipa: /kompromis/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /avtonomija/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: васал
+    ipa: /vasal/
+    translation: vassal
+    pos: noun
+    gender: m
+  - lemma: імперія
+    ipa: /imperija/
+    translation: empire
+    pos: noun
+    gender: f
+  - lemma: цар
+    ipa: /t͡sar/
+    translation: tsar
+    pos: noun
+    gender: m
+  - lemma: гетьманщина
+    ipa: /hetʲmanʃt͡ʃyna/
+    translation: Hetmanate
+    pos: noun
+    gender: f

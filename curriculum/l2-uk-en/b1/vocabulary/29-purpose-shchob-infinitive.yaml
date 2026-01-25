@@ -4,130 +4,187 @@ version: '2.0'
 items:
 - lemma: альтернативний
   ipa: /alʲtɛrnatˈɪʋnɪj/
-  translation: ''
+  translation: alternative (adj)
   pos: adj
+- lemma: архітектура
+  ipa: /arxitɛktˈura/
+  translation: architecture
+  pos: noun
+  gender: f
+- lemma: бог
+  ipa: /bɔɦ/
+  translation: god
+  pos: noun
+  gender: m
+- lemma: боротися
+  ipa: /bɔrˈɔtɪsja/
+  translation: to fight, to struggle
+  pos: verb
 - lemma: бізнес-комунікація
   ipa: /bˈiznɛs-kɔmunikat͡sija/
   translation: ''
   pos: noun
   gender: f
+- lemma: вимовлятися
+  ipa: /ʋɪmɔʋlˈjatɪsja/
+  translation: to be pronounced
+  pos: verb
+- lemma: виражений
+  ipa: /ʋˈɪraʒɛnɪj/
+  translation: expressed
+  pos: adj
 - lemma: виразність
   ipa: /ʋɪrˈaznistʲ/
-  translation: ''
+  translation: expressiveness
   pos: noun
   gender: f
 - lemma: вирватися
   ipa: /ʋˈɪrʋatɪsja/
-  translation: ''
+  translation: to break free
   pos: verb
+- lemma: виробництво
+  ipa: /ʋɪrɔbnˈɪt͡stʋɔ/
+  translation: production
+  pos: noun
+  gender: n
 - lemma: виспатися
   ipa: /ʋˈɪspatɪsja/
-  translation: ''
+  translation: to get enough sleep
   pos: verb
 - lemma: вищати
   ipa: /ʋɪʃt͡ʃatɪ/
-  translation: ''
+  translation: to squeal, to shriek
   pos: verb
 - lemma: делегація
   ipa: /dɛlɛɦˈat͡sija/
-  translation: ''
+  translation: delegation
+  pos: noun
+  gender: f
+- lemma: десятка
+  ipa: /dɛsˈjatka/
+  translation: ten (noun)
   pos: noun
   gender: f
 - lemma: допізна
   ipa: /dɔpˈizna/
-  translation: ''
+  translation: until late
   pos: adv
 - lemma: емфаза
   ipa: /ɛmfˈaza/
-  translation: ''
+  translation: emphasis
   pos: noun
   gender: f
 - lemma: забезпечити
   ipa: /zabɛzpˈɛt͡ʃɪtɪ/
-  translation: ''
+  translation: to provide, to ensure
   pos: verb
+- lemma: задля
+  ipa: /zˈadlja/
+  translation: for the sake of
+  pos: prep
 - lemma: заради
   ipa: /zarˈadɪ/
-  translation: ''
+  translation: for the sake of
   pos: prep
 - lemma: заробити
   ipa: /zarɔbˈɪtɪ/
-  translation: ''
+  translation: to earn, to work
+  pos: verb
+- lemma: заробляти
+  ipa: /zarɔblˈjatɪ/
+  translation: to earn (imperfective)
   pos: verb
 - lemma: захистити
   ipa: /zaxɪstˈɪtɪ/
-  translation: ''
+  translation: to protect, to defend
   pos: verb
 - lemma: здійснити
   ipa: /zdijsnˈɪtɪ/
-  translation: ''
+  translation: to carry out, to realize
   pos: verb
 - lemma: конференц-зал
   ipa: /kɔnfɛrɛnt͡s-zal/
-  translation: ''
+  translation: conference hall
   pos: noun
   gender: m
 - lemma: кіборг
   ipa: /kˈibɔrɦ/
-  translation: ''
+  translation: cyborg
   pos: noun
+- lemma: марк
+  ipa: /mark/
+  translation: Mark (name)
+  pos: noun
+  gender: m
 - lemma: мотивація
   ipa: /mɔtɪʋˈat͡sija/
-  translation: ''
+  translation: motivation
   pos: noun
   gender: f
+- lemma: міський
+  ipa: /misʲkˈɪj/
+  translation: city (adj), urban
+  pos: adj
 - lemma: набратися
   ipa: /nabrˈatɪsja/
-  translation: ''
+  translation: to gain (experience), to get full
   pos: verb
 - lemma: найприродніший
   ipa: /najprɪrˈɔdniʃɪj/
-  translation: ''
+  translation: the most natural
   pos: adj
 - lemma: найпростіший
   ipa: /najprɔstˈiʃɪj/
-  translation: ''
+  translation: the simplest, easiest
+  pos: adj
+- lemma: наповнений
+  ipa: /napˈɔʋnɛnɪj/
+  translation: filled
   pos: adj
 - lemma: настільки
   ipa: /nastˈilʲkɪ/
-  translation: ''
+  translation: so much, so far
   pos: adv
 - lemma: научатися
   ipa: /naut͡ʃˈatɪsja/
-  translation: ''
+  translation: to learn
   pos: verb
 - lemma: неосвічений
   ipa: /nɛɔsʋˈit͡ʃɛnɪj/
-  translation: ''
+  translation: uneducated
   pos: adj
 - lemma: однозначно
   ipa: /ɔdnɔznˈat͡ʃnɔ/
-  translation: ''
+  translation: unambiguously, definitely
   pos: adv
+- lemma: окрім
+  ipa: /ɔkrˈim/
+  translation: except, besides
+  pos: prep
 - lemma: ораторський
   ipa: /ɔrˈatɔrsʲkɪj/
-  translation: ''
+  translation: oratory (adj)
   pos: adj
 - lemma: патріотичний
   ipa: /patriɔtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: patriotic
   pos: adj
 - lemma: перезавантажитися
   ipa: /pɛrɛzaʋantaʒɪtɪsja/
-  translation: ''
+  translation: to restart (passive)
   pos: verb
 - lemma: перемогти
   ipa: /pɛrɛmɔɦtˈɪ/
-  translation: ''
+  translation: to win, to defeat (perfective)
   pos: verb
 - lemma: перспектива
   ipa: /pɛrspɛktˈɪʋa/
-  translation: ''
+  translation: perspective
   pos: noun
   gender: f
 - lemma: писемний
   ipa: /pɪsˈɛmnɪj/
-  translation: ''
+  translation: written (adj)
   pos: adj
 - lemma: познати
   ipa: /pɔznatɪ/
@@ -135,77 +192,111 @@ items:
   pos: verb
 - lemma: помічаючи
   ipa: /pɔmit͡ʃˈajut͡ʃɪ/
-  translation: ''
+  translation: noticing
   pos: verb
 - lemma: початковий
   ipa: /pɔt͡ʃatkˈɔʋɪj/
-  translation: ''
+  translation: initial, elementary
   pos: adj
 - lemma: прагнення
   ipa: /prˈaɦnɛnnja/
-  translation: ''
+  translation: aspiration, desire
   pos: noun
   gender: n
 - lemma: прогулятися
   ipa: /prɔɦulˈjatɪsja/
-  translation: ''
+  translation: to take a stroll (perfective)
   pos: verb
 - lemma: пронизувати
   ipa: /prɔnˈɪzuʋatɪ/
-  translation: ''
+  translation: to pierce, to penetrate
   pos: verb
 - lemma: професійність
   ipa: /prɔfɛsˈijnistʲ/
-  translation: ''
+  translation: professionalism
   pos: noun
   gender: f
 - lemma: риторика
   ipa: /rɪtˈɔrɪka/
-  translation: ''
+  translation: rhetoric
   pos: noun
   gender: f
 - lemma: розбагатіти
   ipa: /rɔzbaɦatˈitɪ/
-  translation: ''
+  translation: to get rich
+  pos: verb
+- lemma: розслабитися
+  ipa: /rɔzslˈabɪtɪsja/
+  translation: to relax
   pos: verb
 - lemma: розташовувати
   ipa: /rɔztaʃˈɔʋuʋatɪ/
-  translation: ''
+  translation: to locate, to place (imperfective)
+  pos: verb
+- lemma: розширити
+  ipa: /rɔzʃˈɪrɪtɪ/
+  translation: to expand, to widen (perfective)
   pos: verb
 - lemma: сварка
   ipa: /sʋˈarka/
-  translation: ''
+  translation: quarrel
   pos: noun
   gender: f
+- lemma: скорочення
+  ipa: /skɔrˈɔt͡ʃɛnnja/
+  translation: abbreviation, reduction
+  pos: noun
+  gender: n
+- lemma: спортзал
+  ipa: /spɔrtzˈal/
+  translation: gym, sports hall
+  pos: noun
+  gender: m
 - lemma: спортсмен
   ipa: /spɔrtsmˈɛn/
-  translation: ''
+  translation: athlete
   pos: noun
   gender: m
 - lemma: спроститися
   ipa: /sprɔstˈɪtɪsja/
-  translation: ''
+  translation: to simplify (oneself perfective)
   pos: verb
 - lemma: стандартно
   ipa: /standˈartnɔ/
-  translation: ''
+  translation: standardly
   pos: adv
 - lemma: стилістичний
   ipa: /stɪlistˈɪt͡ʃnɪj/
-  translation: ''
+  translation: stylistic
   pos: adj
-- lemma: стосуватися
-  ipa: /stɔsuʋˈatɪsja/
-  translation: ''
-  pos: verb
+- lemma: сучасне
+  ipa: /sut͡ʃˈasnɛ/
+  translation: modern (neuter)
+  pos: noun
+  gender: n
+- lemma: тренер
+  ipa: /trˈɛnɛr/
+  translation: coach, trainer
+  pos: noun
+  gender: m
 - lemma: шановний
   ipa: /ʃanˈɔʋnɪj/
-  translation: ''
+  translation: dear, respected
   pos: adj
 - lemma: шоб
   ipa: /ʃɔb/
   translation: ''
   pos: part
+- lemma: шум
+  ipa: /ʃum/
+  translation: noise
+  pos: noun
+  gender: m
+- lemma: щастя
+  ipa: /ʃt͡ʃˈastja/
+  translation: happiness
+  pos: noun
+  gender: n
 - lemma: щоб-конструкція
   ipa: /ʃt͡ʃɔb-kɔnstrˈukt͡sija/
   translation: ''
@@ -217,5 +308,10 @@ items:
   gender: n
 - lemma: інвестувати
   ipa: /inʋɛstuʋˈatɪ/
-  translation: ''
+  translation: to invest
   pos: verb
+- lemma: інфінітів
+  ipa: /infinitiʋ/
+  translation: ''
+  pos: noun
+  gender: m

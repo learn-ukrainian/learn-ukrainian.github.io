@@ -2,52 +2,31 @@ module: 15-aspect-morphology
 level: A2
 version: '2.0'
 items:
-- lemma: аспектний
-  ipa: /aspˈɛktnɪj/
-  translation: ''
-  pos: adj
-- lemma: більшість
-  ipa: /bˈilʲʃistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: ват
   ipa: /ʋat/
-  translation: ''
-  pos: noun
-- lemma: ви-
-  ipa: /ʋɪ-/
-  translation: ''
+  translation: watt
   pos: noun
 - lemma: видалення
   ipa: /ʋˈɪdalɛnnja/
-  translation: ''
+  translation: removal, deletion
   pos: noun
   gender: n
-- lemma: висновок
-  ipa: /ʋˈɪsnɔʋɔk/
-  translation: ''
-  pos: noun
 - lemma: глибший
   ipa: /ɦlˈɪbʃɪj/
-  translation: ''
+  translation: deeper (adj)
   pos: adj
 - lemma: досягати
   ipa: /dɔsjaɦˈatɪ/
-  translation: ''
+  translation: to reach, to achieve
   pos: verb
-- lemma: з-
-  ipa: /z-/
-  translation: ''
-  pos: noun
 - lemma: запас
   ipa: /zapˈas/
-  translation: ''
+  translation: reserve, stock
   pos: noun
   gender: m
 - lemma: збити
   ipa: /zbˈɪtɪ/
-  translation: ''
+  translation: to knock down, to beat (eggs)
   pos: verb
 - lemma: зказати
   ipa: /zkazatɪ/
@@ -55,186 +34,103 @@ items:
   pos: verb
 - lemma: значний
   ipa: /znat͡ʃnˈɪj/
-  translation: ''
+  translation: significant, considerable
   pos: adj
 - lemma: зтворити
   ipa: /ztʋɔrɪtɪ/
   translation: ''
   pos: verb
-- lemma: корень
-  ipa: /kɔrɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: лінгвістичний
-  ipa: /linɦʋistˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: література
-  ipa: /litɛratˈura/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: морфологічний
   ipa: /mɔrfɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: morphological
   pos: adj
-- lemma: на-
-  ipa: /na-/
-  translation: ''
-  pos: noun
 - lemma: надзвичайний
   ipa: /nadzʋɪt͡ʃˈajnɪj/
-  translation: ''
+  translation: extraordinary, emergency (adj)
   pos: adj
 - lemma: найнадійніший
   ipa: /najnadˈijniʃɪj/
-  translation: ''
+  translation: the most reliable
   pos: adj
-- lemma: носій
-  ipa: /nɔsˈij/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: нюанс
-  ipa: /njuˈans/
-  translation: ''
-  pos: noun
-- lemma: обговорювати
-  ipa: /ɔbɦɔʋˈɔrjuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: оволодівши
   ipa: /ɔʋɔlɔdˈiʋʃɪ/
   translation: ''
   pos: verb
-- lemma: ознака
-  ipa: /ɔznˈaka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пантелик
   ipa: /pantɛlˈɪk/
-  translation: ''
+  translation: confusion (in phrase 'збити з пантелику')
   pos: noun
   gender: m
-- lemma: передбачати
-  ipa: /pɛrɛdbat͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: по-
-  ipa: /pɔ-/
-  translation: ''
-  pos: noun
 - lemma: повага
   ipa: /pɔʋˈaɦa/
-  translation: ''
+  translation: respect
   pos: noun
   gender: f
 - lemma: показ
   ipa: /pˈɔkaz/
-  translation: ''
+  translation: show, exhibition, display
   pos: noun
   gender: m
 - lemma: попрактикуватися
   ipa: /pɔpraktɪkuʋˈatɪsja/
-  translation: ''
+  translation: to practice oneself
   pos: verb
-- lemma: постійно
-  ipa: /pɔstˈijnɔ/
-  translation: ''
-  pos: adv
 - lemma: представляти
   ipa: /prɛdstaʋlˈjatɪ/
-  translation: ''
+  translation: to represent, to present
   pos: verb
-- lemma: префікс
-  ipa: /prɛfiks/
-  translation: ''
-  pos: noun
-- lemma: префіксація
-  ipa: /prɛfiksˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: про-
-  ipa: /prɔ-/
-  translation: ''
-  pos: noun
-- lemma: проти
-  ipa: /prˈɔtɪ/
-  translation: ''
-  pos: adv
 - lemma: розвиватися
   ipa: /rɔzʋɪʋˈatɪsja/
-  translation: ''
+  translation: to develop (oneself)
   pos: verb
 - lemma: розпізнавання
   ipa: /rɔzpiznaʋˈannja/
-  translation: ''
+  translation: recognition
   pos: noun
   gender: n
 - lemma: розтягнутий
   ipa: /rɔztˈjaɦnutɪj/
-  translation: ''
+  translation: stretched, prolonged
   pos: adj
 - lemma: с-
   ipa: /s-/
   translation: ''
   pos: noun
-- lemma: сигнал
-  ipa: /sɪɦnˈal/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сильне
   ipa: /sˈɪlʲnɛ/
-  translation: ''
+  translation: strong (neuter)
   pos: noun
   gender: n
 - lemma: системний
   ipa: /sɪstˈɛmnɪj/
-  translation: ''
+  translation: systemic, system (adj)
   pos: adj
 - lemma: словниковий
   ipa: /slɔʋnɪkˈɔʋɪj/
-  translation: ''
+  translation: vocabulary (adj), lexical
   pos: adj
 - lemma: слухач
   ipa: /sluxˈat͡ʃ/
-  translation: ''
+  translation: listener
   pos: noun
   gender: m
-- lemma: стало
-  ipa: /stˈalɔ/
-  translation: ''
-  pos: adv
-- lemma: суплетивний
-  ipa: /suplɛtˈɪʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: суфіксація
-  ipa: /sufiksˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: схоже
   ipa: /sxˈɔʒɛ/
-  translation: ''
+  translation: likely, probably, similar
   pos: adv
 - lemma: творення
   ipa: /tʋˈɔrɛnnja/
-  translation: ''
+  translation: creation, formation
   pos: noun
   gender: n
 - lemma: точність
   ipa: /tˈɔt͡ʃnistʲ/
-  translation: ''
+  translation: accuracy, precision
   pos: noun
   gender: f
 - lemma: точніший
   ipa: /tɔt͡ʃnˈiʃɪj/
-  translation: ''
+  translation: more accurate
   pos: adj
 - lemma: ува-
   ipa: /uʋa-/
@@ -242,17 +138,9 @@ items:
   pos: noun
 - lemma: фразовий
   ipa: /frˈazɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: щоденний
-  ipa: /ʃt͡ʃɔdˈɛnnɪj/
-  translation: ''
+  translation: phrasal
   pos: adj
 - lemma: індикатор
   ipa: /indɪkˈatɔr/
-  translation: ''
+  translation: indicator
   pos: noun
-- lemma: історичний
-  ipa: /istɔrˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj

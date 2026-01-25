@@ -2,191 +2,71 @@ module: 64-scheduling-interviews
 level: A2
 version: '2.0'
 items:
-- lemma: безкоштовний
-  ipa: /bɛzkɔʃtˈɔʋnɪj/
-  translation: ''
-  pos: adj
 - lemma: випробувальний
   ipa: /ʋɪprˈɔbuʋalʲnɪj/
-  translation: ''
+  translation: trial, test (adj)
   pos: adj
 - lemma: витрачати
   ipa: /ʋɪtrat͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: включати
-  ipa: /ʋkljut͡ʃˈatɪ/
-  translation: ''
+  translation: to spend
   pos: verb
 - lemma: впевненіший
   ipa: /ʋpˈɛʋnɛniʃɪj/
-  translation: ''
+  translation: more confident
   pos: adj
-- lemma: віддалений
-  ipa: /ʋiddˈalɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: декілька
-  ipa: /dˈɛkilʲka/
-  translation: ''
-  pos: pron
-- lemma: дизайнер
-  ipa: /dɪzˈajnɛr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: докладно
   ipa: /dɔklˈadnɔ/
-  translation: ''
+  translation: in detail, thoroughly
   pos: adv
 - lemma: домовленість
   ipa: /dɔmˈɔʋlɛnistʲ/
-  translation: ''
+  translation: agreement, arrangement
   pos: noun
   gender: f
-- lemma: дружний
-  ipa: /drˈuʒnɪj/
-  translation: ''
-  pos: adj
-- lemma: ентузіазм
-  ipa: /ɛntuziˈazm/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: заняття
-  ipa: /zanjattja/
-  translation: ''
-  pos: noun
-- lemma: запитання
-  ipa: /zapɪtˈannja/
-  translation: ''
-  pos: noun
-- lemma: зростання
-  ipa: /zrɔstˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: кандидат
-  ipa: /kandɪdˈat/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: кваліфікація
-  ipa: /kʋalifikˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: колектив
-  ipa: /kɔlɛktˈɪʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: корпоративний
   ipa: /kɔrpɔratˈɪʋnɪj/
-  translation: ''
+  translation: corporate
   pos: adj
-- lemma: одинадцятий
-  ipa: /ɔdɪnˈadt͡sjatɪj/
-  translation: ''
-  pos: adj
-- lemma: оновити
-  ipa: /ɔnɔʋˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: посад
-  ipa: /pɔsˈad/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: посада
   ipa: /pɔsˈada/
-  translation: ''
+  translation: position, post, job
   pos: noun
   gender: f
-- lemma: постійне
-  ipa: /pɔstˈijnɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: потенційний
   ipa: /pɔtɛnt͡sˈijnɪj/
-  translation: ''
+  translation: potential (adj)
   pos: adj
-- lemma: працевлаштування
-  ipa: /prat͡sɛʋlaʃtuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: презентувати
   ipa: /prɛzɛntuʋˈatɪ/
-  translation: ''
+  translation: to present
   pos: verb
 - lemma: прийняття
   ipa: /prɪjnjattˈja/
-  translation: ''
+  translation: acceptance, adoption
   pos: noun
   gender: n
-- lemma: продаж
-  ipa: /prˈɔdaʒ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: процедура
-  ipa: /prɔt͡sɛdˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: резюме
-  ipa: /rɛzjumˈɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: ретельно
-  ipa: /rɛtˈɛlʲnɔ/
-  translation: ''
-  pos: adv
 - lemma: роботодавець
   ipa: /rɔbɔtɔdˈaʋɛt͡sʲ/
-  translation: ''
+  translation: employer
   pos: noun
   gender: m
 - lemma: розробка
   ipa: /rɔzrˈɔbka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: різне
-  ipa: /rˈiznɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: стабільність
-  ipa: /stabˈilʲnistʲ/
-  translation: ''
+  translation: development, design
   pos: noun
   gender: f
 - lemma: страхування
   ipa: /straxuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: уміння
-  ipa: /umˈinnja/
-  translation: ''
+  translation: insurance
   pos: noun
   gender: n
 - lemma: частковий
   ipa: /t͡ʃastkɔʋɪj/
-  translation: ''
+  translation: partial
   pos: adj
-- lemma: інтерв'ю
-  ipa: /intɛrʋˈju/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: інтерв'юер
   ipa: /intɛrʋjuˈɛr/
-  translation: ''
+  translation: interviewer
   pos: noun
   gender: m
 - lemma: іт

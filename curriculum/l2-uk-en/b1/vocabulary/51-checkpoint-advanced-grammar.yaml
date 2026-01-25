@@ -4,20 +4,24 @@ version: '2.0'
 items:
 - lemma: бутербродик
   ipa: /butɛrbrˈɔdɪk/
-  translation: ''
+  translation: small sandwich
   pos: noun
   gender: m
 - lemma: в'янучий
   ipa: /ʋˈjanut͡ʃɪj/
-  translation: ''
+  translation: fading, wilting
   pos: adj
+- lemma: виокремити
+  ipa: /ʋˈɪɔkrɛmɪtɪ/
+  translation: to single out
+  pos: verb
 - lemma: випивши
   ipa: /ʋˈɪpɪʋʃɪ/
   translation: ''
   pos: verb
 - lemma: виступивши
   ipa: /ʋˈɪstupɪʋʃɪ/
-  translation: ''
+  translation: having performed
   pos: verb
 - lemma: вшись
   ipa: /ʋʃɪsʲ/
@@ -25,7 +29,7 @@ items:
   pos: verb
 - lemma: граючий
   ipa: /ɦrˈajut͡ʃɪj/
-  translation: ''
+  translation: playing
   pos: adj
 - lemma: дж
   ipa: /dʒ/
@@ -34,7 +38,7 @@ items:
   gender: m
 - lemma: дискусійний
   ipa: /dɪskusˈijnɪj/
-  translation: ''
+  translation: controversial, discussion-based
   pos: adj
 - lemma: дніпр
   ipa: /dnipr/
@@ -43,15 +47,15 @@ items:
   gender: m
 - lemma: доречний
   ipa: /dɔrˈɛt͡ʃnɪj/
-  translation: ''
+  translation: appropriate, relevant
   pos: adj
 - lemma: дробовий
   ipa: /drɔbɔʋˈɪj/
-  translation: ''
+  translation: fractional (number)
   pos: adj
 - lemma: дідів
   ipa: /didiʋ/
-  translation: ''
+  translation: grandfather's, of ancestors
   pos: adj
 - lemma: задумавшись
   ipa: /zadˈumaʋʃɪsʲ/
@@ -59,7 +63,7 @@ items:
   pos: verb
 - lemma: законопроєкт
   ipa: /zakɔnɔprɔˈjɛkt/
-  translation: ''
+  translation: bill, draft law
   pos: noun
   gender: m
 - lemma: закінчи-
@@ -68,7 +72,7 @@ items:
   pos: noun
 - lemma: запакувати
   ipa: /zapakuʋˈatɪ/
-  translation: ''
+  translation: to pack
   pos: verb
 - lemma: заплативши
   ipa: /zaplatˈɪʋʃɪ/
@@ -76,15 +80,15 @@ items:
   pos: verb
 - lemma: затінений
   ipa: /zatˈinɛnɪj/
-  translation: ''
+  translation: shaded
   pos: adj
 - lemma: змарнілий
   ipa: /zmarnˈilɪj/
-  translation: ''
+  translation: haggard, emaciated
   pos: adj
 - lemma: зобразити
   ipa: /zɔbrazˈɪtɪ/
-  translation: ''
+  translation: to depict (perfective)
   pos: verb
 - lemma: зроби-
   ipa: /zrɔbˈɪ-/
@@ -96,11 +100,11 @@ items:
   pos: noun
 - lemma: канцеляризм
   ipa: /kant͡sɛljarˈɪzm/
-  translation: ''
+  translation: bureaucratic jargon
   pos: noun
 - lemma: каталог
   ipa: /katalˈɔɦ/
-  translation: ''
+  translation: catalog
   pos: noun
   gender: m
 - lemma: каталожка
@@ -109,28 +113,28 @@ items:
   pos: noun
 - lemma: мамочка
   ipa: /mˈamɔt͡ʃka/
-  translation: ''
+  translation: mommy (diminutive)
   pos: noun
   gender: f
 - lemma: мутити
   ipa: /mutˈɪtɪ/
-  translation: ''
+  translation: to stir up, to muddy
   pos: verb
 - lemma: надаючи
   ipa: /nadajut͡ʃˈɪ/
-  translation: ''
+  translation: providing
   pos: verb
 - lemma: намальований
   ipa: /namalʲˈɔʋanɪj/
-  translation: ''
+  translation: painted, drawn
   pos: adj
 - lemma: оглянувши
   ipa: /ɔɦlˈjanuʋʃɪ/
-  translation: ''
+  translation: having inspected/reviewed
   pos: verb
 - lemma: освітлений
   ipa: /ɔsʋˈitlɛnɪj/
-  translation: ''
+  translation: lit, illuminated
   pos: adj
 - lemma: печивечка
   ipa: /pɛt͡ʃɪʋɛt͡ʃka/
@@ -139,7 +143,7 @@ items:
   gender: f
 - lemma: побачений
   ipa: /pɔbˈat͡ʃɛnɪj/
-  translation: ''
+  translation: seen
   pos: adj
 - lemma: побуджений
   ipa: /pɔbˈudʒɛnɪj/
@@ -147,7 +151,7 @@ items:
   pos: adj
 - lemma: побудити
   ipa: /pɔbudˈɪtɪ/
-  translation: ''
+  translation: to wake up, to rouse
   pos: verb
 - lemma: поверну-
   ipa: /pɔʋɛrnˈu-/
@@ -155,49 +159,49 @@ items:
   pos: noun
 - lemma: повніти
   ipa: /pɔʋnˈitɪ/
-  translation: ''
+  translation: to get fat
   pos: verb
 - lemma: полотно
   ipa: /pɔlɔtnˈɔ/
-  translation: ''
+  translation: canvas, cloth
   pos: noun
   gender: n
 - lemma: пороги
   ipa: /pɔrˈɔɦɪ/
-  translation: ''
+  translation: thresholds, rapids (river)
   pos: noun
 - lemma: посмутнілий
   ipa: /pɔsmutnˈilɪj/
-  translation: ''
+  translation: saddened, darkened
   pos: adj
 - lemma: поставлений
   ipa: /pɔstˈaʋlɛnɪj/
-  translation: ''
+  translation: placed, set
   pos: adj
 - lemma: прагматичний
   ipa: /praɦmatˈɪt͡ʃnɪj/
-  translation: ''
+  translation: pragmatic
   pos: adj
 - lemma: проведений
   ipa: /prɔʋˈɛdɛnɪj/
-  translation: ''
+  translation: conducted, carried out
   pos: adj
 - lemma: продавчиня
   ipa: /prɔdaʋt͡ʃɪnja/
-  translation: ''
+  translation: seller (female)
   pos: noun
   gender: f
 - lemma: ревіти
   ipa: /rɛʋˈitɪ/
-  translation: ''
+  translation: to roar, to howl
   pos: verb
 - lemma: регочучи
   ipa: /rɛɦˈɔt͡ʃut͡ʃɪ/
-  translation: ''
+  translation: laughing out loud (gerund)
   pos: verb
 - lemma: розглядати
   ipa: /rɔzɦljadˈatɪ/
-  translation: ''
+  translation: to consider, to examine (imperfective)
   pos: verb
 - lemma: сид-
   ipa: /sɪd-/
@@ -213,16 +217,20 @@ items:
   pos: verb
 - lemma: таця
   ipa: /tˈat͡sja/
-  translation: ''
+  translation: tray
   pos: noun
   gender: f
 - lemma: тримаючи
   ipa: /trɪmˈajut͡ʃɪ/
-  translation: ''
+  translation: holding
   pos: verb
 - lemma: увійшовши
   ipa: /uʋijʃˈɔʋʃɪ/
-  translation: ''
+  translation: having entered
+  pos: verb
+- lemma: указати
+  ipa: /ukazˈatɪ/
+  translation: to indicate, to point out (perfective)
   pos: verb
 - lemma: усміха-
   ipa: /usmixa-/
@@ -234,7 +242,7 @@ items:
   pos: noun
 - lemma: хатинка
   ipa: /xatˈɪnka/
-  translation: ''
+  translation: small house (diminutive)
   pos: noun
   gender: f
 - lemma: юч-

@@ -2,131 +2,61 @@ module: 67-social-media-ukrainian
 level: A2
 version: '2.0'
 items:
-- lemma: активність
-  ipa: /aktˈɪʋnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: активніший
-  ipa: /aktˈɪʋniʃɪj/
-  translation: ''
-  pos: adj
 - lemma: викласти
   ipa: /ʋˈɪklastɪ/
-  translation: ''
+  translation: to lay out, to post (online)
   pos: verb
 - lemma: відписатися
   ipa: /ʋidpɪsˈatɪsja/
-  translation: ''
+  translation: to unsubscribe
   pos: verb
-- lemma: глобальний
-  ipa: /ɦlɔbˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: дизайн
-  ipa: /dɪzajn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: залучення
-  ipa: /zalˈut͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: згадка
   ipa: /zɦˈadka/
-  translation: ''
+  translation: mention, memory
   pos: noun
   gender: f
 - lemma: контент
   ipa: /kɔntɛnt/
-  translation: ''
+  translation: content
   pos: noun
   gender: m
 - lemma: нікнейм
   ipa: /niknɛjm/
-  translation: ''
+  translation: nickname
   pos: noun
   gender: m
-- lemma: олень
-  ipa: /ˈɔlɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: переглядати
-  ipa: /pɛrɛɦljadˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: позначити
-  ipa: /pɔznˈat͡ʃɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: пост
   ipa: /pɔst/
-  translation: ''
+  translation: post, fast (religious)
   pos: noun
 - lemma: приватний
   ipa: /prɪʋˈatnɪj/
-  translation: ''
+  translation: private
   pos: adj
-- lemma: просторий
-  ipa: /prɔstˈɔrɪj/
-  translation: ''
-  pos: adj
-- lemma: публікація
-  ipa: /publikˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: підписатися
   ipa: /pidpɪsˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: підтримувати
-  ipa: /pidtrˈɪmuʋatɪ/
-  translation: ''
+  translation: to subscribe, to sign oneself
   pos: verb
 - lemma: репост
   ipa: /rɛpˈɔst/
-  translation: ''
+  translation: repost
   pos: noun
-- lemma: розвивати
-  ipa: /rɔzʋɪʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: спільнота
-  ipa: /spilʲnˈɔta/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: стежити
-  ipa: /stˈɛʒɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: сторіз
   ipa: /stɔriz/
-  translation: ''
+  translation: stories (social media)
   pos: noun
   gender: m
 - lemma: стрічка
   ipa: /strˈit͡ʃka/
-  translation: ''
+  translation: ribbon, tape, feed (news)
   pos: noun
   gender: f
-- lemma: тренд
-  ipa: /trɛnd/
-  translation: ''
-  pos: noun
 - lemma: хештег
   ipa: /xɛʃtɛɦ/
-  translation: ''
+  translation: hashtag
   pos: noun
-- lemma: інколи
-  ipa: /ˈinkɔlɪ/
-  translation: ''
-  pos: pron
 - lemma: інстаграм
   ipa: /instaɦram/
-  translation: ''
+  translation: Instagram
   pos: noun
   gender: m

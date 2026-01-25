@@ -2,14 +2,9 @@ module: 24-smart-shopping
 level: A2
 version: '2.0'
 items:
-- lemma: веста
-  ipa: /ʋˈɛsta/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: грам
   ipa: /ɦram/
-  translation: ''
+  translation: gram
   pos: noun
 - lemma: еко-торбинка
   ipa: /ɛkɔ-tɔrbˈɪnka/
@@ -18,64 +13,40 @@ items:
   gender: f
 - lemma: капуста
   ipa: /kapˈusta/
-  translation: ''
+  translation: cabbage
   pos: noun
   gender: f
 - lemma: крамниця
   ipa: /kramnˈɪt͡sja/
-  translation: ''
+  translation: shop, store
   pos: noun
   gender: f
 - lemma: літр
   ipa: /litr/
-  translation: ''
+  translation: liter
   pos: noun
 - lemma: найдешевший
   ipa: /najdɛʃˈɛʋʃɪj/
-  translation: ''
+  translation: the cheapest
   pos: adj
-- lemma: носити
-  ipa: /nɔsˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: обман
   ipa: /ɔbmˈan/
-  translation: ''
+  translation: deceit, fraud
   pos: noun
   gender: m
-- lemma: остаточний
-  ipa: /ɔstatˈɔt͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: партнер
-  ipa: /partnˈɛr/
-  translation: ''
+- lemma: пакет
+  ipa: /pakˈɛt/
+  translation: packet, package, plastic bag
   pos: noun
   gender: m
-- lemma: переговори
-  ipa: /pɛrɛɦɔʋɔrɪ/
-  translation: ''
-  pos: noun
 - lemma: пляма
   ipa: /plˈjama/
-  translation: ''
+  translation: stain, spot
   pos: noun
   gender: f
-- lemma: постійний
-  ipa: /pɔstˈijnɪj/
-  translation: ''
-  pos: adj
-- lemma: приймати
-  ipa: /prɪjmˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: пройтися
-  ipa: /prɔjtˈɪsja/
-  translation: ''
-  pos: verb
 - lemma: рольовий
   ipa: /rɔlʲɔʋˈɪj/
-  translation: ''
+  translation: role-playing (adj)
   pos: adj
 - lemma: торг
   ipa: /tɔrɦ/
@@ -84,15 +55,15 @@ items:
   gender: m
 - lemma: торгуватися
   ipa: /tɔrɦuʋˈatɪsja/
-  translation: ''
+  translation: to bargain
   pos: verb
 - lemma: цінник
   ipa: /t͡sinnˈɪk/
-  translation: ''
+  translation: price tag
   pos: noun
   gender: m
 - lemma: чек
   ipa: /t͡ʃɛk/
-  translation: ''
+  translation: bill, receipt
   pos: noun
   gender: m

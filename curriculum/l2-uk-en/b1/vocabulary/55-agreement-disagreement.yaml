@@ -4,11 +4,11 @@ version: '2.0'
 items:
 - lemma: абзац
   ipa: /abzˈat͡s/
-  translation: ''
+  translation: paragraph
   pos: noun
 - lemma: вбивати
   ipa: /ʋbɪʋˈatɪ/
-  translation: ''
+  translation: to kill, to murder
   pos: verb
 - lemma: ветерана
   ipa: /ʋɛtɛrˈana/
@@ -17,156 +17,161 @@ items:
   gender: f
 - lemma: графік
   ipa: /ɦrˈafik/
-  translation: ''
+  translation: schedule, graph
   pos: noun
   gender: m
 - lemma: дискурсний
   ipa: /dɪskursnɪj/
-  translation: ''
+  translation: discourse (adj)
   pos: adj
 - lemma: дискутувати
   ipa: /dɪskutuʋˈatɪ/
-  translation: ''
+  translation: to discuss, to debate
   pos: verb
 - lemma: дійсно
   ipa: /dˈijsnɔ/
-  translation: ''
+  translation: really, indeed
   pos: adv
 - lemma: екологія
   ipa: /ɛkɔlˈɔɦija/
-  translation: ''
+  translation: ecology
   pos: noun
   gender: f
 - lemma: жартівливий
   ipa: /ʒartiʋlˈɪʋɪj/
-  translation: ''
+  translation: playful, joking
   pos: adj
 - lemma: забруднювати
   ipa: /zabrˈudnjuʋatɪ/
-  translation: ''
+  translation: to pollute, to dirty
   pos: verb
 - lemma: закупівля
   ipa: /zakupˈiʋlja/
-  translation: ''
+  translation: purchase, procurement
   pos: noun
 - lemma: зменшити
   ipa: /zmˈɛnʃɪtɪ/
-  translation: ''
+  translation: to reduce, to decrease
   pos: verb
 - lemma: консенсус
   ipa: /kɔnsˈɛnsus/
-  translation: ''
+  translation: consensus
   pos: noun
   gender: m
 - lemma: круть
   ipa: /krutʲ/
-  translation: ''
+  translation: Kruti (place/battle)
+  pos: noun
+  gender: m
+- lemma: месенджер
+  ipa: /mɛsɛndʒɛr/
+  translation: messenger
   pos: noun
   gender: m
 - lemma: модератор
   ipa: /mɔdɛrˈatɔr/
-  translation: ''
+  translation: moderator
   pos: noun
   gender: m
 - lemma: міняти
   ipa: /minˈjatɪ/
-  translation: ''
+  translation: to change, to exchange
   pos: verb
 - lemma: недостатній
   ipa: /nɛdɔstˈatnij/
-  translation: ''
+  translation: insufficient
   pos: adj
 - lemma: образливий
   ipa: /ɔbrˈazlɪʋɪj/
-  translation: ''
+  translation: offensive
   pos: adj
 - lemma: передчасний
   ipa: /pɛrɛdt͡ʃˈasnɪj/
-  translation: ''
+  translation: premature
   pos: adj
 - lemma: пластик
   ipa: /plˈastɪk/
-  translation: ''
+  translation: plastic
   pos: noun
   gender: m
 - lemma: пластиковий
   ipa: /plˈastɪkɔʋɪj/
-  translation: ''
+  translation: plastic (adj)
   pos: adj
 - lemma: по-друге
   ipa: /pɔ-drˈuɦɛ/
-  translation: ''
+  translation: secondly
   pos: adv
 - lemma: по-перше
   ipa: /pɔ-pˈɛrʃɛ/
-  translation: ''
+  translation: firstly
   pos: adv
 - lemma: постачальник
   ipa: /pɔstat͡ʃˈalʲnɪk/
-  translation: ''
+  translation: supplier
   pos: noun
   gender: m
 - lemma: прийнятно
   ipa: /prɪjnˈjatnɔ/
-  translation: ''
+  translation: acceptably
   pos: adv
 - lemma: реорганізація
   ipa: /rɛɔrɦanizˈat͡sija/
-  translation: ''
+  translation: reorganization
   pos: noun
   gender: f
 - lemma: слабший
   ipa: /slˈabʃɪj/
-  translation: ''
+  translation: weaker
   pos: adj
 - lemma: спецефект
   ipa: /spɛt͡sɛfˈɛkt/
-  translation: ''
+  translation: special effect
   pos: noun
 - lemma: споживання
   ipa: /spɔʒɪʋˈannja/
-  translation: ''
+  translation: consumption
   pos: noun
   gender: n
 - lemma: співвідношення
   ipa: /spiʋʋidnˈɔʃɛnnja/
-  translation: ''
+  translation: correlation, ratio
   pos: noun
   gender: n
 - lemma: суші
   ipa: /sˈuʃi/
-  translation: ''
+  translation: sushi
   pos: noun
   gender: n
 - lemma: суші-бар
   ipa: /sˈuʃi-bar/
-  translation: ''
+  translation: sushi bar
   pos: noun
   gender: m
 - lemma: телереклама
   ipa: /tɛlɛrɛklˈama/
-  translation: ''
+  translation: TV advertising
   pos: noun
   gender: f
 - lemma: тестувати
   ipa: /tɛstuʋˈatɪ/
-  translation: ''
+  translation: to test
   pos: verb
 - lemma: ток-шоу
   ipa: /tɔk-ʃɔu/
-  translation: ''
+  translation: talk show
   pos: noun
   gender: n
 - lemma: хибний
   ipa: /xˈɪbnɪj/
-  translation: ''
+  translation: erroneous, false
   pos: adj
 - lemma: цивілізований
   ipa: /t͡sɪʋilizˈɔʋanɪj/
-  translation: ''
+  translation: civilized
   pos: adj
 - lemma: ірландія
   ipa: /irlˈandija/
-  translation: ''
+  translation: Ireland
   pos: noun
   gender: f

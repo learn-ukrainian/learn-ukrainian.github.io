@@ -4,33 +4,33 @@ version: '2.0'
 items:
 - lemma: акція
   ipa: /ˈakt͡sija/
-  translation: ''
+  translation: action, promotion, share
   pos: noun
 - lemma: альпійський
   ipa: /alʲpˈijsʲkɪj/
-  translation: ''
+  translation: Alpine
   pos: adj
 - lemma: антилопа
   ipa: /antɪlˈɔpa/
-  translation: ''
+  translation: antelope
   pos: noun
 - lemma: асканія-нова
   ipa: /askˈanija-nɔʋa/
-  translation: ''
+  translation: Askania-Nova
   pos: noun
   gender: f
 - lemma: багаторазовий
   ipa: /baɦatɔrazˈɔʋɪj/
-  translation: ''
+  translation: multiple-use, reusable
   pos: adj
 - lemma: болото
   ipa: /bɔlˈɔtɔ/
-  translation: ''
+  translation: swamp, marsh
   pos: noun
   gender: n
 - lemma: буковий
   ipa: /bˈukɔʋɪj/
-  translation: ''
+  translation: beech (adj)
   pos: adj
 - lemma: бур
   ipa: /bur/
@@ -39,147 +39,147 @@ items:
   gender: m
 - lemma: біологічний
   ipa: /biɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: biological
   pos: adj
 - lemma: біорізноманіття
   ipa: /biɔriznɔmanˈittja/
-  translation: ''
+  translation: biodiversity
   pos: noun
   gender: n
 - lemma: біосферний
   ipa: /biɔsfˈɛrnɪj/
-  translation: ''
+  translation: biospheric
   pos: adj
 - lemma: ведмідь
   ipa: /ʋɛdmˈidʲ/
-  translation: ''
+  translation: bear
   pos: noun
   gender: m
 - lemma: викид
   ipa: /ʋˈɪkɪd/
-  translation: ''
+  translation: emission, discharge
   pos: noun
 - lemma: вимирання
   ipa: /ʋɪmɪrˈannja/
-  translation: ''
+  translation: extinction
   pos: noun
   gender: n
 - lemma: вирубка
   ipa: /ʋˈɪrubka/
-  translation: ''
+  translation: felling, cutting down
   pos: noun
   gender: f
 - lemma: вирубувати
   ipa: /ʋɪrˈubuʋatɪ/
-  translation: ''
+  translation: to cut down
   pos: verb
 - lemma: вичерпний
   ipa: /ʋɪt͡ʃˈɛrpnɪj/
-  translation: ''
+  translation: comprehensive, exhaustive
   pos: adj
 - lemma: вичерпувати
   ipa: /ʋɪt͡ʃˈɛrpuʋatɪ/
-  translation: ''
+  translation: to exhaust, to deplete
   pos: verb
 - lemma: вовк
   ipa: /ʋɔʋk/
-  translation: ''
+  translation: wolf
   pos: noun
 - lemma: волокно
   ipa: /ʋɔlɔknˈɔ/
-  translation: ''
+  translation: fiber
   pos: noun
   gender: n
 - lemma: волонтерство
   ipa: /ʋɔlɔntˈɛrstʋɔ/
-  translation: ''
+  translation: volunteering
   pos: noun
   gender: n
 - lemma: впроваджувати
   ipa: /ʋprɔʋˈadʒuʋatɪ/
-  translation: ''
+  translation: to implement
   pos: verb
 - lemma: вугілля
   ipa: /ʋuɦˈillja/
-  translation: ''
+  translation: coal
   pos: noun
   gender: n
 - lemma: відновлювальний
   ipa: /ʋidnˈɔʋljuʋalʲnɪj/
-  translation: ''
+  translation: restorative, renewable
   pos: adj
 - lemma: відновлювати
   ipa: /ʋidnˈɔʋljuʋatɪ/
-  translation: ''
+  translation: to restore (imperfective)
   pos: verb
 - lemma: відходи
   ipa: /ʋidxˈɔdɪ/
-  translation: ''
+  translation: waste, scrap
   pos: noun
 - lemma: відчуження
   ipa: /ʋidt͡ʃˈuʒɛnnja/
-  translation: ''
+  translation: alienation
   pos: noun
   gender: n
 - lemma: деградація
   ipa: /dɛɦradˈat͡sija/
-  translation: ''
+  translation: degradation
   pos: noun
   gender: f
 - lemma: екосистема
   ipa: /ɛkɔsɪstˈɛma/
-  translation: ''
+  translation: ecosystem
   pos: noun
   gender: f
 - lemma: електроенергія
   ipa: /ɛlɛktrɔɛnˈɛrɦija/
-  translation: ''
+  translation: electricity
   pos: noun
   gender: f
 - lemma: електростанція
   ipa: /ɛlɛktrɔstˈant͡sija/
-  translation: ''
+  translation: power station
   pos: noun
   gender: f
 - lemma: забруднення
   ipa: /zabrˈudnɛnnja/
-  translation: ''
+  translation: pollution, contamination
   pos: noun
   gender: n
 - lemma: загальніший
   ipa: /zaɦalʲniʃɪj/
-  translation: ''
+  translation: more general
   pos: adj
 - lemma: зазнати
   ipa: /zaznˈatɪ/
-  translation: ''
+  translation: to undergo, to suffer (perfective)
   pos: verb
 - lemma: заповідник
   ipa: /zapɔʋˈidnɪk/
-  translation: ''
+  translation: nature reserve
   pos: noun
 - lemma: захоронення
   ipa: /zaxɔrˈɔnɛnnja/
-  translation: ''
+  translation: burial, cemetery
   pos: noun
   gender: n
 - lemma: звалище
   ipa: /zʋˈalɪʃt͡ʃɛ/
-  translation: ''
+  translation: dump, landfill
   pos: noun
   gender: n
 - lemma: знищення
   ipa: /znˈɪʃt͡ʃɛnnja/
-  translation: ''
+  translation: destruction
   pos: noun
   gender: n
 - lemma: зубр
   ipa: /zubr/
-  translation: ''
+  translation: bison
   pos: noun
 - lemma: компонент
   ipa: /kɔmpɔnˈɛnt/
-  translation: ''
+  translation: component
   pos: noun
 - lemma: кон
   ipa: /kɔn/
@@ -188,50 +188,55 @@ items:
   gender: m
 - lemma: лук
   ipa: /luk/
-  translation: ''
+  translation: bow (weapon), onion (archaic)
   pos: noun
 - lemma: нафта
   ipa: /nˈafta/
-  translation: ''
+  translation: oil, petroleum
   pos: noun
   gender: f
 - lemma: нелегальний
   ipa: /nɛlɛɦˈalʲnɪj/
-  translation: ''
+  translation: illegal
   pos: adj
 - lemma: обговорюватися
   ipa: /ɔbɦɔʋˈɔrjuʋatɪsja/
-  translation: ''
+  translation: to be discussed
   pos: verb
+- lemma: олень
+  ipa: /ˈɔlɛnʲ/
+  translation: deer
+  pos: noun
+  gender: m
 - lemma: організм
   ipa: /ɔrɦanˈizm/
-  translation: ''
+  translation: organism
   pos: noun
 - lemma: охоронний
   ipa: /ɔxɔrˈɔnnɪj/
-  translation: ''
+  translation: security (adj), protective
   pos: adj
 - lemma: охороняти
   ipa: /ɔxɔrɔnˈjatɪ/
-  translation: ''
+  translation: to guard, to protect
   pos: verb
 - lemma: парадокс
   ipa: /paradˈɔks/
-  translation: ''
+  translation: paradox
   pos: noun
   gender: m
 - lemma: перевищувати
   ipa: /pɛrɛʋˈɪʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to exceed
   pos: verb
 - lemma: переробка
   ipa: /pɛrɛrˈɔbka/
-  translation: ''
+  translation: reworking, recycling
   pos: noun
   gender: f
 - lemma: планета
   ipa: /planˈɛta/
-  translation: ''
+  translation: planet
   pos: noun
   gender: f
 - lemma: пластика
@@ -241,151 +246,151 @@ items:
   gender: f
 - lemma: поводження
   ipa: /pɔʋˈɔdʒɛnnja/
-  translation: ''
+  translation: treatment, behavior, handling
   pos: noun
   gender: n
 - lemma: поворотний
   ipa: /pɔʋɔrɔtnɪj/
-  translation: ''
+  translation: turn (adj), pivotal
   pos: adj
 - lemma: подільський
   ipa: /pɔdˈilʲsʲkɪj/
-  translation: ''
+  translation: Podillian (adj)
   pos: adj
 - lemma: полісся
   ipa: /pɔlˈissja/
-  translation: ''
+  translation: Polissia (region)
   pos: noun
   gender: n
 - lemma: популяція
   ipa: /pɔpulˈjat͡sija/
-  translation: ''
+  translation: population (biological)
   pos: noun
   gender: f
 - lemma: потоки
   ipa: /pɔtˈɔkɪ/
-  translation: ''
+  translation: streams, flows
   pos: noun
 - lemma: потрапляти
   ipa: /pɔtraplˈjatɪ/
-  translation: ''
+  translation: to get to (imperfective)
   pos: verb
 - lemma: пржевальський
   ipa: /prʒɛʋˈalʲsʲkɪj/
-  translation: ''
+  translation: Przewalski (name)
   pos: noun
   gender: m
 - lemma: прилеглий
   ipa: /prɪlˈɛɦlɪj/
-  translation: ''
+  translation: adjacent, adjoining
   pos: adj
 - lemma: причорномор'я
   ipa: /prɪt͡ʃɔrnɔmɔrja/
-  translation: ''
+  translation: Black Sea region
   pos: noun
   gender: n
 - lemma: промисловий
   ipa: /prɔmɪslˈɔʋɪj/
-  translation: ''
+  translation: industrial
   pos: adj
 - lemma: резерват
   ipa: /rɛzɛrʋˈat/
-  translation: ''
+  translation: reservation, preserve
   pos: noun
 - lemma: роздільний
   ipa: /rɔzdilʲnɪj/
-  translation: ''
+  translation: separate, disjoint
   pos: adj
 - lemma: сміття
   ipa: /smˈittja/
-  translation: ''
+  translation: trash, garbage
   pos: noun
   gender: n
 - lemma: спеціалізований
   ipa: /spɛt͡sializˈɔʋanɪj/
-  translation: ''
+  translation: specialized
   pos: adj
 - lemma: старовіковий
   ipa: /starɔʋikɔʋɪj/
-  translation: ''
+  translation: centuries-old
   pos: adj
 - lemma: створений
   ipa: /stʋˈɔrɛnɪj/
-  translation: ''
+  translation: created
   pos: adj
 - lemma: степова
   ipa: /stɛpɔʋˈa/
-  translation: ''
+  translation: steppe (adj female)
   pos: noun
   gender: f
 - lemma: степовий
   ipa: /stɛpɔʋˈɪj/
-  translation: ''
+  translation: steppe (adj)
   pos: noun
 - lemma: стикатися
   ipa: /stɪkˈatɪsja/
-  translation: ''
+  translation: to encounter, to face
   pos: verb
 - lemma: страус
   ipa: /strˈaus/
-  translation: ''
+  translation: ostrich
   pos: noun
 - lemma: стійкий
   ipa: /stijkˈɪj/
-  translation: ''
+  translation: stable, resistant, resilient
   pos: adj
 - lemma: сухіше
   ipa: /suxˈiʃɛ/
-  translation: ''
+  translation: drier
   pos: adv
 - lemma: сільськогосподарський
   ipa: /silʲsʲkɔɦɔspɔdˈarsʲkɪj/
-  translation: ''
+  translation: agricultural
   pos: adj
 - lemma: тканинний
   ipa: /tkanˈɪnnɪj/
-  translation: ''
+  translation: fabric (adj)
   pos: adj
 - lemma: товтри
   ipa: /tˈɔʋtrɪ/
-  translation: ''
+  translation: Tovtry (geological hills)
   pos: noun
 - lemma: тонна
   ipa: /tˈɔnna/
-  translation: ''
+  translation: ton
   pos: noun
 - lemma: урядовий
   ipa: /urjadˈɔʋɪj/
-  translation: ''
+  translation: governmental
   pos: adj
 - lemma: утилізація
   ipa: /utɪlizˈat͡sija/
-  translation: ''
+  translation: utilization, recycling
   pos: noun
   gender: f
 - lemma: утилізувати
   ipa: /utɪlizuʋˈatɪ/
-  translation: ''
+  translation: to utilize, to recycle
   pos: verb
 - lemma: чорнобиль
   ipa: /t͡ʃɔrnˈɔbɪlʲ/
-  translation: ''
+  translation: Chornobyl
   pos: noun
   gender: m
 - lemma: чорнобильський
   ipa: /t͡ʃɔrnˈɔbɪlʲsʲkɪj/
-  translation: ''
+  translation: Chornobyl (adj)
   pos: adj
 - lemma: чорнозем
   ipa: /t͡ʃɔrnˈɔzɛm/
-  translation: ''
+  translation: chernozem (soil)
   pos: noun
 - lemma: юнеско
   ipa: /junɛskɔ/
-  translation: ''
+  translation: UNESCO
   pos: noun
   gender: n
 - lemma: ґрунт
   ipa: /grunt/
-  translation: ''
+  translation: soil, ground, foundation
   pos: noun

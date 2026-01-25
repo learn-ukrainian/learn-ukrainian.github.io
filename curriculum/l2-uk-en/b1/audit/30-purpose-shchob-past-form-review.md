@@ -1,17 +1,52 @@
-# Audit Report: 30-purpose-shchob-past-form.md
-**Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M30 — 30-purpose-shchob-past-form.md
+**Level:** B1 | **Module:** M30 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:49:20
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Конструкція щоб плюс минула форма | 12 | 8 | ✅ |
+| 2 | match-up | Дієслово і приклад конструкції | 12 | 8 | ✅ |
+| 3 | cloze | Оберіть правильну форму дієслова | 12 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Категорії дієслів з конструкцією щоб | 14 | 12 | ✅ |
+| 6 | unjumble | Розставте слова в правильному порядку | 8 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 8 | 6 | ✅ |
+| 8 | cloze | Щоб плюс минула форма в контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть минулі форми після щоб | 8 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | quiz | Контекст і Культура | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (cloze, error-correction, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1725/1500
+- **Words:** ✅ 1725/1500 (raw: 2352)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
+- **Vocab:** ✅ 41/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -2,10 +2,18 @@ module: 38-complex-sentence-integration
 level: B1
 version: '2.0'
 items:
+- lemma: акт
+  ipa: /akt/
+  translation: act
+  pos: noun
 - lemma: архітектурний
   ipa: /arxitɛktˈurnɪj/
-  translation: ''
+  translation: architectural
   pos: adj
+- lemma: бачитися
+  ipa: /bˈat͡ʃɪtɪsja/
+  translation: to see each other
+  pos: verb
 - lemma: веда
   ipa: /ʋˈɛda/
   translation: ''
@@ -13,7 +21,7 @@ items:
   gender: f
 - lemma: ведення
   ipa: /ʋˈɛdɛnnja/
-  translation: ''
+  translation: conducting, leading
   pos: noun
   gender: n
 - lemma: вересна
@@ -23,80 +31,90 @@ items:
   gender: f
 - lemma: відомо
   ipa: /ʋidˈɔmɔ/
-  translation: ''
+  translation: it is known
   pos: adv
+- lemma: відрядження
+  ipa: /ʋidrˈjadʒɛnnja/
+  translation: business trip
+  pos: noun
+  gender: n
 - lemma: дворівневий
   ipa: /dʋɔrˈiʋnɛʋɪj/
-  translation: ''
+  translation: two-level
   pos: adj
 - lemma: з'ясувальний
   ipa: /zjasuʋˈalʲnɪj/
-  translation: ''
+  translation: clarificatory, finding out (adj)
   pos: adj
 - lemma: з'єднаний
   ipa: /zˈjɛdnanɪj/
-  translation: ''
+  translation: connected, joined
   pos: adj
 - lemma: залагодити
   ipa: /zalˈaɦɔdɪtɪ/
-  translation: ''
+  translation: to settle, to fix
   pos: verb
+- lemma: заняття
+  ipa: /zanjattja/
+  translation: class, lesson, occupation
+  pos: noun
+  gender: n
 - lemma: запланований
   ipa: /zaplanˈɔʋanɪj/
-  translation: ''
+  translation: planned
   pos: adj
 - lemma: засідання
   ipa: /zasidannja/
-  translation: ''
+  translation: meeting, session
   pos: noun
   gender: n
 - lemma: звільнитися
   ipa: /zʋilʲnˈɪtɪsja/
-  translation: ''
+  translation: to quit, to be freed
   pos: verb
 - lemma: зрозумілість
   ipa: /zrɔzumˈilistʲ/
-  translation: ''
+  translation: clarity, understandability
   pos: noun
   gender: f
 - lemma: комбінування
   ipa: /kɔmbinuʋˈannja/
-  translation: ''
+  translation: combining
   pos: noun
   gender: n
 - lemma: компетенція
   ipa: /kɔmpɛtˈɛnt͡sija/
-  translation: ''
+  translation: competency, jurisdiction
   pos: noun
   gender: f
 - lemma: лектор
   ipa: /lˈɛktɔr/
-  translation: ''
+  translation: lecturer
   pos: noun
   gender: m
 - lemma: надмірний
   ipa: /nadmˈirnɪj/
-  translation: ''
+  translation: excessive
   pos: adj
 - lemma: незрозумілий
   ipa: /nɛzrɔzumˈilɪj/
-  translation: ''
+  translation: incomprehensible
   pos: adj
 - lemma: нерівноправний
   ipa: /nɛriʋnɔprˈaʋnɪj/
-  translation: ''
+  translation: unequal
   pos: adj
 - lemma: нормативний
   ipa: /nɔrmatˈɪʋnɪj/
-  translation: ''
+  translation: normative, standard (adj)
   pos: adj
 - lemma: об'їзний
   ipa: /ɔbjiznˈɪj/
-  translation: ''
+  translation: bypass (adj)
   pos: adj
 - lemma: обмежитися
   ipa: /ɔbmˈɛʒɪtɪsja/
-  translation: ''
+  translation: to limit oneself
   pos: verb
 - lemma: один-два
   ipa: /ɔdˈɪn-dʋa/
@@ -104,53 +122,58 @@ items:
   pos: num
 - lemma: пекарня
   ipa: /pɛkˈarnja/
-  translation: ''
+  translation: bakery
   pos: noun
   gender: f
 - lemma: переважати
   ipa: /pɛrɛʋaʒˈatɪ/
-  translation: ''
+  translation: to prevail, to predominate
   pos: verb
 - lemma: перевантажувати
   ipa: /pɛrɛʋantˈaʒuʋatɪ/
-  translation: ''
+  translation: to overload
   pos: verb
 - lemma: порушення
   ipa: /pɔrˈuʃɛnnja/
-  translation: ''
+  translation: violation, breach, disorder
   pos: noun
   gender: n
 - lemma: проза
   ipa: /prˈɔza/
-  translation: ''
+  translation: prose
+  pos: noun
+  gender: f
+- lemma: піч
+  ipa: /pit͡ʃ/
+  translation: oven, stove
   pos: noun
   gender: f
 - lemma: синтаксичний
   ipa: /sɪntaksˈɪt͡ʃnɪj/
-  translation: ''
+  translation: syntactic
   pos: adj
 - lemma: сполучення
   ipa: /spɔlˈut͡ʃɛnnja/
-  translation: ''
+  translation: connection, combination, transport link
   pos: noun
   gender: n
 - lemma: споруда
   ipa: /spɔrˈuda/
-  translation: ''
+  translation: building, structure
   pos: noun
   gender: f
 - lemma: спрощення
   ipa: /sprˈɔʃt͡ʃɛnnja/
-  translation: ''
+  translation: simplification
   pos: noun
   gender: n
 - lemma: структурований
   ipa: /strukturˈɔʋanɪj/
-  translation: ''
+  translation: structured
   pos: adj
 - lemma: сурядність
   ipa: /surˈjadnistʲ/
-  translation: ''
+  translation: coordination (grammar)
   pos: noun
   gender: f
 - lemma: три-чотири
@@ -159,19 +182,28 @@ items:
   pos: num
 - lemma: трирівневий
   ipa: /trɪrˈiʋnɛʋɪj/
-  translation: ''
+  translation: three-level
   pos: adj
+- lemma: турбуватися
+  ipa: /turbuʋˈatɪsja/
+  translation: to worry, to care (about)
+  pos: verb
+- lemma: уміння
+  ipa: /umˈinnja/
+  translation: skill, ability
+  pos: noun
+  gender: n
 - lemma: усний
   ipa: /ˈusnɪj/
-  translation: ''
+  translation: oral, spoken
   pos: adj
 - lemma: цитування
   ipa: /t͡sɪtuʋˈannja/
-  translation: ''
+  translation: quoting, citation
   pos: noun
   gender: n
 - lemma: інна
   ipa: /ˈinna/
-  translation: ''
+  translation: Inna (name)
   pos: noun
   gender: f

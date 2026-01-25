@@ -2,116 +2,164 @@ module: 25-checkpoint-motion-verbs
 level: B1
 version: '2.0'
 items:
+- lemma: вагон
+  ipa: /ʋaɦˈɔn/
+  translation: carriage, wagon
+  pos: noun
+  gender: m
+- lemma: влітку
+  ipa: /ʋlˈitku/
+  translation: in summer
+  pos: adv
 - lemma: відбігти
   ipa: /ʋidbˈiɦtɪ/
-  translation: ''
+  translation: to run away
   pos: verb
+- lemma: відділ
+  ipa: /ʋiddil/
+  translation: department
+  pos: noun
+- lemma: відносний
+  ipa: /ʋidnˈɔsnɪj/
+  translation: relative
+  pos: adj
 - lemma: відплив
   ipa: /ʋidplˈɪʋ/
-  translation: ''
+  translation: ebb, outflow
   pos: noun
   gender: m
 - lemma: відставати
   ipa: /ʋidstaʋˈatɪ/
-  translation: ''
+  translation: to lag behind
   pos: verb
+- lemma: гірський
+  ipa: /ɦirsʲkɪj/
+  translation: mountain (adj)
+  pos: adj
 - lemma: дійшлий
   ipa: /dˈijʃlɪj/
-  translation: ''
+  translation: reached, reached maturity
   pos: adj
 - lemma: дієслов
   ipa: /dijɛslɔʋ/
   translation: ''
   pos: noun
   gender: m
+- lemma: з'явитися
+  ipa: /zjaʋˈɪtɪsja/
+  translation: to appear
+  pos: verb
 - lemma: забігти
   ipa: /zabˈiɦtɪ/
-  translation: ''
+  translation: to run in, to drop by
   pos: verb
 - lemma: заправка
   ipa: /zaprˈaʋka/
-  translation: ''
+  translation: gas station, dressing
   pos: noun
   gender: f
 - lemma: затримуватися
   ipa: /zatrˈɪmuʋatɪsja/
-  translation: ''
+  translation: to be delayed (imperfective)
   pos: verb
 - lemma: зелень
   ipa: /zˈɛlɛnʲ/
-  translation: ''
+  translation: greenery
   pos: noun
   gender: f
 - lemma: злетіти
   ipa: /zlɛtˈitɪ/
-  translation: ''
+  translation: to fly up, to take off
   pos: verb
 - lemma: зникати
   ipa: /znɪkˈatɪ/
-  translation: ''
+  translation: to disappear
   pos: verb
+- lemma: зрости
+  ipa: /zrɔstˈɪ/
+  translation: to grow, to increase (perfective)
+  pos: verb
+- lemma: калюжа
+  ipa: /kalˈjuʒa/
+  translation: puddle
+  pos: noun
+  gender: f
 - lemma: катер
   ipa: /kˈatɛr/
-  translation: ''
+  translation: motorboat, cutter
   pos: noun
   gender: m
 - lemma: корабель
   ipa: /kɔrabˈɛlʲ/
-  translation: ''
+  translation: ship
   pos: noun
   gender: m
 - lemma: малюк
   ipa: /malˈjuk/
-  translation: ''
+  translation: baby, toddler
+  pos: noun
+  gender: m
+- lemma: мінімум
+  ipa: /mˈinimum/
+  translation: minimum
   pos: noun
   gender: m
 - lemma: навесні
   ipa: /naʋɛsnˈi/
-  translation: ''
+  translation: in spring
   pos: adv
 - lemma: напоготові
   ipa: /napɔɦɔtˈɔʋi/
-  translation: ''
+  translation: ready, on standby
   pos: adv
 - lemma: насталий
   ipa: /nastalɪj/
-  translation: ''
+  translation: come, set in
   pos: adj
+- lemma: настати
+  ipa: /nastˈatɪ/
+  translation: to come, to set in (perfective)
+  pos: verb
 - lemma: неквапливий
   ipa: /nɛkʋaplˈɪʋɪj/
-  translation: ''
+  translation: leisurely, unhurried
   pos: adj
 - lemma: обігнати
   ipa: /ɔbiɦnˈatɪ/
-  translation: ''
+  translation: to overtake, to outrun
   pos: verb
 - lemma: однонапрямлений
   ipa: /ɔdnɔnaprjamlɛnɪj/
-  translation: ''
+  translation: one-way, unidirectional
   pos: adj
+- lemma: острів
+  ipa: /ˈɔstriʋ/
+  translation: island
+  pos: noun
+  gender: m
 - lemma: пасовище
   ipa: /pasɔʋˈɪʃt͡ʃɛ/
-  translation: ''
+  translation: pasture
   pos: noun
 - lemma: перебігти
   ipa: /pɛrɛbˈiɦtɪ/
-  translation: ''
+  translation: to run across
   pos: verb
 - lemma: перекусити
   ipa: /pɛrɛkusˈɪtɪ/
-  translation: ''
+  translation: to have a snack, to bite through
   pos: verb
 - lemma: переміщати
   ipa: /pɛrɛmiʃt͡ʃˈatɪ/
-  translation: ''
+  translation: to move, to displace
   pos: verb
 - lemma: пересісти
   ipa: /pɛrɛsˈistɪ/
-  translation: ''
+  translation: to change seats/trains
   pos: verb
 - lemma: плинути
   ipa: /plˈɪnutɪ/
-  translation: ''
+  translation: to flow, to pass
   pos: verb
 - lemma: повер-
   ipa: /pɔʋɛr-/
@@ -119,51 +167,55 @@ items:
   pos: noun
 - lemma: позитивно
   ipa: /pɔzɪtˈɪʋnɔ/
-  translation: ''
+  translation: positively
   pos: adv
 - lemma: поплисти
   ipa: /pɔplɪstˈɪ/
-  translation: ''
+  translation: to start swimming/floating
   pos: verb
 - lemma: порт
   ipa: /pɔrt/
-  translation: ''
+  translation: port
   pos: noun
   gender: m
 - lemma: потьомкінський
   ipa: /pɔtʲˈɔmkinsʲkɪj/
-  translation: ''
+  translation: Potemkin (adj)
   pos: adj
 - lemma: поширюватися
   ipa: /pɔʃˈɪrjuʋatɪsja/
-  translation: ''
+  translation: to spread (passive/intransitive)
   pos: verb
 - lemma: поштар
   ipa: /pɔʃtˈar/
-  translation: ''
+  translation: postman
   pos: noun
   gender: m
 - lemma: поєднуватися
   ipa: /pɔˈjɛdnuʋatɪsja/
-  translation: ''
+  translation: to be combined
   pos: verb
 - lemma: прибулий
   ipa: /prɪbˈulɪj/
-  translation: ''
+  translation: arrived, newcomer
   pos: noun
   gender: f
 - lemma: приморський
   ipa: /prɪmˈɔrsʲkɪj/
-  translation: ''
+  translation: seaside (adj)
   pos: adj
 - lemma: приступити
   ipa: /prɪstupˈɪtɪ/
-  translation: ''
+  translation: to proceed, to start
   pos: verb
 - lemma: пробігти
   ipa: /prɔbˈiɦtɪ/
-  translation: ''
+  translation: to run across/through (perfective)
   pos: verb
+- lemma: провідник
+  ipa: /prɔʋidnˈɪk/
+  translation: conductor, guide
+  pos: noun
 - lemma: пройда
   ipa: /prˈɔjda/
   translation: ''
@@ -171,69 +223,78 @@ items:
   gender: m
 - lemma: підбігти
   ipa: /pidbˈiɦtɪ/
-  translation: ''
+  translation: to run up to
   pos: verb
 - lemma: піднос
   ipa: /pidnˈɔs/
-  translation: ''
+  translation: tray
   pos: noun
   gender: m
 - lemma: підскочити
   ipa: /pidskˈɔt͡ʃɪtɪ/
-  translation: ''
+  translation: to jump up, to rush up
   pos: verb
 - lemma: розпізнати
   ipa: /rɔzpiznˈatɪ/
-  translation: ''
+  translation: to recognize (perfective)
   pos: verb
 - lemma: різка
   ipa: /rizkˈa/
-  translation: ''
+  translation: sharp (female), rod
   pos: noun
   gender: f
 - lemma: різнонапрямлений
   ipa: /riznɔnaprjamlɛnɪj/
-  translation: ''
+  translation: multidirectional
   pos: adj
 - lemma: садка
   ipa: /sadka/
-  translation: ''
+  translation: planting, seating
   pos: noun
 - lemma: садочок
   ipa: /sadˈɔt͡ʃɔk/
-  translation: ''
+  translation: small garden, kindergarten
   pos: noun
   gender: m
 - lemma: спуститися
   ipa: /spustˈɪtɪsja/
-  translation: ''
+  translation: to descend (perfective)
   pos: verb
 - lemma: стабілізуватися
   ipa: /stabilizuʋˈatɪsja/
-  translation: ''
+  translation: to stabilize (passive/intransitive)
   pos: verb
+- lemma: стежка
+  ipa: /stˈɛʒka/
+  translation: path, trail
+  pos: noun
+- lemma: страшне
+  ipa: /straʃnˈɛ/
+  translation: ''
+  pos: noun
+  gender: n
 - lemma: убігти
   ipa: /ubˈiɦtɪ/
-  translation: ''
+  translation: to run in (perfective)
   pos: verb
 - lemma: уздовж
   ipa: /uzdˈɔʋʒ/
-  translation: ''
+  translation: along, alongside
   pos: adv
 - lemma: чутка
   ipa: /t͡ʃˈutka/
-  translation: ''
+  translation: rumor
   pos: noun
   gender: f
 - lemma: щонеділі
   ipa: /ʃt͡ʃɔnɛdˈili/
-  translation: ''
+  translation: every Sunday
   pos: adv
 - lemma: ійти
   ipa: /ijtɪ/
-  translation: ''
+  translation: to go, to walk (vowel-harmony variant of йти)
   pos: verb
 - lemma: ґуцульський
   ipa: /gut͡sulʲsʲkɪj/
-  translation: ''
+  translation: Hutsul (adj)
   pos: adj

@@ -4,19 +4,174 @@ version: '2.0'
 items:
 - lemma: аналітичний
   ipa: /analitˈɪt͡ʃnɪj/
-  translation: ''
+  translation: analytical
+  pos: adj
+- lemma: брати
+  ipa: /brˈatɪ/
+  translation: to take
+  pos: verb
+- lemma: буда
+  ipa: /bˈuda/
+  translation: shack, kennel
+  pos: noun
+  gender: f
+- lemma: важливий
+  ipa: /ʋaʒlˈɪʋɪj/
+  translation: important
   pos: adj
 - lemma: вбити
   ipa: /ʋbˈɪtɪ/
-  translation: ''
+  translation: to kill (perfective)
   pos: verb
+- lemma: вечір
+  ipa: /ʋˈɛt͡ʃir/
+  translation: evening
+  pos: noun
+  gender: m
+- lemma: вжити
+  ipa: /ʋʒˈɪtɪ/
+  translation: to use, to take (measures)
+  pos: verb
+- lemma: взяти
+  ipa: /ʋzˈjatɪ/
+  translation: to take (perfective)
+  pos: verb
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: view, type, aspect
+  pos: noun
+  gender: m
+- lemma: видовий
+  ipa: /ʋɪdɔʋˈɪj/
+  translation: aspectual, specific
+  pos: adj
+- lemma: випадково
+  ipa: /ʋɪpadkˈɔʋɔ/
+  translation: accidentally
+  pos: adv
+- lemma: вирішити
+  ipa: /ʋˈɪriʃɪtɪ/
+  translation: to decide, to solve
+  pos: verb
+- lemma: вирішувати
+  ipa: /ʋɪrˈiʃuʋatɪ/
+  translation: to decide, to solve (imperfective)
+  pos: verb
+- lemma: вмирати
+  ipa: /ʋmɪrˈatɪ/
+  translation: to die (imperfective)
+  pos: verb
+- lemma: ворог
+  ipa: /ʋˈɔrɔɦ/
+  translation: enemy
+  pos: noun
+  gender: m
+- lemma: все
+  ipa: /ʋsɛ/
+  translation: ''
+  pos: part
+- lemma: встигнути
+  ipa: /ʋstˈɪɦnutɪ/
+  translation: to be in time (perfective)
+  pos: verb
+- lemma: вчора
+  ipa: /ʋt͡ʃˈɔra/
+  translation: yesterday
+  pos: adv
+- lemma: відповісти
+  ipa: /ʋidpɔʋˈistɪ/
+  translation: to answer (perfective)
+  pos: verb
+- lemma: віктор
+  ipa: /ʋˈiktɔr/
+  translation: Viktor (name)
+  pos: noun
+  gender: m
+- lemma: говори
+  ipa: /ɦˈɔʋɔrɪ/
+  translation: ''
+  pos: noun
+- lemma: головний
+  ipa: /ɦɔlɔʋnˈɪj/
+  translation: main, principal
+  pos: adj
 - lemma: дв
   ipa: /dʋ/
   translation: ''
   pos: noun
+- lemma: динамічніший
+  ipa: /dɪnamˈit͡ʃniʃɪj/
+  translation: more dynamic
+  pos: adj
+- lemma: довгий
+  ipa: /dˈɔʋɦɪj/
+  translation: long
+  pos: noun
+  gender: m
+- lemma: додавати
+  ipa: /dɔdaʋˈatɪ/
+  translation: to add
+  pos: verb
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective (aspect)
+  pos: adj
 - lemma: діло
   ipa: /dˈilɔ/
-  translation: ''
+  translation: matter, business
+  pos: noun
+  gender: n
+- lemma: дієвідміна
+  ipa: /dijɛʋidmˈina/
+  translation: declension group, conjugation
+  pos: noun
+  gender: f
+- lemma: заборона
+  ipa: /zabɔrˈɔna/
+  translation: ban, prohibition
+  pos: noun
+  gender: f
+- lemma: завершений
+  ipa: /zaʋˈɛrʃɛnɪj/
+  translation: completed, finished
+  pos: adj
+- lemma: завершення
+  ipa: /zaʋˈɛrʃɛnnja/
+  translation: completion, end
+  pos: noun
+  gender: n
+- lemma: завтра
+  ipa: /zˈaʋtra/
+  translation: tomorrow
+  pos: adv
+- lemma: загальний
+  ipa: /zaɦˈalʲnɪj/
+  translation: general, common
+  pos: adj
+- lemma: закінчити
+  ipa: /zakˈint͡ʃɪtɪ/
+  translation: to finish
+  pos: verb
+- lemma: закінчувати
+  ipa: /zakˈint͡ʃuʋatɪ/
+  translation: to finish (imperfective)
+  pos: verb
+- lemma: заперечення
+  ipa: /zapɛrˈɛt͡ʃɛnnja/
+  translation: negation, denial
+  pos: noun
+  gender: n
+- lemma: зараза
+  ipa: /zarˈaza/
+  translation: infection, now (colloquial)
+  pos: noun
+- lemma: змінитися
+  ipa: /zminˈɪtɪsja/
+  translation: to change (passive/intransitive)
+  pos: verb
+- lemma: значення
+  ipa: /znˈat͡ʃɛnnja/
+  translation: meaning, importance
   pos: noun
   gender: n
 - lemma: зно
@@ -24,14 +179,60 @@ items:
   translation: ''
   pos: noun
   gender: n
+- lemma: категорія
+  ipa: /katɛɦˈɔrija/
+  translation: category
+  pos: noun
+  gender: f
+- lemma: катерина
+  ipa: /katɛrˈɪna/
+  translation: Kateryna (name)
+  pos: noun
+  gender: f
+- lemma: кий
+  ipa: /kɪj/
+  translation: cue (billiards), stick
+  pos: noun
+  gender: m
+- lemma: ключовий
+  ipa: /kljut͡ʃɔʋˈɪj/
+  translation: key, crucial
+  pos: adj
+- lemma: концепція
+  ipa: /kɔnt͡sˈɛpt͡sija/
+  translation: concept, conception
+  pos: noun
+  gender: f
+- lemma: ловити
+  ipa: /lɔʋˈɪtɪ/
+  translation: to catch
+  pos: verb
+- lemma: літ
+  ipa: /lit/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: літера
+  ipa: /lˈitɛra/
+  translation: letter (alphabet)
+  pos: noun
+  gender: f
+- lemma: майбутній
+  ipa: /majbˈutnij/
+  translation: future (adj)
+  pos: adj
 - lemma: майч
   ipa: /majt͡ʃ/
   translation: ''
   pos: noun
   gender: m
+- lemma: минулий
+  ipa: /mɪnˈulɪj/
+  translation: past, previous
+  pos: adj
 - lemma: минути
   ipa: /mɪnˈutɪ/
-  translation: ''
+  translation: to pass (perfective)
   pos: verb
 - lemma: му
   ipa: /mu/
@@ -41,44 +242,233 @@ items:
   ipa: /mt͡ʃ/
   translation: ''
   pos: noun
+- lemma: наказовий
+  ipa: /nakazˈɔʋɪj/
+  translation: imperative (mood)
+  pos: adj
 - lemma: написаний
   ipa: /napˈɪsanɪj/
-  translation: ''
+  translation: written
+  pos: adj
+- lemma: наступний
+  ipa: /nastˈupnɪj/
+  translation: next, following
   pos: adj
 - lemma: ндв
   ipa: /ndʋ/
   translation: ''
   pos: noun
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective (aspect)
+  pos: adj
+- lemma: нікола
+  ipa: /nikɔla/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: олег
+  ipa: /ɔlˈɛɦ/
+  translation: Oleh (name)
+  pos: noun
+  gender: m
 - lemma: особовий
   ipa: /ɔsɔbˈɔʋɪj/
-  translation: ''
+  translation: personal (pronoun/file)
   pos: adj
 - lemma: очікуваний
   ipa: /ɔt͡ʃˈikuʋanɪj/
+  translation: expected
+  pos: adj
+- lemma: пам'ятати
+  ipa: /pamjatˈatɪ/
+  translation: to remember
+  pos: verb
+- lemma: пара
+  ipa: /pˈara/
+  translation: pair, couple, steam
+  pos: noun
+- lemma: парадигма
+  ipa: /paradˈɪɦma/
+  translation: paradigm
+  pos: noun
+  gender: f
+- lemma: пасивний
+  ipa: /pasˈɪʋnɪj/
+  translation: passive
+  pos: adj
+- lemma: письменник
+  ipa: /pɪsʲmˈɛnnɪk/
+  translation: writer
+  pos: noun
+  gender: m
+- lemma: план
+  ipa: /plan/
+  translation: plan
+  pos: noun
+- lemma: по-юридичний
+  ipa: /pɔ-jurɪdɪt͡ʃnɪj/
   translation: ''
   pos: adj
+- lemma: повільно
+  ipa: /pɔʋˈilʲnɔ/
+  translation: slowly
+  pos: adv
+- lemma: позначати
+  ipa: /pɔznat͡ʃˈatɪ/
+  translation: to mark, to denote
+  pos: verb
 - lemma: попередження
   ipa: /pɔpɛrˈɛdʒɛnnja/
-  translation: ''
+  translation: warning, prevention
   pos: noun
   gender: n
+- lemma: поїхати
+  ipa: /pɔˈjixatɪ/
+  translation: to go, to leave (by vehicle perfective)
+  pos: verb
+- lemma: префікс
+  ipa: /prɛfiks/
+  translation: prefix
+  pos: noun
+  gender: m
+- lemma: процес
+  ipa: /prɔt͡sˈɛs/
+  translation: process
+  pos: noun
+  gender: m
+- lemma: прочитати
+  ipa: /prɔt͡ʃɪtˈatɪ/
+  translation: to read (perfective)
+  pos: verb
+- lemma: підготовка
+  ipa: /pidɦɔtˈɔʋka/
+  translation: preparation, training
+  pos: noun
+  gender: f
 - lemma: піймати
   ipa: /pijmˈatɪ/
-  translation: ''
+  translation: to catch (perfective)
   pos: verb
+- lemma: результат
+  ipa: /rɛzulʲtˈat/
+  translation: result
+  pos: noun
+  gender: m
+- lemma: розуміння
+  ipa: /rɔzumˈinnja/
+  translation: understanding
+  pos: noun
+  gender: n
+- lemma: рок
+  ipa: /rɔk/
+  translation: rock (music), fate
+  pos: noun
+  gender: m
+- lemma: роман
+  ipa: /rɔmˈan/
+  translation: novel, romance
+  pos: noun
+  gender: m
+- lemma: ріка
+  ipa: /rikˈa/
+  translation: river
+  pos: noun
+- lemma: серйозний
+  ipa: /sɛrjˈɔznɪj/
+  translation: serious
+  pos: adj
+- lemma: сила
+  ipa: /sˈɪla/
+  translation: force, strength
+  pos: noun
+  gender: f
 - lemma: синтетичний
   ipa: /sɪntɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: synthetic
+  pos: adj
+- lemma: складати
+  ipa: /skladˈatɪ/
+  translation: to compose, to put together, to fold
+  pos: verb
+- lemma: складний
+  ipa: /skladnɪj/
+  translation: difficult, complex, compound
   pos: adj
 - lemma: скорочено
   ipa: /skɔrˈɔt͡ʃɛnɔ/
-  translation: ''
+  translation: shortened, abbreviated
   pos: adv
 - lemma: слабіти
   ipa: /slabˈitɪ/
-  translation: ''
+  translation: to weaken, to get weak
   pos: verb
+- lemma: сподіватися
+  ipa: /spɔdiʋˈatɪsja/
+  translation: to hope, to expect
+  pos: verb
+- lemma: стаття
+  ipa: /stattˈja/
+  translation: article (news/academic/law)
+  pos: noun
+  gender: f
+- lemma: стать
+  ipa: /statʲ/
+  translation: gender, sex
+  pos: noun
+  gender: f
+- lemma: теперішній
+  ipa: /tɛpˈɛriʃnij/
+  translation: present, current
+  pos: adj
+- lemma: тривалість
+  ipa: /trɪʋˈalistʲ/
+  translation: duration
+  pos: noun
+  gender: f
 - lemma: тч
   ipa: /tt͡ʃ/
   translation: ''
   pos: noun
+- lemma: уважно
+  ipa: /uʋˈaʒnɔ/
+  translation: attentively, carefully
+  pos: adv
+- lemma: умовний
+  ipa: /umˈɔʋnɪj/
+  translation: conditional, conventional
+  pos: adj
+- lemma: утворювати
+  ipa: /utʋˈɔrjuʋatɪ/
+  translation: to form, to create (imperfective)
+  pos: verb
+- lemma: учора
+  ipa: /ut͡ʃˈɔra/
+  translation: yesterday
+  pos: adv
+- lemma: швидший
+  ipa: /ʃʋˈɪdʃɪj/
+  translation: faster
+  pos: adj
+- lemma: якби
+  ipa: /jakbˈɪ/
+  translation: if (hypothetical)
+  pos: conj
+- lemma: яким
+  ipa: /jakˈɪm/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: інфінітив
+  ipa: /infinitˈɪʋ/
+  translation: infinitive
+  pos: noun
+  gender: m
+- lemma: інший
+  ipa: /ˈinʃɪj/
+  translation: other, another
+  pos: pron
+- lemma: ірин
+  ipa: /irˈɪn/
+  translation: ''
+  pos: adj

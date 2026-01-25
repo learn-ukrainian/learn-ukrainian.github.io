@@ -2,102 +2,31 @@ module: 35-at-the-cafe
 level: A1
 version: '2.0'
 items:
-- lemma: буда
-  ipa: /bˈuda/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
 - lemma: вітрина
   ipa: /ʋitrˈɪna/
-  translation: ''
+  translation: shop window
   pos: noun
   gender: f
-- lemma: десерт
-  ipa: /dɛsˈɛrt/
-  translation: ''
-  pos: noun
 - lemma: закуска
   ipa: /zakˈuska/
-  translation: ''
+  translation: snack, appetizer
   pos: noun
   gender: f
-- lemma: замовлення
-  ipa: /zamˈɔʋlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: кава
-  ipa: /kˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кавовий
-  ipa: /kˈaʋɔʋɪj/
-  translation: ''
-  pos: adj
 - lemma: капучино
   ipa: /kaput͡ʃˈɪnɔ/
-  translation: ''
+  translation: cappuccino
   pos: noun
   gender: n
-- lemma: кафе
-  ipa: /kafˈɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: круасан
-  ipa: /kruasˈan/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кульчицький
   ipa: /kˈulʲt͡ʃɪt͡sʲkɪj/
-  translation: ''
+  translation: Kulchytskyi (name)
   pos: adj
 - lemma: лат
   ipa: /lat/
   translation: ''
   pos: noun
   gender: m
-- lemma: молоко
-  ipa: /mɔlɔkˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: напій
-  ipa: /napˈij/
-  translation: ''
-  pos: noun
-- lemma: рахунок
-  ipa: /raxˈunɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: солодке
-  ipa: /sɔlˈɔdkɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: столиця
-  ipa: /stɔlˈɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тістечко
-  ipa: /tˈistɛt͡ʃkɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: шоколадний
   ipa: /ʃɔkɔlˈadnɪj/
-  translation: ''
+  translation: chocolate (adj)
   pos: adj
-- lemma: юрій
-  ipa: /ˈjurij/
-  translation: ''
-  pos: noun
-  gender: m

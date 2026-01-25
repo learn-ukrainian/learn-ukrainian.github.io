@@ -4,131 +4,82 @@ version: '2.0'
 items:
 - lemma: ані
   ipa: /anˈi/
-  translation: ''
+  translation: not even, nor
   pos: conj
-- lemma: боротьба
-  ipa: /bɔrɔtʲbˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: боягузливий
   ipa: /bɔjaɦˈuzlɪʋɪj/
-  translation: ''
+  translation: cowardly
   pos: adj
 - lemma: боязкий
   ipa: /bɔjazkˈɪj/
-  translation: ''
+  translation: fearful, timid
   pos: adj
-- lemma: виразити
-  ipa: /ʋˈɪrazɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: витонченість
   ipa: /ʋˈɪtɔnt͡ʃɛnistʲ/
-  translation: ''
+  translation: refinement, elegance
   pos: noun
   gender: f
-- lemma: вмирати
-  ipa: /ʋmɪrˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: ворог
-  ipa: /ʋˈɔrɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: воювати
   ipa: /ʋɔjuʋˈatɪ/
-  translation: ''
+  translation: to fight, to wage war
   pos: verb
 - lemma: воїн
   ipa: /ʋˈɔjin/
-  translation: ''
+  translation: warrior, soldier
   pos: noun
   gender: m
 - lemma: відданий
   ipa: /ʋˈiddanɪj/
-  translation: ''
+  translation: devoted, loyal
   pos: adj
 - lemma: відданість
   ipa: /ʋˈiddanistʲ/
-  translation: ''
+  translation: devotion, loyalty
   pos: noun
   gender: f
-- lemma: відкрито
-  ipa: /ʋidkrˈɪtɔ/
-  translation: ''
-  pos: adv
 - lemma: відповідальний
   ipa: /ʋidpɔʋidˈalʲnɪj/
-  translation: ''
+  translation: responsible
   pos: adj
-- lemma: війна
-  ipa: /ʋijnˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: віра
-  ipa: /ʋˈira/
-  translation: ''
-  pos: noun
 - lemma: вічно
   ipa: /ʋˈit͡ʃnɔ/
-  translation: ''
-  pos: adv
-- lemma: гаразд
-  ipa: /ɦarˈazd/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: глибоко
-  ipa: /ɦlˈɪbɔkɔ/
-  translation: ''
+  translation: eternally
   pos: adv
 - lemma: гнів
   ipa: /ɦniʋ/
-  translation: ''
+  translation: anger, wrath
   pos: noun
   gender: m
 - lemma: годувати
   ipa: /ɦɔduʋˈatɪ/
-  translation: ''
+  translation: to feed
   pos: verb
 - lemma: гордий
   ipa: /ɦˈɔrdɪj/
-  translation: ''
+  translation: proud
   pos: adj
-- lemma: гумор
-  ipa: /ɦˈumɔr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: десь
-  ipa: /dɛsʲ/
-  translation: ''
-  pos: part
 - lemma: дивуватися
   ipa: /dɪʋuʋˈatɪsja/
-  translation: ''
+  translation: to be surprised
   pos: verb
 - lemma: добра
   ipa: /dˈɔbra/
-  translation: ''
+  translation: good (female)
   pos: noun
   gender: f
 - lemma: доброта
   ipa: /dɔbrɔtˈa/
-  translation: ''
+  translation: kindness
   pos: noun
   gender: f
 - lemma: дрібниця
   ipa: /dribnˈɪt͡sja/
-  translation: ''
+  translation: trifle, detail, small change
   pos: noun
   gender: f
 - lemma: дівчинка
   ipa: /dˈiʋt͡ʃɪnka/
-  translation: ''
+  translation: girl (child)
   pos: noun
   gender: f
 - lemma: жити-бути
@@ -137,187 +88,118 @@ items:
   pos: verb
 - lemma: журба
   ipa: /ʒurbˈa/
-  translation: ''
+  translation: sorrow, sadness
   pos: noun
   gender: f
-- lemma: загубити
-  ipa: /zaɦubˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: загубитися
-  ipa: /zaɦubˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: залишити
-  ipa: /zalˈɪʃɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: замислюватися
   ipa: /zamˈɪsljuʋatɪsja/
-  translation: ''
+  translation: to ponder, to think
   pos: verb
 - lemma: заспокоїти
   ipa: /zaspɔkˈɔjitɪ/
-  translation: ''
+  translation: to calm
   pos: verb
 - lemma: захищати
   ipa: /zaxɪʃt͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: здатися
-  ipa: /zdˈatɪsja/
-  translation: ''
+  translation: to protect, to defend (imperfective)
   pos: verb
 - lemma: здивування
   ipa: /zdɪʋuʋˈannja/
-  translation: ''
+  translation: surprise
   pos: noun
   gender: n
 - lemma: злий
   ipa: /zlɪj/
-  translation: ''
+  translation: evil, angry
   pos: adj
 - lemma: зляканий
   ipa: /zlˈjakanɪj/
-  translation: ''
+  translation: scared, frightened
   pos: adj
-- lemma: зустрічати
-  ipa: /zustrit͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: криниця
-  ipa: /krɪnˈɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: кріль
   ipa: /krilʲ/
-  translation: ''
+  translation: rabbit
   pos: noun
 - lemma: кури
   ipa: /kˈurɪ/
-  translation: ''
+  translation: chickens
   pos: noun
 - lemma: кущ
   ipa: /kuʃt͡ʃ/
-  translation: ''
+  translation: bush
   pos: noun
 - lemma: лякатися
   ipa: /ljakˈatɪsja/
-  translation: ''
+  translation: to be scared
   pos: verb
 - lemma: лінивий
   ipa: /linˈɪʋɪj/
-  translation: ''
+  translation: lazy
   pos: adj
-- lemma: літній
-  ipa: /lˈitnij/
-  translation: ''
-  pos: adj
-- lemma: м'яч
-  ipa: /mjat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: мужність
   ipa: /mˈuʒnistʲ/
-  translation: ''
+  translation: courage, bravery
   pos: noun
   gender: f
 - lemma: містечко
   ipa: /mistˈɛt͡ʃkɔ/
-  translation: ''
+  translation: small town
   pos: noun
   gender: n
 - lemma: навчати
   ipa: /naʋt͡ʃˈatɪ/
-  translation: ''
+  translation: to teach
   pos: verb
-- lemma: назавжди
-  ipa: /nazˈaʋʒdɪ/
-  translation: ''
-  pos: adv
 - lemma: найважчий
   ipa: /najʋˈaʒt͡ʃɪj/
-  translation: ''
+  translation: the hardest, heaviest
   pos: adj
 - lemma: налаштування
   ipa: /nalaʃtuʋˈannja/
-  translation: ''
+  translation: settings, configuration
   pos: noun
   gender: n
-- lemma: народ
-  ipa: /narˈɔd/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: насправді
-  ipa: /nasprˈaʋdi/
-  translation: ''
-  pos: adv
 - lemma: не-
   ipa: /nɛ-/
   translation: ''
   pos: noun
 - lemma: небезпека
   ipa: /nɛbɛzpˈɛka/
-  translation: ''
+  translation: danger
   pos: noun
   gender: f
-- lemma: негативний
-  ipa: /nɛɦatˈɪʋnɪj/
-  translation: ''
-  pos: adj
 - lemma: недобрий
   ipa: /nɛdˈɔbrɪj/
-  translation: ''
+  translation: unkind, bad
   pos: adj
-- lemma: недолік
-  ipa: /nɛdˈɔlik/
-  translation: ''
-  pos: noun
 - lemma: нетерплячий
   ipa: /nɛtɛrplˈjat͡ʃɪj/
-  translation: ''
+  translation: impatient
   pos: adj
 - lemma: нещирий
   ipa: /nɛʃt͡ʃˈɪrɪj/
-  translation: ''
+  translation: insincere
   pos: adj
-- lemma: обов'язок
-  ipa: /ɔbˈɔʋjazɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: оптимістичний
   ipa: /ɔptɪmistˈɪt͡ʃnɪj/
-  translation: ''
+  translation: optimistic
   pos: adj
 - lemma: палючий
   ipa: /palˈjut͡ʃɪj/
-  translation: ''
+  translation: burning, scorching
   pos: adj
 - lemma: патріот
   ipa: /patriˈɔt/
-  translation: ''
+  translation: patriot
   pos: noun
   gender: m
 - lemma: переставати
   ipa: /pɛrɛstaʋˈatɪ/
-  translation: ''
+  translation: to stop (imperfective)
   pos: verb
-- lemma: персонаж
-  ipa: /pɛrsɔnˈaʒ/
-  translation: ''
-  pos: noun
-- lemma: перше
-  ipa: /pˈɛrʃɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: печаль
   ipa: /pɛt͡ʃˈalʲ/
-  translation: ''
+  translation: sadness, sorrow
   pos: noun
   gender: f
 - lemma: пирог
@@ -327,111 +209,69 @@ items:
   gender: m
 - lemma: плакат
   ipa: /plakˈat/
-  translation: ''
+  translation: poster
   pos: noun
 - lemma: плакати
   ipa: /plakˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: понада
-  ipa: /pɔnˈada/
-  translation: ''
-  pos: noun
-- lemma: почувати
-  ipa: /pɔt͡ʃuʋˈatɪ/
-  translation: ''
+  translation: to cry
   pos: verb
 - lemma: правдивий
   ipa: /praʋdˈɪʋɪj/
-  translation: ''
+  translation: truthful, honest
   pos: adj
 - lemma: пригостити
   ipa: /prɪɦɔstˈɪtɪ/
-  translation: ''
+  translation: to treat (to food/drink)
   pos: verb
-- lemma: пропаганда
-  ipa: /prɔpaɦˈanda/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: прославляти
   ipa: /prɔslaʋlˈjatɪ/
-  translation: ''
+  translation: to glorify (imperfective)
   pos: verb
 - lemma: протилежність
   ipa: /prɔtɪlˈɛʒnistʲ/
-  translation: ''
+  translation: opposite, contrast
   pos: noun
 - lemma: підстрибуючи
   ipa: /pidstrˈɪbujut͡ʃɪ/
-  translation: ''
+  translation: bouncing, jumping
   pos: verb
 - lemma: радісно
   ipa: /rˈadisnɔ/
-  translation: ''
+  translation: joyfully
   pos: adv
 - lemma: радіти
   ipa: /radˈitɪ/
-  translation: ''
+  translation: to rejoice
   pos: verb
-- lemma: рація
-  ipa: /rˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: рис
-  ipa: /rɪs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: риса
-  ipa: /rˈɪsa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: родич
   ipa: /rˈɔdɪt͡ʃ/
-  translation: ''
+  translation: relative
   pos: noun
   gender: m
 - lemma: розказувати
   ipa: /rɔzkˈazuʋatɪ/
-  translation: ''
+  translation: to tell (imperfective)
   pos: verb
 - lemma: розчарований
   ipa: /rɔzt͡ʃarˈɔʋanɪj/
-  translation: ''
+  translation: disappointed
   pos: adj
-- lemma: розширити
-  ipa: /rɔzʃˈɪrɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: рішучий
   ipa: /riʃˈut͡ʃɪj/
-  translation: ''
+  translation: decisive
   pos: adj
 - lemma: самовіддано
   ipa: /samɔʋˈiddanɔ/
-  translation: ''
+  translation: selflessly
   pos: adv
-- lemma: семестр
-  ipa: /sɛmˈɛstr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: синонім
-  ipa: /sɪnˈɔnim/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сльоза
   ipa: /slʲɔzˈa/
-  translation: ''
+  translation: tear
   pos: noun
   gender: f
 - lemma: смуток
   ipa: /smˈutɔk/
-  translation: ''
+  translation: sadness, sorrow
   pos: noun
   gender: m
 - lemma: сміливе
@@ -441,57 +281,43 @@ items:
   gender: n
 - lemma: сміливий
   ipa: /smˈilɪʋɪj/
-  translation: ''
+  translation: brave
   pos: adj
 - lemma: сміливість
   ipa: /smˈilɪʋistʲ/
-  translation: ''
+  translation: bravery, courage
   pos: noun
   gender: f
 - lemma: софійка
   ipa: /sɔfˈijka/
-  translation: ''
+  translation: Sofiika (name)
   pos: noun
   gender: f
-- lemma: спектр
-  ipa: /spɛktr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: спокійніший
   ipa: /spɔkijnˈiʃɪj/
-  translation: ''
+  translation: calmer
   pos: adj
-- lemma: справитися
-  ipa: /sprˈaʋɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: співчутливий
   ipa: /spiʋt͡ʃutlˈɪʋɪj/
-  translation: ''
+  translation: sympathetic, compassionate
   pos: adj
 - lemma: співчутливо
   ipa: /spiʋt͡ʃutlˈɪʋɔ/
-  translation: ''
+  translation: sympathetically
   pos: adv
 - lemma: старанний
   ipa: /starˈannɪj/
-  translation: ''
+  translation: diligent, studious
   pos: adj
 - lemma: страх
   ipa: /strax/
-  translation: ''
+  translation: fear
   pos: noun
   gender: m
 - lemma: стурбований
   ipa: /sturbˈɔʋanɪj/
-  translation: ''
+  translation: worried, concerned, anxious
   pos: adj
-- lemma: суспільство
-  ipa: /suspˈilʲstʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: схвильов
   ipa: /sxʋɪlʲɔʋ/
   translation: ''
@@ -499,121 +325,80 @@ items:
   gender: m
 - lemma: схвильований
   ipa: /sxʋɪlʲˈɔʋanɪj/
-  translation: ''
+  translation: excited, agitated, worried
   pos: adj
-- lemma: сход
-  ipa: /sxɔd/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: тати
   ipa: /tˈatɪ/
   translation: ''
   pos: verb
 - lemma: татусь
   ipa: /tatˈusʲ/
-  translation: ''
+  translation: daddy
   pos: noun
   gender: m
-- lemma: твір
-  ipa: /tʋir/
-  translation: ''
-  pos: noun
 - lemma: темрява
   ipa: /tˈɛmrjaʋa/
-  translation: ''
+  translation: darkness
   pos: noun
   gender: f
 - lemma: терплячий
   ipa: /tɛrplˈjat͡ʃɪj/
-  translation: ''
+  translation: patient (adj)
   pos: adj
-- lemma: тетяна
-  ipa: /tɛtˈjana/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: товариш
   ipa: /tɔʋˈarɪʃ/
-  translation: ''
+  translation: comrade, friend (formal)
   pos: noun
   gender: m
 - lemma: тугий
   ipa: /tuɦˈɪj/
-  translation: ''
+  translation: tight, stiff, hard
   pos: adj
-- lemma: усміхнутися
-  ipa: /usmixnˈutɪsja/
-  translation: ''
-  pos: verb
-- lemma: утворюватися
-  ipa: /utʋˈɔrjuʋatɪsja/
-  translation: ''
-  pos: verb
-- lemma: факультет
-  ipa: /fakulʲtˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фольклор
   ipa: /fɔlʲklˈɔr/
-  translation: ''
+  translation: folklore
   pos: noun
   gender: m
 - lemma: фортепіано
   ipa: /fɔrtɛpiˈanɔ/
-  translation: ''
+  translation: piano
   pos: noun
   gender: n
 - lemma: фронт
   ipa: /frɔnt/
-  translation: ''
+  translation: front
   pos: noun
   gender: m
 - lemma: футбольний
   ipa: /futbˈɔlʲnɪj/
-  translation: ''
+  translation: football (adj)
   pos: adj
 - lemma: філологічний
   ipa: /filɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: philological
   pos: adj
-- lemma: хвилювання
-  ipa: /xʋɪljuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: хлопчик
-  ipa: /xlˈɔpt͡ʃɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: хоробро
   ipa: /xɔrˈɔbrɔ/
-  translation: ''
+  translation: bravely
   pos: adv
 - lemma: хоробрість
   ipa: /xɔrˈɔbristʲ/
-  translation: ''
+  translation: bravery, courage
   pos: noun
   gender: f
 - lemma: чесний
   ipa: /t͡ʃˈɛsnɪj/
-  translation: ''
+  translation: honest
   pos: adj
 - lemma: чесність
   ipa: /t͡ʃˈɛsnistʲ/
-  translation: ''
+  translation: honesty
   pos: noun
   gender: f
 - lemma: чко
   ipa: /t͡ʃkɔ/
   translation: ''
   pos: noun
-- lemma: щасливіший
-  ipa: /ʃt͡ʃaslˈɪʋiʃɪj/
-  translation: ''
-  pos: adj
 - lemma: щир
   ipa: /ʃt͡ʃɪr/
   translation: ''

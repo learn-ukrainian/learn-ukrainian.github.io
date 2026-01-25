@@ -2,127 +2,27 @@ module: 37-at-the-market
 level: A1
 version: '2.0'
 items:
-- lemma: базар
-  ipa: /bazˈar/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: бессарабський
-  ipa: /bɛssarabsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: вага
-  ipa: /ʋaɦˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: дати
-  ipa: /dˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: домашній
-  ipa: /dɔmˈaʃnij/
-  translation: ''
-  pos: adj
-- lemma: коштувати
-  ipa: /kˈɔʃtuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: кілограм
-  ipa: /kilɔɦrˈam/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: міра
   ipa: /mˈira/
-  translation: ''
+  translation: measure
   pos: noun
   gender: f
-- lemma: одеса
-  ipa: /ɔdˈɛsa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: основа
-  ipa: /ɔsnˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: помідор
-  ipa: /pɔmidˈɔr/
-  translation: ''
-  pos: noun
 - lemma: привоз
   ipa: /prɪʋɔz/
-  translation: ''
+  translation: delivery, supply
   pos: noun
   gender: m
-- lemma: продавець
-  ipa: /prɔdaʋˈɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: продукт
-  ipa: /prɔdˈukt/
-  translation: ''
-  pos: noun
 - lemma: півкілограма
   ipa: /piʋkilɔɦrama/
-  translation: ''
+  translation: half a kilogram
   pos: noun
-- lemma: ринка
-  ipa: /rˈɪnka/
-  translation: ''
-  pos: noun
-- lemma: свіжий
-  ipa: /sʋˈiʒɪj/
-  translation: ''
-  pos: adj
 - lemma: свіжість
   ipa: /sʋˈiʒistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: серце
-  ipa: /sˈɛrt͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сир
-  ipa: /sɪr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: скільки
-  ipa: /skˈilʲkɪ/
-  translation: ''
-  pos: pron
-- lemma: спробувати
-  ipa: /sprˈɔbuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: ціна
-  ipa: /t͡sinˈa/
-  translation: ''
+  translation: freshness
   pos: noun
   gender: f
 - lemma: штука
   ipa: /ʃtˈuka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: якість
-  ipa: /ˈjakistʲ/
-  translation: ''
+  translation: thing, piece, trick
   pos: noun
   gender: f

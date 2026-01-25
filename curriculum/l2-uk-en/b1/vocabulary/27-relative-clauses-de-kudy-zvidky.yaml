@@ -4,40 +4,57 @@ version: '2.0'
 items:
 - lemma: байдуже
   ipa: /bˈajduʒɛ/
-  translation: ''
+  translation: indifferent
   pos: adv
 - lemma: близький
   ipa: /blɪzʲkˈɪj/
-  translation: ''
+  translation: close, near
   pos: adj
 - lemma: будь-де
   ipa: /bˈudʲ-dɛ/
-  translation: ''
+  translation: anywhere
   pos: pron
+- lemma: варта
+  ipa: /ʋˈarta/
+  translation: guard, watch
+  pos: noun
+  gender: f
 - lemma: вивезти
   ipa: /ʋˈɪʋɛztɪ/
-  translation: ''
+  translation: to take out, to export
   pos: verb
+- lemma: видно
+  ipa: /ʋˈɪdnɔ/
+  translation: visible, obviously
+  pos: adv
 - lemma: вирости
   ipa: /ʋˈɪrɔstɪ/
-  translation: ''
+  translation: to grow up (perfective)
   pos: verb
 - lemma: вказівний
   ipa: /ʋkaziʋnˈɪj/
-  translation: ''
+  translation: pointing, indicative
   pos: adj
 - lemma: вступити
   ipa: /ʋstupˈɪtɪ/
-  translation: ''
+  translation: to enter (perfective)
   pos: verb
 - lemma: втекти
   ipa: /ʋtɛktˈɪ/
-  translation: ''
+  translation: to run away, to escape
   pos: verb
+- lemma: віддалений
+  ipa: /ʋiddˈalɛnɪj/
+  translation: remote, distant
+  pos: adj
 - lemma: відремонтувати
   ipa: /ʋidrɛmɔntuʋˈatɪ/
-  translation: ''
+  translation: to repair, to fix
   pos: verb
+- lemma: глибокий
+  ipa: /ɦlɪbˈɔkɪj/
+  translation: deep
+  pos: adj
 - lemma: гірш
   ipa: /ɦirʃ/
   translation: ''
@@ -45,36 +62,48 @@ items:
   gender: m
 - lemma: евакуювати
   ipa: /ɛʋakujuʋˈatɪ/
-  translation: ''
+  translation: to evacuate
   pos: verb
 - lemma: експортувати
   ipa: /ɛkspɔrtuʋˈatɪ/
-  translation: ''
+  translation: to export
   pos: verb
 - lemma: завод
   ipa: /zaʋˈɔd/
-  translation: ''
+  translation: factory
   pos: noun
   gender: m
+- lemma: заздалегідь
+  ipa: /zazdalɛɦˈidʲ/
+  translation: in advance
+  pos: adv
+- lemma: затишний
+  ipa: /zˈatɪʃnɪj/
+  translation: cozy
+  pos: adj
 - lemma: звідки-небудь
   ipa: /zʋˈidkɪ-nɛbudʲ/
   translation: ''
   pos: pron
 - lemma: звідкись
   ipa: /zʋˈidkɪsʲ/
-  translation: ''
+  translation: from somewhere
+  pos: pron
+- lemma: звідти
+  ipa: /zʋˈidtɪ/
+  translation: from there
   pos: pron
 - lemma: звідусіль
   ipa: /zʋidusˈilʲ/
-  translation: ''
+  translation: from everywhere
   pos: pron
 - lemma: здалеку
   ipa: /zdˈalɛku/
-  translation: ''
+  translation: from afar
   pos: adv
 - lemma: зерно
   ipa: /zˈɛrnɔ/
-  translation: ''
+  translation: grain, seed
   pos: noun
   gender: n
 - lemma: куди-небудь
@@ -83,90 +112,127 @@ items:
   pos: pron
 - lemma: курорт
   ipa: /kurˈɔrt/
-  translation: ''
+  translation: resort
   pos: noun
   gender: m
 - lemma: мешкати
   ipa: /mˈɛʃkatɪ/
-  translation: ''
+  translation: to reside, to live
   pos: verb
 - lemma: монгол
   ipa: /mɔnɦˈɔl/
-  translation: ''
+  translation: Mongol
   pos: noun
+- lemma: морський
+  ipa: /mɔrsʲkˈɪj/
+  translation: sea (adj), maritime
+  pos: adj
+- lemma: мотив
+  ipa: /mɔtˈɪʋ/
+  translation: motive, motif
+  pos: noun
+  gender: m
 - lemma: місцезнаходження
   ipa: /mist͡sɛznaxˈɔdʒɛnnja/
-  translation: ''
+  translation: location
   pos: noun
   gender: n
 - lemma: міфічний
   ipa: /mifˈit͡ʃnɪj/
-  translation: ''
+  translation: mythical
+  pos: adj
+- lemma: народній
+  ipa: /narˈɔdnij/
+  translation: folk (adj variant)
   pos: adj
 - lemma: насамперед
   ipa: /nasˈampɛrɛd/
-  translation: ''
+  translation: first of all
   pos: adv
 - lemma: невизначений
   ipa: /nɛʋˈɪznat͡ʃɛnɪj/
-  translation: ''
+  translation: indefinite, uncertain
   pos: adj
 - lemma: ностальгія
   ipa: /nɔstalʲɦˈija/
-  translation: ''
+  translation: nostalgia
   pos: noun
   gender: f
 - lemma: перекритий
   ipa: /pɛrɛkrˈɪtɪj/
-  translation: ''
+  translation: blocked, covered over
   pos: adj
+- lemma: побувати
+  ipa: /pɔbuʋˈatɪ/
+  translation: to visit, to be at
+  pos: verb
+- lemma: подібний
+  ipa: /pɔdˈibnɪj/
+  translation: similar
+  pos: adj
+- lemma: покоління
+  ipa: /pɔkɔlˈinnja/
+  translation: generation
+  pos: noun
 - lemma: поставка
   ipa: /pɔstˈaʋka/
-  translation: ''
+  translation: delivery, supply
   pos: noun
+- lemma: потрапити
+  ipa: /pɔtrˈapɪtɪ/
+  translation: to get to, to end up in (perfective)
+  pos: verb
 - lemma: предок
   ipa: /prˈɛdɔk/
-  translation: ''
+  translation: ancestor
   pos: noun
 - lemma: престижний
   ipa: /prɛstˈɪʒnɪj/
-  translation: ''
+  translation: prestigious
   pos: adj
 - lemma: пригодитися
   ipa: /prɪɦɔdˈɪtɪsja/
-  translation: ''
+  translation: to be useful
   pos: verb
 - lemma: прикарпаття
   ipa: /prɪkarpˈattja/
-  translation: ''
+  translation: Precarpathia
   pos: noun
   gender: n
 - lemma: ремесло
   ipa: /rɛmɛslˈɔ/
-  translation: ''
+  translation: craft
   pos: noun
 - lemma: родовід
   ipa: /rɔdɔʋˈid/
-  translation: ''
+  translation: genealogy, lineage
   pos: noun
   gender: m
+- lemma: статичний
+  ipa: /statˈɪt͡ʃnɪj/
+  translation: static
+  pos: adj
 - lemma: статично
   ipa: /statˈɪt͡ʃnɔ/
-  translation: ''
+  translation: statically
   pos: adv
+- lemma: сувенір
+  ipa: /suʋɛnˈir/
+  translation: souvenir
+  pos: noun
 - lemma: тур
   ipa: /tur/
-  translation: ''
+  translation: tour, round
   pos: noun
   gender: f
 - lemma: тухолька
   ipa: /tˈuxɔlʲka/
-  translation: ''
+  translation: Tukholka (name)
   pos: noun
   gender: f
 - lemma: узбережжя
   ipa: /uzbɛrˈɛʒʒja/
-  translation: ''
+  translation: coast, shoreline
   pos: noun
   gender: n
 - lemma: харко
@@ -176,13 +242,13 @@ items:
   gender: m
 - lemma: чутно
   ipa: /t͡ʃˈutnɔ/
-  translation: ''
+  translation: audible, hearing
   pos: adv
 - lemma: щовечора
   ipa: /ʃt͡ʃɔʋˈɛt͡ʃɔra/
-  translation: ''
+  translation: every evening
   pos: adv
 - lemma: із-за
   ipa: /iz-za/
-  translation: ''
+  translation: because of, from behind (Russian influence - better через or з-за)
   pos: prep

@@ -9,21 +9,21 @@ items:
   gender: f
 - lemma: атлет
   ipa: /atlˈɛt/
-  translation: ''
+  translation: athlete
   pos: noun
   gender: m
 - lemma: атлетика
   ipa: /atlˈɛtɪka/
-  translation: ''
+  translation: athletics
   pos: noun
   gender: f
 - lemma: афіни
   ipa: /afˈinɪ/
-  translation: ''
+  translation: Athens
   pos: noun
 - lemma: безсонов
   ipa: /bɛzsɔnɔʋ/
-  translation: ''
+  translation: Bezsonov (name)
   pos: noun
   gender: m
 - lemma: бой
@@ -33,56 +33,56 @@ items:
   gender: m
 - lemma: боксерський
   ipa: /bɔksˈɛrsʲkɪj/
-  translation: ''
+  translation: boxing (adj)
   pos: adj
 - lemma: бубка
   ipa: /bˈubka/
-  translation: ''
+  translation: Bubka (name)
   pos: noun
   gender: f
 - lemma: біатлон
   ipa: /biatlˈɔn/
-  translation: ''
+  translation: biathlon
   pos: noun
   gender: m
 - lemma: біатлоністка
   ipa: /biatlɔnˈistka/
-  translation: ''
+  translation: biathlete (female)
   pos: noun
   gender: f
 - lemma: ваговий
   ipa: /ʋaɦɔʋˈɪj/
-  translation: ''
+  translation: weight (adj), heavy
   pos: adj
 - lemma: валерій
   ipa: /ʋalˈɛrij/
-  translation: ''
+  translation: Valeriy (name)
   pos: noun
   gender: m
 - lemma: вболівання
   ipa: /ʋbɔliʋˈannja/
-  translation: ''
+  translation: cheering, supporting
   pos: noun
   gender: n
 - lemma: випередити
   ipa: /ʋˈɪpɛrɛdɪtɪ/
-  translation: ''
+  translation: to overtake, to precede
   pos: verb
 - lemma: виховати
   ipa: /ʋˈɪxɔʋatɪ/
-  translation: ''
+  translation: to raise, to educate
   pos: verb
 - lemma: вражаючіший
   ipa: /ʋraʒajut͡ʃiʃɪj/
-  translation: ''
+  translation: more impressive
   pos: adj
 - lemma: вшановуватися
   ipa: /ʋʃanˈɔʋuʋatɪsja/
-  translation: ''
+  translation: to be honored
   pos: verb
 - lemma: відмовлятися
   ipa: /ʋidmɔʋlˈjatɪsja/
-  translation: ''
+  translation: to refuse (imperfective)
   pos: verb
 - lemma: віта
   ipa: /ʋˈita/
@@ -91,25 +91,25 @@ items:
   gender: f
 - lemma: віталій
   ipa: /ʋitˈalij/
-  translation: ''
+  translation: Vitaliy (name)
   pos: noun
   gender: m
 - lemma: голити
   ipa: /ɦɔlˈɪtɪ/
-  translation: ''
+  translation: to shave
   pos: verb
 - lemma: двадцятка
   ipa: /dʋadt͡sˈjatka/
-  translation: ''
+  translation: a group of twenty
   pos: noun
   gender: f
 - lemma: демонструючи
   ipa: /dɛmɔnstrˈujut͡ʃɪ/
-  translation: ''
+  translation: demonstrating
   pos: verb
 - lemma: джошуа
   ipa: /dʒɔʃua/
-  translation: ''
+  translation: Joshua (name)
   pos: noun
   gender: m
 - lemma: ентоні
@@ -119,29 +119,33 @@ items:
   gender: m
 - lemma: естафета
   ipa: /ɛstafˈɛta/
-  translation: ''
+  translation: relay race
   pos: noun
   gender: f
 - lemma: жердина
   ipa: /ʒɛrdˈɪna/
-  translation: ''
+  translation: pole, rod
   pos: noun
   gender: f
 - lemma: загинути
   ipa: /zaɦˈɪnutɪ/
-  translation: ''
+  translation: to perish, to die
   pos: verb
 - lemma: заповнений
   ipa: /zapˈɔʋnɛnɪj/
-  translation: ''
+  translation: filled
   pos: adj
+- lemma: заповнитися
+  ipa: /zapˈɔʋnɪtɪsja/
+  translation: to be filled
+  pos: verb
 - lemma: заповнюватися
   ipa: /zapˈɔʋnjuʋatɪsja/
-  translation: ''
+  translation: to be filled (imperfective)
   pos: verb
 - lemma: збройний
   ipa: /zbrˈɔjnɪj/
-  translation: ''
+  translation: armed
   pos: adj
 - lemma: зсу
   ipa: /zsu/
@@ -149,12 +153,12 @@ items:
   pos: noun
 - lemma: зірка
   ipa: /zˈirka/
-  translation: ''
+  translation: star
   pos: noun
   gender: f
 - lemma: зірковий
   ipa: /zirkˈɔʋɪj/
-  translation: ''
+  translation: star (adj), stellar
   pos: adj
 - lemma: клочков
   ipa: /klɔt͡ʃkˈɔʋ/
@@ -163,42 +167,42 @@ items:
   gender: m
 - lemma: лави
   ipa: /lˈaʋɪ/
-  translation: ''
+  translation: rows, benches
   pos: noun
 - lemma: легкоатлет
   ipa: /lɛɦkɔatlˈɛt/
-  translation: ''
+  translation: athlete
   pos: noun
 - lemma: лобановський
   ipa: /lɔbanˈɔʋsʲkɪj/
-  translation: ''
+  translation: Lobanovskyi (name)
   pos: noun
   gender: m
 - lemma: ломаченко
   ipa: /lɔmat͡ʃɛnkɔ/
-  translation: ''
+  translation: Lomachenko (name)
   pos: noun
   gender: m
 - lemma: мундир
   ipa: /mundˈɪr/
-  translation: ''
+  translation: uniform (military)
   pos: noun
 - lemma: міфологізувати
   ipa: /mifɔlɔɦizuʋˈatɪ/
-  translation: ''
+  translation: to mythologize
   pos: verb
 - lemma: найтитулованіший
   ipa: /najtɪtulɔʋaniʃɪj/
-  translation: ''
+  translation: the most titled
   pos: adj
 - lemma: нападник
   ipa: /napˈadnɪk/
-  translation: ''
+  translation: attacker, forward (sports)
   pos: noun
   gender: m
 - lemma: нацистський
   ipa: /nat͡sˈɪstsʲkɪj/
-  translation: ''
+  translation: Nazi (adj)
   pos: adj
 - lemma: незабутний
   ipa: /nɛzabˈutnɪj/
@@ -206,28 +210,32 @@ items:
   pos: adj
 - lemma: нокаут
   ipa: /nɔkˈaut/
-  translation: ''
+  translation: knockout
   pos: noun
   gender: m
 - lemma: одинадцять
   ipa: /ɔdɪnˈadt͡sjatʲ/
-  translation: ''
+  translation: eleven
   pos: num
 - lemma: окупаційний
   ipa: /ɔkupat͡sˈijnɪj/
-  translation: ''
+  translation: occupational
   pos: adj
 - lemma: окупований
   ipa: /ɔkupˈɔʋanɪj/
-  translation: ''
+  translation: occupied
   pos: adj
 - lemma: олімпіада
   ipa: /ɔlimpiˈada/
+  translation: Olympiad
+  pos: noun
+- lemma: олімпіаді-
+  ipa: /ɔlimpiˈadi-/
   translation: ''
   pos: noun
 - lemma: олімпійка
   ipa: /ɔlimpijka/
-  translation: ''
+  translation: Olympic track jacket
   pos: noun
   gender: f
 - lemma: перемігши
@@ -236,29 +244,29 @@ items:
   pos: verb
 - lemma: переоцінити
   ipa: /pɛrɛɔt͡sinˈɪtɪ/
-  translation: ''
+  translation: to overrate, to reassess
   pos: verb
 - lemma: подіум
   ipa: /pˈɔdium/
-  translation: ''
+  translation: podium
   pos: noun
   gender: m
 - lemma: поразка
   ipa: /pɔrˈazka/
-  translation: ''
+  translation: defeat
   pos: noun
   gender: f
 - lemma: пояс
   ipa: /pˈɔjas/
-  translation: ''
+  translation: belt, zone
   pos: noun
 - lemma: призер
   ipa: /prɪzˈɛr/
-  translation: ''
+  translation: prize-winner
   pos: noun
 - lemma: пристрасть
   ipa: /prˈɪstrastʲ/
-  translation: ''
+  translation: passion
   pos: noun
   gender: f
 - lemma: підгрушна
@@ -266,13 +274,17 @@ items:
   translation: ''
   pos: noun
   gender: f
+- lemma: підкорити
+  ipa: /pidkɔrˈɪtɪ/
+  translation: to conquer, to subdue
+  pos: verb
 - lemma: підростати
   ipa: /pidrɔstˈatɪ/
-  translation: ''
+  translation: to grow up
   pos: verb
 - lemma: редкач
   ipa: /rɛdkat͡ʃ/
-  translation: ''
+  translation: Redkach (name)
   pos: noun
   gender: m
 - lemma: редкача
@@ -282,7 +294,7 @@ items:
   gender: f
 - lemma: рибка
   ipa: /rˈɪbka/
-  translation: ''
+  translation: small fish
   pos: noun
   gender: f
 - lemma: різатдінов
@@ -292,58 +304,71 @@ items:
   gender: m
 - lemma: семеренко
   ipa: /sɛmɛrˈɛnkɔ/
-  translation: ''
+  translation: Semerenko (name)
   pos: noun
   gender: f
 - lemma: служити
   ipa: /sluʒˈɪtɪ/
-  translation: ''
+  translation: to serve
   pos: verb
 - lemma: смерть
   ipa: /smɛrtʲ/
-  translation: ''
+  translation: death
   pos: noun
   gender: f
 - lemma: списувати
   ipa: /spˈɪsuʋatɪ/
-  translation: ''
+  translation: to copy, to write off (imperfective)
   pos: verb
+- lemma: спортбар
+  ipa: /spɔrtbar/
+  translation: sports bar
+  pos: noun
 - lemma: спортсменка
   ipa: /spɔrtsmˈɛnka/
-  translation: ''
+  translation: athlete (female)
   pos: noun
   gender: f
 - lemma: стрибун
   ipa: /strɪbˈun/
-  translation: ''
+  translation: jumper
   pos: noun
   gender: m
 - lemma: суперважкий
   ipa: /supɛrʋaʒkˈɪj/
-  translation: ''
+  translation: super-heavy
   pos: adj
 - lemma: сідней
   ipa: /sˈidnɛj/
-  translation: ''
+  translation: Sydney
   pos: noun
   gender: m
+- lemma: титул
+  ipa: /tˈɪtul/
+  translation: title
+  pos: noun
 - lemma: турнір
   ipa: /turnˈir/
-  translation: ''
+  translation: tournament
   pos: noun
   gender: m
 - lemma: усик
   ipa: /ˈusɪk/
-  translation: ''
+  translation: Usyk (name), small whisker
   pos: noun
   gender: m
 - lemma: утримувати
   ipa: /utrˈɪmuʋatɪ/
-  translation: ''
+  translation: to keep, to contain, to maintain
   pos: verb
+- lemma: ф'юрі
+  ipa: /fjuri/
+  translation: Fury (name)
+  pos: noun
+  gender: m
 - lemma: фан-зона
   ipa: /fan-zɔna/
-  translation: ''
+  translation: fan zone
   pos: noun
   gender: f
 - lemma: федерація
@@ -353,35 +378,35 @@ items:
   gender: f
 - lemma: фристайл
   ipa: /frɪstˈajl/
-  translation: ''
+  translation: freestyle
   pos: noun
   gender: m
 - lemma: функціонер
   ipa: /funkt͡siɔnˈɛr/
-  translation: ''
+  translation: functionary, official
   pos: noun
   gender: m
 - lemma: чвертьфінал
   ipa: /t͡ʃʋɛrtʲfinˈal/
-  translation: ''
+  translation: quarter-final
   pos: noun
   gender: m
 - lemma: чемпіонка
   ipa: /t͡ʃɛmpiˈɔnka/
-  translation: ''
+  translation: champion (female)
   pos: noun
   gender: f
 - lemma: чемпіонський
   ipa: /t͡ʃɛmpiˈɔnsʲkɪj/
-  translation: ''
+  translation: championship (adj)
   pos: adj
 - lemma: шістнадцять
   ipa: /ʃistnˈadt͡sjatʲ/
-  translation: ''
+  translation: sixteen
   pos: num
 - lemma: яна
   ipa: /ˈjana/
-  translation: ''
+  translation: Yana (name)
   pos: noun
   gender: f
 - lemma: євро-

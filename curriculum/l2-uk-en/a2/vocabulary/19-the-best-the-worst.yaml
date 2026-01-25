@@ -4,72 +4,53 @@ version: '2.0'
 items:
 - lemma: абсолютний
   ipa: /absɔlˈjutnɪj/
-  translation: ''
+  translation: absolute
   pos: adj
 - lemma: атака
   ipa: /atˈaka/
-  translation: ''
+  translation: attack
   pos: noun
   gender: f
 - lemma: африка
   ipa: /ˈafrɪka/
-  translation: ''
+  translation: Africa
   pos: noun
   gender: f
-- lemma: будь-який
-  ipa: /budʲ-jakˈɪj/
-  translation: ''
+- lemma: всюди
+  ipa: /ʋsˈjudɪ/
+  translation: everywhere
   pos: pron
-- lemma: враження
-  ipa: /ʋrˈaʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: гарніший
   ipa: /ɦarnˈiʃɪj/
-  translation: ''
+  translation: more beautiful
   pos: adj
-- lemma: гора
-  ipa: /ɦɔrˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: граматика
-  ipa: /ɦramˈatɪka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: довший
   ipa: /dˈɔʋʃɪj/
-  translation: ''
+  translation: longer (adj)
   pos: adj
 - lemma: еверест
   ipa: /ɛʋɛrˈɛst/
-  translation: ''
+  translation: Everest
   pos: noun
   gender: m
 - lemma: емоція
   ipa: /ɛmˈɔt͡sija/
-  translation: ''
+  translation: emotion
   pos: noun
   gender: f
 - lemma: коли-небудь
   ipa: /kɔlˈɪ-nɛbudʲ/
-  translation: ''
+  translation: ever
   pos: pron
 - lemma: коротший
   ipa: /kɔrˈɔtʃɪj/
-  translation: ''
+  translation: shorter (adj)
   pos: adj
 - lemma: ле
   ipa: /lɛ/
   translation: ''
   pos: noun
   gender: m
-- lemma: надзвичайно
-  ipa: /nadzʋɪt͡ʃˈajnɔ/
-  translation: ''
-  pos: adv
 - lemma: най
   ipa: /naj/
   translation: ''
@@ -80,99 +61,87 @@ items:
   pos: noun
 - lemma: найбільше
   ipa: /najbˈilʲʃɛ/
-  translation: ''
+  translation: most of all
   pos: adv
-- lemma: найбільший
-  ipa: /najbˈilʲʃɪj/
-  translation: ''
-  pos: adj
 - lemma: найвищий
   ipa: /najʋˈɪʃt͡ʃɪj/
-  translation: ''
+  translation: the highest
   pos: adj
 - lemma: найвідоміший
   ipa: /najʋidˈɔmiʃɪj/
-  translation: ''
+  translation: the most famous
   pos: adj
 - lemma: найгарніший
   ipa: /najɦarnˈiʃɪj/
-  translation: ''
+  translation: the most beautiful
   pos: adj
 - lemma: найгірший
   ipa: /najɦˈirʃɪj/
-  translation: ''
+  translation: the worst
   pos: adj
 - lemma: найдивовижніший
   ipa: /najdɪʋɔʋɪʒniʃɪj/
-  translation: ''
+  translation: the most amazing
   pos: adj
 - lemma: найдовший
   ipa: /najdˈɔʋʃɪj/
-  translation: ''
+  translation: the longest
   pos: adj
 - lemma: найдорожчий
   ipa: /najdɔrˈɔʒt͡ʃɪj/
-  translation: ''
+  translation: the most expensive
   pos: adj
 - lemma: найкоротший
   ipa: /najkɔrˈɔtʃɪj/
-  translation: ''
+  translation: the shortest
   pos: adj
 - lemma: найкрасивіший
   ipa: /najkrasˈɪʋiʃɪj/
-  translation: ''
+  translation: the most beautiful
   pos: adj
 - lemma: найкраще
   ipa: /najkrˈaʃt͡ʃɛ/
-  translation: ''
+  translation: best (adv), the best thing
   pos: adv
 - lemma: найпростіше
   ipa: /najprɔstˈiʃɛ/
-  translation: ''
+  translation: the simplest (adv), easiest thing
   pos: adv
 - lemma: найрозумніший
   ipa: /najrɔzumnˈiʃɪj/
-  translation: ''
+  translation: the smartest
   pos: adj
 - lemma: найсмачніший
   ipa: /najsmat͡ʃnˈiʃɪj/
-  translation: ''
+  translation: the tastiest
   pos: adj
 - lemma: найстарший
   ipa: /najstˈarʃɪj/
-  translation: ''
-  pos: adj
-- lemma: найстаріший
-  ipa: /najstarˈiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: найцікавіший
-  ipa: /najt͡sikaʋˈiʃɪj/
-  translation: ''
+  translation: the oldest, eldest
   pos: adj
 - lemma: найшвидший
   ipa: /najʃʋˈɪdʃɪj/
-  translation: ''
+  translation: the fastest
   pos: adj
 - lemma: ніл
   ipa: /nil/
-  translation: ''
+  translation: Nile
   pos: noun
   gender: m
 - lemma: оборона
   ipa: /ɔbɔrˈɔna/
-  translation: ''
+  translation: defense
+  pos: noun
+  gender: f
+- lemma: пора
+  ipa: /pɔra/
+  translation: time, season
   pos: noun
   gender: f
 - lemma: рекорд
   ipa: /rɛkˈɔrd/
-  translation: ''
+  translation: record
   pos: noun
-- lemma: рішення
-  ipa: /rˈiʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: світа
   ipa: /sʋˈita/
   translation: ''
@@ -180,18 +149,18 @@ items:
   gender: f
 - lemma: світовий
   ipa: /sʋitɔʋˈɪj/
-  translation: ''
+  translation: world (adj), global
   pos: adj
 - lemma: талановитий
   ipa: /talanɔʋˈɪtɪj/
-  translation: ''
+  translation: talented
   pos: adj
 - lemma: формула
   ipa: /fˈɔrmula/
-  translation: ''
+  translation: formula
   pos: noun
   gender: f
 - lemma: хіт
   ipa: /xit/
-  translation: ''
+  translation: hit (song/success)
   pos: noun

@@ -4,105 +4,53 @@ version: '2.0'
 items:
 - lemma: автівка
   ipa: /aʋtiʋka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вказівка
-  ipa: /ʋkazˈiʋka/
-  translation: ''
+  translation: car (informal)
   pos: noun
   gender: f
 - lemma: вуличка
   ipa: /ʋˈulɪt͡ʃka/
-  translation: ''
+  translation: small street, alley
   pos: noun
-- lemma: відвідувач
-  ipa: /ʋidʋˈiduʋat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: відстань
-  ipa: /ʋˈidstanʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: десятихвилинний
   ipa: /dɛsjatɪxʋɪlˈɪnnɪj/
-  translation: ''
+  translation: ten-minute (adj)
   pos: adj
-- lemma: житель
-  ipa: /ʒˈɪtɛlʲ/
-  translation: ''
-  pos: noun
-- lemma: звідси
-  ipa: /zʋˈidsɪ/
-  translation: ''
-  pos: pron
-- lemma: знавець
-  ipa: /znaʋˈɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: корисніший
   ipa: /kɔrˈɪsniʃɪj/
-  translation: ''
+  translation: more useful (adj)
   pos: adj
-- lemma: кудись
-  ipa: /kudˈɪsʲ/
-  translation: ''
-  pos: pron
 - lemma: мікрорайон
   ipa: /mikrɔrajˈɔn/
-  translation: ''
+  translation: microdistrict/neighborhood
   pos: noun
-- lemma: найближчий
-  ipa: /najblˈɪʒt͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: найтаємничіший
   ipa: /najtajɛmnˈɪt͡ʃiʃɪj/
-  translation: ''
+  translation: the most mysterious
   pos: adj
 - lemma: напроти
   ipa: /naprˈɔtɪ/
-  translation: ''
+  translation: opposite
   pos: adv
-- lemma: незалежний
-  ipa: /nɛzalˈɛʒnɪj/
-  translation: ''
-  pos: adj
 - lemma: орієнтир
   ipa: /ɔrijɛntˈɪr/
-  translation: ''
+  translation: landmark, guide
   pos: noun
-- lemma: повертати
-  ipa: /pɔʋɛrtˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: покладатися
   ipa: /pɔkladˈatɪsja/
-  translation: ''
+  translation: to rely on
   pos: verb
-- lemma: покроковий
-  ipa: /pɔkrˈɔkɔʋɪj/
-  translation: ''
-  pos: adj
 - lemma: поліціянт
   ipa: /pɔlit͡siˈjant/
-  translation: ''
+  translation: police officer
   pos: noun
   gender: m
 - lemma: приблизний
   ipa: /prɪblˈɪznɪj/
-  translation: ''
+  translation: approximate
   pos: adj
-- lemma: пізнати
-  ipa: /piznˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: скляний
   ipa: /skljanˈɪj/
-  translation: ''
+  translation: glass (adj)
   pos: adj
 - lemma: сіра
   ipa: /sˈira/

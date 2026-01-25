@@ -2,224 +2,125 @@ module: 29-i-think-that
 level: A2
 version: '2.0'
 items:
-- lemma: аргумент
-  ipa: /arɦumˈɛnt/
-  translation: ''
-  pos: noun
 - lemma: баланс
   ipa: /balˈans/
-  translation: ''
+  translation: balance
   pos: noun
   gender: m
 - lemma: безумовно
   ipa: /bɛzumˈɔʋnɔ/
-  translation: ''
+  translation: certainly, absolutely
   pos: adv
-- lemma: важливіший
-  ipa: /ʋaʒlˈɪʋiʃɪj/
-  translation: ''
-  pos: adj
 - lemma: ввічливіший
   ipa: /ʋʋˈit͡ʃlɪʋiʃɪj/
-  translation: ''
+  translation: more polite
   pos: adj
 - lemma: вигідний
   ipa: /ʋɪɦidnɪj/
-  translation: ''
+  translation: profitable, advantageous
   pos: adj
 - lemma: виділяти
   ipa: /ʋɪdilˈjatɪ/
-  translation: ''
+  translation: to highlight, to allocate (imperfective)
   pos: verb
 - lemma: влучно
   ipa: /ʋlˈut͡ʃnɔ/
-  translation: ''
+  translation: aptly, accurately
   pos: adv
 - lemma: вставний
   ipa: /ʋstaʋnˈɪj/
-  translation: ''
+  translation: parenthetical, inset
   pos: adj
-- lemma: дискусія
-  ipa: /dɪskˈusija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: ділитися
   ipa: /dilˈɪtɪsja/
-  translation: ''
+  translation: to be divided, to share (oneself)
   pos: verb
 - lemma: дієприкметник
   ipa: /dijɛprɪkmˈɛtnɪk/
-  translation: ''
+  translation: participle
   pos: noun
-- lemma: елегантний
-  ipa: /ɛlɛɦˈantnɪj/
-  translation: ''
-  pos: adj
 - lemma: забуватися
   ipa: /zabuʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: зберегти
-  ipa: /zbɛrɛɦtˈɪ/
-  translation: ''
+  translation: to be forgotten
   pos: verb
 - lemma: згода
   ipa: /zɦˈɔda/
-  translation: ''
+  translation: consent, agreement
   pos: noun
   gender: f
 - lemma: зір
   ipa: /zir/
-  translation: ''
+  translation: sight, vision
   pos: noun
   gender: m
-- lemma: категоричний
-  ipa: /katɛɦɔrˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
 - lemma: констатувати
   ipa: /kɔnstatuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: магічний
-  ipa: /maɦˈit͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: навчатися
-  ipa: /naʋt͡ʃˈatɪsja/
-  translation: ''
+  translation: to state, to establish
   pos: verb
 - lemma: найкрасивіше
   ipa: /najkrasˈɪʋiʃɛ/
-  translation: ''
+  translation: the most beautifully
   pos: adv
 - lemma: незгода
   ipa: /nɛzɦˈɔda/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: обмін
-  ipa: /ˈɔbmin/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: освіта
-  ipa: /ɔsʋˈita/
-  translation: ''
+  translation: disagreement
   pos: noun
   gender: f
 - lemma: очевидно
   ipa: /ɔt͡ʃɛʋˈɪdnɔ/
-  translation: ''
+  translation: obviously, apparently
   pos: adv
 - lemma: переконання
   ipa: /pɛrɛkɔnˈannja/
-  translation: ''
+  translation: conviction, belief
   pos: noun
 - lemma: переконливий
   ipa: /pɛrɛkˈɔnlɪʋɪj/
-  translation: ''
+  translation: convincing
   pos: adj
-- lemma: перетворити
-  ipa: /pɛrɛtʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: погляд
   ipa: /pˈɔɦljad/
-  translation: ''
+  translation: view, glance, look
   pos: noun
   gender: m
 - lemma: погоджуватися
   ipa: /pɔɦˈɔdʒuʋatɪsja/
-  translation: ''
+  translation: to agree (imperfective)
   pos: verb
-- lemma: погодитися
-  ipa: /pɔɦɔdɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: позиція
-  ipa: /pɔzˈɪt͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пом'якшувати
   ipa: /pɔmˈjakʃuʋatɪ/
-  translation: ''
+  translation: to soften, to mitigate
   pos: verb
-- lemma: поєднання
-  ipa: /pɔjɛdnˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: правий
   ipa: /praʋɪj/
-  translation: ''
+  translation: right (direction), correct
   pos: adj
 - lemma: пропускати
   ipa: /prɔpuskˈatɪ/
-  translation: ''
+  translation: to skip, to let through
   pos: verb
-- lemma: підготуватися
-  ipa: /pidɦɔtuʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: підрядний
-  ipa: /pidrˈjadnɪj/
-  translation: ''
-  pos: adj
 - lemma: реагувати
   ipa: /rɛaɦuʋˈatɪ/
-  translation: ''
+  translation: to react
   pos: verb
-- lemma: спокій
-  ipa: /spˈɔkij/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: співрозмовник
-  ipa: /spiʋrɔzmˈɔʋnɪk/
-  translation: ''
-  pos: noun
 - lemma: стосунок
   ipa: /stɔsˈunɔk/
-  translation: ''
+  translation: relationship, connection
   pos: noun
 - lemma: структурний
   ipa: /struktˈurnɪj/
-  translation: ''
+  translation: structural
   pos: adj
-- lemma: сумнів
-  ipa: /sˈumniʋ/
-  translation: ''
-  pos: noun
 - lemma: тиша
   ipa: /tˈɪʃa/
-  translation: ''
+  translation: silence, quiet
   pos: noun
   gender: f
-- lemma: точок
-  ipa: /tˈɔt͡ʃɔk/
-  translation: ''
-  pos: noun
-- lemma: універсальний
-  ipa: /uniʋɛrsˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: формулювати
   ipa: /fɔrmuljuʋˈatɪ/
-  translation: ''
+  translation: to formulate, to state
   pos: verb
-- lemma: фундамент
-  ipa: /fundˈamɛnt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: цінуватися
   ipa: /t͡sinuʋˈatɪsja/
-  translation: ''
+  translation: to be valued
   pos: verb
-- lemma: чітко
-  ipa: /t͡ʃˈitkɔ/
-  translation: ''
-  pos: adv

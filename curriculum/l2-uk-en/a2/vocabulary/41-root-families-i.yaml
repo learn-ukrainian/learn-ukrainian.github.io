@@ -4,67 +4,36 @@ version: '2.0'
 items:
 - lemma: автограф
   ipa: /aʋtˈɔɦraf/
-  translation: ''
+  translation: autograph
   pos: noun
   gender: m
 - lemma: ага
   ipa: /aɦˈa/
-  translation: ''
+  translation: aha, I see
   pos: part
-- lemma: базуватися
-  ipa: /bazuʋˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: бач-
   ipa: /bat͡ʃ-/
   translation: ''
   pos: noun
 - lemma: бачення
   ipa: /bˈat͡ʃɛnnja/
-  translation: ''
+  translation: vision, perception
   pos: noun
   gender: n
-- lemma: блок
-  ipa: /blɔk/
-  translation: ''
-  pos: noun
 - lemma: блокнот
   ipa: /blɔknˈɔt/
-  translation: ''
+  translation: notebook
   pos: noun
   gender: m
 - lemma: вгадати
   ipa: /ʋɦadˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: виглядати
-  ipa: /ʋɪɦljadˈatɪ/
-  translation: ''
+  translation: to guess
   pos: verb
 - lemma: видовище
   ipa: /ʋɪdˈɔʋɪʃt͡ʃɛ/
-  translation: ''
+  translation: spectacle, sight
   pos: noun
   gender: n
-- lemma: внесок
-  ipa: /ʋnˈɛsɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: відгук
-  ipa: /ʋˈidɦuk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: відхід
-  ipa: /ʋidxˈid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: візуальний
-  ipa: /ʋizuˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: гляд-
   ipa: /ɦljad-/
   translation: ''
@@ -75,47 +44,32 @@ items:
   pos: noun
 - lemma: ефект
   ipa: /ɛfˈɛkt/
-  translation: ''
+  translation: effect
   pos: noun
 - lemma: замовний
   ipa: /zamˈɔʋnɪj/
-  translation: ''
+  translation: ordered, customized
   pos: adj
-- lemma: занурення
-  ipa: /zanˈurɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: запис
   ipa: /zˈapɪs/
-  translation: ''
+  translation: recording, entry
   pos: noun
 - lemma: західний
   ipa: /zaxidnɪj/
-  translation: ''
+  translation: western
   pos: adj
 - lemma: зачинений
   ipa: /zat͡ʃˈɪnɛnɪj/
-  translation: ''
+  translation: closed
   pos: adj
-- lemma: знак
-  ipa: /znak/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: контракт
-  ipa: /kɔntrˈakt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: мандрівка
   ipa: /mandrˈiʋka/
-  translation: ''
+  translation: trip, journey
   pos: noun
   gender: f
 - lemma: мандрівник
   ipa: /mandrˈiʋnɪk/
-  translation: ''
+  translation: traveler
   pos: noun
 - lemma: менникнути
   ipa: /mɛnnɪknutɪ/
@@ -123,21 +77,21 @@ items:
   pos: verb
 - lemma: надходження
   ipa: /nadxˈɔdʒɛnnja/
-  translation: ''
+  translation: arrival, receipt, income
   pos: noun
   gender: n
 - lemma: наперед
   ipa: /napɛrˈɛd/
-  translation: ''
+  translation: in advance
   pos: adv
 - lemma: напис
   ipa: /nˈapɪs/
-  translation: ''
+  translation: inscription, sign
   pos: noun
   gender: m
 - lemma: неточний
   ipa: /nɛtˈɔt͡ʃnɪj/
-  translation: ''
+  translation: inaccurate
   pos: adj
 - lemma: о-
   ipa: /ɔ-/
@@ -145,206 +99,103 @@ items:
   pos: noun
 - lemma: обрій
   ipa: /ˈɔbrij/
-  translation: ''
+  translation: horizon, skyline
   pos: noun
   gender: m
 - lemma: охоронець
   ipa: /ɔxɔrˈɔnɛt͡sʲ/
-  translation: ''
+  translation: security guard
   pos: noun
   gender: m
-- lemma: пам'ять
-  ipa: /pˈamjatʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пере-'
   ipa: /pɛrɛ-/
   translation: ''
   pos: noun
-- lemma: передбачення
-  ipa: /pɛrɛdbˈat͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: перемагати
   ipa: /pɛrɛmaɦˈatɪ/
-  translation: ''
+  translation: to win, to defeat
   pos: verb
 - lemma: переплатити
   ipa: /pɛrɛplatˈɪtɪ/
-  translation: ''
+  translation: to overpay
   pos: verb
 - lemma: перепрошувати
   ipa: /pɛrɛprˈɔʃuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: перехід
-  ipa: /pɛrɛxˈid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: перечитати
-  ipa: /pɛrɛt͡ʃɪtˈatɪ/
-  translation: ''
+  translation: to apologize, to ask again
   pos: verb
 - lemma: пис
   ipa: /pɪs/
   translation: ''
   pos: noun
-- lemma: пис-
-  ipa: /pɪs-/
-  translation: ''
-  pos: noun
-- lemma: письмо
-  ipa: /pɪsʲmˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: позначка
   ipa: /pˈɔznat͡ʃka/
-  translation: ''
+  translation: mark, label
   pos: noun
-- lemma: поставити
-  ipa: /pɔstˈaʋɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: поширення
   ipa: /pɔʃˈɪrɛnnja/
-  translation: ''
+  translation: spreading, distribution
   pos: noun
   gender: n
-- lemma: при-
-  ipa: /prɪ-/
-  translation: ''
-  pos: noun
-- lemma: прихід
-  ipa: /prɪxˈid/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: пропис
   ipa: /prˈɔpɪs/
-  translation: ''
+  translation: copybook, cursive
   pos: noun
   gender: m
 - lemma: підземний
   ipa: /pidzˈɛmnɪj/
-  translation: ''
+  translation: underground
   pos: adj
-- lemma: підпис
-  ipa: /pˈidpɪs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пішохід
-  ipa: /piʃɔxˈid/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рецензія
   ipa: /rɛt͡sˈɛnzija/
-  translation: ''
+  translation: review, critique
   pos: noun
   gender: f
 - lemma: розбити
   ipa: /rɔzbˈɪtɪ/
-  translation: ''
+  translation: to break, to smash
   pos: verb
-- lemma: розпис
-  ipa: /rˈɔzpɪs/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: розписування
   ipa: /rɔzpˈɪsuʋannja/
-  translation: ''
+  translation: allocating, painting
   pos: noun
   gender: n
 - lemma: рукопис
   ipa: /rukˈɔpɪs/
-  translation: ''
+  translation: manuscript
   pos: noun
   gender: m
 - lemma: слабкий
   ipa: /slabkˈɪj/
-  translation: ''
+  translation: weak
   pos: adj
-- lemma: словник
-  ipa: /slɔʋnˈɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сприйняття
-  ipa: /sprɪjnˈjattja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сторона
-  ipa: /stɔrɔnˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: супер-корень
   ipa: /sˈupɛr-kɔrɛnʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: схожий
-  ipa: /sxˈɔʒɪj/
-  translation: ''
-  pos: adj
 - lemma: схід
   ipa: /sxid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: східний
-  ipa: /sxˈidnɪj/
-  translation: ''
-  pos: adj
-- lemma: сценарій
-  ipa: /st͡sɛnˈarij/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сюжет
-  ipa: /sjuʒˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: тест
-  ipa: /tɛst/
-  translation: ''
+  translation: East, sunrise
   pos: noun
   gender: m
 - lemma: унизу
   ipa: /unɪzˈu/
-  translation: ''
+  translation: below, at the bottom
   pos: adv
 - lemma: фіксування
   ipa: /fiksuʋˈannja/
-  translation: ''
+  translation: fixing, recording
   pos: noun
   gender: n
 - lemma: ходьба
   ipa: /xɔdʲbˈa/
-  translation: ''
+  translation: walking
   pos: noun
   gender: f
-- lemma: хід
-  ipa: /xid/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: хід-
   ipa: /xid-/
   translation: ''
   pos: noun
-- lemma: чергуватися
-  ipa: /t͡ʃɛrɦuʋˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: чит
   ipa: /t͡ʃɪt/
   translation: ''

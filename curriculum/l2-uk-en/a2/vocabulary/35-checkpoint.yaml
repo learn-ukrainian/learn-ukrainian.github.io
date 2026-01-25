@@ -2,28 +2,19 @@ module: 35-checkpoint
 level: A2
 version: '2.0'
 items:
-- lemma: величезний
-  ipa: /ʋɛlɪt͡ʃˈɛznɪj/
-  translation: ''
-  pos: adj
 - lemma: зв'язати
   ipa: /zʋjazˈatɪ/
-  translation: ''
+  translation: to tie, to link
   pos: verb
-- lemma: лікування
-  ipa: /likuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: оглядати
   ipa: /ɔɦljadˈatɪ/
-  translation: ''
+  translation: to review, to inspect
   pos: verb
 - lemma: уважний
   ipa: /uʋˈaʒnɪj/
-  translation: ''
+  translation: attentive, careful
   pos: adj
 - lemma: уперед
   ipa: /upɛrˈɛd/
-  translation: ''
+  translation: forward
   pos: adv

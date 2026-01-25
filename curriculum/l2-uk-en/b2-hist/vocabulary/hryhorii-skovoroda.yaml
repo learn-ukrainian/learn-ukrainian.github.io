@@ -1,0 +1,104 @@
+module: hryhorii-skovoroda
+level: B2
+version: '2.0'
+items:
+  - lemma: сродна праця
+    ipa: /ˈsrɔdnɐ ˈprat͡sʲɐ/
+    translation: affinity labor / natural calling
+    pos: noun phrase
+    gender: f
+  - lemma: мандрівний філософ
+    ipa: /mɐndrʲiʋˈnɪi̯ fʲiˈlɔsof/
+    translation: wandering philosopher
+    pos: noun phrase
+    gender: m
+  - lemma: самопізнання
+    ipa: /sɐmopizˈnanʲːɐ/
+    translation: self-knowledge
+    pos: noun
+    gender: n
+  - lemma: байка
+    ipa: /ˈbai̯kɐ/
+    translation: fable
+    pos: noun
+    gender: f
+  - lemma: афоризм
+    ipa: /ɐfoˈrɪzm/
+    translation: aphorism
+    pos: noun
+    gender: m
+  - lemma: мікрокосм
+    ipa: /mikroˈkɔsm/
+    translation: microcosm
+    pos: noun
+    gender: m
+  - lemma: макрокосм
+    ipa: /mɐkroˈkɔsm/
+    translation: macrocosm
+    pos: noun
+    gender: m
+  - lemma: щастя
+    ipa: /ˈʃt͡ʃasʲtʲɐ/
+    translation: happiness
+    pos: noun
+    gender: n
+  - lemma: свобода
+    ipa: /sʋoˈbɔdɐ/
+    translation: freedom
+    pos: noun
+    gender: f
+  - lemma: серце
+    ipa: /ˈsɛrt͡se/
+    translation: heart (metaphorical)
+    pos: noun
+    gender: n
+  - lemma: істина
+    ipa: /ˈistɪnɐ/
+    translation: truth
+    pos: noun
+    gender: f
+  - lemma: духовність
+    ipa: /duˈxoʋnʲisʲtʲ/
+    translation: spirituality
+    pos: noun
+    gender: f
+  - lemma: колегіум
+    ipa: /koˈlɛɦʲijum/
+    translation: collegium
+    pos: noun
+    gender: m
+  - lemma: усамітнення
+    ipa: /usɐˈmʲitnenʲːɐ/
+    translation: solitude
+    pos: noun
+    gender: n
+  - lemma: мудрість
+    ipa: /ˈmudrʲisʲtʲ/
+    translation: wisdom
+    pos: noun
+    gender: f
+  - lemma: совість
+    ipa: /ˈsɔʋisʲtʲ/
+    translation: conscience
+    pos: noun
+    gender: f
+  - lemma: нерівна рівність
+    ipa: /neˈrʲiʋnɐ ˈrʲiʋnʲisʲtʲ/
+    translation: unequal equality
+    pos: noun phrase
+    gender: f
+  - lemma: суєта
+    ipa: /sujeˈta/
+    translation: vanity / futility
+    pos: noun
+    gender: f
+  - lemma: спокуса
+    ipa: /spoˈkusɐ/
+    translation: temptation
+    pos: noun
+    gender: f
+  - lemma: вічність
+    ipa: /ˈʋit͡ʃnʲisʲtʲ/
+    translation: eternity
+    pos: noun
+    gender: f

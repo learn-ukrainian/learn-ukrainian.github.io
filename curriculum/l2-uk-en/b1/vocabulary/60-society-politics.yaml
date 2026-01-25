@@ -4,193 +4,193 @@ version: '2.0'
 items:
 - lemma: авторитаризм
   ipa: /aʋtɔrɪtarˈɪzm/
-  translation: ''
+  translation: authoritarianism
   pos: noun
   gender: m
 - lemma: активізм
   ipa: /aktɪʋˈizm/
-  translation: ''
+  translation: activism
   pos: noun
   gender: m
 - lemma: активіст
   ipa: /aktɪʋˈist/
-  translation: ''
+  translation: activist
   pos: noun
 - lemma: верховенство
   ipa: /ʋɛrxɔʋˈɛnstʋɔ/
-  translation: ''
+  translation: supremacy, rule
   pos: noun
   gender: n
 - lemma: вимагаючи
   ipa: /ʋɪmaɦˈajut͡ʃɪ/
-  translation: ''
+  translation: demanding
   pos: verb
 - lemma: виниклий
   ipa: /ʋˈɪnɪklɪj/
-  translation: ''
+  translation: arisen
   pos: adj
 - lemma: волонтер
   ipa: /ʋɔlɔntˈɛr/
-  translation: ''
+  translation: volunteer
   pos: noun
 - lemma: вторгнення
   ipa: /ʋtˈɔrɦnɛnnja/
-  translation: ''
+  translation: invasion
   pos: noun
   gender: n
 - lemma: гетьман
   ipa: /ɦˈɛtʲman/
-  translation: ''
+  translation: hetman (leader)
   pos: noun
   gender: m
 - lemma: голосування
   ipa: /ɦɔlɔsuʋˈannja/
-  translation: ''
+  translation: voting
   pos: noun
   gender: n
 - lemma: голосувати
   ipa: /ɦɔlɔsuʋˈatɪ/
-  translation: ''
+  translation: to vote
   pos: verb
 - lemma: граніт
   ipa: /ɦranˈit/
-  translation: ''
+  translation: granite
   pos: noun
   gender: m
 - lemma: громадянство
   ipa: /ɦrɔmadˈjanstʋɔ/
-  translation: ''
+  translation: citizenship
   pos: noun
   gender: n
 - lemma: громадянський
   ipa: /ɦrɔmadˈjansʲkɪj/
-  translation: ''
+  translation: civil, civic
   pos: adj
 - lemma: гідність
   ipa: /ɦˈidnistʲ/
-  translation: ''
+  translation: dignity
   pos: noun
   gender: f
 - lemma: демократичний
   ipa: /dɛmɔkratˈɪt͡ʃnɪj/
-  translation: ''
+  translation: democratic
   pos: adj
 - lemma: демократія
   ipa: /dɛmɔkrˈatija/
-  translation: ''
+  translation: democracy
   pos: noun
   gender: f
 - lemma: демонстрація
   ipa: /dɛmɔnstrˈat͡sija/
-  translation: ''
+  translation: demonstration
   pos: noun
   gender: f
 - lemma: держава
   ipa: /dˈɛrʒaʋa/
-  translation: ''
+  translation: state, country
   pos: noun
   gender: f
 - lemma: доводячи
   ipa: /dɔʋˈɔdjat͡ʃɪ/
-  translation: ''
+  translation: proving, leading to
   pos: verb
 - lemma: зародження
   ipa: /zarˈɔdʒɛnnja/
-  translation: ''
+  translation: conception, birth
   pos: noun
   gender: n
 - lemma: застосунок
   ipa: /zastɔsunɔk/
-  translation: ''
+  translation: application, app
   pos: noun
   gender: m
 - lemma: засідати
   ipa: /zasidˈatɪ/
-  translation: ''
+  translation: to sit (in session)
   pos: verb
 - lemma: здобуття
   ipa: /zdɔbuttˈja/
-  translation: ''
+  translation: gain, acquisition, achievement
   pos: noun
   gender: n
 - lemma: зміняти
   ipa: /zminˈjatɪ/
-  translation: ''
+  translation: to change, to exchange
   pos: verb
 - lemma: контролювати
   ipa: /kɔntrɔljuʋˈatɪ/
-  translation: ''
+  translation: to control
   pos: verb
 - lemma: мирний
   ipa: /mˈɪrnɪj/
-  translation: ''
+  translation: peaceful
   pos: adj
 - lemma: наголосити
   ipa: /naɦɔlɔsˈɪtɪ/
-  translation: ''
+  translation: to emphasize
   pos: verb
 - lemma: населяти
   ipa: /nasɛlˈjatɪ/
-  translation: ''
+  translation: to inhabit, to populate
   pos: verb
 - lemma: небачений
   ipa: /nɛbˈat͡ʃɛnɪj/
-  translation: ''
+  translation: unseen, unprecedented
   pos: adj
 - lemma: недосконалий
   ipa: /nɛdɔskɔnˈalɪj/
-  translation: ''
+  translation: imperfect
   pos: adj
 - lemma: несправедливість
   ipa: /nɛspraʋɛdlˈɪʋistʲ/
-  translation: ''
+  translation: injustice
   pos: noun
   gender: f
 - lemma: неурядовий
   ipa: /nɛurjadˈɔʋɪj/
-  translation: ''
+  translation: non-governmental
   pos: adj
 - lemma: об'єднання
   ipa: /ɔbjɛdnannja/
-  translation: ''
+  translation: union, association
   pos: noun
   gender: n
 - lemma: об'єднатися
   ipa: /ɔbjɛdnˈatɪsja/
-  translation: ''
+  translation: to unite (oneself)
   pos: verb
 - lemma: опозиційний
   ipa: /ɔpɔzɪt͡sˈijnɪj/
-  translation: ''
+  translation: opposition (adj)
   pos: adj
 - lemma: орган
   ipa: /ɔrɦan/
-  translation: ''
+  translation: organ, authority
   pos: noun
 - lemma: передвиборчий
   ipa: /pɛrɛdʋˈɪbɔrt͡ʃɪj/
-  translation: ''
+  translation: pre-election (adj)
   pos: adj
 - lemma: петиція
   ipa: /pɛtˈɪt͡sija/
-  translation: ''
+  translation: petition
   pos: noun
   gender: f
 - lemma: повномасштабний
   ipa: /pɔʋnɔmasʃtˈabnɪj/
-  translation: ''
+  translation: full-scale
   pos: adj
 - lemma: повноцінно
   ipa: /pɔʋnɔt͡sˈinnɔ/
-  translation: ''
+  translation: fully, completely
   pos: adv
 - lemma: помаранчевий
   ipa: /pɔmarˈant͡ʃɛʋɪj/
-  translation: ''
+  translation: orange (adj)
   pos: adj
 - lemma: правовий
   ipa: /praʋɔʋˈɪj/
-  translation: ''
+  translation: legal
   pos: adj
 - lemma: прем'єр-
   ipa: /prɛmˈjɛr-/
@@ -198,69 +198,69 @@ items:
   pos: noun
 - lemma: прем'єр-міністр
   ipa: /prɛmˈjɛr-ministr/
-  translation: ''
+  translation: Prime Minister
   pos: noun
   gender: m
 - lemma: прозорість
   ipa: /prɔzˈɔristʲ/
-  translation: ''
+  translation: transparency
   pos: noun
   gender: f
 - lemma: просвітництво
   ipa: /prɔsʋˈitnɪt͡stʋɔ/
-  translation: ''
+  translation: Enlightenment
   pos: noun
   gender: n
 - lemma: просувати
   ipa: /prɔsuʋˈatɪ/
-  translation: ''
+  translation: to promote, to push forward
   pos: verb
 - lemma: протистояти
   ipa: /prɔtɪstɔˈjatɪ/
-  translation: ''
+  translation: to resist, to withstand
   pos: verb
 - lemma: підвалина
   ipa: /pidʋˈalɪna/
-  translation: ''
+  translation: foundation, basis
   pos: noun
   gender: f
 - lemma: розбудова
   ipa: /rɔzbudˈɔʋa/
-  translation: ''
+  translation: construction, development
   pos: noun
   gender: f
 - lemma: розколотий
   ipa: /rɔzkˈɔlɔtɪj/
-  translation: ''
+  translation: split, cracked
   pos: adj
 - lemma: роками
   ipa: /rˈɔkamɪ/
-  translation: ''
+  translation: for years
   pos: adv
 - lemma: свідомий
   ipa: /sʋidˈɔmɪj/
-  translation: ''
+  translation: conscious, aware
   pos: adj
 - lemma: сесія
   ipa: /sˈɛsija/
-  translation: ''
+  translation: session (exam/meeting)
   pos: noun
 - lemma: слідкування
   ipa: /slidkuʋˈannja/
-  translation: ''
+  translation: tracking, monitoring
   pos: noun
   gender: n
 - lemma: слідкувати
   ipa: /slidkuʋˈatɪ/
-  translation: ''
+  translation: to monitor, to track, to watch
   pos: verb
 - lemma: спрощувати
   ipa: /sprˈɔʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to simplify
   pos: verb
 - lemma: фальсифікація
   ipa: /falʲsɪfikˈat͡sija/
-  translation: ''
+  translation: falsification
   pos: noun
 - lemma: чеснути
   ipa: /t͡ʃɛsnˈutɪ/
@@ -268,6 +268,6 @@ items:
   pos: verb
 - lemma: інтелігенція
   ipa: /intɛliɦˈɛnt͡sija/
-  translation: ''
+  translation: intelligentsia
   pos: noun
   gender: f

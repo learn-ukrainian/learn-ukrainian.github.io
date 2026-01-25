@@ -1,0 +1,102 @@
+module: kost-hordiyenko-sich
+level: B2
+version: '2.0'
+items:
+  - lemma: кошовий отаман
+    ipa: /koʃoˈʋɪi̯ otoˈman/
+    translation: koshovyi otaman (head of the Sich)
+    pos: noun
+    gender: m
+  - lemma: вольниця
+    ipa: /ˈʋɔlʲnɪt͡sʲɐ/
+    translation: free community / liberty
+    pos: noun
+    gender: f
+  - lemma: непримиренність
+    ipa: /neprɪmɪˈrɛnʲːisʲtʲ/
+    translation: irreconcilability / uncompromisingness
+    pos: noun
+    gender: f
+  - lemma: деспотія
+    ipa: /despoˈtʲijɐ/
+    translation: despotism
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /ɐu̯toˈnɔmʲijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: звичаєве право
+    ipa: /zʋɪt͡ʃɐˈjɛʋe ˈpraʋo/
+    translation: customary law
+    pos: noun
+  - lemma: республіка
+    ipa: /resˈpublʲikɐ/
+    translation: republic
+    pos: noun
+    gender: f
+  - lemma: самодержавство
+    ipa: /sɐmodɛrˈʒau̯stʋo/
+    translation: autocracy / absolutism
+    pos: noun
+    gender: n
+  - lemma: холоп
+    ipa: /xoˈlɔp/
+    translation: serf / slave / kholop
+    pos: noun
+    gender: m
+  - lemma: підступність
+    ipa: /pidˈstupnʲisʲtʲ/
+    translation: insidiousness / treachery
+    pos: noun
+    gender: f
+  - lemma: вигнання
+    ipa: /ʋɪˈɦnanʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: протекція
+    ipa: /protekˈt͡sʲijɐ/
+    translation: protection / patronage
+    pos: noun
+    gender: f
+  - lemma: договір
+    ipa: /doˈɦoʋir/
+    translation: treaty / contract
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /leɦiˈtɪmnʲisʲtʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: суб’єктність
+    ipa: /suˈbjɛktnʲisʲtʲ/
+    translation: subjectivity / agency
+    pos: noun
+    gender: f
+  - lemma: терор
+    ipa: /teˈrɔr/
+    translation: terror
+    pos: noun
+    gender: m
+  - lemma: каральна експедиція
+    ipa: /kɐˈralʲnɐ ekspɛˈdɪt͡sʲijɐ/
+    translation: punitive expedition
+    pos: noun
+  - lemma: незламність
+    ipa: /neˈzlamnʲisʲtʲ/
+    translation: resilience / indomitability
+    pos: noun
+    gender: f
+  - lemma: соборність
+    ipa: /soˈbɔrnʲisʲtʲ/
+    translation: unity / sobornist
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪnɐ/
+    translation: heritage / legacy
+    pos: noun
+    gender: f

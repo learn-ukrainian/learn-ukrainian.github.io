@@ -8,54 +8,24 @@ items:
   pos: verb
 - lemma: вбачати
   ipa: /ʋbat͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: відійти
-  ipa: /ʋidijtˈɪ/
-  translation: ''
+  translation: to see, to perceive
   pos: verb
 - lemma: ик
   ipa: /ɪk/
   translation: ''
   pos: noun
-- lemma: неможливо
-  ipa: /nɛmɔʒlˈɪʋɔ/
-  translation: ''
-  pos: adv
-- lemma: писання
-  ipa: /pɪsˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: послухати
-  ipa: /pɔsluxatɪ/
-  translation: ''
-  pos: verb
-- lemma: підручник
-  ipa: /pidrˈut͡ʃnɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: робота
-  ipa: /rɔbˈɔta/
-  translation: ''
-  pos: noun
-- lemma: розійтися
-  ipa: /rɔzijtˈɪsja/
-  translation: ''
-  pos: verb
 - lemma: руч
   ipa: /rut͡ʃ/
   translation: ''
   pos: noun
 - lemma: сильність
   ipa: /sɪlʲnistʲ/
-  translation: ''
+  translation: strength
   pos: noun
   gender: f
 - lemma: спів
   ipa: /spiʋ/
-  translation: ''
+  translation: singing
   pos: noun
   gender: m
 - lemma: ход-
@@ -69,6 +39,6 @@ items:
   gender: f
 - lemma: інсайт
   ipa: /insˈajt/
-  translation: ''
+  translation: insight
   pos: noun
   gender: m

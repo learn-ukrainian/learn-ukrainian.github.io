@@ -4,56 +4,56 @@ version: '2.0'
 items:
 - lemma: болячий
   ipa: /bɔlˈjat͡ʃɪj/
-  translation: ''
+  translation: hurting
   pos: adj
 - lemma: весільний
   ipa: /ʋɛsˈilʲnɪj/
-  translation: ''
+  translation: wedding (adj)
   pos: adj
 - lemma: взаємини
   ipa: /ʋzaˈjɛmɪnɪ/
-  translation: ''
+  translation: relationships
   pos: noun
 - lemma: взаємний
   ipa: /ʋzaˈjɛmnɪj/
-  translation: ''
+  translation: mutual
   pos: adj
 - lemma: викуп
   ipa: /ʋˈɪkup/
-  translation: ''
+  translation: ransom, buyout
   pos: noun
   gender: m
 - lemma: виносити
   ipa: /ʋɪnɔsɪtɪ/
-  translation: ''
+  translation: to carry out, to endure (imperfective)
   pos: verb
 - lemma: вирішуватися
   ipa: /ʋɪrˈiʃuʋatɪsja/
-  translation: ''
+  translation: to be solved
   pos: verb
 - lemma: вінок
   ipa: /ʋinˈɔk/
-  translation: ''
+  translation: wreath
   pos: noun
   gender: m
 - lemma: вінчання
   ipa: /ʋint͡ʃˈannja/
-  translation: ''
+  translation: wedding ceremony (church)
   pos: noun
   gender: n
 - lemma: вірність
   ipa: /ʋˈirnistʲ/
-  translation: ''
+  translation: loyalty, faithfulness
   pos: noun
   gender: f
 - lemma: гарбуз
   ipa: /ɦarbˈuz/
-  translation: ''
+  translation: pumpkin
   pos: noun
   gender: m
 - lemma: дар
   ipa: /dar/
-  translation: ''
+  translation: gift, talent
   pos: noun
 - lemma: два-три
   ipa: /dʋa-trɪ/
@@ -61,121 +61,121 @@ items:
   pos: num
 - lemma: з'єднання
   ipa: /zjɛdnannja/
-  translation: ''
+  translation: connection, link
   pos: noun
   gender: n
 - lemma: зрада
   ipa: /zrˈada/
-  translation: ''
+  translation: treason, betrayal
   pos: noun
   gender: f
 - lemma: зрілість
   ipa: /zrˈilistʲ/
-  translation: ''
+  translation: maturity
   pos: noun
   gender: f
 - lemma: молодята
   ipa: /mɔlɔdˈjata/
-  translation: ''
+  translation: newlyweds
   pos: noun
 - lemma: наречений
   ipa: /narɛt͡ʃˈɛnɪj/
-  translation: ''
+  translation: groom, fiancé
   pos: adj
 - lemma: неминучий
   ipa: /nɛmɪnˈut͡ʃɪj/
-  translation: ''
+  translation: inevitable
   pos: adj
 - lemma: неправий
   ipa: /nɛprˈaʋɪj/
-  translation: ''
+  translation: wrong
   pos: adj
 - lemma: обряд
   ipa: /ɔbrˈjad/
-  translation: ''
+  translation: rite, ceremony
   pos: noun
 - lemma: оспівувати
   ipa: /ɔspˈiʋuʋatɪ/
-  translation: ''
+  translation: to praise, to celebrate (in song)
   pos: verb
 - lemma: погарячкувати
   ipa: /pɔɦarjat͡ʃkuʋˈatɪ/
-  translation: ''
+  translation: to act rashly
   pos: verb
 - lemma: прив'язаність
   ipa: /prɪʋˈjazanistʲ/
-  translation: ''
+  translation: attachment, affection
   pos: noun
   gender: f
 - lemma: примирення
   ipa: /prɪmˈɪrɛnnja/
-  translation: ''
+  translation: reconciliation
   pos: noun
   gender: n
 - lemma: протистояння
   ipa: /prɔtɪstɔˈjannja/
-  translation: ''
+  translation: confrontation, opposition
   pos: noun
   gender: n
 - lemma: прояв
   ipa: /prˈɔjaʋ/
-  translation: ''
+  translation: manifestation
   pos: noun
   gender: m
 - lemma: півроку
   ipa: /piʋrɔku/
-  translation: ''
+  translation: half a year
   pos: noun
 - lemma: рацс
   ipa: /rat͡ss/
-  translation: ''
+  translation: registry office (marriage)
   pos: noun
   gender: m
 - lemma: ритуал
   ipa: /rɪtuˈal/
-  translation: ''
+  translation: ritual
   pos: noun
   gender: m
 - lemma: романтик
   ipa: /rɔmˈantɪk/
-  translation: ''
+  translation: romantic (person)
   pos: noun
   gender: m
 - lemma: романтика
   ipa: /rɔmˈantɪka/
-  translation: ''
+  translation: romance
   pos: noun
   gender: f
 - lemma: романтичний
   ipa: /rɔmantˈɪt͡ʃnɪj/
-  translation: ''
+  translation: romantic
   pos: adj
 - lemma: сватання
   ipa: /sʋˈatannja/
-  translation: ''
+  translation: matchmaking
   pos: noun
   gender: n
 - lemma: символізувати
   ipa: /sɪmʋɔlizuʋˈatɪ/
-  translation: ''
+  translation: to symbolize
   pos: verb
 - lemma: соловій
   ipa: /sɔlɔʋˈij/
-  translation: ''
+  translation: Soloviy (name), nightingale
   pos: noun
   gender: f
 - lemma: спір
   ipa: /spir/
-  translation: ''
+  translation: argument, dispute
   pos: noun
   gender: m
 - lemma: укласти
   ipa: /uklˈastɪ/
-  translation: ''
+  translation: to conclude (deal), to stack, to put to bed (perfective)
   pos: verb
 - lemma: хворобливий
   ipa: /xʋɔrɔblˈɪʋɪj/
-  translation: ''
+  translation: sickly, morbid
   pos: adj
 - lemma: хлібом-сіллю
   ipa: /xlˈibɔm-sillju/
@@ -187,5 +187,5 @@ items:
   pos: noun
 - lemma: явно
   ipa: /ˈjaʋnɔ/
-  translation: ''
+  translation: clearly, obviously
   pos: adv

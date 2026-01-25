@@ -4,30 +4,30 @@ version: '2.0'
 items:
 - lemma: аплодувати
   ipa: /aplɔduʋˈatɪ/
-  translation: ''
+  translation: to applaud
   pos: verb
 - lemma: багатогранність
   ipa: /baɦatɔɦrˈannistʲ/
-  translation: ''
+  translation: versatility, multifacetedness
   pos: noun
   gender: f
 - lemma: бесіда
   ipa: /bˈɛsida/
-  translation: ''
+  translation: conversation, talk
   pos: noun
   gender: f
 - lemma: веселка
   ipa: /ʋɛsˈɛlka/
-  translation: ''
+  translation: rainbow
   pos: noun
   gender: f
 - lemma: виїсти
   ipa: /ʋˈɪjistɪ/
-  translation: ''
+  translation: to eat out
   pos: verb
 - lemma: відтоді
   ipa: /ʋidtˈɔdi/
-  translation: ''
+  translation: since then
   pos: pron
 - lemma: док
   ipa: /dɔk/
@@ -35,33 +35,33 @@ items:
   pos: noun
 - lemma: закохатися
   ipa: /zakɔxˈatɪsja/
-  translation: ''
+  translation: to fall in love
   pos: verb
 - lemma: замовкти
   ipa: /zamˈɔʋktɪ/
-  translation: ''
+  translation: to become silent
   pos: verb
 - lemma: книжно
   ipa: /knˈɪʒnɔ/
-  translation: ''
+  translation: bookishly
   pos: adv
 - lemma: моментальність
   ipa: /mɔmɛntˈalʲnistʲ/
-  translation: ''
+  translation: instantaneousness
   pos: noun
   gender: f
 - lemma: наставати
   ipa: /nastaʋˈatɪ/
-  translation: ''
+  translation: to come, to set in
   pos: verb
 - lemma: нетерплячість
   ipa: /nɛtɛrplˈjat͡ʃistʲ/
-  translation: ''
+  translation: impatience
   pos: noun
   gender: f
 - lemma: односкладний
   ipa: /ɔdnɔsklˈadnɪj/
-  translation: ''
+  translation: one-element, simple (sentence)
   pos: adj
 - lemma: ойно
   ipa: /ɔjnɔ/
@@ -69,44 +69,52 @@ items:
   pos: adv
 - lemma: остигати
   ipa: /ɔstɪɦˈatɪ/
-  translation: ''
+  translation: to cool down
   pos: verb
 - lemma: паралельність
   ipa: /paralˈɛlʲnistʲ/
-  translation: ''
+  translation: parallelism
   pos: noun
   gender: f
 - lemma: повечеряти
   ipa: /pɔʋɛt͡ʃˈɛrjatɪ/
-  translation: ''
+  translation: to have dinner
   pos: verb
 - lemma: попередність
   ipa: /pɔpɛrɛdnistʲ/
-  translation: ''
+  translation: precedence, previousness
   pos: noun
   gender: f
 - lemma: почутися
   ipa: /pɔt͡ʃˈutɪsja/
-  translation: ''
+  translation: to be heard, to feel (dialectal variant)
   pos: verb
 - lemma: поєднуючи
   ipa: /pɔˈjɛdnujut͡ʃɪ/
-  translation: ''
+  translation: combining
   pos: verb
 - lemma: ремонтувати
   ipa: /rɛmɔntuʋˈatɪ/
-  translation: ''
+  translation: to repair, to renovate
   pos: verb
 - lemma: роса
   ipa: /rɔsˈa/
-  translation: ''
+  translation: dew
   pos: noun
   gender: f
+- lemma: систематичний
+  ipa: /sɪstɛmatˈɪt͡ʃnɪj/
+  translation: systematic
+  pos: adj
 - lemma: темніше
   ipa: /tɛmnˈiʃɛ/
-  translation: ''
+  translation: darker
   pos: adv
 - lemma: хронологічний
   ipa: /xrɔnɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: chronological
+  pos: adj
+- lemma: циклічний
+  ipa: /t͡sɪklˈit͡ʃnɪj/
+  translation: cyclic
   pos: adj

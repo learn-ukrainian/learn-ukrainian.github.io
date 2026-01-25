@@ -1,0 +1,104 @@
+module: syntez-khmelnychchyna
+level: B2
+version: '2.0'
+items:
+  - lemma: гетьман
+    ipa: /ɦetʲman/
+    translation: hetman
+    pos: noun
+    gender: m
+  - lemma: булава
+    ipa: /bulava/
+    translation: mace (symbol of power)
+    pos: noun
+    gender: f
+  - lemma: угода
+    ipa: /uɦoda/
+    translation: agreement/treaty
+    pos: noun
+    gender: f
+  - lemma: повстання
+    ipa: /povstanʲːa/
+    translation: uprising
+    pos: noun
+    gender: n
+  - lemma: шляхта
+    ipa: /ʃlʲaxta/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /kripad͡ztvo/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: унія
+    ipa: /unʲija/
+    translation: union
+    pos: noun
+    gender: f
+  - lemma: протекторат
+    ipa: /protektorat/
+    translation: protectorate
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /avtonomija/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: реєстр
+    ipa: /rejestr/
+    translation: register
+    pos: noun
+    gender: m
+  - lemma: старшина
+    ipa: /starʃyna/
+    translation: Cossack officers/elite
+    pos: noun
+    gender: f
+  - lemma: універсал
+    ipa: /universal/
+    translation: universal (decree)
+    pos: noun
+    gender: m
+  - lemma: руїна
+    ipa: /rujina/
+    translation: ruin
+    pos: noun
+    gender: f
+  - lemma: соборність
+    ipa: /sobornisʲtʲ/
+    translation: unity/sobornist
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /subjektnisʲtʲ/
+    translation: subjectivity/agency
+    pos: noun
+    gender: f
+  - lemma: зрада
+    ipa: /zrada/
+    translation: betrayal/treason
+    pos: noun
+    gender: f
+  - lemma: війна
+    ipa: /vijna/
+    translation: war
+    pos: noun
+    gender: f
+  - lemma: союз
+    ipa: /sojuz/
+    translation: alliance/union
+    pos: noun
+    gender: m
+  - lemma: перемир'я
+    ipa: /peremyrja/
+    translation: truce/armistice
+    pos: noun
+    gender: n
+  - lemma: незалежність
+    ipa: /nezaleʒnisʲtʲ/
+    translation: independence
+    pos: noun
+    gender: f

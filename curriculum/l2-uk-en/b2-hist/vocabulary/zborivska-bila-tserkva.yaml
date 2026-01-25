@@ -1,0 +1,126 @@
+module: zborivska-bila-tserkva
+level: B2
+version: '2.0'
+items:
+  - lemma: угода
+    ipa: /ʊˈɡɔdɐ/
+    translation: treaty, agreement
+    pos: noun
+    gender: f
+  - lemma: компроміс
+    ipa: /komproˈmɪs/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔmʲijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: ратифікація
+    ipa: /rɐtɪfʲiˈkat͡sʲijɐ/
+    translation: ratification
+    pos: noun
+    gender: f
+  - lemma: воєводство
+    ipa: /vɔjeˈvɔdstwɔ/
+    translation: voivodeship (province)
+    pos: noun
+    gender: n
+  - lemma: амністія
+    ipa: /ɐmˈnʲistʲijɐ/
+    translation: amnesty
+    pos: noun
+    gender: f
+  - lemma: шляхта
+    ipa: /ˈʃlʲɐxtɐ/
+    translation: nobility (Szlachta)
+    pos: noun
+    gender: f
+  - lemma: реєстр
+    ipa: /reˈjestr/
+    translation: register, roll
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /leɦʲiˈtɪmnʲistʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: поступка
+    ipa: /ˈpɔstʊpkɐ/
+    translation: concession
+    pos: noun
+    gender: f
+  - lemma: ратифікувати
+    ipa: /rɐtɪfʲikʊˈwatɪ/
+    translation: to ratify
+    pos: verb
+    aspect: pf/impf
+  - lemma: суверенітет
+    ipa: /sʊwerenʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: протекторат
+    ipa: /prɔtɛktɔˈrɐt/
+    translation: protectorate
+    pos: noun
+    gender: m
+  - lemma: примирення
+    ipa: /prɪˈmɪrennʲɐ/
+    translation: reconciliation
+    pos: noun
+    gender: n
+  - lemma: стабільність
+    ipa: /stɐˈbʲilʲnʲistʲ/
+    translation: stability
+    pos: noun
+    gender: f
+  - lemma: демаркація
+    ipa: /demɐrˈkat͡sʲijɐ/
+    translation: demarcation
+    pos: noun
+    gender: f
+  - lemma: сейм
+    ipa: /sɛjm/
+    translation: Sejm (parliament)
+    pos: noun
+    gender: m
+  - lemma: маневрувати
+    ipa: /mɐnewrʊˈwatɪ/
+    translation: to maneuver
+    pos: verb
+    aspect: impf
+  - lemma: реєстровець
+    ipa: /reˈjestrɔwet͡sʲ/
+    translation: registered Cossack
+    pos: noun
+    gender: m
+  - lemma: анулювати
+    ipa: /ɐnʊlʲʊˈwatɪ/
+    translation: to annul, to cancel
+    pos: verb
+    aspect: pf/impf
+  - lemma: канцлер
+    ipa: /ˈkant͡sler/
+    translation: chancellor
+    pos: noun
+    gender: m
+  - lemma: унітарний
+    ipa: /ʊnʲiˈtarnɪj/
+    translation: unitary
+    pos: adj
+  - lemma: де-факто
+    ipa: /de ˈfaktɔ/
+    translation: de facto
+    pos: adv
+  - lemma: де-юре
+    ipa: /de ˈjure/
+    translation: de jure
+    pos: adv
+  - lemma: консенсус
+    ipa: /kɔnˈsɛnsʊs/
+    translation: consensus
+    pos: noun
+    gender: m

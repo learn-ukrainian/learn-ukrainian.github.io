@@ -1,0 +1,129 @@
+module: kozatska-derzhava
+level: B2
+version: '2.0'
+items:
+  - lemma: гетьманат
+    ipa: /ɦetʲmɐˈnat/
+    translation: hetmanate
+    pos: noun
+    gender: m
+  - lemma: булава
+    ipa: /bʊɫɐˈwa/
+    translation: mace (symbol of authority)
+    pos: noun
+    gender: f
+  - lemma: канцелярія
+    ipa: /kɐnt͡sɛˈlʲarʲijɐ/
+    translation: office, chancellery
+    pos: noun
+    gender: f
+  - lemma: полковник
+    ipa: /pɔɫˈkɔu̯nɪk/
+    translation: colonel (military and administrative rank)
+    pos: noun
+    gender: m
+  - lemma: сотник
+    ipa: /ˈsɔtnɪk/
+    translation: centurion (military and administrative rank)
+    pos: noun
+    gender: m
+  - lemma: скарбниця
+    ipa: /skɐrbˈnɪt͡sʲɐ/
+    translation: treasury
+    pos: noun
+    gender: f
+  - lemma: універсал
+    ipa: /ʊnʲiwerˈsaɫ/
+    translation: universal (hetman's decree)
+    pos: noun
+    gender: m
+  - lemma: клейноди
+    ipa: /ˈklɛjnɔdɪ/
+    translation: regalia, insignia
+    pos: noun
+    gender: pl
+  - lemma: підскарбій
+    ipa: /pʲidˈskarbʲij/
+    translation: treasurer
+    pos: noun
+    gender: m
+  - lemma: обозний
+    ipa: /ɔˈbɔznɪj/
+    translation: quartermaster (general or regimental)
+    pos: noun
+    gender: m
+  - lemma: писар
+    ipa: /ˈpɪsɐr/
+    translation: scribe, secretary
+    pos: noun
+    gender: m
+  - lemma: суддя
+    ipa: /sʊˈdʲːa/
+    translation: judge
+    pos: noun
+    gender: m
+  - lemma: осавул
+    ipa: /ɔsɐˈwʊɫ/
+    translation: osavul (aide-de-camp)
+    pos: noun
+    gender: m
+  - lemma: хорунжий
+    ipa: /xɔˈrunʒɪj/
+    translation: flag-bearer, ensign
+    pos: noun
+    gender: m
+  - lemma: реєстр
+    ipa: /reˈjestr/
+    translation: register
+    pos: noun
+    gender: m
+  - lemma: автономія
+    ipa: /ɐu̯tɔˈnɔmʲijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: суверенітет
+    ipa: /sʊwerenʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: легітимність
+    ipa: /leɦʲiˈtɪmnʲistʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: суб'єктність
+    ipa: /sʊbˈjɛktnʲistʲ/
+    translation: agency, subjectivity
+    pos: noun
+    gender: f
+  - lemma: деколонізація
+    ipa: /dekɔɫɔnʲizɐˈt͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+  - lemma: адміністрація
+    ipa: /ɐdmʲinʲistˈrat͡sʲijɐ/
+    translation: administration
+    pos: noun
+    gender: f
+  - lemma: ієрархія
+    ipa: /ijeˈrarxʲijɐ/
+    translation: hierarchy
+    pos: noun
+    gender: f
+  - lemma: протокол
+    ipa: /prɔtɔˈkɔɫ/
+    translation: protocol
+    pos: noun
+    gender: m
+  - lemma: посольство
+    ipa: /pɔˈsɔɫʲstwɔ/
+    translation: embassy
+    pos: noun
+    gender: n
+  - lemma: квитанція
+    ipa: /kwɪˈtant͡sʲijɐ/
+    translation: receipt
+    pos: noun
+    gender: f

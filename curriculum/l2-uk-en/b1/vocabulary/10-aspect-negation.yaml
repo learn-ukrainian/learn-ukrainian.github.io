@@ -4,12 +4,38 @@ version: '2.0'
 items:
 - lemma: алгоритм
   ipa: /alɦɔrˈɪtm/
-  translation: ''
+  translation: algorithm
   pos: noun
   gender: m
+- lemma: батьків
+  ipa: /batʲkiʋ/
+  translation: ''
+  pos: adj
+- lemma: більшість
+  ipa: /bˈilʲʃistʲ/
+  translation: majority
+  pos: noun
+  gender: f
 - lemma: вигуляти
   ipa: /ʋˈɪɦuljatɪ/
-  translation: ''
+  translation: to walk (perfective)
+  pos: verb
+- lemma: виписати
+  ipa: /ʋˈɪpɪsatɪ/
+  translation: to write out, to prescribe
+  pos: verb
+- lemma: вираз
+  ipa: /ʋˈɪraz/
+  translation: expression, phrase
+  pos: noun
+  gender: m
+- lemma: вночі
+  ipa: /ʋnɔt͡ʃˈi/
+  translation: at night
+  pos: adv
+- lemma: встигати
+  ipa: /ʋstɪɦˈatɪ/
+  translation: to be in time
   pos: verb
 - lemma: го
   ipa: /ɦɔ/
@@ -18,129 +44,302 @@ items:
   gender: n
 - lemma: губитися
   ipa: /ɦubˈɪtɪsja/
-  translation: ''
+  translation: to get lost
   pos: verb
 - lemma: дедлайн
   ipa: /dɛdlajn/
-  translation: ''
+  translation: deadline
   pos: noun
   gender: m
+- lemma: дерун
+  ipa: /dɛrˈun/
+  translation: derun (potato pancake)
+  pos: noun
 - lemma: дорожній
   ipa: /dɔrˈɔʒnij/
-  translation: ''
+  translation: road (adj), travel (adj)
   pos: adj
 - lemma: забирати
   ipa: /zabɪrˈatɪ/
-  translation: ''
+  translation: to take away, to pick up
+  pos: verb
+- lemma: загубитися
+  ipa: /zaɦubˈɪtɪsja/
+  translation: to get lost
+  pos: verb
+- lemma: зал
+  ipa: /zal/
+  translation: hall
+  pos: noun
+  gender: m
+- lemma: залишати
+  ipa: /zalɪʃˈatɪ/
+  translation: to leave
+  pos: verb
+- lemma: залишити
+  ipa: /zalˈɪʃɪtɪ/
+  translation: to leave (perfective)
   pos: verb
 - lemma: заспокоєння
   ipa: /zaspɔkˈɔjɛnnja/
-  translation: ''
+  translation: calm, soothing
   pos: noun
   gender: n
 - lemma: застереження
   ipa: /zastɛrˈɛʒɛnnja/
-  translation: ''
+  translation: warning, caution
   pos: noun
   gender: n
+- lemma: застосовувати
+  ipa: /zastɔsˈɔʋuʋatɪ/
+  translation: to apply, to use
+  pos: verb
+- lemma: здавати
+  ipa: /zdaʋˈatɪ/
+  translation: to hand over, to take (exam)
+  pos: verb
 - lemma: картопляний
   ipa: /kartˈɔpljanɪj/
-  translation: ''
+  translation: potato (adj)
   pos: adj
-- lemma: кінофестиваль
-  ipa: /kinɔfɛstɪʋˈalʲ/
-  translation: ''
+- lemma: книгарня
+  ipa: /knɪɦˈarnja/
+  translation: bookstore
+  pos: noun
+  gender: f
+- lemma: крок
+  ipa: /krɔk/
+  translation: step
   pos: noun
   gender: m
+- lemma: купити
+  ipa: /kupˈɪtɪ/
+  translation: to buy
+  pos: verb
+- lemma: кінотеатр
+  ipa: /kinɔtɛˈatr/
+  translation: movie theater
+  pos: noun
+- lemma: кінофестиваль
+  ipa: /kinɔfɛstɪʋˈalʲ/
+  translation: film festival
+  pos: noun
+  gender: m
+- lemma: млинці
+  ipa: /mlɪnt͡sˈi/
+  translation: pancakes, crepes
+  pos: noun
+- lemma: нагадування
+  ipa: /naɦˈaduʋannja/
+  translation: reminder
+  pos: noun
+  gender: n
 - lemma: не'
   ipa: /nɛ/
   translation: ''
   pos: noun
+- lemma: незавершений
+  ipa: /nɛzaʋˈɛrʃɛnɪj/
+  translation: incomplete
+  pos: adj
 - lemma: неможливість
   ipa: /nɛmɔʒlˈɪʋistʲ/
-  translation: ''
+  translation: impossibility
   pos: noun
   gender: f
 - lemma: неправильний
   ipa: /nɛprˈaʋɪlʲnɪj/
-  translation: ''
+  translation: incorrect
   pos: adj
 - lemma: нерозуміння
   ipa: /nɛrɔzumˈinnja/
-  translation: ''
+  translation: lack of understanding
   pos: noun
   gender: n
+- lemma: одеський
+  ipa: /ɔdˈɛsʲkɪj/
+  translation: Odesa (adj)
+  pos: adj
 - lemma: останнє
   ipa: /ɔstˈannjɛ/
-  translation: ''
+  translation: the last thing
   pos: noun
   gender: n
+- lemma: от
+  ipa: /ɔt/
+  translation: here, there, well (particle)
+  pos: part
+- lemma: очікувати
+  ipa: /ɔt͡ʃˈikuʋatɪ/
+  translation: to expect, to wait for
+  pos: verb
 - lemma: очікуватися
   ipa: /ɔt͡ʃˈikuʋatɪsja/
-  translation: ''
+  translation: to be expected
   pos: verb
 - lemma: паркувати
   ipa: /parkuʋˈatɪ/
-  translation: ''
+  translation: to park
   pos: verb
 - lemma: партія
   ipa: /pˈartija/
-  translation: ''
+  translation: party (political/game), batch
   pos: noun
   gender: f
 - lemma: переважно
   ipa: /pɛrɛʋˈaʒnɔ/
-  translation: ''
+  translation: mostly, mainly
   pos: adv
+- lemma: перевірити
+  ipa: /pɛrɛʋˈirɪtɪ/
+  translation: to verify, to check (perfective)
+  pos: verb
+- lemma: перегляд
+  ipa: /pɛrˈɛɦljad/
+  translation: view, review, viewing
+  pos: noun
+  gender: m
 - lemma: передзвонити
   ipa: /pɛrɛdzʋɔnˈɪtɪ/
-  translation: ''
+  translation: to call back
   pos: verb
 - lemma: плануюмоїти
   ipa: /planujumɔjitɪ/
   translation: ''
   pos: verb
+- lemma: поведінка
+  ipa: /pɔʋɛdˈinka/
+  translation: behavior
+  pos: noun
+  gender: f
 - lemma: погань
   ipa: /pˈɔɦanʲ/
-  translation: ''
+  translation: scum, trash
   pos: noun
   gender: f
+- lemma: покинутий
+  ipa: /pɔkˈɪnutɪj/
+  translation: abandoned
+  pos: adj
+- lemma: покупець
+  ipa: /pɔkupˈɛt͡sʲ/
+  translation: buyer, customer
+  pos: noun
+  gender: m
 - lemma: польська
   ipa: /pˈɔlʲsʲka/
-  translation: ''
+  translation: Polish (adj female)
   pos: noun
   gender: f
+- lemma: постійне
+  ipa: /pɔstˈijnɛ/
+  translation: constant (neuter)
+  pos: noun
+  gender: n
+- lemma: постійний
+  ipa: /pɔstˈijnɪj/
+  translation: constant, permanent
+  pos: adj
+- lemma: початок
+  ipa: /pɔt͡ʃˈatɔk/
+  translation: beginning
+  pos: noun
+  gender: m
 - lemma: призначити
   ipa: /prɪznˈat͡ʃɪtɪ/
-  translation: ''
+  translation: to appoint, to assign
+  pos: verb
+- lemma: приймати
+  ipa: /prɪjmˈatɪ/
+  translation: to take (medicine), to accept, to receive (imperfective)
   pos: verb
 - lemma: примірник
   ipa: /prɪmˈirnɪk/
-  translation: ''
+  translation: copy (of book/document)
   pos: noun
   gender: m
 - lemma: припинений
   ipa: /prɪpˈɪnɛnɪj/
-  translation: ''
+  translation: stopped, terminated
   pos: adj
 - lemma: пристебнутися
   ipa: /prɪstɛbnˈutɪsja/
-  translation: ''
+  translation: to buckle up
+  pos: verb
+- lemma: проблема
+  ipa: /prɔblˈɛma/
+  translation: problem
+  pos: noun
+  gender: f
+- lemma: продавати
+  ipa: /prɔdaʋˈatɪ/
+  translation: to sell (imperfective)
   pos: verb
 - lemma: продати
   ipa: /prɔdˈatɪ/
-  translation: ''
+  translation: to sell (perfective)
   pos: verb
-- lemma: прохання-попередження
-  ipa: /prɔxˈannja-pɔpɛrɛdʒɛnnja/
-  translation: ''
+- lemma: пропустити
+  ipa: /prɔpustˈɪtɪ/
+  translation: to skip, to let through (perfective)
+  pos: verb
+- lemma: проти
+  ipa: /prˈɔtɪ/
+  translation: against
+  pos: adv
+- lemma: прохання
+  ipa: /prɔxˈannja/
+  translation: request
   pos: noun
   gender: n
+- lemma: прохання-попередження
+  ipa: /prɔxˈannja-pɔpɛrɛdʒɛnnja/
+  translation: request-warning
+  pos: noun
+  gender: n
+- lemma: робота
+  ipa: /rɔbˈɔta/
+  translation: work, job
+  pos: noun
+  gender: f
+- lemma: рішення
+  ipa: /rˈiʃɛnnja/
+  translation: decision, solution
+  pos: noun
+  gender: n
+- lemma: секрет
+  ipa: /sɛkrˈɛt/
+  translation: secret
+  pos: noun
+- lemma: синок
+  ipa: /sɪnˈɔk/
+  translation: sonny (diminutive)
+  pos: noun
+  gender: m
+- lemma: скаржитися
+  ipa: /skˈarʒɪtɪsja/
+  translation: to complain
+  pos: verb
+- lemma: собака
+  ipa: /sɔbˈaka/
+  translation: dog
+  pos: noun
+  gender: m
+- lemma: фінал
+  ipa: /finˈal/
+  translation: final (match/stage)
+  pos: noun
+  gender: m
 - lemma: читальний
   ipa: /t͡ʃɪtˈalʲnɪj/
-  translation: ''
+  translation: reading (adj)
   pos: adj
+- lemma: якість
+  ipa: /ˈjakistʲ/
+  translation: quality
+  pos: noun
+  gender: f
 - lemma: імплікувати
   ipa: /implikuʋˈatɪ/
-  translation: ''
+  translation: to imply
   pos: verb

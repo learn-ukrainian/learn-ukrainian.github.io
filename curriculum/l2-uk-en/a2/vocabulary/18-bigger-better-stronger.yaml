@@ -4,176 +4,144 @@ version: '2.0'
 items:
 - lemma: більший
   ipa: /bˈilʲʃɪj/
-  translation: ''
+  translation: bigger, larger
   pos: adj
-- lemma: вищий
-  ipa: /ʋˈɪʃt͡ʃɪj/
-  translation: ''
+- lemma: гарячий
+  ipa: /ɦarˈjat͡ʃɪj/
+  translation: hot
   pos: adj
 - lemma: гарячіший
   ipa: /ɦarjat͡ʃˈiʃɪj/
-  translation: ''
+  translation: hotter
   pos: adj
 - lemma: гірший
   ipa: /ɦˈirʃɪj/
-  translation: ''
+  translation: worse (adj)
   pos: adj
 - lemma: дешевший
   ipa: /dɛʃˈɛʋʃɪj/
-  translation: ''
+  translation: cheaper
   pos: adj
 - lemma: добріший
   ipa: /dɔbrˈiʃɪj/
-  translation: ''
+  translation: kinder
   pos: adj
 - lemma: довжина
   ipa: /dɔʋʒɪnˈa/
-  translation: ''
+  translation: length
   pos: noun
   gender: f
-- lemma: додавати
-  ipa: /dɔdaʋˈatɪ/
-  translation: ''
-  pos: verb
+- lemma: дорогий
+  ipa: /dɔrɔɦˈɪj/
+  translation: expensive, dear
+  pos: adj
 - lemma: дорожчий
   ipa: /dɔrˈɔʒt͡ʃɪj/
-  translation: ''
+  translation: more expensive (adj)
   pos: adj
+- lemma: зима
+  ipa: /zɪmˈa/
+  translation: winter
+  pos: noun
+  gender: f
 - lemma: значно
   ipa: /znˈat͡ʃnɔ/
-  translation: ''
+  translation: significantly, considerably
   pos: adv
 - lemma: комфортний
   ipa: /kɔmfˈɔrtnɪj/
-  translation: ''
+  translation: comfortable
   pos: adj
 - lemma: красивіший
   ipa: /krasˈɪʋiʃɪj/
-  translation: ''
+  translation: more beautiful
   pos: adj
 - lemma: кращий
   ipa: /krˈaʃt͡ʃɪj/
-  translation: ''
+  translation: better, best
   pos: adj
 - lemma: лев
   ipa: /lɛʋ/
-  translation: ''
+  translation: lion
   pos: noun
   gender: m
-- lemma: менше
-  ipa: /mˈɛnʃɛ/
-  translation: ''
-  pos: adv
+- lemma: малий
+  ipa: /malˈɪj/
+  translation: small
+  pos: noun
+  gender: m
 - lemma: менший
   ipa: /mˈɛnʃɪj/
-  translation: ''
+  translation: smaller, younger
   pos: noun
   gender: m
-- lemma: набагато
-  ipa: /nabaɦˈatɔ/
-  translation: ''
-  pos: adv
+- lemma: молодший
+  ipa: /mɔlˈɔdʃɪj/
+  translation: younger, junior
+  pos: adj
 - lemma: незалежно
   ipa: /nɛzalˈɛʒnɔ/
-  translation: ''
+  translation: independently
   pos: adv
-- lemma: нерегулярний
-  ipa: /nɛrɛɦulˈjarnɪj/
-  translation: ''
-  pos: adj
 - lemma: новіший
   ipa: /nɔʋˈiʃɪj/
-  translation: ''
+  translation: newer
   pos: adj
 - lemma: повільніший
   ipa: /pɔʋˈilʲniʃɪj/
-  translation: ''
-  pos: adj
-- lemma: порівнювати
-  ipa: /pɔrˈiʋnjuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: порівняльний
-  ipa: /pɔriʋnˈjalʲnɪj/
-  translation: ''
+  translation: slower
   pos: adj
 - lemma: посилювач
   ipa: /pɔsˈɪljuʋat͡ʃ/
-  translation: ''
+  translation: amplifier
   pos: noun
   gender: m
 - lemma: розумніший
   ipa: /rɔzumnˈiʃɪj/
-  translation: ''
+  translation: smarter
   pos: adj
 - lemma: сильніший
   ipa: /sɪlʲnˈiʃɪj/
-  translation: ''
+  translation: stronger
   pos: adj
-- lemma: складніший
-  ipa: /skladnˈiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: скласти
-  ipa: /sklˈastɪ/
-  translation: ''
-  pos: verb
 - lemma: смачніший
   ipa: /smat͡ʃnˈiʃɪj/
-  translation: ''
+  translation: tastier
   pos: adj
-- lemma: спорт
-  ipa: /spɔrt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: старіший
   ipa: /starˈiʃɪj/
-  translation: ''
+  translation: older, oldest
   pos: adj
-- lemma: створення
-  ipa: /stʋˈɔrɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: ступінь
   ipa: /stˈupinʲ/
-  translation: ''
+  translation: degree, grade, step
   pos: noun
   gender: m
 - lemma: тепліше
   ipa: /tɛplˈiʃɛ/
-  translation: ''
+  translation: warmer
   pos: adv
 - lemma: тепліший
   ipa: /tɛplˈiʃɪj/
-  translation: ''
+  translation: warmer (adj)
   pos: adj
-- lemma: формувати
-  ipa: /fɔrmuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: холодний
   ipa: /xɔlˈɔdnɪj/
-  translation: ''
+  translation: cold (adj)
   pos: noun
   gender: m
 - lemma: холодніший
   ipa: /xɔlɔdnˈiʃɪj/
-  translation: ''
+  translation: colder
   pos: adj
 - lemma: цікавіший
   ipa: /t͡sikˈaʋiʃɪj/
-  translation: ''
+  translation: more interesting
   pos: adj
 - lemma: шия
   ipa: /ʃˈɪja/
-  translation: ''
+  translation: neck
   pos: noun
-- lemma: інакше
-  ipa: /inˈakʃɛ/
-  translation: ''
-  pos: pron
 - lemma: ішия
   ipa: /iʃɪja/
   translation: ''

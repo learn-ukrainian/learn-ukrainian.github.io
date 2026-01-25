@@ -4,129 +4,243 @@ version: '2.0'
 items:
 - lemma: аналізувати
   ipa: /analizuʋˈatɪ/
-  translation: ''
+  translation: to analyze
   pos: verb
 - lemma: будова
   ipa: /budˈɔʋa/
-  translation: ''
+  translation: structure, construction
   pos: noun
   gender: f
+- lemma: будь-який
+  ipa: /budʲ-jakˈɪj/
+  translation: any
+  pos: pron
 - lemma: вводити
   ipa: /ʋʋˈɔdɪtɪ/
-  translation: ''
+  translation: to introduce, to enter (imperfective)
+  pos: verb
+- lemma: вечеря
+  ipa: /ʋɛt͡ʃˈɛrja/
+  translation: dinner, supper
+  pos: noun
+  gender: f
+- lemma: вивчати
+  ipa: /ʋɪʋt͡ʃˈatɪ/
+  translation: to learn, to study
   pos: verb
 - lemma: відмінковий
   ipa: /ʋidminkˈɔʋɪj/
-  translation: ''
+  translation: case (adj)
+  pos: adj
+- lemma: гнучкий
+  ipa: /ɦnut͡ʃkˈɪj/
+  translation: flexible
   pos: adj
 - lemma: двокрапка
   ipa: /dʋɔkrˈapka/
-  translation: ''
+  translation: colon (punctuation)
   pos: noun
   gender: f
+- lemma: двір
+  ipa: /dʋir/
+  translation: yard, court
+  pos: noun
+  gender: m
 - lemma: другорядний
   ipa: /druɦɔrˈjadnɪj/
-  translation: ''
+  translation: secondary, minor
   pos: adj
 - lemma: дієслово-зв'язка
   ipa: /dijɛslˈɔʋɔ-zʋjazka/
-  translation: ''
+  translation: linking verb
   pos: noun
   gender: n
+- lemma: з'єднувати
+  ipa: /zˈjɛdnuʋatɪ/
+  translation: to connect (imperfective)
+  pos: verb
+- lemma: залежати
+  ipa: /zalˈɛʒatɪ/
+  translation: to depend
+  pos: verb
 - lemma: замінювати
   ipa: /zamˈinjuʋatɪ/
-  translation: ''
+  translation: to replace (imperfective)
   pos: verb
 - lemma: звичайне
   ipa: /zʋɪt͡ʃˈajnɛ/
   translation: ''
   pos: noun
   gender: n
+- lemma: знак
+  ipa: /znak/
+  translation: sign, symbol
+  pos: noun
 - lemma: класифікувати
   ipa: /klasɪfikuʋˈatɪ/
-  translation: ''
+  translation: to classify
   pos: verb
+- lemma: кома
+  ipa: /kˈɔma/
+  translation: comma, coma
+  pos: noun
+  gender: f
 - lemma: крапка
   ipa: /krˈapka/
-  translation: ''
+  translation: dot, period
   pos: noun
   gender: f
 - lemma: лапка
   ipa: /lˈapka/
-  translation: ''
+  translation: paw, quotation mark
   pos: noun
   gender: f
+- lemma: наголос
+  ipa: /nˈaɦɔlɔs/
+  translation: stress, emphasis
+  pos: noun
+  gender: m
+- lemma: об'єднувати
+  ipa: /ɔbˈjɛdnuʋatɪ/
+  translation: to unite (imperfective)
+  pos: verb
 - lemma: обставина
   ipa: /ɔbstˈaʋɪna/
-  translation: ''
+  translation: circumstance
   pos: noun
   gender: f
+- lemma: обід
+  ipa: /ɔbid/
+  translation: dinner, lunch
+  pos: noun
+  gender: m
 - lemma: означення
   ipa: /ɔznˈat͡ʃɛnnja/
-  translation: ''
+  translation: definition, attribute
   pos: noun
   gender: n
+- lemma: описувати
+  ipa: /ɔpˈɪsuʋatɪ/
+  translation: to describe (imperfective)
+  pos: verb
 - lemma: перерахування
   ipa: /pɛrɛraxuʋˈannja/
-  translation: ''
+  translation: counting, transfer (money), enumeration
   pos: noun
   gender: n
 - lemma: половина
   ipa: /pɔlɔʋˈɪna/
-  translation: ''
+  translation: half
+  pos: noun
+  gender: f
+- lemma: помічати
+  ipa: /pɔmit͡ʃˈatɪ/
+  translation: to notice (imperfective)
+  pos: verb
+- lemma: причина
+  ipa: /prɪt͡ʃˈɪna/
+  translation: reason, cause
   pos: noun
   gender: f
 - lemma: пунктуація
   ipa: /punktuˈat͡sija/
-  translation: ''
+  translation: punctuation
   pos: noun
   gender: f
+- lemma: підкреслювати
+  ipa: /pidkrˈɛsljuʋatɪ/
+  translation: to underline, to emphasize (imperfective)
+  pos: verb
+- lemma: підрядний
+  ipa: /pidrˈjadnɪj/
+  translation: subordinate (clause)
+  pos: adj
 - lemma: підрядність
   ipa: /pidrˈjadnistʲ/
-  translation: ''
+  translation: subordination
   pos: noun
   gender: f
 - lemma: підсилення
   ipa: /pidsˈɪlɛnnja/
-  translation: ''
+  translation: reinforcement, amplification
   pos: noun
   gender: n
+- lemma: регулювати
+  ipa: /rɛɦuljuʋˈatɪ/
+  translation: to regulate, to adjust
+  pos: verb
 - lemma: ресурс
   ipa: /rɛsˈurs/
-  translation: ''
+  translation: resource
   pos: noun
 - lemma: розділовий
   ipa: /rɔzdilˈɔʋɪj/
-  translation: ''
+  translation: punctuation (marks), dividing (adj)
   pos: adj
 - lemma: рівноправний
   ipa: /riʋnɔprˈaʋnɪj/
-  translation: ''
+  translation: equal (rights)
   pos: adj
+- lemma: різниця
+  ipa: /riznˈɪt͡sja/
+  translation: difference
+  pos: noun
+  gender: f
+- lemma: самостійно
+  ipa: /samɔstˈijnɔ/
+  translation: independently
+  pos: adv
+- lemma: свобода
+  ipa: /sʋɔbˈɔda/
+  translation: freedom
+  pos: noun
+  gender: f
 - lemma: синтаксис
   ipa: /sˈɪntaksɪs/
-  translation: ''
+  translation: syntax
   pos: noun
   gender: m
 - lemma: складнопідрядний
   ipa: /skladnɔpidrˈjadnɪj/
-  translation: ''
+  translation: complex (sentence)
   pos: adj
 - lemma: складносурядний
   ipa: /skladnɔsurˈjadnɪj/
-  translation: ''
+  translation: compound (sentence)
   pos: adj
+- lemma: ставити
+  ipa: /stˈaʋɪtɪ/
+  translation: to put, to place, to set (vertical position)
+  pos: verb
+- lemma: ставитися
+  ipa: /stˈaʋɪtɪsja/
+  translation: to relate/treat (someone/something)
+  pos: verb
 - lemma: сурядний
   ipa: /surˈjadnɪj/
-  translation: ''
+  translation: coordinating (conjunction/clause)
   pos: adj
+- lemma: тип
+  ipa: /tɪp/
+  translation: type
+  pos: noun
+  gender: m
 - lemma: тир
   ipa: /tɪr/
-  translation: ''
+  translation: shooting range
+  pos: noun
+  gender: m
+- lemma: член
+  ipa: /t͡ʃlɛn/
+  translation: member
   pos: noun
   gender: m
 - lemma: інверсія
   ipa: /inʋˈɛrsija/
-  translation: ''
+  translation: inversion
   pos: noun
   gender: f
+- lemma: існувати
+  ipa: /isnuʋˈatɪ/
+  translation: to exist
+  pos: verb

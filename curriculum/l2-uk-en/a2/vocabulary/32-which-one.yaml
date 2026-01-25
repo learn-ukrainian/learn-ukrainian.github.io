@@ -2,55 +2,29 @@ module: 32-which-one
 level: A2
 version: '2.0'
 items:
-- lemma: антецедент
-  ipa: /antɛt͡sɛdˈɛnt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: важкий
-  ipa: /ʋaʒkˈɪj/
-  translation: ''
-  pos: adj
-- lemma: відносний
-  ipa: /ʋidnˈɔsnɪj/
-  translation: ''
-  pos: adj
 - lemma: закривати
   ipa: /zakrɪʋˈatɪ/
-  translation: ''
+  translation: to close
   pos: verb
-- lemma: кордон
-  ipa: /kɔrdˈɔn/
-  translation: ''
-  pos: noun
 - lemma: малюнок
   ipa: /malˈjunɔk/
-  translation: ''
+  translation: drawing, picture
   pos: noun
 - lemma: міцно
   ipa: /mˈit͡snɔ/
-  translation: ''
+  translation: firmly, strongly
   pos: adv
 - lemma: надихнути
   ipa: /nadɪxnˈutɪ/
-  translation: ''
+  translation: to inspire (perfective)
   pos: verb
-- lemma: об'єднати
-  ipa: /ɔbjɛdnˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: обличчя
-  ipa: /ɔblˈɪt͡ʃt͡ʃja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: посміхатися
   ipa: /pɔsmixˈatɪsja/
-  translation: ''
+  translation: to smile
   pos: verb
 - lemma: програма
   ipa: /prɔɦrˈama/
-  translation: ''
+  translation: program
   pos: noun
   gender: f
 - lemma: рог
@@ -60,27 +34,15 @@ items:
   gender: m
 - lemma: рости
   ipa: /rɔstˈɪ/
-  translation: ''
+  translation: to grow
   pos: verb
 - lemma: ріст
   ipa: /rist/
-  translation: ''
+  translation: growth, height
   pos: noun
   gender: m
-- lemma: тримати
-  ipa: /trɪmˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: цікавити
-  ipa: /t͡sikˈaʋɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: шапка
   ipa: /ʃˈapka/
-  translation: ''
+  translation: hat
   pos: noun
   gender: f
-- lemma: яким
-  ipa: /jakˈɪm/
-  translation: ''
-  pos: noun

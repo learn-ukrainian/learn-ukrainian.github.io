@@ -4,239 +4,239 @@ version: '2.0'
 items:
 - lemma: байдарка
   ipa: /bajdˈarka/
-  translation: ''
+  translation: kayak, canoe
   pos: noun
   gender: f
 - lemma: безліч
   ipa: /bˈɛzlit͡ʃ/
-  translation: ''
+  translation: multitude, plenty
   pos: adv
 - lemma: бризка
   ipa: /brˈɪzka/
-  translation: ''
+  translation: splash, spray
   pos: noun
 - lemma: велопрогулянка
   ipa: /ʋɛlɔprɔɦuljanka/
-  translation: ''
+  translation: bike ride
   pos: noun
   gender: f
 - lemma: велоспорт
   ipa: /ʋɛlɔspˈɔrt/
-  translation: ''
+  translation: cycling (sport)
   pos: noun
   gender: m
 - lemma: велотуризм
   ipa: /ʋɛlɔturˈɪzm/
-  translation: ''
+  translation: bicycle tourism
   pos: noun
   gender: m
 - lemma: веслування
   ipa: /ʋɛsluʋˈannja/
-  translation: ''
+  translation: rowing
   pos: noun
   gender: n
 - lemma: веслувати
   ipa: /ʋɛsluʋˈatɪ/
-  translation: ''
+  translation: to row
   pos: verb
 - lemma: вишиваний
   ipa: /ʋɪʃˈɪʋanɪj/
-  translation: ''
+  translation: embroidered
   pos: adj
 - lemma: відштовхуватися
   ipa: /ʋidʃtˈɔʋxuʋatɪsja/
-  translation: ''
+  translation: to start from, to repel
   pos: verb
 - lemma: десна
   ipa: /dɛsnˈa/
-  translation: ''
+  translation: Desna (river/gum)
   pos: noun
   gender: f
 - lemma: древній
   ipa: /drˈɛʋnij/
-  translation: ''
+  translation: ancient, old
   pos: adj
 - lemma: жилет
   ipa: /ʒɪlˈɛt/
-  translation: ''
+  translation: vest
   pos: noun
   gender: m
 - lemma: залізний
   ipa: /zalˈiznɪj/
-  translation: ''
+  translation: iron (adj)
   pos: adj
 - lemma: занурюючи
   ipa: /zanˈurjujut͡ʃɪ/
-  translation: ''
+  translation: immersing
   pos: verb
 - lemma: засмага
   ipa: /zasmˈaɦa/
-  translation: ''
+  translation: tan
   pos: noun
   gender: f
 - lemma: засмагати
   ipa: /zasmaɦˈatɪ/
-  translation: ''
+  translation: to sunbathe
   pos: verb
 - lemma: застебнути
   ipa: /zastɛbnˈutɪ/
-  translation: ''
+  translation: to fasten, to button
   pos: verb
 - lemma: звикнути
   ipa: /zʋˈɪknutɪ/
-  translation: ''
+  translation: to get used to (perfective)
   pos: verb
 - lemma: зріст
   ipa: /zrist/
-  translation: ''
+  translation: height, growth
   pos: noun
   gender: m
 - lemma: катання
   ipa: /katˈannja/
-  translation: ''
+  translation: riding, skating, rolling
   pos: noun
   gender: n
 - lemma: каяк
   ipa: /kajak/
-  translation: ''
+  translation: kayak
   pos: noun
 - lemma: каякінг
   ipa: /kajakinɦ/
-  translation: ''
+  translation: kayaking
   pos: noun
   gender: f
 - lemma: краєзнавство
   ipa: /krajɛznˈaʋstʋɔ/
-  translation: ''
+  translation: local history/studies
   pos: noun
   gender: n
 - lemma: лопать
   ipa: /lˈɔpatʲ/
-  translation: ''
+  translation: blade, vane
   pos: noun
   gender: f
 - lemma: любитель
   ipa: /ljubˈɪtɛlʲ/
-  translation: ''
+  translation: amateur, lover of
   pos: noun
 - lemma: монастир
   ipa: /mɔnastˈɪr/
-  translation: ''
+  translation: monastery
   pos: noun
   gender: m
 - lemma: наділ
   ipa: /nadˈil/
-  translation: ''
+  translation: plot of land
   pos: noun
 - lemma: оберт
   ipa: /ˈɔbɛrt/
-  translation: ''
+  translation: revolution, turn
   pos: noun
 - lemma: облаштований
   ipa: /ɔblaʃtˈɔʋanɪj/
-  translation: ''
+  translation: arranged, equipped
   pos: adj
 - lemma: ознайомитися
   ipa: /ɔznajˈɔmɪtɪsja/
-  translation: ''
+  translation: to get acquainted with
   pos: verb
 - lemma: освіжаючий
   ipa: /ɔsʋiʒˈajut͡ʃɪj/
-  translation: ''
+  translation: refreshing
   pos: adj
 - lemma: перевернутися
   ipa: /pɛrɛʋɛrnˈutɪsja/
-  translation: ''
+  translation: to flip over
   pos: verb
 - lemma: перетворюватися
   ipa: /pɛrɛtʋˈɔrjuʋatɪsja/
-  translation: ''
+  translation: to transform (imperfective, passive)
   pos: verb
 - lemma: подорожуючи
   ipa: /pɔdɔrɔʒˈujut͡ʃɪ/
-  translation: ''
+  translation: traveling
   pos: verb
 - lemma: покататися
   ipa: /pɔkatˈatɪsja/
-  translation: ''
+  translation: to ride for a while
   pos: verb
 - lemma: припаркуватися
   ipa: /prɪparkuʋˈatɪsja/
-  translation: ''
+  translation: to park (perfective)
   pos: verb
 - lemma: прослухати
   ipa: /prɔsluxatɪ/
-  translation: ''
+  translation: to listen to, to hear (perfective)
   pos: verb
 - lemma: підібрати
   ipa: /pidibrˈatɪ/
-  translation: ''
+  translation: to pick up, to match, to select
   pos: verb
 - lemma: рама
   ipa: /rˈama/
-  translation: ''
+  translation: frame
   pos: noun
   gender: f
 - lemma: розслабляти
   ipa: /rɔzslablˈjatɪ/
-  translation: ''
+  translation: to relax (someone/something)
   pos: verb
 - lemma: руїна
   ipa: /ruˈjina/
-  translation: ''
+  translation: ruin
   pos: noun
   gender: f
 - lemma: рятувальний
   ipa: /rjatuʋˈalʲnɪj/
-  translation: ''
+  translation: rescue (adj)
   pos: adj
 - lemma: сантиметр
   ipa: /santɪmˈɛtr/
-  translation: ''
+  translation: centimeter
   pos: noun
 - lemma: сапа
   ipa: /sapa/
-  translation: ''
+  translation: hoe
   pos: noun
   gender: f
 - lemma: сапсерфінг
   ipa: /sapsɛrfinɦ/
-  translation: ''
+  translation: paddleboarding
   pos: noun
   gender: m
 - lemma: скельний
   ipa: /skˈɛlʲnɪj/
-  translation: ''
+  translation: rock (adj), cliff (adj)
   pos: adj
 - lemma: сплав
   ipa: /splaʋ/
-  translation: ''
+  translation: alloy, rafting
   pos: noun
 - lemma: сплатити
   ipa: /splatˈɪtɪ/
-  translation: ''
+  translation: to pay (perfective)
   pos: verb
 - lemma: спокусливо
   ipa: /spɔkˈuslɪʋɔ/
-  translation: ''
+  translation: temptingly, seductively
   pos: adv
 - lemma: триатлон
   ipa: /trɪatlɔn/
-  translation: ''
+  translation: triathlon
   pos: noun
   gender: m
 - lemma: інвентар
   ipa: /inʋɛntˈar/
-  translation: ''
+  translation: inventory, equipment
   pos: noun
   gender: m
 - lemma: інструктаж
   ipa: /instruktˈaʒ/
-  translation: ''
+  translation: briefing, instruction session
   pos: noun
   gender: m
 - lemma: ірина
   ipa: /irˈɪna/
-  translation: ''
+  translation: Iryna (name)
   pos: noun
   gender: f

@@ -4,62 +4,30 @@ version: '2.0'
 items:
 - lemma: виправлення
   ipa: /ʋˈɪpraʋlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дослівний
-  ipa: /dɔslˈiʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: керування
-  ipa: /kɛruʋˈannja/
-  translation: ''
+  translation: correction
   pos: noun
   gender: n
 - lemma: майкл
   ipa: /majkl/
-  translation: ''
+  translation: Michael (name)
   pos: noun
   gender: m
-- lemma: олександр
-  ipa: /ɔlɛksˈandr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: опанування
-  ipa: /ɔpanuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: оренда
   ipa: /ɔrˈɛnda/
-  translation: ''
+  translation: rent, lease
   pos: noun
   gender: f
 - lemma: оцінити
   ipa: /ɔt͡sinˈɪtɪ/
-  translation: ''
+  translation: to evaluate, to appreciate
   pos: verb
-- lemma: проживання
-  ipa: /prɔʒɪʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: розмовник
   ipa: /rɔzmˈɔʋnɪk/
-  translation: ''
+  translation: phrasebook
   pos: noun
   gender: m
-- lemma: успішно
-  ipa: /uspˈiʃnɔ/
-  translation: ''
-  pos: adv
-- lemma: усього
-  ipa: /usʲˈɔɦɔ/
-  translation: ''
-  pos: adv
 - lemma: шліфування
   ipa: /ʃlifuʋˈannja/
-  translation: ''
+  translation: grinding, polishing
   pos: noun
   gender: n

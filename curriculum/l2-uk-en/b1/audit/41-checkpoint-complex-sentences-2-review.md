@@ -1,17 +1,54 @@
-# Audit Report: 41-checkpoint-complex-sentences-2.md
-**Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1200
+# Audit Report: M41 — 41-checkpoint-complex-sentences-2.md
+**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:17:03
+
+## Configuration
+**Type:** B1-checkpoint
+**Word Target:** 1200 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, quiz
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥10 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Допустові речення (М35) | 8 | 8 | ✅ |
+| 2 | quiz | Причинові та наслідкові речення (М36) | 8 | 8 | ✅ |
+| 3 | quiz | Часові речення (М37) | 8 | 8 | ✅ |
+| 4 | quiz | Непряма мова (М39-40) | 8 | 8 | ✅ |
+| 5 | match-up | З'єднайте тип речення з прикладом | 12 | 8 | ✅ |
+| 6 | fill-in | Інтегрований тест | 14 | 8 | ✅ |
+| 7 | group-sort | Розподіліть сполучники за типами | 20 | 12 | ✅ |
+| 8 | unjumble | Комплексний тест | 8 | 6 | ✅ |
+| 9 | error-correction | Комплексний тест | 8 | 6 | ✅ |
+| 10 | cloze | Комплексний текст | 12 | 12 | ✅ |
+| 11 | mark-the-words | Позначте сполучники складних речень | 9 | 6 | ✅ |
+| 12 | select | Виберіть усі граматично правильні речення | 6 | 6 | ✅ |
+| 13 | translate | Комплексний переклад | 8 | 6 | ✅ |
+| 14 | true-false | Правила складних речень | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2109/1200
+- **Words:** ✅ 2114/1200 (raw: 2310)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 5 < 10 (soft target)
+- **Vocab:** ✅ 22/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -30,12 +67,12 @@
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 11 | 8 | 100% | 25% | 25.0% |
 | review_sections | 37 | 3 | 100% | 20% | 20.0% |
-| variety | 0.89 | - | 89% | 15% | 13.4% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
 | engagement | 4 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
 | visual | 2 | 3 | 67% | 10% | 6.7% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **85.0%** |
+| **TOTAL** | | | | | **85.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -50,6 +87,6 @@
 | **Skill 6: Непряма мова — питання** | ⚪️ | 132 | Skipped |
 | **Skill 7: Непряма мова — накази та прохання** | ⚪️ | 131 | Skipped |
 | **Integration Challenge** | ⚪️ | 220 | Skipped |
-| **Практика** | ⚪️ | 288 | Skipped |
+| **Практика** | ⚪️ | 293 | Skipped |
 | **Підсумок** | ✅ | 212 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

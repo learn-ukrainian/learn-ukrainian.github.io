@@ -4,20 +4,16 @@ version: '2.0'
 items:
 - lemma: агробізнес
   ipa: /aɦrɔbˈiznɛs/
-  translation: ''
+  translation: agribusiness
   pos: noun
   gender: m
-- lemma: адаптувати
-  ipa: /adaptuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: акціонер
   ipa: /akt͡siɔnˈɛr/
-  translation: ''
+  translation: shareholder
   pos: noun
 - lemma: бухгалтер
   ipa: /buxɦˈaltɛr/
-  translation: ''
+  translation: accountant
   pos: noun
   gender: m
 - lemma: бізнес-ландшафт
@@ -59,154 +55,164 @@ items:
   pos: noun
 - lemma: варвар
   ipa: /ʋˈarʋar/
-  translation: ''
+  translation: barbarian
   pos: noun
 - lemma: вдвічі
   ipa: /ʋdʋˈit͡ʃi/
-  translation: ''
+  translation: twice, double
   pos: adv
 - lemma: вживаний
   ipa: /ʋʒˈɪʋanɪj/
-  translation: ''
+  translation: used, second-hand
   pos: adj
 - lemma: взаємоповага
   ipa: /ʋzajɛmɔpɔʋˈaɦa/
-  translation: ''
+  translation: mutual respect
   pos: noun
   gender: f
 - lemma: вирахування
   ipa: /ʋˈɪraxuʋannja/
-  translation: ''
+  translation: calculation, deduction
   pos: noun
   gender: n
 - lemma: виручка
   ipa: /ʋˈɪrut͡ʃka/
-  translation: ''
+  translation: revenue, rescue
   pos: noun
   gender: f
 - lemma: встановлення
   ipa: /ʋstanˈɔʋlɛnnja/
-  translation: ''
+  translation: establishment, installation
   pos: noun
   gender: n
 - lemma: гарантійний
   ipa: /ɦarantˈijnɪj/
-  translation: ''
+  translation: warranty (adj)
   pos: adj
 - lemma: залучати
   ipa: /zalut͡ʃˈatɪ/
-  translation: ''
+  translation: to involve, to attract
   pos: verb
+- lemma: залучення
+  ipa: /zalˈut͡ʃɛnnja/
+  translation: involvement
+  pos: noun
+  gender: n
 - lemma: зареєстрований
   ipa: /zarɛjɛstrˈɔʋanɪj/
-  translation: ''
+  translation: registered
   pos: adj
 - lemma: заробіток
   ipa: /zarɔbˈitɔk/
-  translation: ''
+  translation: earnings, income
   pos: noun
   gender: m
 - lemma: засновник
   ipa: /zasnˈɔʋnɪk/
-  translation: ''
+  translation: founder
   pos: noun
 - lemma: зацікавлений
   ipa: /zat͡sikˈaʋlɛnɪj/
-  translation: ''
+  translation: interested
   pos: adj
 - lemma: збиток
   ipa: /zbˈɪtɔk/
-  translation: ''
+  translation: loss, damage
   pos: noun
 - lemma: здравствувати
   ipa: /zdrˈaʋstʋuʋatɪ/
-  translation: ''
+  translation: to be healthy, to prosper
   pos: verb
 - lemma: капітал
   ipa: /kapitˈal/
-  translation: ''
+  translation: capital
   pos: noun
   gender: m
 - lemma: комплектуючий
   ipa: /kɔmplɛktˈujut͡ʃɪj/
-  translation: ''
+  translation: component (adj)
   pos: adj
 - lemma: корупційний
   ipa: /kɔrupt͡sˈijnɪj/
-  translation: ''
+  translation: corrupt (adj)
   pos: adj
 - lemma: креативний
   ipa: /krɛatˈɪʋnɪj/
-  translation: ''
+  translation: creative
   pos: adj
 - lemma: креативність
   ipa: /krɛatˈɪʋnistʲ/
-  translation: ''
+  translation: creativity
   pos: noun
   gender: f
 - lemma: купка
   ipa: /kˈupka/
-  translation: ''
+  translation: small heap, group
   pos: noun
   gender: f
 - lemma: магнат
   ipa: /maɦnˈat/
-  translation: ''
+  translation: magnate
   pos: noun
 - lemma: машинобудування
   ipa: /maʃɪnɔbuduʋˈannja/
-  translation: ''
+  translation: mechanical engineering
   pos: noun
   gender: n
 - lemma: меценат
   ipa: /mɛt͡sɛnˈat/
-  translation: ''
+  translation: patron, benefactor
   pos: noun
 - lemma: меценатство
   ipa: /mɛt͡sɛnˈatstʋɔ/
-  translation: ''
+  translation: patronage, philanthropy
   pos: noun
   gender: n
 - lemma: місячний
   ipa: /mˈisjat͡ʃnɪj/
-  translation: ''
+  translation: monthly, lunar, moonlit
   pos: adj
 - lemma: найуживаніший
   ipa: /najuʒˈɪʋaniʃɪj/
-  translation: ''
+  translation: the most commonly used
   pos: adj
 - lemma: найуспішніший
   ipa: /najuspˈiʃniʃɪj/
-  translation: ''
+  translation: the most successful
   pos: adj
 - lemma: некомерційний
   ipa: /nɛkɔmɛrt͡sˈijnɪj/
-  translation: ''
+  translation: non-profit
   pos: adj
 - lemma: непрофесійно
   ipa: /nɛprɔfɛsˈijnɔ/
-  translation: ''
+  translation: unprofessionally
   pos: adv
 - lemma: олігарх
   ipa: /ɔliɦˈarx/
-  translation: ''
+  translation: oligarch
   pos: noun
+- lemma: операція
+  ipa: /ɔpɛrˈat͡sija/
+  translation: operation
+  pos: noun
+  gender: f
 - lemma: оподаткування
   ipa: /ɔpɔdatkuʋˈannja/
-  translation: ''
+  translation: taxation
   pos: noun
   gender: n
 - lemma: особа-підприємець
   ipa: /ɔsˈɔba-pidprɪjɛmɛt͡sʲ/
-  translation: ''
+  translation: sole proprietor
   pos: noun
 - lemma: оцінюватися
   ipa: /ɔt͡sˈinjuʋatɪsja/
-  translation: ''
+  translation: to be evaluated
   pos: verb
 - lemma: партнерський
   ipa: /partnˈɛrsʲkɪj/
-  translation: ''
+  translation: partnership (adj)
   pos: adj
 - lemma: плат
   ipa: /plat/
@@ -215,125 +221,125 @@ items:
   gender: m
 - lemma: подвоїти
   ipa: /pɔdʋˈɔjitɪ/
-  translation: ''
+  translation: to double
   pos: verb
 - lemma: починаючий
   ipa: /pɔt͡ʃɪnajut͡ʃɪj/
-  translation: ''
+  translation: starting, beginner
   pos: adj
 - lemma: провідний
   ipa: /prɔʋidnɪj/
-  translation: ''
+  translation: leading, prime
   pos: adj
 - lemma: підписка
   ipa: /pidpˈɪska/
-  translation: ''
+  translation: subscription
   pos: noun
   gender: f
 - lemma: підприємець
   ipa: /pidprɪˈjɛmɛt͡sʲ/
-  translation: ''
+  translation: entrepreneur
   pos: noun
   gender: m
 - lemma: підприємництво
   ipa: /pidprɪˈjɛmnɪt͡stʋɔ/
-  translation: ''
+  translation: entrepreneurship
   pos: noun
   gender: n
 - lemma: підприємницький
   ipa: /pidprɪˈjɛmnɪt͡sʲkɪj/
-  translation: ''
+  translation: entrepreneurial
   pos: adj
 - lemma: підприємство
   ipa: /pidprɪˈjɛmstʋɔ/
-  translation: ''
+  translation: enterprise, business
   pos: noun
   gender: n
 - lemma: раунд
   ipa: /rˈaund/
-  translation: ''
+  translation: round
   pos: noun
   gender: m
 - lemma: революційний
   ipa: /rɛʋɔljut͡sˈijnɪj/
-  translation: ''
+  translation: revolutionary
   pos: adj
 - lemma: розірвати
   ipa: /rɔzirʋˈatɪ/
-  translation: ''
+  translation: to tear, to break (ties)
   pos: verb
 - lemma: сплеск
   ipa: /splɛsk/
-  translation: ''
+  translation: splash, surge, burst
   pos: noun
   gender: m
 - lemma: спрощений
   ipa: /sprˈɔʃt͡ʃɛnɪj/
-  translation: ''
+  translation: simplified
   pos: adj
 - lemma: сума
   ipa: /suma/
-  translation: ''
+  translation: sum, amount
   pos: noun
   gender: f
 - lemma: сфокусуватися
   ipa: /sfɔkusuʋˈatɪsja/
-  translation: ''
+  translation: to focus (perfective)
   pos: verb
 - lemma: терещенки
   ipa: /tɛrɛʃt͡ʃɛnkˈɪ/
-  translation: ''
+  translation: Tereshchenkos (name)
   pos: noun
 - lemma: торгувати
   ipa: /tɔrɦuʋˈatɪ/
-  translation: ''
+  translation: to trade
   pos: verb
 - lemma: укладання
   ipa: /ukladˈannja/
-  translation: ''
+  translation: laying, styling, drafting
   pos: noun
   gender: n
 - lemma: фонд
   ipa: /fɔnd/
-  translation: ''
+  translation: fund, foundation
   pos: noun
   gender: m
 - lemma: фоп
   ipa: /fɔp/
-  translation: ''
+  translation: FOP (sole proprietor)
   pos: noun
   gender: m
 - lemma: формальніший
   ipa: /fɔrmalʲniʃɪj/
-  translation: ''
+  translation: more formal
   pos: adj
 - lemma: фірма
   ipa: /fˈirma/
-  translation: ''
+  translation: firm, company
   pos: noun
 - lemma: ханенко
   ipa: /xanˈɛnkɔ/
-  translation: ''
+  translation: Khanenko (name)
   pos: noun
 - lemma: харитоненки
   ipa: /xarɪtˈɔnɛnkɪ/
-  translation: ''
+  translation: Kharytonenkos (name)
   pos: noun
 - lemma: харківський
   ipa: /xarkiʋsʲkɪj/
-  translation: ''
+  translation: Kharkiv (adj)
   pos: adj
 - lemma: цукровий
   ipa: /t͡sukrˈɔʋɪj/
-  translation: ''
+  translation: sugar (adj)
   pos: adj
 - lemma: ширше
   ipa: /ʃˈɪrʃɛ/
-  translation: ''
+  translation: wider
   pos: adv
 - lemma: інвесторський
   ipa: /inʋˈɛstɔrsʲkɪj/
-  translation: ''
+  translation: investor's (adj)
   pos: adj
 - lemma: іт-
   ipa: /it-/

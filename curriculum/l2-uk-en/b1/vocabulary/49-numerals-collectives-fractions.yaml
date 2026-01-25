@@ -8,20 +8,20 @@ items:
   pos: noun
 - lemma: взаємозамінний
   ipa: /ʋzajɛmɔzamˈinnɪj/
-  translation: ''
+  translation: interchangeable
   pos: adj
 - lemma: виборець
   ipa: /ʋˈɪbɔrɛt͡sʲ/
-  translation: ''
+  translation: voter
   pos: noun
 - lemma: вислів
   ipa: /ʋˈɪsliʋ/
-  translation: ''
+  translation: expression, saying
   pos: noun
   gender: m
 - lemma: виховуватися
   ipa: /ʋɪxˈɔʋuʋatɪsja/
-  translation: ''
+  translation: to be raised
   pos: verb
 - lemma: ворт
   ipa: /ʋɔrt/
@@ -30,164 +30,164 @@ items:
   gender: m
 - lemma: граблі
   ipa: /ɦrablˈi/
-  translation: ''
+  translation: rake
   pos: noun
 - lemma: дехто
   ipa: /dˈɛxtɔ/
-  translation: ''
+  translation: some people
   pos: pron
 - lemma: дитинча
   ipa: /dɪtɪnt͡ʃˈa/
-  translation: ''
+  translation: young child, baby animal
   pos: noun
 - lemma: дріб
   ipa: /drib/
-  translation: ''
+  translation: fraction, small shot
   pos: noun
   gender: m
 - lemma: клопіт
   ipa: /klˈɔpit/
-  translation: ''
+  translation: trouble, bother
   pos: noun
   gender: m
 - lemma: косар
   ipa: /kɔsˈar/
-  translation: ''
+  translation: mower
   pos: noun
 - lemma: коток
   ipa: /kɔtˈɔk/
-  translation: ''
+  translation: rink, roller
   pos: noun
 - lemma: кошеня
   ipa: /kɔʃɛnˈja/
-  translation: ''
+  translation: kitten
   pos: noun
 - lemma: кількісний
   ipa: /kˈilʲkisnɪj/
-  translation: ''
+  translation: quantitative, numeral (adj)
   pos: adj
 - lemma: маля
   ipa: /malˈja/
-  translation: ''
+  translation: baby
   pos: noun
 - lemma: населення
   ipa: /nasˈɛlɛnnja/
-  translation: ''
+  translation: population
   pos: noun
   gender: n
 - lemma: невпевнений
   ipa: /nɛʋpˈɛʋnɛnɪj/
-  translation: ''
+  translation: unsure, unconfident
   pos: adj
 - lemma: опитування
   ipa: /ɔpˈɪtuʋannja/
-  translation: ''
+  translation: survey, poll
   pos: noun
   gender: n
 - lemma: п'ятеро
   ipa: /pˈjatɛrɔ/
-  translation: ''
+  translation: five (collective)
   pos: num
 - lemma: парний
   ipa: /parnɪj/
-  translation: ''
+  translation: paired, even (number)
   pos: adj
 - lemma: перепис
   ipa: /pɛrˈɛpɪs/
-  translation: ''
+  translation: census, copying
   pos: noun
   gender: m
 - lemma: подвір'я
   ipa: /pɔdʋˈirja/
-  translation: ''
+  translation: yard, courtyard
   pos: noun
   gender: n
 - lemma: популяризований
   ipa: /pɔpuljarɪzˈɔʋanɪj/
-  translation: ''
+  translation: popularized
   pos: adj
 - lemma: порядковий
   ipa: /pɔrjadkˈɔʋɪj/
-  translation: ''
+  translation: ordinal (number)
   pos: adj
 - lemma: природність
   ipa: /prɪrˈɔdnistʲ/
-  translation: ''
+  translation: naturalness
   pos: noun
   gender: f
 - lemma: причому
   ipa: /prɪt͡ʃˈɔmu/
-  translation: ''
+  translation: moreover
   pos: conj
 - lemma: пропорція
   ipa: /prɔpˈɔrt͡sija/
-  translation: ''
+  translation: proportion
   pos: noun
   gender: f
 - lemma: процент
   ipa: /prɔt͡sˈɛnt/
-  translation: ''
+  translation: percent
   pos: noun
   gender: m
 - lemma: півтора
   ipa: /piʋtɔrˈa/
-  translation: ''
+  translation: one and a half (masculine)
   pos: num
 - lemma: півтори
   ipa: /piʋtɔrˈɪ/
-  translation: ''
+  translation: one and a half (feminine)
   pos: num
 - lemma: піднімаючись
   ipa: /pidnimˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: rising
   pos: verb
 - lemma: пісочниця
   ipa: /pisˈɔt͡ʃnɪt͡sja/
-  translation: ''
+  translation: sandbox
   pos: noun
   gender: f
 - lemma: респондент
   ipa: /rɛspɔndˈɛnt/
-  translation: ''
+  translation: respondent
   pos: noun
 - lemma: рукавиця
   ipa: /rukaʋˈɪt͡sja/
-  translation: ''
+  translation: mitten
   pos: noun
 - lemma: рукоділля
   ipa: /rukɔdˈillja/
-  translation: ''
+  translation: handicraft, needlework
   pos: noun
   gender: n
 - lemma: селянин
   ipa: /sɛljanˈɪn/
-  translation: ''
+  translation: peasant
   pos: noun
 - lemma: семеро
   ipa: /sˈɛmɛrɔ/
-  translation: ''
+  translation: seven (collective)
   pos: num
 - lemma: синтезувати
   ipa: /sɪntɛzuʋˈatɪ/
-  translation: ''
+  translation: to synthesize
   pos: verb
 - lemma: словотворення
   ipa: /slɔʋɔtʋˈɔrɛnnja/
-  translation: ''
+  translation: word formation
   pos: noun
   gender: n
 - lemma: сонцезахисний
   ipa: /sɔnt͡sɛzaxɪsnˈɪj/
-  translation: ''
+  translation: sun-protective, sunscreen (adj)
   pos: adj
 - lemma: соціолог
   ipa: /sɔt͡siˈɔlɔɦ/
-  translation: ''
+  translation: sociologist
   pos: noun
   gender: m
 - lemma: соціологічний
   ipa: /sɔt͡siɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: sociological
   pos: adj
 - lemma: статистик
   ipa: /statˈɪstɪk/
@@ -195,36 +195,40 @@ items:
   pos: noun
 - lemma: сучасно
   ipa: /sut͡ʃˈasnɔ/
-  translation: ''
+  translation: modernly
   pos: adv
 - lemma: термінологічний
   ipa: /tɛrminɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: terminological
   pos: adj
 - lemma: традиційно
   ipa: /tradɪt͡sˈijnɔ/
-  translation: ''
+  translation: traditionally
   pos: adv
 - lemma: чверть
   ipa: /t͡ʃʋɛrtʲ/
-  translation: ''
+  translation: quarter
   pos: noun
   gender: f
 - lemma: четверо
   ipa: /t͡ʃˈɛtʋɛrɔ/
-  translation: ''
+  translation: four (collective)
   pos: num
+- lemma: шахи
+  ipa: /ʃˈaxɪ/
+  translation: chess
+  pos: noun
 - lemma: явка
   ipa: /ˈjaʋka/
-  translation: ''
+  translation: attendance, turnout
   pos: noun
   gender: f
 - lemma: інтегрований
   ipa: /intɛɦrˈɔʋanɪj/
-  translation: ''
+  translation: integrated
   pos: adj
 - lemma: ініціатива
   ipa: /init͡siatˈɪʋa/
-  translation: ''
+  translation: initiative
   pos: noun
   gender: f

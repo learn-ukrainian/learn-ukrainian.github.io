@@ -8,36 +8,48 @@ items:
   pos: noun
 - lemma: вечірка-сюрприз
   ipa: /ʋɛt͡ʃˈirka-sjurprɪz/
-  translation: ''
+  translation: surprise party
   pos: noun
   gender: f
 - lemma: виконуватися
   ipa: /ʋɪkˈɔnuʋatɪsja/
-  translation: ''
+  translation: to be performed
   pos: verb
-- lemma: вираження
-  ipa: /ʋˈɪraʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: відображати
   ipa: /ʋidɔbraʒˈatɪ/
-  translation: ''
+  translation: to reflect, to display
   pos: verb
 - lemma: герой
   ipa: /ɦɛrˈɔj/
-  translation: ''
+  translation: hero
   pos: noun
   gender: m
+- lemma: годині
+  ipa: /ɦɔdˈɪni/
+  translation: at ... o'clock
+  pos: noun
 - lemma: господар
   ipa: /ɦɔspˈɔdar/
-  translation: ''
+  translation: host, owner
   pos: noun
 - lemma: гост
   ipa: /ɦɔst/
   translation: ''
   pos: noun
   gender: m
+- lemma: готувати
+  ipa: /ɦɔtuʋˈatɪ/
+  translation: to cook, to prepare
+  pos: verb
+- lemma: грати
+  ipa: /ɦrˈatɪ/
+  translation: to play
+  pos: verb
+- lemma: дружина
+  ipa: /druʒˈɪna/
+  translation: wife
+  pos: noun
+  gender: f
 - lemma: дітяма
   ipa: /ditjama/
   translation: ''
@@ -45,30 +57,60 @@ items:
   gender: f
 - lemma: діяти
   ipa: /dˈijatɪ/
-  translation: ''
+  translation: to act, to function
   pos: verb
+- lemma: ема
+  ipa: /ɛma/
+  translation: ''
+  pos: noun
 - lemma: ею
   ipa: /ɛju/
   translation: ''
   pos: noun
+- lemma: зазвичай
+  ipa: /zazʋɪt͡ʃˈaj/
+  translation: usually
+  pos: adv
 - lemma: закричати
   ipa: /zakrɪt͡ʃˈatɪ/
-  translation: ''
+  translation: to scream, to shout
   pos: verb
 - lemma: закінчуватися
   ipa: /zakˈint͡ʃuʋatɪsja/
-  translation: ''
+  translation: to end (imperfective)
   pos: verb
 - lemma: засіб
   ipa: /zˈasib/
-  translation: ''
+  translation: means, tool, remedy
   pos: noun
   gender: m
+- lemma: зустрічатися
+  ipa: /zustrit͡ʃˈatɪsja/
+  translation: to meet each other (imperfective)
+  pos: verb
+- lemma: зі
+  ipa: /zi/
+  translation: ''
+  pos: prep
 - lemma: крем
   ipa: /krɛm/
-  translation: ''
+  translation: cream
   pos: noun
   gender: m
+- lemma: кухня
+  ipa: /kˈuxnja/
+  translation: kitchen, cuisine
+  pos: noun
+  gender: f
+- lemma: кіно
+  ipa: /kinˈɔ/
+  translation: cinema, movie
+  pos: noun
+  gender: n
+- lemma: людина
+  ipa: /ljudˈɪna/
+  translation: person, human
+  pos: noun
 - lemma: людяма
   ipa: /ljudjama/
   translation: ''
@@ -76,148 +118,206 @@ items:
   gender: f
 - lemma: марина
   ipa: /marˈɪna/
-  translation: ''
+  translation: Maryna (name)
   pos: noun
   gender: f
-- lemma: називний
-  ipa: /nazɪʋnˈɪj/
-  translation: ''
-  pos: adj
+- lemma: мед
+  ipa: /mɛd/
+  translation: honey
+  pos: noun
+  gender: m
+- lemma: назва
+  ipa: /nˈazʋa/
+  translation: name, title
+  pos: noun
+  gender: f
 - lemma: найчастіший
   ipa: /najt͡ʃastˈiʃɪj/
-  translation: ''
+  translation: the most frequent/often
   pos: adj
 - lemma: наталія
   ipa: /natˈalija/
-  translation: ''
+  translation: Nataliya (name)
   pos: noun
   gender: f
 - lemma: начальник
   ipa: /nat͡ʃˈalʲnɪk/
-  translation: ''
+  translation: boss, head
   pos: noun
   gender: m
-- lemma: олексій
-  ipa: /ɔlɛksˈij/
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: одружитися
+  ipa: /ɔdruʒˈɪtɪsja/
+  translation: to get married
+  pos: verb
 - lemma: ом
   ipa: /ɔm/
   translation: ''
   pos: noun
   gender: m
-- lemma: орудний
-  ipa: /ɔrˈudnɪj/
-  translation: ''
-  pos: adj
-- lemma: орудувати
-  ipa: /ɔrˈuduʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: освіжати
   ipa: /ɔsʋiʒˈatɪ/
-  translation: ''
+  translation: to refresh
   pos: verb
 - lemma: ою
   ipa: /ɔju/
   translation: ''
   pos: noun
+- lemma: пила
+  ipa: /pɪlˈa/
+  translation: saw
+  pos: noun
+  gender: f
+- lemma: пити
+  ipa: /pˈɪtɪ/
+  translation: to drink
+  pos: verb
 - lemma: познайомити
   ipa: /pɔznajˈɔmɪtɪ/
-  translation: ''
+  translation: to introduce (someone)
   pos: verb
 - lemma: познайомитися
   ipa: /pɔznajˈɔmɪtɪsja/
-  translation: ''
+  translation: to get acquainted
   pos: verb
 - lemma: позначення
   ipa: /pɔznˈat͡ʃɛnnja/
-  translation: ''
+  translation: denotation, marking
   pos: noun
   gender: n
 - lemma: помиритися
   ipa: /pɔmɪrˈɪtɪsja/
-  translation: ''
+  translation: to make up, to reconcile
   pos: verb
 - lemma: попрощатися
   ipa: /pɔprɔʃt͡ʃˈatɪsja/
-  translation: ''
+  translation: to say goodbye
   pos: verb
 - lemma: посваритися
   ipa: /pɔsʋarˈɪtɪsja/
-  translation: ''
+  translation: to quarrel, to have a fight
   pos: verb
+- lemma: потім
+  ipa: /pˈɔtim/
+  translation: then, later
+  pos: pron
 - lemma: походити
   ipa: /pɔxɔdɪtɪ/
-  translation: ''
+  translation: to come from, to originate
+  pos: verb
+- lemma: почати
+  ipa: /pɔt͡ʃˈatɪ/
+  translation: to start, to begin (perfective)
   pos: verb
 - lemma: поєднанний
   ipa: /pɔjɛdnannɪj/
   translation: ''
   pos: adj
-- lemma: правильно
-  ipa: /prˈaʋɪlʲnɔ/
-  translation: ''
-  pos: adv
-- lemma: прийшлий
-  ipa: /prˈɪjʃlɪj/
-  translation: ''
-  pos: adj
+- lemma: приходити
+  ipa: /prɪxˈɔdɪtɪ/
+  translation: to come, to stay (imperfective)
+  pos: verb
 - lemma: проєкт
   ipa: /prɔˈjɛkt/
-  translation: ''
+  translation: project
   pos: noun
   gender: m
+- lemma: півночі
+  ipa: /pˈiʋnɔt͡ʃi/
+  translation: at night, North (gen)
+  pos: noun
+- lemma: піти
+  ipa: /pitɪ/
+  translation: to go, to leave (perfective)
+  pos: verb
 - lemma: розлучитися
   ipa: /rɔzlut͡ʃˈɪtɪsja/
-  translation: ''
+  translation: to get divorced
   pos: verb
+- lemma: рівня
+  ipa: /rˈiʋnja/
+  translation: level (gen), equal
+  pos: noun
+  gender: f
 - lemma: сема
   ipa: /sˈɛma/
   translation: ''
   pos: noun
   gender: f
+- lemma: смачний
+  ipa: /smat͡ʃnˈɪj/
+  translation: tasty, delicious
+  pos: adj
+- lemma: сніг
+  ipa: /sniɦ/
+  translation: snow
+  pos: noun
+  gender: m
 - lemma: супровід
   ipa: /sˈuprɔʋid/
-  translation: ''
+  translation: accompaniment, support
   pos: noun
   gender: m
 - lemma: сховатися
   ipa: /sxɔʋˈatɪsja/
-  translation: ''
+  translation: to hide (oneself perfective)
   pos: verb
+- lemma: сьомий
+  ipa: /sʲˈɔmɪj/
+  translation: seventh
+  pos: adj
 - lemma: сюрприз
   ipa: /sjurprˈɪz/
-  translation: ''
+  translation: surprise
   pos: noun
   gender: m
+- lemma: танцювати
+  ipa: /tant͡sjuʋˈatɪ/
+  translation: to dance
+  pos: verb
+- lemma: торт
+  ipa: /tɔrt/
+  translation: cake
+  pos: noun
+  gender: m
+- lemma: увійти
+  ipa: /uʋijtˈɪ/
+  translation: to enter (perfective)
+  pos: verb
 - lemma: уж
   ipa: /uʒ/
   translation: ''
   pos: noun
   gender: m
-- lemma: утворити
-  ipa: /utʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: учора
-  ipa: /ut͡ʃˈɔra/
-  translation: ''
-  pos: adv
 - lemma: функція
   ipa: /fˈunkt͡sija/
-  translation: ''
+  translation: function
   pos: noun
   gender: f
 - lemma: цілий
   ipa: /t͡sˈilɪj/
-  translation: ''
+  translation: whole, entire
   pos: adj
+- lemma: чекати
+  ipa: /t͡ʃɛkˈatɪ/
+  translation: to wait
+  pos: verb
 - lemma: чим
   ipa: /t͡ʃɪm/
   translation: ''
   pos: conj
+- lemma: чоловік
+  ipa: /t͡ʃɔlɔʋˈik/
+  translation: man, husband
+  pos: noun
+  gender: m
+- lemma: шостий
+  ipa: /ʃˈɔstɪj/
+  translation: sixth
+  pos: adj
+- lemma: шість
+  ipa: /ʃistʲ/
+  translation: six
+  pos: num
 - lemma: я
   ipa: /ja/
   translation: ''
@@ -232,6 +332,10 @@ items:
   pos: prep
 - lemma: інструмент
   ipa: /instrumˈɛnt/
-  translation: ''
+  translation: instrument, tool
   pos: noun
   gender: m
+- lemma: їхати
+  ipa: /ˈjixatɪ/
+  translation: to go, to drive (by vehicle directional)
+  pos: verb

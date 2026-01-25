@@ -4,42 +4,42 @@ version: '2.0'
 items:
 - lemma: амортизація
   ipa: /amɔrtɪzˈat͡sija/
-  translation: ''
+  translation: depreciation, amortization
   pos: noun
   gender: f
 - lemma: амосов
   ipa: /amˈɔsɔʋ/
-  translation: ''
+  translation: Amosov (name)
   pos: noun
   gender: m
 - lemma: асана
   ipa: /asˈana/
-  translation: ''
+  translation: asana
   pos: noun
 - lemma: асфальт
   ipa: /asfˈalʲt/
-  translation: ''
+  translation: asphalt
   pos: noun
   gender: m
 - lemma: багатоповерхівка
   ipa: /baɦatɔpɔʋɛrxˈiʋka/
-  translation: ''
+  translation: high-rise building
   pos: noun
 - lemma: баскетбольний
   ipa: /baskɛtbˈɔlʲnɪj/
-  translation: ''
+  translation: basketball (adj)
   pos: adj
 - lemma: бодібілдер
   ipa: /bɔdibildɛr/
-  translation: ''
+  translation: bodybuilder
   pos: noun
 - lemma: брус
   ipa: /brus/
-  translation: ''
+  translation: beam, bar
   pos: noun
 - lemma: брутально
   ipa: /brutˈalʲnɔ/
-  translation: ''
+  translation: brutally, rudely
   pos: adv
 - lemma: ваги
   ipa: /ʋˈaɦɪ/
@@ -52,86 +52,86 @@ items:
   gender: f
 - lemma: велодоріжка
   ipa: /ʋɛlɔdɔriʒka/
-  translation: ''
+  translation: bike path
   pos: noun
 - lemma: велосипедист
   ipa: /ʋɛlɔsɪpɛdˈɪst/
-  translation: ''
+  translation: cyclist
   pos: noun
 - lemma: велосипедний
   ipa: /ʋɛlɔsɪpˈɛdnɪj/
-  translation: ''
+  translation: bicycle (adj)
   pos: adj
 - lemma: велоінфраструктура
   ipa: /ʋɛlɔinfrastruktura/
-  translation: ''
+  translation: cycling infrastructure
   pos: noun
   gender: f
 - lemma: витривалість
   ipa: /ʋɪtrɪʋˈalistʲ/
-  translation: ''
+  translation: endurance, stamina
   pos: noun
   gender: f
 - lemma: вмовити
   ipa: /ʋmˈɔʋɪtɪ/
-  translation: ''
+  translation: to persuade
   pos: verb
 - lemma: воркаут
   ipa: /ʋɔrkaut/
-  translation: ''
+  translation: workout
   pos: noun
   gender: m
 - lemma: вуличний
   ipa: /ʋˈulɪt͡ʃnɪj/
-  translation: ''
+  translation: street (adj)
   pos: adj
 - lemma: відводити
   ipa: /ʋidʋˈɔdɪtɪ/
-  translation: ''
+  translation: to lead away (imperfective)
   pos: verb
 - lemma: гормон
   ipa: /ɦɔrmˈɔn/
-  translation: ''
+  translation: hormone
   pos: noun
 - lemma: груповий
   ipa: /ɦrupɔʋˈɪj/
-  translation: ''
+  translation: group (adj)
   pos: adj
 - lemma: гідропарк
   ipa: /ɦidrɔpˈark/
-  translation: ''
+  translation: Hydropark
   pos: noun
   gender: m
 - lemma: гіпертонія
   ipa: /ɦipɛrtɔnˈija/
-  translation: ''
+  translation: hypertension
   pos: noun
   gender: f
 - lemma: дихаючий
   ipa: /dɪxajut͡ʃɪj/
-  translation: ''
+  translation: breathing (adj)
   pos: adj
 - lemma: довголіття
   ipa: /dɔʋɦɔlˈittja/
-  translation: ''
+  translation: longevity
   pos: noun
   gender: n
 - lemma: доставляючи
   ipa: /dɔstaʋlˈjajut͡ʃɪ/
-  translation: ''
+  translation: delivering
   pos: verb
 - lemma: доступно
   ipa: /dɔstˈupnɔ/
-  translation: ''
+  translation: accessibly
   pos: adv
 - lemma: дофамін
   ipa: /dɔfamˈin/
-  translation: ''
+  translation: dopamine
   pos: noun
   gender: m
 - lemma: експоцентр
   ipa: /ɛkspɔt͡sˈɛntr/
-  translation: ''
+  translation: expo center
   pos: noun
   gender: m
 - lemma: еліна
@@ -141,39 +141,39 @@ items:
   gender: f
 - lemma: ендорфін
   ipa: /ɛndɔrfin/
-  translation: ''
+  translation: endorphin
   pos: noun
 - lemma: ентузіаст
   ipa: /ɛntuziˈast/
-  translation: ''
+  translation: enthusiast
   pos: noun
 - lemma: заборонений
   ipa: /zabɔrˈɔnɛnɪj/
-  translation: ''
+  translation: forbidden, banned
   pos: adj
 - lemma: забіг
   ipa: /zabˈiɦ/
-  translation: ''
+  translation: race, run
   pos: noun
 - lemma: завадити
   ipa: /zaʋˈadɪtɪ/
-  translation: ''
+  translation: to prevent, to hinder
   pos: verb
 - lemma: запобігати
   ipa: /zapɔbiɦˈatɪ/
-  translation: ''
+  translation: to prevent
   pos: verb
 - lemma: зміцнювати
   ipa: /zmˈit͡snjuʋatɪ/
-  translation: ''
+  translation: to strengthen (imperfective)
   pos: verb
 - lemma: зноситися
   ipa: /znɔsɪtɪsja/
-  translation: ''
+  translation: to be worn out, to communicate (rarely used this way)
   pos: verb
 - lemma: зручніший
   ipa: /zrut͡ʃnˈiʃɪj/
-  translation: ''
+  translation: more convenient (adj)
   pos: adj
 - lemma: зсж
   ipa: /zsʒ/
@@ -182,11 +182,11 @@ items:
   gender: m
 - lemma: йог
   ipa: /jɔɦ/
-  translation: ''
+  translation: yogi
   pos: noun
 - lemma: калорія
   ipa: /kalˈɔrija/
-  translation: ''
+  translation: calorie
   pos: noun
   gender: f
 - lemma: каменський
@@ -195,65 +195,65 @@ items:
   pos: noun
 - lemma: кардіохірург
   ipa: /kardiɔxirˈurɦ/
-  translation: ''
+  translation: cardiac surgeon
   pos: noun
   gender: m
 - lemma: качалка
   ipa: /kat͡ʃˈalka/
-  translation: ''
+  translation: rolling pin
   pos: noun
   gender: f
 - lemma: кисень
   ipa: /kˈɪsɛnʲ/
-  translation: ''
+  translation: oxygen
   pos: noun
   gender: m
 - lemma: клітина
   ipa: /klitˈɪna/
-  translation: ''
+  translation: cell, cage
   pos: noun
   gender: f
 - lemma: колекція
   ipa: /kɔlˈɛkt͡sija/
-  translation: ''
+  translation: collection
   pos: noun
   gender: f
 - lemma: колосальний
   ipa: /kɔlɔsˈalʲnɪj/
-  translation: ''
+  translation: colossal
   pos: adj
 - lemma: коліно
   ipa: /kɔlˈinɔ/
-  translation: ''
+  translation: knee
   pos: noun
   gender: n
 - lemma: корсет
   ipa: /kɔrsˈɛt/
-  translation: ''
+  translation: corset
   pos: noun
   gender: m
 - lemma: кровообіг
   ipa: /krɔʋɔˈɔbiɦ/
-  translation: ''
+  translation: blood circulation
   pos: noun
   gender: m
 - lemma: кріпатура
   ipa: /kripatˈura/
-  translation: ''
+  translation: muscle soreness
   pos: noun
   gender: f
 - lemma: левандівка
   ipa: /lɛʋandiʋka/
-  translation: ''
+  translation: Levandivka (district in Lviv)
   pos: noun
   gender: f
 - lemma: лісопарковий
   ipa: /lisɔpˈarkɔʋɪj/
-  translation: ''
+  translation: forest park (adj)
   pos: adj
 - lemma: метаболізм
   ipa: /mɛtabɔlˈizm/
-  translation: ''
+  translation: metabolism
   pos: noun
   gender: m
 - lemma: металлобрухт
@@ -263,145 +263,145 @@ items:
   gender: m
 - lemma: мозоля
   ipa: /mɔzˈɔlja/
-  translation: ''
+  translation: callus
   pos: noun
 - lemma: муромець
   ipa: /murɔmɛt͡sʲ/
-  translation: ''
+  translation: Muromets (hero)
   pos: noun
   gender: f
 - lemma: міряти
   ipa: /mˈirjatɪ/
-  translation: ''
+  translation: to measure
   pos: verb
 - lemma: найсуворіший
   ipa: /najsuʋˈɔriʃɪj/
-  translation: ''
+  translation: the strictest
   pos: adj
 - lemma: непогано
   ipa: /nɛpɔɦˈanɔ/
-  translation: ''
+  translation: not bad!
   pos: adv
 - lemma: нерв
   ipa: /nɛrʋ/
-  translation: ''
+  translation: nerve
   pos: noun
 - lemma: однодумець
   ipa: /ɔdnɔdˈumɛt͡sʲ/
-  translation: ''
+  translation: like-minded person
   pos: noun
 - lemma: опорно-руховий
   ipa: /ɔpɔrnɔ-ruxɔʋˈɪj/
-  translation: ''
+  translation: musculoskeletal
   pos: adj
 - lemma: освітлення
   ipa: /ɔsʋˈitlɛnnja/
-  translation: ''
+  translation: lighting
   pos: noun
   gender: n
 - lemma: палець
   ipa: /pˈalɛt͡sʲ/
-  translation: ''
+  translation: finger, toe
   pos: noun
 - lemma: перезавантажити
   ipa: /pɛrɛzaʋantaʒɪtɪ/
-  translation: ''
+  translation: to restart, to reboot
   pos: verb
 - lemma: популярно
   ipa: /pɔpulˈjarnɔ/
-  translation: ''
+  translation: popularly
   pos: adv
 - lemma: порухатися
   ipa: /pɔrˈuxatɪsja/
-  translation: ''
+  translation: to move for a while, to stir
   pos: verb
 - lemma: пофарбований
   ipa: /pɔfarbˈɔʋanɪj/
-  translation: ''
+  translation: painted
   pos: adj
 - lemma: початківець
   ipa: /pɔt͡ʃatkˈiʋɛt͡sʲ/
-  translation: ''
+  translation: beginner
   pos: noun
 - lemma: пристосований
   ipa: /prɪstɔsˈɔʋanɪj/
-  translation: ''
+  translation: adapted
   pos: adj
 - lemma: пропагувати
   ipa: /prɔpaɦuʋˈatɪ/
-  translation: ''
+  translation: to advocate, to promote
   pos: verb
 - lemma: путівник
   ipa: /putiʋnˈɪk/
-  translation: ''
+  translation: guidebook
   pos: noun
 - lemma: піднесення
   ipa: /pidnˈɛsɛnnja/
-  translation: ''
+  translation: elevation, surge, rise
   pos: noun
   gender: n
 - lemma: підошва
   ipa: /pidˈɔʃʋa/
-  translation: ''
+  translation: sole (footwear/mountain)
   pos: noun
   gender: f
 - lemma: підтягнутий
   ipa: /pidtˈjaɦnutɪj/
-  translation: ''
+  translation: fit, trim
   pos: adj
 - lemma: рекреаційний
   ipa: /rɛkrɛat͡sˈijnɪj/
-  translation: ''
+  translation: recreational
   pos: adj
 - lemma: розтягувати
   ipa: /rɔztˈjaɦuʋatɪ/
-  translation: ''
+  translation: to stretch
   pos: verb
 - lemma: розтяжка
   ipa: /rɔztˈjaʒka/
-  translation: ''
+  translation: stretching, tripwire
   pos: noun
   gender: f
 - lemma: романтично
   ipa: /rɔmantˈɪt͡ʃnɔ/
-  translation: ''
+  translation: romantically
   pos: adv
 - lemma: рухливий
   ipa: /ruxlˈɪʋɪj/
-  translation: ''
+  translation: mobile, active
   pos: adj
 - lemma: рухливість
   ipa: /ruxlˈɪʋistʲ/
-  translation: ''
+  translation: mobility
   pos: noun
   gender: f
 - lemma: світоліна
   ipa: /sʋitɔlina/
-  translation: ''
+  translation: Svitolina (name)
   pos: noun
   gender: f
 - lemma: серотонін
   ipa: /sɛrɔtɔnˈin/
-  translation: ''
+  translation: serotonin
   pos: noun
   gender: m
 - lemma: серцево-судинний
   ipa: /sɛrt͡sɛʋɔ-sudˈɪnnɪj/
-  translation: ''
+  translation: cardiovascular
   pos: adj
 - lemma: синоптика
   ipa: /sɪnˈɔptɪka/
-  translation: ''
+  translation: synoptics, meteorology
   pos: noun
   gender: f
 - lemma: сихів
   ipa: /sˈɪxiʋ/
-  translation: ''
+  translation: Sykhiv
   pos: noun
   gender: m
 - lemma: спалювати
   ipa: /spˈaljuʋatɪ/
-  translation: ''
+  translation: to burn, to incinerate (imperfective)
   pos: verb
 - lemma: спортмастер
   ipa: /spɔrtmastɛr/
@@ -410,95 +410,95 @@ items:
   gender: m
 - lemma: статистика
   ipa: /statˈɪstɪka/
-  translation: ''
+  translation: statistics
   pos: noun
   gender: f
 - lemma: стоп
   ipa: /stɔp/
-  translation: ''
+  translation: stop
   pos: noun
   gender: m
 - lemma: сітка
   ipa: /sˈitka/
-  translation: ''
+  translation: net, grid, mesh
   pos: noun
   gender: f
 - lemma: тенісистка
   ipa: /tɛnisˈɪstka/
-  translation: ''
+  translation: tennis player (female)
   pos: noun
   gender: f
 - lemma: тракторний
   ipa: /trˈaktɔrnɪj/
-  translation: ''
+  translation: tractor (adj)
   pos: adj
 - lemma: тренажер
   ipa: /trɛnaʒˈɛr/
-  translation: ''
+  translation: training machine, simulator
   pos: noun
 - lemma: тренажерний
   ipa: /trɛnˈaʒɛrnɪj/
-  translation: ''
+  translation: gym (adj)
   pos: adj
 - lemma: тривожність
   ipa: /trɪʋˈɔʒnistʲ/
-  translation: ''
+  translation: anxiety (trait)
   pos: noun
   gender: f
 - lemma: труханів
   ipa: /truxˈaniʋ/
-  translation: ''
+  translation: Trukhaniv (island)
   pos: adj
 - lemma: турнік
   ipa: /turnˈik/
-  translation: ''
+  translation: horizontal bar (gymnastics)
   pos: noun
 - lemma: урбаністика
   ipa: /urbanˈistɪka/
-  translation: ''
+  translation: urbanism, urban planning
   pos: noun
   gender: f
 - lemma: фізіологічний
   ipa: /fiziɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: physiological
   pos: adj
 - lemma: циркулювати
   ipa: /t͡sɪrkuljuʋˈatɪ/
-  translation: ''
+  translation: to circulate
   pos: verb
 - lemma: шкарпетка
   ipa: /ʃkarpˈɛtka/
-  translation: ''
+  translation: sock
   pos: noun
   gender: f
 - lemma: шолом
   ipa: /ʃɔlˈɔm/
-  translation: ''
+  translation: helmet
   pos: noun
   gender: m
 - lemma: інструктор
   ipa: /instrˈuktɔr/
-  translation: ''
+  translation: instructor
   pos: noun
   gender: m
 - lemma: інсульт
   ipa: /insˈulʲt/
-  translation: ''
+  translation: stroke (medical)
   pos: noun
 - lemma: інтенсивніший
   ipa: /intɛnsˈɪʋniʃɪj/
-  translation: ''
+  translation: more intensive
   pos: adj
 - lemma: інтерспорт
   ipa: /intɛrspɔrt/
-  translation: ''
+  translation: Intersport
   pos: noun
   gender: m
 - lemma: інфаркт
   ipa: /infˈarkt/
-  translation: ''
+  translation: heart attack
   pos: noun
 - lemma: ґрунтовий
   ipa: /gruntɔʋˈɪj/
-  translation: ''
+  translation: soil (adj), unpaved
   pos: adj

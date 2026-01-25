@@ -1,17 +1,54 @@
-# Audit Report: 14-aspect-integration-practice.md
-**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M14 — 14-aspect-integration-practice.md
+**Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:30:33
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір виду в наративі | 8 | 8 | ✅ |
+| 2 | match-up | Сполучники та вид | 12 | 8 | ✅ |
+| 3 | group-sort | Класифікація аспектних контекстів | 16 | 12 | ✅ |
+| 4 | fill-in | Інтеграція видів у речення | 12 | 8 | ✅ |
+| 5 | true-false | Аспектні патерни | 12 | 8 | ✅ |
+| 6 | unjumble | Складіть речення з правильним видом | 8 | 6 | ✅ |
+| 7 | cloze | Історія однієї пригоди | 19 | 12 | ✅ |
+| 8 | error-correction | Виправте аспектні помилки в тексті | 8 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть фонові дії | 8 | 6 | ✅ |
+| 10 | select | Аналіз аспектних патернів | 6 | 6 | ✅ |
+| 11 | translate | Переклад інтегрованих фраз | 6 | 6 | ✅ |
+| 12 | select | Ритм розповіді | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1800/1500
+- **Words:** ✅ 1800/1500 (raw: 2172)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
+- **Vocab:** ✅ 55/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

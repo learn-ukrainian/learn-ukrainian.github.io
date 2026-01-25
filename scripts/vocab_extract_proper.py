@@ -414,7 +414,7 @@ def main():
     
     # Delta extraction check
     db_path = Path("curriculum/l2-uk-en/vocabulary.db")
-    known_lemmas = get_known_lemmas(db_path) if db_path.exists() else None
+    known_lemmas = get_known_lemmas(db_path) if db_path.exists() else set()
     
     if known_lemmas:
         print(f"  🔍 Knowledge-Aware: Filtering against {len(known_lemmas):,} known lemmas")

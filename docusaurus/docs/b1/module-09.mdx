@@ -66,7 +66,7 @@ import AuthorialIntent from '@site/src/components/AuthorialIntent';
 
 ## Пояснення
 
-### Три форми майбутнього часу
+#### Три форми майбутнього часу
 
 ### 1. Складна майбутня форма (НДВ): буду + інфінітив
 
@@ -585,6 +585,10 @@ _(What you sow, you shall reap.)_
   <MarkTheWordsActivity instruction="Прочитайте текст і позначте всі маркери майбутнього часу (слова, що вказують на майбутнє):" text="Завтра я почну готуватися до іспитів. Найближчим часом я опрацюю всі теми з граматики. Наступного тижня я вивчатиму нову лексику щодня. Скоро я завершу підготовку до письмової частини. Згодом я зосереджуся на усній частині та пізніше повторю всі матеріали ще раз. У майбутньому я сподіваюся використовувати українську мову професійно." correctWords={JSON.parse(`["Завтра", "Найближчим", "часом", "Наступного", "тижня", "Скоро", "пізніше", "У", "майбутньому"]`)} />
 </MarkTheWords>
 
+### Вибір форми майбутнього
+
+<FillIn items={JSON.parse(`[{"sentence": "Завтра я ________ цю книгу цілий день.", "answer": "буду читати", "options": ["буду читати", "прочитаю", "читатиму", "прочитати"]}, {"sentence": "Він ________ звіт завтра вранці і відправить його.", "answer": "напише", "options": ["напише", "писатиме", "буде писати", "написати"]}, {"sentence": "Ми ________ українську мову наступного року.", "answer": "вивчатимемо", "options": ["вивчатимемо", "вивчимо", "вивчити", "будемо вивчати"]}, {"sentence": "Ти ________ мені з перекладом цього тексту?", "answer": "допоможеш", "options": ["допоможеш", "допомагатимеш", "будеш допомагати", "допомогти"]}, {"sentence": "Вони ________ у цьому готелі два тижні.", "answer": "будуть жити", "options": ["будуть жити", "проживуть", "житимуть", "жити"]}, {"sentence": "Я ________ тобі цю історію, коли ми зустрінемося.", "answer": "розкажу", "options": ["розкажу", "розказуватиму", "буду розказувати", "розказати"]}, {"sentence": "Вона ________ на концерті наступної суботи.", "answer": "співатиме", "options": ["співатиме", "заспіває", "буде співати", "співати"]}, {"sentence": "Ви ________ цей фільм сьогодні ввечері?", "answer": "будете дивитися", "options": ["будете дивитися", "подивитеся", "дивитиметеся", "дивитися"]}, {"sentence": "Я ________ це завдання, поки ти не повернешся.", "answer": "робитиму", "options": ["робитиму", "зроблю", "буду робити", "зробити"]}, {"sentence": "Ми ________ в парку, якщо буде гарна погода.", "answer": "погуляємо", "options": ["погуляємо", "гулятимемо", "будемо гуляти", "гуляти"]}]`)} />
+
 ### Множинний вибір — майбутній час
 
 <Select questions={JSON.parse(`[{"question": "Які форми виражають процес у майбутньому часі (недоконаний вид)?", "options": [{"text": "буду читати", "correct": true}, {"text": "читатиму", "correct": true}, {"text": "прочитаю", "correct": false}, {"text": "читав", "correct": false}], "explanation": ""}, {"question": "Які маркери зазвичай вимагають доконаного виду в майбутньому часі?", "options": [{"text": "нарешті", "correct": true}, {"text": "протягом", "correct": false}, {"text": "до кінця", "correct": true}, {"text": "весь день", "correct": false}, {"text": "точно завершити", "correct": true}], "explanation": ""}, {"question": "У яких контекстах доречно використовувати синтетичну форму майбутнього часу (читатиму, писатиму)?", "options": [{"text": "У журналістських текстах", "correct": true}, {"text": "В офіційних документах", "correct": true}, {"text": "У повсякденних розмовах з друзями", "correct": false}, {"text": "У художній літературі", "correct": true}], "explanation": ""}, {"question": "Які форми є НЕПРАВИЛЬНИМИ в українській мові?", "options": [{"text": "буду читати", "correct": false}, {"text": "буду прочитати", "correct": true}, {"text": "читатиму", "correct": false}, {"text": "буду читатиму", "correct": true}, {"text": "прочитаю", "correct": false}], "explanation": ""}, {"question": "Які речення правильні?", "options": [{"text": "Я працюватиму над проєктом весь тиждень.", "correct": true}, {"text": "Я буду працюватиму над проєктом.", "correct": false}, {"text": "Я буду працювати над проєктом весь тиждень.", "correct": true}, {"text": "Я закінчу проєкт до п'ятниці.", "correct": true}], "explanation": ""}, {"question": "Що правильно для опису регулярної дії в майбутньому?", "options": [{"text": "Я читатиму українські новини щодня.", "correct": true}, {"text": "Я буду читати українські новини щодня.", "correct": true}, {"text": "Я прочитаю українські новини щодня.", "correct": false}, {"text": "Я читав українські новини щодня.", "correct": false}], "explanation": ""}]`)} />
@@ -601,66 +605,154 @@ _(What you sow, you shall reap.)_
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 | --- | --- | --- | --- | --- |
-| **амбітно** | /ambˈitnɔ/ |  | присл |  |
-| **аналогічний** | /analɔɦˈit͡ʃnɪj/ |  | прикм |  |
-| **анкетування** | /ankɛtuʋˈannja/ |  | ім |  |
+| **абсолютно** | /absɔlˈjutnɔ/ | absolutely | присл |  |
+| **академічний** | /akadɛmˈit͡ʃnɪj/ | academic | прикм |  |
+| **амбітно** | /ambˈitnɔ/ | ambitiously | присл |  |
+| **аналогічний** | /analɔɦˈit͡ʃnɪj/ | similar, analogous | прикм |  |
+| **анкетування** | /ankɛtuʋˈannja/ | surveying, questioning | ім |  |
+| **багатство** | /baɦˈatstʋɔ/ | wealth, richness | ім |  |
+| **березень** | /bˈɛrɛzɛnʲ/ | March | ім |  |
 | **березна** | /bɛrˈɛzna/ |  | ім |  |
-| **вибирати** | /ʋɪbɪrˈatɪ/ |  | дієсл |  |
-| **використаний** | /ʋˈɪkɔrɪstanɪj/ |  | прикм |  |
-| **ворожити** | /ʋɔrɔʒˈɪtɪ/ |  | дієсл |  |
-| **ворожіння** | /ʋɔrɔʒˈinnja/ |  | ім |  |
-| **вплив** | /ʋplɪʋ/ |  | ім |  |
-| **вступний** | /ʋstupnˈɪj/ |  | прикм |  |
-| **глава** | /ɦlaʋˈa/ |  | ім |  |
-| **гнучкість** | /ɦnˈut͡ʃkistʲ/ |  | ім |  |
-| **дисертація** | /dɪsɛrtˈat͡sija/ |  | ім |  |
-| **докторант** | /dɔktɔrˈant/ |  | ім |  |
-| **доля** | /dˈɔlja/ |  | ім |  |
-| **дослідницький** | /dɔslˈidnɪt͡sʲkɪj/ |  | прикм |  |
-| **діалектизм** | /dialɛktˈɪzm/ |  | ім |  |
-| **економічний** | /ɛkɔnɔmˈit͡ʃnɪj/ |  | прикм |  |
-| **емпіричний** | /ɛmpirˈɪt͡ʃnɪj/ |  | прикм |  |
-| **журналістика** | /ʒurnalˈistɪka/ |  | ім |  |
-| **журналістський** | /ʒurnalˈistsʲkɪj/ |  | прикм |  |
-| **застаріти** | /zastˈaritɪ/ |  | дієсл |  |
-| **захист** | /zˈaxɪst/ |  | ім |  |
-| **зберегтися** | /zbɛrɛɦtˈɪsja/ |  | дієсл |  |
-| **змішування** | /zmˈiʃuʋannja/ |  | ім |  |
-| **зібраний** | /zˈibranɪj/ |  | прикм |  |
-| **зіпсутий** | /zipsˈutɪj/ |  | прикм |  |
-| **ймовірно** | /jmɔʋˈirnɔ/ |  | присл |  |
-| **курсовий** | /kursɔʋˈɪj/ |  | прикм |  |
-| **літературно** | /litɛratˈurnɔ/ |  | присл |  |
-| **маргіналізувати** | /marɦinalizuʋatɪ/ |  | дієсл |  |
-| **молодь** | /mˈɔlɔdʲ/ |  | ім |  |
-| **називаючи** | /nazɪʋˈajut͡ʃɪ/ |  | дієсл |  |
-| **невідворотний** | /nɛʋidʋɔrˈɔtnɪj/ |  | прикм |  |
-| **новорічний** | /nɔʋɔrˈit͡ʃnɪj/ |  | прикм |  |
-| **опрацьовувати** | /ɔprat͡sʲˈɔʋuʋatɪ/ |  | дієсл |  |
-| **органічний** | /ɔrɦanˈit͡ʃnɪj/ |  | прикм |  |
-| **перебувати** | /pɛrɛbuʋˈatɪ/ |  | дієсл |  |
-| **пожати** | /pɔʒˈatɪ/ |  | дієсл |  |
-| **показник** | /pɔkˈaznɪk/ |  | ім |  |
-| **полонізм** | /pɔlɔnˈizm/ |  | ім |  |
-| **політик** | /pɔlˈitɪk/ |  | ім |  |
-| **помітити** | /pɔmˈitɪtɪ/ |  | дієсл |  |
-| **посіяти** | /pɔsˈijatɪ/ |  | дієсл |  |
-| **прадавній** | /pradˈaʋnij/ |  | прикм |  |
-| **представити** | /prɛdstˈaʋɪtɪ/ |  | дієсл |  |
-| **принаймні** | /prɪnˈajmni/ |  | присл |  |
-| **проміжний** | /prɔmˈiʒnɪj/ |  | прикм |  |
-| **підкреслення** | /pidkrˈɛslɛnnja/ |  | ім |  |
-| **рамка** | /rˈamka/ |  | ім |  |
-| **соня** | /sˈɔnja/ |  | ім |  |
-| **спадок** | /spˈadɔk/ |  | ім |  |
-| **староукраїнський** | /starɔukraˈjinsʲkɪj/ |  | прикм |  |
+| **бігати** | /bˈiɦatɪ/ | to run | дієсл |  |
+| **вересень** | /ʋˈɛrɛsɛnʲ/ | September | ім |  |
+| **вибирати** | /ʋɪbɪrˈatɪ/ | to choose, to select | дієсл |  |
+| **виглядати** | /ʋɪɦljadˈatɪ/ | to look, to appear | дієсл |  |
+| **вийти** | /ʋˈɪjtɪ/ | to go out, to come out | дієсл |  |
+| **використаний** | /ʋˈɪkɔrɪstanɪj/ | used | прикм |  |
+| **вистава** | /ʋɪstˈaʋa/ | performance, show | ім |  |
+| **вміти** | /ʋmˈitɪ/ | to know how, to can | дієсл |  |
+| **ворожити** | /ʋɔrɔʒˈɪtɪ/ | to tell fortunes, to hex | дієсл |  |
+| **ворожіння** | /ʋɔrɔʒˈinnja/ | fortune-telling | ім |  |
+| **впевнений** | /ʋpˈɛʋnɛnɪj/ | confident, sure | прикм |  |
+| **вплив** | /ʋplɪʋ/ | influence, impact | ім |  |
+| **вступний** | /ʋstupnˈɪj/ | introductory | прикм |  |
+| **втратити** | /ʋtrˈatɪtɪ/ | to lose | дієсл |  |
+| **відчути** | /ʋidt͡ʃˈutɪ/ | to feel (perfective) | дієсл |  |
+| **глава** | /ɦlaʋˈa/ | head, chapter | ім |  |
+| **гнучкість** | /ɦnˈut͡ʃkistʲ/ | flexibility | ім |  |
+| **готель** | /ɦɔtˈɛlʲ/ | hotel | ім |  |
+| **дан** | /dan/ |  | ім |  |
+| **дисертація** | /dɪsɛrtˈat͡sija/ | dissertation | ім |  |
+| **докторант** | /dɔktɔrˈant/ | doctoral student | ім |  |
+| **доля** | /dˈɔlja/ | fate, destiny | ім |  |
+| **допоміжний** | /dɔpɔmˈiʒnɪj/ | auxiliary, secondary | прикм |  |
+| **дослідження** | /dɔslˈidʒɛnnja/ | research, study | ім |  |
+| **дослідницький** | /dɔslˈidnɪt͡sʲkɪj/ | research (adj) | прикм |  |
+| **досягти** | /dɔsjaɦtˈɪ/ | to reach, to achieve | дієсл |  |
+| **діалектизм** | /dialɛktˈɪzm/ | dialectical word | ім |  |
+| **екзамен** | /ɛkzˈamɛn/ | exam | ім |  |
+| **економіка** | /ɛkɔnˈɔmika/ | economy | ім |  |
+| **економічний** | /ɛkɔnɔmˈit͡ʃnɪj/ | economic | прикм |  |
+| **експерт** | /ɛkspˈɛrt/ | expert | ім |  |
+| **емпіричний** | /ɛmpirˈɪt͡ʃnɪj/ | empirical | прикм |  |
+| **етап** | /ɛtˈap/ | stage, phase | ім |  |
+| **журнал** | /ʒurnˈal/ | magazine, journal | ім |  |
+| **журналістика** | /ʒurnalˈistɪka/ | journalism | ім |  |
+| **журналістський** | /ʒurnalˈistsʲkɪj/ | journalist (adj) | прикм |  |
+| **завтрашній** | /zˈaʋtraʃnij/ | tomorrow's | прикм |  |
+| **заміж** | /zˈamiʒ/ | married (of a woman) | присл |  |
+| **застаріти** | /zastˈaritɪ/ | to become obsolete | дієсл |  |
+| **захист** | /zˈaxɪst/ | protection, defense | ім |  |
+| **зберегтися** | /zbɛrɛɦtˈɪsja/ | to be preserved | дієсл |  |
+| **згодом** | /zɦˈɔdɔm/ | later, afterwards | присл |  |
+| **змішування** | /zmˈiʃuʋannja/ | mixing | ім |  |
+| **зібраний** | /zˈibranɪj/ | collected, gathered | прикм |  |
+| **зіпсутий** | /zipsˈutɪj/ | spoiled, ruined | прикм |  |
+| **ймовірно** | /jmɔʋˈirnɔ/ | probably, potentially | присл |  |
+| **канікули** | /kanˈikulɪ/ | holidays, vacation | ім |  |
+| **квартал** | /kʋartˈal/ | quarter, block | ім |  |
+| **квиток** | /kʋɪtˈɔk/ | ticket | ім |  |
+| **квітень** | /kʋˈitɛnʲ/ | April | ім |  |
+| **квітний** | /kʋitnˈɪj/ | blooming, April (adj) | прикм |  |
+| **керівник** | /kɛriʋnˈɪk/ | manager, leader | ім |  |
+| **київський** | /kˈɪjiʋsʲkɪj/ | Kyiv (adj) | прикм |  |
+| **консультація** | /kɔnsulʲtˈat͡sija/ | consultation | ім |  |
+| **концерт** | /kɔnt͡sˈɛrt/ | concert | ім |  |
+| **кросівка** | /krɔsˈiʋka/ | sneaker | ім |  |
+| **купля** | /kˈuplja/ |  | ім |  |
+| **курсовий** | /kursɔʋˈɪj/ | course (adj), term paper | прикм |  |
+| **львівський** | /lʲʋˈiʋsʲkɪj/ | Lviv (adj) | прикм |  |
+| **лютий** | /lˈjutɪj/ | February, fierce | ім |  |
+| **літературно** | /litɛratˈurnɔ/ | literarily | присл |  |
+| **мабуть** | /mˈabutʲ/ | probably | присл |  |
+| **маргіналізувати** | /marɦinalizuʋatɪ/ | to marginalize | дієсл |  |
+| **медіа** | /mˈɛdia/ | media | ім |  |
+| **молодь** | /mˈɔlɔdʲ/ | youth (people) | ім |  |
+| **надто** | /nˈadtɔ/ | too, very | присл |  |
+| **називаючи** | /nazɪʋˈajut͡ʃɪ/ | naming | дієсл |  |
+| **найближчий** | /najblˈɪʒt͡ʃɪj/ | nearest, upcoming | прикм |  |
+| **найпопулярніший** | /najpɔpulˈjarniʃɪj/ | the most popular | прикм |  |
+| **намагатися** | /namaɦˈatɪsja/ | to try, to attempt | дієсл |  |
+| **напружений** | /naprˈuʒɛnɪj/ | tense, strained | прикм |  |
+| **насправді** | /nasprˈaʋdi/ | actually, in fact | присл |  |
+| **науковий** | /naukˈɔʋɪj/ | scientific | прикм |  |
+| **наявність** | /naˈjaʋnistʲ/ | availability, presence | ім |  |
+| **небагато** | /nɛbaɦˈatɔ/ | not much, few | займ |  |
+| **невідворотний** | /nɛʋidʋɔrˈɔtnɪj/ | inevitable | прикм |  |
+| **недолік** | /nɛdˈɔlik/ | drawback, flaw | ім |  |
+| **необхідний** | /nɛɔbxˈidnɪj/ | necessary | прикм |  |
+| **новорічний** | /nɔʋɔrˈit͡ʃnɪj/ | New Year's (adj) | прикм |  |
+| **обговорення** | /ɔbɦɔʋˈɔrɛnnja/ | discussion | ім |  |
+| **обіцянка** | /ɔbit͡sˈjanka/ | promise | ім |  |
+| **ознака** | /ɔznˈaka/ | sign, feature | ім |  |
+| **опрацьовувати** | /ɔprat͡sʲˈɔʋuʋatɪ/ | to process, to work on | дієсл |  |
+| **опублікувати** | /ɔpublikuʋˈatɪ/ | to publish | дієсл |  |
+| **органічний** | /ɔrɦanˈit͡ʃnɪj/ | organic | прикм |  |
+| **орендувати** | /ɔrɛnduʋˈatɪ/ | to rent, to lease | дієсл |  |
+| **особливо** | /ɔsɔblˈɪʋɔ/ | especially | присл |  |
+| **остаточний** | /ɔstatˈɔt͡ʃnɪj/ | final, definitive | прикм |  |
+| **перебувати** | /pɛrɛbuʋˈatɪ/ | to stay, to be present | дієсл |  |
+| **побутовий** | /pɔbutˈɔʋɪj/ | everyday, household (adj) | прикм |  |
+| **погуляти** | /pɔɦulˈjatɪ/ | to walk, to party (perfective) | дієсл |  |
+| **подавати** | /pɔdaʋˈatɪ/ | to serve, to submit, to provide | дієсл |  |
+| **пожати** | /pɔʒˈatɪ/ | to shake (hands), to reap | дієсл |  |
+| **показник** | /pɔkˈaznɪk/ | indicator, metric | ім |  |
+| **полонізм** | /pɔlɔnˈizm/ | Polonism | ім |  |
+| **політик** | /pɔlˈitɪk/ | politician | ім |  |
+| **помітити** | /pɔmˈitɪtɪ/ | to notice (perfective) | дієсл |  |
+| **поснідати** | /pɔsnˈidatɪ/ | to have breakfast | дієсл |  |
+| **посіяти** | /pɔsˈijatɪ/ | to sow (perfective) | дієсл |  |
+| **поєднання** | /pɔjɛdnˈannja/ | combination, union | ім |  |
+| **прадавній** | /pradˈaʋnij/ | ancient, primeval | прикм |  |
+| **представити** | /prɛdstˈaʋɪtɪ/ | to present, to introduce | дієсл |  |
+| **принаймні** | /prɪnˈajmni/ | at least | присл |  |
+| **проміжний** | /prɔmˈiʒnɪj/ | intermediate | прикм |  |
+| **підкреслення** | /pidkrˈɛslɛnnja/ | underlining, emphasis | ім |  |
+| **пізніший** | /piznˈiʃɪj/ | later (adj) | прикм |  |
+| **рамка** | /rˈamka/ | frame, border | ім |  |
+| **реальний** | /rɛˈalʲnɪj/ | real, actual | прикм |  |
+| **рекомендація** | /rɛkɔmɛndˈat͡sija/ | recommendation | ім |  |
+| **риса** | /rˈɪsa/ | feature, trait, line | ім |  |
+| **розвиток** | /rˈɔzʋɪtɔk/ | development | ім |  |
+| **розпізнавати** | /rɔzpiznaʋˈatɪ/ | to recognize (imperfective) | дієсл |  |
+| **розробляти** | /rɔzrɔblˈjatɪ/ | to develop, to design (imperfective) | дієсл |  |
+| **російський** | /rɔsˈijsʲkɪj/ | Russian | прикм |  |
+| **світ** | /sʋit/ | world | ім |  |
+| **склад** | /sklad/ | warehouse, composition, syllable | ім |  |
+| **скорочений** | /skɔrˈɔt͡ʃɛnɪj/ | condensed, shortened | прикм |  |
+| **соня** | /sˈɔnja/ | Sonya (name), sleepyhead | ім |  |
+| **соціальний** | /sɔt͡siˈalʲnɪj/ | social | прикм |  |
+| **спадок** | /spˈadɔk/ | inheritance | ім |  |
+| **старе** | /starˈɛ/ |  | ім |  |
+| **староукраїнський** | /starɔukraˈjinsʲkɪj/ | Old Ukrainian | прикм |  |
 | **сти** | /stɪ/ |  | дієсл |  |
-| **стило** | /stɪlˈɔ/ |  | ім |  |
+| **стило** | /stɪlˈɔ/ | stylus (rare - use стилос) | ім |  |
+| **сценарій** | /st͡sɛnˈarij/ | script, scenario | ім |  |
+| **січень** | /sˈit͡ʃɛnʲ/ | January | ім |  |
+| **теоретичний** | /tɛɔrɛtˈɪt͡ʃnɪj/ | theoretical | прикм |  |
 | **тет** | /tɛt/ |  | ім |  |
-| **технічно** | /tɛxnˈit͡ʃnɔ/ |  | присл |  |
-| **уривок** | /urˈɪʋɔk/ |  | ім |  |
-| **утворитися** | /utʋɔrˈɪtɪsja/ |  | дієсл |  |
-| **формування** | /fɔrmuʋˈannja/ |  | ім |  |
-| **щомісяця** | /ʃt͡ʃɔmˈisjat͡sja/ |  | присл |  |
+| **технічно** | /tɛxnˈit͡ʃnɔ/ | technically | присл |  |
+| **уривок** | /urˈɪʋɔk/ | excerpt, fragment | ім |  |
+| **утворитися** | /utʋɔrˈɪtɪsja/ | to form (passive/intransitive) | дієсл |  |
+| **формально** | /fɔrmˈalʲnɔ/ | formally | присл |  |
+| **формування** | /fɔrmuʋˈannja/ | formation | ім |  |
+| **формувати** | /fɔrmuʋˈatɪ/ | to form, to shape | дієсл |  |
+| **художній** | /xudˈɔʒnij/ | artistic, literary | прикм |  |
+| **шлях** | /ʃljax/ | way, path, route | ім |  |
+| **штучний** | /ʃtˈut͡ʃnɪj/ | artificial | прикм |  |
+| **щодо** | /ʃt͡ʃˈɔdɔ/ | regarding, as for | прийм |  |
+| **щомісяця** | /ʃt͡ʃɔmˈisjat͡sja/ | every month | присл |  |
+| **якийсь** | /jakˈɪjsʲ/ | some kind of, some | займ |  |
+| **імперський** | /impˈɛrsʲkɪj/ | imperial | прикм |  |
 | **іму** | /imu/ |  | ім |  |
 | **їдити** | /jidɪtɪ/ |  | дієсл |  |

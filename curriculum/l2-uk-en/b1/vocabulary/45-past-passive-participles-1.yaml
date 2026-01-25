@@ -4,16 +4,16 @@ version: '2.0'
 items:
 - lemma: агенс
   ipa: /aɦɛns/
-  translation: ''
+  translation: agent (linguistics)
   pos: noun
   gender: m
 - lemma: активований
   ipa: /aktɪʋˈɔʋanɪj/
-  translation: ''
+  translation: activated
   pos: adj
 - lemma: апостол
   ipa: /apˈɔstɔl/
-  translation: ''
+  translation: apostle
   pos: noun
   gender: m
 - lemma: бл
@@ -22,11 +22,11 @@ items:
   pos: noun
 - lemma: блокбастер
   ipa: /blɔkbˈastɛr/
-  translation: ''
+  translation: blockbuster
   pos: noun
 - lemma: будівництво
   ipa: /budiʋnˈɪt͡stʋɔ/
-  translation: ''
+  translation: construction
   pos: noun
   gender: n
 - lemma: взя-
@@ -35,32 +35,42 @@ items:
   pos: noun
 - lemma: взятий
   ipa: /ʋzˈjatɪj/
-  translation: ''
+  translation: taken
   pos: adj
 - lemma: виготовлений
   ipa: /ʋˈɪɦɔtɔʋlɛnɪj/
-  translation: ''
+  translation: manufactured, made
   pos: adj
 - lemma: виданий
   ipa: /ʋˈɪdanɪj/
-  translation: ''
+  translation: issued, published
   pos: adj
 - lemma: визнаний
   ipa: /ʋˈɪznanɪj/
-  translation: ''
+  translation: recognized, acknowledged
   pos: adj
 - lemma: вимитий
   ipa: /ʋˈɪmɪtɪj/
-  translation: ''
+  translation: washed
   pos: adj
+- lemma: винний
+  ipa: /ʋˈɪnnɪj/
+  translation: guilty, wine (adj)
+  pos: noun
+  gender: m
 - lemma: виписаний
   ipa: /ʋˈɪpɪsanɪj/
-  translation: ''
+  translation: written out, prescribed
   pos: adj
 - lemma: висловлений
   ipa: /ʋˈɪslɔʋlɛnɪj/
-  translation: ''
+  translation: expressed, uttered
   pos: adj
+- lemma: виставка
+  ipa: /ʋˈɪstaʋka/
+  translation: exhibition
+  pos: noun
+  gender: f
 - lemma: вл
   ipa: /ʋl/
   translation: ''
@@ -71,70 +81,70 @@ items:
   pos: adj
 - lemma: воля
   ipa: /ʋˈɔlja/
-  translation: ''
+  translation: will, freedom
   pos: noun
   gender: f
 - lemma: відновлений
   ipa: /ʋidnˈɔʋlɛnɪj/
-  translation: ''
+  translation: restored
   pos: adj
 - lemma: відредагований
   ipa: /ʋidrɛdaɦˈɔʋanɪj/
-  translation: ''
+  translation: edited
   pos: adj
 - lemma: голлівудський
   ipa: /ɦɔlliʋˈudsʲkɪj/
-  translation: ''
+  translation: Hollywood (adj)
   pos: adj
 - lemma: губний
   ipa: /ɦubnˈɪj/
-  translation: ''
+  translation: labial, lip (adj)
   pos: adj
 - lemma: давніх-давен
   ipa: /dˈaʋnix-daʋɛn/
-  translation: ''
+  translation: since time immemorial
   pos: noun
 - lemma: денний
   ipa: /dˈɛnnɪj/
-  translation: ''
+  translation: daily, daytime (adj)
   pos: adj
 - lemma: дискурс
   ipa: /dˈɪskurs/
-  translation: ''
+  translation: discourse
   pos: noun
   gender: m
 - lemma: доводити
   ipa: /dɔʋˈɔdɪtɪ/
-  translation: ''
+  translation: to prove, to lead to (imperfective)
   pos: verb
 - lemma: допитати
   ipa: /dɔpɪtˈatɪ/
-  translation: ''
+  translation: to interrogate, to question
   pos: verb
 - lemma: допитувати
   ipa: /dɔpˈɪtuʋatɪ/
-  translation: ''
+  translation: to interrogate (imperfective)
   pos: verb
 - lemma: досліджений
   ipa: /dɔslˈidʒɛnɪj/
-  translation: ''
+  translation: researched, studied
   pos: adj
 - lemma: доставлений
   ipa: /dɔstˈaʋlɛnɪj/
-  translation: ''
+  translation: delivered
   pos: adj
 - lemma: дубляж
   ipa: /dublˈjaʒ/
-  translation: ''
+  translation: dubbing
   pos: noun
   gender: m
 - lemma: евакуйований
   ipa: /ɛʋakujˈɔʋanɪj/
-  translation: ''
+  translation: evacuated
   pos: adj
 - lemma: екранізований
   ipa: /ɛkranizˈɔʋanɪj/
-  translation: ''
+  translation: adapted for screen
   pos: adj
 - lemma: енити
   ipa: /ɛnɪtɪ/
@@ -142,68 +152,81 @@ items:
   pos: verb
 - lemma: забрати
   ipa: /zabrˈatɪ/
-  translation: ''
+  translation: to take away (perfective)
   pos: verb
 - lemma: завантажений
   ipa: /zaʋantˈaʒɛnɪj/
-  translation: ''
+  translation: loaded, busy
   pos: adj
-- lemma: закладений
-  ipa: /zaklˈadɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: замовлений
-  ipa: /zamˈɔʋlɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: занедбаність
-  ipa: /zanˈɛdbanistʲ/
+- lemma: задовга
+  ipa: /zadˈɔʋɦa/
   translation: ''
   pos: noun
   gender: f
+- lemma: закладений
+  ipa: /zaklˈadɛnɪj/
+  translation: embedded, laid
+  pos: adj
+- lemma: замовлений
+  ipa: /zamˈɔʋlɛnɪj/
+  translation: ordered
+  pos: adj
+- lemma: занедбаність
+  ipa: /zanˈɛdbanistʲ/
+  translation: neglect
+  pos: noun
+  gender: f
+- lemma: записаний
+  ipa: /zapˈɪsanɪj/
+  translation: recorded, written down
+  pos: adj
+- lemma: запланувати
+  ipa: /zaplanuʋˈatɪ/
+  translation: to plan
+  pos: verb
 - lemma: заслуханий
   ipa: /zaslˈuxanɪj/
   translation: ''
   pos: adj
 - lemma: застосовуватися
   ipa: /zastɔsˈɔʋuʋatɪsja/
-  translation: ''
+  translation: to be applied
   pos: verb
 - lemma: затверджений
   ipa: /zatʋˈɛrdʒɛnɪj/
-  translation: ''
+  translation: approved
   pos: adj
 - lemma: затриманий
   ipa: /zatrˈɪmanɪj/
-  translation: ''
+  translation: delayed, detained
   pos: adj
 - lemma: зауваження
   ipa: /zauʋˈaʒɛnnja/
-  translation: ''
+  translation: remark, comment, observation
   pos: noun
 - lemma: звільнений
   ipa: /zʋˈilʲnɛnɪj/
   translation: ''
   pos: adj
-- lemma: згідно
-  ipa: /zɦˈidnɔ/
-  translation: ''
-  pos: adv
+- lemma: зданий
+  ipa: /zdˈanɪj/
+  translation: handed over
+  pos: adj
 - lemma: знайдений
   ipa: /znˈajdɛnɪj/
-  translation: ''
+  translation: found
   pos: adj
 - lemma: знищений
   ipa: /znˈɪʃt͡ʃɛnɪj/
-  translation: ''
+  translation: destroyed
   pos: adj
 - lemma: знятий
   ipa: /znˈjatɪj/
-  translation: ''
+  translation: taken off, filmed, rented
   pos: adj
 - lemma: знімок
   ipa: /znˈimɔk/
-  translation: ''
+  translation: snapshot, photograph
   pos: noun
   gender: m
 - lemma: зро
@@ -224,7 +247,7 @@ items:
   pos: noun
 - lemma: зубний
   ipa: /zubnˈɪj/
-  translation: ''
+  translation: tooth (adj), dental
   pos: adj
 - lemma: им
   ipa: /ɪm/
@@ -237,37 +260,37 @@ items:
   gender: m
 - lemma: кров
   ipa: /krɔʋ/
-  translation: ''
+  translation: blood
   pos: noun
   gender: f
 - lemma: куплений
   ipa: /kˈuplɛnɪj/
-  translation: ''
+  translation: bought
   pos: adj
 - lemma: куратор
   ipa: /kurˈatɔr/
-  translation: ''
+  translation: curator
   pos: noun
   gender: m
 - lemma: ловлений
   ipa: /lɔʋlɛnɪj/
-  translation: ''
+  translation: caught
   pos: adj
 - lemma: ломити
   ipa: /lɔmˈɪtɪ/
-  translation: ''
+  translation: to break, to ache
   pos: verb
 - lemma: ломлений
   ipa: /lˈɔmlɛnɪj/
-  translation: ''
+  translation: broken
   pos: adj
 - lemma: майстерно
   ipa: /majstˈɛrnɔ/
-  translation: ''
+  translation: masterfully
   pos: adv
 - lemma: мирне
   ipa: /mˈɪrnɛ/
-  translation: ''
+  translation: peaceful (neuter)
   pos: noun
   gender: n
 - lemma: мл
@@ -281,11 +304,11 @@ items:
   pos: noun
 - lemma: мнемонічний
   ipa: /mnɛmɔnˈit͡ʃnɪj/
-  translation: ''
+  translation: mnemonic
   pos: adj
 - lemma: надрукувати
   ipa: /nadrukuʋˈatɪ/
-  translation: ''
+  translation: to print (perfective)
   pos: verb
 - lemma: написан
   ipa: /napɪsan/
@@ -294,28 +317,28 @@ items:
   gender: m
 - lemma: насильство
   ipa: /nasˈɪlʲstʋɔ/
-  translation: ''
+  translation: violence
   pos: noun
   gender: n
 - lemma: насичений
   ipa: /nasˈɪt͡ʃɛnɪj/
-  translation: ''
+  translation: saturated, intense
   pos: adj
 - lemma: неважливий
   ipa: /nɛʋaʒlˈɪʋɪj/
-  translation: ''
+  translation: unimportant
   pos: adj
 - lemma: невідомо
   ipa: /nɛʋidˈɔmɔ/
-  translation: ''
+  translation: it is unknown
   pos: adv
 - lemma: недоречний
   ipa: /nɛdɔrˈɛt͡ʃnɪj/
-  translation: ''
+  translation: inappropriate
   pos: adj
 - lemma: неузгодження
   ipa: /nɛuzɦˈɔdʒɛnnja/
-  translation: ''
+  translation: mismatch, disagreement
   pos: noun
   gender: n
 - lemma: но
@@ -324,23 +347,23 @@ items:
   pos: part
 - lemma: ношений
   ipa: /nˈɔʃɛnɪj/
-  translation: ''
+  translation: worn, used
   pos: adj
 - lemma: обвинувачений
   ipa: /ɔbʋɪnuʋˈat͡ʃɛnɪj/
-  translation: ''
+  translation: accused
   pos: adj
 - lemma: обкрадений
   ipa: /ɔbkrˈadɛnɪj/
-  translation: ''
+  translation: robbed
   pos: adj
 - lemma: оброблений
   ipa: /ɔbrˈɔblɛnɪj/
-  translation: ''
+  translation: processed, treated
   pos: adj
 - lemma: обстеження
   ipa: /ɔbstˈɛʒɛnnja/
-  translation: ''
+  translation: examination, inspection
   pos: noun
   gender: n
 - lemma: одн
@@ -349,15 +372,19 @@ items:
   pos: noun
 - lemma: опублікований
   ipa: /ɔpublikˈɔʋanɪj/
-  translation: ''
+  translation: published
   pos: adj
 - lemma: оти
   ipa: /ˈɔtɪ/
-  translation: ''
+  translation: those (demonstrative variant)
   pos: noun
+- lemma: перевірений
+  ipa: /pɛrɛʋˈirɛnɪj/
+  translation: verified, tested
+  pos: adj
 - lemma: писаний
   ipa: /pˈɪsanɪj/
-  translation: ''
+  translation: written, hand-painted
   pos: adj
 - lemma: пл
   ipa: /pl/
@@ -366,109 +393,119 @@ items:
   gender: f
 - lemma: плачений
   ipa: /plˈat͡ʃɛnɪj/
-  translation: ''
+  translation: paid
   pos: adj
 - lemma: погоджений
   ipa: /pɔɦˈɔdʒɛnɪj/
-  translation: ''
+  translation: agreed, coordinated
   pos: adj
 - lemma: подальший
   ipa: /pɔdˈalʲʃɪj/
-  translation: ''
+  translation: further, subsequent
   pos: adj
 - lemma: поданий
   ipa: /pˈɔdanɪj/
-  translation: ''
+  translation: submitted, provided
   pos: adj
 - lemma: полягати
   ipa: /pɔljaɦˈatɪ/
-  translation: ''
+  translation: to consist (in), to lie (in)
   pos: verb
 - lemma: посланий
   ipa: /pˈɔslanɪj/
-  translation: ''
+  translation: sent
   pos: adj
 - lemma: послати
   ipa: /pɔslˈatɪ/
-  translation: ''
+  translation: to send
   pos: verb
 - lemma: потужність
   ipa: /pɔtˈuʒnistʲ/
-  translation: ''
+  translation: power, capacity
   pos: noun
   gender: f
 - lemma: поява
   ipa: /pɔˈjaʋa/
-  translation: ''
+  translation: appearance, emergence
   pos: noun
   gender: f
 - lemma: прораб
   ipa: /prɔrab/
-  translation: ''
+  translation: foreman
   pos: noun
   gender: m
 - lemma: протокол
   ipa: /prɔtɔkˈɔl/
-  translation: ''
+  translation: protocol, minutes
   pos: noun
 - lemma: пущений
   ipa: /pˈuʃt͡ʃɛnɪj/
-  translation: ''
+  translation: let, released
   pos: adj
 - lemma: підготовлений
   ipa: /pidɦɔtˈɔʋlɛnɪj/
-  translation: ''
+  translation: prepared
   pos: adj
 - lemma: піднесений
   ipa: /pidnˈɛsɛnɪj/
-  translation: ''
+  translation: sublime, elevated, high
   pos: adj
 - lemma: підстава
   ipa: /pidstˈaʋa/
-  translation: ''
+  translation: ground, basis, setup
   pos: noun
   gender: f
 - lemma: редакція
   ipa: /rɛdˈakt͡sija/
-  translation: ''
+  translation: editorial office, edition
   pos: noun
   gender: f
+- lemma: рентген
+  ipa: /rɛntɦˈɛn/
+  translation: X-ray
+  pos: noun
+  gender: m
 - lemma: розглянутий
   ipa: /rɔzɦlˈjanutɪj/
-  translation: ''
+  translation: considered
   pos: adj
 - lemma: розроблений
   ipa: /rɔzrˈɔblɛnɪj/
-  translation: ''
+  translation: developed, designed
   pos: adj
+- lemma: сайт
+  ipa: /sajt/
+  translation: website
+  pos: noun
+  gender: m
 - lemma: святий
   ipa: /sʋjatˈɪj/
-  translation: ''
+  translation: holy, saint
   pos: adj
 - lemma: світловий
   ipa: /sʋitlɔʋˈɪj/
-  translation: ''
+  translation: light (adj), luminous
   pos: adj
 - lemma: споганений
   ipa: /spɔɦˈanɛnɪj/
-  translation: ''
+  translation: defiled, spoiled
   pos: adj
 - lemma: ставлений
   ipa: /stˈaʋlɛnɪj/
-  translation: ''
+  translation: placed, set (past participle)
   pos: adj
 - lemma: становище
   ipa: /stanˈɔʋɪʃt͡ʃɛ/
-  translation: ''
+  translation: situation, position, status
   pos: noun
   gender: n
 - lemma: стародрук
   ipa: /starɔdrˈuk/
-  translation: ''
+  translation: incunabulum, old print
   pos: noun
 - lemma: суд
   ipa: /sud/
-  translation: ''
+  translation: court, trial
   pos: noun
   gender: m
 - lemma: тий
@@ -477,25 +514,25 @@ items:
   pos: noun
 - lemma: убогий
   ipa: /ubˈɔɦɪj/
-  translation: ''
+  translation: poor, wretched, meager
   pos: noun
   gender: m
 - lemma: узгоджений
   ipa: /uzɦˈɔdʒɛnɪj/
-  translation: ''
+  translation: agreed, coordinated
   pos: adj
 - lemma: узгоджено
   ipa: /uzɦˈɔdʒɛnɔ/
-  translation: ''
+  translation: agreed, in accordance with
   pos: adv
 - lemma: урахування
   ipa: /uraxuʋˈannja/
-  translation: ''
+  translation: taking into account
   pos: noun
   gender: n
 - lemma: урочистий
   ipa: /urɔt͡ʃˈɪstɪj/
-  translation: ''
+  translation: solemn, festive, grand
   pos: adj
 - lemma: ути
   ipa: /utɪ/
@@ -503,15 +540,15 @@ items:
   pos: noun
 - lemma: ухвалений
   ipa: /uxʋˈalɛnɪj/
-  translation: ''
+  translation: approved, adopted
   pos: adj
 - lemma: фантастичний
   ipa: /fantastˈɪt͡ʃnɪj/
-  translation: ''
+  translation: fantastic
   pos: adj
 - lemma: федорів
   ipa: /fˈɛdɔriʋ/
-  translation: ''
+  translation: Fedoriv (name)
   pos: adj
 - lemma: ходжений
   ipa: /xˈɔdʒɛnɪj/
@@ -519,15 +556,20 @@ items:
   pos: adj
 - lemma: цитата
   ipa: /t͡sɪtˈata/
-  translation: ''
+  translation: quote
   pos: noun
   gender: f
 - lemma: числення
   ipa: /t͡ʃˈɪslɛnnja/
-  translation: ''
+  translation: calculus, numbering
   pos: noun
   gender: n
 - lemma: широко
   ipa: /ʃˈɪrɔkɔ/
-  translation: ''
+  translation: widely
   pos: adv
+- lemma: інфраструктура
+  ipa: /infrastruktˈura/
+  translation: infrastructure
+  pos: noun
+  gender: f

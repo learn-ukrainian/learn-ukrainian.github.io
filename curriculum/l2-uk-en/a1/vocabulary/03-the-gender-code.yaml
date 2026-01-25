@@ -4,253 +4,189 @@ version: '2.0'
 items:
 - lemma: апельсин
   ipa: /apɛlʲsˈɪn/
-  translation: ''
+  translation: orange (fruit)
   pos: noun
   gender: m
 - lemma: будинок
   ipa: /budˈɪnɔk/
-  translation: ''
+  translation: house, building
   pos: noun
   gender: m
 - lemma: вина
   ipa: /ʋɪna/
-  translation: ''
+  translation: guilt, fault
   pos: noun
   gender: f
 - lemma: вода
   ipa: /ʋɔdˈa/
-  translation: ''
+  translation: water
   pos: noun
   gender: f
 - lemma: відміна
   ipa: /ʋidmˈina/
-  translation: ''
+  translation: declension, variety
   pos: noun
   gender: f
-- lemma: вікно
-  ipa: /ʋiknˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: двері
   ipa: /dʋˈɛri/
-  translation: ''
+  translation: door
   pos: noun
 - lemma: диван
   ipa: /dɪʋˈan/
-  translation: ''
+  translation: sofa, couch
   pos: noun
   gender: m
 - lemma: дім
   ipa: /dim/
-  translation: ''
+  translation: home, house
   pos: noun
   gender: m
 - lemma: земля
   ipa: /zɛmlˈja/
-  translation: ''
+  translation: land, earth, ground
   pos: noun
   gender: f
 - lemma: земля-матінка
   ipa: /zɛmlˈja-matinka/
-  translation: ''
+  translation: Mother Earth
   pos: noun
   gender: f
 - lemma: картопля
   ipa: /kartˈɔplja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: книга
-  ipa: /knˈɪɦa/
-  translation: ''
+  translation: potato
   pos: noun
   gender: f
 - lemma: крісло
   ipa: /krˈislɔ/
-  translation: ''
+  translation: armchair
   pos: noun
   gender: n
 - lemma: кімната
   ipa: /kimnˈata/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: любов
-  ipa: /ljubˈɔʋ/
-  translation: ''
+  translation: room
   pos: noun
   gender: f
 - lemma: ліжко
   ipa: /lˈiʒkɔ/
-  translation: ''
+  translation: bed
   pos: noun
   gender: n
 - lemma: м'ясо
   ipa: /mˈjasɔ/
-  translation: ''
+  translation: meat
   pos: noun
   gender: n
-- lemma: магазин
-  ipa: /maɦazˈɪn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: марко
-  ipa: /mˈarkɔ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: марія
-  ipa: /marˈija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: молоко
   ipa: /mɔlɔkˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: море
-  ipa: /mˈɔrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: місто
-  ipa: /mˈistɔ/
-  translation: ''
+  translation: milk
   pos: noun
   gender: n
 - lemma: місяць
   ipa: /mˈisjat͡sʲ/
-  translation: ''
+  translation: month, moon
   pos: noun
   gender: m
-- lemma: нова
-  ipa: /nɔʋˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: новий
-  ipa: /nɔʋˈɪj/
-  translation: ''
-  pos: adj
 - lemma: ніч
   ipa: /nit͡ʃ/
-  translation: ''
+  translation: night
   pos: noun
   gender: f
 - lemma: овоч
   ipa: /ˈɔʋɔt͡ʃ/
-  translation: ''
+  translation: vegetable
   pos: noun
   gender: m
 - lemma: прип'ять
   ipa: /prɪpjatʲ/
-  translation: ''
+  translation: Pripyat
   pos: noun
   gender: f
 - lemma: продавець
   ipa: /prɔdaʋˈɛt͡sʲ/
-  translation: ''
+  translation: seller, salesman
   pos: noun
   gender: m
 - lemma: підлога
   ipa: /pidlˈɔɦa/
-  translation: ''
+  translation: floor
   pos: noun
   gender: f
 - lemma: річка
   ipa: /rˈit͡ʃka/
-  translation: ''
+  translation: river
   pos: noun
   gender: f
 - lemma: село
   ipa: /sɛlˈɔ/
-  translation: ''
+  translation: village
   pos: noun
   gender: n
 - lemma: сир
   ipa: /sɪr/
-  translation: ''
+  translation: cheese, cottage cheese
   pos: noun
   gender: m
 - lemma: сонце
   ipa: /sˈɔnt͡sɛ/
-  translation: ''
+  translation: sun
   pos: noun
   gender: n
 - lemma: стеля
   ipa: /stˈɛlja/
-  translation: ''
+  translation: ceiling
   pos: noun
   gender: f
 - lemma: стіл
   ipa: /stil/
-  translation: ''
+  translation: table, desk
   pos: noun
   gender: m
 - lemma: стілець
   ipa: /stilˈɛt͡sʲ/
-  translation: ''
+  translation: chair
   pos: noun
   gender: m
 - lemma: стіна
   ipa: /stinˈa/
-  translation: ''
+  translation: wall
   pos: noun
   gender: f
 - lemma: сік
   ipa: /sik/
-  translation: ''
+  translation: juice
   pos: noun
   gender: m
 - lemma: таня
   ipa: /tˈanja/
-  translation: ''
+  translation: Tanya (name)
   pos: noun
   gender: f
-- lemma: університет
-  ipa: /uniʋɛrsɪtˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фрукт
   ipa: /frukt/
-  translation: ''
+  translation: fruit
   pos: noun
 - lemma: хліб
   ipa: /xlib/
-  translation: ''
+  translation: bread
   pos: noun
   gender: m
 - lemma: цибуля
   ipa: /t͡sɪbˈulja/
-  translation: ''
+  translation: onion
   pos: noun
   gender: f
 - lemma: шафа
   ipa: /ʃˈafa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: школа
-  ipa: /ʃkˈɔla/
-  translation: ''
+  translation: wardrobe, cupboard
   pos: noun
   gender: f
 - lemma: яблуко
   ipa: /ˈjablukɔ/
-  translation: ''
+  translation: apple
   pos: noun
   gender: n
 - lemma: яйце
   ipa: /jajt͡sˈɛ/
-  translation: ''
+  translation: egg
   pos: noun
   gender: n

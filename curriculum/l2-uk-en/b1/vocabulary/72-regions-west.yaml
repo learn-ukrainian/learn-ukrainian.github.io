@@ -4,63 +4,63 @@ version: '2.0'
 items:
 - lemma: австро-угорський
   ipa: /aʋstrɔ-uɦˈɔrsʲkɪj/
-  translation: ''
+  translation: Austro-Hungarian
   pos: adj
 - lemma: ароматний
   ipa: /arɔmˈatnɪj/
-  translation: ''
+  translation: fragrant, aromatic
   pos: adj
 - lemma: багатокультурний
   ipa: /baɦatɔkulʲtˈurnɪj/
-  translation: ''
+  translation: multicultural
   pos: adj
 - lemma: багатокультурність
   ipa: /baɦatɔkulʲturnistʲ/
-  translation: ''
+  translation: multiculturalism
   pos: noun
   gender: f
 - lemma: бануш
   ipa: /bˈanuʃ/
-  translation: ''
+  translation: banosh (dish)
   pos: noun
   gender: m
 - lemma: бойко
   ipa: /bˈɔjkɔ/
-  translation: ''
+  translation: Boyko (name)
   pos: noun
 - lemma: брукований
   ipa: /brukˈɔʋanɪj/
-  translation: ''
+  translation: cobbled, paved
   pos: adj
 - lemma: варений
   ipa: /ʋarɛnɪj/
-  translation: ''
+  translation: boiled, cooked
   pos: adj
 - lemma: високогір'я
   ipa: /ʋɪsɔkɔɦˈirja/
-  translation: ''
+  translation: highlands
   pos: noun
   gender: n
 - lemma: габсбурзький
   ipa: /ɦabsburzʲkɪj/
-  translation: ''
+  translation: Habsburg (adj)
   pos: adj
 - lemma: гастрономія
   ipa: /ɦastrɔnˈɔmija/
-  translation: ''
+  translation: gastronomy
   pos: noun
   gender: f
 - lemma: греко-католицький
   ipa: /ɦrˈɛkɔ-katɔlɪt͡sʲkɪj/
-  translation: ''
+  translation: Greek Catholic
   pos: adj
 - lemma: домініканський
   ipa: /dɔminikˈansʲkɪj/
-  translation: ''
+  translation: Dominican
   pos: adj
 - lemma: етнографічний
   ipa: /ɛtnɔɦrafˈit͡ʃnɪj/
-  translation: ''
+  translation: ethnographic
   pos: adj
 - lemma: західнокарпатський
   ipa: /zaxidnɔkarpˈatsʲkɪj/
@@ -68,19 +68,19 @@ items:
   pos: adj
 - lemma: західноукраїнський
   ipa: /zaxidnɔukraˈjinsʲkɪj/
-  translation: ''
+  translation: West Ukrainian
   pos: adj
 - lemma: католицький
   ipa: /katɔlˈɪt͡sʲkɪj/
-  translation: ''
+  translation: Catholic
   pos: adj
 - lemma: лемко
   ipa: /lˈɛmkɔ/
-  translation: ''
+  translation: Lemko
   pos: noun
 - lemma: луцьк
   ipa: /lut͡sʲk/
-  translation: ''
+  translation: Lutsk
   pos: noun
   gender: m
 - lemma: п'єрникнути
@@ -89,65 +89,65 @@ items:
   pos: verb
 - lemma: польський
   ipa: /pˈɔlʲsʲkɪj/
-  translation: ''
+  translation: Polish
   pos: noun
   gender: m
 - lemma: попрактикувати
   ipa: /pɔpraktɪkuʋatɪ/
-  translation: ''
+  translation: to practice for a while
   pos: verb
 - lemma: приїздити
   ipa: /prɪjizdˈɪtɪ/
-  translation: ''
+  translation: to arrive (imperfective)
   pos: verb
 - lemma: пряник
   ipa: /prˈjanɪk/
-  translation: ''
+  translation: gingerbread
   pos: noun
   gender: m
 - lemma: прянощі
   ipa: /prˈjanɔʃt͡ʃi/
-  translation: ''
+  translation: spices
   pos: noun
 - lemma: румунський
   ipa: /rumˈunsʲkɪj/
-  translation: ''
+  translation: Romanian
   pos: adj
 - lemma: різноманіття
   ipa: /riznɔmanˈittja/
-  translation: ''
+  translation: diversity
   pos: noun
   gender: n
 - lemma: сполука
   ipa: /spɔlˈuka/
-  translation: ''
+  translation: compound (chemical/logical)
   pos: noun
   gender: f
 - lemma: стриманий
   ipa: /strˈɪmanɪj/
-  translation: ''
+  translation: restrained, reserved
   pos: adj
 - lemma: термальний
   ipa: /tɛrmˈalʲnɪj/
-  translation: ''
+  translation: thermal
   pos: adj
 - lemma: трембіта
   ipa: /trɛmbˈita/
-  translation: ''
+  translation: trembita (horn)
   pos: noun
   gender: f
 - lemma: турка
   ipa: /tˈurka/
-  translation: ''
+  translation: cezve (coffee pot), Turkish woman
   pos: noun
   gender: f
 - lemma: єдність
   ipa: /ˈjɛdnistʲ/
-  translation: ''
+  translation: unity, oneness
   pos: noun
   gender: f
 - lemma: івано-франківщина
   ipa: /iʋanɔ-frankiʋʃt͡ʃɪna/
-  translation: ''
+  translation: Ivano-Frankivsk region
   pos: noun
   gender: f

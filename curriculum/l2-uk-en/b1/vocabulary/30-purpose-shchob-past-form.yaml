@@ -2,34 +2,48 @@ module: 30-purpose-shchob-past-form
 level: B1
 version: '2.0'
 items:
+- lemma: бажан
+  ipa: /baʒˈan/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: бажане
   ipa: /bˈaʒanɛ/
-  translation: ''
+  translation: desired (thing)
   pos: noun
   gender: n
 - lemma: бажано
   ipa: /bˈaʒanɔ/
-  translation: ''
+  translation: desirably, preferably
   pos: noun
 - lemma: благати
   ipa: /blaɦˈatɪ/
-  translation: ''
+  translation: to beg, to entreat
   pos: verb
 - lemma: виключити
   ipa: /ʋˈɪkljut͡ʃɪtɪ/
-  translation: ''
+  translation: to exclude, to turn off
+  pos: verb
+- lemma: вимкнути
+  ipa: /ʋˈɪmknutɪ/
+  translation: to turn off (perfective)
   pos: verb
 - lemma: випускник
   ipa: /ʋɪpusknˈɪk/
-  translation: ''
+  translation: graduate
   pos: noun
+- lemma: водоспад
+  ipa: /ʋɔdɔspˈad/
+  translation: waterfall
+  pos: noun
+  gender: m
 - lemma: відділятися
   ipa: /ʋiddilˈjatɪsja/
-  translation: ''
+  translation: to separate
   pos: verb
 - lemma: дієта
   ipa: /diˈjɛta/
-  translation: ''
+  translation: diet
   pos: noun
   gender: f
 - lemma: жирне
@@ -39,21 +53,21 @@ items:
   gender: n
 - lemma: записка
   ipa: /zapˈɪska/
-  translation: ''
+  translation: note
   pos: noun
   gender: f
 - lemma: квартальний
   ipa: /kʋartˈalʲnɪj/
-  translation: ''
+  translation: quarterly
   pos: adj
 - lemma: ковбаса
   ipa: /kɔʋbasˈa/
-  translation: ''
+  translation: sausage
   pos: noun
   gender: f
 - lemma: комбінований
   ipa: /kɔmbinˈɔʋanɪj/
-  translation: ''
+  translation: combined
   pos: adj
 - lemma: кон'юнктив
   ipa: /kɔnjunktˈɪʋ/
@@ -62,121 +76,179 @@ items:
   gender: m
 - lemma: латин
   ipa: /latˈɪn/
-  translation: ''
+  translation: Latin (name/person)
   pos: noun
   gender: m
 - lemma: лінгвіст
   ipa: /linɦʋˈist/
-  translation: ''
+  translation: linguist
   pos: noun
 - lemma: механізм
   ipa: /mɛxanˈizm/
-  translation: ''
+  translation: mechanism
   pos: noun
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace, world
+  pos: noun
+  gender: m
+- lemma: мобільний
+  ipa: /mɔbˈilʲnɪj/
+  translation: mobile, cell (adj)
+  pos: adj
 - lemma: наказати
   ipa: /nakazˈatɪ/
-  translation: ''
+  translation: to order, to command
   pos: verb
 - lemma: наполягати
   ipa: /napɔljaɦˈatɪ/
-  translation: ''
+  translation: to insist
   pos: verb
 - lemma: нереальний
   ipa: /nɛrɛˈalʲnɪj/
-  translation: ''
+  translation: unreal
   pos: adj
 - lemma: обмежити
   ipa: /ɔbmˈɛʒɪtɪ/
-  translation: ''
+  translation: to limit, to restrict
   pos: verb
 - lemma: обсяг
   ipa: /ˈɔbsjaɦ/
-  translation: ''
+  translation: volume, scope
   pos: noun
   gender: m
+- lemma: паня
+  ipa: /pˈanja/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: паралель
   ipa: /paralˈɛlʲ/
-  translation: ''
+  translation: parallel
   pos: noun
   gender: f
 - lemma: писатися
   ipa: /pɪsˈatɪsja/
-  translation: ''
+  translation: to be written
   pos: verb
 - lemma: побудувати
   ipa: /pɔbuduʋˈatɪ/
-  translation: ''
+  translation: to build (perfective)
   pos: verb
 - lemma: подихати
   ipa: /pɔdɪxatɪ/
-  translation: ''
+  translation: to breathe for a while
+  pos: verb
+- lemma: попередити
+  ipa: /pɔpɛrˈɛdɪtɪ/
+  translation: to warn (perfective)
   pos: verb
 - lemma: пояснювальний
   ipa: /pɔˈjasnjuʋalʲnɪj/
-  translation: ''
+  translation: explanatory
   pos: adj
 - lemma: призначений
   ipa: /prɪznˈat͡ʃɛnɪj/
-  translation: ''
+  translation: intended, appointed
   pos: adj
 - lemma: пропилососити
   ipa: /prɔpɪlɔsˈɔsɪtɪ/
-  translation: ''
+  translation: to vacuum (perfective)
   pos: verb
+- lemma: ректор
+  ipa: /rˈɛktɔr/
+  translation: rector, provost
+  pos: noun
+  gender: m
 - lemma: рештка
   ipa: /rˈɛʃtka/
-  translation: ''
+  translation: remnant, residue
   pos: noun
   gender: f
 - lemma: розкуповувати
   ipa: /rɔzkupˈɔʋuʋatɪ/
-  translation: ''
+  translation: to buy up
   pos: verb
 - lemma: сашка
   ipa: /saʃkˈa/
-  translation: ''
+  translation: Sashka (name)
   pos: noun
   gender: f
+- lemma: святкування
+  ipa: /sʋjatkuʋˈannja/
+  translation: celebration
+  pos: noun
 - lemma: слов'янськ
   ipa: /slɔʋjansʲk/
-  translation: ''
+  translation: Sloviansk
   pos: noun
   gender: m
+- lemma: смажений
+  ipa: /smˈaʒɛnɪj/
+  translation: fried, roasted
+  pos: adj
+- lemma: солодке
+  ipa: /sɔlˈɔdkɛ/
+  translation: sweet (neuter), sweets
+  pos: noun
+  gender: n
 - lemma: сподівання
   ipa: /spɔdiʋˈannja/
-  translation: ''
+  translation: expectation, hope
   pos: noun
   gender: n
 - lemma: справедливо
   ipa: /spraʋɛdlˈɪʋɔ/
-  translation: ''
+  translation: fairly, justly
   pos: adv
+- lemma: стандарт
+  ipa: /standˈart/
+  translation: standard
+  pos: noun
+  gender: m
+- lemma: суб'єкт
+  ipa: /subˈjɛkt/
+  translation: subject, entity
+  pos: noun
+  gender: m
+- lemma: сягати
+  ipa: /sjaɦˈatɪ/
+  translation: to reach, to extend to
+  pos: verb
 - lemma: тост
   ipa: /tɔst/
-  translation: ''
+  translation: toast (bread/speech)
   pos: noun
 - lemma: узгодити
   ipa: /uzɦˈɔdɪtɪ/
-  translation: ''
+  translation: to agree, to coordinate (perfective)
   pos: verb
 - lemma: фактичний
   ipa: /faktˈɪt͡ʃnɪj/
-  translation: ''
+  translation: actual, factual
+  pos: adj
+- lemma: чеський
+  ipa: /t͡ʃˈɛsʲkɪj/
+  translation: Czech (adj)
   pos: adj
 - lemma: чудовисько
   ipa: /t͡ʃudˈɔʋɪsʲkɔ/
-  translation: ''
+  translation: monster
   pos: noun
   gender: n
 - lemma: шипіт
   ipa: /ʃˈɪpit/
-  translation: ''
+  translation: Shypit (waterfall), hiss
   pos: noun
   gender: m
 - lemma: щасливо
   ipa: /ʃt͡ʃaslˈɪʋɔ/
-  translation: ''
+  translation: happily
   pos: adv
+- lemma: іноземний
+  ipa: /inɔzˈɛmnɪj/
+  translation: foreign
+  pos: adj
 - lemma: ірреаліса
   ipa: /irrɛalisa/
   translation: ''

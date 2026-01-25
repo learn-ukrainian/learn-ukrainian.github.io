@@ -8,27 +8,23 @@ items:
   pos: noun
 - lemma: автомобільний
   ipa: /aʋtɔmɔbˈilʲnɪj/
-  translation: ''
+  translation: automobile (adj)
   pos: adj
 - lemma: адекватний
   ipa: /adɛkʋˈatnɪj/
-  translation: ''
+  translation: adequate, appropriate
   pos: adj
 - lemma: амбітний
   ipa: /ambˈitnɪj/
-  translation: ''
+  translation: ambitious
   pos: adj
 - lemma: американський
   ipa: /amɛrɪkˈansʲkɪj/
-  translation: ''
+  translation: American (adj)
   pos: adj
-- lemma: бракувати
-  ipa: /brakuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: бурхливо
   ipa: /burxlˈɪʋɔ/
-  translation: ''
+  translation: violently, stormily
   pos: adv
 - lemma: бізнес-менеджер
   ipa: /bˈiznɛs-mɛnɛdʒɛr/
@@ -37,411 +33,232 @@ items:
   gender: m
 - lemma: веб-додаток
   ipa: /ʋɛb-dɔdˈatɔk/
-  translation: ''
+  translation: web application
   pos: noun
-- lemma: вижити
-  ipa: /ʋˈɪʒɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: виклик
-  ipa: /ʋˈɪklɪk/
-  translation: ''
-  pos: noun
-- lemma: виписувати
-  ipa: /ʋɪpˈɪsuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: виробляти
-  ipa: /ʋɪrɔblˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: вночі
-  ipa: /ʋnɔt͡ʃˈi/
-  translation: ''
-  pos: adv
-- lemma: втомлюватися
-  ipa: /ʋtˈɔmljuʋatɪsja/
-  translation: ''
-  pos: verb
 - lemma: віддалено
   ipa: /ʋiddˈalɛnɔ/
-  translation: ''
+  translation: remotely
   pos: adv
 - lemma: відсталий
   ipa: /ʋidstˈalɪj/
-  translation: ''
-  pos: adj
-- lemma: гнучкий
-  ipa: /ɦnut͡ʃkˈɪj/
-  translation: ''
+  translation: backward, underdeveloped
   pos: adj
 - lemma: господарство
   ipa: /ɦɔspɔdˈarstʋɔ/
-  translation: ''
+  translation: household, farm
   pos: noun
   gender: n
 - lemma: графіка
   ipa: /ɦrˈafika/
-  translation: ''
+  translation: graphics
   pos: noun
 - lemma: гібридний
   ipa: /ɦibrˈɪdnɪj/
-  translation: ''
+  translation: hybrid
   pos: adj
 - lemma: гідний
   ipa: /ɦˈidnɪj/
-  translation: ''
+  translation: worthy
   pos: adj
 - lemma: гідно
   ipa: /ɦˈidnɔ/
-  translation: ''
+  translation: worthily, decently
   pos: adv
-- lemma: доба
-  ipa: /dɔbˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: добридень
   ipa: /dɔbrˈɪdɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: довести
-  ipa: /dɔʋɛstˈɪ/
-  translation: ''
-  pos: verb
-- lemma: досвідчений
-  ipa: /dɔsʋˈidt͡ʃɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: дух
-  ipa: /dux/
-  translation: ''
+  translation: good day
   pos: noun
   gender: m
 - lemma: діагноз
   ipa: /diˈaɦnɔz/
-  translation: ''
+  translation: diagnosis
   pos: noun
   gender: m
 - lemma: економічно
   ipa: /ɛkɔnɔmˈit͡ʃnɔ/
-  translation: ''
+  translation: economically
   pos: adv
 - lemma: електромобіль
   ipa: /ɛlɛktrɔmɔbˈilʲ/
-  translation: ''
+  translation: electric car
   pos: noun
-- lemma: жаліти
-  ipa: /ʒalˈitɪ/
-  translation: ''
-  pos: verb
 - lemma: заблищати
   ipa: /zablɪʃt͡ʃˈatɪ/
-  translation: ''
+  translation: to start shining
   pos: verb
 - lemma: задуматися
   ipa: /zadˈumatɪsja/
-  translation: ''
+  translation: to think about, to ponder
   pos: verb
 - lemma: записатися
   ipa: /zapɪsˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: заробляти
-  ipa: /zarɔblˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: зацікавитися
-  ipa: /zat͡sikˈaʋɪtɪsja/
-  translation: ''
+  translation: to sign up
   pos: verb
 - lemma: зацікавленість
   ipa: /zat͡sikˈaʋlɛnistʲ/
-  translation: ''
+  translation: interest
   pos: noun
   gender: f
-- lemma: зв'язатися
-  ipa: /zʋjazˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: знищити
   ipa: /znˈɪʃt͡ʃɪtɪ/
-  translation: ''
+  translation: to destroy
   pos: verb
 - lemma: зображувати
   ipa: /zɔbrˈaʒuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: зростати
-  ipa: /zrɔstˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: кар'єра
-  ipa: /karˈjɛra/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кар'єрний
-  ipa: /karˈjɛrnɪj/
-  translation: ''
-  pos: adj
-- lemma: керувати
-  ipa: /kɛruʋˈatɪ/
-  translation: ''
+  translation: to depict, to portray
   pos: verb
 - lemma: коваленко
   ipa: /kɔʋalˈɛnkɔ/
-  translation: ''
+  translation: Kovalenko (name)
   pos: noun
   gender: m
-- lemma: команда
-  ipa: /kɔmˈanda/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: конкурентний
   ipa: /kɔnkurˈɛntnɪj/
-  translation: ''
+  translation: competitive
   pos: adj
 - lemma: лікар-терапевт
   ipa: /lˈikar-tɛrapɛʋt/
-  translation: ''
+  translation: GP, therapist
   pos: noun
   gender: m
 - lemma: медичний
   ipa: /mɛdˈɪt͡ʃnɪj/
-  translation: ''
+  translation: medical
   pos: adj
-- lemma: медсестра
-  ipa: /mɛdsɛstrˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: морально
   ipa: /mɔrˈalʲnɔ/
-  translation: ''
+  translation: morally
   pos: adv
-- lemma: міжнародній
-  ipa: /miʒnarˈɔdnij/
-  translation: ''
-  pos: adj
-- lemma: нагорода
-  ipa: /naɦɔrˈɔda/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: наймати
   ipa: /najmˈatɪ/
-  translation: ''
+  translation: to hire, to rent
   pos: verb
-- lemma: найняти
-  ipa: /najnˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: найпопулярніший
-  ipa: /najpɔpulˈjarniʃɪj/
-  translation: ''
-  pos: adj
 - lemma: настільний
   ipa: /nastˈilʲnɪj/
-  translation: ''
+  translation: table-top, desktop
   pos: adj
 - lemma: непередбачуваний
   ipa: /nɛpɛrɛdbˈat͡ʃuʋanɪj/
-  translation: ''
+  translation: unpredictable
   pos: adj
 - lemma: нестабільний
   ipa: /nɛstabˈilʲnɪj/
-  translation: ''
+  translation: unstable
   pos: adj
 - lemma: обіймаючи
   ipa: /ɔbijmˈajut͡ʃɪ/
-  translation: ''
-  pos: verb
-- lemma: організовувати
-  ipa: /ɔrɦanizˈɔʋuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: орендувати
-  ipa: /ɔrɛnduʋˈatɪ/
-  translation: ''
+  translation: hugging
   pos: verb
 - lemma: офісний
   ipa: /ˈɔfisnɪj/
-  translation: ''
+  translation: office (adj)
   pos: adj
-- lemma: очікувати
-  ipa: /ɔt͡ʃˈikuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: п'ятирічний
   ipa: /pjatɪrˈit͡ʃnɪj/
-  translation: ''
+  translation: five-year (adj)
   pos: adj
 - lemma: пацієнтка
   ipa: /pat͡siˈjɛntka/
-  translation: ''
+  translation: patient (female)
   pos: noun
   gender: f
 - lemma: покликання
   ipa: /pɔklˈɪkannja/
-  translation: ''
+  translation: vocation, calling, reference
   pos: noun
   gender: n
 - lemma: працьовитий
   ipa: /prat͡sʲɔʋˈɪtɪj/
-  translation: ''
+  translation: hard-working
   pos: adj
-- lemma: працівник
-  ipa: /prat͡siʋnˈɪk/
-  translation: ''
-  pos: noun
-- lemma: приблизно
-  ipa: /prɪblˈɪznɔ/
-  translation: ''
-  pos: adv
 - lemma: пристрій
   ipa: /prˈɪstrij/
-  translation: ''
+  translation: device
   pos: noun
   gender: m
-- lemma: приєднуватися
-  ipa: /prɪˈjɛdnuʋatɪsja/
-  translation: ''
-  pos: verb
 - lemma: промисловість
   ipa: /prɔmɪslˈɔʋistʲ/
-  translation: ''
+  translation: industry
   pos: noun
   gender: f
-- lemma: процвітати
-  ipa: /prɔt͡sʋitˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: підприємливий
   ipa: /pidprɪˈjɛmlɪʋɪj/
-  translation: ''
-  pos: adj
-- lemma: радянський
-  ipa: /radˈjansʲkɪj/
-  translation: ''
+  translation: enterprising
   pos: adj
 - lemma: реалізувати
   ipa: /rɛalizuʋˈatɪ/
-  translation: ''
+  translation: to realize, to implement
   pos: verb
 - lemma: революція
   ipa: /rɛʋɔlˈjut͡sija/
-  translation: ''
+  translation: revolution
   pos: noun
   gender: f
 - lemma: республіка
   ipa: /rɛspˈublika/
-  translation: ''
+  translation: republic
   pos: noun
   gender: f
 - lemma: ризик
   ipa: /rˈɪzɪk/
-  translation: ''
+  translation: risk
   pos: noun
   gender: m
 - lemma: розробник
   ipa: /rɔzrˈɔbnɪk/
-  translation: ''
+  translation: developer
   pos: noun
   gender: m
 - lemma: союз
   ipa: /sɔˈjuz/
-  translation: ''
+  translation: union, alliance
   pos: noun
   gender: m
-- lemma: старенька
-  ipa: /starˈɛnʲka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: стартап
   ipa: /startap/
-  translation: ''
+  translation: startup
   pos: noun
   gender: m
 - lemma: стос
   ipa: /stɔs/
-  translation: ''
+  translation: stack, pile
   pos: noun
   gender: m
 - lemma: страховка
   ipa: /straxˈɔʋka/
-  translation: ''
+  translation: insurance (colloquial)
   pos: noun
   gender: f
 - lemma: теніс
   ipa: /tˈɛnis/
-  translation: ''
+  translation: tennis
   pos: noun
   gender: m
-- lemma: троя
-  ipa: /trˈɔja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: фантастика
   ipa: /fantˈastɪka/
-  translation: ''
+  translation: science fiction, fantastic
   pos: noun
   gender: f
-- lemma: фізично
-  ipa: /fizˈɪt͡ʃnɔ/
-  translation: ''
-  pos: adv
-- lemma: хороший
-  ipa: /xɔrˈɔʃɪj/
-  translation: ''
-  pos: adj
-- lemma: цілком
-  ipa: /t͡silkˈɔm/
-  translation: ''
-  pos: adv
-- lemma: штучний
-  ipa: /ʃtˈut͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: юрист
-  ipa: /jurˈɪst/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: іванівна
   ipa: /iʋˈaniʋna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: імперія
-  ipa: /impˈɛrija/
-  translation: ''
+  translation: Ivanivna (patronymic)
   pos: noun
   gender: f
 - lemma: інноваційний
   ipa: /innɔʋat͡sˈijnɪj/
-  translation: ''
+  translation: innovative
   pos: adj
-- lemma: інтелект
-  ipa: /intɛlˈɛkt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: іт-компанія
   ipa: /it-kɔmpˈanija/
-  translation: ''
+  translation: IT company
   pos: noun
   gender: f
 - lemma: іт-сектор
   ipa: /it-sˈɛktɔr/
-  translation: ''
+  translation: IT sector
   pos: noun
   gender: m
 - lemma: іт-стартап
   ipa: /it-startap/
-  translation: ''
+  translation: IT startup
   pos: noun

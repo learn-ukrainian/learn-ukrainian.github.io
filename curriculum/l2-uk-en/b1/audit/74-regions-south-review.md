@@ -1,50 +1,85 @@
-# Audit Report: 74-regions-south.md
-**Phase:** B1.7 | **Level:** B1 | **Pedagogy:** CBI | **Target:** 1500
+# Audit Report: M74 — 74-regions-south.md
+**Level:** B1 | **Module:** M74 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:46:33
+
+## Configuration
+**Type:** B1-cultural
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння Південної України | 10 | 8 | ✅ |
+| 2 | match-up | Регіони та їхні характеристики | 12 | 8 | ✅ |
+| 3 | match-up | Українська лексика — переклад | 12 | 8 | ✅ |
+| 4 | cloze | Заповніть пропуски | 12 | 12 | ✅ |
+| 5 | true-false | Факти про Південну Україну | 12 | 8 | ✅ |
+| 6 | group-sort | Категоризація понять | 18 | 12 | ✅ |
+| 7 | cloze | Заповніть текст про Південну Україну | 16 | 12 | ✅ |
+| 8 | unjumble | Складіть речення про Південну Україну | 8 | 6 | ✅ |
+| 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 10 | select | Виберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть географічні та культурні терміни | 15 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 2/3 (error-correction, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1660/1500
+- **Words:** ✅ 1699/1500 (raw: 1792)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/25
+- **Vocab:** ✅ 99/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 96% (cultural)
+- **Richness:** ✅ 97% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** cultural
+**Score:** 97% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 10 | 5 | 100% | 33% | 33.3% |
-| engagement | 9 | 6 | 100% | 20% | 20.0% |
-| visual | 4 | 4 | 100% | 13% | 13.3% |
-| variety | 0.98 | - | 98% | 7% | 6.5% |
-| paragraph_var | 0.56 | - | 56% | 7% | 3.7% |
-| examples | 21 | - | 100% | 7% | 6.7% |
-| realworld | 2 | - | 100% | 7% | 6.7% |
-| questions | 26 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **96.9%** |
+| examples | 21 | 15 | 100% | 25% | 25.0% |
+| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| variety | 0.97 | - | 97% | 12% | 12.1% |
+| cultural | 10 | 4 | 100% | 12% | 12.5% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.65 | - | 65% | 6% | 4.1% |
+| questions | 26 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ** | ⚪️ | 146 | Skipped |
+| **Вступ** | ✅ | 146 | Included in Core |
 | **Сучасність** | ⚪️ | 208 | Skipped |
-| **Історія та культура** | ✅ | 611 | Included in Core |
+| **Історія та культура** | ✅ | 650 | Included in Core |
 | **Практика** | ⚪️ | 89 | Skipped |
 | **Продукція** | ⚪️ | 274 | Skipped |
 | **Підсумок** | ✅ | 177 | Included in Core |

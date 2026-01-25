@@ -4,20 +4,16 @@ version: '2.0'
 items:
 - lemma: бант
   ipa: /bant/
-  translation: ''
+  translation: bow (ribbon)
   pos: noun
-- lemma: боротися
-  ipa: /bɔrˈɔtɪsja/
-  translation: ''
-  pos: verb
 - lemma: букет
   ipa: /bukˈɛt/
-  translation: ''
+  translation: bouquet
   pos: noun
   gender: m
 - lemma: влаштовувати
   ipa: /ʋlaʃtˈɔʋuʋatɪ/
-  translation: ''
+  translation: to organize, to suit
   pos: verb
 - lemma: галицько-волинський
   ipa: /ɦalɪt͡sʲkɔ-ʋɔlˈɪnsʲkɪj/
@@ -25,172 +21,96 @@ items:
   pos: adj
 - lemma: гуртожиток
   ipa: /ɦurtˈɔʒɪtɔk/
-  translation: ''
+  translation: dormitory
   pos: noun
   gender: m
 - lemma: дзвоник
   ipa: /dzʋˈɔnɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: диплом
-  ipa: /dɪplˈɔm/
-  translation: ''
+  translation: bell
   pos: noun
   gender: m
 - lemma: дружити
   ipa: /druʒˈɪtɪ/
-  translation: ''
+  translation: to be friends
   pos: verb
 - lemma: дівчатко
   ipa: /diʋt͡ʃˈatkɔ/
-  translation: ''
+  translation: little girl
   pos: noun
   gender: n
-- lemma: задовга
-  ipa: /zadˈɔʋɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: захоплюючий
   ipa: /zaxˈɔpljujut͡ʃɪj/
-  translation: ''
+  translation: exciting, thrilling
   pos: adj
-- lemma: захотіти
-  ipa: /zaxɔtˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: здавати
-  ipa: /zdaʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: князівство
   ipa: /knjazˈiʋstʋɔ/
-  translation: ''
+  translation: principality
   pos: noun
   gender: n
-- lemma: літера
-  ipa: /lˈitɛra/
-  translation: ''
-  pos: noun
 - lemma: математика
   ipa: /matɛmˈatɪka/
-  translation: ''
+  translation: mathematics
   pos: noun
   gender: f
-- lemma: міжнародний
-  ipa: /miʒnarˈɔdnɪj/
-  translation: ''
-  pos: adj
 - lemma: наклейка
   ipa: /naklɛjka/
-  translation: ''
+  translation: sticker
   pos: noun
   gender: f
 - lemma: несміливо
   ipa: /nɛsmˈilɪʋɔ/
-  translation: ''
+  translation: timidly
   pos: adv
 - lemma: одягнений
   ipa: /ɔdˈjaɦnɛnɪj/
-  translation: ''
+  translation: dressed
   pos: adj
-- lemma: освічений
-  ipa: /ɔsʋˈit͡ʃɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: острозький
-  ipa: /ɔstrˈɔzʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: парта
-  ipa: /pˈarta/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: плюс
-  ipa: /pljus/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: покращуватися
   ipa: /pɔkrˈaʃt͡ʃuʋatɪsja/
-  translation: ''
+  translation: to improve (passive imperfective)
   pos: verb
 - lemma: піднімати
   ipa: /pidnimˈatɪ/
-  translation: ''
+  translation: to lift, to raise (imperfective)
   pos: verb
 - lemma: рахувати
   ipa: /raxuʋˈatɪ/
-  translation: ''
+  translation: to count, to consider
   pos: verb
-- lemma: ректор
-  ipa: /rˈɛktɔr/
-  translation: ''
-  pos: noun
 - lemma: річний
   ipa: /rit͡ʃnˈɪj/
-  translation: ''
+  translation: annual, yearly
   pos: adj
 - lemma: святково
   ipa: /sʋjatkˈɔʋɔ/
-  translation: ''
+  translation: festively
   pos: adv
 - lemma: семінар
   ipa: /sɛminˈar/
-  translation: ''
+  translation: seminar
   pos: noun
-- lemma: середньовічний
-  ipa: /sɛrɛdnʲɔʋˈit͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: скорочувати
-  ipa: /skɔrˈɔt͡ʃuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: спеціальність
   ipa: /spɛt͡siˈalʲnistʲ/
-  translation: ''
+  translation: specialty, major
   pos: noun
   gender: f
-- lemma: стрийський
-  ipa: /strˈɪjsʲkɪj/
-  translation: ''
-  pos: adj
 - lemma: тарасик
   ipa: /tarˈasɪk/
-  translation: ''
+  translation: Tarasik (name)
   pos: noun
   gender: m
 - lemma: фізика
   ipa: /fˈizɪka/
-  translation: ''
+  translation: physics
   pos: noun
   gender: f
 - lemma: ш-к-о-л-ий
   ipa: /ʃ-k-ɔ-l-ɪj/
   translation: ''
   pos: adj
-- lemma: європейський
-  ipa: /jɛʋrɔpˈɛjsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: імперський
-  ipa: /impˈɛrsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: іноземець
-  ipa: /inɔzˈɛmɛt͡sʲ/
-  translation: ''
-  pos: noun
-- lemma: іноземний
-  ipa: /inɔzˈɛmnɪj/
-  translation: ''
-  pos: adj
 - lemma: інституція
   ipa: /instɪtˈut͡sija/
-  translation: ''
+  translation: institution
   pos: noun
 - lemma: ія
   ipa: /ˈija/

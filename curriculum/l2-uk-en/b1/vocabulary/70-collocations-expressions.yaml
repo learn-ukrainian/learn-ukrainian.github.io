@@ -4,81 +4,77 @@ version: '2.0'
 items:
 - lemma: антонімічний
   ipa: /antɔnimˈit͡ʃnɪj/
-  translation: ''
+  translation: antonymous
   pos: adj
-- lemma: встановлювати
-  ipa: /ʋstanˈɔʋljuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: відень
   ipa: /ʋˈidɛnʲ/
-  translation: ''
+  translation: Vienna
   pos: noun
   gender: m
 - lemma: відігравати
   ipa: /ʋidiɦraʋˈatɪ/
-  translation: ''
+  translation: to play (a role)
   pos: verb
 - lemma: гілка
   ipa: /ɦˈilka/
-  translation: ''
+  translation: branch
   pos: noun
 - lemma: доброчесність
   ipa: /dɔbrɔt͡ʃˈɛsnistʲ/
-  translation: ''
+  translation: integrity, virtue
   pos: noun
   gender: f
 - lemma: загарбник
   ipa: /zaɦˈarbnɪk/
-  translation: ''
+  translation: invader, conqueror
   pos: noun
 - lemma: зазнавати
   ipa: /zaznaʋˈatɪ/
-  translation: ''
+  translation: to undergo, to suffer
   pos: verb
 - lemma: здобувати
   ipa: /zdɔbuʋˈatɪ/
-  translation: ''
+  translation: to gain, to obtain, to conquer
   pos: verb
 - lemma: козаків
   ipa: /kɔzakˈiʋ/
-  translation: ''
+  translation: of Cossacks
   pos: adj
 - lemma: невдача
   ipa: /nɛʋdˈat͡ʃa/
-  translation: ''
+  translation: failure, bad luck
   pos: noun
   gender: f
 - lemma: нехтувати
   ipa: /nˈɛxtuʋatɪ/
-  translation: ''
+  translation: to ignore, to neglect
   pos: verb
 - lemma: орлик
   ipa: /ˈɔrlɪk/
-  translation: ''
+  translation: Orlyk (name)
   pos: noun
   gender: m
 - lemma: пилип
   ipa: /pɪlˈɪp/
-  translation: ''
+  translation: Pylyp (name)
   pos: noun
   gender: m
 - lemma: продовжуючи
   ipa: /prɔdˈɔʋʒujut͡ʃɪ/
-  translation: ''
+  translation: continuing
   pos: verb
 - lemma: справляти
   ipa: /spraʋlˈjatɪ/
-  translation: ''
+  translation: to make/do (imperfective)
   pos: verb
 - lemma: стажування
   ipa: /staʒuʋˈannja/
-  translation: ''
+  translation: internship, training
   pos: noun
   gender: n
 - lemma: старшина
   ipa: /starʃˈɪna/
-  translation: ''
+  translation: sergeant-major, petty officer, elders (historical)
   pos: noun
   gender: f
 - lemma: укртех
@@ -88,13 +84,13 @@ items:
   gender: m
 - lemma: цілісний
   ipa: /t͡sˈilisnɪj/
-  translation: ''
+  translation: integral, cohesive
   pos: adj
 - lemma: чинити
   ipa: /t͡ʃɪnˈɪtɪ/
-  translation: ''
+  translation: to do, to commit, to exert (pressure)
   pos: verb
 - lemma: шкодити
   ipa: /ʃkˈɔdɪtɪ/
-  translation: ''
+  translation: to harm
   pos: verb

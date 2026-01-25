@@ -4,253 +4,169 @@ version: '2.0'
 items:
 - lemma: автоматизм
   ipa: /aʋtɔmatˈɪzm/
-  translation: ''
+  translation: automatism
   pos: noun
   gender: m
 - lemma: автоматизувати
   ipa: /aʋtɔmatɪzuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: важливість
-  ipa: /ʋaʒlˈɪʋistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вголос
-  ipa: /ʋɦˈɔlɔs/
-  translation: ''
-  pos: adv
-- lemma: викладач
-  ipa: /ʋɪkladˈat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: встати
-  ipa: /ʋstˈatɪ/
-  translation: ''
+  translation: to automate
   pos: verb
 - lemma: відмовитися
   ipa: /ʋidmˈɔʋɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: відмінно
-  ipa: /ʋidmˈinnɔ/
-  translation: ''
-  pos: adv
-- lemma: відчути
-  ipa: /ʋidt͡ʃˈutɪ/
-  translation: ''
+  translation: to refuse, to give up
   pos: verb
 - lemma: гордитися
   ipa: /ɦɔrdˈɪtɪsja/
-  translation: ''
+  translation: to be proud
   pos: verb
-- lemma: двічі
-  ipa: /dʋˈit͡ʃi/
-  translation: ''
-  pos: adv
 - lemma: дихання
   ipa: /dɪxannja/
-  translation: ''
+  translation: breathing
   pos: noun
   gender: n
-- lemma: досягти
-  ipa: /dɔsjaɦtˈɪ/
-  translation: ''
-  pos: verb
 - lemma: ефективний
   ipa: /ɛfɛktˈɪʋnɪj/
-  translation: ''
+  translation: effective
   pos: adj
 - lemma: задоволений
   ipa: /zadɔʋˈɔlɛnɪj/
-  translation: ''
+  translation: satisfied, happy
   pos: adj
 - lemma: засвоєння
   ipa: /zasʋˈɔjɛnnja/
-  translation: ''
+  translation: assimilation, mastery
   pos: noun
   gender: n
 - lemma: згадування
   ipa: /zɦˈaduʋannja/
-  translation: ''
+  translation: mentioning
   pos: noun
   gender: n
 - lemma: зро-
   ipa: /zrɔ-/
   translation: ''
   pos: noun
-- lemma: зрозумілий
-  ipa: /zrɔzumˈilɪj/
-  translation: ''
-  pos: adj
-- lemma: зусилля
-  ipa: /zusˈɪllja/
-  translation: ''
-  pos: noun
-- lemma: конспект
-  ipa: /kɔnspˈɛkt/
-  translation: ''
-  pos: noun
 - lemma: контекстний
   ipa: /kɔntˈɛkstnɪj/
-  translation: ''
+  translation: contextual
   pos: adj
 - lemma: миттєвий
   ipa: /mɪttˈjɛʋɪj/
-  translation: ''
+  translation: instant, momentary
   pos: adj
-- lemma: миттєво
-  ipa: /mɪttˈjɛʋɔ/
-  translation: ''
-  pos: adv
 - lemma: мозок
   ipa: /mˈɔzɔk/
-  translation: ''
+  translation: brain
   pos: noun
   gender: m
-- lemma: назвати
-  ipa: /nazʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: накрити
-  ipa: /nakrˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: наталка
   ipa: /natˈalka/
-  translation: ''
+  translation: Natalka (name)
   pos: noun
   gender: f
 - lemma: неввічливо
   ipa: /nɛʋʋˈit͡ʃlɪʋɔ/
-  translation: ''
-  pos: adv
-- lemma: негайно
-  ipa: /nɛɦˈajnɔ/
-  translation: ''
+  translation: impolitely
   pos: adv
 - lemma: недостатньо
   ipa: /nɛdɔstˈatnʲɔ/
-  translation: ''
+  translation: insufficiently, not enough
   pos: adv
 - lemma: окупитися
   ipa: /ɔkupˈɪtɪsja/
-  translation: ''
+  translation: to pay off
   pos: verb
-- lemma: поговорити
-  ipa: /pɔɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: подзвонити
-  ipa: /pɔdzʋɔnˈɪtɪ/
-  translation: ''
+- lemma: переклад
+  ipa: /pɛrɛklad/
+  translation: translation
+  pos: noun
+  gender: m
+- lemma: повертатися
+  ipa: /pɔʋɛrtˈatɪsja/
+  translation: to return (imperfective)
   pos: verb
 - lemma: подякувати
   ipa: /pɔdˈjakuʋatɪ/
-  translation: ''
+  translation: to thank (perfective)
   pos: verb
 - lemma: поділений
   ipa: /pɔdˈilɛnɪj/
-  translation: ''
+  translation: divided
   pos: adj
 - lemma: покривати
   ipa: /pɔkrɪʋˈatɪ/
-  translation: ''
+  translation: to cover (imperfective)
   pos: verb
-- lemma: помити
-  ipa: /pɔmˈɪtɪ/
-  translation: ''
+- lemma: помилитися
+  ipa: /pɔmɪlɪtɪsja/
+  translation: to make a mistake (perfective)
   pos: verb
-- lemma: порада
-  ipa: /pɔrˈada/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: посміятися
   ipa: /pɔsmiˈjatɪsja/
-  translation: ''
+  translation: to laugh
   pos: verb
-- lemma: поснідати
-  ipa: /pɔsnˈidatɪ/
-  translation: ''
-  pos: verb
-- lemma: посуд
-  ipa: /pˈɔsud/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: почекати
   ipa: /pɔt͡ʃɛkˈatɪ/
-  translation: ''
+  translation: to wait (for a while/perfective)
   pos: verb
 - lemma: поїсти
   ipa: /pɔˈjistɪ/
-  translation: ''
+  translation: to eat (perfective)
   pos: verb
 - lemma: прибрати
   ipa: /prɪbrˈatɪ/
-  translation: ''
+  translation: to clean, to remove (perfective)
+  pos: verb
+- lemma: привітати
+  ipa: /prɪʋitˈatɪ/
+  translation: to greet, to congratulate
   pos: verb
 - lemma: промовляти
   ipa: /prɔmɔʋlˈjatɪ/
-  translation: ''
+  translation: to utter, to speak (imperfective)
   pos: verb
+- lemma: рана
+  ipa: /rˈana/
+  translation: wound
+  pos: noun
+  gender: f
 - lemma: роздум
   ipa: /rˈɔzdum/
-  translation: ''
+  translation: reflection, meditation
   pos: noun
 - lemma: рівень
   ipa: /rˈiʋɛnʲ/
-  translation: ''
+  translation: level
   pos: noun
   gender: m
-- lemma: свідомо
-  ipa: /sʋidˈɔmɔ/
-  translation: ''
-  pos: adv
+- lemma: серце
+  ipa: /sˈɛrt͡sɛ/
+  translation: heart
+  pos: noun
+  gender: n
 - lemma: смішний
   ipa: /smiʃnˈɪj/
-  translation: ''
+  translation: funny
   pos: adj
 - lemma: спадати
   ipa: /spadˈatɪ/
-  translation: ''
+  translation: to fall, to decline, to subside
   pos: verb
-- lemma: створювати
-  ipa: /stʋˈɔrjuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: тренування
-  ipa: /trɛnuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: тренувати
   ipa: /trɛnuʋˈatɪ/
-  translation: ''
+  translation: to train (imperfective)
   pos: verb
 - lemma: тренуватися
   ipa: /trɛnuʋˈatɪsja/
-  translation: ''
+  translation: to train (oneself)
   pos: verb
 - lemma: хазяйка
   ipa: /xazˈjajka/
-  translation: ''
+  translation: hostess, landlady
   pos: noun
   gender: f
 - lemma: цукерка
   ipa: /t͡sukˈɛrka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: швидкість
-  ipa: /ʃʋˈɪdkistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: інструкція
-  ipa: /instrˈukt͡sija/
-  translation: ''
+  translation: candy
   pos: noun
   gender: f

@@ -6,67 +6,37 @@ items:
   ipa: /bɛrɛznjakˈiʋsʲkɪj/
   translation: ''
   pos: adj
-- lemma: вперед
-  ipa: /ʋpɛrˈɛd/
-  translation: ''
-  pos: adv
-- lemma: впоратися
-  ipa: /ʋpˈɔratɪsja/
-  translation: ''
-  pos: verb
 - lemma: заблукалий
   ipa: /zablukˈalɪj/
   translation: ''
   pos: adj
 - lemma: заводський
   ipa: /zaʋɔdsʲkɪj/
-  translation: ''
+  translation: factory (adj)
   pos: adj
-- lemma: звернутися
-  ipa: /zʋɛrnˈutɪsja/
-  translation: ''
-  pos: verb
-- lemma: звертатися
-  ipa: /zʋɛrtˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: квест
-  ipa: /kʋɛst/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: метрополітен
-  ipa: /mɛtrɔpɔlitˈɛn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: навігатор
   ipa: /naʋiɦˈatɔr/
-  translation: ''
+  translation: navigator
   pos: noun
   gender: m
 - lemma: незабаром
   ipa: /nɛzabˈarɔm/
-  translation: ''
+  translation: soon
   pos: adv
 - lemma: панікувати
   ipa: /panikuʋˈatɪ/
-  translation: ''
+  translation: to panic
   pos: verb
 - lemma: переставити
   ipa: /pɛrɛstˈaʋɪtɪ/
-  translation: ''
+  translation: to rearrange, to move
   pos: verb
 - lemma: розрядитися
   ipa: /rɔzrjadˈɪtɪsja/
-  translation: ''
+  translation: to run out of power (battery)
   pos: verb
 - lemma: табло
   ipa: /tablˈɔ/
-  translation: ''
+  translation: scoreboard, display board
   pos: noun
   gender: n
-- lemma: інформаційний
-  ipa: /infɔrmat͡sˈijnɪj/
-  translation: ''
-  pos: adj

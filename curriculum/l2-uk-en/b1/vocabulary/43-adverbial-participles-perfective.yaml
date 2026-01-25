@@ -4,19 +4,15 @@ version: '2.0'
 items:
 - lemma: архаїчний
   ipa: /arxaˈjit͡ʃnɪj/
-  translation: ''
+  translation: archaic
   pos: adj
 - lemma: вважатися
   ipa: /ʋʋaʒˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: вжити
-  ipa: /ʋʒˈɪtɪ/
-  translation: ''
+  translation: to be considered
   pos: verb
 - lemma: вжиток
   ipa: /ʋʒˈɪtɔk/
-  translation: ''
+  translation: use, usage
   pos: noun
   gender: m
 - lemma: вийш-
@@ -29,28 +25,28 @@ items:
   pos: verb
 - lemma: виявити
   ipa: /ʋˈɪjaʋɪtɪ/
-  translation: ''
+  translation: to reveal, to detect
   pos: verb
 - lemma: вставлятися
   ipa: /ʋstaʋlˈjatɪsja/
-  translation: ''
+  translation: to be inserted
   pos: verb
 - lemma: втрачений
   ipa: /ʋtrˈat͡ʃɛnɪj/
-  translation: ''
+  translation: lost
   pos: adj
 - lemma: динамічність
   ipa: /dɪnamˈit͡ʃnistʲ/
-  translation: ''
+  translation: dynamism
   pos: noun
   gender: f
 - lemma: допускати
   ipa: /dɔpuskˈatɪ/
-  translation: ''
+  translation: to allow, to assume
   pos: verb
 - lemma: діалектний
   ipa: /dialˈɛktnɪj/
-  translation: ''
+  translation: dialect (adj)
   pos: adj
 - lemma: дізнавшись
   ipa: /diznˈaʋʃɪsʲ/
@@ -58,16 +54,16 @@ items:
   pos: verb
 - lemma: експеримент
   ipa: /ɛkspɛrɪmˈɛnt/
-  translation: ''
+  translation: experiment
   pos: noun
   gender: m
 - lemma: елегантно
   ipa: /ɛlɛɦˈantnɔ/
-  translation: ''
+  translation: elegantly
   pos: adv
 - lemma: забарвленість
   ipa: /zabˈarʋlɛnistʲ/
-  translation: ''
+  translation: coloredness, tint
   pos: noun
   gender: f
 - lemma: забувши
@@ -80,7 +76,7 @@ items:
   pos: verb
 - lemma: завершитися
   ipa: /zaʋɛrʃˈɪtɪsja/
-  translation: ''
+  translation: to end, to finish (passive)
   pos: verb
 - lemma: закінчивши
   ipa: /zakˈint͡ʃɪʋʃɪ/
@@ -92,7 +88,7 @@ items:
   pos: verb
 - lemma: зобов'язуватися
   ipa: /zɔbɔʋˈjazuʋatɪsja/
-  translation: ''
+  translation: to undertake, to commit oneself
   pos: verb
 - lemma: зробивши
   ipa: /zrɔbˈɪʋʃɪ/
@@ -100,20 +96,24 @@ items:
   pos: verb
 - lemma: методологія
   ipa: /mɛtɔdɔlˈɔɦija/
-  translation: ''
+  translation: methodology
   pos: noun
   gender: f
 - lemma: написавши
   ipa: /napɪsˈaʋʃɪ/
   translation: ''
   pos: verb
+- lemma: невід'ємний
+  ipa: /nɛʋidˈjɛmnɪj/
+  translation: integral, inseparable
+  pos: adj
 - lemma: незамінний
   ipa: /nɛzamˈinnɪj/
-  translation: ''
+  translation: irreplaceable
   pos: adj
 - lemma: обмежений
   ipa: /ɔbmˈɛʒɛnɪj/
-  translation: ''
+  translation: limited
   pos: adj
 - lemma: овши
   ipa: /ɔʋʃɪ/
@@ -125,52 +125,56 @@ items:
   pos: verb
 - lemma: побачивши
   ipa: /pɔbˈat͡ʃɪʋʃɪ/
-  translation: ''
+  translation: having seen
   pos: verb
+- lemma: побічний
+  ipa: /pɔbˈit͡ʃnɪj/
+  translation: side (adj), secondary
+  pos: adj
 - lemma: пов'язати
   ipa: /pɔʋjazˈatɪ/
-  translation: ''
+  translation: to connect, to link (perfective)
   pos: verb
 - lemma: повернувшись
   ipa: /pɔʋɛrnˈuʋʃɪsʲ/
-  translation: ''
+  translation: having returned
   pos: verb
 - lemma: повечерявши
   ipa: /pɔʋɛt͡ʃˈɛrjaʋʃɪ/
-  translation: ''
+  translation: having had dinner
   pos: verb
 - lemma: повторивши
   ipa: /pɔʋtɔrˈɪʋʃɪ/
-  translation: ''
+  translation: having repeated
   pos: verb
 - lemma: подавши
   ipa: /pɔdˈaʋʃɪ/
-  translation: ''
+  translation: having served/submitted
   pos: verb
 - lemma: познайомившись
   ipa: /pɔznajˈɔmɪʋʃɪsʲ/
-  translation: ''
+  translation: having met
   pos: verb
 - lemma: полегшення
   ipa: /pɔlˈɛɦʃɛnnja/
-  translation: ''
+  translation: relief
   pos: noun
   gender: n
 - lemma: поснідавши
   ipa: /pɔsnˈidaʋʃɪ/
-  translation: ''
+  translation: having had breakfast
   pos: verb
 - lemma: пошкодувати
   ipa: /pɔʃkɔduʋˈatɪ/
-  translation: ''
+  translation: to regret, to pity
   pos: verb
 - lemma: поївши
   ipa: /pɔˈjiʋʃɪ/
-  translation: ''
+  translation: having eaten
   pos: verb
 - lemma: працюючи
   ipa: /prat͡sˈjujut͡ʃɪ/
-  translation: ''
+  translation: working
   pos: verb
 - lemma: прийш-
   ipa: /prɪjʃ-/
@@ -182,7 +186,7 @@ items:
   pos: verb
 - lemma: прийшовши
   ipa: /prɪjʃˈɔʋʃɪ/
-  translation: ''
+  translation: having come
   pos: verb
 - lemma: прийшів
   ipa: /prɪjʃiʋ/
@@ -195,11 +199,11 @@ items:
   pos: verb
 - lemma: приїхавши
   ipa: /prɪˈjixaʋʃɪ/
-  translation: ''
+  translation: having arrived
   pos: verb
 - lemma: проаналізувавши
   ipa: /prɔanalizuʋˈaʋʃɪ/
-  translation: ''
+  translation: having analyzed
   pos: verb
 - lemma: прочита-
   ipa: /prɔt͡ʃɪta-/
@@ -207,11 +211,11 @@ items:
   pos: noun
 - lemma: підвищити
   ipa: /pidʋˈɪʃt͡ʃɪtɪ/
-  translation: ''
+  translation: to increase, to raise
   pos: verb
 - lemma: підписавши
   ipa: /pidpɪsˈaʋʃɪ/
-  translation: ''
+  translation: having signed
   pos: verb
 - lemma: піш-
   ipa: /piʃ-/
@@ -227,19 +231,24 @@ items:
   pos: verb
 - lemma: реєстраційний
   ipa: /rɛjɛstrat͡sˈijnɪj/
-  translation: ''
+  translation: registration (adj)
   pos: adj
 - lemma: ритмічність
   ipa: /rɪtmˈit͡ʃnistʲ/
-  translation: ''
+  translation: rhythmicity
   pos: noun
   gender: f
 - lemma: скуштувавши
   ipa: /skuʃtuʋˈaʋʃɪ/
-  translation: ''
+  translation: having tasted
   pos: verb
 - lemma: хронологія
   ipa: /xrɔnɔlˈɔɦija/
-  translation: ''
+  translation: chronology
   pos: noun
   gender: f
+- lemma: ші
+  ipa: /ʃi/
+  translation: ''
+  pos: noun
+  gender: m

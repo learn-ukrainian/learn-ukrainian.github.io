@@ -4,147 +4,147 @@ version: '2.0'
 items:
 - lemma: авторитетність
   ipa: /aʋtɔrɪtˈɛtnistʲ/
-  translation: ''
+  translation: authoritativeness
   pos: noun
   gender: f
 - lemma: агресор
   ipa: /aɦrˈɛsɔr/
-  translation: ''
+  translation: aggressor
   pos: noun
   gender: m
 - lemma: білоруський
   ipa: /bilɔrˈusʲkɪj/
-  translation: ''
+  translation: Belarusian
   pos: adj
 - lemma: готовність
   ipa: /ɦɔtˈɔʋnistʲ/
-  translation: ''
+  translation: readiness
   pos: noun
   gender: f
 - lemma: громадськість
   ipa: /ɦrɔmˈadsʲkistʲ/
-  translation: ''
+  translation: the public
   pos: noun
   gender: f
 - lemma: деталізація
   ipa: /dɛtalizˈat͡sija/
-  translation: ''
+  translation: detailing, breakdown
   pos: noun
   gender: f
 - lemma: диктор
   ipa: /dˈɪktɔr/
-  translation: ''
+  translation: announcer, narrator
   pos: noun
   gender: m
 - lemma: доповнення
   ipa: /dɔpˈɔʋnɛnnja/
-  translation: ''
+  translation: addition, supplement
   pos: noun
   gender: n
 - lemma: друк
   ipa: /druk/
-  translation: ''
+  translation: printing
   pos: noun
   gender: m
 - lemma: заявляти
   ipa: /zajaʋlˈjatɪ/
-  translation: ''
+  translation: to state, to announce (imperfective)
   pos: verb
 - lemma: збалансований
   ipa: /zbalansˈɔʋanɪj/
-  translation: ''
+  translation: balanced
   pos: adj
 - lemma: зіпсований
   ipa: /zipsˈɔʋanɪj/
-  translation: ''
+  translation: spoiled, ruined
   pos: adj
 - lemma: малоросійський
   ipa: /malɔrɔsˈijsʲkɪj/
-  translation: ''
+  translation: Little Russian (adj, historical/pejorative)
   pos: adj
 - lemma: медійний
   ipa: /mɛdˈijnɪj/
-  translation: ''
+  translation: media (adj)
   pos: adj
 - lemma: наполягання
   ipa: /napɔljaɦˈannja/
-  translation: ''
+  translation: insistence
   pos: noun
   gender: n
 - lemma: наративний
   ipa: /naratˈɪʋnɪj/
-  translation: ''
+  translation: narrative (adj)
   pos: adj
 - lemma: необхідність
   ipa: /nɛɔbxˈidnistʲ/
-  translation: ''
+  translation: necessity
   pos: noun
   gender: f
 - lemma: нікакий
   ipa: /nikakɪj/
-  translation: ''
+  translation: none, no kind of
   pos: adj
 - lemma: очевидець
   ipa: /ɔt͡ʃɛʋˈɪdɛt͡sʲ/
-  translation: ''
+  translation: eyewitness
   pos: noun
   gender: m
 - lemma: прес-служба
   ipa: /prɛs-slˈuʒba/
-  translation: ''
+  translation: press service
   pos: noun
   gender: f
 - lemma: проголошувати
   ipa: /prɔɦɔlˈɔʃuʋatɪ/
-  translation: ''
+  translation: to proclaim, to declare (imperfective)
   pos: verb
 - lemma: публічно
   ipa: /publˈit͡ʃnɔ/
-  translation: ''
+  translation: publicly
   pos: adv
 - lemma: роз'яснити
   ipa: /rɔzjasnˈɪtɪ/
-  translation: ''
+  translation: to clarify, to explain
   pos: verb
 - lemma: роз'яснювати
   ipa: /rɔzˈjasnjuʋatɪ/
-  translation: ''
+  translation: to clarify (imperfective)
   pos: verb
 - lemma: різноманітніший
   ipa: /riznɔmanˈitniʃɪj/
-  translation: ''
+  translation: more diverse
   pos: adj
 - lemma: самобутність
   ipa: /samɔbˈutnistʲ/
-  translation: ''
+  translation: originality, authenticity
   pos: noun
   gender: f
 - lemma: скептик
   ipa: /skˈɛptɪk/
-  translation: ''
+  translation: skeptic
   pos: noun
 - lemma: слабшати
   ipa: /slˈabʃatɪ/
-  translation: ''
+  translation: to weaken (intransitive)
   pos: verb
 - lemma: трансляція
   ipa: /translˈjat͡sija/
-  translation: ''
+  translation: broadcast, transmission
   pos: noun
   gender: f
 - lemma: цитувати
   ipa: /t͡sɪtuʋˈatɪ/
-  translation: ''
+  translation: to quote
   pos: verb
 - lemma: чиновник
   ipa: /t͡ʃɪnˈɔʋnɪk/
-  translation: ''
+  translation: official, bureaucrat
   pos: noun
 - lemma: інтерпретація
   ipa: /intɛrprɛtˈat͡sija/
-  translation: ''
+  translation: interpretation
   pos: noun
 - lemma: інформувати
   ipa: /infɔrmuʋˈatɪ/
-  translation: ''
+  translation: to inform
   pos: verb

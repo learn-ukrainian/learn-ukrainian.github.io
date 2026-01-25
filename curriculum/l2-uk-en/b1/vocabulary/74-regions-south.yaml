@@ -4,25 +4,25 @@ version: '2.0'
 items:
 - lemma: акустика
   ipa: /akˈustɪka/
-  translation: ''
+  translation: acoustics
   pos: noun
   gender: f
 - lemma: античний
   ipa: /antˈɪt͡ʃnɪj/
-  translation: ''
+  translation: ancient, antique
   pos: adj
 - lemma: бабель
   ipa: /bˈabɛlʲ/
-  translation: ''
+  translation: Babel (name)
   pos: noun
   gender: m
 - lemma: багатонаціональний
   ipa: /baɦatɔnat͡siɔnˈalʲnɪj/
-  translation: ''
+  translation: multinational
   pos: adj
 - lemma: багатонаціональність
   ipa: /baɦatɔnat͡siɔnalʲnistʲ/
-  translation: ''
+  translation: multinationality
   pos: noun
   gender: f
 - lemma: банниця
@@ -32,61 +32,65 @@ items:
   gender: f
 - lemma: бердянськ
   ipa: /bɛrdˈjansʲk/
-  translation: ''
+  translation: Berdyansk
   pos: noun
   gender: m
 - lemma: болгарин
   ipa: /bɔlɦˈarɪn/
-  translation: ''
+  translation: Bulgarian (male)
   pos: noun
 - lemma: болгарський
   ipa: /bɔlɦˈarsʲkɪj/
-  translation: ''
+  translation: Bulgarian (adj)
   pos: adj
 - lemma: броненосець
   ipa: /brɔnɛnˈɔsɛt͡sʲ/
-  translation: ''
+  translation: battleship, armadillo
   pos: noun
   gender: m
 - lemma: буг
   ipa: /buɦ/
-  translation: ''
+  translation: Bug (river)
   pos: noun
   gender: m
 - lemma: виноград
   ipa: /ʋɪnɔɦrˈad/
-  translation: ''
+  translation: grapes
   pos: noun
   gender: m
 - lemma: виноградник
   ipa: /ʋɪnɔɦrˈadnɪk/
-  translation: ''
+  translation: vineyard
   pos: noun
 - lemma: виноробство
   ipa: /ʋɪnɔrˈɔbstʋɔ/
-  translation: ''
+  translation: winemaking
   pos: noun
   gender: n
+- lemma: гарантований
+  ipa: /ɦarantˈɔʋanɪj/
+  translation: guaranteed
+  pos: adj
 - lemma: гектар
   ipa: /ɦɛktˈar/
-  translation: ''
+  translation: hectare
   pos: noun
 - lemma: геніально
   ipa: /ɦɛniˈalʲnɔ/
-  translation: ''
+  translation: brilliantly
   pos: adv
 - lemma: географічно
   ipa: /ɦɛɔɦrafˈit͡ʃnɔ/
-  translation: ''
+  translation: geographically
   pos: adv
 - lemma: гопак
   ipa: /ɦɔpˈak/
-  translation: ''
+  translation: hopak (dance)
   pos: noun
   gender: m
 - lemma: депортація
   ipa: /dɛpɔrtˈat͡sija/
-  translation: ''
+  translation: deportation
   pos: noun
   gender: f
 - lemma: ейзенштейн
@@ -104,11 +108,11 @@ items:
   pos: noun
 - lemma: запорізький
   ipa: /zapɔrˈizʲkɪj/
-  translation: ''
+  translation: Zaporizhzhia (adj)
   pos: adj
 - lemma: заснувати
   ipa: /zasnuʋˈatɪ/
-  translation: ''
+  translation: to found, to establish
   pos: verb
 - lemma: збагативши
   ipa: /zbaɦatˈɪʋʃɪ/
@@ -116,90 +120,99 @@ items:
   pos: verb
 - lemma: збагатити
   ipa: /zbaɦatˈɪtɪ/
-  translation: ''
+  translation: to enrich
   pos: verb
 - lemma: зосереджений
   ipa: /zɔsɛrˈɛdʒɛnɪj/
-  translation: ''
+  translation: focused, concentrated
   pos: adj
+- lemma: зірвати
+  ipa: /zirʋˈatɪ/
+  translation: to pluck, to tear off
+  pos: verb
 - lemma: кавуни
   ipa: /kaʋunˈɪ/
-  translation: ''
+  translation: watermelons
   pos: noun
 - lemma: колонія
   ipa: /kɔlˈɔnija/
-  translation: ''
+  translation: colony
   pos: noun
   gender: f
 - lemma: контролюватися
   ipa: /kɔntrɔljuʋˈatɪsja/
-  translation: ''
+  translation: to be controlled
   pos: verb
 - lemma: корабел
   ipa: /kɔrabˈɛl/
-  translation: ''
+  translation: shipbuilder
   pos: noun
 - lemma: корінний
   ipa: /kɔrinnˈɪj/
-  translation: ''
+  translation: indigenous, root (adj)
   pos: noun
   gender: m
 - lemma: кримський
   ipa: /krˈɪmsʲkɪj/
-  translation: ''
+  translation: Crimean
   pos: adj
 - lemma: кримськотатарський
   ipa: /krɪmsʲkɔtatˈarsʲkɪj/
-  translation: ''
+  translation: Crimean Tatar (adj)
   pos: adj
+- lemma: кузів
+  ipa: /kuziʋ/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: лагман
   ipa: /laɦman/
-  translation: ''
+  translation: lagman (noodle dish)
   pos: noun
   gender: m
 - lemma: легендарний
   ipa: /lɛɦɛndˈarnɪj/
-  translation: ''
+  translation: legendary
   pos: adj
 - lemma: метал
   ipa: /mɛtˈal/
-  translation: ''
+  translation: metal
   pos: noun
   gender: m
 - lemma: миколаїв
   ipa: /mɪkɔlˈajiʋ/
-  translation: ''
+  translation: Mykolaiv (city)
   pos: adj
 - lemma: миколаївський
   ipa: /mɪkɔlˈajiʋsʲkɪj/
-  translation: ''
+  translation: Mykolaiv (adj)
   pos: adj
 - lemma: мозаїка
   ipa: /mɔzˈajika/
-  translation: ''
+  translation: mosaic
   pos: noun
   gender: f
 - lemma: молдованин
   ipa: /mɔldɔʋˈanɪn/
-  translation: ''
+  translation: Moldovan (male)
   pos: noun
 - lemma: монолог
   ipa: /mɔnɔlˈɔɦ/
-  translation: ''
+  translation: monologue
   pos: noun
 - lemma: мусака
   ipa: /musaka/
-  translation: ''
+  translation: moussaka
   pos: noun
   gender: f
 - lemma: мікс
   ipa: /miks/
-  translation: ''
+  translation: mix
   pos: noun
   gender: m
 - lemma: міксування
   ipa: /miksuʋannja/
-  translation: ''
+  translation: mixing
   pos: noun
   gender: n
 - lemma: мілке
@@ -207,62 +220,66 @@ items:
   translation: ''
   pos: noun
   gender: n
+- lemma: найнижчий
+  ipa: /najnˈɪʒt͡ʃɪj/
+  translation: the lowest
+  pos: adj
 - lemma: найтепліший
   ipa: /najtɛplˈiʃɪj/
-  translation: ''
+  translation: the warmest
   pos: adj
 - lemma: неповторний
   ipa: /nɛpɔʋtˈɔrnɪj/
-  translation: ''
+  translation: unique
   pos: adj
 - lemma: неподалік
   ipa: /nɛpɔdalˈik/
-  translation: ''
+  translation: nearby
   pos: adv
 - lemma: обізнаність
   ipa: /ɔbˈiznanistʲ/
-  translation: ''
+  translation: awareness, knowledgeability
   pos: noun
   gender: f
 - lemma: оглядовий
   ipa: /ɔɦljadˈɔʋɪj/
-  translation: ''
+  translation: overview (adj)
   pos: adj
 - lemma: ольвія
   ipa: /ˈɔlʲʋija/
-  translation: ''
+  translation: Olvia
   pos: noun
   gender: f
 - lemma: пантікапей
   ipa: /pantikapˈɛj/
-  translation: ''
+  translation: Panticapaeum (ancient city)
   pos: noun
   gender: m
 - lemma: переселитися
   ipa: /pɛrɛsɛlˈɪtɪsja/
-  translation: ''
+  translation: to migrate, to move (perfective)
   pos: verb
 - lemma: перлина
   ipa: /pɛrlˈɪna/
-  translation: ''
+  translation: pearl
   pos: noun
   gender: f
 - lemma: плов
   ipa: /plɔʋ/
-  translation: ''
+  translation: pilaf
   pos: noun
   gender: m
 - lemma: плодити
   ipa: /plɔdˈɪtɪ/
-  translation: ''
+  translation: to procreate, to multiply
   pos: verb
 - lemma: повно
   ipa: /pˈɔʋnɔ/
-  translation: ''
+  translation: plenty, full
   pos: adv
 - lemma: поповнення
   ipa: /pɔpˈɔʋnɛnnja/
-  translation: ''
+  translation: replenishment, addition
   pos: noun
   gender: n
 - lemma: потьомкін
@@ -272,20 +289,20 @@ items:
   gender: m
 - lemma: приазов'я
   ipa: /prɪazɔʋja/
-  translation: ''
+  translation: Azov region
   pos: noun
   gender: n
 - lemma: приділити
   ipa: /prɪdilˈɪtɪ/
-  translation: ''
+  translation: to allocate, to give (time/attention)
   pos: verb
 - lemma: прославити
   ipa: /prɔslˈaʋɪtɪ/
-  translation: ''
+  translation: to glorify, to make famous
   pos: verb
 - lemma: пшениця
   ipa: /pʃɛnˈɪt͡sja/
-  translation: ''
+  translation: wheat
   pos: noun
   gender: f
 - lemma: південне
@@ -295,156 +312,171 @@ items:
   gender: n
 - lemma: південноукраїнський
   ipa: /piʋdɛnnɔukraˈjinsʲkɪj/
-  translation: ''
+  translation: South Ukrainian
   pos: adj
 - lemma: родючий
   ipa: /rɔdˈjut͡ʃɪj/
-  translation: ''
+  translation: fertile
   pos: adj
 - lemma: розстріл
   ipa: /rˈɔzstril/
-  translation: ''
+  translation: execution (by shooting)
   pos: noun
   gender: m
 - lemma: розташування
   ipa: /rɔztaʃuʋˈannja/
-  translation: ''
+  translation: location, arrangement
   pos: noun
   gender: n
 - lemma: севастополь
   ipa: /sɛʋastˈɔpɔlʲ/
-  translation: ''
+  translation: Sevastopol
   pos: noun
   gender: m
 - lemma: середземноморський
   ipa: /sɛrɛdzɛmnɔmˈɔrsʲkɪj/
-  translation: ''
+  translation: Mediterranean
   pos: adj
 - lemma: скуштувати
   ipa: /skuʃtuʋˈatɪ/
-  translation: ''
+  translation: to taste
   pos: verb
 - lemma: спекотний
   ipa: /spɛkˈɔtnɪj/
-  translation: ''
+  translation: hot, sweltering (adj)
   pos: adj
 - lemma: співіснувати
   ipa: /spiʋisnuʋˈatɪ/
-  translation: ''
+  translation: to coexist
   pos: verb
+- lemma: стиглість
+  ipa: /stˈɪɦlistʲ/
+  translation: ripeness
+  pos: noun
+  gender: f
 - lemma: суднобудування
   ipa: /sudnɔbuduʋˈannja/
-  translation: ''
+  translation: shipbuilding
   pos: noun
   gender: n
 - lemma: суднобудівний
   ipa: /sudnɔbudiʋnˈɪj/
-  translation: ''
+  translation: shipbuilding (adj)
   pos: adj
 - lemma: судноплавство
   ipa: /sudnɔplˈaʋstʋɔ/
-  translation: ''
+  translation: shipping, navigation
   pos: noun
   gender: n
 - lemma: сформувати
   ipa: /sfɔrmuʋˈatɪ/
-  translation: ''
+  translation: to form, to shape (perfective)
   pos: verb
 - lemma: татарин
   ipa: /tatˈarɪn/
-  translation: ''
+  translation: Tatar (male)
   pos: noun
 - lemma: татарський
   ipa: /tatˈarsʲkɪj/
-  translation: ''
+  translation: Tatar (adj)
   pos: adj
+- lemma: узбіччя
+  ipa: /uzbˈit͡ʃt͡ʃja/
+  translation: roadside, shoulder
+  pos: noun
+  gender: n
 - lemma: урожай
   ipa: /urɔʒˈaj/
-  translation: ''
+  translation: harvest
   pos: noun
   gender: m
 - lemma: феномен
   ipa: /fɛnˈɔmɛn/
-  translation: ''
+  translation: phenomenon
   pos: noun
   gender: m
 - lemma: феодосія
   ipa: /fɛɔdˈɔsija/
-  translation: ''
+  translation: Feodosia
   pos: noun
   gender: f
 - lemma: фермер
   ipa: /fˈɛrmɛr/
-  translation: ''
+  translation: farmer
   pos: noun
   gender: m
 - lemma: флот
   ipa: /flɔt/
-  translation: ''
+  translation: fleet, navy
   pos: noun
   gender: m
 - lemma: форшмак
   ipa: /fɔrʃmˈak/
-  translation: ''
+  translation: forshmak
   pos: noun
   gender: m
 - lemma: француз
   ipa: /frant͡sˈuz/
-  translation: ''
+  translation: Frenchman
   pos: noun
 - lemma: херсон
   ipa: /xɛrsˈɔn/
-  translation: ''
+  translation: Kherson
   pos: noun
   gender: m
 - lemma: херсонес
   ipa: /xɛrsɔnˈɛs/
-  translation: ''
+  translation: Chersonesus
+  pos: noun
+  gender: m
+- lemma: херсонець
+  ipa: /xɛrsˈɔnɛt͡sʲ/
+  translation: Khersonite
   pos: noun
   gender: m
 - lemma: херсонський
   ipa: /xɛrsˈɔnsʲkɪj/
-  translation: ''
+  translation: Kherson (adj)
   pos: adj
 - lemma: чебурек
   ipa: /t͡ʃɛburˈɛk/
-  translation: ''
+  translation: cheburek
   pos: noun
 - lemma: чорноземний
   ipa: /t͡ʃɔrnɔzˈɛmnɪj/
-  translation: ''
+  translation: chernozem (adj)
   pos: adj
 - lemma: ялта
   ipa: /ˈjalta/
-  translation: ''
+  translation: Yalta
   pos: noun
   gender: f
 - lemma: ячмінь
   ipa: /jat͡ʃmˈinʲ/
-  translation: ''
+  translation: barley, stye (eye)
   pos: noun
   gender: m
 - lemma: єврей
   ipa: /jɛʋrˈɛj/
-  translation: ''
+  translation: Jew
   pos: noun
   gender: m
 - lemma: єврейський
   ipa: /jɛʋrˈɛjsʲkɪj/
-  translation: ''
+  translation: Jewish
   pos: adj
 - lemma: ідиш
   ipa: /ˈidɪʃ/
-  translation: ''
+  translation: Yiddish
   pos: noun
   gender: m
 - lemma: ісаак
   ipa: /isaak/
-  translation: ''
+  translation: Isaac (name)
   pos: noun
   gender: m
 - lemma: італійка
   ipa: /italˈijka/
-  translation: ''
+  translation: Italian woman
   pos: noun
   gender: f

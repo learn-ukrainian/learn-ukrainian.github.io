@@ -6,184 +6,377 @@ items:
   ipa: /am/
   translation: ''
   pos: noun
+- lemma: бабуся
+  ipa: /babˈusja/
+  translation: grandmother
+  pos: noun
+  gender: f
+- lemma: батьки
+  ipa: /batʲkˈɪ/
+  translation: parents
+  pos: noun
+- lemma: брат
+  ipa: /brat/
+  translation: brother
+  pos: noun
+  gender: m
+- lemma: важливо
+  ipa: /ʋaʒlˈɪʋɔ/
+  translation: importantly, it is important
+  pos: adv
+- lemma: всі
+  ipa: /ʋsi/
+  translation: all, everyone
+  pos: pron
 - lemma: вчителів
   ipa: /ʋt͡ʃɪtɛlˈiʋ/
   translation: ''
   pos: adj
 - lemma: відбуватися
   ipa: /ʋidbuʋˈatɪsja/
-  translation: ''
+  translation: to take place, to happen
   pos: verb
 - lemma: віддавати
   ipa: /ʋiddaʋˈatɪ/
-  translation: ''
+  translation: to give back
+  pos: verb
+- lemma: відповідати
+  ipa: /ʋidpɔʋidˈatɪ/
+  translation: to answer, to correspond
   pos: verb
 - lemma: вірити
   ipa: /ʋˈirɪtɪ/
-  translation: ''
+  translation: to believe
   pos: verb
 - lemma: голосний
   ipa: /ɦɔlɔsnˈɪj/
-  translation: ''
+  translation: loud, voiced
   pos: adj
 - lemma: граматично
   ipa: /ɦramatˈɪt͡ʃnɔ/
-  translation: ''
+  translation: grammatically
   pos: adv
+- lemma: гріш
+  ipa: /ɦriʃ/
+  translation: penny, small coin
+  pos: noun
+  gender: m
+- lemma: дарувати
+  ipa: /daruʋˈatɪ/
+  translation: to give (as a gift)
+  pos: verb
 - lemma: деякий
   ipa: /dˈɛjakɪj/
-  translation: ''
+  translation: some, certain
   pos: pron
 - lemma: дитина
   ipa: /dɪtˈɪna/
-  translation: ''
+  translation: child
   pos: noun
 - lemma: довго
   ipa: /dˈɔʋɦɔ/
-  translation: ''
+  translation: for a long time
   pos: adv
 - lemma: довіряти
   ipa: /dɔʋirˈjatɪ/
-  translation: ''
+  translation: to trust (imperfective)
   pos: verb
+- lemma: домашній
+  ipa: /dɔmˈaʃnij/
+  translation: home (adj), domestic
+  pos: adj
 - lemma: донька
   ipa: /dˈɔnʲka/
-  translation: ''
+  translation: daughter
+  pos: noun
+  gender: f
+- lemma: допомагати
+  ipa: /dɔpɔmaɦˈatɪ/
+  translation: to help
+  pos: verb
+- lemma: дорога
+  ipa: /dɔrˈɔɦa/
+  translation: road, way
   pos: noun
   gender: f
 - lemma: другів
   ipa: /drˈuɦiʋ/
   translation: ''
   pos: adj
-- lemma: ева
-  ipa: /ɛʋa/
+- lemma: друзь
+  ipa: /druzʲ/
   translation: ''
   pos: noun
+  gender: m
+- lemma: ева
+  ipa: /ɛʋa/
+  translation: Eva (name)
+  pos: noun
   gender: f
+- lemma: живе
+  ipa: /ʒɪʋˈɛ/
+  translation: lives (verb), alive (neuter)
+  pos: noun
+  gender: n
+- lemma: жити
+  ipa: /ʒˈɪtɪ/
+  translation: to live
+  pos: verb
 - lemma: заважати
   ipa: /zaʋaʒˈatɪ/
-  translation: ''
+  translation: to disturb, to hinder
   pos: verb
-- lemma: звернути
-  ipa: /zʋɛrnˈutɪ/
-  translation: ''
+- lemma: завдання
+  ipa: /zaʋdˈannja/
+  translation: task, assignment
+  pos: noun
+  gender: n
+- lemma: запізнюватися
+  ipa: /zapˈiznjuʋatɪsja/
+  translation: to be late (imperfective)
   pos: verb
 - lemma: звучати
   ipa: /zʋut͡ʃˈatɪ/
-  translation: ''
+  translation: to sound
   pos: verb
-- lemma: канада
-  ipa: /kanˈada/
-  translation: ''
+- lemma: здоров'я
+  ipa: /zdɔrˈɔʋja/
+  translation: health
+  pos: noun
+  gender: n
+- lemma: зміна
+  ipa: /zmˈina/
+  translation: change, shift
   pos: noun
   gender: f
+- lemma: канада
+  ipa: /kanˈada/
+  translation: Canada
+  pos: noun
+  gender: f
+- lemma: квіти
+  ipa: /kʋˈitɪ/
+  translation: flowers
+  pos: noun
+- lemma: кожний
+  ipa: /kˈɔʒnɪj/
+  translation: every, each
+  pos: pron
+- lemma: колега
+  ipa: /kɔlˈɛɦa/
+  translation: colleague
+  pos: noun
+  gender: m
 - lemma: контекст
   ipa: /kɔntˈɛkst/
+  translation: context
+  pos: noun
+- lemma: кот
+  ipa: /kɔt/
   translation: ''
   pos: noun
+  gender: m
+- lemma: лист
+  ipa: /lɪst/
+  translation: letter, leaf
+  pos: noun
+  gender: m
+- lemma: львов
+  ipa: /lʲʋɔʋ/
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: лікар
+  ipa: /lˈikar/
+  translation: doctor
+  pos: noun
+  gender: m
 - lemma: лікарня
   ipa: /likˈarnja/
-  translation: ''
+  translation: hospital
   pos: noun
   gender: f
 - lemma: літературний
   ipa: /litɛratˈurnɪj/
-  translation: ''
+  translation: literary
   pos: adj
 - lemma: м'який
   ipa: /mjakˈɪj/
-  translation: ''
+  translation: soft
   pos: adj
+- lemma: магазин
+  ipa: /maɦazˈɪn/
+  translation: shop, store
+  pos: noun
+  gender: m
 - lemma: математик
   ipa: /matɛmˈatɪk/
-  translation: ''
+  translation: mathematician
   pos: noun
   gender: m
 - lemma: мелодійніший
   ipa: /mɛlɔdˈijniʃɪj/
-  translation: ''
+  translation: more melodious
   pos: adj
-- lemma: множина
-  ipa: /mnɔʒɪnˈa/
-  translation: ''
+- lemma: мило
+  ipa: /mˈɪlɔ/
+  translation: soap
   pos: noun
-  gender: f
+  gender: n
 - lemma: мовлення
   ipa: /mˈɔʋlɛnnja/
-  translation: ''
+  translation: speech, speaking
   pos: noun
   gender: n
 - lemma: можливий
   ipa: /mɔʒlˈɪʋɪj/
-  translation: ''
+  translation: possible
   pos: adj
+- lemma: море
+  ipa: /mˈɔrɛ/
+  translation: sea
+  pos: noun
+  gender: n
 - lemma: морити
   ipa: /mɔrˈɪtɪ/
-  translation: ''
+  translation: to exhaust, to starve
+  pos: verb
+- lemma: місто
+  ipa: /mˈistɔ/
+  translation: city, town
+  pos: noun
+- lemma: навчитися
+  ipa: /naʋt͡ʃˈɪtɪsja/
+  translation: to learn, to study (perfective)
   pos: verb
 - lemma: надсилати
   ipa: /nadsɪlˈatɪ/
-  translation: ''
+  translation: to send
   pos: verb
 - lemma: неформальний
   ipa: /nɛfɔrmˈalʲnɪj/
-  translation: ''
+  translation: informal
   pos: adj
+- lemma: новина
+  ipa: /nɔʋɪnˈa/
+  translation: news
+  pos: noun
+  gender: f
 - lemma: обидва
   ipa: /ɔbˈɪdʋa/
-  translation: ''
+  translation: both
   pos: num
 - lemma: обов'язковий
   ipa: /ɔbɔʋjazkˈɔʋɪj/
-  translation: ''
+  translation: mandatory, compulsory
   pos: adj
 - lemma: ові
   ipa: /ɔʋi/
   translation: ''
   pos: noun
-- lemma: пані
-  ipa: /pˈani/
-  translation: ''
+- lemma: однаковий
+  ipa: /ɔdnˈakɔʋɪj/
+  translation: identical, same
+  pos: adj
+- lemma: оля
+  ipa: /ɔlja/
+  translation: Olya (name)
   pos: noun
   gender: f
+- lemma: онук
+  ipa: /ɔnˈuk/
+  translation: grandson
+  pos: noun
+  gender: m
+- lemma: офіційний
+  ipa: /ɔfit͡sˈijnɪj/
+  translation: official
+  pos: adj
+- lemma: офіційно
+  ipa: /ɔfit͡sˈijnɔ/
+  translation: officially
+  pos: adv
+- lemma: пані
+  ipa: /pˈani/
+  translation: lady, madam
+  pos: noun
+  gender: f
+- lemma: пацієнт
+  ipa: /pat͡siˈjɛnt/
+  translation: patient
+  pos: noun
+  gender: m
 - lemma: перевага
   ipa: /pɛrɛʋˈaɦa/
-  translation: ''
+  translation: advantage, preference
   pos: noun
   gender: f
 - lemma: передбачуваний
   ipa: /pɛrɛdbˈat͡ʃuʋanɪj/
-  translation: ''
+  translation: predictable
   pos: adj
+- lemma: петра
+  ipa: /pɛtrˈa/
+  translation: ''
+  pos: noun
+  gender: f
 - lemma: петро
   ipa: /pɛtrˈɔ/
-  translation: ''
+  translation: Petro (name)
   pos: noun
   gender: m
 - lemma: письмовий
   ipa: /pɪsʲmˈɔʋɪj/
-  translation: ''
+  translation: written, desk (adj)
   pos: adj
 - lemma: плем'я
   ipa: /plˈɛmja/
-  translation: ''
+  translation: tribe
   pos: noun
   gender: n
 - lemma: повсякденний
   ipa: /pɔʋsjakdˈɛnnɪj/
-  translation: ''
+  translation: everyday, daily
   pos: adj
+- lemma: повідомлення
+  ipa: /pɔʋidˈɔmlɛnnja/
+  translation: message, notification
+  pos: noun
+  gender: n
+- lemma: подруга
+  ipa: /pˈɔdruɦa/
+  translation: friend (female)
+  pos: noun
+  gender: f
+- lemma: посилка
+  ipa: /pɔsˈɪlka/
+  translation: parcel, package
+  pos: noun
+  gender: f
+- lemma: поширений
+  ipa: /pɔʃˈɪrɛnɪj/
+  translation: widespread, common
+  pos: adj
+- lemma: пошта
+  ipa: /pˈɔʃta/
+  translation: post, mail, post office
+  pos: noun
+  gender: f
 - lemma: пояснювати
   ipa: /pɔˈjasnjuʋatɪ/
-  translation: ''
+  translation: to explain (imperfective)
   pos: verb
 - lemma: правильний
   ipa: /praʋɪlʲnɪj/
-  translation: ''
+  translation: correct, right
   pos: adj
+- lemma: працювати
+  ipa: /prat͡sjuʋˈatɪ/
+  translation: to work
+  pos: verb
 - lemma: приголосний
   ipa: /prˈɪɦɔlɔsnɪj/
-  translation: ''
+  translation: consonant
   pos: adj
 - lemma: природній
   ipa: /prɪrˈɔdnij/
@@ -191,68 +384,110 @@ items:
   pos: adj
 - lemma: простіший
   ipa: /prɔstˈiʃɪj/
-  translation: ''
+  translation: simpler (adj)
   pos: adj
 - lemma: радити
   ipa: /rˈadɪtɪ/
-  translation: ''
+  translation: to advise, to suggest
   pos: verb
 - lemma: розмовний
   ipa: /rɔzmˈɔʋnɪj/
-  translation: ''
+  translation: spoken, colloquial
   pos: adj
 - lemma: рука
   ipa: /rukˈa/
-  translation: ''
+  translation: hand, arm
   pos: noun
   gender: f
 - lemma: свекруха
   ipa: /sʋɛkrˈuxa/
-  translation: ''
+  translation: mother-in-law (husband's mother)
   pos: noun
   gender: f
-- lemma: спілкуватися
-  ipa: /spilkuʋˈatɪsja/
-  translation: ''
-  pos: verb
+- lemma: светр
+  ipa: /sʋɛtr/
+  translation: sweater
+  pos: noun
+  gender: m
 - lemma: сумувати
   ipa: /sumuʋˈatɪ/
-  translation: ''
+  translation: to be sad, to miss someone
   pos: verb
 - lemma: твердий
   ipa: /tʋɛrdˈɪj/
-  translation: ''
+  translation: hard, solid, firm
   pos: adj
+- lemma: телефонувати
+  ipa: /tɛlɛfɔnuʋˈatɪ/
+  translation: to call (on phone)
+  pos: verb
+- lemma: теплий
+  ipa: /tˈɛplɪj/
+  translation: warm
+  pos: adj
+- lemma: тиждень
+  ipa: /tˈɪʒdɛnʲ/
+  translation: week
+  pos: noun
+  gender: m
 - lemma: торонто
   ipa: /tɔrˈɔntɔ/
-  translation: ''
+  translation: Toronto
   pos: noun
   gender: n
-- lemma: увага
-  ipa: /uʋˈaɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: уряд
   ipa: /urjad/
-  translation: ''
+  translation: government
   pos: noun
   gender: m
+- lemma: учення
+  ipa: /ut͡ʃˈɛnnja/
+  translation: teaching, doctrine
+  pos: noun
 - lemma: учень
   ipa: /ˈut͡ʃɛnʲ/
-  translation: ''
+  translation: pupil, student (male)
   pos: noun
   gender: m
+- lemma: фотографія
+  ipa: /fɔtɔɦrˈafija/
+  translation: photography, photograph
+  pos: noun
+  gender: f
+- lemma: цілувати
+  ipa: /t͡siluʋˈatɪ/
+  translation: to kiss (imperfective)
+  pos: verb
 - lemma: чергування
   ipa: /t͡ʃɛrɦuʋˈannja/
-  translation: ''
+  translation: duty (shift), alternation
   pos: noun
   gender: n
+- lemma: школа
+  ipa: /ʃkˈɔla/
+  translation: school
+  pos: noun
+  gender: f
 - lemma: щотижня
   ipa: /ʃt͡ʃɔtˈɪʒnja/
-  translation: ''
+  translation: every week
   pos: adv
 - lemma: яма
   ipa: /ˈjama/
-  translation: ''
+  translation: pit, hole
   pos: noun
+- lemma: ім'я
+  ipa: /imˈja/
+  translation: name
+  pos: noun
+  gender: n
+- lemma: історія
+  ipa: /istˈɔrija/
+  translation: history, story
+  pos: noun
+  gender: f
+- lemma: їжа
+  ipa: /ˈjiʒa/
+  translation: food
+  pos: noun
+  gender: f

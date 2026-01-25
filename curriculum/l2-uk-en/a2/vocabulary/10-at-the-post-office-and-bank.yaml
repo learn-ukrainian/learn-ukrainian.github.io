@@ -4,129 +4,174 @@ version: '2.0'
 items:
 - lemma: автоматично
   ipa: /aʋtɔmatˈɪt͡ʃnɔ/
-  translation: ''
+  translation: automatically
   pos: adv
-- lemma: будувати
-  ipa: /buduʋˈatɪ/
+- lemma: адрес
+  ipa: /ˈadrɛs/
   translation: ''
-  pos: verb
+  pos: noun
+  gender: m
+- lemma: базовий
+  ipa: /bˈazɔʋɪj/
+  translation: basic
+  pos: adj
+- lemma: банка
+  ipa: /bˈanka/
+  translation: jar, can
+  pos: noun
+  gender: f
 - lemma: бюрократія
   ipa: /bjurɔkrˈatija/
-  translation: ''
+  translation: bureaucracy
   pos: noun
   gender: f
 - lemma: вважати
   ipa: /ʋʋaʒˈatɪ/
-  translation: ''
+  translation: to consider, to think
   pos: verb
 - lemma: впевнено
   ipa: /ʋpˈɛʋnɛnɔ/
-  translation: ''
+  translation: confidently
   pos: adv
-- lemma: вступ
-  ipa: /ʋstup/
-  translation: ''
+- lemma: відкрити
+  ipa: /ʋidkrˈɪtɪ/
+  translation: to open, to discover (perfective)
+  pos: verb
+- lemma: відправлення
+  ipa: /ʋidprˈaʋlɛnnja/
+  translation: departure, sending
   pos: noun
-  gender: m
-- lemma: готово
-  ipa: /ɦɔtˈɔʋɔ/
-  translation: ''
-  pos: adv
+  gender: n
+- lemma: довідка
+  ipa: /dˈɔʋidka/
+  translation: reference, information
+  pos: noun
+  gender: f
 - lemma: зважити
   ipa: /zʋˈaʒɪtɪ/
-  translation: ''
+  translation: to weigh, to consider
   pos: verb
 - lemma: звичайний
   ipa: /zʋɪt͡ʃˈajnɪj/
-  translation: ''
+  translation: ordinary, usual
   pos: adj
 - lemma: зняти
   ipa: /znˈjatɪ/
-  translation: ''
+  translation: to take off, to film, to rent
   pos: verb
-- lemma: квитанція
-  ipa: /kʋɪtˈant͡sija/
-  translation: ''
+- lemma: картка
+  ipa: /kˈartka/
+  translation: card
   pos: noun
   gender: f
-- lemma: ключовий
-  ipa: /kljut͡ʃɔʋˈɪj/
-  translation: ''
-  pos: adj
+- lemma: квитанція
+  ipa: /kʋɪtˈant͡sija/
+  translation: receipt, bill
+  pos: noun
+  gender: f
+- lemma: конверт
+  ipa: /kɔnʋˈɛrt/
+  translation: envelope
+  pos: noun
+  gender: m
 - lemma: коротка
   ipa: /kɔrˈɔtka/
   translation: ''
   pos: noun
   gender: f
+- lemma: купувати
+  ipa: /kupuʋˈatɪ/
+  translation: to buy (imperfective)
+  pos: verb
+- lemma: кілограм
+  ipa: /kilɔɦrˈam/
+  translation: kilogram
+  pos: noun
 - lemma: марка
   ipa: /mˈarka/
-  translation: ''
+  translation: brand, stamp
   pos: noun
   gender: f
 - lemma: надаватися
   ipa: /nadaʋˈatɪsja/
-  translation: ''
+  translation: to be suitable, to be granted
   pos: verb
 - lemma: непростий
   ipa: /nɛprˈɔstɪj/
-  translation: ''
+  translation: not simple, complicated
   pos: adj
 - lemma: німеччина
   ipa: /nimˈɛt͡ʃt͡ʃɪna/
-  translation: ''
+  translation: Germany
   pos: noun
   gender: f
 - lemma: обміняти
   ipa: /ɔbminˈjatɪ/
-  translation: ''
+  translation: to exchange
   pos: verb
 - lemma: отримання
   ipa: /ɔtrˈɪmannja/
-  translation: ''
+  translation: receiving, acquisition
   pos: noun
   gender: n
 - lemma: оформлення
   ipa: /ɔfˈɔrmlɛnnja/
-  translation: ''
+  translation: arrangement, decoration, document processing
   pos: noun
   gender: n
 - lemma: п'ятсот
   ipa: /pjatsˈɔt/
-  translation: ''
+  translation: five hundred
   pos: num
+- lemma: передати
+  ipa: /pɛrɛdˈatɪ/
+  translation: to hand over, to transmit (perfective)
+  pos: verb
 - lemma: переказ
   ipa: /pɛrˈɛkaz/
-  translation: ''
+  translation: legend, retelling, wire transfer
   pos: noun
   gender: m
 - lemma: переказати
   ipa: /pɛrɛkazˈatɪ/
-  translation: ''
+  translation: to retell, to transfer (money)
+  pos: verb
+- lemma: платити
+  ipa: /platˈɪtɪ/
+  translation: to pay
   pos: verb
 - lemma: послуга
   ipa: /pɔsluɦa/
-  translation: ''
+  translation: service
   pos: noun
 - lemma: рекомендований
   ipa: /rɛkɔmɛndˈɔʋanɪj/
-  translation: ''
+  translation: recommended
   pos: adj
 - lemma: розвінчання
   ipa: /rɔzʋint͡ʃˈannja/
-  translation: ''
+  translation: debunking, exposure
   pos: noun
   gender: n
 - lemma: складно
   ipa: /sklˈadnɔ/
-  translation: ''
+  translation: difficult, complexly
   pos: adv
+- lemma: сорока
+  ipa: /sɔrˈɔka/
+  translation: magpie
+  pos: noun
 - lemma: сфера
   ipa: /sfˈɛra/
-  translation: ''
+  translation: sphere, field, domain
   pos: noun
   gender: f
 - lemma: тисяча
   ipa: /tˈɪsjat͡ʃa/
-  translation: ''
+  translation: thousand
   pos: noun
   gender: f
+- lemma: шаблон
+  ipa: /ʃablˈɔn/
+  translation: template, pattern
+  pos: noun

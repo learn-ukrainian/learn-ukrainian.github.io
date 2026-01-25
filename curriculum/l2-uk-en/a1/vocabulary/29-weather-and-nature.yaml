@@ -2,461 +2,75 @@ module: 29-weather-and-nature
 level: A1
 version: '2.0'
 items:
-- lemma: багато
-  ipa: /baɦˈatɔ/
-  translation: ''
-  pos: adv
-- lemma: біл
-  ipa: /bil/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: великий
-  ipa: /ʋɛlˈɪkɪj/
-  translation: ''
-  pos: adj
-- lemma: веселий
-  ipa: /ʋɛsˈɛlɪj/
-  translation: ''
-  pos: adj
-- lemma: весна
-  ipa: /ʋɛsnˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: взимку
-  ipa: /ʋzˈɪmku/
-  translation: ''
-  pos: adv
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вивчити
-  ipa: /ʋˈɪʋt͡ʃɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: використовувати
-  ipa: /ʋɪkɔrɪstˈɔʋuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: влітку
-  ipa: /ʋlˈitku/
-  translation: ''
-  pos: adv
-- lemma: восени
-  ipa: /ʋɔsɛnˈɪ/
-  translation: ''
-  pos: adv
-- lemma: вправа
-  ipa: /ʋprˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вітряно
-  ipa: /ʋˈitrjanɔ/
-  translation: ''
-  pos: adv
-- lemma: гарний
-  ipa: /ɦˈarnɪj/
-  translation: ''
-  pos: adj
-- lemma: говорити
-  ipa: /ɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: горіти
-  ipa: /ɦɔrˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: гуляти
-  ipa: /ɦulˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: дерево
-  ipa: /dˈɛrɛʋɔ/
-  translation: ''
-  pos: noun
-- lemma: дивитися
-  ipa: /dɪʋˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: дніпро
-  ipa: /dniprˈɔ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: добре
-  ipa: /dˈɔbrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дощ
-  ipa: /dɔʃt͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: жарко
-  ipa: /ʒˈarkɔ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: завжди
-  ipa: /zˈaʋʒdɪ/
-  translation: ''
-  pos: pron
-- lemma: звати
-  ipa: /zʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: зима
-  ipa: /zɪmˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: знати
-  ipa: /znˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: йти
-  ipa: /jtɪ/
-  translation: ''
-  pos: verb
 - lemma: калин
   ipa: /kalɪn/
   translation: ''
   pos: noun
   gender: m
-- lemma: карпати
-  ipa: /karpˈatɪ/
-  translation: ''
-  pos: noun
 - lemma: квітка
   ipa: /kʋˈitka/
-  translation: ''
+  translation: flower
   pos: noun
-- lemma: класно
-  ipa: /klˈasnɔ/
-  translation: ''
-  pos: adv
 - lemma: клімат
   ipa: /klˈimat/
-  translation: ''
+  translation: climate
   pos: noun
   gender: m
-- lemma: кожний
-  ipa: /kˈɔʒnɪj/
-  translation: ''
-  pos: pron
-- lemma: кот
-  ipa: /kɔt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: красивий
-  ipa: /krasˈɪʋɪj/
-  translation: ''
-  pos: adj
-- lemma: кіт
-  ipa: /kit/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: кішка
-  ipa: /kˈiʃka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: луга
   ipa: /lˈuɦa/
   translation: ''
   pos: noun
   gender: f
-- lemma: львов
-  ipa: /lʲʋɔʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: любити
-  ipa: /ljubˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: ліс
-  ipa: /lis/
-  translation: ''
-  pos: noun
-- lemma: літо
-  ipa: /lˈitɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мова
-  ipa: /mˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: море
-  ipa: /mˈɔrɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: мурчик
   ipa: /murt͡ʃɪk/
-  translation: ''
+  translation: Murchyk (cat name)
   pos: noun
   gender: m
-- lemma: місяць
-  ipa: /mˈisjat͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: надворі
-  ipa: /nadʋˈɔri/
-  translation: ''
-  pos: adv
-- lemma: небо
-  ipa: /nˈɛbɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: одеса
-  ipa: /ɔdˈɛsa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: озеро
-  ipa: /ˈɔzɛrɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: ой
-  ipa: /ɔj/
-  translation: ''
-  pos: noun
-- lemma: описати
-  ipa: /ɔpɪsˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: осінь
   ipa: /ˈɔsinʲ/
-  translation: ''
+  translation: autumn
   pos: noun
   gender: f
-- lemma: парк
-  ipa: /park/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: парка
-  ipa: /parka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: переглянути
-  ipa: /pɛrɛɦlˈjanutɪ/
-  translation: ''
-  pos: verb
-- lemma: пес
-  ipa: /pɛs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: погода
-  ipa: /pɔɦˈɔda/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: подобатися
-  ipa: /pɔdˈɔbatɪsja/
-  translation: ''
-  pos: verb
-- lemma: подорож
-  ipa: /pˈɔdɔrɔʒ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: пора
-  ipa: /pɔra/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: практик
-  ipa: /prˈaktɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: природа
   ipa: /prɪrˈɔda/
-  translation: ''
+  translation: nature
   pos: noun
   gender: f
 - lemma: прогноз
   ipa: /prɔɦnˈɔz/
-  translation: ''
+  translation: weather forecast, prediction
   pos: noun
   gender: m
-- lemma: птах
-  ipa: /ptax/
-  translation: ''
-  pos: noun
-- lemma: південь
-  ipa: /pˈiʋdɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: півночі
-  ipa: /pˈiʋnɔt͡ʃi/
-  translation: ''
-  pos: noun
-- lemma: підсумок
-  ipa: /pidsumɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пісня
-  ipa: /pˈisnja/
-  translation: ''
-  pos: noun
 - lemma: рекс
   ipa: /rɛks/
   translation: ''
   pos: noun
   gender: m
-- lemma: риба
-  ipa: /rˈɪba/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: рок
-  ipa: /rɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рослина
   ipa: /rɔslˈɪna/
-  translation: ''
+  translation: plant
   pos: noun
   gender: f
 - lemma: рудий
   ipa: /rudˈɪj/
-  translation: ''
+  translation: red-haired, ginger
   pos: noun
   gender: m
-- lemma: річка
-  ipa: /rˈit͡ʃka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: світязь
   ipa: /sʋitjazʲ/
-  translation: ''
+  translation: Svitiaz (lake)
   pos: noun
   gender: m
-- lemma: сніг
-  ipa: /sniɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: собака
-  ipa: /sɔbˈaka/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сонце
-  ipa: /sˈɔnt͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: сонячно
   ipa: /sˈɔnjat͡ʃnɔ/
-  translation: ''
+  translation: sunny (adv), it's sunny
   pos: adv
-- lemma: сьогодні
-  ipa: /sʲɔɦˈɔdni/
-  translation: ''
-  pos: adv
-- lemma: тварина
-  ipa: /tʋarɪna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тепер
-  ipa: /tɛpˈɛr/
-  translation: ''
-  pos: pron
-- lemma: тепло
-  ipa: /tɛplˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
-- lemma: україна
-  ipa: /ukraˈjina/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: український
-  ipa: /ukraˈjinsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: улюблений
-  ipa: /ulˈjublɛnɪj/
-  translation: ''
-  pos: adj
 - lemma: хмарно
   ipa: /xmˈarnɔ/
-  translation: ''
+  translation: cloudy (it is cloudy)
   pos: adv
-- lemma: ходити
-  ipa: /xɔdˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: холодно
-  ipa: /xˈɔlɔdnɔ/
-  translation: ''
-  pos: adv
-- lemma: цікавий
-  ipa: /t͡sikˈaʋɪj/
-  translation: ''
-  pos: adj
-- lemma: часто
-  ipa: /t͡ʃˈastɔ/
-  translation: ''
-  pos: adv
-- lemma: червона
-  ipa: /t͡ʃɛrʋˈɔna/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: чорне
   ipa: /t͡ʃˈɔrnɛ/
-  translation: ''
+  translation: black (neuter)
   pos: noun
   gender: n
-- lemma: чудовий
-  ipa: /t͡ʃudˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: ідея
-  ipa: /idˈɛja/
-  translation: ''
-  pos: noun
-  gender: f

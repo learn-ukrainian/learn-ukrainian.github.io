@@ -208,7 +208,11 @@ def setup_yaml():
 def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
     """
     Enrich a vocabulary YAML file with lemmas, POS, and IPA.
-    
+
+    Supports both formats:
+    - Bare list: [{ lemma: ... }, ...]
+    - Wrapper format: { module: ..., items: [{ lemma: ... }, ...] }
+
     Returns statistics about the enrichment.
     """
     stats = {
@@ -218,16 +222,31 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
         'lemmas_corrected': 0,
         'pos_corrected': 0,
     }
-    
+
     # Load existing YAML
     with open(yaml_path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
-    
-    if not data or not isinstance(data, list):
+
+    # Handle both wrapper format and bare list format
+    wrapper_metadata = None
+    if isinstance(data, dict) and 'items' in data:
+        # Wrapper format: { module: ..., items: [...] }
+        wrapper_metadata = {k: v for k, v in data.items() if k != 'items'}
+        items = data.get('items', [])
+        print(f"  Detected wrapper format (module: {wrapper_metadata.get('module', 'unknown')})")
+    elif isinstance(data, list):
+        # Bare list format
+        items = data
+    else:
         print(f"  Warning: No vocabulary items found in {yaml_path.name}")
         return stats
-    
-    stats['original_count'] = len(data)
+
+    if not items:
+        print(f"  Warning: Empty items list in {yaml_path.name}")
+        return stats
+
+    stats['original_count'] = len(items)
+    data = items  # Use items for processing
     print(f"  Processing {len(data)} entries...")
     
     # Process and deduplicate
@@ -282,18 +301,28 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
             print(f"    Processed {i + 1}/{len(data)} entries...")
     
     stats['deduplicated_count'] = len(enriched_entries)
-    
+
     # Write back if not dry run
     if not dry_run:
         with open(yaml_path, 'w', encoding='utf-8') as f:
-            yaml.dump(enriched_entries, f, 
-                     allow_unicode=True, 
-                     default_flow_style=False, 
-                     sort_keys=False)
+            if wrapper_metadata:
+                # Preserve wrapper format
+                output_data = wrapper_metadata.copy()
+                output_data['items'] = enriched_entries
+                yaml.dump(output_data, f,
+                         allow_unicode=True,
+                         default_flow_style=False,
+                         sort_keys=False)
+            else:
+                # Write as bare list
+                yaml.dump(enriched_entries, f,
+                         allow_unicode=True,
+                         default_flow_style=False,
+                         sort_keys=False)
         print(f"  ✅ Wrote {len(enriched_entries)} entries to {yaml_path.name}")
     else:
         print(f"  [DRY RUN] Would write {len(enriched_entries)} entries")
-    
+
     return stats
 
 

@@ -4,26 +4,26 @@ version: '2.0'
 items:
 - lemma: альбом
   ipa: /alʲbˈɔm/
-  translation: ''
+  translation: album
   pos: noun
   gender: m
 - lemma: артист
   ipa: /artˈɪst/
-  translation: ''
+  translation: artist, performer
   pos: noun
 - lemma: бандура
   ipa: /bandˈura/
-  translation: ''
+  translation: bandura (instrument)
   pos: noun
   gender: f
 - lemma: виконавиця
   ipa: /ʋɪkɔnˈaʋɪt͡sja/
-  translation: ''
+  translation: performer (female)
   pos: noun
   gender: f
 - lemma: витвір
   ipa: /ʋˈɪtʋir/
-  translation: ''
+  translation: creation, work of art
   pos: noun
 - lemma: вопл
   ipa: /ʋɔpl/
@@ -37,21 +37,21 @@ items:
   gender: m
 - lemma: десятиліття
   ipa: /dɛsjatɪlˈittja/
-  translation: ''
+  translation: decade
   pos: noun
   gender: n
 - lemma: джаз
   ipa: /dʒaz/
-  translation: ''
+  translation: jazz
   pos: noun
   gender: m
 - lemma: джазовий
   ipa: /dʒˈazɔʋɪj/
-  translation: ''
+  translation: jazz (adj)
   pos: adj
 - lemma: джамала
   ipa: /dʒamala/
-  translation: ''
+  translation: Jamala (singer)
   pos: noun
   gender: f
 - lemma: електро-фолк
@@ -61,7 +61,7 @@ items:
   gender: m
 - lemma: електроніка
   ipa: /ɛlɛktrˈɔnika/
-  translation: ''
+  translation: electronics
   pos: noun
   gender: f
 - lemma: етно-хаос
@@ -71,7 +71,7 @@ items:
   gender: m
 - lemma: жанр
   ipa: /ʒanr/
-  translation: ''
+  translation: genre
   pos: noun
 - lemma: запорожець
   ipa: /zapɔrˈɔʒɛt͡sʲ/
@@ -80,44 +80,44 @@ items:
   gender: m
 - lemma: каное
   ipa: /kanˈɔɛ/
-  translation: ''
+  translation: canoe
   pos: noun
   gender: n
 - lemma: клубний
   ipa: /klˈubnɪj/
-  translation: ''
+  translation: club (adj)
   pos: adj
 - lemma: кліп
   ipa: /klip/
-  translation: ''
+  translation: clip, music video
   pos: noun
 - lemma: мелодія
   ipa: /mɛlˈɔdija/
-  translation: ''
+  translation: melody
   pos: noun
   gender: f
 - lemma: мехенді
   ipa: /mɛxɛndi/
-  translation: ''
+  translation: mehndi
   pos: noun
   gender: n
 - lemma: нажива
   ipa: /naʒˈɪʋa/
-  translation: ''
+  translation: gain, profit
   pos: noun
   gender: f
 - lemma: неофолк
   ipa: /nɛɔfɔlk/
-  translation: ''
+  translation: neofolk
   pos: noun
   gender: m
 - lemma: неофіційний
   ipa: /nɛɔfit͡sˈijnɪj/
-  translation: ''
+  translation: unofficial
   pos: adj
 - lemma: плейлист
   ipa: /plɛjlɪst/
-  translation: ''
+  translation: playlist
   pos: noun
   gender: m
 - lemma: поп
@@ -127,15 +127,15 @@ items:
   gender: m
 - lemma: потужно
   ipa: /pɔtˈuʒnɔ/
-  translation: ''
+  translation: powerfully
   pos: adv
 - lemma: присвячений
   ipa: /prɪsʋˈjat͡ʃɛnɪj/
-  translation: ''
+  translation: dedicated
   pos: adj
 - lemma: продюсер
   ipa: /prɔdˈjusɛr/
-  translation: ''
+  translation: producer
   pos: noun
 - lemma: псюк
   ipa: /psjuk/
@@ -144,82 +144,82 @@ items:
   gender: m
 - lemma: ренесанс
   ipa: /rɛnɛsˈans/
-  translation: ''
+  translation: Renaissance
   pos: noun
   gender: m
 - lemma: реп
   ipa: /rɛp/
-  translation: ''
+  translation: rap (music)
   pos: noun
   gender: m
 - lemma: реп-музика
   ipa: /rɛp-mˈuzɪka/
-  translation: ''
+  translation: rap music
   pos: noun
   gender: m
 - lemma: реп-сцена
   ipa: /rɛp-st͡sˈɛna/
-  translation: ''
+  translation: rap scene
   pos: noun
   gender: f
 - lemma: реперка
   ipa: /rɛpɛrka/
-  translation: ''
+  translation: rapper (female)
   pos: noun
 - lemma: рок-музика
   ipa: /rɔk-mˈuzɪka/
-  translation: ''
+  translation: rock music
   pos: noun
   gender: f
 - lemma: руслан
   ipa: /ruslˈan/
-  translation: ''
+  translation: Ruslan (name)
   pos: noun
   gender: m
 - lemma: саундтрек
   ipa: /saundtrˈɛk/
-  translation: ''
+  translation: soundtrack
   pos: noun
 - lemma: скрябін
   ipa: /skrjabin/
-  translation: ''
+  translation: Skryabin (name)
   pos: noun
   gender: m
 - lemma: співак
   ipa: /spiʋˈak/
-  translation: ''
+  translation: singer
   pos: noun
   gender: f
 - lemma: створюючи
   ipa: /stʋˈɔrjujut͡ʃɪ/
-  translation: ''
+  translation: creating
   pos: verb
 - lemma: стійкість
   ipa: /stˈijkistʲ/
-  translation: ''
+  translation: stability, resilience
   pos: noun
   gender: f
 - lemma: торкнутися
   ipa: /tɔrknˈutɪsja/
-  translation: ''
+  translation: to touch (perfective)
   pos: verb
 - lemma: фолк
   ipa: /fɔlk/
-  translation: ''
+  translation: folk
   pos: noun
   gender: m
 - lemma: хіп-хоп
   ipa: /xip-xɔp/
-  translation: ''
+  translation: hip hop
   pos: noun
   gender: m
 - lemma: ширший
   ipa: /ʃˈɪrʃɪj/
-  translation: ''
+  translation: wider (adj)
   pos: adj
 - lemma: шоу
   ipa: /ʃˈɔu/
-  translation: ''
+  translation: show
   pos: noun
   gender: m
 - lemma: інд

@@ -4,77 +4,86 @@ version: '2.0'
 items:
 - lemma: амбіція
   ipa: /ambˈit͡sija/
-  translation: ''
+  translation: ambition
   pos: noun
   gender: f
 - lemma: батьківщина
   ipa: /batʲkiʋʃt͡ʃɪna/
-  translation: ''
+  translation: motherland, homeland
   pos: noun
   gender: f
 - lemma: блискуче
   ipa: /blɪskˈut͡ʃɛ/
-  translation: ''
+  translation: brilliantly
   pos: adv
 - lemma: бій
   ipa: /bij/
-  translation: ''
+  translation: battle, fight
   pos: noun
   gender: m
 - lemma: випливати
   ipa: /ʋɪplɪʋˈatɪ/
-  translation: ''
+  translation: to emerge, to follow (logically)
   pos: verb
 - lemma: виростати
   ipa: /ʋɪrɔstˈatɪ/
-  translation: ''
+  translation: to grow up
   pos: verb
 - lemma: виступити
   ipa: /ʋˈɪstupɪtɪ/
-  translation: ''
+  translation: to perform, to speak (perfective)
   pos: verb
 - lemma: вольний
   ipa: /ʋˈɔlʲnɪj/
   translation: ''
   pos: adj
+- lemma: впоратися
+  ipa: /ʋpˈɔratɪsja/
+  translation: to cope, to manage
+  pos: verb
 - lemma: вражаюче
   ipa: /ʋraʒˈajut͡ʃɛ/
-  translation: ''
+  translation: impressively
   pos: adv
+- lemma: втома
+  ipa: /ʋtˈɔma/
+  translation: fatigue, tiredness
+  pos: noun
+  gender: f
 - lemma: втрачати
   ipa: /ʋtrat͡ʃˈatɪ/
-  translation: ''
+  translation: to lose (imperfective)
   pos: verb
 - lemma: відбудувати
   ipa: /ʋidbuduʋˈatɪ/
-  translation: ''
+  translation: to rebuild
   pos: verb
 - lemma: відзнака
   ipa: /ʋidznˈaka/
-  translation: ''
+  translation: award, distinction
   pos: noun
   gender: f
 - lemma: відновитися
   ipa: /ʋidnɔʋˈɪtɪsja/
-  translation: ''
+  translation: to recover, to be restored
   pos: verb
 - lemma: героїзм
   ipa: /ɦɛrɔˈjizm/
-  translation: ''
+  translation: heroism
   pos: noun
   gender: m
 - lemma: громада
   ipa: /ɦrɔmˈada/
-  translation: ''
+  translation: community
   pos: noun
   gender: f
 - lemma: дарма
   ipa: /darmˈa/
-  translation: ''
+  translation: in vain, no matter
   pos: adv
 - lemma: долати
   ipa: /dɔlˈatɪ/
-  translation: ''
+  translation: to overcome
   pos: verb
 - lemma: долі
   ipa: /dˈɔli/
@@ -82,194 +91,248 @@ items:
   pos: adv
 - lemma: допустовість
   ipa: /dɔpustˈɔʋistʲ/
-  translation: ''
+  translation: concession (grammar)
   pos: noun
   gender: f
 - lemma: достатній
   ipa: /dɔstˈatnij/
-  translation: ''
+  translation: sufficient
   pos: adj
+- lemma: дума
+  ipa: /dˈuma/
+  translation: duma (epic song), thought
+  pos: noun
 - lemma: еміграція
   ipa: /ɛmiɦrˈat͡sija/
-  translation: ''
+  translation: emigration
+  pos: noun
+  gender: f
+- lemma: енеїда
+  ipa: /ɛnɛˈjida/
+  translation: Eneida
   pos: noun
   gender: f
 - lemma: звичай
   ipa: /zʋˈɪt͡ʃaj/
-  translation: ''
+  translation: custom, habit
   pos: noun
 - lemma: змагання
   ipa: /zmaɦˈannja/
-  translation: ''
+  translation: competition, contest
   pos: noun
 - lemma: зневіритися
   ipa: /znɛʋˈirɪtɪsja/
-  translation: ''
+  translation: to lose faith, to despair
+  pos: verb
+- lemma: зростати
+  ipa: /zrɔstˈatɪ/
+  translation: to grow, to increase
   pos: verb
 - lemma: керівництво
   ipa: /kɛriʋnˈɪt͡stʋɔ/
-  translation: ''
+  translation: leadership, management
   pos: noun
   gender: n
 - lemma: комп'ютерний
   ipa: /kɔmpˈjutɛrnɪj/
-  translation: ''
+  translation: computer (adj)
   pos: adj
 - lemma: котляревський
   ipa: /kɔtljarˈɛʋsʲkɪj/
-  translation: ''
+  translation: Kotliarevskyi (name)
   pos: adj
 - lemma: максимум
   ipa: /mˈaksɪmum/
-  translation: ''
+  translation: maximum
   pos: noun
   gender: m
 - lemma: марний
   ipa: /marnɪj/
-  translation: ''
+  translation: useless, vain
   pos: adj
 - lemma: марність
   ipa: /mˈarnistʲ/
-  translation: ''
+  translation: vanity, futility
   pos: noun
   gender: f
 - lemma: найуніверсальніший
   ipa: /najuniʋɛrsalʲniʃɪj/
-  translation: ''
+  translation: the most universal
   pos: adj
 - lemma: напруга
   ipa: /naprˈuɦa/
-  translation: ''
+  translation: voltage, tension
   pos: noun
   gender: f
 - lemma: незламність
   ipa: /nɛzlˈamnistʲ/
-  translation: ''
+  translation: invincibility, steadfastness
   pos: noun
   gender: f
 - lemma: незлий
   ipa: /nɛzlˈɪj/
-  translation: ''
+  translation: not evil, kind
   pos: adj
 - lemma: нелегко
   ipa: /nɛlˈɛɦkɔ/
-  translation: ''
+  translation: not easy
   pos: adv
 - lemma: неочікуваний
   ipa: /nɛɔt͡ʃˈikuʋanɪj/
-  translation: ''
+  translation: unexpected
   pos: adj
 - lemma: обережніший
   ipa: /ɔbɛrɛʒniʃɪj/
-  translation: ''
+  translation: more careful
   pos: adj
 - lemma: переконувати
   ipa: /pɛrɛkˈɔnuʋatɪ/
-  translation: ''
+  translation: to convince (imperfective)
   pos: verb
+- lemma: по-своєму
+  ipa: /pɔ-sʋˈɔjɛmu/
+  translation: in one's own way
+  pos: pron
 - lemma: пом'янути
   ipa: /pɔmjanˈutɪ/
-  translation: ''
+  translation: to commemorate, to remember (dead)
+  pos: verb
+- lemma: попереджати
+  ipa: /pɔpɛrɛdʒˈatɪ/
+  translation: to warn, to prevent
   pos: verb
 - lemma: попри
   ipa: /pˈɔprɪ/
-  translation: ''
+  translation: despite, in spite of
   pos: prep
 - lemma: поранення
   ipa: /pɔrˈanɛnnja/
-  translation: ''
+  translation: injury, wound
   pos: noun
   gender: n
 - lemma: порушити
   ipa: /pɔrˈuʃɪtɪ/
-  translation: ''
+  translation: to violate, to break (perfective)
   pos: verb
 - lemma: поступка
   ipa: /pˈɔstupka/
-  translation: ''
+  translation: concession
   pos: noun
   gender: f
+- lemma: прийом
+  ipa: /prɪjˈɔm/
+  translation: reception, intake, trick
+  pos: noun
+  gender: m
 - lemma: причина-наслідок
   ipa: /prɪt͡ʃˈɪna-naslidɔk/
-  translation: ''
+  translation: cause and effect
   pos: noun
   gender: f
 - lemma: протиставлення
   ipa: /prɔtɪstˈaʋlɛnnja/
-  translation: ''
+  translation: opposition, contrast
   pos: noun
   gender: n
 - lemma: професіонал
   ipa: /prɔfɛsiɔnˈal/
-  translation: ''
+  translation: professional (person)
   pos: noun
 - lemma: прохолодний
   ipa: /prɔxɔlɔdnɪj/
-  translation: ''
+  translation: cool (temperature)
   pos: adj
 - lemma: психологія
   ipa: /psɪxɔlˈɔɦija/
-  translation: ''
+  translation: psychology
   pos: noun
   gender: f
 - lemma: руйнування
   ipa: /rujnuʋˈannja/
-  translation: ''
+  translation: destruction
   pos: noun
   gender: n
 - lemma: руйнівний
   ipa: /rujniʋnˈɪj/
-  translation: ''
+  translation: destructive
   pos: adj
 - lemma: санкція
   ipa: /sˈankt͡sija/
-  translation: ''
+  translation: sanction
   pos: noun
   gender: f
+- lemma: складність
+  ipa: /sklˈadnistʲ/
+  translation: complexity
+  pos: noun
+  gender: f
+- lemma: скорочувати
+  ipa: /skɔrˈɔt͡ʃuʋatɪ/
+  translation: to shorten, to abbreviate
+  pos: verb
 - lemma: скромно
   ipa: /skrˈɔmnɔ/
-  translation: ''
+  translation: modestly
   pos: adv
 - lemma: соловейко
   ipa: /sɔlɔʋˈɛjkɔ/
-  translation: ''
+  translation: nightingale (diminutive)
   pos: noun
 - lemma: стомитися
   ipa: /stɔmˈɪtɪsja/
-  translation: ''
+  translation: to get tired (perfective)
   pos: verb
 - lemma: стомлений
   ipa: /stˈɔmlɛnɪj/
-  translation: ''
+  translation: tired, weary
   pos: adj
+- lemma: сша
+  ipa: /sʃa/
+  translation: USA
+  pos: noun
+- lemma: тихий
+  ipa: /tˈɪxɪj/
+  translation: quiet, silent
+  pos: noun
+  gender: m
 - lemma: толерантність
   ipa: /tɔlɛrˈantnistʲ/
-  translation: ''
+  translation: tolerance
   pos: noun
   gender: f
+- lemma: травень
+  ipa: /trˈaʋɛnʲ/
+  translation: May
+  pos: noun
+  gender: m
 - lemma: травма
   ipa: /trˈaʋma/
-  translation: ''
+  translation: injury, trauma
   pos: noun
   gender: f
 - lemma: труднощі
   ipa: /trˈudnɔʃt͡ʃi/
-  translation: ''
+  translation: difficulties
   pos: noun
 - lemma: формальність
   ipa: /fɔrmˈalʲnistʲ/
-  translation: ''
+  translation: formality
   pos: noun
   gender: f
 - lemma: філософ
   ipa: /filˈɔsɔf/
-  translation: ''
+  translation: philosopher
   pos: noun
 - lemma: фінансово
   ipa: /finˈansɔʋɔ/
-  translation: ''
+  translation: financially
   pos: adv
-- lemma: частий
-  ipa: /t͡ʃˈastɪj/
-  translation: ''
-  pos: adj
+- lemma: холод
+  ipa: /xˈɔlɔd/
+  translation: cold, chill
+  pos: noun
+  gender: m
+- lemma: хоч
+  ipa: /xɔt͡ʃ/
+  translation: at least, even if, although
+  pos: part

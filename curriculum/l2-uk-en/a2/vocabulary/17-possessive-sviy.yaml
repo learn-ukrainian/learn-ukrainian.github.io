@@ -4,150 +4,99 @@ version: '2.0'
 items:
 - lemma: автоматичний
   ipa: /aʋtɔmatˈɪt͡ʃnɪj/
-  translation: ''
+  translation: automatic
   pos: adj
 - lemma: англомовний
   ipa: /anɦlɔmˈɔʋnɪj/
-  translation: ''
+  translation: English-speaking
   pos: adj
 - lemma: бізнес
   ipa: /bˈiznɛs/
-  translation: ''
+  translation: business
   pos: noun
   gender: m
-- lemma: виправити
-  ipa: /ʋˈɪpraʋɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: вказувати
-  ipa: /ʋkˈazuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: власник
   ipa: /ʋlˈasnɪk/
-  translation: ''
+  translation: owner
   pos: noun
   gender: m
-- lemma: відвідувати
-  ipa: /ʋidʋˈiduʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: гостинність
-  ipa: /ɦɔstˈɪnnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: житло
   ipa: /ʒɪtlˈɔ/
-  translation: ''
+  translation: housing, dwelling
   pos: noun
   gender: n
 - lemma: завдяки
   ipa: /zaʋdjakˈɪ/
-  translation: ''
+  translation: thanks to
   pos: prep
 - lemma: кивнути
   ipa: /kɪʋnˈutɪ/
-  translation: ''
+  translation: to nod (perfective)
   pos: verb
 - lemma: костюм
   ipa: /kɔstˈjum/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: матися
-  ipa: /mˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: менеджер
-  ipa: /mˈɛnɛdʒɛr/
-  translation: ''
+  translation: suit, costume
   pos: noun
   gender: m
 - lemma: надіти
   ipa: /nadˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: найкращий
-  ipa: /najkrˈaʃt͡ʃɪj/
-  translation: ''
-  pos: adj
-- lemma: належати
-  ipa: /nalˈɛʒatɪ/
-  translation: ''
+  translation: to put on (clothes)
   pos: verb
 - lemma: неможливий
   ipa: /nɛmɔʒlˈɪʋɪj/
-  translation: ''
+  translation: impossible
   pos: adj
 - lemma: неоднозначність
   ipa: /nɛɔdnɔznˈat͡ʃnistʲ/
-  translation: ''
+  translation: ambiguity
   pos: noun
   gender: f
 - lemma: обійняти
   ipa: /ɔbijnˈjatɪ/
-  translation: ''
+  translation: to hug (perfective)
   pos: verb
 - lemma: папка
   ipa: /pˈapka/
-  translation: ''
+  translation: folder
   pos: noun
   gender: f
-- lemma: попросити
-  ipa: /pɔprɔsˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: поцілувати
   ipa: /pɔt͡siluʋˈatɪ/
-  translation: ''
+  translation: to kiss (perfective)
   pos: verb
-- lemma: право
-  ipa: /prˈaʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: природніше
   ipa: /prɪrɔdniʃɛ/
-  translation: ''
+  translation: more naturally
   pos: adv
-- lemma: продавати
-  ipa: /prɔdaʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: рад
   ipa: /rad/
-  translation: ''
+  translation: council, soviet (historical), glad (pred)
   pos: noun
   gender: m
-- lemma: рекомендація
-  ipa: /rɛkɔmɛndˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: складати
-  ipa: /skladˈatɪ/
-  translation: ''
+- lemma: святкувати
+  ipa: /sʋjatkuʋˈatɪ/
+  translation: to celebrate
   pos: verb
 - lemma: спальний
   ipa: /spˈalʲnɪj/
-  translation: ''
+  translation: sleeping (adj)
   pos: adj
-- lemma: точний
-  ipa: /tˈɔt͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: унікальний
-  ipa: /unikˈalʲnɪj/
-  translation: ''
+- lemma: страва
+  ipa: /strˈaʋa/
+  translation: dish (food)
+  pos: noun
+  gender: f
+- lemma: сімейний
+  ipa: /simˈɛjnɪj/
+  translation: family (adj), domestic
   pos: adj
 - lemma: чужий
   ipa: /t͡ʃuʒˈɪj/
-  translation: ''
+  translation: alien, foreign, someone else's
   pos: noun
   gender: f
 - lemma: інтерес
   ipa: /intɛrˈɛs/
-  translation: ''
+  translation: interest
   pos: noun
   gender: m

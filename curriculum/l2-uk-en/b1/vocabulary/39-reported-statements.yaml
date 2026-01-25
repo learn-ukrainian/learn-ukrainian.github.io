@@ -4,45 +4,58 @@ version: '2.0'
 items:
 - lemma: актуальність
   ipa: /aktuˈalʲnistʲ/
-  translation: ''
+  translation: relevance, topicality
   pos: noun
   gender: f
+- lemma: арсенал
+  ipa: /arsɛnˈal/
+  translation: arsenal
+  pos: noun
+  gender: m
 - lemma: визнання
   ipa: /ʋɪznˈannja/
-  translation: ''
+  translation: recognition, confession
   pos: noun
   gender: n
 - lemma: визнати
   ipa: /ʋˈɪznatɪ/
-  translation: ''
+  translation: to recognize, to admit (perfective)
   pos: verb
+- lemma: вимовити
+  ipa: /ʋˈɪmɔʋɪtɪ/
+  translation: to pronounce
+  pos: verb
+- lemma: дослівний
+  ipa: /dɔslˈiʋnɪj/
+  translation: literal
+  pos: adj
 - lemma: дослідник
   ipa: /dɔslˈidnɪk/
-  translation: ''
+  translation: researcher
   pos: noun
 - lemma: діловий
   ipa: /dilɔʋˈɪj/
-  translation: ''
+  translation: business (adj)
   pos: adj
 - lemma: замало
   ipa: /zamˈalɔ/
-  translation: ''
+  translation: too little
   pos: adv
 - lemma: затвердити
   ipa: /zatʋɛrdɪtɪ/
-  translation: ''
+  translation: to approve
   pos: verb
 - lemma: зауважити
   ipa: /zauʋˈaʒɪtɪ/
-  translation: ''
+  translation: to notice, to remark
   pos: verb
 - lemma: зауважувати
   ipa: /zauʋˈaʒuʋatɪ/
-  translation: ''
+  translation: to notice, to remark (imperfective)
   pos: verb
 - lemma: заявка
   ipa: /zaˈjaʋka/
-  translation: ''
+  translation: application, request
   pos: noun
   gender: f
 - lemma: змі
@@ -50,24 +63,42 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: зміст
+  ipa: /zmist/
+  translation: content, meaning
+  pos: noun
+  gender: m
 - lemma: зсув
   ipa: /zsuʋ/
-  translation: ''
+  translation: shift, landslide
   pos: noun
   gender: m
 - lemma: зізнання
   ipa: /ziznˈannja/
-  translation: ''
+  translation: confession, admission
   pos: noun
   gender: n
+- lemma: лідер
+  ipa: /lˈidɛr/
+  translation: leader
+  pos: noun
+- lemma: медсестра
+  ipa: /mɛdsɛstrˈa/
+  translation: nurse
+  pos: noun
+  gender: f
+- lemma: мовити
+  ipa: /mˈɔʋɪtɪ/
+  translation: to speak, to utter
+  pos: verb
 - lemma: міністерство
   ipa: /ministˈɛrstʋɔ/
-  translation: ''
+  translation: ministry
   pos: noun
   gender: n
 - lemma: напередодні
   ipa: /napɛrɛdˈɔdni/
-  translation: ''
+  translation: on the eve, the day before
   pos: adv
 - lemma: неактуальний
   ipa: /nɛaktuˈalʲnɪj/
@@ -75,106 +106,124 @@ items:
   pos: adj
 - lemma: невигідний
   ipa: /nɛʋɪɦidnɪj/
-  translation: ''
+  translation: unprofitable
   pos: adj
 - lemma: невимушено
   ipa: /nɛʋˈɪmuʃɛnɔ/
-  translation: ''
+  translation: naturally, effortlessly
   pos: adv
 - lemma: незмінений
   ipa: /nɛzmˈinɛnɪj/
-  translation: ''
+  translation: unchanged
   pos: adj
 - lemma: неточність
   ipa: /nɛtˈɔt͡ʃnistʲ/
-  translation: ''
+  translation: inaccuracy
   pos: noun
 - lemma: новітній
   ipa: /nɔʋˈitnij/
-  translation: ''
+  translation: newest, modern
   pos: adj
-- lemma: опозиція
-  ipa: /ɔpɔzˈɪt͡sija/
-  translation: ''
+- lemma: норма
+  ipa: /nˈɔrma/
+  translation: norm, standard
   pos: noun
   gender: f
+- lemma: опозиція
+  ipa: /ɔpɔzˈɪt͡sija/
+  translation: opposition
+  pos: noun
+  gender: f
+- lemma: опускати
+  ipa: /ɔpuskˈatɪ/
+  translation: to lower
+  pos: verb
+- lemma: покроковий
+  ipa: /pɔkrˈɔkɔʋɪj/
+  translation: step-by-step
+  pos: adj
 - lemma: правдивість
   ipa: /praʋdˈɪʋistʲ/
-  translation: ''
+  translation: truthfulness
   pos: noun
   gender: f
 - lemma: представник
   ipa: /prɛdstaʋnˈɪk/
-  translation: ''
+  translation: representative
   pos: noun
   gender: m
 - lemma: прес-конференція
   ipa: /prɛs-kɔnfɛrˈɛnt͡sija/
-  translation: ''
+  translation: press conference
   pos: noun
 - lemma: претензія
   ipa: /prɛtˈɛnzija/
-  translation: ''
+  translation: claim, complaint
   pos: noun
   gender: f
 - lemma: продовжитися
   ipa: /prɔdˈɔʋʒɪtɪsja/
-  translation: ''
+  translation: to continue (passive perfective)
   pos: verb
 - lemma: продукція
   ipa: /prɔdˈukt͡sija/
-  translation: ''
+  translation: production, output
   pos: noun
   gender: f
 - lemma: промовити
   ipa: /prɔmˈɔʋɪtɪ/
-  translation: ''
+  translation: to utter, to speak (perfective)
   pos: verb
 - lemma: просуватися
   ipa: /prɔsuʋˈatɪsja/
-  translation: ''
+  translation: to move forward, to advance
   pos: verb
 - lemma: протест
   ipa: /prɔtˈɛst/
-  translation: ''
+  translation: protest
   pos: noun
   gender: m
 - lemma: протоколювання
   ipa: /prɔtɔkɔljuʋˈannja/
-  translation: ''
+  translation: protocolling
   pos: noun
   gender: n
 - lemma: профілактика
   ipa: /prɔfilˈaktɪka/
-  translation: ''
+  translation: prevention, prophylaxis
   pos: noun
   gender: f
 - lemma: підсумовування
   ipa: /pidsumˈɔʋuʋannja/
-  translation: ''
+  translation: summarizing
   pos: noun
   gender: n
 - lemma: розширювати
   ipa: /rɔzʃˈɪrjuʋatɪ/
-  translation: ''
+  translation: to expand (imperfective)
   pos: verb
 - lemma: різноманітність
   ipa: /riznɔmanˈitnistʲ/
-  translation: ''
+  translation: diversity, variety
   pos: noun
   gender: f
 - lemma: спотворення
   ipa: /spɔtʋˈɔrɛnnja/
-  translation: ''
+  translation: distortion
+  pos: noun
+  gender: n
+- lemma: сприйняття
+  ipa: /sprɪjnˈjattja/
+  translation: perception
   pos: noun
   gender: n
 - lemma: спікер
   ipa: /spˈikɛr/
-  translation: ''
+  translation: speaker
   pos: noun
 - lemma: строгий
   ipa: /strˈɔɦɪj/
-  translation: ''
+  translation: strict, severe
   pos: adj
 - lemma: стіль
   ipa: /stilʲ/
@@ -183,9 +232,9 @@ items:
   gender: m
 - lemma: фіксувати
   ipa: /fiksuʋˈatɪ/
-  translation: ''
+  translation: to fix, to record
   pos: verb
 - lemma: харчуватися
   ipa: /xart͡ʃuʋˈatɪsja/
-  translation: ''
+  translation: to eat, to feed
   pos: verb

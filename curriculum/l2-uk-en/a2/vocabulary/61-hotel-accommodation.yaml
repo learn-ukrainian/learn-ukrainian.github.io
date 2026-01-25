@@ -2,169 +2,122 @@ module: 61-hotel-accommodation
 level: A2
 version: '2.0'
 items:
-- lemma: адміністратор
-  ipa: /administrˈatɔr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: багаж
   ipa: /baɦˈaʒ/
-  translation: ''
+  translation: luggage, baggage
   pos: noun
   gender: m
 - lemma: бронювати
   ipa: /brɔnjuʋˈatɪ/
-  translation: ''
+  translation: to book, to reserve
   pos: verb
 - lemma: вай-фай
   ipa: /ʋaj-faj/
-  translation: ''
+  translation: Wi-Fi
   pos: noun
   gender: m
 - lemma: заселитися
   ipa: /zasɛlˈɪtɪsja/
-  translation: ''
+  translation: to move in
   pos: verb
 - lemma: заселятися
   ipa: /zasɛlˈjatɪsja/
-  translation: ''
+  translation: to move in (imperfective)
   pos: verb
-- lemma: заїзд
-  ipa: /zaˈjizd/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кавомашина
   ipa: /kaʋɔmaʃɪna/
-  translation: ''
+  translation: coffee machine
   pos: noun
   gender: f
 - lemma: ключ-картка
   ipa: /kljut͡ʃ-kˈartka/
-  translation: ''
+  translation: key card
   pos: noun
   gender: f
 - lemma: комфорт
   ipa: /kɔmfˈɔrt/
-  translation: ''
+  translation: comfort
   pos: noun
   gender: m
-- lemma: комфортно
-  ipa: /kɔmfˈɔrtnɔ/
-  translation: ''
-  pos: adv
 - lemma: кондиціонер
   ipa: /kɔndɪt͡siɔnˈɛr/
-  translation: ''
+  translation: air conditioner
   pos: noun
   gender: m
 - lemma: леополіс
   ipa: /lɛɔpɔlis/
-  translation: ''
+  translation: Leopolis (Lviv)
   pos: noun
   gender: m
 - lemma: люкс
   ipa: /ljuks/
-  translation: ''
+  translation: luxury, suite
   pos: noun
   gender: m
 - lemma: ліга
   ipa: /lˈiɦa/
-  translation: ''
-  pos: noun
-- lemma: ліфт
-  ipa: /lift/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: майстер
-  ipa: /mˈajstɛr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: млинці
-  ipa: /mlɪnt͡sˈi/
-  translation: ''
+  translation: league
   pos: noun
 - lemma: міллер
   ipa: /mˈillɛr/
-  translation: ''
+  translation: Miller (name)
   pos: noun
   gender: f
 - lemma: міні-бар
   ipa: /mˈini-bar/
-  translation: ''
+  translation: mini-bar
   pos: noun
   gender: m
-- lemma: незручність
-  ipa: /nɛzrˈut͡ʃnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: номерок
   ipa: /nɔmɛrˈɔk/
-  translation: ''
+  translation: number ticket
   pos: noun
   gender: m
 - lemma: нічний
   ipa: /nit͡ʃnˈɪj/
-  translation: ''
+  translation: night (adj)
   pos: adj
 - lemma: омлет
   ipa: /ɔmlˈɛt/
-  translation: ''
+  translation: omelet
   pos: noun
   gender: m
 - lemma: оплатити
   ipa: /ɔplatˈɪtɪ/
-  translation: ''
+  translation: to pay
   pos: verb
 - lemma: п'ятизірковий
   ipa: /pjatɪzirkˈɔʋɪj/
-  translation: ''
+  translation: five-star (adj)
   pos: adj
 - lemma: портьє
   ipa: /pɔrtʲˈjɛ/
-  translation: ''
+  translation: porter, doorman
   pos: noun
   gender: m
-- lemma: привітатися
-  ipa: /prɪʋitˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: прислати
   ipa: /prɪslˈatɪ/
-  translation: ''
+  translation: to send, to remit
   pos: verb
-- lemma: рецепція
-  ipa: /rɛt͡sˈɛpt͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: сміт
   ipa: /smit/
-  translation: ''
+  translation: Smith (name), trash (gen)
   pos: noun
   gender: f
-- lemma: стандарт
-  ipa: /standˈart/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: тапці
   ipa: /tapt͡si/
-  translation: ''
+  translation: slippers
   pos: noun
 - lemma: хол
   ipa: /xɔl/
-  translation: ''
+  translation: hall, lobby
   pos: noun
   gender: m
 - lemma: хостел
   ipa: /xɔstɛl/
-  translation: ''
+  translation: hostel
   pos: noun
 - lemma: шведський
   ipa: /ʃʋˈɛdsʲkɪj/
-  translation: ''
+  translation: Swedish
   pos: adj

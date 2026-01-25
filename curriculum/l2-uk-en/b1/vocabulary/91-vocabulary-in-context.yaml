@@ -8,84 +8,84 @@ items:
   pos: verb
 - lemma: айтішник
   ipa: /ajtiʃnɪk/
-  translation: ''
+  translation: IT specialist
   pos: noun
 - lemma: бентежити
   ipa: /bɛntˈɛʒɪtɪ/
-  translation: ''
+  translation: to disturb, to embarrass
   pos: verb
 - lemma: випробування
   ipa: /ʋɪprɔbuʋannja/
-  translation: ''
+  translation: test, trial
   pos: noun
   gender: n
 - lemma: гігант
   ipa: /ɦiɦˈant/
-  translation: ''
+  translation: giant
   pos: noun
 - lemma: кирилиця
   ipa: /kɪrˈɪlɪt͡sja/
-  translation: ''
+  translation: Cyrillic
   pos: noun
   gender: f
 - lemma: наводитися
   ipa: /naʋˈɔdɪtɪsja/
-  translation: ''
+  translation: to be cited, to be pointed
   pos: verb
 - lemma: обстріл
   ipa: /ˈɔbstril/
-  translation: ''
+  translation: shelling, firing
   pos: noun
 - lemma: оцінювання
   ipa: /ɔt͡sˈinjuʋannja/
-  translation: ''
+  translation: assessment, evaluation
   pos: noun
   gender: n
 - lemma: пояснюватися
   ipa: /pɔˈjasnjuʋatɪsja/
-  translation: ''
+  translation: to be explained
   pos: verb
 - lemma: провітрювання
   ipa: /prɔʋˈitrjuʋannja/
-  translation: ''
+  translation: ventilation, airing
   pos: noun
   gender: n
 - lemma: прослуховування
   ipa: /prɔsluxˈɔʋuʋannja/
-  translation: ''
+  translation: listening, audition
   pos: noun
   gender: n
 - lemma: розробляючи
   ipa: /rɔzrɔblˈjajut͡ʃɪ/
-  translation: ''
+  translation: developing
   pos: verb
 - lemma: рівність
   ipa: /rˈiʋnistʲ/
-  translation: ''
+  translation: equality
   pos: noun
   gender: f
 - lemma: складнощі
   ipa: /sklˈadnɔʃt͡ʃi/
-  translation: ''
+  translation: difficulties
   pos: noun
 - lemma: співставити
   ipa: /spiʋstaʋɪtɪ/
-  translation: ''
+  translation: to compare, to juxtapose
   pos: verb
 - lemma: триста
   ipa: /trˈɪsta/
-  translation: ''
+  translation: three hundred
   pos: num
 - lemma: іт-галузь
   ipa: /it-ɦˈaluzʲ/
-  translation: ''
+  translation: IT industry
   pos: noun
   gender: f
 - lemma: іт-країна
   ipa: /it-kraˈjina/
-  translation: ''
+  translation: IT country
   pos: noun
 - lemma: іт-фахівець
   ipa: /it-faxiʋˈɛt͡sʲ/
-  translation: ''
+  translation: IT expert
   pos: noun

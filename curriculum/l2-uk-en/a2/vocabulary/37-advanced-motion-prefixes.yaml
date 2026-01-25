@@ -4,391 +4,141 @@ version: '2.0'
 items:
 - lemma: арка
   ipa: /ˈarka/
-  translation: ''
+  translation: arch
   pos: noun
   gender: f
-- lemma: архітектура
-  ipa: /arxitɛktˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: берег
-  ipa: /bˈɛrɛɦ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: береза
   ipa: /bɛrˈɛza/
-  translation: ''
+  translation: birch
   pos: noun
   gender: f
-- lemma: бік
-  ipa: /bik/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: вершина
-  ipa: /ʋɛrʃˈɪna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: видно
-  ipa: /ʋˈɪdnɔ/
-  translation: ''
-  pos: adv
 - lemma: вогнище
   ipa: /ʋˈɔɦnɪʃt͡ʃɛ/
-  translation: ''
+  translation: campfire, hearth
   pos: noun
   gender: n
-- lemma: водоспад
-  ipa: /ʋɔdɔspˈad/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: візуалізація
   ipa: /ʋizualizˈat͡sija/
-  translation: ''
+  translation: visualization
   pos: noun
   gender: f
 - lemma: візуалізувати
   ipa: /ʋizualizuʋˈatɪ/
-  translation: ''
+  translation: to visualize
   pos: verb
-- lemma: гол
-  ipa: /ɦɔl/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: гуцул
-  ipa: /ɦut͡sˈul/
-  translation: ''
-  pos: noun
-- lemma: гід
-  ipa: /ɦid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: до-
-  ipa: /dɔ-/
-  translation: ''
-  pos: noun
-- lemma: доходити
-  ipa: /dɔxɔdɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: дійти
-  ipa: /dijtˈɪ/
-  translation: ''
-  pos: verb
-- lemma: екскурсія
-  ipa: /ɛkskˈursija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: етнічний
   ipa: /ɛtnˈit͡ʃnɪj/
-  translation: ''
+  translation: ethnic
   pos: adj
-- lemma: закінчувати
-  ipa: /zakˈint͡ʃuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: замок
-  ipa: /zamɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: заїжджати
   ipa: /zajiʒdʒˈatɪ/
-  translation: ''
+  translation: to visit, to drop by (by vehicle)
   pos: verb
-- lemma: заїхати
-  ipa: /zaˈjixatɪ/
-  translation: ''
-  pos: verb
-- lemma: знизу
-  ipa: /znˈɪzu/
-  translation: ''
-  pos: adv
-- lemma: знову
-  ipa: /znˈɔʋu/
-  translation: ''
-  pos: adv
-- lemma: зупиняючись
-  ipa: /zupɪnˈjajut͡ʃɪsʲ/
-  translation: ''
-  pos: verb
-- lemma: кабінет
-  ipa: /kabinˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: калюжа
-  ipa: /kalˈjuʒa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: камінець
   ipa: /kaminˈɛt͡sʲ/
-  translation: ''
+  translation: small stone
   pos: noun
-- lemma: карпатський
-  ipa: /karpˈatsʲkɪj/
-  translation: ''
-  pos: adj
 - lemma: кататися
   ipa: /katˈatɪsja/
-  translation: ''
+  translation: to ride, to skate
   pos: verb
-- lemma: квартал
-  ipa: /kʋartˈal/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: кола
-  ipa: /kˈɔla/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: краєвид
   ipa: /krajɛʋˈɪd/
-  translation: ''
+  translation: landscape, view
   pos: noun
   gender: m
-- lemma: крізь
-  ipa: /krizʲ/
-  translation: ''
-  pos: prep
 - lemma: лижа
   ipa: /lˈɪʒa/
-  translation: ''
+  translation: ski
   pos: noun
 - lemma: ментальний
   ipa: /mɛntˈalʲnɪj/
-  translation: ''
+  translation: mental
   pos: adj
-- lemma: наближення
-  ipa: /nablˈɪʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: найефективніший
   ipa: /najɛfɛktˈɪʋniʃɪj/
-  translation: ''
+  translation: the most effective
   pos: adj
 - lemma: насквозити
   ipa: /naskʋɔzɪtɪ/
-  translation: ''
+  translation: to blow through
   pos: verb
-- lemma: наскрізь
-  ipa: /nˈaskrizʲ/
-  translation: ''
-  pos: adv
 - lemma: насолоджуватися
   ipa: /nasɔlˈɔdʒuʋatɪsja/
-  translation: ''
+  translation: to enjoy
   pos: verb
-- lemma: об'їхати
-  ipa: /ɔbˈjixatɪ/
-  translation: ''
-  pos: verb
-- lemma: об-
-  ipa: /ɔb-/
-  translation: ''
-  pos: noun
 - lemma: обдумати
   ipa: /ɔbdˈumatɪ/
-  translation: ''
+  translation: to think over
   pos: verb
-- lemma: обходити
-  ipa: /ɔbxɔdɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: обхід
-  ipa: /ɔbxˈid/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: обьїхати
   ipa: /ɔbʲjixatɪ/
-  translation: ''
+  translation: to drive around
   pos: verb
 - lemma: обі-
   ipa: /ˈɔbi-/
   translation: ''
   pos: noun
-- lemma: обійти
-  ipa: /ɔbijtˈɪ/
-  translation: ''
-  pos: verb
 - lemma: п'ята
   ipa: /pjatˈa/
-  translation: ''
+  translation: heel, five (female variant)
   pos: noun
   gender: f
-- lemma: пам'ятник
-  ipa: /pˈamjatnɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пер
-  ipa: /pɛr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пере-
-  ipa: /pɛrɛ-/
-  translation: ''
-  pos: noun
 - lemma: переплисти
   ipa: /pɛrɛplɪstˈɪ/
-  translation: ''
+  translation: to swim across
   pos: verb
-- lemma: переробити
-  ipa: /pɛrɛrɔbˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: перетин
-  ipa: /pɛrˈɛtɪn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: перетинання
-  ipa: /pɛrɛtɪnˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: перетинати
   ipa: /pɛrɛtɪnˈatɪ/
-  translation: ''
+  translation: to intersect
   pos: verb
 - lemma: перетинаючи
   ipa: /pɛrɛtɪnˈajut͡ʃɪ/
-  translation: ''
+  translation: intersecting (gerund)
   pos: verb
-- lemma: перешкода
-  ipa: /pɛrɛʃkˈɔda/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: переїсти
   ipa: /pɛrɛˈjistɪ/
-  translation: ''
+  translation: to overeat
   pos: verb
-- lemma: пишатися
-  ipa: /pɪʃˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: повз
-  ipa: /pɔʋz/
-  translation: ''
-  pos: adv
-- lemma: повня
-  ipa: /pˈɔʋnja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: поворот
   ipa: /pɔʋɔrˈɔt/
-  translation: ''
+  translation: turn, curve
   pos: noun
   gender: m
-- lemma: потрапити
-  ipa: /pɔtrˈapɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: похід
   ipa: /pɔxˈid/
-  translation: ''
+  translation: hike, campaign, trip
   pos: noun
   gender: m
 - lemma: прапор
   ipa: /prˈapɔr/
-  translation: ''
+  translation: flag
   pos: noun
   gender: m
-- lemma: продовжити
-  ipa: /prɔdˈɔʋʒɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: просунутий
   ipa: /prɔsˈunutɪj/
-  translation: ''
+  translation: advanced
   pos: adj
-- lemma: проходження
-  ipa: /prɔxˈɔdʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: проходити
-  ipa: /prɔxɔdɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: прохід
   ipa: /prɔxˈid/
-  translation: ''
+  translation: passage, corridor
   pos: noun
   gender: m
-- lemma: проїжджати
-  ipa: /prɔjiʒdʒˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: проїхати
-  ipa: /prɔˈjixatɪ/
-  translation: ''
-  pos: verb
+- lemma: проїзд
+  ipa: /prɔˈjizd/
+  translation: passage, fare
+  pos: noun
+  gender: m
 - lemma: півколо
   ipa: /piʋkˈɔlɔ/
-  translation: ''
+  translation: semicircle
   pos: noun
   gender: n
-- lemma: під'їжджати
-  ipa: /pidjiʒdʒˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: під'їхати
-  ipa: /pidˈjixatɪ/
-  translation: ''
-  pos: verb
-- lemma: під-
-  ipa: /pid-/
-  translation: ''
-  pos: noun
-- lemma: підняти
-  ipa: /pidnˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: підхід
-  ipa: /pidxˈid/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: регіон
-  ipa: /rɛɦiˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: стежка
-  ipa: /stˈɛʒka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: сфотографуватися
   ipa: /sfɔtɔɦrafuʋˈatɪsja/
-  translation: ''
+  translation: to have one's photo taken
   pos: verb
-- lemma: траєкторія
-  ipa: /trajɛktˈɔrija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тунель
-  ipa: /tunˈɛlʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фінішний
   ipa: /fˈiniʃnɪj/
-  translation: ''
+  translation: finish (adj)
   pos: adj

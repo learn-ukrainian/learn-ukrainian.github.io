@@ -2,168 +2,269 @@ module: 03-dative-verbs
 level: A2
 version: '2.0'
 items:
+- lemma: батько
+  ipa: /bˈatʲkɔ/
+  translation: father
+  pos: noun
+  gender: m
+- lemma: бібліотека
+  ipa: /bibliɔtˈɛka/
+  translation: library
+  pos: noun
+  gender: f
 - lemma: важок
   ipa: /ʋaʒˈɔk/
   translation: ''
   pos: noun
   gender: m
+- lemma: вечірка
+  ipa: /ʋɛt͡ʃˈirka/
+  translation: party
+  pos: noun
+  gender: f
+- lemma: вибачити
+  ipa: /ʋˈɪbat͡ʃɪtɪ/
+  translation: to forgive, to excuse
+  pos: verb
 - lemma: визначати
   ipa: /ʋɪznat͡ʃˈatɪ/
-  translation: ''
+  translation: to define, to determine
   pos: verb
 - lemma: вимагати
   ipa: /ʋɪmaɦˈatɪ/
-  translation: ''
+  translation: to demand
+  pos: verb
+- lemma: вчителька
+  ipa: /ʋt͡ʃˈɪtɛlʲka/
+  translation: teacher (female)
+  pos: noun
+  gender: f
+- lemma: вчитися
+  ipa: /ʋt͡ʃˈɪtɪsja/
+  translation: to study, to learn
+  pos: verb
+- lemma: вівторок
+  ipa: /ʋiʋtˈɔrɔk/
+  translation: Tuesday
+  pos: noun
+  gender: m
+- lemma: відпочивати
+  ipa: /ʋidpɔt͡ʃɪʋˈatɪ/
+  translation: to rest, to relax
   pos: verb
 - lemma: відрізнятися
   ipa: /ʋidriznˈjatɪsja/
-  translation: ''
+  translation: to differ
   pos: verb
 - lemma: відчувати
   ipa: /ʋidt͡ʃuʋˈatɪ/
-  translation: ''
+  translation: to feel, to sense
   pos: verb
 - lemma: героїня
   ipa: /ɦɛrɔˈjinja/
-  translation: ''
+  translation: heroine
   pos: noun
   gender: f
+- lemma: граматичний
+  ipa: /ɦramatˈɪt͡ʃnɪj/
+  translation: grammatical
+  pos: adj
 - lemma: гратися
   ipa: /ɦrˈatɪsja/
-  translation: ''
+  translation: to play (oneself)
   pos: verb
+- lemma: гуляти
+  ipa: /ɦulˈjatɪ/
+  translation: to walk, to party
+  pos: verb
+- lemma: директор
+  ipa: /dɪrˈɛktɔr/
+  translation: director
+  pos: noun
+  gender: m
 - lemma: дозволяти
   ipa: /dɔzʋɔlˈjatɪ/
-  translation: ''
+  translation: to allow (imperfective)
   pos: verb
 - lemma: дозвіл
   ipa: /dˈɔzʋil/
-  translation: ''
+  translation: permission
+  pos: noun
+  gender: m
+- lemma: допомога
+  ipa: /dɔpɔmˈɔɦa/
+  translation: help, assistance
+  pos: noun
+  gender: f
+- lemma: дощ
+  ipa: /dɔʃt͡ʃ/
+  translation: rain
   pos: noun
   gender: m
 - lemma: дізнатися
   ipa: /diznˈatɪsja/
-  translation: ''
+  translation: to find out, to learn
+  pos: verb
+- lemma: діти
+  ipa: /dˈitɪ/
+  translation: children
   pos: verb
 - lemma: еквівалент
   ipa: /ɛkʋiʋalˈɛnt/
-  translation: ''
+  translation: equivalent
   pos: noun
-- lemma: заборона
-  ipa: /zabɔrˈɔna/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: забороняти
   ipa: /zabɔrɔnˈjatɪ/
-  translation: ''
+  translation: to ban (imperfective)
   pos: verb
 - lemma: закріплення
   ipa: /zakrˈiplɛnnja/
-  translation: ''
+  translation: consolidation, fixing
   pos: noun
   gender: n
 - lemma: заслуговувати
   ipa: /zasluɦˈɔʋuʋatɪ/
-  translation: ''
+  translation: to deserve, to be worthy of
   pos: verb
-- lemma: застосування
-  ipa: /zastɔsuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
+- lemma: звичайно
+  ipa: /zʋɪt͡ʃˈajnɔ/
+  translation: of course, usually
+  pos: adv
 - lemma: змінювати
   ipa: /zmˈinjuʋatɪ/
-  translation: ''
+  translation: to change (imperfective)
   pos: verb
 - lemma: казка
   ipa: /kˈazka/
-  translation: ''
+  translation: fairy tale, story
   pos: noun
   gender: f
 - lemma: клас
   ipa: /klas/
-  translation: ''
+  translation: class
   pos: noun
   gender: m
 - lemma: конструкція
   ipa: /kɔnstrˈukt͡sija/
-  translation: ''
+  translation: structure, construction
   pos: noun
   gender: f
 - lemma: користуватися
   ipa: /kɔrˈɪstuʋatɪsja/
-  translation: ''
+  translation: to use, to enjoy
+  pos: verb
+- lemma: курити
+  ipa: /kurˈɪtɪ/
+  translation: to smoke
   pos: verb
 - lemma: методика
   ipa: /mɛtˈɔdɪka/
-  translation: ''
+  translation: methodology, technique
   pos: noun
   gender: f
 - lemma: мислення
   ipa: /mˈɪslɛnnja/
-  translation: ''
+  translation: thinking, mindset
   pos: noun
   gender: n
 - lemma: обоє
   ipa: /ɔbˈɔjɛ/
-  translation: ''
+  translation: both
   pos: num
+- lemma: особливий
+  ipa: /ɔsɔblˈɪʋɪj/
+  translation: special
+  pos: adj
 - lemma: отримувач
   ipa: /ɔtrˈɪmuʋat͡ʃ/
-  translation: ''
+  translation: recipient
   pos: noun
   gender: m
+- lemma: п'ятниця
+  ipa: /pˈjatnɪt͡sja/
+  translation: Friday
+  pos: noun
+  gender: f
 - lemma: певний
   ipa: /pˈɛʋnɪj/
-  translation: ''
+  translation: certain, specific
   pos: adj
+- lemma: передавати
+  ipa: /pɛrɛdaʋˈatɪ/
+  translation: to transmit, to hand over
+  pos: verb
 - lemma: повністю
   ipa: /pˈɔʋnistju/
-  translation: ''
+  translation: completely
   pos: adv
 - lemma: подарувати
   ipa: /pɔdaruʋˈatɪ/
-  translation: ''
+  translation: to gift
   pos: verb
+- lemma: понеділок
+  ipa: /pɔnɛdˈilɔk/
+  translation: Monday
+  pos: noun
+  gender: m
 - lemma: поняття
   ipa: /pɔnˈjattja/
-  translation: ''
+  translation: concept, notion
   pos: noun
   gender: n
 - lemma: потребувати
   ipa: /pɔtrɛbuʋˈatɪ/
-  translation: ''
+  translation: to need, to require
   pos: verb
+- lemma: правити
+  ipa: /prˈaʋɪtɪ/
+  translation: to rule, to edit
+  pos: verb
+- lemma: практичний
+  ipa: /praktˈɪt͡ʃnɪj/
+  translation: practical
+  pos: adj
 - lemma: предмет
   ipa: /prɛdmˈɛt/
-  translation: ''
+  translation: subject, object
   pos: noun
   gender: m
 - lemma: приносити
   ipa: /prɪnˈɔsɪtɪ/
-  translation: ''
+  translation: to bring (imperfective)
   pos: verb
+- lemma: природний
+  ipa: /prɪrˈɔdnɪj/
+  translation: natural
+  pos: adj
+- lemma: приємно
+  ipa: /prɪˈjɛmnɔ/
+  translation: pleasantly, it's a pleasure
+  pos: adv
 - lemma: прямий
   ipa: /prjamˈɪj/
-  translation: ''
+  translation: straight, direct
   pos: adj
 - lemma: раджа
   ipa: /rˈadʒa/
-  translation: ''
+  translation: rajah
   pos: noun
   gender: m
-- lemma: розмовляти
-  ipa: /rɔzmɔʋlˈjatɪ/
-  translation: ''
-  pos: verb
 - lemma: розповідати
   ipa: /rɔzpɔʋidˈatɪ/
-  translation: ''
+  translation: to tell, to narrate
   pos: verb
+- lemma: розум
+  ipa: /rˈɔzum/
+  translation: mind, intellect
+  pos: noun
+- lemma: середа
+  ipa: /sɛrɛdˈa/
+  translation: Wednesday
+  pos: noun
+  gender: f
 - lemma: симпатія
   ipa: /sɪmpˈatija/
-  translation: ''
+  translation: sympathy, liking
   pos: noun
   gender: f
 - lemma: синів
@@ -172,39 +273,38 @@ items:
   pos: adj
 - lemma: сподобатися
   ipa: /spɔdˈɔbatɪsja/
-  translation: ''
+  translation: to be liked (perfective)
   pos: verb
 - lemma: сприймати
   ipa: /sprɪjmˈatɪ/
-  translation: ''
+  translation: to perceive, to accept
   pos: verb
 - lemma: спрямований
   ipa: /sprjamˈɔʋanɪj/
-  translation: ''
+  translation: directed, aimed
   pos: adj
 - lemma: ставати
   ipa: /staʋˈatɪ/
-  translation: ''
+  translation: to become, to stand (imperfective)
   pos: verb
-- lemma: структура
-  ipa: /struktˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тема
-  ipa: /tˈɛma/
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: старатися
+  ipa: /starˈatɪsja/
+  translation: to try, to strive
+  pos: verb
 - lemma: тихнути
   ipa: /tˈɪxnutɪ/
-  translation: ''
-  pos: verb
-- lemma: утворювати
-  ipa: /utʋˈɔrjuʋatɪ/
-  translation: ''
+  translation: to fall silent, to subside
   pos: verb
 - lemma: фундаментально
   ipa: /fundamɛntˈalʲnɔ/
-  translation: ''
+  translation: fundamentally
   pos: adv
+- lemma: хтось
+  ipa: /xtɔsʲ/
+  translation: someone
+  pos: pron
+- lemma: четвер
+  ipa: /t͡ʃɛtʋˈɛr/
+  translation: Thursday
+  pos: noun
+  gender: m

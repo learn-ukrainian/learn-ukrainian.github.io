@@ -2,372 +2,51 @@ module: 31-body-and-health
 level: A1
 version: '2.0'
 items:
-- lemma: адреса
-  ipa: /adrˈɛsa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: алла
-  ipa: /allˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: аптека
-  ipa: /aptˈɛka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: бабуся
-  ipa: /babˈusja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: багато
-  ipa: /baɦˈatɔ/
-  translation: ''
-  pos: adv
-- lemma: боліти
-  ipa: /bɔlˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: біль
-  ipa: /bilʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вивчити
-  ipa: /ʋˈɪʋt͡ʃɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: викликати
-  ipa: /ʋɪklɪkatɪ/
-  translation: ''
-  pos: verb
-- lemma: використовувати
-  ipa: /ʋɪkɔrɪstˈɔʋuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: високий
-  ipa: /ʋɪsˈɔkɪj/
-  translation: ''
-  pos: adj
 - lemma: володимирський
   ipa: /ʋɔlɔdˈɪmɪrsʲkɪj/
-  translation: ''
+  translation: Volodymyr (adj)
   pos: adj
-- lemma: вправа
-  ipa: /ʋprˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: всюди
-  ipa: /ʋsˈjudɪ/
-  translation: ''
-  pos: pron
-- lemma: вулиця
-  ipa: /ʋˈulɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вухо
-  ipa: /ʋˈuxɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: гарний
-  ipa: /ɦˈarnɪj/
-  translation: ''
-  pos: adj
-- lemma: говорити
-  ipa: /ɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: голова
-  ipa: /ɦɔlɔʋˈa/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: горло
   ipa: /ɦˈɔrlɔ/
-  translation: ''
+  translation: throat
   pos: noun
   gender: n
-- lemma: гривня
-  ipa: /ɦrˈɪʋnja/
-  translation: ''
-  pos: noun
-- lemma: день
-  ipa: /dɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дзеркало
-  ipa: /dzˈɛrkalɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дивитися
-  ipa: /dɪʋˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: добрий
-  ipa: /dˈɔbrɪj/
-  translation: ''
-  pos: adj
-- lemma: допомога
-  ipa: /dɔpɔmˈɔɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: живіт
   ipa: /ʒɪʋˈit/
-  translation: ''
+  translation: stomach
   pos: noun
   gender: m
-- lemma: завжди
-  ipa: /zˈaʋʒdɪ/
-  translation: ''
-  pos: pron
 - lemma: застуда
   ipa: /zastˈuda/
-  translation: ''
+  translation: cold (illness)
   pos: noun
   gender: f
-- lemma: звичайно
-  ipa: /zʋɪt͡ʃˈajnɔ/
-  translation: ''
-  pos: adv
-- lemma: здоров'я
-  ipa: /zdɔrˈɔʋja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: знати
-  ipa: /znˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: зуби
-  ipa: /zˈubɪ/
-  translation: ''
-  pos: noun
-- lemma: клієнт
-  ipa: /kliˈjɛnt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: коштувати
-  ipa: /kˈɔʃtuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: краще
-  ipa: /krˈaʃt͡ʃɛ/
-  translation: ''
-  pos: adv
-- lemma: купити
-  ipa: /kupˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: лікар
-  ipa: /lˈikar/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ліки
-  ipa: /lˈikɪ/
-  translation: ''
-  pos: noun
 - lemma: малин
   ipa: /mˈalɪn/
   translation: ''
   pos: noun
   gender: m
-- lemma: мед
-  ipa: /mɛd/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: медицина
   ipa: /mɛdɪt͡sˈɪna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: молоко
-  ipa: /mɔlɔkˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: назва
-  ipa: /nˈazʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: народний
-  ipa: /narˈɔdnɪj/
-  translation: ''
-  pos: adj
-- lemma: нога
-  ipa: /nɔɦˈa/
-  translation: ''
+  translation: medicine
   pos: noun
   gender: f
 - lemma: одужувати
   ipa: /ɔdˈuʒuʋatɪ/
-  translation: ''
+  translation: to recover (imperfective)
   pos: verb
-- lemma: око
-  ipa: /ˈɔkɔ/
-  translation: ''
-  pos: noun
-- lemma: описати
-  ipa: /ɔpɪsˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: основа
-  ipa: /ɔsnˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: пацієнт
-  ipa: /pat͡siˈjɛnt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: потрібний
-  ipa: /pɔtrˈibnɪj/
-  translation: ''
-  pos: adj
-- lemma: практик
-  ipa: /prˈaktɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: приязнь
   ipa: /prˈɪjaznʲ/
-  translation: ''
+  translation: friendliness, liking
   pos: noun
   gender: f
 - lemma: провізор
   ipa: /prɔʋˈizɔr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: підсумок
-  ipa: /pidsumɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: результат
-  ipa: /rɛzulʲtˈat/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: рецепт
-  ipa: /rɛt͡sˈɛpt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: серце
-  ipa: /sˈɛrt͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сироп
-  ipa: /sɪrˈɔp/
-  translation: ''
+  translation: pharmacist
   pos: noun
   gender: m
 - lemma: спина
   ipa: /spˈɪna/
-  translation: ''
+  translation: back (anatomy)
   pos: noun
   gender: f
-- lemma: статися
-  ipa: /stˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: таблетка
-  ipa: /tablˈɛtka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: температура
-  ipa: /tɛmpɛratˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тепер
-  ipa: /tɛpˈɛr/
-  translation: ''
-  pos: pron
-- lemma: теплий
-  ipa: /tˈɛplɪj/
-  translation: ''
-  pos: adj
-- lemma: тіло
-  ipa: /tˈilɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: україна
-  ipa: /ukraˈjina/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: українець
-  ipa: /ukraˈjinɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: хвилюватися
-  ipa: /xʋɪljuʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: хворий
-  ipa: /xʋˈɔrɪj/
-  translation: ''
-  pos: adj
-- lemma: чай
-  ipa: /t͡ʃaj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: частина
-  ipa: /t͡ʃastˈɪna/
-  translation: ''
-  pos: noun
-- lemma: чудовий
-  ipa: /t͡ʃudˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: швидка
-  ipa: /ʃʋɪdkˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: їхати
-  ipa: /ˈjixatɪ/
-  translation: ''
-  pos: verb

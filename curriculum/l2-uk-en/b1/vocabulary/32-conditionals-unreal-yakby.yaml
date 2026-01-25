@@ -4,40 +4,61 @@ version: '2.0'
 items:
 - lemma: аналітично
   ipa: /analitˈɪt͡ʃnɔ/
-  translation: ''
+  translation: analytically
   pos: adv
+- lemma: багатий
+  ipa: /baɦˈatɪj/
+  translation: rich (male)
+  pos: adj
+- lemma: безкоштовний
+  ipa: /bɛzkɔʃtˈɔʋnɪj/
+  translation: free of charge
+  pos: adj
 - lemma: битва
   ipa: /bˈɪtʋa/
-  translation: ''
+  translation: battle
   pos: noun
   gender: f
 - lemma: вибори
   ipa: /ʋˈɪbɔrɪ/
-  translation: ''
+  translation: elections
   pos: noun
+- lemma: вижити
+  ipa: /ʋˈɪʒɪtɪ/
+  translation: to survive
+  pos: verb
 - lemma: відреагувати
   ipa: /ʋidrɛaɦuʋˈatɪ/
-  translation: ''
+  translation: to react, to respond
   pos: verb
+- lemma: гравець
+  ipa: /ɦraʋˈɛt͡sʲ/
+  translation: player
+  pos: noun
+  gender: m
 - lemma: жалити
   ipa: /ʒalˈɪtɪ/
-  translation: ''
+  translation: to sting
   pos: verb
 - lemma: жалкувати
   ipa: /ʒalkuʋˈatɪ/
-  translation: ''
+  translation: to regret
   pos: verb
 - lemma: жилий
   ipa: /ʒɪlˈɪj/
-  translation: ''
+  translation: residential, inhabited
   pos: adj
 - lemma: зволікання
   ipa: /zʋɔlikˈannja/
-  translation: ''
+  translation: delay, procrastination
   pos: noun
+- lemma: здатися
+  ipa: /zdˈatɪsja/
+  translation: to seem (perfective)
+  pos: verb
 - lemma: злиття
   ipa: /zlɪttˈja/
-  translation: ''
+  translation: merger, fusion
   pos: noun
   gender: n
 - lemma: зраза
@@ -47,7 +68,7 @@ items:
   gender: f
 - lemma: кайдашева
   ipa: /kajdˈaʃɛʋa/
-  translation: ''
+  translation: Kaidasheva (family/book)
   pos: noun
   gender: f
 - lemma: кондиціонал
@@ -61,26 +82,30 @@ items:
   pos: noun
 - lemma: кінцівка
   ipa: /kint͡sˈiʋka/
-  translation: ''
+  translation: ending, limb
   pos: noun
   gender: f
 - lemma: леся
   ipa: /lˈɛsja/
-  translation: ''
+  translation: Lesya (name)
   pos: noun
   gender: f
+- lemma: милий
+  ipa: /mˈɪlɪj/
+  translation: cute, sweet, dear
+  pos: adj
 - lemma: мрійливий
   ipa: /mrˈijlɪʋɪj/
-  translation: ''
+  translation: dreamy
   pos: adj
 - lemma: мільйонер
   ipa: /milʲjɔnˈɛr/
-  translation: ''
+  translation: millionaire
   pos: noun
   gender: m
 - lemma: нездійсненний
   ipa: /nɛzdijsnˈɛnnɪj/
-  translation: ''
+  translation: unfeasible
   pos: adj
 - lemma: неможливе
   ipa: /nɛmɔʒlˈɪʋɛ/
@@ -89,43 +114,61 @@ items:
   gender: n
 - lemma: нереальність
   ipa: /nɛrɛˈalʲnistʲ/
-  translation: ''
+  translation: unreality
   pos: noun
   gender: f
 - lemma: нечуй-левицький
   ipa: /nɛt͡ʃuj-lɛʋˈɪt͡sʲkɪj/
-  translation: ''
+  translation: Nechuy-Levytskyi (name)
   pos: noun
   gender: m
 - lemma: ожилий
   ipa: /ɔʒˈɪlɪj/
-  translation: ''
+  translation: revived
   pos: adj
 - lemma: оптативний
   ipa: /ɔptatˈɪʋnɪj/
-  translation: ''
+  translation: optative (mood)
   pos: adj
 - lemma: поділля
   ipa: /pɔdˈillja/
-  translation: ''
+  translation: Podillia (region)
   pos: noun
   gender: n
+- lemma: політичний
+  ipa: /pɔlitˈɪt͡ʃnɪj/
+  translation: political
+  pos: adj
+- lemma: послухати
+  ipa: /pɔsluxatɪ/
+  translation: to listen (for a while/perfective)
+  pos: verb
 - lemma: психотерапія
   ipa: /psɪxɔtɛrapˈija/
-  translation: ''
+  translation: psychotherapy
   pos: noun
   gender: f
 - lemma: підлеглий
   ipa: /pidlˈɛɦlɪj/
-  translation: ''
+  translation: subordinate
   pos: adj
+- lemma: підхід
+  ipa: /pidxˈid/
+  translation: approach
+  pos: noun
+  gender: m
+- lemma: рація
+  ipa: /rˈat͡sija/
+  translation: reason, walkie-talkie
+  pos: noun
+  gender: f
 - lemma: реально
   ipa: /rɛˈalʲnɔ/
-  translation: ''
+  translation: really, actually
   pos: adv
 - lemma: розмежування
   ipa: /rɔzmɛʒuʋˈannja/
-  translation: ''
+  translation: demarcation, differentiation
   pos: noun
   gender: n
 - lemma: ролевий
@@ -134,23 +177,32 @@ items:
   pos: adj
 - lemma: романський
   ipa: /rɔmˈansʲkɪj/
-  translation: ''
+  translation: Romance (languages), Romanesque
   pos: adj
+- lemma: спільнота
+  ipa: /spilʲnˈɔta/
+  translation: community
+  pos: noun
+  gender: f
 - lemma: старанніший
   ipa: /starˈanniʃɪj/
-  translation: ''
+  translation: more diligent
   pos: adj
 - lemma: травматичний
   ipa: /traʋmatˈɪt͡ʃnɪj/
-  translation: ''
+  translation: traumatic
   pos: adj
 - lemma: трагічний
   ipa: /traɦˈit͡ʃnɪj/
-  translation: ''
+  translation: tragic
   pos: adj
+- lemma: хворіти
+  ipa: /xʋɔrˈitɪ/
+  translation: to be sick
+  pos: verb
 - lemma: швейцарія
   ipa: /ʃʋɛjt͡sˈarija/
-  translation: ''
+  translation: Switzerland
   pos: noun
   gender: f
 - lemma: щастивіший
@@ -159,10 +211,10 @@ items:
   pos: adj
 - lemma: щороку
   ipa: /ʃt͡ʃɔrˈɔku/
-  translation: ''
+  translation: every year
   pos: adv
 - lemma: ґеральт
   ipa: /gɛralʲt/
-  translation: ''
+  translation: Geralt (name)
   pos: noun
   gender: m

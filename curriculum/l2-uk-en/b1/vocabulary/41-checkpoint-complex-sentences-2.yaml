@@ -2,80 +2,124 @@ module: 41-checkpoint-complex-sentences-2
 level: B1
 version: '2.0'
 items:
+- lemma: вдячний
+  ipa: /ʋdˈjat͡ʃnɪj/
+  translation: grateful
+  pos: adj
+- lemma: відпочилий
+  ipa: /ʋidpɔt͡ʃˈɪlɪj/
+  translation: rested
+  pos: adj
 - lemma: відсвяткувати
   ipa: /ʋidsʋjatkuʋˈatɪ/
-  translation: ''
+  translation: to celebrate
   pos: verb
+- lemma: галина
+  ipa: /ɦalˈɪna/
+  translation: Halyna (name)
+  pos: noun
+  gender: f
 - lemma: димінутив
   ipa: /dɪminutɪʋ/
   translation: ''
   pos: noun
 - lemma: дипломатія
   ipa: /dɪplɔmˈatija/
-  translation: ''
+  translation: diplomacy
   pos: noun
   gender: f
 - lemma: дробити
   ipa: /drɔbˈɪtɪ/
-  translation: ''
+  translation: to crush, to fragment
   pos: verb
 - lemma: дієприслівник
   ipa: /dijɛprɪslˈiʋnɪk/
-  translation: ''
+  translation: gerund (adverbial participle)
   pos: noun
 - lemma: елегантність
   ipa: /ɛlɛɦˈantnistʲ/
-  translation: ''
+  translation: elegance
   pos: noun
   gender: f
+- lemma: ентузіазм
+  ipa: /ɛntuziˈazm/
+  translation: enthusiasm
+  pos: noun
+  gender: m
 - lemma: запевнити
   ipa: /zapˈɛʋnɪtɪ/
-  translation: ''
+  translation: to assure
   pos: verb
 - lemma: затриматися
   ipa: /zatrˈɪmatɪsja/
-  translation: ''
+  translation: to be delayed
   pos: verb
 - lemma: збірний
   ipa: /zbˈirnɪj/
-  translation: ''
+  translation: collection (adj), combined
+  pos: adj
+- lemma: літній
+  ipa: /lˈitnij/
+  translation: summer (adj), elderly
   pos: adj
 - lemma: найтонший
   ipa: /najtˈɔnʃɪj/
-  translation: ''
+  translation: the thinnest
   pos: adj
 - lemma: наполягти
   ipa: /napɔljaɦtˈɪ/
-  translation: ''
+  translation: to insist (perfective)
   pos: verb
 - lemma: неповний
   ipa: /nɛpˈɔʋnɪj/
-  translation: ''
+  translation: incomplete, partial
   pos: adj
 - lemma: одужалий
   ipa: /ɔdˈuʒalɪj/
   translation: ''
   pos: adj
+- lemma: одужання
+  ipa: /ɔdˈuʒannja/
+  translation: recovery
+  pos: noun
+  gender: n
+- lemma: поважати
+  ipa: /pɔʋaʒˈatɪ/
+  translation: to respect
+  pos: verb
+- lemma: покращитися
+  ipa: /pɔkrˈaʃt͡ʃɪtɪsja/
+  translation: to improve (passive perfective)
+  pos: verb
 - lemma: присвійний
   ipa: /prɪsʋˈijnɪj/
-  translation: ''
+  translation: possessive (grammar)
   pos: adj
 - lemma: прочитавши
   ipa: /prɔt͡ʃɪtˈaʋʃɪ/
-  translation: ''
+  translation: having read
   pos: verb
 - lemma: підводити
   ipa: /pidʋˈɔdɪtɪ/
-  translation: ''
+  translation: to let down, to bring closer
   pos: verb
 - lemma: секретарка
   ipa: /sɛkrɛtˈarka/
-  translation: ''
+  translation: secretary (female)
   pos: noun
   gender: f
+- lemma: старенька
+  ipa: /starˈɛnʲka/
+  translation: old woman (diminutive)
+  pos: noun
+  gender: f
+- lemma: страшенно
+  ipa: /straʃˈɛnnɔ/
+  translation: terribly, awfully
+  pos: adv
 - lemma: схвилювати
   ipa: /sxʋɪljuʋˈatɪ/
-  translation: ''
+  translation: to excite, to worry (someone perfective)
   pos: verb
 - lemma: тля
   ipa: /tlja/
@@ -84,15 +128,15 @@ items:
   gender: f
 - lemma: читаючи
   ipa: /t͡ʃɪtˈajut͡ʃɪ/
-  translation: ''
+  translation: reading (gerund)
   pos: verb
 - lemma: ювілей
   ipa: /juʋilˈɛj/
-  translation: ''
+  translation: anniversary, jubilee
   pos: noun
   gender: m
 - lemma: юриспруденція
   ipa: /jurɪsprudˈɛnt͡sija/
-  translation: ''
+  translation: jurisprudence
   pos: noun
   gender: f

@@ -2,218 +2,101 @@ module: 58-practical-warm-up
 level: A2
 version: '2.0'
 items:
-- lemma: автентичний
-  ipa: /aʋtɛntˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
 - lemma: автобіографія
   ipa: /aʋtɔbiɔɦrˈafija/
-  translation: ''
+  translation: autobiography
   pos: noun
   gender: f
 - lemma: аліна
   ipa: /ˈalina/
-  translation: ''
+  translation: Alina (name)
   pos: noun
   gender: f
 - lemma: анатомія
   ipa: /anatˈɔmija/
-  translation: ''
+  translation: anatomy
   pos: noun
   gender: f
 - lemma: бал
   ipa: /bal/
-  translation: ''
+  translation: ball (dance), point/score
   pos: noun
   gender: m
-- lemma: бачитися
-  ipa: /bˈat͡ʃɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: браво
   ipa: /brˈaʋɔ/
-  translation: ''
+  translation: bravo
   pos: adv
 - lemma: бізнесмен
   ipa: /biznɛsmˈɛn/
-  translation: ''
+  translation: businessman
   pos: noun
   gender: m
 - lemma: біографія
   ipa: /biɔɦrˈafija/
-  translation: ''
+  translation: biography
   pos: noun
   gender: f
-- lemma: ведучий
-  ipa: /ʋɛdˈut͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: венеція
   ipa: /ʋɛnˈɛt͡sija/
-  translation: ''
+  translation: Venice
   pos: noun
   gender: f
-- lemma: весілля
-  ipa: /ʋɛsˈillja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: взаємодія
-  ipa: /ʋzajɛmɔdˈija/
-  translation: ''
-  pos: noun
-- lemma: включити
-  ipa: /ʋkljut͡ʃˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: відрядження
-  ipa: /ʋidrˈjadʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: вітання
   ipa: /ʋitˈannja/
-  translation: ''
+  translation: greeting, congratulations
   pos: noun
   gender: n
 - lemma: грошовий
   ipa: /ɦrɔʃɔʋˈɪj/
-  translation: ''
+  translation: monetary
   pos: adj
 - lemma: долоня
   ipa: /dɔlˈɔnja/
-  translation: ''
+  translation: palm (of hand)
   pos: noun
   gender: f
 - lemma: дружба
   ipa: /drˈuʒba/
-  translation: ''
+  translation: friendship
   pos: noun
   gender: f
-- lemma: ділити
-  ipa: /dilˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: залізниця
-  ipa: /zaliznˈɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: заміж
-  ipa: /zˈamiʒ/
-  translation: ''
-  pos: adv
-- lemma: зосередитися
-  ipa: /zɔsɛrˈɛdɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: кобзар
-  ipa: /kɔbzˈar/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кпі
   ipa: /kpi/
   translation: ''
   pos: noun
   gender: m
-- lemma: лондон
-  ipa: /lˈɔndɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: медовий
   ipa: /mɛdˈɔʋɪj/
-  translation: ''
+  translation: honey (adj)
   pos: adj
 - lemma: недорого
   ipa: /nɛdˈɔrɔɦɔ/
-  translation: ''
+  translation: inexpensively
   pos: adv
-- lemma: нью-йорк
-  ipa: /nʲju-jˈɔrk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: область
   ipa: /ˈɔblastʲ/
-  translation: ''
+  translation: region, oblast, field
   pos: noun
   gender: f
-- lemma: одеський
-  ipa: /ɔdˈɛsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: продемонструвати
-  ipa: /prɔdɛmɔnstruʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: район
-  ipa: /rajˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рахів
   ipa: /rˈaxiʋ/
-  translation: ''
+  translation: Rakhiv (city)
   pos: noun
   gender: m
 - lemma: рим
   ipa: /rɪm/
-  translation: ''
+  translation: Rome
   pos: noun
   gender: m
 - lemma: розпалити
   ipa: /rɔzpalˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: розробляти
-  ipa: /rɔzrɔblˈjatɪ/
-  translation: ''
+  translation: to kindle, to inflame
   pos: verb
 - lemma: розігрітися
   ipa: /rɔziɦrˈitɪsja/
-  translation: ''
+  translation: to warm up
   pos: verb
-- lemma: рідне
-  ipa: /rˈidnɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: сценарний
   ipa: /st͡sɛnˈarnɪj/
-  translation: ''
+  translation: script (adj)
   pos: adj
-- lemma: телевізійний
-  ipa: /tɛlɛʋizˈijnɪj/
-  translation: ''
-  pos: adj
-- lemma: технічний
-  ipa: /tɛxnˈit͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: туризм
-  ipa: /turˈɪzm/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: фокус
-  ipa: /fˈɔkus/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: фінал
-  ipa: /finˈal/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: інфраструктура
-  ipa: /infrastruktˈura/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: італія
-  ipa: /itˈalija/
-  translation: ''
-  pos: noun
-  gender: f

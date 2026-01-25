@@ -4,72 +4,77 @@ version: '2.0'
 items:
 - lemma: абстрактний
   ipa: /abstrˈaktnɪj/
-  translation: ''
+  translation: abstract
   pos: adj
+- lemma: біль
+  ipa: /bilʲ/
+  translation: pain
+  pos: noun
+  gender: m
 - lemma: варення
   ipa: /ʋarɛnnja/
-  translation: ''
+  translation: jam, preserves
   pos: noun
   gender: n
 - lemma: вишня
   ipa: /ʋˈɪʃnja/
-  translation: ''
+  translation: cherry
   pos: noun
 - lemma: виїжджати
   ipa: /ʋɪjiʒdʒˈatɪ/
-  translation: ''
+  translation: to leave (by vehicle)
   pos: verb
 - lemma: власний
   ipa: /ʋlˈasnɪj/
-  translation: ''
+  translation: own
   pos: adj
 - lemma: втомитися
   ipa: /ʋtɔmˈɪtɪsja/
-  translation: ''
+  translation: to get tired
   pos: verb
-- lemma: відносини
-  ipa: /ʋidnˈɔsɪnɪ/
-  translation: ''
-  pos: noun
 - lemma: відпустка
   ipa: /ʋidpˈustka/
-  translation: ''
+  translation: vacation, leave
   pos: noun
   gender: f
 - lemma: глютен
   ipa: /ɦljutɛn/
-  translation: ''
+  translation: gluten
   pos: noun
   gender: m
 - lemma: голодомор
   ipa: /ɦɔlɔdɔmˈɔr/
-  translation: ''
+  translation: Holodomor (famine)
   pos: noun
   gender: m
+- lemma: гривня
+  ipa: /ɦrˈɪʋnja/
+  translation: hryvnia (currency)
+  pos: noun
 - lemma: джерело
   ipa: /dʒɛrɛlˈɔ/
-  translation: ''
+  translation: source, spring
   pos: noun
   gender: n
 - lemma: домовитися
   ipa: /dɔmˈɔʋɪtɪsja/
-  translation: ''
+  translation: to agree, to reach an agreement
   pos: verb
+- lemma: дорого
+  ipa: /dˈɔrɔɦɔ/
+  translation: expensively, dearly
+  pos: adv
 - lemma: дорослий
   ipa: /dɔrˈɔslɪj/
-  translation: ''
+  translation: adult, grown-up
   pos: adj
-- lemma: думка
-  ipa: /dˈumka/
-  translation: ''
-  pos: noun
 - lemma: жартувати
   ipa: /ʒartuʋˈatɪ/
-  translation: ''
+  translation: to joke
   pos: verb
 - lemma: зайти
   ipa: /zajtˈɪ/
-  translation: ''
+  translation: to enter, to drop by
   pos: verb
 - lemma: зайшлий
   ipa: /zˈajʃlɪj/
@@ -77,131 +82,172 @@ items:
   pos: adj
 - lemma: закритися
   ipa: /zakrˈɪtɪsja/
-  translation: ''
+  translation: to close (passive)
   pos: verb
 - lemma: занадто
   ipa: /zanˈadtɔ/
-  translation: ''
+  translation: too, excessively
   pos: adv
 - lemma: заповнити
   ipa: /zapˈɔʋnɪtɪ/
-  translation: ''
+  translation: to fill
   pos: verb
 - lemma: запросити
   ipa: /zaprɔsˈɪtɪ/
-  translation: ''
+  translation: to invite
   pos: verb
+- lemma: згодний
+  ipa: /zɦˈɔdnɪj/
+  translation: agreeing, in agreement
+  pos: adj
 - lemma: кашель
   ipa: /kˈaʃɛlʲ/
-  translation: ''
+  translation: cough
   pos: noun
   gender: m
-- lemma: легший
-  ipa: /lˈɛɦʃɪj/
-  translation: ''
-  pos: adj
+- lemma: коштувати
+  ipa: /kˈɔʃtuʋatɪ/
+  translation: to cost
+  pos: verb
+- lemma: крім
+  ipa: /krim/
+  translation: except, besides
+  pos: prep
 - lemma: листя
   ipa: /lˈɪstja/
-  translation: ''
+  translation: leaves, foliage
   pos: noun
   gender: n
 - lemma: логічний
   ipa: /lɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: logical
   pos: adj
 - lemma: мало
   ipa: /mˈalɔ/
-  translation: ''
+  translation: little, few
   pos: adv
-- lemma: мета
-  ipa: /mɛtˈa/
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: надворі
+  ipa: /nadʋˈɔri/
+  translation: outside, outdoors
+  pos: adv
 - lemma: надіслати
   ipa: /nadislˈatɪ/
-  translation: ''
+  translation: to send (perfective)
   pos: verb
 - lemma: наслідок
   ipa: /nˈaslidɔk/
-  translation: ''
+  translation: consequence, result
   pos: noun
   gender: m
 - lemma: неважливо
   ipa: /nɛʋaʒlˈɪʋɔ/
-  translation: ''
+  translation: it doesn't matter, unimportant
   pos: adv
-- lemma: обрати
-  ipa: /ɔbrˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: палатка
-  ipa: /palˈatka/
+- lemma: об
+  ipa: /ɔb/
   translation: ''
   pos: noun
+  gender: m
+- lemma: п'ятий
+  ipa: /pˈjatɪj/
+  translation: fifth
+  pos: adj
+- lemma: палатка
+  ipa: /palˈatka/
+  translation: tent
+  pos: noun
   gender: f
+- lemma: планувати
+  ipa: /planuʋˈatɪ/
+  translation: to plan
+  pos: verb
 - lemma: побудова
   ipa: /pɔbudˈɔʋa/
-  translation: ''
+  translation: construction, structure
   pos: noun
   gender: f
 - lemma: поганий
   ipa: /pɔɦˈanɪj/
-  translation: ''
+  translation: bad
   pos: adj
+- lemma: погода
+  ipa: /pɔɦˈɔda/
+  translation: weather
+  pos: noun
+  gender: f
 - lemma: почитати
   ipa: /pɔt͡ʃɪtˈatɪ/
-  translation: ''
+  translation: to read (for a while/perfective)
   pos: verb
 - lemma: присутність
   ipa: /prɪsˈutnistʲ/
-  translation: ''
+  translation: presence
   pos: noun
   gender: f
 - lemma: пропуск
   ipa: /prˈɔpusk/
-  translation: ''
+  translation: pass, skip, permit
   pos: noun
 - lemma: підійти
   ipa: /pidijtˈɪ/
-  translation: ''
+  translation: to approach, to be suitable (perfective)
   pos: verb
-- lemma: раптом
-  ipa: /rˈaptɔm/
-  translation: ''
-  pos: adv
 - lemma: рекомендувати
   ipa: /rɛkɔmɛnduʋˈatɪ/
-  translation: ''
+  translation: to recommend
   pos: verb
-- lemma: складний
-  ipa: /skladnɪj/
-  translation: ''
-  pos: adj
-- lemma: скло
-  ipa: /sklɔ/
+- lemma: сель
+  ipa: /sɛlʲ/
   translation: ''
   pos: noun
+  gender: m
+- lemma: сироп
+  ipa: /sɪrˈɔp/
+  translation: syrup
+  pos: noun
+  gender: m
+- lemma: скло
+  ipa: /sklɔ/
+  translation: glass
+  pos: noun
   gender: n
-- lemma: створити
-  ipa: /stʋɔrˈɪtɪ/
-  translation: ''
+- lemma: сідати
+  ipa: /sidˈatɪ/
+  translation: to sit down (imperfective)
   pos: verb
+- lemma: сім'я
+  ipa: /simˈja/
+  translation: family
+  pos: noun
+  gender: f
+- lemma: сісти
+  ipa: /sˈistɪ/
+  translation: to sit down (perfective)
+  pos: verb
+- lemma: таблетка
+  ipa: /tablˈɛtka/
+  translation: tablet, pill
+  pos: noun
+  gender: f
 - lemma: таблиця
   ipa: /tablˈɪt͡sja/
-  translation: ''
+  translation: table, chart
   pos: noun
   gender: f
 - lemma: хвороба
   ipa: /xʋɔrˈɔba/
-  translation: ''
+  translation: illness, disease
   pos: noun
   gender: f
 - lemma: хотітися
   ipa: /xɔtˈitɪsja/
-  translation: ''
+  translation: to be desired (it feels like)
   pos: verb
 - lemma: чого
   ipa: /t͡ʃɔɦˈɔ/
   translation: ''
   pos: adv
+- lemma: щасливий
+  ipa: /ʃt͡ʃaslˈɪʋɪj/
+  translation: happy
+  pos: noun

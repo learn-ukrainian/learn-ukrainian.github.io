@@ -2,94 +2,44 @@ module: 69-online-services
 level: A2
 version: '2.0'
 items:
-- lemma: безпека
-  ipa: /bɛzpˈɛka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: важливсть
   ipa: /ʋaʒlɪʋstʲ/
   translation: ''
   pos: noun
   gender: f
-- lemma: ввести
-  ipa: /ʋʋɛstˈɪ/
-  translation: ''
-  pos: verb
 - lemma: вчасний
   ipa: /ʋt͡ʃˈasnɪj/
-  translation: ''
+  translation: timely
   pos: adj
 - lemma: відстежити
   ipa: /ʋidstˈɛʒɪtɪ/
-  translation: ''
+  translation: to track down, to trace
   pos: verb
-- lemma: економія
-  ipa: /ɛkɔnˈɔmija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: зареєструвати
   ipa: /zarɛjɛstruʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: зареєструватися
-  ipa: /zarɛjɛstruʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: здійснювати
-  ipa: /zdˈijsnjuʋatɪ/
-  translation: ''
+  translation: to register
   pos: verb
 - lemma: здійснюватися
   ipa: /zdˈijsnjuʋatɪsja/
-  translation: ''
+  translation: to be carried out, to come true (imperfective)
   pos: verb
-- lemma: кур'єр
-  ipa: /kurˈjɛr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: надійний
-  ipa: /nadˈijnɪj/
-  translation: ''
-  pos: adj
 - lemma: надійно
   ipa: /nadˈijnɔ/
-  translation: ''
+  translation: reliably
   pos: adv
 - lemma: онлайн-сервіс
   ipa: /ɔnlajn-sˈɛrʋis/
-  translation: ''
+  translation: online service
   pos: noun
 - lemma: оновитися
   ipa: /ɔnɔʋˈɪtɪsja/
-  translation: ''
+  translation: to be updated, to be renewed
   pos: verb
 - lemma: оператор
   ipa: /ɔpɛrˈatɔr/
-  translation: ''
+  translation: operator
   pos: noun
   gender: m
-- lemma: операція
-  ipa: /ɔpɛrˈat͡sija/
-  translation: ''
-  pos: noun
-- lemma: провідник
-  ipa: /prɔʋidnˈɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: підтвердження
-  ipa: /pidtʋˈɛrdʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: термінологія
-  ipa: /tɛrminɔlˈɔɦija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: тридять
   ipa: /trɪdjatʲ/
   translation: ''
@@ -97,14 +47,10 @@ items:
   gender: m
 - lemma: цифровізований
   ipa: /t͡sɪfrɔʋizɔʋanɪj/
-  translation: ''
-  pos: adj
-- lemma: численний
-  ipa: /t͡ʃɪslˈɛnnɪj/
-  translation: ''
+  translation: digitalized
   pos: adj
 - lemma: інтерфейс
   ipa: /intɛrfˈɛjs/
-  translation: ''
+  translation: interface
   pos: noun
   gender: m

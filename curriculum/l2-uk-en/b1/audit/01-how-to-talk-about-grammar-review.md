@@ -1,7 +1,8 @@
 # Audit Report: M01 — 01-how-to-talk-about-grammar.md
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:13:34
 
 ## Configuration
 **Type:** B1-bridge
@@ -10,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
 **Priority Types:** fill-in, match-up, quiz, translate
-**Required Types:** fill-in, group-sort, match-up, quiz, reading
+**Required Types:** fill-in, group-sort, match-up, quiz
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥20 words
@@ -34,19 +35,20 @@
 | 13 | mark-the-words | Знайдіть частини мови | 8 | 6 | ✅ |
 | 14 | select | Множинний вибір термінів | 14 | 6 | ✅ |
 | 15 | translate | Переклад граматичних термінів | 14 | 6 | ✅ |
+| 16 | quiz | Читання граматичного правила | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 12-16) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 16 (target: 12-16) ✅
+- Unique types: 12 (minimum: 5) ✅
 - Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
-- Required types used: 4/5 (fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2020/1200 (raw: 2465)
-- **Activities:** ✅ 15/12
+- **Words:** ✅ 2032/1200 (raw: 2520)
+- **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
@@ -55,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.3% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 36.9% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -71,11 +73,11 @@
 | engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 9 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 41 | 5 | 100% | 5% | 5.0% |
+| questions | 42 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
@@ -83,9 +85,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Вступ** | ✅ | 191 | Included in Core |
-| **Пояснення** | ⚪️ | 1214 | Skipped |
-| **Практика** | ⚪️ | 120 | Skipped |
-| **Mini-Dialogues** | ✅ | 205 | Included in Core |
-| **Підсумок** | ✅ | 102 | Included in Core |
+| **Introduction - Why Learn Grammar in Ukrainian?** | ✅ | 191 | Included in Core |
+| **Parts of Speech (Частини мови)** | ⚪️ | 458 | Skipped |
+| **Case Names (Відмінки)** | ⚪️ | 310 | Skipped |
+| **Basic Sentence Terms** | ⚪️ | 440 | Skipped |
+| **Practice Reading Grammar Explanations** | ⚪️ | 0 | Skipped (using YAML) |
+| **Mini-Dialogues** | ✅ | 222 | Included in Core |
+| **Summary and Self-Assessment** | ✅ | 103 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

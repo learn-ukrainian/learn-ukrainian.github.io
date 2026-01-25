@@ -1,42 +1,76 @@
-# Audit Report: 81-running-in-ukraine.md
-**Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+# Audit Report: M81 — 81-running-in-ukraine.md
+**Level:** B1 | **Module:** M81 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 01:44:10
+
+## Configuration
+**Type:** B1-cultural
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння тексту про біг | 8 | 8 | ✅ |
+| 2 | true-false | Правда чи ні? | 12 | 8 | ✅ |
+| 3 | match-up | Знайдіть пару: Спортивні терміни | 14 | 8 | ✅ |
+| 4 | fill-in | Вставте слово | 12 | 8 | ✅ |
+| 5 | cloze | Заповніть пропуски | 14 | 12 | ✅ |
+| 6 | group-sort | Розподіліть за категоріями | 22 | 12 | ✅ |
+| 7 | select | Оберіть правильні твердження | 6 | 6 | ✅ |
+| 8 | unjumble | Відновіть порядок слів | 8 | 6 | ✅ |
+| 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 10 | translate | Переклад фраз | 8 | 6 | ✅ |
+| 11 | mark-the-words | Позначте дієслова | 13 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1598/1500
+- **Words:** ✅ 1598/1500 (raw: 1679)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 27/25
+- **Vocab:** ✅ 68/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.7% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 96% (cultural)
+- **Richness:** ✅ 99% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** cultural
+**Score:** 99% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 6 | 5 | 100% | 33% | 33.3% |
-| engagement | 5 | 6 | 83% | 20% | 16.6% |
-| visual | 4 | 4 | 100% | 13% | 13.3% |
-| variety | 0.99 | - | 99% | 7% | 6.6% |
-| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
-| examples | 22 | - | 100% | 7% | 6.7% |
-| realworld | 5 | - | 100% | 7% | 6.7% |
-| questions | 23 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **96.5%** |
+| examples | 22 | 15 | 100% | 25% | 25.0% |
+| engagement | 5 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 6 | 4 | 100% | 12% | 12.5% |
+| realworld | 5 | 3 | 100% | 12% | 12.5% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 23 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

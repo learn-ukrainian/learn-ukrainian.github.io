@@ -2,25 +2,29 @@ module: 44-active-participles-phrases
 level: B1
 version: '2.0'
 items:
+- lemma: автентичний
+  ipa: /aʋtɛntˈɪt͡ʃnɪj/
+  translation: authentic
+  pos: adj
 - lemma: ачий
   ipa: /at͡ʃɪj/
   translation: ''
   pos: adj
 - lemma: бажаючий
   ipa: /baʒˈajut͡ʃɪj/
-  translation: ''
+  translation: wishing, wanting (person)
   pos: adj
 - lemma: бувший
   ipa: /buʋʃɪj/
-  translation: ''
+  translation: former
   pos: adj
 - lemma: бур'ян
   ipa: /burˈjan/
-  translation: ''
+  translation: weed
   pos: noun
 - lemma: бюрократизм
   ipa: /bjurɔkratˈɪzm/
-  translation: ''
+  translation: bureaucratism
   pos: noun
   gender: m
 - lemma: біднійший
@@ -29,22 +33,26 @@ items:
   pos: adj
 - lemma: бідність
   ipa: /bˈidnistʲ/
-  translation: ''
+  translation: povert
   pos: noun
   gender: f
 - lemma: видавництво
   ipa: /ʋɪdaʋnˈɪt͡stʋɔ/
-  translation: ''
+  translation: publishing house
   pos: noun
   gender: n
 - lemma: вкривати
   ipa: /ʋkrɪʋˈatɪ/
-  translation: ''
+  translation: to cover
   pos: verb
 - lemma: встановлений
   ipa: /ʋstanˈɔʋlɛnɪj/
-  translation: ''
+  translation: established, installed
   pos: adj
+- lemma: встановлювати
+  ipa: /ʋstanˈɔʋljuʋatɪ/
+  translation: to establish, to install (imperfective)
+  pos: verb
 - lemma: відбуваючісь
   ipa: /ʋidbuʋajut͡ʃisʲ/
   translation: ''
@@ -52,37 +60,37 @@ items:
   gender: m
 - lemma: відвідуючий
   ipa: /ʋidʋidujut͡ʃɪj/
-  translation: ''
+  translation: visting, attending
   pos: adj
 - lemma: відновлення
   ipa: /ʋidnˈɔʋlɛnnja/
-  translation: ''
+  translation: restoration, recovery
   pos: noun
   gender: n
 - lemma: відповідаючий
   ipa: /ʋidpɔʋidajut͡ʃɪj/
-  translation: ''
+  translation: corresponding, answering
   pos: adj
 - lemma: відчуваючи
   ipa: /ʋidt͡ʃuʋˈajut͡ʃɪ/
-  translation: ''
+  translation: feeling
   pos: verb
 - lemma: генетичний
   ipa: /ɦɛnɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: genetic
   pos: adj
 - lemma: деколонізація
   ipa: /dɛkɔlɔnizˈat͡sija/
-  translation: ''
+  translation: decolonization
   pos: noun
   gender: f
 - lemma: державний
   ipa: /dɛrʒˈaʋnɪj/
-  translation: ''
+  translation: state (adj), national
   pos: adj
 - lemma: діючий
   ipa: /dˈijut͡ʃɪj/
-  translation: ''
+  translation: acting, current
   pos: adj
 - lemma: дієв
   ipa: /dijɛʋ/
@@ -91,28 +99,28 @@ items:
   gender: m
 - lemma: дієприкметниковий
   ipa: /dijɛprɪkmɛtnɪkˈɔʋɪj/
-  translation: ''
+  translation: participial
   pos: adj
 - lemma: забруднений
   ipa: /zabrˈudnɛnɪj/
-  translation: ''
+  translation: polluted, dirty
   pos: adj
 - lemma: загорілий
   ipa: /zaɦɔrˈilɪj/
-  translation: ''
+  translation: tanned
   pos: adj
 - lemma: загоріти
   ipa: /zaɦɔrˈitɪ/
-  translation: ''
+  translation: to get a tan
   pos: verb
 - lemma: законодавство
   ipa: /zakɔnɔdˈaʋstʋɔ/
-  translation: ''
+  translation: legislation
   pos: noun
   gender: n
 - lemma: закріпитися
   ipa: /zakripˈɪtɪsja/
-  translation: ''
+  translation: to establish oneself
   pos: verb
 - lemma: замерзлий
   ipa: /zamˈɛrzlɪj/
@@ -120,28 +128,40 @@ items:
   pos: adj
 - lemma: замерзнути
   ipa: /zamˈɛrznutɪ/
-  translation: ''
+  translation: to freeze
   pos: verb
 - lemma: захищений
   ipa: /zaxˈɪʃt͡ʃɛnɪj/
-  translation: ''
+  translation: protected
   pos: adj
 - lemma: збіжний
   ipa: /zbiʒnɪj/
   translation: ''
   pos: adj
+- lemma: звертатися
+  ipa: /zʋɛrtˈatɪsja/
+  translation: to address (imperfective)
+  pos: verb
 - lemma: звільнення
   ipa: /zʋˈilʲnɛnnja/
-  translation: ''
+  translation: release, dismissal
   pos: noun
   gender: n
+- lemma: згідно
+  ipa: /zɦˈidnɔ/
+  translation: according to
+  pos: adv
+- lemma: зимовий
+  ipa: /zɪmˈɔʋɪj/
+  translation: winter (adj)
+  pos: adj
 - lemma: змоклий
   ipa: /zmˈɔklɪj/
-  translation: ''
+  translation: soaked, wet
   pos: adj
 - lemma: зрозуміліший
   ipa: /zrɔzumˈiliʃɪj/
-  translation: ''
+  translation: clearer
   pos: adj
 - lemma: зів'ялий
   ipa: /ziʋˈjalɪj/
@@ -153,73 +173,73 @@ items:
   pos: verb
 - lemma: калькований
   ipa: /kalʲkˈɔʋanɪj/
-  translation: ''
+  translation: calqued, traced
   pos: adj
 - lemma: калькування
   ipa: /kalʲkuʋˈannja/
-  translation: ''
+  translation: calquing
   pos: noun
   gender: n
 - lemma: канцелярит
   ipa: /kant͡sɛljarɪt/
-  translation: ''
+  translation: bureaucratese
   pos: noun
 - lemma: канцелярський
   ipa: /kant͡sɛlˈjarsʲkɪj/
-  translation: ''
+  translation: office (adj), clerical
   pos: adj
 - lemma: колишній
   ipa: /kɔlˈɪʃnij/
-  translation: ''
+  translation: former, ex
   pos: adj
 - lemma: конкурс
   ipa: /kˈɔnkurs/
-  translation: ''
+  translation: contest, competition
   pos: noun
   gender: m
 - lemma: корекція
   ipa: /kɔrˈɛkt͡sija/
-  translation: ''
+  translation: correction
   pos: noun
   gender: f
 - lemma: користь
   ipa: /kˈɔrɪstʲ/
-  translation: ''
+  translation: use, benefit
   pos: noun
   gender: f
 - lemma: листок
   ipa: /lɪstˈɔk/
-  translation: ''
+  translation: leaf, sheet
   pos: noun
 - lemma: лити
   ipa: /lˈɪtɪ/
-  translation: ''
+  translation: to pour
   pos: verb
 - lemma: майстер-клас
   ipa: /mˈajstɛr-klas/
-  translation: ''
+  translation: master class
   pos: noun
   gender: m
 - lemma: масовий
   ipa: /mˈasɔʋɪj/
-  translation: ''
+  translation: mass (adj), popular
   pos: adj
 - lemma: мовознавець
   ipa: /mɔʋɔznˈaʋɛt͡sʲ/
-  translation: ''
+  translation: linguist
   pos: noun
   gender: m
 - lemma: нав'язаний
   ipa: /naʋˈjazanɪj/
-  translation: ''
+  translation: imposed, forced
   pos: adj
 - lemma: нав'язуватися
   ipa: /naʋˈjazuʋatɪsja/
-  translation: ''
+  translation: to intrude
   pos: verb
 - lemma: навколишній
   ipa: /naʋkˈɔlɪʃnij/
-  translation: ''
+  translation: surrounding, ambient
   pos: adj
 - lemma: навчаючісь
   ipa: /naʋt͡ʃajut͡ʃisʲ/
@@ -228,11 +248,11 @@ items:
   gender: m
 - lemma: наявний
   ipa: /naˈjaʋnɪj/
-  translation: ''
+  translation: available, present
   pos: adj
 - lemma: неприродно
   ipa: /nɛprɪrˈɔdnɔ/
-  translation: ''
+  translation: unnaturally
   pos: adv
 - lemma: окання
   ipa: /ˈɔkannja/
@@ -241,135 +261,157 @@ items:
   gender: n
 - lemma: опадати
   ipa: /ɔpadˈatɪ/
-  translation: ''
+  translation: to fall (leaves)
   pos: verb
 - lemma: опадаючий
   ipa: /ɔpadˈajut͡ʃɪj/
-  translation: ''
+  translation: falling
   pos: adj
 - lemma: опал
   ipa: /ɔpal/
   translation: ''
   pos: noun
   gender: m
+- lemma: опалий
+  ipa: /ɔpˈalɪj/
+  translation: fallen (leaves)
+  pos: adj
 - lemma: осінній
   ipa: /ɔsˈinnij/
-  translation: ''
+  translation: autumnal
   pos: adj
 - lemma: оточуючий
   ipa: /ɔtˈɔt͡ʃujut͡ʃɪj/
-  translation: ''
+  translation: surrounding
   pos: adj
 - lemma: охочий
   ipa: /ɔxˈɔt͡ʃɪj/
-  translation: ''
+  translation: willing, eager
   pos: adj
 - lemma: очищаючи
   ipa: /ɔt͡ʃɪʃt͡ʃˈajut͡ʃɪ/
-  translation: ''
+  translation: cleaning, purifying
   pos: verb
 - lemma: очищення
   ipa: /ɔt͡ʃˈɪʃt͡ʃɛnnja/
-  translation: ''
+  translation: cleaning, purification
   pos: noun
   gender: n
+- lemma: переглядати
+  ipa: /pɛrɛɦljadˈatɪ/
+  translation: to view, to review (imperfective)
+  pos: verb
 - lemma: перефразовувати
   ipa: /pɛrɛfrazˈɔʋuʋatɪ/
-  translation: ''
+  translation: to paraphrase
   pos: verb
 - lemma: перефразування
   ipa: /pɛrɛfrazuʋˈannja/
-  translation: ''
+  translation: paraphrasing
   pos: noun
   gender: n
 - lemma: перефразувати
   ipa: /pɛrɛfrazuʋˈatɪ/
-  translation: ''
+  translation: to paraphrase (perfective)
   pos: verb
 - lemma: перехідний
   ipa: /pɛrɛxidnˈɪj/
-  translation: ''
+  translation: transitional, transitive (verb)
   pos: adj
 - lemma: пишучий
   ipa: /pɪʃut͡ʃɪj/
-  translation: ''
+  translation: writing (adj)
   pos: adj
 - lemma: плекати
   ipa: /plɛkˈatɪ/
-  translation: ''
+  translation: to cherish, to nurture
   pos: verb
+- lemma: повторний
+  ipa: /pɔʋtˈɔrnɪj/
+  translation: repeated, second
+  pos: adj
 - lemma: повторно
   ipa: /pɔʋtˈɔrnɔ/
-  translation: ''
+  translation: repeatedly
   pos: adv
+- lemma: подача
+  ipa: /pɔdˈat͡ʃa/
+  translation: service, submission, supply
+  pos: noun
+  gender: f
 - lemma: поетично
   ipa: /pɔɛtˈɪt͡ʃnɔ/
-  translation: ''
+  translation: poetically
   pos: adv
 - lemma: позбавлений
   ipa: /pɔzbˈaʋlɛnɪj/
-  translation: ''
+  translation: deprived
   pos: adj
 - lemma: позбутися
   ipa: /pɔzbˈutɪsja/
-  translation: ''
+  translation: to get rid of
   pos: verb
 - lemma: посивілий
   ipa: /pɔsˈɪʋilɪj/
-  translation: ''
+  translation: gray-haired
   pos: adj
 - lemma: посивіти
   ipa: /pɔsˈɪʋitɪ/
-  translation: ''
+  translation: to go gray
   pos: verb
 - lemma: правильність
   ipa: /prˈaʋɪlʲnistʲ/
-  translation: ''
+  translation: correctness
   pos: noun
   gender: f
 - lemma: працюючий
   ipa: /prat͡sˈjujut͡ʃɪj/
-  translation: ''
+  translation: working (adj)
   pos: adj
 - lemma: прискоритися
   ipa: /prɪskˈɔrɪtɪsja/
-  translation: ''
+  translation: to accelerate (oneself)
   pos: verb
 - lemma: причетність
   ipa: /prɪt͡ʃˈɛtnistʲ/
-  translation: ''
+  translation: involvement, implication
   pos: noun
   gender: f
 - lemma: приємніший
   ipa: /prɪˈjɛmniʃɪj/
-  translation: ''
+  translation: more pleasant
   pos: adj
+- lemma: процедура
+  ipa: /prɔt͡sɛdˈura/
+  translation: procedure
+  pos: noun
+  gender: f
 - lemma: пуризм
   ipa: /purˈɪzm/
-  translation: ''
+  translation: purism
   pos: noun
   gender: m
 - lemma: регламент
   ipa: /rɛɦlˈamɛnt/
-  translation: ''
+  translation: regulation, rules
   pos: noun
   gender: m
 - lemma: редагування
   ipa: /rɛdaɦuʋˈannja/
-  translation: ''
+  translation: editing
   pos: noun
   gender: n
 - lemma: репресія
   ipa: /rɛprˈɛsija/
-  translation: ''
+  translation: repression
   pos: noun
 - lemma: рильський
   ipa: /rˈɪlʲsʲkɪj/
-  translation: ''
+  translation: Rylskyi (name/adj)
   pos: adj
 - lemma: розвинути
   ipa: /rɔzʋˈɪnutɪ/
-  translation: ''
+  translation: to develop (perfective)
   pos: verb
 - lemma: розстрілянега
   ipa: /rɔzstriljanɛɦa/
@@ -378,64 +420,73 @@ items:
   gender: f
 - lemma: русизм
   ipa: /rusˈɪzm/
-  translation: ''
+  translation: Russism
   pos: noun
 - lemma: русифікація
   ipa: /rusɪfikˈat͡sija/
-  translation: ''
+  translation: Russification
   pos: noun
   gender: f
+- lemma: середовище
+  ipa: /sɛrɛdˈɔʋɪʃt͡ʃɛ/
+  translation: environment, surroundings
+  pos: noun
+  gender: n
+- lemma: сидячий
+  ipa: /sɪdˈjat͡ʃɪj/
+  translation: sedentary, sitting (adj)
+  pos: adj
 - lemma: слідуючий
   ipa: /slidujut͡ʃɪj/
-  translation: ''
+  translation: following (Russian influence - better наступний)
   pos: adj
 - lemma: спотворений
   ipa: /spɔtʋˈɔrɛnɪj/
-  translation: ''
+  translation: distorted, perverted
   pos: adj
 - lemma: співаючий
   ipa: /spiʋˈajut͡ʃɪj/
-  translation: ''
+  translation: singing (adj)
   pos: adj
 - lemma: співпадаючий
   ipa: /spiʋpadajut͡ʃɪj/
-  translation: ''
+  translation: coinciding
   pos: adj
 - lemma: стихія
   ipa: /stɪxˈija/
-  translation: ''
+  translation: element (nature), spontaneity
   pos: noun
   gender: f
 - lemma: стоячий
   ipa: /stɔˈjat͡ʃɪj/
-  translation: ''
+  translation: standing (adj)
   pos: adj
 - lemma: сухий
   ipa: /suxˈɪj/
-  translation: ''
+  translation: dry
   pos: noun
 - lemma: тестування
   ipa: /tɛstuʋˈannja/
-  translation: ''
+  translation: testing
   pos: noun
   gender: n
 - lemma: укання
   ipa: /ukannja/
-  translation: ''
+  translation: ukannia (pronunciation trait)
   pos: noun
   gender: n
 - lemma: уникання
   ipa: /unɪkˈannja/
-  translation: ''
+  translation: avoidance
   pos: noun
   gender: n
 - lemma: усталений
   ipa: /ustˈalɛnɪj/
-  translation: ''
+  translation: established, standard
   pos: adj
 - lemma: участь
   ipa: /ˈut͡ʃastʲ/
-  translation: ''
+  translation: participation
   pos: noun
   gender: f
 - lemma: учий
@@ -444,15 +495,15 @@ items:
   pos: adj
 - lemma: чинний
   ipa: /t͡ʃˈɪnnɪj/
-  translation: ''
+  translation: effective, current (law)
   pos: adj
 - lemma: читаючий
   ipa: /t͡ʃɪtajut͡ʃɪj/
-  translation: ''
+  translation: reading (adj)
   pos: adj
 - lemma: штучно
   ipa: /ʃtˈut͡ʃnɔ/
-  translation: ''
+  translation: artificially
   pos: adv
 - lemma: ючий
   ipa: /jut͡ʃɪj/
@@ -460,5 +511,5 @@ items:
   pos: adj
 - lemma: ячий
   ipa: /jat͡ʃɪj/
-  translation: ''
+  translation: someone's (rare/dialect)
   pos: adj

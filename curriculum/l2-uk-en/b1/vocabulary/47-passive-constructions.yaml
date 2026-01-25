@@ -4,54 +4,59 @@ version: '2.0'
 items:
 - lemma: агентство
   ipa: /aɦˈɛntstʋɔ/
-  translation: ''
+  translation: agency
   pos: noun
   gender: n
 - lemma: армія
   ipa: /ˈarmija/
-  translation: ''
+  translation: army
   pos: noun
   gender: f
 - lemma: верстатися
   ipa: /ʋɛrstˈatɪsja/
-  translation: ''
+  translation: to be laid out (typesetting)
   pos: verb
 - lemma: виготовлятися
   ipa: /ʋɪɦɔtɔʋlˈjatɪsja/
-  translation: ''
+  translation: to be manufactured
   pos: verb
 - lemma: вигулювати
   ipa: /ʋɪɦˈuljuʋatɪ/
-  translation: ''
+  translation: to walk (a dog)
   pos: verb
 - lemma: видаватися
   ipa: /ʋɪdaʋˈatɪsja/
-  translation: ''
+  translation: to seem, to be issued
   pos: verb
 - lemma: винуватець
   ipa: /ʋɪnuʋˈatɛt͡sʲ/
-  translation: ''
+  translation: culprit, originar
   pos: noun
   gender: m
 - lemma: випікатися
   ipa: /ʋɪpikˈatɪsja/
-  translation: ''
+  translation: to be baked
   pos: verb
 - lemma: виставлятися
   ipa: /ʋɪstaʋlˈjatɪsja/
-  translation: ''
+  translation: to be exhibited
   pos: verb
 - lemma: вичитати
   ipa: /ʋˈɪt͡ʃɪtatɪ/
-  translation: ''
+  translation: to proofread, to read thoroughly
   pos: verb
 - lemma: вмикатися
   ipa: /ʋmɪkˈatɪsja/
-  translation: ''
+  translation: to turn on (passive)
   pos: verb
+- lemma: вогонь
+  ipa: /ʋɔɦˈɔnʲ/
+  translation: fire
+  pos: noun
+  gender: m
 - lemma: відповідальність
   ipa: /ʋidpɔʋidˈalʲnistʲ/
-  translation: ''
+  translation: responsibility
   pos: noun
   gender: f
 - lemma: генрик
@@ -61,28 +66,32 @@ items:
   gender: m
 - lemma: гетьманщина
   ipa: /ɦɛtʲmˈanʃt͡ʃɪna/
-  translation: ''
+  translation: Hetmanate
   pos: noun
   gender: f
 - lemma: декан
   ipa: /dɛkˈan/
-  translation: ''
+  translation: dean
   pos: noun
   gender: m
 - lemma: електрик
   ipa: /ɛlɛktrɪk/
-  translation: ''
+  translation: electrician
   pos: noun
   gender: m
 - lemma: етикетка
   ipa: /ɛtɪkˈɛtka/
-  translation: ''
+  translation: label
   pos: noun
   gender: f
 - lemma: забезпечувати
   ipa: /zabɛzpˈɛt͡ʃuʋatɪ/
-  translation: ''
+  translation: to provide (imperfective)
   pos: verb
+- lemma: зайвий
+  ipa: /zˈajʋɪj/
+  translation: extra, surplus
+  pos: adj
 - lemma: законопроект
   ipa: /zakɔnɔprɔɛkt/
   translation: ''
@@ -90,92 +99,102 @@ items:
   gender: m
 - lemma: запікатися
   ipa: /zapikˈatɪsja/
-  translation: ''
+  translation: to be baked
   pos: verb
 - lemma: затримати
   ipa: /zatrˈɪmatɪ/
-  translation: ''
+  translation: to delay, to detain
   pos: verb
 - lemma: змішуватися
   ipa: /zmˈiʃuʋatɪsja/
-  translation: ''
+  translation: to be mixed
   pos: verb
+- lemma: знавець
+  ipa: /znaʋˈɛt͡sʲ/
+  translation: expert, connoisseur
+  pos: noun
+  gender: m
 - lemma: зруйнований
   ipa: /zrujnˈɔʋanɪj/
-  translation: ''
+  translation: destroyed, ruined
   pos: adj
 - lemma: зруйнувати
   ipa: /zrujnuʋˈatɪ/
-  translation: ''
+  translation: to destroy, to ruin (perfective)
   pos: verb
 - lemma: колективний
   ipa: /kɔlɛktˈɪʋnɪj/
-  translation: ''
+  translation: collective (adj)
   pos: adj
+- lemma: комісія
+  ipa: /kɔmˈisija/
+  translation: commission
+  pos: noun
+  gender: f
 - lemma: конституція
   ipa: /kɔnstɪtˈut͡sija/
-  translation: ''
+  translation: constitution
   pos: noun
   gender: f
 - lemma: коректор
   ipa: /kɔrˈɛktɔr/
-  translation: ''
+  translation: proofreader, corrector
   pos: noun
   gender: m
 - lemma: лихо
   ipa: /lˈɪxɔ/
-  translation: ''
+  translation: trouble, misfortune
   pos: noun
   gender: f
 - lemma: ліквідований
   ipa: /likʋidˈɔʋanɪj/
-  translation: ''
+  translation: liquidated, eliminated
   pos: adj
 - lemma: макет
   ipa: /makˈɛt/
-  translation: ''
+  translation: layout, model
   pos: noun
   gender: m
 - lemma: малюватися
   ipa: /maljuʋˈatɪsja/
-  translation: ''
+  translation: to reflect, to pose
   pos: verb
 - lemma: надрукований
   ipa: /nadrukˈɔʋanɪj/
-  translation: ''
+  translation: printed
   pos: adj
 - lemma: названий
   ipa: /nazʋanɪj/
-  translation: ''
+  translation: named, called
   pos: adj
 - lemma: обкладинка
   ipa: /ɔbklˈadɪnka/
-  translation: ''
+  translation: cover (book/magazine)
   pos: noun
   gender: f
 - lemma: окупант
   ipa: /ɔkupˈant/
-  translation: ''
+  translation: occupier
   pos: noun
 - lemma: оливковий
   ipa: /ɔlˈɪʋkɔʋɪj/
-  translation: ''
+  translation: olive (adj)
   pos: adj
 - lemma: оптимальний
   ipa: /ɔptɪmˈalʲnɪj/
-  translation: ''
+  translation: optimal
   pos: adj
 - lemma: охолоджений
   ipa: /ɔxɔlˈɔdʒɛnɪj/
-  translation: ''
+  translation: chilled, cooled
   pos: adj
 - lemma: охолодити
   ipa: /ɔxɔlɔdˈɪtɪ/
-  translation: ''
+  translation: to cool down, to chill
   pos: verb
 - lemma: очищуватися
   ipa: /ɔt͡ʃˈɪʃt͡ʃuʋatɪsja/
-  translation: ''
+  translation: to be cleaned
   pos: verb
 - lemma: пасив
   ipa: /pasˈɪʋ/
@@ -184,147 +203,155 @@ items:
   gender: m
 - lemma: побити
   ipa: /pɔbˈɪtɪ/
-  translation: ''
+  translation: to beat, to break
   pos: verb
 - lemma: представляючи
   ipa: /prɛdstaʋlˈjajut͡ʃɪ/
-  translation: ''
+  translation: representing
   pos: verb
 - lemma: прес-секретар
   ipa: /prɛs-sɛkrɛtˈar/
-  translation: ''
+  translation: press secretary
   pos: noun
   gender: m
 - lemma: призначатися
   ipa: /prɪznat͡ʃˈatɪsja/
-  translation: ''
+  translation: to be intended for
   pos: verb
 - lemma: прийматися
   ipa: /prɪjmˈatɪsja/
-  translation: ''
+  translation: to be accepted, to take root
   pos: verb
 - lemma: приховування
   ipa: /prɪxˈɔʋuʋannja/
-  translation: ''
+  translation: hiding, concealment
   pos: noun
   gender: n
 - lemma: прогулюючись
   ipa: /prɔɦˈuljujut͡ʃɪsʲ/
-  translation: ''
+  translation: strolling
   pos: verb
 - lemma: продаватися
   ipa: /prɔdaʋˈatɪsja/
-  translation: ''
+  translation: to be sold
   pos: verb
 - lemma: прокладатися
   ipa: /prɔkladˈatɪsja/
-  translation: ''
+  translation: to be laid (path/rails)
   pos: verb
 - lemma: публікуватися
   ipa: /publikuʋˈatɪsja/
-  translation: ''
+  translation: to be published
   pos: verb
 - lemma: підключатися
   ipa: /pidkljut͡ʃˈatɪsja/
-  translation: ''
+  translation: to connect, to join
   pos: verb
 - lemma: підкреслюючи
   ipa: /pidkrˈɛsljujut͡ʃɪ/
-  translation: ''
+  translation: emphasizing
+  pos: verb
+- lemma: підписуватися
+  ipa: /pidpˈɪsuʋatɪsja/
+  translation: to subscribe (imperfective)
   pos: verb
 - lemma: підсвідомо
   ipa: /pidsʋidˈɔmɔ/
-  translation: ''
+  translation: subconsciously
   pos: adv
 - lemma: рада
   ipa: /rˈada/
-  translation: ''
+  translation: council, advice
   pos: noun
   gender: f
 - lemma: розмивати
   ipa: /rɔzmɪʋˈatɪ/
-  translation: ''
+  translation: to blur, to wash away
   pos: verb
 - lemma: рошен
   ipa: /rɔʃɛn/
-  translation: ''
+  translation: Roshen
   pos: noun
   gender: m
 - lemma: рясніти
   ipa: /rjasnˈitɪ/
-  translation: ''
+  translation: to abound, to be full of
   pos: verb
 - lemma: рішити
   ipa: /riʃˈɪtɪ/
-  translation: ''
+  translation: to decide (perfective)
   pos: verb
 - lemma: сенкевич
   ipa: /sɛnkˈɛʋɪt͡ʃ/
-  translation: ''
+  translation: Senkevych (name)
   pos: noun
   gender: m
 - lemma: сертифікат
   ipa: /sɛrtɪfikˈat/
-  translation: ''
+  translation: certificate
   pos: noun
 - lemma: соус
   ipa: /sˈɔus/
-  translation: ''
+  translation: sauce
   pos: noun
 - lemma: стихійний
   ipa: /stɪxˈijnɪj/
-  translation: ''
+  translation: spontaneous, elemental
   pos: adj
 - lemma: сухе
   ipa: /suxˈɛ/
-  translation: ''
+  translation: dry (neuter)
   pos: noun
   gender: n
 - lemma: техніка
   ipa: /tˈɛxnika/
-  translation: ''
+  translation: technique, machinery, equipment
   pos: noun
   gender: f
 - lemma: тканина
   ipa: /tkanˈɪna/
-  translation: ''
+  translation: fabric, tissue (bio)
   pos: noun
   gender: f
 - lemma: труба
   ipa: /trubˈa/
-  translation: ''
+  translation: pipe, tube, trumpet
   pos: noun
   gender: f
 - lemma: тушкуватися
   ipa: /tuʃkuʋˈatɪsja/
-  translation: ''
+  translation: to be stewed/braised
   pos: verb
 - lemma: укрінформ
   ipa: /ukrinfɔrm/
-  translation: ''
+  translation: Ukrinform (news agency)
   pos: noun
   gender: m
 - lemma: уніан
   ipa: /unian/
-  translation: ''
+  translation: UNIAN (news agency)
   pos: noun
   gender: m
+- lemma: упаковка
+  ipa: /upakˈɔʋka/
+  translation: packaging, box
+  pos: noun
 - lemma: фокусувати
   ipa: /fɔkusuʋˈatɪ/
-  translation: ''
+  translation: to focus
   pos: verb
 - lemma: ілюстрація
   ipa: /iljustrˈat͡sija/
-  translation: ''
+  translation: illustration
   pos: noun
   gender: f
 - lemma: інтерфакс-україна
   ipa: /intɛrfˈaks-ukrajina/
-  translation: ''
+  translation: Interfax-Ukraine
   pos: noun
   gender: n
 - lemma: іронія
   ipa: /irˈɔnija/
-  translation: ''
+  translation: irony
   pos: noun
   gender: f

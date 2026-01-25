@@ -4,190 +4,139 @@ version: '2.0'
 items:
 - lemma: адресат
   ipa: /adrɛsˈat/
-  translation: ''
+  translation: addressee
   pos: noun
   gender: m
 - lemma: виділений
   ipa: /ʋˈɪdilɛnɪj/
-  translation: ''
+  translation: highlighted, allocated
   pos: adj
-- lemma: визначити
-  ipa: /ʋˈɪznat͡ʃɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: виконати
-  ipa: /ʋˈɪkɔnatɪ/
-  translation: ''
-  pos: verb
-- lemma: виконувати
-  ipa: /ʋɪkˈɔnuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: вміння
   ipa: /ʋmˈinnja/
-  translation: ''
+  translation: skill, ability
   pos: noun
   gender: n
 - lemma: володіння
   ipa: /ʋɔlɔdˈinnja/
-  translation: ''
+  translation: possession, mastery
   pos: noun
   gender: n
+- lemma: впевненість
+  ipa: /ʋpˈɛʋnɛnistʲ/
+  translation: confidence
+  pos: noun
+  gender: f
 - lemma: втрата
   ipa: /ʋtrˈata/
-  translation: ''
+  translation: loss
   pos: noun
   gender: f
 - lemma: відіграти
   ipa: /ʋidiɦrˈatɪ/
-  translation: ''
+  translation: to play (perfective)
   pos: verb
-- lemma: віктор
-  ipa: /ʋˈiktɔr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: довідник
   ipa: /dɔʋˈidnɪk/
-  translation: ''
+  translation: reference book, guide
   pos: noun
   gender: m
-- lemma: додати
-  ipa: /dɔdˈatɪ/
-  translation: ''
+- lemma: застосувати
+  ipa: /zastɔsuʋˈatɪ/
+  translation: to apply, to use (perfective)
   pos: verb
+- lemma: звертання
+  ipa: /zʋɛrtˈannja/
+  translation: addressing, appeal
+  pos: noun
+  gender: n
 - lemma: згадати
   ipa: /zɦadˈatɪ/
-  translation: ''
+  translation: to remember, to mention
   pos: verb
 - lemma: комплексний
   ipa: /kˈɔmplɛksnɪj/
-  translation: ''
+  translation: complex, comprehensive
   pos: adj
 - lemma: критичний
   ipa: /krɪtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: critical
   pos: adj
+- lemma: кількість
+  ipa: /kˈilʲkistʲ/
+  translation: quantity, amount
+  pos: noun
+  gender: f
 - lemma: навіщо
   ipa: /naʋˈiʃt͡ʃɔ/
-  translation: ''
+  translation: why, what for
   pos: pron
 - lemma: наприкінці
   ipa: /naprˈɪkint͡si/
-  translation: ''
+  translation: at the end
   pos: adv
-- lemma: об'єкт
-  ipa: /ɔbˈjɛkt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: обирати
   ipa: /ɔbɪrˈatɪ/
-  translation: ''
+  translation: to choose, to select
   pos: verb
-- lemma: перевірка
-  ipa: /pɛrˈɛʋirka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: перш
   ipa: /pɛrʃ/
   translation: ''
   pos: adv
 - lemma: повторити
   ipa: /pɔʋtɔrˈɪtɪ/
-  translation: ''
+  translation: to repeat (perfective)
   pos: verb
-- lemma: повторювати
-  ipa: /pɔʋtˈɔrjuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: позначати
-  ipa: /pɔznat͡ʃˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: порядок
-  ipa: /pɔrˈjadɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: послідовно
   ipa: /pɔslidˈɔʋnɔ/
-  translation: ''
+  translation: consistently, sequentially
   pos: adv
 - lemma: потренуватися
   ipa: /pɔtrɛnuʋˈatɪsja/
-  translation: ''
+  translation: to practice, to work out
   pos: verb
-- lemma: практика
-  ipa: /prˈaktɪka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: приказка
   ipa: /prˈɪkazka/
-  translation: ''
+  translation: saying, proverb
   pos: noun
   gender: f
-- lemma: природно
-  ipa: /prɪrˈɔdnɔ/
-  translation: ''
-  pos: adv
 - lemma: провідмінювати
   ipa: /prɔʋidmˈinjuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: продовжувати
-  ipa: /prɔdˈɔʋʒuʋatɪ/
-  translation: ''
+  translation: to decline/conjugate
   pos: verb
 - lemma: підказати
   ipa: /pidkazˈatɪ/
-  translation: ''
+  translation: to prompt, to tell (as a hint)
   pos: verb
-- lemma: розрізняти
-  ipa: /rɔzriznˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: розуміння
-  ipa: /rɔzumˈinnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: роль
   ipa: /rɔlʲ/
-  translation: ''
+  translation: role
   pos: noun
   gender: f
 - lemma: секція
   ipa: /sˈɛkt͡sija/
-  translation: ''
+  translation: section
   pos: noun
   gender: f
-- lemma: система
-  ipa: /sɪstˈɛma/
-  translation: ''
+- lemma: сенс
+  ipa: /sɛns/
+  translation: sense, meaning
   pos: noun
-  gender: f
-- lemma: спілкування
-  ipa: /spilkuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: сюди
-  ipa: /sjudˈɪ/
-  translation: ''
-  pos: pron
+  gender: m
+- lemma: спочатку
+  ipa: /spɔt͡ʃˈatku/
+  translation: at first, initially
+  pos: adv
 - lemma: теорія
   ipa: /tɛˈɔrija/
+  translation: theory
+  pos: noun
+  gender: f
+- lemma: єднати
+  ipa: /jɛdnˈatɪ/
+  translation: to unite, to join
+  pos: verb
+- lemma: іда
+  ipa: /ˈida/
   translation: ''
   pos: noun
   gender: f
-- lemma: учитися
-  ipa: /ut͡ʃˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: єднати
-  ipa: /jɛdnˈatɪ/
-  translation: ''
-  pos: verb

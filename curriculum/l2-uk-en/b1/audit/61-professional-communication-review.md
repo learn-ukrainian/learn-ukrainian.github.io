@@ -1,17 +1,52 @@
-# Audit Report: 61-professional-communication.md
-**Phase:** B1.5 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+# Audit Report: M61 — 61-professional-communication.md
+**Level:** B1 | **Module:** M61 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:35:28
+
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння професійної лексики | 8 | 8 | ✅ |
+| 2 | match-up | Колокації — іменник + дієслово | 14 | 8 | ✅ |
+| 3 | match-up | Переклад професійної лексики | 14 | 8 | ✅ |
+| 4 | group-sort | Групування за категорією | 16 | 12 | ✅ |
+| 5 | cloze | Вибір слова з контексту | 14 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання | 14 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 15 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
+| 11 | translate | Переклад речень | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть професійну лексику | 10 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1751/1500
+- **Words:** ✅ 1752/1500 (raw: 2623)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 35 (soft target)
+- **Vocab:** ⚠️ 32 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,9 +77,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 53 | Included in Core |
-| **Вступ** | ⚪️ | 75 | Skipped |
+| **Вступ** | ✅ | 75 | Included in Core |
 | **Вживання** | ⚪️ | 307 | Skipped |
-| **Читання** | ✅ | 249 | Included in Core |
+| **Читання** | ✅ | 250 | Included in Core |
 | **Діалоги** | ✅ | 273 | Included in Core |
 | **Підсумок** | ✅ | 164 | Included in Core |
 | **Лексика** | ⚪️ | 520 | Skipped |

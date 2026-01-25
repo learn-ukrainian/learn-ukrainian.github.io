@@ -4,33 +4,33 @@ version: '2.0'
 items:
 - lemma: аудіо
   ipa: /ˈaudiɔ/
-  translation: ''
+  translation: audio
   pos: noun
   gender: n
 - lemma: видання
   ipa: /ʋɪdannja/
-  translation: ''
+  translation: edition, publication
   pos: noun
 - lemma: випуск
   ipa: /ʋˈɪpusk/
-  translation: ''
+  translation: graduation, release, issue
   pos: noun
   gender: m
 - lemma: всякий
   ipa: /ʋsˈjakɪj/
-  translation: ''
+  translation: every, any
   pos: pron
 - lemma: вісімнадцятий
   ipa: /ʋisimnˈadt͡sjatɪj/
-  translation: ''
+  translation: eighteenth
   pos: adj
 - lemma: галицький
   ipa: /ɦˈalɪt͡sʲkɪj/
-  translation: ''
+  translation: Galician
   pos: adj
 - lemma: георгій
   ipa: /ɦɛˈɔrɦij/
-  translation: ''
+  translation: Heorhii (name)
   pos: noun
   gender: m
 - lemma: гонгадзе
@@ -40,50 +40,50 @@ items:
   gender: m
 - lemma: дезінформація
   ipa: /dɛzinfɔrmˈat͡sija/
-  translation: ''
+  translation: disinformation
   pos: noun
   gender: f
 - lemma: достовірний
   ipa: /dɔstɔʋˈirnɪj/
-  translation: ''
+  translation: authentic, reliable
   pos: adj
 - lemma: достовірність
   ipa: /dɔstɔʋˈirnistʲ/
-  translation: ''
+  translation: authenticity, reliability
   pos: noun
   gender: f
 - lemma: ексклюзивний
   ipa: /ɛkskljuzˈɪʋnɪj/
-  translation: ''
+  translation: exclusive
   pos: adj
 - lemma: ефір
   ipa: /ɛfˈir/
-  translation: ''
+  translation: air, ether, broadcast
   pos: noun
   gender: m
 - lemma: зведення
   ipa: /zʋˈɛdɛnnja/
-  translation: ''
+  translation: building, summary
   pos: noun
   gender: n
 - lemma: зоря
   ipa: /zɔrˈja/
-  translation: ''
+  translation: star, dawn
   pos: noun
   gender: f
 - lemma: кореспондент
   ipa: /kɔrɛspɔndˈɛnt/
-  translation: ''
+  translation: correspondent
   pos: noun
   gender: m
 - lemma: корупція
   ipa: /kɔrˈupt͡sija/
-  translation: ''
+  translation: corruption
   pos: noun
   gender: f
 - lemma: кіносалон
   ipa: /kinɔsalˈɔn/
-  translation: ''
+  translation: cinema hall
   pos: noun
 - lemma: медіа-експерт
   ipa: /mˈɛdia-ɛkspɛrt/
@@ -112,8 +112,13 @@ items:
   gender: f
 - lemma: медіакомунікація
   ipa: /mɛdiakɔmunikat͡sija/
-  translation: ''
+  translation: media communication
   pos: noun
+- lemma: мовник
+  ipa: /mˈɔʋnɪk/
+  translation: linguist, language teacher
+  pos: noun
+  gender: m
 - lemma: надійне
   ipa: /nadˈijnɛ/
   translation: ''
@@ -121,69 +126,73 @@ items:
   gender: n
 - lemma: найвпливовіший
   ipa: /najʋplɪʋˈɔʋiʃɪj/
-  translation: ''
+  translation: the most influential
+  pos: adj
+- lemma: незалежний
+  ipa: /nɛzalˈɛʒnɪj/
+  translation: independent
   pos: adj
 - lemma: неперевірений
   ipa: /nɛpɛrɛʋˈirɛnɪj/
-  translation: ''
+  translation: unverified
   pos: adj
 - lemma: неформальніший
   ipa: /nɛfɔrmalʲniʃɪj/
-  translation: ''
+  translation: more informal
   pos: adj
 - lemma: прес
   ipa: /prɛs/
-  translation: ''
+  translation: press (media/muscle)
   pos: noun
   gender: m
 - lemma: привертати
   ipa: /prɪʋɛrtˈatɪ/
-  translation: ''
+  translation: to attract (imperfective)
   pos: verb
+- lemma: публікація
+  ipa: /publikˈat͡sija/
+  translation: publication
+  pos: noun
+  gender: f
 - lemma: рубрика
   ipa: /rˈubrɪka/
-  translation: ''
+  translation: column, category, rubric
   pos: noun
   gender: f
 - lemma: спеціалізуватися
   ipa: /spɛt͡sializuʋˈatɪsja/
-  translation: ''
+  translation: to specialize
   pos: verb
 - lemma: студія
   ipa: /stˈudija/
-  translation: ''
+  translation: studio
   pos: noun
   gender: f
 - lemma: телебачення
   ipa: /tɛlɛbˈat͡ʃɛnnja/
-  translation: ''
+  translation: television (industry)
   pos: noun
   gender: n
 - lemma: тираж
   ipa: /tɪrˈaʒ/
-  translation: ''
+  translation: circulation (print run)
   pos: noun
   gender: m
 - lemma: фейк
   ipa: /fɛjk/
-  translation: ''
+  translation: fake
   pos: noun
   gender: m
 - lemma: формат
   ipa: /fɔrmˈat/
-  translation: ''
+  translation: format
   pos: noun
 - lemma: фінанси
   ipa: /finˈansɪ/
-  translation: ''
+  translation: finances
   pos: noun
 - lemma: інтернет-видання
   ipa: /intɛrnˈɛt-ʋɪdannja/
-  translation: ''
+  translation: online publication
   pos: noun
   gender: n
-- lemma: інтернет-платформа
-  ipa: /intɛrnˈɛt-platfɔrma/
-  translation: ''
-  pos: noun
-  gender: f

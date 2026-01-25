@@ -2,121 +2,177 @@ module: 07-spatial-prepositions
 level: A2
 version: '2.0'
 items:
-- lemma: висити
-  ipa: /ʋɪsɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: група
-  ipa: /ɦrˈupa/
-  translation: ''
+- lemma: аптека
+  ipa: /aptˈɛka/
+  translation: pharmacy, drugstore
   pos: noun
   gender: f
+- lemma: висити
+  ipa: /ʋɪsɪtɪ/
+  translation: to hang
+  pos: verb
+- lemma: виходити
+  ipa: /ʋɪxɔdɪtɪ/
+  translation: to go out, to exit, to result
+  pos: verb
+- lemma: вхід
+  ipa: /ʋxid/
+  translation: entrance
+  pos: noun
+  gender: m
+- lemma: далеко
+  ipa: /dalˈɛkɔ/
+  translation: far, far away
+  pos: adv
 - lemma: двосторонній
   ipa: /dʋɔstɔrˈɔnnij/
-  translation: ''
+  translation: bilateral, two-sided
   pos: adj
-- lemma: з'єднувати
-  ipa: /zˈjɛdnuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: залежно
-  ipa: /zalˈɛʒnɔ/
-  translation: ''
-  pos: adv
+- lemma: живий
+  ipa: /ʒɪʋˈɪj/
+  translation: alive, living
+  pos: adj
 - lemma: запам'ятовувати
   ipa: /zapamjatˈɔʋuʋatɪ/
-  translation: ''
+  translation: to memorize
   pos: verb
 - lemma: знаходитися
   ipa: /znaxˈɔdɪtɪsja/
-  translation: ''
+  translation: to be located
   pos: verb
 - lemma: зошит
   ipa: /zˈɔʃɪt/
-  translation: ''
+  translation: notebook
   pos: noun
 - lemma: камін
   ipa: /kamˈin/
-  translation: ''
+  translation: fireplace, hearth
   pos: noun
   gender: m
 - lemma: картинка
   ipa: /kartˈɪnka/
-  translation: ''
+  translation: picture, image
   pos: noun
   gender: f
 - lemma: килим
   ipa: /kˈɪlɪm/
-  translation: ''
+  translation: carpet, rug
   pos: noun
   gender: m
 - lemma: клад
   ipa: /klad/
-  translation: ''
+  translation: treasure
   pos: noun
   gender: m
+- lemma: корисно
+  ipa: /kˈɔrɪsnɔ/
+  translation: useful, healthily
+  pos: adv
+- lemma: коробка
+  ipa: /kɔrˈɔbka/
+  translation: box
+  pos: noun
+  gender: f
 - lemma: кошик
   ipa: /kˈɔʃɪk/
-  translation: ''
+  translation: basket
   pos: noun
   gender: f
 - lemma: куток
   ipa: /kutˈɔk/
-  translation: ''
+  translation: corner
   pos: noun
   gender: m
-- lemma: кілька
-  ipa: /kˈilʲka/
-  translation: ''
+- lemma: кіт
+  ipa: /kit/
+  translation: cat (male)
+  pos: noun
+  gender: m
+- lemma: кішка
+  ipa: /kˈiʃka/
+  translation: cat (female)
   pos: noun
   gender: f
-- lemma: навчання
-  ipa: /naʋt͡ʃˈannja/
-  translation: ''
-  pos: noun
-  gender: n
+- lemma: лежати
+  ipa: /lɛʒˈatɪ/
+  translation: to lie, to be situated
+  pos: verb
+- lemma: маленький
+  ipa: /malˈɛnʲkɪj/
+  translation: small, little
+  pos: adj
 - lemma: одразу
   ipa: /ɔdrˈazu/
-  translation: ''
+  translation: immediately
   pos: adv
+- lemma: одяг
+  ipa: /ˈɔdjaɦ/
+  translation: clothing
+  pos: noun
+  gender: m
 - lemma: папір
   ipa: /papˈir/
-  translation: ''
+  translation: paper
   pos: noun
+- lemma: повернути
+  ipa: /pɔʋɛrnˈutɪ/
+  translation: to turn, to return (perfective)
+  pos: verb
+- lemma: поверх
+  ipa: /pɔʋˈɛrx/
+  translation: floor, story
+  pos: noun
+  gender: m
 - lemma: повинно
   ipa: /pɔʋˈɪnnɔ/
-  translation: ''
+  translation: should, must (neuter/adv)
   pos: adv
+- lemma: поклад
+  ipa: /pˈɔklad/
+  translation: ''
+  pos: noun
 - lemma: посередині
   ipa: /pɔsɛrˈɛdɪni/
-  translation: ''
+  translation: in the middle
   pos: adv
 - lemma: принцип
   ipa: /prˈɪnt͡sɪp/
-  translation: ''
+  translation: principle
   pos: noun
   gender: m
 - lemma: роза
   ipa: /rˈɔza/
-  translation: ''
+  translation: rose
   pos: noun
   gender: f
+- lemma: сидіти
+  ipa: /sɪdˈitɪ/
+  translation: to sit
+  pos: verb
+- lemma: спити
+  ipa: /spˈɪtɪ/
+  translation: to drink (all of), to fall asleep (rare variant)
+  pos: verb
 - lemma: стратегія
   ipa: /stratˈɛɦija/
-  translation: ''
+  translation: strategy
   pos: noun
   gender: f
 - lemma: таємниця
   ipa: /tajɛmnˈɪt͡sja/
-  translation: ''
+  translation: secret, mystery
   pos: noun
   gender: f
 - lemma: удача
   ipa: /udˈat͡ʃa/
-  translation: ''
+  translation: luck, success
   pos: noun
   gender: f
+- lemma: уявити
+  ipa: /ujaʋˈɪtɪ/
+  translation: to imagine (perfective)
+  pos: verb
 - lemma: єдиний
   ipa: /jɛdˈɪnɪj/
-  translation: ''
+  translation: single, unique, only
   pos: adj

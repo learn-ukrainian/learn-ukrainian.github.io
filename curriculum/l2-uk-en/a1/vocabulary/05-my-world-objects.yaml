@@ -4,221 +4,131 @@ version: '2.0'
 items:
 - lemma: блюдо
   ipa: /blˈjudɔ/
-  translation: ''
+  translation: dish
   pos: noun
   gender: n
-- lemma: будинок
-  ipa: /budˈɪnɔk/
-  translation: ''
-  pos: noun
 - lemma: ванний
   ipa: /ʋˈannɪj/
-  translation: ''
+  translation: bath (adj)
   pos: adj
 - lemma: виделка
   ipa: /ʋɪdˈɛlka/
-  translation: ''
+  translation: fork
   pos: noun
   gender: f
-- lemma: вікно
-  ipa: /ʋiknˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: вітальня
   ipa: /ʋitˈalʲnja/
-  translation: ''
+  translation: living room
   pos: noun
   gender: f
 - lemma: гарне
   ipa: /ɦˈarnɛ/
-  translation: ''
+  translation: good, beautiful (neuter)
   pos: noun
   gender: n
-- lemma: гарний
-  ipa: /ɦˈarnɪj/
-  translation: ''
-  pos: adj
 - lemma: годинник
   ipa: /ɦɔdˈɪnnɪk/
-  translation: ''
+  translation: clock, watch
   pos: noun
   gender: m
 - lemma: дзеркало
   ipa: /dzˈɛrkalɔ/
-  translation: ''
+  translation: mirror
   pos: noun
   gender: n
-- lemma: диван
-  ipa: /dɪʋˈan/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: заходити
   ipa: /zaxɔdɪtɪ/
-  translation: ''
+  translation: to enter, to visit
   pos: verb
-- lemma: ка
-  ipa: /ka/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: квартира
   ipa: /kʋartˈɪra/
-  translation: ''
+  translation: apartment, flat
   pos: noun
   gender: f
 - lemma: ключ
   ipa: /kljut͡ʃ/
-  translation: ''
+  translation: key, wrench
   pos: noun
   gender: m
 - lemma: ключі
   ipa: /kljut͡ʃˈi/
-  translation: ''
+  translation: keys
   pos: noun
-- lemma: книга
-  ipa: /knˈɪɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: комп'ютер
   ipa: /kɔmpˈjutɛr/
-  translation: ''
+  translation: computer
   pos: noun
   gender: m
-- lemma: крісло
-  ipa: /krˈislɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: кухня
-  ipa: /kˈuxnja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кімната
-  ipa: /kimnˈata/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: лампа
   ipa: /lˈampa/
-  translation: ''
+  translation: lamp
   pos: noun
   gender: f
 - lemma: ложка
   ipa: /lˈɔʒka/
-  translation: ''
+  translation: spoon
   pos: noun
   gender: f
 - lemma: меч
   ipa: /mɛt͡ʃ/
-  translation: ''
+  translation: sword
   pos: noun
   gender: m
 - lemma: мікрохвильовка
   ipa: /mikrɔxʋɪlʲɔʋka/
-  translation: ''
+  translation: microwave
   pos: noun
   gender: f
-- lemma: нова
-  ipa: /nɔʋˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: новий
-  ipa: /nɔʋˈɪj/
-  translation: ''
-  pos: adj
 - lemma: ніж
   ipa: /niʒ/
-  translation: ''
+  translation: knife, than
   pos: conj
 - lemma: праска
   ipa: /prˈaska/
-  translation: ''
+  translation: iron (for clothes)
   pos: noun
   gender: f
-- lemma: працювати
-  ipa: /prat͡sjuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: пульт
   ipa: /pulʲt/
-  translation: ''
+  translation: remote control
   pos: noun
   gender: m
 - lemma: рюкзак
   ipa: /rjukzˈak/
-  translation: ''
+  translation: backpack
   pos: noun
   gender: m
 - lemma: спальня
   ipa: /spˈalʲnja/
-  translation: ''
+  translation: bedroom
   pos: noun
   gender: f
 - lemma: старий
   ipa: /starˈɪj/
-  translation: ''
+  translation: old
   pos: noun
   gender: m
-- lemma: стеля
-  ipa: /stˈɛlja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: стіл
-  ipa: /stil/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: стілець
-  ipa: /stilˈɛt͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: стіна
-  ipa: /stinˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: сумка
   ipa: /sˈumka/
-  translation: ''
+  translation: bag, handbag
   pos: noun
   gender: f
 - lemma: тапочки
   ipa: /tˈapɔt͡ʃkɪ/
-  translation: ''
+  translation: slippers
   pos: noun
-- lemma: телефон
-  ipa: /tɛlɛfˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: холодильник
   ipa: /xɔlɔdˈɪlʲnɪk/
-  translation: ''
+  translation: refrigerator
   pos: noun
   gender: m
 - lemma: хрущовка
   ipa: /xruʃt͡ʃˈɔʋka/
-  translation: ''
+  translation: Khrushchyovka (apartment)
   pos: noun
   gender: f
 - lemma: чашка
   ipa: /t͡ʃˈaʃka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: шафа
-  ipa: /ʃˈafa/
-  translation: ''
+  translation: cup
   pos: noun
   gender: f

@@ -4,12 +4,12 @@ version: '2.0'
 items:
 - lemma: абстрактність
   ipa: /abstrˈaktnistʲ/
-  translation: ''
+  translation: abstractness
   pos: noun
   gender: f
 - lemma: айсберг
   ipa: /ˈajsbɛrɦ/
-  translation: ''
+  translation: iceberg
   pos: noun
   gender: m
 - lemma: антецедент-час
@@ -17,113 +17,162 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: бажання
+  ipa: /baʒˈannja/
+  translation: desire, wish
+  pos: noun
 - lemma: безтурботніший
   ipa: /bɛzturbɔtniʃɪj/
-  translation: ''
+  translation: more carefree
   pos: adj
 - lemma: бесарабка
   ipa: /bɛsarˈabka/
-  translation: ''
+  translation: Besarabka (market)
   pos: noun
   gender: f
+- lemma: блищати
+  ipa: /blɪʃt͡ʃˈatɪ/
+  translation: to shine, to glitter
+  pos: verb
 - lemma: болісний
   ipa: /bˈɔlisnɪj/
-  translation: ''
+  translation: painful, grievous
+  pos: adj
+- lemma: боліти
+  ipa: /bɔlˈitɪ/
+  translation: to hurt, to be ill
+  pos: verb
+- lemma: величезний
+  ipa: /ʋɛlɪt͡ʃˈɛznɪj/
+  translation: huge, enormous
   pos: adj
 - lemma: версія
   ipa: /ʋˈɛrsija/
-  translation: ''
+  translation: version
+  pos: noun
+  gender: f
+- lemma: видалити
+  ipa: /ʋˈɪdalɪtɪ/
+  translation: to remove, to delete
+  pos: verb
+- lemma: вперше
+  ipa: /ʋpˈɛrʃɛ/
+  translation: for the first time
+  pos: adv
+- lemma: відоме
+  ipa: /ʋidˈɔmɛ/
+  translation: well-known (thing/fact)
+  pos: noun
+  gender: n
+- lemma: війна
+  ipa: /ʋijnˈa/
+  translation: war
   pos: noun
   gender: f
 - lemma: вірменка
   ipa: /ʋirmˈɛnka/
-  translation: ''
+  translation: Armenian (female)
   pos: noun
   gender: f
 - lemma: голобородько
   ipa: /ɦɔlɔbɔrˈɔdʲkɔ/
-  translation: ''
+  translation: Holoborodko (name)
   pos: noun
   gender: f
 - lemma: грек
   ipa: /ɦrɛk/
-  translation: ''
+  translation: Greek (male)
   pos: noun
 - lemma: грецький
   ipa: /ɦrˈɛt͡sʲkɪj/
-  translation: ''
+  translation: Greek
   pos: adj
 - lemma: дещо
   ipa: /dˈɛʃt͡ʃɔ/
-  translation: ''
+  translation: something, somewhat
   pos: pron
 - lemma: дистанція
   ipa: /dɪstˈant͡sija/
-  translation: ''
+  translation: distance
   pos: noun
   gender: f
 - lemma: доглядати
   ipa: /dɔɦljadˈatɪ/
-  translation: ''
+  translation: to look after, to care for
   pos: verb
+- lemma: договір
+  ipa: /dˈɔɦɔʋir/
+  translation: agreement, contract
+  pos: noun
+  gender: m
 - lemma: епоха
   ipa: /ɛpˈɔxa/
-  translation: ''
+  translation: epoch, era
   pos: noun
   gender: f
 - lemma: ера
   ipa: /ˈɛra/
-  translation: ''
+  translation: era
   pos: noun
   gender: f
 - lemma: запам'ятатися
   ipa: /zapamjatˈatɪsja/
-  translation: ''
+  translation: to be remembered
   pos: verb
 - lemma: заповіт
   ipa: /zapɔʋˈit/
-  translation: ''
+  translation: testament, will
   pos: noun
   gender: m
 - lemma: заснований
   ipa: /zasnˈɔʋanɪj/
-  translation: ''
+  translation: founded, based
   pos: adj
+- lemma: захоплення
+  ipa: /zaxˈɔplɛnnja/
+  translation: fascination, hobby, capture
+  pos: noun
+  gender: n
 - lemma: здивувати
   ipa: /zdɪʋuʋˈatɪ/
-  translation: ''
+  translation: to surprise
   pos: verb
 - lemma: здобути
   ipa: /zdɔbˈutɪ/
-  translation: ''
+  translation: to gain, to obtain (perfective)
   pos: verb
 - lemma: здригатися
   ipa: /zdrɪɦˈatɪsja/
-  translation: ''
+  translation: to shudder, to flinch
   pos: verb
 - lemma: значущість
   ipa: /znat͡ʃˈuʃt͡ʃistʲ/
-  translation: ''
+  translation: significance
   pos: noun
   gender: f
+- lemma: золото
+  ipa: /zˈɔlɔtɔ/
+  translation: gold
+  pos: noun
+  gender: n
 - lemma: конкретність
   ipa: /kɔnkrˈɛtnistʲ/
-  translation: ''
+  translation: specificity
   pos: noun
   gender: f
 - lemma: костянтин
   ipa: /kɔstjantˈɪn/
-  translation: ''
+  translation: Kostiantyn (name)
   pos: noun
   gender: m
 - lemma: кредитування
   ipa: /krɛdɪtuʋˈannja/
-  translation: ''
+  translation: lending, crediting
   pos: noun
   gender: n
 - lemma: критий
   ipa: /krˈɪtɪj/
-  translation: ''
+  translation: covered
   pos: adj
 - lemma: кругла
   ipa: /krˈuɦla/
@@ -132,28 +181,41 @@ items:
   gender: f
 - lemma: латинський
   ipa: /latˈɪnsʲkɪj/
-  translation: ''
+  translation: Latin (adj)
   pos: adj
 - lemma: лінійний
   ipa: /linˈijnɪj/
-  translation: ''
+  translation: linear
   pos: adj
 - lemma: мирно
   ipa: /mˈɪrnɔ/
-  translation: ''
+  translation: peacefully
   pos: adv
+- lemma: мовчання
+  ipa: /mɔʋt͡ʃˈannja/
+  translation: silence
+  pos: noun
+  gender: n
 - lemma: могила
   ipa: /mɔɦˈɪla/
-  translation: ''
+  translation: grave
   pos: noun
   gender: f
+- lemma: надихати
+  ipa: /nadɪxatɪ/
+  translation: to inspire
+  pos: verb
+- lemma: найромантичніший
+  ipa: /najrɔmantˈɪt͡ʃniʃɪj/
+  translation: the most romantic
+  pos: adj
 - lemma: найщасливіший
   ipa: /najʃt͡ʃaslˈɪʋiʃɪj/
-  translation: ''
+  translation: the happiest
   pos: adj
 - lemma: неволя
   ipa: /nɛʋˈɔlja/
-  translation: ''
+  translation: slavery, captivity
   pos: noun
   gender: f
 - lemma: необхідне
@@ -163,20 +225,30 @@ items:
   gender: n
 - lemma: ностальгічний
   ipa: /nɔstalʲɦˈit͡ʃnɪj/
-  translation: ''
+  translation: nostalgic
   pos: adj
+- lemma: нуль
+  ipa: /nulʲ/
+  translation: zero
+  pos: noun
+  gender: m
 - lemma: об'єктивність
   ipa: /ɔbjɛktˈɪʋnistʲ/
-  translation: ''
+  translation: objectivity
   pos: noun
   gender: f
 - lemma: опановувати
   ipa: /ɔpanˈɔʋuʋatɪ/
-  translation: ''
+  translation: to master, to study
   pos: verb
 - lemma: оповідь
   ipa: /ˈɔpɔʋidʲ/
-  translation: ''
+  translation: story, narrative
+  pos: noun
+  gender: f
+- lemma: освіта
+  ipa: /ɔsʋˈita/
+  translation: education
   pos: noun
   gender: f
 - lemma: офіційно-ділове
@@ -186,29 +258,43 @@ items:
   gender: n
 - lemma: оцінювати
   ipa: /ɔt͡sˈinjuʋatɪ/
-  translation: ''
+  translation: to evaluate (imperfective)
   pos: verb
+- lemma: пам'ять
+  ipa: /pˈamjatʲ/
+  translation: memory
+  pos: noun
+  gender: f
 - lemma: пережити
   ipa: /pɛrɛʒˈɪtɪ/
-  translation: ''
+  translation: to survive, to experience (perfective)
   pos: verb
 - lemma: переконливість
   ipa: /pɛrɛkˈɔnlɪʋistʲ/
-  translation: ''
+  translation: persuasiveness
   pos: noun
   gender: f
+- lemma: подати
+  ipa: /pɔdˈatɪ/
+  translation: to submit, to serve (perfective)
+  pos: verb
 - lemma: поезія
   ipa: /pɔˈɛzija/
-  translation: ''
+  translation: poetry
   pos: noun
   gender: f
 - lemma: поховати
   ipa: /pɔxɔʋˈatɪ/
-  translation: ''
+  translation: to bury
   pos: verb
+- lemma: президент
+  ipa: /prɛzɪdˈɛnt/
+  translation: president
+  pos: noun
+  gender: m
 - lemma: прив'язка
   ipa: /prɪʋjazka/
-  translation: ''
+  translation: link, attachment
   pos: noun
   gender: f
 - lemma: приказ
@@ -218,56 +304,87 @@ items:
   gender: m
 - lemma: присутній
   ipa: /prɪsˈutnij/
-  translation: ''
+  translation: present
   pos: adj
 - lemma: простіше
   ipa: /prɔstˈiʃɛ/
-  translation: ''
+  translation: simpler
+  pos: adv
+- lemma: підтверджувати
+  ipa: /pidtʋˈɛrdʒuʋatɪ/
+  translation: to confirm (imperfective)
+  pos: verb
+- lemma: раптово
+  ipa: /raptˈɔʋɔ/
+  translation: suddenly
   pos: adv
 - lemma: риторичність
   ipa: /rɪtɔrˈɪt͡ʃnistʲ/
-  translation: ''
+  translation: rhetorical quality
   pos: noun
   gender: f
+- lemma: розвинений
+  ipa: /rɔzʋˈɪnɛnɪj/
+  translation: developed
+  pos: adj
 - lemma: розгляд
   ipa: /rˈɔzɦljad/
-  translation: ''
+  translation: consideration, examination
   pos: noun
   gender: m
 - lemma: строгість
   ipa: /strˈɔɦistʲ/
-  translation: ''
+  translation: strictness, severity
   pos: noun
   gender: f
+- lemma: сумнів
+  ipa: /sˈumniʋ/
+  translation: doubt
+  pos: noun
+  gender: m
 - lemma: східнослов'янський
   ipa: /sxidnɔslɔʋˈjansʲkɪj/
-  translation: ''
+  translation: East Slavic
   pos: adj
+- lemma: турбувати
+  ipa: /turbuʋˈatɪ/
+  translation: to disturb, to bother (imperfective)
+  pos: verb
 - lemma: умерти
   ipa: /umˈɛrtɪ/
-  translation: ''
+  translation: to die (perfective)
   pos: verb
 - lemma: установа
   ipa: /ustanˈɔʋa/
-  translation: ''
+  translation: institution, establishment
   pos: noun
+- lemma: фонтан
+  ipa: /fɔntˈan/
+  translation: fountain
+  pos: noun
+  gender: m
 - lemma: фізик
   ipa: /fˈizɪk/
-  translation: ''
+  translation: physicist
   pos: noun
 - lemma: філософський
   ipa: /filɔsˈɔfsʲkɪj/
-  translation: ''
+  translation: philosophical
   pos: adj
+- lemma: хвилювання
+  ipa: /xʋɪljuʋˈannja/
+  translation: worry, agitation, excitement
+  pos: noun
+  gender: n
 - lemma: цінний
   ipa: /t͡sˈinnɪj/
-  translation: ''
+  translation: valuable
   pos: adj
 - lemma: щоразу
   ipa: /ʃt͡ʃɔrˈazu/
-  translation: ''
+  translation: every time
   pos: adv
 - lemma: історик
   ipa: /istˈɔrɪk/
-  translation: ''
+  translation: historian
   pos: noun

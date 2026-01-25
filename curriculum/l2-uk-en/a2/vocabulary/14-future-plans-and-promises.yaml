@@ -2,141 +2,82 @@ module: 14-future-plans-and-promises
 level: A2
 version: '2.0'
 items:
-- lemma: акцент
-  ipa: /akt͡sˈɛnt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: вилетіти
   ipa: /ʋˈɪlɛtitɪ/
-  translation: ''
+  translation: to fly out
   pos: verb
 - lemma: віддати
   ipa: /ʋiddˈatɪ/
-  translation: ''
+  translation: to give back (perfective)
   pos: verb
 - lemma: відраза
   ipa: /ʋidrˈaza/
-  translation: ''
+  translation: disgust, aversion
   pos: noun
   gender: f
 - lemma: горобець
   ipa: /ɦɔrɔbˈɛt͡sʲ/
-  translation: ''
+  translation: sparrow
   pos: noun
   gender: f
-- lemma: допоміжний
-  ipa: /dɔpɔmˈiʒnɪj/
-  translation: ''
-  pos: adj
 - lemma: завантажити
   ipa: /zaʋantˈaʒɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: займатися
-  ipa: /zajmˈatɪsja/
-  translation: ''
+  translation: to load, to download
   pos: verb
 - lemma: залишатися
   ipa: /zalɪʃˈatɪsja/
-  translation: ''
+  translation: to stay, to remain
+  pos: verb
+- lemma: запізнитися
+  ipa: /zapiznˈɪtɪsja/
+  translation: to be late
   pos: verb
 - lemma: заява
   ipa: /zaˈjaʋa/
-  translation: ''
+  translation: statement, application
   pos: noun
   gender: f
 - lemma: звучання
   ipa: /zʋut͡ʃˈannja/
-  translation: ''
+  translation: sounding
   pos: noun
   gender: n
 - lemma: змінений
   ipa: /zmˈinɛnɪj/
-  translation: ''
+  translation: changed, modified
   pos: adj
-- lemma: конкретний
-  ipa: /kɔnkrˈɛtnɪj/
-  translation: ''
-  pos: adj
-- lemma: купля
-  ipa: /kˈuplja/
-  translation: ''
+- lemma: мистецтво
+  ipa: /mɪstˈɛt͡stʋɔ/
+  translation: art
   pos: noun
-  gender: f
-- lemma: кінцевий
-  ipa: /kint͡sˈɛʋɪj/
-  translation: ''
-  pos: adj
-- lemma: наголос
-  ipa: /nˈaɦɔlɔs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: наприклад
-  ipa: /naprˈɪklad/
-  translation: ''
-  pos: adv
-- lemma: обережний
-  ipa: /ɔbɛrˈɛʒnɪj/
-  translation: ''
-  pos: adj
-- lemma: останній
-  ipa: /ɔstˈannij/
-  translation: ''
-  pos: adj
+  gender: n
+- lemma: обіцяти
+  ipa: /ɔbit͡sˈjatɪ/
+  translation: to promise
+  pos: verb
 - lemma: падати
   ipa: /pˈadatɪ/
-  translation: ''
-  pos: verb
-- lemma: перевіряти
-  ipa: /pɛrɛʋirˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: план
-  ipa: /plan/
-  translation: ''
-  pos: noun
-- lemma: повторюватися
-  ipa: /pɔʋtˈɔrjuʋatɪsja/
-  translation: ''
+  translation: to fall
   pos: verb
 - lemma: портрет
   ipa: /pɔrtrˈɛt/
-  translation: ''
+  translation: portrait
   pos: noun
   gender: m
-- lemma: порівняти
-  ipa: /pɔriʋnˈjatɪ/
-  translation: ''
+- lemma: прибирати
+  ipa: /prɪbɪrˈatɪ/
+  translation: to clean, to remove
   pos: verb
-- lemma: поєднувати
-  ipa: /pɔˈjɛdnuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: регулярність
-  ipa: /rɛɦulˈjarnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: семантичний
   ipa: /sɛmantˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: серйозний
-  ipa: /sɛrjˈɔznɪj/
-  translation: ''
+  translation: semantic
   pos: adj
 - lemma: спіймати
   ipa: /spijmˈatɪ/
-  translation: ''
+  translation: to catch (perfective)
   pos: verb
-- lemma: тривалий
-  ipa: /trɪʋˈalɪj/
-  translation: ''
-  pos: adj
 - lemma: флешка
   ipa: /flɛʃka/
-  translation: ''
+  translation: USB flash drive
   pos: noun
   gender: f

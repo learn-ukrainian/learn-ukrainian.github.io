@@ -2,45 +2,16 @@ module: 09-reflexive-verbs
 level: A1
 version: '2.0'
 items:
-- lemma: андрій
-  ipa: /andrˈij/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ати
-  ipa: /ˈatɪ/
-  translation: ''
-  pos: noun
-- lemma: багато
-  ipa: /baɦˈatɔ/
-  translation: ''
-  pos: adv
 - lemma: вмиватися
   ipa: /ʋmɪʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: все
-  ipa: /ʋsɛ/
-  translation: ''
-  pos: part
-- lemma: відпочивати
-  ipa: /ʋidpɔt͡ʃɪʋˈatɪ/
-  translation: ''
+  translation: to wash one's face
   pos: verb
 - lemma: вітатися
   ipa: /ʋitˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: готуватися
-  ipa: /ɦɔtuʋˈatɪsja/
-  translation: ''
+  translation: to greet each other
   pos: verb
 - lemma: дивити
   ipa: /dɪʋɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: дивитися
-  ipa: /dɪʋˈɪtɪsja/
   translation: ''
   pos: verb
 - lemma: дивиш
@@ -53,18 +24,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: добре
-  ipa: /dˈɔbrɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: збиратися
   ipa: /zbɪrˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: зустрічатися
-  ipa: /zustrit͡ʃˈatɪsja/
-  translation: ''
+  translation: to gather, to intend
   pos: verb
 - lemma: ить
   ipa: /ɪtʲ/
@@ -72,145 +34,68 @@ items:
   pos: noun
 - lemma: комедія
   ipa: /kɔmˈɛdija/
-  translation: ''
+  translation: comedy
   pos: noun
   gender: f
-- lemma: мама
-  ipa: /mˈama/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
 - lemma: мита
   ipa: /mˈɪta/
-  translation: ''
+  translation: duties, taxes
   pos: noun
   gender: f
 - lemma: мити
   ipa: /mˈɪtɪ/
-  translation: ''
+  translation: to wash
   pos: verb
 - lemma: митися
   ipa: /mˈɪtɪsja/
-  translation: ''
+  translation: to wash oneself
   pos: verb
 - lemma: миєти
   ipa: /mɪjɛtɪ/
   translation: ''
   pos: verb
-- lemma: називатися
-  ipa: /nazɪʋˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: одягати
   ipa: /ɔdjaɦˈatɪ/
-  translation: ''
+  translation: to put on (clothes)
   pos: verb
 - lemma: одягатися
   ipa: /ɔdjaɦˈatɪsja/
-  translation: ''
+  translation: to get dressed
   pos: verb
-- lemma: олена
-  ipa: /ɔlˈɛna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: подобатися
-  ipa: /pɔdˈɔbatɪsja/
-  translation: ''
-  pos: verb
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: прокинутися
   ipa: /prɔkˈɪnutɪsja/
-  translation: ''
+  translation: to wake up (perfective)
   pos: verb
-- lemma: підсумок
-  ipa: /pidsumɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: робот
-  ipa: /rˈɔbɔt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: син
-  ipa: /sɪn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сміти
   ipa: /smˈitɪ/
-  translation: ''
+  translation: to dare
   pos: verb
 - lemma: сміятися
   ipa: /smiˈjatɪsja/
-  translation: ''
+  translation: to laugh
   pos: verb
 - lemma: смієти
   ipa: /smijɛtɪ/
   translation: ''
   pos: verb
-- lemma: снідати
-  ipa: /snˈidatɪ/
-  translation: ''
-  pos: verb
-- lemma: сь
-  ipa: /sʲ/
-  translation: ''
-  pos: noun
-- lemma: ся
-  ipa: /sja/
-  translation: ''
-  pos: part
-- lemma: телефон
-  ipa: /tɛlɛfˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
 - lemma: тися
   ipa: /tɪsja/
   translation: ''
   pos: verb
 - lemma: усміхатися
   ipa: /usmixˈatɪsja/
-  translation: ''
+  translation: to smile
   pos: verb
 - lemma: усмішка
   ipa: /ˈusmiʃka/
-  translation: ''
+  translation: smile
   pos: noun
   gender: f
-- lemma: фільм
-  ipa: /filʲm/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ц'
   ipa: /t͡s/
   translation: ''
   pos: noun
 - lemma: цілуватися
   ipa: /t͡siluʋˈatɪsja/
-  translation: ''
+  translation: to kiss each other (imperfective)
   pos: verb
-- lemma: яти
-  ipa: /jatɪ/
-  translation: ''
-  pos: noun
-- lemma: ять
-  ipa: /jatʲ/
-  translation: ''
-  pos: noun
-  gender: m

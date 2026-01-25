@@ -1,0 +1,360 @@
+module: 92-b1-final-exam
+level: B1
+version: '2.0'
+items:
+- lemma: агресія
+  ipa: /aɦrˈɛsija/
+  translation: aggression
+  pos: noun
+  gender: f
+- lemma: амбасадор
+  ipa: /ambasadˈɔr/
+  translation: ambassador
+  pos: noun
+- lemma: аргентина
+  ipa: /arɦɛntˈɪna/
+  translation: Argentina
+  pos: noun
+  gender: f
+- lemma: аргументативний
+  ipa: /arɦumɛntatɪʋnɪj/
+  translation: argumentative
+  pos: adj
+- lemma: беззаперечно
+  ipa: /bɛzzapɛrˈɛt͡ʃnɔ/
+  translation: unquestionably
+  pos: adv
+- lemma: бразилія
+  ipa: /brazˈɪlija/
+  translation: Brazil
+  pos: noun
+  gender: f
+- lemma: бізнес-проєкт
+  ipa: /bˈiznɛs-prɔjɛkt/
+  translation: ''
+  pos: noun
+- lemma: білокур
+  ipa: /bilɔkˈur/
+  translation: Bilokur (name)
+  pos: noun
+  gender: f
+- lemma: вакантний
+  ipa: /ʋakˈantnɪj/
+  translation: vacant
+  pos: adj
+- lemma: виздоровіти
+  ipa: /ʋɪzdɔrɔʋitɪ/
+  translation: to recover (perfective)
+  pos: verb
+- lemma: викладання
+  ipa: /ʋɪkladˈannja/
+  translation: teaching
+  pos: noun
+  gender: n
+- lemma: виконавши
+  ipa: /ʋˈɪkɔnaʋʃɪ/
+  translation: having performed
+  pos: verb
+- lemma: вислати
+  ipa: /ʋˈɪslatɪ/
+  translation: to send, to exile
+  pos: verb
+- lemma: внутрішньо
+  ipa: /ʋnˈutriʃnʲɔ/
+  translation: internally
+  pos: adv
+- lemma: волонтерський
+  ipa: /ʋɔlɔntˈɛrsʲkɪj/
+  translation: volunteer (adj)
+  pos: adj
+- lemma: відеодзвінок
+  ipa: /ʋidɛɔdzʋinɔk/
+  translation: video call
+  pos: noun
+- lemma: відлетів-
+  ipa: /ʋidlɛtˈiʋ-/
+  translation: ''
+  pos: noun
+- lemma: відрізок
+  ipa: /ʋidrˈizɔk/
+  translation: segment, period
+  pos: noun
+  gender: m
+- lemma: годинний
+  ipa: /ɦɔdˈɪnnɪj/
+  translation: hour (adj), hourly
+  pos: adj
+- lemma: давність
+  ipa: /dˈaʋnistʲ/
+  translation: antiquity, oldness
+  pos: noun
+  gender: f
+- lemma: дев'ятнадцятий
+  ipa: /dɛʋjatnˈadt͡sjatɪj/
+  translation: nineteenth
+  pos: adj
+- lemma: дисидент
+  ipa: /dɪsɪdˈɛnt/
+  translation: dissident
+  pos: noun
+- lemma: досліджуватися
+  ipa: /dɔslˈidʒuʋatɪsja/
+  translation: to be researched
+  pos: verb
+- lemma: дотепер
+  ipa: /dɔtɛpˈɛr/
+  translation: until now, hitherto
+  pos: pron
+- lemma: діаспорний
+  ipa: /diaspɔrnɪj/
+  translation: diaspora (adj)
+  pos: adj
+- lemma: емігрант
+  ipa: /ɛmiɦrˈant/
+  translation: emigrant
+  pos: noun
+- lemma: есе-аргументація
+  ipa: /ɛsˈɛ-arɦumɛntat͡sija/
+  translation: argumentative essay
+  pos: noun
+  gender: n
+- lemma: жвава
+  ipa: /ʒʋˈaʋa/
+  translation: ''
+  pos: noun
+- lemma: житловий
+  ipa: /ʒɪtlɔʋˈɪj/
+  translation: residential
+  pos: adj
+- lemma: задовільно
+  ipa: /zadɔʋˈilʲnɔ/
+  translation: satisfactorily
+  pos: noun
+  gender: n
+- lemma: заключний
+  ipa: /zaklˈjut͡ʃnɪj/
+  translation: final, concluding
+  pos: adj
+- lemma: заможний
+  ipa: /zamˈɔʒnɪj/
+  translation: wealthy
+  pos: adj
+- lemma: знайомити
+  ipa: /znajˈɔmɪtɪ/
+  translation: to introduce
+  pos: verb
+- lemma: зіткнутися
+  ipa: /zitknˈutɪsja/
+  translation: to collide, to encounter
+  pos: verb
+- lemma: казимир
+  ipa: /kazɪmˈɪr/
+  translation: Kazymyr (name)
+  pos: noun
+  gender: m
+- lemma: кандидатура
+  ipa: /kandɪdatˈura/
+  translation: candidacy
+  pos: noun
+  gender: f
+- lemma: контактний
+  ipa: /kɔntˈaktnɪj/
+  translation: contact (adj)
+  pos: adj
+- lemma: критерій
+  ipa: /krɪtˈɛrij/
+  translation: criterion
+  pos: noun
+  gender: m
+- lemma: лобіювати
+  ipa: /lɔbijuʋˈatɪ/
+  translation: to lobby
+  pos: verb
+- lemma: малевич
+  ipa: /malˈɛʋɪt͡ʃ/
+  translation: Malevich (name)
+  pos: noun
+  gender: m
+- lemma: марчук
+  ipa: /mart͡ʃˈuk/
+  translation: Marchuk (name)
+  pos: noun
+  gender: m
+- lemma: моментальний
+  ipa: /mɔmɛntˈalʲnɪj/
+  translation: instant (adj)
+  pos: adj
+- lemma: мігрант
+  ipa: /miɦrˈant/
+  translation: migrant
+  pos: noun
+- lemma: міститися
+  ipa: /mistˈɪtɪsja/
+  translation: to be contained, to be located
+  pos: verb
+- lemma: наданий
+  ipa: /nadanɪj/
+  translation: provided, granted
+  pos: adj
+- lemma: налічувати
+  ipa: /nalˈit͡ʃuʋatɪ/
+  translation: to number, to count
+  pos: verb
+- lemma: народжений
+  ipa: /narˈɔdʒɛnɪj/
+  translation: born
+  pos: adj
+- lemma: нуш
+  ipa: /nuʃ/
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: обладнати
+  ipa: /ɔbladnˈatɪ/
+  translation: to equip
+  pos: verb
+- lemma: обнадійливий
+  ipa: /ɔbnadˈijlɪʋɪj/
+  translation: hopeful, encouraging
+  pos: adj
+- lemma: переміщений
+  ipa: /pɛrɛmˈiʃt͡ʃɛnɪj/
+  translation: displaced, moved
+  pos: adj
+- lemma: першокласник
+  ipa: /pɛrʃɔklˈasnɪk/
+  translation: first-grader
+  pos: noun
+- lemma: португалія
+  ipa: /pɔrtuɦˈalija/
+  translation: Portugal
+  pos: noun
+  gender: f
+- lemma: пострадянський
+  ipa: /pɔstradˈjansʲkɪj/
+  translation: post-Soviet
+  pos: adj
+- lemma: поширювати
+  ipa: /pɔʃˈɪrjuʋatɪ/
+  translation: to spread, to expand (imperfective)
+  pos: verb
+- lemma: приносячи
+  ipa: /prɪnˈɔsjat͡ʃɪ/
+  translation: bringing
+  pos: verb
+- lemma: природознавство
+  ipa: /prɪrɔdɔznˈaʋstʋɔ/
+  translation: natural science
+  pos: noun
+  gender: n
+- lemma: проблемний
+  ipa: /prɔblˈɛmnɪj/
+  translation: problematic
+  pos: adj
+- lemma: проживати
+  ipa: /prɔʒɪʋˈatɪ/
+  translation: to reside, to live
+  pos: verb
+- lemma: публіка
+  ipa: /publika/
+  translation: audience, public
+  pos: noun
+  gender: f
+- lemma: півгодини
+  ipa: /piʋɦɔdɪnɪ/
+  translation: half an hour
+  pos: noun
+- lemma: підвищений
+  ipa: /pidʋˈɪʃt͡ʃɛnɪj/
+  translation: increased, high
+  pos: adj
+- lemma: піонер
+  ipa: /piɔnˈɛr/
+  translation: pioneer
+  pos: noun
+- lemma: розподілити
+  ipa: /rɔzpɔdilˈɪtɪ/
+  translation: to distribute, to divide (perfective)
+  pos: verb
+- lemma: самоаналіз
+  ipa: /samɔanˈaliz/
+  translation: self-analysis
+  pos: noun
+  gender: m
+- lemma: симфонія
+  ipa: /sɪmfˈɔnija/
+  translation: symphony
+  pos: noun
+  gender: f
+- lemma: сирецько-печерський
+  ipa: /sɪrɛt͡sʲkɔ-pɛt͡ʃˈɛrsʲkɪj/
+  translation: Syretsko-Pecherska (line)
+  pos: adj
+- lemma: скептично
+  ipa: /skɛptˈɪt͡ʃnɔ/
+  translation: skeptically
+  pos: adv
+- lemma: слабко
+  ipa: /slˈabkɔ/
+  translation: weakly
+  pos: adv
+- lemma: сперечаючись
+  ipa: /spɛrɛt͡ʃˈajut͡ʃɪsʲ/
+  translation: arguing
+  pos: verb
+- lemma: спринт
+  ipa: /sprɪnt/
+  translation: sprint
+  pos: noun
+  gender: m
+- lemma: срср
+  ipa: /srsr/
+  translation: USSR
+  pos: noun
+  gender: m
+- lemma: столітній
+  ipa: /stɔlˈitnij/
+  translation: hundred-year-old, centennial
+  pos: adj
+- lemma: суттєвий
+  ipa: /suttˈjɛʋɪj/
+  translation: substantial, essential, significant
+  pos: adj
+- lemma: табори
+  ipa: /tabɔrˈɪ/
+  translation: camps (pl)
+  pos: noun
+- lemma: тематичний
+  ipa: /tɛmatˈɪt͡ʃnɪj/
+  translation: thematic
+  pos: adj
+- lemma: урочисто
+  ipa: /urɔt͡ʃˈɪstɔ/
+  translation: solemnly, grandly
+  pos: adv
+- lemma: учений
+  ipa: /ut͡ʃˈɛnɪj/
+  translation: scientist, scholar
+  pos: noun
+- lemma: ферма
+  ipa: /fˈɛrma/
+  translation: farm
+  pos: noun
+- lemma: харвардський
+  ipa: /xarʋardsʲkɪj/
+  translation: Harvard (adj)
+  pos: adj
+- lemma: чисельність
+  ipa: /t͡ʃɪsˈɛlʲnistʲ/
+  translation: numerical strength, population
+  pos: noun
+  gender: f
+- lemma: інвалідність
+  ipa: /inʋalˈidnistʲ/
+  translation: disability
+  pos: noun
+  gender: f
+- lemma: іспанський
+  ipa: /ispˈansʲkɪj/
+  translation: Spanish
+  pos: adj

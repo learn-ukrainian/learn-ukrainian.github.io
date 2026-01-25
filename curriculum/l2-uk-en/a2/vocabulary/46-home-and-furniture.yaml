@@ -2,249 +2,193 @@ module: 46-home-and-furniture
 level: A2
 version: '2.0'
 items:
-- lemma: блищати
-  ipa: /blɪʃt͡ʃˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: брудний
   ipa: /brudnˈɪj/
-  translation: ''
+  translation: dirty
   pos: adj
 - lemma: будиночок
   ipa: /budˈɪnɔt͡ʃɔk/
-  translation: ''
+  translation: small house, cottage
   pos: noun
   gender: m
 - lemma: ванна
   ipa: /ʋˈanna/
-  translation: ''
+  translation: bath, bathtub
   pos: noun
   gender: f
 - lemma: вирощувати
   ipa: /ʋɪrˈɔʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to grow, to cultivate
   pos: verb
 - lemma: витирати
   ipa: /ʋɪtɪrˈatɪ/
-  translation: ''
+  translation: to wipe
   pos: verb
 - lemma: волога
   ipa: /ʋɔlˈɔɦa/
-  translation: ''
+  translation: moisture
   pos: noun
   gender: f
 - lemma: втеча
   ipa: /ʋtˈɛt͡ʃa/
-  translation: ''
+  translation: escape
   pos: noun
   gender: f
-- lemma: вітальний
-  ipa: /ʋitˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: вішати
   ipa: /ʋˈiʃatɪ/
-  translation: ''
+  translation: to hang
   pos: verb
 - lemma: ганчірка
   ipa: /ɦant͡ʃˈirka/
-  translation: ''
+  translation: rag, cloth
   pos: noun
   gender: f
 - lemma: город
   ipa: /ɦɔrɔd/
-  translation: ''
+  translation: vegetable garden
   pos: noun
   gender: m
 - lemma: дача
   ipa: /dˈat͡ʃa/
-  translation: ''
+  translation: dacha, summer house
   pos: noun
   gender: f
 - lemma: декор
   ipa: /dɛkˈɔr/
-  translation: ''
+  translation: decor
   pos: noun
   gender: m
 - lemma: достаток
   ipa: /dɔstˈatɔk/
-  translation: ''
+  translation: prosperity, abundance
   pos: noun
   gender: m
 - lemma: душовий
   ipa: /duʃɔʋˈɪj/
-  translation: ''
+  translation: shower (adj)
   pos: adj
 - lemma: займати
   ipa: /zajmˈatɪ/
-  translation: ''
+  translation: to occupy, to take up
   pos: verb
 - lemma: заміський
   ipa: /zamisʲkˈɪj/
-  translation: ''
+  translation: country (adj), out-of-town
   pos: adj
-- lemma: запрошувати
-  ipa: /zaprˈɔʃuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: заслужити
-  ipa: /zasluʒˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: застеляти
   ipa: /zastɛlˈjatɪ/
   translation: ''
   pos: verb
 - lemma: затишок
   ipa: /zˈatɪʃɔk/
-  translation: ''
+  translation: coziness, shelter
   pos: noun
   gender: m
 - lemma: зверху
   ipa: /zʋˈɛrxu/
-  translation: ''
+  translation: from above, on top
   pos: adv
-- lemma: здача
-  ipa: /zdˈat͡ʃa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: зітхати
   ipa: /zitxˈatɪ/
-  translation: ''
+  translation: to sigh
   pos: verb
 - lemma: кабіна
   ipa: /kabˈina/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: катерина
-  ipa: /katɛrˈɪna/
-  translation: ''
+  translation: cabin
   pos: noun
   gender: f
 - lemma: комод
   ipa: /kɔmˈɔd/
-  translation: ''
+  translation: chest of drawers
   pos: noun
   gender: m
 - lemma: комора
   ipa: /kɔmˈɔra/
-  translation: ''
+  translation: pantry, storehouse
   pos: noun
   gender: f
-- lemma: локація
-  ipa: /lɔkˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: меблі
-  ipa: /mˈɛbli/
-  translation: ''
-  pos: noun
 - lemma: метушня
   ipa: /mɛtuʃnˈja/
-  translation: ''
+  translation: fuss, bustle
   pos: noun
   gender: f
 - lemma: місткість
   ipa: /mˈistkistʲ/
-  translation: ''
+  translation: capacity
   pos: noun
   gender: f
-- lemma: найскладніший
-  ipa: /najskladnˈiʃɪj/
-  translation: ''
-  pos: adj
 - lemma: насолодитися
   ipa: /nasɔlɔdˈɪtɪsja/
-  translation: ''
+  translation: to enjoy (perfective)
   pos: verb
 - lemma: непоганий
   ipa: /nɛpɔɦˈanɪj/
-  translation: ''
+  translation: not bad
   pos: adj
 - lemma: новосілля
   ipa: /nɔʋɔsˈillja/
-  translation: ''
+  translation: housewarming
   pos: noun
   gender: n
-- lemma: переїжджати
-  ipa: /pɛrɛjiʒdʒˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: пил
   ipa: /pɪl/
-  translation: ''
+  translation: dust
   pos: noun
   gender: m
 - lemma: пилосос
   ipa: /pɪlɔsˈɔs/
-  translation: ''
+  translation: vacuum cleaner
   pos: noun
   gender: m
 - lemma: пилососити
   ipa: /pɪlɔsɔsɪtɪ/
-  translation: ''
+  translation: to vacuum
   pos: verb
-- lemma: побутовий
-  ipa: /pɔbutˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: повернення
-  ipa: /pɔʋˈɛrnɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: повір'я
   ipa: /pɔʋˈirja/
-  translation: ''
+  translation: belief, superstition
   pos: noun
   gender: n
 - lemma: повісити
   ipa: /pɔʋˈisɪtɪ/
-  translation: ''
+  translation: to hang (perfective)
   pos: verb
 - lemma: подушка
   ipa: /pɔdˈuʃka/
-  translation: ''
+  translation: pillow
   pos: noun
   gender: f
-- lemma: попрацювати
-  ipa: /pɔprat͡sjuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: порошок
   ipa: /pɔrɔʃˈɔk/
-  translation: ''
+  translation: powder
   pos: noun
   gender: m
 - lemma: постіль
   ipa: /pˈɔstilʲ/
-  translation: ''
+  translation: bedding, bed linen
   pos: noun
   gender: f
 - lemma: посудомийка
   ipa: /pɔsudɔmˈɪjka/
-  translation: ''
+  translation: dishwasher
   pos: noun
   gender: f
 - lemma: пральний
   ipa: /prˈalʲnɪj/
-  translation: ''
+  translation: washing (adj)
   pos: adj
 - lemma: прибирання
   ipa: /prɪbɪrˈannja/
-  translation: ''
+  translation: cleaning
   pos: noun
   gender: n
 - lemma: привести
   ipa: /prɪʋɛstˈɪ/
-  translation: ''
+  translation: to lead to, to bring (perfective)
   pos: verb
 - lemma: пригощати
   ipa: /prɪɦɔʃt͡ʃˈatɪ/
-  translation: ''
+  translation: to treat (imperfective)
   pos: verb
 - lemma: пятниця
   ipa: /pjatnɪt͡sja/
@@ -253,46 +197,29 @@ items:
   gender: f
 - lemma: раковина
   ipa: /rˈakɔʋɪna/
-  translation: ''
+  translation: shell, sink
   pos: noun
   gender: f
-- lemma: ретельний
-  ipa: /rɛtˈɛlʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: розкиданий
   ipa: /rɔzkˈɪdanɪj/
-  translation: ''
+  translation: scattered
   pos: adj
 - lemma: розкладати
   ipa: /rɔzkladˈatɪ/
-  translation: ''
+  translation: to arrange, to decompose (imperfective)
   pos: verb
-- lemma: розумно
-  ipa: /rɔzˈumnɔ/
-  translation: ''
-  pos: adv
 - lemma: рідкість
   ipa: /rˈidkistʲ/
-  translation: ''
+  translation: rarity
   pos: noun
   gender: f
 - lemma: сезонний
   ipa: /sɛzˈɔnnɪj/
-  translation: ''
+  translation: seasonal
   pos: adj
-- lemma: синок
-  ipa: /sɪnˈɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сувенір
-  ipa: /suʋɛnˈir/
-  translation: ''
-  pos: noun
 - lemma: тумбочка
   ipa: /tˈumbɔt͡ʃka/
-  translation: ''
+  translation: nightstand, small chest
   pos: noun
   gender: f
 - lemma: фух
@@ -301,7 +228,7 @@ items:
   pos: noun
 - lemma: хліб-сіль
   ipa: /xlib-silʲ/
-  translation: ''
+  translation: bread and salt (hospitality)
   pos: noun
   gender: m
 - lemma: ціле
@@ -311,20 +238,20 @@ items:
   gender: n
 - lemma: чистка
   ipa: /t͡ʃˈɪstka/
-  translation: ''
+  translation: cleaning, purging
   pos: noun
   gender: f
 - lemma: шашлик
   ipa: /ʃaʃlˈɪk/
-  translation: ''
+  translation: shashlik, kebab
   pos: noun
   gender: m
 - lemma: штора
   ipa: /ʃtˈɔra/
-  translation: ''
+  translation: curtain
   pos: noun
   gender: f
 - lemma: щосуботи
   ipa: /ʃt͡ʃɔsubˈɔtɪ/
-  translation: ''
+  translation: every Saturday
   pos: adv

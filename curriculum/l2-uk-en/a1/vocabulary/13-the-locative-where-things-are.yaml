@@ -2,172 +2,34 @@ module: 13-the-locative-where-things-are
 level: A1
 version: '2.0'
 items:
-- lemma: аптека
-  ipa: /aptˈɛka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: артефакт
-  ipa: /artɛfˈakt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: балкон
   ipa: /balkˈɔn/
-  translation: ''
+  translation: balcony
   pos: noun
   gender: m
-- lemma: банк
-  ipa: /bank/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: банка
-  ipa: /bˈanka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: банкі
   ipa: /banki/
   translation: ''
   pos: noun
   gender: m
-- lemma: бар
-  ipa: /bar/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: брат
-  ipa: /brat/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: будинок
-  ipa: /budˈɪnɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: бібліотека
-  ipa: /bibliɔtˈɛka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вдома
-  ipa: /ʋdˈɔma/
-  translation: ''
-  pos: adv
-- lemma: великий
-  ipa: /ʋɛlˈɪkɪj/
-  translation: ''
-  pos: adj
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вибачити
-  ipa: /ʋˈɪbat͡ʃɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: волинь
   ipa: /ʋɔlˈɪnʲ/
-  translation: ''
+  translation: Volyn
   pos: noun
   gender: f
-- lemma: все
-  ipa: /ʋsɛ/
-  translation: ''
-  pos: part
-- lemma: вулиця
-  ipa: /ʋˈulɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: відмінок
-  ipa: /ʋidmˈinɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: голова
-  ipa: /ɦɔlɔʋˈa/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: готель
-  ipa: /ɦɔtˈɛlʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дякувати
-  ipa: /djakuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: діти
-  ipa: /dˈitɪ/
-  translation: ''
-  pos: verb
 - lemma: екран
   ipa: /ɛkrˈan/
-  translation: ''
+  translation: screen
   pos: noun
   gender: m
-- lemma: живий
-  ipa: /ʒɪʋˈɪj/
-  translation: ''
-  pos: adj
-- lemma: жити
-  ipa: /ʒˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: забувати
-  ipa: /zabuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: завжди
-  ipa: /zˈaʋʒdɪ/
-  translation: ''
-  pos: pron
-- lemma: зал
-  ipa: /zal/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: зараза
-  ipa: /zarˈaza/
-  translation: ''
-  pos: noun
 - lemma: зон
   ipa: /zɔn/
   translation: ''
   pos: noun
   gender: m
-- lemma: зупинка
-  ipa: /zupˈɪnka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: зустріч
-  ipa: /zˈustrit͡ʃ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: кавказ
   ipa: /kaʋkˈaz/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: кафе
-  ipa: /kafˈɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: квартира
-  ipa: /kʋartˈɪra/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кий
-  ipa: /kɪj/
-  translation: ''
+  translation: Caucasus
   pos: noun
   gender: m
 - lemma: києв
@@ -175,267 +37,31 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: київ
-  ipa: /kɪˈjiʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ключі
-  ipa: /kljut͡ʃˈi/
-  translation: ''
-  pos: noun
-- lemma: книга
-  ipa: /knˈɪɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: концерт
-  ipa: /kɔnt͡sˈɛrt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: коробка
-  ipa: /kɔrˈɔbka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: кухн
   ipa: /kuxn/
   translation: ''
   pos: noun
   gender: m
-- lemma: кухня
-  ipa: /kˈuxnja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: кімната
-  ipa: /kimnˈata/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ласка
-  ipa: /lˈaska/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: львов
-  ipa: /lʲʋɔʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ліжко
-  ipa: /lˈiʒkɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: магазин
-  ipa: /maɦazˈɪn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
 - lemma: мор
   ipa: /mɔr/
   translation: ''
   pos: noun
   gender: m
-- lemma: море
-  ipa: /mˈɔrɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: музе
   ipa: /muzɛ/
   translation: ''
   pos: noun
   gender: f
-- lemma: музей
-  ipa: /muzˈɛj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: місто
-  ipa: /mˈistɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: місце
-  ipa: /mˈist͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: місцевий
-  ipa: /mist͡sˈɛʋɪj/
-  translation: ''
-  pos: adj
-- lemma: місяць
-  ipa: /mˈisjat͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: одеса
-  ipa: /ɔdˈɛsa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: офіс
-  ipa: /ˈɔfis/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: парк
-  ipa: /park/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: парка
-  ipa: /parka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: паспорт
-  ipa: /pˈaspɔrt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: площа
   ipa: /plˈɔʃt͡ʃa/
-  translation: ''
+  translation: square (city), area
   pos: noun
   gender: f
-- lemma: пляж
-  ipa: /pljaʒ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: поверх
-  ipa: /pɔʋˈɛrx/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: підлога
-  ipa: /pidlˈɔɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ринка
-  ipa: /rˈɪnka/
-  translation: ''
-  pos: noun
-- lemma: робот
-  ipa: /rˈɔbɔt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: склад
-  ipa: /sklad/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сталкер
-  ipa: /stˈalkɛr/
-  translation: ''
-  pos: noun
-- lemma: старий
-  ipa: /starˈɪj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: студент
-  ipa: /studˈɛnt/
-  translation: ''
-  pos: noun
-- lemma: стіл
-  ipa: /stil/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: стіна
-  ipa: /stinˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: сумка
-  ipa: /sˈumka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: театр
-  ipa: /tɛˈatr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: телефон
-  ipa: /tɛlɛfˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
-- lemma: третій
-  ipa: /trˈɛtij/
-  translation: ''
-  pos: adj
 - lemma: украине'
   ipa: /ukraɪnɛ/
   translation: ''
   pos: noun
-- lemma: україна
-  ipa: /ukraˈjina/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: україні'
   ipa: /ukraˈjini/
   translation: ''
   pos: noun
-- lemma: урок
-  ipa: /urˈɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: фільм
-  ipa: /filʲm/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: хрещатик
-  ipa: /xrɛʃt͡ʃˈatɪk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: центр
-  ipa: /t͡sɛntr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чашка
-  ipa: /t͡ʃˈaʃka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: чекати
-  ipa: /t͡ʃɛkˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: шафа
-  ipa: /ʃˈafa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: шевченко
-  ipa: /ʃɛʋt͡ʃˈɛnkɔ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: школа
-  ipa: /ʃkˈɔla/
-  translation: ''
-  pos: noun
-  gender: f

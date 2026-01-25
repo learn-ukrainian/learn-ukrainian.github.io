@@ -2,138 +2,63 @@ module: 13-the-completed-past
 level: A2
 version: '2.0'
 items:
-- lemma: блог
-  ipa: /blɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: варіант
-  ipa: /ʋariˈant/
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: випити
+  ipa: /ʋˈɪpɪtɪ/
+  translation: to drink (perfective)
+  pos: verb
 - lemma: вказати
   ipa: /ʋkazˈatɪ/
-  translation: ''
+  translation: to indicate, to specify
   pos: verb
-- lemma: вчорашній
-  ipa: /ʋt͡ʃɔrˈaʃnij/
-  translation: ''
-  pos: adj
 - lemma: геть
   ipa: /ɦɛtʲ/
-  translation: ''
+  translation: away, off
   pos: part
+- lemma: десятий
+  ipa: /dɛsˈjatɪj/
+  translation: tenth
+  pos: adj
 - lemma: емейл
   ipa: /ɛmɛjl/
-  translation: ''
+  translation: email
   pos: noun
   gender: m
 - lemma: з'їсти
   ipa: /zˈjistɪ/
-  translation: ''
+  translation: to eat
   pos: verb
-- lemma: завершеність
-  ipa: /zaʋˈɛrʃɛnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: закінчений
   ipa: /zakˈint͡ʃɛnɪj/
-  translation: ''
+  translation: finished, completed
   pos: adj
-- lemma: звіт
-  ipa: /zʋit/
-  translation: ''
-  pos: noun
-- lemma: згадувати
-  ipa: /zɦˈaduʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: знадоблятися
   ipa: /znadɔbljatɪsja/
-  translation: ''
+  translation: to be needed (imperfective)
   pos: verb
-- lemma: написання
-  ipa: /napɪsˈannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: несподівано
   ipa: /nɛspɔdˈiʋanɔ/
-  translation: ''
+  translation: unexpectedly
   pos: adv
-- lemma: опанувати
-  ipa: /ɔpanuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: повернутися
-  ipa: /pɔʋɛrnˈutɪsja/
-  translation: ''
-  pos: verb
-- lemma: подія
-  ipa: /pɔdˈija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пообідати
   ipa: /pɔɔbˈidatɪ/
-  translation: ''
+  translation: to have dinner
   pos: verb
-- lemma: праця
-  ipa: /prˈat͡sja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: прогулянка
   ipa: /prɔɦˈuljanka/
-  translation: ''
+  translation: walk, stroll
   pos: noun
   gender: f
 - lemma: підказувати
   ipa: /pidkˈazuʋatɪ/
-  translation: ''
+  translation: to prompt (imperfective)
   pos: verb
-- lemma: підкреслювати
-  ipa: /pidkrˈɛsljuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: раптовий
-  ipa: /raptˈɔʋɪj/
-  translation: ''
-  pos: adj
 - lemma: редактор
   ipa: /rɛdˈaktɔr/
-  translation: ''
+  translation: editor
   pos: noun
   gender: m
-- lemma: розповідь
-  ipa: /rˈɔzpɔʋidʲ/
-  translation: ''
-  pos: noun
 - lemma: селф-контроль
   ipa: /sɛlf-kɔntrˈɔlʲ/
-  translation: ''
+  translation: self-control
   pos: noun
   gender: m
-- lemma: слово-маркер
-  ipa: /slˈɔʋɔ-markɛr/
-  translation: ''
-  pos: noun
-- lemma: стать
-  ipa: /statʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: такий
-  ipa: /takˈɪj/
-  translation: ''
-  pos: pron
-- lemma: точно
-  ipa: /tˈɔt͡ʃnɔ/
-  translation: ''
-  pos: adv
-- lemma: чіткий
-  ipa: /t͡ʃitkˈɪj/
-  translation: ''
-  pos: adj

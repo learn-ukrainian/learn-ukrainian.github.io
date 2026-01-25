@@ -2,44 +2,76 @@ module: 34-checkpoint-complex-sentences-1
 level: B1
 version: '2.0'
 items:
+- lemma: вистачити
+  ipa: /ʋˈɪstat͡ʃɪtɪ/
+  translation: to suffice, to be enough
+  pos: verb
+- lemma: вказівка
+  ipa: /ʋkazˈiʋka/
+  translation: instruction, indication
+  pos: noun
 - lemma: вільніше
   ipa: /ʋilʲnˈiʃɛ/
-  translation: ''
+  translation: more freely
   pos: adv
 - lemma: давньоукраїнський
   ipa: /daʋnʲɔukraˈjinsʲkɪj/
-  translation: ''
+  translation: Old Ukrainian
   pos: adj
+- lemma: досконало
+  ipa: /dɔskɔnˈalɔ/
+  translation: perfectly, thoroughly
+  pos: adv
+- lemma: елемент
+  ipa: /ɛlɛmˈɛnt/
+  translation: element
+  pos: noun
 - lemma: зрілий
   ipa: /zrˈilɪj/
-  translation: ''
+  translation: mature, ripe
   pos: adj
 - lemma: корелювати
   ipa: /kɔrɛljuʋˈatɪ/
-  translation: ''
+  translation: to correlate
   pos: verb
 - lemma: кіото
   ipa: /kiˈɔtɔ/
-  translation: ''
+  translation: Kyoto
   pos: noun
   gender: n
+- lemma: недалеко
+  ipa: /nɛdalˈɛkɔ/
+  translation: not far
+  pos: adv
 - lemma: обмеженіший
   ipa: /ɔbmˈɛʒɛniʃɪj/
-  translation: ''
+  translation: more limited
   pos: adj
+- lemma: пишатися
+  ipa: /pɪʃˈatɪsja/
+  translation: to be proud of
+  pos: verb
 - lemma: привіз
   ipa: /prɪʋˈiz/
   translation: ''
   pos: noun
   gender: m
+- lemma: підняти
+  ipa: /pidnˈjatɪ/
+  translation: to lift, to raise (perfective)
+  pos: verb
 - lemma: підсумувати
   ipa: /pidsumuʋˈatɪ/
-  translation: ''
+  translation: to summarize (perfective)
   pos: verb
 - lemma: свідчити
   ipa: /sʋˈidt͡ʃɪtɪ/
-  translation: ''
+  translation: to testify, to indicate
   pos: verb
+- lemma: слово-зв'язок
+  ipa: /slˈɔʋɔ-zʋjazɔk/
+  translation: linking word
+  pos: noun
 - lemma: ст
   ipa: /st/
   translation: ''
@@ -47,15 +79,16 @@ items:
   gender: n
 - lemma: токіо
   ipa: /tˈɔkiɔ/
-  translation: ''
+  translation: Tokyo
   pos: noun
   gender: n
-- lemma: храм
-  ipa: /xram/
-  translation: ''
+- lemma: фудзі
+  ipa: /fudzi/
+  translation: Fuji
   pos: noun
+  gender: m
 - lemma: чекпойнт
   ipa: /t͡ʃɛkpɔjnt/
-  translation: ''
+  translation: checkpoint
   pos: noun
   gender: m

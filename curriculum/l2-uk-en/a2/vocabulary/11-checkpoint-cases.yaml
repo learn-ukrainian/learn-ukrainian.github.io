@@ -4,57 +4,60 @@ version: '2.0'
 items:
 - lemma: архітекторка
   ipa: /arxitɛktɔrka/
-  translation: ''
+  translation: architect (female)
   pos: noun
   gender: f
-- lemma: аспект
-  ipa: /aspˈɛkt/
-  translation: ''
-  pos: noun
 - lemma: висловити
   ipa: /ʋˈɪslɔʋɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: володіти
-  ipa: /ʋɔlɔdˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: завершити
-  ipa: /zaʋɛrʃˈɪtɪ/
-  translation: ''
+  translation: to express, to utter
   pos: verb
 - lemma: заплатити
   ipa: /zaplatˈɪtɪ/
-  translation: ''
+  translation: to pay
   pos: verb
 - lemma: зн
   ipa: /zn/
   translation: ''
   pos: noun
+- lemma: оплата
+  ipa: /ɔplˈata/
+  translation: payment
+  pos: noun
+  gender: f
 - lemma: ор
   ipa: /ɔr/
   translation: ''
   pos: noun
   gender: f
-- lemma: перевірити
-  ipa: /pɛrɛʋˈirɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: плач
   ipa: /plat͡ʃ/
-  translation: ''
+  translation: crying, lament
   pos: noun
   gender: m
 - lemma: ранком
   ipa: /rˈankɔm/
-  translation: ''
+  translation: in the morning
   pos: adv
 - lemma: розповісти
   ipa: /rɔzpɔʋˈistɪ/
-  translation: ''
+  translation: to tell (perfective)
   pos: verb
+- lemma: тістечко
+  ipa: /tˈistɛt͡ʃkɔ/
+  translation: pastry, cupcake
+  pos: noun
+  gender: n
 - lemma: фаза
   ipa: /fˈaza/
-  translation: ''
+  translation: phase, stage
   pos: noun
   gender: f
+- lemma: хобі
+  ipa: /xˈɔbi/
+  translation: hobby
+  pos: noun
+  gender: n
+- lemma: інтеграційний
+  ipa: /intɛɦrat͡sˈijnɪj/
+  translation: integration (adj)
+  pos: adj

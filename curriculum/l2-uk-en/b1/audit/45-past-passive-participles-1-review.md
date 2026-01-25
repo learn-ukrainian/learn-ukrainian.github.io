@@ -1,17 +1,51 @@
-# Audit Report: 45-past-passive-participles-1.md
-**Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M45 — 45-past-passive-participles-1.md
+**Level:** B1 | **Module:** M45 | **Phase:** B1.4 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:19:19
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Теоретичні знання про пасивні дієприкметники минулого часу | 14 | 8 | ✅ |
+| 2 | match-up | Інфінітив та відповідний пасивний дієприкметник | 14 | 8 | ✅ |
+| 3 | fill-in | Утворення пасивних дієприкметників | 14 | 8 | ✅ |
+| 4 | true-false | Правила утворення та використання пасивних дієприкметників | 14 | 8 | ✅ |
+| 5 | group-sort | Класифікація дієприкметників за типом суфікса | 18 | 12 | ✅ |
+| 6 | unjumble | Побудова речень з пасивними дієприкметниками | 8 | 6 | ✅ |
+| 7 | error-correction | Виправлення помилок у формах пасивних дієприкметників | 8 | 6 | ✅ |
+| 8 | cloze | Пасивні дієприкметники в контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть пасивні дієприкметники в тексті | 8 | 6 | ✅ |
+| 10 | select | Вибір правильної форми дієприкметника | 8 | 6 | ✅ |
+| 11 | translate | Переклад речень з пасивними дієприкметниками | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1672/1500
+- **Words:** ✅ 1674/1500 (raw: 2249)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 55/25
+- **Vocab:** ✅ 125/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,7 +78,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Вступний тест** | ⚪️ | 79 | Skipped |
+| **Вступний тест** | ✅ | 79 | Included in Core |
 | **Теоретичне пояснення** | ⚪️ | 493 | Skipped |
 | **Практика** | ⚪️ | 173 | Skipped |
 | **Приклади використання** | ⚪️ | 197 | Skipped |
@@ -52,5 +86,5 @@
 | **Пасивні дієприкметники в українській культурі та літературі** | ✅ | 257 | Included in Core |
 | **Порівняння з активними конструкціями** | ⚪️ | 29 | Skipped |
 | **Практичні поради для запам'ятовування** | ⚪️ | 102 | Skipped |
-| **Підсумок** | ✅ | 59 | Included in Core |
+| **Підсумок** | ✅ | 61 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

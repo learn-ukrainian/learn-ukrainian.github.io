@@ -4,15 +4,11 @@ version: '2.0'
 items:
 - lemma: горище
   ipa: /ɦɔrˈɪʃt͡ʃɛ/
-  translation: ''
+  translation: attic
   pos: noun
   gender: n
-- lemma: забронювати
-  ipa: /zabrɔnjuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: світлиця
   ipa: /sʋitlˈɪt͡sja/
-  translation: ''
+  translation: living room (traditional), light room
   pos: noun
   gender: f

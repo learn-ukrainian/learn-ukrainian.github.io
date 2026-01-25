@@ -4,59 +4,59 @@ version: '2.0'
 items:
 - lemma: амбіційний
   ipa: /ambit͡sˈijnɪj/
-  translation: ''
+  translation: ambitious
   pos: adj
 - lemma: атлантида
   ipa: /atlantˈɪda/
-  translation: ''
+  translation: Atlantis
   pos: noun
   gender: f
 - lemma: байдужість
   ipa: /bajdˈuʒistʲ/
-  translation: ''
+  translation: indifference
   pos: noun
   gender: f
 - lemma: блокувати
   ipa: /blɔkuʋˈatɪ/
-  translation: ''
+  translation: to block
   pos: verb
 - lemma: вдалий
   ipa: /ʋdˈalɪj/
-  translation: ''
+  translation: successful, good
   pos: adj
 - lemma: ветеран
   ipa: /ʋɛtɛrˈan/
-  translation: ''
+  translation: veteran
   pos: noun
 - lemma: востаннє
   ipa: /ʋɔstˈannjɛ/
-  translation: ''
+  translation: for the last time
   pos: adv
 - lemma: відображений
   ipa: /ʋidɔbrˈaʒɛnɪj/
-  translation: ''
+  translation: reflected
   pos: adj
 - lemma: гірка
   ipa: /ɦˈirka/
-  translation: ''
+  translation: hill, slide, bitter (adj female)
   pos: noun
   gender: f
 - lemma: демотивований
   ipa: /dɛmɔtɪʋˈɔʋanɪj/
-  translation: ''
+  translation: demotivated
   pos: adj
 - lemma: досліджуючи
   ipa: /dɔslˈidʒujut͡ʃɪ/
-  translation: ''
+  translation: researching
   pos: verb
 - lemma: екстраверт
   ipa: /ɛkstraʋˈɛrt/
-  translation: ''
+  translation: extrovert
   pos: noun
   gender: m
 - lemma: зазначати
   ipa: /zaznat͡ʃˈatɪ/
-  translation: ''
+  translation: to note, to indicate
   pos: verb
 - lemma: збіг
   ipa: /zbiɦ/
@@ -65,57 +65,57 @@ items:
   gender: m
 - lemma: знижувати
   ipa: /znˈɪʒuʋatɪ/
-  translation: ''
+  translation: to lower, to reduce
   pos: verb
 - lemma: ковтання
   ipa: /kɔʋtˈannja/
-  translation: ''
+  translation: swallowing
   pos: noun
   gender: n
 - lemma: коментувати
   ipa: /kɔmɛntuʋˈatɪ/
-  translation: ''
+  translation: to comment
   pos: verb
 - lemma: конкретніший
   ipa: /kɔnkrˈɛtniʃɪj/
-  translation: ''
+  translation: more specific
   pos: adj
 - lemma: конструктивно
   ipa: /kɔnstruktˈɪʋnɔ/
-  translation: ''
+  translation: constructively
   pos: adv
 - lemma: короткочасний
   ipa: /kɔrɔtkɔt͡ʃˈasnɪj/
-  translation: ''
+  translation: short-term
   pos: adj
 - lemma: краятися
   ipa: /krˈajatɪsja/
-  translation: ''
+  translation: to be tormented, to bleed (heart)
   pos: verb
 - lemma: метафоричний
   ipa: /mɛtafɔrˈɪt͡ʃnɪj/
-  translation: ''
+  translation: metaphorical
   pos: adj
 - lemma: моральний
   ipa: /mɔrˈalʲnɪj/
-  translation: ''
+  translation: moral (adj)
   pos: adj
 - lemma: називання
   ipa: /nazɪʋˈannja/
-  translation: ''
+  translation: naming
   pos: noun
   gender: n
 - lemma: небезпечніший
   ipa: /nɛbɛzpˈɛt͡ʃniʃɪj/
-  translation: ''
+  translation: more dangerous
   pos: adj
 - lemma: невеселий
   ipa: /nɛʋɛsˈɛlɪj/
-  translation: ''
+  translation: sad, not cheerful
   pos: adj
 - lemma: ненависть
   ipa: /nɛnˈaʋɪstʲ/
-  translation: ''
+  translation: hatred
   pos: noun
   gender: f
 - lemma: неприємне
@@ -125,56 +125,56 @@ items:
   gender: n
 - lemma: неприємний
   ipa: /nɛprɪˈjɛmnɪj/
-  translation: ''
+  translation: unpleasant
   pos: adj
 - lemma: несамостійний
   ipa: /nɛsamɔstˈijnɪj/
-  translation: ''
+  translation: dependent, not independent
   pos: adj
 - lemma: несхвалення
   ipa: /nɛsxʋˈalɛnnja/
-  translation: ''
+  translation: disapproval
   pos: noun
   gender: n
 - lemma: нюансувати
   ipa: /njuansuʋˈatɪ/
-  translation: ''
+  translation: to nuance
   pos: verb
 - lemma: огида
   ipa: /ɔɦˈɪda/
-  translation: ''
+  translation: disgust
   pos: noun
   gender: f
 - lemma: особистість
   ipa: /ɔsɔbˈɪstistʲ/
-  translation: ''
+  translation: personality
   pos: noun
   gender: f
 - lemma: п'ятірка
   ipa: /pjatˈirka/
-  translation: ''
+  translation: a five, group of five
   pos: noun
   gender: f
 - lemma: панічний
   ipa: /panˈit͡ʃnɪj/
-  translation: ''
+  translation: panic (adj)
   pos: adj
 - lemma: періодичний
   ipa: /pɛriɔdˈɪt͡ʃnɪj/
-  translation: ''
+  translation: periodic
   pos: adj
 - lemma: подив
   ipa: /pˈɔdɪʋ/
-  translation: ''
+  translation: surprise, wonder
   pos: noun
   gender: m
 - lemma: придушувати
   ipa: /prɪdˈuʃuʋatɪ/
-  translation: ''
+  translation: to suppress, to stifle
   pos: verb
 - lemma: призводити
   ipa: /prɪzʋˈɔdɪtɪ/
-  translation: ''
+  translation: to lead to, to cause (imperfective)
   pos: verb
 - lemma: приємне
   ipa: /prɪˈjɛmnɛ/
@@ -183,75 +183,75 @@ items:
   gender: n
 - lemma: провина
   ipa: /prɔʋˈɪna/
-  translation: ''
+  translation: guilt, fault
   pos: noun
   gender: f
 - lemma: ревнощі
   ipa: /rˈɛʋnɔʃt͡ʃi/
-  translation: ''
+  translation: jealousy
   pos: noun
 - lemma: розгубленість
   ipa: /rɔzɦˈublɛnistʲ/
-  translation: ''
+  translation: confusion, bewilderment
   pos: noun
   gender: f
 - lemma: роздратування
   ipa: /rɔzdratuʋˈannja/
-  translation: ''
+  translation: irritation
   pos: noun
   gender: n
 - lemma: розчарування
   ipa: /rɔzt͡ʃaruʋˈannja/
-  translation: ''
+  translation: disappointment
   pos: noun
   gender: n
 - lemma: скромний
   ipa: /skrˈɔmnɪj/
-  translation: ''
+  translation: modest
   pos: adj
 - lemma: сновидіння
   ipa: /snɔʋɪdˈinnja/
-  translation: ''
+  translation: dream
   pos: noun
 - lemma: сором
   ipa: /sˈɔrɔm/
-  translation: ''
+  translation: shame
   pos: noun
   gender: m
 - lemma: сприятливий
   ipa: /sprɪˈjatlɪʋɪj/
-  translation: ''
+  translation: favorable, beneficial
   pos: adj
 - lemma: стримування
   ipa: /strˈɪmuʋannja/
-  translation: ''
+  translation: deterrence, restraint
   pos: noun
   gender: n
 - lemma: схильний
   ipa: /sxˈɪlʲnɪj/
-  translation: ''
+  translation: inclined, prone
   pos: adj
 - lemma: турин
   ipa: /turɪn/
-  translation: ''
+  translation: Turin
   pos: noun
   gender: m
 - lemma: євробачення
   ipa: /jɛʋrɔbˈat͡ʃɛnnja/
-  translation: ''
+  translation: Eurovision
   pos: noun
   gender: n
 - lemma: івасюк
   ipa: /iʋasˈjuk/
-  translation: ''
+  translation: Ivasyuk (name)
   pos: noun
   gender: m
 - lemma: ігнорувати
   ipa: /iɦnɔruʋˈatɪ/
-  translation: ''
+  translation: to ignore
   pos: verb
 - lemma: інтроверт
   ipa: /intrɔʋˈɛrt/
-  translation: ''
+  translation: introvert
   pos: noun
   gender: m

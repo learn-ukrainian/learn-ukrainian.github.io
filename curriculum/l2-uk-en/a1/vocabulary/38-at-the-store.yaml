@@ -4,82 +4,29 @@ version: '2.0'
 items:
 - lemma: ашан
   ipa: /aʃan/
-  translation: ''
+  translation: Auchan
   pos: noun
   gender: m
 - lemma: безконтактно
   ipa: /bɛzkɔntˈaktnɔ/
-  translation: ''
+  translation: contactlessly
   pos: adv
 - lemma: еко-сумка
   ipa: /ɛkɔ-sˈumka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: завершення
-  ipa: /zaʋˈɛrʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: картка
-  ipa: /kˈartka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: каса
-  ipa: /kˈasa/
-  translation: ''
+  translation: eco-bag
   pos: noun
   gender: f
 - lemma: касир
   ipa: /kasˈɪr/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: магазин
-  ipa: /maɦazˈɪn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: оплата
-  ipa: /ɔplˈata/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: пакет
-  ipa: /pakˈɛt/
-  translation: ''
+  translation: cashier
   pos: noun
   gender: m
 - lemma: прикласти
   ipa: /prɪklˈastɪ/
-  translation: ''
+  translation: to apply (perfective)
   pos: verb
-- lemma: продукт
-  ipa: /prɔdˈukt/
-  translation: ''
-  pos: noun
 - lemma: пін-код
   ipa: /pin-kɔd/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: спосіб
-  ipa: /spˈɔsib/
-  translation: ''
-  pos: noun
-- lemma: супермаркет
-  ipa: /supɛrmˈarkɛt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: сільпо
-  ipa: /silʲpˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: термінал
-  ipa: /tɛrminˈal/
-  translation: ''
+  translation: PIN code
   pos: noun
   gender: m

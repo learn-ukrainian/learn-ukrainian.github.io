@@ -4,151 +4,147 @@ version: '2.0'
 items:
 - lemma: бездіяльність
   ipa: /bɛzdiˈjalʲnistʲ/
-  translation: ''
+  translation: inactivity, inaction
   pos: noun
   gender: f
 - lemma: безперечно
   ipa: /bɛzpɛrˈɛt͡ʃnɔ/
-  translation: ''
+  translation: certainly, undoubtedly
   pos: adv
 - lemma: безсумнівно
   ipa: /bɛzsumnˈiʋnɔ/
-  translation: ''
+  translation: undoubtedly
   pos: adv
 - lemma: вартий
   ipa: /ʋˈartɪj/
-  translation: ''
+  translation: worth, worthy
   pos: adj
 - lemma: вартість
   ipa: /ʋˈartistʲ/
-  translation: ''
+  translation: cost, value
   pos: noun
   gender: f
 - lemma: вияв
   ipa: /ʋˈɪjaʋ/
-  translation: ''
+  translation: manifestation
   pos: noun
   gender: m
 - lemma: гадати
   ipa: /ɦadˈatɪ/
-  translation: ''
+  translation: to think, to guess
   pos: verb
 - lemma: делікатний
   ipa: /dɛlikˈatnɪj/
-  translation: ''
+  translation: delicate
   pos: adj
 - lemma: ефективність
   ipa: /ɛfɛktˈɪʋnistʲ/
-  translation: ''
+  translation: effectiveness
   pos: noun
   gender: f
 - lemma: жвавий
   ipa: /ʒʋˈaʋɪj/
-  translation: ''
+  translation: lively, brisk
   pos: adj
 - lemma: категоричність
   ipa: /katɛɦɔrˈɪt͡ʃnistʲ/
-  translation: ''
+  translation: categoricity
   pos: noun
   gender: f
 - lemma: компроміс
   ipa: /kɔmprɔmˈis/
-  translation: ''
+  translation: compromise
   pos: noun
   gender: m
-- lemma: коректно
-  ipa: /kɔrˈɛktnɔ/
-  translation: ''
-  pos: adv
 - lemma: найслабший
   ipa: /najslˈabʃɪj/
-  translation: ''
+  translation: the weakest
   pos: adj
 - lemma: неввічливість
   ipa: /nɛʋʋˈit͡ʃlɪʋistʲ/
-  translation: ''
+  translation: impoliteness
   pos: noun
   gender: f
 - lemma: невпевненість
   ipa: /nɛʋpˈɛʋnɛnistʲ/
-  translation: ''
+  translation: uncertainty, lack of confidence
   pos: noun
   gender: f
 - lemma: недооцінювати
   ipa: /nɛdɔɔt͡sˈinjuʋatɪ/
-  translation: ''
+  translation: to underestimate
   pos: verb
 - lemma: неефективний
   ipa: /nɛɛfɛktˈɪʋnɪj/
-  translation: ''
+  translation: inefficient
   pos: adj
 - lemma: опонент
   ipa: /ɔpɔnˈɛnt/
-  translation: ''
+  translation: opponent
   pos: noun
 - lemma: опір
   ipa: /ˈɔpir/
-  translation: ''
+  translation: resistance
   pos: noun
   gender: m
 - lemma: педагог
   ipa: /pɛdaɦˈɔɦ/
-  translation: ''
+  translation: pedagogue, teacher
   pos: noun
 - lemma: персоналізувати
   ipa: /pɛrsɔnalizuʋˈatɪ/
-  translation: ''
+  translation: to personalize
   pos: verb
 - lemma: перспективний
   ipa: /pɛrspɛktˈɪʋnɪj/
-  translation: ''
+  translation: promising, prospective
   pos: adj
 - lemma: по-іншому
   ipa: /pɔ-ˈinʃɔmu/
-  translation: ''
+  translation: otherwise, differently
   pos: pron
 - lemma: помилятися
   ipa: /pɔmɪlˈjatɪsja/
-  translation: ''
+  translation: to make mistakes (imperfective)
   pos: verb
 - lemma: поступ
   ipa: /pˈɔstup/
-  translation: ''
+  translation: progress
   pos: noun
   gender: m
 - lemma: приділяти
   ipa: /prɪdilˈjatɪ/
-  translation: ''
+  translation: to allocate (imperfective)
   pos: verb
 - lemma: припускати
   ipa: /prɪpuskˈatɪ/
-  translation: ''
+  translation: to suggest, to assume
   pos: verb
 - lemma: радикальний
   ipa: /radɪkˈalʲnɪj/
-  translation: ''
+  translation: radical
   pos: adj
 - lemma: раціональний
   ipa: /rat͡siɔnˈalʲnɪj/
-  translation: ''
+  translation: rational
   pos: adj
 - lemma: редакційний
   ipa: /rɛdakt͡sˈijnɪj/
-  translation: ''
+  translation: editorial
   pos: adj
 - lemma: статус-кво
   ipa: /stˈatus-kʋɔ/
-  translation: ''
+  translation: status quo
   pos: noun
   gender: m
 - lemma: темп
   ipa: /tɛmp/
-  translation: ''
+  translation: tempo, pace
   pos: noun
   gender: m
 - lemma: учитель
   ipa: /ut͡ʃˈɪtɛlʲ/
-  translation: ''
+  translation: teacher
   pos: noun
   gender: m
 - lemma: фраза-вступ
@@ -157,18 +153,18 @@ items:
   pos: noun
 - lemma: частково
   ipa: /t͡ʃastkˈɔʋɔ/
-  translation: ''
+  translation: partially
   pos: adv
 - lemma: шкала
   ipa: /ʃkalˈa/
-  translation: ''
+  translation: scale, graduation
   pos: noun
   gender: f
 - lemma: інвестиція
   ipa: /inʋɛstˈɪt͡sija/
-  translation: ''
+  translation: investment
   pos: noun
 - lemma: інфраструктурний
   ipa: /infrastruktˈurnɪj/
-  translation: ''
+  translation: infrastructure (adj)
   pos: adj

@@ -2,70 +2,31 @@ module: 30-i-feel-like
 level: A2
 version: '2.0'
 items:
-- lemma: атмосфера
-  ipa: /atmɔsfˈɛra/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: безособовий
   ipa: /bɛzɔsɔbˈɔʋɪj/
-  translation: ''
+  translation: impersonal
   pos: adj
 - lemma: близькі
   ipa: /blɪzʲkˈi/
   translation: ''
   pos: noun
-- lemma: вимовлятися
-  ipa: /ʋɪmɔʋlˈjatɪsja/
-  translation: ''
-  pos: verb
-- lemma: випадково
-  ipa: /ʋɪpadkˈɔʋɔ/
-  translation: ''
-  pos: adv
 - lemma: виразний
   ipa: /ʋɪrˈaznɪj/
-  translation: ''
+  translation: expressive, distinct
   pos: adj
 - lemma: вказуючи
   ipa: /ʋkˈazujut͡ʃɪ/
-  translation: ''
+  translation: indicating
   pos: verb
-- lemma: впізнати
-  ipa: /ʋpiznˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: втомлений
-  ipa: /ʋtˈɔmlɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: глибина
-  ipa: /ɦlɪbɪnˈa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: духовний
   ipa: /duxˈɔʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: життєвий
-  ipa: /ʒɪttˈjɛʋɪj/
-  translation: ''
+  translation: spiritual
   pos: adj
 - lemma: забарвлення
   ipa: /zabˈarʋlɛnnja/
-  translation: ''
+  translation: coloring, tint
   pos: noun
   gender: n
-- lemma: загал
-  ipa: /zaɦˈal/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: закінчитися
-  ipa: /zakˈint͡ʃɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: занятий
   ipa: /zˈanjatɪj/
   translation: ''
@@ -74,141 +35,84 @@ items:
   ipa: /zɦˈajanɪj/
   translation: ''
   pos: adj
-- lemma: здалий
-  ipa: /zdˈalɪj/
-  translation: ''
-  pos: adj
-- lemma: здати
-  ipa: /zdˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: здзвонитися
   ipa: /zdzʋɔnˈɪtɪsja/
-  translation: ''
+  translation: to talk by phone
   pos: verb
 - lemma: людський
   ipa: /ljudsʲkɪj/
-  translation: ''
+  translation: human (adj), humane
   pos: adj
-- lemma: марк
-  ipa: /mark/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: місток
   ipa: /mistˈɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: надавати
-  ipa: /nadaʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: натовп
-  ipa: /nˈatɔʋp/
-  translation: ''
+  translation: small bridge
   pos: noun
   gender: m
 - lemma: несподіванка
   ipa: /nɛspɔdˈiʋanka/
-  translation: ''
+  translation: surprise
   pos: noun
   gender: f
-- lemma: обговорення
-  ipa: /ɔbɦɔʋˈɔrɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: оцінка
   ipa: /ɔt͡sˈinka/
-  translation: ''
+  translation: evaluation, grade, mark
   pos: noun
   gender: f
 - lemma: по-справжньому
   ipa: /pɔ-sprˈaʋʒnʲɔmu/
-  translation: ''
+  translation: really, truly
   pos: adv
-- lemma: поєднати
-  ipa: /pɔjɛdnˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: прийняти
-  ipa: /prɪjnˈjatɪ/
-  translation: ''
-  pos: verb
 - lemma: пробачити
   ipa: /prɔbˈat͡ʃɪtɪ/
-  translation: ''
+  translation: to forgive (perfective)
   pos: verb
 - lemma: пунктуаційний
   ipa: /punktuat͡sˈijnɪj/
-  translation: ''
+  translation: punctuation (adj)
   pos: adj
-- lemma: підтримати
-  ipa: /pidtrˈɪmatɪ/
-  translation: ''
-  pos: verb
-- lemma: серйозно
-  ipa: /sɛrjˈɔznɔ/
-  translation: ''
-  pos: adv
 - lemma: сильно
   ipa: /sˈɪlʲnɔ/
-  translation: ''
+  translation: strongly
   pos: adv
 - lemma: слово-емоція
   ipa: /slˈɔʋɔ-ɛmɔt͡sija/
-  translation: ''
+  translation: emotion word
   pos: noun
   gender: n
 - lemma: соромитися
   ipa: /sɔrˈɔmɪtɪsja/
-  translation: ''
+  translation: to be ashamed, to be shy
   pos: verb
 - lemma: співчуття
   ipa: /spiʋt͡ʃuttˈja/
-  translation: ''
+  translation: sympathy, compassion
   pos: noun
   gender: n
 - lemma: суворий
   ipa: /suʋˈɔrɪj/
-  translation: ''
+  translation: harsh, severe, strict
   pos: adj
 - lemma: сум
   ipa: /sum/
-  translation: ''
+  translation: sadness, sorrow
   pos: noun
   gender: m
-- lemma: частіший
-  ipa: /t͡ʃastˈiʃɪj/
-  translation: ''
-  pos: adj
 - lemma: шлюб
   ipa: /ʃljub/
-  translation: ''
+  translation: marriage
   pos: noun
   gender: m
-- lemma: щаслива
-  ipa: /ʃt͡ʃaslˈɪʋa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: щиро
   ipa: /ʃt͡ʃˈɪrɔ/
-  translation: ''
+  translation: sincerely, honestly
   pos: adv
 - lemma: щирість
   ipa: /ʃt͡ʃˈɪristʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ідентичність
-  ipa: /idɛntˈɪt͡ʃnistʲ/
-  translation: ''
+  translation: sincerity
   pos: noun
   gender: f
 - lemma: інтонація
   ipa: /intɔnˈat͡sija/
-  translation: ''
+  translation: intonation
   pos: noun
   gender: f

@@ -10,65 +10,48 @@ items:
   ipa: /a-a-ɪj/
   translation: ''
   pos: adj
-- lemma: аварія
-  ipa: /aʋˈarija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: ай
   ipa: /aj/
   translation: ''
   pos: noun
 - lemma: антибіотик
   ipa: /antɪbiˈɔtɪk/
-  translation: ''
+  translation: antibiotic
   pos: noun
 - lemma: болити
   ipa: /bɔlɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: везти
-  ipa: /ʋɛztˈɪ/
-  translation: ''
+  translation: to ache, to hurt
   pos: verb
 - lemma: випіти
   ipa: /ʋɪpitɪ/
-  translation: ''
+  translation: to drink out
   pos: verb
 - lemma: висипатися
   ipa: /ʋɪsɪpatɪsja/
-  translation: ''
+  translation: to get enough sleep
   pos: verb
 - lemma: висококваліфікований
   ipa: /ʋɪsɔkɔkʋalifikˈɔʋanɪj/
-  translation: ''
+  translation: highly qualified
   pos: adj
 - lemma: вірусний
   ipa: /ʋˈirusnɪj/
-  translation: ''
+  translation: viral
   pos: adj
 - lemma: гомілка
   ipa: /ɦɔmˈilka/
-  translation: ''
+  translation: shin, drumstick
   pos: noun
   gender: f
 - lemma: гіпс
   ipa: /ɦips/
-  translation: ''
+  translation: plaster, cast
   pos: noun
   gender: m
-- lemma: гірше
-  ipa: /ɦˈirʃɛ/
-  translation: ''
-  pos: adv
 - lemma: дбати
   ipa: /dbˈatɪ/
-  translation: ''
+  translation: to care for, to look after
   pos: verb
-- lemma: досі
-  ipa: /dˈɔsi/
-  translation: ''
-  pos: pron
 - lemma: емпература
   ipa: /ɛmpɛratura/
   translation: ''
@@ -76,46 +59,42 @@ items:
   gender: f
 - lemma: запалений
   ipa: /zapˈalɛnɪj/
-  translation: ''
+  translation: inflamed, lit
   pos: adj
 - lemma: застудитися
   ipa: /zastudˈɪtɪsja/
-  translation: ''
+  translation: to catch a cold
   pos: verb
 - lemma: зачепити
   ipa: /zat͡ʃɛpˈɪtɪ/
-  translation: ''
+  translation: to touch, to hook
   pos: verb
 - lemma: зламати
   ipa: /zlamˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: зрости
-  ipa: /zrɔstˈɪ/
-  translation: ''
+  translation: to break
   pos: verb
 - lemma: зуб
   ipa: /zub/
-  translation: ''
+  translation: tooth
   pos: noun
   gender: m
 - lemma: кардіолог
   ipa: /kardiˈɔlɔɦ/
-  translation: ''
+  translation: cardiologist
   pos: noun
 - lemma: кістка
   ipa: /kˈistka/
-  translation: ''
+  translation: bone
   pos: noun
   gender: f
 - lemma: легеня
   ipa: /lɛɦˈɛnja/
-  translation: ''
+  translation: lung
   pos: noun
   gender: f
 - lemma: лопух
   ipa: /lɔpˈux/
-  translation: ''
+  translation: burdock, simpleton
   pos: noun
   gender: m
 - lemma: ліва
@@ -125,150 +104,107 @@ items:
   gender: f
 - lemma: мазати
   ipa: /mˈazatɪ/
-  translation: ''
+  translation: to smear, to spread
   pos: verb
 - lemma: медик
   ipa: /mˈɛdɪk/
-  translation: ''
+  translation: medic, medical worker
   pos: noun
 - lemma: милиця
   ipa: /mˈɪlɪt͡sja/
-  translation: ''
+  translation: crutch
   pos: noun
 - lemma: набряк
   ipa: /nˈabrjak/
-  translation: ''
+  translation: swelling, edema
   pos: noun
   gender: m
 - lemma: навідати
   ipa: /naʋˈidatɪ/
-  translation: ''
+  translation: to visit
   pos: verb
-- lemma: надто
-  ipa: /nˈadtɔ/
-  translation: ''
-  pos: adv
 - lemma: накласти
   ipa: /naklˈastɪ/
-  translation: ''
+  translation: to impose, to apply
   pos: verb
-- lemma: народній
-  ipa: /narˈɔdnij/
-  translation: ''
-  pos: adj
 - lemma: неприємність
   ipa: /nɛprɪˈjɛmnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: норма
-  ipa: /nˈɔrma/
-  translation: ''
+  translation: trouble, unpleasantness
   pos: noun
   gender: f
 - lemma: оглянин
   ipa: /ɔɦljanɪn/
-  translation: ''
+  translation: inspection, visit (rare)
   pos: noun
 - lemma: перелом
   ipa: /pɛrɛlˈɔm/
-  translation: ''
+  translation: fracture, breaking point
   pos: noun
   gender: m
-- lemma: прибігти
-  ipa: /prɪbˈiɦtɪ/
-  translation: ''
-  pos: verb
 - lemma: простуда
   ipa: /prɔstˈuda/
-  translation: ''
+  translation: cold (illness)
   pos: noun
   gender: f
 - lemma: протизастудний
   ipa: /prɔtɪzastudnɪj/
-  translation: ''
+  translation: anti-cold (medicine)
   pos: adj
 - lemma: піднятий
   ipa: /pˈidnjatɪj/
-  translation: ''
+  translation: lifted, raised
   pos: adj
-- lemma: рентген
-  ipa: /rɛntɦˈɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: реформа
-  ipa: /rɛfˈɔrma/
-  translation: ''
-  pos: noun
 - lemma: рятувальник
   ipa: /rjatuʋˈalʲnɪk/
-  translation: ''
+  translation: rescuer, lifeguard
   pos: noun
 - lemma: рідина
   ipa: /ridɪnˈa/
-  translation: ''
+  translation: liquid, fluid
   pos: noun
   gender: f
 - lemma: спад
   ipa: /spad/
-  translation: ''
+  translation: decline, drop
   pos: noun
   gender: m
 - lemma: стетоскоп
   ipa: /stɛtɔskˈɔp/
-  translation: ''
+  translation: stethoscope
   pos: noun
   gender: m
 - lemma: стогнати
   ipa: /stɔɦnˈatɪ/
-  translation: ''
+  translation: to groan, to moan
   pos: verb
-- lemma: страшенно
-  ipa: /straʃˈɛnnɔ/
-  translation: ''
-  pos: adv
 - lemma: суглоб
   ipa: /suɦlˈɔb/
-  translation: ''
+  translation: joint (anatomy)
   pos: noun
-- lemma: сша
-  ipa: /sʃa/
-  translation: ''
-  pos: noun
-- lemma: торкатися
-  ipa: /tɔrkˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: трапитися
   ipa: /trˈapɪtɪsja/
-  translation: ''
+  translation: to happen, to occur (perfective)
   pos: verb
 - lemma: україць
   ipa: /ukrajit͡sʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: холод
-  ipa: /xˈɔlɔd/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: хірург
   ipa: /xirˈurɦ/
-  translation: ''
+  translation: surgeon
   pos: noun
 - lemma: чисто
   ipa: /t͡ʃˈɪstɔ/
-  translation: ''
+  translation: cleanly
   pos: adv
 - lemma: чхання
   ipa: /t͡ʃxˈannja/
-  translation: ''
+  translation: sneezing
   pos: noun
   gender: n
 - lemma: інфекція
   ipa: /infˈɛkt͡sija/
-  translation: ''
+  translation: infection
   pos: noun
   gender: f

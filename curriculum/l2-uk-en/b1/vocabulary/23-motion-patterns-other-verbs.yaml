@@ -4,103 +4,180 @@ version: '2.0'
 items:
 - lemma: азія
   ipa: /ˈazija/
-  translation: ''
+  translation: Asia
   pos: noun
   gender: f
 - lemma: атом
   ipa: /ˈatɔm/
-  translation: ''
+  translation: atom
   pos: noun
 - lemma: багатозначність
   ipa: /baɦatɔznˈat͡ʃnistʲ/
-  translation: ''
+  translation: polysemy, ambiguity
   pos: noun
   gender: f
 - lemma: бездоганно
   ipa: /bɛzdɔɦˈannɔ/
-  translation: ''
+  translation: flawlessly, perfectly
   pos: adv
+- lemma: ввести
+  ipa: /ʋʋɛstˈɪ/
+  translation: to introduce, to enter
+  pos: verb
 - lemma: вдосконалення
   ipa: /ʋdɔskɔnˈalɛnnja/
-  translation: ''
+  translation: improvement, perfection
   pos: noun
   gender: n
 - lemma: вестя
   ipa: /ʋɛstja/
   translation: ''
   pos: noun
+- lemma: весілля
+  ipa: /ʋɛsˈillja/
+  translation: wedding
+  pos: noun
+  gender: n
 - lemma: вивчивши
   ipa: /ʋˈɪʋt͡ʃɪʋʃɪ/
-  translation: ''
+  translation: having studied
   pos: verb
 - lemma: видавати
   ipa: /ʋɪdaʋˈatɪ/
-  translation: ''
+  translation: to issue, to publish
+  pos: verb
+- lemma: видати
+  ipa: /ʋɪdatɪ/
+  translation: to issue, to publish (perfective)
   pos: verb
 - lemma: винахід
   ipa: /ʋˈɪnaxid/
-  translation: ''
+  translation: invention
   pos: noun
   gender: m
 - lemma: виправляти
   ipa: /ʋɪpraʋlˈjatɪ/
-  translation: ''
+  translation: to correct, to fix (imperfective)
   pos: verb
 - lemma: випускати
   ipa: /ʋɪpuskˈatɪ/
-  translation: ''
+  translation: to release, to produce
+  pos: verb
+- lemma: виробляти
+  ipa: /ʋɪrɔblˈjatɪ/
+  translation: to produce, to manufacture
   pos: verb
 - lemma: відмовити
   ipa: /ʋidmˈɔʋɪtɪ/
-  translation: ''
+  translation: to refuse, to reject
   pos: verb
 - lemma: відпрацювати
   ipa: /ʋidprat͡sjuʋˈatɪ/
-  translation: ''
+  translation: to work out, to finish work
   pos: verb
+- lemma: глибоко
+  ipa: /ɦlˈɪbɔkɔ/
+  translation: deeply
+  pos: adv
 - lemma: десять-п'ятнадцять
   ipa: /dˈɛsjatʲ-pjatnadt͡sjatʲ/
   translation: ''
   pos: adv
+- lemma: довестися
+  ipa: /dɔʋɛstˈɪsja/
+  translation: to happen to, to have to
+  pos: verb
 - lemma: дорожче
   ipa: /dɔrˈɔʒt͡ʃɛ/
-  translation: ''
+  translation: more expensive
   pos: adv
-- lemma: забезпечення
-  ipa: /zabɛzpˈɛt͡ʃɛnnja/
+- lemma: драма
+  ipa: /drˈama/
+  translation: drama
+  pos: noun
+  gender: f
+- lemma: діл
+  ipa: /dil/
   translation: ''
   pos: noun
+  gender: m
+- lemma: ділити
+  ipa: /dilˈɪtɪ/
+  translation: to divide, to share
+  pos: verb
+- lemma: жах
+  ipa: /ʒax/
+  translation: horror, terror
+  pos: noun
+  gender: m
+- lemma: жахливий
+  ipa: /ʒaxlˈɪʋɪj/
+  translation: terrible, horrible
+  pos: adj
+- lemma: забезпечення
+  ipa: /zabɛzpˈɛt͡ʃɛnnja/
+  translation: provision, support
+  pos: noun
   gender: n
+- lemma: заблокувати
+  ipa: /zablɔkuʋˈatɪ/
+  translation: to block
+  pos: verb
+- lemma: заговорити
+  ipa: /zaɦɔʋɔrˈɪtɪ/
+  translation: to start speaking
+  pos: verb
 - lemma: заголовок
   ipa: /zˈaɦɔlɔʋɔk/
-  translation: ''
+  translation: header, title
   pos: noun
   gender: m
 - lemma: закриття
   ipa: /zakrɪttˈja/
-  translation: ''
+  translation: closing
   pos: noun
   gender: n
+- lemma: заплакати
+  ipa: /zaplˈakatɪ/
+  translation: to start crying
+  pos: verb
 - lemma: зачинити
   ipa: /zat͡ʃɪnˈɪtɪ/
-  translation: ''
+  translation: to close
+  pos: verb
+- lemma: здивуватися
+  ipa: /zdɪʋuʋˈatɪsja/
+  translation: to be surprised
+  pos: verb
+- lemma: здогадатися
+  ipa: /zdɔɦadˈatɪsja/
+  translation: to guess, to realize
   pos: verb
 - lemma: здогадка
   ipa: /zdˈɔɦadka/
-  translation: ''
+  translation: guess, conjecture
   pos: noun
   gender: f
 - lemma: значущий
   ipa: /znat͡ʃˈuʃt͡ʃɪj/
-  translation: ''
+  translation: meaningful, significant
   pos: adj
+- lemma: знизу
+  ipa: /znˈɪzu/
+  translation: from below
+  pos: adv
 - lemma: зіпсувати
   ipa: /zipsuʋˈatɪ/
-  translation: ''
+  translation: to spoil, to ruin
   pos: verb
+- lemma: кандидат
+  ipa: /kandɪdˈat/
+  translation: candidate
+  pos: noun
+  gender: m
 - lemma: крива
   ipa: /krɪʋˈa/
-  translation: ''
+  translation: curve
   pos: noun
   gender: f
 - lemma: ля
@@ -108,47 +185,80 @@ items:
   translation: ''
   pos: noun
   gender: n
+- lemma: майстер
+  ipa: /mˈajstɛr/
+  translation: master, craftsman
+  pos: noun
+- lemma: мережа
+  ipa: /mɛrˈɛʒa/
+  translation: network, net
+  pos: noun
 - lemma: мога
   ipa: /mˈɔɦa/
-  translation: ''
+  translation: possibility, strength
   pos: noun
   gender: f
+- lemma: набір
+  ipa: /nabˈir/
+  translation: set, recruitment, collection
+  pos: adv
+- lemma: обличчя
+  ipa: /ɔblˈɪt͡ʃt͡ʃja/
+  translation: face
+  pos: noun
+- lemma: обов'язок
+  ipa: /ɔbˈɔʋjazɔk/
+  translation: duty, obligation
+  pos: noun
 - lemma: перебороти
   ipa: /pɛrɛbɔrˈɔtɪ/
-  translation: ''
+  translation: to overcome
   pos: verb
 - lemma: перебудувати
   ipa: /pɛrɛbuduʋˈatɪ/
-  translation: ''
+  translation: to rebuild, to reconstruct
   pos: verb
 - lemma: перевершити
   ipa: /pɛrɛʋɛrʃɪtɪ/
-  translation: ''
+  translation: to surpass, to excel
   pos: verb
 - lemma: перегородка
   ipa: /pɛrɛɦɔrˈɔdka/
-  translation: ''
+  translation: partition, divider
   pos: noun
   gender: f
 - lemma: переконати
   ipa: /pɛrɛkɔnˈatɪ/
-  translation: ''
+  translation: to convince
+  pos: verb
+- lemma: перемога
+  ipa: /pɛrɛmˈɔɦa/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: переписати
+  ipa: /pɛrɛpɪsˈatɪ/
+  translation: to rewrite, to copy
   pos: verb
 - lemma: переробляти
   ipa: /pɛrɛrɔblˈjatɪ/
-  translation: ''
+  translation: to redo, to rework (imperfective)
   pos: verb
 - lemma: перефарбувати
   ipa: /pɛrɛfarbuʋˈatɪ/
-  translation: ''
+  translation: to repaint
+  pos: verb
+- lemma: перечитати
+  ipa: /pɛrɛt͡ʃɪtˈatɪ/
+  translation: to reread
   pos: verb
 - lemma: по-новому
   ipa: /pɔ-nɔʋˈɔmu/
-  translation: ''
+  translation: in a new way
   pos: adv
 - lemma: повнота
   ipa: /pɔʋnɔtˈa/
-  translation: ''
+  translation: fullness, wholeness
   pos: noun
   gender: f
 - lemma: повід
@@ -158,108 +268,178 @@ items:
   gender: m
 - lemma: полісемія
   ipa: /pɔlisɛmˈija/
-  translation: ''
+  translation: polysemy
   pos: noun
   gender: f
+- lemma: придумати
+  ipa: /prɪdˈumatɪ/
+  translation: to think up, to invent
+  pos: verb
 - lemma: призма
   ipa: /prˈɪzma/
-  translation: ''
+  translation: prism
   pos: noun
   gender: f
 - lemma: приєднатися
   ipa: /prɪjɛdnˈatɪsja/
-  translation: ''
+  translation: to join (oneself)
   pos: verb
 - lemma: пробачати
   ipa: /prɔbat͡ʃˈatɪ/
-  translation: ''
+  translation: to forgive (imperfective)
   pos: verb
 - lemma: програмний
   ipa: /prɔɦrˈamnɪj/
-  translation: ''
+  translation: program (adj), software (adj)
+  pos: adj
+- lemma: прозорий
+  ipa: /prɔzˈɔrɪj/
+  translation: transparent
   pos: adj
 - lemma: пря
   ipa: /prja/
   translation: ''
   pos: noun
   gender: f
-- lemma: рекрутер
-  ipa: /rɛkrutɛr/
-  translation: ''
+- lemma: публікувати
+  ipa: /publikuʋˈatɪ/
+  translation: to publish (imperfective)
+  pos: verb
+- lemma: підпис
+  ipa: /pˈidpɪs/
+  translation: signature
   pos: noun
   gender: m
+- lemma: підтримати
+  ipa: /pidtrˈɪmatɪ/
+  translation: to support (perfective)
+  pos: verb
+- lemma: підтримка
+  ipa: /pidtrˈɪmka/
+  translation: support
+  pos: noun
+  gender: f
+- lemma: підтримувати
+  ipa: /pidtrˈɪmuʋatɪ/
+  translation: to support (imperfective)
+  pos: verb
+- lemma: рекрутер
+  ipa: /rɛkrutɛr/
+  translation: recruiter
+  pos: noun
+  gender: m
+- lemma: розвивати
+  ipa: /rɔzʋɪʋˈatɪ/
+  translation: to develop (imperfective)
+  pos: verb
 - lemma: роздавати
   ipa: /rɔzdaʋˈatɪ/
-  translation: ''
+  translation: to distribute
+  pos: verb
+- lemma: розкласти
+  ipa: /rɔzklˈastɪ/
+  translation: to arrange, to set out (perfective)
   pos: verb
 - lemma: розподіл
   ipa: /rɔzpˈɔdil/
-  translation: ''
+  translation: distribution, division
   pos: noun
   gender: m
 - lemma: розподіляти
   ipa: /rɔzpɔdilˈjatɪ/
-  translation: ''
+  translation: to distribute (imperfective)
   pos: verb
 - lemma: розрізати
   ipa: /rɔzrizatɪ/
-  translation: ''
+  translation: to cut, to slice
   pos: verb
 - lemma: розсіювати
   ipa: /rɔzsˈijuʋatɪ/
-  translation: ''
+  translation: to scatter, to disperse
   pos: verb
+- lemma: розширення
+  ipa: /rɔzʃˈɪrɛnnja/
+  translation: extension, expansion
+  pos: noun
+  gender: n
 - lemma: різкий
   ipa: /rizkˈɪj/
-  translation: ''
+  translation: sharp, abrupt
   pos: adj
 - lemma: сваритися
   ipa: /sʋarˈɪtɪsja/
-  translation: ''
+  translation: to quarrel, to shout at
   pos: verb
+- lemma: словотвір
+  ipa: /slɔʋɔtʋˈir/
+  translation: word formation
+  pos: noun
+  gender: m
 - lemma: спів-
   ipa: /spiʋ-/
   translation: ''
   pos: noun
 - lemma: співпраця
   ipa: /spiʋprˈat͡sja/
-  translation: ''
+  translation: cooperation
   pos: noun
   gender: f
 - lemma: суперсила
   ipa: /supɛrsˈɪla/
-  translation: ''
+  translation: superpower
   pos: noun
   gender: f
 - lemma: творити
   ipa: /tʋɔrˈɪtɪ/
-  translation: ''
+  translation: to create, to form (imperfective)
   pos: verb
 - lemma: тестовий
   ipa: /tˈɛstɔʋɪj/
-  translation: ''
+  translation: test (adj)
   pos: adj
 - lemma: трим
   ipa: /trɪm/
   translation: ''
   pos: noun
   gender: m
-- lemma: чек-лист
-  ipa: /t͡ʃɛk-lɪst/
-  translation: ''
+- lemma: тримати
+  ipa: /trɪmˈatɪ/
+  translation: to hold, to keep
+  pos: verb
+- lemma: учасник
+  ipa: /ut͡ʃˈasnɪk/
+  translation: participant
+  pos: noun
+- lemma: хід
+  ipa: /xid/
+  translation: walk, move, progress
   pos: noun
   gender: m
+- lemma: чек-лист
+  ipa: /t͡ʃɛk-lɪst/
+  translation: check-list
+  pos: noun
+  gender: m
+- lemma: чемпіон
+  ipa: /t͡ʃɛmpiˈɔn/
+  translation: champion
+  pos: noun
+  gender: m
+- lemma: чулий
+  ipa: /t͡ʃˈulɪj/
+  translation: sensitive, responsive
+  pos: adj
 - lemma: якісно
   ipa: /ˈjakisnɔ/
-  translation: ''
+  translation: qualitatively, with high quality
   pos: adv
 - lemma: інновація
   ipa: /innɔʋˈat͡sija/
-  translation: ''
+  translation: innovation
   pos: noun
   gender: f
 - lemma: інтуїція
   ipa: /intuˈjit͡sija/
-  translation: ''
+  translation: intuition
   pos: noun
   gender: f

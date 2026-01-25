@@ -4,77 +4,77 @@ version: '2.0'
 items:
 - lemma: акторський
   ipa: /aktˈɔrsʲkɪj/
-  translation: ''
+  translation: acting (adj)
   pos: adj
 - lemma: аніматор
   ipa: /animˈatɔr/
-  translation: ''
+  translation: animator
   pos: noun
 - lemma: анімаційний
   ipa: /animat͡sˈijnɪj/
-  translation: ''
+  translation: animated
   pos: adj
 - lemma: анімація
   ipa: /animˈat͡sija/
-  translation: ''
+  translation: animation
   pos: noun
   gender: f
 - lemma: архівний
   ipa: /arxˈiʋnɪj/
-  translation: ''
+  translation: archival
   pos: adj
 - lemma: берлінале
   ipa: /bɛrlinˈalɛ/
-  translation: ''
+  translation: Berlinale
   pos: noun
   gender: m
 - lemma: валентин
   ipa: /ʋalɛntˈɪn/
-  translation: ''
+  translation: Valentyn (name)
   pos: noun
   gender: m
 - lemma: васянович
   ipa: /ʋasjanɔʋɪt͡ʃ/
-  translation: ''
+  translation: Vasyanovych (name)
   pos: noun
   gender: f
 - lemma: венеційський
   ipa: /ʋɛnɛt͡sˈijsʲkɪj/
-  translation: ''
+  translation: Venetian
   pos: adj
 - lemma: вразити
   ipa: /ʋrˈazɪtɪ/
-  translation: ''
+  translation: to impress, to strike (perfective)
   pos: verb
 - lemma: гвардія
   ipa: /ɦʋˈardija/
-  translation: ''
+  translation: guard, vanguard
   pos: noun
   gender: f
 - lemma: дебютант
   ipa: /dɛbjutˈant/
-  translation: ''
+  translation: debutant
   pos: noun
   gender: m
 - lemma: дебютний
   ipa: /dɛbˈjutnɪj/
-  translation: ''
+  translation: debut (adj)
   pos: adj
 - lemma: детективний
   ipa: /dɛtɛktˈɪʋnɪj/
-  translation: ''
+  translation: detective (adj)
   pos: adj
 - lemma: жестовий
   ipa: /ʒɛstɔʋɪj/
-  translation: ''
+  translation: gesture (adj), sign (language)
   pos: adj
 - lemma: зеленський
   ipa: /zɛlɛnsʲkɪj/
-  translation: ''
+  translation: Zelenskyy (name)
   pos: adj
 - lemma: зіграти
   ipa: /ziɦrˈatɪ/
-  translation: ''
+  translation: to play (perfective)
   pos: verb
 - lemma: ихна
   ipa: /ˈɪxna/
@@ -83,158 +83,162 @@ items:
   gender: f
 - lemma: канни
   ipa: /kˈannɪ/
-  translation: ''
+  translation: Cannes
   pos: noun
 - lemma: каннський
   ipa: /kˈannsʲkɪj/
-  translation: ''
+  translation: Cannes (adj)
   pos: adj
 - lemma: київнаукфільм
   ipa: /kɪjiʋnaukfˈilʲm/
-  translation: ''
+  translation: Kyivnaukfilm
   pos: noun
   gender: m
 - lemma: комедійний
   ipa: /kɔmɛdˈijnɪj/
-  translation: ''
+  translation: comic, comedy (adj)
   pos: adj
 - lemma: конкурсний
   ipa: /kˈɔnkursnɪj/
-  translation: ''
+  translation: contest (adj), competitive
   pos: adj
 - lemma: конкурувати
   ipa: /kɔnkuruʋˈatɪ/
-  translation: ''
+  translation: to compete
   pos: verb
 - lemma: короткометражний
   ipa: /kɔrɔtkɔmɛtrˈaʒnɪj/
-  translation: ''
+  translation: short-film (adj)
   pos: adj
 - lemma: кримінальний
   ipa: /krɪminˈalʲnɪj/
-  translation: ''
+  translation: criminal
   pos: adj
 - lemma: кінематографічний
   ipa: /kinɛmatɔɦrafˈit͡ʃnɪj/
-  translation: ''
+  translation: cinematic
   pos: adj
 - lemma: кінематографія
   ipa: /kinɛmatɔɦrˈafija/
-  translation: ''
+  translation: cinematography
   pos: noun
   gender: f
 - lemma: кіновиробництво
   ipa: /kinɔʋɪrɔbnˈɪt͡stʋɔ/
-  translation: ''
+  translation: film production
   pos: noun
   gender: n
 - lemma: кінолексика
   ipa: /kinɔlɛksɪka/
-  translation: ''
+  translation: cinema vocabulary
   pos: noun
   gender: f
 - lemma: кіноіндустрія
   ipa: /kinɔindˈustrija/
-  translation: ''
+  translation: film industry
   pos: noun
   gender: f
 - lemma: лозниця
   ipa: /lɔznˈɪt͡sja/
-  translation: ''
+  translation: Loznitsa (name)
   pos: noun
   gender: f
 - lemma: ліцензований
   ipa: /lit͡sɛnzˈɔʋanɪj/
-  translation: ''
+  translation: licensed
   pos: adj
 - lemma: мирослав
   ipa: /mɪrɔslˈaʋ/
-  translation: ''
+  translation: Myroslav (name)
   pos: noun
   gender: m
 - lemma: митець
   ipa: /mɪtˈɛt͡sʲ/
-  translation: ''
+  translation: artist
   pos: noun
 - lemma: мультфільм
   ipa: /mulʲtfˈilʲm/
-  translation: ''
+  translation: cartoon, animated film
   pos: noun
 - lemma: найпрестижніший
   ipa: /najprɛstˈɪʒniʃɪj/
-  translation: ''
+  translation: the most prestigious
   pos: adj
 - lemma: номінація
   ipa: /nɔminˈat͡sija/
-  translation: ''
+  translation: nomination
   pos: noun
 - lemma: онлайн-перегляд
   ipa: /ɔnlajn-pɛrˈɛɦljad/
-  translation: ''
+  translation: online viewing
   pos: noun
   gender: m
 - lemma: оскар
   ipa: /ˈɔskar/
-  translation: ''
+  translation: Oscar
   pos: noun
   gender: m
 - lemma: переосмислювати
   ipa: /pɛrɛɔsmˈɪsljuʋatɪ/
-  translation: ''
+  translation: to rethink, to reinterpret
   pos: verb
 - lemma: плануватися
   ipa: /planuʋˈatɪsja/
-  translation: ''
+  translation: to be planned
   pos: verb
 - lemma: показуючи
   ipa: /pɔkˈazujut͡ʃɪ/
-  translation: ''
+  translation: showing
   pos: verb
 - lemma: прем'єр
   ipa: /prɛmˈjɛr/
-  translation: ''
+  translation: premier, first performance
   pos: noun
-  gender: m
 - lemma: приз
   ipa: /prɪz/
-  translation: ''
+  translation: prize
   pos: noun
   gender: m
 - lemma: режисура
   ipa: /rɛʒɪsˈura/
-  translation: ''
+  translation: directing
   pos: noun
   gender: f
 - lemma: розважальний
   ipa: /rɔzʋaʒˈalʲnɪj/
-  translation: ''
+  translation: entertaining, amusement (adj)
   pos: adj
 - lemma: розкривати
   ipa: /rɔzkrɪʋˈatɪ/
-  translation: ''
+  translation: to reveal, to open (imperfective)
   pos: verb
 - lemma: символізм
   ipa: /sɪmʋɔlˈizm/
-  translation: ''
+  translation: symbolism
   pos: noun
   gender: m
 - lemma: слабошпицький
   ipa: /slabɔʃpˈɪt͡sʲkɪj/
-  translation: ''
+  translation: Slaboshpytskyi (name)
   pos: noun
   gender: m
 - lemma: співробітництво
   ipa: /spiʋrɔbˈitnɪt͡stʋɔ/
-  translation: ''
+  translation: cooperation, partnership
   pos: noun
   gender: n
+- lemma: стб
+  ipa: /stb/
+  translation: ''
+  pos: noun
+  gender: m
 - lemma: стрімінговий
   ipa: /striminɦɔʋɪj/
-  translation: ''
+  translation: streaming (adj)
   pos: adj
 - lemma: сценарист
   ipa: /st͡sɛnarˈɪst/
-  translation: ''
+  translation: screenwriter
   pos: noun
   gender: m
 - lemma: укранімафільм

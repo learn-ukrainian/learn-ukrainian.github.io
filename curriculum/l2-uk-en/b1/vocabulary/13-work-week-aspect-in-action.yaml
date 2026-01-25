@@ -7,13 +7,27 @@ items:
   translation: ''
   pos: noun
   gender: f
+- lemma: активність
+  ipa: /aktˈɪʋnistʲ/
+  translation: activity
+  pos: noun
+  gender: f
 - lemma: англіцизм
   ipa: /anɦlit͡sˈɪzm/
-  translation: ''
+  translation: Anglicism
   pos: noun
 - lemma: банош
   ipa: /banɔʃ/
-  translation: ''
+  translation: banosh (dish)
+  pos: noun
+  gender: m
+- lemma: близько
+  ipa: /blˈɪzʲkɔ/
+  translation: near, about, approximately
+  pos: adv
+- lemma: бюджет
+  ipa: /bjudʒˈɛt/
+  translation: budget
   pos: noun
   gender: m
 - lemma: білд
@@ -21,9 +35,18 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: вдаватися
+  ipa: /ʋdaʋˈatɪsja/
+  translation: to succeed, to resort to
+  pos: verb
+- lemma: вимога
+  ipa: /ʋɪmˈɔɦa/
+  translation: requirement, demand
+  pos: noun
+  gender: f
 - lemma: встиглий
   ipa: /ʋstˈɪɦlɪj/
-  translation: ''
+  translation: ripe, successful
   pos: adj
 - lemma: встигти
   ipa: /ʋstˈɪɦtɪ/
@@ -36,30 +59,34 @@ items:
   gender: m
 - lemma: від'їзд
   ipa: /ʋidˈjizd/
-  translation: ''
+  translation: departure
   pos: noun
   gender: m
 - lemma: відображення
   ipa: /ʋidɔbrˈaʒɛnnja/
-  translation: ''
+  translation: reflection
   pos: noun
   gender: n
 - lemma: відправа
   ipa: /ʋidprˈaʋa/
-  translation: ''
+  translation: departure, dispatch, service (religious)
   pos: noun
 - lemma: відправка
   ipa: /ʋidprˈaʋka/
-  translation: ''
+  translation: dispatch, sending
   pos: noun
   gender: f
 - lemma: геймер
   ipa: /ɦˈɛjmɛr/
-  translation: ''
+  translation: gamer
   pos: noun
 - lemma: даний
   ipa: /dˈanɪj/
-  translation: ''
+  translation: given, this
+  pos: adj
+- lemma: дев'ятий
+  ipa: /dɛʋˈjatɪj/
+  translation: ninth
   pos: adj
 - lemma: деплоїти
   ipa: /dɛplɔjitɪ/
@@ -67,142 +94,288 @@ items:
   pos: verb
 - lemma: детальний
   ipa: /dɛtˈalʲnɪj/
-  translation: ''
+  translation: detailed
   pos: adj
+- lemma: дизайн
+  ipa: /dɪzajn/
+  translation: design
+  pos: noun
+  gender: m
 - lemma: дністер
   ipa: /dnistˈɛr/
-  translation: ''
+  translation: Dnister (river)
   pos: noun
   gender: m
 - lemma: документація
   ipa: /dɔkumɛntˈat͡sija/
-  translation: ''
+  translation: documentation
   pos: noun
   gender: f
 - lemma: доручення
   ipa: /dɔrˈut͡ʃɛnnja/
-  translation: ''
+  translation: errand, instruction
   pos: noun
   gender: n
+- lemma: досвідчений
+  ipa: /dɔsʋˈidt͡ʃɛnɪj/
+  translation: experienced
+  pos: adj
+- lemma: досягнутий
+  ipa: /dɔsˈjaɦnutɪj/
+  translation: achieved
+  pos: adj
+- lemma: дотримуватися
+  ipa: /dɔtrˈɪmuʋatɪsja/
+  translation: to adhere to, to comply with
+  pos: verb
+- lemma: життєвий
+  ipa: /ʒɪttˈjɛʋɪj/
+  translation: life (adj), vital
+  pos: adj
 - lemma: задеплоїти
   ipa: /zadɛplɔjitɪ/
   translation: ''
   pos: verb
 - lemma: запозичений
   ipa: /zapɔzˈɪt͡ʃɛnɪj/
-  translation: ''
+  translation: borrowed
   pos: adj
 - lemma: звинувачувати
   ipa: /zʋɪnuʋˈat͡ʃuʋatɪ/
-  translation: ''
+  translation: to accuse
   pos: verb
+- lemma: зворотний
+  ipa: /zʋɔrˈɔtnɪj/
+  translation: reverse, backwards
+  pos: adj
+- lemma: звісно
+  ipa: /zʋˈisnɔ/
+  translation: of course
+  pos: adv
 - lemma: звітувати
   ipa: /zʋituʋˈatɪ/
-  translation: ''
+  translation: to report
   pos: verb
-- lemma: змінитися
-  ipa: /zminˈɪtɪsja/
+- lemma: здалий
+  ipa: /zdˈalɪj/
   translation: ''
-  pos: verb
+  pos: adj
+- lemma: здача
+  ipa: /zdˈat͡ʃa/
+  translation: change (money), handing over
+  pos: noun
+  gender: f
+- lemma: каміння
+  ipa: /kamˈinnja/
+  translation: stones, masonry
+  pos: noun
+- lemma: карпати
+  ipa: /karpˈatɪ/
+  translation: Carpathians
+  pos: noun
+- lemma: карпатський
+  ipa: /karpˈatsʲkɪj/
+  translation: Carpathian
+  pos: adj
 - lemma: кварталий
   ipa: /kʋartalɪj/
   translation: ''
   pos: adj
-- lemma: лежачий
-  ipa: /lɛʒˈat͡ʃɪj/
-  translation: ''
-  pos: adj
-- lemma: марнування
-  ipa: /marnuʋˈannja/
-  translation: ''
+- lemma: керування
+  ipa: /kɛruʋˈannja/
+  translation: management, control, driving
   pos: noun
   gender: n
+- lemma: лежачий
+  ipa: /lɛʒˈat͡ʃɪj/
+  translation: lying, recumbent
+  pos: adj
+- lemma: лексика
+  ipa: /lˈɛksɪka/
+  translation: vocabulary, lexis
+  pos: noun
+  gender: f
+- lemma: марнування
+  ipa: /marnuʋˈannja/
+  translation: waste, squandering
+  pos: noun
+  gender: n
+- lemma: менеджер
+  ipa: /mˈɛnɛdʒɛr/
+  translation: manager
+  pos: noun
+  gender: m
 - lemma: менеджмент
   ipa: /mˈɛnɛdʒmɛnt/
-  translation: ''
+  translation: management
   pos: noun
   gender: m
 - lemma: мудрість
   ipa: /mˈudristʲ/
-  translation: ''
+  translation: wisdom
   pos: noun
   gender: f
 - lemma: мікрокосм
   ipa: /mikrɔkˈɔsm/
-  translation: ''
+  translation: microcosm
   pos: noun
   gender: m
+- lemma: нарада
+  ipa: /narˈada/
+  translation: meeting, briefing
+  pos: noun
+  gender: f
 - lemma: нафармити
   ipa: /nafarmɪtɪ/
-  translation: ''
+  translation: to farm (slang)
   pos: verb
 - lemma: непорозуміння
   ipa: /nɛpɔrɔzumˈinnja/
-  translation: ''
+  translation: misunderstanding
   pos: noun
+- lemma: ніби
+  ipa: /nˈibɪ/
+  translation: as if, like
+  pos: part
+- lemma: обираючи
+  ipa: /ɔbɪrˈajut͡ʃɪ/
+  translation: choosing
+  pos: verb
+- lemma: організація
+  ipa: /ɔrɦanizˈat͡sija/
+  translation: organization
+  pos: noun
+  gender: f
 - lemma: п'ятничний
   ipa: /pˈjatnɪt͡ʃnɪj/
-  translation: ''
+  translation: Friday (adj)
   pos: adj
+- lemma: перехід
+  ipa: /pɛrɛxˈid/
+  translation: crossing, transition
+  pos: noun
+  gender: m
+- lemma: планування
+  ipa: /planuʋˈannja/
+  translation: planning
+  pos: noun
+  gender: n
 - lemma: повчання
   ipa: /pɔʋt͡ʃˈannja/
-  translation: ''
+  translation: teaching, lesson, moralizing
   pos: noun
   gender: n
 - lemma: позитивне
   ipa: /pɔzɪtˈɪʋnɛ/
-  translation: ''
+  translation: positive (neuter)
   pos: noun
   gender: n
+- lemma: позитивний
+  ipa: /pɔzɪtˈɪʋnɪj/
+  translation: positive (adj)
+  pos: adj
 - lemma: понеділковий
   ipa: /pɔnɛdˈilkɔʋɪj/
-  translation: ''
+  translation: Monday (adj)
   pos: adj
+- lemma: попрацювати
+  ipa: /pɔprat͡sjuʋˈatɪ/
+  translation: to work for a while
+  pos: verb
+- lemma: починатися
+  ipa: /pɔt͡ʃɪnˈatɪsja/
+  translation: to start (imperfective passive)
+  pos: verb
 - lemma: проводитися
   ipa: /prɔʋˈɔdɪtɪsja/
-  translation: ''
+  translation: to be conducted
+  pos: verb
+- lemma: прогрес
+  ipa: /prɔɦrˈɛs/
+  translation: progress
+  pos: noun
+  gender: m
+- lemma: продовжити
+  ipa: /prɔdˈɔʋʒɪtɪ/
+  translation: to continue (perfective)
+  pos: verb
+- lemma: проходити
+  ipa: /prɔxɔdɪtɪ/
+  translation: to pass, to go through (imperfective)
   pos: verb
 - lemma: проєктний
   ipa: /prɔˈjɛktnɪj/
-  translation: ''
+  translation: project (adj)
   pos: adj
 - lemma: пріоритет
   ipa: /priɔrɪtˈɛt/
-  translation: ''
+  translation: priority
   pos: noun
   gender: m
 - lemma: підкорятися
   ipa: /pidkɔrˈjatɪsja/
-  translation: ''
+  translation: to obey, to submit
   pos: verb
+- lemma: ранковий
+  ipa: /rankˈɔʋɪj/
+  translation: morning (adj)
+  pos: adj
 - lemma: розрізняючи
   ipa: /rɔzriznˈjajut͡ʃɪ/
-  translation: ''
+  translation: distinguishing
   pos: verb
 - lemma: рутин
   ipa: /rutˈɪn/
   translation: ''
   pos: noun
   gender: m
+- lemma: рутина
+  ipa: /rutˈɪna/
+  translation: routine
+  pos: noun
+  gender: f
+- lemma: різноманітний
+  ipa: /riznɔmanˈitnɪj/
+  translation: diverse, varied
+  pos: adj
+- lemma: співробітник
+  ipa: /spiʋrɔbˈitnɪk/
+  translation: employee, coworker
+  pos: noun
+  gender: m
+- lemma: статус
+  ipa: /stˈatus/
+  translation: status
+  pos: noun
+  gender: m
 - lemma: статус-апдейт
   ipa: /stˈatus-apdɛjt/
-  translation: ''
+  translation: status update
   pos: noun
+- lemma: стверджувати
+  ipa: /stʋˈɛrdʒuʋatɪ/
+  translation: to assert, to state
+  pos: verb
 - lemma: стендап
   ipa: /stɛndap/
-  translation: ''
+  translation: stand-up (comedy)
   pos: noun
 - lemma: суворо
   ipa: /suʋˈɔrɔ/
-  translation: ''
+  translation: harshly, strictly
   pos: adv
 - lemma: схвалити
   ipa: /sxʋalˈɪtɪ/
-  translation: ''
+  translation: to approve
   pos: verb
+- lemma: схема
+  ipa: /sxˈɛma/
+  translation: scheme, diagram, circuit
+  pos: noun
+  gender: f
 - lemma: твердження
   ipa: /tʋˈɛrdʒɛnnja/
-  translation: ''
+  translation: statement, assertion
   pos: noun
   gender: n
 - lemma: термінов
@@ -210,26 +383,42 @@ items:
   translation: ''
   pos: noun
   gender: m
+- lemma: технічний
+  ipa: /tɛxnˈit͡ʃnɪj/
+  translation: technical
+  pos: adj
 - lemma: теча
   ipa: /tˈɛt͡ʃa/
-  translation: ''
+  translation: leak, current
   pos: noun
   gender: f
 - lemma: точка
   ipa: /tˈɔt͡ʃka/
-  translation: ''
+  translation: point, dot, shop (colloquial)
   pos: noun
   gender: f
 - lemma: трекінг
   ipa: /trɛkinɦ/
-  translation: ''
+  translation: tracking, trekking
   pos: noun
   gender: m
+- lemma: успішний
+  ipa: /uspˈiʃnɪj/
+  translation: successful
+  pos: adj
 - lemma: фармити
   ipa: /farmɪtɪ/
-  translation: ''
+  translation: to farm (gaming)
   pos: verb
 - lemma: фокусуватися
   ipa: /fɔkusuʋˈatɪsja/
-  translation: ''
+  translation: to focus (oneself)
   pos: verb
+- lemma: чітко
+  ipa: /t͡ʃˈitkɔ/
+  translation: clearly, distinctly
+  pos: adv
+- lemma: ідеальний
+  ipa: /idɛˈalʲnɪj/
+  translation: ideal, perfect
+  pos: adj

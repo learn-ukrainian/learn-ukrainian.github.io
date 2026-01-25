@@ -1,17 +1,52 @@
-# Audit Report: 53-abstract-concepts-processes.md
-**Phase:** B1.5 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+# Audit Report: M53 — 53-abstract-concepts-processes.md
+**Level:** B1 | **Module:** M53 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:34:11
+
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння лексики процесів | 8 | 8 | ✅ |
+| 2 | match-up | Колокації — дієслово + іменник | 12 | 8 | ✅ |
+| 3 | match-up | Антоніми | 12 | 8 | ✅ |
+| 4 | group-sort | Групування за типом тренду | 18 | 12 | ✅ |
+| 5 | cloze | Вибір слова з контексту | 14 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання | 12 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
+| 11 | translate | Переклад речень | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть слова процесів та змін | 10 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1699/1500
+- **Words:** ✅ 1703/1500 (raw: 2498)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 12 < 35 (soft target)
+- **Vocab:** ✅ 51/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,11 +77,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |
-| **Вступ** | ⚪️ | 91 | Skipped |
+| **Вступ** | ✅ | 91 | Included in Core |
 | **Вивчення слів** | ⚪️ | 404 | Skipped |
 | **Вживання** | ⚪️ | 218 | Skipped |
 | **Читання** | ✅ | 372 | Included in Core |
 | **Діалоги** | ✅ | 252 | Included in Core |
-| **Підсумок** | ✅ | 200 | Included in Core |
+| **Підсумок** | ✅ | 204 | Included in Core |
 | **Лексика** | ⚪️ | 0 | Skipped |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,19 +2,14 @@ module: 36-basic-motion-prefixes
 level: A2
 version: '2.0'
 items:
-- lemma: апостроф
-  ipa: /apˈɔstrɔf/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: бариста
   ipa: /barɪsta/
-  translation: ''
+  translation: barista
   pos: noun
   gender: m
 - lemma: брама
   ipa: /brˈama/
-  translation: ''
+  translation: gate
   pos: noun
   gender: f
 - lemma: в'-
@@ -23,151 +18,72 @@ items:
   pos: noun
 - lemma: в'їжджати
   ipa: /ʋjiʒdʒˈatɪ/
-  translation: ''
+  translation: to drive in, to enter (by vehicle)
   pos: verb
-- lemma: в'їхати
-  ipa: /ʋˈjixatɪ/
-  translation: ''
-  pos: verb
-- lemma: в-
-  ipa: /ʋ-/
-  translation: ''
-  pos: noun
 - lemma: вбудовуватися
   ipa: /ʋbudɔʋuʋatɪsja/
-  translation: ''
-  pos: verb
-- lemma: вбігти
-  ipa: /ʋbˈiɦtɪ/
-  translation: ''
-  pos: verb
-- lemma: ввійти
-  ipa: /ʋʋijtˈɪ/
-  translation: ''
+  translation: to be built-in
   pos: verb
 - lemma: вивантажувати
   ipa: /ʋɪʋantˈaʒuʋatɪ/
-  translation: ''
+  translation: to unload
   pos: verb
-- lemma: вимова
-  ipa: /ʋɪmˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: високорозвинений
   ipa: /ʋɪsɔkɔrɔzʋˈɪnɛnɪj/
-  translation: ''
+  translation: highly developed
   pos: adj
-- lemma: виходження
-  ipa: /ʋˈɪxɔdʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: виїзд
   ipa: /ʋˈɪjizd/
-  translation: ''
+  translation: departure, exit
   pos: noun
   gender: m
-- lemma: виїхати
-  ipa: /ʋˈɪjixatɪ/
-  translation: ''
-  pos: verb
 - lemma: вмитися
   ipa: /ʋmˈɪtɪsja/
-  translation: ''
+  translation: to wash oneself (perfective)
   pos: verb
 - lemma: водіння
   ipa: /ʋɔdˈinnja/
-  translation: ''
+  translation: driving
   pos: noun
   gender: n
-- lemma: всередину
-  ipa: /ʋsɛrˈɛdɪnu/
-  translation: ''
-  pos: adv
 - lemma: вулиц
   ipa: /ʋulɪt͡s/
   translation: ''
   pos: noun
   gender: m
-- lemma: входження
-  ipa: /ʋxˈɔdʒɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: відтінковий
   ipa: /ʋidtˈinkɔʋɪj/
-  translation: ''
+  translation: tinted, nuanced
   pos: adj
-- lemma: візит
-  ipa: /ʋizˈɪt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: війт
-  ipa: /ʋijt/
-  translation: ''
-  pos: noun
-- lemma: гараж
-  ipa: /ɦarˈaʒ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: географія
-  ipa: /ɦɛɔɦrˈafija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: глибокий
-  ipa: /ɦlɪbˈɔkɪj/
-  translation: ''
-  pos: adj
-- lemma: двір
-  ipa: /dʋir/
-  translation: ''
+- lemma: ескалатор
+  ipa: /ɛskalˈatɔr/
+  translation: escalator
   pos: noun
   gender: m
 - lemma: з'їхати
   ipa: /zˈjixatɪ/
-  translation: ''
+  translation: to drive away, to move out
   pos: verb
-- lemma: за-
-  ipa: /za-/
-  translation: ''
-  pos: noun
 - lemma: задній
   ipa: /zˈadnij/
-  translation: ''
+  translation: back, rear
   pos: adj
 - lemma: замкнутий
   ipa: /zˈamknutɪj/
   translation: ''
   pos: adj
-- lemma: запам'ятовування
-  ipa: /zapamjatˈɔʋuʋannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: зберігати
-  ipa: /zbɛriɦˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: змокнути
   ipa: /zmˈɔknutɪ/
-  translation: ''
+  translation: to get wet
   pos: verb
 - lemma: зовні
   ipa: /zˈɔʋni/
-  translation: ''
+  translation: outside, from the outside
   pos: adv
 - lemma: зовнішній
   ipa: /zˈɔʋniʃnij/
-  translation: ''
+  translation: external, outer
   pos: adj
-- lemma: зібратися
-  ipa: /zibrˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: инка
   ipa: /ɪnka/
   translation: ''
@@ -180,154 +96,71 @@ items:
   gender: m
 - lemma: компактніший
   ipa: /kɔmpˈaktniʃɪj/
-  translation: ''
+  translation: more compact
   pos: adj
-- lemma: контейнер
-  ipa: /kɔntˈɛjnɛr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: королівський
   ipa: /kɔrɔlˈiʋsʲkɪj/
-  translation: ''
+  translation: royal
   pos: adj
 - lemma: коротко
   ipa: /kˈɔrɔtkɔ/
-  translation: ''
+  translation: briefly
   pos: adv
-- lemma: межа
-  ipa: /mɛʒˈa/
-  translation: ''
-  pos: noun
 - lemma: мі
   ipa: /mi/
   translation: ''
   pos: noun
   gender: n
-- lemma: міський
-  ipa: /misʲkˈɪj/
-  translation: ''
-  pos: adj
-- lemma: навігація
-  ipa: /naʋiɦˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: назовний
-  ipa: /nazɔʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: незавершений
-  ipa: /nɛzaʋˈɛrʃɛnɪj/
-  translation: ''
-  pos: adj
-- lemma: оповідання
-  ipa: /ɔpɔʋidˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: острів
-  ipa: /ˈɔstriʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: парковк
   ipa: /parkɔʋk/
   translation: ''
   pos: noun
   gender: f
-- lemma: парковка
-  ipa: /parkɔʋka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: передбачувано
   ipa: /pɛrɛdbˈat͡ʃuʋanɔ/
-  translation: ''
+  translation: predictably
   pos: adv
-- lemma: плутати
-  ipa: /plˈutatɪ/
-  translation: ''
-  pos: verb
 - lemma: поверхня
   ipa: /pɔʋˈɛrxnja/
-  translation: ''
+  translation: surface
   pos: noun
   gender: f
 - lemma: префіксний
   ipa: /prɛfiksnɪj/
-  translation: ''
+  translation: prefixal
   pos: adj
 - lemma: прийнятий
   ipa: /prˈɪjnjatɪj/
-  translation: ''
+  translation: accepted, common
   pos: adj
 - lemma: проникнення
   ipa: /prɔnˈɪknɛnnja/
-  translation: ''
+  translation: penetration
   pos: noun
   gender: n
 - lemma: піднятися
   ipa: /pidnˈjatɪsja/
-  translation: ''
+  translation: to rise, to climb (perfective)
   pos: verb
-- lemma: ранковий
-  ipa: /rankˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: рутина
-  ipa: /rutˈɪna/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: світле
   ipa: /sʋˈitlɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: складність
-  ipa: /sklˈadnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: сучасне
-  ipa: /sut͡ʃˈasnɛ/
-  translation: ''
+  translation: light (neuter), bright
   pos: noun
   gender: n
 - lemma: сільський
   ipa: /silʲsʲkˈɪj/
-  translation: ''
+  translation: rural, village (adj)
   pos: adj
-- lemma: територія
-  ipa: /tɛrɪtˈɔrija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: тротуар
-  ipa: /trɔtuˈar/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: уникнення
-  ipa: /unˈɪknɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: чіткість
   ipa: /t͡ʃˈitkistʲ/
-  translation: ''
+  translation: clarity, precision
   pos: noun
   gender: f
 - lemma: чіткіший
   ipa: /t͡ʃitkˈiʃɪj/
-  translation: ''
+  translation: clearer
   pos: adj
 - lemma: як-от
   ipa: /jak-ɔt/
-  translation: ''
+  translation: such as, for example
   pos: part
-- lemma: ізсередини
-  ipa: /izsɛrˈɛdɪnɪ/
-  translation: ''
-  pos: adv

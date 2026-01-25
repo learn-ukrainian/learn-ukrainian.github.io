@@ -4,160 +4,103 @@ version: '2.0'
 items:
 - lemma: австралія
   ipa: /aʋstrˈalija/
-  translation: ''
+  translation: Australia
   pos: noun
   gender: f
-- lemma: авто
-  ipa: /aʋtˈɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: багате
   ipa: /baɦˈatɛ/
-  translation: ''
+  translation: rich (neuter)
   pos: noun
   gender: n
-- lemma: би
-  ipa: /bɪ/
-  translation: ''
-  pos: part
 - lemma: будуватися
   ipa: /buduʋˈatɪsja/
-  translation: ''
+  translation: to be built, to build oneself
   pos: verb
 - lemma: білет
   ipa: /bilˈɛt/
-  translation: ''
+  translation: ticket
   pos: noun
   gender: m
-- lemma: ввічливий
-  ipa: /ʋʋˈit͡ʃlɪʋɪj/
-  translation: ''
-  pos: adj
-- lemma: ввічливість
-  ipa: /ʋʋˈit͡ʃlɪʋistʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: вибачитися
   ipa: /ʋˈɪbat͡ʃɪtɪsja/
-  translation: ''
+  translation: to apologize (perfective)
   pos: verb
 - lemma: виграти
   ipa: /ʋˈɪɦratɪ/
-  translation: ''
+  translation: to win (perfective)
   pos: verb
 - lemma: висловлення
   ipa: /ʋˈɪslɔʋlɛnnja/
-  translation: ''
+  translation: expression, utterance
   pos: noun
   gender: n
-- lemma: впасти
-  ipa: /ʋpˈastɪ/
-  translation: ''
-  pos: verb
 - lemma: відчинити
   ipa: /ʋidt͡ʃɪnˈɪtɪ/
-  translation: ''
+  translation: to open (a door/window)
   pos: verb
 - lemma: гіпотеза
   ipa: /ɦipˈɔtɛza/
-  translation: ''
+  translation: hypothesis
   pos: noun
   gender: f
 - lemma: домовлятися
   ipa: /dɔmɔʋlˈjatɪsja/
-  translation: ''
+  translation: to negotiate, to agree (imperfective)
   pos: verb
-- lemma: зачекати
-  ipa: /zat͡ʃɛkˈatɪ/
-  translation: ''
-  pos: verb
+- lemma: класно
+  ipa: /klˈasnɔ/
+  translation: coolly
+  pos: adv
 - lemma: лотерейний
   ipa: /lɔtɛrˈɛjnɪj/
-  translation: ''
+  translation: lottery (adj)
   pos: adj
 - lemma: лотерея
   ipa: /lɔtɛrˈɛja/
-  translation: ''
+  translation: lottery
   pos: noun
   gender: f
-- lemma: мабуть
-  ipa: /mˈabutʲ/
-  translation: ''
-  pos: adv
 - lemma: мріти
   ipa: /mrˈitɪ/
-  translation: ''
+  translation: to appear dimly, to loom
   pos: verb
-- lemma: мільйон
-  ipa: /milʲjˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: навколосвітній
   ipa: /naʋkɔlɔsʋˈitnij/
-  translation: ''
+  translation: round-the-world (adj)
   pos: adj
 - lemma: напевно
   ipa: /napˈɛʋnɔ/
-  translation: ''
-  pos: adv
-- lemma: ну
-  ipa: /nu/
-  translation: ''
-  pos: part
-- lemma: нікуди
-  ipa: /nikudɪ/
-  translation: ''
+  translation: probably, for sure
   pos: adv
 - lemma: по-українськи
   ipa: /pɔ-ukraˈjinsʲkɪ/
-  translation: ''
+  translation: in Ukrainian style/way
   pos: adv
 - lemma: пощастити
   ipa: /pɔʃt͡ʃastˈɪtɪ/
-  translation: ''
+  translation: to be lucky (it was lucky)
   pos: verb
 - lemma: припущення
   ipa: /prɪpˈuʃt͡ʃɛnnja/
-  translation: ''
+  translation: assumption
   pos: noun
   gender: n
 - lemma: підстелити
   ipa: /pidstɛlˈɪtɪ/
-  translation: ''
+  translation: to spread under
   pos: verb
 - lemma: реальність
   ipa: /rɛˈalʲnistʲ/
-  translation: ''
+  translation: reality
   pos: noun
   gender: f
 - lemma: соломка
   ipa: /sɔlˈɔmka/
-  translation: ''
+  translation: straw, pretzel sticks
   pos: noun
   gender: f
-- lemma: сполучник
-  ipa: /spɔlˈut͡ʃnɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: умова
   ipa: /umˈɔʋa/
-  translation: ''
+  translation: condition, term
   pos: noun
   gender: f
-- lemma: умовний
-  ipa: /umˈɔʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: частка
-  ipa: /t͡ʃˈastka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: якби
-  ipa: /jakbˈɪ/
-  translation: ''
-  pos: conj

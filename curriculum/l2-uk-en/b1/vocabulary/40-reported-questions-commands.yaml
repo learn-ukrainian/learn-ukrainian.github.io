@@ -4,106 +4,146 @@ version: '2.0'
 items:
 - lemma: авторитетно
   ipa: /aʋtɔrɪtˈɛtnɔ/
-  translation: ''
+  translation: authoritatively
   pos: adv
+- lemma: адаптувати
+  ipa: /adaptuʋˈatɪ/
+  translation: to adapt
+  pos: verb
 - lemma: анкета
   ipa: /ankˈɛta/
-  translation: ''
+  translation: questionnaire, form
   pos: noun
   gender: f
 - lemma: верховний
   ipa: /ʋɛrxˈɔʋnɪj/
-  translation: ''
+  translation: supreme
   pos: adj
 - lemma: висловлювання
   ipa: /ʋɪslˈɔʋljuʋannja/
-  translation: ''
+  translation: statement, utterance
   pos: noun
   gender: n
 - lemma: дерибасівська
   ipa: /dɛrɪbasiʋsʲka/
-  translation: ''
+  translation: Deribasivska (street in Odesa)
   pos: noun
   gender: f
 - lemma: допитуватися
   ipa: /dɔpˈɪtuʋatɪsja/
-  translation: ''
+  translation: to inquire, to insist on knowing
   pos: verb
 - lemma: емоційно
   ipa: /ɛmɔt͡sˈijnɔ/
-  translation: ''
+  translation: emotionally
   pos: adv
 - lemma: з'ясовувати
   ipa: /zjasˈɔʋuʋatɪ/
-  translation: ''
+  translation: to clarify, to find out
   pos: verb
 - lemma: завершальний
   ipa: /zaʋɛrʃˈalʲnɪj/
-  translation: ''
+  translation: final, concluding
   pos: adj
 - lemma: закликати
   ipa: /zaklɪkatɪ/
-  translation: ''
+  translation: to appeal, to call upon
   pos: verb
+- lemma: запорозький
+  ipa: /zapɔrˈɔzʲkɪj/
+  translation: Zaporozhian
+  pos: adj
 - lemma: звітування
   ipa: /zʋituʋˈannja/
-  translation: ''
+  translation: reporting
   pos: noun
   gender: n
 - lemma: механічний
   ipa: /mɛxanˈit͡ʃnɪj/
-  translation: ''
+  translation: mechanical
   pos: adj
 - lemma: наполегливо
   ipa: /napɔlˈɛɦlɪʋɔ/
-  translation: ''
+  translation: persistently, insistently
   pos: adv
 - lemma: оригінальний
   ipa: /ɔrɪɦinˈalʲnɪj/
-  translation: ''
+  translation: original
   pos: adj
 - lemma: переказувати
   ipa: /pɛrɛkˈazuʋatɪ/
-  translation: ''
+  translation: to retell, to transfer (imperfective)
   pos: verb
 - lemma: пересказ
   ipa: /pɛrɛskaz/
-  translation: ''
+  translation: retelling
   pos: noun
   gender: m
 - lemma: поблизу
   ipa: /pɔblɪzˈu/
-  translation: ''
+  translation: nearby
   pos: adv
 - lemma: понаднормово
   ipa: /pɔnadnɔrmˈɔʋɔ/
-  translation: ''
+  translation: overtime
   pos: adv
 - lemma: поцікавитися
   ipa: /pɔt͡sikˈaʋɪtɪsja/
-  translation: ''
+  translation: to inquire, to take interest
+  pos: verb
+- lemma: почувати
+  ipa: /pɔt͡ʃuʋˈatɪ/
+  translation: to feel (imperfective)
   pos: verb
 - lemma: підозрюваний
   ipa: /pidˈɔzrjuʋanɪj/
-  translation: ''
+  translation: suspect (person)
   pos: adj
+- lemma: ратуша
+  ipa: /rˈatuʃa/
+  translation: town hall
+  pos: noun
+  gender: f
+- lemma: ретельно
+  ipa: /rɛtˈɛlʲnɔ/
+  translation: thoroughly, carefully
+  pos: adv
+- lemma: реєстратор
+  ipa: /rɛjɛstrˈatɔr/
+  translation: registrar, recorder
+  pos: noun
+  gender: m
 - lemma: слідчий
   ipa: /slˈidt͡ʃɪj/
-  translation: ''
+  translation: investigator, investigative (adj)
   pos: adj
+- lemma: січа
+  ipa: /sˈit͡ʃa/
+  translation: Sich (historical fort)
+  pos: noun
+  gender: f
 - lemma: умовляти
   ipa: /umɔʋlˈjatɪ/
-  translation: ''
+  translation: to persuade, to coax
   pos: verb
 - lemma: уточнювати
   ipa: /utˈɔt͡ʃnjuʋatɪ/
-  translation: ''
+  translation: to clarify, to specify (imperfective)
   pos: verb
 - lemma: формулювання
   ipa: /fɔrmuljuʋˈannja/
-  translation: ''
+  translation: formulation, wording
+  pos: noun
+- lemma: юрист
+  ipa: /jurˈɪst/
+  translation: lawyer, jurist
   pos: noun
 - lemma: інвертований
   ipa: /inʋɛrtˈɔʋanɪj/
-  translation: ''
+  translation: inverted
   pos: adj
+- lemma: інтерв'ю
+  ipa: /intɛrʋˈju/
+  translation: interview
+  pos: noun
+  gender: n

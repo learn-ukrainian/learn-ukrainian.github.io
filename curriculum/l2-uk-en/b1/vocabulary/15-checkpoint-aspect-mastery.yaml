@@ -2,95 +2,204 @@ module: 15-checkpoint-aspect-mastery
 level: B1
 version: '2.0'
 items:
-- lemma: біблія
-  ipa: /bˈiblija/
-  translation: ''
+- lemma: академія
+  ipa: /akadˈɛmija/
+  translation: academy
   pos: noun
   gender: f
+- lemma: біблія
+  ipa: /bˈiblija/
+  translation: Bible
+  pos: noun
+  gender: f
+- lemma: вищий
+  ipa: /ʋˈɪʃt͡ʃɪj/
+  translation: higher, superior
+  pos: adj
+- lemma: впізнати
+  ipa: /ʋpiznˈatɪ/
+  translation: to recognize
+  pos: verb
+- lemma: вставати
+  ipa: /ʋstaʋˈatɪ/
+  translation: to get up
+  pos: verb
+- lemma: вставити
+  ipa: /ʋstˈaʋɪtɪ/
+  translation: to insert
+  pos: verb
+- lemma: встати
+  ipa: /ʋstˈatɪ/
+  translation: to get up (perfective)
+  pos: verb
 - lemma: гоп
   ipa: /ɦɔp/
   translation: ''
   pos: noun
   gender: m
+- lemma: гора
+  ipa: /ɦɔrˈa/
+  translation: mountain, hill
+  pos: noun
 - lemma: днк
   ipa: /dnk/
   translation: ''
   pos: noun
   gender: f
-- lemma: доконаність
-  ipa: /dɔkˈɔnanistʲ/
-  translation: ''
+- lemma: доба
+  ipa: /dɔbˈa/
+  translation: era, age, 24-hour period
   pos: noun
   gender: f
+- lemma: доконаність
+  ipa: /dɔkˈɔnanistʲ/
+  translation: perfectness, completeness
+  pos: noun
+  gender: f
+- lemma: досі
+  ipa: /dˈɔsi/
+  translation: until now, so far
+  pos: pron
 - lemma: друкований
   ipa: /drukˈɔʋanɪj/
-  translation: ''
+  translation: printed
   pos: adj
 - lemma: заклад
   ipa: /zaklad/
-  translation: ''
+  translation: institution, establishment
   pos: noun
   gender: m
+- lemma: йтися
+  ipa: /jtˈɪsja/
+  translation: to be about, to concern
+  pos: verb
+- lemma: козацький
+  ipa: /kɔzˈat͡sʲkɪj/
+  translation: Cossack (adj)
+  pos: adj
 - lemma: липовий
   ipa: /lˈɪpɔʋɪj/
-  translation: ''
+  translation: linden (adj), fake (slang)
   pos: adj
+- lemma: лягати
+  ipa: /ljaɦˈatɪ/
+  translation: to lie down
+  pos: verb
+- lemma: лягти
+  ipa: /ljaɦtˈɪ/
+  translation: to lie down (perfective)
+  pos: verb
 - lemma: множення
   ipa: /mnˈɔʒɛnnja/
-  translation: ''
+  translation: multiplication
   pos: noun
   gender: n
-- lemma: одесит
-  ipa: /ɔdɛsˈɪt/
+- lemma: навчальний
+  ipa: /naʋt͡ʃˈalʲnɪj/
+  translation: educational, academic
+  pos: adj
+- lemma: найстаріший
+  ipa: /najstarˈiʃɪj/
+  translation: the oldest
+  pos: adj
+- lemma: нерегулярний
+  ipa: /nɛrɛɦulˈjarnɪj/
+  translation: irregular
+  pos: adj
+- lemma: несподіваний
+  ipa: /nɛspɔdˈiʋanɪj/
+  translation: unexpected
+  pos: adj
+- lemma: нове
+  ipa: /nɔʋˈɛ/
+  translation: new (neuter)
+  pos: noun
+  gender: n
+- lemma: об-
+  ipa: /ɔb-/
   translation: ''
   pos: noun
+- lemma: одесит
+  ipa: /ɔdɛsˈɪt/
+  translation: Odesan (male)
+  pos: noun
+- lemma: опанування
+  ipa: /ɔpanuʋˈannja/
+  translation: mastery, acquisition
+  pos: noun
+  gender: n
+- lemma: острозький
+  ipa: /ɔstrˈɔzʲkɪj/
+  translation: Ostroh (adj)
+  pos: adj
 - lemma: паляниця
   ipa: /paljanˈɪt͡sja/
-  translation: ''
+  translation: palianytsia (traditional bread)
   pos: noun
   gender: f
 - lemma: париж
   ipa: /parˈɪʒ/
-  translation: ''
+  translation: Paris
   pos: noun
   gender: m
 - lemma: перемикаючись
   ipa: /pɛrɛmɪkˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: switching
   pos: verb
 - lemma: переносний
   ipa: /pɛrɛnɔsnɪj/
-  translation: ''
+  translation: portable, figurative
   pos: adj
 - lemma: перескочити
   ipa: /pɛrɛskˈɔt͡ʃɪtɪ/
-  translation: ''
+  translation: to jump over
   pos: verb
 - lemma: перестрибнути
   ipa: /pɛrɛstrɪbnˈutɪ/
-  translation: ''
+  translation: to jump over (perfective)
   pos: verb
 - lemma: поділ
   ipa: /pɔdil/
-  translation: ''
+  translation: division, Podil (district)
   pos: noun
   gender: m
-- lemma: похожий
-  ipa: /pɔxˈɔʒɪj/
-  translation: ''
-  pos: adj
+- lemma: попереду
+  ipa: /pɔpˈɛrɛdu/
+  translation: ahead
+  pos: adv
+- lemma: початися
+  ipa: /pɔt͡ʃˈatɪsja/
+  translation: to start (passive perfective)
+  pos: verb
 - lemma: префіксальний
   ipa: /prɛfiksˈalʲnɪj/
-  translation: ''
+  translation: prefixed (adj)
   pos: adj
+- lemma: прибути
+  ipa: /prɪbˈutɪ/
+  translation: to arrive (perfective)
+  pos: verb
 - lemma: пункт
   ipa: /punkt/
-  translation: ''
+  translation: point, item, station
+  pos: noun
+  gender: m
+- lemma: підписати
+  ipa: /pidpɪsˈatɪ/
+  translation: to sign
+  pos: verb
+- lemma: підписувати
+  ipa: /pidpˈɪsuʋatɪ/
+  translation: to sign (imperfective)
+  pos: verb
+- lemma: район
+  ipa: /rajˈɔn/
+  translation: district, neighborhood
   pos: noun
   gender: m
 - lemma: раф
   ipa: /raf/
-  translation: ''
+  translation: raf (coffee drink)
   pos: noun
 - lemma: сдача
   ipa: /sdat͡ʃa/
@@ -99,32 +208,50 @@ items:
   gender: f
 - lemma: складений
   ipa: /sklˈadɛnɪj/
-  translation: ''
+  translation: composed, folded
   pos: adj
+- lemma: славитися
+  ipa: /slˈaʋɪtɪsja/
+  translation: to be famous for
+  pos: verb
 - lemma: слов'янин
   ipa: /slɔʋjanˈɪn/
-  translation: ''
+  translation: Slav (person)
   pos: noun
 - lemma: специфічний
   ipa: /spɛt͡sɪfˈit͡ʃnɪj/
-  translation: ''
+  translation: specific, peculiar
   pos: adj
+- lemma: ставлення
+  ipa: /stˈaʋlɛnnja/
+  translation: attitude, treatment
+  pos: noun
+  gender: n
 - lemma: супплетивний
   ipa: /supplɛtɪʋnɪj/
   translation: ''
   pos: adj
 - lemma: суфіксальний
   ipa: /sufiksˈalʲnɪj/
-  translation: ''
+  translation: suffixal
+  pos: adj
+- lemma: східний
+  ipa: /sxˈidnɪj/
+  translation: eastern
   pos: adj
 - lemma: тонка
   ipa: /tɔnkˈa/
   translation: ''
   pos: noun
   gender: f
+- lemma: угода
+  ipa: /uɦˈɔda/
+  translation: agreement, deal
+  pos: noun
+  gender: f
 - lemma: хвалитися
   ipa: /xʋalˈɪtɪsja/
-  translation: ''
+  translation: to brag, to boast
   pos: verb
 - lemma: хіх
   ipa: /xix/
@@ -132,17 +259,25 @@ items:
   pos: noun
 - lemma: церковнослов'янський
   ipa: /t͡sɛrkɔʋnɔslɔʋˈjansʲkɪj/
-  translation: ''
+  translation: Old Church Slavonic
   pos: adj
+- lemma: цікавити
+  ipa: /t͡sikˈaʋɪtɪ/
+  translation: to interest
+  pos: verb
 - lemma: чіпати
   ipa: /t͡ʃipˈatɪ/
-  translation: ''
+  translation: to touch, to bother
   pos: verb
 - lemma: чіпнути
   ipa: /t͡ʃipnutɪ/
   translation: ''
   pos: verb
+- lemma: ідеально
+  ipa: /idɛˈalʲnɔ/
+  translation: ideally, perfectly
+  pos: adv
 - lemma: ілюструвати
   ipa: /iljustruʋˈatɪ/
-  translation: ''
+  translation: to illustrate
   pos: verb

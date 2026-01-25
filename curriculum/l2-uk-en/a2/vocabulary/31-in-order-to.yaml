@@ -4,76 +4,55 @@ version: '2.0'
 items:
 - lemma: аби
   ipa: /abˈɪ/
-  translation: ''
+  translation: so that, in order to
   pos: conj
-- lemma: бажальний
-  ipa: /baʒˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: бажан
-  ipa: /baʒˈan/
+- lemma: бажай
+  ipa: /baʒˈaj/
   translation: ''
   pos: noun
   gender: m
-- lemma: бажання
-  ipa: /baʒˈannja/
-  translation: ''
+- lemma: бажальний
+  ipa: /baʒˈalʲnɪj/
+  translation: desirable
+  pos: adj
+- lemma: вага
+  ipa: /ʋaɦˈa/
+  translation: weight
   pos: noun
+  gender: f
 - lemma: вимовляти
   ipa: /ʋɪmɔʋlˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: встигнути
-  ipa: /ʋstˈɪɦnutɪ/
-  translation: ''
+  translation: to pronounce (imperfective)
   pos: verb
 - lemma: вчинок
   ipa: /ʋt͡ʃˈɪnɔk/
-  translation: ''
+  translation: action, deed
   pos: noun
-- lemma: відтінок
-  ipa: /ʋidtˈinɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: досягнення
-  ipa: /dɔsˈjaɦnɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: дійовий
   ipa: /dijɔʋˈɪj/
-  translation: ''
+  translation: active, effective, actor (adj)
   pos: adj
-- lemma: задля
-  ipa: /zˈadlja/
-  translation: ''
-  pos: prep
 - lemma: зазирнути
   ipa: /zazɪrnˈutɪ/
-  translation: ''
+  translation: to peek, to look in
   pos: verb
 - lemma: залізня
   ipa: /zalˈiznja/
   translation: ''
   pos: noun
   gender: f
-- lemma: зв'язок
-  ipa: /zʋjazɔk/
-  translation: ''
-  pos: noun
 - lemma: званий
   ipa: /zʋˈanɪj/
-  translation: ''
+  translation: called, named, invited
   pos: adj
 - lemma: здоровий
   ipa: /zdɔrˈɔʋɪj/
-  translation: ''
+  translation: healthy, big
   pos: noun
   gender: m
 - lemma: змістовний
   ipa: /zmistˈɔʋnɪj/
-  translation: ''
+  translation: meaningful, substantial
   pos: adj
 - lemma: комі
   ipa: /kˈɔmi/
@@ -82,87 +61,44 @@ items:
   gender: m
 - lemma: кулінарний
   ipa: /kulinˈarnɪj/
-  translation: ''
+  translation: culinary
   pos: adj
 - lemma: м'якість
   ipa: /mˈjakistʲ/
-  translation: ''
+  translation: softness
   pos: noun
   gender: f
-- lemma: мотив
-  ipa: /mɔtˈɪʋ/
-  translation: ''
-  pos: noun
-- lemma: ніби
-  ipa: /nˈibɪ/
-  translation: ''
-  pos: part
-- lemma: окрім
-  ipa: /ɔkrˈim/
-  translation: ''
-  pos: prep
 - lemma: пиріг
   ipa: /pɪrˈiɦ/
-  translation: ''
+  translation: pie
   pos: noun
   gender: m
-- lemma: поведінка
-  ipa: /pɔʋɛdˈinka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: поетичність
   ipa: /pɔɛtˈɪt͡ʃnistʲ/
-  translation: ''
+  translation: poetic quality
   pos: noun
   gender: f
 - lemma: професійно
   ipa: /prɔfɛsˈijnɔ/
-  translation: ''
+  translation: professionally
   pos: adv
-- lemma: підготувати
-  ipa: /pidɦɔtuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: розділити
   ipa: /rɔzdilˈɪtɪ/
-  translation: ''
+  translation: to divide, to share (perfective)
   pos: verb
-- lemma: скорочений
-  ipa: /skɔrˈɔt͡ʃɛnɪj/
-  translation: ''
-  pos: adj
 - lemma: стільки
   ipa: /stˈilʲkɪ/
-  translation: ''
+  translation: so much, so many
   pos: pron
-- lemma: суб'єкт
-  ipa: /subˈjɛkt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: суто
   ipa: /sˈutɔ/
-  translation: ''
+  translation: purely, strictly
   pos: adv
 - lemma: усвідомлено
   ipa: /usʋidˈɔmlɛnɔ/
-  translation: ''
-  pos: adv
-- lemma: успішний
-  ipa: /uspˈiʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: ціль
-  ipa: /t͡silʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: чогось
-  ipa: /t͡ʃɔɦˈɔsʲ/
-  translation: ''
+  translation: consciously, deliberately
   pos: adv
 - lemma: шиплячий
   ipa: /ʃɪplˈjat͡ʃɪj/
-  translation: ''
+  translation: sibilant, hissing
   pos: adj

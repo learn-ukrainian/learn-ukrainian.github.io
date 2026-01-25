@@ -4,11 +4,11 @@ version: '2.0'
 items:
 - lemma: аргументований
   ipa: /arɦumɛntˈɔʋanɪj/
-  translation: ''
+  translation: reasoned, argued
   pos: adj
 - lemma: безнадійний
   ipa: /bɛznadˈijnɪj/
-  translation: ''
+  translation: hopeless
   pos: adj
 - lemma: бізнес-конференція
   ipa: /bˈiznɛs-kɔnfɛrɛnt͡sija/
@@ -17,32 +17,32 @@ items:
   gender: f
 - lemma: взаємопов'язаний
   ipa: /ʋzajɛmɔpɔʋjazanɪj/
-  translation: ''
+  translation: interconnected
   pos: adj
 - lemma: витрата
   ipa: /ʋˈɪtrata/
-  translation: ''
+  translation: expense, expenditure
   pos: noun
   gender: f
 - lemma: вищезазначений
   ipa: /ʋɪʃt͡ʃɛzaznˈat͡ʃɛnɪj/
-  translation: ''
+  translation: above-mentioned
   pos: adj
 - lemma: втричі
   ipa: /ʋtrˈɪt͡ʃi/
-  translation: ''
+  translation: three times (more/less)
   pos: adv
 - lemma: відновлюваний
   ipa: /ʋidnˈɔʋljuʋanɪj/
-  translation: ''
+  translation: renewable
   pos: adj
 - lemma: вітрів
   ipa: /ʋitrˈiʋ/
-  translation: ''
+  translation: of winds
   pos: adj
 - lemma: доповідач
   ipa: /dɔpɔʋˈidat͡ʃ/
-  translation: ''
+  translation: speaker, reporter
   pos: noun
   gender: m
 - lemma: дорожний
@@ -51,126 +51,131 @@ items:
   pos: adj
 - lemma: енергетик
   ipa: /ɛnɛrɦˈɛtɪk/
-  translation: ''
+  translation: energetician
   pos: noun
 - lemma: енергетика
   ipa: /ɛnɛrɦˈɛtɪka/
-  translation: ''
+  translation: energy sector
   pos: noun
   gender: f
 - lemma: енергетичний
   ipa: /ɛnɛrɦɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: energy (adj)
   pos: adj
 - lemma: запуск
   ipa: /zˈapusk/
-  translation: ''
+  translation: launch, start
   pos: noun
   gender: m
 - lemma: змусити
   ipa: /zmˈusɪtɪ/
-  translation: ''
+  translation: to force, to compel
   pos: verb
 - lemma: знищувати
   ipa: /znˈɪʃt͡ʃuʋatɪ/
-  translation: ''
+  translation: to destroy (imperfective)
   pos: verb
 - lemma: зрослий
   ipa: /zrˈɔslɪj/
-  translation: ''
+  translation: grown, adult
   pos: adj
 - lemma: контраргумент
   ipa: /kɔntrarɦumˈɛnt/
-  translation: ''
+  translation: counterargument
   pos: noun
 - lemma: локальний
   ipa: /lɔkˈalʲnɪj/
-  translation: ''
+  translation: local
   pos: adj
 - lemma: модальність
   ipa: /mɔdˈalʲnistʲ/
-  translation: ''
+  translation: modality
   pos: noun
   gender: f
 - lemma: натомість
   ipa: /natˈɔmistʲ/
-  translation: ''
+  translation: instead, on the other hand
   pos: adv
 - lemma: онлайн-освіта
   ipa: /ɔnlajn-ɔsʋˈita/
-  translation: ''
+  translation: online education
   pos: noun
   gender: f
 - lemma: онлайн-платформа
   ipa: /ɔnlajn-platfˈɔrma/
-  translation: ''
+  translation: online platform
   pos: noun
   gender: f
 - lemma: паче
   ipa: /pˈat͡ʃɛ/
-  translation: ''
+  translation: moreover (archaic)
   pos: adv
 - lemma: передусім
   ipa: /pɛrɛdusˈim/
-  translation: ''
+  translation: above all, first of all
   pos: adv
 - lemma: перелік
   ipa: /pɛrˈɛlik/
-  translation: ''
+  translation: list, enumeration
   pos: noun
   gender: m
 - lemma: перенавчання
   ipa: /pɛrɛnaʋt͡ʃˈannja/
-  translation: ''
+  translation: retraining
   pos: noun
   gender: n
 - lemma: персонал
   ipa: /pɛrsɔnˈal/
-  translation: ''
+  translation: staff, personnel
   pos: noun
   gender: m
 - lemma: по-третє
   ipa: /pɔ-trˈɛtjɛ/
-  translation: ''
+  translation: thirdly
   pos: adv
 - lemma: посилитися
   ipa: /pɔsˈɪlɪtɪsja/
-  translation: ''
+  translation: to strengthen, to intensify (perfective)
   pos: verb
 - lemma: потенціал
   ipa: /pɔtɛnt͡siˈal/
-  translation: ''
+  translation: potential
   pos: noun
   gender: m
 - lemma: підсумовуючи
   ipa: /pidsumˈɔʋujut͡ʃɪ/
-  translation: ''
+  translation: summarizing (gerund)
   pos: verb
 - lemma: розрізнений
   ipa: /rɔzrˈiznɛnɪj/
-  translation: ''
+  translation: disjointed, fragmented
   pos: adj
+- lemma: стабільність
+  ipa: /stabˈilʲnistʲ/
+  translation: stability
+  pos: noun
+  gender: f
 - lemma: стимулювати
   ipa: /stɪmuljuʋˈatɪ/
-  translation: ''
+  translation: to stimulate
   pos: verb
 - lemma: структурувати
   ipa: /strukturuʋˈatɪ/
-  translation: ''
+  translation: to structure
   pos: verb
 - lemma: торгівля
   ipa: /tɔrɦˈiʋlja/
-  translation: ''
+  translation: trade (commerce)
   pos: noun
   gender: f
 - lemma: хаб
   ipa: /xab/
-  translation: ''
+  translation: hub
   pos: noun
   gender: m
 - lemma: цифровізація
   ipa: /t͡sɪfrɔʋizˈat͡sija/
-  translation: ''
+  translation: digitalization
   pos: noun
   gender: f
 - lemma: читачевий

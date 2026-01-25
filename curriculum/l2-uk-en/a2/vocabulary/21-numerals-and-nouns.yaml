@@ -2,85 +2,64 @@ module: 21-numerals-and-nouns
 level: A2
 version: '2.0'
 items:
+- lemma: груша
+  ipa: /ɦrˈuʃa/
+  translation: pear
+  pos: noun
+  gender: f
 - lemma: дев'ятсот
   ipa: /dɛʋjatsˈɔt/
-  translation: ''
+  translation: nine hundred
   pos: num
 - lemma: диня
   ipa: /dˈɪnja/
-  translation: ''
+  translation: melon
   pos: noun
   gender: f
 - lemma: зона
   ipa: /zɔna/
-  translation: ''
+  translation: zone, area
   pos: noun
   gender: f
 - lemma: компот
   ipa: /kɔmpˈɔt/
-  translation: ''
+  translation: kompot (fruit drink)
   pos: noun
   gender: m
 - lemma: комікс
   ipa: /kˈɔmiks/
-  translation: ''
+  translation: comics
   pos: noun
+- lemma: котлета
+  ipa: /kɔtlˈɛta/
+  translation: cutlet, patty
+  pos: noun
+  gender: f
 - lemma: миска
   ipa: /mˈɪska/
-  translation: ''
+  translation: bowl
   pos: noun
   gender: f
-- lemma: морква
-  ipa: /mˈɔrkʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: порахувати
-  ipa: /pɔraxuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: порція
   ipa: /pˈɔrt͡sija/
-  translation: ''
+  translation: portion, serving
   pos: noun
   gender: f
-- lemma: правило
-  ipa: /praʋɪlɔ/
-  translation: ''
+- lemma: продукт
+  ipa: /prɔdˈukt/
+  translation: product
   pos: noun
-  gender: n
 - lemma: піріжок
   ipa: /piriʒɔk/
   translation: ''
   pos: noun
   gender: m
-- lemma: реальний
-  ipa: /rɛˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: роман
-  ipa: /rɔmˈan/
-  translation: ''
-  pos: noun
 - lemma: сито
   ipa: /sˈɪtɔ/
-  translation: ''
+  translation: sieve
   pos: noun
   gender: n
 - lemma: склянка
   ipa: /sklˈjanka/
-  translation: ''
+  translation: glass (vessel)
   pos: noun
-- lemma: цінність
-  ipa: /t͡sˈinnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: числівник
-  ipa: /t͡ʃɪslˈiʋnɪk/
-  translation: ''
-  pos: noun
-- lemma: якийсь
-  ipa: /jakˈɪjsʲ/
-  translation: ''
-  pos: pron

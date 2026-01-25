@@ -2,156 +2,25 @@ module: 21-yesterday-past-tense
 level: A1
 version: '2.0'
 items:
-- lemma: автобус
-  ipa: /aʋtˈɔbus/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: андрій
-  ipa: /andrˈij/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: бабусин
   ipa: /babˈusɪn/
-  translation: ''
+  translation: grandmother's
   pos: adj
-- lemma: бабуся
-  ipa: /babˈusja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: буква
-  ipa: /bˈukʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ва-
-  ipa: /ʋa-/
-  translation: ''
-  pos: noun
 - lemma: вау
   ipa: /ʋˈau/
-  translation: ''
+  translation: wow
   pos: noun
-- lemma: великий
-  ipa: /ʋɛlˈɪkɪj/
-  translation: ''
-  pos: adj
-- lemma: ви
-  ipa: /ʋɪ/
-  translation: ''
-  pos: pron
-- lemma: вивчити
-  ipa: /ʋˈɪʋt͡ʃɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: вихідний
-  ipa: /ʋɪxidnˈɪj/
-  translation: ''
-  pos: adj
-- lemma: вправа
-  ipa: /ʋprˈaʋa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вранці
-  ipa: /ʋrˈant͡si/
-  translation: ''
-  pos: adv
-- lemma: вчора
-  ipa: /ʋt͡ʃˈɔra/
-  translation: ''
-  pos: adv
-- lemma: гарний
-  ipa: /ɦˈarnɪj/
-  translation: ''
-  pos: adj
 - lemma: говори-
   ipa: /ɦˈɔʋɔrɪ-/
   translation: ''
   pos: noun
-- lemma: говорити
-  ipa: /ɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: гуляти
-  ipa: /ɦulˈjatɪ/
-  translation: ''
-  pos: verb
-- lemma: давно
-  ipa: /daʋnˈɔ/
-  translation: ''
-  pos: adv
-- lemma: дивитися
-  ipa: /dɪʋˈɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: дідусь
-  ipa: /didˈusʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дім
-  ipa: /dim/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дія
-  ipa: /dˈija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: живий
-  ipa: /ʒɪʋˈɪj/
-  translation: ''
-  pos: adj
 - lemma: жила
   ipa: /ʒɪlˈa/
-  translation: ''
+  translation: lived (verb female), vein
   pos: noun
   gender: f
-- lemma: закінчення
-  ipa: /zakˈint͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: знайти
-  ipa: /znajtˈɪ/
-  translation: ''
-  pos: verb
-- lemma: знати
-  ipa: /znˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: кий
-  ipa: /kɪj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: книга
-  ipa: /knˈɪɦa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: колись
-  ipa: /kɔlˈɪsʲ/
-  translation: ''
-  pos: pron
-- lemma: круто
-  ipa: /krˈutɔ/
-  translation: ''
-  pos: adv
-- lemma: ла
-  ipa: /la/
-  translation: ''
-  pos: part
 - lemma: ли
   ipa: /lɪ/
-  translation: ''
-  pos: noun
-- lemma: лист
-  ipa: /lɪst/
   translation: ''
   pos: noun
 - lemma: ло
@@ -159,129 +28,17 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: львов
-  ipa: /lʲʋɔʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: марія
-  ipa: /marˈija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: ми
-  ipa: /mɪ/
-  translation: ''
-  pos: pron
-- lemma: минуле
-  ipa: /mɪnˈulɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: минулий
-  ipa: /mɪnˈulɪj/
-  translation: ''
-  pos: adj
-- lemma: мова
-  ipa: /mˈɔʋa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: молодий
   ipa: /mɔlɔdˈɪj/
-  translation: ''
+  translation: young
   pos: noun
   gender: m
-- lemma: море
-  ipa: /mˈɔrɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: музика
-  ipa: /mˈuzɪka/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: міні-діалог
-  ipa: /mˈini-dialɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: місто
-  ipa: /mˈistɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: місце
-  ipa: /mˈist͡sɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: недавно
   ipa: /nɛdˈaʋnɔ/
-  translation: ''
+  translation: recently
   pos: adv
-- lemma: нудно
-  ipa: /nˈudnɔ/
-  translation: ''
-  pos: adv
-- lemma: онук
-  ipa: /ɔnˈuk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: офіс
-  ipa: /ˈɔfis/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: переклад
-  ipa: /pɛrɛklad/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: перекласти
-  ipa: /pɛrɛklˈastɪ/
-  translation: ''
-  pos: verb
-- lemma: пиво
-  ipa: /pˈɪʋɔ/
-  translation: ''
-  pos: noun
-- lemma: пила
-  ipa: /pɪlˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: писати
-  ipa: /pɪsˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: пити
-  ipa: /pˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: питив
   ipa: /pɪtɪʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: позавчора
-  ipa: /pɔzaʋt͡ʃˈɔra/
-  translation: ''
-  pos: adv
-- lemma: понеділок
-  ipa: /pɔnɛdˈilɔk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: правда
-  ipa: /prˈaʋda/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: практик
-  ipa: /prˈaktɪk/
   translation: ''
   pos: noun
   gender: m
@@ -289,156 +46,20 @@ items:
   ipa: /prat͡sjuʋa-/
   translation: ''
   pos: noun
-- lemma: працювати
-  ipa: /prat͡sjuʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: привіт
-  ipa: /prɪʋˈit/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пісня
-  ipa: /pˈisnja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: раніше
-  ipa: /ranˈiʃɛ/
-  translation: ''
-  pos: adv
-- lemma: ресторан
-  ipa: /rɛstɔrˈan/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: речення
-  ipa: /rɛt͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: робити
-  ipa: /rɔbˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: робот
-  ipa: /rˈɔbɔt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: рок
-  ipa: /rɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рута
   ipa: /rˈuta/
-  translation: ''
+  translation: rue (plant)
   pos: noun
   gender: f
 - lemma: сад
   ipa: /sad/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: слово
-  ipa: /slˈɔʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: слухати
-  ipa: /slˈuxatɪ/
-  translation: ''
-  pos: verb
-- lemma: сміятися
-  ipa: /smiˈjatɪsja/
-  translation: ''
-  pos: verb
-- lemma: спогад
-  ipa: /spˈɔɦad/
-  translation: ''
-  pos: noun
-- lemma: старе
-  ipa: /starˈɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: ся
-  ipa: /sja/
-  translation: ''
-  pos: part
-- lemma: телефон
-  ipa: /tɛlɛfˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
-- lemma: тиждень
-  ipa: /tˈɪʒdɛnʲ/
-  translation: ''
+  translation: garden, orchard
   pos: noun
   gender: m
 - lemma: тихо
   ipa: /tˈɪxɔ/
-  translation: ''
+  translation: quietly, silently
   pos: adv
-- lemma: україна
-  ipa: /ukraˈjina/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: фільм
-  ipa: /filʲm/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: час
-  ipa: /t͡ʃas/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: часто
-  ipa: /t͡ʃˈastɔ/
-  translation: ''
-  pos: adv
-- lemma: чекати
-  ipa: /t͡ʃɛkˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: червона
-  ipa: /t͡ʃɛrʋˈɔna/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: чита-
-  ipa: /t͡ʃɪtˈa-/
-  translation: ''
-  pos: noun
-- lemma: читати
-  ipa: /t͡ʃɪtˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: чудово
-  ipa: /t͡ʃudˈɔʋɔ/
-  translation: ''
-  pos: adv
-- lemma: школа
-  ipa: /ʃkˈɔla/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: їсти
-  ipa: /ˈjistɪ/
-  translation: ''
-  pos: verb
 - lemma: їстити
   ipa: /jistɪtɪ/
   translation: ''

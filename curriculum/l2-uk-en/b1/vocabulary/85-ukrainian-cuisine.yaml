@@ -4,113 +4,113 @@ version: '2.0'
 items:
 - lemma: авторський
   ipa: /ˈaʋtɔrsʲkɪj/
-  translation: ''
+  translation: author's, original
   pos: adj
 - lemma: аграрний
   ipa: /aɦrˈarnɪj/
-  translation: ''
+  translation: agrarian, agricultural
   pos: adj
 - lemma: баранина
   ipa: /barˈanɪna/
-  translation: ''
+  translation: mutton, lamb
   pos: noun
   gender: f
 - lemma: барикада
   ipa: /barɪkˈada/
-  translation: ''
+  translation: barricade
   pos: noun
   gender: f
 - lemma: берлін
   ipa: /bɛrlˈin/
-  translation: ''
+  translation: Berlin
   pos: noun
   gender: m
 - lemma: бринза
   ipa: /brˈɪnza/
-  translation: ''
+  translation: brynza (cheese)
   pos: noun
   gender: f
 - lemma: варіація
   ipa: /ʋariˈat͡sija/
-  translation: ''
+  translation: variation
   pos: noun
   gender: f
 - lemma: вегетаріанський
   ipa: /ʋɛɦɛtariˈansʲkɪj/
-  translation: ''
+  translation: vegetarian (adj)
   pos: adj
 - lemma: великодній
   ipa: /ʋɛlɪkˈɔdnij/
-  translation: ''
+  translation: Easter (adj)
   pos: adj
 - lemma: виголошувати
   ipa: /ʋɪɦɔlˈɔʃuʋatɪ/
-  translation: ''
+  translation: to deliver, to proclaim
   pos: verb
 - lemma: винайдений
   ipa: /ʋˈɪnajdɛnɪj/
-  translation: ''
+  translation: invented
   pos: adj
 - lemma: вирізати
   ipa: /ʋɪrizatɪ/
-  translation: ''
+  translation: to cut out
   pos: verb
 - lemma: включений
   ipa: /ʋklˈjut͡ʃɛnɪj/
-  translation: ''
+  translation: included, turned on
   pos: adj
 - lemma: віск
   ipa: /ʋisk/
-  translation: ''
+  translation: wax
   pos: noun
   gender: m
 - lemma: гастрономічний
   ipa: /ɦastrɔnɔmˈit͡ʃnɪj/
-  translation: ''
+  translation: gastronomic
   pos: adj
 - lemma: глазур
   ipa: /ɦlazˈur/
-  translation: ''
+  translation: glaze, icing
   pos: noun
   gender: f
 - lemma: горох
   ipa: /ɦɔrˈɔx/
-  translation: ''
+  translation: peas
   pos: noun
   gender: m
 - lemma: господарів
   ipa: /ɦɔspˈɔdariʋ/
-  translation: ''
+  translation: of owners
   pos: adj
 - lemma: гречка
   ipa: /ɦrˈɛt͡ʃka/
-  translation: ''
+  translation: buckwheat
   pos: noun
   gender: f
 - lemma: грибний
   ipa: /ɦrɪbnˈɪj/
-  translation: ''
+  translation: mushroom (adj)
   pos: adj
 - lemma: гуляш
   ipa: /ɦulˈjaʃ/
-  translation: ''
+  translation: goulash
   pos: noun
   gender: m
 - lemma: догори
   ipa: /dɔɦɔrˈɪ/
-  translation: ''
+  translation: up, upwards
   pos: adv
 - lemma: додаючи
   ipa: /dɔdajut͡ʃˈɪ/
-  translation: ''
+  translation: adding
   pos: verb
 - lemma: закарпатський
   ipa: /zakarpˈatsʲkɪj/
-  translation: ''
+  translation: Transcarpathian
   pos: adj
 - lemma: застільний
   ipa: /zastˈilʲnɪj/
-  translation: ''
+  translation: table (adj), festive
   pos: adj
 - lemma: защипувати
   ipa: /zaʃt͡ʃˈɪpuʋatɪ/
@@ -118,28 +118,28 @@ items:
   pos: verb
 - lemma: зерновий
   ipa: /zɛrnɔʋˈɪj/
-  translation: ''
+  translation: grain (adj), cereal
   pos: adj
 - lemma: злак
   ipa: /zlak/
-  translation: ''
+  translation: cereal, grass
   pos: noun
 - lemma: знайомлячи
   ipa: /znajˈɔmljat͡ʃɪ/
-  translation: ''
+  translation: introducing
   pos: verb
 - lemma: капусняк
   ipa: /kapusnˈjak/
-  translation: ''
+  translation: kapusniak (cabbage soup)
   pos: noun
   gender: m
 - lemma: кидати
   ipa: /kˈɪdatɪ/
-  translation: ''
+  translation: to throw
   pos: verb
 - lemma: консерва
   ipa: /kɔnsˈɛrʋa/
-  translation: ''
+  translation: canned food
   pos: noun
   gender: f
 - lemma: континенталь
@@ -149,7 +149,7 @@ items:
   gender: m
 - lemma: крашанка
   ipa: /krˈaʃanka/
-  translation: ''
+  translation: krashanka (dyed Easter egg)
   pos: noun
   gender: f
 - lemma: кукурудз
@@ -159,106 +159,106 @@ items:
   gender: m
 - lemma: кукурудзяний
   ipa: /kukurˈudzjanɪj/
-  translation: ''
+  translation: corn (adj), maize (adj)
   pos: adj
 - lemma: курятина
   ipa: /kˈurjatɪna/
-  translation: ''
+  translation: chicken meat
   pos: noun
   gender: f
 - lemma: молочний
   ipa: /mɔlˈɔt͡ʃnɪj/
-  translation: ''
+  translation: milk (adj), dairy
   pos: adj
 - lemma: морепродукт
   ipa: /mɔrɛprɔdˈukt/
-  translation: ''
+  translation: seafood
   pos: noun
 - lemma: овечий
   ipa: /ɔʋˈɛt͡ʃɪj/
-  translation: ''
+  translation: sheep (adj)
   pos: adj
 - lemma: окріп
   ipa: /ɔkrˈip/
-  translation: ''
+  translation: boiling water
   pos: noun
   gender: m
 - lemma: оселедець
   ipa: /ɔsɛlˈɛdɛt͡sʲ/
-  translation: ''
+  translation: herring
   pos: noun
   gender: m
 - lemma: паприкаш
   ipa: /paprɪkaʃ/
-  translation: ''
+  translation: paprikash
   pos: noun
   gender: m
-- lemma: пасхалк
-  ipa: /pasxalk/
+- lemma: пасхалка
+  ipa: /pasxalka/
   translation: ''
   pos: noun
-  gender: m
+  gender: f
 - lemma: пшеничний
   ipa: /pʃɛnˈɪt͡ʃnɪj/
-  translation: ''
+  translation: wheat (adj)
   pos: adj
 - lemma: рапана
   ipa: /rapˈana/
-  translation: ''
+  translation: rapana (sea snail)
   pos: noun
   gender: f
 - lemma: релігійний
   ipa: /rɛliɦˈijnɪj/
-  translation: ''
+  translation: religious
   pos: adj
 - lemma: ресторанний
   ipa: /rɛstɔrˈannɪj/
-  translation: ''
+  translation: restaurant (adj)
   pos: adj
 - lemma: ресторатор
   ipa: /rɛstɔrˈatɔr/
-  translation: ''
+  translation: restaurateur
   pos: noun
 - lemma: рибний
   ipa: /rɪbnɪj/
-  translation: ''
+  translation: fish (adj)
   pos: adj
 - lemma: родзинка
   ipa: /rɔdzˈɪnka/
-  translation: ''
+  translation: raisin, highlight/quirk
   pos: noun
 - lemma: розкачувати
   ipa: /rɔzkˈat͡ʃuʋatɪ/
-  translation: ''
+  translation: to rock, to swing, to roll out
   pos: verb
 - lemma: розмальований
   ipa: /rɔzmalʲˈɔʋanɪj/
-  translation: ''
+  translation: painted, decorated
   pos: adj
 - lemma: розписаний
   ipa: /rɔzpˈɪsanɪj/
-  translation: ''
+  translation: painted, scheduled
   pos: adj
 - lemma: розім'яти
   ipa: /rɔzimˈjatɪ/
-  translation: ''
+  translation: to knead, to warm up (muscles)
   pos: verb
 - lemma: рулет
   ipa: /rulˈɛt/
-  translation: ''
+  translation: roll (cake/meat)
   pos: noun
   gender: m
 - lemma: річковий
   ipa: /rit͡ʃkɔʋˈɪj/
-  translation: ''
+  translation: river (adj)
   pos: adj
 - lemma: священний
   ipa: /sʋjaʃt͡ʃˈɛnnɪj/
-  translation: ''
+  translation: sacred
   pos: adj
 - lemma: солений
   ipa: /sˈɔlɛnɪj/
-  translation: ''
+  translation: salty, salted
   pos: adj
 - lemma: солон
   ipa: /sɔlˈɔn/
@@ -267,7 +267,7 @@ items:
   gender: m
 - lemma: сушений
   ipa: /suʃɛnɪj/
-  translation: ''
+  translation: dried (fruits/fish)
   pos: adj
 - lemma: типове
   ipa: /tɪpɔʋɛ/
@@ -276,35 +276,35 @@ items:
   gender: n
 - lemma: трапеза
   ipa: /trˈapɛza/
-  translation: ''
+  translation: meal, repast
   pos: noun
   gender: f
 - lemma: турецький
   ipa: /turˈɛt͡sʲkɪj/
-  translation: ''
+  translation: Turkish
   pos: noun
   gender: m
 - lemma: узвар
   ipa: /uzʋˈar/
-  translation: ''
+  translation: uzvar (fruit compote)
   pos: noun
   gender: m
 - lemma: улюбленець
   ipa: /ulˈjublɛnɛt͡sʲ/
-  translation: ''
+  translation: favorite, pet
   pos: noun
   gender: m
 - lemma: шкварка
   ipa: /ʃkʋˈarka/
-  translation: ''
+  translation: shkvarka (fried fat)
   pos: noun
 - lemma: штрудель
   ipa: /ʃtrudɛlʲ/
-  translation: ''
+  translation: strudel
   pos: noun
   gender: m
 - lemma: юшка
   ipa: /ˈjuʃka/
-  translation: ''
+  translation: yushka (broth/soup)
   pos: noun
   gender: f

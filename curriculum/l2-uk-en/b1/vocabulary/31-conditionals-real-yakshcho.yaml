@@ -4,106 +4,161 @@ version: '2.0'
 items:
 - lemma: адаптований
   ipa: /adaptˈɔʋanɪj/
-  translation: ''
+  translation: adapted
   pos: adj
 - lemma: альтернатива
   ipa: /alʲtɛrnatˈɪʋa/
-  translation: ''
+  translation: alternative
   pos: noun
   gender: f
 - lemma: арабський
   ipa: /arˈabsʲkɪj/
-  translation: ''
+  translation: Arabic
   pos: adj
 - lemma: введення
   ipa: /ʋʋˈɛdɛnnja/
-  translation: ''
+  translation: introduction, input
   pos: noun
   gender: n
 - lemma: виникнути
   ipa: /ʋˈɪnɪknutɪ/
-  translation: ''
+  translation: to arise, to occur (perfective)
   pos: verb
 - lemma: грамота
   ipa: /ɦrˈamɔta/
-  translation: ''
+  translation: diploma, literacy
   pos: noun
   gender: f
+- lemma: гірше
+  ipa: /ɦˈirʃɛ/
+  translation: worse
+  pos: adv
 - lemma: дзвін
   ipa: /dzʋin/
-  translation: ''
+  translation: bell (large)
   pos: noun
+- lemma: з'являтися
+  ipa: /zjaʋlˈjatɪsja/
+  translation: to appear (imperfective)
+  pos: verb
 - lemma: загроза
   ipa: /zaɦrˈɔza/
-  translation: ''
+  translation: threat
   pos: noun
+- lemma: захотіти
+  ipa: /zaxɔtˈitɪ/
+  translation: to want (suddenly)
+  pos: verb
+- lemma: зв'язатися
+  ipa: /zʋjazˈatɪsja/
+  translation: to contact, to get in touch
+  pos: verb
+- lemma: зосередитися
+  ipa: /zɔsɛrˈɛdɪtɪsja/
+  translation: to focus, to concentrate
+  pos: verb
 - lemma: квестовий
   ipa: /kʋɛstɔʋɪj/
-  translation: ''
+  translation: quest (adj)
   pos: adj
 - lemma: контрфактичний
   ipa: /kɔntrfaktɪt͡ʃnɪj/
-  translation: ''
+  translation: counterfactual
   pos: adj
+- lemma: лікування
+  ipa: /likuʋˈannja/
+  translation: treatment
+  pos: noun
+  gender: n
 - lemma: магомет
   ipa: /maɦɔmˈɛt/
-  translation: ''
+  translation: Mahomet
   pos: noun
   gender: m
 - lemma: набувати
   ipa: /nabuʋˈatɪ/
-  translation: ''
+  translation: to acquire, to gain
   pos: verb
 - lemma: нереально
   ipa: /nɛrɛˈalʲnɔ/
-  translation: ''
+  translation: unreally
   pos: adv
+- lemma: нижчий
+  ipa: /nˈɪʒt͡ʃɪj/
+  translation: lower
+  pos: adj
 - lemma: опанувавши
   ipa: /ɔpanuʋˈaʋʃɪ/
-  translation: ''
+  translation: having mastered
   pos: verb
+- lemma: передбачення
+  ipa: /pɛrɛdbˈat͡ʃɛnnja/
+  translation: prediction, foresight
+  pos: noun
 - lemma: поліпшитися
   ipa: /pɔlˈipʃɪtɪsja/
-  translation: ''
+  translation: to improve (perfective)
   pos: verb
 - lemma: порушувати
   ipa: /pɔrˈuʃuʋatɪ/
-  translation: ''
+  translation: to violate, to break (imperfective)
+  pos: verb
+- lemma: приєднуватися
+  ipa: /prɪˈjɛdnuʋatɪsja/
+  translation: to join (imperfective)
   pos: verb
 - lemma: пропалий
   ipa: /prɔpˈalɪj/
-  translation: ''
+  translation: lost, gone
   pos: adj
 - lemma: підписаний
   ipa: /pidpˈɪsanɪj/
-  translation: ''
+  translation: signed
   pos: adj
+- lemma: симптом
+  ipa: /sɪmptˈɔm/
+  translation: symptom
+  pos: noun
+- lemma: сказити
+  ipa: /skazˈɪtɪ/
+  translation: to distort, to drive mad
+  pos: verb
 - lemma: слов'янське
   ipa: /slɔʋˈjansʲkɛ/
-  translation: ''
+  translation: Slavic (neuter)
   pos: noun
   gender: n
 - lemma: суперечити
   ipa: /supɛrˈɛt͡ʃɪtɪ/
-  translation: ''
+  translation: to contradict
   pos: verb
 - lemma: тісно
   ipa: /tˈisnɔ/
-  translation: ''
+  translation: tightly, crowded (adv)
   pos: adv
 - lemma: узгоджуючи
   ipa: /uzɦˈɔdʒujut͡ʃɪ/
-  translation: ''
+  translation: coordinating, agreeing
   pos: verb
 - lemma: ум
   ipa: /um/
   translation: ''
   pos: noun
   gender: m
+- lemma: харчування
+  ipa: /xart͡ʃuʋˈannja/
+  translation: nutrition, food service
+  pos: noun
+  gender: n
 - lemma: ща
   ipa: /ʃt͡ʃa/
   translation: ''
   pos: noun
+- lemma: юрій
+  ipa: /ˈjurij/
+  translation: Yuriy (name)
+  pos: noun
+  gender: m
 - lemma: яко
   ipa: /ˈjakɔ/
   translation: ''

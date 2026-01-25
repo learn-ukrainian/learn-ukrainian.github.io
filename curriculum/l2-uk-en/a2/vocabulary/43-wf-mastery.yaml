@@ -4,20 +4,15 @@ version: '2.0'
 items:
 - lemma: артикулювати
   ipa: /artɪkuljuʋˈatɪ/
-  translation: ''
+  translation: to articulate
   pos: verb
 - lemma: ач
   ipa: /at͡ʃ/
   translation: ''
   pos: part
-- lemma: бестселер
-  ipa: /bɛstsˈɛlɛr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: будівельник
   ipa: /budiʋˈɛlʲnɪk/
-  translation: ''
+  translation: builder
   pos: noun
   gender: m
 - lemma: бізнес-план
@@ -27,23 +22,11 @@ items:
   gender: m
 - lemma: виголосити
   ipa: /ʋˈɪɦɔlɔsɪtɪ/
-  translation: ''
+  translation: to deliver (a speech)
   pos: verb
-- lemma: вимовити
-  ipa: /ʋˈɪmɔʋɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: винайти
-  ipa: /ʋˈɪnajtɪ/
-  translation: ''
-  pos: verb
-- lemma: вниз
-  ipa: /ʋnɪz/
-  translation: ''
-  pos: adv
 - lemma: газ
   ipa: /ɦaz/
-  translation: ''
+  translation: gas
   pos: noun
   gender: m
 - lemma: газа
@@ -53,23 +36,9 @@ items:
   gender: f
 - lemma: депресія
   ipa: /dɛprˈɛsija/
-  translation: ''
+  translation: depression
   pos: noun
   gender: f
-- lemma: дума
-  ipa: /dˈuma/
-  translation: ''
-  pos: noun
-- lemma: діл
-  ipa: /dil/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: елемент
-  ipa: /ɛlɛmˈɛnt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ець
   ipa: /ɛt͡sʲ/
   translation: ''
@@ -81,204 +50,133 @@ items:
   gender: m
 - lemma: заслухати
   ipa: /zaslˈuxatɪ/
-  translation: ''
-  pos: verb
-- lemma: здатність
-  ipa: /zdˈatnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: здогадатися
-  ipa: /zdɔɦadˈatɪsja/
-  translation: ''
+  translation: to listen to, to hear
   pos: verb
 - lemma: зем
   ipa: /zɛm/
   translation: ''
   pos: noun
-- lemma: золото
-  ipa: /zˈɔlɔtɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: катастрофа
   ipa: /katastrˈɔfa/
-  translation: ''
+  translation: catastrophe, disaster
   pos: noun
   gender: f
 - lemma: клич
   ipa: /klɪt͡ʃ/
-  translation: ''
+  translation: call, appeal
   pos: noun
   gender: m
-- lemma: комбінувати
-  ipa: /kɔmbinuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: комбінуючи
   ipa: /kɔmbinˈujut͡ʃɪ/
-  translation: ''
+  translation: combining (gerund)
   pos: verb
 - lemma: лікарь
   ipa: /likarʲ/
   translation: ''
   pos: noun
   gender: m
-- lemma: майстерність
-  ipa: /majstˈɛrnistʲ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: мовити
-  ipa: /mˈɔʋɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: міркування
   ipa: /mirkuʋˈannja/
-  translation: ''
+  translation: consideration, reasoning
   pos: noun
   gender: n
 - lemma: містянин
   ipa: /mistjanˈɪn/
-  translation: ''
+  translation: city dweller
   pos: noun
 - lemma: науковець
   ipa: /naukˈɔʋɛt͡sʲ/
-  translation: ''
+  translation: scientist
   pos: noun
   gender: m
 - lemma: нація
   ipa: /nˈat͡sija/
-  translation: ''
+  translation: nation
   pos: noun
   gender: f
 - lemma: невчення
   ipa: /nɛʋt͡ʃˈɛnnja/
-  translation: ''
+  translation: ignorance, non-learning
   pos: noun
   gender: n
 - lemma: неслухняний
   ipa: /nɛsluxnˈjanɪj/
-  translation: ''
+  translation: disobedient
   pos: adj
 - lemma: никнути
   ipa: /nˈɪknutɪ/
-  translation: ''
+  translation: to droop, to fade
   pos: verb
 - lemma: ння
   ipa: /nnja/
   translation: ''
   pos: noun
-- lemma: опускати
-  ipa: /ɔpuskˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: пасувати
-  ipa: /pasuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: переговорити
   ipa: /pɛrɛɦɔʋɔrˈɪtɪ/
-  translation: ''
+  translation: to talk through, to discuss
   pos: verb
 - lemma: передумати
   ipa: /pɛrɛdˈumatɪ/
-  translation: ''
+  translation: to change one's mind
   pos: verb
 - lemma: перемовити
   ipa: /pɛrɛmˈɔʋɪtɪ/
-  translation: ''
+  translation: to have a word
   pos: verb
-- lemma: перемога
-  ipa: /pɛrɛmˈɔɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: перерозподіл
   ipa: /pɛrɛrɔzpˈɔdil/
-  translation: ''
+  translation: redistribution
   pos: noun
   gender: m
 - lemma: погане
   ipa: /pɔɦanɛ/
-  translation: ''
+  translation: bad (neuter)
   pos: noun
   gender: n
 - lemma: послух
   ipa: /pˈɔslux/
-  translation: ''
+  translation: obedience
   pos: noun
   gender: m
-- lemma: президент
-  ipa: /prɛzɪdˈɛnt/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: придумати
-  ipa: /prɪdˈumatɪ/
-  translation: ''
-  pos: verb
 - lemma: промова
   ipa: /prɔmˈɔʋa/
-  translation: ''
+  translation: speech
   pos: noun
   gender: f
-- lemma: психолог
-  ipa: /psɪxˈɔlɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: розкласти
-  ipa: /rɔzklˈastɪ/
-  translation: ''
-  pos: verb
-- lemma: словотвір
-  ipa: /slɔʋɔtʋˈir/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: слухатися
   ipa: /slˈuxatɪsja/
-  translation: ''
+  translation: to obey
   pos: verb
 - lemma: слухняний
   ipa: /sluxnˈjanɪj/
-  translation: ''
+  translation: obedient
   pos: adj
 - lemma: слухняність
   ipa: /sluxnˈjanistʲ/
-  translation: ''
+  translation: obedience
   pos: noun
   gender: f
-- lemma: соціальний
-  ipa: /sɔt͡siˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: срібло
   ipa: /srˈiblɔ/
-  translation: ''
+  translation: silver
   pos: noun
   gender: n
-- lemma: сумний
-  ipa: /sumnˈɪj/
-  translation: ''
-  pos: adj
 - lemma: темрявий
   ipa: /tˈɛmrjaʋɪj/
-  translation: ''
+  translation: dark (rare variant)
   pos: adj
 - lemma: фабрика
   ipa: /fˈabrɪka/
-  translation: ''
+  translation: factory
   pos: noun
   gender: f
 - lemma: фінальний
   ipa: /finˈalʲnɪj/
-  translation: ''
+  translation: final (adj)
   pos: adj
 - lemma: хрест
   ipa: /xrɛst/
-  translation: ''
+  translation: cross
   pos: noun
   gender: m
 - lemma: чу
@@ -286,14 +184,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: язик
-  ipa: /jazˈɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ясний
   ipa: /ˈjasnɪj/
-  translation: ''
+  translation: clear, bright, lucid
   pos: adj
 - lemma: ість
   ipa: /istʲ/

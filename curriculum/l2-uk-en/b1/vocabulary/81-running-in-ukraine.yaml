@@ -4,26 +4,26 @@ version: '2.0'
 items:
 - lemma: абонемент
   ipa: /abɔnɛmˈɛnt/
-  translation: ''
+  translation: subscription
   pos: noun
   gender: m
 - lemma: аккаунт
   ipa: /akkaunt/
-  translation: ''
+  translation: account
   pos: noun
   gender: m
 - lemma: благодійний
   ipa: /blaɦɔdˈijnɪj/
-  translation: ''
+  translation: charitable
   pos: adj
 - lemma: благодійність
   ipa: /blaɦɔdˈijnistʲ/
-  translation: ''
+  translation: charity
   pos: noun
   gender: f
 - lemma: бігун
   ipa: /biɦˈun/
-  translation: ''
+  translation: runner
   pos: noun
   gender: m
 - lemma: бігун-фандрейзер
@@ -32,69 +32,69 @@ items:
   pos: noun
 - lemma: весняний
   ipa: /ʋɛsnˈjanɪj/
-  translation: ''
+  translation: spring (adj)
   pos: adj
 - lemma: взаємодопомога
   ipa: /ʋzajɛmɔdɔpɔmˈɔɦa/
-  translation: ''
+  translation: mutual aid
   pos: noun
   gender: f
 - lemma: виготовлення
   ipa: /ʋˈɪɦɔtɔʋlɛnnja/
-  translation: ''
+  translation: manufacture, production
   pos: noun
   gender: n
 - lemma: вимірювання
   ipa: /ʋɪmˈirjuʋannja/
-  translation: ''
+  translation: measurement
   pos: noun
   gender: n
 - lemma: виснажений
   ipa: /ʋˈɪsnaʒɛnɪj/
-  translation: ''
+  translation: exhausted
   pos: adj
 - lemma: гнатися
   ipa: /ɦnˈatɪsja/
-  translation: ''
+  translation: to chase, to pursue
   pos: verb
 - lemma: гідратація
   ipa: /ɦidratˈat͡sija/
-  translation: ''
+  translation: hydration
   pos: noun
   gender: f
 - lemma: добігти
   ipa: /dɔbˈiɦtɪ/
-  translation: ''
+  translation: to run to, to reach (by running)
   pos: verb
 - lemma: ейфорія
   ipa: /ɛjfɔrˈija/
-  translation: ''
+  translation: euphoria
   pos: noun
   gender: f
 - lemma: зануритися
   ipa: /zanˈurɪtɪsja/
-  translation: ''
+  translation: to immerge
   pos: verb
 - lemma: зарядитися
   ipa: /zarjadˈɪtɪsja/
-  translation: ''
+  translation: to get charged
   pos: verb
 - lemma: затяжний
   ipa: /zatjaʒnˈɪj/
-  translation: ''
+  translation: protracted, lingering
   pos: adj
 - lemma: збільшувати
   ipa: /zbˈilʲʃuʋatɪ/
-  translation: ''
+  translation: to increase (imperfective)
   pos: verb
 - lemma: кардіологія
   ipa: /kardiɔlˈɔɦija/
-  translation: ''
+  translation: cardiology
   pos: noun
   gender: f
 - lemma: кардіохірургія
   ipa: /kardiɔxirurɦˈija/
-  translation: ''
+  translation: cardiac surgery
   pos: noun
   gender: f
 - lemma: круті
@@ -103,202 +103,198 @@ items:
   pos: noun
 - lemma: кумедний
   ipa: /kumˈɛdnɪj/
-  translation: ''
+  translation: funny, droll
   pos: adj
 - lemma: масаж
   ipa: /masˈaʒ/
-  translation: ''
+  translation: massage
   pos: noun
   gender: m
 - lemma: мотивувати
   ipa: /mɔtɪʋuʋˈatɪ/
-  translation: ''
+  translation: to motivate
   pos: verb
 - lemma: навігувати
   ipa: /naʋiɦuʋatɪ/
-  translation: ''
+  translation: to navigate
   pos: verb
 - lemma: найдоступніший
   ipa: /najdɔstˈupniʃɪj/
-  translation: ''
+  translation: the most accessible
   pos: adj
 - lemma: найдушевніший
   ipa: /najduʃɛʋniʃɪj/
-  translation: ''
+  translation: the most soulful
   pos: adj
 - lemma: наймальовничіший
   ipa: /najmalʲɔʋnɪt͡ʃiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: найнижчий
-  ipa: /najnˈɪʒt͡ʃɪj/
-  translation: ''
+  translation: the most picturesque
   pos: adj
 - lemma: належність
   ipa: /nalˈɛʒnistʲ/
-  translation: ''
+  translation: affiliation, belonging
   pos: noun
   gender: f
 - lemma: напівмарафон
   ipa: /napiʋmarafɔn/
-  translation: ''
+  translation: half-marathon
   pos: noun
   gender: m
 - lemma: наче
   ipa: /nˈat͡ʃɛ/
-  translation: ''
+  translation: as if, like
   pos: part
 - lemma: неоціненний
   ipa: /nɛɔt͡sinˈɛnnɪj/
-  translation: ''
+  translation: invaluable
   pos: adj
 - lemma: обласний
   ipa: /ɔblasnˈɪj/
-  translation: ''
+  translation: regional, oblast (adj)
   pos: adj
 - lemma: осередок
   ipa: /ɔsɛrˈɛdɔk/
-  translation: ''
+  translation: center, hub
   pos: noun
 - lemma: очистити
   ipa: /ɔt͡ʃˈɪstɪtɪ/
-  translation: ''
+  translation: to clean, to peel
   pos: verb
 - lemma: пагорб
   ipa: /pˈaɦɔrb/
-  translation: ''
+  translation: hill, slope
   pos: noun
 - lemma: пам'ятний
   ipa: /pamjatnɪj/
-  translation: ''
+  translation: memorable, commemorative
   pos: adj
 - lemma: перетворюючи
   ipa: /pɛrɛtʋˈɔrjujut͡ʃɪ/
-  translation: ''
+  translation: transforming
   pos: verb
 - lemma: плоский
   ipa: /plˈɔskɪj/
-  translation: ''
+  translation: flat
   pos: adj
 - lemma: популяризація
   ipa: /pɔpuljarɪzˈat͡sija/
-  translation: ''
+  translation: popularization
   pos: noun
   gender: f
 - lemma: популярність
   ipa: /pɔpulˈjarnistʲ/
-  translation: ''
+  translation: popularity
   pos: noun
   gender: f
 - lemma: привернути
   ipa: /prɪʋɛrnˈutɪ/
-  translation: ''
+  translation: to attract (attention), to turn
   pos: verb
 - lemma: пробіг
   ipa: /prɔbˈiɦ/
-  translation: ''
+  translation: run, mileage
   pos: noun
   gender: m
 - lemma: пробігати
   ipa: /prɔbiɦatɪ/
-  translation: ''
+  translation: to run through
   pos: verb
 - lemma: протез
   ipa: /prɔtˈɛz/
-  translation: ''
+  translation: prosthesis
   pos: noun
 - lemma: реєструватися
   ipa: /rɛjɛstruʋˈatɪsja/
-  translation: ''
+  translation: to register (oneself)
   pos: verb
 - lemma: рушій
   ipa: /ruʃˈij/
-  translation: ''
+  translation: driver, engine, mover
   pos: noun
 - lemma: самовдосконалення
   ipa: /samɔʋdɔskɔnˈalɛnnja/
-  translation: ''
+  translation: self-improvement
   pos: noun
   gender: n
 - lemma: самотній
   ipa: /samˈɔtnij/
-  translation: ''
+  translation: lonely, solitary
   pos: adj
 - lemma: селфі
   ipa: /sˈɛlfi/
-  translation: ''
+  translation: selfie
   pos: noun
   gender: n
 - lemma: символіка
   ipa: /sɪmʋˈɔlika/
-  translation: ''
+  translation: symbolism, imagery
   pos: noun
   gender: f
 - lemma: символічний
   ipa: /sɪmʋɔlˈit͡ʃnɪj/
-  translation: ''
+  translation: symbolic
   pos: adj
 - lemma: слот
   ipa: /slɔt/
-  translation: ''
+  translation: slot
   pos: noun
 - lemma: спонсор
   ipa: /spˈɔnsɔr/
-  translation: ''
+  translation: sponsor
   pos: noun
 - lemma: стартовий
   ipa: /stˈartɔʋɪj/
-  translation: ''
+  translation: starting (adj)
   pos: adj
 - lemma: страховий
   ipa: /straxɔʋˈɪj/
-  translation: ''
+  translation: insurance (adj)
   pos: adj
 - lemma: телеведучий
   ipa: /tɛlɛʋɛdˈut͡ʃɪj/
-  translation: ''
+  translation: TV presenter
   pos: noun
 - lemma: траса
   ipa: /trˈasa/
-  translation: ''
+  translation: route, highway, track
   pos: noun
   gender: f
 - lemma: тренувальний
   ipa: /trɛnuʋˈalʲnɪj/
-  translation: ''
+  translation: training (adj)
   pos: adj
 - lemma: тридцятка
   ipa: /trɪdt͡sˈjatka/
-  translation: ''
+  translation: a thirty, group of thirty
   pos: noun
   gender: f
 - lemma: фінішер
   ipa: /finiʃɛr/
-  translation: ''
+  translation: finisher
   pos: noun
   gender: m
 - lemma: фінішувати
   ipa: /finiʃuʋˈatɪ/
-  translation: ''
+  translation: to finish
   pos: verb
 - lemma: ходуля
   ipa: /xɔdˈulja/
-  translation: ''
+  translation: stilt
   pos: noun
 - lemma: чіп
   ipa: /t͡ʃip/
-  translation: ''
+  translation: chip
   pos: noun
   gender: m
 - lemma: яблучний
   ipa: /ˈjablut͡ʃnɪj/
-  translation: ''
+  translation: apple (adj)
   pos: adj
 - lemma: ізотонік
   ipa: /izɔtɔnik/
-  translation: ''
+  translation: isotonic (drink)
   pos: noun
 - lemma: інтервал
   ipa: /intɛrʋˈal/
-  translation: ''
+  translation: interval
   pos: noun

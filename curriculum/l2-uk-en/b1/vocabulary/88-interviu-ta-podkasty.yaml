@@ -4,73 +4,73 @@ version: '2.0'
 items:
 - lemma: анонсувати
   ipa: /anɔnsuʋˈatɪ/
-  translation: ''
+  translation: to announce
   pos: verb
 - lemma: аудіоконтент
   ipa: /audiɔkɔntɛnt/
-  translation: ''
+  translation: audio content
   pos: noun
   gender: m
 - lemma: багатогодинний
   ipa: /baɦatɔɦɔdˈɪnnɪj/
-  translation: ''
+  translation: many-hour
   pos: adj
 - lemma: будь-хто
   ipa: /budʲ-xtˈɔ/
-  translation: ''
+  translation: anyone
   pos: pron
 - lemma: бум
   ipa: /bum/
-  translation: ''
+  translation: boom
   pos: noun
   gender: m
 - lemma: вгадувати
   ipa: /ʋɦˈaduʋatɪ/
-  translation: ''
+  translation: to guess (imperfective)
   pos: verb
 - lemma: виділення
   ipa: /ʋˈɪdilɛnnja/
-  translation: ''
+  translation: highlighting, secretion
   pos: noun
   gender: n
 - lemma: випустити
   ipa: /ʋˈɪpustɪtɪ/
-  translation: ''
+  translation: to release, to let out
   pos: verb
 - lemma: відносно
   ipa: /ʋidnˈɔsnɔ/
-  translation: ''
+  translation: relatively, regarding
   pos: adv
 - lemma: демократизація
   ipa: /dɛmɔkratɪzˈat͡sija/
-  translation: ''
+  translation: democratization
   pos: noun
   gender: f
 - lemma: дилетантизм
   ipa: /dɪlɛtantˈɪzm/
-  translation: ''
+  translation: dilettantism
   pos: noun
   gender: m
 - lemma: досконалість
   ipa: /dɔskɔnˈalistʲ/
-  translation: ''
+  translation: perfection
   pos: noun
   gender: f
 - lemma: думаючий
   ipa: /dumaˈjut͡ʃɪj/
-  translation: ''
+  translation: thinking (adj), thoughtful
   pos: adj
 - lemma: експертний
   ipa: /ɛkspˈɛrtnɪj/
-  translation: ''
+  translation: expert (adj)
   pos: adj
 - lemma: епізод
   ipa: /ɛpizˈɔd/
-  translation: ''
+  translation: episode
   pos: noun
 - lemma: з'ясувати
   ipa: /zjasuʋˈatɪ/
-  translation: ''
+  translation: to clarify (perfective)
   pos: verb
 - lemma: забужко
   ipa: /zabˈuʒkɔ/
@@ -79,19 +79,19 @@ items:
   gender: f
 - lemma: задавати
   ipa: /zadaʋˈatɪ/
-  translation: ''
+  translation: to ask (a question), to set
   pos: verb
 - lemma: здогадуватися
   ipa: /zdɔɦˈaduʋatɪsja/
-  translation: ''
+  translation: to guess, to suspect (imperfective)
   pos: verb
 - lemma: знаючи
   ipa: /znˈajut͡ʃɪ/
-  translation: ''
+  translation: knowing
   pos: verb
 - lemma: ліцензія
   ipa: /lit͡sˈɛnzija/
-  translation: ''
+  translation: license
   pos: noun
   gender: f
 - lemma: медіасцена
@@ -105,29 +105,29 @@ items:
   pos: adv
 - lemma: нитка
   ipa: /nˈɪtka/
-  translation: ''
+  translation: thread
   pos: noun
   gender: f
 - lemma: ніша
   ipa: /nˈiʃa/
-  translation: ''
+  translation: niche
   pos: noun
   gender: f
 - lemma: перепитати
   ipa: /pɛrɛpɪtˈatɪ/
-  translation: ''
+  translation: to ask again
   pos: verb
 - lemma: перепитувати
   ipa: /pɛrɛpˈɪtuʋatɪ/
-  translation: ''
+  translation: to ask again (imperfective)
   pos: verb
 - lemma: переслуховувати
   ipa: /pɛrɛsluxɔʋuʋatɪ/
-  translation: ''
+  translation: to listen again
   pos: verb
 - lemma: повтор
   ipa: /pɔʋtˈɔr/
-  translation: ''
+  translation: repeat
   pos: noun
 - lemma: подкаст-сцена
   ipa: /pɔdkast-st͡sˈɛna/
@@ -136,107 +136,98 @@ items:
   gender: m
 - lemma: подкастер
   ipa: /pɔdkastɛr/
-  translation: ''
+  translation: podcaster
   pos: noun
-- lemma: подкастерти
-  ipa: /pɔdkastɛrtɪ/
-  translation: ''
-  pos: verb
 - lemma: подкастинг
   ipa: /pɔdkˈastɪnɦ/
-  translation: ''
+  translation: podcasting
   pos: noun
   gender: m
 - lemma: подумавши
   ipa: /pɔdˈumaʋʃɪ/
-  translation: ''
+  translation: having thought
   pos: verb
 - lemma: позитив
   ipa: /pɔzɪtˈɪʋ/
-  translation: ''
+  translation: positive
   pos: noun
   gender: m
 - lemma: полегшувати
   ipa: /pɔlˈɛɦʃuʋatɪ/
-  translation: ''
+  translation: to facilitate, to relieve
   pos: verb
 - lemma: пропонуючи
   ipa: /prɔpɔnˈujut͡ʃɪ/
-  translation: ''
+  translation: offering
   pos: verb
 - lemma: підручниковий
   ipa: /pidrut͡ʃnɪkɔʋɪj/
-  translation: ''
+  translation: textbook (adj)
   pos: adj
 - lemma: підсумовувати
   ipa: /pidsumˈɔʋuʋatɪ/
-  translation: ''
+  translation: to summarize (imperfective)
   pos: verb
 - lemma: редагувати
   ipa: /rɛdaɦuʋˈatɪ/
-  translation: ''
+  translation: to edit
   pos: verb
 - lemma: резонанс
   ipa: /rɛzɔnˈans/
-  translation: ''
+  translation: resonance
   pos: noun
   gender: m
 - lemma: самооцінка
   ipa: /samɔɔt͡sˈinka/
-  translation: ''
+  translation: self-esteem
   pos: noun
   gender: f
 - lemma: сигнальний
   ipa: /sɪɦnˈalʲnɪj/
-  translation: ''
+  translation: signal (adj)
   pos: adj
 - lemma: слідити
   ipa: /slidˈɪtɪ/
-  translation: ''
+  translation: to follow, to track
   pos: verb
 - lemma: створюватися
   ipa: /stʋˈɔrjuʋatɪsja/
-  translation: ''
+  translation: to be created
   pos: verb
 - lemma: столичний
   ipa: /stɔlˈɪt͡ʃnɪj/
-  translation: ''
+  translation: capital (adj)
   pos: adj
 - lemma: суржик
   ipa: /sˈurʒɪk/
-  translation: ''
+  translation: Surzhyk
   pos: noun
   gender: m
-- lemma: сьогодення
-  ipa: /sʲɔɦɔdˈɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: точ-
   ipa: /tɔt͡ʃ-/
   translation: ''
   pos: noun
 - lemma: фрагмент
   ipa: /fraɦmˈɛnt/
-  translation: ''
+  translation: fragment
   pos: noun
   gender: m
 - lemma: фрустрація
   ipa: /frustrˈat͡sija/
-  translation: ''
+  translation: frustration
   pos: noun
   gender: f
 - lemma: хвилинний
   ipa: /xʋɪlˈɪnnɪj/
-  translation: ''
+  translation: one-minute (adj)
   pos: adj
 - lemma: хвилювати
   ipa: /xʋɪljuʋˈatɪ/
-  translation: ''
+  translation: to worry, to agitate (imperfective)
   pos: verb
 - lemma: шукаючи
   ipa: /ʃukˈajut͡ʃɪ/
-  translation: ''
+  translation: searching
   pos: verb
 - lemma: шустер
   ipa: /ʃˈustɛr/
@@ -245,15 +236,15 @@ items:
   gender: f
 - lemma: ідентифікувати
   ipa: /idɛntɪfikuʋˈatɪ/
-  translation: ''
+  translation: to identify
   pos: verb
 - lemma: інді-рок
   ipa: /indi-rɔk/
-  translation: ''
+  translation: indie rock
   pos: noun
   gender: m
 - lemma: історичність
   ipa: /istɔrˈɪt͡ʃnistʲ/
-  translation: ''
+  translation: historicity
   pos: noun
   gender: f

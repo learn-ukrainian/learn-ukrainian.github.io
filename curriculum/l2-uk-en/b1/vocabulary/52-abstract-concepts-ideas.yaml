@@ -4,27 +4,27 @@ version: '2.0'
 items:
 - lemma: багатовіковий
   ipa: /baɦatɔʋikɔʋˈɪj/
-  translation: ''
+  translation: centuries-old
   pos: adj
 - lemma: варіюватися
   ipa: /ʋarijuʋˈatɪsja/
-  translation: ''
+  translation: to vary
   pos: verb
 - lemma: викладати
   ipa: /ʋɪkladˈatɪ/
-  translation: ''
+  translation: to teach, to lay out
   pos: verb
 - lemma: висувати
   ipa: /ʋɪsuʋˈatɪ/
-  translation: ''
+  translation: to put forward, to nominate
   pos: verb
 - lemma: висунути
   ipa: /ʋˈɪsunutɪ/
-  translation: ''
+  translation: to put forward (perfective)
   pos: verb
 - lemma: вихор
   ipa: /ʋˈɪxɔr/
-  translation: ''
+  translation: whirlwind
   pos: noun
   gender: m
 - lemma: воло
@@ -34,198 +34,215 @@ items:
   gender: n
 - lemma: вчений
   ipa: /ʋt͡ʃˈɛnɪj/
-  translation: ''
+  translation: scientist, scholar
   pos: adj
 - lemma: відточуватися
   ipa: /ʋidtˈɔt͡ʃuʋatɪsja/
-  translation: ''
+  translation: to be sharpened, to be refined
   pos: verb
+- lemma: глобальний
+  ipa: /ɦlɔbˈalʲnɪj/
+  translation: global
+  pos: adj
 - lemma: говірка
   ipa: /ɦɔʋˈirka/
-  translation: ''
+  translation: dialect, sub-dialect
   pos: noun
   gender: f
 - lemma: данія
   ipa: /dˈanija/
-  translation: ''
+  translation: Denmark
   pos: noun
   gender: f
 - lemma: дебати
   ipa: /dɛbˈatɪ/
-  translation: ''
+  translation: debates
   pos: noun
 - lemma: державність
   ipa: /dɛrʒˈaʋnistʲ/
-  translation: ''
+  translation: statehood
   pos: noun
   gender: f
 - lemma: еволюція
   ipa: /ɛʋɔlˈjut͡sija/
-  translation: ''
+  translation: evolution
   pos: noun
   gender: f
 - lemma: екологічний
   ipa: /ɛkɔlɔɦˈit͡ʃnɪj/
-  translation: ''
+  translation: ecological
   pos: adj
 - lemma: кліматичний
   ipa: /klimatˈɪt͡ʃnɪj/
-  translation: ''
+  translation: climatic
   pos: adj
 - lemma: колокація
   ipa: /kɔlɔkˈat͡sija/
-  translation: ''
+  translation: collocation
   pos: noun
   gender: f
 - lemma: концептуальний
   ipa: /kɔnt͡sɛptuˈalʲnɪj/
-  translation: ''
+  translation: conceptual
   pos: adj
 - lemma: кореляція
   ipa: /kɔrɛlˈjat͡sija/
-  translation: ''
+  translation: correlation
   pos: noun
   gender: f
 - lemma: людство
   ipa: /lˈjudstʋɔ/
-  translation: ''
+  translation: humanity
   pos: noun
   gender: n
 - lemma: мислитель
   ipa: /mɪslˈɪtɛlʲ/
-  translation: ''
+  translation: thinker
   pos: noun
   gender: m
 - lemma: мінімальний
   ipa: /minimˈalʲnɪj/
-  translation: ''
+  translation: minimal
   pos: adj
 - lemma: нав'язувати
   ipa: /naʋˈjazuʋatɪ/
-  translation: ''
+  translation: to impose (imperfective)
   pos: verb
 - lemma: наводити
   ipa: /naʋˈɔdɪtɪ/
-  translation: ''
+  translation: to site, to bring (examples), to point
   pos: verb
+- lemma: надійний
+  ipa: /nadˈijnɪj/
+  translation: reliable
+  pos: adj
 - lemma: найгірше
   ipa: /najɦˈirʃɛ/
-  translation: ''
+  translation: worse (of all), the worst thing
   pos: adv
 - lemma: народжуватися
   ipa: /narˈɔdʒuʋatɪsja/
-  translation: ''
+  translation: to be born
   pos: verb
 - lemma: незграбно
   ipa: /nɛzɦrˈabnɔ/
-  translation: ''
+  translation: awkwardly, clumsily
   pos: adv
 - lemma: нездатний
   ipa: /nɛzdˈatnɪj/
-  translation: ''
+  translation: incapable
   pos: adj
 - lemma: новинний
   ipa: /nɔʋˈɪnnɪj/
-  translation: ''
+  translation: news (adj)
   pos: adj
 - lemma: обережність
   ipa: /ɔbɛrˈɛʒnistʲ/
-  translation: ''
+  translation: caution, care
   pos: noun
   gender: f
 - lemma: онлайн-реклама
   ipa: /ɔnlajn-rɛklˈama/
-  translation: ''
+  translation: online advertising
   pos: noun
   gender: f
 - lemma: оптиміст
   ipa: /ɔptɪmˈist/
-  translation: ''
+  translation: optimist
   pos: noun
 - lemma: падіння
   ipa: /padˈinnja/
-  translation: ''
+  translation: fall, drop
   pos: noun
   gender: n
 - lemma: песиміст
   ipa: /pɛsɪmˈist/
-  translation: ''
+  translation: pessimist
   pos: noun
 - lemma: песимістичний
   ipa: /pɛsɪmistˈɪt͡ʃnɪj/
-  translation: ''
+  translation: pessimistic
   pos: adj
 - lemma: православний
   ipa: /praʋɔslˈaʋnɪj/
-  translation: ''
+  translation: Orthodox
   pos: adj
 - lemma: проблематика
   ipa: /prɔblɛmˈatɪka/
-  translation: ''
+  translation: problematic, set of issues
   pos: noun
   gender: f
 - lemma: провал
   ipa: /prɔʋˈal/
-  translation: ''
+  translation: failure, collapse
   pos: noun
   gender: m
 - lemma: прокопович
   ipa: /prˈɔkɔpɔʋɪt͡ʃ/
-  translation: ''
+  translation: Prokopovych (name)
   pos: noun
   gender: f
 - lemma: публічний
   ipa: /publˈit͡ʃnɪj/
-  translation: ''
+  translation: public (adj)
   pos: adj
 - lemma: регулювання
   ipa: /rɛɦuljuʋˈannja/
-  translation: ''
+  translation: regulation, adjustment
   pos: noun
   gender: n
 - lemma: релігія
   ipa: /rɛlˈiɦija/
-  translation: ''
+  translation: religion
   pos: noun
   gender: f
 - lemma: реєстр
   ipa: /rɛˈjɛstr/
-  translation: ''
+  translation: register, registry
   pos: noun
   gender: m
 - lemma: розв'язання
   ipa: /rɔzʋjazˈannja/
-  translation: ''
+  translation: solution, resolution
   pos: noun
   gender: n
 - lemma: розв'язати
   ipa: /rɔzʋjazˈatɪ/
-  translation: ''
+  translation: to solve, to untie
   pos: verb
 - lemma: спостереження
   ipa: /spɔstɛrˈɛʒɛnnja/
-  translation: ''
+  translation: observation
   pos: noun
   gender: n
 - lemma: спрацювати
   ipa: /sprat͡sjuʋˈatɪ/
-  translation: ''
+  translation: to work (device), to succeed (perfective)
   pos: verb
 - lemma: спростовувати
   ipa: /sprɔstˈɔʋuʋatɪ/
-  translation: ''
+  translation: to refute, to deny (imperfective)
   pos: verb
 - lemma: спростувати
   ipa: /sprɔstuʋˈatɪ/
-  translation: ''
+  translation: to refute, to deny (perfective)
   pos: verb
 - lemma: стимул
   ipa: /stˈɪmul/
-  translation: ''
+  translation: stimulus, incentive
   pos: noun
+- lemma: сформулювати
+  ipa: /sfɔrmuljuʋˈatɪ/
+  translation: to formulate, to state
+  pos: verb
+- lemma: фахівець
+  ipa: /faxiʋˈɛt͡sʲ/
+  translation: specialist, expert
+  pos: noun
+  gender: m
 - lemma: феофан
   ipa: /fɛɔfˈan/
-  translation: ''
+  translation: Feofan (name)
   pos: noun
   gender: m
 - lemma: цінно
@@ -234,19 +251,14 @@ items:
   pos: adv
 - lemma: черговий
   ipa: /t͡ʃɛrɦɔʋˈɪj/
-  translation: ''
+  translation: duty person, sequential
   pos: adj
 - lemma: швеція
   ipa: /ʃʋˈɛt͡sija/
-  translation: ''
+  translation: Sweden
   pos: noun
   gender: f
-- lemma: ші
-  ipa: /ʃi/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: інтелектуальний
   ipa: /intɛlɛktuˈalʲnɪj/
-  translation: ''
+  translation: intellectual (adj)
   pos: adj

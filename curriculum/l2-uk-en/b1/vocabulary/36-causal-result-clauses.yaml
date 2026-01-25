@@ -4,68 +4,76 @@ version: '2.0'
 items:
 - lemma: адміністративний
   ipa: /administratˈɪʋnɪj/
-  translation: ''
+  translation: administrative
   pos: adj
 - lemma: алібі
   ipa: /ˈalibi/
-  translation: ''
+  translation: alibi
   pos: noun
   gender: n
 - lemma: аргументація
   ipa: /arɦumɛntˈat͡sija/
-  translation: ''
+  translation: argumentation
   pos: noun
   gender: f
 - lemma: аргументувати
   ipa: /arɦumɛntuʋˈatɪ/
-  translation: ''
+  translation: to argue, to reason
+  pos: verb
+- lemma: атакувати
+  ipa: /atakuʋˈatɪ/
+  translation: to attack
   pos: verb
 - lemma: безпосередній
   ipa: /bɛzpɔsɛrˈɛdnij/
-  translation: ''
+  translation: direct, immediate
   pos: adj
 - lemma: бонус
   ipa: /bˈɔnus/
-  translation: ''
+  translation: bonus
   pos: noun
   gender: m
 - lemma: будильник
   ipa: /budˈɪlʲnɪk/
-  translation: ''
+  translation: alarm clock
   pos: noun
   gender: m
 - lemma: бюрократичний
   ipa: /bjurɔkratˈɪt͡ʃnɪj/
-  translation: ''
+  translation: bureaucratic
   pos: adj
 - lemma: вакансія
   ipa: /ʋakˈansija/
-  translation: ''
+  translation: vacancy
   pos: noun
   gender: f
 - lemma: виражатися
   ipa: /ʋɪraʒˈatɪsja/
-  translation: ''
+  translation: to be expressed
   pos: verb
 - lemma: вищевикладений
   ipa: /ʋɪʃt͡ʃɛʋˈɪkladɛnɪj/
-  translation: ''
+  translation: above-mentioned
   pos: adj
 - lemma: внаслідок
   ipa: /ʋnˈaslidɔk/
-  translation: ''
+  translation: as a result of
   pos: prep
+- lemma: відповідно
+  ipa: /ʋidpɔʋˈidnɔ/
+  translation: accordingly, appropriately
+  pos: adv
 - lemma: відтак
   ipa: /ʋidtˈak/
-  translation: ''
+  translation: therefore, hence
   pos: adv
 - lemma: громіздкий
   ipa: /ɦrɔmizdkˈɪj/
-  translation: ''
+  translation: bulky, cumbersome
   pos: adj
 - lemma: доказ
   ipa: /dˈɔkaz/
-  translation: ''
+  translation: proof, evidence
   pos: noun
 - lemma: ефіопія
   ipa: /ɛfiˈɔpija/
@@ -74,28 +82,37 @@ items:
   gender: f
 - lemma: жарт
   ipa: /ʒart/
-  translation: ''
+  translation: joke
+  pos: noun
+  gender: m
+- lemma: заклик
+  ipa: /zˈaklɪk/
+  translation: appeal, call
   pos: noun
   gender: m
 - lemma: запасний
   ipa: /zapasnˈɪj/
-  translation: ''
+  translation: spare, reserve
   pos: adj
+- lemma: заслужити
+  ipa: /zasluʒˈɪtɪ/
+  translation: to deserve
+  pos: verb
 - lemma: затримка
   ipa: /zˈatrɪmka/
-  translation: ''
+  translation: delay
   pos: noun
 - lemma: зафіксувати
   ipa: /zafiksuʋˈatɪ/
-  translation: ''
+  translation: to record, to fix
   pos: verb
 - lemma: зацікавити
   ipa: /zat͡sikˈaʋɪtɪ/
-  translation: ''
+  translation: to interest
   pos: verb
 - lemma: заявник
   ipa: /zaˈjaʋnɪk/
-  translation: ''
+  translation: applicant
   pos: noun
   gender: m
 - lemma: згаданий
@@ -104,197 +121,230 @@ items:
   pos: adj
 - lemma: злагоджено
   ipa: /zlˈaɦɔdʒɛnɔ/
-  translation: ''
+  translation: harmoniously, in coordination
   pos: adv
 - lemma: злочин
   ipa: /zlˈɔt͡ʃɪn/
-  translation: ''
+  translation: crime
   pos: noun
   gender: m
 - lemma: знизитися
   ipa: /znˈɪzɪtɪsja/
-  translation: ''
+  translation: to lower, to decrease (perfective)
   pos: verb
 - lemma: зірватися
   ipa: /zirʋˈatɪsja/
-  translation: ''
+  translation: to fall off, to lose control
   pos: verb
+- lemma: камера
+  ipa: /kˈamɛra/
+  translation: camera
+  pos: noun
+  gender: f
 - lemma: каркас
   ipa: /karkˈas/
-  translation: ''
+  translation: frame, skeleton
   pos: noun
   gender: m
 - lemma: клопотання
   ipa: /klɔpɔtˈannja/
-  translation: ''
+  translation: petition, request
   pos: noun
   gender: n
 - lemma: книжний
   ipa: /knˈɪʒnɪj/
-  translation: ''
+  translation: bookish
   pos: adj
 - lemma: король
   ipa: /kɔrˈɔlʲ/
-  translation: ''
+  translation: king
   pos: noun
   gender: f
 - lemma: кшталт
   ipa: /kʃtalt/
-  translation: ''
+  translation: type, sort, shape
   pos: noun
   gender: m
 - lemma: набути
   ipa: /nabˈutɪ/
-  translation: ''
+  translation: to acquire (perfective)
   pos: verb
 - lemma: наголошувати
   ipa: /naɦɔlˈɔʃuʋatɪ/
-  translation: ''
+  translation: to emphasize (imperfective)
   pos: verb
+- lemma: нагорода
+  ipa: /naɦɔrˈɔda/
+  translation: award
+  pos: noun
+  gender: f
 - lemma: надати
   ipa: /nadˈatɪ/
-  translation: ''
+  translation: to provide (perfective)
   pos: verb
 - lemma: наступати
   ipa: /nastupˈatɪ/
-  translation: ''
+  translation: to step on, to advance
   pos: verb
 - lemma: негативне
   ipa: /nɛɦatˈɪʋnɛ/
   translation: ''
   pos: noun
   gender: n
+- lemma: незручність
+  ipa: /nɛzrˈut͡ʃnistʲ/
+  translation: inconvenience
+  pos: noun
+  gender: f
+- lemma: оголошення
+  ipa: /ɔɦɔlˈɔʃɛnnja/
+  translation: announcement, advertisement
+  pos: noun
 - lemma: одноголосно
   ipa: /ɔdnɔɦɔlˈɔsnɔ/
-  translation: ''
+  translation: unanimously
   pos: adv
 - lemma: перенасичений
   ipa: /pɛrɛnasˈɪt͡ʃɛnɪj/
-  translation: ''
+  translation: oversaturated
   pos: adj
 - lemma: переноситися
   ipa: /pɛrɛnɔsɪtɪsja/
-  translation: ''
+  translation: to be transferred
   pos: verb
 - lemma: перескласти
   ipa: /pɛrɛsklˈastɪ/
-  translation: ''
+  translation: to retake (exam perfective)
   pos: verb
 - lemma: перон
   ipa: /pɛrˈɔn/
-  translation: ''
+  translation: platform (railway)
   pos: noun
   gender: m
 - lemma: погіршитися
   ipa: /pɔɦˈirʃɪtɪsja/
-  translation: ''
+  translation: to deteriorate (perfective)
   pos: verb
 - lemma: позаяк
   ipa: /pɔzaˈjak/
-  translation: ''
+  translation: because, since
   pos: noun
   gender: f
 - lemma: померти
   ipa: /pɔmˈɛrtɪ/
-  translation: ''
+  translation: to die (perfective)
   pos: verb
 - lemma: попит
   ipa: /pˈɔpɪt/
-  translation: ''
+  translation: demand
   pos: noun
   gender: m
 - lemma: популярніший
   ipa: /pɔpuljarniʃɪj/
-  translation: ''
+  translation: more popular
   pos: adj
+- lemma: посилання
+  ipa: /pɔsɪlˈannja/
+  translation: link, reference, exile
+  pos: noun
+  gender: n
 - lemma: потому
   ipa: /pɔtˈɔmu/
-  translation: ''
+  translation: thereafter, after that
   pos: adv
 - lemma: прагнути
   ipa: /prˈaɦnutɪ/
-  translation: ''
+  translation: to aspire, to strive
   pos: verb
 - lemma: премія
   ipa: /prˈɛmija/
-  translation: ''
+  translation: award, prize, bonus
   pos: noun
   gender: f
 - lemma: привозити
   ipa: /prɪʋˈɔzɪtɪ/
-  translation: ''
+  translation: to bring (by vehicle imperfective)
   pos: verb
 - lemma: призвести
   ipa: /prɪzʋɛstˈɪ/
-  translation: ''
+  translation: to lead to, to cause (perfective)
   pos: verb
 - lemma: провалити
   ipa: /prɔʋalˈɪtɪ/
-  translation: ''
+  translation: to fail (exam/task)
   pos: verb
 - lemma: прокурор
   ipa: /prɔkurˈɔr/
-  translation: ''
+  translation: prosecutor
   pos: noun
   gender: m
 - lemma: противник
   ipa: /prɔtˈɪʋnɪk/
-  translation: ''
+  translation: opponent, enemy
   pos: noun
   gender: m
 - lemma: підвищитися
   ipa: /pidʋˈɪʃt͡ʃɪtɪsja/
-  translation: ''
+  translation: to increase (passive)
   pos: verb
+- lemma: ретельний
+  ipa: /rɛtˈɛlʲnɪj/
+  translation: thorough, careful
+  pos: adj
 - lemma: свідок
   ipa: /sʋˈidɔk/
-  translation: ''
+  translation: witness
   pos: noun
   gender: m
 - lemma: сезон
   ipa: /sɛzˈɔn/
-  translation: ''
+  translation: season
   pos: noun
   gender: m
 - lemma: скарга
   ipa: /skˈarɦa/
-  translation: ''
+  translation: complaint
   pos: noun
   gender: f
 - lemma: скоїти
   ipa: /skˈɔjitɪ/
-  translation: ''
+  translation: to commit, to do (something bad)
   pos: verb
 - lemma: сорт
   ipa: /sɔrt/
-  translation: ''
+  translation: sort, variety, grade
   pos: noun
   gender: m
 - lemma: спадкоємець
   ipa: /spadkɔˈjɛmɛt͡sʲ/
-  translation: ''
+  translation: heir, successor
   pos: noun
   gender: m
 - lemma: спланувати
   ipa: /splanuʋˈatɪ/
-  translation: ''
+  translation: to plan (perfective)
   pos: verb
 - lemma: стилістика
   ipa: /stɪlˈistɪka/
-  translation: ''
+  translation: stylistics
   pos: noun
   gender: f
 - lemma: стратегічний
   ipa: /stratɛɦˈit͡ʃnɪj/
-  translation: ''
+  translation: strategic
   pos: adj
+- lemma: суддя
+  ipa: /suddˈja/
+  translation: judge
+  pos: noun
+  gender: m
 - lemma: трансформувати
   ipa: /transfɔrmuʋˈatɪ/
-  translation: ''
+  translation: to transform
   pos: verb
 - lemma: трон
   ipa: /trɔn/
-  translation: ''
+  translation: throne
   pos: noun
   gender: m
 - lemma: что
@@ -303,10 +353,10 @@ items:
   pos: noun
 - lemma: юридичний
   ipa: /jurɪdˈɪt͡ʃnɪj/
-  translation: ''
+  translation: legal, juridical
   pos: adj
 - lemma: явище
   ipa: /ˈjaʋɪʃt͡ʃɛ/
-  translation: ''
+  translation: phenomenon
   pos: noun
   gender: n

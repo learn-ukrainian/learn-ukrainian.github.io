@@ -1,17 +1,54 @@
-# Audit Report: 56-discourse-markers-basic.md
-**Phase:** B1.5 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
+# Audit Report: M56 — 56-discourse-markers-basic.md
+**Level:** B1 | **Module:** M56 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:34:13
+
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Функції дискурсивних маркерів | 14 | 8 | ✅ |
+| 2 | group-sort | Формальний чи розмовний регістр | 16 | 12 | ✅ |
+| 3 | fill-in | Контрастні маркери | 14 | 8 | ✅ |
+| 4 | fill-in | Причина та наслідок | 14 | 8 | ✅ |
+| 5 | quiz | Пояснення та уточнення | 8 | 8 | ✅ |
+| 6 | quiz | Узагальнення та підсилення | 8 | 8 | ✅ |
+| 7 | cloze | Новинна стаття | 14 | 12 | ✅ |
+| 8 | cloze | Академічний текст | 14 | 12 | ✅ |
+| 9 | error-correction | Виправте помилки з маркерами | 8 | 6 | ✅ |
+| 10 | unjumble | Складіть речення з маркерами | 8 | 6 | ✅ |
+| 11 | translate | Переклад із маркерами | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть контрастні маркери | 6 | 6 | ✅ |
+| 13 | select | Оберіть усі правильні маркери | 6 | 6 | ✅ |
+| 14 | true-false | Правда чи хибність | 14 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1660/1500
+- **Words:** ✅ 1660/1500 (raw: 2560)
 - **Activities:** ✅ 14/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 21 < 35 (soft target)
+- **Vocab:** ⚠️ 29 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,7 +79,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Вступ** | ⚪️ | 89 | Skipped |
+| **Вступ** | ✅ | 89 | Included in Core |
 | **Вивчення слів** | ⚪️ | 385 | Skipped |
 | **Вживання** | ⚪️ | 212 | Skipped |
 | **Читання** | ✅ | 236 | Included in Core |

@@ -1,0 +1,128 @@
+module: pavlo-polubotok
+level: B2
+version: '1.0'
+items:
+  - lemma: наказний
+    ipa: /na.kaz.ˈnɪj/
+    translation: acting (hetman)
+    pos: adj
+  - lemma: колегія
+    ipa: /ko.ˈlɛ.ɦʲi.jɐ/
+    translation: collegium (administrative body)
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /aw.to.ˈnɔ.mʲi.jɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: тиранія
+    ipa: /tɪ.ra.ˈnʲi.jɐ/
+    translation: tyranny
+    pos: noun
+    gender: f
+  - lemma: петиція
+    ipa: /pɛ.ˈtɪ.t͡sʲi.jɐ/
+    translation: petition
+    pos: noun
+    gender: f
+  - lemma: чолобитна
+    ipa: /t͡ʃo.lo.ˈbɪt.na/
+    translation: petition (archaic)
+    pos: noun
+    gender: f
+  - lemma: скарб
+    ipa: /ˈskarb/
+    translation: treasure
+    pos: noun
+    gender: m
+  - lemma: каземат
+    ipa: /ka.zɛ.ˈmat/
+    translation: casemate, dungeon
+    pos: noun
+    gender: m
+  - lemma: мученик
+    ipa: /mu.t͡ʃɛ.ˈnɪk/
+    translation: martyr
+    pos: noun
+    gender: m
+  - lemma: гута
+    ipa: /ˈɦu.ta/
+    translation: glassworks (archaic)
+    pos: noun
+    gender: f
+  - lemma: рудня
+    ipa: /ˈrud.nʲɐ/
+    translation: ore mine/smeltery
+    pos: noun
+    gender: f
+  - lemma: спротив
+    ipa: /spro.ˈtɪw/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: гідність
+    ipa: /ˈɦid.nʲisʲtʲ/
+    translation: dignity
+    pos: noun
+    gender: f
+  - lemma: заповіт
+    ipa: /za.po.ˈwit/
+    translation: testament, will
+    pos: noun
+    gender: m
+  - lemma: хабар
+    ipa: /xa.ˈbar/
+    translation: bribe
+    pos: noun
+    gender: m
+  - lemma: інтрига
+    ipa: /in.ˈtrɪ.ɦa/
+    translation: intrigue
+    pos: noun
+    gender: f
+  - lemma: деспотизм
+    ipa: /dɛs.po.ˈtɪzm/
+    translation: despotism
+    pos: noun
+    gender: m
+  - lemma: олігарх
+    ipa: /o.li.ˈɦarx/
+    translation: oligarch
+    pos: noun
+    gender: m
+  - lemma: меценат
+    ipa: /mɛ.t͡sɛ.ˈnat/
+    translation: patron of arts
+    pos: noun
+    gender: m
+  - lemma: саботаж
+    ipa: /sa.bo.ˈtaʒ/
+    translation: sabotage
+    pos: noun
+    gender: m
+  - lemma: конфіскація
+    ipa: /kon.fis.ˈka.t͡sʲi.jɐ/
+    translation: confiscation
+    pos: noun
+    gender: f
+  - lemma: дукат
+    ipa: /du.ˈkat/
+    translation: ducat (gold coin)
+    pos: noun
+    gender: m
+  - lemma: кайдани
+    ipa: /kaj.ˈda.nɪ/
+    translation: shackles, fetters
+    pos: noun
+    gender: pl
+  - lemma: позов
+    ipa: /ˈpo.zow/
+    translation: lawsuit
+    pos: noun
+    gender: m
+  - lemma: маєток
+    ipa: /ma.ˈjɛ.tok/
+    translation: estate
+    pos: noun
+    gender: m

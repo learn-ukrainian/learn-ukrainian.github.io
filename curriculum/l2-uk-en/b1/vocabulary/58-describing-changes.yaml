@@ -2,13 +2,17 @@ module: 58-describing-changes
 level: B1
 version: '2.0'
 items:
+- lemma: активніший
+  ipa: /aktˈɪʋniʃɪj/
+  translation: more active
+  pos: adj
 - lemma: атмосферний
   ipa: /atmɔsfˈɛrnɪj/
-  translation: ''
+  translation: atmospheric
   pos: adj
 - lemma: безробіття
   ipa: /bɛzrɔbˈittja/
-  translation: ''
+  translation: unemployment
   pos: noun
   gender: n
 - lemma: бізнес-активність
@@ -18,7 +22,7 @@ items:
   gender: f
 - lemma: валюта
   ipa: /ʋalˈjuta/
-  translation: ''
+  translation: currency
   pos: noun
 - lemma: впад
   ipa: /ʋpad/
@@ -27,184 +31,188 @@ items:
   gender: m
 - lemma: врешті
   ipa: /ʋrˈɛʃti/
-  translation: ''
+  translation: at last, finally
   pos: adv
 - lemma: відкритіший
   ipa: /ʋidkrɪtiʃɪj/
-  translation: ''
+  translation: more open
   pos: adj
 - lemma: долучатися
   ipa: /dɔlut͡ʃˈatɪsja/
-  translation: ''
+  translation: to join, to participate
   pos: verb
 - lemma: дохід
   ipa: /dɔxˈid/
-  translation: ''
+  translation: income, profit
   pos: noun
 - lemma: економіст
   ipa: /ɛkɔnɔmˈist/
-  translation: ''
+  translation: economist
   pos: noun
 - lemma: енергоносій
   ipa: /ɛnɛrɦɔnɔsˈij/
-  translation: ''
+  translation: energy source
   pos: noun
   gender: m
 - lemma: запальний
   ipa: /zapalʲnɪj/
-  translation: ''
+  translation: fiery, inflammatory
   pos: adj
 - lemma: заспокоїтися
   ipa: /zaspɔkˈɔjitɪsja/
-  translation: ''
+  translation: to calm down (perfective)
   pos: verb
 - lemma: захворювання
   ipa: /zaxʋˈɔrjuʋannja/
-  translation: ''
+  translation: disease, illness
   pos: noun
   gender: n
 - lemma: збільшення
   ipa: /zbˈilʲʃɛnnja/
-  translation: ''
+  translation: increase
   pos: noun
   gender: n
 - lemma: збільшитися
   ipa: /zbˈilʲʃɪtɪsja/
-  translation: ''
+  translation: to increase (passive)
   pos: verb
 - lemma: збільшуватися
   ipa: /zbˈilʲʃuʋatɪsja/
-  translation: ''
+  translation: to increase (passive, imperfective)
   pos: verb
 - lemma: звуження
   ipa: /zʋˈuʒɛnnja/
-  translation: ''
+  translation: narrowing
   pos: noun
   gender: n
 - lemma: звужуватися
   ipa: /zʋˈuʒuʋatɪsja/
-  translation: ''
+  translation: to narrow down
   pos: verb
 - lemma: зменшення
   ipa: /zmˈɛnʃɛnnja/
-  translation: ''
+  translation: reduction, decrease
   pos: noun
   gender: n
 - lemma: зменшитися
   ipa: /zmˈɛnʃɪtɪsja/
-  translation: ''
+  translation: to decrease (passive)
   pos: verb
 - lemma: зменшуватися
   ipa: /zmˈɛnʃuʋatɪsja/
-  translation: ''
+  translation: to decrease (passive, imperfective)
   pos: verb
 - lemma: кардинально
   ipa: /kardɪnˈalʲnɔ/
-  translation: ''
+  translation: radically, fundamentally
   pos: adv
 - lemma: коливатися
   ipa: /kɔlɪʋˈatɪsja/
-  translation: ''
+  translation: to fluctuate, to hesitate
   pos: verb
 - lemma: маржа
   ipa: /mˈarʒa/
-  translation: ''
+  translation: margin
   pos: noun
   gender: f
 - lemma: метеоролог
   ipa: /mɛtɛɔrˈɔlɔɦ/
-  translation: ''
+  translation: meteorologist
   pos: noun
 - lemma: напівформальний
   ipa: /napiʋfɔrmalʲnɪj/
-  translation: ''
+  translation: semi-formal
   pos: adj
 - lemma: наростати
   ipa: /narɔstˈatɪ/
-  translation: ''
+  translation: to grow, to increase
   pos: verb
 - lemma: незначно
   ipa: /nɛznˈat͡ʃnɔ/
-  translation: ''
+  translation: insignificantly
   pos: adv
 - lemma: несподіваність
   ipa: /nɛspɔdˈiʋanistʲ/
-  translation: ''
+  translation: suddenness
   pos: noun
   gender: f
 - lemma: опади
   ipa: /ˈɔpadɪ/
-  translation: ''
+  translation: precipitation
   pos: noun
 - lemma: погіршуватися
   ipa: /pɔɦˈirʃuʋatɪsja/
-  translation: ''
+  translation: to deteriorate (imperfective)
   pos: verb
 - lemma: політика
   ipa: /pɔlˈitɪka/
-  translation: ''
+  translation: politics, policy
   pos: noun
   gender: f
 - lemma: помітно
   ipa: /pɔmˈitnɔ/
-  translation: ''
+  translation: noticeably
   pos: adv
 - lemma: порівняно
   ipa: /pɔrˈiʋnjanɔ/
-  translation: ''
+  translation: comparatively, relatively
   pos: adv
 - lemma: посилюватися
   ipa: /pɔsˈɪljuʋatɪsja/
-  translation: ''
+  translation: to strengthen (imperfective)
   pos: verb
 - lemma: послаблюватися
   ipa: /pɔslˈabljuʋatɪsja/
-  translation: ''
+  translation: to weaken (imperfective)
   pos: verb
 - lemma: потеплішати
   ipa: /pɔtɛplˈiʃatɪ/
-  translation: ''
+  translation: to get warmer
   pos: verb
 - lemma: препарат
   ipa: /prɛparˈat/
-  translation: ''
+  translation: preparation, drug
   pos: noun
   gender: m
 - lemma: протриматися
   ipa: /prɔtrˈɪmatɪsja/
-  translation: ''
+  translation: to hold on, to last
   pos: verb
 - lemma: розширюватися
   ipa: /rɔzʃˈɪrjuʋatɪsja/
-  translation: ''
+  translation: to expand (passive)
   pos: verb
 - lemma: самопочуття
   ipa: /samɔpɔt͡ʃuttˈja/
-  translation: ''
+  translation: general well-being
   pos: noun
   gender: n
 - lemma: смог
   ipa: /smɔɦ/
-  translation: ''
+  translation: smog
   pos: noun
   gender: m
 - lemma: сповільнюватися
   ipa: /spɔʋˈilʲnjuʋatɪsja/
-  translation: ''
+  translation: to slow down (imperfective)
   pos: verb
 - lemma: стабілізувати
   ipa: /stabilizuʋˈatɪ/
-  translation: ''
+  translation: to stabilize
+  pos: verb
+- lemma: стежити
+  ipa: /stˈɛʒɪtɪ/
+  translation: to follow, to monitor, to track
   pos: verb
 - lemma: стрімко
   ipa: /strˈimkɔ/
-  translation: ''
+  translation: rapidly, swiftly
   pos: adv
 - lemma: суперечливий
   ipa: /supɛrˈɛt͡ʃlɪʋɪj/
-  translation: ''
+  translation: controversial, contradictory
   pos: adj
 - lemma: суттєво
   ipa: /suttˈjɛʋɔ/
-  translation: ''
+  translation: substantially, significantly
   pos: adv

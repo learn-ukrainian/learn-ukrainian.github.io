@@ -4,45 +4,45 @@ version: '2.0'
 items:
 - lemma: акційний
   ipa: /akt͡sˈijnɪj/
-  translation: ''
+  translation: promotional, on sale
   pos: adj
 - lemma: алое
   ipa: /alˈɔɛ/
-  translation: ''
+  translation: aloe
   pos: noun
   gender: n
 - lemma: антисептик
   ipa: /antɪsˈɛptɪk/
-  translation: ''
+  translation: antiseptic
   pos: noun
   gender: m
 - lemma: аптечка
   ipa: /aptˈɛt͡ʃka/
-  translation: ''
+  translation: first aid kit
   pos: noun
   gender: f
 - lemma: баночка
   ipa: /bˈanɔt͡ʃka/
-  translation: ''
+  translation: small jar
   pos: noun
   gender: f
 - lemma: батончик
   ipa: /batˈɔnt͡ʃɪk/
-  translation: ''
+  translation: bar (candy/snack)
   pos: noun
   gender: m
 - lemma: безпечно
   ipa: /bɛzpˈɛt͡ʃnɔ/
-  translation: ''
+  translation: safely, securely
   pos: adv
 - lemma: бинт
   ipa: /bɪnt/
-  translation: ''
+  translation: bandage
   pos: noun
   gender: m
 - lemma: вище
   ipa: /ʋˈɪʃt͡ʃɛ/
-  translation: ''
+  translation: higher, above
   pos: adv
 - lemma: гематоген
   ipa: /ɦɛmatɔɦˈɛn/
@@ -51,192 +51,159 @@ items:
   gender: m
 - lemma: гріти
   ipa: /ɦrˈitɪ/
-  translation: ''
+  translation: to warm
   pos: verb
 - lemma: двісті
   ipa: /dʋˈisti/
-  translation: ''
+  translation: two hundred
   pos: num
 - lemma: дозування
   ipa: /dɔzuʋˈannja/
-  translation: ''
+  translation: dosage
   pos: noun
   gender: n
 - lemma: дорогенький
   ipa: /dɔrɔɦˈɛnʲkɪj/
-  translation: ''
+  translation: dear, expensive (diminutive)
   pos: adj
 - lemma: е-рецепт
   ipa: /ɛ-rɛt͡sɛpt/
-  translation: ''
+  translation: e-prescription
   pos: noun
   gender: m
 - lemma: залізо
   ipa: /zalˈizɔ/
-  translation: ''
+  translation: iron
   pos: noun
   gender: n
 - lemma: запах
   ipa: /zˈapax/
-  translation: ''
+  translation: smell, scent
   pos: noun
   gender: m
 - lemma: заспокоювати
   ipa: /zaspɔkˈɔjuʋatɪ/
-  translation: ''
+  translation: to calm down
   pos: verb
 - lemma: зволожувати
   ipa: /zʋɔlˈɔʒuʋatɪ/
-  translation: ''
+  translation: to moisturize
   pos: verb
 - lemma: зрадіти
   ipa: /zradˈitɪ/
-  translation: ''
+  translation: to rejoice, to be glad
   pos: verb
 - lemma: йод
   ipa: /jɔd/
-  translation: ''
+  translation: iodine
   pos: noun
   gender: m
 - lemma: класти
   ipa: /klˈastɪ/
-  translation: ''
+  translation: to put, to lay
   pos: verb
 - lemma: комплекс
   ipa: /kˈɔmplɛks/
-  translation: ''
+  translation: complex
   pos: noun
   gender: m
-- lemma: консультація
-  ipa: /kɔnsulʲtˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: косметика
   ipa: /kɔsmˈɛtɪka/
-  translation: ''
+  translation: cosmetics
   pos: noun
   gender: f
 - lemma: льодяник
   ipa: /lʲɔdjanˈɪk/
-  translation: ''
+  translation: lollipop
   pos: noun
-- lemma: м'ята
-  ipa: /mˈjata/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: магній
   ipa: /mˈaɦnij/
-  translation: ''
+  translation: magnesium
   pos: noun
   gender: m
 - lemma: мазь
   ipa: /mazʲ/
-  translation: ''
+  translation: ointment
   pos: noun
   gender: f
-- lemma: набір
-  ipa: /nabˈir/
-  translation: ''
-  pos: adv
 - lemma: намастити
   ipa: /namastˈɪtɪ/
-  translation: ''
+  translation: to smear, to grease
   pos: verb
 - lemma: натуральний
   ipa: /naturˈalʲnɪj/
-  translation: ''
+  translation: natural
   pos: adj
 - lemma: нервовий
   ipa: /nɛrʋˈɔʋɪj/
-  translation: ''
+  translation: nervous
   pos: adj
 - lemma: перекис
   ipa: /pɛrˈɛkɪs/
-  translation: ''
+  translation: peroxide
   pos: noun
   gender: m
 - lemma: пластир
   ipa: /plˈastɪr/
-  translation: ''
+  translation: plaster, band-aid
   pos: noun
   gender: m
 - lemma: подбати
   ipa: /pɔdbˈatɪ/
-  translation: ''
+  translation: to take care of
   pos: verb
 - lemma: поріз
   ipa: /pɔrˈiz/
-  translation: ''
+  translation: cut, slash
   pos: noun
   gender: m
 - lemma: придатний
   ipa: /prɪdˈatnɪj/
-  translation: ''
+  translation: fit, suitable
   pos: adj
 - lemma: придатність
   ipa: /prɪdˈatnistʲ/
-  translation: ''
+  translation: suitability
   pos: noun
   gender: f
 - lemma: пізній
   ipa: /pˈiznij/
-  translation: ''
+  translation: late (adj)
   pos: adj
-- lemma: піч
-  ipa: /pit͡ʃ/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: рідні
-  ipa: /ridni/
-  translation: ''
-  pos: noun
 - lemma: спалий
   ipa: /spˈalɪj/
-  translation: ''
+  translation: fallen, subsided
   pos: adj
 - lemma: стерильний
   ipa: /stɛrˈɪlʲnɪj/
-  translation: ''
+  translation: sterile
   pos: adj
-- lemma: стрес
-  ipa: /strɛs/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: суха
   ipa: /suxˈa/
-  translation: ''
+  translation: dry (female)
   pos: noun
   gender: f
 - lemma: тонометр
   ipa: /tɔnˈɔmɛtr/
-  translation: ''
+  translation: tonometer (blood pressure monitor)
   pos: noun
   gender: m
-- lemma: упаковка
-  ipa: /upakˈɔʋka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: халат
   ipa: /xalˈat/
-  translation: ''
+  translation: robe, bathrobe
   pos: noun
   gender: m
 - lemma: хлоргексидин
   ipa: /xlɔrɦɛksɪdɪn/
-  translation: ''
+  translation: chlorhexidine
   pos: noun
   gender: m
 - lemma: цілодобовий
   ipa: /t͡silɔdɔbɔʋˈɪj/
-  translation: ''
+  translation: round-the-clock, 24/7
   pos: adj
 - lemma: шкіра
   ipa: /ʃkˈira/
-  translation: ''
+  translation: skin, leather
   pos: noun
   gender: f

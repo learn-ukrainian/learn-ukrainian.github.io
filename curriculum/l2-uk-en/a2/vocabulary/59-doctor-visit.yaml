@@ -4,100 +4,79 @@ version: '2.0'
 items:
 - lemma: ангіна
   ipa: /anɦˈina/
-  translation: ''
+  translation: tonsillitis, sore throat
   pos: noun
   gender: f
 - lemma: берегти
   ipa: /bɛrɛɦtˈɪ/
-  translation: ''
+  translation: to protect, to save
   pos: verb
 - lemma: браун
   ipa: /brˈaun/
-  translation: ''
+  translation: Brown (name)
   pos: noun
   gender: m
-- lemma: виписати
-  ipa: /ʋˈɪpɪsatɪ/
-  translation: ''
-  pos: verb
 - lemma: вітамін
   ipa: /ʋitamˈin/
-  translation: ''
+  translation: vitamin
   pos: noun
 - lemma: клініка
   ipa: /klˈinika/
-  translation: ''
+  translation: clinic
   pos: noun
   gender: f
 - lemma: лікарняний
   ipa: /likarnˈjanɪj/
-  translation: ''
+  translation: sick leave
   pos: adj
-- lemma: нормальний
-  ipa: /nɔrmˈalʲnɪj/
-  translation: ''
-  pos: adj
-- lemma: ніякий
-  ipa: /niˈjakɪj/
-  translation: ''
-  pos: pron
 - lemma: петрович
   ipa: /pɛtrˈɔʋɪt͡ʃ/
-  translation: ''
+  translation: Petrovych (patronymic)
   pos: noun
   gender: f
 - lemma: поводитися
   ipa: /pɔʋɔdɪtɪsja/
-  translation: ''
+  translation: to behave
   pos: verb
-- lemma: повторний
-  ipa: /pɔʋtˈɔrnɪj/
-  translation: ''
-  pos: adj
 - lemma: полоскати
   ipa: /pɔlɔskˈatɪ/
-  translation: ''
+  translation: to rinse
   pos: verb
 - lemma: поміряти
   ipa: /pɔmˈirjatɪ/
-  translation: ''
+  translation: to measure, to try on
   pos: verb
 - lemma: прізвище
   ipa: /prˈizʋɪʃt͡ʃɛ/
-  translation: ''
+  translation: surname
   pos: noun
   gender: n
-- lemma: реєстратор
-  ipa: /rɛjɛstrˈatɔr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: реєстратура
   ipa: /rɛjɛstratˈura/
-  translation: ''
+  translation: reception (medical)
   pos: noun
   gender: f
 - lemma: розчин
   ipa: /rˈɔzt͡ʃɪn/
-  translation: ''
+  translation: solution (liquid)
   pos: noun
   gender: m
 - lemma: спрей
   ipa: /sprɛj/
-  translation: ''
+  translation: spray
   pos: noun
   gender: m
 - lemma: стресовий
   ipa: /strˈɛsɔʋɪj/
-  translation: ''
+  translation: stressful
   pos: adj
 - lemma: термометр
   ipa: /tɛrmˈɔmɛtr/
-  translation: ''
+  translation: thermometer
   pos: noun
   gender: m
 - lemma: фармацевт
   ipa: /farmat͡sˈɛʋt/
-  translation: ''
+  translation: pharmacist
   pos: noun
   gender: m

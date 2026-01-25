@@ -1,17 +1,51 @@
-# Audit Report: 38-complex-sentence-integration.md
-**Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M38 — 38-complex-sentence-integration.md
+**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:00:21
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Типи речень | 14 | 8 | ✅ |
+| 2 | match-up | Типи підрядних речень та їхні функції | 12 | 8 | ✅ |
+| 3 | fill-in | Сполучники в складних реченнях | 14 | 8 | ✅ |
+| 4 | true-false | Структура складних речень | 14 | 8 | ✅ |
+| 5 | group-sort | Класифікація сполучників | 18 | 12 | ✅ |
+| 6 | unjumble | Складання складних речень | 6 | 6 | ✅ |
+| 7 | error-correction | Виправлення помилок у складних реченнях | 6 | 6 | ✅ |
+| 8 | cloze | Візит до друга | 15 | 12 | ✅ |
+| 9 | mark-the-words | Позначте підрядні сполучники | 9 | 6 | ✅ |
+| 10 | select | Граматично правильні складні речення | 6 | 6 | ✅ |
+| 11 | translate | Переклад складних речень | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1578/1500
+- **Words:** ✅ 1581/1500 (raw: 1872)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 9 < 25 (soft target)
+- **Vocab:** ✅ 39/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,8 +78,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Тест** | ⚪️ | 188 | Skipped |
-| **Пояснення** | ⚪️ | 641 | Skipped |
+| **Тест** | ⚪️ | 189 | Skipped |
+| **Пояснення** | ⚪️ | 643 | Skipped |
 | **Практика** | ⚪️ | 183 | Skipped |
 | **Діалоги** | ✅ | 240 | Included in Core |
 | **Підсумок** | ✅ | 158 | Included in Core |

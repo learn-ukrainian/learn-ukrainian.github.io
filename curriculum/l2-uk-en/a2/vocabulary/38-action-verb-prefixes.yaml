@@ -4,142 +4,69 @@ version: '2.0'
 items:
 - lemma: борг
   ipa: /bɔrɦ/
-  translation: ''
+  translation: debt
   pos: noun
   gender: m
-- lemma: видалити
-  ipa: /ʋˈɪdalɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: видати
-  ipa: /ʋɪdatɪ/
-  translation: ''
-  pos: verb
-- lemma: винести
-  ipa: /ʋˈɪnɛstɪ/
-  translation: ''
-  pos: verb
 - lemma: впалий
   ipa: /ʋpˈalɪj/
-  translation: ''
+  translation: sunken, fallen
   pos: adj
-- lemma: втратити
-  ipa: /ʋtrˈatɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: від-
-  ipa: /ʋid-/
-  translation: ''
-  pos: noun
 - lemma: відговорити
   ipa: /ʋidɦɔʋɔrˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: відкритий
-  ipa: /ʋidkrˈɪtɪj/
-  translation: ''
-  pos: adj
-- lemma: відоме
-  ipa: /ʋidˈɔmɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: довестися
-  ipa: /dɔʋɛstˈɪsja/
-  translation: ''
+  translation: to dissuade
   pos: verb
 - lemma: докупити
   ipa: /dɔkupˈɪtɪ/
-  translation: ''
+  translation: to buy more
   pos: verb
 - lemma: дописати
   ipa: /dɔpɪsˈatɪ/
-  translation: ''
+  translation: to finish writing
   pos: verb
 - lemma: дослухати
   ipa: /dɔslˈuxatɪ/
-  translation: ''
+  translation: to listen to the end
   pos: verb
-- lemma: доступ
-  ipa: /dˈɔstup/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: доступний
   ipa: /dɔstˈupnɪj/
-  translation: ''
+  translation: available, accessible
   pos: adj
 - lemma: дочитати
   ipa: /dɔt͡ʃɪtˈatɪ/
-  translation: ''
+  translation: to finish reading
   pos: verb
 - lemma: дочитувати
   ipa: /dɔt͡ʃˈɪtuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: жах
-  ipa: /ʒax/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: заговорити
-  ipa: /zaɦɔʋɔrˈɪtɪ/
-  translation: ''
+  translation: to finish reading (imperfective)
   pos: verb
 - lemma: загулятися
   ipa: /zaɦulˈjatɪsja/
   translation: ''
   pos: verb
-- lemma: задоволення
-  ipa: /zadɔʋˈɔlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: заново
   ipa: /zˈanɔʋɔ/
-  translation: ''
+  translation: anew, again
   pos: adv
-- lemma: заплакати
-  ipa: /zaplˈakatɪ/
-  translation: ''
-  pos: verb
 - lemma: запрацюватися
   ipa: /zaprat͡sjuʋˈatɪsja/
-  translation: ''
+  translation: to get carried away with work
   pos: verb
 - lemma: засидітися
   ipa: /zasˈɪditɪsja/
-  translation: ''
-  pos: verb
-- lemma: заспівати
-  ipa: /zaspiʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: заховати
-  ipa: /zaxɔʋˈatɪ/
-  translation: ''
+  translation: to stay too long
   pos: verb
 - lemma: звільнити
   ipa: /zʋilʲnˈɪtɪ/
-  translation: ''
+  translation: to free, to dismiss
   pos: verb
-- lemma: злякатися
-  ipa: /zljakˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: керівник
-  ipa: /kɛriʋnˈɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кнопка
   ipa: /knˈɔpka/
-  translation: ''
+  translation: button
   pos: noun
   gender: f
 - lemma: копія
   ipa: /kˈɔpija/
-  translation: ''
+  translation: copy
   pos: noun
   gender: f
 - lemma: криити
@@ -148,205 +75,121 @@ items:
   pos: verb
 - lemma: крити
   ipa: /krˈɪtɪ/
-  translation: ''
+  translation: to cover
   pos: verb
 - lemma: легкий
   ipa: /lɛɦkˈɪj/
-  translation: ''
+  translation: easy, light
   pos: adj
-- lemma: мебля
-  ipa: /mɛblja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: микати
   ipa: /mˈɪkatɪ/
   translation: ''
   pos: verb
-- lemma: навчальний
-  ipa: /naʋt͡ʃˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: наговорити
   ipa: /naɦɔʋɔrˈɪtɪ/
-  translation: ''
+  translation: to say a lot, to talk nonsense
   pos: verb
 - lemma: наробити
   ipa: /narɔbˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: натиснути
-  ipa: /natˈɪsnutɪ/
-  translation: ''
+  translation: to do (a lot of), to cause
   pos: verb
 - lemma: натхненно
   ipa: /natxnˈɛnnɔ/
-  translation: ''
+  translation: inspiringly
   pos: adv
 - lemma: наїстися
   ipa: /naˈjistɪsja/
-  translation: ''
+  translation: to eat one's fill
   pos: verb
-- lemma: небагато
-  ipa: /nɛbaɦˈatɔ/
-  translation: ''
-  pos: adv
 - lemma: недовго
   ipa: /nɛdˈɔʋɦɔ/
-  translation: ''
+  translation: not for long
   pos: adv
 - lemma: недоступний
   ipa: /nɛdɔstˈupnɪj/
-  translation: ''
+  translation: inaccessible
   pos: adj
 - lemma: новезначення
   ipa: /nɔʋɛznat͡ʃɛnnja/
   translation: ''
   pos: noun
   gender: n
-- lemma: нотатка
-  ipa: /nɔtˈatka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: обслуговувати
   ipa: /ɔbsluɦˈɔʋuʋatɪ/
-  translation: ''
+  translation: to serve, to maintain
   pos: verb
 - lemma: перевернути
   ipa: /pɛrɛʋɛrnˈutɪ/
-  translation: ''
+  translation: to flip, to turn over
   pos: verb
 - lemma: перемити
   ipa: /pɛrɛmˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: переписати
-  ipa: /pɛrɛpɪsˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: переписувати
-  ipa: /pɛrɛpˈɪsuʋatɪ/
-  translation: ''
+  translation: to re-wash
   pos: verb
 - lemma: переслати
   ipa: /pɛrɛslˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: подавати
-  ipa: /pɔdaʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: подати
-  ipa: /pɔdˈatɪ/
-  translation: ''
+  translation: to forward, to send over
   pos: verb
 - lemma: покласти
   ipa: /pɔklˈastɪ/
-  translation: ''
+  translation: to put, to lay (perfective)
   pos: verb
-- lemma: полиця
-  ipa: /pɔlˈɪt͡sja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пофарбувати
   ipa: /pɔfarbuʋˈatɪ/
-  translation: ''
+  translation: to paint (perfective)
   pos: verb
 - lemma: прибити
   ipa: /prɪbˈɪtɪ/
-  translation: ''
+  translation: to nail, to beat
   pos: verb
 - lemma: прихований
   ipa: /prɪxˈɔʋanɪj/
-  translation: ''
+  translation: hidden, latent
   pos: adj
-- lemma: провести
-  ipa: /prɔʋɛstˈɪ/
-  translation: ''
-  pos: verb
 - lemma: під'єднати
   ipa: /pidjɛdnˈatɪ/
-  translation: ''
+  translation: to connect, to link
   pos: verb
 - lemma: підговорити
   ipa: /pidɦɔʋɔrˈɪtɪ/
-  translation: ''
+  translation: to instigate, to incite
   pos: verb
-- lemma: підписати
-  ipa: /pidpɪsˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: роз-
-  ipa: /rɔz-/
-  translation: ''
-  pos: noun
 - lemma: роздрукувати
   ipa: /rɔzdrukuʋˈatɪ/
-  translation: ''
+  translation: to print out
   pos: verb
-- lemma: розділ
-  ipa: /rˈɔzdil/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: розкрити
   ipa: /rɔzkrˈɪtɪ/
-  translation: ''
+  translation: to reveal, to open (perfective)
   pos: verb
-- lemma: самостійно
-  ipa: /samɔstˈijnɔ/
-  translation: ''
-  pos: adv
-- lemma: секрет
-  ipa: /sɛkrˈɛt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: серветка
   ipa: /sɛrʋˈɛtka/
-  translation: ''
+  translation: napkin
   pos: noun
   gender: f
 - lemma: скопіювати
   ipa: /skɔpijuʋˈatɪ/
-  translation: ''
+  translation: to copy
   pos: verb
 - lemma: списати
   ipa: /spɪsˈatɪ/
-  translation: ''
+  translation: to copy (cheat), to write off
   pos: verb
-- lemma: сторінка
-  ipa: /stɔrˈinka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: трансформаційний
   ipa: /transfɔrmat͡sˈijnɪj/
-  translation: ''
+  translation: transformational
   pos: adj
-- lemma: цифра
-  ipa: /t͡sˈɪfra/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: шедевр
   ipa: /ʃɛdˈɛʋr/
-  translation: ''
+  translation: masterpiece
   pos: noun
   gender: m
 - lemma: шпалера
   ipa: /ʃpalˈɛra/
-  translation: ''
+  translation: wallpaper, trellis
   pos: noun
   gender: f
-- lemma: шум
-  ipa: /ʃum/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: існуючий
   ipa: /isnˈujut͡ʃɪj/
-  translation: ''
+  translation: existing (adj)
   pos: adj

@@ -4,45 +4,45 @@ version: '2.0'
 items:
 - lemma: бароко
   ipa: /barˈɔkɔ/
-  translation: ''
+  translation: Baroque
   pos: noun
   gender: n
 - lemma: взаємодіяти
   ipa: /ʋzajɛmɔdˈijatɪ/
-  translation: ''
+  translation: to interact
   pos: verb
 - lemma: взаємозв'язок
   ipa: /ʋzajɛmɔzʋjazˈɔk/
-  translation: ''
+  translation: interconnection
   pos: noun
 - lemma: видний
   ipa: /ʋˈɪdnɪj/
-  translation: ''
+  translation: visible, prominent
   pos: adj
 - lemma: виробник
   ipa: /ʋɪrɔbnˈɪk/
-  translation: ''
+  translation: manufacturer, producer
   pos: noun
 - lemma: вишуканий
   ipa: /ʋˈɪʃukanɪj/
-  translation: ''
+  translation: exquisite, refined
   pos: adj
 - lemma: вразливий
   ipa: /ʋrˈazlɪʋɪj/
-  translation: ''
+  translation: vulnerable
   pos: adj
 - lemma: готика
   ipa: /ɦˈɔtɪka/
-  translation: ''
+  translation: Gothic
   pos: noun
   gender: f
 - lemma: домен
   ipa: /dɔmˈɛn/
-  translation: ''
+  translation: domain
   pos: noun
 - lemma: домна
   ipa: /dˈɔmna/
-  translation: ''
+  translation: blast furnace
   pos: noun
 - lemma: зложитися
   ipa: /zlɔʒˈɪtɪsja/
@@ -50,67 +50,67 @@ items:
   pos: verb
 - lemma: мультикультурний
   ipa: /mulʲtɪkulʲtˈurnɪj/
-  translation: ''
+  translation: multicultural
   pos: adj
 - lemma: міжкультурний
   ipa: /miʒkulʲtˈurnɪj/
-  translation: ''
+  translation: intercultural
   pos: adj
 - lemma: набутий
   ipa: /nabˈutɪj/
-  translation: ''
+  translation: acquired
   pos: adj
 - lemma: наполегливість
   ipa: /napɔlˈɛɦlɪʋistʲ/
-  translation: ''
+  translation: persistence
   pos: noun
   gender: f
 - lemma: нерівність
   ipa: /nɛrˈiʋnistʲ/
-  translation: ''
+  translation: inequality
   pos: noun
   gender: f
 - lemma: переконливіший
   ipa: /pɛrɛkˈɔnlɪʋiʃɪj/
-  translation: ''
+  translation: more convincing
   pos: adj
 - lemma: переплітатися
   ipa: /pɛrɛplitˈatɪsja/
-  translation: ''
+  translation: to intertwine
   pos: verb
 - lemma: писанкарство
   ipa: /pɪsankˈarstʋɔ/
-  translation: ''
+  translation: pysanka painting (art)
   pos: noun
   gender: n
 - lemma: поверхнево
   ipa: /pɔʋɛrxnˈɛʋɔ/
-  translation: ''
+  translation: superficially
   pos: adv
 - lemma: потепління
   ipa: /pɔtɛplˈinnja/
-  translation: ''
+  translation: warming
   pos: noun
   gender: n
 - lemma: підрозділ
   ipa: /pidrˈɔzdil/
-  translation: ''
+  translation: subdivision, unit
   pos: noun
 - lemma: систематично
   ipa: /sɪstɛmatˈɪt͡ʃnɔ/
-  translation: ''
+  translation: systematically
   pos: adv
 - lemma: цеглинка
   ipa: /t͡sɛɦlˈɪnka/
-  translation: ''
+  translation: brick (diminutive)
   pos: noun
   gender: f
 - lemma: інформування
   ipa: /infɔrmuʋˈannja/
-  translation: ''
+  translation: informing
   pos: noun
   gender: n
 - lemma: історико-географічний
   ipa: /istɔrɪkɔ-ɦɛɔɦrafˈit͡ʃnɪj/
-  translation: ''
+  translation: historical-geographical
   pos: adj

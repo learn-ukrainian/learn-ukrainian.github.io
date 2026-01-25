@@ -2,23 +2,11 @@ module: 23-complete-imperative
 level: A2
 version: '2.0'
 items:
-- lemma: боятися
-  ipa: /bɔˈjatɪsja/
-  translation: ''
-  pos: verb
 - lemma: вибачення
   ipa: /ʋˈɪbat͡ʃɛnnja/
-  translation: ''
+  translation: apology, forgiveness
   pos: noun
   gender: n
-- lemma: вирішувати
-  ipa: /ʋɪrˈiʃuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: впевнений
-  ipa: /ʋpˈɛʋnɛnɪj/
-  translation: ''
-  pos: adj
 - lemma: говорити-
   ipa: /ɦɔʋɔrˈɪtɪ-/
   translation: ''
@@ -27,85 +15,39 @@ items:
   ipa: /ɛxajatɪ/
   translation: ''
   pos: verb
-- lemma: заперечення
-  ipa: /zapɛrˈɛt͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: здійснитися
   ipa: /zdijsnˈɪtɪsja/
-  translation: ''
+  translation: to come true, to happen
   pos: verb
 - lemma: калька
   ipa: /kˈalʲka/
-  translation: ''
+  translation: tracing paper, loan translation (calque)
   pos: noun
   gender: f
-- lemma: наказовий
-  ipa: /nakazˈɔʋɪj/
-  translation: ''
-  pos: adj
-- lemma: нарізати
-  ipa: /narizatɪ/
-  translation: ''
-  pos: verb
-- lemma: нехай
-  ipa: /nɛxˈaj/
-  translation: ''
-  pos: part
-- lemma: парадигма
-  ipa: /paradˈɪɦma/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: повний
-  ipa: /pˈɔʋnɪj/
-  translation: ''
-  pos: adj
-- lemma: потужний
-  ipa: /pɔtˈuʒnɪj/
-  translation: ''
-  pos: adj
-- lemma: приміряти
-  ipa: /prɪmirjatɪ/
-  translation: ''
-  pos: verb
-- lemma: реальне
-  ipa: /rɛˈalʲnɛ/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: роба
-  ipa: /rˈɔba/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: російський
-  ipa: /rɔsˈijsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: сам
-  ipa: /sam/
-  translation: ''
-  pos: pron
-- lemma: символ
-  ipa: /sˈɪmʋɔl/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: слава
-  ipa: /slˈaʋa/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: товар
-  ipa: /tɔʋˈar/
-  translation: ''
-  pos: noun
-- lemma: удома
-  ipa: /udˈɔma/
+- lemma: мо
+  ipa: /mɔ/
   translation: ''
   pos: adv
+- lemma: нехай
+  ipa: /nɛxˈaj/
+  translation: let, may (particle)
+  pos: part
+- lemma: побажання
+  ipa: /pɔbaʒˈannja/
+  translation: wish, desire
+  pos: noun
+- lemma: приміряти
+  ipa: /prɪmirjatɪ/
+  translation: to try on (clothes)
+  pos: verb
+- lemma: сам
+  ipa: /sam/
+  translation: self, alone
+  pos: pron
+- lemma: хай
+  ipa: /xaj/
+  translation: ''
+  pos: part
 - lemma: часть
   ipa: /t͡ʃastʲ/
   translation: ''
@@ -115,3 +57,7 @@ items:
   ipa: /t͡ʃɪtˈatɪ-/
   translation: ''
   pos: noun
+- lemma: щастити
+  ipa: /ʃt͡ʃastˈɪtɪ/
+  translation: to be lucky
+  pos: verb

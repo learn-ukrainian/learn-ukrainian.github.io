@@ -4,120 +4,124 @@ version: '2.0'
 items:
 - lemma: авіаквиток
   ipa: /aʋiakʋɪtˈɔk/
-  translation: ''
+  translation: air ticket
   pos: noun
   gender: m
 - lemma: авіакомпанія
   ipa: /aʋiakɔmpˈanija/
-  translation: ''
+  translation: airline
   pos: noun
   gender: f
 - lemma: безвізовий
   ipa: /bɛzʋˈizɔʋɪj/
-  translation: ''
+  translation: visa-free
   pos: adj
 - lemma: буковина
   ipa: /bukɔʋˈɪna/
-  translation: ''
+  translation: Bukovyna
   pos: noun
   gender: f
 - lemma: бюджетний
   ipa: /bjudʒˈɛtnɪj/
-  translation: ''
+  translation: budget (adj)
   pos: adj
 - lemma: біометричний
   ipa: /biɔmɛtrˈɪt͡ʃnɪj/
-  translation: ''
+  translation: biometric
   pos: adj
 - lemma: ворохта
   ipa: /ʋɔrˈɔxta/
-  translation: ''
+  translation: Vorokhta
   pos: noun
   gender: f
 - lemma: десяток
   ipa: /dɛsˈjatɔk/
-  translation: ''
+  translation: a dozen, ten
   pos: noun
 - lemma: донбас
   ipa: /dɔnbˈas/
-  translation: ''
+  translation: Donbas
   pos: noun
   gender: m
 - lemma: закордонний
   ipa: /zakɔrdˈɔnnɪj/
-  translation: ''
+  translation: foreign
   pos: adj
+- lemma: здійснювати
+  ipa: /zdˈijsnjuʋatɪ/
+  translation: to carry out (imperfective)
+  pos: verb
 - lemma: київ-львів
   ipa: /kɪˈjiʋ-lʲʋiʋ/
-  translation: ''
+  translation: Kyiv-Lviv
   pos: noun
   gender: m
 - lemma: км
   ipa: /km/
-  translation: ''
+  translation: km
   pos: noun
   gender: m
 - lemma: коліщатко
   ipa: /kɔliʃt͡ʃˈatkɔ/
-  translation: ''
+  translation: small wheel
   pos: noun
 - lemma: купе
   ipa: /kupˈɛ/
-  translation: ''
+  translation: compartment (train)
   pos: noun
   gender: n
 - lemma: мандрівний
   ipa: /mandrˈiʋnɪj/
-  translation: ''
+  translation: wandering, itinerant
   pos: adj
 - lemma: межувати
   ipa: /mɛʒuʋˈatɪ/
-  translation: ''
+  translation: to border on
   pos: verb
 - lemma: митниця
   ipa: /mˈɪtnɪt͡sja/
-  translation: ''
+  translation: customs
   pos: noun
   gender: f
 - lemma: місцевість
   ipa: /mist͡sˈɛʋistʲ/
-  translation: ''
+  translation: area, locality
   pos: noun
   gender: f
 - lemma: найвіддаленіший
   ipa: /najʋiddˈalɛniʃɪj/
-  translation: ''
+  translation: the most remote
   pos: adj
 - lemma: одноденний
   ipa: /ɔdnɔdˈɛnnɪj/
-  translation: ''
+  translation: one-day (adj)
   pos: adj
 - lemma: оформити
   ipa: /ɔfˈɔrmɪtɪ/
-  translation: ''
+  translation: to arrange, to draw up (documents)
   pos: verb
 - lemma: переліт
   ipa: /pɛrɛlˈit/
-  translation: ''
+  translation: flight (passage)
   pos: noun
   gender: m
 - lemma: поетичніший
   ipa: /pɔɛtɪt͡ʃniʃɪj/
-  translation: ''
+  translation: more poetic
   pos: adj
 - lemma: поклажа
   ipa: /pɔklˈaʒa/
-  translation: ''
+  translation: baggage, load
   pos: noun
   gender: f
 - lemma: посадка
   ipa: /pɔsˈadka/
-  translation: ''
+  translation: landing, planting, boarding
   pos: noun
   gender: f
 - lemma: посадковий
   ipa: /pɔsadkˈɔʋɪj/
-  translation: ''
+  translation: boarding (adj), landing (adj)
   pos: adj
 - lemma: потяга
   ipa: /pˈɔtjaɦa/
@@ -126,11 +130,11 @@ items:
   gender: f
 - lemma: пред'явити
   ipa: /prɛdjaʋˈɪtɪ/
-  translation: ''
+  translation: to present, to show (documents)
   pos: verb
 - lemma: прикордонник
   ipa: /prɪkɔrdˈɔnnɪk/
-  translation: ''
+  translation: border guard
   pos: noun
   gender: m
 - lemma: причорноморʼь
@@ -139,84 +143,88 @@ items:
   pos: verb
 - lemma: пролягати
   ipa: /prɔljaɦˈatɪ/
-  translation: ''
+  translation: to lie, to pass (roads)
   pos: verb
 - lemma: південний
   ipa: /piʋdˈɛnnɪj/
-  translation: ''
+  translation: southern
   pos: adj
 - lemma: північ
   ipa: /pˈiʋnit͡ʃ/
-  translation: ''
+  translation: North, midnight
   pos: noun
   gender: f
 - lemma: північний
   ipa: /piʋnˈit͡ʃnɪj/
-  translation: ''
+  translation: northern
+  pos: adj
+- lemma: розташований
+  ipa: /rɔztaʃˈɔʋanɪj/
+  translation: located, situated
   pos: adj
 - lemma: росія
   ipa: /rɔsˈija/
-  translation: ''
+  translation: Russia
   pos: noun
   gender: f
 - lemma: синевир
   ipa: /sɪnɛʋˈɪr/
-  translation: ''
+  translation: Synevyr
   pos: noun
   gender: m
 - lemma: синевирський
   ipa: /sɪnɛʋˈɪrsʲkɪj/
-  translation: ''
+  translation: Synevyr (adj)
   pos: adj
 - lemma: спакувати
   ipa: /spakuʋˈatɪ/
-  translation: ''
+  translation: to pack (perfective)
   pos: verb
 - lemma: споглядання
   ipa: /spɔɦljadˈannja/
-  translation: ''
+  translation: contemplation
   pos: noun
   gender: n
 - lemma: сходження
   ipa: /sxˈɔdʒɛnnja/
-  translation: ''
+  translation: ascent, climbing, convergence (rare)
   pos: noun
   gender: n
 - lemma: сім
   ipa: /sim/
-  translation: ''
+  translation: seven
   pos: num
 - lemma: талон
   ipa: /talˈɔn/
-  translation: ''
+  translation: coupon, ticket (slip)
   pos: noun
   gender: m
 - lemma: тижневий
   ipa: /tɪʒnˈɛʋɪj/
-  translation: ''
+  translation: weekly (period of one week)
   pos: adj
 - lemma: тура
   ipa: /tˈura/
-  translation: ''
+  translation: rook (chess), tour (gen)
   pos: noun
   gender: f
 - lemma: турагентство
   ipa: /turaɦɛntstʋɔ/
-  translation: ''
+  translation: travel agency
   pos: noun
   gender: n
 - lemma: туреччина
   ipa: /turˈɛt͡ʃt͡ʃɪna/
-  translation: ''
+  translation: Turkey
   pos: noun
   gender: f
 - lemma: юра
   ipa: /jurˈa/
-  translation: ''
+  translation: Yura (name)
   pos: noun
   gender: m
 - lemma: єгипет
   ipa: /jɛɦˈɪpɛt/
-  translation: ''
+  translation: Egypt
   pos: noun
   gender: m

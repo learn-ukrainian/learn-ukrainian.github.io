@@ -2,92 +2,65 @@ module: 45-food-and-cooking
 level: A2
 version: '2.0'
 items:
-- lemma: акуратно
-  ipa: /akurˈatnɔ/
-  translation: ''
-  pos: adv
 - lemma: аромат
   ipa: /arɔmˈat/
-  translation: ''
+  translation: aroma, scent
   pos: noun
-- lemma: багатий
-  ipa: /baɦˈatɪj/
-  translation: ''
-  pos: adj
-- lemma: багатство
-  ipa: /baɦˈatstʋɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: борошно
   ipa: /bˈɔrɔʃnɔ/
-  translation: ''
+  translation: flour
   pos: noun
   gender: n
 - lemma: булочка
   ipa: /bˈulɔt͡ʃka/
-  translation: ''
+  translation: bun, roll
   pos: noun
   gender: f
 - lemma: варити
   ipa: /ʋarˈɪtɪ/
-  translation: ''
+  translation: to cook, to boil
   pos: verb
 - lemma: вимісити
   ipa: /ʋˈɪmisɪtɪ/
-  translation: ''
+  translation: to knead (perfective)
   pos: verb
 - lemma: вимішувати
   ipa: /ʋɪmˈiʃuʋatɪ/
-  translation: ''
+  translation: to knead
   pos: verb
-- lemma: виражений
-  ipa: /ʋˈɪraʒɛnɪj/
-  translation: ''
-  pos: adj
 - lemma: вогні
   ipa: /ʋɔɦnˈi/
   translation: ''
   pos: noun
 - lemma: гладкий
   ipa: /ɦladkɪj/
-  translation: ''
+  translation: smooth, fat
   pos: adj
 - lemma: голубець
   ipa: /ɦɔlubˈɛt͡sʲ/
-  translation: ''
+  translation: holubets (cabbage roll)
   pos: noun
 - lemma: господиня
   ipa: /ɦɔspɔdˈɪnja/
-  translation: ''
+  translation: hostess
   pos: noun
   gender: f
-- lemma: готування
-  ipa: /ɦɔtuʋˈannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: дерун
-  ipa: /dɛrˈun/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: добавка
   ipa: /dɔbˈaʋka/
-  translation: ''
+  translation: additive, supplement
   pos: noun
   gender: f
 - lemma: доповнювати
   ipa: /dɔpˈɔʋnjuʋatɪ/
-  translation: ''
+  translation: to supplement (imperfective)
   pos: verb
 - lemma: дочекатися
   ipa: /dɔt͡ʃɛkˈatɪsja/
-  translation: ''
+  translation: to wait until
   pos: verb
 - lemma: дрібно
   ipa: /drˈibnɔ/
-  translation: ''
+  translation: finely, in small pieces
   pos: adv
 - lemma: дріжджовий
   ipa: /driʒdʒɔʋˈɪj/
@@ -95,16 +68,12 @@ items:
   pos: adj
 - lemma: духовка
   ipa: /duxˈɔʋka/
-  translation: ''
+  translation: oven
   pos: noun
   gender: f
 - lemma: еластичний
   ipa: /ɛlastˈɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: енергійний
-  ipa: /ɛnɛrɦˈijnɪj/
-  translation: ''
+  translation: elastic
   pos: adj
 - lemma: займ
   ipa: /zajm/
@@ -113,130 +82,86 @@ items:
   gender: m
 - lemma: закипіти
   ipa: /zakɪpˈitɪ/
-  translation: ''
-  pos: verb
-- lemma: запорозький
-  ipa: /zapɔrˈɔzʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: запропонувати
-  ipa: /zaprɔpɔnuʋˈatɪ/
-  translation: ''
+  translation: to boil
   pos: verb
 - lemma: зварити
   ipa: /zʋarˈɪtɪ/
-  translation: ''
+  translation: to cook, to boil
   pos: verb
 - lemma: змащений
   ipa: /zmˈaʃt͡ʃɛnɪj/
-  translation: ''
+  translation: lubricated, smeared
   pos: adj
 - lemma: змішати
   ipa: /zmiʃˈatɪ/
-  translation: ''
+  translation: to mix
   pos: verb
 - lemma: золотистий
   ipa: /zɔlɔtˈɪstɪj/
-  translation: ''
+  translation: golden, gold-colored
   pos: adj
-- lemma: каструля
-  ipa: /kastrˈulja/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: комбінація
-  ipa: /kɔmbinˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: комплімент
   ipa: /kɔmplimˈɛnt/
-  translation: ''
+  translation: compliment
   pos: noun
   gender: m
 - lemma: кружечок
   ipa: /kruʒˈɛt͡ʃɔk/
-  translation: ''
-  pos: noun
-- lemma: кубик
-  ipa: /kˈubɪk/
-  translation: ''
+  translation: small circle
   pos: noun
 - lemma: кухар
   ipa: /kˈuxar/
-  translation: ''
+  translation: cook
   pos: noun
   gender: m
 - lemma: кухонний
   ipa: /kuxˈɔnnɪj/
-  translation: ''
+  translation: kitchen (adj)
   pos: adj
 - lemma: липкий
   ipa: /lɪpkˈɪj/
-  translation: ''
+  translation: sticky
   pos: adj
 - lemma: липнути
   ipa: /lˈɪpnutɪ/
-  translation: ''
+  translation: to stick to, to adhere
   pos: verb
 - lemma: ліпити
   ipa: /lipˈɪtɪ/
-  translation: ''
+  translation: to mold, to sculpt
   pos: verb
-- lemma: майстриня
-  ipa: /majstrˈɪnja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: мисочка
   ipa: /mˈɪsɔt͡ʃka/
-  translation: ''
+  translation: small bowl
   pos: noun
   gender: f
 - lemma: морквина
   ipa: /mɔrkʋˈɪna/
-  translation: ''
+  translation: carrot (single)
   pos: noun
   gender: f
-- lemma: найголовніший
-  ipa: /najɦɔlɔʋnˈiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: налити
-  ipa: /nalˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: наповнювати
   ipa: /napˈɔʋnjuʋatɪ/
-  translation: ''
+  translation: to fill (imperfective)
   pos: verb
 - lemma: насип
   ipa: /nˈasɪp/
-  translation: ''
+  translation: mound, embankment
   pos: noun
   gender: m
-- lemma: національний
-  ipa: /nat͡siɔnˈalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: начинка
   ipa: /nˈat͡ʃɪnka/
-  translation: ''
+  translation: filling, stuffing
   pos: noun
   gender: f
-- lemma: обладнання
-  ipa: /ɔbladnannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: олія
   ipa: /ɔlˈija/
-  translation: ''
+  translation: oil (cooking)
   pos: noun
   gender: f
 - lemma: оцет
   ipa: /ˈɔt͡sɛt/
-  translation: ''
+  translation: vinegar
   pos: noun
   gender: m
 - lemma: п'ять-сім
@@ -245,91 +170,61 @@ items:
   pos: num
 - lemma: пампушка
   ipa: /pampˈuʃka/
-  translation: ''
+  translation: pampushka (small garlic bun)
   pos: noun
   gender: f
 - lemma: пекти
   ipa: /pɛktˈɪ/
-  translation: ''
+  translation: to bake, to burn
   pos: verb
 - lemma: передаватися
   ipa: /pɛrɛdaʋˈatɪsja/
-  translation: ''
+  translation: to be transmitted
   pos: verb
 - lemma: перекус
   ipa: /pɛrɛkˈus/
-  translation: ''
+  translation: snack
   pos: noun
   gender: m
-- lemma: плита
-  ipa: /plɪtˈa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: покоління
-  ipa: /pɔkɔlˈinnja/
-  translation: ''
-  pos: noun
 - lemma: поспіх
   ipa: /pˈɔspix/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: постав
-  ipa: /pɔstˈaʋ/
-  translation: ''
+  translation: haste, hurry
   pos: noun
   gender: m
 - lemma: прабабуся
   ipa: /prababˈusja/
-  translation: ''
+  translation: great-grandmother
   pos: noun
   gender: f
 - lemma: приготування
   ipa: /prɪɦɔtuʋˈannja/
-  translation: ''
+  translation: preparation
   pos: noun
   gender: n
-- lemma: прийом
-  ipa: /prɪjˈɔm/
-  translation: ''
-  pos: noun
 - lemma: прилад
   ipa: /prˈɪlad/
-  translation: ''
+  translation: device, appliance
   pos: noun
-- lemma: пробувати
-  ipa: /prɔbuʋatɪ/
-  translation: ''
-  pos: verb
 - lemma: півсклянки
   ipa: /piʋskljankɪ/
-  translation: ''
+  translation: half a glass
   pos: noun
 - lemma: ситний
   ipa: /sɪtnɪj/
-  translation: ''
-  pos: adj
-- lemma: славитися
-  ipa: /slˈaʋɪtɪsja/
-  translation: ''
-  pos: verb
-- lemma: смажений
-  ipa: /smˈaʒɛnɪj/
-  translation: ''
+  translation: filling, satisfying (food)
   pos: adj
 - lemma: смажити
   ipa: /smˈaʒɪtɪ/
-  translation: ''
+  translation: to fry, to roast
   pos: verb
 - lemma: сметана
   ipa: /smɛtˈana/
-  translation: ''
+  translation: sour cream
   pos: noun
   gender: f
 - lemma: смужка
   ipa: /smˈuʒka/
-  translation: ''
+  translation: strip, band
   pos: noun
 - lemma: сол
   ipa: /sɔl/
@@ -338,73 +233,43 @@ items:
   gender: m
 - lemma: солоний
   ipa: /sɔlˈɔnɪj/
-  translation: ''
+  translation: salty, salted
   pos: adj
 - lemma: спекти
   ipa: /spɛktˈɪ/
-  translation: ''
+  translation: to bake (perfective)
   pos: verb
 - lemma: спливти
   ipa: /splɪʋtˈɪ/
-  translation: ''
+  translation: to float up, to elapse (perfective)
   pos: verb
 - lemma: столовий
   ipa: /stɔlˈɔʋɪj/
-  translation: ''
+  translation: table (adj), dining (adj)
   pos: adj
-- lemma: супроводжувати
-  ipa: /suprɔʋˈɔdʒuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: сягати
-  ipa: /sjaɦˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: січа
-  ipa: /sˈit͡ʃa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: терпіти
   ipa: /tɛrpˈitɪ/
-  translation: ''
+  translation: to endure, to tolerate
   pos: verb
-- lemma: тиск
-  ipa: /tɪsk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: тонкий
-  ipa: /tɔnkˈɪj/
-  translation: ''
-  pos: adj
 - lemma: трошечки
   ipa: /trˈɔʃɛt͡ʃkɪ/
-  translation: ''
+  translation: a tiny bit
   pos: adv
 - lemma: тушкувати
   ipa: /tuʃkuʋˈatɪ/
-  translation: ''
+  translation: to stew, to braise
   pos: verb
 - lemma: тісто
   ipa: /tˈistɔ/
-  translation: ''
+  translation: dough, pastry
   pos: noun
   gender: n
-- lemma: уявляти
-  ipa: /ujaʋlˈjatɪ/
-  translation: ''
-  pos: verb
 - lemma: часник
   ipa: /t͡ʃasnˈɪk/
-  translation: ''
+  translation: garlic
   pos: noun
   gender: m
 - lemma: часниковий
   ipa: /t͡ʃasnɪkˈɔʋɪj/
-  translation: ''
+  translation: garlic (adj)
   pos: adj
-- lemma: ідеально
-  ipa: /idɛˈalʲnɔ/
-  translation: ''
-  pos: adv

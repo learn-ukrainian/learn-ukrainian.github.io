@@ -2,158 +2,193 @@ module: 05-the-instrumental-ii-means-and-tools
 level: A2
 version: '2.0'
 items:
+- lemma: автобус
+  ipa: /aʋtˈɔbus/
+  translation: bus
+  pos: noun
+  gender: m
 - lemma: бити
   ipa: /bˈɪtɪ/
-  translation: ''
+  translation: to hit, to beat
   pos: verb
-- lemma: важливий
-  ipa: /ʋaʒlˈɪʋɪj/
-  translation: ''
-  pos: adj
+- lemma: важливе
+  ipa: /ʋaʒlˈɪʋɛ/
+  translation: important (neuter)
+  pos: noun
+  gender: n
 - lemma: ввухо
   ipa: /ʋʋuxɔ/
   translation: ''
   pos: noun
 - lemma: виконання
   ipa: /ʋɪkɔnannja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: використання
-  ipa: /ʋɪkɔrɪstannja/
-  translation: ''
+  translation: performance, execution
   pos: noun
   gender: n
 - lemma: випадок
   ipa: /ʋˈɪpadɔk/
-  translation: ''
+  translation: case, instance, accident
   pos: noun
 - lemma: виступати
   ipa: /ʋɪstupˈatɪ/
-  translation: ''
+  translation: to perform, to speak, to protrude
   pos: verb
 - lemma: воліти
   ipa: /ʋɔlˈitɪ/
   translation: ''
   pos: verb
-- lemma: відмінність
-  ipa: /ʋidmˈinnistʲ/
-  translation: ''
+- lemma: вухо
+  ipa: /ʋˈuxɔ/
+  translation: ear
   pos: noun
-  gender: f
+  gender: n
+- lemma: голова
+  ipa: /ɦɔlɔʋˈa/
+  translation: head
+  pos: noun
+  gender: m
+- lemma: голос
+  ipa: /ɦˈɔlɔs/
+  translation: voice
+  pos: noun
+  gender: m
 - lemma: гроші
   ipa: /ɦrɔʃi/
-  translation: ''
+  translation: money
   pos: noun
+- lemma: десять
+  ipa: /dˈɛsjatʲ/
+  translation: ten
+  pos: num
 - lemma: детально
   ipa: /dɛtˈalʲnɔ/
-  translation: ''
+  translation: in detail
   pos: adv
 - lemma: дивно
   ipa: /dˈɪʋnɔ/
-  translation: ''
+  translation: strangely, it is strange
   pos: adv
 - lemma: добиратися
   ipa: /dɔbɪrˈatɪsja/
-  translation: ''
+  translation: to get to, to reach
   pos: verb
 - lemma: друге
   ipa: /drˈuɦɛ/
-  translation: ''
+  translation: the second thing
   pos: noun
   gender: n
+- lemma: дістатися
+  ipa: /distˈatɪsja/
+  translation: to reach, to arrive at (perfective)
+  pos: verb
 - lemma: електронний
   ipa: /ɛlɛktrˈɔnnɪj/
-  translation: ''
+  translation: electronic
   pos: adj
+- lemma: же
+  ipa: /ʒɛ/
+  translation: indeed, but (particle)
+  pos: conj
 - lemma: жодний
   ipa: /ʒˈɔdnɪj/
-  translation: ''
+  translation: none, not one
   pos: pron
 - lemma: закритий
   ipa: /zakrˈɪtɪj/
-  translation: ''
+  translation: closed
   pos: adj
 - lemma: знаряддя
   ipa: /znarˈjaddja/
-  translation: ''
+  translation: tool, instrument
   pos: noun
   gender: n
-- lemma: значення
-  ipa: /znˈat͡ʃɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
+- lemma: зручно
+  ipa: /zrˈut͡ʃnɔ/
+  translation: conveniently, comfortably
+  pos: adv
 - lemma: зручніше
   ipa: /zrut͡ʃnˈiʃɛ/
-  translation: ''
+  translation: more convenient
   pos: adv
-- lemma: категорія
-  ipa: /katɛɦˈɔrija/
-  translation: ''
+- lemma: зупинка
+  ipa: /zupˈɪnka/
+  translation: stop, station
   pos: noun
   gender: f
+- lemma: зупинятися
+  ipa: /zupɪnˈjatɪsja/
+  translation: to stop (imperfective)
+  pos: verb
 - lemma: каша
   ipa: /kˈaʃa/
-  translation: ''
+  translation: porridge, kasha
   pos: noun
   gender: f
 - lemma: кивати
   ipa: /kɪʋˈatɪ/
-  translation: ''
+  translation: to nod
   pos: verb
 - lemma: компанія
   ipa: /kɔmpˈanija/
-  translation: ''
+  translation: company, party
   pos: noun
   gender: f
 - lemma: комунікація
   ipa: /kɔmunikˈat͡sija/
-  translation: ''
+  translation: communication
   pos: noun
   gender: f
 - lemma: летіти
   ipa: /lɛtˈitɪ/
-  translation: ''
+  translation: to fly
   pos: verb
 - lemma: логічніший
   ipa: /lɔɦˈit͡ʃniʃɪj/
-  translation: ''
+  translation: more logical
   pos: adj
 - lemma: літак
   ipa: /litˈak/
-  translation: ''
+  translation: airplane
   pos: noun
   gender: m
 - lemma: манера
   ipa: /manˈɛra/
-  translation: ''
+  translation: manner
   pos: noun
   gender: f
 - lemma: махати
   ipa: /maxˈatɪ/
-  translation: ''
+  translation: to wave
   pos: verb
 - lemma: метод
   ipa: /mˈɛtɔd/
-  translation: ''
+  translation: method
+  pos: noun
+- lemma: нога
+  ipa: /nɔɦˈa/
+  translation: leg, foot
   pos: noun
 - lemma: ножиці
   ipa: /nˈɔʒɪt͡si/
-  translation: ''
+  translation: scissors
   pos: noun
 - lemma: окуляр
   ipa: /ɔkulˈjar/
-  translation: ''
+  translation: eye-piece, glasses (pl)
   pos: noun
+- lemma: офіс
+  ipa: /ˈɔfis/
+  translation: office
+  pos: noun
+  gender: m
 - lemma: пересування
   ipa: /pɛrɛsuʋˈannja/
-  translation: ''
+  translation: movement, locomotion
   pos: noun
   gender: n
 - lemma: пересуватися
   ipa: /pɛrɛsuʋˈatɪsja/
-  translation: ''
+  translation: to move, to travel
   pos: verb
 - lemma: плеча
   ipa: /plɛt͡ʃˈa/
@@ -161,61 +196,136 @@ items:
   pos: noun
 - lemma: плече
   ipa: /plɛt͡ʃˈɛ/
-  translation: ''
+  translation: shoulder
   pos: noun
   gender: n
+- lemma: подорожувати
+  ipa: /pɔdɔrɔʒuʋˈatɪ/
+  translation: to travel
+  pos: verb
 - lemma: подумати
   ipa: /pɔdˈumatɪ/
-  translation: ''
+  translation: to think (perfective)
   pos: verb
-- lemma: попередній
-  ipa: /pɔpɛrˈɛdnij/
-  translation: ''
-  pos: adj
+- lemma: помідор
+  ipa: /pɔmidˈɔr/
+  translation: tomato
+  pos: noun
 - lemma: порівняння
   ipa: /pɔriʋnjannja/
-  translation: ''
+  translation: comparison
   pos: noun
   gender: n
 - lemma: пошепки
   ipa: /pˈɔʃɛpkɪ/
-  translation: ''
+  translation: in a whisper
   pos: adv
+- lemma: поїзд
+  ipa: /pˈɔjizd/
+  translation: train
+  pos: noun
+  gender: m
+- lemma: прокидатися
+  ipa: /prɔkɪdatɪsja/
+  translation: to wake up (imperfective)
+  pos: verb
+- lemma: пішки
+  ipa: /pˈiʃkɪ/
+  translation: on foot
+  pos: adv
+- lemma: ранка
+  ipa: /rˈanka/
+  translation: small wound, morning (diminutive)
+  pos: noun
 - lemma: розглянути
   ipa: /rɔzɦlˈjanutɪ/
-  translation: ''
+  translation: to consider, to examine (perfective)
   pos: verb
+- lemma: ручка
+  ipa: /rˈut͡ʃka/
+  translation: hand, pen, handle
+  pos: noun
+  gender: f
 - lemma: різати
   ipa: /rˈizatɪ/
-  translation: ''
+  translation: to cut
   pos: verb
+- lemma: снідати
+  ipa: /snˈidatɪ/
+  translation: to have breakfast
+  pos: verb
+- lemma: спати
+  ipa: /spˈatɪ/
+  translation: to sleep
+  pos: verb
+- lemma: справжній
+  ipa: /sprˈaʋʒnij/
+  translation: real, authentic, true
+  pos: adj
+- lemma: станція
+  ipa: /stˈant͡sija/
+  translation: station
+  pos: noun
+  gender: f
 - lemma: суть
   ipa: /sutʲ/
-  translation: ''
+  translation: essence, core, gist
   pos: noun
   gender: f
 - lemma: сучасний
   ipa: /sut͡ʃˈasnɪj/
-  translation: ''
+  translation: modern, contemporary
   pos: adj
 - lemma: терміновий
   ipa: /tɛrminˈɔʋɪj/
-  translation: ''
+  translation: urgent
   pos: adj
 - lemma: терміново
   ipa: /tɛrminˈɔʋɔ/
-  translation: ''
+  translation: urgently
   pos: adv
 - lemma: технологія
   ipa: /tɛxnɔlˈɔɦija/
-  translation: ''
+  translation: technology
   pos: noun
   gender: f
+- lemma: трамвай
+  ipa: /tramʋˈaj/
+  translation: tram, streetcar
+  pos: noun
+  gender: m
+- lemma: транспорт
+  ipa: /transpɔrt/
+  translation: transport, transportation
+  pos: noun
+  gender: m
+- lemma: тіло
+  ipa: /tˈilɔ/
+  translation: body
+  pos: noun
+  gender: n
+- lemma: увечері
+  ipa: /uʋˈɛt͡ʃɛri/
+  translation: in the evening
+  pos: adv
 - lemma: чистий
   ipa: /t͡ʃˈɪstɪj/
-  translation: ''
+  translation: clean, pure
   pos: adj
+- lemma: штани
+  ipa: /ʃtanˈɪ/
+  translation: trousers, pants
+  pos: noun
 - lemma: інгредієнт
   ipa: /inɦrɛdiˈjɛnt/
-  translation: ''
+  translation: ingredient
   pos: noun
+- lemma: іноді
+  ipa: /ˈinɔdi/
+  translation: sometimes
+  pos: pron
+- lemma: їда
+  ipa: /jidˈa/
+  translation: eating, food (colloquial)
+  pos: noun
+  gender: f

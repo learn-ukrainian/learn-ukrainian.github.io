@@ -1,17 +1,52 @@
-# Audit Report: 71-emotional-intelligence.md
-**Phase:** B1.6 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M71 — 71-emotional-intelligence.md
+**Level:** B1 | **Module:** M71 | **Phase:** B1.6 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 22:45:40
+
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння емоційного інтелекту | 14 | 8 | ✅ |
+| 2 | match-up | Колокації — іменник + дієслово | 14 | 8 | ✅ |
+| 3 | match-up | Синоніми та переклад | 14 | 8 | ✅ |
+| 4 | group-sort | Групування за значенням | 23 | 12 | ✅ |
+| 5 | cloze | Вибір слова з контексту | 14 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання | 14 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 15 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 14 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 14 | 6 | ✅ |
+| 11 | translate | Переклад речень | 14 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть слова емоційного інтелекту | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1748/1500
+- **Words:** ✅ 1748/1500 (raw: 2484)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 45/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,7 +77,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
-| **Вступ** | ⚪️ | 97 | Skipped |
+| **Вступ** | ✅ | 97 | Included in Core |
 | **Вживання** | ⚪️ | 296 | Skipped |
 | **Читання** | ✅ | 366 | Included in Core |
 | **Діалоги** | ✅ | 378 | Included in Core |

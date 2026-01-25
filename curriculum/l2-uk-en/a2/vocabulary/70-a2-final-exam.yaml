@@ -2,47 +2,16 @@ module: 70-a2-final-exam
 level: A2
 version: '2.0'
 items:
-- lemma: варта
-  ipa: /ʋˈarta/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: включаючи
-  ipa: /ʋkljut͡ʃˈajut͡ʃɪ/
-  translation: ''
-  pos: verb
-- lemma: досягнутий
-  ipa: /dɔsˈjaɦnutɪj/
-  translation: ''
-  pos: adj
 - lemma: засвоїти
   ipa: /zasʋˈɔjitɪ/
-  translation: ''
-  pos: verb
-- lemma: прогрес
-  ipa: /prɔɦrˈɛs/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: розташований
-  ipa: /rɔztaʃˈɔʋanɪj/
-  translation: ''
-  pos: adj
-- lemma: сказити
-  ipa: /skazˈɪtɪ/
-  translation: ''
+  translation: to master, to assimilate
   pos: verb
 - lemma: спираючись
   ipa: /spɪrˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: leaning on, relying on
   pos: verb
 - lemma: тель
   ipa: /tɛlʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: шанс
-  ipa: /ʃans/
   translation: ''
   pos: noun
   gender: m

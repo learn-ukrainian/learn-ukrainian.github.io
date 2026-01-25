@@ -4,154 +4,133 @@ version: '2.0'
 items:
 - lemma: аптекар
   ipa: /aptˈɛkar/
-  translation: ''
+  translation: pharmacist (male)
   pos: noun
   gender: m
 - lemma: аптекарка
   ipa: /aptˈɛkarka/
-  translation: ''
+  translation: pharmacist (female)
   pos: noun
   gender: f
 - lemma: бідний
   ipa: /bˈidnɪj/
-  translation: ''
+  translation: poor (male)
   pos: adj
 - lemma: біле
   ipa: /bˈilɛ/
-  translation: ''
+  translation: white (neuter)
   pos: noun
   gender: n
 - lemma: видужувати
   ipa: /ʋɪdˈuʒuʋatɪ/
-  translation: ''
+  translation: to recover (from illness)
   pos: verb
 - lemma: волосся
   ipa: /ʋɔlˈɔssja/
-  translation: ''
+  translation: hair
   pos: noun
   gender: n
-- lemma: голови
-  ipa: /ɦˈɔlɔʋɪ/
-  translation: ''
-  pos: noun
 - lemma: грип
   ipa: /ɦrɪp/
-  translation: ''
+  translation: flu
   pos: noun
   gender: m
 - lemma: гірчичник
   ipa: /ɦirt͡ʃˈɪt͡ʃnɪk/
-  translation: ''
+  translation: mustard plaster
   pos: noun
 - lemma: джон
   ipa: /dʒɔn/
-  translation: ''
+  translation: John (name)
   pos: noun
   gender: m
 - lemma: дихати
   ipa: /dˈɪxatɪ/
-  translation: ''
+  translation: to breathe
   pos: verb
 - lemma: доктор
   ipa: /dˈɔktɔr/
-  translation: ''
+  translation: doctor (PhD)
   pos: noun
   gender: m
-- lemma: здивуватися
-  ipa: /zdɪʋuʋˈatɪsja/
-  translation: ''
-  pos: verb
 - lemma: лівий
   ipa: /lˈiʋɪj/
-  translation: ''
+  translation: left (adj)
   pos: adj
 - lemma: лікувати
   ipa: /likuʋˈatɪ/
-  translation: ''
+  translation: to treat (medically)
   pos: verb
 - lemma: лікуватися
   ipa: /likuʋˈatɪsja/
-  translation: ''
+  translation: to be treated
   pos: verb
 - lemma: лінь
   ipa: /linʲ/
-  translation: ''
+  translation: laziness
   pos: noun
   gender: m
 - lemma: малина
   ipa: /malˈɪna/
-  translation: ''
+  translation: raspberry
   pos: noun
   gender: f
 - lemma: мораль
   ipa: /mɔrˈalʲ/
-  translation: ''
+  translation: morality, moral
   pos: noun
   gender: f
 - lemma: направлення
   ipa: /naprˈaʋlɛnnja/
-  translation: ''
+  translation: direction, referral
   pos: noun
   gender: n
 - lemma: наука
   ipa: /naˈuka/
-  translation: ''
+  translation: science
   pos: noun
 - lemma: нежить
   ipa: /nˈɛʒɪtʲ/
-  translation: ''
+  translation: runny nose, cold
   pos: noun
   gender: m
 - lemma: одужати
   ipa: /ɔdˈuʒatɪ/
-  translation: ''
+  translation: to recover (perfective)
   pos: verb
 - lemma: пахнути
   ipa: /paxnutɪ/
-  translation: ''
+  translation: to smell
   pos: verb
 - lemma: поліклініка
   ipa: /pɔliklˈinika/
-  translation: ''
+  translation: polyclinic, outpatient clinic
   pos: noun
   gender: f
 - lemma: репліка
   ipa: /rˈɛplika/
-  translation: ''
+  translation: replica, cue, retort
   pos: noun
   gender: f
 - lemma: рота
   ipa: /rˈɔta/
-  translation: ''
+  translation: company (military), mouth (gen)
   pos: noun
 - lemma: рухати
   ipa: /rˈuxatɪ/
-  translation: ''
+  translation: to move
   pos: verb
-- lemma: симптом
-  ipa: /sɪmptˈɔm/
-  translation: ''
-  pos: noun
 - lemma: слабкість
   ipa: /slˈabkistʲ/
-  translation: ''
+  translation: weakness
   pos: noun
   gender: f
 - lemma: трішки
   ipa: /trˈiʃkɪ/
-  translation: ''
+  translation: a little bit
   pos: adv
 - lemma: фарба
   ipa: /fˈarba/
-  translation: ''
+  translation: paint, dye
   pos: noun
   gender: f
-- lemma: фонтан
-  ipa: /fɔntˈan/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: хворіти
-  ipa: /xʋɔrˈitɪ/
-  translation: ''
-  pos: verb

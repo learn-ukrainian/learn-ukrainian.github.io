@@ -1,17 +1,51 @@
-# Audit Report: 37-temporal-clauses.md
-**Phase:** B1.3b | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
+# Audit Report: M37 — 37-temporal-clauses.md
+**Level:** B1 | **Module:** M37 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:59:33
+
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Часові сполучники | 8 | 8 | ✅ |
+| 2 | match-up | Сполучник та його функція | 12 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення правильним сполучником | 12 | 8 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть сполучники за типом часових відношень | 14 | 12 | ✅ |
+| 6 | unjumble | Складіть речення з розсипаних слів | 8 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 8 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Позначте часові сполучники | 8 | 6 | ✅ |
+| 10 | select | Виберіть усі граматично правильні речення | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть на українську мову | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1577/1500
+- **Words:** ✅ 1573/1500 (raw: 2077)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 14 < 25 (soft target)
+- **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -35,10 +69,10 @@
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
 | questions | 24 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.8%** |
+| **TOTAL** | | | | | **95.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -46,7 +80,7 @@
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
 | **Тест** | ⚪️ | 154 | Skipped |
 | **Пояснення** | ⚪️ | 632 | Skipped |
-| **Практика** | ⚪️ | 217 | Skipped |
+| **Практика** | ⚪️ | 216 | Skipped |
 | **Діалоги** | ✅ | 225 | Included in Core |
-| **Підсумок** | ✅ | 178 | Included in Core |
+| **Підсумок** | ✅ | 175 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

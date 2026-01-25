@@ -1,7 +1,8 @@
 # Audit Report: M12 — 12-aspect-pairs-essential-40.md
 **Level:** B1 | **Module:** M12 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-24 21:51:10
 
 ## Configuration
 **Type:** B1-grammar
@@ -10,7 +11,7 @@
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
-**Required Types:** fill-in, flashcards, group-sort, match-up, quiz
+**Required Types:** fill-in, group-sort, match-up, quiz
 **Engagement:** ≥5 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
@@ -36,20 +37,11 @@
 - Total activities: 12 (target: 8-12) ✅
 - Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 4/5 (fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (57% overlap): "- Вона **читала** книгу тиждень і нарешті **прочитала** її.". Shares significant keywords with sentence at index 6.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1668/1500 (raw: 2403)
+- **Words:** ✅ 1670/1500 (raw: 2405)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -59,7 +51,7 @@
 - **Vocab:** ✅ 47/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.0% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
@@ -90,7 +82,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 43 | Included in Core |
 | **Тест** | ⚪️ | 138 | Skipped |
-| **Пояснення** | ⚪️ | 567 | Skipped |
+| **Пояснення** | ⚪️ | 569 | Skipped |
 | **Практика** | ⚪️ | 345 | Skipped |
 | **Діалоги** | ✅ | 288 | Included in Core |
 | **Підсумок** | ✅ | 177 | Included in Core |

@@ -4,84 +4,110 @@ version: '2.0'
 items:
 - lemma: автовокзал
   ipa: /aʋtɔʋɔkzˈal/
-  translation: ''
+  translation: bus station
   pos: noun
   gender: m
 - lemma: алея
   ipa: /alˈɛja/
-  translation: ''
+  translation: alley, lane
   pos: noun
   gender: f
 - lemma: антонім
   ipa: /antˈɔnim/
-  translation: ''
+  translation: antonym
   pos: noun
+- lemma: ввійти
+  ipa: /ʋʋijtˈɪ/
+  translation: to enter, to come in
+  pos: verb
 - lemma: вектор
   ipa: /ʋˈɛktɔr/
-  translation: ''
+  translation: vector
   pos: noun
   gender: m
 - lemma: вибути
   ipa: /ʋˈɪbutɪ/
-  translation: ''
+  translation: to leave, to drop out
   pos: verb
 - lemma: виглянути
   ipa: /ʋˈɪɦljanutɪ/
-  translation: ''
+  translation: to look out
   pos: verb
 - lemma: вилітати
   ipa: /ʋɪlitatɪ/
-  translation: ''
+  translation: to fly out (imperfective)
   pos: verb
 - lemma: висота
   ipa: /ʋɪsɔtˈa/
-  translation: ''
+  translation: height, altitude
   pos: noun
 - lemma: влада
   ipa: /ʋlˈada/
-  translation: ''
+  translation: power, authority
   pos: noun
   gender: f
 - lemma: входини
   ipa: /ʋxˈɔdɪnɪ/
-  translation: ''
+  translation: housewarming
   pos: noun
 - lemma: від'їжджати
   ipa: /ʋidjiʒdʒˈatɪ/
-  translation: ''
+  translation: to leave, to depart
   pos: verb
 - lemma: відбуття
   ipa: /ʋidbuttˈja/
-  translation: ''
+  translation: departure
   pos: noun
   gender: n
 - lemma: віддалити
   ipa: /ʋiddalˈɪtɪ/
-  translation: ''
+  translation: to move away
   pos: verb
-- lemma: гармонія
-  ipa: /ɦarmˈɔnija/
-  translation: ''
+- lemma: відомий
+  ipa: /ʋidˈɔmɪj/
+  translation: known, famous
+  pos: adj
+- lemma: відстань
+  ipa: /ʋˈidstanʲ/
+  translation: distance
   pos: noun
   gender: f
+- lemma: гармонія
+  ipa: /ɦarmˈɔnija/
+  translation: harmony
+  pos: noun
+  gender: f
+- lemma: голови
+  ipa: /ɦˈɔlɔʋɪ/
+  translation: ''
+  pos: noun
 - lemma: громадське
   ipa: /ɦrɔmadsʲkɛ/
   translation: ''
   pos: noun
   gender: n
+- lemma: додавання
+  ipa: /dɔdaʋˈannja/
+  translation: addition
+  pos: noun
+  gender: n
+- lemma: заборонити
+  ipa: /zabɔrɔnˈɪtɪ/
+  translation: to ban, to prohibit
+  pos: verb
 - lemma: заглиблення
   ipa: /zaɦlˈɪblɛnnja/
-  translation: ''
+  translation: deepening, recess
   pos: noun
   gender: n
 - lemma: збирання
   ipa: /zbɪrˈannja/
-  translation: ''
+  translation: gathering, harvesting
   pos: noun
   gender: n
 - lemma: збожеволіти
   ipa: /zbɔʒɛʋˈɔlitɪ/
-  translation: ''
+  translation: to go crazy
   pos: verb
 - lemma: зв
   ipa: /zʋ/
@@ -93,164 +119,224 @@ items:
   pos: noun
 - lemma: зійти
   ipa: /zijtˈɪ/
-  translation: ''
+  translation: to go down, to descend, to come up (of sun)
   pos: verb
 - lemma: зійтися
   ipa: /zijtˈɪsja/
-  translation: ''
+  translation: to converge, to agree
   pos: verb
+- lemma: кубик
+  ipa: /kˈubɪk/
+  translation: cube, die
+  pos: noun
+  gender: m
 - lemma: лего
   ipa: /lɛɦɔ/
-  translation: ''
+  translation: Lego
   pos: noun
   gender: m
+- lemma: ледве
+  ipa: /lˈɛdʋɛ/
+  translation: hardly, barely
+  pos: part
 - lemma: логістик
   ipa: /lɔɦˈistɪk/
-  translation: ''
+  translation: logistician
   pos: noun
   gender: m
+- lemma: ліс
+  ipa: /lis/
+  translation: forest
+  pos: noun
+  gender: m
+- lemma: магічний
+  ipa: /maɦˈit͡ʃnɪj/
+  translation: magical
+  pos: adj
+- lemma: майстерня
+  ipa: /majstˈɛrnja/
+  translation: workshop
+  pos: noun
+  gender: f
 - lemma: максимально
   ipa: /maksɪmˈalʲnɔ/
-  translation: ''
+  translation: maximally
   pos: adv
 - lemma: минати
   ipa: /mɪnˈatɪ/
-  translation: ''
+  translation: to pass by, to elapse
   pos: verb
 - lemma: множити
   ipa: /mnˈɔʒɪtɪ/
-  translation: ''
+  translation: to multiply
   pos: verb
 - lemma: назвавши
   ipa: /nazʋˈaʋʃɪ/
-  translation: ''
+  translation: having named
   pos: verb
+- lemma: національний
+  ipa: /nat͡siɔnˈalʲnɪj/
+  translation: national
+  pos: adj
 - lemma: націоналістичний
   ipa: /nat͡siɔnalistˈɪt͡ʃnɪj/
-  translation: ''
+  translation: nationalist (adj)
   pos: adj
 - lemma: облетілий
   ipa: /ɔblɛtˈilɪj/
-  translation: ''
+  translation: faded, fallen (leaves)
   pos: adj
 - lemma: образно
   ipa: /ˈɔbraznɔ/
-  translation: ''
+  translation: figuratively
   pos: adv
 - lemma: однонаправлений
   ipa: /ɔdnɔnaprˈaʋlɛnɪj/
-  translation: ''
+  translation: one-way, unidirectional
   pos: adj
 - lemma: оптимізм
   ipa: /ɔptɪmˈizm/
-  translation: ''
+  translation: optimism
   pos: noun
   gender: m
 - lemma: переможець
   ipa: /pɛrɛmˈɔʒɛt͡sʲ/
-  translation: ''
+  translation: winner
   pos: noun
 - lemma: питомий
   ipa: /pɪtˈɔmɪj/
-  translation: ''
+  translation: native, specific
   pos: adj
 - lemma: по-різному
   ipa: /pɔ-rˈiznɔmu/
-  translation: ''
+  translation: differently, in various ways
   pos: adv
 - lemma: побудований
   ipa: /pɔbudˈɔʋanɪj/
-  translation: ''
+  translation: built, constructed
   pos: adj
 - lemma: повертаючись
   ipa: /pɔʋɛrtˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: returning
   pos: verb
 - lemma: покриття
   ipa: /pɔkrɪttˈja/
-  translation: ''
+  translation: coverage, coating
   pos: noun
   gender: n
+- lemma: поспішати
+  ipa: /pɔspiʃˈatɪ/
+  translation: to hurry
+  pos: verb
 - lemma: похідний
   ipa: /pɔxidnɪj/
-  translation: ''
+  translation: derivative, marching
   pos: adj
 - lemma: правопис
   ipa: /praʋˈɔpɪs/
-  translation: ''
+  translation: orthography, spelling
   pos: noun
   gender: m
+- lemma: пройтися
+  ipa: /prɔjtˈɪsja/
+  translation: to take a walk
+  pos: verb
+- lemma: протилежний
+  ipa: /prɔtɪlˈɛʒnɪj/
+  translation: opposite
+  pos: adj
 - lemma: протікати
   ipa: /prɔtikˈatɪ/
-  translation: ''
+  translation: to leak, to flow, to elapse
   pos: verb
 - lemma: пі-
   ipa: /pi-/
   translation: ''
   pos: noun
+- lemma: радянський
+  ipa: /radˈjansʲkɪj/
+  translation: Soviet
+  pos: adj
 - lemma: розсердитися
   ipa: /rɔzsˈɛrdɪtɪsja/
-  translation: ''
+  translation: to get angry
   pos: verb
 - lemma: рівняння
   ipa: /riʋnˈjannja/
-  translation: ''
+  translation: equation
   pos: noun
   gender: n
 - lemma: різнонаправлений
   ipa: /riznɔnaprˈaʋlɛnɪj/
-  translation: ''
+  translation: multidirectional
   pos: adj
 - lemma: скрипниківка
   ipa: /skrɪpnɪkiʋka/
-  translation: ''
+  translation: Skrypnykivka (orthography)
   pos: noun
   gender: f
 - lemma: спливати
   ipa: /splɪʋˈatɪ/
-  translation: ''
+  translation: to float up, to elapse, to expire
   pos: verb
 - lemma: старт
   ipa: /start/
-  translation: ''
+  translation: start
   pos: noun
   gender: m
+- lemma: сход
+  ipa: /sxɔd/
+  translation: ''
+  pos: noun
 - lemma: сходити
   ipa: /sxɔdɪtɪ/
-  translation: ''
+  translation: to descend, to go down, to visit (imperfective)
   pos: verb
 - lemma: текти
   ipa: /tɛktˈɪ/
-  translation: ''
+  translation: to flow
   pos: verb
 - lemma: трускавець
   ipa: /truskaʋˈɛt͡sʲ/
-  translation: ''
+  translation: Truskavets
   pos: noun
   gender: m
 - lemma: уточнити
   ipa: /utɔt͡ʃnˈɪtɪ/
-  translation: ''
+  translation: to clarify, to specify (perfective)
   pos: verb
 - lemma: фотоальбом
   ipa: /fɔtɔalʲbˈɔm/
-  translation: ''
+  translation: photo album
   pos: noun
   gender: m
 - lemma: фразеологія
   ipa: /frazɛɔlˈɔɦija/
-  translation: ''
+  translation: phraseology
   pos: noun
   gender: f
 - lemma: фігуральний
   ipa: /fiɦurˈalʲnɪj/
-  translation: ''
+  translation: figurative
   pos: adj
 - lemma: фініш
   ipa: /fˈiniʃ/
-  translation: ''
+  translation: finish
   pos: noun
   gender: m
+- lemma: хмара
+  ipa: /xmˈara/
+  translation: cloud
+  pos: noun
+  gender: f
+- lemma: широкий
+  ipa: /ʃɪrˈɔkɪj/
+  translation: wide, broad
+  pos: adj
+- lemma: ізсередини
+  ipa: /izsɛrˈɛdɪnɪ/
+  translation: from within
+  pos: adv
 - lemma: їжджати
   ipa: /jiʒdʒatɪ/
   translation: ''

@@ -2,164 +2,324 @@ module: 17-motion-coming-going
 level: B1
 version: '2.0'
 items:
+- lemma: аеропорт
+  ipa: /aɛrɔpˈɔrt/
+  translation: airport
+  pos: noun
+  gender: m
 - lemma: асоціація
   ipa: /asɔt͡siˈat͡sija/
-  translation: ''
+  translation: association
+  pos: noun
+  gender: f
+- lemma: боротьба
+  ipa: /bɔrɔtʲbˈa/
+  translation: struggle, fight
   pos: noun
   gender: f
 - lemma: брехня
   ipa: /brɛxnˈja/
-  translation: ''
+  translation: lie, falsehood
   pos: noun
   gender: f
 - lemma: брістоль
   ipa: /bristɔlʲ/
-  translation: ''
+  translation: Bristol
   pos: noun
   gender: m
 - lemma: бігом
   ipa: /bˈiɦɔm/
-  translation: ''
+  translation: quickly, by running
   pos: adv
 - lemma: біда
   ipa: /bidˈa/
-  translation: ''
+  translation: trouble, misfortune
   pos: noun
   gender: f
+- lemma: в'їхати
+  ipa: /ʋˈjixatɪ/
+  translation: to drive in, to enter (perfective)
+  pos: verb
 - lemma: варшава
   ipa: /ʋarʃˈaʋa/
-  translation: ''
+  translation: Warsaw
   pos: noun
   gender: f
+- lemma: вбігти
+  ipa: /ʋbˈiɦtɪ/
+  translation: to run in
+  pos: verb
 - lemma: вибігти
   ipa: /ʋˈɪbiɦtɪ/
-  translation: ''
+  translation: to run out (perfective)
   pos: verb
 - lemma: вивчаючи
   ipa: /ʋɪʋt͡ʃˈajut͡ʃɪ/
   translation: ''
   pos: verb
+- lemma: винести
+  ipa: /ʋˈɪnɛstɪ/
+  translation: to carry out, to endure
+  pos: verb
 - lemma: випливти
   ipa: /ʋˈɪplɪʋtɪ/
-  translation: ''
+  translation: to swim out, to emerge
   pos: verb
 - lemma: виплисти
   ipa: /ʋˈɪplɪstɪ/
-  translation: ''
+  translation: to emerge
+  pos: verb
+- lemma: виразніший
+  ipa: /ʋɪrˈazniʃɪj/
+  translation: more expressive
+  pos: adj
+- lemma: виїхати
+  ipa: /ʋˈɪjixatɪ/
+  translation: to leave, to depart (perfective)
   pos: verb
 - lemma: влетіти
   ipa: /ʋlɛtˈitɪ/
-  translation: ''
+  translation: to fly in
   pos: verb
+- lemma: внести
+  ipa: /ʋnˈɛstɪ/
+  translation: to contribute, to bring in
+  pos: verb
+- lemma: всередину
+  ipa: /ʋsɛrˈɛdɪnu/
+  translation: inside (direction)
+  pos: adv
 - lemma: втрачатися
   ipa: /ʋtrat͡ʃˈatɪsja/
-  translation: ''
+  translation: to be lost
+  pos: verb
+- lemma: входити
+  ipa: /ʋxɔdɪtɪ/
+  translation: to enter, to be included
+  pos: verb
+- lemma: відкритий
+  ipa: /ʋidkrˈɪtɪj/
+  translation: open
+  pos: adj
+- lemma: відновити
+  ipa: /ʋidnɔʋˈɪtɪ/
+  translation: to restore, to renew
   pos: verb
 - lemma: відправлятися
   ipa: /ʋidpraʋlˈjatɪsja/
   translation: ''
   pos: verb
+- lemma: війнути
+  ipa: /ʋijnˈutɪ/
+  translation: to blow (of wind)
+  pos: verb
+- lemma: війт
+  ipa: /ʋijt/
+  translation: bailiff, mayor (historical)
+  pos: noun
+- lemma: гараж
+  ipa: /ɦarˈaʒ/
+  translation: garage
+  pos: noun
+  gender: m
 - lemma: глибинний
   ipa: /ɦlɪbˈɪnnɪj/
-  translation: ''
+  translation: deep, profound
   pos: adj
 - lemma: давньоруський
   ipa: /daʋnʲɔrˈusʲkɪj/
-  translation: ''
+  translation: Old Rus (adj)
   pos: adj
+- lemma: дозволити
+  ipa: /dɔzʋˈɔlɪtɪ/
+  translation: to allow, to permit
+  pos: verb
 - lemma: забування
   ipa: /zabuʋˈannja/
-  translation: ''
+  translation: forgetting
   pos: noun
   gender: n
+- lemma: закономірність
+  ipa: /zakɔnɔmˈirnistʲ/
+  translation: regularity, pattern
+  pos: noun
+  gender: f
 - lemma: залишення
   ipa: /zalˈɪʃɛnnja/
-  translation: ''
+  translation: leaving
   pos: noun
   gender: n
 - lemma: замкнений
   ipa: /zˈamknɛnɪj/
-  translation: ''
+  translation: locked, closed
   pos: adj
+- lemma: зачинятися
+  ipa: /zat͡ʃɪnˈjatɪsja/
+  translation: to close (passive/ongoing)
+  pos: verb
 - lemma: змушений
   ipa: /zmˈuʃɛnɪj/
-  translation: ''
+  translation: forced, compelled
   pos: adj
+- lemma: зранку
+  ipa: /zrˈanku/
+  translation: in the morning
+  pos: adv
 - lemma: зсередини
   ipa: /zsɛrˈɛdɪnɪ/
-  translation: ''
+  translation: from within
   pos: adv
+- lemma: кабінет
+  ipa: /kabinˈɛt/
+  translation: office, study
+  pos: noun
+  gender: m
 - lemma: колія
   ipa: /kˈɔlija/
-  translation: ''
+  translation: track, rail
   pos: noun
   gender: f
+- lemma: легко
+  ipa: /lˈɛɦkɔ/
+  translation: easily, lightly
+  pos: adv
+- lemma: лондон
+  ipa: /lˈɔndɔn/
+  translation: London
+  pos: noun
+  gender: m
 - lemma: літаючи
   ipa: /litˈajut͡ʃɪ/
-  translation: ''
+  translation: flying
   pos: verb
 - lemma: метафора
   ipa: /mɛtˈafɔra/
-  translation: ''
+  translation: metaphor
   pos: noun
   gender: f
+- lemma: мільйон
+  ipa: /milʲjˈɔn/
+  translation: million
+  pos: noun
+- lemma: навколо
+  ipa: /naʋkˈɔlɔ/
+  translation: around
+  pos: adv
 - lemma: навчившись
   ipa: /naʋt͡ʃˈɪʋʃɪsʲ/
-  translation: ''
+  translation: having learned
   pos: verb
+- lemma: надзвичайно
+  ipa: /nadzʋɪt͡ʃˈajnɔ/
+  translation: extraordinarily
+  pos: adv
+- lemma: надія
+  ipa: /nadˈija/
+  translation: hope
+  pos: noun
+  gender: f
+- lemma: назавжди
+  ipa: /nazˈaʋʒdɪ/
+  translation: forever
+  pos: adv
+- lemma: назовний
+  ipa: /nazɔʋnɪj/
+  translation: nominative (case variant)
+  pos: adj
+- lemma: найбільший
+  ipa: /najbˈilʲʃɪj/
+  translation: the biggest
+  pos: adj
 - lemma: найдавніший
   ipa: /najdaʋnˈiʃɪj/
-  translation: ''
+  translation: the oldest/most ancient
   pos: adj
 - lemma: найстабільніший
   ipa: /najstabilʲniʃɪj/
-  translation: ''
+  translation: the most stable
   pos: adj
 - lemma: населений
   ipa: /nasˈɛlɛnɪj/
-  translation: ''
+  translation: populated
   pos: adj
 - lemma: ндв-форма
   ipa: /ndʋ-fˈɔrma/
   translation: ''
   pos: noun
   gender: f
-- lemma: несті
-  ipa: /nɛsti/
-  translation: ''
+- lemma: неділя
+  ipa: /nɛdˈilja/
+  translation: Sunday
   pos: noun
+  gender: f
 - lemma: опановуючи
   ipa: /ɔpanˈɔʋujut͡ʃɪ/
-  translation: ''
+  translation: mastering
   pos: verb
 - lemma: отриманий
   ipa: /ɔtrˈɪmanɪj/
-  translation: ''
+  translation: received, obtained
   pos: adj
+- lemma: парковка
+  ipa: /parkɔʋka/
+  translation: parking, parking lot
+  pos: noun
+  gender: f
 - lemma: паспортний
   ipa: /pˈaspɔrtnɪj/
-  translation: ''
+  translation: passport (adj)
   pos: adj
 - lemma: перетворювати
   ipa: /pɛrɛtʋˈɔrjuʋatɪ/
-  translation: ''
+  translation: to transform (imperfective)
   pos: verb
+- lemma: повз
+  ipa: /pɔʋz/
+  translation: past, by (preposition)
+  pos: adv
+- lemma: позавчора
+  ipa: /pɔzaʋt͡ʃˈɔra/
+  translation: the day before yesterday
+  pos: adv
+- lemma: понада
+  ipa: /pɔnˈada/
+  translation: ''
+  pos: noun
+- lemma: потяг
+  ipa: /pˈɔtjaɦ/
+  translation: train, attraction, urge
+  pos: noun
+  gender: m
 - lemma: прибувати
   ipa: /prɪbuʋˈatɪ/
-  translation: ''
+  translation: to arrive (imperfective)
+  pos: verb
+- lemma: прибуття
+  ipa: /prɪbuttˈja/
+  translation: arrival
+  pos: noun
+  gender: n
+- lemma: прибігти
+  ipa: /prɪbˈiɦtɪ/
+  translation: to run to (perfective)
   pos: verb
 - lemma: призначення
   ipa: /prɪznˈat͡ʃɛnnja/
-  translation: ''
+  translation: purpose, appointment
   pos: noun
   gender: n
 - lemma: прилетіти
   ipa: /prɪlɛtˈitɪ/
-  translation: ''
+  translation: to fly to, to arrive (by air perfective)
   pos: verb
+- lemma: примітка
+  ipa: /prɪmitka/
+  translation: note, footnote
+  pos: noun
+  gender: f
 - lemma: приміщення
   ipa: /prɪmˈiʃt͡ʃɛnnja/
-  translation: ''
+  translation: premises, room, building
   pos: noun
   gender: n
 - lemma: припливти
@@ -168,51 +328,82 @@ items:
   pos: verb
 - lemma: приплисти
   ipa: /prɪplɪstˈɪ/
-  translation: ''
+  translation: to swim/sail to
   pos: verb
+- lemma: приїжджати
+  ipa: /prɪjiʒdʒˈatɪ/
+  translation: to arrive, to come (by vehicle imperfective)
+  pos: verb
+- lemma: просторий
+  ipa: /prɔstˈɔrɪj/
+  translation: spacious
+  pos: adj
 - lemma: прощання
   ipa: /prɔʃt͡ʃˈannja/
-  translation: ''
+  translation: farewell
   pos: noun
   gender: n
 - lemma: птиця
   ipa: /ptˈɪt͡sja/
-  translation: ''
+  translation: poultry, bird
   pos: noun
   gender: f
 - lemma: рецепціоніст
   ipa: /rɛt͡sɛpt͡siɔnist/
-  translation: ''
+  translation: receptionist
   pos: noun
   gender: m
+- lemma: рідне
+  ipa: /rˈidnɛ/
+  translation: native (neuter)
+  pos: noun
+  gender: n
 - lemma: секретар
   ipa: /sɛkrɛtˈar/
-  translation: ''
+  translation: secretary
   pos: noun
   gender: m
 - lemma: серія
   ipa: /sˈɛrija/
-  translation: ''
+  translation: episode, series
   pos: noun
+- lemma: складніший
+  ipa: /skladnˈiʃɪj/
+  translation: more difficult
+  pos: adj
 - lemma: темно
   ipa: /tˈɛmnɔ/
-  translation: ''
+  translation: darkly, it is dark
   pos: adv
+- lemma: термінал
+  ipa: /tɛrminˈal/
+  translation: terminal
+  pos: noun
+  gender: m
 - lemma: тисячолітній
   ipa: /tɪsjat͡ʃɔlˈitnij/
-  translation: ''
+  translation: millennial, thousand-year-old
   pos: adj
+- lemma: торкатися
+  ipa: /tɔrkˈatɪsja/
+  translation: to touch, to concern
+  pos: verb
+- lemma: траєкторія
+  ipa: /trajɛktˈɔrija/
+  translation: trajectory
+  pos: noun
+  gender: f
 - lemma: унікальність
   ipa: /unikˈalʲnistʲ/
-  translation: ''
+  translation: uniqueness
   pos: noun
   gender: f
 - lemma: хаос
   ipa: /xaɔs/
-  translation: ''
+  translation: chaos
   pos: noun
   gender: m
 - lemma: шар
   ipa: /ʃar/
-  translation: ''
+  translation: layer, sphere
   pos: noun

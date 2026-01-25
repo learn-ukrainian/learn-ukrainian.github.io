@@ -2,40 +2,6 @@ module: 63-scheduling-appointments
 level: A2
 version: '2.0'
 items:
-- lemma: абсолютно
-  ipa: /absɔlˈjutnɔ/
-  translation: ''
-  pos: adv
-- lemma: адаптація
-  ipa: /adaptˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: активно
-  ipa: /aktˈɪʋnɔ/
-  translation: ''
-  pos: adv
-- lemma: база
-  ipa: /bˈaza/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вдаватися
-  ipa: /ʋdaʋˈatɪsja/
-  translation: ''
-  pos: verb
-- lemma: вдячний
-  ipa: /ʋdˈjat͡ʃnɪj/
-  translation: ''
-  pos: adj
-- lemma: внести
-  ipa: /ʋnˈɛstɪ/
-  translation: ''
-  pos: verb
-- lemma: встигати
-  ipa: /ʋstɪɦˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: вільня
   ipa: /ʋˈilʲnja/
   translation: ''
@@ -43,170 +9,83 @@ items:
   gender: f
 - lemma: галасливий
   ipa: /ɦalaslˈɪʋɪj/
-  translation: ''
+  translation: noisy, loud
   pos: adj
-- lemma: демонструвати
-  ipa: /dɛmɔnstruʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: економити
-  ipa: /ɛkɔnˈɔmɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: ефективно
   ipa: /ɛfɛktˈɪʋnɔ/
-  translation: ''
+  translation: effectively
   pos: adv
-- lemma: завтрашній
-  ipa: /zˈaʋtraʃnij/
-  translation: ''
-  pos: adj
-- lemma: зайвий
-  ipa: /zˈajʋɪj/
-  translation: ''
-  pos: adj
 - lemma: записуватися
   ipa: /zapˈɪsuʋatɪsja/
-  translation: ''
+  translation: to sign up (imperfective)
   pos: verb
 - lemma: затримувати
   ipa: /zatrˈɪmuʋatɪ/
-  translation: ''
+  translation: to delay (imperfective)
   pos: verb
 - lemma: коваль
   ipa: /kɔʋˈalʲ/
-  translation: ''
+  translation: blacksmith
   pos: noun
   gender: f
-- lemma: консультант
-  ipa: /kɔnsulʲtˈant/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: лишитися
   ipa: /lɪʃˈɪtɪsja/
-  translation: ''
+  translation: to remain, to stay (perfective)
   pos: verb
-- lemma: нагадування
-  ipa: /naɦˈaduʋannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: неввічливий
   ipa: /nɛʋʋˈit͡ʃlɪʋɪj/
-  translation: ''
+  translation: impolite
   pos: adj
-- lemma: ніяк
-  ipa: /nijak/
-  translation: ''
-  pos: adv
-- lemma: одужання
-  ipa: /ɔdˈuʒannja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: онлайн-бронювання
   ipa: /ɔnlajn-brɔnjuʋˈannja/
-  translation: ''
+  translation: online booking
   pos: noun
   gender: n
-- lemma: організація
-  ipa: /ɔrɦanizˈat͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: організований
-  ipa: /ɔrɦanizˈɔʋanɪj/
-  translation: ''
-  pos: adj
 - lemma: орієнтуватися
   ipa: /ɔrijɛntuʋˈatɪsja/
-  translation: ''
+  translation: to orient oneself, to be guided
   pos: verb
 - lemma: перенесення
   ipa: /pɛrɛnˈɛsɛnnja/
-  translation: ''
+  translation: transfer, postponement
   pos: noun
   gender: n
-- lemma: перенести
-  ipa: /pɛrɛnɛstˈɪ/
-  translation: ''
-  pos: verb
-- lemma: переносити
-  ipa: /pɛrɛnɔsɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: побажати
   ipa: /pɔbaʒˈatɪ/
-  translation: ''
+  translation: to wish
   pos: verb
-- lemma: попередити
-  ipa: /pɔpɛrˈɛdɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: пропозиція
-  ipa: /prɔpɔzˈɪt͡sija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: підтверджувати
-  ipa: /pidtʋˈɛrdʒuʋatɪ/
-  translation: ''
-  pos: verb
-- lemma: раптово
-  ipa: /raptˈɔʋɔ/
-  translation: ''
-  pos: adv
 - lemma: розіграти
   ipa: /rɔziɦrˈatɪ/
-  translation: ''
+  translation: to play (a scene), to raffle, to prank
   pos: verb
 - lemma: салон
   ipa: /salˈɔn/
-  translation: ''
+  translation: salon, cabin, showroom
   pos: noun
   gender: m
-- lemma: середовище
-  ipa: /sɛrɛdˈɔʋɪʃt͡ʃɛ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: скасовувати
   ipa: /skasˈɔʋuʋatɪ/
-  translation: ''
+  translation: to cancel (imperfective)
   pos: verb
 - lemma: скасування
   ipa: /skasuʋˈannja/
-  translation: ''
+  translation: cancellation
   pos: noun
   gender: n
-- lemma: скасувати
-  ipa: /skasuʋˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: спокійно
   ipa: /spɔkˈijnɔ/
-  translation: ''
+  translation: calmly, quietly
   pos: adv
 - lemma: стоматолог
   ipa: /stɔmatˈɔlɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: учасник
-  ipa: /ut͡ʃˈasnɪk/
-  translation: ''
-  pos: noun
-- lemma: фахівець
-  ipa: /faxiʋˈɛt͡sʲ/
-  translation: ''
+  translation: dentist
   pos: noun
   gender: m
 - lemma: хорошіти
   ipa: /xɔrɔʃˈitɪ/
-  translation: ''
+  translation: to become more beautiful
   pos: verb
 - lemma: щопонеділка
   ipa: /ʃt͡ʃɔpɔnɛdˈilka/
-  translation: ''
+  translation: every Monday
   pos: adv

@@ -4,189 +4,151 @@ version: '2.0'
 items:
 - lemma: аж
   ipa: /aʒ/
-  translation: ''
+  translation: even, as much as
   pos: part
 - lemma: безкрайній
   ipa: /bɛzkrˈajnij/
-  translation: ''
+  translation: endless, vast
   pos: adj
 - lemma: білити
   ipa: /bilˈɪtɪ/
-  translation: ''
+  translation: to whitewash
   pos: verb
 - lemma: білка
   ipa: /bilka/
-  translation: ''
+  translation: squirrel
   pos: noun
   gender: f
 - lemma: василь
   ipa: /ʋasˈɪlʲ/
-  translation: ''
+  translation: Vasyl (name)
   pos: noun
   gender: m
 - lemma: величний
   ipa: /ʋɛlˈɪt͡ʃnɪj/
-  translation: ''
+  translation: grand, majestic
   pos: adj
-- lemma: вересень
-  ipa: /ʋˈɛrɛsɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: вести
-  ipa: /ʋɛstˈɪ/
-  translation: ''
-  pos: verb
 - lemma: вечоріти
   ipa: /ʋɛt͡ʃɔrˈitɪ/
-  translation: ''
+  translation: to grow dark, evening approach
   pos: verb
 - lemma: випадати
   ipa: /ʋɪpadˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: впливати
-  ipa: /ʋplɪʋˈatɪ/
-  translation: ''
+  translation: to fall out, to drop out
   pos: verb
 - lemma: врожай
   ipa: /ʋrɔʒˈaj/
-  translation: ''
+  translation: harvest
   pos: noun
   gender: m
-- lemma: відновити
-  ipa: /ʋidnɔʋˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: відпочилий
-  ipa: /ʋidpɔt͡ʃˈɪlɪj/
-  translation: ''
-  pos: adj
 - lemma: візерунок
   ipa: /ʋizɛrˈunɔk/
-  translation: ''
+  translation: pattern, design
   pos: noun
 - lemma: глянути
   ipa: /ɦlˈjanutɪ/
-  translation: ''
+  translation: to look, to glance
   pos: verb
 - lemma: гніздо
   ipa: /ɦnizdˈɔ/
-  translation: ''
+  translation: nest
   pos: noun
   gender: n
 - lemma: годівниця
   ipa: /ɦɔdiʋnˈɪt͡sja/
-  translation: ''
+  translation: feeder
   pos: noun
 - lemma: гордість
   ipa: /ɦˈɔrdistʲ/
-  translation: ''
+  translation: pride
   pos: noun
   gender: f
 - lemma: горизонт
   ipa: /ɦɔrɪzˈɔnt/
-  translation: ''
+  translation: horizon
   pos: noun
   gender: m
 - lemma: гриб
   ipa: /ɦrɪb/
-  translation: ''
+  translation: mushroom
   pos: noun
 - lemma: гроза
   ipa: /ɦrɔzˈa/
-  translation: ''
+  translation: thunderstorm
   pos: noun
   gender: f
 - lemma: грудний
   ipa: /ɦrudnˈɪj/
-  translation: ''
+  translation: chest (adj), thoracic
   pos: adj
 - lemma: густий
   ipa: /ɦustˈɪj/
-  translation: ''
+  translation: thick, dense
   pos: adj
 - lemma: гірлянда
   ipa: /ɦirlˈjanda/
-  translation: ''
+  translation: garland
   pos: noun
 - lemma: дзвіночок
   ipa: /dzʋinˈɔt͡ʃɔk/
-  translation: ''
+  translation: small bell
   pos: noun
 - lemma: диво
   ipa: /dˈɪʋɔ/
-  translation: ''
+  translation: miracle, wonder
   pos: noun
   gender: n
 - lemma: дикий
   ipa: /dˈɪkɪj/
-  translation: ''
+  translation: wild
   pos: noun
 - lemma: дно
   ipa: /dnɔ/
-  translation: ''
+  translation: bottom
   pos: noun
   gender: n
 - lemma: довкілля
   ipa: /dɔʋkˈillja/
-  translation: ''
+  translation: environment
   pos: noun
   gender: n
-- lemma: довше
-  ipa: /dˈɔʋʃɛ/
-  translation: ''
-  pos: adv
 - lemma: долина
   ipa: /dɔlˈɪna/
-  translation: ''
+  translation: valley
   pos: noun
   gender: f
 - lemma: донечка
   ipa: /dˈɔnɛt͡ʃka/
-  translation: ''
+  translation: daughter (diminutive)
   pos: noun
   gender: f
-- lemma: дуб
-  ipa: /dub/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: дути
   ipa: /dˈutɪ/
-  translation: ''
+  translation: to blow
   pos: verb
-- lemma: екзамен
-  ipa: /ɛkzˈamɛn/
-  translation: ''
-  pos: noun
 - lemma: енергія
   ipa: /ɛnˈɛrɦija/
-  translation: ''
+  translation: energy
   pos: noun
   gender: f
 - lemma: жовтень
   ipa: /ʒˈɔʋtɛnʲ/
-  translation: ''
+  translation: October
   pos: noun
   gender: m
 - lemma: захисник
   ipa: /zaxˈɪsnɪk/
-  translation: ''
+  translation: protector, defender
   pos: noun
   gender: m
 - lemma: збір
   ipa: /zbir/
-  translation: ''
+  translation: collection, gathering
   pos: noun
   gender: m
-- lemma: зимовий
-  ipa: /zɪmˈɔʋɪj/
-  translation: ''
-  pos: adj
 - lemma: знижуватися
   ipa: /znˈɪʒuʋatɪsja/
-  translation: ''
+  translation: to decrease, to lower (passive)
   pos: verb
 - lemma: золота
   ipa: /zˈɔlɔta/
@@ -195,75 +157,57 @@ items:
   gender: f
 - lemma: камінка
   ipa: /kˈaminka/
-  translation: ''
+  translation: Kaminka (place/stove)
   pos: noun
   gender: f
-- lemma: канікули
-  ipa: /kanˈikulɪ/
-  translation: ''
-  pos: noun
 - lemma: каштан
   ipa: /kaʃtˈan/
-  translation: ''
+  translation: chestnut
   pos: noun
 - lemma: квітнути
   ipa: /kʋˈitnutɪ/
-  translation: ''
+  translation: to bloom
   pos: verb
 - lemma: квітучий
   ipa: /kʋitˈut͡ʃɪj/
-  translation: ''
+  translation: blooming, flourishing
   pos: adj
-- lemma: композитор
-  ipa: /kɔmpɔzˈɪtɔr/
-  translation: ''
-  pos: noun
 - lemma: конвалія
   ipa: /kɔnʋˈalija/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: краса
-  ipa: /krasˈa/
-  translation: ''
+  translation: lily of the valley
   pos: noun
   gender: f
 - lemma: красна
   ipa: /krˈasna/
-  translation: ''
+  translation: beautiful (archaic)
   pos: noun
   gender: f
-- lemma: крим
-  ipa: /krɪm/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кришталь
   ipa: /krɪʃtˈalʲ/
-  translation: ''
+  translation: crystal
   pos: noun
   gender: m
 - lemma: кулічі
   ipa: /kulit͡ʃi/
-  translation: ''
+  translation: kulichi (Easter breads)
   pos: noun
   gender: m
 - lemma: купала
   ipa: /kupˈala/
-  translation: ''
+  translation: Kupala (holiday)
   pos: noun
   gender: f
 - lemma: купатися
   ipa: /kupˈatɪsja/
-  translation: ''
+  translation: to bathe, to swim
   pos: verb
 - lemma: ландшафт
   ipa: /landʃˈaft/
-  translation: ''
+  translation: landscape
   pos: noun
 - lemma: лелека
   ipa: /lɛlˈɛka/
-  translation: ''
+  translation: stork
   pos: noun
   gender: m
 - lemma: лелеко
@@ -271,27 +215,14 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: ловити
-  ipa: /lɔʋˈɪtɪ/
-  translation: ''
-  pos: verb
-- lemma: лютий
-  ipa: /lˈjutɪj/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: лісовий
-  ipa: /lisɔʋˈɪj/
-  translation: ''
-  pos: adj
 - lemma: магія
   ipa: /mˈaɦija/
-  translation: ''
+  translation: magic
   pos: noun
   gender: f
 - lemma: маланка
   ipa: /malˈanka/
-  translation: ''
+  translation: Malanka (holiday)
   pos: noun
   gender: f
 - lemma: мальовниче
@@ -301,125 +232,91 @@ items:
   gender: n
 - lemma: марійка
   ipa: /marˈijka/
-  translation: ''
+  translation: Mariyka (name)
   pos: noun
   gender: f
 - lemma: меланхолійний
   ipa: /mɛlanxɔlˈijnɪj/
-  translation: ''
+  translation: melancholic
   pos: adj
 - lemma: мороз
   ipa: /mɔrˈɔz/
-  translation: ''
+  translation: frost
   pos: noun
 - lemma: морозний
   ipa: /mɔrˈɔznɪj/
-  translation: ''
+  translation: frosty
   pos: adj
 - lemma: мінус
   ipa: /mˈinus/
-  translation: ''
+  translation: minus
   pos: noun
   gender: m
-- lemma: надихати
-  ipa: /nadɪxatɪ/
-  translation: ''
-  pos: verb
 - lemma: найжаркіший
   ipa: /najʒarkˈiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: найромантичніший
-  ipa: /najrɔmantˈɪt͡ʃniʃɪj/
-  translation: ''
+  translation: the hottest
   pos: adj
 - lemma: найхолодніше
   ipa: /najxɔlɔdnˈiʃɛ/
-  translation: ''
+  translation: the coldest (adv), coldest thing
   pos: adv
 - lemma: найхолодніший
   ipa: /najxɔlɔdnˈiʃɪj/
-  translation: ''
-  pos: adj
-- lemma: наповнений
-  ipa: /napˈɔʋnɛnɪj/
-  translation: ''
+  translation: the coldest
   pos: adj
 - lemma: насолоджуючись
   ipa: /nasɔlˈɔdʒujut͡ʃɪsʲ/
-  translation: ''
+  translation: enjoying
   pos: verb
-- lemma: нуль
-  ipa: /nulʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ніжний
   ipa: /nˈiʒnɪj/
-  translation: ''
+  translation: tender, gentle
   pos: adj
 - lemma: одягти
   ipa: /ɔdjaɦtˈɪ/
-  translation: ''
+  translation: to put on (perfective)
   pos: verb
 - lemma: олесь
   ipa: /ɔlˈɛsʲ/
-  translation: ''
+  translation: Oles (name)
   pos: noun
   gender: f
-- lemma: оновлення
-  ipa: /ɔnˈɔʋlɛnnja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: опалий
-  ipa: /ɔpˈalɪj/
-  translation: ''
-  pos: adj
 - lemma: оранжевий
   ipa: /ɔrˈanʒɛʋɪj/
-  translation: ''
+  translation: orange (color)
   pos: adj
 - lemma: пасхальний
   ipa: /pasxˈalʲnɪj/
-  translation: ''
+  translation: Easter (adj)
   pos: adj
 - lemma: пелюстка
   ipa: /pɛlˈjustka/
-  translation: ''
+  translation: petal
   pos: noun
 - lemma: петренко
   ipa: /pɛtrˈɛnkɔ/
-  translation: ''
+  translation: Petrenko (name)
   pos: noun
 - lemma: плед
   ipa: /plɛd/
-  translation: ''
+  translation: blanket, throw
   pos: noun
   gender: m
 - lemma: плід
   ipa: /plid/
-  translation: ''
+  translation: fruit, fetus
   pos: noun
-- lemma: по-своєму
-  ipa: /pɔ-sʋˈɔjɛmu/
-  translation: ''
-  pos: pron
-- lemma: поважати
-  ipa: /pɔʋaʒˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: погодній
   ipa: /pɔɦˈɔdnij/
-  translation: ''
+  translation: weather (adj)
   pos: adj
 - lemma: покриватися
   ipa: /pɔkrɪʋˈatɪsja/
-  translation: ''
+  translation: to be covered
   pos: verb
 - lemma: покритий
   ipa: /pɔkrˈɪtɪj/
-  translation: ''
+  translation: covered
   pos: adj
 - lemma: пол
   ipa: /pɔl/
@@ -433,141 +330,104 @@ items:
   gender: m
 - lemma: поліський
   ipa: /pɔlˈisʲkɪj/
-  translation: ''
+  translation: Polissian (adj)
   pos: adj
 - lemma: помочити
   ipa: /pɔmɔt͡ʃˈɪtɪ/
-  translation: ''
+  translation: to wet, to soak for a while
   pos: verb
 - lemma: прекрасний
   ipa: /prɛkrˈasnɪj/
-  translation: ''
+  translation: wonderful, beautiful
   pos: adj
 - lemma: прикрашений
   ipa: /prɪkrˈaʃɛnɪj/
-  translation: ''
+  translation: decorated
   pos: adj
 - lemma: прилітати
   ipa: /prɪlitˈatɪ/
-  translation: ''
+  translation: to fly to (imperfective)
   pos: verb
 - lemma: пробиватися
   ipa: /prɔbɪʋˈatɪsja/
-  translation: ''
+  translation: to break through
   pos: verb
-- lemma: прозорий
-  ipa: /prɔzˈɔrɪj/
-  translation: ''
-  pos: adj
-- lemma: птаха
-  ipa: /ptˈaxa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: пуща-водиця
   ipa: /pˈuʃt͡ʃa-ʋɔdɪt͡sja/
-  translation: ''
+  translation: Pushcha-Vodytsia
   pos: noun
   gender: f
 - lemma: підсніжник
   ipa: /pidsnˈiʒnɪk/
-  translation: ''
+  translation: snowdrop
   pos: noun
-- lemma: пікнік
-  ipa: /piknik/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: пісок
-  ipa: /pisˈɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рай
   ipa: /raj/
-  translation: ''
+  translation: paradise, heaven
   pos: noun
   gender: m
 - lemma: рибалити
   ipa: /rɪbˈalɪtɪ/
-  translation: ''
+  translation: to fish
   pos: verb
 - lemma: рибалко
   ipa: /rɪbˈalkɔ/
-  translation: ''
+  translation: Rybalko (name), fisherman
   pos: noun
   gender: m
 - lemma: рожеве
   ipa: /rɔʒˈɛʋɛ/
-  translation: ''
+  translation: pink (neuter)
   pos: noun
   gender: n
 - lemma: розстеляти
   ipa: /rɔzstɛlˈjatɪ/
-  translation: ''
+  translation: to spread out, to make (a bed)
   pos: verb
 - lemma: ромашка
   ipa: /rɔmˈaʃka/
-  translation: ''
+  translation: chamomile
   pos: noun
   gender: f
 - lemma: рукавичка
   ipa: /rukaʋˈɪt͡ʃka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: санчата
-  ipa: /sant͡ʃˈata/
-  translation: ''
-  pos: noun
-- lemma: свобода
-  ipa: /sʋɔbˈɔda/
-  translation: ''
+  translation: small mitten
   pos: noun
   gender: f
 - lemma: синичка
   ipa: /sɪnˈɪt͡ʃka/
-  translation: ''
+  translation: titmouse, chickadee
   pos: noun
   gender: f
 - lemma: скрипіти
   ipa: /skrɪpˈitɪ/
-  translation: ''
+  translation: to creak
   pos: verb
 - lemma: сніговик
   ipa: /sniɦɔʋˈɪk/
-  translation: ''
+  translation: snowman
   pos: noun
-- lemma: сон
-  ipa: /sɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сосни
   ipa: /sˈɔsnɪ/
-  translation: ''
+  translation: pines (pl)
   pos: noun
 - lemma: спека
   ipa: /spˈɛka/
-  translation: ''
+  translation: heat, sweltering heat
   pos: noun
   gender: f
 - lemma: степ
   ipa: /stɛp/
-  translation: ''
-  pos: noun
-- lemma: століття
-  ipa: /stɔlˈittja/
-  translation: ''
+  translation: steppe
   pos: noun
 - lemma: суниця
   ipa: /sunˈɪt͡sja/
-  translation: ''
+  translation: wild strawberry
   pos: noun
   gender: f
 - lemma: сірий
   ipa: /sˈirɪj/
-  translation: ''
+  translation: gray
   pos: noun
   gender: m
 - lemma: тан
@@ -575,99 +435,79 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: травень
-  ipa: /trˈaʋɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: травневий
   ipa: /traʋnˈɛʋɪj/
-  translation: ''
+  translation: May (adj)
   pos: adj
 - lemma: туман
   ipa: /tumˈan/
-  translation: ''
+  translation: fog
   pos: noun
   gender: m
 - lemma: фіолетовий
   ipa: /fiɔlˈɛtɔʋɪj/
-  translation: ''
+  translation: purple, violet
   pos: adj
-- lemma: хмара
-  ipa: /xmˈara/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: хмаринка
   ipa: /xmarˈɪnka/
-  translation: ''
+  translation: small cloud
   pos: noun
   gender: f
 - lemma: хмарний
   ipa: /xmˈarnɪj/
-  translation: ''
+  translation: cloudy
   pos: adj
 - lemma: холодня
   ipa: /xɔlɔdnja/
   translation: ''
   pos: noun
   gender: f
-- lemma: художник
-  ipa: /xudˈɔʒnɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: художників
   ipa: /xudˈɔʒnɪkiʋ/
   translation: ''
   pos: adj
 - lemma: цвіт
   ipa: /t͡sʋit/
-  translation: ''
+  translation: blossom, bloom
   pos: noun
   gender: m
 - lemma: червонити
   ipa: /t͡ʃɛrʋɔnˈɪtɪ/
-  translation: ''
+  translation: to redden
   pos: verb
 - lemma: чорнити
   ipa: /t͡ʃɔrnˈɪtɪ/
-  translation: ''
+  translation: to blacken, to blackened (rare)
   pos: verb
 - lemma: чудо
   ipa: /t͡ʃˈudɔ/
-  translation: ''
+  translation: miracle, wonder
   pos: noun
   gender: n
-- lemma: щоденник
-  ipa: /ʃt͡ʃɔdˈɛnnɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: яблуня
   ipa: /ˈjablunja/
-  translation: ''
+  translation: apple tree
   pos: noun
   gender: f
 - lemma: ягода
   ipa: /ˈjaɦɔda/
-  translation: ''
+  translation: berry
   pos: noun
   gender: f
 - lemma: якраз
   ipa: /jakrˈaz/
-  translation: ''
+  translation: exactly, just, just right
   pos: part
 - lemma: ялинка
   ipa: /jalˈɪnka/
-  translation: ''
+  translation: Christmas tree, fir tree
   pos: noun
   gender: f
 - lemma: яскраво-блакитний
   ipa: /jaskrˈaʋɔ-blakɪtnɪj/
-  translation: ''
+  translation: bright blue
   pos: adj
 - lemma: яскравіше
   ipa: /jaskrˈaʋiʃɛ/
-  translation: ''
+  translation: brighter
   pos: adv

@@ -4,12 +4,12 @@ version: '2.0'
 items:
 - lemma: аналітика
   ipa: /analˈitɪka/
-  translation: ''
+  translation: analytics
   pos: noun
   gender: f
 - lemma: болючий
   ipa: /bɔlˈjut͡ʃɪj/
-  translation: ''
+  translation: painful
   pos: adj
 - lemma: бізнес-клімат
   ipa: /bˈiznɛs-klimat/
@@ -28,50 +28,54 @@ items:
   gender: f
 - lemma: ввп
   ipa: /ʋʋp/
-  translation: ''
+  translation: GDP
   pos: noun
   gender: m
 - lemma: впровадження
   ipa: /ʋprɔʋˈadʒɛnnja/
-  translation: ''
+  translation: implementation, introduction
   pos: noun
   gender: n
 - lemma: відзначати
   ipa: /ʋidznat͡ʃˈatɪ/
-  translation: ''
+  translation: to celebrate, to note
   pos: verb
 - lemma: відступати
   ipa: /ʋidstupˈatɪ/
-  translation: ''
+  translation: to retreat
   pos: verb
 - lemma: докорінний
   ipa: /dɔkɔrˈinnɪj/
-  translation: ''
+  translation: radical, fundamental
   pos: adj
 - lemma: експорт
   ipa: /ˈɛkspɔrt/
-  translation: ''
+  translation: export
   pos: noun
   gender: m
 - lemma: занепад
   ipa: /zanˈɛpad/
-  translation: ''
+  translation: decline
   pos: noun
   gender: m
 - lemma: занепокоєння
   ipa: /zanɛpɔkˈɔjɛnnja/
-  translation: ''
+  translation: worry, concern
   pos: noun
   gender: n
 - lemma: застрягти
   ipa: /zastrˈjaɦtɪ/
-  translation: ''
+  translation: to get stuck
   pos: verb
 - lemma: модернізація
   ipa: /mɔdɛrnizˈat͡sija/
-  translation: ''
+  translation: modernization
   pos: noun
   gender: f
+- lemma: набрати
+  ipa: /nabrˈatɪ/
+  translation: to collect, to dial (perfective)
+  pos: verb
 - lemma: навик
   ipa: /nˈaʋɪk/
   translation: ''
@@ -79,55 +83,51 @@ items:
   gender: m
 - lemma: насильницький
   ipa: /nasˈɪlʲnɪt͡sʲkɪj/
-  translation: ''
+  translation: violent, forced
   pos: adj
 - lemma: онлайн-продаж
   ipa: /ɔnlajn-prˈɔdaʒ/
-  translation: ''
+  translation: online sale
   pos: noun
 - lemma: оптимізація
   ipa: /ɔptɪmizˈat͡sija/
-  translation: ''
+  translation: optimization
   pos: noun
   gender: f
 - lemma: охопити
   ipa: /ɔxɔpˈɪtɪ/
-  translation: ''
+  translation: to cover, to embrace, to involve
   pos: verb
 - lemma: переконаний
   ipa: /pɛrɛkˈɔnanɪj/
-  translation: ''
+  translation: convinced
   pos: adj
 - lemma: перетворення
   ipa: /pɛrɛtʋˈɔrɛnnja/
-  translation: ''
+  translation: transformation
   pos: noun
   gender: n
 - lemma: плановий
   ipa: /plˈanɔʋɪj/
-  translation: ''
+  translation: planned, scheduled
   pos: adj
 - lemma: погіршення
   ipa: /pɔɦˈirʃɛnnja/
-  translation: ''
+  translation: deterioration
   pos: noun
   gender: n
 - lemma: податковий
   ipa: /pɔdatkˈɔʋɪj/
-  translation: ''
+  translation: tax (adj)
   pos: adj
 - lemma: покращення
   ipa: /pɔkrˈaʃt͡ʃɛnnja/
-  translation: ''
+  translation: improvement
   pos: noun
   gender: n
-- lemma: покращитися
-  ipa: /pɔkrˈaʃt͡ʃɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: прискорюватися
   ipa: /prɪskˈɔrjuʋatɪsja/
-  translation: ''
+  translation: to accelerate (passive)
   pos: verb
 - lemma: підход
   ipa: /pidxɔd/
@@ -135,97 +135,101 @@ items:
   pos: noun
 - lemma: реалія
   ipa: /rɛˈalija/
-  translation: ''
+  translation: reality (fact/thing)
   pos: noun
 - lemma: регрес
   ipa: /rɛɦrˈɛs/
-  translation: ''
+  translation: regress
   pos: noun
   gender: m
 - lemma: розмовно
   ipa: /rɔzmɔʋnɔ/
-  translation: ''
+  translation: colloquially
   pos: adv
 - lemma: сектор
   ipa: /sˈɛktɔr/
-  translation: ''
+  translation: sector
   pos: noun
   gender: m
 - lemma: скорочуватися
   ipa: /skɔrˈɔt͡ʃuʋatɪsja/
-  translation: ''
+  translation: to shorten (oneself), to decrease
   pos: verb
 - lemma: скрізь
   ipa: /skrizʲ/
-  translation: ''
+  translation: everywhere
   pos: pron
 - lemma: спадання
   ipa: /spadˈannja/
-  translation: ''
+  translation: decline, reduction
   pos: noun
   gender: n
 - lemma: сповільнення
   ipa: /spɔʋˈilʲnɛnnja/
-  translation: ''
+  translation: slowing down, deceleration
   pos: noun
   gender: n
 - lemma: сповільнитися
   ipa: /spɔʋˈilʲnɪtɪsja/
-  translation: ''
+  translation: to slow down (perfective)
   pos: verb
 - lemma: споживач
   ipa: /spɔʒɪʋˈat͡ʃ/
-  translation: ''
+  translation: consumer
   pos: noun
 - lemma: спостерігатися
   ipa: /spɔstɛriɦˈatɪsja/
-  translation: ''
+  translation: to be observed
   pos: verb
 - lemma: сприяти
   ipa: /sprɪˈjatɪ/
-  translation: ''
+  translation: to facilitate, to contribute to
   pos: verb
 - lemma: стабілізація
   ipa: /stabilizˈat͡sija/
-  translation: ''
+  translation: stabilization
   pos: noun
   gender: f
 - lemma: стрімкий
   ipa: /strimkˈɪj/
-  translation: ''
+  translation: rapid, steep, swift
   pos: adj
 - lemma: супроводжуватися
   ipa: /suprɔʋˈɔdʒuʋatɪsja/
-  translation: ''
+  translation: to be accompanied
   pos: verb
 - lemma: тимчасовий
   ipa: /tɪmt͡ʃasˈɔʋɪj/
-  translation: ''
+  translation: temporary
   pos: adj
+- lemma: тренд
+  ipa: /trɛnd/
+  translation: trend
+  pos: noun
 - lemma: управління
   ipa: /upraʋlˈinnja/
-  translation: ''
+  translation: management, department, steering
   pos: noun
   gender: n
 - lemma: євроінтеграція
   ipa: /jɛʋrɔintɛɦrˈat͡sija/
-  translation: ''
+  translation: European integration
   pos: noun
   gender: f
 - lemma: інвестиційний
   ipa: /inʋɛstɪt͡sˈijnɪj/
-  translation: ''
+  translation: investment (adj)
   pos: adj
 - lemma: індустріальний
   ipa: /industriˈalʲnɪj/
-  translation: ''
+  translation: industrial
   pos: adj
 - lemma: інфляція
   ipa: /inflˈjat͡sija/
-  translation: ''
+  translation: inflation
   pos: noun
   gender: f
 - lemma: ініціювати
   ipa: /init͡sijuʋˈatɪ/
-  translation: ''
+  translation: to initiate
   pos: verb

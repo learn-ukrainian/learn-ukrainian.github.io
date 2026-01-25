@@ -2,19 +2,23 @@ module: 42-adverbial-participles-imperfective
 level: B1
 version: '2.0'
 items:
+- lemma: активно
+  ipa: /aktˈɪʋnɔ/
+  translation: actively
+  pos: adv
 - lemma: апарат
   ipa: /aparˈat/
-  translation: ''
+  translation: apparatus, device
   pos: noun
   gender: m
 - lemma: арія
   ipa: /ˈarija/
-  translation: ''
+  translation: aria
   pos: noun
   gender: f
 - lemma: асиміляція
   ipa: /asɪmilˈjat͡sija/
-  translation: ''
+  translation: assimilation
   pos: noun
   gender: f
 - lemma: ачи
@@ -23,16 +27,16 @@ items:
   pos: noun
 - lemma: багатошаровий
   ipa: /baɦatɔʃarˈɔʋɪj/
-  translation: ''
+  translation: multi-layered
   pos: adj
 - lemma: борець
   ipa: /bɔrˈɛt͡sʲ/
-  translation: ''
+  translation: fighter, wrestler
   pos: noun
   gender: m
 - lemma: братися
   ipa: /brˈatɪsja/
-  translation: ''
+  translation: to undertake, to set about
   pos: verb
 - lemma: біг-ючи
   ipa: /biɦ-jut͡ʃɪ/
@@ -48,40 +52,56 @@ items:
   pos: verb
 - lemma: біжачи
   ipa: /biʒat͡ʃɪ/
-  translation: ''
+  translation: running
   pos: verb
 - lemma: валуєвський
   ipa: /ʋalˈujɛʋsʲkɪj/
-  translation: ''
+  translation: Valuev (adj)
   pos: adj
 - lemma: визволяти
   ipa: /ʋɪzʋɔlˈjatɪ/
-  translation: ''
+  translation: to liberate, to free
   pos: verb
 - lemma: визволяючи
   ipa: /ʋɪzʋɔlˈjajut͡ʃɪ/
-  translation: ''
+  translation: liberating
   pos: verb
 - lemma: визначатися
   ipa: /ʋɪznat͡ʃˈatɪsja/
-  translation: ''
+  translation: to be defined, to determine oneself
   pos: verb
 - lemma: визначення
   ipa: /ʋˈɪznat͡ʃɛnnja/
-  translation: ''
+  translation: definition, determination
   pos: noun
   gender: n
 - lemma: визначитися
   ipa: /ʋˈɪznat͡ʃɪtɪsja/
-  translation: ''
+  translation: to make up one's mind
+  pos: verb
+- lemma: виникати
+  ipa: /ʋɪnɪkatɪ/
+  translation: to arise, to occur
+  pos: verb
+- lemma: виписувати
+  ipa: /ʋɪpˈɪsuʋatɪ/
+  translation: to write out (imperfective)
   pos: verb
 - lemma: виступаючи
   ipa: /ʋɪstupˈajut͡ʃɪ/
-  translation: ''
+  translation: performing, speaking
+  pos: verb
+- lemma: включаючи
+  ipa: /ʋkljut͡ʃˈajut͡ʃɪ/
+  translation: including
   pos: verb
 - lemma: вмиваючись
   ipa: /ʋmɪʋˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: washing oneself
+  pos: verb
+- lemma: втомлюватися
+  ipa: /ʋtˈɔmljuʋatɪsja/
+  translation: to get tired (imperfective)
   pos: verb
 - lemma: вши
   ipa: /ʋʃɪ/
@@ -89,108 +109,120 @@ items:
   pos: noun
 - lemma: відволікати
   ipa: /ʋidʋɔlikˈatɪ/
-  translation: ''
+  translation: to distract
   pos: verb
 - lemma: готуючись
   ipa: /ɦɔtˈujut͡ʃɪsʲ/
-  translation: ''
+  translation: getting ready
   pos: verb
 - lemma: гуляючи
   ipa: /ɦulˈjajut͡ʃɪ/
-  translation: ''
+  translation: walking
   pos: verb
 - lemma: доброволець
   ipa: /dɔbrɔʋˈɔlɛt͡sʲ/
-  translation: ''
+  translation: volunteer
   pos: noun
   gender: m
 - lemma: допускатися
   ipa: /dɔpuskˈatɪsja/
-  translation: ''
+  translation: to be allowed, to commit (an error)
   pos: verb
 - lemma: думаючи
   ipa: /dˈumajut͡ʃɪ/
-  translation: ''
+  translation: thinking
   pos: verb
 - lemma: дієприслівниковий
   ipa: /dijɛprɪsliʋnɪkˈɔʋɪj/
-  translation: ''
+  translation: gerundial
   pos: adj
 - lemma: емський
   ipa: /ɛmsʲkɪj/
-  translation: ''
+  translation: Ems (adj)
   pos: adj
 - lemma: замерзти
   ipa: /zamˈɛrztɪ/
-  translation: ''
+  translation: to freeze
+  pos: verb
+- lemma: засмутитися
+  ipa: /zasmutˈɪtɪsja/
+  translation: to get upset
   pos: verb
 - lemma: захоплюватися
   ipa: /zaxˈɔpljuʋatɪsja/
-  translation: ''
+  translation: to be fascinated, to hobby
+  pos: verb
+- lemma: зацікавитися
+  ipa: /zat͡sikˈaʋɪtɪsja/
+  translation: to get interested
   pos: verb
 - lemma: зберігаючи
   ipa: /zbɛriɦˈajut͡ʃɪ/
-  translation: ''
+  translation: preserving
   pos: verb
 - lemma: зворотній
   ipa: /zʋɔrˈɔtnij/
-  translation: ''
+  translation: reverse, recurring
   pos: adj
 - lemma: йдучи
   ipa: /jdut͡ʃˈɪ/
-  translation: ''
+  translation: walking
   pos: verb
 - lemma: компактний
   ipa: /kɔmpˈaktnɪj/
-  translation: ''
+  translation: compact
   pos: adj
 - lemma: концентруватися
   ipa: /kɔnt͡sɛntruʋˈatɪsja/
-  translation: ''
+  translation: to concentrate
   pos: verb
 - lemma: марширувати
   ipa: /marʃɪruʋˈatɪ/
-  translation: ''
+  translation: to march
   pos: verb
 - lemma: мелодійність
   ipa: /mɛlɔdˈijnistʲ/
-  translation: ''
+  translation: melodiousness
   pos: noun
   gender: f
 - lemma: незвично
   ipa: /nɛzʋˈɪt͡ʃnɔ/
-  translation: ''
+  translation: unusually
   pos: adv
 - lemma: незмінюваний
   ipa: /nɛzmˈinjuʋanɪj/
-  translation: ''
+  translation: unchangeable
   pos: adj
 - lemma: незмінюваність
   ipa: /nɛzmˈinjuʋanistʲ/
-  translation: ''
+  translation: immutability
   pos: noun
   gender: f
 - lemma: неперервність
   ipa: /nɛpɛrˈɛrʋnistʲ/
-  translation: ''
+  translation: continuity
   pos: noun
   gender: f
 - lemma: одягаючись
   ipa: /ɔdjaɦˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: getting dressed
   pos: verb
 - lemma: описуючи
   ipa: /ɔpˈɪsujut͡ʃɪ/
-  translation: ''
+  translation: describing
   pos: verb
 - lemma: опора
   ipa: /ɔpˈɔra/
-  translation: ''
+  translation: support, prop
   pos: noun
   gender: f
+- lemma: освічений
+  ipa: /ɔsʋˈit͡ʃɛnɪj/
+  translation: educated
+  pos: adj
 - lemma: офіційно-діловий
   ipa: /ɔfit͡sˈijnɔ-dilɔʋɪj/
-  translation: ''
+  translation: official-business (style)
   pos: adj
 - lemma: писа-
   ipa: /pɪsa-/
@@ -202,11 +234,11 @@ items:
   pos: verb
 - lemma: писаючи
   ipa: /pɪsajut͡ʃɪ/
-  translation: ''
+  translation: writing (gerund)
   pos: verb
 - lemma: писемність
   ipa: /pɪsˈɛmnistʲ/
-  translation: ''
+  translation: literacy, writing system
   pos: noun
   gender: f
 - lemma: пиш-
@@ -219,43 +251,48 @@ items:
   pos: verb
 - lemma: пишучи
   ipa: /pˈɪʃut͡ʃɪ/
-  translation: ''
+  translation: writing (gerund)
   pos: verb
 - lemma: плавність
   ipa: /plˈaʋnistʲ/
-  translation: ''
+  translation: smoothness
   pos: noun
   gender: f
 - lemma: плутання
   ipa: /plˈutannja/
-  translation: ''
+  translation: confusing, tangling
   pos: noun
   gender: n
 - lemma: повторюючи
   ipa: /pɔʋtˈɔrjujut͡ʃɪ/
-  translation: ''
+  translation: repeating
   pos: verb
 - lemma: полк
   ipa: /pɔlk/
-  translation: ''
+  translation: regiment
   pos: noun
   gender: m
 - lemma: применшити
   ipa: /prɪmˈɛnʃɪtɪ/
-  translation: ''
+  translation: to downplay, to underestimate
   pos: verb
+- lemma: пропаганда
+  ipa: /prɔpaɦˈanda/
+  translation: propaganda
+  pos: noun
+  gender: f
 - lemma: публіцистика
   ipa: /publit͡sˈɪstɪka/
-  translation: ''
+  translation: publicism, journalism
   pos: noun
   gender: f
 - lemma: публіцистичний
   ipa: /publit͡sɪstˈɪt͡ʃnɪj/
-  translation: ''
+  translation: journalistic (style)
   pos: adj
 - lemma: пісенний
   ipa: /pisˈɛnnɪj/
-  translation: ''
+  translation: song (adj)
   pos: adj
 - lemma: радіючись
   ipa: /radijut͡ʃɪsʲ/
@@ -263,27 +300,27 @@ items:
   pos: verb
 - lemma: рефлексивний
   ipa: /rɛflɛksˈɪʋnɪj/
-  translation: ''
+  translation: reflexive
   pos: adj
 - lemma: роблячи
   ipa: /rˈɔbljat͡ʃɪ/
-  translation: ''
+  translation: making, doing
   pos: verb
 - lemma: селянський
   ipa: /sɛlˈjansʲkɪj/
-  translation: ''
+  translation: peasant (adj)
   pos: adj
 - lemma: сидячи
   ipa: /sɪdjat͡ʃˈɪ/
-  translation: ''
+  translation: sitting (gerund)
   pos: verb
 - lemma: слухаючи
   ipa: /slˈuxajut͡ʃɪ/
-  translation: ''
+  translation: listening
   pos: verb
 - lemma: сміючись
   ipa: /smijut͡ʃˈɪsʲ/
-  translation: ''
+  translation: laughing
   pos: verb
 - lemma: спачи
   ipa: /spat͡ʃɪ/
@@ -291,73 +328,82 @@ items:
   pos: verb
 - lemma: сплячий
   ipa: /splˈjat͡ʃɪj/
-  translation: ''
+  translation: sleeping (adj)
   pos: adj
 - lemma: співачка
   ipa: /spiʋˈat͡ʃka/
-  translation: ''
+  translation: singer (female)
   pos: noun
   gender: f
 - lemma: співаючи
   ipa: /spiʋˈajut͡ʃɪ/
-  translation: ''
+  translation: singing (gerund)
   pos: verb
 - lemma: стверджуючи
   ipa: /stʋˈɛrdʒujut͡ʃɪ/
-  translation: ''
+  translation: asserting, stating
   pos: verb
 - lemma: стислий
   ipa: /stˈɪslɪj/
-  translation: ''
+  translation: concise, brief, compressed
   pos: adj
 - lemma: стисло
   ipa: /stˈɪslɔ/
-  translation: ''
+  translation: concisely, briefly
   pos: adv
 - lemma: сумуючи
   ipa: /sumˈujut͡ʃɪ/
-  translation: ''
+  translation: being sad, missing
+  pos: verb
+- lemma: супроводжувати
+  ipa: /suprɔʋˈɔdʒuʋatɪ/
+  translation: to accompany
   pos: verb
 - lemma: супровідний
   ipa: /suprɔʋˈidnɪj/
-  translation: ''
+  translation: accompanying (adj)
   pos: adj
 - lemma: таємно
   ipa: /taˈjɛmnɔ/
-  translation: ''
+  translation: secretly
   pos: adv
 - lemma: темний
   ipa: /tˈɛmnɪj/
-  translation: ''
+  translation: dark
   pos: adj
 - lemma: тепліти
   ipa: /tɛplˈitɪ/
-  translation: ''
+  translation: to get warmer
   pos: verb
 - lemma: указ
   ipa: /ukˈaz/
-  translation: ''
+  translation: decree, edict
   pos: noun
   gender: m
 - lemma: усміхаючись
   ipa: /usmixˈajut͡ʃɪsʲ/
-  translation: ''
+  translation: smiling
   pos: verb
 - lemma: фонетичний
   ipa: /fɔnɛtˈɪt͡ʃnɪj/
-  translation: ''
+  translation: phonetic
   pos: adj
 - lemma: функціональний
   ipa: /funkt͡siɔnˈalʲnɪj/
-  translation: ''
+  translation: functional
   pos: adj
 - lemma: функціонувати
   ipa: /funkt͡siɔnuʋˈatɪ/
-  translation: ''
+  translation: to function
   pos: verb
+- lemma: художник
+  ipa: /xudˈɔʒnɪk/
+  translation: painter, artist (male)
+  pos: noun
+  gender: m
 - lemma: циркуляр
   ipa: /t͡sɪrkulˈjar/
-  translation: ''
+  translation: circular (document)
   pos: noun
   gender: m
 - lemma: ши
@@ -368,17 +414,26 @@ items:
   ipa: /jut͡ʃɪ/
   translation: ''
   pos: noun
+- lemma: яскраво
+  ipa: /jaskrˈaʋɔ/
+  translation: brightly, vividly
+  pos: adv
 - lemma: ячати
   ipa: /jat͡ʃˈatɪ/
-  translation: ''
+  translation: to cry (as a bird), to moan
   pos: verb
 - lemma: ігорів
   ipa: /ˈiɦɔriʋ/
-  translation: ''
+  translation: Ihor's (adj)
   pos: adj
+- lemma: імперія
+  ipa: /impˈɛrija/
+  translation: empire
+  pos: noun
+  gender: f
 - lemma: інформативність
   ipa: /infɔrmatˈɪʋnistʲ/
-  translation: ''
+  translation: informativeness
   pos: noun
   gender: f
 - lemma: їдячати
