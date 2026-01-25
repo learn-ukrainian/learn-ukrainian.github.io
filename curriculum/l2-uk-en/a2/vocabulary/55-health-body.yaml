@@ -6,14 +6,6 @@ items:
   ipa: /a-a-a-ɪj/
   translation: ''
   pos: adj
-- lemma: а-а-ий
-  ipa: /a-a-ɪj/
-  translation: ''
-  pos: adj
-- lemma: ай
-  ipa: /aj/
-  translation: ''
-  pos: noun
 - lemma: антибіотик
   ipa: /antɪbiˈɔtɪk/
   translation: antibiotic
@@ -30,10 +22,6 @@ items:
   ipa: /ʋɪsɪpatɪsja/
   translation: to get enough sleep
   pos: verb
-- lemma: висококваліфікований
-  ipa: /ʋɪsɔkɔkʋalifikˈɔʋanɪj/
-  translation: highly qualified
-  pos: adj
 - lemma: вірусний
   ipa: /ʋˈirusnɪj/
   translation: viral
@@ -106,10 +94,6 @@ items:
   ipa: /mˈazatɪ/
   translation: to smear, to spread
   pos: verb
-- lemma: медик
-  ipa: /mˈɛdɪk/
-  translation: medic, medical worker
-  pos: noun
 - lemma: милиця
   ipa: /mˈɪlɪt͡sja/
   translation: crutch

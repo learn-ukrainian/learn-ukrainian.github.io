@@ -2,11 +2,6 @@ module: 71-emotional-intelligence
 level: B1
 version: '2.0'
 items:
-- lemma: взаєморозуміння
-  ipa: /ʋzajɛmɔrɔzumˈinnja/
-  translation: mutual understanding
-  pos: noun
-  gender: n
 - lemma: вибачатися
   ipa: /ʋɪbat͡ʃˈatɪsja/
   translation: to apologize
@@ -95,10 +90,6 @@ items:
   translation: criticism
   pos: noun
   gender: f
-- lemma: міжособистісний
-  ipa: /miʒɔsɔbˈɪstisnɪj/
-  translation: interpersonal
-  pos: adj
 - lemma: надалі
   ipa: /nadali/
   translation: furthermore, in the future
@@ -172,11 +163,6 @@ items:
   ipa: /spraʋlˈjatɪsja/
   translation: to cope, to manage (imperfective)
   pos: verb
-- lemma: співпереживання
-  ipa: /spiʋpɛrɛʒɪʋˈannja/
-  translation: empathy
-  pos: noun
-  gender: n
 - lemma: співпрацювати
   ipa: /spiʋprat͡sjuʋˈatɪ/
   translation: to cooperate

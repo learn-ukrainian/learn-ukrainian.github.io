@@ -37,11 +37,6 @@ items:
   ipa: /ʋstɪɦˈatɪ/
   translation: to be in time
   pos: verb
-- lemma: го
-  ipa: /ɦɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: губитися
   ipa: /ɦubˈɪtɪsja/
   translation: to get lost
@@ -161,10 +156,6 @@ items:
   translation: the last thing
   pos: noun
   gender: n
-- lemma: от
-  ipa: /ɔt/
-  translation: here, there, well (particle)
-  pos: part
 - lemma: очікувати
   ipa: /ɔt͡ʃˈikuʋatɪ/
   translation: to expect, to wait for

@@ -11,11 +11,6 @@ items:
   ipa: /ˈatɔm/
   translation: atom
   pos: noun
-- lemma: багатозначність
-  ipa: /baɦatɔznˈat͡ʃnistʲ/
-  translation: polysemy, ambiguity
-  pos: noun
-  gender: f
 - lemma: бездоганно
   ipa: /bɛzdɔɦˈannɔ/
   translation: flawlessly, perfectly
@@ -180,11 +175,6 @@ items:
   translation: curve
   pos: noun
   gender: f
-- lemma: ля
-  ipa: /lja/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: майстер
   ipa: /mˈajstɛr/
   translation: master, craftsman

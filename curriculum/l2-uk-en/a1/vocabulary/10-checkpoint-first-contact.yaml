@@ -20,10 +20,6 @@ items:
   translation: green
   pos: noun
   gender: m
-- lemma: иш
-  ipa: /ɪʃ/
-  translation: ''
-  pos: noun
 - lemma: латте
   ipa: /lattɛ/
   translation: latte

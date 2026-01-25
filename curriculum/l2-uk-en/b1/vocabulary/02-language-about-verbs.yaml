@@ -95,10 +95,6 @@ items:
   ipa: /ɦɔlɔʋnˈɪj/
   translation: main, principal
   pos: adj
-- lemma: дв
-  ipa: /dʋ/
-  translation: ''
-  pos: noun
 - lemma: динамічніший
   ipa: /dɪnamˈit͡ʃniʃɪj/
   translation: more dynamic
@@ -234,14 +230,6 @@ items:
   ipa: /mɪnˈutɪ/
   translation: to pass (perfective)
   pos: verb
-- lemma: му
-  ipa: /mu/
-  translation: ''
-  pos: noun
-- lemma: мч
-  ipa: /mt͡ʃ/
-  translation: ''
-  pos: noun
 - lemma: наказовий
   ipa: /nakazˈɔʋɪj/
   translation: imperative (mood)
@@ -254,10 +242,6 @@ items:
   ipa: /nastˈupnɪj/
   translation: next, following
   pos: adj
-- lemma: ндв
-  ipa: /ndʋ/
-  translation: ''
-  pos: noun
 - lemma: недоконаний
   ipa: /nɛdɔkˈɔnanɪj/
   translation: imperfective (aspect)
@@ -426,10 +410,6 @@ items:
   translation: duration
   pos: noun
   gender: f
-- lemma: тч
-  ipa: /tt͡ʃ/
-  translation: ''
-  pos: noun
 - lemma: уважно
   ipa: /uʋˈaʒnɔ/
   translation: attentively, carefully

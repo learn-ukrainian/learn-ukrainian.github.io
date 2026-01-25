@@ -6,10 +6,6 @@ items:
   ipa: /aʋtɛntˈɪt͡ʃnɪj/
   translation: authentic
   pos: adj
-- lemma: ачий
-  ipa: /at͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: бажаючий
   ipa: /baʒˈajut͡ʃɪj/
   translation: wishing, wanting (person)
@@ -97,10 +93,6 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: дієприкметниковий
-  ipa: /dijɛprɪkmɛtnɪkˈɔʋɪj/
-  translation: participial
-  pos: adj
 - lemma: забруднений
   ipa: /zabrˈudnɛnɪj/
   translation: polluted, dirty
@@ -301,10 +293,6 @@ items:
   ipa: /pɛrɛɦljadˈatɪ/
   translation: to view, to review (imperfective)
   pos: verb
-- lemma: перефразовувати
-  ipa: /pɛrɛfrazˈɔʋuʋatɪ/
-  translation: to paraphrase
-  pos: verb
 - lemma: перефразування
   ipa: /pɛrɛfrazuʋˈannja/
   translation: paraphrasing
@@ -489,10 +477,6 @@ items:
   translation: participation
   pos: noun
   gender: f
-- lemma: учий
-  ipa: /ut͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: чинний
   ipa: /t͡ʃˈɪnnɪj/
   translation: effective, current (law)
@@ -505,10 +489,6 @@ items:
   ipa: /ʃtˈut͡ʃnɔ/
   translation: artificially
   pos: adv
-- lemma: ючий
-  ipa: /jut͡ʃɪj/
-  translation: ''
-  pos: adj
 - lemma: ячий
   ipa: /jat͡ʃɪj/
   translation: someone's (rare/dialect)

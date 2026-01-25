@@ -137,11 +137,6 @@ items:
   ipa: /prɔdˈjusɛr/
   translation: producer
   pos: noun
-- lemma: псюк
-  ipa: /psjuk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ренесанс
   ipa: /rɛnɛsˈans/
   translation: Renaissance
@@ -203,11 +198,6 @@ items:
   ipa: /tɔrknˈutɪsja/
   translation: to touch (perfective)
   pos: verb
-- lemma: фолк
-  ipa: /fɔlk/
-  translation: folk
-  pos: noun
-  gender: m
 - lemma: хіп-хоп
   ipa: /xip-xɔp/
   translation: hip hop

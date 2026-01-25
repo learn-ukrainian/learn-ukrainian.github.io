@@ -42,10 +42,6 @@ items:
   translation: mentioning
   pos: noun
   gender: n
-- lemma: зро-
-  ipa: /zrɔ-/
-  translation: ''
-  pos: noun
 - lemma: контекстний
   ipa: /kɔntˈɛkstnɪj/
   translation: contextual

@@ -46,19 +46,10 @@ items:
   ipa: /kɔrˈɔtʃɪj/
   translation: shorter (adj)
   pos: adj
-- lemma: ле
-  ipa: /lɛ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: най
   ipa: /naj/
   translation: the most
   pos: part
-- lemma: най-
-  ipa: /naj-/
-  translation: ''
-  pos: noun
 - lemma: найбільше
   ipa: /najbˈilʲʃɛ/
   translation: most of all
@@ -78,10 +69,6 @@ items:
 - lemma: найгірший
   ipa: /najɦˈirʃɪj/
   translation: the worst
-  pos: adj
-- lemma: найдивовижніший
-  ipa: /najdɪʋɔʋɪʒniʃɪj/
-  translation: the most amazing
   pos: adj
 - lemma: найдовший
   ipa: /najdˈɔʋʃɪj/

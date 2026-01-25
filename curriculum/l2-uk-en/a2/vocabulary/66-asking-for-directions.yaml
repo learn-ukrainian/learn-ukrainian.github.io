@@ -2,10 +2,6 @@ module: 66-asking-for-directions
 level: A2
 version: '2.0'
 items:
-- lemma: березняківський
-  ipa: /bɛrɛznjakˈiʋsʲkɪj/
-  translation: ''
-  pos: adj
 - lemma: заблукалий
   ipa: /zablukˈalɪj/
   translation: ''

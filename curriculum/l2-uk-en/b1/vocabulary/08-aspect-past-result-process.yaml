@@ -11,10 +11,6 @@ items:
   translation: continuity
   pos: noun
   gender: f
-- lemma: би
-  ipa: /bɪ/
-  translation: would (particle)
-  pos: part
 - lemma: боятися
   ipa: /bɔˈjatɪsja/
   translation: to be afraid
@@ -99,11 +95,6 @@ items:
   translation: diploma
   pos: noun
   gender: m
-- lemma: дніпропетровщина
-  ipa: /dniprɔpɛtrˈɔʋʃt͡ʃɪna/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: довше
   ipa: /dˈɔʋʃɛ/
   translation: longer
@@ -485,11 +476,6 @@ items:
   translation: testimony, evidence
   pos: noun
   gender: n
-- lemma: семестр
-  ipa: /sɛmˈɛstr/
-  translation: semester
-  pos: noun
-  gender: m
 - lemma: скосити
   ipa: /skɔsˈɪtɪ/
   translation: to mow, to cut down
@@ -541,10 +527,6 @@ items:
   translation: toloka (communal work)
   pos: noun
   gender: f
-- lemma: торік
-  ipa: /tɔrˈik/
-  translation: last year
-  pos: adv
 - lemma: точний
   ipa: /tˈɔt͡ʃnɪj/
   translation: accurate, exact, precise

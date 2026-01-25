@@ -21,10 +21,6 @@ items:
   translation: asphalt
   pos: noun
   gender: m
-- lemma: багатоповерхівка
-  ipa: /baɦatɔpɔʋɛrxˈiʋka/
-  translation: high-rise building
-  pos: noun
 - lemma: баскетбольний
   ipa: /baskɛtbˈɔlʲnɪj/
   translation: basketball (adj)
@@ -45,11 +41,6 @@ items:
   ipa: /ʋˈaɦɪ/
   translation: ''
   pos: noun
-- lemma: вднг
-  ipa: /ʋdnɦ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: велодоріжка
   ipa: /ʋɛlɔdɔriʒka/
   translation: bike path
@@ -62,11 +53,6 @@ items:
   ipa: /ʋɛlɔsɪpˈɛdnɪj/
   translation: bicycle (adj)
   pos: adj
-- lemma: велоінфраструктура
-  ipa: /ʋɛlɔinfrastruktura/
-  translation: cycling infrastructure
-  pos: noun
-  gender: f
 - lemma: витривалість
   ipa: /ʋɪtrɪʋˈalistʲ/
   translation: endurance, stamina
@@ -129,11 +115,6 @@ items:
   translation: dopamine
   pos: noun
   gender: m
-- lemma: експоцентр
-  ipa: /ɛkspɔt͡sˈɛntr/
-  translation: expo center
-  pos: noun
-  gender: m
 - lemma: еліна
   ipa: /ɛlina/
   translation: Elina
@@ -175,11 +156,6 @@ items:
   ipa: /zrut͡ʃnˈiʃɪj/
   translation: more convenient (adj)
   pos: adj
-- lemma: зсж
-  ipa: /zsʒ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: йог
   ipa: /jɔɦ/
   translation: yogi
@@ -303,10 +279,6 @@ items:
   ipa: /pˈalɛt͡sʲ/
   translation: finger, toe
   pos: noun
-- lemma: перезавантажити
-  ipa: /pɛrɛzaʋantaʒɪtɪ/
-  translation: to restart, to reboot
-  pos: verb
 - lemma: популярно
   ipa: /pɔpulˈjarnɔ/
   translation: popularly
@@ -494,10 +466,6 @@ items:
   translation: Intersport
   pos: noun
   gender: m
-- lemma: інфаркт
-  ipa: /infˈarkt/
-  translation: heart attack
-  pos: noun
 - lemma: ґрунтовий
   ipa: /gruntɔʋˈɪj/
   translation: soil (adj), unpaved

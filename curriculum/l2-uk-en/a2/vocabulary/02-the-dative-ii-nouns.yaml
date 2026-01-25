@@ -168,10 +168,6 @@ items:
   translation: colleague
   pos: noun
   gender: m
-- lemma: контекст
-  ipa: /kɔntˈɛkst/
-  translation: context
-  pos: noun
 - lemma: кот
   ipa: /kɔt/
   translation: ''
@@ -284,11 +280,6 @@ items:
   translation: Olya (name)
   pos: noun
   gender: f
-- lemma: онук
-  ipa: /ɔnˈuk/
-  translation: grandson
-  pos: noun
-  gender: m
 - lemma: офіційний
   ipa: /ɔfit͡sˈijnɪj/
   translation: official

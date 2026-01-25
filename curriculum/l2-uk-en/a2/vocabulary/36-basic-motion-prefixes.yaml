@@ -21,10 +21,6 @@ items:
   translation: gate
   pos: noun
   gender: f
-- lemma: в'-
-  ipa: /ʋ-/
-  translation: ''
-  pos: noun
 - lemma: в'їжджати
   ipa: /ʋjiʒdʒˈatɪ/
   translation: to drive in, to enter (by vehicle)
@@ -37,10 +33,6 @@ items:
   ipa: /ʋɪʋantˈaʒuʋatɪ/
   translation: to unload
   pos: verb
-- lemma: високорозвинений
-  ipa: /ʋɪsɔkɔrɔzʋˈɪnɛnɪj/
-  translation: highly developed
-  pos: adj
 - lemma: виїзд
   ipa: /ʋˈɪjizd/
   translation: departure, exit
@@ -93,16 +85,6 @@ items:
   ipa: /zˈɔʋniʃnij/
   translation: external, outer
   pos: adj
-- lemma: инка
-  ipa: /ɪnka/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: инок
-  ipa: /ɪnɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: компактніший
   ipa: /kɔmpˈaktniʃɪj/
   translation: more compact
@@ -115,11 +97,6 @@ items:
   ipa: /kˈɔrɔtkɔ/
   translation: briefly
   pos: adv
-- lemma: мі
-  ipa: /mi/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: парковк
   ipa: /parkɔʋk/
   translation: ''

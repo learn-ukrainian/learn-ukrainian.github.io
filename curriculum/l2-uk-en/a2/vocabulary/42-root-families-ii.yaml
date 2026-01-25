@@ -2,162 +2,146 @@ module: 42-root-families-ii
 level: A2
 version: '2.0'
 items:
-  - lemma: дум-
-    ipa: /dum-/
-    translation: root related to thought
-    pos: noun
-  - lemma: говор-
-    ipa: /ɦɔʋɔr-/
-    translation: root related to speech
-    pos: noun
-  - lemma: мов-
-    ipa: /mɔʋ-/
-    translation: root related to language/speech
-    pos: noun
-  - lemma: слух-
-    ipa: /slux-/
-    translation: root related to hearing
-    pos: noun
-  - lemma: думка
-    ipa: /dˈumka/
-    translation: thought, opinion
-    pos: noun
-    gender: f
-  - lemma: думати
-    ipa: /dˈumatɪ/
-    translation: to think
-    pos: verb
-  - lemma: роздуми
-    ipa: /rˈɔzdumɪ/
-    translation: reflections, thoughts
-    pos: noun
-    gender: m-pl
-  - lemma: задуматися
-    ipa: /zadˈumatɪsʲa/
-    translation: to ponder, to think deeply
-    pos: verb
-  - lemma: щоденник
-    ipa: /ʃt͡ʃɔdˈɛnnɪk/
-    translation: diary
-    pos: noun
-    gender: m
-  - lemma: говорити
-    ipa: /ɦɔʋɔrˈɪtɪ/
-    translation: to speak, to talk
-    pos: verb
-  - lemma: розмова
-    ipa: /rɔzmˈɔʋa/
-    translation: conversation
-    pos: noun
-    gender: f
-  - lemma: мова
-    ipa: /mˈɔʋa/
-    translation: language
-    pos: noun
-    gender: f
-  - lemma: промовець
-    ipa: /prɔmˈɔʋɛt͡sʲ/
-    translation: speaker, orator
-    pos: noun
-    gender: m
-  - lemma: відмова
-    ipa: /ʋidmˈɔʋa/
-    translation: refusal
-    pos: noun
-    gender: f
-  - lemma: вимова
-    ipa: /ʋɪmˈɔʋa/
-    translation: pronunciation
-    pos: noun
-    gender: f
-  - lemma: слухати
-    ipa: /slˈuxatɪ/
-    translation: to listen
-    pos: verb
-  - lemma: чути
-    ipa: /t͡ʃˈutɪ/
-    translation: to hear
-    pos: verb
-  - lemma: слухач
-    ipa: /sluxˈat͡ʃ/
-    translation: listener
-    pos: noun
-    gender: m
-  - lemma: слухняний
-    ipa: /sluxnʲˈanɪj/
-    translation: obedient
-    pos: adj
-  - lemma: прислухатися
-    ipa: /prɪslˈuxatɪsʲa/
-    translation: to listen closely, to heed
-    pos: verb
-  - lemma: логічний
-    ipa: /lɔɦˈit͡ʃnɪj/
-    translation: logical
-    pos: adj
-  - lemma: професійний
-    ipa: /prɔfɛsˈijnɪj/
-    translation: professional
-    pos: adj
-  - lemma: термінологія
-    ipa: /tɛrmіnɔlɔɦіja/
-    translation: terminology
-    pos: noun
-    gender: f
-  - lemma: спілкування
-    ipa: /spіlkuʋannja/
-    translation: communication
-    pos: noun
-    gender: n
-  - lemma: вигляд
-    ipa: /ʋɪɦljad/
-    translation: appearance
-    pos: noun
-    gender: m
-  - lemma: відчуття
-    ipa: /ʋid͡ʃuttja/
-    translation: feeling, sensation
-    pos: noun
-    gender: n
-  - lemma: розмова
-    ipa: /rɔzmɔʋa/
-    translation: conversation
-    pos: noun
-    gender: f
-  - lemma: подія
-    ipa: /pɔdija/
-    translation: event
-    pos: noun
-    gender: f
-  - lemma: обмін
-    ipa: /ɔbmin/
-    translation: exchange
-    pos: noun
-    gender: m
-  - lemma: ідея
-    ipa: /idɛja/
-    translation: idea
-    pos: noun
-    gender: f
-  - lemma: виступ
-    ipa: /ʋɪstup/
-    translation: performance, speech
-    pos: noun
-    gender: m
-  - lemma: порада
-    ipa: /pɔrada/
-    translation: advice
-    pos: noun
-    gender: f
-  - lemma: допомагати
-    ipa: /dɔpɔmaɦatɪ/
-    translation: to help
-    pos: verb
-  - lemma: розуміти
-    ipa: /rɔzumitɪ/
-    translation: to understand
-    pos: verb
-  - lemma: ділитися
-    ipa: /dilitɪsʲa/
-    translation: to share
-    pos: verb
+- lemma: думка
+  ipa: /dˈumka/
+  translation: thought, opinion
+  pos: noun
+  gender: f
+- lemma: думати
+  ipa: /dˈumatɪ/
+  translation: to think
+  pos: verb
+- lemma: роздуми
+  ipa: /rˈɔzdumɪ/
+  translation: reflections, thoughts
+  pos: noun
+  gender: m-pl
+- lemma: задуматися
+  ipa: /zadˈumatɪsʲa/
+  translation: to ponder, to think deeply
+  pos: verb
+- lemma: щоденник
+  ipa: /ʃt͡ʃɔdˈɛnnɪk/
+  translation: diary
+  pos: noun
+  gender: m
+- lemma: говорити
+  ipa: /ɦɔʋɔrˈɪtɪ/
+  translation: to speak, to talk
+  pos: verb
+- lemma: розмова
+  ipa: /rɔzmˈɔʋa/
+  translation: conversation
+  pos: noun
+  gender: f
+- lemma: мова
+  ipa: /mˈɔʋa/
+  translation: language
+  pos: noun
+  gender: f
+- lemma: промовець
+  ipa: /prɔmˈɔʋɛt͡sʲ/
+  translation: speaker, orator
+  pos: noun
+  gender: m
+- lemma: відмова
+  ipa: /ʋidmˈɔʋa/
+  translation: refusal
+  pos: noun
+  gender: f
+- lemma: вимова
+  ipa: /ʋɪmˈɔʋa/
+  translation: pronunciation
+  pos: noun
+  gender: f
+- lemma: слухати
+  ipa: /slˈuxatɪ/
+  translation: to listen
+  pos: verb
+- lemma: чути
+  ipa: /t͡ʃˈutɪ/
+  translation: to hear
+  pos: verb
+- lemma: слухач
+  ipa: /sluxˈat͡ʃ/
+  translation: listener
+  pos: noun
+  gender: m
+- lemma: слухняний
+  ipa: /sluxnʲˈanɪj/
+  translation: obedient
+  pos: adj
+- lemma: прислухатися
+  ipa: /prɪslˈuxatɪsʲa/
+  translation: to listen closely, to heed
+  pos: verb
+- lemma: логічний
+  ipa: /lɔɦˈit͡ʃnɪj/
+  translation: logical
+  pos: adj
+- lemma: професійний
+  ipa: /prɔfɛsˈijnɪj/
+  translation: professional
+  pos: adj
+- lemma: термінологія
+  ipa: /tɛrmіnɔlɔɦіja/
+  translation: terminology
+  pos: noun
+  gender: f
+- lemma: спілкування
+  ipa: /spіlkuʋannja/
+  translation: communication
+  pos: noun
+  gender: n
+- lemma: вигляд
+  ipa: /ʋɪɦljad/
+  translation: appearance
+  pos: noun
+  gender: m
+- lemma: відчуття
+  ipa: /ʋid͡ʃuttja/
+  translation: feeling, sensation
+  pos: noun
+  gender: n
+- lemma: розмова
+  ipa: /rɔzmɔʋa/
+  translation: conversation
+  pos: noun
+  gender: f
+- lemma: подія
+  ipa: /pɔdija/
+  translation: event
+  pos: noun
+  gender: f
+- lemma: обмін
+  ipa: /ɔbmin/
+  translation: exchange
+  pos: noun
+  gender: m
+- lemma: ідея
+  ipa: /idɛja/
+  translation: idea
+  pos: noun
+  gender: f
+- lemma: виступ
+  ipa: /ʋɪstup/
+  translation: performance, speech
+  pos: noun
+  gender: m
+- lemma: порада
+  ipa: /pɔrada/
+  translation: advice
+  pos: noun
+  gender: f
+- lemma: допомагати
+  ipa: /dɔpɔmaɦatɪ/
+  translation: to help
+  pos: verb
+- lemma: розуміти
+  ipa: /rɔzumitɪ/
+  translation: to understand
+  pos: verb
+- lemma: ділитися
+  ipa: /dilitɪsʲa/
+  translation: to share
+  pos: verb

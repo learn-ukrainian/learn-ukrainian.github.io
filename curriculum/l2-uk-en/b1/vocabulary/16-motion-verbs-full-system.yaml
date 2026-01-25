@@ -289,10 +289,6 @@ items:
   translation: image, role, way
   pos: noun
   gender: m
-- lemma: односпрямований
-  ipa: /ɔdnɔsprjamˈɔʋanɪj/
-  translation: unidirectional
-  pos: adj
 - lemma: освоїти
   ipa: /ɔsʋˈɔjitɪ/
   translation: to master, to settle
@@ -416,10 +412,6 @@ items:
   ipa: /rˈuxatɪsja/
   translation: to move (oneself)
   pos: verb
-- lemma: різноспрямований
-  ipa: /riznɔsprjamˈɔʋanɪj/
-  translation: multidirectional
-  pos: adj
 - lemma: самогон
   ipa: /samɔɦˈɔn/
   translation: moonshine
@@ -468,15 +460,6 @@ items:
   ipa: /tranzɪtˈɪʋnɪj/
   translation: transitive (grammar)
   pos: adj
-- lemma: транспортування
-  ipa: /transpɔrtuʋˈannja/
-  translation: transportation (cargo)
-  pos: noun
-  gender: n
-- lemma: транспортуватися
-  ipa: /transpɔrtuʋˈatɪsja/
-  translation: to be transported
-  pos: verb
 - lemma: тридцять
   ipa: /trˈɪdt͡sjatʲ/
   translation: thirty

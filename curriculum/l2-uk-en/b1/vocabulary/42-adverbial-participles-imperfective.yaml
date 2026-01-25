@@ -116,10 +116,6 @@ items:
   ipa: /dˈumajut͡ʃɪ/
   translation: thinking
   pos: verb
-- lemma: дієприслівниковий
-  ipa: /dijɛprɪsliʋnɪkˈɔʋɪj/
-  translation: gerundial
-  pos: adj
 - lemma: емський
   ipa: /ɛmsʲkɪj/
   translation: Ems (adj)
@@ -156,10 +152,6 @@ items:
   ipa: /kɔmpˈaktnɪj/
   translation: compact
   pos: adj
-- lemma: концентруватися
-  ipa: /kɔnt͡sɛntruʋˈatɪsja/
-  translation: to concentrate
-  pos: verb
 - lemma: марширувати
   ipa: /marʃɪruʋˈatɪ/
   translation: to march
@@ -239,11 +231,6 @@ items:
   ipa: /pɔʋtˈɔrjujut͡ʃɪ/
   translation: repeating
   pos: verb
-- lemma: полк
-  ipa: /pɔlk/
-  translation: regiment
-  pos: noun
-  gender: m
 - lemma: применшити
   ipa: /prɪmˈɛnʃɪtɪ/
   translation: to downplay, to underestimate
@@ -374,10 +361,6 @@ items:
   translation: circular (document)
   pos: noun
   gender: m
-- lemma: ши
-  ipa: /ʃɪ/
-  translation: ''
-  pos: noun
 - lemma: яскраво
   ipa: /jaskrˈaʋɔ/
   translation: brightly, vividly
@@ -393,11 +376,6 @@ items:
 - lemma: імперія
   ipa: /impˈɛrija/
   translation: empire
-  pos: noun
-  gender: f
-- lemma: інформативність
-  ipa: /infɔrmatˈɪʋnistʲ/
-  translation: informativeness
   pos: noun
   gender: f
 - lemma: їдячати

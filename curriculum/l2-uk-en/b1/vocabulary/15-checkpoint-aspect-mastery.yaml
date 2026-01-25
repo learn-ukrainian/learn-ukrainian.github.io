@@ -41,11 +41,6 @@ items:
   ipa: /ɦɔrˈa/
   translation: mountain, hill
   pos: noun
-- lemma: днк
-  ipa: /dnk/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: доба
   ipa: /dɔbˈa/
   translation: era, age, 24-hour period
@@ -175,11 +170,6 @@ items:
   ipa: /prɪbˈutɪ/
   translation: to arrive (perfective)
   pos: verb
-- lemma: пункт
-  ipa: /punkt/
-  translation: point, item, station
-  pos: noun
-  gender: m
 - lemma: підписати
   ipa: /pidpɪsˈatɪ/
   translation: to sign

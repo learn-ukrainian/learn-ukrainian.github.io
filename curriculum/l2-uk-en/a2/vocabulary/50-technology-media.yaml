@@ -81,11 +81,6 @@ items:
   translation: beauty (woman)
   pos: noun
   gender: f
-- lemma: лайк
-  ipa: /lajk/
-  translation: like (social media)
-  pos: noun
-  gender: m
 - lemma: лайка
   ipa: /lˈajka/
   translation: swearing, abuse, husky (dog)

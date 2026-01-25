@@ -16,15 +16,6 @@ items:
   translation: Babel (name)
   pos: noun
   gender: m
-- lemma: багатонаціональний
-  ipa: /baɦatɔnat͡siɔnˈalʲnɪj/
-  translation: multinational
-  pos: adj
-- lemma: багатонаціональність
-  ipa: /baɦatɔnat͡siɔnalʲnistʲ/
-  translation: multinationality
-  pos: noun
-  gender: f
 - lemma: банниця
   ipa: /bˈannɪt͡sja/
   translation: ''
@@ -83,11 +74,6 @@ items:
   ipa: /ɦɛɔɦrafˈit͡ʃnɔ/
   translation: geographically
   pos: adv
-- lemma: гопак
-  ipa: /ɦɔpˈak/
-  translation: hopak (dance)
-  pos: noun
-  gender: m
 - lemma: депортація
   ipa: /dɛpɔrtˈat͡sija/
   translation: deportation
@@ -155,10 +141,6 @@ items:
 - lemma: кримський
   ipa: /krˈɪmsʲkɪj/
   translation: Crimean
-  pos: adj
-- lemma: кримськотатарський
-  ipa: /krɪmsʲkɔtatˈarsʲkɪj/
-  translation: Crimean Tatar (adj)
   pos: adj
 - lemma: кузів
   ipa: /kuziʋ/
@@ -310,10 +292,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: південноукраїнський
-  ipa: /piʋdɛnnɔukraˈjinsʲkɪj/
-  translation: South Ukrainian
-  pos: adj
 - lemma: родючий
   ipa: /rɔdˈjut͡ʃɪj/
   translation: fertile
@@ -333,10 +311,6 @@ items:
   translation: Sevastopol
   pos: noun
   gender: m
-- lemma: середземноморський
-  ipa: /sɛrɛdzɛmnɔmˈɔrsʲkɪj/
-  translation: Mediterranean
-  pos: adj
 - lemma: скуштувати
   ipa: /skuʃtuʋˈatɪ/
   translation: to taste
@@ -468,11 +442,6 @@ items:
 - lemma: ідиш
   ipa: /ˈidɪʃ/
   translation: Yiddish
-  pos: noun
-  gender: m
-- lemma: ісаак
-  ipa: /isaak/
-  translation: Isaac (name)
   pos: noun
   gender: m
 - lemma: італійка

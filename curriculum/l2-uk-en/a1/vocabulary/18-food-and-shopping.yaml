@@ -7,11 +7,6 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: буряк
-  ipa: /burˈjak/
-  translation: beetroot
-  pos: noun
-  gender: f
 - lemma: душа
   ipa: /duʃˈa/
   translation: soul

@@ -111,11 +111,6 @@ items:
   ipa: /kˈibɔrɦ/
   translation: cyborg
   pos: noun
-- lemma: марк
-  ipa: /mark/
-  translation: Mark (name)
-  pos: noun
-  gender: m
 - lemma: мотивація
   ipa: /mɔtɪʋˈat͡sija/
   translation: motivation
@@ -169,10 +164,6 @@ items:
   ipa: /patriɔtˈɪt͡ʃnɪj/
   translation: patriotic
   pos: adj
-- lemma: перезавантажитися
-  ipa: /pɛrɛzaʋantaʒɪtɪsja/
-  translation: to restart (passive)
-  pos: verb
 - lemma: перемогти
   ipa: /pɛrɛmɔɦtˈɪ/
   translation: to win, to defeat (perfective)

@@ -33,11 +33,6 @@ items:
   ipa: /bɛsarˈabsʲkɪj/
   translation: Besarabian
   pos: adj
-- lemma: бюрократичність
-  ipa: /bjurɔkratɪt͡ʃnistʲ/
-  translation: bureaucracy
-  pos: noun
-  gender: f
 - lemma: ввічливий
   ipa: /ʋʋˈit͡ʃlɪʋɪj/
   translation: polite
@@ -433,20 +428,11 @@ items:
   translation: heritage, legacy
   pos: noun
   gender: f
-- lemma: спектр
-  ipa: /spɛktr/
-  translation: spectrum
-  pos: noun
-  gender: m
 - lemma: список
   ipa: /spˈɪsɔk/
   translation: list
   pos: noun
   gender: m
-- lemma: стверджувальний
-  ipa: /stʋˈɛrdʒuʋalʲnɪj/
-  translation: affirmative
-  pos: adj
 - lemma: створювати
   ipa: /stʋˈɔrjuʋatɪ/
   translation: to create (imperfective)
@@ -470,11 +456,6 @@ items:
   translation: urgency
   pos: noun
   gender: f
-- lemma: тиск
-  ipa: /tɪsk/
-  translation: pressure
-  pos: noun
-  gender: m
 - lemma: товар
   ipa: /tɔʋˈar/
   translation: goods, product

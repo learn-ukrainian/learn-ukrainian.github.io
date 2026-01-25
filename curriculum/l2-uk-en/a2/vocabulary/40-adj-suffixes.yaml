@@ -73,10 +73,6 @@ items:
   ipa: /ɛʋɪtɪ/
   translation: ''
   pos: verb
-- lemma: експериментувати
-  ipa: /ɛkspɛrɪmɛntuʋˈatɪ/
-  translation: to experiment
-  pos: verb
 - lemma: еньк-ий
   ipa: /ɛnʲk-ɪj/
   translation: ''
@@ -86,21 +82,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: житт-ов-ий
-  ipa: /ʒɪtt-ɔʋ-ɪj/
-  translation: ''
-  pos: adj
-- lemma: житт-єв-ий
-  ipa: /ʒɪtt-jɛʋ-ɪj/
-  translation: ''
-  pos: adj
 - lemma: зелені
   ipa: /zɛlˈɛni/
   translation: green ones, greens
-  pos: noun
-- lemma: зьк-
-  ipa: /zʲk-/
-  translation: ''
   pos: noun
 - lemma: каштановий
   ipa: /kaʃtˈanɔʋɪj/
@@ -123,15 +107,6 @@ items:
   ipa: /kɔlʲɔrˈɔʋɪj/
   translation: colored, colorful
   pos: adj
-- lemma: континентальний
-  ipa: /kɔntɪnɛntˈalʲnɪj/
-  translation: continental
-  pos: adj
-- lemma: котик
-  ipa: /kˈɔtɪk/
-  translation: kitten, cat
-  pos: noun
-  gender: f
 - lemma: красити
   ipa: /krˈasɪtɪ/
   translation: to color, to dye
@@ -158,10 +133,6 @@ items:
   ipa: /mˈɔdnɪj/
   translation: fashionable, trendy
   pos: adj
-- lemma: музик-
-  ipa: /muzˈɪk-/
-  translation: ''
-  pos: noun
 - lemma: музичити
   ipa: /muzˈɪt͡ʃɪtɪ/
   translation: to play music
@@ -183,10 +154,6 @@ items:
   ipa: /n-ɪj/
   translation: ''
   pos: adj
-- lemma: наук-
-  ipa: /naˈuk-/
-  translation: ''
-  pos: noun
 - lemma: науков
   ipa: /naukɔʋ/
   translation: ''
@@ -200,14 +167,6 @@ items:
   ipa: /nɛzmˈinnɪj/
   translation: constant, immutable
   pos: adj
-- lemma: ов
-  ipa: /ɔʋ/
-  translation: ''
-  pos: noun
-- lemma: ов-
-  ipa: /ɔʋ-/
-  translation: ''
-  pos: noun
 - lemma: ов-ий
   ipa: /ɔʋ-ɪj/
   translation: ''
@@ -312,10 +271,6 @@ items:
   ipa: /ukraˈjin/
   translation: ''
   pos: adj
-- lemma: україн-
-  ipa: /ukraˈjin-/
-  translation: ''
-  pos: noun
 - lemma: україн-ський
   ipa: /ukrajin-sʲkɪj/
   translation: ''
@@ -345,10 +300,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: цьк-
-  ipa: /t͡sʲk-/
-  translation: ''
-  pos: noun
 - lemma: чех
   ipa: /t͡ʃɛx/
   translation: Czech (male)
@@ -447,11 +398,11 @@ items:
   pos: adj
 - lemma: історовий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: історський
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: який
   ipa: /jakˈɪj/
@@ -459,15 +410,15 @@ items:
   pos: pron
 - lemma: якого
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: pron
 - lemma: якої
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: pron
 - lemma: яких
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: pron
 - lemma: чий
   ipa: /t͡ʃɪj/
@@ -475,11 +426,11 @@ items:
   pos: pron
 - lemma: шкапетки
   ipa: ''
-  translation: 'socks'
+  translation: socks
   pos: noun
 - lemma: шкарпетки
   ipa: ''
-  translation: 'socks'
+  translation: socks
   pos: noun
 - lemma: торт
   ipa: /tɔrt/
@@ -527,63 +478,63 @@ items:
   pos: adj
 - lemma: хімовий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: холодина
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: научний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: математиковий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: математицький
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: фізиковий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: фізький
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: географовий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: географський
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: схабний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: смічний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: колірний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: колірський
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: роботний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: робучий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: старійший
   ipa: /starіjʃɪj/
@@ -595,20 +546,15 @@ items:
   pos: adj
 - lemma: духовой
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: духівний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: чай
   ipa: /t͡ʃaj/
   translation: tea
-  pos: noun
-  gender: m
-- lemma: сік
-  ipa: /sik/
-  translation: juice
   pos: noun
   gender: m
 - lemma: вода
@@ -745,7 +691,7 @@ items:
   gender: m
 - lemma: хімський
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: хімія
   ipa: /xˈimіja/
@@ -754,47 +700,47 @@ items:
   gender: f
 - lemma: науцький
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: научна
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: україновий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: українічний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: містовий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: містичний
   ipa: /mіstˈɪt͡ʃnɪj/
-  translation: "mystical (note: distractor for 'urban')"
+  translation: 'mystical (note: distractor for ''urban'')'
   pos: adj
 - lemma: селевий
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: селичний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: холодичний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: дитяцький
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: матерільний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: зоопарк
   ipa: /zɔɔpˈark/
@@ -813,11 +759,11 @@ items:
   gender: f-pl
 - lemma: якості
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: якостей
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: робочий
   ipa: /rɔbˈɔt͡ʃɪj/
@@ -945,7 +891,7 @@ items:
   gender: m
 - lemma: музицький
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: людей
   ipa: /lʲudˈɛj/
@@ -956,18 +902,6 @@ items:
   ipa: /lʲitnˈix/
   translation: elderly/senior (gen-pl)
   pos: adj
-- lemma: лив-
-  ipa: ''
-  translation: ''
-  pos: noun
-- lemma: ий
-  ipa: ''
-  translation: ''
-  pos: noun
-- lemma: ист-
-  ipa: ''
-  translation: ''
-  pos: noun
 - lemma: зору
   ipa: /zˈɔru/
   translation: vision (gen)

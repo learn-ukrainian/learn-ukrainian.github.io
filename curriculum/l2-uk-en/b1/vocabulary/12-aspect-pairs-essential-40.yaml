@@ -275,11 +275,6 @@ items:
   ipa: /pɔstupˈɔʋɔ/
   translation: gradually
   pos: adv
-- lemma: пошук
-  ipa: /pˈɔʃuk/
-  translation: search
-  pos: noun
-  gender: m
 - lemma: пошукати
   ipa: /pɔʃukˈatɪ/
   translation: to look for (perfective)

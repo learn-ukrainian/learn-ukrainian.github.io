@@ -94,11 +94,6 @@ items:
   translation: ship
   pos: noun
   gender: m
-- lemma: малюк
-  ipa: /malˈjuk/
-  translation: baby, toddler
-  pos: noun
-  gender: m
 - lemma: мінімум
   ipa: /mˈinimum/
   translation: minimum
@@ -128,10 +123,6 @@ items:
   ipa: /ɔbiɦnˈatɪ/
   translation: to overtake, to outrun
   pos: verb
-- lemma: однонапрямлений
-  ipa: /ɔdnɔnaprjamlɛnɪj/
-  translation: one-way, unidirectional
-  pos: adj
 - lemma: острів
   ipa: /ˈɔstriʋ/
   translation: island
@@ -239,10 +230,6 @@ items:
   translation: sharp (female), rod
   pos: noun
   gender: f
-- lemma: різнонапрямлений
-  ipa: /riznɔnaprjamlɛnɪj/
-  translation: multidirectional
-  pos: adj
 - lemma: садка
   ipa: /sadka/
   translation: planting, seating
@@ -255,10 +242,6 @@ items:
 - lemma: спуститися
   ipa: /spustˈɪtɪsja/
   translation: to descend (perfective)
-  pos: verb
-- lemma: стабілізуватися
-  ipa: /stabilizuʋˈatɪsja/
-  translation: to stabilize (passive/intransitive)
   pos: verb
 - lemma: стежка
   ipa: /stˈɛʒka/

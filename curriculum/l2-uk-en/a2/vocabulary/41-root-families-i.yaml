@@ -2,6 +2,29 @@ module: 41-root-families-i
 level: A2
 version: '2.0'
 items:
+- lemma: пішохід
+  ipa: /piʃɔxˈid/
+  translation: pedestrian
+  pos: noun
+  gender: m
+- lemma: надпис
+  ipa: /nˈadpɪs/
+  translation: inscription, superscription
+  pos: noun
+  gender: m
+- lemma: цей
+  ipa: /t͡sɛj/
+  translation: this
+  pos: pron
+  gender: m
+- lemma: чекати
+  ipa: /t͡ʃɛkˈatɪ/
+  translation: to wait
+  pos: verb
+- lemma: чого
+  ipa: /t͡ʃɔhˈɔ/
+  translation: why, what (gen)
+  pos: pron
 - lemma: автограф
   ipa: /aʋtˈɔɦraf/
   translation: autograph
@@ -11,10 +34,6 @@ items:
   ipa: /aɦˈa/
   translation: aha, I see
   pos: part
-- lemma: бач-
-  ipa: /bat͡ʃ-/
-  translation: ''
-  pos: noun
 - lemma: бачення
   ipa: /bˈat͡ʃɛnnja/
   translation: vision, perception
@@ -34,10 +53,6 @@ items:
   translation: spectacle, sight
   pos: noun
   gender: n
-- lemma: гляд-
-  ipa: /ɦljad-/
-  translation: ''
-  pos: noun
 - lemma: гляда
   ipa: /ɦljada/
   translation: ''
@@ -93,10 +108,6 @@ items:
   ipa: /nɛtˈɔt͡ʃnɪj/
   translation: inaccurate
   pos: adj
-- lemma: о-
-  ipa: /ɔ-/
-  translation: ''
-  pos: noun
 - lemma: обрій
   ipa: /ˈɔbrij/
   translation: horizon, skyline
@@ -192,16 +203,8 @@ items:
   translation: walking
   pos: noun
   gender: f
-- lemma: хід-
-  ipa: /xid-/
-  translation: ''
-  pos: noun
 - lemma: чит
   ipa: /t͡ʃɪt/
-  translation: ''
-  pos: noun
-- lemma: чит-
-  ipa: /t͡ʃɪt-/
   translation: ''
   pos: noun
 - lemma: відхід
@@ -345,7 +348,7 @@ items:
   gender: f
 - lemma: шоп
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: перехідний
   ipa: /pɛrɛxidnɪj/
@@ -353,11 +356,11 @@ items:
   pos: adj
 - lemma: переходка
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: підписи
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: підписник
   ipa: /pidpɪsnɪk/
@@ -366,7 +369,7 @@ items:
   gender: m
 - lemma: підписака
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: ввійти
   ipa: /ʋʋijti/
@@ -378,7 +381,7 @@ items:
   pos: adj
 - lemma: вхідець
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: письменний
   ipa: /pɪsʲmɛnnɪj/
@@ -386,7 +389,7 @@ items:
   pos: adj
 - lemma: писарій
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: писака
   ipa: /pɪsaka/
@@ -399,11 +402,11 @@ items:
   pos: verb
 - lemma: ходи
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: ходений
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: поглядний
   ipa: /pɔɦljadnɪj/
@@ -411,11 +414,11 @@ items:
   pos: adj
 - lemma: поглядець
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: noun
 - lemma: читне
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: читацький
   ipa: /t͡ʃɪtat͡sʲkɪj/
@@ -423,7 +426,7 @@ items:
   pos: adj
 - lemma: чительний
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
 - lemma: дописувати
   ipa: /dɔpɪsuʋatɪ/
@@ -514,33 +517,5 @@ items:
   pos: adv
 - lemma: швидкого
   ipa: ''
-  translation: 'distractor'
+  translation: distractor
   pos: adj
-- lemma: пішохід
-  ipa: /piʃɔxid/
-  translation: pedestrian
-  pos: noun
-  gender: m
-- lemma: надпис
-  ipa: /nadpɪs/
-  translation: inscription
-  pos: noun
-  gender: m
-- lemma: письменник
-  ipa: /pɪsʲmɛnnɪk/
-  translation: writer
-  pos: noun
-  gender: m
-- lemma: похід
-  ipa: /pɔxid/
-  translation: campaign, hike
-  pos: noun
-  gender: m
-- lemma: прочитати
-  ipa: /prɔt͡ʃɪtatɪ/
-  translation: to read (perf)
-  pos: verb
-- lemma: дочитати
-  ipa: /dɔt͡ʃɪtatɪ/
-  translation: to finish reading
-  pos: verb

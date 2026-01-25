@@ -150,10 +150,6 @@ items:
   ipa: /prɔɦɔʋˈɔrjuʋatɪ/
   translation: to talk through
   pos: verb
-- lemma: продемонструвати
-  ipa: /prɔdɛmɔnstruʋˈatɪ/
-  translation: to demonstrate
-  pos: verb
 - lemma: пхатися
   ipa: /pxˈatɪsja/
   translation: to push, to intrude
@@ -176,10 +172,6 @@ items:
   translation: senior
   pos: noun
   gender: m
-- lemma: систематизувати
-  ipa: /sɪstɛmatɪzuʋˈatɪ/
-  translation: to systematize
-  pos: verb
 - lemma: соватися
   ipa: /sˈɔʋatɪsja/
   translation: to fidget, to move about

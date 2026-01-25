@@ -27,21 +27,11 @@ items:
   translation: Anna (name)
   pos: noun
   gender: f
-- lemma: ар
-  ipa: /ar/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: дівчина
   ipa: /dˈiʋt͡ʃɪna/
   translation: girl, young woman
   pos: noun
   gender: f
-- lemma: ка
-  ipa: /ka/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: канадець
   ipa: /kanˈadɛt͡sʲ/
   translation: Canadian (male)
@@ -164,14 +154,6 @@ items:
   translation: Ukrainian (male)
   pos: noun
   gender: m
-- lemma: я
-  ipa: /ja/
-  translation: I
-  pos: pronoun
-- lemma: ти
-  ipa: /tɪ/
-  translation: you (informal)
-  pos: pronoun
 - lemma: він
   ipa: /ʋin/
   translation: he
@@ -196,10 +178,6 @@ items:
   ipa: /ʋɔnˈɪ/
   translation: they
   pos: pronoun
-- lemma: це
-  ipa: /t͡sɛ/
-  translation: this, it
-  pos: particle
 - lemma: то
   ipa: /tɔ/
   translation: that

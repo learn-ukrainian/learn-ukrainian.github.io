@@ -23,19 +23,10 @@ items:
   ipa: /ʋˈɪstupɪʋʃɪ/
   translation: having performed
   pos: verb
-- lemma: вшись
-  ipa: /ʋʃɪsʲ/
-  translation: ''
-  pos: verb
 - lemma: граючий
   ipa: /ɦrˈajut͡ʃɪj/
   translation: playing
   pos: adj
-- lemma: дж
-  ipa: /dʒ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: дискусійний
   ipa: /dɪskusˈijnɪj/
   translation: controversial, discussion-based

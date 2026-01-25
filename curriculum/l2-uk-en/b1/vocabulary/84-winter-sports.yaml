@@ -2,10 +2,6 @@ module: 84-winter-sports
 level: B1
 version: '2.0'
 items:
-- lemma: вбік
-  ipa: /ʋbik/
-  translation: aside, to the side
-  pos: adv
 - lemma: вертеп
   ipa: /ʋɛrtˈɛp/
   translation: vertep (puppet theater)

@@ -40,10 +40,6 @@ items:
   ipa: /ʋɪsɔkɛznɪj/
   translation: towering, very tall
   pos: adj
-- lemma: високотехнологічний
-  ipa: /ʋɪsɔkɔtɛxnɔlɔɦˈit͡ʃnɪj/
-  translation: high-tech
-  pos: adj
 - lemma: гарн
   ipa: /ɦarn/
   translation: ''
@@ -61,11 +57,6 @@ items:
   ipa: /dɛrɛʋˈjanɪj/
   translation: wooden
   pos: adj
-- lemma: дотик
-  ipa: /dˈɔtɪk/
-  translation: touch, contact
-  pos: noun
-  gender: m
 - lemma: дружелюбний
   ipa: /druʒɛlˈjubnɪj/
   translation: friendly
@@ -79,46 +70,15 @@ items:
   ipa: /ɛzn/
   translation: ''
   pos: noun
-- lemma: езн-
-  ipa: /ɛzn-/
-  translation: ''
-  pos: noun
 - lemma: екстремальний
   ipa: /ɛkstrɛmˈalʲnɪj/
   translation: extreme
   pos: adj
-- lemma: екстремальність
-  ipa: /ɛkstrɛmˈalʲnistʲ/
-  translation: extremeness
-  pos: noun
-  gender: f
 - lemma: енн
   ipa: /ɛnn/
   translation: ''
   pos: noun
   gender: f
-- lemma: енн-
-  ipa: /ɛnn-/
-  translation: ''
-  pos: noun
-- lemma: еньк
-  ipa: /ɛnʲk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: еньк-
-  ipa: /ɛnʲk-/
-  translation: ''
-  pos: noun
-- lemma: есеньк
-  ipa: /ɛsɛnʲk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: есеньк-
-  ipa: /ɛsɛnʲk-/
-  translation: ''
-  pos: noun
 - lemma: жах-фільм
   ipa: /ʒax-filʲm/
   translation: horror film
@@ -168,19 +128,6 @@ items:
   ipa: /mist͡sˈjamɪ/
   translation: in places
   pos: adv
-- lemma: міськ
-  ipa: /misʲk/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: н-
-  ipa: /n-/
-  translation: ''
-  pos: noun
-- lemma: напівпровідниковий
-  ipa: /napiʋprɔʋidnɪkˈɔʋɪj/
-  translation: semiconductor (adj)
-  pos: adj
 - lemma: нити
   ipa: /nˈɪtɪ/
   translation: to ache, to whine
@@ -302,19 +249,6 @@ items:
   ipa: /subjɛktˈɪʋnɪj/
   translation: subjective
   pos: adj
-- lemma: ськ
-  ipa: /sʲk/
-  translation: ''
-  pos: noun
-- lemma: ськ-
-  ipa: /sʲk-/
-  translation: ''
-  pos: noun
-- lemma: ський
-  ipa: /sʲkɪj/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: тепленький
   ipa: /tɛplˈɛnʲkɪj/
   translation: warm (diminutive)
@@ -333,9 +267,9 @@ items:
   ipa: /tɔnˈɛnʲkɪj/
   translation: thin (diminutive)
   pos: adj
-- lemma: українськийський
-  ipa: /ukrajinsʲkɪjsʲkɪj/
-  translation: ''
+- lemma: український
+  ipa: /ukrajinˈsʲkɪj/
+  translation: Ukrainian (adj)
   pos: adj
 - lemma: холоднесенький
   ipa: /xɔlɔdnˈɛsɛnʲkɪj/
@@ -386,8 +320,53 @@ items:
   ipa: /intɛnsˈɪʋnɪj/
   translation: intensive
   pos: adj
-- lemma: інтенсивність
-  ipa: /intɛnsˈɪʋnistʲ/
-  translation: intensity
+- lemma: читання
+  ipa: /t͡ʃɪtˈannʲa/
+  translation: reading
+  pos: noun
+  gender: n
+- lemma: дівчинка
+  ipa: /dˈiʋt͡ʃɪnka/
+  translation: little girl
   pos: noun
   gender: f
+- lemma: старість
+  ipa: /stˈaristʲ/
+  translation: old age
+  pos: noun
+  gender: f
+- lemma: синок
+  ipa: /sɪnˈɔk/
+  translation: sonny, little son
+  pos: noun
+  gender: m
+- lemma: радість
+  ipa: /rˈadistʲ/
+  translation: joy
+  pos: noun
+  gender: f
+- lemma: писання
+  ipa: /pɪsˈannja/
+  translation: writing, scripture
+  pos: noun
+  gender: n
+- lemma: квіточка
+  ipa: /kʋˈitɔt͡ʃka/
+  translation: little flower
+  pos: noun
+  gender: f
+- lemma: життя
+  ipa: /ʒɪttˈja/
+  translation: life
+  pos: noun
+  gender: n
+- lemma: борець
+  ipa: /bɔrˈɛt͡sʲ/
+  translation: fighter, wrestler
+  pos: noun
+  gender: m
+- lemma: співець
+  ipa: /spiʋˈɛt͡sʲ/
+  translation: singer, bard
+  pos: noun
+  gender: m

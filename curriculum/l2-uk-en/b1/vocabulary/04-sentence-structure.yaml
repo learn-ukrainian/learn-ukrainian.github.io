@@ -200,14 +200,6 @@ items:
   translation: syntax
   pos: noun
   gender: m
-- lemma: складнопідрядний
-  ipa: /skladnɔpidrˈjadnɪj/
-  translation: complex (sentence)
-  pos: adj
-- lemma: складносурядний
-  ipa: /skladnɔsurˈjadnɪj/
-  translation: compound (sentence)
-  pos: adj
 - lemma: ставити
   ipa: /stˈaʋɪtɪ/
   translation: to put, to place, to set (vertical position)

@@ -159,10 +159,6 @@ items:
   translation: settings, configuration
   pos: noun
   gender: n
-- lemma: не-
-  ipa: /nɛ-/
-  translation: ''
-  pos: noun
 - lemma: небезпека
   ipa: /nɛbɛzpˈɛka/
   translation: danger

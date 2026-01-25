@@ -91,10 +91,6 @@ items:
   ipa: /pɛdaɦˈɔɦ/
   translation: pedagogue, teacher
   pos: noun
-- lemma: персоналізувати
-  ipa: /pɛrsɔnalizuʋˈatɪ/
-  translation: to personalize
-  pos: verb
 - lemma: перспективний
   ipa: /pɛrspɛktˈɪʋnɪj/
   translation: promising, prospective
@@ -164,7 +160,3 @@ items:
   ipa: /inʋɛstˈɪt͡sija/
   translation: investment
   pos: noun
-- lemma: інфраструктурний
-  ipa: /infrastruktˈurnɪj/
-  translation: infrastructure (adj)
-  pos: adj

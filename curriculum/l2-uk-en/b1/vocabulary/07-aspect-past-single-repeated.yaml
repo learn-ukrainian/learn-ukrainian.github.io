@@ -230,11 +230,6 @@ items:
   ipa: /muzˈɛj/
   translation: museum
   pos: noun
-- lemma: міністр
-  ipa: /minˈistr/
-  translation: minister
-  pos: noun
-  gender: m
 - lemma: набагато
   ipa: /nabaɦˈatɔ/
   translation: much, significantly (with comparative)
@@ -381,10 +376,6 @@ items:
   translation: increase, promotion
   pos: noun
   gender: n
-- lemma: підкреслюватися
-  ipa: /pidkrˈɛsljuʋatɪsja/
-  translation: to be emphasized
-  pos: verb
 - lemma: пісок
   ipa: /pisˈɔk/
   translation: sand
@@ -510,11 +501,6 @@ items:
   ipa: /t͡ʃudˈɔʋɪj/
   translation: wonderful, great
   pos: adj
-- lemma: чумак
-  ipa: /t͡ʃumˈak/
-  translation: chumak (salt trader)
-  pos: noun
-  gender: f
 - lemma: чумаки
   ipa: /t͡ʃumakˈɪ/
   translation: chumaky (salt traders)

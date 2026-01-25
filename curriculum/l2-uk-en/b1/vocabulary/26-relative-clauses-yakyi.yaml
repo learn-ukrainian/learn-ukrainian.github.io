@@ -45,10 +45,6 @@ items:
   ipa: /ʋidmˈinjuʋatɪ/
   translation: to decline, to conjugate
   pos: verb
-- lemma: відокремлюватися
-  ipa: /ʋidɔkrˈɛmljuʋatɪsja/
-  translation: to separate (passive)
-  pos: verb
 - lemma: геній
   ipa: /ɦˈɛnij/
   translation: genius
@@ -306,10 +302,6 @@ items:
 - lemma: ігровий
   ipa: /iɦrɔʋˈɪj/
   translation: game (adj), gambling (adj)
-  pos: adj
-- lemma: індоєвропейський
-  ipa: /indɔjɛʋrɔpˈɛjsʲkɪj/
-  translation: Indo-European
   pos: adj
 - lemma: інформативний
   ipa: /infɔrmatˈɪʋnɪj/

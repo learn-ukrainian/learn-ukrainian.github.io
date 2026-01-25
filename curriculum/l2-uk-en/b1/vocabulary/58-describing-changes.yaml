@@ -119,10 +119,6 @@ items:
   ipa: /mɛtɛɔrˈɔlɔɦ/
   translation: meteorologist
   pos: noun
-- lemma: напівформальний
-  ipa: /napiʋfɔrmalʲnɪj/
-  translation: semi-formal
-  pos: adj
 - lemma: наростати
   ipa: /narɔstˈatɪ/
   translation: to grow, to increase
@@ -192,10 +188,6 @@ items:
   translation: smog
   pos: noun
   gender: m
-- lemma: сповільнюватися
-  ipa: /spɔʋˈilʲnjuʋatɪsja/
-  translation: to slow down (imperfective)
-  pos: verb
 - lemma: стабілізувати
   ipa: /stabilizuʋˈatɪ/
   translation: to stabilize

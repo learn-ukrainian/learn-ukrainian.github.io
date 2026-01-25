@@ -62,8 +62,3 @@ items:
   translation: price tag
   pos: noun
   gender: m
-- lemma: чек
-  ipa: /t͡ʃɛk/
-  translation: bill, receipt
-  pos: noun
-  gender: m

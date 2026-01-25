@@ -25,10 +25,6 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: сумк
-  ipa: /sumk/
-  translation: ''
-  pos: noun
 - lemma: чути
   ipa: /t͡ʃˈutɪ/
   translation: to hear

@@ -55,17 +55,9 @@ items:
   ipa: /mɛntˈalʲnɪj/
   translation: mental
   pos: adj
-- lemma: найефективніший
-  ipa: /najɛfɛktˈɪʋniʃɪj/
-  translation: the most effective
-  pos: adj
 - lemma: насквозити
   ipa: /naskʋɔzɪtɪ/
   translation: to blow through
-  pos: verb
-- lemma: насолоджуватися
-  ipa: /nasɔlˈɔdʒuʋatɪsja/
-  translation: to enjoy
   pos: verb
 - lemma: обдумати
   ipa: /ɔbdˈumatɪ/
@@ -75,10 +67,6 @@ items:
   ipa: /ɔbʲjixatɪ/
   translation: to drive around
   pos: verb
-- lemma: обі-
-  ipa: /ˈɔbi-/
-  translation: ''
-  pos: noun
 - lemma: п'ята
   ipa: /pjatˈa/
   translation: heel, five (female variant)
@@ -134,10 +122,6 @@ items:
   translation: semicircle
   pos: noun
   gender: n
-- lemma: сфотографуватися
-  ipa: /sfɔtɔɦrafuʋˈatɪsja/
-  translation: to have one's photo taken
-  pos: verb
 - lemma: фінішний
   ipa: /fˈiniʃnɪj/
   translation: finish (adj)

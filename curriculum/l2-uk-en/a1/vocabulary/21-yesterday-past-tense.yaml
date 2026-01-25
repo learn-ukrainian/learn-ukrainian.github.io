@@ -10,24 +10,11 @@ items:
   ipa: /ʋˈau/
   translation: wow
   pos: noun
-- lemma: говори-
-  ipa: /ɦˈɔʋɔrɪ-/
-  translation: ''
-  pos: noun
 - lemma: жила
   ipa: /ʒɪlˈa/
   translation: lived (verb female), vein
   pos: noun
   gender: f
-- lemma: ли
-  ipa: /lɪ/
-  translation: ''
-  pos: noun
-- lemma: ло
-  ipa: /lɔ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: молодий
   ipa: /mɔlɔdˈɪj/
   translation: young
@@ -42,10 +29,6 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: працюва-
-  ipa: /prat͡sjuʋa-/
-  translation: ''
-  pos: noun
 - lemma: рута
   ipa: /rˈuta/
   translation: rue (plant)

@@ -154,11 +154,6 @@ items:
   ipa: /maɦnˈat/
   translation: magnate
   pos: noun
-- lemma: машинобудування
-  ipa: /maʃɪnɔbuduʋˈannja/
-  translation: mechanical engineering
-  pos: noun
-  gender: n
 - lemma: меценат
   ipa: /mɛt͡sɛnˈat/
   translation: patron, benefactor
@@ -246,10 +241,6 @@ items:
   translation: entrepreneurship
   pos: noun
   gender: n
-- lemma: підприємницький
-  ipa: /pidprɪˈjɛmnɪt͡sʲkɪj/
-  translation: entrepreneurial
-  pos: adj
 - lemma: підприємство
   ipa: /pidprɪˈjɛmstʋɔ/
   translation: enterprise, business

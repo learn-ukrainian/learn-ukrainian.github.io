@@ -111,10 +111,6 @@ items:
   ipa: /ɔbmˈɛʒɛnɪj/
   translation: limited
   pos: adj
-- lemma: овши
-  ipa: /ɔʋʃɪ/
-  translation: ''
-  pos: verb
 - lemma: отримавши
   ipa: /ɔtrˈɪmaʋʃɪ/
   translation: to receive
@@ -193,10 +189,6 @@ items:
   ipa: /prɪˈjixaʋʃɪ/
   translation: having arrived
   pos: verb
-- lemma: проаналізувавши
-  ipa: /prɔanalizuʋˈaʋʃɪ/
-  translation: having analyzed
-  pos: verb
 - lemma: підвищити
   ipa: /pidʋˈɪʃt͡ʃɪtɪ/
   translation: to increase, to raise
@@ -231,8 +223,3 @@ items:
   translation: chronology
   pos: noun
   gender: f
-- lemma: ші
-  ipa: /ʃi/
-  translation: ''
-  pos: noun
-  gender: m

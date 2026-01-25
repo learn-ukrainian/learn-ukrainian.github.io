@@ -14,10 +14,6 @@ items:
   ipa: /ʋilʲnˈiʃɛ/
   translation: more freely
   pos: adv
-- lemma: давньоукраїнський
-  ipa: /daʋnʲɔukraˈjinsʲkɪj/
-  translation: Old Ukrainian
-  pos: adj
 - lemma: досконало
   ipa: /dɔskɔnˈalɔ/
   translation: perfectly, thoroughly
@@ -72,11 +68,6 @@ items:
   ipa: /slˈɔʋɔ-zʋjazɔk/
   translation: linking word
   pos: noun
-- lemma: ст
-  ipa: /st/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: токіо
   ipa: /tˈɔkiɔ/
   translation: Tokyo

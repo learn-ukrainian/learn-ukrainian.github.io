@@ -142,15 +142,6 @@ items:
   ipa: /sfɔrmuʋˈatɪsja/
   translation: to form (oneself perfective)
   pos: verb
-- lemma: східноукраїнський
-  ipa: /sxidnɔukraˈjinsʲkɪj/
-  translation: East Ukrainian
-  pos: adj
-- lemma: фк
-  ipa: /fk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: харків'янин
   ipa: /xarkiʋˈjanɪn/
   translation: Kharkivite

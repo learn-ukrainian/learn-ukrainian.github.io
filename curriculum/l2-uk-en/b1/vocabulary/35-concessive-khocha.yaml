@@ -155,10 +155,6 @@ items:
   translation: vanity, futility
   pos: noun
   gender: f
-- lemma: найуніверсальніший
-  ipa: /najuniʋɛrsalʲniʃɪj/
-  translation: the most universal
-  pos: adj
 - lemma: напруга
   ipa: /naprˈuɦa/
   translation: voltage, tension

@@ -106,28 +106,15 @@ items:
   ipa: /kɔnkuruʋˈatɪ/
   translation: to compete
   pos: verb
-- lemma: короткометражний
-  ipa: /kɔrɔtkɔmɛtrˈaʒnɪj/
-  translation: short-film (adj)
-  pos: adj
 - lemma: кримінальний
   ipa: /krɪminˈalʲnɪj/
   translation: criminal
-  pos: adj
-- lemma: кінематографічний
-  ipa: /kinɛmatɔɦrafˈit͡ʃnɪj/
-  translation: cinematic
   pos: adj
 - lemma: кінематографія
   ipa: /kinɛmatɔɦrˈafija/
   translation: cinematography
   pos: noun
   gender: f
-- lemma: кіновиробництво
-  ipa: /kinɔʋɪrɔbnˈɪt͡stʋɔ/
-  translation: film production
-  pos: noun
-  gender: n
 - lemma: кінолексика
   ipa: /kinɔlɛksɪka/
   translation: cinema vocabulary
@@ -160,10 +147,6 @@ items:
   ipa: /mulʲtfˈilʲm/
   translation: cartoon, animated film
   pos: noun
-- lemma: найпрестижніший
-  ipa: /najprɛstˈɪʒniʃɪj/
-  translation: the most prestigious
-  pos: adj
 - lemma: номінація
   ipa: /nɔminˈat͡sija/
   translation: nomination
@@ -178,10 +161,6 @@ items:
   translation: Oscar
   pos: noun
   gender: m
-- lemma: переосмислювати
-  ipa: /pɛrɛɔsmˈɪsljuʋatɪ/
-  translation: to rethink, to reinterpret
-  pos: verb
 - lemma: плануватися
   ipa: /planuʋˈatɪsja/
   translation: to be planned
@@ -220,16 +199,6 @@ items:
 - lemma: слабошпицький
   ipa: /slabɔʃpˈɪt͡sʲkɪj/
   translation: Slaboshpytskyi (name)
-  pos: noun
-  gender: m
-- lemma: співробітництво
-  ipa: /spiʋrɔbˈitnɪt͡stʋɔ/
-  translation: cooperation, partnership
-  pos: noun
-  gender: n
-- lemma: стб
-  ipa: /stb/
-  translation: ''
   pos: noun
   gender: m
 - lemma: стрімінговий

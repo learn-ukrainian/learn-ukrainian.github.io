@@ -63,10 +63,6 @@ items:
   ipa: /ɛma/
   translation: ''
   pos: noun
-- lemma: ею
-  ipa: /ɛju/
-  translation: -eyu (case ending)
-  pos: noun
 - lemma: зазвичай
   ipa: /zazʋɪt͡ʃˈaj/
   translation: usually
@@ -149,11 +145,6 @@ items:
   ipa: /ɔdruʒˈɪtɪsja/
   translation: to get married
   pos: verb
-- lemma: ом
-  ipa: /ɔm/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: орудний
   ipa: /ɔrˈudnɪj/
   translation: instrumental (case)
@@ -182,10 +173,6 @@ items:
   ipa: /ɔsʋiʒˈatɪ/
   translation: to refresh
   pos: verb
-- lemma: ою
-  ipa: /ɔju/
-  translation: -oyu (case ending)
-  pos: noun
 - lemma: пила
   ipa: /pɪlˈa/
   translation: saw
@@ -307,11 +294,6 @@ items:
   ipa: /uʋijtˈɪ/
   translation: to enter (perfective)
   pos: verb
-- lemma: уж
-  ipa: /uʒ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: функція
   ipa: /fˈunkt͡sija/
   translation: function
@@ -342,14 +324,6 @@ items:
   ipa: /ʃistʲ/
   translation: six
   pos: num
-- lemma: я
-  ipa: /ja/
-  translation: ''
-  pos: pron
-- lemma: єм
-  ipa: /jɛm/
-  translation: ''
-  pos: noun
 - lemma: із
   ipa: /iz/
   translation: ''

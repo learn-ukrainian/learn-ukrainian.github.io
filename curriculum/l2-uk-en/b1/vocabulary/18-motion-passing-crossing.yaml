@@ -33,11 +33,6 @@ items:
   ipa: /budiʋˈɛlʲnɪj/
   translation: construction (adj)
   pos: adj
-- lemma: бік
-  ipa: /bik/
-  translation: side
-  pos: noun
-  gender: m
 - lemma: визначний
   ipa: /ʋɪznat͡ʃnˈɪj/
   translation: significant, prominent
@@ -482,10 +477,5 @@ items:
 - lemma: цвинтар
   ipa: /t͡sʋˈɪntar/
   translation: cemetery
-  pos: noun
-  gender: m
-- lemma: цирк
-  ipa: /t͡sɪrk/
-  translation: circus
   pos: noun
   gender: m

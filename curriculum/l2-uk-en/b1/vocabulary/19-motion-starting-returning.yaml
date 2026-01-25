@@ -224,11 +224,6 @@ items:
   translation: coordinator
   pos: noun
   gender: m
-- lemma: короткочасність
-  ipa: /kɔrɔtkɔt͡ʃˈasnistʲ/
-  translation: shortness, brevity
-  pos: noun
-  gender: f
 - lemma: краса
   ipa: /krasˈa/
   translation: beauty
@@ -252,10 +247,6 @@ items:
   ipa: /nɛnadˈɔʋɦɔ/
   translation: not for long
   pos: adv
-- lemma: ну
-  ipa: /nu/
-  translation: ''
-  pos: part
 - lemma: опівночі
   ipa: /ɔpˈiʋnɔt͡ʃi/
   translation: at midnight
@@ -309,11 +300,6 @@ items:
   translation: continuation
   pos: noun
   gender: n
-- lemma: пуск
-  ipa: /pusk/
-  translation: start, launch
-  pos: noun
-  gender: m
 - lemma: півострів
   ipa: /piʋˈɔstriʋ/
   translation: peninsula

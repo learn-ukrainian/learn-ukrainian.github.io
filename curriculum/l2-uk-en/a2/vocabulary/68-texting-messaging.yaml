@@ -2,20 +2,10 @@ module: 68-texting-messaging
 level: A2
 version: '2.0'
 items:
-- lemma: бу
-  ipa: /bu/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: голосовий
   ipa: /ɦɔlɔsɔʋˈɪj/
   translation: vocal, voice (adj)
   pos: adj
-- lemma: дяк
-  ipa: /djak/
-  translation: clerk (church/historical)
-  pos: noun
-  gender: f
 - lemma: діма
   ipa: /dima/
   translation: Dima (name)

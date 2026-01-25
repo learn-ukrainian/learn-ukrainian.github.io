@@ -2,176 +2,23 @@ module: 43-wf-mastery
 level: A2
 version: '2.0'
 items:
-  - lemma: словотворення
-    ipa: /slɔʋɔt͡ʋˈɔrɛnnja/
-    translation: word formation
-    pos: noun
-    gender: n
-  - lemma: ланцюжок
-    ipa: /lant͡sʲuʒˈɔk/
-    translation: chain
-    pos: noun
-    gender: m
-  - lemma: складний
-    ipa: /skladnˈɪj/
-    translation: complex, complicated
-    pos: adj
-  - lemma: фундамент
-    ipa: /fundˈamɛnt/
-    translation: foundation
-    pos: noun
-    gender: m
-  - lemma: архітектор
-    ipa: /arxitˈɛktɔr/
-    translation: architect
-    pos: noun
-    gender: m
-  - lemma: конструктор
-    ipa: /kɔnstrˈuktɔr/
-    translation: constructor, designer
-    pos: noun
-    gender: m
-  - lemma: розбирати
-    ipa: /rɔzbɪrˈatɪ/
-    translation: to take apart, to analyze
-    pos: verb
-  - lemma: складати
-    ipa: /skladˈatɪ/
-    translation: to put together, to compose
-    pos: verb
-  - lemma: передбачати
-    ipa: /pɛrɛdbat͡ʃˈatɪ/
-    translation: to predict, to foresee
-    pos: verb
-  - lemma: значення
-    ipa: /znat͡ʃˈɛnnja/
-    translation: meaning, significance
-    pos: noun
-    gender: n
-  - lemma: зв'язок
-    ipa: /zʋjˈazɔk/
-    translation: connection, link
-    pos: noun
-    gender: m
-  - lemma: елемент
-    ipa: /ɛlɛmˈɛnt/
-    translation: element, part
-    pos: noun
-    gender: m
-  - lemma: система
-    ipa: /sɪstˈɛma/
-    translation: system
-    pos: noun
-    gender: f
-  - lemma: творчість
-    ipa: /tʋˈɔrt͡ʃistʲ/
-    translation: creativity, work
-    pos: noun
-    gender: f
   - lemma: записування
-    ipa: /zapˈɪsuʋannja/
-    translation: recording, writing down (process)
+    ipa: /zapɪsuʋannja/
+    translation: recording, writing down
     pos: noun
     gender: n
-  - lemma: перечитування
-    ipa: /pɛrɛt͡ʃˈɪtuʋannja/
-    translation: rereading
+  - lemma: письменник
+    ipa: /pɪsʲmɛnnɪk/
+    translation: writer
     pos: noun
-    gender: n
+    gender: m
   - lemma: обговорення
-    ipa: /ɔbɦɔʋˈɔrɛnnja/
+    ipa: /ɔbɦɔʋɔrɛnnja/
     translation: discussion
     pos: noun
     gender: n
-  - lemma: висловлення
-    ipa: /ʋɪslˈɔʋlɛnnja/
-    translation: expression, utterance
+  - lemma: передбачення
+    ipa: /pɛrɛdbat͡ʃɛnnja/
+    translation: prediction
     pos: noun
     gender: n
-  - lemma: підручник
-    ipa: /pіdrut͡ʃnɪk/
-    translation: textbook
-    pos: noun
-    gender: m
-  - lemma: досвід
-    ipa: /dɔsʋid/
-    translation: experience
-    pos: noun
-    gender: m
-  - lemma: успіх
-    ipa: /uspіx/
-    translation: success
-    pos: noun
-    gender: m
-  - lemma: логіка
-    ipa: /lɔɦіka/
-    translation: logic
-    pos: noun
-    gender: f
-  - lemma: впевненість
-    ipa: /ʋpɛʋnɛnistʲ/
-    translation: confidence
-    pos: noun
-    gender: f
-  - lemma: майстерність
-    ipa: /majstɛrnistʲ/
-    translation: mastery, skill
-    pos: noun
-    gender: f
-  - lemma: підземний
-    ipa: /pidzɛmnɪj/
-    translation: underground
-    pos: adj
-  - lemma: земляк
-    ipa: /zɛmljak/
-    translation: fellow countryman
-    pos: noun
-    gender: m
-  - lemma: світло
-    ipa: /sʋitɫɔ/
-    translation: light
-    pos: noun
-    gender: n
-  - lemma: народитися
-    ipa: /narɔdɪtɪsʲa/
-    translation: to be born
-    pos: verb
-  - lemma: освіта
-    ipa: /ɔsʋita/
-    translation: education
-    pos: noun
-    gender: f
-  - lemma: розвиток
-    ipa: /rɔzʋɪtɔk/
-    translation: development
-    pos: noun
-    gender: m
-  - lemma: творчий
-    ipa: /tʋɔrt͡ʃɪj/
-    translation: creative
-    pos: adj
-  - lemma: професія
-    ipa: /prɔfɛsʲija/
-    translation: profession
-    pos: noun
-    gender: f
-  - lemma: громадянин
-    ipa: /ɦrɔmadʲanɪn/
-    translation: citizen
-    pos: noun
-    gender: m
-  - lemma: держава
-    ipa: /dɛrʒaʋa/
-    translation: state, country
-    pos: noun
-    gender: f
-  - lemma: знання
-    ipa: /znannja/
-    translation: knowledge
-    pos: noun
-    gender: n
-  - lemma: розум
-    ipa: /rɔzum/
-    translation: mind, intellect
-    pos: noun
-    gender: m

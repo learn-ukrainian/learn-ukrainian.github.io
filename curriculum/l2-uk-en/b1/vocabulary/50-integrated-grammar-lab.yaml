@@ -210,11 +210,6 @@ items:
   translation: boss (diminutive)
   pos: noun
   gender: m
-- lemma: невідповідність
-  ipa: /nɛʋidpɔʋˈidnistʲ/
-  translation: discrepancy, inconsistency
-  pos: noun
-  gender: f
 - lemma: організатор
   ipa: /ɔrɦanizˈatɔr/
   translation: organizer
@@ -373,10 +368,6 @@ items:
   ipa: /frazɛɔlɔɦˈizm/
   translation: phraseology, idiom
   pos: noun
-- lemma: характеризуватися
-  ipa: /xaraktɛrɪzuʋˈatɪsja/
-  translation: to be characterized by
-  pos: verb
 - lemma: церемонія
   ipa: /t͡sɛrɛmˈɔnija/
   translation: ceremony

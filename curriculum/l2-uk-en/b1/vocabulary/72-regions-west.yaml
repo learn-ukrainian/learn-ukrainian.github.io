@@ -10,15 +10,6 @@ items:
   ipa: /arɔmˈatnɪj/
   translation: fragrant, aromatic
   pos: adj
-- lemma: багатокультурний
-  ipa: /baɦatɔkulʲtˈurnɪj/
-  translation: multicultural
-  pos: adj
-- lemma: багатокультурність
-  ipa: /baɦatɔkulʲturnistʲ/
-  translation: multiculturalism
-  pos: noun
-  gender: f
 - lemma: бануш
   ipa: /bˈanuʃ/
   translation: banosh (dish)
@@ -62,14 +53,6 @@ items:
   ipa: /ɛtnɔɦrafˈit͡ʃnɪj/
   translation: ethnographic
   pos: adj
-- lemma: західнокарпатський
-  ipa: /zaxidnɔkarpˈatsʲkɪj/
-  translation: ''
-  pos: adj
-- lemma: західноукраїнський
-  ipa: /zaxidnɔukraˈjinsʲkɪj/
-  translation: West Ukrainian
-  pos: adj
 - lemma: католицький
   ipa: /katɔlˈɪt͡sʲkɪj/
   translation: Catholic
@@ -78,11 +61,6 @@ items:
   ipa: /lˈɛmkɔ/
   translation: Lemko
   pos: noun
-- lemma: луцьк
-  ipa: /lut͡sʲk/
-  translation: Lutsk
-  pos: noun
-  gender: m
 - lemma: п'єрникнути
   ipa: /pjɛrnɪknutɪ/
   translation: ''

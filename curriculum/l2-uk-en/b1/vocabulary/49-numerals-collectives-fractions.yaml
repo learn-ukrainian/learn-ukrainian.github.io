@@ -102,10 +102,6 @@ items:
   translation: yard, courtyard
   pos: noun
   gender: n
-- lemma: популяризований
-  ipa: /pɔpuljarɪzˈɔʋanɪj/
-  translation: popularized
-  pos: adj
 - lemma: порядковий
   ipa: /pɔrjadkˈɔʋɪj/
   translation: ordinal (number)
@@ -197,10 +193,6 @@ items:
   ipa: /sut͡ʃˈasnɔ/
   translation: modernly
   pos: adv
-- lemma: термінологічний
-  ipa: /tɛrminɔlɔɦˈit͡ʃnɪj/
-  translation: terminological
-  pos: adj
 - lemma: традиційно
   ipa: /tradɪt͡sˈijnɔ/
   translation: traditionally

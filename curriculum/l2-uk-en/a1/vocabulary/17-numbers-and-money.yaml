@@ -48,11 +48,6 @@ items:
   translation: Hryhorii (name)
   pos: noun
   gender: m
-- lemma: грн
-  ipa: /ɦrn/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: грушевський
   ipa: /ɦruʃˈɛʋsʲkɪj/
   translation: Hrushevskyi (name)
@@ -88,11 +83,6 @@ items:
   translation: ticket office, checkout
   pos: noun
   gender: f
-- lemma: кг
-  ipa: /kɦ/
-  translation: kg
-  pos: noun
-  gender: m
 - lemma: копійка
   ipa: /kɔpˈijka/
   translation: kopiika (cent)

@@ -137,10 +137,6 @@ items:
   ipa: /nastˈilʲnɪj/
   translation: table-top, desktop
   pos: adj
-- lemma: непередбачуваний
-  ipa: /nɛpɛrɛdbˈat͡ʃuʋanɪj/
-  translation: unpredictable
-  pos: adj
 - lemma: нестабільний
   ipa: /nɛstabˈilʲnɪj/
   translation: unstable
@@ -199,11 +195,6 @@ items:
   translation: republic
   pos: noun
   gender: f
-- lemma: ризик
-  ipa: /rˈɪzɪk/
-  translation: risk
-  pos: noun
-  gender: m
 - lemma: розробник
   ipa: /rɔzrˈɔbnɪk/
   translation: developer

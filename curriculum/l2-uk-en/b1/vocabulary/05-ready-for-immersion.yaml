@@ -60,11 +60,6 @@ items:
   ipa: /dɔslˈidʒuʋatɪ/
   translation: to research, to study (imperfective)
   pos: verb
-- lemma: дієвідмінювання
-  ipa: /dijɛʋidmˈinjuʋannja/
-  translation: conjugation
-  pos: noun
-  gender: n
 - lemma: залежний
   ipa: /zalˈɛʒnɪj/
   translation: dependent
@@ -78,10 +73,6 @@ items:
   translation: immersion
   pos: noun
   gender: n
-- lemma: звук
-  ipa: /zʋuk/
-  translation: sound
-  pos: noun
 - lemma: змогти
   ipa: /zmɔɦtˈɪ/
   translation: to be able to (perfective)
@@ -149,10 +140,6 @@ items:
   translation: inflection
   pos: noun
   gender: f
-- lemma: словосполучення
-  ipa: /slɔʋɔspɔlˈut͡ʃɛnnja/
-  translation: phrase, word combination
-  pos: noun
 - lemma: слуга
   ipa: /sluɦˈa/
   translation: servant

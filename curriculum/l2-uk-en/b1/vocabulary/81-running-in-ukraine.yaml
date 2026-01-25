@@ -126,10 +126,6 @@ items:
   ipa: /najduʃɛʋniʃɪj/
   translation: the most soulful
   pos: adj
-- lemma: наймальовничіший
-  ipa: /najmalʲɔʋnɪt͡ʃiʃɪj/
-  translation: the most picturesque
-  pos: adj
 - lemma: належність
   ipa: /nalˈɛʒnistʲ/
   translation: affiliation, belonging
@@ -211,11 +207,6 @@ items:
   ipa: /ruʃˈij/
   translation: driver, engine, mover
   pos: noun
-- lemma: самовдосконалення
-  ipa: /samɔʋdɔskɔnˈalɛnnja/
-  translation: self-improvement
-  pos: noun
-  gender: n
 - lemma: самотній
   ipa: /samˈɔtnij/
   translation: lonely, solitary

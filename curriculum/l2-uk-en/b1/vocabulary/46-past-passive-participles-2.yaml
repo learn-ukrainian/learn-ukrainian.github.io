@@ -113,10 +113,6 @@ items:
   translation: designer
   pos: noun
   gender: m
-- lemma: дистанціюватися
-  ipa: /dɪstant͡sijuʋˈatɪsja/
-  translation: to distance oneself
-  pos: verb
 - lemma: додатково
   ipa: /dɔdatkˈɔʋɔ/
   translation: additionally
@@ -151,11 +147,6 @@ items:
 - lemma: маска
   ipa: /mˈaska/
   translation: mask
-  pos: noun
-  gender: f
-- lemma: медіаграмотність
-  ipa: /mɛdiaɦramɔtnistʲ/
-  translation: media literacy
   pos: noun
   gender: f
 - lemma: монтаж

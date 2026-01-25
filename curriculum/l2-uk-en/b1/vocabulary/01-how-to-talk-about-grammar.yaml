@@ -36,11 +36,6 @@ items:
   ipa: /ʋˈɪʋt͡ʃɪtɪ/
   translation: to learn (perfective)
   pos: verb
-- lemma: вигук
-  ipa: /ʋˈɪɦuk/
-  translation: exclamation, shout
-  pos: noun
-  gender: m
 - lemma: виділити
   ipa: /ʋˈɪdilɪtɪ/
   translation: to highlight, to allocate
@@ -576,11 +571,6 @@ items:
 - lemma: урок
   ipa: /urˈɔk/
   translation: lesson
-  pos: noun
-  gender: m
-- lemma: ус
-  ipa: /us/
-  translation: ''
   pos: noun
   gender: m
 - lemma: утворений

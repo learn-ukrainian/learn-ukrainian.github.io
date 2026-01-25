@@ -41,11 +41,6 @@ items:
   translation: addition, supplement
   pos: noun
   gender: n
-- lemma: друк
-  ipa: /druk/
-  translation: printing
-  pos: noun
-  gender: m
 - lemma: заявляти
   ipa: /zajaʋlˈjatɪ/
   translation: to state, to announce (imperfective)
@@ -110,10 +105,6 @@ items:
   ipa: /rɔzˈjasnjuʋatɪ/
   translation: to clarify (imperfective)
   pos: verb
-- lemma: різноманітніший
-  ipa: /riznɔmanˈitniʃɪj/
-  translation: more diverse
-  pos: adj
 - lemma: самобутність
   ipa: /samɔbˈutnistʲ/
   translation: originality, authenticity

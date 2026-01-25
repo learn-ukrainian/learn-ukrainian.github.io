@@ -15,18 +15,9 @@ items:
   ipa: /zaplatˈɪtɪ/
   translation: to pay
   pos: verb
-- lemma: зн
-  ipa: /zn/
-  translation: ''
-  pos: noun
 - lemma: оплата
   ipa: /ɔplˈata/
   translation: payment
-  pos: noun
-  gender: f
-- lemma: ор
-  ipa: /ɔr/
-  translation: ''
   pos: noun
   gender: f
 - lemma: плач

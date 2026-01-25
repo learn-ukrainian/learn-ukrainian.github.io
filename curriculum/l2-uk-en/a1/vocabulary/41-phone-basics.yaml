@@ -88,11 +88,6 @@ items:
   translation: WhatsApp
   pos: noun
   gender: m
-- lemma: текст
-  ipa: /tɛkst/
-  translation: text
-  pos: noun
-  gender: m
 - lemma: голос
   ipa: /ɦˈɔlɔs/
   translation: voice

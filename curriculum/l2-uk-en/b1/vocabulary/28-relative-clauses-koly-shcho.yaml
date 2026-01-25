@@ -79,10 +79,6 @@ items:
   translation: Holoborodko (name)
   pos: noun
   gender: f
-- lemma: грек
-  ipa: /ɦrɛk/
-  translation: Greek (male)
-  pos: noun
 - lemma: грецький
   ipa: /ɦrˈɛt͡sʲkɪj/
   translation: Greek
@@ -205,10 +201,6 @@ items:
   ipa: /nadɪxatɪ/
   translation: to inspire
   pos: verb
-- lemma: найромантичніший
-  ipa: /najrɔmantˈɪt͡ʃniʃɪj/
-  translation: the most romantic
-  pos: adj
 - lemma: найщасливіший
   ipa: /najʃt͡ʃaslˈɪʋiʃɪj/
   translation: the happiest
@@ -363,10 +355,6 @@ items:
   translation: fountain
   pos: noun
   gender: m
-- lemma: фізик
-  ipa: /fˈizɪk/
-  translation: physicist
-  pos: noun
 - lemma: філософський
   ipa: /filɔsˈɔfsʲkɪj/
   translation: philosophical

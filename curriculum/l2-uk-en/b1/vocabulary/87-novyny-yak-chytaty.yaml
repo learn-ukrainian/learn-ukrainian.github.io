@@ -40,11 +40,6 @@ items:
   ipa: /ʋprɔʋˈadɪtɪ/
   translation: to implement (perfective)
   pos: verb
-- lemma: вр
-  ipa: /ʋr/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: врізка
   ipa: /ʋrizka/
   translation: sidebar
@@ -63,10 +58,6 @@ items:
   ipa: /ɛmɔt͡sˈijniʃɪj/
   translation: more emotional
   pos: adj
-- lemma: закликиподілитися
-  ipa: /zaklɪkɪpɔdilɪtɪsja/
-  translation: ''
-  pos: verb
 - lemma: заробітний
   ipa: /zarɔbˈitnɪj/
   translation: salary (adj)
@@ -122,11 +113,6 @@ items:
   translation: media expert
   pos: noun
   gender: m
-- lemma: мзс
-  ipa: /mzs/
-  translation: Ministry of Foreign Affairs (abbr)
-  pos: noun
-  gender: n
 - lemma: наведений
   ipa: /naʋˈɛdɛnɪj/
   translation: given, cited
@@ -172,11 +158,6 @@ items:
   translation: small flag
   pos: noun
   gender: m
-- lemma: пресконференція
-  ipa: /prɛskɔnfɛrˈɛnt͡sija/
-  translation: press conference
-  pos: noun
-  gender: f
 - lemma: проголосувати
   ipa: /prɔɦɔlɔsuʋˈatɪ/
   translation: to vote
@@ -269,30 +250,15 @@ items:
   ipa: /tɛlɛɦrˈam-kanal/
   translation: Telegram channel
   pos: noun
-- lemma: телерадіокомпанія
-  ipa: /tɛlɛradiɔkɔmpˈanija/
-  translation: TV and radio company
-  pos: noun
-  gender: f
 - lemma: транслювати
   ipa: /transljuʋˈatɪ/
   translation: to broadcast, to transmit
   pos: verb
-- lemma: тсн
-  ipa: /tsn/
-  translation: TSN (news stream)
-  pos: noun
-  gender: f
 - lemma: ужиток
   ipa: /uʒˈɪtɔk/
   translation: use, usage
   pos: noun
   gender: m
-- lemma: уп
-  ipa: /up/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: фактчекер
   ipa: /faktt͡ʃɛkɛr/
   translation: fact-checker

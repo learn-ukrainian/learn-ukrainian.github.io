@@ -50,11 +50,6 @@ items:
   translation: ventilation, airing
   pos: noun
   gender: n
-- lemma: прослуховування
-  ipa: /prɔsluxˈɔʋuʋannja/
-  translation: listening, audition
-  pos: noun
-  gender: n
 - lemma: розробляючи
   ipa: /rɔzrɔblˈjajut͡ʃɪ/
   translation: developing

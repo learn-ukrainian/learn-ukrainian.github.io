@@ -7,10 +7,6 @@ items:
   translation: apology, forgiveness
   pos: noun
   gender: n
-- lemma: говорити-
-  ipa: /ɦɔʋɔrˈɪtɪ-/
-  translation: ''
-  pos: noun
 - lemma: ехаяти
   ipa: /ɛxajatɪ/
   translation: ''
@@ -24,10 +20,6 @@ items:
   translation: tracing paper, loan translation (calque)
   pos: noun
   gender: f
-- lemma: мо
-  ipa: /mɔ/
-  translation: ''
-  pos: adv
 - lemma: нехай
   ipa: /nɛxˈaj/
   translation: let, may (particle)
@@ -53,10 +45,6 @@ items:
   translation: ''
   pos: noun
   gender: f
-- lemma: читати-
-  ipa: /t͡ʃɪtˈatɪ-/
-  translation: ''
-  pos: noun
 - lemma: щастити
   ipa: /ʃt͡ʃastˈɪtɪ/
   translation: to be lucky

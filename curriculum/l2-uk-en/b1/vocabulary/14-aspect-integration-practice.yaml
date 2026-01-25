@@ -94,11 +94,6 @@ items:
   translation: excursion, tour
   pos: noun
   gender: f
-- lemma: екшн
-  ipa: /ɛkʃn/
-  translation: action (genre)
-  pos: noun
-  gender: m
 - lemma: екшн-сцена
   ipa: /ɛkʃn-st͡sˈɛna/
   translation: action scene
@@ -125,10 +120,6 @@ items:
   translation: law
   pos: noun
   gender: m
-- lemma: зареєструватися
-  ipa: /zarɛjɛstruʋˈatɪsja/
-  translation: to register oneself
-  pos: verb
 - lemma: заснути
   ipa: /zasnˈutɪ/
   translation: to fall asleep (perfective)

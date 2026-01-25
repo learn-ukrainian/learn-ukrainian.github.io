@@ -60,10 +60,6 @@ items:
   translation: well-being, prosperity
   pos: noun
   gender: m
-- lemma: дохристиянський
-  ipa: /dɔxrɪstɪˈjansʲkɪj/
-  translation: pre-Christian
-  pos: adj
 - lemma: дітки
   ipa: /dˈitkɪ/
   translation: children (diminutive)

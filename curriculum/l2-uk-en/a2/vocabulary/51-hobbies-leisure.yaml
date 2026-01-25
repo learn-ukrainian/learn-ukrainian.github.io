@@ -46,10 +46,6 @@ items:
   translation: spectator, viewer
   pos: noun
   gender: m
-- lemma: гм
-  ipa: /ɦm/
-  translation: ''
-  pos: noun
 - lemma: говерла
   ipa: /ɦɔʋˈɛrla/
   translation: Hoverla (mountain)

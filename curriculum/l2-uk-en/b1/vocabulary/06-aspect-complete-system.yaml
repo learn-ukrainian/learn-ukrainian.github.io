@@ -525,11 +525,6 @@ items:
   translation: background
   pos: noun
   gender: m
-- lemma: франк
-  ipa: /frank/
-  translation: franc
-  pos: noun
-  gender: m
 - lemma: ходити
   ipa: /xɔdˈɪtɪ/
   translation: to walk

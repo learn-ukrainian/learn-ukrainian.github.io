@@ -125,15 +125,6 @@ items:
   ipa: /ɛstrˈadnɪj/
   translation: variety, stage (adj)
   pos: adj
-- lemma: ечк
-  ipa: /ɛt͡ʃk/
-  translation: ''
-  pos: noun
-- lemma: ечка
-  ipa: /ˈɛt͡ʃka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: задачка
   ipa: /zadˈat͡ʃka/
   translation: small problem
@@ -195,11 +186,6 @@ items:
 - lemma: книжечка
   ipa: /knˈɪʒɛt͡ʃka/
   translation: small book
-  pos: noun
-  gender: f
-- lemma: ко
-  ipa: /kɔ/
-  translation: to (preposition variants)
   pos: noun
   gender: f
 - lemma: комічний
@@ -363,11 +349,6 @@ items:
   translation: parody
   pos: noun
   gender: f
-- lemma: песик
-  ipa: /pˈɛsɪk/
-  translation: doggy
-  pos: noun
-  gender: m
 - lemma: пестливо
   ipa: /pɛstlˈɪʋɔ/
   translation: affectionately
@@ -459,10 +440,6 @@ items:
   translation: sarcasm
   pos: noun
   gender: m
-- lemma: сентиментальний
-  ipa: /sɛntɪmɛntˈalʲnɪj/
-  translation: sentimental
-  pos: adj
 - lemma: сентиментально
   ipa: /sɛntɪmɛntˈalʲnɔ/
   translation: sentimentally
@@ -578,10 +555,6 @@ items:
   ipa: /t͡ʃɛrʋɔnˈɛnʲkɪj/
   translation: red (diminutive)
   pos: adj
-- lemma: чик
-  ipa: /t͡ʃɪk/
-  translation: ''
-  pos: noun
 - lemma: числовий
   ipa: /t͡ʃɪslɔʋˈɪj/
   translation: numerical

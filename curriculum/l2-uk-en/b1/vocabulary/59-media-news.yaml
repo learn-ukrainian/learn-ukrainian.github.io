@@ -110,10 +110,6 @@ items:
   translation: media sphere
   pos: noun
   gender: f
-- lemma: медіакомунікація
-  ipa: /mɛdiakɔmunikat͡sija/
-  translation: media communication
-  pos: noun
 - lemma: мовник
   ipa: /mˈɔʋnɪk/
   translation: linguist, language teacher
@@ -159,10 +155,6 @@ items:
   translation: column, category, rubric
   pos: noun
   gender: f
-- lemma: спеціалізуватися
-  ipa: /spɛt͡sializuʋˈatɪsja/
-  translation: to specialize
-  pos: verb
 - lemma: студія
   ipa: /stˈudija/
   translation: studio
@@ -176,11 +168,6 @@ items:
 - lemma: тираж
   ipa: /tɪrˈaʒ/
   translation: circulation (print run)
-  pos: noun
-  gender: m
-- lemma: фейк
-  ipa: /fɛjk/
-  translation: fake
   pos: noun
   gender: m
 - lemma: формат

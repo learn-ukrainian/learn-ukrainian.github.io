@@ -2,10 +2,6 @@ module: 36-causal-result-clauses
 level: B1
 version: '2.0'
 items:
-- lemma: адміністративний
-  ipa: /administratˈɪʋnɪj/
-  translation: administrative
-  pos: adj
 - lemma: алібі
   ipa: /ˈalibi/
   translation: alibi

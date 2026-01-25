@@ -46,11 +46,6 @@ items:
   ipa: /nɛmɔʒlˈɪʋɪj/
   translation: impossible
   pos: adj
-- lemma: неоднозначність
-  ipa: /nɛɔdnɔznˈat͡ʃnistʲ/
-  translation: ambiguity
-  pos: noun
-  gender: f
 - lemma: обійняти
   ipa: /ɔbijnˈjatɪ/
   translation: to hug (perfective)

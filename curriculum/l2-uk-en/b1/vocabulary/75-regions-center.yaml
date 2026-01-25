@@ -114,10 +114,6 @@ items:
   translation: khutir (homestead)
   pos: noun
   gender: m
-- lemma: центральноукраїнський
-  ipa: /t͡sɛntralʲnɔukraˈjinsʲkɪj/
-  translation: Central Ukrainian
-  pos: adj
 - lemma: черкас
   ipa: /t͡ʃɛrkˈas/
   translation: ''

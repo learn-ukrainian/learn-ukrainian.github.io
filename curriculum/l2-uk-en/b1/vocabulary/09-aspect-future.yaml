@@ -310,10 +310,6 @@ items:
   ipa: /mˈabutʲ/
   translation: probably
   pos: adv
-- lemma: маргіналізувати
-  ipa: /marɦinalizuʋatɪ/
-  translation: to marginalize
-  pos: verb
 - lemma: медіа
   ipa: /mˈɛdia/
   translation: media
@@ -335,10 +331,6 @@ items:
 - lemma: найближчий
   ipa: /najblˈɪʒt͡ʃɪj/
   translation: nearest, upcoming
-  pos: adj
-- lemma: найпопулярніший
-  ipa: /najpɔpulˈjarniʃɪj/
-  translation: the most popular
   pos: adj
 - lemma: намагатися
   ipa: /namaɦˈatɪsja/
@@ -564,10 +556,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: староукраїнський
-  ipa: /starɔukraˈjinsʲkɪj/
-  translation: Old Ukrainian
-  pos: adj
 - lemma: сти
   ipa: /stɪ/
   translation: ''

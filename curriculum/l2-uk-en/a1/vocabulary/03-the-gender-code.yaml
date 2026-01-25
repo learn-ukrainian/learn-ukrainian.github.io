@@ -151,11 +151,6 @@ items:
   translation: wall
   pos: noun
   gender: f
-- lemma: сік
-  ipa: /sik/
-  translation: juice
-  pos: noun
-  gender: m
 - lemma: таня
   ipa: /tˈanja/
   translation: Tanya (name)

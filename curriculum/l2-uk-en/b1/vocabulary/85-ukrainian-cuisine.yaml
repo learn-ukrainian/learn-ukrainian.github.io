@@ -35,10 +35,6 @@ items:
   translation: variation
   pos: noun
   gender: f
-- lemma: вегетаріанський
-  ipa: /ʋɛɦɛtariˈansʲkɪj/
-  translation: vegetarian (adj)
-  pos: adj
 - lemma: великодній
   ipa: /ʋɛlɪkˈɔdnij/
   translation: Easter (adj)
@@ -59,11 +55,6 @@ items:
   ipa: /ʋklˈjut͡ʃɛnɪj/
   translation: included, turned on
   pos: adj
-- lemma: віск
-  ipa: /ʋisk/
-  translation: wax
-  pos: noun
-  gender: m
 - lemma: гастрономічний
   ipa: /ɦastrɔnɔmˈit͡ʃnɪj/
   translation: gastronomic
@@ -120,10 +111,6 @@ items:
   ipa: /zɛrnɔʋˈɪj/
   translation: grain (adj), cereal
   pos: adj
-- lemma: злак
-  ipa: /zlak/
-  translation: cereal, grass
-  pos: noun
 - lemma: знайомлячи
   ipa: /znajˈɔmljat͡ʃɪ/
   translation: introducing

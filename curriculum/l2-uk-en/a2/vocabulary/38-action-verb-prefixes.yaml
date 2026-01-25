@@ -7,6 +7,15 @@ items:
   translation: debt
   pos: noun
   gender: m
+- lemma: вид
+  ipa: /vɪd/
+  translation: aspect, view
+  pos: noun
+  gender: m
+- lemma: доконаний
+  ipa: /dɔkˈɔnɑnɪj/
+  translation: perfective
+  pos: adj
 - lemma: впалий
   ipa: /ʋpˈalɪj/
   translation: sunken, fallen
@@ -175,10 +184,6 @@ items:
   ipa: /spɪsˈatɪ/
   translation: to copy (cheat), to write off
   pos: verb
-- lemma: трансформаційний
-  ipa: /transfɔrmat͡sˈijnɪj/
-  translation: transformational
-  pos: adj
 - lemma: шедевр
   ipa: /ʃɛdˈɛʋr/
   translation: masterpiece

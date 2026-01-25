@@ -2,10 +2,6 @@ module: 08-the-living-verb-ii
 level: A1
 version: '2.0'
 items:
-- lemma: жу
-  ipa: /ʒu/
-  translation: ''
-  pos: noun
 - lemma: ити
   ipa: /ɪtɪ/
   translation: to go (truncated)
@@ -15,11 +11,6 @@ items:
   translation: Katya (name)
   pos: noun
   gender: f
-- lemma: лю
-  ipa: /lju/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: люба
   ipa: /ljubˈa/
   translation: Lyuba (name)
@@ -39,14 +30,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: сь
-  ipa: /sʲ/
-  translation: ''
-  pos: noun
-- lemma: ся
-  ipa: /sja/
-  translation: ''
-  pos: part
 - lemma: ход
   ipa: /xɔd/
   translation: ''

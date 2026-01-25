@@ -51,10 +51,6 @@ items:
   translation: patience
   pos: noun
   gender: n
-- lemma: університетський
-  ipa: /uniʋɛrsɪtˈɛtsʲkɪj/
-  translation: university (adj)
-  pos: adj
 - lemma: шей
   ipa: /ʃɛj/
   translation: necks

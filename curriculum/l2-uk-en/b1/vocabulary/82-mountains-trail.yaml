@@ -127,10 +127,6 @@ items:
   translation: equipment, gear
   pos: noun
   gender: n
-- lemma: спуск
-  ipa: /spusk/
-  translation: descent, slope
-  pos: noun
 - lemma: трейл
   ipa: /trɛjl/
   translation: trail
@@ -139,11 +135,6 @@ items:
 - lemma: трейлраннінг
   ipa: /trɛjlranninɦ/
   translation: trail running
-  pos: noun
-  gender: m
-- lemma: трек
-  ipa: /trɛk/
-  translation: track (music/racing)
   pos: noun
   gender: m
 - lemma: триматися

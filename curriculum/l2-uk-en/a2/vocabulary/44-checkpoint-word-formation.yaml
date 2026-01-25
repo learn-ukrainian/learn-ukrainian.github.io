@@ -10,10 +10,6 @@ items:
   ipa: /ʋbat͡ʃˈatɪ/
   translation: to see, to perceive
   pos: verb
-- lemma: ик
-  ipa: /ɪk/
-  translation: ''
-  pos: noun
 - lemma: руч
   ipa: /rut͡ʃ/
   translation: ''
@@ -28,10 +24,6 @@ items:
   translation: singing
   pos: noun
   gender: m
-- lemma: ход-
-  ipa: /xɔd-/
-  translation: ''
-  pos: noun
 - lemma: читати
   ipa: /t͡ʃɪtˈa/
   translation: to read

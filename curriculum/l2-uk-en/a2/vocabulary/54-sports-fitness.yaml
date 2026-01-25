@@ -211,11 +211,6 @@ items:
   ipa: /nɔʋat͡ʃkˈa/
   translation: beginner (female)
   pos: noun
-- lemma: нск
-  ipa: /nsk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: обводити
   ipa: /ɔbʋɔdɪtɪ/
   translation: to circle, to outline
@@ -232,10 +227,6 @@ items:
   ipa: /ɔlimpˈijsʲkɪj/
   translation: Olympic
   pos: adj
-- lemma: ох
-  ipa: /ɔx/
-  translation: oh, alas
-  pos: noun
 - lemma: пенальті
   ipa: /pɛnˈalʲti/
   translation: penalty (sports)

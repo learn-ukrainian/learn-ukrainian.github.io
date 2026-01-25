@@ -140,20 +140,11 @@ items:
   ipa: /uzɦˈɔdʒujut͡ʃɪ/
   translation: coordinating, agreeing
   pos: verb
-- lemma: ум
-  ipa: /um/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: харчування
   ipa: /xart͡ʃuʋˈannja/
   translation: nutrition, food service
   pos: noun
   gender: n
-- lemma: ща
-  ipa: /ʃt͡ʃa/
-  translation: ''
-  pos: noun
 - lemma: юрій
   ipa: /ˈjurij/
   translation: Yuriy (name)

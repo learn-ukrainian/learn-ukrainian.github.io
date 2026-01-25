@@ -2,10 +2,6 @@ module: 03-reading-grammar-rules
 level: B1
 version: '2.0'
 items:
-- lemma: а-
-  ipa: /a-/
-  translation: a-
-  pos: noun
 - lemma: аналіз
   ipa: /anˈaliz/
   translation: analysis
@@ -36,10 +32,6 @@ items:
   translation: teacher, lecturer
   pos: noun
   gender: m
-- lemma: використовуватися
-  ipa: /ʋɪkɔrɪstˈɔʋuʋatɪsja/
-  translation: to be used
-  pos: verb
 - lemma: виняток
   ipa: /ʋˈɪnjatɔk/
   translation: exception
@@ -89,10 +81,6 @@ items:
   translation: grammar
   pos: noun
   gender: f
-- lemma: да
-  ipa: /da/
-  translation: 'yes'
-  pos: part
 - lemma: документ
   ipa: /dɔkumˈɛnt/
   translation: document
@@ -135,10 +123,6 @@ items:
   ipa: /zmˈɛnʃuʋalʲnɪj/
   translation: diminutive (grammar)
   pos: adj
-- lemma: ий
-  ipa: /ɪj/
-  translation: ''
-  pos: noun
 - lemma: команда
   ipa: /kɔmˈanda/
   translation: team, command
@@ -202,10 +186,6 @@ items:
   ipa: /ɔbrˈatɪ/
   translation: to choose, to select (perfective)
   pos: verb
-- lemma: ок
-  ipa: /ɔk/
-  translation: ''
-  pos: noun
 - lemma: оки
   ipa: /ɔkˈɪ/
   translation: eyes (dialectal)
@@ -283,10 +263,6 @@ items:
   ipa: /prɔanalizuʋˈatɪ/
   translation: to analyze
   pos: verb
-- lemma: підпорядковуватися
-  ipa: /pidpɔrjadkˈɔʋuʋatɪsja/
-  translation: to be subordinate, to obey
-  pos: verb
 - lemma: підручник
   ipa: /pidrˈut͡ʃnɪk/
   translation: textbook
@@ -296,11 +272,6 @@ items:
   ipa: /pidxˈɔdɪtɪ/
   translation: to approach, to be suitable (imperfective)
   pos: verb
-- lemma: регістр
-  ipa: /rɛɦˈistr/
-  translation: register
-  pos: noun
-  gender: m
 - lemma: розрізняти
   ipa: /rɔzriznˈjatɪ/
   translation: to distinguish (imperfective)

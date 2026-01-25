@@ -73,11 +73,6 @@ items:
   translation: box
   pos: noun
   gender: f
-- lemma: кошик
-  ipa: /kˈɔʃɪk/
-  translation: basket
-  pos: noun
-  gender: f
 - lemma: куток
   ipa: /kutˈɔk/
   translation: corner
@@ -172,14 +167,6 @@ items:
   ipa: /ujaʋˈɪtɪ/
   translation: to imagine (perfective)
   pos: verb
-- lemma: в
-  ipa: /ʋ/
-  translation: in, into, at
-  pos: prep
-- lemma: у
-  ipa: /u/
-  translation: in, into, at
-  pos: prep
 - lemma: на
   ipa: /na/
   translation: on, onto, at
@@ -207,10 +194,6 @@ items:
 - lemma: до
   ipa: /dɔ/
   translation: to, into, until
-  pos: prep
-- lemma: з
-  ipa: /z/
-  translation: from, with, since
   pos: prep
 - lemma: із
   ipa: /iz/

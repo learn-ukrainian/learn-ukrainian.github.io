@@ -16,10 +16,6 @@ items:
   translation: apostle
   pos: noun
   gender: m
-- lemma: бл
-  ipa: /bl/
-  translation: ''
-  pos: noun
 - lemma: блокбастер
   ipa: /blɔkbˈastɛr/
   translation: blockbuster
@@ -67,10 +63,6 @@ items:
   translation: exhibition
   pos: noun
   gender: f
-- lemma: вл
-  ipa: /ʋl/
-  translation: ''
-  pos: noun
 - lemma: вожений
   ipa: /ʋˈɔʒɛnɪj/
   translation: led
@@ -184,10 +176,6 @@ items:
   ipa: /zaslˈuxanɪj/
   translation: ''
   pos: adj
-- lemma: застосовуватися
-  ipa: /zastɔsˈɔʋuʋatɪsja/
-  translation: to be applied
-  pos: verb
 - lemma: затверджений
   ipa: /zatʋˈɛrdʒɛnɪj/
   translation: approved
@@ -237,10 +225,6 @@ items:
   ipa: /zubnˈɪj/
   translation: tooth (adj), dental
   pos: adj
-- lemma: им
-  ipa: /ɪm/
-  translation: ''
-  pos: noun
 - lemma: кошт
   ipa: /kɔʃt/
   translation: ''
@@ -281,15 +265,6 @@ items:
   translation: peaceful (neuter)
   pos: noun
   gender: n
-- lemma: мл
-  ipa: /ml/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мн
-  ipa: /mn/
-  translation: ''
-  pos: noun
 - lemma: мнемонічний
   ipa: /mnɛmɔnˈit͡ʃnɪj/
   translation: mnemonic
@@ -329,10 +304,6 @@ items:
   translation: mismatch, disagreement
   pos: noun
   gender: n
-- lemma: но
-  ipa: /nɔ/
-  translation: ''
-  pos: part
 - lemma: ношений
   ipa: /nˈɔʃɛnɪj/
   translation: worn, used
@@ -374,11 +345,6 @@ items:
   ipa: /pˈɪsanɪj/
   translation: written, hand-painted
   pos: adj
-- lemma: пл
-  ipa: /pl/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: плачений
   ipa: /plˈat͡ʃɛnɪj/
   translation: paid

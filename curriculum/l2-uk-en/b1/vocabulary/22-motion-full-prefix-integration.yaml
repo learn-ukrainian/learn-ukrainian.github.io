@@ -109,10 +109,6 @@ items:
   ipa: /zbɔʒɛʋˈɔlitɪ/
   translation: to go crazy
   pos: verb
-- lemma: зв
-  ipa: /zʋ/
-  translation: ''
-  pos: noun
 - lemma: зійти
   ipa: /zijtˈɪ/
   translation: to go down, to descend, to come up (of sun)
@@ -121,11 +117,6 @@ items:
   ipa: /zijtˈɪsja/
   translation: to converge, to agree
   pos: verb
-- lemma: кубик
-  ipa: /kˈubɪk/
-  translation: cube, die
-  pos: noun
-  gender: m
 - lemma: лего
   ipa: /lɛɦɔ/
   translation: Lego
@@ -174,10 +165,6 @@ items:
   ipa: /nat͡siɔnˈalʲnɪj/
   translation: national
   pos: adj
-- lemma: націоналістичний
-  ipa: /nat͡siɔnalistˈɪt͡ʃnɪj/
-  translation: nationalist (adj)
-  pos: adj
 - lemma: облетілий
   ipa: /ɔblɛtˈilɪj/
   translation: faded, fallen (leaves)
@@ -186,10 +173,6 @@ items:
   ipa: /ˈɔbraznɔ/
   translation: figuratively
   pos: adv
-- lemma: однонаправлений
-  ipa: /ɔdnɔnaprˈaʋlɛnɪj/
-  translation: one-way, unidirectional
-  pos: adj
 - lemma: оптимізм
   ipa: /ɔptɪmˈizm/
   translation: optimism
@@ -258,10 +241,6 @@ items:
   translation: equation
   pos: noun
   gender: n
-- lemma: різнонаправлений
-  ipa: /riznɔnaprˈaʋlɛnɪj/
-  translation: multidirectional
-  pos: adj
 - lemma: скрипниківка
   ipa: /skrɪpnɪkiʋka/
   translation: Skrypnykivka (orthography)

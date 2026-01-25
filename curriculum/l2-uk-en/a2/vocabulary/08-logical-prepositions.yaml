@@ -240,14 +240,6 @@ items:
   ipa: /ʋid/
   translation: from (person/source)
   pos: prep
-- lemma: з
-  ipa: /z/
-  translation: from (place), with (instrumental)
-  pos: prep
-- lemma: о
-  ipa: /ɔ/
-  translation: at (time)
-  pos: prep
 - lemma: об
   ipa: /ɔb/
   translation: at (time before vowel)

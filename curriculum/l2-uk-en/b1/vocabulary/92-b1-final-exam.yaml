@@ -16,10 +16,6 @@ items:
   translation: Argentina
   pos: noun
   gender: f
-- lemma: аргументативний
-  ipa: /arɦumɛntatɪʋnɪj/
-  translation: argumentative
-  pos: adj
 - lemma: беззаперечно
   ipa: /bɛzzapɛrˈɛt͡ʃnɔ/
   translation: unquestionably
@@ -238,11 +234,6 @@ items:
   ipa: /prɪnˈɔsjat͡ʃɪ/
   translation: bringing
   pos: verb
-- lemma: природознавство
-  ipa: /prɪrɔdɔznˈaʋstʋɔ/
-  translation: natural science
-  pos: noun
-  gender: n
 - lemma: проблемний
   ipa: /prɔblˈɛmnɪj/
   translation: problematic
@@ -301,11 +292,6 @@ items:
 - lemma: спринт
   ipa: /sprɪnt/
   translation: sprint
-  pos: noun
-  gender: m
-- lemma: срср
-  ipa: /srsr/
-  translation: USSR
   pos: noun
   gender: m
 - lemma: столітній

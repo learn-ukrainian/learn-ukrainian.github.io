@@ -6,14 +6,6 @@ items:
   ipa: /ˈatɪ/
   translation: to (verb suffix/ending)
   pos: noun
-- lemma: аю
-  ipa: /ˈaju/
-  translation: ''
-  pos: noun
-- lemma: ає
-  ipa: /ajɛ/
-  translation: ''
-  pos: noun
 - lemma: аєш
   ipa: /ajɛʃ/
   translation: ''
@@ -23,10 +15,6 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: ва-
-  ipa: /ʋa-/
-  translation: ''
-  pos: noun
 - lemma: вечеряти
   ipa: /ʋɛt͡ʃˈɛrjatɪ/
   translation: to have dinner
@@ -35,10 +23,6 @@ items:
   ipa: /ʋˈilʲnɪj/
   translation: free
   pos: adj
-- lemma: е-
-  ipa: /ɛ-/
-  translation: ''
-  pos: noun
 - lemma: картина
   ipa: /kartˈɪna/
   translation: picture, painting
@@ -79,41 +63,8 @@ items:
   ipa: /tɔ/
   translation: ''
   pos: part
-- lemma: у-
-  ipa: /u-/
-  translation: ''
-  pos: noun
-- lemma: уват
-  ipa: /uʋat/
-  translation: ''
-  pos: noun
-- lemma: чи-та-вати
-  ipa: /t͡ʃɪ-ta-ʋˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: чи-та-я
-  ipa: /t͡ʃɪ-ta-ja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: чита-
-  ipa: /t͡ʃɪtˈa-/
-  translation: ''
-  pos: noun
-- lemma: ю-
-  ipa: /ju-/
-  translation: ''
-  pos: noun
-- lemma: юват
-  ipa: /juʋat/
-  translation: ''
-  pos: noun
 - lemma: ють
   ipa: /jutʲ/
-  translation: ''
-  pos: noun
-- lemma: ює
-  ipa: /jujɛ/
   translation: ''
   pos: noun
 - lemma: юєш
@@ -130,9 +81,5 @@ items:
   pos: noun
 - lemma: єте
   ipa: /jɛtɛ/
-  translation: ''
-  pos: noun
-- lemma: єш
-  ipa: /jɛʃ/
   translation: ''
   pos: noun

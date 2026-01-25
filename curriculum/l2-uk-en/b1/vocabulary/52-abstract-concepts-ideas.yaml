@@ -196,11 +196,6 @@ items:
   translation: religion
   pos: noun
   gender: f
-- lemma: реєстр
-  ipa: /rɛˈjɛstr/
-  translation: register, registry
-  pos: noun
-  gender: m
 - lemma: розв'язання
   ipa: /rɔzʋjazˈannja/
   translation: solution, resolution
@@ -258,7 +253,3 @@ items:
   translation: Sweden
   pos: noun
   gender: f
-- lemma: інтелектуальний
-  ipa: /intɛlɛktuˈalʲnɪj/
-  translation: intellectual (adj)
-  pos: adj

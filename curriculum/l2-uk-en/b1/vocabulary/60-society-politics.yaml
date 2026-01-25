@@ -141,11 +141,6 @@ items:
   ipa: /nɛdɔskɔnˈalɪj/
   translation: imperfect
   pos: adj
-- lemma: несправедливість
-  ipa: /nɛspraʋɛdlˈɪʋistʲ/
-  translation: injustice
-  pos: noun
-  gender: f
 - lemma: неурядовий
   ipa: /nɛurjadˈɔʋɪj/
   translation: non-governmental
@@ -176,10 +171,6 @@ items:
   translation: petition
   pos: noun
   gender: f
-- lemma: повномасштабний
-  ipa: /pɔʋnɔmasʃtˈabnɪj/
-  translation: full-scale
-  pos: adj
 - lemma: повноцінно
   ipa: /pɔʋnɔt͡sˈinnɔ/
   translation: fully, completely
@@ -192,11 +183,6 @@ items:
   ipa: /praʋɔʋˈɪj/
   translation: legal
   pos: adj
-- lemma: прем'єр-міністр
-  ipa: /prɛmˈjɛr-ministr/
-  translation: Prime Minister
-  pos: noun
-  gender: m
 - lemma: прозорість
   ipa: /prɔzˈɔristʲ/
   translation: transparency

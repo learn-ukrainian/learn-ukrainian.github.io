@@ -85,10 +85,6 @@ items:
   ipa: /ɛlɛktrˈɔnnɪj/
   translation: electronic
   pos: adj
-- lemma: же
-  ipa: /ʒɛ/
-  translation: indeed, but (particle)
-  pos: conj
 - lemma: жодний
   ipa: /ʒˈɔdnɪj/
   translation: none, not one
@@ -170,11 +166,6 @@ items:
   ipa: /lɔɦˈit͡ʃniʃɪj/
   translation: more logical
   pos: adj
-- lemma: літак
-  ipa: /litˈak/
-  translation: airplane
-  pos: noun
-  gender: m
 - lemma: манера
   ipa: /manˈɛra/
   translation: manner

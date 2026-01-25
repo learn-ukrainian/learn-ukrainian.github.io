@@ -56,11 +56,6 @@ items:
   translation: Kyiv-Lviv
   pos: noun
   gender: m
-- lemma: км
-  ipa: /km/
-  translation: km
-  pos: noun
-  gender: m
 - lemma: коліщатко
   ipa: /kɔliʃt͡ʃˈatkɔ/
   translation: small wheel
@@ -88,10 +83,6 @@ items:
   translation: area, locality
   pos: noun
   gender: f
-- lemma: найвіддаленіший
-  ipa: /najʋiddˈalɛniʃɪj/
-  translation: the most remote
-  pos: adj
 - lemma: одноденний
   ipa: /ɔdnɔdˈɛnnɪj/
   translation: one-day (adj)

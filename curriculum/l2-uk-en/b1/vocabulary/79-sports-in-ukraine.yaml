@@ -186,10 +186,6 @@ items:
   ipa: /mifɔlɔɦizuʋˈatɪ/
   translation: to mythologize
   pos: verb
-- lemma: найтитулованіший
-  ipa: /najtɪtulɔʋaniʃɪj/
-  translation: the most titled
-  pos: adj
 - lemma: нападник
   ipa: /napˈadnɪk/
   translation: attacker, forward (sports)
@@ -341,11 +337,6 @@ items:
 - lemma: турнір
   ipa: /turnˈir/
   translation: tournament
-  pos: noun
-  gender: m
-- lemma: усик
-  ipa: /ˈusɪk/
-  translation: Usyk (name), small whisker
   pos: noun
   gender: m
 - lemma: утримувати

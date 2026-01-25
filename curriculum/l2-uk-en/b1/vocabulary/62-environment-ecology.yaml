@@ -41,11 +41,6 @@ items:
   ipa: /biɔlɔɦˈit͡ʃnɪj/
   translation: biological
   pos: adj
-- lemma: біорізноманіття
-  ipa: /biɔriznɔmanˈittja/
-  translation: biodiversity
-  pos: noun
-  gender: n
 - lemma: біосферний
   ipa: /biɔsfˈɛrnɪj/
   translation: biospheric
@@ -81,10 +76,6 @@ items:
   ipa: /ʋɪt͡ʃˈɛrpuʋatɪ/
   translation: to exhaust, to deplete
   pos: verb
-- lemma: вовк
-  ipa: /ʋɔʋk/
-  translation: wolf
-  pos: noun
 - lemma: волокно
   ipa: /ʋɔlɔknˈɔ/
   translation: fiber
@@ -104,10 +95,6 @@ items:
   translation: coal
   pos: noun
   gender: n
-- lemma: відновлювальний
-  ipa: /ʋidnˈɔʋljuʋalʲnɪj/
-  translation: restorative, renewable
-  pos: adj
 - lemma: відновлювати
   ipa: /ʋidnˈɔʋljuʋatɪ/
   translation: to restore (imperfective)
@@ -306,10 +293,6 @@ items:
   translation: trash, garbage
   pos: noun
   gender: n
-- lemma: спеціалізований
-  ipa: /spɛt͡sializˈɔʋanɪj/
-  translation: specialized
-  pos: adj
 - lemma: старовіковий
   ipa: /starɔʋikɔʋɪj/
   translation: centuries-old
@@ -343,10 +326,6 @@ items:
   ipa: /suxˈiʃɛ/
   translation: drier
   pos: adv
-- lemma: сільськогосподарський
-  ipa: /silʲsʲkɔɦɔspɔdˈarsʲkɪj/
-  translation: agricultural
-  pos: adj
 - lemma: тканинний
   ipa: /tkanˈɪnnɪj/
   translation: fabric (adj)

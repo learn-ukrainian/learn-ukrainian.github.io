@@ -59,11 +59,6 @@ items:
   translation: block
   pos: noun
   gender: m
-- lemma: брак
-  ipa: /brak/
-  translation: lack, shortage, defect
-  pos: noun
-  gender: m
 - lemma: вжитий
   ipa: /ʋʒˈɪtɪj/
   translation: used, taken
@@ -387,19 +382,10 @@ items:
   ipa: /nikudɪ/
   translation: nowhere (direction)
   pos: adv
-- lemma: ніяк
-  ipa: /nijak/
-  translation: in no way
-  pos: adv
 - lemma: обійтися
   ipa: /ɔbijtˈɪsja/
   translation: to manage, to get by
   pos: verb
-- lemma: олександр
-  ipa: /ɔlɛksˈandr/
-  translation: Oleksandr (name)
-  pos: noun
-  gender: m
 - lemma: опинитися
   ipa: /ɔpɪnˈɪtɪsja/
   translation: to find oneself, to end up
@@ -595,10 +581,6 @@ items:
   ipa: /tˈɪsnutɪ/
   translation: to press, to squeeze
   pos: verb
-- lemma: трансформуватися
-  ipa: /transfɔrmuʋˈatɪsja/
-  translation: to be transformed
-  pos: verb
 - lemma: тіль
   ipa: /tilʲ/
   translation: ''
@@ -613,10 +595,6 @@ items:
   ipa: /ujaʋlˈjatɪ/
   translation: to imagine (imperfective)
   pos: verb
-- lemma: фундаментальний
-  ipa: /fundamɛntˈalʲnɪj/
-  translation: fundamental
-  pos: adj
 - lemma: фізично
   ipa: /fizˈɪt͡ʃnɔ/
   translation: physically

@@ -16,21 +16,11 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: бізнес-контекст
-  ipa: /bˈiznɛs-kɔntɛkst/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: бізнес-нарада
   ipa: /bˈiznɛs-narada/
   translation: business meeting
   pos: noun
   gender: f
-- lemma: ввп
-  ipa: /ʋʋp/
-  translation: GDP
-  pos: noun
-  gender: m
 - lemma: впровадження
   ipa: /ʋprɔʋˈadʒɛnnja/
   translation: implementation, introduction
@@ -76,11 +66,6 @@ items:
   ipa: /nabrˈatɪ/
   translation: to collect, to dial (perfective)
   pos: verb
-- lemma: навик
-  ipa: /nˈaʋɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: насильницький
   ipa: /nasˈɪlʲnɪt͡sʲkɪj/
   translation: violent, forced
@@ -194,10 +179,6 @@ items:
   ipa: /strimkˈɪj/
   translation: rapid, steep, swift
   pos: adj
-- lemma: супроводжуватися
-  ipa: /suprɔʋˈɔdʒuʋatɪsja/
-  translation: to be accompanied
-  pos: verb
 - lemma: тимчасовий
   ipa: /tɪmt͡ʃasˈɔʋɪj/
   translation: temporary

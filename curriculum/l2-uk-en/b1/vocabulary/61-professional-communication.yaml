@@ -95,11 +95,6 @@ items:
   ipa: /ɔtrɪmautɪ/
   translation: ''
   pos: verb
-- lemma: працевлаштування
-  ipa: /prat͡sɛʋlaʃtuʋˈannja/
-  translation: employment, job placement
-  pos: noun
-  gender: n
 - lemma: проведення
   ipa: /prɔʋˈɛdɛnnja/
   translation: conducting, carrying out
@@ -120,10 +115,6 @@ items:
   translation: professionalism
   pos: noun
   gender: m
-- lemma: підпорядкований
-  ipa: /pidpɔrjadkˈɔʋanɪj/
-  translation: subordinate, subject to
-  pos: adj
 - lemma: скасувати
   ipa: /skasuʋˈatɪ/
   translation: to cancel (perfective)

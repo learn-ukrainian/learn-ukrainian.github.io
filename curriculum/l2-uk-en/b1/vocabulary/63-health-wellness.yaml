@@ -196,10 +196,6 @@ items:
   translation: fast food
   pos: noun
   gender: m
-- lemma: хм
-  ipa: /xm/
-  translation: ''
-  pos: noun
 - lemma: хронічний
   ipa: /xrɔnˈit͡ʃnɪj/
   translation: chronic

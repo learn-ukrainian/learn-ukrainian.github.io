@@ -132,11 +132,6 @@ items:
   translation: motive, motif
   pos: noun
   gender: m
-- lemma: місцезнаходження
-  ipa: /mist͡sɛznaxˈɔdʒɛnnja/
-  translation: location
-  pos: noun
-  gender: n
 - lemma: міфічний
   ipa: /mifˈit͡ʃnɪj/
   translation: mythical

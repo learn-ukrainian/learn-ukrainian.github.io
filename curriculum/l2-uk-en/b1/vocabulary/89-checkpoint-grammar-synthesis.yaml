@@ -43,10 +43,6 @@ items:
   translation: synthesis
   pos: noun
   gender: m
-- lemma: ставропігійський
-  ipa: /staʋrɔpiɦˈijsʲkɪj/
-  translation: Stauropegiac
-  pos: adj
 - lemma: сходинка
   ipa: /sxˈɔdɪnka/
   translation: step, stair, rung

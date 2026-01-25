@@ -71,10 +71,6 @@ items:
   translation: show, exhibition, display
   pos: noun
   gender: m
-- lemma: попрактикуватися
-  ipa: /pɔpraktɪkuʋˈatɪsja/
-  translation: to practice oneself
-  pos: verb
 - lemma: представляти
   ipa: /prɛdstaʋlˈjatɪ/
   translation: to represent, to present
@@ -92,10 +88,6 @@ items:
   ipa: /rɔztˈjaɦnutɪj/
   translation: stretched, prolonged
   pos: adj
-- lemma: с-
-  ipa: /s-/
-  translation: ''
-  pos: noun
 - lemma: сильне
   ipa: /sˈɪlʲnɛ/
   translation: strong (neuter)
@@ -132,10 +124,6 @@ items:
   ipa: /tɔt͡ʃnˈiʃɪj/
   translation: more accurate
   pos: adj
-- lemma: ува-
-  ipa: /uʋa-/
-  translation: ''
-  pos: noun
 - lemma: фразовий
   ipa: /frˈazɔʋɪj/
   translation: phrasal

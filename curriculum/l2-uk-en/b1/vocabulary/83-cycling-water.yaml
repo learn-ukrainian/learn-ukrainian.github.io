@@ -43,10 +43,6 @@ items:
   ipa: /ʋɪʃˈɪʋanɪj/
   translation: embroidered
   pos: adj
-- lemma: відштовхуватися
-  ipa: /ʋidʃtˈɔʋxuʋatɪsja/
-  translation: to start from, to repel
-  pos: verb
 - lemma: десна
   ipa: /dɛsnˈa/
   translation: Desna (river/gum)
@@ -96,10 +92,6 @@ items:
   translation: riding, skating, rolling
   pos: noun
   gender: n
-- lemma: каяк
-  ipa: /kajak/
-  translation: kayak
-  pos: noun
 - lemma: каякінг
   ipa: /kajakinɦ/
   translation: kayaking
@@ -147,10 +139,6 @@ items:
 - lemma: перевернутися
   ipa: /pɛrɛʋɛrnˈutɪsja/
   translation: to flip over
-  pos: verb
-- lemma: перетворюватися
-  ipa: /pɛrɛtʋˈɔrjuʋatɪsja/
-  translation: to transform (imperfective, passive)
   pos: verb
 - lemma: подорожуючи
   ipa: /pɔdɔrɔʒˈujut͡ʃɪ/

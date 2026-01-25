@@ -54,10 +54,6 @@ items:
   ipa: /ʋɪ/
   translation: ''
   pos: pron
-- lemma: використовувати
-  ipa: /ʋɪkɔrɪstˈɔʋuʋatɪ/
-  translation: to use (imperfective)
-  pos: verb
 - lemma: використовуючи
   ipa: /ʋɪkɔrɪstˈɔʋujut͡ʃɪ/
   translation: using
@@ -279,11 +275,6 @@ items:
   translation: lecture
   pos: noun
   gender: f
-- lemma: логік
-  ipa: /lˈɔɦik/
-  translation: logician
-  pos: noun
-  gender: m
 - lemma: любити
   ipa: /ljubˈɪtɪ/
   translation: to love
@@ -370,10 +361,6 @@ items:
   translation: Odesa
   pos: noun
   gender: f
-- lemma: ой
-  ipa: /ɔj/
-  translation: oh!, oops!
-  pos: noun
 - lemma: окремо
   ipa: /ɔkrˈɛmɔ/
   translation: separately
@@ -454,10 +441,6 @@ items:
 - lemma: показувати
   ipa: /pɔkˈazuʋatɪ/
   translation: to show (imperfective)
-  pos: verb
-- lemma: порекомендувати
-  ipa: /pɔrɛkɔmɛnduʋˈatɪ/
-  translation: to recommend (perfective)
   pos: verb
 - lemma: потреба
   ipa: /pɔtrˈɛba/
@@ -597,11 +580,6 @@ items:
   ipa: /sˈumnɔ/
   translation: sadly, it's sad
   pos: adv
-- lemma: текст
-  ipa: /tɛkst/
-  translation: text
-  pos: noun
-  gender: m
 - lemma: температура
   ipa: /tɛmpɛratˈura/
   translation: temperature
@@ -612,10 +590,6 @@ items:
   translation: warmth, warmly, heat
   pos: noun
   gender: n
-- lemma: ти
-  ipa: /tɪ/
-  translation: ''
-  pos: pron
 - lemma: тим
   ipa: /tɪm/
   translation: ''
