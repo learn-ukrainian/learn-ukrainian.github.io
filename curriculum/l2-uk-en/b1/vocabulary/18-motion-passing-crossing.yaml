@@ -479,10 +479,6 @@ items:
   translation: festival
   pos: noun
   gender: m
-- lemma: х-образний
-  ipa: /x-ɔbraznɪj/
-  translation: ''
-  pos: adj
 - lemma: цвинтар
   ipa: /t͡sʋˈɪntar/
   translation: cemetery

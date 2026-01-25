@@ -375,10 +375,6 @@ items:
   translation: word formation
   pos: noun
   gender: m
-- lemma: спів-
-  ipa: /spiʋ-/
-  translation: ''
-  pos: noun
 - lemma: співпраця
   ipa: /spiʋprˈat͡sja/
   translation: cooperation

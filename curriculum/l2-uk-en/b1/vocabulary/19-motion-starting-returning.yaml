@@ -46,10 +46,6 @@ items:
   ipa: /ʋɔsɛnˈɪ/
   translation: in autumn
   pos: adv
-- lemma: від-
-  ipa: /ʋid-/
-  translation: ''
-  pos: noun
 - lemma: відвезти
   ipa: /ʋidʋɛztˈɪ/
   translation: to take (by vehicle)
@@ -105,10 +101,6 @@ items:
   ipa: /dɛsʲ/
   translation: somewhere
   pos: part
-- lemma: до-
-  ipa: /dɔ-/
-  translation: ''
-  pos: noun
 - lemma: додаватися
   ipa: /dɔdaʋˈatɪsja/
   translation: to be added
@@ -327,10 +319,6 @@ items:
   translation: peninsula
   pos: noun
   gender: m
-- lemma: під-
-  ipa: /pid-/
-  translation: ''
-  pos: noun
 - lemma: підказка
   ipa: /pidkˈazka/
   translation: hint, prompt
@@ -353,10 +341,6 @@ items:
   ipa: /rɔzˈjixatɪsja/
   translation: to disperse, to move in different directions
   pos: verb
-- lemma: роз-
-  ipa: /rɔz-/
-  translation: ''
-  pos: noun
 - lemma: розвезти
   ipa: /rɔzʋɛztˈɪ/
   translation: to deliver (by vehicle perfective)

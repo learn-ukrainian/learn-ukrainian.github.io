@@ -26,11 +26,6 @@ items:
   translation: Bezsonov (name)
   pos: noun
   gender: m
-- lemma: бой
-  ipa: /bɔj/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: боксерський
   ipa: /bɔksˈɛrsʲkɪj/
   translation: boxing (adj)
@@ -229,10 +224,6 @@ items:
   ipa: /ɔlimpiˈada/
   translation: Olympiad
   pos: noun
-- lemma: олімпіаді-
-  ipa: /ɔlimpiˈadi-/
-  translation: ''
-  pos: noun
 - lemma: олімпійка
   ipa: /ɔlimpijka/
   translation: Olympic track jacket
@@ -409,7 +400,3 @@ items:
   translation: Yana (name)
   pos: noun
   gender: f
-- lemma: євро-
-  ipa: /ˈjɛʋrɔ-/
-  translation: ''
-  pos: noun

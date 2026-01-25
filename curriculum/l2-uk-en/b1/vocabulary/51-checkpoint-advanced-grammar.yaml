@@ -66,10 +66,6 @@ items:
   translation: bill, draft law
   pos: noun
   gender: m
-- lemma: закінчи-
-  ipa: /zakint͡ʃˈɪ-/
-  translation: ''
-  pos: noun
 - lemma: запакувати
   ipa: /zapakuʋˈatɪ/
   translation: to pack
@@ -90,14 +86,6 @@ items:
   ipa: /zɔbrazˈɪtɪ/
   translation: to depict (perfective)
   pos: verb
-- lemma: зроби-
-  ipa: /zrɔbˈɪ-/
-  translation: ''
-  pos: noun
-- lemma: йд-
-  ipa: /jd-/
-  translation: ''
-  pos: noun
 - lemma: канцеляризм
   ipa: /kant͡sɛljarˈɪzm/
   translation: bureaucratic jargon
@@ -153,10 +141,6 @@ items:
   ipa: /pɔbudˈɪtɪ/
   translation: to wake up, to rouse
   pos: verb
-- lemma: поверну-
-  ipa: /pɔʋɛrnˈu-/
-  translation: ''
-  pos: noun
 - lemma: повніти
   ipa: /pɔʋnˈitɪ/
   translation: to get fat
@@ -203,14 +187,6 @@ items:
   ipa: /rɔzɦljadˈatɪ/
   translation: to consider, to examine (imperfective)
   pos: verb
-- lemma: сид-
-  ipa: /sɪd-/
-  translation: ''
-  pos: noun
-- lemma: сказа-
-  ipa: /skˈaza-/
-  translation: ''
-  pos: noun
 - lemma: сказавши
   ipa: /skazˈaʋʃɪ/
   translation: ''
@@ -232,20 +208,8 @@ items:
   ipa: /ukazˈatɪ/
   translation: to indicate, to point out (perfective)
   pos: verb
-- lemma: усміха-
-  ipa: /usmixa-/
-  translation: ''
-  pos: noun
-- lemma: уч-
-  ipa: /ut͡ʃ-/
-  translation: ''
-  pos: noun
 - lemma: хатинка
   ipa: /xatˈɪnka/
   translation: small house (diminutive)
   pos: noun
   gender: f
-- lemma: юч-
-  ipa: /jut͡ʃ-/
-  translation: ''
-  pos: noun

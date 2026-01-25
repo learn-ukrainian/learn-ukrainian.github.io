@@ -15,10 +15,6 @@ items:
   ipa: /aspɛktuˈalʲnɪj/
   translation: aspectual
   pos: adj
-- lemma: в-
-  ipa: /ʋ-/
-  translation: ''
-  pos: noun
 - lemma: варіант
   ipa: /ʋariˈant/
   translation: variant, option
@@ -31,10 +27,6 @@ items:
   ipa: /ʋʒɪʋˈatɪ/
   translation: to use, to consume
   pos: verb
-- lemma: ви-
-  ipa: /ʋɪ-/
-  translation: ''
-  pos: noun
 - lemma: вибрати
   ipa: /ʋˈɪbratɪ/
   translation: to choose (perfective)
@@ -101,10 +93,6 @@ items:
   ipa: /da/
   translation: 'yes'
   pos: part
-- lemma: да'
-  ipa: /da/
-  translation: ''
-  pos: noun
 - lemma: документ
   ipa: /dɔkumˈɛnt/
   translation: document
@@ -125,10 +113,6 @@ items:
   ipa: /zjɛdnˈatɪ/
   translation: to connect, to join (perfective)
   pos: verb
-- lemma: за-
-  ipa: /za-/
-  translation: ''
-  pos: noun
 - lemma: завершеність
   ipa: /zaʋˈɛrʃɛnistʲ/
   translation: completeness
@@ -160,9 +144,9 @@ items:
   translation: team, command
   pos: noun
   gender: f
-- lemma: корень
+- lemma: корінь
   ipa: /kɔrɛnʲ/
-  translation: ''
+  translation: root
   pos: noun
   gender: m
 - lemma: корінь
@@ -184,10 +168,6 @@ items:
   ipa: /mɔʋ/
   translation: ''
   pos: part
-- lemma: на-
-  ipa: /na-/
-  translation: ''
-  pos: noun
 - lemma: навпаки
   ipa: /naʋpakˈɪ/
   translation: on the contrary, vice versa
@@ -201,10 +181,6 @@ items:
   ipa: /nalˈɛʒatɪ/
   translation: to belong to, to pertain
   pos: verb
-- lemma: написа-
-  ipa: /napɪsa-/
-  translation: ''
-  pos: noun
 - lemma: натиснути
   ipa: /natˈɪsnutɪ/
   translation: to press, to click (perfective)
@@ -253,18 +229,10 @@ items:
   ipa: /ˈɔtʒɛ/
   translation: so, therefore
   pos: part
-- lemma: пере-
-  ipa: /pɛrɛ-/
-  translation: ''
-  pos: noun
 - lemma: перекласти
   ipa: /pɛrɛklˈastɪ/
   translation: to translate, to shift (perfective)
   pos: verb
-- lemma: пис-
-  ipa: /pɪs-/
-  translation: ''
-  pos: noun
 - lemma: писати'
   ipa: /pɪsˈatɪ/
   translation: ''
@@ -306,10 +274,6 @@ items:
 - lemma: правило
   ipa: /praʋɪlɔ/
   translation: rule
-  pos: noun
-- lemma: при-
-  ipa: /prɪ-/
-  translation: ''
   pos: noun
 - lemma: приїхати
   ipa: /prɪˈjixatɪ/

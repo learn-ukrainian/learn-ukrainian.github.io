@@ -91,10 +91,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: з-
-  ipa: /z-/
-  translation: ''
-  pos: noun
 - lemma: заміна
   ipa: /zamˈina/
   translation: replacement, substitute
@@ -259,10 +255,6 @@ items:
   translation: character
   pos: noun
   gender: m
-- lemma: по-
-  ipa: /pɔ-/
-  translation: ''
-  pos: noun
 - lemma: погодитися
   ipa: /pɔɦɔdɪtɪsja/
   translation: to agree (perfective)
@@ -301,10 +293,6 @@ items:
   ipa: /prɪblˈɪznɔ/
   translation: approximately
   pos: adv
-- lemma: про-
-  ipa: /prɔ-/
-  translation: ''
-  pos: noun
 - lemma: продовжуватися
   ipa: /prɔdˈɔʋʒuʋatɪsja/
   translation: to continue (imperfective passive)
@@ -360,10 +348,6 @@ items:
   translation: suffixation
   pos: noun
   gender: f
-- lemma: топ-
-  ipa: /tɔp-/
-  translation: ''
-  pos: noun
 - lemma: успішно
   ipa: /uspˈiʃnɔ/
   translation: successfully

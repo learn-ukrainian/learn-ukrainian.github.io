@@ -15,10 +15,6 @@ items:
   translation: use, usage
   pos: noun
   gender: m
-- lemma: вийш-
-  ipa: /ʋɪjʃ-/
-  translation: ''
-  pos: noun
 - lemma: вийшовши
   ipa: /ʋˈɪjʃɔʋʃɪ/
   translation: ''
@@ -176,10 +172,6 @@ items:
   ipa: /prat͡sˈjujut͡ʃɪ/
   translation: working
   pos: verb
-- lemma: прийш-
-  ipa: /prɪjʃ-/
-  translation: ''
-  pos: noun
 - lemma: прийшвши
   ipa: /prɪjʃʋʃɪ/
   translation: ''
@@ -205,10 +197,6 @@ items:
   ipa: /prɔanalizuʋˈaʋʃɪ/
   translation: having analyzed
   pos: verb
-- lemma: прочита-
-  ipa: /prɔt͡ʃɪta-/
-  translation: ''
-  pos: noun
 - lemma: підвищити
   ipa: /pidʋˈɪʃt͡ʃɪtɪ/
   translation: to increase, to raise
@@ -217,10 +205,6 @@ items:
   ipa: /pidpɪsˈaʋʃɪ/
   translation: having signed
   pos: verb
-- lemma: піш-
-  ipa: /piʃ-/
-  translation: ''
-  pos: noun
 - lemma: пішвши
   ipa: /piʃʋʃɪ/
   translation: ''

@@ -113,10 +113,6 @@ items:
   ipa: /zʋ/
   translation: ''
   pos: noun
-- lemma: зі-
-  ipa: /zi-/
-  translation: ''
-  pos: noun
 - lemma: зійти
   ipa: /zijtˈɪ/
   translation: to go down, to descend, to come up (of sun)
@@ -249,10 +245,6 @@ items:
   ipa: /prɔtikˈatɪ/
   translation: to leak, to flow, to elapse
   pos: verb
-- lemma: пі-
-  ipa: /pi-/
-  translation: ''
-  pos: noun
 - lemma: радянський
   ipa: /radˈjansʲkɪj/
   translation: Soviet

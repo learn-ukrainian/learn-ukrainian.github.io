@@ -134,10 +134,6 @@ items:
   translation: reminder
   pos: noun
   gender: n
-- lemma: не'
-  ipa: /nɛ/
-  translation: ''
-  pos: noun
 - lemma: незавершений
   ipa: /nɛzaʋˈɛrʃɛnɪj/
   translation: incomplete

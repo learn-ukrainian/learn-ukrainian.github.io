@@ -115,10 +115,6 @@ items:
   translation: new (neuter)
   pos: noun
   gender: n
-- lemma: об-
-  ipa: /ɔb-/
-  translation: ''
-  pos: noun
 - lemma: одесит
   ipa: /ɔdɛsˈɪt/
   translation: Odesan (male)

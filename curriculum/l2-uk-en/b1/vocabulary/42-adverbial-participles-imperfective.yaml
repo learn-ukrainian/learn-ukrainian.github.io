@@ -21,10 +21,6 @@ items:
   translation: assimilation
   pos: noun
   gender: f
-- lemma: ачи
-  ipa: /at͡ʃɪ/
-  translation: ''
-  pos: noun
 - lemma: багатошаровий
   ipa: /baɦatɔʃarˈɔʋɪj/
   translation: multi-layered
@@ -37,18 +33,6 @@ items:
 - lemma: братися
   ipa: /brˈatɪsja/
   translation: to undertake, to set about
-  pos: verb
-- lemma: біг-ючи
-  ipa: /biɦ-jut͡ʃɪ/
-  translation: ''
-  pos: verb
-- lemma: біж-
-  ipa: /biʒ-/
-  translation: ''
-  pos: noun
-- lemma: біж-ачи
-  ipa: /biʒ-at͡ʃɪ/
-  translation: ''
   pos: verb
 - lemma: біжачи
   ipa: /biʒat͡ʃɪ/
@@ -224,14 +208,6 @@ items:
   ipa: /ɔfit͡sˈijnɔ-dilɔʋɪj/
   translation: official-business (style)
   pos: adj
-- lemma: писа-
-  ipa: /pɪsa-/
-  translation: ''
-  pos: noun
-- lemma: писа-ючи
-  ipa: /pɪsa-jut͡ʃɪ/
-  translation: ''
-  pos: verb
 - lemma: писаючи
   ipa: /pɪsajut͡ʃɪ/
   translation: writing (gerund)
@@ -241,10 +217,6 @@ items:
   translation: literacy, writing system
   pos: noun
   gender: f
-- lemma: пиш-
-  ipa: /pɪʃ-/
-  translation: ''
-  pos: noun
 - lemma: пиш-учити
   ipa: /pɪʃ-ut͡ʃˈɪtɪ/
   translation: ''
@@ -321,10 +293,6 @@ items:
 - lemma: сміючись
   ipa: /smijut͡ʃˈɪsʲ/
   translation: laughing
-  pos: verb
-- lemma: спачи
-  ipa: /spat͡ʃɪ/
-  translation: ''
   pos: verb
 - lemma: сплячий
   ipa: /splˈjat͡ʃɪj/
@@ -408,10 +376,6 @@ items:
   gender: m
 - lemma: ши
   ipa: /ʃɪ/
-  translation: ''
-  pos: noun
-- lemma: ючи
-  ipa: /jut͡ʃɪ/
   translation: ''
   pos: noun
 - lemma: яскраво

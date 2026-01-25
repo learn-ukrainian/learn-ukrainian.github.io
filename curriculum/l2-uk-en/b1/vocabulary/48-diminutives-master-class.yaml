@@ -129,10 +129,6 @@ items:
   ipa: /ɛt͡ʃk/
   translation: ''
   pos: noun
-- lemma: ечк-
-  ipa: /ɛt͡ʃk-/
-  translation: ''
-  pos: noun
 - lemma: ечка
   ipa: /ˈɛt͡ʃka/
   translation: ''
@@ -343,10 +339,6 @@ items:
 - lemma: огірочок
   ipa: /ɔɦirˈɔt͡ʃɔk/
   translation: small cucumber
-  pos: noun
-- lemma: оньк-
-  ipa: /ɔnʲk-/
-  translation: ''
   pos: noun
 - lemma: онька
   ipa: /ɔnʲka/

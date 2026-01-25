@@ -203,10 +203,6 @@ items:
   translation: Surzhyk
   pos: noun
   gender: m
-- lemma: точ-
-  ipa: /tɔt͡ʃ-/
-  translation: ''
-  pos: noun
 - lemma: фрагмент
   ipa: /fraɦmˈɛnt/
   translation: fragment

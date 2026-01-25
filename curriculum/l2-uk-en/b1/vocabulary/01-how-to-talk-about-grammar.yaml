@@ -82,19 +82,19 @@ items:
   translation: cooking, preparation
   pos: noun
   gender: n
-- lemma: граматик
+- lemma: граматика
   ipa: /ɦramˈatɪk/
-  translation: ''
+  translation: grammar
   pos: noun
   gender: m
-- lemma: д-авальний
-  ipa: /d-aʋalʲnɪj/
-  translation: ''
-  pos: adj
 - lemma: давати
   ipa: /daʋˈatɪ/
   translation: to give
   pos: verb
+- lemma: давальний
+  ipa: /daʋˈalʲnɪj/
+  translation: dative (case)
+  pos: adj
 - lemma: допомогти
   ipa: /dɔpɔmɔɦtˈɪ/
   translation: to help (perfective)
@@ -146,7 +146,7 @@ items:
   ipa: /zapamjatˈatɪ/
   translation: to remember
   pos: verb
-- lemma: застосовуючи
+- lemma: застосовувати
   ipa: /zastɔsˈɔʋujut͡ʃɪ/
   translation: ''
   pos: verb
@@ -187,10 +187,6 @@ items:
   ipa: /zrɔzumˈilɔ/
   translation: it is clear, understood
   pos: adv
-- lemma: к-личнити
-  ipa: /k-lɪt͡ʃnɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: канал
   ipa: /kanˈal/
   translation: channel, canal
@@ -224,11 +220,6 @@ items:
 - lemma: львів
   ipa: /lʲʋiʋ/
   translation: Lviv
-  pos: noun
-  gender: m
-- lemma: м-ісцевий
-  ipa: /m-ist͡sɛʋɪj/
-  translation: ''
   pos: noun
   gender: m
 - lemma: марія
@@ -277,12 +268,8 @@ items:
   gender: n
 - lemma: місцевий
   ipa: /mist͡sˈɛʋɪj/
-  translation: local
+  translation: local, locative (case)
   pos: adj
-- lemma: н-азивнити
-  ipa: /n-azɪʋnɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: називати
   ipa: /nazɪʋˈatɪ/
   translation: to name, to call (imperfective)
@@ -458,10 +445,6 @@ items:
   translation: professor
   pos: noun
   gender: m
-- lemma: р-одовити
-  ipa: /r-ɔdɔʋɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: реальне
   ipa: /rɛˈalʲnɛ/
   translation: ''
