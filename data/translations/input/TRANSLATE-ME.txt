@@ -1,0 +1,44 @@
+===============================================================================
+TRANSLATION TASK - 413 Ukrainian Words
+===============================================================================
+
+HOW TO TRANSLATE:
+-----------------
+1. Copy all words from: all-remaining-words.txt
+2. Paste to Gemini (or ChatGPT) with this prompt:
+
+---BEGIN PROMPT---
+
+Translate these Ukrainian words to English. Return ONLY a JSON object with format:
+{
+  "ukrainian_word": "english_translation"
+}
+
+Rules:
+- Provide the most common English translation
+- For adjectives, translate as adjective (e.g., "новий" → "new")
+- For verbs in infinitive, translate with "to" (e.g., "говорити" → "to speak")
+- For nouns, provide the basic English equivalent
+- For proper nouns (names, places), transliterate or provide English equivalent
+- For diminutives, include "little" or "dear" in translation
+- Skip words that are clearly fragments or corrupted (just omit from JSON)
+- Return ONLY the JSON object, no other text
+
+Words:
+
+[PASTE WORDS HERE]
+
+Return the JSON object now.
+
+---END PROMPT---
+
+3. Save the JSON response to: data/translations/all-translations.json
+4. Tell Claude: "done"
+
+NOTES:
+------
+- Many words are fragments - Gemini will skip them (expected)
+- We expect ~100-150 valid translations out of 413 words
+- Claude will apply the translations automatically when you say "done"
+
+===============================================================================
