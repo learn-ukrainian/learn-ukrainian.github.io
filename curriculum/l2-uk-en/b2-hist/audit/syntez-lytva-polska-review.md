@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 09:21:14
+**Generated:** 2026-01-25 20:23:02
 
 ## Configuration
 **Type:** B2-history

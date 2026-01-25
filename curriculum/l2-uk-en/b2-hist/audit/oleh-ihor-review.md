@@ -1,8 +1,8 @@
 # Audit Report: M09 — oleh-ihor.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:32:42
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:22:34
 
 ## Configuration
 **Type:** B2-history
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4047/4000 (raw: 4256)
+- **Words:** ✅ 4102/4000 (raw: 4311)
 - **Activities:** ✅ 11/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/2 types
@@ -79,7 +79,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |
-| **Вступ: Варяги та Київ** | ✅ | 787 | Included in Core |
+| **Вступ: Варяги та Київ** | ✅ | 807 | Included in Core |
 | **Суспільство та Культура** | ✅ | 495 | Included in Core |
 | **Читання: Князь Олег: Об'єднання земель** | ✅ | 317 | Included in Core |
 | **Походи на Царгород і Договори** | ⚪️ | 380 | Skipped |
@@ -87,6 +87,6 @@
 | **Геоекономіка та Торгівля** | ⚪️ | 146 | Skipped |
 | **Первинні джерела: Голоси епохи** | ✅ | 524 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 351 | Included in Core |
-| **Спадщина** | ⚪️ | 81 | Skipped |
+| **Спадщина** | ⚪️ | 116 | Skipped |
 | **Підсумок** | ✅ | 159 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 235 | Skipped |

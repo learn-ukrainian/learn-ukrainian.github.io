@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:24
+**Generated:** 2026-01-25 20:07:25
 
 ## Configuration
 **Type:** A1
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): наступна, вхід, триматися, станція, кінцева...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): станція, наступна, кінцева, триматися, вхід...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

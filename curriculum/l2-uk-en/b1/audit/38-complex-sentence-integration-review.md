@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:00:21
+**Generated:** 2026-01-25 19:22:28
 
 ## Configuration
 **Type:** B1-grammar
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 39/25
+- **Vocab:** ✅ 45/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

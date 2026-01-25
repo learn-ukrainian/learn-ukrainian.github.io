@@ -1,18 +1,52 @@
-# Audit Report: 12-the-ballads.md
-**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M12 — 12-the-ballads.md
+**Level:** LIT | **Module:** M12 | **Phase:** LIT.3 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:10
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | essay-response | Есе-Роздум: Втеча від реальності | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз: Натурфілософія Балади | 1 | 1 | ✅ |
+| 3 | comparative-study | Жанровий Аналіз: Балада vs Поема | 1 | 1 | ✅ |
+| 4 | reading | Читальна Зала: Тополя | 2 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/6 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3919/3500
+- **Words:** ⚠️ 3919/4000 (raw: 4396) (81 short)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 17/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M28 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:12
+**Generated:** 2026-01-25 20:07:13
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): ввічливо, важко, іноді, весело, сумно...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): чесно, жартома, легко, нудно, серйозно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -52,7 +52,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 4/1
+- **Vocab:** ✅ 3/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

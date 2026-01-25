@@ -1,18 +1,53 @@
-# Audit Report: 19-shevchenkos-diary.md
-**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
+# Audit Report: M19 — 19-shevchenkos-diary.md
+**Level:** LIT | **Module:** M19 | **Phase:** LIT.3 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:23
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Уривки зі Щоденника | 3 | 1 | ✅ |
+| 2 | reading | Шевченко і Щепкін | 2 | 1 | ✅ |
+| 3 | essay-response | Есе: Шевченко без гриму | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Мова щоденника | 1 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз уривка: "Про пароплав" | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
+- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 3441/3500 (59 short)
+- **Words:** ❌ 3441/4000 (raw: 3761)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
@@ -47,7 +82,7 @@
 | **Щоденник Шевченка: Внутрішній світ** | ⚪️ | 58 | Skipped |
 | **Підсумок** | ✅ | 77 | Included in Core |
 | **Частина I: Контекст — Очікування волі** | ✅ | 79 | Included in Core |
-| **1. Хронологія Звільнення: Перші Записи** | ⚪️ | 272 | Skipped |
+| **1. Хронологія Звільнення: Перші Записи** | ✅ | 272 | Included in Core |
 | **2. "Мерзотна лакея" і "Добрі Люди"** | ⚪️ | 150 | Skipped |
 | **Частина II: Інтелектуал і Естет** | ✅ | 6 | Included in Core |
 | **1. Коло читання: Що читав Пророк?** | ✅ | 119 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M134 — bucha-irpin.md
 **Level:** B2 | **Module:** M134 | **Phase:** HIST.13 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:16
+**Generated:** 2026-01-25 20:21:56
 
 ## Configuration
 **Type:** B2-history

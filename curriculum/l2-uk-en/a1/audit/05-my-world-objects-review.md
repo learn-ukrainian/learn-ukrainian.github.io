@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:53:57
+**Generated:** 2026-01-25 20:06:58
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): пилосос, картина, пляшка, плита, гаманець...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): тарілка, плита, гаманець, пляшка, картина...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

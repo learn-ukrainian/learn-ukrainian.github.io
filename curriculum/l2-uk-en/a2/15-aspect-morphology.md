@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до глибшого вивчення аспектних пар!** Ви вже знаєте, що в українській мові дієслова працюють парами: одне показує процес, а інше — результат. Але як саме ці пари утворюються? Сьогодні ми зазирнемо "під капот" українського дієслова, щоб зрозуміти його внутрішню архітектуру. Розуміння морфології — це ваша суперсила, яка дозволить вам передбачати аспект навіть тих слів, які ви бачите вперше. Це перетворює вивчення мови на захопливу лінгвістичну гру, де кожен префікс і суфікс мають своє значення та логіку. Майстерність у цій темі відкриває двері до природного та впевненого спілкування.
+**Ласкаво просимо до глибшого вивчення аспектних пар!** Ви вже знаєте, що в українській мові дієслова працюють парами: одне показує процес, а інше — результат. Але як саме ці пари утворюються? Сьогодні ми зазирнемо "під капот" українського дієслова, щоб зрозуміти його внутрішню архітектуру. Розуміння морфології — це ваша суперсила. Це дозволить вам передбачати аспект навіть тих слів, які ви бачите вперше. Це перетворює вивчення мови на захопливу лінгвістичну гру. Кожен префікс і суфікс мають своє значення та логіку. Майстерність у цій темі відкриває двері до природного та впевненого спілкування.
 
 Now that you understand aspect conceptually, let's go deeper into how aspect pairs are formed. Understanding these models helps you predict the aspect of new verbs. This is a vital skill for expanding your vocabulary efficiently. When you learn a new verb in Ukrainian, you potentially learn a whole family of related actions. If you meet «читати», you can predict that adding «про-» will give you «прочитати». This predictability is a huge advantage for learners. You aren't just memorizing lists; you're mastering the logic of word formation.
 
@@ -23,7 +23,7 @@ Now that you understand aspect conceptually, let's go deeper into how aspect pai
 
 ### 1. Prefixation: The Master Key (Префіксація)
 
-Most perfective verbs in Ukrainian are "built" by adding a prefix to an imperfective base. This is the primary way the language signals completion or a specific result. While there are many prefixes, several are extremely common at this level. Think of these as "completion tags" that you attach to the start of the verb to close the loop of the action.
+Most perfective verbs in Ukrainian are "built" by adding a prefix to an imperfective base. Це найпоширеніший спосіб досягти завершеності дії. While there are many prefixes, several are extremely common at this level. Think of these as "completion tags" that you attach to the start of the verb to close the loop of the action. Наприклад, «про-» часто означає завершення читання.
 
 **Common Prefix Patterns and Semantic Shades:**
 
@@ -53,7 +53,7 @@ This pattern is extremely useful for describing routines. For example, «Я за
 
 ### 3. Suppletive Pairs: The Unique Survivors (Суплетивні пари)
 
-Some aspect pairs are so ancient and frequent that they use completely different roots. These are the "irregular" pairs of the aspect world. You cannot predict these from morphology; you must simply learn them as a single unit of meaning. These verbs are the heavy lifters of everyday communication.
+Деякі аспектні пари настільки давні, що вони мають абсолютно різні корені. Це "неправильні" пари у світі аспектів. Їх неможливо передбачити за морфологією — їх потрібно просто вивчити як єдине ціле. Ці дієслова є основою щоденного спілкування. (Some aspect pairs are so ancient that they have completely different roots. These are the "irregular" pairs of the aspect world. You cannot predict these from morphology; you must simply learn them as a single unit or "legacy" pair. These verbs are the heavy lifters of everyday communication.)
 
 | Недоконаний  | Доконаний    | Значення та Нюанси                                                   |
 | :----------- | :----------- | :------------------------------------------------------------------- |
@@ -82,7 +82,31 @@ This hierarchical system is what makes Ukrainian verb morphology so rich and pre
 
 ## Practice / Практика
 
+**Давайте закріпимо матеріал на практиці!** (Let's reinforce the material in practice!)
+
+### Основні аспектні пари модуля (Core Aspect Pairs)
+
+| Недоконаний     | Доконаний      | Переклад       |
+| :-------------- | :------------- | :------------- |
+| **відпочивати** | **відпочити**  | to rest        |
+| **вставати**    | **встати**     | to get up      |
+| **одягатися**   | **одягнутися** | to get dressed |
+| **сідати**      | **сісти**      | to sit down    |
+| **лягати**      | **лягти**      | to lie down    |
+| **відкривати**  | **відкрити**   | to open        |
+| **закривати**   | **закрити**    | to close       |
+| **вмикати**     | **увімкнути**  | to turn on     |
+| **вимикати**    | **вимкнути**   | to turn off    |
+| **починати**    | **почати**     | to start       |
+| **закінчувати** | **закінчити**  | to finish      |
+| **отримувати**  | **отримати**   | to receive     |
+| **посилати**    | **послати**    | to send        |
+| **вибирати**    | **вибрати**    | to choose      |
+| **вирішувати**  | **вирішити**   | to decide      |
+
 ### 1. Pattern Recognition (Впізнайте модель)
+
+**Завдання:** Визначте, яка морфологічна модель використовується в кожній парі. (Task: Identify which morphological model is used in each pair.)
 
 Identify which morphological model (Prefix, Suffix, or Suppletive) is used in each pair.
 
@@ -95,7 +119,7 @@ Identify which morphological model (Prefix, Suffix, or Suppletive) is used in ea
 
 ### 2. Transformation Drill (Трансформація)
 
-Apply the learned patterns to form the correct aspect form for the context.
+**Завдання:** Виберіть правильну форму дієслова відповідно до контексту. (Task: Choose the correct verb form based on the context.)
 
 1. (Pf) Я раптом \_\_\_ (**по**бачити / бачити) його в натовпі. -> **побачив**
 2. (Impf) Вона \_\_\_ (відпочивати / відпочити) в горах цілий тиждень. -> **відпочивала**
@@ -103,8 +127,8 @@ Apply the learned patterns to form the correct aspect form for the context.
 4. (Impf) Студенти довго \_\_\_ (**вчити** / вивчити) ці складні правила. -> **вчили**
 5. (Pf) Нарешті він \_\_\_ (казати / **сказати**) нам усю правду. -> **сказав**
 
-> [!important] **Spelling Nuance: The Apostrophe**
-> Notice the verb **з'їсти** (eat up). When adding the prefix **з-** to a word starting with **є, ю, я**, you MUST use an apostrophe. This ensures the prefix and the root remain distinct in your sound and script. This is another marker of intermediate spelling precision.
+> [!important] **Spelling Nuance: The Apostrophe (Правопис: Апостроф)**
+> Notice the verb **з'їсти** (eat up). Коли ви додаєте префікс **з-** до слова, що починається на **є, ю, я**, ви ПОВИННІ використовувати апостроф. This ensures the prefix and the root remain distinct in your sound and script. Це ще одна ознака точності вашого письма. (This is another sign of your writing precision.)
 
 ## Dialogues / Діалоги
 

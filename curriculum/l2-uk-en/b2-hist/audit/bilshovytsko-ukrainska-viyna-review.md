@@ -1,7 +1,7 @@
 # Audit Report: M95 — bilshovytsko-ukrainska-viyna.md
 **Level:** B2 | **Module:** M95 | **Phase:** HIST.9 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:13
+**Generated:** 2026-01-25 20:21:52
 
 ## Configuration
 **Type:** B2-history

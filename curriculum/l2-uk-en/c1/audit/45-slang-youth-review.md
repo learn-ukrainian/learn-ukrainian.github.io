@@ -1,26 +1,62 @@
-# Audit Report: 141-slang-youth.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 2000
+# Audit Report: M45 — 45-slang-youth.md
+**Level:** C1 | **Module:** M45 | **Phase:** C1.4 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:32
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння молодіжної мови | 5 | 5 | ✅ |
+| 2 | fill-in | Професійний сленг | 6 | 6 | ✅ |
+| 3 | fill-in | Сленговий словник | 6 | 6 | ✅ |
+| 4 | unjumble | Відновлення чату | 5 | 5 | ✅ |
+| 5 | match-up | Сленг vs Літературна мова | 8 | 6 | ✅ |
+| 6 | group-sort | Категорії сленгу | 15 | 12 | ✅ |
+| 7 | cloze | Історія успіху блогера | 12 | 12 | ✅ |
+| 8 | translate | Переклад молодіжних фраз | 5 | 5 | ✅ |
+| 9 | error-correction | Виправлення "дідового" сленгу | 5 | 5 | ✅ |
+| 10 | mark-the-words | Полювання на англіцизми | 12 | 5 | ✅ |
+| 11 | essay-response | Есе про сленг | 1 | 1 | ✅ |
+| 12 | critical-analysis | Феномен "Токсичності" | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 141-slang-youth.yaml: Schema validation error at key '8': {'type': 'error-correction', 'title': 'Виправлення "дідового" сленгу', 'instruction': 'Знайдіть застарілий сленг, який вже не вживають, і замініть його на сучасний.', 'items': [{'sentence': 'Цей фільм просто [[бомба-ракета]].', 'error': 'бомба-ракета', 'answer': 'топчик', 'options': ['topchyk', 'bomba', 'klas', 'super'], 'explanation': "'Бомба-ракета' — це сленг 2000-х або старшого покоління. Молодь скаже 'топчик' або 'імба'."}, {'sentence': 'Привіт, [[медвед]].', 'error': 'медвед', 'answer': 'бро', 'options': ['bro', 'drug', 'chuvak', 'kent'], 'explanation': "'Медвед' (превед медвед) — це мем 2006 року. Зараз кажуть 'йо', 'бро' або просто 'привіт'."}, {'sentence': 'Це повний [[отстой]].', 'error': 'отстой', 'answer': 'крінж', 'options': ['krinzh', 'zashkvar', 'vidstij', 'bida'], 'explanation': "'Отстой' — русизм 90-х. Сучасні відповідники: 'крінж', 'треш', 'зашквар'."}, {'sentence': 'Я сиджу в [[асьці]].', 'error': 'асьці', 'answer': 'телеграмі', 'options': ['telehrami', 'insti', 'tiktoki', 'zumi'], 'explanation': "ICQ ('аська') померла. Всі сидять у Телеграмі, Інстаграмі або ТікТоці."}, {'sentence': 'Він реальний [[лох]].', 'error': 'лох', 'answer': 'нуб', 'options': ['nub', 'luser', 'bot', 'rak'], 'explanation': "'Лох' — кримінальний жаргон 90-х. Геймери скажуть 'нуб', 'бот' або 'рак'."}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-slang-youth.yaml: Schema validation error at key 'words': ['Та', 'там', 'повний', 'зашквар', 'з', 'цим', 'замовником', 'він', 'постійно', 'все', 'міняє'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2013/2000
+- **Words:** ❌ 2013/3000 (raw: 2195)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
@@ -50,7 +86,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 75 | Included in Core |
-| **Вступ: Код покоління** | ⚪️ | 94 | Skipped |
+| **Вступ: Код покоління** | ✅ | 94 | Included in Core |
 | **Презентація первинних текстів** | ✅ | 205 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 98 | Included in Core |
 | **Історія українського сленгу** | ⚪️ | 538 | Skipped |

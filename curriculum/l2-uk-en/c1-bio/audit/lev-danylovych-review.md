@@ -1,18 +1,56 @@
-# Audit Report: lev-danylovych.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M09 — lev-danylovych.md
+**Level:** C1 | **Module:** M09 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:26:46
+
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Літописна оповідь про розбудову Львова | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз урбаністичної стратегії Лева | 1 | 1 | ✅ |
+| 3 | authorial-intent | Аналіз ідеології 'Князя-Будівничого' | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Львів як геополітичний проект Романовичів | 1 | 1 | ✅ |
+| 5 | reading | Лев Данилович та Золота Орда | 1 | 1 | ✅ |
+| 6 | critical-analysis | Аналіз стратегії виживання | 1 | 1 | ✅ |
+| 7 | comparative-study | Порівняння стратегій: Лев Данилович vs Вацлав II | 1 | 1 | ✅ |
+| 8 | quiz | Перевірка знань про епоху Князя Лева | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 3-9) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/6 (essay-response, quiz, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 4014/4000
-- **Activities:** ✅ 8/4
+- **Words:** ✅ 4014/4000 (raw: 4282)
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
@@ -44,7 +82,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Вступ** | ⚪️ | 210 | Skipped |
+| **Вступ** | ✅ | 210 | Included in Core |
 | **Життєпис** | ⚪️ | 1625 | Skipped |
 | **Історичний контекст** | ✅ | 549 | Included in Core |
 | **Внесок** | ⚪️ | 524 | Skipped |

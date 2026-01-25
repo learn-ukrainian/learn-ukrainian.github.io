@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** Review | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:00
+**Generated:** 2026-01-25 20:07:01
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 8/1
+- **Vocab:** ✅ 7/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

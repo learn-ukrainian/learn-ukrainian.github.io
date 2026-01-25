@@ -1,7 +1,7 @@
 # Audit Report: M93 — dyrektoriia.md
 **Level:** B2 | **Module:** M93 | **Phase:** HIST.9 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:23
+**Generated:** 2026-01-25 20:22:03
 
 ## Configuration
 **Type:** B2-history

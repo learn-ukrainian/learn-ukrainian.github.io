@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M60 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 17:24:02
+**Generated:** 2026-01-25 19:31:48
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): вживати, ефект...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): ефект, вживати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

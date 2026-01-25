@@ -17,6 +17,10 @@
       right: forward/public
     - left: за-
       right: start/deeply
+    - left: мовч-
+      right: silence
+    - left: бач-
+      right: vision
   instruction: З'єднайте корінь або префікс із його значенням.
 - type: group-sort
   title: Mind Families
@@ -107,56 +111,56 @@
 - type: fill-in
   title: Logic in Context
   items:
-    - sentence: Мені подобається ваша українська ___. (pronunciation)
+    - sentence: Мені дуже подобається ваша чіткість звуків, у вас гарна ___.
       answer: вимова
       options:
         - вимова
         - промова
         - розмова
         - варіант А
-    - sentence: У мене є цікава ___ про цю книгу. (thought)
+    - sentence: У мене є своя власна ___ про цю ситуацію.
       answer: думка
       options:
         - думка
         - роздуми
         - думання
         - варіант А
-    - sentence: Після лекції була довга ___ про політику. (conversation)
+    - sentence: Ми сіли в кафе, і у нас була цікава ___.
       answer: розмова
       options:
         - розмова
         - мова
         - відмова
         - варіант А
-    - sentence: Президент виголосив важливу ___ сьогодні. (speech)
+    - sentence: Президент вийшов на трибуну і почав свою ___.
       answer: промову
       options:
         - промову
         - розмову
         - вимову
         - варіант А
-    - sentence: Я отримав ___ на свій запит. (refusal)
+    - sentence: Я просив допомоги, але отримав категоричну ___.
       answer: відмову
       options:
         - відмову
         - вимова
         - промова
         - варіант А
-    - sentence: Студент — це дуже уважний ___. (listener)
+    - sentence: Він сидів тихо і уважно слухав, він гарний ___.
       answer: слухач
       options:
         - слухач
         - духняний
         - промовець
         - варіант А
-    - sentence: Я щовечора пишу в свій ___. (diary)
+    - sentence: Я записую події кожного дня у свій ___.
       answer: щоденник
       options:
         - щоденник
         - блокнот
         - журнал
         - варіант А
-    - sentence: Потрібно ___ до поради професора. (to heed)
+    - sentence: Це мудра порада, до неї варто ___.
       answer: прислухатися
       options:
         - прислухатися
@@ -183,6 +187,10 @@
       right: Слухати
     - left: Formal Speech
       right: Промова
+    - left: Silence
+      right: Мовчання
+    - left: Vision
+      right: Бачення
   instruction: З'єднайте англійське слово з українським.
 - type: unjumble
   title: Deep Thoughts
@@ -270,6 +278,34 @@
         - промовець
         - автор
         - варіант А
+    - sentence: "- Я хочу знати твою ___.\n- Я думаю, це добра ідея."
+      answer: думку
+      options:
+        - думку
+        - мову
+        - розмову
+        - варіант А
+    - sentence: "- Це справжній пістолет?\n- Ні, це просто дитяча ___."
+      answer: іграшка
+      options:
+        - іграшка
+        - думка
+        - мова
+        - варіант А
+    - sentence: "- У мене є план.\n- У мене теж є своє ___."
+      answer: бачення
+      options:
+        - бачення
+        - слухання
+        - говоріння
+        - варіант А
+    - sentence: "- Чому тут так тихо?\n- Ми зберігаємо ___."
+      answer: мовчання
+      options:
+        - мовчання
+        - звучання
+        - промовчання
+        - варіант А
   instruction: Доповніть діалог правильним словом.
 - type: quiz
   title: Semantic Logic
@@ -314,6 +350,46 @@
           correct: false
         - text: Мовна дитина
           correct: false
+    - question: Чи можете ви пояснити, що саме означає слово «мовчання» в цьому контексті?
+      options:
+        - text: Повна відсутність звуків та розмов
+          correct: true
+        - text: Дуже гучна розмова
+          correct: false
+        - text: Частина граматики
+          correct: false
+        - text: Вид спорту
+          correct: false
+    - question: Як би ви описали людину, яку ми зазвичай називаємо «промовець»?
+      options:
+        - text: Людина, яка виступає з промовою перед публікою
+          correct: true
+        - text: Людина, яка завжди мовчить
+          correct: false
+        - text: Людина, яка слухає музику
+          correct: false
+        - text: Дитина, яка грається
+          correct: false
+    - question: Яка основна функція людини, яка є «слухачем» на музичному концерті?
+      options:
+        - text: Він слухає музику та виконавців
+          correct: true
+        - text: Він голосно кричить і заважає
+          correct: false
+        - text: Він пише книгу
+          correct: false
+        - text: Він спить
+          correct: false
+    - question: Що ми маємо на увазі, коли говоримо про чиєсь «бачення» у дискусії?
+      options:
+        - text: Це особистий погляд або розуміння ситуації
+          correct: true
+        - text: Це здатність бачити очима
+          correct: false
+        - text: Це назва вулиці
+          correct: false
+        - text: Це кухонний прилад
+          correct: false
   instruction: Оберіть правильну відповідь.
 - type: cloze
   title: The Philosopher's Afternoon
@@ -333,7 +409,7 @@
 - type: error-correction
   title: Root & Prefix Repair
   items:
-    - sentence: Мені подобається твоя українська розмова. (correcting to language)
+    - sentence: Мені подобається твоя українська розмова (система слів і граматика).
       error: розмова
       answer: мова
       options:
@@ -341,8 +417,8 @@
         - розмова
         - вимова
         - варіант А
-      explanation: We like the 'language' itself.
-    - sentence: Президент дав відмову на площі. (correcting to speech)
+      explanation: We like the 'language' itself (system), not 'conversation'.
+    - sentence: Президент дав відмову на площі перед людьми.
       error: відмову
       answer: промову
       options:
@@ -351,7 +427,7 @@
         - розмову
         - варіант А
       explanation: A public address is a promova.
-    - sentence: Я пишу думи у свій блокнот. (correcting to reflections)
+    - sentence: Я пишу думи у свій блокнот систематично.
       error: думи
       answer: роздуми
       options:
@@ -360,7 +436,7 @@
         - думки
         - варіант А
       explanation: Systematic reflections are rozdumy.
-    - sentence: Слухач дитини був поганий. (correcting to obedience/behavior)
+    - sentence: Слухач цієї дитини був поганий, вона не робила те, що казала мама.
       error: Слухач
       answer: Послух
       options:
@@ -368,8 +444,8 @@
         - Слухач
         - Слухання
         - варіант А
-      explanation: Abstract obedience.
-    - sentence: Його вимова була зачинена. (correcting to rejection/refusal)
+      explanation: Abstract obedience is 'poslukh'.
+    - sentence: Його вимова була категорична — він сказав «Ні».
       error: вимова
       answer: відмова
       options:
@@ -378,7 +454,7 @@
         - промова
         - варіант А
       explanation: A rejection is a vidmova.
-    - sentence: Він був дуже слушаний сьогодні. (correcting to obedient)
+    - sentence: Він був дуже слушаний сьогодні і не бешкетував.
       error: слушаний
       answer: слухняний
       options:
@@ -386,5 +462,5 @@
         - слушаний
         - слуханий
         - варіант А
-      explanation: Correct form of 'obedient'.
+      explanation: Correct form of 'obedient' is slukhnyanyi.
   instruction: Виправте помилку у вживанні коріння або префікса.

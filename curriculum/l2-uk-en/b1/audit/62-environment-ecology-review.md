@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M62 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:37:47
+**Generated:** 2026-01-25 19:22:43
 
 ## Configuration
 **Type:** B1-vocab
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 88/35
+- **Vocab:** ✅ 83/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

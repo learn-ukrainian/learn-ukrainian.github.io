@@ -1,30 +1,65 @@
-# Audit Report: 145-ritual-songs.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 2000
+# Audit Report: M49 — 49-ritual-songs.md
+**Level:** C1 | **Module:** M49 | **Phase:** C1.5 | **Pedagogy:** Cultural Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:34
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння обрядовості | 5 | 5 | ✅ |
+| 2 | match-up | Свято і Пісня | 8 | 6 | ✅ |
+| 3 | group-sort | Календарні цикли | 15 | 12 | ✅ |
+| 4 | fill-in | Обрядова лексика | 6 | 6 | ✅ |
+| 5 | cloze | Історія «Щедрика» | 12 | 12 | ✅ |
+| 6 | unjumble | Магічні формули | 5 | 5 | ✅ |
+| 7 | translate | Переклад понять | 5 | 5 | ✅ |
+| 8 | error-correction | Плутанина в традиціях | 5 | 5 | ✅ |
+| 9 | essay-response | Роздум про «Щедрик» | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз тексту веснянки | 1 | 1 | ✅ |
+| 11 | match-up | Символи свята | 8 | 6 | ✅ |
+| 12 | group-sort | Дії під час обряду | 12 | 12 | ✅ |
+| 13 | quiz | Деталі традицій | 5 | 5 | ✅ |
+| 14 | unjumble | Рядки з пісень | 5 | 5 | ✅ |
+| 15 | fill-in | Символіка кольорів | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 145-ritual-songs.yaml: Schema validation error at key '14': {'type': 'fill-in', 'title': 'Символіка кольорів', 'instruction': 'Вставте колір, що відповідає символу.', 'items': [{'sentence': '___ (колір крові та життя) — символ любові та енергії.', 'answer': 'Червоний', 'options': ['Червоний', 'Білий', 'Чорний', 'Синій']}, {'sentence': '___ (колір чистоти) — символ святості та невинності.', 'answer': 'Білий', 'options': ['Білий', 'Зелений', 'Жовтий', 'Сірий']}, {'sentence': '___ (колір землі) — символ смутку та смерті, але й родючості.', 'answer': 'Чорний', 'options': ['Чорний', 'Блакитний', 'Рожевий', 'Золотий']}, {'sentence': '___ (колір весни) — символ відродження природи.', 'answer': 'Зелений', 'options': ['Зелений', 'Фіолетовий', 'Коричневий', 'Срібний']}, {'sentence': '___ (колір сонця) — символ світла та багатства.', 'answer': 'Жовтий', 'options': ['Жовтий', 'Темний', 'Блідий', 'Мутний']}, {'sentence': '___ (колір води і неба) — символ духовності.', 'answer': 'Синій', 'options': ['Синій', 'Червоний', 'Помаранчевий', 'Бежевий']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 49-ritual-songs.yaml: Schema validation error at key 'words': ['Несе', 'Галя', 'воду', 'коромисло', 'гнеться', 'за', 'нею', 'Іванко', 'як', 'барвінок', "в'ється"] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template.md'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2034/2000
+- **Words:** ❌ 2034/3000 (raw: 2139)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
@@ -54,7 +89,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ: Міфологічне мислення та циклічність** | ⚪️ | 147 | Skipped |
+| **Вступ: Міфологічне мислення та циклічність** | ✅ | 147 | Included in Core |
 | **Зимовий цикл: Коляда і Щедрий вечір** | ⚪️ | 364 | Skipped |
 | **Семантика символіки: Коди природи у слові** | ⚪️ | 292 | Skipped |
 | **Весняний цикл: Пробудження життєвої сили** | ⚪️ | 83 | Skipped |

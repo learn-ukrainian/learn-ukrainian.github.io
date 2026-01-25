@@ -1,17 +1,55 @@
-# Audit Report: 25-register-practice-cross-register-rewriting.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M25 — 25-register-practice-cross-register-rewriting.md
+**Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:23:18
+
+## Configuration
+**Type:** B2-checkpoint
+**Word Target:** 1750 words
+**Activities:** 15-19 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥10 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Принципи стильової трансформації | 16 | 8 | ✅ |
+| 2 | match-up | Стилі та маркери | 16 | 8 | ✅ |
+| 3 | cloze | Трансформація в офіційно-діловий стиль | 32 | 14 | ✅ |
+| 4 | group-sort | Класифікація мовних засобів за стилями | 16 | 14 | ✅ |
+| 5 | error-correction | Помилки при трансформації | 16 | 6 | ✅ |
+| 6 | unjumble | Побудова речень офіційно-ділового стилю | 16 | 6 | ✅ |
+| 7 | cloze | Трансформація тексту | 16 | 14 | ✅ |
+| 8 | true-false | Правила трансформації | 16 | 8 | ✅ |
+| 9 | mark-the-words | Визначення стильових маркерів | 10 | 6 | ✅ |
+| 10 | select | Вибір відповідних маркерів | 12 | 6 | ✅ |
+| 11 | translate | Трансформація між стилями | 12 | 6 | ✅ |
+| 12 | fill-in | Трансформація в публіцистичний стиль | 16 | 8 | ✅ |
+| 13 | quiz | Інтеграційний тест | 16 | 8 | ✅ |
+| 14 | essay-response | Крос-регістрове перетворення | 1 | 1 | ✅ |
+| 15 | group-sort | Класифікація стильових маркерів | 20 | 14 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 15-19) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2783/1750
+- **Words:** ✅ 2783/1750 (raw: 3134)
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 128/10
+- **Vocab:** ✅ 12/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

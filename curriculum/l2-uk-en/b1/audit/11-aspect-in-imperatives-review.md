@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:19:03
+**Generated:** 2026-01-25 19:22:11
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,49 +41,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1585/1500 (raw: 2188)
+- **Words:** ✅ 1624/1500 (raw: 2246)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 55/25
+- **Vocab:** ✅ 122/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.2 Motion))
-- **Richness:** ✅ 95% (grammar)
+- **Immersion:** 🇺🇦 97.8% (target 85-100% (B1.2 Motion))
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 85 | 24 | 100% | 20% | 20.0% |
+| examples | 84 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.86 | - | 86% | 5% | 4.3% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.8%** |
+| **TOTAL** | | | | | **96.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Тест** | ⚪️ | 154 | Skipped |
-| **Пояснення** | ⚪️ | 352 | Skipped |
+| **Пояснення** | ⚪️ | 390 | Skipped |
 | **Практика** | ⚪️ | 402 | Skipped |
 | **Діалоги** | ✅ | 366 | Included in Core |
-| **Підсумок** | ✅ | 146 | Included in Core |
+| **Підсумок** | ✅ | 147 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

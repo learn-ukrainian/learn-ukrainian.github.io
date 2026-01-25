@@ -1,18 +1,52 @@
-# Audit Report: 03-eneida-feast.md
-**Phase:** LIT.1 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M03 — 03-eneida-feast.md
+**Level:** LIT | **Module:** M03 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:27:58
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Іван Котляревський: Енеїда (Бенкет) | 2 | 1 | ✅ |
+| 2 | essay-response | Есе-Роздум: Шпундра як ідеологія | 1 | 1 | ✅ |
+| 3 | essay-response | Творче Завдання: Меню Енея | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз Тексту: Бенкет як Ритуал | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
+- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/6 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3888/3500
+- **Words:** ❌ 3888/4000 (raw: 4310)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 14/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)

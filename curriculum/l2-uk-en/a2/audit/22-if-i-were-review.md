@@ -1,7 +1,7 @@
 # Audit Report: M22 — 22-if-i-were.md
 **Level:** A2 | **Module:** M22 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:59:32
+**Generated:** 2026-01-25 20:40:54
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми опануємо просте але...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): мабуть, якби, пішов, поїхав, можливо...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): обов'язково, пішов, якби, поїхав, купив...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

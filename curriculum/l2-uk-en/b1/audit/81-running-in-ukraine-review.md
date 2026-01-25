@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M81 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 01:44:10
+**Generated:** 2026-01-25 19:22:54
 
 ## Configuration
 **Type:** B1-cultural
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 68/25
+- **Vocab:** ✅ 66/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

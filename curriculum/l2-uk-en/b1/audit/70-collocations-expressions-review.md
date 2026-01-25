@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M70 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:38:26
+**Generated:** 2026-01-25 19:22:47
 
 ## Configuration
 **Type:** B1-vocab
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 22 < 35 (soft target)
+- **Vocab:** ⚠️ 20 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

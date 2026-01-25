@@ -1,44 +1,93 @@
-# Audit Report: 138-academic-writing.md
-**Phase:** B2.4 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M77 — 77-academic-writing.md
+**Level:** B2 | **Module:** M77 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:52
+
+## Configuration
+**Type:** B2-skills
+**Word Target:** 1750 words
+**Activities:** 14-18 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** cloze, fill-in, quiz, translate
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Структура та термінологія есе | 8 | 8 | ✅ |
+| 2 | true-false | Доброчесність та цитування | 8 | 8 | ✅ |
+| 3 | fill-in | Словник дослідника | 10 | 8 | ✅ |
+| 4 | unjumble | Логіка формулювання тези | 8 | 6 | ✅ |
+| 5 | group-sort | Функції частин есе | 16 | 14 | ✅ |
+| 6 | mark-the-words | Аналіз академічного етосу | 8 | 6 | ✅ |
+| 7 | cloze | Поради викладача щодо чернетки | 19 | 14 | ✅ |
+| 8 | error-correction | Редагування академічного стилю | 8 | 6 | ✅ |
+| 9 | translate | Академічні терміни | 8 | 6 | ✅ |
+| 10 | select | Якість аргументації | 6 | 6 | ✅ |
+| 11 | cloze | Культура доброчесності | 18 | 14 | ✅ |
+| 12 | translate | Академічна трансформація | 8 | 6 | ✅ |
+| 13 | quiz | Аналіз логічних зв’язків | 8 | 8 | ✅ |
+| 14 | match-up | Академічні колокації | 12 | 8 | ✅ |
+| 15 | essay-response | Написання академічного есе | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 14-18) ✅
+- Unique types: 13 (minimum: 5) ✅
+- Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-academic-writing.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Аналіз логічних зв’язків', 'items': [{'options': [{'text': 'Введення прикладу', 'correct': False}, {'text': 'Узагальнення/Висновок', 'correct': True}, {'text': 'Протиставлення', 'correct': False}, {'text': 'Перерахування', 'correct': False}], 'question': '«Отже, наведені факти дозволяють стверджувати...» Яку логічну функцію виконує вставне слово ОТЖЕ у цьому реченні?'}, {'options': [{'text': 'Додавання інформації', 'correct': False}, {'text': 'Контраст/Зміна перспективи', 'correct': True}, {'text': 'Підтвердження тези', 'correct': False}, {'text': 'Висновок', 'correct': False}], 'question': '«З іншого боку, існує ризик надмірної залежності від технологій». Яка функція З ІНШОГО БОКУ?'}, {'options': [{'text': 'Перерахування/Послідовність', 'correct': True}, {'text': 'Висновок', 'correct': False}, {'text': 'Приклад', 'correct': False}, {'text': 'Сумнів', 'correct': False}], 'question': '«По-перше, необхідно визначити методологію дослідження». Яку роль відіграє вставне слово ПО-ПЕРШЕ?'}, {'options': [{'text': 'Узагальнення', 'correct': False}, {'text': 'Уточнення/Приклад', 'correct': True}, {'text': 'Заперечення', 'correct': False}, {'text': 'Підсумок', 'correct': False}], 'question': '«Зокрема, це стосується студентів гуманітарних факультетів». Яка функція вставного слова ЗОКРЕМА?'}, {'options': [{'text': 'Початку есе', 'correct': False}, {'text': 'Резюмування/Наслідок', 'correct': True}, {'text': 'Сумніву', 'correct': False}, {'text': 'Переліку', 'correct': False}], 'question': '«Таким чином, ми бачимо системні зміни в освіті». Яку логічну функцію виконує конструкція ТАКИМ ЧИНОМ?'}, {'options': [{'text': 'Протиставлення', 'correct': True}, {'text': 'Додавання', 'correct': False}, {'text': 'Приклад', 'correct': False}, {'text': 'Завершення', 'correct': False}], 'question': '«Навпаки, використання ШІ стимулює креативність». Яку роль відіграє слово НАВПАКИ у цьому контексті?'}, {'options': [{'text': 'Доповнення/Розширення', 'correct': True}, {'text': 'Висновок', 'correct': False}, {'text': 'Протилежність', 'correct': False}, {'text': 'Теза', 'correct': False}], 'question': '«Крім того, варто згадати про економічний аспект». Яка функція конструкції КРІМ ТОГО?'}, {'options': [{'text': 'Сумніву', 'correct': False}, {'text': 'Впевненості/Наголосу', 'correct': True}, {'text': 'Прикладу', 'correct': False}, {'text': 'Висновок', 'correct': False}], 'question': '«Безумовно, академічна етика є пріоритетом». Яку функцію виконує вставне слово БЕЗУМОВНО?'}], 'instruction': 'Визначте логічну функцію вставного слова в реченні.'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2848/1750
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2848/1750 (raw: 2930)
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ⚠️ 7 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 69 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 8 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 12 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.5%** |
+| examples | 69 | 15 | 100% | 26% | 25.5% |
+| engagement | 9 | 5 | 100% | 19% | 19.4% |
+| variety | 0.98 | - | 98% | 12% | 12.0% |
+| cultural | 2 | - | 100% | 12% | 12.2% |
+| realworld | 5 | 3 | 100% | 12% | 12.2% |
+| visual | 6 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
+| questions | 12 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -48,7 +97,7 @@
 | **Стратегії: Анатомія аргументу** | ⚪️ | 328 | Skipped |
 | **Deep Dive: Цитування та доброчесність** | ✅ | 678 | Included in Core |
 | **Практика: Від чернетки до есе** | ⚪️ | 471 | Skipped |
-| **Reading Practice: Мова наукового діалогу** | ✅ | 348 | Included in Core |
+| **Reading Practice: Мова наукового діалогу** | ⚪️ | 0 | Skipped (using YAML) |
 | **✍️ Написання есе** | ⚪️ | 320 | Skipped |
 | **Підсумок** | ✅ | 77 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M89 | **Phase:** B1.8 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 23:04:56
+**Generated:** 2026-01-25 19:22:59
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -48,7 +48,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/10
+- **Vocab:** ✅ 12/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

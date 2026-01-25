@@ -1,7 +1,7 @@
 # Audit Report: M135 — kakhovska-hes.md
 **Level:** B2 | **Module:** M135 | **Phase:** HIST.13 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:33
+**Generated:** 2026-01-25 20:22:12
 
 ## Configuration
 **Type:** B2-history

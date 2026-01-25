@@ -1,35 +1,72 @@
-# Audit Report: 17-irregular-verbs-complete.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
+# Audit Report: M17 — 17-irregular-verbs-complete.md
+**Level:** C1 | **Module:** M17 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:14
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-grammar-module-template.md'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Трансформації' per template 'b2-grammar-module-template.md'
-  - FIX: Add '## Трансформації' section as specified in docs/l2-uk-en/templates/b2-grammar-module-template.md.md
+## Configuration
+**Type:** C1-grammar
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння граматичної теорії та тексту | 12 | 5 | ✅ |
+| 2 | match-up | Лінгвістичні категорії та їх дефініції | 12 | 6 | ✅ |
+| 3 | group-sort | Класифікація морфологічних процесів у дієсловах | 20 | 12 | ✅ |
+| 4 | fill-in | Відмінювання атематичних та складних дієслів | 12 | 6 | ✅ |
+| 5 | error-correction | Виправлення типових помилок у вживанні дієслів | 12 | 5 | ✅ |
+| 6 | unjumble | Побудова складних академічних конструкцій | 12 | 5 | ✅ |
+| 7 | cloze | Текстова реконструкція: Дієслова руху в контексті | 12 | 12 | ✅ |
+| 8 | essay-response | Есе: Еволюція мови | 1 | 1 | ✅ |
+| 9 | true-false | Граматичні нюанси дієслів | 8 | 5 | ✅ |
+| 10 | quiz | Стилістика дієслів | 8 | 5 | ✅ |
+| 11 | fill-in | Синтетичні форми майбутнього часу | 8 | 6 | ✅ |
+| 12 | quiz | Синонімічна заміна | 8 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 6/6 (cloze, error-correction, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 17-irregular-verbs-complete.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2124/2000
+- **Words:** ❌ 2124/3000 (raw: 2397)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -54,7 +91,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ⚪️ | 166 | Skipped |
+| **Вступ** | ✅ | 166 | Included in Core |
 | **Академічний текст 1: Еволюція соціальних інститутів** | ✅ | 271 | Included in Core |
 | **Аналіз: Граматичні структури** | ✅ | 191 | Included in Core |
 | **Академічний текст 2: Психологія успіху** | ✅ | 382 | Included in Core |

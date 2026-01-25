@@ -1,18 +1,53 @@
-# Audit Report: 06-kvitka-bio.md
-**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M06 — 06-kvitka-bio.md
+**Level:** LIT | **Module:** M06 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:02
+
+## Configuration
+**Type:** LIT-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | essay-response | Есе-Міркування: Феномен Малих Справ | 1 | 1 | ✅ |
+| 2 | reading | Григорій Квітка-Основ'яненко: Біографія | 2 | 1 | ✅ |
+| 3 | comparative-study | Літературна Дуель: Маруся vs Наталка | 1 | 1 | ✅ |
+| 4 | essay-response | Творча Реконструкція: Забутий Журналіст | 1 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз Тексту: Листи до Нащадків | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3637/3500
+- **Words:** ❌ 3637/4000 (raw: 3989)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 18/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)

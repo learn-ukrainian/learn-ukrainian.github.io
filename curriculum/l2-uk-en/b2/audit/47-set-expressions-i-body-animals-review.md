@@ -1,17 +1,53 @@
-# Audit Report: 47-set-expressions-i-body-animals.md
-**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+# Audit Report: M47 — 47-set-expressions-i-body-animals.md
+**Level:** B2 | **Module:** M47 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:23:33
+
+## Configuration
+**Type:** B2-vocab
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Значення фразеологізмів | 16 | 8 | ✅ |
+| 2 | match-up | Фразеологізми та їхнє значення | 16 | 8 | ✅ |
+| 3 | group-sort | Соматичні vs Зоологічні фразеологізми | 20 | 14 | ✅ |
+| 4 | unjumble | Відновіть фразеологізми | 16 | 6 | ✅ |
+| 5 | cloze | Вставте фразеологізм у контекст | 16 | 14 | ✅ |
+| 6 | true-false | Правильне вживання фразеологізмів | 16 | 8 | ✅ |
+| 7 | error-correction | Виправте помилки у фразеологізмах | 16 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть фразеологізми в тексті | 22 | 6 | ✅ |
+| 9 | select | Оберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 10 | translate | Знайдіть англійський еквівалент | 8 | 6 | ✅ |
+| 11 | essay-response | Роль фразеологізмів у мовленні | 1 | 1 | ✅ |
+| 12 | match-up | Частини тіла та їхня символіка | 16 | 8 | ✅ |
+| 13 | fill-in | Завершіть діалог фразеологізмами | 16 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2121/1750
+- **Words:** ✅ 2121/1750 (raw: 2521)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 104/35
+- **Vocab:** ⚠️ 22 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -42,7 +78,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Вступ** | ⚪️ | 147 | Skipped |
+| **Вступ** | ✅ | 147 | Included in Core |
 | **Фразеологізми** | ⚪️ | 1215 | Skipped |
 | **Вживання у контексті** | ✅ | 203 | Included in Core |
 | **Тематична класифікація виразів** | ⚪️ | 0 | Skipped |

@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-aspect-mastery-pairs.md
 **Level:** A2 | **Module:** M16 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:52:06
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:40:40
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,36 +38,20 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 7: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми перетворимо ваші знання...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ввечері перед сном спробуйте...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): відремонтувати, дзвонити, відповідати, платити, пам'ятати...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 7/100)
-
-- 3 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1454/1000 (raw: 1535)
+- **Words:** ✅ 1448/1000 (raw: 1529)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 47/1
+- **Vocab:** ✅ 69/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 2 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 49.8% LOW (target 50-65% (A2.1))
+- **Immersion:** 🇺🇦 55.5% (target 50-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -75,9 +59,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 222 | Included in Core |
+| **Introduction / Вступ** | ✅ | 215 | Included in Core |
 | **Presentation / Презентація** | ✅ | 693 | Included in Core |
 | **Practice / Практика** | ⚪️ | 174 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 214 | Included in Core |
 | **Summary / Підсумок** | ✅ | 93 | Included in Core |
-| **Need More Practice?** | ⚪️ | 58 | Skipped |
+| **Need More Practice?** | ⚪️ | 59 | Skipped |

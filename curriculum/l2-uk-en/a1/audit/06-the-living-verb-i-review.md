@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:53:57
+**Generated:** 2026-01-25 20:06:58
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): називати, шукати, снідати, чекати, питати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): танцювати, гуляти, снідати, знаходити, відпочивати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -51,7 +51,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/1
+- **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

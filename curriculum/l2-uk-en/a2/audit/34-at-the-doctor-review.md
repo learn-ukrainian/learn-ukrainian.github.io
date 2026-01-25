@@ -1,7 +1,7 @@
 # Audit Report: M34 — 34-at-the-doctor.md
 **Level:** A2 | **Module:** M34 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:12:47
+**Generated:** 2026-01-25 19:30:41
 
 ## Configuration
 **Type:** A2-vocab
@@ -40,7 +40,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Ви дізнаєтеся як попросити про...'
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): температура, оглядати, хвороба, хворіти, біль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): око, лікарня, рука, температура, відчувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

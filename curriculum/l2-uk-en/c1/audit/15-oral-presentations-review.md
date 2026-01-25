@@ -1,47 +1,101 @@
-# Audit Report: 15-oral-presentations.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
+# Audit Report: M15 — 15-oral-presentations.md
+**Level:** C1 | **Module:** M15 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:13
+
+## Configuration
+**Type:** C1-grammar
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, essay-response, fill-in, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Етапи доповіді | 8 | 5 | ✅ |
+| 2 | match-up | Фрази-покажчики | 14 | 6 | ✅ |
+| 3 | fill-in | Словник промовця | 8 | 6 | ✅ |
+| 4 | match-up | Етикет звертань | 14 | 6 | ✅ |
+| 5 | true-false | Слайди: Так чи Ні? | 8 | 5 | ✅ |
+| 6 | group-sort | Регістр: Офіційно vs Розмовно | 18 | 12 | ✅ |
+| 7 | match-up | Сигнали переказу | 14 | 6 | ✅ |
+| 8 | error-correction | Виправлення помилок | 6 | 5 | ✅ |
+| 9 | unjumble | Складання речення: Перехід | 6 | 5 | ✅ |
+| 10 | match-up | Робота з Q&A | 14 | 6 | ✅ |
+| 11 | fill-in | Академічна пунктуація | 8 | 6 | ✅ |
+| 12 | unjumble | Складання плану | 6 | 5 | ✅ |
+| 13 | quiz | Вибір влучного слова | 8 | 5 | ✅ |
+| 14 | true-false | Пошук 'води' | 8 | 5 | ✅ |
+| 15 | match-up | Синтаксис презентації | 14 | 6 | ✅ |
+| 16 | essay-response | Письмове завдання: План виступу | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 12-16) ✅
+- Unique types: 8 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 4/5 (essay-response, fill-in, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2079/2000
+- **Words:** ❌ 2079/3000 (raw: 2284)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 90-100%)
-- **Richness:** ✅ 99% (style)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
+- **Richness:** ❌ 90% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** style
+**Score:** 90% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
-| model_answers | 21 | 3 | 100% | 20% | 20.0% |
+| examples | 21 | 24 | 88% | 20% | 17.6% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 5 | 5 | 100% | 15% | 15.0% |
-| visual | 11 | 4 | 100% | 10% | 10.0% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| cultural | 2 | - | 100% | 5% | 5.0% |
+| dialogues | 3 | 4 | 75% | 15% | 11.2% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 8 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **90.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 117 | Included in Core |
-| **Вступ** | ⚪️ | 167 | Skipped |
+| **Вступ** | ✅ | 167 | Included in Core |
 | **Академічний текст: Структура виступу** | ✅ | 225 | Included in Core |
 | **Аналіз: Мовні засоби** | ✅ | 65 | Included in Core |
 | **Розділ 3: Мистецтво створення слайдів та візуалізація даних** | ⚪️ | 134 | Skipped |

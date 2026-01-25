@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M48 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:58:26
+**Generated:** 2026-01-25 19:31:17
 
 ## Configuration
 **Type:** A2-vocab
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 92/1
+- **Vocab:** ✅ 88/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

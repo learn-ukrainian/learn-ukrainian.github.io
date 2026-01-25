@@ -108,6 +108,32 @@ items:
   ipa: /smat͡ʃnˈiʃɪj/
   translation: tastier
   pos: adj
+- lemma: прикметник
+  ipa: /prɪkmˈɛtnɪк/
+  translation: adjective
+  pos: noun
+  gender: m
+- lemma: ніж
+  ipa: /niʒ/
+  translation: than (conjunction)
+  pos: conj
+- lemma: за
+  ipa: /za/
+  translation: than (preposition with Acc.)
+  pos: prep
+- lemma: набагато
+  ipa: /nabaɦˈatɔ/
+  translation: much, far (with comparative)
+  pos: adv
+- lemma: трохи
+  ipa: /trˈɔxɪ/
+  translation: a bit, slightly
+  pos: adv
+- lemma: інтенсифікатор
+  ipa: /intɛnsɪfˈikatɔr/
+  translation: intensifier
+  pos: noun
+  gender: m
 - lemma: старіший
   ipa: /starˈiʃɪj/
   translation: older, oldest

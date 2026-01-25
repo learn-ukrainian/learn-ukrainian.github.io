@@ -1,7 +1,7 @@
 # Audit Report: M27 — 27-because-and-although.md
 **Level:** A2 | **Module:** M27 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:04:31
+**Generated:** 2026-01-25 19:30:17
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Це величезний крок до вільного...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): зате, хоч, хай, попри, завдяки...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): хай, нехай, попри, хоч, зате...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

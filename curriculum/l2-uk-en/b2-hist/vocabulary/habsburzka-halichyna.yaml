@@ -1,0 +1,122 @@
+module: habsburzka-halichyna
+level: B2
+version: '1.0'
+items:
+  - lemma: Галичина
+    ipa: /ɦa.lɪ.ˈt͡ʃɪ.na/
+    translation: Galicia
+    pos: noun
+    gender: f
+  - lemma: П'ємонт
+    ipa: /pʲjɛ.ˈmont/
+    translation: Piedmont
+    pos: noun
+    gender: m
+  - lemma: Габсбурги
+    ipa: /ɦabs.ˈbur.ɦɪ/
+    translation: Habsburgs
+    pos: noun
+    gender: m-pl
+  - lemma: греко-католицький
+    ipa: /ˈɦrɛ.ko.ka.to.lɪt͡sʲ.kɪj/
+    translation: Greek Catholic
+    pos: adj
+  - lemma: автономія
+    ipa: /aw.to.ˈnɔ.mʲi.jɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: русин
+    ipa: /ˈru.sɪn/
+    translation: Ruthenian
+    pos: noun
+    gender: m
+  - lemma: цензура
+    ipa: /t͡sɛn.ˈzu.ra/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: петиція
+    ipa: /pɛ.ˈtɪ.t͡sʲi.jɐ/
+    translation: petition
+    pos: noun
+    gender: f
+  - lemma: відродження
+    ipa: /wʲid.ro.ˈdʒɛnʲ.ːɐ/
+    translation: revival, renaissance
+    pos: noun
+    gender: n
+  - lemma: етнонім
+    ipa: /ɛt.ˈnɔ.nʲim/
+    translation: ethnonym
+    pos: noun
+    gender: m
+  - lemma: москвофільство
+    ipa: /mos.kwo.ˈfʲilʲ.stwo/
+    translation: Muscophilism
+    pos: noun
+    gender: n
+  - lemma: кріпацтво
+    ipa: /kri.ˈpat͡s.two/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: просвіта
+    ipa: /pros.ˈwʲi.ta/
+    translation: enlightenment, education
+    pos: noun
+    gender: f
+  - lemma: читальня
+    ipa: /t͡ʃɪ.ˈtalʲ.nʲa/
+    translation: reading room
+    pos: noun
+    gender: f
+  - lemma: освічений абсолютизм
+    ipa: /os.ˈwʲi.t͡ʃɛ.nɪj ab.so.lʲu.ˈtɪzm/
+    translation: enlightened absolutism
+    pos: phrase
+  - lemma: народовці
+    ipa: /na.ˈro.dowt͡sʲi/
+    translation: populists (Ukrainian national movement)
+    pos: noun
+    gender: m-pl
+  - lemma: семінарист
+    ipa: /sɛ.mʲi.ˈna.rɪst/
+    translation: seminarian
+    pos: noun
+    gender: m
+  - lemma: альманах
+    ipa: /alʲ.ma.ˈnax/
+    translation: almanac
+    pos: noun
+    gender: m
+  - lemma: наклад
+    ipa: /na.ˈklad/
+    translation: print run, edition
+    pos: noun
+    gender: m
+  - lemma: конфіскувати
+    ipa: /kon.fʲis.ˈku.wa.tɪ/
+    translation: to confiscate
+    pos: verb
+  - lemma: скасувати
+    ipa: /ska.ˈsu.wa.tɪ/
+    translation: to abolish, to cancel
+    pos: verb
+  - lemma: заснувати
+    ipa: /za.snu.ˈwa.tɪ/
+    translation: to found, to establish
+    pos: verb
+  - lemma: поширювати
+    ipa: /po.ʃɪ.ˈrʲu.wa.tɪ/
+    translation: to spread, to disseminate
+    pos: verb
+  - lemma: провадити
+    ipa: /pro.ˈwa.dɪ.tɪ/
+    translation: to conduct, to pursue
+    pos: verb
+  - lemma: деколонізація
+    ipa: /dɛ.ko.lo.nʲi.ˈza.t͡sʲi.jɐ/
+    translation: decolonization
+    pos: noun
+    gender: f

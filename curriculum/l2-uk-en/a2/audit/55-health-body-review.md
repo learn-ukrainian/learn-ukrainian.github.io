@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M55 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:58:45
+**Generated:** 2026-01-25 20:39:51
 
 ## Configuration
 **Type:** A2-vocab
@@ -36,24 +36,15 @@
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, однина, родовий, називний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ⚠️ 949/1000 (raw: 1327) (51 short)
+- **Words:** ⚠️ 949/1000 (raw: 1339) (51 short)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 47/1
+- **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -62,12 +53,19 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 161 | Included in Core |
-| **Граматика** | ⚪️ | 248 | Skipped |
-| **Практика** | ⚪️ | 405 | Skipped |
-| **Підсумок** | ✅ | 108 | Included in Core |
+| **Introduction / Вступ** | ✅ | 161 | Included in Core |
+| **Presentation / Презентація** | ✅ | 248 | Included in Core |
+| **Practice / Практика** | ⚪️ | 182 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 223 | Included in Core |
+| **Summary / Підсумок** | ✅ | 108 | Included in Core |
 | **Need More Practice?** | ⚪️ | 27 | Skipped |

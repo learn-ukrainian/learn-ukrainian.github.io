@@ -2,49 +2,190 @@ module: 20-preferences-and-choices
 level: A2
 version: '2.0'
 items:
-- lemma: важчий
-  ipa: /ʋˈaʒt͡ʃɛ/
-  translation: heavier
+- lemma: більше
+  ipa: /bˈilʲʃɛ/
+  translation: more (adv)
   pos: adv
+- lemma: більший
+  ipa: /bˈilʲʃɪj/
+  translation: bigger/greater
+  pos: adj
+- lemma: брати
+  ipa: /bratɪ/
+  translation: to take
+  pos: verb
+- lemma: важче
+  ipa: /vaʒt͡ʃɛ/
+  translation: harder (adv)
+  pos: adv
+- lemma: важчий
+  ipa: /ʋˈaʒt͡ʃɪj/
+  translation: heavier
+  pos: adj
+- lemma: великий
+  ipa: /ʋɛlˈɪkɪj/
+  translation: big
+  pos: adj
+- lemma: вибирати
+  ipa: /vɪbɪratɪ/
+  translation: to choose (imperf)
+  pos: verb
+- lemma: вибір
+  ipa: /ʋˈɪbir/
+  translation: choice
+  pos: noun
+  gender: m
+- lemma: вибрати
+  ipa: /vɪbratɪ/
+  translation: to choose (perf)
+  pos: verb
 - lemma: викликати
   ipa: /ʋɪklɪkatɪ/
   translation: to cause, to call
   pos: verb
 - lemma: висловлювати
   ipa: /ʋɪslˈɔʋljuʋatɪ/
-  translation: to express (imperfective)
+  translation: to express
+  pos: verb
+- lemma: віддавати
+  ipa: /ʋiddatɪ/
+  translation: to give
+  pos: verb
+- lemma: віддавати перевагу
+  ipa: /ʋiddatɪ pɛrɛʋaɦu/
+  translation: to prefer
+  pos: verb
+- lemma: відмова
+  ipa: /ʋidmˈɔʋa/
+  translation: refusal
+  pos: noun
+  gender: f
+- lemma: волити
+  ipa: /vɔlɪtɪ/
+  translation: to prefer
   pos: verb
 - lemma: вподобання
   ipa: /ʋpɔdˈɔbannja/
-  translation: preferences, likes
+  translation: preferences
   pos: noun
   gender: n
-- lemma: відмова
-  ipa: /ʋidmˈɔʋa/
-  translation: refusal, failure
-  pos: noun
-  gender: f
-- lemma: грубий
-  ipa: /ɦrˈubɪj/
-  translation: rude, coarse, thick
-  pos: adj
 - lemma: гіпотетичний
   ipa: /ɦipɔtɛtˈɪt͡ʃnɪj/
   translation: hypothetical
   pos: adj
+- lemma: гірше
+  ipa: /ɦirʃɛ/
+  translation: worse (adv)
+  pos: adv
+- lemma: граматичний
+  ipa: /ɦramatˈɪt͡ʃnɪj/
+  translation: grammatical
+  pos: adj
+- lemma: грубий
+  ipa: /ɦrˈubɪj/
+  translation: rude
+  pos: adj
+- lemma: давати
+  ipa: /daʋatɪ/
+  translation: to give
+  pos: verb
+- lemma: дарувати
+  ipa: /daruʋatɪ/
+  translation: to gift/give
+  pos: verb
 - lemma: детектив
   ipa: /dɛtɛktˈɪʋ/
   translation: detective
   pos: noun
+- lemma: дешевше
+  ipa: /dɛʃɛʋʃɛ/
+  translation: cheaper (adv)
+  pos: adv
+- lemma: дивитися
+  ipa: /dɪʋɪtɪsja/
+  translation: to watch
+  pos: verb
+- lemma: дім
+  ipa: /dim/
+  translation: home/house
+  pos: noun
+  gender: m
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: well/good
+  pos: adv
+- lemma: добрий
+  ipa: /dˈɔbrɪj/
+  translation: good
+  pos: adj
+- lemma: дорожче
+  ipa: /dɔrɔʒt͡ʃɛ/
+  translation: more expensive (adv)
+  pos: adv
+- lemma: думати
+  ipa: /dˈumatɪ/
+  translation: to think
+  pos: verb
+- lemma: думаєш
+  ipa: /dˈumaʲɛʃ/
+  translation: you think
+  pos: verb
 - lemma: ефективніший
   ipa: /ɛfɛktˈɪʋniʃɪj/
   translation: more effective
   pos: adj
+- lemma: же
+  ipa: /ʒɛ/
+  translation: particle
+  pos: part
 - lemma: жінка
   ipa: /ʒˈinka/
-  translation: woman, wife
+  translation: woman
   pos: noun
   gender: f
+- lemma: завжди
+  ipa: /zaʋʒdˈɪ/
+  translation: always
+  pos: adv
+- lemma: знати
+  ipa: /znˈatɪ/
+  translation: to know
+  pos: verb
+- lemma: знаєш
+  ipa: /znˈaʲɛʃ/
+  translation: you know
+  pos: verb
+- lemma: зручніше
+  ipa: /zrut͡ʃniʃɛ/
+  translation: more convenient (adv)
+  pos: adv
+- lemma: іноді
+  ipa: /inɔdˈi/
+  translation: sometimes
+  pos: adv
+- lemma: йому
+  ipa: /jɔmˈu/
+  translation: him (dat)
+  pos: pron
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: coffee
+  pos: noun
+  gender: f
+- lemma: кафе
+  ipa: /kafˈɛ/
+  translation: cafe
+  pos: noun
+  gender: n
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: book
+  pos: noun
+  gender: f
+- lemma: кожний
+  ipa: /kˈɔʒnɪj/
+  translation: every/each
+  pos: adj
 - lemma: колір
   ipa: /kˈɔlir/
   translation: color
@@ -54,21 +195,142 @@ items:
   ipa: /kɔmfˈɔrtniʃɪj/
   translation: more comfortable
   pos: adj
+- lemma: корисний
+  ipa: /kɔrˈɪsnɪj/
+  translation: useful
+  pos: adj
 - lemma: корисніше
-  ipa: /kɔrˈɪsniʃɛ/
-  translation: more useful
+  ipa: /kɔrɪsniʃɛ/
+  translation: more useful (adv)
+  pos: adv
+- lemma: краще
+  ipa: /kraʃt͡ʃɛ/
+  translation: better (adv)
+  pos: adv
+- lemma: кращий
+  ipa: /krˈaʃt͡ʃɪj/
+  translation: better
+  pos: adj
+- lemma: легко
+  ipa: /lˈɛxkɔ/
+  translation: easily
+  pos: adv
+- lemma: легше
+  ipa: /lɛxʃɛ/
+  translation: easier (adv)
+  pos: adv
+- lemma: любити
+  ipa: /lʲubˈɪtɪ/
+  translation: to love
+  pos: verb
+- lemma: мати
+  ipa: /mˈatɪ/
+  translation: to have
+  pos: verb
+- lemma: мені
+  ipa: /mɛnˈi/
+  translation: me (dat)
+  pos: pron
+- lemma: менше
+  ipa: /mˈɛnʃɛ/
+  translation: less (adv)
+  pos: adv
+- lemma: міцний
+  ipa: /mit͡sˈnɪj/
+  translation: strong
+  pos: adj
+- lemma: могти
+  ipa: /mɔɦtˈɪ/
+  translation: can/be able
+  pos: verb
+- lemma: можна
+  ipa: /mˈɔʒna/
+  translation: possible/allowed
+  pos: pred
+- lemma: найбільше
+  ipa: /najbˈilʲʃɛ/
+  translation: most of all
+  pos: adv
+- lemma: найцікавіше
+  ipa: /najt͡sʲikaʋˈiʃɛ/
+  translation: most interesting (adv)
+  pos: adv
+- lemma: нудніше
+  ipa: /nudniʃɛ/
+  translation: more boring (adv)
   pos: adv
 - lemma: нудніший
   ipa: /nudnˈiʃɪj/
   translation: more boring
   pos: adj
+- lemma: п'ю
+  ipa: /pju/
+  translation: I drink
+  pos: verb
 - lemma: парфум
   ipa: /parfˈum/
   translation: perfume
   pos: noun
+- lemma: перевага
+  ipa: /pɛrɛʋˈaɦa/
+  translation: preference/advantage
+  pos: noun
+  gender: f
+- lemma: писати
+  ipa: /pɪsˈatɪ/
+  translation: to write
+  pos: verb
 - lemma: письмово
   ipa: /pɪsʲmˈɔʋɔ/
   translation: in writing
+  pos: adv
+- lemma: пити
+  ipa: /pˈɪtɪ/
+  translation: to drink
+  pos: verb
+- lemma: пишу
+  ipa: /pɪʃˈu/
+  translation: I write
+  pos: verb
+- lemma: повільніше
+  ipa: /pɔʋilʲniʃɛ/
+  translation: slower (adv)
+  pos: adv
+- lemma: подобатися
+  ipa: /pɔdɔbatɪsja/
+  translation: to like
+  pos: verb
+- lemma: подорожувати
+  ipa: /pɔdɔrɔʒuʋˈatɪ/
+  translation: to travel
+  pos: verb
+- lemma: поїхати
+  ipa: /pɔjˈixatɪ/
+  translation: to go (by vehicle)/depart
+  pos: verb
+- lemma: повний
+  ipa: /pˈɔʋnɪj/
+  translation: full/complete
+  pos: adj
+- lemma: погано
+  ipa: /pɔɦˈanɔ/
+  translation: badly
+  pos: adv
+- lemma: поганий
+  ipa: /pɔɦˈanɪj/
+  translation: bad
+  pos: adj
+- lemma: потрібно
+  ipa: /pɔtrˈibnɔ/
+  translation: necessary
+  pos: pred
+- lemma: потім
+  ipa: /pˈɔtʲim/
+  translation: then/later
+  pos: adv
+- lemma: практичніше
+  ipa: /praktɪt͡ʃniʃɛ/
+  translation: more practical (adv)
   pos: adv
 - lemma: практичніший
   ipa: /praktˈɪt͡ʃniʃɪj/
@@ -78,11 +340,122 @@ items:
   ipa: /rˈadɪj/
   translation: glad
   pos: adj
+- lemma: радість
+  ipa: /rˈadistʲ/
+  translation: joy
+  pos: noun
+  gender: f
+- lemma: рано-вранці
+  ipa: /ranɔ-ʋrˈant͡sʲi/
+  translation: early in the morning
+  pos: adv
+- lemma: робити
+  ipa: /rɔbˈɪtɪ/
+  translation: to do
+  pos: verb
+- lemma: розуміти
+  ipa: /rɔzumˈitɪ/
+  translation: to understand
+  pos: verb
+- lemma: розумний
+  ipa: /rɔzˈumnɪj/
+  translation: smart
+  pos: adj
 - lemma: романтичніший
   ipa: /rɔmantɪt͡ʃniʃɪj/
   translation: more romantic
   pos: adj
+- lemma: сказати
+  ipa: /skazˈatɪ/
+  translation: to say
+  pos: verb
+- lemma: смачний
+  ipa: /smat͡ʃnˈɪj/
+  translation: tasty
+  pos: adj
+- lemma: справа
+  ipa: /sprˈaʋa/
+  translation: matter/affair
+  pos: noun
+  gender: f
+- lemma: твердження
+  ipa: /tʋˈɛrdʒɛnʲːa/
+  translation: statement
+  pos: noun
+  gender: n
+- lemma: те
+  ipa: /tɛ/
+  translation: that
+  pos: pron
+- lemma: театр
+  ipa: /tɛˈatr/
+  translation: theater
+  pos: noun
+  gender: m
+- lemma: телевізор
+  ipa: /tɛlɛʋˈizɔr/
+  translation: TV
+  pos: noun
+  gender: m
+- lemma: теж
+  ipa: /tɛʒ/
+  translation: also
+  pos: adv
+- lemma: ти
+  ipa: /tɪ/
+  translation: you
+  pos: pron
+- lemma: улюблений
+  ipa: /ulʲˈublɛnɪj/
+  translation: favorite
+  pos: adj
+- lemma: хотіти
+  ipa: /xɔtˈitɪ/
+  translation: to want
+  pos: verb
+- lemma: хотітися
+  ipa: /xɔtˈitɪsʲa/
+  translation: to be wanted (impersonal)
+  pos: verb
+- lemma: час
+  ipa: /t͡ʃas/
+  translation: time
+  pos: noun
+  gender: m
+- lemma: чай
+  ipa: /t͡ʃaj/
+  translation: tea
+  pos: noun
+  gender: m
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: to read
+  pos: verb
+- lemma: цікаво
+  ipa: /t͡sʲikˈaʋɔ/
+  translation: interestingly
+  pos: adv
+- lemma: цікавий
+  ipa: /t͡sʲikˈaʋɪj/
+  translation: interesting
+  pos: adj
+- lemma: цікавіше
+  ipa: /t͡sikaviʃɛ/
+  translation: more interesting (adv)
+  pos: adv
 - lemma: шкідливіший
   ipa: /ʃkidlɪʋiʃɪj/
   translation: more harmful
   pos: adj
+- lemma: швидше
+  ipa: /ʃʋɪdʃɛ/
+  translation: faster (adv)
+  pos: adv
+- lemma: щиро
+  ipa: /ʃt͡ʃˈɪrɔ/
+  translation: sincerely
+  pos: adv
+- lemma: якби
+  ipa: /jakbˈɪ/
+  translation: if (conditional)
+  pos: conj

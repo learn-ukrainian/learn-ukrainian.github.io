@@ -1,8 +1,8 @@
 # Audit Report: M42 — 42-root-families-ii.md
-**Level:** A2 | **Module:** M42 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 8/10 (PASS)
+**Level:** A2 | **Module:** M42 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:58:13
+**Generated:** 2026-01-25 20:39:41
 
 ## Configuration
 **Type:** A2-grammar
@@ -19,65 +19,53 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Perception Roots | 10 | 8 | ✅ |
-| 2 | match-up | Speech Roots | 10 | 8 | ✅ |
-| 3 | cloze | Root Families | 12 | 12 | ✅ |
-| 4 | quiz | Perception Roots | 8 | 8 | ✅ |
-| 5 | cloze | Story Comprehension | 12 | 12 | ✅ |
-| 6 | unjumble | Perception Sentences | 8 | 6 | ✅ |
-| 7 | error-correction | Root Usage | 6 | 6 | ✅ |
-| 8 | group-sort | Root Families | 16 | 12 | ✅ |
-| 9 | true-false | Root Rules | 12 | 8 | ✅ |
-| 10 | translate | English to Ukrainian | 8 | 6 | ✅ |
+| 1 | match-up | Root Match | 10 | 8 | ✅ |
+| 2 | group-sort | Mind Families | 16 | 12 | ✅ |
+| 3 | fill-in | Noun to Verb | 8 | 8 | ✅ |
+| 4 | fill-in | Logic in Context | 8 | 8 | ✅ |
+| 5 | match-up | Communication Translation | 10 | 8 | ✅ |
+| 6 | unjumble | Deep Thoughts | 6 | 6 | ✅ |
+| 7 | fill-in | Conversation Flow | 8 | 8 | ✅ |
+| 8 | quiz | Semantic Logic | 8 | 8 | ✅ |
+| 9 | cloze | The Philosopher's Afternoon | 13 | 12 | ✅ |
+| 10 | error-correction | Root & Prefix Repair | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 10-14) ✅
-- Unique types: 8 (minimum: 4) ✅
-- Priority types used: 2/3 (error-correction, unjumble) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): вигляд, думати, роздуми, відчуття, розмова...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1397/1000 (raw: 1714)
+- **Words:** ✅ 1362/1000 (raw: 1586)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 8/4 types
+- **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 179/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 65.0% (target 65-75% (A2.3))
+- **Immersion:** 🇺🇦 74.4% (target 65-75% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 239 | Included in Core |
-| **Presentation** | ✅ | 137 | Included in Core |
-| **слух-/чут- Family (hear)** | ⚪️ | 46 | Skipped |
-| **говор-/мов- Family (speak)** | ⚪️ | 43 | Skipped |
-| **Story Time: Розмова між друзями** | ✅ | 176 | Included in Core |
-| **Story Time Part 2: На лекції** | ✅ | 117 | Included in Core |
-| **Deep Dive: Related Roots** | ✅ | 0 | Included in Core |
-| **глял-/дивл-** | ⚪️ | 9 | Skipped |
-| **думл- (think)** | ⚪️ | 158 | Skipped |
-| **Поширені помилки** | ✅ | 23 | Included in Core |
-| **Помилка 1: Слухати чи Чути** | ⚪️ | 44 | Skipped |
-| **Помилка 2: Мова чи Мовлення** | ⚪️ | 47 | Skipped |
-| **Помилка 3: Бачення чи Побачення** | ⚪️ | 47 | Skipped |
-| **Практика** | ⚪️ | 237 | Skipped |
-| **Підсумок** | ✅ | 44 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 263 | Included in Core |
+| **Presentation / Презентація** | ✅ | 622 | Included in Core |
+| **Practice / Практика** | ⚪️ | 196 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 166 | Included in Core |
+| **Summary / Підсумок** | ✅ | 78 | Included in Core |
+| **Need More Practice?** | ⚪️ | 37 | Skipped |

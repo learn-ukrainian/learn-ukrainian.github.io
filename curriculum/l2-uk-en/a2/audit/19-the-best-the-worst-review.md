@@ -1,7 +1,7 @@
 # Audit Report: M19 — 19-the-best-the-worst.md
 **Level:** A2 | **Module:** M19 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:55:32
+**Generated:** 2026-01-25 20:40:46
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,29 +35,20 @@
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 24 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'най порівняльна форма найвищий ступінь...'
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1387/1000 (raw: 1560)
+- **Words:** ✅ 1457/1000 (raw: 1630)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/1
+- **Vocab:** ✅ 91/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 47.3% LOW (target 50-65% (A2.1))
+- **Immersion:** 🇺🇦 50.9% (target 50-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
@@ -65,8 +56,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 265 | Included in Core |
-| **Presentation / Презентація** | ✅ | 605 | Included in Core |
+| **Introduction / Вступ** | ✅ | 304 | Included in Core |
+| **Presentation / Презентація** | ✅ | 636 | Included in Core |
 | **Practice / Практика** | ⚪️ | 193 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 183 | Included in Core |
 | **Summary / Підсумок** | ✅ | 93 | Included in Core |

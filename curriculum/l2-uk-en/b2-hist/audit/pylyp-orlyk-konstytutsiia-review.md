@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M67 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 09:00:42
+**Generated:** 2026-01-25 20:22:44
 
 ## Configuration
 **Type:** B2-history

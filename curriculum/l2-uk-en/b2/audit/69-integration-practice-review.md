@@ -1,20 +1,67 @@
-# Audit Report: 69-integration-practice.md
-**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** Practice | **Target:** 1750
+# Audit Report: M69 — 69-integration-practice.md
+**Level:** B2 | **Module:** M69 | **Phase:** B2.2 | **Pedagogy:** Practice | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:47
+
+## Configuration
+**Type:** B2-vocab
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть мудрість із контекстом | 12 | 8 | ✅ |
+| 2 | quiz | Оберіть точну ідіому | 8 | 8 | ✅ |
+| 3 | group-sort | Стилістична палітра | 23 | 14 | ✅ |
+| 4 | unjumble | Складіть складний аргумент | 8 | 6 | ✅ |
+| 5 | cloze | Історія успіху в Одесі | 20 | 14 | ✅ |
+| 6 | fill-in | Синонімічний вибір | 10 | 8 | ✅ |
+| 7 | error-correction | Виправте стиль | 8 | 6 | ✅ |
+| 8 | translate | Переклад інтеграції | 8 | 6 | ✅ |
+| 9 | true-false | Правила вживання | 8 | 8 | ✅ |
+| 10 | select | Всі засоби виразності | 6 | 6 | ✅ |
+| 11 | match-up | Трансформація тексту | 12 | 8 | ✅ |
+| 12 | match-up | Логіка та Зв'язок | 12 | 8 | ✅ |
+| 13 | quiz | Кейс: Робота в Харкові | 8 | 8 | ✅ |
+| 14 | select | Майстерність виступу | 6 | 6 | ✅ |
+| 15 | essay-response | Творчий роздум про мовний шлях | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 69-integration-practice.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Майстерність виступу', 'instruction': 'Оберіть елементи успішного виступу рівня B2 (до 6 елементів).', 'items': [{'question': "Які риторичні прийоми варто обов'язково використовувати під час виступу?", 'options': [{'text': "влучні прислів'я", 'correct': True}, {'text': 'риторичні запитання', 'correct': True}, {'text': 'складні сполучники', 'correct': True}, {'text': 'професійна лексика', 'correct': True}, {'text': 'виразний висновок', 'correct': True}, {'text': 'емоційні ідіоми', 'correct': True}]}, {'question': 'Оберіть основні ознаки справді професійної та переконливої презентації:', 'options': [{'text': 'структурованість', 'correct': True}, {'text': 'аргументованість', 'correct': True}, {'text': 'динамічність', 'correct': True}, {'text': 'хаотичність', 'correct': False}]}, {'question': 'Які слова та вирази значно підсилюють довіру аудиторії до мовця?', 'options': [{'text': 'обґрунтовано', 'correct': True}, {'text': 'доведено', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'мабуть', 'correct': False}]}, {'question': 'Оберіть ефективні засоби невербальної комунікації під час мовлення:', 'options': [{'text': 'зоровий контакт', 'correct': True}, {'text': 'жестикуляція', 'correct': True}, {'text': 'впевнений голос', 'correct': True}, {'text': 'читання в підлогу', 'correct': False}]}, {'question': 'Які ідіоми найкраще пасують для енергійного заклику аудиторії до дії?', 'options': [{'text': 'гори звернути', 'correct': True}, {'text': 'взяти себе в руки', 'correct': True}, {'text': 'не пасти задніх', 'correct': True}, {'text': 'бити байдики', 'correct': False}]}, {'question': "Оберіть обов'язкові структурні частини будь-якого успішного виступу:", 'options': [{'text': 'яскравий вступ', 'correct': True}, {'text': 'доказова частина', 'correct': True}, {'text': 'сильний підсумок', 'correct': True}, {'text': 'мовчання', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2011/1750
+- **Words:** ✅ 2011/1750 (raw: 2200)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 46/35
+- **Vocab:** ⚠️ 5 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (grammar)
@@ -44,7 +91,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 48 | Included in Core |
-| **Вступ: Мозаїка вільних знань та професійного зростання** | ⚪️ | 65 | Skipped |
+| **Вступ: Мозаїка вільних знань та професійного зростання** | ✅ | 65 | Included in Core |
 | **Стратегії: Мистецтво поєднання** | ⚪️ | 50 | Skipped |
 | **Практика: Застосування знань** | ⚪️ | 29 | Skipped |
 | **Частина 1: Аргументація з народним корінням та логічною структурою** | ✅ | 195 | Included in Core |

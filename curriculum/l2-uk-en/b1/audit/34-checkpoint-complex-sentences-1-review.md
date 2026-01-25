@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M34 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:57:01
+**Generated:** 2026-01-25 19:22:25
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/10
+- **Vocab:** ✅ 19/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:13:36
+**Generated:** 2026-01-25 19:22:07
 
 ## Configuration
 **Type:** B1-bridge
@@ -61,7 +61,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 19 < 20 (soft target)
+- **Vocab:** ✅ 42/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

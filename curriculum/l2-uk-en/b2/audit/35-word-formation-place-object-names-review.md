@@ -1,20 +1,65 @@
-# Audit Report: 35-word-formation-place-object-names.md
-**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M35 — 35-word-formation-place-object-names.md
+**Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:25
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Визначення суфіксів для назв місць | 16 | 8 | ✅ |
+| 2 | match-up | Слово та суфікс | 16 | 8 | ✅ |
+| 3 | cloze | Утворіть назву місця | 17 | 14 | ✅ |
+| 4 | true-false | Правила словотворення | 16 | 8 | ✅ |
+| 5 | group-sort | Класифікуйте слова за суфіксом | 18 | 14 | ✅ |
+| 6 | unjumble | Складіть речення про місця | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у назвах місць | 16 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть усі назви місць із суфіксами -ня, -ище, -арня | 9 | 6 | ✅ |
+| 9 | select | Оберіть усі правильні форми назв місць | 8 | 6 | ✅ |
+| 10 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
+| 11 | fill-in | Оберіть правильну форму відмінка | 16 | 8 | ✅ |
+| 12 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
+| 13 | essay-response | Мій ідеальний район: Простір для життя | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Археологи знайшли тут сховище для зерна та залишки укріплень.". Shares significant keywords with sentence at index 14.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2332/1750
+- **Words:** ✅ 2332/1750 (raw: 2742)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 136/25
+- **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

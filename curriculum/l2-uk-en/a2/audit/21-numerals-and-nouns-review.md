@@ -1,7 +1,7 @@
 # Audit Report: M21 — 21-numerals-and-nouns.md
 **Level:** A2 | **Module:** M21 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:58:42
+**Generated:** 2026-01-25 20:40:51
 
 ## Configuration
 **Type:** A2-grammar
@@ -48,7 +48,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Цікаво що форма Родового множини...'
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'мові ці числа сприймаються як...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, родовий, іменник
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, іменник, родовий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- Якщо закінчується на **2, 3, 4** (крім 12-14) → використовуйте Зону 2: три грив**ні** (23, 144).". Shares significant keywords with sentence at index 31.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
@@ -56,11 +56,11 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "- Зрозуміли «правило останньої цифри» для складних чисел.". Shares significant keywords with sentence at index 14.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): одинадцять, нуль, десять, сім, двадцять...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): сім, двадцять, нуль, шість, одинадцять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: 3. The Grammar of Zero and Non-Specific Quantities (Нуль та багато), Presentation / Презентація
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Presentation / Презентація, 3. The Grammar of Zero and Non-Specific Quantities (Нуль та багато)
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
@@ -77,7 +77,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 9 violations

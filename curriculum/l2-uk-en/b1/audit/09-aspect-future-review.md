@@ -1,8 +1,8 @@
 # Audit Report: M09 — 09-aspect-future.md
 **Level:** B1 | **Module:** M09 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:13:39
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:22:10
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,6 +41,15 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ **правильно:**...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1854/1500 (raw: 2535)
 - **Activities:** ✅ 13/8
@@ -49,10 +58,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 25 (soft target)
+- **Vocab:** ✅ 144/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 95% (grammar)

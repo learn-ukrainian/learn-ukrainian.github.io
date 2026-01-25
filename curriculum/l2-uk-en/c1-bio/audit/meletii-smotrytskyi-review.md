@@ -1,18 +1,54 @@
-# Audit Report: meletii-smotrytskyi.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 3000
+# Audit Report: M17 — meletii-smotrytskyi.md
+**Level:** C1 | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:26:52
+
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Плач Матері-Церкви | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз барокової метафорики 'Треносу' | 1 | 1 | ✅ |
+| 3 | authorial-intent | Аналіз переходу Смотрицького в унію | 1 | 1 | ✅ |
+| 4 | reading | Значення Граматики Смотрицького (1619) | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння стратегій: Смотрицький vs Вишенський | 1 | 1 | ✅ |
+| 6 | essay-response | Есе: Мелетій Смотрицький — трагедія українського інтелектуала | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/3 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ❌ 2636/3000
-- **Activities:** ✅ 6/4
+- **Words:** ❌ 2636/4000 (raw: 2881)
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 99/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
@@ -44,7 +80,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 103 | Included in Core |
-| **Вступ — Голос плачучої церкви** | ⚪️ | 401 | Skipped |
+| **Вступ — Голос плачучої церкви** | ✅ | 401 | Included in Core |
 | **Життєпис** | ⚪️ | 966 | Skipped |
 | **Історичний контекст** | ✅ | 272 | Included in Core |
 | **Внесок та Спадщина** | ⚪️ | 434 | Skipped |

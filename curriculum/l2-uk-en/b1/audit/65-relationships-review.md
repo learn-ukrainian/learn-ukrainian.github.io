@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M65 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:38:23
+**Generated:** 2026-01-25 19:22:44
 
 ## Configuration
 **Type:** B1-vocab

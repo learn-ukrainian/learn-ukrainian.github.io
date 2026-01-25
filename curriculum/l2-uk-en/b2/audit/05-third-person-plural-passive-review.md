@@ -2,6 +2,47 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:05
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, essay-response, fill-in, match-up, quiz
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Повторення: Пасивний стан (М01-М04) | 8 | 8 | ✅ |
+| 2 | quiz | Визначте регістр | 16 | 8 | ✅ |
+| 3 | cloze | Оберіть правильну форму дієслова | 16 | 14 | ✅ |
+| 4 | fill-in | Оберіть правильний відмінок займенника | 16 | 8 | ✅ |
+| 5 | error-correction | Виправте помилку у вживанні відмінка або форми | 16 | 6 | ✅ |
+| 6 | unjumble | Складіть речення в правильному порядку | 16 | 6 | ✅ |
+| 7 | unjumble | Складіть складніші речення | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть текст правильними формами | 16 | 14 | ✅ |
+| 9 | match-up | З'єднайте офіційну форму з розмовною | 16 | 8 | ✅ |
+| 10 | true-false | Правда чи хибність? | 16 | 8 | ✅ |
+| 11 | group-sort | Розподіліть дієслова за відмінком адресата | 20 | 14 | ✅ |
+| 12 | select | Оберіть усі правильні варіанти | 16 | 6 | ✅ |
+| 13 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
+| 14 | mark-the-words | Знайдіть дієслова у 3-й особі множини (безособовий пасив) | 9 | 6 | ✅ |
+| 15 | cloze | Оберіть відповідну форму для регістру | 16 | 14 | ✅ |
+| 16 | essay-response | Випадок на роботі | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 05-third-person-plural-passive.yaml: Schema validation error at key '0': {'type': 'quiz', 'title': 'Повторення: Пасивний стан (М01-М04)', 'items': [{'question': 'Яка з наведених форм є найбільш характерною офіційно-діловою пасивною конструкцією в українській мові?', 'options': [{'text': 'Мені сказали.', 'correct': False}, {'text': 'Рішення прийнято.', 'correct': True}, {'text': 'Книга пишеться.', 'correct': False}, {'text': 'Вона написала листа.', 'correct': False}], 'explanation': 'Форма -но/-то (прийнято) — типова для офіційно-ділового стилю.'}, {'question': 'Яке саме значення передає речення «Закон застосовується до всіх громадян» у контексті дії?', 'options': [{'text': 'Хтось застосовує закон прямо зараз.', 'correct': False}, {'text': 'Закон буде застосовано в майбутньому.', 'correct': False}, {'text': 'Закон діє постійно для всіх.', 'correct': True}, {'text': 'Громадяни застосовують закон.', 'correct': False}], 'explanation': 'Конструкція з -ся описує постійний процес, стан.'}, {'question': 'Оберіть граматично правильну форму пасивного дієприкметника для узгодження у словосполученні: «написан__ листи»?', 'options': [{'text': 'написаний', 'correct': False}, {'text': 'написана', 'correct': False}, {'text': 'написані', 'correct': True}, {'text': 'написане', 'correct': False}], 'explanation': 'Множина (листи) вимагає форми «написані».'}, {'question': 'Яка з наведених нижче конструкцій є прикладом рефлексивного пасиву (пасиву з часткою -ся)?', 'options': [{'text': 'Книгу написано.', 'correct': False}, {'text': 'Книга написана автором.', 'correct': False}, {'text': 'Книга пишеться легко.', 'correct': True}, {'text': 'Книгу написали.', 'correct': False}], 'explanation': 'Рефлексивний пасив утворюється дієсловом з -ся.'}, {'question': 'У якому з поданих варіантів правильно використано безособову пасивну конструкцію на -но/-то?', 'options': [{'text': 'Рішення прийняли вчора.', 'correct': False}, {'text': 'Рішення було прийняте.', 'correct': False}, {'text': 'Рішення прийнято одноголосно.', 'correct': True}, {'text': 'Рішення приймається.', 'correct': False}], 'explanation': 'Форма «прийнято» — це безособова -но/-то конструкція.'}, {'question': 'Яке з наведених речень містить пасивний дієприкметник у своїй структурі?', 'options': [{'text': 'Мені сказали правду.', 'correct': False}, {'text': 'Закон ухвалено.', 'correct': False}, {'text': 'Написаний текст чудовий.', 'correct': True}, {'text': 'Документ готується.', 'correct': False}], 'explanation': '«Написаний» — це пасивний дієприкметник.'}, {'question': 'Яка форма пасивного стану найчастіше та найдоцільніше вживається в офіційних документах та діловому листуванні?', 'options': [{'text': '3-тя особа множини', 'correct': False}, {'text': '-но/-то конструкція', 'correct': True}, {'text': 'Рефлексивний пасив', 'correct': False}, {'text': 'Активний стан', 'correct': False}], 'explanation': 'В офіційно-діловому стилі домінує -но/-то форма.'}, {'question': 'Оберіть граматично правильну форму дієприкметника для словосполучення: «закрит__ вікно» (середній рід)?', 'options': [{'text': 'закритий', 'correct': False}, {'text': 'закрита', 'correct': False}, {'text': 'закрите', 'correct': True}, {'text': 'закриті', 'correct': False}], 'explanation': 'Середній рід (вікно) вимагає форми «закрите».'}], 'instruction': 'Оберіть правильну відповідь.'} is not valid under any of the given schemas
@@ -13,14 +54,14 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1904/1750
+- **Words:** ✅ 1904/1750 (raw: 2163)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 156/25
+- **Vocab:** ⚠️ 1 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations

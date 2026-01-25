@@ -1,20 +1,71 @@
-# Audit Report: 42-aspect-nuances-imperative-infinitive.md
-**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M42 — 42-aspect-nuances-imperative-infinitive.md
+**Level:** B2 | **Module:** M42 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:30
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | cloze | Вибір виду: наказовий спосіб | 16 | 14 | ✅ |
+| 2 | fill-in | Не можна + інфінітив | 16 | 8 | ✅ |
+| 3 | fill-in | Модальні конструкції з інфінітивом | 16 | 8 | ✅ |
+| 4 | unjumble | Складіть речення з наказовим способом | 16 | 6 | ✅ |
+| 5 | unjumble | Складіть речення з модальними конструкціями | 16 | 6 | ✅ |
+| 6 | error-correction | Виправте помилки у виборі виду | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки в модальних конструкціях | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть текст: інструкція для гостей | 17 | 14 | ✅ |
+| 9 | cloze | Заповніть текст: правила безпеки | 17 | 14 | ✅ |
+| 10 | quiz | Виберіть правильний варіант | 16 | 8 | ✅ |
+| 11 | true-false | Правда чи хибність? | 16 | 8 | ✅ |
+| 12 | group-sort | Розподіліть команди за видом | 16 | 14 | ✅ |
+| 13 | group-sort | Розподіліть конструкції за значенням | 16 | 14 | ✅ |
+| 14 | mark-the-words | Знайдіть команди з недоконаним видом | 9 | 6 | ✅ |
+| 15 | mark-the-words | Знайдіть команди з доконаним видом | 9 | 6 | ✅ |
+| 16 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 17 | translate | Перекладіть на українську | 16 | 6 | ✅ |
+| 18 | match-up | Поєднайте команди з їхнім значенням | 16 | 8 | ✅ |
+| 19 | essay-response | Правила дому | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 19 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'не можна...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2303/1750
+- **Words:** ✅ 2303/1750 (raw: 2706)
 - **Activities:** ✅ 19/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 68/25
+- **Vocab:** ⚠️ 3 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -44,7 +95,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Вступ** | ⚪️ | 202 | Skipped |
+| **Вступ** | ✅ | 202 | Included in Core |
 | **Пояснення** | ⚪️ | 1034 | Skipped |
 | **Трансформації** | ⚪️ | 52 | Skipped |
 | **Практика** | ⚪️ | 347 | Skipped |

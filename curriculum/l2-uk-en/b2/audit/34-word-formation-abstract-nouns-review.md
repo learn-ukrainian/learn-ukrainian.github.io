@@ -1,20 +1,65 @@
-# Audit Report: 34-word-formation-abstract-nouns.md
-**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M34 — 34-word-formation-abstract-nouns.md
+**Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:24
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Визначення типу суфікса | 16 | 8 | ✅ |
+| 2 | match-up | Дієслово та абстрактний іменник | 16 | 8 | ✅ |
+| 3 | cloze | Утворіть абстрактний іменник | 16 | 14 | ✅ |
+| 4 | true-false | Правила словотворення абстрактних іменників | 16 | 8 | ✅ |
+| 5 | group-sort | Класифікація абстрактних іменників за суфіксом | 20 | 14 | ✅ |
+| 6 | unjumble | Складіть речення з абстрактними іменниками | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у словотворенні | 16 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть усі абстрактні іменники на -ння/-ення | 11 | 6 | ✅ |
+| 9 | select | Оберіть усі правильні абстрактні іменники | 8 | 6 | ✅ |
+| 10 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
+| 11 | fill-in | Визначте словотвірну модель | 16 | 8 | ✅ |
+| 12 | quiz | Комплексна перевірка знань про абстрактні іменники | 16 | 8 | ✅ |
+| 13 | essay-response | Абстрактне мислення: Аналіз концепцій | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'приклад із...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2152/1750
+- **Words:** ✅ 2152/1750 (raw: 2761)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 87/25
+- **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

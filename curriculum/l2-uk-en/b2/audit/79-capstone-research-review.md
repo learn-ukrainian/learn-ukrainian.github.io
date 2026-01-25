@@ -1,21 +1,68 @@
-# Audit Report: 140-capstone-research.md
-**Phase:** B2.4 | **Level:** B2 | **Pedagogy:** integration | **Target:** 1750
+# Audit Report: M79 — 79-capstone-research.md
+**Level:** B2 | **Module:** M79 | **Phase:** B2.4 | **Pedagogy:** integration | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:53
+
+## Configuration
+**Type:** B2-checkpoint
+**Word Target:** 1750 words
+**Activities:** 15-19 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥10 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Фази підготовчої роботи | 8 | 8 | ✅ |
+| 2 | true-false | Етика та методологія проєкту | 8 | 8 | ✅ |
+| 3 | fill-in | Словник проєктного менеджменту | 10 | 8 | ✅ |
+| 4 | unjumble | Логіка планування | 8 | 6 | ✅ |
+| 5 | group-sort | Класифікація джерел інформації | 15 | 14 | ✅ |
+| 6 | mark-the-words | Аналіз плану-проспекту | 9 | 6 | ✅ |
+| 7 | cloze | Консультація щодо теми проєкту | 19 | 14 | ✅ |
+| 8 | error-correction | Редагування дослідницьких тез | 8 | 6 | ✅ |
+| 9 | translate | Проєктна термінологія | 8 | 6 | ✅ |
+| 10 | select | Якість дослідницьких питань | 6 | 6 | ✅ |
+| 11 | cloze | Архівна справа в цифрову епоху | 16 | 14 | ✅ |
+| 12 | translate | Від чернетки до академічного вислову | 8 | 6 | ✅ |
+| 13 | quiz | Об'єкт та предмет дослідження | 8 | 8 | ✅ |
+| 14 | match-up | Дослідницькі колокації | 12 | 8 | ✅ |
+| 15 | translate | Ключові фрази дослідження | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 15-19) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 79-capstone-research.yaml: Schema validation error at key '14': {'type': 'translate', 'title': 'Ключові фрази дослідження', 'items': [{'options': [{'text': 'Актуальність теми обґрунтована...', 'correct': True}, {'text': 'Тема є гарною через...', 'correct': False}, {'text': 'Ми вибрали цю тему, бо...', 'correct': False}], 'source': 'The relevance of the topic is grounded in...'}, {'options': [{'text': 'На основі опрацьованих джерел...', 'correct': True}, {'text': 'Згідно з книжками, які я читав...', 'correct': False}, {'text': 'Виходячи з тексту...', 'correct': False}], 'source': 'Based on the analyzed sources...'}, {'options': [{'text': 'Об’єктом дослідження є...', 'correct': True}, {'text': 'Предмет праці — це...', 'correct': False}, {'text': 'Ми дивимося на...', 'correct': False}], 'source': 'The object of the study is...'}, {'options': [{'text': 'Результати вказують на те, що...', 'correct': True}, {'text': 'Ми бачимо, що...', 'correct': False}, {'text': 'Зрештою сталося так, що...', 'correct': False}], 'source': 'The results indicate that...'}, {'options': [{'text': 'Згідно з обраною методологією...', 'correct': True}, {'text': 'Дивлячись на правила...', 'correct': False}, {'text': 'Через наш метод...', 'correct': False}], 'source': 'According to the methodology...'}, {'options': [{'text': 'На завершення варто зауважити...', 'correct': True}, {'text': 'Короче, ми хочемо сказати...', 'correct': False}, {'text': 'В самому кінці ми пишемо...', 'correct': False}], 'source': 'In conclusion, it should be noted...'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1791/1750
+- **Words:** ✅ 1791/1750 (raw: 1968)
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/10
+- **Vocab:** ⚠️ 6 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.0% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

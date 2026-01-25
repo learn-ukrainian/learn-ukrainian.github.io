@@ -1,28 +1,59 @@
-# Audit Report: 155-kazky-ta-prytchi.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+# Audit Report: M59 — 59-kazky-ta-prytchi.md
+**Level:** C1 | **Module:** M59 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:40
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 155-kazky-ta-prytchi.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Казкові коди та символи', 'items': [{'question': 'Які з перелічених особливостей є характерними саме для українських побутових казок у їхньому традиційному варіанті?', 'options': [{'text': 'Гостра соціальна сатира', 'correct': True}, {'text': 'Утвердження розуму бідняка', 'correct': True}, {'text': 'Велика кількість польотів', 'correct': False}, {'text': 'Використання афоризмів', 'correct': True}, {'text': 'Відсутність розв’язки', 'correct': False}, {'text': 'Динамічність сюжету', 'correct': True}], 'min_correct': 3}, {'question': 'Які типи випробувань зазвичай доводиться долати герою у класичній чарівній казці для досягнення звитяги?', 'options': [{'text': 'Боротьба з антагоністом', 'correct': True}, {'text': 'Розгадування складних загадок', 'correct': True}, {'text': 'Подорож у потойбічний світ', 'correct': True}, {'text': 'Проста робота в магазині', 'correct': False}, {'text': 'Прояв милосердя до тварин', 'correct': True}], 'min_correct': 3}, {'question': 'Які філософські істини зазвичай розкриваються через жанр народної притчі в українській традиції?', 'options': [{'text': 'Важливість «сродної праці»', 'correct': True}, {'text': 'Цінність внутрішньої свободи', 'correct': True}, {'text': 'Методи швидкого збагачення', 'correct': False}, {'text': 'Неминучість справедливості', 'correct': True}, {'text': 'Основи вищої математики', 'correct': False}], 'min_correct': 3}, {'question': 'Яки елементи канонічної структури казки є обов’язковими для створення атмосфери магічного дійства?', 'options': [{'text': 'Традиційний магічний зачин', 'correct': True}, {'text': 'Сучасна рекламна пауза', 'correct': False}, {'text': 'Майстерна повчальна кінцівка', 'correct': True}, {'text': 'Ритмізовані повтори фрази', 'correct': True}, {'text': 'Таблиця з цифровими даними', 'correct': False}], 'min_correct': 3}, {'question': 'Які видатні діячі культури зробили найбільший внесок у справу запису та збереження українських казок?', 'options': [{'text': 'Михайло Драгоманов', 'correct': True}, {'text': 'Павло Чубинський', 'correct': True}, {'text': 'Іван Рудченко', 'correct': True}, {'text': 'Микола Гоголь', 'correct': True}, {'text': 'Борис Грінченко', 'correct': True}], 'min_correct': 4}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** C1-vocab
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Типологія українських казок | 5 | 5 | ✅ |
+| 2 | match-up | Жанрові характеристики | 8 | 6 | ✅ |
+| 3 | fill-in | Структура казкового коду | 6 | 6 | ✅ |
+| 4 | true-false | Аналіз традиції | 5 | 5 | ✅ |
+| 5 | unjumble | Реконструкція казкових смислів | 5 | 5 | ✅ |
+| 6 | quiz | Символіка предметів | 5 | 5 | ✅ |
+| 7 | match-up | Збирачі та їхній внесок | 8 | 6 | ✅ |
+| 8 | fill-in | Мораль у притчах | 6 | 6 | ✅ |
+| 9 | essay-response | Філософія казкової ініціації | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз феномену активного героя | 1 | 1 | ✅ |
+| 11 | comparative-study | Казка vs Притча | 1 | 1 | ✅ |
+| 12 | select | Казкові коди та символи | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2202/2000
+- **Words:** ❌ 2202/3000 (raw: 2536)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (vocabulary)
@@ -50,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 85 | Included in Core |
-| **Вступ: Казка як дзеркало національного характеру** | ⚪️ | 238 | Skipped |
+| **Вступ: Казка як дзеркало національного характеру** | ✅ | 238 | Included in Core |
 | **Текст 1: Класифікація українських казок** | ✅ | 334 | Included in Core |
 | **Текст 2: Притча — філософія у короткій формі** | ✅ | 191 | Included in Core |
 | **Текст 3: Роль збирачів та фольклористів у збереженні коду** | ✅ | 169 | Included in Core |

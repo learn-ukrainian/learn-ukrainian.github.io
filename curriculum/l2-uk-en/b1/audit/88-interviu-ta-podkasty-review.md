@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M88 | **Phase:** B1.8 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:51:53
+**Generated:** 2026-01-25 19:22:59
 
 ## Configuration
 **Type:** B1-skills
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 58/15
+- **Vocab:** ✅ 53/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

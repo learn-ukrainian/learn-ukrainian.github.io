@@ -1,30 +1,66 @@
-# Audit Report: 134-hyperbole-litotes.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+# Audit Report: M38 — 38-hyperbole-litotes.md
+**Level:** C1 | **Module:** M38 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:28
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння гіперболи та літоти | 5 | 5 | ✅ |
+| 2 | match-up | Гіпербола чи Літота? | 8 | 6 | ✅ |
+| 3 | fill-in | Створення гіпербол | 6 | 6 | ✅ |
+| 4 | fill-in | Створення літот | 6 | 6 | ✅ |
+| 5 | unjumble | Фразеологічні гіперболи | 5 | 5 | ✅ |
+| 6 | group-sort | Визначте прийом | 12 | 12 | ✅ |
+| 7 | cloze | Гіпербола в літературі | 12 | 12 | ✅ |
+| 8 | select | Аналіз ефекту | 5 | 5 | ✅ |
+| 9 | error-correction | Стилістична доречність | 5 | 5 | ✅ |
+| 10 | match-up | Фразеологізми-літоти | 8 | 6 | ✅ |
+| 11 | fill-in | Градація масштабів | 6 | 6 | ✅ |
+| 12 | essay-response | Творче завдання: Гра з масштабом | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 134-hyperbole-litotes.yaml: Schema validation error at key '10': {'type': 'fill-in', 'title': 'Градація масштабів', 'items': [{'sentence': 'Це не просто помилка, це справжня _____.', 'answer': 'катастрофа', 'options': ['катастрофа', 'дрібниця', 'річ', 'справа']}, {'sentence': 'Він не просто втомився, він падає з _____.', 'answer': 'ніг', 'options': ['ніг', 'рук', 'стільця', 'ліжка']}, {'sentence': 'Це не просто дорого, це коштує цілий _____.', 'answer': 'статок', 'options': ['статок', 'гривню', 'гаманець', 'банк']}, {'sentence': 'Вона не просто плакала, вона _____ сльозами.', 'answer': 'вмивалася', 'options': ['вмивалася', 'капала', 'грала', 'сміялася']}, {'sentence': 'На стадіоні було не просто багато людей, там яблуку ніде _____.', 'answer': 'впасти', 'options': ['впасти', 'стати', 'лягти', 'сісти']}, {'sentence': 'Він не просто злякався, у нього душа в _____ пішла.', 'answer': "п'яти", 'options': ["п'яти", 'руки', 'голову', 'плечі']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-hyperbole-litotes.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2210/2000
+- **Words:** ❌ 2210/3000 (raw: 2317)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)

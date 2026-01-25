@@ -1,20 +1,60 @@
-# Audit Report: 161-ukrainian-avant-garde.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M65 — 65-ukrainian-avant-garde.md
+**Level:** C1 | **Module:** M65 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:44
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння українського авангарду | 8 | 5 | ✅ |
+| 2 | match-up | Художники та їхні стилі | 8 | 6 | ✅ |
+| 3 | group-sort | Характеристики стилів | 12 | 12 | ✅ |
+| 4 | cloze | Лексика аналізу мистецтва | 15 | 12 | ✅ |
+| 5 | match-up | Мистецькі терміни | 8 | 6 | ✅ |
+| 6 | select | Ознаки українського авангарду | 6 | 5 | ✅ |
+| 7 | true-false | Факти чи міфи? | 8 | 5 | ✅ |
+| 8 | essay-response | Аналіз культурного впливу | 1 | 1 | ✅ |
+| 9 | match-up | Митці та їхні новації | 8 | 6 | ✅ |
+| 10 | unjumble | Цитати та описи | 6 | 5 | ✅ |
+| 11 | fill-in | Граматика опису (дієприкметники) | 8 | 6 | ✅ |
+| 12 | cloze | Фінальний текст | 15 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3731/2000
+- **Words:** ✅ 3731/3000 (raw: 3865)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -41,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |
-| **Вступ** | ⚪️ | 187 | Skipped |
+| **Вступ** | ✅ | 187 | Included in Core |
 | **Презентація** | ⚪️ | 1677 | Skipped |
 | **Глибинний аналіз: Київська школа та «Нова ґенерація»** | ✅ | 200 | Included in Core |
 | **Культурна трагедія та «Розстріляне відродження»** | ✅ | 454 | Included in Core |

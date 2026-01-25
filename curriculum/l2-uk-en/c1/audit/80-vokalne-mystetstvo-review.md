@@ -1,17 +1,58 @@
-# Audit Report: 176-vokalne-mystetstvo.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M80 — 80-vokalne-mystetstvo.md
+**Level:** C1 | **Module:** M80 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:54
+
+## Configuration
+**Type:** C1-fine-arts
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Історія та сучасність українського вокалу | 12 | 5 | ✅ |
+| 2 | match-up | Вокальні жанри та виконавці | 10 | 6 | ✅ |
+| 3 | cloze | Еволюція українського вокалу | 18 | 12 | ✅ |
+| 4 | fill-in | Термінологія сучасного вокалу | 10 | 6 | ✅ |
+| 5 | essay-response | Есе: Еволюція українського голосу | 1 | 1 | ✅ |
+| 6 | true-false | Факти про українську пісню | 10 | 5 | ✅ |
+| 7 | group-sort | Класифікація виконавців та колективів | 15 | 12 | ✅ |
+| 8 | mark-the-words | Музичні терміни в тексті | 7 | 5 | ✅ |
+| 9 | translate | Переклад музичних концепцій | 8 | 5 | ✅ |
+| 10 | unjumble | Думки про українську пісню | 8 | 5 | ✅ |
+| 11 | select | Особливості сучасної музики | 8 | 5 | ✅ |
+| 12 | critical-analysis | Аналіз феномену «ДахаБраха» | 1 | 1 | ✅ |
+| 13 | comparative-study | Традиція vs Авангард | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 12-16) ✅
+- Unique types: 13 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2134/2000
+- **Words:** ❌ 2134/3000 (raw: 2212)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
@@ -41,7 +82,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |
-| **Вступ: Голос як код нації** | ⚪️ | 192 | Skipped |
+| **Вступ: Голос як код нації** | ✅ | 192 | Included in Core |
 | **Хорова традиція: Від барокового партесу до сучасності** | ⚪️ | 563 | Skipped |
 | **Солоспів та романс: Інтимна лірика душі** | ⚪️ | 264 | Skipped |
 | **Сучасні експерименти: Етно-хаос та фольктроніка** | ⚪️ | 429 | Skipped |

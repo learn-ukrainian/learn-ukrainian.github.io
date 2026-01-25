@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M51 | **Phase:** B1.4 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:34:10
+**Generated:** 2026-01-25 19:22:36
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -53,7 +53,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 57/10
+- **Vocab:** ✅ 48/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

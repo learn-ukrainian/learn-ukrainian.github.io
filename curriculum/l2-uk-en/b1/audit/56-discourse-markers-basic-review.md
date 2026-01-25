@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M56 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:34:13
+**Generated:** 2026-01-25 19:22:39
 
 ## Configuration
 **Type:** B1-vocab
@@ -48,7 +48,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 29 < 35 (soft target)
+- **Vocab:** ⚠️ 32 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

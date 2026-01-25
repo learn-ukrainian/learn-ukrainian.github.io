@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-preferences-and-choices.md
 **Level:** A2 | **Module:** M20 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:56:26
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:40:48
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,31 +36,20 @@
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вміння ввічливо висловити свою думку...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): зручніше, подобатися, вибирати, гірше, повільніше...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1157/1000 (raw: 1244)
+- **Words:** ✅ 1195/1000 (raw: 1282)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 110/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 45.9% LOW (target 50-65% (A2.1))
+- **Immersion:** 🇺🇦 64.3% (target 50-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -68,8 +57,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 237 | Included in Core |
-| **Presentation / Презентація** | ✅ | 375 | Included in Core |
+| **Introduction / Вступ** | ✅ | 329 | Included in Core |
+| **Presentation / Презентація** | ✅ | 321 | Included in Core |
 | **Practice / Практика** | ⚪️ | 233 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 171 | Included in Core |
 | **Summary / Підсумок** | ✅ | 90 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M64 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:59:15
+**Generated:** 2026-01-25 19:32:02
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): досвід, кваліфікація, пакет, віддалена, резюме...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): досвід, працевлаштування, обов'язки, віддалена, зарплата...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -53,7 +53,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/1
+- **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

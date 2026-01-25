@@ -1,17 +1,56 @@
-# Audit Report: 12-parenthetical-expressions.md
-**Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M12 — 12-parenthetical-expressions.md
+**Level:** B2 | **Module:** M12 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:09
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, essay-response, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Визначення категорії вставного слова | 16 | 8 | ✅ |
+| 2 | match-up | Вставне слово та його функція | 16 | 8 | ✅ |
+| 3 | cloze | Вставте відповідне вставне слово | 15 | 14 | ✅ |
+| 4 | true-false | Правила вживання вставних слів | 16 | 8 | ✅ |
+| 5 | group-sort | Категоризація вставних слів | 16 | 14 | ✅ |
+| 6 | unjumble | Складіть речення з вставними словами | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у вживанні вставних слів | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть текст вставними словами | 16 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть усі вставні слова та вирази | 11 | 6 | ✅ |
+| 10 | select | Оберіть правильні варіанти | 8 | 6 | ✅ |
+| 11 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
+| 12 | fill-in | Оберіть вставне слово відповідно до ступеня впевненості | 16 | 8 | ✅ |
+| 13 | quiz | Комплексна перевірка знань про вставні слова | 16 | 8 | ✅ |
+| 14 | essay-response | Моя думка про соцмережі | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2236/1750
+- **Words:** ✅ 2236/1750 (raw: 3020)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 123/25
+- **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -19,7 +58,7 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -44,7 +83,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Вступ** | ⚪️ | 172 | Skipped |
+| **Вступ** | ✅ | 172 | Included in Core |
 | **Пояснення** | ⚪️ | 1167 | Skipped |
 | **Трансформації** | ⚪️ | 201 | Skipped |
 | **Практика** | ⚪️ | 92 | Skipped |

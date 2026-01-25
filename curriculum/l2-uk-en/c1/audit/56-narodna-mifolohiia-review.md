@@ -1,28 +1,63 @@
-# Audit Report: 152-narodna-mifolohiia.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+# Audit Report: M56 — 56-narodna-mifolohiia.md
+**Level:** C1 | **Module:** M56 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:39
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 152-narodna-mifolohiia.yaml: Schema validation error at key '15': {'type': 'true-false', 'title': 'Язичництво та християнство', 'items': [{'statement': 'Прийняття християнства призвело до негайного та повного зникнення всіх народних духів.', 'correct': False, 'explanation': 'Ні, народні вірування трансформувалися та збереглися у формі двовір’я.'}, {'statement': 'Велес вважався охоронцем потойбічного світу та багатства у давніх українців.', 'correct': True, 'explanation': 'Так, це був один із найважливіших богів давнього пантеону.'}, {'statement': 'Сварог був богом підземних вод та глибоких океанічних течій.', 'correct': False, 'explanation': 'Ні, Сварог уособлював небесний вогонь та божественне ковальство.'}, {'statement': 'Християнські святі часто переймали функції та атрибути колишніх язичницьких богів.', 'correct': True, 'explanation': 'Це дозволило Церкві легше адаптувати нову віру до народного світогляду.'}, {'statement': 'Перун вважався покровителем виключно селян-хліборобів, а не князівської дружини.', 'correct': False, 'explanation': 'Навпаки, Перун був насамперед богом воїнів та державної влади.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** C1-vocab
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Ієрархія народних духів | 5 | 5 | ✅ |
+| 2 | match-up | Духи та їхні сакральні домени | 8 | 6 | ✅ |
+| 3 | fill-in | Механізми магічного захисту | 6 | 6 | ✅ |
+| 4 | true-false | Аналіз міфологічних фактів | 5 | 5 | ✅ |
+| 5 | unjumble | Реконструкція народних вірувань | 5 | 5 | ✅ |
+| 6 | quiz | Небезпечні сутності | 5 | 5 | ✅ |
+| 7 | match-up | Символи та їхні значення | 8 | 6 | ✅ |
+| 8 | fill-in | Культурний контекст двовір’я | 6 | 6 | ✅ |
+| 9 | essay-response | Філософія міфологічного образу | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз феномену двовір’я | 1 | 1 | ✅ |
+| 11 | comparative-study | Домовик vs Водяник | 1 | 1 | ✅ |
+| 12 | select | Міфологічні обереги | 5 | 5 | ✅ |
+| 13 | quiz | Давній пантеон | 5 | 5 | ✅ |
+| 14 | match-up | Пантеон та відповідності | 8 | 6 | ✅ |
+| 15 | fill-in | Трансформація божеств | 6 | 6 | ✅ |
+| 16 | true-false | Язичництво та християнство | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2088/2000
+- **Words:** ❌ 2088/3000 (raw: 2395)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (vocabulary)
@@ -50,7 +85,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |
-| **Вступ: Демонологія як відображення природи** | ⚪️ | 220 | Skipped |
+| **Вступ: Демонологія як відображення природи** | ✅ | 220 | Included in Core |
 | **Текст 1: Господарі дому та стихій** | ✅ | 332 | Included in Core |
 | **Текст 2: Мавка — трагічний символ природи** | ✅ | 221 | Included in Core |
 | **Текст 3: Небезпечні духи та демонічні істоти** | ✅ | 273 | Included in Core |

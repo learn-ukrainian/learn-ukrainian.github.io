@@ -1,20 +1,61 @@
-# Audit Report: 167-summer-holidays.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M71 — 71-summer-holidays.md
+**Level:** C1 | **Module:** M71 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:48
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння літніх обрядових традицій | 8 | 5 | ✅ |
+| 2 | match-up | Символи та атрибути літнього циклу | 8 | 6 | ✅ |
+| 3 | group-sort | Демонологія та міфічні істоти | 12 | 12 | ✅ |
+| 4 | cloze | Містика Купальської ночі | 17 | 12 | ✅ |
+| 5 | match-up | Літня термінологія та дієслова | 8 | 6 | ✅ |
+| 6 | select | Символи та традиції Спасів | 6 | 5 | ✅ |
+| 7 | true-false | Факти та міфи про літній цикл | 8 | 5 | ✅ |
+| 8 | essay-response | Аналіз міфологічного балансу стихій на Купала | 1 | 1 | ✅ |
+| 9 | unjumble | Літні віншування та заклички | 6 | 5 | ✅ |
+| 10 | fill-in | Граматика літніх обрядів | 8 | 6 | ✅ |
+| 11 | match-up | Традиційні рослини-символи літа | 8 | 6 | ✅ |
+| 12 | cloze | Духовний розквіт літа | 18 | 12 | ✅ |
+| 13 | select | Символіка літніх плодів | 6 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2221/2000
+- **Words:** ❌ 2221/3000 (raw: 2335)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -41,7 +82,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 94 | Included in Core |
-| **Вступ** | ⚪️ | 182 | Skipped |
+| **Вступ** | ✅ | 182 | Included in Core |
 | **Презентація** | ⚪️ | 752 | Skipped |
 | **Семіотика Купальського вінка: Магічний текст долі** | ✅ | 134 | Included in Core |
 | **Культурна трагедія: Радянська цензура та боротьба за пам'ять** | ✅ | 169 | Included in Core |

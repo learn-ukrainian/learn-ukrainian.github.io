@@ -1,30 +1,66 @@
-# Audit Report: 135-euphemism-taboo.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+# Audit Report: M39 — 39-euphemism-taboo.md
+**Level:** C1 | **Module:** M39 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:28
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння природи евфемізмів | 5 | 5 | ✅ |
+| 2 | match-up | Евфемізми смерті та хвороби | 8 | 6 | ✅ |
+| 3 | fill-in | Соціальні евфемізми | 6 | 6 | ✅ |
+| 4 | error-correction | Редагування тексту: Від грубості до такту | 5 | 5 | ✅ |
+| 5 | group-sort | Сфери вживання евфемізмів | 15 | 12 | ✅ |
+| 6 | select | Аналіз контексту | 5 | 5 | ✅ |
+| 7 | cloze | Евфемізми в новинах | 12 | 12 | ✅ |
+| 8 | unjumble | Створення делікатних фраз | 5 | 5 | ✅ |
+| 9 | match-up | Табу в культурі: Чого не можна робити? | 8 | 6 | ✅ |
+| 10 | fill-in | Військові евфемізми (Медіаграмотність) | 6 | 6 | ✅ |
+| 11 | true-false | Правда чи Міф: Табу | 5 | 5 | ✅ |
+| 12 | essay-response | Аналіз політичної мови | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 135-euphemism-taboo.yaml: Schema validation error at key '10': {'type': 'true-false', 'title': 'Правда чи Міф: Табу', 'items': [{'statement': "Слово 'останній' часто замінюють на 'крайній' у чергах через професійні забобони.", 'correct': True, 'explanation': "Це поширений мовний забобон, хоча літературно правильно 'останній'."}, {'statement': 'В Україні прийнято голосно обговорювати свої хвороби за святковим столом.', 'correct': False, 'explanation': 'Це вважається поганим тоном і псує апетит присутнім.'}, {'statement': 'Евфемізми завжди роблять мову менш точною, але більш ввічливою.', 'correct': True, 'explanation': 'Так, вони розмивають зміст заради ввічливості або маніпуляції.'}, {'statement': "Вживати слово 'туалет' в офіційному суспільстві суворо заборонено законом.", 'correct': False, 'explanation': "Це нормальне слово, але 'вбиральня' звучить краще."}, {'statement': 'Усі евфемізми є брехнею, яка має на меті обдурити співрозмовника.', 'correct': False, 'explanation': "Вони пом'якшують правду, але не обов'язково її викривляють."}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 39-euphemism-taboo.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 1999/2000 (1 short)
+- **Words:** ❌ 1999/3000 (raw: 2228)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)

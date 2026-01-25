@@ -1,8 +1,8 @@
 # Audit Report: M38 — slobozhanshchyna.md
 **Level:** B2 | **Module:** M38 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 09:21:12
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 20:22:56
 
 ## Configuration
 **Type:** B2-history

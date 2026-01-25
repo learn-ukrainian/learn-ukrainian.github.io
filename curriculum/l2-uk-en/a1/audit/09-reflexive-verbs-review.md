@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:53:59
+**Generated:** 2026-01-25 20:07:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): закінчуватися, запізнюватися, смішний, разом, починатися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): зустрічатися, смішний, разом, запізнюватися, починатися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -51,7 +51,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

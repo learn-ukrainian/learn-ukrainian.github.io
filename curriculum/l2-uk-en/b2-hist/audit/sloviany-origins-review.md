@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 15:21:27
+**Generated:** 2026-01-25 20:22:56
 
 ## Configuration
 **Type:** B2-history
@@ -34,54 +34,58 @@
 - Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2453/4000 (raw: 2660)
+- **Words:** ✅ 4962/4000 (raw: 5056)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 23 | 10 | 100% | 14% | 14.3% |
-| decolonization | 11 | 2 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Слов'яни на українських землях: Витоки державності** | ⚪️ | 63 | Skipped |
-| **Вступ: Витоки державності** | ✅ | 275 | Included in Core |
-| **Читання: Велике переселення народів** | ✅ | 587 | Included in Core |
-| **Господарство та Побут** | ⚪️ | 449 | Skipped |
-| **Суспільство та Влада** | ⚪️ | 323 | Skipped |
-| **Заснування Києва та Поляни** | ⚪️ | 122 | Skipped |
-| **Духовний світ: Язичництво** | ⚪️ | 226 | Skipped |
-| **Первинні джерела: Голоси епохи** | ✅ | 123 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 148 | Included in Core |
-| **Підсумок** | ✅ | 76 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 61 | Skipped |
+| **Intro/Narrative** | ✅ | 99 | Included in Core |
+| **Вступ** | ✅ | 540 | Included in Core |
+| **Читання** | ✅ | 2823 | Included in Core |
+| **Первинні джерела** | ✅ | 453 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 533 | Included in Core |
+| **Підсумок** | ✅ | 307 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 207 | Skipped |

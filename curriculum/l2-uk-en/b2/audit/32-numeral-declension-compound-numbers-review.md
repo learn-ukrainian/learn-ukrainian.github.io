@@ -1,17 +1,54 @@
-# Audit Report: 32-numeral-declension-compound-numbers.md
-**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M32 — 32-numeral-declension-compound-numbers.md
+**Level:** B2 | **Module:** M32 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:23:23
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розпізнавання форм числівників | 10 | 8 | ✅ |
+| 2 | cloze | Заповніть правильною формою числівника | 16 | 14 | ✅ |
+| 3 | match-up | Кількісні та порядкові числівники | 16 | 8 | ✅ |
+| 4 | true-false | Правила відмінювання числівників | 10 | 8 | ✅ |
+| 5 | group-sort | Розподіліть числівники за відмінками | 16 | 14 | ✅ |
+| 6 | unjumble | Складіть речення з числівниками | 8 | 6 | ✅ |
+| 7 | cloze | Заповніть статистичний текст | 16 | 14 | ✅ |
+| 8 | error-correction | Виправте помилки у числівниках | 8 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть числівники в непрямих відмінках | 8 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні форми | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення з числівниками | 8 | 6 | ✅ |
+| 12 | fill-in | Порядкові числівники у контексті | 10 | 8 | ✅ |
+| 13 | cloze | Ціни та статистика | 16 | 14 | ✅ |
+| 14 | essay-response | Аналітичний звіт: Ваша компанія | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2113/1750
+- **Words:** ✅ 2113/1750 (raw: 3678)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 17/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 98/25
+- **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -16,7 +16,21 @@ grammar:
 - Історична наративна лексика
 - Пасивні конструкції в історичних текстах
 vocabulary_focus: null
-  словник"
+activity_types:
+- reading
+- quiz
+- true-false
+- group-sort
+- unjumble
+- fill-in-grammatical
+- cloze
+- error-correction
+- select
+- translation
+- grammar-drill
+- critical-analysis
+- essay-response
+- comparative-study
 objectives:
 - Учень може пояснити процес ліквідації Гетьманщини та Запорозької Січі
 - Учень може аналізувати наслідки колоніальної політики Катерини II для України

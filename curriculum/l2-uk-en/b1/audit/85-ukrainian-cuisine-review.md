@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:53:51
+**Generated:** 2026-01-25 19:22:57
 
 ## Configuration
 **Type:** B1-skills
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 69/15
+- **Vocab:** ✅ 64/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

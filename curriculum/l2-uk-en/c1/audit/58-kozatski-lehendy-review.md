@@ -1,26 +1,62 @@
-# Audit Report: 154-kozatski-lehendy.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+# Audit Report: M58 — 58-kozatski-lehendy.md
+**Level:** C1 | **Module:** M58 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:40
+
+## Configuration
+**Type:** C1-vocab
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Козацький етос та ідеали | 5 | 5 | ✅ |
+| 2 | match-up | Символи влади та магії | 8 | 6 | ✅ |
+| 3 | fill-in | Феномен характерництва | 6 | 6 | ✅ |
+| 4 | true-false | Аналіз героїчного міфу | 5 | 5 | ✅ |
+| 5 | unjumble | Реконструкція етичних норм | 5 | 5 | ✅ |
+| 6 | quiz | Легендарні постаті | 5 | 5 | ✅ |
+| 7 | match-up | Герої та їхні архетипи | 8 | 6 | ✅ |
+| 8 | fill-in | Міф як інструмент нації | 6 | 6 | ✅ |
+| 9 | essay-response | Роль козацького міфу | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз образу Козака Мамая | 1 | 1 | ✅ |
+| 11 | comparative-study | Характерник vs Європейський лицар | 1 | 1 | ✅ |
+| 12 | select | Козацькі клейноди та символи | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 154-kozatski-lehendy.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Козацькі клейноди та символи', 'items': [{'question': 'Які з перелічених предметів належали до офіційних козацьких клейнодів, що символізували державну та військову владу?', 'options': [{'text': 'Гетьманська булава', 'correct': True}, {'text': 'Військова корогва', 'correct': True}, {'text': 'Звичайна люлька', 'correct': False}, {'text': 'Військова печатка', 'correct': True}, {'text': 'Мідний котел', 'correct': False}, {'text': 'Срібна булава', 'correct': True}], 'min_correct': 3}, {'question': 'Які якості вважалися обов’язковими для козака-лицяря згідно з традиційним етосом січового товариства?', 'options': [{'text': 'Абсолютна вірність побратимам', 'correct': True}, {'text': 'Накопичення приватного майна', 'correct': False}, {'text': 'Готовність до самопожертви', 'correct': True}, {'text': 'Релігійна відданість', 'correct': True}, {'text': 'Схильність до зради ворогу', 'correct': False}], 'min_correct': 3}, {'question': 'Які надприродні здібності народна міфологія зазвичай приписувала легендарним козакам-характерникам?', 'options': [{'text': 'Здатність ставати невидимим', 'correct': True}, {'text': 'Вміння літати на хмарах', 'correct': False}, {'text': 'Невразливість до ворожих куль', 'correct': True}, {'text': 'Передбачення кроків противника', 'correct': True}, {'text': 'Зупинка течії великих річок', 'correct': False}], 'min_correct': 3}, {'question': 'Які елементи картини з Козаком Мамаєм вказують на його нерозривний зв’язок із рідною землею та предками?', 'options': [{'text': 'Старий дуб на задньому плані', 'correct': True}, {'text': 'Зображення іноземних замків', 'correct': False}, {'text': 'Спис, уткнутий у рідну землю', 'correct': True}, {'text': 'Музичний інструмент бандура', 'correct': True}, {'text': 'Сучасні карти та компаси', 'correct': False}], 'min_correct': 3}, {'question': 'Які постаті в козацькій історії набули найбільшого міфологічного статусу як «батьки нації» та захисники волі?', 'options': [{'text': 'Петро Сагайдачний', 'correct': True}, {'text': 'Іван Сірко', 'correct': True}, {'text': 'Богдан Хмельницький', 'correct': True}, {'text': 'Іван Мазепа', 'correct': True}, {'text': 'Цар Петро Перший', 'correct': False}], 'min_correct': 4}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-kozatski-lehendy.yaml: Schema validation error at key 'words': ['Козацький', 'етос', 'базувався', 'на', 'демократизмі', 'релігійній', 'самовідданості', 'та', 'культі', 'вічного', 'побратимства'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2033/2000
+- **Words:** ❌ 2033/3000 (raw: 2349)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
@@ -50,7 +86,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 89 | Included in Core |
-| **Вступ: Козаччина як золота доба українського міфу** | ⚪️ | 126 | Skipped |
+| **Вступ: Козаччина як золота доба українського міфу** | ✅ | 126 | Included in Core |
 | **Текст 1: Характерники — магічна еліта Січі** | ✅ | 224 | Included in Core |
 | **Текст 2: Козацьке лицарство, клейноди та культ побратимства** | ✅ | 276 | Included in Core |
 | **Текст 3: Козак Мамай — воїн-філософ та народний оберіг** | ✅ | 230 | Included in Core |

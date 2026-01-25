@@ -17,29 +17,36 @@ In this module, you will learn how to order your favorite drink, grab a snack, a
 
 When the waiter asks "**Що ви будете?**" (What will you have?), you can use the future tense "**Я буду...**" (I will have...). Remember to use the Accusative case for the item (usually changing **-а** to **-у**).
 
-| Phrase | Pronunciation | English |
-| :--- | :--- | :--- |
-| **Я буду каву, будь ласка.** | /jɑ ˈbudʊ ˈkɑvʊ/ | I will have a coffee, please. |
-| **Я буду чай.** | /jɑ ˈbudʊ t͡ʃɑj/ | I will have tea. |
-| **Чорна кава.** | /t͡ʃɔrnɑ ˈkɑvɑ/ | Black coffee. |
-| **Кава і молоко.** | /kɑvɑ i mɔlɔkɔ/ | Coffee and milk. |
-| **Без цукру.** | /bɛz ˈt͡sukrʊ/ | Without sugar. |
-| **Яку каву ви хочете?** | /jɑˈku ˈkɑvʊ vɪ ˈxɔt͡ʃɛtɛ/ | Which coffee do you want? |
+| Phrase                       | Pronunciation              | English                       |
+| :--------------------------- | :------------------------- | :---------------------------- |
+| **Я буду каву, будь ласка.** | /jɑ ˈbudʊ ˈkɑvʊ/           | I will have a coffee, please. |
+| **Я буду чай.**              | /jɑ ˈbudʊ t͡ʃɑj/            | I will have tea.              |
+| **Чорна кава.**              | /t͡ʃɔrnɑ ˈkɑvɑ/             | Black coffee.                 |
+| **Кава і молоко.**           | /kɑvɑ i mɔlɔkɔ/            | Coffee and milk.              |
+| **Без цукру.**               | /bɛz ˈt͡sukrʊ/              | Without sugar.                |
+| **Яку каву ви хочете?**      | /jɑˈku ˈkɑvʊ vɪ ˈxɔt͡ʃɛtɛ/  | Which coffee do you want?     |
+| **Гарячий чи холодний?**     | /ɦɑˈrʲɑt͡ʃɪj t͡ʃɪ xɔˈlɔdnɪj/ | Hot or cold?                  |
+
 | **Гарячий чи холодний?** | /ɦɑˈrʲɑt͡ʃɪj t͡ʃɪ xɔˈlɔdnɪj/ | Hot or cold? |
 
-> 💡 **Tip:** While "Coffee with milk" is common, at this level you can simply say "**Кава і молоко**" (Coffee and milk) or specify "**Лате**" (Latte) / "**Капучино**" (Cappuccino) which do not change form!
+> 💡 **Tip:** To say "with milk", use the fixed phrase "**з молоком**" (/z mɔlɔˈkɔm/). Even though grammar rules for "with" (Instrumental case) come later, you can memorize this useful phrase now!
+>
+> - **Кава з молоком** (Coffee with milk)
+> - **Чай з лимоном** (Tea with lemon)
+> - **Лате** / **Капучино** (Latte / Cappuccino) - these words don't change!
 
 ### Snacks and Pastries (Закуски та десерти)
 
 You might want something sweet (**солодке**) with your drink. Ukrainian cafés often have a display case (**вітрина**) full of delicious treats.
 
-| Item | IPA | English |
-| :--- | :--- | :--- |
+| Item         | IPA           | English     |
+| :----------- | :------------ | :---------- |
 | **Тістечко** | /ˈtʲistɛt͡ʃkɔ/ | pastry/cake |
-| **Круасан** | /krʊɑˈsɑn/ | croissant |
-| **Шоколад** | /ʃɔkɔˈlɑd/ | chocolate |
+| **Круасан**  | /krʊɑˈsɑn/    | croissant   |
+| **Шоколад**  | /ʃɔkɔˈlɑd/    | chocolate   |
 
 **Example:**
+
 - **Я хочу круасан і каву.** (I want a croissant and a coffee.)
 - **Яке це тістечко?** (What is this pastry?)
 - **Це шоколадне тістечко.** (This is a chocolate pastry.)
@@ -53,14 +60,17 @@ You might want something sweet (**солодке**) with your drink. Ukrainian c
 
 When you are ready to leave, you need the bill (**рахунок**).
 
-| Phrase | IPA | English |
-| :--- | :--- | :--- |
-| **Можна рахунок?** | /ˈmɔʒnɑ rɑˈxunɔk/ | Can I have the bill? |
-| **Скільки коштує?** | /ˈskilʲkɪ ˈkɔʃtʊjɛ/ | How much does it cost? |
-| **Карткою чи готівкою?** | /ˈkɑrtkɔjʊ t͡ʃɪ ɦɔˈtʲiwkɔjʊ/ | Card or cash? |
-| **Карткою, будь ласка.** | /ˈkɑrtkɔjʊ budʲ ˈlɑskɑ/ | Card, please. |
+| Phrase                   | IPA                         | English                |
+| :----------------------- | :-------------------------- | :--------------------- |
+| **Можна рахунок?**       | /ˈmɔʒnɑ rɑˈxunɔk/           | Can I have the bill?   |
+| **Скільки коштує?**      | /ˈskilʲkɪ ˈkɔʃtʊjɛ/         | How much does it cost? |
+| **Карткою чи готівкою?** | /ˈkɑrtkɔjʊ t͡ʃɪ ɦɔˈtʲiwkɔjʊ/ | Card or cash?          |
+| **Карткою, будь ласка.** | /ˈkɑrtkɔjʊ budʲ ˈlɑskɑ/     | Card, please.          |
 
-In Ukraine, tips are welcome but voluntary. You can leave cash on the table.
+In Ukraine, **чайові** (tips) are welcome but voluntary. You can leave cash on the table or sometimes add it to the card payment.
+
+> - **Я хочу сплатити карткою.** (I want to pay by card.)
+> - **Ось чайові.** (Here are the tips.)
 
 ---
 
@@ -127,6 +137,7 @@ Read this short story. Try to understand the context.
 Great job! You are now ready to visit a Ukrainian **кафе**.
 
 You learned how to:
+
 - Order a **напій** (beverage) /nɑˈpij/ using **Я буду...**
 - Customize it (**без цукру**)
 - Order a snack like a **тістечко** or **круасан**

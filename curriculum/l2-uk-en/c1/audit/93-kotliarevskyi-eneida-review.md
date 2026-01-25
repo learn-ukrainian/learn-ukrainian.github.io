@@ -1,23 +1,72 @@
-# Audit Report: 189-kotliarevskyi-eneida.md
-**Phase:** C1.6 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
-**Overall Status:** ✅ PASS
+# Audit Report: M93 — 93-kotliarevskyi-eneida.md
+**Level:** C1 | **Module:** M93 | **Phase:** C1.6 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:25:02
+
+## Configuration
+**Type:** C1-literature
+**Word Target:** 3500 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Герої Енеїди та їхні Ролі | 12 | 6 | ✅ |
+| 2 | quiz | Розуміння тексту та контексту | 12 | 5 | ✅ |
+| 3 | cloze | Мовні скарби Котляревського | 18 | 12 | ✅ |
+| 4 | fill-in | Мистецькі терміни у Котляревського | 12 | 6 | ✅ |
+| 5 | unjumble | Цитати з Енеїди | 8 | 5 | ✅ |
+| 6 | error-correction | Корекція літературних тверджень | 6 | 5 | ✅ |
+| 7 | essay-response | Енеїда як маніфест ідентичності | 1 | 1 | ✅ |
+| 8 | select | Культурні реалії в Енеїді | 8 | 5 | ✅ |
+| 9 | reading | Повний текст Енеїди | 3 | 3 | ✅ |
+| 10 | reading | Літературознавчий аналіз травестії | 3 | 3 | ✅ |
+| 11 | critical-analysis | Аналіз бурлескного стилю | 1 | 1 | ✅ |
+| 12 | translate | Архаїзми та Діалектизми | 12 | 5 | ✅ |
+| 13 | reading | Етнографія в Енеїді | 3 | 3 | ✅ |
+| 14 | match-up | Цитати та їх Контекст | 12 | 6 | ✅ |
+| 15 | true-false | Правда чи Брехня про Енеїду | 12 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 12-16) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 3/3 (cloze, fill-in, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-kotliarevskyi-eneida.yaml: Schema validation error at key 'words': ['Де', 'общеє', 'добро', 'в', 'порядку', 'де', 'єсть', 'до', 'нього', 'куш', 'душі', 'там', 'і', 'розправиться', 'все', 'гладко', 'і', 'зло', 'не', 'буде', 'мати', 'сил'] is too long
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2067/2000
-- **Activities:** ✅ 12/12
+- **Words:** ❌ 2067/3500 (raw: 2402)
+- **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (12 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (literature))
 - **Richness:** ✅ 92% (literature)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 92% (minimum: 90%)
@@ -37,12 +86,6 @@
 | visual | 8 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
 | **TOTAL** | | | | | **93.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

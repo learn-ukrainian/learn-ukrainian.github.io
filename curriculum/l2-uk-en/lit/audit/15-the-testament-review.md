@@ -1,18 +1,52 @@
-# Audit Report: 15-the-testament.md
-**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
+# Audit Report: M15 — 15-the-testament.md
+**Level:** LIT | **Module:** M15 | **Phase:** LIT.3 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:13
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | essay-response | Есе-аналіз | 1 | 1 | ✅ |
+| 2 | critical-analysis | Критичний аналіз | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз | 1 | 1 | ✅ |
+| 4 | reading | Читальна Зала: Заповіт | 2 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3572/3500
+- **Words:** ❌ 3572/4000 (raw: 4454)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
@@ -65,6 +99,6 @@
 | **Додаток B: Галерея Осіб (Dramatis Personae) 🎭** | ⚪️ | 163 | Skipped |
 | **Додаток C: Творче Завдання (Creative Writing) ✍️** | ⚪️ | 101 | Skipped |
 | **Додаток D: Глосарій Контексту 📚** | ✅ | 266 | Included in Core |
-| **Додаток E: Хронологія "Заповіту" ⏳** | ⚪️ | 162 | Skipped |
+| **Додаток E: Хронологія "Заповіту" ⏳** | ✅ | 162 | Included in Core |
 | **Додаток F: Анотована Бібліографія 📖** | ⚪️ | 135 | Skipped |
 | **Додаток G: Питання для Самоконтролю 🤔** | ⚪️ | 77 | Skipped |

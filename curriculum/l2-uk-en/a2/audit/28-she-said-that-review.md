@@ -1,7 +1,7 @@
 # Audit Report: M28 — 28-she-said-that.md
 **Level:** A2 | **Module:** M28 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:05:20
+**Generated:** 2026-01-25 19:30:21
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,11 +40,11 @@
   - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося перетворювати прямі...'
 - **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Вміння звітувати про сказане зробить...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): стверджувати, пояснити, переконувати, відповідати, розповідати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): переконувати, скаржитися, стверджувати, питати, обіцяти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: 3. Reporting Commands (Практика «Щоб»), Practice / Практика
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice / Практика, 3. Reporting Commands (Практика «Щоб»)
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

@@ -1,30 +1,66 @@
-# Audit Report: 136-rhetorical-questions.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+# Audit Report: M40 — 40-rhetorical-questions.md
+**Level:** C1 | **Module:** M40 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:29
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Сутність риторичного питання | 5 | 5 | ✅ |
+| 2 | fill-in | Маркери риторичних питань | 6 | 6 | ✅ |
+| 3 | match-up | Питання та їх прихований зміст | 8 | 6 | ✅ |
+| 4 | error-correction | Доречність використання | 5 | 5 | ✅ |
+| 5 | unjumble | Побудова риторичних запитань | 5 | 5 | ✅ |
+| 6 | group-sort | Тип питання: Риторичне чи Інформативне? | 14 | 12 | ✅ |
+| 7 | cloze | Риторика в промові | 12 | 12 | ✅ |
+| 8 | select | Аналіз літературних прикладів | 5 | 5 | ✅ |
+| 9 | true-false | Правда чи Міф: Риторика | 5 | 5 | ✅ |
+| 10 | match-up | Емоційні відтінки 'Невже' | 8 | 6 | ✅ |
+| 11 | fill-in | Контекстуальна риторика | 6 | 6 | ✅ |
+| 12 | essay-response | Написання промови | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 136-rhetorical-questions.yaml: Schema validation error at key '10': {'type': 'fill-in', 'title': 'Контекстуальна риторика', 'items': [{'sentence': "Коли хтось робить очевидну дурницю, ми питаємо: 'Де були твої _____?'", 'answer': 'очі', 'options': ['очі', 'руки', 'ноги', 'вуха']}, {'sentence': "Коли ми не віримо своїм вухам, ми кажем: 'Та _____?'", 'answer': 'невже', 'options': ['невже', 'коли', 'хто', 'де']}, {'sentence': "Коли ми хочемо присоромити когось, ми кажемо: 'Як тобі не _____?'", 'answer': 'соромно', 'options': ['соромно', 'сумно', 'весело', 'боляче']}, {'sentence': "Коли ми наголошуємо на очевидності, ми кажемо: 'Хіба це не _____?'", 'answer': 'зрозуміло', 'options': ['зрозуміло', 'темно', 'тихо', 'далеко']}, {'sentence': "Коли ми втрачаємо терпіння, ми питаємо: 'Скільки можна _____?'", 'answer': 'терпіти', 'options': ['терпіти', 'спати', 'їсти', 'гуляти']}, {'sentence': "Коли ми бачимо безлад, ми питаємо: 'Що тут _____?'", 'answer': 'відбувається', 'options': ['відбувається', 'лежить', 'стоїть', 'росте']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-rhetorical-questions.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2011/2000
+- **Words:** ❌ 2011/3000 (raw: 2121)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)

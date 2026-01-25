@@ -1,8 +1,8 @@
 # Audit Report: M17 — 17-possessive-sviy.md
 **Level:** A2 | **Module:** M17 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:53:07
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:40:42
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,35 +38,20 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми розширимо ваші знання...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це слово справжньою лінгвістичною перлиною...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): свої, спільний, своя, свій, своє...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
-- **Words:** ✅ 1120/1000 (raw: 1283)
+- **Words:** ✅ 1100/1000 (raw: 1263)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 47.0% LOW (target 50-65% (A2.1))
+- **Immersion:** 🇺🇦 52.7% (target 50-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
@@ -74,8 +59,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 208 | Included in Core |
-| **Presentation / Презентація** | ✅ | 408 | Included in Core |
+| **Introduction / Вступ** | ✅ | 185 | Included in Core |
+| **Presentation / Презентація** | ✅ | 411 | Included in Core |
 | **Practice / Практика** | ⚪️ | 185 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 168 | Included in Core |
 | **Summary / Підсумок** | ✅ | 84 | Included in Core |

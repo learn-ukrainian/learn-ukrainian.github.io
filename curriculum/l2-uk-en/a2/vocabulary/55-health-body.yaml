@@ -178,3 +178,21 @@ items:
   translation: infection
   pos: noun
   gender: f
+- lemma: множина
+  ipa: /mnɔʒɪnˈa/
+  translation: plural
+  pos: noun
+  gender: f
+- lemma: однина
+  ipa: /ɔdnɪnˈa/
+  translation: singular
+  pos: noun
+  gender: f
+- lemma: називний
+  ipa: /nazɪʋnˈɪj/
+  translation: nominative (case)
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj

@@ -1,7 +1,7 @@
 # Audit Report: M113 — destalinizatsiia.md
 **Level:** B2 | **Module:** M113 | **Phase:** HIST.11 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:20
+**Generated:** 2026-01-25 20:21:59
 
 ## Configuration
 **Type:** B2-history

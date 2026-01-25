@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M20 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:30:37
+**Generated:** 2026-01-25 19:22:17
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,14 +41,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2044/1500 (raw: 2518)
+- **Words:** ✅ 2047/1500 (raw: 2545)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/25
+- **Vocab:** ✅ 84/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -82,9 +82,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |
 | **Тест** | ⚪️ | 130 | Skipped |
-| **Пояснення** | ⚪️ | 482 | Skipped |
+| **Пояснення** | ⚪️ | 484 | Skipped |
 | **Поглиблення** | ⚪️ | 408 | Skipped |
 | **Практика** | ⚪️ | 199 | Skipped |
 | **Діалоги** | ✅ | 444 | Included in Core |
-| **Підсумок** | ✅ | 209 | Included in Core |
+| **Підсумок** | ✅ | 210 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

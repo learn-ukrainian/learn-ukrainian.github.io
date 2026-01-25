@@ -1,20 +1,67 @@
-# Audit Report: 44-complex-syntax-ellipsis-parcelling.md
-**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M44 — 44-complex-syntax-ellipsis-parcelling.md
+**Level:** B2 | **Module:** M44 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:31
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння еліпсису та парцеляції | 16 | 8 | ✅ |
+| 2 | match-up | Еліпсис та повна форма | 16 | 8 | ✅ |
+| 3 | cloze | Відновіть пропущені слова | 16 | 14 | ✅ |
+| 4 | true-false | Правила еліпсису та парцеляції | 16 | 8 | ✅ |
+| 5 | group-sort | Класифікуйте приклади | 22 | 14 | ✅ |
+| 6 | unjumble | Створіть парцельовані речення | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть художній текст | 16 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть еліптичні конструкції в тексті | 15 | 6 | ✅ |
+| 10 | match-up | Впорядкуйте діалог | 12 | 8 | ✅ |
+| 11 | select | Оберіть доречне використання еліпсису та парцеляції | 8 | 6 | ✅ |
+| 12 | translate | Оберіть переклад з парцеляцією | 16 | 6 | ✅ |
+| 13 | fill-in | Визначте стилістичні прийоми | 16 | 8 | ✅ |
+| 14 | quiz | Комплексна перевірка | 16 | 8 | ✅ |
+| 15 | essay-response | Стилістичний аналіз та творча трансформація | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'еліпсис у...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2154/1750
+- **Words:** ✅ 2154/1750 (raw: 2398)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 76/25
+- **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 97% (grammar)
@@ -44,7 +91,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Вступ** | ⚪️ | 71 | Skipped |
+| **Вступ** | ✅ | 71 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 206 | Included in Core |
 | **Пояснення** | ⚪️ | 924 | Skipped |
 | **Практика** | ⚪️ | 315 | Skipped |

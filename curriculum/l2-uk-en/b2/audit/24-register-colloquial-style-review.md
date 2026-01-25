@@ -1,20 +1,66 @@
-# Audit Report: 24-register-colloquial-style.md
-**Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M24 — 24-register-colloquial-style.md
+**Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:18
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Основи розмовного стилю | 16 | 8 | ✅ |
+| 2 | match-up | Скорочення та повні форми | 16 | 8 | ✅ |
+| 3 | cloze | Частки в контексті | 16 | 14 | ✅ |
+| 4 | true-false | Правила розмовного стилю | 16 | 8 | ✅ |
+| 5 | group-sort | Позитивні та негативні вигуки | 24 | 14 | ✅ |
+| 6 | unjumble | Речення з частками | 16 | 6 | ✅ |
+| 7 | error-correction | Помилки у вживанні розмовного стилю | 16 | 6 | ✅ |
+| 8 | cloze | Розмовний діалог | 17 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть маркери розмовного стилю | 12 | 6 | ✅ |
+| 10 | select | Доречність розмовного стилю | 16 | 6 | ✅ |
+| 11 | translate | Формальне vs розмовне | 16 | 6 | ✅ |
+| 12 | fill-in | Вигуки в контексті | 16 | 8 | ✅ |
+| 13 | quiz | Контекстуальний вибір регістру | 16 | 8 | ✅ |
+| 14 | essay-response | Аналіз стилю спілкування | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1869/1750
+- **Words:** ✅ 1869/1750 (raw: 2741)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 75/25
+- **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -44,7 +90,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ⚪️ | 68 | Skipped |
+| **Вступ** | ✅ | 68 | Included in Core |
 | **Тест: Прочитайте тексти** | ✅ | 112 | Included in Core |
 | **Пояснення** | ⚪️ | 676 | Skipped |
 | **Трансформації** | ⚪️ | 308 | Skipped |

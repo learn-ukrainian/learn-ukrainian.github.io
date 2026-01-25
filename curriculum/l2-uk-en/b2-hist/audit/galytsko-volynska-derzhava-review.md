@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M24 | **Phase:** HIST.3 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 16:03:24
+**Generated:** 2026-01-25 20:22:04
 
 ## Configuration
 **Type:** B2-history

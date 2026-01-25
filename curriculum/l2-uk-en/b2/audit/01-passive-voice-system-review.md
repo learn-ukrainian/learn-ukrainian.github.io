@@ -2,19 +2,67 @@
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 1750
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:02
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розпізнавання форм пасивного стану | 16 | 8 | ✅ |
+| 2 | match-up | Речення та тип пасивної конструкції | 16 | 8 | ✅ |
+| 3 | fill-in | Утворення пасивних дієприкметників | 16 | 8 | ✅ |
+| 4 | true-false | Правила пасивного стану | 16 | 8 | ✅ |
+| 5 | group-sort | Класифікація за регістром | 16 | 14 | ✅ |
+| 6 | unjumble | Складіть пасивні речення | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у пасивних конструкціях | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть текст правильними формами | 16 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть усі пасивні конструкції | 9 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні пасивні форми | 8 | 6 | ✅ |
+| 11 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
+| 12 | cloze | Оберіть форму відповідно до регістру | 16 | 14 | ✅ |
+| 13 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
+| 14 | essay-response | Твір-роздум про роль мови | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 5/5 (essay-response, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1943/1750
+- **Words:** ✅ 1943/1750 (raw: 2337)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 215/25
+- **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)

@@ -1,7 +1,7 @@
 # Audit Report: M25 — 25-checkpoint-aspect-comparison.md
 **Level:** A2 | **Module:** M25 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:02:57
+**Generated:** 2026-01-25 19:30:10
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[GRAMMAR]** Participle used before B1: 'завершений'
   - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, родовий, називний, недоконаний, доконаний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, доконаний, недоконаний, родовий, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## TEMPLATE COMPLIANCE

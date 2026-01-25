@@ -1,20 +1,60 @@
-# Audit Report: 162-traditional-clothing.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M66 — 66-traditional-clothing.md
+**Level:** C1 | **Module:** M66 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:45
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння традиційного українського одягу | 8 | 5 | ✅ |
+| 2 | match-up | Елементи традиційного строю | 8 | 6 | ✅ |
+| 3 | group-sort | Регіональні особливості стилю | 12 | 12 | ✅ |
+| 4 | cloze | Семіотика українського костюма | 15 | 12 | ✅ |
+| 5 | match-up | Символіка кольорів та орнаментів | 8 | 6 | ✅ |
+| 6 | select | Ознаки автентичного строю | 6 | 5 | ✅ |
+| 7 | true-false | Факти та міфи про народний одяг | 8 | 5 | ✅ |
+| 8 | essay-response | Аналіз культурного значення строю | 1 | 1 | ✅ |
+| 9 | match-up | Регіони та їхні стилістичні коди | 8 | 6 | ✅ |
+| 10 | unjumble | Цитати про народні традиції | 6 | 5 | ✅ |
+| 11 | fill-in | Граматика опису костюма | 8 | 6 | ✅ |
+| 12 | cloze | Сучасний ренесанс традиції | 14 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2421/2000
+- **Words:** ❌ 2421/3000 (raw: 2529)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -41,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
-| **Вступ** | ⚪️ | 161 | Skipped |
+| **Вступ** | ✅ | 161 | Included in Core |
 | **Презентація** | ⚪️ | 988 | Skipped |
 | **Глибинний аналіз: Соціальна семіотика костюма** | ✅ | 190 | Included in Core |
 | **Культурна трагедія: Радянська «шароварщина» vs автентика** | ✅ | 181 | Included in Core |

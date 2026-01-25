@@ -1,28 +1,59 @@
-# Audit Report: 139-high-formal-register.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 2000
+# Audit Report: M43 — 43-high-formal-register.md
+**Level:** C1 | **Module:** M43 | **Phase:** C1.5 | **Pedagogy:** Academic | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:31
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 139-high-formal-register.yaml: Schema validation error at key '7': {'type': 'error-correction', 'title': 'Виправлення кальок та помилок', 'instruction': 'Знайдіть та виправте помилки, типові для офіційного мовлення (кальки, русизми).', 'items': [{'sentence': 'Комісія [[займається]] розглядом цього питання.', 'error': 'займається', 'answer': 'розглядає', 'options': ['rozhlyadaye', 'robyt', 'zaymayetsya', 'vykonuye'], 'explanation': "Слово 'займається' є зайвим. Правильно вживати прямий перехід: 'Комісія розглядає це питання' (або 'займається розглядом' - але краще 'здійснює розгляд'). В ідеалі: 'Комісія розглядає'."}, {'sentence': 'Ми повинні [[приймати участь]] у засіданні ради.', 'error': 'приймати участь', 'answer': 'брати участь', 'options': ['braty uchast', 'prymaty uchast', 'robyty uchast', 'maty uchast'], 'explanation': "Калька з російської 'принимать участие'. Українською правильно 'брати участь'."}, {'sentence': 'Директор [[являється]] головою комісії.', 'error': 'являється', 'answer': 'є', 'options': ['ye', 'yavlyayetsya', 'staye', 'buvaye'], 'explanation': "Дієслово 'являтися' означає 'to appear' (ввижатися). У значенні 'to be' вживається 'є'."}, {'sentence': 'Захід відбудеться [[в кінці кінців]].', 'error': 'в кінці кінців', 'answer': 'врешті-решт', 'options': ['vreshti-resht', 'v kinci kinciv', 'na kinec', 'pid kinec'], 'explanation': "Калька з 'в конце концов'. Українські відповідники: 'врешті-решт', 'зрештою'."}, {'sentence': 'Цей закон [[вступає в силу]] завтра.', 'error': 'вступає в силу', 'answer': 'набуває чинності', 'options': ['nabuvaye chynnosti', 'vstupaye v sylu', 'pochinaye diyu', 'staye sylnym'], 'explanation': "Калька з 'вступает в силу'. Юридично правильно: 'набуває чинності'."}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння офіційних текстів | 5 | 5 | ✅ |
+| 2 | fill-in | Канцелярські кліше | 6 | 6 | ✅ |
+| 3 | unjumble | Побудова офіційних речень | 5 | 5 | ✅ |
+| 4 | match-up | Юридична термінологія | 8 | 6 | ✅ |
+| 5 | group-sort | Класифікація термінів | 15 | 12 | ✅ |
+| 6 | cloze | Аналіз тексту закону | 12 | 12 | ✅ |
+| 7 | translate | Переклад юридичних фраз | 5 | 5 | ✅ |
+| 8 | error-correction | Виправлення кальок та помилок | 5 | 5 | ✅ |
+| 9 | mark-the-words | Пошук номіналізацій | 8 | 5 | ✅ |
+| 10 | essay-response | Написання офіційної заяви | 1 | 1 | ✅ |
+| 11 | comparative-study | Аналіз стилю: Закон vs Договір | 1 | 1 | ✅ |
+| 12 | critical-analysis | Тон офіційного документа | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2004/2000
+- **Words:** ❌ 2004/3000 (raw: 2166)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100%)
 - **Richness:** ✅ 97% (style)
@@ -50,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Вступ: Стандартизація та точність** | ⚪️ | 112 | Skipped |
+| **Вступ: Стандартизація та точність** | ✅ | 112 | Included in Core |
 | **Презентація первинних текстів** | ✅ | 300 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 117 | Included in Core |
 | **Граматика документів** | ⚪️ | 176 | Skipped |

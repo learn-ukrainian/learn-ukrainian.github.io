@@ -75,8 +75,8 @@ For perfective verbs, the future is formed by conjugating the verb stem. It look
 
 > [!tip] **Signal Words for Future Consistency**
 >
-> - **Imperfective Indicators:** завжди (always), часто (often), довго (long time), цілий день (all day).
-> - **Perfective Indicators:** завтра (tomorrow - for a specific fact), нарешті (finally), відразу (immediately).
+> - **Imperfective Indicators:** завжди, часто, довго, цілий день.
+> - **Perfective Indicators:** завтра, нарешті, відразу.
 
 ## Practice / Практика
 

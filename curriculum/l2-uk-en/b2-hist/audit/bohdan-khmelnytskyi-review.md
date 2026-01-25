@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 16:03:14
+**Generated:** 2026-01-25 20:21:54
 
 ## Configuration
 **Type:** B2-biography

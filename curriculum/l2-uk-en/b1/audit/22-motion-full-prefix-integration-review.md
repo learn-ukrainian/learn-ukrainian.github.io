@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M22 | **Phase:** B1.3 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:49:14
+**Generated:** 2026-01-25 19:22:18
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,14 +41,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1808/1500 (raw: 1915)
+- **Words:** ✅ 1813/1500 (raw: 1920)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 58/25
+- **Vocab:** ✅ 70/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -65,7 +65,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 48 | 24 | 100% | 20% | 20.0% |
+| examples | 43 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
@@ -82,8 +82,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
 | **Тест** | ⚪️ | 139 | Skipped |
-| **Пояснення** | ⚪️ | 801 | Skipped |
-| **Практика** | ⚪️ | 305 | Skipped |
+| **Пояснення** | ⚪️ | 804 | Skipped |
+| **Практика** | ⚪️ | 306 | Skipped |
 | **Діалоги** | ✅ | 239 | Included in Core |
-| **Підсумок** | ✅ | 151 | Included in Core |
+| **Підсумок** | ✅ | 152 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

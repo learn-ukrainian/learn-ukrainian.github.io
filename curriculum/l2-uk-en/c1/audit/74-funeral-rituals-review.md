@@ -1,20 +1,60 @@
-# Audit Report: 170-funeral-rituals.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M74 — 74-funeral-rituals.md
+**Level:** C1 | **Module:** M74 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:50
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння поховальної обрядовості | 8 | 5 | ✅ |
+| 2 | match-up | Символи та атрибути переходу | 8 | 6 | ✅ |
+| 3 | group-sort | Традиції поминального циклу | 12 | 12 | ✅ |
+| 4 | cloze | Метафізика українських Поминок | 16 | 12 | ✅ |
+| 5 | match-up | Термінологія скорботи та пам'яті | 8 | 6 | ✅ |
+| 6 | select | Традиції поминального тижня (Гробків) | 6 | 5 | ✅ |
+| 7 | true-false | Факти та міфи про культ предків | 8 | 5 | ✅ |
+| 8 | essay-response | Аналіз поховального обряду як механізму тяглості роду | 1 | 1 | ✅ |
+| 9 | unjumble | Побажання та віншування пам'яті | 6 | 5 | ✅ |
+| 10 | fill-in | Граматика скорботних дій | 8 | 6 | ✅ |
+| 11 | cloze | Духовна незламність пам'яті | 17 | 12 | ✅ |
+| 12 | match-up | Традиційні квіти та рослини пам'яті | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2076/2000
+- **Words:** ❌ 2076/3000 (raw: 2191)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (cultural))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -41,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 104 | Included in Core |
-| **Вступ** | ⚪️ | 187 | Skipped |
+| **Вступ** | ✅ | 187 | Included in Core |
 | **Презентація** | ⚪️ | 528 | Skipped |
 | **Метафізика межі та оберега: Семіотика переходу** | ⚪️ | 142 | Skipped |
 | **Культурна трагедія: Нищення пам'яті в радянську тоталітарну добу** | ✅ | 223 | Included in Core |

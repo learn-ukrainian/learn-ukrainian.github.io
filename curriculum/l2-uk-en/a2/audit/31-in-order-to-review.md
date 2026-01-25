@@ -1,7 +1,7 @@
 # Audit Report: M31 — 31-in-order-to.md
 **Level:** A2 | **Module:** M31 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:08:45
+**Generated:** 2026-01-25 19:30:34
 
 ## Configuration
 **Type:** A2-grammar
@@ -42,7 +42,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Цей невеликий але могутній інструмент...'
 - **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Дія щоб Суб єкт Минулий...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): принести, дав, пояснив, пішов, розповів...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): дав, розповів, пояснив, купив, зробив...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
@@ -62,7 +62,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 3 violations

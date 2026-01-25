@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:21
+**Generated:** 2026-01-25 20:07:21
 
 ## Configuration
 **Type:** A1
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): грам, дорого, стиглий, зважити, знижка...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): знижка, вибирати, зважити, стиглий, пакет...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

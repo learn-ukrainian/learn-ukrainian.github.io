@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M17 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:30:35
+**Generated:** 2026-01-25 19:22:15
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,14 +41,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1741/1500 (raw: 2201)
+- **Words:** ✅ 1742/1500 (raw: 2240)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 49/25
+- **Vocab:** ✅ 90/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -72,10 +72,10 @@
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 8 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| paragraph_var | 0.98 | - | 98% | 5% | 4.9% |
 | questions | 24 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -85,5 +85,5 @@
 | **Пояснення** | ⚪️ | 444 | Skipped |
 | **Практика** | ⚪️ | 536 | Skipped |
 | **Діалоги** | ✅ | 274 | Included in Core |
-| **Підсумок** | ✅ | 116 | Included in Core |
+| **Підсумок** | ✅ | 117 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

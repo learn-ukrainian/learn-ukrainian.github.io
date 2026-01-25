@@ -1,30 +1,62 @@
-# Audit Report: 160-halychyna.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+# Audit Report: M64 — 64-halychyna.md
+**Level:** C1 | **Module:** M64 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:44
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 160-halychyna.yaml: Schema validation error at key '12': {'type': 'true-false', 'title': 'Еволюція та тяглість культури', 'items': [{'statement': 'Личаківський цвинтар у Львові вважається одним із найвеличніших меморіальних некрополів Європи.', 'correct': True, 'explanation': 'Там поховані сотні видатних діячів української культури, науки та політики.'}, {'statement': 'Батярська мова була надзвичайно примітивною і складалася лише з декількох десятків грубих слів.', 'correct': False, 'explanation': 'Ні, батярський сленг був дуже багатим, іронічним та метафоричним.'}, {'statement': 'Дерев’яні церкви України, зокрема Галичини, є унікальним втіленням народної архітектурної думки.', 'correct': True, 'explanation': 'Багато з цих храмів визнані ЮНЕСКО як шедеври світового значення.'}, {'statement': 'Слово «вуйко» в галицькому діалекті означає виключно далекого незнайомого перехожого на вулиці.', 'correct': False, 'explanation': 'Ні, «вуйко» — це традиційна назва для дядька, що підкреслює родинні зв’язки.'}, {'statement': 'Тяглість родинних традицій у Галичині є основою високої стійкості регіональної ідентичності.', 'correct': True, 'explanation': 'Повага до предків та їхніх звичаїв гарантує передачу культурного коду новим поколінням.'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Культурні маркери Галичини | 5 | 5 | ✅ |
+| 2 | match-up | Галицька говірка та побут | 8 | 6 | ✅ |
+| 3 | fill-in | Ідентичність галичанина | 6 | 6 | ✅ |
+| 4 | true-false | Аналіз регіональної самобутності | 5 | 5 | ✅ |
+| 5 | unjumble | Реконструкція галицьких смислів | 5 | 5 | ✅ |
+| 6 | quiz | Народне мистецтво гір | 5 | 5 | ✅ |
+| 7 | match-up | Галицька інтелігенція та чини | 8 | 6 | ✅ |
+| 8 | fill-in | Мова як культурний щит | 6 | 6 | ✅ |
+| 9 | essay-response | Феномен галицького П’ємонту | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз батярського етосу | 1 | 1 | ✅ |
+| 11 | comparative-study | Львівська сецесія vs Народне мистецтво | 1 | 1 | ✅ |
+| 12 | select | Галицькі побутові терміни | 5 | 5 | ✅ |
+| 13 | true-false | Еволюція та тяглість культури | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2119/2000
+- **Words:** ❌ 2119/3000 (raw: 2394)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (folk-culture))
+- **Immersion:** 🇺🇦 99.8% (target 90-100%)
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
@@ -50,7 +82,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Вступ: Галичина як інтелектуальний та духовний П'ємонт** | ⚪️ | 86 | Skipped |
+| **Вступ: Галичина як інтелектуальний та духовний П'ємонт** | ✅ | 86 | Included in Core |
 | **Текст 1: Мозаїка галицької говірки — жива історія у словах** | ✅ | 417 | Included in Core |
 | **Текст 2: Архітектурна сецесія та батярський дух Львова** | ✅ | 358 | Included in Core |
 | **Текст 3: Традиційний одяг, сакральне мистецтво та дерев'яна архітектура** | ✅ | 350 | Included in Core |

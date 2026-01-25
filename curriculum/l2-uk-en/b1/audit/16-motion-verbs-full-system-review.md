@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-motion-verbs-full-system.md
 **Level:** B1 | **Module:** M16 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:30:34
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:22:14
 
 ## Configuration
 **Type:** B1-grammar
@@ -48,7 +48,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 77/25
+- **Vocab:** ✅ 115/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -1,8 +1,8 @@
-title: "Буковина та Закарпаття під сусідами"
+title: Буковина та Закарпаття під сусідами
 slug: bukovyna-zakarpattia
 level: B2
 track: history
-phase: "B2.3a [Українська історія]"
+phase: B2.3a [Українська історія]
 status: content-ready
 focus: history
 pedagogy: CBI
@@ -11,37 +11,37 @@ duration: 120
 register: публіцистичний
 transliteration: none
 tags:
-  - history
-  - bukovyna
-  - zakarpattia
-  - regional-history
+- history
+- bukovyna
+- zakarpattia
+- regional-history
 grammar:
-  - 'Історичний наратив'
-  - 'Порівняння історичних процесів'
+- Історичний наратив
+- Порівняння історичних процесів
 objectives:
-  - 'Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.'
-  - 'Учень аналізує вплив іноземного панування на культуру регіонів'
-  - 'Учень володіє термінологією регіональної історії'
+- Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.
+- Учень аналізує вплив іноземного панування на культуру регіонів
+- Учень володіє термінологією регіональної історії
 vocabulary_count: 30
 content_outline:
-  - section: "Вступ"
-    words: 325
-  - section: "Буковина"
-    words: 496
-  - section: "Закарпаття"
-    words: 695
-  - section: "Культурний опір та збереження ідентичності"
-    words: 634
-  - section: "Читання"
-    words: 327
-  - section: "Первинні джерела"
-    words: 339
-  - section: "Деколонізаційний погляд"
-    words: 363
-  - section: "Есе"
-    words: 445
-  - section: "Потрібно більше практики?"
-    words: 95
+- section: Вступ
+  words: 349
+- section: Буковина
+  words: 533
+- section: Закарпаття
+  words: 747
+- section: Культурний опір та збереження ідентичності
+  words: 681
+- section: Читання
+  words: 351
+- section: Первинні джерела
+  words: 364
+- section: Деколонізаційний погляд
+  words: 390
+- section: Есе
+  words: 478
+- section: Потрібно більше практики?
+  words: 107
 naturalness:
   score: 9
   status: PASS

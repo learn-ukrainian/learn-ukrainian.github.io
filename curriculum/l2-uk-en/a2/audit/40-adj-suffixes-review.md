@@ -1,7 +1,7 @@
 # Audit Report: M40 — 40-adj-suffixes.md
 **Level:** A2 | **Module:** M40 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 14:38:19
+**Generated:** 2026-01-25 19:31:02
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,19 +36,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1473/1000 (raw: 1579)
+- **Words:** ✅ 1477/1000 (raw: 1583)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 235/1
+- **Vocab:** ✅ 200/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 72.6% (target 65-75% (A2.2))
+- **Immersion:** 🇺🇦 72.9% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
@@ -57,8 +57,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 256 | Included in Core |
-| **Presentation / Презентація** | ✅ | 772 | Included in Core |
-| **Practice / Практика** | ⚪️ | 169 | Skipped |
+| **Presentation / Презентація** | ✅ | 775 | Included in Core |
+| **Practice / Практика** | ⚪️ | 170 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 164 | Included in Core |
 | **Summary / Підсумок** | ✅ | 74 | Included in Core |
 | **Need More Practice?** | ⚪️ | 38 | Skipped |

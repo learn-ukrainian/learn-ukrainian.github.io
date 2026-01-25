@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:53:59
+**Generated:** 2026-01-25 20:07:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): вчитися, бігти, вітати, лежати, летіти...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): дякувати, бігти, забувати, дивитися, вчитися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -51,7 +51,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 15/1
+- **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

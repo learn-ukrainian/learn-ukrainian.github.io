@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M19 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:06
+**Generated:** 2026-01-25 20:07:07
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): порекомендувати, принесіть, окремо, спробувати, візьму...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): спробувати, порекомендувати, візьму, разом, принесіть...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

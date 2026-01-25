@@ -8,6 +8,9 @@ immersion: 65-75% Ukrainian
 version: '2.0'
 phase: A2.4
 focus: grammar
+naturalness:
+  score: 10
+  status: PASS
 pedagogy: PPP
 duration: 60
 transliteration: none
@@ -37,19 +40,19 @@ content_outline:
   points:
     - The Language of the Mind: Roots of thought and speech
     - The 4 Mind-Roots: дум-, говор-, мов-, слух-
-- section: Presentation / Презентітація
+- section: Presentation / Презентація
   words: 600
   points:
     - 'The дум- Family: Thoughts, diaries, and logic'
     - 'The говор-/мов- Family: The art of speech and conversation'
     - 'The слух- Family: Listening, hearing, and obeying'
-    - 'Semantic Shifts: How 'мова' becomes 'розмова''
-    - 'Prefix Power: How 'від-' changes 'мов-' to 'відмова''
+    - 'Semantic Shifts: How "мова" becomes "розмова"'
+    - 'Prefix Power: How "від-" changes "мов-" to "відмова"'
 - section: Practice / Практика
   words: 150
   points:
     - Root family sorting
-    - 'Build the Thought' derivative challenge
+    - "'Build the Thought' derivative challenge"
 - section: Dialogues / Діалоги
   words: 50
   points:

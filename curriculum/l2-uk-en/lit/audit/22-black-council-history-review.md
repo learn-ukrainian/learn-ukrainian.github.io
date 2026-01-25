@@ -1,18 +1,53 @@
-# Audit Report: 22-black-council-history.md
-**Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Immersion | **Target:** 3500
+# Audit Report: M22 — 22-black-council-history.md
+**Level:** LIT | **Module:** M22 | **Phase:** LIT.4 | **Pedagogy:** Immersion | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:30
+
+## Configuration
+**Type:** LIT-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерела: Чорна рада 1663 | 3 | 1 | ✅ |
+| 2 | quiz | Перевірка знань: Доба Руїни | 5 | 1 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз: Сомко vs Брюховецький | 1 | 1 | ✅ |
+| 4 | essay-response | Есе: Охлократія і Державність | 1 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз джерела: Голос епохи | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/6 (essay-response, quiz, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3529/3500
+- **Words:** ❌ 3529/4000 (raw: 3874)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)

@@ -1,18 +1,53 @@
-# Audit Report: kostiantyn-vasyl-ostrozky.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 3000
+# Audit Report: M14 — kostiantyn-vasyl-ostrozky.md
+**Level:** C1 | **Module:** M14 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:26:50
+
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Передмова до Острозької Біблії | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз культурної стратегії Острозького | 1 | 1 | ✅ |
+| 3 | authorial-intent | Аналіз ідеології 'Волинських Афін' | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння освітніх моделей: Острозька академія vs Єзуїти | 1 | 1 | ✅ |
+| 5 | essay-response | Есе: Чому книга сильніша за меч? | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/3 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3012/3000
-- **Activities:** ✅ 5/4
+- **Words:** ❌ 3012/4000 (raw: 3306)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
@@ -44,7 +79,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 80 | Included in Core |
-| **Вступ** | ⚪️ | 220 | Skipped |
+| **Вступ** | ✅ | 220 | Included in Core |
 | **Життєпис** | ⚪️ | 1386 | Skipped |
 | **Історичний контекст** | ✅ | 199 | Included in Core |
 | **Внесок та Спадщина** | ⚪️ | 245 | Skipped |

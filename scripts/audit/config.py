@@ -193,6 +193,7 @@ FIXED_PHRASES_INSTRUMENTAL = {
     'з новим роком', 'з різдвом', 'з великоднем', 'з днем народження',
     'з днем', 'з весіллям', 'з народженням', 'з перемогою',
     'з святом', 'з успіхом', 'з закінченням',
+    'з молоком', 'з лимоном', 'з цукром',  # Food phrases (M35)
 }
 
 # Dative case expressions taught as fixed phrases at A1
@@ -210,6 +211,8 @@ FIXED_PHRASES_DATIVE = {
     'тобі погано', 'тобі добре', 'тобі болить', 'тобі холодно', 'тобі потрібн',
     # Age expressions for other persons
     'йому рок', 'їй рок', 'їм рок',
+    # Nominative plural falsely detected as dative (ending in -ові)
+    'чайові',
 }
 
 # Activity stage ordering for PPP, TTT, and CLIL/Narrative

@@ -1,27 +1,59 @@
-# Audit Report: 24-language-question-linguistics.md
-**Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Analysis | **Target:** 3500
+# Audit Report: M24 — 24-language-question-linguistics.md
+**Level:** LIT | **Module:** M24 | **Phase:** LIT.4 | **Pedagogy:** Analysis | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:31
+
+## Configuration
+**Type:** LIT
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вікторина з правопису | 4 | 1 | ✅ |
+| 2 | match-up | Абетки та їхні назви | 5 | 1 | ✅ |
+| 3 | fill-in | Термінологія реформ | 5 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз принципу | 1 | 1 | ✅ |
+| 5 | comparative-study | Декодування Ярижки | 1 | 1 | ✅ |
+| 6 | essay-response | Есе: Мова як кордон | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 6 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, critical-analysis, essay-response) ✅
+- Required types used: 3/6 (essay-response, match-up, quiz) ❌
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 24-language-question-linguistics.yaml: Schema validation error at key '2': {'title': 'Термінологія реформ', 'type': 'fill-in', 'items': [{'sentence': 'Пантелеймон Куліш скасував літеру ___ з кінця слів.', 'answer': 'єри', 'options': ['єри', 'ять', 'фіта', 'іжиця']}, {'sentence': 'Система "пишу як чую" називається ___ принципом.', 'answer': 'фонетичним', 'options': ['фонетичним', 'етимологічним', 'історичним', 'традиційним']}, {'sentence': 'Російська імперія намагалася нав’язати ___ правопис.', 'answer': 'етимологічний', 'options': ['етимологічний', 'фонетичний', 'новий', 'старий']}, {'sentence': 'Борис Грінченко видав відомий ___ української мови.', 'answer': 'словник', 'options': ['словник', 'підручник', 'буквар', 'катехизм']}, {'sentence': 'В Галичині використовували правопис ___ до 1922 року.', 'answer': 'Желехівка', 'options': ['Желехівка', 'Максимовичівка', 'Драгоманівка', 'Кулішівка']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 3411/3500 (89 short)
+- **Words:** ❌ 3411/4000 (raw: 3588)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 23/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)

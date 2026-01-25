@@ -1,20 +1,65 @@
-# Audit Report: 31-numeral-declension-time-dates.md
-**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M31 — 31-numeral-declension-time-dates.md
+**Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:22
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір правильного вираження часу | 16 | 8 | ✅ |
+| 2 | fill-in | Доповніть вирази з датами | 8 | 8 | ✅ |
+| 3 | match-up | Зіставте час | 12 | 8 | ✅ |
+| 4 | error-correction | Виправте помилки у виразах часу та дат | 6 | 6 | ✅ |
+| 5 | true-false | Правда чи хибність | 8 | 8 | ✅ |
+| 6 | group-sort | Розподіліть місяці за сезонами | 16 | 14 | ✅ |
+| 7 | unjumble | Складіть речення про час і дати | 10 | 6 | ✅ |
+| 8 | cloze | Прочитайте розклад і заповніть пропуски | 14 | 14 | ✅ |
+| 9 | select | Оберіть усі правильні варіанти | 6 | 6 | ✅ |
+| 10 | translate | Перекладіть вирази часу та дат | 6 | 6 | ✅ |
+| 11 | mark-the-words | Знайдіть вирази часу та дати | 7 | 6 | ✅ |
+| 12 | fill-in | Заповніть розклад заходів | 8 | 8 | ✅ |
+| 13 | essay-response | Мій ідеальний день | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-numeral-declension-time-dates.yaml: Schema validation error at key '11': {'type': 'fill-in', 'title': 'Заповніть розклад заходів', 'items': [{'sentence': 'Збори починаються ___ (09:00).', 'answer': "о дев'ятій", 'options': ["о дев'ятій", "в дев'ять", "на дев'яту", "дев'ять нуль нуль"]}, {'sentence': 'Обід ___ (13:30).', 'answer': 'о пів на другу', 'options': ['о пів на другу', 'в пол другого', 'о тринадцять тридцять', 'тринадцять тридцять']}, {'sentence': 'Презентація ___ (15:15).', 'answer': 'о чверть на четверту', 'options': ['о чверть на четверту', "в п'ятнадцять четвертого", "о третій п'ятнадцять", "п'ятнадцять на четверту"]}, {'sentence': 'Кава-брейк ___ (16:45).', 'answer': "за чверть п'ята", 'options': ["за чверть п'ята", "без чверті п'ять", "о шістнадцять сорок п'ять", "шістнадцять сорок п'ять"]}, {'sentence': 'Вечеря ___ (19:00).', 'answer': "о дев'ятнадцятій", 'options': ["о дев'ятнадцятій", "в дев'ятнадцять", 'на сьому вечора', "дев'ятнадцять нуль нуль"]}, {'sentence': 'Концерт ___ (20:00).', 'answer': 'о двадцятій', 'options': ['о двадцятій', 'в двадцять', 'на восьму', 'двадцять годин']}, {'sentence': 'Салют ___ (22:00).', 'answer': 'о двадцять другій', 'options': ['о двадцять другій', 'в двадцять два', 'на десяту', 'двадцять друга']}, {'sentence': "Від'їзд ___ (23:30).", 'answer': 'о пів на дванадцяту', 'options': ['о пів на дванадцяту', 'в пол дванадцятого', 'о двадцять три тридцять', 'двадцять три тридцять']}], 'instruction': 'Запишіть час словами у правильній формі.'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1837/1750
+- **Words:** ✅ 1837/1750 (raw: 2043)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 51/25
+- **Vocab:** ⚠️ 2 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
@@ -44,7 +89,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
-| **Вступ** | ⚪️ | 146 | Skipped |
+| **Вступ** | ✅ | 146 | Included in Core |
 | **Граматика** | ⚪️ | 457 | Skipped |
 | **Особливості відмінювання дат** | ⚪️ | 229 | Skipped |
 | **Частини доби: Ранок, День, Вечір, Ніч** | ⚪️ | 85 | Skipped |

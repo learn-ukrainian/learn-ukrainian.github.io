@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M53 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:34:11
+**Generated:** 2026-01-25 19:22:37
 
 ## Configuration
 **Type:** B1-vocab
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 51/35
+- **Vocab:** ✅ 47/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

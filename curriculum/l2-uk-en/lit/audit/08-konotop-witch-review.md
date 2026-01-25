@@ -1,20 +1,61 @@
-# Audit Report: 08-konotop-witch.md
-**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M08 — 08-konotop-witch.md
+**Level:** LIT | **Module:** M08 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:05
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | essay-response | Есе-Роздум: Гумор: Скальпель чи Наркоз? | 1 | 1 | ✅ |
+| 2 | essay-response | Дискусія: Жінка і Влада | 1 | 1 | ✅ |
+| 3 | reading | Читальна Зала: Анатомія Занепаду | 3 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз Тексту: Мова Бюрократії | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
+- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Адміністративна реформа знищила залишки козацького самоврядування.". Shares significant keywords with sentence at index 104.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Забрьоха і Пістряк стали жертвами системи, якій вони так вірно служили.". Shares significant keywords with sentence at index 105.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3630/3500
+- **Words:** ❌ 3630/4000 (raw: 4299)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)

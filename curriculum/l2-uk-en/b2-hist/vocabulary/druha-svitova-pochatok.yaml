@@ -1,0 +1,127 @@
+module: druha-svitova-pochatok
+level: B2
+version: '1.0'
+items:
+  - lemma: окупація
+    ipa: /o.ku.ˈpa.t͡sʲi.jɐ/
+    translation: occupation
+    pos: noun
+    gender: f
+  - lemma: пакт
+    ipa: /pakt/
+    translation: pact, treaty
+    pos: noun
+    gender: m
+  - lemma: терор
+    ipa: /ˈtɛ.ror/
+    translation: terror
+    pos: noun
+    gender: m
+  - lemma: геноцид
+    ipa: /ɦɛ.no.ˈt͡sɪd/
+    translation: genocide
+    pos: noun
+    gender: m
+  - lemma: Голокост
+    ipa: /ɦo.lo.ˈkost/
+    translation: Holocaust
+    pos: noun
+    gender: m
+  - lemma: остарбайтер
+    ipa: /os.tar.ˈbaj.tɛr/
+    translation: Ostarbeiter (forced laborer)
+    pos: noun
+    gender: m
+  - lemma: примусова праця
+    ipa: /prɪ.mu.ˈso.wa ˈpra.t͡sʲɐ/
+    translation: forced labor
+    pos: phrase
+  - lemma: спротив
+    ipa: /ˈspro.tɪw/
+    translation: resistance
+    pos: noun
+    gender: m
+  - lemma: підпілля
+    ipa: /pid.ˈpʲi.lʲːɐ/
+    translation: underground, resistance movement
+    pos: noun
+    gender: n
+  - lemma: загарбник
+    ipa: /za.ˈɦar.bnɪk/
+    translation: invader, aggressor
+    pos: noun
+    gender: m
+  - lemma: фронт
+    ipa: /front/
+    translation: front (military)
+    pos: noun
+    gender: m
+  - lemma: визволення
+    ipa: /vɪz.wo.ˈlɛnʲ.ːɐ/
+    translation: liberation
+    pos: noun
+    gender: n
+  - lemma: режим
+    ipa: /rɛ.ˈʒɪm/
+    translation: regime
+    pos: noun
+    gender: m
+  - lemma: меморіал
+    ipa: /mɛ.mo.rʲi.ˈal/
+    translation: memorial
+    pos: noun
+    gender: m
+  - lemma: пам'ять
+    ipa: /ˈpamʲ.jatʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: депортація
+    ipa: /dɛ.por.ˈta.t͡sʲi.jɐ/
+    translation: deportation
+    pos: noun
+    gender: f
+  - lemma: репресія
+    ipa: /rɛ.ˈprɛ.sʲi.jɐ/
+    translation: repression
+    pos: noun
+    gender: f
+  - lemma: колаборант
+    ipa: /ko.la.bo.ˈrant/
+    translation: collaborator
+    pos: noun
+    gender: m
+  - lemma: партизан
+    ipa: /par.tɪ.ˈzan/
+    translation: partisan
+    pos: noun
+    gender: m
+  - lemma: в'язень
+    ipa: /ˈwʲja.zɛnʲ/
+    translation: prisoner
+    pos: noun
+    gender: m
+  - lemma: жертва
+    ipa: /ˈʒɛrt.wa/
+    translation: victim
+    pos: noun
+    gender: f
+  - lemma: злочин
+    ipa: /ˈzlo.t͡ʃɪn/
+    translation: crime
+    pos: noun
+    gender: m
+  - lemma: анексія
+    ipa: /a.ˈnɛk.sʲi.jɐ/
+    translation: annexation
+    pos: noun
+    gender: f
+  - lemma: каральний
+    ipa: /ka.ˈralʲ.nɪj/
+    translation: punitive
+    pos: adj
+  - lemma: деколонізація
+    ipa: /dɛ.ko.lo.nʲi.ˈza.t͡sʲi.jɐ/
+    translation: decolonization
+    pos: noun
+    gender: f

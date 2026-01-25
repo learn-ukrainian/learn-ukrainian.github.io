@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M41 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:25
+**Generated:** 2026-01-25 20:07:26
 
 ## Configuration
 **Type:** A1
@@ -42,7 +42,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 63/1
+- **Vocab:** ✅ 62/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

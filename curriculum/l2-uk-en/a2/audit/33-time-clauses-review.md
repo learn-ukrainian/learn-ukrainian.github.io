@@ -1,7 +1,7 @@
 # Audit Report: M33 — 33-time-clauses.md
 **Level:** A2 | **Module:** M33 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:11:56
+**Generated:** 2026-01-25 19:30:39
 
 ## Configuration
 **Type:** A2-grammar
@@ -42,9 +42,9 @@
   - FIX: Break into shorter sentences. First 5 words: 'Щоб розповісти цікаву історію або...'
 - **[COMPLEXITY]** Sentence too long for A2: 24 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Ви дізнаєтеся як розрізняти тривалі...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, недоконаний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, недоконаний, доконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): раз, щойно, разу, перш, доки...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): перш, раз, щойно, доки, ледве...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

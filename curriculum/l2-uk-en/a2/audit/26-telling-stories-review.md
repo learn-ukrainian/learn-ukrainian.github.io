@@ -1,7 +1,7 @@
 # Audit Report: M26 — 26-telling-stories.md
 **Level:** A2 | **Module:** M26 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:03:47
+**Generated:** 2026-01-25 19:30:14
 
 ## Configuration
 **Type:** A2-vocab
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "- Навчилися додавати драми за допомогою слова **раптом**.". Shares significant keywords with sentence at index 12.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (22 words): цього, згодом, но, цим, нарешті...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (22 words): несподівано, цього, раніше, врешті, цим...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -54,7 +54,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/1
+- **Vocab:** ✅ 27/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations

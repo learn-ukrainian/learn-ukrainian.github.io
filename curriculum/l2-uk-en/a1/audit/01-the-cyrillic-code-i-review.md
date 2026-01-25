@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:53:54
+**Generated:** 2026-01-25 20:06:55
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): музика, тато, хокей, студент, турист...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): музика, мама, студент, доктор, турист...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

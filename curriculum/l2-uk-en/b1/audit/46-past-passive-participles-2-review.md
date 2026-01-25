@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M46 | **Phase:** B1.4 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:20:32
+**Generated:** 2026-01-25 19:22:33
 
 ## Configuration
 **Type:** B1-grammar
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 64/25
+- **Vocab:** ✅ 69/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

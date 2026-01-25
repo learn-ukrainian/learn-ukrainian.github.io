@@ -1,47 +1,112 @@
-# Audit Report: 13-abstract-writing.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
+# Audit Report: M13 — 13-abstract-writing.md
+**Level:** C1 | **Module:** M13 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:12
+
+## Configuration
+**Type:** C1-grammar
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, essay-response, fill-in, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Анатомія анотації | 8 | 5 | ✅ |
+| 2 | match-up | Об'єкт vs Предмет | 8 | 6 | ✅ |
+| 3 | fill-in | Кліше анотації | 8 | 6 | ✅ |
+| 4 | group-sort | Сортування: Описова vs Інформативна | 18 | 12 | ✅ |
+| 5 | error-correction | Стислість: Редагування | 6 | 5 | ✅ |
+| 6 | match-up | Академічні синоніми | 8 | 6 | ✅ |
+| 7 | match-up | Компоненти анотації (English vs Ukrainian) | 8 | 6 | ✅ |
+| 8 | unjumble | Складання речення: Номіналізація | 6 | 5 | ✅ |
+| 9 | true-false | Логіка побудови | 8 | 5 | ✅ |
+| 10 | match-up | Переклад термінів | 8 | 6 | ✅ |
+| 11 | quiz | Вибір дієслова | 8 | 5 | ✅ |
+| 12 | true-false | Пошук 'води' | 8 | 5 | ✅ |
+| 13 | fill-in | Академічна пунктуація | 8 | 6 | ✅ |
+| 14 | match-up | Сигнали переказу | 8 | 6 | ✅ |
+| 15 | quiz | Регістр: Академічний ремонт | 8 | 5 | ✅ |
+| 16 | essay-response | Письмове завдання: Написання анотації | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 12-16) ✅
+- Unique types: 8 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 5/6 (error-correction, essay-response, fill-in, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 13-abstract-writing.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2230/2000
+- **Words:** ❌ 2230/3000 (raw: 2461)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (target 90-100%)
-- **Richness:** ✅ 95% (academic)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
+- **Richness:** ❌ 82% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** academic
+**Score:** 82% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| citations | 19 | 5 | 100% | 24% | 23.8% |
-| data_refs | 19 | 3 | 100% | 19% | 19.0% |
-| visual | 15 | 5 | 100% | 14% | 14.3% |
-| questions | 15 | 4 | 100% | 14% | 14.3% |
-| engagement | 11 | 5 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 10% | 9.3% |
-| cultural | 0 | - | 0% | 5% | 0.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.0%** |
+| examples | 26 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 2 | 4 | 50% | 15% | 7.5% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 15 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **82.3%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_CULTURAL_ANCHOR**
+  - FIX:
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 101 | Included in Core |
-| **Вступ** | ⚪️ | 173 | Skipped |
+| **Вступ** | ✅ | 173 | Included in Core |
 | **Розділ 1: Що таке анотація і навіщо вона потрібна** | ⚪️ | 335 | Skipped |
 | **Розділ 2: Структура ідеальної анотації** | ⚪️ | 227 | Skipped |
 | **Розділ 3: Об'єкт і Предмет дослідження — в чому різниця?** | ⚪️ | 298 | Skipped |

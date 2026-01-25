@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M33 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:17
+**Generated:** 2026-01-25 20:07:17
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): дарувати, листівка, торт, отримувати, гості...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): весілля, листівка, народження, музика, свічка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

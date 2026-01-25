@@ -1,20 +1,70 @@
 # Audit Report: M94 — 94-b2-final-exam.md
 **Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:03
+
+## Configuration
+**Type:** B2-checkpoint
+**Word Target:** 1750 words
+**Activities:** 15-19 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥10 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Професійна електронна пошта - Формальність | 10 | 8 | ✅ |
+| 2 | error-correction | Виправлення помилок у професійному листі | 10 | 6 | ✅ |
+| 3 | match-up | Структура професійного звіту | 14 | 8 | ✅ |
+| 4 | fill-in | Формулювання рекомендацій у звіті | 10 | 8 | ✅ |
+| 5 | group-sort | Класифікація тверджень - Факт чи Думка | 21 | 14 | ✅ |
+| 6 | quiz | Виявлення упередження в медіа | 10 | 8 | ✅ |
+| 7 | unjumble | Структура презентації - Розташуйте речення | 13 | 6 | ✅ |
+| 8 | fill-in | Відповіді на питання під час презентації | 10 | 8 | ✅ |
+| 9 | match-up | Структура аргументації в дискусії | 14 | 8 | ✅ |
+| 10 | fill-in | Формулювання аргументів у дискусії | 10 | 8 | ✅ |
+| 11 | cloze | Інтегроване професійне спілкування | 15 | 14 | ✅ |
+| 12 | true-false | Комунікаційні навички - Перевірка знань | 14 | 8 | ✅ |
+| 13 | mark-the-words | Виділення ключових елементів професійного тексту | 21 | 6 | ✅ |
+| 14 | translate | Переклад професійної термінології | 8 | 6 | ✅ |
+| 15 | select | Множинний вибір - Характеристики професійного спілкування | 8 | 6 | ✅ |
+| 16 | quiz | Підсумкова перевірка комунікаційних навичок | 13 | 8 | ✅ |
+| 17 | essay-response | Написання професійного листа електронною поштою | 1 | 1 | ✅ |
+| 18 | comparative-study | Порівняльний аналіз медіатекстів на одну тему | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 18 (target: 15-19) ✅
+- Unique types: 13 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- ☐ Чи використовуєте конкретні цифри та факти замість загальних фраз?". Shares significant keywords with sentence at index 42.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2566/1750
+- **Words:** ✅ 2566/1750 (raw: 2756)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 45/10
+- **Vocab:** ⚠️ 8 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (18 activities)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
@@ -36,12 +86,6 @@
 | visual | 7 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
 | **TOTAL** | | | | | **99.2%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (18 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

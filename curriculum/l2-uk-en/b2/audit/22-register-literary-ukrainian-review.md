@@ -1,17 +1,54 @@
-# Audit Report: 22-register-literary-ukrainian.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M22 — 22-register-literary-ukrainian.md
+**Level:** B2 | **Module:** M22 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:23:16
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Визначення образних засобів | 16 | 8 | ✅ |
+| 2 | match-up | Образні засоби та приклади | 16 | 8 | ✅ |
+| 3 | cloze | Визначення образних засобів | 16 | 14 | ✅ |
+| 4 | true-false | Характеристики літературного стилю | 16 | 8 | ✅ |
+| 5 | group-sort | Класифікація лексики за стилем | 18 | 14 | ✅ |
+| 6 | unjumble | Речення з інверсією | 16 | 6 | ✅ |
+| 7 | error-correction | Стилістичні помилки в літературному тексті | 16 | 6 | ✅ |
+| 8 | cloze | Характеристики літературного стилю | 16 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть метафори та порівняння | 9 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні відповіді | 16 | 6 | ✅ |
+| 11 | translate | Трансформація в літературний стиль | 16 | 6 | ✅ |
+| 12 | quiz | Аналіз літературних текстів | 16 | 8 | ✅ |
+| 13 | fill-in | Трансформація в літературний стиль | 16 | 8 | ✅ |
+| 14 | essay-response | Творча майстерня | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2199/1750
+- **Words:** ✅ 2199/1750 (raw: 2751)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 162/25
+- **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ⚪️ | 56 | Skipped |
+| **Вступ** | ✅ | 56 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 220 | Included in Core |
 | **Пояснення** | ⚪️ | 954 | Skipped |
 | **Як визначити літературний стиль?** | ⚪️ | 58 | Skipped |

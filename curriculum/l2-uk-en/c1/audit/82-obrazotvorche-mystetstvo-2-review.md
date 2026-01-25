@@ -1,31 +1,72 @@
-# Audit Report: 178-obrazotvorche-mystetstvo-2.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M82 — 82-obrazotvorche-mystetstvo-2.md
+**Level:** C1 | **Module:** M82 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:55
+
+## Configuration
+**Type:** C1-fine-arts
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Мистецтво XX-XXI століття | 12 | 5 | ✅ |
+| 2 | match-up | Митці та їхні твори/стилі | 10 | 6 | ✅ |
+| 3 | cloze | Феномен Марії Примаченко | 12 | 12 | ✅ |
+| 4 | fill-in | Термінологія сучасного мистецтва | 10 | 6 | ✅ |
+| 5 | essay-response | Есе: Мистецтво і тоталітаризм | 1 | 1 | ✅ |
+| 6 | true-false | Міфи та реальність | 10 | 5 | ✅ |
+| 7 | group-sort | Класифікація творчості | 15 | 12 | ✅ |
+| 8 | mark-the-words | Аналіз опису картини | 7 | 5 | ✅ |
+| 9 | translate | Мистецькі концепції | 8 | 5 | ✅ |
+| 10 | unjumble | Тези про сучасне мистецтво | 6 | 5 | ✅ |
+| 11 | select | Творчість Івана Марчука | 8 | 5 | ✅ |
+| 12 | critical-analysis | Аналіз творчості Алли Горської | 1 | 1 | ✅ |
+| 13 | comparative-study | Наївне vs Професійне | 1 | 1 | ✅ |
+| 14 | reading | Маніфест шістдесятників | 3 | 3 | ✅ |
+| 15 | unjumble | Цитати Марії Примаченко | 8 | 5 | ✅ |
+| 16 | true-false | Інституції сучасного мистецтва | 10 | 5 | ✅ |
+| 17 | fill-in | Мурали Києва | 10 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 17 (target: 12-16) ❌
+- Unique types: 14 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Цитати Марії Примаченко' item 4 has 10 words (target: 12-20)
   - FIX: Adjust sentence length to 12-20 words to match C1 complexity.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 178-obrazotvorche-mystetstvo-2.yaml: Schema validation error at key 'blanks': [{'id': 1, 'answer': 'світ', 'options': ['світ', 'село', 'місто', 'район']}, {'id': 2, 'answer': 'освіти', 'options': ['освіти', 'фарби', 'хати', 'землі']}, {'id': 3, 'answer': 'звірі', 'options': ['звірі', 'люди', 'будинки', 'машини']}, {'id': 4, 'answer': 'назву', 'options': ['назву', 'ціну', 'раму', 'вагу']}, {'id': 5, 'answer': 'атомну', 'options': ['атомну', 'холодну', 'стару', 'нову']}, {'id': 6, 'answer': 'наївним', 'options': ['наївним', 'суворим', 'нудним', 'швидким']}, {'id': 7, 'answer': 'фарби', 'options': ['фарби', 'олівці', 'ручки', 'нитки']}, {'id': 8, 'answer': 'фантазії', 'options': ['фантазії', 'бідності', 'ліні', 'роботи']}, {'id': 9, 'answer': 'модний', 'options': ['модний', 'старий', 'брудний', 'дешевий']}, {'id': 10, 'answer': 'ідентичності', 'options': ['ідентичності', 'слабкості', 'байдужості', 'покори']}, {'id': 11, 'answer': 'щирістю', 'options': ['щирістю', 'хитрістю', 'злістю', 'нудьгою']}, {'id': 12, 'answer': 'диво', 'options': ['диво', 'гроші', 'біду', 'страх']}] is too short
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 82-obrazotvorche-mystetstvo-2.yaml: Schema validation error at key 'words': ['Я', 'люблю', 'малювати', 'людям', 'на', 'велику', 'радість', 'щоб', 'всі', 'були', 'щасливі'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 1987/2000 (13 short)
-- **Activities:** ✅ 16/12
+- **Words:** ❌ 1987/3000 (raw: 2098)
+- **Activities:** ✅ 17/12
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 13/4 types
+- **Unique_types:** ✅ 14/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ✅ Content-heavy OK (16 activities)
+- **Content_heavy:** ⚠️ Too many activities: 17 (target 12-16)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (fine-arts))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -52,7 +93,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |
-| **Вступ: Мистецтво в лещатах ідеології** | ⚪️ | 121 | Skipped |
+| **Вступ: Мистецтво в лещатах ідеології** | ✅ | 121 | Included in Core |
 | **Наївне мистецтво: Душа народу** | ⚪️ | 357 | Skipped |
 | **Шістдесятники: Мистецтво спротиву** | ⚪️ | 225 | Skipped |
 | **Іван Марчук: Геній пльонтанізму** | ⚪️ | 183 | Skipped |

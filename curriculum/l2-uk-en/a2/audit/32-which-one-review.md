@@ -1,7 +1,7 @@
 # Audit Report: M32 — 32-which-one.md
 **Level:** A2 | **Module:** M32 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:09:39
+**Generated:** 2026-01-25 19:30:36
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося використовувати який...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, займенник, прикметник, називний, знахідний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, називний, прикметник, місцевий, займенник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -54,7 +54,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 10/1
+- **Vocab:** ✅ 9/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations

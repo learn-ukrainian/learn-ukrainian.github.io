@@ -1,7 +1,7 @@
 # Audit Report: M29 — 29-i-think-that.md
 **Level:** A2 | **Module:** M29 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:06:08
+**Generated:** 2026-01-25 19:30:26
 
 ## Configuration
 **Type:** A2-vocab
@@ -42,7 +42,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося бути не...'
 - **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Дієслово думки що Думка українській...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): гадати, мою, неправда, здається, здаватися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): здаватися, моєї, думку, зору, можливо...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

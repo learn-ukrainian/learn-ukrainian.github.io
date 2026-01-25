@@ -1,8 +1,8 @@
 # Audit Report: M14 — 14-future-plans-and-promises.md
 **Level:** A2 | **Module:** M14 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 18:00:41
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:40:35
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,29 +38,20 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): забуду, загублю, увійду...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1245/1000 (raw: 1569)
+- **Words:** ✅ 1231/1000 (raw: 1555)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/1
+- **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.6% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 47.2% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -69,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 321 | Included in Core |
-| **Presentation / Презентація** | ✅ | 371 | Included in Core |
+| **Presentation / Презентація** | ✅ | 357 | Included in Core |
 | **Practice / Практика** | ⚪️ | 207 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 202 | Included in Core |
 | **Summary / Підсумок** | ✅ | 94 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M42 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:27
+**Generated:** 2026-01-25 20:07:27
 
 ## Configuration
 **Type:** A1
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): знайомство, приємно, познайомитися, професія, приїхати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): приємно, знайомство, вивчати, цікавитися, професія...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

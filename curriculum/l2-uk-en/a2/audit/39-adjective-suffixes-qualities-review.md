@@ -1,7 +1,7 @@
 # Audit Report: M39 — 39-adjective-suffixes-qualities.md
 **Level:** A2 | **Module:** M39 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 15:21:58
+**Generated:** 2026-01-25 19:31:00
 
 ## Configuration
 **Type:** A2-grammar
@@ -44,7 +44,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'яний зазвичай вказує на те...'
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): водій, домик, важливість, вчитель, глядач...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): молодість, навчання, глядач, вчитель, ручечка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -60,7 +60,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 97/1
+- **Vocab:** ✅ 70/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 3 violations

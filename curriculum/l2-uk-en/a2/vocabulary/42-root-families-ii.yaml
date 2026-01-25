@@ -3,145 +3,770 @@ level: A2
 version: '2.0'
 items:
 - lemma: думка
-  ipa: /dˈumka/
-  translation: thought, opinion
+  ipa: /dumka/
+  translation: thought/opinion
   pos: noun
   gender: f
 - lemma: думати
-  ipa: /dˈumatɪ/
+  ipa: /dumatɪ/
   translation: to think
   pos: verb
 - lemma: роздуми
-  ipa: /rˈɔzdumɪ/
-  translation: reflections, thoughts
+  ipa: /rɔzdumɪ/
+  translation: reflections
   pos: noun
-  gender: m-pl
+  gender: m
 - lemma: задуматися
-  ipa: /zadˈumatɪsʲa/
-  translation: to ponder, to think deeply
+  ipa: /zadumatɪsʲa/
+  translation: to ponder
   pos: verb
 - lemma: щоденник
-  ipa: /ʃt͡ʃɔdˈɛnnɪk/
+  ipa: /ʃt͡ʃɔdɛnːɪk/
   translation: diary
   pos: noun
   gender: m
 - lemma: говорити
-  ipa: /ɦɔʋɔrˈɪtɪ/
-  translation: to speak, to talk
+  ipa: /ɦɔvɔrɪtɪ/
+  translation: to speak
   pos: verb
 - lemma: розмова
-  ipa: /rɔzmˈɔʋa/
+  ipa: /rɔzmɔva/
   translation: conversation
   pos: noun
   gender: f
+- lemma: договір
+  ipa: /dɔhɔvir/
+  translation: agreement
+  pos: noun
+  gender: m
 - lemma: мова
-  ipa: /mˈɔʋa/
+  ipa: /mɔva/
   translation: language
   pos: noun
   gender: f
-- lemma: промовець
-  ipa: /prɔmˈɔʋɛt͡sʲ/
-  translation: speaker, orator
-  pos: noun
-  gender: m
-- lemma: відмова
-  ipa: /ʋidmˈɔʋa/
-  translation: refusal
-  pos: noun
-  gender: f
 - lemma: вимова
-  ipa: /ʋɪmˈɔʋa/
+  ipa: /vɪmɔva/
   translation: pronunciation
   pos: noun
   gender: f
-- lemma: слухати
-  ipa: /slˈuxatɪ/
-  translation: to listen
-  pos: verb
+- lemma: промова
+  ipa: /prɔmɔva/
+  translation: speech
+  pos: noun
+  gender: f
+- lemma: відмова
+  ipa: /vidmɔva/
+  translation: refusal
+  pos: noun
+  gender: f
 - lemma: чути
-  ipa: /t͡ʃˈutɪ/
+  ipa: /t͡ʃutɪ/
   translation: to hear
   pos: verb
+- lemma: чув
+  ipa: /t͡ʃuv/
+  translation: heard (past m)
+  pos: verb
+- lemma: слухати
+  ipa: /sluxatɪ/
+  translation: to listen
+  pos: verb
 - lemma: слухач
-  ipa: /sluxˈat͡ʃ/
+  ipa: /sluxat͡ʃ/
   translation: listener
   pos: noun
   gender: m
 - lemma: слухняний
-  ipa: /sluxnʲˈanɪj/
+  ipa: /sluxnʲanɪj/
   translation: obedient
   pos: adj
+- lemma: послух
+  ipa: /pɔslux/
+  translation: obedience
+  pos: noun
+  gender: m
 - lemma: прислухатися
-  ipa: /prɪslˈuxatɪsʲa/
-  translation: to listen closely, to heed
+  ipa: /prɪsluxatɪsʲa/
+  translation: to heed/listen closely
   pos: verb
-- lemma: логічний
-  ipa: /lɔɦˈit͡ʃnɪj/
-  translation: logical
-  pos: adj
-- lemma: професійний
-  ipa: /prɔfɛsˈijnɪj/
-  translation: professional
-  pos: adj
-- lemma: термінологія
-  ipa: /tɛrmіnɔlɔɦіja/
-  translation: terminology
-  pos: noun
-  gender: f
-- lemma: спілкування
-  ipa: /spіlkuʋannja/
-  translation: communication
+- lemma: бачення
+  ipa: /bat͡ʃɛnʲːa/
+  translation: vision/view
   pos: noun
   gender: n
-- lemma: вигляд
-  ipa: /ʋɪɦljad/
-  translation: appearance
-  pos: noun
-  gender: m
-- lemma: відчуття
-  ipa: /ʋid͡ʃuttja/
-  translation: feeling, sensation
+- lemma: обдумати
+  ipa: /ɔbdumatɪ/
+  translation: to think over
+  pos: verb
+- lemma: мовчання
+  ipa: /mɔvt͡ʃanʲːa/
+  translation: silence
   pos: noun
   gender: n
-- lemma: розмова
-  ipa: /rɔzmɔʋa/
-  translation: conversation
-  pos: noun
-  gender: f
-- lemma: подія
-  ipa: /pɔdija/
-  translation: event
-  pos: noun
-  gender: f
-- lemma: обмін
-  ipa: /ɔbmin/
-  translation: exchange
+- lemma: погляд
+  ipa: /pɔhlʲad/
+  translation: look/glance/view
   pos: noun
   gender: m
+- lemma: чіткий
+  ipa: /t͡ʃitkɪj/
+  translation: clear/distinct
+  pos: adj
+- lemma: чіткою
+  ipa: /t͡ʃitkɔju/
+  translation: clear (instr f)
+  pos: adj
+- lemma: щовечора
+  ipa: /ʃt͡ʃɔvɛt͡ʃɔra/
+  translation: every evening
+  pos: adv
+- lemma: юридичний
+  ipa: /jurɪdɪt͡ʃnɪj/
+  translation: legal
+  pos: adj
+- lemma: іграшка
+  ipa: /ihraʃka/
+  translation: toy
+  pos: noun
+  gender: f
 - lemma: ідея
   ipa: /idɛja/
   translation: idea
   pos: noun
   gender: f
-- lemma: виступ
-  ipa: /ʋɪstup/
-  translation: performance, speech
+- lemma: ідей
+  ipa: /idɛj/
+  translation: of ideas (gen pl)
+  pos: noun
+- lemma: ім'я
+  ipa: /imja/
+  translation: name
+  pos: noun
+  gender: n
+- lemma: імені
+  ipa: /imɛni/
+  translation: of name (gen)
+  pos: noun
+  gender: n
+- lemma: промовець
+  ipa: /prɔmɔvɛt͡sʲ/
+  translation: orator/speaker
   pos: noun
   gender: m
-- lemma: порада
-  ipa: /pɔrada/
-  translation: advice
+- lemma: подумати
+  ipa: /pɔdumatɪ/
+  translation: to think (perf)
+  pos: verb
+- lemma: відповідь
+  ipa: /vidpɔvidʲ/
+  translation: answer
   pos: noun
   gender: f
-- lemma: допомагати
-  ipa: /dɔpɔmaɦatɪ/
-  translation: to help
+- lemma: знати
+  ipa: /znatɪ/
+  translation: to know
   pos: verb
-- lemma: розуміти
-  ipa: /rɔzumitɪ/
-  translation: to understand
+- lemma: систематичний
+  ipa: /sɪstɛmatɪt͡ʃnɪj/
+  translation: systematic
+  pos: adj
+- lemma: систематично
+  ipa: /sɪstɛmatɪt͡ʃnɔ/
+  translation: systematically
+  pos: adv
+- lemma: сказати
+  ipa: /skazatɪ/
+  translation: to say
   pos: verb
-- lemma: ділитися
-  ipa: /dilitɪsʲa/
-  translation: to share
+- lemma: сказав
+  ipa: /skazav/
+  translation: said (past m)
   pos: verb
+- lemma: слово
+  ipa: /slɔvɔ/
+  translation: word
+  pos: noun
+  gender: n
+- lemma: слів
+  ipa: /sliv/
+  translation: words (gen pl)
+  pos: noun
+- lemma: спорт
+  ipa: /spɔrt/
+  translation: sport
+  pos: noun
+  gender: m
+- lemma: спорту
+  ipa: /spɔrtu/
+  translation: sport (gen)
+  pos: noun
+- lemma: спір
+  ipa: /spir/
+  translation: dispute
+  pos: noun
+  gender: m
+- lemma: створити
+  ipa: /stvɔrɪtɪ/
+  translation: to create
+  pos: verb
+- lemma: створіть
+  ipa: /stvɔritʲ/
+  translation: create (imp)
+  pos: verb
+- lemma: сісти
+  ipa: /sistɪ/
+  translation: to sit down
+  pos: verb
+- lemma: сіли
+  ipa: /silɪ/
+  translation: sat (past pl)
+  pos: verb
+- lemma: твій
+  ipa: /tvij/
+  translation: your
+  pos: pron
+- lemma: твою
+  ipa: /tvɔju/
+  translation: your (acc f)
+  pos: pron
+- lemma: трибуна
+  ipa: /trɪbuna/
+  translation: tribune
+  pos: noun
+  gender: f
+- lemma: трибуну
+  ipa: /trɪbunu/
+  translation: tribune (acc)
+  pos: noun
+- lemma: туди
+  ipa: /tudɪ/
+  translation: there (direction)
+  pos: adv
+- lemma: уважно
+  ipa: /uvaʒnɔ/
+  translation: attentively
+  pos: adv
+- lemma: формальний
+  ipa: /fɔrmalʲnɪj/
+  translation: formal
+  pos: adj
+- lemma: французький
+  ipa: /frant͡suzʲkɪj/
+  translation: French
+  pos: adj
+- lemma: французька
+  ipa: /frant͡suzʲka/
+  translation: French (f)
+  pos: adj
+- lemma: філософський
+  ipa: /filɔsɔfsʲkɪj/
+  translation: philosophical
+  pos: adj
+- lemma: хотіти
+  ipa: /xɔtitɪ/
+  translation: to want
+  pos: verb
+- lemma: хочу
+  ipa: /xɔt͡ʃu/
+  translation: I want
+  pos: verb
+- lemma: цей
+  ipa: /t͡sɛj/
+  translation: this
+  pos: pron
+- lemma: цю
+  ipa: /t͡sʲu/
+  translation: this (acc f)
+  pos: pron
+- lemma: цієї
+  ipa: /t͡sʲijɛji/
+  translation: this (gen f)
+  pos: pron
+- lemma: відчуття
+  ipa: /vidt͡ʃutʲːa/
+  translation: sensation/feeling
+  pos: noun
+  gender: n
+- lemma: вигляд
+  ipa: /vɪhlʲad/
+  translation: look/appearance
+  pos: noun
+  gender: m
+- lemma: мовлення
+  ipa: /mɔvlɛnʲːa/
+  translation: speech (process)
+  pos: noun
+  gender: n
+- lemma: мовець
+  ipa: /mɔvɛt͡sʲ/
+  translation: speaker (linguistic)
+  pos: noun
+  gender: m
+- lemma: передбачення
+  ipa: /pɛrɛdbat͡ʃɛnʲːa/
+  translation: prediction/foresight
+  pos: noun
+  gender: n
+- lemma: повернення
+  ipa: /pɔvɛrnɛnʲːa/
+  translation: return
+  pos: noun
+  gender: n
+- lemma: подія
+  ipa: /pɔdija/
+  translation: event
+  pos: noun
+  gender: f
+- lemma: події
+  ipa: /pɔdiji/
+  translation: events (pl)
+  pos: noun
+- lemma: почати
+  ipa: /pɔt͡ʃatɪ/
+  translation: to start
+  pos: verb
+- lemma: почав
+  ipa: /pɔt͡ʃav/
+  translation: started (past m)
+  pos: verb
+- lemma: почалася
+  ipa: /pɔt͡ʃalasʲa/
+  translation: started (past f)
+  pos: verb
+- lemma: практикувати
+  ipa: /praktɪkuvatɪ/
+  translation: to practice
+  pos: verb
+- lemma: практикую
+  ipa: /praktɪkuju/
+  translation: I practice
+  pos: verb
+- lemma: президент
+  ipa: /prɛzɪdɛnt/
+  translation: president
+  pos: noun
+  gender: m
+- lemma: президента
+  ipa: /prɛzɪdɛnta/
+  translation: of president (gen)
+  pos: noun
+- lemma: промовчання
+  ipa: /prɔmɔvt͡ʃanʲːa/
+  translation: silence/omission
+  pos: noun
+  gender: n
+- lemma: просити
+  ipa: /prɔsɪtɪ/
+  translation: to ask
+  pos: verb
+- lemma: просив
+  ipa: /prɔsɪv/
+  translation: asked (past m)
+  pos: verb
+- lemma: публіка
+  ipa: /publika/
+  translation: public
+  pos: noun
+  gender: f
+- lemma: публікою
+  ipa: /publikɔju/
+  translation: by public (instr)
+  pos: noun
+- lemma: пістолет
+  ipa: /pistɔlɛt/
+  translation: pistol
+  pos: noun
+  gender: m
+- lemma: раптом
+  ipa: /raptɔm/
+  translation: suddenly
+  pos: adv
+- lemma: робити
+  ipa: /rɔbɪtɪ/
+  translation: to do
+  pos: verb
+- lemma: робила
+  ipa: /rɔbɪla/
+  translation: did (past f)
+  pos: verb
+- lemma: роз-
+  ipa: /rɔz/
+  translation: roz- prefix
+  pos: prefix
+- lemma: розмовляти
+  ipa: /rɔzmɔvlʲatɪ/
+  translation: to converse
+  pos: verb
+- lemma: увага
+  ipa: /uvaha/
+  translation: attention
+  pos: noun
+  gender: f
+- lemma: увазі
+  ipa: /uvazi/
+  translation: attention (loc)
+  pos: noun
+- lemma: чий
+  ipa: /t͡ʃɪj/
+  translation: whose
+  pos: pron
+- lemma: чиєсь
+  ipa: /t͡ʃɪjɛsʲ/
+  translation: someone's (neut)
+  pos: pron
+- lemma: який
+  ipa: /jakɪj/
+  translation: which
+  pos: pron
+- lemma: яку
+  ipa: /jaku/
+  translation: which (acc f)
+  pos: pron
+- lemma: слуханий
+  ipa: /sluxanɪj/
+  translation: listened (participle)
+  pos: adj
+- lemma: слушаний
+  ipa: /sluʃanɪj/
+  translation: listened (error form)
+  pos: adj
+- lemma: категоричний
+  ipa: /katɛɦɔrɪt͡ʃnɪj/
+  translation: categorical
+  pos: adj
+- lemma: категоричну
+  ipa: /katɛɦɔrɪt͡ʃnu/
+  translation: categorical (acc f)
+  pos: adj
+- lemma: кожен
+  ipa: /kɔʒɛn/
+  translation: every/each
+  pos: pron
+- lemma: кожний
+  ipa: /kɔʒnɪj/
+  translation: every
+  pos: pron
+- lemma: кожного
+  ipa: /kɔʒnɔhɔ/
+  translation: every (gen m)
+  pos: pron
+- lemma: коріння
+  ipa: /kɔrinʲːa/
+  translation: roots
+  pos: noun
+  gender: n
+- lemma: корінням
+  ipa: /kɔrinʲːam/
+  translation: roots (instr)
+  pos: noun
+- lemma: кричати
+  ipa: /krɪt͡ʃatɪ/
+  translation: to scream
+  pos: verb
+- lemma: кричить
+  ipa: /krɪt͡ʃɪtʲ/
+  translation: screams
+  pos: verb
+- lemma: логіка
+  ipa: /lɔhika/
+  translation: logic
+  pos: noun
+  gender: f
+- lemma: логікою
+  ipa: /lɔhikɔju/
+  translation: logic (instr)
+  pos: noun
+- lemma: людина
+  ipa: /lʲudɪna/
+  translation: person
+  pos: noun
+  gender: f
+- lemma: людьми
+  ipa: /lʲudʲmɪ/
+  translation: people (instr pl)
+  pos: noun
+- lemma: маємо
+  ipa: /majɛmɔ/
+  translation: we have
+  pos: verb
+- lemma: мов-
+  ipa: /mɔv/
+  translation: root mov
+  pos: root
+- lemma: мовч-
+  ipa: /mɔvt͡ʃ/
+  translation: root movch
+  pos: root
+- lemma: мовчати
+  ipa: /mɔvt͡ʃatɪ/
+  translation: to be silent
+  pos: verb
+- lemma: мовчить
+  ipa: /mɔvt͡ʃɪtʲ/
+  translation: is silent
+  pos: verb
+- lemma: можемо
+  ipa: /mɔʒɛmɔ/
+  translation: we can
+  pos: verb
+- lemma: можете
+  ipa: /mɔʒɛtɛ/
+  translation: you can
+  pos: verb
+- lemma: монолог
+  ipa: /mɔnɔlɔh/
+  translation: monologue
+  pos: noun
+  gender: m
+- lemma: мудра
+  ipa: /mudra/
+  translation: wise (f)
+  pos: adj
+- lemma: музичний
+  ipa: /muzɪt͡ʃnɪj/
+  translation: musical
+  pos: adj
+- lemma: музичному
+  ipa: /muzɪt͡ʃnɔmu/
+  translation: musical (loc m)
+  pos: adj
+- lemma: називати
+  ipa: /nazɪvatɪ/
+  translation: to name/call
+  pos: verb
+- lemma: називаємо
+  ipa: /nazɪvajɛmɔ/
+  translation: we call
+  pos: verb
+- lemma: неї
+  ipa: /nɛji/
+  translation: her (gen)
+  pos: pron
+- lemma: очима
+  ipa: /ɔt͡ʃɪma/
+  translation: with eyes (instr)
+  pos: noun
+- lemma: бач-
+  ipa: /bat͡ʃ/
+  translation: root bach
+  pos: root
+- lemma: почуття
+  ipa: /pɔt͡ʃutʲːa/
+  translation: feeling
+  pos: noun
+  gender: n
+- lemma: говоріння
+  ipa: /ɦɔvɔrinʲːa/
+  translation: speaking (process)
+  pos: noun
+  gender: n
+- lemma: говірка
+  ipa: /ɦɔvirkɐ/
+  translation: dialect/talkative
+  pos: adj
+- lemma: гучний
+  ipa: /ɦut͡ʃnɪj/
+  translation: loud
+  pos: adj
+- lemma: гучна
+  ipa: /ɦut͡ʃna/
+  translation: loud (f)
+  pos: adj
+- lemma: дати
+  ipa: /datɪ/
+  translation: to give
+  pos: verb
+- lemma: дав
+  ipa: /dav/
+  translation: gave (past m)
+  pos: verb
+- lemma: два
+  ipa: /dva/
+  translation: two
+  pos: num
+- lemma: двома
+  ipa: /dvɔma/
+  translation: two (instr)
+  pos: num
+- lemma: дискусія
+  ipa: /dɪskusija/
+  translation: discussion
+  pos: noun
+  gender: f
+- lemma: дискусії
+  ipa: /dɪskusiji/
+  translation: discussions (pl)
+  pos: noun
+- lemma: документ
+  ipa: /dɔkumɛnt/
+  translation: document
+  pos: noun
+  gender: m
+- lemma: дум-
+  ipa: /dum/
+  translation: root dum
+  pos: root
+- lemma: думання
+  ipa: /dumanʲːa/
+  translation: thinking
+  pos: noun
+  gender: n
+- lemma: духмяний
+  ipa: /duxmjanɪj/
+  translation: fragrant
+  pos: adj
+- lemma: духняний
+  ipa: /duxnjanɪj/
+  translation: distractor-fragrant
+  pos: adj
+- lemma: дякую
+  ipa: /dʲakuju/
+  translation: thank you
+  pos: verb
+- lemma: заперечення
+  ipa: /zapɛrɛt͡ʃɛnʲːa/
+  translation: objection/negation
+  pos: noun
+  gender: n
+- lemma: заслухати
+  ipa: /zasluxatɪ/
+  translation: to listen to (official)
+  pos: verb
+- lemma: захват
+  ipa: /zaxvat/
+  translation: delight
+  pos: noun
+  gender: m
+- lemma: захваті
+  ipa: /zaxvati/
+  translation: delight (loc)
+  pos: noun
+- lemma: зберігати
+  ipa: /zbɛrihatɪ/
+  translation: to keep/preserve
+  pos: verb
+- lemma: зберігаємо
+  ipa: /zbɛrihajɛmɔ/
+  translation: we keep
+  pos: verb
+- lemma: звук
+  ipa: /zvuk/
+  translation: sound
+  pos: noun
+  gender: m
+- lemma: звуків
+  ipa: /zvukiv/
+  translation: sounds (gen pl)
+  pos: noun
+- lemma: звучати
+  ipa: /zvut͡ʃatɪ/
+  translation: to sound
+  pos: verb
+- lemma: звучала
+  ipa: /zvut͡ʃala/
+  translation: sounded (past f)
+  pos: verb
+- lemma: здатність
+  ipa: /zdatnistʲ/
+  translation: ability
+  pos: noun
+  gender: f
+- lemma: казати
+  ipa: /kazatɪ/
+  translation: to say (imperf)
+  pos: verb
+- lemma: казала
+  ipa: /kazala/
+  translation: said (past f)
+  pos: verb
+- lemma: бешкетувати
+  ipa: /bɛʃkɛtuvatɪ/
+  translation: to misbehave
+  pos: verb
+- lemma: бешкетував
+  ipa: /bɛʃkɛtuvav/
+  translation: misbehaved (m)
+  pos: verb
+- lemma: би
+  ipa: /bɪ/
+  translation: would (particle)
+  pos: part
+- lemma: варто
+  ipa: /vartɔ/
+  translation: worth/should
+  pos: adv
+- lemma: ви
+  ipa: /vɪ/
+  translation: you
+  pos: pron
+- lemma: вас
+  ipa: /vas/
+  translation: you (acc)
+  pos: pron
+- lemma: вивчати
+  ipa: /vɪvt͡ʃatɪ/
+  translation: to learn
+  pos: verb
+- lemma: вивчаємо
+  ipa: /vɪvt͡ʃajɛmɔ/
+  translation: we learn
+  pos: verb
+- lemma: вийти
+  ipa: /vɪjtɪ/
+  translation: to go out
+  pos: verb
+- lemma: вийшов
+  ipa: /vɪjʃɔv/
+  translation: went out (m)
+  pos: verb
+- lemma: виконавець
+  ipa: /vɪkɔnavɛt͡sʲ/
+  translation: performer
+  pos: noun
+  gender: m
+- lemma: виконавців
+  ipa: /vɪkɔnavt͡siv/
+  translation: performers (gen)
+  pos: noun
+- lemma: вказувати
+  ipa: /vkazuvatɪ/
+  translation: to point/indicate
+  pos: verb
+- lemma: вказує
+  ipa: /vkazujɛ/
+  translation: indicates
+  pos: verb
+- lemma: відмовкати
+  ipa: /vidmɔvkatɪ/
+  translation: to fall silent (fake?)
+  pos: verb
+- lemma: глибокий
+  ipa: /hlɪbɔkɪj/
+  translation: deep
+  pos: adj
+- lemma: глибока
+  ipa: /hlɪbɔka/
+  translation: deep (f)
+  pos: adj
+- lemma: говор-
+  ipa: /hɔvɔr/
+  translation: speaking root
+  pos: root
+- lemma: говоримо
+  ipa: /hɔvɔrɪmɔ/
+  translation: we speak
+  pos: verb
+- lemma: замовчати
+  ipa: /zamɔvt͡ʃatɪ/
+  translation: to fall silent
+  pos: verb
+- lemma: іменник
+  ipa: /imɛnːɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dijɛslɔvɔ/
+  translation: verb
+  pos: noun
+  gender: n

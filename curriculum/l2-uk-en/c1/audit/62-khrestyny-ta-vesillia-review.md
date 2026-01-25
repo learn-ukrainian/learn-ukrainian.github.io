@@ -1,30 +1,61 @@
-# Audit Report: 158-khrestyny-ta-vesillia.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+# Audit Report: M62 — 62-khrestyny-ta-vesillia.md
+**Level:** C1 | **Module:** M62 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:42
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 158-khrestyny-ta-vesillia.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Весільні магічні дії', 'items': [{'question': 'Які з перелічених дій традиційно вважалися необхідними для забезпечення щасливої долі та злагоди в новій сім’ї під час весілля?', 'options': [{'text': 'Бгання короваю щасливими жінками', 'correct': True}, {'text': 'Винесення гарбуза небажаному свату', 'correct': False}, {'text': 'Спільне ставання молодих на рушник', 'correct': True}, {'text': 'Батьківське благословення з іконами', 'correct': True}, {'text': 'Швидкий переїзд до іншої країни', 'correct': False}, {'text': 'Покривання голови нареченої хусткою', 'correct': True}], 'min_correct': 4}, {'question': 'Які предмети традиційно входили до складу посагу української нареченої, гарантуючи її повагу в новій родині?', 'options': [{'text': 'Різьблена скриня з одягом', 'correct': True}, {'text': 'Десятки власноруч вишитих рушників', 'correct': True}, {'text': 'Сучасна електрична пральна машина', 'correct': False}, {'text': 'Свійська худоба (корова або вівці)', 'correct': True}, {'text': 'Земельний наділ у спадок від батька', 'correct': True}, {'text': 'Набір пластикового одноразового посуду', 'correct': False}], 'min_correct': 4}, {'question': 'Які весільні чини (ролі) були відповідальними за правильне проведення обрядів та захист молодих під час свята?', 'options': [{'text': 'Головний дружба', 'correct': True}, {'text': 'Почесні бояри', 'correct': True}, {'text': 'Випадкові перехожі', 'correct': False}, {'text': 'Старша дружка', 'correct': True}, {'text': 'Мудрі старости', 'correct': True}, {'text': 'Іноземні туристи', 'correct': False}], 'min_correct': 4}, {'question': 'Які сакральні об’єкти використовувалися під час хрестин для створення магічного захисту навколо дитини?', 'options': [{'text': 'Біле лляне крижмо', 'correct': True}, {'text': 'Тепла домашня піч', 'correct': True}, {'text': 'Залізний кожух', 'correct': True}, {'text': 'Сталевий гострий ніж', 'correct': False}, {'text': 'Скляне завішене дзеркало', 'correct': False}], 'min_correct': 3}, {'question': 'Які етнографічні терміни описують процеси переходу людини з одного соціального стану в інший в українській культурі?', 'options': [{'text': 'Обряд покривання', 'correct': True}, {'text': 'Духовне хрещення', 'correct': True}, {'text': 'Технічний ремонт', 'correct': False}, {'text': 'Укладання шлюбу', 'correct': True}, {'text': 'Тяглість роду', 'correct': True}, {'text': 'Бізнес-аналітика', 'correct': False}], 'min_correct': 4}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Традиції хрестин | 5 | 5 | ✅ |
+| 2 | match-up | Весільні атрибути та їхні смисли | 8 | 6 | ✅ |
+| 3 | fill-in | Етапи весільного циклу | 6 | 6 | ✅ |
+| 4 | true-false | Аналіз соціальних норм | 5 | 5 | ✅ |
+| 5 | unjumble | Реконструкція обрядових смислів | 5 | 5 | ✅ |
+| 6 | quiz | Символіка короваю | 5 | 5 | ✅ |
+| 7 | match-up | Родинна ієрархія та чини | 8 | 6 | ✅ |
+| 8 | fill-in | Символіка вишитого рушника | 6 | 6 | ✅ |
+| 9 | essay-response | Юридична функція обряду | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз інституту кумівства | 1 | 1 | ✅ |
+| 11 | comparative-study | Родина vs Сім’я | 1 | 1 | ✅ |
+| 12 | select | Весільні магічні дії | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2023/2000
+- **Words:** ❌ 2023/3000 (raw: 2352)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.9% (target 90-100% (folk-culture))
+- **Immersion:** 🇺🇦 99.9% (target 90-100%)
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
@@ -50,7 +81,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |
-| **Вступ: Життєві пороги та соціальне визнання** | ⚪️ | 97 | Skipped |
+| **Вступ: Життєві пороги та соціальне визнання** | ✅ | 97 | Included in Core |
 | **Текст 1: Хрестини — духовне народження та кумівство** | ✅ | 170 | Included in Core |
 | **Текст 2: Весілля — драма створення нової сім’ї** | ✅ | 449 | Included in Core |
 | **Текст 3: Символіка Посагу, Рушника та Скрині** | ✅ | 255 | Included in Core |

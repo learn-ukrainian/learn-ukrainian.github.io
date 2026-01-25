@@ -1,7 +1,7 @@
 # Audit Report: M30 — 30-i-feel-like.md
 **Level:** A2 | **Module:** M30 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:07:49
+**Generated:** 2026-01-25 19:30:30
 
 ## Configuration
 **Type:** A2-vocab
@@ -44,7 +44,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Воно походить від поняття контексті...'
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): страшно, розчарований, засмучений, прикро, переляканий...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): приємно, переляканий, сумний, щасливий, боятися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

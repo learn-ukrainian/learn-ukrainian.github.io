@@ -1,25 +1,75 @@
-# Audit Report: 13-emphasis-and-inversion.md
-**Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
+# Audit Report: M13 — 13-emphasis-and-inversion.md
+**Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 1750
+**Naturalness:** 1/10 (PENDING)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:10
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 1750 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, fill-in, group-sort, match-up, quiz, reading
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Теоретичні основи порядку слів | 16 | 8 | ✅ |
+| 2 | match-up | Терміни актуального членування | 16 | 8 | ✅ |
+| 3 | cloze | Визначте тип порядку слів | 16 | 14 | ✅ |
+| 4 | true-false | Правда чи хибність | 16 | 8 | ✅ |
+| 5 | group-sort | Нейтральний vs емфатичний порядок слів | 20 | 14 | ✅ |
+| 6 | unjumble | Складіть емфатичні речення | 16 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки порядку слів та відмінків | 16 | 6 | ✅ |
+| 8 | cloze | Заповніть текст про емфазу та інверсію | 16 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть елементи, винесені на початок для емфази | 9 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні твердження | 16 | 6 | ✅ |
+| 11 | translate | Оберіть правильний переклад з емфазою | 16 | 6 | ✅ |
+| 12 | fill-in | Трансформуйте речення для емфази | 16 | 8 | ✅ |
+| 13 | quiz | Аналіз порядку слів у тексті | 16 | 8 | ✅ |
+| 14 | essay-response | Емоційна історія | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "*Відповідь:* **Книгу** (тема) *читає Марія* (рема).". Shares significant keywords with sentence at index 18.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 110.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2596/1750
+- **Words:** ✅ 2596/1750 (raw: 3121)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 144/25
+- **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 8/10 (High)
+- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -44,7 +94,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
-| **Вступ** | ⚪️ | 139 | Skipped |
+| **Вступ** | ✅ | 139 | Included in Core |
 | **Пояснення** | ⚪️ | 1065 | Skipped |
 | **Практика** | ⚪️ | 299 | Skipped |
 | **Трансформації** | ⚪️ | 633 | Skipped |

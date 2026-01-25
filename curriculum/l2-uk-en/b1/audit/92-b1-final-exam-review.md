@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M92 | **Phase:** B1.8 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 23:38:40
+**Generated:** 2026-01-25 19:23:01
 
 ## Configuration
 **Type:** B1-skills
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 15 (soft target)
+- **Vocab:** ✅ 79/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

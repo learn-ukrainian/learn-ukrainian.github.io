@@ -1,18 +1,54 @@
-# Audit Report: 21-panteleimon-kulish.md
-**Phase:** LIT.4 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
+# Audit Report: M21 — 21-panteleimon-kulish.md
+**Level:** LIT | **Module:** M21 | **Phase:** LIT.4 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:26
+
+## Configuration
+**Type:** LIT-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Світогляд Куліша | 1 | 1 | ✅ |
+| 2 | essay-response | Есе: Серце проти Розуму | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Проблема зради | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз тексту: Лист до Костомарова | 1 | 1 | ✅ |
+| 5 | quiz | Перевірка знань: Життя Куліша | 5 | 1 | ✅ |
+| 6 | comparative-study | Порівняльний Аналіз: Шевченко і Куліш | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/5 (essay-response, quiz, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 3476/3500 (24 short)
+- **Words:** ❌ 3476/4000 (raw: 3878)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)

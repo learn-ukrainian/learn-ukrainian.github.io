@@ -1,30 +1,64 @@
-# Audit Report: 143-checkpoint-c1-4.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Assessment | **Target:** 1750
+# Audit Report: M47 — 47-checkpoint-c1-4.md
+**Level:** C1 | **Module:** M47 | **Phase:** C1.4 | **Pedagogy:** Assessment | **Target:** 1750
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:33
+
+## Configuration
+**Type:** C1-checkpoint
+**Word Target:** 1750 words
+**Activities:** 14-18 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥15 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Ідентифікація регістру (Тест) | 5 | 5 | ✅ |
+| 2 | unjumble | Конструювання ввічливого прохання | 5 | 5 | ✅ |
+| 3 | cloze | Трансформація тексту (Сленг -> Офіційний) | 14 | 14 | ✅ |
+| 4 | essay-response | Лист-вибачення | 1 | 1 | ✅ |
+| 5 | critical-analysis | Аналіз сленгу | 1 | 1 | ✅ |
+| 6 | unjumble | Офіційний порядок слів | 5 | 5 | ✅ |
+| 7 | group-sort | Регістри мовлення | 15 | 14 | ✅ |
+| 8 | match-up | Емоційні відповідники | 8 | 6 | ✅ |
+| 9 | quiz | Фінальний тест на стиль | 5 | 5 | ✅ |
+| 10 | fill-in | Відновлення офіційного тексту | 6 | 6 | ✅ |
+| 11 | match-up | Стилістичні синоніми | 8 | 6 | ✅ |
+| 12 | group-sort | Розподіл лексики (частина 2) | 18 | 14 | ✅ |
+| 13 | error-correction | Редактор стилю | 5 | 5 | ✅ |
+| 14 | translate | Фінальний переклад | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 14-18) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 143-checkpoint-c1-4.yaml: Schema validation error at key '13': {'type': 'translate', 'title': 'Фінальний переклад', 'instruction': 'Перекладіть англійські фрази українською у відповідному регістрі.', 'items': [{'source': "Hey bro, what's up? (Slang)", 'options': [{'text': 'Йо, бро, як справи?', 'correct': True}, {'text': 'Вітаю, брате, що нового?', 'correct': False}, {'text': 'Доброго дня, колего.', 'correct': False}, {'text': 'Привіт, родичу, як життя?', 'correct': False}]}, {'source': 'I hereby certify that... (Formal)', 'options': [{'text': 'Цим засвідчую, що...', 'correct': True}, {'text': 'Я тут кажу, що...', 'correct': False}, {'text': 'Я клянусь, що...', 'correct': False}, {'text': 'Зуб даю, що...', 'correct': False}]}, {'source': 'My darling, I miss you. (Intimate)', 'options': [{'text': 'Моє сонечко, я сумую.', 'correct': True}, {'text': 'Моя дорога, я не бачив тебе.', 'correct': False}, {'text': 'Шановна, мені нудно.', 'correct': False}, {'text': 'Мала, де ти є?', 'correct': False}]}, {'source': 'Could you please help me? (Polite)', 'options': [{'text': 'Чи не могли б Ви мені допомогти?', 'correct': True}, {'text': 'Поможи мені швидко.', 'correct': False}, {'text': 'Треба хелп.', 'correct': False}, {'text': 'Ви мусите допомогти.', 'correct': False}]}, {'source': "It's cringe. (Slang)", 'options': [{'text': 'Це крінж.', 'correct': True}, {'text': 'Це соромно.', 'correct': False}, {'text': 'Це незручно.', 'correct': False}, {'text': 'Це ганьба.', 'correct': False}]}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-checkpoint-c1-4.yaml: Schema validation error at key 'words': ['Рішення', 'про', 'виділення', 'коштів', 'було', 'ухвалено', 'на', 'позачерговому', 'засіданні', 'міської', 'ради'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-checkpoint-module-template.md'
-  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-checkpoint-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 1668/1750 (82 short)
+- **Words:** ⚠️ 1668/1750 (raw: 1865) (82 short)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/15
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 15 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)

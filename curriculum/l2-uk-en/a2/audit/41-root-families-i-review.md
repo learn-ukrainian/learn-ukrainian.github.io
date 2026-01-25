@@ -1,7 +1,7 @@
 # Audit Report: M41 — 41-root-families-i.md
 **Level:** A2 | **Module:** M41 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 15:23:22
+**Generated:** 2026-01-25 19:31:05
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,6 +35,15 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): хід...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1445/1000 (raw: 1565)
 - **Activities:** ✅ 10/10
@@ -43,7 +52,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 118/1
+- **Vocab:** ✅ 111/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

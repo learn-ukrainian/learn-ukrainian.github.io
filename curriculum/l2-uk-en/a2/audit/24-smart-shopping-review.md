@@ -1,7 +1,7 @@
 # Audit Report: M24 — 24-smart-shopping.md
 **Level:** A2 | **Module:** M24 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:02:00
+**Generated:** 2026-01-25 20:41:01
 
 ## Configuration
 **Type:** A2-vocab
@@ -42,7 +42,7 @@
   - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося бути не...'
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'you want...'.
   - FIX: Vary sentence structure.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): розпродаж, економ, вартість, доступний, рекомендувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): вигідний, невигідний, пропонувати, дешевий, акція...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -59,7 +59,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 14/1
+- **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 3 violations

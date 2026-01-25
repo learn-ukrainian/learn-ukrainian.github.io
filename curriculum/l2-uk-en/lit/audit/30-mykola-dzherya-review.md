@@ -1,20 +1,62 @@
-# Audit Report: 30-mykola-dzherya.md
-**Phase:** LIT.5 | **Level:** LIT | **Pedagogy:** analysis | **Target:** 3500
+# Audit Report: M30 — 30-mykola-dzherya.md
+**Level:** LIT | **Module:** M30 | **Phase:** LIT.5 | **Pedagogy:** analysis | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:38
+
+## Configuration
+**Type:** LIT
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Уривок: Рішення про втечу | 3 | 1 | ✅ |
+| 2 | quiz | Сюжет і Контекст | 12 | 1 | ✅ |
+| 3 | group-sort | Аграрний Світ vs. Індустріальний Світ | 14 | 1 | ✅ |
+| 4 | match-up | Словник Неволі і Свободи | 12 | 1 | ✅ |
+| 5 | essay-response | Ціна Свободи | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 2/3 (essay-response, reading) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'втік з...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3532/3500
+- **Words:** ❌ 3532/4000 (raw: 3975)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 10/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 95-100%)
 - **Richness:** ✅ 92% (literature)

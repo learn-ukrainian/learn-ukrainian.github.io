@@ -2,6 +2,63 @@ module: 15-aspect-morphology
 level: A2
 version: '2.0'
 items:
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: вмикати
+  ipa: /ʋmɪkˈatɪ/
+  translation: to turn on (imperfective)
+  pos: verb
+- lemma: вимикати
+  ipa: /ʋɪmɪkˈatɪ/
+  translation: to turn off (imperfective)
+  pos: verb
+- lemma: одягатися
+  ipa: /ɔdʲahˈatɪsja/
+  translation: to get dressed (imperfective)
+  pos: verb
+- lemma: сідати
+  ipa: /sidˈatɪ/
+  translation: to sit down (imperfective)
+  pos: verb
+- lemma: лягати
+  ipa: /ljahˈatɪ/
+  translation: to lie down (imperfective)
+  pos: verb
+- lemma: відкривати
+  ipa: /ʋidkrɪʋˈatɪ/
+  translation: to open (imperfective)
+  pos: verb
+- lemma: закривати
+  ipa: /zakrɪʋˈatɪ/
+  translation: to close (imperfective)
+  pos: verb
+- lemma: починати
+  ipa: /pɔt͡ʃɪnˈatɪ/
+  translation: to start (imperfective)
+  pos: verb
+- lemma: закінчувати
+  ipa: /zakint͡ʃˈuʋatɪ/
+  translation: to finish (imperfective)
+  pos: verb
+- lemma: отримувати
+  ipa: /ɔtrɪmˈuʋatɪ/
+  translation: to receive (imperfective)
+  pos: verb
+- lemma: посилати
+  ipa: /pɔsɪlˈatɪ/
+  translation: to send (imperfective)
+  pos: verb
+- lemma: вибирати
+  ipa: /ʋɪbɪrˈatɪ/
+  translation: to choose (imperfective)
+  pos: verb
+- lemma: вирішувати
+  ipa: /ʋɪriʃˈuʋatɪ/
+  translation: to decide (imperfective)
+  pos: verb
 - lemma: ват
   ipa: /ʋat/
   translation: watt
@@ -14,6 +71,10 @@ items:
 - lemma: глибший
   ipa: /ɦlˈɪbʃɪj/
   translation: deeper (adj)
+  pos: adj
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective
   pos: adj
 - lemma: досягати
   ipa: /dɔsjaɦˈatɪ/
@@ -100,6 +161,10 @@ items:
 - lemma: словниковий
   ipa: /slɔʋnɪkˈɔʋɪj/
   translation: vocabulary (adj), lexical
+  pos: adj
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective
   pos: adj
 - lemma: слухач
   ipa: /sluxˈat͡ʃ/

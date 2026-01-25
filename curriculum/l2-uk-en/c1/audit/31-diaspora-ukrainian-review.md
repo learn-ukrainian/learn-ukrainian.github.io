@@ -1,46 +1,95 @@
-# Audit Report: 31-diaspora-ukrainian.md
-**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
-**Overall Status:** ✅ PASS
+# Audit Report: M31 — 31-diaspora-ukrainian.md
+**Level:** C1 | **Module:** M31 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** None/10 (PENDING)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:23
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, essay-response, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Історія хвиль еміграції | 8 | 5 | ✅ |
+| 2 | match-up | Діаспорна лексика | 14 | 6 | ✅ |
+| 3 | fill-in | Життя в діаспорі | 8 | 6 | ✅ |
+| 4 | group-sort | Хвилі еміграції | 14 | 12 | ✅ |
+| 5 | unjumble | Факти про діаспору | 6 | 5 | ✅ |
+| 6 | mark-the-words | Знайдіть діаспоризми | 6 | 5 | ✅ |
+| 7 | quiz | Географія діаспори | 8 | 5 | ✅ |
+| 8 | essay-response | Есе: Асиміляція чи Інтеграція? | 1 | 1 | ✅ |
+| 9 | comparative-study | Мова там і тут | 1 | 1 | ✅ |
+| 10 | fill-in | Відомі українці світу | 8 | 6 | ✅ |
+| 11 | match-up | Установи діаспори | 8 | 6 | ✅ |
+| 12 | error-correction | Виправте кальки | 6 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: Schema validation error at key 'min_words': 150 is less than the minimum of 200
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2267/2000
+- **Words:** ❌ 2267/3000 (raw: 2519)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 98.7% (target 90-100%)
+- **Richness:** ✅ 95% (content)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** vocabulary
+**Score:** 95% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 21 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 17 | 15 | 100% | 20% | 20.0% |
-| engagement | 7 | 4 | 100% | 15% | 15.0% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 10% | 10.0% |
-| register_notes | 11 | 5 | 100% | 10% | 10.0% |
-| variety | 0.99 | - | 99% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 17 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 2 | 3 | 67% | 12% | 8.4% |
+| visual | 9 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 4 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 46 | Included in Core |
-| **Вступ** | ⚪️ | 107 | Skipped |
+| **Вступ** | ✅ | 107 | Included in Core |
 | **Хвилі еміграції** | ⚪️ | 246 | Skipped |
 | **Життя в Канаді та "Інша Україна"** | ⚪️ | 234 | Skipped |
 | **Інституції: Церква і Школа** | ⚪️ | 140 | Skipped |

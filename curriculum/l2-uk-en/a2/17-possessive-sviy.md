@@ -2,9 +2,9 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до світу українських присвійних займенників!** У рівні A1 ви вже вивчили основні займенники: мій, твій, його, її, наш, ваш, їхній. Сьогодні ми розширимо ваші знання та познайомимося з унікальним словом, яке часто викликає труднощі у тих, хто вивчає українську мову — **свій**. Це слово є справжньою лінгвістичною перлиною, яка дозволяє уникати двозначності та робити ваше мовлення точним, елегантним і по-справжньому українським. Розуміння логіки «свого» — це великий крок до мислення мовою, а не просто перекладу слів.
+**Ласкаво просимо до світу українських присвійних займенників!** У рівні A1 ви вже вивчили основні займенники: мій, твій, його, її, наш, ваш, їхній. Сьогодні ми розширимо ваші знання та познайомимося з унікальним словом — **свій**. Це слово викликає труднощі у багатьох. Проте воно є справжньою лінгвістичною перлиною. Воно дозволяє уникати двозначності та робити ваше мовлення точним, елегантним і українським. Розуміння логіки «свого» — це великий крок до мислення мовою.
 
-Now that you've mastered the basic possessives (my, your, his), it's time to learn a special pronoun that has no direct equivalent in English: **свій**. This single word means "one's own" and refers back to the subject of the sentence. In English, we often rely on context to know if "his" means "his own" or "someone else's." Ukrainian solves this problem with surgical precision. By the end of this module, you'll be able to claim your possessions and describe others' belongings with the accuracy of a native speaker.
+Ви вже знаєте мій, твій, його. Тепер вивчимо особливе слово — **свій**. Воно не має прямого еквіваленту в англійській мові. Це єдине слово означає "власний" і вказує на підмет речення. (Now that you've mastered the basic possessives (my, your, his), it's time to learn a special word that has no direct equivalent in English: **свій**.) До кінця модуля ви зможете впевнено описувати свою власність. Також ви навчитеся описувати речі інших людей з точністю носія мови.
 
 **Що ви опануєте в цьому модулі:**
 
@@ -38,19 +38,19 @@ Now that you've mastered the basic possessives (my, your, his), it's time to lea
 
 The pronoun «свій» declines exactly like the pronouns you already know, such as **мій** or **твій**. It must agree with the noun it describes in gender, number, and case. This means the ending changes based on the object owned, not the person who owns it!
 
-**Forms by Gender and Number:**
+**Форми за родами та числами (Forms by Gender and Number):**
 
-- **Masculine:** свій (Nom), свого (Gen), своєму (Dat), своїм (Instr).
-- **Feminine:** своя (Nom), своєї (Gen), своїй (Dat), свою (Acc), своєю (Instr).
-- **Neuter:** своє (Nom), свого (Gen), своєму (Dat), своїм (Instr).
-- **Plural:** свої (Nom), своїх (Gen), своїм (Dat), своїми (Instr).
+- **Чоловічий рід (Masculine):** свій (Nom), свого (Gen), своєму (Dat), своїм (Instr).
+- **Жіночий рід (Feminine):** своя (Nom), своєї (Gen), своїй (Dat), свою (Acc), своєю (Instr).
+- **Середній рід (Neuter):** своє (Nom), свого (Gen), своєму (Dat), своїм (Instr).
+- **Множина (Plural):** свої (Nom), своїх (Gen), своїм (Dat), своїми (Instr).
 
 > [!important] **The Agreement Logic**
 > Remember: The gender of «свій» is determined by the **object**, not the owner.
 >
-> - Він (m) любить свою (f) маму (f).
-> - Вона (f) любить свого (m) брата (m).
-> - Вони (pl) люблять своє (n) місто (n).
+> - Він любить свою маму.
+> - Вона любить свого брата.
+> - Вони люблять своє місто.
 
 ### Optionality for 1st and 2nd Person
 

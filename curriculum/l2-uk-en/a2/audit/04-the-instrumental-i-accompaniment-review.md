@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M04 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 09:34:49
+**Generated:** 2026-01-25 20:40:13
 
 ## Configuration
 **Type:** A2-grammar
@@ -47,7 +47,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 83/1
+- **Vocab:** ✅ 71/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

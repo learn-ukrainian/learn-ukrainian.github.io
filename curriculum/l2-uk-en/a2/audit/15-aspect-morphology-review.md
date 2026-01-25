@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-aspect-morphology.md
 **Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:50:01
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 20:40:38
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,31 +38,20 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це перетворює вивчення мови на...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: недоконаний, доконаний, вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1316/1000 (raw: 1589)
+- **Words:** ✅ 1392/1000 (raw: 1813)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/1
+- **Vocab:** ✅ 46/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 38.3% LOW (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 43.7% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
@@ -70,9 +59,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 268 | Included in Core |
-| **Presentation / Презентація** | ✅ | 551 | Included in Core |
-| **Practice / Практика** | ⚪️ | 194 | Skipped |
+| **Introduction / Вступ** | ✅ | 267 | Included in Core |
+| **Presentation / Презентація** | ✅ | 585 | Included in Core |
+| **Practice / Практика** | ⚪️ | 237 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 176 | Included in Core |
 | **Summary / Підсумок** | ✅ | 81 | Included in Core |
 | **Need More Practice?** | ⚪️ | 46 | Skipped |

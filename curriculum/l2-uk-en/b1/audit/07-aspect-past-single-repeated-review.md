@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:13:38
+**Generated:** 2026-01-25 19:22:08
 
 ## Configuration
 **Type:** B1-grammar
@@ -48,7 +48,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 17 < 25 (soft target)
+- **Vocab:** ✅ 123/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

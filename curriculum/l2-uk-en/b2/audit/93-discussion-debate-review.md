@@ -2,16 +2,53 @@
 **Level:** B2 | **Module:** M93 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:24:02
+
+## Configuration
+**Type:** B2-skills
+**Word Target:** 1750 words
+**Activities:** 14-18 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** cloze, fill-in, quiz, translate
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння структури дискусії | 10 | 8 | ✅ |
+| 2 | match-up | Мовні засоби дискусії | 12 | 8 | ✅ |
+| 3 | fill-in | Доповніть фрази для дискусії | 11 | 8 | ✅ |
+| 4 | true-false | Правда чи неправда? | 10 | 8 | ✅ |
+| 5 | group-sort | Розподіліть фрази за етапами дискусії | 16 | 14 | ✅ |
+| 6 | unjumble | Відновіть правильний порядок слів | 10 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у формулюваннях | 10 | 6 | ✅ |
+| 8 | cloze | Доповніть текст виступу у дебатах | 14 | 14 | ✅ |
+| 9 | mark-the-words | Знайдіть мовні засоби аргументації | 10 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні твердження | 8 | 6 | ✅ |
+| 11 | cloze | Доповніть дебатний виступ про екологічну політику | 16 | 14 | ✅ |
+| 12 | unjumble | Складіть складні фрази для аргументації | 8 | 6 | ✅ |
+| 13 | translate | Оберіть правильний переклад | 8 | 6 | ✅ |
+| 14 | quiz | Формати дебатів та етика | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 14-18) ✅
+- Unique types: 11 (minimum: 5) ✅
+- Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4228/1750
+- **Words:** ✅ 4228/1750 (raw: 4400)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/20
+- **Vocab:** ⚠️ 15 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,12 +74,6 @@
 | paragraph_var | 0.78 | - | 78% | 6% | 4.9% |
 | questions | 21 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **98.2%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

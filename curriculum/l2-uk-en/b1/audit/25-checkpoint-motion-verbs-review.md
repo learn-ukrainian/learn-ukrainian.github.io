@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M25 | **Phase:** B1.2 | **Pedagogy:** Checkpoint | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:49:16
+**Generated:** 2026-01-25 19:22:20
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -50,7 +50,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 55/10
+- **Vocab:** ✅ 64/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

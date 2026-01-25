@@ -1,18 +1,52 @@
-# Audit Report: 09-ethnography.md
-**Phase:** LIT.2 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M09 — 09-ethnography.md
+**Level:** LIT | **Module:** M09 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:06
+
+## Configuration
+**Type:** LIT
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, group-sort, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | comparative-study | Аналіз: Весілля vs Похорон | 1 | 1 | ✅ |
+| 2 | critical-analysis | Економічна Етнографія: Чумацтво | 1 | 1 | ✅ |
+| 3 | essay-response | Творче Завдання: Реєстр Посагу | 1 | 1 | ✅ |
+| 4 | reading | Читальна Зала: Сцени Обрядів | 2 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/6 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 4126/3500
+- **Words:** ✅ 4126/4000 (raw: 4624)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 18/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -1,20 +1,59 @@
-# Audit Report: 28-kaidash-family-conflict.md
-**Phase:** LIT.5 | **Level:** LIT | **Pedagogy:** Seminar | **Target:** 3500
+# Audit Report: M28 — 28-kaidash-family-conflict.md
+**Level:** LIT | **Module:** M28 | **Phase:** LIT.5 | **Pedagogy:** Seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:36
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Уривок: Сварка за мотовило | 3 | 1 | ✅ |
+| 2 | essay-response | Конфлікт Поколінь | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз епізоду: Сварка за мотовило | 1 | 1 | ✅ |
+| 4 | essay-response | Груша на межі: Символ | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
+- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 3444/3500 (56 short)
+- **Words:** ❌ 3444/4000 (raw: 3786)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 10/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)

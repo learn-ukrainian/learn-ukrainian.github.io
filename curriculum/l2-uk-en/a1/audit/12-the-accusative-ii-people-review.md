@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:02
+**Generated:** 2026-01-25 20:07:02
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): офіціант, продавчиня, водій, вчителька, лікар...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): офіціантка, гість, водій, офіціант, подруга...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

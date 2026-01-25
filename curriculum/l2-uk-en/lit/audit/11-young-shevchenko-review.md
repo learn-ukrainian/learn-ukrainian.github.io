@@ -1,20 +1,64 @@
-# Audit Report: 11-young-shevchenko.md
-**Phase:** LIT.3 | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M11 — 11-young-shevchenko.md
+**Level:** LIT | **Module:** M11 | **Phase:** LIT.3 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:28:09
+
+## Configuration
+**Type:** LIT-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | essay-response | Есе-Роздум: Self-Made Man XIX Століття | 1 | 1 | ✅ |
+| 2 | comparative-study | Порівняння: Кріпак і Дворянин | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз Картини: Портрет Жуковського | 1 | 1 | ✅ |
+| 4 | reading | Читальна Зала: Автобіографія | 2 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 4 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (79% overlap): "Він гуляв у Літньому саду і побачив хлопця в брудному робочому халаті, який з неймовірною зосереджен...". Shares significant keywords with sentence at index 99.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Почувши рідну українську мову ("земляк!"), Сошенко заговорив.". Shares significant keywords with sentence at index 100.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> [!didactic] **Ціна Людини**
+> Скільки це — 2500 рублів?". Shares significant keywords with sentence at index 116.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 3 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 4039/3500
+- **Words:** ✅ 4039/4000 (raw: 4282)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 15/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

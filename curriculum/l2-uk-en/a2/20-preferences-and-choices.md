@@ -2,9 +2,9 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо до модуля про вибір та вподобання!** Кожен день ми стикаємося з безліччю рішень: чай чи кава, піти в кіно чи залишитися вдома, яку книгу прочитати першою. Тепер, коли ви вже вмієте порівнювати речі, настав час навчитися висловлювати своє ставлення до них. В українській мові вираження вподобань — це не просто передача інформації, а тонкий соціальний танець. Вміння ввічливо висловити свою думку, порадити щось або делікатно відмовитися допоможе вам почуватися впевнено в будь-якій українській компанії. Сьогодні ми навчимося обирати не лише правильні слова, а й правильні граматичні конструкції для кожного випадку.
+**Ласкаво просимо до модуля про вибір та вподобання!** Ми щодня обираємо між чаєм чи кавою. Ми вирішуємо, чи піти в кіно, чи залишитися вдома. Тепер ви вже вмієте порівнювати речі. Настав час навчитися висловлювати своє ставлення до них. В українській мові це тонкий соціальний танець. Вміння ввічливо висловити свою думку допоможе вам у будь-якій компанії. Сьогодні ми навчимося обирати правильні слова та граматичні конструкції. (Welcome to the module on choices and preferences! Every day we choose between tea or coffee. We decide whether to go to the movies or stay home. Now you already know how to compare things. It's time to learn how to express your attitude towards them. In Ukrainian, it's a subtle social dance. The ability to politely express your opinion will help you in any company. Today we will learn to choose the right words and grammatical constructions.)
 
-Now that you can form comparatives and superlatives, let's use them to express your unique tastes! This module teaches you how to say what you like better, make intentional choices, and explain the reasoning behind them. In Ukrainian, expressing a preference is often about more than just liking something—it's about navigating hospitality and social norms with grace. Whether you are at a restaurant, a friend's house, or a shop, these expressions will help you sound natural and polite. Let's explore how to navigate the world of options with linguistic precision!
+Тепер ви можете використовувати ступені порівняння для вираження смаків! Цей модуль навчить вас говорити про те, що вам подобається більше. Ви навчитеся робити свідомий вибір та пояснювати його причини. В українській мові це важливо для навігації в гостях та дотримання соціальних норм. Чи ви в ресторані, чи в гостях у друзів — ці вирази допоможуть вам звучати природно. Давайте досліджувати світ варіантів разом! (Now you can use comparative and superlative degrees to express tastes! This module will teach you how to say what you like more. You will learn to make conscious choices and explain their reasons. In Ukrainian, this is important for navigating hospitality and following social norms. Whether you are in a restaurant or visiting friends, these expressions will help you sound natural. Let's explore the world of options together!)
 
 **Що ви вивчите в цьому модулі:**
 
@@ -18,26 +18,26 @@ Now that you can form comparatives and superlatives, let's use them to express y
 
 ### 1. Dative Preference Logic (Логіка «Мені подобається»)
 
-In English, "I like coffee" is a straight line: I (Subject) -> like (Verb) -> coffee (Object). Ukrainian works differently. The thing you like is actually the **Subject** that "pleases" you. You, the person, are the recipient of this feeling, so you must be in the **Dative** case.
+В англійській мові фраза "I like coffee" пряма: Я (Підмет) -> люблю (Дієслово) -> каву (Додаток). Українська працює інакше. Те, що вам подобається, стає **Підметом**, який "приносить задоволення". Ви — отримувач цього почуття, тому ви маєте бути в **Давальному** відмінку.
 
 - **Мені** (To me) **подобається** (pleases) **кава** (coffee).
-- **Мені більше подобається** кава, ніж чай. (I like coffee more than tea.)
+- **Мені більше подобається** кава, ніж чай.
 
-When you have more than one thing that you like, the verb must change to match the objects:
+Коли вам подобається більше ніж одна річ, дієслово змінюється, щоб відповідати об'єкту:
 
 - Мені **подобається** цей _фільм_ (sg).
 - Мені **подобаються** ці _фільми_ (pl).
 
 ### 2. Formal Preference: Віддавати перевагу
 
-If you want to sound more formal, or when you are in a professional setting, use the verb **віддавати перевагу** (to give preference). This verb is powerful because it shows a clear decision-making process. Note that the object you prefer must be in the **Dative case**.
+Якщо ви хочете звучати більш офіційно або перебуваєте в професійному середовищі, використовуйте дієслово **віддавати перевагу**. Це дієслово сильне, оскільки показує чіткий процес прийняття рішення. Зверніть увагу: об'єкт, якому ви надаєте перевагу, має стояти в **Давальному відмінку**.
 
 - Я **віддаю перевагу** (I give preference) **активному відпочинку** (to active rest - Dative).
 - Він **віддає перевагу** (He gives preference) **класичній музиці** (to classical music - Dative).
 
 ### 3. Comparing Actions (Порівняння дій)
 
-When you are not choosing between objects, but between actions, you use comparative adverbs with infinitives. This is a very common way to justify your behavior or give advice to others.
+Коли ви обираєте не між об'єктами, а між діями, використовуйте вищий ступінь прислівників з інфінітивами. Це дуже популярний спосіб пояснити свою поведінку або дати пораду іншим.
 
 - **Краще** (Better) **читати**, ніж **дивитися** телевізор.
 - **Цікавіше** (More interesting) **подорожувати**, ніж **сидіти** вдома.
@@ -45,16 +45,16 @@ When you are not choosing between objects, but between actions, you use comparat
 
 ### 4. Hypothetical Choices: The "Would" Structure (Гіпотетичний вибір)
 
-What if you aren't choosing yet, but just imagining? Use the conditional particle **б / би** with the past tense form of the verb "to choose" (**вибрати**). Remember that the verb must agree with your gender!
+Що, якби ви ще не обирали, а просто уявляли? Використовуйте умовну частку **б / би** з формою минулого часу дієслова "вибирати" (**вибрати**). Пам'ятайте, що дієслово має узгоджуватися з вашим родом!
 
 - **Чоловік:** Я **б вибрав** каву. (I would choose coffee.)
 - **Жінка:** Я **б вибрала** чай. (I would choose tea.)
 
-> [!tip] **The "Would" Politeness**
-> In Ukrainian homes, using the «б» form sounds more polite and humble. Instead of saying "I want water" (Я хочу воду), try "I would choose water" (Я б вибрав воду). It makes you sound like a guest with excellent manners!
+> [!tip] **Ввічливість з часткою «б»**
+> В українських родинах використання форми з «б» звучить скромніше та ввічливіше. Замість того, щоб сказати "Я хочу воду", спробуйте "Я б вибрав воду". Це звучить як слова гостя з чудовими манерами!
 
-> [!important] **The Hospitality Logic**
-> In Ukraine, hosts might offer you something several times. A direct "No" can sometimes feel a bit short. Using a preference instead (e.g., «Дякую, але я більше люблю воду») is a softer, more culturally appropriate way to decline.
+> [!important] **Логіка гостинності**
+> В Україні господарі можуть пропонувати вам щось кілька разів. Пряме "Ні" іноді може здатися занадто різким. Використання вподобання натомість (наприклад, «Дякую, але я більше люблю воду») — це м'якший, більш культурно доречний спосіб відмовити.
 
 ## Practice / Практика
 

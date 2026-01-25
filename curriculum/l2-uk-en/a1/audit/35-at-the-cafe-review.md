@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M35 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:19
+**Generated:** 2026-01-25 19:59:17
 
 ## Configuration
 **Type:** A1
@@ -34,29 +34,20 @@
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): круасан, гарячий, холодний, тістечко, чайові...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 851/750 (raw: 1140)
+- **Words:** ✅ 908/750 (raw: 1210)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.4% (target 35-55% (M35))
+- **Immersion:** 🇺🇦 37.9% (target 35-55% (M35))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -65,7 +56,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 147 | Included in Core |
-| **Presentation** | ✅ | 206 | Included in Core |
+| **Presentation** | ✅ | 263 | Included in Core |
 | **Практика** | ⚪️ | 125 | Skipped |
 | **Narrative: Morning in Lviv (Ранок у Львові)** | ✅ | 138 | Included in Core |
 | **Summary** | ✅ | 215 | Included in Core |

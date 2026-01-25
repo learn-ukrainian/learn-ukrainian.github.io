@@ -1,6 +1,44 @@
 # Audit Report: M86 — 86-professional-email-advanced.md
 **Level:** B2 | **Module:** M86 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:23:58
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Ситуації та стратегії листування | 12 | 8 | ✅ |
+| 2 | quiz | Управління ланцюжками листування | 10 | 8 | ✅ |
+| 3 | quiz | Етикет копій та прихованих копій | 10 | 8 | ✅ |
+| 4 | quiz | Вибір правильного рівня ескалації | 11 | 8 | ✅ |
+| 5 | fill-in | Фразеологія для нагадувань та подальших дій | 10 | 8 | ✅ |
+| 6 | cloze | Делегування завдання електронною поштою | 7 | 1 | ✅ |
+| 7 | error-correction | Виправлення неформальних фраз в ескалації | 8 | 6 | ✅ |
+| 8 | unjumble | Складіть речення з діловою фразеологією | 8 | 6 | ✅ |
+| 9 | cloze | Лист-делегування з розподілом відповідальності | 7 | 1 | ✅ |
+| 10 | true-false | Правильно чи неправильно? | 10 | 8 | ✅ |
+| 11 | mark-the-words | Знайдіть ключові слова професійної координації | 6 | 6 | ✅ |
+| 12 | quiz | Культурні особливості української професійної комунікації | 11 | 8 | ✅ |
+| 13 | select | Виберіть правильну граматичну форму | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 3-9) ❌
+- Unique types: 9 (minimum: 2) ✅
+- Priority types used: 0/4 (none) ❌
+- Required types used: 0/2 (none) ❌
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
@@ -14,18 +52,18 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4154/4000
+- **Words:** ✅ 4154/4000 (raw: 4236)
 - **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 9/2 types
 - **Priority:** ❌ No priority types
 - **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/20
+- **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-10)
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
 - **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
 - **Richness:** ❌ 75% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -64,7 +102,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 99 | Included in Core |
 | **Ділова пошта: Поглиблено** | ⚪️ | 42 | Skipped |
-| **Вступ** | ⚪️ | 419 | Skipped |
+| **Вступ** | ✅ | 419 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 1790 | Skipped |
 | **Аналіз** | ✅ | 1166 | Included in Core |
 | **Граматика** | ⚪️ | 511 | Skipped |

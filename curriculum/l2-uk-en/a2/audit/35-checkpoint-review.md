@@ -1,7 +1,7 @@
 # Audit Report: M35 — 35-checkpoint.md
 **Level:** A2 | **Module:** M35 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:14:11
+**Generated:** 2026-01-25 19:30:45
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -42,11 +42,11 @@
   - FIX: Break into shorter sentences. First 5 words: 'Ми перевіримо чи вмієте ви...'
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Займенник який завжди узгоджується антецедентом...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник, множина, однина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, займенник, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Summary|Підсумок' found: Summary / Підсумок, The Doctor's Recommendation (Діалог-підсумок)
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Summary|Підсумок' found: The Doctor's Recommendation (Діалог-підсумок), Summary / Підсумок
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation

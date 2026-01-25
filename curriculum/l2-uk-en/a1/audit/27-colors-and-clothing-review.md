@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:12
+**Generated:** 2026-01-25 20:07:13
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): капелюх, сукня, фіолетовий, рожевий, светр...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): помаранчевий, сірий, рожевий, штани, спідниця...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,28 +1,72 @@
-# Audit Report: 142-review-c1-4.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Review | **Target:** 2000
+# Audit Report: M46 — 46-review-c1-4.md
+**Level:** C1 | **Module:** M46 | **Phase:** C1.4 | **Pedagogy:** Review | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:33
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Ідентифікація регістру | 5 | 5 | ✅ |
+| 2 | fill-in | Модальність впевненості | 6 | 6 | ✅ |
+| 3 | group-sort | Маркери ввічливості | 12 | 12 | ✅ |
+| 4 | translate | Переклад ділових ідіом | 5 | 5 | ✅ |
+| 5 | group-sort | Сортування за стилем | 15 | 12 | ✅ |
+| 6 | unjumble | Стилістичні конструкції | 5 | 5 | ✅ |
+| 7 | cloze | Успішні переговори | 12 | 12 | ✅ |
+| 8 | match-up | Синоніми в регістрах | 8 | 6 | ✅ |
+| 9 | cloze | Змішування стилів (Error Correction) | 12 | 12 | ✅ |
+| 10 | error-correction | Стилістичний редактор | 5 | 5 | ✅ |
+| 11 | essay-response | Есе-перевтілення | 1 | 1 | ✅ |
+| 12 | critical-analysis | Аналіз недоречності | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 142-review-c1-4.yaml: Schema validation error at key '9': {'type': 'error-correction', 'title': 'Стилістичний редактор', 'instruction': 'Знайдіть слово, яке НЕ пасує до стилю речення, і замініть його.', 'items': [{'sentence': 'Шановний клієнте, наша компанія пропонує вам [[круті]] послуги.', 'error': 'круті', 'answer': 'якісні', 'options': ['yakisni', 'kruti', 'klovu', 'bombesni'], 'explanation': "В офіційному спілкуванні слово 'круті' недоречне. Краще 'якісні' або 'професійні'."}, {'sentence': 'Привіт, бабусю! Згідно з [[постановою]], я приїду до тебе в суботу.', 'error': 'постановою', 'answer': 'домовленістю', 'options': ['domovlenistyu', 'postanovoyu', 'nakazom', 'zakonom'], 'explanation': "З бабусею не спілкуються мовою постанов. 'Як ми й домовлялися' — краще."}, {'sentence': "Йо, чувак! Ти виконав [[зобов'язання]] по домашці?", 'error': "зобов'язання", 'answer': 'завдання', 'options': ['zavdannya', 'zobovyazannya', 'borg', 'obicyanku'], 'explanation': "У сленгу 'зобов'язання' звучить занадто офіційно. Просто 'зробив домашку' або 'виконав таск'."}, {'sentence': 'Кохана, ти моя [[уповноважена особа]].', 'error': 'уповноважена особа', 'answer': 'половинка', 'options': ['polovynka', 'upovnovazhena osoba', 'pracivnycya', 'kolega'], 'explanation': "Це звучить як шлюбний контракт, а не освідчення. 'Половинка' або 'рідна'."}, {'sentence': 'Директор [[спіймав крінж]] від твого звіту.', 'error': 'спіймав крінж', 'answer': 'був незадоволений', 'options': ['buv nezadovolenyi', 'spijmav krinzh', 'buv v shoci', 'buv zlij'], 'explanation': "Якщо це офіційна розмова, краще сказати 'був незадоволений' або 'розкритикував'."}]} is not valid under any of the given schemas
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "---
+
+## Розминка: Детектив стилів
+
+Перш ніж почати, спробуйте визначити стиль за одним словом.". Shares significant keywords with sentence at index 5.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Вміння миттєво класифікувати лексику — це база для вільного володіння мовою.". Shares significant keywords with sentence at index 6.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 46-review-c1-4.yaml: Schema validation error at key 'words': ['Як', 'же', 'я', 'за', 'тобою', 'неймовірно', 'сильно', 'скучила', 'мій', 'рідненький', 'котику'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 3 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2004/2000
+- **Words:** ❌ 2004/3000 (raw: 2185)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100%)
 - **Richness:** ✅ 97% (style)

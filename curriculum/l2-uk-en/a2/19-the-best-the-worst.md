@@ -4,7 +4,7 @@
 
 **Ласкаво просимо до вершини описової граматики!** У рівні A1 ви вчилися просто описувати світ (це велике місто). У попередньому модулі ви навчилися порівнювати (це місто більше за інше). Тепер настав час для фінального виклику — навчитися говорити про абсолютну першість. Як сказати, що цей телефон — **найкращий** у магазині? Як описати **найбільше** місто чи **найцікавішу** подорож у вашому житті? Сьогодні ми опануємо найвищий ступінь прикметників — форму, яка дозволяє виділити щось одне серед усіх інших. Це інструмент для тих, хто хоче говорити про рекорди, абсолютну якість та виражати найсильніші емоції. В українській мові це робиться надзвичайно просто, системно та логічно. Кожне слово тут має свою вагу та силу, створюючи яскраву картину вашого сприйняття світу.
 
-Now that you can make comparisons (bigger, better), let's go to the extreme! This module covers superlatives—how to say "the biggest," "the best," "the most interesting." You'll learn how to identify the singular peak of any quality among a group. Whether you are discussing world records, your favorite recipes, or your closest friends, superlatives are your best ally. In many ways, this is the easiest part of Ukrainian adjective grammar because it follows One Big Rule that has almost no exceptions. Let's reach for the top! Кожне нове слово — це ваша перемога на шляху до мовної досконалості.
+Тепер ви вмієте порівнювати предмети (більше, краще). Давайте перейдемо до крайнощів! Цей модуль про найвищий ступінь прикметників. Ми навчимося говорити «найбільший», «найкращий», «найцікавіший». Ви дізнаєтеся, як виділити один предмет серед групи. Чи це світові рекорди, чи ваші друзі — найвищий ступінь допоможе вам. В українській мові це дуже просто. Правило майже не має винятків. Тягніться до вершини! Кожна перемога — це крок до досконалості. (Now that you can make comparisons, let's go to the extreme! This module covers superlatives—how to say "the biggest," "the best," "the most interesting." You'll learn how to identify the singular peak of any quality. Whether you are discussing world records or friends, superlatives are your ally. In Ukrainian, this is easy because it follows one rule with almost no exceptions. Let's reach for the top! Every victory is a step to perfection.)
 
 **Що ви вивчите в цьому модулі:**
 
@@ -21,9 +21,9 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 В англійській мові ви маєте два варіанти для творення найвищого ступеня: закінчення «-est» (biggest) та додавання слова «most» (most beautiful). Це часто створює плутанину для тих, хто лише починає вивчати мову. В українській мові ця система значно системніша та передбачуваніша: ми завжди додаємо префікс **най-** до вже знайомої вам порівняльної форми прикметника. Це створює красиву ієрархічну структуру слова, де кожен префікс додає новий рівень інтенсивності та якості.
 
 **Формула (The Formula):**
-**най-** + порівняльна форма (comparative) = найвищий ступінь (superlative)
+**най-** + порівняльна форма = найвищий ступінь
 
-Ця простота означає, що як тільки ви вивчили порівняльну форму (вищий ступінь), ви автоматично отримуєте ключ до найвищого ступеня. Немає потреби запам’ятовувати нові корені чи складні закінчення для рекордів.
+Ця простота дуже корисна. Ви вже знаєте порівняльну форму? Тоді ви автоматично знаєте найвищий ступінь. Не потрібно вчити нові корені. Також не треба запам’ятовувати складні закінчення для рекордів. (This simplicity is very useful. Do you know the comparative? Then you automatically know the superlative. No need to learn new roots or complex endings for records.)
 
 | Початкова форма | Порівняльна форма | Найвищий ступінь  | Переклад             |
 | :-------------- | :---------------- | :---------------- | :------------------- |
@@ -35,7 +35,7 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 
 ### 2. Irregular Superlatives: No New Exceptions! (Нерегулярні форми)
 
-The irregular comparatives you mastered in the last module (like кращий, гірший, або вищий) follow the exact same logic. They simply take the **най-** prefix to reach their maximum degree. This is the beauty of Ukrainian morphology: it stays consistent even when dealing with ancient, high-frequency "irregular" roots. Mastery of the comparative is your direct pass to the superlative.
+Нерегулярні форми вищого ступеня логічно такі самі. Ви вже знаєте їх (кращий, гірший). Вони просто приймають префікс **най-**. Це потрібно для досягнення свого максимуму. У цьому полягає краса української морфології. (Irregular forms of the higher degree are logically the same. You already know them (better, worse). They simply take the nay- prefix. This is needed to reach their maximum. This is the beauty of Ukrainian morphology.)
 
 - **кращий** (better) -> **найкращий** (the best)
 - **гірший** (worse) -> **найгірший** (the worst)

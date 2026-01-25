@@ -1,33 +1,78 @@
-# Audit Report: 04-analysis-vocabulary.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+# Audit Report: M04 — 04-analysis-vocabulary.md
+**Level:** C1 | **Module:** M04 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:06
+
+## Configuration
+**Type:** C1-vocab
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, essay-response, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Ключові терміни аналізу | 8 | 6 | ✅ |
+| 2 | quiz | Розуміння академічного тексту | 8 | 5 | ✅ |
+| 3 | fill-in | Вибір прикметника | 8 | 6 | ✅ |
+| 4 | group-sort | Етапи дослідження | 12 | 12 | ✅ |
+| 5 | match-up | Словотвір: Іменник -> Прикметник | 8 | 6 | ✅ |
+| 6 | fill-in | Академічні колокації | 8 | 6 | ✅ |
+| 7 | match-up | Синоніми в академічному стилі | 8 | 6 | ✅ |
+| 8 | quiz | Визначення регістру | 8 | 5 | ✅ |
+| 9 | error-correction | Виправлення лексичних помилок | 8 | 5 | ✅ |
+| 10 | unjumble | Побудова академічних речень | 8 | 5 | ✅ |
+| 11 | mark-the-words | Пошук слів аналізу | 10 | 5 | ✅ |
+| 12 | fill-in | Структура анотації | 8 | 6 | ✅ |
+| 13 | match-up | Антоніми в аналізі | 8 | 6 | ✅ |
+| 14 | quiz | Логіка та аргументація | 8 | 5 | ✅ |
+| 15 | group-sort | Суб'єктивність vs Об'єктивність | 12 | 12 | ✅ |
+| 16 | essay-response | Есе: Роль критичного мислення | 1 | 1 | ✅ |
+| 17 | fill-in | Прийменники в колокаціях | 8 | 6 | ✅ |
+| 18 | match-up | Академічні вирази | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 18 (target: 12-16) ❌
+- Unique types: 8 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 04-analysis-vocabulary.yaml: Schema validation error at key 'words': ['Глибокий', 'аналіз', 'зібраних', 'даних', 'дозволив', 'вченим', 'виявити', 'приховані', 'закономірності', 'розвитку', 'системи'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2546/2000
+- **Words:** ❌ 2546/3000 (raw: 2890)
 - **Activities:** ✅ 18/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.9% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -51,7 +96,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 116 | Included in Core |
 | **Лексика для критики** | ⚪️ | 135 | Skipped |
-| **Вступ: Презентація - Мистецтво наукового сумніву** | ⚪️ | 991 | Skipped |
+| **Вступ: Презентація - Мистецтво наукового сумніву** | ✅ | 991 | Included in Core |
 | **Академічне письмо: Побудова аргументації** | ⚪️ | 350 | Skipped |
 | **Порівняльний аналіз** | ✅ | 331 | Included in Core |
 | **Типові помилки в аналітичних текстах** | ✅ | 157 | Included in Core |

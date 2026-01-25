@@ -16,6 +16,30 @@ items:
   translation: Africa
   pos: noun
   gender: f
+- lemma: безумовно
+  ipa: /bɛzumˈɔʋnɔ/
+  translation: undoubtedly
+  pos: adv
+- lemma: більший
+  ipa: /bˈilʲʃɪj/
+  translation: bigger
+  pos: adj
+- lemma: велике
+  ipa: /ʋɛlˈɪkɛ/
+  translation: big (neut)
+  pos: adj
+- lemma: великіше
+  ipa: /ʋɛlɪkˈiʃɛ/
+  translation: bigger (colloq/distractor)
+  pos: adj
+- lemma: виправте
+  ipa: /ʋˈɪpraʋtɛ/
+  translation: correct (imperative)
+  pos: verb
+- lemma: вищий
+  ipa: /ʋˈɪʃt͡ʃɪj/
+  translation: higher/taller
+  pos: adj
 - lemma: всюди
   ipa: /ʋsˈjudɪ/
   translation: everywhere
@@ -24,27 +48,107 @@ items:
   ipa: /ɦarnˈiʃɪj/
   translation: more beautiful
   pos: adj
+- lemma: гірший
+  ipa: /ɦˈirʃɪj/
+  translation: worse
+  pos: adj
+- lemma: групами
+  ipa: /ɦrˈupamɪ/
+  translation: by groups
+  pos: noun
+- lemma: дешевший
+  ipa: /dɛʃˈɛʋʃɪj/
+  translation: cheaper
+  pos: adj
+- lemma: добріша
+  ipa: /dɔbrˈiʃa/
+  translation: kinder
+  pos: adj
 - lemma: довший
   ipa: /dˈɔʋʃɪj/
-  translation: longer (adj)
+  translation: longer
+  pos: adj
+- lemma: дорожезний
+  ipa: /dɔrɔʒˈɛznɪj/
+  translation: super expensive
+  pos: adj
+- lemma: дорожчий
+  ipa: /dɔrˈɔʒt͡ʃɪj/
+  translation: more expensive
   pos: adj
 - lemma: еверест
   ipa: /ɛʋɛrˈɛst/
   translation: Everest
   pos: noun
   gender: m
+- lemma: елементи
+  ipa: /ɛlɛmˈɛntɪ/
+  translation: elements
+  pos: noun
 - lemma: емоція
   ipa: /ɛmˈɔt͡sija/
   translation: emotion
   pos: noun
   gender: f
+- lemma: ий
+  ipa: /ɪj/
+  translation: ending -y
+  pos: noun
+- lemma: клацніть
+  ipa: /klˈat͡snitʲ/
+  translation: click (imperative)
+  pos: verb
 - lemma: коли-небудь
   ipa: /kɔlˈɪ-nɛbudʲ/
   translation: ever
   pos: pron
 - lemma: коротший
   ipa: /kɔrˈɔtʃɪj/
-  translation: shorter (adj)
+  translation: shorter
+  pos: adj
+- lemma: краща
+  ipa: /krˈaʃt͡ʃa/
+  translation: better (fem)
+  pos: adj
+- lemma: кращий
+  ipa: /krˈaʃt͡ʃɪj/
+  translation: better
+  pos: adj
+- lemma: критерію
+  ipa: /krɪtˈɛriju/
+  translation: criterion (dat)
+  pos: noun
+- lemma: менший
+  ipa: /mˈɛnʃɪj/
+  translation: smaller
+  pos: adj
+- lemma: молодший
+  ipa: /mɔlˈɔdʃɪj/
+  translation: younger
+  pos: adj
+- lemma: моєму
+  ipa: /mɔjˈɛmu/
+  translation: my (loc/dat)
+  pos: pron
+- lemma: надважливіше
+  ipa: /nadʋaʒlɪʋˈiʃɛ/
+  translation: super important
+  pos: adj
+- lemma: надвисока
+  ipa: /nadʋɪsˈɔka/
+  translation: super high
+  pos: adj
+- lemma: наддовга
+  ipa: /naddˈɔʋɦa/
+  translation: super long
+  pos: adj
+- lemma: надрозумна
+  ipa: /nadrɔzˈumna/
+  translation: super smart
+  pos: adj
+- lemma: надталановита
+  ipa: /nadtalanɔʋˈɪta/
+  translation: super talented
   pos: adj
 - lemma: най
   ipa: /naj/
@@ -52,11 +156,23 @@ items:
   pos: part
 - lemma: найбільше
   ipa: /najbˈilʲʃɛ/
-  translation: most of all
+  translation: most of all / biggest (neut)
   pos: adv
+- lemma: найбільший
+  ipa: /najbˈilʲʃɪj/
+  translation: the biggest
+  pos: adj
+- lemma: найважливіше
+  ipa: /najʋaʒlɪʋˈiʃɛ/
+  translation: the most important (neut)
+  pos: adj
 - lemma: найвищий
   ipa: /najʋˈɪʃt͡ʃɪj/
   translation: the highest
+  pos: adj
+- lemma: найвисокий
+  ipa: /najʋɪsˈɔkɪj/
+  translation: the highest (alt/distractor)
   pos: adj
 - lemma: найвідоміший
   ipa: /najʋidˈɔmiʃɪj/
@@ -69,6 +185,10 @@ items:
 - lemma: найгірший
   ipa: /najɦˈirʃɪj/
   translation: the worst
+  pos: adj
+- lemma: найдобріша
+  ipa: /najdɔbrˈiʃa/
+  translation: the kindest
   pos: adj
 - lemma: найдовший
   ipa: /najdˈɔʋʃɪj/
@@ -88,11 +208,35 @@ items:
   pos: adj
 - lemma: найкраще
   ipa: /najkrˈaʃt͡ʃɛ/
-  translation: best (adv), the best thing
+  translation: best (adv)
   pos: adv
+- lemma: найкращий
+  ipa: /najkrˈaʃt͡ʃɪj/
+  translation: the best
+  pos: adj
+- lemma: найменший
+  ipa: /najmˈɛnʃɪj/
+  translation: the smallest
+  pos: adj
+- lemma: наймолодший
+  ipa: /najmɔlˈɔdʃɪj/
+  translation: the youngest
+  pos: adj
+- lemma: найнижчий
+  ipa: /najnˈɪʒtʃɪj/
+  translation: the lowest
+  pos: adj
+- lemma: найпоганіший
+  ipa: /najpɔɦanˈiʃɪj/
+  translation: the worst (colloq)
+  pos: adj
+- lemma: найпопулярніша
+  ipa: /najpɔpulʲˈarnʲiʃa/
+  translation: the most popular
+  pos: adj
 - lemma: найпростіше
   ipa: /najprɔstˈiʃɛ/
-  translation: the simplest (adv), easiest thing
+  translation: the simplest
   pos: adv
 - lemma: найрозумніший
   ipa: /najrɔzumnˈiʃɪj/
@@ -102,13 +246,37 @@ items:
   ipa: /najsmat͡ʃnˈiʃɪj/
   translation: the tastiest
   pos: adj
+- lemma: найстаріший
+  ipa: /najstˈarʃɪj/
+  translation: the oldest (things)
+  pos: adj
 - lemma: найстарший
   ipa: /najstˈarʃɪj/
-  translation: the oldest, eldest
+  translation: the oldest (people)
+  pos: adj
+- lemma: найталановитіший
+  ipa: /najtalanɔʋˈɪtɪj/
+  translation: the most talented
+  pos: adj
+- lemma: найцікавіша
+  ipa: /najt͡sʲikaʋˈiʃa/
+  translation: the most interesting (fem)
+  pos: adj
+- lemma: найцікавіший
+  ipa: /najt͡sʲikaʋˈiʃɪj/
+  translation: the most interesting
   pos: adj
 - lemma: найшвидший
   ipa: /najʃʋˈɪdʃɪj/
   translation: the fastest
+  pos: adj
+- lemma: найщасливіший
+  ipa: /najʃt͡ʃaslˈɪʋiʃɪj/
+  translation: the happiest
+  pos: adj
+- lemma: нижчий
+  ipa: /nˈɪʒtʃɪj/
+  translation: lower
   pos: adj
 - lemma: ніл
   ipa: /nil/
@@ -125,10 +293,23 @@ items:
   translation: time, season
   pos: noun
   gender: f
+- lemma: пре-
+  ipa: /prɛ/
+  translation: very (prefix)
+  pos: part
+- lemma: прегарний
+  ipa: /prɛɦˈarnɪj/
+  translation: very beautiful
+  pos: adj
 - lemma: рекорд
   ipa: /rɛkˈɔrd/
   translation: record
   pos: noun
+- lemma: рішення
+  ipa: /rˈiʃɛnʲːa/
+  translation: decision
+  pos: noun
+  gender: n
 - lemma: світа
   ipa: /sʋˈita/
   translation: world
@@ -138,10 +319,41 @@ items:
   ipa: /sʋitɔʋˈɪj/
   translation: world (adj), global
   pos: adj
+- lemma: спортсмен
+  ipa: /spɔrtsmˈɛn/
+  translation: sportsman
+  pos: noun
+  gender: m
+- lemma: старіший
+  ipa: /starˈiʃɪj/
+  translation: older
+  pos: adj
+- lemma: талановита
+  ipa: /talanɔʋˈɪta/
+  translation: talented (fem)
+  pos: adj
+- lemma: талановитіша
+  ipa: /talanɔʋɪtˈiʃa/
+  translation: more talented (fem)
+  pos: adj
 - lemma: талановитий
   ipa: /talanɔʋˈɪtɪj/
   translation: talented
   pos: adj
+- lemma: твердження
+  ipa: /tʋˈɛrdʒɛnʲːa/
+  translation: statement
+  pos: noun
+  gender: n
+- lemma: територія
+  ipa: /tɛrɪtˈɔrija/
+  translation: territory
+  pos: noun
+  gender: f
+- lemma: фактично
+  ipa: /faktˈɪt͡ʃnɔ/
+  translation: actually
+  pos: adv
 - lemma: формула
   ipa: /fˈɔrmula/
   translation: formula
@@ -149,5 +361,21 @@ items:
   gender: f
 - lemma: хіт
   ipa: /xit/
-  translation: hit (song/success)
+  translation: hit
   pos: noun
+- lemma: швидкий
+  ipa: /ʃʋɪdkˈɪj/
+  translation: fast
+  pos: adj
+- lemma: швидший
+  ipa: /ʃʋˈɪdʃɪj/
+  translation: faster
+  pos: adj
+- lemma: ший
+  ipa: /ʃɪj/
+  translation: suffix -er
+  pos: noun
+- lemma: щасливіша
+  ipa: /ʃt͡ʃaslɪʋˈiʃa/
+  translation: happier (fem)
+  pos: adj

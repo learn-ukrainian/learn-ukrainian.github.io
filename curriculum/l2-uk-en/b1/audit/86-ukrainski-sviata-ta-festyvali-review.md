@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M86 | **Phase:** B1.7 | **Pedagogy:** cultural | **Target:** 1500
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:57:23
+**Generated:** 2026-01-25 19:22:57
 
 ## Configuration
 **Type:** B1-skills
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 66/15
+- **Vocab:** ✅ 65/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

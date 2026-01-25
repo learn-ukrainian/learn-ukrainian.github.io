@@ -27,3 +27,27 @@ focus: vocabulary
 naturalness:
   score: 9
   status: PASS
+content_outline:
+- section: Introduction / Вступ
+  words: 150
+  points:
+    - Essential health vocabulary
+    - Grammar of 'болить'
+- section: Presentation / Презентація
+  words: 400
+  points:
+    - Body parts (gender and agreement)
+    - Symptoms and illnesses
+    - Medical locations and treatments
+- section: Practice / Практика
+  words: 200
+  points:
+    - Dialogue at the doctor
+- section: Dialogues / Діалоги
+  words: 200
+  points:
+    - Story about an accident
+- section: Summary / Підсумок
+  words: 100
+  points:
+    - Recap of body parts and symptoms

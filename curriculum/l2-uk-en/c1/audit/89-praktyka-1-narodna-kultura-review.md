@@ -1,58 +1,83 @@
-# Audit Report: 185-praktyka-1-narodna-kultura.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+# Audit Report: M89 — 89-praktyka-1-narodna-kultura.md
+**Level:** C1 | **Module:** M89 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:59
+
+## Configuration
+**Type:** C1-fine-arts
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Народна музика та інструменти | 5 | 5 | ✅ |
+| 2 | quiz | Народні танці та обряди | 5 | 5 | ✅ |
+| 3 | match-up | Народні ремесла та вірування | 8 | 6 | ✅ |
+| 4 | quiz | Регіони України | 5 | 5 | ✅ |
+| 5 | essay-response | Есе: Моя улюблена традиція | 1 | 1 | ✅ |
+| 6 | comparative-study | Регіональні відмінності | 1 | 1 | ✅ |
+| 7 | critical-analysis | Аналіз ролі кобзарства | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 7 (target: 12-16) ❌
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 0/3 (none) ❌
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 185-praktyka-1-narodna-kultura.yaml: Array validation: {'type': 'quiz', 'title': 'Регіони України', 'instruction': 'Перевірте свої знання про культурне та географічне різноманіття різних куточків України.', 'items': [{'question': 'У якому гірському регіоні України традиційно проживають гуцули, зберігаючи свою унікальну культуру, діалект, яскраві костюми та містичні вірування?', 'options': [{'text': 'У Карпатах', 'correct': True}, {'text': 'У донецьких степах', 'correct': False}, {'text': 'На болотах Полісся', 'correct': False}, {'text': 'У кримських горах', 'correct': False}]}, {'question': 'Яке старовинне місто з величними соборами та особливою атмосферою вважається історичним, культурним та релігійним центром регіону Галичина?', 'options': [{'text': 'Львів', 'correct': True}, {'text': 'Київ', 'correct': False}, {'text': 'Харків', 'correct': False}, {'text': 'Одеса', 'correct': False}]}, {'question': 'Які природні особливості характерні для північного регіону України — Полісся, що сприяло збереженню там найдавніших архаїчних пісень та традицій?', 'options': [{'text': 'Густі ліси і болота', 'correct': True}, {'text': 'Високі скелясті гори', 'correct': False}, {'text': 'Безкраї сонячні степи', 'correct': False}, {'text': 'Піщані пустелі', 'correct': False}]}, {'question': 'У якій частині України розташований історико-географічний регіон Слобожанщина, головним культурним та освітнім центром якого є сучасний Харків?', 'options': [{'text': 'На північному сході (Харківщина)', 'correct': True}, {'text': 'На крайньому заході', 'correct': False}, {'text': 'На сонячному півдні', 'correct': False}, {'text': 'У географічному центрі', 'correct': False}]}, {'question': 'Який регіон Центральної України славиться своїми широкими степами, островом Хортиця та героїчною історією запорозького козацтва?', 'options': [{'text': 'Запоріжжя (Наддніпрянщина)', 'correct': True}, {'text': 'Лісиста Волинь', 'correct': False}, {'text': 'Буковина', 'correct': False}, {'text': 'Гірське Закарпаття', 'correct': False}]}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 89-praktyka-1-narodna-kultura.yaml: Insufficient activities: 7 found, minimum 12 required for C1
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Мозаїка традицій, Вступ: Мозаїка традицій та жива пам’ять
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template'
-  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md
-
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 40/100)
 
-- 4 violations (moderate)
+- Revision recommended (severity 40/100)
+- 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 3487/2000
+- **Words:** ❌ 2139/3000 (raw: 2276)
 - **Activities:** ❌ 7/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ❌ No priority types
-- **Engagement:** ✅ 7/7
+- **Engagement:** ❌ 2/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 20 < 25 (soft target)
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too few activities: 7 (target 12-16)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (fine-arts))
-- **Richness:** ❌ 79% < 95% min (content)
-- **Grammar:** ⏳ Pending validation
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (fine-arts))
+- **Richness:** ❌ 69% < 95% min (content)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 79% (minimum: 95%)
+**Score:** 69% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 29 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.84 | - | 84% | 12% | 10.5% |
+| examples | 16 | 15 | 100% | 25% | 25.0% |
+| engagement | 2 | 5 | 40% | 19% | 7.5% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
 | cultural | 20 | 4 | 100% | 12% | 12.5% |
 | realworld | 0 | 3 | 0% | 12% | 0.0% |
 | visual | 2 | 4 | 50% | 6% | 3.1% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
 | questions | 2 | 4 | 50% | 6% | 3.1% |
-| **TOTAL** | | | | | **79.2%** |
+| **TOTAL** | | | | | **69.9%** |
 
 ### Dryness Flags & Fixes
 - ❌ **ABSTRACT_ONLY**
@@ -68,20 +93,13 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Вступ: Мозаїка традицій** | ⚪️ | 94 | Skipped |
-| **Спадщина ЮНЕСКО: Скарби людства** | ⚪️ | 134 | Skipped |
-| **Народна музика: Душа нації** | ⚪️ | 248 | Skipped |
-| **Народний танець: Ритм життя** | ⚪️ | 85 | Skipped |
-| **Народні ремесла та побут** | ⚪️ | 291 | Skipped |
-| **Вірування та обряди: Коло життя** | ⚪️ | 231 | Skipped |
-| **Сучасна інтерпретація** | ⚪️ | 48 | Skipped |
-| **Регіональна ідентичність: Єдність у різноманітті** | ⚪️ | 182 | Skipped |
-| **Вступ: Мозаїка традицій та жива пам’ять** | ⚪️ | 146 | Skipped |
+| **Вступ: Мозаїка традицій та жива пам’ять** | ✅ | 146 | Included in Core |
 | **Спадщина ЮНЕСКО: Скарби людства та визнання світу** | ⚪️ | 275 | Skipped |
 | **Народна музика: Душа нації та голос історії** | ⚪️ | 472 | Skipped |
 | **Народний танець: Ритм життя та бойова майстерність** | ⚪️ | 141 | Skipped |
 | **Народні ремесла: Естетика побуту та магія оберегів** | ⚪️ | 422 | Skipped |
 | **Вірування та обряди: Велике коло життя** | ⚪️ | 279 | Skipped |
-| **Регіональна ідентичність: Єдність у неймовірному різноманітті** | ⚪️ | 236 | Skipped |
+| **Регіональна ідентичність: Єдність у неймовірному різноманітті** | ⚪️ | 128 | Skipped |
+| **Аналіз: Народна культура як код нації** | ✅ | 73 | Included in Core |
 | **Підсумок** | ✅ | 69 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 71 | Skipped |

@@ -1,26 +1,62 @@
-# Audit Report: 140-intimate-register.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 2000
+# Audit Report: M44 — 44-intimate-register.md
+**Level:** C1 | **Module:** M44 | **Phase:** C1.4 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:31
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння текстів модуля | 5 | 5 | ✅ |
+| 2 | fill-in | Утворення димінутивів | 6 | 6 | ✅ |
+| 3 | unjumble | Емоційний синтаксис | 5 | 5 | ✅ |
+| 4 | match-up | Синоніми ніжності | 8 | 6 | ✅ |
+| 5 | match-up | Пари слів: Нейтральне vs Пестливе | 8 | 6 | ✅ |
+| 6 | group-sort | Види звертань | 15 | 12 | ✅ |
+| 7 | cloze | Лист коханій | 12 | 12 | ✅ |
+| 8 | fill-in | Трансформація в інтимний регістр | 6 | 6 | ✅ |
+| 9 | translate | Романтичні ідіоми | 5 | 5 | ✅ |
+| 10 | error-correction | Стилістичні помилки в інтимній розмові | 5 | 5 | ✅ |
+| 11 | essay-response | Лист-зізнання | 1 | 1 | ✅ |
+| 12 | critical-analysis | Аналіз звертання "Ви" до батьків | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-intimate-register.yaml: Schema validation error at key '9': {'type': 'error-correction', 'title': 'Стилістичні помилки в інтимній розмові', 'instruction': 'Знайдіть недоречні офіційні фрази в розмові закоханих і замініть їх на інтимні.', 'items': [{'sentence': 'Кохана, я хочу [[здійснити акт дарування]] тобі квітів.', 'error': 'здійснити акт дарування', 'answer': 'подарувати', 'options': ['podaruvaty', 'vruchyty', 'nadaty', 'peredaty'], 'explanation': "Офіційна фраза 'здійснити акт дарування' звучить комічно в інтимній розмові. Краще просто 'подарувати'."}, {'sentence': 'Згідно з нашою домовленістю, я [[прибув]] на побачення вчасно.', 'error': 'прибув', 'answer': 'прийшов', 'options': ['pryyshov', "z'yavyvsya", 'pryletiv', 'prybig'], 'explanation': "'Прибув' — це канцеляризм. У розмові з коханою людиною краще сказати 'прийшов'."}, {'sentence': 'Шановна Олено, ти [[виглядаєш]] задовільно.', 'error': 'виглядаєш', 'answer': 'маєш вигляд', 'options': ['mayesh vyhlyad', 'dyvyshysya', 'bachysh', 'zdayeshsya'], 'explanation': "Краще сказати 'Ти маєш чудовий вигляд' або 'Ти красуня'. 'Виглядаєш' — калька, а 'задовільно' — це оцінка '3', а не комплімент."}, {'sentence': 'Я відчуваю до тебе [[симпатію і повагу]].', 'error': 'симпатію і повагу', 'answer': 'кохання', 'options': ['kokhannya', 'lyubov', 'interes', 'druzhbu'], 'explanation': "Для близьких стосунків це занадто сухо. Краще: 'Я тебе кохаю' або 'Я тебе обожнюю'."}, {'sentence': 'Прошу [[надати дозвіл]] поцілувати тебе.', 'error': 'надати дозвіл', 'answer': 'дозволити', 'options': ['dozvolyty', 'daty pravo', 'pidpysaty paperu', 'skazaty tak'], 'explanation': "'Надати дозвіл' — це мова заяв. В інтимній розмові краще: 'Можна тебе поцілувати?' або 'Дозволь тебе поцілувати'."}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-intimate-register.yaml: Schema validation error at key 'words': ['Ти', 'найкраще', 'і', 'найдорожче', 'що', 'є', 'у', 'моєму', 'житті', 'моє', 'золотце'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2041/2000
+- **Words:** ❌ 2041/3000 (raw: 2233)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
@@ -50,7 +86,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
-| **Вступ: Мова серця** | ⚪️ | 221 | Skipped |
+| **Вступ: Мова серця** | ✅ | 221 | Included in Core |
 | **Презентація первинних текстів** | ✅ | 222 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 188 | Included in Core |
 | **Граматика ніжності** | ⚪️ | 288 | Skipped |

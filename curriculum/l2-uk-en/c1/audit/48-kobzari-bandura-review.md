@@ -1,26 +1,66 @@
-# Audit Report: 144-kobzari-bandura.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Cultural Immersion | **Target:** 2000
+# Audit Report: M48 — 48-kobzari-bandura.md
+**Level:** C1 | **Module:** M48 | **Phase:** C1.5 | **Pedagogy:** Cultural Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:34
+
+## Configuration
+**Type:** C1-cultural
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння кобзарської традиції | 5 | 5 | ✅ |
+| 2 | match-up | Будова бандури | 8 | 6 | ✅ |
+| 3 | group-sort | Епохи бандури | 14 | 12 | ✅ |
+| 4 | fill-in | Музична термінологія | 6 | 6 | ✅ |
+| 5 | cloze | Історія репресій | 12 | 12 | ✅ |
+| 6 | unjumble | Факти про думи | 5 | 5 | ✅ |
+| 7 | translate | Переклад культурних понять | 5 | 5 | ✅ |
+| 8 | error-correction | Історичні помилки | 5 | 5 | ✅ |
+| 9 | essay-response | Роздум про традицію | 1 | 1 | ✅ |
+| 10 | critical-analysis | Аналіз фільму "Поводир" | 1 | 1 | ✅ |
+| 11 | match-up | Виконавці бандури | 8 | 6 | ✅ |
+| 12 | group-sort | Словник емоцій | 12 | 12 | ✅ |
+| 13 | quiz | Деталі інструмента | 5 | 5 | ✅ |
+| 14 | unjumble | Цитати про пісню | 5 | 5 | ✅ |
+| 15 | fill-in | Культурний контекст | 6 | 6 | ✅ |
+| 16 | match-up | Герої дум | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 144-kobzari-bandura.yaml: Schema validation error at key '14': {'type': 'fill-in', 'title': 'Культурний контекст', 'instruction': 'Вставте відповідне слово.', 'items': [{'sentence': 'Шевченка називають Великим ___.', 'answer': 'Кобзарем', 'options': ['Кобзарем', 'Співаком', 'Гравцем', 'Поетом']}, {'sentence': "Фільм 'Поводир' розповідає про ___ 1930-х років.", 'answer': 'події', 'options': ['події', 'свята', 'танці', 'жарти']}, {'sentence': 'Сучасні бандуристи часто виступають на ___ сценах.', 'answer': 'світових', 'options': ['світових', 'лісових', 'домашніх', 'таємних']}, {'sentence': 'Звук бандури часто порівнюють зі ___.', 'answer': 'сріблом', 'options': ['сріблом', 'золотом', 'залізом', 'деревом']}, {'sentence': 'Кобзарі мали свою таємну ___ мову.', 'answer': 'лебійську', 'options': ['лебійську', 'пташину', 'вовчу', "риб'ячу"]}, {'sentence': 'Щоб стати кобзарем, треба було пройти обряд ___.', 'answer': 'посвяти', 'options': ['посвяти', 'весілля', 'хрещення', 'прощання']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 48-kobzari-bandura.yaml: Schema validation error at key 'words': ['Кобзарі', 'були', 'духовними', 'провідниками', 'українського', 'народу', 'у', 'найтемніші', 'часи', 'нашої', 'історії'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 1970/2000 (30 short)
+- **Words:** ❌ 1970/3000 (raw: 2131)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
@@ -50,7 +90,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Вступ: Хто такі кобзарі?** | ⚪️ | 142 | Skipped |
+| **Вступ: Хто такі кобзарі?** | ✅ | 142 | Included in Core |
 | **Інструмент: Анатомія бандури** | ⚪️ | 167 | Skipped |
 | **Жанр: Українські думи** | ⚪️ | 159 | Skipped |
 | **Аналіз кобзарського репертуару** | ✅ | 142 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 21:30:33
+**Generated:** 2026-01-25 19:22:13
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -45,14 +45,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1822/1200 (raw: 2052)
+- **Words:** ✅ 1829/1200 (raw: 2071)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/10
+- **Vocab:** ✅ 60/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -75,19 +75,19 @@
 | engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 0.99 | - | 99% | 10% | 9.9% |
-| **TOTAL** | | | | | **98.7%** |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
 | **Огляд** | ⚪️ | 64 | Skipped |
-| **Skill 1: Вид у минулому часі** | ⚪️ | 326 | Skipped |
-| **Skill 2: Вид у майбутньому часі** | ⚪️ | 207 | Skipped |
-| **Skill 3: Вид у запереченні** | ⚪️ | 325 | Skipped |
-| **Skill 4: Вид у наказовому способі** | ⚪️ | 279 | Skipped |
-| **Skill 5: Видові пари** | ⚪️ | 151 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 158 | Skipped |
-| **Підсумок** | ✅ | 132 | Included in Core |
+| **Skill 1: Вид у минулому часі** | ⚪️ | 327 | Skipped |
+| **Skill 2: Вид у майбутньому часі** | ⚪️ | 208 | Skipped |
+| **Skill 3: Вид у запереченні** | ⚪️ | 326 | Skipped |
+| **Skill 4: Вид у наказовому способі** | ⚪️ | 280 | Skipped |
+| **Skill 5: Видові пари** | ⚪️ | 152 | Skipped |
+| **Інтеграційне завдання** | ⚪️ | 159 | Skipped |
+| **Підсумок** | ✅ | 133 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,8 +1,8 @@
-title: "Братства та освіта: Острозька академія"
+title: 'Братства та освіта: Острозька академія'
 slug: bratstva-i-osvita
 level: B2
 track: history
-phase: "B2.3a [Українська історія]"
+phase: B2.3a [Українська історія]
 status: content-ready
 focus: history
 pedagogy: CBI
@@ -11,37 +11,37 @@ duration: 120
 register: публіцистичний
 transliteration: none
 tags:
-  - history
-  - education
-  - brotherhoods
-  - ostroh-academy
+- history
+- education
+- brotherhoods
+- ostroh-academy
 grammar:
-  - 'Історичний наратив'
-  - 'Складні синтаксичні конструкції'
+- Історичний наратив
+- Складні синтаксичні конструкції
 objectives:
-  - 'Учень може пояснити роль братств у збереженні національної ідентичності'
-  - 'Учень аналізує значення Острозької академії як першого вищого навчального закладу'
-  - 'Учень володіє термінологією історії освіти та культури'
+- Учень може пояснити роль братств у збереженні національної ідентичності
+- Учень аналізує значення Острозької академії як першого вищого навчального закладу
+- Учень володіє термінологією історії освіти та культури
 vocabulary_count: 30
 content_outline:
-  - section: "Вступ"
-    words: 343
-  - section: "Феномен братств"
-    words: 695
-  - section: "Освітня діяльність братств"
-    words: 592
-  - section: "Острозька академія"
-    words: 535
-  - section: "Читання"
-    words: 293
-  - section: "Первинні джерела"
-    words: 387
-  - section: "Деколонізаційний погляд"
-    words: 325
-  - section: "Есе"
-    words: 455
-  - section: "Потрібно більше практики?"
-    words: 103
+- section: Вступ
+  words: 368
+- section: Феномен братств
+  words: 745
+- section: Освітня діяльність братств
+  words: 635
+- section: Острозька академія
+  words: 574
+- section: Читання
+  words: 314
+- section: Первинні джерела
+  words: 415
+- section: Деколонізаційний погляд
+  words: 348
+- section: Есе
+  words: 488
+- section: Потрібно більше практики?
+  words: 113
 naturalness:
   score: 9
   status: PASS

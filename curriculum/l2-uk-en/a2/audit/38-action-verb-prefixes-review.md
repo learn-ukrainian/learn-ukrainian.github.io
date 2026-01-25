@@ -1,7 +1,7 @@
 # Audit Report: M38 — 38-action-verb-prefixes.md
 **Level:** A2 | **Module:** M38 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 15:17:10
+**Generated:** 2026-01-25 19:30:56
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,17 +35,6 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'передбачуваний'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, доконаний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1367/1000 (raw: 1488)
 - **Activities:** ✅ 10/10
@@ -54,10 +43,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 46/1
+- **Vocab:** ✅ 45/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 70.8% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

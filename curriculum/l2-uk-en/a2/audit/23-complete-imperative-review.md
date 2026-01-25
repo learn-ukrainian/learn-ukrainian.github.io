@@ -1,7 +1,7 @@
 # Audit Report: M23 — 23-complete-imperative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 10:00:22
+**Generated:** 2026-01-25 20:40:58
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,7 +38,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Stem ends in a consonant with stress on the stem**: Add **-ь** (sg) / **-ьте** (pl).". Shares significant keywords with sentence at index 19.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): допоможіть, давайте, ходімо, їж, послухайте...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): їж, покажіть, читай, пиши, скажіть...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -54,7 +54,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 14/1
+- **Vocab:** ✅ 10/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations

@@ -4,7 +4,7 @@
 
 Ласкаво просимо до нашої другої лабораторії «Lego Language»! У минулому модулі ми вивчили фізичний світ: як ми ходимо, пишемо та дивимося. Сьогодні ми зануримося в абстрактну глибину. Ми дослідимо, як працює наш розум та як ми розмовляємо з іншими. Ви дізнаєтеся, що в основі складних слів про ідеї та дискусії стоять прості «Супер-корені». Ми відкриємо чотири нові родини: **ДУМ-** (thought), **ГОВОР-** (speech), **МОВ-** (language) та **СЛУХ-** (hearing). Ви зрозумієте, чому «думка» та «щоденник» є родичами, і чому «промова» та «відмова» мають однакове коріння. Це знання допоможе вам не просто вчити слова, а розуміти логіку української ідентичності та спілкування. Починаємо наш шлях до інтелектуальної свободи!
 
-Welcome to our second "Lego Language" laboratory! In the previous module, we explored the physical world: how we move, write, and see. Today, we dive into abstract depths. We will research how our mind works and how we communicate with others. You will discover that at the heart of complex words about ideas and discussions stand simple "Super-Roots." We will unlock four new families: **ДУМ-** (thought), **ГОВОР-** (speech), **МОВ-** (language), and **СЛУХ-** (hearing). You will understand why "thought" and "diary" are relatives, and why "speech" and "refusal" share the same root. This knowledge will help you not just learn words, but understand the logic of Ukrainian identity and communication. Let's start our journey toward intellectual freedom!
+Welcome to our second "Lego Language" laboratory! We have already explored the physical world: how we move, write, and see. Today, we dive into abstract depths. We will research how our mind works and how we communicate with others. You will discover that at the heart of complex words about ideas and discussions stand simple "Super-Roots." We will unlock four new families: **ДУМ-** (thought), **ГОВОР-** (speech), **МОВ-** (language), and **СЛУХ-** (hearing). You will understand why "thought" and "diary" are relatives, and why "speech" and "refusal" share the same root. This knowledge will help you not just learn words, but understand the logic of Ukrainian identity and communication. Let's start our journey toward intellectual freedom!
 
 **Що ви вивчите сьогодні (Learning Objectives):**
 
@@ -50,14 +50,80 @@ Welcome to our second "Lego Language" laboratory! In the previous module, we exp
 - **Слухняний** (Obedient): Дитина, яка _слухає_ батьків.
 - **Прислухатися** (To heed/listen closely): Звертати увагу на дрібні деталі або поради.
 
-### 4. Semantic Shifts: Prefix + Root (Зміна сенсу)
+### 4. The Power of Prefixes (Магія Префіксів)
 
-Prefixes can completely flip the meaning of a root. This is why knowing the core is so strategic:
+Prefixes change the "direction" of the root idea.
 
-- **МОВ-** (Speech) + **РОЗ-** (Distribution) -> **Розмова** (A shared interaction/conversation).
-- **МОВ-** (Speech) + **ВІД-** (Back/Away) -> **Відмова** (A verbal pushback/refusal).
-- **МОВ-** (Speech) + **ПРО-** (Forward/Through) -> **Промова** (A professional public speech).
-- **ДУМ-** (Thought) + **РОЗ-** (Apart/Thorough) -> **Роздуми** (Detailed analytical thinking).
+| Prefix   | Meaning         | Examples                   | Logic                   |
+| -------- | --------------- | -------------------------- | ----------------------- |
+| **Від-** | Back, Away      | **Від**мова — refusal      | Pushing an idea away.   |
+| **Про-** | Forward, Public | **Про**мова — speech       | Moving an idea forward. |
+| **Роз-** | Outwards        | **Роз**мова — conversation | Interaction.            |
+| **За-**  | Into, Deep      | **За**думатися — to ponder | Moving into a state.    |
+| **Ви-**  | Out, Result     | **Ви**мова — pronunciation | Bringing out.           |
+
+> [!tip] **Analogy: The Ball Game**
+> Уявіть, що корінь — це м'яч.
+>
+> - **ГОВОР-** — це кидок м'яча.
+> - **МОВ-** — це сам м'яч.
+> - **СЛУХ-** — це здатність спіймати м'яч.
+> - Префікси кажуть, _куди_ летіти: **Від-** (назад), **Про-** (вперед до людей), **Роз-** (пас один одному).
+
+### 5. Hearing vs. Listening (Слухати проти Чути)
+
+Як і в англійській мові, є різниця між фізикою та увагою.
+
+- **Чути** (To hear): Фізична здатність. «Я чую шум» (I hear noise). Це стається автоматично.
+- **Слухати** (To listen): Активний процес. «Я слухаю музику» (I am listening to music). Ви фокусуєте увагу.
+- **Дослухатися** (To heed): Приймати пораду. «Він дослухається до мами».
+- **Прислухатися** (To listen closely): Намагатися почути тихий звук.
+- **Слухняний** (Obedient): Той, хто «слухає» правила.
+
+### 6. Speaking vs. Language (Говорити проти Мови)
+
+- **Говорити**: Дієслово (to speak/talk). Фокус на дії.
+  - «Він говорить швидко».
+- **Мова**: Іменник (language/speech). Система або здатність.
+  - «Українська мова».
+  - «У нього відняло мову» (He lost his speech).
+- **Розмовляти**: Вести діалог (to converse).
+  - «Ми розмовляємо про політику».
+
+### 6b. To Speak or To Say? (Говорити чи Казати)
+
+Це класичне питання для студентів.
+
+- **Говорити** (To speak): Цей корінь (**ГОВОР-**) вказує на процес мовлення або здатність.
+  - «Ми говоримо українською».
+  - «Він говорить дуже тихо».
+- **Казати** (To say/tell): Цей корінь вказує на зміст повідомлення.
+  - «Він каже правду» (He is telling the truth).
+  - «Мама завжди казала мені...» (Mom always told me...).
+- **Сказати** (To say - Perfective): Сказати один раз, отримати результат.
+  - «Я хочу сказати важливу річ».
+
+> [!important] **Grammar Note (Граматична нотатка)**
+> **Говорити** — це _дієслово_ процесу.
+> **Сказати** — це _дієслово_ результату.
+> **Думка** — це _іменник_, а **Думати** — це дієслово.
+
+### 7. The Power of Silence (Сила Мовчання)
+
+Корінь **МОВЧ-** (silence) є антиподом **ГОВОР-**. Але в українській культурі мовчання теж може "говорити".
+
+- **Мовчати** (To be silent): «Він мовчить, бо він думає».
+- **Мовчання** (Silence): «Мовчання — знак згоди» (Silence is a sign of agreement).
+- **Замовчати** (To fall silent / Hush up): Перестати говорити.
+
+### 8. Semantic Connections (Семантичні зв'язки)
+
+- **Думати** -> **Думка** -> **Роздуми**.
+- **Слухати** -> **Слухач** -> **Слухняний**.
+- **Говорити** -> **Договір**.
+- **Мова** -> **Вимова** -> **Промова**.
+
+Ця мережа робить українські слова логічними. Якщо ви знаєте, що **ПРО-** означає «вперед / публічно», ви розумієте, що **Промова** — це публічний виступ!
 
 > [!important] **Language vs. Conversation (Мова чи Розмова)**
 > Пам'ятайте різницю: **Мова** — це система (Ukrainian language), а **Розмова** — це процес (a talk). Вони мають один корінь, але різні префікси.
@@ -96,7 +162,7 @@ Prefixes can completely flip the meaning of a root. This is why knowing the core
 3. Думати -> **Знати**
 
 > [!reflection] **The Mind's Architecture (Архітектура розуму)**
-> Наші слова про думки та спілкування — це фундамент цивілізації. Ми не просто передаємо звуки, ми ділимося Доріннями (roots) нашої ідентичності. Коли ви кажете «Я думаю», ви входите в велику родину української інтелектуальної традиції. Слухайте світ, аналізуйте розмови та будуйте свої промови з новими силами!
+> Наші слова про думки та спілкування — це фундамент цивілізації. Ми не просто передаємо звуки, ми ділимося корінням нашої ідентичності. Коли ви кажете «Я думаю», ви входите в велику родину української інтелектуальної традиції. Слухайте світ, аналізуйте розмови та будуйте свої промови з новими силами!
 
 > [!tip] **The Prefix РОЗ- (Префікс РОЗ-)**
 > Префікс **РОЗ-** часто означає розширення або взаємодію. **Розмова**, **роздуми**, **розповідати**. Це ключ до розуміння соціальних процесів.

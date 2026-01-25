@@ -4,7 +4,7 @@
 
 **Ласкаво просимо до світу порівнянь!** Кожного дня ми робимо сотні виборів: яка кава смачніша, який телефон дешевший, чия дорога додому коротша. Порівняння — це один із найважливіших інструментів спілкування. В українській мові ми використовуємо для цього вищий ступінь прикметників. Ви вже знаєте, як описувати речі за допомогою базових прикметників; сьогодні ми навчимося їх зіставляти. Це не лише додасть вашому мовленню точності, а й дозволить висловлювати вподобання та робити компліменти значно природніше.
 
-Making comparisons is at the heart of daily communication. Whether you are shopping for groceries, choosing a movie, or describing your family, you need the skills to say one thing is "bigger," "faster," or "more interesting" than another. In Ukrainian, these are called comparative adjectives (вищий ступінь прикметників). In this module, we will explore the different ways to form these words—from the simple adding of a suffix to the few but essential irregular forms. By the end, you'll be able to navigate a Ukrainian market or join a friendly debate with confidence!
+Ми робимо порівняння щодня. Чи купуєте ви продукти, чи вибираєте фільм, чи описуєте свою родину — вам потрібні навички, щоб сказати, що щось є «більшим», «швидшим» або «цікавішим» за інше. В українській мові це називається вищим ступенем прикметників (comparative adjectives). У цьому модулі ми дослідимо різні способи утворення цих слів. Від простого додавання суфікса до важливих нерегулярних форм. До кінця ви зможете впевнено орієнтуватися на українському ринку або приєднатися до дружньої дискусії! (Making comparisons is at the heart of daily communication. Whether you are shopping, choosing a movie, or describing your family, you need the skills to say one thing is "bigger," "faster," or "more interesting" than another. In Ukrainian, these are called comparative adjectives. In this module, we will explore the different ways to form these words—from suffixes to irregular forms. By the end, you'll be able to navigate a market or join a debate with confidence!)
 
 **Що ви вивчите в цьому модулі:**
 
@@ -28,8 +28,8 @@ The most natural way to compare in Ukrainian is the "synthetic" form, where we a
 | милий           | мил-   | мил**іший**       | kinder / cuter |
 | швидкий         | швид-  | швид**ший**       | faster         |
 
-**The Spelling Rule:**
-Use **-іший** for most adjectives. It is the safest and most regular pattern. You'll notice that for adjectives ending in -кий (like швидкий), the -к- sometimes drops or changes when adding **-ший**.
+**Правило правопису (The Spelling Rule):**
+Використовуйте **-іший** для більшості прикметників. Це найнадійніша модель. Ви помітите особливість для прикметників на -кий (як швидкий). При додаванні **-ший** частина -к- іноді зникає або змінюється. (Use -іший for most adjectives. It is the safest pattern. You'll notice a feature for adjectives ending in -kyy. The -k- suffix sometimes drops or changes when adding -shyy.)
 
 ### 2. Compound Form: More vs. Less (Аналітична форма)
 
@@ -39,8 +39,8 @@ For some complex adjectives, or when you want to sound more formal, Ukrainian us
 - **менш** цікавий (less interesting)
 - **більш** комфортний (more comfortable)
 
-> [!tip] **Natural Choice**
-> While both forms are correct, synthetic forms (like **новіший**) are much more frequent in spoken, everyday Ukrainian. Use compound forms for long, multi-syllable adjectives that feel difficult to pronounce with extra suffixes.
+> [!tip] **Природний вибір (Natural Choice)**
+> Хоча обидві форми правильні, синтетичні форми (як **новіший**) набагато частіше зустрічаються в розмовній мові. Використовуйте аналітичні форми для довгих багатоскладових прикметників. Це полегшує вимову. (While both forms are correct, synthetic forms are much more frequent in spoken, everyday Ukrainian. Use compound forms for long, multi-syllable adjectives that feel difficult to pronounce with extra suffixes.)
 
 ### 3. Irregular Comparatives: The "Big 10" (Нерегулярні форми)
 
@@ -59,17 +59,17 @@ Some of the most common adjectives in the world refuse to follow the regular rul
 | **дорогий** | **дорожчий**      | more expensive  |
 | **дешевий** | **дешевший**      | cheaper         |
 
-### 4. Comparison Structures: Than vs. Beyond (Ніж та За)
+### 4. Comparison Structures: Ніж та За (Than and Beyond)
 
 Once you have your comparative word, how do you link the two things you are comparing? Ukrainian gives you two elegant options:
 
-**Option A: Using Ніж (Than)**
+**Варіант А: Використання Ніж (Option A)**
 This is very similar to English.
 
 - Речення: [A] + [Comparative] + **ніж** + [B (Nominative)]
 - Приклад: Мій дім більший, **ніж** твій дім. (My house is bigger than your house.)
 
-**Option B: Using За (Beyond/Than)**
+**Варіант Б: Використання За (Option B)**
 This is the "shorthand" version often heard in conversation. It requires the second object to be in the **Accusative** case.
 
 - Речення: [A] + [Comparative] + **за** + [B (Accusative)]

@@ -22,24 +22,24 @@ objectives:
 vocabulary_count: 35
 slug: velyke-kniazivstvo-lytovske
 content_outline:
-  - section: "Вступ"
-    words: 200
-  - section: "Династія Гедиміновичів: Від будівничих до захисників"
-    words: 200
-  - section: "Вітовт Великий: Золота доба та європейський тріумф"
-    words: 200
-  - section: "Релігійна толерантність і автономія"
-    words: 200
-  - section: "Первинні джерела"
-    words: 200
-  - section: "Читання"
-    words: 100
-  - section: "Деколонізаційний погляд"
-    words: 100
-  - section: "Есе"
-    words: 100
-  - section: "Потрібно більше практики?"
-    words: 100
+- section: Вступ
+  words: 571
+- section: 'Династія Гедиміновичів: Від будівничих до захисників'
+  words: 571
+- section: 'Вітовт Великий: Золота доба та європейський тріумф'
+  words: 571
+- section: Релігійна толерантність і автономія
+  words: 571
+- section: Первинні джерела
+  words: 571
+- section: Читання
+  words: 285
+- section: Деколонізаційний погляд
+  words: 285
+- section: Есе
+  words: 285
+- section: Потрібно більше практики?
+  words: 290
 naturalness:
   score: 9
   status: PASS

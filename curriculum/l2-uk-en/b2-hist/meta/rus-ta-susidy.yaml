@@ -9,16 +9,16 @@ pedagogy: CBI
 duration: 120
 transliteration: none
 tags:
-  - history
-  - kyivan-rus
-  - diplomacy
+- history
+- kyivan-rus
+- diplomacy
 grammar:
-  - Past tense narrative
-  - Diplomatic and international relations terminology
+- Past tense narrative
+- Diplomatic and international relations terminology
 objectives:
-  - Trace the history of Russo-Byzantine relations
-  - Understand the role of dynastic marriages in Rus foreign policy
-  - Analyze the relations with western and steppe neighbors
+- Trace the history of Russo-Byzantine relations
+- Understand the role of dynastic marriages in Rus foreign policy
+- Analyze the relations with western and steppe neighbors
 immersion: 100% Ukrainian
 naturalness:
   score: 9
@@ -38,42 +38,42 @@ sources:
   notes: Chronicle accounts
 content_outline:
 - section: Вступ — Русь у міжнародному контексті
-  words: 480
+  words: 529
   points:
   - Геополітичне положення Русі
   - Торгівля, війна, дипломатія
   - Династичні зв'язки як інструмент політики
   - Русь очима сусідів
 - section: Русь і Візантія
-  words: 746
+  words: 823
   points:
   - Від ворожнечі до союзу
   - Договори 907, 911, 944, 971 років
   - Хрещення та церковні зв'язки
   - Культурний вплив — мистецтво, право, освіта
 - section: Русь і Польща
-  words: 640
+  words: 706
   points:
   - Сусіди та суперники
   - Конфлікт за Червенські гради
   - Болеслав Хоробрий у Києві (1018)
   - Від ворожнечі до династичних шлюбів
 - section: Русь і Угорщина
-  words: 586
+  words: 646
   points:
   - Сусідство в Карпатах
   - Династичні зв'язки — Анастасія, дружина Андраша I
   - Боротьба за Галичину
   - Спільний ворог — кочівники
 - section: Степові сусіди
-  words: 640
+  words: 706
   points:
   - Печеніги — постійна загроза
   - Торки та берендеї — «чорні клобуки«
   - Половці — вороги та союзники
   - Степовий кордон як виклик
 - section: Скандинавія та Захід
-  words: 533
+  words: 590
   points:
   - Варязькі зв'язки
   - Гаральд Суворий та Єлисавета
@@ -128,3 +128,4 @@ prerequisites:
 connects_to:
 - 'b2-hist-20 (Synthesis: Kyivan Rus)'
 - b2-hist-24 (Galicia-Volhynia — Hungarian influence)
+word_target: 4000

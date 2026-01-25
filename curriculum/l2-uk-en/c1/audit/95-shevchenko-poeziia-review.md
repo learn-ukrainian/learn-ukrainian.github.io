@@ -1,23 +1,66 @@
-# Audit Report: 191-shevchenko-poeziia.md
-**Phase:** C1.6 | **Level:** C1 | **Pedagogy:** Literary Analysis | **Target:** 2000
-**Overall Status:** ✅ PASS
+# Audit Report: M95 — 95-shevchenko-poeziia.md
+**Level:** C1 | **Module:** M95 | **Phase:** C1.6 | **Pedagogy:** Literary Analysis | **Target:** 3500
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:25:03
+
+## Configuration
+**Type:** C1-literature
+**Word Target:** 3500 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння "Заповіту" | 12 | 5 | ✅ |
+| 2 | fill-in | Шевченківська лексика | 12 | 6 | ✅ |
+| 3 | match-up | Символи та Значення | 12 | 6 | ✅ |
+| 4 | mark-the-words | Стилістичні фігури | 7 | 5 | ✅ |
+| 5 | error-correction | Виправлення помилок | 6 | 5 | ✅ |
+| 6 | group-sort | Періоди творчості | 13 | 12 | ✅ |
+| 7 | unjumble | Рядки із "Заповіту" | 6 | 5 | ✅ |
+| 8 | reading | Аналіз «Кавказу» | 3 | 3 | ✅ |
+| 9 | reading | Жіноча доля у Шевченка | 3 | 3 | ✅ |
+| 10 | essay-response | Еволюція образу України | 1 | 1 | ✅ |
+| 11 | critical-analysis | Аналіз "Заповіту" | 1 | 1 | ✅ |
+| 12 | translate | Переклад термінів | 12 | 5 | ✅ |
+| 13 | select | Теми творчості Шевченка | 8 | 5 | ✅ |
+| 14 | match-up | Цитати та Твори | 12 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 14 (target: 12-16) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, quiz) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2073/2000
-- **Activities:** ✅ 12/12
+- **Words:** ❌ 2073/3500 (raw: 2400)
+- **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (12 activities)
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (literature))
 - **Richness:** ✅ 99% (literature)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
 **Score:** 99% (minimum: 90%)
@@ -37,12 +80,6 @@
 | visual | 7 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

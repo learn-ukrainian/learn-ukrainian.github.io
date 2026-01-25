@@ -24,22 +24,22 @@ objectives:
 vocabulary_count: 32
 slug: ukrainski-zemli-u-vkl
 content_outline:
-  - section: "Вступ"
-    words: 200
-  - section: "Регіональна автономія: Київ, Волинь, Поділля"
-    words: 200
-  - section: "Соціальний устрій: Анатомія вільного суспільства"
-    words: 200
-  - section: "Читання"
-    words: 100
-  - section: "Первинні джерела"
-    words: 100
-  - section: "Деколонізаційний погляд"
-    words: 100
-  - section: "Есе"
-    words: 100
-  - section: "Потрібно більше практики?"
-    words: 100
+- section: Вступ
+  words: 727
+- section: 'Регіональна автономія: Київ, Волинь, Поділля'
+  words: 727
+- section: 'Соціальний устрій: Анатомія вільного суспільства'
+  words: 727
+- section: Читання
+  words: 363
+- section: Первинні джерела
+  words: 363
+- section: Деколонізаційний погляд
+  words: 363
+- section: Есе
+  words: 363
+- section: Потрібно більше практики?
+  words: 367
 naturalness:
   score: 9
   status: PASS

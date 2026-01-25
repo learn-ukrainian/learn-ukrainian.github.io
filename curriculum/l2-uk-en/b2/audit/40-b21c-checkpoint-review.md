@@ -1,17 +1,56 @@
-# Audit Report: 40-b21c-checkpoint.md
-**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+# Audit Report: M40 — 40-b21c-checkpoint.md
+**Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 1750
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:23:28
+
+## Configuration
+**Type:** B2-checkpoint
+**Word Target:** 1750 words
+**Activities:** 15-19 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥10 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Комплексний тест: Відмінювання числівників (М31-32) | 10 | 8 | ✅ |
+| 2 | quiz | Комплексний тест: Словотвір осіб (М33) | 10 | 8 | ✅ |
+| 3 | quiz | Комплексний тест: Односкладні речення (М38) | 10 | 8 | ✅ |
+| 4 | quiz | Комплексний тест: Інтеграція М31-39 | 10 | 8 | ✅ |
+| 5 | match-up | Словотвір: базове слово → назва особи | 16 | 8 | ✅ |
+| 6 | match-up | Словотвір: базове слово → місце | 16 | 8 | ✅ |
+| 7 | match-up | Прикметник → прислівник | 16 | 8 | ✅ |
+| 8 | cloze | Заповніть: Числівники в датах і часі | 14 | 14 | ✅ |
+| 9 | fill-in | Заповніть: Словотвір | 14 | 8 | ✅ |
+| 10 | fill-in | Заповніть: Прикметники та прислівники | 14 | 8 | ✅ |
+| 11 | group-sort | Класифікація односкладних речень | 20 | 14 | ✅ |
+| 12 | group-sort | Класифікація суфіксів словотвору | 20 | 14 | ✅ |
+| 13 | error-correction | Виправте помилки: Числівники | 12 | 6 | ✅ |
+| 14 | unjumble | Складіть речення: Числівники та час | 10 | 6 | ✅ |
+| 15 | unjumble | Складіть речення: Словотвір та регістри | 10 | 6 | ✅ |
+| 16 | essay-response | Підсумок фази: Мої досягнення в українській мові | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 16 (target: 15-19) ✅
+- Unique types: 8 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2355/1750
+- **Words:** ✅ 2355/1750 (raw: 2606)
 - **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/10
+- **Vocab:** ⚠️ 4 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

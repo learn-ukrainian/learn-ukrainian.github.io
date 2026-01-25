@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** Review | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:54:18
+**Generated:** 2026-01-25 20:07:18
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 133/1
+- **Vocab:** ✅ 131/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

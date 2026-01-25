@@ -1,18 +1,54 @@
-# Audit Report: 01-introduction-to-kotliarevsky.md
-**Phase:** LIT | **Level:** LIT | **Pedagogy:** literature | **Target:** 3500
+# Audit Report: M01 — 01-introduction-to-kotliarevsky.md
+**Level:** LIT | **Module:** M01 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:27:55
+
+## Configuration
+**Type:** LIT-literature
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** cloze, essay-response, match-up, quiz, reading
+**Engagement:** ≥4 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥0 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Іван Котляревський: Біографія та Контекст | 3 | 1 | ✅ |
+| 2 | essay-response | Есе-Роздум: Роль особистості | 1 | 1 | ✅ |
+| 3 | essay-response | Історичний Вердикт: Колабораціоніст чи Підпільник? | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз Цитати: Сергій Єфремов | 1 | 1 | ✅ |
+| 5 | essay-response | Трансформація Регістру: Від Оди до Бурлеску | 1 | 1 | ✅ |
+| 6 | critical-analysis | Аналіз Тропів: «Енеїда» як Ковчег | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 3 (minimum: 2) ✅
+- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/5 (essay-response, reading) ❌
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3671/3500
+- **Words:** ❌ 3671/4000 (raw: 3843)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/0
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 0/0
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)

@@ -1,0 +1,129 @@
+module: kinets-hetmanshchyny
+level: B2
+version: '1.0'
+items:
+  - lemma: гетьманство
+    ipa: /ˈɦɛtʲ.man.stwo/
+    translation: hetmanate
+    pos: noun
+    gender: n
+  - lemma: ліквідація
+    ipa: /lʲi.kʷi.ˈda.t͡sʲi.jɐ/
+    translation: liquidation, abolition
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /aw.to.ˈnɔ.mʲi.jɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: Січ
+    ipa: /sʲit͡ʃ/
+    translation: Sich (Cossack fortress)
+    pos: noun
+    gender: f
+  - lemma: знищення
+    ipa: /znɪ.ˈʃt͡ʃɛ.nʲːɐ/
+    translation: destruction
+    pos: noun
+    gender: n
+  - lemma: централізація
+    ipa: /t͡sɛn.tra.lʲi.ˈza.t͡sʲi.jɐ/
+    translation: centralization
+    pos: noun
+    gender: f
+  - lemma: колонізація
+    ipa: /ko.lo.nʲi.ˈza.t͡sʲi.jɐ/
+    translation: colonization
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /kri.ˈpat͡s.two/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: закріпачення
+    ipa: /za.kri.ˈpa.t͡ʃɛ.nʲːɐ/
+    translation: enserfment
+    pos: noun
+    gender: n
+  - lemma: колегія
+    ipa: /ko.ˈlɛ.ɦʲi.jɐ/
+    translation: collegium
+    pos: noun
+    gender: f
+  - lemma: булава
+    ipa: /bu.la.ˈwa/
+    translation: mace (symbol of power)
+    pos: noun
+    gender: f
+  - lemma: зречення
+    ipa: /ˈzrɛ.t͡ʃɛ.nʲːɐ/
+    translation: abdication, renunciation
+    pos: noun
+    gender: n
+  - lemma: повстання
+    ipa: /pows.ˈtan.ʲːɐ/
+    translation: uprising, rebellion
+    pos: noun
+    gender: n
+  - lemma: втікач
+    ipa: /wˈtʲi.kat͡ʃ/
+    translation: fugitive, runaway
+    pos: noun
+    gender: m
+  - lemma: експедиція
+    ipa: /ɛk.spɛ.ˈdɪ.t͡sʲi.jɐ/
+    translation: expedition
+    pos: noun
+    gender: f
+  - lemma: облога
+    ipa: /ob.lo.ˈɦa/
+    translation: siege
+    pos: noun
+    gender: f
+  - lemma: капітуляція
+    ipa: /ka.pʲi.tu.ˈlʲa.t͡sʲi.jɐ/
+    translation: capitulation, surrender
+    pos: noun
+    gender: f
+  - lemma: заслання
+    ipa: /za.ˈslan.ʲːɐ/
+    translation: exile, banishment
+    pos: noun
+    gender: n
+  - lemma: конфіскація
+    ipa: /kon.fʲis.ˈka.t͡sʲi.jɐ/
+    translation: confiscation
+    pos: noun
+    gender: f
+  - lemma: привілей
+    ipa: /prɪ.wʲi.ˈlɛj/
+    translation: privilege
+    pos: noun
+    gender: m
+  - lemma: сепаратизм
+    ipa: /sɛ.pa.ra.ˈtɪzm/
+    translation: separatism
+    pos: noun
+    gender: m
+  - lemma: асиміляція
+    ipa: /a.sɪ.mi.ˈlʲa.t͡sʲi.jɐ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: русифікація
+    ipa: /ru.sɪ.fi.ˈka.t͡sʲi.jɐ/
+    translation: Russification
+    pos: noun
+    gender: f
+  - lemma: колоніалізм
+    ipa: /ko.lo.nʲi.a.ˈlʲizm/
+    translation: colonialism
+    pos: noun
+    gender: m
+  - lemma: деспотія
+    ipa: /dɛs.po.ˈtʲi.jɐ/
+    translation: despotism
+    pos: noun
+    gender: f

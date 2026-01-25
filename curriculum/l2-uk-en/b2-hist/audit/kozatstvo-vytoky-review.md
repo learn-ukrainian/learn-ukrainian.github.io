@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M41 | **Phase:** HIST.5 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 09:21:14
+**Generated:** 2026-01-25 20:22:23
 
 ## Configuration
 **Type:** B2-history

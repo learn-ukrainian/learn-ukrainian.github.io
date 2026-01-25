@@ -1,21 +1,61 @@
-# Audit Report: kostiantyn-ostrozky-elder.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M11 — kostiantyn-ostrozky-elder.md
+**Level:** C1 | **Module:** M11 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:26:48
+
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Літописна оповідь про битву під Оршею | 1 | 1 | ✅ |
+| 2 | quiz | Розуміння тексту | 5 | 5 | ✅ |
+| 3 | fill-in | Біографічна лексика | 12 | 6 | ✅ |
+| 4 | match-up | Термінологія | 12 | 6 | ✅ |
+| 5 | group-sort | Визначення регістру | 10 | 1 | ✅ |
+| 6 | error-correction | Граматика в контексті | 10 | 5 | ✅ |
+| 7 | critical-analysis | Аналіз військової тактики Острозького | 1 | 1 | ✅ |
+| 8 | authorial-intent | Ідеологічне значення перемоги | 1 | 1 | ✅ |
+| 9 | essay-response | Есе: Костянтин Острозький — захисник віри та держави | 1 | 1 | ✅ |
+| 10 | comparative-study | Порівняння лідерів: Острозький vs Вишневецький | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 3-9) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (essay-response, quiz, reading) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 4132/4000
-- **Activities:** ✅ 10/4
+- **Words:** ✅ 4132/4000 (raw: 4436)
+- **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 4-8)
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -44,7 +84,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 201 | Included in Core |
-| **Вступ** | ⚪️ | 433 | Skipped |
+| **Вступ** | ✅ | 433 | Included in Core |
 | **Життєпис** | ⚪️ | 973 | Skipped |
 | **Внесок у розбудову нації, культури та економіки** | ✅ | 495 | Included in Core |
 | **Костянтин Острозький та Києво-Печерська Лавра: Сакральний союз** | ⚪️ | 152 | Skipped |

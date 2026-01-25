@@ -11,6 +11,94 @@ items:
   ipa: /aʋtɔmatɪzuʋˈatɪ/
   translation: to automate
   pos: verb
+- lemma: готувати
+  ipa: /ɦɔtuʋˈatɪ/
+  translation: to prepare, to cook (imperfective)
+  pos: verb
+- lemma: приготувати
+  ipa: /prɪɦɔtuʋˈatɪ/
+  translation: to prepare, to cook (perfective)
+  pos: verb
+- lemma: мити
+  ipa: /mˈɪtɪ/
+  translation: to wash (imperfective)
+  pos: verb
+- lemma: помити
+  ipa: /pɔmˈɪtɪ/
+  translation: to wash (perfective)
+  pos: verb
+- lemma: малювати
+  ipa: /malʲuʋˈatɪ/
+  translation: to paint, to draw (imperfective)
+  pos: verb
+- lemma: намалювати
+  ipa: /namalʲuʋˈatɪ/
+  translation: to paint, to draw (perfective)
+  pos: verb
+- lemma: дзвонити
+  ipa: /dzʋɔnˈɪtɪ/
+  translation: to ring, to call (imperfective)
+  pos: verb
+- lemma: питати
+  ipa: /pɪtˈatɪ/
+  translation: to ask (imperfective)
+  pos: verb
+- lemma: запитати
+  ipa: /zapɪtˈatɪ/
+  translation: to ask (perfective)
+  pos: verb
+- lemma: відповідати
+  ipa: /ʋidpɔʋidˈatɪ/
+  translation: to answer (imperfective)
+  pos: verb
+- lemma: відповісти
+  ipa: /ʋidpɔʋˈistɪ/
+  translation: to answer (perfective)
+  pos: verb
+- lemma: платити
+  ipa: /platˈɪtɪ/
+  translation: to pay (imperfective)
+  pos: verb
+- lemma: заплатити
+  ipa: /zaplatˈɪtɪ/
+  translation: to pay (perfective)
+  pos: verb
+- lemma: купувати
+  ipa: /kupuʋˈatɪ/
+  translation: to buy (imperfective)
+  pos: verb
+- lemma: купити
+  ipa: /kupˈɪtɪ/
+  translation: to buy (perfective)
+  pos: verb
+- lemma: продавати
+  ipa: /prɔdaʋˈatɪ/
+  translation: to sell (imperfective)
+  pos: verb
+- lemma: знаходити
+  ipa: /znaxˈɔdɪtɪ/
+  translation: to find (imperfective)
+  pos: verb
+- lemma: знайти
+  ipa: /znajtˈi/
+  translation: to find (perfective)
+  pos: verb
+- lemma: губити
+  ipa: /ɦubˈɪtɪ/
+  translation: to lose (imperfective)
+  pos: verb
+- lemma: загубити
+  ipa: /zaɦubˈɪtɪ/
+  translation: to lose (perfective)
+  pos: verb
+- lemma: пам'ятати
+  ipa: /pamjatˈatɪ/
+  translation: to remember (imperfective)
+  pos: verb
+- lemma: запам'ятати
+  ipa: /zapamjatˈatɪ/
+  translation: to remember (perfective)
+  pos: verb
 - lemma: відмовитися
   ipa: /ʋidmˈɔʋɪtɪsja/
   translation: to refuse, to give up
@@ -186,6 +274,10 @@ items:
 - lemma: ремонтувати
   ipa: /rɛmɔntuʋˈatɪ/
   translation: to repair
+  pos: verb
+- lemma: відремонтувати
+  ipa: /ʋidrɛmɔntuʋˈatɪ/
+  translation: to repair (perfective)
   pos: verb
 - lemma: будувати
   ipa: /buduʋˈatɪ/

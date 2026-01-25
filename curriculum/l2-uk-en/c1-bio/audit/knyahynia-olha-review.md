@@ -2,11 +2,12 @@
 **Level:** C1 | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 19:26:41
 
 ## Configuration
 **Type:** C1-biography
 **Word Target:** 4000 words
-**Activities:** 4-9 required
+**Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
@@ -27,7 +28,7 @@
 | 6 | quiz | Концептуальне розуміння | 5 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 4-9) ✅
+- Total activities: 6 (target: 3-9) ✅
 - Unique types: 6 (minimum: 3) ✅
 - Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
@@ -35,7 +36,7 @@
 
 ## Gates
 - **Words:** ✅ 4064/4000 (raw: 4351)
-- **Activities:** ✅ 6/4
+- **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used

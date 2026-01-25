@@ -2,6 +2,52 @@ module: 17-possessive-sviy
 level: A2
 version: '2.0'
 items:
+- lemma: займенник
+  ipa: /zajmˈɛnnɪk/
+  translation: pronoun
+  pos: noun
+  gender: m
+- lemma: свій
+  ipa: /sʋij/
+  translation: one's own (reflexive possessive)
+  pos: pron
+- lemma: множина
+  ipa: /mnɔʒɪnˈa/
+  translation: plural
+  pos: noun
+  gender: f
+- lemma: своя
+  ipa: /sʋɔjˈa/
+  translation: one's own (f)
+  pos: pron
+- lemma: своє
+  ipa: /sʋɔjˈɛ/
+  translation: one's own (n)
+  pos: pron
+- lemma: свої
+  ipa: /sʋɔjˈi/
+  translation: one's own (pl)
+  pos: pron
+- lemma: власне
+  ipa: /ʋlˈasnɛ/
+  translation: actually, properly speaking
+  pos: adv
+- lemma: власний
+  ipa: /ʋlˈasnɪj/
+  translation: own, private
+  pos: adj
+- lemma: особистий
+  ipa: /ɔsɔbˈɪstɪj/
+  translation: personal
+  pos: adj
+- lemma: спільний
+  ipa: /spˈilʲnɪj/
+  translation: common, joint
+  pos: adj
+- lemma: ділитися
+  ipa: /dilˈɪtɪsja/
+  translation: to share (imperfective)
+  pos: verb
 - lemma: автоматичний
   ipa: /aʋtɔmatˈɪt͡ʃnɪj/
   translation: automatic

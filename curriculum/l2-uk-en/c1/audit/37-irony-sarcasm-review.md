@@ -1,30 +1,66 @@
-# Audit Report: 133-irony-sarcasm.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+# Audit Report: M37 — 37-irony-sarcasm.md
+**Level:** C1 | **Module:** M37 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:24:27
+
+## Configuration
+**Type:** C1
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розрізнення іронії та сарказму | 5 | 5 | ✅ |
+| 2 | fill-in | Маркери іронії в тексті | 6 | 6 | ✅ |
+| 3 | match-up | Типи комічного | 8 | 6 | ✅ |
+| 4 | select | Аналіз ситуацій | 5 | 5 | ✅ |
+| 5 | unjumble | Іронічні висловлювання | 5 | 5 | ✅ |
+| 6 | cloze | Іронія в діалозі | 12 | 12 | ✅ |
+| 7 | group-sort | Пряме значення чи Іронія? | 12 | 12 | ✅ |
+| 8 | match-up | Саркастичні відповіді | 8 | 6 | ✅ |
+| 9 | error-correction | Виправлення розуміння | 5 | 5 | ✅ |
+| 10 | true-false | Правда чи Міф: Іронія | 5 | 5 | ✅ |
+| 11 | essay-response | Аналіз іронії у творі | 1 | 1 | ✅ |
+| 12 | select | Іронія в культурі | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 133-irony-sarcasm.yaml: Schema validation error at key '11': {'type': 'select', 'title': 'Іронія в культурі', 'items': [{'question': 'Який український письменник вважається майстром іронічної прози?', 'options': [{'text': 'Остап Вишня', 'correct': True}, {'text': 'Тарас Шевченко', 'correct': False}, {'text': 'Василь Стефаник', 'correct': False}, {'text': 'Іван Багряний', 'correct': False}], 'explanation': 'Остап Вишня — класик українського гумору та сатири.'}, {'question': "Що таке 'сміх крізь сльози'?", 'options': [{'text': 'Поєднання комічного і трагічного, характерне для української літератури.', 'correct': True}, {'text': 'Сміх під час нарізання цибулі.', 'correct': False}, {'text': 'Істерична реакція на стрес.', 'correct': False}, {'text': 'Медичний термін.', 'correct': False}]}, {'question': 'Який персонаж є прикладом сатиричного зображення?', 'options': [{'text': "Голохвастов ('За двома зайцями')", 'correct': True}, {'text': 'Захар Беркут', 'correct': False}, {'text': 'Мавка', 'correct': False}, {'text': 'Ярослав Мудрий', 'correct': False}]}, {'question': 'Як українці використовують іронію під час війни?', 'options': [{'text': 'Як захисний механізм та зброю проти пропаганди (меми, жарти).', 'correct': True}, {'text': 'Українці перестали жартувати.', 'correct': False}, {'text': 'Іронія заборонена законом.', 'correct': False}, {'text': 'Тільки для спілкування з ворогами.', 'correct': False}]}, {'question': "Що означає вираз 'зробити ведмежу послугу'?", 'options': [{'text': 'Допомогти так, що стало тільки гірше (ситуативна іронія).', 'correct': True}, {'text': 'Принести мед.', 'correct': False}, {'text': 'Бути дуже сильним.', 'correct': False}, {'text': 'Впасти в сплячку.', 'correct': False}]}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 37-irony-sarcasm.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template.md'
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
   - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 25/100)
 
 - 2 violations (minor)
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ⚠️ 1917/2000 (83 short)
+- **Words:** ❌ 1917/3000 (raw: 2091)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 25 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)

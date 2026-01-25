@@ -1,21 +1,61 @@
-# Audit Report: dmytro-vyshnevetsky.md
-**Phase:** C1 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 3000
+# Audit Report: M13 — dmytro-vyshnevetsky.md
+**Level:** C1 | **Module:** M13 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 19:26:49
+
+## Configuration
+**Type:** C1-biography
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
+**Required Types:** essay-response, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥24 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Дума про козака Байду | 1 | 1 | ✅ |
+| 2 | quiz | Життя та легенда | 5 | 5 | ✅ |
+| 3 | fill-in | Козацька лексика | 12 | 6 | ✅ |
+| 4 | match-up | Історичні реалії | 12 | 6 | ✅ |
+| 5 | group-sort | Князь чи Козак? | 10 | 1 | ✅ |
+| 6 | error-correction | Граматичні виправлення | 10 | 5 | ✅ |
+| 7 | critical-analysis | Аналіз образу Байди як національного архетипу | 1 | 1 | ✅ |
+| 8 | essay-response | Есе: Вишневецький — архітектор Запорозької Січі | 1 | 1 | ✅ |
+| 9 | authorial-intent | Аналіз трансформації історичного факту в міф | 1 | 1 | ✅ |
+| 10 | comparative-study | Порівняння стратегій: Вишневецький vs Острозький | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 3-9) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 3/3 (essay-response, quiz, reading) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 3299/3000
-- **Activities:** ✅ 10/4
+- **Words:** ❌ 3299/4000 (raw: 3570)
+- **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 10/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/24
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 4-8)
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -44,14 +84,14 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 105 | Included in Core |
-| **Вступ** | ⚪️ | 211 | Skipped |
+| **Вступ** | ✅ | 211 | Included in Core |
 | **Життєпис** | ⚪️ | 761 | Skipped |
 | **Останні роки життя: Молдовська авантюра** | ⚪️ | 449 | Skipped |
 | **Козацький побут на Хортиці: Народження традиції** | ⚪️ | 235 | Skipped |
 | **Архітектура першої Січі: Фортеця на воді** | ⚪️ | 127 | Skipped |
 | **Легенди та перекази про Байду: Фольклорний герой** | ⚪️ | 143 | Skipped |
 | **Політичний портрет: Авантюрист чи Державний діяч?** | ⚪️ | 196 | Skipped |
-| **Історіографія та джерела: Як ми знаємо те, що знаємо** | ⚪️ | 239 | Skipped |
+| **Історіографія та джерела: Як ми знаємо те, що знаємо** | ✅ | 239 | Included in Core |
 | **Історичний контекст** | ✅ | 154 | Included in Core |
 | **Внесок та Спадщина** | ⚪️ | 358 | Skipped |
 | **Порівняльний аналіз** | ✅ | 125 | Included in Core |

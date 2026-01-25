@@ -57,6 +57,14 @@ items:
   ipa: /zapiznˈɪtɪsja/
   translation: to be late
   pos: verb
+- lemma: забуду
+  ipa: /zabˈudu/
+  translation: will forget (1sg perfective)
+  pos: verb
+- lemma: загублю
+  ipa: /zaɦublʲˈu/
+  translation: will lose (1sg perfective)
+  pos: verb
 - lemma: заява
   ipa: /zaˈjaʋa/
   translation: statement, application
@@ -111,6 +119,10 @@ items:
 - lemma: прийду
   ipa: /prɪjdˈu/
   translation: will come (1sg perfective)
+  pos: verb
+- lemma: увійду
+  ipa: /uʋijdˈu/
+  translation: will enter (1sg perfective)
   pos: verb
 - lemma: прочитаю
   ipa: /prɔt͡ʃɪtˈaju/

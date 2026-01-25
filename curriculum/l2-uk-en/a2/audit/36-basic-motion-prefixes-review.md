@@ -1,7 +1,7 @@
 # Audit Report: M36 — 36-basic-motion-prefixes.md
 **Level:** A2 | **Module:** M36 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 14:45:24
+**Generated:** 2026-01-25 19:30:50
 
 ## Configuration
 **Type:** A2-grammar
@@ -43,7 +43,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 39/1
+- **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

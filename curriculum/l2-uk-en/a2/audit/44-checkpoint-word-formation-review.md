@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M44 | **Phase:** A2.3 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 08:58:17
+**Generated:** 2026-01-25 19:31:09
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 9/1
+- **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
