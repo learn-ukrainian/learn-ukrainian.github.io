@@ -1,6 +1,36 @@
 # Audit Report: M101 — holodomor-mekhanizm.md
 **Level:** B2 | **Module:** M101 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 4000
 **Overall Status:** ❌ FAIL
+**Generated:** 2026-01-25 16:03:26
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | «Механізм штучного голоду» | 8 | 8 | ✅ |
+| 2 | true-false | «Факти та міфи про Голодомор» | 10 | 8 | ✅ |
+| 3 | reading | «Голоси свідків: Таємні депеші та спогади» | 3 | 1 | ✅ |
+| 4 | essay-response | «Голодомор як інструмент політичного терору» | 1 | 1 | ✅ |
+| 5 | comparative-study | «Опір селянства: До і під час Голодомору» | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Required types used: 2/3 (essay-response, reading) ❌
+- Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
 - ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template.md'

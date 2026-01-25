@@ -16,10 +16,6 @@ items:
   translation: important (neuter)
   pos: noun
   gender: n
-- lemma: ввухо
-  ipa: /ʋʋuxɔ/
-  translation: ''
-  pos: noun
 - lemma: виконання
   ipa: /ʋɪkɔnannja/
   translation: performance, execution

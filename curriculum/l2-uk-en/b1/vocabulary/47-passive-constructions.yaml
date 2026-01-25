@@ -54,11 +54,6 @@ items:
   translation: fire
   pos: noun
   gender: m
-- lemma: генрик
-  ipa: /ɦɛnrɪk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: гетьманщина
   ipa: /ɦɛtʲmˈanʃt͡ʃɪna/
   translation: Hetmanate

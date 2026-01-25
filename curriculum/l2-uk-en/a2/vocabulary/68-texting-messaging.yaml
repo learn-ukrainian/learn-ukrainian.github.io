@@ -26,15 +26,6 @@ items:
   translation: sending
   pos: noun
   gender: n
-- lemma: ніха
-  ipa: /nixa/
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: прити
-  ipa: /prɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: стікер
   ipa: /stikɛr/
   translation: sticker

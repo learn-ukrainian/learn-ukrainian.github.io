@@ -27,11 +27,6 @@ items:
   translation: program
   pos: noun
   gender: f
-- lemma: рог
-  ipa: /rɔɦ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рости
   ipa: /rɔstˈɪ/
   translation: to grow

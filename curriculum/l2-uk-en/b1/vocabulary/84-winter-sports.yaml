@@ -64,11 +64,6 @@ items:
   translation: kolyba (traditional shepherd's hut/restaurant)
   pos: noun
   gender: f
-- lemma: коль
-  ipa: /kɔlʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: колядка
   ipa: /kɔlˈjadka/
   translation: koliadka (Christmas carol)

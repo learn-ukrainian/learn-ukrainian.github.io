@@ -168,11 +168,6 @@ items:
   translation: colleague
   pos: noun
   gender: m
-- lemma: кот
-  ipa: /kɔt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: лист
   ipa: /lɪst/
   translation: letter, leaf

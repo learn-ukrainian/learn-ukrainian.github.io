@@ -87,10 +87,6 @@ items:
   ipa: /ʋtˈɔmljuʋatɪsja/
   translation: to get tired (imperfective)
   pos: verb
-- lemma: вши
-  ipa: /ʋʃɪ/
-  translation: ''
-  pos: noun
 - lemma: відволікати
   ipa: /ʋidʋɔlikˈatɪ/
   translation: to distract
@@ -209,10 +205,6 @@ items:
   translation: literacy, writing system
   pos: noun
   gender: f
-- lemma: пиш-учити
-  ipa: /pɪʃ-ut͡ʃˈɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: пишучи
   ipa: /pˈɪʃut͡ʃɪ/
   translation: writing (gerund)
@@ -378,7 +370,3 @@ items:
   translation: empire
   pos: noun
   gender: f
-- lemma: їдячати
-  ipa: /jidjat͡ʃatɪ/
-  translation: ''
-  pos: verb

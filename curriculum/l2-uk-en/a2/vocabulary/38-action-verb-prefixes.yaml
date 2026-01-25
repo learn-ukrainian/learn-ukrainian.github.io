@@ -78,10 +78,6 @@ items:
   translation: copy
   pos: noun
   gender: f
-- lemma: криити
-  ipa: /krɪɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: крити
   ipa: /krˈɪtɪ/
   translation: to cover
@@ -90,10 +86,6 @@ items:
   ipa: /lɛɦkˈɪj/
   translation: easy, light
   pos: adj
-- lemma: микати
-  ipa: /mˈɪkatɪ/
-  translation: ''
-  pos: verb
 - lemma: наговорити
   ipa: /naɦɔʋɔrˈɪtɪ/
   translation: to say a lot, to talk nonsense

@@ -158,11 +158,6 @@ items:
   translation: little star
   pos: noun
   gender: f
-- lemma: кавка
-  ipa: /kˈaʋka/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кароль
   ipa: /kˈarɔlʲ/
   translation: Karol (name)
@@ -537,10 +532,6 @@ items:
   ipa: /xrustkˈɪj/
   translation: crunchy, crispy
   pos: adj
-- lemma: цьо
-  ipa: /t͡sʲɔ/
-  translation: ''
-  pos: noun
 - lemma: чайок
   ipa: /t͡ʃajˈɔk/
   translation: tea (diminutive)

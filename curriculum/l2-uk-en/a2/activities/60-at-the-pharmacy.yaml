@@ -202,7 +202,7 @@
     - statement: «Вітаміни можна купити без рецепта.»
       correct: true
       explanation: «Так, вітаміни у вільному доступі.»
-  instruction: Визначте, чи твердження правильне.
+
 
 - type: unjumble
   title: Pharmacy Sentences

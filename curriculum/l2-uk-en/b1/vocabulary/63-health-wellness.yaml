@@ -33,11 +33,6 @@ items:
   translation: appeal, address
   pos: noun
   gender: n
-- lemma: здор
-  ipa: /zdɔr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: злість
   ipa: /zlistʲ/
   translation: anger, spite

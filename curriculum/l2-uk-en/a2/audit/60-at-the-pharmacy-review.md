@@ -1,8 +1,8 @@
 # Audit Report: M60 — 60-at-the-pharmacy.md
 **Level:** A2 | **Module:** M60 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 08:59:00
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:24:02
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,17 +37,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 60-at-the-pharmacy.yaml: Duplicate key 'instruction' at line 205 (first defined at line 179)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): фармацевт, протипоказання, рецепт, побічний, рецепта...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): вживати, ефект...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1003/1000 (raw: 1177)
@@ -57,10 +53,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 45/1
+- **Vocab:** ✅ 50/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 81.0% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

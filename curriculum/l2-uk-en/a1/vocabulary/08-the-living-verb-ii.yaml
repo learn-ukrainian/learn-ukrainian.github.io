@@ -20,35 +20,6 @@ items:
   translation: loving
   pos: noun
   gender: n
-- lemma: роб
-  ipa: /rɔb/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: робя
-  ipa: /rɔbja/
-  translation: ''
-  pos: noun
-  gender: n
-- lemma: ход
-  ipa: /xɔd/
-  translation: ''
-  pos: noun
-- lemma: ходжа
-  ipa: /xɔdʒˈa/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ходь
-  ipa: /xɔdʲ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: ять
-  ipa: /jatʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: іти
   ipa: /itˈɪ/
   translation: to go, to walk

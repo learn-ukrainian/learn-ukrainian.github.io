@@ -230,11 +230,6 @@ items:
   translation: coast, shoreline
   pos: noun
   gender: n
-- lemma: харко
-  ipa: /xarkˈɔ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: чутно
   ipa: /t͡ʃˈutnɔ/
   translation: audible, hearing

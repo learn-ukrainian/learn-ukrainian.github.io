@@ -88,11 +88,6 @@ items:
   ipa: /dˈijut͡ʃɪj/
   translation: acting, current
   pos: adj
-- lemma: дієв
-  ipa: /dijɛʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: забруднений
   ipa: /zabrˈudnɛnɪj/
   translation: polluted, dirty
@@ -401,11 +396,6 @@ items:
   ipa: /rɔzʋˈɪnutɪ/
   translation: to develop (perfective)
   pos: verb
-- lemma: розстрілянега
-  ipa: /rɔzstriljanɛɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: русизм
   ipa: /rusˈɪzm/
   translation: Russism

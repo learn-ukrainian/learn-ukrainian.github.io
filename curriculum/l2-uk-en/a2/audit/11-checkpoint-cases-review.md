@@ -1,8 +1,8 @@
 # Audit Report: M11 — 11-checkpoint-cases.md
 **Level:** A2 | **Module:** M11 | **Phase:** A2.1 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:44:51
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:30:31
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -40,33 +40,20 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ми використовуємо його коли дзвонимо...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Коли ви кажете що стоїте...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, орудний, родовий, давальний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 3 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1475/800 (raw: 1531)
+- **Words:** ✅ 1545/800 (raw: 1697)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 19/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 56.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 48.8% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
@@ -75,7 +62,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Overview** | ⚪️ | 222 | Skipped |
-| **Skills Review / Повторення навичок** | ✅ | 707 | Included in Core |
+| **Skill 1: The Dative Case (Давальний відмінок)** | ⚪️ | 292 | Skipped |
+| **Skill 2: The Instrumental Case (Орудний відмінок)** | ⚪️ | 221 | Skipped |
+| **Skill 3: Prepositions and Contextual Logic** | ✅ | 203 | Included in Core |
+| **Skill 4: Service Contexts (Post & Bank)** | ✅ | 182 | Included in Core |
 | **Integration Challenge** | ⚪️ | 345 | Skipped |
-| **Summary / Підсумок** | ✅ | 147 | Included in Core |
-| **Need More Practice?** | ⚪️ | 54 | Skipped |
+| **Summary / Підсумок** | ✅ | 51 | Included in Core |
+| **Need More Practice?** | ⚪️ | 29 | Skipped |

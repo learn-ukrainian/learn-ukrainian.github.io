@@ -148,6 +148,10 @@ items:
   translation: plaster, band-aid
   pos: noun
   gender: m
+- lemma: побічний
+  ipa: /pɔbˈit͡ʃnɪj/
+  translation: side (effect)
+  pos: adj
 - lemma: подбати
   ipa: /pɔdbˈatɪ/
   translation: to take care of
@@ -170,6 +174,20 @@ items:
   ipa: /pˈiznij/
   translation: late (adj)
   pos: adj
+- lemma: протипоказання
+  ipa: /prɔtɪpɔkazˈannja/
+  translation: contraindication
+  pos: noun
+  gender: n
+- lemma: рецепт
+  ipa: /rɛt͡sˈɛpt/
+  translation: prescription
+  pos: noun
+  gender: m
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive
+  pos: adj
 - lemma: спалий
   ipa: /spˈalɪj/
   translation: fallen, subsided
@@ -186,6 +204,11 @@ items:
 - lemma: тонометр
   ipa: /tɔnˈɔmɛtr/
   translation: tonometer (blood pressure monitor)
+  pos: noun
+  gender: m
+- lemma: фармацевт
+  ipa: /farmat͡sˈɛʋt/
+  translation: pharmacist
   pos: noun
   gender: m
 - lemma: халат

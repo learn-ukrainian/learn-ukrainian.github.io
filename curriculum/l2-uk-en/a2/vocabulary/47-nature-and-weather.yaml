@@ -206,11 +206,6 @@ items:
   translation: stork
   pos: noun
   gender: m
-- lemma: лелеко
-  ipa: /lɛlˈɛkɔ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: магія
   ipa: /mˈaɦija/
   translation: magic
@@ -314,16 +309,6 @@ items:
   ipa: /pɔkrˈɪtɪj/
   translation: covered
   pos: adj
-- lemma: пол
-  ipa: /pɔl/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: поль
-  ipa: /pɔlʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: поліський
   ipa: /pɔlˈisʲkɪj/
   translation: Polissian (adj)
@@ -426,11 +411,6 @@ items:
   translation: gray
   pos: noun
   gender: m
-- lemma: тан
-  ipa: /tan/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: травневий
   ipa: /traʋnˈɛʋɪj/
   translation: May (adj)
@@ -453,11 +433,6 @@ items:
   ipa: /xmˈarnɪj/
   translation: cloudy
   pos: adj
-- lemma: холодня
-  ipa: /xɔlɔdnja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: художників
   ipa: /xudˈɔʒnɪkiʋ/
   translation: artists

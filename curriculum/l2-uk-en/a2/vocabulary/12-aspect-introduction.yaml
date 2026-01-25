@@ -2,10 +2,19 @@ module: 12-aspect-introduction
 level: A2
 version: '2.0'
 items:
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: aspect, view
+  pos: noun
+  gender: m
 - lemma: всередині
   ipa: /ʋsɛrˈɛdɪni/
   translation: inside (location)
   pos: adv
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective
+  pos: adj
 - lemma: есе
   ipa: /ɛsˈɛ/
   translation: essay
@@ -19,6 +28,10 @@ items:
 - lemma: найпоширеніший
   ipa: /najpɔʃˈɪrɛniʃɪj/
   translation: the most widespread
+  pos: adj
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective
   pos: adj
 - lemma: неймовірно
   ipa: /nɛjmɔʋˈirnɔ/

@@ -255,10 +255,6 @@ items:
   translation: start
   pos: noun
   gender: m
-- lemma: сход
-  ipa: /sxɔd/
-  translation: ''
-  pos: noun
 - lemma: сходити
   ipa: /sxɔdɪtɪ/
   translation: to descend, to go down, to visit (imperfective)

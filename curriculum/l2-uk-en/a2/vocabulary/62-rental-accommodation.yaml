@@ -14,10 +14,20 @@ items:
   ipa: /ʋlˈiʋɔ/
   translation: to the left
   pos: adv
+- lemma: договір
+  ipa: /dɔɦɔʋˈir/
+  translation: contract, agreement
+  pos: noun
+  gender: m
 - lemma: економно
   ipa: /ɛkɔnˈɔmnɔ/
   translation: economically
   pos: adv
+- lemma: електрика
+  ipa: /ɛlˈɛktrɪka/
+  translation: electricity
+  pos: noun
+  gender: f
 - lemma: застав
   ipa: /zastˈaʋ/
   translation: pledge
@@ -50,6 +60,11 @@ items:
   translation: property
   pos: noun
   gender: n
+- lemma: меблі
+  ipa: /mˈɛbli/
+  translation: furniture
+  pos: noun
+  gender: p
 - lemma: напрям
   ipa: /nˈaprjam/
   translation: direction
@@ -63,11 +78,21 @@ items:
   ipa: /ɔdnɔkimnˈatnɪj/
   translation: one-room (adj)
   pos: adj
+- lemma: опалення
+  ipa: /ɔpˈalɛnnja/
+  translation: heating
+  pos: noun
+  gender: n
 - lemma: оптоволокно
   ipa: /ɔptɔʋɔlɔknɔ/
   translation: fiber optics
   pos: noun
   gender: n
+- lemma: орендар
+  ipa: /ɔrɛndˈar/
+  translation: tenant
+  pos: noun
+  gender: m
 - lemma: переконатися
   ipa: /pɛrɛkɔnˈatɪsja/
   translation: to make sure, to be convinced
@@ -85,6 +110,10 @@ items:
   translation: signing
   pos: noun
   gender: n
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive
+  pos: adj
 - lemma: розкладатися
   ipa: /rɔzkladˈatɪsja/
   translation: to decompose

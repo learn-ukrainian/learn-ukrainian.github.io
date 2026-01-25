@@ -2,11 +2,6 @@ module: 61-professional-communication
 level: B1
 version: '2.0'
 items:
-- lemma: айт
-  ipa: /ajt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: видатний
   ipa: /ʋɪdatnˈɪj/
   translation: outstanding, prominent
@@ -91,10 +86,6 @@ items:
   ipa: /ɔrɦanizat͡sˈijnɪj/
   translation: organizational
   pos: adj
-- lemma: отримаути
-  ipa: /ɔtrɪmautɪ/
-  translation: ''
-  pos: verb
 - lemma: проведення
   ipa: /prɔʋˈɛdɛnnja/
   translation: conducting, carrying out

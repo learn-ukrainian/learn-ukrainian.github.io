@@ -32,11 +32,6 @@ items:
   ipa: /ɦɔspˈɔdar/
   translation: host, owner
   pos: noun
-- lemma: гост
-  ipa: /ɦɔst/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: готувати
   ipa: /ɦɔtuʋˈatɪ/
   translation: to cook, to prepare
@@ -59,10 +54,6 @@ items:
   ipa: /dˈijatɪ/
   translation: to act, to function
   pos: verb
-- lemma: ема
-  ipa: /ɛma/
-  translation: ''
-  pos: noun
 - lemma: зазвичай
   ipa: /zazʋɪt͡ʃˈaj/
   translation: usually
@@ -84,10 +75,6 @@ items:
   ipa: /zustrit͡ʃˈatɪsja/
   translation: to meet each other (imperfective)
   pos: verb
-- lemma: зі
-  ipa: /zi/
-  translation: ''
-  pos: prep
 - lemma: крем
   ipa: /krɛm/
   translation: cream
@@ -249,11 +236,6 @@ items:
   translation: level (gen), equal
   pos: noun
   gender: f
-- lemma: сема
-  ipa: /sˈɛma/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: смачний
   ipa: /smat͡ʃnˈɪj/
   translation: tasty, delicious
@@ -307,10 +289,6 @@ items:
   ipa: /t͡ʃɛkˈatɪ/
   translation: to wait
   pos: verb
-- lemma: чим
-  ipa: /t͡ʃɪm/
-  translation: ''
-  pos: conj
 - lemma: чоловік
   ipa: /t͡ʃɔlɔʋˈik/
   translation: man, husband
@@ -324,10 +302,6 @@ items:
   ipa: /ʃistʲ/
   translation: six
   pos: num
-- lemma: із
-  ipa: /iz/
-  translation: ''
-  pos: prep
 - lemma: інструмент
   ipa: /instrumˈɛnt/
   translation: instrument, tool

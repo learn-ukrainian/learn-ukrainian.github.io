@@ -61,11 +61,6 @@ items:
   translation: merger, fusion
   pos: noun
   gender: n
-- lemma: зраза
-  ipa: /zrˈaza/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: кайдашева
   ipa: /kajdˈaʃɛʋa/
   translation: Kaidasheva (family/book)
@@ -171,10 +166,6 @@ items:
   translation: demarcation, differentiation
   pos: noun
   gender: n
-- lemma: ролевий
-  ipa: /rɔlˈɛʋɪj/
-  translation: ''
-  pos: adj
 - lemma: романський
   ipa: /rɔmˈansʲkɪj/
   translation: Romance (languages), Romanesque

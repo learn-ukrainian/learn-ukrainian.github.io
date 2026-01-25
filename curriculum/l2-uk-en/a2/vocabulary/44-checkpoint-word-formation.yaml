@@ -2,18 +2,10 @@ module: 44-checkpoint-word-formation
 level: A2
 version: '2.0'
 items:
-- lemma: важлити
-  ipa: /ʋaʒlɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: вбачати
   ipa: /ʋbat͡ʃˈatɪ/
   translation: to see, to perceive
   pos: verb
-- lemma: руч
-  ipa: /rut͡ʃ/
-  translation: ''
-  pos: noun
 - lemma: сильність
   ipa: /sɪlʲnistʲ/
   translation: strength

@@ -49,11 +49,6 @@ items:
   ipa: /prɔdˈukt/
   translation: product
   pos: noun
-- lemma: піріжок
-  ipa: /piriʒɔk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сито
   ipa: /sˈɪtɔ/
   translation: sieve

@@ -343,10 +343,6 @@ items:
   translation: throne
   pos: noun
   gender: m
-- lemma: что
-  ipa: /t͡ʃtɔ/
-  translation: ''
-  pos: noun
 - lemma: юридичний
   ipa: /jurɪdˈɪt͡ʃnɪj/
   translation: legal, juridical

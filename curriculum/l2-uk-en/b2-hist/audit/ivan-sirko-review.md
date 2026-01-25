@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M61 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-24 22:46:06
+**Generated:** 2026-01-25 16:03:32
 
 ## Configuration
 **Type:** B2-history

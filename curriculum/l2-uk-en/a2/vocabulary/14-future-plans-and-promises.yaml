@@ -2,9 +2,26 @@ module: 14-future-plans-and-promises
 level: A2
 version: '2.0'
 items:
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: вивчу
+  ipa: /ʋˈɪʋt͡ʃu/
+  translation: will learn (1sg perfective)
+  pos: verb
+- lemma: вийду
+  ipa: /ʋˈɪjdu/
+  translation: will exit (1sg perfective)
+  pos: verb
 - lemma: вилетіти
   ipa: /ʋˈɪlɛtitɪ/
   translation: to fly out
+  pos: verb
+- lemma: візьму
+  ipa: /ʋizʲmˈu/
+  translation: will take (1sg perfective)
   pos: verb
 - lemma: віддати
   ipa: /ʋiddˈatɪ/
@@ -28,6 +45,14 @@ items:
   ipa: /zalɪʃˈatɪsja/
   translation: to stay, to remain
   pos: verb
+- lemma: закінчу
+  ipa: /zakˈint͡ʃu/
+  translation: will finish (1sg perfective)
+  pos: verb
+- lemma: запам'ятаю
+  ipa: /zapamjatˈaju/
+  translation: will remember (1sg perfective)
+  pos: verb
 - lemma: запізнитися
   ipa: /zapiznˈɪtɪsja/
   translation: to be late
@@ -37,6 +62,14 @@ items:
   translation: statement, application
   pos: noun
   gender: f
+- lemma: зроблю
+  ipa: /zrɔblʲˈu/
+  translation: will do (1sg perfective)
+  pos: verb
+- lemma: зрозумію
+  ipa: /zrɔzumˈiju/
+  translation: will understand (1sg perfective)
+  pos: verb
 - lemma: звучання
   ipa: /zʋut͡ʃˈannja/
   translation: sounding
@@ -51,9 +84,37 @@ items:
   translation: art
   pos: noun
   gender: n
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective
+  pos: adj
+- lemma: напишу
+  ipa: /napɪʃˈu/
+  translation: will write (1sg perfective)
+  pos: verb
 - lemma: обіцяти
   ipa: /ɔbit͡sˈjatɪ/
   translation: to promise
+  pos: verb
+- lemma: побачу
+  ipa: /pɔbˈat͡ʃu/
+  translation: will see (1sg perfective)
+  pos: verb
+- lemma: почую
+  ipa: /pɔt͡ʃˈuju/
+  translation: will hear (1sg perfective)
+  pos: verb
+- lemma: приїду
+  ipa: /prɪjˈidu/
+  translation: will arrive (1sg perfective)
+  pos: verb
+- lemma: прийду
+  ipa: /prɪjdˈu/
+  translation: will come (1sg perfective)
+  pos: verb
+- lemma: прочитаю
+  ipa: /prɔt͡ʃɪtˈaju/
+  translation: will read (1sg perfective)
   pos: verb
 - lemma: падати
   ipa: /pˈadatɪ/
@@ -81,3 +142,35 @@ items:
   translation: USB flash drive
   pos: noun
   gender: f
+- lemma: скажу
+  ipa: /skaʒˈu/
+  translation: will say (1sg perfective)
+  pos: verb
+- lemma: створю
+  ipa: /stʋɔrʲˈu/
+  translation: will create (1sg perfective)
+  pos: verb
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective
+  pos: adj
+- lemma: піду
+  ipa: /pidˈu/
+  translation: will go (1sg perfective)
+  pos: verb
+- lemma: знайду
+  ipa: /znajdˈu/
+  translation: will find (1sg perfective)
+  pos: verb
+- lemma: куплю
+  ipa: /kuplʲˈu/
+  translation: will buy (1sg perfective)
+  pos: verb
+- lemma: дам
+  ipa: /dam/
+  translation: will give (1sg perfective)
+  pos: verb
+- lemma: почну
+  ipa: /pɔt͡ʃnˈu/
+  translation: will start (1sg perfective)
+  pos: verb

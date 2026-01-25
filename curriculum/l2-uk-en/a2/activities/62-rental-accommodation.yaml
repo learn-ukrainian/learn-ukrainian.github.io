@@ -202,7 +202,7 @@
     - statement: «Власник може приходити в квартиру, коли захоче.»
       correct: false
       explanation: «Ні, він має попередити про візит.»
-  instruction: Визначте, чи твердження правильне.
+
 
 - type: unjumble
   title: Questions to Owner

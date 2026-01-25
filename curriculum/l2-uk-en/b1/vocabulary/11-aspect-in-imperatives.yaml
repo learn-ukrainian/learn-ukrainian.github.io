@@ -249,10 +249,6 @@ items:
   ipa: /nakrˈɪtɪ/
   translation: to cover (perfective)
   pos: verb
-- lemma: ндв-наказ
-  ipa: /ndʋ-nakˈaz/
-  translation: ''
-  pos: noun
 - lemma: небажаний
   ipa: /nɛbˈaʒanɪj/
   translation: undesirable
@@ -352,11 +348,6 @@ items:
   translation: position
   pos: noun
   gender: f
-- lemma: понеділко
-  ipa: /pɔnɛdilkɔ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: порадити
   ipa: /pɔrˈadɪtɪ/
   translation: to advise

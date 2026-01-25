@@ -6,10 +6,6 @@ items:
   ipa: /ˈatɪ/
   translation: to (verb suffix/ending)
   pos: noun
-- lemma: аєш
-  ipa: /ajɛʃ/
-  translation: ''
-  pos: noun
 - lemma: бережко
   ipa: /bˈɛrɛʒkɔ/
   translation: little edge
@@ -59,27 +55,3 @@ items:
   ipa: /spiʋˈatɪ/
   translation: to sing
   pos: verb
-- lemma: то
-  ipa: /tɔ/
-  translation: ''
-  pos: part
-- lemma: ють
-  ipa: /jutʲ/
-  translation: ''
-  pos: noun
-- lemma: юєш
-  ipa: /jujɛʃ/
-  translation: ''
-  pos: noun
-- lemma: яти
-  ipa: /jatɪ/
-  translation: ''
-  pos: noun
-- lemma: ємо
-  ipa: /jɛmɔ/
-  translation: ''
-  pos: noun
-- lemma: єте
-  ipa: /jɛtɛ/
-  translation: ''
-  pos: noun

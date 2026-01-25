@@ -139,11 +139,6 @@ items:
   translation: krashanka (dyed Easter egg)
   pos: noun
   gender: f
-- lemma: кукурудз
-  ipa: /kukurudz/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кукурудзяний
   ipa: /kukurˈudzjanɪj/
   translation: corn (adj), maize (adj)
@@ -247,11 +242,6 @@ items:
   ipa: /sˈɔlɛnɪj/
   translation: salty, salted
   pos: adj
-- lemma: солон
-  ipa: /sɔlˈɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сушений
   ipa: /suʃɛnɪj/
   translation: dried (fruits/fish)

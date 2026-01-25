@@ -76,11 +76,6 @@ items:
   translation: wardrobe
   pos: noun
   gender: m
-- lemma: гельмер
-  ipa: /ɦɛlʲmɛr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: генеральний
   ipa: /ɦɛnɛrˈalʲnɪj/
   translation: general, main

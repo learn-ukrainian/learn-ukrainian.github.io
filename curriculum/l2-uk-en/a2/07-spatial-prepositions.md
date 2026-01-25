@@ -17,18 +17,18 @@ The most important concept to master is the difference between "Where?" (**Де?
 1. **РУХ** (Motion / Куди?): We use the **Accusative case** (**знахідний відмінок**). This shows the target or destination of an action.
 2. **МІСЦЕ** (Location / Де?): We use either the **Locative** (**місцевий**) or **Instrumental** (**орудний**) case. This shows a static state of being.
 
-| Прийменник (Prep) | Рух (Motion - Acc)   | Місце (Location)               |
-| :---------------- | :------------------- | :----------------------------- |
-| **в / у**         | Йти **в школу**.     | Бути **в школі** (Loc).        |
-| **на**            | Класти **на стіл**.  | Лежати **на столі** (Loc).     |
-| **під**           | Класти **під стіл**. | Лежати **під столом** (Instr). |
-| **за**            | Йти **за будинок**.  | Бути **за будинком** (Instr).  |
+| Прийменник | Рух                  | Місце                  |
+| :--------- | :------------------- | :--------------------- |
+| **в / у**  | Йти **в школу**.     | Бути **в школі**.      |
+| **на**     | Класти **на стіл**.  | Лежати **на столі**.   |
+| **під**    | Класти **під стіл**. | Лежати **під столом**. |
+| **за**     | Йти **за будинок**.  | Бути **за будинком**.  |
 
 Коли ви говорите про рух (куди?), ви наче "цілитеся" в об'єкт, тому використовуєте знахідний відмінок. Це дуже логічно: ви спрямовуєте свою енергію на предмет. Коли ви описуєте місце (де?), ви фіксуєте стан спокою, тому використовуєте місцевий або орудний відмінки. Вибір залежить від конкретного прийменника. Наприклад, **в** та **на** традиційно потребують місцевого відмінка для позначення знаходження.
 
 ### Prepositions with the Instrumental Case (З орудним відмінком)
 
-As you learned in the previous modules, the Instrumental case is very versatile. Besides "means" and "roles," it is the standard case for prepositions that describe "static" spatial relationships like _under_, _above_, _behind_, or _between_. These prepositions help us pinpoint exactly where an object is located in relation to others.
+The Instrumental case is very versatile. Besides "means" and "roles," it is the standard case for prepositions that describe "static" spatial relationships like _under_, _above_, _behind_, or _between_. These prepositions help us pinpoint exactly where an object is located in relation to others.
 
 - **під** (under) -> Кіт спить **під столом**.
 - **над** (above) -> Лампа висить **над столом**.

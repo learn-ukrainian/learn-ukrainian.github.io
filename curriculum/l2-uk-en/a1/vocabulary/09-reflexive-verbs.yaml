@@ -14,24 +14,10 @@ items:
   ipa: /dɪʋɪtɪ/
   translation: to look
   pos: verb
-- lemma: дивиш
-  ipa: /dɪʋɪʃ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: дивлять
-  ipa: /dɪʋljatʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: збиратися
   ipa: /zbɪrˈatɪsja/
   translation: to gather, to intend
   pos: verb
-- lemma: ить
-  ipa: /ɪtʲ/
-  translation: ''
-  pos: noun
 - lemma: комедія
   ipa: /kɔmˈɛdija/
   translation: comedy
@@ -49,10 +35,6 @@ items:
 - lemma: митися
   ipa: /mˈɪtɪsja/
   translation: to wash oneself
-  pos: verb
-- lemma: миєти
-  ipa: /mɪjɛtɪ/
-  translation: ''
   pos: verb
 - lemma: одягати
   ipa: /ɔdjaɦˈatɪ/
@@ -74,10 +56,6 @@ items:
   ipa: /smiˈjatɪsja/
   translation: to laugh
   pos: verb
-- lemma: смієти
-  ipa: /smijɛtɪ/
-  translation: ''
-  pos: verb
 - lemma: усміхатися
   ipa: /usmixˈatɪsja/
   translation: to smile
@@ -87,10 +65,6 @@ items:
   translation: smile
   pos: noun
   gender: f
-- lemma: ц'
-  ipa: /t͡s/
-  translation: ''
-  pos: noun
 - lemma: цілуватися
   ipa: /t͡siluʋˈatɪsja/
   translation: to kiss each other (imperfective)

@@ -15,7 +15,29 @@ items:
   ipa: /ʋaj-faj/
   translation: Wi-Fi
   pos: noun
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: view
+  pos: noun
   gender: m
+- lemma: виїзд
+  ipa: /ʋˈɪjizd/
+  translation: check-out, departure
+  pos: noun
+  gender: m
+- lemma: включено
+  ipa: /ʋkljˈut͡ʃɛnɔ/
+  translation: included
+  pos: adv
+- lemma: готель
+  ipa: /ɦɔtˈɛlʲ/
+  translation: hotel
+  pos: noun
+  gender: m
+- lemma: залишити
+  ipa: /zalˈɪʃɪtɪ/
+  translation: to leave (something)
+  pos: verb
 - lemma: заселитися
   ipa: /zasɛlˈɪtɪsja/
   translation: to move in
@@ -98,7 +120,11 @@ items:
 - lemma: прислати
   ipa: /prɪslˈatɪ/
   translation: to send, to remit
-  pos: verb
+- lemma: рецепція
+  ipa: /rɛt͡sˈɛpt͡sija/
+  translation: reception
+  pos: noun
+  gender: f
 - lemma: сміт
   ipa: /smit/
   translation: Smith (name), trash (gen)

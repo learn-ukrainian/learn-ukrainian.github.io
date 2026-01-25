@@ -1,74 +1,441 @@
-module: 43-wf-mastery
-level: A2
-version: '2.0'
-activities:
-  - id: 1
-    type: group-sort
-    title: Reverse Engineering
-    concept: 'Part Analysis'
-    items:
-      - id: 1
-        term: 'Вимова'
-        category: 'МОВ (speech)'
-      - id: 2
-        term: 'Розмова'
-        category: 'МОВ (speech)'
-      - id: 3
-        term: 'Записування'
-        category: 'ПИС (writing)'
-      - id: 4
-        term: 'Передбачати'
-        category: 'БАЧ (vision)'
-      - id: 5
-        term: 'Обговорення'
-        category: 'ГОВОР (speech)'
-      - id: 6
-        term: 'Вхід'
-        category: 'ХОД (motion)'
-      - id: 7
-        term: 'Перехід'
-        category: 'ХОД (motion)'
-      - id: 8
-        term: 'Підпис'
-        category: 'ПИС (writing)'
-      - id: 9
-        term: 'Вихід'
-        category: 'ХОД (motion)'
-      - id: 10
-        term: 'Промова'
-        category: 'МОВ (speech)'
-      - id: 11
-        term: 'Відмова'
-        category: 'МОВ (speech)'
-      - id: 12
-        term: 'Опис'
-        category: 'ПИС (writing)'
-  - id: 2
-    type: match-up
-    title: Word Architect Challenge
-    concept: 'Synthesis'
-    items:
-      - id: 1
-        text: 'Переписати'
-        match: 'Rewrite'
-      - id: 2
-        text: 'Вхід'
-        match: 'Entrance (In + Walk)'
-      - id: 3
-        text: 'Вигляд'
-        match: 'Appearance (Out + Look)'
-      - id: 4
-        text: 'Промова'
-        match: 'Speech (For + Speech)'
-      - id: 5
-        text: 'Вихід'
-        match: 'Exit (Out + Walk)'
-      - id: 6
-        text: 'Запис'
-        match: 'Record (In + Write)'
-      - id: 7
-        text: 'Огляд'
-        match: 'Review (Around + Look)'
-      - id: 8
-        text: 'Прочитати'
-        match: 'Read through (Through + Read)'
+- type: group-sort
+  title: Root Sorting (Сортування коренів)
+  instruction: 'Sort the words into their Root families (РІД vs СВІТ vs ЗЕМ).'
+  groups:
+    - name: 'РІД (Family/Kin)'
+      items:
+        - Родина
+        - Народ
+        - Природа
+        - Рідний
+        - Народитися
+    - name: 'СВІТ (Light/World)'
+      items:
+        - Світло
+        - Освіта
+        - Всесвіт
+        - Світити
+        - Світлий
+    - name: 'ЗЕМ (Earth)'
+      items:
+        - Земля
+        - Підземний
+        - Іноземець
+        - Земляк
+        - Земний
+- type: match-up
+  title: Synthesis Challenge
+  instruction: 'Match the derived word with its meaning.'
+  pairs:
+    - left: 'Земляк'
+      right: 'Countryman (Earth person)'
+    - left: 'Іноземець'
+      right: 'Foreigner (Other land person)'
+    - left: 'Підземний'
+      right: 'Underground'
+    - left: 'Передмістя'
+      right: 'Suburb (Before-City)'
+    - left: 'Освіта'
+      right: 'Education (Enlightenment)'
+    - left: 'Всесвіт'
+      right: 'Universe (All-World)'
+    - left: 'Містянин'
+      right: 'City Dweller'
+    - left: 'Рідний'
+      right: 'Native/Dear'
+    - left: 'Світлий'
+      right: 'Light/Bright'
+    - left: 'Народний'
+      right: 'Folk/National'
+- type: cloze
+  title: The Family Tree (Дерево роду)
+  instruction: 'Fill in the blanks using words from the РІД family.'
+  passage: 'Мій {рід|народ|природа} дуже старий і великий. Моя {родина|природа|освіта} живе в Україні. Ми — це один великий {народ|світ|рід}. Українська мова — це наша {рідна|земна|гарна} мова. Я люблю, коли ми збираємося разом на {природі|освіті|світлі}. Я щасливий, що мені пощастило {народитися|світити|бути} в Україні. Це моя {земля|освіта|натура}, і я її люблю. Мій {земляк|світ|родич} працює тут. Наше {місто|село|передмістя} має гарне {світло|темряву|сонце}. Ми вивчаємо {всесвіт|дім|сад} та {освіту|роботу|гру}.'
+- type: fill-in
+  title: Light and Education (Світло і Освіта)
+  instruction: 'Complete the sentences with the correct word form.'
+  items:
+    - sentence: 'Сонце починає [___].'
+      answer: світити
+      options:
+        - світити
+        - освіта
+        - світло
+        - варіант А
+    - sentence: 'У кімнаті яскраве [___].'
+      answer: світло
+      options:
+        - світло
+        - світ
+        - всесвіт
+        - варіант А
+    - sentence: 'Університет дає гарну [___].'
+      answer: освіту
+      options:
+        - освіту
+        - світло
+        - природу
+        - варіант А
+    - sentence: 'Ми вивчаємо наш [___].'
+      answer: світ
+      options:
+        - світ
+        - світло
+        - рід
+        - варіант А
+    - sentence: 'Вона має вищу [___].'
+      answer: освіту
+      options:
+        - освіту
+        - природу
+        - родину
+        - варіант А
+    - sentence: 'Зірки [___] вночі.'
+      answer: світять
+      options:
+        - світять
+        - світло
+        - освіта
+        - варіант А
+    - sentence: 'Це [___] майбутнє.'
+      answer: світле
+      options:
+        - світле
+        - темне
+        - рідне
+        - варіант А
+    - sentence: 'Це [___] місце.'
+      answer: рідне
+      options:
+        - рідне
+        - освітнє
+        - світле
+        - варіант А
+- type: match-up
+  title: City vs Suburb (Місто і Передмістя)
+  instruction: 'Match the terms.'
+  pairs:
+    - left: 'Місто'
+      right: 'City/Town'
+    - left: 'Міський'
+      right: 'Urban'
+    - left: 'Передмістя'
+      right: 'Suburb'
+    - left: 'Містянин'
+      right: 'City Dweller'
+    - left: 'Земний'
+      right: 'Terrestrial'
+    - left: 'Підземний перехід'
+      right: 'Underground crossing'
+    - left: 'Іноземна мова'
+      right: 'Foreign language'
+    - left: 'Рідний дім'
+      right: 'Native home'
+    - left: 'Світова література'
+      right: 'World literature'
+    - left: 'Наш рід'
+      right: 'Our kin'
+- type: quiz
+  title: Definition Quiz (Визначення)
+  instruction: 'Choose the correct definition for each word.'
+  items:
+    - question: 'Яке точне значення має українське слово "Освіта" в цьому контексті?'
+      options:
+        - text: 'Education'
+          correct: true
+        - text: 'Lighting'
+          correct: false
+        - text: 'Nature'
+          correct: false
+        - text: 'Family'
+          correct: false
+    - question: 'Скажіть, будь ласка, хто саме такий "Іноземець"?'
+      options:
+        - text: 'Foreigner from another country'
+          correct: true
+        - text: 'Countryman from the same land'
+          correct: false
+        - text: 'Teacher from a school'
+          correct: false
+        - text: 'City dweller from a town'
+          correct: false
+    - question: 'Скажіть, будь ласка, що саме означає це слово "Природа"?'
+      options:
+        - text: 'Nature and environment'
+          correct: true
+        - text: 'Family and relatives'
+          correct: false
+        - text: 'Birth and beginning'
+          correct: false
+        - text: 'City and buildings'
+          correct: false
+    - question: 'Скажіть, будь ласка, що саме означає це слово "Всесвіт"?'
+      options:
+        - text: 'Universe or Cosmos'
+          correct: true
+        - text: 'City or Town'
+          correct: false
+        - text: 'Subway or Metro'
+          correct: false
+        - text: 'School or University'
+          correct: false
+    - question: 'Скажіть, будь ласка, що саме означає це слово "Народ"?'
+      options:
+        - text: 'People or Nation'
+          correct: true
+        - text: 'Birth or Origin'
+          correct: false
+        - text: 'Family or Kin'
+          correct: false
+        - text: 'Nature or Land'
+          correct: false
+    - question: 'Скажіть, будь ласка, що саме означає слово "Рідний"?'
+      options:
+        - text: 'Native or Dear'
+          correct: true
+        - text: 'Foreign or Strange'
+          correct: false
+        - text: 'Urban or City'
+          correct: false
+        - text: 'Underground or Hidden'
+          correct: false
+    - question: 'Що саме означає це просте слово "Світло"?'
+      options:
+        - text: 'Light or Brightness'
+          correct: true
+        - text: 'World or Earth'
+          correct: false
+        - text: 'People or Nation'
+          correct: false
+        - text: 'City or Town'
+          correct: false
+    - question: 'Скажіть, будь ласка, хто саме такий "Земляк"?'
+      options:
+        - text: 'Countryman or Compatriot'
+          correct: true
+        - text: 'Foreigner or Alien'
+          correct: false
+        - text: 'City dweller or Citizen'
+          correct: false
+        - text: 'Teacher or Student'
+          correct: false
+- type: match-up
+  title: Odd One Out Match (Зайве слово)
+  instruction: 'Match the Category with the Odd Word (the one that does NOT belong).'
+  pairs:
+    - left: 'Group: РІД (Family)'
+      right: 'Odd: Місто (City)'
+    - left: 'Group: СВІТ (Light)'
+      right: 'Odd: Земля (Earth)'
+    - left: 'Group: ЗЕМ (Earth)'
+      right: 'Odd: Рідний (Native)'
+    - left: 'Group: МІСТО (City)'
+      right: 'Odd: Природа (Nature)'
+    - left: 'Group: People (Люди)'
+      right: 'Odd: Світло (Light)'
+    - left: 'Group: Adjectives (Прикметники)'
+      right: 'Odd: Народитися (To be born)'
+    - left: 'Group: Verbs (Дієслова)'
+      right: 'Odd: Освіта (Education)'
+    - left: 'Group: Nouns (Іменники)'
+      right: 'Odd: Світити (To shine)'
+    - left: 'Group: Movement (Рух)'
+      right: 'Odd: Стояти (To stand)'
+    - left: 'Group: Speaking (Мовлення)'
+      right: 'Odd: Мовчати (To be silent)'
+- type: fill-in
+  title: Prefix Power (Сила префіксів)
+  instruction: 'Add the correct prefix.'
+  items:
+    - sentence: '[___]містя (Suburb).'
+      answer: Перед
+      options:
+        - Перед
+        - Під
+        - За
+        - На
+    - sentence: '[___]земний (Underground).'
+      answer: Під
+      options:
+        - Під
+        - Над
+        - При
+        - По
+    - sentence: '[___]світ (Universe).'
+      answer: Все
+      options:
+        - Все
+        - Пере
+        - Ви
+        - За
+    - sentence: '[___]земець (Foreigner).'
+      answer: Іно
+      options:
+        - Іно
+        - Одно
+        - Без
+        - По
+    - sentence: '[___]родитися (To be born).'
+      answer: На
+      options:
+        - На
+        - По
+        - Ви
+        - З
+    - sentence: '[___]світа (Education).'
+      answer: О
+      options:
+        - О
+        - Про
+        - За
+        - При
+    - sentence: '[___]земний (Extraterrestrial).'
+      answer: Поза
+      options:
+        - Поза
+        - На
+        - Під
+        - За
+    - sentence: '[___]хід (Entrance).'
+      answer: В
+      options:
+        - В
+        - Ви
+        - Пере
+        - При
+- type: unjumble
+  title: Sentence Builder (Будуємо речення)
+  instruction: 'Reorder the words to make a complete sentence.'
+  items:
+    - words:
+      - Українська
+      - природа
+      - це
+      - наш
+      - великий
+      - і
+      - рідний
+      - дім
+      answer: 'Українська природа це наш великий і рідний дім'
+    - words:
+      - якісна
+      - освіта
+      - це
+      - справжнє
+      - світло
+      - для
+      - всього
+      - народу
+      answer: 'Якісна освіта це справжнє світло для всього народу'
+    - words:
+      - ми
+      - дуже
+      - сильно
+      - любимо
+      - наше
+      - старе
+      - і
+      - гарне
+      - місто
+      answer: 'Ми дуже сильно любимо наше старе і гарне місто'
+    - words:
+      - мій
+      - найкращий
+      - друг
+      - народився
+      - саме
+      - в
+      - цьому
+      - місті
+      answer: 'Мій найкращий друг народився саме в цьому місті'
+    - words:
+      - вчора
+      - я
+      - випадково
+      - зустрів
+      - свого
+      - давнього
+      - земляка
+      - в
+      - парку
+      answer: 'Вчора я випадково зустрів свого давнього земляка в парку'
+    - words:
+      - цей
+      - довгий
+      - підземний
+      - перехід
+      - був
+      - зачинений
+      - на
+      - ремонт
+      answer: 'Цей довгий підземний перехід був зачинений на ремонт'
+    - words:
+      - яскраве
+      - літнє
+      - сонце
+      - завжди
+      - світить
+      - для
+      - всіх
+      - людей
+      answer: 'Яскраве літнє сонце завжди світить для всіх людей'
+- type: fill-in
+  title: Word Choice Mastery (Вибір слова)
+  instruction: 'Choose the correct word for the context.'
+  items:
+    - sentence: 'Він живе в цьому місті все життя. Він справжній [___].'
+      answer: містянин
+      options:
+        - містянин
+        - містик
+        - міст
+        - варіант А
+    - sentence: 'Ми живемо недалеко від міста, у [___].'
+      answer: передмісті
+      options:
+        - передмісті
+        - місті
+        - селі
+        - варіант А
+    - sentence: 'Ліси, гори та річки — це наша [___].'
+      answer: природа
+      options:
+        - природа
+        - натура
+        - рід
+        - варіант А
+    - sentence: 'Він з мого міста. Він мій [___].'
+      answer: земляк
+      options:
+        - земляк
+        - зема
+        - землю
+        - варіант А
+    - sentence: 'Він не живе тут. Він [___].'
+      answer: іноземець
+      options:
+        - іноземець
+        - інопланетянин
+        - земляк
+        - варіант А
+    - sentence: 'Українська мова — моя [___] мова.'
+      answer: рідна
+      options:
+        - рідна
+        - родина
+        - народна
+        - варіант А
+    - sentence: 'Сонце яскраво [___] на небі.'
+      answer: світить
+      options:
+        - світить
+        - світає
+        - світло
+        - варіант А
+    - sentence: 'Університет дає нам вищу [___].'
+      answer: освіту
+      options:
+        - освіту
+        - світло
+        - просвіту
+        - варіант А

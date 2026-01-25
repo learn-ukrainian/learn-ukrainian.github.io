@@ -4,7 +4,7 @@
 
 Congratulations — you've now learned all seven Ukrainian cases! This is a major milestone in your Ukrainian journey. It is the moment where the internal logic of the language begins to reveal itself as a unified system rather than a series of disconnected rules. У цьому модулі ми об’єднаємо все разом для комплексної практики. Ми побачимо, як відмінки працюють у реальному житті, допомагаючи нам будувати чіткі та красиві речення.
 
-**Чому це важливо:** Система семи відмінків — це основа української граматики. Вміння швидко та правильно обирати відмінок допоможе вам звучати природно. Цей модуль закріпить ваші знання та додасть впевненості у спілкуванні. В англійській мові важливий порядок слів. В українській мові відмінки показують роль слова в реченні. Це дозволяє змінювати порядок слів без втрати сенсу, що робить нашу мову дуже гнучкою та поетичною. Коли ви опануєте цю систему, ви відчуєте справжню свободу вираження думок.
+**Чому це важливо:** The seven-case system is the foundation of Ukrainian grammar. Вміння швидко та правильно обирати відмінок допоможе вам звучати природно. This module will solidify your knowledge. In English, word order is crucial. В українській мові відмінки показують роль слова в реченні. Це дозволяє змінювати порядок слів без втрати сенсу. Це робить мову дуже гнучкою та поетичною. Once you master this system, you will feel true freedom of expression.
 
 **Сім відмінків української мови — Короткий довідник:**
 
@@ -24,9 +24,9 @@ Congratulations — you've now learned all seven Ukrainian cases! This is a majo
 
 ### Understanding the Case Logic (Логіка відмінків)
 
-Перш ніж повторювати кожен відмінок окремо, давайте згадаємо, навіщо вони потрібні. В українській мові відмінки виконують кілька критичних функцій. Вони наче мітки, які ми ставимо на кожне слово, щоб слухач міг розшифрувати наше повідомлення без жодних сумнівів. Це створює неймовірну точність у спілкуванні. Кожен відмінок має власну "територію" значень, і їхня взаємодія робить мову багатогранною.
+Before reviewing each case separately, let's recall why we need them. In Ukrainian, cases perform several critical functions. Вони наче мітки для кожного слова. Слухач може розшифрувати наше повідомлення без жодних сумнівів. This creates incredible precision in communication. Each case has its own "territory" of meanings, and their interaction makes the language multifaceted.
 
-**Function 1: Marking grammatical relationships.** Відмінки кажуть нам, хто що робить. Називний відмінок позначає підмет (актора), а знахідний — додаток (об'єкт дії). Коли ви кажете «Микола бачить Оксану», відмінки чітко показують, хто на кого дивиться. Навіть якщо ви поміняєте слова місцями: «Оксану бачить Микола», сенс залишиться незмінним — Микола все одно залишається тим, хто дивиться. Це фундаментальний принцип слов'янських мов, який дозволяє емоційно виділяти слова, не змінюючи логіку ситуації.
+**Function 1: Marking grammatical relationships.** Cases tell us who is doing what. The Nominative case marks the subject (actor), and the Accusative marks the object. When you say «Микола бачить Оксану», the cases clearly show who is looking at whom. Even if you swap the words: «Оксану бачить Микола», the meaning remains the same — Mykola is still the one looking. This is a fundamental principle of Slavic languages. It allows you to emphasize words emotionally without changing the logic of the situation.
 
 **Function 2: Working with prepositions.** Більшість прийменників в українській мові вимагають конкретного відмінка. Understanding these pairs helps you distinguish between motion (**куди?**) and location (**де?**). Spatial prepositions often use Accusative for movement and Locative or Instrumental for position. Наприклад, ми кажемо «Йду **в школу**» (знахідний), але «Я **в школі**» (місцевий). Це дозволяє уникати плутанини в просторі та часі. Також логічні прийменники, як-от **для** чи **без**, завжди працюють у парі з родовим відмінком.
 
@@ -36,25 +36,25 @@ Congratulations — you've now learned all seven Ukrainian cases! This is a majo
 
 To master cases, you must see how one word changes through all seven forms. Let's look at a typical masculine and feminine noun. Pay attention to how the suffix changes to reflect each role. This visual representation is the best way to internalize the patterns.
 
-**Masculine (Animate): Друг (Friend)**
+**Masculine (Animate): Друг**
 
-- **Називний (Nom):** Хто? — **друг** (чиста основа)
-- **Родовий (Gen):** Кого? — **друга** (закінчення -а)
-- **Давальний (Dat):** Кому? — **другові** (or другу)
-- **Знахідний (Acc):** Кого? — **друга** (збігається з родовим)
-- **Орудний (Instr):** Ким? — **другом** (закінчення -ом)
-- **Місцевий (Loc):** На кому? — на **другові** (or друзі)
-- **Кличний (Voc):** — **друже**! (спеціальна форма)
+- **Називний:** Хто? — **друг** (чиста основа)
+- **Родовий:** Кого? — **друга** (закінчення -а)
+- **Давальний:** Кому? — **другові** (or другу)
+- **Знахідний:** Кого? — **друга** (збігається з родовим)
+- **Орудний:** Ким? — **другом** (закінчення -ом)
+- **Місцевий:** На кому? — на **другові** (or друзі)
+- **Кличний:** — **друже**! (спеціальна форма)
 
-**Feminine: Книга (Book)**
+**Feminine: Книга**
 
-- **Називний (Nom):** Що? — **книга** (закінчення -а)
-- **Родовий (Gen):** Чого? — **книги** (закінчення -и)
-- **Давальний (Dat):** Чому? — **книзі** (закінчення -і з чергуванням г/з)
-- **Знахідний (Acc):** Що? — **книгу** (закінчення -у)
-- **Орудний (Instr):** Чим? — **книгою** (закінчення -ою)
-- **Місцевий (Loc):** На чому? — на **книзі** (збігається з давальним)
-- **Кличний (Voc):** — **книго**! (закінчення -о)
+- **Називний:** Що? — **книга** (закінчення -а)
+- **Родовий:** Чого? — **книги** (закінчення -и)
+- **Давальний:** Чому? — **книзі** (закінчення -і з чергуванням г/з)
+- **Знахідний:** Що? — **книгу** (закінчення -у)
+- **Орудний:** Чим? — **книгою** (закінчення -ою)
+- **Місцевий:** На чому? — на **книзі** (збігається з давальним)
+- **Кличний:** — **книго**! (закінчення -о)
 
 ### Case Selection Strategy (Як обрати відмінок?)
 
@@ -92,11 +92,11 @@ Look at the highlighted words and identify which case is used based on the funct
 
 Put the words in parentheses into the correct case forms. Look for context clues!
 
-1. Ми гуляємо з (друг) **_ в (парк) _**. -> **з другом** (Instr) **в парку** (Loc).
-2. Я купив (квиток) **_ для (сестра) _**. -> **квиток** (Acc) **для сестри** (Gen).
-3. Він розказує (історія) **_ про (Україна) _**. -> **історію** (Acc) **про Україну** (Acc).
-4. (Іван) **_, дай мені (ручка) _**, будь ласка. -> **Іване** (Voc), **ручку** (Acc).
-5. Немає (вода) **_ в (пляшка) _**. -> **води** (Gen), **пляшці** (Loc).
+1. Ми гуляємо з (друг) **_ в (парк) _**. -> **з другом**, **в парку**.
+2. Я купив (квиток) **_ для (сестра) _**. -> **квиток**, **для сестри**.
+3. Він розказує (історія) **_ про (Україна) _**. -> **історію**, **про Україну**.
+4. (Іван) **_, дай мені (ручка) _**, будь ласка. -> **Іване**, **ручку**.
+5. Немає (вода) **_ в (пляшка) _**. -> **води**, **пляшці**.
 
 > [!important] **Verbs are Case Dictators**
 > Most verbs dictate which case its object MUST take. For example, the verb **допомагати** (to help) always wants Dative. Memorize verbs along with their required case! This is the secret to fluent, error-free speech. It's much easier to learn "допомагати + кому" than just "допомагати" as an abstract action.

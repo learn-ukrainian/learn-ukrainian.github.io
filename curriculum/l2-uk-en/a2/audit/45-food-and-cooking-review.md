@@ -1,8 +1,8 @@
 # Audit Report: M45 — 45-food-and-cooking.md
 **Level:** A2 | **Module:** M45 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 08:58:19
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:19:52
 
 ## Configuration
 **Type:** A2-vocab
@@ -36,31 +36,20 @@
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'food is...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1419/1000 (raw: 1957)
+- **Words:** ✅ 1414/1000 (raw: 1952)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 62/1
+- **Vocab:** ✅ 63/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 82.6% (target 75-85% (A2.3))
+- **Immersion:** 🇺🇦 82.5% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -69,7 +58,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ** | ✅ | 152 | Included in Core |
-| **Граматика** | ⚪️ | 483 | Skipped |
+| **Граматика** | ⚪️ | 478 | Skipped |
 | **Практика** | ⚪️ | 610 | Skipped |
 | **Підсумок** | ✅ | 138 | Included in Core |
 | **Need More Practice?** | ⚪️ | 36 | Skipped |

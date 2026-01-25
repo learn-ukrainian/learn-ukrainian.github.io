@@ -58,11 +58,6 @@ items:
   translation: application, request
   pos: noun
   gender: f
-- lemma: змі
-  ipa: /zmi/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: зміст
   ipa: /zmist/
   translation: content, meaning
@@ -220,11 +215,6 @@ items:
   ipa: /strˈɔɦɪj/
   translation: strict, severe
   pos: adj
-- lemma: стіль
-  ipa: /stilʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фіксувати
   ipa: /fiksuʋˈatɪ/
   translation: to fix, to record

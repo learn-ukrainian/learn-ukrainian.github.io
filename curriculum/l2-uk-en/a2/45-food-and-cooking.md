@@ -53,10 +53,10 @@ Food and cooking are more than just survival skills in Ukrainian culture — the
 
 Each of these verbs represents a tradition and has specific uses:
 
-- **Варити** (to boil): Used for soups, pasta, potatoes, eggs. The food is submerged in boiling water.
-- **Смажити** (to fry): Used for meat, vegetables, pancakes. Food is cooked в олії (in oil) on high heat.
-- **Пекти** (to bake): Used for bread, pies, cakes. Food is cooked in the oven with dry heat.
-- **Тушкувати** (to stew): The foundation of many Ukrainian dishes. Food is cooked slowly in liquid under a lid, allowing flavors to blend.
+- **Варити** (to boil): Used for soups, pasta, potatoes, eggs. Submerge the ingredients in boiling water.
+- **Смажити** (to fry): Used for meat, vegetables, pancakes. Cook ingredients в олії (in oil) on high heat.
+- **Пекти** (to bake): Used for bread, pies, cakes. Bake utilizing dry heat in the oven.
+- **Тушкувати** (to stew): The foundation of many Ukrainian dishes. Simmer food slowly in liquid under a lid, allowing flavors to blend.
 
 For example, «варіння» (boiling) is essential for Ukrainian soups like борщ and юшка. «Пекти» (to bake) is the verb for traditional breads and pastries that appear at every Ukrainian holiday.
 

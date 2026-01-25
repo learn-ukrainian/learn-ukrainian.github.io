@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M52 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-24 20:26:57
+**Generated:** 2026-01-25 16:03:14
 
 ## Configuration
 **Type:** B2-biography
@@ -38,21 +38,8 @@
 - Required types used: 5/5 (comparative-study, essay-response, quiz, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'він був...'.
-  - FIX: Vary sentence structure.
-
-## TEMPLATE COMPLIANCE
-- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template.md'
-  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3142/3000 (raw: 3192)
+- **Words:** ✅ 3455/3000 (raw: 3505)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -62,7 +49,7 @@
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ 1 fill-in with year answers
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (biography))
 - **Richness:** ❌ 92% < 95% min (biography)
@@ -80,9 +67,9 @@
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
 | quotes | 2 | 3 | 67% | 14% | 9.6% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 9 | 2 | 100% | 10% | 9.5% |
+| legacy | 11 | 2 | 100% | 10% | 9.5% |
 | variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |
@@ -93,11 +80,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 85 | Included in Core |
 | **Вступ: Батько нації чи суперечлива фігура?** | ✅ | 401 | Included in Core |
-| **Ранні роки: Освіта і служба** | ⚪️ | 525 | Skipped |
-| **Особиста драма як іскра повстання** | ⚪️ | 389 | Skipped |
-| **Геній дипломатії та війни** | ⚪️ | 491 | Skipped |
-| **Будівничий держави** | ⚪️ | 284 | Skipped |
-| **Первинні джерела: Листи та промови** | ✅ | 344 | Included in Core |
-| **Деколонізаційний погляд: Лідер, а не васал** | ✅ | 331 | Included in Core |
-| **Читання** | ✅ | 124 | Included in Core |
+| **Ранні роки: Освіта і служба** | ⚪️ | 591 | Skipped |
+| **Особиста драма як іскра повстання** | ⚪️ | 463 | Skipped |
+| **Геній дипломатії та війни** | ⚪️ | 552 | Skipped |
+| **Будівничий держави** | ⚪️ | 336 | Skipped |
+| **Первинні джерела: Листи та промови** | ✅ | 354 | Included in Core |
+| **Деколонізаційний погляд: Лідер, а не васал** | ✅ | 342 | Included in Core |
+| **Читання** | ✅ | 163 | Included in Core |
 | **Підсумок** | ✅ | 168 | Included in Core |

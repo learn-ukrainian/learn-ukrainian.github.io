@@ -266,11 +266,6 @@ items:
   translation: memo, instruction, monument
   pos: noun
   gender: f
-- lemma: пер
-  ipa: /pɛr/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: перевіз
   ipa: /pɛrɛʋˈiz/
   translation: transportation, transit
@@ -338,11 +333,6 @@ items:
   translation: Poltava
   pos: noun
   gender: f
-- lemma: посад
-  ipa: /pɔsˈad/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: прийменниковий
   ipa: /prɪjmɛnnɪkˈɔʋɪj/
   translation: prepositional

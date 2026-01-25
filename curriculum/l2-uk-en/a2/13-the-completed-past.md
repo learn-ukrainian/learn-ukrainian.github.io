@@ -2,9 +2,9 @@
 
 ## Introduction / Вступ
 
-**Ласкаво просимо! Тепер, коли ви вже знаєте, що таке аспект, давайте навчимося використовувати доконаний вид у минулому часі!** Це один із найважливіших моментів у вашому навчанні, адже саме минулий час найчастіше стає "майданчиком" для вибору між процесом та результатом. Якщо ви хочете розповісти про свій день, подорож або життєві досягнення, вам не обійтися без правильного використання доконаного виду. Це дозволить вам не просто перераховувати дії, а показувати їхню завершеність та важливість для теперішнього. Розуміння цієї логіки — це великий крок до вільного володіння мовою.
+**Ласкаво просимо! Тепер ви знаєте, що таке аспект. Давайте навчимося використовувати доконаний вид у минулому часі!** Це один із найважливіших моментів у вашому навчанні. Саме минулий час найчастіше стає "майданчиком" для вибору між процесом та результатом. Якщо ви хочете розповісти про свій день або подорож, вам потрібен доконаний вид. Ви повинні вміти показувати завершеність подій. Розуміння цієї логіки — це великий крок до вільного володіння мовою.
 
-In your previous module, you discovered the concept of **verbal aspect**. Today, we focus on using the **perfective** aspect (доконаний вид) in the past tense. This is arguably the most common context where aspect choice determines whether you sound like a native speaker or a literal translator. When you tell a story, you constantly choose between the **process** (what was happening) and the **result** (what finally happened). In Ukrainian, this isn't just a nuance; it's practically another tense system! By the end of this module, you will be able to report completed achievements and single events with confidence. Ви зможете чітко розділяти те, що ви "робили", і те, що ви "зробили".
+In your previous module, you discovered the concept of **verbal aspect**. Today, we focus on using the **perfective** aspect (доконаний вид) in the past tense. This is arguably the most common context where aspect choice determines whether you sound like a native speaker or a literal translator. When telling a story, you constantly choose between the **process** (what was happening) and the **result** (what finally happened). In Ukrainian, this isn't just a nuance; it's practically another tense system! By the end of this module, you will be able to report completed achievements and single events with confidence. Ви зможете чітко розділяти те, що ви "робили", і те, що ви "зробили".
 
 **Що ви опануєте в цьому модулі:**
 
@@ -17,7 +17,7 @@ In your previous module, you discovered the concept of **verbal aspect**. Today,
 
 ### The Result Mindset (Орієнтація на результат)
 
-In the present tense, everything is usually a process (I am reading). But in the past, actions have a clear "before" and "after". If you finished your coffee, you use the perfective. If you were sitting in a cafe for an hour sipping it, you use the imperfective. Perfective past = **закінчена дія** з чітким результатом. If you can point to the "final product" of the action, use perfective! Це відмітна риса слов'янського мислення: нас цікавить не тільки те, що відбувалося, а й те, чим це закінчилося.
+In the present tense, everything is usually a process (I am reading). But in the past, actions have a clear "before" and "after". Completion is key: finishing your coffee requires the perfective, while sitting in a cafe for an hour sipping it calls for the imperfective. Perfective past = **закінчена дія** з чітким результатом. Whenever you can point to the "final product" of the action, use perfective! Це відмітна риса слов'янського мислення: нас цікавить не тільки те, що відбувалося, а й те, чим це закінчилося.
 
 Let's look at how the shift from process to result happens in real Ukrainian sentences. Notice how the perfective adds a "stamp of completion" to the action.
 
@@ -30,7 +30,7 @@ Let's look at how the shift from process to result happens in real Ukrainian sen
 
 ### Formation of the Perfective Past (Творення минулого часу)
 
-The good news is that perfective verbs in the past tense follow the exact same rules as imperfective ones. You take the infinitive (usually the perfective one), remove the **-ти** ending, and add endings based on gender and number. The stems of perfective verbs usually contain a prefix, but the endings are familiar to you from A1.
+The good news is that perfective verbs in the past tense follow the exact same rules as imperfective ones. Start with the infinitive (usually the perfective one). Then, remove the **-ти** ending and add endings based on gender and number. The stems of perfective verbs usually contain a prefix, but the endings are familiar to you from A1.
 
 **Endings Review:**
 
@@ -138,4 +138,4 @@ Now you understand how to talk about your achievements with the precision of a n
 
 ## Need More Practice?
 
-To stabilize your knowledge of the perfective past, try describing three things you COMPLETED yesterday and three things you WERE DOING for a long time. Use the vocabulary items provided in the sidecar to practice your new verbs in context! Спробуйте написати короткий текст про свій типовий ранок, використовуючи лише доконаний вид. Пам'ятайте: кожен вивчений аспект — це ваш особистий результат! Успіхів!
+To stabilize your knowledge of the perfective past, try describing three things you COMPLETED yesterday and three things you WERE DOING for a long time. Use the vocabulary items provided in the sidecar to practice your new verbs in context! Спробуйте написати короткий текст про свій типовий ранок, використовуючи лише доконаний вид. Пам'ятайте: кожен аспект, який ви вивчили — це ваш особистий результат! Успіхів!

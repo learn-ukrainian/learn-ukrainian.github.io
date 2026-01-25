@@ -2,11 +2,6 @@ module: 32-my-family
 level: A1
 version: '2.0'
 items:
-- lemma: ганн
-  ipa: /ɦann/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: двоюрідний
   ipa: /dʋɔˈjuridnɪj/
   translation: first (cousin)

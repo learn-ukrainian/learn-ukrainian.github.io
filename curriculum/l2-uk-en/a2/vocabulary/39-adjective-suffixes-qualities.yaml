@@ -40,11 +40,6 @@ items:
   ipa: /ʋɪsɔkɛznɪj/
   translation: towering, very tall
   pos: adj
-- lemma: гарн
-  ipa: /ɦarn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: гарненький
   ipa: /ɦarnˈɛnʲkɪj/
   translation: pretty, nice
@@ -66,19 +61,10 @@ items:
   translation: friendliness
   pos: noun
   gender: f
-- lemma: езн
-  ipa: /ɛzn/
-  translation: ''
-  pos: noun
 - lemma: екстремальний
   ipa: /ɛkstrɛmˈalʲnɪj/
   translation: extreme
   pos: adj
-- lemma: енн
-  ipa: /ɛnn/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: жах-фільм
   ipa: /ʒax-filʲm/
   translation: horror film
@@ -101,19 +87,10 @@ items:
   translation: watermelon
   pos: noun
   gender: m
-- lemma: книж
-  ipa: /knɪʒ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: книжковий
   ipa: /knɪʒkˈɔʋɪj/
   translation: book (adj)
   pos: adj
-- lemma: мал
-  ipa: /mal/
-  translation: ''
-  pos: noun
 - lemma: масштаб
   ipa: /masʃtˈab/
   translation: scale
@@ -168,11 +145,6 @@ items:
   translation: cookies, biscuits
   pos: noun
   gender: n
-- lemma: питаль
-  ipa: /pɪtalʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: побут
   ipa: /pˈɔbut/
   translation: everyday life, way of life
@@ -187,11 +159,6 @@ items:
   ipa: /prɪˈjɛmnɪj/
   translation: pleasant
   pos: adj
-- lemma: робоч
-  ipa: /rɔbɔt͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: розмір
   ipa: /rɔzmir/
   translation: size, dimension
@@ -210,11 +177,6 @@ items:
   ipa: /sɔlɔdˈɛnʲkɪj/
   translation: sweet (diminutive)
   pos: adj
-- lemma: соняч
-  ipa: /sɔnjat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: сонячненька
   ipa: /sɔnjat͡ʃnɛnʲka/
   translation: sunny (adj diminutive female)
@@ -232,11 +194,6 @@ items:
   ipa: /sprˈaʋɪtɪ/
   translation: to celebrate (e.g. wedding), to make an impression
   pos: verb
-- lemma: страш
-  ipa: /straʃ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: страшенний
   ipa: /straʃˈɛnnɪj/
   translation: terrible, awful, huge
@@ -285,28 +242,14 @@ items:
   translation: cup (diminutive)
   pos: noun
   gender: f
-- lemma: чист
-  ipa: /t͡ʃɪst/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: чистесенький
   ipa: /t͡ʃɪstˈɛsɛnʲkɪj/
   translation: perfectly clean
   pos: adj
-- lemma: шкіль
-  ipa: /ʃkilʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: щасливенький
   ipa: /ʃt͡ʃaslɪʋɛnʲkɪj/
   translation: happy (diminutive)
   pos: adj
-- lemma: янити
-  ipa: /janɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: ярмарок
   ipa: /ˈjarmarɔk/
   translation: fair, market

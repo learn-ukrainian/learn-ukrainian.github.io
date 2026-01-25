@@ -168,11 +168,6 @@ items:
   ipa: /kɔmpɔnˈɛnt/
   translation: component
   pos: noun
-- lemma: кон
-  ipa: /kɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: лук
   ipa: /luk/
   translation: bow (weapon), onion (archaic)

@@ -99,10 +99,6 @@ items:
   translation: media scene
   pos: noun
   gender: f
-- lemma: напр
-  ipa: /napr/
-  translation: ''
-  pos: adv
 - lemma: нитка
   ipa: /nˈɪtka/
   translation: thread

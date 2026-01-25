@@ -284,10 +284,6 @@ items:
   translation: Lyuda (name)
   pos: noun
   gender: f
-- lemma: людин
-  ipa: /ljudɪn/
-  translation: ''
-  pos: adj
 - lemma: марко
   ipa: /mˈarkɔ/
   translation: Marko (name)
@@ -298,16 +294,6 @@ items:
   translation: car, machine
   pos: noun
   gender: f
-- lemma: мен
-  ipa: /mɛn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мень
-  ipa: /mɛnʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ми
   ipa: /mɪ/
   translation: we
@@ -585,10 +571,6 @@ items:
   translation: warmth, warmly, heat
   pos: noun
   gender: n
-- lemma: тим
-  ipa: /tɪm/
-  translation: ''
-  pos: conj
 - lemma: типовий
   ipa: /tɪpɔʋɪj/
   translation: typical

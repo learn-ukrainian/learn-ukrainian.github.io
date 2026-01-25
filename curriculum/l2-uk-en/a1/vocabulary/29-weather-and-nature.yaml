@@ -2,11 +2,6 @@ module: 29-weather-and-nature
 level: A1
 version: '2.0'
 items:
-- lemma: калин
-  ipa: /kalɪn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: квітка
   ipa: /kʋˈitka/
   translation: flower
@@ -16,11 +11,6 @@ items:
   translation: climate
   pos: noun
   gender: m
-- lemma: луга
-  ipa: /lˈuɦa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: мурчик
   ipa: /murt͡ʃɪk/
   translation: Murchyk (cat name)

@@ -238,11 +238,6 @@ items:
   ipa: /nasˈɛlɛnɪj/
   translation: populated
   pos: adj
-- lemma: ндв-форма
-  ipa: /ndʋ-fˈɔrma/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: неділя
   ipa: /nɛdˈilja/
   translation: Sunday
@@ -277,10 +272,6 @@ items:
   ipa: /pɔzaʋt͡ʃˈɔra/
   translation: the day before yesterday
   pos: adv
-- lemma: понада
-  ipa: /pɔnˈada/
-  translation: ''
-  pos: noun
 - lemma: потяг
   ipa: /pˈɔtjaɦ/
   translation: train, attraction, urge

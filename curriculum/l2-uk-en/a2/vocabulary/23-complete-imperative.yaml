@@ -7,10 +7,6 @@ items:
   translation: apology, forgiveness
   pos: noun
   gender: n
-- lemma: ехаяти
-  ipa: /ɛxajatɪ/
-  translation: ''
-  pos: verb
 - lemma: здійснитися
   ipa: /zdijsnˈɪtɪsja/
   translation: to come true, to happen

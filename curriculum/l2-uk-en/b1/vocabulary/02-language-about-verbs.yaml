@@ -170,11 +170,6 @@ items:
   translation: meaning, importance
   pos: noun
   gender: n
-- lemma: зно
-  ipa: /znɔ/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: категорія
   ipa: /katɛɦˈɔrija/
   translation: category
@@ -203,11 +198,6 @@ items:
   ipa: /lɔʋˈɪtɪ/
   translation: to catch
   pos: verb
-- lemma: літ
-  ipa: /lit/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: літера
   ipa: /lˈitɛra/
   translation: letter (alphabet)
@@ -217,11 +207,6 @@ items:
   ipa: /majbˈutnij/
   translation: future (adj)
   pos: adj
-- lemma: майч
-  ipa: /majt͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: минулий
   ipa: /mɪnˈulɪj/
   translation: past, previous
@@ -290,10 +275,6 @@ items:
   ipa: /plan/
   translation: plan
   pos: noun
-- lemma: по-юридичний
-  ipa: /pɔ-jurɪdɪt͡ʃnɪj/
-  translation: ''
-  pos: adj
 - lemma: повільно
   ipa: /pɔʋˈilʲnɔ/
   translation: slowly
@@ -434,11 +415,6 @@ items:
   ipa: /jakbˈɪ/
   translation: if (hypothetical)
   pos: conj
-- lemma: яким
-  ipa: /jakˈɪm/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: інфінітив
   ipa: /infinitˈɪʋ/
   translation: infinitive
@@ -448,7 +424,3 @@ items:
   ipa: /ˈinʃɪj/
   translation: other, another
   pos: pron
-- lemma: ірин
-  ipa: /irˈɪn/
-  translation: ''
-  pos: adj

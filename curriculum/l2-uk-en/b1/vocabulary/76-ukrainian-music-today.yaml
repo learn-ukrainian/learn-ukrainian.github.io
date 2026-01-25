@@ -120,11 +120,6 @@ items:
   translation: playlist
   pos: noun
   gender: m
-- lemma: поп
-  ipa: /pɔp/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: потужно
   ipa: /pɔtˈuʒnɔ/
   translation: powerfully
@@ -210,10 +205,5 @@ items:
 - lemma: шоу
   ipa: /ʃˈɔu/
   translation: show
-  pos: noun
-  gender: m
-- lemma: інд
-  ipa: /ind/
-  translation: ''
   pos: noun
   gender: m

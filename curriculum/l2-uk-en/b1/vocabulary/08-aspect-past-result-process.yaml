@@ -224,10 +224,6 @@ items:
   translation: piece of furniture
   pos: noun
   gender: f
-- lemma: мона
-  ipa: /mɔna/
-  translation: ''
-  pos: noun
 - lemma: монотонність
   ipa: /mɔnɔtˈɔnnistʲ/
   translation: monotony
@@ -424,11 +420,6 @@ items:
   translation: resume, summary
   pos: noun
   gender: n
-- lemma: роба
-  ipa: /rˈɔba/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: розділ
   ipa: /rˈɔzdil/
   translation: chapter, section, division
@@ -506,11 +497,6 @@ items:
 - lemma: спорт
   ipa: /spɔrt/
   translation: sport
-  pos: noun
-  gender: m
-- lemma: стар
-  ipa: /star/
-  translation: ''
   pos: noun
   gender: m
 - lemma: сусід

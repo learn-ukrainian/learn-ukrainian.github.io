@@ -2,6 +2,15 @@ module: 13-the-completed-past
 level: A2
 version: '2.0'
 items:
+- lemma: вид
+  ipa: /ʋɪd/
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: вийти
+  ipa: /ʋˈɪjtɪ/
+  translation: to exit, to go out (perfective)
+  pos: verb
 - lemma: випити
   ipa: /ʋˈɪpɪtɪ/
   translation: to drink (perfective)
@@ -14,15 +23,27 @@ items:
   ipa: /ɦɛtʲ/
   translation: away, off
   pos: part
+- lemma: дати
+  ipa: /dˈatɪ/
+  translation: to give (perfective)
+  pos: verb
 - lemma: десятий
   ipa: /dɛsˈjatɪj/
   translation: tenth
+  pos: adj
+- lemma: доконаний
+  ipa: /dɔkˈɔnanɪj/
+  translation: perfective
   pos: adj
 - lemma: емейл
   ipa: /ɛmɛjl/
   translation: email
   pos: noun
   gender: m
+- lemma: забути
+  ipa: /zabˈutɪ/
+  translation: to forget
+  pos: verb
 - lemma: з'їсти
   ipa: /zˈjistɪ/
   translation: to eat
@@ -35,13 +56,41 @@ items:
   ipa: /znadɔbljatɪsja/
   translation: to be needed (imperfective)
   pos: verb
+- lemma: зрозуміти
+  ipa: /zrɔzumˈitɪ/
+  translation: to understand (perfective)
+  pos: verb
+- lemma: написати
+  ipa: /napɪsˈatɪ/
+  translation: to write (perfective)
+  pos: verb
+- lemma: недоконаний
+  ipa: /nɛdɔkˈɔnanɪj/
+  translation: imperfective
+  pos: adj
 - lemma: несподівано
   ipa: /nɛspɔdˈiʋanɔ/
   translation: unexpectedly
   pos: adv
+- lemma: піти
+  ipa: /pitˈɪ/
+  translation: to go (perfective)
+  pos: verb
 - lemma: пообідати
   ipa: /pɔɔbˈidatɪ/
   translation: to have dinner
+  pos: verb
+- lemma: почати
+  ipa: /pɔt͡ʃˈatɪ/
+  translation: to start (perfective)
+  pos: verb
+- lemma: почути
+  ipa: /pɔt͡ʃˈutɪ/
+  translation: to hear (perfective)
+  pos: verb
+- lemma: приїхати
+  ipa: /prɪjˈixatɪ/
+  translation: to arrive (perfective)
   pos: verb
 - lemma: прогулянка
   ipa: /prɔɦˈuljanka/
@@ -62,3 +111,7 @@ items:
   translation: self-control
   pos: noun
   gender: m
+- lemma: увійти
+  ipa: /uʋijˈtɪ/
+  translation: to enter (perfective)
+  pos: verb

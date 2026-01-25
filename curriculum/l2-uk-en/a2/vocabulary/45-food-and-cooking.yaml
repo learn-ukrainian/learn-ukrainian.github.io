@@ -135,6 +135,10 @@ items:
   translation: small bowl
   pos: noun
   gender: f
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: local, locative
+  pos: adj
 - lemma: морквина
   ipa: /mɔrkʋˈɪna/
   translation: carrot (single)
@@ -226,11 +230,11 @@ items:
   ipa: /smˈuʒka/
   translation: strip, band
   pos: noun
-- lemma: сол
-  ipa: /sɔl/
-  translation: ''
+- lemma: сіль
+  ipa: /silʲ/
+  translation: salt
   pos: noun
-  gender: m
+  gender: f
 - lemma: солоний
   ipa: /sɔlˈɔnɪj/
   translation: salty, salted

@@ -156,11 +156,6 @@ items:
   translation: snake
   pos: noun
   gender: f
-- lemma: кача
-  ipa: /kat͡ʃˈa/
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: качатися
   ipa: /kat͡ʃˈatɪsja/
   translation: to rock, to roll
@@ -210,11 +205,6 @@ items:
   ipa: /lˈazɪtɪ/
   translation: to climb, to crawl
   pos: verb
-- lemma: ліз
-  ipa: /liz/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: лізти
   ipa: /lˈiztɪ/
   translation: to climb, to crawl
@@ -487,11 +477,6 @@ items:
 - lemma: хлопчик
   ipa: /xlˈɔpt͡ʃɪk/
   translation: little boy
-  pos: noun
-  gender: m
-- lemma: хмель
-  ipa: /xmɛlʲ/
-  translation: ''
   pos: noun
   gender: m
 - lemma: чабан

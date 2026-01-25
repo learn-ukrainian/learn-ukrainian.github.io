@@ -29,6 +29,16 @@ items:
   ipa: /likarnˈjanɪj/
   translation: sick leave
   pos: adj
+- lemma: направлення
+  ipa: /napraʋlˈɛnnja/
+  translation: referral
+  pos: noun
+  gender: n
+- lemma: нежить
+  ipa: /nˈɛʒɪtʲ/
+  translation: runny nose
+  pos: noun
+  gender: m
 - lemma: петрович
   ipa: /pɛtrˈɔʋɪt͡ʃ/
   translation: Petrovych (patronymic)
@@ -46,6 +56,10 @@ items:
   ipa: /pɔmˈirjatɪ/
   translation: to measure, to try on
   pos: verb
+- lemma: приймати
+  ipa: /prɪjmˈatɪ/
+  translation: to take (medicine), to accept
+  pos: verb
 - lemma: прізвище
   ipa: /prˈizʋɪʃt͡ʃɛ/
   translation: surname
@@ -56,6 +70,11 @@ items:
   translation: reception (medical)
   pos: noun
   gender: f
+- lemma: рецепт
+  ipa: /rɛt͡sˈɛpt/
+  translation: prescription, recipe
+  pos: noun
+  gender: m
 - lemma: розчин
   ipa: /rˈɔzt͡ʃɪn/
   translation: solution (liquid)
@@ -79,4 +98,7 @@ items:
   ipa: /farmat͡sˈɛʋt/
   translation: pharmacist
   pos: noun
-  gender: m
+- lemma: хворіти
+  ipa: /xʋɔrˈitɪ/
+  translation: to be sick
+  pos: verb

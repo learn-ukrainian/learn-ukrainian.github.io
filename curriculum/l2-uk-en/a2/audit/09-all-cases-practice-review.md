@@ -1,8 +1,8 @@
 # Audit Report: M09 — 09-all-cases-practice.md
 **Level:** A2 | **Module:** M09 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:41:54
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:21:50
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,20 +38,8 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це дозволяє змінювати порядок слів...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вони наче мітки які ми...'
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 2 violations (minor)
-- Immersion 6% off target (minor)
-
 ## Gates
-- **Words:** ✅ 1494/1000 (raw: 1687)
+- **Words:** ✅ 1477/1000 (raw: 1670)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -61,9 +49,9 @@
 - **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 55.7% HIGH (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 45.6% (target 40-50% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
@@ -71,9 +59,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 191 | Included in Core |
-| **Presentation / Презентація** | ✅ | 715 | Included in Core |
-| **Practice / Практика** | ⚪️ | 206 | Skipped |
+| **Introduction / Вступ** | ✅ | 188 | Included in Core |
+| **Presentation / Презентація** | ✅ | 711 | Included in Core |
+| **Practice / Практика** | ⚪️ | 196 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 222 | Included in Core |
 | **Summary / Підсумок** | ✅ | 110 | Included in Core |
 | **Need More Practice?** | ⚪️ | 50 | Skipped |

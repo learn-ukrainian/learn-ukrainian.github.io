@@ -112,10 +112,6 @@ items:
   ipa: /ʋijsʲkˈɔʋɪj/
   translation: military, soldier
   pos: adj
-- lemma: війти
-  ipa: /ʋˈijtɪ/
-  translation: ''
-  pos: verb
 - lemma: глухий
   ipa: /ɦluxˈɪj/
   translation: deaf, dull
@@ -295,11 +291,6 @@ items:
   ipa: /lɛdʲ/
   translation: hardly, barely
   pos: conj
-- lemma: лес
-  ipa: /lɛs/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: логіка
   ipa: /lˈɔɦika/
   translation: logic
@@ -483,10 +474,6 @@ items:
   ipa: /rujnˈujut͡ʃɪ/
   translation: destroying
   pos: verb
-- lemma: рівновагий
-  ipa: /riʋnɔʋˈaɦɪj/
-  translation: ''
-  pos: adj
 - lemma: рідний
   ipa: /rˈidnɪj/
   translation: native, own
@@ -554,10 +541,6 @@ items:
   translation: society
   pos: noun
   gender: n
-- lemma: сутий
-  ipa: /sˈutɪj/
-  translation: ''
-  pos: adj
 - lemma: сучасність
   ipa: /sut͡ʃˈasnistʲ/
   translation: modernity, present time
@@ -576,11 +559,6 @@ items:
   ipa: /tˈɪsnutɪ/
   translation: to press, to squeeze
   pos: verb
-- lemma: тіль
-  ipa: /tilʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: українізація
   ipa: /ukrajinizˈat͡sija/
   translation: Ukrainianization

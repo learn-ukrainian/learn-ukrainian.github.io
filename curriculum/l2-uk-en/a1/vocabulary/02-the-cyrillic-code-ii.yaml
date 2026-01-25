@@ -70,11 +70,6 @@ items:
   ipa: /prɔsˈɪtɪ/
   translation: to ask, to beg
   pos: verb
-- lemma: ска
-  ipa: /ska/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: справа
   ipa: /sprˈaʋa/
   translation: matter, business, case

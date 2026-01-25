@@ -10,16 +10,44 @@ items:
 - lemma: висловити
   ipa: /ʋˈɪslɔʋɪtɪ/
   translation: to express, to utter
-  pos: verb
+- lemma: відмінок
+  ipa: /ʋidminˈɔk/
+  translation: case (grammar)
+  pos: noun
+  gender: m
+- lemma: давальний
+  ipa: /daʋˈalʲnɪj/
+  translation: dative (case)
+  pos: adj
 - lemma: заплатити
   ipa: /zaplatˈɪtɪ/
   translation: to pay
   pos: verb
+- lemma: знахідний
+  ipa: /znaxidˈnɪj/
+  translation: accusative (case)
+  pos: adj
+- lemma: кличний
+  ipa: /klˈɪt͡ʃnɪj/
+  translation: vocative (case)
+  pos: adj
+- lemma: місцевий
+  ipa: /mist͡sɛʋˈɪj/
+  translation: locative (case)
+  pos: adj
+- lemma: називний
+  ipa: /nazɪʋnˈɪj/
+  translation: nominative (case)
+  pos: adj
 - lemma: оплата
   ipa: /ɔplˈata/
   translation: payment
   pos: noun
   gender: f
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (case)
+  pos: adj
 - lemma: плач
   ipa: /plat͡ʃ/
   translation: crying, lament
@@ -29,6 +57,10 @@ items:
   ipa: /rˈankɔm/
   translation: in the morning
   pos: adv
+- lemma: родовий
+  ipa: /rɔdɔʋˈɪj/
+  translation: genitive (case)
+  pos: adj
 - lemma: розповісти
   ipa: /rɔzpɔʋˈistɪ/
   translation: to tell (perfective)

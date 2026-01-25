@@ -24,11 +24,6 @@ items:
   ipa: /ʋalˈjuta/
   translation: currency
   pos: noun
-- lemma: впад
-  ipa: /ʋpad/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: врешті
   ipa: /ʋrˈɛʃti/
   translation: at last, finally

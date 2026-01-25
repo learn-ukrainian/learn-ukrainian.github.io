@@ -135,10 +135,6 @@ items:
   translation: tent
   pos: noun
   gender: m
-- lemma: невесло
-  ipa: /nɛʋɛslɔ/
-  translation: ''
-  pos: noun
 - lemma: несамовитий
   ipa: /nɛsamɔʋˈɪtɪj/
   translation: frantic, furious

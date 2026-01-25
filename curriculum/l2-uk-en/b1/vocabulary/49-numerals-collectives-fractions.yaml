@@ -23,11 +23,6 @@ items:
   ipa: /ʋɪxˈɔʋuʋatɪsja/
   translation: to be raised
   pos: verb
-- lemma: ворт
-  ipa: /ʋɔrt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: граблі
   ipa: /ɦrablˈi/
   translation: rake

@@ -80,10 +80,6 @@ items:
   translation: Sofia (name)
   pos: noun
   gender: f
-- lemma: ти'
-  ipa: /tɪ/
-  translation: ''
-  pos: noun
 - lemma: українка
   ipa: /ukraˈjinka/
   translation: Ukrainian (female)

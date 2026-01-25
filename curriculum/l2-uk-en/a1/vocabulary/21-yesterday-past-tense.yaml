@@ -24,11 +24,6 @@ items:
   ipa: /nɛdˈaʋnɔ/
   translation: recently
   pos: adv
-- lemma: питив
-  ipa: /pɪtɪʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: рута
   ipa: /rˈuta/
   translation: rue (plant)
@@ -43,7 +38,3 @@ items:
   ipa: /tˈɪxɔ/
   translation: quietly, silently
   pos: adv
-- lemma: їстити
-  ipa: /jistɪtɪ/
-  translation: ''
-  pos: verb

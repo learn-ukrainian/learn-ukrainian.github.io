@@ -104,10 +104,6 @@ items:
   translation: physics
   pos: noun
   gender: f
-- lemma: ш-к-о-л-ий
-  ipa: /ʃ-k-ɔ-l-ɪj/
-  translation: ''
-  pos: adj
 - lemma: інституція
   ipa: /instɪtˈut͡sija/
   translation: institution

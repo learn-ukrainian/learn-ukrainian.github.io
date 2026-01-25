@@ -24,10 +24,6 @@ items:
   translation: improvement, perfection
   pos: noun
   gender: n
-- lemma: вестя
-  ipa: /ʋɛstja/
-  translation: ''
-  pos: noun
 - lemma: весілля
   ipa: /ʋɛsˈillja/
   translation: wedding
@@ -91,11 +87,6 @@ items:
   translation: drama
   pos: noun
   gender: f
-- lemma: діл
-  ipa: /dil/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: ділити
   ipa: /dilˈɪtɪ/
   translation: to divide, to share
@@ -251,11 +242,6 @@ items:
   translation: fullness, wholeness
   pos: noun
   gender: f
-- lemma: повід
-  ipa: /pˈɔʋid/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: полісемія
   ipa: /pɔlisɛmˈija/
   translation: polysemy
@@ -286,11 +272,6 @@ items:
   ipa: /prɔzˈɔrɪj/
   translation: transparent
   pos: adj
-- lemma: пря
-  ipa: /prja/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: публікувати
   ipa: /publikuʋˈatɪ/
   translation: to publish (imperfective)
@@ -383,11 +364,6 @@ items:
   ipa: /tˈɛstɔʋɪj/
   translation: test (adj)
   pos: adj
-- lemma: трим
-  ipa: /trɪm/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: тримати
   ipa: /trɪmˈatɪ/
   translation: to hold, to keep

@@ -53,10 +53,6 @@ items:
   translation: spectacle, sight
   pos: noun
   gender: n
-- lemma: гляда
-  ipa: /ɦljada/
-  translation: ''
-  pos: noun
 - lemma: ефект
   ipa: /ɛfˈɛkt/
   translation: effect
@@ -86,10 +82,6 @@ items:
   ipa: /mandrˈiʋnɪk/
   translation: traveler
   pos: noun
-- lemma: менникнути
-  ipa: /mɛnnɪknutɪ/
-  translation: ''
-  pos: verb
 - lemma: надходження
   ipa: /nadxˈɔdʒɛnnja/
   translation: arrival, receipt, income
@@ -118,10 +110,6 @@ items:
   translation: security guard
   pos: noun
   gender: m
-- lemma: пере-'
-  ipa: /pɛrɛ-/
-  translation: ''
-  pos: noun
 - lemma: перемагати
   ipa: /pɛrɛmaɦˈatɪ/
   translation: to win, to defeat
@@ -134,10 +122,6 @@ items:
   ipa: /pɛrɛprˈɔʃuʋatɪ/
   translation: to apologize, to ask again
   pos: verb
-- lemma: пис
-  ipa: /pɪs/
-  translation: ''
-  pos: noun
 - lemma: позначка
   ipa: /pˈɔznat͡ʃka/
   translation: mark, label
@@ -203,10 +187,6 @@ items:
   translation: walking
   pos: noun
   gender: f
-- lemma: чит
-  ipa: /t͡ʃɪt/
-  translation: ''
-  pos: noun
 - lemma: відхід
   ipa: /ʋidxiid/
   translation: departure

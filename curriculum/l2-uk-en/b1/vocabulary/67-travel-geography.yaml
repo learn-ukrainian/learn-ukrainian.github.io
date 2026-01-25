@@ -128,10 +128,6 @@ items:
   translation: border guard
   pos: noun
   gender: m
-- lemma: причорноморʼь
-  ipa: /prɪt͡ʃɔrnɔmɔrʲ/
-  translation: ''
-  pos: verb
 - lemma: пролягати
   ipa: /prɔljaɦˈatɪ/
   translation: to lie, to pass (roads)

@@ -1,8 +1,8 @@
 # Audit Report: M61 — 61-hotel-accommodation.md
 **Level:** A2 | **Module:** M61 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 08:59:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:25:03
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,17 +37,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 61-hotel-accommodation.yaml: Duplicate key 'instruction' at line 205 (first defined at line 179)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): одномісний, готель, рецепція, включено, сніданок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): одномісний, двомісний, скарга, сніданок...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1004/1000 (raw: 1148)
@@ -57,10 +53,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 81.2% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

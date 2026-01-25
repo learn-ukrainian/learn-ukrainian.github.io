@@ -202,7 +202,7 @@
     - statement: «Якщо у вас грип, треба йти на роботу.»
       correct: false
       explanation: «Ні, треба сидіти вдома, щоб не заразити інших.»
-  instruction: Визначте, чи твердження правильне.
+
 
 - type: unjumble
   title: Doctor Sentences

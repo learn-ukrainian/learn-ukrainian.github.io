@@ -1,8 +1,8 @@
 # Audit Report: M59 — 59-doctor-visit.md
 **Level:** A2 | **Module:** M59 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 08:58:57
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 17:24:14
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,15 +37,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 59-doctor-visit.yaml: Duplicate key 'instruction' at line 205 (first defined at line 179)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): направлення, одужати, рецепт, симптом, приймати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): симптом, одужати, болить, аналіз, діагноз...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1022/1000 (raw: 1165)
@@ -55,10 +53,10 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 17/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 78.7% (target 75-85% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

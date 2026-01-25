@@ -116,10 +116,6 @@ items:
   ipa: /ʒinˈɔt͡ʃɪj/
   translation: women's, feminine
   pos: adj
-- lemma: з-нахіднити
-  ipa: /z-naxidnɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: завершити
   ipa: /zaʋɛrʃˈɪtɪ/
   translation: to complete, to finish
@@ -449,11 +445,6 @@ items:
   ipa: /rɛɦulˈjarnɔ/
   translation: regularly
   pos: adv
-- lemma: род
-  ipa: /rɔd/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: родовий
   ipa: /rɔdˈɔʋɪj/
   translation: genetic, patrimonial, genitive (case)

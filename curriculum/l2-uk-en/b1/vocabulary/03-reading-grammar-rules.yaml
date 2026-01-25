@@ -148,10 +148,6 @@ items:
   translation: goal, aim
   pos: noun
   gender: f
-- lemma: мов
-  ipa: /mɔʋ/
-  translation: ''
-  pos: part
 - lemma: навпаки
   ipa: /naʋpakˈɪ/
   translation: on the contrary, vice versa
@@ -213,10 +209,6 @@ items:
   ipa: /pɛrɛklˈastɪ/
   translation: to translate, to shift (perfective)
   pos: verb
-- lemma: писати'
-  ipa: /pɪsˈatɪ/
-  translation: ''
-  pos: noun
 - lemma: письмо
   ipa: /pɪsʲmˈɔ/
   translation: writing
@@ -332,10 +324,6 @@ items:
   ipa: /sxˈɔʒɪj/
   translation: similar, resembling
   pos: adj
-- lemma: так'
-  ipa: /tak/
-  translation: ''
-  pos: noun
 - lemma: тривалий
   ipa: /trɪʋˈalɪj/
   translation: long-lasting, lengthy

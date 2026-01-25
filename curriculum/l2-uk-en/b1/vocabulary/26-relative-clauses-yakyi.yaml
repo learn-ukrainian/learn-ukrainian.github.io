@@ -85,10 +85,6 @@ items:
   ipa: /ɛnɛrɦˈijnɪj/
   translation: energetic
   pos: adj
-- lemma: жін
-  ipa: /ʒin/
-  translation: ''
-  pos: noun
 - lemma: завдавати
   ipa: /zaʋdaʋˈatɪ/
   translation: to cause, to inflict
@@ -276,10 +272,6 @@ items:
   translation: validity, effectiveness
   pos: noun
   gender: f
-- lemma: чол
-  ipa: /t͡ʃɔl/
-  translation: ''
-  pos: noun
 - lemma: шеф-кухар
   ipa: /ʃɛf-kˈuxar/
   translation: head chef

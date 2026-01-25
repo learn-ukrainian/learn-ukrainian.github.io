@@ -323,10 +323,6 @@ items:
   ipa: /sxʋɪlʲˈɔʋanɪj/
   translation: excited, agitated, worried
   pos: adj
-- lemma: тати
-  ipa: /tˈatɪ/
-  translation: ''
-  pos: verb
 - lemma: татусь
   ipa: /tatˈusʲ/
   translation: daddy
@@ -391,12 +387,3 @@ items:
   translation: honesty
   pos: noun
   gender: f
-- lemma: чко
-  ipa: /t͡ʃkɔ/
-  translation: ''
-  pos: noun
-- lemma: щир
-  ipa: /ʃt͡ʃɪr/
-  translation: ''
-  pos: noun
-  gender: m

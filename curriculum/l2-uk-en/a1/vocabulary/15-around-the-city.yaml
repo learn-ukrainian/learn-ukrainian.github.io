@@ -122,11 +122,6 @@ items:
   ipa: /ɔsɔbˈɪstɪj/
   translation: personal
   pos: adj
-- lemma: перехрест
-  ipa: /pɛrˈɛxrɛst/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: перехрестя
   ipa: /pɛrɛxrˈɛstja/
   translation: crossroads, intersection

@@ -2,10 +2,6 @@ module: 55-health-body
 level: A2
 version: '2.0'
 items:
-- lemma: а-а-а-ий
-  ipa: /a-a-a-ɪj/
-  translation: ''
-  pos: adj
 - lemma: антибіотик
   ipa: /antɪbiˈɔtɪk/
   translation: antibiotic
@@ -164,11 +160,6 @@ items:
   ipa: /trˈapɪtɪsja/
   translation: to happen, to occur (perfective)
   pos: verb
-- lemma: україць
-  ipa: /ukrajit͡sʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: хірург
   ipa: /xirˈurɦ/
   translation: surgeon

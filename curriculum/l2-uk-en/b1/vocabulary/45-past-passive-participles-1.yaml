@@ -134,10 +134,6 @@ items:
   ipa: /ɛkranizˈɔʋanɪj/
   translation: adapted for screen
   pos: adj
-- lemma: енити
-  ipa: /ɛnɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: забрати
   ipa: /zabrˈatɪ/
   translation: to take away (perfective)
@@ -213,14 +209,6 @@ items:
   translation: snapshot, photograph
   pos: noun
   gender: m
-- lemma: зро
-  ipa: /zrɔ/
-  translation: ''
-  pos: noun
-- lemma: зробенити
-  ipa: /zrɔbɛnɪtɪ/
-  translation: ''
-  pos: verb
 - lemma: зубний
   ipa: /zubnˈɪj/
   translation: tooth (adj), dental
@@ -325,10 +313,6 @@ items:
   translation: examination, inspection
   pos: noun
   gender: n
-- lemma: одн
-  ipa: /ɔdn/
-  translation: ''
-  pos: noun
 - lemma: опублікований
   ipa: /ɔpublikˈɔʋanɪj/
   translation: published

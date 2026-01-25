@@ -21,11 +21,6 @@ items:
   translation: cold (illness)
   pos: noun
   gender: f
-- lemma: малин
-  ipa: /mˈalɪn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: медицина
   ipa: /mɛdɪt͡sˈɪna/
   translation: medicine

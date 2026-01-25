@@ -187,11 +187,6 @@ items:
   ipa: /raf/
   translation: raf (coffee drink)
   pos: noun
-- lemma: сдача
-  ipa: /sdat͡ʃa/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: складений
   ipa: /sklˈadɛnɪj/
   translation: composed, folded
@@ -239,10 +234,6 @@ items:
   ipa: /xʋalˈɪtɪsja/
   translation: to brag, to boast
   pos: verb
-- lemma: хіх
-  ipa: /xix/
-  translation: ''
-  pos: noun
 - lemma: церковнослов'янський
   ipa: /t͡sɛrkɔʋnɔslɔʋˈjansʲkɪj/
   translation: Old Church Slavonic

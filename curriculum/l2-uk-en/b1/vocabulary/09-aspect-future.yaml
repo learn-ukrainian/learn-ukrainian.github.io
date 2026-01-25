@@ -117,11 +117,6 @@ items:
   translation: hotel
   pos: noun
   gender: m
-- lemma: дан
-  ipa: /dan/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: дисертація
   ipa: /dɪsɛrtˈat͡sija/
   translation: dissertation
@@ -556,10 +551,6 @@ items:
   translation: old
   pos: noun
   gender: n
-- lemma: сти
-  ipa: /stɪ/
-  translation: ''
-  pos: verb
 - lemma: стило
   ipa: /stɪlˈɔ/
   translation: stylus (rare - use стилос)
@@ -579,11 +570,6 @@ items:
   ipa: /tɛɔrɛtˈɪt͡ʃnɪj/
   translation: theoretical
   pos: adj
-- lemma: тет
-  ipa: /tɛt/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: технічно
   ipa: /tɛxnˈit͡ʃnɔ/
   translation: technically
@@ -643,7 +629,3 @@ items:
   ipa: /imu/
   translation: to have (dative)
   pos: noun
-- lemma: їдити
-  ipa: /jidɪtɪ/
-  translation: ''
-  pos: verb

@@ -2,23 +2,307 @@ module: 43-wf-mastery
 level: A2
 version: '2.0'
 items:
-  - lemma: записування
-    ipa: /zapɪsuʋannja/
-    translation: recording, writing down
-    pos: noun
-    gender: n
-  - lemma: письменник
-    ipa: /pɪsʲmɛnnɪk/
-    translation: writer
+  - lemma: рід
+    ipa: /rid/
+    translation: clan, kin, gender, genus
     pos: noun
     gender: m
-  - lemma: обговорення
-    ipa: /ɔbɦɔʋɔrɛnnja/
-    translation: discussion
+  - lemma: родина
+    ipa: /rɔdˈɪna/
+    translation: family
+    pos: noun
+    gender: f
+  - lemma: народ
+    ipa: /narˈɔd/
+    translation: people, nation
+    pos: noun
+    gender: m
+  - lemma: рідний
+    ipa: /rˈidnɪj/
+    translation: native, dear
+    pos: adj
+  - lemma: народитися
+    ipa: /narɔdˈɪtɪsja/
+    translation: to be born
+    pos: verb
+  - lemma: природа
+    ipa: /prɪrˈɔda/
+    translation: nature
+    pos: noun
+    gender: f
+  - lemma: світ
+    ipa: /sʋit/
+    translation: world
+    pos: noun
+    gender: m
+  - lemma: світло
+    ipa: /sʋˈitlɔ/
+    translation: light
     pos: noun
     gender: n
-  - lemma: передбачення
-    ipa: /pɛrɛdbat͡ʃɛnnja/
-    translation: prediction
+  - lemma: світити
+    ipa: /sʋitˈɪtɪ/
+    translation: to shine
+    pos: verb
+  - lemma: освіта
+    ipa: /ɔsʋˈita/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: всесвіт
+    ipa: /ʋsˈɛsʋit/
+    translation: universe
+    pos: noun
+    gender: m
+  - lemma: земля
+    ipa: /zɛmlˈja/
+    translation: earth, land, ground
+    pos: noun
+    gender: f
+  - lemma: земляк
+    ipa: /zɛmljˈak/
+    translation: countryman
+    pos: noun
+    gender: m
+  - lemma: земний
+    ipa: /zɛmnˈɪj/
+    translation: earthly, terrestrial
+    pos: adj
+  - lemma: підземний
+    ipa: /pidzˈɛmnɪj/
+    translation: underground
+    pos: adj
+  - lemma: іноземець
+    ipa: /inɔzˈɛmɛt͡sʲ/
+    translation: foreigner
+    pos: noun
+    gender: m
+  - lemma: місто
+    ipa: /mˈistɔ/
+    translation: city, town
     pos: noun
     gender: n
+  - lemma: міський
+    ipa: /misʲkˈɪj/
+    translation: urban, city (adj)
+    pos: adj
+  - lemma: містянин
+    ipa: /mistjˈanɪn/
+    translation: city dweller, citizen
+    pos: noun
+    gender: m
+  - lemma: передмістя
+    ipa: /pɛrɛdmˈistja/
+    translation: suburb
+    pos: noun
+    gender: n
+  - lemma: інопланетянин
+    ipa: /inɔplanɛtʲˈanɪn/
+    translation: alien
+    pos: noun
+    gender: m
+  - lemma: інший
+    ipa: /inʃɪj/
+    translation: other
+    pos: adj
+  - lemma: справжній
+    ipa: /spraʋʒnʲij/
+    translation: real, true
+    pos: adj
+  - lemma: життя
+    ipa: /ʒɪttʲˈa/
+    translation: life
+    pos: noun
+    gender: n
+  - lemma: річка
+    ipa: /rˈit͡ʃka/
+    translation: river
+    pos: noun
+    gender: f
+  - lemma: ліс
+    ipa: /lis/
+    translation: forest
+    pos: noun
+    gender: m
+  - lemma: гора
+    ipa: /hɔrˈa/
+    translation: mountain
+    pos: noun
+    gender: f
+  - lemma: далеко
+    ipa: /dalˈɛkɔ/
+    translation: far
+    pos: adv
+  - lemma: цей
+    ipa: /t͡sɛj/
+    translation: this
+    pos: pron
+  - lemma: увага
+    ipa: /uʋˈaɦa/
+    translation: attention
+    pos: noun
+    gender: f
+  - lemma: точний
+    ipa: /tɔt͡ʃnɪj/
+    translation: exact/precise
+    pos: adj
+  - lemma: сказати
+    ipa: /skazˈatɪ/
+    translation: to say
+    pos: verb
+  - lemma: стояти
+    ipa: /stɔjˈatɪ/
+    translation: to stand
+    pos: verb
+  - lemma: мовчати
+    ipa: /mɔʋt͡ʃˈatɪ/
+    translation: to be silent
+    pos: verb
+  - lemma: рух
+    ipa: /rux/
+    translation: movement
+    pos: noun
+    gender: m
+  - lemma: мовлення
+    ipa: /mˈɔʋlɛnnʲa/
+    translation: speech/speaking
+    pos: noun
+    gender: n
+  - lemma: родитися
+    ipa: /rɔdˈɪtɪsja/
+    translation: to be born (imp)
+    pos: verb
+  - lemma: просвіта
+    ipa: /prɔsʋˈita/
+    translation: enlightenment
+    pos: noun
+    gender: f
+  - lemma: світа
+    ipa: /sʋˈita/
+    translation: suite/retinue
+    pos: noun
+    gender: f
+  - lemma: пощастити
+    ipa: /pɔʃt͡ʃastˈɪtɪ/
+    translation: to be lucky
+    pos: verb
+  - lemma: пощастило
+    ipa: /pɔʃt͡ʃastˈɪlɔ/
+    translation: lucky (impers)
+    pos: verb
+  - lemma: освітній
+    ipa: /ɔsʋˈitnʲij/
+    translation: educational
+    pos: adj
+  - lemma: скажіть
+    ipa: /skaʒˈitʲ/
+    translation: say (imp)
+    pos: verb
+  - lemma: натура
+    ipa: /natˈura/
+    translation: nature/temperament
+    pos: noun
+    gender: f
+  - lemma: недалеко
+    ipa: /nɛdalˈɛkɔ/
+    translation: not far
+    pos: adv
+  - lemma: мій
+    ipa: /mij/
+    translation: my
+    pos: pron
+  - lemma: любити
+    ipa: /ljubˈɪtɪ/
+    translation: to love
+    pos: verb
+  - lemma: мого
+    ipa: /mɔhˈɔ/
+    translation: my (genitive)
+    pos: pron
+  - lemma: корінь
+    ipa: /kˈɔrjnʲ/
+    translation: root
+    pos: noun
+    gender: m
+  - lemma: люблю
+    ipa: /ljublˈju/
+    translation: I love
+    pos: verb
+  - lemma: коренів
+    ipa: /kˈɔrɛniʋ/
+    translation: roots (gen pl)
+    pos: noun
+  - lemma: земець
+    ipa: /zɛmˈɛt͡sʲ/
+    translation: landman
+    pos: noun
+    gender: m
+  - lemma: зайве
+    ipa: /zˈajʋɛ/
+    translation: odd/extra
+    pos: adj
+  - lemma: збиратися
+    ipa: /zbɪrˈatɪsja/
+    translation: to gather
+    pos: verb
+  - lemma: разом
+    ipa: /rˈazɔm/
+    translation: together
+    pos: adv
+  - lemma: збираємося
+    ipa: /zbɪrˈajɛmɔsja/
+    translation: we gather
+    pos: verb
+  - lemma: дає
+    ipa: /dajˈɛ/
+    translation: gives
+    pos: verb
+  - lemma: вночі
+    ipa: /ʋnɔt͡ʃˈi/
+    translation: at night
+    pos: adv
+  - lemma: все
+    ipa: /ʋsɛ/
+    translation: all/everything
+    pos: pron
+  - lemma: жити
+    ipa: /ʒˈɪtɪ/
+    translation: to live
+    pos: verb
+  - lemma: хід
+    ipa: /xid/
+    translation: motion/move
+    pos: noun
+    gender: m
+  - lemma: цьому
+    ipa: /t͡sʲˈɔmu/
+    translation: this (dative/locative)
+    pos: pron
+  - lemma: іноземний
+    ipa: /inɔzˈɛmnɪj/
+    translation: foreign
+    pos: adj
+  - lemma: пере
+    ipa: /pɛrɛ/
+    translation: re- (prefix)
+    pos: part
+  - lemma: іно
+    ipa: /inɔ/
+    translation: foreign- (prefix)
+    pos: part
+  - lemma: одно
+    ipa: /ɔdnɔ/
+    translation: one- (prefix)
+    pos: part
+  - lemma: поза
+    ipa: /pɔza/
+    translation: outside
+    pos: prep
+  - lemma: при
+    ipa: /prɪ/
+    translation: at
+    pos: prep
+  - lemma: о
+    ipa: /ɔ/
+    translation: at/about
+    pos: prep

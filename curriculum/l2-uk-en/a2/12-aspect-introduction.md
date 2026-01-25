@@ -8,10 +8,10 @@ In Ukrainian, verbs usually exist in pairs, representing two aspects: **imperfec
 
 **Що ви вивчите в цьому модулі:**
 
-- Різницю між недоконаним (процес) та доконаним (результат) видами.
-- Як розпізнавати та запам'ятовувати видові пари через префікси.
-- Коли використовувати кожен вид дієслова у повсякденних ситуаціях спілкування.
-- Найпоширеніші видові пари, які допоможуть вам описувати свій день.
+- The difference between **Imperfective** (process) and **Perfective** (result) aspects.
+- How to recognize aspect pairs using **prefixes**.
+- When to use each aspect in daily conversation.
+- Common aspect pairs to describe your day.
 
 ## Presentation / Презентація
 
@@ -60,11 +60,11 @@ Some of the most basic verbs use completely different roots for each aspect. You
 
 To choose the right aspect, always ask yourself: **"Am I describing a duration or a completion?"** This simple question will guide you through 90% of situations. Ukrainian speakers are very sensitive to this distinction. Contextual clues often dictate the aspect for you.
 
-1. **Duration markers:** Always point to Imperfective. Words like **довго** (long), **цілий день** (all day), **три години** (three hours).
+1. **Duration markers:** Always point to Imperfective. Look for words such as **довго** (long), **цілий день** (all day), **три години** (three hours).
    - _Він довго писав есе._ (He was writing the essay for a long time).
-2. **Frequency markers:** Point to Imperfective. Words like **часто** (often), **завжди** (always), **кожен день** (every day).
+2. **Frequency markers:** These also signal the Imperfective. Common indicators include **часто** (often), **завжди** (always), **кожен день** (every day).
    - _Вона завжди купує квіти._ (She always buys flowers).
-3. **Completion markers:** Point to Perfective. Words like **нарешті** (at last), **вже** (already), **раптом** (suddenly).
+3. **Completion markers:** These require the Perfective. Watch out for **нарешті** (at last), **вже** (already), **раптом** (suddenly).
    - _Я вже зробив домашнє завдання!_ (I have already done the homework!).
 
 > [!reflection] **The Philosophy of Done**
@@ -125,8 +125,8 @@ Put the words in parentheses into the correct aspect based on the context clue.
 
 У цьому модулі ми відкрили для себе світ дієслівних аспектів:
 
-- **Недоконаний вид (Imperfective):** фокусується на процесі, тривалості та повторенні. (Що робити?)
-- **Доконаний вид (Perfective):** фокусується на результаті та завершенні дії. (Що зробити?)
+- **Imperfective Aspect (Недоконаний вид):** фокусується на процесі, тривалості та повторенні. (Що робити?)
+- **Perfective Aspect (Доконаний вид):** фокусується на результаті та завершенні дії. (Що зробити?)
 - Ви навчилися розрізняти ці види за допомогою слів-маркерів (довго, вже, часто).
 - Ми ознайомилися з основними принципами творення видових пар (префіксація та заміна кореня).
 

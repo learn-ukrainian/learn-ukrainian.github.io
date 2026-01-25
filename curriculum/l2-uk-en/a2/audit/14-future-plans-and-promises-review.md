@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M14 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 09:48:52
+**Generated:** 2026-01-25 18:00:41
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,15 +39,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: недоконаний, вид, доконаний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): прийду, зрозумію, вийду, запам'ятаю, візьму...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): забуду, загублю, увійду...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1245/1000 (raw: 1569)
@@ -57,7 +55,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 18/1
+- **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -17,11 +17,6 @@ items:
   translation: screen
   pos: noun
   gender: m
-- lemma: зон
-  ipa: /zɔn/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: кавказ
   ipa: /kaʋkˈaz/
   translation: Caucasus
@@ -30,16 +25,6 @@ items:
 - lemma: києв
   ipa: /kɪjɛʋ/
   translation: Kyiv
-  pos: noun
-  gender: m
-- lemma: кухн
-  ipa: /kuxn/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: мор
-  ipa: /mɔr/
-  translation: ''
   pos: noun
   gender: m
 - lemma: музе
@@ -52,11 +37,3 @@ items:
   translation: square (city), area
   pos: noun
   gender: f
-- lemma: украине'
-  ipa: /ukraɪnɛ/
-  translation: ''
-  pos: noun
-- lemma: україні'
-  ipa: /ukraˈjini/
-  translation: ''
-  pos: noun
