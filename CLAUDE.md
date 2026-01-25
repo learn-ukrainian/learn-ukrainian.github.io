@@ -11,7 +11,10 @@
 >
 > **If you cannot commit to these rules, STOP NOW.**
 
-> **Status**: See `docs/CURRENT-STATUS.md` for completion status and current focus.
+> **Status Overview:**
+> - **Quick view by level**: `docs/{LEVEL}-STATUS.md` (e.g., `docs/B2-HIST-STATUS.md`)
+> - **Generate fresh status**: `npm run status:{level}` or `npm run status:all`
+> - **Legacy status**: `docs/CURRENT-STATUS.md` (manual, may be outdated)
 
 ## Critical Rules
 
@@ -143,7 +146,9 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
 
 | Topic | Location |
 |-------|----------|
-| **Current status** | `docs/CURRENT-STATUS.md` |
+| **Level status indices** | `docs/{LEVEL}-STATUS.md` (auto-generated) ⭐ |
+| **Status maintenance** | `docs/STATUS-INDEX-MAINTENANCE.md` |
+| **Current status** | `docs/CURRENT-STATUS.md` (legacy) |
 | **YAML activities** | `docs/ACTIVITY-YAML-REFERENCE.md` |
 | **Quality standards** | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` |
 | **Subsection flexibility** | `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` ⭐ |
