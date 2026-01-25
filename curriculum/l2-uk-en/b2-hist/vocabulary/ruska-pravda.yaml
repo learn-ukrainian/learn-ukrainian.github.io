@@ -92,3 +92,13 @@ items:
     translation: Expanded edition
     pos: phrase
     gender: f
+  - lemma: тіун
+    ipa: /tʲiˈun/
+    translation: tiun (judge/manager)
+    pos: noun
+    gender: m
+  - lemma: знамено
+    ipa: /znɑˈmɛnɔ/
+    translation: mark/brand (ownership sign)
+    pos: noun
+    gender: n

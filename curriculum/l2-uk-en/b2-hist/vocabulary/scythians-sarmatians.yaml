@@ -92,3 +92,38 @@ items:
     translation: Sarmatism
     pos: noun
     gender: m
+  - lemma: акінак
+    ipa: /ɑkʲiˈnɑk/
+    translation: akinakes (Scythian sword)
+    pos: noun
+    gender: m
+  - lemma: горіт
+    ipa: /hɔˈrʲit/
+    translation: gorytos (bow case)
+    pos: noun
+    gender: m
+  - lemma: катафракт
+    ipa: /kɑtɑˈfrɑkt/
+    translation: cataphract (heavy cavalry)
+    pos: noun
+    gender: m
+  - lemma: тризна
+    ipa: /ˈtrɪznɑ/
+    translation: trizna (funeral feast)
+    pos: noun
+    gender: f
+  - lemma: пасовище
+    ipa: /pɑsɔˈwɪʃt͡ʃɛ/
+    translation: pasture
+    pos: noun
+    gender: n
+  - lemma: Борисфен
+    ipa: /bɔrɪsˈfɛn/
+    translation: Borysthenes (Dnieper)
+    pos: noun
+    gender: m
+  - lemma: Геррос
+    ipa: /hɛrˈrɔs/
+    translation: Gerrhos (sacred land)
+    pos: noun
+    gender: m

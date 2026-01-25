@@ -2,11 +2,6 @@ module: 69-online-services
 level: A2
 version: '2.0'
 items:
-- lemma: важливсть
-  ipa: /ʋaʒlɪʋstʲ/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: вчасний
   ipa: /ʋt͡ʃˈasnɪj/
   translation: timely

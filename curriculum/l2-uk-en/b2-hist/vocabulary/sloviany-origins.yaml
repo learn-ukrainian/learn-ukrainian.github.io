@@ -62,3 +62,118 @@ items:
     translation: kinship
     pos: noun
     gender: f
+  - lemma: народоправство
+    ipa: /nɑrɔdɔˈprɑwstwɔ/
+    translation: democracy (rule of people)
+    pos: noun
+    gender: n
+  - lemma: віче
+    ipa: /ˈwit͡ʃɛ/
+    translation: veche (people's assembly)
+    pos: noun
+    gender: n
+  - lemma: громада
+    ipa: /hrɔˈmɑdɑ/
+    translation: community
+    pos: noun
+    gender: f
+  - lemma: верв
+    ipa: /wɛrw/
+    translation: verv (neighboring community)
+    pos: noun
+    gender: f
+  - lemma: капище
+    ipa: /ˈkɑpɪʃt͡ʃɛ/
+    translation: shrine/pagan temple
+    pos: noun
+    gender: n
+  - lemma: волхв
+    ipa: /wɔlxw/
+    translation: sorcerer/pagan priest
+    pos: noun
+    gender: m
+  - lemma: ідол
+    ipa: /ˈidɔl/
+    translation: idol
+    pos: noun
+    gender: m
+  - lemma: Перун
+    ipa: /pɛˈrun/
+    translation: Perun (god of thunder)
+    pos: noun
+    gender: m
+  - lemma: Велес
+    ipa: /ˈwɛlɛs/
+    translation: Veles (god of cattle/wealth)
+    pos: noun
+    gender: m
+  - lemma: тризна
+    ipa: /ˈtrɪznɑ/
+    translation: funeral feast
+    pos: noun
+    gender: f
+  - lemma: спалення
+    ipa: /spɑˈlɛnʲːɑ/
+    translation: cremation/burning
+    pos: noun
+    gender: n
+  - lemma: землянка
+    ipa: /zɛmˈlʲɑnkɑ/
+    translation: dugout/pit-house
+    pos: noun
+    gender: f
+  - lemma: соха
+    ipa: /sɔˈxɑ/
+    translation: sokha (light plow)
+    pos: noun
+    gender: f
+  - lemma: рало
+    ipa: /ˈrɑlɔ/
+    translation: ralo (ard/plow)
+    pos: noun
+    gender: n
+  - lemma: гончарство
+    ipa: /ɦɔnˈt͡ʃɑrstwɔ/
+    translation: pottery
+    pos: noun
+    gender: n
+  - lemma: ткацтво
+    ipa: /tkɑt͡stvw/
+    translation: weaving
+    pos: noun
+    gender: n
+  - lemma: старійшина
+    ipa: /stɑˈrʲijʃɪnɑ/
+    translation: elder
+    pos: noun
+    gender: m
+  - lemma: дружина
+    ipa: /druˈʒɪnɑ/
+    translation: druzhina (military retinue)
+    pos: noun
+    gender: f
+  - lemma: вождь
+    ipa: /wɔʒdʲ/
+    translation: leader/chief
+    pos: noun
+    gender: m
+  - lemma: данина
+    ipa: /dɑˈnɪnɑ/
+    translation: tribute
+    pos: noun
+    gender: f
+  - lemma: слов'янізація
+    ipa: /slɔwʲɑnʲiˈzɑt͡sʲijɑ/
+    translation: Slavicization
+    pos: noun
+    gender: f
+  - lemma: автохтон
+    ipa: /ɑwtɔˈxtɔn/
+    translation: autochthon (indigenous person)
+    pos: noun
+    gender: m
+  - lemma: топонім
+    ipa: /tɔˈpɔnʲim/
+    translation: toponym
+    pos: noun
+    gender: m

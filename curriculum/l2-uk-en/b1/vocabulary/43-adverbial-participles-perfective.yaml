@@ -168,22 +168,9 @@ items:
   ipa: /prat͡sˈjujut͡ʃɪ/
   translation: working
   pos: verb
-- lemma: прийшвши
-  ipa: /prɪjʃʋʃɪ/
-  translation: ''
-  pos: verb
 - lemma: прийшовши
   ipa: /prɪjʃˈɔʋʃɪ/
   translation: having come
-  pos: verb
-- lemma: прийшів
-  ipa: /prɪjʃiʋ/
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: прийшівши
-  ipa: /prɪjʃiʋʃɪ/
-  translation: ''
   pos: verb
 - lemma: приїхавши
   ipa: /prɪˈjixaʋʃɪ/
@@ -196,10 +183,6 @@ items:
 - lemma: підписавши
   ipa: /pidpɪsˈaʋʃɪ/
   translation: having signed
-  pos: verb
-- lemma: пішвши
-  ipa: /piʃʋʃɪ/
-  translation: ''
   pos: verb
 - lemma: пішовши
   ipa: /piʃˈɔʋʃɪ/

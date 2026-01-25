@@ -87,3 +87,18 @@ items:
     translation: sokha/plow
     pos: noun
     gender: f
+  - lemma: ізгой
+    ipa: /izˈɦɔj/
+    translation: outcast
+    pos: noun
+    gender: m
+  - lemma: верв
+    ipa: /wɛrw/
+    translation: community/territorial unit
+    pos: noun
+    gender: f
+  - lemma: тіун
+    ipa: /tʲiˈun/
+    translation: steward/administrator
+    pos: noun
+    gender: m

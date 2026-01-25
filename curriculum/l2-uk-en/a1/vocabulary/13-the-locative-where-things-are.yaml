@@ -7,11 +7,6 @@ items:
   translation: balcony
   pos: noun
   gender: m
-- lemma: банкі
-  ipa: /banki/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: волинь
   ipa: /ʋɔlˈɪnʲ/
   translation: Volyn

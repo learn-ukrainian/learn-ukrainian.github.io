@@ -13,22 +13,22 @@ items:
     pos: noun
     gender: n
   - lemma: лествичне право
-    ipa: /lɛstwɪt͡ʃˈnɛ ˈprɑwɔ/
-    translation: rota system
+    ipa: /ˈlɛstwɪt͡ʃnɛ ˈprɑwɔ/
+    translation: rota system (ladder succession)
     pos: phrase
     gender: n
   - lemma: престолонаслідування
     ipa: /prɛstɔlɔnɑsˈlʲiduwɑnʲːɑ/
-    translation: succession
+    translation: succession to the throne
     pos: noun
     gender: n
   - lemma: отчина
     ipa: /ˈɔtt͡ʃɪnɑ/
-    translation: patrimony
+    translation: patrimony (fatherland)
     pos: noun
     gender: f
   - lemma: з'їзд
-    ipa: /zʲjizd/
+    ipa: /zjazd/
     translation: congress
     pos: noun
     gender: m
@@ -43,8 +43,8 @@ items:
     pos: noun
     gender: n
   - lemma: половці
-    ipa: /ˈpɔlɔwt͡sʲi/
-    translation: Polovtsians
+    ipa: /pɔˈlɔwt͡sʲi/
+    translation: Polovtsians (Cumans)
     pos: noun
     gender: pl
   - lemma: єдність
@@ -63,7 +63,7 @@ items:
     pos: phrase
     gender: f
   - lemma: засліплення
-    ipa: /zɑˈsʲlʲiplɛnʲːɑ/
+    ipa: /zɑsˈlʲiplɛnʲːɑ/
     translation: blinding
     pos: noun
     gender: n
@@ -78,7 +78,27 @@ items:
     pos: noun
     gender: m
   - lemma: культурний розквіт
-    ipa: /kulʲˈturnɪj rɔzˈkwʲit/
+    ipa: /kulʲˈturnɪj ˈrɔzkwit/
     translation: cultural flourishing
     pos: phrase
+    gender: m
+  - lemma: тріумвірат
+    ipa: /trʲiumwiˈrɑt/
+    translation: triumvirate
+    pos: noun
+    gender: m
+  - lemma: устав
+    ipa: /usˈtɑw/
+    translation: statute
+    pos: noun
+    gender: m
+  - lemma: лихвар
+    ipa: /lɪxˈwɑr/
+    translation: usurer
+    pos: noun
+    gender: m
+  - lemma: снем
+    ipa: /snɛm/
+    translation: congress (archaic)
+    pos: noun
     gender: m

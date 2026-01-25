@@ -82,3 +82,48 @@ items:
     translation: legitimacy
     pos: noun
     gender: f
+  - lemma: полюддя
+    ipa: /pɔˈlʲudʲːɑ/
+    translation: polyuddia (tribute collection)
+    pos: noun
+    gender: n
+  - lemma: становище
+    ipa: /stɑˈnɔwɪʃt͡ʃɛ/
+    translation: outpost/garrison
+    pos: noun
+    gender: n
+  - lemma: моноксил
+    ipa: /mɔnɔˈksɪl/
+    translation: monoxyl (single-tree boat)
+    pos: noun
+    gender: m
+  - lemma: грецький вогонь
+    ipa: /ˈhrɛt͡sʲkɪj wɔˈhɔnʲ/
+    translation: Greek fire
+    pos: phrase
+    gender: m
+  - lemma: щит
+    ipa: /ʃt͡ʃɪt/
+    translation: shield
+    pos: noun
+    gender: m
+  - lemma: змія
+    ipa: /zmʲiˈjɑ/
+    translation: snake
+    pos: noun
+    gender: f
+  - lemma: гривня
+    ipa: /ˈhrɪwnʲɑ/
+    translation: hryvnia (currency)
+    pos: noun
+    gender: f
+  - lemma: шовк
+    ipa: /ʃɔwk/
+    translation: silk
+    pos: noun
+    gender: m
+  - lemma: віск
+    ipa: /wʲisk/
+    translation: wax
+    pos: noun
+    gender: m

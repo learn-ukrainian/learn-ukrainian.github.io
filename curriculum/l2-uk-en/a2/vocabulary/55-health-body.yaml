@@ -40,11 +40,6 @@ items:
   ipa: /dbˈatɪ/
   translation: to care for, to look after
   pos: verb
-- lemma: емпература
-  ipa: /ɛmpɛratura/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: запалений
   ipa: /zapˈalɛnɪj/
   translation: inflamed, lit

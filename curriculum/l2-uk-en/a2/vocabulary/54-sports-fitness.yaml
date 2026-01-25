@@ -70,7 +70,7 @@ items:
   gender: m
 - lemma: гооооол
   ipa: /ɦɔɔɔɔɔl/
-  translation: ''
+  translation: GOAL!
   pos: noun
   gender: m
 - lemma: град
@@ -327,11 +327,6 @@ items:
 - lemma: фітнес
   ipa: /fˈitnɛs/
   translation: fitness
-  pos: noun
-  gender: m
-- lemma: фітнеслайф
-  ipa: /fitnɛslajf/
-  translation: ''
   pos: noun
   gender: m
 - lemma: хот-дог

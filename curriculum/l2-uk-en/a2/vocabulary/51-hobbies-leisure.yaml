@@ -205,11 +205,6 @@ items:
   ipa: /uzˈjatɪ/
   translation: to take (perfective)
   pos: verb
-- lemma: унікаль
-  ipa: /unikalʲ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фотоапарат
   ipa: /fɔtɔaparˈat/
   translation: camera

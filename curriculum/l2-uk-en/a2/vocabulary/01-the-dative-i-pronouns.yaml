@@ -408,11 +408,6 @@ items:
   ipa: /pɛrɛʒɪʋˈatɪ/
   translation: to worry, to experience, to survive
   pos: verb
-- lemma: переживач
-  ipa: /pɛrɛʒɪʋat͡ʃ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: питальний
   ipa: /pɪtˈalʲnɪj/
   translation: interrogative

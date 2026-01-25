@@ -92,3 +92,63 @@ items:
     translation: acropolis
     pos: noun
     gender: m
+  - lemma: хора
+    ipa: /ˈxɔrɑ/
+    translation: chora (agricultural territory)
+    pos: noun
+    gender: f
+  - lemma: клер
+    ipa: /klɛr/
+    translation: kleros (plot of land)
+    pos: noun
+    gender: m
+  - lemma: піфос
+    ipa: /ˈpifɔs/
+    translation: pithos (large storage jar)
+    pos: noun
+    gender: m
+  - lemma: стратег
+    ipa: /strɑˈtɛh/
+    translation: strategos (general)
+    pos: noun
+    gender: m
+  - lemma: гімнасій
+    ipa: /ɦimˈnɑsʲij/
+    translation: gymnasium
+    pos: noun
+    gender: m
+  - lemma: театр
+    ipa: /tɛˈɑtr/
+    translation: theater
+    pos: noun
+    gender: m
+  - lemma: ойкіст
+    ipa: /ɔjˈkʲist/
+    translation: oikist (founder of a colony)
+    pos: noun
+    gender: m
+  - lemma: Понт
+    ipa: /pɔnt/
+    translation: Pontus (Black Sea)
+    pos: noun
+    gender: m
+  - lemma: Пантікапей
+    ipa: /pɑntʲikɑˈpɛj/
+    translation: Panticapaeum
+    pos: noun
+    gender: m
+  - lemma: Тіра
+    ipa: /ˈtʲirɑ/
+    translation: Tyras
+    pos: noun
+    gender: f
+  - lemma: монета
+    ipa: /mɔˈnɛtɑ/
+    translation: coin
+    pos: noun
+    gender: f
+  - lemma: варвар
+    ipa: /ˈwɑrwɑr/
+    translation: barbarian
+    pos: noun
+    gender: m

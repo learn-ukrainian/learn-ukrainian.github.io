@@ -378,11 +378,6 @@ items:
   translation: statement, assertion
   pos: noun
   gender: n
-- lemma: термінов
-  ipa: /tɛrminɔʋ/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: технічний
   ipa: /tɛxnˈit͡ʃnɪj/
   translation: technical

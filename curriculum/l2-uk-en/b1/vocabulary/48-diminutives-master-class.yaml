@@ -90,7 +90,7 @@ items:
   gender: f
 - lemma: договорчик
   ipa: /dɔɦɔʋɔrt͡ʃɪk/
-  translation: ''
+  translation: little contract
   pos: noun
   gender: m
 - lemma: документик
@@ -170,7 +170,7 @@ items:
   gender: f
 - lemma: катастрофка
   ipa: /katastrɔfka/
-  translation: ''
+  translation: little catastrophe
   pos: noun
   gender: f
 - lemma: кашка
@@ -326,11 +326,6 @@ items:
   ipa: /ɔɦirˈɔt͡ʃɔk/
   translation: small cucumber
   pos: noun
-- lemma: онька
-  ipa: /ɔnʲka/
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: органічно
   ipa: /ɔrɦanˈit͡ʃnɔ/
   translation: organically

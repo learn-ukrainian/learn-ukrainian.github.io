@@ -16,15 +16,6 @@ items:
   ipa: /ʋidkrɪʋˈatɪ/
   translation: to open, to discover
   pos: verb
-- lemma: коробк
-  ipa: /kɔrɔbk/
-  translation: ''
-  pos: noun
-- lemma: посилк
-  ipa: /pɔsɪlk/
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: чути
   ipa: /t͡ʃˈutɪ/
   translation: to hear
