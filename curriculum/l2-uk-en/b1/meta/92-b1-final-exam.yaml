@@ -3,8 +3,8 @@ title: 'B1 Final Exam'
 subtitle: 'Comprehensive B1 Assessment'
 version: '1.0'
 phase: 'B1.8'
-focus: checkpoint
-pedagogy: 'Test'
+focus: assessment
+pedagogy: 'TTT'
 duration: 180
 transliteration: 'none'
 tags:
@@ -18,3 +18,6 @@ objectives:
   - 'Pass final comprehensive assessment'
 vocabulary_count: 0
 slug: 92-b1-final-exam
+naturalness:
+  score: 9
+  status: PASS
