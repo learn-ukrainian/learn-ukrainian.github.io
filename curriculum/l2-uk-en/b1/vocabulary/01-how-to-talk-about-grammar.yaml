@@ -143,7 +143,7 @@ items:
   pos: verb
 - lemma: застосовувати
   ipa: /zastɔsˈɔʋujut͡ʃɪ/
-  translation: ''
+  translation: to apply
   pos: verb
 - lemma: застосування
   ipa: /zastɔsuʋˈannja/
@@ -432,7 +432,7 @@ items:
   gender: m
 - lemma: присудок
   ipa: /prˈɪsudɔk/
-  translation: ''
+  translation: predicate
   pos: noun
   gender: m
 - lemma: професор
@@ -575,7 +575,7 @@ items:
   gender: m
 - lemma: утворений
   ipa: /utʋˈɔrɛnɪj/
-  translation: ''
+  translation: formed
   pos: adj
 - lemma: утворити
   ipa: /utʋɔrˈɪtɪ/

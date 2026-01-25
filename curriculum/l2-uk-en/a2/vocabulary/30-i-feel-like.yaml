@@ -8,7 +8,7 @@ items:
   pos: adj
 - lemma: близькі
   ipa: /blɪzʲkˈi/
-  translation: ''
+  translation: relatives
   pos: noun
 - lemma: виразний
   ipa: /ʋɪrˈaznɪj/
@@ -29,11 +29,11 @@ items:
   gender: n
 - lemma: занятий
   ipa: /zˈanjatɪj/
-  translation: ''
+  translation: busy
   pos: adj
 - lemma: згаяний
   ipa: /zɦˈajanɪj/
-  translation: ''
+  translation: wasted
   pos: adj
 - lemma: здзвонитися
   ipa: /zdzʋɔnˈɪtɪsja/

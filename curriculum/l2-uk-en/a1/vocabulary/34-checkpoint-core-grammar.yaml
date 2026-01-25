@@ -51,7 +51,7 @@ items:
   pos: verb
 - lemma: ви
   ipa: /ʋɪ/
-  translation: ''
+  translation: you
   pos: pron
 - lemma: випити
   ipa: /ʋˈɪpɪtɪ/
@@ -278,7 +278,7 @@ items:
   gender: m
 - lemma: львов
   ipa: /lʲʋɔʋ/
-  translation: ''
+  translation: Lviv
   pos: noun
   gender: m
 - lemma: лікар

@@ -41,7 +41,7 @@ items:
   gender: f
 - lemma: бюджетика
   ipa: /bjudʒɛtɪka/
-  translation: ''
+  translation: budgeting
   pos: noun
 - lemma: возьма
   ipa: /ʋɔzʲma/
@@ -76,7 +76,7 @@ items:
   pos: adv
 - lemma: городик
   ipa: /ɦɔrˈɔdɪk/
-  translation: ''
+  translation: little garden
   pos: noun
 - lemma: готовенький
   ipa: /ɦɔtɔʋˈɛnʲkɪj/
@@ -140,7 +140,7 @@ items:
   gender: f
 - lemma: кавочко
   ipa: /kaʋɔt͡ʃkɔ/
-  translation: ''
+  translation: little coffee
   pos: noun
   gender: n
 - lemma: киян
@@ -277,7 +277,7 @@ items:
   pos: verb
 - lemma: проектний
   ipa: /prɔɛktnɪj/
-  translation: ''
+  translation: project
   pos: adj
 - lemma: проектування
   ipa: /prɔɛktuʋannja/

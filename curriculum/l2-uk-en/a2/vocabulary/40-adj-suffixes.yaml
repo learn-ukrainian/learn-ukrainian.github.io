@@ -79,7 +79,7 @@ items:
   pos: adj
 - lemma: енький
   ipa: /ɛnʲkɪj/
-  translation: ''
+  translation: little
   pos: noun
   gender: m
 - lemma: зелені
@@ -161,7 +161,7 @@ items:
   gender: m
 - lemma: науковний
   ipa: /naukɔʋnɪj/
-  translation: ''
+  translation: scientific
   pos: adj
 - lemma: незмінний
   ipa: /nɛzmˈinnɪj/
@@ -288,7 +288,7 @@ items:
   gender: n
 - lemma: хлопців
   ipa: /xlˈɔpt͡siʋ/
-  translation: ''
+  translation: boys
   pos: adj
 - lemma: холодн
   ipa: /xɔlɔdn/
@@ -297,7 +297,7 @@ items:
   gender: m
 - lemma: холодне
   ipa: /xɔlˈɔdnɛ/
-  translation: ''
+  translation: cold
   pos: noun
   gender: n
 - lemma: чех

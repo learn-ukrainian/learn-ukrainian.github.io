@@ -49,7 +49,7 @@ items:
   gender: n
 - lemma: вулиц
   ipa: /ʋulɪt͡s/
-  translation: ''
+  translation: streets
   pos: noun
   gender: m
 - lemma: відтінковий
@@ -71,7 +71,7 @@ items:
   pos: adj
 - lemma: замкнутий
   ipa: /zˈamknutɪj/
-  translation: ''
+  translation: closed
   pos: adj
 - lemma: змокнути
   ipa: /zmˈɔknutɪ/

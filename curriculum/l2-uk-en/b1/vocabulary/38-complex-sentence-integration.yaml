@@ -16,7 +16,7 @@ items:
   pos: verb
 - lemma: веда
   ipa: /ʋˈɛda/
-  translation: ''
+  translation: Veda
   pos: noun
   gender: f
 - lemma: ведення
@@ -26,7 +26,7 @@ items:
   gender: n
 - lemma: вересна
   ipa: /ʋɛrɛsna/
-  translation: ''
+  translation: September
   pos: noun
   gender: f
 - lemma: відомо
@@ -118,7 +118,7 @@ items:
   pos: verb
 - lemma: один-два
   ipa: /ɔdˈɪn-dʋa/
-  translation: ''
+  translation: one-two
   pos: num
 - lemma: пекарня
   ipa: /pɛkˈarnja/
@@ -174,7 +174,7 @@ items:
   gender: f
 - lemma: три-чотири
   ipa: /trɪ-t͡ʃɔtˈɪrɪ/
-  translation: ''
+  translation: three-four
   pos: num
 - lemma: трирівневий
   ipa: /trɪrˈiʋnɛʋɪj/

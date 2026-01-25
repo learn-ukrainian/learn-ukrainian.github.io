@@ -12,7 +12,7 @@ items:
   pos: verb
 - lemma: босс
   ipa: /bɔss/
-  translation: ''
+  translation: boss
   pos: noun
   gender: m
 - lemma: вантаж
@@ -115,7 +115,7 @@ items:
   pos: verb
 - lemma: діагностик
   ipa: /diaɦnˈɔstɪk/
-  translation: ''
+  translation: diagnostician
   pos: noun
   gender: m
 - lemma: дійти
@@ -176,7 +176,7 @@ items:
   gender: m
 - lemma: заїда
   ipa: /zˈajida/
-  translation: ''
+  translation: mouth sore
   pos: noun
   gender: f
 - lemma: заїзд
@@ -424,7 +424,7 @@ items:
   gender: m
 - lemma: щаслива
   ipa: /ʃt͡ʃaslˈɪʋa/
-  translation: ''
+  translation: happy
   pos: noun
   gender: f
 - lemma: інколи

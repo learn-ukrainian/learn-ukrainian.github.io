@@ -52,7 +52,7 @@ items:
   pos: adv
 - lemma: ви
   ipa: /ʋɪ/
-  translation: ''
+  translation: you
   pos: pron
 - lemma: використовуючи
   ipa: /ʋɪkɔrɪstˈɔʋujut͡ʃɪ/
@@ -345,7 +345,7 @@ items:
   pos: adj
 - lemma: новий
   ipa: /nɔʋˈa/
-  translation: ''
+  translation: new
   pos: noun
   gender: f
 - lemma: нудний

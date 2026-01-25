@@ -224,7 +224,7 @@ items:
   gender: f
 - lemma: фух
   ipa: /fux/
-  translation: ''
+  translation: phew
   pos: noun
 - lemma: хліб-сіль
   ipa: /xlib-silʲ/
@@ -233,7 +233,7 @@ items:
   gender: m
 - lemma: ціле
   ipa: /t͡sˈilɛ/
-  translation: ''
+  translation: whole
   pos: noun
   gender: n
 - lemma: чистка

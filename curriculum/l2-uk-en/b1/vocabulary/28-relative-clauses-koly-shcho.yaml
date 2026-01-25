@@ -212,7 +212,7 @@ items:
   gender: f
 - lemma: необхідне
   ipa: /nɛɔbxˈidnɛ/
-  translation: ''
+  translation: necessary
   pos: noun
   gender: n
 - lemma: ностальгічний
@@ -245,7 +245,7 @@ items:
   gender: f
 - lemma: офіційно-ділове
   ipa: /ɔfit͡sˈijnɔ-dilɔʋɛ/
-  translation: ''
+  translation: official-business
   pos: noun
   gender: n
 - lemma: оцінювати
@@ -291,7 +291,7 @@ items:
   gender: f
 - lemma: приказ
   ipa: /prɪkˈaz/
-  translation: ''
+  translation: order
   pos: noun
   gender: m
 - lemma: присутній

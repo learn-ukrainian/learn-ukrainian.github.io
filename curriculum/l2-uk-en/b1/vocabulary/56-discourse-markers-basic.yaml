@@ -38,7 +38,7 @@ items:
   gender: f
 - lemma: західній
   ipa: /zaxidnij/
-  translation: ''
+  translation: western
   pos: adj
 - lemma: зв'язно
   ipa: /zʋˈjaznɔ/
@@ -93,7 +93,7 @@ items:
   pos: adv
 - lemma: переходи
   ipa: /pɛrɛxˈɔdɪ/
-  translation: ''
+  translation: transitions
   pos: noun
 - lemma: плавний
   ipa: /plaʋnɪj/

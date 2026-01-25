@@ -22,7 +22,7 @@ items:
   pos: verb
 - lemma: бізнес-комунікація
   ipa: /bˈiznɛs-kɔmunikat͡sija/
-  translation: ''
+  translation: business communication
   pos: noun
   gender: f
 - lemma: вимовлятися
@@ -290,7 +290,7 @@ items:
   gender: n
 - lemma: щоб-конструкція
   ipa: /ʃt͡ʃɔb-kɔnstrˈukt͡sija/
-  translation: ''
+  translation: so-that-construction
   pos: noun
 - lemma: щоб-речення
   ipa: /ʃt͡ʃɔb-rɛt͡ʃɛnnja/
@@ -303,6 +303,6 @@ items:
   pos: verb
 - lemma: інфінітів
   ipa: /infinitiʋ/
-  translation: ''
+  translation: infinitive
   pos: noun
   gender: m

@@ -72,7 +72,7 @@ items:
   pos: adj
 - lemma: відправляти
   ipa: /ʋidpraʋlˈjatɪ/
-  translation: ''
+  translation: to send
   pos: verb
 - lemma: відрізати
   ipa: /ʋidrizatɪ/
@@ -221,7 +221,7 @@ items:
   gender: f
 - lemma: мебля
   ipa: /mɛblja/
-  translation: ''
+  translation: piece of furniture
   pos: noun
   gender: f
 - lemma: мона
@@ -370,7 +370,7 @@ items:
   gender: f
 - lemma: прекрасне
   ipa: /prɛkrˈasnɛ/
-  translation: ''
+  translation: beautiful
   pos: noun
   gender: n
 - lemma: прикрашати

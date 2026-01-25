@@ -18,7 +18,7 @@ items:
   gender: m
 - lemma: банниця
   ipa: /bˈannɪt͡sja/
-  translation: ''
+  translation: banitsa
   pos: noun
   gender: f
 - lemma: бердянськ
@@ -81,7 +81,7 @@ items:
   gender: f
 - lemma: ейзенштейн
   ipa: /ɛjzɛnʃtɛjn/
-  translation: ''
+  translation: Eisenstein
   pos: noun
   gender: m
 - lemma: жванецький
@@ -289,7 +289,7 @@ items:
   gender: f
 - lemma: південне
   ipa: /piʋdˈɛnnɛ/
-  translation: ''
+  translation: southern
   pos: noun
   gender: n
 - lemma: родючий

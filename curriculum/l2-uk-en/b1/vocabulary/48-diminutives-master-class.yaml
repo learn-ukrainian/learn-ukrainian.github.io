@@ -132,7 +132,7 @@ items:
   gender: f
 - lemma: зайці
   ipa: /zajt͡sˈi/
-  translation: ''
+  translation: hares
   pos: noun
 - lemma: зайчик
   ipa: /zˈajt͡ʃɪk/
@@ -145,7 +145,7 @@ items:
   pos: adj
 - lemma: зарплаток
   ipa: /zarplatɔk/
-  translation: ''
+  translation: little salary
   pos: noun
   gender: m
 - lemma: зіронька
@@ -238,7 +238,7 @@ items:
   pos: adj
 - lemma: малі
   ipa: /malˈi/
-  translation: ''
+  translation: small
   pos: noun
 - lemma: мамин
   ipa: /mˈamɪn/
@@ -414,7 +414,7 @@ items:
   pos: adj
 - lemma: роботок
   ipa: /rɔbɔtɔk/
-  translation: ''
+  translation: little job
   pos: noun
   gender: m
 - lemma: рідненький

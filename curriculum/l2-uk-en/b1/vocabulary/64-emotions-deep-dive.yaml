@@ -60,7 +60,7 @@ items:
   pos: verb
 - lemma: збіг
   ipa: /zbiɦ/
-  translation: ''
+  translation: coincidence
   pos: noun
   gender: m
 - lemma: знижувати
@@ -120,7 +120,7 @@ items:
   gender: f
 - lemma: неприємне
   ipa: /nɛprɪˈjɛmnɛ/
-  translation: ''
+  translation: unpleasant
   pos: noun
   gender: n
 - lemma: неприємний
@@ -178,7 +178,7 @@ items:
   pos: verb
 - lemma: приємне
   ipa: /prɪˈjɛmnɛ/
-  translation: ''
+  translation: pleasant
   pos: noun
   gender: n
 - lemma: провина

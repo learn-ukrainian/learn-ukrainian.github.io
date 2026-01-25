@@ -39,7 +39,7 @@ items:
   pos: adv
 - lemma: ваги
   ipa: /ʋˈaɦɪ/
-  translation: ''
+  translation: scales
   pos: noun
 - lemma: велодоріжка
   ipa: /ʋɛlɔdɔriʒka/
@@ -167,7 +167,7 @@ items:
   gender: f
 - lemma: каменський
   ipa: /kamˈɛnsʲkɪj/
-  translation: ''
+  translation: Kamensky
   pos: noun
 - lemma: кардіохірург
   ipa: /kardiɔxirˈurɦ/
@@ -234,7 +234,7 @@ items:
   gender: m
 - lemma: металлобрухт
   ipa: /mɛtallɔbruxt/
-  translation: ''
+  translation: scrap metal
   pos: noun
   gender: m
 - lemma: мозоля

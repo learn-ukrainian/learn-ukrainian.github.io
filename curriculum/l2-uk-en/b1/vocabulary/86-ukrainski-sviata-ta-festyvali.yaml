@@ -22,7 +22,7 @@ items:
   pos: adj
 - lemma: виконанний
   ipa: /ʋɪkɔnannɪj/
-  translation: ''
+  translation: executed
   pos: adj
 - lemma: випас
   ipa: /ʋˈɪpas/
@@ -71,7 +71,7 @@ items:
   gender: m
 - lemma: збора
   ipa: /zbˈɔra/
-  translation: ''
+  translation: assembly
   pos: noun
   gender: f
 - lemma: зловити
@@ -101,7 +101,7 @@ items:
   gender: f
 - lemma: літний
   ipa: /litnˈɪj/
-  translation: ''
+  translation: summer
   pos: adj
 - lemma: майстрів
   ipa: /majstrˈiʋ/
@@ -202,7 +202,7 @@ items:
   pos: verb
 - lemma: ранний
   ipa: /rannɪj/
-  translation: ''
+  translation: early
   pos: adj
 - lemma: розпочатися
   ipa: /rɔzpɔt͡ʃˈatɪsja/

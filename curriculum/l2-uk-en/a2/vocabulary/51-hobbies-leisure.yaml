@@ -190,7 +190,7 @@ items:
   pos: noun
 - lemma: східній
   ipa: /sxˈidnij/
-  translation: ''
+  translation: western
   pos: adj
 - lemma: танець
   ipa: /tˈanɛt͡sʲ/
@@ -222,7 +222,7 @@ items:
   gender: f
 - lemma: яремча
   ipa: /jarˈɛmt͡ʃa/
-  translation: ''
+  translation: Yaremche
   pos: noun
   gender: f
 - lemma: європейка

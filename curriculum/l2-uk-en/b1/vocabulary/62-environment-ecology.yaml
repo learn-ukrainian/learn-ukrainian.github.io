@@ -34,7 +34,7 @@ items:
   pos: adj
 - lemma: бур
   ipa: /bur/
-  translation: ''
+  translation: drill
   pos: noun
   gender: m
 - lemma: біологічний
@@ -228,7 +228,7 @@ items:
   gender: f
 - lemma: пластика
   ipa: /plˈastɪka/
-  translation: ''
+  translation: plastic
   pos: noun
   gender: f
 - lemma: поводження

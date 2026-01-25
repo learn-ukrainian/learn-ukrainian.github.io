@@ -156,7 +156,7 @@ items:
   gender: f
 - lemma: ха-ха
   ipa: /xa-xˈa/
-  translation: ''
+  translation: ha-ha
   pos: noun
   gender: f
 - lemma: цяцянка
@@ -166,7 +166,7 @@ items:
   gender: f
 - lemma: чоловіків
   ipa: /t͡ʃɔlɔʋikˈiʋ/
-  translation: ''
+  translation: men
   pos: adj
 - lemma: шепотіти
   ipa: /ʃɛpɔtˈitɪ/

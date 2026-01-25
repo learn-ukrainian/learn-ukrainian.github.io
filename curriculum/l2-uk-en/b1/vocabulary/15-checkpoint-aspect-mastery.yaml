@@ -34,7 +34,7 @@ items:
   pos: verb
 - lemma: гоп
   ipa: /ɦɔp/
-  translation: ''
+  translation: hop
   pos: noun
   gender: m
 - lemma: гора
@@ -215,7 +215,7 @@ items:
   gender: n
 - lemma: супплетивний
   ipa: /supplɛtɪʋnɪj/
-  translation: ''
+  translation: suppletive
   pos: adj
 - lemma: суфіксальний
   ipa: /sufiksˈalʲnɪj/
@@ -257,7 +257,7 @@ items:
   pos: verb
 - lemma: чіпнути
   ipa: /t͡ʃipnutɪ/
-  translation: ''
+  translation: to attach
   pos: verb
 - lemma: ідеально
   ipa: /idɛˈalʲnɔ/

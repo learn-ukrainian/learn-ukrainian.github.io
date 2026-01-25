@@ -73,7 +73,7 @@ items:
   pos: noun
 - lemma: ефіопія
   ipa: /ɛfiˈɔpija/
-  translation: ''
+  translation: Ethiopia
   pos: noun
   gender: f
 - lemma: жарт
@@ -113,7 +113,7 @@ items:
   gender: m
 - lemma: згаданий
   ipa: /zɦˈadanɪj/
-  translation: ''
+  translation: mentioned
   pos: adj
 - lemma: злагоджено
   ipa: /zlˈaɦɔdʒɛnɔ/
@@ -184,7 +184,7 @@ items:
   pos: verb
 - lemma: негативне
   ipa: /nɛɦatˈɪʋnɛ/
-  translation: ''
+  translation: negative
   pos: noun
   gender: n
 - lemma: незручність

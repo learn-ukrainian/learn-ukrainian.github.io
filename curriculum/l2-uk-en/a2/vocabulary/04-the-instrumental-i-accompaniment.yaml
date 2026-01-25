@@ -52,7 +52,7 @@ items:
   gender: f
 - lemma: дітяма
   ipa: /ditjama/
-  translation: ''
+  translation: children
   pos: noun
   gender: f
 - lemma: діяти
@@ -109,7 +109,7 @@ items:
   pos: noun
 - lemma: людяма
   ipa: /ljudjama/
-  translation: ''
+  translation: people
   pos: noun
   gender: f
 - lemma: марина
@@ -221,7 +221,7 @@ items:
   pos: verb
 - lemma: поєднанний
   ipa: /pɔjɛdnannɪj/
-  translation: ''
+  translation: joined
   pos: adj
 - lemma: приходити
   ipa: /prɪxˈɔdɪtɪ/

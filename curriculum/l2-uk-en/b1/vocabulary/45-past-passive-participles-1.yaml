@@ -148,7 +148,7 @@ items:
   pos: adj
 - lemma: задовга
   ipa: /zadˈɔʋɦa/
-  translation: ''
+  translation: too long
   pos: noun
   gender: f
 - lemma: закладений
@@ -174,7 +174,7 @@ items:
   pos: verb
 - lemma: заслуханий
   ipa: /zaslˈuxanɪj/
-  translation: ''
+  translation: heard
   pos: adj
 - lemma: затверджений
   ipa: /zatʋˈɛrdʒɛnɪj/
@@ -190,7 +190,7 @@ items:
   pos: noun
 - lemma: звільнений
   ipa: /zʋˈilʲnɛnɪj/
-  translation: ''
+  translation: freed
   pos: adj
 - lemma: зданий
   ipa: /zdˈanɪj/

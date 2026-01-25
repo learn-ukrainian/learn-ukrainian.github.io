@@ -144,7 +144,7 @@ items:
   pos: adj
 - lemma: зсу
   ipa: /zsu/
-  translation: ''
+  translation: AFU
   pos: noun
 - lemma: зірка
   ipa: /zˈirka/
@@ -157,7 +157,7 @@ items:
   pos: adj
 - lemma: клочков
   ipa: /klɔt͡ʃkˈɔʋ/
-  translation: ''
+  translation: Klochkov
   pos: noun
   gender: m
 - lemma: лави
@@ -197,7 +197,7 @@ items:
   pos: adj
 - lemma: незабутний
   ipa: /nɛzabˈutnɪj/
-  translation: ''
+  translation: unforgettable
   pos: adj
 - lemma: нокаут
   ipa: /nɔkˈaut/
@@ -286,7 +286,7 @@ items:
   gender: f
 - lemma: різатдінов
   ipa: /rizatdinɔʋ/
-  translation: ''
+  translation: Rizatdinov
   pos: noun
   gender: m
 - lemma: семеренко

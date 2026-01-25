@@ -84,7 +84,7 @@ items:
   gender: f
 - lemma: жити-бути
   ipa: /ʒˈɪtɪ-butɪ/
-  translation: ''
+  translation: to live
   pos: verb
 - lemma: журба
   ipa: /ʒurbˈa/
@@ -200,7 +200,7 @@ items:
   gender: f
 - lemma: пирог
   ipa: /pɪrɔɦ/
-  translation: ''
+  translation: pie
   pos: noun
   gender: m
 - lemma: плакат
@@ -272,7 +272,7 @@ items:
   gender: m
 - lemma: сміливе
   ipa: /smˈilɪʋɛ/
-  translation: ''
+  translation: brave
   pos: noun
   gender: n
 - lemma: сміливий

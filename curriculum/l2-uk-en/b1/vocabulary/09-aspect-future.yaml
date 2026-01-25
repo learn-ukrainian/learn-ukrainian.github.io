@@ -35,7 +35,7 @@ items:
   gender: m
 - lemma: березна
   ipa: /bɛrˈɛzna/
-  translation: ''
+  translation: March
   pos: noun
   gender: f
 - lemma: бігати
@@ -286,7 +286,7 @@ items:
   gender: f
 - lemma: купля
   ipa: /kˈuplja/
-  translation: ''
+  translation: buying
   pos: noun
   gender: f
 - lemma: курсовий
@@ -553,7 +553,7 @@ items:
   gender: m
 - lemma: старе
   ipa: /starˈɛ/
-  translation: ''
+  translation: old
   pos: noun
   gender: n
 - lemma: сти

@@ -32,7 +32,7 @@ items:
   gender: m
 - lemma: білд
   ipa: /bild/
-  translation: ''
+  translation: build
   pos: noun
   gender: m
 - lemma: вдаватися
@@ -50,7 +50,7 @@ items:
   pos: adj
 - lemma: встигти
   ipa: /ʋstˈɪɦtɪ/
-  translation: ''
+  translation: to manage
   pos: verb
 - lemma: вівторок-четвер
   ipa: /ʋiʋtˈɔrɔk-t͡ʃɛtʋɛr/
@@ -134,7 +134,7 @@ items:
   pos: adj
 - lemma: задеплоїти
   ipa: /zadɛplɔjitɪ/
-  translation: ''
+  translation: to deploy
   pos: verb
 - lemma: запозичений
   ipa: /zapɔzˈɪt͡ʃɛnɪj/
@@ -158,7 +158,7 @@ items:
   pos: verb
 - lemma: здалий
   ipa: /zdˈalɪj/
-  translation: ''
+  translation: suitable
   pos: adj
 - lemma: здача
   ipa: /zdˈat͡ʃa/
@@ -179,7 +179,7 @@ items:
   pos: adj
 - lemma: кварталий
   ipa: /kʋartalɪj/
-  translation: ''
+  translation: quarterly
   pos: adj
 - lemma: керування
   ipa: /kɛruʋˈannja/

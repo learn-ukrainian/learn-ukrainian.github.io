@@ -14,7 +14,7 @@ items:
   gender: f
 - lemma: важок
   ipa: /ʋaʒˈɔk/
-  translation: ''
+  translation: weight
   pos: noun
   gender: m
 - lemma: бракувати
@@ -317,7 +317,7 @@ items:
   gender: f
 - lemma: синів
   ipa: /sɪnˈiʋ/
-  translation: ''
+  translation: sons
   pos: adj
 - lemma: сподобатися
   ipa: /spɔdˈɔbatɪsja/

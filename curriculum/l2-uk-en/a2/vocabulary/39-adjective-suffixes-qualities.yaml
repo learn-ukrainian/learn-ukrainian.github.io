@@ -21,7 +21,7 @@ items:
   pos: adj
 - lemma: велико
   ipa: /ʋˈɛlɪkɔ/
-  translation: ''
+  translation: greatly
   pos: noun
 - lemma: весло
   ipa: /ʋɛslˈɔ/
@@ -90,7 +90,7 @@ items:
   pos: adj
 - lemma: зелененький
   ipa: /zɛlɛnˈɛnʲkɪj/
-  translation: ''
+  translation: little green
   pos: adj
 - lemma: зимний
   ipa: /zˈɪmnɪj/
@@ -157,7 +157,7 @@ items:
   gender: f
 - lemma: певне
   ipa: /pˈɛʋnɛ/
-  translation: ''
+  translation: certain
   pos: adv
 - lemma: пензлик
   ipa: /pˈɛnzlɪk/
@@ -273,7 +273,7 @@ items:
   pos: adj
 - lemma: холоднесенький
   ipa: /xɔlɔdnˈɛsɛnʲkɪj/
-  translation: ''
+  translation: very cold
   pos: adj
 - lemma: хустка
   ipa: /xˈustka/

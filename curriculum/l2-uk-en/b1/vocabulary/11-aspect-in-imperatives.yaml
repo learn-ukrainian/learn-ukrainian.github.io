@@ -81,7 +81,7 @@ items:
   gender: n
 - lemma: гостинне
   ipa: /ɦɔstˈɪnnɛ/
-  translation: ''
+  translation: hospitable
   pos: noun
   gender: n
 - lemma: гостинність
@@ -404,7 +404,7 @@ items:
   pos: adj
 - lemma: ринка
   ipa: /rˈɪnka/
-  translation: ''
+  translation: little marketplace
   pos: noun
 - lemma: святковий
   ipa: /sʋjatkˈɔʋɪj/

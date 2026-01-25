@@ -25,7 +25,7 @@ items:
   gender: m
 - lemma: біднійший
   ipa: /bidnijʃɪj/
-  translation: ''
+  translation: poorest
   pos: adj
 - lemma: бідність
   ipa: /bˈidnistʲ/
@@ -51,7 +51,7 @@ items:
   pos: verb
 - lemma: відбуваючісь
   ipa: /ʋidbuʋajut͡ʃisʲ/
-  translation: ''
+  translation: occurring
   pos: noun
   gender: m
 - lemma: відвідуючий
@@ -157,11 +157,11 @@ items:
   pos: adj
 - lemma: зів'ялий
   ipa: /ziʋˈjalɪj/
-  translation: ''
+  translation: withered
   pos: adj
 - lemma: зів'янути
   ipa: /ziʋˈjanutɪ/
-  translation: ''
+  translation: to wither
   pos: verb
 - lemma: калькований
   ipa: /kalʲkˈɔʋanɪj/
@@ -235,7 +235,7 @@ items:
   pos: adj
 - lemma: навчаючісь
   ipa: /naʋt͡ʃajut͡ʃisʲ/
-  translation: ''
+  translation: studying
   pos: noun
   gender: m
 - lemma: наявний
@@ -261,7 +261,7 @@ items:
   pos: adj
 - lemma: опал
   ipa: /ɔpal/
-  translation: ''
+  translation: opal
   pos: noun
   gender: m
 - lemma: опалий

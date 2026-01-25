@@ -88,7 +88,7 @@ items:
   gender: m
 - lemma: ділове
   ipa: /dilɔʋˈɛ/
-  translation: ''
+  translation: business
   pos: noun
   gender: n
 - lemma: заміна
@@ -123,7 +123,7 @@ items:
   gender: n
 - lemma: зписати
   ipa: /zpɪsatɪ/
-  translation: ''
+  translation: to copy
   pos: verb
 - lemma: контрастувати
   ipa: /kɔntrastuʋˈatɪ/

@@ -51,7 +51,7 @@ items:
   gender: f
 - lemma: заводь
   ipa: /zaʋɔdʲ/
-  translation: ''
+  translation: backwater
   pos: noun
   gender: f
 - lemma: запитувати
@@ -69,7 +69,7 @@ items:
   gender: m
 - lemma: лесь
   ipa: /lɛsʲ/
-  translation: ''
+  translation: Les
   pos: noun
   gender: m
 - lemma: мрія
@@ -227,7 +227,7 @@ items:
   gender: f
 - lemma: став
   ipa: /staʋ/
-  translation: ''
+  translation: became
   pos: noun
   gender: m
 - lemma: сталий
@@ -258,7 +258,7 @@ items:
   pos: adj
 - lemma: хороше
   ipa: /xɔrɔʃɛ/
-  translation: ''
+  translation: good
   pos: noun
   gender: n
 - lemma: шевченко

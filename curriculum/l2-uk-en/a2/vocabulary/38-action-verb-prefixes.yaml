@@ -50,7 +50,7 @@ items:
   pos: verb
 - lemma: загулятися
   ipa: /zaɦulˈjatɪsja/
-  translation: ''
+  translation: to stay out late
   pos: verb
 - lemma: заново
   ipa: /zˈanɔʋɔ/
@@ -120,7 +120,7 @@ items:
   pos: adj
 - lemma: новезначення
   ipa: /nɔʋɛznat͡ʃɛnnja/
-  translation: ''
+  translation: new meaning
   pos: noun
   gender: n
 - lemma: обслуговувати

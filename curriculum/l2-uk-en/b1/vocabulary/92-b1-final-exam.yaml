@@ -27,7 +27,7 @@ items:
   gender: f
 - lemma: бізнес-проєкт
   ipa: /bˈiznɛs-prɔjɛkt/
-  translation: ''
+  translation: business project
   pos: noun
 - lemma: білокур
   ipa: /bilɔkˈur/
@@ -112,7 +112,7 @@ items:
   gender: n
 - lemma: жвава
   ipa: /ʒʋˈaʋa/
-  translation: ''
+  translation: lively
   pos: noun
 - lemma: житловий
   ipa: /ʒɪtlɔʋˈɪj/
@@ -198,7 +198,7 @@ items:
   pos: adj
 - lemma: нуш
   ipa: /nuʃ/
-  translation: ''
+  translation: NUS
   pos: noun
   gender: f
 - lemma: обладнати

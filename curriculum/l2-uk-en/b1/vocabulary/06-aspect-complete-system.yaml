@@ -37,11 +37,11 @@ items:
   pos: adj
 - lemma: ввесь
   ipa: /ʋʋɛsʲ/
-  translation: ''
+  translation: all
   pos: pron
 - lemma: веста
   ipa: /ʋˈɛsta/
-  translation: ''
+  translation: Vesta
   pos: noun
   gender: f
 - lemma: весь
@@ -80,7 +80,7 @@ items:
   gender: m
 - lemma: віка
   ipa: /ʋˈika/
-  translation: ''
+  translation: Vika
   pos: noun
 - lemma: вічний
   ipa: /ʋˈit͡ʃnɪj/

@@ -77,7 +77,7 @@ items:
   pos: adj
 - lemma: займ
   ipa: /zajm/
-  translation: ''
+  translation: loan
   pos: noun
   gender: m
 - lemma: закипіти
@@ -166,7 +166,7 @@ items:
   gender: m
 - lemma: п'ять-сім
   ipa: /pjatʲ-sim/
-  translation: ''
+  translation: five-seven
   pos: num
 - lemma: пампушка
   ipa: /pampˈuʃka/

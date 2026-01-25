@@ -51,7 +51,7 @@ items:
   gender: m
 - lemma: встановляти
   ipa: /ʋstanɔʋlˈjatɪ/
-  translation: ''
+  translation: to install
   pos: verb
 - lemma: втомлений
   ipa: /ʋtˈɔmlɛnɪj/
@@ -209,7 +209,7 @@ items:
   pos: adj
 - lemma: нью-йорк
   ipa: /nʲju-jˈɔrk/
-  translation: ''
+  translation: New York
   pos: noun
   gender: m
 - lemma: ніхто
@@ -288,7 +288,7 @@ items:
   pos: verb
 - lemma: підїхати
   ipa: /pidjixatɪ/
-  translation: ''
+  translation: to drive up
   pos: verb
 - lemma: пішохідний
   ipa: /piʃɔxˈidnɪj/

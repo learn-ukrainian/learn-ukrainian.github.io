@@ -88,7 +88,7 @@ items:
   gender: m
 - lemma: каталожка
   ipa: /katalɔʒka/
-  translation: ''
+  translation: little catalog
   pos: noun
 - lemma: мамочка
   ipa: /mˈamɔt͡ʃka/
@@ -117,7 +117,7 @@ items:
   pos: adj
 - lemma: печивечка
   ipa: /pɛt͡ʃɪʋɛt͡ʃka/
-  translation: ''
+  translation: little cookies
   pos: noun
   gender: f
 - lemma: побачений

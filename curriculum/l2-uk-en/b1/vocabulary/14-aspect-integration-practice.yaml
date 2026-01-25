@@ -144,7 +144,7 @@ items:
   pos: verb
 - lemma: калькувати
   ipa: /kalʲkˈujut͡ʃɪ/
-  translation: ''
+  translation: to calculate
   pos: verb
 - lemma: каструля
   ipa: /kastrˈulja/
@@ -157,7 +157,7 @@ items:
   pos: verb
 - lemma: кипіти
   ipa: /kɪpˈitɪ/
-  translation: ''
+  translation: to boil
   pos: verb
 - lemma: красивий
   ipa: /krasˈɪʋɪj/
@@ -188,7 +188,7 @@ items:
   gender: n
 - lemma: налив
   ipa: /nalˈɪʋ/
-  translation: ''
+  translation: pouring
   pos: noun
   gender: m
 - lemma: налити
@@ -368,7 +368,7 @@ items:
   pos: adj
 - lemma: точок
   ipa: /tˈɔt͡ʃɔk/
-  translation: ''
+  translation: dots
   pos: noun
   gender: m
 - lemma: тренування

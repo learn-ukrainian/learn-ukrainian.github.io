@@ -68,7 +68,7 @@ items:
   gender: m
 - lemma: все
   ipa: /ʋsɛ/
-  translation: ''
+  translation: everything
   pos: part
 - lemma: встигнути
   ipa: /ʋstˈɪɦnutɪ/
@@ -248,7 +248,7 @@ items:
   pos: adj
 - lemma: нікола
   ipa: /nikɔla/
-  translation: ''
+  translation: Nikola
   pos: noun
   gender: m
 - lemma: олег

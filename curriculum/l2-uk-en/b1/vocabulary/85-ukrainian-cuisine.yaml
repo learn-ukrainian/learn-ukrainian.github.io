@@ -105,7 +105,7 @@ items:
   pos: adj
 - lemma: защипувати
   ipa: /zaʃt͡ʃˈɪpuʋatɪ/
-  translation: ''
+  translation: to pinch
   pos: verb
 - lemma: зерновий
   ipa: /zɛrnɔʋˈɪj/
@@ -182,7 +182,7 @@ items:
   gender: m
 - lemma: пасхалка
   ipa: /pasxalka/
-  translation: ''
+  translation: easter egg
   pos: noun
   gender: f
 - lemma: пшеничний

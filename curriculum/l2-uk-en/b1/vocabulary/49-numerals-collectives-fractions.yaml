@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: близня
   ipa: /blɪznˈja/
-  translation: ''
+  translation: twin
   pos: noun
 - lemma: взаємозамінний
   ipa: /ʋzajɛmɔzamˈinnɪj/
@@ -187,7 +187,7 @@ items:
   pos: adj
 - lemma: статистик
   ipa: /statˈɪstɪk/
-  translation: ''
+  translation: statistician
   pos: noun
 - lemma: сучасно
   ipa: /sut͡ʃˈasnɔ/

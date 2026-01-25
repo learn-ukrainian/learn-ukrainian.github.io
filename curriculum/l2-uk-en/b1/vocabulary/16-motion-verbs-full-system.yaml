@@ -255,7 +255,7 @@ items:
   gender: f
 - lemma: мішка
   ipa: /miʃkˈa/
-  translation: ''
+  translation: little bag
   pos: noun
   gender: m
 - lemma: назад
@@ -264,7 +264,7 @@ items:
   pos: adv
 - lemma: найняти
   ipa: /najnˈjatɪ/
-  translation: ''
+  translation: to hire
   pos: verb
 - lemma: немовля
   ipa: /nɛmɔʋlˈja/
@@ -431,7 +431,7 @@ items:
   pos: adv
 - lemma: стара
   ipa: /starˈa/
-  translation: ''
+  translation: old
   pos: noun
   gender: f
 - lemma: старослов'янський
@@ -524,6 +524,6 @@ items:
   gender: f
 - lemma: їзда
   ipa: /jizdˈa/
-  translation: ''
+  translation: driving
   pos: noun
   gender: f

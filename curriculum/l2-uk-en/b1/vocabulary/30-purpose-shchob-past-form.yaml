@@ -4,7 +4,7 @@ version: '2.0'
 items:
 - lemma: бажан
   ipa: /baʒˈan/
-  translation: ''
+  translation: desired
   pos: noun
   gender: m
 - lemma: бажане
@@ -119,7 +119,7 @@ items:
   gender: m
 - lemma: паня
   ipa: /pˈanja/
-  translation: ''
+  translation: lady
   pos: noun
   gender: f
 - lemma: паралель
