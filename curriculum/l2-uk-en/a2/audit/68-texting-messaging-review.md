@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M68 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:32:21
+**Generated:** 2026-01-25 23:54:12
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): скорочення, друкувати, прочитано, сленг, неформально...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): прочитано, скорочення, сленг, друкувати, неформально...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -58,3 +58,8 @@ content_outline:
   words: 50
   points:
   - Choosing clothes or electronics in a store
+naturalness:
+  score: 9
+  status: PASS
+  issues: []
+  recommendation: Maintain this level of cultural integration in future modules.

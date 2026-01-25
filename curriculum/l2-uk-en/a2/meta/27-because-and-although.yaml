@@ -53,3 +53,12 @@ content_outline:
   words: 50
   points:
   - Explaining a missing meeting or surprising result
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - In the dialogue, 'Оскільки я вже тут' is slightly formal for a conversation between
+    friends (who would likely use 'Раз я вже тут'), but it correctly demonstrates
+    the grammar point.
+  recommendation: The module is excellent. The slight formality in the dialogue is
+    acceptable for pedagogical clarity.

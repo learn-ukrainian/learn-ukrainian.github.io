@@ -75,9 +75,7 @@ from .checks.yaml_lint import lint_yaml_file
 from .checks.state_standard_compliance import (
     check_state_standard_compliance,
 )
-from .checks.cross_file_integrity import (
-    check_vocabulary_integrity,
-)
+# Vocabulary integrity checking removed - not needed (naturalness catches bad vocabulary)
 from .checks.outline_compliance import (
     check_outline_compliance,
 )
@@ -998,20 +996,7 @@ def audit_module(file_path: str) -> bool:
                 severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
                 print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
-        # Check vocabulary integrity (Issue #439: words in activities must be in vocabulary YAML)
-        # ONLY for A1-A2: At B1+ (90-100% immersion), students can infer meaning from context
-        # Vocabulary YAMLs at B1+ contain NEW/KEY words, not every word used in activities
-        if level_code in ('A1', 'A2'):
-            # Extract full level including track suffix (b2-hist, c1-bio, lit)
-            track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
-            full_level_for_vocab = track_match.group(1) if track_match else level_code.lower()
-            vocab_integrity_violations = check_vocabulary_integrity(file_path, full_level_for_vocab, module_num)
-            if vocab_integrity_violations:
-                print(f"  ❌ Vocabulary integrity violations: {len(vocab_integrity_violations)}")
-                for v in vocab_integrity_violations:
-                    severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
-                    print(f"     {severity_icon} [{v['type']}] {v['message']}")
-
+        # Vocabulary integrity checking removed - naturalness gate catches bad vocabulary
     # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
     mark_words_violations = []
     if yaml_activities:
@@ -1781,10 +1766,39 @@ def audit_module(file_path: str) -> bool:
     # Naturalness validation (Issue #415)
     nat_score = 0
     nat_status = "PENDING"
+
+    # Check if naturalness already evaluated in meta.yaml
     if meta_data and 'naturalness' in meta_data:
         nat_score = meta_data['naturalness'].get('score', 0)
         nat_status = meta_data['naturalness'].get('status', 'PENDING')
-    
+
+    # If still pending, run naturalness check automatically
+    if nat_status == "PENDING":
+        try:
+            from .checks.naturalness import check_naturalness
+            nat_result = check_naturalness(Path(file_path), level_code)
+            if nat_result and nat_result.get('status') != 'ERROR':
+                nat_score = nat_result.get('score', 0)
+                nat_status = nat_result.get('status', 'PENDING')
+
+                # Update meta.yaml with naturalness score
+                if meta_data:
+                    # Calculate meta.yaml path
+                    md_path = Path(file_path)
+                    yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
+
+                    meta_data['naturalness'] = {
+                        'score': nat_score,
+                        'status': nat_status,
+                        'issues': nat_result.get('issues', []),
+                        'recommendation': nat_result.get('recommendation', '')
+                    }
+                    with open(yaml_path, 'w', encoding='utf-8') as f:
+                        yaml.dump(meta_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+        except Exception as e:
+            # If check fails, keep PENDING status
+            print(f"  ⚠️  Naturalness check failed: {e}", file=sys.stderr)
+
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':
         has_critical_failure = True

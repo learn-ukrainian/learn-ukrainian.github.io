@@ -53,3 +53,14 @@ content_outline:
   words: 50
   points:
   - Kitchen dialogue or team coordination
+naturalness:
+  score: 8
+  status: PASS
+  issues:
+  - 'Orthography error in Section 1.3: ''ставь/ставьте'' is incorrect; labials (в)
+    do not take a soft sign. Correct forms are ''став/ставте''.'
+  - 'Editing artifact visible in Practice 1, Item 5: The text ''Wait, no: ... depending
+    on aspect'' appears to be an internal monologue or draft note left in the student-facing
+    content.'
+  recommendation: Fix the spelling of 'ставте' and remove the internal editing commentary
+    in the Practice section.

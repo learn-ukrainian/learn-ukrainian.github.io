@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M66 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:32:10
+**Generated:** 2026-01-25 23:54:11
 
 ## Configuration
 **Type:** A2-vocab
@@ -39,7 +39,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): кінцева, їде, найближчий...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): найближчий, їде, кінцева...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

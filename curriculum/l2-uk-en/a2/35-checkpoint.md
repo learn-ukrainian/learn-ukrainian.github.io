@@ -2,7 +2,7 @@
 
 ## Overview / Огляд
 
-**Вітаємо!** Ви щойно завершили один із найважливіших етапів вивчення української мови — перехід від простих речень до складних логічних конструкцій. У цьому блоці (Модулі 19-34) ми навчилися пояснювати причини («тому що»), ставити цілі («щоб»), описувати предмети через їхні дії («який») та професійно спілкуватися про здоров'я. Цей модуль — ваша можливість об'єднати всі ці знання в єдину систему. Ми перевіримо, чи вмієте ви будувати «логічні містки», чи не плутаєте ви причину та мету, і чи готові ви до автономного спілкування в медичних та професійних ситуаціях. Це фінальна перевірка перед тим, як ми заглибимося в таємниці приставок руху та словотвору.
+**Вітаємо!** Ви щойно завершили один із найважливіших етапів вивчення української мови — перехід від простих речень до складних логічних конструкцій. У цьому блоці (Модулі 19-34) ми багато чого навчилися. Ми опанували пояснення причин («тому що»). Ми вміємо ставити цілі («щоб»). Ми описуємо предмети через їхні дії («який»). Ми професійно спілкуємося про здоров'я. Цей модуль — ваша можливість об'єднати всі ці знання в єдину систему. Ми перевіримо, чи вмієте ви будувати «логічні містки». Чи не плутаєте ви причину та мету? Чи готові ви до автономного спілкування? Це стосується медичних та професійних ситуацій. Це фінальна перевірка перед тим, як ми заглибимося в таємниці приставок руху та словотвору.
 
 Congratulations! You have just crossed one of the most significant bridges in the Ukrainian language: moving from simple sentences to complex logical structures. In this block (Modules 19-34), we learned how to explain reasons ("because"), set intentions ("in order to"), describe objects through their relationships ("which"), and communicate about health with professional precision. This checkpoint is your opportunity to synthesize all these skills into a coherent whole. We will verify if you can build robust "logical bridges," distinguish between cause and goal, and navigate complex medical or social requests. It’s the final quality check before we dive into the world of motion prefixes and advanced word formation in the final A2 phase. Are you ready? Let's prove it!
 
@@ -40,7 +40,7 @@ Congratulations! You have just crossed one of the most significant bridges in th
 
 ### 3. The Relative Chameleon: Який
 
-Займенник **який** завжди узгоджується з антецедентом у роді та числі, але його відмінок залежить від ролі всередині речення. Це ніби "детектив відмінків":
+Займенник **який** завжди узгоджується з антецедентом у роді та числі. Але його відмінок залежить від ролі всередині речення. Це ніби "детектив відмінків":
 
 - **Nominative (Subject):** Книга, **яка** лежить тут.
 - **Accusative (Object):** Книга, **яку** я купив.
@@ -51,7 +51,7 @@ Congratulations! You have just crossed one of the most significant bridges in th
 Як ми будуємо розповідь?
 
 - **Sequence:** після того як -> перед тим як -> коли.
-- **Simultaneity:** поки (while).
+- **Simultaneity:** поки.
 - **Immediacy:** як тільки (as soon as).
 
 ### 5. Health and Body: The Anatomy of Complaint
@@ -114,8 +114,6 @@ Read the story and explain the use of marked connectors.
 5. **Після того як** — Time Sequence (Event A then Event B).
 
 ## Dialogues / Діалоги
-
-### The Doctor's Recommendation (Діалог-підсумок)
 
 **Лікар:** Доброго дня. Я бачу, **що** ви сьогодні втомлені. (Good day. I see that you are tired today.)
 **Пацієнт:** Так, **тому що** я погано спав. **У мене болить** голова і горло. (Yes, because I slept badly. My head and throat hurt.)

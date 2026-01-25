@@ -1,7 +1,8 @@
 # Audit Report: M37 — 37-advanced-motion-prefixes.md
 **Level:** A2 | **Module:** M37 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:53
+**Generated:** 2026-01-25 23:52:42
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,14 +36,8 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 7: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
-
-## Recommendation
-**📝 UPDATE** (severity 2/100)
-
 ## Gates
-- **Words:** ✅ 1192/1000 (raw: 1294)
+- **Words:** ✅ 1102/1000 (raw: 1204)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -51,20 +46,20 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 61.8% LOW (target 65-75% (A2.2))
+- **Immersion:** 🇺🇦 66.5% (target 65-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 298 | Included in Core |
-| **Presentation / Презентиція** | ✅ | 320 | Included in Core |
+| **Introduction / Вступ** | ✅ | 211 | Included in Core |
+| **Presentation / Презентація** | ✅ | 320 | Included in Core |
 | **Practice / Практика** | ⚪️ | 232 | Skipped |
-| **Dialogues / Діалоги** | ✅ | 191 | Included in Core |
+| **Dialogues / Діалоги** | ✅ | 188 | Included in Core |
 | **Summary / Підсумок** | ✅ | 96 | Included in Core |
 | **Need More Practice?** | ⚪️ | 55 | Skipped |

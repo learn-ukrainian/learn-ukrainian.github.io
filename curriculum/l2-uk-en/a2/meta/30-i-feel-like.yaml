@@ -35,7 +35,7 @@ content_outline:
   words: 200
   points:
   - The difference between 'Who I am' and 'How I feel'
-  - The Dative logic: 'It is cold to me'
+  - The Dative logic: It is cold to me
 - section: Presentation / Презентація
   words: 600
   points:
@@ -53,3 +53,10 @@ content_outline:
   words: 50
   points:
   - Comforting a friend or complaining about the weather/health
+naturalness:
+  score: 9
+  status: PASS
+  issues: []
+  recommendation: The content is high quality. Ensure the English instruction remains
+    distinct from the target Ukrainian text to avoid confusion, but the Ukrainian
+    itself is native-level.

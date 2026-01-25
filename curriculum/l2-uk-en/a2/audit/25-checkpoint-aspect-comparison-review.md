@@ -1,7 +1,8 @@
 # Audit Report: M25 — 25-checkpoint-aspect-comparison.md
 **Level:** A2 | **Module:** M25 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:10
+**Generated:** 2026-01-25 23:52:14
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -35,37 +36,22 @@
 - Priority types used: 2/3 (error-correction, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'завершений'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, доконаний, недоконаний, родовий, вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Integration Challenge' per template 'a2-checkpoint-module-template.md'
-  - FIX: Add '## Integration Challenge' section as specified in docs/l2-uk-en/templates/a2-checkpoint-module-template.md.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 3 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1039/800 (raw: 1140)
+- **Words:** ✅ 1145/800 (raw: 1253)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 11/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 69.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 71.8% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -78,5 +64,6 @@
 | **Skill 4: Numeral Agreement (Узгодження числівників)** | ⚪️ | 39 | Skipped |
 | **Practice / Практика (The Mega-Review)** | ✅ | 151 | Included in Core |
 | **Dialogue / Діалог: Synthesis (Синтез навичок)** | ✅ | 256 | Included in Core |
+| **Integration Challenge / Інтеграційне завдання** | ⚪️ | 106 | Skipped |
 | **Підсумок / Summary** | ✅ | 84 | Included in Core |
 | **Need More Practice?** | ⚪️ | 62 | Skipped |

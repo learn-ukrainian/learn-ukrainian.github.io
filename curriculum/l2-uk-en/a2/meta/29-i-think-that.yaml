@@ -58,3 +58,12 @@ content_outline:
   words: 50
   points:
   - Discussing a movie, travel plan, or work proposal
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - 'Minor stylistic note: ''З моєї точки зору'' is a common phrase but considered
+    a calque by some purists (preferring ''На мій погляд'' or ''Як на мене''), though
+    fully acceptable for A2 learners.'
+  recommendation: No major changes needed. The module effectively teaches the concept
+    with authentic examples.

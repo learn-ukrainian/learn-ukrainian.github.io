@@ -57,3 +57,16 @@ content_outline:
   words: 50
   points:
   - Award ceremony dialogue using superlatives
+naturalness:
+  score: 8
+  status: PASS
+  issues:
+  - Instructional tone is slightly over-enthusiastic/flowery ('summit of descriptive
+    grammar', 'historical peak')
+  - 'Minor preposition usage: ''У рівні A1'' sounds less natural than ''На рівні A1'''
+  - Phrasing 'Нерегулярні форми... логічно такі самі' is slightly clunky; 'підкоряються
+    тій самій логіці' would be more idiomatic
+  - 'Dialogue at the end is truncated (''Андрій: Т'')'
+  recommendation: Change 'У рівні' to 'На рівні'. Tone down the metaphorical language
+    in the introduction slightly to sound less like marketing copy. Ensure the final
+    dialogue is fully generated.

@@ -54,3 +54,13 @@ content_outline:
   words: 50
   points:
   - At the handicraft fair: Discussing wooden toys and woolen shawls
+naturalness:
+  score: 8
+  status: PASS
+  issues:
+  - Text is truncated at the very end of the dialogue ('glass wor')
+  - Some instructional sentences are repetitive (frequent use of 'Це...' structure)
+  - Instructional Ukrainian is B1+ level (complex for A2 reading alone), though natural
+    for a textbook context
+  recommendation: Complete the truncated sentence at the end. Try to vary the sentence
+    structure in the explanations to reduce the repetition of 'Це [adjective/noun]'.

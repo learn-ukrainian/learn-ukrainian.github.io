@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M70 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 800
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:32:31
+**Generated:** 2026-01-25 23:54:13
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, орудний, доконаний, місцевий, родовий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: кличний, родовий, місцевий, недоконаний, орудний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

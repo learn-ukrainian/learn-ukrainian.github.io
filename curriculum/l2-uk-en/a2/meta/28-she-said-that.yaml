@@ -45,7 +45,7 @@ content_outline:
   words: 600
   points:
   - 'The Three Pillars: Що (Statement), Чи (Question), Щоб (Command)'
-  - 'The No-Backshift Rule (The Golden Rule)'
+  - The No-Backshift Rule (The Golden Rule)
   - Pronoun Shifting (I -> He/She)
   - Reporting Verbs: Formal vs Emotional registers
   - Reporting Commands: The Past Tense after 'щоб'
@@ -58,3 +58,13 @@ content_outline:
   words: 50
   points:
   - Gossip at the 'lavka' or office news
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - 'Intro: ''Звітувати'' (to report officially) is slightly formal for casual speech;
+    ''переказувати'' (to retell) would be more natural.'
+  - 'Dialogue: ''Виглядає підозріло'' is a slight anglicism (calque of ''looks suspicious'');
+    ''Це підозріло'' or ''Звучить підозріло'' is more idiomatic.'
+  recommendation: Consider softening 'звітувати' to 'переказувати' in the introduction
+    to match the conversational tone.

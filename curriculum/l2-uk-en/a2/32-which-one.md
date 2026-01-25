@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Як ви описуєте світ навколо?** До цього моменту ми вчилися додавати прості прикметники перед іменниками: «червона машина», «цікава книга». Але наше життя набагато складніше. Іноді нам потрібно описати предмет через дію або через його відношення до інших речей. Наприклад: «машина, **яку** купив мій батько» або «книга, **яка** лежить на столі». В українській мові для цього існує універсальне слово-хамелеон — **який**. Це слово є ключем до побудови складних речень. Воно дозволяє вам поєднувати дві думки в одну й робити ваше мовлення точним та елегантним. Сьогодні ми навчимося використовувати **який** для опису людей, місць та предметів, а також зрозуміємо, як це слово змінюється залежно від своєї ролі в реченні.
+**Як ви описуєте світ навколо?** До цього моменту ми вчилися додавати прості прикметники перед іменниками: «червона машина», «цікава книга». Але наше життя набагато складніше. Іноді нам потрібно описати предмет через дію або через його відношення до інших речей. Наприклад: «машина, **яку** купив мій батько» або «книга, **яка** лежить на столі». В українській мові для цього існує універсальне слово-хамелеон — **який**. Це слово є ключем до побудови складних речень. Воно дозволяє вам поєднувати дві думки в одну й робити ваше мовлення точним та елегантним. Сьогодні ми навчимося використовувати **який** для опису людей, місць та предметів. Ми також зрозуміємо, як це слово змінюється залежно від своєї ролі в реченні.
 
 How do you describe the world around you? Up until now, we've focused on placing simple adjectives before nouns: "a red car," "an interesting book." But life is more complex than that. Often, we need to describe an object through an action or its relationship to other things: "the car **that** my father bought" or "the book **which** is lying on the table." In Ukrainian, this is the job of the word **який**. This flexible relative pronoun acts as a bridge, allowing you to merge two ideas into one cohesive, sophisticated sentence. Whether you're describing a person you met or a place you visited, **який** is your ultimate tool for precision. This module will show you how this "grammatical chameleon" adapts to the gender and case of your subject, turning basic reports into detailed narratives.
 
@@ -20,7 +20,7 @@ How do you describe the world around you? Up until now, we've focused on placing
 
 Спочатку розглянемо найпростіше правило. Займенник **який** поводиться як прикметник. Він повинен мати той самий Рід та Число, що й слово, яке він описує.
 
-| Головне слово (Antecedent) | Займенник (Relative Pronoun) | Приклад                            |
+| Головне слово | Займенник | Приклад                            |
 | :------------------------- | :--------------------------- | :--------------------------------- |
 | **Чоловік** (m)            | **який**                     | Це чоловік, **який** тут працює.   |
 | **Жінка** (f)              | **яка**                      | Це жінка, **яка** співає.          |
@@ -29,11 +29,13 @@ How do you describe the world around you? Up until now, we've focused on placing
 
 ### 2. The Case Detective (Детектив відмінків)
 
+This is the most important part of this module. Think of each relative clause as a mini-sentence with its own grammar rules. The case of **який** depends on what role it plays in that mini-sentence, not in the main sentence. If **який** is the subject of the action (doing something), it stays in the nominative case. If it's the object (receiving an action), it changes to the accusative. If it follows a preposition like "в" or "на," it takes whatever case that preposition requires. This "case detective work" requires you to analyze the internal structure of each clause.
+
 Це найважливіша частина цього модуля. Відмінок займенника **який** залежить від його ролі **всередині** тієї частини речення, яку він вводить. Це ніби маленьке речення в реченні зі своїми правилами.
 
-- **Називний (Subject):** Це хлопець, **який** любить музику. («Який» — суб'єкт, він любить).
-- **Знахідний (Object):** Це хлопець, **якого** я знаю. («Якого» — об'єкт, я знаю кого?).
-- **Місцевий (Location):** Це місто, **у якому** я живу. (Препозиція «у» вимагає місцевого відмінка).
+- **Називний відмінок:** Це хлопець, **який** любить музику. («Який» — суб'єкт, він любить).
+- **Знахідний відмінок:** Це хлопець, **якого** я знаю. («Якого» — об'єкт, я знаю кого?).
+- **Місцевий відмінок:** Це місто, **у якому** я живу. (Препозиція «у» вимагає місцевого відмінка).
 
 ### 3. "Who" vs. "Which" (Універсальність української мови)
 
@@ -70,10 +72,10 @@ Combine two simple sentences into one using **який**.
 
 Choose the correct form based on the role in the sub-clause.
 
-1. Це будинок, \_\_\_ (який / у якому) я народився. -> **у якому** (Location)
-2. Ось жінка, \_\_\_ (яка / яку) ми бачили вчора. -> **яку** (Object)
-3. Я знаю людей, \_\_\_ (які / яких) працюють тут. -> **які** (Subject)
-4. Це книга, \_\_\_ (яку / якої) я не читав. -> **якої** (Genitive - negative object)
+1. Це будинок, \_\_\_ (який / у якому) я народився. -> **у якому**
+2. Ось жінка, \_\_\_ (яка / яку) ми бачили вчора. -> **яку**
+3. Я знаю людей, \_\_\_ (які / яких) працюють тут. -> **які**
+4. Це книга, \_\_\_ (яку / якої) я не читав. -> **якої**
 
 ### 3. Abstract Logic (Те, що...)
 

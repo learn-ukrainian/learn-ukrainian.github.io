@@ -27,21 +27,22 @@ objectives:
 - Learner can navigate medical situations confidently
 - Learner can correct common errors in complex sentences
 sources:
-- name: 'Ukrainian State Standard 2024 - A2.2 Assessment'
-  url: 'https://mon.gov.ua/'
+- name: Ukrainian State Standard 2024 - A2.2 Assessment
+  url: https://mon.gov.ua/
   type: reference
-  notes: 'Proficiency benchmarks for complex sentences and health communication at A2.2'
-- name: 'Review of Ukrainian Syntax for A2'
-  url: 'https://uk.wikipedia.org/wiki/Синтаксис_української_мови'
+  notes: Proficiency benchmarks for complex sentences and health communication at
+    A2.2
+- name: Review of Ukrainian Syntax for A2
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
   type: reference
-  notes: 'Synthesized logic for coordinating multiple subordinate clauses'
+  notes: Synthesized logic for coordinating multiple subordinate clauses
 content_outline:
-- section: 'Introduction / Вступ'
+- section: Introduction / Вступ
   words: 200
   points:
-  - 'Transitioning from simple reports to complex ideas'
-  - 'The map of Level A2.2 proficiency'
-- section: 'Presentation / Презентація'
+  - Transitioning from simple reports to complex ideas
+  - The map of Level A2.2 proficiency
+- section: Presentation / Презентація
   words: 600
   points:
   - 'Synthesis 1: Cause & Effect (Тому що, бо, через)'
@@ -51,12 +52,22 @@ content_outline:
   - 'Synthesis 5: Time Coordination (Коли, поки, після того як)'
   - 'The Medical Masterclass: Integrating body parts and symptoms'
   - 'The Comma Masterlist: When to pause'
-- section: 'Practice / Практика'
+- section: Practice / Практика
   words: 150
   points:
-  - 'Complex sentence construction drills'
-  - "'Fix the Logic' diagnostic exercises"
-- section: 'Dialogues / Діалоги'
+  - Complex sentence construction drills
+  - '''Fix the Logic'' diagnostic exercises'
+- section: Dialogues / Діалоги
   words: 50
   points:
-  - "A summary dialogue combining review items: A doctor's visit with elaborate explanations and plans"
+  - 'A summary dialogue combining review items: A doctor''s visit with elaborate explanations
+    and plans'
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - The phrase 'Ми професійно спілкуємося про здоров'я' (We communicate professionally
+    about health) is slightly unnatural for A2 learners; 'впевнено' (confidently)
+    would be more precise.
+  recommendation: Consider changing 'професійно' to 'впевнено' in the overview, otherwise
+    excellent.

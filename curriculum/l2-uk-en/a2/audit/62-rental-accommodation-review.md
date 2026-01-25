@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M62 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:31:54
+**Generated:** 2026-01-25 23:54:09
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): ремонт, звільнити, умови...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): умови, ремонт, звільнити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

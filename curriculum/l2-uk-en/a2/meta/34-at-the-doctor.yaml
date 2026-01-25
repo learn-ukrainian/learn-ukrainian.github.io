@@ -30,7 +30,8 @@ sources:
 - name: Ukrainian State Standard 2024 - Health and Hygiene
   url: https://mon.gov.ua/
   type: reference
-  notes: Standards for medical consultation and describing physical conditions at A2
+  notes: Standards for medical consultation and describing physical conditions at
+    A2
 - name: Medical Ukrainian for Foreigners
   url: https://uk.wikipedia.org/wiki/Охорона_здоров'я_в_Україні
   type: reference
@@ -59,3 +60,10 @@ content_outline:
   words: 50
   points:
   - Calling an ambulance or explaining a flu to a family doctor
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - 'Grammar error: ''від нежиті'' used in Practice section; ''нежить'' is masculine,
+    so genitive should be ''від нежитю'''
+  recommendation: Correct the genitive form of 'нежить' to 'нежитю'.

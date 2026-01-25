@@ -1,7 +1,8 @@
 # Audit Report: M32 — 32-which-one.md
 **Level:** A2 | **Module:** M32 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:36
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 23:54:04
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,41 +36,30 @@
 - Priority types used: 2/3 (error-correction, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося використовувати який...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, називний, прикметник, місцевий, займенник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1076/1000 (raw: 1234)
+- **Words:** ✅ 1167/1000 (raw: 1322)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 9/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 65.7% HIGH (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 61.4% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 295 | Included in Core |
-| **Presentation / Презентація** | ✅ | 230 | Included in Core |
-| **Practice / Практика** | ⚪️ | 240 | Skipped |
+| **Presentation / Презентація** | ✅ | 328 | Included in Core |
+| **Practice / Практика** | ⚪️ | 233 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 176 | Included in Core |
 | **Summary / Підсумок** | ✅ | 89 | Included in Core |
 | **Need More Practice?** | ⚪️ | 46 | Skipped |

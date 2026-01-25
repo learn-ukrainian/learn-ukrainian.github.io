@@ -32,21 +32,21 @@ objectives:
 - Learner can describe "popping in" or stopping by
 - Learner can describe moving around an obstacle
 sources:
-- name: 'Ukrainian State Standard 2024 - Advanced Verbs of Motion'
-  url: 'https://mon.gov.ua/'
+- name: Ukrainian State Standard 2024 - Advanced Verbs of Motion
+  url: https://mon.gov.ua/
   type: reference
-  notes: 'Standards for complex spatial trajectories and prefixed verbs at A2'
-- name: 'Grammar of Ukrainian Language - Verb Prefixes'
-  url: 'https://uk.wikipedia.org/wiki/Префікси_дієслів_руху'
+  notes: Standards for complex spatial trajectories and prefixed verbs at A2
+- name: Grammar of Ukrainian Language - Verb Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_дієслів_руху
   type: reference
-  notes: 'Detailed semantics of spatial prefixes with motion stems'
+  notes: Detailed semantics of spatial prefixes with motion stems
 content_outline:
-- section: 'Introduction / Вступ'
+- section: Introduction / Вступ
   words: 200
   points:
   - 'Beyond In and Out: The geometry of complex paths'
-  - 'Navigating the city like a local'
-- section: 'Presentation / Презентація'
+  - Navigating the city like a local
+- section: Presentation / Презентація
   words: 600
   points:
   - 'The Bridge: Пере- (Across) vs Про- (Through)'
@@ -55,12 +55,20 @@ content_outline:
   - 'The Circle: Об- (Around)'
   - 'Prepositional Harmony: Matching prefixes to cases'
   - 'The Logic of Distance: How prefixes signal proximity'
-- section: 'Practice / Практика'
+- section: Practice / Практика
   words: 150
   points:
-  - 'Path visualization drills'
-  - 'Giving complex directions in Lviv/Kyiv'
-- section: 'Dialogues / Діалоги'
+  - Path visualization drills
+  - Giving complex directions in Lviv/Kyiv
+- section: Dialogues / Діалоги
   words: 50
   points:
   - 'Travel stories: A journey through the mountains or a complex commute'
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - Slight syntactic repetition in the Introduction ('Ми хочемо... Ми хочемо...'),
+    though pedagogically acceptable for A2 emphasis
+  recommendation: Continue using this 'narrative/metaphorical' approach for complex
+    grammar topics.

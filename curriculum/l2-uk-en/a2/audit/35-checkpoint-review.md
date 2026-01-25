@@ -1,7 +1,8 @@
 # Audit Report: M35 — 35-checkpoint.md
 **Level:** A2 | **Module:** M35 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 800
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:45
+**Generated:** 2026-01-25 23:52:41
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -35,48 +36,29 @@
 - Priority types used: 2/3 (error-correction, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 23 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'цьому блоці Модулі ми навчилися...'
-- **[COMPLEXITY]** Sentence too long for A2: 25 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ми перевіримо чи вмієте ви...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Займенник який завжди узгоджується антецедентом...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, займенник, множина
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Summary|Підсумок' found: The Doctor's Recommendation (Діалог-підсумок), Summary / Підсумок
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 5 violations (moderate)
-
 ## Gates
-- **Words:** ✅ 1175/800 (raw: 1276)
+- **Words:** ✅ 1181/800 (raw: 1277)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 4/1
+- **Vocab:** ✅ 8/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 60.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 61.2% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Overview / Огляд** | ⚪️ | 257 | Skipped |
-| **Presentation / Презентація** | ✅ | 320 | Included in Core |
+| **Overview / Огляд** | ⚪️ | 264 | Skipped |
+| **Presentation / Презентація** | ✅ | 319 | Included in Core |
 | **Practice / Практика** | ⚪️ | 209 | Skipped |
 | **Integration Challenge / Інтеграційне завдання** | ⚪️ | 102 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 137 | Included in Core |

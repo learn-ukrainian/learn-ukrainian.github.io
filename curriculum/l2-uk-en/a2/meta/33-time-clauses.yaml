@@ -27,21 +27,22 @@ objectives:
 - Learner can distinguish between 'перед тим як' and 'після того як'
 - Learner can tell stories with clear chronological structure
 sources:
-- name: 'Ukrainian State Standard 2024 - Temporal Clauses'
-  url: 'https://mon.gov.ua/'
+- name: Ukrainian State Standard 2024 - Temporal Clauses
+  url: https://mon.gov.ua/
   type: reference
-  notes: 'Communicative requirements for sequencing events and temporal coordination at A2'
-- name: 'Grammar of Ukrainian Language - Time Conjunctions'
-  url: 'https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу'
+  notes: Communicative requirements for sequencing events and temporal coordination
+    at A2
+- name: Grammar of Ukrainian Language - Time Conjunctions
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
   type: reference
-  notes: "Detailed rules for 'коли', 'поки', and 'як тільки'"
+  notes: Detailed rules for 'коли', 'поки', and 'як тільки'
 content_outline:
-- section: 'Introduction / Вступ'
+- section: Introduction / Вступ
   words: 200
   points:
-  - 'Life as a sequence of events'
-  - "Why chronological 'logic' matters for storytelling"
-- section: 'Presentation / Презентиція'
+  - Life as a sequence of events
+  - Why chronological 'logic' matters for storytelling
+- section: Presentation / Презентиція
   words: 600
   points:
   - 'Simultaneity: Поки (Process) vs Коли (Point)'
@@ -50,12 +51,17 @@ content_outline:
   - 'Frequency: Кожного разу, коли...'
   - 'The Until Trap: Поки не'
   - 'Aspect Selection: Ongoing processes vs Finished triggers'
-- section: 'Practice / Практика'
+- section: Practice / Практика
   words: 150
   points:
-  - 'Narrative sequencing drills'
-  - "'Wait until' logic exercises"
-- section: 'Dialogues / Діалоги'
+  - Narrative sequencing drills
+  - '''Wait until'' logic exercises'
+- section: Dialogues / Діалоги
   words: 50
   points:
-  - 'Reporting a busy morning or planning a trip''s schedule'
+  - Reporting a busy morning or planning a trip's schedule
+naturalness:
+  score: 9
+  status: PASS
+  issues: []
+  recommendation: None, the module is well-written and appropriate for A2 level.

@@ -53,8 +53,20 @@ content_outline:
   words: 150
   points:
   - Sequencing a chaotic morning
-  - 'Anekdot completion drills'
+  - Anekdot completion drills
 - section: Dialogues / Діалоги
   words: 50
   points:
   - Telling a fishing story or travel adventure
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - 'Minor Anglicism in instructional text: ''Ми також маємо слова'' (We also have
+    words) could be more naturally phrased as ''В українській мові також є слова''
+    or ''Існують також слова''.'
+  - Dialogue opening 'Як твоя риболовля минулої суботи?' is slightly formal; 'Як пройшла
+    риболовля?' is more common in casual speech.
+  recommendation: Consider softening the instructional voice slightly to avoid direct
+    translations of English teaching phrases ('We have words...'), but overall this
+    is excellent content.

@@ -1,7 +1,8 @@
 # Audit Report: M21 — 21-numerals-and-nouns.md
 **Level:** A2 | **Module:** M21 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:40:51
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 23:51:13
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,64 +36,30 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Але чи знаєте ви що...'
-- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це може здатися складним на...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це допоможе вам миттєво вибрати...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це правило діє для всіх...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Цікаво що форма Родового множини...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'мові ці числа сприймаються як...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, іменник, родовий
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- Якщо закінчується на **2, 3, 4** (крім 12-14) → використовуйте Зону 2: три грив**ні** (23, 144).". Shares significant keywords with sentence at index 31.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "- Якщо закінчується на **5-9** або **0** → використовуйте Зону 3: п'ять грив**ень** (25, 100).". Shares significant keywords with sentence at index 32.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "- Зрозуміли «правило останньої цифри» для складних чисел.". Shares significant keywords with sentence at index 14.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): сім, двадцять, нуль, шість, одинадцять...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Presentation / Презентація, 3. The Grammar of Zero and Non-Specific Quantities (Нуль та багато)
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 12 violations (severe - consider revision)
-
 ## Gates
-- **Words:** ✅ 1516/1000 (raw: 1717)
+- **Words:** ✅ 1577/1000 (raw: 1772)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 12/1
+- **Vocab:** ✅ 108/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 9 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 66.4% HIGH (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 63.7% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 259 | Included in Core |
-| **Presentation / Презентація** | ✅ | 700 | Included in Core |
+| **Introduction / Вступ** | ✅ | 255 | Included in Core |
+| **Presentation / Презентація** | ✅ | 785 | Included in Core |
 | **Practice / Практика** | ⚪️ | 234 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 163 | Included in Core |
-| **Summary / Підсумок** | ✅ | 99 | Included in Core |
+| **Summary / Підсумок** | ✅ | 79 | Included in Core |
 | **Need More Practice?** | ⚪️ | 61 | Skipped |

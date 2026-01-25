@@ -2,9 +2,9 @@
 
 ## Introduction / Вступ
 
-**Світ — це складна карта.** Ваші дієслова повинні вміти її читати. Ми вже вивчили входи та виходи (В- та ВИ-). Життя цікавіше, ніж просто «зайти». Нам потрібно вміти **переходити** вулиці. Ми хочемо **проходити** крізь парки. Ми хочемо **заходити** в гості. Треба **підходити** до друзів і **доходити** до мети. Українська мова має унікальну систему префіксів. Вони дозволяють точний опис. Сьогодні ми вивчимо «геометрію руху». Ви дізнаєтеся про різницю префіксів. Ми зрозуміємо різницю між **пере-** та **про-**. Наприкінці ви зможете давати вказівки. Ви зможете розказати про свій шлях. Слухач бачитиме вашу дорогу.
+**Світ — це складна карта.** Ваші дієслова повинні вміти її читати. Ми вже вивчили входи та виходи (В- та ВИ-). Життя цікавіше, ніж просто «зайти». Нам потрібно вміти **переходити** вулиці. Ми хочемо **проходити** крізь парки. Ми хочемо **заходити** в гості. Треба **підходити** до друзів і **доходити** до мети. Українська мова має унікальну систему префіксів. Вони дозволяють точний опис. Сьогодні ми вивчимо «геометрію руху». Ви дізнаєтеся про різницю префіксів. Ми зрозуміємо різницю між **пере-** та **про-**. Після цього модуля ваш опис маршруту буде чітким і природним — слухач легко уявить кожен крок вашої дороги.
 
-The world is a complex map, and your verbs must know how to read it. In the previous module, we mastered basic entries and exits (В- and ВИ-). But life is much more interesting than just popping in and out. We need to be able to **cross** streets, **pass through** parks, **stop by** a friend’s house, **approach** a landmark, and finally **reach** our ultimate destination. Ukrainian possesses a unique system of advanced motion prefixes that allow you to describe any trajectory with mathematical precision. Today, we dive into the "geometry of movement." You’ll learn the subtle difference between **пере-** (crossing) and **про-** (passing through), how to signal your successful arrival with **при-**, and how to master the logic of distance with prefixes of approach. By the end of this module, you’ll be able to give complex directions and narrate your travels so vividly that your listeners will see your path unfolding before their eyes.
+Your verbs must know how to navigate the world's complex map. We've already learned basic entries and exits (В- and ВИ-), but life offers richer movement: crossing streets (**пере-**), passing through parks (**про-**), stopping by friends (**за-**), approaching landmarks (**під-**), and reaching destinations (**до-**). Today's focus: the geometry of movement through advanced motion prefixes. These tools let you describe any trajectory with mathematical precision.
 
 **Що ви вивчите в цьому модулі:**
 
@@ -15,7 +15,7 @@ The world is a complex map, and your verbs must know how to read it. In the prev
 - Узгодження префіксів з прийменниками та відмінками.
 - Як описувати довгі маршрути та подорожі в горах.
 
-## Presentation / Презентиція
+## Presentation / Презентація
 
 ### 1. The Geometry of Crossing: Пере- vs. Про- (Геометрія перетину)
 
@@ -108,7 +108,7 @@ Choose the correct form.
 **Турист:** А парк великий? Його треба **обходити**? (Is the park big? Should I go around it?)
 **Перехожий:** Ні, не треба **обходити**. Просто **йдіть** наскрізь. Коли **підійдете** до високого будинку, поверніть направо. (No, no need to go around. Just go through. When you approach the tall building, turn right.)
 **Турист:** Зрозумів. І я одразу **прийду** до музею? (Understood. And I'll arrive at the museum immediately?)
-**Перехожий:** Так, ви **доїдете** або **дійдете** туди за п'ять хвилин. Видужуйте... щасливої дороги! (Yes, you'll drive or walk there in five minutes. Get well... have a safe trip!)
+**Перехожий:** Так, ви **доїдете** або **дійдете** туди за п'ять хвилин. Щасливої дороги! (Yes, you'll drive or walk there in five minutes. Have a safe trip!)
 
 > [!context] **Mountain Navigation in Carpathians (Навігація в Карпатах)**
 > У Карпатах префікси руху рятують життя. Ви повинні **перейти** потік, **обійти** небезпечну ділянку та **дійти** до притулку до заходу сонця. Місцеві жителі використовують ці дієслова, щоб давати неймовірно точні інструкції з безпеки.

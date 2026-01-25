@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M03 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 20:40:10
+**Generated:** 2026-01-25 23:50:37
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): захотітися, пробачати, подобатися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): пробачати, подобатися, захотітися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

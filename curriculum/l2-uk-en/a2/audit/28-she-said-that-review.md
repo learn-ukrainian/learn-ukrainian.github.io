@@ -1,7 +1,8 @@
 # Audit Report: M28 — 28-she-said-that.md
 **Level:** A2 | **Module:** M28 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:21
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 23:52:16
 
 ## Configuration
 **Type:** A2-grammar
@@ -35,25 +36,8 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми навчимося перетворювати прямі...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вміння звітувати про сказане зробить...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): переконувати, скаржитися, стверджувати, питати, обіцяти...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice / Практика, 3. Reporting Commands (Практика «Щоб»)
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
-- **Words:** ✅ 1135/1000 (raw: 1293)
+- **Words:** ✅ 1137/1000 (raw: 1294)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -63,17 +47,17 @@
 - **Vocab:** ✅ 40/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 57.3% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 57.4% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 280 | Included in Core |
+| **Introduction / Вступ** | ✅ | 282 | Included in Core |
 | **Presentation / Презентація** | ✅ | 306 | Included in Core |
 | **Practice / Практика** | ⚪️ | 218 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 185 | Included in Core |

@@ -1,6 +1,6 @@
 module: a2-43
 title: 'Майстерня слів: Велика гра'
-subtitle: 'Word Formation Mastery'
+subtitle: Word Formation Mastery
 version: '2.0'
 phase: A2.4
 focus: grammar
@@ -8,15 +8,23 @@ pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-  - word-formation
-  - roots
-  - mastery
+- word-formation
+- roots
+- mastery
 grammar:
-  - 'word formation synthesis'
-  - 'prefix-root-suffix analysis'
+- word formation synthesis
+- prefix-root-suffix analysis
 objectives:
-  - 'Learner can synthesize words from parts'
-  - 'Learner can predict meaning relative to root'
-  - 'Learner can analyze complex words'
+- Learner can synthesize words from parts
+- Learner can predict meaning relative to root
+- Learner can analyze complex words
 vocabulary_count: 25
 slug: 43-wf-mastery
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - Slightly unnatural phrasing in dialogue ('роблю записування' instead of 'роблю
+    записи' or 'записую') - likely intentional to enforce the grammar point.
+  recommendation: The text is high quality for a summary module. The minor issue in
+    the dialogue is acceptable given the pedagogical goal of testing verbal nouns.

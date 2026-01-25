@@ -27,35 +27,43 @@ objectives:
 - Learner can describe people and objects using relative clauses
 - Learner can punctuate complex sentences correctly
 sources:
-- name: 'Ukrainian State Standard 2024 - Relative Clauses'
-  url: 'https://mon.gov.ua/'
+- name: Ukrainian State Standard 2024 - Relative Clauses
+  url: https://mon.gov.ua/
   type: reference
-  notes: 'Standards for complex sentence structures and relative pronouns at A2'
-- name: 'Grammar of Ukrainian Language - Relative Pronouns'
-  url: 'https://uk.wikipedia.org/wiki/Відносні_займенники'
+  notes: Standards for complex sentence structures and relative pronouns at A2
+- name: Grammar of Ukrainian Language - Relative Pronouns
+  url: https://uk.wikipedia.org/wiki/Відносні_займенники
   type: reference
-  notes: "Declension rules for 'який' and its role in subordinate clauses"
+  notes: Declension rules for 'який' and its role in subordinate clauses
 content_outline:
-- section: 'Introduction / Вступ'
+- section: Introduction / Вступ
   words: 200
   points:
-  - 'The power of description beyond adjectives'
-  - "The Chameleon: Why 'Який' is the ultimate linker"
-- section: 'Presentation / Презентація'
+  - The power of description beyond adjectives
+  - 'The Chameleon: Why ''Який'' is the ultimate linker'
+- section: Presentation / Презентація
   words: 600
   points:
   - 'Basic Agreement: Який, Яка, Яке, Які'
-  - "The Case Detective: Why 'Який' changes inside the clause"
-  - "Who vs. Which: The universal nature of 'Який'"
+  - 'The Case Detective: Why ''Який'' changes inside the clause'
+  - 'Who vs. Which: The universal nature of ''Який'''
   - 'Abstract Links: Те, що...'
   - 'Precision: Defining your subject with relative clauses'
-  - 'The Mandatory Comma'
-- section: 'Practice / Практика'
+  - The Mandatory Comma
+- section: Practice / Практика
   words: 150
   points:
-  - 'Sentence merging drills'
-  - "'Wanted' poster description exercises"
-- section: 'Dialogues / Діалоги'
+  - Sentence merging drills
+  - '''Wanted'' poster description exercises'
+- section: Dialogues / Діалоги
   words: 50
   points:
-  - 'Police witness interview or searching for a specific item in a shop'
+  - Police witness interview or searching for a specific item in a shop
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - Dialogue lines are slightly forced to ensure grammar usage (e.g., 'місце, у якому'
+    instead of 'де'), but this is pedagogically justified for the target grammar point.
+  recommendation: No changes needed; the module effectively teaches the target concept
+    with appropriate A2 complexity.

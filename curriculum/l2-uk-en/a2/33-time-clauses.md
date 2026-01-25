@@ -2,7 +2,7 @@
 
 ## Introduction / Вступ
 
-**Життя — це послідовність подій.** Кожен наш день складається з моментів, які йдуть один за одним або відбуваються одночасно. Щоб розповісти цікаву історію або просто пояснити свій розклад, вам потрібно вміти логічно поєднувати ці моменти в часі. До цього ми вчилися казати «Я снідаю» та «Я йду на роботу». Тепер ми навчимося казати: «**Коли** я снідаю, я читаю новини» або «**Після того як** я поснідав, я пішов на роботу». Сьогодні ми опануємо «часовий клей» української мови. Ви дізнаєтеся, як розрізняти тривалі процеси та миттєві дії, як правильно вибудовувати хронологію та як використовувати частку «не» для того, щоб сказати «поки не». Наприкінці цього модуля ви станете справжніми майстрами сторітелінгу!
+**Життя — це послідовність подій.** Кожен наш день складається з моментів, які йдуть один за одним або відбуваються одночасно. Як розповісти цікаву історію? Як пояснити свій розклад? Вам потрібно вміти логічно поєднувати моменти в часі. До цього ми вчилися казати «Я снідаю» та «Я йду на роботу». Тепер ми навчимося казати: «**Коли** я снідаю, я читаю новини». Або: «**Після того як** я поснідав, я пішов на роботу». Сьогодні ми опануємо «часовий клей» української мови. Ви дізнаєтеся багато нового. Як розрізняти тривалі процеси та миттєві дії? Як правильно вибудовувати хронологію? Як використовувати частку «не» для того, щоб сказати «поки не»? Наприкінці цього модуля ви станете справжніми майстрами сторітелінгу!
 
 Life is a sequence of events. From the moment we wake up until we fall asleep, everything we do is interconnected by time. In Ukrainian, these temporal relationships are controlled by a specific set of conjunctions that dictate the flow of your narrative. Up until now, you've stated facts in isolation. Now, you'll learn how to weave them together: "When I wake up, I drink coffee" or "After I finished coffee, I went to work." This module will teach you the "temporal glue" of the Ukrainian language. We’ll explore the difference between simultaneous actions and sequential triggers, the logic of "until," and how to choose the right verb aspect to show whether an action is ongoing or completed. By the end of this lesson, you'll be able to structure your daily stories with clarity and chronological precision.
 
@@ -17,7 +17,7 @@ Life is a sequence of events. From the moment we wake up until we fall asleep, e
 
 ## Presentation / Презентація
 
-### 1. Simultaneous Actions: Поки (Process)
+### 1. Simultaneous Actions: Поки
 
 Коли дві дії відбуваються в один і той самий час, ми використовуємо **поки**. Оскільки обидві дії тривають, ми зазвичай використовуємо **недоконаний вид** (process).
 
@@ -56,7 +56,7 @@ Use this when the order of events is the most important part of your message.
 
 ### 5. Aspect and Time Coordination
 
-Вибір виду дієслова (Aspect) критично важливий у часових реченнях.
+Вибір виду дієслова  критично важливий у часових реченнях.
 
 - **Коли я снідала** (Imperf.), він прийшов. -> He arrived _during_ the breakfast.
 - **Коли я поснідала** (Perf.), він прийшов. -> He arrived _after_ the breakfast was over.
@@ -102,7 +102,7 @@ Complete the sentences using **поки не**.
 
 ## Dialogues / Діалоги
 
-### The Busy Morning (Насичений ранок)
+### The Busy Morning (Зайнятий ранок)
 
 **Андрій:** Олю, ти чому така втомлена? (Olia, why are you so tired?)
 **Оля:** Ой, це був божевільний ранок. **Коли** я прокинулася, води не було. (Oh, it was a crazy morning. When I woke up, there was no water.)
@@ -126,7 +126,7 @@ Complete the sentences using **поки не**.
 - Вивчили сполучники одночасності (**поки**) та послідовності (**коли**, **після того як**).
 - Зрозуміли логіку миттєвих дій через **як тільки** та **щойно**.
 - Навчилися будувати речення зі значенням «until» за допомогою **поки не**.
-- Побачили, як вид дієслова (Aspect) впливає на хронологію подій.
+- Побачили, як вид дієслова  впливає на хронологію подій.
 - Потренувалися правильно ставити коми в складних часових реченнях.
 
 Storytelling is the heart of human connection. By mastering time clauses, you’ve gained the ability to tell clear, engaging, and logical stories about your life. Your Ukrainian is now ready for the flow of time. Keep narrating, keep connecting!

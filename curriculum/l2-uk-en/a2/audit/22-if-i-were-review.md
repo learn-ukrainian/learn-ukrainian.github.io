@@ -1,7 +1,8 @@
 # Audit Report: M22 — 22-if-i-were.md
 **Level:** A2 | **Module:** M22 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:40:54
+**Generated:** 2026-01-25 23:15:34
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,15 +37,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми опануємо просте але...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): обов'язково, пішов, якби, поїхав, купив...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): пішов...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1284/1000 (raw: 1433)
@@ -54,12 +53,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 54.9% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 55.0% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
@@ -67,8 +66,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 262 | Included in Core |
-| **Presentation / Презентація** | ✅ | 408 | Included in Core |
+| **Introduction / Вступ** | ✅ | 263 | Included in Core |
+| **Presentation / Презентація** | ✅ | 407 | Included in Core |
 | **Practice / Практика** | ⚪️ | 253 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 228 | Included in Core |
 | **Summary / Підсумок** | ✅ | 88 | Included in Core |

@@ -25,7 +25,8 @@ sources:
 - name: Ukrainian State Standard 2024 - Adjective Morphology
   url: https://mon.gov.ua/
   type: reference
-  notes: Standards for suffixal adjective formation and emotional-expressive nuances at A2
+  notes: Standards for suffixal adjective formation and emotional-expressive nuances
+    at A2
 - name: Word Formation in Ukrainian Language - Suffixes
   url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
   type: reference
@@ -54,3 +55,9 @@ content_outline:
   words: 50
   points:
   - On the market: Choosing between 'big' and 'gigantic' watermelons
+naturalness:
+  score: 10
+  status: PASS
+  issues: []
+  recommendation: Continue using this 'narrative grammar' approach where suffixes
+    are presented as tools for expression rather than just rules.

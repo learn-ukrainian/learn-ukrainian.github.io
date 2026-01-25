@@ -1,7 +1,8 @@
 # Audit Report: M34 — 34-at-the-doctor.md
 **Level:** A2 | **Module:** M34 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:41
+**Generated:** 2026-01-25 23:52:40
 
 ## Configuration
 **Type:** A2-vocab
@@ -36,17 +37,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ви дізнаєтеся як попросити про...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): око, лікарня, рука, температура, відчувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): рецепт, біль, приймати, око, пацієнт...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1146/1000 (raw: 1291)
@@ -56,14 +53,14 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/1
+- **Vocab:** ✅ 49/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.4% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |

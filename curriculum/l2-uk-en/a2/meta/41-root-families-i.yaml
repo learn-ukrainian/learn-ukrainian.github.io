@@ -38,23 +38,32 @@ content_outline:
 - section: Introduction / Вступ
   words: 200
   points:
-    - The 'Lego' Language: Why Ukrainian is built, not just memorized
-    - The 4 Super-Roots: ход-, пис-, чит-, бач-
+  - The 'Lego' Language: Why Ukrainian is built, not just memorized
+  - The 4 Super-Roots: ход-, пис-, чит-, бач-
 - section: Presentation / Презенітація
   words: 600
   points:
-    - 'The ход- Family: Motion, paths, and destinations'
-    - 'The пис- Family: Writing, signing, and describing'
-    - 'The чит- Family: Consumption of information'
-    - 'The бач-/гляд- Family: Perception and vision'
-    - 'The Guessing Machine: Logic of prefix + root'
-    - 'Etymology Corner: Why -хід- and -ход- are siblings'
+  - 'The ход- Family: Motion, paths, and destinations'
+  - 'The пис- Family: Writing, signing, and describing'
+  - 'The чит- Family: Consumption of information'
+  - 'The бач-/гляд- Family: Perception and vision'
+  - 'The Guessing Machine: Logic of prefix + root'
+  - 'Etymology Corner: Why -хід- and -ход- are siblings'
 - section: Practice / Практика
   words: 150
   points:
-    - Root identification drills
-    - "'Translate by Logic' challenge"
+  - Root identification drills
+  - '''Translate by Logic'' challenge'
 - section: Dialogues / Діалоги
   words: 50
   points:
-    - At the library: Discussing writers, readers, and descriptions
+  - At the library: Discussing writers, readers, and descriptions
+naturalness:
+  score: 9
+  status: PASS
+  issues:
+  - 'Minor awkward collocation in dialogue: ''опис творчості'' is slightly forced
+    to fit the root (native would likely say ''бібліографія'' or ''огляд''), but acceptable
+    for A2 pedagogical purposes.'
+  recommendation: The module is high quality and ready for use. The 'Lego' analogy
+    is particularly effective for this grammar point.

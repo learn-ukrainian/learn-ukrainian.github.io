@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M49 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:31:19
+**Generated:** 2026-01-25 23:54:02
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, орудний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

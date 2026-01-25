@@ -3,7 +3,7 @@ title: 'Checkpoint: Aspect, Comparison & Modality'
 subtitle: Review of Modules 11-24
 slug: 25-checkpoint-aspect-comparison
 module_type: checkpoint
-word_target: 1000
+word_target: 800
 immersion: 40-50% Ukrainian
 version: '2.0'
 phase: A2.2
@@ -35,24 +35,50 @@ sources:
   type: reference
   notes: Standards for integrating intermediate A2 skills
 content_outline:
-- section: Introduction / Вступ
-  words: 200
+- section: Огляд / Overview
+  words: 250
   points:
   - Consolidating the 'Quality and Time' block
   - The map of skills from M11 to M24
-- section: Presentation / Презентація
-  words: 600
+- section: 'Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)'
+  words: 70
   points:
-  - 'Mega-Review: Aspect Logic (Process vs Result)'
-  - 'Mega-Review: Comparison Logic (Degrees of Value)'
-  - 'Mega-Review: Modality Logic (Imperatives and Ifs)'
-  - 'Agreement Logic: Numbers and Nouns'
-- section: Practice / Практика
-  words: 150
-  points:
-  - Error correction marathon
-  - Cumulative role-play scenarios
-- section: Dialogues / Діалоги
+  - Process vs Result distinction
+  - Aspect pair review
+- section: 'Skill 2: Degrees of Comparison (Ступені порівняння)'
   words: 50
   points:
-  - Synthesizing all skills in a complex life situation (Moving/Buying)
+  - Comparative and superlative forms
+  - Irregular comparatives
+- section: 'Skill 3: Modality (Умовний та наказовий способи)'
+  words: 60
+  points:
+  - Conditional and imperative moods
+  - Real vs unreal conditions
+- section: 'Skill 4: Numeral Agreement (Узгодження числівників)'
+  words: 40
+  points:
+  - Zone 1-2-3 agreement rules
+  - Counting with nouns
+- section: Practice / Практика (The Mega-Review)
+  words: 150
+  points:
+  - Aspect transformation
+  - Comparison marathon
+  - Modality check
+  - Counting money
+- section: 'Dialogue / Діалог: Synthesis (Синтез навичок)'
+  words: 250
+  points:
+  - Synthesizing all four skills in dialogue with analysis
+- section: Integration Challenge / Інтеграційне завдання
+  words: 100
+  points:
+  - Combined task using all skills
+naturalness:
+  score: 10
+  status: PASS
+  issues: []
+  recommendation: The use of 'Поквапся' in the dialogue is slightly literary; 'Поспіши'
+    might be more common in casual speech, but 'Поквапся' is perfectly valid. No changes
+    needed.

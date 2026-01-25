@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M59 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:31:45
+**Generated:** 2026-01-25 23:54:07
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): одужати, болить, діагноз, симптом, аналіз...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): аналіз, симптом, болить, діагноз, одужати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

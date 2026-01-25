@@ -1,7 +1,8 @@
 # Audit Report: M31 — 31-in-order-to.md
 **Level:** A2 | **Module:** M31 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:34
+**Generated:** 2026-01-25 23:52:39
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,47 +37,43 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'бажаний'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Цей невеликий але могутній інструмент...'
 - **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Дія щоб Суб єкт Минулий...'
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): дав, розповів, пояснив, купив, зробив...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): того, розповів, дав, пояснив, купив...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: 1. Shift the Focus (Змініть суб'єкта), Presentation / Презентація
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: 1. Shift the Focus, Presentation / Презентація
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 5 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1105/1000 (raw: 1313)
+- **Words:** ✅ 1112/1000 (raw: 1318)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 39/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 55.8% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 56.2% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 302 | Included in Core |
-| **Presentation / Презентація** | ✅ | 242 | Included in Core |
+| **Introduction / Вступ** | ✅ | 307 | Included in Core |
+| **Presentation / Презентація** | ✅ | 244 | Included in Core |
 | **Practice / Практика** | ⚪️ | 225 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 178 | Included in Core |
 | **Summary / Підсумок** | ✅ | 101 | Included in Core |

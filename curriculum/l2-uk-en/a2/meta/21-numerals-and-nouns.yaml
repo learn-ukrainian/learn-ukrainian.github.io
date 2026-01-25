@@ -53,3 +53,16 @@ content_outline:
   words: 50
   points:
   - Buying products in specific quantities at a market
+naturalness:
+  score: 8
+  status: PASS
+  issues:
+  - 'Grammar Error: ''євро'' is indeclinable in standard Ukrainian. Usage of ''євра''
+    (Genitive singular) is incorrect; it should remain ''євро'' in all cases (одне
+    євро, два євро, п''ять євро).'
+  - 'Script Mixing: ''У Ukrainian мові'' in Section 3 contains a Latin script placeholder.
+    Should be ''В українській мові''.'
+  - 'Missing Content: The ''Dialogues / Діалоги'' section cuts off abruptly after
+    the header ''На продукт''.'
+  recommendation: Fix the 'євро' declension error immediately as this is a grammar
+    module. Correct the 'Ukrainian' typo. Complete the missing dialogue section.

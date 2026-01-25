@@ -1,7 +1,8 @@
 # Audit Report: M23 — 23-complete-imperative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 20:40:58
+**Generated:** 2026-01-25 23:52:13
 
 ## Configuration
 **Type:** A2-grammar
@@ -36,39 +37,37 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Stem ends in a consonant with stress on the stem**: Add **-ь** (sg) / **-ьте** (pl).". Shares significant keywords with sentence at index 19.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): їж, покажіть, читай, пиши, скажіть...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): будь, прошу, допоможіть, робімо, дай...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1064/1000 (raw: 1226)
+- **Words:** ✅ 1106/1000 (raw: 1268)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 10/1
+- **Vocab:** ✅ 40/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 45.5% LOW (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction / Вступ** | ✅ | 238 | Included in Core |
-| **Presentation / Презентація** | ✅ | 346 | Included in Core |
+| **Presentation / Презентація** | ✅ | 388 | Included in Core |
 | **Practice / Практика** | ⚪️ | 212 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 138 | Included in Core |
 | **Summary / Підсумок** | ✅ | 86 | Included in Core |

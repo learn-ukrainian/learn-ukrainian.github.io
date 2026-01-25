@@ -1,7 +1,8 @@
 # Audit Report: M30 — 30-i-feel-like.md
 **Level:** A2 | **Module:** M30 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-25 19:30:30
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-25 23:52:38
 
 ## Configuration
 **Type:** A2-vocab
@@ -36,45 +37,37 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ласкаво просимо до модуля де...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сьогодні ми опануємо цей суб...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Воно походить від поняття контексті...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): приємно, переляканий, сумний, щасливий, боятися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): сумувати, турбуватися, радіти, здивований, засмучений...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 5 violations (moderate)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1418/1000 (raw: 1608)
+- **Words:** ✅ 1413/1000 (raw: 1602)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 52/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.9% (target 50-65% (A2.2))
+- **Immersion:** 🇺🇦 51.8% (target 50-65% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 297 | Included in Core |
-| **Presentation / Презентація** | ✅ | 561 | Included in Core |
+| **Introduction / Вступ** | ✅ | 295 | Included in Core |
+| **Presentation / Презентація** | ✅ | 558 | Included in Core |
 | **Practice / Практика** | ⚪️ | 214 | Skipped |
 | **Dialogues / Діалоги** | ✅ | 182 | Included in Core |
 | **Summary / Підсумок** | ✅ | 100 | Included in Core |

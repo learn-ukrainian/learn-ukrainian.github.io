@@ -63,3 +63,9 @@ content_outline:
   words: 50
   points:
   - A conversation between a writer and an editor about deadlines and rewrites
+naturalness:
+  score: 9
+  status: PASS
+  issues: []
+  recommendation: The content is high quality and pedagogically sound for introducing
+    prefixes at the A2 level.
