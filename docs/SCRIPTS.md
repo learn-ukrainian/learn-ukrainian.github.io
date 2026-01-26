@@ -110,10 +110,9 @@ Plans are the immutable source of truth for module requirements.
 ```bash
 # Extract plans from existing meta files (migration)
 .venv/bin/python scripts/migrate_to_v2.py b1
-
-# Validate plans against schema
-.venv/bin/python scripts/validate_plan_yaml.py --level b1
 ```
+
+**Note:** Plan YAML files follow the schema in `schemas/module-plan.schema.json`. Use `validate_meta_yaml.py` for meta file validation.
 
 ### Generate Human-Readable Plan Markdown
 
