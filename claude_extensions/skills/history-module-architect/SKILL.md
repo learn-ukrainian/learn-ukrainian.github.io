@@ -305,5 +305,5 @@ Before submitting a history/biography module:
 ## Related Documents
 
 - `claude_extensions/quick-ref/{level}.md` — Level constraints
-- `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` — Module specifications
+- `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` — Module plans
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` — Quality standards

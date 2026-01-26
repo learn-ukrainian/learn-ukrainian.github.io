@@ -142,50 +142,72 @@ TOTAL: 1400 / 1400 ✅
 
 **If you create a fake LLM review, you have FAILED the task.**
 
-### 7. Meta.yaml is Sacred - NEVER Edit During Sync
+### 7. Plan Immutability (Architecture v2.0)
 
-**Meta.yaml is the SPECIFICATION. Markdown is the IMPLEMENTATION.**
+**Plans in `plans/` are IMMUTABLE. Meta in `meta/` is mutable build config.**
 
-**After Phase 2 (module-meta-qa), meta.yaml is LOCKED.**
+> **Architecture v2.0** separates planning from building:
+> - `plans/{level}/{slug}.yaml` → IMMUTABLE source of truth
+> - `{level}/meta/{slug}.yaml` → MUTABLE build config
+> - `{level}/status/{slug}.json` → AUTO-GENERATED audit cache
 
 **You MUST:**
-- ✅ Write markdown content to MATCH meta.yaml
-- ✅ Hit word count targets defined in meta.yaml
-- ✅ Include all sections from content_outline
-- ✅ Fix markdown when it doesn't match spec
+- ✅ READ plans to understand requirements (content_outline, word_target, objectives)
+- ✅ WRITE content that matches plan exactly
+- ✅ UPDATE status cache after audits (automatic via audit script)
+- ✅ REPORT if plan seems wrong → user reviews plan
 
 **You MUST NOT:**
-- ❌ Edit meta.yaml to match your markdown output
-- ❌ Change word_target to match what you wrote
-- ❌ Update content_outline to reflect your sections
-- ❌ Modify vocabulary_hints, grammar, or objectives
+- ❌ MODIFY plan files (plans/*.yaml) - EVER
+- ❌ ADD content not in the plan's content_outline
+- ❌ CHANGE word_target to match your output
+- ❌ ARGUE that plan requirements are "too strict"
+
+**If build cannot meet plan requirements:**
+1. STOP building
+2. REPORT: "Plan requires X but Y is not achievable because Z"
+3. User must update plan manually (or approve exception)
+4. You do NOT modify the plan yourself
 
 **This is MUTINY:**
 ```yaml
-# User created meta with specification:
+# Plan says:
 word_target: 4000
+content_outline:
+  - section: "Introduction"
+    words: 500
 
-# You wrote only 3500 words, then changed meta to:
-word_target: 3500  # ← FORBIDDEN. This is changing the spec to match your failure.
+# You wrote only 3500 words, then edited plan to:
+word_target: 3500  # ← FORBIDDEN
 ```
 
 **Correct behavior:**
 ```
-Meta says: 4000 words
+Plan says: 4000 words
 You wrote: 3500 words
-Action: ADD 500 words to match specification
+Action: ADD 500 more words to match plan
 ```
 
-**Exception:** Only `/module-sync` uses different logic, and even then:
-- Read audit review file for context
-- Fix markdown to match meta specification
-- Work until ALL gates pass
-- **Still NEVER edit meta.yaml** (it's the specification)
+### 8. Meta.yaml is Build Config - Mutable but Structured
 
-**If meta.yaml itself is wrong:**
-- Tell user to run `/module-meta {level} {num}` to rebuild it
-- Then run `/module-sync {level} {num}` to fix content
-- You do NOT edit meta.yaml directly
+**Meta.yaml contains mutable build configuration, NOT planning data.**
+
+**Meta contains (MUTABLE):**
+- `naturalness` - Score and status (you update this)
+- `version` - Architecture version
+- `build` - Timestamps, build metadata
+
+**Plan contains (IMMUTABLE - in plans/):**
+- `content_outline` - Section structure and word targets
+- `word_target` - Total word count requirement
+- `objectives` - Learning objectives
+- `vocabulary_hints` - Required vocabulary
+- `activity_hints` - Required activity types
+
+**When to update meta.yaml:**
+- ✅ After naturalness evaluation → update score/status
+- ✅ After successful build → update build.last_modified
+- ❌ NEVER add planning data to meta (it belongs in plans/)
 
 ## Enforcement
 

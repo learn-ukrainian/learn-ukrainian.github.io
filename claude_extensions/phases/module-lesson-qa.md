@@ -275,10 +275,10 @@ For each word in plan.vocabulary_hints.required:
 
 **Process:**
 
-1. **Read curriculum plan:**
+1. **Read module plan:**
 
    ```
-   docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
+   curriculum/l2-uk-en/plans/{level}/{slug}.yaml
    ```
 
 2. **Extract all Ukrainian words** from lesson content (excluding proper nouns)

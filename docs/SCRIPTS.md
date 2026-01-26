@@ -78,63 +78,75 @@ npm run validate:html l2-uk-en a1 5
 
 ---
 
-## Plans & Status Management
+## Plans & Status Management (v2.0)
 
-Scripts for managing the three-layer architecture (plans → content → status).
+Learn Ukrainian v2.0 uses a three-layer architecture: **Plans** (Immutable) → **Build** (Mutable) → **Status** (Cached).
 
-### Extract Plans from Meta Files
+### View Module Status (Cached)
 
-Extracts plan data from existing meta files to create standalone plan YAML files.
-
-```bash
-# Extract all plans for a level
-.venv/bin/python scripts/extract_plans.py b1
-
-# Extract single module
-.venv/bin/python scripts/extract_plans.py b1 5
-
-# Extract range of modules
-.venv/bin/python scripts/extract_plans.py b1 1-10
-
-# Extract all levels
-.venv/bin/python scripts/extract_plans.py all
-
-# Validate existing plans against schema
-.venv/bin/python scripts/extract_plans.py --validate b1
-```
-
-**Output:** Creates `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` files.
-
-### Update Status Files
-
-Updates status YAML files with current module progress.
+Instant status reporting using the audit cache.
 
 ```bash
-# Update status for a level
-.venv/bin/python scripts/update_status.py b1
+# View status of a single module
+/module-status b1 5
 
-# Update single module
-.venv/bin/python scripts/update_status.py b1 5
-
-# Initialize status file from scratch
-.venv/bin/python scripts/update_status.py --init b1
-
-# Update all levels
-.venv/bin/python scripts/update_status.py all
+# View status of entire level
+/level-status b1
 ```
 
-**Output:** Updates `curriculum/l2-uk-en/status/{level}.yaml` files.
+### Update Status Cache
 
-### Status Stages
+The cache is updated automatically whenever `audit_module.py` is run.
 
-Modules progress through these stages:
+```bash
+# Force update cache for a module by running audit
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/05-*.md
+```
 
-| Stage | Description |
-|-------|-------------|
-| `planned` | Has plan file, no content |
-| `content` | Has content MD file (>100 words) |
-| `activities` | Has activities YAML file |
-| `reviewed` | Has naturalness score >= 7 |
+### Plan Management
+
+Plans are the immutable source of truth for module requirements.
+
+```bash
+# Extract plans from existing meta files (migration)
+.venv/bin/python scripts/migrate_to_v2.py b1
+
+# Validate plans against schema
+.venv/bin/python scripts/validate_plan_yaml.py --level b1
+```
+
+### Generate Human-Readable Plan Markdown
+
+Convert YAML plans to readable markdown for review and comparison.
+
+```bash
+# Generate readable plan for specific level
+.venv/bin/python scripts/generate_plan_markdown.py b2-hist
+
+# Generate plans for all levels
+.venv/bin/python scripts/generate_plan_markdown.py --all
+```
+
+**Output:** `docs/l2-uk-en/{LEVEL}-PLAN-GENERATED.md`
+
+**What it includes:**
+- Level overview (title, target, prerequisites)
+- Vocabulary focus areas
+- Pedagogy notes (including decolonization guidance)
+- Phase structure with module sequences
+- Per-module details: title, focus, word target, objectives, grammar
+- Content outline preview for each module
+
+**Use cases:**
+- Review curriculum scope before building modules
+- Compare old curriculum plans with new YAML-based plans
+- Generate documentation for stakeholder review
+
+### Legacy Status Scripts (Deprecated)
+
+The following scripts are kept for backward compatibility but are superseded by the JSON cache system:
+- `scripts/update_status.py` (Updates level-wide YAML status)
+- `scripts/generate_level_status.py` (Updates `docs/*-STATUS.md` - now uses cache!)
 
 ---
 
@@ -1247,9 +1259,9 @@ npm run pipeline l2-uk-en a1 5  # In terminal 2
 
 ## Review Files
 
-Review files are generated in `gemini/` subdirectories alongside source modules. They consolidate all validation results in one place.
+Review files are generated in `audit/` subdirectories alongside source modules. They consolidate all validation results in one place.
 
-**Location:** `curriculum/{lang}/{level}/gemini/{module-slug}-review.md`
+**Location:** `curriculum/l2-uk-en/{level}/audit/{module-slug}-review.md`
 
 **Structure:**
 

@@ -188,15 +188,16 @@ Select the appropriate architect skill based on module type:
 
 These skills provide focus-area pedagogical guidance beyond the template structure.
 
-### Curriculum Plan (Extract Only Your Module)
+### Module Plan (Read Your Module's Plan)
 
-**DO NOT read the entire curriculum plan file.** Use grep to extract only your module:
+**Read the module plan file directly:**
 
 ```bash
-grep -A 50 "Module {NUM}:" docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
+# Read module plan (source of truth for content)
+cat curriculum/l2-uk-en/plans/{level}/{slug}.yaml
 ```
 
-This gives you ONLY the vocabulary and grammar scope for your specific module (~50 lines).
+This gives you the content_outline, vocabulary_hints, objectives, and activity_hints for your module.
 
 ### Pre-flight Checklist
 

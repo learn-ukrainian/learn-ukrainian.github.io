@@ -1,79 +1,50 @@
 # Current Project Status
 
-**Last Updated**: January 24, 2026
-**Session**: B2-HIST Module Testing (Claude vs Gemini)
+**Last Updated**: January 26, 2026
+**Session**: Curriculum Architecture v2.0 (Plan-Build-Status)
 
 ---
 
-## 🚧 Current Work (January 24, 2026)
+## 🚧 Current Work (January 26, 2026)
 
-### B2-HIST Module Testing ✅ M41 COMPLETE
+### Milestone 5: Clean Up & Documentation ✅ COMPLETE
 
-**M41 kozatstvo-vytoky**: ✅ PASS
-- Word count: 4143/4000
-- Activities: 9 (within 3-9 target)
-- Naturalness: 9/10 (MCP validated)
-- Audit: `curriculum/l2-uk-en/b2-hist/audit/kozatstvo-vytoky-review.md`
+**Architectural Migration**: ✅ PASS
+- All 10 levels migrated to Split Architecture
+- Mixed `meta.yaml` files split into `plans/` (immutable) and `meta/` (mutable)
+- `audit_module.py` upgraded to use `plans/` and generate JSON status cache
+- `generate_level_status.py` optimized to use JSON cache (~15x speed improvement)
 
-**M61 ivan-sirko**: ⏳ Ready for Gemini test
-- Current state: Skeleton (110 words)
-- Test command: `/module b2-hist 61 --from=lesson`
-- Test prompt: `tests/workflow/scenarios/gemini-prompt-b2-hist-m61.md`
-
-**Scripts fixed**:
-- `scripts/vocab_enrich_nlp.py` - Now handles wrapper format YAML (`{module:..., items:[...]}`)
+**Documentation Updated**:
+- `docs/ARCHITECTURE.md` - New v2.0 section added
+- `docs/SCRIPTS.md` - Status cache commands added
+- `CLAUDE.md` - New tracking structure documented
+- `claude_extensions/NON-NEGOTIABLE-RULES.md` - Plan Immutability rule added
 
 ---
 
-## 🚧 Previous Work (January 21, 2026)
+## 🎯 Recent Completions (January 26, 2026)
 
-### RFC-001 Seven-Phase Workflow Testing 🔄 IN PROGRESS
+### Epic #465: Plan-Build-Status System ✅ COMPLETE
 
-**Status**: Test Case 1 complete, Test Cases 2-3 pending
-**Location**: `docs/RFC-001-module-workflow.md`
-**Branch**: main
+**Milestone 1: Design & Document (#466)** ✅
+- Defined 3-layer architecture
+- Created JSON schemas for Level Plan, Module Plan, and Status Cache
 
-**What Is Being Done**:
-Testing the new 7-phase module workflow that separates vocabulary enrichment from the main content pipeline.
+**Milestone 2: Create Detailed Plans (#467)** ✅
+- Created level plans for all tracks
+- Hydrated `content_outline` for all 506 Core modules and 440 Specialized modules
+- Extended automation scripts to support C2 and history tracks
 
-**Workflow Change**:
-- **Old (9 phases)**: meta → meta-qa → lesson → lesson-qa → act → act-qa → vocab → vocab-qa → integrate
-- **New (7 phases)**: meta → meta-qa → lesson → lesson-qa → act → act-qa → integrate
-- **Vocabulary**: Deferred to `/module-vocab-enrich {level}` after all modules complete
+**Milestone 3: Migrate Existing Content (#468)** ✅
+- Executed migration script `scripts/migrate_to_v2.py` across all levels
+- Verified no data loss during split
+- Successfully backfilled status cache for B1
 
-**Test Cases**:
-1. ✅ **trypillian-civilization** (b2-hist M1) - Complete
-   - All 7 phases executed successfully
-   - Skeleton vocabulary created
-   - MDX deployed (vocabulary section missing - known issue, deferred)
-   - Location: `curriculum/l2-uk-en/b2-hist/`
-   - Audit: `curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-review.md`
-
-2. ⏳ **aneksiia-krymu** (b2-hist M128) - Ready to start after reset
-   - Regeneration test: 2056→4000 words
-   - Existing module needs full Phases 1-7 regeneration
-   - Current status: FAIL (YAML schema violation in activity #13, below word target)
-
-3. ⏳ **bohdan-khmelnytskyi** (b2-hist M50) - Ready to start after reset
-   - Full generation test: skeleton→4000 words
-   - Tests complete workflow from empty module
-
-**Key Findings**:
-- Phase 7 (integrate) executes in seconds (just file operations)
-- Skeleton vocabulary approach works: `items: []` in YAML
-- MDX generation needs update to show empty vocabulary section
-- Vocabulary extraction (1645 words) needs lemmatization - current script extracts all inflected forms
-
-**Next Steps After Reset**:
-1. Continue with Test Case 2: aneksiia-krymu regeneration
-2. Complete Test Case 3: bohdan-khmelnytskyi generation
-3. Address vocabulary enrichment workflow issues (lemmatization, YAML structure)
-4. Update MDX generation to display empty vocabulary section
-
-**Documentation**:
-- Phase prompts: `claude_extensions/phases/module-*.md` (Phases 1-7)
-- Workflow guide: `docs/SCRIPTS.md` (lines 96-203)
-- Integration report example: `curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-review.md`
+**Milestone 4: Update Workflow Commands (#469)** ✅
+- All `/module-*` commands updated to read from `plans/`
+- New `/module-status` and `/level-status` commands implemented
+- Cache-first status generation enabled
 
 ---
 

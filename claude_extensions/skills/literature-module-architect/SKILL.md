@@ -253,7 +253,8 @@ LIT vocabulary tables use **Ukrainian-to-Ukrainian** definitions:
 | **AI-Optimized** | `docs/l2-uk-en/templates/ai/lit-module-template.md` |
 | **Full Reference** | `docs/l2-uk-en/templates/lit-module-template.md` |
 
-- `docs/l2-uk-en/LIT-CURRICULUM-PLAN.md` — Curriculum overview
+- `curriculum/l2-uk-en/plans/lit.yaml` — Level plan
+- `curriculum/l2-uk-en/plans/lit/{slug}.yaml` — Module plans
 
 **For research material, see:**
 

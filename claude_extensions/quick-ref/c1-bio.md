@@ -81,7 +81,7 @@
 
 Before writing, confirm:
 
-- [ ] Read C1-BIO-CURRICULUM-PLAN.md for this module's vocabulary + biography scope
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml` for content outline + vocabulary hints
 - [ ] **Read the biography template** (`c1-biography-module-template.md`)
 - [ ] Research the historical figure thoroughly (use reliable Ukrainian sources)
 - [ ] All metadata YAML fields ready
@@ -264,7 +264,9 @@ The track maintains diversity:
 
 ## Related Documentation
 
-- **C1-BIO Curriculum Plan:** `docs/l2-uk-en/C1-BIO-CURRICULUM-PLAN.md`
+- **C1-BIO Level Plan:** `curriculum/l2-uk-en/plans/c1-bio.yaml`
+- **C1-BIO Module Plans:** `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/C1-BIO-PLAN-GENERATED.md`
 - **Biography Template (AI):** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
 - **Biography Template (Full):** `docs/l2-uk-en/templates/c1-biography-module-template.md`
 - **Checkpoint Template:** `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`

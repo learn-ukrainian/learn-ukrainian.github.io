@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-how-to-talk-about-grammar.md
-**Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M01 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:04
+**Generated:** 2026-01-26 15:47:03
 
 ## Configuration
 **Type:** B1-bridge

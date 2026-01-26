@@ -70,7 +70,7 @@
 
 Before writing, confirm:
 
-- [ ] Read B2-PRO-CURRICULUM-PLAN.md for this module's vocabulary + scope
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/b2-pro/{slug}.yaml` for content outline + vocabulary hints
 - [ ] **Read the professional template** (`b2-pro-module-template.md`)
 - [ ] Identify if this is a checkpoint module (M13, M15, M28, M30, M38, M40)
 - [ ] All metadata YAML fields ready
@@ -163,7 +163,9 @@ prerequisites:
 
 ## Related Documentation
 
-- **B2-PRO Curriculum Plan:** `docs/l2-uk-en/B2-PRO-CURRICULUM-PLAN.md`
+- **B2-PRO Level Plan:** `curriculum/l2-uk-en/plans/b2-pro.yaml`
+- **B2-PRO Module Plans:** `curriculum/l2-uk-en/plans/b2-pro/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/B2-PRO-PLAN-GENERATED.md`
 - **Professional Template (AI):** `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
 - **Professional Template (Full):** `docs/l2-uk-en/templates/b2-pro-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`

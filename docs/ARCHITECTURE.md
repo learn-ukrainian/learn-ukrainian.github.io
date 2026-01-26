@@ -1,45 +1,57 @@
 # Learn Ukrainian Architecture
 
+> **See also:**
+> - `docs/ARCHITECTURE-PLANS.md` - Detailed three-layer architecture
+> - `docs/STATUS-SYSTEM.md` - Status caching system
+> - `docs/PLANNING-GUIDE.md` - How to create/update plans
+
 ## Overview
 
 Learn Ukrainian (CO) is a content factory that generates Ukrainian language learning materials from Markdown source files.
 
+## Architecture v2.0 (Plan-Build-Status)
+
+The curriculum follows a strict three-layer separation of concerns to ensure consistency and prevent semantic drift.
+
+### 1. Plans (Immutable Source of Truth)
+
+**Level plans:** `curriculum/l2-uk-en/plans/{level}.yaml` — Phases, scope, pedagogy notes
+**Module plans:** `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` — Individual module specs
+
+- **Ownership**: Humans (Architects)
+- **Content**: `content_outline`, `word_target`, `vocabulary_hints`, `activity_hints`, `sources`
+- **Rule**: NEVER modified by build agents. If a plan is wrong, it must be updated by a human.
+- **Human-readable view**: `docs/l2-uk-en/{LEVEL}-PLAN-GENERATED.md` (run `scripts/generate_plan_markdown.py`)
+
+### 2. Build (Mutable Artifacts)
+Located in `curriculum/l2-uk-en/{level}/`.
+- **Ownership**: AI Agents (Builders)
+- **Components**:
+  - `{slug}.md`: Lesson prose (matches plan outline).
+  - `activities/{slug}.yaml`: Interactive exercises.
+  - `vocabulary/{slug}.yaml`: IPA, translations, and metadata for words.
+  - `meta/{slug}.yaml`: Build-time metadata (naturalness score, last modified).
+
+### 3. Status (Cached Audit Results)
+Located in `curriculum/l2-uk-en/{level}/status/{slug}.json`.
+- **Ownership**: System (Auditor)
+- **Content**: Results of all 16+ audit gates, violation counts, and source file timestamps.
+- **Benefit**: Enables instant status reporting without re-auditing every module.
+
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SOURCE (Markdown)                           │
-│                                                                 │
-│   curriculum/l2-uk-en/{level}/*.md                              │
-│   - Frontmatter (YAML metadata)                                 │
-│   - Lesson content (sections)                                   │
-│   - Activities (## quiz:, ## match-up:, etc.)                   │
-│   - Vocabulary tables                                           │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-              ┌───────────────┴───────────────┐
-              ▼                               ▼
-┌─────────────────────────┐     ┌─────────────────────────┐
-│   generate_mdx.py       │     │   generate_json.py      │
-│   (Python 3.12)         │     │   (Python 3.12)         │
-└───────────┬─────────────┘     └───────────┬─────────────┘
-            ▼                               ▼
-┌─────────────────────────┐     ┌─────────────────────────┐
-│     MDX OUTPUT          │     │     JSON OUTPUT         │
-│     (Docusaurus)        │     │     (For Vibe)          │
-│                         │     │                         │
-│ docusaurus/docs/{level}/│     │ output/json/l2-uk-en/   │
-│ - Interactive lessons   │     │ - moduleType            │
-│ - React components      │     │ - immersionLevel        │
-│ - Live activities       │     │ - sections (raw md)     │
-└───────────┬─────────────┘     └───────────┬─────────────┘
-            ▼                               ▼
-┌─────────────────────────┐     ┌─────────────────────────┐
-│     DOCUSAURUS WEB      │     │     VIBE APP            │
-│                         │     │                         │
-│ - Static site           │     │ - Extracts activities   │
-│ - GitHub Pages          │     │ - Creates flash cards   │
-│ - krisztiankoos.github  │     │ - Interactive workbook  │
-│   .io/learn-ukrainian    │     │                         │
-└─────────────────────────┘     └─────────────────────────┘
+┌─────────────────────────────────────┐    ┌──────────────────────────┐
+│ plans/                              │    │ {level}/                 │
+│   └── {slug}.yaml (Immutable Plan)  │───▶│   ├── {slug}.md          │
+│       - content_outline             │    │   ├── activities/        │
+│       - word_target                 │    │   └── vocabulary/        │
+└─────────────────────────────────────┘    └────────────┬─────────────┘
+                                                        │
+                                                        ▼
+                                           ┌──────────────────────────┐
+                                           │ {level}/status/          │
+                                           │   └── {slug}.json        │
+                                           │       (Audit Cache)      │
+                                           └──────────────────────────┘
 ```
 
 ## Directory Structure
@@ -48,19 +60,29 @@ Learn Ukrainian (CO) is a content factory that generates Ukrainian language lear
 learn-ukrainian/
 ├── curriculum/                    # SOURCE OF TRUTH
 │   └── l2-uk-en/
-│       ├── a1/                    # A1 modules (34)
-│       ├── a2/                    # A2 modules (50)
-│       ├── b1/                    # B1 modules (85)
-│       ├── b2/                    # B2 modules (110)
-│       ├── c1/                    # C1 modules (160)
-│       ├── c2/                    # C2 modules (100)
+│       ├── plans/                 # ⭐ IMMUTABLE PLANS (v2.0)
+│       │   ├── a1.yaml            # Level plan (phases, scope)
+│       │   ├── a1/                # Module plans
+│       │   │   ├── 01-the-cyrillic-code-i.yaml
+│       │   │   └── ...
+│       │   ├── b2-hist.yaml       # Track level plan
+│       │   ├── b2-hist/           # Track module plans
+│       │   └── ...
+│       ├── a1/                    # A1 build artifacts (34)
+│       ├── a2/                    # A2 build artifacts (50)
+│       ├── b1/                    # B1 build artifacts (85)
+│       ├── b2/                    # B2 build artifacts (110)
+│       ├── c1/                    # C1 build artifacts (160)
+│       ├── c2/                    # C2 build artifacts (100)
+│       ├── b2-hist/               # B2-HIST track (61)
+│       ├── c1-bio/                # C1-BIO track (25)
 │       ├── lit/                   # LIT modules (30) - post-C1 track
-│       ├── vocabulary.db          # SQLite vocabulary database
-│       └── *-CURRICULUM-PLAN.md   # Level planning docs
+│       └── vocabulary.db          # SQLite vocabulary database
 │
 ├── scripts/                       # GENERATOR CODE
 │   ├── generate_mdx.py            # MDX generator (Python)
 │   ├── generate_json.py           # JSON generator (Python)
+│   ├── generate_plan_markdown.py  # ⭐ Plan → readable markdown
 │   ├── audit_module.py            # Module quality checker
 │   ├── calculate_richness.py      # Content richness scoring
 │   ├── pipeline.py                # Full pipeline (lint → generate → validate)

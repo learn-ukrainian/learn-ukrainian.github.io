@@ -1,8 +1,8 @@
 # Audit Report: M02 — 02-language-about-verbs.md
-**Level:** B1 | **Module:** M02 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 1200
+**Level:** B1 | **Module:** M02 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-25 19:22:05
+**Generated:** 2026-01-26 17:33:45
 
 ## Configuration
 **Type:** B1-bridge

@@ -71,7 +71,7 @@
 
 Before writing, confirm:
 
-- [ ] Read C1-PRO-CURRICULUM-PLAN.md for this module's vocabulary + scope
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/c1-pro/{slug}.yaml` for content outline + vocabulary hints
 - [ ] **Read the professional mastery template** (`c1-pro-module-template.md`)
 - [ ] Identify if this is a checkpoint module (M13, M15, M28, M30, M44, M45, M50)
 - [ ] All metadata YAML fields ready
@@ -189,7 +189,9 @@ naturalness:
 
 ## Related Documentation
 
-- **C1-PRO Curriculum Plan:** `docs/l2-uk-en/C1-PRO-CURRICULUM-PLAN.md`
+- **C1-PRO Level Plan:** `curriculum/l2-uk-en/plans/c1-pro.yaml`
+- **C1-PRO Module Plans:** `curriculum/l2-uk-en/plans/c1-pro/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/C1-PRO-PLAN-GENERATED.md`
 - **Professional Mastery Template (AI):** `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
 - **Professional Mastery Template (Full):** `docs/l2-uk-en/templates/c1-pro-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`

@@ -17,8 +17,8 @@ Create the module metadata sidecar file (`meta/{slug}.yaml`).
 
 ## Input Required
 
-1. **Curriculum plan**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
-2. **Plan file** (if exists): `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`
+1. **Level plan**: `curriculum/l2-uk-en/plans/{level}.yaml` (phases, scope)
+2. **Module plan**: `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (content_outline, vocabulary_hints)
 3. **Module position**: Which module number in the sequence
 4. **Previous vocabulary**: For tracks, cumulative from A1→B2 core
 

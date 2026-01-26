@@ -9,7 +9,7 @@ Scan A1 activities for naturalness while strictly maintaining vocabulary and gra
 
 **NEVER violate these rules when fixing activities:**
 
-1. **Vocabulary Scope**: Only use words from `docs/l2-uk-en/A1-CURRICULUM-PLAN.md` up to current module
+1. **Vocabulary Scope**: Only use words from `curriculum/l2-uk-en/plans/a1/` (module plans) up to current module
 2. **Grammar Scope**: Only use grammar constructs introduced by Ukrainian State Standard 2024 up to current module
 3. **Pedagogical Focus**: Preserve the grammar point being drilled (e.g., M21 = past tense)
 4. **CEFR Level**: Maintain A1 complexity (simple sentences, present tense, basic cases)
@@ -22,8 +22,8 @@ Scan A1 activities for naturalness while strictly maintaining vocabulary and gra
 
 **Before scanning ANY files:**
 
-1. **Read A1-CURRICULUM-PLAN.md** completely
-   - Extract vocabulary by module (M01, M02, ... M34)
+1. **Read A1 module plans** from `curriculum/l2-uk-en/plans/a1/`
+   - Extract vocabulary hints from each module plan
    - Build cumulative vocabulary map: M01→M{current}
    - Note which grammar points each module introduces
 

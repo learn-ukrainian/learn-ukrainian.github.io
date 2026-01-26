@@ -141,5 +141,5 @@ Before submitting a vocabulary module:
 ## Related Documents
 
 - `claude_extensions/quick-ref/b1.md` — B1 constraints
-- `docs/l2-uk-en/B1-CURRICULUM-PLAN.md` — M51-70 specifications
+- `curriculum/l2-uk-en/plans/b1/{slug}.yaml` — Module plans
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` — Quality standards

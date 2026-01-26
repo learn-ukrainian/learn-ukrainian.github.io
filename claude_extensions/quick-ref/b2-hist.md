@@ -77,7 +77,7 @@
 
 Before writing, confirm:
 
-- [ ] Read B2-HIST-CURRICULUM-PLAN.md for this module's vocabulary + grammar scope
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/b2-hist/{slug}.yaml` for content outline + vocabulary hints
 - [ ] **Read the appropriate template** (history or synthesis)
 - [ ] Identify if this is a synthesis module (M13, M27, M37, M49, M55, M61)
 - [ ] All metadata YAML fields ready
@@ -223,7 +223,9 @@ History modules must present Ukrainian history from Ukrainian perspective:
 
 ## Related Documentation
 
-- **B2-HIST Curriculum Plan:** `docs/l2-uk-en/B2-HIST-CURRICULUM-PLAN.md`
+- **B2-HIST Level Plan:** `curriculum/l2-uk-en/plans/b2-hist.yaml`
+- **B2-HIST Module Plans:** `curriculum/l2-uk-en/plans/b2-hist/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/B2-HIST-PLAN-GENERATED.md`
 - **History Template (AI):** `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
 - **History Template (Full):** `docs/l2-uk-en/templates/b2-history-module-template.md`
 - **Synthesis Template:** `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`

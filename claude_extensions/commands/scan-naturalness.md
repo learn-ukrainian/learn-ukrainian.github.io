@@ -58,8 +58,11 @@ When this skill is invoked, follow the protocol in `claude_extensions/protocols/
 ### 1. Load Level Context
 
 ```bash
-# Read curriculum plan for vocabulary/grammar scope
-READ: docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
+# Read level plan for phases and scope
+READ: curriculum/l2-uk-en/plans/{level}.yaml
+
+# Read module plans for vocabulary/grammar scope
+READ: curriculum/l2-uk-en/plans/{level}/*.yaml
 
 # Read Ukrainian State Standard section for grammar progression
 READ: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.md (if exists)

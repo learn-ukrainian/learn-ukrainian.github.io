@@ -12,10 +12,10 @@
 > **If you cannot commit to these rules, STOP NOW.**
 
 > **Status Overview:**
-> - **Queryable status**: `curriculum/l2-uk-en/status/{level}.yaml` (machine-readable)
+> - **Queryable status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` (per-module cache)
 > - **Human-readable**: `docs/{LEVEL}-STATUS.md` (e.g., `docs/B2-HIST-STATUS.md`)
-> - **Update status**: `.venv/bin/python scripts/update_status.py {level|all}`
-> - **Generate markdown**: `npm run status:{level}` or `npm run status:all`
+> - **View status**: `/module-status {level} {num}` or `/level-status {level}`
+> - **Update cache**: `.venv/bin/python scripts/audit_module.py {path}`
 
 ## Critical Rules
 
@@ -118,8 +118,12 @@ curriculum/l2-uk-en/
 │   ├── vocabulary/{slug}.yaml    # Vocabulary data
 │   └── audit/                    # Review reports
 │
-└── status/                       # LAYER 3: TRACKING
-    └── {level}.yaml              # Per-module state, timestamps
+└── status/                       # LAYER 3: TRACKING (DEPRECATED)
+    └── {level}.yaml              # Use per-module JSON cache instead
+
+New Tracking structure:
+curriculum/l2-uk-en/{level}/status/
+└── {slug}.json                   # LAYER 3: CACHED AUDIT RESULTS
 ```
 
 **Module counts**: A1 (44), A2 (70), B1 (92), B2 (94), C1 (106), C2 (100)
@@ -165,15 +169,17 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
 | Topic | Location |
 |-------|----------|
 | **Module plans (source)** | `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` ⭐ |
-| **Module status (queryable)** | `curriculum/l2-uk-en/status/{level}.yaml` ⭐ |
+| **Module status (cache)** | `curriculum/l2-uk-en/{level}/status/{slug}.json` ⭐ |
 | **Level status (human)** | `docs/{LEVEL}-STATUS.md` (auto-generated) |
+| **Architecture v2** | `docs/ARCHITECTURE-PLANS.md` ⭐ |
+| **Status caching system** | `docs/STATUS-SYSTEM.md` ⭐ |
+| **Planning guide** | `docs/PLANNING-GUIDE.md` ⭐ |
 | **YAML activities** | `docs/ACTIVITY-YAML-REFERENCE.md` |
 | **Quality standards** | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` |
 | **Subsection flexibility** | `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` |
 | **Markdown format** | `docs/MARKDOWN-FORMAT.md` |
 | **Scripts reference** | `docs/SCRIPTS.md` |
-| **Architecture** | `docs/ARCHITECTURE.md` |
-| **Plans architecture** | `docs/ARCHITECTURE-PLANS.md` |
+| **Architecture (legacy)** | `docs/ARCHITECTURE.md` |
 | **Grammar validation** | `scripts/audit/ukrainian_grammar_validator_prompt.md` |
 | **Level quick-refs** | `claude_extensions/quick-ref/{level}.md` |
 | **Stage workflows** | `claude_extensions/stages/stage-{1-4}-*.md` |
